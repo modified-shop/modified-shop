@@ -39,7 +39,7 @@
       $response = modified_api::request('modified/version');
       
       $contents['version'] = $response['stable'];
-      $contents['update'] = version_compare($contents['version'], $contents['version'], '>');
+      $contents['update'] = version_compare($contents['version'], $contents['version_installed'], '>');
 
       $installer = modified_api::request('modified/version/install/installer');
 
