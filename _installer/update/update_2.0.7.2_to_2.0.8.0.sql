@@ -28,6 +28,7 @@ ALTER TABLE `manufacturers` ADD `listing_template` VARCHAR(64) NOT NULL DEFAULT 
 ALTER TABLE `manufacturers` ADD `categories_template` VARCHAR(64) AFTER `listing_template`; 
 ALTER TABLE `manufacturers` ADD INDEX `idx_manufacturers_status` (`manufacturers_status`);
 ALTER TABLE `manufacturers` ADD INDEX `idx_sort_order` (`sort_order`);
+UPDATE `manufacturers` SET `manufacturers_status` = 1;
 
 #GTB - 2022-07-13 - add image description
 CREATE TABLE IF NOT EXISTS `products_images_description` (
