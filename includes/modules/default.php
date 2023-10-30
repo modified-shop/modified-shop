@@ -253,6 +253,7 @@ switch ($category_depth) {
         $select .= "m.manufacturers_name, ";
         $from   .= "JOIN ".TABLE_MANUFACTURERS." m 
                          ON p.manufacturers_id = m.manufacturers_id
+                            AND m.manufacturers_status = 1
                             AND m.manufacturers_id = '".(int) $_GET['manufacturers_id']."' ";
         $use_group_by = true;
       }
@@ -277,6 +278,7 @@ switch ($category_depth) {
         $select .= "m.manufacturers_name, ";
         $from .= "JOIN ".TABLE_MANUFACTURERS." m 
                        ON p.manufacturers_id = m.manufacturers_id
+                          AND m.manufacturers_status = 1
                           AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
       }
     }

@@ -119,7 +119,7 @@
     $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON p.products_id = pa.products_id
                                               LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON pa.options_values_id = pov.products_options_values_id AND pov.language_id = '".(int) $_SESSION['languages_id']."' " : "";
     $from_str .= "LEFT JOIN ".TABLE_SPECIALS." AS s ON p.products_id = s.products_id ".SPECIALS_CONDITIONS_S." ";
-    $from_str .= SEARCH_IN_MANU == 'true' ? " LEFT JOIN ".TABLE_MANUFACTURERS." AS m ON p.manufacturers_id = m.manufacturers_id " : "";
+    $from_str .= SEARCH_IN_MANU == 'true' ? " LEFT JOIN ".TABLE_MANUFACTURERS." AS m ON p.manufacturers_id = m.manufacturers_id AND m.manufacturers_status = 1 " : "";
   
     if (SEARCH_IN_FILTER == 'true') {
       $from_str .= "LEFT JOIN ".TABLE_PRODUCTS_TAGS." pt ON pt.products_id = p.products_id
