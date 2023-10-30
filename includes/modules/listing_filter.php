@@ -157,6 +157,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
                                           AND trim(pd.products_name) != ''
                                   JOIN ".TABLE_MANUFACTURERS." m 
                                        ON m.manufacturers_id = p.manufacturers_id
+                                          AND m.manufacturers_status = 1
                                        ".$join."
                                  WHERE p.products_status = '1'
                                        ".$where."
