@@ -82,13 +82,13 @@
       'VISITED' => false,
     ),
     array(
-      'NAME' => TEXT_UPDATE_SYSTEM,
+      'NAME' => TEXT_SQL_UPDATE,
       'LINK' => 'javascript:void(0)',
       'BUTTON' => '<i class="fas fa-check"></i>',
       'VISITED' => false,
     ),
     array(
-      'NAME' => TEXT_SQL_UPDATE,
+      'NAME' => TEXT_UPDATE_SYSTEM,
       'LINK' => 'javascript:void(0)',
       'BUTTON' => '<i class="fas fa-check"></i>',
       'VISITED' => false,
@@ -266,20 +266,13 @@
           $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER, 'action=shop', $request_type).'">'.BUTTON_SHOP.'</a>');
           $modulelist[$step - 1]['BUTTON'] = '<i class="fas fa-exclamation-triangle"></i>';
         } else {
-          $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdateprocess', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'uaction=update&step=5', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+          $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdateprocess', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=processnow&uaction=update&step=5', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
           $modulelist[$step - 1]['BUTTON'] = '<i class="fas fa-clock fa-spin"></i>';
         }
         break;
 
       case '5':
-        include(DIR_FS_INSTALLER.'includes/update_system.php');
-
-        $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdateprocess', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=processnow&uaction=update&step=6', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
-        $modulelist[$step - 1]['BUTTON'] = '<i class="fas fa-clock fa-spin"></i>';
-        break;
-
-      case '6':
-        $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdateprocess', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=updatenow&uaction=update&step=7', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+        $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdateprocess', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'uaction=update&step=6', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
         $modulelist[$step - 1]['BUTTON'] = '<i class="fas fa-clock fa-spin"></i>';
         
         if (!isset($_SESSION['sql_files'])) {
@@ -330,6 +323,13 @@
           $smarty->assign('PROCESSING', 'db_update');
           $smarty->clear_assign('FORM_ACTION');
         }
+        break;
+
+      case '6':
+        include(DIR_FS_INSTALLER.'includes/update_system.php');
+
+        $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdateprocess', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=updatenow&uaction=update&step=7', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+        $modulelist[$step - 1]['BUTTON'] = '<i class="fas fa-clock fa-spin"></i>';
         break;
 
       case '7':
