@@ -61,16 +61,16 @@
       'VISITED' => in_array('configure', $_SESSION['visited']),
     ),
     array(
-      'NAME' => TEXT_UPDATE_SYSTEM,
-      'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=system_updates', $request_type),
-      'BUTTON' => BUTTON_SYSTEM_UPDATES,
-      'VISITED' => in_array('system_updates', $_SESSION['visited']),
-    ),
-    array(
       'NAME' => TEXT_SQL_UPDATE,
       'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update', $request_type),
       'BUTTON' => BUTTON_SQL_UPDATE,
       'VISITED' => in_array('sql_update', $_SESSION['visited']),
+    ),
+    array(
+      'NAME' => TEXT_UPDATE_SYSTEM,
+      'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=system_updates', $request_type),
+      'BUTTON' => BUTTON_SYSTEM_UPDATES,
+      'VISITED' => in_array('system_updates', $_SESSION['visited']),
     ),
     array(
       'NAME' => TEXT_DB_UPDATE,
