@@ -41,23 +41,24 @@
   defined('DB_SERVER_PASSWORD') OR define('DB_SERVER_PASSWORD', '');
   defined('DB_DATABASE') OR define('DB_DATABASE', '');
   defined('DB_SERVER_CHARSET') OR define('DB_SERVER_CHARSET', 'latin1'); // set db charset 'utf8' or 'latin1'
+  defined('DB_SERVER_ENGINE') OR define('DB_SERVER_ENGINE', 'MyISAM');
   defined('USE_PCONNECT') OR define('USE_PCONNECT', 'false'); // use persistent connections?
 
   // server
-  defined('HTTP_SERVER') or define('HTTP_SERVER', 'http://localhost'); // eg, http://localhost - should not be empty for productive servers
-  defined('HTTPS_SERVER') or define('HTTPS_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
+  defined('HTTP_SERVER') OR define('HTTP_SERVER', 'http://localhost'); // eg, http://localhost - should not be empty for productive servers
+  defined('HTTPS_SERVER') OR define('HTTPS_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
 
   // secure SSL
-  defined('ENABLE_SSL') or define('ENABLE_SSL', false); // secure webserver for checkout procedure?
+  defined('ENABLE_SSL') OR define('ENABLE_SSL', false); // secure webserver for checkout procedure?
 
   // session handling
-  defined('STORE_SESSIONS') or define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
+  defined('STORE_SESSIONS') OR define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
 
   // timezone
-  defined('DEFAULT_TIMEZONE') or define('DEFAULT_TIMEZONE', 'Europe/Berlin');
+  defined('DEFAULT_TIMEZONE') OR define('DEFAULT_TIMEZONE', 'Europe/Berlin');
 
   // password pepper (store additionally in a safe place!)
-  defined('PASSWORD_HMAC') or define('PASSWORD_HMAC', ''); // to be used to encrypt customer passwords hashes - ATTENTION: The loss of this password pepper leads to the fact that no customer can log in the store with his password any more, so store this password in a safe place if used!
+  defined('PASSWORD_HMAC') OR define('PASSWORD_HMAC', ''); // to be used to encrypt customer passwords hashes - ATTENTION: The loss of this password pepper leads to the fact that no customer can log in the store with his password any more, so store this password in a safe place if used!
 
   if (DB_DATABASE != '') {
     // set admin directory DIR_ADMIN
