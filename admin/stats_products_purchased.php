@@ -49,7 +49,13 @@ require (DIR_WS_INCLUDES.'head.php');
     <td class="boxCenter">
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
       <div class="pageHeading flt-l">
-        <?php echo HEADING_TITLE; ?>
+        <?php 
+        if (isset($_GET['action']) && $_GET['action'] == 'orders') {
+        	echo HEADING_TITLE.': '.xtc_get_products_name($_GET['pID']);
+        } else {
+        	echo HEADING_TITLE; 
+        }
+        ?>
         <div class="main pdg2">Statistics</div>
       </div>              
       <div class="main flt-r pdg2 mrg5" style="margin-left:20px;">
@@ -75,7 +81,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <tr class="dataTableHeadingRow">
                   <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
                   <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ORDERS_ID; ?></td>
-                  <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_QUANTITY; ?></td>
+                  <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_PURCHASED; ?></td>
                 </tr>
                 <?php
                 $products_query_raw = "SELECT op.orders_id, 
