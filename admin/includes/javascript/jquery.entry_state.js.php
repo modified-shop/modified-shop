@@ -30,7 +30,7 @@
     $('#'+container).html('<img src="images/loading.gif">');
     
     var ajax_url = "orders_edit.php<?php echo defined('SID') ? '?'. SID : '';?>";
-    var token = "&<?php echo $_SESSION['CSRFName'] . '='.  $_SESSION['CSRFToken']; ?>";
+    var token = "&<?php echo (defined('CSRF_TOKEN_SYSTEM') && CSRF_TOKEN_SYSTEM == 'true') ? $_SESSION['CSRFName'] . '='.  $_SESSION['CSRFToken'] : ''; ?>";
     var data = 'action=get_states&countryid=' + val + type + zone + token + '&field=' + container;
 
     jQuery.ajax({
