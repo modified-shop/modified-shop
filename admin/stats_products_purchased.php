@@ -50,10 +50,14 @@ require (DIR_WS_INCLUDES.'head.php');
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
       <div class="pageHeading flt-l">
         <?php 
-        if (isset($_GET['action']) && $_GET['action'] == 'orders') {
-        	echo HEADING_TITLE.': '.xtc_get_products_name($_GET['pID']);
-        } else {
-        	echo HEADING_TITLE; 
+       	echo HEADING_TITLE; 
+        if (isset($_GET['action']) 
+            && $_GET['action'] == 'orders' 
+            && isset($_GET['pID']) 
+            && $_GET['pID'] != ''
+            )
+        {
+          echo ': '.xtc_get_products_name($_GET['pID']);
         }
         ?>
         <div class="main pdg2">Statistics</div>
