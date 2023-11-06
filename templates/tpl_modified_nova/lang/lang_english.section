@@ -17,7 +17,9 @@ text_account_history = 'Here you can see all the orders you have placed.<br />Yo
 
 [account_password]
 text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
-
+text_note = 'Notice'
+text_account_new_password_info = 'After submitting the form, your new password will be saved and you will automatically be redirected to the login page. You can then log in here with the newly assigned password.'
+                                  
 [account]
 title_nav_account = 'Your account'
 title_nav_account_edit = 'Edit your account'
@@ -137,7 +139,7 @@ text_cart_or = 'or'
 [new_password]
 heading_personal = 'Your data'
 text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
-text_note = 'Hinweis'
+text_note = 'Notice'
 
 [password_forgotten]
 
@@ -156,7 +158,7 @@ products_basket_quantity = 'Quantity'
 
 [reviews]
 heading_reviews = 'Customer reviews'
-text_reviews_avg = 'Durchschnittliche Bewertung'
+text_reviews_avg = 'Average rating'
 text_reviews_based = 'Based on'
 text_single_review = 'Review'
 text_multiple_review = 'Customer reviews'
