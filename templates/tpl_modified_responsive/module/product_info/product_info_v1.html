@@ -121,24 +121,26 @@
         {if $SHIPPING_NAME}<div class="pd_inforow"><strong>{#text_shippingtime#}</strong> {if $SHIPPING_IMAGE}<img class="pd_shipping_image" src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if} {$SHIPPING_NAME_LINK}</div>{/if}
         {if $PRODUCTS_MODEL != ''}<div class="pd_inforow"><strong>{#model#}</strong> <span itemprop="sku">{$PRODUCTS_MODEL}</span></div>{/if}
         {if $PRODUCTS_EAN != ''}<div class="pd_inforow"><strong>{#ean#}</strong> <span itemprop="gtin{$PRODUCTS_EAN|strlen}">{$PRODUCTS_EAN}</span></div>{/if}
-        {if $PRODUCTS_RATING_COUNT > 1}
-        <div class="pd_inforow" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-          <strong>{#info_reviews#}</strong> 
-          <span class="pd_rating_icons"><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 1} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 2} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 3} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 4} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 5} full{/if}"></i></span>
-          ({$PRODUCTS_RATING_COUNT})
-          <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
-          <meta itemprop="bestRating" content="5" />
-          <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT}" /> 
-        </div>
-        {elseif $PRODUCTS_RATING_COUNT > 0 }
-        <div class="pd_inforow" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-          <strong>{#info_review#}</strong> 
-          <span class="pd_rating_icons"><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 1} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 2} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 3} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 4} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 5} full{/if}"></i></span>
-          ({$PRODUCTS_RATING_COUNT})
-          <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
-          <meta itemprop="bestRating" content="5" />
-          <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT}" /> 
-        </div>
+        {if isset($PRODUCTS_RATING_COUNT)}
+          {if $PRODUCTS_RATING_COUNT > 1}
+          <div class="pd_inforow" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+            <strong>{#info_reviews#}</strong> 
+            <span class="pd_rating_icons"><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 1} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 2} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 3} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 4} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 5} full{/if}"></i></span>
+            ({$PRODUCTS_RATING_COUNT})
+            <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
+            <meta itemprop="bestRating" content="5" />
+            <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT}" /> 
+          </div>
+          {elseif $PRODUCTS_RATING_COUNT > 0 }
+          <div class="pd_inforow" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+            <strong>{#info_review#}</strong> 
+            <span class="pd_rating_icons"><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 1} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 2} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 3} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 4} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 5} full{/if}"></i></span>
+            ({$PRODUCTS_RATING_COUNT})
+            <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
+            <meta itemprop="bestRating" content="5" />
+            <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT}" /> 
+          </div>
+          {/if}
         {/if}
         {if isset($PRODUCTS_DISCOUNT) && $PRODUCTS_DISCOUNT != ''}<div class="pd_inforow"><strong>{#text_discount#}</strong> {$PRODUCTS_DISCOUNT}</div>{/if}  
         {if $PRODUCTS_EXPIRES}<div class="pd_inforow red">{#text_expires_date#} {$PRODUCTS_EXPIRES}</div>{/if}
@@ -150,7 +152,7 @@
 
         <ul class="pd_iconlist">
           <li class="print">{$PRODUCTS_PRINT_LAYER}</li>
-          {if $smarty.session.customers_status.customers_status_write_reviews == 1}
+          {if isset($PRODUCTS_WRITE_REVIEW)}
            <li class="vote">{$PRODUCTS_WRITE_REVIEW}</li>
           {/if}
           {if isset($EXPRESS_LINK)}<li class="express">{$EXPRESS_LINK}</li>{/if}
