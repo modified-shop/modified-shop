@@ -17,6 +17,8 @@ text_account_history = 'Hier sehen Sie alle Ihre get&auml;tigten Bestellungen.<b
 
 [account_password]
 text_must = '<i class="fa-solid fa-asterisk"></i> notwendige Informationen'
+text_note = 'Hinweis'
+text_account_new_password_info = 'Nach Absenden des Formulars wird ihr neues Passwort gespeichert und Sie werden automatisch auf die Anmelden-Seite weitergeleitet. Hier k&ouml;nnen Sie sich dann mit dem neu vergebenen Passwort anmelden.'
 
 [account]
 title_nav_account = 'Mein Konto'
