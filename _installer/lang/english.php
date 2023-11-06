@@ -21,6 +21,8 @@
   define('BUTTON_SHOP', 'Go to Shop');
   define('BUTTON_UPDATE_CONTINUE', 'Continue Update');
   define('BUTTON_DOWNLOAD_DIFF', 'Download');
+  define('BUTTON_TEMPLATE_UPDATE', 'Template Update');
+  define('BUTTON_REQUEST_UPDATE', 'Update Anfragen');
 
   define('BUTTON_CONFIGURE', 'Execute <i class="fas fa-arrow-alt-circle-right"></i>');
   define('BUTTON_SYSTEM_UPDATES', 'Execute <i class="fas fa-arrow-alt-circle-right"></i>');
@@ -49,8 +51,13 @@
   define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.modified-shop.org/images/content/btn_donateCC_LS.png" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START_TITLE', 'Welcome to the modified eCommerce Shopsoftware installation process');
   define('TEXT_START', 'The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
-  define('TEXT_UPDATER_HEADING', 'Please Choose');
   define('TEXT_AUTOUPDATER_HEADING', 'Updating');
+  define('TEXT_AUTOUPDATER_TEMPLATE_HEADING', 'Template update');
+  define('TEXT_AUTOUPDATER_TEMPLATE_INFO', 'The template still needs to be updated for the full functionality of the new shop version. Unfortunately, this process cannot be automated as there are too many different templates.');
+  define('TEXT_AUTOUPDATER_SUPPORT_HEADING', 'Request update');
+  define('TEXT_AUTOUPDATER_SUPPORT_INFO', 'We would be happy to support you in updating your template. Simply request a non-binding offer from us.');
+  define('TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE', 'The support is currently not available. Please submit your request directly via the&nbsp;<a href="https://www.modified-shop.org/kontakt" target="_blank">contact form</a>');
+  define('TEXT_UPDATER_HEADING', 'Please Choose');
   define('TEXT_UPDATER', 'Welcome to the Updater of the modified eCommerce Shopsoftware');
   define('TEXT_UPDATE_CONFIG', 'Update configuration');
   define('TEXT_UPDATE_SYSTEM', 'System updates');

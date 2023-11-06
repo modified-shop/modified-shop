@@ -153,6 +153,33 @@
         {$JAVASCRIPT}
       </div>
     {/if}
+    
+    {if isset($BUTTON_REQUEST_UPDATE) || isset($BUTTON_TEMPLATE_UPDATE)}
+    <br />
+    <div class="field_row">
+      {if isset($BUTTON_TEMPLATE_UPDATE)}
+        <div class="field_item">
+          <h2>{$smarty.const.TEXT_AUTOUPDATER_TEMPLATE_HEADING}</h2>      
+          <p>{$smarty.const.TEXT_AUTOUPDATER_TEMPLATE_INFO}</p>
+          <div class="cssButtonRow_Plain">
+            <div class="cssButton cssColor_4">{$BUTTON_TEMPLATE_UPDATE}</div>
+          </div>
+        </div>
+      {/if}
+      {if isset($BUTTON_REQUEST_UPDATE)}
+        <div class="field_item">
+          <h2>{$smarty.const.TEXT_AUTOUPDATER_SUPPORT_HEADING}</h2>      
+          <p>{$smarty.const.TEXT_AUTOUPDATER_SUPPORT_INFO}</p>
+          {if $BUTTON_REQUEST_UPDATE != ''}
+            <div class="cssButtonRow_Plain">
+              <div class="cssButton cssColor_3">{$BUTTON_REQUEST_UPDATE}</div>
+            </div>
+          {/if}
+        </div>
+      {/if}
+    </div>
+   {/if}
+    
     <div class="cssButtonRow">
       {if isset($BUTTON_BACK)}<div class="cssButton cssColor_2">{$BUTTON_BACK}</div>{/if}
       {if isset($FORM_ACTION)}
