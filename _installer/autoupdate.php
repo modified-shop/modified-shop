@@ -278,7 +278,7 @@
         
         if (!isset($_SESSION['sql_files'])) {
           modified_api::reset();
-          $_SESSION['sql_files'] = modified_api::request('modified/version_test/update/'.$_SESSION['dbversion']);
+          $_SESSION['sql_files'] = modified_api::request('modified/version/update/'.$_SESSION['dbversion']);
         }
         
         if ((isset($_GET['action']) && $_GET['action'] == 'processnow') 
