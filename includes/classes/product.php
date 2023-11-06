@@ -551,7 +551,7 @@ class product {
           
           $products_tax = isset($xtPrice->TAX[$this->data['products_tax_class_id']]) ? $xtPrice->TAX[$this->data['products_tax_class_id']] : 0;
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0') {
-            $Bprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcAddTax($Pprice, $products_tax));
+            $Bprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcAddTax($Pprice, $products_tax, false));
             $Nprice = $xtPrice->xtcFormatCurrency($Pprice);
           } else {
             $Bprice = $xtPrice->xtcFormatCurrency($Pprice);
