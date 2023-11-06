@@ -26,6 +26,7 @@
   require_once (DIR_FS_INC.'xtc_unlink_temp_dir.inc.php');
   require_once (DIR_FS_INC.'readfile_chunked.inc.php');
   require_once (DIR_FS_INC.'xtc_get_shop_conf.inc.php'); 
+  require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 
   // make a connection to the database... now
   xtc_db_connect() or die('Unable to connect to database server!');
@@ -277,7 +278,7 @@
         
         if (!isset($_SESSION['sql_files'])) {
           modified_api::reset();
-          $_SESSION['sql_files'] = modified_api::request('modified/version/update/'.$_SESSION['dbversion']);
+          $_SESSION['sql_files'] = modified_api::request('modified/version_test/update/'.$_SESSION['dbversion']);
         }
         
         if ((isset($_GET['action']) && $_GET['action'] == 'processnow') 
@@ -374,6 +375,50 @@
 
       case 'finish':
         $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER, 'action=shop', $request_type).'">'.BUTTON_SHOP.'</a>');
+        $smarty->assign('BUTTON_TEMPLATE_UPDATE', '<a target="_blank" href="https://www.modified-shop.org/wiki/Tutorial:_Template_eines_xt:Commerce_Shops_in_der_modified_eCommerce_Shopsoftware_weiter_verwenden">'.BUTTON_TEMPLATE_UPDATE.'</a>');
+        $smarty->assign('BUTTON_REQUEST_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'uaction=update&step=finish&action=request', $request_type).'">'.BUTTON_REQUEST_UPDATE.'</a>');
+        
+        if (isset($_GET['action'])
+            && $_GET['action'] == 'request'
+            )
+        {
+          modified_api::reset();
+          $response = modified_api::request('modified/support/'.$_SESSION['language_code']);
+          
+          if (!is_array($response) || count($response) < 1) {
+            $smarty->assign('BUTTON_REQUEST_UPDATE', '');
+            $smarty->assign('error_message', TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE);
+          } else {
+            $message_array = array(
+              'PHP Version' => phpversion(),
+              'Shop Domain' => HTTP_SERVER,
+              'Shop Version' => get_shop_version(),
+              'Template' => CURRENT_TEMPLATE,
+            );
+          
+            $message = '';
+            foreach ($message_array as $k => $v) {
+              $message .= $k . ': ' . xtc_db_prepare_input($v). "\n";
+            }
+        
+            xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
+                         EMAIL_SUPPORT_NAME, 
+                         $response['mail']['address'], 
+                         $response['mail']['name'], 
+                         EMAIL_SUPPORT_FORWARDING_STRING, 
+                         EMAIL_SUPPORT_REPLY_ADDRESS, 
+                         EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
+                         '', 
+                         '', 
+                         $response['mail']['templatesubject'].STORE_NAME, 
+                         nl2br($message), 
+                         $message);
+          
+            $smarty->assign('BUTTON_REQUEST_UPDATE', '');
+            $smarty->assign('success_message', $response['stack']['success']);
+          }
+        }
+        
         if (isset($_SESSION['offline'])
             && $_SESSION['offline'] == 2
             )
@@ -381,6 +426,7 @@
           xtc_db_query("UPDATE shop_configuration
                            SET configuration_value = '' 
                          WHERE configuration_key = 'SHOP_OFFLINE'");
+          unset($_SESSION['offline']);
         }
         break;
     }

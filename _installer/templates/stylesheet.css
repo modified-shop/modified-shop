@@ -251,9 +251,10 @@ html[lang|="en"] .installer_languages img[alt~="flag_en"] {
   .cssButtonRow { flex-direction:row; }
 }
 
-
-
-
+.cssButtonRow_Plain {
+  margin: 10px -5px;
+  padding: 0px 0px;
+}
 
 /* start for CSS Buttons */
 .cssButton {

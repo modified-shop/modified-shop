@@ -21,6 +21,8 @@
   define('BUTTON_SHOP', 'Zum Shop');
   define('BUTTON_UPDATE_CONTINUE', 'Update ausf&uuml;hren');
   define('BUTTON_DOWNLOAD_DIFF', 'Download');
+  define('BUTTON_TEMPLATE_UPDATE', 'Anleitung');
+  define('BUTTON_REQUEST_UPDATE', 'Angebot');
 
   define('BUTTON_CONFIGURE', '<i class="fas fa-arrow-alt-circle-right"></i>');
   define('BUTTON_SYSTEM_UPDATES', '<i class="fas fa-arrow-alt-circle-right"></i>');
@@ -49,8 +51,13 @@
   define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.modified-shop.org/images/content/btn_donateCC_LS.png" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START_TITLE', 'Willkommen zur modified eCommerce Shopsoftware Installation');
   define('TEXT_START', 'Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP '.PHP_VERSION_MIN.') und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine <b>Spende</b> als kleine Anerkennung freuen.<br /><br />' . BUTTON_DONATE);
-  define('TEXT_UPDATER_HEADING', 'Bitte ausw&auml;hlen');
   define('TEXT_AUTOUPDATER_HEADING', 'Aktualisierung');
+  define('TEXT_AUTOUPDATER_TEMPLATE_HEADING', 'Template Update');
+  define('TEXT_AUTOUPDATER_TEMPLATE_INFO', 'F&uuml;r den vollen Funktionsumfang der neuen Shopversion muss das Template noch aktualisiert werden.');
+  define('TEXT_AUTOUPDATER_SUPPORT_HEADING', 'Update anfragen');
+  define('TEXT_AUTOUPDATER_SUPPORT_INFO', 'Gerne unterst&uuml;tzen wir Sie beim Update Ihres Templates. Fordern Sie einfach ein unverbindliches Angebot bei uns an.');
+  define('TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE', 'Der Support ist gerade nicht erreichbar. Bitte stellen Sie Ihre Anfrage direkt &uuml;ber das&nbsp;<a href="https://www.modified-shop.org/kontakt" target="_blank">Kontaktformular</a>');
+  define('TEXT_UPDATER_HEADING', 'Bitte ausw&auml;hlen');
   define('TEXT_UPDATER', 'Willkommen beim Updater der modified eCommerce Shopsoftware.');
   define('TEXT_UPDATE_CONFIG', 'Konfiguration aktualisieren');
   define('TEXT_UPDATE_SYSTEM', 'System Updates');
