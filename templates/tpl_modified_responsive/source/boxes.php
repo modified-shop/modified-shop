@@ -48,7 +48,7 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
 // -----------------------------------------------------------------------------------------
 //	full content
 // -----------------------------------------------------------------------------------------
-  if (!in_array(basename($PHP_SELF), $fullcontent) || defined('DISPLAY_ERROR_HANDLER')) {
+  if (!in_array(basename($PHP_SELF), $fullcontent) || (isset($display_mode) && $display_mode == 'error')) {
     require_once(DIR_FS_BOXES . 'categories.php');
     require_once(DIR_FS_BOXES . 'manufacturers.php');
     require_once(DIR_FS_BOXES . 'last_viewed.php');
@@ -146,7 +146,7 @@ $bestsellers = array(FILENAME_DEFAULT,
                      FILENAME_SHOPPING_CART, 
                      FILENAME_NEWSLETTER
                      );
-if (defined('DISPLAY_ERROR_HANDLER') || (in_array(basename($PHP_SELF), $bestsellers) && !isset($_GET['cPath']) && !isset($_GET['manufacturers_id']))) {
+if ((isset($display_mode) && $display_mode == 'error') || (in_array(basename($PHP_SELF), $bestsellers) && !isset($_GET['cPath']) && !isset($_GET['manufacturers_id']))) {
   require_once(DIR_FS_BOXES . 'best_sellers.php');
   $smarty->assign('bestseller', true);
 }

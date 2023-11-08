@@ -9,8 +9,6 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-   
-define('DISPLAY_ERROR_HANDLER', true);
 
 $error = array(
   '400' => TEXT_ERROR_HANDLER_400,
