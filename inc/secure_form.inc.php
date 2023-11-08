@@ -65,21 +65,24 @@ function check_secure_form($params) {
     $valid = false;
   }
   
-  if (isset($_SESSION['SFName'])
+  if ($valid === true
       && !isset($params[$_SESSION['SFName']])
       )
   {
     $valid = false;
   }
 
-  if (isset($params[$_SESSION['SFName']]) 
+  if ($valid === true
       && $params[$_SESSION['SFName']] != $_SESSION['SFToken']
       )
   {
     $valid = false;
   }
   
-  if (xtc_check_agent() == 1) {
+  if ($valid === true
+      && xtc_check_agent() == 1
+      )
+  {
     $valid = false;
   }
   
