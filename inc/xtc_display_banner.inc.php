@@ -54,7 +54,7 @@
             }
             if ($banner['banners_image_mobile'] != '') {
               $banner_image_mobile = substr($banner['banners_image_mobile'], 0, strrpos($banner['banners_image_mobile'], '.')).'.'.IMAGE_TYPE_EXTENSION;
-              if (is_file(DIR_WS_IMAGES.'banner/'.$banners_image)) {
+              if (is_file(DIR_WS_IMAGES.'banner/'.$banner_image_mobile)) {
                 $banner['banners_image_mobile'] = $banner_image_mobile;
               }
             }
