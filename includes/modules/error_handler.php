@@ -61,3 +61,5 @@ $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/error_message.html', $
 
 $smarty->assign('main_content', $module);
 $display_mode = 'error';
+
+foreach(auto_include(DIR_FS_CATALOG.'includes/modules/error_handler/','php') as $file) require_once ($file);
