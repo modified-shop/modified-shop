@@ -65,8 +65,8 @@ if (isset($_GET['action'])
     && $_SERVER['REQUEST_METHOD'] == 'POST'
     )
 {
-	$email_address = xtc_db_prepare_input($_POST['email_address']);
-	$password = xtc_db_prepare_input($_POST['password']);
+	$email_address = ((isset($_POST['email_address'])) ? xtc_db_prepare_input($_POST['email_address']) : '');
+	$password = ((isset($_POST['password'])) ? xtc_db_prepare_input($_POST['password']) : '');
   $captcha_validation = $mod_captcha->validate((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '');
   
   // brute force
