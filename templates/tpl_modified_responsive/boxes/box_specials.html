@@ -11,6 +11,12 @@
     <div class="box_sidebar cf">
       <div class="box_line"></div>
       <div class="box_title"><a href="{$box_content.PRODUCTS_LINK}"><strong>{$box_content.PRODUCTS_NAME}</strong></a></div>
+      {if isset($box_content.PRODUCTS_REVIEWS_COUNT)}
+        <div class="box_rating_icons{if $box_content.PRODUCTS_REVIEWS_COUNT < 1} no_reviews{/if}">
+          <i class="fas fa-star{if $box_content.PRODUCTS_REVIEWS_AVERAGE >= 1} full{/if}"></i><i class="fas fa-star{if $box_content.PRODUCTS_REVIEWS_AVERAGE >= 2} full{/if}"></i><i class="fas fa-star{if $box_content.PRODUCTS_REVIEWS_AVERAGE >= 3} full{/if}"></i><i class="fas fa-star{if $box_content.PRODUCTS_REVIEWS_AVERAGE >= 4} full{/if}"></i><i class="fas fa-star{if $box_content.PRODUCTS_REVIEWS_AVERAGE >= 5} full{/if}"></i>
+          <span class="box_rating_count">({$box_content.PRODUCTS_REVIEWS_COUNT})</span>
+        </div>
+      {/if}  
       {if $box_content.PRODUCTS_IMAGE != ''}
         <div class="box_image">
           <a href="{$box_content.PRODUCTS_LINK}">

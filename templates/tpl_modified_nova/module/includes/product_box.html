@@ -34,6 +34,13 @@
           &nbsp;
         {/if}
       </div>
+                  
+      {if isset($module_data.PRODUCTS_REVIEWS_COUNT)}
+        <div class="lb_rating_icons{if $module_data.PRODUCTS_REVIEWS_COUNT < 1} no_reviews{/if}">
+          <i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 1} full{/if}"></i><i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 2} full{/if}"></i><i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 3} full{/if}"></i><i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 4} full{/if}"></i><i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 5} full{/if}"></i>
+          <span class="lb_rating_count">({$module_data.PRODUCTS_REVIEWS_COUNT})</span>
+        </div>
+      {/if}        
                                                                                     
       <div class="lb_price cf">
         {foreach name=inner item=price_data from=$module_data.PRODUCTS_PRICE_ARRAY}

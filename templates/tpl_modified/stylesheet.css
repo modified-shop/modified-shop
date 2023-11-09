@@ -1061,6 +1061,36 @@ a.show_all .arrow {
   color:#444;
   text-decoration:none;
 }
+
+.box_rating_icons {
+  margin: -4px 0 0 0;
+  padding:0px 0px 10px 0px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  height:20px;
+}
+.box_rating_icons.no_reviews {
+}
+.box_rating_icons .box_rating_image {
+  height:14px;
+}
+.box_rating_icons .box_rating_image img {
+  width:auto;
+  height:14px;
+  vertical-align:top;
+}
+.box_rating_icons .box_rating_count {
+  color:#666;
+  font-size:12px;
+  line-height:14px;
+  padding:0 0 0 3px;
+  letter-spacing:1px;
+}
+.box_rating_icons.no_reviews .box_rating_count {
+  color:#999;
+}
+
 .box_image {
   text-align:center;
   margin: 0px 0px 10px 0px;
@@ -1732,6 +1762,34 @@ a.color_more:hover {
   display:inline-block;
   padding: 0 5px 0 0;
 }
+.lb_rating_icons {
+  padding:5px 0px 5px 0px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  height:20px;
+  border-bottom: 1px dotted #ddd;
+}
+.lb_rating_icons.no_reviews {
+}
+.lb_rating_icons .lb_rating_image {
+  height:14px;
+}
+.lb_rating_icons .lb_rating_image img {
+  width:auto;
+  height:14px;
+  vertical-align:top;
+}
+.lb_rating_icons .lb_rating_count {
+  color:#666;
+  font-size:12px;
+  line-height:14px;
+  padding:0 0 0 3px;
+  letter-spacing:1px;
+}
+.lb_rating_icons.no_reviews .lb_rating_count {
+  color:#ccc;
+}
 .lb_price {
   position:relative;
   font-family: 'fjallaoneregular', sans-serif;
@@ -1893,6 +1951,33 @@ a.color_more:hover {
 .lr_price_box {
   float:right;
   width:31.8584%;
+}
+.lr_rating_icons {
+  padding:6px 0px 0px 0px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  height:20px;
+}
+.lr_rating_icons.no_reviews {
+}
+.lr_rating_icons .lr_rating_image {
+  height:14px;
+}
+.lr_rating_icons .lr_rating_image img {
+  width:auto;
+  height:14px;
+  vertical-align:top;
+}
+.lr_rating_icons .lr_rating_count {
+  color:#666;
+  font-size:12px;
+  line-height:14px;
+  padding:0 0 0 3px;
+  letter-spacing:1px;
+}
+.lr_rating_icons.no_reviews .lr_rating_count {
+  color:#ccc;
 }
 .lr_desc {
   font-size:13px;

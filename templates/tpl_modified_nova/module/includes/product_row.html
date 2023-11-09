@@ -27,6 +27,14 @@
       <div class="lr_title">
         <h2><a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">{$module_data.PRODUCTS_NAME}</a></h2>
       </div>
+
+      {if isset($module_data.PRODUCTS_REVIEWS_COUNT)}
+        <div class="lr_rating_icons{if $module_data.PRODUCTS_REVIEWS_COUNT < 1} no_reviews{/if}">
+          <i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 1} full{/if}"></i><i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 2} full{/if}"></i><i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 3} full{/if}"></i><i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 4} full{/if}"></i><i class="fa-solid fa-star{if $module_data.PRODUCTS_REVIEWS_AVERAGE >= 5} full{/if}"></i>
+          <span class="lr_rating_count">({$module_data.PRODUCTS_REVIEWS_COUNT})</span>
+        </div>
+      {/if} 
+
       {if $module_data.PRODUCTS_SHORT_DESCRIPTION}
         <div class="lr_desc">{$module_data.PRODUCTS_SHORT_DESCRIPTION}</div>
       {/if}
