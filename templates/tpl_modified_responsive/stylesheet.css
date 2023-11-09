@@ -1583,6 +1583,38 @@ a.show_all .arrow {
   color:#444;
   text-decoration:none;
 }
+.box_rating_icons {
+  margin: -2px 0 0 0;
+  padding:0px 0px 12px 0px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  font-weight:300;
+  font-size:12px;
+  line-height:21px;
+}
+.box_rating_icons.no_reviews {
+}
+.box_rating_icons .fas {
+  color:#ccc;
+  padding: 0 3px 0 0;
+}
+.box_rating_icons .full  {
+  color:#f1c40f;
+}
+.box_rating_icons .box_rating_count {
+  color:#666;
+  font-size:11px;
+  line-height:13px;
+  font-weight:400;
+  padding:2px 0 0 0;
+  letter-spacing:1px;
+}
+.box_rating_icons.no_reviews .box_rating_count {
+  color:#ccc;
+}
+
+
 .box_image {
   text-align:center;
   margin: 0px auto 10px auto;
@@ -2448,6 +2480,37 @@ a.color_more:hover {
   display:inline-block;
   padding: 0 5px 0 0;
 }
+.lb_rating_icons {
+  padding:5px 0px 5px 0px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  font-weight:300;
+  font-size:12px;
+  line-height:21px;
+  height:21px;
+  border-bottom: 1px solid #eee;
+}
+.lb_rating_icons.no_reviews {
+}
+.lb_rating_icons .fas {
+  color:#ccc;
+  padding: 0 3px 0 0;
+}
+.lb_rating_icons .full  {
+  color:#f1c40f;
+}
+.lb_rating_icons .lb_rating_count {
+  color:#666;
+  font-size:11px;
+  line-height:13px;
+  font-weight:400;
+  padding:2px 0 0 0;
+  letter-spacing:1px;
+}
+.lb_rating_icons.no_reviews .lb_rating_count {
+  color:#ccc;
+}
 .lb_price {
   position:relative;
   text-align:right;
@@ -2626,6 +2689,35 @@ a.color_more:hover {
 .lr_title h2 a:hover {
   color:#444;
   text-decoration:none;
+}
+.lr_rating_icons {
+  padding:12px 0px 0px 0px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  font-weight:300;
+  font-size:12px;
+  line-height:21px;
+}
+.lr_rating_icons.no_reviews {
+}
+.lr_rating_icons .fas {
+  color:#ccc;
+  padding: 0 3px 0 0;
+}
+.lr_rating_icons .full  {
+  color:#f1c40f;
+}
+.lr_rating_icons .lr_rating_count {
+  color:#666;
+  font-size:11px;
+  line-height:13px;
+  font-weight:400;
+  padding:2px 0 0 0;
+  letter-spacing:1px;
+}
+.lr_rating_icons.no_reviews .lr_rating_count {
+  color:#ccc;
 }
 .lr_desc_box {
   float:left;

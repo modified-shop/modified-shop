@@ -122,6 +122,12 @@
             <meta itemprop="bestRating" content="5" />
             <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT}" /> 
           </div>
+          {else}
+          <div class="pd_inforow">
+            <strong>{#info_reviews#}</strong> 
+            <span class="pd_rating_icons"><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 1} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 2} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 3} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 4} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 5} full{/if}"></i></span>
+            ({$PRODUCTS_RATING_COUNT})
+          </div>
           {/if}
         {/if}
         {if isset($PRODUCTS_DISCOUNT) && $PRODUCTS_DISCOUNT != ''}<div class="pd_inforow"><strong>{#text_discount#}</strong> {$PRODUCTS_DISCOUNT}</div>{/if}  

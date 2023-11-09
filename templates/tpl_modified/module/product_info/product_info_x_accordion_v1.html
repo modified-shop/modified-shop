@@ -44,6 +44,12 @@
             <meta itemprop="bestRating" content="5" />
             <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT}" /> 
           </div>
+          {else}
+          <div class="pd_inforow">
+            <strong>{#info_reviews#}</strong> 
+            <span class="pd_reviews_image"><img src="{$tpl_path}img/stars_{$PRODUCTS_AVERAGE_RATING}.png" alt="" /></span> 
+            ({$PRODUCTS_RATING_COUNT})
+          </div>
           {/if}
         {/if}
         {if isset($PRODUCTS_DISCOUNT) && $PRODUCTS_DISCOUNT != ''}<div class="pd_inforow"><strong>{#text_discount#}</strong> {$PRODUCTS_DISCOUNT}</div>{/if}  
