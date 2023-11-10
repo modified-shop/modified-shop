@@ -256,7 +256,7 @@ readers do not read off random characters that represent icons */
 .fa-heart::before {
   content: "\f004"; }
 
-.fa-facebook-f:before {
+.fa-facebook:before {
   content: "\f39e"; }
 
 .fa-twitter:before {
