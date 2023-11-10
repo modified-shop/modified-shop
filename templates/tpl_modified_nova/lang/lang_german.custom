@@ -89,3 +89,4 @@ footer_heading_contact = 'Kontakt'
 footer_text_contact = 'Demoshop modified eCommerce Shopsoftware<br />Musterstr. 123<br />12345 Musterstadt<br /><br />Telefon: 01234 56789<br />Mail: demo@modified-shop.org'
 
 text_expires_date = 'Sonderangebot g&uuml;ltig bis:'
+products_flag_new = 'Neu'

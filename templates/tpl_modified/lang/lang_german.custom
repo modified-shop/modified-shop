@@ -43,3 +43,4 @@ text_search_again = 'Die Suche ergab keine genauen Treffer'
 
 listing_listview = 'Listenansicht'
 listing_boxview = 'Boxansicht'
+products_flag_new = 'Neu'
