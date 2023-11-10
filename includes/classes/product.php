@@ -45,6 +45,7 @@ class product {
                              p.products_vpe_status,
                              p.products_vpe_value,
                              p.products_model,
+                             p.products_date_added,
                              pd.products_name,
                              pd.products_heading_title,
                              pd.products_short_description';
@@ -698,6 +699,13 @@ class product {
     $productData = array();
     foreach((array)$array as $key => $entry) {                  
       $productData[strtoupper($key)] = $entry;
+    }
+
+    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && isset($array['products_date_added'])) {    
+      $date_new_products = mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y"));
+      if (strtotime($array['products_date_added']) >= $date_new_products) {
+        $productData['PRODUCTS_FLAG_NEW'] = true;
+      }
     }
     
     $productDataAdds = array (
