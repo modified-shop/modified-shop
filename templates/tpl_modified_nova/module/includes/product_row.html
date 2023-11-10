@@ -3,6 +3,10 @@
   <div class="listingrow">
 
     <div class="lr_image">
+      {if isset($module_data.PRODUCTS_FLAG_NEW) && ($module_data.PRODUCTS_FLAG_NEW == 1)}
+        <div class="lr_new_flag">{#products_flag_new#}</div>
+      {/if}
+
       <div class="lr_image_inner">
         <div class="prod_image">
           {if $module_data.PRODUCTS_IMAGE != ''}

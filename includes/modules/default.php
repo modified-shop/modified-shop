@@ -306,6 +306,7 @@ switch ($category_depth) {
                            p.products_vpe,
                            p.products_vpe_status,
                            p.products_vpe_value,
+                           p.products_date_added,
                            pd.products_name,
                            pd.products_heading_title,
                            pd.products_description,

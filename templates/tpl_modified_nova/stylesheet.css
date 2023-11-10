@@ -2670,6 +2670,22 @@ ul.subcats_menu li.Selected a {
   border-radius:4px;
   z-index:1;
 }
+.lb_new_flag {
+  position:absolute;
+  right:20px;
+  top:20px;
+  background: #43c875;
+  color: #fff;
+  padding: 4px 0px 4px 0px;
+  font-size:14px;
+  line-height:16px;
+  font-weight:700;
+  min-width:50px;
+  text-transform:uppercase;
+  text-align:center;
+  border-radius:4px;
+  z-index:1;
+}
 .lb_tax {
   font-size:10px;
   line-height:12px;
@@ -2752,11 +2768,31 @@ ul.subcats_menu li.Selected a {
 .lr_image {
   width: 100%;
   padding: 0 0 20px 0;
+  position:relative;
 }
 @media only screen and (min-width: 759px) {
   .lr_image { width: 180px; padding: 0 30px 0 0; }
 }
 
+.lr_new_flag {
+  position:absolute;
+  right:0px;
+  top:-20px;
+  background: #43c875;
+  color: #fff;
+  padding: 4px 0px 4px 0px;
+  font-size:14px;
+  line-height:16px;
+  font-weight:700;
+  min-width:50px;
+  text-transform:uppercase;
+  text-align:center;
+  border-radius:4px;
+  z-index:1;
+}
+@media only screen and (min-width: 759px) {
+  .lr_new_flag { right:20px; }
+}
 .lr_image_inner {
   text-align: center;
   width: 150px;

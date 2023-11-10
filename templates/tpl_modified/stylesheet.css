@@ -1711,7 +1711,25 @@ a.color_more:hover {
   border: 1px solid #ddd;
   padding: 10px 10px 5px 10px;
   min-height:300px;
+  position:relative;
 }
+.lb_new_flag {
+  position:absolute;
+  left:10px;
+  top:10px;
+  background: #43c875;
+  color: #fff;
+  padding: 4px 0px 4px 0px;
+  font-size:14px;
+  line-height:16px;
+  font-weight:700;
+  min-width:50px;
+  text-transform:uppercase;
+  text-align:center;
+  border-radius:0px;
+  z-index:1;
+}
+
 .lb_image {
   margin: 0 0 10px 0;
   text-align: center;
@@ -1907,6 +1925,22 @@ a.color_more:hover {
   border-bottom: 1px solid #ddd;
   min-height:160px;
   position:relative;
+}
+.lr_new_flag {
+  position:absolute;
+  left:0px;
+  top:10px;
+  background: #43c875;
+  color: #fff;
+  padding: 4px 0px 4px 0px;
+  font-size:14px;
+  line-height:16px;
+  font-weight:700;
+  min-width:50px;
+  text-transform:uppercase;
+  text-align:center;
+  border-radius:0px;
+  z-index:1;
 }
 .lr_image {
   float:left;
