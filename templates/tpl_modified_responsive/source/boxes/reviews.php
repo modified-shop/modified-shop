@@ -31,7 +31,7 @@ $cache_id = '';
 if ($product->isProduct() === true && $_SESSION['customers_status']['customers_status_write_reviews'] == '1') {
   
   // set cache id
-  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id']);
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
   
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id) || !$cache) {
     // display 'write a review' box
@@ -78,7 +78,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
     $reviews = xtc_db_fetch_array($reviews_query);
     
     // set cache id
-    $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.($product->isProduct() === true ? $product->data['products_id'] : 0).'|rID:'.$reviews['reviews_id']);
+    $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.($product->isProduct() === true ? $product->data['products_id'] : 0).'|rID:'.$reviews['reviews_id'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
     
     if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id) || !$cache) {
 
