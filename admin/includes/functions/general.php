@@ -2436,6 +2436,22 @@
     return $default_array;
   }
 
+
+  /**
+   * xtc_cfg_image_extension()
+   *
+   * @param string $image_extension
+   * @return dropdown
+   */
+  function xtc_cfg_image_extension($value) {
+    $image_extension_array = array();
+    $image_extension_array[] = array('id' => 'default', 'text' => 'Default');
+    if (function_exists('imagewebp')) {
+      $image_extension_array[] = array('id' => 'webp', 'text' => 'WebP');
+    }
+    return xtc_draw_pull_down_menu('configuration_value', $image_extension_array, $value);
+  }
+
   /********************************************** NOT USED FUNCTIONS **********************************************/
   
   /**
