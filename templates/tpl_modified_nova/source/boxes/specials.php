@@ -36,7 +36,7 @@
                                            ".PRODUCTS_CONDITIONS_P."                                             
                                   GROUP BY p.products_id
                                   ORDER BY s.expires_date ASC, p.products_id
-                                     LIMIT ".MAX_PRODUCTS_RANDOM_POOL);
+                                     LIMIT ".MAX_RANDOM_SELECT_SPECIALS);
 
     $box_content = array();
     if (xtc_db_num_rows($specials_query) > 0) {

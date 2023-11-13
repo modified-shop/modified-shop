@@ -42,7 +42,7 @@
                                                   " . $products_id . "
                                                   " . $days . "                                           
                                          ORDER BY p.products_date_added DESC, p.products_id
-                                            LIMIT ".MAX_PRODUCTS_RANDOM_POOL);
+                                            LIMIT ".MAX_RANDOM_SELECT_NEW);
 
     $box_content = array();
     if (xtc_db_num_rows($whats_new_query, true) > 0) {

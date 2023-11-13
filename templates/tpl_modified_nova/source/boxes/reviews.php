@@ -52,14 +52,21 @@
                        WHERE p.products_status = '1'
                              AND r.reviews_status = '1'
                              ".PRODUCTS_CONDITIONS_P."
-                    ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
-                       LIMIT 10";
+                    ORDER BY r.date_added ASC, p.products_id
+                       LIMIT ".MAX_RANDOM_SELECT_REVIEWS;
 
     $reviews_query = xtc_db_query($reviews_query);
 
     $box_content = array();
     if (xtc_db_num_rows($reviews_query) > 0) {       
+      $content_array = array();
       while ($reviews = xtc_db_fetch_array($reviews_query)) {
+        $content_array[] = $reviews;
+      }
+      shuffle($content_array);
+      $content_array = array_slice($content_array, 0, MAX_PRODUCTS_BOX);
+
+      foreach ($content_array as $reviews) {
         $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
         $review_image_microtag = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');
 

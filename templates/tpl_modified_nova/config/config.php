@@ -61,8 +61,7 @@
   // manufacturer
   define('HEADER_SHOW_MANUFACTURERS', true);
   
-  // random products
-  define('MAX_PRODUCTS_RANDOM_POOL', 100);
+  // max products
   define('MAX_PRODUCTS_BOX', 10);
 
   // categories menu
