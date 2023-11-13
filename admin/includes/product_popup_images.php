@@ -33,7 +33,7 @@ if (PRODUCT_IMAGE_POPUP_MERGE != '') {
 
 $a->create();
 
-if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION == 'webp') {
   $a->createWebp();
 }
 
