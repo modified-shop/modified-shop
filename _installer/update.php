@@ -234,7 +234,12 @@
       case 'sql_manuell_confirm':
         if ($_GET['action'] == 'sql_manuell_confirm') {
           if (isset($_POST['sql']) && $_POST['sql'] != '') {
-            sql_update($_POST['sql'], true);
+            $sql_data_array = sql_update($_POST['sql'], true);
+            if (count($sql_data_array) > 0) {
+              foreach ($sql_data_array as $sql) {
+                execute_sql($sql);
+              }
+            }
           }
           xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_manuell', $request_type));
         }
