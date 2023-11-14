@@ -34,12 +34,6 @@ function xtc_php_mail($from_email_address, $from_email_name,
   require_once(DIR_FS_INC.'xtc_not_null.inc.php');
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
   
-  // includes main class
-  if (!is_object($main)) {
-    require_once(DIR_FS_CATALOG.'includes/classes/main.php');
-    $main = new main();
-  }
-
   if (!class_exists('Smarty')) {
     require (DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php');
   }
@@ -52,10 +46,17 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $lang_data['language_charset'] = isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : '';
   $lang_data['code'] = isset($_SESSION['language_code']) ? $_SESSION['language_code'] : '';
   $lang_data['languages_id'] = isset($_SESSION['languages_id']) ? $_SESSION['languages_id'] : '';
+  
   $where= '';
-  if (empty($lang_data['directory']) || empty($lang_data['language_charset']) || empty($lang_data['code'])) {
+  if (empty($lang_data['directory']) 
+      || empty($lang_data['language_charset']) 
+      || empty($lang_data['code'])
+      || empty($lang_data['languages_id'])
+      )
+  {
      $where = " WHERE code = '".DEFAULT_LANGUAGE."'";
   }
+  
   if (isset($order) && is_object($order)) {
     $where = " WHERE directory = '".$order->info['language']."'";
     $customers_status = $order->info['status'];
@@ -66,6 +67,12 @@ function xtc_php_mail($from_email_address, $from_email_name,
                                FROM ".TABLE_LANGUAGES." 
                                   ".$where);
     $lang_data = xtc_db_fetch_array($lang_query, true);
+  }
+
+  // includes main class
+  if (!is_object($main)) {
+    require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+    $main = new main($lang_data['languages_id']);
   }
   
   // set parameters
