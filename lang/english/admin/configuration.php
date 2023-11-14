@@ -263,7 +263,7 @@ define('IMAGE_MANIPULATOR_TITLE','GDlib processing');
 define('IMAGE_MANIPULATOR_DESC','Image Manipulator for GD2 or GD1<br /><br /><b>NOTE:</b> image_manipulator_GD2_advanced.php support transparent PNG\s');
 
 define('IMAGE_TYPE_EXTENSION_TITLE','Imagetype');
-define('IMAGE_TYPE_EXTENSION_DESC','Which image type should be delivered?<br /><br /><b>NOTE:</b> after changing, image processing must be started to generate the images.');
+define('IMAGE_TYPE_EXTENSION_DESC','Which image type should be delivered?<br /><br /><b>NOTE:</b> After changing, <a href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=image_processing_step').'"><b>Imageprocessing - product images</b></a> must be started to generate the images.');
 
 define('ACCOUNT_GENDER_TITLE' , 'Salutation');
 define('ACCOUNT_GENDER_DESC' , 'Display salutation upon customer account creation/editing');

@@ -262,7 +262,7 @@ define('IMAGE_MANIPULATOR_TITLE','GDlib processing');
 define('IMAGE_MANIPULATOR_DESC','Image Manipulator f&uuml;r GD2 oder GD1<br /><br /><b>HINWEIS:</b> image_manipulator_GD2_advanced.php unterst&uuml;tzt transparente PNG\'s');
 
 define('IMAGE_TYPE_EXTENSION_TITLE','Bildtyp');
-define('IMAGE_TYPE_EXTENSION_DESC','Welcher Bildtyp soll ausgeliefert werden?<br /><br /><b>HINWEIS:</b> nach der Umstellung muss für die Generierung der Bilder das Bildprocessing gestartet werden.');
+define('IMAGE_TYPE_EXTENSION_DESC','Welcher Bildtyp soll ausgeliefert werden?<br /><br /><b>HINWEIS:</b> Nach der Umstellung muss f&uuml;r die Generierung der Bilder das <a href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=image_processing_step').'"><b>Bilder Prozessing</b></a> gestartet werden.');
 
 
 define('ACCOUNT_GENDER_TITLE' , 'Anrede');
