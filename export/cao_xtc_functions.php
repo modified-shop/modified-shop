@@ -481,7 +481,7 @@ function SendOrders ()
 
       $schema .= '<TOTAL>' . "\n" .
                  '<TOTAL_TITLE>' . encode_htmlspecialchars(strip_tags($totals['title'])) . '</TOTAL_TITLE>' . "\n" .
-                 '<TOTAL_VALUE>' . encode_htmlspecialchars($totals['value']) . '</TOTAL_VALUE>' . "\n" .
+                 '<TOTAL_VALUE>' . encode_htmlspecialchars(abs($totals['value'])) . '</TOTAL_VALUE>' . "\n" .
                  '<TOTAL_CLASS>' . encode_htmlspecialchars($totals['class']) . '</TOTAL_CLASS>' . "\n" .
                  '<TOTAL_SORT_ORDER>' . encode_htmlspecialchars($totals['sort_order']) . '</TOTAL_SORT_ORDER>' . "\n" .
                  '<TOTAL_PREFIX>' . encode_htmlspecialchars($total_prefix) . '</TOTAL_PREFIX>' . "\n" .
