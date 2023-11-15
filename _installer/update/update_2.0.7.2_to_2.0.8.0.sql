@@ -135,4 +135,9 @@ ALTER TABLE `orders_products` ADD `products_vpe_value` DECIMAL(15,4) NOT NULL AF
 #GTB - 2023-08-21 - fix #2559 - extend manufacturers_name to 255 signs
 ALTER TABLE `manufacturers` MODIFY `manufacturers_name` VARCHAR(255) NOT NULL;
 
+#GTB - 2023-11-15 - set sql pool for specials, reviews and whats new
+UPDATE `configuration` SET `configuration_value` = '100' WHERE `configuration_key` = 'MAX_RANDOM_SELECT_REVIEWS' AND `configuration_value` = '10';
+UPDATE `configuration` SET `configuration_value` = '100' WHERE `configuration_key` = 'MAX_RANDOM_SELECT_NEW' AND `configuration_value` = '10';
+UPDATE `configuration` SET `configuration_value` = '100' WHERE `configuration_key` = 'MAX_RANDOM_SELECT_SPECIALS' AND `configuration_value` = '10';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
