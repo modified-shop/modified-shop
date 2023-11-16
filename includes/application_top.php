@@ -276,6 +276,9 @@ $main = new main();
 require_once (DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
 
+// class product
+require_once (DIR_WS_CLASSES.'product.php');
+
 // create the shopping cart & fix the cart if necesary
 if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart'])) {
   $_SESSION['cart'] = new shoppingCart();
@@ -303,9 +306,6 @@ require_once (DIR_WS_INCLUDES.FILENAME_CART_ACTIONS);
 
 // split-page-results
 require_once (DIR_WS_CLASSES.'split_page_results.php');
-
-// class product
-require_once (DIR_WS_CLASSES.'product.php');
 
 // set $actual_products_id,  $current_category_id, $cPath, $_GET['manufacturers_id']
 include_once (DIR_WS_MODULES.'set_ids_by_url_parameters.php');
