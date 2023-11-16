@@ -235,6 +235,7 @@ class main {
    * @return array
    */
   function getContentData($coID, $language_id = '', $customers_status = '', $get_inactive = true, $add_select= '') {
+    global $_mod_captcha_class;
     static $content_data_array;
     
     if (!isset($content_data_array)) $content_data_array = array();
