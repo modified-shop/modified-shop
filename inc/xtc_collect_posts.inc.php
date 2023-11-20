@@ -55,7 +55,7 @@
       if ($gv_result['coupon_type'] == 'G') {
         
         // check if customer is guest
-        if ($_SESSION['customers_status']['customers_status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {                         
+        if ($_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {                         
           $gv_amount = $gv_result['coupon_amount'];
           
           // check gv for customer
@@ -127,7 +127,7 @@
         // restrict to customers
         if (!empty($gv_result['restrict_to_customers'])) {
           $customers_status_array = explode(',', $gv_result['restrict_to_customers']);
-          if (!in_array($_SESSION['customers_status']['customers_status'], $customers_status_array)) {
+          if (!in_array($_SESSION['customers_status']['customers_status_id'], $customers_status_array)) {
             $messageStack->add_session('coupon_message', ERROR_INVALID_CUSTOMERS_STATUS_COUPON);
             xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
           }
