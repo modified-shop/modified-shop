@@ -15,7 +15,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALIDEAL_TEXT_TITLE' => 'iDEAL via PayPal',
   'MODULE_PAYMENT_PAYPALIDEAL_TEXT_ADMIN_TITLE' => 'iDEAL via PayPal',
   'MODULE_PAYMENT_PAYPALIDEAL_TEXT_INFO' => '<img src="https://www.paypalobjects.com/images/checkout/alternative_payments/paypal_ideal_color.svg" />',
-  'MODULE_PAYMENT_PAYPALIDEAL_TEXT_DESCRIPTION' => 'Sie werden nach dem "Best&auml;tigen" zu iDEAL geleitet, um hier Ihre Bestellung zu bezahlen.<br />Danach gelangen Sie zur&uuml;ck in den Shop und erhalten Ihre Bestell-Best&auml;tigung.<br />Jetzt schneller bezahlen mit unbegrenztem PayPal-K&auml;uferschutz - nat&uuml;rlich kostenlos.',
+  'MODULE_PAYMENT_PAYPALIDEAL_TEXT_DESCRIPTION' => 'Sie werden nach dem "Best&auml;tigen" zu iDEAL geleitet, um hier Ihre Bestellung zu bezahlen.<br />Danach gelangen Sie zur&uuml;ck in den Shop und erhalten Ihre Bestell-Best&auml;tigung.<br />Jetzt schneller bezahlen mit unbegrenztem PayPal-K&auml;uferschutz - nat&uuml;rlich kostenlos.<br /><br /><strong><font color="red">ACHTUNG:</font></strong> Damit der Bestellstatus korrekt gesetzt wird, m&uuml;ssen folgende <a href="'.xtc_href_link('paypal_webhook.php', '').'">Webhooks</a> in der PayPal Konfiguration eingestellt werden , damit der Status korrekt umgestellt wird:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DECLINED</li><li>PAYMENT.CAPTURE.DENIED</li><li>PAYMENT.CAPTURE.PENDING</li></ul>',
   'MODULE_PAYMENT_PAYPALIDEAL_ALLOWED_TITLE' => 'Erlaubte Zonen',
   'MODULE_PAYMENT_PAYPALIDEAL_ALLOWED_DESC' => 'Das Modul kann f&uuml;r die folgenden Zonen verwendet werden.',
   'MODULE_PAYMENT_PAYPALIDEAL_STATUS_TITLE' => 'iDEAL via PayPal aktivieren',

@@ -903,6 +903,10 @@ padding:8px;
 border-bottom: 1px solid #aaaaaa;
 border-top: 1px solid #aaaaaa;
 }
+.tableConfig td a {
+  font-size: 12px;
+  font-weight: bold;
+}
 .tableConfig td.col-left{
 font-size:12px;
 font-weight:bold;

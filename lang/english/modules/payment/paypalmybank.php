@@ -15,7 +15,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALMYBANK_TEXT_TITLE' => 'MyBank via PayPal',
   'MODULE_PAYMENT_PAYPALMYBANK_TEXT_ADMIN_TITLE' => 'MyBank via PayPal',
   'MODULE_PAYMENT_PAYPALMYBANK_TEXT_INFO' => '<img src="https://www.paypalobjects.com/images/checkout/alternative_payments/paypal_mybank_color.svg" />',
-  'MODULE_PAYMENT_PAYPALMYBANK_TEXT_DESCRIPTION' => 'After "confirm" your will be routet to MyBank to pay your order.<br />Back in shop you will get your order-mail.<br />PayPal is the safer way to pay online. We keep your details safe from others and can help you get your money back if something ever goes wrong.',
+  'MODULE_PAYMENT_PAYPALMYBANK_TEXT_DESCRIPTION' => 'After "confirm" your will be routet to MyBank to pay your order.<br />Back in shop you will get your order-mail.<br />PayPal is the safer way to pay online. We keep your details safe from others and can help you get your money back if something ever goes wrong.<br /><br /><strong><font color="red">ATTENTION:</font></strong> In order for the order status to be set correctly, the following <a href="'.xtc_href_link('paypal_webhook.php', '').'">webhooks</a> must be set in the PayPal configuration so that the status is changed correctly:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DECLINED</li><li>PAYMENT.CAPTURE.DENIED</li><li>PAYMENT.CAPTURE.PENDING</li></ul>',
   'MODULE_PAYMENT_PAYPALMYBANK_ALLOWED_TITLE' => 'Allowed zones',
   'MODULE_PAYMENT_PAYPALMYBANK_ALLOWED_DESC' => 'The module can be used for the following zones.',
   'MODULE_PAYMENT_PAYPALMYBANK_STATUS_TITLE' => 'Enable MyBank via PayPal',

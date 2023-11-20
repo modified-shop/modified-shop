@@ -15,7 +15,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALACDC_TEXT_TITLE' => 'Credit Card',
   'MODULE_PAYMENT_PAYPALACDC_TEXT_ADMIN_TITLE' => 'Credit Card (without note to PayPal)',
   'MODULE_PAYMENT_PAYPALACDC_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal_creditcard.png', '', 'SSL', false).'" />' : ''),
-  'MODULE_PAYMENT_PAYPALACDC_TEXT_DESCRIPTION' => 'In the last step during the checkout, you will be asked to enter your credit card details to pay for your order.',
+  'MODULE_PAYMENT_PAYPALACDC_TEXT_DESCRIPTION' => 'In the last step during the checkout, you will be asked to enter your credit card details to pay for your order.<br /><br /><strong><font color="red">ATTENTION:</font></strong> In order for the order status to be set correctly, the following <a href="'.xtc_href_link('paypal_webhook.php', '').'">webhooks</a> must be set in the PayPal configuration so that the status is changed correctly:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DECLINED</li><li>PAYMENT.CAPTURE.DENIED</li><li>PAYMENT.CAPTURE.PENDING</li></ul>',
   'MODULE_PAYMENT_PAYPALACDC_ALLOWED_TITLE' => 'Allowed zones',
   'MODULE_PAYMENT_PAYPALACDC_ALLOWED_DESC' => 'The module can be used for the following zones.',
   'MODULE_PAYMENT_PAYPALACDC_STATUS_TITLE' => 'Enable Credit Card',
