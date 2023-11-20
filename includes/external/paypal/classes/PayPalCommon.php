@@ -45,8 +45,8 @@ class PayPalCommon extends PayPalAuth {
     } else {
       if (!is_bool($string)) {
         $string = decode_htmlentities($string);
-        $cur_encoding = mb_detect_encoding($string);
-        if ($cur_encoding === false || ($cur_encoding == "UTF-8" && mb_check_encoding($string, "UTF-8"))) {
+        $cur_encoding = detect_encoding($string);
+        if ($cur_encoding == "UTF-8" && mb_check_encoding($string, "UTF-8")) {
           return $string;
         } else {
           return mb_convert_encoding($string, "UTF-8", $_SESSION['language_charset']);
@@ -635,4 +635,3 @@ class PayPalCommon extends PayPalAuth {
   }
   
 }
-?>
