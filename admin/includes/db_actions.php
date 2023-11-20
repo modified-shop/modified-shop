@@ -331,11 +331,13 @@
           $actual_table = $restore['actual_table'];
           if (!RESTORE_TEST) {
             if ($restore['utf8'] == true) {
-              if (!isset($restore['encoding'])) {
-                $restore['encoding'] = detect_encoding($sql_command);
+              if (isset($restore['encoding'])) {
+                $encoding = $restore['encoding'];
+              } else {
+                $encoding = detect_encoding($sql_command);
               }
               xtc_db_set_charset('utf8');
-              $sql_command = encode_utf8($sql_command, $restore['encoding'], true); 
+              $sql_command = encode_utf8($sql_command, $encoding, true); 
             }
             $res = xtc_db_query($sql_command);
 
