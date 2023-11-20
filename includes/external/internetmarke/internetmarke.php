@@ -168,7 +168,7 @@
         }
       } else {
         $string = decode_htmlentities($string);
-        $cur_encoding = mb_detect_encoding($string);
+        $cur_encoding = detect_encoding($string);
         if ($cur_encoding == "UTF-8" && mb_check_encoding($string, "UTF-8")) {
           return $string;
         } else {
@@ -184,4 +184,3 @@
       return $this->error;
     }
   }
-?>

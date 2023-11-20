@@ -148,7 +148,7 @@ if (!function_exists('xtc_cfg_save_max_display_results')) {
 if (!function_exists('encode_utf8')) {
   function encode_utf8($in_str) {
     if (strtolower($_SESSION['language_charset']) == 'utf-8') {
-      $cur_encoding = mb_detect_encoding($in_str);
+      $cur_encoding = detect_encoding($in_str);
       if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
         return $in_str;
       } else {
@@ -164,7 +164,7 @@ if (!function_exists('encode_utf8')) {
 if (!function_exists('decode_utf8')) {
   function decode_utf8($in_str) {
     if (strtolower($_SESSION['language_charset']) != 'utf-8') {
-      $cur_encoding = mb_detect_encoding($in_str);
+      $cur_encoding = detect_encoding($in_str);
       if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
         return mb_convert_encoding($in_str,"ISO-8859-15","UTF-8");
       } else {
@@ -173,6 +173,17 @@ if (!function_exists('decode_utf8')) {
     } else {
       return $in_str;
     }
+  }
+}
+
+
+if (!function_exists('detect_encoding')) {
+  function detect_encoding($string, $encodings = ENCODE_DEFINED_CHARSETS, $strict = true) {
+    $encoding = mb_detect_encoding($string, $encodings, $strict);
+    if ($encoding === false) {
+      $encoding = mb_detect_encoding($string, $encodings, false);
+    }
+    return $encoding;
   }
 }
 
@@ -209,5 +220,3 @@ if (!function_exists('encode_htmlentities')) {
     return htmlentities($string, $flags , $encoding);
   }
 }
-
-?>
