@@ -450,14 +450,15 @@ define('REDEEMED_AMOUNT','Your gift voucher was successfully added to your accou
 define('REDEEMED_COUPON','Your voucher has been successfully credited to your account and will be cashed automatically on your purchase.');
 define('REDEEMED_COUPON_NO_SPECIALS','Your voucher has been successfully credited to your account and will be cashed automatically on your purchase, but can not be used for specials.');
 
-define('ERROR_INVALID_USES_USER_COUPON','This voucher can only be redeemed ');
-define('ERROR_INVALID_USES_COUPON','This coucher can only be redeemed ');
+define('ERROR_INVALID_USES_USER_COUPON','This coupon can only be redeemed ');
+define('ERROR_INVALID_USES_COUPON','This coupon can only be redeemed ');
 define('TIMES',' times.');
 define('ERROR_INVALID_STARTDATE_COUPON','Your coupon is not available yet.');
-define('ERROR_INVALID_FINISDATE_COUPON','Your voucher is already expired.');
+define('ERROR_INVALID_FINISDATE_COUPON','Your coupon is already expired.');
+define('ERROR_INVALID_CUSTOMERS_STATUS_COUPON','This coupon can only be redeemed by customers in a specific customer group.');
 define('ERROR_INVALID_MINIMUM_ORDER_COUPON', 'This coupon can be redeemed only with a minimum order value of %s!');
 define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>You have to enter the coupon code again when you reach the minimum order value!');
-define('ERROR_COUPON_REQUIRES_ACCOUNT', 'To redeem the voucher you need a customer account.');
+define('ERROR_COUPON_REQUIRES_ACCOUNT', 'To redeem the coupon you need a customer account.');
 define('PERSONAL_MESSAGE', '%s writes:');
 
 define('TEXT_LINK_TITLE_INFORMATION', 'Information');
