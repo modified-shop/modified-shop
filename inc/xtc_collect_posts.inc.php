@@ -32,16 +32,7 @@
     if (isset($_POST['gv_redeem_code']) && xtc_not_null($_POST['gv_redeem_code'])) {
       unset($_SESSION['cc_id']);
       
-      $gv_query = xtc_db_query("SELECT coupon_id,
-                                       coupon_amount,
-                                       coupon_type,
-                                       coupon_minimum_order,
-                                       coupon_start_date,
-                                       coupon_expire_date,
-                                       uses_per_coupon,
-                                       uses_per_user,
-                                       restrict_to_products,
-                                       restrict_to_categories
+      $gv_query = xtc_db_query("SELECT *
                                   FROM " . TABLE_COUPONS . "
                                  WHERE coupon_code = '".xtc_db_input(trim($_POST['gv_redeem_code']))."'
                                    AND coupon_active = 'Y'");
@@ -131,6 +122,15 @@
         if (strtotime($gv_result['coupon_expire_date']) < time()) {
           $messageStack->add_session('coupon_message', ERROR_INVALID_FINISDATE_COUPON);
           xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
+        }
+
+        // restrict to customers
+        if (!empty($gv_result['restrict_to_customers'])) {
+          $customers_status_array = explode(',', $gv_result['restrict_to_customers']);
+          if (!in_array($_SESSION['customers_status']['customers_status'], $customers_status_array)) {
+            $messageStack->add_session('coupon_message', ERROR_INVALID_CUSTOMERS_STATUS_COUPON);
+            xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
+          }
         }
         
         // min order
