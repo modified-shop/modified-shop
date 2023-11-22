@@ -9,13 +9,13 @@
    --------------------------------------------------------------*/
 
 // DB version, used for updates (_installer)
-define('DB_VERSION', 'MOD_2.0.7.2'); // ToDo before release!
+define('DB_VERSION', 'MOD_3.0.0'); // ToDo before release!
 
-define('PROJECT_MAJOR_VERSION', '2');
-define('PROJECT_MINOR_VERSION', '0.7.2');
-define('PROJECT_REVISION', '14622'); // ToDo before release!
+define('PROJECT_MAJOR_VERSION', '3');
+define('PROJECT_MINOR_VERSION', '0.0');
+define('PROJECT_REVISION', '15588'); // ToDo before release!
 define('PROJECT_SERVICEPACK_VERSION', ''); // currently not in use since new version numbers
-define('PROJECT_RELEASE_DATE', '2022-07-04'); // ToDo before release!
+define('PROJECT_RELEASE_DATE', '2023-11-22'); // ToDo before release!
 define('MINIMUM_DB_VERSION', '200'); // currently not in use
 
 // Define the project version
