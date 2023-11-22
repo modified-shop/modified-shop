@@ -5314,7 +5314,7 @@ a.view_box.active {
 }
 @media only screen and (min-width: 850px) {
   .pd_heading { float:right; padding: 0 0 0 30px; width:50%; max-width:initial; margin: initial; }
-  .pd_col_1 { float:left; padding: 0 30px 0 0; width:50%; max-width:initial; margin: initial; min-height:100px;}
+  .pd_col_1 { float:left; padding: 0 30px 0 0; width:50%; max-width:initial; margin: initial; min-height:200px;}
   .pd_col_2 { float:right;  padding: 0 0 0 30px; width:50%; max-width:initial; margin: initial; }
 }
 
