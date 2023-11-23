@@ -39,18 +39,20 @@
   define('TEXT_MODE_INSTALL', 'New installation');
   define('TEXT_MODE_AUTOUPDATE', 'Autoupdate');
 
-  define('TEXT_START_SHOP_HEADING', 'Zur&uuml;ck zum Shop');
-  define('TEXT_START_SHOP_TEXT', 'Das Installationsverzeichnis wird aus Sicherheitsgr&uuml;nden automatisch gel&ouml;scht.');
+  define('TEXT_START_SHOP_HEADING', 'Back to Shop');
+  define('TEXT_START_SHOP_TEXT', 'The installation directory is automatically deleted for security reasons.');
   define('TEXT_START_UPDATE_HEADING', 'Update');
-  define('TEXT_START_UPDATE_TEXT', 'Update eines bestehenden modified Shop auf die aktuelle Version.');
-  define('TEXT_START_INSTALL_HEADING', 'Neu installieren');
-  define('TEXT_START_INSTALL_TEXT', 'Komplette Neuinstallation des modified Shops. Eine bestehende Datenbank wird &uuml;berschrieben.');
+  define('TEXT_START_UPDATE_TEXT', 'Update of an existing modified shop to the current version.');
+  define('TEXT_START_INSTALL_HEADING', 'New installation');
+  define('TEXT_START_INSTALL_TEXT', 'Complete reinstallation of the modified shop. An existing database is overwritten.');
 
   define('TEXT_SQL_SUCCESS', '%s');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
   define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.modified-shop.org/images/content/btn_donateCC_LS.png" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START_TITLE', 'Welcome to the modified eCommerce Shopsoftware installation process');
-  define('TEXT_START', 'The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
+  define('TEXT_START', 'The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.');
+  define('TEXT_DONATE', 'The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
+  define('TEXT_COPYRIGHT', '<span class="magenta">mod</span><span class="darkgrey">ified</span> eCommerce Shopsoftware &copy; 2009 - '.date('Y'));
   define('TEXT_AUTOUPDATER_HEADING', 'Updating');
   define('TEXT_AUTOUPDATER_TEMPLATE_HEADING', 'Template update');
   define('TEXT_AUTOUPDATER_TEMPLATE_INFO', 'The template still needs to be updated for the full functionality of the new shop version.');

@@ -1338,3 +1338,24 @@ select:focus {
 }
 
 
+
+.installer_footer {
+  background:#eee;
+  padding: 40px 20px 40px 20px;
+  text-align:center;
+}
+.installer_copyright {
+  background:#eee;
+  padding: 0px 20px 20px 20px;
+  text-align:center;
+  font-size:12px;
+  line-height:18px;
+}
+.installer_copyright .magenta {
+  color:#b0377e;
+}  
+.installer_copyright .darkgrey {
+  color:#6d6d6d;
+}
+
+
