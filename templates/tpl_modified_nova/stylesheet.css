@@ -5670,7 +5670,7 @@ a.view_box.active {
 
 .pd_price .small_price {
   vertical-align:0px;
-  padding: 0 3px 0 0;
+  padding: 0 3px 2px 0;
   font-weight:400;
   font-size:12px;
   line-height:12px;
