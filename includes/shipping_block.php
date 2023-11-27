@@ -11,15 +11,17 @@
    ---------------------------------------------------------------------------------------*/
 
   $module_smarty = new Smarty();
+  $module_smarty->assign('language', $_SESSION['language']);
+
   $shipping_block = '';
   if (xtc_count_shipping_modules() > 0) {
-    $showtax = $_SESSION['customers_status']['customers_status_show_price_tax'];
     $module_smarty->assign('FREE_SHIPPING', $free_shipping);
-    # free shipping or not...
+    
+    // free shipping
     if ($free_shipping == true) {
       $module_smarty->assign('FREE_SHIPPING_TITLE', FREE_SHIPPING_TITLE);
       $module_smarty->assign('FREE_SHIPPING_DESCRIPTION', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)).xtc_draw_hidden_field('shipping', 'free_free'));
-      $module_smarty->assign('FREE_SHIPPING_ICON', (isset($quotes[$i]['icon'])) ? $quotes[$i]['icon'] : '');
+      $module_smarty->assign('FREE_SHIPPING_ICON', (isset($shipping_modules) && is_object($shipping_modules) && isset($shipping_modules->icon)) ? $shipping_modules->icon : '');
     } else {
       $radio_buttons = 0;
       #loop through installed shipping methods...
@@ -53,7 +55,7 @@
       }
       $module_smarty->assign('module_content', $quotes);
     }
+    
     $module_smarty->caching = 0;
-    $module_smarty->assign('language', $_SESSION['language']);
     $shipping_block = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_shipping_block.html');
   }
