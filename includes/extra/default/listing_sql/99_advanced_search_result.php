@@ -200,8 +200,5 @@
                                 ".SPECIALS_CONDITIONS_S."
                        WHERE p.products_id IN ('".implode("', '", $products_search_array)."')
                              ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
-    }
-  
-    $_GET['keywords'] = urlencode($keywords);
+    }  
   }
-?>
