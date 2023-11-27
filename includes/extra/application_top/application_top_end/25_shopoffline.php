@@ -17,6 +17,7 @@
   if ($shop_is_offline 
       && !defined('_MODIFIED_SHOP_LOGIN')
       && basename($PHP_SELF) != FILENAME_LOGIN
+      && basename($PHP_SELF) != FILENAME_LOGOFF
       )
   {
     // create smarty elements
