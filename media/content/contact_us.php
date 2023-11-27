@@ -68,7 +68,7 @@
       }
     }
 
-    if (!xtc_validate_email(trim($email))) {
+    if (!isset($email) || !xtc_validate_email(trim($email))) {
       $messageStack->add('contact_us', ERROR_EMAIL);
       $error = true;
     }
@@ -80,7 +80,7 @@
       }
     }
     
-    if (trim($message_body) == '') {
+    if (!isset($message_body) || trim($message_body) == '') {
       $messageStack->add('contact_us', ERROR_MSG_BODY);
       $error = true;
     }
