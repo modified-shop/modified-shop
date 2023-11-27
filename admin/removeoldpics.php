@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: removeoldpics.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -27,22 +27,38 @@
     xtc_redirect(xtc_href_link(FILENAME_REMOVEOLDPICS));    
   }
 
-  function remove_old_pics ($path='') {
+  function remove_old_pics ($path = '') {
     // Images product table
     $pics_array = array();
-    $pics_query = xtc_db_query("SELECT products_image FROM ".TABLE_PRODUCTS."");
+    $pics_query = xtc_db_query("SELECT products_image 
+                                  FROM ".TABLE_PRODUCTS."
+                                 WHERE products_image != ''
+                                   AND products_image IS NOT NULL");
     while ($pics = xtc_db_fetch_array($pics_query)) {
-      if ($pics['products_image'] != '' || $pics['products_image'] != NULL) {
+      if (!in_array($pics['products_image'], $pics_array)) {
         $pics_array[] = $pics['products_image'];
+        
+        if (IMAGE_TYPE_EXTENSION != 'default') {
+          $pics_array[] = substr($pics['products_image'], 0, strrpos($pics['products_image'], '.')).'.'.IMAGE_TYPE_EXTENSION;
+        }
       }
     }
+    
     // Images product_images table
-    $pics_query = xtc_db_query("SELECT image_name FROM ".TABLE_PRODUCTS_IMAGES."");
+    $pics_query = xtc_db_query("SELECT image_name 
+                                  FROM ".TABLE_PRODUCTS_IMAGES."
+                                 WHERE image_name != ''
+                                   AND image_name IS NOT NULL");
     while ($pics = xtc_db_fetch_array($pics_query)) {
-      if ($pics['image_name'] != '' || $pics['image_name'] != NULL) {
+      if (!in_array($pics['image_name'], $pics_array)) {
         $pics_array[] = $pics['image_name'];
+
+        if (IMAGE_TYPE_EXTENSION != 'default') {
+          $pics_array[] = substr($pics['image_name'], 0, strrpos($pics['image_name'], '.')).'.'.IMAGE_TYPE_EXTENSION;
+        }
       }
     }
+    
     switch ($path) {
       case 'original' :
         $path = DIR_FS_CATALOG_ORIGINAL_IMAGES;
@@ -65,18 +81,22 @@
     }
 
     $flag_delete = false;
-    if ($path != "") {
+    if ($path != '') {
       $handle = opendir($path);
-      while ($datei = readdir($handle)) {
-        if (!in_array($datei,$pics_array) && ($datei!='.') && ($datei != '..') && ($datei != 'index.html') && ($datei != 'noimage.gif')) {
-          if(!is_dir($path.$datei) ) { // do not remove (sub)directories
-            unlink($path.$datei);
-            $flag_delete = true;
-          }
-        }
+      while ($image = readdir($handle)) {
+        if (!in_array($image, $pics_array)
+            && is_file($path.$image)
+            && $image != 'index.html'
+            && $image != 'noimage.gif'
+            )
+        {
+          unlink($path.$image);
+          $flag_delete = true;
+        }        
       }
       closedir($handle);
     }
+    
     return $flag_delete;
   }
 
