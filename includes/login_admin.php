@@ -185,7 +185,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
         // set template to default template
         case 'default_template':
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                           SET configuration_value = 'xtc5'
+                           SET configuration_value = 'tpl_modified_nova'
                          WHERE configuration_key = 'CURRENT_TEMPLATE'");
           die('Report: CURRENT_TEMPLATE wurde auf das Standardtemplate zur&uuml;ckgesetzt.');
           break;
