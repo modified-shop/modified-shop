@@ -214,7 +214,7 @@
   define('ERROR_SQL_UPDATE_NO_FILE', 'Unfortunately we could not find any SQL update file...');
   define('ERROR_FTP_LOGIN_NOT_POSSIBLE', 'FTP access data incorrect, host not available');
   define('ERROR_FTP_CHMOD_WAS_NOT_SUCCESSFUL', 'Changing the directory permissions was unsuccessful');
-  define('ERROR_FILE_INTEGRITY', 'Files have been changed compared to the original installation. You can download these files as a backup and continue the update.<br><br><b>ATTENTION:</b> During the update ALL changed files will be overwritten!');
+  define('ERROR_FILE_INTEGRITY', '%s Files have been changed compared to the original installation (eg module updates or bugfixes). You can download these files as a backup and continue the update.<br><br><b>ATTENTION:</b> During the update ALL changed files will be overwritten!');
   define('ERROR_CREATE_TMP_DIR', 'Could not create tmp directory');
   define('ERROR_INVALID_UPDATE_DOWNLOAD', 'Update package could not be downloaded');
 
