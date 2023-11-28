@@ -96,7 +96,7 @@
           $ps_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_PS_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $ps_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_PS_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
-          if ($cod_tax > 0
+          if ($ps_tax > 0
               && defined('MODULE_ORDER_TOTAL_TAX_STATUS')
               && MODULE_ORDER_TOTAL_TAX_STATUS == 'true'
               )
