@@ -159,7 +159,7 @@ class PHPlot
     protected $line_spacing = 4;
     protected $line_styles = array('solid', 'solid', 'dashed');
     protected $line_widths = 1;
-    public $locale_override = FALSE;
+    public $locale_override = TRUE;
     protected $max_x;
     protected $max_y;
     protected $max_z;
