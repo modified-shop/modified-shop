@@ -133,6 +133,10 @@
   define('TEXT_DB_UPDATE_DESC', 'Here you can bring the database of your shop installation up to date.');
   define('TEXT_DB_UPDATE_FINISHED', 'DB structure update successfully completed!');
   define('TEXT_FROM', ' of ');
+  define('TEXT_YES', 'Yes');
+  define('TEXT_NO', 'No');
+  define('TEXT_DATABASE', 'Database');
+  define('TEXT_FILE', 'File');
   //define('TEXT_DB_UPDATE_BEFORE', 'Text before'); // Not used yet
   //define('TEXT_DB_UPDATE_AFTER', 'Text after'); // Not used yet
 

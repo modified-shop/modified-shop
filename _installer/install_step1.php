@@ -310,12 +310,12 @@
     array('id' => 'InnoDB', 'text' => 'InnoDB'),
   );
   $session_array = array(
-    array('id' => 'mysql', 'text' => 'Datenbank'),
-    array('id' => 'files', 'text' => 'Datei'),
+    array('id' => 'mysql', 'text' => TEXT_DATABASE),
+    array('id' => 'files', 'text' => TEXT_FILE),
   );
   $boolean_array = array(
-    array('id' => 'true', 'text' => 'Ja'),
-    array('id' => 'false', 'text' => 'Nein'),
+    array('id' => 'true', 'text' => TEXT_YES),
+    array('id' => 'false', 'text' => TEXT_NO),
   );
   $smarty->assign('INPUT_DB_SERVER', xtc_draw_input_fieldNote(array('name' => 'db_server')));
   $smarty->assign('INPUT_DB_USERNAME', xtc_draw_input_fieldNote(array('name' => 'db_username')));
