@@ -304,6 +304,9 @@
       if ($this->parcel_outlet > 0) {
         $Service->ParcelOutletRouting['active'] = '1';
         $Service->ParcelOutletRouting['details'] = $customers_data['email_address'];
+        if ($this->notification !== true) {
+          $Service->ParcelOutletRouting['details'] = $this->info['email_address'];
+        }
       }
 
       // signed
