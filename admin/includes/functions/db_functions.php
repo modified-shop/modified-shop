@@ -646,7 +646,7 @@ function GetTableInfo($table) {
     $check_utf8 = xtc_db_query("SHOW TABLE STATUS WHERE Name='".$table."'");
     $utf8 = xtc_db_fetch_array($check_utf8);
     if (strpos($utf8['Collation'], 'utf8') === false) {
-      $data .= "ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;\n\n";
+      $data .= "ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8 COLLATE utf8_german2_ci;\n\n";
     }
   }
   $data .= "/*!40000 ALTER TABLE `$table` DISABLE KEYS */;\n";
