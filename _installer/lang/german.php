@@ -133,6 +133,10 @@
   define('TEXT_DB_UPDATE_DESC', 'Hier k&ouml;nnen Sie die Datenbank Ihrer Shopinstallation auf den aktuellen Stand bringen.');
   define('TEXT_DB_UPDATE_FINISHED', 'DB Update erfolgreich abgesclossen!');
   define('TEXT_FROM', ' von ');
+  define('TEXT_YES', 'Ja');
+  define('TEXT_NO', 'Nein');
+  define('TEXT_DATABASE', 'Datenbank');
+  define('TEXT_FILE', 'Datei');
   //define('TEXT_DB_UPDATE_BEFORE', 'Text davor'); // Not used yet
   //define('TEXT_DB_UPDATE_AFTER', 'Text danach'); // Not used yet
   
