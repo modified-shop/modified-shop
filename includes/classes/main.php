@@ -223,7 +223,7 @@ class main {
     $contentLink = '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.$popup_params['link_parameters'], $ssl).'" title="'.$popup_params['link_title'].'" class="'.(($class_more === true) ? 'color_more ' : '').$popup_params['link_class'].'">'.$text.'</a>';
     
     //new module support
-    $contentLink = $this->mainModules->getShippingNotice($contentLink, $coID, $text, $ssl, $class_more);
+    $contentLink = $this->mainModules->getContentLink($contentLink, $coID, $text, $ssl, $class_more);
     
     return $contentLink;
   }
