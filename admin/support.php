@@ -64,8 +64,7 @@ if (isset($_GET['action'])) {
       if ($error === false) {
         $system_informations = array(
           'PHP Version' => phpversion(),
-          'Shop Domain' => HTTP_SERVER,
-          'Shop Path' => DIR_WS_CATALOG,
+          'Shop Domain' => HTTP_SERVER.DIR_WS_CATALOG,
           'Shop Version' => PROJECT_VERSION,
           'DB Version' => DB_VERSION,
         );

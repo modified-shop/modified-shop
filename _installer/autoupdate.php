@@ -391,8 +391,7 @@
           } else {
             $message_array = array(
               'PHP Version' => phpversion(),
-              'Shop Domain' => HTTP_SERVER,
-              'Shop Path' => DIR_WS_CATALOG,
+              'Shop Domain' => HTTP_SERVER.DIR_WS_CATALOG,
               'Shop Version' => get_shop_version(),
               'Template' => CURRENT_TEMPLATE,
             );
