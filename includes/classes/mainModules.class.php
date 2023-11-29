@@ -76,9 +76,15 @@ class mainModules {
         return $this->call_module_method($tax_info,$tax_rate); //Return parameter must be in first place
     }
 
-    function getShippingNotice($contentLink, $coID, $text, $ssl, $class_more)
+    function getShippingNotice($shippingNotice)
     {
         $this->function_call = 'getShippingNotice';
+        return $this->call_module_method($shippingNotice);
+    }
+
+    function getContentLink($contentLink, $coID, $text, $ssl, $class_more)
+    {
+        $this->function_call = 'getContentLink';
         return $this->call_module_method($contentLink, $coID, $text, $ssl, $class_more);
     }
     
