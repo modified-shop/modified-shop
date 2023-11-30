@@ -122,7 +122,7 @@
     }
   }
   
-  //install new configurations
+  // install new configurations
   if (file_exists(DIR_FS_CATALOG.DIR_ADMIN.'includes/configuration_installer.php')) {
     define('_VALID_XTC', true);
     include(DIR_FS_CATALOG.DIR_ADMIN.'includes/configuration_installer.php');
@@ -131,6 +131,27 @@
   // check phpfastcache
   if (is_dir(DIR_FS_EXTERNAL.'phpfastcache') && !is_dir(DIR_FS_EXTERNAL.'Phpfastcache')) {
     rename(DIR_FS_EXTERNAL.'phpfastcache', DIR_FS_EXTERNAL.'Phpfastcache');
+  }
+  
+  // update htaccess
+  if (is_file(DIR_FS_CATALOG.'.htaccess')) {
+    $rewrite = false;
+  
+    $htaccess = file(DIR_FS_CATALOG.'.htaccess');
+    if (is_array($htaccess)) {
+      $file = '';
+      foreach ($htaccess as $line) {
+        if (preg_match('#^ErrorDocument[\s]+([0-9]+)[\s]+\/sitemap\.html\?error\=([0-9]+)$#', $line, $matches)) {
+          $line = sprintf("ErrorDocument %s /error.php?error=%s\n", $matches[1], $matches[2]);
+          $rewrite = true;
+        }
+        $file .= $line;
+      }
+    
+      if ($rewrite === true) {
+        file_put_contents(DIR_FS_CATALOG.'.htaccess', $file);
+      }
+    }
   }
   
   // set shipping title
