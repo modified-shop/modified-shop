@@ -437,7 +437,11 @@
                                                     FROM " . TABLE_BANNERS . " 
                                                    WHERE banners_group_id = '" . xtc_db_input($bInfo->banners_group_id) . "'
                                                      AND languages_id = '".$languages[$i]['id']."'");
-                    $banner = xtc_db_fetch_array($banner_query);
+                    if (xtc_db_num_rows($banner_query) > 0) {
+                      $banner = xtc_db_fetch_array($banner_query);
+                    } else {
+                      $banner = xtc_get_default_table_data(TABLE_BANNERS);
+                    }
                     $bInfo = new objectInfo($banner);
                   } else {
                     $bInfo = new objectInfo($banner_array);
