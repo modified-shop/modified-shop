@@ -170,8 +170,6 @@
           }
         }
         xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action', 'uid')) . 'cID=' . (int)$_GET['cID']));
-      } else {
-        $action = 'new';
       }
       break;
   }
@@ -334,6 +332,8 @@ require (DIR_WS_INCLUDES.'head.php');
         $coupon_finishdate = date('Y-m-d H:i', strtotime($coupon['coupon_expire_date']));
 
       case 'new':
+      case 'insert':
+      case 'update':
         if (isset($_POST['coupon_amount'])) $coupon_amount = xtc_db_prepare_input($_POST['coupon_amount']);
         if (isset($_POST['coupon_min_order'])) $coupon_min_order = xtc_db_prepare_input($_POST['coupon_min_order']);
         if (isset($_POST['coupon_free_ship'])) $coupon_free_ship = xtc_db_prepare_input($_POST['coupon_free_ship']);
@@ -402,7 +402,7 @@ require (DIR_WS_INCLUDES.'head.php');
           </div>
           <div class="clear"></div>
           <?php
-          echo xtc_draw_form('coupon', FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cID')) . 'action='.(($action == 'new') ? 'insert' : 'update') . ((isset($_GET['cID']) && $_GET['cID'] > 0) ? '&cID=' . (int)$_GET['cID'] : ''), 'post', 'enctype="multipart/form-data"');
+          echo xtc_draw_form('coupon', FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cID')) . 'action='.(($action == 'new' || $action == 'insert') ? 'insert' : 'update') . ((isset($_GET['cID']) && $_GET['cID'] > 0) ? '&cID=' . (int)$_GET['cID'] : ''), 'post', 'enctype="multipart/form-data"');
           ?>
             <table class="tableConfig">
               <tr>
