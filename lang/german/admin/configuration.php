@@ -151,7 +151,7 @@ define('MAX_RANDOM_SELECT_NEW_DESC' , 'Aus wie vielen neuen Artikeln sollen die 
 define('MAX_RANDOM_SELECT_SPECIALS_TITLE' , 'Auswahlpool der Sonderangebote');
 define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'Aus wie vielen Sonderangeboten sollen die zuf&auml;llig angezeigten Sonderangebote in der Box ausgew&auml;hlt werden?');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Anzahl Kategorien pro Zeile');
-define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Anzahl an Kategorien, die pro Zeile in den &Uuml;bersichten angezeigt werden sollen.');
+define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Anzahl an Unterkategorien, die pro Zeile in der Kategorie&uuml;bersicht angezeigt werden sollen. Werte &uuml;ber 1 greifen nur in Tabellenbasierten Templates wie dem xtc5. F&uuml;r alle anderen Templates kann die Anzeige der Unterkategorien mit 1 (aktiviert) und 0 (deaktiviert) werden.');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'Neue Artikel Liste');
 define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum Anzahl neuer Artikel die pro Seite von "Neue Artikel" (products_new.php) angezeigt werden sollen."');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Bestsellers');

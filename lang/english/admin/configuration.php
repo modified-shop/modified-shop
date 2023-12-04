@@ -152,7 +152,7 @@ define('MAX_RANDOM_SELECT_NEW_DESC' , 'How many records to select from to choose
 define('MAX_RANDOM_SELECT_SPECIALS_TITLE' , 'Selection of Products on Special');
 define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'How many records to select from to choose one random product special to display');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Categories To List Per Row');
-define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'How many categories to list per row');
+define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Number of subcategories to be displayed per row in the category overview. Values above 1 only apply in table-based templates such as xtc5. For all other templates, the display of subcategories can be set to 1 (activated) and 0 (deactivated).');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'New Products Listing');
 define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum number of new products to be displayed per page of "New Products" (products_new.php).');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Best Sellers');
