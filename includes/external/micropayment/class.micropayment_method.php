@@ -152,6 +152,11 @@ class micropayment_method extends micropayment_helper
         return false;
     }
 
+    function before_send_order()
+    {
+        return true;
+    }
+    
     function update_status()
     {
         global $order;
