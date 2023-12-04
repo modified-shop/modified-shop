@@ -8,8 +8,8 @@
     <div class="subcats_row">
       {foreach name=aussen item=categories_data from=$categories_content key=spalten}
         <div class="subcats_item">
-          <div class="subcats_item_inner">
-            <a href="{$categories_data.CATEGORIES_LINK}" title="{$categories_data.CATEGORIES_NAME|onlytext}">                
+          <a href="{$categories_data.CATEGORIES_LINK}" title="{$categories_data.CATEGORIES_NAME|onlytext}">
+            <span class="subcats_item_inner">
               {if $categories_data.CATEGORIES_IMAGE != '' || (isset($categories_data.CATEGORIES_IMAGE_LIST) && $categories_data.CATEGORIES_IMAGE_LIST != '')}
                 <span class="subcats_image">
                   <span class="subcats_image_inner">
@@ -23,8 +23,8 @@
                 </span>
               {/if}
               <span class="subcats_title"><span>{$categories_data.CATEGORIES_NAME}</span></span>
-            </a>
-          </div>
+            </span>
+          </a>  
         </div>
       {/foreach}
     </div>
