@@ -114,34 +114,14 @@
 
         {if isset($SLIDER)}
           <div class="slider_row">
-            <div class="splide {if $SLIDER|@count > 1}splide_slider{else}splide_slider_single{/if}" aria-label="Slider">
+            <div class="splide {if count($SLIDER) > 1}splide_slider{else}splide_slider_single{/if}" aria-label="Slider">
               <div class="splide__track">
         		    <div class="splide__list">
-                  
-                    {foreach name=outer item=slider from=$SLIDER}
-                      <div class="splide__slide">          
-                        {if $slider.LINK != ''}
-                          {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
-                            <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
-                              <picture>
-                                <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
-                                <source data-srcset="{$slider.IMAGE_SRC}">
-                                <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
-                              </picture>
-                              <span class="slider_item_content">
-                                {$slider.TITLE}
-                              </span>
-                            </a>
-                          {else}
-                            <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
-                              {$slider.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
-                              <span class="slider_item_content">
-                                {$slider.TITLE}
-                              </span>
-                            </a>
-                          {/if}
-                        {elseif $slider.IMAGE_IMG != ''}
-                          {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
+                  {foreach name=outer item=slider from=$SLIDER}
+                    <div class="splide__slide">          
+                      {if $slider.LINK != ''}
+                        {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
+                          <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                             <picture>
                               <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                               <source data-srcset="{$slider.IMAGE_SRC}">
@@ -150,20 +130,52 @@
                             <span class="slider_item_content">
                               {$slider.TITLE}
                             </span>
-                          {else}
+                          </a>
+                        {else}
+                          <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                             {$slider.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
                             <span class="slider_item_content">
                               {$slider.TITLE}
                             </span>
-                          {/if}
+                          </a>
                         {/if}
-                      </div>
-                    {/foreach}
-
+                      {elseif $slider.IMAGE_IMG != ''}
+                        {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
+                          <picture>
+                            <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
+                            <source data-srcset="{$slider.IMAGE_SRC}">
+                            <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
+                          </picture>
+                          <span class="slider_item_content">
+                            {$slider.TITLE}
+                          </span>
+                        {else}
+                          {$slider.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
+                          <span class="slider_item_content">
+                            {$slider.TITLE}
+                          </span>
+                        {/if}
+                      {/if}
+                    </div>
+                  {/foreach}
                 </div>
               </div>
             </div>
           </div>            
+        {/if}
+ 
+        {if isset($BANNER) && $BANNER != ''}
+          <div class="slider_row">
+            <div class="splide splide_slider_single">
+              <div class="splide__track">
+        		    <div class="splide__list">
+                  <div class="splide__slide">          
+                    {$BANNER}
+                  </div>
+                </div>        
+              </div>
+            </div>  
+          </div>
         {/if}
  
         {if isset($box_GREETING)}{$box_GREETING}{/if}
