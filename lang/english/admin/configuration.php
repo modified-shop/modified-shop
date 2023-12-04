@@ -146,11 +146,11 @@ define('MAX_DISPLAY_MANUFACTURER_NAME_LEN_DESC' , 'Used in manufacturers box; ma
 define('MAX_DISPLAY_NEW_REVIEWS_TITLE' , 'New Reviews');
 define('MAX_DISPLAY_NEW_REVIEWS_DESC' , 'Maximum number of new reviews to display');
 define('MAX_RANDOM_SELECT_REVIEWS_TITLE' , 'Selection of Random Reviews');
-define('MAX_RANDOM_SELECT_REVIEWS_DESC' , 'How many records to select from to choose one random product review');
+define('MAX_RANDOM_SELECT_REVIEWS_DESC' , 'How many records to select from to choose one random product review. For templates based on xtc5, it corresponds to the number of reviews displayed. Otherwise it is the selection pool from which one or more reviews are displayed.');
 define('MAX_RANDOM_SELECT_NEW_TITLE' , 'Selection of Random New Products');
-define('MAX_RANDOM_SELECT_NEW_DESC' , 'How many records to select from to choose one random new product to display');
+define('MAX_RANDOM_SELECT_NEW_DESC' , 'How many records to select from to choose one random new product to display. For templates based on xtc5, it corresponds to the number of articles displayed. Otherwise it is the selection pool from which one or more articles are displayed.');
 define('MAX_RANDOM_SELECT_SPECIALS_TITLE' , 'Selection of Products on Special');
-define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'How many records to select from to choose one random product special to display');
+define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'How many records to select from to choose one random product special to display. For templates based on xtc5, it corresponds to the number of special offers displayed. Otherwise, it is the selection pool from which one or more special offers are displayed.');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Categories To List Per Row');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Number of subcategories to be displayed per row in the category overview. Values above 1 only apply in table-based templates such as xtc5. For all other templates, the display of subcategories can be set to 1 (activated) and 0 (deactivated).');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'New Products Listing');

@@ -145,11 +145,11 @@ define('MAX_DISPLAY_MANUFACTURER_NAME_LEN_DESC' , 'In der Hersteller Box; Maximu
 define('MAX_DISPLAY_NEW_REVIEWS_TITLE' , 'Neue Rezensionen');
 define('MAX_DISPLAY_NEW_REVIEWS_DESC' , 'Maximum Anzahl an neuen Rezensionen die angezeigt werden sollen.');
 define('MAX_RANDOM_SELECT_REVIEWS_TITLE' , 'Auswahlpool der Rezensionen');
-define('MAX_RANDOM_SELECT_REVIEWS_DESC' , 'Aus wie vielen Rezensionen sollen die zuf&auml;llig angezeigten Rezensionen in der Box ausgew&auml;hlt werden?');
+define('MAX_RANDOM_SELECT_REVIEWS_DESC' , 'Aus wie vielen Rezensionen sollen die zuf&auml;llig angezeigten Rezensionen in der Box ausgew&auml;hlt werden? Bei Templates auf der Basis vom xtc5 entspricht es der Anzahl der angezeigten Rezensionen. Ansonsten ist es der Auswahlpool aus denen ein oder mehrere Rezensionen angezeigt werden.');
 define('MAX_RANDOM_SELECT_NEW_TITLE' , 'Auswahlpool der Neuen Artikel');
-define('MAX_RANDOM_SELECT_NEW_DESC' , 'Aus wie vielen neuen Artikeln sollen die zuf&auml;llig angezeigten neuen Artikel in der Box ausgew&auml;hlt werden?');
+define('MAX_RANDOM_SELECT_NEW_DESC' , 'Aus wie vielen neuen Artikeln sollen die zuf&auml;llig angezeigten neuen Artikel in der Box ausgew&auml;hlt werden? Bei Templates auf der Basis vom xtc5 entspricht es der Anzahl der angezeigten Artikeln. Ansonsten ist es der Auswahlpool aus denen ein oder mehrere Artikeln angezeigt werden.');
 define('MAX_RANDOM_SELECT_SPECIALS_TITLE' , 'Auswahlpool der Sonderangebote');
-define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'Aus wie vielen Sonderangeboten sollen die zuf&auml;llig angezeigten Sonderangebote in der Box ausgew&auml;hlt werden?');
+define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'Aus wie vielen Sonderangeboten sollen die zuf&auml;llig angezeigten Sonderangebote in der Box ausgew&auml;hlt werden? Bei Templates auf der Basis vom xtc5 entspricht es der Anzahl der angezeigten Sonderangebote. Ansonsten ist es der Auswahlpool aus denen ein oder mehrere Sonderangebote angezeigt werden.');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Anzahl Kategorien pro Zeile');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Anzahl an Unterkategorien, die pro Zeile in der Kategorie&uuml;bersicht angezeigt werden sollen. Werte &uuml;ber 1 greifen nur in Tabellenbasierten Templates wie dem xtc5. F&uuml;r alle anderen Templates kann die Anzeige der Unterkategorien mit 1 (aktiviert) und 0 (deaktiviert) werden.');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'Neue Artikel Liste');

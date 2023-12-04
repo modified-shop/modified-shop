@@ -70,12 +70,17 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
                      WHERE p.products_status = '1'
                            ".PRODUCTS_CONDITIONS_P."
                            ".$reviews_status."
-                  ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
-                     LIMIT 1";
+                  ORDER BY r.date_added ASC, p.products_id
+                     LIMIT ".MAX_RANDOM_SELECT_REVIEWS;
   $reviews_query = xtc_db_query($reviews_query);
   
   if (xtc_db_num_rows($reviews_query) > 0) {                  
-    $reviews = xtc_db_fetch_array($reviews_query);
+    $content_array = array();
+    while ($reviews = xtc_db_fetch_array($reviews_query)) {
+      $content_array[] = $reviews;
+    }
+    shuffle($content_array);
+    $reviews = $content_array[0];
     
     // set cache id
     $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.($product->isProduct() === true ? $product->data['products_id'] : 0).'|rID:'.$reviews['reviews_id'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));

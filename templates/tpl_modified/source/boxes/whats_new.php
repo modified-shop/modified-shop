@@ -51,11 +51,16 @@ $whats_new_query = xtc_db_query("SELECT DISTINCT ".$product->default_select."
                                                  " . PRODUCTS_CONDITIONS_P . "
                                                  " . $current_prd . "
                                                  " . $days . "                                           
-                                        ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
-                                           LIMIT 1");
+                                        ORDER BY p.products_date_added DESC, p.products_id
+                                           LIMIT ".MAX_RANDOM_SELECT_NEW);
 
 if (xtc_db_num_rows($whats_new_query) > 0) {
-  $whats_new = xtc_db_fetch_array($whats_new_query);
+  $content_array = array();
+  while ($whats_new = xtc_db_fetch_array($whats_new_query)) {
+    $content_array[] = $whats_new;
+  }
+  shuffle($content_array);
+  $whats_new = $content_array[0];
   
   // set cache id
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$whats_new['products_id'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
