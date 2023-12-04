@@ -41,7 +41,7 @@
     $beginCode .= '
         var _paq = _paq || [];
           var u="//'.$url.'/";
-          _paq.push([\'setSiteId\', '.MODULE_MATOMO.']);
+          _paq.push([\'setSiteId\', '.MODULE_MATOMO_ANALYTICS_ID.']);
           _paq.push([\'setTrackerUrl\', u+\'matomo.php\']);
           _paq.push([\'trackPageView\']);
           _paq.push([\'enableLinkTracking\']);'."\n";
