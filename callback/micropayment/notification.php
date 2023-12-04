@@ -56,7 +56,7 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
     
     echo '<pre>';
     echo 'MICROPAYMENT GATEWAY TEST FUNCTION' . PHP_EOL;
-    echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.2.5' . PHP_EOL;
+    echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.2.6' . PHP_EOL;
     echo 'ACCOUNT-ID: ' . substr($accId,0,1).str_repeat('x',strlen($accId)-2).substr($accId,strlen($accId)-1) . PHP_EOL;
     echo 'ACCESSKEY: ' . substr($accKey,0,1).str_repeat('x',strlen($accKey)-2).substr($accKey,strlen($accKey)-1) . PHP_EOL;
     echo 'SECRET_FIELD: ' . substr($secretField,0,1).str_repeat('x',strlen($secretField)-2).substr($secretField,strlen($secretField)-1) . PHP_EOL;
