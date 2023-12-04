@@ -47,6 +47,12 @@
     define('SPECIALS_EXISTS', check_specials());
   }
       
+  // check whats new
+  if (WHATSNEW_CATEGORIES === true) {
+    require_once (DIR_FS_INC.'check_whatsnew.inc.php');
+    define('WHATSNEW_EXISTS', check_whatsnew());
+  }      
+      
   // picture set listing box
   define('PICTURESET_ACTIVE', defined('DIR_WS_MINI_IMAGES'));
   define('PICTURESET_BOX', '360:thumbnail,460:midi');
