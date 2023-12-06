@@ -717,6 +717,7 @@
             $this->info['tax_groups'][$tax_index] = 0;
           }
           if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
+            if (!isset($this->tax_discount[$products[$i]['tax_class_id']])) $this->tax_discount[$products[$i]['tax_class_id']] = 0;
             $this->tax_discount[$products[$i]['tax_class_id']] += ($shown_price_tax / 100) * $products_tax;
             $this->info['tax_groups'][$tax_index] += ($shown_price_tax / 100) * ($products_tax);
           } else {
