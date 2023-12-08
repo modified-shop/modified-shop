@@ -31,7 +31,19 @@
     }
 
     function process() {
-      global $order, $xtPrice, $PHP_SELF;
+      global $order, $xtPrice, $main, $PHP_SELF;
+
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+          && $order->delivery['country_id'] != STORE_COUNTRY
+          ) 
+      {
+        $order->info['allow_tax'] = 4; //merchant EU, shipping to EU
+      }
+
+      if ($main->getDeliveryDutyInfo($order->delivery['country']['iso_code_2'])) {
+        $order->info['allow_tax'] = 0; //customer, shipping outside EU
+      }
 
       foreach ($order->info['tax_groups'] as $key => $value) {
         if ($value > 0) {
@@ -66,7 +78,7 @@
               && $order->delivery['country_id'] == STORE_COUNTRY
               ) 
           {
-            $order->info['allow_tax'] = 3; //merchant EU
+            $order->info['allow_tax'] = 3; //merchant EU, shipping to store country
             $this->output[] = array('title' => $key .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));

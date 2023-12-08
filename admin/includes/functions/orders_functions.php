@@ -43,8 +43,64 @@
                                          customers_status_name
                                     FROM ".TABLE_CUSTOMERS_STATUS."
                                    WHERE customers_status_id = '".$order->info['status']."'
-                                     AND language_id ='".(int)$lang['languages_id']."'");
+                                     AND language_id = '".(int)$lang['languages_id']."'");
     return xtc_db_fetch_array($status_query);
+  }
+
+
+  function get_allow_tax($c_info, $status) {
+    $allow_tax = 0;
+    
+    if ($status['customers_status_show_price_tax'] != 0) {
+      $allow_tax = 1;
+    }
+
+    if ($status['customers_status_show_price_tax'] == 0 
+        && $status['customers_status_add_tax_ot'] == 1
+        ) 
+    {
+      $allow_tax = 2;
+    }
+
+    if ($status['customers_status_show_price_tax'] == 0 
+        && $status['customers_status_add_tax_ot'] == 0
+        ) 
+    {
+      $allow_tax = 3;
+      if ($c_info['country_id'] != STORE_COUNTRY) {
+        $allow_tax = 4;
+      }
+    }
+
+    if ($c_info['country_id'] != STORE_COUNTRY) {
+      $countries = array();
+      $geo_zone_array = array();
+      
+      $geo_zone_query = xtc_db_query("SELECT geo_zone_id 
+                                        FROM ".TABLE_GEO_ZONES." 
+                                       WHERE geo_zone_info = '1'");
+      if (xtc_db_num_rows($geo_zone_query) > 0) {
+        while ($geo_zone = xtc_db_fetch_array($geo_zone_query)) {
+          $geo_zone_array[] = $geo_zone['geo_zone_id'];
+        }
+        $duty_countries_query = xtc_db_query("SELECT c.countries_id
+                                                FROM ".TABLE_COUNTRIES." c
+                                                JOIN " . TABLE_ZONES_TO_GEO_ZONES . " gz 
+                                                     ON c.countries_id = gz.zone_country_id
+                                               WHERE gz.geo_zone_id IN ('".implode("', '", $geo_zone_array)."')");
+        if (xtc_db_num_rows($duty_countries_query, true)) {
+          while ($duty_countries = xtc_db_fetch_array($duty_countries_query, true)) {
+            $countries[] = $duty_countries['countries_id'];
+          }
+        }
+      }
+      
+      if (in_array($c_info['country_id'], $countries)) {
+        $allow_tax = 0;
+      }
+    }
+
+    return $allow_tax;
   }
 
 
@@ -415,28 +471,25 @@
 
     $status = get_customers_taxprice_status();
 
+    $c_info = get_c_infos($order->customer['ID'], $order->delivery['country_iso_2']);
+
+    $allow_tax = get_allow_tax($c_info, $status);
+
     $product_query = xtc_db_query("SELECT op.allow_tax,
                                           op.products_tax,
                                           p.products_tax_class_id,
                                           pd.products_name,
                                           pd.products_short_description,
                                           pd.products_order_description
-                                     FROM " . TABLE_ORDERS_PRODUCTS . " op
-                                LEFT JOIN " . TABLE_PRODUCTS . " p 
+                                     FROM ".TABLE_ORDERS_PRODUCTS." op
+                                LEFT JOIN ".TABLE_PRODUCTS." p 
                                           ON op.products_id = p.products_id
-                                LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd 
+                                LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                           ON op.products_id = pd.products_id 
                                              AND pd.language_id = '".(int)$lang['languages_id']."'
-                                    WHERE op.products_id = " . (int)($data_array['products_id']) . "
-                                      AND op.orders_products_id = " . (int)($data_array['opID'])
-                                  );
+                                    WHERE op.products_id = '".(int)$data_array['products_id']."'
+                                      AND op.orders_products_id = '".(int)$data_array['opID']."'");
     $product = xtc_db_fetch_array($product_query);
-
-    if (isset($data_array['products_tax'])) {
-      $product['products_tax'] = $data_array['products_tax'];
-    }
-
-    $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
 
     $product['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($data_array['products_id'], $product['products_tax_class_id']);
 
@@ -450,46 +503,8 @@
 
     $tax_rate = xtc_get_tax_rate($product['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
 
-    if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0) {
+    if (in_array($allow_tax, array('0', '4'))) {
       $tax_rate = 0;
-    }
-
-    if ($tax_rate > 0 && $product['allow_tax'] == 0 ) {
-      $product['products_tax'] = $tax_rate;
-    }
-
-    $group_subtax = $group_addtax = false;
-    if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0 && $product['products_tax'] > 0 && $product['allow_tax'] == 1) {
-      $group_subtax = true;
-    }
-    if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 1 && $product['allow_tax'] == 1) {
-      $group_subtax = true;
-    }
-    if ($status['customers_status_show_price_tax'] == 1 && $status['customers_status_add_tax_ot'] == 0 && $product['allow_tax'] == 0) {
-      $group_addtax = true;
-    }
-        
-    $products_a_query = xtc_db_query("SELECT orders_products_attributes_id,
-                                             options_values_price
-                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
-                                       WHERE orders_products_id = '".(int)($data_array['opID'])."'");
-
-    if ($group_addtax) {
-      $data_array['products_price'] += $data_array['products_price'] /100 * $product['products_tax'];
-      while ($products_a = xtc_db_fetch_array($products_a_query)) {
-        if ($products_a['options_values_price'] > 0) {
-          $products_a['options_values_price'] += $products_a['options_values_price'] /100 * $product['products_tax'];
-        }
-      }
-    }
-
-    if ($group_subtax) {
-      $data_array['products_price'] = $data_array['products_price'] * 100 /(100 + $product['products_tax']);
-      while ($products_a = xtc_db_fetch_array($products_a_query)) {
-        if ($products_a['options_values_price'] > 0) {
-          $products_a['options_values_price'] = $products_a['options_values_price'] * 100 /(100 + $product['products_tax']);
-        }
-      }
     }
 
     $final_price = $data_array['products_price'] * (int)$data_array['products_quantity'];
@@ -503,27 +518,24 @@
       'products_name' => xtc_db_prepare_input($data_array['products_name']),
       'products_order_description' => xtc_db_prepare_input($product['products_order_description']),
       'products_price' => (float)$data_array['products_price'],
-      'products_discount_made' => '',
       'final_price' => (float)$final_price,
       'products_tax' => xtc_db_prepare_input($tax_rate),
       'products_quantity' => xtc_db_prepare_input($data_array['products_quantity']),
-      'allow_tax' => (int)$status['customers_status_show_price_tax'],
+      'allow_tax' => $allow_tax,
       'products_model' => xtc_db_prepare_input($data_array['products_model']),
     );
-
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
 
     $new_qty = (double)$data_array['old_qty'] - (double)$data_array['products_quantity'];
-    xtc_db_query("UPDATE " . TABLE_PRODUCTS . " 
+    xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
                      SET products_quantity = products_quantity + " . $new_qty . " 
-                   WHERE products_id = " . (int)($data_array['products_id']));
+                   WHERE products_id = '" . (int)$data_array['products_id'] . "'");
 
     // Update Attributes Stock
     if (STOCK_LIMITED == 'true') {
       $delete_products_attributes_query = xtc_db_query("SELECT *
                                                           FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
-                                                         WHERE orders_products_id = '".(int)$data_array['opID']."'
-                                                        ");
+                                                         WHERE orders_products_id = '".(int)$data_array['opID']."'");
       while ($delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query)) {
         xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
                          SET attributes_stock = attributes_stock + '".$new_qty."'
@@ -534,9 +546,9 @@
     }
 
     // Update products_ordered
-    xtc_db_query("UPDATE " . TABLE_PRODUCTS . " 
+    xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
                      SET products_ordered = products_ordered - ".sprintf('%d', $new_qty)." 
-                   WHERE products_id = '".(int)($data_array['products_id'])."'");
+                   WHERE products_id = '".(int)$data_array['products_id']."'");
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
   }
@@ -552,13 +564,16 @@
 
     $status = get_customers_taxprice_status();
 
+    $c_info = get_c_infos($order->customer['ID'], $order->delivery['country_iso_2']);
+
+    $allow_tax = get_allow_tax($c_info, $status);
+
     $shipping_time_query = xtc_db_query("SELECT ps.shipping_status_name
                                            FROM ".TABLE_PRODUCTS." p
                                            JOIN ".TABLE_SHIPPING_STATUS." ps
                                                 ON p.products_shippingtime = ps.shipping_status_id
                                                    AND ps.language_id = '".(int)$lang['languages_id']."'
-                                          WHERE products_id = '".(int)$data_array['products_id']."'");
-
+                                          WHERE p.products_id = '".(int)$data_array['products_id']."'");
     $shipping_time_array = xtc_db_fetch_array($shipping_time_query);
     $shipping_time = $shipping_time_array['shipping_status_name'];
 
@@ -576,10 +591,7 @@
                                           ON pd.products_id = p.products_id
                                              AND pd.language_id = '".(int)$lang['languages_id']."'
                                     WHERE p.products_id = '".(int)$data_array['products_id']."'");
-
     $product = xtc_db_fetch_array($product_query);
-
-    $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
 
     $product['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($data_array['products_id'], $product['products_tax_class_id']);
     
@@ -593,7 +605,7 @@
 
     $tax_rate = xtc_get_tax_rate($product['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
 
-    if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0) {
+    if (in_array($allow_tax, array('0', '4'))) {
       $tax_rate = 0;
     }
 
@@ -613,12 +625,12 @@
       'products_name' => xtc_db_prepare_input($product['products_name']),
       'products_order_description' => xtc_db_prepare_input($product['products_order_description']),
       'products_price' => (float)$price,
-      'products_discount_made' => '',
-      'products_shipping_time' => xtc_db_prepare_input($shipping_time), //web28 - 2011-10-14- added status update for shipping_status_name in TABLE_ORDERS_PRODUCTS
+      'products_discount_made' => 0,
+      'products_shipping_time' => xtc_db_prepare_input($shipping_time),
       'final_price' => (float)$final_price,
       'products_tax' => xtc_db_prepare_input($tax_rate),
       'products_quantity' => xtc_db_prepare_input($data_array['products_quantity']),
-      'allow_tax' => (int)$status['customers_status_show_price_tax'],
+      'allow_tax' => $allow_tax,
       'products_model' => xtc_db_prepare_input($product['products_model']),
       'products_weight' => $product['products_weight'],
       'products_weight_origin' => $product['products_weight'],
@@ -632,16 +644,16 @@
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
     if ($data_array['products_quantity'] != 0) {
-      xtc_db_query("UPDATE " . TABLE_PRODUCTS . " 
-                       SET products_quantity = products_quantity - " . (double)$data_array['products_quantity'] . " 
+      xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
+                       SET products_quantity = products_quantity - ".sprintf('%d', (double)$data_array['products_quantity'])." 
                      WHERE products_id= " . (int)$data_array['products_id']);
 
       xtc_db_query("UPDATE " . TABLE_SPECIALS . " 
-                       SET specials_quantity = specials_quantity - " . (double)$data_array['products_quantity'] . " 
+                       SET specials_quantity = specials_quantity - ".sprintf('%d', (double)$data_array['products_quantity'])." 
                      WHERE products_id= " . (int)$data_array['products_id']);
     
       // Update products_ordered (for bestsellers list)
-      xtc_db_query("UPDATE " . TABLE_PRODUCTS . " 
+      xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
                        SET products_ordered = products_ordered + ".sprintf('%d', (double)$data_array['products_quantity'])." 
                      WHERE products_id = '".(int)($data_array['products_id'])."'");
     }
@@ -661,7 +673,7 @@
                                                          WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
       while ($delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query)) {
         xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
-                         SET attributes_stock = attributes_stock + '".(double)$delete_products_attributes['products_quantity']."'
+                         SET attributes_stock = attributes_stock + ".sprintf('%d', (double)$delete_products_attributes['products_quantity'])."
                        WHERE products_id = '".(int)$delete_products_attributes['products_id']."' 
                          AND options_id = '".(int)$delete_products_attributes['orders_products_options_id']."'
                          AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
@@ -672,11 +684,11 @@
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id = '".(int)($oID)."' AND orders_products_id = '".(int)($data_array['opID'])."'");
 
     xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
-                     SET products_quantity = products_quantity + ".xtc_db_input($data_array['del_qty'])." 
+                     SET products_quantity = products_quantity + ".sprintf('%d', (double)$data_array['del_qty'])."
                    WHERE products_id = ".(int)$data_array['del_pID']);
 
     xtc_db_query("UPDATE ".TABLE_SPECIALS." 
-                     SET specials_quantity = specials_quantity + ".xtc_db_input($data_array['del_qty'])." 
+                     SET specials_quantity = specials_quantity + ".sprintf('%d', (double)$data_array['del_qty'])."
                    WHERE products_id = ".(int)$data_array['del_pID']);
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
@@ -887,37 +899,34 @@
     }
 
     if (DOWNLOAD_ENABLED == 'true') {
-      $attributes_query = "SELECT popt.products_options_name,
-                                  poval.products_options_values_name,
-                                  pa.options_values_price,
-                                  pa.price_prefix,
-                                  pad.products_attributes_maxdays,
-                                  pad.products_attributes_maxcount,
-                                  pad.products_attributes_filename
-                             FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                             JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." poval
-                                  ON pa.options_values_id = poval.products_options_values_id
-                                     AND poval.language_id = '".(int)$lang['languages_id']."'
-                             JOIN ".TABLE_PRODUCTS_OPTIONS." popt
-                                  ON pa.options_id = popt.products_options_id
-                                     AND popt.language_id = '".(int)$lang['languages_id']."'
-                        LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
-                               ON pa.products_attributes_id = pad.products_attributes_id
-                            WHERE pa.products_id = '".(int)$products['products_id']."'
-                              AND pa.options_id = '".(int)$products_attributes['options_id']."'
-                              AND pa.options_values_id = '".(int)$products_attributes['options_values_id']."'";
+      $attributes_downloads_query = xtc_db_query("SELECT popt.products_options_name,
+                                                         poval.products_options_values_name,
+                                                         pa.options_values_price,
+                                                         pa.price_prefix,
+                                                         pad.products_attributes_maxdays,
+                                                         pad.products_attributes_maxcount,
+                                                         pad.products_attributes_filename
+                                                    FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                                    JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." poval
+                                                         ON pa.options_values_id = poval.products_options_values_id
+                                                            AND poval.language_id = '".(int)$lang['languages_id']."'
+                                                    JOIN ".TABLE_PRODUCTS_OPTIONS." popt
+                                                         ON pa.options_id = popt.products_options_id
+                                                            AND popt.language_id = '".(int)$lang['languages_id']."'
+                                               LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                                      ON pa.products_attributes_id = pad.products_attributes_id
+                                                   WHERE pa.products_id = '".(int)$products['products_id']."'
+                                                     AND pa.options_id = '".(int)$products_attributes['options_id']."'
+                                                     AND pa.options_values_id = '".(int)$products_attributes['options_values_id']."'");
+      $attributes_downloads = xtc_db_fetch_array($attributes_downloads_query);
 
-      $attributes = xtc_db_query($attributes_query);
-
-      $attributes_values = xtc_db_fetch_array($attributes);
-
-      if (isset($attributes_values['products_attributes_filename']) && xtc_not_null($attributes_values['products_attributes_filename'])) {
+      if (isset($attributes_downloads['products_attributes_filename']) && xtc_not_null($attributes_downloads['products_attributes_filename'])) {
         $sql_data_array = array(
           'orders_id' =>(int)($oID),
           'orders_products_id' => (int)($data_array['opID']),
-          'orders_products_filename' => $attributes_values['products_attributes_filename'],
-          'download_maxdays' => $attributes_values['products_attributes_maxdays'],
-          'download_count' => $attributes_values['products_attributes_maxcount'],
+          'orders_products_filename' => $attributes_downloads['products_attributes_filename'],
+          'download_maxdays' => $attributes_downloads['products_attributes_maxdays'],
+          'download_count' => $attributes_downloads['products_attributes_maxcount'],
         );
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
       }
@@ -945,10 +954,10 @@
                                                           FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
                                                           JOIN ".TABLE_ORDERS_PRODUCTS." op
                                                                ON op.orders_products_id=opa.orders_products_id
-                                                         WHERE orders_products_attributes_id='".(int)$data_array['opAID']."'");
+                                                         WHERE orders_products_attributes_id = '".(int)$data_array['opAID']."'");
       $delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query);
       xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
-                       SET attributes_stock = attributes_stock + '".(double)$delete_products_attributes['products_quantity']."'
+                       SET attributes_stock = attributes_stock + ".sprintf('%d', (double)$delete_products_attributes['products_quantity'])."
                      WHERE products_id = '".(int)$delete_products_attributes['products_id']."' 
                        AND options_id = '".(int)$delete_products_attributes['orders_products_options_id']."'
                        AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
@@ -1025,11 +1034,15 @@
 
     $status = get_customers_taxprice_status();
 
+    $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
+
+    $allow_tax = get_allow_tax($c_info, $status);
+    
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_RECALCULATE." WHERE orders_id = '".(int)($oID)."'");
   
     $products_query = xtc_db_query("SELECT SUM(final_price) as subtotal_final 
                                       FROM ".TABLE_ORDERS_PRODUCTS." 
-                                     WHERE orders_id = '".(int)$oID."' ");
+                                     WHERE orders_id = '".(int)$oID."'");
     $products = xtc_db_fetch_array($products_query);
     $subtotal_final = $products['subtotal_final'];
     $subtotal_text = $xtPrice->xtcFormat($subtotal_final, true);
@@ -1039,7 +1052,7 @@
       'value' => xtc_db_prepare_input($subtotal_final)
     );
         
-    xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id ='". (int)($oID). "' AND class = 'ot_subtotal'");
+    xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id = '". (int)($oID). "' AND class = 'ot_subtotal'");
 
     $products_query = xtc_db_query("SELECT final_price, 
                                            products_tax, 
@@ -1049,14 +1062,11 @@
     while ($products = xtc_db_fetch_array($products_query)) {
       $tax_rate = $products['products_tax'];
 
-      if ($status['customers_status_add_tax_ot'] == 0
-          && $status['customers_status_show_price_tax'] == 0
-          ) 
-      {
+      if (in_array($allow_tax, array('0', '4'))) {
         $tax_rate = 0;
       }
 
-      if ($products['allow_tax'] == '1') {
+      if ($allow_tax == '1') {
         $bprice = $products['final_price'];
         $nprice = $xtPrice->xtcRemoveTax($bprice, $tax_rate);
         $tax = $xtPrice->calcTax($nprice, $tax_rate);
@@ -1083,7 +1093,6 @@
                                 WHERE orders_id = '".(int)$oID."'
                                   AND class = 'products'
                              GROUP BY tax_rate");
-
     while ($tax = xtc_db_fetch_array($tax_query)) {
       $sql_data_array = array(
         'orders_id' => (int)($oID),
@@ -1102,7 +1111,6 @@
                                      AND class != 'ot_subtotal_no_tax'
                                      AND class != 'ot_tax'
                                      AND class != 'ot_subtotal'");
-
     $discount_modules = array_map('trim', explode(",", DISCOUNT_MODULES));
     while ($module_value = xtc_db_fetch_array($module_query)) {
       $module_name = str_replace('ot_', '', $module_value['class']);
@@ -1120,13 +1128,9 @@
         }
       }
 
-      $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
       $module_tax_rate = xtc_get_tax_rate($module_tax_class, $c_info['country_id'], $c_info['zone_id']);
 
-      if ($status['customers_status_add_tax_ot'] == 0
-          && $status['customers_status_show_price_tax'] == 0
-          ) 
-      {
+      if (in_array($allow_tax, array('0', '4'))) {
         $module_tax_rate = 0;
       }
 
@@ -1185,7 +1189,6 @@
                                         WHERE orders_id = '".(int)$oID."'
                                           AND tax_rate = '".xtc_db_input($newtax['tax_rate'])."'
                                           AND class = 'ot_tax'");
-      
       if (xtc_db_num_rows($check_tax_query) > 0) {
         xtc_db_query("UPDATE ".TABLE_ORDERS_RECALCULATE."
                          SET tax = '".xtc_db_prepare_input($newtax_array['new_tax_value'])."'
@@ -1202,7 +1205,7 @@
         xtc_db_perform(TABLE_ORDERS_RECALCULATE, $sql_data_array);
       }
     }
-    
+        
     $sort_array = array(
       'MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER',
       'MODULE_ORDER_TOTAL_TAX_SORT_ORDER',
@@ -1254,8 +1257,7 @@
       );
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array, 'update', "orders_id = '".(int)($oID)."' AND class = 'ot_subtotal_no_tax'");
     } else {
-      if ($status['customers_status_show_price_tax'] == 0 
-          && $status['customers_status_add_tax_ot'] == 1 
+      if (!in_array($allow_tax, array('0', '1', '4'))
           && defined('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS') 
           && MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS == 'true'
           )
@@ -1285,20 +1287,20 @@
 
     if (!defined('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS') 
         || MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS == 'false' 
-        || ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0)
+        || in_array($allow_tax, array('0', '1', '4'))
         )
     {
       $display_to_subtotal_no_tax = false;
-      xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class='ot_subtotal_no_tax'");
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_subtotal_no_tax'");
     }
 
-    xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class='ot_tax'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_tax'");
 
     $add_tax = 0;
     $price = 'b_price';
-    if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 1) {
-      $tax_query = xtc_db_query("SELECT SUM(value) as value 
-                                   FROM ".TABLE_ORDERS_TOTAL." 
+    if ($allow_tax != '1') {
+      $tax_query = xtc_db_query("SELECT SUM(tax) as value 
+                                   FROM ".TABLE_ORDERS_RECALCULATE." 
                                   WHERE orders_id = '".(int)($oID)."' 
                                     AND class = 'ot_tax'");
       $tax = xtc_db_fetch_array($tax_query);
@@ -1310,7 +1312,7 @@
                                    FROM ".TABLE_ORDERS_RECALCULATE." 
                                   WHERE orders_id = '".(int)$oID."'
                                     AND class != 'ot_gv'");
-
+    
     $total = xtc_db_fetch_array($total_query);
     $total_tax_final = $total['value'] + $add_tax;
 
@@ -1331,7 +1333,6 @@
                                   AND class = 'ot_tax'
                              GROUP BY tax_rate 
                              ORDER BY tax_rate DESC");
-
     while ($ust = xtc_db_fetch_array($ust_query)) {
       $ust_desc_query = xtc_db_query("SELECT tax_description 
                                         FROM ".TABLE_TAX_RATES." 
@@ -1356,14 +1357,13 @@
       }
     }
 
-    if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0) {
-      xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class='ot_tax'");
+    if (in_array($allow_tax, array('0', '4'))) {
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_tax'");
     }
 
     $total_query = xtc_db_query("SELECT SUM(".$price.") as value 
                                    FROM ".TABLE_ORDERS_RECALCULATE." 
                                   WHERE orders_id = '".(int)$oID."'");
-
     $total = xtc_db_fetch_array($total_query);
     $total_final = $total['value'] + $add_tax;
     $total_text = '<b>'.$xtPrice->xtcFormat($total_final, true).'</b>';
@@ -1373,7 +1373,7 @@
       'value' => xtc_db_prepare_input($total_final)
     );
     
-    xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id ='". (int)($oID). "' AND class='ot_total'");
+    xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id = '". (int)($oID). "' AND class = 'ot_total'");
 
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_RECALCULATE." WHERE orders_id = '".xtc_db_input($oID)."'");
 
