@@ -281,7 +281,7 @@
         'intent' => $this->intent,
         'purchase_units' => array($purchase_unit),
         'application_context' => array(
-          'brand_name' => $this->encode_utf8(STORE_NAME),
+          'brand_name' => $this->encode_utf8(mb_substr(STORE_NAME, 0, 127)),
           'locale' => $_SESSION['language_code'].'-'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']),
           'landing_page' => 'BILLING',
           'user_action' => 'CONTINUE',
