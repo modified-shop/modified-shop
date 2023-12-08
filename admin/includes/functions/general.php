@@ -1696,7 +1696,7 @@
                                         WHERE code = '".xtc_db_input($currency)."'");
     $currencies = xtc_db_fetch_array($currencies_query);
 
-    if ($allow_tax == 1) {
+    if ($allow_tax == '1') {
       $price_string = (double)$price_string / ((100 + (double)$tax_rate) / 100);
     }
 

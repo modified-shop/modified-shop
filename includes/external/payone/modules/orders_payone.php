@@ -27,7 +27,7 @@ function payone_get_order_details() {
     <tr class="dataTableHeadingRow">
       <td class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
       <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></td>
-      <?php if ($order->products[0]['allow_tax'] == 1) { ?>
+      <?php if ($order->products[0]['allow_tax'] == '1') { ?>
       <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_PRICE_INCLUDING_TAX; ?></td>
       <?php  } else { ?>
       <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_PRICE_EXCLUDING_TAX; ?></td>
@@ -58,7 +58,7 @@ function payone_get_order_details() {
           }
         }
         echo '&nbsp;</td>'.PHP_EOL;
-        if ($order->products[$i]['allow_tax'] == 1) {
+        if ($order->products[$i]['allow_tax'] == '1') {
           echo '  <td class="dataTableContent" align="right" valign="top">'.format_price($order->products[$i]['price'], 1, $order->info['currency'], 0, 0).'</td>'.PHP_EOL;
         } else {
           echo '  <td class="dataTableContent" align="right" valign="top">'.format_price($order->products[$i]['price'], 1, $order->info['currency'], $order->products[$i]['allow_tax'], $order->products[$i]['tax']).'</td>'.PHP_EOL;            

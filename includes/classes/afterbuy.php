@@ -242,8 +242,8 @@ class xtc_afterbuy_functions {
 
         $price = $pDATA['products_price'];
         $tax = $pDATA['products_tax'];
-        if ($pDATA['allow_tax'] == 0) {
-          if ($cData['customers_status_add_tax_ot'] == 0) {
+        if ($pDATA['allow_tax'] != '1') {
+          if (in_array($pDATA['allow_tax'], array('0', '4'))) {
             $tax = 0;
           } else {
             $price = $xtPrice->xtcAddTax($price, $tax);

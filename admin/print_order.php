@@ -47,7 +47,7 @@
   
   $smarty->assign('vat_info', 0);
   if (count($order_data) > 0
-      && $order_data[0]['ALLOW_TAX'] == 0
+      && in_array($order_data[0]['ALLOW_TAX'], array('0', '4'))
       )
   {
     $store_country = xtc_get_countriesList(STORE_COUNTRY);

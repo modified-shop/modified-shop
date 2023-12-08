@@ -232,6 +232,10 @@
             $this->products[$index][str_replace('products_', '', $key)] = $val;
           }
         }
+
+        // set allow tax
+        $this->info['allow_tax'] = (int)$orders_products['allow_tax'];
+        $this->products[$index]['allow_tax'] = (int)$orders_products['allow_tax'];
         
         $attributes_query = xtc_db_query("SELECT *,
                                                  products_options as `option`,
