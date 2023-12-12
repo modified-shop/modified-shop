@@ -83,6 +83,8 @@
     
   // theme color
   // default, blue, green, modified
+  // after a change, the template cache must be deleted.
+  // admin -> adv. configuration -> cache options -> delete templatecache
   define('THEME_COLOR', 'default');  
 
   // set base
