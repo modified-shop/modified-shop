@@ -378,7 +378,7 @@
     {if isset($box_CATEGORIES)}
       <div id="mobile_menu">
         <div id="menu_closer"><i class="fa-solid fa-xmark"></i></div>
-        <ul>
+        <ul class="mobile_menu">
           {$box_CATEGORIES|replace:"<div class=\"mega_menu\">":""|replace:"</div>":""}
           {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS|replace:"<div class=\"mega_menu\">":""|replace:"</div>":""}{/if}
           {if $smarty.const.SPECIALS_CATEGORIES === true}
