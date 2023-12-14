@@ -155,6 +155,7 @@ body {
 
 /* prevent flicker of mobile menu */
 #mobile_menu { display:none; }
+.mobile_menu { display:none; }
 
 /* scrollbars */
 * {
