@@ -1108,6 +1108,7 @@ h1.subline {
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease-in-out;
+  transition-delay: 400ms;
   background:#fff;
   padding: 10px 0;
   z-index:101;
@@ -1126,7 +1127,7 @@ h1.subline {
 .menu_items li:hover .mega_menu {
   opacity: 1;
   visibility: visible;
-  transition-delay: 200ms;
+  transition-delay: 400ms;
 }
 .mega_menu a {
   color:#666;
