@@ -77,7 +77,7 @@ class xtc_afterbuy_functions {
         if (file_exists('includes/local/configure.php') || $testmode === true) {
           $afterbuy_URL = 'https://api.afterbuy.de/afterbuy/ShopInterface_test.aspx';
         } else {
-          $afterbuy_URL = 'https://api.afterbuy.de/afterbuy/ShopInterfaceUTF8.aspx';
+          $afterbuy_URL = 'https://api.afterbuy.de/afterbuy/ShopInterface.aspx';
         }
       }
 
