@@ -24,7 +24,7 @@
         <div class="account_history_box_row">
           {if $DELIVERY_LABEL}
             <div class="account_history_box">
-              <p class="my_5"><strong>{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}{#text_pickup_address#}{else}{#text_shipping_address#}{/if}</strong></p>
+              <p class="my_5"><strong>{if isset($SHIPPING_CLASS) && ($SHIPPING_CLASS|strpos:"selfpickup" !== false)}{#text_pickup_address#}{else}{#text_shipping_address#}{/if}</strong></p>
               {$DELIVERY_LABEL}
             </div>
           {/if}
