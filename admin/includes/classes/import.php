@@ -58,7 +58,8 @@ class xtcImport {
         $this->counter = array ('prod_new' => 0,
                                 'cat_new' => 0,
                                 'prod_upd' => 0,
-                                'cat_upd' => 0);
+                                'cat_upd' => 0,
+                                'cat_touched' => 0);
         $this->mfn = $this->get_mfn();
         $this->errorlog = array ();
         $this->time_start = time();
