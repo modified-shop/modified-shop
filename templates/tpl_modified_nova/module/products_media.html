@@ -10,11 +10,11 @@
         <div class="media_row">
           <span class="media_icon">
             {if isset($module_data.ICON)}
-              {if strpos($module_data.ICON, 'pdf')}
+              {if strpos($module_data.ICON, 'pdf') !== false}
                 <i class="fa-regular fa-file-pdf"></i>
-              {elseif strpos($module_data.ICON, 'link')}
+              {elseif strpos($module_data.ICON, 'link') !== false}
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              {elseif strpos($module_data.ICON, 'jpg') || strpos($module_data.ICON, 'png') }
+              {elseif strpos($module_data.ICON, 'jpg') !== false || strpos($module_data.ICON, 'png') !== false}
                 <i class="fa-regular fa-file-video"></i>
               {else}  
                 <i class="fa-regular fa-file-zipper"></i>

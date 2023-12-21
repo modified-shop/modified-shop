@@ -77,10 +77,10 @@
             {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS}{/if}
           {/if}
           {if $smarty.const.SPECIALS_EXISTS === true}
-            <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_SPECIALS)} active1{/if}"><a title="{#link_specials#}" href="{$smarty.const.FILENAME_SPECIALS|xtc_href_link}">{#link_specials#}</a></li>
+            <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_SPECIALS) !== false} active1{/if}"><a title="{#link_specials#}" href="{$smarty.const.FILENAME_SPECIALS|xtc_href_link}">{#link_specials#}</a></li>
           {/if}
           {if $smarty.const.WHATSNEW_EXISTS === true}
-            <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_PRODUCTS_NEW)} active1{/if}"><a title="{#link_whatsnew#}" href="{$smarty.const.FILENAME_PRODUCTS_NEW|xtc_href_link}">{#link_whatsnew#}</a></li>
+            <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_PRODUCTS_NEW) !== false} active1{/if}"><a title="{#link_whatsnew#}" href="{$smarty.const.FILENAME_PRODUCTS_NEW|xtc_href_link}">{#link_whatsnew#}</a></li>
           {/if}
         </ul>
       </div>
@@ -93,7 +93,7 @@
         <div class="flex_header_checkout_row">
           <div class="col_logo_checkout"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name}" /></div>
           <div class="col_logo_back">
-            {if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_CHECKOUT_SUCCESS)}
+            {if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_CHECKOUT_SUCCESS) !== false}
               <a href="{$index}" title="{#link_index#} &bull; {$store_name}">{#header_back_to_shop#}</a>
             {else}
               <a href="{$smarty.const.FILENAME_SHOPPING_CART|xtc_href_link}" title="{#link_index#} &bull; {$store_name}">{#header_back_to_cart#}</a>
@@ -383,12 +383,12 @@
           {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS|replace:"<div class=\"mega_menu\">":""|replace:"</div>":""}{/if}
           {if $smarty.const.SPECIALS_CATEGORIES === true}
             {if $smarty.const.SPECIALS_EXISTS === true}
-              <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_SPECIALS)} active1{/if}"><a title="{#link_specials#}" href="{$smarty.const.FILENAME_SPECIALS|xtc_href_link}">{#link_specials#}</a></li>
+              <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_SPECIALS) !== false} active1{/if}"><a title="{#link_specials#}" href="{$smarty.const.FILENAME_SPECIALS|xtc_href_link}">{#link_specials#}</a></li>
             {/if}
           {/if}
           {if $smarty.const.WHATSNEW_CATEGORIES === true}
             {if $smarty.const.WHATSNEW_EXISTS === true}
-              <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_PRODUCTS_NEW)} active1{/if}"><a title="{#link_whatsnew#}" href="{$smarty.const.FILENAME_PRODUCTS_NEW|xtc_href_link}">{#link_whatsnew#}</a></li>
+              <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_PRODUCTS_NEW) !== false} active1{/if}"><a title="{#link_whatsnew#}" href="{$smarty.const.FILENAME_PRODUCTS_NEW|xtc_href_link}">{#link_whatsnew#}</a></li>
             {/if}
           {/if}
         </ul>    
