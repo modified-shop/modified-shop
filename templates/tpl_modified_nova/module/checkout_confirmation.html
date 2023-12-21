@@ -52,7 +52,7 @@
       <div class="checkout_box_row">
         {if $DELIVERY_LABEL}
           <div class="checkout_box">
-            <div class="subline">{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}{#text_pickup_address#}{else}{#text_shipping_address#} <a class="color_more" title="{#text_edit#}" href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a>{/if}</div>
+            <div class="subline">{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup') !== false}{#text_pickup_address#}{else}{#text_shipping_address#} <a class="color_more" title="{#text_edit#}" href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a>{/if}</div>
             {$DELIVERY_LABEL}
           </div>
         {/if}
