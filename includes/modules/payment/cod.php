@@ -37,7 +37,7 @@ class cod {
     $this->cost = '';    
     
     if ($this->check() > 0) {
-      $this->limit_subtotal = MODULE_PAYMENT_COD_LIMIT_ALLOWED; // for comparison to be able to limit order subtotal sum where cod allowed
+      $this->limit_subtotal = (double)MODULE_PAYMENT_COD_LIMIT_ALLOWED;
       if ((int) MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
         $this->order_status = MODULE_PAYMENT_COD_ORDER_STATUS_ID;
       }
@@ -92,13 +92,14 @@ class cod {
     global $xtPrice, $order;
 
     // limit sum where cod allowed
-    if($this->limit_subtotal && ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) >= $this->limit_subtotal)) {
+    if ($this->limit_subtotal && ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) >= $this->limit_subtotal)) {
       return;
     }
     
-    $cod_country = false;
-
-    if (MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') {
+    if (defined('MODULE_ORDER_TOTAL_COD_FEE_STATUS')
+        && MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true'
+        )
+    {
       //process installed shipping modules
       $shipping_code = '';
       if (isset($_SESSION['shipping']) 
@@ -115,19 +116,16 @@ class cod {
       if (defined('MODULE_ORDER_TOTAL_COD_'. $shipping_code)) {
         $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
       }
-      // dont't show cod on checkout_payment when shipping module doesn't offer cod
-      if (count($cod_zones) == 0 || (!in_array(($order->delivery['country']['iso_code_2']), $cod_zones) && !in_array('00', $cod_zones))) {
-        return;
-      }
-
+      
+      $cod_cost = 0;
+      $cod_country = false;
       for ($i = 0; $i < count($cod_zones); $i++) {
         if ($cod_zones[$i] == $order->delivery['country']['iso_code_2'] || $cod_zones[$i] == '00') {
-          $cod_cost = $cod_zones[$i + 1];
-          if ($cod_cost == '') {
-            return;
-          }
-          $cod_country = true;
-          break;
+          $cod_cost = (double)$cod_zones[$i + 1];
+          if ($cod_cost > 0) {
+            $cod_country = true;
+            break;
+          }        
         }
         $i++;
       }
@@ -141,14 +139,20 @@ class cod {
           $cod_cost_value = $xtPrice->xtcAddTax($cod_cost, $cod_tax);
           $cod_cost = $xtPrice->xtcFormat($cod_cost_value,true);
         }
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+        
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+            & $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+            )
+        {
           $cod_cost_value = $cod_cost;
           $cod_cost = $xtPrice->xtcFormat($cod_cost,true);
         }
+        
         if (!isset($cod_cost_value)) {
           $cod_cost_value = $cod_cost;
           $cod_cost = $xtPrice->xtcFormat($cod_cost,true);
         }
+        
         $this->cost = '+ '.$cod_cost;
       }
     }
