@@ -229,6 +229,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'STORE_DB_SLOW_QUERY', 'false', '10', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'STORE_DB_SLOW_QUERY_TIME', '1.0', '10', '7', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'DISPLAY_ERROR_REPORTING', 'none', '10', '8', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'none\', \'admin\', \'all\'),');";
+  $values[] = "(NULL, 'DISPLAY_ERROR_REPORTING_LEVEL', 'error', '10', '9', NULL, NOW(), 'xtc_set_log_level', 'xtc_cfg_select_option(array(\'none\', \'error\', \'warning\', \'notice\', \'dev\'),');";
 
   $values_update[] = array (
                            'values' => "configuration_group_id = '10', set_function = 'xtc_cfg_select_option(array(\'none\', \'admin\', \'all\'),'",
