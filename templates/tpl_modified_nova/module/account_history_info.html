@@ -24,7 +24,7 @@
         <div class="account_history_box_row">
           {if $DELIVERY_LABEL}
             <div class="account_history_box">
-              <p class="my_5"><strong>{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup') !== false}{#text_pickup_address#}{else}{#text_shipping_address#}{/if}</strong></p>
+              <p class="my_5"><strong>{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}{#text_pickup_address#}{else}{#text_shipping_address#}{/if}</strong></p>
               {$DELIVERY_LABEL}
             </div>
           {/if}
@@ -155,7 +155,7 @@
             {if sizeof($order_total) > 0}
               <div class="ordertotal_block">
                 {foreach name=aussen item=order_total_values from=$order_total}
-                  <div class="ordertotal_row{if strpos($order_total_values.TEXT, '-') !== false} ot_red{/if}">
+                  <div class="ordertotal_row{if $order_total_values.TEXT|strpos:"-"} ot_red{/if}"">
                     <div class="ot_width_1">{$order_total_values.TITLE}</div>
                     <div class="ot_width_2"><strong>{$order_total_values.TEXT}</strong></div>
                   </div>
