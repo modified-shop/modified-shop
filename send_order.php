@@ -28,7 +28,7 @@ $order_check = xtc_db_fetch_array($order_query_check);
 
 if ((isset($_SESSION['customer_id']) 
      && $_SESSION['customer_id'] == $order_check['customers_id']
-     ) || $send_by_admin
+     ) || (isset($send_by_admin) && $send_by_admin == true)
     )
 {
   $order = new order($insert_id);
@@ -187,7 +187,7 @@ if ((isset($_SESSION['customer_id'])
   }
   
   // send mail to customer
-  if (SEND_EMAILS == 'true' || $send_by_admin) {
+  if (SEND_EMAILS == 'true' || (isset($send_by_admin) && $send_by_admin == true)) {
     xtc_php_mail(EMAIL_BILLING_ADDRESS,
                  EMAIL_BILLING_NAME,
                  $order->customer['email_address'],
