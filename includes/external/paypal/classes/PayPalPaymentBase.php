@@ -452,10 +452,12 @@ class PayPalPaymentBase extends PayPalCommon {
       $shop_content_data = $main->getContentData(2);
       $module_smarty->assign('PRIVACY', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
       $module_smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO,'SSL'));
-      $module_smarty->assign('PRIVACY_checkbox', '<input type="checkbox" value="privacy" name="privacy" id="privacy"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+      if (!defined('DISPLAY_PRIVACY_CHECK') || DISPLAY_PRIVACY_CHECK == 'true') {
+        $module_smarty->assign('PRIVACY_checkbox', '<input type="checkbox" value="privacy" name="privacy" id="privacy"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+      }
     }
 
-    $module_smarty->assign('COMMENTS', xtc_draw_textarea_field('comments', 'soft', '60', '5', isset($_SESSION['comments'])?$_SESSION['comments']:'') . xtc_draw_hidden_field('comments_added', 'YES')); //Dokuman - 2012-05-31 - fix paypal_checkout notices
+    $module_smarty->assign('COMMENTS', xtc_draw_textarea_field('comments', 'soft', '60', '5', isset($_SESSION['comments'])?$_SESSION['comments']:'') . xtc_draw_hidden_field('comments_added', 'YES'));
     $module_smarty->assign('ADR_checkbox', '<input type="checkbox" value="address" name="check_address" id="address" />');
 
     if ($messageStack->size('checkout_confirmation') > 0) {
@@ -531,7 +533,12 @@ class PayPalPaymentBase extends PayPalCommon {
           $error = true;
           $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_REVOCATION_NOT_ACCEPTED));
         }
-        if (defined('DISPLAY_PRIVACY_ON_CHECKOUT') && DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && (!isset($_POST['privacy']) || $_POST['privacy'] != 'privacy')) {
+        if (defined('DISPLAY_PRIVACY_ON_CHECKOUT') 
+            && DISPLAY_PRIVACY_ON_CHECKOUT == 'true' 
+            && (!defined('DISPLAY_PRIVACY_CHECK') || DISPLAY_PRIVACY_CHECK == 'true')
+            && (!isset($_POST['privacy']) || $_POST['privacy'] != 'privacy')
+            )
+        {
           $error = true;
           $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED));
         }
