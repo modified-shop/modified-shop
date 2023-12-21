@@ -35,7 +35,7 @@
 
     {else}
     
-      {if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_DOWNLOAD)}
+      {if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_DOWNLOAD) !== false}
         <h1>{#heading_download#}</h1>
       {else}
         <div class="subline border_0 mb_0">{#heading_download#}</div>
