@@ -2452,6 +2452,45 @@
     return xtc_draw_pull_down_menu('configuration_value', $image_extension_array, $value);
   }
 
+
+  function xtc_set_log_level($log_level) {
+    $log_array = array();
+
+    switch ($log_level) {
+      case 'error':
+        $log_array[] = '_error_reporting.err';
+        break;
+      case 'warning':
+        $log_array[] = '_error_reporting.shop';
+        $log_array[] = '_error_reporting.admin';
+        break;
+      case 'notice':
+        $log_array[] = '_error_reporting.all';
+        break;
+      case 'dev':
+        $log_array[] = '_error_reporting.dev';
+        break;
+      case 'none':
+        $log_array[] = '_error_reporting.none';
+        break;
+    }
+
+    foreach (glob(DIR_FS_CATALOG.'export/_error_reporting.*') as $filename) {
+      if (!in_array(basename($filename), $log_array)) {
+        unlink($filename);
+      }
+      if (in_array(basename($filename), $log_array)) {
+        $log_array = array_diff($log_array, array(basename($filename)));
+      }
+    }
+    
+    if (count($log_array) > 0) {
+      foreach ($log_array as $filename) {
+        file_put_contents(DIR_FS_CATALOG.'export/'.$filename, '');
+      }
+    }
+  }
+  
   /********************************************** NOT USED FUNCTIONS **********************************************/
   
   /**
@@ -2766,5 +2805,3 @@
     }
     return $number;
   }
-
-?>
