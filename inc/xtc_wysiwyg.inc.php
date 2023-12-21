@@ -88,6 +88,9 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
       { name: 'about' }*/
     ],";
     
+    // iframe attributes
+    $customConfig['iframe_attributes'] = 'iframe_attributes: "sandbox: \'allow-scripts allow-same-origin\', allow: \'autoplay\'",';
+  
     //Sprache aus Session
     $customConfig['language'] = 'language: "'.$_SESSION['language_code'].'",';
 
