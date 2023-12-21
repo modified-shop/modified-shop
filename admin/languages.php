@@ -172,6 +172,20 @@
               xtc_db_perform(TABLE_PRODUCTS_DESCRIPTION,$sql_data_array);
             }
           }
+          // create additional products_images_description records
+          if (isset($_POST['p_imgdesc'])) {
+            xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_IMAGES_DESCRIPTION . " WHERE language_id = '" . $lngID_to . "'");
+            $products_query = xtc_db_query("SELECT pid.* 
+                                              FROM " . TABLE_PRODUCTS . " p 
+                                         LEFT JOIN " . TABLE_PRODUCTS_IMAGES_DESCRIPTION . " pid 
+                                                   ON p.products_id = pid.products_id 
+                                             WHERE pid.language_id = '" . $lngID_from . "'");
+            while ($products = xtc_db_fetch_array($products_query)) {
+              $sql_data_array = $products;
+              $sql_data_array['language_id'] = $lngID_to;
+              xtc_db_perform(TABLE_PRODUCTS_IMAGES_DESCRIPTION,$sql_data_array);
+            }
+          }
           // create additional products_options records
           if (isset($_POST['p_opt'])) {
             xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . $lngID_to . "'");
@@ -485,6 +499,7 @@
                     }
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_desc', '1', false) . ' ' . TABLE_CATEGORIES_DESCRIPTION . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_desc', '1', false) . ' ' . TABLE_PRODUCTS_DESCRIPTION . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_imgdesc', '1', false) . ' ' . TABLE_PRODUCTS_IMAGES_DESCRIPTION . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_opt', '1', false) . ' ' . TABLE_PRODUCTS_OPTIONS . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_opt_val', '1', false) . ' ' . TABLE_PRODUCTS_OPTIONS_VALUES . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_tags_opt', '1', false) . ' ' . TABLE_PRODUCTS_TAGS_OPTIONS . '</div>'.PHP_EOL;
