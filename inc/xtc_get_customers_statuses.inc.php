@@ -24,13 +24,15 @@
   // Use it to make pull_down_menu, checkbox....
   function xtc_get_customers_statuses($use_customers_status_id = false) {
     static $customers_statuses_array;
-        
+    
     $languages_id = 1;
     if (isset($_SESSION['languages_id'])) {
       $languages_id = $_SESSION['languages_id'];
     }
     
     if (!isset($customers_statuses_array)) {
+      $customers_statuses_array = array();
+      
       $customers_statuses_query = xtc_db_query("SELECT * 
                                                   FROM " . TABLE_CUSTOMERS_STATUS . " 
                                                  WHERE language_id = '" . (int)$languages_id . "' 
