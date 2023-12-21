@@ -50,7 +50,7 @@
           {/if}
           {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
           {if isset($MODULE_product_options) && $MODULE_product_options != ''}
-            {if $MODULE_product_options_template == 'multi_options_1.html' || strpos($MODULE_product_options_template, 'dropdown') !== false}
+            {if $MODULE_product_options_template == 'multi_options_1.html' || $MODULE_product_options_template|strpos:"dropdown" !== false}
               {$MODULE_product_options}
             {/if}
           {/if}
@@ -148,7 +148,7 @@
       </div>
       <br class="clearfix" />
       {if isset($MODULE_product_options) && $MODULE_product_options != ''}
-        {if $MODULE_product_options_template != 'multi_options_1.html' && strpos($MODULE_product_options_template, 'dropdown') === false}
+        {if $MODULE_product_options_template != 'multi_options_1.html' && $MODULE_product_options_template|strpos:"dropdown" === false}
           {$MODULE_product_options}
         {/if}
       {/if}      
