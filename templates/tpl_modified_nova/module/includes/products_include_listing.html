@@ -1,4 +1,4 @@
-{if ($STARTPAGE == 'true' && $smarty.const.PRODUCT_LIST_BOX_STARTPAGE == 'true')}
+{if $STARTPAGE == 'true'}
   {foreach name=aussen item=module_data from=$module_content}
     <div class="splide__slide">{include file="module/includes/product_box.html"}</div>
   {/foreach}

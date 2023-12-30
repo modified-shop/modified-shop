@@ -64,7 +64,7 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
         $module_content[$row]['PRODUCTS_DATE'] = xtc_date_short($expected['date_expected']);
         $row ++;
       }
-
+      $module_smarty->assign('STARTPAGE', 'true');
       $module_smarty->assign('module_content', $module_content);
     }
   }

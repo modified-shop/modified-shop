@@ -12,9 +12,7 @@
     <div class="splide splide_size1" aria-label="{#heading_upcoming#}">
       <div class="splide__track">
 		    <div class="splide__list">
-          {foreach name=aussen item=module_data from=$module_content}
-            <div class="splide__slide">{include file="module/includes/products_include_info.html"}</div>
-          {/foreach}
+          {include file="module/includes/products_include_listing.html"}
 		    </div>
       </div>
     </div> 

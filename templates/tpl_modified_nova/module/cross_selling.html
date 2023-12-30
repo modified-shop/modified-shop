@@ -12,7 +12,7 @@
         <div class="subline border_0 mt_50 mb_0">{#heading_text#}</div>
       {/if}
   
-      <div class="splide splide_size1" aria-label="{if $products_data.GROUP != ''}{$products_data.GROUP}{else}{#heading_text#}{/if}">
+      <div class="splide {if $smarty.const.PRODUCT_INFO_BOX == 'true'}splide_size1{else}splide_size3{/if}" aria-label="{if $products_data.GROUP != ''}{$products_data.GROUP}{else}{#heading_text#}{/if}">
         <div class="splide__track">
   		    <div class="splide__list">
             {foreach item=module_data from=$products_data.PRODUCTS}

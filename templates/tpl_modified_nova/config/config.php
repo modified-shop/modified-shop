@@ -28,7 +28,6 @@
   
   // view
   define('PRODUCT_LIST_BOX', ((isset($_SESSION['listbox'])) ? $_SESSION['listbox'] : 'true'));
-  define('PRODUCT_LIST_BOX_STARTPAGE', 'true');
   define('PRODUCT_INFO_BOX', 'true');
   
   // template output

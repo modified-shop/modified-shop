@@ -6,7 +6,7 @@
   <div class="also_purchased">
     <div class="subline border_0 mb_0">{#heading_text#}</div>
 
-    <div class="splide splide_size1" aria-label="{#heading_text#}">
+    <div class="splide {if $smarty.const.PRODUCT_INFO_BOX == 'true'}splide_size1{else}splide_size3{/if}" aria-label="{#heading_text#}">
       <div class="splide__track">
 		    <div class="splide__list">
           {foreach name=aussen item=module_data from=$module_content}

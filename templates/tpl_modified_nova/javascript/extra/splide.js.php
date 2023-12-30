@@ -95,6 +95,18 @@
 
   }); 
 
+    /* carousel products row */
+    var elms = document.getElementsByClassName("splide_size3");
+    for (var i = 0; i < elms.length; i++) {
+      new Splide(elms[i], {
+        type: 'slide',
+        role: 'group',
+        speed: 1000,
+        perPage: 1,
+        mediaQuery: 'min', 
+      }).mount();
+    }
+
   /* prevent accessibility warning for vertical orientation */
   $(document).ready(function(){
     $("#splide02-list").removeAttr('aria-orientation');
