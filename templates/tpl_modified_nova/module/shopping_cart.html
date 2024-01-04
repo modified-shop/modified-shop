@@ -96,7 +96,7 @@
           <div class="button_row">
             <div class="br_btn_0">{$BUTTON_CHECKOUT}</div>
             {if (isset($BUTTON_CHECKOUT_EXPRESS) || isset($ACTIVATE_EXPRESS_LINK)) && !$PAYPALPLAN}
-              <div class="br_btn_alternate"><span>oder</span></div>
+              <div class="br_btn_alternate"><span>{#text_cart_or#}</span></div>
               <div class="br_btn_0">
                 {$BUTTON_CHECKOUT_EXPRESS}
                 {if isset($ACTIVATE_EXPRESS_LINK)}
