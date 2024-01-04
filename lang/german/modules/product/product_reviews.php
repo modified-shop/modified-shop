@@ -11,4 +11,4 @@
    ---------------------------------------------------------------------------------------*/
 
   define('MODULE_PRODUCT_PRODUCT_REVIEWS_TITLE', 'Bewertungen im Listing');
-  define('MODULE_PRODUCT_PRODUCT_REVIEWS_DESCRIPTION', 'Anzeigen der Anzahl und Durchschnitt der Bewertungen');
+  define('MODULE_PRODUCT_PRODUCT_REVIEWS_DESCRIPTION', 'Anzeige der Anzahl und Durchschnitt der Bewertungen');
