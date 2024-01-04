@@ -95,12 +95,12 @@
     
           <div class="button_row">
             <div class="br_btn_0">{$BUTTON_CHECKOUT}</div>
-            {if isset($BUTTON_CHECKOUT_EXPRESS) && !$PAYPALPLAN}
+            {if (isset($BUTTON_CHECKOUT_EXPRESS) || isset($ACTIVATE_EXPRESS_LINK)) && !$PAYPALPLAN}
               <div class="br_btn_alternate"><span>oder</span></div>
               <div class="br_btn_0">
                 {$BUTTON_CHECKOUT_EXPRESS}
-                  <div class="font_small mt_5" style="text-align:center;"><a class="arrow" href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></div>            
                 {if isset($ACTIVATE_EXPRESS_LINK)}
+                  <div class="font_small my_5" style="text-align:center;"><a class="arrow" href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></div>            
                 {/if}
               </div>
             {/if}
