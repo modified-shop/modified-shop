@@ -24,9 +24,10 @@ if (isset($_GET['language'])
   require_once (DIR_WS_CLASSES.'language.php');
   
   if (isset($_GET['language'])) {
-    $lng = new language(xtc_input_validation($_GET['language'], 'lang'));
+    $_GET['language'] = xtc_input_validation($_GET['language'], 'lang');
+    $lng = new language($_GET['language']);
   } else {
-    $lng = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'lang'));
+    $lng = new language(DEFAULT_LANGUAGE);
     if (USE_BROWSER_LANGUAGE == 'true') {
       $lng->get_browser_language();
     }

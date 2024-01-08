@@ -28,6 +28,8 @@
     if (in_array(basename($PHP_SELF), $seo_url_sites)) {
       if (!isset($_GET['language'])) {
         $_GET['language'] = DEFAULT_LANGUAGE;
+      } else {
+        $_GET['language'] = xtc_input_validation($_GET['language'], 'lang');
       }
       $site_key = array_search(basename($PHP_SELF), $seo_url_sites);
       if ($site_key >= 2
@@ -47,4 +49,3 @@
       }
     }  
   }
-?>
