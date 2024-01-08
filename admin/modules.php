@@ -102,6 +102,18 @@
         }
         break;
     }
+
+    if (isset($module_key) && $module_key != '' && !defined($module_key)) {
+      $sql_data_array = array(
+        'configuration_key' => $module_key,
+        'configuration_value' => '',
+        'configuration_group_id' => '6',
+        'sort_order' => 0,
+        'date_added' => 'now()',
+      );
+      xtc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+      xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, xtc_get_all_get_params()));
+    }
   }
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
