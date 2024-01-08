@@ -16,6 +16,15 @@
       && MODULE_MAGNALISTER_STATUS == 'True'
       )
   {
+    if (!defined('MAGNALISTER_PLUGIN') 
+        && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')
+        )
+    {
+      ob_start();
+      require_once (DIR_FS_DOCUMENT_ROOT.'magnaCallback.php');
+      ob_end_clean();
+    }
+    
     switch (basename($PHP_SELF)) {
       case FILENAME_CATEGORIES:
         if (function_exists('magnaExecute')) magnaExecute('magnaInventoryUpdate', array('action' => 'inventoryUpdate'), array('inventoryUpdate.php'));
