@@ -497,7 +497,7 @@ if (xtc_not_null($action) && !$box) {
                     }
                     
                     foreach ($mInfo->keys as $key => $value) {
-                      $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
+                      $keys .= '<b>' . $value['title'] . '</b>' . (($value['description'] != '') ? '<br />' . $value['description'] : '').'<br />';
                       if ($value['set_function']) {
                         if (strpos($value['set_function'], '->') !== false) {
                           $class_method = explode('->', $value['set_function']);
