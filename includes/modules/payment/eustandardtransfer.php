@@ -30,7 +30,10 @@ class eustandardtransfer {
     
     if ($this->check() > 0) {
       $this->info_success = ((defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') ? $this->description : $this->info);
-      if ((int) MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID > 0) {
+      if (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID') 
+          && (int) MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID > 0
+          )
+      {
         $this->order_status = MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID;
       }
     }
