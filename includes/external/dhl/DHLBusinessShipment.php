@@ -568,6 +568,9 @@
       $ExportDocument->placeOfCommital = $this->info['city'];
       $ExportDocument->additionalFee = $this->order->info['pp_shipping'] + $this->order->info['pp_fee'];
       $ExportDocument->customsCurrency = $this->order->info['currency'];
+      if ($this->mrn != '') {
+        $ExportDocument->MRN = $this->mrn;
+      }
       
       $ExportDocument->ExportDocPosition = array();
       $this->order->products = $this->encode_request($this->order->products);

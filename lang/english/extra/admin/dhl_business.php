@@ -37,6 +37,7 @@
   define('TEXT_DHL_BUSINESS_DUTYPAID', 'Postal DDP:');
   define('TEXT_DHL_BUSINESS_DROPPOINT', 'Droppoint:');
   define('TEXT_DHL_BUSINESS_SIGNED', 'Recipient Signature:');
+  define('TEXT_DHL_BUSINESS_MRN', 'MRN:');
 
   define('TEXT_DHL_BUSINESS_SHOW_MORE', '[show more]');
   define('TEXT_DHL_BUSINESS_SHOW_LESS', '[show less]');
