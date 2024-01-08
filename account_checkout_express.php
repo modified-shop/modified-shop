@@ -190,9 +190,17 @@ $selection = $payment_modules->selection();
 // disable some modules, because needed action on checkout_payment
 $disallowed_payment = array(
   'banktransfer',
+  'easycredit',
+  'klarna_directbanktransfer',
+  'klarna_directdebit',
+  'klarna_paylater',
+  'klarna_paynow',
+  'klarna_payovertime',
   'paypalplus',
   'payone_installment',
   'payone_otrans',
+  'sofort_sofortueberweisung_classic',
+  'sofort_sofortueberweisung_gateway',
 );
 for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
   if (in_array($selection[$i]['id'], $disallowed_payment)
