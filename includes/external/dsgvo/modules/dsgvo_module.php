@@ -44,8 +44,8 @@
       $smarty = new Smarty();
 
       // build breadcrumb
-      $breadcrumb->add(NAVBAR_TITLE_LOGIN, xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-      
+      $breadcrumb->add(NAVBAR_TITLE_DSGVO, xtc_href_link(basename($PHP_SELF), '', 'SSL'));
+
       // include header
       require (DIR_WS_INCLUDES.'header.php');
 

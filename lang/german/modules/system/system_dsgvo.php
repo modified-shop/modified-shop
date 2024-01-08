@@ -18,6 +18,7 @@ define('MODULE_SYSTEM_DSGVO_TEXT_DESCRIPTION', 'Es wird geloggt, welche Datensch
 define('MODULE_SYSTEM_DSGVO_CONTENT_TITLE', 'Privatsph&auml;re &amp; Datenschutz');
 define('MODULE_SYSTEM_DSGVO_CONTENT_DESC', 'W&auml;hlen Sie den Content f&uuml;r Ihre Datenschutzbestimmungen');
 
+define('NAVBAR_TITLE_DSGVO', 'Aktualisierung erforderlich');
 define('TEXT_DSGVO_HEADING', 'Aktualisierung erforderlich');
 define('TEXT_DSGVO_DESCRIPTION', 'Neue gesetzliche Bestimmungen erfordern, dass wir eine erneute Zustimmung unserer Kunden f&uuml;r folgende Punkte einholen:');
 define('TEXT_DSGVO_ACCEPT_CONDITIONS', 'Ich habe die %s zur Kenntnis genommen.');
