@@ -59,13 +59,14 @@ class vat_validation {
     $error = false;
     if ($vat_id != '') {
       $validate_vatid = $this->validate_vatid($vat_id, $country_id);
+      $vat_id_status = $validate_vatid;
+
       switch ($validate_vatid) {
         case '0' :
           if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
             $error = true;
           }
           $status = $customers_status_id;
-          $vat_id_status = $validate_vatid;
           break;
         case '1' :
           if ($country_id == STORE_COUNTRY) {
@@ -81,21 +82,18 @@ class vat_validation {
               $status = $customers_status_id;
             }
           }
-          $vat_id_status = $validate_vatid;
           break;
         case '8' :
           if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
             $error = true;
           }
           $status = $customers_status_id;
-          $vat_id_status = $validate_vatid;
           break;
         case '9' :
           if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
             $error = true;
           }
           $status = $customers_status_id;
-          $vat_id_status = $validate_vatid;
           break;
         case '99' :
         case '98' :
@@ -108,7 +106,6 @@ class vat_validation {
             $error = true;
           }
           $status = $customers_status_id;
-          $vat_id_status = $validate_vatid;
           break;
         default :
           $status = $customers_status_id;
@@ -165,6 +162,7 @@ class vat_validation {
       1 => '1',
       8 => '8',
       9 => '9',
+      93 => '93',
       94 => '94',
       95 => '95',
       96 => '96',
