@@ -198,7 +198,7 @@
           unset($_SESSION['payment']);
         }
         
-        if (isset($address_book_id)) {
+        if (isset($address_book_id) || isset($edit_address_book_id)) {
           if (isset($_SESSION['paypal']['PayerID'])
               && $_SESSION['paypal']['PayerID'] != ''
               )
