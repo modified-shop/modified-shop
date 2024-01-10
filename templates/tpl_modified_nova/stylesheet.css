@@ -4509,7 +4509,7 @@ a.view_box.active {
 }
 .action_item.selected,
 .action_item_full.selected {
-  order:1;
+  order:2;
 }
 
 .action_item_inner {
@@ -4526,7 +4526,7 @@ a.view_box.active {
 .action_item.selected .action_item_inner,
 .action_item_full.selected .action_item_inner {
   border-top: 1px solid #e1e1e1;
-  background:#fff7dd;
+  background:#eaf2fa;
 }
 .action_item_inner_plain {
   padding: 5px 2px;
