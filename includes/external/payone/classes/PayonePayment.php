@@ -33,16 +33,6 @@ class PayonePayment {
 	function __construct() {
 		global $order;
 
-		$this->payone = new PayoneModified();
-		if ($this->check() > 0) {
-			$this->config = $this->payone->getConfig();
-			if (is_object($order)) {
-        $this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
-        $this->global_config = $this->pg_config['global_override'] == 'true' ? $this->pg_config['global'] : $this->config['global'];
-        $this->tmpStatus = $this->config['orders_status']['tmp'];
-			}
-  		$this->order_status = $this->config['orders_status']['paid'];
-		}
 		!empty($this->code) OR $this->code = 'payone';
 		$this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : ''); 
 		$this->description = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION').((defined('RUN_MODE_ADMIN')) ? MODULE_PAYMENT_PAYONE_LP : '') : ''); 
@@ -50,8 +40,18 @@ class PayonePayment {
 		$this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
 		$this->info = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : ''); 
 
-		if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
-			$this->update_status();
+		$this->payone = new PayoneModified();
+		if ($this->check() > 0) {
+			$this->config = $this->payone->getConfig();
+      $this->tmpStatus = $this->config['orders_status']['tmp'];
+  		$this->order_status = $this->config['orders_status']['paid'];
+
+      if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
+        $this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
+        $this->global_config = $this->pg_config['global_override'] == 'true' ? $this->pg_config['global'] : $this->config['global'];
+        
+        $this->update_status();
+      }
 		}
 	}
 	
