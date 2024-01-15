@@ -431,7 +431,11 @@
       // prevent negative px styles
       $code = preg_replace('/(?<!px)\s?(-)\s?/', "\\1", $code);
       // Remove spaces that can be removed
-      return trim(preg_replace('/\s?([\{\};\=\(\)\/\+\*])\s?/', "\\1", $code));
+      $code = trim(preg_replace('/\s?([\{\};\=\(\)\/\+\*])\s?/', "\\1", $code));
+      // prevent media queries
+      $code = preg_replace('/(and\()/', "and (", $code);
+
+      return $code;
     }
 
 		/**
