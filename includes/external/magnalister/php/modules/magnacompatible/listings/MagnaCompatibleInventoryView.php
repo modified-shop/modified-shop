@@ -472,7 +472,7 @@ $(document).ready(function() {
 			''
 		);
 		$right = '<table class="right"><tbody>
-			'.(in_array(getDBConfigValue('meinpaket.stocksync.tomarketplace', $this->mpID), array('abs', 'auto'))
+			'.(in_array(getDBConfigValue($this->magnasession['currentPlatform'] . '.stocksync.tomarketplace', $this->mpID), array('abs', 'auto'))
 				? '<tr><td><input type="submit" class="ml-button fullWidth smallmargin" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/></td></tr>'
 				: ''
 			).'

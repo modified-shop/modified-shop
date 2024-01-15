@@ -47,8 +47,10 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 
 		$shippingTimes = HitmeisterHelper::GetShippingTimes();
 		$handlingTimes = HitmeisterHelper::GetHandlingTimes();
+		$shippingGroups = HitmeisterHelper::GetShippingGroups();
 		$defaultShippingTime = $preSelected['ShippingTime'];
 		$defaultHandlingTime = $preSelected['HandlingTime'];
+		$defaultShippingGroup = $preSelected['ShippingGroup'];
 		// if not prepared + configuration prefers matching
 		if (    empty($preSelected['MarketplaceCategories'])
 		     && (getDBConfigValue(array('hitmeister.shippingtimematching.prefer', 'val'), $this->mpID, false))) {
@@ -224,7 +226,33 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 		$html .= '
 					</select>
 					</td>
-				</tr>
+				</tr>';
+		if ($shippingGroups !== false) {
+			$html .= '
+				<tr class="odd">
+					<th>'.ML_AMAZON_SHIPPING_TEMPLATE.'</th>
+					<td class="input">
+					<select name="shippinggroup" id="shippinggroup">';
+		foreach ($shippingGroups as $shippingGroupID => $shippingGroupName) {
+			if ($shippingGroupID == $defaultShippingGroup) {
+				$html .= '
+					<option selected value="'.$shippingGroupID.'">'.fixHTMLUTF8Entities($shippingGroupName, ENT_COMPAT).'</option>';
+			} else {
+				$html .= '
+					<option value="'.$shippingGroupID.'">'.fixHTMLUTF8Entities($shippingGroupName, ENT_COMPAT).'</option>';
+			}
+		}
+
+			$html .= '
+					</select>
+					</td>
+					<td class="info">&nbsp;</td>
+				</tr>';
+		} else {
+			$html .= '
+			<input type="hidden" name="shippinggroup" id="shippinggroup" value="0">';
+		}
+		$html .= '
 				<tr class="odd">
 					<th>'.ML_HITMEISTER_DELIVERY_COUNTRY.'</th>
 					<td class="input">
@@ -383,6 +411,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			'ConditionType' => array(),
 			'ShippingTime' => array(),
 			'HandlingTime' => array(),
+			'ShippingGroup' => array(),
 			'Location' => array(),
 			'Comment' => array(),
 			'PictureUrl' => array(),
@@ -393,6 +422,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			'ConditionType' => getDBConfigValue($this->marketplace.'.itemcondition', $this->mpID),
 			'ShippingTime' => getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID),
 			'HandlingTime' => getDBConfigValue($this->marketplace.'.handlingtime', $this->mpID),
+			'ShippingGroup' => getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0),
 			'Location' => getDBConfigValue($this->marketplace.'.itemcountry', $this->mpID),
 			'Comment' => null,
 			'PictureUrl' => null,
@@ -419,6 +449,11 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 					? $defaults[$field]
 					: null;
 			}
+		}
+		# case ShippingGroup: If 0 in prepare table, use config default
+		if (    $preSelected['ShippingGroup'] == '0'
+		     && isset($defaults['ShippingGroup'])) {
+			$preSelected['ShippingGroup'] = $defaults['ShippingGroup'];
 		}
 
 		return $preSelected;

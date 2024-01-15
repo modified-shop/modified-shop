@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -278,9 +278,6 @@ define('ML_MODULE_PRICEMINISTER', 'PriceMinister');
 define('ML_MODULE_CROWDFOX', 'Crowdfox');
 define('ML_MODULE_HOOD', 'Hood');
 define('ML_MODULE_DAWANDA', 'DaWanda');
-define('ML_MODULE_MEINPAKET', 'Allyouneed');
-define('ML_MODULE_AYN24', 'ayn24.pl');
-define('ML_MODULE_LAARY', 'Laary.eu');
 define('ML_MODULE_TWENGA', 'Twenga');
 define('ML_MODULE_GLOBAL_CONFIG', 'Globale Konfiguration');
 define('ML_MODULE_STATISTICS', 'Statistiken');
@@ -976,6 +973,8 @@ define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_SAMEDAY', 'Prime Same Day
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_NEXTDAY', 'Prime Next Day');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_SECONDDAY', 'Prime Second Day');
 define('ML_AMAZON_PRODUCT_MATCHING_POPUP_INFO_MAX_ALLOWED_PRODUCTS', 'Aus technischen Gr&uuml;nden ist es nicht m&ouml;glich mehr als %d Produkte gleichzeitig manuell zu matchen!');
+define('ML_AMAZON_SHIPPING_TIME_DEFAULT_VALUE', 'Standardbearbeitungszeit (Amazon)');
+define('ML_AMAZON_SHIPPING_TIME_SAMEDAY_VALUE', 'Am selben Tag');
 /*
  * comparison shopping
  */
@@ -1016,6 +1015,7 @@ define('ML_COMPARISON_SHOPPING_FIELD_POSSIBLE_AMOUNT_INTERVAL', 'M&ouml;gliche M
 
 define('ML_COMPARISON_SHOPPING_LABEL_MISSING_FIELDS', 'Fehlende Felder');
 define('ML_COMPARISON_SHOPPING_LABEL_LUMP', 'Pauschal (aus rechtem Feld)');
+define('ML_COMPARISON_SHOPPING_LABEL_CONFIG', 'Aus Konfiguration &uuml;bernehmen');
 define('ML_COMPARISON_SHOPPING_LABEL_STD', 'Vom Marktplatz &uuml;bernehmen');
 define('ML_COMPARISON_SHOPPING_LABEL_ARTICLE_SHIPPING_COSTS', 'Shop-Artikel-Versandkosten &uuml;bernehmen');
 define('ML_COMPARISON_SHOPPING_LABEL_PATH_TO_CSV_TABLE', 'Pfad zu Ihrer CSV-Tabelle');
@@ -1296,6 +1296,8 @@ define('ML_EBAY_PAYMENT_METHODS', 'Zahlungsarten');
 define('ML_EBAY_PAYMENT_METHODS_OFFERED', 'Angebotene Zahlungsarten');
 define('ML_EBAY_ITEM_CONDITION', 'Artikelzustand');
 define('ML_EBAY_ITEM_CONDITION_INFO', 'Zustand des Artikels (wird in den meisten Kategorien bei eBay angezeigt)');
+define('ML_EBAY_ITEM_CONDITION_DESCRIPTORS', 'Angaben zum Artikelzustand');
+define('ML_EBAY_ITEM_CONDITION_DESCRIPTORS_INFO', 'Zus&auml;tzliche Angaben zum Artikelzustand (f&uuml;r einige Kategorien)');
 define('ML_EBAY_ITEM_CONDITION_DESCRIPTION', 'Beschreibung des Zustands');
 define('ML_EBAY_ITEM_CONDITION_DESCRIPTION_INFO', 'Zus&auml;tzliche Angaben zum Artikelzustand. Nicht angezeigt bei Zust&auml;nden wie &quot;Neu&quot; oder &quot;Neu mit ...&quot;');
 define('ML_EBAY_GALLERY_PICTURES', 'Galerie-Bilder');
@@ -1820,106 +1822,6 @@ define('ML_CDISCOUNT_VARMATCH_MP_ATTRIBUTE', '%marketplace% Pflichtattribut');
 define('ML_CDISCOUNT_CATEGORY_INFO', 'Info: F&uuml;r die hellgrau-markierten Kategorien sind Sie von Cdiscount nicht freigeschaltet. Bitte wenden Sie sich zur Freischaltung direkt an Cdiscount.');
 define('ML_MATCH_CDISCOUNT_CARRIER_TO_SHIPPING_MODULE', 'Von Cdiscount vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop Versandkosten-Modul matchen');
 
-/* Allyouneed.de */
-
-define('ML_MEINPAKET_CATEGORY_MATCHING', 'Kategorie Matching');
-define('ML_MEINPAKET_VARIANT_MATCHING', 'Varianten-Matching');
-define('ML_MEINPAKET_LABEL_SHOP_VARIANTS', 'Shop-Varianten');
-define('ML_MEINPAKET_LABEL_MEINPAKET_VARIANTS', 'Allyouneed-Varianten');
-define('ML_MEINPAKET_LABEL_SELECTED_SHOP_VAR', 'Gew&auml;hlte Shopvariante');
-define('ML_MEINPAKET_LABEL_SELECTED_MEINPAKET_VARS', 'Dazu gew&auml;hlte Allyouneed Variante');
-define('ML_MEINPAKET_LABEL_PURGE_VARIANTS', 'Allyouneed-Varianten aktualisieren');
-
-define('ML_MEINPAKET_LABEL_CATMATCH_NOT_PREPARED', 'Nicht vorbereitet');
-define('ML_MEINPAKET_LABEL_CATMATCH_PREPARE_COMPLETE', 'Vollst&auml;ndig');
-define('ML_MEINPAKET_LABEL_CATMATCH_PREPARE_INCOMPLETE', 'Unvollst&auml;ndig');
-define('ML_MEINPAKET_CATEGORYMATCHING_ASSIGN_MP_CAT', 'Allyouneed Kategorie zuweisen');
-define('ML_MEINPAKET_CATEGORYMATCHING_ASSIGN_SHOP_CAT', 'Allyouneed-Shop Kategorie zuweisen');
-define('ML_MEINPAKET_LABEL_CATEGORY', 'Allyouneed Kategorie');
-define('ML_MEINPAKET_LABEL_MEINPAKET_CATEGORY', 'Allyouneed Kategorie');
-define('ML_MEINPAKET_LABEL_SHOP_CATEGORY', 'Allyouneed-Shop Kategorie');
-define('ML_MEINPAKET_SHIPPING_DETAILS', 'Versandoptionen');
-define('ML_MEINPAKET_SHIPPING_DETAILS_SHIPPINGCOST', 'Versandkosten');
-define('ML_MEINPAKET_SHIPPING_DETAILS_SHIPPINGCOSTFIXED', 'Fixe Versandkosten');
-define('ML_MEINPAKET_SHIPPING_DETAILS_SHIPPINGTYPE', 'Versandtyp');
-define('ML_MEINPAKET_LABEL_PREPARED', 'Vorbereitet');
-define('ML_MEINPAKET_VARIATIONCONFIG', 'Variantenkonfiguration');
-define('ML_MEINPAKET_LABEL_MP_PRICE_SHORT', 'Mein Allyouneed Preis');
-define('ML_MEINPAKET_LABEL_MEINPAKETID', 'AllyouneedID');
-define('ML_MEINPAKET_LABEL_ORDER_ID', 'Allyouneed-Bestellnummer');
-define('ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_EMPTY', 'Variationen sind nicht konfiguriert.');
-define('ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_MISSING_NAMEID', 'Es konnte keine Zuordnung f&uuml;r das Shop Attribut "{#Attribute#}" bei der gew&auml;hlten Allyouneed Variantengruppe "{#MpIdentifier#}" f&uuml;r den Varianten Artikel mit der SKU "{#SKU#}" gefunden werden.');
-define('ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_CANNOT_CALC_VARIATIONS', 'Es konnten keine Variationen errechnet werden.');
-define('ML_MEINPAKET_ERROR_ACCESS_DENIED', 'Die Zugangsdaten zum Allyouneed.de-Admin scheinen nicht zu stimmen: Der
-	magnalister-Server kann mit den Zugangsdaten keine Verbindung herstellen.
-	Bitte &uuml;berpr&uuml;fen Sie die bei der Konfiguration hinterlegten Zugangsdaten und
-	korrigieren Sie diese gegebenenfalls.');
-define('ML_MEINPAKET_DO_NOT_USE_VARIATIONS', 'Do not use variations');
-define('ML_MEINPAKET_ERROR_CATEGORY', 'Bitte geben Sie eine Kategorie an.');
-
-define('ML_MEINPAKET_VARMATCH_DEFINE_NAME', 'Bitte geben Sie einen Bezeichner ein.');
-define('ML_MEINPAKET_VARMATCH_AJAX_ERROR', 'Ein Fehler ist aufgetreten.');
-define('ML_MEINPAKET_VARMATCH_SELECT_VARIANT_GROUP', 'Bitte w&auml;hlen Sie eine Variantengruppe aus.');
-define('ML_MEINPAKET_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED', 'Bitte weisen Sie allen Allyouneed Attributen ein Shop-Attribut zu.');
-define('ML_MEINPAKET_VARMATCH_PLEASE_SELECT', 'Bitte w&auml;hlen...');
-define('ML_MEINPAKET_VARMATCH_SHOP_VALUE', 'Shop-Wert');
-define('ML_MEINPAKET_VARMATCH_MP_VALUE', 'Allyouneed-Wert');
-define('ML_MEINPAKET_VARMATCH_DONT_TRANSMIT', 'Nicht &uuml;bertragen');
-define('ML_MEINPAKET_VARMATCH_WEBSHOP_ATTRIB', 'Web-Shop Attribut');
-define('ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_TITLE', 'Varianten-Matching-Gruppe l&ouml;schen');
-define('ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_CONTENT', 'Wollen Sie die eigene Gruppe wirklich l&ouml;schen?<br />Alle zugeh&ouml;rigen Variantenmatchings werden dann ebenfalls gel&ouml;scht.');
-define('ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_OK', 'Ok');
-define('ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_CANCEL', 'Abbrechen');
-
-/* Ayn24.pl */
-define('ML_AYN24_CATEGORY_MATCHING', 'Kategorie Matching');
-define('ML_AYN24_VARIANT_MATCHING', 'Varianten-Matching');
-define('ML_AYN24_LABEL_SHOP_VARIANTS', 'Shop-Varianten');
-define('ML_AYN24_LABEL_MEINPAKET_VARIANTS', 'Allyouneed-Varianten');
-define('ML_AYN24_LABEL_SELECTED_SHOP_VAR', 'Gew&auml;hlte Shopvariante');
-define('ML_AYN24_LABEL_SELECTED_MEINPAKET_VARS', 'Dazu gew&auml;hlte Allyouneed Variante');
-define('ML_AYN24_LABEL_PURGE_VARIANTS', 'Allyouneed-Varianten aktualisieren');
-
-define('ML_AYN24_LABEL_CATMATCH_NOT_PREPARED', 'Nicht vorbereitet');
-define('ML_AYN24_LABEL_CATMATCH_PREPARE_COMPLETE', 'Vollst&auml;ndig');
-define('ML_AYN24_LABEL_CATMATCH_PREPARE_INCOMPLETE', 'Unvollst&auml;ndig');
-define('ML_AYN24_CATEGORYMATCHING_ASSIGN_MP_CAT', 'Ayn24 Kategorie zuweisen');
-define('ML_AYN24_CATEGORYMATCHING_ASSIGN_SHOP_CAT', 'Ayn24-Shop Kategorie zuweisen');
-define('ML_AYN24_LABEL_CATEGORY', 'Ayn24 Kategorie');
-define('ML_AYN24_LABEL_AYN24_CATEGORY', 'Ayn24 Kategorie');
-define('ML_AYN24_LABEL_SHOP_CATEGORY', 'Ayn24-Shop Kategorie');
-define('ML_AYN24_SHIPPING_DETAILS', 'Versandoptionen');
-define('ML_AYN24_SHIPPING_DETAILS_SHIPPINGCOST', 'Versandkosten');
-define('ML_AYN24_SHIPPING_DETAILS_SHIPPINGCOSTFIXED', 'Fixe Versandkosten');
-define('ML_AYN24_SHIPPING_DETAILS_SHIPPINGTYPE', 'Versandtyp');
-define('ML_AYN24_LABEL_PREPARED', 'Vorbereitet');
-define('ML_AYN24_VARIATIONCONFIG', 'Variantenkonfiguration');
-define('ML_AYN24_LABEL_MP_PRICE_SHORT', 'Mein Ayn24 Preis');
-define('ML_AYN24_LABEL_AYN24ID', 'Ayn24ID');
-define('ML_AYN24_LABEL_ORDER_ID', 'Ayn24-Bestellnummer');
-define('ML_AYN24_ERROR_CHECKIN_VARIATION_CONFIG_EMPTY', 'Variationen sind nicht konfiguriert.');
-define('ML_AYN24_ERROR_CHECKIN_VARIATION_CONFIG_MISSING_NAMEID', 'Es konnte keine Zuordnung f&uuml;r das Shop Attribut "{#Attribute#}" bei der gew&auml;hlten Ayn24 Variantengruppe "{#MpIdentifier#}" f&uuml;r den Varianten Artikel mit der SKU "{#SKU#}" gefunden werden.');
-define('ML_AYN24_ERROR_CHECKIN_VARIATION_CONFIG_CANNOT_CALC_VARIATIONS', 'Es konnten keine Variationen errechnet werden.');
-define('ML_AYN24_ERROR_ACCESS_DENIED', 'Die Zugangsdaten zum Ayn24.pl-Admin scheinen nicht zu stimmen: Der
-	magnalister-Server kann mit den Zugangsdaten keine Verbindung herstellen.
-	Bitte &uuml;berpr&uuml;fen Sie die bei der Konfiguration hinterlegten Zugangsdaten und
-	korrigieren Sie diese gegebenenfalls.');
-
-define('ML_AYN24_VARMATCH_DEFINE_NAME', 'Bitte geben Sie einen Bezeichner ein.');
-define('ML_AYN24_VARMATCH_AJAX_ERROR', 'Ein Fehler ist aufgetreten.');
-define('ML_AYN24_VARMATCH_SELECT_VARIANT_GROUP', 'Bitte w&auml;hlen Sie eine Variantengruppe aus.');
-define('ML_AYN24_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED', 'Bitte weisen Sie allen Ayn24 Attributen ein Shop-Attribut zu.');
-define('ML_AYN24_VARMATCH_PLEASE_SELECT', 'Bitte w&auml;hlen...');
-define('ML_AYN24_VARMATCH_SHOP_VALUE', 'Shop-Wert');
-define('ML_AYN24_VARMATCH_MP_VALUE', 'AYN24-Wert');
-define('ML_AYN24_VARMATCH_DONT_TRANSMIT', 'Nicht &uuml;bertragen');
-define('ML_AYN24_VARMATCH_WEBSHOP_ATTRIB', 'Web-Shop Attribut');
-define('ML_AYN24_VARMATCH_DELETE_CUSTOM_BTN_TITLE', 'Varianten-Matching-Gruppe l&ouml;schen');
-define('ML_AYN24_VARMATCH_DELETE_CUSTOM_BTN_CONTENT', 'Wollen Sie die eigene Gruppe wirklich l&ouml;schen?<br />Alle zugeh&ouml;rigen Variantenmatchings werden dann ebenfalls gel&ouml;scht.');
-define('ML_AYN24_VARMATCH_DELETE_CUSTOM_BTN_OK', 'Ok');
-define('ML_AYN24_VARMATCH_DELETE_CUSTOM_BTN_CANCEL', 'Abbrechen');
-
-
 /* MagnaCompat */
 define('ML_MAGNACOMPAT_CATEGORYMATCHING_ASSIGN_MP_CAT', 'Marktplatz Kategorie zuweisen');
 define('ML_MAGNACOMPAT_LABEL_CATEGORY', 'Marktplatz Kategorie');
@@ -1935,8 +1837,6 @@ define('ML_MAGNACOMPAT_ERROR_ACCESS_DENIED', 'Die Zugangsdaten zu %s scheinen ni
 	korrigieren Sie diese gegebenenfalls.');
 define('ML_MAGNACOMPAT_LABEL_ERROR', '%s meldet: ');
 
-/* Laary */
-define('ML_LAARY_ERROR_NO_REGION_SELECTED', 'Bitte w&auml;hlen Sie in der Konfiguration mindestens eine Einstellregion aus.');
 
 /* Internal Stuff */
 define('ML_INTERNAL_EMPTY_RESPONSE', 'Antwort von magnalister-Servern ohne Inhalt. Bitte wenden Sie sich an unseren Support.');
@@ -1952,6 +1852,7 @@ define('ML_RATE_ULTIMATE2', 'Ultimate 2');
 define('ML_RATE_ULTIMATE12', 'Ultimate 12');
 define('ML_RATE_FLAT2', 'Flat 2');
 define('ML_RATE_FLAT12', 'Flat 12');
+define('ML_RATE_ENTERPRISE', 'Enterprise');
 define('ML_RATE_XTCM_BASIC6', 'xt:MultiConnect Basic');
 define('ML_RATE_XTCM_LIGHT6', 'xt:MultiConnect Light');
 define('ML_RATE_XTCM_PREMIUM6', 'xt:MultiConnect Premium');

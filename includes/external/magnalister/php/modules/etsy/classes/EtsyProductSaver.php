@@ -53,6 +53,18 @@ class EtsyProductSaver {
 			die();
 		}
 		#echo print_m($aData, __METHOD__.' '.__LINE__);
+		// prevent double entries
+		if ('artNr' == $this->aConfig['keytype']) {
+			 MagnaDB::gi()->delete(TABLE_MAGNA_ETSY_PREPARE, array(
+				'mpID' => $this->mpId,
+				'products_model' => $aData['products_model']
+			));
+		} else {
+			 MagnaDB::gi()->delete(TABLE_MAGNA_ETSY_PREPARE, array(
+				'mpID' => $this->mpId,
+				'products_id' => $aData['products_id']
+			));
+		}
 			MagnaDB::gi()->insert(TABLE_MAGNA_ETSY_PREPARE, $aData, true);
 	}
 

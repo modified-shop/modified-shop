@@ -377,7 +377,7 @@ class OttoCategoryMatching {
 
         if ($exists) {
             foreach (json_decode($dbResult) as $key => $exist) {
-                if ($key == 'Brand') {
+                if ($key == 'Brand' && is_array($exist->Values)) {
                     foreach ($exist->Values as $key => $value) {
                         array_push($selectedIds, $value->Shop->Key);
                     }
@@ -428,6 +428,7 @@ class OttoCategoryMatching {
 
         $aBrandCount = count($aFinalBrands[1]['children']);
         $aFinalBrands[1]['children'] = array_slice($aFinalBrands[1]['children'], $iOffset, $iLength);
+        arrayEntitiesToUTF8($aFinalBrands[1]['children']);
 
         if(intval($brandfilterPage) !== 1) {
             $aBrandPage = [['text' => ML_OTTO_LABEL_OTTO_VALUES]];

@@ -162,6 +162,9 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 				&& $aPropertiesRow['ShippingCostMethod'] === '__ml_lump'
             ) {
 				$data['submit']['ShippingCost'] = $aPropertiesRow['ShippingCost'];
+			} else if (    ($aPropertiesRow['ShippingCostMethod'] === '__ml_config')
+				    && is_numeric(getDBConfigValue($this->marketplace.'.shipping.cost', $this->_magnasession['mpID'], ''))) {
+				$data['submit']['ShippingCost'] = getDBConfigValue($this->marketplace.'.shipping.cost', $this->_magnasession['mpID'], '');
 			} else if ($aPropertiesRow['ShippingCostMethod'] === '__ml_weight') {
 				$data['submit']['ShippingCost'] = $data['submit']['ItemWeight'];
 			}

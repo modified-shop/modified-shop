@@ -59,6 +59,7 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 					pd.products_name,
 					pr.ShippingTime,
 					pr.HandlingTime,
+					pr.ShippingGroup,
 					pr.ConditionType,
 					pr.Comment,
 					pr.Location
@@ -95,7 +96,7 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 			}
 
 			foreach ($p as $sKey => &$sValue) {
-				if (in_array($sKey, array('ShippingTime', 'HandlingTime', 'ConditionType', 'Location')) && $sValue === null) {
+				if (in_array($sKey, array('ShippingTime', 'HandlingTime', 'ConditionType', 'Location', 'ShippingGroup')) && $sValue === null) {
 					switch ($sKey) {
 						case 'ShippingTime':
 							$sValue = getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 0);
@@ -109,9 +110,14 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 						case 'Location':
 							$sValue = getDBConfigValue($this->marketplace.'.itemcountry', $this->mpID, 0);
 							break;
+						case 'ShippingGroup':
+							$sValue = getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0);
+							break;
 						default:
 							breaK;
 					}
+				} else if ('ShippingGroup' == $sKey && $sValue == '0') {
+					$sValue = getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0);
 				}
 			}
 
@@ -127,6 +133,7 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 				'ShippingTime'	=> $p['ShippingTime'],
 				'products_shippingtime'	=> $p['products_shippingtime'],
 				'HandlingTime'	=> $p['HandlingTime'],
+				'ShippingGroup'	=> $p['ShippingGroup'],
 				'Condition'		=> $p['ConditionType'],
 				'Comment'		=> $p['Comment'],
 				'Country'		=> $p['Location'],
@@ -181,11 +188,13 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 
 		$shippingTimes		= HitmeisterHelper::GetShippingTimes();
 		$handlingTimes		= HitmeisterHelper::GetHandlingTimes();
+		$shippingGroups		= HitmeisterHelper::GetShippingGroups();
 		$conditions			= HitmeisterHelper::GetConditionTypes();
 		$deliveryCountries	= HitmeisterHelper::GetDeliveryCountries();
 
 		$defaultShippingTime	= getDBConfigValue($this->marketplace . '.shippingtime', $this->mpID);
 		$defaultHandlingTime	= getDBConfigValue($this->marketplace . '.handlingtime', $this->mpID);
+		$defaultShippingGroup	= getDBConfigValue($this->marketplace . '.shippinggroup', $this->mpID, 0);
 		$defaultCondition		= getDBConfigValue($this->marketplace . '.itemcondition', $this->mpID);
 		$defaultComment			= '';
 		$defaultDeliveryCountry = getDBConfigValue($this->marketplace . '.itemcountry', $this->mpID);
@@ -202,6 +211,7 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 					$defaultHandlingTime = $handlingtimeMatching[$singleProduct['products_shippingtime']];
 				}
 			}
+			$defaultShippingGroup		= isset($singleProduct['ShippingGroup']) ? $singleProduct['ShippingGroup'] : getDBConfigValue($this->marketplace . '.shippinggroup', $this->mpID, 0);
 			$defaultCondition		= isset($singleProduct['Condition']) ? $singleProduct['Condition'] : $defaultCondition;
 			$defaultComment			= isset($singleProduct['Comment']) ? $singleProduct['Comment'] : $defaultComment;
 			$defaultDeliveryCountry = isset($singleProduct['Country']) ? $singleProduct['Country'] : $defaultDeliveryCountry;
@@ -253,6 +263,21 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 						</td>
 						<td class="info">&nbsp;</td>
 					</tr>
+					<?php if ($shippingGroups !== false): ?>
+					<tr class="even">
+						<th><?php echo ML_AMAZON_SHIPPING_TEMPLATE ?></th>
+						<td class="input">
+						<select name="unit[shippinggroup]" id="shippinggroup">
+						<?php foreach ($shippingGroups as $spID => $spName) : ?>
+							<option <?php echo $spID == $defaultShippingGroup ? 'selected' : '' ?> value="<?php echo $spID ?>"><?php echo fixHTMLUTF8Entities($spName, ENT_COMPAT, 'UTF-8') ?></option>
+						<?php endforeach ?>
+						</select>
+						</td>
+						<td class="info">&nbsp;</td>
+					</tr>
+					<?php else: ?>
+						<input type="hidden" name="unit[shippinggroup]" id="shippinggroup" value="0">
+					<?php endif ?>
 					<tr class="odd">
 						<th><?php echo ML_HITMEISTER_DELIVERY_COUNTRY ?></th>
 						<td class="input">

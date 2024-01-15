@@ -20,7 +20,8 @@
 
 $queries = array();
 $functions = array();
-
+/*
+2024-01-08 module deleted
 $queries[] = 'CREATE TABLE IF NOT EXISTS '.TABLE_MAGNA_MEINPAKET_VARIANTMATCHING.' (
   `MpId` int(11) NOT NULL,
   `MpIdentifier` varchar(50) NOT NULL,
@@ -73,3 +74,4 @@ function magnaUpdateMeinpaketProperties() {
 }
 
 $functions[] = 'magnaUpdateMeinpaketProperties';
+*/

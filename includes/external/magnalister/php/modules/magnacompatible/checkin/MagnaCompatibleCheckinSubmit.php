@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCheckinSubmit.php 1260 2011-09-26 10:08:02Z derpapst $
+ * $Id: MagnaCompatibleCheckinSubmit.php 1260 2011-09-26 10:08:02Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -139,7 +139,7 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 		return $c;
 	}
 	
-	protected function generateShopCategoryPath($id, $from = 'category', $langID, $categoriesArray = array(), $index = 0) {
+	protected function generateShopCategoryPath($id, $from, $langID, $categoriesArray = array(), $index = 0) {
 		$descCol = '';
 		if (MagnaDB::gi()->columnExistsInTable('categories_description', TABLE_CATEGORIES_DESCRIPTION)) {
 			$descCol = 'categories_description';

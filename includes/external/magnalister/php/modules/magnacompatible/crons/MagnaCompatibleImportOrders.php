@@ -65,7 +65,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	protected $blGambioOrderConfirmation = false;
 	
 	protected $verbose = false;
-	
+
+    /** @var bool Checking if more orders are ready to import - if set to false it does only one iteration */
+    protected $continueMode = true;
+
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);
 
@@ -442,7 +445,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$this->out($this->marketplace.' ('.$this->mpID.") order import: No data.\n");
 			return false;
 		}
-		$this->hasNext = $res['HASNEXT'];
+		$this->hasNext = ($this->continueMode) ? $res['HASNEXT'] : false;
 		$this->offset['START'] += $this->offset['COUNT'];
 		
 		$orders = $res['DATA'];
@@ -1298,7 +1301,6 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 					SELECT SUM(variation_quantity) FROM ".TABLE_MAGNA_VARIATIONS."
 					 WHERE     products_id = '".(int)$this->p['products_id']."'
 				");
-				return; // Variation stock reduced, no need to reduce main stock
 			}
 		}
 
@@ -2045,12 +2047,16 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			     || (!defined('ACCOUNT_ADDITIONAL_INFO'))
 			     || (ACCOUNT_ADDITIONAL_INFO !== 'true')) {
 				if (!empty($this->o['adress']['entry_additional_info'])) {
-					$this->o['adress']['entry_street_address'] .= ' '.$this->o['adress']['entry_additional_info'];
+					$this->o['adress']['entry_suburb'] = $this->o['adress']['entry_additional_info'];
 					unset($this->o['adress']['entry_additional_info']);
 				}
 				foreach(array('customers','billing','delivery') as $addrPurpose) {
 					if (!empty($this->o['order'][$addrPurpose.'_additional_info'])) {
-						$this->o['order'][$addrPurpose.'_street_address'] .= ' '.$this->o['order'][$addrPurpose.'_additional_info'];
+						if (!isset($this->o['order'][$addrPurpose.'_suburb'])) {
+							$this->o['order'][$addrPurpose.'_suburb'] = $this->o['order'][$addrPurpose.'_additional_info'];
+						} else {
+							$this->o['order'][$addrPurpose.'_suburb'] .= ' '.$this->o['order'][$addrPurpose.'_additional_info'];
+						}
 						unset($this->o['order'][$addrPurpose.'_additional_info']);
 					}
 				}

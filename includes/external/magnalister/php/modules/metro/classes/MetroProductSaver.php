@@ -45,7 +45,7 @@ class MetroProductSaver {
             $imagePath = SHOP_URL_POPUP_IMAGES;
         }
         $aRow['Title'] = $aItemDetails['Title'];
-        $aRow['Description'] = strip_tags($aItemDetails['Description'], '<p><ul><ol><li><span><br><b>');
+        $aRow['Description'] = strip_tags(replaceNbsp($aItemDetails['Description']), '<p><ul><ol><li><span><br><b>');
         $aRow['ShortDescription'] = MetroHelper::sanitizeDescription($aItemDetails['ShortDescription']);
 
         // Check for selected Images
@@ -127,6 +127,7 @@ class MetroProductSaver {
 
         $aRow['ShopVariation'] = $aItemDetails['ShopVariation'];
         $aRow['ShippingProfile'] = $aItemDetails['ShippingProfile'];
+        $aRow['ShippingGroup'] = $aItemDetails['ShippingGroup'];
         // Image -> depends if Single or Multi
 
         $aRow['ProcessingTime'] = $aItemDetails['ProcessingTime'];
@@ -251,7 +252,7 @@ class MetroProductSaver {
             $aItemDetails['GTIN'] = $aProductDescDataByPId[$iProductId]['products_ean'];
             $aRow = $this->preparePropertiesRow($iProductId, $aItemDetails);
             $aRow['BusinessModel'] = $aItemDetails['BusinessModel'];
-            $aRow['Description'] = strip_tags($aProductDescDataByPId[$iProductId]['products_description'], '<p><ul><ol><li><span><br><b>');
+            $aRow['Description'] = strip_tags(replaceNbsp($aProductDescDataByPId[$iProductId]['products_description']), '<p><ul><ol><li><span><br><b>');
             if(array_key_exists('products_short_description', $aProductDescDataByPId[$iProductId])) {
                 $aRow['ShortDescription'] = MetroHelper::sanitizeDescription($aProductDescDataByPId[$iProductId]['products_short_description']);
             }

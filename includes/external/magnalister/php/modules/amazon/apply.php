@@ -62,7 +62,7 @@ function populateGenericData($pID, $edit = false) {
 		'Description' => '',
 		'Keywords' => '',
 		'Attributes' => array(),
-		'LeadtimeToShip' => getDBConfigValue('amazon.leadtimetoship', $mpId, '0'),
+		'LeadtimeToShip' => getDBConfigValue('amazon.leadtimetoship', $mpId, '-'),
 		'ConditionType' => getDBConfigValue('amazon.itemCondition', $mpId, '0'),
 		'ConditionNote' => '',
 		'B2BActive' => getDBConfigValue('amazon.b2b.active', $mpId, 'false'),
@@ -604,7 +604,7 @@ if (!defined('MAGNA_DEV_PRODUCTLIST') || MAGNA_DEV_PRODUCTLIST !== true) { // wi
 				unset($aNewRow['BrowseNodes']);
 
 				$aNewRow['Attributes'] = $aRow['data']['Attributes'];
-				if ($aRow['leadtimeToShipFrozen'] > 0) {
+				if ($aRow['leadtimeToShipFrozen'] >= 0) {
 					$aNewRow['LeadtimeToShip'] = $aRow['leadtimeToShip'];
 				}
 

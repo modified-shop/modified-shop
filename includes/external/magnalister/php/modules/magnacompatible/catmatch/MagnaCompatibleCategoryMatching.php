@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCategoryMatching.php 1018 2011-04-29 11:20:46Z derpapst $
+ * $Id: MagnaCompatibleCategoryMatching.php 1018 2011-04-29 11:20:46Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)

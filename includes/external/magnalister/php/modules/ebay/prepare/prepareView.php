@@ -25,7 +25,7 @@
  * @param $selectedCatName	the category path of the selected category
  * @returns string	option tags for the select element
  */
-function eBayRenderCategoryOptions($type = 'PrimaryCategory', $selectedCat, $selectedCatName) {
+function eBayRenderCategoryOptions($type = 'PrimaryCategory', $selectedCat = 0, $selectedCatName = '') {
 	global $_MagnaSession;
 	# echo print_m(func_get_args(), __FUNCTION__);
 	require_once DIR_MAGNALISTER_FS.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'ebay'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'ebayTopTen.php';
@@ -360,6 +360,7 @@ function renderMultiPrepareView($data) {
 
 	$ConditionIDArray          = array();
 	$ConditionDescriptionArray = array();
+	$ConditionDescriptorsArray = array();
 	$StrikePriceConfArray      = array();
 	$PaymentMethodsArray       = array();
 	$ShippingDetailsArray      = array();
@@ -395,6 +396,9 @@ function renderMultiPrepareView($data) {
 			$ConditionIDArray[] = $row['ConditionID'];
 			if(!empty($row['ConditionDescription'])) {
 				$ConditionDescriptionArray[] = $row['ConditionDescription'];
+			}
+			if(!empty($row['ConditionDescriptors'])) {
+				$ConditionDescriptorsArray[] = $row['ConditionDescriptors'];
 			}
 			$PaymentMethodsArray[] = $row['PaymentMethods'];
 			$ShippingDetailsArray[] = $row['ShippingDetails'];
@@ -489,6 +493,13 @@ function renderMultiPrepareView($data) {
 		$ConditionDescriptionArray = array_unique($ConditionDescriptionArray);
 		if (1 == count($ConditionDescriptionArray)) {
 			$ConditionDescription = $ConditionDescriptionArray[0];
+		}
+	}
+	$ConditionDescriptors = '';
+	if (is_array($ConditionDescriptorsArray)) {
+		$ConditionDescriptorsArray = array_unique($ConditionDescriptorsArray);
+		if (1 == count($ConditionDescriptorsArray)) {
+			$ConditionDescriptors = $ConditionDescriptorsArray[0];
 		}
 	}
 	$prefilledPaymentMethods = null;
@@ -785,6 +796,15 @@ function renderMultiPrepareView($data) {
 					</div>
 				</td>
 				<td class="info">'.ML_EBAY_ITEM_CONDITION_INFO.'</td>
+			</tr>';
+	$html .= '
+			<tr class="'.(($oddEven) ? 'odd' : 'even').'" id="ebay_ConditionDescriptors_tr" name="ebay_ConditionDescriptors_tr" >
+				<th>'.ML_EBAY_ITEM_CONDITION_DESCRIPTORS.'</th>
+				<td class="input">
+				<div id="ebay_ConditionDescriptors">
+				</div>
+				</td>
+				<td class="info">'.ML_EBAY_ITEM_CONDITION_DESCRIPTORS_INFO.'</td>
 			</tr>';
 	$html .= '
 			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
@@ -1456,6 +1476,15 @@ function toggleFixedPriceAuction() {
 	$('#chinesePrice2').css({'display': 'none'});
 }
 
+function toggleConditionDescriptorsVisibility() {
+	if ($('#ebay_ConditionDescriptors').html().length < 20) {
+		$('#ebay_ConditionDescriptors_tr').hide();
+	} else {
+		$('#ebay_ConditionDescriptors_tr').show();
+	}
+	window.setTimeout('toggleConditionDescriptorsVisibility()', 1000);
+}
+
 function onListingTypeChange() {
 	getListingDurations();
 	if (typeof($('#Price')) != "undefined") {
@@ -1563,6 +1592,8 @@ $(document).ready(function() {
 			ProductRequired(cID, $('#noteProductRequired'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID))
 			echo $defaultConditionID; else echo '1000'; ?>);
+			GetConditionDescriptors(cID, <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>, $('#ebay_ConditionDescriptors'), <?php if(isset($ConditionDescriptors)) echo $ConditionDescriptors; else echo ''; ?>);
+			toggleConditionDescriptorsVisibility();
 			return true;
 		}
 	});
@@ -1583,6 +1614,14 @@ $(document).ready(function() {
 	$('#PrimaryCategoryVisual > select').trigger('change');
 	$('#SecondaryCategoryVisual > select').trigger('change');
 
+	$('#ebay_Condition').on('change', '#ConditionID', function() {
+		var iConditionID = this.value;
+		var iCategoryID = $('#PrimaryCategory').val();
+		GetConditionDescriptors(iCategoryID, iConditionID, $('#ebay_ConditionDescriptors'), <?php if(isset($ConditionDescriptors)) echo $ConditionDescriptors; else echo ''; ?>);
+		toggleConditionDescriptorsVisibility();
+	});
+	$('#ebay_Condition > select').trigger('change');
+
 	$('#selectPrimaryCategory').click(function() {
 		startCategorySelector(function(cID) {
 			$('#PrimaryCategory').val(cID);
@@ -1594,6 +1633,8 @@ $(document).ready(function() {
 			}
 			ProductRequired(cID, $('#noteProductRequired'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>);
+			GetConditionDescriptors(cID, <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>, $('#ebay_ConditionDescriptors'), <?php if(isset($ConditionDescriptors)) echo $ConditionDescriptors; else echo ''; ?>);
+			toggleConditionDescriptorsVisibility();
 			return true;
 		}, 'eBay');
 	});

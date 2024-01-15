@@ -1,19 +1,17 @@
 <?php
-/**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+/*
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: applicationviews.php 2454 2013-05-07 21:53:33Z derpapst $
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -740,10 +738,13 @@ function renderB2B($data) {
 
 function renderGenericApplication($data) {
 	global $conditionStatus, $conditionHtml, $_MagnaSession;
-	$opts = array_merge(array(
-		'0' => '&mdash;',
-		'X' => ML_LABEL_DO_NOT_CHANGE,
-	), range(1, 30));
+    $opts = array(
+        '-' => ML_AMAZON_SHIPPING_TIME_DEFAULT_VALUE,
+        '0' => ML_AMAZON_SHIPPING_TIME_SAMEDAY_VALUE
+    );
+    for ($i = 1; $i < 31; $i++) {
+        $opts[$i.''] = $i;
+    }
 
 	$html = '
 		<tbody>
@@ -757,7 +758,7 @@ function renderGenericApplication($data) {
 	$usrValue = $data['LeadtimeToShip'];
 	foreach ($opts as $vk => $vv) {
 		$html .= '
-						<option value="' . $vk . '"' . (($vk == $usrValue) ? 'selected="selected"' : '') . '>' . $vv . '</option>' . "\n";
+						<option value="' . $vk . '"' . (($vk.'' === $usrValue.'') ? 'selected="selected"' : '') . '>' . $vv . '</option>' . "\n";
 	}
 	$html .= '"
 					</select>

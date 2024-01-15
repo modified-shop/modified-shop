@@ -192,6 +192,7 @@ class OttoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
      * upload request payload. Only existing and matched product attribute values should be exported.
      */
     private function translateCategoryAttributesForVariations($jCategoryAttributes, $aVariations, $sSkuKey) {
+$logfile = DIR_MAGNALISTER_LOGS.__CLASS__.'_'.__FUNCTION__.'.log';
         $aCategoryAttributes = json_decode($jCategoryAttributes, true);
         $aShopNamesForCategoryAttributes = array_map(function ($attr) {
             return $attr['AttributeName'];
@@ -231,6 +232,12 @@ class OttoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                     // Only if is array we can go through matched values
                     if (is_array($matchedAttributes['Values'])) {
                         foreach ($matchedAttributes['Values'] as $matched) {
+                            if (    !is_array($matched)
+                                 || !array_key_exists('Shop', $matched)
+                                 || !is_array($matched['Shop'])
+                                 || !array_key_exists('Value', $matched['Shop'])) {
+                                continue;
+                            }
                             if ($matched['Shop']['Value'] === $vattr) {
                                 $res[$aVariation[$sSkuKey]][$attr] = $matched['Marketplace']['Value'];
                             }

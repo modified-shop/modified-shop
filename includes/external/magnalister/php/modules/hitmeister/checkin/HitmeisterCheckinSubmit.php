@@ -162,6 +162,12 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			$data['submit']['ShippingTime'] = $shippingTime;
 			$data['submit']['HandlingTime'] = $handlingTime;
 			$data['submit']['ConditionType'] = $prepare['ConditionType'];
+			if (isset($prepare['ShippingGroup']) && $prepare['ShippingGroup'] != 0) {
+				$data['submit']['ShippingGroup'] = $prepare['ShippingGroup'];
+			} else if (getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0) != 0) {
+				$data['submit']['ShippingGroup'] = getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0);
+			// if nothing set, don't submit
+			}
 			$data['submit']['Location'] = isset($prepare['Location']) ? $prepare['Location'] : $defaultLocation;
 			$data['submit']['Comment'] = isset($prepare['Comment']) ? $prepare['Comment'] : '';
 			$data['submit']['Matched'] = $prepare['PrepareType'] === 'Match' ? true : false;

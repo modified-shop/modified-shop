@@ -38,7 +38,7 @@ class MagnaException extends Exception {
 
 	private $backtrace = array();
 
-	public function __construct($message, $code = 0, $request, $response, $time = 0) {
+	public function __construct($message, $code = 0, $request = array(), $response = array(), $time = 0) {
 		parent::__construct($message, $code);
 		$this->response = $response;
 		$this->request = $request;

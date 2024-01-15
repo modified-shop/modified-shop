@@ -117,7 +117,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		$data['submit']['ConditionType'] = empty($productMatching['item_condition']) ? $data['submit']['ConditionType'] : $productMatching['item_condition'];
 		$data['submit']['ConditionNote'] = sanitizeProductDescription($productMatching['item_note']);
 		$data['submit']['ShippingTemplate'] = isset($defaultTemplate) ? $defaultTemplate : "";
-		if ($productMatching['leadtimeToShip'] > 0) {
+		if (is_numeric($productMatching['leadtimeToShip'])) {
 			$data['submit']['LeadtimeToShip'] = $productMatching['leadtimeToShip'];
 		}
 
@@ -293,7 +293,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			$data['submit']['Images'] = $images;
 		}
 
-		if ($productApply['leadtimeToShip'] > 0) {
+		if (is_numeric($productApply['leadtimeToShip'])) {
 			$data['submit']['LeadtimeToShip'] = $productApply['leadtimeToShip'];
 		}
 			
@@ -334,7 +334,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				? $vItem['MarketplaceSku']
 				: $vItem['MarketplaceId'];
 				
-			if ($productApply['leadtimeToShip'] > 0) {
+			if (is_numeric($productApply['leadtimeToShip'])) {
 				$vItem['LeadtimeToShip'] = $productApply['leadtimeToShip'];
 			}
 
@@ -756,7 +756,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			$data['submit']['Quantity'] = $data['quantity'];
 			$data['submit']['WillShipInternationally'] = $productMatching['will_ship_internationally'];
 			$data['submit']['ConditionNote'] = sanitizeProductDescription($productMatching['item_note']);
-			if ($productMatching['leadtimeToShip'] > 0) {
+			if (is_numeric($productMatching['leadtimeToShip'])) {
 				$data['submit']['LeadtimeToShip'] = $productMatching['leadtimeToShip'];
 			}
 
@@ -813,7 +813,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				$data['submit']['Images'] = $images;
 			}
 			
-			if ($productApply['leadtimeToShip'] > 0) {
+			if (is_numeric($productApply['leadtimeToShip'])) {
 				$data['submit']['LeadtimeToShip'] = $productApply['leadtimeToShip'];
 			}
 			

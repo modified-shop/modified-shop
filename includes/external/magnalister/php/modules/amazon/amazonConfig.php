@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -276,9 +276,14 @@ function amazonLeadtimeToShipMatching($args, &$value = '') {
 	  ORDER BY shipping_status_id ASC
 	');
     $leadtimeMatch = getDBConfigValue($args['key'], $_MagnaSession['mpID'], array());
-    $opts = array_merge(array(
-        '0' => '&mdash;',
-    ), range(1, 30));
+    $opts = array(
+        '-' => ML_AMAZON_SHIPPING_TIME_DEFAULT_VALUE,
+        '0' => ML_AMAZON_SHIPPING_TIME_SAMEDAY_VALUE
+    );
+    for ($i = 1; $i < 31; $i++) {
+        $opts[$i.''] = $i.'';
+    }
+
     $html = '<table class="nostyle" width="100%" style="float: left; margin-right: 2em;">
 		<thead><tr>
 			<th width="25%">'.ML_LABEL_SHIPPING_TIME_SHOP.'</th>
@@ -292,7 +297,7 @@ function amazonLeadtimeToShipMatching($args, &$value = '') {
 				<td width="75%"><select name="conf['.$args['key'].']['.$st['id'].']">';
         foreach ($opts as $key => $val) {
             $html .= '<option value="'.$key.'" '.(
-                (array_key_exists($st['id'], $leadtimeMatch) && ($leadtimeMatch[$st['id']] == $key))
+                (array_key_exists($st['id'], $leadtimeMatch) && ($leadtimeMatch[$st['id']].'' === $key.''))
                     ? 'selected="selected"'
                     : ''
                 ).'>'.$val.'</option>';

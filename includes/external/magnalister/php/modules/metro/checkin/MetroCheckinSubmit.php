@@ -80,7 +80,7 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'MasterSKU' => '', // handled below
             'Quantity' => $product['Quantity'],
             'GTIN' => $properties['GTIN'],
-            'ShortDescription' => $properties['ShortDescription'],
+            'ShortDescription' => replaceNbsp($properties['ShortDescription']),
             'CategoryID' => $properties['PrimaryCategory'],
             'ProductPrice' => $product['Price']['Fixed'],
             'Manufacturer' => $properties['Manufacturer'],
@@ -88,6 +88,7 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'Brand' => $properties['Brand'],
             'Currency' => 'EUR',
             'ShippingProfile' => $properties['ShippingProfile'],
+            'ShippingGroup' => MetroHelper::gi()->getShippingGroupName($properties['ShippingGroup']),
             'Verified' => 'OK',
             'ProductId' => $pID,
             'PreparedTS' => $properties['PreparedTS'],
@@ -98,7 +99,7 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'BusinessModel' => $properties['BusinessModel'],
             'FreightForwarding' => ($properties['FreightForwarding'] === 'true'),
             'Title' => $properties['Title'],
-            'Description' => $properties['Description']
+            'Description' => replaceNbsp($properties['Description'])
         );
         if (getDBConfigValue('general.keytype', '0') == 'artNr') {
             $data['submit']['SKU'] = $properties['products_model'];
@@ -186,6 +187,13 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             // Product Gross Price
             $productGrossPrice = round(($aVariation['Price']['Fixed'] * ((100 + (float)$masterData['Vat']) / 100)), 2);
 
+            // MPN must not be the same for variations
+            if (!empty($masterData['ManufacturerPartNumber'])) {
+                $aVariation['ManufacturerPartNumber'] = $masterData['ManufacturerPartNumber'] . str_replace($masterData['MasterSKU'], '', $aVariation[$sSkuKey]);
+            } else {
+                $aVariation['ManufacturerPartNumber'] = '';
+            }
+
             $data['submit'][$i] = array(
                 'SKU' => $aVariation[$sSkuKey],
                 'MasterSKU' => $masterData['MasterSKU'],
@@ -195,10 +203,11 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'CategoryID' => $masterData['CategoryID'],
                 'ProductPrice' => $aVariation['Price']['Fixed'],
                 'Manufacturer' => $masterData['Manufacturer'],
-                'ManufacturerPartNumber' => $masterData['ManufacturerPartNumber'],
+                'ManufacturerPartNumber' => $aVariation['ManufacturerPartNumber'],
                 'Brand' => $masterData['Brand'],
                 'Currency' => $masterData['Currency'],
                 'ShippingProfile' => $masterData['ShippingProfile'],
+                'ShippingGroup' => $masterData['ShippingGroup'],
                 'Verified' => $masterData['Verified'],
                 'ProductId' => $masterData['ProductId'],
                 'PreparedTS' => $masterData['PreparedTS'],

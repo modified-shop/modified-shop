@@ -1,19 +1,17 @@
 <?php
-/**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+/*
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: singlematching.php 4961 2014-12-09 14:10:12Z tim.neumann $
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -61,7 +59,17 @@ if (!empty($amazonProperties) && !empty($amazonProperties['asin'])) {
 	if (defined('DEVELOPMENT_TEST')) {
 		$productDetails['item_note'] = DEVELOPMENT_TEST;
 	}
-
+	if (getDBConfigValue(array('amazon.leadtimetoshipmatching.prefer', 'val'), $_MagnaSession['mpID'], false)) {
+		$leadtimeToShipMatching = getDBConfigValue('amazon.leadtimetoshipmatching.values', $_MagnaSession['mpID'], array());
+		if (    !empty($leadtimeToShipMatching)
+		     && array_key_exists($productsData['products_shippingtime'], $leadtimeToShipMatching)) {
+			$productDetails['leadtimeToShip'] = $leadtimeToShipMatching[$productsData['products_shippingtime']];
+		} else {
+			$productDetails['leadtimeToShip'] = getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '-');
+		}
+	} else {
+		$productDetails['leadtimeToShip'] = getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '-');
+	}
 }
 $shippingTemplates = getDBConfigValue('amazon.shipping.template', $_MagnaSession['mpID']);
 
@@ -195,16 +203,21 @@ echo '
 				&nbsp;&nbsp;&nbsp;
 				'.ML_AMAZON_LABEL_LEADTIME_TO_SHIP.': 
 				<select name="amazonProperties[leadtimeToShip]" id="amazon_leadtimeToShip">';
-					$leadtimeToShipOpts = array_merge(array (
-						'0' => '&mdash;',
-					), range(1, 30));
+                    $leadtimeToShipOpts = array(
+                        '-' => ML_AMAZON_SHIPPING_TIME_DEFAULT_VALUE,
+                        '0' => ML_AMAZON_SHIPPING_TIME_SAMEDAY_VALUE
+                    );
+
+                    for ($i = 1; $i < 31; $i++) {
+                        $leadtimeToShipOpts[$i.''] = $i;
+                    }
 
 					$usrValue = isset($productDetails['leadtimeToShip'])
 						? $productDetails['leadtimeToShip']
-						: getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '0');
+						: getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '-');
 					
 					foreach ($leadtimeToShipOpts as $vk => $vv) {
-						echo '	<option value="'.$vk.'"'.(($vk == $usrValue) ? 'selected="selected"' : '').'>'.$vv.'</option>'."\n";
+						echo '	<option value="'.$vk.'"'.(($vk.'' === $usrValue.'') ? 'selected="selected"' : '').'>'.$vv.'</option>'."\n";
 					}
 					echo '
 				</select>

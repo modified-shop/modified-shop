@@ -516,7 +516,7 @@ function geteBayBusinessPolicies($forceRefresh = false) {
     return true;
 }
 
-function geteBaySellerProfiles($forceRefresh = false, $sKind) {
+function geteBaySellerProfiles($forceRefresh = false, $sKind = '') {
     global $_MagnaSession;
     $mpID = $_MagnaSession['mpID'];
     if (('Payment' != $sKind)
@@ -774,9 +774,9 @@ function getEBayAttributes($cID, $mode, $preselectedValues = array()) {
 
     require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/GenerateProductsDetailInput.php');
     if (!empty($preselectedValues)) {
-        $gPDI = new GenerateProductsDetailInput($attrOptions, $preselectedValues, $prefilledReadonlyFields);
+        $gPDI = new GenerateProductsDetailInput($attrOptions, $preselectedValues);
     } else
-        $gPDI = new GenerateProductsDetailInput($attrOptions, array(), $prefilledReadonlyFields);
+        $gPDI = new GenerateProductsDetailInput($attrOptions, array());
     return $gPDI->render();
 }
 
@@ -982,6 +982,7 @@ function ProductRequired($cID) {
 
 function GetConditionValues($cID) {
     global $_MagnaSession;
+#echo '<pre>'.var_export($_MagnaSession[$_MagnaSession['mpID']]['EbayApiConfigValues']['GetCategoryDetails{"DATA":{"CategoryID":"180273"}}'], true)."\n</pre>\n";
     if (empty($cID))
         return false;
     try {
@@ -999,6 +1000,50 @@ function GetConditionValues($cID) {
         return $GetConditionValuesResult['DATA']['ConditionValues'];
     }
     return false;
+}
+
+function GetConditionPolicies($cID) {
+    global $_MagnaSession;
+    if (empty($cID))
+        return false;
+    try {
+        $GetConditionPoliciesResult = MagnaConnector::gi()->submitRequest(array(
+            'ACTION' => 'GetConditionPolicies',
+            'DATA' => array('CategoryID' => $cID,
+                'Site' => getDBConfigValue('ebay.site', $_MagnaSession['mpID'])),
+        ));
+    } catch (MagnaException $e) {
+        return false;
+    }
+    if (isset($GetConditionPoliciesResult['DATA']['ConditionPolicies'])
+        && (is_array($GetConditionPoliciesResult['DATA']['ConditionPolicies']))
+    ) {
+        if (!isset($_MagnaSession[$_MagnaSession['mpID']]['EbayApiConfigValues'])) {
+            $_MagnaSession[$_MagnaSession['mpID']]['EbayApiConfigValues'] = array();
+        }
+        $_MagnaSession[$_MagnaSession['mpID']]['EbayApiConfigValues']['GetConditionPolicies{"DATA":{"CategoryID":"'.$cID.'"}}'] = $GetConditionPoliciesResult['DATA']['ConditionPolicies'];
+        return $GetConditionPoliciesResult['DATA']['ConditionPolicies'];
+    }
+    return false;
+}
+
+function GetConditionDescriptors($iCategoryID, $iConditionID) {
+    global $_MagnaSession;
+    if (isset($_MagnaSession[$_MagnaSession['mpID']]['EbayApiConfigValues']['GetConditionPolicies{"DATA":{"CategoryID":"'.$iCategoryID.'"}}'])) {
+        $aConditionPolicies = $_MagnaSession[$_MagnaSession['mpID']]['EbayApiConfigValues']['GetConditionPolicies{"DATA":{"CategoryID":"'.$iCategoryID.'"}}'];
+    } else {
+        $aConditionPolicies = GetConditionPolicies($iCategoryID);
+    }
+    if (empty($aConditionPolicies)) {
+        return false;
+    }
+    if ($iConditionID == 1000) { // nothing predefined, take the first (it's never < 1000)
+        return current($aConditionPolicies);
+    }
+    if (!array_key_exists($iConditionID, $aConditionPolicies)) {
+        return false;
+    }
+    return $aConditionPolicies[$iConditionID];
 }
 
 function substitutePictures($tmplStr, $pID, $imagePath) {
@@ -1116,9 +1161,9 @@ function makePriceByStrikePriceSettings($pID, $StrikePriceKind, $StrikePriceGrou
     switch($StrikePriceKind) {
         case('SpecialPrice'):
             $fixExtra = array (
-                'AddKind'    => getDBConfigValue($mp.$extra.'.price.addkind', $_MagnaSession['mpID'], 'percent'),
-                'Factor'     => (float)getDBConfigValue($mp.$extra.'.price.factor', $_MagnaSession['mpID'], 0),
-                'Signal'     => getDBConfigValue($mp.$extra.'.price.signal', $_MagnaSession['mpID'], ''),
+                'AddKind'    => getDBConfigValue('ebay.fixed.price.addkind', $_MagnaSession['mpID'], 'percent'),
+                'Factor'     => (float)getDBConfigValue('ebay.fixed.price.factor', $_MagnaSession['mpID'], 0),
+                'Signal'     => getDBConfigValue('ebay.fixed.price.signal', $_MagnaSession['mpID'], ''),
                 'Group'      => getDBConfigValue('ebay.fixed.price.group', $_MagnaSession['mpID'], ''),
                 'UseSpecialOffer' => true,
                 'IncludeTax' => true
@@ -1614,6 +1659,7 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
     $row['VariationThemeBlacklist'] = !empty($itemDetails['VariationThemeBlacklist']) ? $itemDetails['VariationThemeBlacklist'] : null;
 
     $row['ConditionID'] = $itemDetails['ConditionID'];
+    $row['ConditionDescriptors'] = json_encode($itemDetails['ConditionDescriptors']);
     $row['ConditionDescription'] = $itemDetails['ConditionDescription'];
 
     // BusinessPolicies

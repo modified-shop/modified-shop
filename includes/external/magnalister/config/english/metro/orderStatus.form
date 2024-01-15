@@ -1,0 +1,73 @@
+{
+    "orderSyncState": {
+        "headline": "",
+        "desc": "<b>Synchronisation des Bestell-Status vom Shop zu _#_platformName_#_<\/b>",
+        "fields": {
+            "syncstatus": {
+                "label": "Status Synchronisierung",
+                "desc": "<dl>\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>Die Funktion \"Automatische Synchronisierung per CronJob\" &uuml;bermittelt alle 2 Stunden den aktuellen Versendet-Status zu _#_platformName_#_.<br\/>\n\t\t\t\t\t\t\t\t\t\tDabei werden die Status-Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. eine Warenwirtschaft nur in der Datenbank erfolgten.<br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tEinen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie die Bestellung direkt im Web-Shop bearbeiten, dort  den gew&uuml;nschten Status setzen, und dann auf \"Aktualisieren\" klicken.<br\/>\n\t\t\t\t\t\t\t\t\t\tSie k&ouml;nnen auch den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise), um den Status sofort zu &uuml;bergeben.<br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tZus&auml;tzlich k&ouml;nnen Sie den Bestellstatus-Abgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, indem Sie folgenden Link zu Ihrem Shop aufrufen: <br\/><br\/>\n\t\t\t\t\t\t\t\t\t\t<i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncOrderStatus<\/i><br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tEigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\n\t\t\t\t\t\t\t\t\t<\/dd>\n\t\t\t\t\t\t\t<\/dl>\n\t\t\t\t",
+                "key": "_#_platform_#_.orderstatus.sync",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "no": "Keine Synchronisierung"
+                },
+                "default": "auto"
+            },
+            "shippedstatus": {
+                "label": "Versand best&auml;tigen mit",
+                "desc": "Setzen Sie hier den Shop-Status, der auf _#_platformName_#_ automatisch den Status \"Versand best&auml;tigen\" setzen soll.",
+                "key": "_#_platform_#_.orderstatus.shipped",
+                "type": "selection",
+                "values": null
+            },
+            "carrierMatch": {
+                "label": "Spediteur Matching",
+                "key": "_#_platform_#_.orderstatus.carrier.dbmatching.table",
+                "desc": "Falls Sie ein Contrib zur Verwaltung von Trackingcodes und Spediteuren verwenden, k&ouml;nnen Sie hier die Tabelle und die Spalte ausw&auml;hlen in der der Spediteur gespeichert\n\t\t\t\t           wird. Dadurch wird das Feld f&uuml;r den Spediteur bei Bestellstatus&uuml;bermittlung mit diesem vorausgef&uuml;llt. Andernfalls wird die Einstellung bei <b>Spediteur<\/b> verwendet.<br\/>\n\t\t\t\t           Sollte in der Tabelle die Spalte \"orders_id\" anders benannt sein, geben Sie bitte bei Alias die alternative Bezeichnung f&uuml;r die Spalte mit der gleichen \n\t\t\t\t           Bedeutung an.<br\/><br\/>\n\t\t\t\t           <b>Hinweis:<\/b> Diese Daten werden nicht &uuml;berpr&uuml;ft. Sollten Sie fehlerhaft sein, wird es zu Datenbankfehlern kommen!",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class=\"tt\">`orders_id`<\/span> Alias",
+                        "key": "_#_platform_#_.orderstatus.carrier.dbmatching.alias",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "trackingMatch": {
+                "label": "Trackingcode Matching",
+                "key": "_#_platform_#_.orderstatus.trackingcode.dbmatching.table",
+                "desc": "Falls Sie ein Contrib zur Verwaltung von Trackingcodes verwenden, k&ouml;nnen Sie hier die Tabelle und die Spalte ausw&auml;hlen in der der Trackingcode gespeichert\n\t\t\t\t           wird. Dadurch wird das Feld f&uuml;r den Trackingcode bei Bestellstatus&uuml;bermittlung vorausgef&uuml;llt. <br\/>\n\t\t\t\t           Sollte in der Tabelle die Spalte \"orders_id\" anders benannt sein, geben Sie bitte bei Alias die alternative Bezeichnung f&uuml;r die Spalte mit der gleichen \n\t\t\t\t           Bedeutung an.<br\/><br\/>\n\t\t\t\t           <b>Hinweis:<\/b> Diese Daten werden nicht &uuml;berpr&uuml;ft. Sollten Sie fehlerhaft sein, wird es zu Datenbankfehlern kommen!",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class=\"tt\">`orders_id`<\/span> Alias",
+                        "key": "_#_platform_#_.orderstatus.trackingcode.dbmatching.alias",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "cancelstatus": {
+                "label": "Bestellung stornieren mit",
+                "desc": "Setzen Sie hier den Shop-Status, der auf  _#_platformName_#_ automatisch den Status \"Bestellung stornieren\" setzen soll. <br\/><br\/>\n\t\t\t\t           Hinweis: Teilstorno ist hier&uuml;ber nicht m&ouml;glich. Die gesamte Bestellung wird &uuml;ber diese Funktion storniert\n\t\t\t\t           und dem K&auml;ufer gutgeschrieben.",
+                "key": "_#_platform_#_.orderstatus.cancelled",
+                "type": "selection",
+                "values": null
+            },
+            "cancelreason": {
+                "label": "Bestellung stornieren Grund",
+                "key": "_#_platform_#_.orderstatus.cancelreason",
+                "type": "selection",
+                "values": null
+            }
+        }
+    }
+}

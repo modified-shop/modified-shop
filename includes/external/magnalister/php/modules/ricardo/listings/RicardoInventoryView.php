@@ -203,7 +203,6 @@ $(document).ready(function() {
 		}
 		$sortFlags = array (
 			'sku' => 'SKU',
-			'meinpaketid' => 'MeinpaketID',
 			'price' => 'Price',
 			'quantity' => 'Quantity',
 			'dateadded' => 'DateAdded',

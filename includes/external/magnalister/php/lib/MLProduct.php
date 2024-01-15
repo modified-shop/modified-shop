@@ -2332,7 +2332,7 @@ $images = array (
 	 * @return array
 	 *    The category path
 	 */
-	private function generateMPCategoryPath($id, $from = 'category', $langID, $categories_array = array(), $index = 0, $callCount = 0) {
+	private function generateMPCategoryPath($id, $from = 'category', $langID = 1, $categories_array = array(), $index = 0, $callCount = 0) {
 		$descCol = '';
 		if (MagnaDB::gi()->columnExistsInTable('categories_description', TABLE_CATEGORIES_DESCRIPTION)) {
 			$descCol = 'categories_description';

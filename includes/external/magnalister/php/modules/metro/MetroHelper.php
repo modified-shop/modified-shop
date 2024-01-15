@@ -138,7 +138,7 @@ class MetroHelper extends AttributesMatchingHelper {
         }
     }
 
-    public function getShippingProfiles($iSelectedProfile=999) {
+    public function getShippingProfilesHtml($iSelectedProfile=999) {
 
         $aDefaultProfile = getDBConfigValue('metro.shippingprofile', $this->mpId);
         $aProfileName = getDBConfigValue('metro.shippingprofile.name', $this->mpId);
@@ -159,6 +159,46 @@ class MetroHelper extends AttributesMatchingHelper {
         }
 
         return $html;
+    }
+
+    public function getShippingGroupsHtml($iSelectedGroup=999) {
+
+        $aGroups = getDBConfigValue('metro.shippinggroup', $this->mpId, ''); 
+        if (empty($aGroups)) return '';
+        $aGroupNames = getDBConfigValue('metro.shippinggroup.name',$this->mpId, '');
+        if (empty($aGroups)) return '';
+        $html = '';
+
+        if ($iSelectedGroup < 999) {
+            foreach ($aGroups['defaults'] as $iKey => $sValue) {
+                $aGroups['defaults'][$iKey] = '';
+            }
+            unset($iKey); unset($sValue);
+            $aGroups['defaults'][$iSelectedGroup] = '1';
+        }
+
+        foreach ($aGroups['defaults'] as $iKey => $sValue) {
+            $html .= '<option value="'.$iKey.'" '.(($sValue) ? 'selected="selected"' : '').'>'.$aGroupNames[$iKey].'</option>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Returns the name of selected shipping group
+     *
+     * @param $iSelectedGroup
+     * @return string
+     */
+    public function getShippingGroupName($iSelectedGroup=999) {
+        $aGroups = getDBConfigValue('metro.shippinggroup', $this->mpId, '');
+        if (empty($aGroups)) return '';
+        $aGroupNames = getDBConfigValue('metro.shippinggroup.name',$this->mpId, '');
+        if (isset($aGroupNames[$iSelectedGroup])) {
+            return $aGroupNames[$iSelectedGroup];
+        } else {
+            return $aGroupNames[array_search('1', $aGroups['defaults'])];
+        }
     }
 
     public function getVarMatchTranslations() {

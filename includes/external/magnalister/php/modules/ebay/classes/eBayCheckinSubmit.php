@@ -238,6 +238,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			array('var' => 'property',	'varKey' => 'SellerProfiles',		'submitKey' => 'SellerProfiles',		'default' => $defaultSellerProfiles, 'empty' => false, 'sanitize' => 'json'),
 			array('var' => 'property',	'varKey' => 'Subtitle',			'submitKey' => 'ItemSubTitle',		'empty' => false),
 			array('var' => 'property',	'varKey' => 'ConditionID',		'submitKey' => 'ConditionID',		'empty' => false),
+			array('var' => 'property',	'varKey' => 'ConditionDescriptors',		'submitKey' => 'ConditionDescriptors',		'empty' => true),
 			array('var' => 'property',	'varKey' => 'ConditionDescription',		'submitKey' => 'ConditionDescription',		'empty' => true),
 			array('var' => 'property',	'varKey' => 'SecondaryCategory',	'submitKey' => 'SecondaryCategory',		'empty' => false),
 			array('var' => 'property',	'varKey' => 'StrikePriceConf',		'submitKey' => 'StrikePriceConf',		'empty' => false, 'sanitize' => 'json'), 
@@ -1028,6 +1029,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
                 }
             }
         }
+        if (!empty($data['submit']['ConditionDescriptors'])) {
+            $data['submit']['ConditionDescriptors'] = json_decode($data['submit']['ConditionDescriptors'], true);
+        }
 		$data['submit'] = array_merge($data['submit'], $aListingDetails);
 		if ($blDoprepareVariationDataForSubmitRequest) {
 			$this->prepareVariationDataForSubmitRequest($variationsForSubmit, $data);
@@ -1126,6 +1130,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 
 		if ($propertiesRow['ConditionID']) {
 			$data['submit']['ConditionID'] = $propertiesRow['ConditionID'];
+		}
+		if (!empty($propertiesRow['ConditionDescriptors'])) {
+			$data['submit']['ConditionDescriptors'] = json_decode($propertiesRow['ConditionDescriptors'], true);
 		}
 		if (!empty($propertiesRow['ConditionDescription'])) {
 			$data['submit']['ConditionDescription'] = $propertiesRow['ConditionDescription'];

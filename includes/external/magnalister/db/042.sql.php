@@ -29,7 +29,6 @@ function mlDbUpdate_AddPreparedTsColumn_042 () {
 		TABLE_MAGNA_EBAY_PROPERTIES,
 		TABLE_MAGNA_HITMEISTER_PREPARE,
 		TABLE_MAGNA_HOOD_PROPERTIES,
-		TABLE_MAGNA_MEINPAKET_PROPERTIES,
 	) as $sTable) {
 		if (MagnaDB::gi()->tableExists($sTable)) {
 			$aFields = MagnaDB::gi()->getTableCols($sTable);

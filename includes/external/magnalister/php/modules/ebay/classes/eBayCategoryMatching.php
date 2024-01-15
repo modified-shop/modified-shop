@@ -525,6 +525,25 @@ function GetConditionValues(cID, viewElem, defaultConditionID) {
 	});
 }
 
+function GetConditionDescriptors(iCategoryID, iConditionID, viewElem, defaultDescriptors) {
+	jQuery.ajax({
+		type: 'POST',
+		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+		data: {
+			'action': 'GetConditionDescriptors',
+			'iCategoryID': iCategoryID,
+			'iConditionID': iConditionID,
+			'defaultDescriptors': defaultDescriptors
+		},
+		success: function(data) {
+			viewElem.html(data);
+		},
+		error: function() {
+		},
+		dataType: 'html'
+	});
+}
+
 function initEBayCategories(purge) {
 	purge = purge || false;
 	myConsole.log('isStoreCategory', isStoreCategory);
@@ -624,6 +643,15 @@ $(document).ready(function() {
 		if (isset($_POST['id2'])) {
 			$id2 = $_POST['id2'];
 		}
+
+		$iCategoryID = $iConditionID = '';
+		if (isset($_POST['iCategoryID'])) {
+			$iCategoryID = $_POST['iCategoryID'];
+		}
+		if (isset($_POST['iConditionID'])) {
+			$iConditionID = $_POST['iConditionID'];
+		}
+		
 		$this->isStoreCategory = (array_key_exists('isStoreCategory', $_POST))
 			? (($_POST['isStoreCategory'] == 'false')
 				? false
@@ -710,6 +738,32 @@ $(document).ready(function() {
 						}
 					}
 				$html .= "</select>\n";
+				return $html;
+			}
+			case 'GetConditionDescriptors': {
+				$conditionDescriptors = GetConditionDescriptors($iCategoryID, $iConditionID);
+				if (false == $conditionDescriptors) return '';
+				if(array_key_exists('defaultDescriptors', $_POST)
+				    && !empty($_POST['defaultDescriptors'])) {
+					$defaultDescriptors = $_POST['defaultDescriptors'];
+				} else {
+					$defaultDescriptors = array();
+				}
+				$html = "<table>\n";
+				foreach ($conditionDescriptors['conditionDescriptors'] as $iDescriptorId => $aDescriptor) {
+					$html .= '<tr><td>'.$aDescriptor['conditionDescriptorName'].'</td><td>';
+					if ($aDescriptor['conditionDescriptorConstraint']['mode'] == 'SELECTION_ONLY') {
+						$html .= '<select name="ConditionDescriptors['.$iDescriptorId.']" id="ConditionDescriptors_'.$iDescriptorId.'">'."\n";
+						foreach ($aDescriptor['conditionDescriptorValues'] as $sDescriptorID => $sDescriptorName) {
+							$html .= "<option ". ((array_key_exists($iDescriptorId, $defaultDescriptors) && $defaultDescriptors[$iDescriptorId] == $sDescriptorID ) ? 'selected ' : '')."value=$sDescriptorID>$sDescriptorName</option>\n";
+						}
+						$html .= "</select>\n";
+					} else {
+						$html .= '<input type="text" name="ConditionDescriptors['.$iDescriptorId.']" id="ConditionDescriptors_'.$iDescriptorId.'" '.(array_key_exists($iDescriptorId, $defaultDescriptors) ? 'value="'.$defaultDescriptors[$iDescriptorId].'"':'').'>';
+					}
+					$html .= "</tr></td>\n";
+				}
+				$html .= "</table>\n";
 				return $html;
 			}
 			case 'saveCategoryMatching': {
