@@ -1057,6 +1057,13 @@ function stripLinks($str, $sTarget = '') {
 	return $str;
 }
 
+/**
+ * html decoded &nbsp; may cause problems (e.g. in METRO)
+ */
+function replaceNbsp($str) {
+    return str_replace(array('&nbsp;', html_entity_decode('&nbsp;')), ' ', $str);
+}
+
 function arrayMap($callback, $arr1) {
 	$results = array();
 	$args = array();

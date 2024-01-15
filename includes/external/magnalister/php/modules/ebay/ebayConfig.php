@@ -428,6 +428,12 @@ if ($auth['state']) {
 		$defaultPaymentSellerProfile  =  getDBConfigValue('ebay.default.paymentsellerprofile', $_MagnaSession['mpID'], 0);
 		$defaultShippingSellerProfile =  getDBConfigValue('ebay.default.shippingsellerprofile', $_MagnaSession['mpID'], 0);
 		$defaultReturnSellerProfile   =  getDBConfigValue('ebay.default.returnsellerprofile', $_MagnaSession['mpID'], 0);
+		foreach (array('paymentmethod', 'paypal.address', 'paymentinstructions') as $paymentSetting) {
+			if (!isset($sellerProfileContents['Payment'][$defaultPaymentSellerProfile][$paymentSetting])) {
+				$sellerProfileContents['Payment'][$defaultPaymentSellerProfile][$paymentSetting] = ''; // because 'value' in magnalister_config is not nullable
+			}
+		}
+		unset($paymentSetting);
 		setDBConfigValue('ebay.default.paymentmethod', $_MagnaSession['mpID'], $sellerProfileContents['Payment'][$defaultPaymentSellerProfile]['paymentmethod'], true);
 		setDBConfigValue('ebay.paypal.address', $_MagnaSession['mpID'], $sellerProfileContents['Payment'][$defaultPaymentSellerProfile]['paypal.address'], true);
 		setDBConfigValue('ebay.paymentinstructions', $_MagnaSession['mpID'], fixHTMLUTF8Entities($sellerProfileContents['Payment'][$defaultPaymentSellerProfile]['paymentinstructions']), true);

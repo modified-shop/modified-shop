@@ -25,7 +25,7 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/catmatch/MagnaCompatibleCa
 class TradoriaCategoryMatching extends MagnaCompatibleCategoryMatching {
 	
 	protected function getCategoryValidityPeriod() {
-		/* 1 day for laary */
+		/* 1 day for tradoria */
 		return 60 * 60 * 24;
 	}
 	

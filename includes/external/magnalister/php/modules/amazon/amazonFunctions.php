@@ -176,11 +176,17 @@ function amazonGetLeadtimeToShip($mpID, $pID) {
               FROM ".TABLE_PRODUCTS." p
              WHERE p.products_id = '".$pID."'
         ");
-        return getDBConfigValue(
+
+        $iTime = getDBConfigValue(
             array('amazon.leadtimetoshipmatching.values', $products_shippingtime),
             $mpID,
-            getDBConfigValue('amazon.leadtimetoship', $mpID, 0)
+            getDBConfigValue('amazon.leadtimetoship', $mpID, '-')
         );
+        if ($iTime == '-') {
+            $iTime = ''; // empty string means use default setting of in amazon seller central of client
+        }
+
+        return $iTime;
     }
 	
 	$leadtime = MagnaDB::gi()->fetchOne(eecho('
@@ -198,7 +204,11 @@ function amazonGetLeadtimeToShip($mpID, $pID) {
 	', false));
 
 	if (($leadtime === false) || ($leadtime === null)) {
-		$leadtime = getDBConfigValue('amazon.leadtimetoship', $mpID, 0);
+		$leadtime = getDBConfigValue('amazon.leadtimetoship', $mpID, '-');
+
+        if ($leadtime == '-') {
+            $leadtime = ''; // empty string means use default setting of in amazon seller central of client
+        }
 	}
 	return $leadtime;
 }

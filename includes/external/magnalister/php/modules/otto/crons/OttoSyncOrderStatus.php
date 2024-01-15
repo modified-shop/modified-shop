@@ -68,8 +68,11 @@ class OttoSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
     }
 
     private function getReturnTrackingKey($orderId) {
-        if ($this->config['ReturnTrackingKeyDBMatchingTable']['table'] == 'orders_parcel_tracking_codes'
-            && $this->config['ReturnTrackingKeyDBMatchingTable']['column'] == 'tracking_code'
+        if (   (    (    $this->config['ReturnTrackingKeyDBMatchingTable']['table'] == 'orders_parcel_tracking_codes'
+                      && $this->config['ReturnTrackingKeyDBMatchingTable']['column'] == 'tracking_code')
+                 || (    empty($this->config['ReturnTrackingKeyDBMatchingTable']['table'])
+                      && empty($this->config['ReturnTrackingKeyDBMatchingTable']['column']))
+                )
             && MagnaDB::gi()->columnExistsInTable('is_return_delivery','orders_parcel_tracking_codes')
         ) {
             $returnTrackingCode = MagnaDB::gi()->fetchOne("

@@ -28,11 +28,9 @@ class MetroPrepareView extends MagnaCompatibleBase {
     protected $catMatch = null;
     protected $topTen = null;
     protected $businessSeller = false;
-    protected $defaultShippingTemplate = '';
 
     public function __construct(&$params) {
         parent::__construct($params);
-        $this->defaultShippingTemplate = getDBConfigValue('metro.ShippingTemplate', $this->mpID);
     }
 
     public function process() {
@@ -60,6 +58,7 @@ class MetroPrepareView extends MagnaCompatibleBase {
         } else {
             $renderedView .= $this->renderMultiPrepareView($data);
         }
+
         $renderedView .= '
 				</table>
 				<table class="actions">
@@ -343,9 +342,15 @@ class MetroPrepareView extends MagnaCompatibleBase {
 
         if (   isset($data[0]['ShippingProfile'])
             || '0' === $data[0]['ShippingProfile']) {
-            $aShippingProfiles = MetroHelper::gi()->getShippingProfiles($data[0]['ShippingProfile']);
+            $aShippingProfiles = MetroHelper::gi()->getShippingProfilesHtml($data[0]['ShippingProfile']);
         } else {
-            $aShippingProfiles = MetroHelper::gi()->getShippingProfiles();
+            $aShippingProfiles = MetroHelper::gi()->getShippingProfilesHtml();
+        }
+        if (   isset($data[0]['ShippingGroup'])
+            || '0' === $data[0]['ShippingGroup']) {
+            $aShippingGroups = MetroHelper::gi()->getShippingGroupsHtml($data[0]['ShippingGroup']);
+        } else {
+            $aShippingGroups = MetroHelper::gi()->getShippingGroupsHtml();
         }
         $html .= '
 			<tbody>
@@ -388,6 +393,18 @@ class MetroPrepareView extends MagnaCompatibleBase {
 					<td class="input">
 						<select name="ShippingProfile" style="width:100%">';
         $html .= $aShippingProfiles;
+
+        $html .= '
+						</select>
+					</td>
+					<td class="info">&nbsp;</td>
+				</tr>
+				
+				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
+					<th>'.ML_AMAZON_SHIPPING_TEMPLATE.'</th>
+					<td class="input">
+						<select name="ShippingGroup" style="width:100%">';
+        $html .= $aShippingGroups;
 
         $html .= '
 						</select>
@@ -589,7 +606,7 @@ class MetroPrepareView extends MagnaCompatibleBase {
         # Daten aus magnalister_metro_prepare (bereits frueher vorbereitet)
         $dbOldSelectionQuery = '
 		    SELECT ep.products_id, ep.products_model, ep.Manufacturer, ep.Feature, ep.MSRP, ep.ShortDescription,
-		           ep.GTIN, ep.ManufacturerPartNumber, ep.Brand, ep.BusinessModel, ep.FreightForwarding, ep.ShippingProfile,
+		           ep.GTIN, ep.ManufacturerPartNumber, ep.Brand, ep.BusinessModel, ep.FreightForwarding, ep.ShippingProfile, ep.ShippingGroup,
 		           ep.Title, ep.Description, ep.Images, ep.MSRP, ep.ProcessingTime, ep.MaxProcessingTime,
 		           ep.PrimaryCategory, ep.PrimaryCategoryName, ep.ShopVariation
 		      FROM '.TABLE_MAGNA_METRO_PREPARE.' ep
@@ -712,11 +729,11 @@ class MetroPrepareView extends MagnaCompatibleBase {
         unset($current_row);
         if (1 == $rowCount) {
             if (!empty($dbSelection[0]['Description'])) {
-                $dbSelection[0]['Description'] = strip_tags($dbSelection[0]['Description'],
+                $dbSelection[0]['Description'] = strip_tags(replaceNbsp($dbSelection[0]['Description']),
                     '<p><ul><ol><li><span><br><b>');
             }
             if (!empty($dbSelection[0]['ShortDescription'])) {
-                $dbSelection[0]['ShortDescription'] = strip_tags($dbSelection[0]['ShortDescription'],
+                $dbSelection[0]['ShortDescription'] = strip_tags(replaceNbsp($dbSelection[0]['ShortDescription']),
                     '<p><ul><ol><li><span><br><b>');
             }
             if (!isset($dbSelection[0]['MSRP'])) {
@@ -734,7 +751,12 @@ class MetroPrepareView extends MagnaCompatibleBase {
             // check for shipping profile
             if (!isset($dbSelection[0]['ShippingProfile'])) {
                 $aDefaultProfile = getDBConfigValue('metro.shippingprofile', $this->mpID);
-                $dbSelection[0]['ShippingProfile'] = array_search('1', $aDefaultProfile['defaults']);
+                $dbSelection[0]['ShippingProfile'] = isset($aDefaultProfile['defaults']) && is_array($aDefaultProfile['defaults']) ? array_search('1', $aDefaultProfile['defaults']) : null;
+            }
+            // check for shipping group
+            if (!isset($dbSelection[0]['ShippingGroup'])) {
+                $aDefaultGroup = getDBConfigValue('metro.shipping.group', $this->mpID);
+                $dbSelection[0]['ShippingGroup'] = is_array($aDefaultGroup) ? array_search('1', $aDefaultGroup) : null;
             }
 
         }

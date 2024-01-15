@@ -234,6 +234,46 @@ class HitmeisterHelper extends AttributesMatchingHelper
 		$times['values'] = self::GetDeliveryCountries();
 	}
 
+	public static function GetShippingGroups() {
+		global $_MagnaSession;
+	
+		$mpID = $_MagnaSession['mpID'];
+	
+		$types['values'] = array();
+	
+		if (   isset($_MagnaSession[$mpID]['ShippingGroups'])
+			&& !empty($_MagnaSession[$mpID]['ShippingGroups'])
+		) {
+			return $_MagnaSession[$mpID]['ShippingGroups'];
+		}
+		try {
+			$groupsData = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'GetListOfShippingGroups'
+			));
+		} catch (MagnaException $e) {
+			$groupsData = array(
+				'DATA' => false
+			);
+		}
+		if (    !is_array($groupsData)
+		     || !isset($groupsData['DATA'])
+		     || ($groupsData['DATA'] == false)
+		   ) {
+			return false;
+		}
+
+		$profilesData = array();
+		foreach ($groupsData['DATA'] as $aGroup) {
+			$profilesData[$aGroup['ShippingGroupId']] = $aGroup['Name'];
+		}
+		$_MagnaSession[$mpID]['ShippingGroups'] = $profilesData;
+		return $profilesData;
+	}
+
+	public static function GetShippingGroupsConfig(&$profiles) {
+		$profiles['values'] = self::GetShippingGroups();
+	}
+
 	public static function SearchOnHitmeister($search = '', $searchBy = 'EAN') {
 		try {
 			$data = MagnaConnector::gi()->submitRequest(array(

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -530,7 +530,7 @@ class MLConfigurator {
 			case 'selection': {
 				$html .= '<select id="config_'.$idkey.'" name="conf['.$pItem['key'].']['.$subKey.'.value]"'.$parameters.'>'."\n";
 				foreach ($item['values'] as $k => $v) {
-					$html .= '	<option value="'.$k.'"'.(($value == $k) ? ' selected="selected"' : '').'>'.$v.'</option>'."\n";
+					$html .= '	<option value="'.$k.'"'.(($value.'' === $k.'') ? ' selected="selected"' : '').'>'.$v.'</option>'."\n";
 				}
 				$html .= '</select>'."\n";
 				break;
@@ -637,7 +637,7 @@ class MLConfigurator {
 			case 'selection': {
 				$class = ' class="'.implode(' ', $item['cssClasses']).'"';
 				if (isset($item['labelinfo'])) {
-					$html .= ' <label for="config_'.$idkey.'"'.$class.$style.'>'.$item['labelinfo'].'</label> ';				
+					$html .= ' <label for="config_'.$idkey.'"'.$class.$style.'>'.$item['labelinfo'].'</label> ';
 				}
 				
 				$html .= '<select id="config_'.$idkey.'" name="conf['.$item['key'].']"'.$parameters.''.$class.$style.'>'."\n";
@@ -652,11 +652,11 @@ class MLConfigurator {
 						if (preg_match('/^range\(([0-9]*),([0-9]*)\)$/', $v, $matches)) {
 							$a = range($matches[1], $matches[2]);
 							foreach ($a as $nV) {
-								$html .= '<option value="'.$nV.'"'.(($value == $nV) ? ' selected="selected"' : '').'>'.$nV.'</option>'."\n";
+								$html .= '<option value="'.$nV.'"'.(($value.'' === $nV.'') ? ' selected="selected"' : '').'>'.$nV.'</option>'."\n";
 							}
 						}
 					} else {
-						$html .= '<option value="'.$k.'"'.(((strlen((string)$value) == strlen((string)$k)) && ($value == $k)) ? ' selected="selected"' : '').'>'.(!preg_match('/&[^\s;]*;/', $v) ? fixHTMLUTF8Entities($v) : $v).'</option>'."\n";
+						$html .= '<option value="'.$k.'"'.(((strlen((string)$value) == strlen((string)$k)) && ($value.'' === $k.'')) ? ' selected="selected"' : '').'>'.(!preg_match('/&[^\s;]*;/', $v) ? fixHTMLUTF8Entities($v) : $v).'</option>'."\n";
 					}
 				}
 				$html .= '</select>'."\n";

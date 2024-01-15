@@ -23,13 +23,15 @@
  * unnecessary data, all backward compatibility issues are solved here leaving new plugin code free of legacy code.
  */
 
+$queries = array();
+$functions = array();
+
+/*
+2024-01-08 module deleted
+
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'config.php');
 
-$queries = array();
-$functions = array();
 
-$queries = array();
-$functions = array();
 
 function ml_db_update_90_1()
 {
@@ -233,3 +235,4 @@ function getConvertedShopVariationAttributes($mpId, $oldShopVariation) {
 
 	return $shopVariation;
 }
+*/

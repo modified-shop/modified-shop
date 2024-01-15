@@ -1,0 +1,59 @@
+{
+    "checkin": {
+        "headline": "Artikel hochladen: Voreinstellungen",
+        "fields": {
+            "status": {
+                "label": "Statusfilter",
+                "desc": "Im Web-Shop k&ouml;nnen Sie Artikel aktiv oder inaktiv setzen. Je nach Einstellung hier werden nur aktive Artikel beim Produkte hochladen angezeigt.",
+                "key": "_#_platform_#_.checkin.status",
+                "type": "checkbox",
+                "values": {
+                    "val": "nur aktive Artikel &uuml;bernehmen"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "quantity": {
+                "label": "St&uuml;ckzahl Lagerbestand",
+                "desc": "Geben Sie hier an, wie viel Lagermenge eines Artikels auf dem Marktplatz verf&uuml;gbar sein soll.<br\/>\n\t\t\t\t\t\t<br\/>\n\t\t\t\t\t\tUm &Uuml;berverk&auml;ufe zu vermeiden, k&ouml;nnen Sie den Wert<br\/>\n\t\t\t\t\t\t\"<i>Shop-Lagerbestand &uuml;bernehmen abzgl. Wert aus rechtem Feld<\/i>\" aktivieren.<br\/>\n\t\t\t\t\t\t<br\/>\n\t\t\t\t\t\t<strong>Beispiel:<\/strong> Wert auf \"<i>2<\/i>\" setzen. Ergibt &#8594; Shoplager: 10 &#8594; _#_platformName_#_-Lager: 8<br\/>\n\t\t\t\t\t\t<br\/>\n\t\t\t\t\t\t<strong>Hinweis:<\/strong>Wenn Sie Artikel, die im Shop inaktiv gesetzt werden, unabh&auml;ngig der verwendeten Lagermengen<br\/>\n\t\t\t\t\t\tauch auf dem Marktplatz als Lager \"<i>0<\/i>\" behandeln wollen, gehen Sie bitte wie folgt vor:<br\/>\n\t\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li>\"<i>Synchronisation des Inventars<\/i>\" > \"<i>Lagerver&auml;nderung Shop<\/i>\" auf \"<i>automatische Synchronisation per CronJob\" einstellen<\/i><\/li>\n\t\t\t\t\t\t<li>\"<i>Globale Konfiguration\" > \"<i>Produktstatus<\/i>\" > \"<i>Wenn Produktstatus inaktiv ist, wird der Lagerbestand wie 0 behandelt\" aktivieren<\/i><\/li>\n\t\t\t\t\t\t<\/ul>",
+                "key": "_#_platform_#_.quantity.type",
+                "type": "selection",
+                "values": {
+                    "stock": "Shop-Lagerbestand &uuml;bernehmen",
+                    "stocksub": "Shop-Lagerbestand &uuml;bernehmen abzgl. Wert aus rechtem Feld",
+                    "lump": "Pauschal (aus rechtem Feld)"
+                },
+                "default": "stock",
+                "morefields": {
+                    "quantity": {
+                        "key": "_#_platform_#_.quantity.value",
+                        "type": "text",
+                        "default": 1,
+                        "verify": "int",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "maxquantity": {
+                "label": "St&uuml;ckzahl-Begrenzung",
+                "desc": "Hier k&ouml;nnen Sie die St&uuml;ckzahlen der auf METRO eingestellten Artikel begrenzen.<br \/><br \/>\n<strong>Beispiel:<\/strong> Sie stellen bei &quot;St&uuml;ckzahl&quot; ein &quot;Shop-Lagerbestand &uuml;bernehmen&quot;, und tragen hier 20 ein. Dann werden beim Hochladen so viel St&uuml;ck eingestellt wie im Shop vorhanden, aber nicht mehr als 20. Die Lagersynchronisierung (wenn aktiviert) gleicht die METRO-St&uuml;ckzahl an den Shopbestand an, solange der Shopbestand unter 20 St&uuml;ck ist. Wenn im Shop mehr als 20 St&uuml;ck auf Lager sind, wird die METRO-St&uuml;ckzahl auf 20 gesetzt.<br \/><br \/>\n Lassen Sie dieses Feld leer oder tragen Sie 0 ein, wenn Sie keine Begrenzung w&uuml;nschen.<br \/><br \/>\n <strong>Hinweis:<\/strong> Wenn die &quot;St&uuml;ckzahl&quot;-Einstellung &quot;Pauschal (aus rechtem Feld)&quot; ist, hat die Begrenzung keine Wirkung.",
+                "key": "_#_platform_#_.maxquantity",
+                "type": "text",
+                "default": "",
+                "cssClasses": [
+                    "autoWidth"
+                ]
+            },
+            "imagepath": {
+                "label": "Bilder-Verzeichnis",
+                "key": "_#_platform_#_.imagepath",
+                "type": "text",
+                "expertsetting": true,
+                "desc": "Verzeichnis, aus dem die Produktbilder genommen werden sollen."
+            }
+        }
+    }
+}

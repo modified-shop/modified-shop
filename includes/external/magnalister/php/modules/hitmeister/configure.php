@@ -120,6 +120,10 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 			HitmeisterHelper::GetConditionTypesConfig($this->form['prepare']['fields']['condition']);
 			HitmeisterHelper::GetShippingTimesConfig($this->form['prepare']['fields']['shippingtime']);
 			HitmeisterHelper::GetHandlingTimesConfig($this->form['prepare']['fields']['handlingtime']);
+			HitmeisterHelper::GetShippingGroupsConfig($this->form['prepare']['fields']['shippinggroup']);
+			if ($this->form['prepare']['fields']['shippinggroup']['values'] === false) {
+				unset($this->form['prepare']['fields']['shippinggroup']);
+			}
 
 			$this->form['prepare']['fields']['shippingtimeMatching']['procFunc'] = array($this, 'confShippingtimeMatching');
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);

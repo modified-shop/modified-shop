@@ -1,0 +1,138 @@
+{
+    "prepare": {
+        "headline": "Artikelvorbereitung",
+        "fields": {
+            "filter": {
+                "label": "Status Filter",
+                "desc": "Im Web-Shop k&ouml;nnen Sie Artikel aktiv oder inaktiv setzen. Je nach Einstellung hier werden nur aktive Artikel beim Produkte vorbereiten angezeigt.",
+                "key": "_#_platform_#_.prepare.status",
+                "type": "checkbox",
+                "values": {
+                    "val": "nur aktive Artikel &uuml;bernehmen"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "lang": {
+                "label": "Artikelbeschreibung",
+                "key": "_#_platform_#_.lang",
+                "type": "selection",
+                "values": null
+            },
+            "processingtime": {
+                "label": "Min. Lieferzeit in Werktagen",
+                "desc": "Tragen Sie hier ein, wie viele Werktage mindestens vom Zeitpunkt der Bestellung durch den Kunden es bis zum Erhalt des Pakets dauert",
+                "key": "_#_platform_#_.processingtime",
+                "type": "selection",
+                "values": {}
+            },
+            "maxprocessingtime": {
+                "label": "Max. Lieferzeit in Werktagen",
+                "desc": "Tragen Sie hier ein, wie viele Werktage maximal vom Zeitpunkt der Bestellung durch den Kunden es bis zum Erhalt des Pakets dauert",
+                "key": "_#_platform_#_.maxprocessingtime",
+                "type": "selection",
+                "values": {}
+            },
+            "businessmodel": {
+                "label": "K&auml;ufergruppe festlegen",
+                "desc": "Ordnen Sie das Produkt einer K&auml;ufergruppe zu:<br>\n                <ul>\n                    <li>B2C und B2B: Produkt richtet sich an beide K&auml;ufergruppen</li>\n                    <li>B2C: Produkt richtet sich an private Endkunden</li>\n                    <li>B2B: Produkt richtet sich an gewerbliche Endkunden</li>\n                </ul>\n                ",
+                "key": "_#_platform_#_.businessmodel",
+                "type": "selection",
+                "values": {
+                    "": "B2B / B2C",
+                    "B2B": "B2B"
+                }
+            },
+            "freightforwarding": {
+                "label": "Lieferung per Spedition",
+                "desc": "Geben Sie an, ob Ihr Produkt per Spedition versendet wird.",
+                "key": "_#_platform_#_.freightforwarding",
+                "type": "radio",
+                "values": {
+                    "true": "Ja",
+                    "false": "Nein"
+                },
+                "default": "true"
+            },
+            "manufacturerfilter": {
+                "label": "Herstellerfilter",
+                "key": "_#_platform_#_.filter.manufacturer",
+                "type": "multicheckbox",
+                "desc": "Alle hier markierten Hersteller werden bei der Produkt-Vorbereitung nicht mit angezeigt.",
+                "default": [
+                ],
+                "expertsetting": true
+            }
+        }
+    },
+    "shippinglabel": {
+        "headline": "Versand",
+        "desc": "",
+        "fields": {
+            "shippingprofile": {
+                "label": "Versandkosten-Profile",
+                "key": "metro.shippingprofile",
+                "desc": "Legen Sie hier ihre Versandkosten-Profile an. Sie k&ouml;nnen f&uuml;r jedes Profil unterschiedliche Versandkosten angeben (Beispiel: 4.95) und ein Standard-Profil bestimmen. Die angegebenen Versandkosten werden beim Produkt-Upload zum Artikelpreis hinzugerechnet, da Waren auf dem METRO Marktplatz ausschließlich versandkostenfrei eingestellt werden k&ouml;nnen. ",
+                "type": "duplicate",
+                "subtype": "extern",
+                "procFunc": "MetroConfigure::shippingProfile",
+                "params": {
+                    "subfields": {
+                        "name": {
+                            "label": "Name des Versandkosten-Profils",
+                            "key": "metro.shippingprofile.name",
+                            "type": "text",
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        },
+                        "cost": {
+                            "label": "Versandkostenaufschlag (Betrag)",
+                            "key": "metro.shippingprofile.cost",
+                            "type": "text",
+                            "cssClasses": [
+                                "autoWidth"
+                            ],
+                            "default": "0.00"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "shippinggroup": {
+        "headline": "Verk&auml;uferversandgruppen",
+        "fields": {
+            "shippinggroups": {
+                "label": "Verk&auml;uferversandgruppen",
+                "desc":"Verk&auml;ufer k&ouml;nnen eine Gruppe mit verschiedenen Versandeinstellungen erstellen, je nach gesch&auml;ftlichen Erfordernissen und Anwendungsf&auml;llen. F&uuml;r verschiedene Regionen k&ouml;nnen unterschiedliche Gruppen von Versandeinstellungen gew&auml;hlt werden, mit unterschiedlichen Versandbedingungen und &ndash;geb&uuml;hren f&uuml;r die jeweilige Region.<br /><br /> Wenn der Verk&auml;ufer ein Produkt als Angebot erstellt, kann er eine seiner angelegten Gruppen von Versandeinstellungen f&uuml;r das jeweilige Produkt festlegen. Die Versandeinstellungen dieser Gruppe werden dann genutzt, um die jeweils g&uuml;ltige Versandoption je Produkt auf der Website anzuzeigen.<br /><br /><strong>Wichtig:</strong> Kopieren Sie die Versandgruppen-Ids aus Ihrem METRO Account in die entsprechenden Felder hier. Nur diese werden verwendet. Die Bezeichnung dient hier nur dazu, sie in der Produktvorbereitung anzuzeigen.<br /><br />F&uuml;r Details zum Anlegen der Versandgruppen und zu Versandgruppen-Ids s. <a href=\"https://developer.metro-selleroffice.com/docs/offer-data/shipping/\" target=\"_blank\">METRO Dokumentation</a>",
+                "hint":"Eine bestimmte Gruppe von Versandeinstellungen, die verk&auml;uferspezifisch f&uuml;r ein Angebot festgelegt wird.<br>Die Verk&auml;uferversandgruppe wird in der Benutzeroberfl&auml;che f&uuml;r Versandeinstellungen vom Verk&auml;ufer erstellt und verwaltet.",
+                "key":"_#_platform_#_.shippinggroup",
+                "type":"duplicate",
+                "subtype":"extern",
+                "procFunc": "MetroConfigure::shippingProfile",
+                "params": {
+                    "subfields": {
+                        "name": {
+                            "label": "Bezeichnung",
+                            "key": "metro.shippinggroup.name",
+                            "type": "text",
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        },
+                        "cost": {
+                            "label": "Versandgruppen-Id",
+                            "key": "metro.shippinggroup.id",
+                            "type": "text",
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+     }
+}

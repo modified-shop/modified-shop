@@ -178,6 +178,7 @@ class HitmeisterProductSaver {
 		$aRow['ConditionType'] = $aItemDetails['condition_id'];
 		$aRow['ShippingTime'] = $aItemDetails['shippingtime'];
 		$aRow['HandlingTime'] = $aItemDetails['handlingtime'];
+		$aRow['ShippingGroup'] = $aItemDetails['shippinggroup'];
 		$aRow['Location'] = $aItemDetails['deliverycountry'];
 		$aRow['Comment'] = $aItemDetails['comment'];
 
@@ -221,6 +222,7 @@ class HitmeisterProductSaver {
 				'ConditionType'		=> $itemDetails['unit']['condition_id'],
 				'ShippingTime'		=> $itemDetails['unit']['shippingtime'],
 				'HandlingTime'		=> $itemDetails['unit']['handlingtime'],
+				'ShippingGroup'		=> $itemDetails['unit']['shippinggroup'],
 				'Location'			=> $itemDetails['unit']['deliverycountry'],
 				'Comment'			=> $itemDetails['unit']['comment'],
 				'PrepareType'		=> 'Match',

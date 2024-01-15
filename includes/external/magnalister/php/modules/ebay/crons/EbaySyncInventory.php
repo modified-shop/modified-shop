@@ -565,7 +565,9 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		}
 		$this->log(
 		"\n\teBay Quantity: ".$this->cItem['Quantity'].
-		"\n\tShop Main Quantity: ". $data['NewQuantity'].
+		"\n\tShop Main Quantity: ". ( array_key_exists('NewQuantity', $data)
+			? $data['NewQuantity']
+			: $product['Quantity'] ).
 		"\n\teBay Price: ".$this->cItem['Price']. $sAddEbayStrikePrice .
 		"\n\tShop Price: ".$product['Price'][$listingMasterType]. $sAddShopStrikePrice
 		);
@@ -600,8 +602,10 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		}
 
 		// catch the case when there's no quantity and price (product data broken)
-		if (    ($data['NewQuantity'] === null)
-		     && ($product['Price'][$listingMasterType] === null)
+		if (    (    !array_key_exists('NewQuantity', $data)
+		          || $data['NewQuantity'] === null)
+		     && (    !array_key_exists($listingMasterType, $product['Price'])
+		          || $product['Price'][$listingMasterType] === null)
 		     && !isset($product['Variations'])) {
 			$process = false;
 		}

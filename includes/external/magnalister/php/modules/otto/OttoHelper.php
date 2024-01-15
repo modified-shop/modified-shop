@@ -222,15 +222,20 @@ class OttoHelper extends AttributesMatchingHelper {
                 $variationThemeData['variation_details_blacklist'] = $mpData['variation_details_blacklist'];
             }
 
-            return array_merge(
+            $result = array_merge(
                 array(
                     'Attributes' => $attributes,
                     'ModificationDate' => $modificationDate,
                     'DifferentProducts' => $hasDifferentlyPreparedProducts,
                 ), $variationThemeData
             );
+            // encode to utf8 for json encode
+            arrayEntitiesToUTF8($result);
+
+            return $result;
         }
 
+        arrayEntitiesToUTF8($attributes);
         return $attributes;
     }
 

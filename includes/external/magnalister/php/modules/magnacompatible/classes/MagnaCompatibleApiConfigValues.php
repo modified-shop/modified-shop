@@ -52,8 +52,8 @@ class MagnaCompatibleApiConfigValues {
 		
 		return $this;
 	}
-	
-	protected function fetchDataFromApi($action, $extend = array(), $encode = true) {
+
+    public function fetchDataFromApi($action, $extend = array(), $encode = true) {
 		$key = $action.json_encode($extend);
 		if (isset($this->data[$key]) && ($this->data[$key] !== false)) {
 			return $this->data[$key];

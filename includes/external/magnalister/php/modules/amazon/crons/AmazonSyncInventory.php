@@ -90,10 +90,8 @@ class AmazonSyncInventory extends MagnaCompatibleSyncInventory {
 		if (empty($data)) {
 			return;
 		}
-		$timeToShip = (int)amazonGetLeadtimeToShip($this->mpID, $this->cItem['pID']);
-		if ($timeToShip > 0) {
-			$data['LeadtimeToShip'] = $timeToShip;
-		}
+
+        $data['LeadtimeToShip'] = amazonGetLeadtimeToShip($this->mpID, $this->cItem['pID']);
 	}
 
     /**

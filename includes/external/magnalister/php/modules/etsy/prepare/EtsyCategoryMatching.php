@@ -69,8 +69,7 @@ class EtsyCategoryMatching {
 		foreach($categories['DATA'] as &$curRow) {
 			$curRow['InsertTimestamp'] = $now;
 			$curRow['Language'] = getDBConfigValue('etsy.shop.language', $_MagnaSession['mpID'], 'en');
-			unset($curRow['CategoryLevel']);
-			unset($curRow['Timestamp']);
+			$curRow = array_filter_keys($curRow, MagnaDB::gi()->getTableColumns(TABLE_MAGNA_ETSY_CATEGORIES));
 		}
 		$delete_query = 'DELETE FROM '.TABLE_MAGNA_ETSY_CATEGORIES
 			.' WHERE Language = \''.getDBConfigValue('etsy.shop.language', $_MagnaSession['mpID'], 'en').'\'

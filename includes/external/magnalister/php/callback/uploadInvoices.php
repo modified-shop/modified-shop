@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------------
  */
 
-define('ML_LOG_INVENTORY_CHANGE', true);
+defined('ML_LOG_INVENTORY_CHANGE') or define('ML_LOG_INVENTORY_CHANGE', true);
 
 require_once(DIR_MAGNALISTER_CALLBACK.'callbackFunctions.php');
 

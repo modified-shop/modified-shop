@@ -100,5 +100,31 @@
                 }
             }
         }
-    }
+    },
+    "shippinggroup": {
+        "headline": "Verk&auml;uferversandgruppen",
+        "fields": {
+            "shippinggroups": {
+                "label": "Verk&auml;uferversandgruppen",
+                "desc":"Verk&auml;ufer k&ouml;nnen eine Gruppe mit verschiedenen Versandeinstellungen erstellen, je nach gesch&auml;ftlichen Erfordernissen und Anwendungsf&auml;llen. F&uuml;r verschiedene Regionen k&ouml;nnen unterschiedliche Gruppen von Versandeinstellungen gew&auml;hlt werden, mit unterschiedlichen Versandbedingungen und &ndash;geb&uuml;hren f&uuml;r die jeweilige Region.<br /><br /> Wenn der Verk&auml;ufer ein Produkt als Angebot erstellt, kann er eine seiner angelegten Gruppen von Versandeinstellungen f&uuml;r das jeweilige Produkt festlegen. Die Versandeinstellungen dieser Gruppe werden dann genutzt, um die jeweils g&uuml;ltige Versandoption je Produkt auf der Website anzuzeigen.<br /><br /><strong>Wichtig:</strong> Kopieren Sie die Versandgruppen-Namen aus Ihrem METRO Account in die entsprechenden Felder hier. Nur diese werden verwendet. Die Bezeichnung dient hier nur dazu, sie in der Produktvorbereitung anzuzeigen.<br /><br />F&uuml;r Details zum Anlegen der Versandgruppen und zu Versandgruppen-Namen siehe <a href=\"https://developer.metro-selleroffice.com/docs/offer-data/shipping/\" target=\"_blank\">METRO Dokumentation</a>",
+                "hint":"Eine bestimmte Gruppe von Versandeinstellungen, die verk&auml;uferspezifisch f&uuml;r ein Angebot festgelegt wird.<br>Die Verk&auml;uferversandgruppe wird in der Benutzeroberfl&auml;che f&uuml;r Versandeinstellungen vom Verk&auml;ufer erstellt und verwaltet.",
+                "key":"_#_platform_#_.shippinggroup",
+                "type":"duplicate",
+                "subtype":"extern",
+                "procFunc": "MetroConfigure::shippingProfile",
+                "params": {
+                    "subfields": {
+                        "name": {
+                            "label": "Versandgruppen-Name",
+                            "key": "metro.shippinggroup.name",
+                            "type": "text",
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+     }
 }

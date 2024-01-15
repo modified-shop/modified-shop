@@ -25,7 +25,7 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/catmatch/MagnaCompatibleCa
 class PriceministerCategoryMatching extends MagnaCompatibleCategoryMatching {
 	
 	protected function getCategoryValidityPeriod() {
-		/* 1 day for laary */
+		/* 1 day for priceminister */
 		return 60 * 60 * 24;
 	}
 	

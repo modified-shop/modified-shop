@@ -20,7 +20,8 @@
 
 $queries = array();
 $functions = array();
-
+/*
+2024-01-08 module deleted
 function md_db_update_60_1() {
 	if (!MagnaDB::gi()->columnExistsInTable('IsValid', TABLE_MAGNA_AYN24_VARIANTMATCHING)) {
 		MagnaDB::gi()->query("ALTER TABLE `".TABLE_MAGNA_AYN24_VARIANTMATCHING."` ADD COLUMN `IsValid` BIT NOT NULL DEFAULT 1 AFTER `ShopVariation` ");
@@ -28,9 +29,11 @@ function md_db_update_60_1() {
 }
 $functions[] = 'md_db_update_60_1';
 
+2024-01-08 module deleted
 function md_db_update_60_2() {
 	if (!MagnaDB::gi()->columnExistsInTable('IsValid', TABLE_MAGNA_MEINPAKET_VARIANTMATCHING)) {
 		MagnaDB::gi()->query("ALTER TABLE `".TABLE_MAGNA_MEINPAKET_VARIANTMATCHING."` ADD COLUMN `IsValid` BIT NOT NULL DEFAULT 1 AFTER `ShopVariation` ");
 	}
 }
 $functions[] = 'md_db_update_60_2';
+*/

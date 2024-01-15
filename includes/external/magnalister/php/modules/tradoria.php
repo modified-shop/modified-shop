@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: meinpaket.php 1174 2011-07-30 17:49:04Z derpapst $
+ * $Id: tradoria.php 1174 2011-07-30 17:49:04Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)

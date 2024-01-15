@@ -64,7 +64,7 @@ function amazonAutoMatching($mpID, $selectionName) {
 		');
 	}
 
-	$leadtimeToShip = getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '0');
+	$leadtimeToShip = getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '-');
 
 	while (!empty($allItems)) {
 		$result = array();
@@ -239,7 +239,14 @@ if (array_key_exists('amazonProperties', $_POST)) {
  */
 if (array_key_exists('action', $_GET) && ($_GET['action'] == 'multimatching') && array_key_exists('match', $_POST)) {
 	$items = $_POST['match'];
-	$leadtimeToShip = getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '0');
+	$leadtimeToShip = getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '-');
+	$useLeadtimeToShipMatching = getDBConfigValue(array('amazon.leadtimetoshipmatching.prefer', 'val'), $_MagnaSession['mpID'], false);
+	if ($useLeadtimeToShipMatching) {
+		$leadtimeToShipMatching = getDBConfigValue('amazon.leadtimetoshipmatching.values', $_MagnaSession['mpID'], array());
+		if (empty($leadtimeToShipMatching)) {
+			$useLeadtimeToShipMatching = false;
+		}
+	}
 	foreach ($items as $productID => $asin) {
 		if ($asin != 'false') {
 			$product = MLProduct::gi()->getProductByIdOld($productID);
@@ -269,6 +276,19 @@ if (array_key_exists('action', $_GET) && ($_GET['action'] == 'multimatching') &&
 			$data['asin_type'] = $data['will_ship_internationally'] = $data['lowestprice'] = 0;
 		}
 
+		if ($useLeadtimeToShipMatching) {
+			$products_shippingtime = MagnaDB::gi()->fetchOne('SELECT products_shippingtime
+				 FROM '.TABLE_PRODUCTS.'
+				WHERE '.((getDBConfigValue('general.keytype', '0') == 'artNr')
+				? "products_model = '".$data['products_model']."'"
+				: 'products_id = '.$data['products_id']));
+			if (array_key_exists($products_shippingtime, $leadtimeToShipMatching)) {
+				$data['leadtimeToShip'] = $leadtimeToShipMatching[$products_shippingtime];
+			} else {
+				$data['leadtimeToShip'] = $leadtimeToShip;
+			}
+		}
+
 		$_MagnaSession['amazonLastPreparedTS'] = array_key_exists('amazonLastPreparedTS', $_MagnaSession) ? $_MagnaSession['amazonLastPreparedTS'] : date('Y-m-d H:i:s');
 		$data['PreparedTS'] = $_MagnaSession['amazonLastPreparedTS'];
 		$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
@@ -283,7 +303,6 @@ if (array_key_exists('action', $_GET) && ($_GET['action'] == 'multimatching') &&
 		if (MagnaDB::gi()->recordExists(TABLE_MAGNA_AMAZON_PROPERTIES, $where)) {
 			MagnaDB::gi()->update(TABLE_MAGNA_AMAZON_PROPERTIES, $data, $where);
 		} else {
-			$data['leadtimeToShip'] = $leadtimeToShip;
 			MagnaDB::gi()->insert(TABLE_MAGNA_AMAZON_PROPERTIES, $data);
 		}
 	}

@@ -22,7 +22,7 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/catmatch/MagnaCompatibleCa
 
 class GoogleshoppingCategoryMatching extends MagnaCompatibleCategoryMatching {
     protected function getCategoryValidityPeriod() {
-        /* 1 day for laary */
+        /* 1 day for googleshopping */
         return 60 * 60 * 24;
     }
 

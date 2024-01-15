@@ -19,132 +19,134 @@
  */
 require_once DIR_MAGNALISTER_INCLUDES.'lib/classes/ProductList/Dependency/MLProductListDependency.php';
 class MLProductListDependencySelectionAction extends MLProductListDependency {
-	
-	public function getActionTopTemplate() {
-		return 'selection';
-	}
-	
-	public function executeAction() {
-		if ($this->getProductList()->isAjax()) {
-			$aRequest = explode('-', $this->getActionRequest());
-			if (
-				count($aRequest) == 2
-				&& (int)$aRequest[0] != 0
-				&& in_array($aRequest[1], array('true', 'false'))
-			) {
-				if ($aRequest[1] == 'true') {
-					MagnaDB::gi()->insert(
-						TABLE_MAGNA_SELECTION, 
-						array(
-							'pID' => $aRequest[0],
-							'data' => '',
-							'session_id' => $this->getConfig('session_id'),
-							'mpID' => $this->getConfig('mpID'),
-							'selectionname' => $this->getConfig('selectionname'),
+    
+    public function getActionTopTemplate() {
+        return 'selection';
+    }
+    
+    public function executeAction() {
+        if ($this->getProductList()->isAjax()) {
+            $aRequest = explode('-', $this->getActionRequest());
+            if (
+                count($aRequest) == 2
+                && (int)$aRequest[0] != 0
+                && in_array($aRequest[1], array('true', 'false'))
+            ) {
+                if ($aRequest[1] == 'true') {
+                    MagnaDB::gi()->insert(
+                        TABLE_MAGNA_SELECTION, 
+                        array(
+                            'pID' => $aRequest[0],
+                            'data' => '',
+                            'session_id' => $this->getConfig('session_id'),
+                            'mpID' => $this->getConfig('mpID'),
+                            'selectionname' => $this->getConfig('selectionname'),
                             'expires' => gmdate('Y-m-d H:i:s'),
-						),
-						true
-					);
-				} else {
-					MagnaDB::gi()->delete(
-						TABLE_MAGNA_SELECTION, 
-						array(
-							'pID' => $aRequest[0],
-							'session_id' => $this->getConfig('session_id'),
-							'mpID' => $this->getConfig('mpID'),
-							'selectionname' => $this->getConfig('selectionname')
-						)
-					);
-				}
-				echo sprintf(ML_LABEL_TO_SELECTION_SELECT, $this->getSelectedCount());
-				exit();
-			}
-		} else {
-			switch($this->getActionRequest()) {
-				case 'add-page' : {
-					foreach ($this->getQuery()->getResult() as $aRow) {
-						MagnaDB::gi()->insert(
-							TABLE_MAGNA_SELECTION, 
-							array(
-								'pID' => $aRow['products_id'],
+                        ),
+                        true
+                    );
+                } else {
+                    MagnaDB::gi()->delete(
+                        TABLE_MAGNA_SELECTION, 
+                        array(
+                            'pID' => $aRequest[0],
+                            'session_id' => $this->getConfig('session_id'),
+                            'mpID' => $this->getConfig('mpID'),
+                            'selectionname' => $this->getConfig('selectionname')
+                        )
+                    );
+                }
+                echo sprintf(ML_LABEL_TO_SELECTION_SELECT, $this->getSelectedCount());
+                exit();
+            }
+        } else {
+            switch($this->getActionRequest()) {
+                case 'add-page' : {
+                    foreach ($this->getQuery()->getResult() as $aRow) {
+                        MagnaDB::gi()->insert(
+                            TABLE_MAGNA_SELECTION, 
+                            array(
+                                'pID' => $aRow['products_id'],
                                 'data' => '',
-								'session_id' => $this->getConfig('session_id'),
-								'mpID' => $this->getConfig('mpID'),
-								'selectionname' => $this->getConfig('selectionname')
-							),
-							true
-						);
-					}
-					break;
-				}
-				case 'add-filtered' : {
-					foreach ($this->getQuery()->getAll() as $aRow) {
-						MagnaDB::gi()->insert(
-							TABLE_MAGNA_SELECTION, 
-							array(
-								'pID' => $aRow['products_id'],
+                                'session_id' => $this->getConfig('session_id'),
+                                'mpID' => $this->getConfig('mpID'),
+                                'selectionname' => $this->getConfig('selectionname'),
+                                'expires' => gmdate('Y-m-d H:i:s'),
+                            ),
+                            true
+                        );
+                    }
+                    break;
+                }
+                case 'add-filtered' : {
+                    foreach ($this->getQuery()->getAll() as $aRow) {
+                        MagnaDB::gi()->insert(
+                            TABLE_MAGNA_SELECTION, 
+                            array(
+                                'pID' => $aRow['products_id'],
                                 'data' => '',
-								'session_id' => $this->getConfig('session_id'),
-								'mpID' => $this->getConfig('mpID'),
-								'selectionname' => $this->getConfig('selectionname')
-							),
-							true
-						);
-					}
-					break;
-				}
-				case 'sub-page' : {
-					foreach ($this->getQuery()->getResult() as $aRow) {
-						MagnaDB::gi()->delete(
-							TABLE_MAGNA_SELECTION, 
-							array(
-								'pID' => $aRow['products_id'],
+                                'session_id' => $this->getConfig('session_id'),
+                                'mpID' => $this->getConfig('mpID'),
+                                'selectionname' => $this->getConfig('selectionname'),
+                                'expires' => gmdate('Y-m-d H:i:s'),
+                            ),
+                            true
+                        );
+                    }
+                    break;
+                }
+                case 'sub-page' : {
+                    foreach ($this->getQuery()->getResult() as $aRow) {
+                        MagnaDB::gi()->delete(
+                            TABLE_MAGNA_SELECTION, 
+                            array(
+                                'pID' => $aRow['products_id'],
                                 'data' => '',
-								'session_id' => $this->getConfig('session_id'),
-								'mpID' => $this->getConfig('mpID'),
-								'selectionname' => $this->getConfig('selectionname')
-							)
-						);
-					}
-					break;
-				}
-				case 'sub-all' : {
-						MagnaDB::gi()->delete(
-							TABLE_MAGNA_SELECTION, 
-							array(
-								'session_id' => $this->getConfig('session_id'),
-								'mpID' => $this->getConfig('mpID'),
-								'selectionname' => $this->getConfig('selectionname')
-							)
-						);
-					break;
-				}	
-			}
-			$this->getQuery()->reset();
-		}
-		return $this;
-	}
-	
-	public function getSelectedCount() {
-		$sSql = "
-			SELECT count(*) from ".TABLE_MAGNA_SELECTION."
-			WHERE `session_id` = '".$this->getConfig('session_id')."' 
-			  AND `mpID` = '".$this->getConfig('mpID')."'
-			  AND `selectionname` = '".$this->getConfig('selectionname')."'
-		";
-		return MagnaDB::gi()->fetchOne($sSql);
-	}
-		
-	protected function getDefaultConfig() {
-		return array(
-			'selectionname' => 'general',
-			'mpID' => $this->getMagnaSession('mpID'),
-			'session_id' => session_id(),
-		);
-	}
-	
-	public function getHeaderTemplate() {
-		return 'selection';
-	}
-	
+                                'session_id' => $this->getConfig('session_id'),
+                                'mpID' => $this->getConfig('mpID'),
+                                'selectionname' => $this->getConfig('selectionname')
+                            )
+                        );
+                    }
+                    break;
+                }
+                case 'sub-all' : {
+                        MagnaDB::gi()->delete(
+                            TABLE_MAGNA_SELECTION, 
+                            array(
+                                'session_id' => $this->getConfig('session_id'),
+                                'mpID' => $this->getConfig('mpID'),
+                                'selectionname' => $this->getConfig('selectionname')
+                            )
+                        );
+                    break;
+                }    
+            }
+            $this->getQuery()->reset();
+        }
+        return $this;
+    }
+    
+    public function getSelectedCount() {
+        $sSql = "
+            SELECT count(*) from ".TABLE_MAGNA_SELECTION."
+            WHERE `session_id` = '".$this->getConfig('session_id')."' 
+              AND `mpID` = '".$this->getConfig('mpID')."'
+              AND `selectionname` = '".$this->getConfig('selectionname')."'
+        ";
+        return MagnaDB::gi()->fetchOne($sSql);
+    }
+        
+    protected function getDefaultConfig() {
+        return array(
+            'selectionname' => 'general',
+            'mpID' => $this->getMagnaSession('mpID'),
+            'session_id' => session_id(),
+        );
+    }
+    
+    public function getHeaderTemplate() {
+        return 'selection';
+    }
+    
 }

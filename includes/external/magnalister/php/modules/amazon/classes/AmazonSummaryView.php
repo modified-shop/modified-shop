@@ -242,7 +242,7 @@ class AmazonSummaryView extends SimpleSummaryView {
 
 	protected function resetLeadtimeToShip() {
 		// Get all settings and verify them.
-		$defaultLeadtime  = getDBConfigValue($this->marketplace.'.leadtimetoship', $this->mpID, 0); 
+		$defaultLeadtime = getDBConfigValue($this->marketplace.'.leadtimetoship', $this->mpID, '-');
 		$leadtimeMatching = getDBConfigValue($this->marketplace.'.leadtimetoshipmatching.values', $this->mpID, array()); 
 		$useMatching = getDBConfigValue(array($this->marketplace.'.leadtimetoshipmatching.prefer', 'val'), $this->mpID, false); 
 		
@@ -452,14 +452,8 @@ class AmazonSummaryView extends SimpleSummaryView {
 								'&mdash;'
 						).'</td></tr>
 					</tbody></table>
-				</td>
+				</td>';
 				
-				<td>
-					<select id="leadtimeToShip_'.$dbRow['products_id'].'" name="leadtimeToShip['.$dbRow['products_id'].']" class="ml-js-noBlockUi">';
-					$leadtimeToShipOpts = array_merge(array (
-						'0' => '&mdash;',
-					), range(1, 30));
-					
 					if (getDBConfigValue(array('amazon.leadtimetoshipmatching.prefer', 'val'), $this->mpID, false)) {
 						$products_shippingtime = MagnaDB::gi()->fetchOne('
 						    SELECT products_shippingtime
@@ -469,16 +463,16 @@ class AmazonSummaryView extends SimpleSummaryView {
 						$leadtime = getDBConfigValue(
 							array('amazon.leadtimetoshipmatching.values', $products_shippingtime),
 							$this->mpID,
-							getDBConfigValue('amazon.leadtimetoship', $this->mpID, 0)
+							getDBConfigValue('amazon.leadtimetoship', $this->mpID, '-')
 						);
 					} else {
 						$leadtime = $dbRow['leadtimeToShip'];
 					}
-					foreach ($leadtimeToShipOpts as $vk => $vv) {
-						$html .= '    <option value="'.$vk.'"'.(($vk == $leadtime) ? ' selected="selected"' : '').'>'.$vv.'</option>'."\n";
-					}
 					$html .= '
-					</select><br>&nbsp;
+				<td>
+                                        '.(int)$leadtime.'
+					<input type="hidden" id="leadtimeToShip_'.$dbRow['products_id'].'"
+					       name="leadtimeToShip_['.$dbRow['products_id'].']" value="'.$leadtime.'"/>
 					<input type="hidden" id="prepareType_'.$dbRow['products_id'].'"
 					       name="prepareType['.$dbRow['products_id'].']" value="'.$dbRow['prepareType'].'"/>
 				</td>';

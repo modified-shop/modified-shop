@@ -1,0 +1,42 @@
+{
+    "inventorysync": {
+        "headline": "Synchronisation des Inventars",
+        "desc": "Legt fest, welche Produkteigenschaften des Produktes in diesem Shop ebenfalls bei _#_platformName_#_ \n\t\t           automatisch aktualisiert werden sollen.",
+        "fields": {
+            "stock_shop": {
+                "label": "Lagerver&auml;nderung Shop",
+                "desc": "\n\t\t\t\t\t<p>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\n\t                   den aktuellen _#_platformName_#_-Lagerbestand an der Shop-Lagerbestand an (je nach Konfiguration ggf. mit Abzug).<br>\n                       Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \n                       eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\n                       \n                       Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der\n                       Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\n                       \n                       Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch\n                       einen eigenen CronJob ansto&szlig;en, indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\n                       <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\n                       Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen,\n                       werden geblockt.<br><br>\n                    \n\t\t\t\t\t   <b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" &rarr; \"Einstellvorgang\" &rarr; \"St&uuml;ckzahl Lagerbestand\"\n\t\t\t\t\t   werden ber&uuml;cksichtigt.\n\t\t\t\t    <\/p>\n\t\t\t\t",
+                "key": "_#_platform_#_.stocksync.tomarketplace",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto",
+                "submit": "Callback.SyncInventory"
+            },
+            "stock_mp": {
+                "label": "Lagerver&auml;nderung _#_platformName_#_",
+                "desc": "Wenn z. B. bei _#_platformName_#_ ein Artikel 3 mal gekauft wurde, wird der Lagerbestand im Shop um 3 reduziert.<br \/><br \/>\n\t\t\t\t           <strong>Wichtig:<\/strong> Diese Funktion l&auml;uft nur, wenn Sie den Bestellimport aktiviert haben!",
+                "key": "_#_platform_#_.stocksync.frommarketplace",
+                "type": "selection",
+                "values": {
+                    "rel": "Bestellung reduziert Shop-Lagerbestand (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "rel"
+            },
+            "price": {
+                "label": "Artikelpreis",
+                "desc": "<p>\n\t\t\t\t\t\t\t  Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\n\t\t\t\t\t\t\t  den aktuellen _#_platformName_#_-Preis an Ihren Shop-Preis an.<br>\n    \t\t\t              Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \n    \t\t\t              eine Warenwirtschaft nur in der Datenbank erfolgten.\n\t\t\t\t\t\t\t  <br><br>\n\t\t\t\t\t\t\t  <b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" &rarr; \"Preisberechnung\" werden ber&uuml;cksichtigt.\n\t\t\t\t\t\t   <\/p>\n\t\t\t\t",
+                "key": "_#_platform_#_.inventorysync.price",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto"
+            }
+        }
+    }
+}

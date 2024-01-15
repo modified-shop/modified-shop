@@ -1,0 +1,109 @@
+{
+    "orders": {
+        "headline": "Bestellimport",
+        "fields": {
+            "doimport": {
+                "label": "Import aktivieren",
+                "desc": "Sollen Bestellungen aus _#_platformName_#_ importiert werden? <br\/><br\/>Wenn die Funktion aktiviert ist, werden \n\t\t\t\t           Bestellungen voreingestellt st&uuml;ndlich importiert.<br><br>\n\t\t\t\t\t\t   Sie k&ouml;nnen die Zeiten der automatischen Bestellimporte selbst unter<br> \n\t\t\t\t\t\t   \"magnalister Admin\" &rarr; \"Globale Konfiguration\" &rarr; \"Bestellabrufe\" bestimmen.<br><br>\n\t\t\t\t\t\t   Einen manuellen Import k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der \n\t\t\t\t\t\t   Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\n\t\t\t\t\t\t   Zus&auml;tzlich k&ouml;nnen Sie den Bestellimport (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch \n\t\t\t\t\t\t   einen eigenen CronJob ansto&szlig;en, indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\n    \t\t\t           <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=ImportOrders<\/i><br><br>\n    \t\t\t           Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich\n    \t\t\t           laufen, werden geblockt.\t\t\t\t\t\t   \n\t\t\t\t\t\t   ",
+                "key": "_#_platform_#_.import",
+                "type": "radio",
+                "values": {
+                    "true": "Ja",
+                    "false": "Nein"
+                },
+                "default": "true",
+                "submit": "Orders.Import",
+                "morefields": {
+                    "preimportsince": {
+                        "label": "erstmalig ab Zeitpunkt",
+                        "desc": "Startzeitpunkt, ab dem die Bestellungen erstmalig importiert werden sollen. Bitte beachten Sie, dass dies\n\t\t\t\t\t\t           nicht beliebig weit in die Vergangenheit m&ouml;glich ist, da die Daten bei _#_platformName_#_ \n\t\t\t\t\t\t           h&ouml;chstens einige Wochen lang vorliegen.",
+                        "key": "_#_platform_#_.preimport.start",
+                        "type": "date",
+                        "default": "now",
+                        "submit": "Orders.Import.Start",
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ]
+                    }
+                }
+            },
+            "onlycomplete": false,
+            "customersgroup": {
+                "label": "Kundengruppe",
+                "desc": "Kundengruppe, zu der Kunden bei neuen Bestellungen zugeordnet werden sollen.",
+                "key": "_#_platform_#_.CustomerGroup",
+                "type": "selection",
+                "values": null,
+                "default": "2"
+            },
+            "unpaidsatus": false,
+            "openstatus": {
+                "label": "Bestellstatus im Shop",
+                "desc": "Der Status, den eine von _#_platformName_#_ neu eingegangene Bestellung im Shop automatisch bekommen soll. <br\/>\n\t\t\t\t           Sollten Sie ein angeschlossenes Mahnwesen verwenden, ist es empfehlenswert, den Bestellstatus auf \"Bezahlt\"\n\t\t\t\t           zu setzen (Konfiguration &rarr; Bestellstatus).",
+                "key": "_#_platform_#_.orderstatus.open",
+                "type": "selection",
+                "values": null,
+                "default": "2"
+            },
+            "defaultshipping": {
+                "label": "Versandart der Bestellungen",
+                "desc": "Versandart, die allen _#_platformName_#_-Bestellungen zugeordnet wird. Standard: \"marketplace\".<br><br>\n\t\t\t\t           Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&amul;gliche\n\t\t\t\t           Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.shippingmethod",
+                "type": "selection",
+                "values": {
+                    "textfield": "Aus Textfeld"
+                },
+                "default": "textfield",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "_#_platform_#_.orderimport.shippingmethod.name",
+                        "type": "text",
+                        "default": "marketplace",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "defaultpayment": {
+                "label": "Zahlart der Bestellungen",
+                "desc": "Zahlart, die allen _#_platformName_#_-Bestellungen zugeordnet wird. Standard: \"marketplace\".<br><br>\n\t\t\t\t           Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&auml;gliche\n\t\t\t\t           Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.paymentmethod",
+                "type": "selection",
+                "values": {
+                    "textfield": "Aus Textfeld",
+                    "matching": "Automatische Zuordnung"
+                },
+                "default": "matching",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "_#_platform_#_.orderimport.paymentmethod.name",
+                        "type": "text",
+                        "default": "marketplace",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "vat": {
+        "headline": "",
+        "desc": "<b>Mehrwertsteuer<b>",
+        "fields": {
+            "vat_unknown": {
+                "label": "MwSt. Shop-fremder Artikel",
+                "desc": "Wenn der Artikel nicht &uuml;ber magnalister eingestellt wurde, kann die Mehrwertsteuer nicht ermittelt werden.<br\/>\n\t\t\t\t\tAls L&ouml;sung wird der hier angegebene Wert in Prozent bei allen Produkten hinterlegt, deren Mehrwertsteuersatz\n\t\t\t\t\tbeim Bestellimport aus _#_platformName_#_ nicht bekannt ist.",
+                "hint": "Steuersatz, der f&uuml;r Shop-fremde Artikel bei Bestellimport verwendet wird in %.",
+                "key": "_#_platform_#_.mwst.fallback",
+                "type": "text",
+                "default": "19",
+                "verify": "float"
+            }
+        }
+    }
+}

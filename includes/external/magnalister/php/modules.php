@@ -168,112 +168,6 @@ $_modules = array(
 		),
 		'type' => 'marketplace',
 	),
-	'meinpaket' => array(
-		'title' => ML_MODULE_MEINPAKET,
-		'logo' => 'ayn',
-		'displayAlways' => false,
-		'referer' => array('allyouneed.com'),
-		'requiredConfigKeys' => array (
-			'meinpaket.username',
-			'meinpaket.password',
-			'meinpaket.lang',
-			'meinpaket.quantity.type',
-			'meinpaket.quantity.value',
-			'meinpaket.stocksync.frommarketplace',
-			'meinpaket.stocksync.tomarketplace',
-			'meinpaket.import',
-			'meinpaket.orderstatus.open',
-			'meinpaket.mwst.fallback',
-			/*//{search: 1427198983}
-			'meinpaket.mwst.shipping',
-			//*/
-			'meinpaket.orderstatus.shipped',
-			'meinpaket.orderstatus.sync',
-			'meinpaket.orderstatus.cancelled.customerrequest',
-			'meinpaket.orderstatus.cancelled.outofstock',
-			'meinpaket.orderstatus.cancelled.damagedgoods',
-			'meinpaket.orderstatus.cancelled.dealerrequest',
-		),
-		'pages' => array (
-			'prepare' => array (
-				'title' => ML_GENERIC_PREPARE,
-				'views' => array (
-					'apply' => ML_AMAZON_NEW_ITMES,
-					'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
-				),
-			),
-			'checkin' => ML_GENERIC_CHECKIN,
-			'listings' => array (
-				'title' => ML_GENERIC_LISTINGS,
-				'views' => array (
-					'inventory' => ML_GENERIC_INVENTORY,
-					'deleted' => ML_GENERIC_DELETED,
-				),
-			),
-			'errorlog' => ML_GENERIC_ERRORLOG,
-			'conf' => ML_GENERIC_CONFIGURATION,
-		),
-		'settings' => array (
-			'defaultpage' => 'prepare',
-			'subsystem' => 'Meinpaket',
-			'currency' => 'EUR',
-			'hasOrderImport' => true,
-		),
-		'type' => 'marketplace',
-	),
-	'ayn24' => array(
-		'title' => ML_MODULE_AYN24,
-		'logo' => 'ayn24',
-		'displayAlways' => false,
-		'referer' => array('ayn24.pl'),
-		'requiredConfigKeys' => array (
-			'ayn24.username',
-			'ayn24.password',
-			'ayn24.lang',
-			'ayn24.quantity.type',
-			'ayn24.quantity.value',
-			'ayn24.stocksync.frommarketplace',
-			'ayn24.stocksync.tomarketplace',
-			'ayn24.import',
-			'ayn24.orderstatus.open',
-			'ayn24.mwst.fallback',
-			/*//{search: 1427198983}
-			'ayn24.mwst.shipping',
-			//*/
-			'ayn24.orderstatus.shipped',
-			'ayn24.orderstatus.sync',
-			'ayn24.orderstatus.cancelled.customerrequest',
-			'ayn24.orderstatus.cancelled.outofstock',
-			'ayn24.orderstatus.cancelled.damagedgoods',
-			'ayn24.orderstatus.cancelled.dealerrequest',
-		),
-		'pages' => array (
-			'prepare' => array (
-				'title' => ML_GENERIC_PREPARE,
-				'views' => array (
-					'apply' => ML_AMAZON_NEW_ITMES,
-					'varmatch' => ML_AYN24_VARIANT_MATCHING,
-				),
-			),
-			'checkin' => ML_GENERIC_CHECKIN,
-			'listings' => array (
-				'title' => ML_GENERIC_LISTINGS,
-				'views' => array (
-					'inventory' => ML_GENERIC_INVENTORY,
-					'deleted' => ML_GENERIC_DELETED,
-				),
-			),
-			'errorlog' => ML_GENERIC_ERRORLOG,
-			'conf' => ML_GENERIC_CONFIGURATION,
-		),
-		'settings' => array (
-			'defaultpage' => 'prepare',
-			'subsystem' => 'Ayn24',
-			'currency' => 'PLN',
-			'hasOrderImport' => true,
-		),
-		'type' => 'marketplace',
-	),
 	'hitmeister' => array(
 		'title' => ML_MODULE_HITMEISTER,
 		'logo' => 'kaufland',
@@ -283,7 +177,7 @@ $_modules = array(
 			'hitmeister.clientkey',
 			'hitmeister.secretkey',
 			'hitmeister.lang',
-			'hitmeister.shippingtime',
+			'hitmeister.handlingtime',
 			'hitmeister.itemcondition',
 			'hitmeister.itemcountry',
 			'hitmeister.import',
@@ -658,39 +552,6 @@ $_modules = array(
 		),
 		'settings' => array (
 			'subsystem' => 'ComparisonShopping',
-			'currency' => 'EUR',
-			'hasOrderImport' => false,
-		),
-		'type' => 'marketplace',
-	),
-	'laary' => array (
-		'title' => ML_MODULE_LAARY,
-		'logo' => 'laary',
-		'displayAlways' => false,
-		'requiredConfigKeys' => array (
-			'laary.username',
-			'laary.password',
-			'laary.mpusername',
-			'laary.mppassword',
-			'laary.checkin.region',
-			'laary.import',
-		),
-		'pages' => array (
-			'catmatch' => ML_MEINPAKET_CATEGORY_MATCHING,
-			'checkin' => ML_GENERIC_CHECKIN,
-			'listings' => array (
-				'title' => ML_GENERIC_LISTINGS,
-				'views' => array (
-					'inventory' => ML_GENERIC_INVENTORY,
-					'deleted' => ML_GENERIC_DELETED,
-				)
-			),
-			'errorlog' => ML_GENERIC_ERRORLOG,
-			'conf' => ML_GENERIC_CONFIGURATION,
-		),
-		'settings' => array (
-			'defaultpage' => 'checkin',
-			'subsystem' => 'Laary',
 			'currency' => 'EUR',
 			'hasOrderImport' => false,
 		),

@@ -21,6 +21,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/MagnaCompatibleBase.php');
 include_once(DIR_MAGNALISTER_INCLUDES.'lib/configFunctions.php');
 require_once(DIR_MAGNALISTER_MODULES.'idealo/classes/IdealoApiConfigValues.php');
+require_once(DIR_MAGNALISTER_MODULES.'idealo/idealoFunctions.php');
 
 class IdealoPrepareView extends MagnaCompatibleBase {
 
@@ -447,7 +448,7 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                     <?php
                     $shippingCostMethodSelect = '<select id="ShippingCostMethod" name="ShippingCostMethod">';
                     $shippingCostMethods = array();
-                    mlGetShippingMethods($shippingCostMethods);
+                    idealoGetShippingMethods($shippingCostMethods);
 
                     foreach ($shippingCostMethods['values'] as $key => $shippingCostMethod) {
                         $shippingCostMethodSelect .= '<option value="'.$key.'"'.(

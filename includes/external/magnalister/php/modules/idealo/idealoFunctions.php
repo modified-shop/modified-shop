@@ -23,24 +23,49 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'generic/genericFunctions.php');
 
 function updateIdealoInventoryByEdit($mpID, $updateData) {
-	$updateItem = genericInventoryUpdateByEdit($mpID, $updateData);	
-	if (!is_array($updateItem)) {
-		return false;
-	}
-	try {
-		$result = MagnaConnector::gi()->submitRequest(array(
-			'ACTION' => 'UpdateItems',
-			'SUBSYSTEM' => 'ComparisonShopping',
-			'SEARCHENGINE' => 'idealo',
-			'MARKETPLACEID' => $mpID,
-			'DATA' => array($updateItem),
-		));
-		#echo print_m($result, '$result');
-	} catch (MagnaException $e) {
-		if ($e->getCode() == MagnaException::TIMEOUT) {
-			$e->saveRequest();
-			$e->setCriticalStatus(false);
-		}
-		#echo print_m($e->getErrorArray(), '$error');
-	}
+    $updateItem = genericInventoryUpdateByEdit($mpID, $updateData);        
+    if (!is_array($updateItem)) {
+        return false;
+    }
+    try {
+        $result = MagnaConnector::gi()->submitRequest(array(
+            'ACTION' => 'UpdateItems',
+            'SUBSYSTEM' => 'ComparisonShopping',
+            'SEARCHENGINE' => 'idealo',
+            'MARKETPLACEID' => $mpID,
+            'DATA' => array($updateItem),
+        ));
+        #echo print_m($result, '$result');
+    } catch (MagnaException $e) {
+        if ($e->getCode() == MagnaException::TIMEOUT) {
+            $e->saveRequest();
+            $e->setCriticalStatus(false);
+        }
+        #echo print_m($e->getErrorArray(), '$error');
+    }
+}
+
+function idealoGetShippingMethods(&$form) {
+    if (!class_exists('Shipping')) {
+        require_once (DIR_MAGNALISTER_INCLUDES.'lib/classes/Shipping.php');
+    }
+    $shippingClass = new Shipping();
+    $shippingMethods = $shippingClass->getShippingMethods();
+    $form['values'] = array(
+        '__ml_lump' => ML_COMPARISON_SHOPPING_LABEL_LUMP,
+        '__ml_config' => ML_COMPARISON_SHOPPING_LABEL_CONFIG
+    );
+    if (SHOPSYSTEM == 'gambio') {
+        $form['values']['__ml_gambio'] = ML_COMPARISON_SHOPPING_LABEL_ARTICLE_SHIPPING_COSTS;
+    }
+    if (MagnaDB::gi()->columnExistsInTable('products_weight', TABLE_PRODUCTS)) {
+        $form['values']['__ml_weight'] = ML_LABEL_SHIPPINGCOSTS_EQ_ARTICLEWEIGHT;
+    }
+    if (!empty($shippingMethods)) {
+        foreach ($shippingMethods as $method) {
+            if ($method['code'] == 'gambioultra') continue;
+            $form['values'][$method['code']] = fixHTMLUTF8Entities($method['title']);
+        }
+    }
+    unset($shippingClass);
 }

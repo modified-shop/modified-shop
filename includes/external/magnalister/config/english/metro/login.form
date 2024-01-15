@@ -1,0 +1,46 @@
+{
+    "login": {
+        "headline": "_#_platformName_#_ Zugangsdaten",
+        "fields": {
+            "clientKey": {
+                "label": "METRO-Client-Key",
+                "key": "_#_platform_#_.clientkey",
+                "desc": "Geben Sie hier den \u201cMETRO-Client-Key\u201d ein.<br>Aktuell k\u00f6nnen Sie diesen ausschlie\u00dflich beim METRO Marktplatz Seller-Support anfordern. Schreiben Sie dazu eine E-Mail an: seller@metro-marketplace.eu",
+                "type": "text"
+            },
+            "secretKey": {
+                "label": "METRO-Secret-Key",
+                "key": "_#_platform_#_.secretkey",
+                "desc": "Geben Sie hier den \u201cMETRO-Secret-Key\u201d ein.<br>Aktuell k\u00f6nnen Sie diesen ausschlie\u00dflich beim METRO Marktplatz Seller-Support anfordern. Schreiben Sie dazu eine E-Mail an: seller@metro-marketplace.eu",
+                "type": "password",
+                "settings": {
+                    "save": false
+                }
+            },
+            "shippingdestination": {
+                "label": "METRO Site",
+                "desc": "Auf welchem METRO Marktplatz Land sollen Ihre Produkte verkauft werden<br><br>METRO Vorgabe: Aktuell ist keine Cross Border Trade m\u00f6glich.",
+                "key": "_#_platform_#_.shippingdestination",
+                "type": "selection",
+                "values": {
+                    "DE_MAIN": "METRO MARKETS Deutschland",
+                    "ES_MAIN": "METRO MARKETS Spanien"
+                },
+                "default": "DE_MAIN",
+                "submit": "Access.Shipping.Destination"
+            },
+            "shippingorigin": {
+                "label": "Versand aus",
+                "desc": "Aus welchem Land werden Ihre Produkte verschickt<br><br>METRO Vorgabe: Aktuell ist keine Cross Border Trade m\u00f6glich.",
+                "key": "_#_platform_#_.shippingorigin",
+                "type": "selection",
+                "values": {
+                    "DE_MAIN": "Deutschland",
+                    "ES_MAIN": "Spanien"
+                },
+                "default": "DE_MAIN",
+                "submit": "Access.Shipping.Origin"
+            }
+        }
+    }
+}
