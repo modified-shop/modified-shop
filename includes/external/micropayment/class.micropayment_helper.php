@@ -36,7 +36,7 @@ class micropayment_helper
             //'shop_version' => $this->getShopSignatur(),
             'currency'     => $order->info['currency'],
             'project'      => MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE,
-            'amount'       => (double)($order->info['pp_total'] * 100),
+            'amount'       => (round($order->info['pp_total'], 2) * 100),
             'orderid'      => $insert_id,
             'paytext'      => str_replace('#ORDER#',$insert_id,MODULE_PAYMENT_MCP_SERVICE_PAYTEXT),
             'theme'        => MODULE_PAYMENT_MCP_SERVICE_THEME,
