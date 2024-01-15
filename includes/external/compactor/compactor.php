@@ -242,15 +242,15 @@
 			{
         // check that the opening browser is internet explorer
 				$msie = '/msie\s(.*).*(win)/i';
-			    $keep_conditionals = (isset($_SERVER['HTTP_USER_AGENT']) && preg_match($msie, $_SERVER['HTTP_USER_AGENT']));
-          /*
-          $keep_doctype = false;
-          if(strpos($html, '<!DOCTYPE'))
-           {
-             $html = str_replace('<!DOCTYPE', '--**@@DOCTYPE@@**--', $html);
-             $keep_doctype = true;
-           }
-           */
+        $keep_conditionals = (isset($_SERVER['HTTP_USER_AGENT']) && preg_match($msie, $_SERVER['HTTP_USER_AGENT']));
+        /*
+        $keep_doctype = false;
+        if(strpos($html, '<!DOCTYPE'))
+         {
+           $html = str_replace('<!DOCTYPE', '--**@@DOCTYPE@@**--', $html);
+           $keep_doctype = true;
+         }
+         */
         // ie conditionals are to be kept so substitute
 				if($keep_conditionals)
 				{
