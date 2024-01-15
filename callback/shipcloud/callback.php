@@ -68,7 +68,14 @@ if (is_array($request) && count($request) > 0) {
     // update order
     $oID = $order->info['orders_id'];
     $status = $order->info['orders_status_id'];
-    $comments = decode_htmlentities(constant(strtoupper($request['type']['value'])));
+    $comments = '';
+    if (isset($request['type'])
+        && isset($request['type']['value'])
+        && defined(strtoupper($request['type']['value']))
+        )
+    {
+      $comments = decode_htmlentities(constant(strtoupper($request['type']['value'])));
+    }
     $order_updated = false;
     $_POST['notify'] = ((MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'Shop') ? 'on' : 'off');
     $_POST['notify_comments'] = 'off';

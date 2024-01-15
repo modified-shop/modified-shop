@@ -50,7 +50,7 @@ define('HEADER_TITLE_CATALOG', 'Catalogue');
 
 // if USE_DEFAULT_LANGUAGE_CURRENCY is true, use the following currency when changing language, 
 // instead of staying with the applications default currency
-define('LANGUAGE_CURRENCY', 'EUR');
+defined('LANGUAGE_CURRENCY') OR define('LANGUAGE_CURRENCY', 'EUR');
 
 define('MALE', 'Mr.');
 define('FEMALE', 'Ms./Mrs.');
