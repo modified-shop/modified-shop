@@ -405,7 +405,7 @@
     'includes/external/magnalister/config/french/meinpaket.form',
     'includes/external/magnalister/config/german/ayn24.form',
     'includes/external/magnalister/config/german/hood.form',
-    'includes/external/magnalister/config/german/meinpaket.form  ',  
+    'includes/external/magnalister/config/german/meinpaket.form',
     'includes/external/magnalister/images/logos/modules.php',
     'includes/external/magnalister/js/marketplaces/meinpaket/variationmatching.js',
     'includes/external/magnalister/lang/ababab',
