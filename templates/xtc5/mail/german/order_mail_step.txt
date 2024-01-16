@@ -50,7 +50,7 @@ Art.-Nr. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}
 {$downloads_content_txt}
 
 {if $address_label_payment != $address_label_shipping}
-{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}Abholadresse
+{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup') !== false}Abholadresse
 {else}Versandadresse
 {/if} 
 ----------------------------------------------------------------------
