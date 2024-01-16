@@ -93,8 +93,6 @@
       }).mount();
     }
 
-  }); 
-
     /* carousel products row */
     var elms = document.getElementsByClassName("splide_size3");
     for (var i = 0; i < elms.length; i++) {
@@ -106,6 +104,8 @@
         mediaQuery: 'min', 
       }).mount();
     }
+
+  }); 
 
   /* prevent accessibility warning for vertical orientation */
   $(document).ready(function(){
