@@ -52,4 +52,4 @@ $queries[] = "CREATE TABLE IF NOT EXISTS `".TABLE_MAGNA_BEPADO_PROPERTIES."` (
   KEY `products_model` (`products_model`)
 ) ENGINE=MyISAM";
 
-$queries[] = "DROP TABLE IF EXISTS `".TABLE_MAGNA_MEINPAKET_CATEGORIES."`";
+$queries[] = "DROP TABLE IF EXISTS `magnalister_meinpaket_categories`";

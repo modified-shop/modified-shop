@@ -116,6 +116,8 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 	protected function loadChoiseValues() {
 		parent::loadChoiseValues();
 		if ($this->isAuthed) {
+			HitmeisterHelper::GetSitesConfig($this->form['sites']['fields']['site']);
+			HitmeisterHelper::GetCurrenciesConfig($this->form['sites']['fields']['currency']);
 			HitmeisterHelper::GetDeliveryCountriesConfig($this->form['prepare']['fields']['location']);
 			HitmeisterHelper::GetConditionTypesConfig($this->form['prepare']['fields']['condition']);
 			HitmeisterHelper::GetShippingTimesConfig($this->form['prepare']['fields']['shippingtime']);
@@ -182,7 +184,28 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 				ML_HITMEISTER_TEXT_WARNING_ALLOW_MULTIPLE_EAN,
 				ML_BUTTON_LABEL_YES,
 				ML_BUTTON_LABEL_NO);
+			$curSite = getDBConfigValue('hitmeister.site', $this->mpID, false);
+?>
+<script type="text/javascript">/*<![CDATA[*/
+		$('#config_hitmeister_site').change(function() {
+			var s = $(this);
+			if (s.val() == '<?php echo $curSite; ?>') return true;
+			$('<div></div>').html('<?php echo str_replace(array("\n", "\r"), ' ', ML_HITMEISTER_TEXT_CHANGE_SITE); ?>').jDialog({
+				title: '<?php echo ML_HITMEISTER_LABEL_CHANGE_SITE ?>',
+				buttons: {
+					'<?php echo ML_BUTTON_LABEL_NO; ?>': function() {
+						s.val('<?php echo $curSite; ?>');
+						jQuery(this).dialog('close');
+					},
+					'<?php echo ML_BUTTON_LABEL_YES; ?>': function() {
+						$('#config_hitmeister_currency_key').val($('#config_hitmeister_site').val());
+						$('#conf_magnacompat').submit();
+					}
+				}
+			});
+		});
+/*]]>*/</script>
+<?php
 		}
 	}
-
 }

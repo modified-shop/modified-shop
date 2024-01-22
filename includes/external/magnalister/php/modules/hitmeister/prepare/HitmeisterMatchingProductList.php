@@ -23,6 +23,15 @@ class HitmeisterMatchingProductList extends MLProductListHitmeisterAbstract {
 	public function __construct() {	
 		$this->aListConfig[] = array(
 			'head' => array(
+				'attributes'    => 'class="lowestprice"',
+				'content'       => 'ML_HITMEISTER_LABEL_HITMEISTER_PRICE_SHORT',
+			),
+			'field' => array(
+				'hitmeisterprice'
+			)
+		);
+		$this->aListConfig[] = array(
+			'head' => array(
 				'attributes' => 'class="matched"',
 				'content' => 'ML_MAGNACOMPAT_LABEL_PREPARED'
 			),

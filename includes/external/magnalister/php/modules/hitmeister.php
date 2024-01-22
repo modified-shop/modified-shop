@@ -28,6 +28,13 @@ class HitmeisterMarketplace extends MagnaCompatMarketplace {
 
     protected function extraChecks() {
         global $_MagnaSession;
+        // the select field has country_iso as keys
+        if (    isset($_POST)
+             && isset($_POST['conf'])
+             && isset($_POST['conf']['hitmeister.currency.key'])) {
+            $aHitmeisterCurrencies = HitmeisterHelper::GetCurrencies();
+            $_POST['conf']['hitmeister.currency'] = $aHitmeisterCurrencies[$_POST['conf']['hitmeister.currency.key']];
+        }
         if (($hp = magnaContribVerify('HitmeisterExtraChecksReplacement', 1)) !== false) {
             require($hp);
         } else {

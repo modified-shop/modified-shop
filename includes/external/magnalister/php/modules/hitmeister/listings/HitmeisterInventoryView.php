@@ -295,8 +295,9 @@ $(document).ready(function() {
 		if (empty($item['EAN'])) {
 			return '<td>&mdash</td>';
 		}
+		$site = getDBConfigValue($this->magnasession['currentPlatform'] . '.site', $this->mpID, 'de');
 
-		return '<td><a href="http://www.hitmeister.de/item/search/?search_value='.$item['EAN'].'" target="_blank">'.$item['EAN'].'</a></td>';
+		return '<td><a href="https://www.kaufland.'.$site.'/item/search/?search_value='.$item['EAN'].'" target="_blank">'.$item['EAN'].'</a></td>';
 	}
 
 	protected function getQuantities($item) {

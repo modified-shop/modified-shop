@@ -206,7 +206,7 @@ $_modules = array(
 		'settings' => array (
 			'defaultpage' => 'prepare',
 			'subsystem' => 'Hitmeister',
-			'currency' => 'EUR',
+			'currency' => '__depends__',
 			'hasOrderImport' => true,
 		),
 		'type' => 'marketplace',

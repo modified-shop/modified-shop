@@ -112,6 +112,84 @@ class HitmeisterHelper extends AttributesMatchingHelper
 		}
 	}
 	
+	public static function GetSites() {
+		global $_MagnaSession;
+	
+		$mpID = $_MagnaSession['mpID'];
+	
+		$sites['values'] = array();
+
+		if (   isset($_MagnaSession[$mpID]['Sites'])
+			&& !empty($_MagnaSession[$mpID]['Sites'])
+		) {
+			return $_MagnaSession[$mpID]['Sites'];
+		}
+		
+		try {
+			$sitesData = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'GetSites'
+			));
+		} catch (MagnaException $e) {
+			$sitesData = array(
+				'DATA' => false
+			);
+		}
+		
+		if (!is_array($sitesData) || !isset($sitesData['DATA'])) {
+			return false;
+		}
+
+		foreach ($sitesData['DATA'] as &$site) {
+			$site = stringToUTF8($site);
+		}
+		
+		$_MagnaSession[$mpID]['Sites'] = $sitesData['DATA'];
+		return $sitesData['DATA'];
+	}
+
+        public static function GetSitesConfig(&$field) {
+            $field['values'] = self::GetSites();
+        }
+
+	public static function GetCurrencies() {
+		global $_MagnaSession;
+	
+		$mpID = $_MagnaSession['mpID'];
+	
+		$sites['values'] = array();
+
+		if (   isset($_MagnaSession[$mpID]['Currencies'])
+			&& !empty($_MagnaSession[$mpID]['Currencies'])
+		) {
+			return $_MagnaSession[$mpID]['Currencies'];
+		}
+		
+		try {
+			$sitesData = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'GetCurrencies'
+			));
+		} catch (MagnaException $e) {
+			$sitesData = array(
+				'DATA' => false
+			);
+		}
+		
+		if (!is_array($sitesData) || !isset($sitesData['DATA'])) {
+			return false;
+		}
+
+		foreach ($sitesData['DATA'] as &$site) {
+			$site = stringToUTF8($site);
+		}
+		
+		$_MagnaSession[$mpID]['Currencies'] = $sitesData['DATA'];
+		return $sitesData['DATA'];
+	}
+
+        public static function GetCurrenciesConfig(&$field) {
+            $field['values'] = self::GetCurrencies();
+        }
+
 	public static function GetConditionTypes() {
 		global $_MagnaSession;
 	

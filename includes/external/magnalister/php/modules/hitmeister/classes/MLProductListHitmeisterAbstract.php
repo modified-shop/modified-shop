@@ -148,4 +148,11 @@ abstract class MLProductListHitmeisterAbstract extends MLProductList {
 		return false;
 	}
 
+	protected function getHitmeisterPrice ($aRow) {
+		$aPriceConfig = HitmeisterHelper::loadPriceSettings($this->aMagnaSession['mpID']);
+		$price = $this->getPrice()
+			->setFinalPriceFromDB($aRow['products_id'], $this->aMagnaSession['mpID'], $aPriceConfig['Price'])
+                                ->format();
+		return $price;
+	}
 }

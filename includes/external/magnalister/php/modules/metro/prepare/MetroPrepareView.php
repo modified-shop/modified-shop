@@ -729,12 +729,10 @@ class MetroPrepareView extends MagnaCompatibleBase {
         unset($current_row);
         if (1 == $rowCount) {
             if (!empty($dbSelection[0]['Description'])) {
-                $dbSelection[0]['Description'] = strip_tags(replaceNbsp($dbSelection[0]['Description']),
-                    '<p><ul><ol><li><span><br><b>');
+                $dbSelection[0]['Description'] = MetroHelper::MetroStripTagsFromDescription($dbSelection[0]['Description']);
             }
             if (!empty($dbSelection[0]['ShortDescription'])) {
-                $dbSelection[0]['ShortDescription'] = strip_tags(replaceNbsp($dbSelection[0]['ShortDescription']),
-                    '<p><ul><ol><li><span><br><b>');
+                $dbSelection[0]['ShortDescription'] = MetroHelper::MetroStripTagsFromDescription($dbSelection[0]['ShortDescription']);
             }
             if (!isset($dbSelection[0]['MSRP'])) {
                 $dbSelection[0]['MSRP'] = '';

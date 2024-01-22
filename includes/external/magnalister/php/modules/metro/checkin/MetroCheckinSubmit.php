@@ -99,7 +99,7 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'BusinessModel' => $properties['BusinessModel'],
             'FreightForwarding' => ($properties['FreightForwarding'] === 'true'),
             'Title' => $properties['Title'],
-            'Description' => replaceNbsp($properties['Description'])
+            'Description' => MetroHelper::MetroStripTagsFromDescription($properties['Description'])
         );
         if (getDBConfigValue('general.keytype', '0') == 'artNr') {
             $data['submit']['SKU'] = $properties['products_model'];

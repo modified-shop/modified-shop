@@ -573,7 +573,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 					<tr>
 						<td><?php echo ML_HITMEISTER_LABEL_HITMEISTER_PRICE ?>: </td>
 						<td>
-							<?php echo $defaultPrice.' '.ML_HITMEISTER_CURRENCY ?>
+							<?php echo $defaultPrice.' '.getCurrencyFromMarketplace($this->mpID); ?>
 							<input type="hidden" value="<?php echo $defaultPrice; ?>" name="Price" id="Price" />
 						</td>
 						<td></td>

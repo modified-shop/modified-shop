@@ -119,6 +119,17 @@ class MetroHelper extends AttributesMatchingHelper {
         return substituteTemplate($template, $substitution);
     }
 
+    public static function MetroStripTagsFromDescription($string) {
+        // tags constrained + attributes in tags not allowed + decoded &nbsp; not allowed
+        return preg_replace('/(<p.+?)+(>)/i', '<p>',
+                   preg_replace('/(<span.+?)+(>)/i', '<span>',
+                       strip_tags(
+                           replaceNbsp($string), '<p><ul><ol><li><span><br><b>'
+                       )
+                   )
+               );
+    }
+
     public static function str2float($str) {
         $val = str_replace(',', '.', $str);
         $val = preg_replace('/\.(?=.*\.)/', '', $val);
