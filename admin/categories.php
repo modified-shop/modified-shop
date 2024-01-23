@@ -186,7 +186,9 @@ if (xtc_not_null($action)) {
             )
         {
           foreach ($_POST['multi_products'] AS $product_id) {
-            $catfunc->delete_product($product_id, $_POST['multi_products_categories'][$product_id]);
+            if (isset($_POST['multi_products_categories'][$product_id])) {
+              $catfunc->delete_product($product_id, $_POST['multi_products_categories'][$product_id]);
+            }
           }
         }
       }
