@@ -105,7 +105,7 @@
                                        FROM ".TABLE_SCHEDULED_TASKS."
                                       WHERE tasks = 'avalex_update'");
         if (xtc_db_num_rows($check_query) < 1) {                      
-          xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'avalex_update')");
+          xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('6', 'h',  '0', 'avalex_update')");
         }
       }
     }
