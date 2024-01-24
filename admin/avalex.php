@@ -72,7 +72,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <li><strong>Einfache Einbindung per Modul</strong></li>
                 <li><strong>Inklusive Abmahnkostenschutz</strong></li>
                 <li><strong>W&ouml;chentliche Scans Ihres Shops + Infomails bei rechtlich relevanten &Auml;nderungen</strong></li>
-                <li><strong><a href="https://partner.avalex.de/avalex.php?id=317&url=2" target="_blank"><font style="font-size:12px;"><u><strong>30 Tage Geld-zur&uuml;ck-Garantie</strong></u></font></a></strong></li>
+                <li><strong><a href="https://www.avalex.de/faq#collapse-13" target="_blank"><font style="font-size:12px;"><u><strong>30 Tage Geld-zur&uuml;ck-Garantie</strong></u></font></a></strong></li>
               </ul>
               <p align="left">
                 <br />
