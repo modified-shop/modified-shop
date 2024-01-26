@@ -238,7 +238,7 @@ class xtc_afterbuy_functions {
 
         $DATAstring .= "Artikelnr_" . $nr . "=" . $artnr . "&";
         if ($stammid != '') $DATAstring .= "ArtikelStammID_" . $nr . "=" . $stammid . "&";
-        $DATAstring .= "Artikelname_" . $nr . "=" . preg_replace("/&/", "%38", preg_replace("/\"/", "", preg_replace("/ /", "%20", $pDATA['products_name']))) . "&";
+        $DATAstring .= "Artikelname_" . $nr . "=" . preg_replace("/&/", "%26", preg_replace("/\"/", "", preg_replace("/ /", "%20", $pDATA['products_name']))) . "&";
 
         $price = $pDATA['products_price'];
         $tax = $pDATA['products_tax'];
