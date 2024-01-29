@@ -2438,7 +2438,6 @@ ul.subcats_menu li.Selected a {
 /* boxes */
 .listingbox {
   position:relative;
-  background:#fff;
   border:solid #e1e1e1;
   border-width:0px 1px 1px 0px;
   overflow:hidden;
