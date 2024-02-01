@@ -21,6 +21,9 @@
 $queries = array();
 $functions = array();
 
+/*
+2024-01-08 module deleted
+
 $queries[] = "CREATE TABLE IF NOT EXISTS `" . TABLE_MAGNA_AYN24_CATEGORIES . "` (
    `mpID` int(11) NOT NULL,
    `platform` varchar(30) NOT NULL,
@@ -36,3 +39,4 @@ $queries[] = "CREATE TABLE IF NOT EXISTS `" . TABLE_MAGNA_AYN24_CATEGORIES . "` 
    UNIQUE KEY `UniqueEntry` (`mpID`,`platform`,`CategoryID`),
    KEY `mpID` (`mpID`)
  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+*/

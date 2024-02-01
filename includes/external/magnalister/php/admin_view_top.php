@@ -62,6 +62,10 @@ if (in_array(SHOPSYSTEM, array('oscommerce', 'xonsoft'))) {
 	}
 }
 
+if (SHOPSYSTEM == 'xtcmodified') {
+        global $menu_access, $PHP_SELF;
+}
+
 if (array_key_exists('module', $_GET) && array_key_exists($_GET['module'], $_modules)) {
 	$_mainTitle .= ' - '.$_modules[$_GET['module']]['title'];
 }

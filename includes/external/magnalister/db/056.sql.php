@@ -21,6 +21,9 @@
 $queries = array();
 $functions = array();
 
+/*
+2024-01-08 module deleted
+
 $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_AYN24_VARIANTMATCHING . '` (
 	`MpId` int(11) NOT NULL,
 	`MpIdentifier` varchar(50) NOT NULL,
@@ -53,3 +56,4 @@ $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_AYN24_ERRORLOG . '` (
 	PRIMARY KEY (`id`),
 	KEY `mpID` (`mpID`)
 )';
+*/

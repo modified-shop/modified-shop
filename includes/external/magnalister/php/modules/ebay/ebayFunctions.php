@@ -1835,9 +1835,9 @@ function eBayInsertPrepareData($data) {
 function SaveEBaySingleProductProperties($pID, $itemDetails) {
     global $_MagnaSession;
     $row = prepareEBayPropertiesRow($pID, $itemDetails);
-    $row['Title'] = substr(trim(strip_tags(html_entity_decode($itemDetails['Title']))), 0, 80);
+    $row['Title'] = mb_substr(trim(strip_tags(html_entity_decode($itemDetails['Title']))), 0, 80, 'UTF-8');
     if (array_key_exists('enableSubtitle', $itemDetails) && ('on' == $itemDetails['enableSubtitle']) && !empty($itemDetails['Subtitle'])) {
-        $row['Subtitle'] = substr(trim(strip_tags($itemDetails['Subtitle'])), 0, 55);
+        $row['Subtitle'] = mb_substr(trim(strip_tags($itemDetails['Subtitle'])), 0, 55, 'UTF-8');
     }
     if (!empty($itemDetails['PictureURL'])) {
         if (is_array($itemDetails['PictureURL'])) {
@@ -1967,14 +1967,14 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
         $pID = $dataRow['products_id'];
         #$row['Title'] = (isset($prefilled_data_by_pID[$pID]) && isset($prefilled_data_by_pID[$pID]['Title']))
         #	? $prefilled_data_by_pID[$pID]['Title']
-        $row['Title'] = substr(eBaySubstituteTemplate($_MagnaSession['mpID'], $dataRow['products_id'], $eBayTitleTemplate, array(
+        $row['Title'] = mb_substr(eBaySubstituteTemplate($_MagnaSession['mpID'], $dataRow['products_id'], $eBayTitleTemplate, array(
             '#TITLE#' => strip_tags($dataRow['products_name']),
             '#ARTNR#' => $dataRow['products_model']
-        )), 0, 80);
+        )), 0, 80, 'UTF-8');
         if ('on' == $itemDetails['enableSubtitle'] && !empty($dataRow['products_short_description'])) {
             #$row['Subtitle'] = (isset($prefilled_data_by_pID[$pID]) && isset($prefilled_data_by_pID[$pID]['Subtitle']))
             #? $prefilled_data_by_pID[$pID]['Subtitle']
-            $row['Subtitle'] = substr(trim(strip_tags($dataRow['products_short_description'])), 0, 55);
+            $row['Subtitle'] = mb_substr(trim(strip_tags($dataRow['products_short_description'])), 0, 55, 'UTF-8');
         }
         if ('on' == $itemDetails['privateListing']) {
             $row['PrivateListing'] = '1';
