@@ -150,7 +150,7 @@
           $this->sortString = " ORDER BY pname DESC";
           break;
         case '3':
-          $this->sortString = " ORDER BY pquant DESC, pname ASC";
+          $this->sortString = " ORDER BY pquant ASC, pname ASC";
           break;
         case '4':
           $this->sortString = " ORDER BY pquant DESC, pname ASC";
