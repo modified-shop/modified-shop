@@ -11,17 +11,16 @@
 
 #mobile_menu {
   display:block;
-} 
- 
+}
+
 #menu_closer {
   cursor:pointer;
   width:30px;
   height:30px;
   background: var(--toggle_menu_closer_bg, #eee);
   color: var(--toggle_menu_closer_color, #555);
-  position:absolute;
-  top:0px;
-  right:0px;
+  position:relative;
+  margin-left:auto;
   font-size:20px;
   line-height:30px;
   text-align:center;
