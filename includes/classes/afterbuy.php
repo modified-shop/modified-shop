@@ -440,7 +440,7 @@ class xtc_afterbuy_functions {
 
       if ($oData['payment_method'] == 'banktransfer') {
         $b_query = xtc_db_query("SELECT * FROM " . TABLE_BANKTRANSFER . " WHERE orders_id = " . $oID);
-        if (xtc_db_numrows($b_query)) {
+        if (xtc_db_num_rows($b_query)) {
           $b_data = xtc_db_fetch_array($b_query);
           $DATAstring .= "Bankname=" . $b_data['banktransfer_bankname'] . "&";
           $DATAstring .= "BLZ=" . $b_data['banktransfer_blz'] . "&";
