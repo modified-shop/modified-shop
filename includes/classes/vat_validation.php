@@ -23,8 +23,12 @@ require_once(DIR_FS_EXTERNAL . 'nusoap/nusoap.php');
 define ('VAT_LIVE_CHECK_URL', 'https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl');
 
 class vat_validation {
-  var $vat_info, $vat_errors;
-
+  
+  var $vat_info;
+  var $vat_errors;
+  var $live_check;
+  
+  
   function __construct($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
 
     $vat_id = str_replace(' ', '', $vat_id);
