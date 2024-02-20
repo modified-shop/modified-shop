@@ -26,6 +26,10 @@ defined('ADD_LANGUAGE_TO_LINK') OR defined('MODULE_MULTILANG_STATUS') ? define('
 
 class seo_url_shopstat extends modified_seo_url {
 
+  var $params_array;
+  var $language_id;
+  
+  
   /**
    * instance
    *
@@ -393,15 +397,15 @@ class seo_url_shopstat extends modified_seo_url {
     }
     
     // unset not needed params
-    unset($this->params_array['language']);
-    unset($this->params_array['cPath']);
-    unset($this->params_array['manufacturers_id']);
-    unset($this->params_array['products_id']);
-    unset($this->params_array['coID']);
-    unset($this->params_array['page']);
-    unset($this->params_array['content']);
-    unset($this->params_array['product']);
-    unset($this->params_array['name']);
+    if (isset($this->params_array['language'])) unset($this->params_array['language']);
+    if (isset($this->params_array['cPath'])) unset($this->params_array['cPath']);
+    if (isset($this->params_array['manufacturers_id'])) unset($this->params_array['manufacturers_id']);
+    if (isset($this->params_array['products_id'])) unset($this->params_array['products_id']);
+    if (isset($this->params_array['coID'])) unset($this->params_array['coID']);
+    if (isset($this->params_array['page'])) unset($this->params_array['page']);
+    if (isset($this->params_array['content'])) unset($this->params_array['content']);
+    if (isset($this->params_array['product'])) unset($this->params_array['product']);
+    if (isset($this->params_array['name'])) unset($this->params_array['name']);
 
     if (count($this->params_array) > 0) {
       $link .= $separator.http_build_query($this->params_array, '', '&');
@@ -412,4 +416,3 @@ class seo_url_shopstat extends modified_seo_url {
   }
   
 }
-?>
