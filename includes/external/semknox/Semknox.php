@@ -406,15 +406,17 @@
           $products_price = $customers_status['xtPrice']->xtcGetPrice($products['products_id'], true, 1, $products['products_tax_class_id'], $products['products_price'], 1);
           $tax_rate = isset($customers_status['xtPrice']->TAX[$products['products_tax_class_id']]) ? $customers_status['xtPrice']->TAX[$products['products_tax_class_id']] : 0;
           $_SESSION['customers_status'] = $customers_status['xtPrice']->cStatus;
-        
-          if (!isset($price_array[$products_price['plain']])) {
-            $price_array[$products_price['plain']] = array(
+          
+          $products_price['hash'] = md5($products_price['plain']);
+          
+          if (!isset($price_array[$products_price['hash']])) {
+            $price_array[$products_price['hash']] = array(
               'key' => 'price',
               'value' => $products_price['plain'],
               'userGroups' => array(),
             );
 
-            $price_formatted_array[$products_price['plain']] = array(
+            $price_formatted_array[$products_price['hash']] = array(
               'key' => 'price_formatted',
               'value' => $customers_status['xtPrice']->xtcFormatCurrency($products_price['plain']),
               'userGroups' => array(),
@@ -422,7 +424,7 @@
           
             $vpe_array = $this->getVpeData($products, $products_price['plain']);
             if (is_array($vpe_array)) {
-              $vpe_price_array[$products_price['plain']] = array(
+              $vpe_price_array[$products_price['hash']] = array(
                 'key' => 'vpe_price',
                 'value' => $customers_status['xtPrice']->xtcFormatCurrency($vpe_array['vpe_price']),
                 'userGroups' => array(),
@@ -430,10 +432,10 @@
             }
           }
 
-          $price_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
-          $price_formatted_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
+          $price_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
+          $price_formatted_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
           if (count($vpe_price_array) > 0) {
-            $vpe_price_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
+            $vpe_price_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
           }
         
           if (!isset($tax_info_array[$tax_rate])) {
@@ -458,7 +460,7 @@
         $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_formatted_array));
         $products_array['attributes'] = array_merge($products_array['attributes'], array_values($vpe_price_array));
         $products_array['attributes'] = array_merge($products_array['attributes'], array_values($tax_info_array));
-            
+        
         if (count($products_array['categories']) > 0) {
           return $this->encode_utf8($products_array);
         }
