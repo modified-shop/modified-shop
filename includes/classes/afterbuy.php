@@ -19,10 +19,34 @@ class xtc_afterbuy_functions {
   var $order_id;
   var $payment_id;
   var $payment_name;
+  var $customer_country_id = -1;
+  var $customer_zone_id = -1;
 
   // constructor
-  function __construct($order_id) {
+  function __construct($order_id, $from='public') {
     $this->order_id = (int)$order_id;
+    if ($from == 'admin') {
+      $o_query = xtc_db_query("SELECT `delivery_country_iso_code_2`,`delivery_state` FROM " . TABLE_ORDERS . " WHERE orders_id = " . $this->order_id);
+      $o_array = xtc_db_fetch_array($o_query);
+      if (!empty($o_array['delivery_country_iso_code_2'])) {
+        $c_query = xtc_db_query("SELECT `countries_id` FROM " . TABLE_COUNTRIES . " WHERE countries_iso_code_2 = '" . $o_array['delivery_country_iso_code_2'] ."'");
+        $c_array = xtc_db_fetch_array($c_query);
+        if (!empty($c_array)) {
+          $this->customer_country_id = $c_array['countries_id'];
+        }
+      }
+      if (!empty($o_array['delivery_state'])) {
+        $this->customer_zone_id = 0;
+        $z_query = xtc_db_query("SELECT `zone_id` FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . $this->customer_country_id ."' AND `zone_name`='".$o_array['delivery_state']."'");
+        if (!empty($z_query)) {
+          $this->customer_zone_id = $c_array['zone_id'];
+        } else {
+          $this->customer_zone_id = 0;
+        }
+      } else {
+        $this->customer_zone_id = 0;
+      }
+    }
   }
 
   function process_order() {
@@ -321,7 +345,7 @@ class xtc_afterbuy_functions {
       // add cod as product
       if ($cod_flag !== false) {
         $nr++;
-        $cod_tax = defined('MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS') ? xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS) : 0;
+        $cod_tax = defined('MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS') ? xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $this->customer_country_id, $this->customer_zone_id) : 0;
         $DATAstring .= "Artikelnr_" . $nr . "=99999999&";
         $DATAstring .= "Artikelname_" . $nr . "=Nachname&";
         $cod_fee = $this->get_ot_total($customers_status_show_price_tax, $cod_tax, $cod_fee);
@@ -344,7 +368,7 @@ class xtc_afterbuy_functions {
       // Gutschein
       if ($gv_flag !== false) {
         $nr++;
-        $gv_tax = defined('MODULE_ORDER_TOTAL_GV_TAX_CLASS') ? xtc_get_tax_rate(MODULE_ORDER_TOTAL_GV_TAX_CLASS) : 0;
+        $gv_tax = defined('MODULE_ORDER_TOTAL_GV_TAX_CLASS') ? xtc_get_tax_rate(MODULE_ORDER_TOTAL_GV_TAX_CLASS, $this->customer_country_id, $this->customer_zone_id) : 0;
         $DATAstring .= "Artikelnr_" . $nr . "=99999997&";
         $DATAstring .= "Artikelname_" . $nr . "=Gutschein&";
         $gv = $this->change_dec_separator(($gv * (-1)));
@@ -356,7 +380,7 @@ class xtc_afterbuy_functions {
       // Coupon
       if ($coupon_flag !== false) {
         $nr++;
-        $coupon_tax = defined('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS') ? xtc_get_tax_rate(MODULE_ORDER_TOTAL_COUPON_TAX_CLASS) : 0;
+        $coupon_tax = defined('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS') ? xtc_get_tax_rate(MODULE_ORDER_TOTAL_COUPON_TAX_CLASS, $this->customer_country_id, $this->customer_zone_id) : 0;
         $DATAstring .= "Artikelnr_" . $nr . "=99999996&";
         $DATAstring .= "Artikelname_" . $nr . "=Kupon&";
         $coupon = $this->change_dec_separator(($coupon * (-1)));
