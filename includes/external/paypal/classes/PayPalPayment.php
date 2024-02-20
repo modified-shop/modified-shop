@@ -87,7 +87,32 @@ use PayPal\Api\PaymentMethod;
 
 class PayPalPayment extends PayPalPaymentBase {
 
+  var $loglevel;
+  var $logmode;
+  var $LoggingManager;
+  var $code;
+  var $_check_install;
+  var $paypal_version;
+  var $admin_access_array;
+  var $title;
+  var $info;
+  var $description;
+  var $extended_description;
+  var $sort_order;
+  var $enabled;
+  var $order_status_success;
+  var $order_status_rejected;
+  var $order_status_pending;
+  var $order_status_capture;
+  var $order_status_tmp;
+  var $tmpOrders;
+  var $tmpStatus;
 
+  var $details;
+  var $amount;
+  var $intent;
+  var $transaction_type;
+  
   function __construct($class) {  
     $this->loglevel = ((PayPalPaymentBase::check_install() === true) ? $this->get_config('PAYPAL_LOG_LEVEL') : 'INFO'); 
     $this->logmode = ((PayPalPaymentBase::check_install() === true) ? $this->get_config('PAYPAL_MODE') : 'paypal'); 
