@@ -869,7 +869,10 @@ class PayoneModified {
 		$capture_data = false; // i.e. cannot be captured
 		$orders_data = $this->getOrdersData($orders_id);
 		foreach($orders_data['transaction_status'] as $tstatus) {
-			if (strtoupper($tstatus['data']['txaction']) == 'APPOINTED') {
+			if (isset($tstatus['data']['txaction']) 
+			    && strtoupper($tstatus['data']['txaction']) == 'APPOINTED'
+			    )
+			{
 				$capture_data = array(
 					'txid' => $tstatus['data']['txid'],
 					'price' => $tstatus['data']['price'],

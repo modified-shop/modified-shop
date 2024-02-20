@@ -147,6 +147,14 @@ class payone_cc extends PayonePayment {
       }
       return false;
     }
+
+    document.getElementById(\'errorOutput\').addEventListener(\'DOMSubtreeModified\', function(e) {  
+      if (document.getElementById(\'errorOutput\').innerHTML == \'\') {
+        document.getElementById(\'errorOutput\').style.display = \'none\';   
+      } else {
+        document.getElementById(\'errorOutput\').style.display = \'block\';   
+      }
+    });
     </script>';
 
     $payment_smarty->assign('cc_javascript', $cc_javascript);

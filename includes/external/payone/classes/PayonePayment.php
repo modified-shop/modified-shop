@@ -57,12 +57,23 @@ class PayonePayment {
 	
 	function _updateOrdersStatus($orders_id, $txid, $txaction, $comment = '') {
 		if (in_array($txaction, $this->payone->getStatusNames())) {
-		  $sql_data_orders_array = array('orders_status' => $this->config['orders_status'][$txaction],
+		  $orders_query = xtc_db_query("SELECT *
+		                                  FROM ".TABLE_ORDERS."
+		                                 WHERE orders_id = '".(int)$orders_id."'");
+		  $orders = xtc_db_fetch_array($orders_query);
+		  $orders_status_id = $orders['orders_status'];
+		  if (isset($this->config['orders_status'][$txaction])
+		      && $this->config['orders_status'][$txaction] > 0
+		      )
+		  {
+		    $orders_status_id = $this->config['orders_status'][$txaction];
+		  }
+		  $sql_data_orders_array = array('orders_status' => $orders_status_id,
 		                                 'last_modified' => 'now()');
 		  xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id = '".(int)$orders_id."'");
 		                            
       $sql_data_array = array('orders_id' => (int)$orders_id,
-                              'orders_status_id' => $this->config['orders_status'][$txaction],
+                              'orders_status_id' => $orders_status_id,
                               'date_added' => 'now()',
                               'customer_notified' => '0',
                               'comments' => xtc_db_input($comment),
