@@ -32,6 +32,7 @@ class xtcPrice {
   var $actualGroup;
   var $actualCurr;
   var $TAX;
+  var $tax_class;
   var $showFrom_Attributes;
   var $showCheapestGraduated;
   var $show_price_tax;
