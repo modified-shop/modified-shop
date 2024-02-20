@@ -43,7 +43,8 @@
 
 	class Compactor
 	{
-
+    var $data;
+    
 		/**
 		 * Holds the options array
 		 * @access private
@@ -469,4 +470,3 @@
       return $code;
     }
 	}
-?>
