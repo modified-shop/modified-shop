@@ -17,6 +17,10 @@
 
 class main {
 
+  var $SHIPPING;
+  var $vpe_name;
+  var $mainModules;
+
   /**
    * class constructor function
    */
