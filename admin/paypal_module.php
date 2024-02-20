@@ -30,11 +30,11 @@ function get_module_info($module) {
                                        FROM " . TABLE_CONFIGURATION . "
                                       WHERE configuration_key = '" . $module_keys[$j] . "'");
     $key_value = xtc_db_fetch_array($key_value_query);
-    if ($key_value['configuration_key'] !='') {
+    if ($key_value['configuration_key'] != '') {
       $keys_extra[$module_keys[$j]]['title'] = constant(strtoupper($key_value['configuration_key'] .'_TITLE'));
     }
     $keys_extra[$module_keys[$j]]['value'] = $key_value['configuration_value'];
-    if ($key_value['configuration_key'] !='') {
+    if ($key_value['configuration_key'] != '') {
       $keys_extra[$module_keys[$j]]['description'] = constant(strtoupper($key_value['configuration_key'] .'_DESC'));
     }
     $keys_extra[$module_keys[$j]]['use_function'] = $key_value['use_function'];
@@ -62,6 +62,8 @@ $orders_v2_array = array(
   'paypalacdc',
   'paypalpui',
   'paypalexpress',
+  'paypalapplepay',
+  'paypalgooglepay',
   'paypalcard',
   'paypalsepa',
   'paypalsofort',
@@ -177,6 +179,11 @@ if (isset($_GET['action'])) {
                            SET configuration_value = '" . implode(';', $installed_modules) . "', 
                                last_modified = now() 
                          WHERE configuration_key = 'MODULE_PAYMENT_INSTALLED'");
+        }
+        
+        if ($module->code == 'paypalapplepay') {
+          $config = $paypal->get_config('PAYPAL_MODE');
+          $paypal->applepay_association($config, true);
         }
       }
       xtc_redirect(xtc_href_link(basename($PHP_SELF)));

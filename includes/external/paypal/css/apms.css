@@ -166,6 +166,13 @@
   .apms_nocheckout.apms_product {
     height: auto;
   }
+  .gpay-card-info-container {
+    width:100%;
+  }
+  apple-pay-button {
+    --apple-pay-button-width: 100%;
+    --apple-pay-button-height: 40px;
+  }
   
   @media only screen and (min-width: 759px) {
     .apms_form_button.apms_nocheckout {

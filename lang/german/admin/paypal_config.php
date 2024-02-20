@@ -40,6 +40,14 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_SANDBOX' => 'Status Kauf auf Rechnung Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_LIVE' => 'Status ApplePay Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_SANDBOX' => 'Status ApplePay Sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
+
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_LIVE' => 'Status GooglePay Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_SANDBOX' => 'Status GooglePay Sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
+
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Bestellnummer Pr&auml;fix:',
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Frei w&auml;hlbare Zeichenfolge (Pr&auml;fix), die der Bestellnummer vorangestellt und f&uuml;r die Erzeugung der PayPal-Rechnungsnummer genutzt wird.<br />Dadurch k&ouml;nnen mehrere Shops mit nur einer PayPal App arbeiten. Konflikte bei gleichen Bestellnummern werden vermieden. Jede Bestellung erh&auml;lt eine eigene Rechnungs-Nummer im PayPal Konto.',
 
@@ -99,4 +107,3 @@ $PAYPAL_INST_ORDER_STATUS_CAPTURED_NAME = 'PayPal erfasst';
 $PAYPAL_INST_ORDER_STATUS_REFUNDED_NAME = 'PayPal erstattet';
 $PAYPAL_INST_ORDER_STATUS_REJECTED_NAME = 'PayPal abgelehnt';
 $PAYPAL_INST_ORDER_STATUS_ACCEPTED_NAME = 'PayPal akzeptiert';
-?>

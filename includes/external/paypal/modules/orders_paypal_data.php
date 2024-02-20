@@ -25,6 +25,8 @@ if (isset($order) && is_object($order)) {
     'paypalacdc',
     'paypalpui',
     'paypalexpress',
+    'paypalapplepay',
+    'paypalgooglepay',
     'paypalcard',
     'paypalsepa',
     'paypalsofort',
@@ -701,4 +703,3 @@ if (isset($order) && is_object($order)) {
   </script>
   <?php
 }
-?>

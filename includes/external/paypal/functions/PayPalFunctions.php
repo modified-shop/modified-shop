@@ -79,7 +79,7 @@ function get_paypal_js_sdk($client_id, $currency, $intent, $commit, $client_toke
         "enable-funding": "paylater",
         "data-partner-attribution-id": "Modified_Cart_PPCP",
         '.(($client_token !== false) ? '"data-client-token": "'.$client_token.'",' : '').'
-        "components": "buttons,funding-eligibility,messages,hosted-fields"
+        "components": "buttons,funding-eligibility,messages,hosted-fields,applepay,googlepay"
       }).then((paypal) => {
         %s
       }).catch((error) => {
