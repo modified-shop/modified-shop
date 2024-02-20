@@ -39,7 +39,21 @@ require_once (DIR_FS_INC.'xtc_get_prid.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_description.inc.php');
 
 class shoppingCart {
-  var $contents, $total, $weight, $cartID, $content_type, $attr_price, $attr_weight, $type, $table_basket, $table_basket_attributes, $shoppingCartModules;
+
+  var $contents;
+  var $total; 
+  var $total_netto;
+  var $tax;
+  var $tax_discount;
+  var $weight; 
+  var $cartID; 
+  var $content_type; 
+  var $attr_price; 
+  var $attr_weight; 
+  var $type; 
+  var $table_basket; 
+  var $table_basket_attributes; 
+  var $shoppingCartModules;
   
   function __construct($type = 'cart') {
     //new module support
