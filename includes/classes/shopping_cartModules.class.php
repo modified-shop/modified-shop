@@ -46,7 +46,6 @@ class shoppingCartModules {
           }
           unset($modules);
         }
-        //echo '<pre>'. print_r(self::$modules,1) . '<pre>'; EXIT;
     }
     
     public static function call_module_method()
@@ -56,21 +55,21 @@ class shoppingCartModules {
         if (is_array(self::$modules)) {
             foreach(self::$modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }
-        return $arg_list[0]; //Returns only first parameter
+        return $arg_list[0];
     }
     
-    function secure_call_module_method() //change no parameter
+    function secure_call_module_method()
     {
         $arg_list = func_get_args();
         $function_call = $this->function_call;
         if (is_array($this->modules)) {
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }

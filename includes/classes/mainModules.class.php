@@ -17,7 +17,9 @@
    ---------------------------------------------------------------------------------------*/
 
 class mainModules {
+    
     var $modules;
+    var $function_call;
     
     function __construct()
     {
@@ -49,21 +51,21 @@ class mainModules {
         if (is_array($this->modules)) {
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }
-        return $arg_list[0]; //Returns only first parameter
+        return $arg_list[0];
     }
     
-    function secure_call_module_method() //change no parameter
+    function secure_call_module_method()
     {
         $arg_list = func_get_args();
         $function_call = $this->function_call;
         if (is_array($this->modules)) {
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }
@@ -73,7 +75,7 @@ class mainModules {
     function getTaxInfo($tax_info,$tax_rate)
     {
         $this->function_call = 'getTaxInfo';
-        return $this->call_module_method($tax_info,$tax_rate); //Return parameter must be in first place
+        return $this->call_module_method($tax_info,$tax_rate);
     }
 
     function getShippingNotice($shippingNotice)

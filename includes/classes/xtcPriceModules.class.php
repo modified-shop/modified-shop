@@ -17,7 +17,9 @@
    ---------------------------------------------------------------------------------------*/
 
 class priceModules {
+    
     var $modules;
+    var $function_call;
     
     function __construct()
     {
@@ -49,21 +51,21 @@ class priceModules {
         if (is_array($this->modules)) {
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }
-        return $arg_list[0]; //Returns only first parameter
+        return $arg_list[0];
     }
     
-    function secure_call_module_method() //change no parameter
+    function secure_call_module_method()
     {
         $arg_list = func_get_args();
         $function_call = $this->function_call;
         if (is_array($this->modules)) {
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }
@@ -73,61 +75,61 @@ class priceModules {
     function construct($currency, $cGroup)
     {
         $this->function_call = 'construct';
-        return $this->call_module_method($currency, $cGroup); //Return parameter must be in first place
+        return $this->call_module_method($currency, $cGroup);
     }
     
     function CheckSpecial($product, $pID)
     {
         $this->function_call = 'CheckSpecial';
-        return $this->call_module_method($product, $pID); //Return parameter must be in first place
+        return $this->call_module_method($product, $pID);
     }
     
     function CheckSpecialPrice($special_price, $pID)
     {
         $this->function_call = 'CheckSpecialPrice';
-        return $this->call_module_method($special_price, $pID); //Return parameter must be in first place
+        return $this->call_module_method($special_price, $pID);
     }
 
     function CheckSpecialProductPrice($products_price, $pID, $add_tax)
     {
         $this->function_call = 'CheckSpecialProductPrice';
-        return $this->call_module_method($products_price, $pID, $add_tax); //Return parameter must be in first place
+        return $this->call_module_method($products_price, $pID, $add_tax);
     }
     
     function GetOptionPrice($dataArr,$attribute_data,$pID, $option, $value, $qty)
     {
         $this->function_call = 'GetOptionPrice';
-        return $this->call_module_method($dataArr,$attribute_data,$pID, $option, $value, $qty); //Return parameter must be in first place
+        return $this->call_module_method($dataArr,$attribute_data,$pID, $option, $value, $qty);
     }
     
     function FormatSpecial($return, $pID, $sPrice, $pPrice, $format, $vpeStatus)
     {
         $this->function_call = 'FormatSpecial';
-        return $this->call_module_method($return, $pID, $sPrice, $pPrice, $format, $vpeStatus); //Return parameter must be in first place
+        return $this->call_module_method($return, $pID, $sPrice, $pPrice, $format, $vpeStatus);
     }
     
     function checkAttributes($pID)
     {
         $this->function_call = 'checkAttributes';
-        return $this->call_module_method($pID); //Return parameter must be in first place
+        return $this->call_module_method($pID);
     }
     
     function getPprice($pData,$pID)
     {
         $this->function_call = 'getPprice';
-        return $this->call_module_method($pData,$pID); //Return parameter must be in first place
+        return $this->call_module_method($pData,$pID);
     }
     
     function CheckExtension($price, $pID)
     {
         $this->function_call = 'CheckExtension';
-        return $this->call_module_method($price, $pID); //Return parameter must be in first place
+        return $this->call_module_method($price, $pID);
     }
 
     function FormatExtension($return, $pID, $ePrice, $pPrice, $format, $vpeStatus)
     {
         $this->function_call = 'FormatExtension';
-        return $this->call_module_method($return, $pID, $ePrice, $pPrice, $format, $vpeStatus); //Return parameter must be in first place
+        return $this->call_module_method($return, $pID, $ePrice, $pPrice, $format, $vpeStatus);
     }
 
 }

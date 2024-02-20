@@ -17,7 +17,9 @@
    ---------------------------------------------------------------------------------------*/
 
 class orderModules {
+    
     var $modules;
+    var $function_call;
     
     function __construct()
     {
@@ -49,21 +51,21 @@ class orderModules {
         if (is_array($this->modules)) {
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }
-        return $arg_list[0]; //Returns only first parameter
+        return $arg_list[0];
     }
 
-    function secure_call_module_method() //change no parameter
+    function secure_call_module_method()
     {
         $arg_list = func_get_args();
         $function_call = $this->function_call;
         if (is_array($this->modules)) {
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }
@@ -73,7 +75,7 @@ class orderModules {
     function add_products($products,$orders_products)
     {
         $this->function_call = 'add_products';
-        return $this->call_module_method($products,$orders_products); //Return parameter must be in first place
+        return $this->call_module_method($products,$orders_products);
     }
     
     function add_attributes($products_attributes,$attributes)
