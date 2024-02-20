@@ -17,6 +17,16 @@
 
 class product {
 
+  var $pID;
+  var $data;
+  var $standardImage;
+  var $useStandardImage;
+  var $ShippingLink;
+  var $getTaxInfo;
+  var $isProduct;
+  var $default_select;
+  var $productModules;
+
   /**
    *
    * Constructor
