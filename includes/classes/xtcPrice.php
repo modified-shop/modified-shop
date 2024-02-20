@@ -28,7 +28,18 @@
  */
 class xtcPrice {
 
+  var $cStatus;
+  var $actualGroup;
+  var $actualCurr;
+  var $TAX;
+  var $showFrom_Attributes;
+  var $showCheapestGraduated;
+  var $show_price_tax;
   var $currencies;
+  var $country_id;
+  var $zone_id;
+  var $content_type;
+  var $priceModules;
   
   /**
    * Constructor initialises all required values like currencies, tax classes, tax zones etc.
