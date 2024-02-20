@@ -17,7 +17,9 @@
    ---------------------------------------------------------------------------------------*/
 
 class productModules {
+    
     var $modules;
+    var $function_call;
     
     function __construct()
     {
@@ -49,21 +51,21 @@ class productModules {
         if (is_array($this->modules)) {
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }
-        return $arg_list[0]; //Returns only first parameter
+        return $arg_list[0];
     }
     
-    function secure_call_module_method() //change no parameter
+    function secure_call_module_method()
     {
         $arg_list = func_get_args();
         $function_call = $this->function_call;
         if (is_array($this->modules)) {
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list);
                 }
             }
         }
@@ -80,7 +82,7 @@ class productModules {
     function buildDataArray($productData,$array,$image)
     {
         $this->function_call = 'buildDataArray';
-        return $this->call_module_method($productData,$array,$image); //Return parameter must be in first place
+        return $this->call_module_method($productData,$array,$image);
     }
 
     function productImage($returnName, $name, $type ,$path)
