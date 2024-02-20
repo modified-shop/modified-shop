@@ -1465,19 +1465,19 @@ class PayPalPayment extends PayPalPaymentBase {
     $apiContext = $this->apiContext();
 
     $subscriber_name = new Name();
-    $subscriber_name->setGivenName($order->customer['firstname'])
-                    ->setSurname($order->customer['lastname']);
+    $subscriber_name->setGivenName($this->encode_utf8($order->customer['firstname']))
+                    ->setSurname($this->encode_utf8($order->customer['lastname']));
     
     $shipping_address_name = new Name();
-    $shipping_address_name->setFullName($order->delivery['firstname'].' '.$order->delivery['lastname']);
+    $shipping_address_name->setFullName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']));
     
     $address = new Address();
-    $address->setAddressLine1($order->delivery['street_address'])
-            ->setAddressLine2($order->delivery['suburb'])
+    $address->setAddressLine1($this->encode_utf8($order->delivery['street_address']))
+            ->setAddressLine2($this->encode_utf8($order->delivery['suburb']))
             ->setAdminArea1('')
-            ->setAdminArea2($order->delivery['city'])
-            ->setPostalCode($order->delivery['postcode'])
-            ->setCountryCode($order->delivery['country']['iso_code_2']);
+            ->setAdminArea2($this->encode_utf8($order->delivery['city']))
+            ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
+            ->setCountryCode($this->encode_utf8($order->delivery['country']['iso_code_2']));
             
     $shipping_address = new ShippingAddress();
     $shipping_address->setName($shipping_address_name)
@@ -1505,7 +1505,7 @@ class PayPalPayment extends PayPalPaymentBase {
                    ->setPayeePreferred('IMMEDIATE_PAYMENT_REQUIRED');
                    
     $application_context = new ApplicationContext();
-    $application_context->setBrandName(STORE_NAME)
+    $application_context->setBrandName($this->encode_utf8(STORE_NAME))
                         ->setLocale($_SESSION['language_code'].'-'.strtoupper($_SESSION['language_code']))
                         ->setShippingPreference('SET_PROVIDED_ADDRESS')
                         ->setUserAction('SUBSCRIBE_NOW')
@@ -1519,7 +1519,7 @@ class PayPalPayment extends PayPalPaymentBase {
                   ->setShippingAmount($shipping_amount)
                   ->setSubscriber($subscriber)
                   ->setApplicationContext($application_context);
-            
+      
     try {
       $payment = $subscriptions->create($apiContext);
       
@@ -1610,7 +1610,7 @@ class PayPalPayment extends PayPalPaymentBase {
           
     $plans = new Plans();
     $plans->setProductId(str_pad($data['products_id'], 6, 0, STR_PAD_LEFT))
-          ->setName($data['paypal_plan_name'])
+          ->setName($this->encode_utf8($data['paypal_plan_name']))
           ->setStatus($data['paypal_plan_status'])
           ->setBillingCycles($billing_cycles)
           ->setPaymentPreferences($payment_preferences)
@@ -1820,4 +1820,3 @@ class PayPalPayment extends PayPalPaymentBase {
 
 
 }
-?>

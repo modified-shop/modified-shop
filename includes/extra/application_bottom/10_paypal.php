@@ -25,6 +25,7 @@
     if (!isset($_SESSION['paypal_instruments']) 
         && ((defined('MODULE_PAYMENT_PAYPALSEPA_STATUS') && MODULE_PAYMENT_PAYPALSEPA_STATUS == 'True')
             || (defined('MODULE_PAYMENT_PAYPALCARD_STATUS') && MODULE_PAYMENT_PAYPALCARD_STATUS == 'True')
+            || (defined('MODULE_PAYMENT_PAYPALAPPLEPAY_STATUS') && MODULE_PAYMENT_PAYPALAPPLEPAY_STATUS == 'True')
             )
         && (isset($_SESSION['customer_id']) 
             || strpos(basename($PHP_SELF), 'account') !== false
@@ -45,6 +46,20 @@
         });
         $.post("'.DIR_WS_BASE.'ajax.php?ext=set_paypal_instruments", {paypal_instruments: paypal_instruments_arr});
       ';
+
+      if (defined('MODULE_PAYMENT_PAYPALAPPLEPAY_STATUS') && MODULE_PAYMENT_PAYPALAPPLEPAY_STATUS == 'True') {
+      $paypalscript .= '
+        const applepay = paypal.Applepay().config().then((data) => {
+          if (data.isEligible === true) {
+            if (typeof ApplePaySession != "undefined" && ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()) {
+            paypal_instruments_arr.push("applepay");
+            console.log(paypal_instruments_arr);
+            $.post("'.DIR_WS_BASE.'ajax.php?ext=set_paypal_instruments", {paypal_instruments: paypal_instruments_arr});
+            }
+          }
+        });
+      ';
+      }
     }
 
     if ((basename($PHP_SELF) == FILENAME_SHOPPING_CART 

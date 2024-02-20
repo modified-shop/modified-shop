@@ -29,6 +29,7 @@ if (isset($_GET['action'])) {
         );
       }
       $paypal->save_config($sql_data_array);
+      $paypal->applepay_association($_POST['config']['PAYPAL_MODE']);
       xtc_redirect(xtc_href_link(basename($PHP_SELF)));
       break;
       
@@ -59,7 +60,7 @@ $mode_array = array('live', 'sandbox');
 foreach ($mode_array as $mode) {
   $partner = $paypal->getSellerStatus($mode);
 
-  $status_acdc = $status_pui = 'red';
+  $status_acdc = $status_pui = $status_apple = $status_google = 'red';
   if (is_object($partner)) {
     foreach ($partner->getProducts() as $product) {
       if (is_object($product) 
@@ -87,6 +88,18 @@ foreach ($mode_array as $mode) {
                 {
                   $status_pui = 'green';
                 }
+                if ($capability->getName() == 'APPLE_PAY'
+                    && $capability->getStatus() == 'ACTIVE'
+                    )
+                {
+                  $status_apple = 'green';
+                }
+                if ($capability->getName() == 'GOOGLE_PAY'
+                    && $capability->getStatus() == 'ACTIVE'
+                    )
+                {
+                  $status_google = 'green';
+                }
               }
             }
           }
@@ -98,6 +111,8 @@ foreach ($mode_array as $mode) {
   $sellerstatus[$mode] = array(
     'status_acdc' => $status_acdc,
     'status_pui' => $status_pui,
+    'status_apple' => $status_apple,
+    'status_google' => $status_google,
   );
 }
 
@@ -222,6 +237,16 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO; ?></td>
               </tr>
               <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_LIVE; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus['live']['status_apple'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus['live']['status_apple'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_LIVE; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus['live']['status_google'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus['live']['status_google'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_INFO; ?></td>
+              </tr>
+              <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_CLIENT_ID_SANDBOX]', $paypal->get_config('PAYPAL_CLIENT_ID_SANDBOX'), 'style="width: 300px;"'); ?></td>
                 <td class="dataTableConfig col-right" rowspan="2"><?php echo (($paypal_sandbox != '') ? '<a target="_blank" data-paypal-popup-close="onboardedClose" data-paypal-onboard-complete="onboardedCallbackSandbox" data-paypal-button="PPLtBlue" href="' . $paypal_sandbox . '">' . TEXT_PAYPAL_APPINATOR_SANDBOX . '</a><br><br>' : '') . TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO; ?></td>
@@ -244,6 +269,16 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_SANDBOX; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus['sandbox']['status_pui'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus['sandbox']['status_pui'])), 12, 12); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_SANDBOX; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus['sandbox']['status_apple'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus['sandbox']['status_apple'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_SANDBOX; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus['sandbox']['status_google'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus['sandbox']['status_google'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MODE; ?></td>

@@ -221,7 +221,7 @@ class PayPalInfo extends PayPalPayment {
         'total' => 0,
         'state' => $subscription->getStatus(),
         'address' => array(
-          'name' => $shipping_address->getName()->getFullName(),
+          'name' => ((is_object($shipping_address->getName())) ? $shipping_address->getName()->getFullName() : ''),
           'company' => '',
           'firstname' => '',
           'lastname' => '',

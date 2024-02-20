@@ -43,7 +43,7 @@
           }
           
           // without 3D secure
-          if ($paypal->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS') == '1'
+          if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_EXTEND_CARDS') == '1'
               && $authentication_result->liability_shift == 'NO'
               && in_array($authentication_result->three_d_secure->enrollment_status, array('N', 'U', 'B'))
               )

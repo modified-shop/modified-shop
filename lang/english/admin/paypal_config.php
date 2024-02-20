@@ -40,6 +40,14 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_SANDBOX' => 'Status Pay upon invoice Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
 
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_LIVE' => 'Status ApplePay Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_SANDBOX' => 'Status ApplePay Sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
+
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_LIVE' => 'Status GooglePay Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_SANDBOX' => 'Status GooglePay Sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
+
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Prefix for order ID:',
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Arbitrary string of letters (prefix), which is placed in front of each order number and is used for generating the PayPal invoice number.<br />This allows multiple store operation with only one PayPal App. Conflicts regarding the order numbers are avoided. Each order has its own invoice numbers within the PayPal account.',
 
@@ -99,4 +107,3 @@ $PAYPAL_INST_ORDER_STATUS_CAPTURED_NAME = 'PayPal captured';
 $PAYPAL_INST_ORDER_STATUS_REFUNDED_NAME = 'PayPal refunded';
 $PAYPAL_INST_ORDER_STATUS_REJECTED_NAME = 'PayPal rejected';
 $PAYPAL_INST_ORDER_STATUS_ACCEPTED_NAME = 'PayPal accepted';
-?>

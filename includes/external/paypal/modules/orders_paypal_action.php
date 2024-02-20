@@ -27,6 +27,8 @@ if (isset($oID) && $oID != '') {
     'paypalacdc',
     'paypalpui',
     'paypalexpress',
+    'paypalapplepay',
+    'paypalgooglepay',
     'paypalcard',
     'paypalsepa',
     'paypalsofort',
