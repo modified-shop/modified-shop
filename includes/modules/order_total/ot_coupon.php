@@ -42,6 +42,7 @@ class ot_coupon {
 
   var $code;
   var $title;
+  var $header;
   var $description;
   var $enabled;
   var $sort_order;
