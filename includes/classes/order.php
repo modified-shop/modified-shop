@@ -43,7 +43,16 @@
   require_once(DIR_FS_INC . 'get_country_id.inc.php');
 
   class order {
-    var $info, $totals, $products, $customer, $delivery, $content_type;
+
+    var $info;
+    var $totals;
+    var $products;
+    var $customer;
+    var $delivery;
+    var $billing;
+    var $tax_discount;
+    var $content_type;
+    var $orderModules;
 
     function __construct($order_id = '') {
       
@@ -743,4 +752,3 @@
       }
     }
   }
-?>

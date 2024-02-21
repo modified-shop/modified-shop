@@ -29,7 +29,29 @@
    -----------------------------------------------------------*/
 
 class ot_payment {
-  var $title, $output;
+
+  var $code;
+  var $title;
+  var $description;
+  var $enabled;
+  var $sort_order;
+  var $output;
+  var $_check;
+
+  var $num_payment;
+  var $include_shipping;
+  var $include_tax;
+  var $calculate_tax;
+  var $tax_class;
+  var $amount;
+  var $original_total;
+  var $discount;
+  var $amounts;
+  var $show_in_checkout_payment;
+  var $show_type;
+  var $percentage;
+  var $payment;
+  var $billing_zone;
 
   function __construct() {
     global $order;

@@ -17,7 +17,14 @@
 
 
   class ot_total {
-    var $title, $output;
+
+    var $code;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $output;
+    var $_check;
 
     function __construct() {
       $this->code = 'ot_total';
@@ -99,4 +106,3 @@
       xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
-?>

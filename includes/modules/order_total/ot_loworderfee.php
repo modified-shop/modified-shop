@@ -17,10 +17,16 @@
    
 
   class ot_loworderfee {
-    var $title, $output;
 
-    function __construct() {
-    	global $xtPrice;
+    var $code;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $output;
+    var $_check;
+
+    function __construct() {    	
       $this->code = 'ot_loworderfee';
       $this->title = MODULE_ORDER_TOTAL_LOWORDERFEE_TITLE;
       $this->description = MODULE_ORDER_TOTAL_LOWORDERFEE_DESCRIPTION;
@@ -161,4 +167,3 @@
       xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
-?>

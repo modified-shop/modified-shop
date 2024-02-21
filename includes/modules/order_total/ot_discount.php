@@ -17,11 +17,18 @@
    ---------------------------------------------------------------------------------------*/
 
   class ot_discount {
-    var $title, $output;
 
-    function __construct() {
-    	global $xtPrice;
-    	
+    var $code;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $credit_class;
+    var $deduction;
+    var $output;
+    var $_check;
+
+    function __construct() {    	
       $this->code = 'ot_discount';
       $this->title = MODULE_ORDER_TOTAL_DISCOUNT_TITLE;
       $this->description = MODULE_ORDER_TOTAL_DISCOUNT_DESCRIPTION;
@@ -97,4 +104,3 @@
       xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
-?>

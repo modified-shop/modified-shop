@@ -39,17 +39,35 @@
    ---------------------------------------------------------------------------------------*/
 
 class ot_coupon {
-  var $title, $output;
 
+  var $code;
+  var $title;
+  var $description;
+  var $enabled;
+  var $sort_order;
+  var $credit_class;
+  var $output;
+  var $_check;
+
+  var $include_shipping;
+  var $include_tax;
+  var $calculate_tax;
+  var $tax_class;
+  var $netto;
+  var $deduction;
+  var $products_price;
+  var $products_tax_rate;
+  var $products_tax_description;
+  var $tax_groups;
+  var $price_total_by_tax_groups;
+  var $price_total_by_tax_rate;
+  var $coupon_code;
 
   function __construct() {
-    global $xtPrice;
-
     $this->code = 'ot_coupon';
     $this->header = MODULE_ORDER_TOTAL_COUPON_HEADER;
     $this->title = MODULE_ORDER_TOTAL_COUPON_TITLE;
     $this->description = MODULE_ORDER_TOTAL_COUPON_DESCRIPTION;
-    $this->user_prompt = '';
     $this->enabled = ((defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true') ? true : false);
     $this->sort_order = ((defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER')) ? MODULE_ORDER_TOTAL_COUPON_SORT_ORDER : '');
 
@@ -588,4 +606,3 @@ class ot_coupon {
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_COUPON_%'");
   }
 }
-?>

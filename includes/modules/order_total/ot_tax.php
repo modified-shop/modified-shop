@@ -17,10 +17,16 @@
 
  
   class ot_tax {
-    var $title, $output;
 
-    function __construct() {
-    	global $xtPrice;
+    var $code;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $output;
+    var $_check;
+
+    function __construct() {    	
       $this->code = 'ot_tax';
       $this->title = MODULE_ORDER_TOTAL_TAX_TITLE;
       $this->description = MODULE_ORDER_TOTAL_TAX_DESCRIPTION;
@@ -115,4 +121,3 @@
       xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
-?>

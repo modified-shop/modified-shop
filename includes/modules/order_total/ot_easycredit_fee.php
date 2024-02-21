@@ -12,11 +12,17 @@
 
 
   class ot_easycredit_fee {
-    var $title, $output;
 
-    function __construct() {
-    	global $xtPrice;
-    	
+    var $code;
+    var $title;
+    var $total_title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $output;
+    var $_check;
+
+    function __construct() {    	
       $this->code = 'ot_easycredit_fee';
       $this->title = MODULE_ORDER_TOTAL_EASYCREDIT_FEE_TITLE;
       $this->total_title = MODULE_ORDER_TOTAL_EASYCREDIT_FEE_TOTAL_TITLE;
@@ -80,4 +86,3 @@
       xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
-?>

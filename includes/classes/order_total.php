@@ -28,7 +28,10 @@
    ---------------------------------------------------------------------------------------*/
 
 class order_total {
+
   var $modules;
+  var $order_total;
+  var $checkoutModules;
   
   function __construct() {
     global $PHP_SELF, $order;
@@ -321,4 +324,3 @@ class order_total {
   }
 
 }
-?>

@@ -17,11 +17,18 @@
    ---------------------------------------------------------------------------------------*/
    
 class ot_shipping {
-  var $title, $output;
 
-  function __construct() {
-    global $xtPrice;
-    
+  var $code;
+  var $title;
+  var $description;
+  var $enabled;
+  var $sort_order;
+  var $icon;
+  var $quotes;
+  var $output;
+  var $_check;
+
+  function __construct() {    
     $this->code = 'ot_shipping';
     $this->title = MODULE_ORDER_TOTAL_SHIPPING_TITLE;
     $this->description = MODULE_ORDER_TOTAL_SHIPPING_DESCRIPTION;
@@ -196,4 +203,3 @@ class ot_shipping {
   }
 
 }
-?>

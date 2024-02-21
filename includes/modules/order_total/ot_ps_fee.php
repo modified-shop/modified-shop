@@ -31,11 +31,18 @@
 
 
   class ot_ps_fee {
-    var $title, $output;
 
-    function __construct() {
-    	global $xtPrice;
-      
+    var $code;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $default_values;
+    var $properties;
+    var $output;
+    var $_check;
+
+    function __construct() {      
       $this->code = 'ot_ps_fee';
       $this->title = MODULE_ORDER_TOTAL_PS_FEE_TITLE;
       $this->description = MODULE_ORDER_TOTAL_PS_FEE_DESCRIPTION;
@@ -226,4 +233,3 @@
       xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
-?>

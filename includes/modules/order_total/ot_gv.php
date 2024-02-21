@@ -27,11 +27,25 @@
    ---------------------------------------------------------------------------------------*/
 
 class ot_gv {
-  var $title, $output;
 
-  function __construct() {
-    global $xtPrice;
-    
+  var $code;
+  var $title;
+  var $description;
+  var $enabled;
+  var $sort_order;
+  var $credit_class;
+  var $deduction;
+  var $output;
+  var $_check;
+
+  var $include_shipping;
+  var $include_tax;
+  var $calculate_tax;
+  var $credit_tax;
+  var $tax_class;
+  var $checkbox;
+
+  function __construct() {    
     $this->code = 'ot_gv';
     $this->title = MODULE_ORDER_TOTAL_GV_TITLE;
     $this->header = MODULE_ORDER_TOTAL_GV_HEADER;
@@ -370,4 +384,3 @@ class ot_gv {
     xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key IN ('".implode("', '", $this->keys())."')");
   }
 }
-?>
