@@ -30,25 +30,13 @@
       (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
       SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    
+      Documentation is available at http://www.ejeliot.com/pages/2
+
       Last Updated:  18th April 2006                               */
    /***************************************************************/
    
-  //Copyright (C) 2014 new vars and functions by web28 - www.rpa-com.de
-   
-   /************************ Documentation ************************/
-   /*
-   
-   Documentation is available at http://www.ejeliot.com/pages/2
-   
-   */
    /************************ Default Options **********************/
-   
-   // start a PHP session - this class uses sessions to store the generated 
-   // code. Comment out if you are calling already from your application
-   //session_start();
-   
-   // class defaults - change to effect globally
-   
+      
    define('CAPTCHA_SESSION_ID', 'vvcode');
    define('CAPTCHA_WIDTH', 200); // max 500
    define('CAPTCHA_HEIGHT', 50); // max 200
@@ -89,9 +77,9 @@
       var $iMaxFontSize;
       var $bUseColour;
       var $sFileType;
+      var $captcha;
       var $sCode = '';
       
-      //new vars by web28 - www.rpa-com.de
       var $aBackgroundColors = array();
       var $aLinesColors = array();
       var $aCharsColors = array();
@@ -119,7 +107,6 @@
          $this->SetHeight($iHeight);
       }
       
-      //BOC new functions by web28 - www.rpa-com.de
       function SetBackgroundColors($rgb) {
         $rgb = preg_replace("'[\r\n\s]+'",'',$rgb);
         $rgb_arr = explode(',', $rgb);
@@ -143,7 +130,6 @@
         $this->aCharsColors['G'] = $rgb_arr[1];
         $this->aCharsColors['B'] = $rgb_arr[2];
       }
-      //EOC new functions by web28 - www.rpa-com.de
       
       function CalculateSpacing() {
          $this->iSpacing = (int)($this->iWidth / $this->iNumChars) - 0.5;
@@ -266,14 +252,12 @@
             if ($this->bUseColour) {
                $iLineColour = $this->iRandColour(xtc_rand($minColor, $maxColor), xtc_rand($minColor, $maxColor), xtc_rand($minColor, $maxColor));
             } else {
-               //BOC new code by web28 - www.rpa-com.de
                if(count($this->aLinesColors)) {
                   $iLineColour = $this->iRandColour($this->aLinesColors['R'], $this->aLinesColors['G'], $this->aLinesColors['B']);
                } else {
                   $iRandColour = xtc_rand($minColor, $maxColor);
                   $iLineColour = $this->iRandColour($iRandColour, $iRandColour, $iRandColour);
                }
-               //EOC new code by web28 - www.rpa-com.de
             }
             
             // draw line
@@ -324,15 +308,13 @@
       
       function DrawCharacters() {
          // loop through and write out selected number of characters
-         //BOC new code by web28 - www.rpa-com.de
          $minColor = 0;
          $maxColor = 100;
-         //EOC new code by web28 - www.rpa-com.de
+
          for ($i = 0; $i < strlen($this->sCode); $i++) {
             // selectmt_random font
             $sCurrentFont = $this->aFonts[array_rand($this->aFonts)];
             
-            //BOC new code by web28 - www.rpa-com.de
             // selectmt_random colour
             if ($this->bUseColour) {
                $iTextColour = $this->iRandColour(xtc_rand($minColor, $maxColor) , xtc_rand($minColor, $maxColor), xtc_rand($minColor, $maxColor));
@@ -355,7 +337,6 @@
                   $iShadowColour = $this->iRandColour($iRandColour, $iRandColour, $iRandColour);
                }
             }
-            //EOC new code by web28 - www.rpa-com.de
             
             // selectmt_random font size
             $iFontSize = xtc_rand($this->iMinFontSize, $this->iMaxFontSize);
@@ -455,14 +436,12 @@
             $this->oImage = imagecreate($this->iWidth, $this->iHeight);
          }
          
-         //BOC new code by web28 - www.rpa-com.de
          // allocate white background colour
          if (count($this->aBackgroundColors)) {
             $this->iRandColour($this->aBackgroundColors['R'], $this->aBackgroundColors['G'], $this->aBackgroundColors['B']);
          } else {
             $this->iRandColour(255, 255, 255);
          }
-         //EOC new code by web28 - www.rpa-com.de
          
          // check for owner text
          if ($this->sOwnerText != '') {
@@ -587,4 +566,3 @@
          $this->UseColour(true);
       }
    }
-?>
