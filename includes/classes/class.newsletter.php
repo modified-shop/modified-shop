@@ -29,8 +29,13 @@ require_once (DIR_FS_CATALOG.'includes/classes/modified_captcha.php');
 
 
 class newsletter {
-  var $message, $message_class;
 
+  var $message;
+  var $message_class;
+  var $auto;
+  var $remove;
+  var $vlCode;
+  var $mod_captcha;
 
   function __construct() {
     $this->auto = false;
