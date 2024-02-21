@@ -30,7 +30,10 @@ class ot_gv {
 
   var $code;
   var $title;
+  var $header;
   var $description;
+  var $info;
+  var $user_prompt;
   var $enabled;
   var $sort_order;
   var $credit_class;
