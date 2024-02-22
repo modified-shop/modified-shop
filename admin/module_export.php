@@ -86,7 +86,7 @@
       case 'module_processing_do':
         $class = basename($module_class);
         include($module_directory . $class . $file_extension);
-        $module = new $class();
+        $module = instantiate_class($class);
         $module->process($_GET['file']);
         $get_params = isset($module->get_params) ? $module->get_params : '';
         //convert params array to params string
@@ -126,7 +126,7 @@
         }
         $class = basename($module_class);
         include($module_directory . $class . $file_extension);
-        $module = new $class();
+        $module = instantiate_class($class);
         //BOF NEW MODULE PROCESSING
         if (isset($_POST['process']) && $_POST['process'] == 'module_processing_do') {
           $get_params = isset($module->get_params) ? $module->get_params : array();
@@ -158,7 +158,7 @@
         $class = basename($module_class);
         if (is_file($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
-          $module = new $class();
+          $module = instantiate_class($class);
           if ($action == 'install') {
             $module->install();
           } elseif ($action == 'removeconfirm') {
@@ -248,7 +248,7 @@
 
       $class = substr($filename, 0, strpos($filename, '.'));
       if (class_exists($class)) {
-        $module = new $class();
+        $module = instantiate_class($class);
       }
 
       if (method_exists($module,'check')) {
@@ -307,7 +307,7 @@
           include_once($module_directory . $file);
           $class = substr($file, 0, strpos($file, '.'));
           if (class_exists($class)) {
-            $module = new $class();
+            $module = instantiate_class($class);
             if ($module instanceof $class && $module->check() > 0) {     
               $key_array = $module->keys();     
               foreach ($key_array as $key) {
@@ -324,7 +324,18 @@
     return $info;
   }
 
-//########## OUTPUT ##########//
+  function instantiate_class($class) {
+    static $module_array;
+    
+    if (!isset($module_array)) $module_array = array();
+    
+    if (!isset($module[$class]) || !is_object($module[$class])) {
+      $module[$class] = new $class;
+    }
+    
+    return $module[$class];
+  }
+
 require (DIR_WS_INCLUDES.'head.php');
 if (xtc_not_null($action) && !$box) {
   echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
@@ -385,7 +396,7 @@ if (xtc_not_null($action) && !$box) {
                             include_once($module_directory . $file);
                             $class = substr($file, 0, strrpos($file, '.'));
                             if (class_exists($class)) {
-                              $module = new $class();
+                              $module = instantiate_class($class);
                               if ($module->check() > 0) {
                                 $installed_modules[$module->sort_order][] = $file;
                                 sort($installed_modules[$module->sort_order]);
@@ -485,7 +496,7 @@ if (xtc_not_null($action) && !$box) {
                       }
                       include($module_directory . $class . '.php');
                       if (class_exists($class)) {
-                        $module = new $class();
+                        $module = instantiate_class($class);
                         $module_info = get_module_info($module);
                         $mInfo = new objectInfo($module_info);
                       }
