@@ -66,8 +66,12 @@ class seo_url_shopstat extends modified_seo_url {
       require_once(DIR_FS_INC . 'xtc_get_parent_categories.inc.php');
       require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
     }
-
-    parse_str($parameters, $this->params_array);
+    
+    $this->params_array = array();
+    $params_array = preg_split("/[\&\=]/" , $parameters); 
+    for ($i=0, $n=count($params_array); $i<$n; $i+=2) {
+      $this->params_array[$params_array[$i]] = $params_array[$i+1];
+    }
 
     if (isset($this->params_array['language']) 
         && strlen($this->params_array['language']) > 0
