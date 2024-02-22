@@ -160,7 +160,7 @@
         if (is_file($module_directory . $class . $file_extension)) {
           include_once($module_directory . $class . $file_extension);
           if (class_exists($class)) {
-            $module = new $class();
+            $module = instantiate_class($class);
           }
           if ($action == 'install') {
             $module->install();
@@ -250,7 +250,7 @@
       include_once($module_directory . $file);
       $class = substr($file, 0, strpos($file, '.'));
       if (class_exists($class)) {
-        $module = new $class();
+        $module = instantiate_class($class);
         if ($module->check() > 0) {
           $installed_modules[$module->sort_order][] = $file;
           sort($installed_modules[$module->sort_order]);
@@ -307,7 +307,7 @@
           include_once($module_directory . $file);
           $class = substr($file, 0, strpos($file, '.'));
           if (class_exists($class)) {
-            $module = new $class();
+            $module = instantiate_class($class);
             if ($module instanceof $class && $module->check() > 0) {     
               $key_array = $module->keys();     
               foreach ($key_array as $key) {
@@ -323,7 +323,19 @@
     }
     return $info;
   }
-  
+
+  function instantiate_class($class) {
+    static $module_array;
+    
+    if (!isset($module_array)) $module_array = array();
+    
+    if (!isset($module[$class]) || !is_object($module[$class])) {
+      $module[$class] = new $class;
+    }
+    
+    return $module[$class];
+  }
+
 require (DIR_WS_INCLUDES.'head.php');
 if (xtc_not_null($action) && !$box) {
   echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
@@ -390,7 +402,7 @@ if (xtc_not_null($action) && !$box) {
         
                 $class = substr($filename, 0, strpos($filename, '.'));
                 if (class_exists($class)) {
-                  $module = new $class();
+                  $module = instantiate_class($class);
                 }
 
                 if (method_exists($module,'check')) {
