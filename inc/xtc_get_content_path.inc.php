@@ -25,7 +25,7 @@ function xtc_get_content_path($content_group, $content=array()) {
       if ($parent_content['parent_id'] == 0) break;
       $content[] = $parent_content['parent_id'];
       if ($parent_content['content_group'] != $content_group) {
-        xtc_get_parent_content($parent_content['content_group'], $content);
+        xtc_get_content_path($parent_content['content_group'], $content);
       }
     }
   }
@@ -42,4 +42,3 @@ function xtc_get_content_id($content_group) {
     return $content_group['content_id'];
   }
 }
-?>
