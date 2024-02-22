@@ -380,7 +380,9 @@
         <div id="menu_closer"><i class="fa-solid fa-xmark"></i></div>
         <ul class="mobile_menu">
           {$box_CATEGORIES|replace:"<div class=\"mega_menu\">":""|replace:"</div>":""}
-          {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS|replace:"<div class=\"mega_menu\">":""|replace:"</div>":""}{/if}
+          {if $smarty.const.HEADER_SHOW_MANUFACTURERS === true}
+            {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS|replace:"<div class=\"mega_menu\">":""|replace:"</div>":""}{/if}
+          {/if}
           {if $smarty.const.SPECIALS_CATEGORIES === true}
             {if $smarty.const.SPECIALS_EXISTS === true}
               <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_SPECIALS) !== false} active1{/if}"><a title="{#link_specials#}" href="{$smarty.const.FILENAME_SPECIALS|xtc_href_link}">{#link_specials#}</a></li>
