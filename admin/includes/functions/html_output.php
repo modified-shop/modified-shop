@@ -21,8 +21,8 @@
   require_once (DIR_FS_INC . 'xtc_href_link.inc.php');
 
   // The HTML href link wrapper function for frontend
-  function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = false) {
-    return xtc_href_link($page, $parameters, $connection, $add_session, true, true, true);
+  function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = false, $search_engine_safe = true, $urlencode = true) {
+    return xtc_href_link($page, $parameters, $connection, $add_session_id, $search_engine_safe, $urlencode, true);
   }
 
   // The HTML image wrapper function

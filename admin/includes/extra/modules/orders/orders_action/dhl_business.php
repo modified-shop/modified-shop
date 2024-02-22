@@ -17,7 +17,7 @@
       require_once(DIR_FS_EXTERNAL.'dhl/DHLBusinessShipment.php');
       $oID = (int)$_POST['oID'];
       $dhl = new DHLBusinessShipment($_POST);
-      $response = $dhl->CreateLabel($oID, false);
+      $response = $dhl->CreateLabel($oID);
       
       if (is_array($response) && isset($response['message'])) {
         if (is_array($response['message'])) {

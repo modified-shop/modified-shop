@@ -147,7 +147,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   // decode html2txt
   $html_array = array('<br />', '<br/>', '<br>');
   $txt_array = array(" \n", " \n", " \n");
-  $message_body_plain = str_replace($html_array, $txt_array, $message_body_plain.$txt_signatur);//DPW Signatur ergänzt.
+  $message_body_plain = str_replace($html_array, $txt_array, $message_body_plain.$txt_signatur);
   
   // remove html tags
   $message_body_plain = strip_tags($message_body_plain);
@@ -158,9 +158,10 @@ function xtc_php_mail($from_email_address, $from_email_name,
 
   $mail = new PHPMailer(false);
   $mail->Debugoutput = new LoggingManager(DIR_FS_LOG.'mod_mailer_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'mailer', 'debug');
+  $mail->UseSendmailOptions = ((defined('USE_SENDMAIL_OPTIONS') && USE_SENDMAIL_OPTIONS != 'true') ? false : true);
   $mail->CharSet = $lang_data['language_charset'];
   $mail->Priority = $priority;
-  $mail->UseSendmailOptions = ((defined('USE_SENDMAIL_OPTIONS') && USE_SENDMAIL_OPTIONS != 'true') ? false : true);
+  $mail->WordWrap = (int)EMAIL_WORD_WRAP;
   
   if (EMAIL_TRANSPORT == 'smtp') {
     require_once (DIR_FS_EXTERNAL.'phpmailer/SMTP.php');
@@ -193,6 +194,9 @@ function xtc_php_mail($from_email_address, $from_email_name,
   if (EMAIL_TRANSPORT == 'mail') {
     $mail->isMail();
   }
+
+  //Subject
+  $mail->Subject = encode_utf8($email_subject);
 
   //Recipients
   $mail->setFrom($from_email_address, $from_email_name);
@@ -244,16 +248,15 @@ function xtc_php_mail($from_email_address, $from_email_name,
   }
 
   //Content
-  $mail->Subject = encode_utf8($email_subject);
-  $mail->setWordWrap((int)EMAIL_WORD_WRAP);
-  if (EMAIL_USE_HTML == 'true') { // set email format to HTML
+  if (EMAIL_USE_HTML == 'true') {
     $mail->IsHTML(true);
-    $mail->Body = $message_body_html.$html_signatur;//DPW Signatur ergänzt.
+    $mail->Body = $message_body_html.$html_signatur;
     $mail->AltBody = $message_body_plain;
   } else {
     $mail->IsHTML(false);
     $mail->Body = $message_body_plain;
   }
+  $mail->setWordWrap();
 
   require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/php_mail/','php') as $file) require ($file);
