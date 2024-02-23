@@ -14,7 +14,7 @@
   include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
   // set cache id
-  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id']);
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].((isset($_SESSION['customer_id'])) ? '|cID:'.$_SESSION['customer_id'] : ''));
 
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_greeting.html', $cache_id) || !$cache) {
     $shop_content_data = $main->getContentData(5, '', '', false, ADD_SELECT_CONTENT);
