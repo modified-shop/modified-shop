@@ -578,6 +578,9 @@ if (xtc_not_null($action) && !$box) {
                       $heading[] = array('text' => '<b>' . $mInfo->title . ($mInfo->status > 1 ? ' '.sprintf(MULTIPLE_INSTALLATION,$mInfo->status) : '') . '</b>');
                       if ($mInfo->status != '0') {
                         $keys = '';
+                        foreach ($mInfo->keys_dispnone as $key => $value) {
+                          unset($mInfo->keys[$value]);
+                        }
                         foreach ($mInfo->keys as $value) {
                           $keys .= '<b>' . $value['title'] . '</b><br />';
                           if ($value['use_function']) {
