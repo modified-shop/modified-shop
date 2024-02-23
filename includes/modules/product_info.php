@@ -139,10 +139,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     if (xtc_db_num_rows($specials_query) > 0) {
       $specials = xtc_db_fetch_array($specials_query);
       $info_smarty->assign('PRODUCTS_SPECIALS_QUANTITY', $specials['specials_quantity']);
-      $info_smarty->assign('PRODUCTS_START', $specials['start_date'] != '0000-00-00 00:00:00' ? xtc_date_short($specials['start_date']) : '');
-      $info_smarty->assign('PRODUCTS_START_C', $specials['start_date'] != '0000-00-00 00:00:00' ? date('c', strtotime($specials['start_date'])) : '');
-      $info_smarty->assign('PRODUCTS_EXPIRES', $specials['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($specials['expires_date']) : '');
-      $info_smarty->assign('PRODUCTS_EXPIRES_C', $specials['expires_date'] != '0000-00-00 00:00:00' ? date('c', strtotime($specials['expires_date'])) : '');
+      $info_smarty->assign('PRODUCTS_START', ((xtc_not_null($specials['start_date']) && strtotime($specials['start_date']) > 0) ? xtc_date_short($specials['start_date']) : ''));
+      $info_smarty->assign('PRODUCTS_START_C', ((xtc_not_null($specials['start_date']) && strtotime($specials['start_date']) > 0) ? date('c', strtotime($specials['start_date'])) : ''));
+      $info_smarty->assign('PRODUCTS_EXPIRES', ((xtc_not_null($specials['expires_date']) && strtotime($specials['expires_date']) > 0) ? xtc_date_short($specials['expires_date']) : ''));
+      $info_smarty->assign('PRODUCTS_EXPIRES_C', ((xtc_not_null($specials['expires_date']) && strtotime($specials['expires_date']) > 0) ? date('c', strtotime($specials['expires_date'])) : ''));
     }
   }
 
