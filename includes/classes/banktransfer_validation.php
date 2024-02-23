@@ -3502,7 +3502,7 @@ class IbanAccountCheck extends AccountCheck {
 																								'bank_start_pos' => 5,
 																								'bank_length' => 9),
 															// Marokko
-																'MT' => array(	'scheme' => 'MApp bbba aakk kkkk kkkk kkKK',
+																'MA' => array(	'scheme' => 'MApp bbba aakk kkkk kkkk kkKK',
 																								'regex' => null, 
 																								'length' => 24,
 																								'sepa_ctry' => false,
