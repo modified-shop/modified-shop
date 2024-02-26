@@ -89,6 +89,14 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_
       
         document.cookie = cookieString;
       };
+      if (event && event.data && (eventDataContains('oil_soi_optin_done'))) {
+        if (typeof pushgTagEventAction === "function" && gTagCounter > 0) {
+          pushgTagEventAction();
+        }
+        if (typeof pushTagmanagerEventAction === "function" && gTagmanagerCounter > 0) {
+          pushTagmanagerEventAction();
+        }
+      }
       if (event && event.data && (eventDataContains('oil_optin_done') || eventDataContains('oil_has_optedin'))) {
         __cmp('getVendorConsents', [], oilGtagCookie);
       }
