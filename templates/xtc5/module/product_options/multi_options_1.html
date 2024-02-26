@@ -1,4 +1,4 @@
-{if $options != ''}
+{if is_array($options) && count($options) > 0}
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     {foreach name=outer item=options_data from=$options}
       <tr>
