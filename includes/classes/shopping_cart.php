@@ -697,7 +697,7 @@ class shoppingCart {
    *
    * @return array
    */
-  function get_products() {
+  function get_products($cache = true) {
     global $xtPrice,$main;
     static $products_array;
     
@@ -709,7 +709,7 @@ class shoppingCart {
       $products_array = array();
     }
     
-    if (!isset($products_array[$this->type])) {
+    if (!isset($products_array[$this->type]) || $cache === false) {
       $products_array[$this->type] = array();
 
       $index = 0;

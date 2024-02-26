@@ -600,7 +600,7 @@
           $this->delivery = $GLOBALS[$shipping_class]->address();
           
           $this->delivery['shipping'] = $_shipping;
-          $this->delivery['delivery_zone'] = $shipping_address['iso_code_2'];
+          $this->delivery['delivery_zone'] = $this->delivery['country']['iso_code_2'];
 
           $tax_address['country_id'] = $this->delivery['country_id'];
           $tax_address['zone_id'] = $this->delivery['zone_id'];
@@ -618,7 +618,7 @@
       $index = 0;
       $this->tax_discount = array ();
 
-      $products = $_SESSION['cart']->get_products();
+      $products = $_SESSION['cart']->get_products(false);
 
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
