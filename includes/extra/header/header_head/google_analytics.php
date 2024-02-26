@@ -19,20 +19,14 @@
           )
       )
   {
-    $beginCode = '<script async src="https://www.googletagmanager.com/gtag/js?id='.MODULE_GOOGLE_ANALYTICS_TAG_ID.'"></script>
-<script>';
-
-    if (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true' && (in_array(3, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))) {
-      $beginCode = '<script async data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id='.MODULE_GOOGLE_ANALYTICS_TAG_ID.'" type="as-oil" data-purposes="3" data-managed="as-oil"></script>
-<script async data-type="text/javascript" type="as-oil" data-purposes="3" data-managed="as-oil">';
-    }
-
-    $beginCode .= "
-  window['ga-disable-".MODULE_GOOGLE_ANALYTICS_TAG_ID."'] = ".(((MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0') || $_SESSION['customers_status']['customers_status_id'] != '0') ? 'false' : 'true').";
+    $beginCode = "
+<script>
+  var gTagCounter = 0;
   window.dataLayer = window.dataLayer || [];
+  dataLayer.push({ ecommerce: null });
   function gtag(){dataLayer.push(arguments);}
+  
   gtag('js', new Date());
-
   gtag('config', '".MODULE_GOOGLE_ANALYTICS_TAG_ID."', {
     anonymize_ip: true,
     link_attribution: ".((MODULE_GOOGLE_ANALYTICS_LINKID == 'true') ? 'true' : 'false').",
@@ -47,7 +41,7 @@
   });
 ";
     }
-    
+
     $endCode = "
 </script>
 ";
@@ -103,7 +97,89 @@
       }
     }
 
-    echo $beginCode . $addCode . $endCode;
+    $consent_allowed = (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true') ? 'denied' : 'granted';
+
+    $consentDefaultCode = "
+  gtag('consent', 'default', {
+    ad_storage: '".$consent_allowed."',
+    ad_user_data: '".$consent_allowed."',
+    ad_personalization: '".$consent_allowed."',
+    analytics_storage: '".$consent_allowed."'
+  });";
+        
+    $consentAddCode = $consentPushCode = null;
+    if (defined('MODULE_COOKIE_CONSENT_STATUS') 
+        && MODULE_COOKIE_CONSENT_STATUS == 'true' 
+        && (in_array(3, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))
+        )
+    {
+      $consentCode = "
+  gtag('consent', 'update', {
+    analytics_storage: 'granted'
+  });";
+      
+      if (isset($_SESSION['tracking']['allow'][3]) && $_SESSION['tracking']['allow'][3] == true) {
+        $consentAddCode .= $consentCode;
+      } else {
+        $consentPushCode .= '<script async data-type="text/javascript" type="as-oil" data-purposes="3" data-managed="as-oil">';
+        $consentPushCode .= "gTagCounter ++;";
+        $consentPushCode .= $consentCode;
+        $consentPushCode .= $endCode;
+      }
+      
+      $consentCode = "
+  gtag('consent', 'update', {
+    ad_storage: 'granted',
+    ad_user_data: 'granted',
+    ad_personalization: 'granted'
+  });";
+
+      if (isset($_SESSION['tracking']['allow'][8]) && $_SESSION['tracking']['allow'][8] == true) {
+        $consentAddCode .= $consentCode;
+      } else {
+        $consentPushCode .= '<script async data-type="text/javascript" type="as-oil" data-purposes="8" data-managed="as-oil">';
+        $consentPushCode .= "gTagCounter ++;";
+        $consentPushCode .= $consentCode;
+        $consentPushCode .= $endCode;
+      }
+      
+      if ($consentPushCode && $addCode) {
+        $consentPushCode .= "<script>";
+        $consentPushCode .= "
+function pushgTagEventAction() {";
+        $consentPushCode .= $addCode;
+        $consentPushCode .= "
+}";
+        $consentPushCode .= $endCode;
+      }
+    }
+
+    // output    
+    $output = $beginCode . $consentDefaultCode;
+    
+    if ($consentAddCode) {
+      $output .= $consentAddCode;
+    }
+
+    if ($addCode) {
+      $output .= $addCode;
+    }
+    
+    $output .= $endCode;
+    
+    if ($consentPushCode) {
+      $output .= $consentPushCode;
+    }
+    
+    $output .= '<script async src="https://www.googletagmanager.com/gtag/js?id='.MODULE_GOOGLE_ANALYTICS_TAG_ID.'"></script>';
+
+    if (COMPRESS_JAVASCRIPT == 'true') {
+      require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
+      $compactor = new Compactor(array('strip_php_comments' => false, 'compress_css' => false, 'compress_scripts' => true));
+      $output = $compactor->squeeze($output);
+    }
+    
+    echo $output.PHP_EOL;
   }
 
   /*
