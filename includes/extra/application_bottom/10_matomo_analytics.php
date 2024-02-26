@@ -78,7 +78,15 @@
       }
     }
   
-    echo $beginCode . $orderCode . $endCode;
+    $output = $beginCode . $orderCode . $endCode;
+    
+    if (COMPRESS_JAVASCRIPT == 'true') {
+      require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
+      $compactor = new Compactor(array('strip_php_comments' => false, 'compress_css' => false, 'compress_scripts' => true));
+      $output = $compactor->squeeze($output);
+    }
+    
+    echo $output.PHP_EOL;
   }
 
 
