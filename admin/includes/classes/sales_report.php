@@ -238,7 +238,7 @@
         // to avoid rounding differences round for every quantum
         // multiply with the number of items afterwords.
         $price = 0;
-        if ($resp['psum'] > 0 && && $resp['pquant'] > 0) {
+        if ($resp['psum'] > 0 && $resp['pquant'] > 0) {
           $price = $resp['psum'] / $resp['pquant'];
         }
         
