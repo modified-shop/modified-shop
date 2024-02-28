@@ -134,15 +134,17 @@
     ad_personalization: 'granted'
   });";
 
-      if (isset($_SESSION['tracking']['allow'][8]) && $_SESSION['tracking']['allow'][8] == true) {
-        $consentAddCode .= $consentCode;
-      } else {
-        $consentPushCode .= '<script async data-type="text/javascript" type="as-oil" data-purposes="8" data-managed="as-oil">';
-        $consentPushCode .= "gTagCounter ++;";
-        $consentPushCode .= $consentCode;
-        $consentPushCode .= $endCode;
+      if (in_array(8, $_SESSION['tracking']['allowed'])) {
+        if (isset($_SESSION['tracking']['allow'][8]) && $_SESSION['tracking']['allow'][8] == true) {
+          $consentAddCode .= $consentCode;
+        } else {
+          $consentPushCode .= '<script async data-type="text/javascript" type="as-oil" data-purposes="8" data-managed="as-oil">';
+          $consentPushCode .= "gTagCounter ++;";
+          $consentPushCode .= $consentCode;
+          $consentPushCode .= $endCode;
+        }
       }
-      
+
       if ($consentPushCode && $addCode) {
         $consentPushCode .= "<script>";
         $consentPushCode .= "
