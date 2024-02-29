@@ -65,6 +65,9 @@ if (is_array($request) && count($request) > 0) {
     require (DIR_WS_LANGUAGES.$order->info['language'].'/'. $order->info['language'] .'.php');
     require (DIR_WS_LANGUAGES.$order->info['language'].'/modules/system/shipcloud.php');
 
+    // create smarty elements
+    $smarty = new Smarty();
+
     // update order
     $oID = $order->info['orders_id'];
     $status = $order->info['orders_status_id'];
