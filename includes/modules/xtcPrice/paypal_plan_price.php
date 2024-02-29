@@ -10,12 +10,20 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-class paypal_plan_price {  //Important same name as filename
+class paypal_plan_price {
+
+    var $code;
+    var $name;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $_check;
   
     //--- BEGIN DEFAULT CLASS METHODS ---//
     function __construct()
     {
-        $this->code = 'paypal_plan_price'; //Important same name as class name
+        $this->code = 'paypal_plan_price';
         $this->title = 'PayPal Plan';
         $this->description = 'PayPal Plan';
         $this->name = 'MODULE_XTCPRICE_'.strtoupper($this->code);
