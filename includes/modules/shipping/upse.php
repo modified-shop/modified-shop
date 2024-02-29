@@ -24,7 +24,17 @@
    
 
   class upse {
-    var $code, $title, $description, $icon, $enabled, $num_upse;
+
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $icon;
+    var $tax_class;
+    var $enabled;
+    var $num_upse;
+    var $quotes;
+    var $_check;
 
 
     function __construct() {

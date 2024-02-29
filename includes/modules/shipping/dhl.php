@@ -22,7 +22,18 @@
    ---------------------------------------------------------------------------------------*/
 
   class dhl {
-    var $code, $title, $description, $icon, $enabled, $num_dhl, $types;
+
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $icon;
+    var $tax_class;
+    var $enabled;
+    var $num_dhl;
+    var $types;
+    var $quotes;
+    var $_check;
 
     /**
      * class constructor

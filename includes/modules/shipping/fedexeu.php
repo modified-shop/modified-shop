@@ -23,8 +23,18 @@
    ---------------------------------------------------------------------------------------*/
 
   class fedexeu {
-    var $code, $title, $description, $icon, $enabled, $num_fedexeu, $types;
 
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $icon;
+    var $tax_class;
+    var $enabled;
+    var $num_fedexeu;
+    var $types;
+    var $quotes;
+    var $_check;
 
     function __construct() {
       global $order;

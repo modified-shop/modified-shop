@@ -32,6 +32,17 @@
 
 
   class dpd {
+
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $icon;
+    var $tax_class;
+    var $enabled;
+    var $quotes;
+    var $_check;
+
     var $code, $title, $description, $enabled, $icon;
 
     // class constructor

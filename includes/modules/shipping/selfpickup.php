@@ -23,7 +23,15 @@
 
 class selfpickup
 {
-    var $code, $title, $description, $icon, $enabled;
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $icon;
+    var $tax_class;
+    var $enabled;
+    var $quotes;
+    var $_check;
 
     function __construct()
     {

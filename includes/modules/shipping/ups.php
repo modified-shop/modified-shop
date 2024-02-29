@@ -26,8 +26,17 @@
    
 
   class ups {
-    var $code, $title, $description, $icon, $enabled, $num_ups;
 
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $icon;
+    var $tax_class;
+    var $enabled;
+    var $num_ups;
+    var $quotes;
+    var $_check;
 
     function __construct() {
       global $order;

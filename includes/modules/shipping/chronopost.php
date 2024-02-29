@@ -23,7 +23,17 @@
    
 
   class chronopost {
-    var $code, $title, $description, $enabled, $num_chronopost;
+
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $icon;
+    var $tax_class;
+    var $enabled;
+    var $num_chronopost;
+    var $quotes;
+    var $_check;
 
     /**
     * class constructor
