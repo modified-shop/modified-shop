@@ -11,8 +11,13 @@ if(!class_exists('micropayment_method',false)) {
 }
 class mcp_prepay extends micropayment_method
 {
-    var $code = 'mcp_prepay';
-    var $url = '/prepay/event';
+    var $code;
+    var $title;
+    var $title_extern;
+    var $info;
+    var $description;
+    var $sort_order;
+    var $url;
 
     function __construct()
     {
@@ -23,6 +28,7 @@ class mcp_prepay extends micropayment_method
         $this->sort_order   = ((defined('MODULE_PAYMENT_MCP_PREPAY_SORT_ORDER')) ? MODULE_PAYMENT_MCP_PREPAY_SORT_ORDER : '');
         $this->title_extern = MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE_EXTERN;
         $this->info         = MODULE_PAYMENT_MCP_PREPAY_TEXT_INFO;
+        $this->url          = '/prepay/event/';
         parent::__construct();
     }
 
@@ -58,4 +64,3 @@ class mcp_prepay extends micropayment_method
         parent::remove();
     }
 }
-?>

@@ -11,8 +11,13 @@ if(!class_exists('micropayment_method',false)) {
 }
 class mcp_ebank2pay extends micropayment_method
 {
-    var $code = 'mcp_ebank2pay';
-    var $url = '/ebank2pay/event';
+    var $code;
+    var $title;
+    var $title_extern;
+    var $info;
+    var $description;
+    var $sort_order;
+    var $url;
 
     function __construct()
     {
@@ -23,6 +28,7 @@ class mcp_ebank2pay extends micropayment_method
         $this->description  = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION;
         $this->sort_order   = ((defined('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER')) ? MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER : '');
         $this->info         = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO;
+        $this->url          = '/ebank2pay/event/';
         parent::__construct();
     }
 
@@ -57,4 +63,3 @@ class mcp_ebank2pay extends micropayment_method
         parent::remove();
     }
 }
-?>

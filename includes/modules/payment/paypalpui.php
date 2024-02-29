@@ -21,8 +21,17 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
 
 class paypalpui extends PayPalPaymentV2 {
-  var $code, $title, $description, $extended_description, $enabled;
 
+  var $code;
+  var $title;
+  var $description;
+  var $enabled;
+  var $tmpOrders;
+  var $tmpStatus;
+  var $form_action_url;
+  var $allowed_zones;
+  var $order_status_pending;
+  var $order_status_success;
 
   function __construct() {
     global $order;
@@ -393,4 +402,3 @@ class paypalpui extends PayPalPaymentV2 {
   }
 
 }
-?>

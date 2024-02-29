@@ -27,6 +27,7 @@ use PayPalCheckoutSdk\Core\SandboxEnvironment;
 
 class PayPalAuth {
 
+  var $code;
 
   function __construct() {
 
@@ -93,4 +94,3 @@ class PayPalAuth {
   }
   
 }
-?>

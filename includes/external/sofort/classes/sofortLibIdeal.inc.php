@@ -15,6 +15,8 @@
  */
 class SofortLibIdeal extends Sofort\SofortLib\Ideal {
 
+  var $_parameters;
+  
 	/**
 	 * Setter for user_variable_0
 	 *

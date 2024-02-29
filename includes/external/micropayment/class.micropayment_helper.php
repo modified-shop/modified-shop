@@ -7,9 +7,12 @@
  */
 class micropayment_helper
 {
+    var $code;
+    var $version;
+    
     static $infoServiceDone = false;
-    const HTTP_TIMEOUT = 5;
 
+    const HTTP_TIMEOUT = 5;
     const INFO_SERVICE_URL                   = 'http://webservices.micropayment.de/public/info/index.php';
 
     const CONFIG_NAME_CURRENT_VERSION         = 'MODULE_PAYMENT_MCP_SERVICE_CURRENT_VERSION';

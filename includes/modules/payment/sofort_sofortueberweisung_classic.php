@@ -26,7 +26,14 @@ require_once(DIR_FS_EXTERNAL.'sofort/classes/SofortLibPayment.php');
 
 class sofort_sofortueberweisung_classic extends SofortLibPayment {
 
-	var $code, $title, $description, $enabled;
+	var $code;
+	var $tmpOrders;
+	var $version;
+
+	var $logger;
+	var $logging;
+	var $data;
+	var $Sofortueberweisung;
 
   function __construct() {
     $this->SofortPayment();
@@ -126,4 +133,3 @@ class sofort_sofortueberweisung_classic extends SofortLibPayment {
 	}
 
 }
-?>

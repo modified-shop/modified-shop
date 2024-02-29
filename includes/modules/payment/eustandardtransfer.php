@@ -16,11 +16,21 @@
    ---------------------------------------------------------------------------------------*/
 
 class eustandardtransfer {
-  var $code, $title, $description, $enabled;
+
+  var $code;
+  var $title;
+  var $info;
+  var $info_success;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $order_status;
+  var $_check;
 
   // class constructor
   function __construct() {
     global $order;
+    
     $this->code = 'eustandardtransfer';
     $this->title = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE;
     $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION;
@@ -185,4 +195,3 @@ class eustandardtransfer {
     );
   }
 }
-?>

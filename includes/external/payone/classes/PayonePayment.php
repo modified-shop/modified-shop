@@ -21,14 +21,28 @@ require_once (DIR_FS_EXTERNAL.'payone/classes/PayoneModified.php');
 require_once (DIR_FS_EXTERNAL.'payone/lang/'.$_SESSION['language'].'.php');
 
 class PayonePayment {
-	var $code, $title, $description, $enabled;
+
+	var $code;
+	var $title;
+	var $description;
+	var $sort_order;
+	var $enabled;
+	var $info;
 	var $form_action_url;
 	var $tmpOrders = true;
 	var $tmpStatus;
+  var $_check;
+
 	var $payone;
 	var $config;
-	var $global_config;
 	var $pg_config;
+	var $global_config;
+  var $personal_data;
+  var $delivery_data;
+  var $payment_method;
+  var $service;
+  var $request;
+  var $response;
 	
 	function __construct() {
 		global $order;
@@ -685,4 +699,3 @@ class PayonePayment {
   }	
 	
 }
-?>

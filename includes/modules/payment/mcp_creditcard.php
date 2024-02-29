@@ -11,8 +11,13 @@ if(!class_exists('micropayment_method',false)) {
 }
 class mcp_creditcard extends micropayment_method
 {
-    var $code = 'mcp_creditcard';
-    var $url = '/creditcard/event';
+    var $code;
+    var $title;
+    var $title_extern;
+    var $info;
+    var $description;
+    var $sort_order;
+    var $url;
 
     function __construct()
     {
@@ -59,4 +64,3 @@ class mcp_creditcard extends micropayment_method
         parent::remove();
     }
 }
-?>

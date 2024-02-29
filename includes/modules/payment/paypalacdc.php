@@ -16,8 +16,14 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
 
 class paypalacdc extends PayPalPaymentV2 {
-  var $code, $title, $description, $extended_description, $enabled;
 
+  var $code;
+  var $description;
+  var $enabled;
+  var $tmpOrders;
+  var $tmpStatus;
+  var $form_action_url;
+  var $allowed_zones;
 
   function __construct() {
     global $order;

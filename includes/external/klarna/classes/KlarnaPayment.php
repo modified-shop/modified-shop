@@ -38,6 +38,13 @@ if (is_file(DIR_FS_EXTERNAL.'klarna/lang/'.$_SESSION['language'].'.php')) {
 
 class KlarnaPayment extends KlarnaPaymentBase {
 
+  var $code;
+  var $logger;
+  var $merchant_id;
+  var $shared_secret;
+  var $api_endpoint;
+  var $connector;
+
   function __construct($code) {
     $this->code = $code;
 

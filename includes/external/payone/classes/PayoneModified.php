@@ -29,6 +29,10 @@ class PayoneModified {
   public $api_version = '3.10';
   public $logging = false;
   
+  var $amount;
+  var $order;
+  var $invtrans;
+  
 	public function __construct() {
 		$this->_client_api_url = 'https://secure.pay1.de/client-api/';
 		$this->_frontend_url = 'https://secure.pay1.de/frontend/';
@@ -1517,4 +1521,3 @@ class PayoneModified {
     return $module;
   }
 }
-?>

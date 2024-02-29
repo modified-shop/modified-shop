@@ -26,7 +26,15 @@ require_once(DIR_FS_EXTERNAL.'sofort/classes/SofortLibPayment.php');
 
 class sofort_ideal extends SofortLibPayment {
 
-	var $code, $title, $description, $enabled;
+	var $code;
+	var $tmpOrders;
+	var $version;
+
+	var $ideal;
+	var $logger;
+	var $logging;
+	var $data;
+	var $SofortIdeal;
 
   function __construct() {
     $this->SofortPayment();
@@ -141,4 +149,3 @@ class sofort_ideal extends SofortLibPayment {
 	}
 
 }
-?>

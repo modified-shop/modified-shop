@@ -24,6 +24,11 @@ use PayPal\Api\InputFields;
 
 class PayPalCommon extends PayPalAuth {
 
+  var $details;
+  var $amount;
+  var $free_shipping;
+  var $free_shipping_value_over;
+  var $LoggingManager;
 
   function __construct() {
 

@@ -27,8 +27,33 @@
    ---------------------------------------------------------------------------------------*/
 
 class amoneybookers {
-	var $code, $title, $description, $enabled, $auth_num, $transaction_id;
-	var $mbLanguages, $mbCurrencies, $aCurrencies, $defCurr, $defLang;
+
+  var $code;
+  var $title;
+  var $info;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $order_status;
+  var $tmpOrders;
+  var $tmpStatus;
+  var $form_action_url;
+  var $_check;
+
+  var $version;
+  var $logo;
+  var $landingPage;
+  var $icons_available;
+  var $repost;
+  var $Error;
+  var $oID;
+  var $debug;
+  var $transaction_id;
+  var $mbLanguages;
+  var $mbCurrencies;
+  var $aCurrencies;
+  var $defCurr;
+  var $defLang;
 
 	// class constructor
 	function __construct() {
@@ -687,4 +712,3 @@ class amoneybookers {
 
 	}
 }
-?>

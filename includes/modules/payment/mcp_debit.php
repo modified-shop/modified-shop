@@ -11,8 +11,13 @@ if(!class_exists('micropayment_method',false)) {
 }
 class mcp_debit extends micropayment_method
 {
-    var $code = 'mcp_debit';
-    var $url = '/lastschrift/event';
+    var $code;
+    var $title;
+    var $title_extern;
+    var $info;
+    var $description;
+    var $sort_order;
+    var $url;
 
     function __construct()
     {
@@ -58,4 +63,3 @@ class mcp_debit extends micropayment_method
         parent::remove();
     }
 }
-?>

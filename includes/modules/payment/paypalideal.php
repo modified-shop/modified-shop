@@ -16,8 +16,12 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
 
 class paypalideal extends PayPalPaymentV2 {
-  var $code, $title, $description, $extended_description, $enabled;
 
+  var $code;
+  var $description;
+  var $enabled;
+  var $tmpOrders;
+  var $allowed_zones;
 
   function __construct() {
     global $order;
@@ -128,4 +132,3 @@ class paypalideal extends PayPalPaymentV2 {
   }
 
 }
-?>

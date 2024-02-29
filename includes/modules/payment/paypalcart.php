@@ -16,8 +16,9 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 
 
 class paypalcart extends PayPalPayment {
-  var $code, $title, $description, $extended_description, $enabled;
 
+  var $code;
+  var $tmpOrders;
 
   function __construct() {
     global $order;
@@ -58,4 +59,3 @@ class paypalcart extends PayPalPayment {
   }
 
 }
-?>

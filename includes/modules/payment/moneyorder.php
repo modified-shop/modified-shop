@@ -17,7 +17,17 @@
    ---------------------------------------------------------------------------------------*/
 
 class moneyorder {
-  var $code, $title, $description, $enabled;
+
+  var $code;
+  var $title;
+  var $info;
+  var $info_success;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $order_status;
+  var $email_footer;
+  var $_check;
 
   function __construct() {
     global $order;
@@ -178,4 +188,3 @@ class moneyorder {
     );
   }
 }
-?>

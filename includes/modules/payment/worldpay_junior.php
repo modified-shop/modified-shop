@@ -18,7 +18,17 @@
    ---------------------------------------------------------------------------------------*/
 
   class worldpay_junior {
-    var $code, $title, $description, $enabled;
+  
+    var $code;
+    var $title;
+    var $info;
+    var $description;
+    var $sort_order;
+    var $order_status;
+    var $form_action_url;
+    var $_check;
+    
+    var $signature;
 
     // class constructor
     function __construct() {
@@ -651,4 +661,3 @@
       return number_format(xtc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
-?>
