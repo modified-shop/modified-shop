@@ -40,6 +40,7 @@ use PayPal\Api\TrackerIdentifier;
 
 class PayPalInfo extends PayPalPayment {
 
+  var $LoggingManager;
 
 	function __construct($class) {
     PayPalPayment::__construct($class);
@@ -391,4 +392,3 @@ class PayPalInfo extends PayPalPayment {
   }
 
 }
-?>

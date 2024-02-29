@@ -17,7 +17,15 @@
    ---------------------------------------------------------------------------------------*/
 
 class cash {
-  var $code, $title, $description, $enabled;
+
+  var $code;
+  var $title;
+  var $info;
+  var $description;
+  var $sort_order;
+  var $order_status;
+  var $email_footer;
+  var $_check;
 
   function __construct() {
     global $order;
@@ -172,4 +180,3 @@ class cash {
     );
   }
 }
-?>

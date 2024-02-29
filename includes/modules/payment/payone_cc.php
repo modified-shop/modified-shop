@@ -20,8 +20,22 @@
 require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePayment.php');
 
 class payone_cc extends PayonePayment {
+	
 	var $payone_genre = 'creditcard';
 
+  var $code;
+  var $tmpOrders;
+  var $form_action_url;
+
+  var $config;
+  var $payone;
+  var $global_config;
+  var $personal_data;
+  var $delivery_data;
+  var $payment_method;
+  var $params;
+  var $builder;
+  
 	function __construct() {
 		$this->code = 'payone_cc';		
 		parent::__construct();
@@ -242,4 +256,3 @@ class payone_cc extends PayonePayment {
 	}
 
 }
-?>

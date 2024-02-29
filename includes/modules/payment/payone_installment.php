@@ -20,7 +20,24 @@
 require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePayment.php');
 
 class payone_installment extends PayonePayment {
+
 	var $payone_genre = 'installment';
+
+  var $code;
+  var $form_action_url;
+  var $installmenttypes;
+  var $klarnalocale;
+
+  var $config;
+  var $payone;
+  var $personal_data;
+  var $delivery_data;
+  var $payment_method;
+  var $params;
+  var $builder;
+  var $service;
+  var $request;
+  var $response;
 
 	function __construct() {
 	  global $order;
@@ -500,4 +517,3 @@ class payone_installment extends PayonePayment {
 		unset($_SESSION[$this->code]);
 	}
 }
-?>

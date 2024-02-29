@@ -30,6 +30,7 @@ use PayPal\Api\Partner;
 
 class PayPalAdmin extends PayPalPayment {
 
+  var $LoggingManager;
 
 	function __construct() {
     PayPalPayment::__construct('paypal');    

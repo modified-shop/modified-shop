@@ -45,7 +45,27 @@ use EasyCredit\Transfer\TechnicalShopParams;
 
 
 class easycredit {
-  var $code, $title, $description, $enabled, $link_parameters, $link_class, $link_title;
+
+  var $code;
+  var $title;
+  var $info;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $order_status;
+  var $order_status_success;
+  var $_check;
+
+  var $webshopId;
+  var $token;
+  var $config;
+  var $request;
+  var $apiClient;
+  var $ecProcess;
+  var $link_parameters;
+  var $link_class;
+  var $link_title;
+  var $total_amount;
 
   function __construct() {
     global $order, $main;

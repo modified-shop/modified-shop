@@ -20,7 +20,19 @@
 require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePayment.php');
 
 class payone_cod extends PayonePayment {
+
 	var $payone_genre = 'accountbased';
+
+  var $code;
+  var $form_action_url;
+
+  var $pg_config;
+  var $payone;
+  var $personal_data;
+  var $delivery_data;
+  var $payment_method;
+  var $params;
+  var $builder;
 
 	function __construct() {
 		$this->code = 'payone_cod';
@@ -82,4 +94,3 @@ class payone_cod extends PayonePayment {
 		parent::after_process();
 	}
 }
-?>

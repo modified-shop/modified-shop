@@ -16,8 +16,11 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 
 
 class paypalplus extends PayPalPayment {
-	var $code, $title, $description, $extended_description, $enabled;
 
+  var $code;
+  var $title;
+  var $info;
+  var $tmpOrders;
 
 	function __construct() {
 		global $order;
@@ -196,4 +199,3 @@ class paypalplus extends PayPalPayment {
 	}
 
 }
-?>

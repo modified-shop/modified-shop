@@ -23,7 +23,16 @@
 
 class cod {
 
-  var $code, $title, $description, $enabled;
+  var $code;
+  var $title;
+  var $info;
+  var $description;
+  var $sort_order;
+  var $order_status;
+  var $_check;
+  
+  var $cost;
+  var $limit_subtotal;
 
   function __construct() {
     global $order,$xtPrice;
@@ -250,4 +259,3 @@ class cod {
     );
   }
 }
-?>

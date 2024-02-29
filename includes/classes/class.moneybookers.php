@@ -30,7 +30,21 @@
 
 
 class fcnt_moneybookers {
-	var $code, $title, $description, $enabled, $auth_num, $transaction_id,$allowed;
+
+	var $code;
+	var $title;
+	var $description;
+	var $info;
+	var $sort_order;
+	var $enabled;
+	
+	var $module;
+	var $method;
+	var $auth_num;
+	var $transaction_id;
+	var $allowed;
+	var $oID;
+	var $allowed;
 	
 	var $version = '2.4';
 	var	$tmpOrders = true;
@@ -308,4 +322,3 @@ class fcnt_moneybookers {
 	
 	
 }
-?>

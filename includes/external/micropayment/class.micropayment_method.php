@@ -10,18 +10,20 @@ include_once(dirname(__FILE__).'/../../../lang/'.$_SESSION['language'].'/modules
 
 class micropayment_method extends micropayment_helper
 {
-
     var $code;
-    var $logo;
     var $title;
-    var $description;
-    var $sort_order;
-    var $enabled = true;
+    var $title_extern;
     var $info;
-    var $version = '2.2.7';
+    var $tmpOrders;
+    var $tmpStatus;
+    var $form_action_url;
     var $_check;
+
+    var $enabled = true;
+    var $version = '2.2.7';
     var $rslcode = 'r120';
     var $get_url_called = false;
+
     static $versionInfoShow = false;
     static $registerInfoShow = false;
 

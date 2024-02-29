@@ -16,8 +16,10 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
 
 class paypalgooglepay extends PayPalPaymentV2 {
-  var $code, $title, $description, $extended_description, $enabled;
 
+  var $code;
+  var $description;
+  var $tmpOrders;
 
   function __construct() {
     global $order;

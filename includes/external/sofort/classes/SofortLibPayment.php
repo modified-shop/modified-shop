@@ -12,6 +12,26 @@
 
 class SofortLibPayment {
 
+  var $code;
+  var $title;
+  var $info;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $order_status;
+  var $tmpStatus;
+  var $version;
+  var $tmpOrders;
+  var $form_action_url;
+  var $_version;
+  var $_check;
+
+  var $logging;
+  var $logger;
+  var $ideal;
+  var $sofortLibIdealBanks;
+  var $data;
+
   function __construct() {}
 
 	function SofortPayment() {
@@ -580,4 +600,3 @@ if (!function_exists('xtc_cfg_pull_down_order_statuses_sofort')) {
     return xtc_draw_pull_down_menu($name, $statuses_array, $order_status_id);
   }
 }
-?>

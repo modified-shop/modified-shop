@@ -15,7 +15,9 @@ require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
 
 
 class klarna_directdebit extends KlarnaPayment {
-  var $code, $title, $description, $enabled;
+
+  var $code;
+  var $klarna_code;
 
   function __construct() {
     global $order;

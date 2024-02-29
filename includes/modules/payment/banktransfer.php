@@ -27,7 +27,30 @@
 
 
   class banktransfer {
-    var $code, $title, $description, $enabled, $extended_description;
+  
+    var $code;
+    var $title;
+    var $info;
+    var $description;
+    var $extended_description;
+    var $sort_order;
+    var $properties;
+    var $min_order;
+    var $order_status;
+    var $email_footer;
+    var $_check;
+
+    var $iban_mode;
+    var $banktransfer_bankname;
+    var $banktransfer_owner;
+    var $banktransfer_owner_email;
+    var $banktransfer_iban;
+    var $banktransfer_bic;
+    var $banktransfer_number;
+    var $banktransfer_blz;
+    var $banktransfer_prz;
+    var $banktransfer_status;
+    var $banktransfer_fax;
 
     function __construct() {
       global $order;
@@ -561,4 +584,3 @@
       );
     }
   }
-?>

@@ -8,6 +8,8 @@
 
 class EasyCreditProcess extends \EasyCredit\Process\Process
 {
+   var $saveHandler;
+   
     /**
      * @var SessionHandler
      */

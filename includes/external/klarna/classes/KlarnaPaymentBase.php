@@ -17,6 +17,18 @@ require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaAutoload.php');
 
 class KlarnaPaymentBase extends KlarnaAutoload {
 
+  var $code;
+  var $title;
+  var $info;
+  var $description;
+  var $extended_description;
+  var $sort_order;
+  var $enabled;
+  var $order_status;
+  var $_check;
+
+  var $klarna_version;
+
   function __construct() {
 
   }
