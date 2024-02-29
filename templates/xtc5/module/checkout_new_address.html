@@ -69,7 +69,7 @@
     <td align="left">{$INPUT_STATE}</td>
   </tr>
   {/if}
-  {if $new == '1'}
+  {if isset($new) && $new == '1'}
   <tr>
     <td>&nbsp;</td>
     <td align="left">{$CHECKBOX_PRIMARY} {#text_standard#}</td>

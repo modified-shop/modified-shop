@@ -36,7 +36,7 @@
       <div class="field_item_1"{if $display_state}{$display_state}{/if}><label><span class="field_text">{#text_state#}</span>{$INPUT_STATE|asterisk}</label></div>
     {/if}
 
-    {if $new == '1'}
+    {if isset($new) && $new == '1'}
       <div class="contentbox lightyellow mt_20">      
         <div class="cus_check">
           {$CHECKBOX_PRIMARY}
