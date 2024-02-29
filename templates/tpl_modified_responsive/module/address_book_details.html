@@ -52,7 +52,7 @@
         </tr>
         {/if}
       </table>
-      {if $new == '1'}
+      {if isset($new) && $new == '1'}
       <br />
       <div class="cus_check cus_check_small">
         {$CHECKBOX_PRIMARY}
