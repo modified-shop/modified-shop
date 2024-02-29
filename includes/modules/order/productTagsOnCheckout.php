@@ -10,12 +10,20 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-class productTagsOnCheckout {  //Important same name as filename
+class productTagsOnCheckout {
+
+    var $code;
+    var $name;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $_check;
   
     //--- BEGIN DEFAULT CLASS METHODS ---//
     function __construct()
     {
-        $this->code = 'productTagsOnCheckout'; //Important same name as class name
+        $this->code = 'productTagsOnCheckout';
         $this->name = 'MODULE_ORDER_'.strtoupper($this->code);
         $this->title = defined($this->name.'_TITLE') ? constant($this->name.'_TITLE') : '';        
         $this->description = defined($this->name.'_DESCRIPTION') ? constant($this->name.'_DESCRIPTION') : '';        

@@ -11,6 +11,14 @@
    ---------------------------------------------------------------------------------------*/
 
   class product_reviews {
+
+    var $code;
+    var $name;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $_check;
   
     function __construct() {
       $this->code = 'product_reviews'; //Important same name as class name
