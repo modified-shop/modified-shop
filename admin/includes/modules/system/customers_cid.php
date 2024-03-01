@@ -14,7 +14,12 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
 class customers_cid
 {
-    var $code, $title, $description, $enabled;
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $enabled;
+    var $_check;
 
     function __construct() 
     {
@@ -71,4 +76,3 @@ class customers_cid
                      'MODULE_CUSTOMERS_CID_NEXT');
     }    
 }
-?>

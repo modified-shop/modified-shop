@@ -16,12 +16,13 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_FS_INC . 'xtc_rand.inc.php');
 
 class it_recht_kanzlei {
+
   var $code;
   var $title;
+  var $description;
   var $sort_order;
   var $enabled;
-  var $description;
-  var $extended_description;
+  var $_check;
 
   function __construct() {
     $this->code = 'it_recht_kanzlei';
@@ -110,5 +111,3 @@ class it_recht_kanzlei {
                  );
   }
 }
-
-?>

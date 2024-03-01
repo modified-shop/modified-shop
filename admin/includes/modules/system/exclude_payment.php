@@ -13,7 +13,14 @@
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 class exclude_payment {
-  var $code, $title, $description, $enabled, $num_exclude_payment;
+
+  var $code;
+  var $title;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $num_exclude_payment;
+  var $_check;
 
   function __construct() {
     global $order;
@@ -110,4 +117,3 @@ class exclude_payment {
     return $keys;
   }
 }
-?>

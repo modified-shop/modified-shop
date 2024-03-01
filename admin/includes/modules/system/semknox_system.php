@@ -13,7 +13,15 @@
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 class semknox_system {
-  var $code, $title, $description, $enabled;
+
+  var $code;
+  var $title;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $_check;
+
+  var $languages;
 
   function __construct() {
     $this->code = 'semknox_system';
@@ -119,4 +127,3 @@ class semknox_system {
     return $keys;
   }    
 }
-?>

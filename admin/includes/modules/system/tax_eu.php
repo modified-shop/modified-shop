@@ -14,7 +14,15 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
 class tax_eu
 {
-  var $code, $title, $description, $enabled;
+  var $code;
+  var $title;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $properties;
+  var $_check;
+
+  var $additional_countries;
 
   function __construct() {
     $this->code = 'tax_eu';
@@ -205,4 +213,3 @@ class tax_eu
     return array();
   }
 }
-?>

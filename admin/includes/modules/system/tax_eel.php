@@ -13,12 +13,14 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 class tax_eel {
+
   var $code;
   var $title;
+  var $description;
   var $sort_order;
   var $enabled;
-  var $description;
-  var $extended_description;
+  var $properties;
+  var $_check;
 
   function __construct() {
     $this->code = 'tax_eel';
@@ -181,4 +183,3 @@ class tax_eel {
     return array();
   }
 }
-?>

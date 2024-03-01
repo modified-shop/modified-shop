@@ -15,7 +15,13 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 if (!class_exists('invoice_number')) {
     class invoice_number
     {
-        var $code, $title, $description, $enabled;
+        var $code;
+        var $title;
+        var $description;
+        var $sort_order;
+        var $enabled;
+        var $properties;
+        var $_check;
 
         function __construct() 
         {
@@ -98,4 +104,3 @@ if (!class_exists('invoice_number')) {
         }
     }
 }
-?>

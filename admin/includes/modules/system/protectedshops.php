@@ -15,12 +15,15 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_FS_EXTERNAL.'protectedshops/protectedshops_update.php');
 
 class protectedshops {
+
   var $code;
   var $title;
+  var $description;
   var $sort_order;
   var $enabled;
-  var $description;
-  var $extended_description;
+  var $version;
+  var $_check;
+
   var $update;
   var $content;
 
@@ -178,5 +181,3 @@ class protectedshops {
     return $keys;
   }
 }
-
-?>
