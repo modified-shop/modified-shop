@@ -28,7 +28,14 @@ require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
 
 
 class sitemaporg extends sitemap {
-  var $code, $title, $description, $enabled;
+
+  var $code;
+  var $title;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $properties;
+  var $_check;
 
   function __construct() {
 
@@ -118,4 +125,3 @@ class sitemaporg extends sitemap {
   }
   
 }
-?>

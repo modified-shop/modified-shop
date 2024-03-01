@@ -16,8 +16,14 @@ require_once (DIR_WS_CLASSES.'order.php');
 
 
 class dsgvo_export
-{
-    var $code, $title, $description, $enabled, $properties;
+{  
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $enabled;
+    var $properties;
+    var $_check;
 
     function __construct() 
     {
@@ -335,4 +341,3 @@ class dsgvo_export
         return array();
     }
 }
-?>
