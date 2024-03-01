@@ -44,7 +44,10 @@
 
     public $account = array();
     public $error = array();
+    public $api_key;
+    public $client;
     public $client_id;
+    public $LoggingManager;
     public $zettle_version = '1.06';
     
     function __construct() {    
