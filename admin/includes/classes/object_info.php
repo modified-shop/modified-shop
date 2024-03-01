@@ -14,7 +14,10 @@
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+  
+  #[AllowDynamicProperties]
   class objectInfo {
 
     // class constructor
@@ -23,5 +26,5 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
         $this->$key = xtc_db_prepare_input($value);
       }
     }
+    
   }
-?>
