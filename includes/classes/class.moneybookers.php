@@ -44,7 +44,6 @@ class fcnt_moneybookers {
 	var $transaction_id;
 	var $allowed;
 	var $oID;
-	var $allowed;
 	
 	var $version = '2.4';
 	var	$tmpOrders = true;
