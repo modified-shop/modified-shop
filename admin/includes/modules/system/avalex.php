@@ -16,7 +16,14 @@
   require_once(DIR_FS_EXTERNAL.'avalex/avalex_update.php');
   
   class avalex {
-    var $code, $title, $description, $enabled;
+
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $enabled;
+    var $version;
+    var $_check;
 
     function __construct() {
       global $order;

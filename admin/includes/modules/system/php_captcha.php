@@ -15,7 +15,12 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
 class php_captcha
 {
-    var $code, $title, $description, $enabled;
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $enabled;
+    var $_check;
 
     function __construct() 
     {
@@ -95,4 +100,3 @@ class php_captcha
         );
     }    
 }
-?>

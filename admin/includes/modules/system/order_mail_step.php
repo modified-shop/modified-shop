@@ -14,7 +14,12 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
 class order_mail_step
 {
-    var $code, $title, $description, $enabled;
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $enabled;
+    var $_check;
 
     function __construct() 
     {
@@ -73,4 +78,3 @@ class order_mail_step
         );
     }    
 }
-?>

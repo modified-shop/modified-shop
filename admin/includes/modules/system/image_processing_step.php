@@ -26,7 +26,23 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
 if ( !class_exists( "image_processing_step" ) ) {
   class image_processing_step {
-    var $code, $title, $description, $enabled;
+
+    var $code;
+    var $title;
+    var $description;
+    var $sort_order;
+    var $enabled;
+    var $properties;
+    var $_check;
+
+    var $files;
+    var $logfile;
+    var $module_filename;
+    var $images_type_array;
+    var $get_params;
+    var $post_params;
+    var $data_volume;
+    var $max_files;
 
     function __construct() {
       global $current_page;
@@ -35,13 +51,11 @@ if ( !class_exists( "image_processing_step" ) ) {
       $this->description = sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION, 5);
       $this->sort_order = defined('MODULE_STEP_IMAGE_PROCESS_SORT_ORDER') ? MODULE_STEP_IMAGE_PROCESS_SORT_ORDER:'';
       $this->enabled = ((defined('MODULE_STEP_IMAGE_PROCESS_STATUS') && MODULE_STEP_IMAGE_PROCESS_STATUS == 'True') ? true : false);
+      
       $this->module_filename = $current_page;
       $this->properties = array();
       $this->files = array();
-      
-
       $this->logfile = DIR_FS_CATALOG.'log/mod_image_processing_*.log';
-
       $this->images_type_array = array(
         '',
         '_list',
@@ -524,4 +538,3 @@ if ( !class_exists( "image_processing_step" ) ) {
     }
   }
 }
-?>

@@ -20,7 +20,14 @@
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 class janolaw {
-  var $code, $title, $description, $enabled;
+
+  var $code;
+  var $title;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $version;
+  var $_check;
 
   function __construct() {
     $this->version = '3.20';
@@ -190,4 +197,3 @@ class janolaw {
                  );
   }
 }
-?>
