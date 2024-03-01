@@ -37,6 +37,7 @@ class fcnt_moneybookers {
 	var $info;
 	var $sort_order;
 	var $enabled;
+	var $_check;
 	
 	var $module;
 	var $method;
