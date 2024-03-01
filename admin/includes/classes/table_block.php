@@ -15,12 +15,11 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
   class tableBlock {
-    public $table_border = '0';     //deprecated -> removed
-    public $table_width = '100%';   //deprecated -> removed
-    public $table_cellspacing = '0';//deprecated -> removed
-    public $table_cellpadding = '2';//deprecated -> removed
+    
+    public $contents_param = '';
     public $table_parameters = '';
     public $table_row_parameters = '';
     public $table_data_parameters = '';
@@ -122,4 +121,3 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     
     }
   }
-?>

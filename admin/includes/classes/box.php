@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: box.php 2666 2012-02-23 11:38:17Z dokuman $ 
+   $Id$ 
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -26,11 +26,17 @@
 
    $box = new box;
    echo $box->infoBox($heading, $contents);   
-   --------------------------------------------------------------
-*/
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+   ------------------------------------------------------------*/
+   
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
   class box extends tableBlock {
+    
+    var $heading;
+    var $contents;
+    var $table_row_parameters;
+    var $table_data_parameters;
+
     public function __construct() {
       $this->heading = array();
       $this->contents = array();
@@ -68,4 +74,3 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       return $this->heading . $this->contents;
     }
   }
-?>
