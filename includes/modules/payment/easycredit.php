@@ -56,6 +56,7 @@ class easycredit {
   var $order_status_success;
   var $_check;
 
+  var $version;
   var $webshopId;
   var $token;
   var $config;
