@@ -23,13 +23,15 @@
   // include nneded classes
   require_once(DIR_WS_CLASSES.'order.php');
 
-
+  #[AllowDynamicProperties]
   class DHLBusinessShipment {
 
     private $data;
     private $info;
     private $client;
     private $order;
+    private $insurance_array;
+    private $LoggingManager;
 
     protected $sandbox;
 
