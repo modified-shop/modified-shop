@@ -34,8 +34,6 @@
     var $quotes;
     var $_check;
 
-    var $code, $title, $description, $icon, $enabled, $num_ap;
-
     function __construct() {
       global $order;
 
