@@ -43,8 +43,6 @@
     var $quotes;
     var $_check;
 
-    var $code, $title, $description, $enabled, $icon;
-
     // class constructor
     function __construct() {
       global $order;

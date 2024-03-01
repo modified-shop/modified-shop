@@ -36,7 +36,6 @@
     var $quotes;
     var $_check;
 
-
     function __construct() {
       global $order;
 
