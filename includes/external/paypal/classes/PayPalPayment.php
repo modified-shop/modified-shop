@@ -87,26 +87,14 @@ use PayPal\Api\PaymentMethod;
 
 class PayPalPayment extends PayPalPaymentBase {
 
+  var $code;
   var $loglevel;
   var $logmode;
   var $LoggingManager;
-  var $code;
-  var $_check_install;
-  var $paypal_version;
-  var $admin_access_array;
-  var $title;
-  var $info;
-  var $description;
-  var $extended_description;
-  var $sort_order;
-  var $enabled;
   var $order_status_success;
-  var $order_status_rejected;
   var $order_status_pending;
   var $order_status_capture;
   var $order_status_tmp;
-  var $tmpOrders;
-  var $tmpStatus;
 
   var $details;
   var $amount;

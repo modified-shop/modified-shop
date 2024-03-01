@@ -28,6 +28,7 @@ class cod {
   var $info;
   var $description;
   var $sort_order;
+  var $enabled;
   var $order_status;
   var $_check;
   

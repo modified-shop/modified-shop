@@ -23,6 +23,7 @@ class cash {
   var $info;
   var $description;
   var $sort_order;
+  var $enabled;
   var $order_status;
   var $email_footer;
   var $_check;

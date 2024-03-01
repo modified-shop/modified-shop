@@ -34,6 +34,7 @@
     var $description;
     var $extended_description;
     var $sort_order;
+    var $enabled;
     var $properties;
     var $min_order;
     var $order_status;

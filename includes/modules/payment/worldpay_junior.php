@@ -24,6 +24,7 @@
     var $info;
     var $description;
     var $sort_order;
+    var $enabled;
     var $order_status;
     var $form_action_url;
     var $_check;
