@@ -26,8 +26,10 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
   class messageStack {
-    var $size = 0;
 
+    var $size = 0;
+    var $errors;
+    
     function __construct() {
       $this->errors = array();
       if (isset($_SESSION['messageToAdminStack']) && count($_SESSION['messageToAdminStack']) > 0) {
@@ -74,4 +76,3 @@
       return $output;
     }
   }
-?>

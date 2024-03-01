@@ -35,6 +35,7 @@
     var $tax_class;
     var $enabled;
     var $num_ups;
+    var $free;
     var $quotes;
     var $_check;
 
