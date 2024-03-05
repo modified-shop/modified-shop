@@ -18,7 +18,9 @@
 
 
   class shipping {
+
     var $modules;
+    var $checkoutModules;
 
     function __construct($module = '') {
       global $PHP_SELF, $order;

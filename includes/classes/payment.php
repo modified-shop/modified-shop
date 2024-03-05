@@ -31,7 +31,11 @@
   require_once(DIR_FS_INC . 'xtc_count_payment_modules.inc.php');
 
   class payment {
-    var $modules, $selected_module;
+
+    var $modules;
+    var $checkoutModules;
+    var $selected_module;
+    var $form_action_url;
 
     function __construct($module = '') {
       global $PHP_SELF,$order;
