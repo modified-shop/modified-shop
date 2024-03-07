@@ -26,6 +26,7 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Predis\Client as PredisClient;
+use Predis\Collection\Iterator as PredisIterator;
 use Predis\Connection\ConnectionException as PredisConnectionException;
 
 /**
@@ -67,8 +68,8 @@ HELP;
     public function getStats(): DriverStatistic
     {
         $info = $this->instance->info();
-        $size = (isset($info['Memory']['used_memory']) ? $info['Memory']['used_memory'] : 0);
-        $version = (isset($info['Server']['redis_version']) ? $info['Server']['redis_version'] : 0);
+        $size = ($info['Memory']['used_memory'] ?? 0);
+        $version = ($info['Server']['redis_version'] ?? 0);
         $date = (isset($info['Server']['uptime_in_seconds']) ? (new DateTime())->setTimestamp(time() - $info['Server']['uptime_in_seconds']) : 'unknown date');
 
         return (new DriverStatistic())
@@ -77,8 +78,9 @@ HELP;
             ->setSize((int)$size)
             ->setInfo(
                 sprintf(
-                    "The Redis daemon v%s is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
+                    "The Redis daemon v%s (with Predis v%s) is up since %s.\n For more information see RawData. \n Driver size includes the memory allocation size.",
                     $version,
+                    PredisClient::VERSION,
                     $date->format(DATE_RFC2822)
                 )
             );
@@ -92,7 +94,7 @@ HELP;
     protected function driverConnect(): bool
     {
         /**
-         * In case of an user-provided
+         * In case of a user-provided
          * Predis client just return here
          */
         if ($this->getConfig()->getPredisClient() instanceof PredisClient) {
@@ -151,6 +153,37 @@ HELP;
         return $this->decode($val);
     }
 
+
+    /**
+     * @param ExtendedCacheItemInterface ...$items
+     * @return array<array<string, mixed>>
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
+     * @throws \RedisException
+     */
+    protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
+    {
+        $keys = $this->getKeys($items);
+
+        return array_combine($keys, array_map(
+            fn($val) => $val ? $this->decode($val) : null,
+            $this->instance->mget($keys)
+        ));
+    }
+
+    /**
+     * @return array<int, string>
+     * @throws \RedisException
+     */
+    protected function driverReadAllKeys(string $pattern = '*'): iterable
+    {
+        $keys = [];
+        foreach (new PredisIterator\Keyspace($this->instance, $pattern, ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT) as $key) {
+            $keys[] = $key;
+        }
+        return $keys;
+    }
+
+
     /**
      * @param ExtendedCacheItemInterface $item
      * @return mixed
@@ -159,7 +192,6 @@ HELP;
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
@@ -175,15 +207,22 @@ HELP;
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-        $this->assertCacheItemType($item, Item::class);
+        return (bool)$this->instance->del([$key]);
+    }
 
-        return (bool)$this->instance->del([$item->getKey()]);
+    /**
+     * @param string[] $keys
+     * @return bool
+     */
+    protected function driverDeleteMultiple(array $keys): bool
+    {
+        return (bool) $this->instance->del(...$keys);
     }
 
     /**

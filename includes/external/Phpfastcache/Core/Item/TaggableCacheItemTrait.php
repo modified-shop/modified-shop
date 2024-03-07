@@ -69,6 +69,14 @@ trait TaggableCacheItemTrait
     }
 
     /**
+     * @return bool
+     */
+    public function isTagged(): bool
+    {
+        return !empty($this->tags);
+    }
+
+    /**
      * @param string[] $tagNames
      * @param int $strategy
      * @return bool
@@ -154,13 +162,23 @@ trait TaggableCacheItemTrait
     }
 
     /**
+     * @return ExtendedCacheItemInterface
+     */
+    public function clearRemovedTags(): ExtendedCacheItemInterface
+    {
+        $this->removedTags = [];
+
+        return $this;
+    }
+
+    /**
      * @throws PhpfastcacheLogicException
      * @throws PhpfastcacheInvalidArgumentException
      */
     public function cloneInto(ExtendedCacheItemInterface $itemTarget, ?ExtendedCacheItemPoolInterface $itemPoolTarget = null): void
     {
         $itemTarget->setEventManager($this->getEventManager())
-            ->set($this->getRawValue())
+            ->set($this->_getData())
             ->setHit($this->isHit())
             ->setTags($this->getTags())
             ->expiresAt(clone $this->getExpirationDate())

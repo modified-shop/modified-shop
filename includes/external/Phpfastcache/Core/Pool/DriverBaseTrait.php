@@ -19,8 +19,11 @@ namespace Phpfastcache\Core\Pool;
 use DateTime;
 use DateTimeInterface;
 use Phpfastcache\Config\ConfigurationOptionInterface;
+use Phpfastcache\Event\Event;
 use Phpfastcache\Event\EventManagerDispatcherTrait;
 use Phpfastcache\Event\EventManagerInterface;
+use Phpfastcache\Exceptions\PhpfastcacheCorruptedDataException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Util\ClassNamespaceResolverTrait;
 use Throwable;
@@ -48,9 +51,9 @@ trait DriverBaseTrait
     protected ConfigurationOptionInterface $config;
 
     /**
-     * @var object|array<mixed>|null
+     * @var object|null
      */
-    protected object|array|null $instance;
+    protected ?object $instance;
 
     protected string $driverName;
 
@@ -67,28 +70,35 @@ trait DriverBaseTrait
      * @throws PhpfastcacheIOException
      * @throws PhpfastcacheInvalidArgumentException
      */
-    public function __construct(ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
+    public function __construct(#[\SensitiveParameter] ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
     {
-        $this->setEventManager($em);
+        $this->setEventManager($em->getScopedEventManager($this));
         $this->setConfig($config);
         $this->instanceId = $instanceId;
 
         if (!$this->driverCheck()) {
-            throw new PhpfastcacheDriverCheckException(\sprintf(ExtendedCacheItemPoolInterface::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+            throw new PhpfastcacheDriverCheckException(
+                \sprintf(
+                    ExtendedCacheItemPoolInterface::DRIVER_CHECK_FAILURE,
+                    $this->getDriverName(),
+                    $this->getHelp() ? " Additionally, {$this->getHelp()}" : ''
+                )
+            );
         }
+        $this->eventManager->dispatch(Event::CACHE_DRIVER_CHECKED, $this);
 
         try {
             $this->driverConnect();
-            $config->lock($this);
+            $config->lock($this); // Lock the config only after a successful driver connection.
+            $this->eventManager->dispatch(Event::CACHE_DRIVER_CONNECTED, $this, $this->instance ?? null);
         } catch (Throwable $e) {
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
                     ExtendedCacheItemPoolInterface::DRIVER_CONNECT_FAILURE,
-                    $e::class,
                     $this->getDriverName(),
                     $e->getMessage(),
                     $e->getLine() ?: 'unknown line',
-                    $e->getFile() ?: 'unknown file'
+                    $e->getFile() ?: 'unknown file',
                 ),
                 0,
                 $e
@@ -138,6 +148,24 @@ trait DriverBaseTrait
         return self::$cacheItemClasses[static::class];
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getEncodedKey(string $key): string
+    {
+        $keyHashFunction = $this->getConfig()->getDefaultKeyHashFunction();
+
+        if ($keyHashFunction) {
+            if (\is_callable($keyHashFunction)) {
+                return $keyHashFunction($key);
+            }
+            throw new PhpfastcacheLogicException('Unable to build the encoded key (defaultKeyHashFunction is not callable)');
+        }
+
+        return $key;
+    }
+
+
 
     /**
      * @param ExtendedCacheItemInterface $item
@@ -149,7 +177,7 @@ trait DriverBaseTrait
     {
         $wrap = [
             ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
-            ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
+            ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => $item->_getData(),
             ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
             TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
         ];
@@ -266,13 +294,30 @@ trait DriverBaseTrait
     }
 
     /**
-     * Decode data types such as object/array
+     * Decode data stored in the cache
      * for driver that does not support
-     * non-scalar value
+     * non-scalar value storage.
      * @param string|null $value
-     * @return mixed
+     * @return array<string, mixed>|null
+     * @throws PhpfastcacheDriverException
      */
-    protected function decode(?string $value): mixed
+    protected function decode(?string $value): ?array
+    {
+        $decoded = $this->unserialize($value);
+
+        if ($decoded === null || is_array($decoded)) {
+            return $decoded;
+        }
+        throw new PhpfastcacheCorruptedDataException(
+            sprintf(
+                'Failed to unserialize data from the cache, expected array or null but got "%s". Stored data may be corrupted.',
+                gettype($decoded)
+            ),
+            $value
+        );
+    }
+
+    protected function unserialize(?string $value): mixed
     {
         return $value ? \unserialize($value, ['allowed_classes' => true]) : null;
     }

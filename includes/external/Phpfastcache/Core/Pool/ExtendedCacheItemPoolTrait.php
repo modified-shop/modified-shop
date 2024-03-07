@@ -32,6 +32,29 @@ trait ExtendedCacheItemPoolTrait
 
     /**
      * @inheritDoc
+     * @param string $pattern
+     * @return array<string, mixed>
+     */
+    public function getAllItems(string $pattern = ''): iterable
+    {
+        $driverReadAllKeysCallback = fn (string $pattern): iterable => $this->driverReadAllKeys($pattern);
+
+        /**
+         * This event allow you to customize the callback and wrap it to an invoker
+         * like SebastianBergmann\Invoke\Invoke, so you can set up custom timeouts.
+         */
+        $this->eventManager->dispatch(Event::CACHE_GET_ALL_ITEMS, $this, new EventReferenceParameter($driverReadAllKeysCallback));
+        $keys = $driverReadAllKeysCallback($pattern);
+
+        if (count($keys) > 0) {
+            return $this->getItems($keys instanceof \Traversable ? iterator_to_array($keys) : $keys);
+        }
+
+        return [];
+    }
+
+    /**
+     * @inheritDoc
      * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
@@ -94,5 +117,19 @@ trait ExtendedCacheItemPoolTrait
     public function getHelp(): string
     {
         return '';
+    }
+
+    /**
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    public function throwUnsupportedDriverReadAllPattern(string $linkReference = ''): void
+    {
+        throw new PhpfastcacheInvalidArgumentException(
+            sprintf(
+                '%s does not support a pattern argument.%s',
+                $this->getDriverName(),
+                $linkReference ? " See $linkReference" : ''
+            )
+        );
     }
 }

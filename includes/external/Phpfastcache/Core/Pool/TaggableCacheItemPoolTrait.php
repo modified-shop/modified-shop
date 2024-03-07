@@ -183,6 +183,7 @@ trait TaggableCacheItemPoolTrait
     public function getItemsByTag(string $tagName, int $strategy = TaggableCacheItemPoolInterface::TAG_STRATEGY_ONE): array
     {
         $items = $this->fetchItemsByTagFromBackend($tagName);
+
         if ($strategy === TaggableCacheItemPoolInterface::TAG_STRATEGY_ONLY) {
             foreach ($items as $key => $item) {
                 if (\array_diff($item->getTags(), [$tagName])) {
@@ -367,7 +368,9 @@ trait TaggableCacheItemPoolTrait
      */
     protected function cleanItemTags(ExtendedCacheItemInterface $item): void
     {
-        $this->driverWriteTags($item->removeTags($item->getTags()));
+        if (!empty($item->getTags()) || !empty($item->getRemovedTags())) {
+            $this->driverWriteTags($item->removeTags($item->getTags()));
+        }
     }
 
     /**

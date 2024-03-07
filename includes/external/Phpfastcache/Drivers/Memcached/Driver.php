@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Memcached;
 
 use DateTime;
-use Exception;
 use Memcached as MemcachedSoftware;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
 use Phpfastcache\Config\ConfigurationOption;
@@ -31,6 +30,7 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidTypeException;
 use Phpfastcache\Exceptions\PhpfastcacheIOException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use Phpfastcache\Util\MemcacheDriverCollisionDetectorTrait;
@@ -155,6 +155,42 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
+     * @param ExtendedCacheItemInterface ...$items
+     * @return array<array<string, mixed>>
+     */
+    protected function driverReadMultiple(ExtendedCacheItemInterface ...$items): array
+    {
+        $keys = $this->getKeys($items);
+
+        $val = $this->instance->getMulti($keys);
+
+        if (empty($val) || !\is_array($val)) {
+            return [];
+        }
+
+        return $val;
+    }
+
+
+    /**
+     * @return array<string, mixed>
+     * @throws PhpfastcacheInvalidArgumentException
+     */
+    protected function driverReadAllKeys(string $pattern = ''): iterable
+    {
+        if ($pattern !== '') {
+            $this->throwUnsupportedDriverReadAllPattern('https://www.php.net/manual/en/memcached.getallkeys.php');
+        }
+        $keys = $this->instance->getAllKeys();
+
+        if (is_iterable($keys)) {
+            return $keys;
+        } else {
+            return [];
+        }
+    }
+
+    /**
      * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
@@ -162,7 +198,6 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
@@ -176,15 +211,13 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-        $this->assertCacheItemType($item, Item::class);
-
-        return $this->instance->delete($item->getKey());
+        return $this->instance->delete($key);
     }
 
     /**

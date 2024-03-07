@@ -22,6 +22,8 @@ use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheExtensionNotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheExtensionNotInstalledException;
 use Phpfastcache\Exceptions\PhpfastcacheInstanceNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
@@ -59,6 +61,11 @@ class CacheManager
     protected static array $driverCustoms = [];
 
     /**
+     * @var string[]
+     */
+    protected static array $driverExtensions = [];
+
+    /**
      * @param string $instanceId
      * @return ExtendedCacheItemPoolInterface
      * @throws PhpfastcacheInstanceNotFoundException
@@ -90,6 +97,7 @@ class CacheManager
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheDriverNotFoundException
+     * @throws PhpfastcacheExtensionNotInstalledException
      * @throws PhpfastcacheLogicException
      */
     public static function getInstance(string $driver, ?ConfigurationOptionInterface $config = null, ?string $instanceId = null): ExtendedCacheItemPoolInterface
@@ -98,7 +106,7 @@ class CacheManager
             $driverClass = $driver;
         } else {
             $driver = self::normalizeDriverName($driver);
-            $driverClass = self::validateDriverClass(self::getDriverClass($driver));
+            $driverClass = self::getDriverClass($driver);
         }
         $config = self::validateConfig($config);
         $instanceId = $instanceId ?: self::getInstanceHash($driverClass, $config);
@@ -114,11 +122,22 @@ class CacheManager
                     EventManager::getInstance()
                 );
             } else {
-                throw new PhpfastcacheDriverNotFoundException(sprintf(
-                    'The driver "%s" does not exist or does not implement %s',
-                    $driver,
-                    ExtendedCacheItemPoolInterface::class
-                ));
+                try {
+                    self::$driverExtensions[$driver] = ExtensionManager::getExtension($driver);
+                    return CacheManager::getInstance($driver, $config, $instanceId);
+                } catch (PhpfastcacheExtensionNotFoundException) {
+                    if (in_array($driver, ExtensionManager::KNOWN_EXTENSION_NAMES, true)) {
+                        throw new PhpfastcacheExtensionNotInstalledException(sprintf(
+                            'You requested a driver which is now an extension. Run the following command to solve this issue: %s',
+                            sprintf('composer install phpfastcache/%s-extension', strtolower($driver))
+                        ));
+                    }
+                    throw new PhpfastcacheDriverNotFoundException(sprintf(
+                        'The driver "%s" does not exist or does not implement %s.',
+                        $driver,
+                        ExtendedCacheItemPoolInterface::class,
+                    ));
+                }
             }
         }
 
@@ -171,31 +190,14 @@ class CacheManager
     }
 
     /**
-     * @param string $driverClass
-     * @return string
-     * @throws PhpfastcacheDriverException
-     */
-    protected static function validateDriverClass(string $driverClass): string
-    {
-        if (!\is_a($driverClass, ExtendedCacheItemPoolInterface::class, true)) {
-            throw new PhpfastcacheDriverException(
-                \sprintf(
-                    'Class "%s" does not implement "%s"',
-                    $driverClass,
-                    ExtendedCacheItemPoolInterface::class
-                )
-            );
-        }
-        return $driverClass;
-    }
-
-    /**
      * @param string $driverName
      * @return string
      */
     public static function getDriverClass(string $driverName): string
     {
-        if (!empty(self::$driverCustoms[$driverName])) {
+        if (!empty(self::$driverExtensions[$driverName])) {
+            $driverClass = self::$driverExtensions[$driverName];
+        } elseif (!empty(self::$driverCustoms[$driverName])) {
             $driverClass = self::$driverCustoms[$driverName];
         } elseif (!empty(self::$driverOverrides[$driverName])) {
             $driverClass = self::$driverOverrides[$driverName];
@@ -301,6 +303,15 @@ class CacheManager
         }
 
         self::$driverCustoms[$driverName] = $className;
+    }
+
+    /**
+     * @param string $driverName
+     * @return bool
+     */
+    public static function customDriverExists(string $driverName): bool
+    {
+        return isset(self::$driverCustoms[$driverName]);
     }
 
     /**

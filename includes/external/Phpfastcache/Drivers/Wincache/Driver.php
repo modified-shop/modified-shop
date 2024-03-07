@@ -26,6 +26,7 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
+ * @deprecated will be removed as of v10 due to the lack of updates to PHP8 as officially stated by PHP: https://www.php.net/manual/en/install.windows.recommended.php
  * @method Config getConfig()
  */
 class Driver implements AggregatablePoolInterface
@@ -38,6 +39,13 @@ class Driver implements AggregatablePoolInterface
     public function driverCheck(): bool
     {
         return extension_loaded('wincache') && function_exists('wincache_ucache_set');
+    }
+
+    public function getHelp(): string
+    {
+        return <<<HELP
+Wincache PECL extension is not maintained anymore and has been superseded. Check sourceforge for more informations: https://sourceforge.net/projects/wincache/'
+HELP;
     }
 
     /**
@@ -87,21 +95,18 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         return wincache_ucache_set($item->getKey(), $this->driverPreWrap($item), $item->getTtl());
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-        $this->assertCacheItemType($item, Item::class);
-
-        return wincache_ucache_delete($item->getKey());
+        return wincache_ucache_delete($key);
     }
 
     /**

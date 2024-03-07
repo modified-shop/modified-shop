@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Phpfastcache\Core\Pool;
 
 use InvalidArgumentException;
-use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Config\ConfigurationOptionInterface;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
@@ -25,25 +24,22 @@ use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Event\EventManagerDispatcherInterface;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
+use Phpfastcache\Exceptions\PhpfastcacheUnsupportedMethodException;
 use Phpfastcache\Util\ClassNamespaceResolverInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * IMPORTANT NOTICE
- *
- * If you modify this file please make sure that
- * the ActOnAll helper will also get those modifications
- * since it does no longer implements this interface
- * @see \Phpfastcache\Helper\ActOnAll
- *
+ * Extended cache item pool interface that
+ * contains all the phpfastcache-related
+ * methods that does not belong to PSR-6.
  */
 interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventManagerDispatcherInterface, ClassNamespaceResolverInterface, TaggableCacheItemPoolInterface
 {
     public const DRIVER_CHECK_FAILURE = '%s is not installed or is misconfigured, cannot continue. 
-    Also, please verify the suggested dependencies in composer because as of the V6, 3rd party libraries are no longer required.';
+    Also, please verify the suggested dependencies in composer because as of the V6, 3rd party libraries are no longer required.%s';
 
-    public const DRIVER_CONNECT_FAILURE = '(%s) %s failed to connect with the following error message: "%s" line %d in %s';
+    public const DRIVER_CONNECT_FAILURE = '%s failed to connect with the following error message: "%s" line %d in %s.';
 
     public const DRIVER_KEY_WRAPPER_INDEX = 'k';
 
@@ -65,6 +61,11 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
     public const DRIVER_MDATE_WRAPPER_INDEX = 'm';
 
     /**
+     * Hard-limit count  of items returns by getAllItems()
+     */
+    public const MAX_ALL_KEYS_COUNT = 9999;
+
+    /**
      * Return the config class name
      * @return string
      */
@@ -75,6 +76,12 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      * @return string
      */
     public static function getItemClass(): string;
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getEncodedKey(string $key): string;
 
     /**
      * @return ConfigurationOptionInterface
@@ -133,6 +140,26 @@ interface ExtendedCacheItemPoolInterface extends CacheItemPoolInterface, EventMa
      *
      */
     public function getItems(array $keys = []): iterable;
+
+    /**
+     * Returns the WHOLE cache as a traversable set of cache items.
+     * A hard-limit of 9999 items is defined internally to prevent
+     * serious performances issues of your application.
+     * @see ExtendedCacheItemPoolInterface::MAX_ALL_KEYS_COUNT
+     *
+     * @param string $pattern
+     * An optional pattern supported by a limited range of drivers.
+     * If this parameter is unsupported by the driver, a PhpfastcacheInvalidArgumentException will be thrown.
+     *
+     * @return iterable<ExtendedCacheItemInterface>
+     *   A traversable collection of Cache Items keyed by the cache keys of
+     *   each item. However, if no keys are returned by the backend then an empty
+     *   traversable WILL be returned instead.
+     *
+     * @throws PhpfastcacheInvalidArgumentException If the driver does not support the $pattern argument
+     * @throws PhpfastcacheUnsupportedMethodException If the driver does not permit to list all the keys through this implementation.
+     */
+    public function getAllItems(string $pattern = ''): iterable;
 
     /**
      * Returns A json string that represents an array of items.

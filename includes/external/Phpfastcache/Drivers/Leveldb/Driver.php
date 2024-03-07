@@ -77,21 +77,18 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         return (bool)$this->instance->set($item->getKey(), $this->encode($this->driverPreWrap($item)));
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-        $this->assertCacheItemType($item, Item::class);
-
-        return $this->instance->delete($item->getKey());
+        return $this->instance->delete($key);
     }
 
     /**

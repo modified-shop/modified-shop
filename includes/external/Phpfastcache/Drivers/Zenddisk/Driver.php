@@ -95,7 +95,6 @@ HELP;
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
@@ -103,15 +102,14 @@ HELP;
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
-        return (bool)zend_disk_cache_delete($item->getKey());
+        return (bool)zend_disk_cache_delete($key);
     }
 
 

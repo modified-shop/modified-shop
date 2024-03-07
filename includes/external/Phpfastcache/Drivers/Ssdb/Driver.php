@@ -80,6 +80,7 @@ class Driver implements AggregatablePoolInterface
             if (!empty($clientConfig->getPassword())) {
                 $this->instance->auth($clientConfig->getPassword());
             }
+            $this->instance->ping();
 
             return true;
         } catch (SSDBException $e) {
@@ -110,21 +111,18 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         return (bool)$this->instance->setx($item->getEncodedKey(), $this->encode($this->driverPreWrap($item)), $item->getTtl());
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-        $this->assertCacheItemType($item, Item::class);
-
-        return (bool)$this->instance->del($item->getEncodedKey());
+        return (bool)$this->instance->del($encodedKey);
     }
 
     /**

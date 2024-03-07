@@ -37,6 +37,8 @@ class Driver implements AggregatablePoolInterface
 {
     use IOHelperTrait;
 
+    /** @var array<PDO>  */
+    protected array $dbInstances = [];
     protected const INDEXING_FILE = 'indexing';
 
     protected int $maxSize = 10;
@@ -141,7 +143,7 @@ class Driver implements AggregatablePoolInterface
         /**
          * init instant
          */
-        if (!isset($this->instance[$instant])) {
+        if (!isset($this->dbInstances[$instant])) {
             // check DB Files ready or not
             $tableCreated = false;
             if ($reset || !file_exists($this->sqliteDir . '/db' . $instant)) {
@@ -154,11 +156,11 @@ class Driver implements AggregatablePoolInterface
                 $this->initDB($pdo);
             }
 
-            $this->instance[$instant] = $pdo;
+            $this->dbInstances[$instant] = $pdo;
             unset($pdo);
         }
 
-        return $this->instance[$instant];
+        return $this->dbInstances[$instant];
     }
 
     /**
@@ -277,7 +279,6 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        $this->assertCacheItemType($item, Item::class);
 
         try {
             $stm = $this->getDb($item->getEncodedKey())
@@ -297,20 +298,19 @@ class Driver implements AggregatablePoolInterface
     }
 
     /**
-     * @param ExtendedCacheItemInterface $item
+     * @param string $key
+     * @param string $encodedKey
      * @return bool
-     * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(ExtendedCacheItemInterface $item): bool
+    protected function driverDelete(string $key, string $encodedKey): bool
     {
-        $this->assertCacheItemType($item, Item::class);
         try {
-            $stm = $this->getDb($item->getEncodedKey())
+            $stm = $this->getDb($encodedKey)
                 ->prepare("DELETE FROM `caching` WHERE (`exp` <= :exp) OR (`keyword`=:keyword) ");
 
             return $stm->execute(
                 [
-                    ':keyword' => $item->getEncodedKey(),
+                    ':keyword' => $encodedKey,
                     ':exp' => time(),
                 ]
             );
@@ -325,7 +325,7 @@ class Driver implements AggregatablePoolInterface
      */
     protected function driverClear(): bool
     {
-        $this->instance = [];
+        $this->dbInstances = [];
         $this->indexing = null;
 
         // delete everything before reset indexing

@@ -17,11 +17,14 @@ declare(strict_types=1);
 namespace Phpfastcache\Event;
 
 use BadMethodCallException;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
  * == ItemPool Events ==
  * @method Void onCacheGetItem(Callable $callable, ?string $callbackName = null)
+ * @method Void onCacheGetItems(Callable $callable, ?string $callbackName = null)
  * @method Void onCacheDeleteItem(Callable $callable, ?string $callbackName = null)
  * @method Void onCacheSaveItem(Callable $callable, ?string $callbackName = null)
  * @method Void onCacheSaveMultipleItems(Callable $callable, ?string $callbackName = null)
@@ -44,8 +47,10 @@ use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
  * == Driver-specific events ==
  * @method Void onArangodbConnection(Callable $callable, ?string $callbackName = null)
  * @method Void onArangodbCollectionParams(Callable $callable, ?string $callbackName = null)
+ * @method Void onCouchdbCreateOptions(Callable $callable, ?string $callbackName = null)
  * @method Void onDynamodbCreateTable(Callable $callable, ?string $callbackName = null)
  * @method Void onSolrBuildEndpoint(Callable $callable, ?string $callbackName = null)
+ * @method Void onFirestoreClientOptions(Callable $callable, ?string $callbackName = null)
  */
 interface EventManagerInterface
 {
@@ -81,10 +86,10 @@ interface EventManagerInterface
     public function onEveryEvents(callable $callback, string $callbackName): void;
 
     /**
-     * @param string[] $events
+     * @param string[]|string $events
      * @param callable $callback
      */
-    public function on(array $events, callable $callback): void;
+    public function on(array|string $events, callable $callback): void;
 
     /**
      * @param string $eventName
@@ -97,4 +102,17 @@ interface EventManagerInterface
      * @return bool
      */
     public function unbindAllEventCallbacks(): bool;
+
+    /**
+     * @param ExtendedCacheItemPoolInterface $pool
+     * @return EventManagerInterface
+     */
+    public function getScopedEventManager(ExtendedCacheItemPoolInterface $pool): EventManagerInterface;
+
+    /**
+     * @param ExtendedCacheItemPoolInterface $pool
+     * @return EventManagerInterface
+     * @throws PhpfastcacheEventManagerException
+     */
+    public function setItemPoolContext(ExtendedCacheItemPoolInterface $pool): EventManagerInterface;
 }

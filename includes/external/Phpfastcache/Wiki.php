@@ -14,17 +14,13 @@
 
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Arangodb;
+namespace Phpfastcache;
 
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Core\Item\TaggableCacheItemTrait;
+use Phpfastcache\Helper\UninstanciableObjectTrait;
 
-class Item implements ExtendedCacheItemInterface
+class Wiki
 {
-    use TaggableCacheItemTrait;
+    use UninstanciableObjectTrait;
 
-    protected function getDriverClass(): string
-    {
-        return Driver::class;
-    }
+    public const FETCH_ALL_KEY_URL = 'https://github.com/PHPSocialNetwork/phpfastcache/wiki/%5BV5%CB%96%5D-Fetching-all-keys';
 }

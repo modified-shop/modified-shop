@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Phpfastcache;
 
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Event\EventManagerInterface;
 use Phpfastcache\Exceptions\PhpfastcacheEventManagerException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
@@ -28,6 +29,10 @@ class EventManager implements EventManagerInterface
     public const ON_EVERY_EVENT = '__every';
 
     protected static EventManagerInterface $instance;
+
+    protected bool $isScopedEventManager = false;
+
+    protected ?ExtendedCacheItemPoolInterface $itemPoolContext = null;
 
     /** @var array<string, array<string, callable>> */
     protected array $events = [
@@ -61,6 +66,9 @@ class EventManager implements EventManagerInterface
         if (isset($this->events[$eventName]) && $eventName !== self::ON_EVERY_EVENT) {
             $loopArgs = array_merge($args, [$eventName]);
             foreach ($this->events[$eventName] as $event) {
+                /**
+                 * @todo V10: BC Break: Put eventName as first parameter (like self::ON_EVERY_EVENT)
+                 */
                 $event(...$loopArgs);
             }
         }
@@ -95,9 +103,13 @@ class EventManager implements EventManagerInterface
     /**
      * @param callable $callback
      * @param string $callbackName
+     * @throws PhpfastcacheEventManagerException
      */
     public function onEveryEvents(callable $callback, string $callbackName): void
     {
+        if ($callbackName === '') {
+            throw new PhpfastcacheEventManagerException('Callbackname cannot be empty');
+        }
         $this->events[self::ON_EVERY_EVENT][$callbackName] = $callback;
     }
 
@@ -105,8 +117,11 @@ class EventManager implements EventManagerInterface
     /**
      * @throws PhpfastcacheEventManagerException
      */
-    public function on(array $events, callable $callback): void
+    public function on(array|string $events, callable $callback): void
     {
+        if (is_string($events)) {
+            $events = [$events];
+        }
         foreach ($events as $event) {
             if (!\preg_match('#^([a-zA-Z])*$#', $event)) {
                 throw new PhpfastcacheEventManagerException(\sprintf('Invalid event name "%s"', $event));
@@ -140,4 +155,43 @@ class EventManager implements EventManagerInterface
 
         return true;
     }
+
+    public function __clone(): void
+    {
+        $this->isScopedEventManager = true;
+        $this->unbindAllEventCallbacks();
+    }
+
+    /**
+     * @param ExtendedCacheItemPoolInterface $pool
+     * @return EventManagerInterface
+     * @throws PhpfastcacheEventManagerException
+     */
+    public function getScopedEventManager(ExtendedCacheItemPoolInterface $pool): EventManagerInterface
+    {
+        return (clone $this)->setItemPoolContext($pool);
+    }
+
+    /**
+     * @param ExtendedCacheItemPoolInterface $pool
+     * @return EventManagerInterface
+     * @throws PhpfastcacheEventManagerException
+     */
+    public function setItemPoolContext(ExtendedCacheItemPoolInterface $pool): EventManagerInterface
+    {
+        if (!$this->isScopedEventManager) {
+            throw new PhpfastcacheEventManagerException('Cannot set itemPool context on unscoped event manager instance.');
+        }
+        $this->itemPoolContext = $pool;
+
+        $this->onEveryEvents(function (string $eventName, ...$args) {
+            EventManager::getInstance()->dispatch($eventName, ...$args);
+        }, 'Scoped' . $pool->getDriverName() . spl_object_hash($this));
+
+        return $this;
+    }
 }
+
+// phpcs:disable
+\class_alias(EventManager::class, PhpfastcacheEventManager::class); // @phpstan-ignore-line
+// phpcs:enable

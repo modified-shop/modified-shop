@@ -14,7 +14,7 @@
 
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Mongodb;
+namespace Phpfastcache\Drivers\Memory;
 
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Core\Item\TaggableCacheItemTrait;

@@ -19,6 +19,9 @@ namespace Phpfastcache\Config;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
+/**
+ * @todo: As of V10, imports cache slams properties.
+ */
 class IOConfigurationOption extends ConfigurationOption
 {
     protected bool $secureFileManipulation = false;
@@ -44,10 +47,7 @@ class IOConfigurationOption extends ConfigurationOption
      */
     public function setSecurityKey(string $securityKey): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->securityKey = $securityKey;
-
-        return $this;
+        return $this->setProperty('securityKey', $securityKey);
     }
 
     /**
@@ -60,14 +60,12 @@ class IOConfigurationOption extends ConfigurationOption
 
     /**
      * @param bool $secureFileManipulation
-     * @return self
+     * @return static
      * @throws PhpfastcacheLogicException
      */
     public function setSecureFileManipulation(bool $secureFileManipulation): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->secureFileManipulation = $secureFileManipulation;
-        return $this;
+        return $this->setProperty('secureFileManipulation', $secureFileManipulation);
     }
 
 
@@ -87,7 +85,6 @@ class IOConfigurationOption extends ConfigurationOption
      */
     public function setCacheFileExtension(string $cacheFileExtension): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
         $safeFileExtensions = \explode('|', IOConfigurationOptionInterface::SAFE_FILE_EXTENSIONS);
 
         if (\str_contains($cacheFileExtension, '.')) {
@@ -99,8 +96,7 @@ class IOConfigurationOption extends ConfigurationOption
             );
         }
 
-        $this->cacheFileExtension = $cacheFileExtension;
-        return $this;
+        return $this->setProperty('cacheFileExtension', $cacheFileExtension);
     }
 
     /**
@@ -113,13 +109,48 @@ class IOConfigurationOption extends ConfigurationOption
 
     /**
      * @param int $defaultChmod
-     * @return self
+     * @return static
      * @throws PhpfastcacheLogicException
      */
     public function setDefaultChmod(int $defaultChmod): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->defaultChmod = $defaultChmod;
-        return $this;
+        return $this->setProperty('defaultChmod', $defaultChmod);
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isPreventCacheSlams(): bool
+    {
+        return $this->preventCacheSlams;
+    }
+
+    /**
+     * @param bool $preventCacheSlams
+     * @return static
+     * @throws PhpfastcacheLogicException
+     */
+    public function setPreventCacheSlams(bool $preventCacheSlams): static
+    {
+        return $this->setProperty('preventCacheSlams', $preventCacheSlams);
+    }
+
+    /**
+     * @return int
+     */
+    public function getCacheSlamsTimeout(): int
+    {
+        return $this->cacheSlamsTimeout;
+    }
+
+    /**
+     * @param int $cacheSlamsTimeout
+     * @return static
+     * @throws PhpfastcacheLogicException
+     */
+    public function setCacheSlamsTimeout(int $cacheSlamsTimeout): static
+    {
+        return $this->setProperty('cacheSlamsTimeout', $cacheSlamsTimeout);
     }
 }

@@ -44,14 +44,11 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $host
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setHost(string $host): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->host = $host;
-        return $this;
+        return $this->setProperty('host', $host);
     }
 
     /**
@@ -64,14 +61,11 @@ class Config extends ConfigurationOption
 
     /**
      * @param int $port
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setPort(int $port): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->port = $port;
-        return $this;
+        return $this->setProperty('port', $port);
     }
 
     /**
@@ -84,14 +78,11 @@ class Config extends ConfigurationOption
 
     /**
      * @param int $timeout
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setTimeout(int $timeout): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->timeout = $timeout;
-        return $this;
+        return $this->setProperty('timeout', $timeout);
     }
 
     /**
@@ -104,14 +95,11 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $username
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setUsername(string $username): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->username = $username;
-        return $this;
+        return $this->setProperty('username', $username);
     }
 
     /**
@@ -124,14 +112,11 @@ class Config extends ConfigurationOption
 
     /**
      * @param string $password
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setPassword(string $password): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->password = $password;
-        return $this;
+        return $this->setProperty('password', $password);
     }
 
     /**
@@ -144,14 +129,11 @@ class Config extends ConfigurationOption
 
     /**
      * @param bool $sslEnabled
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setSslEnabled(bool $sslEnabled): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->sslEnabled = $sslEnabled;
-        return $this;
+        return $this->setProperty('sslEnabled', $sslEnabled);
     }
 
     /**
@@ -164,14 +146,11 @@ class Config extends ConfigurationOption
 
     /**
      * @param bool $sslVerify
-     * @return self
      * @throws PhpfastcacheLogicException
      */
     public function setSslVerify(bool $sslVerify): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->sslVerify = $sslVerify;
-        return $this;
+        return $this->setProperty('sslVerify', $sslVerify);
     }
 
     /**
@@ -184,13 +163,10 @@ class Config extends ConfigurationOption
 
     /**
      * @param bool $useLegacyExecutionOptions
-     * @return $this
      * @throws PhpfastcacheLogicException
      */
     public function setUseLegacyExecutionOptions(bool $useLegacyExecutionOptions): static
     {
-        $this->enforceLockedProperty(__FUNCTION__);
-        $this->useLegacyExecutionOptions = $useLegacyExecutionOptions;
-        return $this;
+        return $this->setProperty('useLegacyExecutionOptions', $useLegacyExecutionOptions);
     }
 }

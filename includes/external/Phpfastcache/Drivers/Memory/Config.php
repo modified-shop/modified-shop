@@ -14,17 +14,10 @@
 
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Firestore;
+namespace Phpfastcache\Drivers\Memory;
 
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Core\Item\TaggableCacheItemTrait;
+use Phpfastcache\Config\ConfigurationOption;
 
-class Item implements ExtendedCacheItemInterface
+class Config extends ConfigurationOption
 {
-    use TaggableCacheItemTrait;
-
-    protected function getDriverClass(): string
-    {
-        return Driver::class;
-    }
 }

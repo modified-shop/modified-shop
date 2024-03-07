@@ -14,17 +14,8 @@
 
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Solr;
+namespace Phpfastcache\Exceptions;
 
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Core\Item\TaggableCacheItemTrait;
-
-class Item implements ExtendedCacheItemInterface
+class PhpfastcacheExtensionNotInstalledException extends PhpfastcacheDriverNotFoundException
 {
-    use TaggableCacheItemTrait;
-
-    protected function getDriverClass(): string
-    {
-        return Driver::class;
-    }
 }

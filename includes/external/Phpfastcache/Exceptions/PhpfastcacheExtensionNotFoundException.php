@@ -14,17 +14,8 @@
 
 declare(strict_types=1);
 
-namespace Phpfastcache\Drivers\Dynamodb;
+namespace Phpfastcache\Exceptions;
 
-use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use Phpfastcache\Core\Item\TaggableCacheItemTrait;
-
-class Item implements ExtendedCacheItemInterface
+class PhpfastcacheExtensionNotFoundException extends PhpfastcacheDriverNotFoundException
 {
-    use TaggableCacheItemTrait;
-
-    protected function getDriverClass(): string
-    {
-        return Driver::class;
-    }
 }
