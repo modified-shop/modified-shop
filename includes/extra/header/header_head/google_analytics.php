@@ -24,22 +24,22 @@
   var gTagCounter = 0;
   window.dataLayer = window.dataLayer || [];
   dataLayer.push({ ecommerce: null });
-  function gtag(){dataLayer.push(arguments);}
-  
+  function gtag(){dataLayer.push(arguments);}";
+
+    $analyticsCode = "
   gtag('js', new Date());
   gtag('config', '".MODULE_GOOGLE_ANALYTICS_TAG_ID."', {
     anonymize_ip: true,
     link_attribution: ".((MODULE_GOOGLE_ANALYTICS_LINKID == 'true') ? 'true' : 'false').",
     allow_google_signals: ".((MODULE_GOOGLE_ANALYTICS_DISPLAY == 'true') ? 'true' : 'false')."
-  });
-";
+  });";
+  
     if (MODULE_GOOGLE_ANALYTICS_ADS_ID != '') {
-      $beginCode .= "
+      $analyticsCode .= "
   gtag('config', '".MODULE_GOOGLE_ANALYTICS_ADS_ID."', {
     anonymize_ip: true,
     allow_enhanced_conversions: true
-  });
-";
+  });";
     }
 
     $endCode = "
@@ -157,7 +157,7 @@ function pushgTagEventAction() {";
     }
 
     // output    
-    $output = $beginCode . $consentDefaultCode;
+    $output = $beginCode . $consentDefaultCode . $analyticsCode;
     
     if ($consentAddCode) {
       $output .= $consentAddCode;
