@@ -87,6 +87,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
 
 		if (xtc_validate_password($password_current, $check_customer['customers_password'], $_SESSION['customer_id'])) {
+			if (SESSION_RECREATE == 'True') {
+				xtc_session_recreate();
+			}
 		  $_SESSION['customer_time'] = time();
 		  
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
