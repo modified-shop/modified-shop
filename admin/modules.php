@@ -39,7 +39,6 @@
     'sofort_sofortueberweisung_classic',
     'sofort_sofortueberweisung_gateway',
 
-    'paypalsofort',
     'paypaltrustly',
     'paypalprzelewy',
     'paypalmybank',
