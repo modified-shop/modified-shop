@@ -40,12 +40,12 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_SANDBOX' => 'Status Pay upon invoice Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
 
-  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_LIVE' => 'Status ApplePay Live:',
-  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_SANDBOX' => 'Status ApplePay Sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_LIVE' => 'Status Apple Pay Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_SANDBOX' => 'Status Apple Pay Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
 
-  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_LIVE' => 'Status GooglePay Live:',
-  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_SANDBOX' => 'Status GooglePay Sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_LIVE' => 'Status Google Pay Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_SANDBOX' => 'Status Google Pay Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
 
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Prefix for order ID:',

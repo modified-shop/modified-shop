@@ -40,12 +40,12 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_SANDBOX' => 'Status Kauf auf Rechnung Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
-  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_LIVE' => 'Status ApplePay Live:',
-  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_SANDBOX' => 'Status ApplePay Sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_LIVE' => 'Status Apple Pay Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_SANDBOX' => 'Status Apple Pay Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
-  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_LIVE' => 'Status GooglePay Live:',
-  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_SANDBOX' => 'Status GooglePay Sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_LIVE' => 'Status Google Pay Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_SANDBOX' => 'Status Google Pay Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Bestellnummer Pr&auml;fix:',
