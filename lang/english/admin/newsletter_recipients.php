@@ -36,7 +36,11 @@
   define('BUTTON_REMIND', 'E-Mail opt-in');
 
   define('TEXT_EMAIL_SUBJECT','Your newsletter subscription');
+  define('TEXT_EMAIL_ACTIVE','This e-mail address has successfully been registered for the newsletter!');
+  define('TEXT_EMAIL_ACTIVE_ERROR','An error occured, this e-mail address has not been registered for the newsletter!');
   define('TEXT_EMAIL_DEL','E-Mail address was deleted successfully from newsletter database.');
   define('TEXT_EMAIL_DEL_ERROR','An Error occured, E-Mail address has not been removed from database!');
+  define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','This e-mail address is registered but not yet activated!');
+  define('TEXT_EMAIL_EXIST_NEWSLETTER','This e-mail address is already registered for the newsletter!');
+  define('TEXT_EMAIL_NOT_EXIST','This e-mail address is not registered for newsletters!');
   define('TEXT_EMAIL_INPUT', 'Opt-in E-Mail sent.');
-?>

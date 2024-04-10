@@ -36,7 +36,11 @@
   define('BUTTON_REMIND', 'E-Mail opt-in');
 
   define('TEXT_EMAIL_SUBJECT','Ihre Newsletter-Anmeldung');
+  define('TEXT_EMAIL_ACTIVE','Die E-Mail-Adresse wurde erfolgreich f&uuml;r den Newsletterempfang freigeschaltet!');
+  define('TEXT_EMAIL_ACTIVE_ERROR','Es ist ein Fehler aufgetreten, die E-Mail-Adresse wurde nicht freigeschaltet!');
   define('TEXT_EMAIL_DEL','Die E-Mail-Adresse wurde aus der Newsletterdatenbank gel&ouml;scht.');
   define('TEXT_EMAIL_DEL_ERROR','Es ist ein Fehler aufgetreten, die E-Mail-Adresse wurde nicht gel&ouml;scht!');
+  define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','Diese E-Mail-Adresse existiert bereits in unserer Datenbank, ist aber noch nicht f&uuml;r den Empfang des Newsletters freigeschaltet!');
+  define('TEXT_EMAIL_EXIST_NEWSLETTER','Diese E-Mail-Adresse existiert bereits in unserer Datenbank und ist f&uuml;r den Newsletterempfang bereits freigeschaltet!');
+  define('TEXT_EMAIL_NOT_EXIST','Diese E-Mail-Adresse existiert nicht in unserer Datenbank!');
   define('TEXT_EMAIL_INPUT', 'Die Opt-in E-Mail wurde erneut versendet.');
-?>
