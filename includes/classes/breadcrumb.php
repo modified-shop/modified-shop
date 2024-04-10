@@ -35,6 +35,11 @@
     }
 
 
+    function remove_first() {
+      array_shift($this->_trail);
+    }
+
+
     function remove($title) {
       for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
         if ($this->_trail[$i]['title'] == $title) {
@@ -75,4 +80,3 @@
     }
     
   }
-?>
