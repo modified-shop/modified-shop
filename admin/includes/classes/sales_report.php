@@ -49,6 +49,8 @@
 
   class sales_report {
 
+    var $mode;
+    var $status;
     var $statusFilter;
     var $paymentFilter;
     var $cgroupFilter;
