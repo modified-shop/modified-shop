@@ -48,8 +48,9 @@
     $option_order_by = $_GET['option_order_by'];
     $_POST['current_product_id'] = (int)$_GET['current_product_id'];
   } else {
-    $option_order_by = 'products_options_sortorder,products_options_id';
+    $option_order_by = 'products_options_sortorder';
   }
+  
   $options = array();
   $options[] = array ('id' => 'products_options_sortorder', 'text' => TEXT_SORTORDER);
   $options[] = array ('id' => 'products_options_id', 'text' => TEXT_OPTION_ID);
@@ -71,26 +72,27 @@
   function checkAttribute($current_value_id, $current_pid, $current_product_option_id) {
     global $attr_array, $attr_dl_array;
 
-    $result = xtc_db_query("SELECT *
-                              FROM ".TABLE_PRODUCTS_ATTRIBUTES."
-                             WHERE options_values_id = '" . (int)$current_value_id . "'
-                               AND products_id = '" . (int)$current_pid . "'
-                               AND options_id = '" . (int)$current_product_option_id . "'");
+    $attributes_query = xtc_db_query("SELECT *
+                                        FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                       WHERE options_values_id = '" . (int)$current_value_id . "'
+                                         AND products_id = '" . (int)$current_pid . "'
+                                         AND options_id = '" . (int)$current_product_option_id . "'");
 
-    $isFound = xtc_db_num_rows($result);
+    $isFound = xtc_db_num_rows($attributes_query);
 
     $attr_array = array();
     $attr_dl_array = array();
 
-    if (xtc_db_num_rows($result) > 0) {
-      while($line = xtc_db_fetch_array($result)) {
-        $attr_array= $line;
-        $dl_sql = xtc_db_query("SELECT products_attributes_maxdays,
-                                       products_attributes_filename,
-                                       products_attributes_maxcount
-                                 FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD."
-                                 WHERE products_attributes_id = '" . $line['products_attributes_id'] . "'");
-        $attr_dl_array = xtc_db_fetch_array($dl_sql);
+    if ($isFound > 0) {
+      while($attributes = xtc_db_fetch_array($attributes_query)) {
+        $attr_array = $attributes;
+        
+        $downloads_query = xtc_db_query("SELECT products_attributes_maxdays,
+                                                products_attributes_filename,
+                                                products_attributes_maxcount
+                                           FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD."
+                                          WHERE products_attributes_id = '" . $attributes['products_attributes_id'] . "'");
+        $attr_dl_array = xtc_db_fetch_array($downloads_query);
       }
       return true;
     } else {      
@@ -148,7 +150,6 @@ require (DIR_WS_INCLUDES.'head.php');
         <table class="tableCenter collapse">
           <tr>
             <td>
-     
               <div class="pageHeading pdg2"><?php echo $pageTitle; ?></div>
               <div class="main pdg2">
                 <?php echo SORT_ORDER;
@@ -198,22 +199,22 @@ require (DIR_WS_INCLUDES.'head.php');
                 }
 
                 // Lets get all of the possible options
-                $query = "SELECT *
-                            FROM ".TABLE_PRODUCTS_OPTIONS."
-                           WHERE language_id = '" . (int)$_SESSION['languages_id'] . "'
-                        ORDER BY ". $option_order_by;
-
-                $result = xtc_db_query($query);
-                $matches = xtc_db_num_rows($result);
+                $options_query = xtc_db_query("SELECT *
+                                                 FROM ".TABLE_PRODUCTS_OPTIONS."
+                                                WHERE language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                             ORDER BY ". $option_order_by.", products_options_id ASC");
+                $options_num_rows = xtc_db_num_rows($options_query);
   
                 $products_tax_rate = xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id']));
                 $countOptions = $countValues = 0;
 
-                if ($matches) {
-                  while ($line = xtc_db_fetch_array($result)) {
-                    $countOptions++;
-                    $current_product_option_name = $line['products_options_name'];
-                    $current_product_option_id = $line['products_options_id'];
+                if ($options_num_rows > 0) {
+                  while ($options = xtc_db_fetch_array($options_query)) {
+                    $countOptions ++;
+                    
+                    $current_product_option_name = $options['products_options_name'];
+                    $current_product_option_id = $options['products_options_id'];
+                    
                     // Print the Option Name
                     $output = '<div style="margin-bottom:20px;clear:both;">';
                     $output .= '<table id="attrtable-'.$current_product_option_id.'" class="attributes collapse">'. PHP_EOL;
@@ -236,34 +237,31 @@ require (DIR_WS_INCLUDES.'head.php');
                     $output .= '<tbody>'. PHP_EOL;
 
                     // Find all of the Current Option's Available Values
-                    //$values_order_by = 'products_options_values_id';
-                    $values_order_by = 'products_options_values_name';
-                    $sortv = 'ASC';
-                    $query2 = xtc_db_query(
-                          "SELECT a.products_options_id, 
-                                  a.products_options_values_id, 
-                                  b.products_options_values_name
-                             FROM ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." a 
-                        LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." b 
-                                  ON a.products_options_values_id = b.products_options_values_id
-                            WHERE a.products_options_id = '" . (int)$current_product_option_id . "' 
-                              AND b.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                         ORDER BY " . $values_order_by . " " . $sortv
-                      );
+                    $options_values_query = xtc_db_query("SELECT pov2po.products_options_id, 
+                                                                 pov2po.products_options_values_id, 
+                                                                 pov.products_options_values_name
+                                                            FROM ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." pov2po 
+                                                       LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
+                                                                 ON pov2po.products_options_values_id = pov.products_options_values_id
+                                                           WHERE pov2po.products_options_id = '" . (int)$current_product_option_id . "' 
+                                                             AND pov.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                                        ORDER BY pov.products_options_values_sortorder, pov.products_options_values_id ASC");
         
-                    $matches2 = xtc_db_num_rows($query2);
+                    $options_values_num_rows = xtc_db_num_rows($options_values_query);
       
                     $isChecked = false;
 
-
-                    if ($matches2) {
+                    if ($options_values_num_rows > 0) {
                       $i = 0;
-                      while ($line = xtc_db_fetch_array($query2)) {
-                        $countValues++;
-                        $i++;
-                        $rowClass = rowClass($i) . ' oid-'.$current_product_option_id;
-                        $current_value_id = $line['products_options_values_id'];
+                      while ($options_values = xtc_db_fetch_array($options_values_query)) {
+                        $countValues ++;
+                        $i ++;
+                        
+                        $current_value_id = $options_values['products_options_values_id'];
+                        $current_value_name = $options_values['products_options_values_name'];
+
                         $isSelected = checkAttribute($current_value_id, $_POST['current_product_id'], $current_product_option_id);
+                        $rowClass = rowClass($i) . ' oid-'.$current_product_option_id;
                         $checked = ($isSelected) ? true : false;
                         $disable = ($checked === false) ? ' disabled="true" ' : ' ';
           
@@ -271,12 +269,10 @@ require (DIR_WS_INCLUDES.'head.php');
                           $isChecked = true;
                         }
 
-                        $current_value_name = $line['products_options_values_name'];
-          
                         $attr_array['options_values_price'] = (isset($attr_array['options_values_price']) ? $attr_array['options_values_price'] : 0);
           
                         // brutto Admin
-                        if (PRICE_IS_BRUTTO=='true') {
+                        if (PRICE_IS_BRUTTO == 'true') {
                           $attribute_value_price_calculate = xtc_round($attr_array['options_values_price'] * ((100 + $products_tax_rate) / 100),PRICE_PRECISION);
                           // brutto Admin Price netto
                           $attribute_value_price_calculate_netto = '<span style="font-size:11px">&nbsp;'.TEXT_NETTO .'<strong>'. xtc_round($attr_array['options_values_price'],PRICE_PRECISION).'</strong></span>  ';
@@ -318,19 +314,17 @@ require (DIR_WS_INCLUDES.'head.php');
     
                         $output .= '</tr>'. PHP_EOL;
           
-                        // Download function start
+                        // Download function 
                         if (strtoupper($current_product_option_name) == 'DOWNLOADS') {
                           $output .= '<tr class="downloads ' . $rowClass . '">'. PHP_EOL;
-                         // $output .= '<td colspan="2">File: <input type="file" name="' . $current_value_id . "_download_file"></td>';
                           $output .= '<td class="main">&nbsp;</td>';
                           $output .= '<td class="main" colspan="'.(int)($colspan - 1) .'" style="white-space: nowrap; background: #ccc; padding: 4px;">'.xtc_draw_pull_down_menu($current_value_id . '_download_file', xtc_getDownloads(), (isset($attr_dl_array['products_attributes_filename'])?$attr_dl_array['products_attributes_filename']:''), $noStylingClass . $disable). PHP_EOL;
                           $output .= '&nbsp;&nbsp;&nbsp;'.DL_COUNT.' <input'.$disable.'type="text" name="' . $current_value_id . '_download_count" value="' . (isset($attr_dl_array['products_attributes_maxcount'])?$attr_dl_array['products_attributes_maxcount']:'') . '" size="6">'. PHP_EOL;
                           $output .= '&nbsp;&nbsp;&nbsp;'.DL_EXPIRE.' <input'.$disable.'type="text" name="' . $current_value_id . '_download_expire" value="' . (isset($attr_dl_array['products_attributes_maxdays'])?$attr_dl_array['products_attributes_maxdays']:'') . '" size="6"></td>'. PHP_EOL;
                           $output .= '</tr>'. PHP_EOL;
                         }
-                        // Download function end
 
-                        if ($i == $matches2 ) $i = 0;
+                        if ($i == $options_values_num_rows) $i = 0;
                       }
                     } else {
                       $output .= '<tr>'. PHP_EOL;
@@ -360,7 +354,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 ?>
               </div>
 
-            </form>
+              </form>
             </td>
           </tr>
         </table>
