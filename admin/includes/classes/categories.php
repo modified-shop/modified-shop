@@ -31,6 +31,14 @@ defined('ADD_PRODUCTS_FIELDS') or require_once (DIR_WS_INCLUDES.'add_db_fields.p
 
 // holds functions for manipulating products & categories
 class categories {
+
+  var $catModules;
+  var $images_type_array;
+  var $page_parameter;
+  var $page_parameter_plain;
+  var $dup_products_id;
+  
+  
   //new module support
   function __construct() {
     require_once (DIR_WS_CLASSES.'categoriesModules.class.php');
@@ -1593,4 +1601,3 @@ class categories {
   }
   
 }
-?>
