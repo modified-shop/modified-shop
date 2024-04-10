@@ -22,12 +22,36 @@
 
 class campaigns {
 
+  var $startD;
+  var $startM;
+  var $startY;
+  var $startDate;
+  var $endD;
+  var $endM;
+  var $endY;
+  var $endDate;
+  var $status;
+  var $campaign;
+  var $campaign_id;
+  var $campaigns;
+  var $SelectArray;
+  var $type;
+  var $result;
+  var $total;
+  var $counter;
+  var $counterCMP;
+  var $camp;
+
 	function __construct(& $get_array) {
 		global $currencies;
 
     $required = array('startD', 'startM', 'startY', 'endD', 'endM', 'endY', 'status', 'campaign', 'report');
     if (count(array_intersect_key(array_flip($required), $get_array)) === count($required)) {
         
+			$this->result = array ();
+			$this->total = array ();
+			$this->$camp = array ();
+
 			$this->startD = $get_array['startD'];
 			$this->startM = $get_array['startM'];
 			$this->startY = $get_array['startY'];
@@ -48,14 +72,8 @@ class campaigns {
 			}
 			$this->type = $get_array['report'];
 
-			$this->result = array ();
-			$this->total = array ();
-
-			// query data
-
 			$this->counter = 0;
 			$this->counterCMP = 0;
-			// tŠglich
 
 			$this->getTotalLeads();
 			$this->getTotalSells();
@@ -391,4 +409,3 @@ class campaigns {
 	}
 
 }
-?>
