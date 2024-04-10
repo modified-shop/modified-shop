@@ -49,16 +49,21 @@
 
   class sales_report {
 
-    var $mode, 
-        $globalStartDate, 
-        $startDate, 
-        $endDate, 
-        $actDate, 
-        $showDate, 
-        $showDateEnd, 
-        $sortString, 
-        $status, 
-        $outlet;
+    var $statusFilter;
+    var $paymentFilter;
+    var $cgroupFilter;
+    var $countryFilter;
+    var $globalStartDate;
+    var $queryOrderCnt;
+    var $queryShipping;
+    var $queryItemCnt;
+    var $queryAdditional;
+    var $startDate;
+    var $endDate;
+    var $actDate;
+    var $showDate;
+    var $showDateEnd;
+    var $sortString;
 
     function __construct($mode, $startDate = 0, $endDate = 0, $sort = 0, $statusFilter = 0, $filter = 0, $payment = 0, $cgroup = '', $country = '') {
       // startDate and endDate have to be a unix timestamp. Use mktime !
