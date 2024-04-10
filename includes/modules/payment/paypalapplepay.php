@@ -87,7 +87,7 @@ class paypalapplepay extends PayPalPaymentV2 {
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
     
-    $paypalscript .= '
+    $paypalscript = '
     if ($("#apms_button3").length) {    
       // eslint-disable-next-line no-undef
       if (typeof ApplePaySession != "undefined" && ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()) {
