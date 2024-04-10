@@ -17,6 +17,18 @@
 
   class zettle_categories {
 
+    var $code;
+    var $name;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $_check;
+
+    var $language_id;
+    var $customers_status;
+    var $PayPalZettle;
+
     function __construct() {      
       $this->code = 'zettle_categories';
       $this->name = 'MODULE_CATEGORIES_'.strtoupper($this->code);
