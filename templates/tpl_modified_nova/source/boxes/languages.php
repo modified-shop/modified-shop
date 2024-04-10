@@ -38,7 +38,7 @@
         if (isset($_GET) && count($_GET) > 0) {
           reset($_GET);
           foreach ($_GET as $key => $value) {
-            if (is_string($value) && $key != 'language' && $key != xtc_session_name() && $key != 'x' && $key != 'y' ) {
+            if ($key != 'language' && $key != xtc_session_name() && $key != 'x' && $key != 'y' && trim($value) != '') {
               $hidden_get_variables .= xtc_draw_hidden_field($key, $value);
             }
           }
