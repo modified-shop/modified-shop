@@ -384,7 +384,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <div class="smallText pdg2 flt-r"><?php echo $values_split->display_links($values_query_numrows, $page_max_display_values_results, MAX_DISPLAY_PAGE_LINKS, $spage, xtc_get_all_get_params(array('page', 'vID', 'action', 'saction', 'list', 'spage')) . 'list=detail', 'spage'); ?></div>
             <div class="clear"></div>
             <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('spage', 'saction')),$cfg_max_display_values_key,$page_max_display_values_results); ?>
-            <div class="smallText pdg2 flt-r"><?php if (!xtc_not_null($saction)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'spage', 'vID', 'list'))) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'saction', 'vID', 'list')) . 'list=detail&vID=' . $vInfo->products_options_values_id . '&saction=new_value') . '">' . BUTTON_INSERT . '</a>'; ?></div>
+            <div class="smallText pdg2 flt-r"><?php if (!xtc_not_null($saction)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'spage', 'vID', 'list'))) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'saction', 'vID', 'list')) . 'list=detail' . ((isset($vInfo)) ? '&vID=' . $vInfo->products_options_values_id : '') . '&saction=new_value') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             } else {
             ?>
@@ -511,7 +511,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     break;
 
                   default:
-                    if (is_object($vInfo)) {
+                    if (isset($vInfo) && is_object($vInfo)) {
                       $heading[] = array('text' => '<b>' . xtc_get_attributes_values_detail($vInfo->products_options_values_id, $_SESSION['languages_id'], 'products_options_values_name') . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction', 'list')) . 'list=detail&vID=' . $vInfo->products_options_values_id . '&saction=edit_value') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction', 'list')) . 'list=detail&vID=' . $vInfo->products_options_values_id . '&saction=delete_value') . '">' . BUTTON_DELETE . '</a>');
