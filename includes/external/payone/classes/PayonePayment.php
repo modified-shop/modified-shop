@@ -57,8 +57,8 @@ class PayonePayment {
 		$this->payone = new PayoneModified();
 		if ($this->check() > 0) {
 			$this->config = $this->payone->getConfig();
-      $this->tmpStatus = $this->config['orders_status']['tmp'];
-  		$this->order_status = $this->config['orders_status']['paid'];
+      $this->tmpStatus = ((isset($this->config['orders_status'])) ? $this->config['orders_status']['tmp'] : -1);
+  		$this->order_status = ((isset($this->config['orders_status'])) ? $this->config['orders_status']['paid'] : -1);
 
       if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
         $this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
