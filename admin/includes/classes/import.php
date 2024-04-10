@@ -32,12 +32,31 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
  **
  ******************************************************************************/
 class xtcImport {
-
-  /*****************************************************************************
-  **
-  *F xtcImport . . . . . . . . . . . . . . . . . . . . . . . . . . .  xtcImport
-  **
-  *****************************************************************************/
+    
+    var $seperator;
+    var $TextSign;
+    var $filename;
+    var $ImportDir;
+    var $catDepth;
+    var $languages;
+    var $counter;
+    var $mfn;
+    var $errorlog;
+    var $time_start;
+    var $debug;
+    var $CatTree;
+    var $CatCache;
+    var $CatDefault;
+    var $FileSheme;
+    var $Groups;
+    var $count_groups;
+    var $sizeof_languages;
+    
+    /*****************************************************************************
+    **
+    *F xtcImport . . . . . . . . . . . . . . . . . . . . . . . . . . .  xtcImport
+    **
+    *****************************************************************************/
 
     function __construct($filename) {
         $this->seperator = CSV_SEPERATOR;
@@ -71,7 +90,7 @@ class xtcImport {
         $this->FileSheme = array ();
         $this->Groups = xtc_get_customers_statuses();
         $this->count_groups = count($this->Groups);
-        $this->sizeof_languages = sizeof($this->languages);
+        $this->sizeof_languages = count($this->languages);
     }
 
     /*****************************************************************************
@@ -728,6 +747,7 @@ class xtcImport {
     ** @return String elapsed time
     **
     ****************************************************************************/
+    
     function calcElapsedTime($time) {
 
         // calculate elapsed time (in seconds!)
@@ -767,6 +787,7 @@ class xtcImport {
     ** @return array
     **
     ****************************************************************************/
+    
     function get_mfn() {
         $mfn_query = xtc_db_query("SELECT manufacturers_id,
                                           manufacturers_name
@@ -787,6 +808,20 @@ class xtcImport {
 
 class xtcExport {
 
+    var $catDepth;
+    var $languages;
+    var $filename;
+    var $CAT;
+    var $PARENT;
+    var $counter;
+    var $time_start;
+    var $man;
+    var $TextSign;
+    var $seperator;
+    var $Groups;
+    var $count_groups;
+    var $sizeof_languages;
+    
     /*****************************************************************************
     **
     *F xtcExport . . . . . . . . . . . . . . . . . . . . . . . . . . .  xtcExport
