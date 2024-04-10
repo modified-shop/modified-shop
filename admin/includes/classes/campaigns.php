@@ -50,7 +50,7 @@ class campaigns {
         
 			$this->result = array ();
 			$this->total = array ();
-			$this->$camp = array ();
+			$this->camp = array ();
 
 			$this->startD = $get_array['startD'];
 			$this->startM = $get_array['startM'];
