@@ -20,8 +20,11 @@
   
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
   
+  
+  #[AllowDynamicProperties] 
   class image_manipulation {
     var $effects_disabled = false; 
+    
     function __construct($resource_file, $max_width, $max_height, $destination_file="", $compression=IMAGE_QUALITY, $transform="") {
       $this->a = $this->correctImageOrientation($resource_file);
       $this->c = $transform;
