@@ -19,7 +19,9 @@
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 class categoriesModules {
+
     var $modules;
+    var $function_call;
     
     function __construct()
     {
