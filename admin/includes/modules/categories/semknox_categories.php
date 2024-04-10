@@ -15,6 +15,17 @@ require_once(DIR_FS_EXTERNAL.'semknox/Semknox.php');
 
 class semknox_categories {
 
+  var $code;
+  var $name;
+  var $title;
+  var $description;
+  var $enabled;
+  var $sort_order;
+  var $_check;
+
+  var $languages;
+  var $semknox;
+
   function __construct() {
     $this->code = 'semknox_categories';
     $this->name = 'MODULE_CATEGORIES_'.strtoupper($this->code);

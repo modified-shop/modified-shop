@@ -10,12 +10,20 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-class catCopyProductName {  //Important same name as filename
+class catCopyProductName {
   
+    var $code;
+    var $name;
+    var $title;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $_check;
+
     //--- BEGIN DEFAULT CLASS METHODS ---//
     function __construct()
     {
-        $this->code = 'catCopyProductName'; //Important same name as class name
+        $this->code = 'catCopyProductName';
         $this->name = 'MODULE_CATEGORIES_'.strtoupper($this->code);
         $this->title = constant($this->name.'_TITLE');
         $this->description = constant($this->name.'_DESCRIPTION');
