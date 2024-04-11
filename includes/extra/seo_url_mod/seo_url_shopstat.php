@@ -72,6 +72,7 @@ class seo_url_shopstat extends modified_seo_url {
     for ($i=0, $n=count($params_array); $i<$n; $i+=2) {
       $this->params_array[$params_array[$i]] = ((isset($params_array[$i+1])) ? $params_array[$i+1] : '');
     }
+    $this->params_array = array_filter($this->params_array);
 
     if (isset($this->params_array['language']) 
         && strlen($this->params_array['language']) > 0
