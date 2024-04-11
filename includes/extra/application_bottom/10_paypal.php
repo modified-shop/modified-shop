@@ -29,6 +29,7 @@
             )
         && (isset($_SESSION['customer_id']) 
             || strpos(basename($PHP_SELF), 'account') !== false
+            || strpos(basename($PHP_SELF), 'checkout') !== false
             || basename($PHP_SELF) == FILENAME_SHOPPING_CART
             || basename($PHP_SELF) == FILENAME_LOGIN
             )
@@ -51,10 +52,13 @@
       $paypalscript .= '
         const applepay = paypal.Applepay().config().then((data) => {
           if (data.isEligible === true) {
-            if (typeof ApplePaySession != "undefined" && ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()) {
-            paypal_instruments_arr.push("applepay");
-            console.log(paypal_instruments_arr);
-            $.post("'.DIR_WS_BASE.'ajax.php?ext=set_paypal_instruments", {paypal_instruments: paypal_instruments_arr});
+            if (typeof ApplePaySession != "undefined" 
+                && ApplePaySession?.supportsVersion(4) 
+                && ApplePaySession?.canMakePayments()
+                )
+            {
+              paypal_instruments_arr.push("applepay");
+              $.post("'.DIR_WS_BASE.'ajax.php?ext=set_paypal_instruments", {paypal_instruments: paypal_instruments_arr});
             }
           }
         });
