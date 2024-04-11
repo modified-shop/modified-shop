@@ -21,7 +21,11 @@
    
   if (!class_exists('language')) {
     class language {
-      var $languages, $catalog_languages, $browser_languages, $language;
+    
+      var $languages;
+      var $catalog_languages;
+      var $browser_languages;
+      var $language;
 
       function __construct($lng = '') {
         $this->languages = array(

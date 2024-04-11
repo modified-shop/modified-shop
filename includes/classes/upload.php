@@ -18,7 +18,14 @@
   
   
   class upload {
-    var $file, $filename, $destination, $permissions, $extensions, $mime_types, $tmp_filename;
+  
+    var $file;
+    var $filename;
+    var $destination;
+    var $permissions;
+    var $extensions;
+    var $mime_types;
+    var $tmp_filename;
 
     function __construct($file = '', $destination = '', $permissions = '644', $extensions = '', $mime_types = '') {
 
@@ -220,4 +227,3 @@
     }
     
   }
-?>
