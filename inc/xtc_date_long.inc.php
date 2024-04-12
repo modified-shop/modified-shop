@@ -28,7 +28,6 @@
 
     if ($raw_date == '0000-00-00 00:00:00' 
         || empty($raw_date) 
-        || !is_int($raw_date) 
         )
     {
       return false;
