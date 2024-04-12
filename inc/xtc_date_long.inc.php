@@ -16,8 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// Output a raw date string in the selected locale date format
-// $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
+  // Output a raw date string in the selected locale date format
+  // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
   function xtc_date_long($raw_date) {
     if(defined('USE_SHORT_DATE_FORMAT') && USE_SHORT_DATE_FORMAT == 'true') {
       if(!function_exists('xtc_date_short')) {
@@ -25,7 +25,14 @@
       }
       return xtc_date_short($raw_date);
     }
-    if ( ($raw_date == '0000-00-00 00:00:00') || ($raw_date == '') ) return false;
+
+    if ($raw_date == '0000-00-00 00:00:00' 
+        || empty($raw_date) 
+        || !is_int($raw_date) 
+        )
+    {
+      return false;
+    }
     
     if (function_exists('datefmt_create')) {
       $dateTime = date_create($raw_date, timezone_open(DEFAULT_TIMEZONE));
