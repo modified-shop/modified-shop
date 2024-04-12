@@ -20,7 +20,7 @@ define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-15');
 function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if (!empty($string)) {
-    $encoding = get_default_encoding($encoding)
+    $encoding = get_default_encoding($encoding);
     return htmlentities($string, $flags , $encoding);
   } else {
     return $string;
@@ -33,7 +33,7 @@ function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if (!empty($string)) {
-    $encoding = get_default_encoding($encoding)
+    $encoding = get_default_encoding($encoding);
     return htmlspecialchars($string, $flags , $encoding);
   } else {
     return $string;
@@ -63,7 +63,7 @@ function encode_utf8($string, $encoding = '', $force_utf8 = false)
 function decode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if (!empty($string)) {
-    $encoding = get_default_encoding($encoding)
+    $encoding = get_default_encoding($encoding);
     return html_entity_decode($string, $flags , $encoding);
   } else {
     return $string;
@@ -76,7 +76,7 @@ function decode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 function decode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if (!empty($string)) {
-    $encoding = get_default_encoding($encoding)
+    $encoding = get_default_encoding($encoding);
     return htmlspecialchars_decode($string, $flags , $encoding);
   } else {
     return $string;
@@ -89,7 +89,7 @@ function decode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 function decode_utf8($string, $encoding = '', $force_utf8 = false) 
 {
   if (strtolower($_SESSION['language_charset']) != 'utf-8' || $force_utf8 === true) {
-    $encoding = get_default_encoding($encoding)
+    $encoding = get_default_encoding($encoding);
     
     $cur_encoding = detect_encoding($string, 'UTF-8');
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
