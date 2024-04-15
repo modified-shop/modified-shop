@@ -21,6 +21,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+//Run Mode
+define('RUN_MODE_EXPORT',true);
+
 // start the timer for the page parse time log
 defined('PAGE_PARSE_START_TIME') OR define('PAGE_PARSE_START_TIME', microtime(true));
 

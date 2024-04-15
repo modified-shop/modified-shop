@@ -15,6 +15,8 @@
       && defined('MODULE_MULTILANG_STATUS')
       && MODULE_MULTILANG_STATUS == 'true'
       && !defined('RUN_MODE_ADMIN')
+      && !defined('RUN_MODE_CALLBACK')
+      && !defined('RUN_MODE_EXPORT')
       )
   {
     $seo_url_sites = array(
