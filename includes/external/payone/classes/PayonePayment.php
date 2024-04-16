@@ -31,6 +31,7 @@ class PayonePayment {
 	var $form_action_url;
 	var $tmpOrders = true;
 	var $tmpStatus;
+	var $order_status;
   var $_check;
 
 	var $payone;
