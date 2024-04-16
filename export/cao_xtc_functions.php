@@ -2339,6 +2339,28 @@ function OrderUpdate ()
     $check_status_query = xtc_db_query("select * from " . TABLE_ORDERS . " where orders_id = '" . xtc_db_input($oID) . "'");
     if ($check_status = xtc_db_fetch_array($check_status_query))
     {
+      if (isset($_POST['trackingcode']) && $_POST['trackingcode'] != '')
+      {
+        $trackingcode = xtc_db_prepare_input($_POST['trackingcode']);
+
+        $tracking_query = xtc_db_query("SELECT * 
+                                          FROM ".TABLE_ORDERS_TRACKING."
+                                         WHERE orders_id = '" . xtc_db_input($oID) . "'
+                                           AND parcel_id = '" . xtc_db_input($trackingcode) . "'");
+        if (xtc_db_num_rows($tracking_query) < 1)
+        {
+          $sql_data_array = array(
+            'orders_id' => $oID,
+            'carrier_id' => 1,
+            'parcel_id' => $trackingcode,
+            'date_added' => 'now()'
+          );
+          xtc_db_perform(TABLE_ORDERS_TRACKING, $sql_data_array);
+          
+          $tracking_id = xtc_db_insert_id();
+        }        
+      }
+      
       if ($check_status['orders_status'] != $status || $comments != '')
       {
         xtc_db_query("update " . TABLE_ORDERS . " set orders_status = '" . xtc_db_input($status) . "', last_modified = now() where orders_id = '" . xtc_db_input($oID) . "'");
@@ -2377,14 +2399,16 @@ function OrderUpdate ()
           require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
           require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
           require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
+          require_once(DIR_FS_INC . 'get_tracking_link.inc.php');
 
-          $smarty = new Smarty;
+          $smarty = new Smarty();
 
-          $smarty->assign('language', $check_status['language']);
           $smarty->caching = 0;
           $smarty->template_dir = DIR_FS_CATALOG.'templates';
           $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
           $smarty->config_dir = DIR_FS_CATALOG.'lang';
+          
+          $smarty->assign('language', $check_status['language']);
           $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
           $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
           $smarty->assign('NAME',$check_status['customers_name']);
@@ -2394,8 +2418,14 @@ function OrderUpdate ()
           $smarty->assign('NOTIFY_COMMENTS',$comments);
           $smarty->assign('ORDER_STATUS',$o_status);
 
-          $html_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.html');
-          $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.txt');
+          if (isset($tracking_id)) {
+            $tracking_array = get_tracking_link($oID, 'de', array($tracking_id));
+            $smarty->assign('PARCEL_COUNT', count($tracking_array));
+            $smarty->assign('PARCEL_ARRAY', $tracking_array);
+          }
+          
+          $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.html');
+          $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.txt');
 
           $order_subject_search = array('{$nr}', '{$date}', '{$lastname}', '{$firstname}');
           $order_subject_replace = array($oID, xtc_date_long($check_status['date_purchased']), $check_status['customers_lastname'], $check_status['customers_lfirstname']);
