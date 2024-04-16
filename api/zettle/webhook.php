@@ -40,7 +40,7 @@
                                                 ON p.products_id = pz2p.products_id
                                           WHERE pz2p.stock = 1
                                             AND pz2p.products_uuid = '".xtc_db_input($inventory['productUuid'])."'
-                                            AND p.products_quantity != '".(int)$data['balanceAfter'][$k]['balance']."'");
+                                            AND p.products_quantity != '".(float)$data['balanceAfter'][$k]['balance']."'");
             if (xtc_db_num_rows($check_query) > 0) {
               $check = xtc_db_fetch_array($check_query);
           

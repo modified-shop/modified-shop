@@ -351,4 +351,28 @@
       }
     }
     
+    function update_product($products_data, $products_id) {
+      global $messageStack;
+      
+      $check_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
+                                    WHERE products_id = '".(int)$products_id."' AND `stock`=1 AND `products_uuid` != ''");
+      if (xtc_db_num_rows($check_query) > 0) {
+        $check = xtc_db_fetch_array($check_query);
+        $products_uuid = $check['products_uuid'];
+        $products = array('products_quantity'=>$products_data['products_quantity']);
+        $this->PayPalZettle->updateInventory($products_uuid, $products);
+      }
+      
+      if (isset($this->PayPalZettle->error) 
+          && isset($this->PayPalZettle->error[0])
+          && isset($this->PayPalZettle->error[0]['errors'])
+          && count($this->PayPalZettle->error[0]['errors']) > 0
+          )
+      {
+        foreach ($this->PayPalZettle->error[0]['errors'] as $error) {
+          $messageStack->add_session($error, 'error');
+        }
+      }
+    }
   }
