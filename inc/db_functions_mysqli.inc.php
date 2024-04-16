@@ -261,11 +261,15 @@
   function xtc_db_input($string, $link='db_link') {
     global ${$link};
 
-    if (function_exists('mysqli_real_escape_string')) {
-      return mysqli_real_escape_string(${$link}, $string);
+    if (!empty($string)) {
+      if (function_exists('mysqli_real_escape_string')) {
+        return mysqli_real_escape_string(${$link}, $string);
+      }
+  
+      return addslashes($string);
+    } else {
+      return $string;
     }
-
-    return addslashes($string);
   }
 
 
