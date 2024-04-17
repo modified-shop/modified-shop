@@ -466,7 +466,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   case 'new_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_VALUE . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('values', FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction', 'list')) . 'list=detail&vID=' . $_GET['vID'] . '&saction=insert_values', 'post', 'enctype="multipart/form-data"'));
+                    $contents = array('form' => xtc_draw_form('values', FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction', 'list')) . 'list=detail' . ((isset($_GET['vID'])) ? '&vID=' . (int)$_GET['vID'] : '') . '&saction=insert_values', 'post', 'enctype="multipart/form-data"'));
                     $contents[] = array('text' => TEXT_INFO_NEW_VALUE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
