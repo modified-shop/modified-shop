@@ -3540,19 +3540,26 @@ a.view_box.active {
   display:none;
 }
 .footer_item ul.content_box_list li {
-  padding: 6px 0px 6px 0px;
+  padding: 6px 0px;
   font-size:13px;
   line-height:17px;
 }
+@media only screen and (min-width: 985px) {
+  .footer_item ul.content_box_list li { padding: 0px 0px; }
+}
 
 .footer_item ul.content_box_list li a {
-  padding: 0 0 0 0px;
+  padding: 0px 0px;
   display:block;
   color: var(--footer_link_color, #333);
   font-size:13px;
   line-height:17px;
   position:relative;
 }
+@media only screen and (min-width: 985px) {
+  .footer_item ul.content_box_list li a { padding: 6px 0; }
+}
+
 .footer_item ul.content_box_list li a:hover {
   text-decoration:none;
 }
