@@ -102,7 +102,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
         const button = paymentsClient.createButton({
           buttonColor: "default",
           buttonType: "buy",
-          buttonLocale: "'.$_SESSION['languages_code'].'",
+          buttonLocale: "'.$_SESSION['language_code'].'",
           onClick: onGooglePaymentButtonClicked
         });
         document.getElementById("apms_button4").appendChild(button);
