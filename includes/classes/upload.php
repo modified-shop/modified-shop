@@ -26,6 +26,7 @@
     var $extensions;
     var $mime_types;
     var $tmp_filename;
+    var $counter;
 
     function __construct($file = '', $destination = '', $permissions = '644', $extensions = '', $mime_types = '') {
 
