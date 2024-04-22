@@ -28,7 +28,7 @@
     function __construct() {
       global $order;
       
-      $this->version = '1.01';
+      $this->version = '1.02';
       $this->code = 'avalex';
       $this->title = MODULE_AVALEX_TEXT_TITLE;
       $this->description = MODULE_AVALEX_TEXT_DESCRIPTION.'<br><br><br><b>Version</b><br>'.$this->version;
