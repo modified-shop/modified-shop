@@ -84,15 +84,6 @@ async function onGooglePayLoaded() {
     });
 }
 
-function addGooglePayButton() {
-  const paymentsClient = getGooglePaymentsClient();
-  const button = paymentsClient.createButton({
-    onClick: onGooglePaymentButtonClicked,
-  });
-  document.getElementById("apms_button4").appendChild(button);
-  document.getElementsByClassName("apms_form_button_overlay")[0].style.display = 'none';
-}
-
 async function onGooglePaymentButtonClicked() {
   const paymentDataRequest = await getGooglePaymentDataRequest();
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();

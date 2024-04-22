@@ -96,6 +96,18 @@ class paypalgooglepay extends PayPalPaymentV2 {
           totalPriceStatus: "FINAL",
         };
       }
+
+      function addGooglePayButton() {
+        const paymentsClient = getGooglePaymentsClient();
+        const button = paymentsClient.createButton({
+          buttonColor: "default",
+          buttonType: "buy",
+          buttonLocale: "'.$_SESSION['languages_code'].'",
+          onClick: onGooglePaymentButtonClicked
+        });
+        document.getElementById("apms_button4").appendChild(button);
+        document.getElementsByClassName("apms_form_button_overlay")[0].style.display = "none";
+      }
       
       function redirectGoogleSuccess() {
         $("#checkout_confirmation").submit();
