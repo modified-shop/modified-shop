@@ -1,5 +1,52 @@
-{if isset($BOX_CONTENT) && $BOX_CONTENT != ''}
+{if isset($BOX_CONTENT) && is_array($BOX_CONTENT)}
   {config_load file="$language/lang_$language.conf" section="boxes"}
   {config_load file="lang_`$language`.custom"}
-  {$BOX_CONTENT}
+  {config_load file="lang_`$language`.section" section="boxes"}
+  <div class="box_sub_categories">
+
+    <div class="subline mt_40 mb_0">{if isset($BOX_CONTENT_HOVER) && count($BOX_CONTENT_HOVER) > 0}{#subcats_menu_heading#}{else}{#subcats_menu_heading#}{/if}</div>
+    
+    {if isset($BOX_CONTENT_HOVER) && count($BOX_CONTENT_HOVER) > 0}
+      <div class="subcats_menu_hover_box">
+        {foreach name=aussen item=module_data from=$BOX_CONTENT_HOVER}
+          <ul class="subcats_menu_hover">
+              <li class="level0"><a href="{$module_data.DATA.link}">{if $module_data.DATA.name == ''}{#subcats_total_heading#}{else}{$module_data.DATA.name}{/if}{if isset($module_data.DATA.count) && $module_data.DATA.count != ''}<span class="counts">({$module_data.DATA.count})</span>{/if}</a>
+                {if is_array($module_data.SUBS)}
+                  <ul>
+                  {foreach name=innen item=subs_data from=$module_data.SUBS}
+                    <li class="level{$subs_data.level}{if $subs_data.active == 1} Selected{/if}{if isset($subs_data.hasSubs) && $subs_data.hasSubs == 1} Subs{/if}"><a href="{$subs_data.link}">{$subs_data.name}{if isset($subs_data.count) && $subs_data.count != ''}<span class="counts">({$subs_data.count})</span>{/if}</a></li>
+                  {/foreach}
+                  </ul>
+                {/if}
+              </li>
+          </ul>
+        {/foreach}
+      </div>
+    {/if}
+
+    <div class="subcats_menu_box">
+      <ul class="subcats_menu">
+        {foreach name=aussen item=module_data from=$BOX_CONTENT}
+          {if !isset($BOX_CONTENT_HOVER) || count($BOX_CONTENT_HOVER) == 0}
+            {if is_array($module_data.SUBS)}
+              {foreach name=innen item=subs_data from=$module_data.SUBS}
+                <li class="level0{if $subs_data.active == 1} Selected{/if}{if isset($subs_data.hasSubs) &&  $subs_data.hasSubs == 1} Subs{/if}"><a href="{$subs_data.link}">{$subs_data.name}{if isset($subs_data.count) && $subs_data.count != ''}<span class="counts">({$subs_data.count})</span>{/if}</a></li>
+              {/foreach}
+            {/if}
+          {else}
+            <li class="level0{if $module_data.DATA.active == 1} Selected{/if}"><a href="{$module_data.DATA.link}">{$module_data.DATA.name}{if isset($module_data.DATA.count) && $module_data.DATA.count != ''}<span class="counts">({$module_data.DATA.count})</span>{/if}</a>
+              {if is_array($module_data.SUBS)}
+                <ul>
+                {foreach name=innen item=subs_data from=$module_data.SUBS}
+                  <li class="level{$subs_data.level}{if isset($subs_data.hasSubs) && $subs_data.hasSubs == 1} Subs{/if}{if $subs_data.active == 1} Selected{/if}"><a href="{$subs_data.link}">{$subs_data.name}{if isset($subs_data.count) && $subs_data.count != ''}<span class="counts">({$subs_data.count})</span>{/if}</a></li>
+                {/foreach}
+                </ul>
+              {/if}
+            </li>
+          {/if}
+        {/foreach}
+      </ul>
+    </div>
+
+  </div>
 {/if}

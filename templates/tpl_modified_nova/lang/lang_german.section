@@ -49,6 +49,7 @@ text_must = '<i class="fa-solid fa-asterisk"></i> notwendige Informationen'
 [boxes]
 text_shippingtime = 'Lieferzeit:'
 show_all = 'Alle anzeigen'
+subcats_total_heading = 'Gesamtsortiment'
 
 [error_handler]
 

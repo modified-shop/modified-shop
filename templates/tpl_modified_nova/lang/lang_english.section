@@ -49,6 +49,7 @@ text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
 [boxes]
 text_shippingtime = 'Shipping time:'
 show_all = 'Show all'
+subcats_total_heading = 'Product range'
 
 [error_handler]
 

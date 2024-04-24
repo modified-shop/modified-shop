@@ -245,14 +245,8 @@
         {/if}
 
         <div class="flex_listing_cols">        
-
           <div class="flex_listing_categories">
-            <div class="subcats_menu_box">  
-              <div class="subline mt_40 mb_0">{#subcats_menu_heading#}</div>
-              <ul class="subcats_menu">
-                {if isset($box_SUB_CATEGORIES)}{$box_SUB_CATEGORIES}{/if}
-              </ul>
-            </div>
+            {if isset($box_SUB_CATEGORIES)}{$box_SUB_CATEGORIES}{/if}
           </div>
 
           <div class="flex_listing_products">
