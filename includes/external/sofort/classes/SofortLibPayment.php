@@ -419,7 +419,7 @@ class SofortLibPayment {
     if (!isset($this->_version)) {
       require_once(DIR_FS_INC.'get_database_version.inc.php');
       $db_version = get_database_version();
-      $this->_version = 'modified_'.$db_version['full'].'_v1.23';
+      $this->_version = 'modified_'.$db_version['full'].'_v1.24';
     }
     
     return $this->_version;
