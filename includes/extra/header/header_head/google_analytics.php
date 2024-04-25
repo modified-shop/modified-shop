@@ -212,7 +212,7 @@ function pushgTagEventAction() {";
   gtag('event', 'view_item', {
     currency: '".$_SESSION['currency']."',
     value: ".numberFormatGoogleAnalytics($xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'])).",
-    items: [".getItemDetailsGoogleAnalytics($product->data)."
+    items: [".getItemDetailsGoogleAnalytics($product->data, false)."
     ]
   });";
 
@@ -233,7 +233,7 @@ function pushgTagEventAction() {";
       $products_array = array();
       $listing_query = xtDBquery(${$object}->sql_query);
       while ($listing = xtc_db_fetch_array($listing_query, true)) {
-        $products_array[] = getItemDetailsGoogleAnalytics($listing);
+        $products_array[] = getItemDetailsGoogleAnalytics($listing, false);
       }
 
       $addCode = "
@@ -408,7 +408,7 @@ function pushgTagEventAction() {";
   }
 
 
-  function getItemDetailsGoogleAnalytics($data) {
+  function getItemDetailsGoogleAnalytics($data, $use_qty=true) {
     global $xtPrice, $PHP_SELF;
 
     $item = array();
@@ -429,7 +429,7 @@ function pushgTagEventAction() {";
         item_id: '".addslashes($item['model'])."',
         item_name: '".addslashes($item['name'])."',
         price: ".numberFormatGoogleAnalytics($item['price']).",
-        quantity: ".((isset($item['quantity']) && $item['quantity'] > 0) ? $item['quantity'] : 1)."
+        quantity: ".(($use_qty && isset($item['quantity']) && $item['quantity'] > 0) ? $item['quantity'] : 1)."
       }";
 
     return $item_data;
