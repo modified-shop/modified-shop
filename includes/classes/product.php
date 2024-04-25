@@ -605,7 +605,7 @@ class product {
    */
   function getBuyNowButton($id, $name) {
     global $PHP_SELF;
-    return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=buy_now&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button('button_buy_now.gif', sprintf(TEXT_BUY, 1).$name.TEXT_NOW).'</a>';
+    return '<a class="add_cart" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=buy_now&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button('button_buy_now.gif', sprintf(TEXT_BUY, 1).$name.TEXT_NOW).'</a>';
   }
 
   /**
@@ -824,7 +824,7 @@ class product {
     if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
       $link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=buy_now&wishlist=true&BUYproducts_id='.$id, 'NONSSL');
       if ($plain === false) {
-        $link = '<a href="'.$link.'">'.xtc_image_button('button_in_wishlist.gif', $name.' '.TEXT_TO_WISHLIST).'</a>';
+        $link = '<a class="add_wishlist" href="'.$link.'">'.xtc_image_button('button_in_wishlist.gif', $name.' '.TEXT_TO_WISHLIST).'</a>';
       }
     
       return $link;
@@ -842,7 +842,7 @@ class product {
     global $PHP_SELF;
     
     if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
-      return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=wishlist_cart&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button((($cart == true) ? 'button_in_cart.gif' : 'button_buy_now.gif'), sprintf(TEXT_BUY, $qty).$name.TEXT_NOW).'</a>';
+      return '<a class="wishlist_to_cart" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=wishlist_cart&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button((($cart == true) ? 'button_in_cart.gif' : 'button_buy_now.gif'), sprintf(TEXT_BUY, $qty).$name.TEXT_NOW).'</a>';
     }
   }
   
@@ -857,7 +857,7 @@ class product {
     global $PHP_SELF;
     
     if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
-      return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=cart_wishlist&BUYproducts_id='.$id, 'NONSSL').'">'.TEXT_TO_WISHLIST.'</a>';
+      return '<a class="cart_to_wishlist" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=cart_wishlist&BUYproducts_id='.$id, 'NONSSL').'">'.TEXT_TO_WISHLIST.'</a>';
     }
   }
 }
