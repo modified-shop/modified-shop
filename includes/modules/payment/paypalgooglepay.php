@@ -68,7 +68,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
     
-    $paypalscript .= '
+    $paypalscript = '
     if ($("#apms_button4").length) {
       if (google && paypal.Googlepay) {
         onGooglePayLoaded();
