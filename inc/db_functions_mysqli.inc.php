@@ -121,7 +121,7 @@
       return false;
     }
 
-    if (version_compare(xtc_db_get_server_info(), '5.0.0', '>=')) {
+    if (version_compare(xtc_db_get_server_info($link), '5.0.0', '>=')) {
       xtc_db_query("SET SESSION sql_mode=''");
     }
 
@@ -129,7 +129,7 @@
     if(!defined('DB_SERVER_CHARSET')) {
       define('DB_SERVER_CHARSET', 'latin1');
     }
-    xtc_db_set_charset(DB_SERVER_CHARSET);
+    xtc_db_set_charset(DB_SERVER_CHARSET, $link);
 
     // set engine defined in configure.php
     if(!defined('DB_SERVER_ENGINE')) {
