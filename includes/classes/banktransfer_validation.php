@@ -40,6 +40,12 @@
 
 class AccountCheck {
 
+  var $banktransfer_number;
+  var $banktransfer_blz;
+  var $Bankname;
+  var $PRZ;
+  var $checkmode;
+  
 /* Folgende Returncodes werden übergeben                                        */
 /*                                                                              */
 /* 0 -> Kontonummer & BLZ OK                                                    */
@@ -2919,6 +2925,10 @@ class AccountCheck {
 
 class IbanAccountCheck extends AccountCheck { 
 
+  var $banktransfer_iban;
+  var $banktransfer_bic
+  var $IBAN_country
+
 /*
    -----------------------------------------------------------------------------------------
    Copyright (c) 2013 Christian Rothe
@@ -3815,7 +3825,7 @@ class IbanAccountCheck extends AccountCheck {
 
 			$result = 0;
 
-	    if (MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ == 'true' && defined(MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ)) {
+	    if (defined('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ') && MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ == 'true') {
 				// Zunächst prüfen, ob BIC-Spalte in Bankleitzahlen-Tabelle enthalten
 				$table_query = xtc_db_query("SHOW COLUMNS from ".TABLE_BANKTRANSFER_BLZ." where Field = 'bic'"); 
 				if (xtc_db_num_rows($table_query) > 0) {
@@ -3935,5 +3945,3 @@ class IbanAccountCheck extends AccountCheck {
  
     
 }  /* End Class IbanAccountCheck */
-
-?>
