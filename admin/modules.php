@@ -330,11 +330,11 @@
     
     if (!isset($module_array)) $module_array = array();
     
-    if (!isset($module[$class]) || !is_object($module[$class])) {
-      $module[$class] = new $class;
+    if (!isset($module_array[$class]) || !is_object($module_array[$class])) {
+      $module_array[$class] = new $class;
     }
     
-    return $module[$class];
+    return $module_array[$class];
   }
 
 require (DIR_WS_INCLUDES.'head.php');
