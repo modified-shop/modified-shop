@@ -1003,15 +1003,6 @@ class PayPalPaymentBase extends PayPalCommon {
                     KEY idx_config_key (config_key)
                   );");
 
-    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_IPN." (
-                    paypal_ipn_id int(11) NOT NULL auto_increment, 
-                    orders_id int(11) NOT NULL,
-                    transaction_id varchar(64) NOT NULL default '',
-                    payment_status varchar(64) NOT NULL default '',
-                    PRIMARY KEY (paypal_ipn_id), 
-                    KEY idx_orders_id (orders_id)
-                  );");
-
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_INSTRUCTIONS." (
                     paypal_instructions_id int(11) NOT NULL auto_increment, 
                     orders_id int(11) NOT NULL DEFAULT '0',
@@ -1144,7 +1135,6 @@ class PayPalPaymentBase extends PayPalCommon {
     if (xtc_db_num_rows($check_query) == 1) {
       //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_PAYMENT);
       //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_CONFIG);
-      //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_IPN);
       //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_INSTRUCTIONS);
       //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_TRACKING);
 
@@ -1363,10 +1353,6 @@ class PayPalPaymentBase extends PayPalCommon {
     if (xtc_db_num_rows($check_query) == 0) {
       xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_CONFIG." ADD `config_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
     }
-    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_IPN." LIKE 'paypal_ipn_id'");
-    if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_IPN." ADD `paypal_ipn_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
-    }
     $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE 'paypal_inctructions_id'");
     if (xtc_db_num_rows($check_query) == 1) {
       xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." CHANGE `paypal_inctructions_id` `paypal_instructions_id` INT(11) NOT NULL AUTO_INCREMENT");
@@ -1374,6 +1360,12 @@ class PayPalPaymentBase extends PayPalCommon {
     $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE 'paypal_instructions_id'");
     if (xtc_db_num_rows($check_query) == 0) {
       xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." ADD `paypal_instructions_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+    }
+
+    // remove ipn
+    xtc_db_query("DROP TABLE IF EXISTS `paypal_ipn`");
+    if (is_file(DIR_FS_CATALOG.'callback/paypal/paypalipn.php')) {
+      unlink(DIR_FS_CATALOG.'callback/paypal/paypalipn.php');
     }
     
     // check scheduled tasks

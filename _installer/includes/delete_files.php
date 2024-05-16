@@ -263,6 +263,7 @@
     'build_config.php',
     'callback/paypal/ipn.php',
     'callback/paypal/paypalinstallment.php',
+    'callback/paypal/paypalipn.php',
     'callback/sofort/callback.php',
     'callback/sofort/helperFunctions.php',
     'callback/sofort/sofort.ini',
