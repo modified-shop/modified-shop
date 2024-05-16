@@ -345,7 +345,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_BUTTON_HEIGHT; ?></td>
                       <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[profile][PAYPAL_BUTTON_HEIGHT]', $paypal->get_config('PAYPAL_BUTTON_HEIGHT'), 'style="width: 300px;"'); ?></td>
-                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_BUTTON_LAYOUT_INFO; ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_BUTTON_HEIGHT_INFO; ?></td>
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_SAVE_PAYMENT; ?></td>
