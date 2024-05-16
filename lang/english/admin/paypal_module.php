@@ -82,7 +82,7 @@ $lang_array = array(
   'TEXT_PAYPAL_BUTTON_SECONDARY_COLOR_INFO' => 'Select the button color',
 
   'TEXT_PAYPAL_BUTTON_HEIGHT' => 'Button Height',
-  'TEXT_PAYPAL_BUTTON_HEIGHT_INFO' => 'Select the button height in pixels min. 22px max. 55px',
+  'TEXT_PAYPAL_BUTTON_HEIGHT_INFO' => 'Select the button height in pixels (min: 22 max: 55)',
 );
 
 

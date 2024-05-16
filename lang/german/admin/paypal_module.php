@@ -70,19 +70,19 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT_INFO' => 'Sollen Details zur Ratenzahlung im Checkout angezeigt werden?',
 
   'TEXT_PAYPAL_BUTTON_LAYOUT' => 'Button Layout',
-  'TEXT_PAYPAL_BUTTON_LAYOUT_INFO' => 'W&auml;hlen sie das Button Layout',
+  'TEXT_PAYPAL_BUTTON_LAYOUT_INFO' => 'W&auml;hlen Sie das Button Layout',
 
   'TEXT_PAYPAL_BUTTON_SHAPE' => 'Button Form',
-  'TEXT_PAYPAL_BUTTON_SHAPE_INFO' => 'W&auml;hlen sie das Button Form',
+  'TEXT_PAYPAL_BUTTON_SHAPE_INFO' => 'W&auml;hlen Sie die Button Form',
 
   'TEXT_PAYPAL_BUTTON_PRIMARY_COLOR' => 'Button Farbe Paypal',
-  'TEXT_PAYPAL_BUTTON_PRIMARY_COLOR_INFO' => 'W&auml;hlen sie das Button Farbe',
+  'TEXT_PAYPAL_BUTTON_PRIMARY_COLOR_INFO' => 'W&auml;hlen Sie die Button Farbe',
 
   'TEXT_PAYPAL_BUTTON_SECONDARY_COLOR' => 'Button Farbe Sp&auml;ter bezahlen',
-  'TEXT_PAYPAL_BUTTON_SECONDARY_COLOR_INFO' => 'W&auml;hlen sie das Button Farbe',
+  'TEXT_PAYPAL_BUTTON_SECONDARY_COLOR_INFO' => 'W&auml;hlen Sie die Button Farbe',
 
   'TEXT_PAYPAL_BUTTON_HEIGHT' => 'Button H&ouml;he',
-  'TEXT_PAYPAL_BUTTON_HEIGHT_INFO' => 'W&auml;hlen sie das Button H&ouml;he in Pixel min. 22px max. 55px',
+  'TEXT_PAYPAL_BUTTON_HEIGHT_INFO' => 'W&auml;hlen Sie die Button H&ouml;he in Pixeln (min: 22 max: 55)',
 );
 
 
