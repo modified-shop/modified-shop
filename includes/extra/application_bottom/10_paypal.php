@@ -75,7 +75,7 @@
       $paypal = new PayPalPaymentV2('paypalexpress');
             
       if ($paypal->is_enabled()) {
-        if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_PRODUCT') == '1') {
+        if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SAVE_PAYMENT') == '1') {
           $paypal_user_token = $paypal->GenerateUserToken()->tokenId;
         }
         
