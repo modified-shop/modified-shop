@@ -20,6 +20,7 @@
   defined('TABLE_PAYPAL_IPN') OR define('TABLE_PAYPAL_IPN', 'paypal_ipn');
   defined('TABLE_PAYPAL_INSTRUCTIONS') OR define('TABLE_PAYPAL_INSTRUCTIONS', 'paypal_instructions');
   defined('TABLE_PAYPAL_TRACKING') OR define('TABLE_PAYPAL_TRACKING', 'paypal_tracking');
+  defined('TABLE_PAYPAL_VAULT') OR define('TABLE_PAYPAL_VAULT', 'paypal_vault');
 
   // include needed functions
   require_once(DIR_FS_EXTERNAL.'paypal/functions/PayPalFunctions.php');
@@ -31,6 +32,8 @@
 
   use PayPalClient\PayPalClient;
   use PayPalCheckoutSdk\Core\PayPalHttpClient;
+  use PayPalCheckoutSdk\Core\AccessToken;
+  use PayPalCheckoutSdk\Core\AccessTokenRequest;
   use PayPalCheckoutSdk\Core\SandboxEnvironment;
   use PayPalCheckoutSdk\Core\ProductionEnvironment;
   use PayPalCheckoutSdk\Core\GenerateClientTokenRequest;
@@ -76,17 +79,38 @@
 
       try {
         $response = $client->execute($request);
-                
         return $response->result;
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'CreateOrder', array('exception' => $ex));
+        $this->LoggingManager->log('DEBUG', 'GenerateClientToken', array('exception' => $ex));
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'CreateOrder', array('exception' => $ex));
+        $this->LoggingManager->log('DEBUG', 'GenerateClientToken', array('exception' => $ex));
       }
     }
     
+
+    function GenerateUserToken() {
+      // auth
+      $client = $this->GetClient();
+      
+      $customer_id = NULL;
+      if (isset($_SESSION['customer_id'])) {
+        $customer_id = $this->getCustomerId($_SESSION['customer_id']);
+      }
+      
+      try {
+        $accessTokenResponse = $client->execute(new AccessTokenRequest($this->GetEnvironment(), NULL, $customer_id));
+        $accessToken = $accessTokenResponse->result;
+        return new AccessToken($accessToken->access_token, $accessToken->id_token, $accessToken->token_type, $accessToken->expires_in);
+        
+      } catch (PayPalHttp\HttpException $ex) {
+        $this->LoggingManager->log('DEBUG', 'GenerateUserToken', array('exception' => $ex));
+      } catch (Exception $ex) {
+        $this->LoggingManager->log('DEBUG', 'GenerateUserToken', array('exception' => $ex));
+      }
+    }
     
+        
     function CreateOrder($payment_source = array(), $error = false) {
       global $order, $xtPrice;
       
@@ -123,7 +147,9 @@
         $purchase_unit['amount']['value'] = sprintf("%01.2f", round(($order->info['total'] + $order->info['shipping_cost'] + $order->info['tax']), 2));
       }
       
+      $pm_source = 'paypal';
       if ($this->code == 'paypalpui') {
+        $pm_source = 'pay_upon_invoice';
         $order_total = $this->calculate_total(2);
         foreach ($order_total as $total) {
           switch ($total['code']) {
@@ -257,9 +283,7 @@
             $purchase_unit['shipping']['address']['address_line_1'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
           }
         }
-      }
-      
-      if (isset($_SESSION['customer_id'])) {
+
         $payer = array(
           'email_address' => $this->encode_utf8($order->customer['email_address']),
           'name' => array(
@@ -290,18 +314,22 @@
       $request->body = array(
         'intent' => $this->intent,
         'purchase_units' => array($purchase_unit),
-        'application_context' => array(
-          'brand_name' => $this->encode_utf8(mb_substr(STORE_NAME, 0, 127)),
-          'locale' => $_SESSION['language_code'].'-'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']),
-          'landing_page' => 'BILLING',
-          'user_action' => 'CONTINUE',
-          'cancel_url' => $this->link_encoding(xtc_href_link('callback/paypal/error.php', 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
-          'return_url' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PROCESS, xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
+        'payment_source' => array(
+          $pm_source => array(
+            'experience_context' => array(
+              'brand_name' => $this->encode_utf8(STORE_NAME),
+              'locale' => $_SESSION['language_code'].'-'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']),
+              'landing_page' => 'LOGIN',
+              'user_action' => 'CONTINUE',
+              'cancel_url' => $this->link_encoding(xtc_href_link('callback/paypal/error.php', 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
+              'return_url' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PROCESS, xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
+            )
+          )
         ) 
       );
       
       if (isset($_SESSION['customer_id'])) {
-        $request->body['application_context']['shipping_preference'] = 'SET_PROVIDED_ADDRESS';
+        $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'SET_PROVIDED_ADDRESS';
       }
       
       if (isset($payer)) {
@@ -309,7 +337,7 @@
       }
       
       if (count($payment_source) > 0) {
-        $request->body = array_merge($request->body, $payment_source);
+        $request->body = array_merge_recursive($request->body, $payment_source);
       }
       
       if ($this->code == 'paypalpui') {
@@ -479,9 +507,11 @@
     
     
     function PatchOrder($orderID) {
-      global $insert_id;
+      global $insert_id, $order;
       
-      $order = new order($insert_id);
+      if (xtc_not_null($insert_id)) {
+        $order = new order($insert_id);
+      }
       
       // auth
       $client = $this->GetClient();
@@ -492,7 +522,7 @@
         'admin_area_1' => $this->encode_utf8((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : ''), // state
         'admin_area_2' => $this->encode_utf8($order->delivery['city']), // city
         'postal_code' => $this->encode_utf8($order->delivery['postcode']),
-        'country_code' => $this->encode_utf8($order->delivery['country_iso_2'])
+        'country_code' => $this->encode_utf8((isset($order->customer['country']['iso_code_2'])) ? $order->customer['country']['iso_code_2'] : $order->delivery['country_iso_2'])
       );
       
       if ($order->delivery['company'] != '') {
@@ -505,16 +535,11 @@
       $request = new OrdersPatchRequest($orderID);
       $request->body = array(
         array(
-          'op' => 'add',
-          'path' => "/purchase_units/@reference_id=='default'/invoice_id",
-          'value' => $this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$insert_id
-        ),
-        array(
           'op' => 'replace',
           'path' => "/purchase_units/@reference_id=='default'/amount",
           'value' => array (
             'currency_code' => $this->encode_utf8($order->info['currency']),
-            'value' => sprintf("%01.2f", round($order->info['pp_total'], 2))
+            'value' => sprintf("%01.2f", round(((isset($order->info['pp_total'])) ? $order->info['pp_total'] : $order->info['total']), 2))
           )
         ),
         array(
@@ -530,6 +555,14 @@
           'value' => $shipping_address
         ),
       );
+      
+      if (xtc_not_null($insert_id)) {
+        $request->body[] = array(
+          'op' => 'add',
+          'path' => "/purchase_units/@reference_id=='default'/invoice_id",
+          'value' => $this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$insert_id
+        );
+      }
       
       try {
         $response = $client->execute($request);
@@ -770,4 +803,18 @@
         return $orders['payment_id'];
       }    
     }
+    
+    
+    function getCustomerId($customer_id) {
+      $customers_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_PAYPAL_VAULT."
+                                        WHERE customers_id = '".$customer_id."'");
+      if (xtc_db_num_rows($customers_query) > 0) {
+        $customers = xtc_db_fetch_array($customers_query);
+        return $customers['paypal_customers_id'];
+      }
+      
+      return NULL;
+    }
+    
   }

@@ -45,6 +45,9 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL' => 'Sp&auml;ter bezahlen Button im Checkout',
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO' => 'Soll der PayPal Sp&auml;ter bezahlen Button im Checkout angezeigt werden?',
 
+  'TEXT_PAYPAL_MODULE_SAVE_PAYMENT' => 'Zahlart im Checkout speichern',
+  'TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO' => 'Soll die Zahlart f&uuml;r einen schnelleren Checkout bei einer weiteren Bestellung gespeichert werden?',
+
   'TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS' => 'Kreditkarten ohne 3D Secure erlauben',
   'TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS_INFO' => 'Es besteht keine Haftungs&uuml;bernahme bei Zahlungen ohne 3D Secure.',
 
@@ -71,4 +74,3 @@ $lang_array = array(
 foreach ($lang_array as $key => $val) {
   defined($key) or define($key, $val);
 }
-?>

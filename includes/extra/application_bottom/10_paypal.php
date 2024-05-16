@@ -89,10 +89,10 @@
             paypal.Buttons({
               fundingSource: paypal.FUNDING.PAYPAL,
               style: {
-                layout: "horizontal",
-                shape: "rect",
-                color: "gold",
-                height: 35
+                layout: "'.$this->get_config('PAYPAL_BUTTON_LAYOUT').'",
+                shape: "'.$this->get_config('PAYPAL_BUTTON_SHAPE').'",
+                color: "'.$this->get_config('PAYPAL_BUTTON_PRIMARY_COLOR').'",
+                height: '.$this->get_config('PAYPAL_BUTTON_HEIGHT').'
               },
               createOrder: function(data, actions) {              
                 var formdata = '.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? '$("#cart_quantity").serializeArray()' : "''").'; 
@@ -131,10 +131,10 @@
             paypal.Buttons({
               fundingSource: paypal.FUNDING.PAYLATER,
               style: {
-                layout: "horizontal",
-                shape: "rect",
-                color: "blue",
-                height: 35
+                layout: "'.$this->get_config('PAYPAL_BUTTON_LAYOUT').'",
+                shape: "'.$this->get_config('PAYPAL_BUTTON_SHAPE').'",
+                color: "'.$this->get_config('PAYPAL_BUTTON_SECONDARY_COLOR').'",
+                height: '.$this->get_config('PAYPAL_BUTTON_HEIGHT').'
               },
               createOrder: function(data, actions) {              
                 var formdata = '.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? '$("#cart_quantity").serializeArray()' : "''").'; 

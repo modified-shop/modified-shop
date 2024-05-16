@@ -57,23 +57,7 @@ class paypalsepa extends PayPalPaymentV2 {
     global $smarty;
     
     $smarty->clear_assign('CHECKOUT_BUTTON');
-    
-    if (!isset($_SESSION['paypal'])
-        || $_SESSION['paypal']['cartID'] != $_SESSION['cart']->cartID
-        || $_SESSION['paypal']['OrderID'] == ''
-        )
-    {
-      $_SESSION['paypal'] = array(
-        'cartID' => $_SESSION['cart']->cartID,
-        'OrderID' => $this->CreateOrder()
-      );
-    }
-    
-    $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
-    if ($_SESSION['paypal']['OrderID'] == '') {
-	    xtc_redirect($error_url);
-    }
-    
+        
     $paypal_smarty = new Smarty();
     $paypal_smarty->assign('language', $_SESSION['language']);
     $paypal_smarty->assign('checkout', true);
@@ -85,16 +69,24 @@ class paypalsepa extends PayPalPaymentV2 {
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
 
+    $order_url = DIR_WS_BASE.'ajax.php?ext=create_paypal_order';
+    $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
+
     $process_button .= sprintf($this->get_js_sdk(), '
       paypal.Buttons({
         fundingSource: paypal.FUNDING.SEPA,
         style: {
-          layout: "vertical",
-          shape: "rect",
-          label: "buynow",
+          layout: "'.$this->get_config('PAYPAL_BUTTON_LAYOUT').'",
+          shape: "'.$this->get_config('PAYPAL_BUTTON_SHAPE').'",
+          height: '.$this->get_config('PAYPAL_BUTTON_HEIGHT').',
+          label: "buynow"
         },
         createOrder: function(data, actions) {
-          return "'.$_SESSION['paypal']['OrderID'].'";
+          return $.ajax({
+            type: "POST",
+            url: "'.$order_url.'",
+            dataType: "json"
+          });
         },
         onApprove: function(data, actions) {
           $("#checkout_confirmation").submit();
