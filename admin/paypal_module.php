@@ -373,9 +373,9 @@ require (DIR_WS_INCLUDES.'head.php');
                   if ($module->code == 'paypalexpress') {
                     ?>
                     <tr>
-                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_SAVE_PAYMENT; ?></td>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT; ?></td>
                       <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SAVE_PAYMENT]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SAVE_PAYMENT') == '1') ? true : false)); ?></td>
-                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO; ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT_INFO; ?></td>
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_PRODUCT; ?></td>

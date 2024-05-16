@@ -48,6 +48,9 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_SAVE_PAYMENT' => 'Zahlart im Checkout speichern',
   'TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO' => 'Soll die Zahlart f&uuml;r einen schnelleren Checkout bei einer weiteren Bestellung gespeichert werden?',
 
+  'TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT' => 'Gespeicherte Zahlart erlauben',
+  'TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT_INFO' => 'Soll eine gespeicherte Zahlart f&uuml;r einen schnelleren Checkout erlaubt werden?',
+
   'TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS' => 'Kreditkarten ohne 3D Secure erlauben',
   'TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS_INFO' => 'Es besteht keine Haftungs&uuml;bernahme bei Zahlungen ohne 3D Secure.',
 
