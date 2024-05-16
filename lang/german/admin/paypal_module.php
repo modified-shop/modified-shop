@@ -68,6 +68,21 @@ $lang_array = array(
 
   'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT' => 'Finanzierungsbox im Checkout',
   'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT_INFO' => 'Sollen Details zur Ratenzahlung im Checkout angezeigt werden?',
+
+  'TEXT_PAYPAL_BUTTON_LAYOUT' => 'Button Layout',
+  'TEXT_PAYPAL_BUTTON_LAYOUT_INFO' => 'Wählen sie das Button Layout',
+
+  'TEXT_PAYPAL_BUTTON_SHAPE' => 'Button Form',
+  'TEXT_PAYPAL_BUTTON_SHAPE_INFO' => 'Wählen sie das Button Form',
+
+  'TEXT_PAYPAL_BUTTON_PRIMARY_COLOR' => 'Button Farbe Paypal',
+  'TEXT_PAYPAL_BUTTON_PRIMARY_COLOR_INFO' => 'Wählen sie das Button Farbe',
+
+  'TEXT_PAYPAL_BUTTON_SECONDARY_COLOR' => 'Button Farbe Später bezahlen',
+  'TEXT_PAYPAL_BUTTON_SECONDARY_COLOR_INFO' => 'Wählen sie das Button Farbe',
+
+  'TEXT_PAYPAL_BUTTON_HEIGHT' => 'Button Höhe',
+  'TEXT_PAYPAL_BUTTON_HEIGHT_INFO' => 'Wählen sie das Button Höhe in Pixel min. 22px max. 55px',
 );
 
 
