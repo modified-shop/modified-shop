@@ -22,6 +22,7 @@
     require_once (DIR_FS_INC.'xtc_get_countries.inc.php');
 
     $paypalscript = '';
+    $paypal_user_token = false;
     if (!isset($_SESSION['paypal_instruments']) 
         && ((defined('MODULE_PAYMENT_PAYPALSEPA_STATUS') && MODULE_PAYMENT_PAYPALSEPA_STATUS == 'True')
             || (defined('MODULE_PAYMENT_PAYPALCARD_STATUS') && MODULE_PAYMENT_PAYPALCARD_STATUS == 'True')
@@ -74,6 +75,10 @@
       $paypal = new PayPalPaymentV2('paypalexpress');
             
       if ($paypal->is_enabled()) {
+        if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_PRODUCT') == '1') {
+          $paypal_user_token = $paypal->GenerateUserToken()->tokenId;
+        }
+        
         $action = '';
         if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {
           $action = 'action=add_product&';
@@ -81,7 +86,7 @@
         $url = str_replace('&amp;', '&', xtc_href_link('ajax.php', $action.'ext=create_paypal_order&payment_method='.$paypal->code));
         
         if (basename($PHP_SELF) == FILENAME_SHOPPING_CART 
-            || $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_PRODUCT') == '1'
+            || $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SAVE_PAYMENT') == '1'
             )
         {
           $paypalscript .= '
@@ -214,7 +219,7 @@
     }
     
     if ($paypalscript != '') {
-      echo sprintf($paypal->get_js_sdk('false'), $paypalscript);
+      echo sprintf($paypal->get_js_sdk('false', false, $paypal_user_token), $paypalscript);
     }    
   }
 
