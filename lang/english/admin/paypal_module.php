@@ -56,9 +56,6 @@ $lang_array = array(
 
   'TEXT_PAYPAL_MODULE_SHIPPING_COST' => 'provisional shipping costs',
   'TEXT_PAYPAL_MODULE_SHIPPING_COST_INFO' => 'Amount for provisional shipping costs.',
-
-  'TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED' => 'Order status',
-  'TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED_INFO' => 'Select the order status.<br/><b>Important:</b> the name must not contain the word "paid".',
   
   'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT' => 'Show at product',
   'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT_INFO' => 'Show details for Installment at product?',
