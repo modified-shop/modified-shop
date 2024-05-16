@@ -49,7 +49,7 @@ function get_third_party_payments() {
 }
 
 
-function get_paypal_js_sdk($client_id, $currency, $intent, $commit, $client_token, $custom) {
+function get_paypal_js_sdk($client_id, $currency, $intent, $commit, $client_token, $user_token, $custom) {
   static $output;
   
   if (!isset($output)) {
@@ -79,6 +79,7 @@ function get_paypal_js_sdk($client_id, $currency, $intent, $commit, $client_toke
         "enable-funding": "paylater",
         "data-partner-attribution-id": "Modified_Cart_PPCP",
         '.(($client_token !== false) ? '"data-client-token": "'.$client_token.'",' : '').'
+        '.(($user_token !== false) ? '"data-user-id-token": "'.$user_token.'",' : '').'
         "components": "buttons,funding-eligibility,messages,hosted-fields,applepay,googlepay"
       }).then((paypal) => {
         %s

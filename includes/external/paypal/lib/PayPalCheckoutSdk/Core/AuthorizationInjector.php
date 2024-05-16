@@ -11,13 +11,15 @@ class AuthorizationInjector implements Injector
     private $client;
     private $environment;
     private $refreshToken;
+    private $customer_id;
     public $accessToken;
 
-    public function __construct(HttpClient $client, PayPalEnvironment $environment, $refreshToken)
+    public function __construct(HttpClient $client, PayPalEnvironment $environment, $refreshToken, $customer_id)
     {
         $this->client = $client;
         $this->environment = $environment;
         $this->refreshToken = $refreshToken;
+        $this->customer_id = $customer_id;
     }
 
     public function inject($request)
@@ -34,9 +36,9 @@ class AuthorizationInjector implements Injector
 
     private function fetchAccessToken()
     {
-        $accessTokenResponse = $this->client->execute(new AccessTokenRequest($this->environment, $this->refreshToken));
+        $accessTokenResponse = $this->client->execute(new AccessTokenRequest($this->environment, $this->refreshToken, $this->customer_id));    
         $accessToken = $accessTokenResponse->result;
-        return new AccessToken($accessToken->access_token, $accessToken->token_type, $accessToken->expires_in);
+        return new AccessToken($accessToken->access_token, $accessToken->id_token, $accessToken->token_type, $accessToken->expires_in);
     }
 
     private function isAuthRequest($request)

@@ -841,8 +841,8 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
   
-  function get_js_sdk($commit = 'true', $client_token = false, $custom = false) {
-    return get_paypal_js_sdk($this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))), $_SESSION['currency'], $this->intent, $commit, $client_token, $custom);
+  function get_js_sdk($commit = 'true', $client_token = false, $user_token = false, $custom = false) {
+    return get_paypal_js_sdk($this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))), $_SESSION['currency'], $this->intent, $commit, $client_token, $user_token, $custom);
   }
   
   
@@ -1038,6 +1038,16 @@ class PayPalPaymentBase extends PayPalCommon {
                    KEY idx_orders_id (orders_id)
                  );");
   
+    xtc_db_query("CREATE TABLE ".TABLE_PAYPAL_VAULT." (
+                   paypal_id int(11) NOT NULL AUTO_INCREMENT,
+                   customers_id int(11) NOT NULL,
+                   paypal_customers_id varchar(64) NOT NULL,
+                   vault_id varchar(64) NOT NULL,
+                   PRIMARY KEY (paypal_id),
+                   KEY idx_customers_id (customers_id),
+                   KEY idx_paypal_customers_id (paypal_customers_id)
+                 );");
+
     $admin_query = xtc_db_query("SELECT * 
                                    FROM ".TABLE_ADMIN_ACCESS."
                                   LIMIT 1");
@@ -1092,6 +1102,35 @@ class PayPalPaymentBase extends PayPalCommon {
           'config_value' => '0'
         );
         xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
+      }
+    }
+
+    // set buttons
+    if ($this->code == 'paypal') {
+      if ($this->get_config('PAYPAL_BUTTON_LAYOUT') == '') {
+        $sql_data_array = array(
+          array(
+            'config_key' => 'PAYPAL_BUTTON_LAYOUT',
+            'config_value' => 'horizontal',
+          ),
+          array(
+            'config_key' => 'PAYPAL_BUTTON_SHAPE',
+            'config_value' => 'rect',
+          ),
+          array(
+            'config_key' => 'PAYPAL_BUTTON_PRIMARY_COLOR',
+            'config_value' => 'gold',
+          ),
+          array(
+            'config_key' => 'PAYPAL_BUTTON_SECONDARY_COLOR',
+            'config_value' => 'blue',
+          ),
+          array(
+            'config_key' => 'PAYPAL_BUTTON_HEIGHT',
+            'config_value' => '35',
+          )
+        );
+        $this->save_config($sql_data_array);
       }
     }
   }
@@ -1239,6 +1278,16 @@ class PayPalPaymentBase extends PayPalCommon {
                    KEY idx_orders_id (orders_id)
                  );");
 
+    xtc_db_query("CREATE TABLE ".TABLE_PAYPAL_VAULT." (
+                   paypal_id int(11) NOT NULL AUTO_INCREMENT,
+                   customers_id int(11) NOT NULL,
+                   paypal_customers_id varchar(64) NOT NULL,
+                   vault_id varchar(64) NOT NULL,
+                   PRIMARY KEY (paypal_id),
+                   KEY idx_customers_id (customers_id),
+                   KEY idx_paypal_customers_id (paypal_customers_id)
+                 );");
+
     $table_array = array(
       array('column' => 'method', 'default' => "varchar(64) NOT NULL AFTER orders_id"),
     );
@@ -1382,6 +1431,33 @@ class PayPalPaymentBase extends PayPalCommon {
         array(
           'config_key' => 'MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS',
           'config_value' => '0',
+        )
+      );
+      $this->save_config($sql_data_array);
+    }
+    
+    // set buttons
+    if ($this->get_config('PAYPAL_BUTTON_LAYOUT') == '') {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'PAYPAL_BUTTON_LAYOUT',
+          'config_value' => 'horizontal',
+        ),
+        array(
+          'config_key' => 'PAYPAL_BUTTON_SHAPE',
+          'config_value' => 'rect',
+        ),
+        array(
+          'config_key' => 'PAYPAL_BUTTON_PRIMARY_COLOR',
+          'config_value' => 'gold',
+        ),
+        array(
+          'config_key' => 'PAYPAL_BUTTON_SECONDARY_COLOR',
+          'config_value' => 'blue',
+        ),
+        array(
+          'config_key' => 'PAYPAL_BUTTON_HEIGHT',
+          'config_value' => '35',
         )
       );
       $this->save_config($sql_data_array);

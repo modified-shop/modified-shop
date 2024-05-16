@@ -22,13 +22,13 @@ class paypal extends PayPalPaymentV2 {
   var $tmpOrders;
   var $paypal_code;
 
-	function __construct() {
-		global $order;
-		
-		$this->paypal_code = 'paypal';
+  function __construct() {
+    global $order;
+    
+    $this->paypal_code = 'paypal';
     PayPalPaymentV2::__construct('paypal');
-		$this->tmpOrders = false;
-	}
+    $this->tmpOrders = false;
+  }
 
 
   function confirmation() {
@@ -41,22 +41,6 @@ class paypal extends PayPalPaymentV2 {
     
     $smarty->clear_assign('CHECKOUT_BUTTON');
     
-    if (!isset($_SESSION['paypal'])
-        || $_SESSION['paypal']['cartID'] != $_SESSION['cart']->cartID
-        || $_SESSION['paypal']['OrderID'] == ''
-        )
-    {
-      $_SESSION['paypal'] = array(
-        'cartID' => $_SESSION['cart']->cartID,
-        'OrderID' => $this->CreateOrder()
-      );
-    }
-    
-    $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
-    if ($_SESSION['paypal']['OrderID'] == '') {
-	    xtc_redirect($error_url);
-    }
-
     $paypal_smarty = new Smarty();
     $paypal_smarty->assign('language', $_SESSION['language']);
     $paypal_smarty->assign('checkout', true);
@@ -64,7 +48,10 @@ class paypal extends PayPalPaymentV2 {
     if ($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHOW_CHECKOUT_BNPL') == '1') {
       $paypal_smarty->assign('paypalbnpl', true);
     }
-
+    if ($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SAVE_PAYMENT') == '1') {
+      $paypal_smarty->assign('SAVE_PAYMENT_CHECKBOX', xtc_draw_checkbox_field('save_payment', 'save_payment', false, 'id="save_payment"'));
+    }
+    
     $paypal_smarty->caching = 0;
 
     $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/apms.html';
@@ -72,17 +59,28 @@ class paypal extends PayPalPaymentV2 {
       $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/apms.html';
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
+
+    $order_url = DIR_WS_BASE.'ajax.php?ext=create_paypal_order';
+    $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
     
     $paypalscript = '
       paypal.Buttons({
         fundingSource: paypal.FUNDING.PAYPAL,
         style: {
-          layout: "horizontal",
-          shape: "rect",
-          label: "buynow",
+          layout: "'.$this->get_config('PAYPAL_BUTTON_LAYOUT').'",
+          shape: "'.$this->get_config('PAYPAL_BUTTON_SHAPE').'",
+          color: "'.$this->get_config('PAYPAL_BUTTON_PRIMARY_COLOR').'",
+          height: '.$this->get_config('PAYPAL_BUTTON_HEIGHT').',
+          label: "buynow"
         },
         createOrder: function(data, actions) {
-          return "'.$_SESSION['paypal']['OrderID'].'";
+          var formdata = $("#checkout_confirmation").serializeArray(); 
+          return $.ajax({
+            type: "POST",
+            url: "'.$order_url.'",
+            data: formdata,
+            dataType: "json"
+          });
         },
         onApprove: function(data, actions) {
           $("#checkout_confirmation").submit();
@@ -103,19 +101,26 @@ class paypal extends PayPalPaymentV2 {
         paypal.Buttons({
           fundingSource: paypal.FUNDING.PAYLATER,
           style: {
-            layout: "horizontal",
-            shape: "rect",
-            color: "blue",
+            layout: "'.$this->get_config('PAYPAL_BUTTON_LAYOUT').'",
+            shape: "'.$this->get_config('PAYPAL_BUTTON_SHAPE').'",
+            color: "'.$this->get_config('PAYPAL_BUTTON_SECONDARY_COLOR').'",
+            height: '.$this->get_config('PAYPAL_BUTTON_HEIGHT').'
           },
           createOrder: function(data, actions) {
-            return "'.$_SESSION['paypal']['OrderID'].'";
+            var formdata = $("#checkout_confirmation").serializeArray(); 
+            return $.ajax({
+              type: "POST",
+              url: "'.$order_url.'",
+              data: formdata,
+              dataType: "json"
+            });
           },
           onApprove: function(data, actions) {
             $("#checkout_confirmation").submit();
             $(".apms_form_button").hide();
           },
           onError: function (err) {
-            console.error("failed to load PayPal buttons", err);
+            console.error("failed to load PayPal BNPL buttons", err);
             $("#apms_bnpl").hide();
           },
           onRender: function() { 
@@ -124,23 +129,23 @@ class paypal extends PayPalPaymentV2 {
         }).render("#apms_button2");
       ';
     }
-
-    $process_button .= sprintf($this->get_js_sdk(), $paypalscript);
+    
+    $process_button .= sprintf($this->get_js_sdk('true', false, $this->GenerateUserToken()->tokenId), $paypalscript);
     
     return $process_button;
   }
-  
-  
-	function before_process() {	  
-	  $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
-	  	  
-	  if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
-	    $key = array_search($this->paypal_code, $_SESSION['paypal_instruments']);
-	    unset($_SESSION['paypal_instruments'][$key]);
 
-	    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-	  }
-	}
+
+  function before_process() {	  
+    $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
+        
+    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+      $key = array_search($this->paypal_code, $_SESSION['paypal_instruments']);
+      unset($_SESSION['paypal_instruments'][$key]);
+
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
+  }
 
 
   function before_send_order() {
@@ -158,20 +163,20 @@ class paypal extends PayPalPaymentV2 {
   function success() {    
     return false;
   }
-  
-
-	function install() {	
-	  parent::install();	  
-	}
 
 
-	function keys() {
-		return array(
-		  'MODULE_PAYMENT_PAYPAL_STATUS', 
+  function install() {	
+    parent::install();	  
+  }
+
+
+  function keys() {
+    return array(
+      'MODULE_PAYMENT_PAYPAL_STATUS', 
       'MODULE_PAYMENT_PAYPAL_ALLOWED', 
       'MODULE_PAYMENT_PAYPAL_ZONE',
       'MODULE_PAYMENT_PAYPAL_SORT_ORDER'
     );
-	}
+  }
 
 }
