@@ -323,6 +323,36 @@ require (DIR_WS_INCLUDES.'head.php');
                   if ($module->code == 'paypal') {
                     ?>
                     <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_BUTTON_LAYOUT; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[PAYPAL_BUTTON_LAYOUT]', array(array('id' => 'horizontal', 'text' => 'horizontal'), array('id' => 'vertical', 'text' => 'vertical')), $paypal->get_config('PAYPAL_BUTTON_LAYOUT')); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_BUTTON_LAYOUT_INFO; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_BUTTON_SHAPE; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[PAYPAL_BUTTON_SHAPE]', array(array('id' => 'rect', 'text' => 'rectangular'), array('id' => 'pill', 'text' => 'pill')), $paypal->get_config('PAYPAL_BUTTON_SHAPE')); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_BUTTON_SHAPE_INFO; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_BUTTON_PRIMARY_COLOR; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[PAYPAL_BUTTON_PRIMARY_COLOR]', array(array('id' => 'gold', 'text' => 'gold'), array('id' => 'blue', 'text' => 'blue'), array('id' => 'silver', 'text' => 'silver'), array('id' => 'white', 'text' => 'white'), array('id' => 'black', 'text' => 'black')), $paypal->get_config('PAYPAL_BUTTON_PRIMARY_COLOR')); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_BUTTON_PRIMARY_COLOR_INFO; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_BUTTON_SECONDARY_COLOR; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[PAYPAL_BUTTON_SECONDARY_COLOR]', array(array('id' => 'gold', 'text' => 'gold'), array('id' => 'blue', 'text' => 'blue'), array('id' => 'silver', 'text' => 'silver'), array('id' => 'white', 'text' => 'white'), array('id' => 'black', 'text' => 'black')), $paypal->get_config('PAYPAL_BUTTON_SECONDARY_COLOR')); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_BUTTON_SECONDARY_COLOR_INFO; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_BUTTON_HEIGHT; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_BUTTON_HEIGHT]', $paypal->get_config('PAYPAL_BUTTON_HEIGHT'), 'style="width: 300px;"'); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_BUTTON_LAYOUT_INFO; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_SAVE_PAYMENT; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SAVE_PAYMENT]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SAVE_PAYMENT') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO; ?></td>
+                    </tr>
+                    <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_CHECKOUT_BNPL; ?></td>
                       <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CHECKOUT_BNPL]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CHECKOUT_BNPL') == '1') ? true : false)); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO; ?></td>
