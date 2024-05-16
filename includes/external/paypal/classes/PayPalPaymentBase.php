@@ -1038,7 +1038,7 @@ class PayPalPaymentBase extends PayPalCommon {
                    KEY idx_orders_id (orders_id)
                  );");
   
-    xtc_db_query("CREATE TABLE ".TABLE_PAYPAL_VAULT." (
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_VAULT." (
                    paypal_id int(11) NOT NULL AUTO_INCREMENT,
                    customers_id int(11) NOT NULL,
                    paypal_customers_id varchar(64) NOT NULL,
@@ -1278,7 +1278,7 @@ class PayPalPaymentBase extends PayPalCommon {
                    KEY idx_orders_id (orders_id)
                  );");
 
-    xtc_db_query("CREATE TABLE ".TABLE_PAYPAL_VAULT." (
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_VAULT." (
                    paypal_id int(11) NOT NULL AUTO_INCREMENT,
                    customers_id int(11) NOT NULL,
                    paypal_customers_id varchar(64) NOT NULL,
