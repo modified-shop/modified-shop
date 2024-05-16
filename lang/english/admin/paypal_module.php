@@ -68,6 +68,21 @@ $lang_array = array(
 
   'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT' => 'Show at checkout',
   'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT_INFO' => 'Show details for Installment during checkout?',
+
+  'TEXT_PAYPAL_BUTTON_LAYOUT' => 'Button Layout',
+  'TEXT_PAYPAL_BUTTON_LAYOUT_INFO' => 'Select the button layout',
+
+  'TEXT_PAYPAL_BUTTON_SHAPE' => 'Button Shape',
+  'TEXT_PAYPAL_BUTTON_SHAPE_INFO' => 'Select the button shape',
+
+  'TEXT_PAYPAL_BUTTON_PRIMARY_COLOR' => 'Button Color Paypal',
+  'TEXT_PAYPAL_BUTTON_PRIMARY_COLOR_INFO' => 'Select the button color',
+
+  'TEXT_PAYPAL_BUTTON_SECONDARY_COLOR' => 'Button Color BNPL',
+  'TEXT_PAYPAL_BUTTON_SECONDARY_COLOR_INFO' => 'Select the button color',
+
+  'TEXT_PAYPAL_BUTTON_HEIGHT' => 'Button Height',
+  'TEXT_PAYPAL_BUTTON_HEIGHT_INFO' => 'Select the button height in pixels min. 22px max. 55px',
 );
 
 
