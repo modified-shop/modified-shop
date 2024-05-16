@@ -115,21 +115,31 @@ class PayPalCommon extends PayPalAuth {
   }
 
 
-  function get_config($config_key) {
+  function get_config($config_key, $cache = true) {
     static $config_array;
     
     if (!is_array($config_array)) {
       $config_array = array();
     }
     
-    if (!isset($config_array[$config_key])) {
+    if (!isset($config_array[$config_key]) || $cache === false) {
       $config_array[$config_key] = '';
-      $config_query = xtDBquery("SELECT config_value 
-                                   FROM ".TABLE_PAYPAL_CONFIG." 
-                                  WHERE config_key = '".xtc_db_input($config_key)."'");
-      if (xtc_db_num_rows($config_query, true) > 0) {
-        $config = xtc_db_fetch_array($config_query, true);
-        $config_array[$config_key] = $config['config_value'];
+      if ($cache === false) {
+        $config_query = xtc_db_query("SELECT config_value 
+                                        FROM ".TABLE_PAYPAL_CONFIG." 
+                                       WHERE config_key = '".xtc_db_input($config_key)."'");
+        if (xtc_db_num_rows($config_query) > 0) {
+          $config = xtc_db_fetch_array($config_query);
+          $config_array[$config_key] = $config['config_value'];
+        }
+      } else {
+        $config_query = xtDBquery("SELECT config_value 
+                                     FROM ".TABLE_PAYPAL_CONFIG." 
+                                    WHERE config_key = '".xtc_db_input($config_key)."'");
+        if (xtc_db_num_rows($config_query, true) > 0) {
+          $config = xtc_db_fetch_array($config_query, true);
+          $config_array[$config_key] = $config['config_value'];
+        }
       }
     }
     

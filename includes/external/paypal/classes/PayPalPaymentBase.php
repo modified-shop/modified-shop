@@ -45,6 +45,7 @@ class PayPalPaymentBase extends PayPalCommon {
   var $transaction_type;
   var $free_shipping;
   var $free_shipping_value_over;
+  var $paypal_config;
 
   function __construct() {
 
@@ -118,7 +119,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->update_status();
     }
     
-    if ($this->check_install() && version_compare($this->paypal_version, $this->get_config('PAYPAL_VERSION'), '>')) {
+    if ($this->check_install() && version_compare($this->paypal_version, $this->get_config('PAYPAL_VERSION', false), '>')) {
       $this->paypal_update();
     }
   }
@@ -1074,7 +1075,7 @@ class PayPalPaymentBase extends PayPalCommon {
   
     // check tabs
     if ($this->code == 'paypalplus') {
-      if ($this->get_config('MODULE_PAYMENT_PAYPALPLUS_USE_TABS') == '') {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALPLUS_USE_TABS', false) == '') {
         $sql_data_array = array(
           'config_key' => 'MODULE_PAYMENT_PAYPALPLUS_USE_TABS',
           'config_value' => '1'
@@ -1085,7 +1086,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
     // check express button
     if ($this->code == 'paypalcart') {
-      if ($this->get_config('MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT') == '') {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT', false) == '') {
         $sql_data_array = array(
           'config_key' => 'MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT',
           'config_value' => '1'
@@ -1096,7 +1097,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
     // check express button
     if ($this->code == 'paypalacdc') {
-      if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS') == '') {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS', false) == '') {
         $sql_data_array = array(
           'config_key' => 'MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS',
           'config_value' => '0'
@@ -1107,7 +1108,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
     // set buttons
     if ($this->code == 'paypal') {
-      if ($this->get_config('PAYPAL_BUTTON_LAYOUT') == '') {
+      if ($this->get_config('PAYPAL_BUTTON_LAYOUT', false) == '') {
         $sql_data_array = array(
           array(
             'config_key' => 'PAYPAL_BUTTON_LAYOUT',
@@ -1237,7 +1238,7 @@ class PayPalPaymentBase extends PayPalCommon {
       }
     }
   }
-  
+    
   
   function paypal_update() {
     $table_array = array(
@@ -1328,7 +1329,7 @@ class PayPalPaymentBase extends PayPalCommon {
     );
     $this->save_config($sql_data_array);
     
-    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == '') {
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY', false) == '') {
       $sql_data_array = array(
         array(
           'config_key' => 'PAYPAL_INSTALLMENT_BANNER_DISPLAY',
@@ -1338,7 +1339,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->save_config($sql_data_array);
     }
 
-    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_COLOR') == '') {
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_COLOR', false) == '') {
       $sql_data_array = array(
         array(
           'config_key' => 'PAYPAL_INSTALLMENT_BANNER_COLOR',
@@ -1426,7 +1427,7 @@ class PayPalPaymentBase extends PayPalCommon {
       }
     }
 
-    if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS') == '') {
+    if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS', false) == '') {
       $sql_data_array = array(
         array(
           'config_key' => 'MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS',
@@ -1437,7 +1438,7 @@ class PayPalPaymentBase extends PayPalCommon {
     }
     
     // set buttons
-    if ($this->get_config('PAYPAL_BUTTON_LAYOUT') == '') {
+    if ($this->get_config('PAYPAL_BUTTON_LAYOUT', false) == '') {
       $sql_data_array = array(
         array(
           'config_key' => 'PAYPAL_BUTTON_LAYOUT',
