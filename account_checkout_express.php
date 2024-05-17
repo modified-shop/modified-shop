@@ -173,7 +173,7 @@ if ($check_shipping_address === false) {
 $smarty->assign('module_shipping_address', $address_content);
 
 // payment
-if ($account['checkout_shipping'] != 'cheapest_cheapest') {
+if ($account['checkout_shipping'] != '' && $account['checkout_shipping'] != 'cheapest_cheapest') {
   $_SESSION['shipping'] = array('id' => $account['checkout_shipping']);
 }
 $_SESSION['billto'] = $account['checkout_payment_address'];
