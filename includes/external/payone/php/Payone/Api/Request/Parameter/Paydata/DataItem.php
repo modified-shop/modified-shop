@@ -45,7 +45,7 @@ class Payone_Api_Request_Parameter_Paydata_DataItem
      */
     public function toArray()
     {
-        $data = parent::toArray();
+        $data = [];
         $data['add_paydata[' . $this->key . ']'] = $this->getData();
         return $data;
     }
