@@ -46,7 +46,7 @@ class PayonePayment {
   var $response;
 	
 	function __construct() {
-		global $order;
+		global $order, $PHP_SELF;
 
 		!empty($this->code) OR $this->code = 'payone';
 		$this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : ''); 
@@ -61,10 +61,12 @@ class PayonePayment {
       $this->tmpStatus = ((isset($this->config['orders_status'])) ? $this->config['orders_status']['tmp'] : -1);
   		$this->order_status = ((isset($this->config['orders_status'])) ? $this->config['orders_status']['paid'] : -1);
 
-      if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
+      if (strpos(basename($PHP_SELF), 'checkout') !== false) {
         $this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
         $this->global_config = $this->pg_config['global_override'] == 'true' ? $this->pg_config['global'] : $this->config['global'];
-        
+      }
+      
+      if (!defined('RUN_MODE_ADMIN') && is_object($order)) {        
         $this->update_status();
       }
 		}
