@@ -825,7 +825,7 @@ define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Maximum Anzahl der Artikel d
 define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Anzahl der History');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum Anzahl an Artikeln, die zuletzt besucht wurden, im Account anzeigen.');
 define('MAX_DISPLAY_SEARCH_AC_RESULTS_TITLE' , 'Anzahl Autocomplete Suchergebnisse');
-define('MAX_DISPLAY_SEARCH_AC_RESULTS_DESC' , 'Maximum Anzahl an Erbnissen der Autocomplete Suche.');
+define('MAX_DISPLAY_SEARCH_AC_RESULTS_DESC' , 'Maximum Anzahl an Ergebnissen der Autocomplete Suche.');
 
 define('SEARCH_RESULTS_SORT_TITLE', 'Reihenfolge f&uuml;r Suchergebnisse');
 define('SEARCH_RESULTS_SORT_DESC', 'Das ist die Reihenfolge, wie Suchergebnisse angezeigt werden.');
