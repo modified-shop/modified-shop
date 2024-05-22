@@ -15,7 +15,7 @@
   define('TEXT_MODULE_ZETTLE_STOCK', 'Lagerbestand &uuml;bertragen:');
   
   define('TEXT_MODULE_ZETTLE_BULK_HEADING', 'Zettle Bulkimport');
-  define('TEXT_MODULE_ZETTLE_BULK', 'Artikel&auml;nderungen vornehmen?');
+  define('TEXT_MODULE_ZETTLE_BULK', 'Artikeländerungen vornehmen?');
   define('TEXT_MODULE_ZETTLE_BULK_STATUS', 'Artikelstatus:');
   define('TEXT_MODULE_ZETTLE_BULK_STOCK', 'Lagerbestand &uuml;bertragen:');
   define('TEXT_MODULE_ZETTLE_BULK_ACTIVE', 'nur aktive Artikel?');
