@@ -48,7 +48,7 @@
     public $client;
     public $client_id;
     public $LoggingManager;
-    public $zettle_version = '1.08';
+    public $zettle_version = '1.09';
     
     function __construct() {    
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_zettle_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'zettle', 'debug');
