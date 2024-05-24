@@ -93,8 +93,7 @@ if (is_array($request)
       case 'VAULT.PAYMENT-TOKEN.DELETED':
       case 'VAULT.PAYMENT-TOKEN.DELETION-INITIATED':
         xtc_db_query("DELETE FROM ".TABLE_PAYPAL_VAULT."
-                            WHERE vault_id = '".xtc_db_input($request['resource']['id'])."'
-                              AND paypal_customers_id = '".xtc_db_input($request['resource']['customer']['id'])."'");
+                            WHERE vault_id = '".xtc_db_input($request['resource']['id'])."'");
         break;
         
       case 'VAULT.PAYMENT-TOKEN.CREATED':
