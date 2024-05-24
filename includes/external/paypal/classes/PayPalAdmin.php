@@ -537,7 +537,6 @@ class PayPalAdmin extends PayPalPayment {
         || $status === true
         )
     {
-      $partner = $this->get_partner_details($mode);
       if (!is_dir(DIR_FS_CATALOG.'.well-known/')) {
         mkdir(DIR_FS_CATALOG.'.well-known/', 0755);
       }
@@ -545,8 +544,11 @@ class PayPalAdmin extends PayPalPayment {
       // include needed functions
       require_once (DIR_FS_INC.'get_external_content.inc.php');
 
-      $domainAssociation = get_external_content($response['domainAssociation'], 3, false);
-      file_put_contents(DIR_FS_CATALOG.'.well-known/apple-developer-merchantid-domain-association', $domainAssociation);
+      $partner = $this->get_partner_details($mode);
+      if (is_array($partner)) {      
+        $domainAssociation = get_external_content($partner['domainAssociation'], 3, false);
+        file_put_contents(DIR_FS_CATALOG.'.well-known/apple-developer-merchantid-domain-association', $domainAssociation);
+      }
     }
   }
   
