@@ -298,8 +298,8 @@
           break;
         case '204':
           // Switzerland
-          $tax_normal = '7.7000';
-          $tax_special = '2.5000';
+          $tax_normal = '8.1000';
+          $tax_special = '2.6000';
 
           $tax_zero = '0.0000';
           $tax_germany_normal = '19.0000';
