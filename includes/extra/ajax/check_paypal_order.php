@@ -22,7 +22,7 @@
         )
     {
       $paypal = new PayPalPaymentV2($_GET['payment_method']);
-      $order = $paypal->GetOrder($_SESSION['paypal']['OrderID']);
+      $order = $paypal->GetOrder($_SESSION['paypal']['OrderID'], 'fields=payment_source');
       
       if (isset($order->payment_source)
           && isset($order->payment_source->card)
