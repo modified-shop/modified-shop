@@ -367,6 +367,16 @@
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_FACEBOOK_PIXEL_COUNT_ADMIN', '".TRACKING_COUNT_ADMIN_ACTIVE."',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
   
+  // rename config key
+  foreach ($config_array as $old_config => $new_config) {
+    if (!defined($new_config)) {
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_key = '".$new_config."'
+                     WHERE configuration_key = '".$old_config."'");
+    }
+    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key = '".$old_config."'");
+  }
+
   // delete old configuration
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TRACKING_COUNT_ADMIN_ACTIVE'");
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TRACKING_GOOGLEANALYTICS_ACTIVE'");
@@ -384,16 +394,6 @@
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM'");
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM'");
   
-  // rename config key
-  foreach ($config_array as $old_config => $new_config) {
-    if (!defined($new_config)) {
-      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                       SET configuration_key = '".$new_config."'
-                     WHERE configuration_key = '".$old_config."'");
-    }
-    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key = '".$old_config."'");
-  }
-
   // add columns
   $table_array = array(
     array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'paypal_info', 'default' => 'INT(1) NOT NULL DEFAULT 0', 'after' => 'blacklist_logs'),
