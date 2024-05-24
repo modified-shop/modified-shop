@@ -39,22 +39,6 @@ class paypalgooglepay extends PayPalPaymentV2 {
     
     $smarty->clear_assign('CHECKOUT_BUTTON');
     
-    if (!isset($_SESSION['paypal'])
-        || $_SESSION['paypal']['cartID'] != $_SESSION['cart']->cartID
-        || $_SESSION['paypal']['OrderID'] == ''
-        )
-    {
-      $_SESSION['paypal'] = array(
-        'cartID' => $_SESSION['cart']->cartID,
-        'OrderID' => $this->CreateOrder()
-      );
-    }
-    
-    $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
-    if ($_SESSION['paypal']['OrderID'] == '') {
-	    xtc_redirect($error_url);
-    }
-
     $paypal_smarty = new Smarty();
     $paypal_smarty->assign('language', $_SESSION['language']);
     $paypal_smarty->assign('checkout', true);
@@ -67,6 +51,9 @@ class paypalgooglepay extends PayPalPaymentV2 {
       $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/apms.html';
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
+
+    $order_url = DIR_WS_BASE.'ajax.php?ext=create_paypal_order';
+    $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
     
     $paypalscript = '
     if ($("#apms_button4").length) {
@@ -85,7 +72,13 @@ class paypalgooglepay extends PayPalPaymentV2 {
     $process_button .= '
     <script>
       function getGoogleOrderID() {
-        return "'.$_SESSION['paypal']['OrderID'].'";
+        var formdata = $("#checkout_confirmation").serializeArray(); 
+        return $.ajax({
+          type: "POST",
+          url: "'.$order_url.'",
+          data: formdata,
+          dataType: "json"
+        });
       }
       
       function getGoogleTransactionInfo() {
@@ -115,7 +108,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
       }
       
       function redirectGoogleError() {
-        window.location.href = "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'";
+        window.location.href = "'.$error_url.'";
       }
       
       function getGoogleEnviroment() {
