@@ -606,12 +606,12 @@
     }
 
 
-    function GetOrder($OrderID) {
+    function GetOrder($OrderID, $params = NULL) {
 
       // auth
       $client = $this->GetClient();
 
-      $request = new OrdersGetRequest($OrderID);
+      $request = new OrdersGetRequest($OrderID, $params);
       
       try {
         $response = $client->execute($request);
