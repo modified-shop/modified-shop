@@ -198,5 +198,5 @@
 
   /* format price */
   function formatMatomoPrice($price) {      
-    return number_format($price, 2, '.', '');
+    return number_format((double)$price, 2, '.', '');
   }
