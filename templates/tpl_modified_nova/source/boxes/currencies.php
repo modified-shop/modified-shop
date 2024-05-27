@@ -27,25 +27,26 @@
 
     // dont show box if there's only 1 currency
     if (count($currencies_array) > 1 ) {
-      $box_content = xtc_draw_form('currencies', xtc_href_link(basename($PHP_SELF), '', $request_type, false), 'get', '')
-                     . xtc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'aria-label="currencies" onchange="this.form.submit();"')
-                     . xtc_hide_session_id();
-    
-      parse_str(xtc_get_all_get_params(array('currency', 'language')), $params_array);
-      if (is_array($params_array) && count($params_array) > 0) {
+      $hidden_get_variables = '';
+
+      $params_array = xtc_get_params_array(xtc_get_all_get_params(array('language', 'currency')));
+      if (count($params_array) > 0) {
         foreach ($params_array as $k => $v) {
           if (is_array($v)) {
             foreach ($v as $kk => $vv) {
-              $box_content .= xtc_draw_hidden_field($k.'['.$kk.']', $vv);
+              $hidden_get_variables .= xtc_draw_hidden_field($k.'['.$kk.']', $vv);
             }
           } else {
-            $box_content .= xtc_draw_hidden_field($k, $v);
+            $hidden_get_variables .= xtc_draw_hidden_field($k, $v);
           }
         }
       }
-        
-      $box_content .= '</form>';
 
+      $box_content = xtc_draw_form('currencies', xtc_href_link(basename($PHP_SELF), '', $request_type, false), 'get', '')
+                     . xtc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'aria-label="currencies" onchange="this.form.submit();"')
+                     . $hidden_get_variables . xtc_hide_session_id()
+                     . '</form>';
+    
       $box_smarty->assign('BOX_CONTENT', $box_content);
     }
   }

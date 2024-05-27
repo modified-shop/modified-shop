@@ -35,11 +35,16 @@
     
       if (count($language_array) > 1) {
         $hidden_get_variables = '';
-        if (isset($_GET) && count($_GET) > 0) {
-          reset($_GET);
-          foreach ($_GET as $key => $value) {
-            if ($key != 'language' && $key != xtc_session_name() && $key != 'x' && $key != 'y' && $value != '' && trim($value) != '') {
-              $hidden_get_variables .= xtc_draw_hidden_field($key, $value);
+
+        $params_array = xtc_get_params_array(xtc_get_all_get_params(array('language', 'currency')));
+        if (count($params_array) > 0) {
+          foreach ($params_array as $k => $v) {
+            if (is_array($v)) {
+              foreach ($v as $kk => $vv) {
+                $hidden_get_variables .= xtc_draw_hidden_field($k.'['.$kk.']', $vv);
+              }
+            } else {
+              $hidden_get_variables .= xtc_draw_hidden_field($k, $v);
             }
           }
         }

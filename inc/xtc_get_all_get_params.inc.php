@@ -75,6 +75,14 @@
   }
   
   
+  function xtc_get_params_array($parameters) {
+    parse_str($parameters, $params_array);
+    $params_array = array_filter($params_array);
+    
+    return $params_array;
+  }
+  
+  
   function build_get_query($array) {
     $get_url = '';
     
