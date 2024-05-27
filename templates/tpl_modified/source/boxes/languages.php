@@ -51,4 +51,3 @@ if (!$cache) {
 }
 
 $smarty->assign('box_LANGUAGES', $box_languages);
-?>
