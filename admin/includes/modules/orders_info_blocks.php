@@ -373,6 +373,8 @@
         $count = xtc_db_num_rows($orders_history_query);
         if ($count) {
           while ($orders_history = xtc_db_fetch_array($orders_history_query)) {
+            $orders_history['comments'] = xtc_db_output($orders_history['comments']);
+            
             $count--;
             $class = ($count == 0) ? ' last_row' : '';
             echo '                <tr>'.PHP_EOL;
@@ -390,7 +392,7 @@
               echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';
             }
             echo '</td>'.PHP_EOL;
-            echo '                  <td class="smallText'.$class.'">'.nl2br(xtc_db_output($orders_history['comments'])).'&nbsp;</td>'. PHP_EOL;                 
+            echo '                  <td class="smallText'.$class.'">'.(($orders_history['comments'] != '') ? nl2br($orders_history['comments']) : '&nbsp;').'</td>'. PHP_EOL;                 
             echo '                  <td class="smallText'.$class.'" align="center">';
             if ($orders_history['comments_sent'] == '1') {
               echo xtc_image(DIR_WS_ICONS.'tick.gif').'</td>'.PHP_EOL;
