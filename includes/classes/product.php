@@ -626,136 +626,144 @@ class product {
    * @param array $array
    * @return array
    */
-  function buildDataArray(&$array, $image='thumbnail') {
-    global $xtPrice, $main;
-        
-    $array['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($array['products_id'], $array['products_tax_class_id']);
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
-        && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
-        && $xtPrice->get_content_type_product($array['products_id']) == 'virtual'
-        ) 
-    {
-      $array['products_tax_class_id'] = xtc_get_tax_class($array['products_tax_class_id']);
+  function buildDataArray(&$array, $image = 'thumbnail') {
+    global $xtPrice, $main;        
+    static $productData;
+    
+    if (!isset($productData)) {
+      $productData = array();
     }
 
-    //get tax rate
-    $tax_rate = isset($xtPrice->TAX[$array['products_tax_class_id']]) ? $xtPrice->TAX[$array['products_tax_class_id']] : 0;
+    if (!isset($productData[$array['products_id']])) {
+      $productData[$array['products_id']] = array();
 
-    //get products price , returns array
-    $products_price = $xtPrice->xtcGetPrice($array['products_id'], $format = true, 1, $array['products_tax_class_id'], $array['products_price'], 1);
-
-    //create buy now button
-    $buy_now = '';
-    $wishlist_now = '';
-    $wishlist_now_link = '';
-    if ($_SESSION['customers_status']['customers_status_show_price'] != '0' 
-        && defined('SHOW_BUTTON_BUY_NOW') && SHOW_BUTTON_BUY_NOW != 'false'
-        && ($_SESSION['customers_status']['customers_fsk18'] != '1' 
-            || (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')
-            ) 
-        )
-    {
-      $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
-      if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
-        $wishlist_now = $this->getWishlistNowButton($array['products_id'], $array['products_name']);
-        $wishlist_now_link = $this->getWishlistNowButton($array['products_id'], $array['products_name'], true);
+      $array['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($array['products_id'], $array['products_tax_class_id']);
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+          && $xtPrice->get_content_type_product($array['products_id']) == 'virtual'
+          ) 
+      {
+        $array['products_tax_class_id'] = xtc_get_tax_class($array['products_tax_class_id']);
       }
-    }
-    
-    // check for gift
-    if (isset($array['products_model']) && preg_match('/^GIFT/', addslashes($array['products_model']))
-        && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
-        && isset($_SESSION['customer_id']))
-    {
+  
+      //get tax rate
+      $tax_rate = isset($xtPrice->TAX[$array['products_tax_class_id']]) ? $xtPrice->TAX[$array['products_tax_class_id']] : 0;
+  
+      //get products price , returns array
+      $products_price = $xtPrice->xtcGetPrice($array['products_id'], $format = true, 1, $array['products_tax_class_id'], $array['products_price'], 1);
+  
+      //create buy now button
       $buy_now = '';
-      $array['products_gift_forbidden'] = 'true';
-    }
-    
-    //create products link
-    $products_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name']));
-
-    //get $shipping_status_name, $shipping_status_image
-    $shipping_status_name = $shipping_status_image = $shipping_status_link = '';
-    if (isset($array['products_shippingtime']) && ACTIVATE_SHIPPING_STATUS == 'true') {
-      $shipping_status_name = $main->getShippingStatusName($array['products_shippingtime']);
-      $shipping_status_image = $main->getShippingStatusImage($array['products_shippingtime']);
-      $shipping_status_link = $main->getShippingStatusName($array['products_shippingtime'], true);      
-    }
-
-    if ($_SESSION['customers_status']['customers_status_show_price'] != '0') {
-      if ($tax_rate >= 0) {
-        if (!isset($this->getTaxInfo[(string)$tax_rate])) {
-          $this->getTaxInfo[(string)$tax_rate] = $main->getTaxInfo($tax_rate);
+      $wishlist_now = '';
+      $wishlist_now_link = '';
+      if ($_SESSION['customers_status']['customers_status_show_price'] != '0' 
+          && defined('SHOW_BUTTON_BUY_NOW') && SHOW_BUTTON_BUY_NOW != 'false'
+          && ($_SESSION['customers_status']['customers_fsk18'] != '1' 
+              || (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')
+              ) 
+          )
+      {
+        $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
+        if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+          $wishlist_now = $this->getWishlistNowButton($array['products_id'], $array['products_name']);
+          $wishlist_now_link = $this->getWishlistNowButton($array['products_id'], $array['products_name'], true);
         }
       }
-      if ($this->ShippingLink == '' && SHOW_SHIPPING == 'true') {
-        $this->ShippingLink = $main->getShippingLink();
+      
+      // check for gift
+      if (isset($array['products_model']) && preg_match('/^GIFT/', addslashes($array['products_model']))
+          && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+          && isset($_SESSION['customer_id']))
+      {
+        $buy_now = '';
+        $array['products_gift_forbidden'] = 'true';
       }
-    }
-    
-    //get products image
-    $products_image = $this->productImage($array['products_image'], $image);   
-
-    // exclude some variables
-    if (isset($array['products_date_available']) && $array['products_date_available'] < date('Y-m-d H:i:s')) {
-      unset($array['products_date_available']);
-    }
-
-    if (defined('DB_CACHE') && DB_CACHE == 'true') {
-      $array['products_quantity'] = xtc_get_products_stock($array['products_id']);
-    }
-
-    //products data array
-    $productData = array();
-    foreach((array)$array as $key => $entry) {                  
-      $productData[strtoupper($key)] = $entry;
-    }
-
-    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && isset($array['products_date_added'])) {    
-      $date_new_products = mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y"));
-      if (strtotime($array['products_date_added']) >= $date_new_products) {
-        $productData['PRODUCTS_FLAG_NEW'] = true;
+      
+      //create products link
+      $products_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name']));
+  
+      //get $shipping_status_name, $shipping_status_image
+      $shipping_status_name = $shipping_status_image = $shipping_status_link = '';
+      if (isset($array['products_shippingtime']) && ACTIVATE_SHIPPING_STATUS == 'true') {
+        $shipping_status_name = $main->getShippingStatusName($array['products_shippingtime']);
+        $shipping_status_image = $main->getShippingStatusImage($array['products_shippingtime']);
+        $shipping_status_link = $main->getShippingStatusName($array['products_shippingtime'], true);      
       }
+  
+      if ($_SESSION['customers_status']['customers_status_show_price'] != '0') {
+        if ($tax_rate >= 0) {
+          if (!isset($this->getTaxInfo[(string)$tax_rate])) {
+            $this->getTaxInfo[(string)$tax_rate] = $main->getTaxInfo($tax_rate);
+          }
+        }
+        if ($this->ShippingLink == '' && SHOW_SHIPPING == 'true') {
+          $this->ShippingLink = $main->getShippingLink();
+        }
+      }
+      
+      //get products image
+      $products_image = $this->productImage($array['products_image'], $image);   
+  
+      // exclude some variables
+      if (isset($array['products_date_available']) && $array['products_date_available'] < date('Y-m-d H:i:s')) {
+        unset($array['products_date_available']);
+      }
+  
+      if (defined('DB_CACHE') && DB_CACHE == 'true') {
+        $array['products_quantity'] = xtc_get_products_stock($array['products_id']);
+      }
+  
+      //products data array
+      foreach((array)$array as $key => $entry) {                  
+        $productData[$array['products_id']][strtoupper($key)] = $entry;
+      }
+  
+      if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && isset($array['products_date_added'])) {    
+        $date_new_products = mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y"));
+        if (strtotime($array['products_date_added']) >= $date_new_products) {
+          $productData[$array['products_id']]['PRODUCTS_FLAG_NEW'] = true;
+        }
+      }
+      
+      $productDataAdds = array (
+        'PRODUCTS_PRICE' => $products_price['formated'],
+        'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
+        'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
+        'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
+        'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
+        'PRODUCTS_VPE_NAME' => $main->vpe_name,
+        'PRODUCTS_IMAGE' => $products_image,
+        'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
+        'PRODUCTS_IMAGE_ALT' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
+        'PRODUCTS_LINK' => $products_link,
+        'PRODUCTS_TAX_INFO' => isset($this->getTaxInfo[(string)$tax_rate]) ? $this->getTaxInfo[(string)$tax_rate] : '',
+        'PRODUCTS_SHIPPING_LINK' => $this->ShippingLink,
+        'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
+        'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
+        'PRODUCTS_SHIPPING_IMAGE' => $shipping_status_image,
+        'PRODUCTS_SHIPPING_NAME_LINK' => $shipping_status_link,
+        'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
+        'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
+        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.$products_link.'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>',
+        'PRODUCTS_BUTTON_WISHLIST_NOW' => $wishlist_now,
+        'PRODUCTS_LINK_WISHLIST_NOW' => $wishlist_now_link,
+        'SHIPPING_NAME' => $shipping_status_name,
+        'SHIPPING_IMAGE' => $shipping_status_image,
+        'SHIPPING_NAME_LINK' => $shipping_status_link,
+      );
+      $productData[$array['products_id']] = array_merge($productData[$array['products_id']], $productDataAdds);
+        
+      foreach((array)$products_price as $key => $entry) {
+        if (strtoupper($key) == 'PLAIN') $entry = round((double)$entry, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);      
+        $productData[$array['products_id']]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
+        $productData[$array['products_id']]['PRODUCTS_PRICE_ARRAY'][0]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
+      }
+      $productData[$array['products_id']]['PRODUCTS_PRICE_ARRAY'][0]['PRICE_ALLOWED'] = $productData[$array['products_id']]['PRICE_ALLOWED'];
+  
+      $productData[$array['products_id']] = $this->productModules->buildDataArray($productData[$array['products_id']], $array, $image);
     }
     
-    $productDataAdds = array (
-      'PRODUCTS_PRICE' => $products_price['formated'],
-      'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
-      'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
-      'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
-      'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
-      'PRODUCTS_VPE_NAME' => $main->vpe_name,
-      'PRODUCTS_IMAGE' => $products_image,
-      'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
-      'PRODUCTS_IMAGE_ALT' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
-      'PRODUCTS_LINK' => $products_link,
-      'PRODUCTS_TAX_INFO' => isset($this->getTaxInfo[(string)$tax_rate]) ? $this->getTaxInfo[(string)$tax_rate] : '',
-      'PRODUCTS_SHIPPING_LINK' => $this->ShippingLink,
-      'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
-      'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
-      'PRODUCTS_SHIPPING_IMAGE' => $shipping_status_image,
-      'PRODUCTS_SHIPPING_NAME_LINK' => $shipping_status_link,
-      'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
-      'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
-      'PRODUCTS_BUTTON_DETAILS' => '<a href="'.$products_link.'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>',
-      'PRODUCTS_BUTTON_WISHLIST_NOW' => $wishlist_now,
-      'PRODUCTS_LINK_WISHLIST_NOW' => $wishlist_now_link,
-      'SHIPPING_NAME' => $shipping_status_name,
-      'SHIPPING_IMAGE' => $shipping_status_image,
-      'SHIPPING_NAME_LINK' => $shipping_status_link,
-    );
-    $productData = array_merge($productData,$productDataAdds);                     
-
-    foreach((array)$products_price as $key => $entry) {
-      if (strtoupper($key) == 'PLAIN') $entry = round((double)$entry, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);      
-      $productData['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
-      $productData['PRODUCTS_PRICE_ARRAY'][0]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
-    }
-    $productData['PRODUCTS_PRICE_ARRAY'][0]['PRICE_ALLOWED'] = $productData['PRICE_ALLOWED'];
-
-    $productData = $this->productModules->buildDataArray($productData,$array,$image);
-    
-    return $productData;
+    return $productData[$array['products_id']];
   }
 
   /**
