@@ -22,7 +22,7 @@
   define('MODULE_DHL_BUSINESS_EKP_TITLE', 'EKP');
   define('MODULE_DHL_BUSINESS_EKP_DESC', 'DHL Customer number');
   define('MODULE_DHL_BUSINESS_ACCOUNT_TITLE', 'Account');
-  define('MODULE_DHL_BUSINESS_ACCOUNT_DESC', 'Account ID, Format ISO2:ID separated by comma (standard WORLD:01).<br>If "Warenpost" has a different ID, add PK (parcel) or WP (Warenpost). Example: WORLD:01PK,WORLD:02WP');
+  define('MODULE_DHL_BUSINESS_ACCOUNT_DESC', 'Account ID, Format ISO2:ID separated by comma (standard WORLD:01).<br>If "Warenpost" or "Returning" has a different ID, add PK (parcel), WP (Warenpost) or RT (Returning). Example: WORLD:01PK,WORLD:02WP,WORLD:03RT');
   define('MODULE_DHL_BUSINESS_PREFIX_TITLE', 'Sender reference prefix');
   define('MODULE_DHL_BUSINESS_PREFIX_DESC', 'Enter a prefix for the sender reference. The order number will be added automatically.');
   define('MODULE_DHL_BUSINESS_WEIGHT_CN23_TITLE', 'Weight CN23');

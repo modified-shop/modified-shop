@@ -57,9 +57,12 @@
           $this->data['account'][$account_data[$i]]['PK'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
         } elseif (strpos($account_data[$i+1], 'WP') !== false) {
           $this->data['account'][$account_data[$i]]['WP'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
+        } elseif (strpos($account_data[$i+1], 'RT') !== false) {
+          $this->data['account'][$account_data[$i]]['RT'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
         } else {
           $this->data['account'][$account_data[$i]]['PK'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
           $this->data['account'][$account_data[$i]]['WP'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
+          $this->data['account'][$account_data[$i]]['RT'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
         }
       }
       
@@ -347,7 +350,7 @@
       $ShipmentDetails->customerReference = $this->data['reference'];
       
       if ($this->retoure > 0) {
-        $ShipmentDetails->returnShipmentAccountNumber = $this->data['ekp'].'07'.((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']][$this->data['product_type']] : $this->data['account']['WORLD'][$this->data['product_type']]);
+        $ShipmentDetails->returnShipmentAccountNumber = $this->data['ekp'].'07'.((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']]['RT'] : $this->data['account']['WORLD']['RT']);
         $ShipmentDetails->returnShipmentReference = $this->data['reference'];
       }
       
