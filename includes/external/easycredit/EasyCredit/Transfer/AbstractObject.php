@@ -149,7 +149,7 @@ abstract class AbstractObject implements \ArrayAccess, \Serializable, TransferIn
      *
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         $propertyKey = Inflector::toCamelcase($offset);
 
@@ -162,7 +162,7 @@ abstract class AbstractObject implements \ArrayAccess, \Serializable, TransferIn
      *
      * @return null
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         $propertyKey = Inflector::toCamelcase($offset);
 
@@ -173,7 +173,7 @@ abstract class AbstractObject implements \ArrayAccess, \Serializable, TransferIn
      * @param string $offset
      * @param string $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $propertyKey = Inflector::toCamelcase($offset);
 
@@ -183,7 +183,7 @@ abstract class AbstractObject implements \ArrayAccess, \Serializable, TransferIn
     /**
      * @param string $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         $propertyKey = Inflector::toCamelcase($offset);
         $this->$propertyKey = null;

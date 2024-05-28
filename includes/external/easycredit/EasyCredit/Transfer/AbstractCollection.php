@@ -92,7 +92,7 @@ abstract class AbstractCollection implements \IteratorAggregate, \Countable, \Ar
      *
      * @return AbstractObject|null
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->offsetExists($offset) ? $this->items[$offset] : null;
     }
@@ -102,7 +102,7 @@ abstract class AbstractCollection implements \IteratorAggregate, \Countable, \Ar
      *
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->items[$offset]);
     }
@@ -111,7 +111,7 @@ abstract class AbstractCollection implements \IteratorAggregate, \Countable, \Ar
      * @param int $offset
      * @param int $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->items[$offset] = $value;
     }
@@ -119,7 +119,7 @@ abstract class AbstractCollection implements \IteratorAggregate, \Countable, \Ar
     /**
      * @param int $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->items[$offset]);
     }
