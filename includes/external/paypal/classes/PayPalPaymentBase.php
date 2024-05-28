@@ -1455,6 +1455,15 @@ class PayPalPaymentBase extends PayPalCommon {
       );
       $this->save_config($sql_data_array);
     }
+    
+    // unlink association files
+    if (is_file(DIR_FS_EXTERNAL.'paypal/templates/apple-developer-merchantid-domain-association.live')) {
+      unlink(DIR_FS_EXTERNAL.'paypal/templates/apple-developer-merchantid-domain-association.live');
+    }
+    if (is_file(DIR_FS_EXTERNAL.'paypal/templates/apple-developer-merchantid-domain-association.sandbox')) {
+      unlink(DIR_FS_EXTERNAL.'paypal/templates/apple-developer-merchantid-domain-association.sandbox');
+    }
+    
   }
 
 }
