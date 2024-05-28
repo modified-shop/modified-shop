@@ -577,6 +577,10 @@
         $this->billing = $customers_standard_arr;
       }
       
+      if (!isset($this->customer['zone_id'])) $this->customer['zone_id'] = -1;
+      if (!isset($this->delivery['zone_id'])) $this->delivery['zone_id'] = -1;
+      if (!isset($this->billing['zone_id'])) $this->billing['zone_id'] = -1;
+      
       // set shipping
       $this->delivery['shipping'] = $this->delivery['country'];
       $this->delivery['shipping']['zone_id'] = $this->delivery['zone_id'];
