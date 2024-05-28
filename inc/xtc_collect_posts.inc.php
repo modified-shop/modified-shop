@@ -95,16 +95,6 @@
           }
           $messageStack->add_session('coupon_message', sprintf(REDEEMED_AMOUNT, $xtPrice->xtcFormatCurrency($gv_amount)), 'success');
           
-          // update cart ID to reset external payments
-          if (isset($_SESSION['cart']->cartID) 
-              && isset($_SESSION['cartID'])
-              && $_SESSION['cart']->cartID == $_SESSION['cartID']
-              )
-          {
-            $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
-            $_SESSION['cartID'] = $_SESSION['cart']->cartID;
-          }
-          
           if (strpos(basename($PHP_SELF), 'checkout') !== false) {
             $_SESSION['cot_gv'] = 'ot_gv';
             xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'NONSSL'));
@@ -191,16 +181,6 @@
         $_SESSION['cc_amount_info'] = $coupon_amount;
         $_SESSION['cc_id'] = $gv_result['coupon_id'];
         $_SESSION['cc_post'] = true;
-        
-        // update cart ID to reset external payments
-        if (isset($_SESSION['cart']->cartID) 
-            && isset($_SESSION['cartID'])
-            && $_SESSION['cart']->cartID == $_SESSION['cartID']
-            )
-        {
-          $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
-          $_SESSION['cartID'] = $_SESSION['cart']->cartID;
-        }
         
         $messageStack->add_session('coupon_message', ((MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES == 'true') ? REDEEMED_COUPON : REDEEMED_COUPON_NO_SPECIALS), 'success');
         xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
