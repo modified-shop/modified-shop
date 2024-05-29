@@ -634,6 +634,7 @@ DROP TABLE IF EXISTS database_version;
 CREATE TABLE database_version (
   id INT(11) NOT NULL AUTO_INCREMENT,
   version VARCHAR(32) NOT NULL,
+  date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (id)
 );
 

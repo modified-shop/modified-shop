@@ -7,8 +7,11 @@
 #  Copyright (c) 2009 - 2013 [www.modified-shop.org]
 #  -----------------------------------------------------------------------------------------
 
+#GTB - 2024-05-29 - add date_added for database_version
+ALTER TABLE `database_version` ADD `date_added` DATETIME DEFAULT '0000-00-00 00:00:00';
+
 #Tomcraft - 2024-03-19 - changed database_version
-INSERT INTO `database_version` (`version`) VALUES ('MOD_3.1.0');
+INSERT INTO `database_version` (`version`, `date_added`) VALUES ('MOD_3.1.0', NOW());
 
 #GTB - 2024-03-19 - remove paypal sofort
 DELETE FROM `configuration` WHERE `configuration_key` = 'MODULE_PAYMENT_PAYPALSOFORT_STATUS';
