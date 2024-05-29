@@ -130,7 +130,7 @@ define ('_VALID_XTC',false);
 require('../includes/application_top_export.php');
 
 define('SET_TIME_LIMIT',1);   // use set_time_limit(0);
-define('CHARSET', (defined('DB_SERVER_CHARSET') && DB_SERVER_CHARSET == 'utf8') ? 'utf-8' : 'iso-8859-15'); // iso-8859-1 or utf-8
+define('CHARSET', (defined('DB_SERVER_CHARSET') && strpos(DB_SERVER_CHARSET, 'utf8') !== false) ? 'utf-8' : 'iso-8859-15'); // iso-8859-1 or utf-8
 define('DIR_FS_LANGUAGES', DIR_WS_LANGUAGES);
 define('CONTENT_CONDITIONS', '');
 

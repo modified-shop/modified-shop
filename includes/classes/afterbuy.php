@@ -91,7 +91,7 @@ class xtc_afterbuy_functions {
 
     if ($ignore_order === false) {
 
-      if (DB_SERVER_CHARSET == 'utf8') {
+      if (strpos(DB_SERVER_CHARSET, 'utf8') !== false) {
         if (file_exists('includes/local/configure.php') || $testmode === true) {
           $afterbuy_URL = 'https://api.afterbuy.de/afterbuy/ShopInterface_testUTF8.aspx';
         } else {

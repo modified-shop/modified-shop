@@ -2794,7 +2794,7 @@ function SendLog ()
       } else {
         $array[$key] = $value;
         if (defined('DB_SERVER_CHARSET') 
-            && DB_SERVER_CHARSET == 'utf8'
+            && strpos(DB_SERVER_CHARSET, 'utf8') !== false
             && !is_bool($value)
             )
         {
