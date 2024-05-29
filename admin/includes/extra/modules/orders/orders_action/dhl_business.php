@@ -22,10 +22,10 @@
       if (is_array($response) && isset($response['message'])) {
         if (is_array($response['message'])) {
           foreach ($response['message'] as $message) {
-            $messageStack->add_session(utf8_decode($message), 'warning');
+            $messageStack->add_session(decode_utf8($message), 'warning');
           }
         } else {
-          $messageStack->add_session(utf8_decode($response['message']), 'warning');
+          $messageStack->add_session(decode_utf8($response['message']), 'warning');
         }
       } else {
         $_SESSION['DHLparcel_id'] = $response;
@@ -83,10 +83,10 @@
       if (is_array($response) && isset($response['message'])) {
         if (is_array($response['message'])) {
           foreach ($response['message'] as $message) {
-            $messageStack->add_session(utf8_decode($message), 'warning');
+            $messageStack->add_session(decode_utf8($message), 'warning');
           }
         } else {
-          $messageStack->add_session(utf8_decode($response['message']), 'warning');
+          $messageStack->add_session(decode_utf8($response['message']), 'warning');
         }
       } else {
         $messageStack->add_session(TEXT_DHL_BUSINESS_DELETE_SUCCESS, 'success');

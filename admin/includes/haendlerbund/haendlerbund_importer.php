@@ -83,7 +83,7 @@ class haendlerbund_importer
                     )) {
                     if ($this->updateContent(
                             $this->getConfigurationValue($agb),
-                            utf8_decode(
+                            decode_utf8(
                                 str_replace(
                                     'style="font-size: medium;"',
                                     "",

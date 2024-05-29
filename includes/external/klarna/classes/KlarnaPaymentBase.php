@@ -371,7 +371,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 		$error = false;
 		if (isset($_GET['payment_error']) && $_GET['payment_error'] != '') {
 			$error = array('title' => constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_HEADING'),
-			               'error' => utf8_decode(decode_htmlentities(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE')))
+			               'error' => decode_utf8(decode_htmlentities(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE')))
 			               );
 		}
 		
