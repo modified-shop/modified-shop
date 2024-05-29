@@ -36,7 +36,7 @@ function get_states() {
     while ($zones_values = xtc_db_fetch_array($query)) {
       $zones[] = array(
         'id' => $zones_values['zone_id'],
-        'name' => (DB_SERVER_CHARSET == 'utf8'
+        'name' => (strpos(DB_SERVER_CHARSET, 'utf8') !== false
         ? $zones_values['zone_name']
         : iconv("ISO-8859-1", "UTF-8", $zones_values['zone_name']))
       );

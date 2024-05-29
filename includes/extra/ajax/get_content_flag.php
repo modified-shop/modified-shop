@@ -40,7 +40,7 @@ function get_content_flag() {
     while ($content_values = xtc_db_fetch_array($query)) {
       $content[] = array(
         'id' => $content_values['content_id'],
-        'name' => (DB_SERVER_CHARSET == 'utf8'
+        'name' => (strpos(DB_SERVER_CHARSET, 'utf8') !== false
         ? $content_values['content_title']
         : iconv("ISO-8859-1", "UTF-8", $content_values['content_title']))
       );

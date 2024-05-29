@@ -184,7 +184,7 @@
     
     $sql_data_array = array();
     foreach ($sql_array as $sql) {
-      if (DB_SERVER_CHARSET == 'utf8') {
+      if (strpos(DB_SERVER_CHARSET, 'utf8') !== false) {
         $sql = encode_utf8($sql, 'ISO-8859-1', true);
       }
       $sql_data_array[] = trim($sql);

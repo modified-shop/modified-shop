@@ -44,7 +44,7 @@ if (isset($_SESSION['language_charset'])) {
 } else {
   $charset = 'ISO-8859-1';
   if (defined('DB_SERVER_CHARSET')
-      && DB_SERVER_CHARSET == 'utf8'
+      && strpos(DB_SERVER_CHARSET, 'utf8') !== false 
       )
   {
     $charset = 'UTF-8';

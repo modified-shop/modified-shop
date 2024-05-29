@@ -377,7 +377,7 @@ class api_it_recht_kanzlei {
     // remove problem sign
     $string = str_replace('&thinsp;', ' ', $string);
     
-    return decode_htmlentities($string, ENT_COMPAT, ((DB_SERVER_CHARSET == 'utf8') ? 'UTF-8' : ''));
+    return decode_htmlentities($string, ENT_COMPAT, ((strpos(DB_SERVER_CHARSET, 'utf8') !== false) ? 'UTF-8' : ''));
   }
     
   // return error and end script
