@@ -20,7 +20,7 @@
     $entry_state_has_zones = ($check['total'] > 0);
   
     $zone_name = isset($_POST['zone']) ? $_POST['zone'] : '';
-    $zone_name =  DB_SERVER_CHARSET == 'latin1' ? utf8_decode($zone_name) : $zone_name;
+    $zone_name =  DB_SERVER_CHARSET == 'latin1' ? decode_utf8($zone_name) : $zone_name;
   
     $field = 'entry_state';
     if (isset($_POST['field'])) {
