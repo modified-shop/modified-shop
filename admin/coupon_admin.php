@@ -491,17 +491,24 @@ require (DIR_WS_INCLUDES.'head.php');
         ?>
         <td class="boxCenter">
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
-          <div>
-            <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>
+          <div class="pageHeading flt-l"><?php echo HEADING_TITLE; ?>
+            <div class="main pdg2"><?php echo 'Configuration'; ?></div>
           </div>
-          <div style="width: 100%; margin: 0 0 10px 0;">
-            <div class="main" style="display:inline-block; padding: 5px; vertical-align:top;">
-              <?php echo xtc_draw_form('status', FILENAME_COUPON_ADMIN, '', 'get');
+          <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
+            <?php echo xtc_draw_form('status', FILENAME_COUPON_ADMIN, '', 'get');
               $status_array[] = array('id' => 'Y', 'text' => TEXT_COUPON_ACTIVE);
               $status_array[] = array('id' => 'N', 'text' => TEXT_COUPON_INACTIVE);
               $status_array[] = array('id' => '*', 'text' => TEXT_COUPON_ALL);
-              $status = isset($_GET['status']) ? xtc_db_prepare_input($_GET['status']) : 'Y';
-              echo HEADING_TITLE_STATUS . ' &nbsp; ' . xtc_draw_pull_down_menu('status', $status_array, $status, '');
+              $status = isset($_GET['status']) ? xtc_db_prepare_input($_GET['status']) : 'Y';              $orders_statuses_array = array();
+              echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', $status_array, $status, 'onchange="this.form.submit();" style="margin-top: 2px; min-width:150px;"'); 
+              echo xtc_draw_hidden_filter_field('input_id', ((isset($_GET['input_id'])) ? $_GET['input_id'] : ''));
+              echo xtc_draw_hidden_filter_field('input_code', ((isset($_GET['input_code'])) ? $_GET['input_code'] : ''));
+              echo xtc_draw_hidden_filter_field('input_name', ((isset($_GET['input_name'])) ? $_GET['input_name'] : ''));
+            ?>
+            </form>        
+          </div>
+          <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
+            <?php echo xtc_draw_form('search', FILENAME_COUPON_ADMIN, '', 'get');
               $input_id = !isset($_POST['input_id']) ? !isset($_GET['input_id']) ? '' : (int)$_GET['input_id'] : (int)$_POST['input_id'];
               echo ' &nbsp; cID: <input type="text" name="input_id" value="'.$input_id.'"/> &nbsp; ';
               $input_code = !isset($_POST['input_code']) ? !isset($_GET['input_code']) ? '' : xtc_db_input($_GET['input_code']) : xtc_db_input($_POST['input_code']);
@@ -509,11 +516,11 @@ require (DIR_WS_INCLUDES.'head.php');
               $input_name = !isset($_POST['input_name']) ? !isset($_GET['input_name']) ? '' : xtc_db_input($_GET['input_name']) : xtc_db_input($_POST['input_name']);
               echo ' &nbsp; Name: <input type="text" name="input_name" value="'.$input_name.'"/> &nbsp; ';
               echo '<input class="button no_top_margin" style="vertical-align:top;" type="submit" name="btnSearch" value="'.BUTTON_SEARCH.'"/>';
+              echo xtc_draw_hidden_filter_field('status', ((isset($_GET['status'])) ? $_GET['status'] : ''));
               ?>
-              </form>
-            </div>
-            <div class="main" style="display:inline-block; padding:5px; vertical-align:top; margin-left:50px"><a class="button no_top_margin" href="<?php echo xtc_href_link(FILENAME_COUPON_ADMIN, 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>
+            </form>
           </div>
+          <div class="main" style="display:inline-block; padding:5px; vertical-align:top; margin-left:50px"><a class="button no_top_margin" href="<?php echo xtc_href_link(FILENAME_COUPON_ADMIN, 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>    
           <table class="tableCenter">
             <tr>
               <td class="boxCenterLeft">
@@ -586,7 +593,15 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td class="dataTableContent" style="padding-left: 5px"><?php echo $coupon_amount;?>&nbsp;</td>
                     <td class="dataTableContent">&nbsp;<?php echo $currencies->format($cc_list['coupon_minimum_order']); ?></td>
                     <td class="dataTableContent nobr">&nbsp;<?php echo $cc_list['coupon_code']; ?></td>
-                    <td class="dataTableContent txta-c"><?php if ($cc_list['coupon_active'] == 'N') { echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12); } else { echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12); } ?></td>
+                    <td  class="dataTableContent txta-c">
+                      <?php
+                      if ($cc_list['coupon_active'] == 'Y') {
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_inactive&cID='.$cc_list['coupon_id'],'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                      } else {
+                        echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_active&cID='.$cc_list['coupon_id'],'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                      }
+                      ?>
+                    </td>
                     <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['coupon_id'] == $cInfo->coupon_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('page', 'cID', 'action')) . 'page=' . $page . '&cID=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                   </tr>
                   <?php
