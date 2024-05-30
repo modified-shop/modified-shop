@@ -33,7 +33,7 @@ if (ACTIVATE_GIFT_SYSTEM != 'true') {
 }
 
 // if the customer is not logged on, redirect them to the login page
-if (!isset ($_SESSION['customer_id'])) {
+if (!isset($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
@@ -41,7 +41,7 @@ if (!isset ($_SESSION['customer_id'])) {
 $smarty = new Smarty();
 
 // check for a voucher number in the url
-if (isset ($_GET['gv_no'])) {
+if (isset($_GET['gv_no'])) {
 	$error = true;
 	$gv_query = xtc_db_query("SELECT c.coupon_id, 
 	                                 c.coupon_amount 
@@ -66,16 +66,19 @@ if (isset ($_GET['gv_no'])) {
 	xtc_redirect(FILENAME_DEFAULT);
 }
 
-if ($error === false && isset($_SESSION['customer_id'])) {
+if ($error === false) {
 	// Update redeem status
-	$sql_data_array = array('coupon_id' => $coupon['coupon_id'],
-	                        'customer_id' => $_SESSION['customer_id'],
-	                        'redeem_date' => 'now()',
-	                        'redeem_ip' => $_SESSION['tracking']['ip']);
+	$sql_data_array = array(
+	  'coupon_id' => (int)$_SESSION['gv_id'],
+    'customer_id' => (int)$_SESSION['customer_id'],
+    'redeem_date' => 'now()',
+    'redeem_ip' => $_SESSION['tracking']['ip']
+  );
 	xtc_db_perform(TABLE_COUPON_REDEEM_TRACK, $sql_data_array);                        
+	
 	xtc_db_query("UPDATE ".TABLE_COUPONS." 
 	                 SET coupon_active = 'N' 
-	               WHERE coupon_id = '".$coupon['coupon_id']."'");
+	               WHERE coupon_id = '".(int)$_SESSION['gv_id']."'");
 	xtc_gv_account_update($_SESSION['customer_id'], $_SESSION['gv_id']);
 	unset($_SESSION['gv_id']);
 }
