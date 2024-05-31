@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: orders_klarna.php 11169 2018-05-30 13:57:32Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,7 +30,7 @@ if (isset($_GET['subaction'])
     if ($amount > 0) {
       switch ($_POST['cmd']) {
         case 'refund':
-          $_SESSION['klarna_success'] = $klarna->refundOrder($amount, $order_id);
+          $_SESSION['klarna_success'] = $klarna->refundOrder($amount, $order_id, xtc_db_prepare_input($_POST['description']));
           break;
 
         case 'capture':

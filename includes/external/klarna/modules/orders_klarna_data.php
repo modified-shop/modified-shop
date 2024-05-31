@@ -191,6 +191,10 @@ if (isset($order) && is_object($order)) {
                       <dt style="line-height: 28px;"><?php echo TEXT_KLARNA_REFUND_AMOUNT; ?></dt>
                       <dd><?php echo xtc_draw_input_field('amount', '', 'style="width: 135px"'); ?></dd>
                     </dl>
+                    <dl class="pp_transaction">
+                      <dt style="line-height: 28px;"><?php echo TEXT_KLARNA_REFUND_DESCRIPTION; ?></dt>
+                      <dd><?php echo xtc_draw_textarea_field('description', '', '40', '4', '', 'maxlength="127"'); ?></dd>
+                    </dl>
                   </div>
                   <br>
                   <input type="submit" class="button flt-r" name="refund_submit" value="<?php echo TEXT_KLARNA_REFUND_SUBMIT; ?>">

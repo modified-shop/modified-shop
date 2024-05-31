@@ -278,11 +278,12 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
-  function refundOrder($amount, $order_id) {
+  function refundOrder($amount, $order_id, $description = '') {
     try {
       $management = new Klarna\Rest\OrderManagement\Order($this->connector, $order_id);
       $management->refund(array(
         'refunded_amount' => $this->format_amount($amount),
+        'description' => $description,
       ));
       
       return TEXT_KLARNA_TRANSACTION_REFUND;

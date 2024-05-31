@@ -39,6 +39,7 @@ $lang_array = array(
   'TEXT_KLARNA_CAPTURE_MAX_AMOUNT' => 'Maximaler Betrag:',
 
   'TEXT_KLARNA_REFUND_AMOUNT' => 'Betrag:',
+  'TEXT_KLARNA_REFUND_DESCRIPTION' => 'Kommentar:',
   'TEXT_KLARNA_REFUND_MAX_AMOUNT' => 'Maximaler Betrag:',
   
   'TEXT_KLARNA_CAPTURE_SUBMIT' => 'Aktivieren',
