@@ -63,7 +63,9 @@
       'OrderID' => $paypal->CreateOrder($payment_source)
     );
 
-    $paypal->PatchOrder($_SESSION['paypal']['OrderID']);
-        
+    if ($paypal->code != 'paypalexpress') {
+      $paypal->PatchOrder($_SESSION['paypal']['OrderID']);
+    }
+    
     return $_SESSION['paypal']['OrderID'];
   }
