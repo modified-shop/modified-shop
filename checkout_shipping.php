@@ -45,7 +45,6 @@ $smarty = new Smarty();
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 unset ($_SESSION['tmp_oID']);
-unset ($_SESSION['paypal']);
 
 //express checkout
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {

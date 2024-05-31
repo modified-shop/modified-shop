@@ -31,6 +31,7 @@ $params = '';
 $link_checkout_payment = FILENAME_CHECKOUT_PAYMENT;
 if (isset($_SESSION['paypal']['PayerID'])
     && $_SESSION['paypal']['PayerID'] != ''
+    && MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'True'
     )
 {
   $params = xtc_get_all_get_params(array('action', 'id'));

@@ -58,8 +58,32 @@ class paypalexpress extends PayPalPaymentV2 {
 
 
   function selection() {
+    if (MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
+      return array(
+        'id' => $this->code, 
+        'module' => $this->title, 
+        'description' => $this->info,
+      );
+    }
     unset($_SESSION['paypal']);
     xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
+  }
+
+
+  function before_process() {
+    if (MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'True') {
+      return parent::before_process();
+    }
+    
+    $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
+        
+    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+      $key = array_search($this->paypal_code, $_SESSION['paypal_instruments']);
+      unset($_SESSION['paypal_instruments'][$key]);
+      unset($_SESSION['paypal']['payment_modules']);
+      
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
   }
 
 
@@ -90,7 +114,8 @@ class paypalexpress extends PayPalPaymentV2 {
       'MODULE_PAYMENT_PAYPALEXPRESS_STATUS', 
       'MODULE_PAYMENT_PAYPALEXPRESS_ALLOWED', 
       'MODULE_PAYMENT_PAYPALEXPRESS_ZONE',
-      'MODULE_PAYMENT_PAYPALEXPRESS_SORT_ORDER'
+      'MODULE_PAYMENT_PAYPALEXPRESS_SORT_ORDER',
+      'MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT'
     );
   }
 

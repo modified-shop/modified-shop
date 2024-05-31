@@ -200,7 +200,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function pre_confirmation_check() {
     global $order, $smarty, $total_weight, $total_count, $free_shipping;
     
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress'))) {
+    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
       return false;
     }
 
@@ -252,7 +252,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function confirmation() {
     global $order, $smarty, $xtPrice, $main, $messageStack, $total_weight, $total_count, $free_shipping;
     
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress'))) {
+    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
       return false;
     }
 
@@ -427,7 +427,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function process_button() {
     global $smarty, $main, $messageStack;
     
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress'))) {
+    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
       return false;
     }
 
@@ -512,7 +512,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function before_process() {
     global $messageStack;
 
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || isset($_SESSION['tmp_oID'])) {
+    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False' || isset($_SESSION['tmp_oID'])) {
       return false;
     }
         
@@ -963,6 +963,9 @@ class PayPalPaymentBase extends PayPalCommon {
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_SORT_ORDER', '0', '6', '2', NULL, now(), '', '')");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ALLOWED', '', '6', '3', NULL, now(), '', '')");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ZONE', '0', '6', '4', NULL, now(), 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(')");
+    if ($this->code == 'paypalexpress') {
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_SHORT_CHECKOUT', 'True', '6', '1', NULL, now(), '', 'xtc_cfg_select_option(array(\'True\', \'False\'),' )");
+    }
     
     // scheduled task
     if (defined('TABLE_SCHEDULED_TASKS')) {
@@ -1347,7 +1350,16 @@ class PayPalPaymentBase extends PayPalCommon {
         xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
       }
     }
-    
+ 
+    if (defined('MODULE_PAYMENT_PAYPALEXPRESS_STATUS') && !defined('MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT')) {
+      $check_query = xtc_db_query("SELECT * 
+                                     FROM ".TABLE_CONFIGURATION." 
+                                    WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_SECRET'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT', 'True', '6', '1', NULL, now(), '', 'xtc_cfg_select_option(array(\'True\', \'False\'),' )");
+      }
+    }
+   
     //check tables
     $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_CONFIG." LIKE 'config_id'");
     if (xtc_db_num_rows($check_query) == 0) {

@@ -24,6 +24,8 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALEXPRESS_SORT_ORDER_DESC' => 'Sort order of the view. Lowest numeral will be displayed first',
   'MODULE_PAYMENT_PAYPALEXPRESS_ZONE_TITLE' => 'Payment zone',
   'MODULE_PAYMENT_PAYPALEXPRESS_ZONE_DESC' => 'If a zone is choosen, the payment method will be valid for this zone only.',
+  'MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT_TITLE' => 'Short Checkout',
+  'MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT_DESC' => 'Should the redirect be made directly to confirmation page?',
   'MODULE_PAYMENT_PAYPALEXPRESS_LP' => '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Create PayPal account now.</strong></a>',
 
   'MODULE_PAYMENT_PAYPALEXPRESS_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ATTENTION:</font></strong> Please setup PayPal configuration under "Partner Modules" -> "PayPal" -> <a href="'.xtc_href_link('paypal_config.php').'"><strong>"PayPal Configuration"</strong></a>!',

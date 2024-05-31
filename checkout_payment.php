@@ -49,7 +49,6 @@ require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
-unset ($_SESSION['paypal']);
 
 //if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);
 if (isset($_SESSION['cot_gv']) /*&& isset($_SESSION['payment'])*/) {

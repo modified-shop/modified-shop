@@ -121,6 +121,9 @@ if (isset($_SESSION['paypal'])
       $_SESSION['paypal']['PayerID'] = $PayPalOrder->payer->payer_id;
     }
     
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'NONSSL'));
+    if (MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+    }
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'SSL'));
   }
 }
