@@ -25,7 +25,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALEXPRESS_ZONE_TITLE' => 'Zahlungszone',
   'MODULE_PAYMENT_PAYPALEXPRESS_ZONE_DESC' => 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.',
   'MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT_TITLE' => 'Kurzer Checkout',
-  'MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT_DESC' => 'Soll die R&uuml;ckleitung direckt auf die Bestell&uuml;bersichtsseite erfolgen?',
+  'MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT_DESC' => 'Soll die R&uuml;ckleitung direkt auf die Bestell&uuml;bersichtsseite erfolgen?',
   'MODULE_PAYMENT_PAYPALEXPRESS_LP' => '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>',
 
   'MODULE_PAYMENT_PAYPALEXPRESS_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ACHTUNG:</font></strong> Bitte nehmen Sie noch die Einstellungen unter "Partner Module" -> "PayPal" -> <a href="'.xtc_href_link('paypal_config.php').'"><strong>"PayPal Konfiguration"</strong></a> vor!',
