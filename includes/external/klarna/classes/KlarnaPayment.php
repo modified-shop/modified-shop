@@ -192,6 +192,18 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
+  function updateKlarnaSession($session_id) {
+    $order_array = $this->getOrderData(true);
+    
+    try {
+      $session = new Klarna\Rest\Payments\Sessions($this->connector, $session_id);
+      $resonse = $session->update($order_array);
+    } catch (Exception $e) {
+      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
+    }
+  }
+
+
   function updateMerchantReference($order_id, $reference1, $reference2) {
     try {
       $management = new Klarna\Rest\OrderManagement\Order($this->connector, $order_id);

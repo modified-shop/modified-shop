@@ -56,7 +56,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function update_status() {
-    global $order;
+    global $order, $PHP_SELF;
     
     if ($this->enabled == true
         && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')
@@ -95,7 +95,12 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       }
     }
     
-    if (!defined('RUN_MODE_ADMIN') && !isset($_SESSION['klarna'])) {
+    if (!defined('RUN_MODE_ADMIN') 
+        && !isset($_SESSION['klarna'])
+        && strpos(basename($PHP_SELF), 'checkout') !== false
+        && basename($PHP_SELF) != FILENAME_CHECKOUT_SUCCESS
+        )
+    {
       $this->getKlarnaSession();
     }
         
@@ -132,53 +137,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function javascript_validation() {
-    $js = false;
-    if (!isset($_SESSION['klarna'])
-        || !array_key_exists($this->klarna_code, $_SESSION['klarna'])
-        || !array_key_exists('payment_method', $_SESSION['klarna'][$this->klarna_code])
-        || $_SESSION['klarna'][$this->klarna_code]['payment_method'] != $this->klarna_code
-        )
-    {
-      $order_array = $this->getOrderData();
-      
-      $js = 'if (payment_value == "'.$this->code.'" 
-                 && klarna_'.$this->klarna_code.'_result === false
-                 && error == 0
-                 )
-             {
-               Klarna.Payments.authorize({ 
-                  payment_method_category: "'.$this->klarna_code.'", 
-                  auto_finalize: false
-                }, {
-                  billing_address: 
-                    '.json_encode($order_array['billing_address']).'
-                  ,
-                  shipping_address:
-                    '.json_encode($order_array['shipping_address']).'
-                  
-                }, function(result) {                  
-                  if (result.approved !== undefined
-                      && result.approved === true
-                      )
-                  {
-                    klarna_'.$this->klarna_code.'_result = true;
-                    
-                    $("#checkout_payment").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
-                    $.each(result, function (key, val) {
-                      $("#checkout_payment").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][\'+key+\']" value="\'+val+\'">\');
-                    });
-                  
-                    var check = check_form_payment();
-                    if (check === true) {
-                      $("#checkout_payment").submit();
-                    }
-                  }
-               });
-               
-               return false;
-             }';
-    }
-    return $js;
+    return false;
   }
 
 
@@ -196,27 +155,11 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
-  function pre_confirmation_check() {    
-    if (isset($_POST['klarna'])) {
-      $_SESSION['klarna'] = array_merge($_SESSION['klarna'], $_POST['klarna']);
-            
-      if (array_key_exists($this->klarna_code, $_SESSION['klarna'])
-          && array_key_exists('show_form', $_SESSION['klarna'][$this->klarna_code])
-          && $_SESSION['klarna'][$this->klarna_code]['show_form'] == 'false'
-          )
-      {
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-      }
-      return false;
-    } elseif (isset($_SESSION['klarna'])
-              && array_key_exists($this->klarna_code, $_SESSION['klarna'])
-              && array_key_exists('authorization_token', $_SESSION['klarna'][$this->klarna_code])
-              )
-    {
-      return false;
+  function pre_confirmation_check() {
+    if (isset($_SESSION['klarna'])) {
+      $this->updateKlarnaSession($_SESSION['klarna']['session_id']);
     }
-    unset($_SESSION['klarna']);
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    return false;
   }
 
 
@@ -226,15 +169,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function process_button() {
-    if (isset($_SESSION['klarna'])
-        && array_key_exists($this->klarna_code, $_SESSION['klarna'])
-        && array_key_exists('finalize_required', $_SESSION['klarna'][$this->klarna_code])
-        && $_SESSION['klarna'][$this->klarna_code]['finalize_required'] != false
-        && (!isset($_SESSION['klarna'][$this->klarna_code]['authorization_token'])
-            || $_SESSION['klarna'][$this->klarna_code]['authorization_token'] == ''
-            )
-        )
-    {
+    if (isset($_SESSION['klarna'])) {
+      $order_array = $this->getOrderData();
+      
       $js = '
         <script>
           var klarna_'.$this->klarna_code.'_result = false;
@@ -249,27 +186,54 @@ class KlarnaPaymentBase extends KlarnaAutoload {
             $("#checkout_confirmation").on("submit", function(event) {
               if (klarna_'.$this->klarna_code.'_result == false) {
                 event.preventDefault();
-                            
-                Klarna.Payments.finalize({
-                  payment_method_category: "'.$this->klarna_code.'"
-                },
-                function(result) {
-                  console.debug(result);
-                                
-                  $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
-                  $.each(result, function (key, val) {
-                    $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][\'+key+\']" value="\'+val+\'">\');
-                  });
                 
-                  if (result.authorization_token !== undefined) {
-                    klarna_'.$this->klarna_code.'_result = true;
-                    $("#checkout_confirmation").submit();
+                Klarna.Payments.authorize({ 
+                  payment_method_category: "'.$this->klarna_code.'", 
+                  auto_finalize: false
+                }, {
+                  billing_address: 
+                    '.json_encode($order_array['billing_address']).'
+                  ,
+                  shipping_address:
+                    '.json_encode($order_array['shipping_address']).'
+                  
+                }, function(result) {
+                  if (result.approved !== undefined
+                      && result.approved === true
+                      )
+                  {
+                    if (result.finalize_required === true) {
+                      Klarna.Payments.finalize({
+                        payment_method_category: "'.$this->klarna_code.'"
+                      },
+                      function(finalresult) {
+                        $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
+                        $.each(finalresult, function (key, val) {
+                          $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][\'+key+\']" value="\'+val+\'">\');
+                        });
+                      
+                        if (finalresult.authorization_token !== undefined) {
+                          klarna_'.$this->klarna_code.'_result = true;
+                          $("#checkout_confirmation").submit();
+                        } else {
+                          $(location).attr("href", "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'");
+                        }
+                      });
+                    } else {
+                      $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
+                      $.each(result, function (key, val) {
+                        $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][\'+key+\']" value="\'+val+\'">\');
+                      });
+                      
+                      klarna_'.$this->klarna_code.'_result = true;
+                      $("#checkout_confirmation").submit();
+                    }
                   } else {
                     $(location).attr("href", "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'");
                   }
-                });
+               });
               }
-            });            
+            });
           }
         </script>
         <script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>';
