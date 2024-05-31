@@ -63,6 +63,7 @@
 
         //Will become true, if cod can be processed.
         $cod_country = false;
+        $cod_cost = 0;
 
         //check if payment method is cod. If yes, check if cod is possible.
         if (isset($_SESSION['payment']) 
@@ -93,7 +94,7 @@
           }
         }
 
-        if ($cod_country) {
+        if ($cod_country && $cod_cost != '') {
           $cod_cost = $xtPrice->xtcCalculateCurr($cod_cost);
           $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);

@@ -130,17 +130,19 @@ class cod {
       $cod_cost = 0;
       $cod_country = false;
       for ($i = 0; $i < count($cod_zones); $i++) {
-        if ($cod_zones[$i] == $order->delivery['country']['iso_code_2'] || $cod_zones[$i] == '00') {
-          $cod_cost = (double)$cod_zones[$i + 1];
-          if ($cod_cost > 0) {
-            $cod_country = true;
-            break;
-          }        
+        if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
+          $cod_cost = $cod_zones[$i + 1];
+          $cod_country = true;
+          break;
+        } elseif ($cod_zones[$i] == '00') {
+          $cod_cost = $cod_zones[$i + 1];
+          $cod_country = true;
+          break;
         }
         $i++;
       }
 
-      if ($cod_country) {
+      if ($cod_country && $cod_cost != '') {
         $cod_cost = $xtPrice->xtcCalculateCurr($cod_cost);
         $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
@@ -164,6 +166,8 @@ class cod {
         }
         
         $this->cost = '+ '.$cod_cost;
+      } else {
+        return false;
       }
     }
     
