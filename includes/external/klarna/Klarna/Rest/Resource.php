@@ -111,11 +111,13 @@ abstract class Resource extends \ArrayObject
         $id = $this->getId();
 
         if (!is_null($array)) {
-            parent::exchangeArray($array);
+            $array = parent::exchangeArray($array);
         }
         if (is_null($this->getId()) && !is_null($id)) {
             $this->setId($id);
         }
+                
+        return $array;
     }
 
     /**
