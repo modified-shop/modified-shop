@@ -237,7 +237,8 @@ class api_it_recht_kanzlei {
       
       $url = ((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CONTENT.'?coID='.$content_group.'&language='.$languages_code;
       if ($content_group != '') {
-        $check_query = xtc_db_query("SELECT content_text 
+        $check_query = xtc_db_query("SELECT content_text,
+                                            group_ids
                                        FROM ".TABLE_CONTENT_MANAGER." 
                                       WHERE content_group = '".$content_group."' 
                                         AND languages_id = '".$languages_id."' 
@@ -250,6 +251,7 @@ class api_it_recht_kanzlei {
               'content_manager_id' => $content_group,
               'content_name' => $this->charset_decode_utf_8($xml->rechtstext_title),
               'content_file' => $file_pdf_targetfilename,
+              'group_ids' => $check['group_ids'],
               'languages_id' => $languages_id,
               'external' => 1,
             );
