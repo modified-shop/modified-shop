@@ -123,6 +123,8 @@ class paypalacdc extends PayPalPaymentV2 {
 
         for (let i = 0; i < el_checkout_confirmation.children.length; i++) {
           if (el_checkout_confirmation.children[i].className != 'apms_form'
+              && el_checkout_confirmation.children[i].tagName != 'apms_alternate'
+              && el_checkout_confirmation.children[i].className.indexOf('apms_notice') < 0
               && el_checkout_confirmation.children[i].tagName != 'SCRIPT'
               && el_checkout_confirmation.children[i].tagName != 'LINK'
               )
