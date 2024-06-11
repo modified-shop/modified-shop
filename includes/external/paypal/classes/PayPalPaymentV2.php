@@ -349,7 +349,10 @@
       try {
         $response = $client->execute($request);
 
-        if ($response->result->status == 'PAYER_ACTION_REQUIRED') {
+        if ($this->code == 'paypalacdc'
+            && $response->result->status == 'PAYER_ACTION_REQUIRED'
+            )
+        {
           $_SESSION['paypal'] = array(
             'cartID' => $_SESSION['cart']->cartID,
             'OrderID' => $response->result->id

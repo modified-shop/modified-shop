@@ -72,9 +72,6 @@ class paypalacdc extends PayPalPaymentV2 {
         && function_exists('css_button')
         )
     {
-      $smarty->clear_assign('CHECKOUT_BUTTON');
-
-      $paypal_smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, ' id="button_checkout_confirmation"') . '</form>' . "\n");
       $paypal_smarty->assign('SAVE_PAYMENT_CHECKBOX', xtc_draw_checkbox_field('save_payment', 'save_payment', false, 'id="save_payment"').xtc_draw_hidden_field('payment_method', $this->code));
     
       $vault_id = $this->getVaultId($_SESSION['customer_id'], 'card');
@@ -99,6 +96,9 @@ class paypalacdc extends PayPalPaymentV2 {
           
           $paypal_smarty->assign('VAULT_FORM', xtc_draw_form('checkout_confirmation_vault', xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'), 'post', 'name="checkout_confirmation_vault"').xtc_draw_hidden_field('payment_method', $this->code));
           $paypal_smarty->assign('VAULT_BUTTON', $button);
+
+          $smarty->clear_assign('CHECKOUT_BUTTON');
+          $paypal_smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, ' id="button_checkout_confirmation"') . '</form>' . "\n");
         }
       }
     }
