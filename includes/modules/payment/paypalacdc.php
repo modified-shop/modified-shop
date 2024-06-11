@@ -62,30 +62,57 @@ class paypalacdc extends PayPalPaymentV2 {
 
 
   function process_button() {
-    global $order;
-
-    $_SESSION['paypal'] = array(
-      'cartID' => $_SESSION['cart']->cartID,
-      'OrderID' => $this->CreateOrder(),
-      'PayerID' => '',
-      'Token' => $this->GenerateClientToken()
-    );
-
-    if ($_SESSION['paypal']['OrderID'] == '') {
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-    }
-
+    global $order, $smarty;
+    
     $paypal_smarty = new Smarty();
     $paypal_smarty->assign('language', $_SESSION['language']);
     $paypal_smarty->caching = 0;
 
+    if ($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SAVE_PAYMENT') == '1'
+        && function_exists('css_button')
+        )
+    {
+      $smarty->clear_assign('CHECKOUT_BUTTON');
+
+      $paypal_smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, ' id="button_checkout_confirmation"') . '</form>' . "\n");
+      $paypal_smarty->assign('SAVE_PAYMENT_CHECKBOX', xtc_draw_checkbox_field('save_payment', 'save_payment', false, 'id="save_payment"').xtc_draw_hidden_field('payment_method', $this->code));
+    
+      $vault_id = $this->getVaultId($_SESSION['customer_id'], 'card');
+      if (!is_null($vault_id)) {
+        $result = $this->GetVaultDetails($vault_id);          
+        
+        if (isset($result->id) 
+            && $result->id == $vault_id
+            && isset($result->payment_source->card)
+            )
+        {          
+          $card_details = array(
+            'last_digits' => $result->payment_source->card->last_digits,
+            'brand' => $result->payment_source->card->brand,
+            'expiry' => $result->payment_source->card->expiry,
+          );
+          
+          $button = xtc_image_submit('button_confirm_order.gif', '%s', ' id="button_checkout_confirmation_vault"');
+          $button = str_replace(array('title="%s"', '%s</button>'), array('title="'.IMAGE_BUTTON_CONFIRM_ORDER.'"', IMAGE_BUTTON_CONFIRM_ORDER.'</button>'), $button);
+          $button = str_replace('%s', sprintf('Kaufen mit <span class="brand">%s</span> <span class="expiry">%s</span> <span class="last_digits">%s</span>', $card_details['brand'], $card_details['expiry'], $card_details['last_digits']), $button);
+  
+          
+          $paypal_smarty->assign('VAULT_FORM', xtc_draw_form('checkout_confirmation_vault', xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'), 'post', 'name="checkout_confirmation_vault"').xtc_draw_hidden_field('payment_method', $this->code));
+          $paypal_smarty->assign('VAULT_BUTTON', $button);
+        }
+      }
+    }
+    
     $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/acdc.html';
     if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/acdc.html')) {
       $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/acdc.html';
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
 
-    $process_button .= sprintf($this->get_js_sdk('true', $_SESSION['paypal']['Token']->client_token), "
+    $order_url = DIR_WS_BASE.'ajax.php?ext=create_paypal_order';
+    $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
+
+    $process_button .= sprintf($this->get_js_sdk('true', $this->GenerateClientToken()->client_token), "
       if (paypal.HostedFields.isEligible()) {
         let orderId;
 
@@ -114,8 +141,13 @@ class paypalacdc extends PayPalPaymentV2 {
 
         paypal.HostedFields.render({
           createOrder: function () {
-            orderId = '".$_SESSION['paypal']['OrderID']."';
-            return orderId;
+            var formdata = $('#checkout_confirmation').serializeArray(); 
+            return $.ajax({
+              type: 'POST',
+              url: '".$order_url."',
+              data: formdata,
+              dataType: 'json'
+            });
           },
           styles: {
             '.invalid': {
@@ -179,7 +211,7 @@ class paypalacdc extends PayPalPaymentV2 {
         });
       } else {
         // redirects if the merchant isn't eligible
-        window.location.href = '".xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')."';
+        window.location.href = '".$error_url."';
       }
       
       function display_error_acdc(msg) {
@@ -193,7 +225,50 @@ class paypalacdc extends PayPalPaymentV2 {
     return $process_button;
   }
 
+  
+  function before_process() {
+    global $messageStack;
+    
+    if (isset($_POST['payment_method'])
+        && $_POST['payment_method'] == $this->code
+        )
+    {
+      $vault_id = $this->getVaultId($_SESSION['customer_id'], 'card');
+      
+      if (!is_null($vault_id)) {
+        $payment_source = array(
+          'payment_source' => array(
+            'card' => array(
+              'vault_id' => $vault_id,
+              'attributes' => array(
+                'verification' => array(
+                  'method' => 'SCA_WHEN_REQUIRED',
+                )
+              ),
+              'stored_credential' => array(
+                'payment_initiator' => 'CUSTOMER',
+                'payment_type' => 'UNSCHEDULED',
+                'usage' => 'SUBSEQUENT',
+              )
+            )
+          )
+        );
 
+        $_SESSION['paypal'] = array(
+          'cartID' => $_SESSION['cart']->cartID,
+          'OrderID' => $this->CreateOrder($payment_source)
+        );
+
+        if ($_SESSION['paypal']['OrderID'] == '') {
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+        }        
+      } else {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+      }
+    }
+  }
+  
+  
 	function payment_action() {
     global $insert_id;
 
@@ -233,4 +308,3 @@ class paypalacdc extends PayPalPaymentV2 {
   }
 
 }
-?>

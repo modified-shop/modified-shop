@@ -9,6 +9,13 @@
 {/if}
 
 <div class="apms_form_button{if !isset($checkout)} apms_nocheckout{if isset($product)} apms_product{/if}{/if}">
+  {if isset($SAVE_PAYMENT_CHECKBOX)}
+    <div class="apms_notice cus_check cus_check_small">
+      {$SAVE_PAYMENT_CHECKBOX}
+      <label for="save_payment">{$smarty.const.MODULE_PAYMENT_PAYPAL_TEXT_SAVE_PAYMENT}</label>
+    </div>
+  {/if}
+
   {if isset($checkout) || isset($paypalexpress) || isset($paypalapplepay) || isset($paypalgooglepay)}
     <div id="apms_buttons" class="apms_form_button_inner">
       {if isset($checkout)}
@@ -37,13 +44,6 @@
       {if !isset($checkout) && !isset($paypalexpress)}
         <div class="apms_form_button_overlay"></div>
       {/if}
-    </div>
-  {/if}
-
-  {if isset($SAVE_PAYMENT_CHECKBOX)}
-    <div class="cus_check cus_check_small">
-      {$SAVE_PAYMENT_CHECKBOX}
-      <label for="save_payment">{$smarty.const.MODULE_PAYMENT_PAYPAL_TEXT_SAVE_PAYMENT}</label>
     </div>
   {/if}
 </div>

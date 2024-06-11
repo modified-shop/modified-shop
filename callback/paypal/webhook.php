@@ -98,7 +98,8 @@ if (is_array($request)
         
       case 'VAULT.PAYMENT-TOKEN.CREATED':
         if (isset($request['resource']['metadata']['order_id'])) {
-          $orders_query = xtc_db_query("SELECT o.customers_id
+          $orders_query = xtc_db_query("SELECT o.customers_id,
+                                               o.payment_class
                                           FROM ".TABLE_PAYPAL_PAYMENT." p
                                           JOIN ".TABLE_ORDERS." o
                                                ON p.orders_id = o.orders_id
@@ -109,7 +110,8 @@ if (is_array($request)
             $sql_data_array = array(
               'customers_id' => (int)$orders['customers_id'],
               'paypal_customers_id' => $request['resource']['customer']['id'],
-              'vault_id' => $request['resource']['id'],            
+              'vault_id' => $request['resource']['id'],
+              'payment_source' => (($orders['payment_class'] == 'paypalacdc') ? 'card' : 'paypal')
             );
             xtc_db_perform(TABLE_PAYPAL_VAULT, $sql_data_array);
           }

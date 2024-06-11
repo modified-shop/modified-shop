@@ -25,27 +25,44 @@
     $order_total_modules->pre_confirmation_check();
     $order_total_modules->process();
 
-    $paypal = new PayPalPaymentV2(isset($_GET['payment_method']) ? $_GET['payment_method'] : 'paypal');
+    $paypal = new PayPalPaymentV2(isset($_REQUEST['payment_method']) ? $_REQUEST['payment_method'] : 'paypal');
         
     $payment_source = array();
     if (isset($_POST['save_payment']) 
         && $_POST['save_payment'] == 'save_payment'
         )
     {
-      $payment_source = array(
-        'payment_source' => array(
-          'paypal' => array(
-            'attributes' => array(
-              'vault' => array(
-                'store_in_vault' => 'ON_SUCCESS',
-                'usage_type' => 'MERCHANT',
-                'customer_type' => 'CONSUMER',
-                'permit_multiple_payment_tokens' => true,
+      if ($paypal->code == 'paypalacdc') {
+        $payment_source = array(
+          'payment_source' => array(
+            'card' => array(
+              'attributes' => array(
+                'vault' => array(
+                  'store_in_vault' => 'ON_SUCCESS',
+                ),
+                'verification' => array(
+                  'method' => 'SCA_WHEN_REQUIRED',
+                )
               )
             )
           )
-        )
-      );
+        );
+      } else {
+        $payment_source = array(
+          'payment_source' => array(
+            'paypal' => array(
+              'attributes' => array(
+                'vault' => array(
+                  'store_in_vault' => 'ON_SUCCESS',
+                  'usage_type' => 'MERCHANT',
+                  'customer_type' => 'CONSUMER',
+                  'permit_multiple_payment_tokens' => true,
+                )
+              )
+            )
+          )
+        );
+      }
       
       if (isset($_SESSION['customer_id'])) {
         $customer_id = $paypal->getCustomerId($_SESSION['customer_id']);

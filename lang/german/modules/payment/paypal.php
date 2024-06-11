@@ -31,7 +31,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPAL_TEXT_ERROR_HEADING' => 'Hinweis',
   'MODULE_PAYMENT_PAYPAL_TEXT_ERROR_MESSAGE' => 'PayPal Zahlung wurde abgebrochen',  
 
-  'MODULE_PAYMENT_PAYPAL_TEXT_SAVE_PAYMENT' => 'Zahlart f&uuml;r zuk&uuml;nftige Bestellungen speichern',
+  'MODULE_PAYMENT_PAYPAL_TEXT_SAVE_PAYMENT' => 'Zahlungsmethode sicher speichern. So k&ouml;nnen Sie beim n&auml;chsten Einkauf schneller, einfacher und bequemer bezahlen.',
 );
 
 
