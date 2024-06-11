@@ -1038,6 +1038,7 @@ class PayPalPaymentBase extends PayPalCommon {
                    customers_id int(11) NOT NULL,
                    paypal_customers_id varchar(64) NOT NULL,
                    vault_id varchar(64) NOT NULL,
+                   payment_source varchar(8) NOT NULL,
                    PRIMARY KEY (paypal_id),
                    KEY idx_customers_id (customers_id),
                    KEY idx_paypal_customers_id (paypal_customers_id)
@@ -1277,6 +1278,7 @@ class PayPalPaymentBase extends PayPalCommon {
                    customers_id int(11) NOT NULL,
                    paypal_customers_id varchar(64) NOT NULL,
                    vault_id varchar(64) NOT NULL,
+                   payment_source varchar(8) NOT NULL,
                    PRIMARY KEY (paypal_id),
                    KEY idx_customers_id (customers_id),
                    KEY idx_paypal_customers_id (paypal_customers_id)
