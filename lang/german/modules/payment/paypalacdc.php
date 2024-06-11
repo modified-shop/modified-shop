@@ -40,6 +40,9 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALACDC_TEXT_CARDNUMBER_PLACEHOLDER' => 'Kartennummer',
   'MODULE_PAYMENT_PAYPALACDC_TEXT_EXPIRATION_PLACEHOLDER' => 'MM/JJ',
   'MODULE_PAYMENT_PAYPALACDC_TEXT_CVV_PLACEHOLDER' => 'Pr&uuml;fziffer',
+
+  'MODULE_PAYMENT_PAYPALACDC_TEXT_SAVE_PAYMENT' => 'Zahlungsmethode sicher speichern. So k&ouml;nnen Sie beim n&auml;chsten Einkauf schneller, einfacher und bequemer bezahlen.',
+  'MODULE_PAYMENT_PAYPALACDC_TEXT_OR' => 'oder',
 );
 
 

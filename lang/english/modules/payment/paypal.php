@@ -31,7 +31,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPAL_TEXT_ERROR_HEADING' => 'Note',
   'MODULE_PAYMENT_PAYPAL_TEXT_ERROR_MESSAGE' => 'PayPal payment has been cancelled',
 
-  'MODULE_PAYMENT_PAYPAL_TEXT_SAVE_PAYMENT' => 'Save Payment for later usage',
+  'MODULE_PAYMENT_PAYPAL_TEXT_SAVE_PAYMENT' => 'Save payment method securely. This means you can pay faster, easier and more conveniently for your next purchase.',
 );
 
 

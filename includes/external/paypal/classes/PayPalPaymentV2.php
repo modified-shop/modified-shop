@@ -44,6 +44,7 @@
   use PayPalCheckoutSdk\Orders\OrdersConfirmRequest;
   use PayPalCheckoutSdk\Payments\CapturesRefundRequest;
   use PayPalCheckoutSdk\Payments\AuthorizationsCaptureRequest;
+  use PayPalCheckoutSdk\Vault\VaultGetRequest;
   
   // language
   if (is_file(DIR_FS_EXTERNAL.'paypal/lang/'.$_SESSION['language'].'.php')) {
@@ -259,6 +260,8 @@
         if (isset($_SESSION['tmp_oID'])) {
           $purchase_unit['invoice_id'] = $this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$_SESSION['tmp_oID'];
         }
+      } elseif ($this->code == 'paypalacdc') {
+        $pm_source = 'card';
       }
       
       if (isset($_SESSION['customer_id'])) {
@@ -345,6 +348,21 @@
 
       try {
         $response = $client->execute($request);
+
+        if ($response->result->status == 'PAYER_ACTION_REQUIRED') {
+          $_SESSION['paypal'] = array(
+            'cartID' => $_SESSION['cart']->cartID,
+            'OrderID' => $response->result->id
+          );
+
+          foreach ($response->result->links as $links) {
+            if ($links->rel == 'payer-action') {
+              xtc_redirect($links->href);
+              break;
+            }
+          }
+        }
+
         return $response->result->id;
         
       } catch (PayPalHttp\HttpException $ex) {
@@ -726,6 +744,24 @@
       }
     }
 
+
+    function GetVaultDetails($vault_id) {
+      // auth
+      $client = $this->GetClient();
+    
+      $request = new VaultGetRequest($vault_id);
+
+      try {
+        $response = $client->execute($request);
+        return $response->result;
+        
+      } catch (PayPalHttp\HttpException $ex) {
+        $this->LoggingManager->log('DEBUG', 'GetVaultDetails', array('exception' => $ex));
+      } catch (Exception $ex) {
+        $this->LoggingManager->log('DEBUG', 'GetVaultDetails', array('exception' => $ex));
+      }
+    }
+
     
     function parse_address($address) {
       if (isset($address->name->full_name)) {
@@ -807,10 +843,24 @@
     function getCustomerId($customer_id) {
       $customers_query = xtc_db_query("SELECT *
                                          FROM ".TABLE_PAYPAL_VAULT."
-                                        WHERE customers_id = '".$customer_id."'");
+                                        WHERE customers_id = '".(int)$customer_id."'");
       if (xtc_db_num_rows($customers_query) > 0) {
         $customers = xtc_db_fetch_array($customers_query);
         return $customers['paypal_customers_id'];
+      }
+      
+      return NULL;
+    }
+
+
+    function getVaultId($customer_id, $payment_source = 'paypal') {
+      $vault_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_PAYPAL_VAULT."
+                                    WHERE customers_id = '".(int)$customer_id."'
+                                      AND payment_source = '".xtc_db_input($payment_source)."'");
+      if (xtc_db_num_rows($vault_query) > 0) {
+        $vault = xtc_db_fetch_array($vault_query);
+        return $vault['vault_id'];
       }
       
       return NULL;
