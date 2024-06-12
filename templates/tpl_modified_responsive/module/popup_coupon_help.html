@@ -8,10 +8,10 @@
   <title>{$title}</title>
   <meta name="robots" content="noindex, nofollow, noodp" />
   {if $base}<base href="{$base}" />{/if}
-  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet{if $smarty.const.COMPRESS_STYLESHEET == 'true'}.min{/if}.css" />
 </head>
 <body class="popupcontent">
-<h1>{#title_help#}</h1>
-{$TEXT_HELP}
+  <h1>{#title_help#}</h1>
+  {$TEXT_HELP}
 </body>
 </html>

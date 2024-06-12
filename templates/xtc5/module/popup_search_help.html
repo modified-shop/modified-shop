@@ -2,11 +2,11 @@
 <!DOCTYPE html{$doctype}>
 <html {$html_params}>
 <head>
-<meta charset="{$charset}" />
-<title>{#title_help#}</title>
-<meta name="robots" content="noindex, nofollow, noodp" />
-{if $base}<base href="{$base}" />{/if}
-<link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+  <meta charset="{$charset}" />
+  <title>{#title_help#}</title>
+  <meta name="robots" content="noindex, nofollow, noodp" />
+  {if $base}<base href="{$base}" />{/if}
+  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet{if $smarty.const.COMPRESS_STYLESHEET == 'true'}.min{/if}.css" />
 </head>
 <body class="popup-cont">
   <div class="popupContainer" style="padding:15px;">
