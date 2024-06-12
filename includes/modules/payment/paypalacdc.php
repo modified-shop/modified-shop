@@ -92,8 +92,7 @@ class paypalacdc extends PayPalPaymentV2 {
           $button = xtc_image_submit('button_confirm_order.gif', '%s', ' id="button_checkout_confirmation_vault"');
           $button = str_replace(array('title="%s"', '%s</button>'), array('title="'.IMAGE_BUTTON_CONFIRM_ORDER.'"', IMAGE_BUTTON_CONFIRM_ORDER.'</button>'), $button);
           $button = str_replace('%s', sprintf('Kaufen mit <span class="brand">%s</span> <span class="expiry">%s</span> <span class="last_digits">%s</span>', $card_details['brand'], $card_details['expiry'], $card_details['last_digits']), $button);
-  
-          
+            
           $paypal_smarty->assign('VAULT_FORM_ACTION', xtc_draw_form('checkout_confirmation_vault', xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'), 'post', 'name="checkout_confirmation_vault"').xtc_draw_hidden_field('payment_method', $this->code));
           $paypal_smarty->assign('VAULT_BUTTON', $button);
           $paypal_smarty->assign('VAULT_FORM_END', '</form>');
