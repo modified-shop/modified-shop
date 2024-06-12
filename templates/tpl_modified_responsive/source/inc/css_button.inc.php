@@ -169,7 +169,7 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
 
 
   // button
-  $button = '<span class="cssButton '.((isset($button_array[$image_idx]['class'])) ? $button_array[$image_idx]['class'] : $default_class).'"'.(($submit !== true) ? ' title="'.((defined('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') && constant('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') != '') ? constant('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') : $alt).'"' : '').'>';
+  $button = '<span class="cssButton '.((isset($button_array[$image_idx]['class'])) ? $button_array[$image_idx]['class'] : $default_class).'"'.(($submit !== true) ? ' title="'.strip_tags((defined('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') && constant('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') != '') ? constant('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') : $alt).'"' : '').'>';
   if (defined('CSS_IMAGE_'.strtoupper($image_idx).'_ICON_LEFT')
       && constant('CSS_IMAGE_'.strtoupper($image_idx).'_ICON_LEFT') != ''
       )
@@ -182,7 +182,7 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
   }
 
   if ($submit === true) {
-    $button .= '<button type="submit" class="cssButtonText"'.(((defined('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') && constant('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE')) || $alt != '') ? ' title="'.((defined('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE')) ? constant('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') : $alt).'"' : '').$parameters.'>'.((defined('CSS_IMAGE_'.strtoupper($image_idx).'_TEXT')) ? constant('CSS_IMAGE_'.strtoupper($image_idx).'_TEXT') : $alt).'</button>';
+    $button .= '<button type="submit" class="cssButtonText"'.(((defined('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') && constant('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE')) || $alt != '') ? ' title="'.strip_tags((defined('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE')) ? constant('CSS_IMAGE_'.strtoupper($image_idx).'_TITLE') : $alt).'"' : '').$parameters.'>'.((defined('CSS_IMAGE_'.strtoupper($image_idx).'_TEXT')) ? constant('CSS_IMAGE_'.strtoupper($image_idx).'_TEXT') : $alt).'</button>';
   }
 
   if (defined('CSS_IMAGE_'.strtoupper($image_idx).'_ICON_RIGHT')
