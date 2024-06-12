@@ -219,7 +219,7 @@
 
           <div class="button_row">
             <div class="br_right">
-              <div class="br_btn_checkout">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}{$CHECKOUT_BUTTON|replace:"cssButton ":"cssButton cssButtonPos12 "|replace:"</form>":""}</form></div>
+              <div class="br_btn_checkout">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}<div class="cssButtonPos12">{$CHECKOUT_BUTTON}</div>{$CHECKOUT_FORM_END}</div>
             </div>
           </div>
           
