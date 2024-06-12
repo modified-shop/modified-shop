@@ -685,7 +685,7 @@
       $sql_data_array = array(
         'orders_id' => $order_id,
         'payment_id' => $_SESSION['paypal']['OrderID'],
-        'payer_id' => $_SESSION['paypal']['PayerID'],
+        'payer_id' => ((isset($_SESSION['paypal']['PayerID'])) ? $_SESSION['paypal']['PayerID'] : ''),
         'transaction_id' => $result->transaction_id,
       );
       xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
