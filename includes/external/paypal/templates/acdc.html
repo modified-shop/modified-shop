@@ -43,7 +43,7 @@
 {/if}
 
 {if isset($VAULT_FORM)}
-  {$CHECKOUT_BUTTON}
+  {$CHECKOUT_BUTTON}{$CHECKOUT_FORM_END}
   <div class="apms_alternate"><div class="apms_alternate_inner"><span>{$smarty.const.MODULE_PAYMENT_PAYPALACDC_TEXT_OR}</span></div></div>
-  {$VAULT_FORM}{$VAULT_BUTTON}</form>
+  {$VAULT_FORM_ACTION}{$VAULT_BUTTON}{$VAULT_FORM_END}
 {/if}

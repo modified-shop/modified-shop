@@ -94,11 +94,15 @@ class paypalacdc extends PayPalPaymentV2 {
           $button = str_replace('%s', sprintf('Kaufen mit <span class="brand">%s</span> <span class="expiry">%s</span> <span class="last_digits">%s</span>', $card_details['brand'], $card_details['expiry'], $card_details['last_digits']), $button);
   
           
-          $paypal_smarty->assign('VAULT_FORM', xtc_draw_form('checkout_confirmation_vault', xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'), 'post', 'name="checkout_confirmation_vault"').xtc_draw_hidden_field('payment_method', $this->code));
+          $paypal_smarty->assign('VAULT_FORM_ACTION', xtc_draw_form('checkout_confirmation_vault', xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'), 'post', 'name="checkout_confirmation_vault"').xtc_draw_hidden_field('payment_method', $this->code));
           $paypal_smarty->assign('VAULT_BUTTON', $button);
-
+          $paypal_smarty->assign('VAULT_FORM_END', '</form>');
+          
           $smarty->clear_assign('CHECKOUT_BUTTON');
-          $paypal_smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, ' id="button_checkout_confirmation"') . '</form>' . "\n");
+          $smarty->clear_assign('CHECKOUT_FORM_END');
+          
+          $paypal_smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, ' id="button_checkout_confirmation"'));
+          $paypal_smarty->assign('CHECKOUT_FORM_END', '</form>');
         }
       }
     }
