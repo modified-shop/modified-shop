@@ -14,6 +14,7 @@
    
   // this javascriptfile get includes at the BOTTOM of every template page in shop
   // you can add your template specific js scripts here
+  defined('DIR_TMPL') OR define('DIR_TMPL', 'templates/'.CURRENT_TEMPLATE.'/');
   defined('DIR_TMPL_JS') OR define('DIR_TMPL_JS', DIR_TMPL.'javascript/');
   ?>
 
