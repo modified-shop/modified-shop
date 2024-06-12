@@ -18,28 +18,28 @@
   
             <div class="subline">{#text_data#}&nbsp; <span class="fields_required">({#text_hint#})</span></div>
     
-            <div class="field_item_1"><label><span class="field_text">{#text_name#}</span>{$INPUT_NAME}<label></div>
-            <div class="field_item_1"><label><span class="field_text">{#text_email#}</span>{$INPUT_EMAIL|replace:"type=\"text\"":"type=\"email\""}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span><label></div>
-            <div class="field_item_1"><label><span class="field_text">{#text_phone#}</span>{$INPUT_PHONE|replace:"type=\"text\"":"type=\"tel\""}<label></div>
+            <div class="field_item_1"><label><span class="field_text">{#text_name#}</span>{$INPUT_NAME}</label></div>
+            <div class="field_item_1"><label><span class="field_text">{#text_email#}</span>{$INPUT_EMAIL|replace:"type=\"text\"":"type=\"email\""}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span></label></div>
+            <div class="field_item_1"><label><span class="field_text">{#text_phone#}</span>{$INPUT_PHONE|replace:"type=\"text\"":"type=\"tel\""}</label></div>
     
             {*
               Additional Fiels for contact_form  
-              <div class="field_item_1"><label><span class="field_text">{#text_street#}</span>{$INPUT_STREET}<label></div>
+              <div class="field_item_1"><label><span class="field_text">{#text_street#}</span>{$INPUT_STREET}</label></div>
               <div class="field_item_row">
-                <div class="field_item_3"><label><span class="field_text">{#text_postcode#}</span>{$INPUT_POSTCODE}<label></div>
-                <div class="field_item_4"><label><span class="field_text">{#text_city#}</span>{$INPUT_CITY}<label></div>
+                <div class="field_item_3"><label><span class="field_text">{#text_postcode#}</span>{$INPUT_POSTCODE}</label></div>
+                <div class="field_item_4"><label><span class="field_text">{#text_city#}</span>{$INPUT_CITY}</label></div>
               </div>
-              <div class="field_item_1"><label><span class="field_text">{#text_company#}</span>{$INPUT_COMPANY}<label></div>
+              <div class="field_item_1"><label><span class="field_text">{#text_company#}</span>{$INPUT_COMPANY}</label></div>
             *}
     
             {if $VVIMG}
               <div class="field_item_1 vvcode_img"><span class="field_text">{#text_sec_code#}</span>{$VVIMG}</div>
             {/if}
             {if $INPUT_CODE}
-              <div class="field_item_1 vvcode_sec"><label><span class="field_text">{#text_inp_code#}</span>{$INPUT_CODE}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span><label></div>
+              <div class="field_item_1 vvcode_sec"><label><span class="field_text">{#text_inp_code#}</span>{$INPUT_CODE}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span></label></div>
             {/if}
     
-            <div class="field_item_1"><label><span class="field_text">{#text_message#}</span>{$INPUT_TEXT}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span><label></div>
+            <div class="field_item_1"><label><span class="field_text">{#text_message#}</span>{$INPUT_TEXT}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span></label></div>
   
             {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
               <br />
