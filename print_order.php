@@ -17,11 +17,13 @@
 include ('includes/application_top.php');
 
 $smarty = new Smarty();
-
+$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
+$smarty->assign('doctype', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''));
+$smarty->assign('charset', $_SESSION['language_charset']);
 if (DIR_WS_BASE == '') {
   $smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
 }
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 $oID = (isset($_GET['oID']) ? (int)$_GET['oID'] : 0);
 $customer_id = (isset($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : (isset($_SESSION['customer_gid']) ? (int)$_SESSION['customer_gid'] : 0));
@@ -55,7 +57,6 @@ if ($customer_id > 0
 
   // assign language to template for caching
   $smarty->assign('language', $order->info['language']);  
-  $smarty->assign('charset', $_SESSION['language_charset'] );
 
   $smarty->assign('oID', $oID);
   $smarty->assign('COMMENT', $order->info['comments']);
