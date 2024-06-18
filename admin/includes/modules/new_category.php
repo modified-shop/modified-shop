@@ -223,7 +223,7 @@
             <tr>
               <td class="dataTableConfig col-left"><?php echo constant('TEXT_EDIT_CATEGORIES_IMAGE'.strtoupper($image_type)); ?></td>
               <td class="dataTableConfig col-middle"><?php echo $cInfo->{'categories_image'.$image_type}; ?></td>
-              <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->{'categories_image'.$image_type}) { ?><img class="thumbnail-catimage" src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->{'categories_image'.$image_type}; ?>" /><?php } ?></td>
+              <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->{'categories_image'.$image_type}) { echo xtc_info_image_c($cInfo->{'categories_image'.$image_type}, $cInfo->{'categories_image'.$image_type}, '', '', 'class="thumbnail-catimage"'); } ?></td>
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo constant('TEXT_EDIT_CATEGORIES_IMAGE'.strtoupper($image_type)); ?></td>
