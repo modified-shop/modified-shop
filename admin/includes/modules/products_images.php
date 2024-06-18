@@ -86,7 +86,7 @@ if ($_GET['action'] == 'new_product') {
         ?>
       </table>
       <?php
-      echo xtc_draw_hidden_field('products_previous_image_'. ($i +1), (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : ''));
+      echo xtc_draw_hidden_field('products_previous_image_'. ($i +1), (isset($mo_images[$_SESSION['languages_id']][$i]['image_name']) ? $mo_images[$_SESSION['languages_id']][$i]['image_name'] : ''));
     }
   }
   echo '<div style="clear:both;"></div>';
