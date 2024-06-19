@@ -117,6 +117,32 @@ if (is_array($request)
           }
         }
         break;
+      
+      default:
+        $check_query = xtc_db_query("SELECT p.*,
+                                            o.orders_status,
+                                            o.payment_class
+                                       FROM ".TABLE_PAYPAL_PAYMENT." p
+                                       JOIN ".TABLE_ORDERS." o
+                                            ON o.orders_id = p.orders_id
+                                      WHERE p.payment_id = '".xtc_db_input($request['resource']['id'])."'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $check = xtc_db_fetch_array($check_query);
+          
+          if ($version == 1) {
+            $paypal = new PayPalPayment($check['payment_class']);
+          } else {
+            $paypal = new PayPalPaymentV2($check['payment_class']);
+          }
+                
+          $orders_status_id = $paypal->get_config($request['event_type']);
+          if ($orders_status_id < 0) {
+            $orders_status_id = $check['orders_status'];
+          }
+          
+          $paypal->update_order($request['summary'], $orders_status_id, $check['orders_id']);
+        }
+        break;
     }
   }
 } else {
