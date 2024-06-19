@@ -86,7 +86,7 @@
         $url = str_replace('&amp;', '&', xtc_href_link('ajax.php', $action.'ext=create_paypal_order&payment_method='.$paypal->code));
         
         if (basename($PHP_SELF) == FILENAME_SHOPPING_CART 
-            || $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SAVE_PAYMENT') == '1'
+            || $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_PRODUCT') == '1'
             )
         {
           $paypalscript .= '
