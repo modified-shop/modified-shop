@@ -28,6 +28,11 @@
     DIR_TMPL_CSS.'fontawesome-6-custom.css',
     DIR_TMPL_CSS.'cookieconsent.css',
   );
+
+  if (is_file(DIR_FS_CATALOG.DIR_TMPL_CSS.'tpl_custom_bottom.css')) {
+    array_push($css_array, DIR_TMPL_CSS.'tpl_custom_bottom.css');
+  }
+
   $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
 
   $this_f_time = filemtime(DIR_FS_CATALOG.DIR_TMPL_CSS.'general_bottom.css.php');
