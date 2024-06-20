@@ -263,7 +263,15 @@
       } elseif ($this->code == 'paypalacdc') {
         $pm_source = 'card';
       }
-      
+ 
+      if (isset($payment_source['payment_source'])
+          && is_array($payment_source['payment_source'])
+          && count($payment_source['payment_source']) == 0
+          )
+      {
+        $pm_source = key($payment_source['payment_source']);        
+      }
+     
       if (isset($_SESSION['customer_id'])) {
         $purchase_unit['shipping'] = array(
           'name' => array(
