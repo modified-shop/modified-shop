@@ -35,6 +35,8 @@ class selfpickup
 
     function __construct()
     {
+        global $order;
+        
         $this->code = 'selfpickup';
         $this->title = MODULE_SHIPPING_SELFPICKUP_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_SELFPICKUP_TEXT_DESCRIPTION;
@@ -42,6 +44,30 @@ class selfpickup
         $this->tax_class = ((defined('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS')) ? MODULE_SHIPPING_SELFPICKUP_TAX_CLASS : '');
         $this->sort_order = ((defined('MODULE_SHIPPING_SELFPICKUP_SORT_ORDER')) ? MODULE_SHIPPING_SELFPICKUP_SORT_ORDER : '');
         $this->enabled = ((defined('MODULE_SHIPPING_SELFPICKUP_STATUS') && MODULE_SHIPPING_SELFPICKUP_STATUS == 'True') ? true : false);
+
+        if ($this->enabled == true 
+            && !defined('RUN_MODE_ADMIN')
+            && is_object($order)
+            )
+        {
+          $check_flag = true;
+          if ($address = $this->address()) {
+            $check_flag = false;
+            if ($address['firstname'] != ''
+                && $address['lastname'] != ''
+                && $address['street_address'] != ''
+                && $address['city'] != ''
+                && $address['postcode'] != ''                
+                )
+            {
+              $check_flag = true;
+            }
+          }
+          
+          if ($check_flag == false) {
+            $this->enabled = false;
+          }
+        }
 
         if ($this->check() > 0) {
           if (!defined('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS')) {

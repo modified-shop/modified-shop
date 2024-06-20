@@ -598,10 +598,11 @@
         if (isset($GLOBALS[$shipping_class])
             && is_object($GLOBALS[$shipping_class])
             && method_exists($GLOBALS[$shipping_class], 'address')
+            && $address = $GLOBALS[$shipping_class]->address()
             )
         {
           $_shipping = $this->delivery['shipping'];
-          $this->delivery = $GLOBALS[$shipping_class]->address();
+          $this->delivery = $address;
           
           $this->delivery['shipping'] = $_shipping;
           $this->delivery['delivery_zone'] = $this->delivery['country']['iso_code_2'];
