@@ -266,7 +266,7 @@
  
       if (isset($payment_source['payment_source'])
           && is_array($payment_source['payment_source'])
-          && count($payment_source['payment_source']) == 0
+          && count($payment_source['payment_source']) == 1
           )
       {
         $pm_source = key($payment_source['payment_source']);        
