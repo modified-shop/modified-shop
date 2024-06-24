@@ -36,7 +36,7 @@
         <div class="tags_bar">
           <div class="tags_bar_headline cf">
             {#text_filter_options#}
-            <a rel="nofollow" class="tags_bar_reset" href="{$LINK_FILTER_RESET}" title="Reset">{#text_filter_reset#}</a>
+            <a rel="nofollow" class="tags_bar_reset" href="{$LINK_FILTER_RESET}" title="{#text_filter_reset#}">{#text_filter_reset#}</a>
           </div>
           <div class="tags_bar_row cf">
             {if $FILTER_MANUFACTURER != ''}<div class="tags_bar_item">{$FILTER_MANUFACTURER}</div>{/if}
@@ -48,7 +48,7 @@
         <div class="tags_bar">
           <div class="tags_bar_headline cf">
             {#text_filter_options#}
-            <a rel="nofollow" class="tags_bar_reset" href="{$LINK_FILTER_RESET}" title="Reset">{#text_filter_reset#}</a>
+            <a rel="nofollow" class="tags_bar_reset" href="{$LINK_FILTER_RESET}" title="{#text_filter_reset#}">{#text_filter_reset#}</a>
           </div>
           <div class="tags_bar_row cf">
             {if $FILTER_MANUFACTURER != ''}<div class="tags_bar_item">{$FILTER_MANUFACTURER}</div>{/if}
@@ -66,7 +66,7 @@
 {if isset($FILTER_SELECTED) && count($FILTER_SELECTED) > 0}
   <div class="listing_filter_selected">
   {foreach name=aussen item=filter_data from=$FILTER_SELECTED}
-    <div class="listing_filter_selected_item"><a title="{#listing_filter_text_delete#}" href="{$filter_data.LINK}"><span>{$filter_data.NAME}</span></a></div>
+    <div class="listing_filter_selected_item"><a rel="nofollow" class="tags_bar_reset_item" title="{#listing_filter_text_delete#}" href="{$filter_data.LINK}"><span>{$filter_data.NAME}</span></a></div>
   {/foreach}
   </div>
 {/if}  
