@@ -20,7 +20,9 @@
     global ${$link};
     
     if (is_object(${$link})) {
-      return mysqli_close(${$link});
+      try {
+        return mysqli_close(${$link});
+      } catch (Exception $ex) {}
     }
   }
 
@@ -39,7 +41,9 @@
     global ${$link};
 
     if (is_object(${$link})) {
-      return mysqli_get_client_info(${$link});
+      try {
+        return mysqli_get_client_info(${$link});
+      } catch (Exception $ex) {}
     }
   }
 
@@ -48,7 +52,9 @@
     global ${$link};
 
     if (is_object(${$link})) {
-      return mysqli_get_server_info(${$link});
+      try {
+        return mysqli_get_server_info(${$link});
+      } catch (Exception $ex) {}
     }
   }
 
@@ -62,7 +68,9 @@
     global ${$link};
 
     if (is_object(${$link})) {
-      return mysqli_affected_rows(${$link});
+      try {
+        return mysqli_affected_rows(${$link});
+      } catch (Exception $ex) {}
     }
   }
   
@@ -71,7 +79,9 @@
     global ${$link};
 
     if (is_object(${$link})) {
-      return mysqli_insert_id(${$link});
+      try {
+        return mysqli_insert_id(${$link});
+      } catch (Exception $ex) {}
     }
   }
 
@@ -148,7 +158,9 @@
       }
     } else {
       if (is_object($db_query)) {
-        return mysqli_data_seek($db_query, $row_number);
+        try {
+          return mysqli_data_seek($db_query, $row_number);
+        } catch (Exception $ex) {}
       }
     }
 
@@ -189,7 +201,9 @@
       }
     } else {
       if (is_object($db_query)) {
-        return mysqli_fetch_array($db_query, $result_type);
+        try {
+          return mysqli_fetch_array($db_query, $result_type);
+        } catch (Exception $ex) {}
       }
     }
 
@@ -207,7 +221,9 @@
       }
     } else {
       if (is_object($db_query)) {
-        return mysqli_fetch_row($db_query);
+        try {
+          return mysqli_fetch_row($db_query);
+        } catch (Exception $ex) {}
       }
     }
 
@@ -280,7 +296,9 @@
       }
     } else {
       if (is_object($db_query)) {
-        return mysqli_num_rows($db_query);
+        try {
+          return mysqli_num_rows($db_query);
+        } catch (Exception $ex) {}
       }
     }
     
