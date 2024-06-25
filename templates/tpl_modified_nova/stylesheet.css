@@ -145,6 +145,12 @@ body {
   box-sizing: border-box;
 }
 
+/* Carousel Flexbox Fix */
+* {
+  min-width: 0;
+  min-height: 0;
+}
+
 /* prevent flicker in responsive tabs & accordion */
 #horizontalAccordion { display:none; }
 #horizontalAccordion ul.resp-tabs-list { display:none !important; }
