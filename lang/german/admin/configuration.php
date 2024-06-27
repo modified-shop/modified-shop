@@ -1019,3 +1019,6 @@ define('REVIEWS_PURCHASED_INFOS_DESC', 'W&auml;hle den Content zur Anzeige als B
 
 define('CAT_VIEW_DROPDOWN_TITLE' , 'Kategorie Dropdown bei Kategorien/Artikel');
 define('CAT_VIEW_DROPDOWN_DESC' , 'Kategorie Dropdown zur Navigation f&uuml;r Kategorien/Artikel aktivieren?');
+
+define('DISPLAY_PRODUCTS_ADDED_TITLE' , 'Anzeige Artikel hinzugef&uuml;gt');
+define('DISPLAY_PRODUCTS_ADDED_DESC' , 'Soll beim Artikel anzeigt werden, wann der Artikel in den Katalog aufgenommen wurde?');

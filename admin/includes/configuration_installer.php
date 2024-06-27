@@ -458,6 +458,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'ACTIVATE_CROSS_SELLING', 'true', '17', '17', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'MODULE_NEWSLETTER_INFOS', '', 17, 30, NULL, NOW(), NULL, 'xtc_cfg_select_content(\'MODULE_NEWSLETTER_INFOS\',');";
   $values[] = "(NULL, 'REVIEWS_PURCHASED_ONLY', 'false', '17', '31', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'DISPLAY_PRODUCTS_ADDED', 'true', '17', '33', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
 
   $values_update[] = array (
                            'values' => "set_function = 'xtc_cfg_select_content(\'REVOCATION_ID\','",

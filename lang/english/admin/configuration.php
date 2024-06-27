@@ -1019,3 +1019,6 @@ define('REVIEWS_PURCHASED_INFOS_DESC', 'Select the content to display as rating 
 
 define('CAT_VIEW_DROPDOWN_TITLE' , 'Categories Select with Categories / Articles');
 define('CAT_VIEW_DROPDOWN_DESC' , 'Use Categories Select as navigation with categories / articles?');
+
+define('DISPLAY_PRODUCTS_ADDED_TITLE' , 'Display products date added');
+define('DISPLAY_PRODUCTS_ADDED_DESC' , 'Display products date added when the article was added to the catalog?');
