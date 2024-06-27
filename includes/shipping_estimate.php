@@ -94,6 +94,7 @@ if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
     //ot_subtotal_no_tax nur anzeigen wenn notwendig
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 
         || (isset($ot_subtotal_no_tax_value) && isset($ot_total_value) && round($ot_subtotal_no_tax_value, 2) == round($ot_total_value, 2))
+        || (isset($ot_subtotal_no_tax_value) && isset($ot_subtotal_value) && round($ot_subtotal_no_tax_value, 2) == round($ot_subtotal_value, 2))
         )
     {
       if (isset($ot_subtotal_no_tax_key) && isset($order_total_array[$ot_subtotal_no_tax_key])) {
