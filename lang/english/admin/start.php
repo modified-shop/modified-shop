@@ -161,4 +161,5 @@ define('WARNING_REGISTER_GLOBALS', '<strong>WARNING:</strong> This feature has b
 
 // domain check
 define('WARNING_DOMAIN_INVALID', '<strong>WARNING:</strong> Your shop domain could not be validated (Possible reasons: Invalid format or internationalized domain name (IDN))');
-?>
+
+define('WARNING_REQUIREMENTS', '<b>%s installed</b>:%s <b>Min</b>:%s <b>Max</b>:%s');
