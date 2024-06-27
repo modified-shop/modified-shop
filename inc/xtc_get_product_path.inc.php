@@ -76,6 +76,7 @@ function xtc_get_product_path($products_id) {
                                    ".CATEGORIES_CONDITIONS_C."
                       WHERE p.products_id = '" . (int)$products_id . "' 
                         AND p.products_status = 1 
+                            ".PRODUCTS_CONDITIONS_P."
                             ".$order_by."
                             ".$limit;
 
@@ -104,4 +105,3 @@ function xtc_get_product_path($products_id) {
   
   return $cPath;
 }
-?>
