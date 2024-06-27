@@ -70,11 +70,11 @@
         break;
       case 'sort':
         $catsort    = 'c.sort_order ASC';
-        $prodsort   = (isset($_GET['cPath']) && $_GET['cPath'] != '0') ? 'p.products_sort ASC' : 'p.products_startpage_sort ASC';
+        $prodsort   = ($current_category_id == 0 && !xtc_not_null($search) && !xtc_not_null($search_id)) ? 'p.products_startpage_sort ASC' : 'p.products_sort ASC';
         break;
       case 'sort-desc':
         $catsort    = 'c.sort_order DESC';
-        $prodsort   = (isset($_GET['cPath']) && $_GET['cPath'] != '0') ? 'p.products_sort DESC' : 'p.products_startpage_sort DESC';
+        $prodsort   = ($current_category_id == 0 && !xtc_not_null($search) && !xtc_not_null($search_id)) ? 'p.products_startpage_sort DESC' : 'p.products_sort DESC';
         break;
       case 'name':
         $catsort    = 'cd.categories_name ASC';
@@ -139,7 +139,7 @@
     }
   } else {
         $catsort    = 'c.sort_order, cd.categories_name ASC';
-        $prodsort   = (isset($_GET['cPath']) && $_GET['cPath'] != '0') ? 'p.products_sort, pd.products_name ASC' : 'p.products_startpage_sort, pd.products_name ASC';
+        $prodsort   = ($current_category_id == 0 && !xtc_not_null($search) && !xtc_not_null($search_id)) ? 'p.products_startpage_sort, pd.products_name ASC' : 'p.products_sort, pd.products_name ASC';
   }
   
   $catsort .= ', c.categories_id ASC';
@@ -580,7 +580,7 @@
                 //display products from a manufacturer
                 if (isset($_GET['mID']) && $_GET['mID'] != '') {
                   $add_where = "WHERE p.manufacturers_id = '".(int)$_GET['mID']."'";
-                  if ($current_category_id == 0 && $display_categories) {
+                  if ($current_category_id == 0 && !xtc_not_null($search) && !xtc_not_null($search_id)) {
                     $add_where .= " AND p.products_startpage = 1";
                   } else {
                     if ($display_categories) {
@@ -588,7 +588,7 @@
                     }
                   }
                 //display "products on startpage", no entry in table produtcs_to_categories used
-                } elseif ($current_category_id == 0 && $display_categories) {
+                } elseif ($current_category_id == 0 && !xtc_not_null($search) && !xtc_not_null($search_id)) {
                   $add_where = 'WHERE p.products_startpage = 1';
                 //display products in categories
                 } else {
@@ -686,7 +686,7 @@
                  ?>
                  <td class="categories_view_data txta-c">
                    <?php
-                   if ($current_category_id == 0) {
+                   if ($current_category_id == 0 && !xtc_not_null($search) && !xtc_not_null($search_id)) {
                        echo $products['products_startpage_sort'];
                    } else {
                        echo $products['products_sort'];
