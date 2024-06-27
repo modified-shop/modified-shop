@@ -439,8 +439,8 @@
       2 => 'Trusted Shops Trustbadge'
     ),
     'desc'      => array(
-      1 => 'Description EN',
-      2 => 'Beschreibung DE'
+      1 => 'This is a quality seal. It offers the Trusted Shops guarantee and automatically collects reviews.',
+      2 => 'Dies ist ein Qualitätssiegel. Es bietet die Trusted-Shops-Garantie und sammelt automatisch Bewertungen.'
     ),
     'cookies'   => '',
     'sort_order'=> 1,
