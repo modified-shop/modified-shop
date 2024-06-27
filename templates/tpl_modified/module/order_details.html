@@ -23,6 +23,9 @@
         {/foreach} 
       </ul>
       {/if}
+      {if $module_data.PRODUCTS_VPE}<div class="shipping">{$module_data.PRODUCTS_VPE}</div>{/if}
+      {if $module_data.PRODUCTS_MODEL}<div class="shipping"><strong>{$smarty.const.HEADER_MODEL}:</strong> {$module_data.PRODUCTS_MODEL}</div>{/if}
+      {if $module_data.PRODUCTS_SHIPPING_TIME}<div class="shipping"><strong>{$smarty.const.SHIPPING_TIME}</strong> {$module_data.PRODUCTS_SHIPPING_TIME}</div>{/if}
       {if $module_data.BUTTON_WISHLIST != ''}<span class="ord_wishlist">&laquo; {$module_data.BUTTON_WISHLIST}</span>{/if}
     </td>
     <td class="ord_table_center ord_width90 delete toppad">{$module_data.BUTTON_DELETE}</td>

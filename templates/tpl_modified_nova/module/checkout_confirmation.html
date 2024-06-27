@@ -152,8 +152,9 @@
                   </ul>
                 {/if}
 
-                {if $data.model || $data.shipping_time}
+                {if $data.model || $data.shipping_time || $data.vpe}
                   <div class="of_inforows">
+                    {if $data.vpe}<div class="of_infoline">{$data.vpe}</div>{/if}
                     {if $data.model}<div class="of_infoline"><strong>{$smarty.const.HEADER_MODEL}:</strong> {$data.model}</div>{/if}
                     {if $data.shipping_time}<div class="of_infoline"><strong>{$smarty.const.SHIPPING_TIME}</strong> {$data.shipping_time}</div>{/if}
                   </div>

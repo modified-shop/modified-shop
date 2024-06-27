@@ -160,6 +160,7 @@
             {/foreach} 
           </ul>
         {/if}
+        {if $data.vpe}<div class="shipping">{$data.vpe}</div>{/if}
         {if $data.shipping_time}<div class="shipping">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</div>{/if}
       </td>
       <td class="ord_table_right ord_width120">{$data.model}</td>

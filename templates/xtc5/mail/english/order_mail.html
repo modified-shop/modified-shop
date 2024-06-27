@@ -96,6 +96,7 @@
             <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
             <strong>{$order_values.PRODUCTS_NAME}</strong>
             {if $order_values.PRODUCTS_ORDER_DESCRIPTION neq ''}<br />{$order_values.PRODUCTS_ORDER_DESCRIPTION}{/if}
+            {if $order_values.PRODUCTS_VPE neq ''}<br />{$order_values.PRODUCTS_VPE}{/if}
             {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />Shipping time: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}
             {if $order_values.PRODUCTS_ATTRIBUTES neq ''}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>{/if}
             </font>
