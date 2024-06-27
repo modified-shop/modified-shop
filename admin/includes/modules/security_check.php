@@ -17,6 +17,10 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+define('SSL_VERSION_MIN', '1.2');
+define('PHP_VERSION_MIN', '8.0.0');
+define('PHP_VERSION_MAX', '8.1.99');
+
 require_once (DIR_FS_INC.'get_database_version.inc.php');
 require_once (DIR_WS_INCLUDES.'file_permissions.php');
 
@@ -238,6 +242,16 @@ if (isset($_POST['action'])
 {
   $warnings[] = RSS_FEED_NOT_REACHABLE;
   $warnings[] = xtc_draw_form('configuration', basename($PHP_SELF)).xtc_draw_hidden_field('action', 'delete_newsfeed').'<input class="button" type="submit" value="OK"/></form>';
+}
+
+/*******************************************************************************
+ ** requirements check:
+ ******************************************************************************/
+require_once(DIR_WS_MODULES.'check_requirements.php');
+foreach ($requirement_array as $k => $requirement) {
+  if ($requirement['status'] !== true) {
+    $warnings[] = sprintf(WARNING_REQUIREMENTS, $requirement['name'], $requirement['version'], $requirement['version_min'], $requirement['version_max']);
+  }
 }
 
 /*******************************************************************************
