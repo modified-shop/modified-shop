@@ -149,6 +149,7 @@
               {/foreach} 
             </div>
           {/if}
+          {if $data.vpe}<br /><span class="nobr small">{$data.vpe}</span>{/if}
           {if $data.shipping_time}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</span>{/if}
           {if is_array($data.attributes) && count($data.attributes) > 0}
             {foreach key=a_data item=attrib_data from=$data.attributes}

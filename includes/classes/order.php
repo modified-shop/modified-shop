@@ -361,6 +361,10 @@
         $order_data[$index]['PRODUCTS_TAX'] = (($order_data_values['products_tax'] > 0.00) ? number_format($order_data_values['products_tax'], TAX_DECIMAL_PLACES) : 0);
         $order_data[$index]['PRODUCTS_QTY'] = $order_data_values['products_quantity'];
         
+        if ($order_data_values['products_vpe_value'] > 0) {
+          $order_data[$index]['PRODUCTS_VPE'] = $xtPrice->xtcFormatCurrency(($order_data_values['products_price'] * (1 / $order_data_values['products_vpe_value'])), 0, true).TXT_PER.$order_data_values['products_vpe'];
+        }
+        
         if (!defined('RUN_MODE_ADMIN')) {
           $order_data[$index]['BUTTON_CART'] = '<a href="'.xtc_href_link(basename($PHP_SELF), 'action=add_order_product&order_id='.(int)$oID.'&id='.$order_data_values['orders_products_id'], 'SSL').'">'.xtc_image_button('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>';
 

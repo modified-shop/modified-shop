@@ -39,6 +39,9 @@
           {/foreach}
         </ul>
         {/if}
+      {if $module_data.PRODUCTS_VPE}<div class="ol_model">{$module_data.PRODUCTS_VPE}</div>{/if}
+      {if $module_data.PRODUCTS_MODEL}<div class="ol_model"><strong>{$smarty.const.HEADER_MODEL}:</strong> {$module_data.PRODUCTS_MODEL}</div>{/if}
+      {if $module_data.PRODUCTS_SHIPPING_TIME}<div class="ol_shipping"><strong>{$smarty.const.SHIPPING_TIME}</strong> {$module_data.PRODUCTS_SHIPPING_TIME}</div>{/if}
         {if $module_data.BUTTON_WISHLIST != ''}<span class="ord_wishlist"><i class="fas fa-angle-left"></i>{$module_data.BUTTON_WISHLIST}</span>{/if}
       </span>
       <span class="ol_price_row ol_width4 cf">

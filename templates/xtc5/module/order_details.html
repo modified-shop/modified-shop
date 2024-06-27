@@ -23,6 +23,8 @@
       </table>
     {/if}
     {if !is_array($module_data.ATTRIBUTES) || count($module_data.ATTRIBUTES) == 0}<br />{/if}
+    {if $module_data.PRODUCTS_VPE}<br /><span class="nobr small">{$module_data.PRODUCTS_VPE}</span>{/if}
+    {if $module_data.PRODUCTS_SHIPPING_TIME}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME} {$module_data.PRODUCTS_SHIPPING_TIME}</span>{/if}
     {if $module_data.BUTTON_WISHLIST != ''}&laquo; {$module_data.BUTTON_WISHLIST}{/if}
     </td>
     <td class="singleprice">{$module_data.PRODUCTS_SINGLE_PRICE}</td>
