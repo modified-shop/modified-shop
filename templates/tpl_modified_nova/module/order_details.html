@@ -40,7 +40,7 @@
 
           {if $module_data.PRODUCTS_MODEL || $module_data.PRODUCTS_SHIPPING_TIME || $module_data.PRODUCTS_VPE}
             <div class="of_inforows">
-              {if $module_data.PRODUCTS_VPE}<div class="of_infoline"><strong>{$module_data.PRODUCTS_VPE}</div>{/if}
+              {if $module_data.PRODUCTS_VPE}<div class="of_infoline">{$module_data.PRODUCTS_VPE}</div>{/if}
               {if $module_data.PRODUCTS_MODEL}<div class="of_infoline"><strong>{$smarty.const.HEADER_MODEL}:</strong> {$module_data.PRODUCTS_MODEL}</div>{/if}
               {if $module_data.PRODUCTS_SHIPPING_TIME}<div class="of_infoline"><strong>{$smarty.const.SHIPPING_TIME}</strong> {$module_data.PRODUCTS_SHIPPING_TIME}</div>{/if}
             </div>
