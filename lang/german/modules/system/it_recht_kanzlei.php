@@ -35,7 +35,3 @@ define('MODULE_API_IT_RECHT_KANZLEI_PDF_DSE_TITLE', 'Auswahl Datenschutz PDF Rec
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_DSE_DESC', 'Angabe ob der Datenschutztext als PDF verf&uuml;gbar sein soll.');
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_WRB_TITLE', 'Auswahl Widerruf PDF Rechtstext');
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_WRB_DESC', 'Angabe ob der Widerrufstext als PDF verf&uuml;gbar sein soll.');
-define('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE_TITLE', '<hr noshade>Speicherort PDF');
-define('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE_DESC', 'Angabe des Speicherorts der PDF Rechtstexte.');
-
-?>
