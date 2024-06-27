@@ -144,7 +144,12 @@ $total = $xtPrice->xtcFormat($order->info['total'], false);
 $module_smarty = new Smarty();
 
 $credit_amount = 0;
-if (ACTIVATE_GIFT_SYSTEM == 'true') {
+if (ACTIVATE_GIFT_SYSTEM == 'true' 
+    && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+        || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+        )
+    )
+{
   $credit_selection = $order_total_modules->credit_selection();
   for ($i = 0, $n = sizeof($credit_selection); $i < $n; $i++) {
     $credit_amount =  $xtPrice->xtcCalculateCurr($credit_selection[$i]['credit_amount']);

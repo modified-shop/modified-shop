@@ -81,7 +81,12 @@ $smarty->assign('BUTTON_PRINT', xtc_image_button('print.gif', TEXT_PRINT, 'style
 $smarty->assign('BUTTON_PRINT_LAYER', '<a title="'.TEXT_PRINT.'" target="_blank" class="'.$popup_params['link_class'].'" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order.$popup_params['link_parameters'], 'SSL'). '"/>'. xtc_image_button('print.gif', TEXT_PRINT) .'</a>');
 
 // GV Code
-if (ACTIVATE_GIFT_SYSTEM == 'true') {
+if (ACTIVATE_GIFT_SYSTEM == 'true' 
+    && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+        || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+        )
+    )
+{
   $gv_query = xtc_db_query("SELECT amount 
                               FROM ".TABLE_COUPON_GV_CUSTOMER." 
                              WHERE customer_id='".(int)$_SESSION['customer_id']."'");

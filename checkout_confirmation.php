@@ -86,7 +86,10 @@ if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
   }
 }
 
-if (ACTIVATE_GIFT_SYSTEM == 'true'
+if (ACTIVATE_GIFT_SYSTEM == 'true' 
+    && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+        || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+        )
     && isset($_GET['action'])
     && $_GET['action'] == 'check_gift_checkout'
     )
@@ -148,7 +151,12 @@ if ((is_array($payment_modules->modules)
   xtc_redirect(xtc_href_link(((isset($payment_modules->selected_module) && $payment_modules->selected_module == 'paypalcart') ? FILENAME_CHECKOUT_SHIPPING : FILENAME_CHECKOUT_PAYMENT), '', 'SSL'));
 }
 
-if (ACTIVATE_GIFT_SYSTEM == 'true') {
+if (ACTIVATE_GIFT_SYSTEM == 'true' 
+    && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+        || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+        )
+    )
+{
   include (DIR_WS_MODULES.'gift_cart.php');
 }
 

@@ -72,7 +72,12 @@
                   <td class="dataTableHeadingContent"><?php echo HEADING_TITLE_VAT; ?></td>
                   <?php
                   }
-                  if (ACTIVATE_GIFT_SYSTEM=='true') {
+                  if (ACTIVATE_GIFT_SYSTEM == 'true' 
+                      && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+                          || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+                          )
+                      )
+                  {
                   ?>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_AMOUNT; ?></td>
                   <?php

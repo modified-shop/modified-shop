@@ -283,7 +283,12 @@ class newsletter {
         break;
         
       case 'subscribe':
-        if (ACTIVATE_GIFT_SYSTEM == 'true') {
+        if (ACTIVATE_GIFT_SYSTEM == 'true' 
+            && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+                || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+                )
+            )
+        {
           if (defined('MODULE_NEWSLETTER_VOUCHER_AMOUNT')
               && MODULE_NEWSLETTER_VOUCHER_AMOUNT > '0'
               && $this->check_gv_coupon_sendt($mail) === false
