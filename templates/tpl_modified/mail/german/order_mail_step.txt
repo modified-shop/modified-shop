@@ -36,6 +36,8 @@ Ihre bestellten Produkte zur Kontrolle
 Art.-Nr. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}
 {if $order_values.PRODUCTS_ORDER_DESCRIPTION != ''}{$order_values.PRODUCTS_ORDER_DESCRIPTION}
 {/if}
+{if $order_values.PRODUCTS_VPE != ''}{$order_values.PRODUCTS_VPE}
+{/if}
 {if $order_values.PRODUCTS_SHIPPING_TIME != ''}Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}
 {/if}
 {if $order_values.PRODUCTS_ATTRIBUTES != ''}{$order_values.PRODUCTS_ATTRIBUTES}
