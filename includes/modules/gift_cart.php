@@ -31,7 +31,12 @@
 $gift_smarty = new Smarty();
 $gift_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
-if (ACTIVATE_GIFT_SYSTEM == 'true') {
+if (ACTIVATE_GIFT_SYSTEM == 'true' 
+    && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+        || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+        )
+    )
+{
 	$gift_smarty->assign('ACTIVATE_GIFT', 'true');
 }
 

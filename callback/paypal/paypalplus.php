@@ -33,7 +33,12 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
   $paypal = new PayPalPayment('paypalplus');
   
   $module = array();
-  if (ACTIVATE_GIFT_SYSTEM == 'true') {
+  if (ACTIVATE_GIFT_SYSTEM == 'true' 
+      && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+          || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+          )
+      )
+  {
     require_once (DIR_WS_CLASSES . 'order_total.php');
     $order_total_modules = new order_total();
     $credit_selection = $order_total_modules->credit_selection();

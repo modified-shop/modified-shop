@@ -80,7 +80,7 @@
   $box_smarty->assign('products', $products_in_cart);
   $box_smarty->assign('PRODUCTS', $qty);
   $box_smarty->assign('empty', $qty > 0 ? 'false' : 'true');
-  $box_smarty->assign('ACTIVATE_GIFT', ACTIVATE_GIFT_SYSTEM == 'true' ? 'true' : false);
+  $box_smarty->assign('ACTIVATE_GIFT', ((ACTIVATE_GIFT_SYSTEM == 'true' && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true'))) ? 'true' : false));
 
   // GV Code
   if (isset($_SESSION['customer_id'])) {

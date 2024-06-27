@@ -424,7 +424,12 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $send_mail = ((SEND_MAIL_ACCOUNT_CREATED == 'true') ? true : false);
       
       // GV Code - CREDIT CLASS CODE BLOCK
-      if (ACTIVATE_GIFT_SYSTEM == 'true') {
+      if (ACTIVATE_GIFT_SYSTEM == 'true' 
+          && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+              || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+              )
+          )
+      {
         $check_query = xtc_db_query("SELECT *
                                        FROM ".TABLE_COUPON_EMAIL_TRACK."
                                       WHERE emailed_to = '".xtc_db_input($email_address)."'

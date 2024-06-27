@@ -473,7 +473,12 @@
               </td>
            </tr>
            <?php
-           if (ACTIVATE_GIFT_SYSTEM=='true') {
+           if (ACTIVATE_GIFT_SYSTEM == 'true' 
+               && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
+                   || (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true')
+                   )
+               )
+           {
            ?>
            <tr>
             <td class="dataTableConfig col-left"><?php echo TABLE_HEADING_AMOUNT; ?></td>
