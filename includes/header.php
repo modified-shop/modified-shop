@@ -111,19 +111,19 @@ Please visit our website: www.modified-shop.org
 if (DIR_WS_BASE == '') {
   echo '<base href="'.(($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'" />'.PHP_EOL;
 }
-if (is_file('templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
-  require('templates/'.CURRENT_TEMPLATE.'/css/general.css.php');
+if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
+  require(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/general.css.php');
 } else { //Maintain backwards compatibility for older templates 
-  echo '<link rel="stylesheet" type="text/css" href="templates/'.CURRENT_TEMPLATE.'/stylesheet.css" />'.PHP_EOL;
+  echo '<link rel="stylesheet" type="text/css" href="'.DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/stylesheet.css" />'.PHP_EOL;
 }
 
 // require theme based javascript
-require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
+require(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
 
 // require additional javascript
 switch(basename($PHP_SELF)) {
   case FILENAME_CHECKOUT_PAYMENT:
-    require('includes/form_check.js.php');
+    require(DIR_WS_INCLUDES.'form_check.js.php');
     if (isset($payment_modules)
         && is_object($payment_modules)
         && method_exists($payment_modules, 'javascript_validation')
