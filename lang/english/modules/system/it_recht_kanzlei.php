@@ -35,7 +35,3 @@ define('MODULE_API_IT_RECHT_KANZLEI_PDF_DSE_TITLE', 'Privacy Policy selection PD
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_DSE_DESC', 'Instruction whether the Privacy Policy legal text will be available in PDF format.');
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_WRB_TITLE', 'Revocation selection PDF');
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_WRB_DESC', 'Instruction whether Revocation legal text should be available as a PDF.');
-define('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE_TITLE', '<hr noshade>Location PDF');
-define('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE_DESC', 'Specify the location of the PDF legal texts.');
-
-?>
