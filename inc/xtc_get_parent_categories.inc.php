@@ -39,10 +39,10 @@
     }
   
     if (!isset($parent_id_cache[$categories_id])) {
-      $parent_categories_query = "SELECT parent_id 
-                                    FROM " . TABLE_CATEGORIES . " 
-                                   WHERE categories_id = '" . (int)$categories_id . "'";
-      $parent_categories_query  = xtDBquery($parent_categories_query);
+      $parent_categories_query = xtDBquery("SELECT parent_id 
+                                              FROM " . TABLE_CATEGORIES . " 
+                                             WHERE categories_id = '" . (int)$categories_id . "'
+                                                   ".CATEGORIES_CONDITIONS);
       while ($parent_categories = xtc_db_fetch_array($parent_categories_query, true)) {
         $parent_id_cache[$categories_id] = $parent_categories['parent_id'];
       
