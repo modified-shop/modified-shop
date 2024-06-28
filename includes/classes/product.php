@@ -58,7 +58,8 @@ class product {
                              p.products_date_added,
                              pd.products_name,
                              pd.products_heading_title,
-                             pd.products_short_description';
+                             pd.products_short_description,
+                             m.manufacturers_name';
 
     // default products image
     $this->useStandardImage = PRODUCT_IMAGE_SHOW_NO_IMAGE;
@@ -80,6 +81,9 @@ class product {
                                        ON pd.products_id = p.products_id
                                           AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                           AND trim(pd.products_name) != ''
+                             LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                       ON m.manufacturers_id = p.manufacturers_id
+                                          AND m.manufacturers_status = '1'
                                  WHERE p.products_status = '1'
                                    AND p.products_id = '".$this->pID."'                                          
                                        ".PRODUCTS_CONDITIONS_P);
