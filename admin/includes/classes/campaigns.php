@@ -77,7 +77,8 @@ class campaigns {
 
 			$this->getTotalLeads();
 			$this->getTotalSells();
-
+      $this->getTotalHits();
+      
 			for ($n = 0; $n < count($this->SelectArray); $n ++) {
 
 				$this->campaign = $this->SelectArray[$n]['id'];
@@ -253,6 +254,20 @@ class campaigns {
 		$this->total['sum'] = $sale_data['Summe'];
 	}
 
+	function getTotalHits() {
+		$end = mktime(0, 0, 0, date("m", $this->endDate), date("d", $this->endDate) + 1, date("Y", $this->endDate));
+
+		$hits_query = "SELECT count(*) as hits 
+		                 FROM ".TABLE_CAMPAIGNS_IP." 
+		                WHERE time>'".xtc_db_input(date("Y-m-d", $this->startDate))."'
+		                  AND time<'".xtc_db_input(date("Y-m-d", $end))."'";
+
+		$hits_query = xtc_db_query($hits_query);
+		$hits_data = xtc_db_fetch_array($hits_query);
+
+		$this->total['hits'] = $hits_data['hits'];
+	}
+
 	function getSells($date_start, $date_end, $type) {
 		global $currencies;
 
@@ -302,7 +317,10 @@ class campaigns {
 		$late_sell_query = xtc_db_query($late_sell_query);
 		$late_sell_data = xtc_db_fetch_array($late_sell_query);
 
-
+    if (!isset($this->result[$this->counterCMP]['sum_s'])) $this->result[$this->counterCMP]['sum_s'] = 0;
+    if (!isset($this->result[$this->counterCMP]['sells_s'])) $this->result[$this->counterCMP]['sells_s'] = 0;
+    if (!isset($this->result[$this->counterCMP]['late_sells_s'])) $this->result[$this->counterCMP]['late_sells_s'] = 0;
+    
 		$this->result[$this->counterCMP]['result'][$this->counter]['sells'] = $sell_data['sells'];
 		$this->result[$this->counterCMP]['result'][$this->counter]['sum'] =  $currencies->format(($sell_data['Summe']+$late_sell_data['Summe']));
 		$this->result[$this->counterCMP]['sells_s'] += $sell_data['sells'];
@@ -351,7 +369,9 @@ class campaigns {
 		                      ".$selection;		
 		$lead_query = xtc_db_query($lead_query);
 		$lead_data = xtc_db_fetch_array($lead_query);
-
+    
+    if (!isset($this->result[$this->counterCMP]['leads_s'])) $this->result[$this->counterCMP]['leads_s'] = 0;
+    
 		$this->result[$this->counterCMP]['result'][$this->counter]['range'] = $this->getDateFormat($date_start, $date_end);
 		$this->result[$this->counterCMP]['result'][$this->counter]['leads'] = $lead_data['leads'];
 		$this->result[$this->counterCMP]['leads_s'] += $lead_data['leads'];
@@ -390,7 +410,9 @@ class campaigns {
 		                      ".$selection;
 		$hits_query = xtc_db_query($hits_query);
 		$hits_data = xtc_db_fetch_array($hits_query);
-
+    
+    if (!isset($this->result[$this->counterCMP]['hits_s'])) $this->result[$this->counterCMP]['hits_s'] = 0;
+    
 		$this->result[$this->counterCMP]['result'][$this->counter]['hits'] = $hits_data['hits'];
 		$this->result[$this->counterCMP]['hits_s'] += $hits_data['hits'];
 		if ($this->total['hits'] == 0) {
