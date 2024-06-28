@@ -26,10 +26,12 @@
  * @return string
  */
 function smarty_modifier_onlytext($string) {
-  $string = strip_tags($string);
-  $string = preg_replace("'[\r\n\s]+'", ' ', $string);
-  $string = str_replace(array('"', "'"), '', $string);
-  $string = trim($string);
-
+  if (xtc_not_null($string)) {
+    $string = strip_tags($string);
+    $string = preg_replace("'[\r\n\s]+'", ' ', $string);
+    $string = str_replace(array('"', "'"), '', $string);
+    $string = trim($string);
+  }
+  
   return $string;
 }
