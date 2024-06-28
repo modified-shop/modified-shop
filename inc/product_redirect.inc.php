@@ -77,6 +77,7 @@ function product_redirect($actual_products_id) {
   global $products_link_cat_id, $PHP_SELF;
 
   // Wenn wir auf ner Produkt-Info-Seite sind
+  $cPath = '';
   if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO 
       && strpos($_SERVER['QUERY_STRING'], 'error') === false 
       && strpos($_SERVER['QUERY_STRING'], 'success') === false
@@ -131,7 +132,8 @@ function product_redirect($actual_products_id) {
       }        
     }
     
-    return xtc_get_category_path($products_link_cat_id);
+    $cPath = xtc_get_category_path($products_link_cat_id);
   }
+  
+  return $cPath;
 }
-?>
