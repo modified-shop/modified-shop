@@ -18,7 +18,14 @@
 
 
   class sitemap {
-    var $schema, $image_url, $image_path, $url_function;
+  
+    var $schema;
+    var $language;
+    var $group_id;
+    var $image_url;
+    var $image_path;
+    var $url_param;
+    var $url_function;
 
     function __construct() {
       $this->schema = '';
