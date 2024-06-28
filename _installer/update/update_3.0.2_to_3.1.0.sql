@@ -25,4 +25,8 @@ ALTER TABLE `customers` ADD INDEX `idx_customers_date_added` (`customers_date_ad
 #GTB - 2024-06-28 - extend banners_title to 255 chars
 ALTER TABLE `banners` MODIFY `banners_title` VARCHAR(255) NOT NULL;
 
+#GTB - 2024-06-28 - change tracking link
+UPDATE `carriers` SET `carrier_tracking_link` = 'https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1' WHERE `carrier_tracking_link` = 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1';
+UPDATE `carriers` SET `carrier_tracking_link` = 'https://www.fedex.com/fedextrack/?trknbr=$1&cntry_code=$2' WHERE `carrier_tracking_link` = 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
