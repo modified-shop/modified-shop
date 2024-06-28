@@ -472,13 +472,3 @@
       }
     }
   }
-  
-  // DHL Trackinglink
-  xtc_db_query("UPDATE ".TABLE_CARRIERS."
-                   SET carrier_tracking_link = 'https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1'
-                 WHERE carrier_name = 'DHL'");
-
-  // Fedex Trackinglink
-  xtc_db_query("UPDATE ".TABLE_CARRIERS."
-                   SET carrier_tracking_link = 'https://www.fedex.com/fedextrack/?trknbr=$1&cntry_code=$2'
-                 WHERE carrier_name = 'FEDEX'");
