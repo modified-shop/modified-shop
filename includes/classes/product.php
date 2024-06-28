@@ -59,8 +59,7 @@ class product {
                              p.products_date_available,
                              pd.products_name,
                              pd.products_heading_title,
-                             pd.products_short_description,
-                             m.manufacturers_name';
+                             pd.products_short_description';
 
     // default products image
     $this->useStandardImage = PRODUCT_IMAGE_SHOW_NO_IMAGE;
@@ -76,7 +75,10 @@ class product {
     }
     
     // query for Product
-    $product_query = xtDBquery("SELECT *
+    $product_query = xtDBquery("SELECT p.*,
+                                       pd.*,
+                                       m.manufacturers_name,
+                                       m.manufacturers_image
                                   FROM ".TABLE_PRODUCTS." p
                                   JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                        ON pd.products_id = p.products_id
