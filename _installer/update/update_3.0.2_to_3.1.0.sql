@@ -22,4 +22,7 @@ DELETE FROM `configuration` WHERE `configuration_key` = 'MODULE_PAYMENT_PAYPALSO
 #GTB - 2024-04-26 - add index 
 ALTER TABLE `customers` ADD INDEX `idx_customers_date_added` (`customers_date_added`); 
 
+#GTB - 2024-06-28 - extend banners_title to 255 chars
+ALTER TABLE `banners` MODIFY `banners_title` VARCHAR(255) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

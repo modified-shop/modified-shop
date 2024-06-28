@@ -178,7 +178,7 @@ DROP TABLE IF EXISTS banners;
 CREATE TABLE banners (
   banners_id INT(11) NOT NULL AUTO_INCREMENT,
   banners_group_id INT(11) NOT NULL,
-  banners_title VARCHAR(64) NOT NULL,
+  banners_title VARCHAR(255) NOT NULL,
   banners_url VARCHAR(255) NOT NULL,
   banners_redirect INT(11) NOT NULL DEFAULT 1,
   banners_image VARCHAR(255) NOT NULL,
