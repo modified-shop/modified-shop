@@ -56,6 +56,7 @@ class product {
                              p.products_vpe_value,
                              p.products_model,
                              p.products_date_added,
+                             p.products_date_available,
                              pd.products_name,
                              pd.products_heading_title,
                              pd.products_short_description,
