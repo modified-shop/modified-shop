@@ -295,11 +295,9 @@ class ot_coupon {
             $cat_ids = explode(",", $coupon_array['restrict_to_categories']);
             $cat_ids = array_unique($cat_ids);
             for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
-              $p_flag = $coupon_array['restrict_to_products'] && in_array($order->products[$i]['id'], $_c_products_ids) ? true : false;
-
               $prod_cat_ids_array = $this->get_cat_ids_array(xtc_get_prid($order->products[$i]['id']));
               for ($ii = 0 , $nn = count($cat_ids); $ii < $nn ; $ii ++) {
-                if (in_array($cat_ids[$ii], $prod_cat_ids_array) && !$p_flag && !in_array($order->products[$i]['id'], $_c_products_ids)) {
+                if (in_array($cat_ids[$ii], $prod_cat_ids_array) && !in_array($order->products[$i]['id'], $_c_products_ids)) {
                   $_c_products_ids[] = $order->products[$i]['id'];
                   
                   if ($coupon_array['coupon_type'] == 'P') {
@@ -318,16 +316,14 @@ class ot_coupon {
             }
           }
 
-          //allowed categories
+          //allowed manufacturers
           $coupon_array['restrict_to_manufacturers'] = preg_replace("'[\r\n\s]+'", '', $coupon_array['restrict_to_manufacturers']);
           if (trim($coupon_array['restrict_to_manufacturers']) != '') {
             $manu_ids = explode(",", $coupon_array['restrict_to_manufacturers']);
             $manu_ids = array_unique($manu_ids);
             for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
-              $p_flag = ($coupon_array['restrict_to_products'] || $coupon_array['restrict_to_categories']) && in_array($order->products[$i]['id'], $_c_products_ids) ? true : false;
-
               for ($ii = 0, $nn = count($manu_ids); $ii < $nn; $ii ++) {
-                if ($manu_ids[$ii] == $order->products[$i]['manufacturers_id']) {
+                if ($manu_ids[$ii] == $order->products[$i]['manufacturers_id'] && !in_array($order->products[$i]['id'], $_c_products_ids)) {
                   $_c_products_ids[] = $order->products[$i]['id'];
 
                   if ($coupon_array['coupon_type'] == 'P') {
