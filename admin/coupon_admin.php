@@ -129,6 +129,7 @@
           'uses_per_coupon' => xtc_db_prepare_input((int)$_POST['coupon_uses_coupon']),
           'uses_per_user' => xtc_db_prepare_input((int)$_POST['coupon_uses_user']),
           'coupon_minimum_order' => xtc_db_prepare_input($_POST['coupon_min_order']),
+          'coupon_specials' => (isset($_POST['coupon_specials']) && $_POST['coupon_specials'] == 'on') ? 1 : 0,
           'restrict_to_products' => xtc_db_prepare_input($_POST['coupon_products']),
           'restrict_to_categories' => xtc_db_prepare_input($_POST['coupon_categories']),
           'restrict_to_manufacturers' => xtc_db_prepare_input($_POST['coupon_manufacturers']),
@@ -322,6 +323,7 @@ require (DIR_WS_INCLUDES.'head.php');
           $coupon_amount .= '%';
           $coupon_free_ship = true;
         }
+        $coupon_specials = $coupon['coupon_specials'] == 0 ? false : true;
         $coupon_min_order = $coupon['coupon_minimum_order'];
         $coupon_code = $coupon['coupon_code'];
         $coupon_uses_coupon = $coupon['uses_per_coupon'];
@@ -339,6 +341,7 @@ require (DIR_WS_INCLUDES.'head.php');
         if (isset($_POST['coupon_amount'])) $coupon_amount = xtc_db_prepare_input($_POST['coupon_amount']);
         if (isset($_POST['coupon_min_order'])) $coupon_min_order = xtc_db_prepare_input($_POST['coupon_min_order']);
         if (isset($_POST['coupon_free_ship'])) $coupon_free_ship = xtc_db_prepare_input($_POST['coupon_free_ship']);
+        if (isset($_POST['coupon_specials'])) $coupon_specials = (isset($_POST['coupon_specials']) && $_POST['coupon_specials'] == 'on') ? true : false;
         if (isset($_POST['coupon_code'])) $coupon_code = xtc_db_prepare_input($_POST['coupon_code']);
         if (isset($_POST['coupon_uses_coupon'])) $coupon_uses_coupon = xtc_db_prepare_input($_POST['coupon_uses_coupon']);
         if (isset($_POST['coupon_uses_user'])) $coupon_uses_user = xtc_db_prepare_input($_POST['coupon_uses_user']);
@@ -369,6 +372,9 @@ require (DIR_WS_INCLUDES.'head.php');
         }
         if (!isset($coupon_free_ship)) {
           $coupon_free_ship = false;
+        }
+        if (!isset($coupon_specials)) {
+          $coupon_specials = false;
         }
         if (isset($coupon_groups)) {
           $coupon_groups = array_filter($coupon_groups);
@@ -451,7 +457,12 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_uses_user', $coupon_uses_user); ?></td>
                 <td class="dataTableConfig col-right"><?php echo COUPON_USES_USER_HELP; ?></td>
               </tr>
-               <tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo COUPON_SPECIALS; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('coupon_specials', $coupon_specials); ?></td>
+                <td class="dataTableConfig col-right"><?php echo COUPON_SPECIALS_HELP; ?></td>
+              </tr>
+              <tr>
                 <td class="dataTableConfig col-left"><?php echo COUPON_PRODUCTS; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_products', $coupon_products); ?> <a href="<?php echo xtc_href_link('validproducts.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validproducts.php', 'Valid_Products', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
                 <td class="dataTableConfig col-right"><?php echo COUPON_PRODUCTS_HELP; ?></td>

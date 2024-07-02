@@ -449,6 +449,7 @@ CREATE TABLE coupons (
   restrict_to_categories TEXT DEFAULT NULL,
   restrict_to_manufacturers TEXT DEFAULT NULL,
   restrict_to_customers TEXT DEFAULT NULL,
+  coupon_specials INT(1) NOT NULL DEFAULT 0,
   coupon_active CHAR(1) NOT NULL DEFAULT 'Y',
   date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   date_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',

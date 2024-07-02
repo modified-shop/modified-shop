@@ -47,5 +47,3 @@
   define('MODULE_ORDER_TOTAL_COUPON_CALC_TAX_DESC', 'MwSt. neu berechnen');
   define('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS_TITLE', 'MwSt.-Satz');
   define('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS_DESC', 'Folgenden MwSt. Satz benutzen, wenn Sie den Rabatt Coupon als Gutschrift verwenden.');
-  define('MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES_TITLE', 'Rabatt auf Sonderangebote');
-  define('MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES_DESC', 'Rabatt auf Sonderangebote bei prozentualen Coupons erlauben');

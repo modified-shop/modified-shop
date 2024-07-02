@@ -48,7 +48,7 @@ if (xtc_db_num_rows($coupon_query) > 0) {
     $text_coupon_help .= sprintf(TEXT_COUPON_HELP_DESC, $coupon['coupon_description']);
   }
 
-  if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES == 'false') {
+  if ($coupon['coupon_specials'] == 0) {
     $text_coupon_help .= TEXT_COUPON_HELP_SPECIALS;
   }
 

@@ -44,6 +44,12 @@
     xtc_db_query("ALTER TABLE ".TABLE_WHOS_ONLINE." ADD PRIMARY KEY (session_id)");
   }
 
+  if (defined('MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES')) {
+    $status = MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES == 'false' ? 0 : 1;
+    xtc_db_query("UPDATE ".TABLE_COUPONS."
+                     SET coupon_specials = '".$status."'");
+  }
+  
   // exclude payments
   if (defined('MODULE_EXCLUDE_PAYMENT_NUMBER')) {
     for ($i = 1; $i <= MODULE_EXCLUDE_PAYMENT_NUMBER; $i ++) {
@@ -393,6 +399,8 @@
 
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM'");
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM'");
+
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES'");
   
   // add columns
   $table_array = array(

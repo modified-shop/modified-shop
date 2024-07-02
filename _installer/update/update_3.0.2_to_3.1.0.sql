@@ -30,6 +30,7 @@ UPDATE `carriers` SET `carrier_tracking_link` = 'https://nolp.dhl.de/nextt-onlin
 UPDATE `carriers` SET `carrier_tracking_link` = 'https://www.fedex.com/fedextrack/?trknbr=$1&cntry_code=$2' WHERE `carrier_tracking_link` = 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1';
 
 #GTB - 2024-07-02 - extend coupons
+ALTER TABLE `coupons` ADD `coupon_specials` INT(1) NOT NULL DEFAULT 0 AFTER `restrict_to_customers`; 
 ALTER TABLE `coupons` ADD `restrict_to_manufacturers` TEXT DEFAULT NULL AFTER `restrict_to_categories`; 
 ALTER TABLE `coupons` MODIFY `restrict_to_customers` TEXT DEFAULT NULL;
 
