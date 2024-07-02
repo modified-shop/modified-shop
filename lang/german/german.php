@@ -482,10 +482,12 @@ define('TEXT_COUPON_HELP_DATE', '<br /><br />Dieser Coupon ist g&uuml;ltig vom %
 define('TEXT_COUPON_HELP_RESTRICT', '<br /><br />Artikel / Kategorie Einschr&auml;nkungen');
 define('TEXT_COUPON_HELP_CATEGORIES', 'Kategorie');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Artikel');
+define('TEXT_COUPON_HELP_MANUFACTURERS', 'Hersteller');
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Ung&uuml;ltiger Gutscheinbetrag');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Ung&uuml;ltige E-Mail-Adresse');
 define('TEXT_COUPON_PRODUCTS_RESTRICT', 'Der Coupon ist auf eine Auswahl an Artikeln beschr&auml;nkt.');
 define('TEXT_COUPON_CATEGORIES_RESTRICT', 'Der Coupon ist auf eine Auswahl an Kategorien beschr&auml;nkt.');
+define('TEXT_COUPON_MANUFACTURERS_RESTRICT', 'Der Coupon ist auf eine Auswahl an Herstellern beschr&auml;nkt.');
 
 // VAT Reg No
 define('ENTRY_VAT_TEXT', '');

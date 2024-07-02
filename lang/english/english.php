@@ -481,10 +481,12 @@ define('TEXT_COUPON_HELP_DATE', '<br /><br />This voucher is valid from: %s to %
 define('TEXT_COUPON_HELP_RESTRICT', '<br /><br />Product / Category Restrictions');
 define('TEXT_COUPON_HELP_CATEGORIES', 'Category');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Product');
+define('TEXT_COUPON_HELP_MANUFACTURERS', 'Manufacturers');
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Invalid amount');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Invalid e-mail address');
 define('TEXT_COUPON_PRODUCTS_RESTRICT', 'Your voucher/coupon is limited to some products.');
 define('TEXT_COUPON_CATEGORIES_RESTRICT', 'Your voucher/coupon is limited to some categories.');
+define('TEXT_COUPON_MANUFACTURERS_RESTRICT', 'Your voucher/coupon is limited to some manufacturers.');
 
 // VAT Reg No
 define('ENTRY_VAT_TEXT', '');

@@ -176,6 +176,9 @@
         if ($gv_result['restrict_to_categories'] != '') {
           $coupon_amount .= '<br /><br />'.TEXT_COUPON_CATEGORIES_RESTRICT;
         }
+        if ($gv_result['restrict_to_manufacturers'] != '') {
+          $coupon_amount .= '<br /><br />'.TEXT_COUPON_MANUFACTURERS_RESTRICT;
+        }
         
         $_SESSION['cc_amount_min_order'] = $coupon_minimum_order;
         $_SESSION['cc_amount_info'] = $coupon_amount;
