@@ -48,8 +48,8 @@ require('includes/application_top.php');
                                                  FROM ".TABLE_MANUFACTURERS);
           while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
             echo '<tr class="dataTableRow">';
-            echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_id'].'</td>\n';
-            echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_name'].'</td>\n';
+            echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_id'].'</td>';
+            echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_name'].'</td>';
             echo '</tr>';
           }
         ?>

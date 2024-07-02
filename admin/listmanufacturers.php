@@ -59,8 +59,8 @@ require('includes/application_top.php');
                                                   WHERE manufacturers_id = '".(int)$manu_ids[$i]."'");
             while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
               echo '<tr class="dataTableRow">';
-              echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_id'].'</td>\n';
-              echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_name'].'</td>\n';
+              echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_id'].'</td>';
+              echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_name'].'</td>';
               echo '</tr>';
             }
           }

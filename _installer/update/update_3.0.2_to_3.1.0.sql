@@ -37,9 +37,9 @@ ALTER TABLE `admin_access` ADD `listmanufacturers` INT(1) NOT NULL DEFAULT 0 AFT
 ALTER TABLE `admin_access` ADD `validmanufacturers` INT(1) NOT NULL DEFAULT 0 AFTER `validcategories`;
 
 UPDATE `admin_access` SET `listmanufacturers` = 1 WHERE `customers_id` = 1 LIMIT 1;
-UPDATE `admin_access` SET `validcategories` = 1 WHERE `customers_id` = 1 LIMIT 1;
+UPDATE `admin_access` SET `validmanufacturers` = 1 WHERE `customers_id` = 1 LIMIT 1;
 
 UPDATE `admin_access` SET `listmanufacturers` = 6 WHERE `customers_id` = 'groups' LIMIT 1;
-UPDATE `admin_access` SET `validcategories` = 6 WHERE `customers_id` = 'groups' LIMIT 1;
+UPDATE `admin_access` SET `validmanufacturers` = 6 WHERE `customers_id` = 'groups' LIMIT 1;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
