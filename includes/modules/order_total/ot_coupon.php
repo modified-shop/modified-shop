@@ -379,7 +379,7 @@ class ot_coupon {
     global $order;
 
     // restrictions
-    $restriction = isset($order->info['tax_groups']) && count($order->info['tax_groups']) == 1 ? false : true;
+    //$restriction = isset($order->info['tax_groups']) && count($order->info['tax_groups']) == 1 ? false : true;
 
     // reduction in percent
     $od_amount_pro = $od_amount/$order_total * 100;
@@ -387,7 +387,7 @@ class ot_coupon {
     foreach ($order->info['tax_groups'] as $key => $value) {
       if (isset($this->tax_groups[$key])) {
         // restriction
-        $od_amount_pro = $restriction ? ($od_amount / $this->price_total_by_tax_groups[$key] * 100) : $od_amount_pro;
+        //$od_amount_pro = $restriction ? ($od_amount / $this->price_total_by_tax_groups[$key] * 100) : $od_amount_pro;
         
         if ($od_amount_pro > 0) {
           $god_amount = $order->info['tax_groups'][$key] * $od_amount_pro / 100;
