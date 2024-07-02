@@ -71,15 +71,15 @@ if (xtc_db_num_rows($coupon_query) > 0) {
   }
   $text_coupon_help .= sprintf(TEXT_COUPON_HELP_DATE, xtc_date_short($coupon['coupon_start_date']), xtc_date_short($coupon['coupon_expire_date']));
 
-  $coupon['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_categories']);
   $coupon['restrict_to_products'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_products']);
+  $coupon['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_categories']);
+  $coupon['restrict_to_manufacturers'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_manufacturers']);
 
-  if (trim($coupon['restrict_to_categories']) || trim($coupon['restrict_to_products'])) {
+  if (trim($coupon['restrict_to_categories']) || trim($coupon['restrict_to_products']) || trim($coupon['restrict_to_manufacturers'])) {
     $text_coupon_help .= '<strong>'.TEXT_COUPON_HELP_RESTRICT.'</strong>';
 
     if (trim($coupon['restrict_to_categories'])) {
       $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_CATEGORIES;
-      $cats = '<br />---';
 
       $cat_ids = explode(",", $coupon['restrict_to_categories']);
       $cat_ids = array_unique($cat_ids);
@@ -99,7 +99,6 @@ if (xtc_db_num_rows($coupon_query) > 0) {
 
     if (trim($coupon['restrict_to_products'])) {
       $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_PRODUCTS;
-      $prods = '<br />---';
 
       $pr_ids = explode(",", $coupon['restrict_to_products']);
       $pr_ids = array_unique($pr_ids);
@@ -115,6 +114,24 @@ if (xtc_db_num_rows($coupon_query) > 0) {
         }
       }
       $text_coupon_help .= $prods;
+    }
+
+    if (trim($coupon['restrict_to_manufacturers'])) {
+      $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_MANUFACTURERS;
+
+      $manu_ids = explode(",", $coupon['restrict_to_manufacturers']);
+      $manu_ids = array_unique($manu_ids);
+      $pmanufacturers_query = xtc_db_query("SELECT manufacturers_name
+                                              FROM ".TABLE_MANUFACTURERS."
+                                             WHERE manufacturers_id IN ('" . implode("', '", $manu_ids) . "')
+                                               AND trim(manufacturers_name) != ''");
+      if (xtc_db_num_rows($pmanufacturers_query) > 0) {
+        $manus = '';
+        while ($pmanufacturers = xtc_db_fetch_array($pmanufacturers_query)) {
+          $manus .= '<br />'.$pmanufacturers["manufacturers_name"];
+        }
+      }
+      $text_coupon_help .= $manus;
     }
   }
 }
