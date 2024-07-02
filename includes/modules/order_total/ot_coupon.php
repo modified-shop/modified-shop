@@ -253,6 +253,10 @@ class ot_coupon {
           $coupon_array['coupon_type'] = 'P';
           $flag_t = true;
         }
+        
+        if ($coupon_array['coupon_type'] == 'P') {
+          $c_deduct = $coupon_array['coupon_amount'];
+        }
 
         $_c_products_ids = $pr_ids = array();
         if ($coupon_array['restrict_to_products'] || $coupon_array['restrict_to_categories']) {
@@ -269,9 +273,11 @@ class ot_coupon {
                 if ($pr_ids[$ii] == xtc_get_prid($order->products[$i]['id'])) {
                   if ($coupon_array['coupon_type'] == 'P') {
                     $pr_c = $this->product_price($order->products[$i]['id']);
-                    $pod_amount = round($pr_c*10)/10*$c_deduct/100;
+                    if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
+                      $pr_c = round($pr_c, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+                    }
+                    $pod_amount = $pr_c * $c_deduct / 100;
                     $od_amount = $od_amount + $pod_amount;
-
                   } else {
                     $od_amount = $c_deduct;
                     $pr_c += $this->product_price($order->products[$i]['id']);
@@ -295,7 +301,10 @@ class ot_coupon {
                   $_c_products_ids[] = $order->products[$i]['id'];
                   if ($coupon_array['coupon_type'] == 'P') {
                     $pr_c = $this->product_price($order->products[$i]['id']);
-                    $pod_amount = round($pr_c*10)/10*$c_deduct/100;
+                    if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
+                      $pr_c = round($pr_c, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+                    }
+                    $pod_amount = $pr_c * $c_deduct / 100;
                     $od_amount = $od_amount + $pod_amount;
                   } else {
                     $od_amount = $c_deduct;
@@ -312,7 +321,7 @@ class ot_coupon {
           if ($coupon_array['coupon_type'] != 'P') {
             $od_amount = $c_deduct;
           } else {
-            $od_amount = $amount * $coupon_array['coupon_amount'] / 100;
+            $od_amount = $amount * $c_deduct / 100;
           }
           
           for ($i = 0; $i < sizeof($order->products); $i ++) {
@@ -341,7 +350,10 @@ class ot_coupon {
                 $product = xtc_db_fetch_array($product_query);
                 if ($coupon_array['coupon_type'] == 'P') {
                   $pr_c = $this->product_price($order->products[$i]['id'], false);
-                  $pod_amount = round($pr_c*10)/10*$c_deduct/100;
+                  if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
+                    $pr_c = round($pr_c, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+                  }
+                  $pod_amount = $pr_c * $c_deduct / 100;
                   $od_amount -= $pod_amount;
                 } else {
                   $pr_c += $this->product_price($order->products[$i]['id'], false);
