@@ -1,6 +1,6 @@
 <?php
-   /* -----------------------------------------------------------------------------------------
-   $Id: listproducts.php 1312 2005-10-18 14:18:20Z mz $
+/* -----------------------------------------------------------------------------------------
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -28,49 +28,54 @@
 
 
 require('includes/application_top.php');
-
-
 ?>
 <html>
-<head>
-<title>Valid Categories/Products List</title>
-<style type="text/css">
-<!--
-h4 {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: x-small; text-align: center}
-p {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: xx-small}
-th {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: xx-small}
-td {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: xx-small}
--->
-</style>
-</head>
-<body>
-<table width="550" border="1" cellspacing="1" bordercolor="gray">
-<tr>
-<td colspan="3">
-<h4>Valid Products List</h4>
-</td>
-</tr>
-<?php
-   $coupon_get=xtc_db_query("select restrict_to_products,restrict_to_categories from " . TABLE_COUPONS . "  where coupon_id='".$_GET['cid']."'");
-   $get_result=xtc_db_fetch_array($coupon_get);
-
-    echo "<tr><th>Product ID</th><th>Product Name</th><th>Product Size</th></tr><tr>";
-    $pr_ids = explode(",", $get_result['restrict_to_products']);  // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
-    for ($i = 0; $i < count($pr_ids); $i++) {
-      $result = xtc_db_query("SELECT * FROM ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd WHERE p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'and p.products_id = '" . $pr_ids[$i] . "'");
-      if ($row = xtc_db_fetch_array($result)) {
-            echo "<td>".$row["products_id"]."</td>\n";
-            echo "<td>".$row["products_name"]."</td>\n";
-            echo "<td>".$row["products_model"]."</td>\n";
-            echo "</tr>\n";
-      }
-    }
-?>
-</table>
-<br />
-<table width="550" border="0" cellspacing="1">
-<tr>
-<td align=middle><input type="button" value="Close Window" onclick="window.close()"></td>
-</tr></table>
-</body>
+  <head>
+    <title>Valid Products List</title>
+    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+  </head>
+  <body>
+    <table width="550" class="tableBoxCenter collapse">
+      <tr>
+        <td class="pageHeading txta-c" colspan="3">Valid Products List</td>
+        </tr>
+        <?php
+          $coupon_query = xtc_db_query("SELECT restrict_to_products
+                                          FROM " . TABLE_COUPONS . "
+                                         WHERE coupon_id='".(int)$_GET['cID']."'");
+          $coupon = xtc_db_fetch_array($coupon_query);
+          $coupon['restrict_to_products'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_products']);
+          
+          $pr_ids = explode(",", $coupon['restrict_to_products']);
+          $pr_ids = array_unique($pr_ids);
+          
+          echo '<tr class="dataTableHeadingRow">
+                  <td class="dataTableHeadingContent">Product ID</td>
+                  <td class="dataTableHeadingContent">Product Name</td>
+                  <td class="dataTableHeadingContent">Product Model</td>
+                </tr>';
+          for ($i = 0; $i < count($pr_ids); $i++) {
+            $products_query = xtc_db_query("SELECT * 
+                                              FROM ".TABLE_PRODUCTS." p
+                                              JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                                   ON p.products_id = pd.products_id 
+                                                      AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                             WHERE p.products_id = '".(int)$pr_ids[$i]."'");
+            while ($products = xtc_db_fetch_array($products_query)) {
+              echo '<tr class="dataTableRow">';
+              echo '  <td class="dataTableContent">'.$products['products_id'].'</td>';
+              echo '  <td class="dataTableContent">'.$products['products_name'].'</td>';
+              echo '  <td class="dataTableContent">'.$products['products_model'].'</td>';
+              echo '</tr>';
+            }
+          }
+        ?>
+    </table>
+    <br />
+    <table width="550" border="0" cellspacing="1">
+      <tr>
+        <td align=middle><input type="button" value="Close Window" onclick="window.close()"></td>
+      </tr>
+    </table>
+  </body>
 </html>

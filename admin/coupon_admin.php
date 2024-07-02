@@ -131,6 +131,7 @@
           'coupon_minimum_order' => xtc_db_prepare_input($_POST['coupon_min_order']),
           'restrict_to_products' => xtc_db_prepare_input($_POST['coupon_products']),
           'restrict_to_categories' => xtc_db_prepare_input($_POST['coupon_categories']),
+          'restrict_to_manufacturers' => xtc_db_prepare_input($_POST['coupon_manufacturers']),
           'restrict_to_customers' => xtc_db_prepare_input((isset($_POST['coupon_groups']) && $_POST['coupon_groups'][0] != 'all') ? implode(',', $_POST['coupon_groups']) : ''),
           'coupon_start_date' => xtc_db_prepare_input(date('Y-m-d H:i:00', strtotime($_POST['coupon_startdate']))),
           'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d H:i:59', strtotime($_POST['coupon_finishdate']))),
@@ -327,6 +328,7 @@ require (DIR_WS_INCLUDES.'head.php');
         $coupon_uses_user = $coupon['uses_per_user'];
         $coupon_products = $coupon['restrict_to_products'];
         $coupon_categories = $coupon['restrict_to_categories'];
+        $coupon_manufacturers = $coupon['restrict_to_manufacturers'];
         $coupon_groups = explode(',', $coupon['restrict_to_customers']);
         $coupon_startdate = date('Y-m-d H:i', strtotime($coupon['coupon_start_date']));
         $coupon_finishdate = date('Y-m-d H:i', strtotime($coupon['coupon_expire_date']));
@@ -342,6 +344,7 @@ require (DIR_WS_INCLUDES.'head.php');
         if (isset($_POST['coupon_uses_user'])) $coupon_uses_user = xtc_db_prepare_input($_POST['coupon_uses_user']);
         if (isset($_POST['coupon_products'])) $coupon_products = xtc_db_prepare_input($_POST['coupon_products']);
         if (isset($_POST['coupon_categories'])) $coupon_categories = xtc_db_prepare_input($_POST['coupon_categories']);
+        if (isset($_POST['coupon_manufacturers'])) $coupon_manufacturers = xtc_db_prepare_input($_POST['coupon_manufacturers']);
         if (isset($_POST['coupon_startdate'])) $coupon_startdate = xtc_db_prepare_input($_POST['coupon_startdate']);
         if (isset($_POST['coupon_finishdate'])) $coupon_finishdate = xtc_db_prepare_input($_POST['coupon_finishdate']);
         if (isset($_POST['coupon_groups'])) $coupon_groups = ((is_array($_POST['coupon_groups'])) ? $_POST['coupon_groups'] : explode(',', xtc_db_prepare_input($_POST['coupon_groups'])));
@@ -360,6 +363,9 @@ require (DIR_WS_INCLUDES.'head.php');
         }
         if (!isset($coupon_categories)) {
           $coupon_categories = '';
+        }
+        if (!isset($coupon_manufacturers)) {
+          $coupon_manufacturers = '';
         }
         if (!isset($coupon_free_ship)) {
           $coupon_free_ship = false;
@@ -454,6 +460,11 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableConfig col-left"><?php echo COUPON_CATEGORIES; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_categories', $coupon_categories); ?> <a href="<?php echo xtc_href_link('validcategories.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validcategories.php', 'Valid_Categories', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
                 <td class="dataTableConfig col-right"><?php echo COUPON_CATEGORIES_HELP; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo COUPON_MANUFACTURERS; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_manufacturers', $coupon_manufacturers); ?> <a href="<?php echo xtc_href_link('validmanufacturers.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validmanufacturers.php', 'Valid_Manufacturers', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
+                <td class="dataTableConfig col-right"><?php echo COUPON_MANUFACTURERS_HELP; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo COUPON_CUSTOMERS; ?></td>
@@ -649,6 +660,10 @@ require (DIR_WS_INCLUDES.'head.php');
                     if ($cInfo->restrict_to_categories) {
                       $cat_details = '<a href="listcategories.php?cID=' . $cInfo->coupon_id . '" target="_blank" onclick="window.open(\'listcategories.php?cID=' . $cInfo->coupon_id . '\', \'Valid_Categories\', \'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600\'); return false"><strong>' . TEXT_VIEW_SHORT .'</strong></a>';
                     }
+                    $manu_details = TEXT_NO_RESTRICTION;
+                    if ($cInfo->restrict_to_manufacturers) {
+                      $manu_details = '<a href="listmanufacturers.php?cID=' . $cInfo->coupon_id . '" target="_blank" onclick="window.open(\'listmanufacturers.php?cID=' . $cInfo->coupon_id . '\', \'Valid_Manufacturers\', \'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600\'); return false"><strong>' . TEXT_VIEW_SHORT .'</strong></a>';
+                    }
                     $coupon_name_query = xtc_db_query("SELECT coupon_name FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE coupon_id = '" . (int)$cInfo->coupon_id . "' AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
                     $coupon_name = xtc_db_fetch_array($coupon_name_query);
 
@@ -693,6 +708,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       COUPON_USES_USER . ':&nbsp;<strong>' . $cInfo->uses_per_user . '</strong><br /><br />' .
                       COUPON_PRODUCTS . ':&nbsp;' . $prod_details . '<br />' .
                       COUPON_CATEGORIES . ':&nbsp;' . $cat_details . '<br />' .
+                      COUPON_MANUFACTURERS . ':&nbsp;' . $manu_details . '<br />' .
                       COUPON_CUSTOMERS . ':&nbsp;' . $customers_list . '<br />' .
                       DATE_CREATED . ':&nbsp;' . xtc_date_short($cInfo->date_created) . '<br />' .
                       DATE_MODIFIED . ':&nbsp;' . xtc_date_short($cInfo->date_modified) . '<br />'

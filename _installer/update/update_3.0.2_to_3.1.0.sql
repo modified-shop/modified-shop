@@ -29,4 +29,17 @@ ALTER TABLE `banners` MODIFY `banners_title` VARCHAR(255) NOT NULL;
 UPDATE `carriers` SET `carrier_tracking_link` = 'https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1' WHERE `carrier_tracking_link` = 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1';
 UPDATE `carriers` SET `carrier_tracking_link` = 'https://www.fedex.com/fedextrack/?trknbr=$1&cntry_code=$2' WHERE `carrier_tracking_link` = 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1';
 
+#GTB - 2024-07-02 - extend coupons
+ALTER TABLE `coupons` ADD `restrict_to_manufacturers` TEXT DEFAULT NULL AFTER `restrict_to_categories`; 
+ALTER TABLE `coupons` MODIFY `restrict_to_customers` TEXT DEFAULT NULL;
+
+ALTER TABLE `admin_access` ADD `listmanufacturers` INT(1) NOT NULL DEFAULT 0 AFTER `listcategories`;
+ALTER TABLE `admin_access` ADD `validmanufacturers` INT(1) NOT NULL DEFAULT 0 AFTER `validcategories`;
+
+UPDATE `admin_access` SET `listmanufacturers` = 1 WHERE `customers_id` = 1 LIMIT 1;
+UPDATE `admin_access` SET `validcategories` = 1 WHERE `customers_id` = 1 LIMIT 1;
+
+UPDATE `admin_access` SET `listmanufacturers` = 6 WHERE `customers_id` = 'groups' LIMIT 1;
+UPDATE `admin_access` SET `validcategories` = 6 WHERE `customers_id` = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
