@@ -57,3 +57,5 @@
 
 .SumoSelect > .optWrapper > .options li.opt.disabled { background-color: inherit; pointer-events: none; }
 .SumoSelect > .optWrapper > .options li.opt.disabled * { opacity: 0.5; }
+
+.SumoSelect > .optWrapper > .options li.opt.sel { background-color: #eee; }
