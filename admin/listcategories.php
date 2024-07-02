@@ -1,6 +1,6 @@
 <?php
-   /* -----------------------------------------------------------------------------------------
-   $Id: listcategories.php 1313 2005-10-18 15:49:15Z mz $
+/* -----------------------------------------------------------------------------------------
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -9,7 +9,7 @@
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce (validcategories.php,v 0.01 2002/08/17); www.oscommerce.com
+   (c) 2002-2003 osCommerce (validproducts.php,v 0.01 2002/08/17); www.oscommerce.com
 
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
@@ -28,47 +28,50 @@
 
 
 require('includes/application_top.php');
-
-
 ?>
 <html>
-<head>
-<title>Valid Categories/Products List</title>
-<style type="text/css">
-<!--
-h4 {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: x-small; text-align: center}
-p {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: xx-small}
-th {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: xx-small}
-td {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: xx-small}
--->
-</style>
-</head>
-<body>
-<table width="550" border="1" cellspacing="1" bordercolor="gray">
-<tr>
-<td colspan="4">
-<h4>Valid Categories List</h4>
-</td>
-</tr>
-<?php
-   $coupon_get=xtc_db_query("select restrict_to_categories from " . TABLE_COUPONS . " where coupon_id='".$_GET['cid']."'");
-   $get_result=xtc_db_fetch_array($coupon_get);
-   echo "<tr><th>Category ID</th><th>Category Name</th></tr><tr>";
-   $cat_ids = explode(",", $get_result['restrict_to_categories']); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
-   for ($i = 0; $i < count($cat_ids); $i++) {
-     $result = xtc_db_query("SELECT * FROM ".TABLE_CATEGORIES." c, ".TABLE_CATEGORIES_DESCRIPTION." cd WHERE c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' and c.categories_id='" . $cat_ids[$i] . "'");
-     if ($row = xtc_db_fetch_array($result)) {
-       echo "<td>".$row["categories_id"]."</td>\n";
-       echo "<td>".$row["categories_name"]."</td>\n";
-       echo "</tr>\n";
-     } 
-   }   
-?>
-</table>
-<br />
-<table width="550" border="0" cellspacing="1">
-<tr>
-<td align=middle><input type="button" value="Close Window" onclick="window.close()"></td>
-</tr></table>
-</body>
+  <head>
+    <title>Valid Categories List</title>
+    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+  </head>
+  <body>
+    <table width="550" class="tableBoxCenter collapse">
+      <tr>
+        <td class="pageHeading txta-c" colspan="2">Valid Categories List</td>
+        </tr>
+        <?php
+          $coupon_query = xtc_db_query("SELECT restrict_to_categories
+                                          FROM ".TABLE_COUPONS."
+                                         WHERE coupon_id = '".(int)$_GET['cID']."'");
+          $coupon = xtc_db_fetch_array($coupon_query);
+          $coupon['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_categories']);
+          
+          $cat_ids = explode(",", $coupon['restrict_to_categories']);
+          $cat_ids = array_unique($cat_ids);
+          
+          echo '<tr class="dataTableHeadingRow">
+                  <td class="dataTableHeadingContent">Category ID</td>
+                  <td class="dataTableHeadingContent">Category Name</td>
+                </tr>';
+          for ($i = 0; $i < count($cat_ids); $i++) {
+            $categories_query = xtc_db_query("SELECT * 
+                                                FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                               WHERE categories_id = '".(int)$cat_ids[$i]."'
+                                                 AND language_id = '".(int)$_SESSION['languages_id']."'");
+            while ($categories = xtc_db_fetch_array($categories_query)) {
+              echo '<tr class="dataTableRow">';
+              echo '  <td class="dataTableContent">'.$categories['categories_id'].'</td>';
+              echo '  <td class="dataTableContent">'.$categories['categories_name'].'</td>';
+              echo '</tr>';
+            }
+          }
+        ?>
+    </table>
+    <br />
+    <table width="550" border="0" cellspacing="1">
+      <tr>
+        <td align=middle><input type="button" value="Close Window" onclick="window.close()"></td>
+      </tr>
+    </table>
+  </body>
 </html>

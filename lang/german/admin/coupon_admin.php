@@ -76,6 +76,7 @@ define('COUPON_USES_COUPON', 'Anzahl/Verwendungen pro Coupon');
 define('COUPON_USES_USER', 'Anzahl/Verwendungen pro Kunde');
 define('COUPON_PRODUCTS', 'Liste der g&uuml;ltigen Artikel');
 define('COUPON_CATEGORIES', 'Liste der g&uuml;ltigen Kategorien');
+define('COUPON_MANUFACTURERS', 'Liste der g&uuml;ltigen Hersteller');
 define('COUPON_CUSTOMERS', 'Liste der g&uuml;ltigen Kundengruppen');
 define('VOUCHER_NUMBER_USED', 'Anzahl Verwendet');
 define('DATE_CREATED', 'erstellt am');
@@ -95,6 +96,7 @@ define('COUPON_USES_COUPON_HELP', 'Tragen Sie hier ein wie oft dieser Coupon ein
 define('COUPON_USES_USER_HELP', 'Tragen Sie hier ein wie oft ein Kunde diesen Coupon einl&ouml;sen darf. Lassen Sie das Feld frei, dann ist die Benutzung unlimitiert.');
 define('COUPON_PRODUCTS_HELP', 'Eine durch Komma getrennte Liste von Artikel-IDs f&uuml;r die dieser Coupon g&uuml;ltig ist. Ein leeres Feld bedeutet keine Einschr&auml;nkung.');
 define('COUPON_CATEGORIES_HELP', 'Eine durch Komma getrennte Liste von Kategorie-IDs f&uuml;r die dieser Coupon g&uuml;ltig ist. Ein leeres Feld bedeutet keine Einschr&auml;nkung.');
+define('COUPON_MANUFACTURERS_HELP', 'Eine durch Komma getrennte Liste von Hersteller-IDs f&uuml;r die dieser Coupon g&uuml;ltig ist. Ein leeres Feld bedeutet keine Einschr&auml;nkung.');
 define('COUPON_CUSTOMERS_HELP', 'W&auml;hlen Sie die g&uuml;ltigen Kundengruppen f&uuml;r diesen Coupon.');
 
 define('COUPON_ID', 'cID');

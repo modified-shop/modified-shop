@@ -730,6 +730,7 @@ class shoppingCart {
                                                  p.products_tax_class_id,
                                                  p.products_status,
                                                  p.products_fsk18,
+                                                 p.manufacturers_id,
                                                  p.products_price as products_price_origin,
                                                  p.products_quantity as products_stock,
                                                  p.products_weight as products_weight_origin,

@@ -31,26 +31,25 @@ require('includes/application_top.php');
 ?>
 <html>
   <head>
-    <title>Categories List</title>
+    <title>Manufacturers List</title>
     <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
   </head>
   <body>
     <table width="550" class="tableBoxCenter collapse">
       <tr>
-        <td class="pageHeading txta-c" colspan="2">Categories List</td>
+        <td class="pageHeading txta-c" colspan="2">Manufacturers List</td>
         </tr>
-        <?php          
-          echo '<tr class="dataTableHeadingRow">
-                  <td class="dataTableHeadingContent">Category ID</td>
-                  <td class="dataTableHeadingContent">Category Name</td>
-                </tr>';
-          $categories_query = xtc_db_query("SELECT * 
-                                              FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                             WHERE language_id = '".(int)$_SESSION['languages_id']."'");
-          while ($categories = xtc_db_fetch_array($categories_query)) {
+        <?php
+        echo '<tr class="dataTableHeadingRow">
+                <td class="dataTableHeadingContent">Manufacturers ID</td>
+                <td class="dataTableHeadingContent">Manufacturers Name</td>
+              </tr>';
+          $manufacturers_query = xtc_db_query("SELECT * 
+                                                 FROM ".TABLE_MANUFACTURERS);
+          while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
             echo '<tr class="dataTableRow">';
-            echo '  <td class="dataTableContent">'.$categories['categories_id'].'</td>';
-            echo '  <td class="dataTableContent">'.$categories['categories_name'].'</td>';
+            echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_id'].'</td>\n';
+            echo '  <td class="dataTableContent">'.$manufacturers['manufacturers_name'].'</td>\n';
             echo '</tr>';
           }
         ?>
