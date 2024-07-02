@@ -459,7 +459,7 @@ require (DIR_WS_INCLUDES.'head.php');
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo COUPON_SPECIALS; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('coupon_specials', $coupon_specials); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('coupon_specials', 'on', $coupon_specials); ?></td>
                 <td class="dataTableConfig col-right"><?php echo COUPON_SPECIALS_HELP; ?></td>
               </tr>
               <tr>
