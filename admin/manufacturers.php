@@ -373,15 +373,13 @@ if (USE_WYSIWYG == 'true') {
                     <td class="main"><?php echo xtc_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', xtc_get_manufacturer_url($manufacturer['manufacturers_id'], $languages[$i]['id']), 'style="width:99%" maxlength="255"'); ?></td>
                   </tr>
                   <tr>
-                    <td class="main"><b><?php  echo $lng_image.TEXT_MANUFACTURERS_DESCRIPTION; ?></b></td>
-                    <td class="main">&nbsp;</td>
+                    <td class="main" colspan="2"><b><?php  echo $lng_image.TEXT_MANUFACTURERS_DESCRIPTION; ?></b></td>
                   </tr>
                   <tr>
                     <td class="main" colspan="2"><?php echo xtc_draw_textarea_field('manufacturers_description[' . $languages[$i]['id'] . ']', 'soft', '100', '30', ((isset($manufacturer['manufacturers_description'])) ? stripslashes($manufacturer['manufacturers_description']) : ''), 'style="width:99%"'); ?></td>
                   </tr>
                   <tr>
-                    <td class="main"><b><?php  echo $lng_image.TEXT_MANUFACTURERS_SHORT_DESCRIPTION; ?></b></td>
-                    <td class="main">&nbsp;</td>
+                    <td class="main" colspan="2"><b><?php  echo $lng_image.TEXT_MANUFACTURERS_SHORT_DESCRIPTION; ?></b></td>
                   </tr>
                   <tr>
                     <td class="main" colspan="2"><?php echo xtc_draw_textarea_field('manufacturers_short_description[' . $languages[$i]['id'] . ']', 'soft', '100', '20', ((isset($manufacturer['manufacturers_short_description'])) ? stripslashes($manufacturer['manufacturers_short_description']) : ''), 'style="width:99%"'); ?></td>
