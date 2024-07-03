@@ -13,9 +13,10 @@
   {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 
   {if (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')
-     || (isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != '')
-     || (isset($CATEGORIES_IMAGE_MOBILE) && $CATEGORIES_IMAGE_MOBILE != '')
-     }
+       || (isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != '')
+       || (isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != '')
+       || (isset($CATEGORIES_IMAGE_MOBILE) && $CATEGORIES_IMAGE_MOBILE != '')
+       }
     <div class="cat_description">
       {if isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}
         <div class="cat_description_image">
@@ -33,9 +34,11 @@
         </div>
       {/if}
 
-      {if isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}
+      {if (isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != '')
+           || (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')
+           }
         <div class="cat_description_text cf">
-          {$CATEGORIES_DESCRIPTION}
+          {if isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != ''}{$CATEGORIES_SHORT_DESCRIPTION}{else if isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}{$CATEGORIES_DESCRIPTION}{/if}
         </div>
       {/if}
     </div>
@@ -45,5 +48,12 @@
 
   {if isset($MODULE_new_products)}{$MODULE_new_products}{/if}
   
-</div>  
+  {if isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION = '' && isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}
+  <div class="cat_description">
+    <div class="cat_description_text cf">
+      {$CATEGORIES_DESCRIPTION}
+    </div>
+  </div>
+  {/if}
 
+</div>

@@ -10,7 +10,7 @@
         {if $categories_data.CATEGORIES_IMAGE}<span class="subcat_image"><span class="subcat_image_inner"><img src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" /></span></span>{/if}
         <span class="subcat_title"><span class="subcat_title_inner">{$categories_data.CATEGORIES_NAME}</span></span>
       </a>
-      {* <span class="subcat_desc">{$categories_data.CATEGORIES_DESCRIPTION}</span> *}
+      {* <span class="subcat_desc">{if $categories_data.CATEGORIES_SHORT_DESCRIPTION}{$categories_data.CATEGORIES_SHORT_DESCRIPTION}{else}{$categories_data.CATEGORIES_DESCRIPTION}{/if}</span> *}
     </div>
     {if $smarty.foreach.aussen.iteration is div by $TR_COLS}<br class="clearfix" />{/if}
     {/foreach}
