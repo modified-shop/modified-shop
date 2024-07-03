@@ -42,6 +42,7 @@
     $categories_name = $_POST['categories_name'];
     $categories_heading_title = $_POST['categories_heading_title'];
     $categories_description = $_POST['categories_description'];
+    $categories_short_description = $_POST['categories_short_description'];
     $categories_meta_title = $_POST['categories_meta_title'];
     $categories_meta_description = $_POST['categories_meta_description'];
     $categories_meta_keywords = $_POST['categories_meta_keywords'];
@@ -188,7 +189,11 @@
         </div>
         <div class="main" style="padding: 3px; line-height:20px;">
           <b><?php echo $lng_image . '&nbsp;' . TEXT_EDIT_CATEGORIES_DESCRIPTION; ?></b><br />
-          <?php echo xtc_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100', '25', (isset($categories_description[$languages[$i]['id']]) ? stripslashes($categories_description[$languages[$i]['id']]) : $categories_desc_fields['categories_description'])); ?>
+          <?php echo xtc_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100', '30', (isset($categories_description[$languages[$i]['id']]) ? stripslashes($categories_description[$languages[$i]['id']]) : $categories_desc_fields['categories_description'])); ?>
+        </div>
+        <div class="main" style="padding: 3px; line-height:20px;">
+          <b><?php echo $lng_image . '&nbsp;' . TEXT_EDIT_CATEGORIES_SHORT_DESCRIPTION; ?></b><br />
+          <?php echo xtc_draw_textarea_field('categories_short_description[' . $languages[$i]['id'] . ']', 'soft', '100', '20', (isset($categories_short_description[$languages[$i]['id']]) ? stripslashes($categories_short_description[$languages[$i]['id']]) : $categories_desc_fields['categories_short_description'])); ?>
         </div>
         <div class="main" style="vertical-align:top; padding: 3px; line-height:20px;">
           <?php echo $lng_image . '&nbsp;' . TEXT_META_TITLE .' (max. ' . META_TITLE_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?> <br/>

@@ -78,6 +78,7 @@ define('TEXT_EDIT_CATEGORIES_ID', 'Category ID:');
 define('TEXT_EDIT_CATEGORIES_NAME', 'Category Name:');
 define('TEXT_EDIT_CATEGORIES_HEADING_TITLE', 'Category Heading:');
 define('TEXT_EDIT_CATEGORIES_DESCRIPTION', 'Category Description:');
+define('TEXT_EDIT_CATEGORIES_SHORT_DESCRIPTION', 'Category Short Description:');
 define('TEXT_EDIT_CATEGORIES_IMAGE', 'Category Image:');
 define('TEXT_EDIT_CATEGORIES_IMAGE_LIST', 'Category Image Listing:');
 define('TEXT_EDIT_CATEGORIES_IMAGE_MOBILE', 'Category Image Mobile:');

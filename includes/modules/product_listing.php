@@ -93,11 +93,13 @@ if ($listing_split->number_of_rows > 0) {
         $module_smarty->assign('MANUFACTURER_NAME', $manufacturer['manufacturers_name']);
         $module_smarty->assign('MANUFACTURER_TITLE', $manufacturer['manufacturers_title']);
         $module_smarty->assign('MANUFACTURER_DESCRIPTION', $manufacturer['manufacturers_description']);
+        $module_smarty->assign('MANUFACTURER_SHORT_DESCRIPTION', $manufacturer['manufacturers_short_description']);
         $module_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name']))); 
       } else {
         $category['categories_name'] = $manufacturer['manufacturers_name'];
         $category['categories_heading_title'] = $manufacturer['manufacturers_title'];
         $category['categories_description'] = $manufacturer['manufacturers_description'];
+        $category['categories_short_description'] = $manufacturer['manufacturers_short_description'];
         $category['listing_template'] = $manufacturer['listing_template'];
         $image = ((isset($manufacturer_image) && $manufacturer_image != '') ? $manufacturer_image : '');
         $module_smarty->assign('listing_mode', 'manufacturer');
@@ -124,6 +126,7 @@ if ($listing_split->number_of_rows > 0) {
   $module_smarty->assign('CATEGORIES_NAME', isset($category['categories_name']) ? $category['categories_name'] : '');
   $module_smarty->assign('CATEGORIES_HEADING_TITLE', isset($category['categories_heading_title']) ? $category['categories_heading_title'] : '');
   $module_smarty->assign('CATEGORIES_DESCRIPTION', isset($category['categories_description']) ? $category['categories_description'] : '');
+  $module_smarty->assign('CATEGORIES_SHORT_DESCRIPTION', isset($category['categories_short_description']) ? $category['categories_short_description'] : '');
   $module_smarty->assign('CATEGORIES_IMAGE', ((isset($image) && $image != '') ? DIR_WS_BASE . $image : ''));
   $module_smarty->assign('CATEGORIES_IMAGE_LIST', ((isset($image_list) && $image_list != '') ? DIR_WS_BASE . $image_list : ''));
   $module_smarty->assign('CATEGORIES_IMAGE_MOBILE', ((isset($image_mobile) && $image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''));
@@ -181,7 +184,9 @@ if ($result != false) {
   $category = xtc_get_category_data($current_category_id);
   if (count($category) > 0 
       && $category['categories_name'] != ''
-      && $category['categories_description'] != ''
+      && ($category['categories_description'] != ''
+          || $category['categories_short_description'] != ''
+          )
       )
   {  
     //include Categorie Listing
@@ -193,6 +198,7 @@ if ($result != false) {
     $module_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
     $module_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $module_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
+    $module_smarty->assign('CATEGORIES_SHORT_DESCRIPTION', $category['categories_short_description']);
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_end/','php') as $file) require ($file);
 
@@ -224,7 +230,9 @@ if ($result != false) {
   $manufacturers_array = xtc_get_manufacturers();
   if (isset($manufacturers_array[(int)$_GET['manufacturers_id']])
       && $manufacturers_array[(int)$_GET['manufacturers_id']]['manufacturers_name'] != ''
-      && $manufacturers_array[(int)$_GET['manufacturers_id']]['manufacturers_description'] != ''
+      && ($manufacturers_array[(int)$_GET['manufacturers_id']]['manufacturers_description'] != ''
+          || $manufacturers_array[(int)$_GET['manufacturers_id']]['manufacturers_short_description'] != ''
+          )
       )
   {
     $manufacturer = $manufacturers_array[(int)$_GET['manufacturers_id']];
@@ -234,6 +242,7 @@ if ($result != false) {
     $module_smarty->assign('CATEGORIES_NAME', $manufacturer['manufacturers_name']);
     $module_smarty->assign('CATEGORIES_HEADING_TITLE', $manufacturer['manufacturers_title']);
     $module_smarty->assign('CATEGORIES_DESCRIPTION', $manufacturer['manufacturers_description']);
+    $module_smarty->assign('CATEGORIES_SHORT_DESCRIPTION', $manufacturer['manufacturers_short_description']);
     $module_smarty->assign('CATEGORIES_IMAGE', ((isset($manufacturer_image) && $manufacturer_image != '') ? DIR_WS_BASE . $manufacturer_image : ''));
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_end/','php') as $file) require ($file);

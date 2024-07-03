@@ -197,6 +197,7 @@ class categories {
         'categories_name' => xtc_db_prepare_input($categories_data['categories_name'][$lang['id']]),
         'categories_heading_title' => xtc_db_prepare_input($categories_data['categories_heading_title'][$lang['id']]),
         'categories_description' => xtc_db_prepare_input($categories_data['categories_description'][$lang['id']]),
+        'categories_short_description' => xtc_db_prepare_input($categories_data['categories_short_description'][$lang['id']]),
         'categories_meta_title' => xtc_db_prepare_input($categories_data['categories_meta_title'][$lang['id']]),
         'categories_meta_description' => xtc_db_prepare_input($categories_data['categories_meta_description'][$lang['id']]),
         'categories_meta_keywords' => xtc_db_prepare_input($categories_data['categories_meta_keywords'][$lang['id']])

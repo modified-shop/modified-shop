@@ -375,14 +375,15 @@ if (USE_WYSIWYG == 'true') {
 	// generate editor for categories
 	if ($action == 'new_category' || $action == 'edit_category') {
 	  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-		echo xtc_wysiwyg('categories_description', $data['code'], $languages[$i]['id']);
+		  echo xtc_wysiwyg('categories_description', $data['code'], $languages[$i]['id']);
+		  echo xtc_wysiwyg('categories_short_description', $data['code'], $languages[$i]['id']);
 	  }
 	}
 	// generate editor for products
 	if ($action == 'new_product' || $action == 'new_product_preview') {
 	  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-		echo xtc_wysiwyg('products_description', $data['code'], $languages[$i]['id']);
-		echo xtc_wysiwyg('products_short_description', $data['code'], $languages[$i]['id']);
+      echo xtc_wysiwyg('products_description', $data['code'], $languages[$i]['id']);
+      echo xtc_wysiwyg('products_short_description', $data['code'], $languages[$i]['id']);
 	  }
 	}
 }

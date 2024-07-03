@@ -130,9 +130,15 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
             $default_editor_height = 400;   
             break;
             
-        // WYSIWYG editor categories_description textarea named categories_description[langID]
+        // WYSIWYG editor categories description textarea named categories_description[langID]
         case 'categories_description':
             $editorName = 'categories_description_'.$langID;
+            $default_editor_height = 400;
+            break;
+
+        // WYSIWYG editor categories short description textarea named categories_short_description[langID]
+        case 'categories_short_description':
+            $editorName = 'categories_short_description_'.$langID;
             $default_editor_height = 300;
             break;
             
@@ -171,10 +177,16 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
             $default_editor_height = 400;
             break;
             
-        // WYSIWYG editor categories_description textarea named manufacturers_description[langID]
+        // WYSIWYG editor manufacturers description textarea named manufacturers_description[langID]
         case 'manufacturers_description':
             $editorName = 'manufacturers_description_'.$langID;
             $default_editor_height = 400;
+            break;
+
+        // WYSIWYG editor manufacturers description textarea named manufacturers_description[langID]
+        case 'manufacturers_short_description':
+            $editorName = 'manufacturers_short_description_'.$langID;
+            $default_editor_height = 300;
             break;
 
         // WYSIWYG editor banner_manager textarea

@@ -61,6 +61,7 @@ define('TEXT_META_TITLE', 'Meta Title:');
 define('TEXT_META_DESCRIPTION', 'Meta Description:');
 define('TEXT_META_KEYWORDS', 'Meta Keywords:');
 define('TEXT_MANUFACTURERS_DESCRIPTION', 'Manufacturer description:');
+define('TEXT_MANUFACTURERS_SHORT_DESCRIPTION', 'Manufacturer short description:');
 define('TEXT_DELETE', 'Delete');
 
 define('TXT_PRICES','Price');

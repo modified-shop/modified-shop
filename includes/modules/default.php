@@ -152,6 +152,7 @@ switch ($category_depth) {
     $default_smarty->assign('CATEGORIES_IMAGE_LIST', (($image_list != '') ? DIR_WS_BASE . $image_list : ''));
     $default_smarty->assign('CATEGORIES_IMAGE_MOBILE', (($image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''));
     $default_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
+    $default_smarty->assign('CATEGORIES_SHORT_DESCRIPTION', $category['categories_short_description']);
 
     if ($messageStack->size('categorie_listing') > 0) {
       $default_smarty->assign('error_message', $messageStack->output('categorie_listing'));
