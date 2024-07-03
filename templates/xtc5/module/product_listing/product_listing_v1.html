@@ -3,7 +3,7 @@
 {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 <div class="cf">
   {if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" class="imgLeft" /><br />{/if}
-  {if $CATEGORIES_DESCRIPTION}<div>{$CATEGORIES_DESCRIPTION}</div>{/if}
+  {if $CATEGORIES_SHORT_DESCRIPTION}<div>{$CATEGORIES_SHORT_DESCRIPTION}</div>{else if $CATEGORIES_DESCRIPTION}<div>{$CATEGORIES_DESCRIPTION}</div>{/if}
 </div>
 {if $CATEGORIES_LISTING}{$CATEGORIES_LISTING}<br />{/if}
 {$LISTING_FILTER}<br />
@@ -40,3 +40,6 @@
   {/foreach}
 </table>
 {$PAGINATION}
+<div class="cf">
+  {if $CATEGORIES_SHORT_DESCRIPTION && $CATEGORIES_DESCRIPTION}<div>{$CATEGORIES_DESCRIPTION}</div>{/if}
+</div>

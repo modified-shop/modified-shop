@@ -7,6 +7,7 @@
   {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 
   {if (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')
+       || (isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != '')
        || (isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != '')
        || (isset($CATEGORIES_IMAGE_MOBILE) && $CATEGORIES_IMAGE_MOBILE != '')
        }
@@ -27,9 +28,11 @@
         </div>
       {/if}
 
-      {if isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}
+      {if (isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != '')
+           || (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')
+           }
         <div class="cat_description_text cf">
-          {$CATEGORIES_DESCRIPTION}
+          {if isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != ''}{$CATEGORIES_SHORT_DESCRIPTION}{else if isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}{$CATEGORIES_DESCRIPTION}{/if}
         </div>
       {/if}
     </div>
@@ -51,8 +54,17 @@
     <div class="pagination_bottom">{$PAGINATION}</div>
   </div>      
 
+  {if isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION = '' && isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}
+  <div class="cat_description">
+    <div class="cat_description_text cf">
+      {$CATEGORIES_DESCRIPTION}
+    </div>
+  </div>
+  {/if}
 
-  {if isset($MANUFACTURER_DESCRIPTION) && $MANUFACTURER_DESCRIPTION != ''}
+  {if (isset($MANUFACTURER_DESCRIPTION) && $MANUFACTURER_DESCRIPTION != '')
+       || (isset($MANUFACTURER_SHORT_DESCRIPTION) && $MANUFACTURER_SHORT_DESCRIPTION != '')
+       }
     <div class="cat_description mt_50">
       {if isset($MANUFACTURER_TITLE) && $MANUFACTURER_TITLE != ''}
         <div class="subline">{$MANUFACTURER_TITLE}</div>
@@ -66,7 +78,7 @@
           <noscript><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" /></noscript>
         </div>
       {/if}
-      <div class="cat_description_text cf">{$MANUFACTURER_DESCRIPTION}</div>
+      <div class="cat_description_text cf">{if $MANUFACTURER_SHORT_DESCRIPTION}{$MANUFACTURER_SHORT_DESCRIPTION}{else if $MANUFACTURER_DESCRIPTION}{$MANUFACTURER_DESCRIPTION}{/if}</div>
     </div>  
   {/if}
 
