@@ -43,7 +43,7 @@ class trustedshops {
           array('action' => 'add', 'column' => 'trustbadge_offset_mobile', 'default' => "int(11) NOT NULL DEFAULT '0' AFTER trustbadge_position"),
           array('action' => 'add', 'column' => 'trustbadge_position_mobile', 'default' => "varchar(32) NOT NULL AFTER trustbadge_offset_mobile"),
           array('action' => 'add', 'column' => 'product_sticker_api_client', 'default' => "varchar(128) NOT NULL AFTER product_sticker_api"),
-          array('action' => 'add', 'column' => 'product_sticker_api_secret', 'default' => "varchar(128) NOT NULL AFTER product_sticker_api_secret"),
+          array('action' => 'add', 'column' => 'product_sticker_api_secret', 'default' => "varchar(128) NOT NULL AFTER product_sticker_api_client"),
 
           array('action' => 'delete', 'column' => 'snippets'),
           array('action' => 'delete', 'column' => 'widget'),
