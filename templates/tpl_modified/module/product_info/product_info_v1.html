@@ -159,7 +159,7 @@
   </div>
   {$FORM_END}
 
-  {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}<h4 class="detailbox">{#products_desc#}</h4><div class="pd_description" itemprop="description">{$PRODUCTS_DESCRIPTION}{if $MANUFACTURER_LEGAL_DESCRIPTION != ''}{if $PRODUCTS_DESCRIPTION != ''}<br>{/if}{$MANUFACTURER_LEGAL_DESCRIPTION}{/if}</div><br />{/if}
+  {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}<h4 class="detailbox">{#products_desc#}</h4>{if $PRODUCTS_DESCRIPTION != ''}<div class="pd_description" itemprop="description">{$PRODUCTS_DESCRIPTION}</div>{/if}{if $MANUFACTURER_LEGAL_DESCRIPTION != ''}{if $PRODUCTS_DESCRIPTION != ''}<br class="clearfix" />{/if}<div class="pd_description">{$MANUFACTURER_LEGAL_DESCRIPTION}</div>{/if}</div>{/if}
   {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}{$MODULE_product_tags}{/if}
   {if isset($MODULE_products_media) && $MODULE_products_media != ''}{$MODULE_products_media}{/if}
   {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}{$MODULE_products_reviews}{/if}
