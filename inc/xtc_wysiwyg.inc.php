@@ -66,6 +66,9 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     //Bilder per Zwischenablage deaktivieren
     $customConfig['config'] = "clipboard_handleImages: false,";
 
+    //disable version check
+    $customConfig['versionCheck'] = "versionCheck: false,";
+
     //toolbarGroups
     $customConfig['toolbarGroups'] ="
     toolbarGroups : [
