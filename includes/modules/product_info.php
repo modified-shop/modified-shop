@@ -70,7 +70,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $info_smarty->assign('MANUFACTURER_TITLE', $manufacturer['manufacturers_title']);
     $info_smarty->assign('MANUFACTURER_DESCRIPTION', $manufacturer['manufacturers_description']);
     $info_smarty->assign('MANUFACTURER_SHORT_DESCRIPTION', $manufacturer['manufacturers_short_description']);
-    $info_smarty->assign('MANUFACTURER_ADD_DESCRIPTION', $manufacturer['manufacturers_legal_description']);
+    $info_smarty->assign('MANUFACTURER_ADD_DESCRIPTION', $manufacturer['manufacturers_add_description']);
     $info_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name'])));
   }
 
