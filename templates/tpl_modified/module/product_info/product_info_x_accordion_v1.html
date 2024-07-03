@@ -151,7 +151,7 @@
 
   <div id="horizontalAccordion" class="pd_accordion">
     <ul class="resp-tabs-list">
-      {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}<li>{#description#}</li>{/if}
+      {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}<li>{#description#}</li>{/if}
       {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<li>{#products_tags#}</li>{/if}
       {if isset($more_images) && count($more_images) > 0}<li>{#more_images#}</li>{/if}
       {if isset($MODULE_products_media) && $MODULE_products_media != ''}<li>{#products_media#}</li>{/if}
@@ -161,7 +161,7 @@
       {if isset($MODULE_products_category) && $MODULE_products_category != ''}<li>{#products_category#}</li>{/if}
     </ul>
     <div class="resp-tabs-container">
-      {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}<div class="pd_description"><h4 class="detailbox">{#products_desc#}</h4>{if $PRODUCTS_DESCRIPTION != ''}<div itemprop="description">{$PRODUCTS_DESCRIPTION}{/if}{if $MANUFACTURER_LEGAL_DESCRIPTION != ''}{if $PRODUCTS_DESCRIPTION != ''}<br class="clearfix" />{/if}<div>{$MANUFACTURER_LEGAL_DESCRIPTION}</div>{/if}</div></div>{/if}
+      {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}<div class="pd_description"><h4 class="detailbox">{#products_desc#}</h4>{if $PRODUCTS_DESCRIPTION != ''}<div itemprop="description">{$PRODUCTS_DESCRIPTION}{/if}{if $MANUFACTURER_ADD_DESCRIPTION != ''}{if $PRODUCTS_DESCRIPTION != ''}<br class="clearfix" />{/if}<div>{$MANUFACTURER_ADD_DESCRIPTION}</div>{/if}</div></div>{/if}
       {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<div>{$MODULE_product_tags}</div>{/if}
       {if isset($more_images) && count($more_images) > 0}
       <div class="cf">

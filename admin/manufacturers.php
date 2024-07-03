@@ -140,7 +140,7 @@
         $manufacturers_title_array = $_POST['manufacturers_title'];
         $manufacturers_description_array = $_POST['manufacturers_description'];
         $manufacturers_short_description_array = $_POST['manufacturers_short_description'];
-        $manufacturers_legal_description_array = $_POST['manufacturers_legal_description'];
+        $manufacturers_add_description_array = $_POST['manufacturers_add_description'];
         $manufacturers_meta_title_array = $_POST['manufacturers_meta_title'];
         $manufacturers_meta_description_array = $_POST['manufacturers_meta_description'];
         $manufacturers_meta_keywords_array = $_POST['manufacturers_meta_keywords'];
@@ -151,7 +151,7 @@
           'manufacturers_title' => xtc_db_prepare_input($manufacturers_title_array[$language_id]),
           'manufacturers_description' => xtc_db_prepare_input($manufacturers_description_array[$language_id]),
           'manufacturers_short_description' => xtc_db_prepare_input($manufacturers_short_description_array[$language_id]),
-          'manufacturers_legal_description' => xtc_db_prepare_input($manufacturers_legal_description_array[$language_id]),
+          'manufacturers_add_description' => xtc_db_prepare_input($manufacturers_add_description_array[$language_id]),
           'manufacturers_meta_title' => xtc_db_prepare_input($manufacturers_meta_title_array[$language_id]),
           'manufacturers_meta_description' => xtc_db_prepare_input($manufacturers_meta_description_array[$language_id]),
           'manufacturers_meta_keywords' => xtc_db_prepare_input($manufacturers_meta_keywords_array[$language_id])                    
@@ -387,10 +387,10 @@ if (USE_WYSIWYG == 'true') {
                     <td class="main" colspan="2"><?php echo xtc_draw_textarea_field('manufacturers_short_description[' . $languages[$i]['id'] . ']', 'soft', '100', '20', ((isset($manufacturer['manufacturers_short_description'])) ? stripslashes($manufacturer['manufacturers_short_description']) : ''), 'style="width:99%"'); ?></td>
                   </tr>
                   <tr>
-                    <td class="main" colspan="2"><b><?php  echo $lng_image.TEXT_MANUFACTURERS_LEGAL_DESCRIPTION; ?></b></td>
+                    <td class="main" colspan="2"><b><?php  echo $lng_image.TEXT_MANUFACTURERS_ADD_DESCRIPTION; ?></b></td>
                   </tr>
                   <tr>
-                    <td class="main" colspan="2"><?php echo xtc_draw_textarea_field('manufacturers_legal_description[' . $languages[$i]['id'] . ']', 'soft', '100', '10', ((isset($manufacturer['manufacturers_legal_description'])) ? stripslashes($manufacturer['manufacturers_legal_description']) : ''), 'style="width:99%"'); ?></td>
+                    <td class="main" colspan="2"><?php echo xtc_draw_textarea_field('manufacturers_add_description[' . $languages[$i]['id'] . ']', 'soft', '100', '10', ((isset($manufacturer['manufacturers_add_description'])) ? stripslashes($manufacturer['manufacturers_add_description']) : ''), 'style="width:99%"'); ?></td>
                   </tr>
                   <tr>
                     <td class="main" colspan="2"><div style="padding: 3px; line-height:20px">

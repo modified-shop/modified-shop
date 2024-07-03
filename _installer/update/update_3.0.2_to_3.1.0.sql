@@ -45,7 +45,7 @@ UPDATE `admin_access` SET `validmanufacturers` = 6 WHERE `customers_id` = 'group
 
 #GTB - 2024-07-03 - extend manufacturers/categories
 ALTER TABLE `manufacturers_info` ADD `manufacturers_short_description` TEXT AFTER `manufacturers_description`; 
-ALTER TABLE `manufacturers_info` ADD `manufacturers_legal_description` TEXT AFTER `manufacturers_short_description`; 
+ALTER TABLE `manufacturers_info` ADD `manufacturers_add_description` TEXT AFTER `manufacturers_short_description`; 
 ALTER TABLE `categories_description` ADD `categories_short_description` TEXT AFTER `categories_description`; 
 ALTER TABLE `categories_description` MODIFY `categories_description` TEXT;
 
