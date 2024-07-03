@@ -367,25 +367,25 @@ require (DIR_WS_INCLUDES.'head.php');
 require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
 // Include WYSIWYG if is activated
 if (USE_WYSIWYG == 'true') {
-	$query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
-	$data = xtc_db_fetch_array($query);
-	// generate editor for categories EDIT
-	$languages = xtc_get_languages();
-	echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
-	// generate editor for categories
-	if ($action == 'new_category' || $action == 'edit_category') {
-	  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-		  echo xtc_wysiwyg('categories_description', $data['code'], $languages[$i]['id']);
-		  echo xtc_wysiwyg('categories_short_description', $data['code'], $languages[$i]['id']);
-	  }
-	}
-	// generate editor for products
-	if ($action == 'new_product' || $action == 'new_product_preview') {
-	  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+  $query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
+  $data = xtc_db_fetch_array($query);
+  // generate editor for categories EDIT
+  $languages = xtc_get_languages();
+  echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
+  // generate editor for categories
+  if ($action == 'new_category' || $action == 'edit_category') {
+    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+      echo xtc_wysiwyg('categories_description', $data['code'], $languages[$i]['id']);
+      echo xtc_wysiwyg('categories_short_description', $data['code'], $languages[$i]['id']);
+    }
+  }
+  // generate editor for products
+  if ($action == 'new_product' || $action == 'new_product_preview') {
+    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       echo xtc_wysiwyg('products_description', $data['code'], $languages[$i]['id']);
       echo xtc_wysiwyg('products_short_description', $data['code'], $languages[$i]['id']);
-	  }
-	}
+    }
+  }
 }
 ?>
 </head>
