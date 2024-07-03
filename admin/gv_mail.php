@@ -180,7 +180,7 @@
           if ($coupon_result['coupon_minimum_order'] > 0) {
             $coupon_amount .= COUPON_MINORDER_INFO . $currencies->format($coupon['coupon_minimum_order']) . ' ';
           }
-          if (trim($coupon_result['restrict_to_products']) != '' || trim($coupon['restrict_to_categories']) != '') {
+          if (trim($coupon_result['restrict_to_products']) != '' || trim($coupon['restrict_to_categories']) != '' || trim($coupon['restrict_to_manufacturers']) != '') {
             $coupon_amount .= COUPON_RESTRICT_INFO;
           }
           
