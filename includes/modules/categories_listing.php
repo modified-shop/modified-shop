@@ -95,8 +95,8 @@ if (!$categorie_smarty->is_cached(CURRENT_TEMPLATE.'/module/'.$categorie_templat
           'CATEGORIES_IMAGE_LIST' => (($image_list != '') ? DIR_WS_BASE . $image_list : ''),
           'CATEGORIES_IMAGE_MOBILE' => (($image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''),
           'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new), 
-          'CATEGORIES_DESCRIPTION' => $categories['categories_description']
-          'CATEGORIES_SHORT_DESCRIPTION' => $categories['categories_short_description']
+          'CATEGORIES_DESCRIPTION' => $categories['categories_description'],
+          'CATEGORIES_SHORT_DESCRIPTION' => $categories['categories_short_description'],
         );
 
         foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/categories_listing/categories_content/','php') as $file) require ($file);
