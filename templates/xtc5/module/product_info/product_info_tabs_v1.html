@@ -132,7 +132,7 @@
 {*BEGIN TABS*}
 <div id="tabbed_product_info">
   <ul>
-    {if $PRODUCTS_DESCRIPTION != ''}<li><a href="#tab_description">{#description#}</a></li>{/if}
+    {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}<li><a href="#tab_description">{#description#}</a></li>{/if}
     {if $MODULE_product_tags != ''}<li><a href="#tab_tags">{#products_tags#}</a></li>{/if}
     {if isset($more_images) && count($more_images) > 0}<li><a href="#tab_more_images">{#more_images#}</a></li>{/if}
     {if $MODULE_products_media != ''}<li><a href="#tab_media">{#products_media#}</a></li>{/if}
@@ -141,7 +141,7 @@
     {if $MODULE_also_purchased != ''}<li><a href="#tab_also_purchased">{#also_purchased#}</a></li>{/if}
     {if $MODULE_products_category != ''}<li><a href="#tab_products_category">{#products_category#}</a></li>{/if}
   </ul>
-  {if $PRODUCTS_DESCRIPTION != ''}<div id="tab_description">{$PRODUCTS_DESCRIPTION}</div>{/if}
+  {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}<div id="tab_description">{$PRODUCTS_DESCRIPTION}{if $MANUFACTURER_LEGAL_DESCRIPTION != ''}{if $PRODUCTS_DESCRIPTION != ''}<br>{/if}{$MANUFACTURER_LEGAL_DESCRIPTION}{/if}</div>{/if}
   {if $MODULE_product_tags != ''}<div id="tab_tags">{$MODULE_product_tags}</div>{/if}
   {if isset($more_images) && count($more_images) > 0}
     <div id="tab_more_images">

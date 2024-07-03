@@ -228,16 +228,16 @@
 
       <div id="horizontalTab" class="pd_tabs my_50">
         <ul class="resp-tabs-list cf" role="tablist">
-          {if $PRODUCTS_DESCRIPTION != ''}<li id="description">{#products_desc#}</li>{/if}
+          {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}<li id="description">{#products_desc#}</li>{/if}
           {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<li id="tags">{#products_tags#}</li>{/if}
           {if isset($MODULE_products_media) && $MODULE_products_media != ''}<li id="media">{#products_media#}</li>{/if}
           {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}<li id="reviews">{#products_reviews#}{if $PRODUCTS_RATING_COUNT > 0}<span class="count">{$PRODUCTS_RATING_COUNT}</span>{/if}</li>{/if}
         </ul>
         <div class="resp-tabs-container">
-          {if $PRODUCTS_DESCRIPTION != ''}
+          {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}
             <div class="pd_description">
               <div class="subline">{#products_desc#}</div>
-              <div class="pd_description_content cf" itemprop="description">{$PRODUCTS_DESCRIPTION}</div>
+              <div class="pd_description_content cf" itemprop="description">{$PRODUCTS_DESCRIPTION}{if $MANUFACTURER_LEGAL_DESCRIPTION != ''}{if $PRODUCTS_DESCRIPTION != ''}<br>{/if}{$MANUFACTURER_LEGAL_DESCRIPTION}{/if}</div>
               {if ($PRODUCTS_PRINT_LAYER != '') || ($PRODUCTS_URL != '') || ($PRODUCTS_ADDED != '')}
                 <div class="pd_description_additional">
                   <div class="pd_print font_small my_5">{$PRODUCTS_PRINT_LAYER}</div>

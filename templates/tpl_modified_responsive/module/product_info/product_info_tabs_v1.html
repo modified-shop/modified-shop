@@ -162,7 +162,7 @@
   <div id="horizontalTab" class="pd_tabs">
     <ul class="resp-tabs-list" role="tablist">
       {counter start=-1 print=0 assign="tablist_cnt"}
-      {if $PRODUCTS_DESCRIPTION != ''}{counter}<li>{#description#}</li>{/if}
+      {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}{counter}<li>{#description#}</li>{/if}
       {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}{counter}<li>{#products_tags#}</li>{/if}
       {if isset($more_images) && count($more_images) > 0}{counter}<li>{#more_images#}</li>{/if}
       {if isset($MODULE_products_media) && $MODULE_products_media != ''}{counter}<li>{#products_media#}</li>{/if}
@@ -172,7 +172,7 @@
       {if isset($MODULE_products_category) && $MODULE_products_category != ''}{counter}<li>{#products_category#}</li>{/if}
     </ul>
     <div class="resp-tabs-container" role="tablist" {if $tablist_cnt >= 0}aria-owns="{for $tablist_data=0 to $tablist_cnt}tab_item-{$tablist_data} {/for}"{/if}>
-      {if $PRODUCTS_DESCRIPTION != ''}<div class="pd_description"><h4 class="detailbox">{#products_desc#}</h4><div itemprop="description">{$PRODUCTS_DESCRIPTION}</div></div>{/if}
+      {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_LEGAL_DESCRIPTION != ''}<div class="pd_description"><h4 class="detailbox">{#products_desc#}</h4><div itemprop="description">{$PRODUCTS_DESCRIPTION}{if $MANUFACTURER_LEGAL_DESCRIPTION != ''}{if $PRODUCTS_DESCRIPTION != ''}<br>{/if}{$MANUFACTURER_LEGAL_DESCRIPTION}{/if}</div></div>{/if}
       {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<div>{$MODULE_product_tags}</div>{/if}
       {if isset($more_images) && count($more_images) > 0}
       <div class="cf">

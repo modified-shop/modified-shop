@@ -718,6 +718,7 @@ CREATE TABLE manufacturers_info (
   manufacturers_title VARCHAR(255) NOT NULL DEFAULT '',
   manufacturers_description text,
   manufacturers_short_description text,
+  manufacturers_legal_description text,
   manufacturers_meta_title text NOT NULL,
   manufacturers_meta_description text NOT NULL,
   manufacturers_meta_keywords text NOT NULL,
