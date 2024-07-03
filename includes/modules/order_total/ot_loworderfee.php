@@ -70,9 +70,11 @@
             && $xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) < $low_order_fee_value_under
             )
         {
-          $low_order_fee_value = $xtPrice->xtcCalculateCurr($low_order_fee_value);
-          $tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+          $lof_cost = $xtPrice->xtcCalculateCurr($low_order_fee_value);
+          $lof_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+          $lof_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+
+          $tax = $xtPrice->calcTax($lof_cost, $lof_tax);
 
           if ($tax > 0
               && defined('MODULE_ORDER_TOTAL_TAX_STATUS')
@@ -80,14 +82,13 @@
               )
           {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-              if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"])) {
-                $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] = 0;
+              if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"])) {
+                $order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"] = 0;
               }
-              $order->info['tax'] += $xtPrice->calcTax($low_order_fee_value, $tax);
-              $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] += $xtPrice->calcTax($low_order_fee_value, $tax);
-              $order->info['total'] += $low_order_fee_value + $xtPrice->calcTax($low_order_fee_value, $tax);
-              $low_order_fee = $xtPrice->xtcAddTax($low_order_fee_value, $tax);
-              $order->info['subtotal'] += $low_order_fee;
+              $order->info['tax'] += $tax;
+              $order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"] += $tax;
+              $lof_cost = $xtPrice->xtcAddTax($lof_cost, $lof_tax, false);
+              $order->info['total'] += $lof_cost;
             }
         
             if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
@@ -99,27 +100,19 @@
                 )
         
             {
-              if (!isset($order->info['tax_groups'][TAX_NO_TAX . "$tax_description"])) {
-                $order->info['tax_groups'][TAX_NO_TAX . "$tax_description"] = 0;
+              if (!isset($order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"])) {
+                $order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"] = 0;
               }
-              $low_order_fee = $low_order_fee_value;
-              $order->info['tax'] += $xtPrice->calcTax($low_order_fee_value, $tax);
-              $order->info['tax_groups'][TAX_NO_TAX . "$tax_description"] += $xtPrice->calcTax($low_order_fee_value, $tax);
-              $order->info['subtotal'] += $low_order_fee;
-              $order->info['total'] += $low_order_fee;
+              $order->info['tax'] += $tax;
+              $order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"] += $tax;
+              $order->info['total'] += $lof_cost;
             }
-          }
-          
-          if (!isset($low_order_fee)) {
-            $low_order_fee = $low_order_fee_value;
-            $order->info['subtotal'] += $low_order_fee;
-            $order->info['total'] += $low_order_fee;
           }
           
           $this->output[] = array(
             'title' => $this->title . ':',
-            'text' => $xtPrice->xtcFormat($low_order_fee, true),
-            'value' => $low_order_fee
+            'text' => $xtPrice->xtcFormat($lof_cost, true),
+            'value' => $xtPrice->xtcFormat($lof_cost, false),
           );
         }
       }

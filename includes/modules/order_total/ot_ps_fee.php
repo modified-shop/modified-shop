@@ -103,7 +103,9 @@
           $ps_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_PS_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $ps_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_PS_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
-          if ($ps_tax > 0
+          $tax = $xtPrice->calcTax($ps_cost, $ps_tax);
+
+          if ($tax > 0
               && defined('MODULE_ORDER_TOTAL_TAX_STATUS')
               && MODULE_ORDER_TOTAL_TAX_STATUS == 'true'
               )
@@ -112,12 +114,10 @@
               if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"])) {
                 $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] = 0;
               }
-              $order->info['tax'] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
-              $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
-              $order->info['total'] += $ps_cost + ($xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost);
-              $ps_cost_value = $xtPrice->xtcAddTax($ps_cost, $ps_tax);
-              $ps_cost= $xtPrice->xtcFormat($ps_cost_value, true);
-              $order->info['subtotal'] += $ps_cost_value;
+              $order->info['tax'] += $tax;
+              $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] += $tax;
+              $ps_cost = $xtPrice->xtcAddTax($ps_cost, $ps_tax, false);
+              $order->info['total'] += $ps_cost;
             }
             
             if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
@@ -132,25 +132,17 @@
               if (!isset($order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"])) {
                 $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] = 0;
               }
-              $order->info['tax'] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
-              $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
-              $ps_cost_value = $ps_cost;
-              $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
-              $order->info['subtotal'] += $ps_cost_value;
-              $order->info['total'] += $ps_cost_value;
+              $order->info['tax'] += $tax;
+              $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] += $tax;
+              $order->info['total'] += $ps_cost;
             }
           }
           
-          if (!isset($ps_cost_value)) {
-             $ps_cost_value = $ps_cost;
-             $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
-             $order->info['subtotal'] += $ps_cost_value;
-             $order->info['total'] += $ps_cost_value;
-          }
-          
-          $this->output[] = array('title' => $this->title . ':',
-                                  'text' => $ps_cost,
-                                  'value' => $ps_cost_value);
+          $this->output[] = array(
+            'title' => $this->title . ':',
+            'text' => $xtPrice->xtcFormat($ps_cost, true),
+            'value' => $xtPrice->xtcFormat($ps_cost, false),
+          );
         }
       }
     }
