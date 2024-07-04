@@ -46,6 +46,13 @@ class ConnectorException extends \RuntimeException
     protected $correlationId;
 
     /**
+     * API Service version.
+     *
+     * @var string
+     */
+    protected $serviceVersion;
+
+    /**
      * Constructs a connector exception instance.
      *
      * @param array $data Error data
