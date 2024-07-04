@@ -129,11 +129,7 @@ if (is_array($request)
         if (xtc_db_num_rows($check_query) > 0) {
           $check = xtc_db_fetch_array($check_query);
           
-          if ($version == 1) {
-            $paypal = new PayPalPayment($check['payment_class']);
-          } else {
-            $paypal = new PayPalPaymentV2($check['payment_class']);
-          }
+          $paypal = new PayPalPaymentV2($check['payment_class']);
                 
           $orders_status_id = $paypal->get_config($request['event_type']);
           if ($orders_status_id < 0) {
