@@ -42,6 +42,8 @@
   use PayPalCheckoutSdk\Orders\OrdersPatchRequest;
   use PayPalCheckoutSdk\Orders\OrdersAuthorizeRequest;
   use PayPalCheckoutSdk\Orders\OrdersConfirmRequest;
+  use PayPalCheckoutSdk\Orders\OrdersTrackRequest;
+  use PayPalCheckoutSdk\Orders\OrdersPatchTrackRequest;
   use PayPalCheckoutSdk\Payments\CapturesRefundRequest;
   use PayPalCheckoutSdk\Payments\AuthorizationsCaptureRequest;
   use PayPalCheckoutSdk\Vault\VaultGetRequest;
@@ -389,7 +391,7 @@
       }
     }
     
-    
+
     function CaptureOrder($OrderID, $error = false) {
       global $insert_id;
       
@@ -772,6 +774,98 @@
     }
 
 
+    function AddOrderTracking($orders_id, $tracking_id) {
+      $tracking_query = xtc_db_query("SELECT pp.*,
+                                             ot.*,
+                                             c.carrier_name
+                                        FROM ".TABLE_PAYPAL_PAYMENT." pp
+                                        JOIN ".TABLE_ORDERS_TRACKING." ot
+                                             ON ot.orders_id = pp.orders_id
+                                                AND ot.tracking_id = '".xtc_db_input($tracking_id)."'
+                                        JOIN ".TABLE_CARRIERS." c
+                                             ON c.carrier_id = ot.carrier_id
+                                       WHERE pp.orders_id = '".(int)$orders_id."'");
+      if (xtc_db_num_rows($tracking_query) > 0) {
+        $tracking = xtc_db_fetch_array($tracking_query);
+  
+        // auth
+        $client = $this->GetClient();
+  
+        $OrderID = $this->getOrderID($orders_id);
+        
+        $request = new OrdersTrackRequest($OrderID);
+        
+        $request->body = array(
+          'capture_id' => $tracking['transaction_id'],
+          'tracking_number' => $tracking['parcel_id'],
+          'carrier' => strtoupper($tracking['carrier_name']),
+          'notify_payer' => false
+        );
+        
+        try {
+          $response = $client->execute($request);
+          
+          end($response->result->purchase_units[0]->shipping->trackers);
+          $key = key($response->result->purchase_units[0]->shipping->trackers);
+          
+          $sql_data_array = array(
+            'tracking_id' => $tracking['tracking_id'],
+            'orders_id' => $tracking['orders_id'],
+            'transaction_id' => $tracking['transaction_id'],
+            'tracking_number' => $tracking['parcel_id'],
+            'carrier' => strtoupper($tracking['carrier_name']),
+            'trackers_id' => $response->result->purchase_units[0]->shipping->trackers[$key]->id,
+            'date_added' => 'now()',
+          );
+          xtc_db_perform(TABLE_PAYPAL_TRACKING, $sql_data_array);
+
+          return $response->result;
+          
+        } catch (PayPalHttp\HttpException $ex) {
+          $this->LoggingManager->log('WARNING', 'AddOrderTracking', array('exception' => $ex));
+        } catch (Exception $ex) {
+          $this->LoggingManager->log('DEBUG', 'AddOrderTracking', array('exception' => $ex));
+        }
+      }
+    }
+
+
+    function PatchOrderTracking($orders_id, $tracking_id) {
+      $tracking_query = xtc_db_query("SELECT *
+                                        FROM ".TABLE_PAYPAL_TRACKING."
+                                       WHERE orders_id = '".(int)$orders_id."'
+                                         AND tracking_id = '".(int)$tracking_id."'");
+      if (xtc_db_num_rows($tracking_query) > 0) {
+        $tracking = xtc_db_fetch_array($tracking_query);
+  
+        // auth
+        $client = $this->GetClient();
+
+        $OrderID = $this->getOrderID($orders_id);
+  
+        $request = new OrdersPatchTrackRequest($OrderID, $tracking['trackers_id']);
+        $request->body = array(
+          array(
+            'op' => 'replace',
+            'path' => '/status',
+            'value' => 'CANCELLED',
+          ),
+        );
+        
+        try {
+          $response = $client->execute($request);
+  
+          xtc_db_query("DELETE FROM ".TABLE_PAYPAL_TRACKING."
+                              WHERE tracking_id = '".(int)$tracking_id."'");
+        } catch (PayPalHttp\HttpException $ex) {
+          $this->LoggingManager->log('WARNING', 'PatchOrderTracking', array('exception' => $ex));
+        } catch (Exception $ex) {
+          $this->LoggingManager->log('DEBUG', 'PatchOrderTracking', array('exception' => $ex));
+        }
+      }
+    }
+
+    
     function GetVaultDetails($vault_id) {
       // auth
       $client = $this->GetClient();

@@ -578,7 +578,22 @@ if (isset($order) && is_object($order)) {
                                            WHERE orders_id = '".(int)$order->info['order_id']."'");
           if (xtc_db_num_rows($tracker_query)) {
             while ($tracker = xtc_db_fetch_array($tracker_query)) {
-              $tracker['status'] = $paypal->getTrackingStatus($tracker['transaction_id'], $tracker['tracking_number']);
+              if ($tracker['trackers_id'] == '') {
+                $tracker['status'] = $paypal->getTrackingStatus($tracker['transaction_id'], $tracker['tracking_number']);
+              } else {              
+                if (isset($admin_info_data->purchase_units[0]->shipping->trackers)
+                    && is_array($admin_info_data->purchase_units[0]->shipping->trackers)
+                    )
+                {
+                  foreach ($admin_info_data->purchase_units[0]->shipping->trackers as $trackers) {
+                                    
+                    if ($trackers->id == $tracker['trackers_id']) {
+                      $tracker['status'] = $trackers->status;
+                    }
+                  }
+                }
+              }
+              
               $tracker_array[$tracker['tracking_number']] = $tracker;
             }
           }
@@ -606,7 +621,11 @@ if (isset($order) && is_object($order)) {
                     if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
                       echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
                     }
-                    echo xtc_draw_hidden_field('cmd', 'canceltracking');
+                    if ($tracker['trackers_id'] == '') {
+                      echo xtc_draw_hidden_field('cmd', 'canceltracking');
+                    } else {
+                      echo xtc_draw_hidden_field('cmd', 'patchtrack');
+                    }
                     echo xtc_draw_hidden_field('tracking_id', $tracker['tracking_id']);
                     ?>
                     <div class="pp_txstatus">
@@ -614,17 +633,19 @@ if (isset($order) && is_object($order)) {
                         <?php echo xtc_datetime_short($tracker['date_added']) . ' ' . $tracker['tracking_number']; ?>
                       </div>
                       <div class="pp_txstatus_data">
+                        <?php if (isset($tracker['status'])) { ?>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRACKING_STATE; ?></dt>
                           <dd><?php echo $tracker['status']; ?></dd>
                         </dl>
+                        <?php } ?>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRACKING_CARRIER; ?></dt>
                           <dd><?php echo $tracker['carrier']; ?></dd>
                         </dl>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRACKING_ID; ?></dt>
-                          <dd><?php echo $tracker['transaction_id']; ?></dd>
+                          <dd><?php echo (($tracker['trackers_id'] != '') ? $tracker['trackers_id'] : $tracker['transaction_id']); ?></dd>
                         </dl>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRACKING_ACTION; ?></dt>
@@ -646,7 +667,7 @@ if (isset($order) && is_object($order)) {
                   if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
                     echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
                   }
-                  echo xtc_draw_hidden_field('cmd', 'addtracking');
+                  echo xtc_draw_hidden_field('cmd', 'addtrack');
           
                   $i = 0;
                  foreach ($tracking_array as $tracking) {
