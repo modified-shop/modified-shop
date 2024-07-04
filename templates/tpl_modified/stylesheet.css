@@ -2143,6 +2143,9 @@ a.color_more:hover {
 .cat_description {
   padding: 0px 0px 25px 0px; 
 }
+.cat_description.bottom {
+  padding: 25px 0px 0px 0px; 
+}
 .cat_description ul {
   margin-left:15px;
 }
