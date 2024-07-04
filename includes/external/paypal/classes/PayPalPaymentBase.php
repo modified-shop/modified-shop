@@ -875,7 +875,7 @@ class PayPalPaymentBase extends PayPalCommon {
       if ($_SESSION['customer_id'] == $check['customers_id']) {
         require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
         xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
-        $this->LoggingManager->log('INFO', 'Remove Order ID: '.$orders_id);
+        $this->LoggingManager->log('WARNING', 'Remove Order ID: '.$orders_id);
       }
     }
   }

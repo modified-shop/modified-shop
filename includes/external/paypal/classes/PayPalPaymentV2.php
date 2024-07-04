@@ -82,7 +82,7 @@
         return $response->result;
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'GenerateClientToken', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'GenerateClientToken', array('exception' => $ex));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GenerateClientToken', array('exception' => $ex));
       }
@@ -104,7 +104,7 @@
         return new AccessToken($accessToken->access_token, $accessToken->id_token, $accessToken->token_type, $accessToken->expires_in);
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'GenerateUserToken', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'GenerateUserToken', array('exception' => $ex));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GenerateUserToken', array('exception' => $ex));
       }
@@ -377,7 +377,7 @@
         return $response->result->id;
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'CreateOrder', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'CreateOrder', array('exception' => $ex));
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }      
@@ -404,7 +404,7 @@
         return $response->result;
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'CaptureOrder', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'CaptureOrder', array('exception' => $ex));
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }      
@@ -464,7 +464,7 @@
         return $response->result;
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'AuthorizeOrder', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'AuthorizeOrder', array('exception' => $ex));
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }      
@@ -525,7 +525,7 @@
         return $response->result;
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'CaptureAuthorizedOrder', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'CaptureAuthorizedOrder', array('exception' => $ex));
         
         return $ex;
       } catch (Exception $ex) {
@@ -597,7 +597,7 @@
         return $response->result;
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'PatchOrder', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'PatchOrder', array('exception' => $ex));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'PatchOrder', array('exception' => $ex));
       }
@@ -626,7 +626,7 @@
         return $response->result;
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'refundOrder', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'refundOrder', array('exception' => $ex));
         
         return $ex;
       } catch (Exception $ex) {
@@ -647,7 +647,7 @@
         return $response->result;
           
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'GetOrder', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'GetOrder', array('exception' => $ex));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GetOrder', array('exception' => $ex));
       }
@@ -767,7 +767,7 @@
         return $response->result;
         
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('DEBUG', 'GetVaultDetails', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'GetVaultDetails', array('exception' => $ex));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GetVaultDetails', array('exception' => $ex));
       }
