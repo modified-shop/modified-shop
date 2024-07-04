@@ -559,6 +559,22 @@
           $shipping_address['address_line_1'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
         }
       }
+      
+      if (isset($order->info['pp_total'])) {
+        $total = $order->info['pp_total'];
+      } else {
+        $total = $order->info['total'];
+        if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+             && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+             ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                   && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0 
+                   && $order->delivery['country_id'] == STORE_COUNTRY
+                   )
+            ) 
+        {
+          $total += $order->info['tax'];
+        }
+      }
 
       $request = new OrdersPatchRequest($orderID);
       $request->body = array(
@@ -567,7 +583,7 @@
           'path' => "/purchase_units/@reference_id=='default'/amount",
           'value' => array (
             'currency_code' => $this->encode_utf8($order->info['currency']),
-            'value' => sprintf("%01.2f", round(((isset($order->info['pp_total'])) ? $order->info['pp_total'] : $order->info['total']), 2))
+            'value' => sprintf("%01.2f", round($total, 2))
           )
         ),
         array(
