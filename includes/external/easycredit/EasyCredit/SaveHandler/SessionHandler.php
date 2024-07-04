@@ -15,7 +15,7 @@ class SessionHandler implements SaveHandlerInterface
      */
     public function clear(TransferInterface $data)
     {
-        unset($_SESSION[get_class($data)]);
+        unset($_SESSION[md5(get_class($data))]);
     }
 
     /**
