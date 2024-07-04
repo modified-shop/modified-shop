@@ -198,11 +198,27 @@ abstract class AbstractObject implements \ArrayAccess, \Serializable, TransferIn
     }
 
     /**
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return $this->toArray();
+    }
+
+    /**
      * @param string $serialized
      */
     public function unserialize($serialized)
     {
         $this->__construct(unserialize($serialized));
+    }
+
+    /**
+     * @param array $$data
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->__construct($data);
     }
 
     /**
