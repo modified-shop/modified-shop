@@ -1028,6 +1028,7 @@ class PayPalPaymentBase extends PayPalCommon {
                    transaction_id varchar(64) NOT NULL,
                    tracking_number varchar(64) NOT NULL,
                    carrier varchar(16) NOT NULL,
+                   trackers_id varchar(128) NOT NULL,
                    date_added datetime NOT NULL,
                    PRIMARY KEY (tracking_id),
                    KEY idx_orders_id (orders_id)
@@ -1268,6 +1269,7 @@ class PayPalPaymentBase extends PayPalCommon {
                    transaction_id varchar(64) NOT NULL,
                    tracking_number varchar(64) NOT NULL,
                    carrier varchar(16) NOT NULL,
+                   trackers_id varchar(128) NOT NULL,
                    date_added datetime NOT NULL,
                    PRIMARY KEY (tracking_id),
                    KEY idx_orders_id (orders_id)
@@ -1291,6 +1293,16 @@ class PayPalPaymentBase extends PayPalCommon {
       $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE '".xtc_db_input($table['column'])."'");
       if (xtc_db_num_rows($check_query) < 1) {
         xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." ADD ".$table['column']." ".$table['default']."");
+      }
+    }
+
+    $table_array = array(
+      array('column' => 'trackers_id', 'default' => "varchar(128) NOT NULL AFTER carrier"),
+    );
+    foreach ($table_array as $table) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_TRACKING." LIKE '".xtc_db_input($table['column'])."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_TRACKING." ADD ".$table['column']." ".$table['default']."");
       }
     }
 

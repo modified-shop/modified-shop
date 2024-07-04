@@ -13,7 +13,7 @@
   function cron_paypal_tracking() {
     if (defined('MODULE_PAYMENT_PAYPAL_SECRET')) {
       // include needed classes
-      require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+      require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
       $tracking_query = xtc_db_query("SELECT o.orders_id,
                                              ot.tracking_id
@@ -29,10 +29,10 @@
                                     ORDER BY ot.tracking_id DESC
                                        LIMIT 50");
       if (xtc_db_num_rows($tracking_query) > 0) {
-        $paypal = new PayPalInfo('paypal');
+        $paypal = new PayPalPaymentV2('paypal');
             
         while ($tracking = xtc_db_fetch_array($tracking_query)) { 
-          $paypal->addTracking($tracking['orders_id'], $tracking['tracking_id']); 
+          $paypal->AddOrderTracking($tracking['orders_id'], $tracking['tracking_id']); 
         }
       }
     }

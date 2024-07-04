@@ -139,6 +139,18 @@ if (isset($oID) && $oID != '') {
             $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
           }
           break;
+        case 'addtrack':
+          $response = $paypal->AddOrderTracking($order->info['order_id'], $_POST['tracking']);
+          if (is_array($response) && count($response) > 0) {
+            $_SESSION['pp_error'] = implode('<br/>', $response);
+          }
+          break;
+        case 'patchtrack':
+          $response = $paypal->PatchOrderTracking($order->info['order_id'], $_POST['tracking_id']);
+          if (is_array($response) && count($response) > 0) {
+            $_SESSION['pp_error'] = implode('<br/>', $response);
+          }
+          break;
       }
     }    
   }
