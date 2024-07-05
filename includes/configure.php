@@ -40,7 +40,7 @@
   defined('DB_SERVER_USERNAME') OR define('DB_SERVER_USERNAME', '');
   defined('DB_SERVER_PASSWORD') OR define('DB_SERVER_PASSWORD', '');
   defined('DB_DATABASE') OR define('DB_DATABASE', '');
-  defined('DB_SERVER_CHARSET') OR define('DB_SERVER_CHARSET', 'latin1'); // set db charset 'utf8' or 'latin1'
+  defined('DB_SERVER_CHARSET') OR define('DB_SERVER_CHARSET', 'utf8'); // set db charset 'utf8', 'utf8mb4' or 'latin1'
   defined('DB_SERVER_ENGINE') OR define('DB_SERVER_ENGINE', 'MyISAM');
   defined('USE_PCONNECT') OR define('USE_PCONNECT', 'false'); // use persistent connections?
 
@@ -67,4 +67,3 @@
     // include standard settings
     require_once(DIR_FS_CATALOG.(defined('RUN_MODE_ADMIN')? DIR_ADMIN : '').'includes/paths.php');
   }
-?>
