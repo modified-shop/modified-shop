@@ -109,7 +109,7 @@
     require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
     require_once (DIR_FS_INC.'db_functions.inc.php');
 
-    $_SESSION['language_charset'] = (($db_charset == 'utf8') ? 'utf-8' : 'ISO-8859-15');
+    $_SESSION['language_charset'] = ((strpos($db_charset, 'utf8') !== false) ? 'utf-8' : 'ISO-8859-15');
   
     $connection = xtc_db_connect($db_server, $db_username, $db_password, $db_database, 'db_link');
     if (is_object($connection) || is_resource($connection)) {
@@ -125,8 +125,11 @@
       if ($error === false || isset($db_install) || isset($write_configure)) {
         if ($error === false || isset($db_install)) {     
           $collation = 'latin1_german1_ci';
-          if ($_SESSION['language_charset'] == 'utf-8') {
+          if ($db_charset == 'utf8') {
             $collation = 'utf8_german2_ci';
+          }
+          if ($db_charset == 'utf8mb4') {
+            $collation = 'utf8mb4_german2_ci';
           }
           xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
           xtc_db_query('SET NAMES '.$db_charset.' COLLATE '.$collation);
@@ -302,8 +305,9 @@
 
   // database 
   $db_charset_array = array(
-    array('id' => 'latin1', 'text' => 'ISO-8859-15'),
     array('id' => 'utf8', 'text' => 'UTF-8'),
+    array('id' => 'utf8mb4', 'text' => 'UTF-8 MB4'),
+    array('id' => 'latin1', 'text' => 'ISO-8859-15'),
   );
   $db_engine_array = array(
     array('id' => 'MyISAM', 'text' => 'MyISAM'),

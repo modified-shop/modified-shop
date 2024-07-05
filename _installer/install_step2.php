@@ -212,7 +212,7 @@
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($multilanguage_email) . "' WHERE configuration_key = 'EMAIL_BILLING_REPLY_ADDRESS'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($multilanguage_email) . "' WHERE configuration_key = 'EMAIL_BILLING_FORWARDING_STRING'");
 
-      if (DB_SERVER_CHARSET == 'utf8') {
+      if (strpos(DB_SERVER_CHARSET, 'utf8') !== false) {
         xtc_db_query("UPDATE " .TABLE_LANGUAGES . " SET language_charset='utf-8'");
       }
 
