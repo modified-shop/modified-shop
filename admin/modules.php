@@ -45,7 +45,6 @@
     'paypalprzelewy',
     'paypalmybank',
     'paypalideal',
-    'paypalgiropay',
     'paypaleps',
     'paypalblik',
     'paypalbancontact',

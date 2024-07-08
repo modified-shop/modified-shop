@@ -97,7 +97,6 @@ class PayPalPaymentBase extends PayPalCommon {
         'paypalprzelewy',
         'paypalmybank',
         'paypalideal',
-        'paypalgiropay',
         'paypaleps',
         'paypalblik',
         'paypalbancontact',
@@ -1414,7 +1413,6 @@ class PayPalPaymentBase extends PayPalCommon {
       'paypalprzelewy',
       'paypalmybank',
       'paypalideal',
-      'paypalgiropay',
       'paypaleps',
       'paypalblik',
       'paypalbancontact',
@@ -1432,10 +1430,13 @@ class PayPalPaymentBase extends PayPalCommon {
       'includes/external/paypal/templates/presentment.html',
       'includes/external/paypal/templates/presentment_info.html',
       'includes/modules/order_total/ot_paypalinstallment_fee.php',
+      'includes/modules/payment/paypalgiropay.php',
       'includes/modules/payment/paypalinstallment.php',
       'lang/english/modules/order_total/ot_paypalinstallment_fee.php',
+      'lang/english/modules/payment/paypalgiropay.php',
       'lang/english/modules/payment/paypalinstallment.php',
       'lang/german/modules/order_total/ot_paypalinstallment_fee.php',
+      'lang/german/modules/payment/paypalgiropay.php',
       'lang/german/modules/payment/paypalinstallment.php',
     );
   
@@ -1444,7 +1445,14 @@ class PayPalPaymentBase extends PayPalCommon {
         unlink(DIR_FS_CATALOG.$unlink);
       }
     }
-
+    
+    // remove giropay
+    xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPALGIROPAY_%'");
+    if (xtc_db_affected_rows() > 0) {
+      require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+      update_module_configuration('payment');
+    }
+    
     if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS', false) == '') {
       $sql_data_array = array(
         array(
