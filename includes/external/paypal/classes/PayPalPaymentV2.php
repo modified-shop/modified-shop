@@ -367,13 +367,8 @@
             'cartID' => $_SESSION['cart']->cartID,
             'OrderID' => $response->result->id
           );
-
-          foreach ($response->result->links as $links) {
-            if ($links->rel == 'payer-action') {
-              xtc_redirect($links->href);
-              break;
-            }
-          }
+          
+          $this->redirectOrder($response->result->links, 'payer-action');
         }
 
         return $response->result->id;
@@ -407,6 +402,10 @@
         
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'CaptureOrder', array('exception' => $ex));
+
+        $message = json_decode($ex->getMessage());
+        $this->redirectOrder($message->links, 'payer-action');
+        
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }      
@@ -420,12 +419,7 @@
       $PayPalOrder = $this->GetOrder($OrderID);
 
       if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
-        foreach ($PayPalOrder->links as $links) {
-          if ($links->rel == 'payer-action') {
-            xtc_redirect($links->href);
-            break;
-          }
-        }
+        $this->redirectOrder($PayPalOrder->links, 'payer-action');
       }
       
       if (isset($insert_id) && (int)$insert_id > 0) {
@@ -480,12 +474,7 @@
       $PayPalOrder = $this->GetOrder($OrderID);
 
       if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
-        foreach ($PayPalOrder->links as $links) {
-          if ($links->rel == 'payer-action') {
-            xtc_redirect($links->href);
-            break;
-          }
-        }
+        $this->redirectOrder($PayPalOrder->links, 'payer-action');
       }
 
       if (isset($insert_id) && (int)$insert_id > 0) {
@@ -986,5 +975,15 @@
       
       return NULL;
     }
-    
+
+
+    function redirectOrder($links, $action) {
+      foreach ($links as $link) {
+        if ($link->rel == $action) {
+          xtc_redirect($link->href);
+          break;
+        }
+      }
+    }
+
   }
