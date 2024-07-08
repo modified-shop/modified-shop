@@ -82,12 +82,7 @@ class paypalgiropay extends PayPalPaymentV2 {
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
 
     if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
-      foreach ($PayPalOrder->links as $links) {
-        if ($links->rel == 'payer-action') {
-          xtc_redirect($links->href);
-          break;
-        }
-      }
+      $this->redirectOrder($PayPalOrder->links, 'payer-action');
     }
   
     if (isset($PayPalOrder->payer->payer_id)) {
