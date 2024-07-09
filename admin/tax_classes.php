@@ -89,7 +89,7 @@
           'tax_class_title' => $tax_class_title,
           'tax_class_description' => $tax_class_description,
           'sort_order' => (int)$_POST['sort_order'],
-          'date_added' => 'now()',
+          'last_modified' => 'now()',
         );
         xtc_db_perform(TABLE_TAX_CLASS, $sql_data_array, 'update', "tax_class_id = '" . $tax_class_id . "'");
 
