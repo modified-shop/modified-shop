@@ -45,11 +45,11 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL' => 'BNPL Button in checkout',
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO' => 'Shall the PayPal button be displayed in the checkout?',
 
-  'TEXT_PAYPAL_MODULE_SAVE_PAYMENT' => 'Save payment method in the checkout',
-  'TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO' => 'Should the payment method be saved for a faster checkout for another order?',
+  'TEXT_PAYPAL_MODULE_SAVE_PAYMENT' => 'Save payment method in the checkout (PayPal Vault)',
+  'TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO' => 'Should the payment method used for PayPal be saved for a faster checkout for another order?',
 
-  'TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT' => 'Allow saved payment method',
-  'TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT_INFO' => 'Allow a saved payment method for a faster checkout?',
+  'TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT' => 'Allow saved payment method (PayPal Vault)',
+  'TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT_INFO' => 'Allow a saved payment method for PayPal for a faster checkout?',
 
   'TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS' => 'Allow Creditcards without 3D Secure',
   'TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS_INFO' => 'There is no liability shift without 3D Secure.',

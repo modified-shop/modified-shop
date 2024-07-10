@@ -15,7 +15,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALCART_TEXT_TITLE' => 'PayPal',
   'MODULE_PAYMENT_PAYPALCART_TEXT_ADMIN_TITLE' => 'PayPal Express-Button auf Warenkorb- &amp; Artikelseite<span style="background:#dd2400;color: #fff;font-weight: bold;padding: 2px 5px;border-radius: 4px;margin: 0 0 0 5px;">ALT</span>',
   'MODULE_PAYMENT_PAYPALCART_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
-  'MODULE_PAYMENT_PAYPALCART_TEXT_DESCRIPTION' => 'PayPal Express Checkout - der PayPal Button im Warenkorb und auf der Artikelseite f&uuml;r maximale Konversion.<br/>Mehr Infos zu PayPal Express Shortcut finden Sie <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/express-checkout">hier</a>.<br /><br /><strong><font color="red">ACHTUNG:</font></strong> Damit der Bestellstatus korrekt gesetzt wird, m&uuml;ssen folgende <a href="'.xtc_href_link('paypal_webhook.php').'">Webhooks</a> in der PayPal Konfiguration eingestellt werden , damit der Status korrekt umgestellt wird:<ul><li>PAYMENT.SALE.COMPLETED</li><li>PAYMENT.SALE.DENIED</li><li>PAYMENT.SALE.PENDING</li></ul>',
+  'MODULE_PAYMENT_PAYPALCART_TEXT_DESCRIPTION' => 'PayPal Express Checkout - der PayPal Button im Warenkorb und auf der Artikelseite f&uuml;r maximale Konversion.<br/>Mehr Infos zu PayPal Express Shortcut finden Sie <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/express-checkout">hier</a>.<br /><br /><strong><font color="red">ACHTUNG:</font></strong> Damit der Bestellstatus korrekt gesetzt wird, m&uuml;ssen folgende <a href="'.xtc_href_link('paypal_webhook.php').'">Webhooks</a> in der PayPal Konfiguration eingestellt werden, damit der Status korrekt umgestellt wird:<ul><li>PAYMENT.SALE.COMPLETED</li><li>PAYMENT.SALE.DENIED</li><li>PAYMENT.SALE.PENDING</li></ul>',
   'MODULE_PAYMENT_PAYPALCART_ALLOWED_TITLE' => 'Erlaubte Zonen',
   'MODULE_PAYMENT_PAYPALCART_ALLOWED_DESC' => 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))',
   'MODULE_PAYMENT_PAYPALCART_STATUS_TITLE' => 'PayPal Express aktivieren',
@@ -24,7 +24,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALCART_SORT_ORDER_DESC' => 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt',
   'MODULE_PAYMENT_PAYPALCART_ZONE_TITLE' => 'Zahlungszone',
   'MODULE_PAYMENT_PAYPALCART_ZONE_DESC' => 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.',
-  'MODULE_PAYMENT_PAYPALCART_LP' => '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>',
+  'MODULE_PAYMENT_PAYPALCART_LP' => '<br /><br />F&uuml;r diese Zahlungsart ben&ouml;tigen Sie ein PayPal H&auml;ndler Konto.<br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>',
 
   'MODULE_PAYMENT_PAYPALCART_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ACHTUNG:</font></strong> Bitte nehmen Sie noch die Einstellungen unter "Partner Module" -> "PayPal" -> <a href="'.xtc_href_link('paypal_config.php').'"><strong>"PayPal Konfiguration"</strong></a> vor!',
 

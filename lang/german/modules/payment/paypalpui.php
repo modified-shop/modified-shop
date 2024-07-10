@@ -15,7 +15,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALPUI_TEXT_TITLE' => 'Rechnung',
   'MODULE_PAYMENT_PAYPALPUI_TEXT_ADMIN_TITLE' => 'Rechnung via PayPal',
   'MODULE_PAYMENT_PAYPALPUI_TEXT_INFO' => 'Mit Klicken auf den Button akzeptieren Sie die <a target="_blank" href="https://www.ratepay.com/legal-payment-terms">Ratepay Zahlungsbedingungen</a> und erkl&auml;ren sich mit der Durchf&uuml;hrung einer <a target="_blank" href="https://www.ratepay.com/legal-payment-dataprivacy">Risikopr&uuml;fung durch Ratepay</a>, unseren Partner, einverstanden. Sie akzeptieren auch PayPal&rsquo;s <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/ua/rechnungskauf-mit-ratepay?locale.x=en_DE&_ga=1.121064910.716429872.1643889674">Datenschutzerkl&auml;rung</a>. Falls Ihre Transaktion erfolgreich per Kauf auf Rechnung abgewickelt werden kann, wird der Kaufpreis an Ratepay abgetreten und Sie d&uuml;rfen nur an Ratepay &uuml;berweisen, nicht an den H&auml;ndler.',
-  'MODULE_PAYMENT_PAYPALPUI_TEXT_DESCRIPTION' => '<strong><font color="red">ACHTUNG:</font></strong> Damit der Bestellstatus korrekt gesetzt wird, m&uuml;ssen folgende <a href="'.xtc_href_link('paypal_webhook.php').'">Webhooks</a> in der PayPal Konfiguration eingestellt werden , damit der Status korrekt umgestellt wird:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DECLINED</li><li>PAYMENT.CAPTURE.DENIED</li><li>PAYMENT.CAPTURE.PENDING</li></ul>',
+  'MODULE_PAYMENT_PAYPALPUI_TEXT_DESCRIPTION' => '<strong><font color="red">ACHTUNG:</font></strong> Damit der Bestellstatus korrekt gesetzt wird, m&uuml;ssen folgende <a href="'.xtc_href_link('paypal_webhook.php').'">Webhooks</a> in der PayPal Konfiguration eingestellt werden, damit der Status korrekt umgestellt wird:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DECLINED</li><li>PAYMENT.CAPTURE.DENIED</li><li>PAYMENT.CAPTURE.PENDING</li></ul>',
   'MODULE_PAYMENT_PAYPALPUI_ALLOWED_TITLE' => 'Erlaubte Zonen',
   'MODULE_PAYMENT_PAYPALPUI_ALLOWED_DESC' => 'Das Modul kann f&uuml;r die folgenden Zonen verwendet werden.',
   'MODULE_PAYMENT_PAYPALPUI_STATUS_TITLE' => 'PayPal Rechnung aktivieren',
@@ -24,7 +24,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALPUI_SORT_ORDER_DESC' => 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt',
   'MODULE_PAYMENT_PAYPALPUI_ZONE_TITLE' => 'Zahlungszone',
   'MODULE_PAYMENT_PAYPALPUI_ZONE_DESC' => 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.',
-  'MODULE_PAYMENT_PAYPALPUI_LP' => '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>',
+  'MODULE_PAYMENT_PAYPALPUI_LP' => '<br /><br />F&uuml;r diese Zahlungsart ben&ouml;tigen Sie ein PayPal H&auml;ndler Konto.<br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>',
 
   'MODULE_PAYMENT_PAYPALPUI_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ACHTUNG:</font></strong> Bitte nehmen Sie noch die Einstellungen unter "Partner Module" -> "PayPal" -> <a href="'.xtc_href_link('paypal_config.php').'"><strong>"PayPal Konfiguration"</strong></a> vor!',
 
