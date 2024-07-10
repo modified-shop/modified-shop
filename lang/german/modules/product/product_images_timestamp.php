@@ -10,5 +10,5 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_PRODUCT_PRODUCT_IMAGES_TIMESTAMP_TITLE', 'Timestamp für Artikelbilder');
-  define('MODULE_PRODUCT_PRODUCT_IMAGES_TIMESTAMP_DESCRIPTION', 'Zusätzlicher Timestamp Paremeter für die Artikelbilder');
+  define('MODULE_PRODUCT_PRODUCT_IMAGES_TIMESTAMP_TITLE', 'Timestamp f&uuml;r Artikelbilder');
+  define('MODULE_PRODUCT_PRODUCT_IMAGES_TIMESTAMP_DESCRIPTION', 'Zus&auml;tzlicher Timestamp Parameter f&uuml;r die Artikelbilder');

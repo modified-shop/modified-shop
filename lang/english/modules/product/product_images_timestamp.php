@@ -11,4 +11,4 @@
    ---------------------------------------------------------------------------------------*/
 
   define('MODULE_PRODUCT_PRODUCT_IMAGES_TIMESTAMP_TITLE', 'Timestamp for product images');
-  define('MODULE_PRODUCT_PRODUCT_IMAGES_TIMESTAMP_DESCRIPTION', 'Additional parameter for product images');
+  define('MODULE_PRODUCT_PRODUCT_IMAGES_TIMESTAMP_DESCRIPTION', 'Additional timestamp parameter for product images');
