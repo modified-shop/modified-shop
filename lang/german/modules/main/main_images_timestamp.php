@@ -10,5 +10,5 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_MAIN_MAIN_IMAGES_TIMESTAMP_TITLE', 'Timestamp f&uuml;r Kategoriebilder und Herstellerbilder');
-  define('MODULE_MAIN_MAIN_IMAGES_TIMESTAMP_DESCRIPTION', 'Zus&auml;tzlicher Timestamp Parameter f&uuml;r Kategoriebilder und Herstellerbilder');
+  define('MODULE_MAIN_MAIN_IMAGES_TIMESTAMP_TITLE', 'Timestamp f&uuml;r Kategorie, Hersteller und Banner Bilder');
+  define('MODULE_MAIN_MAIN_IMAGES_TIMESTAMP_DESCRIPTION', 'Zus&auml;tzlicher Timestamp Paremeter f&uuml;r Kategorie, Hersteller und Banner Bilder');
