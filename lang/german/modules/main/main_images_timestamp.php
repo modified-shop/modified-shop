@@ -11,4 +11,4 @@
    ---------------------------------------------------------------------------------------*/
 
   define('MODULE_MAIN_MAIN_IMAGES_TIMESTAMP_TITLE', 'Timestamp f&uuml;r Kategorie, Hersteller und Banner Bilder');
-  define('MODULE_MAIN_MAIN_IMAGES_TIMESTAMP_DESCRIPTION', 'Zus&auml;tzlicher Timestamp Paremeter f&uuml;r Kategorie, Hersteller und Banner Bilder');
+  define('MODULE_MAIN_MAIN_IMAGES_TIMESTAMP_DESCRIPTION', 'Zus&auml;tzlicher Timestamp Parameter f&uuml;r Kategorie, Hersteller und Banner Bilder');
