@@ -20,6 +20,8 @@
   
   // Display a banner from the specified group or banner id ($identifier)
   function xtc_display_banner($action, $identifier) {
+    global $main;
+    
     $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
 
     if ($action == 'dynamic') {
@@ -45,35 +47,23 @@
   
         $banner_array = array();
         foreach ($banner_content as $banner) {
-          if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
-            if ($banner['banners_image'] != '') {
-              $banners_image = substr($banner['banners_image'], 0, strrpos($banner['banners_image'], '.')).'.'.IMAGE_TYPE_EXTENSION;
-              if (is_file(DIR_WS_IMAGES.'banner/'.$banners_image)) {
-                $banner['banners_image'] = $banners_image;
-              }
-            }
-            if ($banner['banners_image_mobile'] != '') {
-              $banner_image_mobile = substr($banner['banners_image_mobile'], 0, strrpos($banner['banners_image_mobile'], '.')).'.'.IMAGE_TYPE_EXTENSION;
-              if (is_file(DIR_WS_IMAGES.'banner/'.$banner_image_mobile)) {
-                $banner['banners_image_mobile'] = $banner_image_mobile;
-              }
-            }
-          }
+          $banner_image_plain = $main->getImage($banner['banners_image'], 'banner/', 'false');
+          $banner_image_mobile_plain = $main->getImage($banner['banners_image_mobile'], 'banner/', 'false');
 
           $banner_url = xtc_get_top_level_domain($banner['banners_url']);
           $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
           $banner_link = (($banner['banners_redirect'] == 0) ? xtc_get_banners_url($banner['banners_url']) : xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']));
           $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
-          $banner_image = (($banner['banners_image'] != '') ? xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
-          $banner_image_mobile = (($banner['banners_image_mobile'] != '') ? xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image_mobile'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
+          $banner_image = (($banner_image_plain != '') ? xtc_image($banner_image_plain, $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
+          $banner_image_mobile = (($banner_image_mobile_plain != '') ? xtc_image($banner_image_mobile_plain, $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
           $banner_image_title = (($banner['banners_image_title'] != '') ? xtc_parse_input_field_data($banner['banners_image_title'], array('"' => '&quot;')) : $banner_title);
           $banner_image_alt = (($banner['banners_image_alt'] != '') ? xtc_parse_input_field_data($banner['banners_image_alt'], array('"' => '&quot;')) : $banner_image_title);
           
           $banner_array[] = array(
             'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
-            'IMAGE_SRC' => (($banner['banners_image'] != '') ? DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image'] : ''),
+            'IMAGE_SRC' => (($banner_image_plain != '') ? DIR_WS_BASE.$banner_image_plain : ''),
             'IMAGE_IMG' => $banner_image,
-            'IMAGE_SRC_MOBILE' => (($banner['banners_image_mobile'] != '') ? DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image_mobile'] : ''),
+            'IMAGE_SRC_MOBILE' => (($banner_image_mobile_plain != '') ? DIR_WS_BASE.$banner_image_mobile_plain : ''),
             'IMAGE_IMG_MOBILE' => $banner_image_mobile,
             'IMAGE_TITLE' => $banner_image_title,
             'IMAGE_ALT' => $banner_image_alt,
@@ -91,40 +81,28 @@
       
       return false;
     }
+    
     if (empty($banner)) {
       return false;
     }
     
-    
-    if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
-      if ($banner['banners_image'] != '') {
-        $banners_image = substr($banner['banners_image'], 0, strrpos($banner['banners_image'], '.')).'.'.IMAGE_TYPE_EXTENSION;
-        if (is_file(DIR_WS_IMAGES.'banner/'.$banners_image)) {
-          $banner['banners_image'] = $banners_image;
-        }
-      }
-      if ($banner['banners_image_mobile'] != '') {
-        $banner_image_mobile = substr($banner['banners_image_mobile'], 0, strrpos($banner['banners_image_mobile'], '.')).'.'.IMAGE_TYPE_EXTENSION;
-        if (is_file(DIR_WS_IMAGES.'banner/'.$banner_image_mobile)) {
-          $banner['banners_image_mobile'] = $banner_image_mobile;
-        }
-      }
-    }
+    $banner_image_plain = $main->getImage($banner['banners_image'], 'banner/', 'false');
+    $banner_image_mobile_plain = $main->getImage($banner['banners_image_mobile'], 'banner/', 'false');
 
     $banner_url = xtc_get_top_level_domain($banner['banners_url']);
     $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
     $banner_link = (($banner['banners_redirect'] == 0) ? xtc_get_banners_url($banner['banners_url']) : xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']));
     $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
-    $banner_image = (($banner['banners_image'] != '') ? xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
-    $banner_image_mobile = (($banner['banners_image_mobile'] != '') ? xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image_mobile'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
+    $banner_image = (($banner_image_plain != '') ? xtc_image($banner_image_plain, $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
+    $banner_image_mobile = (($banner_image_mobile_plain != '') ? xtc_image($banner_image_mobile_plain, $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
     $banner_image_title = (($banner['banners_image_title'] != '') ? xtc_parse_input_field_data($banner['banners_image_title'], array('"' => '&quot;')) : $banner_title);
     $banner_image_alt = (($banner['banners_image_alt'] != '') ? xtc_parse_input_field_data($banner['banners_image_alt'], array('"' => '&quot;')) : $banner_image_title);
 
     $banner_array = array(
       'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
-      'IMAGE_SRC' => (($banner['banners_image'] != '') ? DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image'] : ''),
+      'IMAGE_SRC' => (($banner_image_plain != '') ? DIR_WS_BASE.$banner_image_plain : ''),
       'IMAGE_IMG' => $banner_image,
-      'IMAGE_SRC_MOBILE' => (($banner['banners_image_mobile'] != '') ? DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image_mobile'] : ''),
+      'IMAGE_SRC_MOBILE' => (($banner_image_mobile_plain != '') ? DIR_WS_BASE.$banner_image_mobile_plain : ''),
       'IMAGE_IMG_MOBILE' => $banner_image_mobile,
       'IMAGE_TITLE' => $banner_image_title,
       'IMAGE_ALT' => $banner_image_alt,
@@ -139,4 +117,3 @@
         
     return $banner_array;
   }
-?>
