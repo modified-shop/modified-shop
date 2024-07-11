@@ -82,14 +82,14 @@ if ($existing === false) {
 }
 
 // build the expires date in the format YYYY-MM-DD
-if (strtotime($sInfo->expires_date) !== false && strtotime($sInfo->expires_date) > 0) {
+if (xtc_not_null($sInfo->expires_date) && strtotime($sInfo->expires_date) !== false && strtotime($sInfo->expires_date) > 0) {
   $expires_date = date('Y-m-d H:i', strtotime($sInfo->expires_date));
 } else {
   $expires_date = '';
 }
 
 // build the start date in the format YYYY-MM-DD
-if (strtotime($sInfo->start_date) !== false && strtotime($sInfo->start_date) > 0) {
+if (xtc_not_null($sInfo->start_date) && strtotime($sInfo->start_date) !== false && strtotime($sInfo->start_date) > 0) {
   $start_date = date('Y-m-d H:i', strtotime($sInfo->start_date));
 } else {
   $start_date = '';
