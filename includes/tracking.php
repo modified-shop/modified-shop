@@ -29,8 +29,8 @@ if (!isset($_SESSION['tracking']['ip'])) {
 // campaigns
 if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
   $campaign_query = xtDBquery("SELECT * 
-                                       FROM ".TABLE_CAMPAIGNS." 
-                                      WHERE campaigns_refID = '".xtc_db_input($_GET['refID'])."'");
+                                 FROM ".TABLE_CAMPAIGNS." 
+                                WHERE campaigns_refID = '".xtc_db_input($_GET['refID'])."'");
   if (xtc_db_num_rows($campaign_query, true) > 0) {
     $campaign = xtc_db_fetch_array($campaign_query, true);
     
