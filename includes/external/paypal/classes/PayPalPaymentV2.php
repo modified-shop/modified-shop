@@ -403,9 +403,17 @@
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'CaptureOrder', array('exception' => $ex));
 
-        $message = json_decode($ex->getMessage());
-        $this->redirectOrder($message->links, 'payer-action');
-        
+        $details = json_decode($ex->getMessage());
+        if (isset($details->details)
+            && is_array($details->details)
+            && isset($details->details[0])
+            && isset($details->details[0]->issue)
+            && $details->details[0]->issue == 'PAYER_ACTION_REQUIRED'
+            )
+        {
+          $this->redirectOrder($details->links, 'payer-action');
+        }
+      
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }      
@@ -426,13 +434,14 @@
         $this->remove_order($insert_id);
       }
 
-      if (isset($ex->details)
-          && is_array($ex->details)
-          && isset($ex->details[0])
-          && isset($ex->details[0]->issue)
+      $details = json_decode($ex->getMessage());
+      if (isset($details->details)
+          && is_array($details->details)
+          && isset($details->details[0])
+          && isset($details->details[0]->issue)
           )
       {
-        $_SESSION['paypal_payment_error'] = strtoupper($ex->details[0]->issue);
+        $_SESSION['paypal_payment_error'] = strtoupper($details->details[0]->issue);
       }
       
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')); 
@@ -481,13 +490,14 @@
         $this->remove_order($insert_id);
       }
 
-      if (isset($ex->details)
-          && is_array($ex->details)
-          && isset($ex->details[0])
-          && isset($ex->details[0]->issue)
+      $details = json_decode($ex->getMessage());
+      if (isset($details->details)
+          && is_array($details->details)
+          && isset($details->details[0])
+          && isset($details->details[0]->issue)
           )
       {
-        $_SESSION['paypal_payment_error'] = strtoupper($ex->details[0]->issue);
+        $_SESSION['paypal_payment_error'] = strtoupper($details->details[0]->issue);
       }
        
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')); 
