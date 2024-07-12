@@ -190,8 +190,14 @@
 
     // make a connection to the database... now
     xtc_db_connect() or die('Unable to connect to database server!');
-    xtc_db_query("SET default_storage_engine = MYISAM");
-  
+
+    $engine_query = xtc_db_query("SELECT * FROM `engine`");
+    $engine = xtc_db_fetch_array($engine_query);
+    
+    if ($engine['type'] != '') {
+      xtc_db_query("SET default_storage_engine = ".$engine['type']);
+    }
+    
     if ($_GET['action'] == 'restorenow' || $_GET['action'] == 'restoredb') {
       define('_VALID_XTC', true);
       $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -355,7 +361,20 @@
   $javascriptcheck = '
   <script type="text/javascript">
     $(document).ready(function(){	
-      $(".cssButtonRow").show();	
+      $(".cssButtonRow").show();
+      $("select[name=\"db_charset\"]").on("change", function(){
+        if ($(this).val() == "utf8mb4") {
+          $("select[name=\"db_engine\"]").val("InnoDB");
+        }
+      });
+      $("select[name=\"db_engine\"]").on("change", function(){
+        if ($(this).val() == "MyISAM"
+            && $("select[name=\"db_charset\"]").val() == "utf8mb4"
+            )
+        {
+          $("select[name=\"db_charset\"]").val("utf8");
+        }
+      });
     });
   </script>
   ';
