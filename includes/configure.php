@@ -41,7 +41,7 @@
   defined('DB_SERVER_PASSWORD') OR define('DB_SERVER_PASSWORD', '');
   defined('DB_DATABASE') OR define('DB_DATABASE', '');
   defined('DB_SERVER_CHARSET') OR define('DB_SERVER_CHARSET', 'utf8'); // set db charset 'utf8', 'utf8mb4' or 'latin1'
-  defined('DB_SERVER_ENGINE') OR define('DB_SERVER_ENGINE', 'MyISAM');
+  defined('DB_SERVER_ENGINE') OR define('DB_SERVER_ENGINE', 'MyISAM'); // set db engine 'InnoDB' or 'MyISAM'
   defined('USE_PCONNECT') OR define('USE_PCONNECT', 'false'); // use persistent connections?
 
   // server
