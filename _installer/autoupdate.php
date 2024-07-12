@@ -139,7 +139,10 @@
         // check for errors
         $error = false;
 
-        require_once(DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/check_requirements.php');  
+        // check requirements
+        require_once(DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/check_requirements.php');
+        
+        // check permissions
         require_once('includes/check_permissions.php');
         
         // check versions
