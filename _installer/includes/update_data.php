@@ -273,7 +273,13 @@
     'products_xsell_grp_name' => array(),
     'reviews' => array(),
     'reviews_description' => array(),
-    'scheduled_tasks' => array(),
+    'scheduled_tasks' => array(
+      'drop' => array(
+        'idx' => array(
+          'idx_task',
+        ),
+      ),
+    ),
     'sessions' => array(),
     'shipping_status' => array(),
     'shop_configuration' => array(
