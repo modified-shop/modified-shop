@@ -49,5 +49,12 @@ ALTER TABLE `manufacturers_info` ADD `manufacturers_add_description` TEXT AFTER 
 ALTER TABLE `categories_description` ADD `categories_short_description` TEXT AFTER `categories_description`; 
 ALTER TABLE `categories_description` MODIFY `categories_description` TEXT;
 
+#GTB - 2024-07-14 - unify database
+ALTER TABLE `scheduled_tasks` DROP INDEX `idx_task`; 
+ALTER TABLE `scheduled_tasks` DROP INDEX `idx_tasks`;
+ALTER TABLE `scheduled_tasks` ADD UNIQUE KEY `idx_tasks` (`tasks`);
+ALTER TABLE `manufacturers` MODIFY `products_sorting2` VARCHAR(64) NULL;
+ALTER TABLE `customers` MODIFY `refferers_id` INT(11) DEFAULT 0 NOT NULL;
+
 
 # Keep an empty line at the end of this file for the db_updater to work properly

@@ -273,6 +273,7 @@
     'products_xsell_grp_name' => array(),
     'reviews' => array(),
     'reviews_description' => array(),
+    'scheduled_tasks' => array(),
     'sessions' => array(),
     'shipping_status' => array(),
     'shop_configuration' => array(
@@ -307,5 +308,3 @@
     'payment_moneybookers_currencies',
     'payment_moneybookers_countries',
   );
-  
-?>

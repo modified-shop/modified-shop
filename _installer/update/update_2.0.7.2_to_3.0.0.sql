@@ -23,7 +23,7 @@ ALTER TABLE `customers` MODIFY `customers_password` VARCHAR(255) NOT NULL;
 ALTER TABLE `manufacturers` ADD `manufacturers_status` INT(1) NOT NULL AFTER `manufacturers_image`; 
 ALTER TABLE `manufacturers` ADD `sort_order` INT(3) DEFAULT 0 NOT NULL AFTER `manufacturers_status`; 
 ALTER TABLE `manufacturers` ADD `products_sorting` VARCHAR(64) NULL AFTER `sort_order`; 
-ALTER TABLE `manufacturers` ADD `products_sorting2` VARCHAR(64) NOT NULL AFTER `products_sorting`; 
+ALTER TABLE `manufacturers` ADD `products_sorting2` VARCHAR(64) NULL AFTER `products_sorting`; 
 ALTER TABLE `manufacturers` ADD `listing_template` VARCHAR(64) NOT NULL DEFAULT '' AFTER `products_sorting2`; 
 ALTER TABLE `manufacturers` ADD `categories_template` VARCHAR(64) AFTER `listing_template`; 
 ALTER TABLE `manufacturers` ADD INDEX `idx_manufacturers_status` (`manufacturers_status`);
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `scheduled_tasks` (
   `edit` INT(1) NOT NULL DEFAULT 1,
   `tasks` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`tasks_id`),
-  UNIQUE KEY `idx_task` (`tasks`),
+  UNIQUE KEY `idx_tasks` (`tasks`),
   KEY `idx_status` (`status`),
   KEY `idx_time_next` (`time_next`)
 );

@@ -28,7 +28,7 @@ ALTER TABLE `products` MODIFY `products_discount_allowed` DECIMAL(5,2) NOT NULL 
 
 #GTB - 2020-03-24 - update campaigns
 ALTER TABLE `orders` CHANGE `refferers_id` `campaign` VARCHAR(32) NOT NULL;
-ALTER TABLE `customers` MODIFY `refferers_id` INT(11);
+ALTER TABLE `customers` MODIFY `refferers_id` INT(11) DEFAULT 0 NOT NULL;
 
 #GTB - 2020-04-07 - delete obsolete configuration
 DELETE FROM `configuration` WHERE `configuration_key` = 'CONFIG_CALCULATE_IMAGE_SIZE';
