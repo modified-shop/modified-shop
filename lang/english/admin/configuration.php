@@ -574,7 +574,7 @@ define('STORE_OWNER_VAT_ID_DESC' , 'The VAT Reg No of the Shop Owner');
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_TITLE' , 'Customers Group Approved VAT Reg No (Foreign Country)');
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_DESC' , 'Customers group for customers whose VAT Reg No has been checked and approved, shop country <> customer\'s country');
 define('ACCOUNT_COMPANY_VAT_CHECK_TITLE' , 'Validate VAT Reg No');
-define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Customers may enter a VAT Registration number. If false, the box disappears.<br /><b>Attention:</b> Under "Configuration" -> "<a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=5').'"><strong>E-Mail Options</strong></a>" the setting "Company" must be set to "Yes".');
+define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Customers may enter a VAT Registration number. If false, the box disappears.<br /><b>Attention:</b> Under "Configuration" -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=5').'"><strong>"Customer Details"</strong></a> the setting "Company" must be set to "Yes".');
 define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'Validate VAT Reg No online for plausability');
 define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Validate VAT Registration number online for plausability using the webservice of the taxation portal of the EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Requires PHP5 with activated "SOAP" support!<br/><br/><span class="messageStackSuccess">The "PHP5 SOAP"-support is actually '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NOT</span>').' active!</span><br/><br/>');
 define('ACCOUNT_COMPANY_VAT_GROUP_TITLE' , 'Automatic Pruning?');
