@@ -19,7 +19,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 define('SSL_VERSION_MIN', '1.2');
 define('PHP_VERSION_MIN', '8.0.0');
-define('PHP_VERSION_MAX', '8.1.99');
+define('PHP_VERSION_MAX', '8.3.99');
 
 require_once (DIR_FS_INC.'get_database_version.inc.php');
 require_once (DIR_WS_INCLUDES.'file_permissions.php');
