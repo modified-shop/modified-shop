@@ -25,6 +25,7 @@
         'sitemap.xml'
     ),
     'dirs' => array(
+        DIR_MODIFIED_INSTALLER.'/update',
         DIR_ADMIN.'backups',
         DIR_ADMIN.'images/graphs',
         DIR_ADMIN.'images/icons',
