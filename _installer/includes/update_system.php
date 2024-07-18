@@ -430,52 +430,54 @@
   }
 
   // cookie consent
-  $languages = array();
-  $defined_cookies = array();
-
-  $qr = xtc_db_query("SELECT * FROM " . TABLE_LANGUAGES);
-  while ($row = xtc_db_fetch_array($qr)) {
-    $languages[$row['languages_id']] = $row;
-  }
-
-  // Trustedshops
-  $defined_cookies[] = array(
-    'id'        => 10,
-    'category'  => 2,
-    'name'      => array(
-      1 => 'Trusted Shops Trustbadge',
-      2 => 'Trusted Shops Trustbadge'
-    ),
-    'desc'      => array(
-      1 => 'This is a quality seal. It offers the Trusted Shops guarantee and automatically collects reviews.',
-      2 => 'Dies ist ein Qualitätssiegel. Es bietet die Trusted-Shops-Garantie und sammelt automatisch Bewertungen.'
-    ),
-    'cookies'   => '',
-    'sort_order'=> 1,
-    'status'    => 0,
-    'fixed'     => 1
-  );
-
-  foreach ($defined_cookies as $row) {
-    $check_query = xtc_db_query("SELECT *
-                                   FROM ".TABLE_COOKIE_CONSENT_COOKIES."
-                                  WHERE cookies_id = '".$row['id']."'");
-    if (xtc_db_num_rows($check_query) < 1) {
-      foreach ($languages as $language_id => $language) {
-        if (array_key_exists($language_id, $row['name'])) {
-          $sql_data = array(
-            'cookies_id'          => $row['id'],
-            'categories_id'       => $row['category'],
-            'cookies_name'        => decode_utf8($row['name'][$language_id], $language['language_charset']),
-            'cookies_description' => decode_utf8($row['desc'][$language_id], $language['language_charset']),
-            'cookies_list'        => $row['cookies'],
-            'sort_order'          => $row['sort_order'],
-            'languages_id'        => $language_id,
-            'status'              => $row['status'],
-            'date_added'          => 'now()',
-            'fixed'               => $row['fixed']
-          );
-          xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data);
+  if (defined('MODULE_COOKIE_CONSENT_STATUS')) {
+    $languages = array();
+    $defined_cookies = array();
+  
+    $qr = xtc_db_query("SELECT * FROM " . TABLE_LANGUAGES);
+    while ($row = xtc_db_fetch_array($qr)) {
+      $languages[$row['languages_id']] = $row;
+    }
+  
+    // Trustedshops
+    $defined_cookies[] = array(
+      'id'        => 10,
+      'category'  => 2,
+      'name'      => array(
+        1 => 'Trusted Shops Trustbadge',
+        2 => 'Trusted Shops Trustbadge'
+      ),
+      'desc'      => array(
+        1 => 'This is a quality seal. It offers the Trusted Shops guarantee and automatically collects reviews.',
+        2 => 'Dies ist ein Qualitätssiegel. Es bietet die Trusted-Shops-Garantie und sammelt automatisch Bewertungen.'
+      ),
+      'cookies'   => '',
+      'sort_order'=> 1,
+      'status'    => 0,
+      'fixed'     => 1
+    );
+  
+    foreach ($defined_cookies as $row) {
+      $check_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_COOKIE_CONSENT_COOKIES."
+                                    WHERE cookies_id = '".$row['id']."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        foreach ($languages as $language_id => $language) {
+          if (array_key_exists($language_id, $row['name'])) {
+            $sql_data = array(
+              'cookies_id'          => $row['id'],
+              'categories_id'       => $row['category'],
+              'cookies_name'        => decode_utf8($row['name'][$language_id], $language['language_charset']),
+              'cookies_description' => decode_utf8($row['desc'][$language_id], $language['language_charset']),
+              'cookies_list'        => $row['cookies'],
+              'sort_order'          => $row['sort_order'],
+              'languages_id'        => $language_id,
+              'status'              => $row['status'],
+              'date_added'          => 'now()',
+              'fixed'               => $row['fixed']
+            );
+            xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data);
+          }
         }
       }
     }
