@@ -11,16 +11,16 @@
         <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
       </picture>
       <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}"></noscript>
-      <span class="banner_item_content">
-        <span>{$banner_data.TITLE}</span>
-      </span>
+      {if $banner_data.TITLE != ''}
+        <span class="banner_item_content"><span>{$banner_data.TITLE}</span></span>
+      {/if}
     </a>
   {else}
     <a title="{$banner_data.IMAGE_TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
       {$banner_data.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
-      <span class="banner_item_content">
-        <span>{$banner_data.TITLE}</span>
-      </span>
+      {if $banner_data.TITLE != ''}
+        <span class="banner_item_content"><span>{$banner_data.TITLE}</span></span>
+      {/if}
     </a>
   {/if}
 
@@ -33,14 +33,14 @@
       <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
     </picture>
     <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}"></noscript>
-    <span class="banner_item_content">
-      <span>{$banner_data.TITLE}</span>
-    </span>
+    {if $banner_data.TITLE != ''}
+      <span class="banner_item_content"><span>{$banner_data.TITLE}</span></span>
+    {/if}
   {else}
     {$banner_data.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
-    <span class="banner_item_content">
-      <span>{$banner_data.TITLE}</span>
-    </span>
+    {if $banner_data.TITLE != ''}
+      <span class="banner_item_content"><span>{$banner_data.TITLE}</span></span>
+    {/if}
   {/if}
 
 {/if}

@@ -127,16 +127,16 @@
                               <source data-srcset="{$slider.IMAGE_SRC}">
                               <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                             </picture>
-                            <span class="slider_item_content">
-                              {$slider.TITLE}
-                            </span>
+                            {if $slider.TITLE != ''}
+                              <span class="slider_item_content">{$slider.TITLE}</span>
+                            {/if}
                           </a>
                         {else}
                           <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                             {$slider.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
-                            <span class="slider_item_content">
-                              {$slider.TITLE}
-                            </span>
+                            {if $slider.TITLE != ''}
+                              <span class="slider_item_content">{$slider.TITLE}</span>
+                            {/if}
                           </a>
                         {/if}
                       {elseif $slider.IMAGE_IMG != ''}
@@ -146,14 +146,14 @@
                             <source data-srcset="{$slider.IMAGE_SRC}">
                             <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                           </picture>
-                          <span class="slider_item_content">
-                            {$slider.TITLE}
-                          </span>
+                          {if $slider.TITLE != ''}
+                            <span class="slider_item_content">{$slider.TITLE}</span>
+                          {/if}
                         {else}
                           {$slider.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
-                          <span class="slider_item_content">
-                            {$slider.TITLE}
-                          </span>
+                          {if $slider.TITLE != ''}
+                            <span class="slider_item_content">{$slider.TITLE}</span>
+                          {/if}
                         {/if}
                       {/if}
                     </div>
