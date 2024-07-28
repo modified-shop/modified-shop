@@ -2926,8 +2926,8 @@ class AccountCheck {
 class IbanAccountCheck extends AccountCheck { 
 
   var $banktransfer_iban;
-  var $banktransfer_bic
-  var $IBAN_country
+  var $banktransfer_bic;
+  var $IBAN_country;
 
 /*
    -----------------------------------------------------------------------------------------
