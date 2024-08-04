@@ -25,8 +25,8 @@ get_newsfeed();
 
 $admin_access = array();
 if ($_SESSION['customers_status']['customers_status'] == '0') {
-  $admin_access_query = xtc_db_query("SELECT * FROM " . TABLE_ADMIN_ACCESS . " WHERE customers_id = ".(int)$_SESSION['customer_id']);
-  $admin_access = xtc_db_fetch_array($admin_access_query); 
+  require_once(DIR_FS_INC.'get_admin_access.inc.php');
+  $admin_access = get_admin_access($_SESSION['customer_id']); 
 }
 
 // offline/online
