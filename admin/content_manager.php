@@ -386,11 +386,10 @@
   require (DIR_WS_INCLUDES.'head.php');
 
   if (USE_WYSIWYG=='true') {
-    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
-    $data=xtc_db_fetch_array($query);
+    echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
     if ($set != '') {
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        echo xtc_wysiwyg('products_content', $data['code'], $languages[$i]['id']);
+        echo xtc_wysiwyg('products_content', $languages[$i]['code'], $languages[$i]['id']);
       }
     }
   }

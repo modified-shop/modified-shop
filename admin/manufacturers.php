@@ -237,14 +237,12 @@ require (DIR_WS_INCLUDES.'head.php');
 <?php
 // Include WYSIWYG if is activated
 if (USE_WYSIWYG == 'true') {
-	$query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
-	$data = xtc_db_fetch_array($query);
 	// generate editor 
 	echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
 	if ($action == 'edit' || $action == 'new') {
 	  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-      echo xtc_wysiwyg('manufacturers_description', $data['code'], $languages[$i]['id']);
-      echo xtc_wysiwyg('manufacturers_short_description', $data['code'], $languages[$i]['id']);
+      echo xtc_wysiwyg('manufacturers_description', $languages[$i]['code'], $languages[$i]['id']);
+      echo xtc_wysiwyg('manufacturers_short_description', $languages[$i]['code'], $languages[$i]['id']);
 	  }
 	}
 }
