@@ -303,7 +303,7 @@
                 for ($i=0,$n=count($customer_group); $i<$n; $i++) {
                   ?>
                   <tr>
-                    <td class="dataTableContent"><?php echo xtc_image(DIR_WS_ICONS . $customer_group[$i]['IMAGE'], ''); ?><?php echo $customer_group[$i]['NAME']; ?></td>
+                    <td class="dataTableContent"><?php echo xtc_image(DIR_WS_CATALOG . DIR_WS_ICONS . $customer_group[$i]['IMAGE'], ''); ?><?php echo $customer_group[$i]['NAME']; ?></td>
                     <td class="dataTableContent"><?php echo $customer_group[$i]['USERS']; ?></td>
                     <td class="dataTableContent txta-c">&nbsp;</td>
                   </tr>
