@@ -1053,7 +1053,18 @@
     );
         
     xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id = '". (int)($oID). "' AND class = 'ot_subtotal'");
-
+    
+    $discount = 0;
+    $subtotal = 0;
+    foreach ($order->totals as $totals) {
+      if ($totals['class'] == 'ot_subtotal') $subtotal = $totals['value'];
+      if ($totals['class'] == 'ot_discount') $discount = abs($totals['value']);
+    }
+    
+    if ($discount > 0) {
+      $discount = $discount / $subtotal * 100;
+    }
+    
     $products_query = xtc_db_query("SELECT final_price, 
                                            products_tax, 
                                            allow_tax 
@@ -1069,12 +1080,17 @@
       if ($allow_tax == '1') {
         $bprice = $products['final_price'];
         $nprice = $xtPrice->xtcRemoveTax($bprice, $tax_rate);
-        $tax = $xtPrice->calcTax($nprice, $tax_rate);
+        $cprice = $nprice;
       } else {
         $nprice = $products['final_price'];
         $bprice = $xtPrice->xtcAddTax($nprice, $tax_rate);
-        $tax = $xtPrice->calcTax($nprice, $tax_rate);
+        $cprice = $bprice;
       }
+
+      if ($discount > 0) {
+        $cprice = $cprice - ($cprice / 100 * $discount);
+      }
+      $tax = $xtPrice->calcTax($cprice, $tax_rate);
 
       $sql_data_array = array(
         'orders_id' => (int)($oID),
