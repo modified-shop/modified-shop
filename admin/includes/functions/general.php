@@ -122,10 +122,7 @@
       'support'
     );
     if ($pagename != 'index') {
-      $access_permission_query = xtc_db_query("SELECT *
-                                                 FROM ".TABLE_ADMIN_ACCESS."
-                                                WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
-      $access_permission = xtc_db_fetch_array($access_permission_query);
+      $access_permission = get_admin_access($_SESSION['customer_id']);
       if ($_SESSION['customers_status']['customers_status_id'] == '0'
           && ((isset($access_permission[$pagename]) 
                && $access_permission[$pagename] == '1'

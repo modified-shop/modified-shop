@@ -116,6 +116,7 @@ require_once(DIR_FS_INC . 'xtc_product_link.inc.php');
 require_once(DIR_FS_INC . 'xtc_category_link.inc.php');
 require_once(DIR_FS_INC . 'xtc_manufacturer_link.inc.php');
 require_once(DIR_FS_INC . 'xtc_content_link.inc.php');
+require_once(DIR_FS_INC . 'get_admin_access.inc.php');
 
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/functions/','php') as $file) require ($file);
 

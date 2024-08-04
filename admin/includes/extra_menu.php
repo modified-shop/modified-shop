@@ -28,8 +28,7 @@ if (!function_exists('subMenue')){ // zweite ebene
         if (!is_array($admin_access) || count($admin_access) < 1) {
           $admin_access = array();
           if (($_SESSION['customers_status']['customers_status_id'] == '0')) {
-            $admin_access_query = xtc_db_query("SELECT * FROM " . TABLE_ADMIN_ACCESS . " WHERE customers_id = ".(int)$_SESSION['customer_id']);
-            $admin_access = xtc_db_fetch_array($admin_access_query);
+            $admin_access = get_admin_access($_SESSION['customer_id']);
           }
         }
 

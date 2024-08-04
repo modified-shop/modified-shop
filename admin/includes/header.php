@@ -214,9 +214,8 @@
             }
           }
 
-          $page_permission_query = xtc_db_query("SELECT * FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$_SESSION['customer_id']."'");
-          $page_permission = xtc_db_fetch_array($page_permission_query);
-  
+          $page_permission = get_admin_access($_SESSION['customer_id']);
+          
           foreach ($favorites as $f) {
             if (is_array($f)) {
               if ($f['mode'] == 2) {

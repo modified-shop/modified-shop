@@ -20,8 +20,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
 $admin_access = array();
 if (($_SESSION['customers_status']['customers_status_id'] == '0')) {
-  $admin_access_query = xtc_db_query("SELECT * FROM " . TABLE_ADMIN_ACCESS . " WHERE customers_id = ".(int)$_SESSION['customer_id']);
-  $admin_access = xtc_db_fetch_array($admin_access_query); 
+  $admin_access = get_admin_access($_SESSION['customer_id']);
 }
 
 if (!function_exists('mainMenue')) {

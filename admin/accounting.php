@@ -26,10 +26,7 @@
       case 'save':
 
         // reset values before writing
-        $admin_access_query = xtc_db_query("SELECT *
-                                              FROM " . TABLE_ADMIN_ACCESS . "
-                                             WHERE customers_id = '" . (int)$_GET['cID'] . "'");
-        $admin_access = xtc_db_fetch_array($admin_access_query);
+        $admin_access = get_admin_access($_GET['cID']);
 
         $fields = xtc_db_query("SHOW COLUMNS FROM `".TABLE_ADMIN_ACCESS."` FROM `".DB_DATABASE."`");
         $columns = xtc_db_num_rows($fields);
@@ -184,22 +181,14 @@ require (DIR_WS_INCLUDES.'head.php');
               <td>
                 <?php
                 $customers_id = xtc_db_prepare_input($_GET['cID']);
-                $admin_access_query = xtc_db_query("SELECT *
-                                                      FROM " . TABLE_ADMIN_ACCESS . "
-                                                     WHERE customers_id = '" . (int)$_GET['cID'] . "'");
-                if (xtc_db_num_rows($admin_access_query) < 1) {
+
+                $group_access = get_admin_access('groups');
+                $admin_access = get_admin_access($_GET['cID']);
+                if (count($admin_access) < 1) {
                   xtc_db_query("INSERT INTO " . TABLE_ADMIN_ACCESS . " (customers_id) VALUES ('" . (int)$_GET['cID'] . "')");
-                  $admin_access_query = xtc_db_query("SELECT *
-                                                        FROM " . TABLE_ADMIN_ACCESS . "
-                                                       WHERE customers_id = '" . (int)$_GET['cID'] . "'");
+                  $admin_access = get_admin_access($_GET['cID'], false);
                 }
-                $admin_access = xtc_db_fetch_array($admin_access_query);
-
-                $group_query = xtc_db_query("SELECT *
-                                               FROM " . TABLE_ADMIN_ACCESS . "
-                                              WHERE customers_id = 'groups'");
-                $group_access = xtc_db_fetch_array($group_query);
-
+                
                 $fields = xtc_db_query("SHOW COLUMNS FROM `".TABLE_ADMIN_ACCESS."` FROM `".DB_DATABASE."`");
                 while ($field = xtc_db_fetch_array($fields)) {
               
