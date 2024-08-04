@@ -42,7 +42,7 @@
 
     if (is_object(${$link})) {
       try {
-        return mysqli_get_client_info(${$link});
+        return mysqli_get_client_info();
       } catch (Exception $ex) {}
     }
   }
