@@ -15,7 +15,7 @@
    Released under the GNU General Public License
 ---------------------------------------------------------------------------------------*/
 
-function xtc_wysiwyg($type, $lang, $langID = '',$addonType='') 
+function xtc_wysiwyg($type, $language_code, $language_id = '',$addonType='') 
 {
 
     $wysiwig_type = 'ckeditor';
@@ -31,7 +31,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $sid = ''; //'&'.session_name() . '=' . session_id();
 
     $editor = '&editor='. $wysiwig_type;
-    $language = '&lang='. $_SESSION['language_code'];
+    $language = '&lang='. $language_code;
 
     //Einrückung für Code
     $codetab = '            ';  
@@ -95,7 +95,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $customConfig['iframe_attributes'] = 'iframe_attributes: "sandbox: \'allow-scripts allow-same-origin\', allow: \'autoplay\'",';
   
     //Sprache aus Session
-    $customConfig['language'] = 'language: "'.$_SESSION['language_code'].'",';
+    $customConfig['language'] = 'language: "'.$language_code.'",';
 
     //CSS Dateien aus template laden
     //$css_path = '../templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
@@ -120,7 +120,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     switch($type) {
         // WYSIWYG editor content manager textarea named cont
         case 'content_manager':
-            $editorName = 'content_text_'.$addonType.'_'.$langID;
+            $editorName = 'content_text_'.$addonType.'_'.$language_id;
             $default_editor_height = 400;
             break;
             
@@ -130,26 +130,26 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
             $default_editor_height = 400;   
             break;
             
-        // WYSIWYG editor categories description textarea named categories_description[langID]
+        // WYSIWYG editor categories description textarea named categories_description[languages_id]
         case 'categories_description':
-            $editorName = 'categories_description_'.$langID;
+            $editorName = 'categories_description_'.$language_id;
             $default_editor_height = 400;
             break;
 
-        // WYSIWYG editor categories short description textarea named categories_short_description[langID]
+        // WYSIWYG editor categories short description textarea named categories_short_description[languages_id]
         case 'categories_short_description':
-            $editorName = 'categories_short_description_'.$langID;
+            $editorName = 'categories_short_description_'.$language_id;
             $default_editor_height = 300;
             break;
             
-        // WYSIWYG editor products_description textarea named products_description_langID
+        // WYSIWYG editor products_description textarea named products_description_languages_id
         case 'products_description':
-            $editorName = 'products_description_'.$langID;
+            $editorName = 'products_description_'.$language_id;
             $default_editor_height = 400;
             break;
-        // WYSIWYG editor products short description textarea named products_short_description_langID
+        // WYSIWYG editor products short description textarea named products_short_description_languages_id
         case 'products_short_description':
-            $editorName = 'products_short_description_'.$langID;
+            $editorName = 'products_short_description_'.$language_id;
             $default_editor_height = 300;
             break;
             
@@ -177,21 +177,21 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
             $default_editor_height = 400;
             break;
             
-        // WYSIWYG editor manufacturers description textarea named manufacturers_description[langID]
+        // WYSIWYG editor manufacturers description textarea named manufacturers_description[languages_id]
         case 'manufacturers_description':
-            $editorName = 'manufacturers_description_'.$langID;
+            $editorName = 'manufacturers_description_'.$language_id;
             $default_editor_height = 400;
             break;
 
-        // WYSIWYG editor manufacturers description textarea named manufacturers_description[langID]
+        // WYSIWYG editor manufacturers description textarea named manufacturers_description[languages_id]
         case 'manufacturers_short_description':
-            $editorName = 'manufacturers_short_description_'.$langID;
+            $editorName = 'manufacturers_short_description_'.$language_id;
             $default_editor_height = 300;
             break;
 
         // WYSIWYG editor banner_manager textarea
         case 'banner_manager':
-          $editorName = 'html_text[' . $langID . ']';
+          $editorName = 'html_text[' . $language_id . ']';
           $default_editor_height = 200;
           break;
     }

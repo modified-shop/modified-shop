@@ -110,9 +110,8 @@
   require (DIR_WS_INCLUDES.'head.php');
 
   if (USE_WYSIWYG == 'true' && ($action != 'preview' || $error == true)) {
-    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
-    $data=xtc_db_fetch_array($query);
-    echo xtc_wysiwyg('gv_mail', $data['code']);
+    echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
+    echo xtc_wysiwyg('gv_mail', $_SESSION['language_code'], $_SESSION['languages_id']);
   } 
 ?>
 </head>

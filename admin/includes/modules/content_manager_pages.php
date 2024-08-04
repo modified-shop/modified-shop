@@ -468,11 +468,10 @@ if (!$action || $action == 'delete') {
         <script type="text/javascript" src="includes/lang_tabs_menu/lang_tabs_menu.js"></script>
         <?php
         if (USE_WYSIWYG=='true') {
-          $query = xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
-          $data = xtc_db_fetch_array($query);
+          echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
           for ($i=0; $i<$content_count; $i++) {
             for ($l=0; $l<$languages_count; $l++) {
-              echo xtc_wysiwyg('content_manager', $data['code'], $content[$i][$languages[$l]['id']]['languages_id'], $i);
+              echo xtc_wysiwyg('content_manager', $_SESSION['language_code'], $content[$i][$languages[$l]['id']]['languages_id'], $i);
             }
           }
         }

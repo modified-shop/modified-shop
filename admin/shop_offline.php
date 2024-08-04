@@ -71,10 +71,8 @@
 <script type="text/javascript" src="includes/general.js"></script>
 <?php 
 if (USE_WYSIWYG == 'true') {
-  $query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
-  $data = xtc_db_fetch_array($query);
-  $languages = xtc_get_languages();
-  echo xtc_wysiwyg('shop_offline',$data['code']);
+  echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
+  echo xtc_wysiwyg('shop_offline', $_SESSION['language_code'], $_SESSION['languages_id']);
 }
 ?>
 </head>
