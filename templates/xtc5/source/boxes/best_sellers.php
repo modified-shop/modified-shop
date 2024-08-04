@@ -120,9 +120,9 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
     $box_content = array();
     if ($best_sellers_count >= MIN_DISPLAY_BESTSELLERS) {  
       while ($best_sellers = xtc_db_fetch_array($best_sellers_query, true)) {
+        $box_content[$rows] = $product->buildDataArray($best_sellers);
+        $box_content[$rows] = array_merge($box_content[$rows], array('ID' => xtc_row_number_format($rows + 1), 'COUNT' => xtc_row_number_format($rows + 1)));
         $rows ++;
-        $best_sellers = array_merge($best_sellers, array('ID' => xtc_row_number_format($rows)));
-        $box_content[] = $product->buildDataArray($best_sellers);
       }
     }
 
