@@ -96,6 +96,7 @@ if (xtc_not_null($cPath)) {
   $cPath_array = xtc_parse_category_path($cPath);
   $current_category_id = end($cPath_array);
   $cPath = category_redirect(xtc_get_category_path($current_category_id)); //verify $cPath
+  $cPath_array = xtc_parse_category_path($cPath); // renew cPath array
   $_SESSION['CatPath'] = $cPath;
 } else {
   $current_category_id = 0;
