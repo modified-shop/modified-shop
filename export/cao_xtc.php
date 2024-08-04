@@ -136,6 +136,7 @@ define('CONTENT_CONDITIONS', '');
 
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 require_once (DIR_FS_INC.'xtc_try_upload.inc.php');
+require_once (DIR_FS_INC.'xtc_get_all_get_params.inc.php');
 
 require_once(DIR_FS_LANGUAGES . $Lang_folder . '/admin/' . $Lang_folder . '.php');
 
