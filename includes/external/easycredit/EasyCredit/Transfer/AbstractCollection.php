@@ -74,7 +74,7 @@ abstract class AbstractCollection implements \IteratorAggregate, \Countable, \Ar
     /**
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): Iterator
     {
         return new \ArrayIterator($this->items);
     }
@@ -82,7 +82,7 @@ abstract class AbstractCollection implements \IteratorAggregate, \Countable, \Ar
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->items);
     }
