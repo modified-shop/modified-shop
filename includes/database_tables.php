@@ -127,8 +127,8 @@ $database_table_array = array(
   'TABLE_COOKIE_CONSENT_CATEGORIES' => 'cookie_consent_categories',
 );
 
-require_once(DIR_FS_INC.'auto_include.inc.php',
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/database_tables/','php') as $file) require ($file,
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/database_tables/','php') as $file) require ($file);
 
 // define 
 foreach ($database_table_array as $key => $val) {
