@@ -15,8 +15,8 @@
    Released under the GNU General Public License
 ---------------------------------------------------------------------------------------*/
 
-function xtc_wysiwyg($type, $language_code = '', $language_id = '', $addonType = '') 
-{
+  function xtc_wysiwyg($type, $language_code = '', $language_id = '', $addonType = '') {
+  
     if ($language_code == '') $language_code = $_SESSION['language_code'];
     if ($language_id == '') $language_id = $_SESSION['languages_id'];
 
@@ -120,82 +120,82 @@ function xtc_wysiwyg($type, $language_code = '', $language_id = '', $addonType =
     $editorName = '';
     
     switch($type) {
-        // WYSIWYG editor content manager textarea named cont
-        case 'content_manager':
-            $editorName = 'content_text_'.$addonType.'_'.$language_id;
-            $default_editor_height = 400;
-            break;
-            
-        // WYSIWYG editor content manager products content section textarea named file_comment
-        case 'products_content':
-            $editorName = 'file_comment';
-            $default_editor_height = 400;   
-            break;
-            
-        // WYSIWYG editor categories description textarea named categories_description[languages_id]
-        case 'categories_description':
-            $editorName = 'categories_description_'.$language_id;
-            $default_editor_height = 400;
-            break;
-
-        // WYSIWYG editor categories short description textarea named categories_short_description[languages_id]
-        case 'categories_short_description':
-            $editorName = 'categories_short_description_'.$language_id;
-            $default_editor_height = 300;
-            break;
-            
-        // WYSIWYG editor products_description textarea named products_description_languages_id
-        case 'products_description':
-            $editorName = 'products_description_'.$language_id;
-            $default_editor_height = 400;
-            break;
-        // WYSIWYG editor products short description textarea named products_short_description_languages_id
-        case 'products_short_description':
-            $editorName = 'products_short_description_'.$language_id;
-            $default_editor_height = 300;
-            break;
-            
-        // WYSIWYG editor newsletter textarea named newsletter_body
-        case 'newsletter':
-            $editorName = 'newsletter_body';
-            $default_editor_height = 300;
-            break;
-                    
-        // WYSIWYG editor mail textarea named message
-        case 'mail':
-            $editorName = 'message';
-            $default_editor_height = 400;
-            break;
-                    
-        // WYSIWYG editor gv_mail textarea named message
-        case 'gv_mail':
-            $editorName = 'message';
-            $default_editor_height = 400;
-            break;
-                    
-        // WYSIWYG editor offline_msg textarea named cont
-        case 'shop_offline':
-            $editorName = 'offline_msg';
-            $default_editor_height = 400;
-            break;
-            
-        // WYSIWYG editor manufacturers description textarea named manufacturers_description[languages_id]
-        case 'manufacturers_description':
-            $editorName = 'manufacturers_description_'.$language_id;
-            $default_editor_height = 400;
-            break;
-
-        // WYSIWYG editor manufacturers description textarea named manufacturers_description[languages_id]
-        case 'manufacturers_short_description':
-            $editorName = 'manufacturers_short_description_'.$language_id;
-            $default_editor_height = 300;
-            break;
-
-        // WYSIWYG editor banner_manager textarea
-        case 'banner_manager':
-          $editorName = 'html_text[' . $language_id . ']';
-          $default_editor_height = 200;
+      // WYSIWYG editor content manager textarea named cont
+      case 'content_manager':
+          $editorName = 'content_text_'.$addonType.'_'.$language_id;
+          $default_editor_height = 400;
           break;
+      
+      // WYSIWYG editor content manager products content section textarea named file_comment
+      case 'products_content':
+          $editorName = 'file_comment';
+          $default_editor_height = 400;   
+          break;
+      
+      // WYSIWYG editor categories description textarea named categories_description[languages_id]
+      case 'categories_description':
+          $editorName = 'categories_description_'.$language_id;
+          $default_editor_height = 400;
+          break;
+
+      // WYSIWYG editor categories short description textarea named categories_short_description[languages_id]
+      case 'categories_short_description':
+          $editorName = 'categories_short_description_'.$language_id;
+          $default_editor_height = 300;
+          break;
+      
+      // WYSIWYG editor products_description textarea named products_description_languages_id
+      case 'products_description':
+          $editorName = 'products_description_'.$language_id;
+          $default_editor_height = 400;
+          break;
+      // WYSIWYG editor products short description textarea named products_short_description_languages_id
+      case 'products_short_description':
+          $editorName = 'products_short_description_'.$language_id;
+          $default_editor_height = 300;
+          break;
+      
+      // WYSIWYG editor newsletter textarea named newsletter_body
+      case 'newsletter':
+          $editorName = 'newsletter_body';
+          $default_editor_height = 300;
+          break;
+              
+      // WYSIWYG editor mail textarea named message
+      case 'mail':
+          $editorName = 'message';
+          $default_editor_height = 400;
+          break;
+              
+      // WYSIWYG editor gv_mail textarea named message
+      case 'gv_mail':
+          $editorName = 'message';
+          $default_editor_height = 400;
+          break;
+              
+      // WYSIWYG editor offline_msg textarea named cont
+      case 'shop_offline':
+          $editorName = 'offline_msg';
+          $default_editor_height = 400;
+          break;
+      
+      // WYSIWYG editor manufacturers description textarea named manufacturers_description[languages_id]
+      case 'manufacturers_description':
+          $editorName = 'manufacturers_description_'.$language_id;
+          $default_editor_height = 400;
+          break;
+
+      // WYSIWYG editor manufacturers description textarea named manufacturers_description[languages_id]
+      case 'manufacturers_short_description':
+          $editorName = 'manufacturers_short_description_'.$language_id;
+          $default_editor_height = 300;
+          break;
+
+      // WYSIWYG editor banner_manager textarea
+      case 'banner_manager':
+        $editorName = 'html_text[' . $language_id . ']';
+        $default_editor_height = 200;
+        break;
     }
     
     $html = '';
@@ -203,7 +203,7 @@ function xtc_wysiwyg($type, $language_code = '', $language_id = '', $addonType =
     require_once(DIR_FS_INC.'auto_include.inc.php');
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/wysiwyg/','php') as $file) require ($file);
     
-    $customConfig = implode(PHP_EOL.$codetab,$customConfig);
+    $customConfig = implode(PHP_EOL.$codetab, $customConfig);
     
     if ($editorName != '') {
       $html .='
@@ -216,12 +216,11 @@ function xtc_wysiwyg($type, $language_code = '', $language_id = '', $addonType =
     }
     
     $html .=  $add_init ; 
-    $html = wysiwyg_add_javascript($js_src,$html);
+    $html = wysiwyg_add_javascript($js_src, $html);
     return $html;
-}
+  }
 
-function editorJSLink($js_src)
-{
+  function editorJSLink($js_src) {
     static $editorJSLinkCache;
     
     if (!isset ($editorJSLinkCache)) {
@@ -230,10 +229,9 @@ function editorJSLink($js_src)
       $editorJSLinkCache = '';
     }
     return $editorJSLinkCache;
-}
+  }
 
-function wysiwyg_add_javascript($js_src,$html)
-{
+  function wysiwyg_add_javascript($js_src, $html) {
     $html = editorJSLink($js_src).
     '<script type="text/javascript">
       $(document).ready(function() {
@@ -242,4 +240,4 @@ function wysiwyg_add_javascript($js_src,$html)
     </script>'. PHP_EOL;
 
     return $html;
-}
+  }
