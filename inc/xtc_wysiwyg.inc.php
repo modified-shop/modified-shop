@@ -15,8 +15,10 @@
    Released under the GNU General Public License
 ---------------------------------------------------------------------------------------*/
 
-function xtc_wysiwyg($type, $language_code, $language_id = '',$addonType='') 
+function xtc_wysiwyg($type, $language_code = '', $language_id = '', $addonType = '') 
 {
+    if ($language_code == '') $language_code = $_SESSION['language_code'];
+    if ($language_id == '') $language_id = $_SESSION['languages_id'];
 
     $wysiwig_type = 'ckeditor';
 
@@ -29,7 +31,7 @@ function xtc_wysiwyg($type, $language_code, $language_id = '',$addonType='')
     $default_editor_height = '400';
 
     $sid = ''; //'&'.session_name() . '=' . session_id();
-
+    
     $editor = '&editor='. $wysiwig_type;
     $language = '&lang='. $language_code;
 
@@ -241,4 +243,3 @@ function wysiwyg_add_javascript($js_src,$html)
 
     return $html;
 }
-?>

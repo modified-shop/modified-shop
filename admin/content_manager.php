@@ -389,7 +389,7 @@
     echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
     if ($set != '') {
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        echo xtc_wysiwyg('products_content', $languages[$i]['code'], $languages[$i]['id']);
+        echo xtc_wysiwyg('products_content', $_SESSION['language_code'], $languages[$i]['id']);
       }
     }
   }

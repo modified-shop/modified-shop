@@ -111,7 +111,7 @@
 
   if (USE_WYSIWYG == 'true' && ($action != 'preview' || $error == true)) {
     echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
-    echo xtc_wysiwyg('gv_mail', $_SESSION['language_code'], $_SESSION['languages_id']);
+    echo xtc_wysiwyg('gv_mail');
   } 
 ?>
 </head>

@@ -288,7 +288,7 @@
     if ($action == 'new') {
       echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
       for ($i = 0; $i < count($languages); $i++) {
-        echo xtc_wysiwyg('banner_manager', $languages[$i]['code'], $languages[$i]['id']);
+        echo xtc_wysiwyg('banner_manager', $_SESSION['language_code'], $languages[$i]['id']);
       }
     }
   }
