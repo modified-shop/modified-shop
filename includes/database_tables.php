@@ -9,8 +9,8 @@
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(database_tables.php,v 1.1 2003/03/14, www.oscommerce.com 
-   (c) 2003  nextcommerce (database_tables.php,v 1.8 2003/08/24, www.nextcommerce.org 
+   (c) 2002-2003 osCommerce(database_tables.php,v 1.1 2003/03/14; www.oscommerce.com 
+   (c) 2003  nextcommerce (database_tables.php,v 1.8 2003/08/24; www.nextcommerce.org 
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
