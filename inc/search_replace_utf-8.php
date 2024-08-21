@@ -93,6 +93,8 @@ function shopstat_getRegExps() {
       "'&(icirc|#238);|î'i"  => 'i',        //Lowercase i-circumflex Kleinbuchstaben i-Zirkumflex
       "'&(Iuml|#207);|Ï'i"   => 'I',        //Capital I-umlaut Capital I-Umlaut
       "'&(iuml|#239);|ï'i"   => 'i',        //Lowercase i-umlaut Kleinbuchstaben i-Umlaut
+      "'&(Ograve|#210);|Ò'i" => 'O',        //Großes O mit Grave
+      "'&(ograve|#242);|ò'i" => 'o',        //Kleines o mit Grave
       "'&(Ocirc|#212);|Ô'i"  => 'O',        //Capital O-circumflex O-Capital circumflexa
       "'&(ocirc|#244);|ô'i"  => 'o',        //Lowercase o-circumflex Kleinbuchstabe o-Zirkumflex
       "'&(OElig|#338);|Œ'i"  => 'OE',       //Capital OE ligature Capital OE Ligatur
@@ -150,8 +152,6 @@ function shopstat_getRegExps() {
   //Weitere Sonderzeichen
   if (defined('SPECIAL_CHAR_MORE') && SPECIAL_CHAR_MORE === true) {
     $sr_array_mo = array(  
-      "'&(Ograve|#210);|Ò'i" => 'O',        //Großes O mit Grave
-      "'&(ograve|#242);|ò'i" => 'o',        //Kleines o mit Grave
       "'&(Ograve|#210);|Ò'i" => 'O',        //Großes O mit Grave
       "'&(ograve|#242);|ò'i" => 'o',        //Kleines o mit Grave
       "'&(Oslash|#216);|Ø'i" => 'O',        //Großes O mit Schrägstrich
@@ -249,4 +249,3 @@ function shopstat_getRegExps() {
   
   return array($search, $replace);
 }
-?>
