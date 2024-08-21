@@ -152,7 +152,7 @@
     if ($gd['GD Version'] == '') {
       $gd['GD Version'] = 'undefined';
     }
-    if ($gd['GIF Read Support'] == 1 || $gd['GIF Support'] == 1) {
+    if ($gd['GIF Read Support'] == 1 || $gd['GIF Create Support'] == 1) {
       $status = true;
     } else {
       $error = true;
