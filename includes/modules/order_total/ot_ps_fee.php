@@ -117,7 +117,6 @@
               $order->info['tax'] += $tax;
               $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] += $tax;
               $ps_cost = $xtPrice->xtcAddTax($ps_cost, $ps_tax, false);
-              $order->info['total'] += $ps_cost;
             }
             
             if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
@@ -134,9 +133,10 @@
               }
               $order->info['tax'] += $tax;
               $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] += $tax;
-              $order->info['total'] += $ps_cost;
             }
           }
+
+          $order->info['total'] += $ps_cost;
           
           $this->output[] = array(
             'title' => $this->title . ':',
