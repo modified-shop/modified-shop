@@ -504,7 +504,7 @@
                       <?php
                     }
                     ?>
-                    <tr>
+                    <tr id="htmltext" <?php echo (($bInfo->banners_group == 'slider') ? 'style="display:none;"' : ''); ?>>
                       <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_HTML_TEXT; ?></td>
                       <td class="dataTableConfig col-middle"><?php echo xtc_draw_textarea_field('html_text[' . $languages[$i]['id'] . ']', 'soft', '40', '5', $bInfo->banners_html_text, 'class="textareaModule"'); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_HTML_TEXT_NOTE; ?></td>
@@ -703,6 +703,23 @@
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
     <br />
+    <script>
+      $(document).ready(function() {
+        set_html_text($("[name='banners_group']").val());
+      });
+      
+      $("[name='banners_group']").on('change', function (e) {
+        set_html_text($(this).val());
+      });
+      
+      function set_html_text($val) {
+        if ($val == 'slider') {
+          $('#htmltext').hide();
+        } else {
+          $('#htmltext').show();
+        }        
+      }
+    </script>
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
