@@ -136,7 +136,7 @@
           $catID = $this->getParent($catID);
           $cat[] = $cat_data['categories_name'];
         }
-        $this->CAT[$tmpID] = implode(' > ', $cat);
+        $this->CAT[$tmpID] = implode(' > ', array_reverse($cat));
         return $this->CAT[$tmpID];
       }
     }
