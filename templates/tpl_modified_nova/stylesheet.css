@@ -7847,7 +7847,7 @@ p.underline {
   background:#000;
 }
 .banner_item_image_inner:has(.banner_html_text):hover {
-  background:none;
+  background:rgba(0,0,0,0.10);
 }
 .banner_item_image_inner img {
   margin: auto;
