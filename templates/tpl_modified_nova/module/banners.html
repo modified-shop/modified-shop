@@ -1,7 +1,7 @@
 {if $banner_data.TEXT != ''}
-
-  {$banner_data.TEXT}
-
+  <div class="banner_html_text">
+    {$banner_data.TEXT}
+  </div>
 {elseif $banner_data.LINK != ''}
   {if isset($banner_data.IMAGE_SRC_MOBILE) && $banner_data.IMAGE_SRC_MOBILE != ''}
     <a title="{$banner_data.IMAGE_TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>

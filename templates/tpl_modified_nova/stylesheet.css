@@ -7846,6 +7846,9 @@ p.underline {
 .banner_item_image_inner:hover {
   background:#000;
 }
+.banner_item_image_inner:has(.banner_html_text):hover {
+  background:none;
+}
 .banner_item_image_inner img {
   margin: auto;
   position: absolute;
