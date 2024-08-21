@@ -43,8 +43,9 @@
       require_once (DIR_WS_CLASSES.'language.php');
       $lng = new language($_POST['language']);
       
-      $separator = $_POST['configuration']['MODULE_PRODUCTS_EXPORT_SEPARATOR'];
       $enclosure = $_POST['configuration']['MODULE_PRODUCTS_EXPORT_ENCLOSURE'];
+      $separator = $_POST['configuration']['MODULE_PRODUCTS_EXPORT_SEPARATOR'];
+      if ($separator == '') $separator = ',';
       
       $export_query = xtc_db_query("SELECT p.*,
                                            pd.products_name,
