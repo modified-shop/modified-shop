@@ -88,7 +88,6 @@
               $order->info['tax'] += $tax;
               $order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"] += $tax;
               $lof_cost = $xtPrice->xtcAddTax($lof_cost, $lof_tax, false);
-              $order->info['total'] += $lof_cost;
             }
         
             if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
@@ -105,9 +104,10 @@
               }
               $order->info['tax'] += $tax;
               $order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"] += $tax;
-              $order->info['total'] += $lof_cost;
             }
           }
+
+          $order->info['total'] += $lof_cost;
           
           $this->output[] = array(
             'title' => $this->title . ':',
