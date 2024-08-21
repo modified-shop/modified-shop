@@ -385,9 +385,9 @@ if (xtc_not_null($action) && !$box) {
                     <td class="boxCenterLeft">
                       <table class="tableBoxCenter collapse">
                         <?php
-                        $directory_array = create_directory_array($module_directory,$file_extension);
+                        $directories_array = create_directory_array($module_directory,$file_extension);
                         $installed_modules = array();
-                        foreach ($directory_array as $directory_array) {
+                        foreach ($directories_array as $directory_array) {
                           for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
                             $file = $directory_array[$i];
                             if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
