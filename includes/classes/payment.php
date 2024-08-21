@@ -161,8 +161,14 @@
               $allowed_zones = explode(',', strtoupper(preg_replace("'[\r\n\s]+'",'',constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'))));
               $allowed_zones = array_filter($allowed_zones);
             }
-            if ((isset($_SESSION['billing_zone']) 
-                 && in_array($_SESSION['billing_zone'], $allowed_zones) == true
+            
+            $zone = isset($_SESSION['billing_zone']) ? $_SESSION['billing_zone'] : '';
+            if (in_array($include_modules[$i]['class'], array('cod'))) {
+              $zone = isset($_SESSION['delivery_zone']) ? $_SESSION['delivery_zone'] : '';
+            }
+            
+            if (($zone != ''
+                 && in_array($zone, $allowed_zones) == true
                  ) || count($allowed_zones) == 0
                 )
             {
