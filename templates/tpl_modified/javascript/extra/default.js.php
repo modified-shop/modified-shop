@@ -35,7 +35,7 @@
 
   <?php if (basename($PHP_SELF) != FILENAME_SHOPPING_CART && !strpos($PHP_SELF, 'checkout')) { ?>
     $(function() {
-      $('#toggle_cart').click(function() {
+      $('body').on('click', '#toggle_cart', function() {
         $('.toggle_cart').slideToggle('slow');
         $('.toggle_wishlist').slideUp('slow');
         ac_closing();
@@ -55,7 +55,7 @@
     });     
 
     $(function() {
-      $('#toggle_wishlist').click(function() {
+      $('body').on('click', '#toggle_wishlist', function() {
         $('.toggle_wishlist').slideToggle('slow');
         $('.toggle_cart').slideUp('slow');
         ac_closing();

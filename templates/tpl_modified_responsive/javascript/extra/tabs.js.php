@@ -39,7 +39,7 @@
       }
     });
 
-    $('.cus_check_gift label').click(function() {
+    $('.cus_check_gift label').on('click', function() {
       $('#rd-cot_gv').prop('checked', !$('#rd-cot_gv').prop('checked'));
     });
    
