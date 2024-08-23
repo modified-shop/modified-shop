@@ -23,19 +23,19 @@
     $('body').addClass('admin_mode');
     <?php } ?>
     
-    $(".topscroll").click(function(event) {
+    $('body').on('click', '.topscroll', function(event) {
       event.preventDefault();
       $("html, body").animate({ scrollTop: 0 }, "slow");
       return false;
     });
     
-    $(".listing_topscroll").click(function(event) {
+    $('body').on('click', '.listing_topscroll', function(event) {
       event.preventDefault();
       $("html, body").animate({ scrollTop: $('.listing').offset().top - 120}, "slow");
       return false;
     });
 
-    $(".listing_bottomscroll").click(function(event) {
+    $('body').on('click', '.listing_bottomscroll', function(event) {
       event.preventDefault();
       $("html, body").animate({ scrollTop: $('.listing').offset().top + $(".listing").outerHeight() - $(window).height() + 80}, "slow");
       return false;
@@ -65,7 +65,7 @@
   }
 
   $(function() {
-    $('#toggle_account').click(function() {
+    $('body').on('click', '#toggle_account', function() {
       $('body').addClass('no_scroll');
       $('.toggle_account').addClass('active');
       $('.toggle_overlay').fadeIn('slow');
@@ -76,7 +76,7 @@
       return false;
     });
 
-    $('#toggle_settings').click(function() {
+    $('body').on('click', '#toggle_settings', function() {
       $('body').addClass('no_scroll');
       $('.toggle_settings').addClass('active');
       $('.toggle_overlay').fadeIn('slow');
@@ -87,7 +87,7 @@
       return false;
     });
     
-    $('#toggle_filter').click(function() {
+    $('body').on('click', '#toggle_filter', function() {
       $('body').addClass('no_scroll');
       $('.toggle_filter').addClass('active');
       $('.toggle_overlay').fadeIn('slow');
@@ -99,7 +99,7 @@
       return false;
     });
 
-    $('html').click(function(e){
+    $('html').on('click', function(e){
       var target = $(e.target);
       var parents = target.parents().map(function(){return $(this).attr("class")}).get().join(',');
       parents = ","+parents+",";
@@ -186,31 +186,31 @@
   });   
   
   $(function() {
-      $('#search_short').click(function(event) {
-        show_search_field(event);
-        $('#inputString').focus();
-      });
+    $('#search_short').on('click', function(event) {
+      show_search_field(event);
+      $('#inputString').focus();
+    });
 
-      $(".toggle_search").on("click", function (event) {
-        show_search_field(event);
-      });
+    $(".toggle_search").on("click", function (event) {
+      show_search_field(event);
+    });
 
-      $('#search_closer').click(function(event) {
-        close_search_field(event);
-      });
+    $('#search_closer').on('click', function(event) {
+      close_search_field(event);
+    });
 
-      var globalWidth = window.innerWidth;
+    var globalWidth = window.innerWidth;
 
-      $(window).resize(function() {
-        if (window.innerWidth <= 920) {
-          if(globalWidth != window.innerWidth){
-            globalWidth = window.innerWidth;
-            $(".toggle_search").hide();
-          }
-        } else {
-          $(".toggle_search").show();
+    $(window).resize(function() {
+      if (window.innerWidth <= 920) {
+        if(globalWidth != window.innerWidth){
+          globalWidth = window.innerWidth;
+          $(".toggle_search").hide();
         }
-      });
+      } else {
+        $(".toggle_search").show();
+      }
+    });
   });
  
   function close_search_field(event) {
