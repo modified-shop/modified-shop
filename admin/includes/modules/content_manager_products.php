@@ -71,7 +71,8 @@ if (!$action || in_array($action, array('delete', 'list'))) {
               <td class="dataTableContent txta-c">--</td>
             </tr>
             <?php
-              $content_query_raw = "SELECT *
+              $content_query_raw = "SELECT pc.*,
+                                           l.directory
                                       FROM ".TABLE_PRODUCTS_CONTENT." pc
                                       JOIN ".TABLE_LANGUAGES." l
                                            ON pc.languages_id = l.languages_id
