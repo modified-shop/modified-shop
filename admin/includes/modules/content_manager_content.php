@@ -426,7 +426,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
               ?>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_FILENAME; ?></td>
-                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image('../'. DIR_WS_IMAGES. 'icons/filetype/icon_'.str_replace('.','',strstr($content['content_file'],'.')).'.gif').$content['content_file']; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image('../'. DIR_WS_IMAGES. 'icons/filetype/icon_'.substr($content['content_file'], strrpos($content['content_file'], '.') + 1).'.gif').' '.$content['content_file']; ?></td>
               </tr>
               <?php
             }
