@@ -54,7 +54,8 @@ if (!$action || in_array($action, array('delete', 'list'))) {
               <td class="dataTableContent txta-c">--</td>
             </tr>
             <?php
-              $content_query_raw = "SELECT *
+              $content_query_raw = "SELECT ec.*,
+                                           l.directory
                                       FROM ".TABLE_EMAIL_CONTENT." ec
                                       JOIN ".TABLE_LANGUAGES." l
                                            ON ec.languages_id = l.languages_id

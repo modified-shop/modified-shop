@@ -66,7 +66,8 @@ if (!$action || in_array($action, array('delete', 'list'))) {
               <td class="dataTableContent txta-c">--</td>
             </tr>
             <?php
-              $content_query_raw = "SELECT *
+              $content_query_raw = "SELECT cmc.*,
+                                           l.directory
                                       FROM ".TABLE_CONTENT_MANAGER_CONTENT." cmc
                                       JOIN ".TABLE_LANGUAGES." l
                                            ON cmc.languages_id = l.languages_id
