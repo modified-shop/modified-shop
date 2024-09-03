@@ -90,7 +90,7 @@
   define('TEXT_EMAIL_CONTENT', 'E-Mail Content:');
   define('TEXT_EMAIL_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebigen Dateityp einer E-Mail als Anhang hinzuzuf&uuml;gen.<br />Z.B. PDF f&uuml;r Rechtstexte, usw...<br /><br />');
 
-  define('TEXT_FILENAME','Benutze Datei:');
+  define('TEXT_FILENAME','Benutzte Datei:');
   define('TEXT_FILE_DESC','Beschreibung:');
   define('USED_SPACE','Verwendeter Speicherplatz:');
   define('TABLE_HEADING_CONTENT_FILESIZE','Dateigr&ouml;&szlig;e');
