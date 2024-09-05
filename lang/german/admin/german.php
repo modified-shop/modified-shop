@@ -641,4 +641,3 @@ define('TXT_PER',' pro ');
 define('TEXT_NO_PAYMENT', 'Keine Zahlart');
 
 define('TEXT_ERROR_EMPTY_NOT_ALLOWED', '<span class="error_message" style="display:inline-block;">Pflichtfeld (bitte ausf&uuml;llen)</span>');
-
