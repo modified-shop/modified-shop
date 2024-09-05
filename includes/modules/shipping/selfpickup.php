@@ -64,11 +64,13 @@ class selfpickup
         }
 
         if ($this->check() > 0) {
-          $this->check_install('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME');
-          $this->check_install('MODULE_SHIPPING_SELFPICKUP_LASTNAME');
-          $this->check_install('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS');
-          $this->check_install('MODULE_SHIPPING_SELFPICKUP_POSTCODE');
-          $this->check_install('MODULE_SHIPPING_SELFPICKUP_CITY');
+          if (defined('RUN_MODE_ADMIN')) {
+            $this->check_install('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME');
+            $this->check_install('MODULE_SHIPPING_SELFPICKUP_LASTNAME');
+            $this->check_install('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS');
+            $this->check_install('MODULE_SHIPPING_SELFPICKUP_POSTCODE');
+            $this->check_install('MODULE_SHIPPING_SELFPICKUP_CITY');
+          }
           
           if (!defined('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS')) {
             xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
