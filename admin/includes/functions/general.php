@@ -2491,6 +2491,14 @@
     }
   }
   
+  
+  function xtc_cfg_check_not_empty($val) {
+    if (empty($val)) {
+      $val = TEXT_ERROR_EMPTY_NOT_ALLOWED;
+    }
+    return $val;
+  }
+  
   /********************************************** NOT USED FUNCTIONS **********************************************/
   
   /**

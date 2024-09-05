@@ -34,9 +34,7 @@ class selfpickup
     var $_check;
 
     function __construct()
-    {
-        global $order;
-        
+    {        
         $this->code = 'selfpickup';
         $this->title = MODULE_SHIPPING_SELFPICKUP_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_SELFPICKUP_TEXT_DESCRIPTION;
@@ -45,11 +43,7 @@ class selfpickup
         $this->sort_order = ((defined('MODULE_SHIPPING_SELFPICKUP_SORT_ORDER')) ? MODULE_SHIPPING_SELFPICKUP_SORT_ORDER : '');
         $this->enabled = ((defined('MODULE_SHIPPING_SELFPICKUP_STATUS') && MODULE_SHIPPING_SELFPICKUP_STATUS == 'True') ? true : false);
 
-        if ($this->enabled == true 
-            && !defined('RUN_MODE_ADMIN')
-            && is_object($order)
-            )
-        {
+        if ($this->enabled == true) {
           $check_flag = true;
           if ($address = $this->address()) {
             $check_flag = false;
@@ -70,6 +64,12 @@ class selfpickup
         }
 
         if ($this->check() > 0) {
+          $this->check_install('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME');
+          $this->check_install('MODULE_SHIPPING_SELFPICKUP_LASTNAME');
+          $this->check_install('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS');
+          $this->check_install('MODULE_SHIPPING_SELFPICKUP_POSTCODE');
+          $this->check_install('MODULE_SHIPPING_SELFPICKUP_CITY');
+          
           if (!defined('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS')) {
             xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
           }
@@ -177,17 +177,31 @@ class selfpickup
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_STATUS', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_ALLOWED', '', '6', '0', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_SORT_ORDER', '0', '6', '4', now())");
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME', '', '6', '4', now())");
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_LASTNAME', '', '6', '4', now())");
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME', '', '6', '4', 'xtc_cfg_check_not_empty', now())");
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_LASTNAME', '', '6', '4', 'xtc_cfg_check_not_empty', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_COMPANY', '', '6', '4', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_SUBURB', '', '6', '4', now())");
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS', '', '6', '4', now())");
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_POSTCODE', '', '6', '4', now())");
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_CITY', '', '6', '4', now())");
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS', '', '6', '4', 'xtc_cfg_check_not_empty', now())");
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_POSTCODE', '', '6', '4', 'xtc_cfg_check_not_empty', now())");
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_CITY', '', '6', '4', 'xtc_cfg_check_not_empty', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_COUNTRY', '".STORE_COUNTRY."', '6', '7', 'xtc_get_country_name', 'xtc_cfg_pull_down_country_list(', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
     }
 
+    function check_install($key) {
+      $check_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key = '".xtc_db_input($key)."'");
+      if (xtc_db_num_rows($check_query) > 0) {
+        $check = xtc_db_fetch_array($check_query);
+        if ($check['use_function'] == '') {
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET use_function = 'xtc_cfg_check_not_empty'
+                         WHERE configuration_key = '".xtc_db_input($key)."'");
+        }
+      }
+    }
+    
     function remove()
     {
         xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE 'MODULE_SHIPPING_SELFPICKUP_%'");
