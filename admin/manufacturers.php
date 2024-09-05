@@ -243,6 +243,7 @@ if (USE_WYSIWYG == 'true') {
 	  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       echo xtc_wysiwyg('manufacturers_description', $_SESSION['language_code'], $languages[$i]['id']);
       echo xtc_wysiwyg('manufacturers_short_description', $_SESSION['language_code'], $languages[$i]['id']);
+      echo xtc_wysiwyg('manufacturers_add_description', $_SESSION['language_code'], $languages[$i]['id']);
 	  }
 	}
 }

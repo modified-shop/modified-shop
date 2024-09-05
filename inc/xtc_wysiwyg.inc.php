@@ -191,6 +191,12 @@
           $default_editor_height = 300;
           break;
 
+      // WYSIWYG editor manufacturers add description textarea named manufacturers_add_description[languages_id]
+      case 'manufacturers_add_description':
+          $editorName = 'manufacturers_add_description_'.$language_id;
+          $default_editor_height = 200;
+          break;
+
       // WYSIWYG editor banner_manager textarea
       case 'banner_manager':
         $editorName = 'html_text[' . $language_id . ']';
