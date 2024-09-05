@@ -312,7 +312,7 @@
               $key_array = $module->keys();     
               foreach ($key_array as $key) {
                 if (!defined($key)) {
-                  $info[] = '<li>'.$class.'</li>';
+                  $info[] = '<li>'.$module->title.' ('.$class.')</li>';
                   break;
                 }
               }

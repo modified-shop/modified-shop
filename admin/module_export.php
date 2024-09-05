@@ -312,7 +312,7 @@
               $key_array = $module->keys();     
               foreach ($key_array as $key) {
                 if (!defined($key)) {
-                  $info[] = '<li>'.$class.'</li>';
+                  $info[] = '<li>'.$module->title.' ('.$class.')</li>';
                   break;
                 }
               }
@@ -413,6 +413,7 @@ if (xtc_not_null($action) && !$box) {
                                 </tr>
                                 <tr class="dataTableHeadingRow">
                                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
                                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
                                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
                                 </tr>
@@ -426,6 +427,7 @@ if (xtc_not_null($action) && !$box) {
                                 </tr>
                                 <tr class="dataTableHeadingRow">
                                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
                                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
                                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
                                 </tr>
@@ -444,6 +446,7 @@ if (xtc_not_null($action) && !$box) {
                                 ?>
                                 <tr <?php echo $tr_attribute;?>>
                                 <td class="dataTableContent"><?php echo $module->title; ?></td>
+                                <td class="dataTableContent"><?php echo str_replace('.php','',$file); ?></td>
                                 <td class="dataTableContent  txta-c">
                                   <?php
                                     if ($module->check() > 0) {
