@@ -206,6 +206,7 @@
       $this->counter = $counter;
       
       if (is_file($this->destination.$name.(($this->counter != '') ? '-'.$this->counter : '').$extension)) {
+        if (is_string($this->counter)) $this->counter = (int)$this->counter;
         $this->counter ++;
         $this->check_filename($name, $extension, $this->counter);
       }
