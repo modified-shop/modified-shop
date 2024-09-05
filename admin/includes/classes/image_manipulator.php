@@ -33,9 +33,12 @@
       $this->m = (int)$max_width;
       $this->n = (int)$max_height;
       $this->compile();
+
       if($this->c !== "") {
         $this->manipulate();
         $this->create();
+      } elseif(is_file($this->a) && $this->d !== "") {
+        copy($this->a, $this->d);
       }
     }
 
@@ -75,6 +78,7 @@
     }
 
     function compile() {
+      $this->s = Null;
       $this->h = getimagesize($this->a);
       if(is_array($this->h)){
         $this->i = $this->h[0];
@@ -97,8 +101,9 @@
         $this->p = ($this->j / $this->n);
         $this->q = ($this->o > $this->p) ? $this->m : round($this->i / $this->p); // width
         $this->r = ($this->o > $this->p) ? round($this->j / $this->o) : $this->n; // height
+
+        $this->s = ($this->k < 4) ? ($this->k < 3) ? ($this->k < 2) ? ($this->k < 1) ? Null : imagecreatefromgif($this->a) : imagecreatefromjpeg($this->a) : imagecreatefrompng($this->a) : Null;
       }
-      $this->s = ($this->k < 4) ? ($this->k < 3) ? ($this->k < 2) ? ($this->k < 1) ? Null : imagecreatefromgif($this->a) : imagecreatefromjpeg($this->a) : imagecreatefrompng($this->a) : Null;
       if($this->s !== Null) {
         // Creates an new image: $this->t. $this->k is the image type.
         $this->u = $this->imagecopyresampled_adv($this->k, $this->t, $this->s, 0, 0, 0, 0, $this->q, $this->r, $this->i, $this->j);
@@ -368,7 +373,7 @@
     
     function create() {
       if($this->s !== Null) {
-        if($this->d !== "") {
+        if(isset($this->k) && $this->d !== "") {
           $image_type = $this->k;
 
           ob_start();
@@ -401,7 +406,7 @@
     }
 
     function createWebp() {
-      if ($this->d !== "" && is_file($this->d)) {
+      if (isset($this->k) && $this->d !== "" && is_file($this->d)) {
         $image_type = $this->k;
         $destination = substr($this->d, 0, strrpos($this->d, '.')).'.webp';
 
