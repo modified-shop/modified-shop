@@ -112,8 +112,10 @@ class PayonePayment {
 	function update_status() {
 		global $order;
     
-    $forbidden_array = array('selfpickup_selfpickup' => 'payone_cod');
-    if (isset($forbidden_array[$_SESSION['shipping']['id']]) &&  $forbidden_array[$_SESSION['shipping']['id']] == $this->code) {
+    if (strpos($_SESSION['shipping']['id'], 'selfpickup') !== false
+        && $this->code == 'payone_cod'
+        )
+    {
       $this->enabled = false;
     }
 		

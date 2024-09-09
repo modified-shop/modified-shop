@@ -64,11 +64,12 @@ class cod {
     if (isset($_SESSION['shipping']) 
         && is_array($_SESSION['shipping'])
         && array_key_exists('id', $_SESSION['shipping']) 
-        && $_SESSION['shipping']['id'] == 'selfpickup_selfpickup'
+        && strpos($_SESSION['shipping']['id'], 'selfpickup') !== false
         )
     {
       $this->enabled = false;
     }
+    
     if (($this->enabled == true) && ((int) MODULE_PAYMENT_COD_ZONE > 0)) {
       $check_flag = false;
       $check_query = xtc_db_query("SELECT zone_id 
