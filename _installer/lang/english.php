@@ -55,7 +55,7 @@
   define('TEXT_COPYRIGHT', '<span class="magenta">mod</span><span class="darkgrey">ified</span> eCommerce Shopsoftware &copy; 2009 - '.date('Y'));
   define('TEXT_AUTOUPDATER_HEADING', 'Updating');
   define('TEXT_AUTOUPDATER_TEMPLATE_HEADING', 'Template update');
-  define('TEXT_AUTOUPDATER_TEMPLATE_INFO', 'Detailed instructions for the template update according to your shop version can be found here.');
+  define('TEXT_AUTOUPDATER_TEMPLATE_INFO', 'Detailed instructions for the template update according to your current shop version can be found here.');
   define('TEXT_AUTOUPDATER_SUPPORT_HEADING', 'Request update');
   define('TEXT_AUTOUPDATER_SUPPORT_INFO', 'We would be happy to support you in updating your template. Simply request a non-binding offer from us.');
   define('TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE', 'The support is currently not available. Please submit your request directly via the&nbsp;<a href="https://www.modified-shop.org/kontakt" target="_blank">contact form</a>');

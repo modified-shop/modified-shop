@@ -55,7 +55,7 @@
   define('TEXT_COPYRIGHT', '<span class="magenta">mod</span><span class="darkgrey">ified</span> eCommerce Shopsoftware &copy; 2009 - '.date('Y'));
   define('TEXT_AUTOUPDATER_HEADING', 'Aktualisierung');
   define('TEXT_AUTOUPDATER_TEMPLATE_HEADING', 'Template Update');
-  define('TEXT_AUTOUPDATER_TEMPLATE_INFO', 'Eine detaillierte Anleitung f&uuml;r das Template Update entsprechend Ihrer Shopversion finden Sie hier.');
+  define('TEXT_AUTOUPDATER_TEMPLATE_INFO', 'Eine detaillierte Anleitung f&uuml;r das Template Update entsprechend Ihrer aktuellen Shopversion finden Sie hier.');
   define('TEXT_AUTOUPDATER_SUPPORT_HEADING', 'Update anfragen');
   define('TEXT_AUTOUPDATER_SUPPORT_INFO', 'Gerne unterst&uuml;tzen wir Sie beim Update Ihres Templates. Fordern Sie einfach ein unverbindliches Angebot bei uns an.');
   define('TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE', 'Der Support ist gerade nicht erreichbar. Bitte stellen Sie Ihre Anfrage direkt &uuml;ber das&nbsp;<a href="https://www.modified-shop.org/kontakt" target="_blank">Kontaktformular</a>');
