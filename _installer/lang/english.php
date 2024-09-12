@@ -55,7 +55,7 @@
   define('TEXT_COPYRIGHT', '<span class="magenta">mod</span><span class="darkgrey">ified</span> eCommerce Shopsoftware &copy; 2009 - '.date('Y'));
   define('TEXT_AUTOUPDATER_HEADING', 'Updating');
   define('TEXT_AUTOUPDATER_TEMPLATE_HEADING', 'Template update');
-  define('TEXT_AUTOUPDATER_TEMPLATE_INFO', 'The template still needs to be updated for the full functionality of the new shop version.');
+  define('TEXT_AUTOUPDATER_TEMPLATE_INFO', 'Detailed instructions for the template update according to your shop version can be found here.');
   define('TEXT_AUTOUPDATER_SUPPORT_HEADING', 'Request update');
   define('TEXT_AUTOUPDATER_SUPPORT_INFO', 'We would be happy to support you in updating your template. Simply request a non-binding offer from us.');
   define('TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE', 'The support is currently not available. Please submit your request directly via the&nbsp;<a href="https://www.modified-shop.org/kontakt" target="_blank">contact form</a>');
@@ -71,7 +71,7 @@
   define('TEXT_DELETE_FILES_SUCCESS', 'Obsolete files deleted successfully');
   define('TEXT_DELETE_FILES_ERROR', 'The following files could not be deleted:');
   define('TEXT_DELETE_DIR_ERROR', 'The following directories could not be deleted:');
-  define('TEXT_INFO_TEMPLATE_UPDATE', 'The template must be updated.');
+  define('TEXT_INFO_TEMPLATE_UPDATE', 'Third party and renamed templates must be updated manually before updating the shop!<br />Only the supplied standard templates are updated automatically!');
 
   define('TEXT_CONFIGURE', 'Recreate configuration file (configure.php)');
   define('TEXT_CONFIGURE_DESC', 'Here you can update the configure.php file to make sure it is up to date.');
