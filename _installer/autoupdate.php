@@ -47,15 +47,62 @@
          ->setConfigDir(__DIR__.'/lang')
          ->SetCaching(0);
 
+  if (isset($_GET['action'])
+      && $_GET['action'] == 'request'
+      )
+  {
+    modified_api::reset();
+    $response = modified_api::request('modified/support/'.$_SESSION['language_code']);
+    
+    if (!is_array($response) || count($response) < 1) {
+      $messageStack->add_session('update', TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE);
+    } else {
+      $message_array = array(
+        'PHP Version' => phpversion(),
+        'Shop Domain' => HTTP_SERVER.DIR_WS_CATALOG,
+        'Shop Version' => get_shop_version(),
+        'Template' => CURRENT_TEMPLATE,
+      );
+    
+      $message = '';
+      foreach ($message_array as $k => $v) {
+        $message .= $k . ': ' . xtc_db_prepare_input($v). "\n";
+      }
+  
+      xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
+                   EMAIL_SUPPORT_NAME, 
+                   $response['mail']['address'], 
+                   $response['mail']['name'], 
+                   EMAIL_SUPPORT_FORWARDING_STRING, 
+                   EMAIL_SUPPORT_REPLY_ADDRESS, 
+                   EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
+                   '', 
+                   '', 
+                   $response['mail']['templatesubject'].STORE_NAME, 
+                   nl2br($message), 
+                   $message);
+    
+      $messageStack->add_session('update', $response['stack']['success'], 'success');
+    }
+
+    $_SESSION['template_request'] = true;
+    xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
+  }
+
   $smarty->assign('BUTTON_DB_BACKUP', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_DB_BACKUP.'</a>');
   
   $smarty->assign('AUTOUPDATE', true);
   $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER, 'action=shop', $request_type).'">'.BUTTON_SHOP.'</a>');
-  $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdate', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'uaction=update', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
-  $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_UPDATE.'</button>');
-  $smarty->assign('FORM_END', '</form>');
+  if (!isset($_SESSION['template_request'])) {
+    $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdate', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'uaction=update', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+    $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_UPDATE.'</button>');
+    $smarty->assign('FORM_END', '</form>');
+  }
 
   $smarty->assign('LINK_DB_BACKUP', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type));
+  
+  $smarty->assign('BUTTON_TEMPLATE_UPDATE', '<a target="_blank" href="https://www.modified-shop.org/wiki/Tutorial:_Template_eines_xt:Commerce_Shops_in_der_modified_eCommerce_Shopsoftware_weiter_verwenden">'.BUTTON_TEMPLATE_UPDATE.'</a>');
+  $smarty->assign('BUTTON_REQUEST_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=request', $request_type).'">'.BUTTON_REQUEST_UPDATE.'</a>');
   
   $modulelist = array(
     array(
@@ -221,11 +268,10 @@
           $smarty->assign('UPDATE_ERROR', $smarty->fetch('error.html'));
           $smarty->clear_assign('error_message');
           
-          if ($error !== true && $integrity_error === true) {
+          if ($error !== true && $integrity_error === true && !isset($_SESSION['template_request'])) {
             $messageStack->add('update', sprintf(ERROR_FILE_INTEGRITY, count($checksum_array)));
             $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdate', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'uaction=update&step=2', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
             $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_UPDATE_CONTINUE.'</button>');
-            
           }
           if ($error === true) {
             $messageStack->add('update', ERROR_AUTOUPDATE);
@@ -378,50 +424,7 @@
 
       case 'finish':
         $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER, 'action=shop', $request_type).'">'.BUTTON_SHOP.'</a>');
-        $smarty->assign('BUTTON_TEMPLATE_UPDATE', '<a target="_blank" href="https://www.modified-shop.org/wiki/Tutorial:_Template_eines_xt:Commerce_Shops_in_der_modified_eCommerce_Shopsoftware_weiter_verwenden">'.BUTTON_TEMPLATE_UPDATE.'</a>');
-        $smarty->assign('BUTTON_REQUEST_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'uaction=update&step=finish&action=request', $request_type).'">'.BUTTON_REQUEST_UPDATE.'</a>');
-        
-        if (isset($_GET['action'])
-            && $_GET['action'] == 'request'
-            )
-        {
-          modified_api::reset();
-          $response = modified_api::request('modified/support/'.$_SESSION['language_code']);
-          
-          if (!is_array($response) || count($response) < 1) {
-            $smarty->assign('BUTTON_REQUEST_UPDATE', '');
-            $smarty->assign('error_message', TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE);
-          } else {
-            $message_array = array(
-              'PHP Version' => phpversion(),
-              'Shop Domain' => HTTP_SERVER.DIR_WS_CATALOG,
-              'Shop Version' => get_shop_version(),
-              'Template' => CURRENT_TEMPLATE,
-            );
-          
-            $message = '';
-            foreach ($message_array as $k => $v) {
-              $message .= $k . ': ' . xtc_db_prepare_input($v). "\n";
-            }
-        
-            xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
-                         EMAIL_SUPPORT_NAME, 
-                         $response['mail']['address'], 
-                         $response['mail']['name'], 
-                         EMAIL_SUPPORT_FORWARDING_STRING, 
-                         EMAIL_SUPPORT_REPLY_ADDRESS, 
-                         EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
-                         '', 
-                         '', 
-                         $response['mail']['templatesubject'].STORE_NAME, 
-                         nl2br($message), 
-                         $message);
-          
-            $smarty->assign('BUTTON_REQUEST_UPDATE', '');
-            $smarty->assign('success_message', $response['stack']['success']);
-          }
-        }
-        
+                
         if (isset($_SESSION['offline'])
             && $_SESSION['offline'] == 2
             )

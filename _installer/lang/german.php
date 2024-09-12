@@ -71,6 +71,7 @@
   define('TEXT_DELETE_FILES_SUCCESS', 'Alte Dateien erfolgreich gel&ouml;scht');
   define('TEXT_DELETE_FILES_ERROR', 'Folgende Dateien konnten nicht gel&ouml;scht werden:');
   define('TEXT_DELETE_DIR_ERROR', 'Folgende Verzeichnisse konnten nicht gel&ouml;scht werden:');
+  define('TEXT_INFO_TEMPLATE_UPDATE', 'Das Template muss aktualisiert werden.');
 
   define('TEXT_CONFIGURE', 'Konfigurations-Datei (configure.php) aktualisieren');
   define('TEXT_CONFIGURE_DESC', 'Hier k&ouml;nnen Sie die configure.php Datei aktualisieren um sicher zu gehen, dass sie dem aktuelle Stand entspricht.');
