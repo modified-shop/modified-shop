@@ -71,7 +71,7 @@
   define('TEXT_DELETE_FILES_SUCCESS', 'Obsolete files deleted successfully');
   define('TEXT_DELETE_FILES_ERROR', 'The following files could not be deleted:');
   define('TEXT_DELETE_DIR_ERROR', 'The following directories could not be deleted:');
-  define('TEXT_INFO_TEMPLATE_UPDATE', 'Das Template muss aktualisiert werden.');
+  define('TEXT_INFO_TEMPLATE_UPDATE', 'The template must be updated.');
 
   define('TEXT_CONFIGURE', 'Recreate configuration file (configure.php)');
   define('TEXT_CONFIGURE_DESC', 'Here you can update the configure.php file to make sure it is up to date.');
