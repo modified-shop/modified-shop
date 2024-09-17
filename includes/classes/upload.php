@@ -131,6 +131,11 @@
       $name_arr = explode('.', $this->filename);
       $extension = '.'.array_pop($name_arr);
       $name = implode('.', $name_arr);
+
+      // remove not allowed chars
+      include_once(DIR_FS_INC.'seo_url_href_mask.php');
+      $name  = seo_url_href_mask($name);
+
       $this->filename = $this->check_filename($name, $extension);
       
       if (move_uploaded_file($this->file['tmp_name'], $this->destination . $this->filename)) {
