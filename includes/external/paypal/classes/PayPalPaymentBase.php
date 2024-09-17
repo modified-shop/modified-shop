@@ -319,7 +319,12 @@ class PayPalPaymentBase extends PayPalCommon {
     // if the modules status was changed when none were available, to save on implementing
     // a javascript force-selection method, also automatically select the cheapest shipping
     // method if more than one module is now enabled
-    if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() == 1))) {
+    if ($no_shipping == false
+        && ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') 
+            || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() == 1))
+            )
+        )
+    {
       if ($free_shipping == true) {
         $_SESSION['shipping'] = array(
           'id' => 'free_free',
