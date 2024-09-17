@@ -45,6 +45,7 @@
       
       $enclosure = $_POST['configuration']['MODULE_PRODUCTS_EXPORT_ENCLOSURE'];
       $separator = $_POST['configuration']['MODULE_PRODUCTS_EXPORT_SEPARATOR'];
+      if ($enclosure == '') $enclosure = '"';
       if ($separator == '') $separator = ',';
       
       $export_query = xtc_db_query("SELECT p.*,
