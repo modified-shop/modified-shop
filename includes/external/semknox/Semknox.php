@@ -235,6 +235,7 @@
                                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                              ON p.products_id = pd.products_id
                                                 AND pd.language_id = ".$this->language_id."
+                                                AND trim(pd.products_name) != ''
                                    LEFT JOIN ".TABLE_MANUFACTURERS." m
                                              ON p.manufacturers_id = m.manufacturers_id
                                        WHERE p.products_id = ".$products_id."
@@ -393,6 +394,11 @@
           $products_array['attributes'][] = array(
             'key' => 'vpe_name',
             'value' => $vpe_array['vpe_name'],
+            'userGroups' => $this->customers_status_all_array,
+          );          
+          $products_array['attributes'][] = array(
+            'key' => 'vpe_value',
+            'value' => $vpe_array['vpe_value'],
             'userGroups' => $this->customers_status_all_array,
           );          
         }
@@ -584,6 +590,7 @@
         }
 
         return array(
+          'vpe_value' => $products['products_vpe_value'],
           'vpe_name' => $vpe_name_array[$this->language_id][$products['products_vpe']],
           'vpe_price' => $price * (1 / $products['products_vpe_value']),
         );
