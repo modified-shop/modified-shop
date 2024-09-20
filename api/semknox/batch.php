@@ -16,6 +16,10 @@
       && MODULE_SEMKNOX_SYSTEM_STATUS == 'true'
       )
   {
+    // set time limit
+    require_once (DIR_FS_INC.'xtc_set_time_limit.inc.php');
+    xtc_set_time_limit(0);
+    
     // set the language
     include_once (DIR_WS_MODULES.'set_language_sessions.php');
 
