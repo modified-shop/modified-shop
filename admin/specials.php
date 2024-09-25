@@ -176,7 +176,7 @@
         </div>
         <?php if (empty($action)) { ?>
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
-          <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID')) . '&action=new'); ?>'"><?php echo  BUTTON_NEW_PRODUCTS; ?></a>
+          <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID')) . '&action=new'); ?>"><?php echo  BUTTON_NEW_PRODUCTS; ?></a>
         </div>
         <?php } ?>
         <?php
