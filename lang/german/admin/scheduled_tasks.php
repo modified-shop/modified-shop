@@ -53,7 +53,7 @@
   define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles &auml;lter als 7 Tage werden gel&ouml;scht');
 
   define('TEXT_HEADING_TASKS_EXPORT_SITEMAP', 'Sitemap erstellen');
-  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Die Sitemap wird neu erstellt');
+  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Die Sitemap wird neu erstellt. (Das Export Modul <a href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=sitemaporg').'"><b>XML Sitemap.org</b></a> muss aktiviert sein.)');
 
   define('TEXT_HEADING_TASKS_ADMINLOG_MAINTENANCE', 'Admin Log');
   define('TEXT_INFO_TASKS_ADMINLOG_MAINTENANCE', 'Admin Log bereinigen');
