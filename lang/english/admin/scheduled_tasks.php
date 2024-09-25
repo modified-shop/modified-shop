@@ -52,5 +52,8 @@
   define('TEXT_HEADING_TASKS_LOGS_MAINTENANCE', 'Logfiles cleanup');
   define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles older than 7 days are deleted');
 
+  define('TEXT_HEADING_TASKS_EXPORT_SITEMAP', 'Sitemap'); 
+  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Sitemap will be recreated');
+
   define('TEXT_HEADING_TASKS_ADMINLOG_MAINTENANCE', 'Admin Log');
   define('TEXT_INFO_TASKS_ADMINLOG_MAINTENANCE', 'Cleanup Admin log');
