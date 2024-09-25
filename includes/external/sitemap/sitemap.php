@@ -42,11 +42,12 @@
     }
 
     function export() {
+      $code = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_LANGUAGE'] : MODULE_SITEMAPORG_LANGUAGE);
       $lang_query = xtc_db_query("SELECT *,
                                          languages_id as id,
                                          language_charset as charset
                                     FROM ".TABLE_LANGUAGES."
-                                   WHERE code = '".xtc_db_input((defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') ? MODULE_SITEMAPORG_LANGUAGE : DEFAULT_LANGUAGE)."'");
+                                   WHERE code = '".xtc_db_input((defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') ? $code : DEFAULT_LANGUAGE)."'");
       if (xtc_db_num_rows($lang_query) > 0) {
         while ($lang =  xtc_db_fetch_array($lang_query)) {
           $this->language = $lang;
@@ -58,7 +59,7 @@
           $this->group_id = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_CUSTOMERS_STATUS'] : MODULE_SITEMAPORG_CUSTOMERS_STATUS);
 
           $this->xml_sitemap_top();
-          $this->xml_sitemap_entry(($this->url_function)('index.php'));
+          $this->xml_sitemap_entry(($this->url_function)('index.php', $this->url_param));
     
           $this->process_contents();
           $this->process_categories();
