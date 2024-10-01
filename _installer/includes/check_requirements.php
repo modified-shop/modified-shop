@@ -187,3 +187,41 @@
     'version_max' => '',
     'status' => $status
   );  
+
+  if (function_exists('chmod')
+      && is_make_nonwriteable(DIR_FS_INSTALLER.'includes/configure.php')
+      && is_make_writeable(DIR_FS_INSTALLER.'includes/configure.php')
+      )
+  {
+    $status = true;
+  } else {
+    $status = false;
+    $error = true;
+  }
+
+  $requirement_array[] = array(
+    'name' => 'CHMOD',
+    'version' => '',
+    'version_min' => '',
+    'version_max' => '',
+    'status' => $status
+  );  
+
+  if (function_exists('rename')
+      && rename(DIR_FS_INSTALLER.'includes/tmp.php', DIR_FS_INSTALLER.'includes/tmp.txt')
+      && rename(DIR_FS_INSTALLER.'includes/tmp.txt', DIR_FS_INSTALLER.'includes/tmp.php')
+      )
+  {
+    $status = true;
+  } else {
+    $status = false;
+    $error = true;
+  }
+
+  $requirement_array[] = array(
+    'name' => 'RENAME',
+    'version' => '',
+    'version_min' => '',
+    'version_max' => '',
+    'status' => $status
+  );  

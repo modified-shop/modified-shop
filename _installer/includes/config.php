@@ -27,6 +27,7 @@
   
   // permission
   define('CHMOD_WRITEABLE', 0775);
+  define('CHMOD_NONWRITEABLE', 0444);
   
   // update
   define('UPDATE_MAX_RELOADS', 100000000);

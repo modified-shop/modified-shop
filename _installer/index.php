@@ -16,11 +16,12 @@
   if ($upgrade === true) {
     if (isset($_GET['action']) && $_GET['action'] == 'shop') {
       if (is_file(DIR_FS_CATALOG.'/includes/local/configure.php')) {
-        chmod(DIR_FS_CATALOG.'/includes/local/configure.php', 0444);
+        is_make_nonwriteable(DIR_FS_CATALOG.'/includes/local/configure.php');
       }
       if (is_file(DIR_FS_CATALOG.'/includes/configure.php')) {
-        chmod(DIR_FS_CATALOG.'/includes/configure.php', 0444);
+        is_make_nonwriteable(DIR_FS_CATALOG.'/includes/configure.php');
       }
+      
       if (!isset($unlinked_files)) {
         $unlinked_files = array(
           'error' => array(
