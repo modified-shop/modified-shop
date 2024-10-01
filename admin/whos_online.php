@@ -60,7 +60,7 @@
   require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
-<body">
+<body>
  <!-- header //-->
   <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
   <!-- header_eof //-->
