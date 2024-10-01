@@ -118,24 +118,26 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
         unset($_SESSION['sendto']);
       }
       
-      for ($i = 0, $n = sizeof($_POST['products_id']); $i < $n; $i++) {
-        $cart_quantity = $_POST['cart_quantity'][$i] = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);
-        $_POST['old_qty'][$i] = xtc_remove_non_numeric($_POST['old_qty'][$i]);
-        $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id');
-          
-        if ($cart_quantity == 0) $cart_object->remove($_POST['products_id'][$i]);
-      
-        if (in_array($_POST['products_id'][$i], (isset($_POST['cart_delete']) && is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array ()))) {
-          $cart_object->remove($_POST['products_id'][$i]);
-        } else {
-          if ((int)$_POST['cart_quantity'][$i] > MAX_PRODUCTS_QTY) {
-            $cart_quantity = MAX_PRODUCTS_QTY;
-            $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($_POST['products_id'][$i])));
+      if (isset($_POST['products_id']) && is_array($_POST['products_id'])) {
+        for ($i = 0, $n = sizeof($_POST['products_id']); $i < $n; $i++) {
+          $cart_quantity = $_POST['cart_quantity'][$i] = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);
+          $_POST['old_qty'][$i] = xtc_remove_non_numeric($_POST['old_qty'][$i]);
+          $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id');
+            
+          if ($cart_quantity == 0) $cart_object->remove($_POST['products_id'][$i]);
+        
+          if (in_array($_POST['products_id'][$i], (isset($_POST['cart_delete']) && is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array ()))) {
+            $cart_object->remove($_POST['products_id'][$i]);
+          } else {
+            if ((int)$_POST['cart_quantity'][$i] > MAX_PRODUCTS_QTY) {
+              $cart_quantity = MAX_PRODUCTS_QTY;
+              $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($_POST['products_id'][$i])));
+            }
+            $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+  
+            $cart_object->add_cart($_POST['products_id'][$i], $cart_quantity, $attributes, false);
+            unset($cart_quantity);
           }
-          $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
-
-          $cart_object->add_cart($_POST['products_id'][$i], $cart_quantity, $attributes, false);
-          unset($cart_quantity);
         }
       }
       
