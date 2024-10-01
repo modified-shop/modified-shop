@@ -39,7 +39,9 @@ $smarty->assign('SELECT_PFROM',xtc_draw_input_field('pfrom', ((isset($_GET['pfro
 $smarty->assign('SELECT_PTO',xtc_draw_input_field('pto', ((isset($_GET['pto'])) ? (float)$_GET['pto'] : '')));
 $smarty->assign('FORM_END', '</form>');
 
-if (isset ($_GET['errorno'])) {
+if (isset ($_GET['errorno']) && $_GET['errorno'] != '') {
+  $_GET['errorno'] = (int)$_GET['errorno'];
+  
 	if (($_GET['errorno'] & 1) == 1) {
 	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_AT_LEAST_ONE_INPUT)));
 	}
