@@ -28,7 +28,7 @@ if (isset($_GET['info'])) {
 if (isset($_GET['cat'])) {
   $site = explode('_', $_GET['cat']);
   $cID = $site[0];
-  $cID = str_replace('c', '', $cID);
+  $cID = (int)str_replace('c', '', $cID);
   $_GET['cPath'] = xtc_get_category_path($cID);
   unset($_GET['cat']);
 }
