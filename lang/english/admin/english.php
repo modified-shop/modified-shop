@@ -642,3 +642,4 @@ define('TXT_PER',' per ');
 define('TEXT_NO_PAYMENT', 'No payment method');
 
 define('TEXT_ERROR_EMPTY_NOT_ALLOWED', '<span class="error_message" style="display:inline-block;">Mandatory (please fill in)</span>');
+define('ERROR_NO_DEFAULT_LANGUAGE_DEFINED', 'Error: There is currently no default language set. Please set one at: Zones/Tax -> Languages');
