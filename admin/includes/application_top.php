@@ -167,12 +167,6 @@ require(DIR_WS_CLASSES . 'logger.php');
 // shopping cart class
 require(DIR_WS_CLASSES . 'shopping_cart.php');
 
-// todo
-require(DIR_WS_FUNCTIONS . 'general.php');
-
-// define our general functions used application-wide
-require(DIR_WS_FUNCTIONS . 'html_output.php');
-
 // define how the session functions will be used
 require(DIR_WS_FUNCTIONS . 'sessions.php');
 
@@ -204,6 +198,12 @@ if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page
 if (isset($_SESSION['country'])) {
   unset($_SESSION['country']);
 }
+
+// general functions
+require(DIR_WS_FUNCTIONS . 'general.php');
+
+// define our general functions used application-wide
+require(DIR_WS_FUNCTIONS . 'html_output.php');
 
 // write customers status in session
 require(DIR_FS_CATALOG.DIR_WS_INCLUDES.'write_customers_status.php');
