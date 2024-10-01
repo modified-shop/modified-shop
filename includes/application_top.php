@@ -233,6 +233,11 @@ require_once (DIR_WS_CLASSES.'shopping_cart.php');
 // define how the session functions will be used
 require_once (DIR_WS_FUNCTIONS.'sessions.php');
 
+// verify the ssl_session_id if the feature is enabled
+// verify the browser user agent if the feature is enabled
+// verify the IP address if the feature is enabled
+include_once (DIR_WS_MODULES.'verify_session.php');
+
 // set the session name and save path
 // set the session cookie parameters
 // set the session ID if it exists
@@ -244,11 +249,6 @@ include_once (DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
 
 // user tracking
 include_once (DIR_WS_INCLUDES.'tracking.php');
-
-// verify the ssl_session_id if the feature is enabled
-// verify the browser user agent if the feature is enabled
-// verify the IP address if the feature is enabled
-include_once (DIR_WS_MODULES.'verify_session.php');
 
 // set the language
 include_once (DIR_WS_MODULES.'set_language_sessions.php');
