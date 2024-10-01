@@ -641,3 +641,4 @@ define('TXT_PER',' pro ');
 define('TEXT_NO_PAYMENT', 'Keine Zahlart');
 
 define('TEXT_ERROR_EMPTY_NOT_ALLOWED', '<span class="error_message" style="display:inline-block;">Pflichtfeld (bitte ausf&uuml;llen)</span>');
+define('ERROR_NO_DEFAULT_LANGUAGE_DEFINED', 'Fehler: Es wurde keine Standardsprache definiert. Bitte definieren Sie unter Land/Steuer -> Sprachen eine Standardsprache.');
