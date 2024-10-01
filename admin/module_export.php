@@ -39,7 +39,7 @@
     $messageStack->add($_GET['error'], $map);
   }
 
-  $set = (isset($_GET['set']) ? strip_tags($_GET['set']) : '');
+  $set = ((isset($_GET['set']) && $_GET['set'] != '') ? strip_tags($_GET['set']) : 'export');
   $module_class = (isset($_GET['module']) ? strip_tags($_GET['module']) : '');
   $box = (isset($_GET['box']) ? true : false);
 
