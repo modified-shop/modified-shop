@@ -47,6 +47,18 @@
     );
   }
   
+
+  function is_make_nonwriteable($filename) {
+    return (
+      !is_writable($filename)
+      ? true
+      : ( @chmod($filename, CHMOD_NONWRITEABLE) && !is_writable($filename)
+          ? true
+          : false
+        )
+    );
+  }
+
   
   function rrmdir($dir) {
     global $unlinked_files, $error;
