@@ -159,9 +159,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   );
 
   // refID
-  $refID = '';
   if (isset($_SESSION['tracking']['refID'])) {
-    $refID = $_SESSION['tracking']['refID'];
+    $sql_data_array['campaign'] = $_SESSION['tracking']['refID'];
   } else {
     $campaign_query = xtc_db_query("SELECT cp.campaigns_refID
                                       FROM ".TABLE_CUSTOMERS." c
@@ -170,22 +169,12 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
                                      WHERE c.customers_id = '".(int)$_SESSION['customer_id']."'");
     if (xtc_db_num_rows($campaign_query) > 0) {
       $campaign = xtc_db_fetch_array($campaign_query);
-      $refID = $campaign['campaigns_refID'];
+      
+      $sql_data_array['campaign'] = $campaign['campaigns_refID'];
+      $sql_data_array['conversion_type'] = 2;
     }
   }
   
-  if ($refID != '') {
-    $sql_data_array['campaign'] = $refID;
-  }
-  
-  // check if late or direct sale
-  $customers_logon_query = xtc_db_query("SELECT customers_info_number_of_logons
-                                           FROM ".TABLE_CUSTOMERS_INFO."
-                                          WHERE customers_info_id  = '".(int)$_SESSION['customer_id']."'");
-  $customers_logon = xtc_db_fetch_array($customers_logon_query);
-  if ($customers_logon['customers_info_number_of_logons'] > 1) {
-    $sql_data_array['conversion_type'] = 2;
-  }
   
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();
