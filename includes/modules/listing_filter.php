@@ -37,7 +37,7 @@ if (!CacheCheck()) {
 }
 
 $module_filter = '';
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $cache_id) || !$cache) {
+if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $cache_id) || !$cache) {
   $filter_set_dropdown = '';
   $filter_sort_dropdown = '';
   $manufacturer_dropdown = '';
