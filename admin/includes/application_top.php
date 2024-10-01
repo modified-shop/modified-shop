@@ -176,11 +176,6 @@ require(DIR_WS_FUNCTIONS . 'html_output.php');
 // define how the session functions will be used
 require(DIR_WS_FUNCTIONS . 'sessions.php');
 
-// verify the ssl_session_id if the feature is enabled
-// verify the browser user agent if the feature is enabled
-// verify the IP address if the feature is enabled
-include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
-
 // set the session name and save path
 // set the session cookie parameters
 // set the session ID if it exists
@@ -189,6 +184,11 @@ include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 // check for Cookie usage
 // check the Agent
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
+
+// verify the ssl_session_id if the feature is enabled
+// verify the browser user agent if the feature is enabled
+// verify the IP address if the feature is enabled
+include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 
 // set the language
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_language_sessions.php');
