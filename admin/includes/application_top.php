@@ -78,17 +78,24 @@ $_REQUEST = $inputfilter->validate($_REQUEST);
 // auto include
 require_once (DIR_FS_INC . 'auto_include.inc.php');
 
+// include the list of project filenames
+require (DIR_FS_ADMIN.DIR_WS_INCLUDES.'filenames.php');
+
 // project versison
 require_once (DIR_WS_INCLUDES.'version.php');
+
+define('TAX_DECIMAL_PLACES', 0);
+
+// set the type of request (secure or not)
+if (file_exists(DIR_WS_INCLUDES . 'request_type.php')) {
+  include (DIR_WS_INCLUDES . 'request_type.php');
+} else {
+  $request_type = 'NONSSL';
+}
 
 // Base/PHP_SELF/SSL-PROXY
 require_once(DIR_FS_INC . 'set_php_self.inc.php');
 $PHP_SELF = set_php_self();
-
-define('TAX_DECIMAL_PLACES', 0);
-
-// include the list of project filenames
-require (DIR_FS_ADMIN.DIR_WS_INCLUDES.'filenames.php');
 
 // list of project database tables
 require_once(DIR_FS_CATALOG.DIR_WS_INCLUDES.'database_tables.php');
@@ -142,29 +149,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_top/application_top_begin/','php') as $file) require ($file);
 
-define('FILENAME_IMAGEMANIPULATOR',IMAGE_MANIPULATOR);
-
-// initialize the logger class
-require(DIR_WS_CLASSES . 'logger.php');
-
-// shopping cart class
-require(DIR_WS_CLASSES . 'shopping_cart.php');
-
-// todo
-require(DIR_WS_FUNCTIONS . 'general.php');
-
-// define how the session functions will be used
-require(DIR_WS_FUNCTIONS . 'sessions.php');
-
-  // define our general functions used application-wide
-require(DIR_WS_FUNCTIONS . 'html_output.php');
-
-// set the type of request (secure or not)
-if (file_exists(DIR_WS_INCLUDES . 'request_type.php')) {
-  include (DIR_WS_INCLUDES . 'request_type.php');
-} else {
-  $request_type = 'NONSSL';
-}
+define('FILENAME_IMAGEMANIPULATOR', IMAGE_MANIPULATOR);
 
 // set the top level domains
 $http_domain_arr = xtc_get_top_level_domain(HTTP_SERVER);
@@ -176,6 +161,26 @@ $current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
 // set the top level domains to delete
 $current_domain_delete = (($request_type == 'NONSSL') ? $http_domain_arr['delete'] : $https_domain_arr['delete']);
 
+// initialize the logger class
+require(DIR_WS_CLASSES . 'logger.php');
+
+// shopping cart class
+require(DIR_WS_CLASSES . 'shopping_cart.php');
+
+// todo
+require(DIR_WS_FUNCTIONS . 'general.php');
+
+// define our general functions used application-wide
+require(DIR_WS_FUNCTIONS . 'html_output.php');
+
+// define how the session functions will be used
+require(DIR_WS_FUNCTIONS . 'sessions.php');
+
+// verify the ssl_session_id if the feature is enabled
+// verify the browser user agent if the feature is enabled
+// verify the IP address if the feature is enabled
+include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
+
 // set the session name and save path
 // set the session cookie parameters
 // set the session ID if it exists
@@ -184,11 +189,6 @@ $current_domain_delete = (($request_type == 'NONSSL') ? $http_domain_arr['delete
 // check for Cookie usage
 // check the Agent
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
-
-// verify the ssl_session_id if the feature is enabled
-// verify the browser user agent if the feature is enabled
-// verify the IP address if the feature is enabled
-include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 
 // set the language
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_language_sessions.php');
