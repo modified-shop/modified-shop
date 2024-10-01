@@ -60,7 +60,7 @@
 
   $mTypeArr = array();
 
-  $set = (isset($_GET['set']) ? strip_tags($_GET['set']) : '');
+  $set = (isset($_GET['set']) ? strip_tags($_GET['set']) : 'categories');
   $module_class = (isset($_GET['module']) ? strip_tags($_GET['module']) : '');
   $box = (isset($_GET['box']) ? true : false);
 
