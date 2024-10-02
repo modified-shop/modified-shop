@@ -90,7 +90,7 @@
       // previous button - not displayed on first page
       if ($this->current_page_number > 1) {
         $display_links_array['previous_data'] = array(
-          'LINK' => xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number - 1), $request_type),
+          'LINK' => xtc_href_link(basename($PHP_SELF), $parameters . ((($this->current_page_number - 1) > 1) ? 'page=' . ($this->current_page_number - 1) : ''), $request_type),
           'TITLE' => PREVNEXT_TITLE_PREVIOUS_PAGE,
           'TEXT' => PREVNEXT_BUTTON_PREV,
           'PAGE' => ($this->current_page_number - 1),
@@ -121,7 +121,7 @@
       // page nn button
       for ($jump_to_page = 1 + (($cur_window_num - 1) * $max_page_links); ($jump_to_page <= ($cur_window_num * $max_page_links)) && ($jump_to_page <= $this->number_of_pages); $jump_to_page++) {
         $display_links_array['pages_data'][$jump_to_page] = array(
-          'LINK' => xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . $jump_to_page, $request_type),
+          'LINK' => xtc_href_link(basename($PHP_SELF), $parameters.(($jump_to_page > 1) ? 'page='.$jump_to_page : ''), $request_type),
           'TITLE' => sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page),
           'TEXT' => $jump_to_page,
           'PAGE' => $jump_to_page,
