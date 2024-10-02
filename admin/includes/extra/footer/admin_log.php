@@ -66,6 +66,9 @@
           border-left: 5px solid #ccc;
           padding-left: 20px;
         }
+        .log_desc pre {
+          white-space: pre-wrap;
+        }
       </style>
       <?php if (MODULE_ADMIN_LOG_SHOW_DETAILS == 'true') { ?>
       <script type="text/javascript">
