@@ -100,6 +100,19 @@ if ( !class_exists( "image_processing_step" ) ) {
       $this->files = $files;
     }
 
+    function getMemoryLimitBytes() {
+      $limit = ini_get('memory_limit');
+      if ($limit == -1) return 0;
+    
+      $units = array(1 => 'K', 'M', 'G');
+      $unit = strtoupper(substr($limit, -1));
+      if ($exp = array_search($unit, $units)) {
+        return (int)substr($limit, 0, -1) * pow(1024, $exp);
+      } else {
+        return (int)$limit;
+      }
+    }
+
     function image_processing_do() {
       
       include ('includes/classes/'.FILENAME_IMAGEMANIPULATOR);
@@ -115,7 +128,16 @@ if ( !class_exists( "image_processing_step" ) ) {
       
       $this->logfile = str_replace('*',$rData['file_time'],$this->logfile);
       
-      ini_set('memory_limit','256M');
+      // set memory limit
+      $memory_limit = $this->getMemoryLimitBytes();
+      if ($memory_limit > 0
+          && $memory_limit < (256 * 1024 * 1024)
+          )
+      {
+        ini_set('memory_limit', '256M');
+      }
+      
+      // set timeout
       xtc_set_time_limit(0);
 
       switch ($_POST['process_type']) {
