@@ -187,6 +187,12 @@ include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 // set the language
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_language_sessions.php');
 
+// general functions
+require(DIR_WS_FUNCTIONS . 'general.php');
+
+// define our general functions used application-wide
+require(DIR_WS_FUNCTIONS . 'html_output.php');
+
 // include the language translations
 require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
 require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');
@@ -198,12 +204,6 @@ if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page
 if (isset($_SESSION['country'])) {
   unset($_SESSION['country']);
 }
-
-// general functions
-require(DIR_WS_FUNCTIONS . 'general.php');
-
-// define our general functions used application-wide
-require(DIR_WS_FUNCTIONS . 'html_output.php');
 
 // write customers status in session
 require(DIR_FS_CATALOG.DIR_WS_INCLUDES.'write_customers_status.php');
