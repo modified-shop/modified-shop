@@ -949,7 +949,7 @@ define('DISPLAY_PRIVACY_CHECK_TITLE', 'Sign privacy notice');
 define('DISPLAY_PRIVACY_CHECK_DESC', 'Request approval of privacy notice during account creation, contact page, newsletter registration and checkout?)');
 
 define('SHOW_SELFPICKUP_FREE_TITLE', 'Shipping module "Self Pickup" on "free shipping"');
-define('SHOW_SELFPICKUP_FREE_DESC', 'Shall the shipping module "Self Pickup (selfpickup)" be displayed upon reaching the amount for "free shipping" in module "Shipping (ot_shipping)"?');
+define('SHOW_SELFPICKUP_FREE_DESC', 'Shall the shipping module "Self Pickup (selfpickup)" (if installed) be displayed upon reaching the amount for "free shipping" in module "Shipping (ot_shipping)"?');
 
 define('CHECK_FIRST_PAYMENT_MODUL_TITLE', 'Preselect first payment method');
 define('CHECK_FIRST_PAYMENT_MODUL_DESC', 'Shall the first payment method be preselected in checkout for the customer?');
