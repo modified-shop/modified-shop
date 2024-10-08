@@ -30,14 +30,13 @@
     function __construct() {
       $this->schema = '';
       
+      $this->image_path = DIR_FS_CATALOG.DIR_WS_IMAGES;
+      $this->image_url = HTTP_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES;
+
       if (defined('RUN_MODE_ADMIN')) {
         $this->url_function = 'xtc_href_link_from_admin';
-        $this->image_path = DIR_FS_CATALOG_POPUP_IMAGES;
-        $this->image_url = HTTP_SERVER.DIR_WS_CATALOG_POPUP_IMAGES;
       } else {
         $this->url_function = 'xtc_href_link';
-        $this->image_path = DIR_FS_CATALOG.DIR_WS_POPUP_IMAGES;
-        $this->image_url = HTTP_SERVER.DIR_WS_CATALOG.DIR_WS_POPUP_IMAGES;
       }      
     }
 
@@ -112,34 +111,25 @@
       $this->schema .= '</urlset>'."\n";
     }
 
-    function xml_sitemap_entry($url, $lastmod = '', $products = '') { 
+    function xml_sitemap_entry($url, $lastmod = '', $images = '') { 
       if (trim($url) == '#') return; 
+      
       $this->schema .= "\t<url>\n";
       $this->schema .= "\t\t<loc>" . $url . "</loc>\n";
       if ($this->check_date($lastmod) === true) {
         $this->schema .= "\t\t<lastmod>" . date('c', strtotime($lastmod)) . "</lastmod>\n";
       }
-      if (is_array($products)) {      
-        if (is_file($this->image_path.$products['products_image'])) {
-          $this->xml_image_entry($this->image_url.urlencode($products['products_image']), $products['products_name']);
-        }
-        $mo_images = xtc_get_products_mo_images($products['products_id']);
-        if ($mo_images != false) {
-          foreach ($mo_images as $img) {
-            if (is_file($this->image_path.$img['image_name'])) {
-              $this->xml_image_entry($this->image_url.urlencode($img['image_name']), $products['products_name']);
-            }
-          }
-        }
+      if (is_array($images) && count($images) > 0) {
+        foreach ($images as $link) {
+          $this->xml_image_entry($link);
+        }   
       }
       $this->schema .= "\t</url>\n";
     }
   
-    function xml_image_entry($link, $title) {
+    function xml_image_entry($link) {
       $this->schema .= "\t\t<image:image>\n";
       $this->schema .= "\t\t\t<image:loc>".encode_utf8(decode_htmlentities($link), $this->language['charset'], true)."</image:loc>\n";
-      $this->schema .= "\t\t\t<image:title><![CDATA[".encode_utf8(decode_htmlentities($title), $this->language['charset'], true)."]]></image:title>\n";
-      $this->schema .= "\t\t\t<image:caption><![CDATA[".encode_utf8(decode_htmlentities($title), $this->language['charset'], true)."]]></image:caption>\n";
       $this->schema .= "\t\t</image:image>\n";
     }
   
@@ -171,7 +161,10 @@
 
     function process_manufacturers() {
       $manufacturers_query = "SELECT DISTINCT m.manufacturers_id,
-                                              m.manufacturers_name 
+                                              m.manufacturers_name,
+                                              m.manufacturers_image,
+                                              m.date_added,
+                                              m.last_modified
                                          FROM ".TABLE_MANUFACTURERS." as m
                                          JOIN ".TABLE_PRODUCTS." as p 
                                               ON m.manufacturers_id = p.manufacturers_id
@@ -182,7 +175,14 @@
       $manufacturers_query = xtc_db_query($manufacturers_query);
       while ($manufacturers_data = xtc_db_fetch_array($manufacturers_query)) {
         $link = encode_htmlspecialchars(($this->url_function)('index.php', $this->url_param . xtc_manufacturer_link($manufacturers_data['manufacturers_id'], $manufacturers_data['manufacturers_name']), 'NONSSL', false));
-        $this->xml_sitemap_entry($link);     
+        $date = (($this->check_date($manufacturers_data['last_modified']) === true) ? $manufacturers_data['last_modified'] : $manufacturers_data['date_added']);
+
+        $images = array();
+        if (is_file($this->image_path.'manufacturers/'.$manufacturers_data['manufacturers_image'])) {
+          $images[] = $this->image_url.'manufacturers/'.urlencode($manufacturers_data['manufacturers_image']);
+        }
+
+        $this->xml_sitemap_entry($link, $date, $images);     
       }
     }
 
@@ -192,9 +192,9 @@
 
       $categories_query = "SELECT c.categories_image,
                                   c.categories_id,
-                                  cd.categories_name,
                                   c.date_added,
-                                  c.last_modified
+                                  c.last_modified,
+                                  cd.categories_name
                              FROM " . TABLE_CATEGORIES . " c 
                              JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
                                   ON c.categories_id = cd.categories_id
@@ -208,7 +208,13 @@
       while ($categories = xtc_db_fetch_array($categories_query)) {
         $link = encode_htmlspecialchars(($this->url_function)('index.php', $this->url_param . xtc_category_link($categories['categories_id'], $categories['categories_name']), 'NONSSL', false));
         $date = (($this->check_date($categories['last_modified']) === true) ? $categories['last_modified'] : $categories['date_added']);
-        $this->xml_sitemap_entry($link, $date);     
+
+        $images = array();
+        if (is_file($this->image_path.'categories/'.$categories['categories_image'])) {
+          $images[] = $this->image_url.'categories/'.urlencode($categories['categories_image']);
+        }
+
+        $this->xml_sitemap_entry($link, $date, $images);     
       }
     }
 
@@ -244,7 +250,21 @@
       while ($products = xtc_db_fetch_array($products_query)) {
         $link = encode_htmlspecialchars(($this->url_function)('product_info.php', $this->url_param . xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false));
         $date = (($this->check_date($products['products_last_modified']) === true) ? $products['products_last_modified'] : $products['products_date_added']);
-        $this->xml_sitemap_entry($link, $date, $products);     
+        
+        $images = array();
+        if (is_file($this->image_path.'product_images/popup_images/'.$products['products_image'])) {
+          $images[] = $this->image_url.'product_images/popup_images/'.urlencode($products['products_image']);
+        }
+        $mo_images = xtc_get_products_mo_images($products['products_id']);
+        if ($mo_images != false) {
+          foreach ($mo_images as $img) {
+            if (is_file($this->image_path.'product_images/popup_images/'.$img['image_name'])) {
+              $images[] = $this->image_url.'product_images/popup_images/'.urlencode($img['image_name']);
+            }
+          }
+        }
+
+        $this->xml_sitemap_entry($link, $date, $images);     
       }
     }
 
