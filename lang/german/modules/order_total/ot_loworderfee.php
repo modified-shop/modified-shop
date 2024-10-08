@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_loworderfee.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -23,10 +23,7 @@
   
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER_TITLE','Sortierreihenfolge');
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER_DESC','Anzeigereihenfolge');
-  
-  define('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE_TITLE','Mindermengenzuschlag erlauben');
-  define('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE_DESC','M&ouml;chten Sie Mindermengenzuschl&auml;ge erlauben?');
-  
+    
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_TITLE','Mindermengenzuschlag f&uuml;r Bestellungen unter');
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_DESC','Mindermengenzuschlag wird f&uuml;r Bestellungen unter diesem Wert hinzugef&uuml;gt.');
 
@@ -44,4 +41,3 @@
   
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS_TITLE','Steuerklasse');
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS_DESC','Folgende Steuerklasse f&uuml;r den Mindermengenzuschlag verwenden.');
-?>

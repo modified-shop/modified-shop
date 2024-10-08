@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_loworderfee.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -24,9 +24,6 @@
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER_TITLE','Sort Order');
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER_DESC','Sort order of display.');
 
-  define('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE_TITLE','Allow Low Order Fee');
-  define('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE_DESC','Do you want to allow low order fees?');
-
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_TITLE','Order Fee For Orders Under');
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_DESC','Add the low order fee to orders under this amount.');
 
@@ -44,4 +41,3 @@
 
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS_TITLE','Tax Class');
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS_DESC','Use the following tax class on the low order fee.');
-?>
