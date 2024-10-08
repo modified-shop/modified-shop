@@ -195,15 +195,15 @@
   function arrayRecursiveLogDiff($aArray1, $aArray2) {
     $aReturn = array();
 
-    foreach($aArray1 as $mKey => $mValue) {
-      if(array_key_exists($mKey, $aArray2)) {
-        if(is_array($mValue)) {
+    foreach ($aArray1 as $mKey => $mValue) {
+      if (array_key_exists($mKey, $aArray2)) {
+        if (is_array($mValue)) {
           $aRecursiveDiff = arrayRecursiveLogDiff($mValue, $aArray2[$mKey]);
-          if(count($aRecursiveDiff)) {
+          if (count($aRecursiveDiff)) {
             $aReturn[$mKey] = $aRecursiveDiff;
           }
         } else {
-          if((string)$mValue != (string)$aArray2[$mKey]) {
+          if ((string)$mValue != (string)$aArray2[$mKey]) {
             $aReturn[$mKey] = $aArray2[$mKey];
           }
         }
