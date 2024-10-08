@@ -14,7 +14,8 @@
 
   if (defined('MODULE_ADMIN_LOG_STATUS') && MODULE_ADMIN_LOG_STATUS == 'true') {
     if (MODULE_ADMIN_LOG_DISPLAY == 'true') {
-    ?>
+      require_once(DIR_FS_INC.'array_map_recursive.inc.php');
+      ?>
       <style type="text/css">
         .log_title {
           cursor: pointer;
@@ -168,6 +169,7 @@
                 $base_new = array_merge($base, $log['text']);
                 $log['text'] = arrayRecursiveLogDiff($base, $base_new);
               }
+              $log = array_map_recursive('encode_htmlentities', $log);
             }
             echo '<div class="log_row">
                     <div class="log_title cf">'.((MODULE_ADMIN_LOG_SHOW_DETAILS == 'true') ? '<div class="log_arrow">&rsaquo;</div>' : '').date('d.m.Y H:i:s', strtotime($log['date_modified'])).'&nbsp;&nbsp;&nbsp;&nbsp;'.$log['customers_firstname'].' '.$log['customers_lastname'].'</div>
@@ -212,4 +214,3 @@
 
     return $aReturn;
   }
-?>
