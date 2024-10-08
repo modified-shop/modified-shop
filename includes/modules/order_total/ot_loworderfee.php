@@ -39,82 +39,80 @@
     function process() {
       global $order, $xtPrice;
       
-      if (MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE == 'true') {
-        switch (MODULE_ORDER_TOTAL_LOWORDERFEE_DESTINATION) {
-          case 'national':
-            if ($order->delivery['country_id'] == STORE_COUNTRY) $pass = true; 
+      switch (MODULE_ORDER_TOTAL_LOWORDERFEE_DESTINATION) {
+        case 'national':
+          if ($order->delivery['country_id'] == STORE_COUNTRY) $pass = true; 
+          $low_order_fee_value_under = MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER;
+          $low_order_fee_value = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
+         break;
+        case 'international':
+          if ($order->delivery['country_id'] != STORE_COUNTRY) $pass = true; 
+          $low_order_fee_value_under = MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_INTERNATIONAL;
+          $low_order_fee_value = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE_INTERNATIONAL;
+          break;
+        case 'both':
+          if ($order->delivery['country_id'] == STORE_COUNTRY) {
             $low_order_fee_value_under = MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER;
             $low_order_fee_value = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
-           break;
-          case 'international':
-            if ($order->delivery['country_id'] != STORE_COUNTRY) $pass = true; 
+          } else {
             $low_order_fee_value_under = MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_INTERNATIONAL;
             $low_order_fee_value = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE_INTERNATIONAL;
-            break;
-          case 'both':
-            if ($order->delivery['country_id'] == STORE_COUNTRY) {
-              $low_order_fee_value_under = MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER;
-              $low_order_fee_value = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
-            } else {
-              $low_order_fee_value_under = MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_INTERNATIONAL;
-              $low_order_fee_value = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE_INTERNATIONAL;
-            }
-            $pass = true; 
-            break;
-          default:
-            $pass = false; 
-            break;
-        }
+          }
+          $pass = true; 
+          break;
+        default:
+          $pass = false; 
+          break;
+      }
 
-        if ($pass == true 
-            && $xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) < $low_order_fee_value_under
+      if ($pass == true 
+          && $xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) < $low_order_fee_value_under
+          )
+      {
+        $lof_cost = $xtPrice->xtcCalculateCurr($low_order_fee_value);
+        $lof_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $lof_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+
+        $tax = $xtPrice->calcTax($lof_cost, $lof_tax);
+
+        if ($tax > 0
+            && defined('MODULE_ORDER_TOTAL_TAX_STATUS')
+            && MODULE_ORDER_TOTAL_TAX_STATUS == 'true'
             )
         {
-          $lof_cost = $xtPrice->xtcCalculateCurr($low_order_fee_value);
-          $lof_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $lof_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
-
-          $tax = $xtPrice->calcTax($lof_cost, $lof_tax);
-
-          if ($tax > 0
-              && defined('MODULE_ORDER_TOTAL_TAX_STATUS')
-              && MODULE_ORDER_TOTAL_TAX_STATUS == 'true'
-              )
-          {
-            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-              if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"])) {
-                $order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"] = 0;
-              }
-              $order->info['tax'] += $tax;
-              $order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"] += $tax;
-              $lof_cost = $xtPrice->xtcAddTax($lof_cost, $lof_tax, false);
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
+            if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"])) {
+              $order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"] = 0;
             }
-        
-            if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-                 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-                 ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-                       && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
-                       && $order->delivery['country_id'] == STORE_COUNTRY
-                       )
-                )
-        
-            {
-              if (!isset($order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"])) {
-                $order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"] = 0;
-              }
-              $order->info['tax'] += $tax;
-              $order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"] += $tax;
-            }
+            $order->info['tax'] += $tax;
+            $order->info['tax_groups'][TAX_ADD_TAX . "$lof_tax_description"] += $tax;
+            $lof_cost = $xtPrice->xtcAddTax($lof_cost, $lof_tax, false);
           }
-
-          $order->info['total'] += $lof_cost;
-          
-          $this->output[] = array(
-            'title' => $this->title . ':',
-            'text' => $xtPrice->xtcFormat($lof_cost, true),
-            'value' => $xtPrice->xtcFormat($lof_cost, false),
-          );
+      
+          if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+               ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                     && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                     && $order->delivery['country_id'] == STORE_COUNTRY
+                     )
+              )
+      
+          {
+            if (!isset($order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"])) {
+              $order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"] = 0;
+            }
+            $order->info['tax'] += $tax;
+            $order->info['tax_groups'][TAX_NO_TAX . "$lof_tax_description"] += $tax;
+          }
         }
+
+        $order->info['total'] += $lof_cost;
+        
+        $this->output[] = array(
+          'title' => $this->title . ':',
+          'text' => $xtPrice->xtcFormat($lof_cost, true),
+          'value' => $xtPrice->xtcFormat($lof_cost, false),
+        );
       }
     }
 
@@ -134,7 +132,6 @@
       return array(
         'MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS', 
         'MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER', 
-        'MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE',
         'MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER',
         'MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_INTERNATIONAL',
         'MODULE_ORDER_TOTAL_LOWORDERFEE_FEE', 
@@ -147,7 +144,6 @@
     function install() {
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER', '35', '6', '2', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE', 'false', '6', '3', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER', '50','6', '4', 'currencies->format', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_INTERNATIONAL', '50','6', '4', 'currencies->format', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE', '5','6', '5', 'currencies->format', now())");
