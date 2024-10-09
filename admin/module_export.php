@@ -249,18 +249,19 @@
       $class = substr($filename, 0, strpos($filename, '.'));
       if (class_exists($class)) {
         $module = instantiate_class($class);
-      }
 
-      if (method_exists($module,'check')) {
-        $title = strtoupper(preg_replace('/[^A-Za-z]/', '', $module->title));
-        $module->sort_order = array_search($title[0], $alphabet);
-        if ($module instanceof $class && $module->check() > 0) {
-          $directory_array[0][get_module_configuration_sorting($directory_array[0], $module->sort_order)] = $filename;
-        } else {
-          $directory_array[1][get_module_configuration_sorting($directory_array[1], $module->sort_order)] = $filename;
+        if (is_object($module) && method_exists($module,'check')) {
+          $title = strtoupper(preg_replace('/[^A-Za-z]/', '', $module->title));
+          $module->sort_order = array_search($title[0], $alphabet);
+          if ($module instanceof $class && $module->check() > 0) {
+            $directory_array[0][get_module_configuration_sorting($directory_array[0], $module->sort_order)] = $filename;
+          } else {
+            $directory_array[1][get_module_configuration_sorting($directory_array[1], $module->sort_order)] = $filename;
+          }
         }
+        
+        unset($module);
       }
-      unset($module);
     }
   
     if (isset($directory_array[0])) {

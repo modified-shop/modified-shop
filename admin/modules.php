@@ -403,21 +403,22 @@ if (xtc_not_null($action) && !$box) {
                 $class = substr($filename, 0, strpos($filename, '.'));
                 if (class_exists($class)) {
                   $module = instantiate_class($class);
-                }
 
-                if (method_exists($module,'check')) {
-                  if ($module instanceof $class && $module->check() > 0) {
-                    if (!isset($module->sort_order) || !is_numeric($module->sort_order)) {
-                      $module->sort_order = 0;
+                  if (is_object($module) && method_exists($module,'check')) {
+                    if ($module instanceof $class && $module->check() > 0) {
+                      if (!isset($module->sort_order) || !is_numeric($module->sort_order)) {
+                        $module->sort_order = 0;
+                      }
+                      $directory_array['installed'][get_module_configuration_sorting($directory_array['installed'], $module->sort_order)] = $filename;
+                    } elseif (in_array($class, $preferred_modules)) {
+                      $directory_array['preferred'][] = $filename;
+                    } else {
+                      $directory_array['uninstalled'][] = $filename;
                     }
-                    $directory_array['installed'][get_module_configuration_sorting($directory_array['installed'], $module->sort_order)] = $filename;
-                  } elseif (in_array($class, $preferred_modules)) {
-                    $directory_array['preferred'][] = $filename;
-                  } else {
-                    $directory_array['uninstalled'][] = $filename;
                   }
+                  
+                  unset($module);
                 }
-                unset($module);
               }
 
               if (count($directory_array['installed']) > 0) {
