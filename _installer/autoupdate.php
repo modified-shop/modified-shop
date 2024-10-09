@@ -100,7 +100,9 @@
   }
 
   $smarty->assign('LINK_DB_BACKUP', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type));
+  $smarty->assign('LINK_DB_RESTORE', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type));
   
+  $smarty->assign('SITE', 'autoupdate');
   $smarty->assign('BUTTON_TEMPLATE_UPDATE', '<a target="_blank" href="https://www.modified-shop.org/wiki/Tutorial:_Template_eines_xt:Commerce_Shops_in_der_modified_eCommerce_Shopsoftware_weiter_verwenden">'.BUTTON_TEMPLATE_UPDATE.'</a>');
   $smarty->assign('BUTTON_REQUEST_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=request', $request_type).'">'.BUTTON_REQUEST_UPDATE.'</a>');
   
@@ -166,6 +168,7 @@
     $step = isset($_GET['step']) ? $_GET['step'] : 1;
     
     $smarty->clear_assign('LINK_DB_BACKUP');
+    $smarty->clear_assign('LINK_DB_RESTORE');
     $smarty->clear_assign('LINK_SQL_MANUELL');
     $smarty->clear_assign('BUTTON_SUBMIT');
     $smarty->clear_assign('BUTTON_BACK');
@@ -200,6 +203,14 @@
         if (isset($_SESSION['sql_files'])) unset($_SESSION['sql_files']);
         
         $requirement_array[] = array(
+          'name' => 'DB VERSION',
+          'version' => $dbversion['plain'],
+          'version_min' => '',
+          'version_max' => '',
+          'status' => ($dbversion['plain'] == $shopversion)
+        );
+        
+        $requirement_array[] = array(
           'name' => 'SHOP VERSION',
           'version' => $shopversion,
           'version_min' => '',
@@ -207,14 +218,6 @@
           'status' => ($dbversion['plain'] == $shopversion)
         );  
 
-        $requirement_array[] = array(
-          'name' => 'DATABASE VERSION',
-          'version' => $dbversion['plain'],
-          'version_min' => '',
-          'version_max' => '',
-          'status' => ($dbversion['plain'] == $shopversion)
-        );
-        
         if ($dbversion['plain'] != $shopversion) {   
           $integrity_error = true;
         }
@@ -234,6 +237,9 @@
         );
         
         if ($error === true || $integrity_error === true) {
+          $smarty->assign('LINK_DB_BACKUP', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type));
+          $smarty->assign('LINK_DB_RESTORE', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type));
+        
           $smarty->assign('REQUIREMENT_ARRAY', $requirement_array);
           $smarty->assign('PERMISSION_ARRAY', $permission_array);
           $smarty->clear_assign('FORM_ACTION');
