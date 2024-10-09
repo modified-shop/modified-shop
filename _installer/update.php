@@ -21,6 +21,9 @@
   // include needed classes
   require_once (DIR_WS_CLASSES.'modified_api.php');
 
+  // include needed functions
+  require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+
   // make a connection to the database... now
   xtc_db_connect() or die('Unable to connect to database server!');
 
@@ -42,10 +45,56 @@
          ->setConfigDir(__DIR__.'/lang')
          ->SetCaching(0);
 
+  if (isset($_GET['action'])
+      && $_GET['action'] == 'request'
+      )
+  {
+    modified_api::reset();
+    $response = modified_api::request('modified/support/'.$_SESSION['language_code']);
+    
+    if (!is_array($response) || count($response) < 1) {
+      $messageStack->add_session('update', TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE);
+    } else {
+      $message_array = array(
+        'PHP Version' => phpversion(),
+        'Shop Domain' => HTTP_SERVER.DIR_WS_CATALOG,
+        'Shop Version' => get_shop_version(),
+        'Template' => CURRENT_TEMPLATE,
+      );
+    
+      $message = '';
+      foreach ($message_array as $k => $v) {
+        $message .= $k . ': ' . xtc_db_prepare_input($v). "\n";
+      }
+  
+      xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
+                   EMAIL_SUPPORT_NAME, 
+                   $response['mail']['address'], 
+                   $response['mail']['name'], 
+                   EMAIL_SUPPORT_FORWARDING_STRING, 
+                   EMAIL_SUPPORT_REPLY_ADDRESS, 
+                   EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
+                   '', 
+                   '', 
+                   $response['mail']['templatesubject'].STORE_NAME, 
+                   nl2br($message), 
+                   $message);
+    
+      $messageStack->add_session('update', $response['stack']['success'], 'success');
+    }
+
+    $_SESSION['template_request'] = true;
+    xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
+  }
+
   $smarty->assign('LINK_DB_BACKUP', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type));
   $smarty->assign('LINK_DB_RESTORE', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type));
   $smarty->assign('LINK_SQL_MANUELL', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_manuell', $request_type));
   $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'index.php', '', $request_type).'">'.BUTTON_BACK.'</a>');
+
+  $smarty->assign('SITE', 'update');
+  $smarty->assign('BUTTON_TEMPLATE_UPDATE', '<a target="_blank" href="https://www.modified-shop.org/wiki/Tutorial:_Template_eines_xt:Commerce_Shops_in_der_modified_eCommerce_Shopsoftware_weiter_verwenden">'.BUTTON_TEMPLATE_UPDATE.'</a>');
+  $smarty->assign('BUTTON_REQUEST_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=request', $request_type).'">'.BUTTON_REQUEST_UPDATE.'</a>');
   
   $modulelist = array(
     array(
@@ -463,7 +512,10 @@
   
   // checks  
   require_once('includes/checks.php');
-
+  if ($error === true) {
+    $smarty->clear_assign('LINK_SQL_MANUELL');
+  }
+  
   if ($messageStack->size('update') > 0) {
     $smarty->assign('error_message', $messageStack->output('update'));
   }

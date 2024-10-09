@@ -10,6 +10,73 @@
   {$JAVASCRIPTCHECK}
   <noscript><div class="errormessage"><strong>{$smarty.const.TEXT_ERROR_JAVASCRIPT}</strong></div></noscript>
 
+  {if isset($BUTTON_REQUEST_UPDATE) || isset($BUTTON_TEMPLATE_UPDATE)}
+  {if !isset($smarty.get.uaction) && $SITE == 'autoupdate'}<div class="infomessage"><strong>{$smarty.const.TEXT_INFO_TEMPLATE_UPDATE}</strong></div>{/if}
+  <div class="field_row">
+    {if isset($BUTTON_TEMPLATE_UPDATE)}
+      <div class="field_item">
+        <h2>{$smarty.const.TEXT_AUTOUPDATER_TEMPLATE_HEADING}</h2>      
+        <p>{$smarty.const.TEXT_AUTOUPDATER_TEMPLATE_INFO}</p>
+        <div class="cssButtonRow_Plain">
+          <div class="cssButton cssColor_4">{$BUTTON_TEMPLATE_UPDATE}</div>
+        </div>
+      </div>
+    {/if}
+    {if isset($BUTTON_REQUEST_UPDATE)}
+      <div class="field_item">
+        <h2>{$smarty.const.TEXT_AUTOUPDATER_SUPPORT_HEADING}</h2>      
+        <p>{$smarty.const.TEXT_AUTOUPDATER_SUPPORT_INFO}</p>
+        {if !isset($smarty.session.template_request)}
+          <div class="cssButtonRow_Plain">
+            <div class="cssButton cssColor_3">{$BUTTON_REQUEST_UPDATE}</div>
+          </div>
+        {/if}
+      </div>
+    {/if}
+  </div>
+  <br />
+  {/if}
+
+  {if isset($LINK_DB_BACKUP) || isset($LINK_DB_RESTORE)}
+    <h2>{$smarty.const.TEXT_DB_BACKUP_OPTIONS}</h2> 
+    {* if isset($BUTTON_DB_BACKUP) || isset($BUTTON_DB_RESTORE)}{$smarty.const.TEXT_UPDATER_HEADING}{else}{$smarty.const.TEXT_AUTOUPDATER_HEADING}{/if *}
+  
+    <ul class="modulelist">
+      {if isset($LINK_DB_BACKUP)}
+        <li>
+          <a href="{$LINK_DB_BACKUP}" class="ActionLink" style="display:none">
+            <span class="ml_row">
+              <span class="ml_title">{$smarty.const.TEXT_DB_BACKUP}</span>
+              <span class="ml_action">{$smarty.const.BUTTON_DB_BACKUP}</span>
+            </span>
+          </a>
+        </li>
+      {/if}
+      {if isset($LINK_DB_RESTORE)}
+        <li>
+          <a href="{$LINK_DB_RESTORE}" class="ActionLink" style="display:none">
+            <span class="ml_row">
+              <span class="ml_title">{$smarty.const.TEXT_DB_RESTORE}</span>
+              <span class="ml_action">{$smarty.const.BUTTON_DB_RESTORE}</span>
+            </span>
+          </a>
+        </li>
+      {/if}
+      {if isset($LINK_SQL_MANUELL)}
+        <li>
+          <a href="{$LINK_SQL_MANUELL}" class="ActionLink" style="display:none">
+            <span class="ml_row">
+              <span class="ml_title">{$smarty.const.TEXT_SQL_MANUELL}</span>
+              <span class="ml_action">{$smarty.const.BUTTON_SQL_MANUELL}</span>
+            </span>
+          </a>
+        </li>
+      {/if}
+    </ul>
+    <br />
+    <br />
+  {/if}
+
   {if isset($ERROR)}
     {$ERROR}
     {if isset($BUTTON_BACK)}
@@ -18,73 +85,6 @@
       </div>
     {/if}
   {else}
-    {if isset($BUTTON_REQUEST_UPDATE) || isset($BUTTON_TEMPLATE_UPDATE)}
-    {if !isset($smarty.get.uaction)}<div class="infomessage"><strong>{$smarty.const.TEXT_INFO_TEMPLATE_UPDATE}</strong></div>{/if}
-    <div class="field_row">
-      {if isset($BUTTON_TEMPLATE_UPDATE)}
-        <div class="field_item">
-          <h2>{$smarty.const.TEXT_AUTOUPDATER_TEMPLATE_HEADING}</h2>      
-          <p>{$smarty.const.TEXT_AUTOUPDATER_TEMPLATE_INFO}</p>
-          <div class="cssButtonRow_Plain">
-            <div class="cssButton cssColor_4">{$BUTTON_TEMPLATE_UPDATE}</div>
-          </div>
-        </div>
-      {/if}
-      {if isset($BUTTON_REQUEST_UPDATE)}
-        <div class="field_item">
-          <h2>{$smarty.const.TEXT_AUTOUPDATER_SUPPORT_HEADING}</h2>      
-          <p>{$smarty.const.TEXT_AUTOUPDATER_SUPPORT_INFO}</p>
-          {if !isset($smarty.session.template_request)}
-            <div class="cssButtonRow_Plain">
-              <div class="cssButton cssColor_3">{$BUTTON_REQUEST_UPDATE}</div>
-            </div>
-          {/if}
-        </div>
-      {/if}
-    </div>
-    <br />
-    {/if}
-
-    {if isset($LINK_DB_BACKUP) || isset($LINK_DB_RESTORE)}
-      <h2>{$smarty.const.TEXT_DB_BACKUP_OPTIONS}</h2> 
-      {* if isset($BUTTON_DB_BACKUP) || isset($BUTTON_DB_RESTORE)}{$smarty.const.TEXT_UPDATER_HEADING}{else}{$smarty.const.TEXT_AUTOUPDATER_HEADING}{/if *}
-    
-      <ul class="modulelist">
-        {if isset($LINK_DB_BACKUP)}
-          <li>
-            <a href="{$LINK_DB_BACKUP}" class="ActionLink" style="display:none">
-              <span class="ml_row">
-                <span class="ml_title">{$smarty.const.TEXT_DB_BACKUP}</span>
-                <span class="ml_action">{$smarty.const.BUTTON_DB_BACKUP}</span>
-              </span>
-            </a>
-          </li>
-        {/if}
-        {if isset($LINK_DB_RESTORE)}
-          <li>
-            <a href="{$LINK_DB_RESTORE}" class="ActionLink" style="display:none">
-              <span class="ml_row">
-                <span class="ml_title">{$smarty.const.TEXT_DB_RESTORE}</span>
-                <span class="ml_action">{$smarty.const.BUTTON_DB_RESTORE}</span>
-              </span>
-            </a>
-          </li>
-        {/if}
-        {if isset($LINK_SQL_MANUELL)}
-          <li>
-            <a href="{$LINK_SQL_MANUELL}" class="ActionLink" style="display:none">
-              <span class="ml_row">
-                <span class="ml_title">{$smarty.const.TEXT_SQL_MANUELL}</span>
-                <span class="ml_action">{$smarty.const.BUTTON_SQL_MANUELL}</span>
-              </span>
-            </a>
-          </li>
-        {/if}
-      </ul>
-      <br />
-      <br />
-    {/if}
-
     <h2>{$smarty.const.TEXT_UPDATER_ORDER}</h2>
     <ul class="modulelist">
       {foreach key=count name=aussen item=module from=$modulelist}
@@ -98,65 +98,6 @@
           </a>
         </li>      
       {/foreach}
-      
-      {*
-      {counter start=0 print=0}
-      {if isset($AUTOUPDATE)}
-        <li>
-          <span class="ml_row">
-            <span class="ml_counter">{counter}.</span>
-            <span class="ml_title">{$smarty.const.TEXT_CHECK_UPDATE}</span>
-            <span class="ml_action">{$BUTTON_CHECK_UPDATE}</span>
-          </span>
-        </li>
-      {/if}
-      {if isset($AUTOUPDATE)}
-        <li>
-          <span class="ml_row">
-            <span class="ml_counter">{counter}.</span>
-            <span class="ml_title">{$smarty.const.TEXT_DO_UPDATE}</span> 
-            <span class="ml_action">{$BUTTON_DO_UPDATE}</span>
-          </span>
-        </li>
-      {/if}
-      {if isset($BUTTON_DELETE_FILES)}
-        <li>
-          <span class="ml_row">
-            <span class="ml_counter">{counter}.</span>
-            <span class="ml_title">{$smarty.const.TEXT_DELETE_FILES}</span>
-            <span class="ml_action">{$BUTTON_DELETE_FILES}</span>
-          </span>
-        </li>
-      {/if}
-      <li>
-        <span class="ml_row">
-          <span class="ml_counter">{counter}.</span>
-          <span class="ml_title">{$smarty.const.TEXT_UPDATE_CONFIG}</span>
-          <span class="ml_action">{$BUTTON_CONFIGURE}</span>
-        </span>
-      </li>
-      <li>
-        <span class="ml_row">
-          <span class="ml_counter">{counter}.</span>
-          <span class="ml_title">{$smarty.const.TEXT_UPDATE_SYSTEM}</span>
-          <span class="ml_action">{$BUTTON_SYSTEM_UPDATES}</span>
-        </span>
-      </li>
-      <li>
-        <span class="ml_row">
-          <span class="ml_counter">{counter}.</span>
-          <span class="ml_title">{$smarty.const.TEXT_SQL_UPDATE}</span>
-          <span class="ml_action">{$BUTTON_SQL_UPDATE}</span>
-        </span>
-      </li>
-      <li>
-        <span class="ml_row">
-          <span class="ml_counter">{counter}.</span>
-          <span class="ml_title">{$smarty.const.TEXT_DB_UPDATE}</span>
-          <span class="ml_action">{$BUTTON_DB_UPDATE}</span>
-        </span>
-      </li>
-      *}
     </ul>
     <br />
 
