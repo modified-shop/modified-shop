@@ -27,10 +27,19 @@ $order = new order();
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();
 
-$selected = isset($_SESSION['customer_country_id']) ? $_SESSION['customer_country_id'] : STORE_COUNTRY;
+$selected = STORE_COUNTRY;
+if (isset($_SESSION['customer_country_id'])) {
+  $countries = xtc_get_countriesList($_SESSION['customer_country_id']);
+  if ($countries !== false) {
+    $selected = $countries['countries_id'];
+  }
+}
+
 if (!isset($_SESSION['customer_id']) || SHOW_ALWAYS_LANG_DROPDOWN) {
   if (isset($_SESSION['country'])) {
     $selected = $_SESSION['country'];
+    $countries = xtc_get_countriesList($selected);
+    $selected = (($countries !== false) ? $countries['countries_id'] : STORE_COUNTRY);
   }
   $module_smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'autocomplete="off" onchange="this.form.submit()"'));
   $module_smarty->assign('SELECT_COUNTRY_PLAIN', xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'autocomplete="off" onchange="this.form.submit()"'));

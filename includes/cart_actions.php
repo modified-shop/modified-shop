@@ -114,7 +114,9 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/update_product_prepare_post/','php') as $file) require ($file);
 
       if (isset($_POST['country'])) {
-        $_SESSION['country'] = xtc_remove_non_numeric($_POST['country']);
+        include_once(DIR_FS_INC . 'xtc_get_countries.inc.php');
+        $countries = xtc_get_countriesList(xtc_remove_non_numeric($_POST['country']));
+        $_SESSION['country'] = (($countries !== false) ? $countries['countries_id'] : STORE_COUNTRY);
         unset($_SESSION['sendto']);
       }
       

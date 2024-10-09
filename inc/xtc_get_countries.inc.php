@@ -32,9 +32,12 @@
     }
     
     if (xtc_not_null($countries_id)) {
-      return $countries_array[$countries_id];
+      if (isset($countries_array[$countries_id])) {
+        return $countries_array[$countries_id];
+      }
     } else {
       return array_values($countries_array);
     }
+    
+    return false;
   }
-?>
