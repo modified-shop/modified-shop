@@ -187,7 +187,8 @@
     'version_max' => '',
     'status' => $status
   );  
-
+  
+  /*
   if (function_exists('chmod')
       && is_make_nonwriteable(DIR_FS_INSTALLER.'includes/configure.php')
       && is_make_writeable(DIR_FS_INSTALLER.'includes/configure.php')
@@ -225,7 +226,8 @@
     'version_max' => '',
     'status' => $status
   );  
-
+  */
+  
   if (isset($db_link) && is_object($db_link)) {  
     xtc_db_query("DROP TABLE IF EXISTS `engine`");
     xtc_db_query("CREATE TABLE IF NOT EXISTS `engine` (`type` VARCHAR( 16 ) NOT NULL)");
