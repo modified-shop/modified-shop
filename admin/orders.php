@@ -224,9 +224,10 @@ switch ($action) {
 		break;
 
 	case 'downloads':
-	  $sql_data_array = array('download_count' => (int)$_POST['download_count'],
-	                          'download_maxdays' => floor((strtotime('+'.(int)$_POST['download_maxdays'].' day') - (int)$_POST['date_purchased']) / 86400)
-	                          );
+	  $sql_data_array = array('download_count' => (int)$_POST['download_count']);
+    if (isset($_POST['download_maxdays']) && preg_replace('/\s/', '', $_POST['download_maxdays']) != '') {
+	    $sql_data_array['download_maxdays'] = floor((strtotime('+'.(int)$_POST['download_maxdays'].' day') - (int)$_POST['date_purchased']) / 86400);
+    }
 	  xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array, 'update', "orders_products_download_id = '".(int)$_POST['orders_products_download_id']."'");
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
 		break;
