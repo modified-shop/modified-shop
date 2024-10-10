@@ -146,7 +146,10 @@ $carriers_query = xtc_db_query("SELECT carrier_id,
                                   FROM ".TABLE_CARRIERS." 
                               ORDER BY carrier_sort_order ASC");
 while ($carrier = xtc_db_fetch_array($carriers_query)) {
-	$carriers[] = array('id' => $carrier['carrier_id'], 'text' => $carrier['carrier_name']);
+  $carriers[] = array(
+    'id' => $carrier['carrier_id'],
+    'text' => $carrier['carrier_name']
+  );
 }
 
 // orders status
@@ -159,7 +162,10 @@ $orders_status_query = xtc_db_query("SELECT orders_status_id,
                                    ORDER BY sort_order");
 while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
   if ($orders_status['language_id'] == $_SESSION['languages_id']) {
-    $orders_statuses[] = array ('id' => $orders_status['orders_status_id'], 'text' => $orders_status['orders_status_name']);
+    $orders_statuses[] = array(
+      'id' => $orders_status['orders_status_id'],
+      'text' => $orders_status['orders_status_name']
+    );
   }
   $orders_status_lang_array[$orders_status['language_id']][$orders_status['orders_status_id']] = $orders_status['orders_status_name'];
 }
@@ -203,10 +209,10 @@ switch ($action) {
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action'))));
     break;
     
-	case 'inserttracking':
-		$oID = (int)$_GET['oID'];
-		$carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
-		$parcel_id = xtc_db_prepare_input($_POST['parcel_id']);
+  case 'inserttracking':
+    $oID = (int)$_GET['oID'];
+    $carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
+    $parcel_id = xtc_db_prepare_input($_POST['parcel_id']);
     $sql_data_array = array(
       'orders_id' => $oID,
       'carrier_id' => $carrier_id,
@@ -214,23 +220,23 @@ switch ($action) {
       'date_added' => 'now()'
     );
     xtc_db_perform(TABLE_ORDERS_TRACKING, $sql_data_array);
-		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));              
-		break;
-		
-	case 'deletetracking':
-		$tracking_id = (int)$_GET['tID'];
-		xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
+    xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));              
+    break;
+    
+  case 'deletetracking':
+    $tracking_id = (int)$_GET['tID'];
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
-		break;
+    break;
 
-	case 'downloads':
-	  $sql_data_array = array('download_count' => (int)$_POST['download_count']);
+  case 'downloads':
+    $sql_data_array = array('download_count' => (int)$_POST['download_count']);
     if (isset($_POST['download_maxdays']) && preg_replace('/\s/', '', $_POST['download_maxdays']) != '') {
-	    $sql_data_array['download_maxdays'] = floor((strtotime('+'.(int)$_POST['download_maxdays'].' day') - (int)$_POST['date_purchased']) / 86400);
+      $sql_data_array['download_maxdays'] = floor((strtotime('+'.(int)$_POST['download_maxdays'].' day') - (int)$_POST['date_purchased']) / 86400);
     }
-	  xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array, 'update', "orders_products_download_id = '".(int)$_POST['orders_products_download_id']."'");
+    xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array, 'update', "orders_products_download_id = '".(int)$_POST['orders_products_download_id']."'");
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
-		break;
+    break;
 
   case 'custom':
     foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_action/','php') as $file) require ($file);
