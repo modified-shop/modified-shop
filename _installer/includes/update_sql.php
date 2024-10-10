@@ -22,7 +22,7 @@
     $db_update['num_tables'] = ((isset($sql_data_array) && is_array($sql_data_array)) ? count($sql_data_array) : 0);
     $db_update['ready'] = 0;
     $db_update['step'] = 1;
-    $db_update['start'] = -1;
+    $db_update['start'] = 0;
     
     if (isset($sql_data_array) && is_array($sql_data_array)) {
       $sql_data_array = array_map('base64_encode', $sql_data_array);
