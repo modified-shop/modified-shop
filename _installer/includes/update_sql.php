@@ -27,11 +27,7 @@
     if (isset($sql_data_array) && is_array($sql_data_array)) {
       $sql_data_array = array_map('base64_encode', $sql_data_array);
       file_put_contents(DIR_FS_INSTALLER.'update/complete.sql', json_encode($sql_data_array, JSON_PRETTY_PRINT));
-      $_POST['sql_files'] = array(
-        'complete.sql'
-      );
     }
-    $db_update['sql_files'] = $_POST['sql_files'];
 
     $_SESSION['db_update'] = $db_update;
   }
@@ -65,7 +61,6 @@
     $json_output['nr'] = $db_update['start'];
     $json_output['num_tables'] = $db_update['num_tables'];
     $json_output['time'] = $time;
-    $json_output['sql_files'] = $db_update['sql_files'];
 
     $json_output = json_encode($json_output);
     echo $json_output;
