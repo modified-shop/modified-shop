@@ -74,7 +74,7 @@ abstract class AbstractCollection implements \IteratorAggregate, \Countable, \Ar
     /**
      * @return \ArrayIterator
      */
-    public function getIterator(): Iterator
+    public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->items);
     }
