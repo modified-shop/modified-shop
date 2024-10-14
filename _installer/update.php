@@ -202,19 +202,21 @@
             $action = 'processnow';
           }
 
-          if (isset($_POST['sql_files']) && count($_POST['sql_files']) > 0) {
+          if (isset($_POST['sql_files']) 
+              && is_array($_POST['sql_files']) 
+              && count($_POST['sql_files']) > 0
+              && $action == 'processnow'
+              )
+          {
             $sql_data_array = array();
             foreach ($_POST['sql_files'] as $sql_file) {
-              if ($sql_file == 'complete.sql' && is_file(DIR_FS_INSTALLER.'update/'.$sql_file)) {
-                $sql_data_content = file_get_contents(DIR_FS_INSTALLER.'update/'.$sql_file);
-                $sql_data = json_decode($sql_data_content, true);
-                $sql_data = array_map('base64_decode', $sql_data);
-                $sql_data_array = array_merge($sql_data_array, $sql_data);
-              } elseif ($sql_file != 'complete.sql' && is_file(DIR_FS_INSTALLER.'update/'.$sql_file)) {
-                $sql_data = sql_update(DIR_FS_INSTALLER.'update/'.$sql_file);
-                $sql_data_array = array_merge($sql_data_array, $sql_data);
-              }
+              $sql_data = sql_update(DIR_FS_INSTALLER.'update/'.$sql_file);
+              $sql_data_array = array_merge($sql_data_array, $sql_data);
             }
+          } elseif (is_file(DIR_FS_INSTALLER.'update/complete.sql')) {
+            $sql_data_content = file_get_contents(DIR_FS_INSTALLER.'update/complete.sql');
+            $sql_data_array = json_decode($sql_data_content, true);
+            $sql_data_array = array_map('base64_decode', $sql_data_array);
           }
 
           include(DIR_FS_INSTALLER.'includes/update_sql.php');
