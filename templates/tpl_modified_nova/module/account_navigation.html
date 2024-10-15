@@ -22,33 +22,35 @@
       <span class="icon"><i class="fa-solid fa-address-card"></i></span><span class="title">{#title_nav_address_book#}</span>
     </a>
   </div>
-                                                     
-  <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_PASSWORD) !== false} selected{/if}">
-    <a href="{$smarty.const.FILENAME_ACCOUNT_PASSWORD|xtc_href_link}" title="{#title_nav_password#}">
-      <span class="icon"><i class="fa-solid fa-key"></i></span><span class="title">{#title_nav_password#}</span>
-    </a>
-  </div>
 
-  <div class="navigation_item{if (strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_HISTORY) !== false) || (strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_HISTORY_INFO) !== false)} selected{/if}">
-    <a href="{$smarty.const.FILENAME_ACCOUNT_HISTORY|xtc_href_link}" title="{#title_nav_orders#}">
-      <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span><span class="title">{#title_nav_orders#}</span>
-    </a>
-  </div>
-
-  {if $smarty.session.customer_id != 1}
-    <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_DELETE) !== false} selected{/if}">
-      <a href="{$smarty.const.FILENAME_ACCOUNT_DELETE|xtc_href_link}" title="{#title_nav_account_delete#}">
-        <span class="icon"><i class="fa-solid fa-trash-can"></i></span><span class="title">{#title_nav_account_delete#}</span>
+  {if isset($smarty.session.account_type) && $smarty.session.account_type == 0 }
+    <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_PASSWORD) !== false} selected{/if}">
+      <a href="{$smarty.const.FILENAME_ACCOUNT_PASSWORD|xtc_href_link}" title="{#title_nav_password#}">
+        <span class="icon"><i class="fa-solid fa-key"></i></span><span class="title">{#title_nav_password#}</span>
       </a>
     </div>
-  {/if}
 
-  {if 'MODULE_CHECKOUT_EXPRESS_STATUS'|defined && $smarty.const.MODULE_CHECKOUT_EXPRESS_STATUS == 'true'}
-    <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_CHECKOUT_EXPRESS) !== false} selected{/if}">
-      <a href="{$smarty.const.FILENAME_ACCOUNT_CHECKOUT_EXPRESS|xtc_href_link}" title="{#title_nav_checkout_express#}">
-        <span class="icon"><i class="fa-solid fa-truck-fast"></i></span><span class="title">{#title_nav_checkout_express#}</span>
+    <div class="navigation_item{if (strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_HISTORY) !== false) || (strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_HISTORY_INFO) !== false)} selected{/if}">
+      <a href="{$smarty.const.FILENAME_ACCOUNT_HISTORY|xtc_href_link}" title="{#title_nav_orders#}">
+        <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span><span class="title">{#title_nav_orders#}</span>
       </a>
     </div>
+
+    {if $smarty.session.customer_id != 1}
+      <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_DELETE) !== false} selected{/if}">
+        <a href="{$smarty.const.FILENAME_ACCOUNT_DELETE|xtc_href_link}" title="{#title_nav_account_delete#}">
+          <span class="icon"><i class="fa-solid fa-trash-can"></i></span><span class="title">{#title_nav_account_delete#}</span>
+        </a>
+      </div>
+    {/if}
+
+    {if 'MODULE_CHECKOUT_EXPRESS_STATUS'|defined && $smarty.const.MODULE_CHECKOUT_EXPRESS_STATUS == 'true'}
+      <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_CHECKOUT_EXPRESS) !== false} selected{/if}">
+        <a href="{$smarty.const.FILENAME_ACCOUNT_CHECKOUT_EXPRESS|xtc_href_link}" title="{#title_nav_checkout_express#}">
+          <span class="icon"><i class="fa-solid fa-truck-fast"></i></span><span class="title">{#title_nav_checkout_express#}</span>
+        </a>
+      </div>
+    {/if}
   {/if}
 
 {*

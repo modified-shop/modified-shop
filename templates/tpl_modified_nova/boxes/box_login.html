@@ -9,7 +9,7 @@
   </div>
 
   <ul class="arrownav">
-    {if isset($IS_CUSTOMER) && $IS_CUSTOMER == true}
+    {if (isset($smarty.session.account_type) && $smarty.session.account_type == 0) || ((isset($smarty.session.account_type) && $smarty.session.account_type == 1) && $smarty.const.GUEST_ACCOUNT_EDIT == 'true')}
       <li>
         <a href="{$LINK_ACCOUNT}" title="{#title_nav_account#}">
           <span class="icon"><i class="fa-solid fa-user"></i></span><span class="title">{#title_nav_account#}</span>
@@ -25,6 +25,9 @@
           <span class="icon"><i class="fa-solid fa-address-card"></i></span><span class="title">{#title_nav_address_book#}</span>
         </a>
       </li>
+    {/if}
+
+    {if isset($smarty.session.account_type) && $smarty.session.account_type == 0}
       <li>
         <a href="{$LINK_PASSWORD}" title="{#title_nav_password#}">
           <span class="icon"><i class="fa-solid fa-key"></i></span><span class="title">{#title_nav_password#}</span>

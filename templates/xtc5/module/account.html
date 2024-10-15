@@ -3,7 +3,7 @@
 <h1>{#heading_account#}</h1>
 {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
-{if !$products_history || !isset($smarty.session.customer_id)}
+{if isset($smarty.session.account_type) && $smarty.session.account_type == 0 }
   <h2>{#title_welcome#}</h2>
   {if #text_welcome#}
     <p>{#text_welcome#}</p>

@@ -19,7 +19,7 @@
 
     <div class="flex_account_col_2">
 
-      {if !$products_history || !isset($smarty.session.customer_id)}
+      {if isset($smarty.session.account_type) && $smarty.session.account_type == 0 }
         <div class="contentbox">
           <div class="subline">{#title_welcome#}</div>
           {if #text_welcome#}

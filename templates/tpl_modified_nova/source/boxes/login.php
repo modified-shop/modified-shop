@@ -26,7 +26,6 @@
     $box_smarty->assign('LINK_CREATE_GUEST_ACCOUNT', xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL'));
     $box_smarty->assign('FORM_END', '</form>');
   } else {
-    $box_smarty->assign('IS_CUSTOMER', ($_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) ? 1 : 0);
     $box_smarty->assign('LINK_ACCOUNT', xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     $box_smarty->assign('LINK_EDIT', xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'));
     $box_smarty->assign('LINK_ADDRESS', xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));

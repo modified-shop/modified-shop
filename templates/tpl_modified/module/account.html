@@ -8,7 +8,7 @@
 
 <div class="twoColums">
   <div class="highlightbox">
-    {if !$products_history || !isset($smarty.session.customer_id)}
+    {if isset($smarty.session.account_type) && $smarty.session.account_type == 0 }
       <h4>{#title_welcome#}</h4>
       {if #text_welcome#}
         <p>{#text_welcome#}</p>
@@ -16,6 +16,7 @@
       {if $LINK_LOGIN}
         <p><a class="black" href="{$LINK_LOGIN}"><strong>{#text_login#}</strong></a></p>
       {/if}
+      <br />
     {/if}
     {if isset($smarty.session.customer_id)}
       <h4>{#title_account#}</h4>
