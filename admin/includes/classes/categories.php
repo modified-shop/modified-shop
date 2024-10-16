@@ -455,18 +455,21 @@ class categories {
        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT." WHERE products_id = '".(int)$product_id."' AND (content_file = '".xtc_db_input($product_content['content_file'])."' OR content_file = '')");
     }
 
+    //delete products images
     $product_image_query = xtc_db_query("SELECT products_image 
                                            FROM ".TABLE_PRODUCTS." 
-                                          WHERE products_id = '".(int)$product_id."'");
-    $product_image = xtc_db_fetch_array($product_image_query);
+                                          WHERE products_id = '".(int)$product_id."'
+                                            AND products_image != ''");
+    if (xtc_db_num_rows($product_image_query) > 0) {
+      $product_image = xtc_db_fetch_array($product_image_query);
 
-    $duplicate_image_query = xtc_db_query("SELECT count(*) AS total 
-                                             FROM ".TABLE_PRODUCTS." 
-                                            WHERE products_image = '".xtc_db_input($product_image['products_image'])."'");
-    $duplicate_image = xtc_db_fetch_array($duplicate_image_query);
-
-    if ($duplicate_image['total'] < 2) {
-      xtc_del_image_file($product_image['products_image']);
+      $duplicate_image_query = xtc_db_query("SELECT count(*) AS total 
+                                               FROM ".TABLE_PRODUCTS." 
+                                              WHERE products_image = '".xtc_db_input($product_image['products_image'])."'");
+      $duplicate_image = xtc_db_fetch_array($duplicate_image_query);
+      if ($duplicate_image['total'] < 2) {
+        xtc_del_image_file($product_image['products_image']);
+      }
     }
 
     //delete more images
@@ -480,20 +483,21 @@ class categories {
       $duplicate_more_image = xtc_db_fetch_array($duplicate_more_image_query);
       if ($duplicate_more_image['total'] < 2) {
         xtc_del_image_file($mo_images_values['image_name']);
-        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES_DESCRIPTION." WHERE image_id = '".(int)$mo_images_values['image_id']."'");
       }
+
+      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES_DESCRIPTION." WHERE image_id = '".(int)$mo_images_values['image_id']."'");
     }
 
     //new module support
     $this->catModules->remove_product($product_id);
 
-    xtc_db_query("DELETE FROM ".TABLE_SPECIALS." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE xsell_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_DESCRIPTION." WHERE products_id = '".(int)$product_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_SPECIALS." WHERE products_id = '".(int)$product_id."'");
     
     xtc_db_query("DELETE pad 
                     FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
@@ -501,9 +505,6 @@ class categories {
                          ON pa.products_attributes_id = pad.products_attributes_id
                             AND pa.products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES." WHERE products_id = '".(int)$product_id."'");
-
-    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
-    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".(int)$product_id."'");
 
     xtc_db_query("DELETE rd
@@ -513,6 +514,9 @@ class categories {
                             AND r.products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_REVIEWS." WHERE products_id = '".(int)$product_id."'");
     
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+
     if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
