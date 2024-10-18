@@ -20,5 +20,5 @@
     $product_sticker = preg_replace('/data-gtin="([\w\-\_]+)"/', 'data-sku="%s"', $product_sticker);
     $product_sticker = preg_replace('/data-mpn="([\w\-\_]+)"/', 'data-sku="%s"', $product_sticker);
     
-    $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, $product->data['products_model']));
+    $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, MODULE_TS_TRUSTEDSHOPS_ID, $product->data['products_model']));
   }
