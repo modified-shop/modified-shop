@@ -34,7 +34,7 @@ Alle $customConfig Einstellungen in der inc/xtc_wysiwig.inc.php können hier
 switch($type) {
         // WYSIWYG editor event_calender
         case 'test_editor_multi':
-            $editorName = 'test_editor_multi['.$langID.']';
+            $editorName = 'test_editor_multi['.$language_id.']';
             $default_editor_height = 200;
             
             // Weitere Einstellung hier einfügen, diese gelten nur für diesen Editor
