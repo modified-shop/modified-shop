@@ -24,7 +24,7 @@ class trustedshops {
   var $_check;
 
   function __construct() {
-    $this->version = '1.19';
+    $this->version = '1.20';
     $this->code = 'trustedshops';
     $this->title = MODULE_TRUSTEDSHOPS_TEXT_TITLE;
     $this->description = MODULE_TRUSTEDSHOPS_TEXT_DESCRIPTION;
