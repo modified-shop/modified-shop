@@ -53,6 +53,9 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
+  $customers_statuses_array = xtc_get_customers_statuses();
+  unset($customers_statuses_array[0]);
+  
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'insert':
@@ -387,8 +390,8 @@ if (xtc_not_null($action) && $action != 'delete') {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_READ_REVIEWS . '<br />' . xtc_draw_pull_down_menu('customers_status_read_reviews', $customers_status_array, $cInfo->customers_status_read_reviews));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_REVIEWS_STATUS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_REVIEWS_STATUS . '<br />' . xtc_draw_pull_down_menu('customers_status_reviews_status', $customers_status_array, $cInfo->customers_status_reviews_status));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_SPECIALS . '<br />' . xtc_draw_pull_down_menu('customers_status_specials', $customers_status_array, $cInfo->customers_status_specials));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_BASE . '<br />' . ENTRY_CUSTOMERS_STATUS_BASE . '<br />' . xtc_draw_pull_down_menu('customers_base_status', xtc_get_customers_statuses()));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . xtc_draw_pull_down_menu('customers_group_adopt_permission', array_merge(array(array('id' => '', 'text' => CUSTOMERS_GROUP_ADOPT_PERMISSIONS)), xtc_get_customers_statuses())));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_BASE . '<br />' . ENTRY_CUSTOMERS_STATUS_BASE . '<br />' . xtc_draw_pull_down_menu('customers_base_status', $customers_statuses_array));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . xtc_draw_pull_down_menu('customers_group_adopt_permission', array_merge(array(array('id' => '', 'text' => CUSTOMERS_GROUP_ADOPT_PERMISSIONS)), $customers_statuses_array)));
                 $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page) . '">' . BUTTON_CANCEL . '</a>');
                 break;
@@ -425,8 +428,12 @@ if (xtc_not_null($action) && $action != 'delete') {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_READ_REVIEWS . '<br />' . xtc_draw_pull_down_menu('customers_status_read_reviews', $customers_status_array, $cInfo->customers_status_read_reviews));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_REVIEWS_STATUS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_REVIEWS_STATUS . '<br />' . xtc_draw_pull_down_menu('customers_status_reviews_status', $customers_status_array, $cInfo->customers_status_reviews_status));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_SPECIALS . '<br />' . xtc_draw_pull_down_menu('customers_status_specials', $customers_status_array, $cInfo->customers_status_specials));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_BASE . '<br />' . ENTRY_CUSTOMERS_STATUS_BASE_EDIT . '<br />' . xtc_draw_pull_down_menu('customers_base_status', xtc_get_customers_statuses()));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . xtc_draw_pull_down_menu('customers_group_adopt_permission', array_merge(array(array('id' => '', 'text' => CUSTOMERS_GROUP_ADOPT_PERMISSIONS)), xtc_get_customers_statuses())));
+                
+                unset($customers_statuses_array[$cInfo->customers_status_id]);
+                if ($cInfo->customers_status_id != 0) {
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_BASE . '<br />' . ENTRY_CUSTOMERS_STATUS_BASE_EDIT . '<br />' . xtc_draw_pull_down_menu('customers_base_status', array_merge(array(array('id' => '', 'text' => CUSTOMERS_STATUS_BASE)), $customers_statuses_array)));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . xtc_draw_pull_down_menu('customers_group_adopt_permission', array_merge(array(array('id' => '', 'text' => CUSTOMERS_GROUP_ADOPT_PERMISSIONS)), $customers_statuses_array)));
+                }
                 if (DEFAULT_CUSTOMERS_STATUS_ID != $cInfo->customers_status_id) {
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 }
