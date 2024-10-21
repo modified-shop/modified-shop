@@ -694,6 +694,25 @@
               $this->products[$index]['attributes'][$subindex][str_replace('attributes_', '', $key)] = $val;
             }
 
+            $vpe_value = $products[$i]['vpe_value'] + $attributes['attributes_vpe_value'];
+            switch ($attributes['weight_prefix']) {
+              case '-':
+                $vpe_value = $products[$i]['vpe_value'] - $attributes['attributes_vpe_value'];
+                break;
+              case '=':
+                $vpe_value = $attributes['attributes_vpe_value'];
+                break;
+            }
+                    
+            if ($attributes['attributes_vpe_value'] != 0.0 && $products[$i]['price'] > 0) {
+              $vpe_array = array(
+                'products_vpe_status' => $products[$i]['vpe_status'],
+                'products_vpe_value' => $vpe_value,
+                'products_vpe' => $attributes['attributes_vpe_id'],
+              );
+              $this->products[$index]['vpe'] = $main->getVPEtext($vpe_array, $products[$i]['price']);
+            }
+
             //new module support
             $this->products[$index]['attributes'][$subindex] = $this->orderModules->cart_attributes($this->products[$index]['attributes'][$subindex],$attributes,$products[$i]['id'],$value,$this->products[$index]);
   

@@ -1,0 +1,32 @@
+<?php
+/* -----------------------------------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License 
+   ---------------------------------------------------------------------------------------*/
+
+  if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
+    $vpe_value = $products[$i]['vpe_value'] + $attributes['attributes_vpe_value'];
+    switch ($attributes['weight_prefix']) {
+      case '-':
+        $vpe_value = $products[$i]['vpe_value'] - $attributes['attributes_vpe_value'];
+        break;
+      case '=':
+        $vpe_value = $attributes['attributes_vpe_value'];
+        break;
+    }
+            
+    if ($attributes['attributes_vpe_value'] != 0.0 && $products[$i]['price'] > 0) {
+      $vpe_array = array(
+        'products_vpe_status' => $products[$i]['vpe_status'],
+        'products_vpe_value' => $vpe_value,
+        'products_vpe' => $attributes['attributes_vpe_id'],
+      );
+      $module_content[$i]['PRODUCTS_VPE'] = $main->getVPEtext($vpe_array, $products[$i]['price']);
+    }
+  }
