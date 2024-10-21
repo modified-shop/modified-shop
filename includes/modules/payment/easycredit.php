@@ -71,7 +71,7 @@ class easycredit {
   function __construct() {
     global $order, $main;
 
-    $this->version = '1.27';
+    $this->version = '1.28';
     $this->code = 'easycredit';
     $this->title = MODULE_PAYMENT_EASYCREDIT_TEXT_TITLE;
     $this->description = MODULE_PAYMENT_EASYCREDIT_TEXT_DESCRIPTION;
