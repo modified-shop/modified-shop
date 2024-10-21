@@ -461,8 +461,11 @@
           $action = (isset($_GET['action']) ? $_GET['action'] : '');
           if (isset($_POST['action']) && $_POST['action'] == 'restorenow') {
             $action = 'restorenow';
+            $_GET['file'] = $_POST['restore_file'];
+          } else {
+            $_GET['file'] = basename($_SESSION['dump']['file']);
           }
-          $_GET['file'] = $_POST['restore_file'];
+
 
           $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
           $utf8_array = xtc_db_fetch_array($utf8_query);
