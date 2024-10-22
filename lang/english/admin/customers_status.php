@@ -88,7 +88,7 @@ define('TEXT_INFO_HEADING_DELETE_CUSTOMERS_STATUS', 'Delete Customer Group');
 define('TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS','Edit Group Data');
 define('TEXT_INFO_HEADING_NEW_CUSTOMERS_STATUS', 'New Customer Group');
 
-define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Base customers group for product prices</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Transfer for product prices</strong>');
 define('ENTRY_CUSTOMERS_STATUS_BASE', 'Apply customers group prices from the following customer group.');
 define('ENTRY_CUSTOMERS_STATUS_BASE_EDIT', 'Apply customers group prices from the following customer group.<br /><span class="col-red"><strong>CAUTION:</strong></span> Hereby you overwrite all existing customer group prices for the customer group!');
 define('CUSTOMERS_STATUS_BASE', 'Don\'t apply product prices');

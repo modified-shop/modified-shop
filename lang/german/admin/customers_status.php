@@ -88,7 +88,7 @@ define('TEXT_INFO_HEADING_DELETE_CUSTOMERS_STATUS', 'Kundengruppe l&ouml;schen')
 define('TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS','Gruppendaten bearbeiten');
 define('TEXT_INFO_HEADING_NEW_CUSTOMERS_STATUS', 'Neue Kundengruppe');
 
-define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Basis Kundengruppe f&uuml;r Artikelpreise</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Transfer f&uuml;r Artikelpreise</strong>');
 define('ENTRY_CUSTOMERS_STATUS_BASE', 'Die Kundengruppen-Preise der folgenden Kundengruppe &uuml;bernehmen.');
 define('ENTRY_CUSTOMERS_STATUS_BASE_EDIT', 'Die Kundengruppen-Preise der folgenden Kundengruppe &uuml;bernehmen.<br /><span class="col-red"><strong>ACHTUNG:</strong></span> Hiermit werden alle bereits vorhandenen Kundengruppen-Preise der Kundengruppe &uuml;berschrieben!');
 define('CUSTOMERS_STATUS_BASE', 'Keine Artikelpreise &uuml;bertragen');
