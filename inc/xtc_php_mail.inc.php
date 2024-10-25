@@ -57,7 +57,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
      $where = " WHERE code = '".DEFAULT_LANGUAGE."'";
   }
   
-  if (isset($order) && is_object($order)) {
+  if (isset($order) && is_object($order) && isset($order->info['language'])) {
     $where = " WHERE directory = '".$order->info['language']."'";
     $customers_status = $order->info['status'];
   }
