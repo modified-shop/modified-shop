@@ -453,7 +453,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
             $amount = $this->xtcAddTax($amount, $tax);
           }
                     
-          if ($total['code'] == 'ot_discount') {          
+          if ($total['code'] == 'ot_discount' && $products_total > 0) {          
             $tax = round(($tax_total_products / ($products_total - $tax_total_products)), 2) * 100;
           }
           
