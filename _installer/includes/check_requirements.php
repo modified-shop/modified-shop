@@ -226,7 +226,12 @@
     'status' => $status
   );  
 
-  if (isset($db_link) && is_object($db_link)) {  
+  if (isset($db_link) 
+      && is_object($db_link) 
+      && $db_link->errno == 0 
+      && $db_link->connect_errno == 0
+      )
+  {  
     xtc_db_query("DROP TABLE IF EXISTS `engine`");
     xtc_db_query("CREATE TABLE IF NOT EXISTS `engine` (`type` VARCHAR( 16 ) NOT NULL)");
     
