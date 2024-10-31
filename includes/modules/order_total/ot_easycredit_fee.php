@@ -34,27 +34,32 @@
     }
 
     function process() {
-      global $order, $xtPrice;
-
-      if (isset($_SESSION['easycredit'])
-          && isset($_SESSION['easycredit']['total_cost'])
-          && isset($_SESSION['easycredit']['total_interest'])
+      global $order, $xtPrice, $PHP_SELF;
+      
+     if (in_array(basename($PHP_SELF), array(FILENAME_CHECKOUT_CONFIRMATION, FILENAME_CHECKOUT_PROCESS))
+          && isset($GLOBALS['easycredit']) 
+          && is_object($GLOBALS['easycredit'])
+          && $GLOBALS['easycredit']->ecProcess->getProcessData()->getStatus() == 'ACCEPTED'
           )
       {
+        $easycredit = $GLOBALS['easycredit']->ecProcess->getFinancingDetails()->getInstallmentPlan();
+                
+        $total_cost = $easycredit->getAmount();
+        $total_interest = $easycredit->getInterestRate()->getAccruingInterest();
+      
         $this->output[] = array(
-            'title' => '<br/>'.$this->title . ':',
-            'text'  => '<br/>'.$xtPrice->xtcFormat($_SESSION['easycredit']['total_interest'], true),
-            'value' => $_SESSION['easycredit']['total_interest'],
-            'sort_order' => $this->sort_order,
-          );
+          'title' => '<br/>'.$this->title . ':',
+          'text'  => '<br/>'.$xtPrice->xtcFormat($total_interest, true),
+          'value' => $total_interest,
+          'sort_order' => $this->sort_order,
+        );
 
         $this->output[] = array(
-            'title' => '<b>'.$this->total_title . ':</b>',
-            'text'  => '<b>'.$xtPrice->xtcFormat($_SESSION['easycredit']['total_cost'], true).'</b>',
-            'value' => $_SESSION['easycredit']['total_cost'],
-            'sort_order' => $this->sort_order + 1,
-          );
-
+          'title' => '<b>'.$this->total_title . ':</b>',
+          'text'  => '<b>'.$xtPrice->xtcFormat($total_cost, true).'</b>',
+          'value' => $total_cost,
+          'sort_order' => $this->sort_order + 1,
+        );
       }
     }
 

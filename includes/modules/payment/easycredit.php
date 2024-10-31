@@ -144,6 +144,8 @@ class easycredit {
     }
     
     if ($this->enabled === true
+        && isset($_SESSION['sendto'])
+        && isset($_SESSION['billto'])
         && $_SESSION['sendto'] !== $_SESSION['billto']
         )
     {
@@ -223,10 +225,6 @@ class easycredit {
           && $this->ecProcess->getProcessData()->getValidUntil()->format('U') > time()
           )
       {
-        $FinancingDetails = $this->ecProcess->getFinancingDetails();
-        $_SESSION['easycredit']['total_cost'] = $FinancingDetails->getInstallmentPlan()->getAmount();
-        $_SESSION['easycredit']['total_interest'] = $FinancingDetails->getInstallmentPlan()->getInterestRate()->getAccruingInterest();
-        
         return true;
       } else {
         $this->ecProcess->destroy();
@@ -322,6 +320,8 @@ class easycredit {
       }
     }
     
+    //reset
+    $this->ecProcess->getProcessData()->initEmpty();
     $this->ecProcess->destroy();
     unset($_SESSION['easycredit']);
   }
@@ -608,30 +608,32 @@ class easycredit {
     $ContractInfoURL .= (($this->link_parameters != '') ? $separator.$this->link_parameters : '');
     
     $string = $CommonProcessData->getPaymentPlanText();
-        
-    $text_array = array();
-    $array = explode(').', $string);
-
-    foreach ($array as $text) {
-      if (trim($text) != '') {
-        $part1 = explode(':', $text, 2);
-        $text_array[] = trim($part1[0]);
-  
-        $part2 = explode('),', $part1[1], 2);
-        $part3 = explode(',', trim($part2[0]).')', 2);
-  
-        $text_array[] = $part3[0];
     
-        $part4 = explode('(', trim($part3[1]));
-        $text_array[] = trim($part4[0]);
-        $text_array[] = '('.trim($part4[1]);
-
-        $part5 = explode('(', trim($part2[1]));
-        $text_array[] = trim($part5[0]);
-        $text_array[] = '('.trim($part5[1]).')';
+    $text_array = array();
+    if (xtc_not_null($string)) {
+      $array = explode(').', $string);
+  
+      foreach ($array as $text) {
+        if (trim($text) != '') {
+          $part1 = explode(':', $text, 2);
+          $text_array[] = trim($part1[0]);
+    
+          $part2 = explode('),', $part1[1], 2);
+          $part3 = explode(',', trim($part2[0]).')', 2);
+    
+          $text_array[] = $part3[0];
+      
+          $part4 = explode('(', trim($part3[1]));
+          $text_array[] = trim($part4[0]);
+          $text_array[] = '('.trim($part4[1]);
+  
+          $part5 = explode('(', trim($part2[1]));
+          $text_array[] = trim($part5[0]);
+          $text_array[] = '('.trim($part5[1]).')';
+        }
       }
     }
-
+    
     if (count($text_array) == 12) {
       $text_array = array_chunk($text_array, 6);
   
