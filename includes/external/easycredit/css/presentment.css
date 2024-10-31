@@ -5,24 +5,26 @@
 .ec_checkout {
   border: 0px;
   padding: 5px 0px 0px 0px;
-  max-width: 500px;
+  max-width: 100%;
 }
 .ec_short_container {
   display:block;
   width:100%;
-  max-width:495px;
+  max-width:100%;
   /*border: 1px solid #1099DB;*/
   padding:5px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+.ec_short_container img {
+  margin: 0 0 20px 0;
+}
 .ec_cart {
-  display:table;
+  display:flex;
   width:auto;
 }
 .ec_cart_image {
-  display:table-cell;
   padding: 0 10px 0 0;
   vertical-align:middle;
 }
@@ -30,7 +32,6 @@
   vertical-align:top;
 }
 .ec_cart_text {
-  display:table-cell;
   padding: 0px 0px 0 0;
   vertical-align:middle;
   font-size:11px;
