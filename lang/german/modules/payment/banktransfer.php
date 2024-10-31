@@ -80,6 +80,8 @@ define('MODULE_PAYMENT_BANKTRANSFER_STATUS_TITLE', 'Banktransfer Zahlungen erlau
 define('MODULE_PAYMENT_BANKTRANSFER_STATUS_DESC', 'M&ouml;chten Sie Banktransfer Zahlungen erlauben?');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_TITLE', 'Notwendige Bestellungen');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_DESC', 'Die Mindestanzahl an Bestellungen, die ein Kunde haben muss, damit die Option zur Verf&uuml;gung steht.');
+define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID_TITLE' , 'Bestellstatus notwendiger Bestellungen');
+define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID_DESC' , 'W&auml;hlen Sie hier den Status der Bestellungen aus, der f&uuml;r die unter "Notwendige Bestellungen" eingetragene Anzahl ber&uuml;cksichtigt werden soll.');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_TITLE', 'IBAN Mode');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_DESC', 'M&ouml;chten Sie nur IBAN Zahlungen erlauben?');
 
@@ -95,4 +97,3 @@ define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION', '<strong><font c
 
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS', 'Aktualisierte Bankleitzahlen: ');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_ERROR', 'Bankleitzahlen konnten nicht aktualisiert werden.');
-?>

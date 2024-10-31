@@ -84,7 +84,10 @@
     function update_status() {
       global $order;
 
-      $check_order_query = xtc_db_query("select count(*) as count from " . TABLE_ORDERS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+      $check_order_query = xtc_db_query("SELECT COUNT(*) as count 
+                                           FROM ".TABLE_ORDERS." 
+                                          WHERE customers_id = '".(int) $_SESSION['customer_id']."' 
+                                            AND orders_status IN (".MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID.")");
       $order_check = xtc_db_fetch_array($check_order_query);
 
       if ($order_check['count'] < MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER) {
@@ -553,6 +556,7 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_ALLOWED', '', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID', '0',  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID', '0',  '6', '0', 'xtc_cfg_display_orders_statuses', 'xtc_cfg_multi_checkbox(\'xtc_get_orders_status\', \'chr(44)\',', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION', 'false',  '6', '2', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ', 'false', '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE', 'fax.html', '6', '0', now())");
@@ -577,6 +581,7 @@
         'MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ',
         'MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION',
         'MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER',
+        'MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID',
         'MODULE_PAYMENT_BANKTRANSFER_URL_NOTE',
         'MODULE_PAYMENT_BANKTRANSFER_CI',
         'MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX',

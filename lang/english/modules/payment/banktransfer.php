@@ -80,6 +80,8 @@ define('MODULE_PAYMENT_BANKTRANSFER_STATUS_TITLE' , 'Allow Banktransfer Payments
 define('MODULE_PAYMENT_BANKTRANSFER_STATUS_DESC' , 'Do you want to accept banktransfer payments?');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_TITLE' , 'Minimum Orders');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_DESC' , 'Minimum orders for a Customer to view this Option.');
+define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID_TITLE' , 'Order status for calculation');
+define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID_DESC' , 'Select the status of the purchase orders here, which should be considered for the number entered under "Minimum Orders".');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_TITLE', 'IBAN Mode');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_DESC', 'Do you want to accept IBAN banktransfer payments only?');
 
@@ -95,4 +97,3 @@ define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION', '<strong><font c
 
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS', 'Updated bank codes: ');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_ERROR', 'Bank codes could not be updated.');
-?>
