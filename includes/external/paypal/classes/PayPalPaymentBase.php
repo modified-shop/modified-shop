@@ -1369,7 +1369,11 @@ class PayPalPaymentBase extends PayPalCommon {
       }
     }
  
-    if (defined('MODULE_PAYMENT_PAYPALEXPRESS_STATUS') && !defined('MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT')) {
+    if ((defined('MODULE_PAYMENT_PAYPALEXPRESS_STATUS') 
+         || defined('MODULE_PAYMENT_PAYPALCART_STATUS')
+         ) && !defined('MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT')
+        )
+    {
       $check_query = xtc_db_query("SELECT * 
                                      FROM ".TABLE_CONFIGURATION." 
                                     WHERE configuration_key = 'MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT'");
