@@ -64,7 +64,7 @@ abstract class AbstractObject implements \ArrayAccess, \Serializable, TransferIn
             if (is_array($v)) {
                 $empty = $this->isEmptyArray($v);
             } else {
-                $v = trim($v);
+                $v = (($v != '') ? trim($v) : '');
                 if (!empty($v)) {
                     $empty = false;
                 }

@@ -71,7 +71,7 @@ class Process extends MessageCollector
             if ($this->saveHandler) {
                 $this->processData->setSaveHandler($this->saveHandler);
             }
-            $this->processData->initEmpty();
+            //$this->processData->initEmpty();
             $this->processData->load();
         } else {
             $this->processData = $processData;
