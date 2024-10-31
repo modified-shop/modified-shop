@@ -520,36 +520,40 @@ class product {
 
     if ($pID == '') {
       $pID = $this->pID;
-      $pValues = array(
+      $pValues_array[$pID] = array(
+        'products_vpe' => $this->data['products_vpe'],
         'products_vpe_status' => $this->data['products_vpe_status'],
-        'products_vpe_value'  => $this->data['products_vpe_value'],
-        'products_vpe'        => $this->data['products_vpe'],
-        'products_tax_class_id'=> $this->data['products_tax_class_id']
+        'products_vpe_value' => $this->data['products_vpe_value'],
+        'products_tax_class_id' => $this->data['products_tax_class_id']
       );
-    } 
-    else {
+    } else {
       if (!array_key_exists($pID, $pValues_array)) {
-        $values_query = xtDBquery("SELECT products_vpe_status, products_vpe_value, products_vpe, products_tax_class_id FROM " . TABLE_PRODUCTS . ' WHERE products_id = ' . (int)$pID);
+        $values_query = xtDBquery("SELECT products_vpe, 
+                                          products_vpe_status, 
+                                          products_vpe_value, 
+                                          products_tax_class_id 
+                                     FROM ".TABLE_PRODUCTS." 
+                                    WHERE products_id = '".(int)$pID."'");
         if (xtc_db_num_rows($values_query, true)) {
           $pValues_array[$pID] = xtc_db_fetch_array($values_query, true);
-        }
-        else {
+        } else {
           $pValues_array[$pID] = array(
+            'products_vpe' => 0,
             'products_vpe_status' => 0,
-            'products_vpe_value'  => 0,
-            'products_vpe'        => 0,
-            'products_tax_class_id'=> 0
+            'products_vpe_value' => 0,
+            'products_tax_class_id' => 0
           );
         }
-      }
-      $pValues = array(
-        'products_vpe_status' => $pValues_array[$pID]['products_vpe_status'],
-        'products_vpe_value'  => $pValues_array[$pID]['products_vpe_value'],
-        'products_vpe'        => $pValues_array[$pID]['products_vpe'],
-        'products_tax_class_id'=> $pValues_array[$pID]['products_tax_class_id']
-      );
+      }      
     }
-    
+
+    $pValues = array(
+      'products_vpe' => $pValues_array[$pID]['products_vpe'],
+      'products_vpe_status' => $pValues_array[$pID]['products_vpe_status'],
+      'products_vpe_value' => $pValues_array[$pID]['products_vpe_value'],
+      'products_tax_class_id' => $pValues_array[$pID]['products_tax_class_id']
+    );
+
     if (!isset($graduated_array[$pID])) {	
       $graduated_array[$pID] = array();
       
