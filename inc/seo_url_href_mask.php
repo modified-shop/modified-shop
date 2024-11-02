@@ -22,6 +22,7 @@
 
     static $char_search;
     static $char_replace;
+    static $lang_charset;
     
     if (!is_array($char_search) || !is_array($char_replace)) {
       list($char_search, $char_replace) = shopstat_getRegExps();
@@ -30,7 +31,18 @@
     $newstring = $string;
   
     if ($charset == '') {
-      $charset = strtoupper($_SESSION['language_charset']);
+      if (isset($_SESSION['language_charset'])) {
+        $charset = strtoupper($_SESSION['language_charset']);
+      } else {
+        if (!isset($lang_charset)) {
+          $language_query = xtDBquery("SELECT * 
+                                         FROM ".TABLE_LANGUAGES." 
+                                        WHERE code = '".xtc_db_input(DEFAULT_LANGUAGE)."'");
+          $language = xtc_db_fetch_array($language_query, true);
+          $lang_charset = $language['language_charset'];
+        }
+        $charset = $lang_charset;
+      }
     }
   
     //-- convert to utf-8
