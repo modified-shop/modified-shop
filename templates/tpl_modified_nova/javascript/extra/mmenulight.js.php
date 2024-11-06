@@ -16,6 +16,10 @@ if (strpos(basename($PHP_SELF), 'checkout') === false
 {
   ?>
   <script>
+
+  let mobilemenu = document.getElementById('mobile_menu');
+  if (mobilemenu !== null) { 
+
     document.addEventListener(
       "DOMContentLoaded", () => {
         const menu = new MmenuLight(
@@ -47,6 +51,8 @@ if (strpos(basename($PHP_SELF), 'checkout') === false
 
       }
     );
+  }    
+    
   </script>
   <?php
 }
