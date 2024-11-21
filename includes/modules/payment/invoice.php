@@ -53,9 +53,11 @@ class invoice {
   function update_status() {
     global $order, $xtPrice;
     
+    $customer_id = (isset($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : (isset($_SESSION['customer_gid']) ? (int)$_SESSION['customer_gid'] : 0));
+    
     $check_order_query = xtc_db_query("SELECT COUNT(*) as count 
                                          FROM ".TABLE_ORDERS." 
-                                        WHERE customers_id = '".(int) $_SESSION['customer_id']."' 
+                                        WHERE customers_id = '".$customer_id."' 
                                           AND orders_status IN (".MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID.")");
     $order_check = xtc_db_fetch_array($check_order_query);
 
