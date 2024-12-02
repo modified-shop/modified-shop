@@ -71,7 +71,24 @@
         
         $sorting = ' ORDER BY '.SEARCH_RESULTS_FIELD.' '.SEARCH_RESULTS_SORT.', p.products_id ASC ';
                                                  
-        $autocomplete_search_query = "SELECT ".$product->default_select.",
+        $autocomplete_search_query = "SELECT ".ADD_SELECT_SEARCH."
+                                             p.products_id,
+                                             p.products_ean,
+                                             p.products_quantity,
+                                             p.products_shippingtime,
+                                             p.products_model,
+                                             p.products_image,
+                                             p.products_price,
+                                             p.products_weight,
+                                             p.products_tax_class_id,
+                                             p.products_fsk18,
+                                             p.products_vpe,
+                                             p.products_vpe_status,
+                                             p.products_vpe_value,
+                                             pd.products_name,
+                                             pd.products_heading_title,
+                                             pd.products_short_description,
+                                             pd.products_description,
                                              IFNULL(s.specials_new_products_price, p.products_price) AS price
                                         FROM ".TABLE_PRODUCTS." p 
                                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
