@@ -568,28 +568,25 @@
 
     $allow_tax = get_allow_tax($c_info, $status);
 
-    $shipping_time_query = xtc_db_query("SELECT ps.shipping_status_name
-                                           FROM ".TABLE_PRODUCTS." p
-                                           JOIN ".TABLE_SHIPPING_STATUS." ps
-                                                ON p.products_shippingtime = ps.shipping_status_id
-                                                   AND ps.language_id = '".(int)$lang['languages_id']."'
-                                          WHERE p.products_id = '".(int)$data_array['products_id']."'");
-    $shipping_time_array = xtc_db_fetch_array($shipping_time_query);
-    $shipping_time = $shipping_time_array['shipping_status_name'];
-
     $product_query = xtc_db_query("SELECT p.products_model,
-                                          p.products_tax_class_id,
-                                          p.products_weight,
+                                          p.products_ean,
                                           p.products_vpe,
                                           p.products_vpe_status,
                                           p.products_vpe_value,
+                                          p.products_weight,
+                                          p.products_tax_class_id,
+                                          p.products_price as products_price_origin,
                                           pd.products_name,
                                           pd.products_short_description,
-                                          pd.products_order_description
+                                          pd.products_order_description,
+                                          ps.shipping_status_name
                                      FROM ".TABLE_PRODUCTS." p
                                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                           ON pd.products_id = p.products_id
                                              AND pd.language_id = '".(int)$lang['languages_id']."'
+                                LEFT JOIN ".TABLE_SHIPPING_STATUS." ps
+                                          ON p.products_shippingtime = ps.shipping_status_id
+                                             AND ps.language_id = '".(int)$lang['languages_id']."'
                                     WHERE p.products_id = '".(int)$data_array['products_id']."'");
     $product = xtc_db_fetch_array($product_query);
 
@@ -614,6 +611,10 @@
       $price = round($price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
     }
 
+    if ($products_price_origin = $xtPrice->xtcGetGraduatedPrice($data_array['products_id'], 1)) {
+      $product['products_price_origin'] = $products_price_origin;
+    }
+
     $final_price = $price * (int)$data_array['products_quantity'];
   
     $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
@@ -622,16 +623,18 @@
     $sql_data_array = array(
       'orders_id' => (int)($oID),
       'products_id' => (int)($data_array['products_id']),
+      'products_model' => xtc_db_prepare_input($product['products_model']),
+      'products_ean' => xtc_db_prepare_input($product['products_ean']),
       'products_name' => xtc_db_prepare_input($product['products_name']),
-      'products_order_description' => xtc_db_prepare_input($product['products_order_description']),
       'products_price' => (float)$price,
+      'products_price_origin' => (float)$product['products_price_origin'],
+      'products_shipping_time' => xtc_db_prepare_input($product['shipping_status_name']),
       'products_discount_made' => 0,
-      'products_shipping_time' => xtc_db_prepare_input($shipping_time),
       'final_price' => (float)$final_price,
       'products_tax' => xtc_db_prepare_input($tax_rate),
       'products_quantity' => xtc_db_prepare_input($data_array['products_quantity']),
       'allow_tax' => $allow_tax,
-      'products_model' => xtc_db_prepare_input($product['products_model']),
+      'products_order_description' => xtc_db_prepare_input($product['products_order_description']),
       'products_weight' => $product['products_weight'],
       'products_weight_origin' => $product['products_weight'],
     );
@@ -640,7 +643,7 @@
       $sql_data_array['products_vpe'] = xtc_get_vpe_name($product['products_vpe'], $lang['languages_id']);
       $sql_data_array['products_vpe_value'] = $product['products_vpe_value'];
     }
-    
+        
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
     if ($data_array['products_quantity'] != 0) {
