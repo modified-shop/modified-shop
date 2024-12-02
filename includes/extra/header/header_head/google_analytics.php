@@ -397,6 +397,9 @@ function pushgTagEventAction() {";
     $order = new order($last_order);
 
     $addCode = "
+  gtag('set', 'user_data', {
+    email: '".$order->customer['email_address']."'
+  });
   gtag('event', 'conversion', {
     send_to: '".MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID."',
     transaction_id: '".$order->info['orders_id']."',
