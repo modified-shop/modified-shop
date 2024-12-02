@@ -245,13 +245,16 @@
         {/if}
 
         <div class="flex_listing_cols">        
-          <div class="flex_listing_categories">
-            {if isset($box_SUB_CATEGORIES)}{$box_SUB_CATEGORIES}{/if}
-          </div>
-
-          <div class="flex_listing_products">
+          {if isset($box_SUB_CATEGORIES)}
+            <div class="flex_listing_categories">
+              {$box_SUB_CATEGORIES}
+            </div>
+            <div class="flex_listing_products">
+              {if isset($main_content)}{$main_content}{/if}
+            </div>
+          {else}
             {if isset($main_content)}{$main_content}{/if}
-          </div>
+          {/if}
         </div>
 
       </div>
