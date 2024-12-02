@@ -14,11 +14,11 @@
    --------------------------------------------------------------*/
 
 $state_pages = array(
-  'address_book_process.php',
-  'create_account.php',
-  'create_guest_account.php',
-  'checkout_shipping_address.php',
-  'checkout_payment_address.php'
+  FILENAME_ADDRESS_BOOK_PROCESS,
+  FILENAME_CREATE_ACCOUNT,
+  FILENAME_CREATE_GUEST_ACCOUNT,
+  FILENAME_CHECKOUT_SHIPPING_ADDRESS,
+  FILENAME_CHECKOUT_PAYMENT_ADDRESS,
 );
 
 if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
