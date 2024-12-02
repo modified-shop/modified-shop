@@ -80,7 +80,7 @@ if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
     }
   
     //countries with required_zones
-    $.get('ajax.php', {ext: 'get_states', country: selection, speed: 1}, function(data) {
+    $.get('<?php echo DIR_WS_BASE; ?>ajax.php', {ext: 'get_states', country: selection, speed: 1}, function(data) {
       if (data != '' && data != undefined) {
         $("[name='state']").replaceWith('<select name="state"></select>');
         var stateSelect = $("[name='state']");
