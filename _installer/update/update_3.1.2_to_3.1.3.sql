@@ -10,4 +10,7 @@
 #GTB - 2024-12-03 - changed database_version
 INSERT INTO `database_version` (`version`, `date_added`) VALUES ('MOD_3.1.3', NOW());
 
+#GTB - 2024-12-03 - add index 
+ALTER TABLE `banners_history` ADD INDEX `idx_banners_history_date` (`banners_history_date`); 
+
 # Keep an empty line at the end of this file for the db_updater to work properly
