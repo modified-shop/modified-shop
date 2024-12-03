@@ -1085,13 +1085,12 @@
       if ($allow_tax == '1') {
         $bprice = $products['final_price'];
         $nprice = $xtPrice->xtcRemoveTax($bprice, $tax_rate);
-        $cprice = $nprice;
-      } else {
+      } else {      
         $nprice = $products['final_price'];
         $bprice = $xtPrice->xtcAddTax($nprice, $tax_rate);
-        $cprice = $bprice;
       }
 
+      $cprice = $nprice;
       if ($discount > 0) {
         $cprice = $cprice - ($cprice / 100 * $discount);
       }
