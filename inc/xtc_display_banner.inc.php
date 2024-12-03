@@ -73,7 +73,10 @@
             'TITLE' => $banner_title,
             'GROUP' => $banner['banners_group'],
           );
-          xtc_update_banner_display_count($banner['banners_id']);
+          
+          if ($banner['banners_redirect'] == 1) {
+            xtc_update_banner_display_count($banner['banners_id']);
+          }
         }
         
         return $banner_array;
@@ -113,7 +116,9 @@
       'GROUP' => $banner['banners_group'],
     );
     
-    xtc_update_banner_display_count($banner['banners_id']);
+    if ($banner['banners_redirect'] == 1) {
+      xtc_update_banner_display_count($banner['banners_id']);
+    }
         
     return $banner_array;
   }
