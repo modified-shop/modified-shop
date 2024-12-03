@@ -25,7 +25,7 @@ if (is_dir($fs_dir)) {
       if ($favicon_type['extension'] == 'ico') {
         echo '<link rel="shortcut icon" href="'.xtc_href_link($ws_dir.$favicon, '', $request_type, false).'" />'."\n";
       } else {
-        echo '<link rel="icon" type="image/'.$favicon_type['extension'].'"'.((isset($match[0]) && $match[0] != '') ? ' sizes="'.$match[0].'"' : '').' href="'.xtc_href_link($ws_dir.$favicon, '', $request_type, false).'" />'."\n";
+        echo '<link rel="icon" type="image/'.$favicon_type['extension'].(($favicon_type['extension'] == 'svg') ? '+xml' : '').'"'.((isset($match[0]) && $match[0] != '') ? ' sizes="'.$match[0].'"' : '').' href="'.xtc_href_link($ws_dir.$favicon, '', $request_type, false).'" />'."\n";
       }
     }
   }
@@ -39,6 +39,7 @@ if (is_dir($fs_dir)) {
       preg_match('/(\d+)x(\d+)/', $apple_touch_icon, $match);
       echo '<link rel="apple-touch-icon"'.((isset($match[0]) && $match[0] != '') ? ' sizes="'.$match[0].'"' : '').' href="'.xtc_href_link($ws_dir.$apple_touch_icon, '', $request_type, false).'" />'."\n";
     }
+    echo '<meta name="apple-mobile-web-app-title" content="'.encode_htmlspecialchars(TITLE).'" />'."\n";
   }
 
   // safari icon
@@ -82,6 +83,7 @@ if (is_dir($fs_dir)) {
   
   // android touch icon
   $android_touch_icon_array = glob($fs_dir.'android-chrome*');
+  $android_touch_icon_array = array_merge($android_touch_icon_array, glob($fs_dir.'web-app-manifest*'));
   if (is_array($android_touch_icon_array) && count($android_touch_icon_array) > 0) {
     natcasesort($android_touch_icon_array);
     $manifest_array = array('name' => encode_htmlspecialchars(TITLE),
@@ -114,4 +116,3 @@ if (is_dir($fs_dir)) {
 } else {
   echo '<link rel="shortcut icon" href="'.xtc_href_link('templates/'.CURRENT_TEMPLATE.'/favicon.ico','', $request_type, false).'" />'."\n";
 }
-?>
