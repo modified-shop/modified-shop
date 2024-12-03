@@ -487,11 +487,21 @@
   
   
   function get_checksum_version($version = '') {
-    if ($version == '') {
-      $version = get_shop_version();
+    static $files_array;
+    
+    if (!isset($files_array)) {    
+      if ($version == '') {
+        $version = get_shop_version();
+      }
+      modified_api::reset();
+      $files_array = modified_api::request('modified/version/check/'.$version);
+
+      unset($files_array['/admin/images/graphs/banner_infobox-1.png']);
+      unset($files_array['/images/banner/modified_banner_mobile.jpg']);
+      unset($files_array['/images/banner/modified_banner_mobile.webp']);
+      unset($files_array['/images/banner/modified_banner.jpg']);
+      unset($files_array['/images/banner/modified_banner.webp']);
     }
-    modified_api::reset();
-    $files_array = modified_api::request('modified/version/check/'.$version);
     
     return $files_array;
   }
