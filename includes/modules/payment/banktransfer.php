@@ -55,7 +55,9 @@
 
     function __construct() {
       global $order;
-
+      
+      $this->install_update();
+      
       $this->code = 'banktransfer';
       $this->title = MODULE_PAYMENT_BANKTRANSFER_TEXT_TITLE;
       $this->info = MODULE_PAYMENT_BANKTRANSFER_TEXT_INFO;
@@ -566,7 +568,14 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY', '1', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     }
-
+    
+    function install_update() {
+      if (!defined('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID')) {
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID', '0',  '6', '0', 'xtc_cfg_display_orders_statuses', 'xtc_cfg_multi_checkbox(\'xtc_get_orders_status\', \'chr(44)\',', now())");
+        define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID', '0');
+      }
+    }
+    
     function remove() {
       xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
