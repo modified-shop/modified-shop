@@ -120,6 +120,9 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
       $smarty->assign('ACTIVATE_EXPRESS_LINK', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, 'cart=true', 'SSL'));
     }
   }
+  if (MODULE_CHECKOUT_EXPRESS_CONTENT != '') {
+    $smarty->assign('EXPRESS_LINK', $main->getContentLink(MODULE_CHECKOUT_EXPRESS_CONTENT, TEXT_CHECKOUT_EXPRESS_INFO_LINK, $request_type, false));
+  }
 }
 
 // build breadcrumb

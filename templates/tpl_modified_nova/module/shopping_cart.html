@@ -100,7 +100,10 @@
               <div class="br_btn_0">
                 {$BUTTON_CHECKOUT_EXPRESS}
                 {if isset($ACTIVATE_EXPRESS_LINK)}
-                  <div class="font_small my_5" style="text-align:center;"><a class="arrow" href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></div>            
+                  <div class="font_small my_5" style="text-align:center;">
+                    {if isset($EXPRESS_LINK)}{$EXPRESS_LINK|replace:"iframe":"arrow iframe"}<br>{/if}
+                    <a class="arrow" href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a>
+                  </div>            
                 {/if}
               </div>
             {/if}
