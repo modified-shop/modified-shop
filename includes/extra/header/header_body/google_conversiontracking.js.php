@@ -32,8 +32,8 @@ if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS
           )
       )
   {
-    $script = '<script async data-type="text/javascript" type="as-oil" data-purposes="8" data-managed="as-oil">';
-    $script_js = '<script async data-src="//www.googleadservices.com/pagead/conversion.js" data-type="text/javascript" type="as-oil" data-purposes="8" data-managed="as-oil"></script>';
+    $script = '<script data-type="text/javascript" type="as-oil" data-purposes="8" data-managed="as-oil">';
+    $script_js = '<script data-src="//www.googleadservices.com/pagead/conversion.js" data-type="text/javascript" type="as-oil" data-purposes="8" data-managed="as-oil"></script>';
   }
 ?>
 <div style="height:0px;overflow:hidden;">
