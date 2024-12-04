@@ -26,19 +26,16 @@
     $('body').on('click', '.topscroll', function(event) {
       event.preventDefault();
       $("html, body").animate({ scrollTop: 0 }, "slow");
-      return false;
     });
     
     $('body').on('click', '.listing_topscroll', function(event) {
       event.preventDefault();
       $("html, body").animate({ scrollTop: $('.listing').offset().top - 120}, "slow");
-      return false;
     });
 
     $('body').on('click', '.listing_bottomscroll', function(event) {
       event.preventDefault();
       $("html, body").animate({ scrollTop: $('.listing').offset().top + $(".listing").outerHeight() - $(window).height() + 80}, "slow");
-      return false;
     });
   });
 
@@ -65,7 +62,8 @@
   }
 
   $(function() {
-    $('body').on('click', '#toggle_account', function() {
+    $('body').on('click', '#toggle_account', function(event) {
+      event.preventDefault();
       $('body').addClass('no_scroll');
       $('.toggle_account').addClass('active');
       $('.toggle_overlay').fadeIn('slow');
@@ -73,10 +71,10 @@
       $('.toggle_wishlist').removeClass('active');
       $('.toggle_settings').removeClass('active');
       ac_closing();
-      return false;
     });
 
-    $('body').on('click', '#toggle_settings', function() {
+    $('body').on('click', '#toggle_settings', function(event) {
+      event.preventDefault();
       $('body').addClass('no_scroll');
       $('.toggle_settings').addClass('active');
       $('.toggle_overlay').fadeIn('slow');
@@ -84,10 +82,10 @@
       $('.toggle_wishlist').removeClass('active');
       $('.toggle_account').removeClass('active');
       ac_closing();
-      return false;
     });
     
-    $('body').on('click', '#toggle_filter', function() {
+    $('body').on('click', '#toggle_filter', function(event) {
+      event.preventDefault();
       $('body').addClass('no_scroll');
       $('.toggle_filter').addClass('active');
       $('.toggle_overlay').fadeIn('slow');
@@ -96,7 +94,6 @@
       $('.toggle_wishlist').removeClass('active');
       $('.toggle_account').removeClass('active');
       ac_closing();
-      return false;
     });
 
     $('html').on('click', function(e){
@@ -126,7 +123,8 @@
   });
   <?php if (basename($PHP_SELF) != FILENAME_SHOPPING_CART && !strpos($PHP_SELF, 'checkout')) { ?>
     $(function() {
-      $('body').on('click', '#toggle_cart', function() {
+      $('body').on('click', '#toggle_cart', function(event) {
+        event.preventDefault();
         $('body').addClass('no_scroll');
         $('.toggle_cart').addClass('active');
         $('.toggle_overlay').fadeIn('slow');
@@ -134,7 +132,6 @@
         $('.toggle_account').removeClass('active');
         $('.toggle_settings').removeClass('active');
         ac_closing();
-        return false;
       });
       <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_cart'])) {
         unset($_SESSION['new_products_id_in_cart']); ?>
@@ -151,7 +148,8 @@
     });     
 
     $(function() {
-      $('body').on('click', '#toggle_wishlist', function() {
+      $('body').on('click', '#toggle_wishlist', function(event) {
+        event.preventDefault();
         $('body').addClass('no_scroll');
         $('.toggle_wishlist').addClass('active');
         $('.toggle_overlay').fadeIn('slow');
@@ -159,7 +157,6 @@
         $('.toggle_account').removeClass('active');
         $('.toggle_settings').removeClass('active');
         ac_closing();
-        return false;
       });
       <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_wishlist'])) {
         unset($_SESSION['new_products_id_in_wishlist']); ?>
@@ -214,21 +211,21 @@
   });
  
   function close_search_field(event) {
-    event.stopPropagation();
+    event.preventDefault();
     $(".toggle_search").fadeOut("slow");
-    return false;
   }
 
   function show_search_field(event) {
+    event.preventDefault();
     $(".toggle_search").fadeIn("slow");
     $('.toggle_account').removeClass('active');
     $('.toggle_settings').removeClass('active');
     $('.toggle_cart').removeClass('active');
     $('.toggle_wishlist').removeClass('active');
-    return false;
   }  
   
   function close_toggle_panel(event) {
+    event.preventDefault();
     $('body').removeClass('no_scroll');
     $('.toggle_cart').removeClass('active');
     $('.toggle_wishlist').removeClass('active');
@@ -236,7 +233,6 @@
     $('.toggle_settings').removeClass('active');
     $('.toggle_filter').removeClass('active');
     $('.toggle_overlay').fadeOut('slow');
-    return false;
   }    
   
   var keyName = "<?php echo basename($PHP_SELF); ?>";
