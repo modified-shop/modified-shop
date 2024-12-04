@@ -1787,14 +1787,11 @@ function ProductsUpdate ()
                          'products_shippingtime' => $products_shippingtime,
                          'products_tax_class_id' => $products_tax_class_id,
                          'manufacturers_id' => $manufacturers_id,
-                         //VPE Frank
-                         'products_vpe_value' => $products_vpe_value,
-                         'products_vpe_status' => $products_vpe_status);
-                         //VPE Frank Ende
-
+                         );
+             
   if ((defined('TABLE_PRODUCTS_VPE')) and (USE_VPE==true))
   {
-    $sql_data_array = array_merge($sql_data_array, array ('products_vpe' => $products_vpe_id));
+    $sql_data_array = array_merge($sql_data_array, array ('products_vpe_value' => $products_vpe_value, 'products_vpe_status' => $products_vpe_status, 'products_vpe' => $products_vpe_id));
   }
 
   if ($exists==0) // Neuanlage (ID wird an CAO zurueckgegeben !!!)
