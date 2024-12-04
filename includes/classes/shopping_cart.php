@@ -798,6 +798,7 @@ class shoppingCart {
               $products_data['weight'] =  $products['products_weight'] + $this->attr_weight;
               $products_data['final_weight'] =  $products_data['weight'] * $this->contents[$products_id]['qty'];
               $products_data['tax'] = isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0;
+              $products_data['attributes_price'] = $attributes_price;
               $products_data['attributes'] = isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : null;
 
               $products_data = $this->shoppingCartModules->get_products($products_data, $products, $this->contents[$products_id], $this->type);
