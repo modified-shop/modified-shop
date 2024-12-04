@@ -11,11 +11,9 @@
    --------------------------------------------------------------*/
 ?>
 <script>
-	<?php if (SEARCH_AC_STATUS == 'true' || (basename($PHP_SELF) != FILENAME_SHOPPING_CART && !strpos($PHP_SELF, 'checkout'))) { ?>	
 	function ac_closing() {
 		setTimeout("$('#suggestions').slideUp();", 100);
 	}
-  <?php } ?>
   <?php if (SEARCH_AC_STATUS == 'true') { ?>
   var session_id = '<?php echo xtc_session_id(); ?>';
   
