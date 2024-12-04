@@ -233,6 +233,27 @@
           'keywords' => (($product->data['products_meta_keywords'] != '') ? $product->data['products_meta_keywords'] : metaKeyWords($product->data['products_name'].' '.$product->data['products_description'])),
           'link' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product->data['products_id'], $product->data['products_name']), 'NONSSL', false),
         );
+        
+        $metadata_image_array = array();
+        if ($product->data['products_image'] != '') {
+          $metadata_image_array[] = array(
+            'link' => $product->productImage($product->data['products_image'], 'popup'),
+          );
+        }
+
+        if (MO_PICS != '0') {
+          $mo_images = xtc_get_products_mo_images($product->data['products_id']);
+          if ($mo_images != false) {
+            $more_images_data = array();
+            foreach ($mo_images as $img) {            
+              $metadata_image_array[] = array(
+                'link' => $product->productImage($img['image_name'], 'popup'),
+                'title' => metaClean($img['image_title']),
+              );
+            }
+          }
+        }
+        
         $canonical_flag = false;
       
         if ($addProdShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
@@ -257,6 +278,14 @@
             'link' => xtc_href_link(FILENAME_DEFAULT, xtc_category_link($category['categories_id'], $category['categories_name']).$page_param, 'NONSSL', false),
           );
 
+          $metadata_image_array = array();
+          $image = $main->getImage($category['categories_image']);
+          if ($image != '') {
+            $metadata_image_array[] = array(
+              'link' => DIR_WS_BASE.$image,
+            );
+          }
+
           if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
           if ($addCatShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
         
@@ -278,6 +307,14 @@
             'keywords' => (($manufacturer['manufacturers_meta_keywords'] != '') ? $manufacturer['manufacturers_meta_keywords'] : metaKeyWords($manufacturer['manufacturers_name'].' '.$manufacturer['manufacturers_description'])),
             'link' => xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name']).$page_param, 'NONSSL', false),
           );
+
+          $metadata_image_array = array();
+          $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
+          if ($image != '') {
+            $metadata_image_array[] = array(
+              'link' => DIR_WS_BASE.$image,
+            );
+          }
 
           if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
           if ($addCatShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
@@ -477,6 +514,30 @@
     echo '<meta name="msvalidate.01" content="'. META_BING_VERIFICATION_KEY .'" />'."\n";
   }
 
+  echo '<meta property="og:type" content="website" />'."\n";
+  echo '<meta property="og:site_name" content="'. metaClean(TITLE) .'" />'."\n";
+  if ($metadata_array['link'] != '') {
+    echo '<meta property="og:url" content="'. $metadata_array['link'] .'" />'."\n";
+  }  
+  if (isset($metadata_array['title']) && $metadata_array['title'] != '') {
+    echo '<meta property="og:title" content="'. $metadata_array['title'] .'" />'."\n";
+  }
+  if ($metadata_array['description'] != '') {
+    echo '<meta property="og:description" content="'. $metadata_array['description'] .'" />'."\n";
+  }
+  if (isset($metadata_image_array) 
+      && is_array($metadata_image_array) 
+      && count($metadata_image_array) > 0
+      )
+  {
+    foreach ($metadata_image_array as $image) {
+      echo '<meta property="og:image" content="'. $image['link'] .'" />'."\n";
+      if (isset($image['title']) && $image['title'] != '') {
+        echo '<meta property="og:image:alt" content="'. $image['title'] .'" />'."\n";
+      }
+    }
+  }
+  
   if (strpos($meta_robots,'noindex') !== false) {
     $set_hreflang = false;
     if (isset($metadata_array['link'])) {
