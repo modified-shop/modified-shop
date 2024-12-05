@@ -21,8 +21,8 @@ Links<br />
 <a target="_new" href="https://r120.micropayment.de">
   <input class="button" type="button" value="Micropayment Registrierung">
 </a>');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE', 'micropayment&trade; Online&Uuml;berweisung');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE_EXTERN', 'Online&Uuml;berweisung');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE', 'micropayment&trade; Online&uuml;berweisung');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE_EXTERN', 'Online&uuml;berweisung');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
 <div style="margin:10px; height:140px;">
   <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div>
@@ -32,8 +32,8 @@ define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
     &#10004; sicher &nbsp; &#10004; einfach &nbsp; &#10004; registrierungsfrei
   </div>
 </div>');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_TITLE','Online&Uuml;berweisung');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_DESC','Online&Uuml;berweisung Modul von micropayment&trade;');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_TITLE','Online&uuml;berweisung');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_DESC','Online&uuml;berweisung Modul von micropayment&trade;');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT_TITLE','Minimum Warenkorbwert');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT_DESC','Mindestwert des Warenkorbs f&uuml;r diese Bezahlmethode');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MAXIMUM_AMOUNT_TITLE','Maximum Warenkorbwert');
