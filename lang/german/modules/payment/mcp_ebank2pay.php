@@ -6,7 +6,7 @@
  * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 include_once('mcp_service.php');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION', 'micropayment&trade; Online&Uuml;berweisung Modul
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION', 'micropayment&trade; Online&uuml;berweisung Modul
 <br /><br />
 Links<br />
 <b>Tools</b><br />
