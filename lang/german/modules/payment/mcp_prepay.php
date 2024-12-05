@@ -11,15 +11,15 @@ define('MODULE_PAYMENT_MCP_PREPAY_TEXT_DESCRIPTION', 'Micropayment Vorkasse Modu
 Links<br />
 <b>Tools</b><br />
 <a target="_new" href="../callback/micropayment/cleanup.php">
-  <input type="button" value="Bestellungen aufr&auml;umen">
+  <input class="button" type="button" value="Bestellungen aufr&auml;umen">
 </a><br />
 <br />
 <b>Extern</b><br />
 <a href="https://www.micropayment.de/products/plugins/modified/?_r=gst&_src=ctor">
-  <input type="button" value="Handbuch">
+  <input class="button" type="button" value="Handbuch">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
-  <input type="button" value="Micropayment Registrierung">
+  <input class="button" type="button" value="Micropayment Registrierung">
 </a>');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE', 'micropayment&trade; Vorkasse');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE_EXTERN', 'Vorkasse');

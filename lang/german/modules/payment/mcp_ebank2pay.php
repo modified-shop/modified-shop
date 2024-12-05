@@ -6,23 +6,23 @@
  * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 include_once('mcp_service.php');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION', 'micropayment&trade; Sofort. Modul
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION', 'micropayment&trade; Online&Uuml;berweisung Modul
 <br /><br />
 Links<br />
 <b>Tools</b><br />
 <a target="_new" href="../callback/micropayment/cleanup.php">
-  <input type="button" value="Bestellungen aufr&auml;umen">
+  <input class="button" type="button" value="Bestellungen aufr&auml;umen">
 </a><br />
 <br />
 <b>Extern</b><br />
 <a href="https://www.micropayment.de/products/plugins/modified/?_r=gst&_src=ctor">
-  <input type="button" value="Handbuch">
+  <input class="button" type="button" value="Handbuch">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
-  <input type="button" value="Micropayment Registrierung">
+  <input class="button" type="button" value="Micropayment Registrierung">
 </a>');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE', 'micropayment&trade; Sofort.');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE_EXTERN', 'Sofort.');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE', 'micropayment&trade; Online&Uuml;berweisung');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE_EXTERN', 'Online&Uuml;berweisung');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
 <div style="margin:10px; height:140px;">
   <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div>
@@ -32,8 +32,8 @@ define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
     &#10004; sicher &nbsp; &#10004; einfach &nbsp; &#10004; registrierungsfrei
   </div>
 </div>');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_TITLE','Sofort.');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_DESC','Sofort. Modul von micropayment&trade;');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_TITLE','Online&Uuml;berweisung');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_DESC','Online&Uuml;berweisung Modul von micropayment&trade;');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT_TITLE','Minimum Warenkorbwert');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT_DESC','Mindestwert des Warenkorbs f&uuml;r diese Bezahlmethode');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MAXIMUM_AMOUNT_TITLE','Maximum Warenkorbwert');

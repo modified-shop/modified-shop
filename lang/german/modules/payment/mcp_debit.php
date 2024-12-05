@@ -11,15 +11,15 @@ define('MODULE_PAYMENT_MCP_DEBIT_TEXT_DESCRIPTION', 'micropayment&trade; Lastsch
 Links<br />
 <b>Tools</b><br />
 <a target="_new" href="../callback/micropayment/cleanup.php">
-  <input type="button" value="Bestellungen aufr&auml;umen">
+  <input class="button" type="button" value="Bestellungen aufr&auml;umen">
 </a><br />
 <br />
 <b>Extern</b><br />
 <a href="https://www.micropayment.de/products/plugins/modified/?_r=gst&_src=ctor">
-  <input type="button" value="Handbuch">
+  <input class="button" type="button" value="Handbuch">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
-  <input type="button" value="Micropayment Registrierung">
+  <input class="button" type="button" value="Micropayment Registrierung">
 </a>');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE', 'micropayment&trade; Lastschrift');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE_EXTERN', 'Lastschrift');

@@ -8,19 +8,19 @@
 include_once('mcp_service.php');
 define('MODULE_PAYMENT_MCP_PAYSAFECARD_TEXT_DESCRIPTION', 'micropayment&trade; paysafecard Module
 <br /><br />
-links<br />
-<b>tools</b><br />
+Links<br />
+<b>Tools</b><br />
 <a target="_new" href="../callback/micropayment/cleanup.php">
-    <input type="button" value="clear old orders">
+  <input class="button" type="button" value="clear old orders">
 </a><br />
 <br />
 <b>Extern</b><br />
 <a href="https://www.micropayment.de/products/plugins/modified/?_r=gst&_src=ctor">
-    <input type="button" value="Manual">
+  <input class="button" type="button" value="Manual">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
-    <input type="button" value="Micropayment register">
-    </a>');
+  <input class="button" type="button" value="Micropayment register">
+</a>');
 define('MODULE_PAYMENT_MCP_PAYSAFECARD_TEXT_TITLE', 'micropayment&trade; Paysafecard');
 define('MODULE_PAYMENT_MCP_PAYSAFECARD_TEXT_TITLE_EXTERN', 'Paysafecard');
 define('MODULE_PAYMENT_MCP_PAYSAFECARD_TEXT_INFO', '
