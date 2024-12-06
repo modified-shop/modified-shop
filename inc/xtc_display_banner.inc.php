@@ -54,10 +54,10 @@
           $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
           $banner_link = (($banner['banners_redirect'] == 0) ? xtc_get_banners_url($banner['banners_url']) : xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']));
           $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
-          $banner_image = (($banner_image_plain != '') ? xtc_image($banner_image_plain, $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
-          $banner_image_mobile = (($banner_image_mobile_plain != '') ? xtc_image($banner_image_mobile_plain, $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
           $banner_image_title = (($banner['banners_image_title'] != '') ? xtc_parse_input_field_data($banner['banners_image_title'], array('"' => '&quot;')) : $banner_title);
           $banner_image_alt = (($banner['banners_image_alt'] != '') ? xtc_parse_input_field_data($banner['banners_image_alt'], array('"' => '&quot;')) : $banner_image_title);
+          $banner_image = (($banner_image_plain != '') ? xtc_image($banner_image_plain, $banner_image_alt, '', '', 'title="'.$banner_image_title.'"') : '');
+          $banner_image_mobile = (($banner_image_mobile_plain != '') ? xtc_image($banner_image_mobile_plain, $banner_image_alt, '', '', 'title="'.$banner_image_title.'"') : '');
           
           $banner_array[] = array(
             'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
@@ -96,10 +96,10 @@
     $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
     $banner_link = (($banner['banners_redirect'] == 0) ? xtc_get_banners_url($banner['banners_url']) : xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']));
     $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
-    $banner_image = (($banner_image_plain != '') ? xtc_image($banner_image_plain, $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
-    $banner_image_mobile = (($banner_image_mobile_plain != '') ? xtc_image($banner_image_mobile_plain, $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
     $banner_image_title = (($banner['banners_image_title'] != '') ? xtc_parse_input_field_data($banner['banners_image_title'], array('"' => '&quot;')) : $banner_title);
     $banner_image_alt = (($banner['banners_image_alt'] != '') ? xtc_parse_input_field_data($banner['banners_image_alt'], array('"' => '&quot;')) : $banner_image_title);
+    $banner_image = (($banner_image_plain != '') ? xtc_image($banner_image_plain, $banner_image_alt, '', '', 'title="'.$banner_image_title.'"') : '');
+    $banner_image_mobile = (($banner_image_mobile_plain != '') ? xtc_image($banner_image_mobile_plain, $banner_image_alt, '', '', 'title="'.$banner_image_title.'"') : '');
 
     $banner_array = array(
       'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
