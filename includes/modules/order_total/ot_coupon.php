@@ -268,7 +268,7 @@ class ot_coupon {
           if (trim($coupon_array['restrict_to_products']) != '') {
             $pr_ids = explode(",", $coupon_array['restrict_to_products']);
             $pr_ids = array_unique($pr_ids);
-            for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
+            for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
               for ($ii = 0, $nn = count($pr_ids); $ii < $nn; $ii ++) {
                 if ($pr_ids[$ii] == xtc_get_prid($order->products[$i]['id'])) {
                   $_c_products_ids[] = $order->products[$i]['id'];
@@ -294,7 +294,7 @@ class ot_coupon {
           if (trim($coupon_array['restrict_to_categories']) != '') {
             $cat_ids = explode(",", $coupon_array['restrict_to_categories']);
             $cat_ids = array_unique($cat_ids);
-            for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
+            for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
               $prod_cat_ids_array = $this->get_cat_ids_array(xtc_get_prid($order->products[$i]['id']));
               for ($ii = 0 , $nn = count($cat_ids); $ii < $nn ; $ii ++) {
                 if (in_array($cat_ids[$ii], $prod_cat_ids_array) && !in_array($order->products[$i]['id'], $_c_products_ids)) {
@@ -321,7 +321,7 @@ class ot_coupon {
           if (trim($coupon_array['restrict_to_manufacturers']) != '') {
             $manu_ids = explode(",", $coupon_array['restrict_to_manufacturers']);
             $manu_ids = array_unique($manu_ids);
-            for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
+            for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
               for ($ii = 0, $nn = count($manu_ids); $ii < $nn; $ii ++) {
                 if ($manu_ids[$ii] == $order->products[$i]['manufacturers_id'] && !in_array($order->products[$i]['id'], $_c_products_ids)) {
                   $_c_products_ids[] = $order->products[$i]['id'];
@@ -351,7 +351,7 @@ class ot_coupon {
             $od_amount = $amount * $c_deduct / 100;
           }
           
-          for ($i = 0; $i < sizeof($order->products); $i ++) {
+          for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
             $this->product_price($order->products[$i]['id']);
           }
         }
@@ -363,7 +363,7 @@ class ot_coupon {
             )
         {
           $pr_c = 0;
-          for ($i = 0; $i < sizeof($order->products); $i ++) {
+          for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
             if (count($_c_products_ids) == 0
                 || in_array($order->products[$i]['id'], $_c_products_ids)
                 )
@@ -517,7 +517,7 @@ class ot_coupon {
     $this->products_tax_rate = array();
 
     $products = $order->products;
-    for ($i = 0; $i < sizeof($products); $i ++) {
+    for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
       $product_id = $products[$i]['id'];
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0) {
         $products[$i]['price'] = round($products[$i]['price'], $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
