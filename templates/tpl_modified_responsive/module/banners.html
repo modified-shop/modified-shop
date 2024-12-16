@@ -7,11 +7,12 @@
         <source media="(max-width:600px)" data-srcset="{$banner_data.IMAGE_SRC_MOBILE}">
         <source data-srcset="{$banner_data.IMAGE_SRC}">
         <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
-        <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}"></noscript>
       </picture>
     </a>
   {else}
-    <a title="{$banner_data.IMAGE_TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>{$banner_data.IMAGE_IMG}</a>
+    <a title="{$banner_data.IMAGE_TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+      <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
+    </a>
   {/if}
 {elseif $banner_data.IMAGE_IMG != ''}
   {if isset($banner_data.IMAGE_SRC_MOBILE) && $banner_data.IMAGE_SRC_MOBILE != ''}
@@ -19,9 +20,8 @@
       <source media="(max-width:600px)" data-srcset="{$banner_data.IMAGE_SRC_MOBILE}">
       <source data-srcset="{$banner_data.IMAGE_SRC}">
       <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
-      <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}"></noscript>
     </picture>
   {else}
-    {$banner_data.IMAGE_IMG}
+    <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
   {/if}
 {/if}
