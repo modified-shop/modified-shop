@@ -134,6 +134,7 @@ if (!isset($order->info['total'])) {
 $total = $ot_total_value;
 
 $shipping_content = array();
+$shipping_weight = 0;
 
 //suppot downloads and gifts
 if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
