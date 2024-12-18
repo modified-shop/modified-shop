@@ -137,7 +137,7 @@
 
     // set charset defined in configure.php
     if(!defined('DB_SERVER_CHARSET')) {
-      define('DB_SERVER_CHARSET', 'latin1');
+      define('DB_SERVER_CHARSET', 'utf8');
     }
     xtc_db_set_charset(DB_SERVER_CHARSET, $link);
 
