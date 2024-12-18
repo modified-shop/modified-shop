@@ -213,12 +213,10 @@
   });
  
   function close_search_field(event) {
-    event.preventDefault();
     $(".toggle_search").fadeOut("slow");
   }
 
   function show_search_field(event) {
-    event.preventDefault();
     $(".toggle_search").fadeIn("slow");
     $('.toggle_account').removeClass('active');
     $('.toggle_settings').removeClass('active');
@@ -227,7 +225,6 @@
   }  
   
   function close_toggle_panel(event) {
-    event.preventDefault();
     $('body').removeClass('no_scroll');
     $('.toggle_cart').removeClass('active');
     $('.toggle_wishlist').removeClass('active');

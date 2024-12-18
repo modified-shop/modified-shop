@@ -36,10 +36,10 @@
   <?php if (basename($PHP_SELF) != FILENAME_SHOPPING_CART && !strpos($PHP_SELF, 'checkout')) { ?>
     $(function() {
       $('body').on('click', '#toggle_cart', function(event) {
-        event.preventDefault();
         $('.toggle_cart').slideToggle('slow');
         $('.toggle_wishlist').slideUp('slow');
         ac_closing();
+        return false;
       });
       $('html').on('click', function(e) {
         if (!$(e.target).closest('.toggle_cart').length > 0 ) {
@@ -56,10 +56,10 @@
 
     $(function() {
       $('body').on('click', '#toggle_wishlist', function(event) {
-        event.preventDefault();
         $('.toggle_wishlist').slideToggle('slow');
         $('.toggle_cart').slideUp('slow');
         ac_closing();
+        return false;
       });
       $('html').on('click', function(e) {
         if (!$(e.target).closest('.toggle_wishlist').length > 0 ) {
