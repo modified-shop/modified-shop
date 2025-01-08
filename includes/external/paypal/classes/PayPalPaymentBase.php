@@ -1095,7 +1095,7 @@ class PayPalPaymentBase extends PayPalCommon {
       }
     }
 
-    // check express button
+    // check 3D secure
     if ($this->code == 'paypalacdc') {
       if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS', false) == '') {
         $sql_data_array = array(
@@ -1362,10 +1362,15 @@ class PayPalPaymentBase extends PayPalCommon {
     
     if (!defined('MODULE_PAYMENT_PAYPAL_SECRET')) {
       $check_query = xtc_db_query("SELECT * 
-                                     FROM ".TABLE_CONFIGURATION." 
-                                    WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_SECRET'");
-      if (xtc_db_num_rows($check_query) < 1) {
-        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL%_STATUS'"); 
+      if (xtc_db_num_rows($check_query) > 0) {
+        $check_query = xtc_db_query("SELECT * 
+                                       FROM ".TABLE_CONFIGURATION." 
+                                      WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_SECRET'");
+        if (xtc_db_num_rows($check_query) < 1) {
+          xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
+        }      
       }
     }
  
