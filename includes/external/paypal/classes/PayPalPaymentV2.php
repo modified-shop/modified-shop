@@ -548,7 +548,7 @@
       $shipping_address = array(
         'address_line_1' => $this->encode_utf8($order->delivery['street_address']),
         'address_line_2' => $this->encode_utf8($order->delivery['suburb']),
-        'admin_area_1' => $this->encode_utf8((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : ''), // state
+        'admin_area_1' => $this->encode_utf8((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], ((isset($order->delivery['zone_id'])) ? $order->delivery['zone_id'] : 0), $order->delivery['state']) : ''), // state
         'admin_area_2' => $this->encode_utf8($order->delivery['city']), // city
         'postal_code' => $this->encode_utf8($order->delivery['postcode']),
         'country_code' => $this->encode_utf8((isset($order->customer['country']['iso_code_2'])) ? $order->customer['country']['iso_code_2'] : $order->delivery['country_iso_2'])
@@ -897,7 +897,7 @@
         'name' => implode(' ', $name),
         'company' => '',
         'firstname' => $name[0],
-        'lastname' => $name[1],
+        'lastname' => ((isset($name[1])) ? $name[1] : ''),
         'street_address' => ((isset($address->address->address_line_1)) ? $address->address->address_line_1 : ''),
         'suburb' => ((isset($address->address->address_line_2)) ? $address->address->address_line_2 : ''),
         'state' => ((isset($address->address->admin_area_1)) ? $address->address->admin_area_1 : ''),
