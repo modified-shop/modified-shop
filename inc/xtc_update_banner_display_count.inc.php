@@ -17,24 +17,24 @@
 
   // Update the banner display statistics
   function xtc_update_banner_display_count($banner_id) {
-    $banner_check_query = xtc_db_query("SELECT count(*) as count 
+    $datetime = date('Y-m-d 00:00:00');
+    $banner_check_query = xtc_db_query("SELECT count(*) as count,
+                                               banners_history_id
                                           FROM " . TABLE_BANNERS_HISTORY . " 
                                          WHERE banners_id = '" . (int)$banner_id . "' 
-                                           AND date_format(banners_history_date, '%Y%m%d') = date_format(now(), '%Y%m%d')");
+                                           AND banners_history_date = '".xtc_db_input($datetime)."'");
     $banner_check = xtc_db_fetch_array($banner_check_query);
 
     if ($banner_check['count'] > 0) {
       xtc_db_query("UPDATE " . TABLE_BANNERS_HISTORY . " 
                        SET banners_shown = banners_shown + 1 
-                     WHERE banners_id = '" . (int)$banner_id . "' 
-                       AND date_format(banners_history_date, '%Y%m%d') = date_format(now(), '%Y%m%d')");
+                     WHERE banners_history_id = '" . (int)$banner_check['banners_history_id'] . "'");
     } else {
       $sql_data_array = array(
         'banners_id' => (int)$banner_id,
         'banners_shown' => 1,
-        'banners_history_date' => 'now()'
+        'banners_history_date' => $datetime
       );
       xtc_db_perform(TABLE_BANNERS_HISTORY, $sql_data_array);
     }
   }
-?>
