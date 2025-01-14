@@ -256,6 +256,8 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $mail->IsHTML(false);
     $mail->Body = $message_body_plain;
   }
+  $mail->Body = str_replace(chr(0), '', $mail->Body);
+  $mail->AltBody = str_replace(chr(0), '', $mail->AltBody);
   $mail->setWordWrap();
 
   require_once(DIR_FS_INC.'auto_include.inc.php');
