@@ -20,5 +20,11 @@
     $product_sticker = preg_replace('/data-gtin="([\w\-\_]+)"/', 'data-sku="%s"', $product_sticker);
     $product_sticker = preg_replace('/data-mpn="([\w\-\_]+)"/', 'data-sku="%s"', $product_sticker);
     
-    $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, MODULE_TS_TRUSTEDSHOPS_ID, $product->data['products_model']));
+    if (substr_count($product_sticker, '%s') == 1) {
+      $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, $product->data['products_model']));
+    } elseif (substr_count($product_sticker, '%s') == 2) {
+      $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, MODULE_TS_TRUSTEDSHOPS_ID, $product->data['products_model']));
+    } else {
+      $info_smarty->assign('MODULE_products_reviews', $product_sticker);
+    }
   }
