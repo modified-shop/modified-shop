@@ -36,7 +36,7 @@ define('ENTRY_CUSTOMERS_STATUS_READ_REVIEWS','Kundengruppe darf Produktrezension
 define('ENTRY_CUSTOMERS_STATUS_REVIEWS_STATUS','Produktrezensionen automatisch freischalten?');
 define('ENTRY_GRADUATED_PRICES','Staffelpreise');
 define('ENTRY_NO','Nein');
-define('ENTRY_OT_XMEMBER', 'Kundenrabatt auf Gesamtbestellwert? :');
+define('ENTRY_OT_XMEMBER', 'Kundenrabatt auf Gesamtbestellwert?');
 define('ENTRY_YES','Ja');
 
 define('ERROR_REMOVE_DEFAULT_CUSTOMERS_STATUS', 'Fehler: Die Standard-Kundengruppe kann nicht gel&ouml;scht werden. Bitte legen Sie zuerst eine andere Standard-Kundengruppe fest und versuchen Sie es erneut.');

@@ -36,7 +36,7 @@ define('ENTRY_CUSTOMERS_STATUS_READ_REVIEWS','Customer group is allowed to read 
 define('ENTRY_CUSTOMERS_STATUS_REVIEWS_STATUS','Activate reviews automatically?');
 define('ENTRY_GRADUATED_PRICES','Graduated Prices');
 define('ENTRY_NO','No');
-define('ENTRY_OT_XMEMBER', 'Customer Discount on order total? :');
+define('ENTRY_OT_XMEMBER', 'Customer Discount on order total?');
 define('ENTRY_YES','Yes');
 
 define('ERROR_REMOVE_DEFAULT_CUSTOMERS_STATUS', 'Error: You can not delete the default customer group. Please set another group to default customer group and try again.');
