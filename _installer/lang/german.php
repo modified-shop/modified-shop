@@ -59,6 +59,7 @@
   define('TEXT_AUTOUPDATER_SUPPORT_HEADING', 'Update anfragen');
   define('TEXT_AUTOUPDATER_SUPPORT_INFO', 'Gerne unterst&uuml;tzen wir Sie beim Update Ihres Templates. Fordern Sie einfach ein unverbindliches Angebot bei uns an.');
   define('TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE', 'Der Support ist gerade nicht erreichbar. Bitte stellen Sie Ihre Anfrage direkt &uuml;ber das&nbsp;<a href="https://www.modified-shop.org/kontakt" target="_blank">Kontaktformular</a>');
+  define('TEXT_AUTOUPDATER_FINISH_INFO', 'Bitte &uuml;berpr&uuml;fen Sie die installierten Module auf eventuell notwendige Updates.');
   define('TEXT_UPDATER_HEADING', 'Bitte ausw&auml;hlen');
   define('TEXT_UPDATER', 'Willkommen beim Updater der modified eCommerce Shopsoftware.');
   define('TEXT_UPDATE_CONFIG', 'Konfiguration aktualisieren');
