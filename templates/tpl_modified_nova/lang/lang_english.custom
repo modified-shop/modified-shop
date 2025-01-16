@@ -81,7 +81,7 @@ footer_price_hinweis_incl = 'incl.'
 footer_price_hinweis_excl = 'excl.'
 footer_price_hinweis_2 = 'VAT. plus'
 footer_price_hinweis_3 = 'shipping and handling'
-footer_price_hinweis_4 = 'The crossed out prices correspond to the price at'
+footer_price_hinweis_4 = 'The crossed out prices correspond to the previous price at'
 
 footer_heading_payment = 'Payment methods'
 footer_heading_social = 'Social Media'
