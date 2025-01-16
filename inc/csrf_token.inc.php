@@ -40,6 +40,7 @@ if (defined('RUN_MODE_ADMIN')) {
     'products_tags', 
     'validproducts', 
     'validcategories',
+    'validmanufacturers',
   );
   if (isset($user_exclusions) && is_array($user_exclusions)) {
     $exclusions = array_merge($exclusions, $user_exclusions);
