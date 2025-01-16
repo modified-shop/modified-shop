@@ -59,6 +59,7 @@
   define('TEXT_AUTOUPDATER_SUPPORT_HEADING', 'Request update');
   define('TEXT_AUTOUPDATER_SUPPORT_INFO', 'We would be happy to support you in updating your template. Simply request a non-binding offer from us.');
   define('TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE', 'The support is currently not available. Please submit your request directly via the&nbsp;<a href="https://www.modified-shop.org/kontakt" target="_blank">contact form</a>');
+  define('TEXT_AUTOUPDATER_FINISH_INFO', 'Please check the installed modules for any necessary updates.');
   define('TEXT_UPDATER_HEADING', 'Please Choose');
   define('TEXT_UPDATER', 'Welcome to the Updater of the modified eCommerce Shopsoftware');
   define('TEXT_UPDATE_CONFIG', 'Update configuration');
