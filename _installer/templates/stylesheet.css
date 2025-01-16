@@ -1018,15 +1018,56 @@ select:focus {
   cursor:pointer;
 }
 
-.field_eye {
-  position:absolute;
-  bottom: 5px;
-  right:20px;
-  width:40px;
+.field_password {
+  display:flex;
+  align-items:center;
+  background-color:#fafafa;
+  border-color: #dddddd;
+  border-style: solid;
+  border-width: 1px;
+  transition: all 0.3s ease-in-out;
+  color: #666;
+  border-radius: 4px;
   height:38px;
-  line-height:40px;
+  position:relative;
+}
+.field_password:hover {
+  background-color:#ffffff;
+  border-color: #dddddd;
+  color: #666;
+}
+.field_password:focus-within {
+  background-color:#fff;
+  border-color: #659EC9;
+  color: #333333;
+  outline: 0 none;
+}
+.field_password input[type=text], 
+.field_password input[type=password] {
+  height:36px;
+  padding: 7px 8px 7px 8px;
+  background:transparent;
+  border:none;
+}
+.field_password input[type=text]:hover,
+.field_password input[type=password]:hover {
+  background:transparent;
+  border:none;
+}
+.field_password input[type=text]:focus,
+.field_password input[type=password]:focus {
+  background:transparent;
+  border:none;
+}
+.field_input {
+  flex:1;
+}
+
+.field_eye {
+  width:36px;
+  height:36px;
+  line-height:38px;
   text-align:center;
-  cursor:pointer;
   display:block;
   font-size:14px;
 }
@@ -1037,15 +1078,17 @@ select:focus {
   width:1px;
   height:16px;
   position:absolute;
-  left:0px;
+  right:35px;
   bottom:0px;
   top:0px;
   margin: auto;
 }
 .fa-eye {
+  cursor:pointer;
   color:#ccc;
 }
 .fa-eye-slash {
+  cursor:pointer;
   color:#555;
 }
 

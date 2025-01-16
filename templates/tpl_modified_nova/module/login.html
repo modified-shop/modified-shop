@@ -23,8 +23,11 @@
     
           <div class="field_item_1">
             <label>
-              <span class="field_text">{#text_password#}</span>{$INPUT_PASSWORD}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span>
-              <span class="field_eye"><i class="fa-solid fa-eye" data-name="password"></i></span>
+              <span class="field_text">{#text_password#}</span>
+              <span class="field_password">
+                <span class="field_input">{$INPUT_PASSWORD}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span></span>
+                <span class="field_eye"><i class="fa-solid fa-eye" data-name="password"></i></span>
+              </span>
             </label>
           </div>
           {if $VVIMG}

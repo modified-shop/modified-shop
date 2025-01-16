@@ -22,8 +22,20 @@
   <div class="field_row">
     <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_EMAIL}</div>{$INPUT_EMAIL}</div>
     <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRM_EMAIL}</div>{$INPUT_CONFIRM_EMAIL}</div>
-    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_PASSWORD}</div>{$INPUT_PASSWORD}<span class="field_eye"><i class="fas fa-eye" data-name="password"></i></span></div>
-    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRMATION}</div>{$INPUT_CONFIRM_PASSWORD}<span class="field_eye"><i class="fas fa-eye" data-name="confirm_password"></i></span></div>
+    <div class="field_item">
+      <div class="field_heading">{$smarty.const.TEXT_ACCOUNT_PASSWORD}</div>
+      <div class="field_password">
+        <span class="field_input">{$INPUT_PASSWORD}</span>
+        <span class="field_eye"><i class="fas fa-eye" data-name="password"></i></span>
+      </div>
+    </div>
+    <div class="field_item">
+      <div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRMATION}</div>
+      <div class="field_password">
+        <span class="field_input">{$INPUT_CONFIRM_PASSWORD}</span>
+        <span class="field_eye"><i class="fas fa-eye" data-name="confirm_password"></i></span>
+      </div>    
+    </div>
   </div>
 
   <script>

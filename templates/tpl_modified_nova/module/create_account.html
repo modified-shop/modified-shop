@@ -69,14 +69,20 @@
      
           <div class="field_item_1">
             <label>
-              <span class="field_text">{#text_password#}</span>{$INPUT_PASSWORD|asterisk}
-              <span class="field_eye"><i class="fa-solid fa-eye" data-name="password"></i></span>
+              <span class="field_text">{#text_password#}</span>
+              <span class="field_password">
+                <span class="field_input">{$INPUT_PASSWORD|asterisk}</span>
+                <span class="field_eye"><i class="fa-solid fa-eye" data-name="password"></i></span>
+              </span>
             </label>
           </div>
           <div class="field_item_1">
             <label>
-              <span class="field_text">{#text_confirmation#}</span>{$INPUT_CONFIRMATION|asterisk}
-              <span class="field_eye"><i class="fa-solid fa-eye" data-name="confirmation"></i></span>
+              <span class="field_text">{#text_confirmation#}</span>
+              <span class="field_password">
+                <span class="field_input">{$INPUT_CONFIRMATION|asterisk}</span>
+                <span class="field_eye"><i class="fa-solid fa-eye" data-name="confirmation"></i></span>
+              </span>
             </label>
           </div>
     

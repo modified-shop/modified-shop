@@ -57,7 +57,13 @@
         <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_PORT}</div>{$INPUT_FTP_PORT}</div>
         <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_PATH}</div>{$INPUT_FTP_PATH}</div>
         <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_USER}</div>{$INPUT_FTP_USER}</div>
-        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_PASS}</div>{$INPUT_FTP_PASS}<span class="field_eye"><i class="fas fa-eye" data-name="ftp_pass"></i></span></div>
+        <div class="field_item">
+          <div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_PASS}</div>
+          <div class="field_password">
+            <span class="field_input">{$INPUT_FTP_PASS}</span>
+            <span class="field_eye"><i class="fas fa-eye" data-name="ftp_pass"></i></span>
+          </div>
+        </div>
         <div class="field_item"><div class="field_heading">&nbsp;</div><div class="cssButton cssColor_3">{$BUTTON_SUBMIT}</div></div>
       </div>
       <script>
