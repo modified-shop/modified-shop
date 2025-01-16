@@ -32,9 +32,13 @@
   require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
   
 
-  function get_customers_taxprice_status() {
+  function get_customers_taxprice_status($status_id = '') {
     global $order, $lang;
-
+    
+    if ($status_id == '') {
+      $status_id = $order->info['status'];
+    }
+    
     $status_query = xtc_db_query("SELECT customers_status_show_price_tax,
                                          customers_status_add_tax_ot,
                                          customers_status_discount,
@@ -42,7 +46,7 @@
                                          customers_status_show_tax_total,
                                          customers_status_name
                                     FROM ".TABLE_CUSTOMERS_STATUS."
-                                   WHERE customers_status_id = '".$order->info['status']."'
+                                   WHERE customers_status_id = '".(int)$status_id."'
                                      AND language_id = '".(int)$lang['languages_id']."'");
     return xtc_db_fetch_array($status_query);
   }
@@ -381,7 +385,7 @@
                                  WHERE directory = '".xtc_db_input($order->info['language'])."'");
     $lang = xtc_db_fetch_array($lang_query);
 
-    $status = get_customers_taxprice_status();
+    $status = get_customers_taxprice_status($data_array['customers_status']);
 
     $sql_data_array = array(
       'customers_vat_id' => xtc_db_prepare_input($data_array['customers_vat_id']),
