@@ -259,7 +259,7 @@ class ot_coupon {
         }
 
         $_c_products_ids = array();
-        if ($coupon_array['restrict_to_products'] || $coupon_array['restrict_to_categories']) {
+        if ($coupon_array['restrict_to_products'] || $coupon_array['restrict_to_categories'] || $coupon_array['restrict_to_manufacturers']) {
 
           $pr_c = 0;
 
