@@ -29,7 +29,7 @@
 
     $manufacturers_query = xtDBquery("SELECT *
                                         FROM " . TABLE_MANUFACTURERS . " m
-                                        JOIN " . TABLE_MANUFACTURERS_INFO . " mi
+                                   LEFT JOIN " . TABLE_MANUFACTURERS_INFO . " mi
                                              ON m.manufacturers_id = mi.manufacturers_id
                                                 AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'
                                              ".$conditions."
@@ -46,4 +46,3 @@
     
     return $manufacturers_array;
   }
- ?>

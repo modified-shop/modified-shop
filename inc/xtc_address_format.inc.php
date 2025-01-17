@@ -20,12 +20,21 @@
   require_once(DIR_FS_INC . 'xtc_get_zone_name.inc.php');
   require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php');
    
-  function xtc_address_format($address_format_id, $address, $html, $boln, $eoln) {
+  function xtc_address_format($address_format_id, $address, $html, $boln, $eoln, $add_contact = false, $key_replacement = '') {
     $address_format_query = xtDBquery("SELECT address_format as format 
                                          FROM ".TABLE_ADDRESS_FORMAT." 
                                         WHERE address_format_id = '".(int)$address_format_id."'");
     $address_format = xtc_db_fetch_array($address_format_query, true);
-
+    
+    if ($key_replacement != '') {
+      foreach ($address as $k => $v) {
+        $address[str_replace($key_replacement, '', $k)] = $v;
+      }
+      if (isset($address['name'])) {
+        unset($address['name']);
+      }
+    }
+    
     $company = isset($address['company']) ? addslashes($address['company']) : '';
     $firstname = isset($address['firstname']) ? addslashes($address['firstname']) : '';
     $cid = isset($address['csID']) ? addslashes($address['csID']) : '';
@@ -41,6 +50,9 @@
     $country = isset($address['country_id']) ? xtc_get_country_name($country_id) : '';
     $zone = xtc_get_zone_name($country_id, $zone_id, $state);
     $state = xtc_get_zone_code($country_id, $zone_id, $state);
+
+    $telephone = isset($address['telephone']) ? addslashes($address['telephone']) : '';
+    $email_address = isset($address['email_address']) ? addslashes($address['email_address']) : '';
 
     if ($html) {
       // HTML Mode
@@ -87,6 +99,13 @@
       $address = $company . $cr . $address;
     }
 
+    if ($add_contact === true) {
+      $contact = '';
+      if ($telephone != '') $contact .=  $cr . $telephone;
+      if ($email_address != '') $contact .=  $cr . $email_address;
+      if ($contact != '') $address .= $cr . $contact;
+    }
+    
     $address = stripslashes($address);
 
     return $address;

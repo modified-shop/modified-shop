@@ -159,7 +159,7 @@
   </div>
   {$FORM_END}
 
-  {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}<h4 class="detailbox">{#products_desc#}</h4>{if $PRODUCTS_DESCRIPTION != ''}<div class="pd_description" itemprop="description">{$PRODUCTS_DESCRIPTION}</div>{/if}{if $MANUFACTURER_ADD_DESCRIPTION != ''}{if $PRODUCTS_DESCRIPTION != ''}<br class="clearfix" />{/if}<div class="pd_description">{$MANUFACTURER_ADD_DESCRIPTION}</div>{/if}</div>{/if}
+  {if $PRODUCTS_DESCRIPTION != ''}<h4 class="detailbox">{#products_desc#}</h4><div class="pd_description" itemprop="description">{$PRODUCTS_DESCRIPTION}</div></div>{/if}
   {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}{$MODULE_product_tags}{/if}
   {if isset($MODULE_products_media) && $MODULE_products_media != ''}{$MODULE_products_media}{/if}
   {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}{$MODULE_products_reviews}{/if}
@@ -167,6 +167,11 @@
   {if isset($MODULE_reverse_cross_selling) && $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}
   {if isset($MODULE_also_purchased) && $MODULE_also_purchased != ''}{$MODULE_also_purchased}{/if}
   {if isset($MODULE_products_category) && $MODULE_products_category != ''}{$MODULE_products_category}{/if}
+  {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}
+    {if $MANUFACTURER_ADD_DESCRIPTION != ''}{$MANUFACTURER_ADD_DESCRIPTION}{/if}
+    {if isset($MANUFACTURER_CONTACT_ADDRESS)}{$MANUFACTURER_CONTACT_ADDRESS}{/if}
+    {if isset($MANUFACTURER_RESPONSIBLE_ADDRESS)}{$MANUFACTURER_RESPONSIBLE_ADDRESS}{/if}
+  {/if}
 
   {if $PRODUCTS_ADDED != ''}<p class="dateadded_border">{$PRODUCTS_ADDED}</p>{/if}
   {$PRODUCT_NAVIGATOR}

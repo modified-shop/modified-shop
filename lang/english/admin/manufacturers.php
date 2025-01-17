@@ -76,3 +76,14 @@ define('TXT_MODEL','Products Model');
 
 define('TEXT_CHOOSE_INFO_TEMPLATE_CATEGORIE','Template for Manufacturer Listing');
 define('TEXT_CHOOSE_INFO_TEMPLATE_LISTING','Template for Product Listing');
+
+define('TEXT_GENDER', 'Salutation:'); 
+define('TEXT_COMPANY', 'Company:');
+define('TEXT_FIRSTNAME', 'Firstname:');
+define('TEXT_LASTNAME', 'Lastname:');
+define('TEXT_STREET', 'Street');
+define('TEXT_ZIP', 'Postcode:');
+define('TEXT_CITY', 'City:');
+define('TEXT_COUNTRY', 'Country:');
+define('TEXT_EMAIL', 'E-Mail Address:');
+define('TEXT_TELEPHONE', 'Telephone:');

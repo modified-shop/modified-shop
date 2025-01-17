@@ -28,6 +28,7 @@ defined('MANUFACTURER_IMAGE_SHOW_NO_IMAGE') OR define('MANUFACTURER_IMAGE_SHOW_N
 //include needed functions
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
+require_once (DIR_FS_INC.'xtc_address_format.inc.php');
 
 if (!is_object($product) || $product->isProduct() === false || $language_not_found === true) {
 
@@ -72,6 +73,30 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $info_smarty->assign('MANUFACTURER_SHORT_DESCRIPTION', $manufacturer['manufacturers_short_description']);
     $info_smarty->assign('MANUFACTURER_ADD_DESCRIPTION', $manufacturer['manufacturers_add_description']);
     $info_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name'])));
+
+    if ($manufacturer['manufacturers_company'] != ''
+        || $manufacturer['manufacturers_firstname'] != ''
+        || $manufacturer['manufacturers_lastname'] != ''
+        )
+    {
+      $countries_query = xtDBquery("SELECT *
+                                      FROM ".TABLE_COUNTRIES."
+                                     WHERE countries_id = '".(int)$manufacturer['manufacturers_country_id']."'");
+      $countries = xtc_db_fetch_array($countries_query, true);
+      $info_smarty->assign('MANUFACTURER_CONTACT_ADDRESS', xtc_address_format($countries['address_format_id'], $manufacturer, 1, '', '<br />', true, 'manufacturers_'));
+    }
+
+    if ($manufacturer['responsible_company'] != ''
+        || $manufacturer['responsible_firstname'] != ''
+        || $manufacturer['responsible_lastname'] != ''
+        )
+    {
+      $countries_query = xtDBquery("SELECT *
+                                      FROM ".TABLE_COUNTRIES."
+                                     WHERE countries_id = '".(int)$manufacturer['responsible_country_id']."'");
+      $countries = xtc_db_fetch_array($countries_query, true);
+      $info_smarty->assign('MANUFACTURER_RESPONSIBLE_ADDRESS', xtc_address_format($countries['address_format_id'], $manufacturer, 1, '', '<br />', true, 'responsible_'));
+    }
   }
 
   // check if customer is allowed to add to cart

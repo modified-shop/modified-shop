@@ -76,3 +76,14 @@ define('TXT_MODEL','Artikelnummer');
 
 define('TEXT_CHOOSE_INFO_TEMPLATE_CATEGORIE','Vorlage f&uuml;r Hersteller&uuml;bersicht');
 define('TEXT_CHOOSE_INFO_TEMPLATE_LISTING','Vorlage f&uuml;r Artikel&uuml;bersicht');
+
+define('TEXT_GENDER', 'Anrede:'); 
+define('TEXT_COMPANY', 'Firma:');
+define('TEXT_FIRSTNAME', 'Vorname:');
+define('TEXT_LASTNAME', 'Nachname:');
+define('TEXT_STREET', 'Stra&szlig;e');
+define('TEXT_ZIP', 'PLZ:');
+define('TEXT_CITY', 'Stadt:');
+define('TEXT_COUNTRY', 'Land:');
+define('TEXT_EMAIL', 'E-Mail Adresse:');
+define('TEXT_TELEPHONE', 'Telefon:');

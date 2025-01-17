@@ -133,7 +133,7 @@
 
 {*BEGIN ACCORDION*}
 <div id="accordion_product_info">
-  {if $PRODUCTS_DESCRIPTION != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}<h3><a href="#">{#description#}</a></h3><div>{$PRODUCTS_DESCRIPTION}{if $MANUFACTURER_ADD_DESCRIPTION != ''}{if $PRODUCTS_DESCRIPTION != ''}<br class="clearfix" />{/if}{$MANUFACTURER_ADD_DESCRIPTION}{/if}</div>{/if}
+  {if $PRODUCTS_DESCRIPTION != ''}<h3><a href="#">{#description#}</a></h3><div>{$PRODUCTS_DESCRIPTION}</div>{/if}
   {if $MODULE_product_tags != ''}<h3><a href="#">{#products_tags#}</a></h3><div>{$MODULE_product_tags}</div>{/if}
   {if isset($more_images) && count($more_images) > 0}<h3><a href="#">{#more_images#}</a></h3>
     <div>
@@ -154,6 +154,14 @@
   {if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
   {if $MODULE_also_purchased != ''}<h3><a href="#">{#also_purchased#}</a></h3><div>{$MODULE_also_purchased}</div>{/if}
   {if $MODULE_products_category != ''}<h3><a href="#">{#products_category#}</a></h3><div>{$MODULE_products_category}</div>{/if}
+  {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}
+    <h3><a href="#">{#manufacturers_info#}</a></h3>
+    <div>
+      {if $MANUFACTURER_ADD_DESCRIPTION != ''}{$MANUFACTURER_ADD_DESCRIPTION}{/if}
+      {if isset($MANUFACTURER_CONTACT_ADDRESS)}{$MANUFACTURER_CONTACT_ADDRESS}{/if}
+      {if isset($MANUFACTURER_RESPONSIBLE_ADDRESS)}{$MANUFACTURER_RESPONSIBLE_ADDRESS}{/if}
+    </div>
+  {/if}
 </div>
 {*END ACCORDION*}
 
