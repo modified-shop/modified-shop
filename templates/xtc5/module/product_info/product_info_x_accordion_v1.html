@@ -157,9 +157,25 @@
   {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}
     <h3><a href="#">{#manufacturers_info#}</a></h3>
     <div>
-      {if $MANUFACTURER_ADD_DESCRIPTION != ''}{$MANUFACTURER_ADD_DESCRIPTION}{/if}
-      {if isset($MANUFACTURER_CONTACT_ADDRESS)}{$MANUFACTURER_CONTACT_ADDRESS}{/if}
-      {if isset($MANUFACTURER_RESPONSIBLE_ADDRESS)}{$MANUFACTURER_RESPONSIBLE_ADDRESS}{/if}
+      {if $MANUFACTURER_ADD_DESCRIPTION != ''}
+        <div class="pd_manu_add_desc cf">{$MANUFACTURER_ADD_DESCRIPTION}</div>
+      {/if}
+      {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS)}
+        <div class="pd_manu_address_row">
+          {if isset($MANUFACTURER_CONTACT_ADDRESS)}
+            <div class="pd_manu_address_item">
+              <div class="pd_manu_address_heading">{#manufacturers_heading_contact#}</div>
+              {$MANUFACTURER_CONTACT_ADDRESS}
+            </div>
+          {/if}
+          {if isset($MANUFACTURER_RESPONSIBLE_ADDRESS)}
+            <div class="pd_manu_address_item">
+              <div class="pd_manu_address_heading">{#manufacturers_heading_responsible#}</div>
+              {$MANUFACTURER_RESPONSIBLE_ADDRESS}
+            </div>
+          {/if}
+        </div>
+      {/if}
     </div>
   {/if}
 </div>
