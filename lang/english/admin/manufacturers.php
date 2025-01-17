@@ -36,6 +36,8 @@ define('TEXT_MANUFACTURER_STATUS', 'Manufacturer status:');
 define('TEXT_MANUFACTURERS_SORT_ORDER', 'Sort order:');
 define('TEXT_MANUFACTURERS_PRODUCT_SORT_ORDER', 'Product Sorting:');
 define('TEXT_NO_FILE', 'No template file existing!');
+define('TEXT_MANUFACTURERS_ADDRESS', 'Manufacturer Address');
+define('TEXT_RESPONSIBLE_ADDRESS', 'Responsible Address');
 
 define('TEXT_MANUFACTURER_AVAILABLE', 'Active');
 define('TEXT_MANUFACTURER_NOT_AVAILABLE', 'Deactivated');

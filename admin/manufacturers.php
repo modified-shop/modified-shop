@@ -435,8 +435,8 @@ if (USE_WYSIWYG == 'true') {
               </tr>
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent">&nbsp;</td>
-                <td class="dataTableHeadingContent" style="width:40%"><?php echo 'Hersteller Adresse';?></td>
-                <td class="dataTableHeadingContent" style="width:40%"><?php echo 'Verantwortlicher Adresse';?></td>
+                <td class="dataTableHeadingContent" style="width:40%"><?php echo TEXT_MANUFACTURERS_ADDRESS;?></td>
+                <td class="dataTableHeadingContent" style="width:40%"><?php echo TEXT_RESPONSIBLE_ADDRESS;?></td>
               </tr>
               <tr class="dataTableRow">
                 <td class="dataTableContent">
