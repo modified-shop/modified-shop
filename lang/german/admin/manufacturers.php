@@ -36,6 +36,8 @@ define('TEXT_MANUFACTURER_STATUS', 'Herstellerstatus:');
 define('TEXT_MANUFACTURERS_SORT_ORDER', 'Sortierreihenfolge:');
 define('TEXT_MANUFACTURERS_PRODUCT_SORT_ORDER', 'Artikel-Sortierung:');
 define('TEXT_NO_FILE', 'Keine Vorlagen-Datei vorhanden!');
+define('TEXT_MANUFACTURERS_ADDRESS', 'Hersteller Adresse');
+define('TEXT_RESPONSIBLE_ADDRESS', 'Verantwortlicher Adresse');
 
 define('TEXT_MANUFACTURER_AVAILABLE', 'Aktiviert');
 define('TEXT_MANUFACTURER_NOT_AVAILABLE', 'Deaktiviert');
