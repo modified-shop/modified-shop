@@ -309,7 +309,7 @@
           );
 
           $metadata_image_array = array();
-          $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
+          $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
           if ($image != '') {
             $metadata_image_array[] = array(
               'link' => DIR_WS_BASE.$image,
@@ -634,4 +634,3 @@
   }
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/metatags_end/','php') as $file) require ($file); 
-?>

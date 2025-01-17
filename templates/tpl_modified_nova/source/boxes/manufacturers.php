@@ -40,7 +40,7 @@
     if (xtc_db_num_rows($manufacturers_query, true) > 0) {
       $box_content = array();
       while ($manufacturers = xtc_db_fetch_array($manufacturers_query, true)) {
-        $image = $main->getImage($manufacturers['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
+        $image = $main->getImage($manufacturers['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
       
         $box_content[] = array(
           'NAME' => $manufacturers['manufacturers_name'],
