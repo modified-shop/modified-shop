@@ -4077,6 +4077,33 @@ ul.pd_iconlist li.wishlist:before {
   .pd_tabs h2.resp-accordion { display: none; }
   .pd_tabs ul.resp-tabs-list { display: block; }
 }
+
+.pd_manu_content {
+}
+.pd_manu_add_desc {
+  margin: 0 0 30px 0;
+}
+.pd_manu_address_row {
+  margin: 0px -10px;
+  display:flex;
+  flex-wrap:wrap;
+}
+.pd_manu_address_item {
+  padding: 0px 10px;
+  flex:initial;
+  width:100%;
+}
+.pd_manu_address_item:nth-child(2) {
+  margin: 30px 0 0 0;
+}
+@media only screen and (min-width: 600px) {
+  .pd_manu_address_item { flex:1; width:initial; }
+  .pd_manu_address_item:nth-child(2) { margin: 0 0 0 0; }
+}
+.pd_manu_address_heading {
+  font-weight:700;
+  margin: 0 0 5px 0;
+}
 /* END Product details */
 
 

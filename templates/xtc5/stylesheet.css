@@ -2295,3 +2295,22 @@ ol#address_block_new li label .address {
 }
 /* END reviews_note */
 
+/* START manufacturer contact */
+.pd_manu_add_desc {
+  margin: 0 0 30px 0;
+}
+.pd_manu_address_row {
+  margin: 0px -10px;
+  display:flex;
+  flex-wrap:wrap;
+}
+.pd_manu_address_item {
+  padding: 0px 10px;
+  flex:1;
+}
+.pd_manu_address_heading {
+  font-weight:700;
+  margin: 0 0 5px 0;
+}
+/* END manufacturer contact */
+
