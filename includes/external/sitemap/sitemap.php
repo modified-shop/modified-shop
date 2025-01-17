@@ -69,20 +69,37 @@
 
           $file = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_FILE'] : MODULE_SITEMAPORG_FILE);
 
-          if ((isset($_POST['configuration']) && $_POST['configuration']['MODULE_SITEMAPORG_ROOT'] == 'yes' || MODULE_SITEMAPORG_ROOT == 'yes')
-              && (isset($_POST['configuration']) && $_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'no' || MODULE_SITEMAPORG_EXPORT == 'no')
-              ) 
-          {
-            $filename = DIR_FS_DOCUMENT_ROOT.$file; 
-          } else {
-            $filename = DIR_FS_DOCUMENT_ROOT.'export/'.$file;
+          $use_gzip = false;
+          $filename = DIR_FS_DOCUMENT_ROOT.'export/'.$file;
+          if (isset($_POST['configuration'])) {
+            if ($_POST['configuration']['MODULE_SITEMAPORG_ROOT'] == 'yes'
+                && $_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'no'
+                )
+            {
+              $filename = DIR_FS_DOCUMENT_ROOT.$file;
+            }
+            if ($_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'yes') {
+              $filename = $filename.'_tmp_'.time();
+            }
+            if ($_POST['configuration']['MODULE_SITEMAPORG_GZIP'] == 'yes') {
+              $use_gzip = true;
+            }
+          } else{
+            if (MODULE_SITEMAPORG_ROOT == 'yes'
+                && MODULE_SITEMAPORG_EXPORT == 'no'
+                )
+            {
+              $filename = DIR_FS_DOCUMENT_ROOT.$file;
+            }
+            if (MODULE_SITEMAPORG_EXPORT == 'yes') {
+              $filename = $filename.'_tmp_'.time();
+            }
+            if (MODULE_SITEMAPORG_GZIP == 'yes') {
+              $use_gzip = true;
+            }
           }
-  
-          if (defined('RUN_MODE_ADMIN') && (isset($_POST['configuration']) && $_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'yes') || MODULE_SITEMAPORG_EXPORT == 'yes') { 
-            $filename = $filename.'_tmp_'.time();
-          }
-  
-          if ((isset($_POST['configuration']) && $_POST['configuration']['MODULE_SITEMAPORG_GZIP'] == 'yes') || MODULE_SITEMAPORG_GZIP == 'yes') {
+            
+          if ($use_gzip === true) {
             $filename = $filename.'.gz';
             $gz = gzopen($filename,'w');
             gzwrite($gz, $this->schema);
