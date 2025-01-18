@@ -160,7 +160,7 @@
       {if isset($MODULE_also_purchased) && $MODULE_also_purchased != ''}<li>{#also_purchased#}</li>{/if}
       {if isset($MODULE_products_category) && $MODULE_products_category != ''}<li>{#products_category#}</li>{/if}
       {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}<li>{#manufacturers_info#}</li>{/if}
-  </ul>
+    </ul>
     <div class="resp-tabs-container">
       {if $PRODUCTS_DESCRIPTION != ''}<div class="pd_description"><h4 class="detailbox">{#products_desc#}</h4><div itemprop="description">{$PRODUCTS_DESCRIPTION}</div></div>{/if}
       {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<div>{$MODULE_product_tags}</div>{/if}
