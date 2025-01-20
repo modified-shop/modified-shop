@@ -73,7 +73,7 @@
         $box_content[$reviews['reviews_id']] = $product->buildDataArray($reviews);
         $box_content[$reviews['reviews_id']]['REVIEWS_VOTE'] = $reviews['reviews_rating'];
         $box_content[$reviews['reviews_id']]['PRODUCTS_LINK'] = xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $reviews['products_id'] . '&reviews_id=' . $reviews['reviews_id']);
-        $box_content[$reviews['reviews_id']]['REVIEWS'] = xtc_break_string(encode_htmlspecialchars($reviews['reviews_text']), 15, '-<br />');
+        $box_content[$reviews['reviews_id']]['REVIEWS'] = encode_htmlspecialchars($reviews['reviews_text']);
         $box_content[$reviews['reviews_id']]['REVIEWS_IMAGE'] = $review_image;
         $box_content[$reviews['reviews_id']]['REVIEWS_IMAGE_MICROTAG'] = $review_image_microtag;
         $box_content[$reviews['reviews_id']]['AUTHOR'] = $reviews['customers_name'];
