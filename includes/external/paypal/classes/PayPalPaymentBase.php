@@ -46,6 +46,7 @@ class PayPalPaymentBase extends PayPalCommon {
   var $free_shipping;
   var $free_shipping_value_over;
   var $paypal_config;
+  var $numberFormat;
 
   function __construct() {
 
@@ -87,6 +88,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->tmpOrders = true;
       $this->tmpStatus = $this->order_status_tmp;
 
+      $this->numberFormat = "%01.2f";
       $this->loglevel = $this->get_config('PAYPAL_LOG_LEVEL');
   
       $payment_sale = array(
@@ -624,6 +626,17 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function set_number_format($currency) {
+    $check_query = xtDBquery("SELECT *
+                                FROM ".TABLE_CURRENCIES."
+                               WHERE UPPER(code) = '".xtc_db_input(strtoupper($currency))."'");
+    if (xtc_db_num_rows($check_query, true) > 0) {
+      $check = xtc_db_fetch_array($check_query, true);
+      $this->numberFormat = sprintf("%%01.%df", (int)$check['decimal_places']);
+    }                          
+  }
+  
+  
   function get_payment_instructions($orders_id) {
     // include needed functions
     if (!function_exists('xtc_date_short')) {
@@ -635,7 +648,10 @@ class PayPalPaymentBase extends PayPalCommon {
                                     WHERE orders_id = '".(int)$orders_id."'");
     if (xtc_db_num_rows($payment_query) > 0) {
       $payment = xtc_db_fetch_array($payment_query);
-      $payment['amount'] = sprintf("%01.2f", round($payment['amount'], 2));
+      
+      $this->set_number_format($payment['currency']);
+      
+      $payment['amount'] = sprintf($this->numberFormat, round($payment['amount'], 2));
       $payment['date'] = xtc_date_short($payment['date']);
 
       $fields = array(

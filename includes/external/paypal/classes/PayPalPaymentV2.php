@@ -129,11 +129,13 @@
         }
       }
       
+      $this->set_number_format($order->info['currency']);
+      
       $purchase_unit = array(
         'description' => $this->encode_utf8(mb_substr(MODULE_PAYMENT_PAYPAL_TEXT_ORDER, 0, 127)),
         'soft_descriptor' => $this->encode_utf8(mb_substr(STORE_NAME, 0, 22)),
         'amount' => array(
-          'value' => sprintf("%01.2f", round(($order->info['total'] + $order->info['shipping_cost']), 2)),
+          'value' => sprintf($this->numberFormat, round(($order->info['total'] + $order->info['shipping_cost']), 2)),
           'currency_code' => $this->encode_utf8($order->info['currency'])
         )
       );
@@ -146,7 +148,7 @@
                  )
           ) 
       {
-        $purchase_unit['amount']['value'] = sprintf("%01.2f", round(($order->info['total'] + $order->info['shipping_cost'] + $order->info['tax']), 2));
+        $purchase_unit['amount']['value'] = sprintf($this->numberFormat, round(($order->info['total'] + $order->info['shipping_cost'] + $order->info['tax']), 2));
       }
       
       $pm_source = 'paypal';
@@ -161,31 +163,31 @@
               break;
             case 'ot_shipping':
               $purchase_unit['amount']['breakdown']['shipping'] = array(
-                'value' => sprintf("%01.2f", round($total['value'], 2)),
+                'value' => sprintf($this->numberFormat, round($total['value'], 2)),
                 'currency_code' => $this->encode_utf8($order->info['currency'])
               );
               break;
             case 'ot_total':
-              $purchase_unit['amount']['value'] = sprintf("%01.2f", round($total['value'], 2));
+              $purchase_unit['amount']['value'] = sprintf($this->numberFormat, round($total['value'], 2));
               break;
             default:
               if ($total['value'] > 0) {
                 if (!isset($purchase_unit['amount']['breakdown']['handling'])) {
                   $purchase_unit['amount']['breakdown']['handling'] = array(
-                    'value' => sprintf("%01.2f", round($total['value'], 2)),
+                    'value' => sprintf($this->numberFormat, round($total['value'], 2)),
                     'currency_code' => $this->encode_utf8($order->info['currency'])
                   );
                 } else {
-                  $purchase_unit['amount']['breakdown']['handling']['value'] += sprintf("%01.2f", round($total['value'], 2));
+                  $purchase_unit['amount']['breakdown']['handling']['value'] += sprintf($this->numberFormat, round($total['value'], 2));
                 }              
               } else {
                 if (!isset($purchase_unit['amount']['breakdown']['discount'])) {
                   $purchase_unit['amount']['breakdown']['discount'] = array(
-                    'value' => sprintf("%01.2f", round(abs($total['value']), 2)),
+                    'value' => sprintf($this->numberFormat, round(abs($total['value']), 2)),
                     'currency_code' => $this->encode_utf8($order->info['currency'])
                   );
                 } else {
-                  $purchase_unit['amount']['breakdown']['discount']['value'] += sprintf("%01.2f", round(abs($total['value']), 2));
+                  $purchase_unit['amount']['breakdown']['discount']['value'] += sprintf($this->numberFormat, round(abs($total['value']), 2));
                 }
               }
               break;
@@ -213,14 +215,14 @@
             'name' => $this->encode_utf8($product['name']),
             'category' => 'PHYSICAL_GOODS',
             'unit_amount' => array(
-              'value' => sprintf("%01.2f", $product['price_net']),
+              'value' => sprintf($this->numberFormat, $product['price_net']),
               'currency_code' => $this->encode_utf8($order->info['currency'])
             ),
             'tax' => array(
-              'value' => sprintf("%01.2f", $product['tax_value']),
+              'value' => sprintf($this->numberFormat, $product['tax_value']),
               'currency_code' => $this->encode_utf8($order->info['currency'])
             ),
-            'tax_rate' => sprintf("%01.2f", round($product['tax'], 2)),
+            'tax_rate' => sprintf($this->numberFormat, round($product['tax'], 2)),
             'quantity' => $product['qty'],
           );
       
@@ -235,14 +237,14 @@
               'name' => $this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER),
               'category' => 'PHYSICAL_GOODS',
               'unit_amount' => array(
-                'value' => sprintf("%01.2f", $sum_net[$tax]),
+                'value' => sprintf($this->numberFormat, $sum_net[$tax]),
                 'currency_code' => $this->encode_utf8($order->info['currency'])
               ),
               'tax' => array(
-                'value' => sprintf("%01.2f", $sum_tax[$tax]),
+                'value' => sprintf($this->numberFormat, $sum_tax[$tax]),
                 'currency_code' => $this->encode_utf8($order->info['currency'])
               ),
-              'tax_rate' => sprintf("%01.2f", $tax),
+              'tax_rate' => sprintf($this->numberFormat, $tax),
               'quantity' => 1,
             );
           }
@@ -251,11 +253,11 @@
         }
 
         $purchase_unit['amount']['breakdown']['item_total'] = array(
-          'value' => sprintf("%01.2f", array_sum($sum_net)),
+          'value' => sprintf($this->numberFormat, array_sum($sum_net)),
           'currency_code' => $this->encode_utf8($order->info['currency'])
         );
         $purchase_unit['amount']['breakdown']['tax_total'] = array(
-          'value' => sprintf("%01.2f", array_sum($sum_tax)),
+          'value' => sprintf($this->numberFormat, array_sum($sum_tax)),
           'currency_code' => $this->encode_utf8($order->info['currency'])
         );
         
@@ -504,15 +506,17 @@
     }
 
 
-    function CaptureAuthorizedOrder($authorize_id, $amunt, $currency, $final_capture = false) {
+    function CaptureAuthorizedOrder($authorize_id, $amount, $currency, $final_capture = false) {
       
       // auth
       $client = $this->GetClient();
-            
+      
+      $this->set_number_format($currency);
+      
       $request = new AuthorizationsCaptureRequest($authorize_id);
       $request->body = array(
         'amount' => array(
-          'value' => sprintf("%01.2f", $amunt),
+          'value' => sprintf($this->numberFormat, $amount),
           'currency_code' => $this->encode_utf8($currency)
         )
       );
@@ -577,6 +581,8 @@
         }
       }
 
+      $this->set_number_format($order->info['currency']);
+      
       $request = new OrdersPatchRequest($orderID);
       $request->body = array(
         array(
@@ -584,7 +590,7 @@
           'path' => "/purchase_units/@reference_id=='default'/amount",
           'value' => array (
             'currency_code' => $this->encode_utf8($order->info['currency']),
-            'value' => sprintf("%01.2f", round($total, 2))
+            'value' => sprintf($this->numberFormat, round($total, 2))
           )
         ),
         array(
