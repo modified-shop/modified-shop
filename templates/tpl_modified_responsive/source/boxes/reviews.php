@@ -101,7 +101,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
       $box_smarty->assign('REVIEWS_VOTE', $reviews['reviews_rating']);
       $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
       $box_smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $reviews['products_id'] . '&reviews_id=' . $reviews['reviews_id']));
-      $box_smarty->assign('REVIEWS', xtc_break_string(encode_htmlspecialchars($reviews['reviews_text']), 15, '-<br />'));
+      $box_smarty->assign('REVIEWS', encode_htmlspecialchars($reviews['reviews_text']));
       $box_smarty->assign('REVIEWS_IMAGE', $review_image);
       $box_smarty->assign('REVIEWS_IMAGE_MICROTAG', $review_image_microtag);
       $box_smarty->assign('RANDOM', 1);
