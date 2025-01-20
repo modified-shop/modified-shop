@@ -24,7 +24,8 @@
     // include needed functions
     require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
   
-    $join_where = $select = $join = $where = '';
+    $join_where = $select = $join = $sub_where = '';
+    $where = " AND p.products_ordered > 0 ";
     $order_by = "p.products_ordered";
     $products_id_array = array();
     if (MAX_DISPLAY_BESTSELLERS_DAYS != '0') {
@@ -41,12 +42,12 @@
         $products_id_array[] = $orders['products_id'];
       }
       if (count($products_id_array) > 0) {
-        $select = "count(op.products_quantity) as ordered, ";
+        $select = "SUM(op.products_quantity) as ordered, ";
         $join = " JOIN ".TABLE_ORDERS_PRODUCTS." op
                        ON op.products_id = p.products_id ";
-        $join_where = " AND p2c.products_id IN ('".implode("', '", $products_id_array)."') ";
-        $where = " AND p.products_id IN ('".implode("', '", $products_id_array)."') ";
+        $sub_where = " WHERE p2c.products_id IN (".implode(', ', $products_id_array).") ";
         $order_by = "ordered";
+        $where = '';
       }
     }
   
@@ -60,21 +61,24 @@
                                     ON p.products_id = pd.products_id
                                        AND trim(pd.products_name) != ''
                                        AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                               JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                    ON p.products_id = p2c.products_id
-                                       ".$join_where."
-                               JOIN ".TABLE_CATEGORIES." c
-                                    ON p2c.categories_id = c.categories_id
-                                       AND c.categories_status = 1
-                                       AND (c.categories_id = '" . (int)$current_category_id . "' 
-                                            OR c.parent_id = '" . (int)$current_category_id . "')
-                                           ".CATEGORIES_CONDITIONS_C." 
                               WHERE p.products_status = 1
-                                AND p.products_ordered > 0
+                                AND p.products_id IN (
+                                      SELECT DISTINCT p2c.products_id 
+                                        FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                        JOIN ".TABLE_CATEGORIES." c
+                                             ON p2c.categories_id = c.categories_id
+                                                AND c.categories_status = 1
+                                                AND (c.categories_id = '" . (int)$current_category_id . "' 
+                                                     OR c.parent_id = '" . (int)$current_category_id . "')
+                                                    ".CATEGORIES_CONDITIONS_C." 
+                                        ".$sub_where."
+                                    )
+                                    ".$where."
                                     ".PRODUCTS_CONDITIONS_P."
                            GROUP BY p.products_id
                            ORDER BY ".$order_by." DESC
                               LIMIT ".MAX_DISPLAY_BESTSELLERS;
+
       $check_result = xtDBquery($best_sellers_query);
       $check_num = xtc_db_num_rows($check_result, true);
       if ($check_num == 1 && count($products_id_array) > 0) {
@@ -92,14 +96,16 @@
                                     ON p.products_id = pd.products_id
                                        AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                        AND trim(pd.products_name) != ''
-                               JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                    ON p.products_id = p2c.products_id
-                               JOIN ".TABLE_CATEGORIES." c
-                                    ON c.categories_id = p2c.categories_id
-                                       AND c.categories_status = 1
-                                           ".CATEGORIES_CONDITIONS_C."
                               WHERE p.products_status = 1
-                                AND p.products_ordered > 0
+                                AND p.products_id IN (
+                                      SELECT DISTINCT p2c.products_id 
+                                        FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                        JOIN ".TABLE_CATEGORIES." c
+                                             ON p2c.categories_id = c.categories_id
+                                                AND c.categories_status = 1
+                                                    ".CATEGORIES_CONDITIONS_C." 
+                                        ".$sub_where."
+                                    )
                                     ".$where."
                                     ".PRODUCTS_CONDITIONS_P."
                            GROUP BY p.products_id
