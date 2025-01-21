@@ -64,11 +64,11 @@ if (isset ($cPath) && xtc_not_null($cPath)) {
   }
   $subcategories_array[] = (int)$current_category_id;
     
-  $categories_products_query = "SELECT p2c.products_id
-                                  FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                  JOIN ".TABLE_PRODUCTS." p
+  $categories_products_query = "SELECT p.products_id
+                                  FROM ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                        ON p2c.products_id = p.products_id
-                                          AND p2c.categories_id ".((count($subcategories_array) > 1) ? "IN (".implode(', ', $subcategories_array).") " : "= '".(int)$current_category_id."' ")."
+                                          AND p2c.categories_id ".((count($subcategories_array) > 1) ? "IN (".implode(', ', $subcategories_array).") " : "= '".(int)$subcategories_array[0]."' ")."
                                  WHERE p.products_status = '1'
                                        ".PRODUCTS_CONDITIONS_P."
                                  LIMIT 1";
@@ -261,15 +261,15 @@ switch ($category_depth) {
       
       // We are asked to show only a specific category
       if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
-        $p2c_condition = " AND p2c.categories_id = '".(int)$_GET['filter_id']."'  ";
+        $p2c_condition = " WHERE p2c.categories_id = '".(int)$_GET['filter_id']."'  ";
       }
     } else {
       if (basename($PHP_SELF) == FILENAME_DEFAULT && count($subcategories_array) > 0) {
         // show the products in a given categorie
-        $p2c_condition = " AND p2c.categories_id IN (".implode(', ', $subcategories_array).") ";
+        $p2c_condition = " WHERE p2c.categories_id IN (".implode(', ', $subcategories_array).") ";
         $use_group_by = true;
         if (count($subcategories_array) == 1) {
-          $p2c_condition = " AND p2c.categories_id = '".$subcategories_array[0]."' ";
+          $p2c_condition = " WHERE p2c.categories_id = '".(int)$subcategories_array[0]."' ";
           $use_group_by = false;
         }
       }
@@ -317,15 +317,17 @@ switch ($category_depth) {
                            ON p.products_id = pd.products_id 
                               AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                               AND trim(pd.products_name) != '' 
-                      JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                           ON p2c.products_id = pd.products_id
-                              ".$p2c_condition."
-                      JOIN ".TABLE_CATEGORIES." c
-                           ON c.categories_id = p2c.categories_id
-                              AND c.categories_status = 1
-                                  ".CATEGORIES_CONDITIONS_C."
                            ".$from."
                      WHERE p.products_status = '1'
+                       AND p.products_id IN (
+                             SELECT DISTINCT p2c.products_id 
+                               FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                               JOIN ".TABLE_CATEGORIES." c
+                                    ON c.categories_id = p2c.categories_id 
+                                       AND c.categories_status=1 
+                                           ".CATEGORIES_CONDITIONS_C." 
+                                    ".$p2c_condition."
+                           )
                            ".PRODUCTS_CONDITIONS_P."
                            ".$where."
                            ".$filter_where."
