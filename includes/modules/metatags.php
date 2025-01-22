@@ -157,8 +157,9 @@
         }
       }
       $Text = encode_htmlspecialchars($Text, ENT_QUOTES, $_SESSION['language_charset']);
+      $Text = str_replace('&amp;', '&', $Text);
     }
-    return str_replace('&amp;', '&', $Text); 
+    return $Text; 
   }
 
   function metaTitle($Title = array()) {
