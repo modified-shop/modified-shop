@@ -144,18 +144,20 @@
   }
 
   function metaClean($Text, $Length = false, $Abk = ' ...') {
-    $Text = preg_replace("/<[^>]*>/", ' ', $Text);
-    $Text = metaNoEntities($Text);
-    $Text = str_replace(array('&nbsp;', '\t', '\r', '\n', '\b'), ' ', $Text);
-    $Text = trim(preg_replace("/\s\s+/", ' ', $Text));
-    if ($Length > 0) {
-      if (strlen($Text) > $Length) {
-        $Length -= strlen($Abk);
-        $Text = preg_replace('/\s+?(\S+)?$/', '', substr($Text, 0, $Length + 1));
-        $Text = substr($Text, 0, $Length).$Abk;
+    if (!empty($Text)) {
+      $Text = preg_replace("/<[^>]*>/", ' ', $Text);
+      $Text = metaNoEntities($Text);
+      $Text = str_replace(array('&nbsp;', '\t', '\r', '\n', '\b'), ' ', $Text);
+      $Text = trim(preg_replace("/\s\s+/", ' ', $Text));
+      if ($Length > 0) {
+        if (strlen($Text) > $Length) {
+          $Length -= strlen($Abk);
+          $Text = preg_replace('/\s+?(\S+)?$/', '', substr($Text, 0, $Length + 1));
+          $Text = substr($Text, 0, $Length).$Abk;
+        }
       }
+      $Text = encode_htmlspecialchars($Text, ENT_QUOTES, $_SESSION['language_charset']);
     }
-    $Text = encode_htmlspecialchars($Text, ENT_QUOTES, $_SESSION['language_charset']);
     return str_replace('&amp;', '&', $Text); 
   }
 
