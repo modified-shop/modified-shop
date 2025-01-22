@@ -518,7 +518,6 @@
 
     $sql_data_array = array (
       'orders_id' => (int)($oID),
-      'products_id' => (int)($data_array['products_id']),
       'products_name' => xtc_db_prepare_input($data_array['products_name']),
       'products_order_description' => xtc_db_prepare_input($product['products_order_description']),
       'products_price' => (float)$data_array['products_price'],
@@ -527,6 +526,7 @@
       'products_quantity' => xtc_db_prepare_input($data_array['products_quantity']),
       'allow_tax' => $allow_tax,
       'products_model' => xtc_db_prepare_input($data_array['products_model']),
+      'products_weight_origin' => xtc_db_prepare_input($data_array['products_weight_origin']),
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
 
@@ -555,6 +555,10 @@
                    WHERE products_id = '".(int)$data_array['products_id']."'");
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
+    
+    if (round($data_array['products_weight_origin'], 4) != round($data_array['old_weight'], 4)) {
+      orders_product_update($oID, $data_array, $status);
+    }
   }
 
 
@@ -830,7 +834,9 @@
       'products_options' => xtc_db_prepare_input($data_array['products_options']),
       'products_options_values' => xtc_db_prepare_input($data_array['products_options_values']),
       'options_values_price' => xtc_db_prepare_input($data_array['options_values_price']),
-      'price_prefix' => xtc_db_prepare_input($data_array['prefix']),
+      'price_prefix' => xtc_db_prepare_input($data_array['price_prefix']),
+      'options_values_weight' => xtc_db_prepare_input($data_array['options_values_weight']),
+      'weight_prefix' => xtc_db_prepare_input($data_array['weight_prefix']),
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array, 'update', "orders_products_attributes_id = '".xtc_db_input($data_array['opAID'])."'");
 

@@ -55,6 +55,7 @@ define('TEXT_SMALL_NETTO', '(Netto)');
 define('TEXT_PRODUCT_ID', 'pID:');
 define('TEXT_PRODUCTS_MODEL', 'Art.Nr:');
 define('TEXT_QUANTITY', 'Anzahl:');
+define('TEXT_WEIGHT', 'Gewicht:');
 define('TEXT_PRODUCT', 'Artikel:');
 define('TEXT_TAX', 'MWSt.:');
 define('TEXT_PRICE', 'Preis:');
@@ -63,7 +64,8 @@ define('TEXT_PRODUCT_SEARCH', 'Artikelsuche:');
 
 define('TEXT_PRODUCT_OPTION', 'Artikelmerkmale:');
 define('TEXT_PRODUCT_OPTION_VALUE', 'Optionswert:');
-define('TEXT_PRICE_PREFIX', 'Price Prefix:');
+define('TEXT_PRICE_PREFIX', 'Preis Prefix:');
+define('TEXT_WEIGHT_PREFIX', 'Gewicht Prefix:');
 define('TEXT_INS', 'Hinzuf&uuml;gen:');
 define('TEXT_COD_COSTS', 'Nachnahmekosten');
 define('TEXT_VALUE', 'Preis');

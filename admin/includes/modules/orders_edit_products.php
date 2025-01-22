@@ -58,6 +58,8 @@
         <td class="dataTableHeadingContent"><b><?php echo TEXT_QUANTITY;?></b></td>
         <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT;?></b></td>
         <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_MODEL;?></b></td>
+        <td class="dataTableHeadingContent"><b><?php echo TEXT_WEIGHT;?></b></td>
+        <td class="dataTableHeadingContent"><b><?php echo TEXT_FINAL;?></b></td>
         <td class="dataTableHeadingContent"><b><?php echo TEXT_TAX;?></b></td>
         <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE;?></b></td>
         <td class="dataTableHeadingContent"><b><?php echo TEXT_FINAL;?></b></td>
@@ -67,6 +69,7 @@
       for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
         echo xtc_draw_form('product_edit', FILENAME_ORDERS_EDIT, 'action=product', 'post');
           echo xtc_draw_hidden_field('old_qty', $order->products[$i]['qty']);
+          echo xtc_draw_hidden_field('old_weight', $order->products[$i]['weight_origin']);
           echo xtc_draw_hidden_field('oID', $_GET['oID']);
           echo xtc_draw_hidden_field('opID', $order->products[$i]['opid']);
           echo xtc_draw_hidden_field('allow_tax', $order->products[$i]['allow_tax']);
@@ -74,10 +77,12 @@
           echo xtc_draw_hidden_field('del_pID', $order->products[$i]['id']);
           ?>
           <tr class="dataTableRow">
-            <td class="dataTableContent"><?php echo xtc_draw_input_field('products_id', $order->products[$i]['id'], 'size="5"');?></td>
-            <td class="dataTableContent"><?php echo xtc_draw_input_field('products_quantity', $order->products[$i]['qty'], 'size="2"');?></td>
+            <td class="dataTableContent"><?php echo $order->products[$i]['id']; ?></td>
+            <td class="dataTableContent"><?php echo xtc_draw_input_field('products_quantity', $order->products[$i]['qty'], 'class="txta-r" size="2"');?></td>
             <td class="dataTableContent"><?php echo xtc_draw_input_field('products_name', $order->products[$i]['name'], 'size="20"');?></td>
             <td class="dataTableContent"><?php echo xtc_draw_input_field('products_model', $order->products[$i]['model'], 'size="10"');?></td>
+            <td class="dataTableContent"><?php echo xtc_draw_input_field('products_weight_origin', $order->products[$i]['weight_origin'], 'class="txta-r" size="10"');?></td>
+            <td class="dataTableContent txta-r"><?php echo $order->products[$i]['weight']; ?></td>
             <td class="dataTableContent txta-r"><?php echo $order->products[$i]['tax']; ?></td>
             <td class="dataTableContent"><?php echo xtc_draw_input_field('products_price', $order->products[$i]['price'], 'class="txta-r" size="10"');?></td>
             <td class="dataTableContent txta-r"><?php echo $order->products[$i]['final_price']; ?></td>

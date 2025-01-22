@@ -47,6 +47,8 @@
       <tr class="dataTableHeadingRow">
         <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION;?></b></td>
         <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION_VALUE;?></b></td>
+        <td class="dataTableHeadingContent txta-c"><b><?php echo TEXT_WEIGHT_PREFIX;?></b></td>
+        <td class="dataTableHeadingContent txta-c"><b><?php echo TEXT_WEIGHT;?></b></td>
         <td class="dataTableHeadingContent txta-c"><b><?php echo TEXT_PRICE_PREFIX;?></b></td>
         <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE . TEXT_SMALL_NETTO;?></b></td>
         <td class="dataTableHeadingContent">&nbsp;</td>
@@ -62,7 +64,9 @@
             <tr class="dataTableRow">
               <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options', $attributes['products_options'], 'size="20"');?></td>
               <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options_values', $attributes['products_options_values'], 'size="20"');?></td>
-              <td class="dataTableContent txta-c"><?php echo xtc_draw_pull_down_menu('prefix', $prefix_array, $attributes['price_prefix']); ?></td>
+              <td class="dataTableContent txta-c"><?php echo xtc_draw_pull_down_menu('weight_prefix', $prefix_array, $attributes['weight_prefix']); ?></td>
+              <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_weight',$attributes['options_values_weight'], 'size="10"');?></td>
+              <td class="dataTableContent txta-c"><?php echo xtc_draw_pull_down_menu('price_prefix', $prefix_array, $attributes['price_prefix']); ?></td>
               <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_price',$attributes['options_values_price'], 'size="10"');?></td>
               <td class="dataTableContent txta-c">
                 <?php
