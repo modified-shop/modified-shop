@@ -516,13 +516,13 @@
 
   echo '<meta property="og:type" content="website" />'."\n";
   echo '<meta property="og:site_name" content="'. metaClean(TITLE) .'" />'."\n";
-  if ($metadata_array['link'] != '') {
+  if (isset($metadata_array['link']) && $metadata_array['link'] != '') {
     echo '<meta property="og:url" content="'. $metadata_array['link'] .'" />'."\n";
   }  
   if (isset($metadata_array['title']) && $metadata_array['title'] != '') {
     echo '<meta property="og:title" content="'. $metadata_array['title'] .'" />'."\n";
   }
-  if ($metadata_array['description'] != '') {
+  if (isset($metadata_array['description']) && $metadata_array['description'] != '') {
     echo '<meta property="og:description" content="'. $metadata_array['description'] .'" />'."\n";
   }
   if (isset($metadata_image_array) 
