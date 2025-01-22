@@ -27,8 +27,10 @@
         } else {
           $messageStack->add_session(mb_convert_encoding($response['message'], 'ISO-8859-1', 'UTF-8'), 'warning');
         }
-      } else {
-        $_SESSION['DHLparcel_id'] = $response;
+      }
+      
+      if (is_array($response) && isset($response['parcel_id'])) {
+        $_SESSION['DHLparcel_id'] = $response['parcel_id'];
         $messageStack->add_session(TEXT_DHL_BUSINESS_CREATE_SUCCESS, 'success');
         
         if ($_POST['status_update'] > 0) {

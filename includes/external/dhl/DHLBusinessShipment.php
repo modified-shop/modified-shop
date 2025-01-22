@@ -10,8 +10,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  define('API_AUTH', 'http://dhl.de/webservice/cisbase');
-  define('API_URL', 'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/3.1/geschaeftskundenversand-api-3.1.wsdl');
+  define('DHL_API_AUTH', 'http://dhl.de/webservice/cisbase');
+  define('DHL_API_URL', 'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/3.1/geschaeftskundenversand-api-3.1.wsdl');
 
   define('DHL_SANDBOX_URL', 'https://cig.dhl.de/services/sandbox/soap');
   define('DHL_PRODUCTION_URL', 'https://cig.dhl.de/services/production/soap');
@@ -55,12 +55,15 @@
         }
         if (strpos($account_data[$i+1], 'PK') !== false) {
           $this->data['account'][$account_data[$i]]['PK'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
+        } elseif (strpos($account_data[$i+1], 'KP') !== false) {
+          $this->data['account'][$account_data[$i]]['KP'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
         } elseif (strpos($account_data[$i+1], 'WP') !== false) {
           $this->data['account'][$account_data[$i]]['WP'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
         } elseif (strpos($account_data[$i+1], 'RT') !== false) {
           $this->data['account'][$account_data[$i]]['RT'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
         } else {
           $this->data['account'][$account_data[$i]]['PK'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
+          $this->data['account'][$account_data[$i]]['KP'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
           $this->data['account'][$account_data[$i]]['WP'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
           $this->data['account'][$account_data[$i]]['RT'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
         }
@@ -120,21 +123,35 @@
           $response->CreationState->LabelData->labelUrl, 
           ((isset($response->CreationState->LabelData->exportLabelUrl)) ? $response->CreationState->LabelData->exportLabelUrl : '')
         );
-      
-        return $response->CreationState->shipmentNumber;
+        
+        $result = array(
+          'parcel_id' => $response->CreationState->shipmentNumber
+        ); 
+        
+        if (isset($response->Status->statusText)
+            && $response->Status->statusText != ''
+            )
+        {
+          $message = array('INFO - <b>Message:</b> '.decode_utf8(utf8_encode($response->Status->statusText)));
+        }
       } else {
         $message = array('ERROR - <b>Code:</b> '.$response->Status->statusCode.' <b>Message:</b> '.decode_utf8(utf8_encode($response->Status->statusText)));
-        if (isset($response->CreationState->LabelData->Status->statusMessage)) {
-          foreach ($response->CreationState->LabelData->Status->statusMessage as $status_message) {
-            if (!isset($message[md5($status_message)])) {
-              $message[md5($status_message)] = decode_utf8(utf8_encode($status_message));
-            }
+      }
+      
+      if (isset($message) && isset($response->CreationState->LabelData->Status->statusMessage)) {
+        foreach ($response->CreationState->LabelData->Status->statusMessage as $status_message) {
+          if (!isset($message[md5($status_message)])) {
+            $message[md5($status_message)] = decode_utf8(utf8_encode($status_message));
           }
         }
-        
-        $this->LoggingManager->log('DEBUG', 'CreateLabel', array('exception' => $response->CreationState->LabelData->Status->statusMessage));
-        return array('message' => implode('<br>- ',$message));
       }
+      
+      if (isset($message) && count($message) > 0) {
+        $this->LoggingManager->log('DEBUG', 'CreateLabel', array('exception' => $message));
+        $result['message'] = implode('<br>- ',$message);
+      }
+
+      return $result;
     }
 
 
@@ -209,7 +226,7 @@
       );
       
       try {
-        $this->client = new SoapClient(API_URL, $auth_params);
+        $this->client = new SoapClient(DHL_API_URL, $auth_params);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'buildClient', array('exception' => $ex));
         return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.decode_utf8(utf8_encode($ex->faultstring)));
@@ -231,7 +248,7 @@
         'type' => 0
       );
     
-      return new SoapHeader(API_AUTH, 'Authentification', $auth_params);
+      return new SoapHeader(DHL_API_AUTH, 'Authentification', $auth_params);
     }
 
 
@@ -315,7 +332,10 @@
       }
 
       // signed
-      if ($this->signed > 0) {
+      if ($this->data['product'] == 'V01PAK' 
+          && $this->signed > 0
+          )
+      {
         $Service->signedForByRecipient['active'] = '1';
       }
 
@@ -462,9 +482,9 @@
           $this->data['product'] = 'V01PAK';
           $this->data['product_code'] = '01';
           if ($this->type == 1 && $this->data['weight'] <= 1) {
-            $this->data['product'] = 'V62WP';
+            $this->data['product'] = 'V62KP';
             $this->data['product_code'] = '62';
-            $this->data['product_type'] = 'WP';
+            $this->data['product_type'] = 'KP';
           }
           break;
         default:
@@ -615,13 +635,23 @@
         $this->order = new order($order_id);
       }
             
-      $weight = (double)SHIPPING_BOX_WEIGHT;
+      $weight = 0;
       for ($i = 0, $n = count($this->order->products); $i < $n; $i++) {
         $weight += ($this->order->products[$i]['qty'] * $this->order->products[$i]['weight']);
       }
-    
-      if ($weight == '0') {
-        $weight = '1';
+      
+      if ($weight > 0) {
+        if ((double)SHIPPING_BOX_WEIGHT >= ($weight * (double)SHIPPING_BOX_PADDING / 100)) {
+          $weight = $weight + (double)SHIPPING_BOX_WEIGHT;
+        } else {
+          $weight = $weight + ($weight * (double)SHIPPING_BOX_PADDING / 100);
+        }
+      } else {
+        $weight = (double)SHIPPING_BOX_WEIGHT;
+      }
+      
+      if ($weight == 0) {
+        $weight = 1;
       }
     
       return $weight;

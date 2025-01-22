@@ -63,7 +63,7 @@
 
               $type_array = array(
                 array('id' => '0', 'text' => 'Paket'),
-                array('id' => '1', 'text' => 'Warenpost'),
+                array('id' => '1', 'text' => 'Kleinpaket'),
               );
               
               $orders_statuses_selected = MODULE_DHL_BUSINESS_STATUS_UPDATE;
