@@ -31,6 +31,11 @@ if (isset($_REQUEST['speed'])) {
   include_once('includes/application_top.php');
 }
 
+// check for extension
+if (!isset($_REQUEST['ext'])) {
+  die("no extension");
+}
+
 // extension
 $ajax_ext = preg_replace("/[^a-z0-9\\.\\_]/i", "", $_REQUEST['ext']);
 
