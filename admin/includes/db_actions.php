@@ -87,7 +87,7 @@
       $schema .= '-- Charset: ' . ((isset($dump['utf8-convert'])) ? 'utf8' : $charset) . "\n";
 
       
-      $backup_file = 'dbd_' . DB_DATABASE . '-' . date('YmdHis');
+      $backup_file = 'dbd_' . DB_DATABASE . '_' . date('Y-m-d-H-i-s');
       $dump['file'] = DIR_FS_BACKUP . $backup_file;
       
       if (isset($_POST['compress']) && $_POST['compress'] == 'gzip') {
