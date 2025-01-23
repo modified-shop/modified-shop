@@ -77,7 +77,7 @@ $smarty = new Smarty();
 
 $mod_captcha = $_mod_captcha_class::getInstance();
 
-$country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY; //is country_id (int)
+$country = isset($_POST['country']) ? (int)$_POST['country'] : (isset($_SESSION['country']) ? (int)$_SESSION['country'] : STORE_COUNTRY);
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
 
 $required_zones = check_country_required_zones($country);
