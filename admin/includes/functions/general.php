@@ -491,16 +491,21 @@
    * @return
    */
   function xtc_get_languages() {
-    $languages_array = array();
-    $languages_query = xtc_db_query("SELECT *,
-                                            languages_id as id
-                                       FROM ".TABLE_LANGUAGES."
-                                      WHERE status_admin = '1'
-                                   ORDER BY sort_order");
-
-    while ($languages = xtc_db_fetch_array($languages_query)) {
-      $languages_array[] = $languages;
+    static $languages_array;
+    
+    if (!isset($languages_array)) {
+      $languages_array = array();
+      $languages_query = xtc_db_query("SELECT *,
+                                              languages_id as id
+                                         FROM ".TABLE_LANGUAGES."
+                                        WHERE status_admin = '1'
+                                     ORDER BY sort_order");
+  
+      while ($languages = xtc_db_fetch_array($languages_query)) {
+        $languages_array[] = $languages;
+      }
     }
+    
     return $languages_array;
   }
 
