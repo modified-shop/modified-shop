@@ -31,14 +31,16 @@
     private $client;
     private $order;
     private $insurance_array;
+    private $loglevel;
     private $LoggingManager;
 
     protected $sandbox;
 
 
     function __construct($data) {
-      $this->sandbox = false;    
-      $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_dhl_%s_%s.log', 'dhl', 'debug');
+      $this->sandbox = false;
+      $this->loglevel = defined('MODULE_DHL_BUSINESS_LOGLEVEL') ? MODULE_DHL_BUSINESS_LOGLEVEL : 'ERROR';
+      $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_dhl_%s_%s.log', 'dhl', strtolower($this->loglevel));
       
       $this->data = array(
         'user'          => MODULE_DHL_BUSINESS_USER,
@@ -113,8 +115,8 @@
       try {
         $response = $this->client->createShipmentOrder($request);
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'CreateLabel', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.decode_utf8(utf8_encode($ex->faultstring)));
+        $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $ex));
+        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$this->encode_message($ex->faultstring));
       }
       
       if ($response->Status->statusCode == '0') {
@@ -130,24 +132,25 @@
         
         if (isset($response->Status->statusText)
             && $response->Status->statusText != ''
+            && $this->loglevel != 'NONE'
             )
         {
-          $message = array('INFO - <b>Message:</b> '.decode_utf8(utf8_encode($response->Status->statusText)));
+          $message = array('INFO - <b>Message:</b> '.$this->encode_message($response->Status->statusText));
         }
       } else {
-        $message = array('ERROR - <b>Code:</b> '.$response->Status->statusCode.' <b>Message:</b> '.decode_utf8(utf8_encode($response->Status->statusText)));
+        $message = array('ERROR - <b>Code:</b> '.$response->Status->statusCode.' <b>Message:</b> '.$this->encode_message($response->Status->statusText));
       }
       
       if (isset($message) && isset($response->CreationState->LabelData->Status->statusMessage)) {
         foreach ($response->CreationState->LabelData->Status->statusMessage as $status_message) {
           if (!isset($message[md5($status_message)])) {
-            $message[md5($status_message)] = decode_utf8(utf8_encode($status_message));
+            $message[md5($status_message)] = decode_utf8(encode_utf8($status_message, 'ISO-8859-1', true));
           }
         }
       }
       
       if (isset($message) && count($message) > 0) {
-        $this->LoggingManager->log('DEBUG', 'CreateLabel', array('exception' => $message));
+        $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $message));
         $result['message'] = implode('<br>- ',$message);
       }
 
@@ -182,8 +185,8 @@
       
         return $response->Status->statusCode;
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'buildClient', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.decode_utf8(utf8_encode($ex->faultstring)));
+        $this->LoggingManager->log('ERROR', 'buildClient', array('exception' => $ex));
+        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$this->encode_message($ex->faultstring));
       }
     }
 
@@ -228,15 +231,15 @@
       try {
         $this->client = new SoapClient(DHL_API_URL, $auth_params);
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'buildClient', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.decode_utf8(utf8_encode($ex->faultstring)));
+        $this->LoggingManager->log('ERROR', 'buildClient', array('exception' => $ex));
+        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$this->encode_message($ex->faultstring));
       }
       
       try {
         $this->client->__setSoapHeaders($header);
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'buildClient', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.decode_utf8(utf8_encode($ex->faultstring)));
+        $this->LoggingManager->log('ERROR', 'buildClient', array('exception' => $ex));
+        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$this->encode_message($ex->faultstring));
       }
     }
 
@@ -658,6 +661,11 @@
     }
 
 
+    private function encode_message($string) {
+      return decode_utf8(encode_utf8($string, 'ISO-8859-1', true));
+    }
+    
+    
     private function encode_request($array) {
       foreach ($array as $key => $value) {
         if (is_array($value)) {
