@@ -354,7 +354,7 @@ class MetroCategoryMatching {
         # nichts gefunden? vom Server abrufen
         # Mit < 5 fuer den Fall dass Kategoriepfade zu einzelnen Kategorien geholt wurden
         if ($countFoundCategories < 5) {
-            if (self::importMetroCategories($ParentID)) {
+            if ($this->importMetroCategories($ParentID)) {
                 # Wenn Daten bekommen, noch mal select
                 $metroCategories = MagnaDB::gi()->fetchArray('
 				    SELECT DISTINCT CategoryID, CategoryName,
@@ -372,7 +372,7 @@ class MetroCategoryMatching {
         return $metroCategories;
     }
 
-    private static function importMetroCategories($ParentID = '0') {
+    private function importMetroCategories($ParentID = '0') {
         global $_MagnaSession;
         try {
             $categories = MagnaConnector::gi()->submitRequest(array(
@@ -390,9 +390,11 @@ class MetroCategoryMatching {
         if (!is_array($categories['DATA']) || empty($categories['DATA'])) {
             return false;
         }
-        $now = time();
+        $now = new \DateTime();
         foreach ($categories['DATA'] as &$curRow) {
-            $curRow['InsertTimestamp'] = $now;
+            $curRow['mpID'] = $this->mpID;
+            $curRow['platform'] = 'metro';
+            $curRow['InsertTimestamp'] = $now->format('Y-m-d H:i:s');
             $curRow['Language'] = 'de';
             unset($curRow['CategoryLevel']);
             unset($curRow['Timestamp']);

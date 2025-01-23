@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -25,7 +25,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
     public function __construct($settings = array()) {
         $settings = array_merge(array(
-            'itemsPerBatch' => 500,
+            'itemsPerBatch' => 50,
             'keytype' => getDBConfigValue('general.keytype', '0'),
             'mlProductsUseLegacy' => false
         ), $settings);

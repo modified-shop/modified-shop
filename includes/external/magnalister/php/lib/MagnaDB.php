@@ -1263,7 +1263,15 @@ class MagnaDB {
 		if (!is_array($data)) return;
 		$tabledesc = $this->getDesc($table);
 		if (!is_array($tabledesc)) return false;
-		$returnarray = array();
+		/* {Hook} "MagnaDB_addNonNullableEntries": Enables you to add own functionality to this method, or replace the method's functionality.<br>
+
+		   Variables that can be used: <ul><li>$data: The table data</li>
+		   <li>$table: The table name (read only)</li></ul>
+		   <li>$tabledesc: The desctription of the table (read only)</li></ul>
+		 */
+		if (function_exists('magnaContribVerify') && (($hp = magnaContribVerify('MagnaDB_addNonNullableEntries', 1)) !== false)) {
+			require($hp);
+		}
 		// go through all table's columns
 		foreach ($tabledesc as $column_description) {
 			if (!array_key_exists($column_description['Field'], $data)) {

@@ -43,7 +43,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 
 
 		parent::__construct($settings);
-		if (!getDBConfigValue('ebay.zerostockontrol', $this->mpID, false)) {
+		if (getDBConfigValue('ebay.zerostockontrol', $this->mpID, false) !== 'true') {
 			$this->summaryAddText = "<br />\n".ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED;
 		} else {
 			$this->summaryAddText = "<br />\n".ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_ONLY_UPDATED;
@@ -1479,7 +1479,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				unset($this->selection[$pID]);
 				$this->badItems[] = $pID;
 			} else if (    ((int)$data['submit']['Quantity'] <= 0)
-			            && (!getDBConfigValue('ebay.zerostockontrol', $this->mpID, false))) {
+			            && (getDBConfigValue('ebay.zerostockontrol', $this->mpID, false) !== 'true')) {
 				unset($this->selection[$pID]);
 				$this->disabledItems[] = $pID;
 				$this->ajaxReply['ignoreErrors'] = true; // braucht man denke nicht

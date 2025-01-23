@@ -50,6 +50,7 @@ define('TABLE_MAGNA_CDISCOUNT_VARIANTMATCHING', 'magnalister_cdiscount_variantma
 define('TABLE_MAGNA_TRADORIA_PREPARE', 'magnalister_tradoria_prepare');
 define('TABLE_MAGNA_TRADORIA_VARIANTMATCHING', 'magnalister_tradoria_variantmatching');
 define('TABLE_MAGNA_HOOD_CATEGORIES', 'magnalister_hood_categories');
+define('TABLE_MAGNA_HOOD_VARIANTMATCHING', 'magnalister_hood_variantmatching');
 define('TABLE_MAGNA_HOOD_PROPERTIES', 'magnalister_hood_properties');
 define('TABLE_MAGNA_HOOD_ERRORLOG', 'magnalister_hood_errorlog');
 define('TABLE_MAGNA_HOOD_DELETEDLOG', 'magnalister_hood_deletedlog');

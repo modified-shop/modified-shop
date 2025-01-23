@@ -388,7 +388,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		);
 		$aWhenMadeValues = array(
 			'made_to_order' => ML_ETSY_WHEN_MADE_MADE_TO_ORDER,
-			'2020_2023'     => ML_ETSY_WHEN_MADE_2020_2023,
+			'2020_'.date('Y') => '2020-'.date('Y'),
 			'2010_2019'     => ML_ETSY_WHEN_MADE_2010_2019,
 			'2004_2009'     => ML_ETSY_WHEN_MADE_2004_2009,
 			'before_2004'   => ML_ETSY_WHEN_MADE_BEFORE_2004,

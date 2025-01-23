@@ -21,6 +21,8 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 class Check24ProductSaver {
 	const DEBUG = false;
 
+	public $aErrors = array();
+
 	protected $aMagnaSession = array();
 	protected $sMarketplace = '';
 	protected $sMpId = 0;
@@ -85,6 +87,38 @@ class Check24ProductSaver {
 		}
 		$aRow['ItemHandlingData'] = json_encode($aItemHandlingData);
 
+		$aGPSRDataKeys = array (
+			'Marke',
+			'Hersteller_Name',
+			'Hersteller_Strasse_Hausnummer',
+			'Hersteller_PLZ',
+			'Hersteller_Stadt',
+			'Hersteller_Land',
+			'Hersteller_Email',
+			'Hersteller_Telefonnummer',
+			'Verantwortliche_Person_fuer_EU_Name',
+			'Verantwortliche_Person_fuer_EU_Strasse_Hausnummer',
+			'Verantwortliche_Person_fuer_EU_PLZ',
+			'Verantwortliche_Person_fuer_EU_Stadt',
+			'Verantwortliche_Person_fuer_EU_Land',
+			'Verantwortliche_Person_fuer_EU_Email',
+			'Verantwortliche_Person_fuer_EU_Telefonnummer'
+		);
+		$aGPSRData = array();
+		foreach ($aGPSRDataKeys as $sGPSRKey) {
+			if (!empty($aItemDetails[$sGPSRKey])) {
+				$aGPSRData[$sGPSRKey] = $aItemDetails[$sGPSRKey];
+				unset($aItemDetails[$sGPSRKey]);
+			} else {
+				// all mandatory, except Tel-Nr.
+				if (strpos($sGPSRKey, 'Telefonnummer') == false) {
+					$aRow['Verified'] = 'ERROR';
+					$this->aErrors[] = sprintf(ML_ERROR_MANDATORY_FIELD_MISSING, $sGPSRKey);
+				}
+			}
+		}
+		$aRow['GPSRData'] = json_encode($aGPSRData);
+
 		if ($aItemDetails['ShippingCost'] === '') {
 			$aRow['Verified'] = 'ERROR';
 			$this->addToErrorLog(ML_CHECK24_ERROR_SHIPPING_COST, $aRow['products_model']);
@@ -93,6 +127,7 @@ class Check24ProductSaver {
 			if (!is_numeric($aItemDetails['ShippingCost'])) {
 				$aRow['Verified'] = 'ERROR';
 				$this->addToErrorLog(ML_CHECK24_ERROR_SHIPPING_COST, $aRow['products_model']);
+				$this->aErrors[] = ML_CHECK24_ERROR_SHIPPING_COST;
 			}
 		}
 		

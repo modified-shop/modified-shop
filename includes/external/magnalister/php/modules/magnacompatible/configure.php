@@ -31,6 +31,14 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 	protected $missingConfigKeys = array();
 
 	protected $form = array ();
+
+	/**
+	 * Write HTML for alert boxes in here.
+	 *
+	 * Always concatenate this string to not delete previous boxes.
+	 *
+	 * @var string
+	 */
 	protected $boxes = '';
 	
 	protected $isAuthed = false;
@@ -83,6 +91,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 	
 	protected function loadConfigFormFile($file, $replace = array(), $unset = array()) {
 		$fC = file_get_contents($file);
+		$replace['http:\/\/www.IhrShop.de\/'] = trim(json_encode(HTTP_SERVER.DIR_WS_CATALOG), ' "\/').'\/';
 		if (!empty($replace)) {
 			$fC = str_replace(array_keys($replace), array_values($replace), $fC);
 		}
@@ -257,26 +266,28 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 				'state' => false,
 				'expire' => time()
 			), true);
-			
-			if (empty($request)) return;
-			foreach ($request as $v) {
-				if (empty($v)) {
-					return;
-				}
-			}
-			
-			$request['ACTION'] = 'SetCredentials';
-			#echo print_m(json_indent(json_encode($request)));
-			try {
-				$result = MagnaConnector::gi()->submitRequest($request);
-				$this->boxes .= '
+
+            if($this->needToSetCredential()) {
+                if (empty($request)) return;
+                foreach ($request as $v) {
+                    if (empty($v)) {
+                        return;
+                    }
+                }
+
+                $request['ACTION'] = 'SetCredentials';
+                #echo print_m(json_indent(json_encode($request)));
+                try {
+                    $result = MagnaConnector::gi()->submitRequest($request);
+                    $this->boxes .= '
 					<p class="successBox">'.ML_GENERIC_STATUS_LOGIN_SAVED.'</p>';
 					
 			} catch (MagnaException $e) {
 				$this->boxes .= '
 					<p class="errorBox">'.ML_GENERIC_STATUS_LOGIN_SAVEERROR.'</p>';
-					
-			}
+
+                }
+            }
 			try {
 				$r = MagnaConnector::gi()->submitRequest(array(
 					'ACTION' => 'IsAuthed',
@@ -427,6 +438,10 @@ $(document).ready(function() {
         <?php
         $sJSOutPut = ob_get_clean();
         return $sJSOutPut;
+    }
+
+    protected function needToSetCredential() {
+        return true;
     }
 }
 

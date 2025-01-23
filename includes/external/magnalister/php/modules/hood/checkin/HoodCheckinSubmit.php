@@ -157,7 +157,13 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		}
 		
 		$quantity = 0;
-		
+        if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+            $sSkuKey = 'MarketplaceSku';
+        } else {
+            $sSkuKey = 'MarketplaceId';
+        }
+        $newVersionProduct = MLProduct::gi()->getProductById($pID);
+        $CategoryAttributesBySKU = $this->translateCategoryAttributesForVariations($data['submit']['MarketplaceAttributes'], $newVersionProduct['Variations'], $sSkuKey);
 		// fetch the netto baseprice for this item
 		$basePrice = $this->simpleprice->setPriceFromDB($pID, $this->_magnasession['mpID'], $this->priceConfig['Fixed'])->getPrice();
 		
@@ -168,6 +174,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				'SKU' => magnaAID2SKU($v['aID']),
 				'Price' => $v['VPrice'] * (($v['VPricePrefix'] == '+') ? 1 : -1),
 				'Quantity' => $v['Quantity'],
+                'MarketplaceAttributes' =>  $CategoryAttributesBySKU[$v[$sSkuKey]],
 				'Variation' => array (array (
 					'Name' => $v['VariationTitle'],
 					'Value' => $v['VariationValue']
@@ -210,6 +217,12 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		$p = MLProduct::gi()->getProductById($pID);
 		$vars = array();
 		$mainQuantity = 0;
+        if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+            $sSkuKey = 'MarketplaceSku';
+        } else {
+            $sSkuKey = 'MarketplaceId';
+        }
+        $CategoryAttributesBySKU = $this->translateCategoryAttributesForVariations($data['submit']['MarketplaceAttributes'], $p['Variations'], $sSkuKey);
 		foreach ($p['Variations'] as $i => $v) {
 			$vars[$i] = array (
 			'SKU' => ((getDBConfigValue('general.keytype', '0') == 'artNr')
@@ -217,6 +230,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				: $v['MarketplaceId']),
 			'Price' => $v['Price'],
 			'Quantity' => $v['Quantity'],
+            'MarketplaceAttributes' =>  $CategoryAttributesBySKU[$v[$sSkuKey]],
 			'Variation' => array(),
 			); 
 			foreach ($v['Variation'] as $vv) {
@@ -236,6 +250,70 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			$data['submit']['Variations'] = $vars;
 		}
 	}
+
+    /*
+     * Map matched variation attributes to be exported in 'MarketplaceAttributes'
+     * upload request payload. Only existing and matched product attribute values should be exported.
+     */
+
+    private function translateCategoryAttributesForVariations($jCategoryAttributes, $aVariations, $sSkuKey) {
+
+        $aCategoryAttributes = json_decode($jCategoryAttributes, true);
+        $aShopNamesForCategoryAttributes = array_map(function ($attr) {
+            return $attr['AttributeName'];
+        }, $aCategoryAttributes);
+        $aShopCodesForCategoryAttributes = array_map(function ($attr) {
+            return $attr['Code'];
+        }, $aCategoryAttributes);
+
+        $res = $freetext = array();
+        foreach ($aCategoryAttributes as $key => $matched) {
+            if ($matched['Code'] === 'freetext' || $matched['Code'] === 'attribute_value') {
+                $freetext[$key] = $matched['Values'];
+                unset($aCategoryAttributes[$key]);
+            }
+        }
+        foreach ($aVariations as $i => $aVariation) {
+            $variantAttributes = array();
+
+            foreach ($aVariation['Variation'] as $key => $variant) {
+                if (in_array($variant['Name'], $aShopNamesForCategoryAttributes) || in_array($variant["NameId"], $aShopCodesForCategoryAttributes)) {
+                    $variantAttributes[$variant['Name']] = $variant['Value'];
+                }
+            }
+
+            foreach ($variantAttributes as $key => $vattr) {
+
+                foreach ($aCategoryAttributes as $attr => $matchedAttributes) {
+                    if (is_array($matchedAttributes['Values'])) {
+                        foreach ($matchedAttributes['Values'] as $matched) {
+                            if ($matched['Shop']['Value'] === $vattr) {
+                                $res[$aVariation[$sSkuKey]][$attr] = $matched['Marketplace']['Value'];
+                            }
+                        }
+                    }
+                }
+            }
+            $res[$aVariation[$sSkuKey]] = array_merge(
+                empty($res[$aVariation[$sSkuKey]]) ? array() : $res[$aVariation[$sSkuKey]],
+                $freetext);
+        }
+
+        return $res;
+    }
+
+    protected function setUpMLProduct() {
+        parent::setUpMLProduct();
+        MLProduct::gi()->setPriceConfig(HoodHelper::loadPriceSettings($this->mpID));
+        MLProduct::gi()->setQuantityConfig(HoodHelper::loadQuantitySettings($this->mpID));
+        MLProduct::gi()->useMultiDimensionalVariations(true);
+        MLProduct::gi()->setOptions(array(
+            'includeVariations' => true,
+            'sameVariationsToAttributes' => false,
+            'purgeVariations' => true,
+            'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties')
+        ));
+    }
 	
 	protected function appendOfferData($pID, $product, &$data) {
 		$listingType = ($data['submit']['ListingType'] == 'classic') ? 'Auction' : 'Fixed';
@@ -269,6 +347,17 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			if (isset($data['submit']['Variations']) && (count($data['submit']['Variations']) == 0)) {
 				unset($data['submit']['Variations']);
 			}
+            if (!array_key_exists('Variations', $data['submit'])
+                || empty($data['submit']['Variations'])
+            ) {
+                $newVersionProduct = MLProduct::gi()->getProductById($pID);
+                $data['submit']['MarketplaceAttributes'] = HoodHelper::gi()->convertMatchingToNameValue(
+                    json_decode($data['submit']['MarketplaceAttributes'], true),
+                    $newVersionProduct
+                );
+            } else {
+                unset($data['submit']['MarketplaceAttributes']);
+            }
 		}
 	}
 	
@@ -388,6 +477,10 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 		if ($propertiesRow['noIdentifierFlag']) {
 			$data['submit']['NoIdentifierFlag'] = $propertiesRow['noIdentifierFlag'];
+		}
+
+        if ($propertiesRow['ShopVariation']) {
+			$data['submit']['MarketplaceAttributes'] = $propertiesRow['ShopVariation'];
 		}
 		
 		foreach (array('FSK', 'USK') as $ageThingy) {

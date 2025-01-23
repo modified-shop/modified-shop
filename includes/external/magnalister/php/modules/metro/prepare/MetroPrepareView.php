@@ -512,46 +512,32 @@ class MetroPrepareView extends MagnaCompatibleBase {
 			</tr>
 		</tbody>
 		<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
-                   <tr class="headline">
-                       <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
-                       <td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
-                   </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
-                    <tr>
-                        <th></th>
-                        <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
-                        <td class="info"></td>
-                    </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
-                    <tr class="headline">
-                        <td colspan="1"><h4>'.$mpCustomAttributeTitle.'</h4></td>
-                        <td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
-                    </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
-                    <tr>
-                        <th></th>
-                        <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
-                        <td class="info"></td>
-                    </tr>
-                </tbody>
-				
-				<script type="text/javascript" src="'.DIR_MAGNALISTER_WS.'js/variation_matching.js?'.CLIENT_BUILD_VERSION.'"></script>
-        <script type="text/javascript" src="'.DIR_MAGNALISTER_WS.'js/marketplaces/metro/variation_matching.js?'.CLIENT_BUILD_VERSION.'"></script>
-        <script type="text/javascript">
-            /*<![CDATA[*/
-            var ml_vm_config = {
-                url: \''.toURL($this->resources['url'], array('where' => 'prepareView', 'kind' => 'ajax'), true).'\',
-                viewName: \'prepareView\',
-                formName: \'#prepareForm\',
-                handleCategoryChange: false,
-                i18n: '.json_encode(MetroHelper::gi()->getVarMatchTranslations()).',
-                shopVariations: '.json_encode(MetroHelper::gi()->getShopVariations()).' ?>
-            }
-        </script>
-				';
+           <tr class="headline">
+               <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
+               <td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
+           </tr>
+        </tbody>
+        <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+            <tr>
+                <th></th>
+                <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+                <td class="info"></td>
+            </tr>
+        </tbody>
+        <tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
+            <tr class="headline">
+                <td colspan="1"><h4>'.$mpCustomAttributeTitle.'</h4></td>
+                <td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
+            </tr>
+        </tbody>
+        <tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
+            <tr>
+                <th></th>
+                <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+                <td class="info"></td>
+            </tr>
+        </tbody>
+        ';
 
         return $html;
     }

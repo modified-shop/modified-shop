@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -82,6 +82,9 @@ class OttoProductSaver {
         }
         $aRow['Images'] = json_encode($aRow['Images']);
 
+        if (!empty($aItemDetails['MainImage'])) {
+            $aRow['MainImage'] = $aItemDetails['MainImage'];
+        }
         $this->insertPrepareData($aRow);
     }
 
@@ -193,6 +196,15 @@ class OttoProductSaver {
         foreach ($aProductIds as $iProductId) {
             $aRow = $this->preparePropertiesRow($iProductId, $aItemDetails);
             $aRow['Description'] = strip_tags($aProductDescDataByPId[$iProductId]['products_description'], '<p><ul><ol><li><span><br><b>');
+            // Filter JNH Tab
+            if (getDBConfigValue('gambio.tabs.display', 0, 'h1') == 'none') {
+                if (strpos($aRow['Description'], '[TAB:')) {
+                    $aRow['Description'] = substr($aRow['Description'], 0, strpos($aRow['Description'], '[TAB:'));
+                }
+            } else {
+                $aRow['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<b>${1}</b>', $aRow['Description']);
+            }
+
             $aRow['DeliveryType'] = $aItemDetails['DeliveryType'];
             $aRow['DeliveryTime'] = $aItemDetails['DeliveryTime'];
             $aRow['Images'] = json_encode($aProductDescDataByPId[$iProductId]['images']);

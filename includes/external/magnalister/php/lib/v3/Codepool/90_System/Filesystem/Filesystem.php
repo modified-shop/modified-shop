@@ -95,7 +95,7 @@ class ML_Filesystem_Filesystem {
         }
         if ($sContent === null) {
             $oldumask = umask(0);
-            @mkdir($sPath, 0777);
+            if (!is_dir($sPath)) @mkdir($sPath, 0777);
             umask($oldumask);
         } else {
             @file_put_contents($sPath, $sContent, ($blAppend ? FILE_APPEND : 0));

@@ -382,7 +382,7 @@ function microtime2human($time) {
 		round($time % 60, 2).'s';
 	}
 	if ($time > 1) {
-		$seconds = $time % 60;
+		$seconds = floor($time) % 60;
 		$str .= ' '.$seconds.'s';
 		$time -= $seconds;
 	}

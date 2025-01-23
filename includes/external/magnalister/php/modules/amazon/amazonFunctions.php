@@ -109,8 +109,8 @@ function performItemSearch($asin, $ean, $productsName) {
 			if (!empty($data['Author'])) {
 				$data['Title'] .= ' ('.$data['Author'].')';
 			}
-			$price = new SimplePrice($data['LowestPrice']['Price'], $data['LowestPrice']['CurrencyCode']);
-			$data['LowestPrice'] = $data['LowestPrice']['Price'];
+			$price = new SimplePrice($data['LowestPrice']['Amount'], $data['LowestPrice']['CurrencyCode']);
+			$data['LowestPrice'] = $data['LowestPrice']['Amount'];
 			$data['LowestPriceFormated'] = $price->format();
 		}
 	}

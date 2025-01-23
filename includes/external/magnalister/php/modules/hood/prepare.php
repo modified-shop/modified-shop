@@ -25,34 +25,45 @@ class HoodPrepare extends MagnaCompatibleBase {
 	protected $prepareSettings = array();
 
 	public function __construct(&$params) {
+        if (!empty($_POST['FullSerializedForm'])) {
+            $newPost = array();
+            parse_str_unlimited($_POST['FullSerializedForm'], $newPost);
+            $_POST = array_merge($_POST, $newPost);
+        }
 		parent::__construct($params);
 
 		$this->prepareSettings['selectionName'] = 'prepare';
 		$this->resources['url']['mode'] = $this->prepareSettings['selectionName'];
+		$this->resources['url']['view'] = $this->prepareSettings['selectionName'];
 	}
 	
 	protected function saveMatching() {
 		if (!array_key_exists('savePrepareData', $_POST)) {
-			return;
+            if (!isset($_POST['Action']) || $_POST['Action'] !== 'SaveMatching' || $_GET['where'] === 'varmatchView') {
+                return;
+            }
 		}
-		
+
 		//echo print_m($_POST, '$_POST');
-		
+
 		require_once(DIR_MAGNALISTER_MODULES . 'hood/classes/HoodProductSaver.php');
 		require_once(DIR_MAGNALISTER_MODULES . 'hood/checkin/HoodCheckinSubmit.php');
-		
-		$itemDetails = $_POST;
-		unset($itemDetails['savePrepareData']);
-		#echo print_m($itemDetails, '$itemDetails');
-		
-		$hoodSaver = new HoodProductSaver($this->resources['session']);
-		
-		$pIDs = MagnaDB::gi()->fetchArray('
+        $oProductSaver = new HoodProductSaver($this->resources['session']);
+        $pIDs = MagnaDB::gi()->fetchArray('
 			SELECT pID FROM ' . TABLE_MAGNA_SELECTION . '
 			 WHERE mpID="' . $this->mpID . '" AND
 				   selectionname="' . $this->prepareSettings['selectionName'] . '" AND
 				   session_id="' . session_id() . '"
 		', true);
+        $isSinglePrepare = 1 == count($pIDs);
+        $shopVariations = $this->saveMatchingAttributes($oProductSaver, $isSinglePrepare);
+
+        $itemDetails = $_POST;
+        $itemDetails['ShopVariation'] = $shopVariations;
+		unset($itemDetails['savePrepareData']);
+		#echo print_m($itemDetails, '$itemDetails');
+
+		$hoodSaver = new HoodProductSaver($this->resources['session']);
 		
 		if (1 == count($pIDs)) {
 			$hoodSaver->saveSingleProductProperties($pIDs[0], $itemDetails);
@@ -67,36 +78,47 @@ class HoodPrepare extends MagnaCompatibleBase {
 		
 		#echo print_m($ecs->verifyOneItem(), '$ecs->verifyOneItem()');
 		$verified = $ecs->verifyOneItem(false);
+        $savePrepareData = array_key_exists('savePrepareData', $_POST);
 		if ('SUCCESS' == $verified['STATUS']) {
-			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
-				'mpID' => $this->mpID,
-				'selectionname' => $this->prepareSettings['selectionName'],
-				'session_id' => session_id()
-			));
-			if (isset($verified['CONFIRMATIONS']) && is_array($verified['CONFIRMATIONS'])) {
-				foreach ($verified['CONFIRMATIONS'] as $value) {
-					echo '
-						<div class="hood successBox">'.sprintf(ML_HOOD_LABEL_ADDITEM_COSTS, $value['Costs']).'</div>';
-					break;
-				}
-			}
+            $isAjax = false;
+            if (!$savePrepareData) {
+                # stay on prepare product form
+                $_POST['prepare'] = 'prepare';
+                $isAjax = true;
+            }
+            if (!$isAjax) {
+                MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+                    'mpID' => $this->mpID,
+                    'selectionname' => $this->prepareSettings['selectionName'],
+                    'session_id' => session_id()
+                ));
+                if (isset($verified['CONFIRMATIONS']) && is_array($verified['CONFIRMATIONS'])) {
+                    foreach ($verified['CONFIRMATIONS'] as $value) {
+                        echo '
+						<div class="hood successBox">' . sprintf(ML_HOOD_LABEL_ADDITEM_COSTS, $value['Costs']) . '</div>';
+                        break;
+                    }
+                }
+            }
 			
 		} else if ('ERROR' == $verified['STATUS']) {
 			# noch mal in der Maske bleiben
 			$_POST['prepare'] = 'prepare';
 	
 			/* Letzte Exception holen */
-			$ex = $ecs->getLastException();
-			if (is_object($ex) && ($errors = $ex->getErrorArray())) {
-				$ex->setCriticalStatus(false);
-				foreach ($errors['ERRORS'] as $error) {
-					echo '
+        if ($savePrepareData) {
+            $ex = $ecs->getLastException();
+            if (is_object($ex) && ($errors = $ex->getErrorArray())) {
+                $ex->setCriticalStatus(false);
+                foreach ($errors['ERRORS'] as $error) {
+                    echo '
 						<div class="hood errorBox">
 							<span class="error">' . sprintf(ML_HOOD_LABEL_HOODERROR, $error['ERRORCODE']) . '</span>:
-							'.fixHTMLUTF8Entities($error['ERRORMESSAGE']).'
+							' . fixHTMLUTF8Entities($error['ERRORMESSAGE']) . '
 						</div>';
-				}
-			}
+                }
+            }
+        }
 		}
 		//echo print_m(json_indent($ecs->getLastRequest()));
 	}
@@ -184,6 +206,7 @@ class HoodPrepare extends MagnaCompatibleBase {
 			}
 		}
 
+        /** @var $cMDiag HoodPrepareView  */
 		$cMDiag = new $class($params);
 
 		if ($this->isAjax) {
@@ -230,10 +253,29 @@ class HoodPrepare extends MagnaCompatibleBase {
 	}
 
 	public function process() {
+        // ajax / LoadMPVariations in prepare item form
+        if ((isset($_GET['mode']) && $_GET['mode'] == 'prepare')
+            && (isset($_GET['view']) && ($_GET['view'] == 'apply' || $_GET['view'] == 'prepare'))
+            && (isset($_GET['kind']) && $_GET['kind'] == 'ajax')
+            && (isset($_GET['where']) && $_GET['where'] == 'HoodPrepareView')
+            && (isset($_POST['Action']) && $_POST['Action'] == 'LoadMPVariations')
+            && (isset($_POST['SelectValue']))) {
+            $productModel = HoodHelper::gi()->getProductModel('prepare');
+            die(json_encode(HoodHelper::gi()->getMPVariations($_POST['SelectValue'], $productModel, true)));
+        }
 		$this->saveMatching();
 		if (isset($_POST['prepare']) || (isset($_GET['where']) && ($_GET['where'] == 'prepareView'))) {
 			$this->processMatching();
-		} else {
+		} else if (    isset($_GET['where'])
+            && ($_GET['where'] == 'HoodPrepareView')
+            && isset($_GET['kind'])
+            && ($_GET['kind'] == 'ajax')
+            && isset($_POST['Action'])
+            && ($_POST['Action'] == 'DBMatchingColumns')
+            && isset($_POST['Table'])) {
+            // processMatching instantiates MetroPrepareView and calls MetroPrepareView->renderAjax() if needed
+            $this->processMatching();
+        } else {
 			if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
 				$this->processProductList();
 			} else {
@@ -243,5 +285,29 @@ class HoodPrepare extends MagnaCompatibleBase {
 			}
 		}
 	}
+
+    protected function saveMatchingAttributes($oProductSaver, $isSinglePrepare) {
+
+        if (isset($_POST['Variations'])) {
+            parse_str_unlimited($_POST['Variations'], $params);
+            $_POST = $params;
+        }
+
+        $sIdentifier = $_POST['PrimaryCategory'];
+        $matching = isset($_POST['ml']['match']) ? $_POST['ml']['match'] : false;
+        $variationThemeAttributes = null;
+
+        if (isset($_POST['variationTheme']) && $_POST['variationTheme'] !== 'null') {
+            $variationThemes = json_decode($_POST['variationThemes'], true);
+            $variationThemeAttributes = $variationThemes[$_POST['variationTheme']]['attributes'];
+        }
+
+        $savePrepare = true;
+
+        $oProductSaver->aErrors = array_merge($oProductSaver->aErrors,
+            HoodHelper::gi()->saveMatching($sIdentifier, $matching, $savePrepare, true, $isSinglePrepare, $variationThemeAttributes));
+
+        return json_encode($matching['ShopVariation']);
+    }
 
 }

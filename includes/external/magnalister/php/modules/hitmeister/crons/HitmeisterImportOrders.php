@@ -32,21 +32,59 @@ class HitmeisterImportOrders extends MagnaCompatibleImportOrders {
             $this->gambioPropertiesEnabled = true;
         }
     }
-	
+
+    /**
+     * Return all config keys.
+     *
+     * @return array
+     */
 	protected function getConfigKeys() {
 		$keys = parent::getConfigKeys();
 		$keys['OrderStatusOpen'] = array (
 			'key' => 'orderstatus.open',
 			'default' => '2',
 		);
+		$keys['FbkStatus'] = array(
+			'key' => 'orderstatus.fbk',
+			'default' => '3',
+		);
+
 		return $keys;
 	}
-	
+
+    /**
+     * Return the new order status depending on the fulfillment type.
+     *
+     * @return string
+     */
 	protected function getOrdersStatus() {
+		if (is_array($this->o['magnaOrders']) &&
+			array_key_exists('FulfillmentType', $this->o['magnaOrders']) &&
+			'fulfilled_by_kaufland' == $this->o['magnaOrders']['FulfillmentType']
+		) {
+			return $this->config['FbkStatus'];
+		}
+
 		return $this->config['OrderStatusOpen'];
 	}
-	
-	protected function additionalProductsIdentification() {
+
+    /**
+     * Determines if the stock needs to be reduced due to settings.
+     *
+     * Either relative stock synchronization without fbk orders, or including them, otherwise not.
+     *
+     * @return bool
+     */
+    protected function hasReduceStock() {
+        return
+            ('rel' == $this->config['StockSync.FromMarketplace'] &&
+                (!is_array($this->o['magnaOrders']) ||
+                    !array_key_exists('FulfillmentType', $this->o['magnaOrders']) ||
+                    'fulfilled_by_kaufland' != $this->o['magnaOrders']['FulfillmentType']))
+            || 'fbk' == $this->config['StockSync.FromMarketplace'];
+    }
+
+    protected function additionalProductsIdentification() {
 		$ean = $this->p['products_ean'];
 		unset($this->p['products_ean']);
 		if ($this->p['products_id'] == 0) {

@@ -32,6 +32,19 @@ class HitmeisterSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
     }
 
     /**
+     * CarrierDefault is named differently for Hitmeister
+     */
+    protected function getConfigKeys() {
+        $aReturn = parent::getConfigKeys();
+
+        $aReturn['CarrierDefault'] = array (
+            'key' => 'orderstatus.carrier',
+            'default' => false,
+        );
+        return $aReturn;
+    }
+
+    /**
      * Overwrite to set __dirty to false,
      * so only when marketplace responded the confirmations the sync was successful
      *
@@ -45,7 +58,29 @@ class HitmeisterSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
         $this->oOrder['__dirty'] = false;
     }
 
-	/**
+    /**
+     * Decides if the order will be processed.
+     *
+     * Stop processing fulfilled_by_kaufland orders.
+     *
+     * @return bool
+     */
+    protected function isProcessable() {
+        $data = is_string($this->oOrder['data'])
+            ? @unserialize($this->oOrder['data'])
+            : $this->oOrder['data'];
+
+        $fulfillment_check = true;
+        if (is_array($data) &&
+            array_key_exists('FulfillmentType', $data)
+        ) {
+            $fulfillment_check = 'fulfilled_by_kaufland' != $data['FulfillmentType'];
+        }
+
+        return parent::isProcessable() && $fulfillment_check;
+    }
+
+    /**
 	 * Builds an element for the CancelShipment request
 	 * @return array
 	 */

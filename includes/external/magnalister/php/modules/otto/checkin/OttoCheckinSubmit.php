@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -93,8 +93,6 @@ class OttoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             $data['submit']['ProductName'] = 'ML'.$properties['products_id'];
         }
 
-
-
         $data['submit']['Price'] = $product['Price']['Fixed'];
         $configVAT = getDBConfigValue('otto.product.vat', $this->mpID);
         $data['submit']['VAT'] = isset($product['TaxClass'], $configVAT[$product['TaxClass']]) ? $configVAT[$product['TaxClass']] : 'no_tax_set';
@@ -104,12 +102,24 @@ class OttoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             if (empty($imagePath)) {
                 $imagePath = SHOP_URL_POPUP_IMAGES;
             }
+            $mainImage = $properties['MainImage'];
+            $foundMainImageKey = 0;
             foreach ($images as $imgNo => $imgName) {
                 // add path if it doesn't start with http
                 if (strpos($imgName, 'http') !== 0) {
                     $images[$imgNo] = $imagePath.$imgName;
                 }
+                if ((function_exists('mb_strpos') && mb_strpos($imgName, $mainImage) !== false) || strpos($imgName, $mainImage) !== false) {
+                    $foundMainImageKey = $imgNo;
+                }
             }
+            if ($foundMainImageKey > 0) {
+                $imageToBeMoved = $images[$foundMainImageKey];
+                unset($images[$foundMainImageKey]);
+                $images = array_values($images);
+                array_unshift($images, $imageToBeMoved);
+            }
+
             $data['submit']['Images'] = $images;
         } else {
             $data['submit']['Images'] = array();
@@ -192,11 +202,7 @@ class OttoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
      * upload request payload. Only existing and matched product attribute values should be exported.
      */
     private function translateCategoryAttributesForVariations($jCategoryAttributes, $aVariations, $sSkuKey) {
-$logfile = DIR_MAGNALISTER_LOGS.__CLASS__.'_'.__FUNCTION__.'.log';
         $aCategoryAttributes = json_decode($jCategoryAttributes, true);
-        $aShopNamesForCategoryAttributes = array_map(function ($attr) {
-            return $attr['AttributeName'];
-        }, $aCategoryAttributes);
         $aShopCodesForCategoryAttributes = array_map(function ($attr) {
             return $attr['Code'];
         }, $aCategoryAttributes);
@@ -208,46 +214,47 @@ $logfile = DIR_MAGNALISTER_LOGS.__CLASS__.'_'.__FUNCTION__.'.log';
                 unset($aCategoryAttributes[$key]);
             }
         }
-        foreach ($aVariations as $i => $aVariation) {
-            $variantAttributes = array();
+        foreach ($aVariations as $aVariation) {
             $ean = array();
 
             //get the ean from the variations
             if (in_array('ean', $aShopCodesForCategoryAttributes) && $aVariation['EAN'] != '') {
-                foreach ($aCategoryAttributes as $key => $value) {
+                foreach ($aCategoryAttributes as $value) {
                     if ($value['Code'] == 'ean') {
                         $ean[$value['AttributeName']] = $aVariation['EAN'];
                     }
                 }
             }
 
-            foreach ($aVariation['Variation'] as $key => $variant) {
-                if (in_array($variant['Name'], $aShopNamesForCategoryAttributes) || in_array($variant["NameId"], $aShopCodesForCategoryAttributes)) {
-                    $variantAttributes[$variant['Name']] = $variant['Value'];
-                }
-            }
-
-            foreach ($variantAttributes as $key => $vattr) {
+            $res[$aVariation[$sSkuKey]] = array();
+            foreach ($aVariation['Variation'] as $variant) {
                 foreach ($aCategoryAttributes as $attr => $matchedAttributes) {
-                    // Only if is array we can go through matched values
-                    if (is_array($matchedAttributes['Values'])) {
-                        foreach ($matchedAttributes['Values'] as $matched) {
-                            if (    !is_array($matched)
-                                 || !array_key_exists('Shop', $matched)
-                                 || !is_array($matched['Shop'])
-                                 || !array_key_exists('Value', $matched['Shop'])) {
-                                continue;
-                            }
-                            if ($matched['Shop']['Value'] === $vattr) {
-                                $res[$aVariation[$sSkuKey]][$attr] = $matched['Marketplace']['Value'];
-                            }
+                    if (// We need to either match the attribute name or the code
+                        (  $variant['Name'] !== $matchedAttributes['AttributeName']
+                           && $variant['NameId'] !== $matchedAttributes['Code']
+                        )
+                        // The matched attribute values needs to be an array
+                        || !is_array($matchedAttributes['Values'])
+                    ) {
+                        continue;
+                    }
+
+                    foreach ($matchedAttributes['Values'] as $matched) {
+                        if (// only if the value from the shop is matched by the attribute value
+                               !is_array($matched)
+                            || !array_key_exists('Shop', $matched)
+                            || !is_array($matched['Shop'])
+                            || !array_key_exists('Value', $matched['Shop'])
+                            || $matched['Shop']['Value'] !== $variant['Value']
+                        ) {
+                            continue;
                         }
+
+                        $res[$aVariation[$sSkuKey]][$attr] = $matched['Marketplace']['Value'];
                     }
                 }
             }
-            $res[$aVariation[$sSkuKey]] = array_merge(
-                empty($res[$aVariation[$sSkuKey]]) ? array() : $res[$aVariation[$sSkuKey]],
-                $freetext, $ean);
+            $res[$aVariation[$sSkuKey]] = array_merge($res[$aVariation[$sSkuKey]], $freetext, $ean);
         }
 
         return $res;

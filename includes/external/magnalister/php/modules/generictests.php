@@ -277,7 +277,10 @@ function blargh() {
 			       ).'
 		', true), true);
 	}
-	if ((count($productsPropertiesCombisId) === 1) && ((int)$productsPropertiesCombisId[0] > 0)) {
+	if (is_array(($productsPropertiesCombisId)
+            && count($productsPropertiesCombisId) === 1)
+        && ((int)$productsPropertiesCombisId[0] > 0)
+    ) {
 		echo "\n".print_m(MagnaDB::gi()->fetchArray(eecho('
 			    SELECT CONCAT(p.products_model, "-", ppc.combi_model) AS SKU, ppc.*
 			      FROM products_properties_combis ppc

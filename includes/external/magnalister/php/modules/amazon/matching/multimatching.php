@@ -82,6 +82,7 @@ if (!empty($_MagnaSession['amazon']['multimatching']['items'])) {
 	$price->setCurrency(getCurrencyFromMarketplace($_MagnaSession['mpID']));
 
 	foreach ($currentItems as $current_product_id) {
+		@set_time_limit(60);
 		$productsData = MLProduct::gi()->getProductByIdOld($current_product_id);
 		$asin = MagnaDB::gi()->fetchOne('
 			SELECT `asin` FROM '.TABLE_MAGNA_AMAZON_PROPERTIES.'

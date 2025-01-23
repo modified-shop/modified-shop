@@ -123,6 +123,15 @@ class MetroPrepare extends MagnaCompatibleBase {
         ) {
 #echo "<br />\n".__METHOD__.' '.__LINE__."<br />\n";
             $this->processMatching();
+        } else if (    isset($_GET['where'])
+                    && ($_GET['where'] == 'MetroPrepareView')
+                    && isset($_GET['kind'])
+                    && ($_GET['kind'] == 'ajax')
+                    && isset($_POST['Action'])
+                    && ($_POST['Action'] == 'DBMatchingColumns')
+                    && isset($_POST['Table'])) {
+            // processMatching instantiates MetroPrepareView and calls MetroPrepareView->renderAjax() if needed
+            $this->processMatching();
         } else {
             if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true) {
 #echo "<br />\n".__METHOD__.' '.__LINE__."<br />\n";

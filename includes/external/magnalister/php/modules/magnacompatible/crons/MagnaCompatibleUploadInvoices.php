@@ -37,12 +37,23 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
         global $magnaConfig;
         if ($magnaConfig['db'][$this->mpID][$this->marketplace.'.invoice.option'] == 'erp') {
             try {
-                MLReceiptUpload::gi()->setConfig(array(
+                $config = array(
                     'Invoice' => getDBConfigValue($this->marketplace.'.invoice.erpinvoicesource', $this->mpID),
-                    'Invoice_DESTINATION' => getDBConfigValue($this->marketplace.'.invoice.erpinvoicedestination', $this->mpID),
+                    'Invoice_DESTINATION' => getDBConfigValue($this->marketplace.'.invoice.erpinvoicedestination',
+                        $this->mpID),
                     'Reversal' => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicesource', $this->mpID),
-                    'Reversal_DESTINATION' => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicedestination', $this->mpID),
-                ));
+                    'Reversal_DESTINATION' => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicedestination',
+                        $this->mpID),
+                );
+
+                // Make sure the paths have a trailing slash
+                foreach ($config as $key => $value) {
+                    if ('/' != mb_substr($value, -1)) {
+                        $config[$key] = $value.'/';
+                    }
+                }
+
+                MLReceiptUpload::gi()->setConfig($config);
             } catch (MagnaException $e) {
                 if (MLReceiptUpload::$ReceiptUploadError == $e->getCode()) {
                     $this->out($e->getMessage());

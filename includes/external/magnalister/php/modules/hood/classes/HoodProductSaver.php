@@ -1,28 +1,28 @@
 <?php
-
-/**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+/*
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: prepare.php 674 2011-01-08 03:21:50Z MaW $
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
+
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 class HoodProductSaver {
 	const DEBUG = false;
 	
+	public $aErrors = array();
+
 	protected $magnaSession = array();
 	protected $marketplace = '';
 	protected $mpId = 0;
@@ -154,7 +154,7 @@ class HoodProductSaver {
 		);
 		
 		foreach (array ('PrimaryCategory', 'SecondaryCategory') as $kat) {
-			$row[$kat] = $itemDetails[$kat];
+			$row[$kat] = $itemDetails[$kat] == NULL ? 0 : $itemDetails[$kat];
 			if (empty($row[$kat])) {
 				$row[$kat.'Name'] = '';
 			} else {
@@ -169,7 +169,10 @@ class HoodProductSaver {
 		foreach (array ('StoreCategory', 'StoreCategory2', 'StoreCategory3') as $kat) {
 			$row[$kat] = $itemDetails[$kat];
 		}
-		
+
+        $row['topPrimaryCategory'] = $itemDetails['PrimaryCategory'] == NULL ? '' : $itemDetails['PrimaryCategory'];
+        $row['topSecondaryCategory'] = $itemDetails['topSecondaryCategory'] == NULL ? '' : $itemDetails['SecondaryCategory'];
+
 		$row['ListingType'] = $itemDetails['ListingType'];
 		$row['ListingDuration']  = isset($itemDetails['ListingDuration']) ? $itemDetails['ListingDuration'] : '';
 		$row['PaymentMethods']   = json_encode(isset($itemDetails['PaymentMethods']) ? $itemDetails['PaymentMethods'] : array());
@@ -185,14 +188,15 @@ class HoodProductSaver {
 		
 		$row['FSK'] = $itemDetails['FSK'];
 		$row['USK'] = $itemDetails['USK'];
-		
-		$shippingDetails = array();
-		foreach ($itemDetails['hood_default_shipping_local'] as $key => $localService) {
-			$shippingDetails[$key] = array(
-				'Service' => $localService['Service'],
-				'Cost' => mlFloatalize($localService['Cost']),
-			);
-		}
+        $row['ShopVariation'] = $itemDetails['ShopVariation'];
+
+        $shippingDetails = array();
+        $this->formatShippingService($itemDetails['hood_default_shipping_local'], true, $shippingDetails);
+
+        if (empty($shippingDetails) && is_array($itemDetails['hood.default.shipping.local'])) {
+            $this->formatShippingService($itemDetails['hood.default.shipping.local'], true, $shippingDetails);
+        }
+
 		if (isset($itemDetails['conf'])
 			&& is_array($itemDetails['conf'][$this->marketplace.'.default.shipping.international']) 
 			&& is_array($itemDetails['hood_default_shipping_international'])
@@ -202,12 +206,13 @@ class HoodProductSaver {
 			}
 		}
 		if (is_array($itemDetails['hood_default_shipping_international'])) {
-			foreach ($itemDetails['hood_default_shipping_international'] as $key => $intlService) {
-				if (empty($intlService['Service']))
-					break;
-				$shippingDetails[$key] = $intlService;
-			}
+           $this->formatShippingService($itemDetails['hood_default_shipping_international'], false, $shippingDetails);
 		}
+
+        if (is_array($itemDetails['hood.default.shipping.international']) && !is_array($itemDetails['hood_default_shipping_international'])) {
+            $this->formatShippingService($itemDetails['hood.default.shipping.international'], false, $shippingDetails);
+        }
+
 		if (0 == count($shippingDetails)) {
 			unset($shippingDetails);
 		}
@@ -217,6 +222,23 @@ class HoodProductSaver {
 		$row['Verified'] = 'OPEN';
 		return $row;
 	}
+
+    public function formatShippingService($data, $isLocal, &$shippingDetails) {
+        if ($isLocal) {
+            foreach ($data as $key => $localService) {
+                $shippingDetails[$key] = array(
+                    'Service' => $localService['Service'],
+                    'Cost' => mlFloatalize($localService['Cost']),
+                );
+            }
+        } else {
+            foreach ($data as $key => $intlService) {
+                if (empty($intlService['Service']))
+                    break;
+                $shippingDetails[$key] = $intlService;
+            }
+        }
+    }
 	
 	public function saveSingleProductProperties($pID, $itemDetails) {
 		#echo print_m(func_get_args(), __METHOD__);
@@ -255,7 +277,7 @@ class HoodProductSaver {
 		$row['ShortDescription'] = trim($itemDetails['ShortDescription']);
 		$row['Description'] = trim($itemDetails['Description']);
 		$row['PreparedTs'] = date('Y-m-d H:i:s');
-				
+
 		$this->insertPrepareData($row);
 	}
 	

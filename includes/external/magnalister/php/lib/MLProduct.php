@@ -1262,7 +1262,11 @@ class MLProduct {
                     ");
 
                     $firstImage = current($variationImages);
-                    $v['Image'] = $firstImage['product_image_list_image_local_path'];
+                    if (is_array($firstImage)) {
+                        $v['Image'] = $firstImage['product_image_list_image_local_path'];
+                    } else {
+                        $v['Image'] = '';
+                    }
 
                     $v['Images'] = array();
                     foreach ($variationImages as $variationImage) {

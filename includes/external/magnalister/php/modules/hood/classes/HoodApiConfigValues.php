@@ -105,5 +105,16 @@ class HoodApiConfigValues extends MagnaCompatibleApiConfigValues {
 		$data = $this->fetchDataFromApi('GetUskOptions');
 		return $data['UskOptions'];
 	}
-	
+    public function getVariantConfigurationDefinition($category, $secondaryCategory = null) {
+        $apiCall = 'GetCategoryDetails';
+
+        $requestParams = array(
+            'DATA' => array(
+                'CategoryID' => $category,
+                'Language' => 'de',
+            )
+        );
+
+        return $this->fetchDataFromApi($apiCall, $requestParams);
+    }
 }

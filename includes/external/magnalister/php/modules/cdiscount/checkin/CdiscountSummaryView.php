@@ -40,7 +40,11 @@ class CdiscountSummaryView extends MagnaCompatibleSummaryView {
 		              ';
 		$addFrom   = 'LEFT JOIN '.TABLE_MAGNA_CDISCOUNT_PREPARE.' hp ON (
 							hp.mpID=\''.$this->mpID.'\' 
-							AND hp.products_id=p.products_id
+ 							AND '.
+ 			('artNr' == getDBConfigValue('general.keytype', '0')
+ 			 ? 'hp.products_model=p.products_model'
+ 			 : 'hp.products_id=p.products_id'
+ 			).'
 					  )
                       '.$addFrom;
 		parent::setupQuery($addFields, $addFrom, $addWhere);

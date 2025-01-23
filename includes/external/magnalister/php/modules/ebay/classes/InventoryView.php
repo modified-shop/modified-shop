@@ -320,6 +320,10 @@ class InventoryView {
         $SKUarr = array();
         $SKUlist = '';
         foreach ($this->renderableData as $item) {
+            // check each variation if master exists in shop
+            if (!empty($item['MasterSKU']) && (int)magnaSKU2pID($item['MasterSKU'], true) === 0) {
+                continue;
+            }
             $SKUarr[] = $item['SKU'];
         }
         $SKUarr = array_unique($SKUarr);
@@ -554,6 +558,7 @@ Eigene Daten
 				<thead class="small"><tr>
 					<td class="nowrap" style="width: 5px;"><input type="checkbox" id="selectAll"/><label for="selectAll">'.ML_LABEL_CHOICE.'</label></td>
 					<td>'.ML_LABEL_SKU.' '.$this->sortByType('sku').'</td>
+					<td>Master-SKU</td>
 					<td>'.ML_LABEL_SHOP_TITLE.'</td>
 					<td>'.ML_LABEL_EBAY_TITLE.' '.$this->sortByType('itemtitle').'</td>
 					<td>'.ML_LABEL_EBAY_ITEM_ID.'</td>
@@ -606,6 +611,7 @@ Eigene Daten
 						<input type="hidden" name="details['.$item['ItemID'].']" value="'.$details.'">' : '<input type="checkbox" name="dummy" disabled="disabled"> ')
                         .$icon.'</td>
 					<td>'.fixHTMLUTF8Entities($item['SKU'], ENT_COMPAT).'</td>
+					<td>'.fixHTMLUTF8Entities($item['MasterSKU'], ENT_COMPAT).'</td>
 					<td title="'.fixHTMLUTF8Entities($item['ShopTitle'], ENT_COMPAT).'">'.$item['ShopTitle'].'<br /><span class="small">'.$item['ShopVarText'].'</span></td>
 					<td title="'.fixHTMLUTF8Entities($item['ItemTitle'], ENT_COMPAT).'">'.$item['ItemTitleShort'].'<br /><span class="small">'.$item['VariationAttributesText'].'</span></td>
 					<td>'.(!empty($item['ItemID']) ? '<a href="'.$item['SiteUrl'].'?ViewItem&item='.$item['ItemID'].'" target="_blank">'.$item['ItemID'].'</a>' : '&mdash;').'</td>';

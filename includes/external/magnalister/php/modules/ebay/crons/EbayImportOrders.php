@@ -633,6 +633,7 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
                     $this->db->query(eecho("DELETE FROM ".TABLE_ORDERS_PRODUCTS."
 						WHERE orders_id = ".$this->cur['OrderID']."
 						  AND products_id = ".$row['products_id']."
+						  AND products_name = '".$row['products_name']."'
 						  AND orders_products_id <> ".$aOrdersProductsSums['mopi']
                         , $this->verbose));
                     // and continue to te next product
@@ -776,6 +777,7 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 						WHERE orders_id = ".$this->cur['OrderID']."
 						  AND products_id = ".$row['products_id']."
 						  AND products_model = '".$row['products_model']."'
+						  AND products_name = '".$row['products_name']."'
 						  ORDER BY orders_products_id DESC LIMIT ".(int)($row['cnt'] - 1)
                         , $this->verbose));
                     // and continue to te next product
@@ -799,6 +801,7 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 						WHERE orders_id = ".$this->cur['OrderID']."
 						  AND products_id = ".$row['products_id']."
 						  AND products_model = '".$row['products_model']."'
+						  AND products_name = '".$row['products_name']."'
 						  AND orders_products_id IN ($sOrdersProductsIdsForProp)
 						  ORDER BY orders_products_id DESC LIMIT ".(int)($prop['cnt'] - 1)
                         ,$this->verbose));
