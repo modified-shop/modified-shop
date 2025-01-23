@@ -34,7 +34,11 @@ class PriceministerSummaryView extends MagnaCompatibleSummaryView
         $addFields .= (empty($addFields) ? '' : ',') . ' hp.MarketplaceCategories, hp.MarketplaceCategoriesName, hp.ConditionType ';
         $addFrom = 'LEFT JOIN ' . TABLE_MAGNA_PRICEMINISTER_PREPARE . ' hp ON (
 							hp.mpID=\'' . $this->mpID . '\' 
-							AND hp.products_id=p.products_id
+ 							AND '.
+ 			('artNr' == getDBConfigValue('general.keytype', '0')
+ 			 ? 'hp.products_model=p.products_model'
+ 			 : 'hp.products_id=p.products_id'
+ 			).'
 					  )
                       ' . $addFrom;
         parent::setupQuery($addFields, $addFrom, $addWhere);

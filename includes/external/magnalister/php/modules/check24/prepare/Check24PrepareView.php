@@ -65,11 +65,13 @@ class Check24PrepareView extends MagnaCompatibleBase {
 		$oldProducts = array();
 		if (is_array($dbOldSelection)) {
 			foreach ($dbOldSelection as &$row) {
-				if (!empty($row['ItemHandlingData'])) {
-					$aItemHandlingData = json_decode($row['ItemHandlingData'], true);
-					if (is_array($aItemHandlingData) && !empty($aItemHandlingData)) {
-						foreach ($aItemHandlingData as $sIHKey => $sIHValue) {
-							$row[$sIHKey] = $sIHValue;
+				foreach (array('ItemHandlingData', 'GPSRData') as $sMoreData) {
+					if (!empty($row[$sMoreData])) {
+						$aMoreData = json_decode($row[$sMoreData], true);
+						if (is_array($aMoreData) && !empty($aMoreData)) {
+							foreach ($aMoreData as $mdKey => $mdValue) {
+								$row[$mdKey] = $mdValue;
+							}
 						}
 					}
 				}
@@ -184,6 +186,21 @@ class Check24PrepareView extends MagnaCompatibleBase {
 			'LogisticsProvider' => array(),
 			'CustomTariffsNumber' => array(),
 			'ReturnShippingCosts' => array(),
+			'Marke' => array(),
+			'Hersteller_Name' => array(),
+			'Hersteller_Strasse_Hausnummer' => array(),
+			'Hersteller_PLZ' => array(),
+			'Hersteller_Stadt' => array(),
+			'Hersteller_Land' => array(),
+			'Hersteller_Email' => array(),
+			'Hersteller_Telefonnummer' => array(),
+			'Verantwortliche_Person_fuer_EU_Name' => array(),
+			'Verantwortliche_Person_fuer_EU_Strasse_Hausnummer' => array(),
+			'Verantwortliche_Person_fuer_EU_PLZ' => array(),
+			'Verantwortliche_Person_fuer_EU_Stadt' => array(),
+			'Verantwortliche_Person_fuer_EU_Land' => array(),
+			'Verantwortliche_Person_fuer_EU_Email' => array(),
+			'Verantwortliche_Person_fuer_EU_Telefonnummer' => array(),
 		);
 		
 		$defaults = array (
@@ -200,6 +217,9 @@ class Check24PrepareView extends MagnaCompatibleBase {
 			'CustomTariffsNumber' => getDBConfigValue($this->marketplace.'.custom_tariffs_number.dbmatching.table', $this->mpID, ''),
 			'ReturnShippingCosts' => getDBConfigValue($this->marketplace.'.return_shipping_costs', $this->mpID, ''),
 		);
+		foreach (array('Marke', 'Hersteller_Name', 'Hersteller_Strasse_Hausnummer', 'Hersteller_PLZ', 'Hersteller_Stadt', 'Hersteller_Land', 'Hersteller_Email', 'Hersteller_Telefonnummer', 'Verantwortliche_Person_fuer_EU_Name', 'Verantwortliche_Person_fuer_EU_Strasse_Hausnummer', 'Verantwortliche_Person_fuer_EU_PLZ', 'Verantwortliche_Person_fuer_EU_Stadt', 'Verantwortliche_Person_fuer_EU_Land', 'Verantwortliche_Person_fuer_EU_Email', 'Verantwortliche_Person_fuer_EU_Telefonnummer') as $GPSRentry) {
+			$defaults[$GPSRentry] = getDBConfigValue($this->marketplace.'.'.$GPSRentry, $this->mpID, '');
+		}
 		
 		// CustomTariffsNumber comes from the DB: Show only if single preparation
 		if (count($data) == 1) {
@@ -271,6 +291,38 @@ class Check24PrepareView extends MagnaCompatibleBase {
 					</td>
 					<td class="info"><span style="color:red;"></span></td>
 				</tr>
+				<tr class="spacer">
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr class="headline">
+					<th colspan="3">' . ML_CHECK24_GPSR_DATA . '</th>
+				</tr>';
+				foreach (array (
+					ML_CHECK24_BRAND => 'Marke',
+					ML_CHECK24_MANUFACTURER_NAME => 'Hersteller_Name',
+					ML_CHECK24_MANUFACTURER_STREET => 'Hersteller_Strasse_Hausnummer',
+					ML_CHECK24_MANUFACTURER_PLZ => 'Hersteller_PLZ',
+					ML_CHECK24_MANUFACTURER_CITY => 'Hersteller_Stadt',
+					ML_CHECK24_MANUFACTURER_COUNTRY => 'Hersteller_Land',
+					ML_CHECK24_MANUFACTURER_EMAIL => 'Hersteller_Email',
+					ML_CHECK24_MANUFACTURER_PHONE => 'Hersteller_Telefonnummer',
+					ML_CHECK24_RESPONSIBLE_NAME => 'Verantwortliche_Person_fuer_EU_Name',
+					ML_CHECK24_RESPONSIBLE_STREET => 'Verantwortliche_Person_fuer_EU_Strasse_Hausnummer',
+					ML_CHECK24_RESPONSIBLE_PLZ => 'Verantwortliche_Person_fuer_EU_PLZ',
+					ML_CHECK24_RESPONSIBLE_CITY => 'Verantwortliche_Person_fuer_EU_Stadt',
+					ML_CHECK24_RESPONSIBLE_COUNTRY => 'Verantwortliche_Person_fuer_EU_Land',
+					ML_CHECK24_RESPONSIBLE_EMAIL => 'Verantwortliche_Person_fuer_EU_Email',
+					ML_CHECK24_RESPONSIBLE_PHONE => 'Verantwortliche_Person_fuer_EU_Telefonnummer') as $sTitle => $sKey) {
+				$html .= '
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . $sTitle . '</th>
+					<td class="input">
+						<input style="padding-left: 2px;" type="text" name="'.$sKey.'" value="' . $preSelected[$sKey] . '" class="fullwidth" />
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>';
+				}
+				$html .= '
 				<tr class="spacer">
 					<td colspan="3">&nbsp;</td>
 				</tr>

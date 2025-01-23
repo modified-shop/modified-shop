@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -272,7 +272,7 @@ define('ML_MODULE_BILLIGER', 'billiger.de');
 define('ML_MODULE_IDEALO', 'idealo.de');
 define('ML_MODULE_PREISSUCHMASCHINE', 'preissuchmaschine.de');
 define('ML_MODULE_KELKOO', 'kelkoo');
-define('ML_MODULE_HITMEISTER', 'Kaufland.de');
+define('ML_MODULE_HITMEISTER', 'Kaufland');
 define('ML_MODULE_CDISCOUNT', 'Cdiscount');
 define('ML_MODULE_PRICEMINISTER', 'PriceMinister');
 define('ML_MODULE_CROWDFOX', 'Crowdfox');
@@ -495,6 +495,7 @@ define('ML_ERROR_OLD_BROWSER', '<h2>Zu alter Browser</h2>
 	</ul>'
 );
 define('ML_ERROR_INVALID_NUMBER', 'Keine g&uuml;ltige Zahl');
+define('ML_ERROR_MANDATORY_FIELD_MISSING', 'Das Pflichtfeld %s wurde nicht gef&uuml;llt.');
 define('ML_ERROR_WRONG_DEFAULT_CURRENCY', 'Sie versuchen Ihre Artikel in ein Verkaufsportal einzustellen, dass %1$s als W&auml;hrung vorgibt.
 	Ihre Standardw&auml;hrung ist %2$s!<br/>
 	Daher k&ouml;nnen Sie keine Artikel in dieses Verkausportal einstellen. Bitte &auml;ndern Sie ihre Standardw&auml;hrung um dieses Problem zu l&ouml;sen.');
@@ -1574,36 +1575,36 @@ define('ML_CROWDFOX_OBLIGATION_INFO_LABEL', 'Obligation info');
 define('ML_CROWDFOX_NO_GTIN', 'Some of prepared products do not have EAN specified.');
 
 
-/* Kaufland.de */
+/* Kaufland */
 define('ML_SAME_WORKING_DAY', 'Am selben Werktag');
 define('ML_WORKING_DAY', 'Werktag');
 define('ML_WORKING_DAYS', 'Werktage');
-define('ML_HITMEISTER_SAME_PRODUCT_THERE', 'Dieser Artikel bei Kaufland.de');
+define('ML_HITMEISTER_SAME_PRODUCT_THERE', 'Dieser Artikel bei Kaufland');
 define('ML_HITMEISTER_LABEL_HITMEISTER_PRICE', 'Berechneter Preis <small>(gem. Konfig)</small>');
-define('ML_HITMEISTER_LABEL_HITMEISTER_PRICE_SHORT', 'Kaufland.de Preis');
-define('ML_HITMEISTER_LABEL_CHANGE_SITE', 'Kaufland.de Site &auml;ndern');
-define('ML_HITMEISTER_TEXT_CHANGE_SITE', 'Sie haben eine andere Kaufland.de-Site ausgew&auml;hlt. Das wirkt sich auf weitere Optionen auf, da die Kaufland.de-L&auml;nderseiten ggf. unterschiedliche W&auml;hrungen sowie Zahlungs- und Versandarten anbieten. Artikel werden dann auf die neue L&auml;nder-Site eingestellt und nur dort synchronisiert, Bestellungen ebenfalls nur von dort importiert. Soll die neue Einstellung &uuml;bernommen werden?');
-define('ML_HITMEISTER_LABEL_ORDER_ID', 'Kaufland.de-Bestellnummer');
+define('ML_HITMEISTER_LABEL_HITMEISTER_PRICE_SHORT', 'Kaufland Preis');
+define('ML_HITMEISTER_LABEL_CHANGE_SITE', 'Kaufland Site &auml;ndern');
+define('ML_HITMEISTER_TEXT_CHANGE_SITE', 'Sie haben eine andere Kaufland-Site ausgew&auml;hlt. Das wirkt sich auf weitere Optionen auf, da die Kaufland-L&auml;nderseiten ggf. unterschiedliche W&auml;hrungen sowie Zahlungs- und Versandarten anbieten. Artikel werden dann auf die neue L&auml;nder-Site eingestellt und nur dort synchronisiert, Bestellungen ebenfalls nur von dort importiert. Soll die neue Einstellung &uuml;bernommen werden?');
+define('ML_HITMEISTER_LABEL_ORDER_ID', 'Kaufland-Bestellnummer');
 define('ML_HITMEISTER_IS_PORN', 'Porno');
 define('ML_HITMEISTER_AGE_RATING', 'Altersbeschr&auml;nkung');
 define('ML_HITMEISTER_CONDITION', 'Zustand');
 define('ML_HITMEISTER_SHIPPINGTIME', 'Lieferzeit');
 define('ML_HITMEISTER_HANDLINGTIME', 'Bearbeitungszeit');
-define('ML_HITMEISTER_SHIPPINGTIME_HM', 'Lieferzeit Kaufland.de');
-define('ML_HITMEISTER_HANDLINGTIME_HM', 'Bearbeitungszeit Kaufland.de');
+define('ML_HITMEISTER_SHIPPINGTIME_HM', 'Lieferzeit Kaufland');
+define('ML_HITMEISTER_HANDLINGTIME_HM', 'Bearbeitungszeit Kaufland');
 define('ML_HITMEISTER_USE_SHIPPINGTIME_MATCHING', 'Lieferzeit Matching verwenden');
 define('ML_HITMEISTER_DELIVERY_COUNTRY', 'Artikel wird versandt aus');
 define('ML_HITMEISTER_COMMENT', 'Hinweise zu Ihrem Artikel');
 define('ML_HITMEISTER_UPLOAD_EXPLANATION', '<b>Hinweis</b>:<br /><br />
-Hochgeladene Artikel, deren EAN auf Kaufland.de bekannt sind, werden in der Regel innerhalb einer Stunde auf Kaufland.de platziert.
+Hochgeladene Artikel, deren EAN auf Kaufland bekannt sind, werden in der Regel innerhalb einer Stunde auf Kaufland platziert.
 <br /><br />
-EAN-Artikel, die noch nicht auf Kaufland.de gelistet sind, &uuml;bermittelt magnalister jede Nacht ab 00:00 Uhr.
+EAN-Artikel, die noch nicht auf Kaufland gelistet sind, &uuml;bermittelt magnalister jede Nacht ab 00:00 Uhr.
 <br /><br />
-Zur Qualit&auml;tssicherung werden die Daten von Kaufland.de manuell gesichtet und verarbeitet. Die Verarbeitung dort kann 2-4 Werktage dauern. Sie k&ouml;nnen den Status jederzeit auf Ihrer Kaufland.de Verwaltung einsehen.');
-define('ML_STOCK_SHOP_STOCK_HITMEISTER', 'Bestand<br />Shop / Kaufland.de');
+Zur Qualit&auml;tssicherung werden die Daten von Kaufland manuell gesichtet und verarbeitet. Die Verarbeitung dort kann 2-4 Werktage dauern. Sie k&ouml;nnen den Status jederzeit auf Ihrer Kaufland Verwaltung einsehen.');
+define('ML_STOCK_SHOP_STOCK_HITMEISTER', 'Bestand<br />Shop / Kaufland');
 define('ML_LABEL_PRODUCTS_WITH_MULTIPLE_EAN', 'Produkte mit mehrfach vergebener EAN');
 define('ML_HITMEISTER_ERROR_PRODUCTS_WITHDOUBLE_EAN_EXIST','Es sind Produkte mit mehrfach vergebener EAN vorhanden.<br />
-Kaufland.de ordnet Produkte nach der EAN zu, daher kann ein mehrfaches Vergeben dazu f&uuml;hren, dass Lageranzahlen und Preise nicht korrekt zugewiesen werden k&ouml;nnen.<br /><br />
+Kaufland ordnet Produkte nach der EAN zu, daher kann ein mehrfaches Vergeben dazu f&uuml;hren, dass Lageranzahlen und Preise nicht korrekt zugewiesen werden k&ouml;nnen.<br /><br />
 Bitte &auml;ndern Sie die EANs, so dass keine davon mehrfach vergeben wird.');
 define('ML_HITMEISTER_UNIT_ATTRIBUTES', 'Allgemeine Einstellungen');
 define('ML_HITMEISTER_PRODUCT_DETAILS', 'Produktdetails');
@@ -1611,10 +1612,10 @@ define('ML_HITMEISTER_ITEM_NAME_TITLE', 'Titel');
 define('ML_HITMEISTER_KEYWORDS', 'Keywords');
 define('ML_HITMEISTER_KEYWORDS_INFO', 'Suchw&ouml;rter f&uuml;r Preissuchmaschinen (werden nicht angezeigt, nur in den Metadaten hinterlegt), Flie&szlig;text, bis zu 1024 Zeichen');
 define('ML_HITMEISTER_DESCRIPTION', 'Beschreibung');
-define('ML_HITMEISTER_PRICE', 'Kaufland.de Preis');
-define('ML_HITMEISTER_CATEGORY', 'Kaufland.de Kategorie');
-define('ML_HITMEISTER_LABEL_TITLE', 'Kaufland.de Titel');
-define('ML_HITMEISTER_LABEL_PRODUCT_AT_HITMEISTER', 'Produkt bei Kaufland.de');
+define('ML_HITMEISTER_PRICE', 'Kaufland Preis');
+define('ML_HITMEISTER_CATEGORY', 'Kaufland Kategorie');
+define('ML_HITMEISTER_LABEL_TITLE', 'Kaufland Titel');
+define('ML_HITMEISTER_LABEL_PRODUCT_AT_HITMEISTER', 'Produkt bei Kaufland');
 define('ML_HITMEISTER_LABEL_NOT_MATCHED', 'nicht matchen');
 define('ML_HITMEISTER_SEARCH_BY_TITLE', 'Suche nach Titel');
 define('ML_HITMEISTER_SEARCH_BY_EAN', 'Suche nach EAN');
@@ -1641,21 +1642,22 @@ define('ML_HITMEISTER_INVENTORY_STATUS_ACTIVE', 'Aktiv');
 define('ML_HITMEISTER_INVENTORY_STATUS_PENDING_NEW', 'Artikel wird erstellt');
 define('ML_HITMEISTER_INVENTORY_STATUS_PENDING_UPDATE', 'Artikel wird aktualisiert');
 define('ML_HITMEISTER_TEXT_MANUALLY_MATCHING_DESC', 'Die per Checkbox ausgew&auml;hlten Shop-Artikel werden versucht &uuml;ber EAN und Titel
-	mit Artikeln auf Kaufland.de zu matchen.<br/ ><br/ >
+	mit Artikeln auf Kaufland zu matchen.<br/ ><br/ >
 	Sie erhalten ein detailiertes Ergebnis &uuml;ber erfolgreiche oder erfolglose Suchtreffer und k&ouml;nnen individuell ausw&auml;hlen,
 	mit welchem Treffer gematcht werden soll.<br/ ><br/ >
 	Die Verarbeitung ist sehr genau, aber auch zeitaufw&auml;ndig.');
 define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_DESC', 'Die per Checkbox ausgew&auml;hlten Shop-Artikel werden automatisch im Hintergrund verarbeitet:
-	Der Artikel wird &uuml;ber die hinterlegte EAN automatisch mit der EAN eines bestehenden Kaufland.de Artikels gematcht.<br/ ><br/ >
+	Der Artikel wird &uuml;ber die hinterlegte EAN automatisch mit der EAN eines bestehenden Kaufland Artikels gematcht.<br/ ><br/ >
 	Voraussetzung ist die Pflege der EAN-Nummern je Artikel.');
 define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_CONFIRM', 'Bitte beachten Sie, dass das automatische Matching auschlie&szlig;lich &uuml;ber den Abgleich der EAN Nummer
-	erfolgt. M&ouml;glicherweise werden Artikel aus Kaufland.de gematcht, deren Beschreibungen oder Produktbilder eine mindere Qualit&auml;t aufweisen. Daher kann das
+	erfolgt. M&ouml;glicherweise werden Artikel aus Kaufland gematcht, deren Beschreibungen oder Produktbilder eine mindere Qualit&auml;t aufweisen. Daher kann das
 	Matching zu einem schlechteren Ergebnis f&uuml;hren, als das manuelle Matching.<br/ ><br/ >
 	RedGecko GmbH &uuml;bernimmt daher keine Haftung f&uuml;r die Korrektheit der gematchten Produkte.');
-define('ML_HITMEISTER_LABEL_LAST_REPORT', 'Letzter Bericht von Kaufland.de');
-define('ML_HITMEISTER_TEXT_CHECKIN_DELAY', 'Bitte beachten Sie, dass es bis zu zwei Stunden dauern kann bis Einstell- und L&ouml;schvorg&auml;nge vollst&auml;ndig von Kaufland.de verarbeitet werden.');
+define('ML_HITMEISTER_LABEL_LAST_REPORT', 'Letzter Bericht von Kaufland');
+define('ML_HITMEISTER_TEXT_CHECKIN_DELAY', 'Bitte beachten Sie, dass es bis zu zwei Stunden dauern kann bis Einstell- und L&ouml;schvorg&auml;nge vollst&auml;ndig von Kaufland verarbeitet werden.');
 define('ML_HITMEISTER_TITLE_WARNING_ALLOW_MULTIPLE_EAN','Warnung');
-define('ML_HITMEISTER_TEXT_WARNING_ALLOW_MULTIPLE_EAN','Kaufland.de identifiziert Produkte nach der EAN. Alle Angebote mit derselben EAN werden demselben Produkt zugeordnet.<br/><br/>Bitte lassen Sie mehrfache EANs <b>nur dann</b> zu, wenn Sie tats&auml;chlich <b>mehrfach jeweils denselben Artikel</b> (mit unterschiedlichen Artikelnummern) im Shop f&uuml;hren, z.B. wenn es ein gebrauchter Artikel mit unterschiedlichen Zust&auml;nden ist.<br/><br/>Mehrfache EANs zulassen?');
+define('ML_HITMEISTER_TEXT_WARNING_ALLOW_MULTIPLE_EAN','Kaufland identifiziert Produkte nach der EAN. Alle Angebote mit derselben EAN werden demselben Produkt zugeordnet.<br/><br/>Bitte lassen Sie mehrfache EANs <b>nur dann</b> zu, wenn Sie tats&auml;chlich <b>mehrfach jeweils denselben Artikel</b> (mit unterschiedlichen Artikelnummern) im Shop f&uuml;hren, z.B. wenn es ein gebrauchter Artikel mit unterschiedlichen Zust&auml;nden ist.<br/><br/>Mehrfache EANs zulassen?');
+define('ML_HITMEISTER_NOT_CONFIGURED_IN_KAUFLAND_DE_ACCOUNT', 'nicht konfiguriert in Ihrem Kaufland Konto');
 
 
 /* VARIATION MATCHING */
@@ -1723,7 +1725,7 @@ define('ML_GENERAL_VARMATCH_CATEGORY_WITHOUT_ATTRIBUTES_INFO', 'F&uuml;r die aus
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_VALUE', 'W&auml;hle Datenbank-Werte (f&uuml;r Experten)');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_TABLE', 'Choose table: ');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_COLUMN', 'Choose column: ');
-define('ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS', 'Alias products_id: ');
+define('ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS', 'Alias products_id or manufacturers_id: ');
 define('ML_GENERAL_VARMATCH_ALREADY_MATCHED', '(bereits gematcht)');
 define('ML_GENERAL_VARMATCH_MULTI_SELECT', 'Multiselect');
 define('ML_GENERAL_VARMATCH_PRODUCTS_PREPARED_DIFFERENTLY', 'Bitte beachten Sie, dass Sie einige Artikel der gew&auml;hlten Kategorie "%category_name%" abweichend unter „Produkte vorbereiten“ gematcht haben. Es werden die dort gespeicherten Werte zum Marktplatz &uuml;bermittelt.');
@@ -2180,6 +2182,22 @@ define('ML_RICARDO_BUTTON_TOKEN_NEW', 'Token beantragen / &auml;ndern');
 define('ML_CHECK24_SHIPPING', 'Versand');
 define('ML_CHECK24_SHIPPING_COST', 'Versandkosten');
 define('ML_CHECK24_SHIPPING_TIME', 'Versand');
+define('ML_CHECK24_GPSR_DATA', 'GPSR Daten');
+define('ML_CHECK24_BRAND', 'Marke<span class="bull">&bull;</span>');
+define('ML_CHECK24_MANUFACTURER_NAME', 'Hersteller: Name<span class="bull">&bull;</span>');
+define('ML_CHECK24_MANUFACTURER_STREET', 'Hersteller: Stra&szlig;e + Hausnummer<span class="bull">&bull;</span>');
+define('ML_CHECK24_MANUFACTURER_PLZ', 'Hersteller: PLZ<span class="bull">&bull;</span>');
+define('ML_CHECK24_MANUFACTURER_CITY', 'Hersteller: Stadt<span class="bull">&bull;</span>');
+define('ML_CHECK24_MANUFACTURER_COUNTRY', 'Hersteller: Land<span class="bull">&bull;</span>');
+define('ML_CHECK24_MANUFACTURER_EMAIL', 'Hersteller: Email<span class="bull">&bull;</span>');
+define('ML_CHECK24_MANUFACTURER_PHONE', 'Hersteller: Telefonnummer');
+define('ML_CHECK24_RESPONSIBLE_NAME', 'Verantwortliche Person f&uuml;r EU: Name<span class="bull">&bull;</span>');
+define('ML_CHECK24_RESPONSIBLE_STREET', 'Verantwortliche Person f&uuml;r EU: Stra&szlig;e + Hausnummer<span class="bull">&bull;</span>');
+define('ML_CHECK24_RESPONSIBLE_PLZ', 'Verantwortliche Person f&uuml;r EU: PLZ<span class="bull">&bull;</span>');
+define('ML_CHECK24_RESPONSIBLE_CITY', 'Verantwortliche Person f&uuml;r EU: Stadt<span class="bull">&bull;</span>');
+define('ML_CHECK24_RESPONSIBLE_COUNTRY', 'Verantwortliche Person f&uuml;r EU: Land<span class="bull">&bull;</span>');
+define('ML_CHECK24_RESPONSIBLE_EMAIL', 'Verantwortliche Person f&uuml;r EU: Email<span class="bull">&bull;</span>');
+define('ML_CHECK24_RESPONSIBLE_PHONE', 'Verantwortliche Person f&uuml;r EU: Telefonnummer');
 define('ML_CHECK24_OPTIONAL_SHIPPING_DATA', 'Optionale Angaben f&uuml;r den Versand');
 define('ML_CHECK24_DELIVERY_MODE', 'Art des Versands');
 define('ML_CHECK24_2MEN_HANDLING', 'Lieferung bis zum Aufstellort');
@@ -2323,6 +2341,10 @@ define('ML_METRO_STOCK_SHOP_METRO', 'Bestand Shop / METRO');
 define('ML_METRO_ERROR_GTIN', 'METRO verlangt entweder eine GTIN oder den Hersteller + Herstellerartikelnummer. Da Sie die Felder “Hersteller” und “Herstellerartikelnummer” leer gelassen haben, m&uuml;ssen Sie in das GTIN-Feld einen Wert eintragen, um die Produktvorbereitung abzuschlie&#xDF;en.');
 define('ML_METRO_STATUS_PRODUCT_IS_PENDING_DELETE', 'Angebot wird gel&ouml;scht');
 define('ML_METRO_DELETED_OFFER_PURGE_INFO', 'Gel&ouml;schte Artikel werden nach 30 Tagen final aus der Datenbank und &Uuml;bersicht gel&ouml;scht.');
+define('ML_METRO_CROSS_BORDERS_STOCK_LIMITATION_WARNING', '<strong>Bearbeitung der Lager-Einstellungen nicht möglich:</strong> <span style="font-weight:400;">Bitte nehmen Sie die Einstellungen im <a href="{#TAB_LINK#}">Tab {#TAB_LABEL#}</a> vor. Die dort festgelegten Werte gelten zentral für alle angebundenen METRO-Marktplätze mit gleichem Marktplatz-Konto und Verkauf aus dem gleichen Herkunftsland.<br><br>
+Nur so kann sichergestellt werden, dass die Synchronisierung des Lagerbestands mit dem Shop über die angebundenen METRO Marktplätze einwandfrei funktioniert.<br><br>
+Möchten Sie die Lagerbestände pro METRO Marktplatz manuell pflegen, deaktivieren Sie die Lager-Synchronisation im <a href="{#TAB_LINK#}">Tab {#TAB_LABEL#}</a> unter “Preis und Lager” -> “Lagerveränderung vom Shop”. Die hier ausgegrauten Felder werden dann bearbeitbar.</span>');
+define('ML_METRO_CROSS_BORDERS_STOCK_LIMITATION_TOOLTIP', 'Dieses Feld ist hier nicht bearbeitbar. Für weitere Infos, siehe Hinweis am oberen Bildschirmrand.');
 
 /**
  * Invoice Upload
@@ -2349,7 +2371,17 @@ define('ML_OTTO_PREPARE_PRODUCT_FORWARDER_PREFERREDLOCATION', 'Spediteur - bevor
 define('ML_OTTO_PREPARE_PRODUCT_FORWARDER_CURBSIDE', 'Spediteur - Bordsteinkante');
 define('ML_OTTO_PREPARE_PRODUCT_TITLE_INFO', 'Eine &Uuml;bertragung des Produkttitels ist bei OTTO nicht m&ouml;glich.<br>OTTO erstellt den Titel basierend auf den von Ihnen &uuml;bertragenen Attributen wie Hersteller, Marke, Produktlinie und viele mehr.');
 define('ML_OTTO_PRODUCT_IMAGES', 'Produktbilder');
+define('ML_OTTO_PRODUCT_MAIN_IMAGE_INFO', '<p>W&auml;hlen Sie hier das an Ihrem Shop-Produkt hinterlegte Bild, das als Hauptbild f&uuml;r OTTO verwendet werden soll.</p>
+<p></p>
+<p>Die &Uuml;bermittlung eines Produkt-Hauptbildes ist f&uuml;r OTTO verpflichtend. Es muss freigestellt und mit wei&szlig;em Hintergrund &uuml;bermittelt werden.</p>
+<p></p>
+<p>Wenn Sie die Option "Immer aktuell aus dem Web-Shop verwenden" w&auml;hlen, so wird das erste, an Ihrem Shop-Produkt hinterlegte Bild, an OTTO &uuml;bermittelt.</p>
+<p></p>
+<p>Bitte beachten Sie, dass Sie f&uuml;r bereits an OTTO hochgeladene Produkte einen erneuten Produkt-Upload in magnalister durchf&uuml;hren m&uuml;ssen, damit die &Auml;nderungen zum Produkt-Hauptbild &uuml;bernommen werden.</p>
+');
 define('ML_OTTO_PREPARE_PRODUCT_DESCRIPTION_INFO', 'Detaillierte und informative Beschreibung des Produkts mit seinen Spezifikationen und Eigenschaften. Angebotsdetails, Versand- oder Shopinformationen wie Preise, Lieferbedingungen, etc. sind nicht erlaubt. Bitte beachten Sie, dass es nur eine Produktdetailseite pro Produkt gibt, die von allen Verk&auml;ufern, die dieses Produkt anbieten, geteilt wird. F&uuml;gen Sie keine Hyperlinks, Bilder oder Videos hinzu.<br><br>May contain HTML elements<br><br>Maximal 2000 Zeichen');
+define('ML_OTTO_PRODUCT_MAINIMAGES', 'Produkt-Hauptbilder');
+define('ML_OTTO_PREPARE_PRODUCT_MAINIMAGE_INFO', 'Als Hauptbild muss dann verpflichtend ein Freisteller mit weißem Hintergrund übermittelt werden.');
 define('ML_OTTO_PREPARE_PRODUCT_IMAGES_INFO', 'Immer aktuell aus Web-Shop verwenden');
 define('ML_OTTO_PRODUCT_GENERALSETTINGS', 'Allgemeine Einstellungen');
 define('ML_OTTO_LABEL_SELECT_CATEGORY', 'Kategorien');
@@ -2394,3 +2426,7 @@ define('ML_DUPLCIATE_HOVERTEXTS', 'Bitte speichern Sie die Konfiguration / Vorbe
 define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_AND_UNIT', 'Artikelgewicht (Wert und Einheit als Text)');
 define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_VALUE', 'Artikelgewicht (Nur den Wert)');
 define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_UNIT', 'Artikelgewicht (Nur die Einheit)');
+
+define('ML_BUTTON_TOKEN_NEW', 'Token beantragen / &auml;ndern');
+define('ML_ERROR_CREATE_TOKEN_LINK_HEADLINE', 'Fehler beim Herstellen der Verbindung zu {#marketplace#}');
+define('ML_ERROR_CREATE_TOKEN_LINK_TEXT', 'Es konnte keine Verbindung zu {#marketplace#} aufgebaut werden. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut.<br><br>Sollte der Fehler wiederholt auftreten, setzen Sie sich mit dem magnalister-Support in Verbindung.');

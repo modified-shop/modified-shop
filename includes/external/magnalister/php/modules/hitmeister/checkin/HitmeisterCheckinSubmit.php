@@ -308,6 +308,15 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		}
 
 		$variations = array();
+		if (!empty ($product['VariationPictures'])) {
+			foreach ($product['Variations'] as $no => &$var) {
+				if (    array_key_exists($no, $product['VariationPictures'])
+				     && array_key_exists('Images', $product['VariationPictures'][$no])
+				     && !empty($product['VariationPictures'][$no]['Images'])) {
+				    $product['Variations'][$no]['Images'] = $product['VariationPictures'][$no]['Images'];
+				}
+			}
+		}
 		foreach ($product['Variations'] as $v) {
 			$this->simpleprice->setPrice($v['Price']['Price']);
 			$price = $this->simpleprice->roundPrice()->makeSignalPrice(
@@ -341,8 +350,13 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				$vi['Images'] = $data['submit']['Images'];
 			} else {
 				foreach ($v['Images'] as $image) {
+					if (strpos($image, 'images/') === 0) {
+						$currImagePath = rtrim(HTTP_CATALOG_SERVER, '/').'/';
+					} else {
+						$currImagePath = $imagePath;
+					}
 					$vi['Images'][] = array(
-						'URL' => $imagePath . $image,
+						'URL' => $currImagePath . $image,
 						'id' => $image
 					);
 				}

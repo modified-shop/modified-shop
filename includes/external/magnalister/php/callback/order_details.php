@@ -116,6 +116,14 @@ function magnaGetOrderPlatformIcon($order) {
 			$filename = 'ebay_orderview';
 		}
 	}
+    if ('kaufland' == $logo) {
+        $filename = 'kaufland_orderview';
+        if (is_array($order['data']) && array_key_exists('FulfillmentType', $order['data']) &&
+            'fulfilled_by_kaufland' == $order['data']['FulfillmentType']
+        ) {
+            $filename .= '_fbk';
+        }
+    }
 	if (empty($filename)) {
 		$filename = $logo.'_orderview';
 	}

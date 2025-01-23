@@ -56,6 +56,90 @@
       "shippingcost": {
         "label": "Versandkosten",
         "key": "_#_platform_#_.shippingcost",
+        "type": "text",
+        "cssClasses": [
+          "autoWidth"
+        ]
+      }
+    }
+  },
+  "GPSRdata" : {
+    "headline": "",
+    "desc": "<b>Vorgabe f&uuml;r GPSR Daten</b>",
+    "fields": {
+      "Marke": {
+        "label": "Marke",
+        "key": "_#_platform_#_.Marke",
+        "type": "text"
+      },
+      "Hersteller_Name": {
+        "label": "Hersteller: Name",
+        "key": "_#_platform_#_.Hersteller_Name",
+        "type": "text"
+      },
+      "Hersteller_Strasse_Hausnummer": {
+        "label": "Hersteller: Stra&szlig;e und Hausnummer",
+        "key": "_#_platform_#_.Hersteller_Strasse_Hausnummer",
+        "type": "text"
+      },
+      "Hersteller_PLZ": {
+        "label": "Hersteller: PLZ",
+        "key": "_#_platform_#_.Hersteller_PLZ",
+        "type": "text"
+      },
+      "Hersteller_Stadt": {
+        "label": "Hersteller: Stadt",
+        "key": "_#_platform_#_.Hersteller_Stadt",
+        "type": "text"
+      },
+      "Hersteller_Land": {
+        "label": "Hersteller: Land",
+        "key": "_#_platform_#_.Hersteller_Land",
+        "type": "text"
+      },
+      "Hersteller_Email": {
+        "label": "Hersteller: Email",
+        "key": "_#_platform_#_.Hersteller_Email",
+        "type": "text"
+      },
+      "Hersteller_Telefonnummer": {
+        "label": "Hersteller: Telefonnummer",
+        "key": "_#_platform_#_.Hersteller_Telefonnummer",
+        "type": "text"
+      },
+      "Verantwortliche_Person_fuer_EU_Name": {
+        "label": "Verantwortliche Person f&uuml;r EU: Name",
+        "key": "_#_platform_#_.Verantwortliche_Person_fuer_EU_Name",
+        "type": "text"
+      },
+      "Verantwortliche_Person_fuer_EU_Strasse_Hausnummer": {
+        "label": "Verantwortliche Person f&uuml;r EU: Stra&szlig;e und Hausnummer",
+        "key": "_#_platform_#_.Verantwortliche_Person_fuer_EU_Strasse_Hausnummer",
+        "type": "text"
+      },
+      "Verantwortliche_Person_fuer_EU_PLZ": {
+        "label": "Verantwortliche Person f&uuml;r EU: PLZ",
+        "key": "_#_platform_#_.Verantwortliche_Person_fuer_EU_PLZ",
+        "type": "text"
+      },
+      "Verantwortliche_Person_fuer_EU_Stadt": {
+        "label": "Verantwortliche Person f&uuml;r EU: Stadt",
+        "key": "_#_platform_#_.Verantwortliche_Person_fuer_EU_Stadt",
+        "type": "text"
+      },
+      "Verantwortliche_Person_fuer_EU_Land": {
+        "label": "Verantwortliche Person f&uuml;r EU: Land",
+        "key": "_#_platform_#_.Verantwortliche_Person_fuer_EU_Land",
+        "type": "text"
+      },
+      "Verantwortliche_Person_fuer_EU_Email": {
+        "label": "Verantwortliche Person f&uuml;r EU: Email",
+        "key": "_#_platform_#_.Verantwortliche_Person_fuer_EU_Email",
+        "type": "text"
+      },
+      "Verantwortliche_Person_fuer_EU_Telefonnummer": {
+        "label": "Verantwortliche Person f&uuml;r EU: Telefonnummer",
+        "key": "_#_platform_#_.Verantwortliche_Person_fuer_EU_Telefonnummer",
         "type": "text"
       }
     }
@@ -124,7 +208,7 @@
       },
       "available_service_product_ids": {
         "label": "Zubuchbare Services",
-        "desc": "Liste von verfügbaren Services (Produkte-Ids aus dem Feed), die in Kombination mit dem Produkt kaufbar sind",
+        "desc": "Liste von verf&uuml;gbaren Services (Produkte-Ids aus dem Feed), die in Kombination mit dem Produkt kaufbar sind",
         "key": "_#_platform_#_.available_service_product_ids",
         "type": "text",
         "cssClasses": [
@@ -133,7 +217,7 @@
       },
       "logistics_provider": {
         "label": "Logistikdienstleister",
-        "desc": "Logistikdienstleister für das Produkt (z.B. DHL)",
+        "desc": "Logistikdienstleister f&uuml;r das Produkt (z.B. DHL)",
         "key": "_#_platform_#_.logistics_provider",
         "type": "text",
         "cssClasses": [
@@ -147,8 +231,8 @@
         "type": "dbfieldselector"
       },
       "return_shipping_costs": {
-        "label": "Kosten für Retoure",
-        "desc": "Kosten für Retoure bei Geschmacksretouren",
+        "label": "Kosten f&uuml;r Retoure",
+        "desc": "Kosten f&uuml;r Retoure bei Geschmacksretouren",
         "key": "_#_platform_#_.return_shipping_costs",
         "type": "text",
         "cssClasses": [

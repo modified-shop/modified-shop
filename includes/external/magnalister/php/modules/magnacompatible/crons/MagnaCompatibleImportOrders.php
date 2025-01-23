@@ -1149,6 +1149,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$this->o['_processingData']['ProductsCount'] += (int)$this->p['products_quantity'];
 
 		// insert product
+		MagnaDB::gi()->addNonNullableEntries($this->p, TABLE_ORDERS_PRODUCTS);
 		$this->insert(TABLE_ORDERS_PRODUCTS, $this->p);
 		$iOrdersProductsId = $this->db->getLastInsertID();
 
@@ -1517,6 +1518,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$aOrderProductsAttribute['products_attributes_id'] = ($aOption['id'] == false) ? 0 : $aOption['id'];
 		}
 
+		MagnaDB::gi()->addNonNullableEntries($aOrderProductsAttribute, TABLE_ORDERS_PRODUCTS_ATTRIBUTES);
 		$this->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $aOrderProductsAttribute);
 	}
 
@@ -1719,6 +1721,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 					if ($this->config['DBColumnExists']['orders_products_attributes.products_attributes_id']) {
 						$prodOrderAttrData['products_attributes_id'] = $attributeId == false ? 0 : $attributeId;
 					}
+					MagnaDB::gi()->addNonNullableEntries($prodOrderAttrData, TABLE_ORDERS_PRODUCTS_ATTRIBUTES);
 					$this->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $prodOrderAttrData);
 				}
 			}
@@ -2045,7 +2048,11 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 
 			if (    (!MagnaDB::gi()->columnExistsInTable('entry_additional_info', TABLE_ADDRESS_BOOK)) 
 			     || (!defined('ACCOUNT_ADDITIONAL_INFO'))
-			     || (ACCOUNT_ADDITIONAL_INFO !== 'true')) {
+			     || (    (ACCOUNT_ADDITIONAL_INFO !== 'true')
+			          && (defined(ACCOUNT_SUBURB))
+			          && (ACCOUNT_SUBURB == 'true')
+			        )
+			) {
 				if (!empty($this->o['adress']['entry_additional_info'])) {
 					$this->o['adress']['entry_suburb'] = $this->o['adress']['entry_additional_info'];
 					unset($this->o['adress']['entry_additional_info']);

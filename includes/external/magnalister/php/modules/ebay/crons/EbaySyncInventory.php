@@ -359,6 +359,10 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		@set_time_limit(180);
 		$this->identifySKU();
 
+		if (($hp = magnaContribVerify('EBay_SyncInventory_PreUpdateItem', 1)) !== false) {
+			require($hp);
+		}
+
 		$articleIdent = 'SKU: '.$this->cItem['SKU'].(empty($this->cItem['MasterSKU']) ? '' : ' [MasterSKU: '.$this->cItem['MasterSKU'].']').' ('.$this->cItem['ItemTitle'].'); eBay-ItemID: '.$this->cItem['ItemID'].'; ListingType: '.$this->cItem['ListingType'].' ';
 		if ((int)$this->cItem['pID'] <= 0) {
 			$this->log("\n".$articleIdent.' not found');
@@ -436,7 +440,9 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 				}
 			}
 			// master price is empty for variation items, therefore check if isset
-			$process = $process || (isset($data['Price']) && (float)$this->cItem['Price'] != (float)$data['Price']);
+			$process = $process 
+			|| (isset($data['Price']) && (float)$this->cItem['Price'] != (float)$data['Price'])
+			|| (isset($data['StartPrice']) && (float)$this->cItem['Price'] != (float)$data['StartPrice']);
 			// consider strike prices
 			// STP on eBay, not in the Shop
 			if (   (   (   isset($this->cItem['OldPrice'])
@@ -582,14 +588,14 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 				     || (isset($this->cItem['Variations']) && $blVarStockOnEbay)
 				   ) {
 					$process = true;
-					if (!getDBConfigValue('ebay.zerostockontrol', $this->mpID, false)) {
+					if (getDBConfigValue('ebay.zerostockontrol', $this->mpID, false) !== 'true') {
 						$this->log(
 						"\n\tDeleting Item due to inactive Status"
 						);
 					}
 				}
 				$data['NewQuantity'] = 0;
-				if (getDBConfigValue('ebay.zerostockontrol', $this->mpID, false)
+				if (getDBConfigValue('ebay.zerostockontrol', $this->mpID, false) === 'true'
 				     && array_key_exists('Variations', $data)
 				     && is_array($data['Variations'])        ) {
 					foreach($data['Variations'] as &$vv) {
@@ -709,6 +715,10 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 
 		@set_time_limit(180);
 		$this->identifySKU();
+
+		if (($hp = magnaContribVerify('EBay_SyncInventory_PreUpdateItem', 1)) !== false) {
+			require($hp);
+		}
 
 		$articleIdent = 'SKU: '.$this->cItem['SKU'].(empty($this->cItem['MasterSKU']) ? '' : ' [MasterSKU: '.$this->cItem['MasterSKU'].']').' ('.$this->cItem['ItemTitle'].'); eBay-ItemID: '.$this->cItem['ItemID'].'; ListingType: '.$this->cItem['ListingType'].' ';
 		if ((int)$this->cItem['pID'] <= 0) {

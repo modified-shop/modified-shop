@@ -3,19 +3,14 @@
         "headline": "_#_platformName_#_ Zugangsdaten",
         "fields": [
             {
-                "label": "OTTO API-Nutzer",
-                "desc":"<p>Ihren “OTTO API-Nutzer” erhalten Sie automatisch per E-Mail, nachdem Sie einen H&auml;ndler-Account bei OTTO registriert und die Legitimationspr&uuml;fung durchlaufen haben.</p><strong>Weitere Infos:</strong><ul><li>Unter <a href=\"https://www.otto.market/\" target=_\"blank\">https://www.otto.market/</a> k&ouml;nnen Sie sich als H&auml;ndler registrieren.</li><li>Damit Ihre per magnalister hochgeladenen Produkte auf OTTO angezeigt werden, m&uuml;ssen Sie als neuer H&auml;ndler die Sichtbarkeits-Restriktion im OTTO H&auml;ndler-Backend entfernen und eine “Best&auml;tigung &uuml;ber Ihr Verst&auml;ndnis des Bestellprozesses” an OTTO senden. </br>Weitere Infos dazu finden Sie hier: <a href=\"https://account.otto.market/s/article/Vorbereitungen-Livegang/\" target=_\"blank\">https://account.otto.market/s/article/Vorbereitungen-Livegang/</a></li></ul>",
-                "key": "_#_platform_#_.username",
-                "type": "text"
-            },
-            {
-                "label": "OTTO API-Passwort",
-                "desc":"<p>Nach der Registrierung des OTTO H&auml;ndler-Accounts und der Legitimationspr&uuml;fung durch OTTO erhalten Sie eine E-Mail mit Ihrem OTTO “API-Nutzer” und einem Link zur Passwort-Vergabe. </br>Tragen Sie das generierte “API-Passwort” hier ein.</p><p>Bitte beachten Sie auch die Hinweise im Info-Icon unter “OTTO Market API-Username”.</p>",
-                "key": "_#_platform_#_.password",
-                "type": "password",
-                "settings": {
-                    "save": false
-                }
+                "label": "OTTO API-Token",
+                "key": "_#_platform_#_.token",
+                "desc": "",
+                "type": "extern",
+                "procFunc": "OttoConfigure::OttoGetToken",
+                "params": [
+
+                ]
             }
         ]
     }

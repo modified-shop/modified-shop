@@ -23,6 +23,8 @@ require_once(DIR_MAGNALISTER_MODULES.'metro/classes/MetroProductSaver.php');
 
 class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
+    private $iHighestPID = 0; // needed for afterPopulateSelectionWithData()
+
     public function __construct($settings = array()) {
         $settings = array_merge(array(
             'itemsPerBatch' => 1,
@@ -32,6 +34,11 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         parent::__construct($settings);
 
         $this->summaryAddText = "<br />\n".ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED;
+        $this->getHighestPID();
+    }
+
+    private function getHighestPID() {
+        $this->iHighestPID = MagnaDB::gi()->fetchOne("SELECT MAX(products_id) FROM ".TABLE_PRODUCTS);
     }
 
     protected function generateRequestHeader() {
@@ -228,8 +235,12 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'NetPrice' => $aVariation['Price']['Fixed'] + $masterData['NetShippingCost'],
             );
             if (array_key_exists($aVariation['VariationId'], $varImagesByVarId)) {
-                foreach ($varImagesByVarId[$aVariation['VariationId']] as $variationImage) {
-                    array_unshift($data['submit'][$i]['Images'], $variationImage);
+                if (is_array($varImagesByVarId[$aVariation['VariationId']])) {
+                    foreach ($varImagesByVarId[$aVariation['VariationId']] as $variationImage) {
+                        array_unshift($data['submit'][$i]['Images'], $variationImage);
+                    }
+                } else if (is_string($varImagesByVarId[$aVariation['VariationId']]) && !empty($varImagesByVarId[$aVariation['VariationId']])) {
+                    array_unshift($data['submit'][$i]['Images'], $varImagesByVarId[$aVariation['VariationId']]);
                 }
             }
             $i++;
@@ -270,9 +281,11 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             foreach ($variantAttributes as $key => $vattr) {
 
                 foreach ($aCategoryAttributes as $attr => $matchedAttributes) {
-                    foreach ($matchedAttributes['Values'] as $matched) {
-                        if ($matched['Shop']['Value'] === $vattr) {
-                            $res[$aVariation[$sSkuKey]][$attr] = $matched['Marketplace']['Value'];
+                    if (is_array($matchedAttributes['Values'])) {
+                        foreach ($matchedAttributes['Values'] as $matched) {
+                            if ($matched['Shop']['Value'] === $vattr) {
+                                $res[$aVariation[$sSkuKey]][$attr] = $matched['Marketplace']['Value'];
+                            }
                         }
                     }
                 }
@@ -331,8 +344,8 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         // VariationPictures don't have keys but only IDs
         foreach ($product['VariationPictures'] as $aPictureData) {
             // Support for one Variation Image (if shop not support multiple variation images)
-            if (empty($aPictureData['Images'])) {
-                $return[$aPictureData['VariationId']] = $imagePathVariations.$aPictureData['Image'];;
+            if (empty($aPictureData['Images']) && !empty($aPictureData['Image'])) {
+                $return[$aPictureData['VariationId']] = $imagePathVariations.$aPictureData['Image'];
             }
 
             // Support for Multiple Variation Images - see Fallback above if shop supports only one variation image
@@ -356,12 +369,26 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         $blChanged = false;
         foreach ($this->selection as $i => $item) {
             if (array_key_exists('SKU', $item['submit'])) {
-                $aNewSelection[] = $item;
+                $aNewSelection[$i] = $item;
                 continue;
             }
             $blChanged = true;
+
+            // One of the items must have the original key $i,
+            // so that after submitting, it's removed from the selection table
+            // and the processing can go on with the next item.
+            // The others get keys above the products_id range,
+            // so that they're not confused with anything else
+            $blKeyUsed = false;
             foreach ($item['submit'] as $j => $aVarItem) {
-                $aNewSelection[] = array(
+                if (!$blKeyUsed) {
+                    $sCurrKey = $i;
+                    $blKeyUsed = true;
+                } else {
+                    $sCurrKey = $this->iHighestPID + 1 + $j;
+                    $this->variationCount += 1;
+                }
+                $aNewSelection[$sCurrKey] = array(
                     'quantity' => $aVarItem['Quantity'],
                     'price' => $aVarItem['Price'],
                     'submit' => $aVarItem

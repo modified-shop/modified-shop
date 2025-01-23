@@ -106,13 +106,14 @@ class VariationsCalculator {
 			'variation_shipping_time' => 1,
 			'variation_volume' => 0,
 			'variation_unit_of_measure' => '',
+            'date_added' => date('Y-m-d H:i:s'),
 		), $base);
 		$permutations = array_fill(0, $permutationsCount, $std);
 		//echo print_m($attrByOptionsID, '$attrByOptionsID['.$permutationsCount.']');
 
 		// To avoid database errors since the variations table does not support NULL
-		array_walk($base, array($this, 'nullToEmptyString')); 
-		array_walk($attrByOptionsID, array($this, 'nullToEmptyString')); 
+		array_walk($base, array($this, 'nullToEmptyString'));
+		array_walk($attrByOptionsID, array($this, 'nullToEmptyString'));
 
 		$shift = $permutationsCount;
 		foreach ($attrByOptionsID as $oID => $vec) {
@@ -161,11 +162,25 @@ class VariationsCalculator {
 							break;
 						}
 					}
-					if (strpos(trim($attr['attributes_model']), trim($base['marketplace_sku'])) === 0) {
-						$tModel = substr(trim($attr['attributes_model']), strlen(trim($base['marketplace_sku'])));
-					} else {
-						$tModel = $attr['attributes_model'];
-					}
+
+                    // Check if the base code exists at the beginning of the attributes_model string
+                    if (strpos($attr['attributes_model'], $base['marketplace_sku']) === 0) {
+                        // Extract the part of the SKU after the base code
+                        $tModel = substr($attr['attributes_model'], strlen($base['marketplace_sku']));
+
+                        // Special handling for cases where the extracted part is empty
+                        if ($tModel === '') {
+                            $tModel = $base['marketplace_sku'];
+                        }
+                        // Check if the extracted part is numeric and less than x digits
+                        elseif (ctype_digit($tModel) && strlen($tModel) < strlen($base['marketplace_sku'])) {
+                            $tModel = $base['marketplace_sku'] . $tModel;
+                        }
+                    } else {
+                        // If base code is not found at the beginning, use the entire SKU
+                        $tModel = $attr['attributes_model'];
+                    }
+
 					$tModel = str_replace(array("\n", "\r", "\t" , ' '), array('', '', '', ''), $tModel);
 					if (empty($tModel)) {
 						$tModel = '_'.$oID.'.'.$vID;

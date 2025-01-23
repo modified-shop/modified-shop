@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -414,21 +414,7 @@ class OttoConfigure extends MagnaCompatibleConfigure {
     }
 
     protected function getAuthValuesFromPost() {
-        $nUser = trim($_POST['conf'][$this->marketplace.'.username']);
-        $nPass = trim($_POST['conf'][$this->marketplace.'.password']);
-        $nPass = $this->processPasswordFromPost('password', $nPass);
-
-        if (empty($nUser)) {
-            unset($_POST['conf'][$this->marketplace.'.username']);
-        }
-        if ($nPass === false) {
-            unset($_POST['conf'][$this->marketplace.'.password']);
-            return false;
-        }
-        return array(
-            'Username' => $nUser,
-            'Password' => $nPass,
-        );
+        return array();
     }
 
     protected function getFormFiles() {
@@ -469,5 +455,79 @@ class OttoConfigure extends MagnaCompatibleConfigure {
             );
             return;
         }
+    }
+
+    /**
+     * Token Button + Popup functionality
+     *
+     * @param $args
+     * @param $value
+     * @return string
+     */
+    public static function OttoGetToken($args, &$value = '') {
+        global $_url, $_modules;
+        $apiRequest = 'GetOauthTokenCreationLink';
+        $buttonId = 'requestToken';
+
+        $content = '<input class="ml-button mlbtn-action" type="button" value="'.ML_BUTTON_TOKEN_NEW.'" id="'.$buttonId.'"/>';
+
+        ob_start(); ?>
+
+        <script type="text/javascript">/*<![CDATA[*/
+            $(document).ready(function () {
+                $('#<?php echo $buttonId; ?>').click(function () {
+                    jQuery.blockUI(blockUILoading);
+                    jQuery.ajax({
+                        'method': 'get',
+                        'url': '<?php echo toURL($_url, array('what' => $apiRequest, 'kind' => 'ajax'), true); ?>',
+                        'success': function (data) {
+                            // some shop systems attach error messages, warnings or even notices
+                            // to the output, which would be fatal here, so we strip it away
+                            if (data.indexOf('<style') > 0) {
+                                data = data.substring(0, data.indexOf('<style'));
+                            }
+                            jQuery.unblockUI();
+                            myConsole.log('ajax.success', data);
+                            if (data == 'error') {
+                                $('<div></div>')
+                                    .attr('title', '<?php echo json_encode(str_replace('{#marketplace#}', $_modules[$_GET['module']]['title'], ML_ERROR_CREATE_TOKEN_LINK_HEADLINE)); ?>.')
+                                    .html('<?php echo json_encode(str_replace('{#marketplace#}', $_modules[$_GET['module']]['title'], ML_ERROR_CREATE_TOKEN_LINK_HEADLINE)); ?>.')
+                                    .jDialog();
+                            } else {
+                                var hwin = window.open(data, "popup", "resizable=yes,scrollbars=yes");
+                                if (hwin.focus) {
+                                    hwin.focus();
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+            /*]]>*/</script>
+
+        <?php
+        $content .= ob_get_contents();
+        ob_end_clean();
+
+        return $content;
+    }
+    protected function needToSetCredential() {
+        return false;
+    }
+}
+
+if (isset($_GET['what'])) {
+    if ($_GET['what'] == 'GetOauthTokenCreationLink') {
+        $iframeURL = 'error';
+        try {
+            $result = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'GetOauthTokenCreationLink'
+            ));
+            $iframeURL = $result['DATA']['TokenLink'];
+        } catch (MagnaException $e) {
+            echo print_m($e, '$e');
+        }
+        echo $iframeURL;
+        exit();
     }
 }

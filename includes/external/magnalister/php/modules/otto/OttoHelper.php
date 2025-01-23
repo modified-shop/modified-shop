@@ -850,11 +850,11 @@ class OttoHelper extends AttributesMatchingHelper {
     }
 
     private function setDefaultFiledsOnIndependentAttributes($utf8Code) {
-        $array = [
+        $array = array(
             'Kind' => "FreeText",
             'Required' => "1",
             'Values' => "true"
-        ];
+        );
 
         switch ($utf8Code) {
             case 'EAN':

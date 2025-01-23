@@ -123,6 +123,12 @@ $(document).ready(function() {
         } else {
             $this->form['prepare']['fields']['shippingprofile']['values'] = array('');
         }
+        # Etsy changes the "whenmade" entry "2020-...." each year
+        $tmpWhenmadeValues = array_slice($this->form['prepare']['fields']['whenmade']['values'], 0, 1);
+        $tmpWhenmadeValues['2020_'.date('Y')] = '2020-'.date('Y');
+        array_shift($this->form['prepare']['fields']['whenmade']['values']);
+        array_shift($this->form['prepare']['fields']['whenmade']['values']);
+        $this->form['prepare']['fields']['whenmade']['values'] = array_merge($tmpWhenmadeValues, $this->form['prepare']['fields']['whenmade']['values']);
     }
 
     public static function zeroStockSyncConfirmationPopup() {

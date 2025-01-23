@@ -128,6 +128,7 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 			}
 
 			$this->form['prepare']['fields']['shippingtimeMatching']['procFunc'] = array($this, 'confShippingtimeMatching');
+			mlGetOrderStatus($this->form['orders']['fields']['fbkstatus']);
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
             mlPresetTrackingCodeMatching($this->mpID, 'hitmeister.orderstatus.carrier.dbmatching', 'hitmeister.orderstatus.trackingcode.dbmatching');
@@ -187,6 +188,15 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 			$curSite = getDBConfigValue('hitmeister.site', $this->mpID, false);
 ?>
 <script type="text/javascript">/*<![CDATA[*/
+		$(document).ready(function() {
+			$('#config_hitmeister_currency_key').val($('#config_hitmeister_site').val());
+			$('#config_hitmeister_currency_key').prop('disabled', true);
+		});
+		jQuery(function ($) {
+			$('form').bind('submit', function () {
+			$('#config_hitmeister_currency_key').prop('disabled', false);
+                        });
+		});
 		$('#config_hitmeister_site').change(function() {
 			var s = $(this);
 			if (s.val() == '<?php echo $curSite; ?>') return true;

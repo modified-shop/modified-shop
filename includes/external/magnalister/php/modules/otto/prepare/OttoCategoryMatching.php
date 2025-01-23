@@ -402,14 +402,16 @@ class OttoCategoryMatching {
             );
         }
 
-        $aFinalBrands = [
-            ['text' => ML_OTTO_LABEL_MATCHING_OPTIONS, 'children' => [
-                ['id' => 'all', 'text' => 'All']
-            ]],
-            ['text' => ML_OTTO_LABEL_SHOP_VALUES, 'children' => $sBrands],
-        ];
+        $aFinalBrands = array(
+            array('text' => ML_OTTO_LABEL_MATCHING_OPTIONS, 'children' => array(
+                array('id' => 'all', 'text' => 'All')
+            )),
+            array('text' => ML_OTTO_LABEL_SHOP_VALUES, 'children' => $sBrands),
+        );
 
         $sSearch = $brandfilterSearch;
+        $iOffset = 0;
+        $iLength = 50;
         if (!empty($sSearch)) {
             $sBrands = array();
             foreach ($aFinalBrands[1]['children'] as $sKey => &$aBrand) {
@@ -431,7 +433,7 @@ class OttoCategoryMatching {
         arrayEntitiesToUTF8($aFinalBrands[1]['children']);
 
         if(intval($brandfilterPage) !== 1) {
-            $aBrandPage = [['text' => ML_OTTO_LABEL_OTTO_VALUES]];
+            $aBrandPage = array(array('text' => ML_OTTO_LABEL_OTTO_VALUES));
             $aBrandPage[0]['children'] = $aFinalBrands[1]['children'];
 
             $aFinalBrands = $aBrandPage;
@@ -479,13 +481,13 @@ class OttoCategoryMatching {
             );
         }
 
-        $aFinalBrands = [
-            ['text' => ML_OTTO_LABEL_MATCHING_OPTIONS, 'children' => [
-                ['id' => 'auto', 'text' => 'Auto-match'], 
-                ['id' => 'auto', 'text' => 'Undo-matching']
-            ]],
-            ['text' => ML_OTTO_LABEL_OTTO_VALUES, 'children' => $ottoBrands],
-        ];
+        $aFinalBrands = array(
+            array('text' => ML_OTTO_LABEL_MATCHING_OPTIONS, 'children' => array(
+                array('id' => 'auto', 'text' => 'Auto-match'),
+                array('id' => 'auto', 'text' => 'Undo-matching')
+            )),
+            array('text' => ML_OTTO_LABEL_OTTO_VALUES, 'children' => $ottoBrands),
+        );
 
         $sSearch = $brandfilterSearch;
         if (!empty($sSearch)) {
@@ -508,7 +510,7 @@ class OttoCategoryMatching {
         $aFinalBrands[1]['children'] = array_slice($aFinalBrands[1]['children'], $iOffset, $iLength);
 
         if(intval($brandfilterPage) !== 1) {
-            $aBrandPage = [['text' => ML_OTTO_LABEL_OTTO_VALUES]];
+            $aBrandPage = array(array('text' => ML_OTTO_LABEL_OTTO_VALUES));
             $aBrandPage[0]['children'] = $aFinalBrands[1]['children'];
 
             $aFinalBrands = $aBrandPage;

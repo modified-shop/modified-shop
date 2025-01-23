@@ -26,6 +26,19 @@ class HitmeisterMarketplace extends MagnaCompatMarketplace {
     # Hitmeister uses EANs to identify products. Don't allow multiple products with the same EAN,
     # as this would make the identification unpredictable and break the synchronisation.
 
+    public function checkCurrency() {
+        $currency = getCurrencyFromMarketplace($this->mpID);
+        if (empty($currency)) {
+            $site = getDBConfigValue('hitmeister.site', $this->mpID, 'de');
+            $currencies = HitmeisterHelper::GetCurrencies();
+            if (!empty($currencies[$site])) {
+                setDBConfigValue('hitmeister.currency.key', $this->mpID, $currencies[$site]);
+                setDBConfigValue('hitmeister.currency', $this->mpID, $currencies[$site]);
+            }
+        }
+        parent::checkCurrency();
+    }
+
     protected function extraChecks() {
         global $_MagnaSession;
         // the select field has country_iso as keys

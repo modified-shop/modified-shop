@@ -458,7 +458,8 @@ function generateHoodCategoryPath(cID, viewElem) {
 		},
 		success: function(data) {
 //			viewElem.html(data);
-			viewElem.find('select').append('<option selected="selected" value="'+cID+'">'+data+'</option>');
+			viewElem.find('select').append('<option selected="selected" value="' + cID + '">' + data + '</option>');
+            $('#PrimaryCategory').trigger('change');
 		},
 		error: function() {
 		},
@@ -528,11 +529,20 @@ function startCategorySelector(callback, kind) {
 		}
 	});
 }
+    var mpCategorySelector = (function () {
+        return {
+            addCategoriesEventListener: addHoodCategoriesEventListener,
+            getCategoryPath: function (e) {
+                e.html(finalHoodCategoryPath);
+            },
+            startCategorySelector: startCategorySelector
+        }
+    })();
 
-$(document).ready(function() {
-	addHoodCategoriesEventListener($('#hoodCats'));
-});
-/*]]>*/</script>
+    $(document).ready(function () {
+        mpCategorySelector.addCategoriesEventListener($('#hoodCats')); // new 20190131
+    });
+</script>
 <?php
 		$html .= ob_get_contents();	
 		ob_end_clean();
@@ -612,6 +622,13 @@ $(document).ready(function() {
 
 				break;
 			}
+            case 'GetMpCategoryAttributes': {
+                if (isset($_POST['cId'])) {
+                    return json_encode(HoodHelper::gi()->getAttributesFromMP($_POST['cId']));
+                } else {
+                    return '';
+                }
+            }
 			default: {
 				return json_encode(array(
 					'error' => ML_HOOD_ERROR_REQUEST_INVALID

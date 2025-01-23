@@ -155,6 +155,21 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			}
 		}
 
+		if (!empty($aPropertiesRow['GPSRData'])) {
+			$aGPSRData = json_decode($aPropertiesRow['GPSRData'], true);
+			foreach ($aGPSRData as $sGPSRKey => $sGPSRValue) {
+				// check24 uses umlauts (we don't internally)
+				if ($sGPSRKey == 'Hersteller_Strasse_Hausnummer') {
+					$sGPSRKey = 'Hersteller_Straße_Hausnummer';
+				} else if ($sGPSRKey == 'Verantwortliche_Person_fuer_EU_Strasse_Hausnummer') {
+					$sGPSRKey = 'Verantwortliche_Person_für_EU_Straße';
+				} else if (strpos($sGPSRKey, 'Verantwortliche_Person_fuer_EU_') === 0) {
+					$sGPSRKey = str_replace('Verantwortliche_Person_fuer', 'Verantwortliche_Person_für', $sGPSRKey);
+				}
+				$aData['submit'][$sGPSRKey] = $sGPSRValue;
+			}
+		}
+
 		if (empty($aProduct['Variations']) === false) {
 			$aData['submit']['Variations'] = $aProduct['Variations'];
 		}

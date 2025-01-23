@@ -624,7 +624,11 @@ class MLConfigurator {
 				if (isset($item['formatstr']) && !empty($item['formatstr'])) {
 					$value = sprintf($item['formatstr'], $value);
 				}
-				$item['cssClasses'][] = 'fullwidth';
+				if (is_array($item['cssClasses'])) {
+					$item['cssClasses'][] = 'fullwidth';
+				} else {
+					$item['cssClasses'] = array($item['cssClasses'], 'fullwidth');
+				}
 
 				$class = ' class="'.implode(' ', $item['cssClasses']).'"';
 				if (isset($item['inputLabel']) && (!empty($item['inputLabel']))) {
@@ -656,7 +660,7 @@ class MLConfigurator {
 							}
 						}
 					} else {
-						$html .= '<option value="'.$k.'"'.(((strlen((string)$value) == strlen((string)$k)) && ($value.'' === $k.'')) ? ' selected="selected"' : '').'>'.(!preg_match('/&[^\s;]*;/', $v) ? fixHTMLUTF8Entities($v) : $v).'</option>'."\n";
+						$html .= '<option value="'.$k.'"'.(((strlen((string)$value) == strlen((string)$k)) && ($value.'' === $k.'')) ? ' selected="selected"' : '').(array_key_exists('disableditems', $item) && in_array($k, $item['disableditems']) ? ' disabled="disabled"' : '').'>'.(!preg_match('/&[^\s;]*;/', $v) ? fixHTMLUTF8Entities($v) : $v).'</option>'."\n";
 					}
 				}
 				$html .= '</select>'."\n";
@@ -875,7 +879,18 @@ class MLConfigurator {
                 $html .= $this->getFileBrowserHTMLOutput($item, $idkey, $value);
                 break;
             }
+            case 'tooltip': {
+                $html .= $this->getTooltipHtmlOutput($item, 'config_'.$idkey);
+
+                break;
+            }
 		}
+
+        if ('tooltip' != $item['type'] && array_key_exists('tooltip', $item)) {
+            $item['type'] = 'tooltip';
+            $html .= $this->renderInput($item);
+        }
+
 		return $html;
 	}
 	
@@ -1610,6 +1625,42 @@ class MLConfigurator {
     private function getFileBrowserHTMLOutput($item, $idkey, $value) {
         require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FileBrowserHelper.php');
         return MLFileBrowserHelper::gi()->getView($item, $idkey, $this->realUrl, $value);
+    }
+
+    /**
+     * Return the HTML output for a tooltip to a specific item.
+     *
+     * @param array $item
+     * @param string $id_key
+     * @return false|string
+     */
+    private function getTooltipHtmlOutput($item, $id_key) {
+        ob_start();
+        ?>
+        <script>
+            (function ($) {
+                $(document).ready(function () {
+                    let $tooltipField = $('#<?php echo $id_key; ?>');
+                    $tooltipField.on('mouseover', function () {
+                        $tooltipField.parent().css('position', 'relative');
+                        let $tooltip = $('<div class="ml-tooltip">' +
+                            '<div class="ml-tooltip-arrow"></div>' +
+                            '<div class="ml-tooltip-content">' +
+                            '<?php echo str_replace("'", "\\'", $item['tooltip']); ?>' +
+                            '</div></div>');
+                        $tooltip.insertAfter($tooltipField);
+                    });
+                    $tooltipField.on('mouseout', function () {
+                        $tooltipField.next('.ml-tooltip').remove();
+                    });
+                });
+            })(jQuery);
+        </script>
+        <?php
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        return $html;
     }
 
     private function renderFileBrowserField($args, $sKey) {

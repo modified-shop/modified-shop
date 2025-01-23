@@ -567,7 +567,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		if ($this->_debugLevel >= self::DBGLV_MED) {
 			$this->log(print_m($this->unprocessed, '$this->unprocessed'));
 		}
-		$this->out($this->marketplace.' ('.$this->mpID.') SyncOrderStatus: Unprocessed = '. implode('", "', $this->unprocessed)."\n");
+		$this->out($this->marketplace.' ('.$this->mpID.') SyncOrderStatus: Unprocessed = '. implode('", "', array_keys($this->unprocessed))."\n");
 		if ($this->_debugDryRun) {
 			return;
 		}

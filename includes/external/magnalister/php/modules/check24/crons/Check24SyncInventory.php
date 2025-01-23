@@ -41,13 +41,22 @@ class Check24SyncInventory extends MagnaCompatibleSyncInventory {
 		@set_time_limit(180);
 		$this->identifySKU();
 
+		if (($hp = magnaContribVerify('Check24SyncInventory_PreUpdateItem', 1)) !== false) {
+			require($hp);
+		}
+
 		$title = isset($this->cItem['Title']) ? $this->cItem['Title'] : 'unknown';
 
 		if ((int)$this->cItem['pID'] <= 0) {
-			$this->log("\n" . $title . ' not found');
-			return;
+            $this->log("\n".
+                'SKU: '.$this->cItem['SKU'].' ('.$title.') not found (Marketplace: '.$this->marketplaceTitle.')'
+            );
+            return;
 		} else {
-			$this->log("\n" . $title . ' found (pID: ' . $this->cItem['pID'] . ')');
+            $this->log("\n".
+                'SKU: '.$this->cItem['SKU'].' ('.$title.') found ('.
+                'pID: '.$this->cItem['pID'].'; aID: '.$this->cItem['aID'].'; Marketplace: '.$this->marketplaceTitle.')'
+            );
 		}
 
 		// Prepare product

@@ -691,6 +691,16 @@ $_mainTitle = '';
 include_once(DIR_MAGNALISTER_FS_INCLUDES.'modules.php');
 /* Must be loaded after loading the language definitions. */
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/magnaFunctionLib.php');
+/* {Hook} "init_extendModules" : define additional modules
+    Here, you can define additional modules by extending the $modules array.
+    Variables that can be used:
+    <ul>
+        <li>$modules</li>
+    </ul>
+*/
+if (function_exists('magnaContribVerify') && (($hp = magnaContribVerify('init_extendModules', 1)) !== false)) {
+    require($hp);
+}
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/classes/BrowserDetect.php');
 /* Must be loaded after magnaFunctionLib */
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MLProduct.php');
@@ -932,6 +942,15 @@ MLProduct::gi()->setOptions(array (
 	// todo: Set default to 'false'
 	'useGambioProperties' => MAGNA_GAMBIO_VARIATIONS && (getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true')
 ));
+
+/* {Hook} "init_additionalModules" : include additional modules
+    Here, you can set the address of an extra (contrib) module,
+    if defined under init_extendModules hookpoint.
+    Variables that can be used:
+*/
+if (function_exists('magnaContribVerify') && (($hp = magnaContribVerify('init_additionalModules', 1)) !== false)) {
+    require($hp);
+}
 
 /* Testpages */
 if (isset($_GET['module']) && in_array($_GET['module'], array('apitest', 'generictests', 'dev'))) {

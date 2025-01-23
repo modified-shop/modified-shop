@@ -620,7 +620,7 @@ function renderB2B($data) {
 						   name="QuantityLowerBound1"
 						   value="<?php echo isset($data['QuantityLowerBound1']) ? $data['QuantityLowerBound1'] : ''; ?>">
 					<label for="QuantityPrice1"><?php echo ML_LABEL_ORDER_TOTAL_DISCOUNT ?></label>:&nbsp;
-					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityLowerBound1"
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityPrice1"
 						   name="QuantityPrice1"
 						   value="<?php echo isset($data['QuantityLowerBound1']) ? $data['QuantityLowerBound1'] : ''; ?>">
 				</td>

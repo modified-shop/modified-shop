@@ -679,7 +679,7 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
 
     public function renderShippingCosts($var1, $var2, $var3) {
         $deliveryModes = CdiscountConfigure::getDeliveryModes();
-        $array = [
+        $array = array(
             'label' => 'Versandkosten',
             'key' => 'cdiscount.shippingprofile',
             'type' => 'duplicate',
@@ -687,36 +687,36 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
             'subtype' => 'extern',
             'procFunc' => 'CdiscountConfigure::shippingProfile',
             'params' =>
-                ['subfields' => [
-                    'method' => [
+                array('subfields' => array(
+                    'method' => array(
                         'label' => 'Name des Versandprofils',
                         'key' => 'cdiscount.shippingprofile.name',
                         'name' => 'Name',
                         'type' => 'selection',
                         'values' => $deliveryModes,
                         'selectedValues' => $var1,
-                        'cssClasses' => ['autoWidth']
-                    ],
-                    'fee' => [
+                        'cssClasses' => array('autoWidth')
+                    ),
+                    'fee' => array(
                         'label' => 'Versandgebühr (€)',
                         'key' => 'cdiscount.shippingprofile.fee',
                         'name' => 'Fee',
                         'type' => 'text',
                         'selectedValues' => $var2,
-                        'cssClasses' => ['autoWidth']
-                    ],
-                    'feeadditional' => [
+                        'cssClasses' => array('autoWidth')
+                    ),
+                    'feeadditional' => array(
                         'label' => 'Zusätzliche Versandgebühren (€)',
                         'key' => 'cdiscount.shippingprofile.feeadditional',
                         'name' => 'Fee2',
                         'type' => 'text',
                         'selectedValues' => $var3,
-                        'cssClasses' => ['autoWidth']
-                    ],
-                ],
-            ],
-            'cssClasses' => ['orderConfig']
-        ];
+                        'cssClasses' => ('autoWidth')
+                    ),
+                ),
+            ),
+            'cssClasses' => array('orderConfig')
+        );
 
         return $this->renderDuplicateField($array, 'cdiscount_shippingprofile', false);
     }

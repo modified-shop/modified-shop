@@ -71,6 +71,16 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 	protected function initSync() {
 		require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 		$this->simplePrice = new SimplePrice();
+
+		/* {Hook} "SyncInventory_initSync": Runs beginning of an the synchronization for a marketplace. Here you can add or modify any kind of settings for the synchronization.<br>
+			   Variables that can be used: 
+			   <ul><li>$this->mpID: The ID of the marketplace.</li>
+			       <li>$this->marketplace: The name of the marketplace.</li>
+			   </ul>
+		 */
+		if (($hp = magnaContribVerify('SyncInventory_initSync', 1)) !== false) {
+			require($hp);
+		}
 	}
 	
 	protected function initMLProduct() {

@@ -973,6 +973,11 @@ if (!defined('_VALID_XTC')) {
 	define('_VALID_XTC', true);
 }
 
+//modified - run callback processes also if shop is offline
+if (!defined('_MODIFIED_SHOP_LOGIN')) {
+    define('_MODIFIED_SHOP_LOGIN', 1);
+}
+
 # Modus festlegen
 if (!defined('MAGNA_CALLBACK_MODE')) {
 	if (basename($_SERVER['SCRIPT_NAME']) == basename(__FILE__)) {

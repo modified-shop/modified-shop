@@ -1,0 +1,43 @@
+{
+    "country": {
+        "headline": "Countries",
+        "fields": {
+            "shippingorigin": {
+                "label": "Versand aus",
+                "desc": "Aus welchem Land werden Ihre Produkte verschickt<br><br>METRO Vorgabe: Aktuell ist keine Cross Border Trade m\u00f6glich.",
+                "key": "_#_platform_#_.shippingorigin",
+                "type": "extern",
+                "values": {
+                    "DE_MAIN": "Deutschland",
+                    "ES_MAIN": "Spanien",
+                    "IT_MAIN": "Italien",
+                    "PT_MAIN": "Portugal",
+                    "NL_MAIN": "Niederlande",
+                    "FR_MAIN": "Frankreich"
+                },
+                "default": "DE_MAIN",
+                "submit": "Access.Shipping.Origin",
+                "procFunc": "MetroConfigure::getShippingOriginHtml"
+            },
+            "shippingdestination": {
+                "label": "METRO Site",
+                "desc": "Auf welchem METRO Marktplatz Land sollen Ihre Produkte verkauft werden<br><br>METRO Vorgabe: Aktuell ist keine Cross Border Trade m\u00f6glich.",
+                "key": "_#_platform_#_.shippingdestination",
+                "data": {
+                    "origin-destination-combinations": []
+                },
+                "type": "selection",
+                "values": {
+                    "DE_MAIN": "METRO MARKETS Germany",
+                    "ES_MAIN": "METRO MARKETS Spain",
+                    "IT_MAIN": "METRO MARKETS Italy",
+                    "PT_MAIN": "METRO MARKETS Portugal",
+                    "NL_MAIN": "METRO MARKETS Netherlands",
+                    "FR_MAIN": "METRO MARKETS France"
+                },
+                "default": "DE_MAIN",
+                "submit": "Access.Shipping.Destination"
+            }
+        }
+    }
+}

@@ -87,10 +87,12 @@ if (isset($_POST['conf']['general.passphrase'])) {
                 $sqlConfigFieldKey => $sqlConfigValuePassphrase
 			));
 		} else {
-			MagnaDB::gi()->insert(TABLE_CONFIGURATION, array (
-                $sqlConfigFieldValue => $_POST['conf']['general.passphrase'],
-                $sqlConfigFieldKey => $sqlConfigValuePassphrase
-			));
+			$aDataForConfigurationTable = array (
+                            $sqlConfigFieldValue => $_POST['conf']['general.passphrase'],
+                            $sqlConfigFieldKey => $sqlConfigValuePassphrase
+			);
+			MagnaDB::gi()->addNonNullableEntries($aDataForConfigurationTable, TABLE_CONFIGURATION);
+			MagnaDB::gi()->insert(TABLE_CONFIGURATION, $aDataForConfigurationTable);
 		}
 	}
 }

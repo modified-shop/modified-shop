@@ -348,7 +348,6 @@ class AmazonCheckinSubmit extends CheckinSubmit {
             $vItem['variation_theme'] = $sVariationTheme;
 
             $vItem['Attributes'] = $this->fixVariationCategoryAttributes($preparedAttributes, $product, $vItem);
-
 			if (isset($vItem['Attributes']['ConditionType'])) {
 				unset($vItem['Attributes']['ConditionType']);
 			}
@@ -430,6 +429,19 @@ class AmazonCheckinSubmit extends CheckinSubmit {
             // Set MerchantShippingGroup also for Variations!
             foreach ($data['submit']['Variations'] as &$varItem) {
                 $varItem['Attributes']['MerchantShippingGroupName'] = $aTemplates[$defaultTemplateIndex];
+            }
+        }
+        // ensure that variations have all attributes (also custom attributes)
+        if (    is_array($data['submit']['Attributes'])
+             && isset($data['submit']['Variations'])
+             && is_array($data['submit']['Variations'])) {
+            foreach($data['submit']['Variations'] as &$varItem) {
+                if (!is_array($varItem['Attributes'])) continue;
+                foreach ($data['submit']['Attributes'] as $sAttrName => $sAttrValue) {
+                    if (!array_key_exists($sAttrName, $varItem['Attributes'])) {
+                        $varItem['Attributes'][$sAttrName] = $sAttrValue;
+                    }
+                }
             }
         }
 
@@ -863,6 +875,30 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		}
 		*/
 	}
+
+    protected function preSubmit(&$request) {
+        // if you checked to prefer matching we use leadtimetoship time from configuration
+        if (getDBConfigValue(array('amazon.leadtimetoshipmatching.prefer', 'val'), $this->mpID, false)) {
+            foreach ($request['DATA'] as &$product) {
+                $products_shippingtime = MagnaDB::gi()->fetchOne("
+            SELECT products_shippingtime
+              FROM ".TABLE_PRODUCTS." p
+             WHERE p.products_model = '".$product['SKU']."'
+        ");
+
+                $iTime = getDBConfigValue(
+                    array('amazon.leadtimetoshipmatching.values', $products_shippingtime),
+                    $this->mpID,
+                    getDBConfigValue('amazon.leadtimetoship', $this->mpID, '-')
+                );
+                // if matching is not empty in the configuration it means we use that value for shipping time
+                // instead of the value stored in the preparation form
+                if ($iTime != '-') {
+                    $product['LeadtimeToShip'] = $iTime;
+                }
+            }
+        }
+    }
 
 	protected function postSubmit() {
         $doUploadItems = true;

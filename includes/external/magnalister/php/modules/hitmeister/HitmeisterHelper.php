@@ -119,15 +119,24 @@ class HitmeisterHelper extends AttributesMatchingHelper
 	
 		$sites['values'] = array();
 
-		if (   isset($_MagnaSession[$mpID]['Sites'])
-			&& !empty($_MagnaSession[$mpID]['Sites'])
-		) {
-			return $_MagnaSession[$mpID]['Sites'];
+		if (!empty($_MagnaSession[$mpID]['Sites'])) {
+			$discord_cache = false;
+			// we still have a cache from VERSION 1, discard it and read it from the API again
+			foreach ($_MagnaSession[$mpID]['Sites'] as $site) {
+				if (!is_array($site)) {
+					$discord_cache = true;
+				}
+			}
+
+			if (!$discord_cache) {
+				return $_MagnaSession[$mpID]['Sites'];
+			}
 		}
 		
 		try {
 			$sitesData = MagnaConnector::gi()->submitRequest(array(
-				'ACTION' => 'GetSites'
+				'ACTION' => 'GetSites',
+				'VERSION' => 2
 			));
 		} catch (MagnaException $e) {
 			$sitesData = array(
@@ -139,8 +148,8 @@ class HitmeisterHelper extends AttributesMatchingHelper
 			return false;
 		}
 
-		foreach ($sitesData['DATA'] as &$site) {
-			$site = stringToUTF8($site);
+		foreach ($sitesData['DATA'] as $key => $site) {
+			$sitesData['DATA'][$key]['label'] = stringToUTF8($site['label']);
 		}
 		
 		$_MagnaSession[$mpID]['Sites'] = $sitesData['DATA'];
@@ -148,7 +157,15 @@ class HitmeisterHelper extends AttributesMatchingHelper
 	}
 
         public static function GetSitesConfig(&$field) {
-            $field['values'] = self::GetSites();
+            $field['values'] = array();
+            $field['disableditems'] = array();
+            foreach (self::GetSites() as $key => $site) {
+                $field['values'][$key] = $site['label'].
+                    (!$site['configured'] ? ' ['.ML_HITMEISTER_NOT_CONFIGURED_IN_KAUFLAND_DE_ACCOUNT.']' : '');
+                if (!$site['configured']) {
+                    $field['disableditems'][] = $key;
+                }
+            }
         }
 
 	public static function GetCurrencies() {

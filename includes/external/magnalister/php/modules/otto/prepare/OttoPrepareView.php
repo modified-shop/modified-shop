@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -144,7 +144,7 @@ class OttoPrepareView extends MagnaCompatibleBase {
      */
     protected function renderSinglePrepareView($data) {
 
-        $productImagesHTML = '';
+        $productImagesHTML = $productMainImagesHTML = '';
         if (!empty($data['GalleryPictures']['Images'])) {
             $maxImages = (int)self::OTTO_MAX_IMAGES;
 
@@ -165,11 +165,27 @@ class OttoPrepareView extends MagnaCompatibleBase {
                     --$maxImages;
                 }
             }
-            #$productImagesHTML .= '<br style="clear:both">'.ML_HOOD_PICTURE_PATH.': <input class="fullwidth" type="text" name="GalleryPictures[BaseUrl]" value="'.htmlspecialchars($data['GalleryPictures']['BaseUrl']).'">';
             $productImagesHTML .= '<input type="hidden" name="GalleryPictures[BaseUrl]" value="'.htmlspecialchars($data['GalleryPictures']['BaseUrl']).'">';
+            foreach ($data['GalleryPictures']['Images'] as $img => $checked) {
+                if (empty($data['MainImage']) || !in_array($data['MainImage'], array_keys($data['GalleryPictures']['Images']))) {
+                    $data['MainImage'] = key($data['GalleryPictures']['Images']);
+                }
+                $productMainImagesHTML .= '
+					<table class="imageBox"><tbody>
+						<tr><td class="image"><label for="mainimage_' . $img . '">' . generateProductCategoryThumb($img, 60, 60) . '</label></td></tr>
+						<tr><td class="cb">
+							<input type="radio" id="mainimage_' . $img . '" name="MainImage"
+							       value="' . $img . '" ' . ($img === $data['MainImage'] ? 'checked="checked"' : '') . '/>
+						</td></tr>
+					</tbody></table>';
+            }
+//            $productImagesHTML .= '<input type="hidden" name="MainImage[BaseUrl]" value="'.htmlspecialchars($data['GalleryPictures']['BaseUrl']).'">';
         }
         if (empty($productImagesHTML)) {
             $productImagesHTML = '&mdash;';
+        }
+        if (empty($productMainImagesHTML)) {
+            $productMainImagesHTML = '&mdash;';
         }
 
         $features = '';
@@ -199,18 +215,35 @@ class OttoPrepareView extends MagnaCompatibleBase {
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 					<th>'.ML_GENERIC_ITEM_DESCRIPTION.'<span class="bull">&bull;</span></th>
 					<td class="input">
-                        <textarea class="fullwidth" name="Description" id="Description" rows="40" cols="100">'.fixHTMLUTF8Entities($data['Description'],
-                ENT_COMPAT).'</textarea>
+						'.magna_wysiwyg(array(
+							'id' => 'Description',
+							'name' => 'Description',
+							'class' => 'fullwidth',
+							'cols' => '80',
+							'rows' => '40',
+							'wrap' => 'virtual',
+					), fixHTMLUTF8Entities($data['Description'], ENT_COMPAT)).'
 					</td>
 					<td class="info">'.ML_OTTO_PREPARE_PRODUCT_DESCRIPTION_INFO.'</td>
 				</tr>
 				
-				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
-					<th>'.ML_OTTO_PRODUCT_IMAGES.'<span class="bull">&bull;</span></th>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_OTTO_PRODUCT_MAINIMAGES . '<span class="bull">&bull;</span>
+					<div style="float: right; width: 16px; height: 16px; background: transparent url(\'' . DIR_MAGNALISTER_WS . 'images/information.png\') no-repeat 0 0;cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_1" title="Infos">
+        <span style="display: none">' . ML_OTTO_PRODUCT_MAIN_IMAGE_INFO . '</span>
+        </div>
+        </th>
 					<td class="input">
-						'.$productImagesHTML.'
+						' . $productMainImagesHTML . '
 					</td>
 					<td class="info">'.ML_OTTO_PREPARE_PRODUCT_IMAGES_INFO.'</td>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_OTTO_PRODUCT_IMAGES . '<span class="bull">&bull;</span></th>
+					<td class="input">
+						' . $productImagesHTML . '
+					</td>
+					<td class="info">' . ML_OTTO_PREPARE_PRODUCT_IMAGES_INFO . '</td>
 				</tr>
 				<tr class="spacer">
 				    <td colspan="3">
@@ -231,6 +264,19 @@ class OttoPrepareView extends MagnaCompatibleBase {
         ob_start();
         ?>
         </tbody>
+        <div id="infodiag" class="dialog2" title="<?php echo ML_LABEL_INFORMATION ?>"></div>
+        <script type="text/javascript">
+            /*<![CDATA[*/
+            $(document).ready(function () {
+                $('#desc_1').click(function () {
+                    var d = $('#desc_1 span').html();
+                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
+                });
+
+            });
+            /*]]>*/
+        </script>
+
         <?php echo $this->renderMultiPrepareView(array($data), 'single'); ?>
         <?php
         $html .= ob_get_clean();
@@ -513,7 +559,8 @@ class OttoPrepareView extends MagnaCompatibleBase {
         # Daten aus magnalister_otto_prepare (bereits frueher vorbereitet)
         $dbOldSelectionQuery = '
 		    SELECT ep.products_id, ep.products_model, ep.Description, ep.DeliveryTime, ep.DeliveryType,
-		           ep.PrimaryCategory, ep.PrimaryCategoryName, ep.ShopVariation, ep.CategoryIndependentShopVariation 
+		           ep.PrimaryCategory, ep.PrimaryCategoryName, ep.ShopVariation, ep.CategoryIndependentShopVariation, 
+		           ep.MainImage
 		      FROM '.TABLE_MAGNA_OTTO_PREPARE.' ep
 		';
         if ($keytypeIsArtNr) {
@@ -630,6 +677,16 @@ class OttoPrepareView extends MagnaCompatibleBase {
             if (!empty($dbSelection[0]['Description'])) {
                 $dbSelection[0]['Description'] = strip_tags($dbSelection[0]['Description'],
                     '<p><ul><ol><li><span><br><b>');
+
+                // Filter JNH Tab
+                if (getDBConfigValue('gambio.tabs.display', 0, 'h1') == 'none') {
+                    if (strpos($dbSelection[0]['Description'], '[TAB:')) {
+                        $dbSelection[0]['Description'] = substr($dbSelection[0]['Description'], 0, strpos($dbSelection[0]['Description'], '[TAB:'));
+                    }
+                } else {
+                    $dbSelection[0]['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<b>${1}</b>', $dbSelection[0]['Description']);
+                }
+
             }
             if (!empty($dbSelection[0]['ShortDescription'])) {
                 $dbSelection[0]['ShortDescription'] = strip_tags($dbSelection[0]['ShortDescription'],

@@ -40,3 +40,6 @@ if (false === getDBConfigValue('hitmeister.imagepath', $_MagnaSession['mpID'], f
 		: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;
 	setDBConfigValue('hitmeister.imagepath', $_MagnaSession['mpID'], $form['prepare']['fields']['imagepath']['default'], true);
 }
+
+# Status filter for matching = for apply
+setDBConfigValue('hitmeister.match.status', $_MagnaSession['mpID'], getDBConfigValue('hitmeister.apply.status', $_MagnaSession['mpID'], false), true);

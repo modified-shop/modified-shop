@@ -1476,6 +1476,7 @@ function loadConfigForm($lang, $files, $replace = array()) {
 //            $pageURL .= DIR_MAGNALISTER_WS.'config/'.$lang.'/'.$sPHPFileName;
 //            $fC = file_get_contents($pageURL);
 //        }
+        $replace['http:\/\/www.IhrShop.de\/'] = trim(json_encode(HTTP_SERVER.DIR_WS_CATALOG), ' "\/').'\/';
         if (!empty($replace)) {
             $fC = str_replace(array_keys($replace), array_values($replace), $fC);
         }

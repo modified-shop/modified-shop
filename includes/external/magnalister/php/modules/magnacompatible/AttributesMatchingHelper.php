@@ -1699,6 +1699,11 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             return false;
         }
 
+        if (    $tableSettings['Table']['table'] == TABLE_MANUFACTURERS
+             || $tableSettings['Alias'] == 'manufacturers_id' ) {
+            return $this->runManufacturersDbMatching($tableSettings, 'manufacturers_id', $where);
+        }
+
         if (empty($tableSettings['Alias'])) {
             $tableSettings['Alias'] = $defaultAlias;
         }
@@ -1727,14 +1732,21 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                     ');
             }
             default: {
-                if (    MagnaDB::gi()->columnExistsInTable('language_id', $tableSettings['Table']['table'])
-                     && (getDBConfigValue($this->marketplace.'.lang' , $this->mpId, 0) != 0)) {
+                // language column is sometimes called language_id, sometimes languages_id
+                if (MagnaDB::gi()->columnExistsInTable('language_id', $tableSettings['Table']['table'])) {
+                    $sLanguageColumn = 'language_id';
+                } else if (MagnaDB::gi()->columnExistsInTable('languages_id', $tableSettings['Table']['table'])) {
+                    $sLanguageColumn = 'languages_id';
+                } else {
+                    return '';
+                }
+                if (getDBConfigValue($this->marketplace.'.lang' , $this->mpId, 0) != 0) {
                     return (string) MagnaDB::gi()->fetchOne('
                         SELECT DISTINCT `' . $tableSettings['Table']['column'] . '`
                          FROM `' . $tableSettings['Table']['table'] . '`
                         WHERE `' . $tableSettings['Alias'] . '` = ' . $where . '
                           AND `' . $tableSettings['Table']['column'] . '` <> \'\'
-                          AND language_id = '.(int)getDBConfigValue($this->marketplace.'.lang' , $this->mpId, 0).'
+                          AND `'.$sLanguageColumn.'` = '.(int)getDBConfigValue($this->marketplace.'.lang' , $this->mpId, 0).'
                         LIMIT 1
                         ');
                 } else {
@@ -1742,6 +1754,91 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                 }
             }
         }
+    }
+
+     /**
+     * Helper method to execute a db matching query for manufacturer's data.
+     * (we get products_id as input, so we need to query for manufacturers_id first,
+     *  and then proceed with it)
+     * @return mixed
+     *   A string or false if the matching config is empty.
+     */
+    protected function runManufacturersDbMatching($tableSettings, $defaultAlias, $where) {
+        if (empty($tableSettings['Alias'])) {
+            $tableSettings['Alias'] = $defaultAlias;
+        }
+        if (!is_numeric($where)) {
+            $where = '"' . MagnaDB::gi()->escape($where) . '"';
+        }  
+
+
+        // We get products_id as input, so we must first detect the manufacturers_id of it
+        $sManufacturersId = (int)MagnaDB::gi()->fetchOne('
+            SELECT manufacturers_id
+              FROM '.TABLE_PRODUCTS.'
+             WHERE products_id = ' . $where
+        );
+        if (empty($sManufacturersId)) {
+            return '';
+        }
+
+        $iResultCount = (int)MagnaDB::gi()->fetchOne('
+            SELECT COUNT(DISTINCT ' . $tableSettings['Table']['column'] . ')
+             FROM `' . $tableSettings['Table']['table'] . '`
+            WHERE `manufacturers_id` = ' . $sManufacturersId . '
+              AND `' . $tableSettings['Table']['column'] . '` <> \'\'
+        ');
+
+        switch ($iResultCount) {
+            case (0) : {
+                return '';
+            }
+            case (1) : {
+                $sResult = (string) MagnaDB::gi()->fetchOne('
+                    SELECT DISTINCT `' . $tableSettings['Table']['column'] . '`
+                     FROM `' . $tableSettings['Table']['table'] . '`
+                    WHERE `manufacturers_id` = ' . $sManufacturersId . '
+                      AND `' . $tableSettings['Table']['column'] . '` <> \'\'
+                    ');
+                break; 
+            }
+            default: {
+                // language column is sometimes called language_id, sometimes languages_id
+                if (MagnaDB::gi()->columnExistsInTable('language_id', $tableSettings['Table']['table'])) {
+                    $sLanguageColumn = 'language_id';
+                } else if (MagnaDB::gi()->columnExistsInTable('languages_id', $tableSettings['Table']['table'])) {
+                    $sLanguageColumn = 'languages_id';
+                } else {
+                    return '';
+                }
+                if (getDBConfigValue($this->marketplace.'.lang' , $this->mpId, 0) != 0) {
+                    $sResult = (string) MagnaDB::gi()->fetchOne('
+                        SELECT DISTINCT `' . $tableSettings['Table']['column'] . '`
+                         FROM `' . $tableSettings['Table']['table'] . '`
+                        WHERE `manufacturers_id` = ' . $sManufacturersId . '
+                          AND `' . $tableSettings['Table']['column'] . '` <> \'\'
+                          AND `'.$sLanguageColumn.'` = '.(int)getDBConfigValue($this->marketplace.'.lang' , $this->mpId, 0).'
+                        LIMIT 1
+                        ');
+                } else {
+                    return '';
+                }
+                break;
+            }
+        }
+        // modified >= 3.1.3: If it's .._country_id, find the name
+        if (    strpos($tableSettings['Table']['column'], 'country_id') !== false
+             && is_numeric($sResult)) {
+            if (!function_exists('xtc_get_country_name')) {
+                if (file_exists(DIR_FS_CATALOG.'inc/xtc_get_country_name.inc.php')) {
+                    require_once(DIR_FS_CATALOG.'inc/xtc_get_country_name.inc.php');
+                }
+            }
+            if (function_exists('xtc_get_country_name')) {
+                $sResult = xtc_get_country_name($sResult);
+            }
+        }
+        return $sResult;
     }
 
     protected function fixHTMLUTF8Entities($code) {

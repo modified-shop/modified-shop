@@ -169,7 +169,7 @@ abstract class MLProductList {
 		return $this;
 	}
 	protected function getQuerySort(){
-		$sRequestSorting = $this->getRequest('sorting');
+		$sRequestSorting = $this->getRequest('sorting') OR $sRequestSorting = '';
 		$sSort = '';
 		$aRequestSorting = explode('-', $sRequestSorting);
 		if (

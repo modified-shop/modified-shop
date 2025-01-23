@@ -68,7 +68,11 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 		              ';
 		$addFrom   = 'LEFT JOIN '.TABLE_MAGNA_HITMEISTER_PREPARE.' hp ON (
 							hp.mpID=\''.$this->mpID.'\' 
-							AND hp.products_id=p.products_id
+							AND '.
+			('artNr' == getDBConfigValue('general.keytype', '0')
+			 ? 'hp.products_model=p.products_model'
+			 : 'hp.products_id=p.products_id'
+			).'
 					  )
                       '.$addFrom;
 		parent::setupQuery($addFields, $addFrom, $addWhere);
@@ -95,7 +99,7 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 	}
 
 	protected function getAdditionalHeadlines() {
-		return parent::getAdditionalHeadlines().'<td>Lieferzeit</td><td>Bearbeitungszeit</td>';
+		return parent::getAdditionalHeadlines().'<td>'.ML_AMAZON_LABEL_LEADTIME_TO_SHIP.'</td>';
 	}
 	
 	protected function getAdditionalItemCells($key, $dbRow) {
@@ -113,7 +117,6 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 			? $this->handlingtimeMatching[$dbRow['products_shippingtime']]
 			: $dbRow['HandlingTime']
 		;
-		$html = '<td>'.$this->shippingTimes[$shippingTime].'</td>';
 		$html .= '<td>'.$handlingTime.'</td>';
 
 		return parent::getAdditionalItemCells($key, $dbRow).$html;

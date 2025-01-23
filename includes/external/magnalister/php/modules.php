@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -983,8 +983,6 @@ $_modules = array(
         'logo' => 'otto',
         'displayAlways' => false,
         'requiredConfigKeys' => array (
-            'otto.username',
-            'otto.password',
             'otto.lang',
             'otto.product.vat',
             'otto.price.addkind',

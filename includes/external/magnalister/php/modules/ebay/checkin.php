@@ -33,12 +33,16 @@ require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/eBayCheckinSubmit.php');
 require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
 
 
-$cm = new CheckinManager(array(
+$cm = new CheckinManager(
+    array(
         'summaryView'   => 'eBaySummaryView',
-	'checkinView'   => $sView,
-	'checkinSubmit' => 'eBayCheckinSubmit'),
-	array(
-	'marketplace' => 'ebay')
+        'checkinView'   => $sView,
+        'checkinSubmit' => 'eBayCheckinSubmit'
+    ),
+    array(
+        'marketplace' => 'ebay',
+        'hasPurge' => false,
+    )
 );
 
 eBayRemoveDoublePrepareEntries();

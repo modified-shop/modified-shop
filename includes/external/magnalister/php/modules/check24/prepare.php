@@ -57,7 +57,15 @@ class Check24Prepare extends MagnaCompatibleBase {
 		} else if (!empty($aProductIDs)) {
 			$oProductSaver->saveMultipleProductProperties($aProductIDs, $itemDetails);
 		}
-		
+
+		if (count($oProductSaver->aErrors) > 0) {
+			$_POST['prepare'] = 'prepare';
+			foreach ($oProductSaver->aErrors as $sError) {
+				echo '<div class="errorBox">'.$sError.'</div>';
+			}
+			return;
+		}
+
 		MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 			'mpID' => $this->mpID,
 			'selectionname' => $this->prepareSettings['selectionName'],

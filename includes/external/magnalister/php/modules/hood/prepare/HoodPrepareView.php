@@ -64,8 +64,8 @@ class HoodPrepareView extends MagnaCompatibleBase {
 		           ep.Manufacturer, ep.ManufacturerPartNumber,
 		           ep.Title, ep.Subtitle, ep.Description, ep.StartPrice, ep.StartTime,
 		           ep.ShortDescription, ep.ConditionType, ep.noIdentifierFlag,
-		           ep.PrimaryCategory, ep.SecondaryCategory, ep.StoreCategory, ep.StoreCategory2, ep.StoreCategory3,
-		           ep.ListingType, ep.ListingDuration, ep.PaymentMethods, ep.ShippingServiceOptions,
+		           ep.PrimaryCategory, ep.SecondaryCategory, ep.StoreCategory, ep.StoreCategory2, ep.StoreCategory3, 
+		           ep.ShopVariation, ep.ListingType, ep.ListingDuration, ep.PaymentMethods, ep.ShippingServiceOptions,
 		           pd.products_name, pd.products_description,
 		           '.($shortDescColumnExists ? 'pd.products_short_description' : '"" AS products_short_description').',
 		           ep.GalleryPictures, ep.Features, ep.FSK, ep.USK
@@ -120,6 +120,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 		           AND selectionname="prepare" 
 		           AND session_id="' . session_id() . '"
 		';
+
 		$dbNewSelection = MagnaDB::gi()->fetchArray($dbNewSelectionQuery);
 		$dbSelection = array_merge(
 			is_array($dbOldSelection) ? $dbOldSelection : array(),
@@ -463,6 +464,81 @@ class HoodPrepareView extends MagnaCompatibleBase {
 		$html .= ob_get_clean();
 		return $html;
 	}
+
+    protected function renderAttributesTable() {
+        $mpAttributeTitle = str_replace('%marketplace%', 'Hood', ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
+        $mpOptionalAttributeTitle = str_replace('%marketplace%', 'Hood', ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
+        $mpCustomAttributeTitle = str_replace('%marketplace%', 'Hood', ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
+
+        $html = '
+		<tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
+			<tr class="headline">
+				<td colspan="1"><h4>'.$mpAttributeTitle.'</h4></td>
+				<td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
+			</tr>
+		</tbody>
+		<tbody id="tbodyDynamicMatchingInput" style="display:none;">
+			<tr>
+				<th></th>
+				<td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+				<td class="info"></td>
+			</tr>
+		</tbody>
+		<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+           <tr class="headline">
+               <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
+               <td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
+           </tr>
+        </tbody>
+        <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+            <tr>
+                <th></th>
+                <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+                <td class="info"></td>
+            </tr>
+        </tbody>
+        <tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
+            <tr class="headline">
+                <td colspan="1"><h4>'.$mpCustomAttributeTitle.'</h4></td>
+                <td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
+            </tr>
+        </tbody>
+        <tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
+            <tr>
+                <th></th>
+                <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+                <td class="info"></td>
+            </tr>
+        </tbody>
+        ';
+
+        return $html;
+    }
+
+    protected function renderAttributesJS() {
+        global $_url;
+        ob_start();
+        ?>
+        <script type="text/javascript"
+                src="<?php echo DIR_MAGNALISTER_WS; ?>js/variation_matching.js?<?php echo CLIENT_BUILD_VERSION ?>"></script>
+        <script type="text/javascript"
+                src="<?php echo DIR_MAGNALISTER_WS; ?>js/marketplaces/hood/variation_matching.js?<?php echo CLIENT_BUILD_VERSION ?>"></script>
+        <script type="text/javascript">
+            /*<![CDATA[*/
+            var ml_vm_config = {
+                url: '<?php echo toURL($_url, array('where' => 'HoodPrepareView', 'kind' => 'ajax'), true);?>',
+                viewName: 'HoodPrepareView',
+                secondaryCategory: false,
+                formName: '#prepareForm',
+                handleCategoryChange: false,
+                i18n: <?php echo json_encode(HoodHelper::gi()->getVarMatchTranslations());?>,
+                shopVariations: <?php echo json_encode(HoodHelper::gi()->getShopVariations()); ?>
+            };
+            /*]]>*/</script><?php
+        $sAttrMatchJS = ob_get_contents();
+        ob_end_clean();
+        return $sAttrMatchJS;
+    }
 	
 	/**
 	 * @param $data	enthaelt bereits vorausgefuellte daten aus Config oder User-eingaben
@@ -822,6 +898,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 					<td colspan="3">&nbsp;</td>
 				</tr>
 			</tbody>
+					'. $this->renderAttributesTable() . '
 			<tbody id="attr_1" style="display:none">
 			</tbody>
 			<tbody id="attr_2" style="display:none">
@@ -1033,9 +1110,9 @@ class HoodPrepareView extends MagnaCompatibleBase {
 		 * Check ob einer oder mehrere Artikel
 		 */
 		$prepareView = (1 == count($data)) ? 'single' : 'multiple';
-	
-		$renderedView = '
-			<form method="post" action="' . toURL($this->resources['url']) . '">
+        $renderedView = $this->renderAttributesJS();
+		$renderedView .= '
+			<form method="post" id="prepareForm" action="' . toURL($this->resources['url']) . '">
 				<table class="attributesTable">';
 		if ('single' == $prepareView) {
 			$renderedView .= $this->renderSinglePrepareView($data[0]);
@@ -1073,8 +1150,14 @@ class HoodPrepareView extends MagnaCompatibleBase {
 	}
 	
 	public function renderAjax() {
-		if (array_key_exists('action', $_POST)) {
-			switch ($_POST['action']) {
+        $action = null;
+        if (array_key_exists('action', $_POST)) {
+            $action = $_POST['action'];
+        } else if (array_key_exists('Action', $_POST)) {
+            $action = $_POST['Action'];
+        }
+		if (isset($action)) {
+			switch ($action) {
 				case 'getListingDurations': {
 					$html = '';
 					if (isset($_POST['ListingType']) && ($_POST['ListingType'] == 'shopProduct')) {
@@ -1101,7 +1184,11 @@ class HoodPrepareView extends MagnaCompatibleBase {
 				case 'extern': {
 					$args = $_POST;
 					unset($args['function']);
-					unset($args['action']);
+                    if (isset($args['action'])) {
+                        unset($args['action']);
+                    } else if (isset($args['Action'])) {
+                        unset($args['Action']);
+                    }
 					global $_url;
 					$tmpURL = $_url;
 					$tmpURL['where'] = 'prepareView';
@@ -1113,13 +1200,41 @@ class HoodPrepareView extends MagnaCompatibleBase {
 					echo $shipProc->process();
 					break;
 				}
+                case 'LoadMPVariations': {
+                    if (isset($_POST['SelectValue'])) {
+                        $select = $_POST['SelectValue'];
+                    } else {
+                        $select = $_POST['PrimaryCategory'];
+                    }
+                    $productModel = HoodHelper::gi()->getProductModel('prepare');
+                    echo json_encode(HoodHelper::gi()->getMPVariations($select, $productModel, true));
+                    break;
+				}
+                case 'DBMatchingColumns': {
+                    $columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+                    $editedColumns = array();
+                    foreach ($columns as $column) {
+                        $editedColumns[$column] = $column;
+                    }
+
+                    echo json_encode($editedColumns, JSON_FORCE_OBJECT);
+                    break;
+				}
 				default: {
 					$ycm = new HoodCategoryMatching('ajax');
 					echo $ycm->render();
 					break;
 				}
 			}
-		}
+		} else if ($_POST['prepare'] === 'prepare') {
+            if (isset($_POST['SelectValue'])) {
+                $select = $_POST['SelectValue'];
+            } else {
+                $select = $_POST['PrimaryCategory'];
+            }
+            $productModel = HoodHelper::gi()->getProductModel('prepare');
+            return json_encode(HoodHelper::gi()->getMPVariations($select, $productModel, true));
+        }
 		
 		#echo print_m($_POST);
 	}
