@@ -27,7 +27,7 @@
   define('MODULE_DHL_BUSINESS_PREFIX_DESC', 'Enter a prefix for the sender reference. The order number will be added automatically.');
   define('MODULE_DHL_BUSINESS_WEIGHT_CN23_TITLE', 'Weight CN23');
   define('MODULE_DHL_BUSINESS_WEIGHT_CN23_DESC', 'Enter the product weight for the customs declaration if none is stored with the product.');
-  define('MODULE_DHL_BUSINESS_LOGLEVEL_TITLE', 'Loglevel');
+  define('MODULE_DHL_BUSINESS_LOGLEVEL_TITLE', 'Log level');
   define('MODULE_DHL_BUSINESS_LOGLEVEL_DESC', 'Select the log level.');
   
   define('MODULE_DHL_BUSINESS_NOTIFICATION_TITLE', '<hr noshade>Notification');
