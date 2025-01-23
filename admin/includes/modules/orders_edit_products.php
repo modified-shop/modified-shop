@@ -68,13 +68,13 @@
       <?php
       for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
         echo xtc_draw_form('product_edit', FILENAME_ORDERS_EDIT, 'action=product', 'post');
+          echo xtc_draw_hidden_field('products_id', $order->products[$i]['id']);
+          echo xtc_draw_hidden_field('del_qty', $order->products[$i]['qty']);
           echo xtc_draw_hidden_field('old_qty', $order->products[$i]['qty']);
           echo xtc_draw_hidden_field('old_weight', $order->products[$i]['weight_origin']);
           echo xtc_draw_hidden_field('oID', $_GET['oID']);
           echo xtc_draw_hidden_field('opID', $order->products[$i]['opid']);
           echo xtc_draw_hidden_field('allow_tax', $order->products[$i]['allow_tax']);
-          echo xtc_draw_hidden_field('del_qty', $order->products[$i]['qty']);
-          echo xtc_draw_hidden_field('del_pID', $order->products[$i]['id']);
           ?>
           <tr class="dataTableRow">
             <td class="dataTableContent"><?php echo $order->products[$i]['id']; ?></td>
