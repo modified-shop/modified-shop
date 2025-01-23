@@ -27,6 +27,8 @@
   define('MODULE_DHL_BUSINESS_PREFIX_DESC', 'Geben Sie ein Prefix f&uuml;r die Absenderreferenz an. Die Bestellnummer wird automatisch mit angeh&auml;ngt.');
   define('MODULE_DHL_BUSINESS_WEIGHT_CN23_TITLE', 'Gewicht CN23');
   define('MODULE_DHL_BUSINESS_WEIGHT_CN23_DESC', 'Geben Sie das Artikelgewicht f&uuml;r die Zollerkl&auml;rung an, sofern keines beim Artikel hinterlegt ist.');
+  define('MODULE_DHL_BUSINESS_LOGLEVEL_TITLE', 'Loglevel');
+  define('MODULE_DHL_BUSINESS_LOGLEVEL_DESC', 'W&auml;hlen sie das Log Level.');
   
   define('MODULE_DHL_BUSINESS_NOTIFICATION_TITLE', '<hr noshade>Benachrichtigung');
   define('MODULE_DHL_BUSINESS_NOTIFICATION_DESC', 'Soll als Standard Benachrichtigung via DHL vorausgew&auml;hlt werden?<br>Der Kunde wird von DHL per eMail &uuml;ber den Versand benachrichtigt.<br><b>Hinweis:</b> daf&uuml;r muss eine Einverst&auml;ndniserkl&auml;rung zur Weitergabe der E-Mail Adresse vom Kunden vorhanden sein.');
