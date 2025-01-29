@@ -322,6 +322,14 @@
         }
       }
       
+      $locale_array = preg_split("/[-_]/", strtolower($_SESSION['language_code']));
+      if (count($locale_array) == 1) {
+        $locale_array[1] = $locale_array[0];
+        if ($locale_array[1] == 'en') {
+          $locale_array[1] = 'GB';
+        }
+      }
+      
       $request = new OrdersCreateRequest();
       $request->payPalRequestId(md5($this->code.$_SESSION['cart']->cartID));
       $request->prefer('return=representation');
@@ -332,7 +340,7 @@
           $pm_source => array(
             'experience_context' => array(
               'brand_name' => $this->encode_utf8(STORE_NAME),
-              'locale' => $_SESSION['language_code'].'-'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']),
+              'locale' => $locale_array[0].'-'.strtoupper($locale_array[1]),
               'landing_page' => 'LOGIN',
               'user_action' => 'CONTINUE',
               'cancel_url' => $this->link_encoding(xtc_href_link('callback/paypal/error.php', 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
