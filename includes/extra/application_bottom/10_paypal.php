@@ -219,7 +219,7 @@
     }
     
     if ($paypalscript != '') {
-      echo sprintf($paypal->get_js_sdk('false', false, $paypal_user_token), $paypalscript);
+      echo sprintf($paypal->get_js_sdk('false', false, $paypal_user_token), $paypalscript, '');
     }    
 
     if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {

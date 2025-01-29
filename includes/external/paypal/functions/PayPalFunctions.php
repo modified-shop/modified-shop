@@ -87,6 +87,7 @@ function get_paypal_js_sdk($client_id, $currency, $intent, $commit, $client_toke
         $(".apms_form").hide();
         $(".apms_form_button").hide();
         console.error("failed to load the PayPal SDK", error);
+        %s
       });
     </script>';
     
