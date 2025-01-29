@@ -434,6 +434,8 @@ class xtc_afterbuy_functions {
           'paypaleps',
           'paypalblik',
           'paypalbancontact',
+          'paypalapplepay',
+          'paypalgooglepay',
         );
    
         if (in_array($oData['payment_method'], $orders_v2_array)) {
@@ -645,6 +647,8 @@ class xtc_afterbuy_functions {
       case 'paypaleps':
       case 'paypalblik':
       case 'paypalbancontact':
+      case 'paypalapplepay':
+      case 'paypalgooglepay':
         $this->payment_id = '5';
         $this->payment_name = "Paypal";
         break;
@@ -676,5 +680,3 @@ class xtc_afterbuy_functions {
   }
 
 }
-
-?>
