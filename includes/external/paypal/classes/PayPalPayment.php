@@ -1517,9 +1517,17 @@ class PayPalPayment extends PayPalPaymentBase {
     $payment_method->setPayerSelected('PAYPAL')
                    ->setPayeePreferred('IMMEDIATE_PAYMENT_REQUIRED');
                    
+    $locale_array = preg_split("/[-_]/", strtolower($_SESSION['language_code']));
+    if (count($locale_array) == 1) {
+      $locale_array[1] = $locale_array[0];
+      if ($locale_array[1] == 'en') {
+        $locale_array[1] = 'GB';
+      }
+    }
+
     $application_context = new ApplicationContext();
     $application_context->setBrandName($this->encode_utf8(STORE_NAME))
-                        ->setLocale($_SESSION['language_code'].'-'.strtoupper($_SESSION['language_code']))
+                        ->setLocale($locale_array[0].'-'.strtoupper($locale_array[1]))
                         ->setShippingPreference('SET_PROVIDED_ADDRESS')
                         ->setUserAction('SUBSCRIBE_NOW')
                         ->setPaymentMethod($payment_method)

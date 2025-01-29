@@ -69,13 +69,21 @@ function get_paypal_js_sdk($client_id, $currency, $intent, $commit, $client_toke
       return $script;
     }
     
+    $locale_array = preg_split("/[-_]/", strtolower($_SESSION['language_code']));
+    if (count($locale_array) == 1) {
+      $locale_array[1] = $locale_array[0];
+      if ($locale_array[1] == 'en') {
+        $locale_array[1] = 'GB';
+      }
+    }
+    
     $script .= '
       loadScript({
         "client-id": "'.$client_id.'",
         "currency": "'.$currency.'",
         "intent": "'.strtolower($intent).'",
         "commit": "'.$commit.'",
-        "locale": "'.$_SESSION['language_code'].'_'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']).'",
+        "locale": "'.$locale_array[0].'_'.strtoupper($locale_array[1]).'",
         "enable-funding": "paylater",
         "data-partner-attribution-id": "Modified_Cart_PPCP",
         '.(($client_token !== false) ? '"data-client-token": "'.$client_token.'",' : '').'
