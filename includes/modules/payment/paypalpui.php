@@ -194,6 +194,8 @@ class paypalpui extends PayPalPaymentV2 {
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
 
+    $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
+
     $process_button .= '
       <script type="application/json" fncls="fnparams-dede7cc5-15fd-4c75-a9f4-36c430ee3a99">
         {
@@ -210,7 +212,7 @@ class paypalpui extends PayPalPaymentV2 {
           url: "https://c.paypal.com/da/r/fb.js"
         });
       } catch (error) {
-        window.location.href = "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'";
+        window.location.href = "'.$error_url.'";
       }
     ');
 

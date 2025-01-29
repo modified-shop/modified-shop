@@ -69,6 +69,14 @@ class paypalcard extends PayPalPaymentV2 {
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
 
+    $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/pui_error.html';
+    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html')) {
+      $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html';
+    }
+    $paypal_smarty->assign('error_message', TEXT_PAYPAL_ERROR_NOT_AVAILABLE);
+    $info = $paypal_smarty->fetch($tpl_file);
+    $info = trim(str_replace(array("\r", "\n"), '', $info));
+
     $order_url = DIR_WS_BASE.'ajax.php?ext=create_paypal_order';
     $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
 
@@ -98,7 +106,7 @@ class paypalcard extends PayPalPaymentV2 {
       }).render("#apms_button").then(() => {
         $(".apms_form_button_overlay").hide();
       });
-    ');
+    ', "$('#checkout_confirmation').replaceWith('".$info."');");
 
     return $process_button;
   }
