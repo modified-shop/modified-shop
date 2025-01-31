@@ -259,8 +259,8 @@ readers do not read off random characters that represent icons */
 .fa-facebook:before {
   content: "\f09a"; }
 
-.fa-twitter:before {
-  content: "\f099"; }
+.fa-x-twitter:before {
+  content: "\e61b"; }
 
 .fa-instagram:before {
   content: "\f16d"; }
