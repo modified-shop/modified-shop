@@ -35,7 +35,7 @@ $queries[] = '
 		`StoreCategory` enum(\'0\',\'1\') NOT NULL DEFAULT \'0\',
 		`InsertTimestamp` int(11) NOT NULL DEFAULT 0,
 		PRIMARY KEY (`CategoryID`, `SiteID`, `StoreCategory`)
-	) ENGINE=MyISAM;
+	) ENGINE='.DB_SERVER_ENGINE.';
 ';
 
 /* Tabellenstruktur fuer Tabelle `magnalister_ebay_properties` */
@@ -67,7 +67,7 @@ $queries[] = '
 		`ShippingDetails` longtext,
 		`Verified` enum("OK", "ERROR", "OPEN") NOT NULL DEFAULT "OPEN",
 		UNIQUE KEY `UniqueEntry` (`mpID`, `products_id`, `products_model`)
-	) ENGINE=MyISAM;
+	) ENGINE='.DB_SERVER_ENGINE.';
 ';
 
 /* Tabellenstruktur fuer Tabelle `magnalister_ebay_errorlog` */
@@ -483,7 +483,7 @@ function magnaAddNewAmazonErrorLog() {
 			`additionaldata` longtext NOT NULL,
 			PRIMARY KEY (`id`),
 			KEY `mpID` (`mpID`)
-		) ENGINE=MyISAM;
+		) ENGINE='.DB_SERVER_ENGINE.';
 	');
 }
 $functions[] = 'magnaAddNewAmazonErrorLog';

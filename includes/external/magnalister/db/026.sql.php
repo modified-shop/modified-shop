@@ -36,5 +36,5 @@ $queries[] = '
   `age_rating` int(3) NOT NULL default 0,
   `comment` text NOT NULL default \'\',
   UNIQUE KEY `UniqueEntry` (`mpID`,`products_id`,`products_model`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE='.DB_SERVER_ENGINE.' DEFAULT CHARSET='.DB_SERVER_CHARSET.';
 ';

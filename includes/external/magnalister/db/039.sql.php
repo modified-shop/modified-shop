@@ -40,4 +40,4 @@ $queries[] = 'CREATE TABLE IF NOT EXISTS `'.TABLE_MAGNA_DAWANDA_PROPERTIES.'` (
   KEY `mpID` (`mpID`),
   KEY `products_id` (`products_id`),
   KEY `products_model` (`products_model`)
-) ENGINE=MyISAM';
+) ENGINE='.DB_SERVER_ENGINE;

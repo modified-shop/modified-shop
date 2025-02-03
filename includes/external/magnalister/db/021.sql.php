@@ -46,5 +46,5 @@ $queries[] = '
         `KType` int(11) unsigned NOT NULL DEFAULT 0,
         `CompatibilityNotes` varchar(255) NOT NULL DEFAULT \'\',
         PRIMARY KEY (`products_id`, `products_model`, `KType`)
-    ) ENGINE=MyISAM;
+    ) ENGINE='.DB_SERVER_ENGINE.';
 ';

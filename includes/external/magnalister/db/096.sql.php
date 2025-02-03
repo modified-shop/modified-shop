@@ -50,7 +50,7 @@ function ml_db_update_96() {
 			`ShippingMethod` enum('0','1') DEFAULT NULL,
 			`ShopVariation` text NOT NULL,
 			PRIMARY KEY (`mpID`,`products_id`,`products_model`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8
+		) ENGINE=".DB_SERVER_ENGINE." DEFAULT CHARSET=".DB_SERVER_CHARSET."
 	");
 
     MagnaDB::gi()->query('CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_CROWDFOX_VARIANTMATCHING . '` (
@@ -60,7 +60,7 @@ function ml_db_update_96() {
 	`ShopVariation` text NOT NULL,
 	`IsValid` bit NOT NULL DEFAULT 1,
 	`ModificationDate` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\',
-	PRIMARY KEY (`MpId`, `MpIdentifier`, `CustomIdentifier`)) ENGINE=MyISAM DEFAULT CHARSET=utf8');
+	PRIMARY KEY (`MpId`, `MpIdentifier`, `CustomIdentifier`)) ENGINE='.DB_SERVER_ENGINE.' DEFAULT CHARSET='.DB_SERVER_CHARSET);
 }
 
 $functions[] = 'ml_db_update_96';

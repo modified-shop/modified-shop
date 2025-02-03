@@ -37,7 +37,7 @@ function ml_db_update_110() {
             `IsSupply` enum('false', 'true') NOT NULL DEFAULT 'false',
             `Image` text DEFAULT NULL,
             PRIMARY KEY (`mpID`,`products_id`,`products_model`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8
+        ) ENGINE=".DB_SERVER_ENGINE." DEFAULT CHARSET=".DB_SERVER_CHARSET."
     ");
 
     MagnaDB::gi()->query('
@@ -63,7 +63,7 @@ function ml_db_update_110() {
             KEY `CategoryID` (`CategoryID`),
             KEY `ParentID` (`ParentID`),
             KEY `Language` (`Language`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+        ) ENGINE='.DB_SERVER_ENGINE.' DEFAULT CHARSET='.DB_SERVER_CHARSET.' COLLATE=utf8_unicode_ci
     ');
 }
 
