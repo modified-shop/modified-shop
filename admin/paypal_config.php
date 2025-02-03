@@ -162,6 +162,9 @@ $paypal_sandbox = $paypal->getOnboardingLink('sandbox');
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="../includes/external/paypal/css/stylesheet.css"> 
+<style type="text/css">
+  .tableConfig td a.button { font-size: 10px; }
+</style>
 <script>
   function onboardedClose() {
     window.location.reload(false);

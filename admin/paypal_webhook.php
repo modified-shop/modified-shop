@@ -58,13 +58,23 @@ $landingpage_array = array(
   array('id' => 'Payment', 'text' => 'Payment'),
 ); 
 
+$webhook_active_array = array(
+  'PAYMENT.CAPTURE.COMPLETED',
+  'PAYMENT.CAPTURE.DECLINED',
+  'PAYMENT.CAPTURE.DENIED',
+  'PAYMENT.CAPTURE.PENDING',
+  'PAYMENT.CAPTURE.REFUNDED',
+  'PAYMENT.CAPTURE.REVERSED',
+);
+
 //$locale_code = array(
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="../includes/external/paypal/css/stylesheet.css">  
 <style type="text/css">
-  .check { width: 40px; float: left; padding-top: 3px; }
-  .drop { width: 230px; float: left; }
+  .check { width: 10%; float: left; padding-top: 3px; }
+  .drop { width: 90%; float: left; }
+  .tableConfig td a.button { font-size: 10px; }
 </style>
 </head>
 <body>
@@ -150,8 +160,8 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo $list[$i]['name']; ?></td>
                       <td class="dataTableConfig col-middle">
                         <?php 
-                          echo xtc_draw_checkbox_field('config[data]['.$i.'][name]', $list[$i]['name'], 'checked="checked"'); 
-                          echo xtc_draw_pull_down_menu('config[data]['.$i.'][orders_status]', $orders_statuses, '-1', 'style="width: 300px;"');
+                          echo '<div class="check">'.xtc_draw_checkbox_field('config[data]['.$i.'][name]', $list[$i]['name'], ((in_array($list[$i]['name'], $webhook_active_array)) ? 'checked="checked"' : '')).'</div>'; 
+                          echo '<div class="drop">'.xtc_draw_pull_down_menu('config[data]['.$i.'][orders_status]', $orders_statuses, '-1', 'style="width: 300px;"').'</div>'; 
                         ?>
                       </td>
                       <td class="dataTableConfig col-right"><?php echo $list[$i]['description']; ?></td>
@@ -216,6 +226,11 @@ require (DIR_WS_INCLUDES.'head.php');
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
+    <script>
+      $('input[name="checkall"]').on('click', function () {    
+        $('input[name*="config"]').prop('checked', this.checked);
+      });
+    </script>
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
