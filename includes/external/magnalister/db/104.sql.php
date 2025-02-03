@@ -34,7 +34,7 @@ function ml_db_update_createTradoriaPrepareTable() {
             `Verified` enum('OK','ERROR','OPEN','EMPTY') NOT NULL DEFAULT 'OK',
             `PreparedTS` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
             PRIMARY KEY (`mpID`,`products_id`,`products_model`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8
+        ) ENGINE=".DB_SERVER_ENGINE." DEFAULT CHARSET=".DB_SERVER_CHARSET."
     ");
 }
 
@@ -48,7 +48,7 @@ $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_TRADORIA_VARIANTMATCHI
     `IsValid` bit NOT NULL DEFAULT 1,
     `ModificationDate` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\',
     PRIMARY KEY (`MpId`, `MpIdentifier`, `CustomIdentifier`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8';
+) ENGINE='.DB_SERVER_ENGINE.' DEFAULT CHARSET='.DB_SERVER_CHARSET;
 
 $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_EBAY_VARIANTMATCHING . '` (
 	`MpId` int(11) NOT NULL,
@@ -58,5 +58,5 @@ $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_EBAY_VARIANTMATCHING .
 	`IsValid` bit NOT NULL DEFAULT 1,
 	`ModificationDate` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\',
 	PRIMARY KEY (`MpId`, `MpIdentifier`, `CustomIdentifier`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8';
+) ENGINE='.DB_SERVER_ENGINE.' DEFAULT CHARSET='.DB_SERVER_CHARSET;
 

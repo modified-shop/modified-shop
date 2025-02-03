@@ -62,4 +62,4 @@ $queries[] = "CREATE TABLE IF NOT EXISTS `".TABLE_MAGNA_RICARDO_PROPERTIES."` (
   `Verified` enum('OK','ERROR','OPEN','EMPTY') NOT NULL DEFAULT 'OPEN',
   `PreparedTS` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`mpID`, `products_id`, `products_model`)
-) ENGINE=MyISAM";
+) ENGINE=".DB_SERVER_ENGINE;

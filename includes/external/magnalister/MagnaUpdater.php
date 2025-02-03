@@ -500,6 +500,16 @@ class MagnaUpdater {
 	public function updateDatabase() {
 		require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php');
 
+		if (!defined('DB_SERVER_CHARSET')) {
+			define('DB_SERVER_CHARSET', 'utf8');
+		}
+		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
+
+		if (!defined('DB_SERVER_ENGINE')) {
+			define('DB_SERVER_ENGINE', 'MyISAM');
+		}
+		MagnaDB::gi()->query('SET default_storage_engine = '.DB_SERVER_ENGINE);
+
 		$dbDir = DIR_MAGNALISTER_FS.'db/';
 		if (!$dirhandle = @opendir($dbDir)) {
 			return false;

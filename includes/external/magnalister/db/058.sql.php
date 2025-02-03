@@ -38,5 +38,5 @@ $queries[] = "CREATE TABLE IF NOT EXISTS `" . TABLE_MAGNA_AYN24_CATEGORIES . "` 
    `InsertTimestamp` datetime NOT NULL,
    UNIQUE KEY `UniqueEntry` (`mpID`,`platform`,`CategoryID`),
    KEY `mpID` (`mpID`)
- ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+ ) ENGINE=".DB_SERVER_ENGINE." DEFAULT CHARSET=".DB_SERVER_CHARSET." COLLATE=utf8_unicode_ci";
 */

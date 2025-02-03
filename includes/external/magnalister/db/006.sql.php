@@ -33,5 +33,5 @@ $queries[] = '
 		`ItemID` VARCHAR( 20 ) NOT NULL ,
 		`Price` FLOAT( 9, 2 ) NOT NULL ,
 		`timestamp` DATETIME NOT NULL
-	) ENGINE = MYISAM ;
+	) ENGINE = '.DB_SERVER_ENGINE.' ;
 ';
