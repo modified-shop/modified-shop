@@ -73,6 +73,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $info_smarty->assign('MANUFACTURER_SHORT_DESCRIPTION', $manufacturer['manufacturers_short_description']);
     $info_smarty->assign('MANUFACTURER_ADD_DESCRIPTION', $manufacturer['manufacturers_add_description']);
     $info_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name'])));
+    if ($manufacturer['manufacturers_url'] != '') {
+      $info_smarty->assign('MANUFACTURER_URL', $manufacturer['manufacturers_url']);
+      $info_smarty->assign('MANUFACTURER_REDIRECT', xtc_href_link(FILENAME_REDIRECT, 'action=manufacturer&manufacturers_id='.$manufacturer['manufacturers_id']));
+    }
 
     if ($manufacturer['manufacturers_company'] != ''
         || $manufacturer['manufacturers_firstname'] != ''
