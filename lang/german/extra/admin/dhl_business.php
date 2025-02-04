@@ -21,7 +21,6 @@
   define('TEXT_DHL_BUSINESS_WEIGHT', 'Paketgewicht (kg):');
   define('TEXT_DHL_BUSINESS_INSURANCE', 'Versicherung:');
   define('TEXT_DHL_BUSINESS_AVS', 'Alterssichtpr&uuml;fung:');
-  define('TEXT_DHL_BUSINESS_TYPE', 'Produkt:');
   define('TEXT_DHL_BUSINESS_RETOURE', 'Retourenlabel:');
   define('TEXT_DHL_BUSINESS_BULKY', 'Sperrgut:');
   define('TEXT_DHL_BUSINESS_PERSONAL', 'Eigenh&auml;ndig:');
