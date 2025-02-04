@@ -503,7 +503,7 @@ border-radius: 4px;
 margin: 4px 4px 0px 0px;  
 cursor:pointer;
 }
-input.button {
+input.button, button {
 display:inline-block;
 padding: 6px 15px;
 font-size:10px;
@@ -519,12 +519,12 @@ margin: 4px 4px 0px 0px;
 cursor:pointer;
 }
 
-a.button, input.button {
+a.button, input.button, button {
 color:#ddd;
 background-color:#444;
 border-color: #333;
 }
-a.button:hover, input.button:hover {
+a.button:hover, input.button:hover, button:hover {
 color:#fff;
 background-color:#333;
 border-color: #222;
@@ -1596,7 +1596,9 @@ a.btnbox:link,
 a.btnbox:visited,
 a.btnbox:active,
 a.btnbox:hover,
-span.btnbox {
+span.btnbox,
+button.btnbox,
+input.btnbox {
 margin: 7px auto;
 width: 120px;
 display: block;

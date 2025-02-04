@@ -61,11 +61,6 @@
                 array('id' => 'ABANDONMENT', 'text' => CFG_TXT_ABANDONMENT),
               );
 
-              $type_array = array(
-                array('id' => '0', 'text' => 'Paket'),
-                array('id' => '1', 'text' => 'Kleinpaket'),
-              );
-              
               $orders_statuses_selected = MODULE_DHL_BUSINESS_STATUS_UPDATE;
               if (MODULE_DHL_BUSINESS_STATUS_UPDATE == '0') {
                 $orders_statuses_selected = $order->info['orders_status'];
@@ -90,14 +85,14 @@
               <tr>
                 <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_WEIGHT; ?></td>
                 <td style="width:16%;padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_input_field('weight', $weight, 'style="width: 120px; padding:5px;" placeholder="optional..."'); ?></td>
-                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_TYPE; ?></td>
-                <td style="width:16%;padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('type', $type_array, ((MODULE_DHL_BUSINESS_PRODUCT == 'Paket') ? 0 : 1), 'style="width:120px;"'); ?></td>
+                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_INSURANCE; ?></td>
+                <td style="width:16%;padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('insurance', $insurance_array, '', 'style="width:120px;"'); ?></td>
                 <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_CODEABLE; ?></td>
                 <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('codeable', 'checkbox', ((MODULE_DHL_BUSINESS_CODING == 'True') ? true : false), 'style="width:120px;"'); ?></td>
               </tr>
               <tr class="dhl_expand dhl_toggle">
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_INSURANCE; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('insurance', $insurance_array, '', 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_SIGNED; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('signed', 'checkbox', ((MODULE_DHL_BUSINESS_SIGNED == 'True') ? true : false), 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_RETOURE; ?></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('retoure', 'checkbox', ((MODULE_DHL_BUSINESS_RETOURE == 'True') ? true : false), 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_STATUS_UPDATE; ?></td>
@@ -136,10 +131,10 @@
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('droppoint', 'checkbox', ((MODULE_DHL_BUSINESS_DROPPOINT == 'True') ? true : false), 'style="width:120px;"'); ?></td>
               </tr>
               <tr class="dhl_expand dhl_toggle">
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_SIGNED; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('signed', 'checkbox', ((MODULE_DHL_BUSINESS_SIGNED == 'True') ? true : false), 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_MRN; ?></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_input_field('mrn', '', 'style="width: 120px; padding:5px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"></td>
               </tr>
@@ -153,7 +148,10 @@
               </tr>
             </table>
           </td>
-          <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo TEXT_DHL_BUSINESS_BUTTON_CREATE; ?>"></td>
+          <td class="smallText" align="center">
+            <button class="button btnbox" name="type" type="submit" value="0"><?php echo TEXT_DHL_BUSINESS_BUTTON_CREATE_PARCEL; ?></button>
+            <button class="button btnbox no_bottom_margin" name="type" type="submit" value="1"><?php echo TEXT_DHL_BUSINESS_BUTTON_CREATE_SMALL_PARCEL; ?></button>            
+          </td>
         </tr>
       </table>
     </form>
