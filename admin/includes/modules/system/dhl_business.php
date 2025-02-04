@@ -25,7 +25,7 @@
     function __construct() {
       global $order;
       
-      $this->version = '1.31';
+      $this->version = '1.32';
       $this->code = 'dhl_business';
       $this->title = MODULE_DHL_BUSINESS_TEXT_TITLE;
       $this->description = MODULE_DHL_BUSINESS_TEXT_DESCRIPTION.'<br><br><br><b>Version</b><br>'.$this->version;
