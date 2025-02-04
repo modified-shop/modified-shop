@@ -21,7 +21,6 @@
   define('TEXT_DHL_BUSINESS_WEIGHT', 'Package weight (kg):');
   define('TEXT_DHL_BUSINESS_INSURANCE', 'Insurance:');
   define('TEXT_DHL_BUSINESS_AVS', 'Visual check of age:');
-  define('TEXT_DHL_BUSINESS_TYPE', 'Product:');
   define('TEXT_DHL_BUSINESS_RETOURE', 'Return label:');
   define('TEXT_DHL_BUSINESS_BULKY', 'Bulky goods:');
   define('TEXT_DHL_BUSINESS_PERSONAL', 'Personally:');
