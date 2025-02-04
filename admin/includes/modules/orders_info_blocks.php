@@ -317,7 +317,7 @@
         <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
         <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
         <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_DATE; ?></strong></td>
-        <td class="smallText" align="center" style="width:155px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
+        <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
       </tr>
       <?php
         $tracking_array = get_tracking_link($oID, $lang_code);
@@ -343,7 +343,7 @@
       <tr>
         <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers); ?></td>
         <td class="smallText" align="center" colspan="2"><?php echo xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
-        <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo BUTTON_INSERT; ?>"></td>
+        <td class="smallText" align="center"><input class="button btnbox no_top_margin no_bottom_margin" type="submit" value="<?php echo BUTTON_INSERT; ?>"></td>
       </tr>
     </table>
     </form>
