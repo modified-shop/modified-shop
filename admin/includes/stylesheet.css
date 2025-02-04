@@ -535,6 +535,9 @@ cursor:pointer;
 .no_top_margin {
 margin-top: 0px !important;
 }
+.no_bottom_margin {
+margin-bottom: 0px !important;
+}
 
 a.but_green, input.but_green {
 color:#ddd;
