@@ -449,7 +449,8 @@
     
     $products_query = xtc_db_query("SELECT *,
                                            orders_products_id as opID,
-                                           products_quantity as old_qty
+                                           products_quantity as old_qty,
+                                           products_weight_origin as old_weight
                                       FROM ".TABLE_ORDERS_PRODUCTS."
                                      WHERE orders_id = '".(int)$oID."'");
     if (xtc_db_num_rows($products_query) > 0) {
