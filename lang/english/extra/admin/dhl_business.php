@@ -41,8 +41,9 @@
   define('TEXT_DHL_BUSINESS_SHOW_MORE', '[show more]');
   define('TEXT_DHL_BUSINESS_SHOW_LESS', '[show less]');
 
-  define('TEXT_DHL_BUSINESS_BUTTON_CREATE_PARCEL', 'DHL Paket');
-  define('TEXT_DHL_BUSINESS_BUTTON_CREATE_SMALL_PARCEL', 'DHL Kleinpaket');
+  define('TEXT_DHL_BUSINESS_BUTTON_CREATE_PK', 'DHL Paket');
+  define('TEXT_DHL_BUSINESS_BUTTON_CREATE_WP', 'DHL Warenpost');
+  define('TEXT_DHL_BUSINESS_BUTTON_CREATE_KP', 'DHL Kleinpaket');
   define('TEXT_DHL_BUSINESS_CREATE_SUCCESS', 'DHL Label was created');
   define('TEXT_DHL_BUSINESS_DELETE_SUCCESS', 'DHL Label was deleted');
 

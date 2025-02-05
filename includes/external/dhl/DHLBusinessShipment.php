@@ -484,7 +484,7 @@
         case 'DE':
           $this->data['product'] = 'V01PAK';
           $this->data['product_code'] = '01';
-          if ($this->type == 1 && $this->data['weight'] <= 1) {
+          if ($this->type == 1) {
             $this->data['product'] = 'V62KP';
             $this->data['product_code'] = '62';
             $this->data['product_type'] = 'KP';
@@ -493,7 +493,7 @@
         default:
           $this->data['product'] = 'V53WPAK';
           $this->data['product_code'] = '53';
-          if ($this->type == 1 && $this->data['weight'] <= 1) {
+          if ($this->type == 1) {
             $this->data['product'] = 'V66WPI';
             $this->data['product_code'] = '66';
             $this->data['product_type'] = 'WP';
