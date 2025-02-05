@@ -19,6 +19,14 @@
   function create_paypal_order() {
     global $order;
     
+    if (isset($_SESSION['shipping']) 
+        && $_SESSION['shipping'] != false
+        )
+    {
+      require_once (DIR_WS_CLASSES . 'shipping.php');
+      $shipping_modules = new shipping($_SESSION['shipping']);
+    }
+
     $order = new order();
 
     $order_total_modules = new order_total();
