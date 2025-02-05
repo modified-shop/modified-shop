@@ -24,7 +24,7 @@
         break;
     }
     
-    if ($products_options['attributes_vpe_value'] != 0.0 && $vpe_price > 0) {
+    if ($vpe_value != 0.0 && $vpe_price > 0) {
       $attr_vpe_name = xtc_get_vpe_name($products_options['attributes_vpe_id']);
       $attr_vpe_value = $vpe_value;
       $attr_vpe_price_plain = $xtPrice->xtcFormat($vpe_price * (1 / $vpe_value), false);
