@@ -63,94 +63,98 @@ class tax_eel {
     modified_api::reset();
     $response = modified_api::request('modified/tax/');
     
-    $tax_array = array();
-    foreach ($response as $data) {
-      $key = key($data);
-      $tax_array[$key] = $data[$key][1];
-    }
-
-    if (!defined('MODULE_TAX_EEL_TAX_CLASS_ID') || MODULE_TAX_EEL_TAX_CLASS_ID == '') {
-      $sql_data_array = array(
-        'tax_class_title' => 'DE::Standardsatz VP||EN::Default rate VP',
-        'tax_class_description' => 'DE::elektronisch erbrachte Leistungen||EN::Services provided electronically',
-        'date_added' => 'now()',
-        'sort_order' => '99',
-      );
-      xtc_db_perform(TABLE_TAX_CLASS, $sql_data_array);                       
-      $tax_class_id = xtc_db_insert_id();
-    
-      xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
-                       SET configuration_value = '".$tax_class_id."'
-                     WHERE configuration_key = 'MODULE_TAX_EEL_TAX_CLASS_ID'");
-    } else {
-      $tax_class_id = MODULE_TAX_EEL_TAX_CLASS_ID;
-    }
-    
-    $geo_zones_array = array();
-    if (defined('MODULE_TAX_EEL_GEO_ZONES')) {
-      $geozones = preg_split("/[:,]/", MODULE_TAX_EEL_GEO_ZONES); 
-      for ($i=0, $n=count($geozones); $i<$n; $i+=2) {
-        $geo_zones_array[$geozones[$i]] = $geozones[$i+1];
-      }    
-    }
-    
-    foreach ($tax_array as $iso_code_2 => $tax_rate) {
-      $countries_query = xtc_db_query("SELECT countries_id 
-                                         FROM ".TABLE_COUNTRIES." 
-                                        WHERE countries_iso_code_2 = '".$iso_code_2."'");
-      if (xtc_db_num_rows($countries_query) == 1) {
-        $countries = xtc_db_fetch_array($countries_query);
-        
-        $action = 'update';
-        if (!isset($geo_zones_array[$iso_code_2])) {
-          $sql_data_array = array(
-            'geo_zone_name' => sprintf('DE::Steuerzone VP - %s||EN::Tax zone VP - %s', $iso_code_2, $iso_code_2),
-            'date_added' => 'now()'
-          );
-          xtc_db_perform(TABLE_GEO_ZONES, $sql_data_array);
-          $geo_zones_array[$iso_code_2] = xtc_db_insert_id();
-          $action = 'insert';
-        }
-        
-        $sql_data_array = array(
-          'zone_country_id' => $countries['countries_id'],
-          'zone_id' => '0',
-          'geo_zone_id' => $geo_zones_array[$iso_code_2],
-        );
-        
-        if ($action == 'insert') {
-          $sql_data_array['date_added'] = 'now()';
-        } else {
-          $sql_data_array['last_modified'] = 'now()';        
-        }
-        
-        xtc_db_perform(TABLE_ZONES_TO_GEO_ZONES, $sql_data_array, $action, "zone_country_id = '".$sql_data_array['zone_country_id']."' AND geo_zone_id = '".$sql_data_array['geo_zone_id']."'");
-  
-        $sql_data_array = array(
-          'tax_zone_id' => $geo_zones_array[$iso_code_2],
-          'tax_class_id' => $tax_class_id,
-          'tax_priority' => '99',
-          'tax_rate' => $tax_rate,
-          'tax_description' => sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate),
-        );
-
-        if ($action == 'insert') {
-          $sql_data_array['date_added'] = 'now()';
-        } else {
-          $sql_data_array['last_modified'] = 'now()';        
-        }
-
-        xtc_db_perform(TABLE_TAX_RATES, $sql_data_array, $action, "tax_zone_id = '".$sql_data_array['tax_zone_id']."' AND tax_class_id = '".$sql_data_array['tax_class_id']."'");
+    if (count($response) > 0) {
+      $tax_array = array();
+      foreach ($response as $data) {
+        $key = key($data);
+        $tax_array[$key] = $data[$key][1];
       }
-    }
+  
+      if (!defined('MODULE_TAX_EEL_TAX_CLASS_ID') || MODULE_TAX_EEL_TAX_CLASS_ID == '') {
+        $sql_data_array = array(
+          'tax_class_title' => 'DE::Standardsatz VP||EN::Default rate VP',
+          'tax_class_description' => 'DE::elektronisch erbrachte Leistungen||EN::Services provided electronically',
+          'date_added' => 'now()',
+          'sort_order' => '99',
+        );
+        xtc_db_perform(TABLE_TAX_CLASS, $sql_data_array);                       
+        $tax_class_id = xtc_db_insert_id();
+      
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
+                         SET configuration_value = '".$tax_class_id."'
+                       WHERE configuration_key = 'MODULE_TAX_EEL_TAX_CLASS_ID'");
+      } else {
+        $tax_class_id = MODULE_TAX_EEL_TAX_CLASS_ID;
+      }
+      
+      $geo_zones_array = array();
+      if (defined('MODULE_TAX_EEL_GEO_ZONES')) {
+        $geozones = preg_split("/[:,]/", MODULE_TAX_EEL_GEO_ZONES); 
+        for ($i=0, $n=count($geozones); $i<$n; $i+=2) {
+          $geo_zones_array[$geozones[$i]] = $geozones[$i+1];
+        }    
+      }
+      
+      foreach ($tax_array as $iso_code_2 => $tax_rate) {
+        $countries_query = xtc_db_query("SELECT countries_id 
+                                           FROM ".TABLE_COUNTRIES." 
+                                          WHERE countries_iso_code_2 = '".$iso_code_2."'");
+        if (xtc_db_num_rows($countries_query) == 1) {
+          $countries = xtc_db_fetch_array($countries_query);
+          
+          $action = 'update';
+          if (!isset($geo_zones_array[$iso_code_2])) {
+            $sql_data_array = array(
+              'geo_zone_name' => sprintf('DE::Steuerzone VP - %s||EN::Tax zone VP - %s', $iso_code_2, $iso_code_2),
+              'date_added' => 'now()'
+            );
+            xtc_db_perform(TABLE_GEO_ZONES, $sql_data_array);
+            $geo_zones_array[$iso_code_2] = xtc_db_insert_id();
+            $action = 'insert';
+          }
+          
+          $sql_data_array = array(
+            'zone_country_id' => $countries['countries_id'],
+            'zone_id' => '0',
+            'geo_zone_id' => $geo_zones_array[$iso_code_2],
+          );
+          
+          if ($action == 'insert') {
+            $sql_data_array['date_added'] = 'now()';
+          } else {
+            $sql_data_array['last_modified'] = 'now()';        
+          }
+          
+          xtc_db_perform(TABLE_ZONES_TO_GEO_ZONES, $sql_data_array, $action, "zone_country_id = '".$sql_data_array['zone_country_id']."' AND geo_zone_id = '".$sql_data_array['geo_zone_id']."'");
     
-    $configuration = array();
-    foreach ($geo_zones_array as $key => $val) {
-      $configuration[] = $key.':'.$val;
+          $sql_data_array = array(
+            'tax_zone_id' => $geo_zones_array[$iso_code_2],
+            'tax_class_id' => $tax_class_id,
+            'tax_priority' => '99',
+            'tax_rate' => $tax_rate,
+            'tax_description' => sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate),
+          );
+  
+          if ($action == 'insert') {
+            $sql_data_array['date_added'] = 'now()';
+          } else {
+            $sql_data_array['last_modified'] = 'now()';        
+          }
+  
+          xtc_db_perform(TABLE_TAX_RATES, $sql_data_array, $action, "tax_zone_id = '".$sql_data_array['tax_zone_id']."' AND tax_class_id = '".$sql_data_array['tax_class_id']."'");
+        }
+      }
+      
+      $configuration = array();
+      foreach ($geo_zones_array as $key => $val) {
+        $configuration[] = $key.':'.$val;
+      }
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
+                       SET configuration_value = '".implode(',', $configuration)."'
+                     WHERE configuration_key = 'MODULE_TAX_EEL_GEO_ZONES'");
+    } else {
+      $messageStack->add_session(MODULE_TAX_EEL_ERROR_API);
     }
-    xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
-                     SET configuration_value = '".implode(',', $configuration)."'
-                   WHERE configuration_key = 'MODULE_TAX_EEL_GEO_ZONES'");
   }
   
   // install
