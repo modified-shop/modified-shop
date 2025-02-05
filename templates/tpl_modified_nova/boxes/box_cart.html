@@ -1,5 +1,6 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
 {config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="boxes"}
 <div id="cart_short"{if $empty == 'false'} style="cursor:pointer"{/if}>
   {if $empty == 'false'}
     <a title="{#heading_cart#}" {if $deny_cart != 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">
@@ -78,6 +79,19 @@
         </a>
       </div>
   
+      {if isset($paypalexpress)}
+      <div class="br_btn_alternate mb_10"><span>{#text_cart_or#}</span></div>
+      <div class="toggle_action_3">
+        <div id="apms_button3"></div>
+      </div>
+      {/if}
+
+      {if isset($paypalbnpl)}
+      <div class="toggle_action_4">
+        <div id="apms_button4"></div>
+      </div>
+      {/if}
+
     {else}
   
       <div class="infomessage">{#text_empty_cart#}</div>

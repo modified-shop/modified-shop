@@ -67,9 +67,9 @@
       }
     }
 
-    if ((basename($PHP_SELF) == FILENAME_SHOPPING_CART 
-         && $_SESSION['cart']->count_contents() > 0
-         ) || basename($PHP_SELF) == FILENAME_PRODUCT_INFO 
+    if ((basename($PHP_SELF) == FILENAME_SHOPPING_CART && $_SESSION['cart']->count_contents() > 0) 
+         || (strpos(basename($PHP_SELF), 'checkout') === false && $_SESSION['cart']->count_contents() > 0)
+         || basename($PHP_SELF) == FILENAME_PRODUCT_INFO 
         )
     {         
       $paypal = new PayPalPaymentV2('paypalexpress');
@@ -159,6 +159,72 @@
                 $(".apms_form_button_overlay").hide();
               }
             }).render("#apms_button2");
+          }
+          ';
+        }
+
+        if (strpos(basename($PHP_SELF), 'checkout') === false && $_SESSION['cart']->count_contents() > 0) {
+          $paypalscript .= '
+          if ($("#apms_button3").length) {
+            paypal.Buttons({
+              fundingSource: paypal.FUNDING.PAYPAL,
+              style: {
+                layout: "'.$paypal->get_config('PAYPAL_BUTTON_LAYOUT').'",
+                shape: "'.$paypal->get_config('PAYPAL_BUTTON_SHAPE').'",
+                color: "'.$paypal->get_config('PAYPAL_BUTTON_PRIMARY_COLOR').'",
+                height: '.$paypal->get_config('PAYPAL_BUTTON_HEIGHT').'
+              },
+              createOrder: function(data, actions) {              
+                var formdata = \'\'; 
+
+                return $.ajax({
+                  type: "POST",
+                  url: "'.$url.'",
+                  data: formdata,
+                  dataType: "json"
+                });        
+              },
+              onApprove: function(data, actions) {
+                window.location.href = "'.xtc_href_link('callback/paypal/paypalexpress.php').'";
+              },
+              onError: function (err) {
+                $("#apms_buttons").hide();
+                console.error("failed to load PayPal buttons", err);
+              },
+            }).render("#apms_button3");
+          }
+          ';
+        }
+
+        if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_CART_BNPL') == '1'
+            && strpos(basename($PHP_SELF), 'checkout') === false 
+            && $_SESSION['cart']->count_contents() > 0
+            )
+        {
+          $paypalscript .= '
+          if ($("#apms_button4").length) {
+            paypal.Buttons({
+              fundingSource: paypal.FUNDING.PAYLATER,
+              style: {
+                layout: "'.$paypal->get_config('PAYPAL_BUTTON_LAYOUT').'",
+                shape: "'.$paypal->get_config('PAYPAL_BUTTON_SHAPE').'",
+                color: "'.$paypal->get_config('PAYPAL_BUTTON_SECONDARY_COLOR').'",
+                height: '.$paypal->get_config('PAYPAL_BUTTON_HEIGHT').'
+              },
+              createOrder: function(data, actions) {              
+                var formdata = \'\'; 
+
+                return $.ajax({
+                  type: "POST",
+                  url: "'.$url.'",
+                  data: formdata,
+                  dataType: "json"
+                });        
+              },
+              onApprove: function(data, actions) {
+                window.location.href = "'.xtc_href_link('callback/paypal/paypalexpress.php').'";
+              },
+            }).render("#apms_button4");
           }
           ';
         }

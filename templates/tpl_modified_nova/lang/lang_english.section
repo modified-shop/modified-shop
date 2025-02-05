@@ -50,6 +50,7 @@ text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
 text_shippingtime = 'Shipping time:'
 show_all = 'Show all'
 subcats_total_heading = 'Product range'
+text_cart_or = 'or'
 
 [error_handler]
 

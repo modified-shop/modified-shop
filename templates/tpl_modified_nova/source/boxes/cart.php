@@ -61,6 +61,22 @@
         );
       }
     }
+
+    if (defined('MODULE_PAYMENT_PAYPAL_SECRET')
+        && MODULE_PAYMENT_PAYPAL_SECRET != ''
+        )
+    {
+      // include needed classes
+      require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
+  
+      $paypal = new PayPalPaymentV2('paypalexpress');
+      if ($paypal->is_enabled()) {
+        $box_smarty->assign('paypalexpress', true);
+        if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_CART_BNPL') == '1') {
+         $box_smarty->assign('paypalbnpl', true);
+        }
+      }
+    }
   }
 
   if (STOCK_CHECK == 'true' && $any_out_of_stock === true) {
