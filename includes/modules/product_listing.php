@@ -141,12 +141,6 @@ if ($listing_split->number_of_rows > 0) {
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
     $module_content[$listing['products_id']] =  $product->buildDataArray($listing);
   }
-} else {
-  // no product found
-  $result = false;
-}
-
-if ($result != false) {
 
   // get default template
   if (!isset($category['listing_template'])
