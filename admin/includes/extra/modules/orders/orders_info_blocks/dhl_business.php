@@ -150,7 +150,7 @@
           </td>
           <td class="smallText" align="center">
             <button class="button btnbox" name="type" type="submit" value="0"><?php echo TEXT_DHL_BUSINESS_BUTTON_CREATE_PK; ?></button>
-            <button class="button btnbox no_bottom_margin" name="type" type="submit" value="1"><?php echo (($order->delivery['country_id'] == 81) ? TEXT_DHL_BUSINESS_BUTTON_CREATE_KP : TEXT_DHL_BUSINESS_BUTTON_CREATE_WP); ?></button>            
+            <button class="button btnbox no_bottom_margin" name="type" type="submit" value="1"><?php echo (($order->delivery['country_iso_2'] == 'DE') ? TEXT_DHL_BUSINESS_BUTTON_CREATE_KP : TEXT_DHL_BUSINESS_BUTTON_CREATE_WP); ?></button>            
           </td>
         </tr>
       </table>
