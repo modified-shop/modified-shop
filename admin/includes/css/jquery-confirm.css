@@ -147,6 +147,7 @@ body.jconfirm-noscroll {
 .jconfirm.white .jconfirm-box .buttons button {
   border: 1px solid #999;
   background-image: none;
+  background-color: #e9e9ed;
   text-transform: uppercase;
   font-size: 14px;
   font-weight: bold;
