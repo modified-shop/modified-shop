@@ -62,9 +62,10 @@ define('HEADER_TITLE_ONLINE_CATALOG', 'Online Katalog');
 define('HEADER_TITLE_ADMINISTRATION', 'Administration');
 
 // text for gender
-define('MALE', 'Herr');
-define('FEMALE', 'Frau');
-define('DIVERSE', 'Divers');
+define('GENDER_NONE', 'keine');
+define('GENDER_MALE', 'Herr');
+define('GENDER_FEMALE', 'Frau');
+define('GENDER_DIVERSE', 'Divers');
 
 // text for date of birth example
 define('DOB_FORMAT_STRING', 'tt.mm.jjjj');
@@ -259,7 +260,7 @@ define('CATEGORY_COMPANY', 'Firma');
 define('CATEGORY_OPTIONS', 'Weitere Optionen');
 
 define('ENTRY_GENDER', 'Anrede:');
-define('ENTRY_GENDER_ERROR', '&nbsp;<span class="errorText">notwendige Eingabe</span>');
+define('ENTRY_GENDER_ERROR', '');
 define('ENTRY_FIRST_NAME', 'Vorname:');
 define('ENTRY_FIRST_NAME_ERROR', '&nbsp;<span class="errorText">mindestens ' . (defined('ENTRY_FIRST_NAME_MIN_LENGTH') ? ENTRY_FIRST_NAME_MIN_LENGTH : 0) . ' Buchstaben</span>');
 define('ENTRY_LAST_NAME', 'Nachname:');

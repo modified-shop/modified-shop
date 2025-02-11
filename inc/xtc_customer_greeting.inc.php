@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_customer_greeting.inc.php 1009 2005-07-11 16:19:29Z mz $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -28,9 +28,9 @@
         $_SESSION['customer_gender'] = $check_customer_data['customers_gender'];
       }
       if ($_SESSION['customer_gender'] == 'f') {
-        $greeting_string = sprintf(TEXT_GREETING_PERSONAL, FEMALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;'. $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
+        $greeting_string = sprintf(TEXT_GREETING_PERSONAL, GENDER_FEMALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;'. $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
       } elseif ($_SESSION['customer_gender'] == 'm') {
-        $greeting_string = sprintf(TEXT_GREETING_PERSONAL, MALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;' . $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
+        $greeting_string = sprintf(TEXT_GREETING_PERSONAL, GENDER_MALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;' . $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
       } else {
         $greeting_string = sprintf(TEXT_GREETING_PERSONAL, $_SESSION['customer_first_name'] . '&nbsp;' . $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
       }
@@ -40,4 +40,3 @@
 
     return $greeting_string;
   }
-?>

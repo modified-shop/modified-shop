@@ -91,15 +91,11 @@
             ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_GENDER; ?></td>
-              <td class="dataTableConfig col-single-right<?php echo (($error == true && isset($entry_gender_error) && $entry_gender_error == true) ? ' col-error' : ''); ?>">
+              <td class="dataTableConfig col-single-right">
               <?php
               if ($error == true) {
-                if ($entry_gender_error == true) {
-                  echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $cInfo->customers_gender).'&nbsp;'.ENTRY_GENDER_ERROR;
-                } else {
-                  echo get_customers_gender($cInfo->customers_gender);
-                  echo xtc_draw_hidden_field('customers_gender', $cInfo->customers_gender);
-                }
+                echo get_customers_gender($cInfo->customers_gender);
+                echo xtc_draw_hidden_field('customers_gender', $cInfo->customers_gender);
               } else {
                 echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $cInfo->customers_gender);
               }

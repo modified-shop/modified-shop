@@ -52,9 +52,10 @@ define('HEADER_TITLE_CATALOG', 'Katalog');
 // instead of staying with the applications default currency
 defined('LANGUAGE_CURRENCY') OR define('LANGUAGE_CURRENCY', 'EUR');
 
-define('MALE', 'Herr');
-define('FEMALE', 'Frau');
-define('DIVERSE', 'Divers');
+define('GENDER_NONE', 'keine');
+define('GENDER_MALE', 'Herr');
+define('GENDER_FEMALE', 'Frau');
+define('GENDER_DIVERSE', 'Divers');
 
 /*
  * 
@@ -114,8 +115,8 @@ define('ERROR_NO_SHIPPING_MODULE_SELECTED', 'Bitte w&auml;hlen Sie eine Versanda
 
 define('ENTRY_COMPANY_ERROR', '');
 define('ENTRY_COMPANY_TEXT', '');
-define('ENTRY_GENDER_ERROR', 'Bitte w&auml;hlen Sie Ihre Anrede aus.');
-define('ENTRY_GENDER_TEXT', '*');
+define('ENTRY_GENDER_ERROR', '');
+define('ENTRY_GENDER_TEXT', '');
 define('ENTRY_FIRST_NAME_ERROR', 'Ihr Vorname muss aus mindestens ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' Zeichen bestehen.');
 define('ENTRY_FIRST_NAME_TEXT', '*');
 define('ENTRY_LAST_NAME_ERROR', 'Ihr Nachname muss aus mindestens ' . ENTRY_LAST_NAME_MIN_LENGTH . ' Zeichen bestehen.');

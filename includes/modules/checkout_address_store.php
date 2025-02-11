@@ -41,11 +41,6 @@
 
   $process = true;
 
-  if (ACCOUNT_GENDER == 'true' && $gender == '') {
-    $error = true;
-    $messageStack->add('checkout_address', ENTRY_GENDER_ERROR);
-  }
-
   if (mb_strlen($firstname, $_SESSION['language_charset']) < ENTRY_FIRST_NAME_MIN_LENGTH) {
     $error = true;
     $messageStack->add('checkout_address', ENTRY_FIRST_NAME_ERROR);

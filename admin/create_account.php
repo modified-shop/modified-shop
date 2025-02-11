@@ -42,7 +42,6 @@
   }
 
   $error = false;
-  $entry_gender_error = false;
   $entry_password_error = false;
   $entry_mail_error = false;
   $entry_firstname_error = false;
@@ -93,9 +92,6 @@
 
     if (ACCOUNT_GENDER == 'true') {
       $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
-      if ($customers_gender == '') {
-        $error = $entry_gender_error = true;
-      }
     }
 
     if (strlen($customers_password) < ENTRY_PASSWORD_MIN_LENGTH) {
@@ -381,10 +377,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     <?php if (ACCOUNT_GENDER == 'true') { ?>
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo ENTRY_GENDER; ?></td>
-                        <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_gender_error == true) ? ' col-error' : ''); ?>">
+                        <td class="dataTableConfig col-single-right">
                         <?php
                           echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), isset($customers_gender)?$customers_gender:'');
-                          if ($error && $entry_gender_error) echo '&nbsp;'.ENTRY_GENDER_ERROR;
                         ?>
                         </td>                        
                       </tr>

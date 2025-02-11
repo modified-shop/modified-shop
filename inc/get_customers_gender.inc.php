@@ -13,10 +13,10 @@
 
 function get_customers_gender($id=false) 
 {
-  $gender_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT),
-                        array('id' => 'm', 'text' => MALE),
-                        array('id' => 'f', 'text' => FEMALE),
-                        array('id' => 'd', 'text' => DIVERSE),
+  $gender_array = array(array('id' => '', 'text' => GENDER_NONE),
+                        array('id' => 'm', 'text' => GENDER_MALE),
+                        array('id' => 'f', 'text' => GENDER_FEMALE),
+                        array('id' => 'd', 'text' => GENDER_DIVERSE),
                         );
   if ($id === false) {
     return $gender_array;
@@ -30,4 +30,3 @@ function get_customers_gender($id=false)
   
   return '';
 }
-?>
