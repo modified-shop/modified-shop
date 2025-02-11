@@ -217,6 +217,7 @@ if ($messageStack->size('account_edit') > 0)
   $smarty->assign('error_message', $messageStack->output('account_edit'));
 
 if (ACCOUNT_GENDER == 'true') {
+  $smarty->assign('gender','1');
   $smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array('name' => 'gender', 'text' => (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender()));
 }
 
