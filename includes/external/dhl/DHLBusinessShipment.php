@@ -132,7 +132,8 @@
         
         if (isset($response->Status->statusText)
             && $response->Status->statusText != ''
-            && $this->loglevel != 'NONE'
+            && strtolower($response->Status->statusText) != 'ok'
+            && $this->loglevel == 'INFO'
             )
         {
           $message = array('INFO - <b>Message:</b> '.$this->encode_message($response->Status->statusText));
