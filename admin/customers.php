@@ -381,15 +381,6 @@
           $entry_lastname_error = false;
         }
 
-        if (ACCOUNT_GENDER == 'true') {
-          if (($customers_gender == '')) {
-            $error = true;
-            $entry_gender_error = true;
-          } else {
-            $entry_gender_error = false;
-          }
-        }
-
         if (strlen($entry_street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
           $error = true;
           $entry_street_address_error = true;
