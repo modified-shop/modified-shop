@@ -231,7 +231,9 @@ class shoppingCart {
     //new module support 
     $this->shoppingCartModules->reset($reset_database, $this->type);
 
-    unset ($this->cartID);
+    // unique ID to the order contents
+    $this->cartID = $this->generate_cart_id();
+
     if (isset($_SESSION[$this->type.'ID'])) {
       unset ($_SESSION[$this->type.'ID']);
     }
