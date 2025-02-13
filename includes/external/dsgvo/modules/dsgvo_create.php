@@ -16,7 +16,7 @@
       foreach ($content_group_array as $content_group) {
         foreach ($lng->catalog_languages as $language) {
           $content = $main->getContentData($content_group, $language['id'], $customers_status['customers_status_id']);
-          $content_array[$language['code']] = $content['content_text'];
+          $content_array[$language['code']] = ((isset($content['content_text'])) ? $content['content_text'] : '');
         }
         ksort($content_array);
         
@@ -65,4 +65,3 @@
       }
     }
   }
-?>
