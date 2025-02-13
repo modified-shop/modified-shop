@@ -68,7 +68,7 @@
   float:left;
   margin: 0px 10px 0px 0px;
 }
-#admin ul li a.togglelink{
+#admin ul li a.togglelink, #admin ul li > img {
 	display: block;
 	font-size: 12px;
 	font-weight: bold;
