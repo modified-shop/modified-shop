@@ -253,12 +253,17 @@
         // are there any attributes for this order_id ?
         if ($details > 0) {
           $attr = array();
-          $attributes_query = xtc_db_query("SELECT opa.*
-                                              FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " opa
-                                              JOIN " . TABLE_ORDERS_PRODUCTS . " op
-                                                   ON (op.orders_id=opa.orders_id 
-                                                       AND op.products_id='".$resp['pid']."'
-                                                       AND op.orders_products_id=opa.orders_products_id)
+          $attributes_query = xtc_db_query("SELECT opa.*,
+                                                   sum(op.products_quantity) as aquant
+                                              FROM " . TABLE_ORDERS_PRODUCTS . " op
+                                              JOIN " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " opa
+                                                   ON op.orders_id = opa.orders_id 
+                                                      AND op.orders_products_id = opa.orders_products_id
+                                              JOIN " . TABLE_ORDERS . " o
+                                                   ON op.orders_id = o.orders_id 
+                                                      AND o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' 
+                                                      AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'
+                                             WHERE op.products_id = '".$resp['pid']."'
                                           GROUP BY opa.orders_products_options_values_id
                                           ORDER BY opa.orders_products_attributes_id");
           $attrib_cnt = xtc_db_num_rows($attributes_query);
@@ -284,10 +289,11 @@
                 $prefix = "+";
               }
               $ord_pro_id = $attr[$j]['orders_products_id'];
-              if ( $ord_pro_id != $ord_pro_id_old) {
+              if ($ord_pro_id != $ord_pro_id_old) {
                 $k++;
                 $l = 0;
                 // set values
+                $option[$k]['aquant'][0] = $attr[$j]['aquant'];
                 $option[$k]['price_prefix'] = $attr[$j]['price_prefix'];
                 $option[$k]['options'][0] = $attr[$j]['products_options'];
                 $option[$k]['options_values'][0] = $attr[$j]['products_options_values'];
@@ -299,6 +305,7 @@
               } else {
                 $l++;
                 // update values
+                $option[$k]['aquant'][$l] = $attr[$j]['aquant'];
                 $option[$k]['options'][$l] = $attr[$j]['products_options'];
                 $option[$k]['options_values'][$l] = $attr[$j]['products_options_values'];
                 if ($price3 != 0) {
