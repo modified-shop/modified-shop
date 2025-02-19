@@ -34,7 +34,7 @@ define('MODULE_SHIPPING_GLS_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im M
 define('MODULE_SHIPPING_GLS_STATUS_TITLE' , 'GLS');
 define('MODULE_SHIPPING_GLS_STATUS_DESC' , 'Wollen Sie den Versand &uuml;ber GLS anbieten?');
 define('MODULE_SHIPPING_GLS_HANDLING_TITLE' , 'Bearbeitungsgeb&uuml;hr');
-define('MODULE_SHIPPING_GLS_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart in Euro');
+define('MODULE_SHIPPING_GLS_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart');
 define('MODULE_SHIPPING_GLS_TAX_CLASS_TITLE' , 'Steuersatz');
 define('MODULE_SHIPPING_GLS_TAX_CLASS_DESC' , 'W&auml;hlen Sie den MwSt.-Satz f&uuml;r diese Versandart aus.');
 define('MODULE_SHIPPING_GLS_ZONE_TITLE' , 'Versand Zone');

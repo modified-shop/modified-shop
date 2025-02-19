@@ -22,73 +22,29 @@
    ---------------------------------------------------------------------------------------*/
    
 
-
 define('MODULE_SHIPPING_CHRONOPOST_TEXT_TITLE', 'Chronopost');
 define('MODULE_SHIPPING_CHRONOPOST_TEXT_DESCRIPTION', 'Chronopost Zone Based Rates');
-define('MODULE_SHIPPING_CHRONOPOST_TEXT_WAY', 'Shipping to');
+define('MODULE_SHIPPING_CHRONOPOST_TEXT_WAY', 'Dispatch to');
 define('MODULE_SHIPPING_CHRONOPOST_TEXT_UNITS', 'kg');
-define('MODULE_SHIPPING_CHRONOPOST_INVALID_ZONE', 'Chronopost No shipping available to the selected country');
-define('MODULE_SHIPPING_CHRONOPOST_UNDEFINED_RATE', 'Chronopost The shipping rate cannot be determined at this time');
+define('MODULE_SHIPPING_CHRONOPOST_INVALID_ZONE', 'Unfortunately it is not possible to dispatch into this country');
+define('MODULE_SHIPPING_CHRONOPOST_UNDEFINED_RATE', 'Shipping costs cannot be calculated for the moment');
 
-define('MODULE_SHIPPING_CHRONOPOST_STATUS_TITLE' , 'Activer Chronopost');
-define('MODULE_SHIPPING_CHRONOPOST_STATUS_DESC' , 'Vous souhaitez activer l\'exp&eacute;dition via Chronopost? (True, False)');
-define('MODULE_SHIPPING_CHRONOPOST_HANDLING_TITLE' , 'Les tarifs');
-define('MODULE_SHIPPING_CHRONOPOST_HANDLING_DESC' , 'Les tarifs pour l\'exp&eacute;dition via chronopost');
-define('MODULE_SHIPPING_CHRONOPOST_TAX_CLASS_TITLE' , 'Tax Class');
-define('MODULE_SHIPPING_CHRONOPOST_TAX_CLASS_DESC' , 'Use the following tax class on the shipping fee.');
+define('MODULE_SHIPPING_CHRONOPOST_STATUS_TITLE' , 'DHL WORLDWIDE EXPRESS');
+define('MODULE_SHIPPING_CHRONOPOST_STATUS_DESC' , 'Do you want to offer DHL WORLDWIDE EXPRESS shipping?');
+define('MODULE_SHIPPING_CHRONOPOST_HANDLING_TITLE' , 'Handling Fee');
+define('MODULE_SHIPPING_CHRONOPOST_HANDLING_DESC' , 'Handling fee for this shipping method');
+define('MODULE_SHIPPING_CHRONOPOST_TAX_CLASS_TITLE' , 'Tax Rate');
+define('MODULE_SHIPPING_CHRONOPOST_TAX_CLASS_DESC' , 'Use the following tax class on the shipping fee');
 define('MODULE_SHIPPING_CHRONOPOST_ZONE_TITLE' , 'Shipping Zone');
-define('MODULE_SHIPPING_CHRONOPOST_ZONE_DESC' , 'If a zone is selected, only enable this shipping method for that zone.');
+define('MODULE_SHIPPING_CHRONOPOST_ZONE_DESC' , 'If a zone is selected, only enable this shipping method for that zone');
 define('MODULE_SHIPPING_CHRONOPOST_SORT_ORDER_TITLE' , 'Sort Order');
-define('MODULE_SHIPPING_CHRONOPOST_SORT_ORDER_DESC' , 'Sort order of display.');
-define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_TITLE' , 'Einzelne Versandzonen');
-define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. z.B. AT,DE');
+define('MODULE_SHIPPING_CHRONOPOST_SORT_ORDER_DESC' , 'Sort order of display');
+define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_TITLE' , 'Allowed Shipping Zones');
+define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
 
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_1_TITLE' , 'Chronopost Zone 1 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_1_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_1_TITLE' , 'Chronopost Zone 1 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_1_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 1. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_2_TITLE' , 'Chronopost Zone 2 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_2_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_2_TITLE' , 'Chronopost Zone 2 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_2_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 2. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_3_TITLE' , 'Chronopost Zone 3 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_3_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_3_TITLE' , 'Chronopost Zone 3 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_3_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 3. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_4_TITLE' , 'Chronopost Zone 4 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_4_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_4_TITLE' , 'Chronopost Zone 4 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_4_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 4. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_5_TITLE' , 'Chronopost Zone 5 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_5_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_5_TITLE' , 'Chronopost Zone 5 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_5_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 5. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_6_TITLE' , 'Chronopost Zone 6 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_6_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_6_TITLE' , 'Chronopost Zone 6 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_6_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 6. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_7_TITLE' , 'Chronopost Zone 7 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_7_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_7_TITLE' , 'Chronopost Zone 7 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_7_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 7. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_8_TITLE' , 'Chronopost Zone 8 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_8_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_8_TITLE' , 'Chronopost Zone 8 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_8_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 8. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_9_TITLE' , 'Chronopost Zone 9 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_9_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_9_TITLE' , 'Chronopost Zone 9 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_9_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 9. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_10_TITLE' , 'Chronopost Zone 10 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_10_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
-define('MODULE_SHIPPING_CHRONOPOST_COST_10_TITLE' , 'Chronopost Zone 10 (poids:tarifs)');
-define('MODULE_SHIPPING_CHRONOPOST_COST_10_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 10. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
+for ($module_shipping_chp_i = 1; $module_shipping_chp_i <= 10; $module_shipping_chp_i ++) {
+  define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_'.$module_shipping_chp_i.'_TITLE' , '<hr/>Chronopost Zone '.$module_shipping_chp_i.' Countries');
+  define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_'.$module_shipping_chp_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_chp_i.' (Enter WORLD for the rest of the world.).');
+  define('MODULE_SHIPPING_CHRONOPOST_COST_'.$module_shipping_chp_i.'_TITLE' , 'Chronopost Zone '.$module_shipping_chp_i.' Shipping Table');
+  define('MODULE_SHIPPING_CHRONOPOST_COST_'.$module_shipping_chp_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_chp_i.' destinations based on a range of order weights. Example: 0-2000:28.71,2000-5000:34.38... Weights greater than 0 and less than 2 would cost 28,71, less than 5 would cost 34.38 for Zone '.$module_shipping_chp_i.' destinations.');
+}

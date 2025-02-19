@@ -40,7 +40,7 @@ define('MODULE_SHIPPING_DPD_SUBSIDIZED_SHIPPING', 'Einen Teil der Versandkosten 
 define('MODULE_SHIPPING_DPD_STATUS_TITLE', 'DPD');
 define('MODULE_SHIPPING_DPD_STATUS_DESC', 'Wollen Sie den Versand &uuml;ber DPD anbieten?');
 define('MODULE_SHIPPING_DPD_HANDLING_TITLE', 'Bearbeitungsgeb&uuml;hr');
-define('MODULE_SHIPPING_DPD_HANDLING_DESC', 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart in Euro');
+define('MODULE_SHIPPING_DPD_HANDLING_DESC', 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart');
 define('MODULE_SHIPPING_DPD_ALLOWED_TITLE' , 'Erlaubte Versandzonen');
 define('MODULE_SHIPPING_DPD_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
 define('MODULE_SHIPPING_DPD_SORT_ORDER_TITLE', 'Reihenfolge der Anzeige');

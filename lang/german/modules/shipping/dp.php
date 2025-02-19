@@ -32,8 +32,8 @@ define('MODULE_SHIPPING_DP_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Mo
 
 define('MODULE_SHIPPING_DP_STATUS_TITLE' , 'Deutsche Post WorldNet');
 define('MODULE_SHIPPING_DP_STATUS_DESC' , 'Wollen Sie den Versand &uuml;ber die deutsche Post anbieten?');
-define('MODULE_SHIPPING_DP_HANDLING_TITLE' , 'Handling Fee');
-define('MODULE_SHIPPING_DP_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart in Euro');
+define('MODULE_SHIPPING_DP_HANDLING_TITLE' , 'Bearbeitungsgeb&uuml;hr');
+define('MODULE_SHIPPING_DP_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart');
 define('MODULE_SHIPPING_DP_TAX_CLASS_TITLE' , 'Steuerklasse');
 define('MODULE_SHIPPING_DP_TAX_CLASS_DESC' , 'Folgende Steuerklasse an Versandkosten anwenden.');
 define('MODULE_SHIPPING_DP_ZONE_TITLE' , 'Versand Zone');

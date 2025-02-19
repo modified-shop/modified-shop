@@ -31,8 +31,8 @@ define('MODULE_SHIPPING_DHL_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im M
 
 define('MODULE_SHIPPING_DHL_STATUS_TITLE' , 'DHL WORLDWIDE EXPRESS');
 define('MODULE_SHIPPING_DHL_STATUS_DESC' , 'Wollen Sie den Versand &uuml;ber DHL WORLDWIDE EXPRESS anbieten?');
-define('MODULE_SHIPPING_DHL_HANDLING_TITLE' , 'Handling Fee');
-define('MODULE_SHIPPING_DHL_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart in Euro');
+define('MODULE_SHIPPING_DHL_HANDLING_TITLE' , 'Bearbeitungsgeb&uuml;hr');
+define('MODULE_SHIPPING_DHL_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart');
 define('MODULE_SHIPPING_DHL_TAX_CLASS_TITLE' , 'Steuersatz');
 define('MODULE_SHIPPING_DHL_TAX_CLASS_DESC' , 'W&auml;hlen Sie den MwSt.-Satz f&uuml;r diese Versandart aus.');
 define('MODULE_SHIPPING_DHL_ZONE_TITLE' , 'Versand Zone');

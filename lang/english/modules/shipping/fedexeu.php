@@ -33,7 +33,7 @@ define('MODULE_SHIPPING_FEDEXEU_UNDEFINED_RATE', 'Forwarding expenses cannot be 
 define('MODULE_SHIPPING_FEDEXEU_STATUS_TITLE' , 'FedEx');
 define('MODULE_SHIPPING_FEDEXEU_STATUS_DESC' , 'Do you want to offer FedEx shipping?');
 define('MODULE_SHIPPING_FEDEXEU_HANDLING_TITLE' , 'Handling Fee');
-define('MODULE_SHIPPING_FEDEXEU_HANDLING_DESC' , 'Handlingfee for this shipping method in Euro');
+define('MODULE_SHIPPING_FEDEXEU_HANDLING_DESC' , 'Handling fee for this shipping method');
 define('MODULE_SHIPPING_FEDEXEU_TAX_CLASS_TITLE' , 'Tax Rate');
 define('MODULE_SHIPPING_FEDEXEU_TAX_CLASS_DESC' , 'Use the following tax class on the shipping fee.');
 define('MODULE_SHIPPING_FEDEXEU_ZONE_TITLE' , 'Shipping Zone');

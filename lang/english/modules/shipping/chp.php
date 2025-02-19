@@ -32,7 +32,7 @@ define('MODULE_SHIPPING_CHP_UNDEFINED_RATE', 'Forwarding expenses cannot be calc
 define('MODULE_SHIPPING_CHP_STATUS_TITLE' , 'The Swiss Post');
 define('MODULE_SHIPPING_CHP_STATUS_DESC' , 'Would you like to offer shipping with The Swiss Post?');
 define('MODULE_SHIPPING_CHP_HANDLING_TITLE' , 'Handling Fee');
-define('MODULE_SHIPPING_CHP_HANDLING_DESC' , 'Handling Fee in CHF');
+define('MODULE_SHIPPING_CHP_HANDLING_DESC' , 'Handling fee for this shipping method');
 define('MODULE_SHIPPING_CHP_TAX_CLASS_TITLE' , 'Tax');
 define('MODULE_SHIPPING_CHP_TAX_CLASS_DESC' , 'Please choose the tax rate for shipping.');
 define('MODULE_SHIPPING_CHP_ZONE_TITLE' , 'Shipping Zone');

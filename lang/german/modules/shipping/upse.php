@@ -32,8 +32,8 @@ define('MODULE_SHIPPING_UPSE_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im 
 
 define('MODULE_SHIPPING_UPSE_STATUS_TITLE' , 'UPS Express');
 define('MODULE_SHIPPING_UPSE_STATUS_DESC' , 'Wollen Sie den Versand durch UPS Express anbieten?');
-define('MODULE_SHIPPING_UPSE_HANDLING_TITLE' , 'Zuschlag');
-define('MODULE_SHIPPING_UPSE_HANDLING_DESC' , 'Bearbeitungszuschlag f&uuml;r diese Versandart in Euro');
+define('MODULE_SHIPPING_UPSE_HANDLING_TITLE' , 'Bearbeitungsgeb&uuml;hr');
+define('MODULE_SHIPPING_UPSE_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart');
 define('MODULE_SHIPPING_UPSE_TAX_CLASS_TITLE' , 'Steuersatz');
 define('MODULE_SHIPPING_UPSE_TAX_CLASS_DESC' , 'W&auml;hlen Sie den MwSt.-Satz f&uuml;r diese Versandart aus.');
 define('MODULE_SHIPPING_UPSE_ZONE_TITLE' , 'Versand Zone');

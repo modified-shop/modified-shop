@@ -33,7 +33,7 @@ define('MODULE_SHIPPING_DP_UNDEFINED_RATE', 'Shipping costs cannot be calculated
 define('MODULE_SHIPPING_DP_STATUS_TITLE' , 'German Post WorldNet');
 define('MODULE_SHIPPING_DP_STATUS_DESC' , 'Would you like to offer shipping with German Post WorldNet?');
 define('MODULE_SHIPPING_DP_HANDLING_TITLE' , 'Handling Fee');
-define('MODULE_SHIPPING_DP_HANDLING_DESC' , 'Handling Fee in Euro');
+define('MODULE_SHIPPING_DP_HANDLING_DESC' , 'Handling fee for this shipping method');
 define('MODULE_SHIPPING_DP_TAX_CLASS_TITLE' , 'Tax');
 define('MODULE_SHIPPING_DP_TAX_CLASS_DESC' , 'Please choose the tax rate for shipping.');
 define('MODULE_SHIPPING_DP_ZONE_TITLE' , 'Shipping Zone');

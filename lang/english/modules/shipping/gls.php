@@ -34,7 +34,7 @@ define('MODULE_SHIPPING_GLS_UNDEFINED_RATE', 'Shipping costs cannot be calculate
 define('MODULE_SHIPPING_GLS_STATUS_TITLE' , 'GLS');
 define('MODULE_SHIPPING_GLS_STATUS_DESC' , 'Do you want to offer shipping via GLS?');
 define('MODULE_SHIPPING_GLS_HANDLING_TITLE' , 'Handling Fee');
-define('MODULE_SHIPPING_GLS_HANDLING_DESC' , 'Handling Fee for this shipping type in Euro');
+define('MODULE_SHIPPING_GLS_HANDLING_DESC' , 'Handling fee for this shipping method');
 define('MODULE_SHIPPING_GLS_TAX_CLASS_TITLE' , 'Tax Rate');
 define('MODULE_SHIPPING_GLS_TAX_CLASS_DESC' , 'Choose the tax rate for this shipping type');
 define('MODULE_SHIPPING_GLS_ZONE_TITLE' , 'Shipping Zone');

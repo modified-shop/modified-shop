@@ -36,7 +36,7 @@ define('MODULE_SHIPPING_UPS_UNDEFINED_RATE', 'Shipping costs cannot be calculate
 define('MODULE_SHIPPING_UPS_STATUS_TITLE' , 'UPS Standard');
 define('MODULE_SHIPPING_UPS_STATUS_DESC' , 'Would you like to offer shipping with UPS Standard?');
 define('MODULE_SHIPPING_UPS_HANDLING_TITLE' , 'Handling Fee');
-define('MODULE_SHIPPING_UPS_HANDLING_DESC' , 'Handling Fee in Euro');
+define('MODULE_SHIPPING_UPS_HANDLING_DESC' , 'Handling fee for this shipping method');
 define('MODULE_SHIPPING_UPS_TAX_CLASS_TITLE' , 'Tax');
 define('MODULE_SHIPPING_UPS_TAX_CLASS_DESC' , 'Please choose the tax rate for shipping.');
 define('MODULE_SHIPPING_UPS_ZONE_TITLE' , 'Shipping Zone');

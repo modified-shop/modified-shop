@@ -32,8 +32,8 @@ define('MODULE_SHIPPING_FEDEXEU_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen 
 
 define('MODULE_SHIPPING_FEDEXEU_STATUS_TITLE' , 'FedEx Express Europe');
 define('MODULE_SHIPPING_FEDEXEU_STATUS_DESC' , 'Wollen Sie den Versand durch FedEx anbieten?');
-define('MODULE_SHIPPING_FEDEXEU_HANDLING_TITLE' , 'Handling Geb&uuml;hr');
-define('MODULE_SHIPPING_FEDEXEU_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart in Euro');
+define('MODULE_SHIPPING_FEDEXEU_HANDLING_TITLE' , 'Bearbeitungsgeb&uuml;hr');
+define('MODULE_SHIPPING_FEDEXEU_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart');
 define('MODULE_SHIPPING_FEDEXEU_TAX_CLASS_TITLE' , 'Steuersatz');
 define('MODULE_SHIPPING_FEDEXEU_TAX_CLASS_DESC' , 'W&auml;hlen Sie den MwSt.-Satz f&uuml;r diese Versandart aus.');
 define('MODULE_SHIPPING_FEDEXEU_ZONE_TITLE' , 'Versand Zone');
