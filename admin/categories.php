@@ -328,9 +328,19 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
 //breadcrumb
 require_once (DIR_FS_CATALOG.'includes/classes/breadcrumb.php');
-$breadcrumb = new breadcrumb;
-$breadcrumb->add(TEXT_TOP, xtc_href_link(FILENAME_CATEGORIES, (isset($_GET['page']) ? 'page='.(int)$_GET['page'] : '')));
-if (isset ($cPath_array)) {
+$breadcrumb = new breadcrumb();
+$breadcrumb->add(TEXT_TOP, xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'page'))));
+
+if ((isset($_GET['search']) && xtc_not_null($_GET['search']))
+    || (isset($_GET['search_id']) && xtc_not_null($_GET['search_id']))
+    )
+{
+  $heading_title = HEADING_TITLE_SEARCH;
+} else {
+  $heading_title = HEADING_TITLE;
+}
+
+if (isset($cPath_array)) {
   $cPathLinkParam = array();
   for ($i = 0, $n = sizeof($cPath_array); $i < $n; $i ++) {
     if ($cPath_array[$i]
@@ -351,6 +361,7 @@ if (isset ($cPath_array)) {
     }
   }
 }
+
 $breadcrumb_html = '<span class="breadcrumb">' . $breadcrumb->trail(' &raquo; ') . '</span>';
 
 require (DIR_WS_INCLUDES.'head.php');
