@@ -29,7 +29,7 @@ function smarty_modifier_onlytext($string) {
   if (xtc_not_null($string)) {
     $string = strip_tags($string);
     $string = preg_replace("'[\r\n\s]+'", ' ', $string);
-    $string = str_replace(array('"', "'"), '', $string);
+    $string = str_replace(array('"', "'"), array('&quote;', '&#39;'), $string);
     $string = trim($string);
   }
   
