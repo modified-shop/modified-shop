@@ -149,7 +149,7 @@
     }
 
     function install() {
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) VALUES ('MODULE_SHIPPING_CHRONOPOST_STATUS', 'True', '6', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPPING_CHRONOPOST_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_CHRONOPOST_HANDLING', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_CHRONOPOST_ALLOWED', '', '6', '0', now())");
 
