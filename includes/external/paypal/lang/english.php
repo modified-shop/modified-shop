@@ -25,7 +25,10 @@ $lang_array = array(
   'TEXT_PAYPAL_TRANSACTION_INTENT' => 'Intent:',
   'TEXT_PAYPAL_TRANSACTION_STATE' => 'Status:',
   'TEXT_PAYPAL_TRANSACTION_ID' => 'ID:',
-  
+  'TEXT_PAYPAL_TRANSACTION_ACTION' => 'Action:',
+  'TEXT_PAYPAL_TRANSACTION_SUBMIT' => 'Delete',
+  'TEXT_PAYPAL_TRANSACTION_CONFIRM' => 'Are you sure you want to delete the PayPal payment information?',
+
   
   // transactions
   'TEXT_PAYPAL_TRANSACTIONS_STATUS' => 'Transaktions',

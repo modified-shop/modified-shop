@@ -116,6 +116,23 @@ if (isset($order) && is_object($order)) {
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_STATE; ?></dt>
                 <dd><?php echo $admin_info_data['state']; ?></dd>
               </dl>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_TRANSACTION_STATE; ?></dt>
+                <dd><?php echo $admin_info_data['state']; ?></dd>
+              </dl>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACTION; ?></dt>
+                <dd>
+                  <?php
+                  echo xtc_draw_form('delete', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                  if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                    echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
+                  }
+                  echo xtc_draw_hidden_field('cmd', 'delete');
+                  ?>
+                  <input type="submit" class="button" name="delete_submit" value="<?php echo TEXT_PAYPAL_TRANSACTION_SUBMIT; ?>">
+                </dd>
+              </dl>
             </div>
       
             <?php
@@ -358,6 +375,19 @@ if (isset($order) && is_object($order)) {
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ID; ?></dt>
                 <dd><?php echo $admin_info_data->id; ?></dd>
+              </dl>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACTION; ?></dt>
+                <dd>
+                  <?php
+                  echo xtc_draw_form('delete', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                  if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                    echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
+                  }
+                  echo xtc_draw_hidden_field('cmd', 'delete');
+                  ?>
+                  <input type="submit" class="button" name="delete_submit" value="<?php echo TEXT_PAYPAL_TRANSACTION_SUBMIT; ?>">
+                </dd>
               </dl>
             </div>
 
@@ -719,6 +749,10 @@ if (isset($order) && is_object($order)) {
           $('div.pp_txstatus_data').hide();
           $('div.pp_txstatus_data', $(this).parent()).show();
         }
+      });
+
+      $('#delete').submit(function() {
+          return confirm("<?php echo decode_htmlentities(TEXT_PAYPAL_TRANSACTION_CONFIRM); ?>");
       });
     });
   </script>

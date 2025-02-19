@@ -25,7 +25,10 @@ $lang_array = array(
   'TEXT_PAYPAL_TRANSACTION_INTENT' => 'Intent:',
   'TEXT_PAYPAL_TRANSACTION_STATE' => 'Status:',
   'TEXT_PAYPAL_TRANSACTION_ID' => 'ID:',
-  
+  'TEXT_PAYPAL_TRANSACTION_ACTION' => 'Aktion:',
+  'TEXT_PAYPAL_TRANSACTION_SUBMIT' => 'L&ouml;schen',
+  'TEXT_PAYPAL_TRANSACTION_CONFIRM' => 'Sind Sie sicher, dass Sie die PayPal Zahlungsinformationen l&ouml;schen wollen?',
+
   
   // transactions
   'TEXT_PAYPAL_TRANSACTIONS_STATUS' => 'Transaktionen',

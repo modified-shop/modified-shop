@@ -90,6 +90,9 @@ if (isset($oID) && $oID != '') {
             $_SESSION['pp_error'] = implode('<br/>', $response);
           }
           break;
+        case 'delete':
+          xtc_db_query("DELETE FROM ".TABLE_PAYPAL_PAYMENT." WHERE orders_id = '".(int)$order->info['order_id']."'");
+          break;
       }
     }
   }
@@ -150,6 +153,9 @@ if (isset($oID) && $oID != '') {
           if (is_array($response) && count($response) > 0) {
             $_SESSION['pp_error'] = implode('<br/>', $response);
           }
+          break;
+        case 'delete':
+          xtc_db_query("DELETE FROM ".TABLE_PAYPAL_PAYMENT." WHERE orders_id = '".(int)$order->info['order_id']."'");
           break;
       }
     }    
