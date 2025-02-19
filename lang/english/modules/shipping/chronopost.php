@@ -29,8 +29,8 @@ define('MODULE_SHIPPING_CHRONOPOST_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_CHRONOPOST_INVALID_ZONE', 'Unfortunately it is not possible to dispatch into this country');
 define('MODULE_SHIPPING_CHRONOPOST_UNDEFINED_RATE', 'Shipping costs cannot be calculated for the moment');
 
-define('MODULE_SHIPPING_CHRONOPOST_STATUS_TITLE' , 'DHL WORLDWIDE EXPRESS');
-define('MODULE_SHIPPING_CHRONOPOST_STATUS_DESC' , 'Do you want to offer DHL WORLDWIDE EXPRESS shipping?');
+define('MODULE_SHIPPING_CHRONOPOST_STATUS_TITLE' , 'Chronopost');
+define('MODULE_SHIPPING_CHRONOPOST_STATUS_DESC' , 'Do you want to offer Chronopost shipping?');
 define('MODULE_SHIPPING_CHRONOPOST_HANDLING_TITLE' , 'Handling Fee');
 define('MODULE_SHIPPING_CHRONOPOST_HANDLING_DESC' , 'Handling fee for this shipping method');
 define('MODULE_SHIPPING_CHRONOPOST_TAX_CLASS_TITLE' , 'Tax Rate');
