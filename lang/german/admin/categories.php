@@ -19,8 +19,8 @@
 // BOF - Tomcraft - 2009-11-02 - Admin language tabs
 define('TEXT_EDIT_STATUS', 'Status aktiv');
 // BOF - Tomcraft - 2009-11-02 - Admin language tabs
-define('HEADING_TITLE', 'Kategorien');
-define('HEADING_TITLE_SEARCH', 'Suche: ');
+define('HEADING_TITLE', 'Kategorien &amp; Artikel');
+define('HEADING_TITLE_SEARCH', 'Suchergebnisse');
 define('HEADING_TITLE_GOTO', 'Gehe zu:');
 define('HEADING_TITLE_MANUFACTURERS', 'Hersteller:');
 define('HEADING_TITLE_SHOW_CATEGORIES', 'Kategorien anzeigen:');

@@ -151,7 +151,7 @@
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_categories.png'); ?></div>
       <div class="flt-l">
         <div class="pageHeading pdg2"><?php echo ((isset($category_name['categories_name'])) ? $category_name['categories_name'] : TEXT_TOP); ?></div>
-        <div class="main pdg2"><?php echo HEADING_TITLE .sprintf(HEADING_TITLE_CAT_BREADCRUMB,$breadcrumb_html); ?></div>
+        <div class="main pdg2"><?php echo $heading_title . sprintf(HEADING_TITLE_CAT_BREADCRUMB, $breadcrumb_html); ?></div>
       </div>
       <?php
       if (defined('CAT_VIEW_DROPDOWN') && CAT_VIEW_DROPDOWN == 'true') {
@@ -285,6 +285,7 @@
             $categories_count = 0;
             $rows = 0;
             
+            $cPath_back = '';
             if ($display_categories) {
                // ----------------------------------------------------------------------------------------------------- //
                // WHILE loop to display categories STARTS
@@ -327,7 +328,6 @@
                                                  ORDER BY " . $catsort);
                }
 
-              $cPath_back = '';
               if (!isset($cPath_array)) {
                 $cPath_array = array();
               }
@@ -582,19 +582,15 @@
                   $add_where = "WHERE p.manufacturers_id = '".(int)$_GET['mID']."'";
                   if ($current_category_id == 0 && !xtc_not_null($search) && !xtc_not_null($search_id)) {
                     $add_where .= " AND p.products_startpage = 1";
-                  } else {
-                    if ($display_categories) {
-                      $add_join = "JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p2c.categories_id = '" . $current_category_id . "'";
-                    }
+                  } else {                  
+                    $add_join = "JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p2c.categories_id = '" . $current_category_id . "'";
                   }
                 //display "products on startpage", no entry in table produtcs_to_categories used
                 } elseif ($current_category_id == 0 && !xtc_not_null($search) && !xtc_not_null($search_id)) {
                   $add_where = 'WHERE p.products_startpage = 1';
                 //display products in categories
                 } else {
-                  if ($display_categories) {
-                    $add_join = "JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p2c.categories_id = '" . $current_category_id . "'";
-                  }
+                  $add_join = "JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p2c.categories_id = '" . $current_category_id . "'";
                 }
                 
                 if (isset($_GET['status']) && $_GET['status'] != '') {
