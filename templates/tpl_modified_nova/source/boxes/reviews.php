@@ -52,7 +52,7 @@
                        WHERE p.products_status = '1'
                              AND r.reviews_status = '1'
                              ".PRODUCTS_CONDITIONS_P."
-                    ORDER BY r.date_added ASC, p.products_id
+                    ORDER BY r.date_added DESC, p.products_id
                        LIMIT ".MAX_RANDOM_SELECT_REVIEWS;
 
     $reviews_query = xtc_db_query($reviews_query);

@@ -70,7 +70,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
                      WHERE p.products_status = '1'
                            ".PRODUCTS_CONDITIONS_P."
                            ".$reviews_status."
-                  ORDER BY r.date_added ASC, p.products_id
+                  ORDER BY r.date_added DESC, p.products_id
                      LIMIT ".MAX_RANDOM_SELECT_REVIEWS;
   $reviews_query = xtc_db_query($reviews_query);
   
