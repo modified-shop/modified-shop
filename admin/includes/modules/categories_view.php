@@ -344,7 +344,7 @@
                 $cPath_back = 'cPath=' . $cPath_back;
               }
 
-              if (!xtc_not_null($search) && count($cPath_array) > 0 && $_GET['cPath'] != '0') {
+              if (count($cPath_array) > 0 && $_GET['cPath'] != '0') {
                 ?>
                  <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'">
                    <td class="categories_view_data txta-c">--</td>
