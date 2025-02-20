@@ -1480,7 +1480,9 @@ background-color:#d4ebcb;
 color:#3C763D;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="number"], input[type="tel"],
+input[type="date"], input[type="time"], input[type="month"], input[type="week"],
+input[type="email"], input[type="url"] {
 background-color: #fafafa;
 border-color: #c6c6c6 #dadada #eaeaea;
 -webkit-border-radius: 2px;
@@ -1514,7 +1516,9 @@ font-size: 12px;
 padding: 5px 4px;
 vertical-align: middle;
 }
-.main input[type="text"], .main input[type="password"] {
+.main input[type="text"], .main input[type="password"], .main input[type="number"], .main input[type="tel"],
+.main input[type="date"], .main input[type="time"], .main input[type="month"], .main input[type="week"],
+.main input[type="email"], .main input[type="url"] {
   width: auto;
 }
 td.main table {
