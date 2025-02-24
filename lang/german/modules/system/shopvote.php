@@ -23,7 +23,7 @@
   define('MODULE_SHOPVOTE_API_SECRET_DESC', 'Tragen Sie das API-Secret ein.');
   define('MODULE_SHOPVOTE_BADGE_TITLE', 'Badge Typ');
   define('MODULE_SHOPVOTE_BADGE_DESC', 'W&auml;hlen Sie ein Badge aus.');
-  define('MODULE_SHOPVOTE_DEFAULT_LANG_TITLE', 'Fallback Sprache');
-  define('MODULE_SHOPVOTE_DEFAULT_LANG_DESC', 'W&auml;hlen Sie die Sprache f&uuml;r Bewertungen in einer Sprache, die nicht im Shop angelegt ist.');
-  define('MODULE_SHOPVOTE_SCHEDULED_TASKS_TITLE', 'Geplante Aufgaben');
-  define('MODULE_SHOPVOTE_SCHEDULED_TASKS_DESC', 'Soll der Import der Bewertungen &uuml;ber die geplanten Aufgaben erfolgen?');
+  define('MODULE_SHOPVOTE_DEFAULT_LANG_TITLE', '<h2>Import Shopvote Bewertungen</h2><br>Fallback Sprache');
+  define('MODULE_SHOPVOTE_DEFAULT_LANG_DESC', 'W&auml;hlen Sie die Sprache f&uuml;r externe Shopvote Bewertungen die in keiner der im Shop installierten Sprache erstellt wurde.');
+  define('MODULE_SHOPVOTE_SCHEDULED_TASKS_TITLE', 'Import per Geplante Aufgaben');
+  define('MODULE_SHOPVOTE_SCHEDULED_TASKS_DESC', 'Soll der Import der Bewertungen &uuml;ber die geplanten Aufgaben anstelle bei Aufruf des jeweiligen Artikels erfolgen?');
