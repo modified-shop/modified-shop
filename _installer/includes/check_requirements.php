@@ -51,6 +51,9 @@
       // check for SSL Version
       $ch = curl_init('https://www.howsmyssl.com/a/check');
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
       $data = curl_exec($ch);
       curl_close($ch);
       $json = json_decode($data);
