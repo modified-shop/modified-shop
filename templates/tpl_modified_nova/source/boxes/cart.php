@@ -43,7 +43,7 @@
           if ($mark_stock) $any_out_of_stock = true;
         }
   
-        if (STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
+        if (empty($mark_stock) && STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
           $mark_stock = check_stock_specials($products[$i]['id'], $products[$i]['quantity']);
           if ($mark_stock) $any_out_of_stock = true;
         }

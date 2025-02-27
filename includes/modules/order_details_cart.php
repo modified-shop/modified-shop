@@ -42,7 +42,6 @@ require_once (DIR_FS_INC.'check_stock_specials.inc.php');
 
 $module_content = array ();
 $any_out_of_stock = '';
-$mark_stock = '';
 $hidden_options = '';
 
 $products = $_SESSION['cart']->get_products();
@@ -51,6 +50,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
     $module_content[$i]['PRODUCTS_'.strtoupper($key)] = $entry;
   }
 
+  $mark_stock = '';
   if (STOCK_CHECK == 'true') {
     $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity'], $products[$i]['stock']);
     if ($mark_stock) {
@@ -58,7 +58,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
     }
   }
   
-  if (STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
+  if (empty($mark_stock) && STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
     $mark_stock = check_stock_specials($products[$i]['id'], $products[$i]['quantity']);
     if ($mark_stock) {
       $_SESSION['any_out_of_stock'] = 1;
