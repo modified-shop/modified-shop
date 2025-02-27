@@ -320,7 +320,7 @@ if (isset($order) && is_object($order)) {
               <div class="pp_capture pp_box">
                 <div class="pp_boxheading"><?php echo TEXT_PAYPAL_REFUND; ?></div>
                 <?php 
-                  echo xtc_draw_form('capture', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                  echo xtc_draw_form('refund', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
                   if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
                     echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
                   }
@@ -387,6 +387,7 @@ if (isset($order) && is_object($order)) {
                   echo xtc_draw_hidden_field('cmd', 'delete');
                   ?>
                   <input type="submit" class="button" name="delete_submit" value="<?php echo TEXT_PAYPAL_TRANSACTION_SUBMIT; ?>">
+                  </form>
                 </dd>
               </dl>
             </div>
@@ -535,7 +536,7 @@ if (isset($order) && is_object($order)) {
               <div class="pp_capture pp_box">
                 <div class="pp_boxheading"><?php echo TEXT_PAYPAL_REFUND; ?></div>
                 <?php 
-                  echo xtc_draw_form('capture', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                  echo xtc_draw_form('refund', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
                   if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
                     echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
                   }
