@@ -53,7 +53,7 @@ if ($customer_info['customers_id'] != $_SESSION['customer_id']) {
 // clear session
 clear_checkout_session();
 
-require (DIR_WS_CLASSES.'order.php');
+require_once (DIR_WS_CLASSES.'order.php');
 $order = new order((int)$_GET['order_id']);
 $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
 
