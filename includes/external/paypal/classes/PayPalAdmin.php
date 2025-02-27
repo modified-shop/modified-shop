@@ -297,7 +297,10 @@ class PayPalAdmin extends PayPalPayment {
     $webhookEventTypes = array();
     
     for ($i=0, $n=count($data['data']); $i<$n; $i++) {
-      if ($data['data'][$i]['name'] != '') {
+      if (isset($data['data'][$i]['name'])
+          && $data['data'][$i]['name'] != ''
+          )
+      {
         $webhookEvent = new WebhookEventType();
         $webhookEvent->setName($data['data'][$i]['name']);
       
@@ -319,7 +322,10 @@ class PayPalAdmin extends PayPalPayment {
 
     $sql_data_array = array();
     for ($i=0, $n=count($data['data']); $i<$n; $i++) {
-      if ($data['data'][$i]['name'] != '') {
+      if (isset($data['data'][$i]['name'])
+          && $data['data'][$i]['name'] != ''
+          )
+      {
         $sql_data_array[] = array(
           'config_key' => $data['data'][$i]['name'],
           'config_value' => $data['data'][$i]['orders_status'],
@@ -351,7 +357,10 @@ class PayPalAdmin extends PayPalPayment {
       $webhookEventTypes = array();
     
       for ($i=0, $n=count($data['data']); $i<$n; $i++) {
-        if ($data['data'][$i]['name'] != '') {
+        if (isset($data['data'][$i]['name'])
+            && $data['data'][$i]['name'] != ''
+            )
+        {
           $webhookEvent = new WebhookEventType();
           $webhookEvent->setName($data['data'][$i]['name']);
       
@@ -383,7 +392,10 @@ class PayPalAdmin extends PayPalPayment {
     
     $sql_data_array = array();
     for ($i=0, $n=count($data['data']); $i<$n; $i++) {
-      if ($data['data'][$i]['name'] != '') {
+      if (isset($data['data'][$i]['name'])
+          && $data['data'][$i]['name'] != ''
+          )
+      {
         $sql_data_array[] = array(
           'config_key' => $data['data'][$i]['name'],
           'config_value' => $data['data'][$i]['orders_status'],
