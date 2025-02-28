@@ -90,7 +90,9 @@
                 $search = '';
                 if (isset($_GET['search']) && (xtc_not_null($_GET['search']))) {
                   $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search']));
-                  $search = "WHERE (c.customers_lastname LIKE '%".$keywords."%'
+                  $search = " JOIN ".TABLE_ADDRESS_BOOK." ab1
+                                    ON c.customers_id = ab1.customers_id
+                             WHERE (c.customers_lastname LIKE '%".$keywords."%'
                                     OR c.customers_firstname LIKE '%".$keywords."%'
                                     OR CONCAT(c.customers_firstname,' ',c.customers_lastname) LIKE '%".$keywords."%'
                                     OR CONCAT(c.customers_lastname,' ',c.customers_firstname) LIKE '%".$keywords."%'
@@ -173,8 +175,6 @@
                                           JOIN ".TABLE_ADDRESS_BOOK." ab
                                                ON c.customers_id = ab.customers_id
                                                   AND c.customers_default_address_id = ab.address_book_id
-                                          JOIN ".TABLE_ADDRESS_BOOK." ab1
-                                               ON c.customers_id = ab1.customers_id
                                      LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
                                                ON c.customers_id = cgc.customer_id
                                                ".$search."
