@@ -131,6 +131,7 @@ if (isset($order) && is_object($order)) {
                   echo xtc_draw_hidden_field('cmd', 'delete');
                   ?>
                   <input type="submit" class="button" name="delete_submit" value="<?php echo TEXT_PAYPAL_TRANSACTION_SUBMIT; ?>">
+                  </form>
                 </dd>
               </dl>
             </div>
