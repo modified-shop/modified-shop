@@ -41,7 +41,7 @@ class xtcImport {
     var $languages;
     var $counter;
     var $mfn;
-    var $errorlog;
+    var $errorLog;
     var $time_start;
     var $debug;
     var $CatTree;
@@ -80,7 +80,7 @@ class xtcImport {
                                 'cat_upd' => 0,
                                 'cat_touched' => 0);
         $this->mfn = $this->get_mfn();
-        $this->errorlog = array ();
+        $this->errorLog = array ();
         $this->time_start = time();
         $this->debug = false;
         $this->CatTree = array ('ID' => 0);
@@ -184,6 +184,7 @@ class xtcImport {
             $content = explode($this->seperator, $inhalt[0]);
 
             foreach ($mapping as $key => $value) {
+                $this->FileSheme[$key] = '';
                 // try to find our field in fieldlayout
                 foreach ($content as $key_c => $value_c)
                     if ($key == trim($this->RemoveTextNotes($content[$key_c]))) {
@@ -249,6 +250,9 @@ class xtcImport {
         while ($line = fgetcsv($fp, 20000, $this->seperator, $this->TextSign)) {
             $row++; //increment row to get line number
             foreach($mapping as $name => $key) {
+                if ($key == '') {
+                  continue;
+                }
                 $line_data[$name] = $line[$key];
             }
 
@@ -481,6 +485,7 @@ class xtcImport {
                 $prices = $dataArray['p_priceNoTax.'.$this->Groups[$i +1]['id']];
                 $prices = explode('::', $prices);
                 for ($ii = 0, $cp = count($prices); $ii < $cp; $ii ++) {
+                  if (strpos($prices[$ii], ':')) {
                     $values = explode(':', $prices[$ii]);
                     
                     if ($values[0] > 0 && $values[1] > 0) {
@@ -492,6 +497,7 @@ class xtcImport {
 
                         xtc_db_perform(TABLE_PERSONAL_OFFERS_BY.$this->Groups[$i +1]['id'], $group_array);
                     }
+                  }
                 }
             }
         }
