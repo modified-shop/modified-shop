@@ -32,13 +32,20 @@
   //	always visible
   // -----------------------------------------------------------------------------------------
   require_once(DIR_FS_BOXES . 'categories.php');
-  require_once(DIR_FS_BOXES . 'manufacturers.php');
   require_once(DIR_FS_BOXES . 'search.php');
   require_once(DIR_FS_BOXES . 'content.php');
   require_once(DIR_FS_BOXES . 'information.php');
   require_once(DIR_FS_BOXES . 'miscellaneous.php');
   require_once(DIR_FS_BOXES . 'infobox.php');
   require_once(DIR_FS_BOXES . 'login.php');
+  
+  if (defined('HEADER_SHOW_MANUFACTURERS')
+      && HEADER_SHOW_MANUFACTURERS == true
+      )
+  {
+    require_once(DIR_FS_BOXES . 'manufacturers.php');
+  }
+  
   if (!defined('MODULE_NEWSLETTER_STATUS') 
       || MODULE_NEWSLETTER_STATUS == 'true'
       )
