@@ -1,5 +1,5 @@
 /*!
- * Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  * Copyright 2024 Fonticons, Inc.
  */
@@ -7,15 +7,13 @@
   font-family: var(--fa-style-family, "Font Awesome 6 Free");
   font-weight: var(--fa-style, 900); }
 
-.fa,
-.fa-classic,
-.fa-sharp,
 .fas,
-.fa-solid,
 .far,
-.fa-regular,
 .fab,
-.fa-brands {
+.fa-solid,
+.fa-regular,
+.fa-brands,
+.fa {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   display: var(--fa-display, inline-block);
@@ -24,17 +22,25 @@
   line-height: 1;
   text-rendering: auto; }
 
-.fas,
+.fas::before,
+.far::before,
+.fab::before,
+.fa-solid::before,
+.fa-regular::before,
+.fa-brands::before,
+.fa::before {
+  content: var(--fa); }
+
 .fa-classic,
+.fas,
 .fa-solid,
 .far,
 .fa-regular {
   font-family: 'Font Awesome 6 Free'; }
 
-.fab,
-.fa-brands {
+.fa-brands,
+.fab {
   font-family: 'Font Awesome 6 Brands'; }
-
 
 .fa-ul {
   list-style-type: none;
@@ -44,253 +50,250 @@
     position: relative; }
 
 .fa-li {
-  left: calc(var(--fa-li-width, 2em) * -1);
+  left: calc(-1 * var(--fa-li-width, 2em));
   position: absolute;
   text-align: center;
   width: var(--fa-li-width, 2em);
   line-height: inherit; }
 
+/* Default used icons */
 
-/* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
-readers do not read off random characters that represent icons */
+.fa-xmark {
+  --fa: "\f00d"; }
 
-.fa-xmark::before {
-  content: "\f00d"; }
+.fa-right-long {
+  --fa: "\f30b"; }
 
-.fa-right-long::before {
-  content: "\f30b"; }
+.fa-asterisk {
+  --fa: "\2a"; }
 
-.fa-asterisk::before {
-  content: "\2a"; }
+.fa-eye {
+  --fa: "\f06e"; }
 
-.fa-eye::before {
-  content: "\f06e"; }
+.fa-eye-slash {
+  --fa: "\f070"; }
 
-.fa-eye-slash::before {
-  content: "\f070"; }
+.fa-arrow-right-long {
+  --fa: "\f178"; }
 
-.fa-arrow-right-long::before {
-  content: "\f178"; }
+.fa-star {
+  --fa: "\f005"; }
 
-.fa-star::before {
-  content: "\f005"; }
+.fa-magnifying-glass {
+  --fa: "\f002"; }
 
-.fa-magnifying-glass::before {
-  content: "\f002"; }
+.fa-globe {
+  --fa: "\f0ac"; }
 
-.fa-globe::before {
-  content: "\f0ac"; }
+.fa-bars {
+  --fa: "\f0c9"; }
 
-.fa-bars::before {
-  content: "\f0c9"; }
+.fa-angle-right {
+  --fa: "\f105"; }
 
-.fa-angle-right::before {
-  content: "\f105"; }
+.fa-angle-left {
+  --fa: "\f104"; }
 
-.fa-angle-left::before {
-  content: "\f104"; }
+.fa-user {
+  --fa: "\f007"; }
 
-.fa-user::before {
-  content: "\f007"; }
+.fa-user-pen {
+  --fa: "\f4ff"; }
 
-.fa-user-pen::before {
-  content: "\f4ff"; }
+.fa-user-shield {
+  --fa: "\f505"; }
 
-.fa-user-shield::before {
-  content: "\f505"; }
+.fa-address-card {
+  --fa: "\f2bb"; }
 
-.fa-address-card::before {
-  content: "\f2bb"; }
+.fa-key {
+  --fa: "\f084"; }
 
-.fa-key::before {
-  content: "\f084"; }
+.fa-cart-shopping {
+  --fa: "\f07a"; }
 
-.fa-cart-shopping::before {
-  content: "\f07a"; }
+.fa-truck-fast {
+  --fa: "\f48b"; }
 
+.fa-envelopes-bulk {
+  --fa: "\f674"; }
 
-.fa-truck-fast::before {
-  content: "\f48b"; }
+.fa-right-from-bracket {
+  --fa: "\f2f5"; }
 
-.fa-envelopes-bulk::before {
-  content: "\f674"; }
+.fa-1 {
+  --fa: "\31"; }
 
-.fa-right-from-bracket::before {
-  content: "\f2f5"; }
+.fa-2 {
+  --fa: "\32"; }
 
-.fa-1::before {
-  content: "\31"; }
+.fa-3 {
+  --fa: "\33"; }
 
-.fa-2::before {
-  content: "\32"; }
+.fa-4 {
+  --fa: "\34"; }
 
-.fa-3::before {
-  content: "\33"; }
+.fa-check {
+  --fa: "\f00c"; }
 
-.fa-4::before {
-  content: "\34"; }
+.fa-download {
+  --fa: "\f019"; }
 
-.fa-check::before {
-  content: "\f00c"; }
+.fa-lock {
+  --fa: "\f023"; }
 
-.fa-download::before {
-  content: "\f019"; }
+.fa-circle-info {
+  --fa: "\f05a"; }
 
-.fa-lock::before {
-  content: "\f023"; }
+.fa-circle-question {
+  --fa: "\f059"; }
 
-.fa-circle-info::before {
-  content: "\f05a"; }
+.fa-filter {
+  --fa: "\f0b0"; }
 
-.fa-circle-question::before {
-  content: "\f059"; }
+.fa-filter-circle-xmark {
+  --fa: "\e17b"; }
 
-.fa-filter::before {
-  content: "\f0b0"; }
+.fa-table-cells {
+  --fa: "\f00a"; }
 
-.fa-filter-circle-xmark::before {
-  content: "\e17b"; }
+.fa-table-list {
+  --fa: "\f00b"; }
 
-.fa-table-cells::before {
-  content: "\f00a"; }
+.fa-rotate {
+  --fa: "\f2f1"; }
 
-.fa-table-list::before {
-  content: "\f00b"; }
+.fa-chevron-left {
+  --fa: "\f053"; }
 
-.fa-rotate::before {
-  content: "\f2f1"; }
+.fa-ellipsis {
+  --fa: "\f141"; }
 
-.fa-chevron-left::before {
-  content: "\f053"; }
+.fa-chevron-right {
+  --fa: "\f054"; }
 
-.fa-ellipsis::before {
-  content: "\f141"; }
+.fa-arrow-up-long {
+  --fa: "\f176"; }
 
-.fa-chevron-right::before {
-  content: "\f054"; }
+.fa-arrow-down-long {
+  --fa: "\f175"; }
 
-.fa-arrow-up-long::before {
-  content: "\f176"; }
+.fa-arrow-left-long {
+  --fa: "\f177"; }
 
-.fa-arrow-down-long::before {
-  content: "\f175"; }
+.fa-arrow-up-right-from-square {
+  --fa: "\f08e"; }
 
-.fa-arrow-left-long::before {
-  content: "\f177"; }
+.fa-calendar-days {
+  --fa: "\f073"; }
 
-.fa-arrow-up-right-from-square::before {
-  content: "\f08e"; }
+.fa-up-right-from-square {
+  --fa: "\f35d"; }
 
-.fa-calendar-days::before {
-  content: "\f073"; }
+.fa-chevron-down {
+  --fa: "\f078"; }
 
-.fa-up-right-from-square::before {
-  content: "\f35d"; }
+.fa-square {
+  --fa: "\f0c8"; }
 
-.fa-chevron-down::before {
-  content: "\f078"; }
+.fa-square-check {
+  --fa: "\f14a"; }
 
-.fa-square::before {
-  content: "\f0c8"; }
+.fa-circle {
+  --fa: "\f111"; }
 
-.fa-square-check::before {
-  content: "\f14a"; }
+.fa-circle-dot {
+  --fa: "\f192"; }
 
-.fa-circle::before {
-  content: "\f111"; }
+.fa-triangle-exclamation {
+  --fa: "\f071"; }
 
-.fa-circle-dot::before {
-  content: "\f192"; }
+.fa-circle-check {
+  --fa: "\f058"; }
 
-.fa-triangle-exclamation::before {
-  content: "\f071"; }
+.fa-gift {
+  --fa: "\f06b"; }
 
-.fa-circle-check::before {
-  content: "\f058"; }
+.fa-pen-to-square {
+  --fa: "\f044"; }
 
-.fa-gift::before {
-  content: "\f06b"; }
+.fa-ban {
+  --fa: "\f05e"; }
 
-.fa-pen-to-square::before {
-  content: "\f044"; }
+.fa-right-to-bracket {
+  --fa: "\f2f6"; }
 
-.fa-ban::before {
-  content: "\f05e"; }
+.fa-square-plus {
+  --fa: "\f0fe"; }
 
-.fa-right-to-bracket::before {
-  content: "\f2f6"; }
+.fa-trash-can {
+  --fa: "\f2ed"; }
 
-.fa-square-plus::before {
-  content: "\f0fe"; }
+.fa-magnifying-glass-plus {
+  --fa: "\f00e"; }
 
-.fa-trash-can::before {
-  content: "\f2ed"; }
+.fa-magnifying-glass-minus {
+  --fa: "\f010"; }
 
-.fa-magnifying-glass-plus::before {
-  content: "\f00e"; }
+.fa-thumbs-up {
+  --fa: "\f164"; }
 
-.fa-magnifying-glass-minus::before {
-  content: "\f010"; }
+.fa-print {
+  --fa: "\f02f"; }
 
-.fa-thumbs-up::before {
-  content: "\f164"; }
+.fa-credit-card {
+  --fa: "\f09d"; }
 
-.fa-print::before {
-  content: "\f02f"; }
+.fa-circle-right {
+  --fa: "\f35a"; }
 
-.fa-credit-card::before {
-  content: "\f09d"; }
+.fa-floppy-disk {
+  --fa: "\f0c7"; }
 
-.fa-circle-right::before {
-  content: "\f35a"; }
+.fa-cart-plus {
+  --fa: "\f217"; }
 
-.fa-floppy-disk::before {
-  content: "\f0c7"; }
+.fa-arrow-up-right-dots {
+  --fa: "\e4b7"; }
 
-.fa-cart-plus::before {
-  content: "\f217"; }
+.fa-heart {
+  --fa: "\f004"; }
 
-.fa-arrow-up-right-dots::before {
-  content: "\e4b7"; }
+.fa-facebook {
+  --fa: "\f09a"; }
 
-.fa-heart::before {
-  content: "\f004"; }
+.fa-x-twitter {
+  --fa: "\e61b"; }
 
-.fa-facebook:before {
-  content: "\f09a"; }
+.fa-instagram {
+  --fa: "\f16d"; }
 
-.fa-x-twitter:before {
-  content: "\e61b"; }
+.fa-youtube {
+  --fa: "\f167"; }
 
-.fa-instagram:before {
-  content: "\f16d"; }
+.fa-pinterest {
+  --fa: "\f0d2"; }
 
-.fa-youtube:before {
-  content: "\f167"; }
+.fa-linkedin {
+  --fa: "\f08c"; }
 
-.fa-pinterest:before {
-  content: "\f0d2"; }
+.fa-ticket {
+  --fa: "\f145"; }
 
-.fa-linkedin:before {
-  content: "\f08c"; }
+.fa-cogs {
+  --fa: "\f085"; }
 
-.fa-ticket::before {
-  content: "\f145"; }
+.fa-circle-chevron-right {
+  --fa: "\f138"; }
 
-.fa-cogs::before {
-  content: "\f085"; }
-
-.fa-circle-chevron-right::before {
-  content: "\f138"; }
-
-.fa-file-pdf::before {
-  content: "\f1c1"; }
+.fa-file-pdf {
+  --fa: "\f1c1"; }
   
-.fa-file-video::before {
-  content: "\f1c8"; }
+.fa-file-video {
+  --fa: "\f1c8"; }
 
-.fa-file-zipper::before {
-  content: "\f1c6"; }
+.fa-file-zipper {
+  --fa: "\f1c6"; }
   
 /* start add new icons here */
 
@@ -320,7 +323,7 @@ readers do not read off random characters that represent icons */
   font-weight: 400; }
 
 
-#:root, :host {
+:root, :host {
   --fa-style-family-classic: 'Font Awesome 6 Free';
   --fa-font-solid: normal 900 1em/1 'Font Awesome 6 Free'; }
 
@@ -335,10 +338,10 @@ readers do not read off random characters that represent icons */
 .fa-solid {
   font-weight: 900; }
 
-
-#:root, :host {
-  --fa-style-family-classic: 'Font Awesome 6 Brands';
-  --fa-font-solid: normal 900 1em/1 'Font Awesome 6 Brands'; }
+  
+:root, :host {
+  --fa-style-family-brands: 'Font Awesome 6 Brands';
+  --fa-font-brands: normal 400 1em/1 'Font Awesome 6 Brands'; }
 
 @font-face {
   font-family: 'Font Awesome 6 Brands';
@@ -349,9 +352,9 @@ readers do not read off random characters that represent icons */
 
 .fab,
 .fa-brands {
-  font-weight: 400; }
+  font-weight: 400; }  
 
-
+  
 @font-face {
   font-family: 'Font Awesome 5 Brands';
   font-display: block;
@@ -369,6 +372,8 @@ readers do not read off random characters that represent icons */
   font-display: block;
   font-weight: 400;
   src: url("../css/fonts/fa-regular-400.woff2") format("woff2"), url("../css/fonts/fa-regular-400.ttf") format("truetype"); }
+
+
 @font-face {
   font-family: 'FontAwesome';
   font-display: block;
