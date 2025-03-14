@@ -263,6 +263,7 @@
                                                    ON op.orders_id = o.orders_id 
                                                       AND o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' 
                                                       AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'
+                                                          ".$filterString."
                                              WHERE op.products_id = '".$resp['pid']."'
                                           GROUP BY opa.orders_products_options_values_id
                                           ORDER BY opa.orders_products_attributes_id");
