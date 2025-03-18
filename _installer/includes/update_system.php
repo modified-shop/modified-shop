@@ -159,6 +159,11 @@
       }
     }
   }
+
+  // delete old tracking group
+  xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                   SET configuration_group_id = '6'
+                 WHERE configuration_group_id = '24'");
   
   // set shipping title
   xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
