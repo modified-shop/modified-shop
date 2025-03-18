@@ -43,7 +43,7 @@
         $banner_content = xtc_banner_exists($action, $identifier);
       }
       
-      if (count($banner_content) > 0) {
+      if (is_array($banner_content) && count($banner_content) > 0) {
   
         $banner_array = array();
         foreach ($banner_content as $banner) {
