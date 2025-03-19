@@ -239,13 +239,15 @@ require (DIR_WS_INCLUDES.'head.php');
                   unset($accounting_array[0]);
                   $accounting_array[0] = $accounting_tmp;
                 }
+                $accounting_array = array_values($accounting_array);
+                $naming_array = array_values($naming_array);
                 
                 $total = count($accounting_array);
                 $divide = ceil($total/2);
                 
                 echo '<div class="accounting_container">';
                 echo '<div class="accounting_col">';
-                for ($i=1; $i<=$total; $i++) {
+                for ($i=0; $i<$total; $i++) {
                   ?>
                   <table class="tableBoxCenter collapse">
                     <tr class="dataTableHeadingRow">
@@ -266,9 +268,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     <tr><td>&nbsp;</td></tr>
                   </table>
                   <?php
-                  if ($i % $divide == 0 || $i == $total) {
+                  if (($i + 1) % $divide == 0 || ($i + 1) == $total) {
                     echo '</div>';
-                    if ($i < $total) {
+                    if (($i + 1) < $total) {
                       echo '<div class="accounting_col">';
                     }
                   }
