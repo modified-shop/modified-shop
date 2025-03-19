@@ -86,3 +86,5 @@ define('BUTTON_VALUES', 'Werte');
 define('BUTTON_DELETE_BANKTRANSFER', 'Bankdaten l&ouml;schen');
 define('BUTTON_BLACKLIST', 'Blacklist');
 define('BUTTON_REVIEWS', 'Rezensionen');
+define('BUTTON_DISPLAY_ALL', 'Alle anzeigen');
+define('BUTTON_API_ACCESS', 'API Zugriff');
