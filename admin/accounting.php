@@ -134,6 +134,24 @@ require (DIR_WS_INCLUDES.'head.php');
     $(".access"+val).attr('checked', checked);
   }
 </script>
+<style>
+.accounting_container {
+  display: flex;
+  margin: 0px -10px;
+}
+.accounting_col {
+  width: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+ 
+.accounting_col .tableBoxCenter.collapse .dataTableHeadingRow {
+  cursor:pointer;
+}
+.accounting_col .tableBoxCenter.collapse .dataTableHeadingRow:hover .dataTableHeadingContent {
+  background-color:#ddd; 
+}
+</style>
 </head>
 <body>
 <!-- header //-->
@@ -222,21 +240,25 @@ require (DIR_WS_INCLUDES.'head.php');
                   $accounting_array[0] = $accounting_tmp;
                 }
                 
-                echo '<div class="multicolumn">';
-                foreach ($accounting_array as $field => $accounting) {
+                $total = count($accounting_array);
+                $divide = ceil($total/2);
+                
+                echo '<div class="accounting_container">';
+                echo '<div class="accounting_col">';
+                for ($i=1; $i<=$total; $i++) {
                   ?>
                   <table class="tableBoxCenter collapse">
                     <tr class="dataTableHeadingRow">
-                      <td class="dataTableHeadingContent" colspan="2" style="vertical-align:middle;"><?php echo $naming_array[$field]['name']; ?></td>
-                      <td class="dataTableHeadingContent" style="vertical-align:middle;"><?php echo TEXT_ALLOWED.' '.xtc_draw_checkbox_field('checkall'.$field, '', '', '', 'class="checkall'.$field.'" onclick="set_checkbox('.$field.', '.$_GET['cID'].')"'); ?></td>
+                      <td class="dataTableHeadingContent column<?php echo $i; ?>" colspan="2" style="vertical-align:middle;"><?php echo $naming_array[$i]['name']; ?></td>
+                      <td class="dataTableHeadingContent" style="width:100px;vertical-align:middle;"><?php echo TEXT_ALLOWED.' '.xtc_draw_checkbox_field('checkall'.$i, '', '', '', 'class="checkall'.$i.'" onclick="set_checkbox('.$i.', '.$_GET['cID'].')"'); ?></td>
                     </tr>
                     <?php
-                    foreach ($accounting as $array) {
+                    foreach ($accounting_array[$i] as $details) {
                       ?>
-                      <tr class="dataTableRow">
-                        <td class="dataTableContent" style="width:18px; background:<?php echo $naming_array[$field]['color']; ?>;"></td>
-                        <td class="dataTableContent" style="width:200px;"><?php echo $array['key']; ?></td>
-                        <td class="dataTableContent" align="center"><?php echo $array['val']; ?></td>
+                      <tr class="dataTableRow detail<?php echo $i; ?>" style="display:none;">
+                        <td class="dataTableContent" style="width:18px; background:<?php echo $naming_array[$i]['color']; ?>;"></td>
+                        <td class="dataTableContent"><?php echo $details['key']; ?></td>
+                        <td class="dataTableContent txta-c" style="width:100px;"><?php echo $details['val']; ?></td>
                       </tr>
                       <?php
                     }
@@ -244,6 +266,12 @@ require (DIR_WS_INCLUDES.'head.php');
                     <tr><td>&nbsp;</td></tr>
                   </table>
                   <?php
+                  if ($i % $divide == 0 || $i == $total) {
+                    echo '</div>';
+                    if ($i < $total) {
+                      echo '<div class="accounting_col">';
+                    }
+                  }
                 }
                 echo '</div>';
                 ?>
@@ -252,6 +280,7 @@ require (DIR_WS_INCLUDES.'head.php');
           </table>
           <a class="button" href="<?php echo xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
           <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
+          <a class="button flt-r" id="collapseall" href="#"><?php echo BUTTON_DISPLAY_ALL; ?></a>
         </form>
           
       </div>
@@ -264,9 +293,16 @@ require (DIR_WS_INCLUDES.'head.php');
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
 <script>
-  $('input[name="complete"]').click(function () {    
+  $('input[name="complete"]').on('click', function () {    
     $('input[name*="checkall"]').prop('checked', this.checked);
     $('input[name*="access"]').prop('checked', this.checked);
+  });
+  $('#collapseall').on('click', function () {
+    $("[class*=detail]").show();
+  });
+  $("[class*=column]").on('click', function () {
+    var num = $(this).attr('class').replace(/^\D+/g, ''); 
+    $('.detail'+num).toggle();
   });
 </script>
 </body>
