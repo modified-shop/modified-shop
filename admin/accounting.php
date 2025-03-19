@@ -151,6 +151,16 @@ require (DIR_WS_INCLUDES.'head.php');
 .accounting_col .tableBoxCenter.collapse .dataTableHeadingRow:hover .dataTableHeadingContent {
   background-color:#ddd; 
 }
+.accounting_col .tableBoxCenter.collapse .dataTableHeadingRow em {
+  position:relative;
+  top:1px;
+  left:5px;
+  z-index:0;
+}
+.accounting_col .tableBoxCenter.collapse .dataTableHeadingRow input[type=checkbox].ChkBox:not(old) {
+  position:relative;
+  z-index:1;
+}
 </style>
 </head>
 <body>
@@ -227,7 +237,9 @@ require (DIR_WS_INCLUDES.'head.php');
 
                     $accounting_array[$group_access[$field['Field']]][$field['Field']] = array(
                       'key' => $field['Field'],
-                      'val' => $hidden_field.xtc_draw_checkbox_field('access[]', $field['Field'], $checked, '', $params.' class="access'.$group_access[$field['Field']].'"'),
+                      'hidden' => $hidden_field,
+                      'params' => $params,
+                      'checked' => $checked,
                     );
                     ksort($accounting_array[$group_access[$field['Field']]]);
                   }
@@ -248,19 +260,22 @@ require (DIR_WS_INCLUDES.'head.php');
                 echo '<div class="accounting_container">';
                 echo '<div class="accounting_col">';
                 for ($i=0; $i<$total; $i++) {
+                  $totalaccess = count($accounting_array[$i]);
+                  $totalchecked = array_sum(array_column($accounting_array[$i], 'checked'));
                   ?>
                   <table class="tableBoxCenter collapse">
                     <tr class="dataTableHeadingRow">
                       <td class="dataTableHeadingContent column<?php echo $i; ?>" colspan="2" style="vertical-align:middle;"><?php echo $naming_array[$i]['name']; ?></td>
-                      <td class="dataTableHeadingContent" style="width:100px;vertical-align:middle;"><?php echo TEXT_ALLOWED.' '.xtc_draw_checkbox_field('checkall'.$i, '', '', '', 'class="checkall'.$i.'" onclick="set_checkbox('.$i.', '.$_GET['cID'].')"'); ?></td>
+                      <td class="dataTableHeadingContent txta-c column<?php echo $i; ?>" style="width:60px;vertical-align:middle;"><?php echo $totalchecked.'/'.$totalaccess; ?></td>
+                      <td class="dataTableHeadingContent" style="width:90px;vertical-align:middle;"><?php echo TEXT_ALLOWED.' '.xtc_draw_checkbox_field('checkall'.$i, '', ($totalchecked === $totalaccess), '', 'class="checkall'.$i.'" onclick="set_checkbox('.$i.', '.$_GET['cID'].')"'); ?></td>
                     </tr>
                     <?php
                     foreach ($accounting_array[$i] as $details) {
                       ?>
                       <tr class="dataTableRow detail<?php echo $i; ?>" style="display:none;">
                         <td class="dataTableContent" style="width:18px; background:<?php echo $naming_array[$i]['color']; ?>;"></td>
-                        <td class="dataTableContent"><?php echo $details['key']; ?></td>
-                        <td class="dataTableContent txta-c" style="width:100px;"><?php echo $details['val']; ?></td>
+                        <td class="dataTableContent" colspan="2"><?php echo $details['key']; ?></td>
+                        <td class="dataTableContent txta-c" style="width:90px;"><?php echo xtc_draw_checkbox_field('access[]', $details['key'], $details['checked'], '', $details['params'].' class="access'.$i.'"').$details['hidden']; ?></td>
                       </tr>
                       <?php
                     }
@@ -281,8 +296,8 @@ require (DIR_WS_INCLUDES.'head.php');
             </tr>
           </table>
           <a class="button" href="<?php echo xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
-          <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
-          <a class="button flt-r" id="collapseall" href="#"><?php echo BUTTON_DISPLAY_ALL; ?></a>
+          <a class="button" id="collapseall" href="#"><?php echo BUTTON_DISPLAY_ALL; ?></a>
+          <input type="submit" class="button flt-r" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
         </form>
           
       </div>
