@@ -387,14 +387,14 @@ require (DIR_WS_INCLUDES.'head.php');
 
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_CID; ?></td>
-                      <td class="dataTableConfig col-single-right bg_notice"><?php echo xtc_draw_input_field('csID', generate_customers_cid(), 'maxlength="32"'); ?></td>
+                      <td class="dataTableConfig col-single-right bg_notice"><?php echo xtc_draw_input_field('csID', generate_customers_cid()); ?></td>
                     </tr>
 
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_FIRST_NAME; ?></td>
                       <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_firstname_error == true) ? ' col-error' : ''); ?>">
                       <?php
-                        echo xtc_draw_input_field('customers_firstname', isset($customers_firstname)?$customers_firstname:'', 'maxlength="64"', true);
+                        echo xtc_draw_input_field('customers_firstname', isset($customers_firstname)?$customers_firstname:'', '', true);
                         if ($error && $entry_firstname_error) echo '&nbsp;'.ENTRY_FIRST_NAME_ERROR;
                       ?>
                       </td>
@@ -404,7 +404,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_LAST_NAME; ?></td>
                       <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_lastname_error == true) ? ' col-error' : ''); ?>">
                       <?php
-                        echo xtc_draw_input_field('customers_lastname', isset($customers_lastname)?$customers_lastname:'', 'maxlength="64"', true);
+                        echo xtc_draw_input_field('customers_lastname', isset($customers_lastname)?$customers_lastname:'', '', true);
                         if ($error && $entry_lastname_error) echo '&nbsp;'.ENTRY_LAST_NAME_ERROR;
                       ?>
                       </td>
@@ -415,7 +415,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_DATE_OF_BIRTH; ?></td>
                       <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_date_of_birth_error == true) ? ' col-error' : ''); ?>">
                       <?php
-                        echo xtc_draw_input_field('customers_dob', xtc_date_short(isset($customers_dob)?$customers_dob:''), 'maxlength="10"', true);
+                        echo xtc_draw_input_field('customers_dob', xtc_date_short(isset($customers_dob)?$customers_dob:''), '', true);
                         if ($error && $entry_date_of_birth_error) echo '&nbsp;'.ENTRY_DATE_OF_BIRTH_ERROR;
                       ?>
                       </td>
@@ -426,7 +426,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
                       <td class="dataTableConfig col-single-right<?php echo (($error == true && ($entry_email_address_error == true || $entry_email_address_check_error == true || $entry_email_address_exists == true)) ? ' col-error' : ''); ?>">
                       <?php
-                        echo xtc_draw_input_field('customers_email_address', isset($customers_email_address)?$customers_email_address:'', 'maxlength="96"', true);
+                        echo xtc_draw_input_field('customers_email_address', isset($customers_email_address)?$customers_email_address:'', '', true);
                         if ($error && $entry_email_address_error) echo '&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR;
                         if ($error && $entry_email_address_check_error) echo '&nbsp;'.ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
                         if ($error && $entry_email_address_exists) echo '&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
@@ -447,7 +447,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_COMPANY; ?></td>
                       <td class="dataTableConfig col-single-right">
                       <?php
-                        echo xtc_draw_input_field('entry_company', isset($entry_company)?$entry_company:'', 'maxlength="64"');
+                        echo xtc_draw_input_field('entry_company', isset($entry_company)?$entry_company:'');
                       ?>
                       </td>
                     </tr>
@@ -457,7 +457,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_VAT_ID; ?></td>
                       <td class="dataTableConfig col-single-right">
                       <?php
-                        echo xtc_draw_input_field('customers_vat_id', isset($customers_vat_id)?$customers_vat_id:'', 'maxlength="32"');
+                        echo xtc_draw_input_field('customers_vat_id', isset($customers_vat_id)?$customers_vat_id:'');
                         if ($error && $entry_vat_error_text) echo '&nbsp;' . $entry_vat_error_text;
                       ?>
                       </td>
@@ -477,7 +477,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_STREET_ADDRESS; ?></td>
                       <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_street_address_error == true) ? ' col-error' : ''); ?>">
                       <?php
-                        echo xtc_draw_input_field('entry_street_address', isset($entry_street_address)?$entry_street_address:'', 'maxlength="64"', true);
+                        echo xtc_draw_input_field('entry_street_address', isset($entry_street_address)?$entry_street_address:'', '', true);
                         if ($error && $entry_street_address_error) echo '&nbsp;'.ENTRY_STREET_ADDRESS_ERROR;
                       ?>
                       </td>
@@ -488,7 +488,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_SUBURB; ?></td>
                       <td class="dataTableConfig col-single-right">
                       <?php
-                        echo xtc_draw_input_field('entry_suburb', isset($entry_suburb)?$entry_suburb:'', 'maxlength="32"');
+                        echo xtc_draw_input_field('entry_suburb', isset($entry_suburb)?$entry_suburb:'';
                       ?>
                       </td>
                     </tr>
@@ -498,7 +498,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_POST_CODE; ?></td>
                       <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_post_code_error == true) ? ' col-error' : ''); ?>">
                       <?php
-                        echo xtc_draw_input_field('entry_postcode', isset($entry_postcode)?$entry_postcode:'', 'maxlength="8"', true);
+                        echo xtc_draw_input_field('entry_postcode', isset($entry_postcode)?$entry_postcode:'', '', true);
                         if ($error && $entry_post_code_error) echo '&nbsp;'.ENTRY_POST_CODE_ERROR;
                       ?>
                       </td>
@@ -508,7 +508,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_CITY; ?></td>
                       <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_city_error == true) ? ' col-error' : ''); ?>">
                       <?php
-                        echo xtc_draw_input_field('entry_city', isset($entry_city)?$entry_city:'', 'maxlength="64"', true);
+                        echo xtc_draw_input_field('entry_city', isset($entry_city)?$entry_city:'', '', true);
                         if ($error && $entry_city_error) echo '&nbsp;'.ENTRY_CITY_ERROR;
                       ?>
                       </td>

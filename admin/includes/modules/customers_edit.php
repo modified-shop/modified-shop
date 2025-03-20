@@ -110,7 +110,7 @@
               <td class="dataTableConfig col-left"><?php echo ENTRY_CID; ?></td>
               <td class="dataTableConfig col-single-right bg_notice">
                 <?php
-                echo xtc_draw_input_field('customers_cid', $cInfo->customers_cid, 'maxlength="32"', false);
+                echo xtc_draw_input_field('customers_cid', $cInfo->customers_cid, '', false);
                 ?>
               </td>
 
@@ -121,12 +121,12 @@
                 <?php
                 if ($error == true) {
                   if ($entry_firstname_error == true) {
-                    echo xtc_draw_input_field('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"').'&nbsp;'.ENTRY_FIRST_NAME_ERROR;
+                    echo xtc_draw_input_field('customers_firstname', $cInfo->customers_firstname).'&nbsp;'.ENTRY_FIRST_NAME_ERROR;
                   } else {
                     echo $cInfo->customers_firstname.xtc_draw_hidden_field('customers_firstname', $cInfo->customers_firstname);
                   }
                 } else {
-                  echo xtc_draw_input_field('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"', true);
+                  echo xtc_draw_input_field('customers_firstname', $cInfo->customers_firstname, '', true);
                 }
                 ?>
               </td>
@@ -138,12 +138,12 @@
                 <?php
                 if ($error == true) {
                   if ($entry_lastname_error == true) {
-                    echo xtc_draw_input_field('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"').'&nbsp;'.ENTRY_LAST_NAME_ERROR;
+                    echo xtc_draw_input_field('customers_lastname', $cInfo->customers_lastname).'&nbsp;'.ENTRY_LAST_NAME_ERROR;
                   } else {
                     echo $cInfo->customers_lastname.xtc_draw_hidden_field('customers_lastname', $cInfo->customers_lastname);
                   }
                 } else {
-                  echo xtc_draw_input_field('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"', true);
+                  echo xtc_draw_input_field('customers_lastname', $cInfo->customers_lastname, '', true);
                 }
                 ?>
               </td>
@@ -158,12 +158,12 @@
                  <?php
                 if ($error == true) {
                   if ($entry_date_of_birth_error == true) {
-                    echo xtc_draw_input_field('customers_dob', xtc_date_short($cInfo->customers_dob), 'maxlength="10"').'&nbsp;'.ENTRY_DATE_OF_BIRTH_ERROR;
+                    echo xtc_draw_input_field('customers_dob', xtc_date_short($cInfo->customers_dob)).'&nbsp;'.ENTRY_DATE_OF_BIRTH_ERROR;
                   } else {
                     echo xtc_date_short($cInfo->customers_dob).xtc_draw_hidden_field('customers_dob', xtc_date_short($cInfo->customers_dob));
                   }
                 } else {
-                  echo xtc_draw_input_field('customers_dob', xtc_date_short($cInfo->customers_dob), 'maxlength="10"', true);
+                  echo xtc_draw_input_field('customers_dob', xtc_date_short($cInfo->customers_dob), '', true);
                 }
                 ?>
               </td>
@@ -178,16 +178,16 @@
                 <?php
                 if ($error == true) {
                   if (isset($entry_email_address_error) && $entry_email_address_error == true) {
-                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR;
+                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR;
                   } elseif (isset($entry_email_address_check_error) && $entry_email_address_check_error == true) {
-                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
                   } elseif (isset($entry_email_address_exists) && $entry_email_address_exists == true) {
-                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
+                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
                   } else {
                     echo $cInfo->customers_email_address.xtc_draw_hidden_field('customers_email_address', $cInfo->customers_email_address);
                   }
                 } else {
-                  echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"', true);
+                  echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"', true);
                 }
                 ?>
               </td>
@@ -205,7 +205,7 @@
               <td class="dataTableConfig col-left"><?php echo ENTRY_COMPANY; ?></td>
               <td class="dataTableConfig col-single-right">
                 <?php
-                  echo xtc_draw_input_field('entry_company', $cInfo->entry_company, 'maxlength="64"');
+                  echo xtc_draw_input_field('entry_company', $cInfo->entry_company);
                 ?>
               </td>
 
@@ -248,16 +248,16 @@
                 <td class="dataTableConfig col-left"><?php echo ENTRY_VAT_ID; ?></td>
                 <td class="dataTableConfig col-single-right">
                   <?php
-                    echo xtc_draw_input_field('customers_vat_id', $cInfo->customers_vat_id, 'maxlength="32"').'&nbsp;'.$entry_vat_error_text;
+                    echo xtc_draw_input_field('customers_vat_id', $cInfo->customers_vat_id).'&nbsp;'.$entry_vat_error_text;
                     /*
                     if ($error == true) {
                       if ($entry_vat_error == true) {
-                        echo xtc_draw_input_field('customers_vat_id', $cInfo->customers_vat_id, 'maxlength="32"').'&nbsp;'.$entry_vat_error_text;
+                        echo xtc_draw_input_field('customers_vat_id', $cInfo->customers_vat_id).'&nbsp;'.$entry_vat_error_text;
                       } else {
                         echo $cInfo->customers_vat_id.xtc_draw_hidden_field('customers_vat_id');
                       }
                     } else {
-                      echo xtc_draw_input_field('customers_vat_id', $cInfo->customers_vat_id, 'maxlength="32"');
+                      echo xtc_draw_input_field('customers_vat_id', $cInfo->customers_vat_id);
                     }
                     */
                     ?>
@@ -281,12 +281,12 @@
                 <?php
                 if ($error == true) {
                   if ($entry_street_address_error == true) {
-                    echo xtc_draw_input_field('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"').'&nbsp;'.ENTRY_STREET_ADDRESS_ERROR;
+                    echo xtc_draw_input_field('entry_street_address', $cInfo->entry_street_address).'&nbsp;'.ENTRY_STREET_ADDRESS_ERROR;
                   } else {
                     echo $cInfo->entry_street_address.xtc_draw_hidden_field('entry_street_address', $cInfo->entry_street_address);
                   }
                 } else {
-                  echo xtc_draw_input_field('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"', true);
+                  echo xtc_draw_input_field('entry_street_address', $cInfo->entry_street_address, '', true);
                 }
                 ?>
               </td>
@@ -299,7 +299,7 @@
               <td class="dataTableConfig col-left"><?php echo ENTRY_SUBURB; ?></td>
               <td class="dataTableConfig col-single-right">
                 <?php
-                  echo xtc_draw_input_field('entry_suburb', $cInfo->entry_suburb, 'maxlength="32"');
+                  echo xtc_draw_input_field('entry_suburb', $cInfo->entry_suburb);
                 ?>
               </td>
 
@@ -313,12 +313,12 @@
                 <?php
                 if ($error == true) {
                   if ($entry_post_code_error == true) {
-                    echo xtc_draw_input_field('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"').'&nbsp;'.ENTRY_POST_CODE_ERROR;
+                    echo xtc_draw_input_field('entry_postcode', $cInfo->entry_postcode).'&nbsp;'.ENTRY_POST_CODE_ERROR;
                   } else {
                     echo $cInfo->entry_postcode.xtc_draw_hidden_field('entry_postcode', $cInfo->entry_postcode);
                   }
                 } else {
-                  echo xtc_draw_input_field('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"', true);
+                  echo xtc_draw_input_field('entry_postcode', $cInfo->entry_postcode, '', true);
                 }
               ?>
               </td>
@@ -330,12 +330,12 @@
                 <?php
                 if ($error == true) {
                   if ($entry_city_error == true) {
-                    echo xtc_draw_input_field('entry_city', $cInfo->entry_city, 'maxlength="32"').'&nbsp;'.ENTRY_CITY_ERROR;
+                    echo xtc_draw_input_field('entry_city', $cInfo->entry_city).'&nbsp;'.ENTRY_CITY_ERROR;
                   } else {
                     echo $cInfo->entry_city.xtc_draw_hidden_field('entry_city', $cInfo->entry_city);
                   }
                 } else {
-                  echo xtc_draw_input_field('entry_city', $cInfo->entry_city, 'maxlength="32"', true);
+                  echo xtc_draw_input_field('entry_city', $cInfo->entry_city, '', true);
                 }
                 ?>
               </td>
@@ -406,12 +406,12 @@
               <?php
                 if ($error == true) {
                   if (isset($entry_telephone_error) && $entry_telephone_error == true) {
-                    echo xtc_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"').'&nbsp;'.ENTRY_TELEPHONE_NUMBER_ERROR;
+                    echo xtc_draw_input_field('customers_telephone', $cInfo->customers_telephone).'&nbsp;'.ENTRY_TELEPHONE_NUMBER_ERROR;
                   } else {
                     echo $cInfo->customers_telephone.xtc_draw_hidden_field('customers_telephone', $cInfo->customers_telephone);
                   }
                 } else {
-                  echo xtc_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"', (ACCOUNT_TELEPHONE_OPTIONAL == 'false'));
+                  echo xtc_draw_input_field('customers_telephone', $cInfo->customers_telephone, '', (ACCOUNT_TELEPHONE_OPTIONAL == 'false'));
                 }
               ?>
               </td>
@@ -424,7 +424,7 @@
                 if ($processed == true) {
                   echo $cInfo->customers_fax.xtc_draw_hidden_field('customers_fax', $cInfo->customers_fax);
                 } else {
-                  echo xtc_draw_input_field('customers_fax', $cInfo->customers_fax, 'maxlength="32"');
+                  echo xtc_draw_input_field('customers_fax', $cInfo->customers_fax);
                 }
               ?>
               </td>
