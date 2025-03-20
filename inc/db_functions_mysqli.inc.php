@@ -131,6 +131,9 @@
       return false;
     }
 
+    // set time zone
+    xtc_db_query("SET time_zone = '".date('P')."'");
+
     if (version_compare(xtc_db_get_server_info($link), '5.0.0', '>=')) {
       xtc_db_query("SET SESSION sql_mode=''");
     }
