@@ -263,7 +263,24 @@
     private function buildLabelData() {
       // customers_data
       $customers_data = $this->buildCustomersData();
+            
+      // Service
+      $Service = new stdClass();
       
+      // international
+      if (in_array($this->data['product_code'], array('53', '66'))) {
+        $this->notification = true;
+        if ($this->premium > 0) {
+          $Service->Premium['active'] = '1';
+        }
+        if ($this->dutypaid > 0) {
+          $Service->PDDP['active'] = '1';
+        }
+        if ($this->droppoint > 0) {
+          $Service->CDP['active'] = '1';
+        }
+      }
+
       // Shipper
       $Shipper = $this->buildShippingDetails($this->info, 'sender');
       
@@ -272,10 +289,7 @@
       
       // ReturnReceiver
       $ReturnReceiver = $this->buildShippingDetails($this->info, 'sender');
-      
-      // Service
-      $Service = new stdClass();
-      
+
       // cod
       if ($this->data['payment_class'] == 'cod') {
         $Service->CashOnDelivery = array(
@@ -298,20 +312,6 @@
           'active' => '1',
           'insuranceAmount' => $this->insurance_array[$this->insurance]
         );
-      }
-            
-      // international
-      if (in_array($this->data['product_code'], array('53', '66'))) {
-        if ($this->premium > 0) {
-          $Service->Premium['active'] = '1';
-        }
-        if ($this->dutypaid > 0) {
-          $Service->PDDP['active'] = '1';
-        }
-        if ($this->droppoint > 0) {
-          $Service->CDP['active'] = '1';
-          $this->notification = true;
-        }
       }
       
       // avs
@@ -532,7 +532,7 @@
       
       $Communication = new stdClass();
       $Communication->phone = $data['telephone'];
-      if ($this->notification === true) {
+      if ($this->notification === true && $type != 'sender') {
         $Communication->email = $data['email_address'];
       }
       
@@ -586,6 +586,9 @@
             $shipping_details->Address->name2 = $Name->name2;
             if (isset($Name->name3)) {
               $shipping_details->Address->name3 = $Name->name3;
+            }
+            if ($this->notification === true) {
+              $shipping_details->Communication = $Communication;
             }
           }
           break;
