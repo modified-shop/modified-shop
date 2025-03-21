@@ -275,6 +275,8 @@ define('ACCOUNT_SUBURB_TITLE' , 'Addition to address');
 define('ACCOUNT_SUBURB_DESC' , 'Display addition to address upon customer account creation/editing');
 define('ACCOUNT_STATE_TITLE' , 'State');
 define('ACCOUNT_STATE_DESC' , 'Display state upon customer account creation/editing');
+define('ACCOUNT_FAX_TITLE' , 'Fax');
+define('ACCOUNT_FAX_DESC' , 'Display fax upon customer account creation/editing');
 
 define('DEFAULT_CURRENCY_TITLE' , 'Default Currency');
 define('DEFAULT_CURRENCY_DESC' , 'Currency to be used as default');

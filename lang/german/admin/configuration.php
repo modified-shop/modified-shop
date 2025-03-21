@@ -275,6 +275,8 @@ define('ACCOUNT_SUBURB_TITLE' , 'Weitere Anschrift');
 define('ACCOUNT_SUBURB_DESC' , 'Weitere Anschrift bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 define('ACCOUNT_STATE_TITLE' , 'Bundesland');
 define('ACCOUNT_STATE_DESC' , 'Bundesland bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
+define('ACCOUNT_FAX_TITLE' , 'Fax');
+define('ACCOUNT_FAX_DESC' , 'Fax bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 
 define('DEFAULT_CURRENCY_TITLE' , 'Standard W&auml;hrung');
 define('DEFAULT_CURRENCY_DESC' , 'W&auml;hrung die standardm&auml;&szlig;ig benutzt wird');

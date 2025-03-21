@@ -152,8 +152,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
       'customers_firstname' => $firstname, 
       'customers_lastname' => $lastname, 
       'customers_email_address' => $email_address, 
-      'customers_telephone' => $telephone, 
-      'customers_fax' => $fax,
+      'customers_telephone' => ((isset($telephone)) ? $telephone : ''),
+      'customers_fax' => ((isset($fax)) ? $fax : ''),
       'customers_last_modified' => 'now()'
     );
 
@@ -217,8 +217,10 @@ if ($messageStack->size('account_edit') > 0)
   $smarty->assign('error_message', $messageStack->output('account_edit'));
 
 if (ACCOUNT_GENDER == 'true') {
-  $smarty->assign('gender','1');
+  $smarty->assign('gender', '1');
   $smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array('name' => 'gender', 'text' => (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender()));
+} else {
+  $smarty->assign('gender', '0');
 }
 
 if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
@@ -241,10 +243,16 @@ if (ACCOUNT_DOB == 'true') {
   $smarty->assign('birthdate', '0');
 }
 
+if (ACCOUNT_FAX == 'true') {
+  $smarty->assign('fax', '1');
+  $smarty->assign('INPUT_FAX', xtc_draw_input_fieldNote(array('name' => 'fax', 'text' => (xtc_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="inputRequirement">'.ENTRY_FAX_NUMBER_TEXT.'</span>' : ''))));
+} else {
+  $smarty->assign('fax', '0');
+}
+
 $smarty->assign('INPUT_EMAIL', xtc_draw_input_fieldNote(array('name' => 'email_address', 'text' => (xtc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">'.ENTRY_EMAIL_ADDRESS_TEXT.'</span>' : ''))));
 $smarty->assign('INPUT_CONFIRM_EMAIL', xtc_draw_input_fieldNote(array('name' => 'confirm_email_address', 'text' => (xtc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">'.ENTRY_EMAIL_ADDRESS_TEXT.'</span>' : ''))));
 $smarty->assign('INPUT_TEL', xtc_draw_input_fieldNote(array('name' => 'telephone', 'text' => ((ACCOUNT_TELEPHONE_OPTIONAL == 'false' && xtc_not_null(ENTRY_TELEPHONE_NUMBER_TEXT)) ? '<span class="inputRequirement">'.ENTRY_TELEPHONE_NUMBER_TEXT.'</span>' : ''))));
-$smarty->assign('INPUT_FAX', xtc_draw_input_fieldNote(array('name' => 'fax', 'text' => (xtc_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="inputRequirement">'.ENTRY_FAX_NUMBER_TEXT.'</span>' : ''))));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('BUTTON_SUBMIT_SAVE', xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));

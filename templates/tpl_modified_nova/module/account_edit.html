@@ -39,7 +39,9 @@
           <div class="field_item_1"><label><span class="field_text">{#text_email#}</span>{$INPUT_EMAIL|asterisk|replace:"type=\"text\"":"type=\"email\""}</label></div>
           <div class="field_item_1"><label><span class="field_text">{#text_confirm_email#}</span>{$INPUT_CONFIRM_EMAIL|asterisk|replace:"type=\"text\"":"type=\"email\""}</label></div>
           <div class="field_item_1"><label><span class="field_text">{#text_tel#}</span>{$INPUT_TEL|asterisk|replace:"type=\"text\"":"type=\"tel\""}</label></div>
-          <div class="field_item_1"><label><span class="field_text">{#text_fax#}</span>{$INPUT_FAX|replace:"type=\"text\"":"type=\"tel\""}</label></div>
+          {if $fax == '1'}
+            <div class="field_item_1"><label><span class="field_text">{#text_fax#}</span>{$INPUT_FAX|replace:"type=\"text\"":"type=\"tel\""}</label></div>
+          {/if}  
           {if $vat == '1'}
             <div class="field_item_1"><label><span class="field_text">{#text_ustid#}</span>{$INPUT_VAT}<span class="inputNote">{$TEXT_VAT_NOTE}</span></label></div>
           {/if}  
