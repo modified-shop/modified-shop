@@ -101,7 +101,6 @@
               }
               ?>
               </td>
-
             </tr>
             <?php
               }
@@ -113,7 +112,6 @@
                 echo xtc_draw_input_field('customers_cid', $cInfo->customers_cid, '', false);
                 ?>
               </td>
-
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_FIRST_NAME; ?></td>
@@ -130,7 +128,6 @@
                 }
                 ?>
               </td>
-
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_LAST_NAME; ?></td>
@@ -147,7 +144,6 @@
                 }
                 ?>
               </td>
-
             </tr>
             <?php
             if (ACCOUNT_DOB == 'true') {
@@ -167,7 +163,6 @@
                 }
                 ?>
               </td>
-
             </tr>
             <?php
             }
@@ -191,7 +186,6 @@
                 }
                 ?>
               </td>
-
             </tr>
           </table>
         </div>
@@ -208,7 +202,6 @@
                   echo xtc_draw_input_field('entry_company', $cInfo->entry_company);
                 ?>
               </td>
-
             </tr>
             <?php
             if(ACCOUNT_COMPANY_VAT_CHECK == 'true'){
@@ -290,7 +283,6 @@
                 }
                 ?>
               </td>
-
             </tr>
             <?php
               if (ACCOUNT_SUBURB == 'true') {
@@ -302,7 +294,6 @@
                   echo xtc_draw_input_field('entry_suburb', $cInfo->entry_suburb);
                 ?>
               </td>
-
             </tr>
             <?php
               }
@@ -322,7 +313,6 @@
                 }
               ?>
               </td>
-
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_CITY; ?></td>
@@ -339,9 +329,7 @@
                 }
                 ?>
               </td>
-
             </tr>
-            
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_COUNTRY; ?></td>
               <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_country_error == true) ? ' col-error' : ''); ?>">
@@ -390,7 +378,6 @@
             <?php
             }
             ?>
-
           </table>
         </div>
         <?php
@@ -415,8 +402,10 @@
                 }
               ?>
               </td>
-
             </tr>
+            <?php
+              if (ACCOUNT_FAX == 'true') {
+            ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_FAX_NUMBER; ?></td>
               <td class="dataTableConfig col-single-right">
@@ -428,8 +417,10 @@
                 }
               ?>
               </td>
-
             </tr>
+            <?php
+              }
+            ?>
           </table>
         </div>
 

@@ -87,9 +87,11 @@
       <tr>
         <td><span class="fieldtext">{#text_tel#}</span><span class="stern">{$INPUT_TEL|replace:"type=\"text\"":"type=\"tel\""}</span></td>
       </tr>
+      {if $fax == '1'}
       <tr>
         <td><span class="fieldtext">{#text_fax#}</span><span class="stern">{$INPUT_FAX|replace:"type=\"text\"":"type=\"tel\""}</span></td>
       </tr>
+      {/if}
     </table>
     {if $INPUT_VVCODE || $VVIMG}
     <br />

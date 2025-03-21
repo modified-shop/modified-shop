@@ -43,10 +43,12 @@
     <td>{#text_tel#}</td>
     <td>{$INPUT_TEL}</td>
   </tr>
+  {if $fax == '1'}
   <tr>
     <td>{#text_fax#}</td>
     <td>{$INPUT_FAX}</td>
   </tr>
+  {/if}
   {if $vat == '1'}
   <tr>
     <td>{#text_ustid#}</td>

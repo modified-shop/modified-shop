@@ -564,10 +564,12 @@ require (DIR_WS_INCLUDES.'head.php');
                       </td>
                     </tr>
 
+                    <?php if (ACCOUNT_FAX == 'true') { ?>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_FAX_NUMBER; ?></td>
                       <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('customers_fax'); ?></td>
                     </tr>
+                    <?php } ?>
 
                   </table>
                 </div>

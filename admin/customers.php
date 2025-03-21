@@ -320,7 +320,7 @@
           $customers_vat_id = xtc_db_prepare_input($_POST['customers_vat_id']);
           $customers_vat_id_status = (isset($_POST['customers_vat_id_status']) ? xtc_db_prepare_input($_POST['customers_vat_id_status']) : '');
           $customers_telephone = xtc_db_prepare_input($_POST['customers_telephone']);
-          $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
+          if (ACCOUNT_FAX == 'true') $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
           if (ACCOUNT_DOB == 'true') $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
           $memo_title = xtc_db_prepare_input($_POST['memo_title']);
           $memo_text = xtc_db_prepare_input($_POST['memo_text']);
@@ -557,6 +557,8 @@
                 'customers_vat_id_status' => $customers_vat_id_status,
                 'customers_lastname' => $customers_lastname,
                 'customers_email_address' => $customers_email_address,
+                'customers_telephone' => ((isset($customers_telephone)) ? $customers_telephone : ''),
+                'customers_fax' => ((isset($customers_fax)) ? $customers_fax : ''),
                 'customers_telephone' => $customers_telephone,
                 'customers_fax' => $customers_fax,
                 'payment_unallowed' => $payment_unallowed,
