@@ -151,6 +151,10 @@
 function pushgTagEventAction() {";
         $consentPushCode .= $addCode;
         $consentPushCode .= "
+  dataLayer.push({
+    event: 'consent_ready'
+  });";
+        $consentPushCode .= "
 }";
         $consentPushCode .= $endCode;
       }
@@ -162,6 +166,11 @@ function pushgTagEventAction() {";
     if ($consentAddCode) {
       $output .= $consentAddCode;
     }
+
+    $output .= "
+  dataLayer.push({
+    event: 'consent_ready'
+  });";
 
     if ($addCode) {
       $output .= $addCode;
