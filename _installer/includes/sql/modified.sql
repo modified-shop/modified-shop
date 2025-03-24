@@ -210,7 +210,7 @@ CREATE TABLE banners_history (
   banners_clicked INT(5) NOT NULL DEFAULT 0,
   banners_history_date DATETIME NOT NULL,
   PRIMARY KEY (banners_history_id),
-  KEY idx_banners_id (banners_id, banners_history_date),
+  KEY idx_banners_id (banners_id, banners_history_date)
 );
 
 DROP TABLE IF EXISTS campaigns;
