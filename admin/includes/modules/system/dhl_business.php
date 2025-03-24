@@ -97,7 +97,7 @@
         }
       }
       
-      if (defined('MODULE_DHL_BUSINESS_PRODUCT') {
+      if (defined('MODULE_DHL_BUSINESS_PRODUCT')) {
         xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key = 'MODULE_DHL_BUSINESS_PRODUCT'");
       }
     }
