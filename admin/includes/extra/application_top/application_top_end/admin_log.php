@@ -24,12 +24,38 @@
               'products_id' => (int)$_POST['products_id'],
             );
           }
+          if (isset($_POST['multi_products']) 
+              && is_array($_POST['multi_products']) 
+              && count($_POST['multi_products']) > 0
+              && isset($_POST['multi_delete_confirm'])
+              )
+          {
+            foreach ($_POST['multi_products'] as $products_id) {
+              $sql_data_array[] = array(
+                'customers_id' => (int)$_SESSION['customer_id'],
+                'products_id' => (int)$products_id,
+              );
+            }
+          }
     
           if (isset($_POST['categories_id'])) {
             $sql_data_array = array(
               'customers_id' => (int)$_SESSION['customer_id'],
               'categories_id' => (int)$_POST['categories_id'],
             );
+          }
+          if (isset($_POST['multi_categories']) 
+              && is_array($_POST['multi_categories']) 
+              && count($_POST['multi_categories']) > 0
+              && isset($_POST['multi_delete_confirm'])
+              )
+          {
+            foreach ($_POST['multi_categories'] as $categories_id) {
+              $sql_data_array[] = array(
+                'customers_id' => (int)$_SESSION['customer_id'],
+                'categories_id' => (int)$categories_id,
+              );
+            }
           }
           break;
       
@@ -110,10 +136,21 @@
       }
   
       if (count($sql_data_array) > 0) {
-        $sql_data_array['text'] = base64_encode(serialize($_POST));
-        $sql_data_array['date_modified'] = 'now()';
-      
-        xtc_db_perform('admin_log', $sql_data_array);
+        $text = base64_encode(serialize($_POST));
+        
+        if (isset($sql_data_array[0])) {
+          foreach ($sql_data_array as $sql_data) {
+            $sql_data['text'] = $text;
+            $sql_data['date_modified'] = 'now()';
+          
+            xtc_db_perform('admin_log', $sql_data);
+          }
+        } else {
+          $sql_data_array['text'] = $text;
+          $sql_data_array['date_modified'] = 'now()';
+        
+          xtc_db_perform('admin_log', $sql_data_array);
+        }
       }
     }
   }
