@@ -488,7 +488,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_SUBURB; ?></td>
                       <td class="dataTableConfig col-single-right">
                       <?php
-                        echo xtc_draw_input_field('entry_suburb', isset($entry_suburb)?$entry_suburb:'';
+                        echo xtc_draw_input_field('entry_suburb', isset($entry_suburb)?$entry_suburb:'');
                       ?>
                       </td>
                     </tr>
