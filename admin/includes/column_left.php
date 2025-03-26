@@ -235,7 +235,7 @@ if (count($admin_access) > 0) {
   if ($admin_access['products_vpe'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_PRODUCTS_VPE, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_VPE . '</a></li>';
   if ($admin_access['campaigns'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_CAMPAIGNS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CAMPAIGNS . '</a></li>';
   if ($admin_access['cross_sell_groups'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_XSELL_GROUPS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDERS_XSELL_GROUP . '</a></li>';
-  if (isset($admin_access['cookie_consent']) && $admin_access['cookie_consent'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_COOKIE_CONSENT, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_COOKIE_CONSENT . '</a></li>';
+  if (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true' && isset($admin_access['cookie_consent']) && $admin_access['cookie_consent'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_COOKIE_CONSENT, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_COOKIE_CONSENT . '</a></li>';
   endMenue(BOX_HEADING_CONFIGURATION);
 
   //configuration 2
