@@ -58,21 +58,16 @@ if (isset($order) && $order->content_type == 'virtual' && !isset($_SESSION['payp
 $error = false;
 $process = false;
 if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
-  // process a new shipping address
-  if ((isset($_POST['firstname'])
-       && xtc_not_null($_POST['firstname']) 
-       && isset($_POST['lastname']) 
-       && xtc_not_null($_POST['lastname']) 
-       && isset($_POST['street_address'])
-       && xtc_not_null($_POST['street_address'])
-       ) || isset($_POST['store_address'])
-      ) 
+  // process a new shipping address or changes
+  if (isset($_POST['address_book_id']) 
+      || isset($_POST['store_address'])
+      )
   {
     $checkout_page = 'shipping';
     if (isset($_POST['address_book_id'])) $edit_address_book = true;
     include(DIR_WS_MODULES.'checkout_address_store.php');    
   // process the selected shipping destination
-  } elseif (isset ($_POST['address'])) {
+  } elseif (isset($_POST['address'])) {
     $reset_shipping = false;
     if (isset ($_SESSION['sendto'])
         && $_SESSION['sendto'] != $_POST['address']

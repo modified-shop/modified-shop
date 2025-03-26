@@ -51,15 +51,11 @@ if ($_SESSION['cart']->count_contents() < 1) {
 $error = false;
 $process = false;
 if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
-  // process a new billing address
-  if ((isset($_POST['firstname']) 
-       && xtc_not_null($_POST['firstname']) 
-       && isset($_POST['lastname']) 
-       && xtc_not_null($_POST['lastname']) 
-       && isset($_POST['street_address'])
-       && xtc_not_null($_POST['street_address'])
-       ) || isset($_POST['store_address'])
-      ) 
+  // process a new billing address or changes
+  if (isset($_POST['address_book_id']) 
+      || isset($_POST['edit_address_book_id']) 
+      || isset($_POST['store_address'])
+      )
   {
     $checkout_page = 'payment';
     if (isset($_POST['address_book_id'])) $edit_address_book = true;
@@ -67,7 +63,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
     
     include(DIR_WS_MODULES.'checkout_address_store.php');
   // process the selected billing destination
-  } elseif (isset ($_POST['address'])) {
+  } elseif (isset($_POST['address'])) {
     $reset_payment = false;
     if (isset ($_SESSION['billto'])
         && $_SESSION['billto'] != $_POST['address']
