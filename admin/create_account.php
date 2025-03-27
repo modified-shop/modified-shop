@@ -558,7 +558,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_TELEPHONE_NUMBER; ?></td>
                       <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_telephone_error == true) ? ' col-error' : ''); ?>">
                       <?php
-                        echo xtc_draw_input_field('customers_telephone', isset($customers_telephone)?$customers_telephone:'', '', true);
+                        echo xtc_draw_input_field('customers_telephone', isset($customers_telephone)?$customers_telephone:'', '', (ACCOUNT_TELEPHONE_OPTIONAL == 'false'));
                         if ($error && $entry_telephone_error) echo '&nbsp;'.ENTRY_TELEPHONE_NUMBER_ERROR;
                       ?>
                       </td>
