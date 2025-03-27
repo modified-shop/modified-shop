@@ -62,6 +62,14 @@
   }
 
   $(function() {
+    if ($('.box_sub_categories').is(":visible")) {
+      if ($('.box_sub_categories').height() > (window.innerHeight - 80)) {
+        $('.box_sub_categories').css('position','static');
+      }
+    }
+  });
+  
+  $(function() {
     $('body').on('click', '#toggle_account', function(event) {
       event.preventDefault();
       $('body').addClass('no_scroll');
