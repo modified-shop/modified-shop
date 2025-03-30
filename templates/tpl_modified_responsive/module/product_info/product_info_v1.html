@@ -176,7 +176,7 @@
   </div>
   {$FORM_END}
 
-  {if $PRODUCTS_DESCRIPTION != ''}<h4 class="detailbox">{#products_desc#}</h4><div class="pd_description" itemprop="description">{$PRODUCTS_DESCRIPTION}</div></div>{/if}
+  {if $PRODUCTS_DESCRIPTION != ''}<h4 class="detailbox">{#products_desc#}</h4><div class="pd_description" itemprop="description">{$PRODUCTS_DESCRIPTION}</div>{/if}
   {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}{$MODULE_product_tags}{/if}
   {if isset($MODULE_products_media) && $MODULE_products_media != ''}{$MODULE_products_media}{/if}
   {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}{$MODULE_products_reviews}{/if}
