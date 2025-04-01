@@ -19,7 +19,7 @@
   if (isset($_POST['products_options_id']) && $_POST['action'] == 'change') {
     include(DIR_WS_MODULES.'new_attributes_change.php');
     $options_id = isset($_POST['options_id']) ? '&options_id='.implode(',',$_POST['options_id']) : '';
-    xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'current_product_id='.$_POST['current_product_id'].((isset($_POST['cpath'])) ? 'cpath='.$_POST['cpath'] : '').'&option_order_by='.$_POST['option_order_by'].'&products_options_id='.$_POST['products_options_id'].$oldaction.$oldpage.$options_id.$iframe));
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'current_product_id='.$_POST['current_product_id'].((isset($_POST['cpath'])) ? '&cpath='.$_POST['cpath'] : '').'&option_order_by='.$_POST['option_order_by'].'&products_options_id='.$_POST['products_options_id'].$oldaction.$oldpage.$options_id.$iframe));
   }
 
   if (isset($_GET['cPath'])) {
