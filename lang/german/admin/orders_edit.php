@@ -117,4 +117,5 @@ define('TEXT_PRODUCTS_EAN', 'GTIN/EAN:');
 define('TEXT_PRODUCTS_TAX_RATE', 'Steuersatz:');
 define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Erscheinungsdatum:');
 define('TEXT_IMAGE_NONEXISTENT', '---');
-?>
+
+define('ERROR_STATUS_CHANGE', 'ACHTUNG: Nach &Auml;nderung der Kundengruppe m&uuml;ssen eventuell Versandkosten, Zuschl&auml;ge und Rabatte manuell angepasst werden.');
