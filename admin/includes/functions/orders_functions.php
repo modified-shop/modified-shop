@@ -108,6 +108,21 @@
   }
 
 
+  function calculate_price_tax($price, $tax, $allow_tax_old, $allow_tax_new) {
+    global $xtPrice;
+    
+    if ($allow_tax_old == 1 && $allow_tax_new != 1) {
+      $price = $xtPrice->xtcRemoveTax($price, $tax);
+    }
+
+    if ($allow_tax_old != 1 && $allow_tax_new == 1) {
+      $price = $xtPrice->xtcAddTax($price, $tax, false);
+    }
+    
+    return $price;
+  }
+
+
   function calculate_tax($amount, $oID) {
     global $xtPrice, $status;
 
@@ -374,7 +389,11 @@
 
 
   function orders_address_edit($oID, $data_array) {
-    global $order, $lang;
+    global $order, $lang, $messageStack;
+
+    if ($order->info['status'] != $data_array['customers_status']) {
+      $messageStack->add_session(ERROR_STATUS_CHANGE);
+    }
   
     $customers_country = xtc_get_countriesList(xtc_db_prepare_input($data_array['customers_country_id']), true);
     $delivery_country = xtc_get_countriesList(xtc_db_prepare_input($data_array['delivery_country_id']), true);
@@ -511,7 +530,9 @@
     if (in_array($allow_tax, array('0', '4'))) {
       $tax_rate = 0;
     }
-
+    
+    $data_array['products_price'] = calculate_price_tax($data_array['products_price'], $tax_rate, $product['allow_tax'], $allow_tax);
+    
     $final_price = $data_array['products_price'] * (int)$data_array['products_quantity'];
   
     $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
