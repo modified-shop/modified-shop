@@ -130,11 +130,11 @@
       } else {
         $freeamount_zone = (double)constant('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_' . $dest_zone);
 
-        if (( $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $freeamount_zone) && MODULE_SHIPPING_FREEAMOUNT_DISPLAY == 'False') {
+        if (( $xtPrice->xtcRemoveCurr($order->info['subtotal']) < $freeamount_zone) && MODULE_SHIPPING_FREEAMOUNT_DISPLAY == 'False') {
           $this->enabled = false;
         }
 
-        if ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $freeamount_zone) {
+        if ($xtPrice->xtcRemoveCurr($order->info['subtotal']) < $freeamount_zone) {
           $this->quotes['error'] = sprintf(MODULE_SHIPPING_FREEAMOUNT_TEXT_WAY, $xtPrice->xtcFormat($freeamount_zone, true, 0, true));
         } else {
           $this->quotes['methods'] = array(array('id' => $this->code,
