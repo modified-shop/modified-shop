@@ -135,7 +135,7 @@
         $shipping = -1;
         
         if (MODULE_SHIPPING_TABLE_MODE == 'price') {
-          $order_total = $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total());
+          $order_total = $xtPrice->xtcRemoveCurr($order->info['subtotal']);
         } else {
           $order_total = $shipping_weight;
         }
