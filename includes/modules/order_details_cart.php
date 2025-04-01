@@ -153,8 +153,6 @@ if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
   $total_content .= NOT_ALLOWED_TO_SEE_PRICES.'<br />';
 }
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/order_details_cart_total/','php') as $file) require ($file);
-
 if (SHOW_SHIPPING == 'true') {
   $module_smarty->assign('SHIPPING_INFO', $main->getShippingLink());
 }
@@ -164,6 +162,8 @@ if ($_SESSION['customers_status']['customers_status_show_price'] == '1' && MODUL
 }
 
 include (DIR_WS_INCLUDES.'shipping_estimate.php');
+
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/order_details_cart_total/','php') as $file) require ($file);
 
 $module_smarty->assign('TOTAL_CONTENT', $total_content);
 $module_smarty->assign('language', $_SESSION['language']);
