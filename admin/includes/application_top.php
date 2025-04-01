@@ -216,9 +216,6 @@ if (is_file(DIR_FS_ADMIN.$current_page) == false || $_SESSION['customers_status'
   xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
 }
 
-// define our localization functions
-require(DIR_WS_FUNCTIONS . 'localization.php');
-
 // setup our boxes
 require(DIR_WS_CLASSES . 'table_block.php');
 require(DIR_WS_CLASSES . 'box.php');

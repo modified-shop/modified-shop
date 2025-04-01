@@ -17,6 +17,10 @@
    --------------------------------------------------------------*/
   require('includes/application_top.php');
 
+  // include needed functions
+  require_once(DIR_FS_INC.'quote_currency.inc.php');
+
+  // include needed classes
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
   
@@ -97,10 +101,7 @@
       $currency_id = (int)$_GET['cID'];
       $currency_query = xtc_db_query("SELECT * FROM " . TABLE_CURRENCIES);
       while ($currency = xtc_db_fetch_array($currency_query)) {
-        $rate = quote_primary_currency($currency['code']);
-        if ($rate === false) {
-          $rate = quote_secondary_currency($currency['code']);
-        }
+        $rate = quote_currency($currency['code']);
         if ($rate !== false && $rate > 0) {
           $sql_data_array = array(
             'value' => $rate,

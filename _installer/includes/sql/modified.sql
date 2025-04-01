@@ -2388,6 +2388,7 @@ INSERT INTO scheduled_tasks VALUES (2, 0, 0, 1, 'm', 1, 1, 'status_banners');
 INSERT INTO scheduled_tasks VALUES (3, 0, 0, 1, 'w', 0, 1, 'db_maintenance');
 INSERT INTO scheduled_tasks VALUES (4, 0, 0, 1, 'd', 0, 1, 'db_backup');
 INSERT INTO scheduled_tasks VALUES (5, 0, 0, 1, 'd', 0, 1, 'logs_maintenance');
+INSERT INTO scheduled_tasks VALUES (6, 0, 0, 1, 'd', 0, 1, 'currencies_update');
 
 # shipping status
 INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '', 1);

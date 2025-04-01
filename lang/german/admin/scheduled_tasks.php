@@ -57,3 +57,6 @@
 
   define('TEXT_HEADING_TASKS_ADMINLOG_MAINTENANCE', 'Admin Log');
   define('TEXT_INFO_TASKS_ADMINLOG_MAINTENANCE', 'Admin Log bereinigen');
+
+  define('TEXT_HEADING_TASKS_CURRENCIES_UPDATE', 'W&auml;hrungen aktualisieren');
+  define('TEXT_INFO_TASKS_CURRENCIES_UPDATE', 'Die W&auml;hrungskurese werden aktualisiert');
