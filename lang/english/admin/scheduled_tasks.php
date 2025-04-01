@@ -59,4 +59,4 @@
   define('TEXT_INFO_TASKS_ADMINLOG_MAINTENANCE', 'Cleanup Admin log');
 
   define('TEXT_HEADING_TASKS_CURRENCIES_UPDATE', 'Currencies update');
-  define('TEXT_INFO_TASKS_CURRENCIES_UPDATE', 'Currencies rate are updated');
+  define('TEXT_INFO_TASKS_CURRENCIES_UPDATE', 'Currency exchange rates are updated');
