@@ -1108,10 +1108,44 @@ class PayPalPaymentBase extends PayPalCommon {
     if ($this->code == 'paypalcart') {
       if ($this->get_config('MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT', false) == '') {
         $sql_data_array = array(
-          'config_key' => 'MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT',
-          'config_value' => '1'
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT',
+            'config_value' => '1'
+          ),
         );
-        xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
+        $this->save_config($sql_data_array);
+      }
+    }
+
+    if ($this->code == 'paypalexpress') {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALEXPRESS_SAVE_PAYMENT', false) == '') {
+        $sql_data_array = array(
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALEXPRESS_SAVE_PAYMENT',
+            'config_value' => '1',
+          ),
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALEXPRESS_SHOW_CART_BNPL',
+            'config_value' => '1',
+          ),
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALEXPRESS_SHOW_PRODUCT',
+            'config_value' => '1',
+          ),
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALEXPRESS_SHOW_PRODUCT_BNPL',
+            'config_value' => '1',
+          ),
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALEXPRESS_SHOW_BOX_CART',
+            'config_value' => '1',
+          ),
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALEXPRESS_SHOW_BOX_CART_BNPL',
+            'config_value' => '1',
+          ),
+        );
+        $this->save_config($sql_data_array);
       }
     }
 
@@ -1119,10 +1153,16 @@ class PayPalPaymentBase extends PayPalCommon {
     if ($this->code == 'paypalacdc') {
       if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS', false) == '') {
         $sql_data_array = array(
-          'config_key' => 'MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS',
-          'config_value' => '0'
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS',
+            'config_value' => '0'
+          ),
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALACDC_SAVE_PAYMENT',
+            'config_value' => '1',
+          ),
         );
-        xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
+        $this->save_config($sql_data_array);
       }
     }
 
@@ -1149,7 +1189,15 @@ class PayPalPaymentBase extends PayPalCommon {
           array(
             'config_key' => 'PAYPAL_BUTTON_HEIGHT',
             'config_value' => '35',
-          )
+          ),
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPAL_SAVE_PAYMENT',
+            'config_value' => '1',
+          ),
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPAL_SHOW_CHECKOUT_BNPL',
+            'config_value' => '1',
+          ),
         );
         $this->save_config($sql_data_array);
       }
@@ -1497,14 +1545,25 @@ class PayPalPaymentBase extends PayPalCommon {
       update_module_configuration('payment');
     }
     
-    if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS', false) == '') {
-      $sql_data_array = array(
-        array(
-          'config_key' => 'MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS',
-          'config_value' => '0',
-        )
-      );
-      $this->save_config($sql_data_array);
+    if (defined('MODULE_PAYMENT_PAYPALACDC_STATUS')) {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS', false) == '') {
+        $sql_data_array = array(
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS',
+            'config_value' => '0',
+          )
+        );
+        $this->save_config($sql_data_array);
+      }
+      if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_SAVE_PAYMENT', false) == '') {
+        $sql_data_array = array(
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALACDC_SAVE_PAYMENT',
+            'config_value' => '1',
+          )
+        );
+        $this->save_config($sql_data_array);
+      }
     }
     
     // set buttons
@@ -1530,6 +1589,23 @@ class PayPalPaymentBase extends PayPalCommon {
           'config_key' => 'PAYPAL_BUTTON_HEIGHT',
           'config_value' => '35',
         )
+      );
+      $this->save_config($sql_data_array);
+    }
+
+    if (defined('MODULE_PAYMENT_PAYPALEXPRESS_STATUS')
+        && $this->get_config('MODULE_PAYMENT_PAYPALEXPRESS_SHOW_BOX_CART', false) == ''
+        )
+    {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALEXPRESS_SHOW_BOX_CART',
+          'config_value' => '1',
+        ),
+        array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALEXPRESS_SHOW_BOX_CART_BNPL',
+          'config_value' => '1',
+        ),
       );
       $this->save_config($sql_data_array);
     }

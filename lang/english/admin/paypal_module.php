@@ -45,6 +45,12 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL' => 'BNPL Button in checkout',
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO' => 'Shall the PayPal button be displayed in the checkout?',
 
+  'TEXT_PAYPAL_MODULE_BOX_CART' => 'Button in box cart',
+  'TEXT_PAYPAL_MODULE_BOX_CART_INFO' => 'Shall the PayPal button be displayed in the pbox cart?',
+
+  'TEXT_PAYPAL_MODULE_BOX_CART_BNPL' => 'BNPL Button in box cart',
+  'TEXT_PAYPAL_MODULE_BOX_CART_BNPL_INFO' => 'Shall the PayPal button be displayed in the box cart?',
+
   'TEXT_PAYPAL_MODULE_SAVE_PAYMENT' => 'Save payment method in the checkout (PayPal Vault)',
   'TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO' => 'Should the payment method used for PayPal be saved for a faster checkout for another order?',
 

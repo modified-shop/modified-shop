@@ -45,6 +45,12 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL' => 'Sp&auml;ter bezahlen Button im Checkout',
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO' => 'Soll der PayPal Sp&auml;ter bezahlen Button im Checkout angezeigt werden?',
 
+  'TEXT_PAYPAL_MODULE_BOX_CART' => 'Express Button in Warenkorb Box',
+  'TEXT_PAYPAL_MODULE_BOX_CART_INFO' => 'Soll der PayPal Express Button in Warenkorb Box angezeigt werden?',
+
+  'TEXT_PAYPAL_MODULE_BOX_CART_BNPL' => 'Sp&auml;ter bezahlen Button in Warenkorb Box',
+  'TEXT_PAYPAL_MODULE_BOX_CART_BNPL_INFO' => 'Soll der PayPal Sp&auml;ter bezahlen Button in Warenkorb Box angezeigt werden?',
+
   'TEXT_PAYPAL_MODULE_SAVE_PAYMENT' => 'Zahlart im Checkout speichern (PayPal Vault)',
   'TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO' => 'Soll die f&uuml;r PayPal verwendete Zahlart f&uuml;r einen schnelleren Checkout bei einer weiteren Bestellung gespeichert werden k&ouml;nnen?',
 
