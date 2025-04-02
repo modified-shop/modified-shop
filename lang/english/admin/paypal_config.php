@@ -28,7 +28,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE' => 'Mode:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
-  'TEXT_PAYPAL_REMOVE_ORDER_TMP' => 'Temp Orders:',
+  'TEXT_PAYPAL_REMOVE_ORDER_TMP' => 'Delete Orders:',
   'TEXT_PAYPAL_REMOVE_ORDER_TMP_INFO' => 'Should temporarily created orders be deleted?',
 
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID_LIVE' => 'Merchant ID Live:',
