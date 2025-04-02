@@ -279,7 +279,7 @@
     }
 
     function getOrderData($oID) {
-      global $xtPrice, $main, $PHP_SELF;
+      global $xtPrice, $PHP_SELF;
 
       require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_short_description.inc.php');
