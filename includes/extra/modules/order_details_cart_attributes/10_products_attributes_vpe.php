@@ -21,12 +21,12 @@
         break;
     }
             
-    if ($attributes['attributes_vpe_value'] != 0.0 && $products[$i]['price'] > 0) {
-      $vpe_array = array(
-        'products_vpe_status' => $products[$i]['vpe_status'],
-        'products_vpe_value' => $vpe_value,
-        'products_vpe' => $attributes['attributes_vpe_id'],
-      );
-      $module_content[$i]['PRODUCTS_VPE'] = $main->getVPEtext($vpe_array, $products[$i]['price']);
-    }
+    $vpe_array = array(
+      'products_vpe_status' => $products[$i]['vpe_status'],
+      'products_vpe_value' => $vpe_value,
+      'products_vpe' => $attributes['attributes_vpe_id'],
+    );
+    $module_content[$i]['PRODUCTS_VPE'] = $main->getVPEtext($vpe_array, $products[$i]['price']);
+    $module_content[$i]['PRODUCTS_VPE_NAME'] = $main->vpe_name;
+    $module_content[$i]['PRODUCTS_VPE_VALUE'] = $vpe_value;
   }

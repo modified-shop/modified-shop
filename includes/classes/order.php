@@ -279,7 +279,7 @@
     }
 
     function getOrderData($oID) {
-      global $xtPrice, $PHP_SELF;
+      global $xtPrice, $main, $PHP_SELF;
 
       require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_short_description.inc.php');
@@ -360,8 +360,15 @@
         $order_data[$index]['PRODUCTS_SINGLE_PRICE'] = $xtPrice->xtcFormat($order_data_values['products_price'], true);
         $order_data[$index]['PRODUCTS_TAX'] = (($order_data_values['products_tax'] > 0.00) ? number_format($order_data_values['products_tax'], TAX_DECIMAL_PLACES) : 0);
         $order_data[$index]['PRODUCTS_QTY'] = $order_data_values['products_quantity'];
-        
-        if ($order_data_values['products_vpe_value'] > 0) {
+
+        $order_data[$index]['PRODUCTS_VPE'] = '';
+        $order_data[$index]['PRODUCTS_VPE_NAME'] = $order_data_values['products_vpe'];
+        $order_data[$index]['PRODUCTS_VPE_VALUE'] = $order_data_values['products_vpe_value'];
+
+        if ($order_data_values['products_vpe_value'] > 0
+            && $order_data_values['products_price'] > 0
+            )
+        {
           $order_data[$index]['PRODUCTS_VPE'] = $xtPrice->xtcFormatCurrency(($order_data_values['products_price'] * (1 / $order_data_values['products_vpe_value'])), 0, true).TXT_PER.$order_data_values['products_vpe'];
         }
         
@@ -703,15 +710,15 @@
                 $vpe_value = $attributes['attributes_vpe_value'];
                 break;
             }
-                    
-            if ($attributes['attributes_vpe_value'] != 0.0 && $products[$i]['price'] > 0) {
-              $vpe_array = array(
-                'products_vpe_status' => $products[$i]['vpe_status'],
-                'products_vpe_value' => $vpe_value,
-                'products_vpe' => $attributes['attributes_vpe_id'],
-              );
-              $this->products[$index]['vpe'] = $main->getVPEtext($vpe_array, $products[$i]['price']);
-            }
+            
+            $vpe_array = array(
+              'products_vpe_status' => $products[$i]['vpe_status'],
+              'products_vpe_value' => $vpe_value,
+              'products_vpe' => $attributes['attributes_vpe_id'],
+            );
+            $this->products[$index]['vpe'] = $main->getVPEtext($vpe_array, $products[$i]['price']);
+            $this->products[$index]['vpe_name'] = $main->vpe_name;
+            $this->products[$index]['vpe_value'] = $vpe_value;
 
             //new module support
             $this->products[$index]['attributes'][$subindex] = $this->orderModules->cart_attributes($this->products[$index]['attributes'][$subindex],$attributes,$products[$i]['id'],$value,$this->products[$index]);
