@@ -24,7 +24,7 @@
     $vpe_array = array(
       'products_vpe_status' => $product->data['products_vpe_status'],
       'products_vpe_value' => $vpe_value,
-      'products_vpe' => $products_options['attributes_vpe_id'],
+      'products_vpe' => (($products_options['attributes_vpe_id'] > 0) ? $products_options['attributes_vpe_id'] : $product->data['products_vpe']),
     );
     $products_options_data[$row]['DATA'][$col]['VPE'] = $main->getVPEtext($vpe_array, $full);
     $products_options_data[$row]['DATA'][$col]['VPE_NAME'] = $main->vpe_name;
