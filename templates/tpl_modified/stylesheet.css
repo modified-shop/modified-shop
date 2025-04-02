@@ -3103,6 +3103,12 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
 .options_row_selection .options_selection label input[type=radio] {
   vertical-align: -1px;
 }
+.options_row_selection .options_selection label .options_selection_vpe {
+  white-space:nowrap;
+  font-size: 10px;
+  line-height: 12px;
+  color: #666;
+}
 .options_row_selection .options_selection label .options_selection_price {
   float:right;
   padding-right:2px;

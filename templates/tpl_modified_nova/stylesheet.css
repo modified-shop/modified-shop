@@ -6455,6 +6455,14 @@ a.view_box.active {
 .po_row_table_option {
   flex: 1;
 }
+.po_row_table_option_text {
+  padding: 0 5px 0 0;
+}
+.po_row_table_option_vpe {
+  font-size:11px;
+  white-space:nowrap;
+  color:#666;
+}
 .po_row_table_price {
   white-space:nowrap;
   text-align:right;
@@ -6514,6 +6522,15 @@ a.view_box.active {
   white-space: nowrap;
 }
 .po_row_button_item_price {
+  width:100%;
+  text-align:center;
+  font-weight:400;
+  font-size: 10px;
+  line-height: 10px;
+  display:block;
+  padding: 3px 0 0 0;
+}
+.po_row_button_item_vpe {
   width:100%;
   text-align:center;
   font-weight:400;

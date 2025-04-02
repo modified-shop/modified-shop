@@ -16,6 +16,7 @@
                   <span class="po_row_button_item_name">
                     {$item_data.TEXT}
                     {if $item_data.PRICE != ''}<span class="po_row_button_item_price">{$item_data.PREFIX} {$item_data.PRICE}</span>{/if}
+                    {if $item_data.VPE}<span class="po_row_button_item_vpe">({$item_data.VPE})</span>{/if}
                   </span>
                 </label>
               </div>
