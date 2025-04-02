@@ -632,6 +632,7 @@
       }
       
       $index = 0;
+      $vpe_value = 0;
       $this->tax_discount = array ();
 
       $products = $_SESSION['cart']->get_products(false);
@@ -701,7 +702,7 @@
               $this->products[$index]['attributes'][$subindex][str_replace('attributes_', '', $key)] = $val;
             }
 
-            $vpe_value = $products[$i]['vpe_value'] + $attributes['attributes_vpe_value'];
+            $vpe_value += $products[$i]['vpe_value'] + $attributes['attributes_vpe_value'];
             switch ($attributes['weight_prefix']) {
               case '-':
                 $vpe_value = $products[$i]['vpe_value'] - $attributes['attributes_vpe_value'];

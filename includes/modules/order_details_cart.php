@@ -102,6 +102,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
   //products attributes
   if (isset ($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
     $subindex = 0;
+    $vpe_value = 0;
     foreach ($products[$i]['attributes'] as $option => $value) {
       $hidden_options .= xtc_draw_hidden_field('id['.$products[$i]['id'].']['.$option.']', $value);
 
