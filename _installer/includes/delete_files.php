@@ -180,6 +180,7 @@
     DIR_ADMIN.'includes/functions/db_restore.php',
     DIR_ADMIN.'includes/functions/export_functions.php',
     DIR_ADMIN.'includes/functions/languages.php',
+    DIR_ADMIN.'includes/functions/localization.php',
     DIR_ADMIN.'includes/functions/validations.php',
     DIR_ADMIN.'includes/haendlerbund/css/ui_custom.css',
     DIR_ADMIN.'includes/haendlerbund/images/_notes/dwsync.xml',
