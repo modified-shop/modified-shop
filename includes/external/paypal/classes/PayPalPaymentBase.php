@@ -868,7 +868,6 @@ class PayPalPaymentBase extends PayPalCommon {
   
   
   function update_order($comment, $orders_status, $orders_id) {
-  
     $order_history_data = array(
       'orders_id' => (int)$orders_id,
       'orders_status_id' => (int)$orders_status,
@@ -886,16 +885,21 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function remove_order($orders_id) {
-
     $check_query = xtc_db_query("SELECT * 
                                    FROM ".TABLE_ORDERS." 
                                   WHERE orders_id = '".(int)$orders_id."'");
     if (xtc_db_num_rows($check_query) > 0) {
       $check = xtc_db_fetch_array($check_query);
       if ($_SESSION['customer_id'] == $check['customers_id']) {
-        require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-        xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
-        $this->LoggingManager->log('WARNING', 'Remove Order ID: '.$orders_id);
+        if ($this->get_config('PAYPAL_REMOVE_ORDER_TMP') == '1') {
+          require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+          xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+          $this->LoggingManager->log('INFO', 'Remove Order ID: '.$orders_id);
+        } else {
+          require_once(DIR_FS_INC.'xtc_restock_order.inc.php');
+          xtc_restock_order((int)$orders_id, true);
+          $this->LoggingManager->log('INFO', 'Restock Order ID: '.$orders_id);
+        }
       }
     }
   }
@@ -1371,6 +1375,16 @@ class PayPalPaymentBase extends PayPalCommon {
         array(
           'config_key' => 'PAYPAL_INSTALLMENT_BANNER_COLOR',
           'config_value' => 'white',
+        )
+      );
+      $this->save_config($sql_data_array);
+    }
+
+    if ($this->get_config('PAYPAL_REMOVE_ORDER_TMP', false) == '') {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'PAYPAL_REMOVE_ORDER_TMP',
+          'config_value' => '1',
         )
       );
       $this->save_config($sql_data_array);

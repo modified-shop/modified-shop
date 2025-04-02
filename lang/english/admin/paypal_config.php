@@ -28,6 +28,9 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE' => 'Mode:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
+  'TEXT_PAYPAL_REMOVE_ORDER_TMP' => 'Temp Orders:',
+  'TEXT_PAYPAL_REMOVE_ORDER_TMP_INFO' => 'Should temporarily created orders be deleted?',
+
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID_LIVE' => 'Merchant ID Live:',
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID_SANDBOX' => 'Merchant ID Sandbox:',
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO' => 'Merchant ID of your merchant account. If you do not have it, request the data for Client ID and Secret again. This will automatically determine the Merchant ID.',
