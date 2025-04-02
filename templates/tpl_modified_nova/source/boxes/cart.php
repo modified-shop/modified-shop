@@ -71,8 +71,10 @@
   
       $paypal = new PayPalPaymentV2('paypalexpress');
       if ($paypal->is_enabled()) {
-        $box_smarty->assign('paypalexpress', true);
-        if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_CART_BNPL') == '1') {
+        if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_BOX_CART') == '1') {
+          $box_smarty->assign('paypalexpress', true);
+        }
+        if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_BOX_CART_BNPL') == '1') {
          $box_smarty->assign('paypalbnpl', true);
         }
       }
