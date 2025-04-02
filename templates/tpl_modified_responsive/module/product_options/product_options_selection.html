@@ -11,7 +11,7 @@
           <div class="cus_radio cus_radio_small">
             <input type="radio" name="id[{$options_data.ID}]" id="rdb_{$item_data.ID}" value="{$item_data.ID}"{if $item_data.CHECKED == '1'} checked="checked"{/if} />
             <label class="cf" for="rdb_{$item_data.ID}">{#text_in#}
-              {$item_data.TEXT} {if $item_data.PRICE != '' }<span class="options_selection_price">{$item_data.PREFIX}{$item_data.PRICE}</span>{/if}
+              {$item_data.TEXT}{if $item_data.VPE} <span class="options_selection_vpe">({$item_data.VPE})</span>{/if} {if $item_data.PRICE != '' }<span class="options_selection_price">{$item_data.PREFIX}{$item_data.PRICE}</span>{/if}
             </label>
           </div>
         </div>
