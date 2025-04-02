@@ -508,26 +508,26 @@ class product {
    * @return array
    */
   function getGraduated($pID = '') {
-    static $graduated_array, $pValues_array;
-    global $xtPrice;
+    static $graduated_array, $products_array;
+    global $xtPrice, $main;
     
     if (!isset($graduated_array)) {
       $graduated_array = array();
     }
-    if (!isset($pValues_array)) {
-      $pValues_array = array();
+    if (!isset($products_array)) {
+      $products_array = array();
     }
 
     if ($pID == '') {
       $pID = $this->pID;
-      $pValues_array[$pID] = array(
+      $products_array[$pID] = array(
         'products_vpe' => $this->data['products_vpe'],
         'products_vpe_status' => $this->data['products_vpe_status'],
         'products_vpe_value' => $this->data['products_vpe_value'],
         'products_tax_class_id' => $this->data['products_tax_class_id']
       );
     } else {
-      if (!array_key_exists($pID, $pValues_array)) {
+      if (!array_key_exists($pID, $products_array)) {
         $values_query = xtDBquery("SELECT products_vpe, 
                                           products_vpe_status, 
                                           products_vpe_value, 
@@ -535,9 +535,9 @@ class product {
                                      FROM ".TABLE_PRODUCTS." 
                                     WHERE products_id = '".(int)$pID."'");
         if (xtc_db_num_rows($values_query, true)) {
-          $pValues_array[$pID] = xtc_db_fetch_array($values_query, true);
+          $products_array[$pID] = xtc_db_fetch_array($values_query, true);
         } else {
-          $pValues_array[$pID] = array(
+          $products_array[$pID] = array(
             'products_vpe' => 0,
             'products_vpe_status' => 0,
             'products_vpe_value' => 0,
@@ -546,13 +546,6 @@ class product {
         }
       }      
     }
-
-    $pValues = array(
-      'products_vpe' => $pValues_array[$pID]['products_vpe'],
-      'products_vpe_status' => $pValues_array[$pID]['products_vpe_status'],
-      'products_vpe_value' => $pValues_array[$pID]['products_vpe_value'],
-      'products_tax_class_id' => $pValues_array[$pID]['products_tax_class_id']
-    );
 
     if (!isset($graduated_array[$pID])) {	
       $graduated_array[$pID] = array();
@@ -594,15 +587,9 @@ class product {
             $quantity = GRADUATED_PRICE_MAX_VALUE.' '.$staffel[$i]['stk'];
           }
 
-          $Pprice = $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $pValues['products_tax_class_id']);
-
-          $vpe = '';
-          if ($pValues['products_vpe_status'] == 1 && $pValues['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
-            $vpe = $Pprice * (1 / $pValues['products_vpe_value']);
-            $vpe = $xtPrice->xtcFormat($vpe, true).TXT_PER.xtc_get_vpe_name($pValues['products_vpe']);
-          }
+          $Pprice = $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $products_array[$pID]['products_tax_class_id']);
           
-          $products_tax = isset($xtPrice->TAX[$pValues['products_tax_class_id']]) ? $xtPrice->TAX[$pValues['products_tax_class_id']] : 0;
+          $products_tax = isset($xtPrice->TAX[$products_array[$pID]['products_tax_class_id']]) ? $xtPrice->TAX[$products_array[$pID]['products_tax_class_id']] : 0;
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0') {
             $Bprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcAddTax($Pprice, $products_tax, false));
             $Nprice = $xtPrice->xtcFormatCurrency($Pprice);
@@ -616,7 +603,7 @@ class product {
             'PLAIN_QUANTITY' => $staffel[$i]['stk'],
             'FROM_QUANTITY' => GRADUATED_PRICE_MAX_VALUE,
             'TO_QUANTITY' => $to_quantity,
-            'VPE' => $vpe,
+            'VPE' => $main->getVPEtext($products_array[$pID], $Pprice),
             'PRICE' => $xtPrice->xtcFormat($Pprice, true),
             'PLAIN_PRICE' => round((double)$Pprice, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']),
             'PRICE_NETTO' => $Nprice,

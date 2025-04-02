@@ -715,7 +715,7 @@
             $vpe_array = array(
               'products_vpe_status' => $products[$i]['vpe_status'],
               'products_vpe_value' => $vpe_value,
-              'products_vpe' => $attributes['attributes_vpe_id'],
+              'products_vpe' => (($attributes['attributes_vpe_id'] > 0) ? $attributes['attributes_vpe_id'] : $products[$i]['vpe_id']),
             );
             $this->products[$index]['vpe'] = $main->getVPEtext($vpe_array, $products[$i]['price']);
             $this->products[$index]['vpe_name'] = $main->vpe_name;
