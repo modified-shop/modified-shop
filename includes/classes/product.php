@@ -604,6 +604,8 @@ class product {
             'FROM_QUANTITY' => GRADUATED_PRICE_MAX_VALUE,
             'TO_QUANTITY' => $to_quantity,
             'VPE' => $main->getVPEtext($products_array[$pID], $Pprice),
+            'VPE_NAME' => $main->vpe_name,
+            'VPE_VALUE' => $products_array[$pID]['products_vpe_value'],
             'PRICE' => $xtPrice->xtcFormat($Pprice, true),
             'PLAIN_PRICE' => round((double)$Pprice, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']),
             'PRICE_NETTO' => $Nprice,
@@ -759,8 +761,8 @@ class product {
         'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
         'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
         'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
-        'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
         'PRODUCTS_VPE_NAME' => $main->vpe_name,
+        'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
         'PRODUCTS_IMAGE' => $products_image,
         'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
         'PRODUCTS_IMAGE_ALT' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
