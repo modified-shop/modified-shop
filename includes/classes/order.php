@@ -632,7 +632,6 @@
       }
       
       $index = 0;
-      $vpe_value = 0;
       $this->tax_discount = array ();
 
       $products = $_SESSION['cart']->get_products(false);
@@ -681,6 +680,7 @@
             $check_attributes_model = true;
           }
           $subindex = 0;
+          $vpe_value = $products[$i]['vpe_value'];
           foreach ($products_attributes as $option => $value) {
             $attributes = $main->getAttributes($products[$i]['id'],$option,$value);
             if ($check_attributes_model === true && $attributes['attributes_model'] != '') {
@@ -702,14 +702,15 @@
               $this->products[$index]['attributes'][$subindex][str_replace('attributes_', '', $key)] = $val;
             }
 
-            $vpe_value += $products[$i]['vpe_value'] + $attributes['attributes_vpe_value'];
             switch ($attributes['weight_prefix']) {
               case '-':
-                $vpe_value = $products[$i]['vpe_value'] - $attributes['attributes_vpe_value'];
+                $vpe_value -= $attributes['attributes_vpe_value'];
                 break;
               case '=':
                 $vpe_value = $attributes['attributes_vpe_value'];
                 break;
+              default:
+                $vpe_value += $attributes['attributes_vpe_value'];
             }
             
             $vpe_array = array(

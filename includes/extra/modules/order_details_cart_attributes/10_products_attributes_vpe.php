@@ -11,14 +11,15 @@
    ---------------------------------------------------------------------------------------*/
 
   if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
-    $vpe_value += $products[$i]['vpe_value'] + $attributes['attributes_vpe_value'];
     switch ($attributes['weight_prefix']) {
       case '-':
-        $vpe_value = $products[$i]['vpe_value'] - $attributes['attributes_vpe_value'];
+        $vpe_value -= $attributes['attributes_vpe_value'];
         break;
       case '=':
         $vpe_value = $attributes['attributes_vpe_value'];
         break;
+      default:
+        $vpe_value += $attributes['attributes_vpe_value'];
     }
             
     $vpe_array = array(
