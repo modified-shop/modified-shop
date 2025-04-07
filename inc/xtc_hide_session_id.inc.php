@@ -22,8 +22,7 @@
   function xtc_hide_session_id() {
     global $session_started;
 
-    if ( ($session_started == true) && defined('SID') && xtc_not_null(SID) ) {
+    if ($session_started == true) {
       return xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
     }
   }
-?>

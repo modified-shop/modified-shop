@@ -12,11 +12,11 @@
   
   
   function xtc_get_banners_url($banners_url) {
-    global $http_domain, $https_domain, $truncate_session_id, $cookie;
+    global $http_domain, $https_domain, $session_started, $truncate_session_id, $cookie;
     
     // remove session id
-    if (strrpos($banners_url, session_name()) !== false) {
-      $banners_url = substr($banners_url, 0, strrpos($banners_url, session_name()));
+    if (strrpos($banners_url, xtc_session_name()) !== false) {
+      $banners_url = substr($banners_url, 0, strrpos($banners_url, xtc_session_name()));
     }
     $banners_url = rtrim($banners_url, '&?');
       
@@ -30,12 +30,10 @@
        )
     {
       $separator = ((strpos($banners_url, '?') === false) ? '?' : '&');
-      if (defined('SID')
-          && constant('SID') != '')
-      {
-        $banners_url .= $separator . session_name() . '=' . session_id();
+      if ($session_started == true) {
+        $banners_url .= $separator . xtc_session_name() . '=' . xtc_session_id();
       } elseif ($http_domain != $https_domain) {
-        $banners_url .= $separator . session_name() . '=' . session_id();
+        $banners_url .= $separator . xtc_session_name() . '=' . xtc_session_id();
       }
     }
     
@@ -59,4 +57,3 @@
   
     return $url;
   }
-?>

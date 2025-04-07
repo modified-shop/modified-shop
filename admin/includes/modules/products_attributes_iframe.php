@@ -25,7 +25,8 @@ if (defined('USE_ATTRIBUTES_IFRAME') && USE_ATTRIBUTES_IFRAME == 'true') {
   function attributes_iframe_link($pID, $icon=false)
   {
     global $icon_padding;
-    $sid = SID ? '&'. SID : '';
+
+    $sid = xtc_session_name() . '=' . xtc_session_id();
     if ($icon) {
       $link = '<a href="javascript:iframeBox_show('. $pID .', \''.BUTTON_EDIT_ATTRIBUTES.'\' , \''.FILENAME_PRODUCTS_ATTRIBUTES.'\',\'&action=edit'.$sid.'\');">' . xtc_image(DIR_WS_ICONS . 'icon_edit_attr.gif', BUTTON_EDIT_ATTRIBUTES,'', '', $icon_padding). '</a>';
     } else {

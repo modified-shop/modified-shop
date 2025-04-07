@@ -25,7 +25,8 @@ if (defined('USE_ATTRIBUTES_IFRAME') && USE_ATTRIBUTES_IFRAME == 'true') {
   function tags_iframe_link($pID, $icon=false)
   {
     global $icon_padding;
-    $sid = SID ? '&'. SID : '';
+
+    $sid = xtc_session_name() . '=' . xtc_session_id();
     if ($icon) {
       $link = '<a href="javascript:iframeBox_show('. $pID .', \''.TEXT_PRODUCTS_TAGS.'\' , \''.FILENAME_PRODUCTS_TAGS.'\',\''.$sid.'\');">' . xtc_image(DIR_WS_ICONS . 'icon_edit_tags.gif', TEXT_PRODUCTS_TAGS,'', '', $icon_padding). '</a>';
     } else {

@@ -80,16 +80,13 @@
        ) 
     {
       if (!isset($session_id)) {
-        if (defined('SID')
-            && constant('SID') != ''
-            && session_id() != '')
-        {
-          $session_id = session_name() . '=' . session_id();
+        if ($session_started == true) {
+          $session_id = xtc_session_name() . '=' . xtc_session_id();
         } elseif ( 
           ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) )
             || ( ($request_type == 'SSL') && ($connection == 'NONSSL') )
           ) && $http_domain != $https_domain) {
-          $session_id = session_name() . '=' . session_id();
+          $session_id = xtc_session_name() . '=' . xtc_session_id();
         }
       }
       
@@ -110,4 +107,3 @@
   function xtc_href_link_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false) {
     return xtc_href_link($page, $parameters, $connection, $add_session_id, $search_engine_safe, $urlencode, true);
   }
-?>
