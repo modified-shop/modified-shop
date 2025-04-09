@@ -24,7 +24,27 @@ require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
 //display per page
 $cfg_max_display_results_key = 'MAX_DISPLAY_STATS_PRODUCTS_PURCHASED_RESULTS';
 $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
- 
+
+$products_purchased_history_status_array = array(
+  array('id' => '1','text'=> CFG_TXT_YES),
+  array('id' => '0','text'=> CFG_TXT_NO)
+);
+
+if (!defined('MODULE_PRODUCTS_PURCHASED_HISTORY_STATUS')) {
+  xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PRODUCTS_PURCHASED_HISTORY_STATUS', 'true',  '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+  define('MODULE_PRODUCTS_PURCHASED_HISTORY_STATUS', 'true');
+}
+
+if (isset($_GET['action']) && $_GET['action'] == 'save') {
+  if (isset($_POST['reset_products_purchased_history']) && $_POST['reset_products_purchased_history'] == 'on') {
+    xtc_db_query("UPDATE ".TABLE_PRODUCTS_DESCRIPTION." SET products_viewed = 0");
+  }
+  xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                   SET configuration_value = '".(($_POST['products_history'] == '1') ? 'true' : 'false')."'
+                 WHERE configuration_key = 'MODULE_PRODUCTS_PURCHASED_HISTORY_STATUS'");
+  xtc_redirect(xtc_href_link(FILENAME_STATS_PRODUCTS_PURCHASED));
+}
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
@@ -47,21 +67,42 @@ require (DIR_WS_INCLUDES.'head.php');
     ?>
     <!-- body_text //-->
     <td class="boxCenter">
-      <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
-      <div class="pageHeading flt-l">
-        <?php 
-       	echo HEADING_TITLE; 
-        if (isset($_GET['action']) 
-            && $_GET['action'] == 'orders' 
-            && isset($_GET['pID']) 
-            && $_GET['pID'] != ''
-            )
-        {
-          echo ': '.xtc_get_products_name($_GET['pID']);
-        }
-        ?>
+      <div class="flt-l" style="min-width: 300px;">
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
+        <div class="pageHeading">
+          <?php 
+          echo HEADING_TITLE; 
+          if (isset($_GET['action']) 
+              && $_GET['action'] == 'orders' 
+              && isset($_GET['pID']) 
+              && $_GET['pID'] != ''
+              )
+          {
+            echo ': '.xtc_get_products_name($_GET['pID']);
+          }
+          ?>
+        </div>              
         <div class="main pdg2">Statistics</div>
-      </div>              
+      </div>
+      <div class="main pdg2 flt-l" style="margin:5px 0 0 128px;">
+        <?php 
+        echo xtc_draw_form('products_history', FILENAME_STATS_PRODUCTS_PURCHASED, 'action=save', 'post').PHP_EOL;
+        echo '<div class="flt-l" style="margin: 10px 0 0">'.PHP_EOL;
+        echo TEXT_RESET_PRODUCTS_PURCHASED_HISTORY.PHP_EOL;
+        echo '<div class="flt-l" style="margin: -5px 5px 0px 5px">'.PHP_EOL;
+        echo xtc_draw_checkbox_field('reset_products_purchased_history', 'on', false);
+        echo '</div>'.PHP_EOL;
+        echo '</div>'.PHP_EOL;
+        echo '<br>';
+        echo '<div class="flt-l" style="margin: 10px 0 0">'.PHP_EOL;
+        echo TEXT_ACTIVATE_PRODUCTS_PURCHASED_HISTORY.PHP_EOL;
+        echo '<div class="flt-r" style="margin: -6px 50px 0px 5px">'.PHP_EOL;
+        echo draw_on_off_selection('products_history', $products_purchased_history_status_array, ((MODULE_PRODUCTS_PURCHASED_HISTORY_STATUS == 'true') ? true : false), 'onchange="this.form.submit();"').PHP_EOL;
+        echo '</div>'.PHP_EOL;
+        echo '</div>'.PHP_EOL;
+        echo '</form>';
+        ?>
+      </div>
       <div class="main flt-r pdg2 mrg5" style="margin-left:20px;">
         <?php echo xtc_draw_form('search', FILENAME_STATS_PRODUCTS_PURCHASED, '', 'get'); ?>
         <?php echo TEXT_SEARCH_PRODUCTS . ' ' . xtc_draw_input_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''), 'size="24"'); ?>

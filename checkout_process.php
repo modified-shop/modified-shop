@@ -41,6 +41,7 @@ defined('STOCK_LIMITED_DOWNLOADS') or define('STOCK_LIMITED_DOWNLOADS', 'false')
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'ip_clearing.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
+require_once (DIR_FS_INC.'xtc_update_products_ordered_count.inc.php');
 
 // initialize smarty
 $smarty = new Smarty();
@@ -217,7 +218,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $_SESSION['disable_products'] = array();
   for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
     // Stock Update
-    $stock_set = '';
     if (STOCK_LIMITED == 'true') {
       if (DOWNLOAD_ENABLED == 'true' && STOCK_LIMITED_DOWNLOADS == 'false') {
         $add_stock_query_raw = '';
@@ -256,15 +256,17 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         if (($stock_left < 1) && (STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true')) {
           $_SESSION['disable_products'][] = xtc_get_prid($order->products[$i]['id']);
         }
+
+        // update product quantity
+        xtc_db_query("UPDATE ".TABLE_PRODUCTS."
+                         SET ".$stock_set."
+                       WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
       }
     }
 
-    // update product
-    xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                     SET ".$stock_set."
-                         products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])."
-                   WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
-
+    // update product ordered
+    xtc_update_products_ordered_count($order->products[$i]['id'], $order->products[$i]['qty']);
+    
     $sql_data_array = array(
       'orders_id' => $insert_id,
       'products_id' => xtc_get_prid($order->products[$i]['id']),
@@ -294,25 +296,27 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $order_products_id = xtc_db_insert_id();
 
     // update specials quantity
-    $specials_query = xtc_db_query("SELECT products_id,
-                                           specials_quantity
-                                      FROM ".TABLE_SPECIALS."
-                                     WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
-                                           ".SPECIALS_CONDITIONS);
-    if (xtc_db_num_rows($specials_query)) {
-      $specials = xtc_db_fetch_array($specials_query);
-      if ($specials['specials_quantity'] != 0) {
-        $specials_quantity = ($specials['specials_quantity'] - $order->products[$i]['qty']);
-        
-        $stock_set = '';
-        if ($specials_quantity < 1) {
-          $stock_set = " status = '0', ";
+    if ($_SESSION['customers_status']['customers_status_specials'] == '1') {
+      $specials_query = xtc_db_query("SELECT products_id,
+                                             specials_quantity
+                                        FROM ".TABLE_SPECIALS."
+                                       WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
+                                             ".SPECIALS_CONDITIONS);
+      if (xtc_db_num_rows($specials_query)) {
+        $specials = xtc_db_fetch_array($specials_query);
+        if ($specials['specials_quantity'] != 0) {
+          $specials_quantity = ($specials['specials_quantity'] - $order->products[$i]['qty']);
+          
+          $stock_set = '';
+          if ($specials_quantity < 1) {
+            $stock_set = " status = '0', ";
+          }
+          
+          xtc_db_query("UPDATE ".TABLE_SPECIALS." 
+                           SET ".$stock_set."
+                               specials_quantity = '".$specials_quantity."' 
+                         WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."' ");
         }
-        
-        xtc_db_query("UPDATE ".TABLE_SPECIALS." 
-                         SET ".$stock_set."
-                             specials_quantity = '".$specials_quantity."' 
-                       WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."' ");
       }
     }
 

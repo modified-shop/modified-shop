@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: stats_products_purchased.php 3542 2012-08-27 10:52:20Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -25,4 +25,5 @@ define('TABLE_HEADING_QUANTITY', 'Bestand');
 define('TABLE_HEADING_DATE_PURCHASED', 'Bestelldatum');
 define('TABLE_HEADING_ORDERS_ID', 'Bestell-Nr.');
 define('TEXT_SEARCH_PRODUCTS', 'Suche Artikel:');
-?>
+define('TEXT_ACTIVATE_PRODUCTS_PURCHASED_HISTORY', 'Verkaufte Artikel Statistik aktivieren:');
+define('TEXT_RESET_PRODUCTS_PURCHASED_HISTORY', 'Soll die Statistik zur&uuml;ckgesetzt werden?');
