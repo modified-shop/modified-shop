@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: stats_products_viewed.php 3542 2012-08-27 10:52:20Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -21,4 +21,5 @@ define('TABLE_HEADING_MODEL', 'Products model');
 define('TABLE_HEADING_NUMBER', 'No.');
 define('TABLE_HEADING_PRODUCTS', 'Products');
 define('TABLE_HEADING_VIEWED', 'Viewed');
-?>
+define('TEXT_ACTIVATE_PRODUCTS_HISTORY', 'Products Statistic activate:');
+define('TEXT_RESET_PRODUCTS_HISTORY', 'Reset Products Statistic?');

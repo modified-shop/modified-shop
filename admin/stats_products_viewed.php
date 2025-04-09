@@ -24,7 +24,27 @@ require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
 //display per page
 $cfg_max_display_results_key = 'MAX_DISPLAY_STATS_PRODUCTS_VIEWED_RESULTS';
 $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
-  
+
+$products_history_status_array = array(
+  array('id' => '1','text'=> CFG_TXT_YES),
+  array('id' => '0','text'=> CFG_TXT_NO)
+);
+
+if (!defined('MODULE_PRODUCTS_HISTORY_STATUS')) {
+  xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PRODUCTS_HISTORY_STATUS', 'true',  '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+  define('MODULE_PRODUCTS_HISTORY_STATUS', 'true');
+}
+
+if (isset($_GET['action']) && $_GET['action'] == 'save') {
+  if (isset($_POST['products_history'])) {
+    xtc_db_query("UPDATE ".TABLE_PRODUCTS_DESCRIPTION." SET products_viewed = 0");
+  }
+  xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                   SET configuration_value = '".(($_POST['products_history'] == '1') ? 'true' : 'false')."'
+                 WHERE configuration_key = 'MODULE_PRODUCTS_HISTORY_STATUS'");
+  xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+}
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
@@ -47,9 +67,30 @@ require (DIR_WS_INCLUDES.'head.php');
     ?>
     <!-- body_text //-->
     <td class="boxCenter">
-      <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
-      <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
-      <div class="main pdg2">Statistics</div>
+      <div class="flt-l" style="min-width: 300px;">
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
+        <div class="main pdg2">Statistics</div>
+      </div>
+      <div class="main pdg2 flt-l" style="margin:5px 0 0 128px;">
+        <?php 
+        echo xtc_draw_form('products_history', basename($PHP_SELF), 'action=save', 'post').PHP_EOL;
+        echo '<div class="flt-l" style="margin: 10px 0 0">'.PHP_EOL;
+        echo TEXT_RESET_PRODUCTS_HISTORY.PHP_EOL;
+        echo '<div class="flt-l" style="margin: -5px 5px 0px 5px">'.PHP_EOL;
+        echo xtc_draw_checkbox_field('reset', 'on', false);
+        echo '</div>'.PHP_EOL;
+        echo '</div>'.PHP_EOL;
+        echo '<br>';
+        echo '<div class="flt-l" style="margin: 10px 0 0">'.PHP_EOL;
+        echo TEXT_ACTIVATE_PRODUCTS_HISTORY.PHP_EOL;
+        echo '<div class="flt-r" style="margin: -6px 50px 0px 5px">'.PHP_EOL;
+        echo draw_on_off_selection('products_history', $products_history_status_array, ((MODULE_PRODUCTS_HISTORY_STATUS == 'true') ? true : false), 'onchange="this.form.submit();"').PHP_EOL;
+        echo '</div>'.PHP_EOL;
+        echo '</div>'.PHP_EOL;
+        echo '</form>';
+        ?>
+      </div>
       <table class="tableCenter">      
         <tr>
           <td class="boxCenterFull">
