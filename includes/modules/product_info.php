@@ -29,6 +29,7 @@ defined('MANUFACTURER_IMAGE_SHOW_NO_IMAGE') OR define('MANUFACTURER_IMAGE_SHOW_N
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 require_once (DIR_FS_INC.'xtc_address_format.inc.php');
+require_once (DIR_FS_INC.'xtc_update_products_viewed_count.inc.php');
 
 if (!is_object($product) || $product->isProduct() === false || $language_not_found === true) {
 
@@ -54,10 +55,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
   // Update products_viewed
   if ($_SESSION['customers_status']['customers_status_id'] != '0') {
-    xtc_db_query("UPDATE ".TABLE_PRODUCTS_DESCRIPTION."
-                     SET products_viewed = products_viewed+1
-                   WHERE products_id = '".$product->data['products_id']."'
-                     AND language_id = ".(int)$_SESSION['languages_id']);
+    xtc_update_products_viewed_count($product->data['products_id'], $_SESSION['languages_id']);
   }
 
   $manufacturers_array = xtc_get_manufacturers();
