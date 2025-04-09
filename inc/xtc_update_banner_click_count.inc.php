@@ -17,9 +17,13 @@
 
   // Update the banner click statistics
   function xtc_update_banner_click_count($banner_id) {
+
+    if (defined('MODULE_BANNER_CLICK_STATUS') && MODULE_BANNER_CLICK_STATUS == 'false') {
+      return;
+    }
+  
     xtc_db_query("UPDATE " . TABLE_BANNERS_HISTORY . " 
                      SET banners_clicked = banners_clicked + 1 
                    WHERE banners_id = '" . (int)$banner_id . "' 
                      AND date_format(banners_history_date, '%Y%m%d') = date_format(now(), '%Y%m%d')");
   }
-?>

@@ -28,6 +28,16 @@
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
 
+  $banner_click_status_array = array(
+    array('id' => '1','text'=> CFG_TXT_YES),
+    array('id' => '0','text'=> CFG_TXT_NO)
+  );
+
+  if (!defined('MODULE_BANNER_CLICK_STATUS')) {
+		xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_BANNER_CLICK_STATUS', 'true',  '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    define('MODULE_BANNER_CLICK_STATUS', 'true');
+  }
+  
   $banner_extension = xtc_banner_image_extension();
   $languages = xtc_get_languages();
 
@@ -45,6 +55,13 @@
 
   if (xtc_not_null($action)) {
     switch ($action) {
+      case 'save':
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                         SET configuration_value = '".(((int)$_POST['banner_click'] == 1) ? 'true' : 'false')."'
+                       WHERE configuration_key = 'MODULE_BANNER_CLICK_STATUS'");
+        xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER));
+        break;
+        
       case 'setflag':
         if ( ($_GET['flag'] == '0') || ($_GET['flag'] == '1') ) {
           xtc_set_banner_status($_GET['bID'], $_GET['flag']);
@@ -319,6 +336,18 @@
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
           <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
           <div class="main pdg2 flt-l">Tools</div>
+        </div>
+        <div class="main pdg2 flt-l" style="margin:5px 0 0 128px;">
+          <?php 
+          echo xtc_draw_form('banner_click', FILENAME_BANNER_MANAGER, 'action=save', 'post').PHP_EOL;
+          echo '<div class="flt-l" style="margin: 10px 0 0">'.PHP_EOL;
+          echo TEXT_ACTIVATE_BANNER_CLICK.PHP_EOL;
+          echo '<div class="flt-r" style="margin: -6px 50px 0px 5px">'.PHP_EOL;
+          echo draw_on_off_selection('banner_click', $banner_click_status_array, ((MODULE_BANNER_CLICK_STATUS == 'true') ? true : false), 'onchange="this.form.submit();"').PHP_EOL;
+          echo '</div>'.PHP_EOL;
+          echo '</div>'.PHP_EOL;
+          echo '</form>';
+          ?>
         </div>
           <?php
           if ($action == 'new') {
