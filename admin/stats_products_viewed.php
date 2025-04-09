@@ -36,7 +36,7 @@ if (!defined('MODULE_PRODUCTS_HISTORY_STATUS')) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'save') {
-  if (isset($_POST['products_history'])) {
+  if (isset($_POST['reset_products_history']) && $_POST['reset_products_history'] == 'on') {
     xtc_db_query("UPDATE ".TABLE_PRODUCTS_DESCRIPTION." SET products_viewed = 0");
   }
   xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
@@ -78,7 +78,7 @@ require (DIR_WS_INCLUDES.'head.php');
         echo '<div class="flt-l" style="margin: 10px 0 0">'.PHP_EOL;
         echo TEXT_RESET_PRODUCTS_HISTORY.PHP_EOL;
         echo '<div class="flt-l" style="margin: -5px 5px 0px 5px">'.PHP_EOL;
-        echo xtc_draw_checkbox_field('reset', 'on', false);
+        echo xtc_draw_checkbox_field('reset_products_history', 'on', false);
         echo '</div>'.PHP_EOL;
         echo '</div>'.PHP_EOL;
         echo '<br>';
