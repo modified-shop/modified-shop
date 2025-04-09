@@ -17,8 +17,7 @@
 
   // Update the banner click statistics
   function xtc_update_banner_click_count($banner_id) {
-
-    if (defined('MODULE_BANNER_CLICK_STATUS') && MODULE_BANNER_CLICK_STATUS == 'false') {
+    if (defined('MODULE_BANNER_HISTORY_STATUS') && MODULE_BANNER_HISTORY_STATUS == 'false') {
       return;
     }
   

@@ -17,6 +17,10 @@
 
   // Update the banner display statistics
   function xtc_update_banner_display_count($banner_id) {
+    if (defined('MODULE_BANNER_HISTORY_STATUS') && MODULE_BANNER_HISTORY_STATUS == 'false') {
+      return;
+    }
+
     $datetime = date('Y-m-d 00:00:00');
     $banner_check_query = xtc_db_query("SELECT count(*) as count,
                                                banners_history_id
