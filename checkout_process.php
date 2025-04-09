@@ -251,7 +251,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
           $stock_left = $stock_values['products_quantity'];
         }
         
-        $stock_set = " products_quantity = '".$stock_left."', ";
+        $stock_set = " products_quantity = '".$stock_left."' ";
         
         if (($stock_left < 1) && (STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true')) {
           $_SESSION['disable_products'][] = xtc_get_prid($order->products[$i]['id']);
