@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  function xtc_update_products_ordered_count($products_id, qty) {    
+  function xtc_update_products_ordered_count($products_id, $qty) {    
     if (defined('MODULE_PRODUCTS_PURCHASED_HISTORY_STATUS') && MODULE_PRODUCTS_PURCHASED_HISTORY_STATUS == 'false') {
       return;
     }
