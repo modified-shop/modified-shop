@@ -37,7 +37,7 @@ if (!defined('MODULE_PRODUCTS_PURCHASED_HISTORY_STATUS')) {
 
 if (isset($_GET['action']) && $_GET['action'] == 'save') {
   if (isset($_POST['reset_products_purchased_history']) && $_POST['reset_products_purchased_history'] == 'on') {
-    xtc_db_query("UPDATE ".TABLE_PRODUCTS_DESCRIPTION." SET products_viewed = 0");
+    xtc_db_query("UPDATE ".TABLE_PRODUCTS." SET products_ordered = 0");
   }
   xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                    SET configuration_value = '".(($_POST['products_history'] == '1') ? 'true' : 'false')."'
