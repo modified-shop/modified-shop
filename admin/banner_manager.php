@@ -33,9 +33,9 @@
     array('id' => '0','text'=> CFG_TXT_NO)
   );
 
-  if (!defined('MODULE_BANNER_HISTORY_STATUS')) {
-		xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_BANNER_HISTORY_STATUS', 'true',  '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    define('MODULE_BANNER_HISTORY_STATUS', 'true');
+  if (!defined('MODULE_BANNERS_HISTORY_STATUS')) {
+		xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_BANNERS_HISTORY_STATUS', 'true',  '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    define('MODULE_BANNERS_HISTORY_STATUS', 'true');
   }
   
   $banner_extension = xtc_banner_image_extension();
@@ -57,8 +57,8 @@
     switch ($action) {
       case 'save':
         xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                         SET configuration_value = '".(((int)$_POST['banner_click'] == 1) ? 'true' : 'false')."'
-                       WHERE configuration_key = 'MODULE_BANNER_HISTORY_STATUS'");
+                         SET configuration_value = '".(((int)$_POST['banners_history'] == 1) ? 'true' : 'false')."'
+                       WHERE configuration_key = 'MODULE_BANNERS_HISTORY_STATUS'");
         xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER));
         break;
         
@@ -339,11 +339,11 @@
         </div>
         <div class="main pdg2 flt-l" style="margin:5px 0 0 128px;">
           <?php 
-          echo xtc_draw_form('banner_click', FILENAME_BANNER_MANAGER, 'action=save', 'post').PHP_EOL;
+          echo xtc_draw_form('banners_history', FILENAME_BANNER_MANAGER, 'action=save', 'post').PHP_EOL;
           echo '<div class="flt-l" style="margin: 10px 0 0">'.PHP_EOL;
-          echo TEXT_ACTIVATE_BANNER_HISTORY.PHP_EOL;
+          echo TEXT_ACTIVATE_BANNERS_HISTORY.PHP_EOL;
           echo '<div class="flt-r" style="margin: -6px 50px 0px 5px">'.PHP_EOL;
-          echo draw_on_off_selection('banner_click', $banner_history_status_array, ((MODULE_BANNER_HISTORY_STATUS == 'true') ? true : false), 'onchange="this.form.submit();"').PHP_EOL;
+          echo draw_on_off_selection('banners_history', $banner_history_status_array, ((MODULE_BANNERS_HISTORY_STATUS == 'true') ? true : false), 'onchange="this.form.submit();"').PHP_EOL;
           echo '</div>'.PHP_EOL;
           echo '</div>'.PHP_EOL;
           echo '</form>';

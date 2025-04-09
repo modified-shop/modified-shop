@@ -17,7 +17,7 @@
 
   // Update the banner display statistics
   function xtc_update_banner_display_count($banner_id) {
-    if (defined('MODULE_BANNER_HISTORY_STATUS') && MODULE_BANNER_HISTORY_STATUS == 'false') {
+    if (defined('MODULE_BANNERS_HISTORY_STATUS') && MODULE_BANNERS_HISTORY_STATUS == 'false') {
       return;
     }
 

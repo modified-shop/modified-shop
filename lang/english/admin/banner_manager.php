@@ -95,4 +95,4 @@ define('TEXT_BANNERS_LANGUAGE', 'Language:');
 define('TEXT_BANNERS_LANGUAGE_NOTE', 'Select the language where the banner should be displayed?');
 define('TEXT_NO_FILE', '-- no file --');
 define('TEXT_BANNERS_LATEST_STATISTICS', '%s days statistic');
-define('TEXT_ACTIVATE_BANNER_HISTORY', 'Banner Statistic activate:');
+define('TEXT_ACTIVATE_BANNERS_HISTORY', 'Banner Statistic activate:');
