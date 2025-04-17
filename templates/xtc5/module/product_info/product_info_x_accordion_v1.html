@@ -154,7 +154,7 @@
   {if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
   {if $MODULE_also_purchased != ''}<h3><a href="#">{#also_purchased#}</a></h3><div>{$MODULE_also_purchased}</div>{/if}
   {if $MODULE_products_category != ''}<h3><a href="#">{#products_category#}</a></h3><div>{$MODULE_products_category}</div>{/if}
-  {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}
+  {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) || $MANUFACTURER_ADD_DESCRIPTION != ''}
     <h3><a href="#">{#manufacturers_info#}</a></h3>
     <div>
       {if $MANUFACTURER_ADD_DESCRIPTION != ''}
