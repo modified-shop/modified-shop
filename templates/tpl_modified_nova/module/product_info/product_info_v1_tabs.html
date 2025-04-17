@@ -232,7 +232,7 @@
           {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<li id="tags">{#products_tags#}</li>{/if}
           {if isset($MODULE_products_media) && $MODULE_products_media != ''}<li id="media">{#products_media#}</li>{/if}
           {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}<li id="reviews">{#products_reviews#}{if $PRODUCTS_RATING_COUNT > 0}<span class="count">{$PRODUCTS_RATING_COUNT}</span>{/if}</li>{/if}
-          {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}<li id="manufacturers">{#manufacturers_info#}</li>{/if}
+          {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) || $MANUFACTURER_ADD_DESCRIPTION != ''}<li id="manufacturers">{#manufacturers_info#}</li>{/if}
         </ul>
         <div class="resp-tabs-container">
           {if $PRODUCTS_DESCRIPTION != ''}
@@ -257,7 +257,7 @@
           {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}
             <div>{$MODULE_products_reviews}</div>
           {/if}
-          {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) != '' || $MANUFACTURER_ADD_DESCRIPTION != ''}
+          {if isset($MANUFACTURER_CONTACT_ADDRESS) || isset($MANUFACTURER_RESPONSIBLE_ADDRESS) || $MANUFACTURER_ADD_DESCRIPTION != ''}
             <div class="pd_manu_description">
               <div class="subline">{#manufacturers_info#}</div>
               <div class="pd_manu_content cf">
