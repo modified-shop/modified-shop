@@ -505,7 +505,7 @@
             <td>
               <!-- PAGINATION-->
               <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
-              <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+              <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page', 'sID'))); ?></div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
             </td>
             <td>&nbsp;</td>
