@@ -267,7 +267,7 @@
           $paypalscript .= '
           if ($(".pp-message").length) {
             paypal.Messages({
-              amount: '.$total.',
+              amount: '.sprintf($paypal->numberFormat, $total).',
               countryCode: "'.$countries_iso_code_2.'",
               style: {
                 layout: "'.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? 'text' : 'flex').'",
