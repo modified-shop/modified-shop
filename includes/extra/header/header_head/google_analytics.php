@@ -407,7 +407,16 @@ function pushgTagEventAction() {";
 
     $addCode = "
   gtag('set', 'user_data', {
-    email: '".$order->customer['email_address']."'
+    sha256_email_address: '".hash('sha256', strtolower(trim($order->customer['email_address'])))."',
+    address: {
+      sha256_first_name: '".hash('sha256', strtolower(trim($order->customer['firstname'])))."',
+      sha256_last_name: '".hash('sha256', strtolower(trim($order->customer['lastname'])))."',
+      street: '".$order->customer['address']."',
+      city: '".$order->customer['city']."',
+      region: '".$order->customer['state']."',
+      postal_code: '".$order->customer['postcode']."',
+      country: '".$order->customer['country_iso_2']."'
+    }
   });
   gtag('event', 'conversion', {
     send_to: '".MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID."',
