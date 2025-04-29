@@ -298,6 +298,7 @@
             )
         {
           $field .= ' selected="selected"';
+          $li .= ' class="selected"';
           $selText = $val['text'];
         }
         $field .= '>' . $val['text'] . '</option>' . PHP_EOL;
@@ -305,9 +306,6 @@
       }
     }
     $field .= '</select>'. PHP_EOL;
-    if ($required) {
-      $field .= TEXT_FIELD_REQUIRED;
-    }
     if ($addwrap && NEW_SELECT_CHECKBOX == 'true' && strpos($params,'noStyling') === false) {
       $name = str_replace(array('[',']'),array('_',''),$name); //fix for name is array:  example[...]
       $add = '<p class="CaptionCont SlectBox">'. PHP_EOL;
@@ -315,6 +313,9 @@
       $add .= '<label><i></i></label></p>'. PHP_EOL;
       $add .= '<div class="optWrapper">'. PHP_EOL . '<ul class="options">' . PHP_EOL . $li . PHP_EOL . '</ul>' . PHP_EOL . '</div>'. PHP_EOL;
       $field = '<div class="SumoSelect '. strtolower($name) .'" tabindex="0">' . $field . $add . '</div>';
+    }
+    if ($required) {
+      $field .= TEXT_FIELD_REQUIRED;
     }
     return $field;
   }
