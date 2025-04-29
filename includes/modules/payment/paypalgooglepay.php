@@ -102,7 +102,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
         return {
           countryCode: "'.strtoupper($order->delivery['country']['iso_code_2']).'",
           currencyCode: "'.$order->info['currency'].'",
-          totalPrice: "'.round($order->info['total'], 2).'",
+          totalPrice: "'.sprintf($this->numberFormat, round($order->info['total'], 2)).'",
           totalPriceStatus: "FINAL",
         };
       }

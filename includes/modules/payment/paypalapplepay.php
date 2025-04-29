@@ -122,7 +122,7 @@ class paypalapplepay extends PayPalPaymentV2 {
         return {
           countryIsoCode: "'.strtoupper($order->delivery['country']['iso_code_2']).'",
           currencyIsoCode: "'.$order->info['currency'].'",
-          totalPrice: "'.round($order->info['total'], 2).'",
+          totalPrice: "'.sprintf($this->numberFormat, round($order->info['total'], 2)).'",
           totalPriceStatus: "final",
           totalLabel: "'.$this->encode_utf8(mb_substr(STORE_NAME, 0, 22)).'",
         };
