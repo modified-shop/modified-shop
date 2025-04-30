@@ -97,6 +97,18 @@ class paypalapplepay extends PayPalPaymentV2 {
 
     $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
     
+    $total = $order->info['total'];
+    if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+         && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+         ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0 
+               && $order->delivery['country_id'] == STORE_COUNTRY
+               )
+        ) 
+    {
+      $total += $order->info['tax'];
+    }
+
     $paypalscript = '
     if ($("#apms_button3").length) {    
       // eslint-disable-next-line no-undef
@@ -122,7 +134,7 @@ class paypalapplepay extends PayPalPaymentV2 {
         return {
           countryIsoCode: "'.strtoupper($order->delivery['country']['iso_code_2']).'",
           currencyIsoCode: "'.$order->info['currency'].'",
-          totalPrice: "'.sprintf($this->numberFormat, round($order->info['total'], 2)).'",
+          totalPrice: "'.sprintf($this->numberFormat, round($total, 2)).'",
           totalPriceStatus: "final",
           totalLabel: "'.$this->encode_utf8(mb_substr(STORE_NAME, 0, 22)).'",
         };
