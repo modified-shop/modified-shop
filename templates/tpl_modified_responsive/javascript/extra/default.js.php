@@ -46,8 +46,7 @@
           $('.toggle_cart').slideUp('slow');
         }
       });
-      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_cart'])) {
-        unset($_SESSION['new_products_id_in_cart']); ?>
+      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_cart'])) { ?>
         $('.toggle_cart').slideToggle('slow');
         timer = setTimeout(function(){$('.toggle_cart').slideUp('slow');}, 3000);
         $('.toggle_cart').mouseover(function() {clearTimeout(timer);});
@@ -66,15 +65,11 @@
           $('.toggle_wishlist').slideUp('slow');
         }
       });
-      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_wishlist'])) {
-        unset($_SESSION['new_products_id_in_wishlist']); ?>
+      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_wishlist'])) { ?>
         $('.toggle_wishlist').slideToggle('slow');
         timer = setTimeout(function(){$('.toggle_wishlist').slideUp('slow');}, 3000);
         $('.toggle_wishlist').mouseover(function() {clearTimeout(timer);});
       <?php } ?>
     });     
-  <?php } else {
-    unset($_SESSION['new_products_id_in_cart']);
-    unset($_SESSION['new_products_id_in_wishlist']);
-  } ?>
+  <?php } ?>
 </script>

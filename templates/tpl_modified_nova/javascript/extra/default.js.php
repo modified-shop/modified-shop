@@ -141,8 +141,7 @@
         $('.toggle_settings').removeClass('active');
         ac_closing();
       });
-      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_cart'])) {
-        unset($_SESSION['new_products_id_in_cart']); ?>
+      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_cart'])) { ?>
         $('body').addClass('no_scroll');
         $('.toggle_cart').addClass('active');
         $('.toggle_overlay').fadeIn('slow');
@@ -154,9 +153,7 @@
         $('.toggle_cart').mouseover(function() {clearTimeout(timer);});
       <?php } ?>
     });     
-  <?php } else {
-    unset($_SESSION['new_products_id_in_cart']);
-  } ?>
+  <?php } ?>
   <?php if (basename($PHP_SELF) != FILENAME_WISHLIST && !strpos($PHP_SELF, 'checkout')) { ?>
     $(function() {
       $('body').on('click', '#toggle_wishlist', function(event) {
@@ -169,8 +166,7 @@
         $('.toggle_settings').removeClass('active');
         ac_closing();
       });
-      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_wishlist'])) {
-        unset($_SESSION['new_products_id_in_wishlist']); ?>
+      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_wishlist'])) { ?>
         $('body').addClass('no_scroll');
         $('.toggle_wishlist').addClass('active');
         $('.toggle_overlay').fadeIn('slow');
@@ -182,9 +178,7 @@
         $('.toggle_wishlist').mouseover(function() {clearTimeout(timer);});
       <?php } ?>
     });     
-  <?php } else {
-    unset($_SESSION['new_products_id_in_wishlist']);
-  } ?>
+  <?php } ?>
   
   $(function() {
     $('body').on('click', '.toggle_closer', function(event) {

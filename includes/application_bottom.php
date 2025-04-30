@@ -63,6 +63,10 @@ if (isset($error_exceptions) && is_array($error_exceptions) && count($error_exce
   }
 }
 
+// unregister session variables
+unset($_SESSION['new_products_id_in_cart']);
+unset($_SESSION['new_products_id_in_wishlist']);
+
 // close MySQL connection
 session_write_close();
 xtc_db_close();

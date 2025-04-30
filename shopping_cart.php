@@ -98,10 +98,6 @@ if ($messageStack->size('shopping_cart') > 0) {
   $smarty->assign('error_message', $messageStack->output('shopping_cart'));
 }
 
-// unset
-unset($_SESSION['new_products_id_in_cart']);
-unset($_SESSION['new_products_id_in_wishlist']);
-
 // continue shopping link
 $_SESSION['continue_link'] = $_SESSION['cart']->get_continue_shopping_link();
 if (!empty($_SESSION['continue_link'])) {

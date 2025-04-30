@@ -248,8 +248,6 @@ class shoppingCart {
    * @param boolean $notify
    */
   function add_cart($products_id, $qty = 1, $attributes = '', $notify = true) {
-    global $new_products_id_in_cart;
-
     $products_id = xtc_get_uprid($products_id, $attributes);
 
     if (ATTRIBUTES_VALID_CHECK == 'true' && !$this->validate_attributes($products_id,$attributes,'add_cart')) {
