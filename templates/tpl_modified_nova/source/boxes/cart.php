@@ -64,6 +64,7 @@
 
     if (defined('MODULE_PAYMENT_PAYPAL_SECRET')
         && MODULE_PAYMENT_PAYPAL_SECRET != ''
+        && $any_out_of_stock === false
         )
     {
       // include needed classes

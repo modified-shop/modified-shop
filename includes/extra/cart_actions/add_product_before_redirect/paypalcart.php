@@ -23,13 +23,15 @@
     
     $products = $_SESSION['cart']->get_products();
     for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+      $mark_stock = '';
       if (STOCK_CHECK == 'true') {
         $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity'], $products[$i]['stock']);
         if ($mark_stock) {
           $_SESSION['any_out_of_stock'] = 1;
         }
       }
-      if (STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
+      
+      if (empty($mark_stock) && STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
         $mark_stock = check_stock_specials($products[$i]['id'], $products[$i]['quantity']);
         if ($mark_stock) {
           $_SESSION['any_out_of_stock'] = 1;
@@ -56,4 +58,3 @@
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
     }
   } 
-?>
