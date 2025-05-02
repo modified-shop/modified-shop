@@ -26,7 +26,9 @@
                                         WHERE address_format_id = '".(int)$address_format_id."'");
     $address_format = xtc_db_fetch_array($address_format_query, true);
     
+    $account_company = ((ACCOUNT_COMPANY == 'true') ? true : false);
     if ($key_replacement != '') {
+      $account_company = true;
       foreach ($address as $k => $v) {
         $address[str_replace($key_replacement, '', $k)] = $v;
       }
@@ -95,7 +97,7 @@
       }
     }
 
-    if ( (ACCOUNT_COMPANY == 'true') && (xtc_not_null($company)) ) {
+    if ($account_company == true && xtc_not_null($company)) {
       $address = $company . $cr . $address;
     }
 
