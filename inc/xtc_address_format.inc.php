@@ -98,7 +98,7 @@
     }
 
     if ($account_company == true && xtc_not_null($company)) {
-      if ($firstname != '' || $lastname != '') $company .= $cr;
+      if (xtc_not_null($firstname) || xtc_not_null($lastname)) $company .= $cr;
       $address = $company . $address;
     }
 
