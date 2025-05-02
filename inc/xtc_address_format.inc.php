@@ -78,10 +78,10 @@
 
     $statecomma = '';
     $streets = $street;
-    if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($firstname == '' && isset($address['name'])) $firstname = addslashes($address['name']);
-    if ($country == '' && isset($address['country'])) $country = addslashes((is_array($address['country']) && array_key_exists('title', $address['country'])) ? $address['country']['title'] : $address['country']);
-    if ($state != '') $statecomma = $state . ', ';
+    if (xtc_not_null($suburb)) $streets = $street . $cr . $suburb;
+    if (!xtc_not_null($firstname) && isset($address['name'])) $firstname = addslashes($address['name']);
+    if (!xtc_not_null($country) && isset($address['country'])) $country = addslashes((is_array($address['country']) && array_key_exists('title', $address['country'])) ? $address['country']['title'] : $address['country']);
+    if (xtc_not_null($state)) $statecomma = $state . ', ';
     
     if (defined('CAPITALIZE_ADDRESS_FORMAT') && CAPITALIZE_ADDRESS_FORMAT == 'true') {
       $city = strtoupper($city);
@@ -104,9 +104,9 @@
 
     if ($add_contact === true) {
       $contact = '';
-      if ($telephone != '') $contact .=  $cr . $telephone;
-      if ($email_address != '') $contact .=  $cr . $email_address;
-      if ($contact != '') $address .= $cr . $contact;
+      if (xtc_not_null($telephone)) $contact .=  $cr . $telephone;
+      if (xtc_not_null($email_address)) $contact .=  $cr . $email_address;
+      if (xtc_not_null($contact)) $address .= $cr . $contact;
     }
     
     $address = stripslashes($address);
