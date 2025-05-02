@@ -16,20 +16,20 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
 
-<script type="text/javascript">
-var debug = false;
-var ajax_url = 'backup_db.php?ajax=1&action=readdb<?php echo defined('SID') ? '&'. SID : '';?>';
-var ajax_type = 'POST';
-var dataStr = '';
-
-var maxReloads = <?php echo MAX_RELOADS;?>;
-
-ajaxCall(dataStr);
-
-function ajaxCall(dataStr) {
+<script>
+  var debug = false;
+  var ajax_url = "backup_db.php?ajax=1&action=readdb&<?php echo xtc_session_name() . '=' . xtc_session_id(); ?>";
+  var ajax_type = 'POST';
+  var dataStr = '';
+  
+  var maxReloads = <?php echo MAX_RELOADS;?>;
+  
+  ajaxCall(dataStr);
+  
+  function ajaxCall(dataStr) {
     if (debug) console.log('dataStr: ' + dataStr);
     if (debug) console.log('url:' + ajax_url);
-    //return;
+
     jQuery.ajax({
       url: ajax_url,
       type: ajax_type,
@@ -43,10 +43,9 @@ function ajaxCall(dataStr) {
         JStoPHPResponse(data);
       }
     })
-}
-
-function JStoPHPResponse(data) {
-    // Antwort des Server ggf. verarbeiten
+  }
+  
+  function JStoPHPResponse(data) {
     var response = data ;
     if (debug) console.log('response:' + $.param(response));
     
@@ -63,7 +62,7 @@ function JStoPHPResponse(data) {
     var maxReloadsText = '';
     if (response.aufruf > maxReloads) {
       response.nr = response.num_tables;
-      maxReloadsText = '<span>' + '<?php echo (defined('TEXT_MAX_RELOADS') ? TEXT_MAX_RELOADS : 'Maximale Seitenreloads wurden erreicht: ');?>' + maxReloads + '</span>';
+      maxReloadsText = '<span>' + "<?php echo (defined('TEXT_MAX_RELOADS') ? TEXT_MAX_RELOADS : 'Maximale Seitenreloads wurden erreicht: ');?>" + maxReloads + '</span>';
     }
 
     if (response.nr < response.num_tables) {
@@ -71,25 +70,24 @@ function JStoPHPResponse(data) {
        if (debug) console.log('$.param:' + dataStrNew); 
        ajaxCall(dataStrNew);
     } else {
-      //$('#info_wait').css('display','none');
       $('#info_wait').html('&nbsp;');
       
       var infoText = '<?php echo TEXT_INFO_DO_BACKUP_OK;?>';
       if (maxReloadsText != '') infoText = maxReloadsText;
       $('#info_text').html(infoText);
     
-      var button_back = '<a href="backup.php?file='+ response.file +'<?php echo SID ? '&'. SID : '';?>" class="button">'+ '<?php echo BUTTON_BACK;?>' +'</a>';
+      var button_back = '<a href="backup.php?file=' + response.file + '<?php echo xtc_session_name() . "=" . xtc_session_id(); ?>" class="button"><?php echo BUTTON_BACK;?></a>';
       $('#button_back').html(button_back);
       
     }
-}
-
-function updateProgressBar(total,counter,type) {
-  precent = (counter *100/total).toFixed(0); //+ '%';
-  $('#'+ type + '_process').css('width',precent + '%');
-  $('#'+ type + '_precents').html(precent + '%');
- 
-  if (debug) console.log('precent:' + precent); 
-  if (debug) console.log('type:' + type);
-}
+  }
+  
+  function updateProgressBar(total,counter,type) {
+    precent = (counter *100/total).toFixed(0);
+    $('#'+ type + '_process').css('width',precent + '%');
+    $('#'+ type + '_precents').html(precent + '%');
+   
+    if (debug) console.log('precent:' + precent); 
+    if (debug) console.log('type:' + type);
+  }
 </script>

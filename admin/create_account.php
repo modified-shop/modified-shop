@@ -23,14 +23,14 @@
 
   require ('includes/application_top.php');
   
+  require(DIR_WS_INCLUDES . 'get_states.php');
+
   require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
   require_once (DIR_FS_INC.'xtc_create_password.inc.php');
   require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
   require_once (DIR_FS_INC.'generate_customers_cid.inc.php');
   require_once (DIR_FS_INC.'get_customers_gender.inc.php');
-
-  require(DIR_WS_INCLUDES . 'get_states.php');
 
   // initiate template engine for mail
   $smarty = new Smarty();
