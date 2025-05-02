@@ -98,7 +98,8 @@
     }
 
     if ($account_company == true && xtc_not_null($company)) {
-      $address = $company . $cr . $address;
+      if ($firstname != '' || $lastname != '') $company .= $cr;
+      $address = $company . $address;
     }
 
     if ($add_contact === true) {
