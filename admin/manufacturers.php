@@ -18,6 +18,9 @@
 
   require('includes/application_top.php');
   
+  $styles = ' style="width:200px;"';
+  require(DIR_WS_INCLUDES . 'get_states.php');
+
   // include needed function
   require_once (DIR_FS_INC.'xtc_wysiwyg.inc.php');
   require_once (DIR_FS_INC.'get_customers_gender.inc.php');
@@ -25,9 +28,6 @@
   // include needed classes
   require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
   require_once (DIR_WS_CLASSES.'categories.php');
-
-  $styles = ' style="width:200px;"';
-  require(DIR_WS_INCLUDES . 'get_states.php');
 
   $catfunc = new categories();
   
