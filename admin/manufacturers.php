@@ -115,31 +115,31 @@
       $listing_template = xtc_db_prepare_input($_POST['listing_template']);
       $categories_template = xtc_db_prepare_input($_POST['categories_template']);
 
+      $manufacturers_gender = xtc_db_prepare_input($_POST['manufacturers_gender']);
       $manufacturers_firstname = xtc_db_prepare_input($_POST['manufacturers_firstname']);
       $manufacturers_lastname = xtc_db_prepare_input($_POST['manufacturers_lastname']);
+      $manufacturers_company = xtc_db_prepare_input($_POST['manufacturers_company']);
       $manufacturers_street_address = xtc_db_prepare_input($_POST['manufacturers_street_address']);
+      $manufacturers_suburb = xtc_db_prepare_input($_POST['manufacturers_suburb']);
       $manufacturers_postcode = xtc_db_prepare_input($_POST['manufacturers_postcode']);
       $manufacturers_city = xtc_db_prepare_input($_POST['manufacturers_city']);
+      $manufacturers_state = xtc_db_prepare_input($_POST['manufacturers_state']);
       $manufacturers_country_id = xtc_db_prepare_input($_POST['manufacturers_country_id']);
       $manufacturers_email_address = xtc_db_prepare_input($_POST['manufacturers_email_address']);
       $manufacturers_telephone = xtc_db_prepare_input($_POST['manufacturers_telephone']);
-      if (ACCOUNT_COMPANY == 'true') $manufacturers_company = xtc_db_prepare_input($_POST['manufacturers_company']);
-      if (ACCOUNT_GENDER == 'true') $manufacturers_gender = xtc_db_prepare_input($_POST['manufacturers_gender']);
-      if (ACCOUNT_SUBURB == 'true') $manufacturers_suburb = xtc_db_prepare_input($_POST['manufacturers_suburb']);
-      if (ACCOUNT_STATE == 'true') $manufacturers_state = xtc_db_prepare_input($_POST['manufacturers_state']);
       
+      $responsible_gender = xtc_db_prepare_input($_POST['responsible_gender']);
       $responsible_firstname = xtc_db_prepare_input($_POST['responsible_firstname']);
       $responsible_lastname = xtc_db_prepare_input($_POST['responsible_lastname']);
+      $responsible_company = xtc_db_prepare_input($_POST['responsible_company']);
       $responsible_street_address = xtc_db_prepare_input($_POST['responsible_street_address']);
+      $responsible_suburb = xtc_db_prepare_input($_POST['responsible_suburb']);
       $responsible_postcode = xtc_db_prepare_input($_POST['responsible_postcode']);
       $responsible_city = xtc_db_prepare_input($_POST['responsible_city']);
+      $responsible_state = xtc_db_prepare_input($_POST['responsible_state']);
       $responsible_country_id = xtc_db_prepare_input($_POST['responsible_country_id']);
       $responsible_email_address = xtc_db_prepare_input($_POST['responsible_email_address']);
       $responsible_telephone = xtc_db_prepare_input($_POST['responsible_telephone']);
-      if (ACCOUNT_COMPANY == 'true') $responsible_company = xtc_db_prepare_input($_POST['responsible_company']);
-      if (ACCOUNT_GENDER == 'true') $responsible_gender = xtc_db_prepare_input($_POST['responsible_gender']);
-      if (ACCOUNT_SUBURB == 'true') $responsible_suburb = xtc_db_prepare_input($_POST['responsible_suburb']);
-      if (ACCOUNT_STATE == 'true') $responsible_state = xtc_db_prepare_input($_POST['responsible_state']);
 
       $sql_data_array = array(
         'manufacturers_name' => $manufacturers_name,
@@ -150,44 +150,34 @@
         'listing_template' => $listing_template,
         'categories_template' => $categories_template,
 
+        'manufacturers_gender' => $manufacturers_gender,
         'manufacturers_firstname' => $manufacturers_firstname,
         'manufacturers_lastname' => $manufacturers_lastname,
+        'manufacturers_company' => $manufacturers_company,
         'manufacturers_street_address' => $manufacturers_street_address,
+        'manufacturers_suburb' => $manufacturers_suburb,
         'manufacturers_postcode' => $manufacturers_postcode,
         'manufacturers_city' => $manufacturers_city,
+        'manufacturers_state' => $manufacturers_state,
         'manufacturers_country_id' => $manufacturers_country_id,
+        'manufacturers_zone_id' => get_states_id($manufacturers_country_id, $manufacturers_state),
         'manufacturers_email_address' => $manufacturers_email_address,
         'manufacturers_telephone' => $manufacturers_telephone,
 
+        'responsible_gender' => $responsible_gender,
         'responsible_firstname' => $responsible_firstname,
         'responsible_lastname' => $responsible_lastname,
+        'responsible_company' => $responsible_company,
         'responsible_street_address' => $responsible_street_address,
+        'responsible_suburb' => $responsible_suburb,
         'responsible_postcode' => $responsible_postcode,
         'responsible_city' => $responsible_city,
+        'responsible_state' => $responsible_state,
         'responsible_country_id' => $responsible_country_id,
+        'responsible_zone_id' => get_states_id($responsible_country_id, $responsible_state),
         'responsible_email_address' => $responsible_email_address,
         'responsible_telephone' => $responsible_telephone,
       );
-
-      if (ACCOUNT_GENDER == 'true') {
-        $sql_data_array['manufacturers_gender'] = $manufacturers_gender;
-        $sql_data_array['responsible_gender'] = $responsible_gender;
-      }
-      if (ACCOUNT_COMPANY == 'true') {
-        $sql_data_array['manufacturers_company'] = $manufacturers_company;
-        $sql_data_array['responsible_company'] = $responsible_company;
-      }
-      if (ACCOUNT_SUBURB == 'true') {
-        $sql_data_array['manufacturers_suburb'] = $manufacturers_suburb;
-        $sql_data_array['responsible_suburb'] = $responsible_suburb;
-      }
-      if (ACCOUNT_STATE == 'true') {
-        $sql_data_array['manufacturers_zone_id'] = get_states_id($manufacturers_country_id, $manufacturers_state);
-        $sql_data_array['manufacturers_state'] = $manufacturers_state;
-
-        $sql_data_array['responsible_zone_id'] = get_states_id($responsible_country_id, $responsible_state);
-        $sql_data_array['responsible_state'] = $responsible_state;
-      }
 
       if ($action == 'insert') {
         $insert_sql_data = array('date_added' => 'now()');
@@ -449,7 +439,6 @@ if (USE_WYSIWYG == 'true') {
                 <?php echo xtc_draw_input_field('responsible_company', $manufact['responsible_company'], 'style="width: 200px"');?>
                 </td>
               </tr>
-              <?php if (ACCOUNT_GENDER == 'true') { ?>
               <tr class="dataTableRow">
                 <td class="dataTableContent">
                 <?php echo TEXT_GENDER;?>
@@ -461,7 +450,6 @@ if (USE_WYSIWYG == 'true') {
                 <?php echo xtc_draw_pull_down_menu('responsible_gender', get_customers_gender(), $manufact['responsible_gender'], 'style="width:200px;"');?>
                 </span></td>
               </tr>
-              <?php } ?>
               <tr class="dataTableRow">
                 <td class="dataTableContent">
                 <?php echo TEXT_FIRSTNAME;?>
@@ -495,7 +483,6 @@ if (USE_WYSIWYG == 'true') {
                 <?php echo xtc_draw_input_field('responsible_street_address', $manufact['responsible_street_address'], 'style="width: 200px"');?>
                 </td>
               </tr>
-              <?php if (ACCOUNT_SUBURB == 'true') { ?>
               <tr class="dataTableRow">
                 <td class="dataTableContent">
                 <?php echo ENTRY_SUBURB;?>
@@ -507,7 +494,6 @@ if (USE_WYSIWYG == 'true') {
                 <?php echo xtc_draw_input_field('responsible_suburb', $manufact['responsible_suburb'], 'style="width: 200px"');?>
                 </td>
               </tr>
-              <?php } ?>
                 <tr class="dataTableRow">
                 <td class="dataTableContent">
                 <?php echo TEXT_ZIP;?>
@@ -541,7 +527,6 @@ if (USE_WYSIWYG == 'true') {
                 <?php echo xtc_draw_pull_down_menu('responsible_country_id', xtc_get_countries('',1), (($manufact['responsible_country_id'] != 0) ? $manufact['responsible_country_id'] : STORE_COUNTRY), 'style="width: 200px"');?>
                 </span></td>
               </tr>
-              <?php if (ACCOUNT_STATE == 'true') { ?>
               <tr class="dataTableRow">
                 <td class="dataTableContent">
                 <?php echo ENTRY_STATE;?>
@@ -553,7 +538,6 @@ if (USE_WYSIWYG == 'true') {
                 <?php echo xtc_draw_input_field('responsible_state', $manufact['responsible_state'], 'style="width: 200px"');?>
                 </span></td>
               </tr>
-              <?php } ?>
               <tr class="dataTableRow">
                 <td class="dataTableContent">
                 <?php echo TEXT_EMAIL;?>
