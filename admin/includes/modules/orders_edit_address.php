@@ -77,13 +77,13 @@ if ($_GET['edit_action'] == 'address') {
       <?php echo TEXT_FIRSTNAME;?>
       </td>
       <td class="dataTableContent">
-      <?php echo xtc_draw_input_field('customers_firstname', $order->customer['firstname'], 'style="width: 200px"');?>
+      <?php echo xtc_draw_input_field('customers_firstname', (($order->customer['firstname'] != '') ? $order->customer['firstname'] : $order->customer['name']), 'style="width: 200px"');?>
       </td>
       <td class="dataTableContent">
-      <?php echo xtc_draw_input_field('delivery_firstname', $order->delivery['firstname'], 'style="width: 200px"');?>
+      <?php echo xtc_draw_input_field('delivery_firstname', (($order->delivery['firstname'] != '') ? $order->delivery['firstname'] : $order->delivery['name']), 'style="width: 200px"');?>
       </td>
       <td class="dataTableContent">
-      <?php echo xtc_draw_input_field('billing_firstname', $order->billing['firstname'], 'style="width: 200px"');?>
+      <?php echo xtc_draw_input_field('billing_firstname', (($order->billing['firstname'] != '') ? $order->billing['firstname'] : $order->billing['name']), 'style="width: 200px"');?>
       </td>
     </tr>
     <tr class="dataTableRow">
