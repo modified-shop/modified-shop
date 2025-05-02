@@ -132,9 +132,9 @@
       if (trim($url) == '#') return; 
       
       $this->schema .= "\t<url>\n";
-      $this->schema .= "\t\t<loc>" . $url . "</loc>\n";
+      $this->schema .= "\t\t<loc>" . $url."</loc>\n";
       if ($this->check_date($lastmod) === true) {
-        $this->schema .= "\t\t<lastmod>" . date('c', strtotime($lastmod)) . "</lastmod>\n";
+        $this->schema .= "\t\t<lastmod>" . date('c', strtotime($lastmod))."</lastmod>\n";
       }
       if (is_array($images) && count($images) > 0) {
         foreach ($images as $link) {
@@ -151,7 +151,6 @@
     }
   
     function process_contents() {
-
       $group_check = GROUP_CHECK == 'true' ? ' AND group_ids LIKE \'%c_'.$this->group_id.'_group%\' ' : '';
 
       $content_query = "SELECT content_id,
@@ -177,16 +176,36 @@
     }
 
     function process_manufacturers() {
+      $p_group_check = GROUP_CHECK == 'true' ? ' AND p.group_permission_'.$this->group_id.' = 1 ' : '';
+      $c_group_check = GROUP_CHECK == 'true' ? ' AND c.group_permission_'.$this->group_id.' = 1 ' : '';
+
       $manufacturers_query = "SELECT DISTINCT m.manufacturers_id,
                                               m.manufacturers_name,
                                               m.manufacturers_image,
                                               m.date_added,
                                               m.last_modified
-                                         FROM ".TABLE_MANUFACTURERS." as m
-                                         JOIN ".TABLE_PRODUCTS." as p 
+                                         FROM ".TABLE_MANUFACTURERS." m
+                                         JOIN ".TABLE_PRODUCTS." p 
                                               ON m.manufacturers_id = p.manufacturers_id
                                                 AND p.products_status = '1'
-                                        WHERE trim(m.manufacturers_name) != ''
+                                                    ".$p_group_check."
+                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                             ON p.products_id = pd.products_id
+                                                AND pd.language_id = '".(int)$this->language['id']."'
+                                                AND trim(pd.products_name) != ''
+                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                             ON p.products_id = p2c.products_id
+                                        JOIN ".TABLE_CATEGORIES." c 
+                                             ON c.categories_id = p2c.categories_id
+                                                AND c.categories_status = '1'
+                                                    ".$c_group_check."
+                                        JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                             ON c.categories_id = cd.categories_id
+                                                AND cd.language_id = '".(int)$this->language['id']."'
+                                                AND trim(cd.categories_name) != ''
+                                        WHERE m.manufacturers_status = 1
+                                          AND trim(m.manufacturers_name) != ''
+                                     GROUP BY m.manufacturers_id
                                      ORDER BY m.manufacturers_name";
 
       $manufacturers_query = xtc_db_query($manufacturers_query);
@@ -204,7 +223,6 @@
     }
 
     function process_categories() {
-
       $c_group_check = GROUP_CHECK == 'true' ? ' AND c.group_permission_'.$this->group_id.' = 1 ' : '';
 
       $categories_query = "SELECT c.categories_image,
@@ -212,8 +230,8 @@
                                   c.date_added,
                                   c.last_modified,
                                   cd.categories_name
-                             FROM " . TABLE_CATEGORIES . " c 
-                             JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
+                             FROM ".TABLE_CATEGORIES." c 
+                             JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                                   ON c.categories_id = cd.categories_id
                                      AND cd.language_id = '".(int)$this->language['id']."'
                                      AND trim(cd.categories_name) != ''
@@ -236,7 +254,6 @@
     }
 
     function process_products() {      
-
       $p_group_check = GROUP_CHECK == 'true' ? ' AND p.group_permission_'.$this->group_id.' = 1 ' : '';
       $c_group_check = GROUP_CHECK == 'true' ? ' AND c.group_permission_'.$this->group_id.' = 1 ' : '';
     
@@ -245,23 +262,24 @@
                                              p.products_date_added,
                                              p.products_image,
                                              pd.products_name
-                                        FROM " . TABLE_PRODUCTS . " p
-                                        JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                        FROM ".TABLE_PRODUCTS." p
+                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                              ON p.products_id = pd.products_id
                                                 AND pd.language_id = '".(int)$this->language['id']."'
                                                 AND trim(pd.products_name) != ''
-                                        JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                              ON p.products_id = p2c.products_id
-                                        JOIN " . TABLE_CATEGORIES . " c 
+                                        JOIN ".TABLE_CATEGORIES." c 
                                              ON c.categories_id = p2c.categories_id
                                                 AND c.categories_status = '1'
                                                     ".$c_group_check."
-                                        JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
+                                        JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                                              ON c.categories_id = cd.categories_id
                                                 AND cd.language_id = '".(int)$this->language['id']."'
                                                 AND trim(cd.categories_name) != ''
                                        WHERE p.products_status = '1'
                                              ".$p_group_check."
+                                    GROUP BY p.products_id
                                     ORDER BY p.products_id");
 
       while ($products = xtc_db_fetch_array($products_query)) {
