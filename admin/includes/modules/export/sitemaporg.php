@@ -56,20 +56,20 @@ class sitemaporg extends sitemap {
   }
   
   function process($file) {
+    global $messageStack;
+    
     @xtc_set_time_limit(0);
     
-    $result = $this->export();
-  
-    switch ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] : MODULE_SITEMAPORG_EXPORT) {
-      case 'yes':
-        // send File to Browser
-        header('Content-type: application/x-octet-stream');
-        header('Content-disposition: attachment; filename=' . $result['file']);
-        readfile($result['filename']);
-        unlink($result['filename']);
-        exit;
-        break;
+    if (isset($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
+        && is_array($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
+        && count(array_unique($_POST['configuration']['MODULE_SITEMAPORG_FILE'])) != count($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
+        )
+    {
+      $messageStack->add_session(MODULE_SITEMAPORG_ERROR_FILENAME);
+      xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=' . $this->code . '&action=edit'));
     }
+    
+    $this->export();
   }
 
   function display() {
@@ -90,13 +90,11 @@ class sitemaporg extends sitemap {
   }
 
   function install() {
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_FILE', 'sitemap.xml',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_SITEMAPORG_FILE', 'sitemap.xml',  '6', '1', 'xtc_cfg_input_email_language;MODULE_SITEMAPORG_FILE', 'xtc_get_email_language_names', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_SITEMAPORG_CUSTOMERS_STATUS', '1',  '6', '1', 'xtc_cfg_pull_down_customers_status_list(', 'xtc_get_customers_status_name', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_LANGUAGE', '".DEFAULT_LANGUAGE."',  '6', '1', 'xtc_cfg_pull_down_language_code(', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_ROOT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_GZIP', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_EXPORT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
 
     // scheduled task
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'd',  '0', 'export_sitemap')");
@@ -114,10 +112,8 @@ class sitemaporg extends sitemap {
       'MODULE_SITEMAPORG_STATUS',
       'MODULE_SITEMAPORG_FILE',
       'MODULE_SITEMAPORG_CUSTOMERS_STATUS',
-      ((defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') ? 'MODULE_SITEMAPORG_LANGUAGE' : ''),
       'MODULE_SITEMAPORG_ROOT',
       'MODULE_SITEMAPORG_GZIP',
-      'MODULE_SITEMAPORG_EXPORT'
     );
     $keys = array_values(array_filter($keys));
     

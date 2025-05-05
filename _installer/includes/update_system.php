@@ -231,7 +231,15 @@
   {
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('15', 'm',  '".((MODULE_MAGNALISTER_STATUS == 'True') ? 1 : 0)."', 'magnalister')");
   }
-  
+
+  // sitemap
+  if (defined('MODULE_SITEMAPORG_STATUS')) {
+    xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                     SET use_function = 'xtc_get_email_language_names',
+                         set_function = 'xtc_cfg_input_email_language;MODULE_SITEMAPORG_FILE'
+                   WHERE configuration_key = 'MODULE_SITEMAPORG_FILE'");
+  }
+    
   // reviews
   if (defined('MODULE_TRUSTEDSHOPS_STATUS') || defined('MODULE_SHOPVOTE_STATUS')) {
     $table_array = array(
@@ -409,6 +417,9 @@
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE'");
 
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_DHL_BUSINESS_PRODUCT'");
+
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SITEMAPORG_EXPORT'");
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SITEMAPORG_LANGUAGE'");
   
   // add columns
   $table_array = array(

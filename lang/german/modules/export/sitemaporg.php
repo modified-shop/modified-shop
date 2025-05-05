@@ -23,21 +23,17 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_SITEMAPORG_TEXT_DESCRIPTION', 'Die Standard Definition finden Sie hier: <a href="http://www.sitemaps.org/" target="_blank">www.sitemap.org</a>');
-define('MODULE_SITEMAPORG_TEXT_TITLE', 'XML Sitemap.org');
-define('MODULE_SITEMAPORG_EXPORTED', 'XML Sitemap.org erfolgreich erstellt.');
-define('MODULE_SITEMAPORG_FILE_TITLE' , '<hr />Dateiname');
-define('MODULE_SITEMAPORG_FILE_DESC' , 'Geben Sie einen Dateinamen ein, falls die Exportdatei am Server gespeichert werden soll.<br />(Verzeichnis "export/")');
-define('MODULE_SITEMAPORG_STATUS_DESC','Modulstatus');
-define('MODULE_SITEMAPORG_STATUS_TITLE','Status');
-define('MODULE_SITEMAPORG_ROOT_TITLE', '<hr /><b>Installation im Root?</b>');
-define('MODULE_SITEMAPORG_ROOT_DESC', 'Soll die Sitemap-Datei gleich im Rootverzeichnis abgelegt werden?');
-define('MODULE_SITEMAPORG_GZIP_TITLE', '<b>gzip Komprimierung nutzen?</b>');
-define('MODULE_SITEMAPORG_GZIP_DESC', 'Die Endung ".gz" wird automatisch ans Ende der Datei gesetzt!');
-define('MODULE_SITEMAPORG_EXPORT_TITLE', '<hr /><b>Herunterladen?</b>');
-define('MODULE_SITEMAPORG_EXPORT_DESC', 'M&ouml;chten Sie die Datei herunterladen?');
-define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_TITLE', 'Kundengruppe');
-define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_DESC','Geben Sie hier an welche Kundengruppe f&uuml;r den Export der sitemap.xml verwendet werden soll.');
-define('MODULE_SITEMAPORG_LANGUAGE_TITLE', 'Sprache');
-define('MODULE_SITEMAPORG_LANGUAGE_DESC','Geben Sie hier an in welcher Sprache der Export der sitemap.xml gemacht werden soll.');
-?>
+  define('MODULE_SITEMAPORG_TEXT_DESCRIPTION', 'Die Standard Definition finden Sie hier: <a href="http://www.sitemaps.org/" target="_blank">www.sitemap.org</a>');
+  define('MODULE_SITEMAPORG_TEXT_TITLE', 'XML Sitemap.org');
+  define('MODULE_SITEMAPORG_EXPORTED', 'XML Sitemap.org erfolgreich erstellt.');
+  define('MODULE_SITEMAPORG_ERROR_FILENAME', 'Der Dateiname muss f&uuml;r jede Sprachen unterschiedlich sein.');
+  define('MODULE_SITEMAPORG_FILE_TITLE' , '<hr />Dateiname');
+  define('MODULE_SITEMAPORG_FILE_DESC' , 'Geben Sie einen Dateinamen ein, falls die Exportdatei am Server gespeichert werden soll.<br />(Verzeichnis "export/")');
+  define('MODULE_SITEMAPORG_STATUS_DESC','Modulstatus');
+  define('MODULE_SITEMAPORG_STATUS_TITLE','Status');
+  define('MODULE_SITEMAPORG_ROOT_TITLE', '<hr /><b>Installation im Root?</b>');
+  define('MODULE_SITEMAPORG_ROOT_DESC', 'Soll die Sitemap-Datei gleich im Rootverzeichnis abgelegt werden?');
+  define('MODULE_SITEMAPORG_GZIP_TITLE', '<b>gzip Komprimierung nutzen?</b>');
+  define('MODULE_SITEMAPORG_GZIP_DESC', 'Die Endung ".gz" wird automatisch ans Ende der Datei gesetzt!');
+  define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_TITLE', 'Kundengruppe');
+  define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_DESC','Geben Sie hier an welche Kundengruppe f&uuml;r den Export der sitemap.xml verwendet werden soll.');

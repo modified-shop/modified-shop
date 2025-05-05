@@ -15,6 +15,7 @@
   require_once(DIR_FS_INC . 'xtc_get_parent_categories.inc.php');
   require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
   require_once(DIR_FS_INC . 'xtc_get_products_mo_images.inc.php');
+  require_once(DIR_FS_INC . 'parse_multi_language_value.inc.php');
 
 
   class sitemap {
@@ -41,80 +42,74 @@
     }
 
     function export() {
-      $code = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_LANGUAGE'] : MODULE_SITEMAPORG_LANGUAGE);
       $lang_query = xtc_db_query("SELECT *,
                                          languages_id as id,
                                          language_charset as charset
-                                    FROM ".TABLE_LANGUAGES."
-                                   WHERE code = '".xtc_db_input((defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') ? $code : DEFAULT_LANGUAGE)."'");
+                                    FROM ".TABLE_LANGUAGES);
       if (xtc_db_num_rows($lang_query) > 0) {
-        while ($lang =  xtc_db_fetch_array($lang_query)) {
-          $this->language = $lang;
-          
-          $this->url_param = '';
-          if (defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') {
-            $this->url_param = 'language='.$this->language['code'].'&';
-          }
-          $this->group_id = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_CUSTOMERS_STATUS'] : MODULE_SITEMAPORG_CUSTOMERS_STATUS);
-
-          $this->xml_sitemap_top();
-          $this->xml_sitemap_entry(($this->url_function)('index.php', $this->url_param));
-    
-          $this->process_contents();
-          $this->process_categories();
-          $this->process_products();
-          $this->process_manufacturers();
-    
-          $this->xml_sitemap_bottom();
-
-          $file = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_FILE'] : MODULE_SITEMAPORG_FILE);
-
-          $use_gzip = false;
-          $filename = DIR_FS_DOCUMENT_ROOT.'export/'.$file;
-          if (isset($_POST['configuration'])) {
-            if ($_POST['configuration']['MODULE_SITEMAPORG_ROOT'] == 'yes'
-                && $_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'no'
-                )
-            {
-              $filename = DIR_FS_DOCUMENT_ROOT.$file;
+        while ($lang =  xtc_db_fetch_array($lang_query)) {          
+          if (isset($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
+              && is_array($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
+              )
+          {
+            $file = '';
+            if (isset($_POST['configuration']['MODULE_SITEMAPORG_FILE'][strtoupper($lang['code'])])) {
+              $file = $_POST['configuration']['MODULE_SITEMAPORG_FILE'][strtoupper($lang['code'])];  
             }
-            if ($_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'yes') {
-              $filename = $filename.'_tmp_'.time();
-            }
-            if ($_POST['configuration']['MODULE_SITEMAPORG_GZIP'] == 'yes') {
-              $use_gzip = true;
-            }
-          } else{
-            if (MODULE_SITEMAPORG_ROOT == 'yes'
-                && MODULE_SITEMAPORG_EXPORT == 'no'
-                )
-            {
-              $filename = DIR_FS_DOCUMENT_ROOT.$file;
-            }
-            if (MODULE_SITEMAPORG_EXPORT == 'yes') {
-              $filename = $filename.'_tmp_'.time();
-            }
-            if (MODULE_SITEMAPORG_GZIP == 'yes') {
-              $use_gzip = true;
-            }
-          }
-            
-          if ($use_gzip === true) {
-            $filename = $filename.'.gz';
-            $gz = gzopen($filename,'w');
-            gzwrite($gz, $this->schema);
-            gzclose($gz);
-            $file = $file.'.gz';
           } else {
-            $fp = fopen($filename, "w");
-            fputs($fp, $this->schema);
-            fclose($fp);
+            $file = parse_multi_language_value(MODULE_SITEMAPORG_FILE, $lang['code'], true);
           }
           
-          return array(
-            'file' => $file,
-            'filename' => $filename,
-          );
+          if (xtc_not_null($file)) {
+            $this->language = $lang;
+            
+            $this->url_param = '';
+            if (defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') {
+              $this->url_param = 'language='.$this->language['code'].'&';
+            }
+            $this->group_id = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_CUSTOMERS_STATUS'] : MODULE_SITEMAPORG_CUSTOMERS_STATUS);
+  
+            $this->xml_sitemap_top();
+            $this->xml_sitemap_entry(($this->url_function)('index.php', $this->url_param));
+      
+            $this->process_contents();
+            $this->process_categories();
+            $this->process_products();
+            $this->process_manufacturers();
+      
+            $this->xml_sitemap_bottom();
+  
+            $use_gzip = false;
+            $filename = DIR_FS_DOCUMENT_ROOT.'export/'.$file;
+            
+            if (isset($_POST['configuration'])) {
+              if ($_POST['configuration']['MODULE_SITEMAPORG_ROOT'] == 'yes') {
+                $filename = DIR_FS_DOCUMENT_ROOT.$file;
+              }
+              if ($_POST['configuration']['MODULE_SITEMAPORG_GZIP'] == 'yes') {
+                $use_gzip = true;
+              }
+            } else {
+              if (MODULE_SITEMAPORG_ROOT == 'yes') {
+                $filename = DIR_FS_DOCUMENT_ROOT.$file;
+              }
+              if (MODULE_SITEMAPORG_GZIP == 'yes') {
+                $use_gzip = true;
+              }
+            }
+              
+            if ($use_gzip === true) {
+              $filename = $filename.'.gz';
+              $gz = gzopen($filename,'w');
+              gzwrite($gz, $this->schema);
+              gzclose($gz);
+              $file = $file.'.gz';
+            } else {
+              $fp = fopen($filename, "w");
+              fputs($fp, $this->schema);
+              fclose($fp);
+            }
+          }          
         }
       }
     }

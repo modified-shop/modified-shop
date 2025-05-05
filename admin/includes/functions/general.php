@@ -2144,6 +2144,25 @@
   }
 
   /**
+   * xtc_get_email_languages()
+   *
+   * @param string $key
+   * @return
+   */
+  function xtc_get_email_language_names($key) {
+    require_once(DIR_FS_INC . 'parse_multi_language_value.inc.php');
+    
+    $languages = xtc_get_languages();
+
+    $val_array = array();
+    for ($i=0, $n=count($languages); $i<$n; $i++) {
+      $val_array[] = '<b>'.strtoupper($languages[$i]['code']).'</b>: '.parse_multi_language_value($key, $languages[$i]['code'], true);
+    }
+    
+    return implode('<br/>', $val_array);
+  }
+
+  /**
    * xtc_draw_gender_pull_down()
    *
    * @author MK
