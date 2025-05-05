@@ -319,7 +319,7 @@
                     
                     if ($configuration['set_function']) {
                       if (strpos($configuration['set_function'], '(') !== false) {
-                        eval('$value_field = ' . $configuration['set_function'] . ' "' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
+                        eval('$value_field = ' . $configuration['set_function'] . ' "' . encode_htmlspecialchars($configuration['configuration_value'], ENT_QUOTES) . '", "' . $configuration['configuration_key'] . '");');
                       } else {
                         $parameters = explode(';', $configuration['set_function']);
                         $function = trim($parameters[0]);
