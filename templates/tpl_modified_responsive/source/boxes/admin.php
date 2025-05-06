@@ -100,6 +100,13 @@ if ($admin_access['customers'] == '1') {
   $box_smarty->assign('CUSTOMERS', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'customers.php', '', 'NONSSL'));
 }
 
+// manufacturers
+if ($admin_access['manufacturers'] == '1') {
+  if (isset($_GET['manufacturers_id'])) {
+    $box_smarty->assign('EDIT_MANUFACTURER', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'manufacturers.php', 'action=edit&mID='.(int)$_GET['manufacturers_id']));
+  }
+}
+
 // categories/product/attributes
 if ($admin_access['categories'] == '1') {
   // categories
