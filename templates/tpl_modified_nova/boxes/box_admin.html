@@ -35,17 +35,22 @@
         </li>
       {/if}
 
-      {if isset($CATEGORIES)}
+      {if isset($CATEGORIES) || isset($MANUFACTURERS)}
         <li class="togglemenu">
-          <a class="togglelink" href="{$CATEGORIES}"><img src="{$tpl_path}img/adminbar_categories.png" alt="{#ab_category#}" /></a>
+          <a class="togglelink" href="{if isset($EDIT_MANUFACTURER)}{$MANUFACTURERS}{else}{$CATEGORIES}{/if}"><img src="{$tpl_path}img/adminbar_categories.png" alt="{#ab_category#}" /></a>
           <ul>
-            {if isset($EDIT_PRODUCT)}<li><a href="{$EDIT_PRODUCT}">{#ab_edit_product#}</a></li>{/if}
-            {if isset($EDIT_XSELL)}<li><a href="{$EDIT_XSELL}">{#ab_edit_xsell#}</a></li>{/if}
-            {if isset($EDIT_PRODUCT_ATTRIBUTES)}<li><a href="{$EDIT_PRODUCT_ATTRIBUTES}">{#ab_edit_attributes#}</a></li>{/if}
-            {if isset($EDIT_PRODUCT_TAGS)}<li><a href="{$EDIT_PRODUCT_TAGS}">{#ab_edit_tags#}</a></li>{/if}
-            {if isset($EDIT_CATEGORY)}<li><a href="{$EDIT_CATEGORY}">{#ab_edit_category#}</a></li>{/if}
-            <li class="info">{$PRODUCTS_INFO}</li>
-            <li class="info">{$REVIEWS_INFO}</li>
+            {if isset($EDIT_MANUFACTURER)}
+              {if isset($EDIT_MANUFACTURER)}<li><a href="{$EDIT_MANUFACTURER}">{#ab_edit_manufacturer#}</a></li>{/if}
+            {/if}
+            {if isset($CATEGORIES)}
+              {if isset($EDIT_PRODUCT)}<li><a href="{$EDIT_PRODUCT}">{#ab_edit_product#}</a></li>{/if}
+              {if isset($EDIT_XSELL)}<li><a href="{$EDIT_XSELL}">{#ab_edit_xsell#}</a></li>{/if}
+              {if isset($EDIT_PRODUCT_ATTRIBUTES)}<li><a href="{$EDIT_PRODUCT_ATTRIBUTES}">{#ab_edit_attributes#}</a></li>{/if}
+              {if isset($EDIT_PRODUCT_TAGS)}<li><a href="{$EDIT_PRODUCT_TAGS}">{#ab_edit_tags#}</a></li>{/if}
+              {if isset($EDIT_CATEGORY)}<li><a href="{$EDIT_CATEGORY}">{#ab_edit_category#}</a></li>{/if}
+              <li class="info">{$PRODUCTS_INFO}</li>
+              <li class="info">{$REVIEWS_INFO}</li>
+            {/if}
           </ul>
         </li>
       {/if}

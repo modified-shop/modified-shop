@@ -28,6 +28,7 @@ ab_shop = 'Shop'
 ab_caching = 'Caching'
 
 ab_edit_content = 'Content bearbeiten'
+ab_edit_manufacturer = 'Hersteller bearbeiten'
 ab_edit_product = 'Artikel bearbeiten'
 ab_edit_attributes = 'Attribute editieren'
 ab_edit_category = 'Kategorie bearbeiten'
