@@ -105,6 +105,7 @@ if ($admin_access['manufacturers'] == '1') {
   if (isset($_GET['manufacturers_id'])) {
     $box_smarty->assign('EDIT_MANUFACTURER', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'manufacturers.php', 'action=edit&mID='.(int)$_GET['manufacturers_id']));
   }
+  $box_smarty->assign('MANUFACTURERS', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'manufacturers.php', '', 'NONSSL'));
 }
 
 // categories/product/attributes
