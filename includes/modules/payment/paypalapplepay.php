@@ -136,7 +136,7 @@ class paypalapplepay extends PayPalPaymentV2 {
           currencyIsoCode: "'.$order->info['currency'].'",
           totalPrice: "'.sprintf($this->numberFormat, round($total, 2)).'",
           totalPriceStatus: "final",
-          totalLabel: "'.$this->encode_utf8($paypal->get_config('PAYPAL_COMPANY_LABEL')).'",
+          totalLabel: "'.$this->encode_utf8($this->get_config('PAYPAL_COMPANY_LABEL')).'",
         };
       }
       
