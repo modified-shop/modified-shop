@@ -521,7 +521,7 @@
       }
     }
 
-    public static function payment_title($payment_method, $order_id = '') {
+    public static function payment_title($payment_method, $order_id = '', $language = '') {
       static $static_payment_array;
 
       if (!isset($static_payment_array)) {
@@ -531,7 +531,8 @@
       if ($payment_method != '' && ($payment_method != 'no_payment' || defined('RUN_MODE_ADMIN'))) {
         if (!isset($static_payment_array[$payment_method][(int)$order_id])) { 
           if (is_file(DIR_FS_CATALOG . 'includes/modules/payment/' . $payment_method . '.php')) {
-            include_once(DIR_FS_CATALOG . 'lang/' . $_SESSION['language'] . '/modules/payment/' . $payment_method . '.php');
+            if ($language == '') $language = $_SESSION['language'];
+            include_once(DIR_FS_CATALOG . 'lang/' . $language . '/modules/payment/' . $payment_method . '.php');
             $payment_name = strip_tags(constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE')));
 
             if ($payment_method == 'paypalplus' && (int)$order_id > 0) {
