@@ -361,6 +361,16 @@ require (DIR_WS_INCLUDES.'head.php');
                     <?php
                   }
 
+                  if ($module->code == 'paypalapplepay') {
+                    ?>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_COMPANY_LABEL; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[profile][PAYPAL_COMPANY_LABEL]', $paypal->get_config('PAYPAL_COMPANY_LABEL'), 'style="width: 300px;"'); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_COMPANY_LABEL_INFO; ?></td>
+                    </tr>
+                    <?php
+                  }
+
                   if ($module->code == 'paypalacdc') {
                     ?>
                     <tr>
