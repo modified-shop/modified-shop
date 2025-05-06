@@ -31,10 +31,10 @@ async function setupApplepay() {
   document.getElementsByClassName("apms_form_button_overlay")[0].style.display = 'none';
 
   async function onClick() {
-    const { currencyIsoCode, totalPrice, totalPriceStatus, totalLabel } = getAppleTransactionInfo();
+    const { countryIsoCode, currencyIsoCode, totalPrice, totalPriceStatus, totalLabel } = getAppleTransactionInfo();
     
     const paymentRequest = {
-      countryCode,
+      countryCode: countryIsoCode,
       currencyCode: currencyIsoCode,
       merchantCapabilities,
       supportedNetworks,
@@ -58,6 +58,7 @@ async function setupApplepay() {
     session.onvalidatemerchant = (event) => {
       applepay
         .validateMerchant({
+          displayName: decodeAppleLabel(totalLabel),
           validationUrl: event.validationURL,
         })
         .then((payload) => {
@@ -68,7 +69,7 @@ async function setupApplepay() {
         });
     };
 
-    session.onpaymentmethodselected = () => {
+    session.onpaymentmethodselected = (event) => {
       session.completePaymentMethodSelection({
         newTotal: paymentRequest.total,
       });
@@ -97,7 +98,7 @@ async function setupApplepay() {
       }
     };
 
-    session.oncancel = () => {
+    session.oncancel = (event) => {
       redirectAppleError();
     }
 

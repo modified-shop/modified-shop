@@ -89,6 +89,9 @@ $lang_array = array(
 
   'TEXT_PAYPAL_BUTTON_HEIGHT' => 'Button Height',
   'TEXT_PAYPAL_BUTTON_HEIGHT_INFO' => 'Select the button height in pixels (min: 22 max: 55)',
+
+  'TEXT_PAYPAL_COMPANY_LABEL' => 'Company Label',
+  'TEXT_PAYPAL_COMPANY_LABEL_INFO' => 'Use the company name what should be displayed on the bank or credit card statement. <b>Attention:</b> no specialchars or german umlauts allowed!',
 );
 
 
