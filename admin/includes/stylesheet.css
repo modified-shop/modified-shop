@@ -1954,3 +1954,7 @@ img.thumbnail-productsimage {
   width: auto;
   min-width:100%;
 }
+
+.dataTableConfig.col-middle .wordwrap {
+  word-break: break-all;
+}
