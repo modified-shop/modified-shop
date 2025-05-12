@@ -60,7 +60,7 @@
         }
 
         // update changed configurations
-        if (isset($_POST) && count($_POST) > 0) {
+        if ($_GET['gID'] != '6' && isset($_POST) && count($_POST) > 0) {
           $configuration_query = xtc_db_query("SELECT *
                                                  FROM " . TABLE_CONFIGURATION . " 
                                                 WHERE configuration_group_id = '" . (int)$_GET['gID'] . "'
@@ -317,25 +317,29 @@
                       $cfgValue = encode_htmlspecialchars($configuration['configuration_value']);
                     }
                     
-                    if ($configuration['set_function']) {
-                      if (strpos($configuration['set_function'], '(') !== false) {
-                        eval('$value_field = ' . $configuration['set_function'] . ' "' . encode_htmlspecialchars($configuration['configuration_value'], ENT_QUOTES) . '", "' . $configuration['configuration_key'] . '");');
+                    if ($_GET['gID'] != '6') {
+                      if ($configuration['set_function']) {
+                        if (strpos($configuration['set_function'], '(') !== false) {
+                          eval('$value_field = ' . $configuration['set_function'] . ' "' . encode_htmlspecialchars($configuration['configuration_value'], ENT_QUOTES) . '");');
+                        } else {
+                          $parameters = explode(';', $configuration['set_function']);
+                          $function = trim($parameters[0]);
+                          $parameters[0] = $configuration['configuration_value'];
+                          $value_field = xtc_call_function($function, $parameters);
+                        }
                       } else {
-                        $parameters = explode(';', $configuration['set_function']);
-                        $function = trim($parameters[0]);
-                        $parameters[0] = $configuration['configuration_value'];
-                        $value_field = xtc_call_function($function, $parameters);
+                        $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'], 'style="width:100%;"');
                       }
                     } else {
-                      $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'], 'style="width:100%;"');
+                      $value_field = '<div class="wordwrap">'.$cfgValue.'</div>';
                     }
                     
-                    if (strpos($value_field,'cfg_so_k') !== false) {
-                      $value_field=str_replace('cfg_so_k',strtolower($configuration['configuration_key']),$value_field);
+                    if (strpos($value_field, 'cfg_so_k') !== false) {
+                      $value_field = str_replace('cfg_so_k', strtolower($configuration['configuration_key']), $value_field);
                     }
                     
-                    if (strpos($value_field,'configuration_value') !== false) {
-                      $value_field=str_replace('configuration_value',$configuration['configuration_key'],$value_field);
+                    if (strpos($value_field, 'configuration_value') !== false) {
+                      $value_field = str_replace('configuration_value', $configuration['configuration_key'], $value_field);
                     }
 
                     // catch up warnings if no language-text defined for configuration-key
@@ -367,7 +371,9 @@
                   }
                 ?>
               </table>
+              <?php if ($_GET['gID'] != '6') { ?>
               <div class="main pdg2 txta-r mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/></div>
+              <?php } ?>
             </form>
           <?php echo (($tabs === true) ? '</div>' : ''); ?>
         </td>
