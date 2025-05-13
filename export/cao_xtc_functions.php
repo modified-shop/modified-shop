@@ -2206,7 +2206,7 @@ function CategoriesUpdate ()
       if ($desc = xtc_db_fetch_array($desc_query))
       {
         $categories_name             = $desc['categories_name'];
-        $categories_description      = $desc['$categories_description'];
+        $categories_description      = $desc['categories_description'];
         $categories_heading_title    = $desc['categories_heading_title'];
         $categories_meta_title       = $desc['categories_meta_title'];
         $categories_meta_description = $desc['categories_meta_description'];
