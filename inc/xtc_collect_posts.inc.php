@@ -185,7 +185,7 @@
         $_SESSION['cc_id'] = $gv_result['coupon_id'];
         $_SESSION['cc_post'] = true;
         
-        $messageStack->add_session('coupon_message', (($gv_result['coupon_specials'] == 0) ? REDEEMED_COUPON : REDEEMED_COUPON_NO_SPECIALS), 'success');
+        $messageStack->add_session('coupon_message', (($gv_result['coupon_specials'] == 0) ? REDEEMED_COUPON_NO_SPECIALS : REDEEMED_COUPON), 'success');
         xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
       }
     }
