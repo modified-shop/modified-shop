@@ -521,10 +521,10 @@ if (USE_WYSIWYG == 'true') {
                 <?php echo TEXT_COUNTRY;?>
                 </td>
                 <td class="dataTableContent"><span class="select_f12">
-                <?php echo xtc_draw_pull_down_menu('manufacturers_country_id', xtc_get_countries('',1), (($manufact['manufacturers_country_id'] != 0) ? $manufact['manufacturers_country_id'] : STORE_COUNTRY), 'style="width: 200px"');?>
+                <?php echo xtc_draw_pull_down_menu('manufacturers_country_id', xtc_get_countries(), (($manufact['manufacturers_country_id'] != 0) ? $manufact['manufacturers_country_id'] : STORE_COUNTRY), 'style="width: 200px"');?>
                 </span></td>
                 <td class="dataTableContent"><span class="select_f12">
-                <?php echo xtc_draw_pull_down_menu('responsible_country_id', xtc_get_countries('',1), (($manufact['responsible_country_id'] != 0) ? $manufact['responsible_country_id'] : STORE_COUNTRY), 'style="width: 200px"');?>
+                <?php echo xtc_draw_pull_down_menu('responsible_country_id', xtc_get_countries(), (($manufact['responsible_country_id'] != 0) ? $manufact['responsible_country_id'] : STORE_COUNTRY), 'style="width: 200px"');?>
                 </span></td>
               </tr>
               <tr class="dataTableRow">
