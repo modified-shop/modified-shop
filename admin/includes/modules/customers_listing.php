@@ -150,6 +150,7 @@
                       $sort = 'ORDER BY c.customers_email_address';
                       break;
                   }
+                  $sort .= ', c.customers_id DESC';
                 } else {
                   $sort = 'ORDER BY c.customers_id DESC';
                 }
@@ -190,7 +191,7 @@
                                                  WHERE o.customers_id = '".(int)$customers['customers_id']."'");
                   $umsatz = xtc_db_fetch_array($umsatz_query);
 
-                  if ((!isset($_GET['cID']) || (@$_GET['cID'] == $customers['customers_id'])) && !isset($cInfo)) {
+                  if ((!isset($_GET['cID']) || $_GET['cID'] == $customers['customers_id']) && !isset($cInfo)) {
                     $country_query = xtc_db_query("SELECT countries_name 
                                                      FROM ".TABLE_COUNTRIES." 
                                                     WHERE countries_id = '".(int)$customers['entry_country_id']."'");
@@ -220,7 +221,7 @@
                     $cInfo = new objectInfo($customers);
                   }
 
-                  if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) {
+                  if (isset($cInfo) && is_object($cInfo) && $customers['customers_id'] == $cInfo->customers_id) {
                     echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" data-event="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'edit')).'cID='.$cInfo->customers_id.'&action=edit').'">'."\n";
                   } else {
                     echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" data-event="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'edit', 'action')).'cID='.$customers['customers_id']).'">'."\n";
