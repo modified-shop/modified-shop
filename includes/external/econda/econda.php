@@ -55,7 +55,7 @@ function product_to_EMOSItem($product, $lang, $quant, $cedit_id = 0) {
 	$product_to_emos = xtc_db_fetch_array($product_to_emos_query);
 	$emos_xtPrice = new xtcPrice(DEFAULT_CURRENCY,$_SESSION['customers_status']['customers_status_id']);
 	$product_to_emos_price = $emos_xtPrice->xtcGetPrice($product_to_emos['products_id'], false, $quant, $product_to_emos['products_tax_class_id'], $product_to_emos['products_price'], '', $cedit_id);
-	if (ECONDA_PRICE_IS_BRUTTO == 'false') {
+	if (defined('ECONDA_PRICE_IS_BRUTTO') && ECONDA_PRICE_IS_BRUTTO == 'false') {
 		$product_to_emos_price = sprintf("%0.2f",($product_to_emos_price / ((xtc_get_tax_rate($product_to_emos['products_tax_class_id']) + 100) / 100)));
 	}
 	$item = new EMOS_Item();
@@ -125,9 +125,9 @@ switch ($current_page) {
 		break;
 	case FILENAME_SHOPPING_CART:
 		$emos->addOrderProcess("1_Warenkorb");
-		if ($_SESSION['econda_cart']) {
+		if (isset($_SESSION['econda_cart'])) {
 			for ($i=0, $n=sizeof($_SESSION['econda_cart']); $i<$n; $i++) {
-				if ($_SESSION['econda_cart'][$i]['todo'] == 'update') {
+				if (isset($_SESSION['econda_cart'][$i]['todo']) && $_SESSION['econda_cart'][$i]['todo'] == 'update') {
 					if ($_SESSION['econda_cart'][$i]['cart_qty'] == $_SESSION['econda_cart'][$i]['old_qty']) {
 						// nop
 					} else {
@@ -139,10 +139,10 @@ switch ($current_page) {
 							$emos->addToBasket($item);
 						}
 					}
-				} elseif ($_SESSION['econda_cart'][$i]['todo'] == 'add') {
+				} elseif (isset($_SESSION['econda_cart'][$i]['todo']) && $_SESSION['econda_cart'][$i]['todo'] == 'add') {
 					$item = product_to_EMOSItem($_SESSION['econda_cart'][$i]['id'],$_SESSION['languages_id'], $_SESSION['econda_cart'][$i]['cart_qty'] - $_SESSION['econda_cart'][$i]['old_qty']);
 					$emos->addToBasket($item);
-				} elseif ($_SESSION['econda_cart'][$i]['todo'] == 'del') {
+				} elseif (isset($_SESSION['econda_cart'][$i]['todo']) && $_SESSION['econda_cart'][$i]['todo'] == 'del') {
 					$item = product_to_EMOSItem($_SESSION['econda_cart'][$i]['id'],$_SESSION['languages_id'], $_SESSION['econda_cart'][$i]['cart_qty']);
 					$emos->removeFromBasket($item);
 				}
