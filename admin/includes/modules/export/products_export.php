@@ -75,7 +75,7 @@
       $i = 0;
       $fp = fopen(DIR_FS_DOCUMENT_ROOT.'export/'.$file, 'w');
       while ($export = xtc_db_fetch_array($export_query)) {
-        $products_price = $xtPrice->xtcGetPrice($export['products_id'], false, 1, $export['products_tax_class_id']);
+        $products_price = (($xtPrice->cStatus['customers_status_show_price'] != 0) ? $xtPrice->xtcGetPrice($export['products_id'], false, 1, $export['products_tax_class_id']) : 0);
 
         $export_data_array = array(
           'id' => $export['products_id'],
