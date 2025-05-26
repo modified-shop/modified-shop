@@ -199,9 +199,13 @@
         foreach ($order->products as $product) {
           $product['price_net'] = $product['final_price'];
           $product['tax_value'] = 0;
+          $product['single_price_net'] = $product['price'];
+          $product['single_tax_value'] = 0;
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 && $product['tax'] > 0) {
             $product['price_net'] = round($xtPrice->xtcRemoveTax($product['final_price'], $product['tax']), 2);
             $product['tax_value'] = round($xtPrice->xtcGetTax($product['final_price'], $product['tax']), 2);
+            $product['single_price_net'] = round($xtPrice->xtcRemoveTax($product['price'], $product['tax']), 2);
+            $product['single_tax_value'] = round($xtPrice->xtcGetTax($product['price'], $product['tax']), 2);
           }
           
           $product['tax'] = (string)$product['tax'];
@@ -215,11 +219,11 @@
             'name' => $this->encode_utf8($product['name']),
             'category' => 'PHYSICAL_GOODS',
             'unit_amount' => array(
-              'value' => sprintf($this->numberFormat, $product['price_net']),
+              'value' => sprintf($this->numberFormat, $product['single_price_net']),
               'currency_code' => $this->encode_utf8($order->info['currency'])
             ),
             'tax' => array(
-              'value' => sprintf($this->numberFormat, $product['tax_value']),
+              'value' => sprintf($this->numberFormat, $product['single_tax_value']),
               'currency_code' => $this->encode_utf8($order->info['currency'])
             ),
             'tax_rate' => sprintf($this->numberFormat, round($product['tax'], 2)),
