@@ -264,7 +264,10 @@ if (!$action || $action == 'delete') {
                                                                   .((!isset($_GET['pID']) || (int)$_GET['pID'] < 1) ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'coIndex', 'pID')) . 'pID=' . $oInfo->content_id) . '">' . BUTTON_DETAILS . '</a>' : '').'
                                                                   <a class="button" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$oInfo->content_group).'&preview=true&coIndex='.$oInfo->content_group_index.'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=600\')">'.TEXT_PREVIEW.'</a>'
                                                                   .(($oInfo->content_delete == '1') ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'coIndex')) . 'coID=' . $oInfo->content_group . '&coIndex=' . $oInfo->content_group_index . '&action=delete') . '">' . BUTTON_DELETE . '</a>' : ''));
-
+              if ($oInfo->content_delete != '1') {
+                $contents[] = array ('text' => '<div class="important_info">'.CONTENT_NOTE.'</div>');
+              }
+              
               $contents[] = array ('text' => '<br />'.TEXT_DATE_ADDED.' '.xtc_datetime_short($oInfo->date_added));
               $contents[] = array ('text' => TEXT_LAST_MODIFIED.' '.xtc_datetime_short($oInfo->last_modified));
             }
