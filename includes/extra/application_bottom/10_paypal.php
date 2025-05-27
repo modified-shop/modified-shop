@@ -244,7 +244,10 @@
     {
       $paypal = new PayPalPayment('paypalinstallment');
       
-      if ($paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1) {
+      if ($paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1
+          && $paypal->get_config('MODULE_PAYMENT_PAYPAL_SAVE_PAYMENT') != 1
+          )
+      {
         $total = 0;  
         if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO 
             && is_object($product) 
