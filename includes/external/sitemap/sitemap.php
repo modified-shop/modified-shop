@@ -28,9 +28,7 @@
     var $url_param;
     var $url_function;
 
-    function __construct() {
-      $this->schema = '';
-      
+    function __construct() {      
       $this->image_path = DIR_FS_CATALOG.DIR_WS_IMAGES;
       $this->image_url = HTTP_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES;
 
@@ -115,7 +113,7 @@
     }
 
     function xml_sitemap_top() {
-      $this->schema .= '<?xml version="1.0" encoding="utf-8"?>'."\n";
+      $this->schema  = '<?xml version="1.0" encoding="utf-8"?>'."\n";
       $this->schema .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">'."\n";
     }
 
