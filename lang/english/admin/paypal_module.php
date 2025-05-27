@@ -52,7 +52,7 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_BOX_CART_BNPL_INFO' => 'Shall the PayPal button be displayed in the box cart?',
 
   'TEXT_PAYPAL_MODULE_SAVE_PAYMENT' => 'Save payment method in the checkout (PayPal Vault)',
-  'TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO' => 'Should the payment method used for PayPal be saved for a faster checkout for another order?',
+  'TEXT_PAYPAL_MODULE_SAVE_PAYMENT_INFO' => 'Should the payment method used for PayPal be saved for a faster checkout for another order?<br><b>Note:</b> PayPal Installment Banner is getting deactivated from PayPal.',
 
   'TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT' => 'Allow saved payment method (PayPal Vault)',
   'TEXT_PAYPAL_MODULE_OFFER_SAVE_PAYMENT_INFO' => 'Allow a saved payment method for PayPal for a faster checkout?',
