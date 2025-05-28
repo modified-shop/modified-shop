@@ -87,7 +87,6 @@ footer_price_hinweis_4 = 'The crossed out prices correspond to the previous pric
 footer_heading_payment = 'Payment methods'
 footer_heading_social = 'Social Media'
 footer_heading_contact = 'Contact'
-footer_text_contact = 'Demoshop modified eCommerce Shopsoftware<br />Musterstr. 123<br />12345 Musterstadt<br /><br />Telefon: 01234 56789<br />Mail: demo@modified-shop.org'
 
 text_expires_date = 'Special offer valid until:'
 products_flag_new = 'New'
