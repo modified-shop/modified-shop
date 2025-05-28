@@ -355,7 +355,7 @@
         <div class="footer_item">
           <div class="content_box">
             <div class="content_box_header">{#footer_heading_contact#}</div>
-            <div class="content_box_text">{#footer_text_contact#}</div>            
+            <div class="content_box_text">{$smarty.const.STORE_NAME_ADDRESS|regex_replace:"/[\n]/":"<br />"}</div>            
           </div>
         </div>
         {if isset($box_CONTENT)}<div class="footer_item">{$box_CONTENT}</div>{/if}
