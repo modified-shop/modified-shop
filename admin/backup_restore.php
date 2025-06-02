@@ -62,7 +62,7 @@
 
   // set the session name and save path
   xtc_session_name('MODsid');
-  if (STORE_SESSIONS == '') {
+  if (STORE_SESSIONS == 'files') {
     define('SESSION_WRITE_DIRECTORY', sys_get_temp_dir());
     xtc_session_save_path(SESSION_WRITE_DIRECTORY);
   }
