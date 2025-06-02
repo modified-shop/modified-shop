@@ -26,7 +26,7 @@
   define('ENABLE_SSL', HTTP_SERVER === HTTPS_SERVER);
   
   // session handling
-  define('STORE_SESSIONS', '');
+  define('STORE_SESSIONS', ini_get('session.save_handler')); 
   define('SESSION_WRITE_DIRECTORY', sys_get_temp_dir());
   define('SESSION_FORCE_COOKIE_USE', 'True');
   define('CHECK_CLIENT_AGENT', 'False');

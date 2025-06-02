@@ -54,7 +54,7 @@ $file_contents =
 '  defined(\'ENABLE_SSL\') OR define(\'ENABLE_SSL\', ' . $use_ssl . '); // secure webserver for checkout procedure?' . PHP_EOL .
 '' . PHP_EOL .
 '  // session handling' . PHP_EOL .
-'  defined(\'STORE_SESSIONS\') OR define(\'STORE_SESSIONS\', \'' . (($session == 'files') ? '' : 'mysql') . '\'); // leave empty \'\' for default handler or set to \'mysql\'' . PHP_EOL .                     
+'  defined(\'STORE_SESSIONS\') OR define(\'STORE_SESSIONS\', \'' . (($session == 'user') ? 'mysql' : $session) . '\'); // set to \'files\' for default php handler or set to custom handler like \'mysql\'' . PHP_EOL .                     
 '' . PHP_EOL .
 '  // timezone' . PHP_EOL .
 '  defined(\'DEFAULT_TIMEZONE\') OR define(\'DEFAULT_TIMEZONE\', \'Europe/Berlin\');' . PHP_EOL .                     

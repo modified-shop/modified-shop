@@ -52,7 +52,7 @@
   defined('ENABLE_SSL') OR define('ENABLE_SSL', false); // secure webserver for checkout procedure?
 
   // session handling
-  defined('STORE_SESSIONS') OR define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
+  defined('STORE_SESSIONS') OR define('STORE_SESSIONS', 'mysql'); // set to 'files' for default php handler or set to custom handler like 'mysql'
 
   // timezone
   defined('DEFAULT_TIMEZONE') OR define('DEFAULT_TIMEZONE', 'Europe/Berlin');

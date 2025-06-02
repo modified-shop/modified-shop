@@ -39,7 +39,7 @@
 
       // check if the session folder is writeable
       if (WARN_SESSION_DIRECTORY_NOT_WRITEABLE == 'true') {
-        if (STORE_SESSIONS == '') {
+        if (STORE_SESSIONS == 'files') {
           if (!is_dir(xtc_session_save_path())) {
             $messageStack->add('output_warning', WARNING_SESSION_DIRECTORY_NON_EXISTENT);
           } elseif (!is_writeable(xtc_session_save_path())) {
