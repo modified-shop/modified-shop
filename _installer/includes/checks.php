@@ -19,7 +19,10 @@
   // check permissions
   require_once('includes/check_permissions.php');
   
-  if ($error === true) {
+  if ($error === true
+      && !in_array($_GET['action'], array('db_backup', 'readdb', 'db_restore', 'restoredb'))
+      )
+  {
     $smarty->assign('PERMISSION_ARRAY', $permission_array);
     $smarty->assign('REQUIREMENT_ARRAY', $requirement_array);
     
