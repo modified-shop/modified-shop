@@ -833,21 +833,27 @@ if (USE_WYSIWYG == 'true') {
   <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
   <!-- footer_eof //-->
   <br />
-  <?php require(DIR_WS_INCLUDES . 'javascript/jquery.entry_state.js.php'); ?>
-  <script>
-    $(document).ready(function () {
-      create_states($('select[name="manufacturers_country_id"]').val(), 'manufacturers_state');
-      create_states($('select[name="responsible_country_id"]').val(), 'responsible_state');
+  <?php 
+  if ($action == 'edit' || $action == 'new') {
+    require(DIR_WS_INCLUDES . 'javascript/jquery.entry_state.js.php'); 
+    ?>
+    <script>
+      $(document).ready(function () {
+        create_states($('select[name="manufacturers_country_id"]').val(), 'manufacturers_state');
+        create_states($('select[name="responsible_country_id"]').val(), 'responsible_state');
   
-      $('[name="manufacturers_country_id"]').on('change', function() {
-        create_states($(this).val(), 'manufacturers_state');
-      });
+        $('[name="manufacturers_country_id"]').on('change', function() {
+          create_states($(this).val(), 'manufacturers_state');
+        });
   
-      $('[name="responsible_country_id"]').on('change', function() {
-        create_states($(this).val(), 'responsible_state');
-      });
-    });  
-  </script>
+        $('[name="responsible_country_id"]').on('change', function() {
+          create_states($(this).val(), 'responsible_state');
+        });
+      });  
+    </script>
+    <?php
+  }
+  ?>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
