@@ -33,6 +33,9 @@ class paypalpui extends PayPalPaymentV2 {
   var $order_status_pending;
   var $order_status_success;
 
+  var $min_order = 5;
+  var $max_order = 2500;
+
   function __construct() {
     global $order;
 
@@ -58,8 +61,8 @@ class paypalpui extends PayPalPaymentV2 {
           && in_array($order->info['currency'], array('EUR'))
           && $_SESSION['customers_status']['customers_status_show_price_tax'] == 1
           && $order->content_type == 'physical'
-          && $order->info['total'] >= 5
-          && $order->info['total'] <= 2500
+          && $order->info['total'] >= $this->min_order
+          && $order->info['total'] <= $this->max_order
           )
       {
         $this->enabled = true;
@@ -175,7 +178,15 @@ class paypalpui extends PayPalPaymentV2 {
 
 
   function process_button() {
-    global $order;
+    global $order, $messageStack;
+
+    if ($order->info['total'] < $this->min_order
+        || $order->info['total'] > $this->max_order
+        )
+    {
+      $messageStack->add_session('paypalpui', MODULE_PAYMENT_PAYPALPUI_MIN_MAX_AMOUNT);
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    }
 
     $_SESSION['paypal'] = array(
       'cartID' => $_SESSION['cart']->cartID,
