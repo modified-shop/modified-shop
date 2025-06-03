@@ -36,7 +36,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALPUI_PAYMENT_SOURCE_CANNOT_BE_USED' => 'Die gew&auml;hlte Zahlungsart kann nicht genutzt werden. Diese Entscheidung basiert auf einem automatisierten Datenverarbeitungsverfahren. Weitere Informationen finden Sie in der <a target="_blank" href="https://www.ratepay.com/legal-payment-dataprivacy">Ratepay-Datenschutzerkl&auml;rung</a> oder Sie k&ouml;nnen Ratepay &uuml;ber dieses <a target="_blank" href="https://www.ratepay.com/kontakt">Kontaktformular</a> kontaktieren.',
   'MODULE_PAYMENT_PAYPALPUI_BILLING_ADDRESS_INVALID' => 'Ihre Rechnungsadresse konnte nicht validiert werden.',
   'MODULE_PAYMENT_PAYPALPUI_SHIPPING_ADDRESS_INVALID' => 'Ihre Versandadresse konnte nicht validiert werden.',
-  'MODULE_PAYMENT_PAYPALPUI_MIN_MAX_AMOUNT' => 'Der Gesamtbetrag liegt unter dem minimum oder &uuml;ber dem maximum Betrag f&uuml;r diese Zahlart.',
+  'MODULE_PAYMENT_PAYPALPUI_MIN_MAX_AMOUNT' => 'Der Gesamtbetrag liegt unter dem Mindest- oder &uuml;ber dem H&ouml;chstbetrag f&uuml;r diese Zahlungsmethode.',
   
   'MALFORMED_REQUEST_JSON' => 'Die Kombination aus Ihrem Namen und Ihrer Adresse konnte nicht validiert werden. Bitte korrigieren Sie Ihre Daten und versuchen Sie es erneut. Weitere Informationen finden Sie in der <a target="_blank" href="https://www.ratepay.com/legal-payment-dataprivacy">Ratepay-Datenschutzerkl&auml;rung</a> oder Sie k&ouml;nnen Ratepay &uuml;ber dieses <a target="_blank" href="https://www.ratepay.com/kontakt">Kontaktformular</a> kontaktieren.',
 
