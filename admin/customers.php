@@ -559,8 +559,6 @@
                 'customers_email_address' => $customers_email_address,
                 'customers_telephone' => ((isset($customers_telephone)) ? $customers_telephone : ''),
                 'customers_fax' => ((isset($customers_fax)) ? $customers_fax : ''),
-                'customers_telephone' => $customers_telephone,
-                'customers_fax' => $customers_fax,
                 'payment_unallowed' => $payment_unallowed,
                 'shipping_unallowed' => $shipping_unallowed,
                 'customers_last_modified' => 'now()'
