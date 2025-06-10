@@ -109,7 +109,7 @@
                           <picture>
                             <source media="(max-width:420px)" srcset="{$PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}">
                             <source srcset="{$PRODUCTS_IMAGE}">
-                            <img data-original="{$PRODUCTS_IMAGE|replace:"info_":"popup_"}" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" itemprop="image" />
+                            <img data-original="{$PRODUCTS_IMAGE|replace:"info_":"popup_"}" src="{$PRODUCTS_IMAGE|replace:"info_":"mini_"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" itemprop="image" />
                           </picture>
                         </div>
                         {if isset($more_images) && count($more_images) > 0}
@@ -118,7 +118,7 @@
                               <picture>
                                 <source media="(max-width:420px)" data-srcset="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}">
                                 <source data-srcset="{$more_images_data.PRODUCTS_IMAGE}">
-                                <img class="lazyload" data-original="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"popup_"}" data-src="{$more_images_data.PRODUCTS_IMAGE}" alt="{if isset($more_images_data.IMAGE_ALT) && $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if isset($more_images_data.IMAGE_TITLE) && $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" />
+                                <img class="lazyload" data-original="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"popup_"}" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"mini_"}" alt="{if isset($more_images_data.IMAGE_ALT) && $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if isset($more_images_data.IMAGE_TITLE) && $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" />
                               </picture>
                             </div>
                           {/foreach}
