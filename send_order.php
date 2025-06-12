@@ -182,7 +182,8 @@ if ((isset($_SESSION['customer_id'])
                  '',
                  $order_subject,
                  $html_mail,
-                 $txt_mail
+                 $txt_mail,
+                 4
                  );
   }
   
@@ -199,7 +200,8 @@ if ((isset($_SESSION['customer_id'])
                  '',
                  $order_subject,
                  $html_mail,
-                 $txt_mail
+                 $txt_mail,
+                 2
                  );
                  
     if (isset($sepa_html_mail)) {
@@ -214,7 +216,8 @@ if ((isset($_SESSION['customer_id'])
                    '',
                    $order_subject,
                    $sepa_html_mail,
-                   $sepa_txt_mail
+                   $sepa_txt_mail,
+                   2
                  );
     }
   }

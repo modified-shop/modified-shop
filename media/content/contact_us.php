@@ -166,7 +166,8 @@
                    '',
                    CONTACT_US_EMAIL_SUBJECT,
                    $html_mail,
-                   $txt_mail
+                   $txt_mail,
+                   4
                    );
 
       xtc_redirect(xtc_href_link(FILENAME_CONTENT, 'action=success&coID='.(int) $_GET['coID']));

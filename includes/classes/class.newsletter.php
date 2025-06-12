@@ -386,7 +386,8 @@ class newsletter {
                    NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_NAME : '',
                    TEXT_EMAIL_SUBJECT,
                    $html_mail,
-                   $txt_mail
+                   $txt_mail,
+                   2
                    );
     }
   }

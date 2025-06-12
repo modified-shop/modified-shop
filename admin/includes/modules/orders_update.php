@@ -90,7 +90,8 @@
                    '',
                    $order_subject,
                    $html_mail,
-                   $txt_mail
+                   $txt_mail,
+                   3
                    );
                  
       //send copy to admin
@@ -106,7 +107,8 @@
                      '',
                      $order_subject,
                      $html_mail,
-                     $txt_mail
+                     $txt_mail,
+                     4
                      );
       }
 

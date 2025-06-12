@@ -25,7 +25,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
                       $reply_address, $reply_address_name,
                       $path_to_attachments, $path_to_more_attachments,
                       $email_subject, $message_body_html, $message_body_plain,
-                      $priority = null
+                      $send_priority = 5, $mail_priority = null
                      )
 {
   global $order, $main;
@@ -160,7 +160,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $mail->Debugoutput = new LoggingManager(DIR_FS_LOG.'mod_mailer_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'mailer', 'debug');
   $mail->UseSendmailOptions = ((defined('USE_SENDMAIL_OPTIONS') && USE_SENDMAIL_OPTIONS != 'true') ? false : true);
   $mail->CharSet = $lang_data['language_charset'];
-  $mail->Priority = $priority;
+  $mail->Priority = $mail_priority;
   $mail->WordWrap = (int)EMAIL_WORD_WRAP;
   
   if (EMAIL_TRANSPORT == 'smtp') {
@@ -259,13 +259,16 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $mail->Body = str_replace(chr(0), '', $mail->Body);
   $mail->AltBody = str_replace(chr(0), '', $mail->AltBody);
   $mail->setWordWrap();
-
+  
+  $sendmail = true;
   require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/php_mail/','php') as $file) require ($file);
-
-  if (!$mail->Send()) {
-    trigger_error('Mailer Error - '.$mail->ErrorInfo, E_USER_WARNING);
-    return false;
+  
+  if ($sendmail === true) {
+    if (!$mail->Send()) {
+      trigger_error('Mailer Error - '.$mail->ErrorInfo, E_USER_WARNING);
+      return false;
+    }
   }
   return true;
 }

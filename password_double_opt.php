@@ -112,7 +112,9 @@ if (isset($_GET['action'])
                    '', 
                    TEXT_EMAIL_PASSWORD_FORGOTTEN, 
                    $html_mail, 
-                   $txt_mail);
+                   $txt_mail,
+                   1
+                   );
     }
   } else {
     $case = 'code_error';

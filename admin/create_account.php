@@ -337,7 +337,9 @@
                      '',
                      EMAIL_SUPPORT_SUBJECT,
                      $html_mail,
-                     $txt_mail);
+                     $txt_mail,
+                     1
+                     );
       }
       xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, 'cID='.$cc_id, 'SSL'));
     }
