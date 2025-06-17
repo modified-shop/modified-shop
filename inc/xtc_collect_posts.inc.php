@@ -159,33 +159,36 @@
           xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
         }
         
+        $messageStack->add_session('coupon_message', REDEEMED_COUPON, 'success');
+        
         if ($gv_result['coupon_type'] == 'S') {
-          $coupon_amount = TEXT_COUPON_HELP_FREESHIP;
+          $messageStack->add_session('coupon_message', TEXT_COUPON_HELP_FREESHIP, 'success');
         } else {
-          $coupon_amount = sprintf(TEXT_COUPON_HELP_FIXED, $xtPrice->xtcFormat($gv_result['coupon_amount'], true, 0, true));
+          $messageStack->add_session('coupon_message', sprintf(TEXT_COUPON_HELP_FIXED, $xtPrice->xtcFormat($gv_result['coupon_amount'], true, 0, true)), 'success');
         }
         if ($gv_result['coupon_type'] == 'P') {
-          $coupon_amount = sprintf(TEXT_COUPON_HELP_FIXED, round($gv_result['coupon_amount'],0)) . '%';
+          $messageStack->add_session('coupon_message', sprintf(TEXT_COUPON_HELP_FIXED, round($gv_result['coupon_amount'],0)) . '%', 'success');
         }
         if ($gv_result['coupon_minimum_order'] > 0) {          
-          $coupon_amount .= sprintf(TEXT_COUPON_HELP_MINORDER, $xtPrice->xtcFormat($gv_result['coupon_minimum_order'], true, 0, true));
+          $messageStack->add_session('coupon_message', sprintf(TEXT_COUPON_HELP_MINORDER, $xtPrice->xtcFormat($gv_result['coupon_minimum_order'], true, 0, true)), 'success');
         }
+        if ($gv_result['coupon_specials'] == 0) {
+          $messageStack->add_session('coupon_message', TEXT_COUPON_HELP_SPECIALS, 'success');
+        }        
         if ($gv_result['restrict_to_products'] != '') {
-          $coupon_amount .= '<br /><br />'.TEXT_COUPON_PRODUCTS_RESTRICT;
+          $messageStack->add_session('coupon_message', TEXT_COUPON_PRODUCTS_RESTRICT, 'success');
         }
         if ($gv_result['restrict_to_categories'] != '') {
-          $coupon_amount .= '<br /><br />'.TEXT_COUPON_CATEGORIES_RESTRICT;
+          $messageStack->add_session('coupon_message', TEXT_COUPON_CATEGORIES_RESTRICT, 'success');
         }
         if ($gv_result['restrict_to_manufacturers'] != '') {
-          $coupon_amount .= '<br /><br />'.TEXT_COUPON_MANUFACTURERS_RESTRICT;
+          $messageStack->add_session('coupon_message', TEXT_COUPON_MANUFACTURERS_RESTRICT, 'success');
         }
         
         $_SESSION['cc_amount_min_order'] = $coupon_minimum_order;
-        $_SESSION['cc_amount_info'] = $coupon_amount;
         $_SESSION['cc_id'] = $gv_result['coupon_id'];
         $_SESSION['cc_post'] = true;
         
-        $messageStack->add_session('coupon_message', (($gv_result['coupon_specials'] == 0) ? REDEEMED_COUPON_NO_SPECIALS : REDEEMED_COUPON), 'success');
         xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
       }
     }
