@@ -43,43 +43,43 @@ $coupon_query = xtc_db_query("SELECT *
 if (xtc_db_num_rows($coupon_query) > 0) {
   $coupon = xtc_db_fetch_array($coupon_query);
 
-  $text_coupon_help .= sprintf(TEXT_COUPON_HELP_NAME, $coupon['coupon_name']);
+  $text_coupon_help .= '<br /><br />'.sprintf(TEXT_COUPON_HELP_NAME, $coupon['coupon_name']);
   if (xtc_not_null($coupon['coupon_description'])) {
-    $text_coupon_help .= sprintf(TEXT_COUPON_HELP_DESC, $coupon['coupon_description']);
+    $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_DESC, $coupon['coupon_description']);
   }
 
   if ($coupon['coupon_specials'] == 0) {
-    $text_coupon_help .= TEXT_COUPON_HELP_SPECIALS;
+    $text_coupon_help .= '<br />'.TEXT_COUPON_HELP_SPECIALS;
   }
 
   switch ($coupon['coupon_type']) {
     case 'F' :
-      $text_coupon_help .= sprintf(TEXT_COUPON_HELP_FIXED, $xtPrice->xtcFormat($coupon['coupon_amount'], true));
+      $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_FIXED, $xtPrice->xtcFormat($coupon['coupon_amount'], true));
       break;
     case 'P' :
-      $text_coupon_help .= sprintf(TEXT_COUPON_HELP_FIXED, number_format($coupon['coupon_amount'], 2).'%');
+      $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_FIXED, number_format($coupon['coupon_amount'], 2).'%');
       break;
     case 'S' :
-      $text_coupon_help .= TEXT_COUPON_HELP_FREESHIP;
+      $text_coupon_help .= '<br />'.TEXT_COUPON_HELP_FREESHIP;
       break;
     default :
       break;
   }
 
   if ($coupon['coupon_minimum_order'] > 0) {
-    $text_coupon_help .= sprintf(TEXT_COUPON_HELP_MINORDER, $xtPrice->xtcFormat($coupon['coupon_minimum_order'], true));
+    $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_MINORDER, $xtPrice->xtcFormat($coupon['coupon_minimum_order'], true));
   }
-  $text_coupon_help .= sprintf(TEXT_COUPON_HELP_DATE, xtc_date_short($coupon['coupon_start_date']), xtc_date_short($coupon['coupon_expire_date']));
+  $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_DATE, xtc_date_short($coupon['coupon_start_date']), xtc_date_short($coupon['coupon_expire_date']));
 
   $coupon['restrict_to_products'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_products']);
   $coupon['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_categories']);
   $coupon['restrict_to_manufacturers'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_manufacturers']);
 
   if (trim($coupon['restrict_to_categories']) || trim($coupon['restrict_to_products']) || trim($coupon['restrict_to_manufacturers'])) {
-    $text_coupon_help .= '<strong>'.TEXT_COUPON_HELP_RESTRICT.'</strong>';
+    //$text_coupon_help .= '<br /><br /><strong>'.TEXT_COUPON_HELP_RESTRICT.'</strong>';
 
     if (trim($coupon['restrict_to_categories'])) {
-      $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_CATEGORIES;
+      $text_coupon_help .= '<br /><br /><strong>'.TEXT_COUPON_HELP_CATEGORIES.'</strong>';
 
       $cat_ids = explode(",", $coupon['restrict_to_categories']);
       $cat_ids = array_unique($cat_ids);
@@ -98,7 +98,7 @@ if (xtc_db_num_rows($coupon_query) > 0) {
     }
 
     if (trim($coupon['restrict_to_products'])) {
-      $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_PRODUCTS;
+      $text_coupon_help .= '<br /><br /><strong>'.TEXT_COUPON_HELP_PRODUCTS.'</strong>';
 
       $pr_ids = explode(",", $coupon['restrict_to_products']);
       $pr_ids = array_unique($pr_ids);
@@ -117,7 +117,7 @@ if (xtc_db_num_rows($coupon_query) > 0) {
     }
 
     if (trim($coupon['restrict_to_manufacturers'])) {
-      $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_MANUFACTURERS;
+      $text_coupon_help .= '<br /><br /><strong>'.TEXT_COUPON_HELP_MANUFACTURERS.'</strong>';
 
       $manu_ids = explode(",", $coupon['restrict_to_manufacturers']);
       $manu_ids = array_unique($manu_ids);
