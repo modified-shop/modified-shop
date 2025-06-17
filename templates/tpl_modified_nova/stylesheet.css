@@ -4571,6 +4571,12 @@ a.view_box.active {
   font-size:13px;
   line-height:17px;
 }
+.giftbox .successmessage p {
+  margin: 0 0 5px 0;
+}
+.giftbox .successmessage p:last-child {
+  margin: 0 0 0 0;
+}
 .giftbox a.arrow {
   display:inline-block;
   margin: 5px 0 0 0;
@@ -7189,6 +7195,12 @@ table.paymentinfotable.paypalpluslink span.cssButton {
 .checkout_confirmation_gift .successmessage,
 .checkout_confirmation_gift .errormessage {
   margin: 10px 0 10px 0;
+}
+.checkout_confirmation_gift .successmessage .successmessage p {
+  margin: 0 0 5px 0;
+}
+.checkout_confirmation_gift .successmessage .successmessage p:last-child {
+  margin: 0 0 0 0;
 }
 .checkout_confirmation_gift .ordertotal_row {
   background: #f5f5f5;
