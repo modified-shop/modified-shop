@@ -804,25 +804,29 @@ class xtcPrice {
   function xtcFormatSpecialDiscount($pID, $discount, $pPrice, $format, $vpeStatus, $qty = 1) {
     $sPrice = $this->xtcFormat($pPrice - ($pPrice / 100) * $discount, false) * $qty;
     if ($format) {
-      $old_price = $this->xtcFormat($pPrice * $qty, $format);
-      $special_price = $this->xtcFormat($sPrice, $format);
-      $save_percent = round(($pPrice * $qty - $sPrice) / $pPrice * 100 / $qty);
-      $save_diff = $this->xtcFormat($pPrice * $qty - $sPrice, $format);
-      $from = $this->checkAttributes($pID);
-      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff;
-      if ($discount != 0) {
-        // customer group discount
-        $price .= '<br />' . BOX_LOGINBOX_DISCOUNT . ': ' . round($discount) . ' %';
-      }
-      $price .= '</small>';
-      
-      $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
-      if ($this->cStatus['customers_status_show_price_tax'] == '0') {
-        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, $products_tax, false));
-        $Nprice = $special_price;
+      if ($sPrice < $pPrice) {
+        $old_price = $this->xtcFormat($pPrice * $qty, $format);
+        $special_price = $this->xtcFormat($sPrice, $format);
+        $save_percent = round(($pPrice * $qty - $sPrice) / $pPrice * 100 / $qty);
+        $save_diff = $this->xtcFormat($pPrice * $qty - $sPrice, $format);
+        $from = $this->checkAttributes($pID);
+        $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff;
+        if ($discount != 0) {
+          // customer group discount
+          $price .= '<br />' . BOX_LOGINBOX_DISCOUNT . ': ' . round($discount) . ' %';
+        }
+        $price .= '</small>';
+        
+        $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
+        if ($this->cStatus['customers_status_show_price_tax'] == '0') {
+          $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, $products_tax, false));
+          $Nprice = $special_price;
+        } else {
+          $Bprice = $special_price;
+          $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, $products_tax));
+        }
       } else {
-        $Bprice = $special_price;
-        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, $products_tax));
+        return $this->xtcFormat($sPrice, $format, 0, false, $vpeStatus, $pID);
       }
 
       if ($vpeStatus == 0) {
@@ -861,26 +865,30 @@ class xtcPrice {
   function xtcFormatSpecial($pID, $sPrice, $pPrice, $format, $vpeStatus) {
     $pPrice = $this->xtcSpecialProductPrice($pID, $pPrice, true);
     
-    if ($format) {      
-      if (!isset($pPrice) || $pPrice == 0) {
-        $discount = 0;
+    if ($format) {
+      if ($sPrice < $pPrice) {
+        if ($pPrice == 0) {
+          $discount = 0;
+        } else {
+          $discount = ($pPrice - $sPrice) / $pPrice * 100;
+        }
+        $old_price = $this->xtcFormat($pPrice, $format);
+        $special_price = $this->xtcFormat($sPrice, $format);
+        $save_percent = round($discount);
+        $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
+        $from = $this->checkAttributes($pID);
+        $price = '<span class="productOldPrice"><small>' . INSTEAD . $from . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
+  
+        $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
+        if ($this->cStatus['customers_status_show_price_tax'] == '0') {
+          $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, $products_tax, false));
+          $Nprice = $special_price;
+        } else {
+          $Bprice = $special_price;
+          $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, $products_tax));
+        }
       } else {
-        $discount = ($pPrice - $sPrice) / $pPrice * 100;
-      }
-      $old_price = $this->xtcFormat($pPrice, $format);
-      $special_price = $this->xtcFormat($sPrice, $format);
-      $save_percent = round($discount);
-      $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
-      $from = $this->checkAttributes($pID);
-      $price = '<span class="productOldPrice"><small>' . INSTEAD . $from . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
-
-      $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
-      if ($this->cStatus['customers_status_show_price_tax'] == '0') {
-        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, $products_tax, false));
-        $Nprice = $special_price;
-      } else {
-        $Bprice = $special_price;
-        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, $products_tax));
+        return $this->xtcFormat($sPrice, $format, 0, false, $vpeStatus, $pID);
       }
 
       if ($vpeStatus == 0) {
@@ -954,7 +962,7 @@ class xtcPrice {
         $old_price = $this->xtcFormat($old_price_plain, true);
         $special_price = $this->xtcFormat($sPrice, $format);
         $price = FROM . $old_price . ' <br /><small>' . UNIT_PRICE . $special_price . '</small>';
-      } elseif ($sPrice != $pPrice) {
+      } elseif ($sPrice < $pPrice) {
         $old_price_plain = $this->xtcFormat($pPrice, false);
         $old_price = $this->xtcFormat($old_price_plain, true);
         $special_price = $this->xtcFormat($sPrice, $format);
