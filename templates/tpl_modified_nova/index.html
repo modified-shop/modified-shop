@@ -364,7 +364,7 @@
       </div>
 
       <div class="mod_copyright">
-        {if $smarty.const.MODULE_SMALL_BUSINESS != 'true'}{#footer_price_hinweis_1#} {if $smarty.session.customers_status.customers_status_show_price_tax == 1}{#footer_price_hinweis_incl#}{else}{#footer_price_hinweis_excl#}{/if} {#footer_price_hinweis_2#} <a class="iframe" title="Information" href="{'popup_content.php'|xtc_href_link:'coID=1'}" target="_blank" rel="nofollow">{#footer_price_hinweis_3#}</a>. {/if}{#footer_price_hinweis_4#} {$smarty.const.TITLE}.<br />
+        {if $smarty.const.MODULE_SMALL_BUSINESS != 'true'}{#footer_price_hinweis_1#} {if $tax_status == 1}{#footer_price_hinweis_incl#}{else}{#footer_price_hinweis_excl#}{/if} {#footer_price_hinweis_2#} <a class="iframe" title="Information" href="{'popup_content.php'|xtc_href_link:'coID=1'}" target="_blank" rel="nofollow">{#footer_price_hinweis_3#}</a>. {/if}{#footer_price_hinweis_4#} {$smarty.const.TITLE}.<br />
         {$smarty.const.TITLE} &copy; {$smarty.now|date_format:"Y"} | Template &copy; 2009-{$smarty.now|date_format:"Y"} by modified eCommerce Shopsoftware
       </div>
 
