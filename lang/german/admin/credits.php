@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: credits.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -18,7 +18,9 @@
 
 define('HEADING_TITLE', 'Credits');
 define('HEADING_SUBTITLE', 'Danksagung');
+define('TEXT_SHOP_VERSION','Shop Version:');
 define('TEXT_DB_VERSION','Datenbank Version:');
+define('TEXT_HISTORY','Update Verlauf:');
 define('TEXT_HEADING_GPL', 'Ver&ouml;ffentlicht unter der GNU General Public License (Version 2)');
 
 define('TEXT_INFO_GPL', 'Die Ver&ouml;ffentlichung dieses Programms erfolgt in der Hoffnung, dass es Ihnen von Nutzen sein wird, aber <strong>OHNE JEDE GEW&Auml;HRLEISTUNG</strong><br /> - sogar ohne die implizite Gew&auml;hrleistung der <strong>MARKTREIFE</strong> oder der <strong>EIGNUNG F&Uuml;R EINEN BESTIMMTEN ZWECK</strong>.<br /> Details finden Sie in der GNU General Public License.<br /><br /> Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben.<br />Falls nicht, schreiben Sie an die Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.<br />Einzelheiten (in Englisch) hier: <a rel="nofollow noopener" style="font-size: 12px; text-decoration: underline;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">http://www.gnu.org/licenses/gpl-2.0.html</a>.');
@@ -34,4 +36,3 @@ define('TEXT_INFO_DISCLAIMER', 'Dieses Programm wurde ver&ouml;ffentlicht, in de
 define('TEXT_INFO_DONATIONS', 'Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.');
 define('TEXT_INFO_DONATIONS_IMG_ALT', 'Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
 define('BUTTON_DONATE', '<a rel="nofollow noopener" href="https://www.modified-shop.org/spenden"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0"></a>');
-?>

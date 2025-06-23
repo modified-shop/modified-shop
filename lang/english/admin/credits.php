@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: credits.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -18,7 +18,9 @@
 
 define('HEADING_TITLE', 'Credits');
 define('HEADING_SUBTITLE', 'Acknowledgements');
+define('TEXT_SHOP_VERSION','Shop version:');
 define('TEXT_DB_VERSION','Database version:');
+define('TEXT_HISTORY','Update History:');
 define('TEXT_HEADING_GPL', 'Released under the GNU General Public License (Version 2)');
 
 define('TEXT_INFO_GPL', 'This program is distributed in the hope that it will be useful, but <strong>WITHOUT ANY WARRANTY</strong>;<br />without even the implied warranty of <strong>MERCHANTABILITY</strong> or <strong>FITNESS FOR A PARTICULAR PURPOSE</strong>.<br />See the GNU General Public License for more details.<br /><br /> You should have received a copy of the<br />GNU General Public License along with this program; if not, write to the<br />Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.<br />See <a rel="nofollow noopener" style="font-size: 12px; text-decoration: underline;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">http://www.gnu.org/licenses/gpl-2.0.html</a> for details. ');
@@ -34,4 +36,3 @@ define('TEXT_INFO_DISCLAIMER', 'This program is distributed in the hope that it 
 define('TEXT_INFO_DONATIONS', 'The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by donating to the project.');
 define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
 define('BUTTON_DONATE', '<a rel="nofollow noopener" href="https://www.modified-shop.org/spenden"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0"></a>');
-?>
