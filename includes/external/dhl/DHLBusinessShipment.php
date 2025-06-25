@@ -269,7 +269,7 @@
       
       // international
       if (in_array($this->data['product_code'], array('53', '66'))) {
-        $this->notification = true;
+        $this->notification = 1;
         if ($this->premium > 0) {
           $Service->Premium['active'] = '1';
         }
@@ -334,7 +334,7 @@
       if ($this->parcel_outlet > 0) {
         $Service->ParcelOutletRouting['active'] = '1';
         $Service->ParcelOutletRouting['details'] = $customers_data['email_address'];
-        if ($this->notification !== true) {
+        if ($this->notification < 1) {
           $Service->ParcelOutletRouting['details'] = $this->info['email_address'];
         }
       }
@@ -532,7 +532,7 @@
       
       $Communication = new stdClass();
       $Communication->phone = $data['telephone'];
-      if ($this->notification === true && $type != 'sender') {
+      if ($this->notification == 1 && $type != 'sender') {
         $Communication->email = $data['email_address'];
       }
       
@@ -587,7 +587,7 @@
             if (isset($Name->name3)) {
               $shipping_details->Address->name3 = $Name->name3;
             }
-            if ($this->notification === true) {
+            if ($this->notification == 1) {
               $shipping_details->Communication = $Communication;
             }
           }
