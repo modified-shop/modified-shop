@@ -18,12 +18,14 @@
   define('BACKUP_ROWS', 5000);
   define('BACKUP_ROWS_MAX', 50000);
   define('BACKUP_ROWS_STEP', 1000);
+  define('BACKUP_ROWS_MIN', 10);
   define('BACKUP_GAP', 3);
   
   define('RESTORE_ROWS', 5000);
   define('RESTORE_ROWS_MAX', 50000);
   define('RESTORE_ROWS_STEP', 500);
-  define('RESTORE_GAP', 2);
+  define('RESTORE_ROWS_MIN', 10);
+  define('RESTORE_GAP', 3);
 
   if (isset($_SESSION['dump'])) {
     $dump = $_SESSION['dump'];
@@ -198,10 +200,10 @@
         }
         
         $time_gap = time() - $dump['time_gap']; 
-        if ($time_gap > BACKUP_GAP && $dump['anzahl_zeilen'] > 10) {
+        if ($time_gap > BACKUP_GAP && $dump['anzahl_zeilen'] > BACKUP_ROWS_MIN) {
           $dump['anzahl_zeilen'] -= BACKUP_ROWS_STEP;
-          if ($dump['anzahl_zeilen'] < 10) {
-            $dump['anzahl_zeilen'] = 10;
+          if ($dump['anzahl_zeilen'] < BACKUP_ROWS_MIN) {
+            $dump['anzahl_zeilen'] = BACKUP_ROWS_MIN;
           }
         } elseif ($time_gap < BACKUP_GAP) {
           $dump['anzahl_zeilen'] += BACKUP_ROWS_STEP;
@@ -358,10 +360,10 @@
       $restore['aufruf']++;
 
       $time_gap = time() - $restore['time_gap']; 
-      if ($time_gap > RESTORE_GAP && $restore['anzahl_zeilen'] > 10) {
+      if ($time_gap > RESTORE_GAP && $restore['anzahl_zeilen'] > RESTORE_ROWS_MIN) {
         $restore['anzahl_zeilen'] -= RESTORE_ROWS_STEP;
-        if ($restore['anzahl_zeilen'] < 10) {
-          $restore['anzahl_zeilen'] = 10;
+        if ($restore['anzahl_zeilen'] < RESTORE_ROWS_MIN) {
+          $restore['anzahl_zeilen'] = RESTORE_ROWS_MIN;
         }
       } elseif ($time_gap < RESTORE_GAP) {
         $restore['anzahl_zeilen'] += RESTORE_ROWS_STEP;
