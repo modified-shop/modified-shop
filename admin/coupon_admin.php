@@ -277,6 +277,29 @@ require (DIR_WS_INCLUDES.'head.php');
                   $contents[] = array('text' => '<b>' . TEXT_REDEMPTIONS . '</b>');
                   $contents[] = array('text' => TEXT_REDEMPTIONS_TOTAL . ' ' . $cc_query_numrows);
                   $contents[] = array('text' => TEXT_REDEMPTIONS_CUSTOMER . ' ' . $total);
+                  
+                  // select orders 
+                  $orders_list = '';
+                  $orders = array();
+                  while ($row = xtc_db_fetch_array($count_customers)) {
+                    $orders[] = $row['order_id'];
+                  }
+                  $last_id = '';
+                  if (!empty($orders)) {
+                    $products_query = xtc_db_query("SELECT orders_id, products_name, products_quantity, final_price FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id IN (".implode(',', $orders).") ORDER BY orders_id DESC, orders_products_id");
+                    while ($row = xtc_db_fetch_array($products_query)) {
+                      if ($row['orders_id'] != $last_id) {
+                        if (!empty($last_id)) {
+                          $orders_list .= '</ul><br />';
+                        }
+                        $orders_list .= xtc_date_short($cInfo->redeem_date).': <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$row['orders_id'].'&action=edit').'">'.$row['orders_id'].'</a><ul>';
+                        $last_id = $row['orders_id'];
+                      }
+                      $orders_list .= '<li>'.$row['products_quantity'].'x '.encode_htmlentities($row['products_name']).': '.$currencies->format($row['final_price']).'</li>';
+                    }
+                    $orders_list .= '</ul>';
+                    $contents[] = array('text' => $orders_list);
+                  }
                 }
           
                 if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
