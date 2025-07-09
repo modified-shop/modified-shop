@@ -239,7 +239,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         $cInfo = new objectInfo($cc_list);
                       }
                       if (isset($cInfo) && is_object($cInfo) && $cc_list['unique_id'] == $cInfo->unique_id) {
-                        $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action', 'uid')) . 'cID=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cinfo->unique_id) . '\'"';
+                        $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action', 'uid')) . 'cID=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cInfo->unique_id) . '\'"';
                       } else {
                         $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action', 'uid')) . 'cID=' . $cc_list['coupon_id'] . '&action=voucherreport&uid=' . $cc_list['unique_id']) . '\'"';
                       }
