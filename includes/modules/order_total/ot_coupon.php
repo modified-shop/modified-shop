@@ -51,7 +51,6 @@ class ot_coupon {
   var $_check;
 
   var $include_shipping;
-  var $include_tax;
   var $calculate_tax;
   var $tax_class;
   var $netto;
@@ -73,8 +72,7 @@ class ot_coupon {
     $this->sort_order = ((defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER')) ? MODULE_ORDER_TOTAL_COUPON_SORT_ORDER : '');
 
     if ($this->check() > 0) {
-      $this->include_shipping = 'false';
-      $this->include_tax = 'true';
+      $this->include_shipping = MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING;
       $this->calculate_tax = MODULE_ORDER_TOTAL_COUPON_CALC_TAX;
       $this->tax_class = MODULE_ORDER_TOTAL_COUPON_TAX_CLASS;
     }
@@ -139,7 +137,6 @@ class ot_coupon {
 
 
   function pre_confirmation_check($order_total) {
-    $this->netto = true;
     $order_total = $this->get_order_total();
     return $this->calculate_credit($order_total);
   }
@@ -502,6 +499,7 @@ class ot_coupon {
         )
     {
       $order_total = $_SESSION['cart']->total_netto;
+      $this->netto = true;
     }
     
     if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
@@ -540,12 +538,8 @@ class ot_coupon {
       }
     }
 
-    if ($this->include_shipping == 'true'
-        && isset($order->info['shipping_cost'])
-        && $order->info['shipping_cost'] > 0
-        )
-    {
-      $order_total += $order->info['shipping_cost'];
+    if ($this->include_shipping == 'true') {
+      $order_total += $this->get_shipping_cost();
     }
 
     return $order_total;
@@ -623,6 +617,7 @@ class ot_coupon {
     return array (
       'MODULE_ORDER_TOTAL_COUPON_STATUS',
       'MODULE_ORDER_TOTAL_COUPON_SORT_ORDER',
+      'MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING',
       'MODULE_ORDER_TOTAL_COUPON_CALC_TAX',
     );
   }
