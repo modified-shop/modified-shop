@@ -380,7 +380,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
 if (USE_WYSIWYG == 'true') {
   // generate editor for categories EDIT
   $languages = xtc_get_languages();
-  echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
+  echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/ckeditor/ckeditor.js"></script>' : '') . PHP_EOL;
   // generate editor for categories
   if ($action == 'new_category' || $action == 'edit_category') {
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
