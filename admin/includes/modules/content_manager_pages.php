@@ -471,7 +471,7 @@ if (!$action || $action == 'delete') {
         <script type="text/javascript" src="includes/lang_tabs_menu/lang_tabs_menu.js"></script>
         <?php
         if (USE_WYSIWYG=='true') {
-          echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
+          echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/ckeditor/ckeditor.js"></script>' : '') . PHP_EOL;
           for ($i=0; $i<$content_count; $i++) {
             for ($l=0; $l<$languages_count; $l++) {
               echo xtc_wysiwyg('content_manager', $_SESSION['language_code'], $content[$i][$languages[$l]['id']]['languages_id'], $i);

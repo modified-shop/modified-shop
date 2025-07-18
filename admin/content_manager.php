@@ -386,7 +386,7 @@
   require (DIR_WS_INCLUDES.'head.php');
 
   if (USE_WYSIWYG=='true') {
-    echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
+    echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/ckeditor/ckeditor.js"></script>' : '') . PHP_EOL;
     if ($set != '') {
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         echo xtc_wysiwyg('products_content', $_SESSION['language_code'], $languages[$i]['id']);

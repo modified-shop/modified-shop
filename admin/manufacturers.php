@@ -326,7 +326,7 @@ require (DIR_WS_INCLUDES.'head.php');
 // Include WYSIWYG if is activated
 if (USE_WYSIWYG == 'true') {
 	// generate editor 
-	echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
+	echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/ckeditor/ckeditor.js"></script>' : '') . PHP_EOL;
 	if ($action == 'edit' || $action == 'new') {
 	  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       echo xtc_wysiwyg('manufacturers_description', $_SESSION['language_code'], $languages[$i]['id']);
