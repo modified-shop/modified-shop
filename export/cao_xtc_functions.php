@@ -2360,7 +2360,20 @@ function OrderUpdate ()
       
       if ($check_status['orders_status'] != $status || $comments != '')
       {
-        xtc_db_query("update " . TABLE_ORDERS . " set orders_status = '" . xtc_db_input($status) . "', last_modified = now() where orders_id = '" . xtc_db_input($oID) . "'");
+        $sql_data_array = array(
+          'orders_status' => $status,
+          'last_modified' => 'now()',
+        );
+        if (defined('MODULE_INVOICE_NUMBER_STATUS') 
+            && MODULE_INVOICE_NUMBER_STATUS == 'True'
+            && $_POST['recordnum'] != ''
+            )
+        {
+          $sql_data_array['ibn_billnr'] = $_POST['recordnum'];
+          $sql_data_array['ibn_billdate'] = $_POST['recorddate'];
+        }
+        xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', "orders_id = '" . (int)$oID . "'");
+        
         $customer_notified = '0';
         if ($_POST['notify'] == 'on')
         {
