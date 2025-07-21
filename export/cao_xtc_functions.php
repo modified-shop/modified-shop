@@ -358,6 +358,7 @@ function SendOrders ()
                '<POSTCODE>' . encode_htmlspecialchars($orders['billing_postcode']) . '</POSTCODE>' . "\n" .
                '<CITY>' . encode_htmlspecialchars($orders['billing_city']) . '</CITY>' . "\n" .
                '<SUBURB>' . encode_htmlspecialchars($orders['billing_suburb']) . '</SUBURB>' . "\n" .
+               '<ADRESSADD>' . encode_htmlspecialchars($orders['billing_suburb']) . '</ADRESSADD>' . "\n" .
                '<STATE>' . encode_htmlspecialchars($orders['billing_state']) . '</STATE>' . "\n" .
                '<COUNTRY>' . encode_htmlspecialchars($orders['billing_country_iso_code_2']) . '</COUNTRY>' . "\n" .
                '<TELEPHONE>' . encode_htmlspecialchars($orders['customers_telephone']) . '</TELEPHONE>' . "\n" . // JAN
@@ -374,6 +375,7 @@ function SendOrders ()
                '<POSTCODE>' . encode_htmlspecialchars($orders['delivery_postcode']) . '</POSTCODE>' . "\n" .
                '<CITY>' . encode_htmlspecialchars($orders['delivery_city']) . '</CITY>' . "\n" .
                '<SUBURB>' . encode_htmlspecialchars($orders['delivery_suburb']) . '</SUBURB>' . "\n" .
+               '<ADRESSADD>' . encode_htmlspecialchars($orders['delivery_suburb']) . '</ADRESSADD>' . "\n" .
                '<STATE>' . encode_htmlspecialchars($orders['delivery_state']) . '</STATE>' . "\n" .
                '<COUNTRY>' . encode_htmlspecialchars($orders['delivery_country_iso_code_2']) . '</COUNTRY>' . "\n" .
                ((in_array($orders['countries_id'], $countries_array)) ? '<OTHER_TAX>1</OTHER_TAX>' . "\n" : '') . 
@@ -906,6 +908,7 @@ function SendCustomers ()
               '<POSTCODE>' . encode_htmlspecialchars($address['entry_postcode']) . '</POSTCODE>' . "\n" .
               '<CITY>' . encode_htmlspecialchars($address['entry_city']) . '</CITY>' . "\n" .
               '<SUBURB>' . encode_htmlspecialchars($address['entry_suburb']) . '</SUBURB>' . "\n" .
+              '<ADRESSADD>' . encode_htmlspecialchars($address['entry_suburb']) . '</ADRESSADD>' . "\n" .
               '<STATE>' . encode_htmlspecialchars($address['entry_state']) . '</STATE>' . "\n" .
               '<COUNTRY>' . encode_htmlspecialchars($address['countries_iso_code_2']) . '</COUNTRY>' . "\n" .
               '<TELEPHONE>' . encode_htmlspecialchars($address['customers_telephone']) . '</TELEPHONE>' . "\n" . // JAN
@@ -2360,7 +2363,20 @@ function OrderUpdate ()
       
       if ($check_status['orders_status'] != $status || $comments != '')
       {
-        xtc_db_query("update " . TABLE_ORDERS . " set orders_status = '" . xtc_db_input($status) . "', last_modified = now() where orders_id = '" . xtc_db_input($oID) . "'");
+        $sql_data_array = array(
+          'orders_status' => $status,
+          'last_modified' => 'now()',
+        );
+        if (defined('MODULE_INVOICE_NUMBER_STATUS') 
+            && MODULE_INVOICE_NUMBER_STATUS == 'True'
+            && $_POST['recordnum'] != ''
+            )
+        {
+          $sql_data_array['ibn_billnr'] = $_POST['recordnum'];
+          $sql_data_array['ibn_billdate'] = $_POST['recorddate'];
+        }
+        xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', "orders_id = '" . (int)$oID . "'");
+        
         $customer_notified = '0';
         if ($_POST['notify'] == 'on')
         {
@@ -2551,6 +2567,7 @@ function CustomersUpdate ()
   if (isset($_POST['customers_lastname'])) $sql_address_data_array['entry_lastname'] = $_POST['customers_lastname'];
   if (isset($_POST['customers_company'])) $sql_address_data_array['entry_company'] = $_POST['customers_company'];
   if (isset($_POST['customers_street'])) $sql_address_data_array['entry_street_address'] = $_POST['customers_street'];
+  if (isset($_POST['customers_adressadd'])) $sql_address_data_array['entry_suburb'] = $_POST['customers_adressadd'];
   if (isset($_POST['customers_city'])) $sql_address_data_array['entry_city'] = $_POST['customers_city'];
   if (isset($_POST['customers_postcode'])) $sql_address_data_array['entry_postcode'] = $_POST['customers_postcode'];
   if (isset($_POST['customers_gender'])) $sql_address_data_array['entry_gender'] = $_POST['customers_gender'];
