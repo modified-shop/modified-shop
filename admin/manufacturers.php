@@ -717,10 +717,10 @@ if (USE_WYSIWYG == 'true') {
                         $csort = 'manufacturers_name DESC';
                         break;
                       case 'status':
-                        $csort = 'sort_order ASC';
+                        $csort = 'manufacturers_status ASC';
                         break;
                       case 'status-desc':
-                        $csort = 'sort_order DESC';
+                        $csort = 'manufacturers_status DESC';
                         break;
                       default:
                         $csort = 'manufacturers_name ASC';
