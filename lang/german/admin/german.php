@@ -441,6 +441,7 @@ define('ENTRY_CUSTOMERS_VAT_ID', 'USt-IdNr.:');
 define('TEXT_VAT_FALSE','<span class="messageStackError">Gepr&uuml;ft/USt-IdNr. ist ung&uuml;ltig!</span>');
 define('TEXT_VAT_TRUE','<span class="messageStackSuccess">Gepr&uuml;ft/USt-IdNr. ist g&uuml;ltig</span>');
 define('TEXT_VAT_UNKNOWN_COUNTRY','<span class="messageStackError">Nicht gepr&uuml;ft/Land unbekannt!</span>');
+define('TEXT_VAT_MAX_CONCURRENT_REQ','<span class="messageStackError">Die maximale Anzahl gleichzeitiger Anfragen wurde erreicht!</span>');
 define('TEXT_VAT_INVALID_INPUT','<span class="messageStackError">Nicht gepr&uuml;ft/Der &uuml;bergebene L&auml;ndercode ist ung&uuml;ltig oder die USt-IdNr. ist leer!</span>');
 define('TEXT_VAT_SERVICE_UNAVAILABLE','<span class="messageStackError">Nicht gepr&uuml;ft/Der SOAP Service ist nicht erreichbar, versuchen Sie es sp&auml;ter noch einmal!</span>');
 define('TEXT_VAT_MS_UNAVAILABLE','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service des Mitgliedsstaats ist nicht erreichbar, versuchen Sie es sp&auml;ter noch einmal oder mit einem anderen Mitgliedsstaat!</span>');

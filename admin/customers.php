@@ -477,6 +477,9 @@
               case '8' :// 'unknown country'
                 $entry_vat_error_text = TEXT_VAT_UNKNOWN_COUNTRY;
                 break;
+              case '93' :// 'MS_MAX_CONCURRENT_REQ' => 'The maximum number of concurrent requests has been reached'
+                $entry_vat_error_text = TEXT_VAT_MAX_CONCURRENT_REQ;
+                break;
               case '94' :// 'INVALID_INPUT' => 'The provided CountryCode is invalid or the VAT number is empty'
                 $entry_vat_error_text = TEXT_VAT_INVALID_INPUT;
                 break;
