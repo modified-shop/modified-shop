@@ -155,11 +155,12 @@ class vat_validation {
     // 1 = 'valid'
     // 8 = 'unknown country'
     // 9 = 'unknown algorithm'
-    //94 = 'INVALID_INPUT'       => 'The provided CountryCode is invalid or the VAT number is empty',
-    //95 = 'SERVICE_UNAVAILABLE' => 'The SOAP service is unavailable, try again later',
-    //96 = 'MS_UNAVAILABLE'      => 'The Member State service is unavailable, try again later or with another Member State',
-    //97 = 'TIMEOUT'             => 'The Member State service could not be reached in time, try again later or with another Member State',
-    //98 = 'SERVER_BUSY'         => 'The service cannot process your request. Try again later.'
+    //93 = 'MS_MAX_CONCURRENT_REQ' => 'The maximum number of concurrent requests has been reached'
+    //94 = 'INVALID_INPUT'         => 'The provided CountryCode is invalid or the VAT number is empty'
+    //95 = 'SERVICE_UNAVAILABLE'   => 'The SOAP service is unavailable, try again later'
+    //96 = 'MS_UNAVAILABLE'        => 'The Member State service is unavailable, try again later or with another Member State'
+    //97 = 'TIMEOUT'               => 'The Member State service could not be reached in time, try again later or with another Member State'
+    //98 = 'SERVER_BUSY'           => 'The service cannot process your request. Try again later.'
     //99 = 'no PHP5 SOAP support'
     $results = array(
       0 => '0',
