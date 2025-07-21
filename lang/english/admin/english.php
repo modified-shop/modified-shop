@@ -442,6 +442,7 @@ define('ENTRY_CUSTOMERS_VAT_ID', 'Vat-ID:');
 define('TEXT_VAT_FALSE','<span class="messageStackError">Checked/VAT is invalid!</span>');
 define('TEXT_VAT_TRUE','<span class="messageStackSuccess">Checked/VAT is valid!</span>');
 define('TEXT_VAT_UNKNOWN_COUNTRY','<span class="messageStackError">Not Checked/Unknown country!</span>');
+define('TEXT_VAT_MAX_CONCURRENT_REQ','<span class="messageStackError">The maximum number of concurrent requests has been reached!</span>');
 define('TEXT_VAT_INVALID_INPUT','<span class="messageStackError">Not Checked/The provided CountryCode is invalid or the VAT number is empty!</span>');
 define('TEXT_VAT_SERVICE_UNAVAILABLE','<span class="messageStackError">Not Checked/The SOAP service is unavailable, try again later!</span>');
 define('TEXT_VAT_MS_UNAVAILABLE','<span class="messageStackError">Not Checked/The Member State service is unavailable, try again later or with another Member State!</span>');
