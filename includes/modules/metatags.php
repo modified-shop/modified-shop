@@ -165,7 +165,6 @@
   function metaTitle($Title = array()) {
     $Title = func_get_args();
     $Title = array_filter($Title, "metaClean");
-    $Title = array_unique($Title);
     return implode(' - ', $Title);
   }
 
