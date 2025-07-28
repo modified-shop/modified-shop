@@ -6,7 +6,7 @@
       {if $dl_data.download_link_plain}{$dl_data.download_link_plain}
       {else}{$dl_data.download_link}
       {/if}
-      {#table_heading_download_date#} {$dl_data.date}, {$dl_data.count} {#table_heading_download_count#}
+      {#table_heading_download_date#} {$dl_data.date}, {#table_heading_download_count#} {$dl_data.count}
     {/foreach}
   {/if}
 {/if}
