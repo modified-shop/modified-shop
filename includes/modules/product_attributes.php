@@ -91,6 +91,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
       $products_options_array = array ();
 
       $products_options_data[$row] = array (
+        'PRODUCTS_ID' => $product->data['products_id'],
         'NAME' => $products_options_name['products_options_name'],
         'ID' => $products_options_name['products_options_id'],
         'SORTORDER' => $products_options_name['products_options_sortorder'],
