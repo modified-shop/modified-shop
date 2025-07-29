@@ -32,6 +32,7 @@ if (!CacheCheck()) {
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_navigator.html', $cache_id) || !$cache) {  
   if (isset($current_category_id) && (int)$current_category_id > 0) {
+    $actual_key = 0;
     $sorting_data = array(
       'products_sorting' => '',
       'products_sorting2' => '',
