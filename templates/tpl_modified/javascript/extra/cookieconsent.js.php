@@ -51,7 +51,7 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_
       "label_nocookie_head": "<?php echo TEXT_COOKIE_CONSENT_LABEL_NOCOOKIE_HEAD; ?>",
       "label_nocookie_text": "<?php echo TEXT_COOKIE_CONSENT_LABEL_NOCOOKIE_TEXT; ?>",
       "label_third_party": " ",
-      "label_imprint_links": "<?php echo $lang_links; ?><a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=2"); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_PRIVACY; ?></a> <a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=4"); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_IMPRINT; ?></a>"
+      "label_imprint_links": "<?php echo $lang_links; ?><a rel='nofollow' href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=2"); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_PRIVACY; ?></a> <a rel='nofollow' href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=4"); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_IMPRINT; ?></a>"
     }
   }
 }
