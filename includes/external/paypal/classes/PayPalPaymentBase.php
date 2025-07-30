@@ -997,7 +997,7 @@ class PayPalPaymentBase extends PayPalCommon {
                                          FROM ".TABLE_SCHEDULED_TASKS."
                                         WHERE tasks = 'paypal_tracking'");
       if (xtc_db_num_rows($scheduled_query) < 1) {
-        xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'paypal_tracking')");
+        xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '1', 'paypal_tracking')");
       }
     }
     
@@ -1491,7 +1491,7 @@ class PayPalPaymentBase extends PayPalCommon {
                                      FROM ".TABLE_SCHEDULED_TASKS."
                                     WHERE tasks = 'paypal_tracking'");
       if (xtc_db_num_rows($check_query) < 1) {                      
-        xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'paypal_tracking')");
+        xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '1', 'paypal_tracking')");
       }
     }
     
