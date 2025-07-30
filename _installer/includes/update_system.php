@@ -232,6 +232,17 @@
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('15', 'm',  '".((MODULE_MAGNALISTER_STATUS == 'True') ? 1 : 0)."', 'magnalister')");
   }
 
+  if (defined('MODULE_PAYMENT_PAYPAL_SECRET')
+      && !in_array('paypal_tracking', $scheduled_tasks_array)
+      )
+  {
+    $check_query = xtc_db_query("SELECT * 
+                                   FROM ".TABLE_CONFIGURATION."
+                                  WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL%_STATUS' 
+                                    AND configuration_value = 'True'");
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '".((xtc_db_num_rows($check_query) > 0) ? 1 : 0)."', 'paypal_tracking')");
+  }
+
   // sitemap
   if (defined('MODULE_SITEMAPORG_STATUS')) {
     xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
