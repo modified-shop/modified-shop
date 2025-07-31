@@ -54,4 +54,3 @@
   }
   
   define('DIR_FS_LANGUAGES', DIR_FS_CATALOG.'lang/');
-?>

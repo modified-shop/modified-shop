@@ -93,6 +93,11 @@
   // define how the session functions will be used
   require_once (DIR_WS_FUNCTIONS.'sessions.php');
 
+  // set save path for installer
+  if (STORE_SESSIONS == 'files') {
+    xtc_session_save_path(SESSION_WRITE_DIRECTORY);
+  }
+
   // set the session name and save path
   // set the session cookie parameters
   // set the session ID if it exists
@@ -143,4 +148,3 @@
         break;
     }
   }
-?>

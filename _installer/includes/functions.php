@@ -623,6 +623,40 @@
   }
 
 
+  function get_session_handler() {
+    $session = ini_get('session.save_handler');
+    $check_query = xtc_db_query("SELECT * 
+                                   FROM ".TABLE_CONFIGURATION." 
+                                  WHERE configuration_key = 'STORE_SESSIONS_TMP'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      $check = xtc_db_fetch_array($check_query);
+      $session = $check['configuration_value'];
+    }
+    
+    return $session;
+  }
+  
+  
+  function delete_session_handler() {
+    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key = 'STORE_SESSIONS_TMP'");
+  }
+
+
+  function save_session_handler() {
+    $configure = file_get_contents(file_exists(DIR_FS_CATALOG.'/includes/local/configure.php') ? DIR_FS_CATALOG.'/includes/local/configure.php' : DIR_FS_CATALOG.'/includes/configure.php');
+    preg_match("/define\(\s*'STORE_SESSIONS'\s*,\s*'([^']*)'\s*\)/", $configure, $matches);
+    
+    delete_session_handler();
+    
+    $sql_data_array = array(
+      'configuration_key' => 'STORE_SESSIONS_TMP',
+      'configuration_value' => (($matches[1] != '') ? trim($matches[1]) : 'files'),
+      'date_added' => 'now()'
+    );
+    xtc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+  }
+
+
   function installer_log($messages) {
     error_log($messages."\n", 3, DIR_FS_LOG.'mod_installer_info_'.date('Y-m-d').'.log');
   }

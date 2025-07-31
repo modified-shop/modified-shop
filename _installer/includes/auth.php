@@ -79,25 +79,27 @@
     require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
     require_once (DIR_FS_INC.'db_functions.inc.php');
 
-  $check_db = false;
-  if (DB_SERVER_USERNAME != '') {
-    // make a connection to the database... now
-    $check_db = xtc_db_connect();
-    
-    if ($check_db !== false) {
-      $check_db = false;
+    $check_db = false;
+    if (DB_SERVER_USERNAME != '') {
+      // make a connection to the database... now
+      $check_db = xtc_db_connect();
       
-      $check_table = xtc_db_query("SHOW TABLES WHERE `Tables_in_".DB_DATABASE."` = '".TABLE_CUSTOMERS."'");
-      if (xtc_db_num_rows($check_table) > 0) {     
-        $check_query = xtc_db_query("SELECT *
-                                       FROM ".TABLE_CUSTOMERS);
-        if (xtc_db_num_rows($check_query) > 0) {
-          $check_db = true;
+      if ($check_db !== false) {
+        $check_db = false;
+        
+        $check_table = xtc_db_query("SHOW TABLES WHERE `Tables_in_".DB_DATABASE."` = '".TABLE_CUSTOMERS."'");
+        if (xtc_db_num_rows($check_table) > 0) {     
+          $check_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_CUSTOMERS);
+          if (xtc_db_num_rows($check_query) > 0) {
+            $check_db = true;
+            
+            // save session handler
+            save_session_handler();
+          }
         }
       }
     }
-  }
   
     return $check_db;
   } 
-?>

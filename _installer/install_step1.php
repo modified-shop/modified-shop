@@ -55,7 +55,10 @@
   $https_server = HTTPS_SERVER;
   $use_ssl = ((defined('ENABLE_SSL') && ENABLE_SSL == true) ? 'true' : 'false');
   $password_hmac = ((defined('PASSWORD_HMAC')) ? PASSWORD_HMAC : '');
-  $session = 'mysql';
+  $session = ini_get('session.save_handler');
+  if ($session == 'files') {
+    $session = 'mysql';
+  }
 
   $sql_file_array = array(
     DIR_FS_INSTALLER.'includes/sql/modified.sql',
