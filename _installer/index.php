@@ -15,6 +15,8 @@
 
   if ($upgrade === true) {
     if (isset($_GET['action']) && $_GET['action'] == 'shop') {
+      delete_session_handler();
+
       if (is_file(DIR_FS_CATALOG.'/includes/local/configure.php')) {
         is_make_nonwriteable(DIR_FS_CATALOG.'/includes/local/configure.php');
       }
