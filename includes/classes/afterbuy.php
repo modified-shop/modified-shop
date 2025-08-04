@@ -298,8 +298,9 @@ class xtc_afterbuy_functions {
         $anzahl += $pDATA['products_quantity'];
       }
 
-      $coupon = $gv = $discount = $cod_fee = $shipping = $ot_payment_fee = '0.0000';
+      $coupon = $gv = $discount = $cod_fee = $shipping = $ot_payment_fee = $ot_payment_discount = '0.0000';
       $ot_payment_flag = false;
+      $ot_payment_discount_flag = false;
       $cod_flag = false;
       $discount_flag = false;
       $gv_flag = false;
@@ -313,32 +314,37 @@ class xtc_afterbuy_functions {
       while ($order_total_values = xtc_db_fetch_array($order_total_query)) {
         // payment fee
         if ($order_total_values['class'] == 'ot_payment') {
-          $ot_payment_flag = true;
-          $ot_payment_fee = $order_total_values['value'];
+          if ($order_total_values['value'] > 0) {
+            $ot_payment_flag = true;
+            $ot_payment_fee += $order_total_values['value'];
+          } else {
+            $ot_payment_discount += $order_total_values['value'];
+            $ot_payment_discount_flag = true;         
+          }
         }
         // shippingcosts
         if ($order_total_values['class'] == 'ot_shipping') {
-          $shipping = $order_total_values['value'];
+          $shipping += $order_total_values['value'];
         }
         // nachnamegebuer
         if ($order_total_values['class'] == 'ot_cod_fee') {
           $cod_flag = true;
-          $cod_fee = $order_total_values['value'];
+          $cod_fee += $order_total_values['value'];
         }
         // rabatt
         if ($order_total_values['class'] == 'ot_discount') {
           $discount_flag = true;
-          $discount = $order_total_values['value'];
+          $discount += $order_total_values['value'];
         }
         // Gutschein
         if ($order_total_values['class'] == 'ot_gv') {
           $gv_flag = true;
-          $gv = ($order_total_values['value'] * (-1));
+          $gv += $order_total_values['value'];
         }
         // Coupon
         if ($order_total_values['class'] == 'ot_coupon') {
           $coupon_flag = true;
-          $coupon = ($order_total_values['value'] * (-1));
+          $coupon += $order_total_values['value'];
         }
       }
 
@@ -351,6 +357,18 @@ class xtc_afterbuy_functions {
         $cod_fee = $this->get_ot_total($customers_status_show_price_tax, $cod_tax, $cod_fee);
         $DATAstring .= "ArtikelEPreis_" . $nr . "=" . $cod_fee . "&";
         $DATAstring .= "ArtikelMwst_" . $nr . "=" . $cod_tax . "&";
+        $DATAstring .= "ArtikelMenge_" . $nr . "=1&";
+        $p_count++;
+      }
+      // Zahlart Rabatt
+      if ($ot_payment_discount_flag !== false) {
+        $nr++;
+        $ot_payment_discount_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS') ? xtc_get_tax_rate(MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS, $this->customer_country_id, $this->customer_zone_id) : 0;
+        $DATAstring .= "Artikelnr_" . $nr . "=99999998&";
+        $DATAstring .= "Artikelname_" . $nr . "=Rabatt&";
+        $ot_payment_discount = $this->get_ot_total($customers_status_show_price_tax, $ot_payment_discount_tax, $ot_payment_discount);
+        $DATAstring .= "ArtikelEPreis_" . $nr . "=" . $ot_payment_discount . "&";
+        $DATAstring .= "ArtikelMwst_" . $nr . "=" . $ot_payment_discount_tax . "&";
         $DATAstring .= "ArtikelMenge_" . $nr . "=1&";
         $p_count++;
       }
@@ -371,7 +389,7 @@ class xtc_afterbuy_functions {
         $gv_tax = defined('MODULE_ORDER_TOTAL_GV_TAX_CLASS') ? xtc_get_tax_rate(MODULE_ORDER_TOTAL_GV_TAX_CLASS, $this->customer_country_id, $this->customer_zone_id) : 0;
         $DATAstring .= "Artikelnr_" . $nr . "=99999997&";
         $DATAstring .= "Artikelname_" . $nr . "=Gutschein&";
-        $gv = $this->change_dec_separator(($gv * (-1)));
+        $gv = $this->change_dec_separator($gv);
         $DATAstring .= "ArtikelEPreis_" . $nr . "=" . $gv . "&";
         $DATAstring .= "ArtikelMwst_" . $nr . "=" . $gv_tax . "&";
         $DATAstring .= "ArtikelMenge_" . $nr . "=1&";
@@ -383,7 +401,7 @@ class xtc_afterbuy_functions {
         $coupon_tax = defined('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS') ? xtc_get_tax_rate(MODULE_ORDER_TOTAL_COUPON_TAX_CLASS, $this->customer_country_id, $this->customer_zone_id) : 0;
         $DATAstring .= "Artikelnr_" . $nr . "=99999996&";
         $DATAstring .= "Artikelname_" . $nr . "=Kupon&";
-        $coupon = $this->change_dec_separator(($coupon * (-1)));
+        $coupon = $this->change_dec_separator($coupon);
         $DATAstring .= "ArtikelEPreis_" . $nr . "=" . $coupon . "&";
         $DATAstring .= "ArtikelMwst_" . $nr . "=" . $coupon_tax . "&";
         $DATAstring .= "ArtikelMenge_" . $nr . "=1&";
