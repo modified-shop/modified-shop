@@ -1282,6 +1282,26 @@
       }
     }
 
+    $add_tax = 0;
+    $price = 'b_price';
+    if ($allow_tax != '1') {
+      $tax_query = xtc_db_query("SELECT SUM(tax) as value 
+                                   FROM ".TABLE_ORDERS_RECALCULATE." 
+                                  WHERE orders_id = '".(int)($oID)."' 
+                                    AND class = 'ot_tax'");
+      $tax = xtc_db_fetch_array($tax_query);
+      $add_tax = $tax['value'];
+      $price = 'n_price';
+    }
+
+    $total_query = xtc_db_query("SELECT SUM(".$price.") as value 
+                                   FROM ".TABLE_ORDERS_RECALCULATE." 
+                                  WHERE orders_id = '".(int)$oID."'
+                                    AND class != 'ot_gv'");
+    
+    $total = xtc_db_fetch_array($total_query);
+    $total_tax_final = $total['value'] + $add_tax;
+
     $check_no_tax_value_query = xtc_db_query("SELECT count(*) as count 
                                                 FROM ".TABLE_ORDERS_TOTAL." 
                                                WHERE orders_id = '".(int)$oID."' 
@@ -1309,9 +1329,9 @@
       );
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array, 'update', "orders_id = '".(int)($oID)."' AND class = 'ot_subtotal_no_tax'");
     } else {
-      if (!in_array($allow_tax, array('0', '1', '4'))
-          && defined('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS') 
+      if (defined('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS') 
           && MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS == 'true'
+          && (!in_array($allow_tax, array('0', '1', '4')) || $total_tax_final >= $status['customers_status_show_tax_total'])
           )
       {
         $display_to_subtotal_no_tax = true;
@@ -1342,31 +1362,13 @@
         || in_array($allow_tax, array('0', '1', '4'))
         )
     {
-      $display_to_subtotal_no_tax = false;
-      xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_subtotal_no_tax'");
+      if ($total_tax_final < $status['customers_status_show_tax_total']) {
+        $display_to_subtotal_no_tax = false;
+        xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_subtotal_no_tax'");
+      }
     }
 
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_tax'");
-
-    $add_tax = 0;
-    $price = 'b_price';
-    if ($allow_tax != '1') {
-      $tax_query = xtc_db_query("SELECT SUM(tax) as value 
-                                   FROM ".TABLE_ORDERS_RECALCULATE." 
-                                  WHERE orders_id = '".(int)($oID)."' 
-                                    AND class = 'ot_tax'");
-      $tax = xtc_db_fetch_array($tax_query);
-      $add_tax = $tax['value'];
-      $price = 'n_price';
-    }
-
-    $total_query = xtc_db_query("SELECT SUM(".$price.") as value 
-                                   FROM ".TABLE_ORDERS_RECALCULATE." 
-                                  WHERE orders_id = '".(int)$oID."'
-                                    AND class != 'ot_gv'");
-    
-    $total = xtc_db_fetch_array($total_query);
-    $total_tax_final = $total['value'] + $add_tax;
 
     $tax_info = '';
     if ($status['customers_status_show_price_tax'] == 0
