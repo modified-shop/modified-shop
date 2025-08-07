@@ -74,6 +74,19 @@
                             WHERE tasks_id = ".(int)$tasks['tasks_id']);
       }
     }
+    
+    $time_run = strtotime('-1 month');
+    $log_query = xtc_db_query("SELECT *, 
+                                      MAX(logs_id) as max_logs_id
+                                 FROM ".TABLE_SCHEDULED_TASKS_LOG."
+                                WHERE time_run < '".$time_run."' 
+                             GROUP BY tasks_id");
+    while ($log = xtc_db_fetch_array($log_query)) {
+      xtc_db_query("DELETE FROM ".TABLE_SCHEDULED_TASKS_LOG."
+                     WHERE time_run < '".$time_run."'
+                       AND tasks_id = '".(int)$log['tasks_id']."'
+                       AND logs_id != '".(int)$log['max_logs_id']."'");
+    }
   }
   
   $next_event = time() + 86400;
