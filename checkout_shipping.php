@@ -109,6 +109,9 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();
 
+// clear delivery zone
+unset($_SESSION['delivery_zone']);
+
 if ($order->delivery['country']['iso_code_2'] != '') {
 	$_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 }
