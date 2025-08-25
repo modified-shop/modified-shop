@@ -107,7 +107,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             $check_query = xtc_db_query("SELECT * FROM `database_version` ORDER BY id DESC");
                             while ($check = xtc_db_fetch_array($check_query)) {
                               echo '<dt>'.preg_replace('/[^0-9\.]/', '', $check['version']).'</dt>';
-                              echo '<dd>'.xtc_date_short($check['date_added']).'</dd>';
+                              echo '<dd>'.((strtotime($check['date_added']) > 0) ? xtc_date_short($check['date_added']) : '-').'</dd>';
                             }
                           ?>
                         </dl>
