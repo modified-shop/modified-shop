@@ -102,9 +102,9 @@
                   && (int)$_POST[$configuration['configuration_key']] < $value_limits[$configuration['configuration_key']]['min']
                   )
               {
-                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
-                $messageStack->add_session(sprintf(CONFIG_MIN_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['min'] ), 'warning');
+                $messageStack->add_session(sprintf(CONFIG_MIN_VALUE_WARNING, $configuration_key_title, $_POST[$configuration['configuration_key']], $value_limits[$configuration['configuration_key']]['min']), 'warning');
+                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
               }
               
               //value_limits max
@@ -113,9 +113,9 @@
                   && (int)$_POST[$configuration['configuration_key']] > $value_limits[$configuration['configuration_key']]['max']
                   )
               {
-                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
-                $messageStack->add_session(sprintf(CONFIG_MAX_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['max'] ), 'warning');
+                $messageStack->add_session(sprintf(CONFIG_MAX_VALUE_WARNING, $configuration_key_title, $_POST[$configuration['configuration_key']], $value_limits[$configuration['configuration_key']]['max']), 'warning');
+                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
               }
               
               //check numeric input
@@ -125,9 +125,9 @@
                       )
                   )
               {
-                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
-                $messageStack->add_session(sprintf(CONFIG_INT_VALUE_ERROR,$configuration_key_title,$_POST[$configuration['configuration_key']],''), 'error');
+                $messageStack->add_session(sprintf(CONFIG_INT_VALUE_ERROR, $configuration_key_title,$_POST[$configuration['configuration_key']], ''), 'error');
+                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
               }
              
               xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
