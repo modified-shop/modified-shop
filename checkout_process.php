@@ -225,7 +225,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         if (is_array($products_attributes)) {
           $add_stock_query_raw .= " AND pa.options_id = '".$products_attributes[0]['option_id']."' AND pa.options_values_id = '".$products_attributes[0]['value_id']."'";
         }
-        $stock_query_raw = "SELECT products_quantity, 
+        $stock_query_raw = "SELECT p.products_quantity, 
                                    pad.products_attributes_filename
                               FROM ".TABLE_PRODUCTS." p
                          LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa 
