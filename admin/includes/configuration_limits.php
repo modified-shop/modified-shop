@@ -47,3 +47,5 @@ $value_limits['META_MIN_KEYWORD_LENGTH'] = array('min' => 0);
 $value_limits['META_MAX_KEYWORD_LENGTH'] = array('min' => 0);
 $value_limits['META_DESCRIPTION_LENGTH'] = array('min' => 0);
 $value_limits['META_KEYWORDS_NUMBER'] = array('min' => 0);
+
+$value_limits['ENTRY_STATE_MIN_LENGTH'] = array('min' => 0, 'max' => 0);

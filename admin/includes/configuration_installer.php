@@ -76,7 +76,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'POLICY_MIN_SPECIAL_CHARS', '1', '2', '12', NULL, NOW(), NULL, NULL);";
 
   $values_update[] = array (
-                           'values' => "configuration_group_id = '2'",
+                           'values' => "configuration_group_id = '6'",
                            'configuration_key' => 'ENTRY_STATE_MIN_LENGTH'
                            );
 
