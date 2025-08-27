@@ -77,11 +77,10 @@ if (!$categorie_smarty->is_cached(CURRENT_TEMPLATE.'/module/'.$categorie_templat
     }
     $categories_query = xtDBquery($categories_query); 
   
-    $categories_listing = array();
     if ( xtc_db_num_rows($categories_query, true) >= 1 ) {
+      $categories_content = array();
       $rows = 0;
       while ($categories = xtc_db_fetch_array($categories_query, true)) {
-     
         $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
      
         $image = $main->getImage($categories['categories_image']);
