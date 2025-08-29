@@ -23,4 +23,6 @@ define('MODULE_CAO_FAKTURA_PASSWORD_DESC', 'Geben Sie bitte ein Passwort an. Die
 
 define('MODULE_CAO_FAKTURA_ORDERS_STATUS_TITLE', 'Bestellstatus');
 define('MODULE_CAO_FAKTURA_ORDERS_STATUS_DESC', 'Geben Sie die Bestellstatus an, welche exportiert werden sollen.');
-?>
+
+define('MODULE_CAO_FAKTURA_LOG_TITLE', 'Logging');
+define('MODULE_CAO_FAKTURA_LOG_DESC', 'CAO Logging aktivieren?');
