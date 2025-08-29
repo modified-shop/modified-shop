@@ -87,8 +87,8 @@ class cao_faktura {
     $key = array(
       'MODULE_CAO_FAKTURA_STATUS',
       'MODULE_CAO_FAKTURA_ORDERS_STATUS',
-      'MODULE_CAO_FAKTURA_EMAIL',
       'MODULE_CAO_FAKTURA_LOG',
+      'MODULE_CAO_FAKTURA_EMAIL',
     );
 
     return $key;
