@@ -23,4 +23,7 @@ define('MODULE_CAO_FAKTURA_PASSWORD_DESC', 'Enter a password. This has to be equ
 
 define('MODULE_CAO_FAKTURA_ORDERS_STATUS_TITLE', 'Order status');
 define('MODULE_CAO_FAKTURA_ORDERS_STATUS_DESC', 'Select the order status which should be exported.');
-?>
+
+define('MODULE_CAO_FAKTURA_LOG_TITLE', 'Logging');
+define('MODULE_CAO_FAKTURA_LOG_DESC', 'Enable CAO Logging?');
+
