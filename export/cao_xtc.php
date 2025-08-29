@@ -108,8 +108,6 @@ $version_datum = '2009.08.26';
 // falls die MWST vom shop vertauscht wird, hier true setzen.
 define('SWITCH_MWST',false);
 
-define ('LOGGER',false); // Um das Loggen einzuschalten false durch true ersetzen.
-
 define('USE_3IMAGES',false);
 define('USE_VPE',false);
 
@@ -250,11 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
        SendXMLHeader ();
        SendShopConfig ();
        exit;
-       
-     case 'update_tables':
-       UpdateTables ();
-       exit;
-       
+              
      case 'send_log':
        SendLog ();
        exit;

@@ -1152,73 +1152,6 @@ function ShowHTMLMenu ()
 
 //--------------------------------------------------------------
 
-function UpdateTables ()
-{
-  global $version_nr, $version_datum;
-
-  SendHTMLHeader();
-
-  echo '<html><head></head><body>';
-  echo '<h3>Tabellen-Update / Erweiterung für CAO-Faktura</h3>';
-  echo '<h4>Version ' . $version_nr . ' Stand : ' . $version_datum .'</h4>';
-
-  $sql[1]  = 'ALTER TABLE ' . TABLE_PRODUCTS . ' ADD products_ean VARCHAR(128) AFTER products_id';
-  $sql[2]  = 'ALTER TABLE ' . TABLE_ORDERS . ' ADD payment_class VARCHAR(32) NOT NULL';
-  $sql[3]  = 'ALTER TABLE ' . TABLE_ORDERS . ' ADD shipping_method VARCHAR(32) NOT NULL';
-  $sql[4]  = 'ALTER TABLE ' . TABLE_ORDERS . ' ADD shipping_class VARCHAR(32) NOT NULL';
-  $sql[5]  = 'ALTER TABLE ' . TABLE_ORDERS . ' ADD billing_country_iso_code_2 CHAR(2) NOT NULL AFTER billing_country';
-  $sql[6]  = 'ALTER TABLE ' . TABLE_ORDERS . ' ADD delivery_country_iso_code_2 CHAR(2) NOT NULL AFTER delivery_country';
-  $sql[7]  = 'ALTER TABLE ' . TABLE_ORDERS . ' ADD billing_firstname VARCHAR(32) NOT NULL AFTER billing_name';
-  $sql[8]  = 'ALTER TABLE ' . TABLE_ORDERS . ' ADD billing_lastname VARCHAR(32) NOT NULL AFTER billing_firstname';
-  $sql[9]  = 'ALTER TABLE ' . TABLE_ORDERS . ' ADD delivery_firstname VARCHAR(32) NOT NULL AFTER delivery_name';
-  $sql[10] = 'ALTER TABLE ' . TABLE_ORDERS . ' ADD delivery_lastname VARCHAR(32) NOT NULL AFTER delivery_firstname';
-  $sql[11] = 'ALTER TABLE ' . TABLE_ORDERS . ' CHANGE payment_method payment_method VARCHAR(255) NOT NULL';
-  $sql[12] = 'ALTER TABLE ' . TABLE_ORDERS . ' CHANGE shipping_method shipping_method VARCHAR(255) NOT NULL';
-  $sql[13] = 'CREATE TABLE cao_log ( id int(11) NOT NULL auto_increment, date datetime NOT NULL default "0000-00-00 00:00:00",'.
-             'user varchar(64) NOT NULL default "", pw varchar(64) NOT NULL default "", method varchar(64) NOT NULL default "",'.
-             'action varchar(64) NOT NULL default "", post_data mediumtext, get_data mediumtext, PRIMARY KEY  (id))';
-
-  $link = 'db_link';
-
-  global ${$link}, $logger;
-
-  for ($i=1;$i<=13;$i++)
-  {
-    echo '<b>SQL:</b> ' . $sql[$i] . '<br>';
-
-    if (@xtc_db_query($sql[$i], ${$link}))
-    {
-      echo '<b>Ergebnis : OK</b>';
-    }
-     else
-    {
-      $error = ((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link})) : @xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link})));
-      $pos=strpos($error,'Duplicate column name');
-
-      if ($pos===false)
-      {
-        $pos=strpos($error,'already exists');
-        if ($pos===false)
-        {
-          echo '<b>Ergebnis : </b><font color="red"><b>' . $error . '</b></font>';
-      }
-        else
-      {
-        echo '<b>Ergebnis : OK, Tabelle existierte bereits !</b>';
-      }
-     }
-       else
-     {
-       echo '<b>Ergebnis : OK, Spalte existierte bereits !</b>';
-     }
-   }
-    echo '<br><br>';
-  }
-  echo '</body></html>';
-}
-
-//--------------------------------------------------------------
-
 require_once(DIR_FS_INC .'xtc_not_null.inc.php');
 
 function clear_string($value)
@@ -2764,18 +2697,20 @@ function SendLog ()
   SendHTMLHeader();
 
   echo '<html><head></head><body>';
-  echo '<h3>Shoptransfer XTC<->CAO-Faktura</h3>';
+  echo '<h3>Shoptransfer modified eCommerce Shopsoftware<->CAO-Faktura</h3>';
   echo '<h4>Version ' . $version_nr . ' Stand : ' . $version_datum .'</h4>'.
        '<h4>Transfer-Log:</h4>';
 
-  if (LOGGER==true)
+  if (defined('MODULE_CAO_FAKTURA_LOG')
+      && MODULE_CAO_FAKTURA_LOG == 'true'
+      )
   {
-    $sql = 'select * from cao_log order by date desc limit 0,100';
+    $sql = 'select * from cao_log order by date_added desc limit 0,100';
 
     $res = xtc_db_query($sql);
     while ($log = xtc_db_fetch_array($res))
     {
-      echo 'Date:' . $log['date'] . '<br>' . "\n";
+      echo 'Date:' . $log['date_added'] . '<br>' . "\n";
       echo 'Method:' . $log['method'] . '<br>' . "\n";
       echo 'Action:' . $log['action'] . '<br>' . "\n";
       echo 'Post-Data:<br>' . nl2br($log['post_data']) . '<br>' . "\n";
@@ -2842,39 +2777,46 @@ function SendLog ()
   }
 
 
-  if (LOGGER==true)
+  if (defined('MODULE_CAO_FAKTURA_LOG')
+      && MODULE_CAO_FAKTURA_LOG == 'true'
+      )
   {
     // log data into db.
 
-    $pdata ='';
+    $pdata = '';
     foreach ($_POST as $key => $value)
     {
        if (is_array($value))
        {
          foreach ($value as $key1 => $value1)
          {
-           $pdata .= xtc_db_input($key)."[" . xtc_db_input($key1)."] => ".xtc_db_input($value1)."\\r\\n";
+           $pdata .= xtc_db_input($key)."[" . xtc_db_input($key1)."] => ".xtc_db_input($value1)."\r\n";
          }
        }
          else
        {
-         $pdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\\r\\n";
+         $pdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\r\n";
        }
     }
 
     $gdata ='';
     foreach ($_GET as $key => $value)
     {
-       $gdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\\r\\n";
+       $gdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\r\n";
     }
 
 
-     if ($_GET['action']!='send_log')
+     if ($_GET['action'] != 'send_log')
      {
-        xtc_db_query("INSERT INTO cao_log
-                  (date,user,pw,method,action,post_data,get_data) VALUES
-                  (NOW(),'".xtc_db_input($user)."','".xtc_db_input($password)."','".$REQUEST_METHOD."','".xtc_db_input($_POST['action'])."','".$pdata."','".$gdata."')");
+        $sql_data_array = array(
+          'user' => $user,
+          'pass' => $password,
+          'method' => $_SERVER['REQUEST_METHOD'],
+          'action' => $_REQUEST['action'],
+          'post_data' => $pdata,
+          'get_data' => $gdata,
+          'date_added' => 'now()',
+        );
+        xtc_db_perform('cao_log', $sql_data_array);
      }
   }
-
-?>

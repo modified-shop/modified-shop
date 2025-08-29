@@ -64,6 +64,19 @@ class cao_faktura {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAO_FAKTURA_EMAIL', '',  '6', '1', '', now())");  
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAO_FAKTURA_PASSWORD', '',  '6', '1', '', now())");  
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAO_FAKTURA_ORDERS_STATUS', '1',  '6', '1', 'xtc_cfg_multi_checkbox(\'xtc_get_orders_status\', \'chr(44)\',', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAO_FAKTURA_LOG', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");  
+
+    xtc_db_query("CREATE TABLE IF NOT EXISTS `cao_log` (
+                   `log_id` int(11) NOT NULL AUTO_INCREMENT,
+                   `user` varchar(256) NOT NULL,
+                   `pass` varchar(32) NOT NULL,
+                   `method` varchar(8) NOT NULL,
+                   `action` varchar(32) NOT NULL,
+                   `post_data` longtext NOT NULL,
+                   `get_data` longtext NOT NULL,
+                   `date_added` datetime NOT NULL,
+                   PRIMARY KEY (`log_id`)
+                  )");
   }
 
   function remove() {
