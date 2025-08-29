@@ -26,6 +26,7 @@
                                    LEFT JOIN ".TABLE_PAYPAL_TRACKING." pt
                                              ON ot.tracking_id = pt.tracking_id
                                        WHERE pt.tracking_id IS NULL
+                                         AND o.date_purchased >= '".date('Y-m-d', strtotime('-6 months'))."'
                                     ORDER BY ot.tracking_id DESC
                                        LIMIT 50");
       if (xtc_db_num_rows($tracking_query) > 0) {
