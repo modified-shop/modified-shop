@@ -93,17 +93,27 @@ class categories {
     $category_image = xtc_db_fetch_array($category_image_query);
 
     foreach ($this->images_type_array as $image_type) {
+      $image_name = $category_image['categories_image'.$image_type];
+      
       $duplicate_image_query = xtc_db_query("SELECT count(*) AS total 
                                                FROM ".TABLE_CATEGORIES." 
-                                              WHERE categories_image".$image_type." = '".xtc_db_input($category_image['categories_image'.$image_type])."'");
+                                              WHERE categories_image".$image_type." = '".xtc_db_input($image_name)."'");
       $duplicate_image = xtc_db_fetch_array($duplicate_image_query);
 
       if ($duplicate_image['total'] < 2) {
-        if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$category_image['categories_image'.$image_type])) {
-          unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$category_image['categories_image'.$image_type]);
+        $img_name_array = array();
+        $img_name_array[] = $image_name;
+        if (IMAGE_TYPE_EXTENSION != 'default') {
+          $img_name_array[] = substr($image_name, 0, strrpos($image_name, '.')).'.'.IMAGE_TYPE_EXTENSION;
         }
-        if (is_file(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$category_image['categories_image'.$image_type])) {
-          unlink(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$category_image['categories_image'.$image_type]);
+        
+        foreach ($img_name_array as $img_name) {
+          if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$img_name)) {
+            unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$img_name);
+          }
+          if (is_file(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$img_name)) {
+            unlink(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$img_name);
+          }
         }
         
         $this->catModules->delete_category_image($category_image['categories_image'.$image_type]);
@@ -234,11 +244,21 @@ class categories {
     foreach ($this->images_type_array as $image_type) {
       //are we asked to delete some pics?
       if (isset($categories_data['del_cat_pic'.$image_type]) && $categories_data['del_cat_pic'.$image_type] == 'yes') {
-        if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_data['categories_previous_image'.$image_type])) {
-          unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_data['categories_previous_image'.$image_type]);
+        $image_name = $categories_data['categories_previous_image'.$image_type];
+      
+        $img_name_array = array();
+        $img_name_array[] = $image_name;
+        if (IMAGE_TYPE_EXTENSION != 'default') {
+          $img_name_array[] = substr($image_name, 0, strrpos($image_name, '.')).'.'.IMAGE_TYPE_EXTENSION;
         }
-        if (is_file(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$categories_data['categories_previous_image'.$image_type])) {
-          unlink(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$categories_data['categories_previous_image'.$image_type]);
+
+        foreach ($img_name_array as $img_name) {
+          if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$img_name)) {
+            unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$img_name);
+          }
+          if (is_file(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$img_name)) {
+            unlink(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$img_name);
+          }
         }
       
         $this->catModules->delete_category_image($categories_data['categories_previous_image'.$image_type]);
@@ -374,12 +394,14 @@ class categories {
         }
       }
 
+      //copy+rename image
       foreach ($this->images_type_array as $image_type) {
-        //copy+rename image
-        $src_pic = DIR_FS_CATALOG_IMAGES.'categories/'.$ccopy_values['categories_image'.$image_type];
-        $src_orig_pic = DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$ccopy_values['categories_image'.$image_type];
+        $image_name = $ccopy_values['categories_image'.$image_type];
+        
+        $src_pic = DIR_FS_CATALOG_IMAGES.'categories/'.$image_name;
+        $src_orig_pic = DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$image_name;
         if (is_file($src_pic)) {
-          $get_suffix = explode('.', $ccopy_values['categories_image'.$image_type]);
+          $get_suffix = explode('.', $image_name);
           $suffix = array_pop($get_suffix);
           $dest_pic = $this->image_name($new_cat_id, substr($image_type, 1), $suffix, $get_suffix, $src_category_id, $ccopy_values);
 
@@ -389,6 +411,18 @@ class categories {
           if (is_file($src_orig_pic)) {
             copy($src_orig_pic, DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$dest_pic);
             chmod(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$dest_pic, 0644);
+          }
+
+          if (IMAGE_TYPE_EXTENSION != 'default') {
+            $image_name_ext = substr($image_name, 0, strrpos($image_name, '.')).'.'.IMAGE_TYPE_EXTENSION;
+
+            $src_pic_ext = DIR_FS_CATALOG_IMAGES.'categories/'.$image_name_ext;
+            $dest_pic_ext = substr($dest_pic, 0, strrpos($dest_pic, '.')).'.'.IMAGE_TYPE_EXTENSION;
+            
+            if (is_file($src_pic_ext)) {
+              copy($src_pic_ext, DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic_ext);
+              chmod(DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic_ext, 0644);
+            }
           }
 
           $this->catModules->copy_category_image($src_pic, $dest_pic);
