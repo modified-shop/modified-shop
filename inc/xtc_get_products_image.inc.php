@@ -20,7 +20,7 @@
                                          FROM ".TABLE_PRODUCTS." 
                                         WHERE products_id = '".(int)$products_id."'");
     if (xtc_db_num_rows($products_image_query, true) > 0) {
-      $products_image = xtc_db_fetch_array($product_query, true);
+      $products_image = xtc_db_fetch_array($products_image_query, true);
       return $products_image['products_image'];
     }
   }
