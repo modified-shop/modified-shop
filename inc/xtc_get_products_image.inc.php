@@ -23,6 +23,6 @@
     $product_query  = xtDBquery($product_query);
     $products_image = xtc_db_fetch_array($product_query,true);
 
-    return $products_image['products_image'];
+    return $products_image ? $products_image['products_image'] : '';
   }
  ?>
