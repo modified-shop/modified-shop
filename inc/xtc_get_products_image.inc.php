@@ -15,14 +15,13 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-  function xtc_get_products_image($products_id = '') {
-
-    $product_query = "SELECT products_image 
-                        FROM " . TABLE_PRODUCTS . " 
-                       WHERE products_id = '" . (int)$products_id . "'";
-    $product_query  = xtDBquery($product_query);
-    $products_image = xtc_db_fetch_array($product_query,true);
-
-    return $products_image ? $products_image['products_image'] : '';
+  function xtc_get_products_image($products_id) {
+    $products_image_query = xtDBquery("SELECT products_image 
+                                         FROM ".TABLE_PRODUCTS." 
+                                        WHERE products_id = '".(int)$products_id."'");
+    if (xtc_db_num_rows($products_image_query, true) > 0) {
+      $products_image = xtc_db_fetch_array($product_query, true);
+      return $products_image['products_image'];
+    }
   }
- ?>
+  
