@@ -269,6 +269,21 @@ class PayPalPaymentBase extends PayPalCommon {
       $_SESSION['billing_zone'] = $order->billing['country']['iso_code_2'];
     }
 
+    if (isset($_SESSION['shipping']) 
+        && is_array($_SESSION['shipping']) 
+        )
+    {
+      $class = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
+      if (isset($GLOBALS[$class])
+          && is_object($GLOBALS[$class]) 
+          && method_exists($GLOBALS[$class], 'address')
+          && $order->billing['country']['iso_code_2'] != ''
+          ) 
+      {
+        $_SESSION['delivery_zone'] = $order->billing['country']['iso_code_2'];
+      }
+    }
+
     $allowed_zones = explode(',', strtoupper(preg_replace("'[\r\n\s]+'",'',constant('MODULE_PAYMENT_' . strtoupper($this->code) . '_ALLOWED'))));
     $allowed_zones = array_filter($allowed_zones);
 
@@ -316,14 +331,16 @@ class PayPalPaymentBase extends PayPalCommon {
     
     // get all available shipping quotes
     $quotes = $shipping_modules->quote();
-
+    //$quotes_count = $shipping_modules->count_modules();
+    $quotes_count = xtc_count_shipping_modules();
+    
     // if no shipping method has been selected, automatically select the cheapest method.
     // if the modules status was changed when none were available, to save on implementing
     // a javascript force-selection method, also automatically select the cheapest shipping
     // method if more than one module is now enabled
     if ($no_shipping == false
         && ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') 
-            || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() == 1))
+            || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && ($quotes_count == 1))
             )
         )
     {
@@ -391,13 +408,8 @@ class PayPalPaymentBase extends PayPalCommon {
       }
       if ($shipping_found === false) {
         $module_smarty->assign('shipping_message', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
-        /*
-        if (xtc_count_shipping_modules() == 1) {
-          $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
-        }
-        */
-      }
-      if (xtc_count_shipping_modules() > 1) {
+        $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
+      } elseif ($quotes_count > 1) {
         $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
       }
       $module_smarty->assign('FORM_END', '</form>');
@@ -406,7 +418,7 @@ class PayPalPaymentBase extends PayPalCommon {
         $module_smarty->assign('SHIPPING_BLOCK', $shipping_block);
       }
       
-      if (xtc_count_shipping_modules() == 0) {
+      if ($quotes_count == 0) {
         $_SESSION['shipping'] = '';
       }
       
@@ -516,7 +528,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function before_process() {
-    global $messageStack;
+    global $messageStack, $order;
 
     if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False' || isset($_SESSION['tmp_oID'])) {
       return false;
@@ -547,8 +559,14 @@ class PayPalPaymentBase extends PayPalCommon {
           $error = true;
           $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_ADDRESS_NOT_ACCEPTED));
         }
+
+        $no_shipping = false;
+        if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
+          $no_shipping = true;
+        }
         if (!isset($_SESSION['shipping']) 
             || ($_SESSION['shipping'] !== false && !is_array($_SESSION['shipping']))
+            || ($no_shipping === false && $_SESSION['shipping'] === false)
             ) 
         {
           $error = true;
