@@ -197,12 +197,19 @@
                                              WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
         $manufacturer = xtc_db_fetch_array($manufacturer_query);
 
-        if (is_file(DIR_FS_CATALOG_IMAGES . 'manufacturers/original_images/' . $manufacturer['manufacturers_image'])) {
-          unlink(DIR_FS_CATALOG_IMAGES . 'manufacturers/original_images/' . $manufacturer['manufacturers_image']);
+        $img_name_array = array();
+        $img_name_array[] = $manufacturer['manufacturers_image'];
+        if (IMAGE_TYPE_EXTENSION != 'default') {
+          $img_name_array[] = substr($manufacturer['manufacturers_image'], 0, strrpos($manufacturer['manufacturers_image'], '.')).'.'.IMAGE_TYPE_EXTENSION;
         }
-
-        if (is_file(DIR_FS_CATALOG_IMAGES . 'manufacturers/' . $manufacturer['manufacturers_image'])) {
-          unlink(DIR_FS_CATALOG_IMAGES . 'manufacturers/' . $manufacturer['manufacturers_image']);
+        
+        foreach ($img_name_array as $img_name) {
+          if (is_file(DIR_FS_CATALOG_IMAGES.'manufacturers/'.$img_name)) {
+            unlink(DIR_FS_CATALOG_IMAGES.'manufacturers/'.$img_name);
+          }
+          if (is_file(DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/'.$img_name)) {
+            unlink(DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/'.$img_name);
+          }
         }
 
         xtc_db_query("UPDATE ".TABLE_MANUFACTURERS."
@@ -278,13 +285,20 @@
                                               FROM " . TABLE_MANUFACTURERS . " 
                                              WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
         $manufacturer = xtc_db_fetch_array($manufacturer_query);
-        $image_location = DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/'.$manufacturer['manufacturers_image'];
-        if (is_file($image_location)) {
-          unlink($image_location);
+
+        $img_name_array = array();
+        $img_name_array[] = $manufacturer['manufacturers_image'];
+        if (IMAGE_TYPE_EXTENSION != 'default') {
+          $img_name_array[] = substr($manufacturer['manufacturers_image'], 0, strrpos($manufacturer['manufacturers_image'], '.')).'.'.IMAGE_TYPE_EXTENSION;
         }
-        $image_location = DIR_FS_CATALOG_IMAGES.'manufacturers/'.$manufacturer['manufacturers_image'];
-        if (is_file($image_location)) {
-          unlink($image_location);
+        
+        foreach ($img_name_array as $img_name) {
+          if (is_file(DIR_FS_CATALOG_IMAGES.'manufacturers/'.$img_name)) {
+            unlink(DIR_FS_CATALOG_IMAGES.'manufacturers/'.$img_name);
+          }
+          if (is_file(DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/'.$img_name)) {
+            unlink(DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/'.$img_name);
+          }
         }
       }
 

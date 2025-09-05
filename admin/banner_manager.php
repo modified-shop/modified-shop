@@ -127,15 +127,21 @@
                   && $_POST['del_image'.$images_type.'_'.$languages[$i]['id']] != ''
                   )
               {
-                $image_location = DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$_POST['del_image'.$images_type.'_'.$languages[$i]['id']];
-                if (is_file($image_location)) {
-                  ${'banners_image'.$images_type.'_exist'} = '';
-                  unlink($image_location);
+                $img_name_array = array();
+                $img_name_array[] = $_POST['del_image'.$images_type.'_'.$languages[$i]['id']];
+                if (IMAGE_TYPE_EXTENSION != 'default') {
+                  $img_name_array[] = substr($_POST['del_image'.$images_type.'_'.$languages[$i]['id']], 0, strrpos($_POST['del_image'.$images_type.'_'.$languages[$i]['id']], '.')).'.'.IMAGE_TYPE_EXTENSION;
                 }
-                $image_location = DIR_FS_CATALOG_IMAGES.'banner/'.$_POST['del_image'.$images_type.'_'.$languages[$i]['id']];
-                if (is_file($image_location)) {
-                  ${'banners_image'.$images_type.'_exist'} = '';
-                  unlink($image_location);
+
+                foreach ($img_name_array as $img_name) {
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'banner/'.$img_name)) {
+                    unlink(DIR_FS_CATALOG_IMAGES.'banner/'.$img_name);
+                    ${'banners_image'.$images_type.'_exist'} = '';
+                  }
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$img_name)) {
+                    unlink(DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$img_name);
+                    ${'banners_image'.$images_type.'_exist'} = '';
+                  }
                 }
               }
       
@@ -242,14 +248,22 @@
         while ($banner = xtc_db_fetch_array($banner_query)) {
           if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
             foreach ($images_type_array as $images_type) {
-              $image_location = DIR_FS_CATALOG_IMAGES . 'banner/' . $banner['banners_image'.$images_type];
-              if (is_file($image_location)) {
-                unlink($image_location);
+              $img_name_array = array();
+              $img_name_array[] = $banner['banners_image'.$images_type];
+              if (IMAGE_TYPE_EXTENSION != 'default') {
+                $img_name_array[] = substr($banner['banners_image'.$images_type], 0, strrpos($banner['banners_image'.$images_type], '.')).'.'.IMAGE_TYPE_EXTENSION;
               }
-              $image_location = DIR_FS_CATALOG_IMAGES . 'banner/original_images/' . $banner['banners_image'.$images_type];
-              if (is_file($image_location)) {
-                unlink($image_location);
-              }            
+
+              foreach ($img_name_array as $img_name) {
+                if (is_file(DIR_FS_CATALOG_IMAGES.'banner/'.$img_name)) {
+                  unlink(DIR_FS_CATALOG_IMAGES.'banner/'.$img_name);
+                  ${'banners_image'.$images_type.'_exist'} = '';
+                }
+                if (is_file(DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$img_name)) {
+                  unlink(DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$img_name);
+                  ${'banners_image'.$images_type.'_exist'} = '';
+                }
+              }
             }
           }
           if (xtc_not_null($banner_extension)) {
