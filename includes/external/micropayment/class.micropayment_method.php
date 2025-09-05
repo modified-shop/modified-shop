@@ -198,6 +198,7 @@ class micropayment_method extends micropayment_helper
           $cancelledId      = $nextId + 4;
           $paymentReviewId  = $nextId + 5;
           $conflictId       = $nextId + 6;
+          $refundedId       = $nextId + 7;
 
 
           $this->_createOrderStatus($pendingPaymentId, 2, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_GERMAN_TITLE);
@@ -217,6 +218,9 @@ class micropayment_method extends micropayment_helper
 
           $this->_createOrderStatus($conflictId, 2, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_GERMAN_TITLE);
           $conflictId = $this->_createOrderStatus($conflictId, 1, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ENGLISH_TITLE);
+
+          $this->_createOrderStatus($refundedId, 2, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_GERMAN_TITLE);
+          $refundedId = $this->_createOrderStatus($refundedId, 1, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ENGLISH_TITLE);
         }
 
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_SORT_ORDER', '0', '6','0');
@@ -245,6 +249,7 @@ class micropayment_method extends micropayment_helper
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID', $paymentReviewId ,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID', $conflictId,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID', $partPayId,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
+        $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID', $refundedId,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
 
 
 
@@ -300,7 +305,8 @@ class micropayment_method extends micropayment_helper
             'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID',
             'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID',
             'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID',
-            'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID'
+            'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID',
+            'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID'
         );
     }
 
