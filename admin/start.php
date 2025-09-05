@@ -342,8 +342,8 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td align="right"><?php echo $products['active_count']; ?></td>
                       </tr>
                       <tr class="content_row">
-                        <td><a href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'search_inactive=1');?>"><strong><?php echo TOTAL_PRODUCTS_INACTIVE; ?>:</strong></a></td>
-                        <td align="right"><a href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'search_inactive=1');?>"><?php echo $products['inactive_count']; ?></a></td>
+                        <td><strong><?php echo TOTAL_PRODUCTS_INACTIVE; ?>:</strong></td>
+                        <td align="right"><?php echo $products['inactive_count']; ?></td>
                       </tr>
                       <tr class="content_row">
                         <td><strong><?php echo TOTAL_PRODUCTS; ?>:</strong></td>
@@ -362,7 +362,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <table class="admin_table">
                     <?php
                       foreach ($orders as $order) {
-                        echo '<tr class="content_row"><td><a href="'.xtc_href_link(FILENAME_ORDERS, 'status='.((isset($order['id']) && $order['id'] > 0) ? $order['id'] : '0'), 'SSL').'"><strong>' . $order['status'] . ':</strong></a></td>';
+                        echo '<tr class="content_row"><td><strong>' . $order['status'] . ':</strong></td>';
                         echo '<td align="right">' . $order['order_count'] . '</td></tr>';
                       }
                     ?>   
