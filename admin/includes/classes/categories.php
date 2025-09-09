@@ -475,18 +475,18 @@ class categories {
                                             WHERE products_id = '".(int)$product_id."'");
     // check if used elsewhere, delete db-entry + file if not
     while ($product_content = xtc_db_fetch_array($product_content_query)) {
-       $duplicate_content_query = xtc_db_query("SELECT count(*) AS total 
-                                                  FROM ".TABLE_PRODUCTS_CONTENT." 
-                                                 WHERE content_file = '".xtc_db_input($product_content['content_file'])."' 
-                                                   AND products_id != '".(int)$product_id."'");
-       $duplicate_content = xtc_db_fetch_array($duplicate_content_query);
-       if ($duplicate_content['total'] == 0) {
+      $duplicate_content_query = xtc_db_query("SELECT count(*) AS total 
+                                                 FROM ".TABLE_PRODUCTS_CONTENT." 
+                                                WHERE content_file = '".xtc_db_input($product_content['content_file'])."' 
+                                                  AND products_id != '".(int)$product_id."'");
+      $duplicate_content = xtc_db_fetch_array($duplicate_content_query);
+      if ($duplicate_content['total'] == 0) {
          if (is_file(DIR_FS_DOCUMENT_ROOT.'media/products/'.$product_content['content_file'])) {
            unlink(DIR_FS_DOCUMENT_ROOT.'media/products/'.$product_content['content_file']);
          }
-       }
-       //delete DB-Entry
-       xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT." WHERE products_id = '".(int)$product_id."' AND (content_file = '".xtc_db_input($product_content['content_file'])."' OR content_file = '')");
+      }
+      //delete DB-Entry
+      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT." WHERE products_id = '".(int)$product_id."' AND (content_file = '".xtc_db_input($product_content['content_file'])."' OR content_file = '')");
     }
 
     //delete products images
@@ -911,14 +911,37 @@ class categories {
       xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
                        SET products_image = '".xtc_db_input($dup_products_image_name)."' 
                      WHERE products_id = '".$this->dup_products_id."'");
+
+      $img_name_array = array();
+      $img_name_array[$product['products_image']] = $dup_products_image_name;
+      if (IMAGE_TYPE_EXTENSION != 'default') {
+        $products_image_ext = substr($product['products_image'], 0, strrpos($product['products_image'], '.')).'.'.IMAGE_TYPE_EXTENSION;
+        $dup_products_image_name_ext = substr($dup_products_image_name, 0, strrpos($dup_products_image_name, '.')).'.'.IMAGE_TYPE_EXTENSION;
+        $img_name_array[$products_image_ext] = $dup_products_image_name_ext;
+      }
       
       //copy org images to duplicate
-      copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.$product['products_image'], DIR_FS_CATALOG_ORIGINAL_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_POPUP_IMAGES.$product['products_image'], DIR_FS_CATALOG_POPUP_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_INFO_IMAGES.$product['products_image'], DIR_FS_CATALOG_INFO_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_MIDI_IMAGES.$product['products_image'], DIR_FS_CATALOG_MIDI_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$product['products_image'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_MINI_IMAGES.$product['products_image'], DIR_FS_CATALOG_MINI_IMAGES.$dup_products_image_name);
+      foreach ($img_name_array as $products_image => $products_image_dup) {
+        if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image, DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_POPUP_IMAGES.$products_image, DIR_FS_CATALOG_POPUP_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_INFO_IMAGES.$products_image, DIR_FS_CATALOG_INFO_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_MIDI_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_MIDI_IMAGES.$products_image, DIR_FS_CATALOG_MIDI_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image, DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_MINI_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_MINI_IMAGES.$products_image, DIR_FS_CATALOG_MINI_IMAGES.$products_image_dup);
+        }
+      }
+      
       $this->set_products_images_file_rights($dup_products_image_name);
     }
 
@@ -963,14 +986,38 @@ class categories {
       $dup_products_image_name = $this->image_name($this->dup_products_id, $mo_images['image_nr'], $nsuffix, $pname_arr, $src_products_id, $product);
       
       //copy org images to duplicate
-      copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_ORIGINAL_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_POPUP_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_POPUP_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_INFO_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_INFO_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_MIDI_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_MIDI_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_MINI_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_MINI_IMAGES.$dup_products_image_name);
+      $img_name_array = array();
+      $img_name_array[$mo_images['image_name']] = $dup_products_image_name;
+      if (IMAGE_TYPE_EXTENSION != 'default') {
+        $products_image_ext = substr($mo_images['image_name'], 0, strrpos($mo_images['image_name'], '.')).'.'.IMAGE_TYPE_EXTENSION;
+        $dup_products_image_name_ext = substr($dup_products_image_name, 0, strrpos($dup_products_image_name, '.')).'.'.IMAGE_TYPE_EXTENSION;
+        $img_name_array[$products_image_ext] = $dup_products_image_name_ext;
+      }
+      
+      //copy org images to duplicate
+      foreach ($img_name_array as $products_image => $products_image_dup) {
+        if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image, DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_POPUP_IMAGES.$products_image, DIR_FS_CATALOG_POPUP_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_INFO_IMAGES.$products_image, DIR_FS_CATALOG_INFO_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_MIDI_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_MIDI_IMAGES.$products_image, DIR_FS_CATALOG_MIDI_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image, DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image_dup);
+        }
+        if (is_file(DIR_FS_CATALOG_MINI_IMAGES.$products_image)) {
+          copy(DIR_FS_CATALOG_MINI_IMAGES.$products_image, DIR_FS_CATALOG_MINI_IMAGES.$products_image_dup);
+        }
+      }
+      
       $this->set_products_images_file_rights($dup_products_image_name);
-    
+      
       //write to DB
       $sql_data_array = $mo_images;
       unset($sql_data_array['image_id']);
@@ -1290,20 +1337,28 @@ class categories {
 
   //set products images file rights
   function set_products_images_file_rights($image_name) {
-    if (is_file(DIR_FS_CATALOG_MINI_IMAGES.$image_name)) {
-      chmod(DIR_FS_CATALOG_MINI_IMAGES.$image_name, 0644);
+    $img_name_array = array();
+    $img_name_array[] = $image_name;
+    if (IMAGE_TYPE_EXTENSION != 'default') {
+      $img_name_array[] = substr($image_name, 0, strrpos($image_name, '.')).'.'.IMAGE_TYPE_EXTENSION;
     }
-    if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image_name)) {
-      chmod(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image_name, 0644);
-    }
-    if (is_file(DIR_FS_CATALOG_MIDI_IMAGES.$image_name)) {
-      chmod(DIR_FS_CATALOG_MIDI_IMAGES.$image_name, 0644);
-    }
-    if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$image_name)) {
-      chmod(DIR_FS_CATALOG_INFO_IMAGES.$image_name, 0644);
-    }
-    if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$image_name)) {
-      chmod(DIR_FS_CATALOG_POPUP_IMAGES.$image_name, 0644);
+  
+    foreach ($img_name_array as $img_name) {  
+      if (is_file(DIR_FS_CATALOG_MINI_IMAGES.$img_name)) {
+        chmod(DIR_FS_CATALOG_MINI_IMAGES.$img_name, 0644);
+      }
+      if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$img_name)) {
+        chmod(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$img_name, 0644);
+      }
+      if (is_file(DIR_FS_CATALOG_MIDI_IMAGES.$img_name)) {
+        chmod(DIR_FS_CATALOG_MIDI_IMAGES.$img_name, 0644);
+      }
+      if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$img_name)) {
+        chmod(DIR_FS_CATALOG_INFO_IMAGES.$img_name, 0644);
+      }
+      if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$img_name)) {
+        chmod(DIR_FS_CATALOG_POPUP_IMAGES.$img_name, 0644);
+      }
     }
   }
 

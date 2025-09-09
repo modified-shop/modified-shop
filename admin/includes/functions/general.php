@@ -1296,24 +1296,32 @@
    * @param mixed $image
    * @return
    */
-  function xtc_del_image_file($image) {
-    if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$image)) {
-      unlink(DIR_FS_CATALOG_ORIGINAL_IMAGES.$image);
+  function xtc_del_image_file($image_name) {  
+    $img_name_array = array();
+    $img_name_array[] = $image_name;
+    if (IMAGE_TYPE_EXTENSION != 'default') {
+      $img_name_array[] = substr($image_name, 0, strrpos($image_name, '.')).'.'.IMAGE_TYPE_EXTENSION;
     }
-    if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$image)) {
-      unlink(DIR_FS_CATALOG_POPUP_IMAGES.$image);
-    }
-    if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$image)) {
-      unlink(DIR_FS_CATALOG_INFO_IMAGES.$image);
-    }
-    if (is_file(DIR_FS_CATALOG_MIDI_IMAGES.$image)) {
-      unlink(DIR_FS_CATALOG_MIDI_IMAGES.$image);
-    }
-    if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image)) {
-      unlink(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image);
-    }
-    if (is_file(DIR_FS_CATALOG_MINI_IMAGES.$image)) {
-      unlink(DIR_FS_CATALOG_MINI_IMAGES.$image);
+  
+    foreach ($img_name_array as $img_name) {
+      if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$img_name)) {
+        unlink(DIR_FS_CATALOG_ORIGINAL_IMAGES.$img_name);
+      }
+      if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$img_name)) {
+        unlink(DIR_FS_CATALOG_POPUP_IMAGES.$img_name);
+      }
+      if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$img_name)) {
+        unlink(DIR_FS_CATALOG_INFO_IMAGES.$img_name);
+      }
+      if (is_file(DIR_FS_CATALOG_MIDI_IMAGES.$img_name)) {
+        unlink(DIR_FS_CATALOG_MIDI_IMAGES.$img_name);
+      }
+      if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$img_name)) {
+        unlink(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$img_name);
+      }
+      if (is_file(DIR_FS_CATALOG_MINI_IMAGES.$img_name)) {
+        unlink(DIR_FS_CATALOG_MINI_IMAGES.$img_name);
+      }
     }
   }
 
