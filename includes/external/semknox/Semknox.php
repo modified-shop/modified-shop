@@ -486,8 +486,8 @@
         $path = array_map(array($this, 'getCategoriesNames'), explode('_', $cPath));
         $path = array_filter($path);
         
-        if (count($path) > 0) {
-          $categories_array[]['path'] = $path;
+        if (is_array($path) && count($path) > 0) {
+          $categories_array[]['path'] = array_values($path);
         }
       }
     
