@@ -407,7 +407,7 @@ CREATE TABLE coupon_email_track (
 DROP TABLE IF EXISTS coupon_gv_customer;
 CREATE TABLE coupon_gv_customer (
   customer_id INT(5) NOT NULL DEFAULT 0,
-  amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
+  amount DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (customer_id)
 );
 
@@ -416,7 +416,7 @@ CREATE TABLE coupon_gv_queue (
   unique_id INT(5) NOT NULL AUTO_INCREMENT,
   customer_id INT(5) NOT NULL DEFAULT 0,
   order_id INT(5) NOT NULL DEFAULT 0,
-  amount DECIMAL(8,4) NOT NULL DEFAULT '0.0000',
+  amount DECIMAL(15,4) NOT NULL,
   date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   ipaddr VARCHAR(50) NOT NULL DEFAULT '',
   release_flag CHAR(1) NOT NULL DEFAULT 'N',
@@ -440,8 +440,8 @@ CREATE TABLE coupons (
   coupon_id INT(11) NOT NULL AUTO_INCREMENT,
   coupon_type CHAR(1) NOT NULL DEFAULT 'F',
   coupon_code VARCHAR(32) NOT NULL DEFAULT '',
-  coupon_amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
-  coupon_minimum_order DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
+  coupon_amount DECIMAL(15,4) NOT NULL,
+  coupon_minimum_order DECIMAL(15,4) NOT NULL,
   coupon_start_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   coupon_expire_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   uses_per_coupon INT(5) NOT NULL DEFAULT 1,
@@ -988,10 +988,10 @@ DROP TABLE IF EXISTS orders_recalculate;
 CREATE TABLE orders_recalculate (
   orders_recalculate_id INT(11) NOT NULL AUTO_INCREMENT,
   orders_id INT(11) NOT NULL DEFAULT 0,
-  n_price DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
-  b_price DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
-  tax DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
-  tax_rate DECIMAL(7,4) NOT NULL DEFAULT '0.0000',
+  n_price DECIMAL(15,4) NOT NULL,
+  b_price DECIMAL(15,4) NOT NULL,
+  tax DECIMAL(15,4) NOT NULL,
+  tax_rate DECIMAL(7,4) NOT NULL,
   class VARCHAR(32) NOT NULL DEFAULT '',
   PRIMARY KEY (orders_recalculate_id)
 );
@@ -1185,7 +1185,7 @@ CREATE TABLE products_graduated_prices (
   price_id INT(11) NOT NULL AUTO_INCREMENT,
   products_id INT(11) NOT NULL DEFAULT 0,
   quantity INT(11) NOT NULL DEFAULT 0,
-  unitprice DECIMAL(15,4) NOT NULL DEFAULT 0.0000,
+  unitprice DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (price_id),
   KEY idx_products_id (products_id)
 );
