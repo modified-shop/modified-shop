@@ -598,33 +598,50 @@ function WriteToDumpFile($data) {
   unset($data);
 }
 
+function sortByLength($a,$b) {
+  return strlen($b)-strlen($a);
+}
+
 function remove_collate($table,$data) {
-    global $dump;
-    if (stripos($table,'magnalister') === false && isset($dump['collations']) && count($dump['collations'])) {
-      foreach ($dump['collations'] as $collation) {
-        if ($collation != '') {
-          $data = str_ireplace(' COLLATE '.$collation,'',$data);
-          $data = str_ireplace(' COLLATE='.$collation,'',$data);
-          $collation = explode('_',$collation);
-          $data = str_ireplace(' CHARACTER SET '.$collation[0],'',$data);
-          $data = str_ireplace(' DEFAULT CHARSET='.$collation[0],'',$data);
-        }
-      }
+  global $dump;
+    
+  if (stripos($table,'magnalister') === false && isset($dump['collations']) && count($dump['collations'])) {
+    $search_array = array();
+    usort($dump['collations'],'sortByLength');
+    foreach ($dump['collations'] as $collation) {
+      if ($collation != '') {
+        $search_array[] = ' COLLATE '.$collation;
+        $search_array[] = ' COLLATE='.$collation;
+        
+        $collation = explode('_',$collation);
+        $search_array[] = ' CHARACTER SET '.$collation[0];
+        $search_array[] = ' DEFAULT CHARSET='.$collation[0];
+      }        
     }
-    return $data;
+    if (count($search_array) > 0) {
+      $data = str_ireplace($search_array, '', $data);
+    }
+  }
+  return $data;
 }
 
 function remove_engine($table,$data) {
-    global $dump;
-    if (stripos($table,'magnalister') === false && isset($dump['engines']) && count($dump['engines'])) {
-      foreach ($dump['engines'] as $engine) {
-        if ($engine != '') {
-          $data = str_ireplace(' TYPE='.$engine,'',$data);
-          $data = str_ireplace(' ENGINE='.$engine,'',$data);
-        }
+  global $dump;
+  
+  if (stripos($table,'magnalister') === false && isset($dump['engines']) && count($dump['engines'])) {
+    $search_array = array();
+    usort($dump['engines'],'sortByLength');
+    foreach ($dump['engines'] as $engine) {
+      if ($engine != '') {
+        $search_array[] = ' TYPE='.$engine;
+        $search_array[] = ' ENGINE='.$engine;
       }
     }
-    return $data;
+    if (count($search_array) > 0) {
+      $data = str_ireplace($search_array, '', $data);
+    }
+  }
+  return $data;
 }
 
 function GetTableInfo($table) {
