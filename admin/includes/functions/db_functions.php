@@ -273,11 +273,16 @@ function get_sqlbefehl()
   // wenn bestimmte Tabellen wiederhergestellt werden sollen -> pruefen
   if (isset($restore['tables_to_restore'])&&is_array($restore['tables_to_restore'])&&!(in_array($restore['actual_table'],$restore['tables_to_restore'])))
   {
-    $complete_sql='';		
+    $complete_sql = '';		
   }
 
-  return trim($complete_sql);
- 
+  if ($restore['actual_table'] == TABLE_CONFIGURATION) {
+    if (strpos($complete_sql, "'STORE_SESSIONS_TMP'") !== false) {
+      $complete_sql = '';		
+    }
+  }
+
+  return (($complete_sql != '') ? trim($complete_sql) : '');
 }
 
 function submit_create_action($sql)
@@ -689,8 +694,13 @@ function GetTableData($table) {
     while ($fields = xtc_db_fetch_array($fields_query)) {
       $table_list[] = $fields['Field'];
     }
-
-    $rows_query = xtc_db_query('select `' . implode('`,`', $table_list) . '` from '.$table . ' limit '.$dump['zeilen_offset'].','.($dump['anzahl_zeilen']));
+    
+    $where = '';
+    if ($table == TABLE_CONFIGURATION) {
+      $where = ' WHERE `configuration_key` != \'STORE_SESSIONS_TMP\' ';
+    }
+    
+    $rows_query = xtc_db_query('select `' . implode('`,`', $table_list) . '` from '.$table . $where . ' limit '.$dump['zeilen_offset'].','.($dump['anzahl_zeilen']));
     $ergebnisse = @xtc_db_num_rows($rows_query);
 
     $data = '';
@@ -778,11 +788,12 @@ function getBackupData($file) {
           if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
           if (substr($line, 0, 9) == "-- TABLE|") {
             $table_info = explode('|',trim(substr($line, 9)));
-            $file_array['table_list'][]  = array('name' => $table_info[0],
-                                                 'rows' => $table_info[1],
-                                                 'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
-                                                 'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
-                                                );
+            $file_array['table_list'][] = array(
+              'name' => $table_info[0],
+              'rows' => $table_info[1],
+              'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
+              'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
+            );
             $file_array['tables_row_count'] += $table_info[1];
           }
           if (substr($line, 0, 10) == "-- Charset") {
@@ -799,11 +810,12 @@ function getBackupData($file) {
           if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
           if (substr($line, 0, 9) == "-- TABLE|") {
             $table_info = explode('|',trim(substr($line, 9)));
-            $file_array['table_list'][]  = array('name' => $table_info[0],
-                                                 'rows' => $table_info[1],
-                                                 'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
-                                                 'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
-                                                );
+            $file_array['table_list'][] = array(
+              'name' => $table_info[0],
+              'rows' => $table_info[1],
+              'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
+              'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
+            );
             $file_array['tables_row_count'] += $table_info[1];
           }
           if (substr($line, 0, 10) == "-- Charset") {
@@ -816,4 +828,3 @@ function getBackupData($file) {
   
   return $file_array;
 }                        
-?>
