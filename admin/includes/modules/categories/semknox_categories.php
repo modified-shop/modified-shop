@@ -37,28 +37,31 @@ class semknox_categories {
     $this->languages = xtc_get_languages();
     $this->semknox = array();
 
-    if ($this->check() > 0
-        && defined('MODULE_SEMKNOX_SYSTEM_STATUS')
-        && MODULE_SEMKNOX_SYSTEM_STATUS == 'true'
-        )
-    {      
-      foreach ($this->languages as $language) {
-        if (defined('MODULE_SEMKNOX_SYSTEM_API_'.$language['id'])
-            && constant('MODULE_SEMKNOX_SYSTEM_API_'.$language['id']) != ''
-            )
-        {
-          $this->semknox[$language['id']] = new Semknox($language['id']);
+    if ($this->check(false) > 0) {
+      $check_query = xtc_db_query("SELECT configuration_value 
+                                     FROM " . TABLE_CONFIGURATION . " 
+                                    WHERE configuration_key = 'MODULE_SEMKNOX_SYSTEM_STATUS'");
+      if (xtc_db_num_rows($check_query) > 0) {
+        foreach ($this->languages as $language) {
+          if (defined('MODULE_SEMKNOX_SYSTEM_API_'.$language['id'])
+              && constant('MODULE_SEMKNOX_SYSTEM_API_'.$language['id']) != ''
+              )
+          {
+            $this->semknox[$language['id']] = new Semknox($language['id']);
+          }
         }
       }
     }
   }
   
-  function check() {
+  function check($cache = true) {
     if (!isset($this->_check)) {
-      if (defined($this->name.'_STATUS')) {
+      if (defined($this->name.'_STATUS') && $cache === true) {
         $this->_check = true;
       } else {
-        $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '".$this->name."_STATUS'");
+        $check_query = xtc_db_query("SELECT configuration_value 
+                                       FROM " . TABLE_CONFIGURATION . " 
+                                      WHERE configuration_key = '".$this->name."_STATUS'");
         $this->_check = xtc_db_num_rows($check_query);
       }
     }
@@ -85,7 +88,7 @@ class semknox_categories {
 
     require_once(DIR_FS_ADMIN.DIR_WS_MODULES.'system/semknox_system.php');
     $semknox_system = new semknox_system();
-    if ($semknox_system->check() < 1) {
+    if ($semknox_system->check(false) < 1) {
       $semknox_system->install();
     }
   }
@@ -96,7 +99,7 @@ class semknox_categories {
 
     require_once(DIR_FS_ADMIN.DIR_WS_MODULES.'system/semknox_system.php');
     $semknox_system = new semknox_system();
-    if ($semknox_system->check() > 0) {
+    if ($semknox_system->check(false) > 0) {
       $semknox_system->remove();
     }
   }
