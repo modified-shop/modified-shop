@@ -18,7 +18,7 @@ ALTER TABLE coupons MODIFY coupon_minimum_order DECIMAL(15,4) NOT NULL;
 ALTER TABLE orders_recalculate MODIFY n_price DECIMAL(15,4) NOT NULL;
 ALTER TABLE orders_recalculate MODIFY b_price DECIMAL(15,4) NOT NULL;
 ALTER TABLE orders_recalculate MODIFY tax DECIMAL(15,4) NOT NULL;
-ALTER TABLE orders_recalculate MODIFY tax_rate DECIMAL(15,4) NOT NULL;
+ALTER TABLE orders_recalculate MODIFY tax_rate DECIMAL(7,4) NOT NULL;
 ALTER TABLE products_graduated_prices MODIFY unitprice DECIMAL(15,4) NOT NULL;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
