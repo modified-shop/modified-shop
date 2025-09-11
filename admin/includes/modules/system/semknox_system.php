@@ -32,7 +32,7 @@ class semknox_system {
 
     $this->languages = xtc_get_languages();
 
-    if ($this->check(false) > 0) {      
+    if ($this->check() > 0) {      
       $check_api_query = xtc_db_query("SELECT * 
                                          FROM " . TABLE_CONFIGURATION . " 
                                         WHERE configuration_key LIKE 'MODULE_SEMKNOX_SYSTEM_API_%'");
@@ -53,9 +53,9 @@ class semknox_system {
                  );
   }
 
-  function check($cache = true) {
+  function check() {
     if (!isset($this->_check)) {
-      if (defined('MODULE_SEMKNOX_SYSTEM_STATUS') && $cache === true) {
+      if (defined('MODULE_SEMKNOX_SYSTEM_STATUS') && !defined('RUN_MODE_ADMIN')) {
         $this->_check = true;
       } else {
         $check_query = xtc_db_query("SELECT configuration_value 
@@ -74,7 +74,7 @@ class semknox_system {
 
     require_once(DIR_FS_ADMIN.DIR_WS_MODULES.'categories/semknox_categories.php');
     $semknox_categories = new semknox_categories();
-    if ($semknox_categories->check(false) < 1) {
+    if ($semknox_categories->check() < 1) {
       $semknox_categories->install();
     }
     
@@ -107,7 +107,7 @@ class semknox_system {
 
     require_once(DIR_FS_ADMIN.DIR_WS_MODULES.'categories/semknox_categories.php');
     $semknox_categories = new semknox_categories();
-    if ($semknox_categories->check(false) > 0) {
+    if ($semknox_categories->check() > 0) {
       $semknox_categories->remove();
     }
   }
