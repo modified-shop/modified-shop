@@ -20,7 +20,7 @@ class micropayment_method extends micropayment_helper
     var $_check;
 
     var $enabled = true;
-    var $version = '2.2.9';
+    var $version = '2.3.0';
     var $rslcode = 'r120';
     var $get_url_called = false;
 
