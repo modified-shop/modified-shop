@@ -246,7 +246,7 @@
         $products_array = array(
           'identifier' => $products['products_id'],
           'groupIdentifier' => $products['products_id'],
-          'name' => $products['products_name'],
+          'name' => $this->getText($products['products_name']),
           'productUrl' => $xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false),
           'categories' => $this->getCategories($products['products_id']),
           'images' => array(),
@@ -408,9 +408,20 @@
         $vpe_price_array = array();
         $tax_info_array = array();
 
+        $old_price_array = array();
+        $old_price_save_array = array();
+        $old_price_formatted_array = array();
+        
         foreach ($this->customers_status_array as $customers_status) {
           $products_price = $customers_status['xtPrice']->xtcGetPrice($products['products_id'], true, 1, $products['products_tax_class_id'], $products['products_price'], 1);
-          $tax_rate = isset($customers_status['xtPrice']->TAX[$products['products_tax_class_id']]) ? $customers_status['xtPrice']->TAX[$products['products_tax_class_id']] : 0;
+          $tax_rate = 0;
+          if (isset($customers_status['xtPrice']->TAX[$products['products_tax_class_id']])
+              && $customers_status['xtPrice']->cStatus['customers_status_show_price'] != 0
+              && $customers_status['xtPrice']->cStatus['customers_status_show_price_tax'] != 0
+              )
+          {
+            $tax_rate = $customers_status['xtPrice']->TAX[$products['products_tax_class_id']];
+          }
           $_SESSION['customers_status'] = $customers_status['xtPrice']->cStatus;
           
           $products_price['hash'] = md5($products_price['plain']);
@@ -436,12 +447,43 @@
                 'userGroups' => array(),
               );
             }
+            
+            $old_price = $customers_status['xtPrice']->xtcAddTax($products['products_price'], $tax_rate, false);            
+            if (round($products_price['plain'], 2) != 0 
+                && round($products_price['plain'], 2) < round($old_price, 2)
+                )
+            {              
+              $old_price_array[$products_price['hash']] = array(
+                'key' => 'price_old',
+                'value' => $old_price,
+                'userGroups' => array(),
+              );
+              $old_price_save_array[$products_price['hash']] = array(
+                'key' => 'price_old_save',
+                'value' => round(($old_price - $products_price['plain']) / $old_price * 100),
+                'userGroups' => array(),
+              );
+              $old_price_formatted_array[$products_price['hash']] = array(
+                'key' => 'price_old_formatted',
+                'value' => $customers_status['xtPrice']->xtcFormatCurrency($old_price),
+                'userGroups' => array(),
+              );
+            }
           }
 
           $price_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
           $price_formatted_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
-          if (count($vpe_price_array) > 0) {
+          if (isset($vpe_price_array[$products_price['hash']]['userGroups'])) {
             $vpe_price_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
+          }
+          if (isset($old_price_array[$products_price['hash']])) {
+            $old_price_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
+          }
+          if (isset($old_price_save_array[$products_price['hash']])) {
+            $old_price_save_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
+          }
+          if (isset($old_price_formatted_array[$products_price['hash']])) {
+            $old_price_formatted_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
           }
         
           if (!isset($tax_info_array[$tax_rate])) {
@@ -466,7 +508,11 @@
         $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_formatted_array));
         $products_array['attributes'] = array_merge($products_array['attributes'], array_values($vpe_price_array));
         $products_array['attributes'] = array_merge($products_array['attributes'], array_values($tax_info_array));
-        
+        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($old_price_array));
+        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($old_price_save_array));
+        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($old_price_formatted_array));
+        $products_array['attributes'] = array_values($products_array['attributes']);
+                   
         if (count($products_array['categories']) > 0) {
           return $this->encode_utf8($products_array);
         }
