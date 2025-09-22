@@ -14,7 +14,7 @@
 	function ac_closing() {
 		setTimeout("$('#suggestions').slideUp();", 100);
 	}
-  <?php if (SEARCH_AC_STATUS == 'true') { ?>
+  <?php if (SEARCH_AC_STATUS == 'true' && (!defined('MODULE_SEMKNOX_SYSTEM_STATUS') || MODULE_SEMKNOX_SYSTEM_STATUS == 'false')) { ?>
   var session_id = '<?php echo xtc_session_id(); ?>';
   
   function ac_ajax_call(post_params) {
