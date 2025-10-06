@@ -307,7 +307,7 @@ class paypalpui extends PayPalPaymentV2 {
       if ($PayPalOrder->status == 'COMPLETED' || $PayPalOrder->status == 'PENDING_APPROVAL') {
 
         if ($PayPalOrder->status == 'COMPLETED') {
-          $paypal->FinishOrderPui($_SESSION['tmp_oID'], $PayPalOrder);
+          $this->FinishOrderPui($_SESSION['tmp_oID'], $PayPalOrder);
         }
 
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
