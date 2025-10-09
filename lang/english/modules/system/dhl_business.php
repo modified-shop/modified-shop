@@ -29,6 +29,8 @@
   define('MODULE_DHL_BUSINESS_WEIGHT_CN23_DESC', 'Enter the product weight for the customs declaration if none is stored with the product.');
   define('MODULE_DHL_BUSINESS_LOGLEVEL_TITLE', 'Log level');
   define('MODULE_DHL_BUSINESS_LOGLEVEL_DESC', 'Select the log level.');
+  define('MODULE_DHL_BUSINESS_MODE_TITLE', 'Mode');
+  define('MODULE_DHL_BUSINESS_MODE_DESC', 'Select the Mode.');
   
   define('MODULE_DHL_BUSINESS_NOTIFICATION_TITLE', '<hr noshade>Notification');
   define('MODULE_DHL_BUSINESS_NOTIFICATION_DESC', 'Set Notification via DHL preselected as default<br>The customer will be notified by DHL via email about the shipment.<br><b>Note:</b> for this purpose, a declaration of consent to the disclosure of the e-mail address must be available from the customer.');
@@ -36,6 +38,8 @@
   define('MODULE_DHL_BUSINESS_STATUS_UPDATE_DESC', 'The customer will be notified by mail including tracking information and the order will be set to this status.');
   define('MODULE_DHL_BUSINESS_CODING_TITLE', 'Coding');
   define('MODULE_DHL_BUSINESS_CODING_DESC', 'Set Coding preselected as default');
+  define('MODULE_DHL_BUSINESS_PRODUCT_TITLE', 'Product');
+  define('MODULE_DHL_BUSINESS_PRODUCT_DESC', 'Which product should be preselected as default?');
   define('MODULE_DHL_BUSINESS_DISPLAY_LABEL_TITLE', 'Display Label');
   define('MODULE_DHL_BUSINESS_DISPLAY_LABEL_DESC', 'Should the DHL Label be displayed (popup) after generation?');
   define('MODULE_DHL_BUSINESS_RETOURE_TITLE', 'Returns Label');

@@ -69,6 +69,7 @@
               require_once(DIR_FS_EXTERNAL.'dhl/DHLBusinessShipment.php');
               $dhl = new DHLBusinessShipment(array());
               $weight = $dhl->calculate_weight($oID);
+              $weight = sprintf("%01.2f", round($weight, 2));
               
               if (!isset($order->customer['dob'])) {
                 $order->customer['dob'] = '0000-00-00';
@@ -171,34 +172,34 @@
     <?php
     if (MODULE_DHL_BUSINESS_DISPLAY_LABEL == 'True'
         && isset($_SESSION['DHLparcel_id']) 
-        && $_SESSION['DHLparcel_id'] != ''
+        && is_array($_SESSION['DHLparcel_id'])
+        && count($_SESSION['DHLparcel_id']) > 0
         )
     {                                    
       $check_query = xtc_db_query("SELECT *
                                      FROM ".TABLE_ORDERS_TRACKING."
-                                    WHERE parcel_id = '".xtc_db_input($_SESSION['DHLparcel_id'])."'
+                                    WHERE parcel_id IN ('".xtc_db_input(implode("', '", $_SESSION['DHLparcel_id']))."')
                                       AND orders_id = '".(int)$oID."'
                                       AND dhl_label_url != ''
                                  ORDER BY tracking_id DESC 
                                     LIMIT 1");
       if (xtc_db_num_rows($check_query) > 0) {
-        $check = xtc_db_fetch_array($check_query);
-      
-        if ($check['dhl_label_url'] != '') {
-          echo "<script>
-                  $(document).ready(function() {      
-                    window.open('".$check['dhl_label_url']."', 'DHL Label', 'toolbar=0, width=600, height=1000');
-                  });
-                </script>";
-        }     
-
-        if ($check['dhl_export_url'] != '') {
-          echo "<script>
-                  $(document).ready(function() {      
-                    window.open('".$check['dhl_export_url']."', 'DHL Export', 'toolbar=0, width=1000, height=1000');
-                  });
-                </script>";
-        }     
+        while ($check = xtc_db_fetch_array($check_query)) {
+          if ($check['dhl_label_url'] != '') {
+            echo "<script>
+                    $(document).ready(function() {      
+                      window.open('".$check['dhl_label_url']."', 'DHL Label', 'toolbar=0, width=600, height=1000');
+                    });
+                  </script>";
+          }     
+          if ($check['dhl_export_url'] != '') {
+            echo "<script>
+                    $(document).ready(function() {      
+                      window.open('".$check['dhl_export_url']."', 'DHL Export', 'toolbar=0, width=1000, height=1000');
+                    });
+                  </script>";
+          }
+        }  
       }
       unset($_SESSION['DHLparcel_id']);
     }

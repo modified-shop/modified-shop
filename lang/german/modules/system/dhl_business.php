@@ -29,6 +29,8 @@
   define('MODULE_DHL_BUSINESS_WEIGHT_CN23_DESC', 'Geben Sie das Artikelgewicht f&uuml;r die Zollerkl&auml;rung an, sofern keines beim Artikel hinterlegt ist.');
   define('MODULE_DHL_BUSINESS_LOGLEVEL_TITLE', 'Log Level');
   define('MODULE_DHL_BUSINESS_LOGLEVEL_DESC', 'W&auml;hlen Sie das Log Level.');
+  define('MODULE_DHL_BUSINESS_MODE_TITLE', 'Modus');
+  define('MODULE_DHL_BUSINESS_MODE_DESC', 'W&auml;hlen Sie den Modus aus.');
   
   define('MODULE_DHL_BUSINESS_NOTIFICATION_TITLE', '<hr noshade>Benachrichtigung');
   define('MODULE_DHL_BUSINESS_NOTIFICATION_DESC', 'Soll als Standard Benachrichtigung via DHL vorausgew&auml;hlt werden?<br>Der Kunde wird von DHL per eMail &uuml;ber den Versand benachrichtigt.<br><b>Hinweis:</b> daf&uuml;r muss eine Einverst&auml;ndniserkl&auml;rung zur Weitergabe der E-Mail Adresse vom Kunden vorhanden sein.');
@@ -36,6 +38,8 @@
   define('MODULE_DHL_BUSINESS_STATUS_UPDATE_DESC', 'Der Kunde wird per Mail inkl. Trackinginformation benachrichtigt und die Bestellung auf diesen Status gesetzt.');
   define('MODULE_DHL_BUSINESS_CODING_TITLE', 'Leitcodierung');
   define('MODULE_DHL_BUSINESS_CODING_DESC', 'Soll als Standard die Leitcodierung vorausgew&auml;hlt werden?');
+  define('MODULE_DHL_BUSINESS_PRODUCT_TITLE', 'Produkt');
+  define('MODULE_DHL_BUSINESS_PRODUCT_DESC', 'Welches Produkt soll als Standard vorausgew&auml;hlt sein?');
   define('MODULE_DHL_BUSINESS_DISPLAY_LABEL_TITLE', 'Label anzeigen');
   define('MODULE_DHL_BUSINESS_DISPLAY_LABEL_DESC', 'Soll das DHL Label nach Erzeugung angezeigt (Popup) werden?');
   define('MODULE_DHL_BUSINESS_RETOURE_TITLE', 'Retouren Label');

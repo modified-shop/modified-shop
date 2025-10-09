@@ -19,29 +19,25 @@
       $dhl = new DHLBusinessShipment($_POST);
       $response = $dhl->CreateLabel($oID);
       
-      if (is_array($response) && isset($response['message'])) {
-        if (is_array($response['message'])) {
-          foreach ($response['message'] as $message) {
-            $messageStack->add_session(mb_convert_encoding($message, 'ISO-8859-1', 'UTF-8'), 'warning');
+      if (is_array($response['message']) && count($response['message']) > 0) {
+        foreach ($response['message'] as $error => $messages) {
+          foreach ($messages as $message) {
+            $messageStack->add_session($message, 'warning');
           }
-        } else {
-          $messageStack->add_session(mb_convert_encoding($response['message'], 'ISO-8859-1', 'UTF-8'), 'warning');
         }
       }
-      
-      if (is_array($response) && isset($response['parcel_id'])) {
-        $_SESSION['DHLparcel_id'] = $response['parcel_id'];
+            
+      if (is_array($response['label']) && count($response['label']) > 0) {
+        $_SESSION['DHLparcel_id'] = array_column($response['label'], 'parcel_id');
         $messageStack->add_session(TEXT_DHL_BUSINESS_CREATE_SUCCESS, 'success');
         
         if ($_POST['status_update'] > 0) {
           $check_query = xtc_db_query("SELECT *
                                          FROM ".TABLE_ORDERS_TRACKING."
-                                        WHERE parcel_id = '".xtc_db_input($_SESSION['DHLparcel_id'])."'
+                                        WHERE parcel_id IN ('".xtc_db_input(implode("', '", $_SESSION['DHLparcel_id']))."')
                                           AND orders_id = '".(int)$oID."'
                                           AND dhl_label_url != ''");
-          if (xtc_db_num_rows($check_query) > 0) {
-            $check = xtc_db_fetch_array($check_query);
-            
+          if (xtc_db_num_rows($check_query) > 0) {            
             $order = new order($oID);
             require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
             $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
@@ -54,12 +50,12 @@
             $lang_code = $lang_array['code'];
 
             $status = $_POST['status_update'];
-            $comments = sprintf(TEXT_DHL_BUSINESS_ORDER_COMMENT, $_SESSION['DHLparcel_id']);
+            $comments = sprintf(TEXT_DHL_BUSINESS_ORDER_COMMENT, implode(', ', $_SESSION['DHLparcel_id']));
             $order_updated = false;
             $_POST['notify'] = 'on';
             $_POST['notify_comments'] = 'off';
-            $_POST['tracking_id'] = array($check['tracking_id']);
-      
+            $_POST['tracking_id'] = array_column($response['label'], 'tracking_id');
+
             include (DIR_WS_MODULES.'orders_update.php');
         
             if ($order_updated) {
@@ -82,13 +78,11 @@
       $dhl = new DHLBusinessShipment(array());
       $response = $dhl->DeleteLabel($tracking_links['parcel_id']);
       
-      if (is_array($response) && isset($response['message'])) {
-        if (is_array($response['message'])) {
-          foreach ($response['message'] as $message) {
-            $messageStack->add_session(mb_convert_encoding($message, 'ISO-8859-1', 'UTF-8'), 'warning');
+      if (is_array($response['message']) && count($response['message']) > 0) {
+        foreach ($response['message'] as $error => $messages) {
+          foreach ($messages as $message) {
+            $messageStack->add_session($message, 'warning');
           }
-        } else {
-          $messageStack->add_session(mb_convert_encoding($response['message'], 'ISO-8859-1', 'UTF-8'), 'warning');
         }
       } else {
         $messageStack->add_session(TEXT_DHL_BUSINESS_DELETE_SUCCESS, 'success');

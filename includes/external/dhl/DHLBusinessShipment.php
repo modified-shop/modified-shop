@@ -10,21 +10,23 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  define('DHL_API_AUTH', 'http://dhl.de/webservice/cisbase');
-  define('DHL_API_URL', 'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/3.1/geschaeftskundenversand-api-3.1.wsdl');
-
-  define('DHL_SANDBOX_URL', 'https://cig.dhl.de/services/sandbox/soap');
-  define('DHL_PRODUCTION_URL', 'https://cig.dhl.de/services/production/soap');
-
   // include needed function
+  require_once(DIR_FS_EXTERNAL.'GuzzleHttp/functions_include.php');
+  require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Promise/functions_include.php');
+  require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Psr7/functions_include.php');
+
   require_once(DIR_FS_INC.'xtc_get_countries_with_iso_codes.inc.php');
   require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
 
   // include nneded classes
   require_once(DIR_WS_CLASSES.'order.php');
 
+
   #[AllowDynamicProperties]
   class DHLBusinessShipment {
+
+    const DHL_API_AUTH = 'https://api-%s.dhl.com/parcel/de/account/auth/ropc/v1';
+    const DHL_API_URL = 'https://api-%s.dhl.com/parcel/de/shipping/v2';
 
     private $data;
     private $info;
@@ -33,12 +35,13 @@
     private $insurance_array;
     private $loglevel;
     private $LoggingManager;
+    private $message;
 
     protected $sandbox;
 
 
     function __construct($data) {
-      $this->sandbox = false;
+      $this->sandbox = (MODULE_DHL_BUSINESS_MODE === 'sandbox');    
       $this->loglevel = defined('MODULE_DHL_BUSINESS_LOGLEVEL') ? MODULE_DHL_BUSINESS_LOGLEVEL : 'ERROR';
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_dhl_%s_%s.log', 'dhl', strtolower($this->loglevel));
       
@@ -46,8 +49,8 @@
         'user'          => MODULE_DHL_BUSINESS_USER,
         'signature'     => MODULE_DHL_BUSINESS_SIGNATURE,
         'ekp'           => MODULE_DHL_BUSINESS_EKP,
-        'api_user'      => 'ModifiedShopV1_1',
-        'api_password'  => 'tHv3UHNBc9FE6VXZz2mgWXK9oEFO5i',
+        'api_user'      => 'lWh2GbG4I1VyVRvADeWNiWGNKVPI4Wfk',
+        'api_password'  => 'PUrMdYgQnh9ko8ii',
       );
       
       $account_data = preg_split("/[:,]/", MODULE_DHL_BUSINESS_ACCOUNT); 
@@ -72,21 +75,20 @@
       }
       
       $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
-      $street_address = $this->parse_street_address(MODULE_DHL_BUSINESS_ADDRESS);
+     
       $this->info = array(
         'name'            => MODULE_DHL_BUSINESS_FIRSTNAME . ' ' . MODULE_DHL_BUSINESS_LASTNAME,
         'firstname'       => MODULE_DHL_BUSINESS_FIRSTNAME,
         'lastname'        => MODULE_DHL_BUSINESS_LASTNAME,
         'company'         => MODULE_DHL_BUSINESS_COMPANY,
-        'street_name'     => $street_address['street_name'],
-        'street_number'   => $street_address['street_number'],
         'street_address'  => MODULE_DHL_BUSINESS_ADDRESS,
         'postcode'        => MODULE_DHL_BUSINESS_POSTCODE,
         'city'            => MODULE_DHL_BUSINESS_CITY,
         'country'         => $country['countries_name'],
         'country_iso_2'   => $country['countries_iso_code_2'],
+        'country_iso_3'   => $country['countries_iso_code_3'],
         'email_address'   => STORE_OWNER_EMAIL_ADDRESS,
-        'telephone'       => MODULE_DHL_BUSINESS_TELEPHONE,
+        'telephone'       => preg_replace('/[^\+\d]/', '', MODULE_DHL_BUSINESS_TELEPHONE),
       );
       $this->info = $this->encode_request($this->info);
       
@@ -102,63 +104,72 @@
         0 => '500',
         1 => '2500',
         2 => '25000',
-      );      
+      );
+      
+      $this->client = new \GuzzleHttp\Client();
+      $this->getAccessToken();
     }
 
 
     public function CreateLabel($order_id) {
       $this->order = new order($order_id);
-      
-      $this->buildClient();
-      $request = $this->buildLabelData();
-      
+          
+      $headers = array(
+        'Authorization' => 'Bearer '.$this->data['access_token'],
+        'Content-Type' => 'application/json'
+      );
+
+      $body = json_encode($this->buildLabelData());
+
+      $result = array(
+        'label' => array(),
+        'message' => array(),
+      );
+
+      $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/orders?includeDocs=URL'.(($this->codeable == true) ? '&mustEncode=true' : '')), $headers, $body);
+     
       try {
-        $response = $this->client->createShipmentOrder($request);
-      } catch (Exception $ex) {
-        $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$this->encode_message($ex->faultstring));
-      }
-      
-      if ($response->Status->statusCode == '0') {
-        $this->SaveLabel(
-          $response->CreationState->shipmentNumber, 
-          $response->CreationState->LabelData->labelUrl, 
-          ((isset($response->CreationState->LabelData->exportLabelUrl)) ? $response->CreationState->LabelData->exportLabelUrl : '')
-        );
+        $response = $this->client->send($request);
+        $response = json_decode($response->getBody()->getContents(), true);
         
-        $result = array(
-          'parcel_id' => $response->CreationState->shipmentNumber
-        ); 
-        
-        if (isset($response->Status->statusText)
-            && $response->Status->statusText != ''
-            && strtolower($response->Status->statusText) != 'ok'
-            && $this->loglevel == 'INFO'
-            )
-        {
-          $message = array('INFO - <b>Message:</b> '.$this->encode_message($response->Status->statusText));
-        }
-      } else {
-        $message = array('ERROR - <b>Code:</b> '.$response->Status->statusCode.' <b>Message:</b> '.$this->encode_message($response->Status->statusText));
-      }
-      
-      if (isset($message) 
-          && isset($response->CreationState->LabelData->Status->statusMessage)
-          && is_array($response->CreationState->LabelData->Status->statusMessage)
-          )
-      {
-        foreach ($response->CreationState->LabelData->Status->statusMessage as $status_message) {
-          if (!isset($message[md5($status_message)])) {
-            $message[md5($status_message)] = decode_utf8(encode_utf8($status_message, 'ISO-8859-1', true));
+        foreach ($response['items'] as $items) {
+          $tracking_id = $this->SaveLabel(
+            $items['shipmentNo'], 
+            $items['label']['url'], 
+            ((isset($items['customsDoc'])) ? $items['customsDoc']['url'] : ''), 
+          );
+
+          $result['label'][] = array(
+            'tracking_id' => $tracking_id,
+            'parcel_id' => $items['shipmentNo'],
+          ); 
+          
+          if (isset($items['validationMessages']) && $this->loglevel == 'INFO') {
+            foreach ($items['validationMessages'] as $messages) {
+              $this->message['warning'][] = sprintf('Property %s: %s', $messages['property'], $messages['validationMessage']);
+            }
           }
         }
+      } catch (Exception $ex) {
+        $error = json_decode($ex->getResponse()->getBody(), true);      
+
+        if (isset($error['items'])) {
+          foreach ($error['items'] as $items) {
+            if (isset($items['validationMessages'])) {
+              foreach ($items['validationMessages'] as $messages) {
+                $this->message['error'][] = sprintf('Property %s: %s', $messages['property'], $messages['validationMessage']);
+              }
+            }
+          }
+        } elseif (isset($error['detail'])) {
+          $this->message['error'][] = $error['detail'];
+        }
+
+        $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $error));
       }
       
-      if (isset($message) && count($message) > 0) {
-        $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $message));
-        $result['message'] = implode('<br>- ',$message);
-      }
-
+      $result['message'] = $this->message;
+      
       return $result;
     }
 
@@ -174,89 +185,83 @@
         'dhl_export_url' => $dhl_export_url,
       );
       xtc_db_perform(TABLE_ORDERS_TRACKING, $sql_data_array);
+      
+      return xtc_db_insert_id();
     }
 
 
     public function DeleteLabel($shipmentNumber) {
-      $this->buildClient();
+      $headers = [
+        'Authorization' => 'Bearer '.$this->data['access_token'],
+      ];
 
-      // request
-      $request = new stdClass();
-      $request->Version = $this->buildVersion();
-      $request->shipmentNumber = $shipmentNumber;
-      
+      $result = array(
+        'message' => array(),
+      );
+
+      $request = new \GuzzleHttp\Psr7\Request('DELETE', $this->getUrl(self::DHL_API_URL, '/orders?shipment='.$shipmentNumber), $headers);
+
       try {
-        $response = $this->client->deleteShipmentOrder($request);
-      
-        return $response->Status->statusCode;
+        $response = $this->client->send($request);
+        $response = json_decode($response->getBody()->getContents(), true);        
       } catch (Exception $ex) {
-        $this->LoggingManager->log('ERROR', 'buildClient', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$this->encode_message($ex->faultstring));
+        $error = json_decode($ex->getResponse()->getBody(), true);      
+
+        foreach ($error['items'] as $items) {
+          if (isset($items['sstatus'])) {
+            $this->message['error'][] = sprintf('Status %s: %s', $items['sstatus']['status'], $items['sstatus']['detail']);
+          }
+        }
+
+        $this->LoggingManager->log('ERROR', 'DeleteLabel', array('exception' => $error));
       }
+
+      $result['message'] = $this->message;
+      
+      return $result;
     }
 
 
-    private function buildVersion() {
-      $Version = new stdClass();
-      $Version->majorRelease = 3;
-      $Version->minorRelease = 1;
-      $Version->build = 0;
+    private function getAccessToken() {
+      $headers = array(
+        'Content-Type' => 'application/x-www-form-urlencoded'
+      );
       
-      return $Version;
-    }
-
-
-    private function buildClient() {
-      $header = $this->buildAuthHeader();
-      
-      if ($this->sandbox === true) {
-        $location = DHL_SANDBOX_URL;
-      } else {
-        $location = DHL_PRODUCTION_URL;
-      }
-      
-      $ssl_opts = array(
-        'ssl' => array(
-          'verify_peer' => false, 
-          'verify_peer_name' => false
+      $options = array(
+        'form_params' => array(
+          'client_id' => $this->data['api_user'],
+          'client_secret' => $this->data['api_password'],
+          'username' => $this->data['user'],
+          'password' => $this->data['signature'],
+          'grant_type' => 'password',
         )
       );
       
-      $auth_params = array(
-        'login' => $this->data['api_user'],
-        'password' => $this->data['api_password'],
-        'location' => $location,
-        'trace' => 1,
-        'authentication' => SOAP_AUTHENTICATION_BASIC,
-        'connection_timeout' => 60,
-        'cache_wsdl' => WSDL_CACHE_NONE,
-        'stream_context' => stream_context_create($ssl_opts)
-      );
-      
-      try {
-        $this->client = new SoapClient(DHL_API_URL, $auth_params);
-      } catch (Exception $ex) {
-        $this->LoggingManager->log('ERROR', 'buildClient', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$this->encode_message($ex->faultstring));
-      }
-      
-      try {
-        $this->client->__setSoapHeaders($header);
-      } catch (Exception $ex) {
-        $this->LoggingManager->log('ERROR', 'buildClient', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$this->encode_message($ex->faultstring));
+      if (!isset($this->data['access_token'])) {
+        $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_AUTH, '/token'), $headers);
+        
+        try {
+          $response = $this->client->send($request, $options);
+          $response = json_decode($response->getBody()->getContents(), true);
+          $this->data['access_token'] = $response['access_token'];   
+        } catch (Exception $ex) {
+          $error = json_decode($ex->getResponse()->getBody(), true);      
+
+          $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
+
+          $this->LoggingManager->log('ERROR', 'getAccessToken', array('exception' => $error));
+        }
       }
     }
 
 
-    private function buildAuthHeader() {
-      $auth_params = array(
-        'user' => $this->data['user'],
-        'signature' => $this->data['signature'],
-        'type' => 0
-      );
-    
-      return new SoapHeader(DHL_API_AUTH, 'Authentification', $auth_params);
+    private function getUrl($url, $path) {
+      if ($this->sandbox === true) {
+        $url = sprintf($url, 'sandbox');
+      } else {
+        $url = sprintf($url, 'eu');
+      }
+      return $url.$path;
     }
 
 
@@ -266,76 +271,77 @@
             
       // Service
       $Service = new stdClass();
-      
+
       // international
       if (in_array($this->data['product_code'], array('53', '66'))) {
         $this->notification = 1;
         if ($this->premium > 0) {
-          $Service->Premium['active'] = '1';
+          $Service->premium = true;
         }
         if ($this->dutypaid > 0) {
-          $Service->PDDP['active'] = '1';
+          $Service->postalDeliveryDutyPaid = true;
         }
         if ($this->droppoint > 0) {
-          $Service->CDP['active'] = '1';
+          $Service->closestDropPoint = true;
         }
       }
 
       // Shipper
       $Shipper = $this->buildShippingDetails($this->info, 'sender');
-      
-      // Receiver
-      $Receiver = $this->buildShippingDetails($customers_data, 'receiver');
-      
+            
       // ReturnReceiver
       $ReturnReceiver = $this->buildShippingDetails($this->info, 'sender');
 
+      // Receiver
+      $Receiver = $this->buildShippingDetails($customers_data, 'receiver');
+      
       // cod
-      if ($this->data['payment_class'] == 'cod') {
-        $Service->CashOnDelivery = array(
-          'active' => 1,
-          'codAmount' => $this->data['amount']
-        );
-        
+      if ($this->data['payment_class'] == 'cod') {        
         // bankdata
         $BankData = new stdClass();
-        $BankData->accountOwner = MODULE_DHL_BUSINESS_ACCOUNT_OWNER;
+        $BankData->accountHolder = MODULE_DHL_BUSINESS_ACCOUNT_OWNER;
         $BankData->bankName = MODULE_DHL_BUSINESS_BANK_NAME;
         $BankData->iban = MODULE_DHL_BUSINESS_IBAN;
         $BankData->bic = MODULE_DHL_BUSINESS_BIC;
-        $BankData->note1 = $this->data['reference'];
+        
+        $Service->cashOnDelivery = array(
+          'amount' => array(
+            'currency' => $this->data['currency'],
+            'value' => $this->data['amount'],
+          ),
+          'bankAccount' => $BankData,
+          'transferNote1' => $this->data['reference'],
+        );
       }
       
       // insurance
       if ($this->insurance > 0) {
-        $Service->AdditionalInsurance = array(
-          'active' => '1',
-          'insuranceAmount' => $this->insurance_array[$this->insurance]
+        $Service->additionalInsurance = array(
+          'currency' => $this->data['currency'],
+          'value' => $this->insurance_array[$this->insurance]
         );
       }
       
       // avs
       if ($this->avs > 0) {
-        $Service->VisualCheckOfAge['active'] = '1';
-        $Service->VisualCheckOfAge['type'] = 'A'.$this->avs;
+        $Service->visualCheckOfAge = 'A'.$this->avs;
       }
       
       // personal
       if ($this->personal > 0) {
-        $Service->NamedPersonOnly['active'] = '1';
+        $Service->namedPersonOnly = true;
       }
       
       // no neighbour
       if ($this->no_neighbour > 0) {
-        $Service->NoNeighbourDelivery['active'] = '1';
+        $Service->noNeighbourDelivery = true;
       }
 
       // parcel outlet
       if ($this->parcel_outlet > 0) {
-        $Service->ParcelOutletRouting['active'] = '1';
-        $Service->ParcelOutletRouting['details'] = $customers_data['email_address'];
-        if ($this->notification < 1) {
-          $Service->ParcelOutletRouting['details'] = $this->info['email_address'];
+        $Service->parcelOutletRouting = $customers_data['email_address'];
+        if ($this->notification != 1) {
+          $Service->parcelOutletRouting = $this->info['email_address'];
         }
       }
 
@@ -344,63 +350,58 @@
           && $this->signed > 0
           )
       {
-        $Service->signedForByRecipient['active'] = '1';
+        $Service->signedForByRecipient = true;
       }
 
       // bulky
       if ($this->bulky > 0) {
-        $Service->BulkyGoods['active'] = '1';
+        $Service->bulkyGoods = true;
       }
       
+      // ident
       if ($this->ident > 0) {        
         $Ident = new stdClass();
-        $Ident->surname = $this->order->delivery['lastname'];
-        $Ident->givenName = $this->order->delivery['firstname'];
+        $Ident->lastName = $this->order->delivery['lastname'];
+        $Ident->firstName = $this->order->delivery['firstname'];
         $Ident->dateOfBirth = date('Y-m-d', strtotime($this->dob));
         $Ident->minimumAge = 'A'.$this->ident;
         
-        $Service->IdentCheck = new stdClass();
-        $Service->IdentCheck->active = '1';
-        $Service->IdentCheck->Ident = $Ident;
+        $Service->identCheck = $Ident;
       }
       
       // endorsement
       if (in_array($this->data['product_code'], array('53', '66'))) {
-        $Service->Endorsement['active'] = '1';
-        $Service->Endorsement['type'] = $this->endorsement;
+        $Service->endorsement = $this->endorsement;
       }
       
-      // ShipmentDetails
-      $ShipmentDetails = new stdClass();
-      $ShipmentDetails->product = $this->data['product'];
-      $ShipmentDetails->accountNumber = $this->data['ekp'].$this->data['product_code'].((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']][$this->data['product_type']] : $this->data['account']['WORLD'][$this->data['product_type']]);
-      $ShipmentDetails->shipmentDate = date('Y-m-d');
-      $ShipmentDetails->customerReference = $this->data['reference'];
-      
+      // retoure      
       if ($this->retoure > 0) {
-        $ShipmentDetails->returnShipmentAccountNumber = $this->data['ekp'].'07'.((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']]['RT'] : $this->data['account']['WORLD']['RT']);
-        $ShipmentDetails->returnShipmentReference = $this->data['reference'];
+        $Retoure = new stdClass();
+        $Retoure->billingNumber = $this->data['ekp'].'07'.((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']]['RT'] : $this->data['account']['WORLD']['RT']);
+        $Retoure->refNo = $this->data['reference'];
+        $Retoure->returnAddress = $ReturnReceiver;
+        
+        $Service->dhlRetoure = $Retoure;
       }
-      
-      $ShipmentDetails->Service = $Service;
-      if (isset($BankData) && is_object($BankData)) {
-        $ShipmentDetails->BankData = $BankData;
-      }
-    
-      // ShipmentItem
-      $ShipmentItem = new stdClass();
-      $ShipmentItem->weightInKG = $this->data['weight'];
-      $ShipmentDetails->ShipmentItem = $ShipmentItem;
+            
+      // Details
+      $Details = new stdClass();
+      $Details->weight = array(
+        'uom' => 'kg',
+        'value' => (double)sprintf("%01.2f", $this->data['weight']),
+      );
       
       // Shipment
       $Shipment = new stdClass();
-      $Shipment->ShipmentDetails = $ShipmentDetails;
-      $Shipment->Shipper = $Shipper;    
-      $Shipment->Receiver = $Receiver;
-      if ($this->retoure > 0) {
-        $Shipment->ReturnReceiver = $ReturnReceiver;
-      }
-      
+      $Shipment->product = $this->data['product'];
+      $Shipment->billingNumber = $this->data['ekp'].$this->data['product_code'].((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']][$this->data['product_type']] : $this->data['account']['WORLD'][$this->data['product_type']]);
+      $Shipment->shipDate = date('Y-m-d');
+      $Shipment->refNo = $this->data['reference'];
+      $Shipment->shipper = $Shipper;    
+      $Shipment->consignee = $Receiver;
+      $Shipment->details = $Details;
+      $Shipment->services = $Service;
+            
       $tax_rate = 0;                        
       $tax_rates_query = xtc_db_query("SELECT tr.* 
                                          FROM " . TABLE_COUNTRIES . " c
@@ -415,57 +416,47 @@
       }
       
       if ($tax_rate == 0) {
-        $Shipment->ExportDocument = $this->buildExportDocument();
-        $Shipment->ShipmentDetails->Service->Endorsement['active'] = '1';
-        $Shipment->ShipmentDetails->Service->Endorsement['type'] = 'IMMEDIATE';
+        $Shipment->customs = $this->buildExportDocument();
+        $Shipment->services->endorsement = $this->endorsement;
       }
-      
-      // ShipmentOrder
-      $ShipmentOrder = new stdClass();
-      $ShipmentOrder->PrintOnlyIfCodeable['active'] = $this->codeable;
-      $ShipmentOrder->sequenceNumber = MODULE_DHL_BUSINESS_PREFIX.$this->data['orders_id'];
-      $ShipmentOrder->Shipment = $Shipment;
-    
+          
       // request
       $request = new stdClass();
-      $request->Version = $this->buildVersion();
-      $request->ShipmentOrder = $ShipmentOrder;
-      $request->labelResponseType = 'URL';
+      $request->shipments = array($Shipment);
 
       return $request;
     }
 
 
-    private function buildCustomersData() {
-      $street_address = $this->parse_street_address($this->order->delivery['street_address']);
-      
+    private function buildCustomersData() { 
       $customers_data = array(
         'name' => $this->order->delivery['name'],
         'firstname' => $this->order->delivery['firstname'],
         'lastname' => $this->order->delivery['lastname'],
         'company' => $this->order->delivery['company'],
         'suburb' => $this->order->delivery['suburb'],
-        'street_name' => $street_address['street_name'],
-        'street_number' => $street_address['street_number'],
         'street_address' => $this->order->delivery['street_address'],
         'postcode' => $this->order->delivery['postcode'],
         'city' => $this->order->delivery['city'],
         'country' => $this->order->delivery['country'],
         'country_iso_2' => $this->order->delivery['country_iso_2'],
+        'country_iso_3' => $this->get_country_iso_3($this->order->delivery['country_iso_2']),
         'email_address' => $this->order->customer['email_address'],
-        'packstation' => ((stripos($street_address['street_name'], 'packstation') !== false) ? true : false),
-        'postfiliale' => ((stripos($street_address['street_name'], 'postfiliale') !== false) ? true : false),
+        'packstation' => ((stripos($this->order->delivery['street_address'], 'packstation') !== false) ? true : false),
+        'postfiliale' => ((stripos($this->order->delivery['street_address'], 'postfiliale') !== false) ? true : false),
         'postnumber' => '',
-        'telephone' => $this->order->customer['telephone'],
+        'telephone' => preg_replace('/[^\+\d]/', '', $this->order->customer['telephone']),
       );
       
       if ($customers_data['packstation'] === true || $customers_data['postfiliale'] === true) {        
         if (preg_replace('/[^0-9]/', '', $customers_data['company']) != '') {
           $customers_data['postnumber'] = preg_replace('/[^0-9]/', '', $customers_data['company']);
           $customers_data['company'] = '';
+          $customers_data['suburb'] = '';
         }
         if (preg_replace('/[^0-9]/', '', $customers_data['suburb']) != '') {
           $customers_data['postnumber'] = preg_replace('/[^0-9]/', '', $customers_data['suburb']);
+          $customers_data['company'] = '';
           $customers_data['suburb'] = '';
         }
       }
@@ -473,8 +464,8 @@
       $customers_data = $this->encode_request($customers_data);
       
       // global data
-      $this->data['reference'] = $this->order->info['order_id'];
       $this->data['orders_id'] = $this->order->info['order_id'];
+      $this->data['reference'] = $this->getReference();
       $this->data['orders_status'] = $this->order->info['orders_status_id'];
       $this->data['payment_class'] = $this->order->info['payment_class'];
       $this->data['amount'] = number_format(($this->order->info['pp_total']), 2, '.', '');
@@ -512,84 +503,74 @@
 
 
     private function buildShippingDetails($data, $type = 'sender') {
-      $Name = new stdClass();
-      $Name->name1 = (($data['company'] != '') ? substr($data['company'], 0, 35) : substr(($data['firstname'] . ' ' . $data['lastname']), 0, 35));
-      $Name->name2 = (($data['company'] != '') ? substr(($data['firstname'] . ' ' . $data['lastname']), 0, 35) : '');
+      $Address = new stdClass();
+      $Address->name1 = (($data['company'] != '') ? substr($data['company'], 0, 35) : substr(($data['firstname'] . ' ' . $data['lastname']), 0, 35));
+      if ($data['company'] != ''
+          && ($data['firstname'] != '' || $data['lastname'] != '')
+          )
+      {
+         $Address->name2 = substr(($data['firstname'] . ' ' . $data['lastname']), 0, 35);
+      }
       
       if (isset($data['suburb'])
           && $data['suburb'] != '' 
           ) 
       {
-        if ($Name->name2 == '') {
-          $Name->name2 = $data['suburb'];
+        if (!isset($Address->name2)) {
+          $Address->name2 = $data['suburb'];
         } else {
-          $Name->name3 = $data['suburb'];
+          $Address->name3 = $data['suburb'];
         }
       }
-
-      $Origin = new stdClass();
-      $Origin->countryISOCode = $data['country_iso_2'];
-      
-      $Communication = new stdClass();
-      $Communication->phone = $data['telephone'];
-      if ($this->notification == 1 && $type != 'sender') {
-        $Communication->email = $data['email_address'];
-      }
-      
-      $Address = new stdClass();
-      $Address->streetName = $data['street_name'];
-      $Address->streetNumber = $data['street_number'];
-      if (isset($data['suburb']) && $data['suburb'] != '') {
-        //$Address->addressAddition = $data['suburb'];
-      }
-      $Address->zip = $data['postcode'];
+      $Address->addressStreet = $this->format_street_address($data['street_address']);
+      $Address->postalCode = $data['postcode'];
       $Address->city = $data['city'];
-      $Address->Origin = $Origin;
+      $Address->country = $data['country_iso_3'];
+      if ($this->notification == 1 || $type == 'sender') {
+        if ($data['telephone'] != '') {
+          $Address->phone = $data['telephone'];
+        }
+        $Address->email = $data['email_address'];
+      }
   
       if (isset($data['packstation']) && $data['packstation'] === true) {
         $Packstation = new stdClass();
-        $Packstation->packstationNumber = preg_replace('/[^0-9]/', '', (($data['street_number'] != '') ? $data['street_number'] : $data['street_name']));
+        $Packstation->name = (($Address->name2 != '') ? $Address->name2 : $Address->name1);
+        $Packstation->lockerID = preg_replace('/[^0-9]/', '', $data['street_address']);
         $Packstation->postNumber = $data['postnumber'];
-        $Packstation->zip = $data['postcode'];
+        $Packstation->postalCode = $data['postcode'];
         $Packstation->city = $data['city'];
-        $Packstation->Origin = $Origin;
+        $Packstation->country = $data['country_iso_3'];
+        if ($this->notification == 1) {
+          $Packstation->email = $data['email_address'];
+        }
       }
 
       if (isset($data['postfiliale']) && $data['postfiliale'] === true) {
         $Postfiliale = new stdClass();
-        $Postfiliale->postfilialNumber = preg_replace('/[^0-9]/', '', (($data['street_number'] != '') ? $data['street_number'] : $data['street_name']));
+        $Postfiliale->name = (($Address->name2 != '') ? $Address->name2 : $Address->name1);
+        $Postfiliale->retailID = preg_replace('/[^0-9]/', '', $data['street_address']);
         $Postfiliale->postNumber = $data['postnumber'];
-        $Postfiliale->zip = $data['postcode'];
+        $Postfiliale->postalCode = $data['postcode'];
         $Postfiliale->city = $data['city'];
-        $Postfiliale->Origin = $Origin;
+        $Postfiliale->country = $data['country_iso_3'];
+        if ($this->notification == 1) {
+          $Postfiliale->email = $data['email_address'];
+        }
       }
       
       switch ($type) {
         case 'sender':
-          $shipping_details = new stdClass();
-          $shipping_details->Name = $Name;
-          $shipping_details->Address = $Address;
-          $shipping_details->Communication = $Communication;
+          $shipping_details = $Address;
           break;
     
-        case 'receiver':
-          $shipping_details = new stdClass();
+        case 'receiver':         
           if (isset($Packstation) && is_object($Packstation)) {
-            $shipping_details->name1 = (($Name->name2 != '') ? $Name->name2 : $Name->name1);
-            $shipping_details->Packstation = $Packstation;
+            $shipping_details = $Packstation;
           } elseif (isset($Postfiliale) && is_object($Postfiliale)) {
-            $shipping_details->name1 = (($Name->name2 != '') ? $Name->name2 : $Name->name1);
-            $shipping_details->Postfiliale = $Postfiliale;
+            $shipping_details = $Postfiliale;
           } else {
-            $shipping_details->name1 = $Name->name1;
-            $shipping_details->Address = $Address;
-            $shipping_details->Address->name2 = $Name->name2;
-            if (isset($Name->name3)) {
-              $shipping_details->Address->name3 = $Name->name3;
-            }
-            if ($this->notification == 1) {
-              $shipping_details->Communication = $Communication;
-            }
+            $shipping_details = $Address;
           }
           break;
       }
@@ -598,46 +579,55 @@
     }
 
 
+    private function getReference() {
+      $reference = MODULE_DHL_BUSINESS_PREFIX.$this->data['orders_id'];
+      $length = mb_strlen($reference);
+      if ($length < 8) {
+        $reference = MODULE_DHL_BUSINESS_PREFIX.str_pad($this->data['orders_id'], (8 - mb_strlen(MODULE_DHL_BUSINESS_PREFIX)), '0', STR_PAD_LEFT);
+      }
+      
+      return $reference;
+    }
+    
+    
     private function buildExportDocument() {
       $ExportDocument = new stdClass();
       $ExportDocument->exportType = 'COMMERCIAL_GOODS';
-      $ExportDocument->placeOfCommital = $this->info['city'];
-      $ExportDocument->additionalFee = $this->order->info['pp_shipping'] + $this->order->info['pp_fee'];
-      $ExportDocument->customsCurrency = $this->order->info['currency'];
-      if ($this->mrn != '') {
-        $ExportDocument->MRN = $this->mrn;
-      }
+//       $ExportDocument->shipperCustomsRef = '';
+//       $ExportDocument->consigneeCustomsRef = '';
+//       $ExportDocument->invoiceNo = '';
+//       $ExportDocument->permitNo = '';
+//       $ExportDocument->attestationNo = '';
+      $ExportDocument->postalCharges = array(
+        'currency' => $this->data['currency'],
+        'value' => (double)sprintf("%01.2f", $this->order->info['pp_shipping'] + $this->order->info['pp_fee']),
+      );
+//       if ($this->mrn != '') {
+//         $ExportDocument->MRN = $this->mrn;
+//       }
       
-      $ExportDocument->ExportDocPosition = array();
+      $ExportDocument->items = array();
       $this->order->products = $this->encode_request($this->order->products);
       for ($i=0, $n=count($this->order->products); $i<$n; $i++) {
-        $ExportDocument->ExportDocPosition[$i] = new stdClass();
-        $ExportDocument->ExportDocPosition[$i]->description = ((isset($this->order->products[$i]['tariff_title']) && $this->order->products[$i]['tariff_title'] != '') ? $this->order->products[$i]['tariff_title'] : $this->order->products[$i]['name']);
-        $ExportDocument->ExportDocPosition[$i]->countryCodeOrigin = ((isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') ? $this->order->products[$i]['origin'] : $this->info['country_iso_2']);
-        $ExportDocument->ExportDocPosition[$i]->customsTariffNumber = ((isset($this->order->products[$i]['tariff']) && $this->order->products[$i]['tariff'] != '') ? $this->order->products[$i]['tariff'] : '');
-        $ExportDocument->ExportDocPosition[$i]->amount = $this->order->products[$i]['quantity'];
-        $ExportDocument->ExportDocPosition[$i]->netWeightInKG = $this->order->products[$i]['weight'] + (($this->order->products[$i]['weight'] == 0) ? (double)MODULE_DHL_BUSINESS_WEIGHT_CN23 : 0);
-        $ExportDocument->ExportDocPosition[$i]->customsValue = $this->order->products[$i]['price'];
+        if (isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') {
+          $this->order->products[$i]['origin'] = $this->get_country_iso_3($this->order->products[$i]['origin']);
+        }
+        $ExportDocument->items[$i] = new stdClass();
+        $ExportDocument->items[$i]->itemDescription = ((isset($this->order->products[$i]['tariff_title']) && $this->order->products[$i]['tariff_title'] != '') ? $this->order->products[$i]['tariff_title'] : $this->order->products[$i]['name']);
+        $ExportDocument->items[$i]->countryOfOrigin = ((isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') ? $this->order->products[$i]['origin'] : $this->info['country_iso_3']);
+        $ExportDocument->items[$i]->hsCode = ((isset($this->order->products[$i]['tariff']) && $this->order->products[$i]['tariff'] != '') ? $this->order->products[$i]['tariff'] : '');
+        $ExportDocument->items[$i]->packagedQuantity = (double)$this->order->products[$i]['quantity'];
+        $ExportDocument->items[$i]->itemWeight = array(
+          'uom' => 'kg',
+          'value' => (double)sprintf("%01.3f", $this->order->products[$i]['weight'] + (($this->order->products[$i]['weight'] == 0) ? (double)MODULE_DHL_BUSINESS_WEIGHT_CN23 : 0)),
+        );
+        $ExportDocument->items[$i]->itemValue = array(
+          'currency' => $this->data['currency'],
+          'value' => (double)sprintf("%01.2f", $this->order->products[$i]['price']),
+        );
       }
       
       return $ExportDocument;
-    }
-
-
-    private function parse_street_address($street_address) {
-      preg_match_all("! [0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER);
-      if (count($matches) < 1) {
-        preg_match_all("/^([\d][a-z-\/\d]*)|[\s]+([\d][a-z-\/][\d]*)/i", $street_address, $matches, PREG_SET_ORDER);
-      }
-      if (count($matches) < 1) {
-        preg_match_all("![0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER);
-      }
-      $addr = end($matches);
-      
-      return array(
-        'street_name' => ((isset($addr[0])) ? trim(str_replace(trim($addr[0]), '', $street_address), ', ') : $street_address),
-        'street_number' => ((isset($addr[0])) ? trim($addr[0]) : ''),
-      );
     }
 
 
@@ -669,11 +659,28 @@
     }
 
 
-    private function encode_message($string) {
-      return decode_utf8(encode_utf8($string, 'ISO-8859-1', true));
+    private function format_street_address($street_address) {
+      preg_match_all("! [0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER);
+      if (count($matches) < 1) {
+        preg_match_all("/^([\d][a-z-\/\d]*)|[\s]+([\d][a-z-\/][\d]*)/i", $street_address, $matches, PREG_SET_ORDER);
+      }
+      if (count($matches) < 1) {
+        preg_match_all("![0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER);
+      }
+      $addr = end($matches);
+      
+      $address = array(
+        'street_name' => ((isset($addr[0])) ? trim(str_replace(trim($addr[0]), '', $street_address), ', ') : $street_address),
+        'street_number' => ((isset($addr[0])) ? trim($addr[0]) : ''),
+      );
+      
+      $street_address = implode(' ', $address);
+      $street_address = preg_replace('/\s+/', ' ', $street_address);
+      
+      return $street_address;
     }
-    
-    
+
+
     private function encode_request($array) {
       foreach ($array as $key => $value) {
         if (is_array($value)) {
@@ -686,4 +693,16 @@
       return $array;
     }
 
+    
+    private function get_country_iso_3($iso_code_2) {
+      $country_query = xtc_db_query("SELECT countries_iso_code_3 
+                                       FROM ".TABLE_COUNTRIES."
+                                      WHERE countries_iso_code_2 = '".xtc_db_input($iso_code_2)."'");
+      if (xtc_db_num_rows($country_query) > 0) {
+        $country = xtc_db_fetch_array($country_query);
+        return $country['countries_iso_code_3'];
+      }
+      
+      return $iso_code_2;
+    }
   }

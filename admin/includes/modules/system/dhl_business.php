@@ -25,7 +25,7 @@
     function __construct() {
       global $order;
       
-      $this->version = '1.40';
+      $this->version = '1.35';
       $this->code = 'dhl_business';
       $this->title = MODULE_DHL_BUSINESS_TEXT_TITLE;
       $this->description = MODULE_DHL_BUSINESS_TEXT_DESCRIPTION.'<br><br><br><b>Version</b><br>'.$this->version;
@@ -97,8 +97,13 @@
         }
       }
       
-      if (defined('MODULE_DHL_BUSINESS_PRODUCT')) {
-        xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key = 'MODULE_DHL_BUSINESS_PRODUCT'");
+      if (defined('MODULE_DHL_BUSINESS_ACCOUNT_NUMBER')) {
+        xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
+                            WHERE configuration_key = 'MODULE_DHL_BUSINESS_ACCOUNT_NUMBER'");
+      }
+      if (defined('MODULE_DHL_BUSINESS_BANK_CODE')) {
+        xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
+                            WHERE configuration_key = 'MODULE_DHL_BUSINESS_BANK_CODE'");
       }
     }
 
@@ -133,10 +138,12 @@
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_PREFIX', '',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_WEIGHT_CN23', '0.1',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_LOGLEVEL', 'NONE',  '6', '1', 'xtc_cfg_select_option(array(\'NONE\', \'INFO\', \'ERROR\'), ', now())");
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_MODE', 'live',  '6', '1', 'xtc_cfg_select_option(array(\'live\', \'sandbox\'), ', now())");
 
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_NOTIFICATION', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_DHL_BUSINESS_STATUS_UPDATE', '-1',  '6', '1', 'xtc_cfg_get_dhl_orders_status(', 'xtc_get_order_status_name', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_CODING', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_PRODUCT', 'Paket',  '6', '1', 'xtc_cfg_select_option(array(\'Paket\', \'Warenpost\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_DISPLAY_LABEL', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_RETOURE', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_BULKY', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
@@ -162,15 +169,11 @@
     
       // bank data
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_ACCOUNT_OWNER', '',  '6', '1', '', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_ACCOUNT_NUMBER', '',  '6', '1', '', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_BANK_CODE', '',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_BANK_NAME', '',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_IBAN', '',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_BIC', '',  '6', '1', '', now())");
 
       $table_array = array(
-        array('table' => TABLE_ORDERS_TRACKING, 'column' => 'date_added', 'default' => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\' AFTER parcel_id'), //check for date added for previous versions
-
         array('table' => TABLE_ORDERS_TRACKING, 'column' => 'external', 'default' => 'INT(1) NOT NULL'),
         array('table' => TABLE_ORDERS_TRACKING, 'column' => 'dhl_label_url', 'default' => 'VARCHAR(512) NOT NULL'),
         array('table' => TABLE_ORDERS_TRACKING, 'column' => 'dhl_export_url', 'default' => 'VARCHAR(512) NOT NULL'),
@@ -197,10 +200,12 @@
         'MODULE_DHL_BUSINESS_PREFIX',
         'MODULE_DHL_BUSINESS_WEIGHT_CN23',
         'MODULE_DHL_BUSINESS_LOGLEVEL',
+        'MODULE_DHL_BUSINESS_MODE',
         
         'MODULE_DHL_BUSINESS_NOTIFICATION',
         'MODULE_DHL_BUSINESS_STATUS_UPDATE',
         'MODULE_DHL_BUSINESS_CODING',
+        'MODULE_DHL_BUSINESS_PRODUCT',
         'MODULE_DHL_BUSINESS_RETOURE',
         'MODULE_DHL_BUSINESS_PERSONAL',
         'MODULE_DHL_BUSINESS_NO_NEIGHBOUR',
@@ -224,8 +229,6 @@
         'MODULE_DHL_BUSINESS_TELEPHONE',
 
         'MODULE_DHL_BUSINESS_ACCOUNT_OWNER',
-        'MODULE_DHL_BUSINESS_ACCOUNT_NUMBER',
-        'MODULE_DHL_BUSINESS_BANK_CODE',
         'MODULE_DHL_BUSINESS_BANK_NAME',
         'MODULE_DHL_BUSINESS_IBAN',
         'MODULE_DHL_BUSINESS_BIC',
