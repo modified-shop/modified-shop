@@ -87,6 +87,10 @@
       while ($configuration = xtc_db_fetch_array($configuration_query)) {
         $configuration_array[$configuration['configuration_key']] = stripslashes($configuration['configuration_value']);
       }
+      
+      if (is_file(DIR_FS_CATALOG.'.maintenance')) {
+        $configuration_array['SHOP_OFFLINE'] = 'checked';
+      }
     }
     
     return $configuration_array;
