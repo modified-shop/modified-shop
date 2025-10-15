@@ -24,6 +24,7 @@
     var $order_status;
     var $order_status_success;
     var $_check;  
+    var $properties;
     
     function __construct() {
       global $order, $main;
