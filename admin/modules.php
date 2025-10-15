@@ -27,6 +27,7 @@
     'cod',
     'invoice',
     'easycredit',
+    'easyinvoice',
     'eustandardtransfer',
     'moneyorder',
     'paypal',
