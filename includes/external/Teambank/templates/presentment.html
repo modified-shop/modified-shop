@@ -1,0 +1,9 @@
+<link rel="stylesheet" href="{$smarty.const.DIR_WS_BASE}includes/external/Teambank/css/presentment.css" type="text/css" media="screen" />
+<script type="module" src="https://ratenkauf.easycredit.de/api/resource/webcomponents/v3/easycredit-components/easycredit-components.esm.js"></script>
+
+<div class="ec_short_container_outer ec_checkout cf">
+  <div class="ec_short_container ec_checkout cf">
+    <div class="label"><easycredit-checkout-label payment-type="{$paymenttype}" /></div>
+  </div>
+  <div class="ec_checkout_agb cf"><label for="ec_conditions">{$conditions_text}</label></div>
+</div>

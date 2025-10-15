@@ -10,19 +10,12 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-
   class ot_easycredit_fee {
+    var $title, $output;
 
-    var $code;
-    var $title;
-    var $total_title;
-    var $description;
-    var $enabled;
-    var $sort_order;
-    var $output;
-    var $_check;
-
-    function __construct() {    	
+    function __construct() {
+    	global $xtPrice;
+    	
       $this->code = 'ot_easycredit_fee';
       $this->title = MODULE_ORDER_TOTAL_EASYCREDIT_FEE_TITLE;
       $this->total_title = MODULE_ORDER_TOTAL_EASYCREDIT_FEE_TOTAL_TITLE;
@@ -34,30 +27,24 @@
     }
 
     function process() {
-      global $order, $xtPrice, $PHP_SELF;
-      
-     if (in_array(basename($PHP_SELF), array(FILENAME_CHECKOUT_CONFIRMATION, FILENAME_CHECKOUT_PROCESS))
-          && isset($GLOBALS['easycredit']) 
-          && is_object($GLOBALS['easycredit'])
-          && $GLOBALS['easycredit']->ecProcess->getProcessData()->getStatus() == 'ACCEPTED'
+      global $order, $xtPrice;
+
+      if (isset($_SESSION['easycredit'])
+          && isset($_SESSION['easycredit']['decision'])
+          && $_SESSION['easycredit']['decision']['interest'] > 0
           )
       {
-        $easycredit = $GLOBALS['easycredit']->ecProcess->getFinancingDetails()->getInstallmentPlan();
-                
-        $total_cost = $easycredit->getAmount();
-        $total_interest = $easycredit->getInterestRate()->getAccruingInterest();
-      
         $this->output[] = array(
           'title' => '<br/>'.$this->title . ':',
-          'text'  => '<br/>'.$xtPrice->xtcFormat($total_interest, true),
-          'value' => $total_interest,
+          'text'  => '<br/>'.$xtPrice->xtcFormat($_SESSION['easycredit']['decision']['interest'], true),
+          'value' => $_SESSION['easycredit']['interest']['interest'],
           'sort_order' => $this->sort_order,
         );
 
         $this->output[] = array(
           'title' => '<b>'.$this->total_title . ':</b>',
-          'text'  => '<b>'.$xtPrice->xtcFormat($total_cost, true).'</b>',
-          'value' => $total_cost,
+          'text'  => '<b>'.$xtPrice->xtcFormat($_SESSION['easycredit']['decision']['totalValue'], true).'</b>',
+          'value' => $_SESSION['easycredit']['interest']['totalValue'],
           'sort_order' => $this->sort_order + 1,
         );
       }
@@ -65,10 +52,12 @@
 
     function check() {
       if (!isset($this->_check)) {
-        if (defined('MODULE_ORDER_TOTAL_EASYCREDIT_FEE_STATUS')) {
+        if (defined('MODULE_ORDER_TOTAL_EASYCREDIT_FEE_STATUS') && !defined('RUN_MODE_ADMIN')) {
           $this->_check = true;
         } else {
-          $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_ORDER_TOTAL_EASYCREDIT_FEE_STATUS'");
+          $check_query = xtc_db_query("SELECT configuration_value 
+                                         FROM " . TABLE_CONFIGURATION . " 
+                                        WHERE configuration_key = 'MODULE_ORDER_TOTAL_EASYCREDIT_FEE_STATUS'");
           $this->_check = xtc_db_num_rows($check_query);
         }
       }
