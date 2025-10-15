@@ -112,7 +112,6 @@ define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Such-Optionen');
 define('BOX_CONFIGURATION_24', 'Google, Matomo &amp; Facebook');
 define('BOX_CONFIGURATION_25', 'Captcha');
-define('BOX_CONFIGURATION_31', 'Skrill');
 define('BOX_CONFIGURATION_40', 'Popup Fenster Optionen');
 define('BOX_CONFIGURATION_1000', 'Adminbereich Optionen');
 
@@ -460,26 +459,6 @@ define('BOX_GOOGLE_SITEMAP', 'Google Sitemap');
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('BOX_PAYPAL','PayPal');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-
-// BOF - Dokuman - 2009-10-02 - added moneybookers payment module version 2.4
-define('_PAYMENT_MONEYBOOKERS_EMAILID_TITLE','Skrill E-Mail-Adresse');
-define('_PAYMENT_MONEYBOOKERS_EMAILID_DESC','E-Mail-Adresse mit welcher Sie bei Skrill.com registriert sind.<br />Wenn Sie noch &uuml;ber kein Konto verf&uuml;gen, <b>melden Sie sich</b> jetzt bei <a href="https://account.skrill.com/signup/page1" target="_blank"><b>Skrill</b></a> <b>gratis</b> an.');
-define('_PAYMENT_MONEYBOOKERS_MERCHANTID_TITLE','Skrill H&auml;ndler ID');
-define('_PAYMENT_MONEYBOOKERS_MERCHANTID_DESC','Ihre Skrill.com H&auml;ndler ID');
-define('_PAYMENT_MONEYBOOKERS_PWD_TITLE','Skrill Geheimwort');
-define('_PAYMENT_MONEYBOOKERS_PWD_DESC','Mit der Eingabe des Geheimwortes wird die Verbindung beim Bezahlvorgang verschl&uuml;sselt. So wird h&ouml;chste Sicherheit gew&auml;hrleistet. Geben Sie Ihr Skrill Geheimwort ein (dies ist nicht Ihr Passwort!). Das Geheimwort darf nur aus Kleinbuchstaben und Zahlen bestehen. Sie k&ouml;nnen Ihr Geheimwort <b><span class="col-red">nach der Freischaltung</b></span> in Ihrem Skrill-Benutzerkonto definieren (H&auml;ndlereinstellungen).<br /><br /><span class="col-red">So schalten Sie Ihren Skrill.com Account f&uuml;r die Zahlungsabwicklung frei!</span><br /><br />Senden Sie eine E-Mail mit:<br/>- Ihrer Shopdomain<br/>- Ihrer Skrill E-Mail-Adresse<br /><br />An: <a href="mailto:ecommerce@skrill.com?subject=modified eCommerce Shopsoftware: Aktivierung fuer Skrill Quick Checkout">ecommerce@skrill.com</a>');
-define('_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID_TITLE','Bestellstatus - Zahlungsvorgang');
-define('_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID_DESC',' Sobald der Kunde im Shop auf "Bestellung absenden" dr&uuml;ckt, wird eine "tempor&auml;re Bestellung" angelegt. Dies hat den Vorteil, dass bei Kunden die den Zahlungsvorgang bei Moneybookes abbrechen eine Bestellung aufgezeichnet wurde.');
-define('_PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID_TITLE','Bestellstatus - Zahlung OK');
-define('_PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID_DESC','Erscheint, wenn die Zahlung von Skrill best&auml;tigt wurde.');
-define('_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID_TITLE','Bestellstatus - Zahlung in Warteschleife');
-define('_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID_DESC','Wenn der Kunde kein Guthaben auf seinem Konto hat wird die Zahlung solange schwebend gehalten bis das Konto Skrill ausgeglichen ist.');
-define('_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID_TITLE','Bestellstatus - Zahlung Storniert');
-define('_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID_DESC','Wird erscheinen, wenn z.B. eine Kreditkarte abgelehnt wurde');
-define('MB_ERROR_NO_MERCHANT','Es Existiert kein Skrill.com Account mit dieser E-Mail-Adresse!');
-define('MB_MERCHANT_OK','Skrill.com Account korrekt, H&auml;ndler ID %s von Skrill.com empfangen und gespeichert.');
-define('MB_INFO','<img src="../images/icons/moneybookers/MBbanner.jpg" /><br /><br />Sie k&ouml;nnen jetzt Kreditkarten, Lastschrift, Sofort., Giropay sowie alle weiteren wichtigen lokalen Bezahloptionen direkt akzeptieren, mit einer simplen Aktivierung im Shop. Mit Skrill als All-in-One-L&ouml;sung brauchen Sie dabei keine Einzelvertr&auml;ge pro Zahlart abzuschlie&szlig;en. Sie brauchen lediglich einen <a href="https://account.skrill.com/signup/page1" target="_blank"><b>kostenlosen Skrill Account</b></a>, um alle wichtigen Bezahloptionen in Ihrem Shop zu akzeptieren. Zus&auml;tzliche Bezahlarten sind ohne Mehrkosten, das Modul beinhaltet <b>keine monatlichen Fixkosten oder Installationskosten</b>.<br /><br /><b>Ihre Vorteile:</b><br />-Die Akzeptanz der wichtigsten Bezahloptionen steigert Ihren Umsatz<br />-Ein Anbieter reduziert Ihre Aufw&auml;nde und Ihre Kosten<br />-Ihr Kunde bezahlt direkt und ohne Registrierungsprozedur<br />-Ein-Klick-Aktivierung und Integration<br />-Sehr attraktive <a href="https://www.skrill.com/de/fees/" target="_blank"><b>Konditionen</b></a> <br />-sofortige Zahlungsbest&auml;tigung und Pr&uuml;fung der Kundendaten<br />-Bezahlabwicklung auch im Ausland und ohne Mehrkosten<br />-6 Millionen Kunden weltweit vertrauen Skrill');
-// EOF - Dokuman - 2009-10-02 - added moneybookers payment module version 2.4
 
 // BOF - Tomcraft - 2009-11-02 - set global customers-group-permissions
 define('BOX_CUSTOMERS_GROUP','KG-Berechtigungen');

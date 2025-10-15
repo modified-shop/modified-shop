@@ -111,7 +111,6 @@ define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Search-Options');
 define('BOX_CONFIGURATION_24', 'Google, Matomo &amp; Facebook');
 define('BOX_CONFIGURATION_25', 'Captcha');
-define('BOX_CONFIGURATION_31', 'Skrill');
 define('BOX_CONFIGURATION_40', 'Popup Window Options');
 define('BOX_CONFIGURATION_1000', 'My Admin');
 
@@ -461,26 +460,6 @@ define('BOX_GOOGLE_SITEMAP', 'Google Sitemap');
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('BOX_PAYPAL','PayPal');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-
-// BOF - Dokuman - 2009-10-02 - added moneybookers payment module version 2.4
-define('_PAYMENT_MONEYBOOKERS_EMAILID_TITLE','Skrill email address');
-define('_PAYMENT_MONEYBOOKERS_EMAILID_DESC','Email address you have registered with Skrill.<br />If not having a Skrill account you may get one for free at <a href="https://account.skrill.com/signup/page1" target="_blank">Skrill.com</a>.');
-define('_PAYMENT_MONEYBOOKERS_MERCHANTID_TITLE','Merchant ID');
-define('_PAYMENT_MONEYBOOKERS_MERCHANTID_DESC','Your Skrill Merchant ID');
-define('_PAYMENT_MONEYBOOKERS_PWD_TITLE','Skrill Secret Word');
-define('_PAYMENT_MONEYBOOKERS_PWD_DESC','The secret word can be found in your Skrill profile (this is not your password!). It must be lower-case characters and numbers only.<br />To activate the processing at Skrill: Send an email including your Skrill email address and shopsystems domain name<br />To: <a href="mailto:ecommerce@skrill.com?subject=modified eCommerce Shopsoftware: Activation of Skrill Quick Checkout">ecommerce@skrill.com</a>');
-define('_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID_TITLE','order status - temporary order');
-define('_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID_DESC','A temporary order is created after submitting "send order" during order process. If problems occur you find an order with this status.');
-define('_PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID_TITLE','order status - payment OK');
-define('_PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID_DESC','If everything is fine and transaction confirmed by Skrill.');
-define('_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID_TITLE','order status - payment on hold');
-define('_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID_DESC','If someone does not have balance at his Skrill account. The payment is pending until Skrill receive settlement.');
-define('_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID_TITLE','order status - payment cancelled');
-define('_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID_DESC','If a (credit card) payment is rejected.');
-define('MB_ERROR_NO_MERCHANT','There is no Skrill account associated with this email address.');
-define('MB_MERCHANT_OK','Skrill account OK, merchant ID %s received and saved.');
-define('MB_INFO','<img src="../images/icons/moneybookers/MBbanner.jpg"><br /><br />You may accept credit cards, debit notes, online bank transfer, Giropay and other major local payment payments after one single activation. You do not need the hassle of contracts with every payment processor if going with Skrill. All is done with <a href="https://account.skrill.com/signup/page1" target="_blank"><b>free Skrill account</b></a>. Additional payment options are free of charge, and there are <b>no monthy fees or activation costs</b>.<br /><br /><b>Your advantage:</b><br />- more sales by accepting all major payments<br />- reduced costs and effort - just one contract<br />- easy processing for your customer - direct payment without need to create an extra account<br />- one click activation and integration<br />- good <a href="https://www.skrill.com/en/fees/" target="_blank"><b>conditions</b></a><br />- instant payment notification and proof of customer details<br />- no extra costs, even abroad<br />- 11 mio. customers worldwide');
-// EOF - Dokuman - 2009-10-02 - added moneybookers payment module version 2.4
 
 // BOF - Tomcraft - 2009-11-02 - set global customers-group-permissions
 define('BOX_CUSTOMERS_GROUP','CG-authorizations');

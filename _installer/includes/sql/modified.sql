@@ -1047,18 +1047,6 @@ CREATE TABLE orders_tracking (
   KEY idx_carrier_id (carrier_id)
 );
 
-DROP TABLE IF EXISTS payment_moneybookers;
-CREATE TABLE payment_moneybookers (
-  mb_TRID VARCHAR(255) NOT NULL DEFAULT '',
-  mb_ERRNO SMALLINT(3) unsigned NOT NULL DEFAULT 0,
-  mb_ERRTXT VARCHAR(255) NOT NULL DEFAULT '',
-  mb_DATE DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  mb_MBTID BIGINT(18) unsigned NOT NULL DEFAULT 0,
-  mb_STATUS TINYINT(1) NOT NULL DEFAULT 0,
-  mb_ORDERID INT(11) unsigned NOT NULL DEFAULT 0,
-  PRIMARY KEY (mb_TRID)
-);
-
 DROP TABLE IF EXISTS products;
 CREATE TABLE products (
   products_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2004,15 +1992,6 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CAPTCHA_MOD_CLASS', 'modified_captcha', 25, 3, NULL, NOW(), NULL, 'xtc_cfg_select_mod_captcha(');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MODULE_CAPTCHA_LOGIN_NUM', '2', 25, 4, NULL, NOW(), NULL, NULL);
 
-#configuration_group_id 31, Moneybookers
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, '_PAYMENT_MONEYBOOKERS_EMAILID', '', 31, 1, NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, '_PAYMENT_MONEYBOOKERS_PWD','', 31, 2, NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, '_PAYMENT_MONEYBOOKERS_MERCHANTID','', 31, 3, NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, '_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID','0', 31, 4, NULL, NOW(), 'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, '_PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID','0', 31, 5, NULL, NOW(),'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, '_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID','0', 31, 6, NULL, NOW(), 'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, '_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID','0', 31, 7, NULL, NOW(), 'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
-
 #configuration_group_id 40, Popup Window Configuration
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'POPUP_SHIPPING_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600', '40', '10', NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'POPUP_SHIPPING_LINK_CLASS', 'thickbox', '40', '11', NULL, NOW(), NULL, NULL);
@@ -2079,7 +2058,6 @@ INSERT INTO configuration_group VALUES (21,'Afterbuy','Afterbuy.de',21,1);
 INSERT INTO configuration_group VALUES (22,'Search Options','Additional Options for search function',22,1);
 INSERT INTO configuration_group VALUES (23,'Econda Tracking','Econda Tracking System',23,1);
 INSERT INTO configuration_group VALUES (25,'Captcha','Captcha Configuration',25,1);
-INSERT INTO configuration_group VALUES (31,'Skrill','Skrill System',31,1);
 INSERT INTO configuration_group VALUES (40,'Popup Window Configuration','Popup Window Parameters',40,1);
 INSERT INTO configuration_group VALUES (1000,'Adminarea Options','Adminarea Configuration', 1000,1);
 

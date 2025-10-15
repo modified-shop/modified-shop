@@ -635,9 +635,6 @@ $values_group_update = array();
                            'configuration_key' => 'MODULE_CAPTCHA_ACTIVE'
                            );
 
-//configuration_group_id 31 --- "Moneybookers"
-  $values_group[] = "(31,'Moneybookers','Moneybookers System',31,1);";
-
 //configuration_group_id 40 --- "Popup window configuration"
   $values_group[] = "(40,'Popup Window Configuration','Popup Window Parameters',40,1);";
 

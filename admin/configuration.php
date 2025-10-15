@@ -37,28 +37,6 @@
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'save':
-        // moneybookers payment module version 2.4
-        if ($_GET['gID']=='31') {
-          if (isset($_POST['_PAYMENT_MONEYBOOKERS_EMAILID'])) {
-            $url = 'https://www.skrill.com/app/email_check.pl?email=' . urlencode($_POST['_PAYMENT_MONEYBOOKERS_EMAILID']) . '&cust_id=8644877&password=1a28e429ac2fcd036aa7d789ebbfb3b0';
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            $result = curl_exec($ch);
-            if ($result=='NOK') {
-              $messageStack->add_session(MB_ERROR_NO_MERCHANT, 'error');
-            }
-            if (strpos($result,'OK,') !== false) {
-              $data = explode(',',$result);
-              $_POST['_PAYMENT_MONEYBOOKERS_MERCHANTID'] = $data[1];
-              $messageStack->add_session(sprintf(MB_MERCHANT_OK,$data[1]), 'success');
-            }
-          }
-        }
-
         // update changed configurations
         if ($_GET['gID'] != '6' && isset($_POST) && count($_POST) > 0) {
           $configuration_query = xtc_db_query("SELECT *
@@ -237,11 +215,9 @@
             switch ($_GET['gID']) {
               case '21': //Afterbuy                 
               case '19': // Google Conversion-Tracking
-              case '31': // moneybookers payment module version 2.4        
                 echo '<div class="configPartner cf">
                         <a class="configtab'.(($_GET['gID'] == '21') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=21', 'NONSSL').'">Afterbuy</a>
                         <a class="configtab'.(($_GET['gID'] == '19') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=19', 'NONSSL').'">Google Conversion</a>
-                        <a class="configtab'.(($_GET['gID'] == '31') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31', 'NONSSL').'">Skrill.com</a>
                       </div>';
 
                 $tabs = true;
@@ -249,9 +225,6 @@
 
                 if ($_GET['gID'] == '21') {
                   echo '<div class="clear bg_notice pdg2">'.AFTERBUY_URL.'</div>';
-                }
-                if ($_GET['gID'] == '31') {
-                  echo '<div class="clear div_box pdg2" style="max-width:100%">'. MB_INFO.'</div>';
                 }
                 break;
             }
