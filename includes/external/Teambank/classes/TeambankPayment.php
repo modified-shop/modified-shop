@@ -349,7 +349,6 @@
         'urlSuccess' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&easycredit=true', 'SSL')),
         'urlCancellation' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL')),
         'urlDenial' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')),
-        //'urlAuthorizationCallback' => $this->link_encoding(xtc_href_link('callback/teambank/callback.php', '', 'SSL')),
       ]);
   
       $shopsystem = new \Teambank\EasyCreditApiV3\Model\Shopsystem([
@@ -364,10 +363,10 @@
                                           ON o.customers_id = c.customers_id
                                     WHERE c.customers_id = '".(int)$_SESSION['customer_id']."'");
       $check = xtc_db_fetch_array($check_query);
-  
+
       $customerRelationship = new \Teambank\EasyCreditApiV3\Model\CustomerRelationship([
         'customerStatus' => \Teambank\EasyCreditApiV3\Model\CustomerRelationship::CUSTOMER_STATUS_NEW_CUSTOMER,
-        'customerSince' => new DateTime($check['customers_date_added']),
+        'customerSince' => new DateTime((strtotime($check['customers_date_added']) > 0) ? $check['customers_date_added'] : ''),
         'orderDoneWithLogin' => (($_SESSION['account_type'] == 0) ? true : false),
         'numberOfOrders' => $check['total'],
         'negativePaymentInformation' => \Teambank\EasyCreditApiV3\Model\CustomerRelationship::NEGATIVE_PAYMENT_INFORMATION_NO_PAYMENT_DISRUPTION,
@@ -379,7 +378,7 @@
         $shoppingCartInformation[] = new \Teambank\EasyCreditApiV3\Model\ShoppingCartInformationItem([
           'productName' => $this->data_encoding($order->products[$i]['name']),
           'quantity' => (int)$order->products[$i]['quantity'],
-          'price' => floatval($order->products[$i]['final_price']),
+          'price' => sprintf("%01.2f", $order->products[$i]['final_price']),
           'articleNumber' => [
               new \Teambank\EasyCreditApiV3\Model\ArticleNumberItem([
                   'numberType' => 'id',
@@ -398,7 +397,7 @@
       
       $Transaction = new \Teambank\EasyCreditApiV3\Model\Transaction([
           'orderDetails' => new \Teambank\EasyCreditApiV3\Model\OrderDetails([
-            'orderValue' => floatval($this->total_amount),
+            'orderValue' => sprintf("%01.2f", $this->total_amount),
             'orderId' => $_SESSION['easycredit']['oID'],
             'numberOfProductsInShoppingCart' => count($order->products),
             'invoiceAddress' => $invoiceAddress,

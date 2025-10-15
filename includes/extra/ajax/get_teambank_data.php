@@ -18,7 +18,7 @@
     require_once (DIR_WS_CLASSES.'order.php');
     
     if (!isset($_GET['sec'])
-        || $_GET['sec'] != MODULE_PAYMENT_EASYCREDIT_SECRET
+        || $_GET['sec'] != MODULE_PAYMENT_TEAMBANK_SECRET
         )
     {
       return;
