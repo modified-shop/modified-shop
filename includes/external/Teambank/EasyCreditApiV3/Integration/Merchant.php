@@ -8,6 +8,9 @@ use Teambank\EasyCreditApiV3\Model\RefundRequest;
 
 class Merchant implements MerchantInterface {
 
+    protected $transactionApi;
+    protected $logger;
+
     public function __construct(
         TransactionApi $transactionApi,
         $logger

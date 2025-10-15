@@ -11,14 +11,22 @@
    ---------------------------------------------------------------------------------------*/
 
   class ot_easycredit_fee {
-    var $title, $output;
+
+    var $code;
+    var $title;
+    var $header;
+    var $description;
+    var $enabled;
+    var $sort_order;
+    var $output;
+    var $_check;
 
     function __construct() {
     	global $xtPrice;
     	
       $this->code = 'ot_easycredit_fee';
       $this->title = MODULE_ORDER_TOTAL_EASYCREDIT_FEE_TITLE;
-      $this->total_title = MODULE_ORDER_TOTAL_EASYCREDIT_FEE_TOTAL_TITLE;
+      $this->header = MODULE_ORDER_TOTAL_EASYCREDIT_FEE_TOTAL_TITLE;
       $this->description = MODULE_ORDER_TOTAL_EASYCREDIT_FEE_DESCRIPTION;
       $this->enabled = ((defined('MODULE_ORDER_TOTAL_EASYCREDIT_FEE_STATUS') && MODULE_ORDER_TOTAL_EASYCREDIT_FEE_STATUS == 'true') ? true : false);
       $this->sort_order = defined('MODULE_ORDER_TOTAL_EASYCREDIT_FEE_SORT_ORDER') ? MODULE_ORDER_TOTAL_EASYCREDIT_FEE_SORT_ORDER : '';
@@ -42,7 +50,7 @@
         );
 
         $this->output[] = array(
-          'title' => '<b>'.$this->total_title . ':</b>',
+          'title' => '<b>'.$this->header . ':</b>',
           'text'  => '<b>'.$xtPrice->xtcFormat($_SESSION['easycredit']['decision']['totalValue'], true).'</b>',
           'value' => $_SESSION['easycredit']['interest']['totalValue'],
           'sort_order' => $this->sort_order + 1,
