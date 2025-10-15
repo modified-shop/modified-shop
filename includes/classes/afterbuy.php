@@ -592,58 +592,6 @@ class xtc_afterbuy_functions {
         $this->payment_id = '1';
         $this->payment_name = "Vorkasse";
         break;
-      case 'moneybookers':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers";
-        break;
-      case 'moneybookers_cc':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers CC";
-        break;
-      case 'moneybookers_cgb':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers CGB";
-        break;
-      case 'moneybookers_csi':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers CSI";
-        break;
-      case 'moneybookers_elv':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers ELV";
-        break;
-      case 'moneybookers_giropay':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers GIROPAY";
-        break;
-      case 'moneybookers_ideal':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers IDEAL";
-        break;
-      case 'moneybookers_mae':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers MAE";
-        break;
-      case 'moneybookers_netpay':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers NETPAY";
-        break;
-      case 'moneybookers_psp':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers PSP";
-        break;
-      case 'moneybookers_pwy':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers PWY";
-        break;
-      case 'moneybookers_sft':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers SFT";
-        break;
-      case 'moneybookers_wlt':
-        $this->payment_id = '15';
-        $this->payment_name = "Moneybookers WLT";
-        break;
       case 'paypal':
       case 'paypalplus':
       case 'paypalcart':
