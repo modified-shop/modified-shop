@@ -69,6 +69,8 @@
       }
       
       if ($this->enabled === true
+          && isset($_SESSION['sendto'])
+          && isset($_SESSION['billto'])
           && $_SESSION['sendto'] !== $_SESSION['billto']
           )
       {

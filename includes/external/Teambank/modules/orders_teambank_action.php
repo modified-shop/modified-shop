@@ -29,7 +29,7 @@
         switch ($_POST['cmd']) {
           case 'capture':
             try {
-              $TeambankPayment->ecMerchant->confirmShipment($_POST['transactionId'], $_POST['tracking']);
+              $TeambankPayment->ecMerchant->confirmShipment($_POST['transactionId'], ((isset($_POST['tracking'])) ? $_POST['tracking'] : null));
               $messageStack->add_session(TEXT_TEAMBANK_CAPTURED_SUCCESS, 'success');
             } catch (Exception $e) {
               $messageStack->add_session(TEXT_TEAMBANK_CAPTURED_ERROR);
