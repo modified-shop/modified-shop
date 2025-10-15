@@ -10,22 +10,19 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
   
-  
-  if (defined('MODULE_PAYMENT_EASYCREDIT_STATUS') && MODULE_PAYMENT_EASYCREDIT_STATUS == 'True') {
-    require_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/easycredit.php');
-    require_once(DIR_WS_MODULES.'payment/easycredit.php');
-    $easycredit = new easycredit();
+  if ((defined('MODULE_PAYMENT_EASYCREDIT_STATUS') && MODULE_PAYMENT_EASYCREDIT_STATUS == 'True')
+      || (defined('MODULE_PAYMENT_EASYINVOICE_STATUS') && MODULE_PAYMENT_EASYINVOICE_STATUS == 'True')
+      )
+  {
+    $amount = $xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'], $product->data['products_price']); 
+    
+    $payment_array = array();
+    if (defined('MODULE_PAYMENT_EASYCREDIT_STATUS') && MODULE_PAYMENT_EASYCREDIT_STATUS == 'True') $payment_array[] = 'INSTALLMENT';
+    if (defined('MODULE_PAYMENT_EASYINVOICE_STATUS') && MODULE_PAYMENT_EASYINVOICE_STATUS == 'True') $payment_array[] = 'BILL';
 
-    require_once (DIR_FS_INC.'xtc_get_countries.inc.php');
-    $country = xtc_get_countriesList(((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)), true);
-  
-    if ($easycredit->enabled === true
-        && $country['countries_iso_code_2'] == 'DE'
-        ) 
-    {  
-      $amount = $xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'], $product->data['products_price']); 
-      $presentment = $easycredit->get_presentment_product($amount);
-      $info_smarty->assign('EASYCREDIT', $presentment);
-    }
+    $presentment  = '<style>easycredit-widget{width:100%;}</style>';
+    $presentment .= '<script type="module" src="https://ratenkauf.easycredit.de/api/resource/webcomponents/v3/easycredit-components/easycredit-components.esm.js"></script>';
+    $presentment .= '<easycredit-widget webshop-id="'.MODULE_PAYMENT_EASYCREDIT_SHOP_ID.'" amount="'.$amount.'" payment-types="'.implode(',', $payment_array).'" display-type="minimal" class="hydrated"></easycredit-widget>';
+    
+    $info_smarty->assign('EASYCREDIT', $presentment);
   }
-?>

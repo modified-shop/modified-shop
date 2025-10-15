@@ -57,6 +57,7 @@
     'includes/external/billpay', 
     'includes/external/billsafe', 
     'includes/external/easybill', 
+    'includes/external/easycredit', 
     'includes/external/findologic',
     'includes/external/klarna/KITT',
     'includes/external/klarna/api',
