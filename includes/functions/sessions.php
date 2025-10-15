@@ -29,83 +29,85 @@
   
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/sessions/','php') as $file) require_once ($file);
   
-  if (STORE_SESSIONS == 'mysql') {  
-    function _sess_open($save_path, $session_name) {
-      return true;
-    }
-
-    function _sess_close() {
-      return true;
-    }
-
-    function _sess_read($key) {
-      $value_query = xtc_db_query("SELECT value
-                                     FROM " . TABLE_SESSIONS . "
-                                    WHERE sesskey = '" . xtc_db_input($key) . "'
-                                      AND expiry > '" . time() . "'");
-      if (xtc_db_num_rows($value_query) == 1) {
-        $value = xtc_db_fetch_array($value_query);
-
-        if (isset($value['value']) && $value['value'] != '') {
-          return base64_decode($value['value']);
-        }
+  if (STORE_SESSIONS == 'mysql') {
+    class ModifiedSessionHandler implements SessionHandlerInterface {
+  
+      function open($save_path, $session_name) {
+        return true;
       }
-      
-      return '';
-    }
-
-    function _sess_write($key, $val) {
-      global $SESS_LIFE;
-
-      $flag = '';
-      if (isset($_SESSION['customers_status']['customers_status']) 
-          && $_SESSION['customers_status']['customers_status'] == '0'
-          )
-      {
-        $SESS_LIFE = defined('SESSION_LIFE_ADMIN') ? (int)SESSION_LIFE_ADMIN : (int)SESSION_LIFE_ADMIN_DEFAULT;
-        $flag = 'admin';
+  
+      function close() {
+        return true;
       }
-      $expiry = time() + (int)$SESS_LIFE;
-      $value = base64_encode($val);
-
-      $result = xtc_db_query("INSERT INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
-                              VALUES ('". xtc_db_input($key) ."', '".(int)$expiry."', '".xtc_db_input($value)."', '".xtc_db_input($flag)."')
-                              ON DUPLICATE KEY UPDATE expiry = '".(int)$expiry."', value = '".xtc_db_input($value)."', flag = '".xtc_db_input($flag)."'");
-
-      return true;
-    }
-
-    function _sess_destroy($key) {
-      xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($key) . "'");
-      
-      return true;
-    }
-
-    function _sess_gc($maxlifetime) {
-      if (defined('DELETE_GUEST_ACCOUNT') && DELETE_GUEST_ACCOUNT == 'true') {
-        $session_query = xtc_db_query("SELECT sesskey,
-                                              value
-                                         FROM " . TABLE_SESSIONS . "
-                                        WHERE expiry < '" . time() . "'");
-        while ($session = xtc_db_fetch_array($session_query)) {
-          $customers = unserialize_session_data(base64_decode($session['value']));
-          if (is_array($customers) && isset($customers['customer_id']) && isset($customers['account_type']) && $customers['account_type'] != '0') {
-            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers['customer_id']."'");
-            xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$customers['customer_id']."'");
-            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$customers['customer_id']."'");
-            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$customers['customer_id']."'");
+  
+      function read($session_id) {
+        $value_query = xtc_db_query("SELECT value
+                                       FROM " . TABLE_SESSIONS . "
+                                      WHERE sesskey = '" . xtc_db_input($session_id) . "'
+                                        AND expiry > '" . time() . "'");
+        if (xtc_db_num_rows($value_query) == 1) {
+          $value = xtc_db_fetch_array($value_query);
+  
+          if (isset($value['value']) && $value['value'] != '') {
+            return base64_decode($value['value']);
           }
-        }                                       
+        }
+        
+        return '';
       }
-      xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
-      
-      return true;
+  
+      function write($session_id, $val) {
+        global $SESS_LIFE;
+  
+        $flag = '';
+        if (isset($_SESSION['customers_status']['customers_status']) 
+            && $_SESSION['customers_status']['customers_status'] == '0'
+            )
+        {
+          $SESS_LIFE = defined('SESSION_LIFE_ADMIN') ? (int)SESSION_LIFE_ADMIN : (int)SESSION_LIFE_ADMIN_DEFAULT;
+          $flag = 'admin';
+        }
+        $expiry = time() + (int)$SESS_LIFE;
+        $value = base64_encode($val);
+  
+        $result = xtc_db_query("INSERT INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
+                                VALUES ('". xtc_db_input($session_id) ."', '".(int)$expiry."', '".xtc_db_input($value)."', '".xtc_db_input($flag)."')
+                                ON DUPLICATE KEY UPDATE expiry = '".(int)$expiry."', value = '".xtc_db_input($value)."', flag = '".xtc_db_input($flag)."'");
+  
+        return true;
+      }
+  
+      function destroy($session_id) {
+        xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($session_id) . "'");
+        
+        return true;
+      }
+  
+      function gc($maxlifetime) {
+        if (defined('DELETE_GUEST_ACCOUNT') && DELETE_GUEST_ACCOUNT == 'true') {
+          $session_query = xtc_db_query("SELECT sesskey,
+                                                value
+                                           FROM " . TABLE_SESSIONS . "
+                                          WHERE expiry < '" . time() . "'");
+          while ($session = xtc_db_fetch_array($session_query)) {
+            $customers = unserialize_session_data(base64_decode($session['value']));
+            if (is_array($customers) && isset($customers['customer_id']) && isset($customers['account_type']) && $customers['account_type'] != '0') {
+              xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers['customer_id']."'");
+              xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$customers['customer_id']."'");
+              xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$customers['customer_id']."'");
+              xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$customers['customer_id']."'");
+            }
+          }                                       
+        }
+        xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
+        
+        return true;
+      }
     }
-
-    session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
-    register_shutdown_function('session_write_close');
+    
+    $modified_session_handler = new ModifiedSessionHandler();
+    session_set_save_handler($modified_session_handler, true);
   }
-
 
   function xtc_session_start() {
     if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '') {
@@ -247,7 +249,7 @@
   }
   
   function unserialize_session_data( $session_data ) {
-    //check for suhosin.session.encrypt
+    //check for suhosin
     if (suhosin_check()) return 'ENCRYPTED';
  
     //check for correct session value  
@@ -265,8 +267,7 @@
   }
 
   function suhosin_check() {
-    if ( extension_loaded( "suhosin" ) && ini_get( "suhosin.session.encrypt" ) ) {
-      // suhosin is active and suhosin.session.encrypt is On    
+    if (extension_loaded('suhosin') && xtc_get_cfg_var('suhosin.session.encrypt')) {
       return true;      
     }
     return false;
@@ -281,5 +282,3 @@
     }       
     return $ini_option_value;
   }
-        
-?>
