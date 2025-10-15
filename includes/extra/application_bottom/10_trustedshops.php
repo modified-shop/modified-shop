@@ -58,7 +58,6 @@
       Google Checkout                 GOOGLE_CHECKOUT
       Online Shop Zahlungskarte       SHOP_CARD
       Sofortüberweisung.de            DIRECT_E_BANKING
-      Moneybookers.com                MONEYBOOKERS
       Dotpay                          DOTPAY
       Płatności                       PLATNOSCI
       Przelewy24                      PRZELEWY24
@@ -112,34 +111,12 @@
         case 'mcp_ebank2pay':
           $paymenttype = 'DIRECT_E_BANKING';
           break;
-        case 'amoneybookers':
-        case 'moneybookers_cc':
-        case 'moneybookers_cgb':
-        case 'moneybookers_csi':
-        case 'moneybookers_elv':
-        case 'moneybookers_giropay':
-        case 'moneybookers_ideal':
-        case 'moneybookers_mae':
-        case 'moneybookers_netpay':
-        case 'moneybookers_psp':
-        case 'moneybookers_pwy':
-        case 'moneybookers_sft':
-        case 'moneybookers_wlt':
-          $paymenttype = 'MONEYBOOKERS';
-          break;
         case 'klarna_payovertime':
         case 'payone_installment':
           $paymenttype = 'FINANCING';
           break;
-        case 'payone_otrans':
-        case 'shopgate':
-        case 'sofort_ideal':
-        case 'worldpay_junior':
-        case 'payone_paydirekt':
-          $paymenttype = 'OTHER';
-          break;
         default:
-          $paymenttype = '';
+          $paymenttype = 'OTHER';
           break;
       }
       ?>
