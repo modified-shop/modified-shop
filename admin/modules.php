@@ -36,8 +36,6 @@
     'paypalexpress',
     'paypalsepa',
     'paypalsubscription',
-    'sofort_sofortueberweisung_classic',
-    'sofort_sofortueberweisung_gateway',
 
     'paypalapplepay',
     'paypalgooglepay',

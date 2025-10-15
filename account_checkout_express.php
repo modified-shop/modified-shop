@@ -199,8 +199,6 @@ $disallowed_payment = array(
   'paypalplus',
   'payone_installment',
   'payone_otrans',
-  'sofort_sofortueberweisung_classic',
-  'sofort_sofortueberweisung_gateway',
 );
 for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
   if (in_array($selection[$i]['id'], $disallowed_payment)

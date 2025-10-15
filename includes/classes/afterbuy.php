@@ -618,11 +618,6 @@ class xtc_afterbuy_functions {
         $this->payment_id = '5';
         $this->payment_name = "Paypal";
         break;
-      case 'sofort_sofortueberweisung_gateway':
-      case 'sofort_sofortueberweisung_classic':
-        $this->payment_id = '12';
-        $this->payment_name = "Sofort";
-        break;
       case 'billsafe':
         $this->payment_id = '18';
         $this->payment_name = "Billsafe";

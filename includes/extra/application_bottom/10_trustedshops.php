@@ -105,8 +105,6 @@
           $paymenttype = 'INVOICE';
           break;
         case 'klarna_directbanktransfer':
-        case 'sofort_sofortueberweisung_classic':
-        case 'sofort_sofortueberweisung_gateway':
         case 'klarna_paynow':
         case 'mcp_ebank2pay':
           $paymenttype = 'DIRECT_E_BANKING';
