@@ -299,7 +299,7 @@ class vat_validation {
       );
       $client = new SoapClient(VAT_LIVE_CHECK_URL, $options);
     } catch (Exception $e) {
-      trigger_error('SOAP-Fehler: (Fehlernummer: '. $e->faultcode .', Fehlermeldung: '. $e->faultstring .')', E_USER_ERROR);
+      trigger_error('SOAP-Fehler: (Fehlernummer: '. $e->faultcode .', Fehlermeldung: '. $e->faultstring .')', E_USER_WARNING);
     }
 
     if ($client) {

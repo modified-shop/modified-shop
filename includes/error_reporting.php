@@ -180,8 +180,6 @@ function mod_error_level($type)
       return 'WARNING';
     case E_USER_NOTICE: // 1024 //
       return 'CUSTOM';
-    case E_STRICT: // 2048 //
-      return 'INFO';
     case E_RECOVERABLE_ERROR: // 4096 //
       return 'ERROR';
     case E_DEPRECATED: // 8192 //
