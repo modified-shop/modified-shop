@@ -39,14 +39,12 @@
     var $webshopId;
     var $token;
     var $secret;
-    var $storage;
+    var $loglevel;
     
     var $ecCheckout;
     var $ecMerchant;
     var $WebshopDetails;
     var $total_amount;
-
-    var $use_real_order_id = true;
     
     function __construct() {}
     
