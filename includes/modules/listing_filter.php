@@ -36,7 +36,6 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|self:'.basename($PHP_SELF).((isset($current_category_id)) ? '|cID:'.$current_category_id : '').$get_params);
 }
 
-$module_filter = '';
 if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $cache_id) || !$cache) {
   $filter_set_dropdown = '';
   $filter_sort_dropdown = '';
