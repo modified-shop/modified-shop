@@ -60,3 +60,6 @@
 
   define('TEXT_HEADING_TASKS_CURRENCIES_UPDATE', 'Currencies update');
   define('TEXT_INFO_TASKS_CURRENCIES_UPDATE', 'Currency exchange rates are updated');
+
+  define('TEXT_HEADING_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Customer IP Log');
+  define('TEXT_INFO_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Cleanup Customer IP log older than 1 year');
