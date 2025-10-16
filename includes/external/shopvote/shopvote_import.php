@@ -88,8 +88,8 @@
             }
                           
             foreach ($response['reviews'] as $reviews) {
-              if ($sku != '') $reviews['sku'] = $sku;
-              
+              if (!isset($reviews['sku']) || empty($reviews['sku'])) continue;
+                                                            
               if ($migrate === true) {
                 $check_query = xtc_db_query("SELECT *  
                                                FROM ".TABLE_REVIEWS."
@@ -141,7 +141,30 @@
                   'reviews_text' => xtc_db_prepare_input($reviews['text'])
                 );
                 xtc_db_perform(TABLE_REVIEWS_DESCRIPTION, $sql_data_array);
-              } 
+              }
+              
+              // delete duplicate reviews
+              $check_query = xtc_db_query("SELECT products_id 
+                                             FROM ".TABLE_REVIEWS."
+                                            WHERE external_source = 'shopvote'
+                                              AND external_id = '".xtc_db_input($reviews['reviewUID'])."'
+                                              AND products_id != '".(int)$reviews['sku']."'");
+              if (xtc_db_num_rows($check_query) > 0) {
+                while ($check = xtc_db_fetch_array($check_query)) {     
+                  xtc_db_query("DELETE rd
+                                  FROM ".TABLE_REVIEWS_DESCRIPTION." rd
+                                  JOIN ".TABLE_REVIEWS." r
+                                       ON r.reviews_id = rd.reviews_id
+                                          AND r.external_source = 'shopvote'
+                                          AND r.products_id = '".(int)$check['products_id']."'
+                                          AND r.external_id = '".xtc_db_input($reviews['reviewUID'])."'");
+                  xtc_db_query("DELETE FROM ".TABLE_REVIEWS." 
+                                      WHERE external_source = 'shopvote' 
+                                        AND products_id = '".(int)$check['products_id']."' 
+                                        AND external_id = '".xtc_db_input($reviews['reviewUID'])."'");
+                }
+              }
+              
             }
           }
           
