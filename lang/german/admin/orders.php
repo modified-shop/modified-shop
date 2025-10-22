@@ -180,4 +180,4 @@ define('SUCCESS_ORDER_MAIL_STEP_SEND', 'Bestellbest&auml;tigung erfolgreich gese
 define('TABLE_HEADING_INVOICE_NUMBER', 'Rg.Nr.');
 define('BUTTON_BILL', 'Rechnungsnummer erstellen');
 define('NOT_ASSIGNED', 'noch nicht vergeben!');
-?>
+define('SHIPPING_TIME','Lieferzeit: ');

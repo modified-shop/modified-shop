@@ -180,4 +180,4 @@ define('SUCCESS_ORDER_MAIL_STEP_SEND', 'Order mail sent successfully');
 define('TABLE_HEADING_INVOICE_NUMBER', 'Invoice No.');
 define('BUTTON_BILL', 'Create Invoice Number');
 define('NOT_ASSIGNED', 'not yet assigned!');
-?>
+define('SHIPPING_TIME','Shipping time: ');
