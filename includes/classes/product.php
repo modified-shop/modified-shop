@@ -237,7 +237,7 @@ class product {
                                                AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                       WHERE r.products_id = '".(int)$pID."'
                                         AND r.reviews_status = '1'
-                                   ORDER BY r.reviews_id DESC");
+                                   ORDER BY r.date_added DESC");
       if (xtc_db_num_rows($reviews_query)) {
         $i = 0;
         while ($reviews = xtc_db_fetch_array($reviews_query)) {
