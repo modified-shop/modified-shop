@@ -209,7 +209,7 @@
               </table>
                 
               <div class="smallText pdg2 flt-l"><?php echo $whos_online_split->display_count($whos_online_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $whos_online_split->display_links($whos_online_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $whos_online_split->display_links($whos_online_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page', 'info', 'action'))); ?></div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
             </td>
           <?php
@@ -256,12 +256,12 @@
             }
             $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS, 'action=new&ip='.$info['ip']) . '">'.BUTTON_BLACKLIST.'</a><br/><br/>');
           }
-          if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-              echo '            <td class="boxRight" style="min-width:120px">' . "\n";
-              $box = new box;
-              echo $box->infoBox($heading, $contents);
-              echo '            </td>' . "\n";
-            }
+          if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
+            echo '            <td class="boxRight" style="min-width:120px">' . "\n";
+            $box = new box;
+            echo $box->infoBox($heading, $contents);
+            echo '            </td>' . "\n";
+          }
           ?>
           </tr>
         </table>
