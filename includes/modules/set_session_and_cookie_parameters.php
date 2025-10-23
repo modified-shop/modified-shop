@@ -15,8 +15,6 @@ require_once(DIR_FS_INC.'xtc_setcookie.inc.php');
 require_once(DIR_FS_INC.'set_session_cookie.inc.php');
 require_once(DIR_FS_INC.'redirect_invalid_session.inc.php');
 
-@ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
-
 // set the session name and save path
 xtc_session_name('MODsid');
 if (STORE_SESSIONS == 'files') {

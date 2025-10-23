@@ -57,7 +57,6 @@
   }
 
   //Start Session
-  @ini_set('session.use_only_cookies', 1);
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
   // set the session name and save path
