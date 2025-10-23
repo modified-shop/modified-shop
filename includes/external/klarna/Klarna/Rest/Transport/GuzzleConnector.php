@@ -80,7 +80,7 @@ class GuzzleConnector implements ConnectorInterface
         ClientInterface $client,
         $merchantId,
         $sharedSecret,
-        UserAgentInterface $userAgent = null
+        ?UserAgentInterface $userAgent = null
     ) {
         $this->client = $client;
         $this->merchantId = $merchantId;
@@ -271,7 +271,7 @@ class GuzzleConnector implements ConnectorInterface
         $merchantId,
         $sharedSecret,
         $baseUrl = self::EU_BASE_URL,
-        UserAgentInterface $userAgent = null
+        ?UserAgentInterface $userAgent = null
     ) {
         $client = new Client(['base_uri' => $baseUrl]);
 
