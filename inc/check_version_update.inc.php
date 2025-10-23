@@ -18,12 +18,15 @@
 
   function check_version_update($cache = true) {
     global $PHP_SELF;
+    static $version;
     
     $filename = SQL_CACHEDIR.'version.cache';
   
-    $version = PROJECT_VERSION;
-    if (!defined('RUN_MODE_ADMIN')) {
-      require_once(DIR_FS_CATALOG.DIR_ADMIN.'includes/version.php');
+    if (!isset($version)) {
+      $version = PROJECT_VERSION;
+      if (!defined('RUN_MODE_ADMIN')) {
+        require_once(DIR_FS_CATALOG.DIR_ADMIN.'includes/version.php');
+      }
     }
 
     if (!is_file($filename)
@@ -76,6 +79,9 @@
       foreach ($modules_data as $heading => $modules) {
         foreach ($modules as $module => $data) {
           $data['path'] = str_replace('DIR_ADMIN/', DIR_ADMIN, $data['path']);
+          if (isset($data['path2'])) {
+            $data['path'] = str_replace('DIR_ADMIN/', DIR_ADMIN, $data['path2']);
+          }
           $data['lang'] = str_replace('DIR_LANG', $_SESSION['language'], $data['lang']);
           
           $details[$heading][$module] = $data;
