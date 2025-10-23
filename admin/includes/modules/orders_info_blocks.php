@@ -214,7 +214,9 @@
             echo '<br /><nobr><i>&nbsp; - '.$order->products[$i]['attributes'][$j]['option'].': '.$order->products[$i]['attributes'][$j]['value'].'</i></nobr> ';
           }
         }
-        echo '<br /><nobr><i>&nbsp; - '.SHIPPING_TIME.$order->products[$i]['shipping_time'].'</i></nobr> ';
+        if (ACTIVATE_SHIPPING_STATUS == 'true') {
+          echo '<br /><nobr><i>&nbsp; - '.SHIPPING_TIME.$order->products[$i]['shipping_time'].'</i></nobr> ';
+        }
         echo '            </td>'.PHP_EOL;
         echo '            <td class="dataTableContent" valign="top">';
         echo ($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : '<br />';
