@@ -885,12 +885,12 @@ class PayPalPaymentBase extends PayPalCommon {
   }
   
   
-  function update_order($comment, $orders_status, $orders_id) {
+  function update_order($comment, $orders_status, $orders_id, $notified = 0) {
     $order_history_data = array(
       'orders_id' => (int)$orders_id,
       'orders_status_id' => (int)$orders_status,
       'date_added' => 'now()',
-      'customer_notified' => '0',
+      'customer_notified' => $notified,
       'comments' => $comment,
     );
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $order_history_data);

@@ -51,6 +51,8 @@ if (is_array($request)
     if (xtc_db_num_rows($check_query) > 0) {
       $check = xtc_db_fetch_array($check_query);
       
+      $notified = 0;
+      
       if ($version == 1) {
         $paypal = new PayPalPayment($check['payment_class']);
       } else {
@@ -68,6 +70,7 @@ if (is_array($request)
             $_SESSION['customer_id'] = $check['customers_id'];
             include(DIR_FS_CATALOG.'send_order.php');
             unset($_SESSION['customer_id']);
+            $notified = 1;
             
             xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
                              SET send_order = 0
@@ -81,7 +84,7 @@ if (is_array($request)
         $orders_status_id = $check['orders_status'];
       }
       
-      $paypal->update_order($request['summary'], $orders_status_id, $check['orders_id']);
+      $paypal->update_order($request['summary'], $orders_status_id, $check['orders_id'], $notified);
     } else {
       // order is missing
       header("HTTP/1.0 404 Not Found");
