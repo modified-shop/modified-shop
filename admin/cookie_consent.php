@@ -487,8 +487,6 @@ require (DIR_WS_INCLUDES.'head.php');
                       
                       $js = encode_htmlentities("<img data-managed=\"as-oil\"".chr(10)." data-src=\"YOUR-SRC-HERE\"".chr(10)." data-title=\"Simple Image\"".chr(10)." data-purposes=\"".$vInfo->cookies_id."\" />".chr(10));
                       $contents[] = array('text' => '<b>'.TEXT_INFO_HEADING_JSCRIPT_OTHER_CODE.'</b><br /><pre>'.$js.'</pre><br /><br />');
-                      
-                      $contents[] = array('text' => 'More information: <a href="https://github.com/as-ideas/oil" target="_blank">https://github.com/as-ideas/oil</a>');
                     }
                     break;
                 }
