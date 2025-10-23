@@ -204,13 +204,11 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
   }
 
-  $customer_notification = (SEND_EMAILS == 'true') ? '1' : '0';
-
   $sql_data_array = array(
     'orders_id' => $insert_id,
     'orders_status_id' => $order->info['order_status'],
     'date_added' => 'now()',
-    'customer_notified' => $customer_notification,
+    'customer_notified' => 0,
     'comments' => $order->info['comments']
   );
   xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
@@ -442,7 +440,19 @@ if (!$tmp) {
   $disable_send_order = $payment_modules->before_send_order();
   
   // send order mail
-  if ($disable_send_order !== true) {
+  if ($disable_send_order !== true) {    
+    if (SEND_EMAILS == 'true') {
+      $orders_status_history_query = xtc_db_query("SELECT orders_status_history_id
+                                                     FROM ".TABLE_ORDERS_STATUS_HISTORY." 
+                                                    WHERE orders_id = '".(int)$insert_id."'
+                                                 ORDER BY orders_status_history_id DESC 
+                                                    LIMIT 1");
+      $orders_status_history = xtc_db_fetch_array($orders_status_history_query);
+      
+      xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY."
+                       SET customer_notified = 1
+                     WHERE orders_status_history_id = '".$orders_status_history['orders_status_history_id']."'");
+    }
     include(DIR_FS_CATALOG.'send_order.php');
   }
   
