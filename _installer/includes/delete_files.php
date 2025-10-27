@@ -416,6 +416,8 @@
     'includes/external/magnalister/lang/ababab',
     'includes/external/magnalister/php/modules/ayn24.php',
     'includes/external/magnalister/php/modules/idealo/classes/IdealoCheckinSubmit.php',
+    'includes/external/magnalister/php/modules/idealo/crons/IdealoImportOrders.php',
+    'includes/external/magnalister/php/modules/idealo/crons/IdealoSyncOrderStatus.php',
     'includes/external/magnalister/php/modules/laary.php',
     'includes/external/magnalister/php/modules/meinpaket.php',
     'includes/external/magnalister/php/modules/metro/classes/MetroShippingDetailsProcessor.php',
