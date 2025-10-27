@@ -47,6 +47,7 @@
       $separator = $_POST['configuration']['MODULE_PRODUCTS_EXPORT_SEPARATOR'];
       if ($enclosure == '') $enclosure = '"';
       if ($separator == '') $separator = ',';
+      $escape = "\\";
       
       $export_query = xtc_db_query("SELECT p.*,
                                            pd.products_name,
@@ -99,9 +100,9 @@
           foreach ($export_data_array as $k => $v) {
             $header[] = $k;
           }
-          fputcsv($fp, $header, $separator, $enclosure);
+          fputcsv($fp, $header, $separator, $enclosure, $escape);
         }
-        fputcsv($fp, $export_data_array, $separator, $enclosure);
+        fputcsv($fp, $export_data_array, $separator, $enclosure, $escape);
         $i ++;
       }
       fclose($fp);
