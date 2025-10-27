@@ -22,7 +22,7 @@
 
     $presentment  = '<style>easycredit-widget{width:100%;}</style>';
     $presentment .= '<script type="module" src="https://ratenkauf.easycredit.de/api/resource/webcomponents/v3/easycredit-components/easycredit-components.esm.js"></script>';
-    $presentment .= '<easycredit-widget webshop-id="'.MODULE_PAYMENT_EASYCREDIT_SHOP_ID.'" amount="'.$amount.'" payment-types="'.implode(',', $payment_array).'" display-type="minimal" class="hydrated"></easycredit-widget>';
+    $presentment .= '<easycredit-widget webshop-id="'.((defined('MODULE_PAYMENT_EASYCREDIT_SHOP_ID')) ? MODULE_PAYMENT_EASYCREDIT_SHOP_ID : MODULE_PAYMENT_EASYINVOICE_SHOP_ID).'" amount="'.$amount.'" payment-types="'.implode(',', $payment_array).'" display-type="minimal" class="hydrated"></easycredit-widget>';
     
     $info_smarty->assign('EASYCREDIT', $presentment);
   }
