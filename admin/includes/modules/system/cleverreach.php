@@ -55,20 +55,22 @@ class cleverreach {
     
   function install() {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CLEVERREACH_STATUS', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, date_added) VALUES ('MODULE_CLEVERREACH_APIKEY', '',  '6', '1', '', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, date_added) VALUES ('MODULE_CLEVERREACH_NAME', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, date_added) VALUES ('MODULE_CLEVERREACH_CLIENT_ID', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, date_added) VALUES ('MODULE_CLEVERREACH_SECRET', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, date_added) VALUES ('MODULE_CLEVERREACH_GROUP', '',  '6', '1', '', now())");
   }
 
   function remove() {
-    xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+        xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_CLEVERREACH_%'");
   }
 
   function keys() {
-    $key = array('MODULE_CLEVERREACH_STATUS',
-                 'MODULE_CLEVERREACH_APIKEY',
-                 'MODULE_CLEVERREACH_NAME',
-                 'MODULE_CLEVERREACH_GROUP');
+    $key = array(
+      'MODULE_CLEVERREACH_STATUS',
+      'MODULE_CLEVERREACH_GROUP',
+      'MODULE_CLEVERREACH_CLIENT_ID',
+      'MODULE_CLEVERREACH_SECRET',
+    );
 
     return $key;
   }
