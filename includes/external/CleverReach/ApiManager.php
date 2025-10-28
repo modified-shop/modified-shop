@@ -30,7 +30,7 @@ class ApiManager implements ApiManagerInterface
         bool $active = false,
         array $attributes = [],
         array $globalAttributes = [],
-        string $source = null,
+        ?string $source = null,
         array $tags = []
     ) {
         $now = time();
@@ -58,7 +58,7 @@ class ApiManager implements ApiManagerInterface
         int $groupId,
         array $attributes = [],
         array $globalAttributes = [],
-        string $source = null,
+        ?string $source = null,
         array $tags = []
     ) {
         
@@ -77,7 +77,7 @@ class ApiManager implements ApiManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getSubscriber(string $email, int $groupId = null)
+    public function getSubscriber(string $email, ?int $groupId = null)
     {
         if ($groupId) {
             return $this->adapter->action('get', "/v3/groups.json/{$groupId}/receivers/{$email}");

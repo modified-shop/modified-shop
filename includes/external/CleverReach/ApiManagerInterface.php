@@ -23,7 +23,7 @@ interface ApiManagerInterface
         bool $active = false,
         array $attributes = [],
         array $globalAttributes = [],
-        string $source = null,
+        ?string $source = null,
         array $tags = []
     );
 
@@ -44,7 +44,7 @@ interface ApiManagerInterface
         int $groupId,
         array $attributes = [],
         array $globalAttributes = [],
-        string $source = null,
+        ?string $source = null,
         array $tags = []
     );
 
@@ -56,7 +56,7 @@ interface ApiManagerInterface
      *
      * @return mixed
      */
-    public function getSubscriber(string $email, int $groupId = null);
+    public function getSubscriber(string $email, ?int $groupId = null);
 
     /**
      * Sets the active status of a subscriber.

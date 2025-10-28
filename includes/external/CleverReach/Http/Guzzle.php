@@ -28,7 +28,7 @@ class Guzzle extends Client implements AdapterInterface, LoggerAwareInterface
      * @param array                $config
      * @param LoggerInterface|null $logger
      */
-    public function __construct(array $config = [], LoggerInterface $logger = null)
+    public function __construct(array $config = [], ?LoggerInterface $logger = null)
     {
         $adapterConfig = [
             'base_uri' => self::API_ENDPOINT,
