@@ -1,46 +1,54 @@
-<?php    
+<?php
+/* -----------------------------------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
+  use CleverReach\ApiManager;
+  use CleverReach\Http\Guzzle as HttpAdapter;
+ 
   if (defined('MODULE_CLEVERREACH_STATUS') && MODULE_CLEVERREACH_STATUS == 'true') {
-    $api = new SoapClient('http://api.cleverreach.com/soap/interface_v5.1.php?wsdl');
-
-    $newsletter_query = xtc_db_query("SELECT * 
-                                        FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
-                                       WHERE customers_email_address ='".xtc_db_input($mail)."'");
-    $newsletter = xtc_db_fetch_array($newsletter_query);
-  
-    $user = array('email' => $mail,
-                  'registered' => strtotime($newsletter['date_added']),
-                  'activated' => time(),
-                  'source' => MODULE_CLEVERREACH_NAME,
-                  'attributes' => array(array('key' => 'firstname', 'value' => encode_utf8($newsletter['customers_firstname'], $_SESSION['language_charset'], true)),
-                                        array('key' => 'lastname', 'value' => encode_utf8($newsletter['customers_lastname'], $_SESSION['language_charset'], true)))
-                  );
-    $result = $api->receiverAdd(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $user);
-
-    // get unsubscribed
-    $nl_unsubscribe_query = xtc_db_query("SELECT date_added
+    //include needed functions
+    require_once(DIR_FS_EXTERNAL.'GuzzleHttp/functions_include.php');
+    require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Promise/functions_include.php');
+    require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Psr7/functions_include.php');
+    
+    require_once(DIR_FS_EXTERNAL.'CleverReach/autoload.php');
+       
+    $httpAdapter = new HttpAdapter();
+    
+    $response = $httpAdapter->authorize(MODULE_CLEVERREACH_CLIENT_ID, MODULE_CLEVERREACH_SECRET);
+    
+    if (isset($response['access_token'])) {
+      $httpAdapter = new HttpAdapter(array('access_token' => $response['access_token']));
+    
+      $apiManager = new ApiManager($httpAdapter);
+        
+      $data = $apiManager->getSubscriber($mail, MODULE_CLEVERREACH_GROUP);
+      
+      if (isset($data['error'])) {
+        $newsletter_query = xtc_db_query("SELECT * 
                                             FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
-                                           WHERE mail_id < '".$newsletter['mail_id']."'
-                                        ORDER BY mail_id DESC
-                                           LIMIT 1");
-                                         
-    if (xtc_db_num_rows($nl_unsubscribe_query) > 0) {
-      $nl_unsubscribe = xtc_db_fetch_array($nl_unsubscribe_query);
-                                         
-      $page = 0;
-      do {
-        $filter = array('page' => $page++,
-                        'filter' => 'unsubscribed',
-                        'range_start' => date('d.m.Y H:i', strtotime($nl_unsubscribe['date_added'])),
-                        'range_end' => date('d.m.Y H:i', time())
-                        );
-        $return = $api->receiverGetByDate(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $filter);
-        if ($return->status == "SUCCESS") {
-          foreach ($return->data as $data) {
-            xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
-                                WHERE customers_email_address = '".xtc_db_input($data->email)."'");
-          }
-        }        
-      } while ($return->status == "SUCCESS");
+                                           WHERE customers_email_address = '".xtc_db_input($mail)."'");
+        $newsletter = xtc_db_fetch_array($newsletter_query);
+
+        $apiManager->createSubscriber(
+          $mail,
+          MODULE_CLEVERREACH_GROUP, 
+          true,
+          array(
+            'firstname' => encode_utf8($newsletter['customers_firstname'], $_SESSION['language_charset'], true),
+            'lastname' => encode_utf8($newsletter['customers_lastname'], $_SESSION['language_charset'], true)
+          )
+        );
+      } elseif ($data['active'] !== true) {
+        $apiManager->setSubscriberStatus($mail, MODULE_CLEVERREACH_GROUP, true);
+      }
     }
   }
-?>
