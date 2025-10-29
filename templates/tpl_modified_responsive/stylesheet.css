@@ -4070,7 +4070,8 @@ ul.pd_iconlist li.wishlist:before {
 .pd_tabs .resp-tabs-container {
   border-top: 1px solid #ddd;
 }
-.pd_tabs h2.resp-accordion {
+.pd_tabs h2.resp-accordion,
+.pd_tabs div.resp-accordion {
   display: block; 
   background:#eee;
 }
@@ -4081,6 +4082,7 @@ ul.pd_iconlist li.wishlist:before {
   .pd_tabs { background:#fff; }  
   .pd_tabs .resp-tabs-container { border-top: none; }
   .pd_tabs h2.resp-accordion { display: none; }
+  .pd_tabs div.resp-accordion { display: none; }
   .pd_tabs ul.resp-tabs-list { display: block; }
 }
 

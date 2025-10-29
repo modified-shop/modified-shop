@@ -24,7 +24,7 @@ $script_array = array(
   DIR_TMPL_JS.'jquery.colorbox.min.js',
   DIR_TMPL_JS.'jquery.lazysizes.min.js',
   DIR_TMPL_JS.'jquery.bxslider.min.js',
-  DIR_TMPL_JS.'jquery.easyTabs.min.js',
+  DIR_TMPL_JS.'jquery.easyTabs.js',
   DIR_TMPL_JS.'jquery.alertable.min.js',
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';

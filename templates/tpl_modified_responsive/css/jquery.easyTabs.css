@@ -18,7 +18,8 @@ ul.resp-tabs-list {
   background-color: #fff;
   clear: left;
 }
-h2.resp-accordion {
+h2.resp-accordion,
+div.resp-accordion {
   cursor: pointer;
   padding: 5px;
   display: none;
@@ -44,7 +45,8 @@ h2.resp-accordion {
 .resp-tab-content {
   border: 1px solid #ddd;
 }
-h2.resp-accordion {
+h2.resp-accordion,
+div.resp-accordion {
   font-size: 13px;
   font-weight:600;
   background:#fafafa;
@@ -53,12 +55,14 @@ h2.resp-accordion {
   margin: 0px;
   padding: 10px 10px;
 }
-h2.resp-tab-active {
+h2.resp-tab-active,
+div.resp-tab-active {
   border-bottom: 0px solid #ddd !important;
   margin-bottom: 0px !important;
   padding: 10px 10px !important;
 }
-h2.resp-tab-title:last-child {
+h2.resp-tab-title:last-child,
+div.resp-tab-title:last-child {
   border-bottom: 12px solid #ddd !important;
   background: blue;
 }
@@ -104,7 +108,8 @@ h2.resp-tab-title:last-child {
   border-right: 6px solid transparent;
   border-top: 12px solid #ddd;
 }
-h2.resp-tab-active span.resp-arrow {
+h2.resp-tab-active span.resp-arrow,
+div.resp-tab-active span.resp-arrow {
   border: none;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
@@ -112,10 +117,12 @@ h2.resp-tab-active span.resp-arrow {
 }
 
 /*-----------Accordion styles-----------*/
-h2.resp-tab-active {
+h2.resp-tab-active,
+div.resp-tab-active {
   background: #DBDBDB !important;
 }
-.resp-easy-accordion  h2.resp-accordion {
+.resp-easy-accordion  h2.resp-accordion,
+.resp-easy-accordion  div.resp-accordion {
   display: block;
 }
 .resp-easy-accordion .resp-tab-content {
