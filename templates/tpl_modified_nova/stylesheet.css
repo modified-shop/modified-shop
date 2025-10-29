@@ -2689,7 +2689,8 @@ ul.subcats_menu_hover > li > ul > li:last-child > a {
 .lb_title {
   margin: 15px 0px 0px 0px;
 }
-.lb_title h2 {
+.lb_title h2,
+.lb_title .lb_title_inner {
   font-weight:600;
   text-align:left;
   height:32px;
@@ -2703,12 +2704,14 @@ ul.subcats_menu_hover > li > ul > li:last-child > a {
   margin: 0;
   padding: 0;
 }
-.lb_title h2 a {
+.lb_title h2 a,
+.lb_title .lb_title_inner a {
   color:#333;
   display: block;
   height: 100%;
 }
-.lb_title h2 a:hover {
+.lb_title h2 a:hover,
+.lb_title .lb_title_inner a:hover {
   color:#555;
   text-decoration:none;
 }
@@ -3015,7 +3018,8 @@ ul.subcats_menu_hover > li > ul > li:last-child > a {
 .lr_title {
   margin: 3px 0px 15px 0px;
 }
-.lr_title h2 {
+.lr_title h2,
+.lr_title .lr_title_inner {
   font-weight:600;
   font-size:14px;
   line-height:16px;
@@ -3023,10 +3027,12 @@ ul.subcats_menu_hover > li > ul > li:last-child > a {
   margin: 0;
   padding: 0;
 }
-.lr_title h2 a {
+.lr_title h2 a,
+.lr_title .lr_title_inner a {
   color:#333;
 }
-.lr_title h2 a:hover {
+.lr_title h2 a:hover,
+.lr_title .lr_title_inner a:hover {
   color:#555;
   text-decoration:none;
 }
@@ -4875,7 +4881,8 @@ a.view_box.active {
 .rb_title {
   margin: 3px 0px 15px 0px;
 }
-.rb_title h2 {
+.rb_title h2,
+.rb_title .rb_title_inner {
   font-weight:600;
   font-size:14px;
   line-height:16px;
@@ -4883,10 +4890,12 @@ a.view_box.active {
   margin: 0;
   padding: 0;
 }
-.rb_title h2 a {
+.rb_title h2 a,
+.rb_title .rb_title_inner a {
   color:#333;
 }
-.rb_title h2 a:hover {
+.rb_title h2 a:hover,
+.rb_title .rb_title_inner a:hover {
   color:#555;
   text-decoration:none;
 }

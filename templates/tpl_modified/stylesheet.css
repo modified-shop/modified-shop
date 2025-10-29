@@ -1753,7 +1753,8 @@ a.color_more:hover {
   border-top: 1px dotted #ddd;
   padding: 5px 0px 5px 0px;
 }
-.lb_title h2 {
+.lb_title h2,
+.lb_title .lb_title_inner {
   margin: 0px;  
   padding:0px;
   border:none !important;
@@ -1763,10 +1764,12 @@ a.color_more:hover {
   overflow:hidden;
   color:#444;
 }
-.lb_title h2 a {
+.lb_title h2 a,
+.lb_title .lb_title_inner a {
   color:#6D2551;
 }
-.lb_title h2 a:hover {
+.lb_title h2 a:hover,
+.lb_title .lb_title_inner a:hover {
   color:#444;
   text-decoration:none;
 }
@@ -1963,7 +1966,8 @@ a.color_more:hover {
   border-bottom: 1px dotted #ddd;
   padding: 0px 0px 5px 0px;
 }
-.lr_title h2 {
+.lr_title h2,
+.lr_title .lr_title_inner {
   margin: 0px;  
   padding:0px;
   border:none !important;
@@ -1971,10 +1975,12 @@ a.color_more:hover {
   font-size:13px;
   color:#444;
 }
-.lr_title h2 a {
+.lr_title h2 a,
+.lr_title .lr_title_inner a {
   color:#6D2551;
 }
-.lr_title h2 a:hover {
+.lr_title h2 a:hover,
+.lr_title .lr_title_inner a:hover {
   color:#444;
   text-decoration:none;
 }
