@@ -1,6 +1,6 @@
 {foreach name=outer item=gift_data from=$module_gift}
   <div class="resp-easy-accordion">
-    <h2 class="resp-accordion resp-tab-active">{$gift_data.module|onlytext}<span class="payment_costs">{$gift_data.credit_amount}</span></h2>
+    <div class="resp-accordion resp-tab-active">{$gift_data.module|onlytext}<span class="payment_costs">{$gift_data.credit_amount}</span></div>
     <div class="resp-tab-content resp-tab-content-active">
       <div class="cus_check cus_check_gift">
         {$gift_data.selection}
