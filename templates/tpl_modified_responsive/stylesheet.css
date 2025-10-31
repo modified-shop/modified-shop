@@ -2302,6 +2302,9 @@ table.paymentinfotable.paypallink span.cssButton, table.paymentinfotable.paypalp
   white-space:nowrap;
   padding: 0 0 0 0;
 }
+.resp-easy-accordion > .resp-accordion > .payment_costs {
+  float:right;
+}
 .checkout_accordion img {
   max-width:100%;
   height:auto;
