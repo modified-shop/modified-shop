@@ -56,6 +56,7 @@ require (DIR_WS_INCLUDES.'head.php');
   border: 1px solid #666 !important;
   border-bottom: none !important;
 }
+#phpinfo h2 a,
 #phpinfo h2 a:hover{
   font-size: 100% !important;
   font-weight:bold !important;
