@@ -58,7 +58,8 @@ if (is_array($request)
       } else {
         $paypal = new PayPalPaymentV2($check['payment_class']);
         if ($check['payment_class'] == 'paypalpui') {
-          $PayPalOrder = $paypal->FinishOrderPui($check['orders_id']);
+          $PayPalOrder = $paypal->GetOrder($check['payment_id']);
+          $paypal->FinishOrderPui($check['orders_id'], $PayPalOrder);
           
           if (is_object($PayPalOrder)
               && $PayPalOrder->status == 'COMPLETED'

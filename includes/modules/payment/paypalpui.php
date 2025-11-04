@@ -323,18 +323,7 @@ class paypalpui extends PayPalPaymentV2 {
   }
 
 
-  function before_send_order() {
-    global $insert_id;
-    
-    $_SESSION['paypal']['send'] = 0;
-    $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
-    if (is_object($PayPalOrder)
-        && $PayPalOrder->status == 'COMPLETED'
-        )
-    {
-      return false;
-    }
-    
+  function before_send_order() {    
     $_SESSION['paypal']['send'] = 1;
     return true;
   }
