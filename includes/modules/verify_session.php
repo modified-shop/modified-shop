@@ -68,6 +68,7 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
 if ($session_started === true
     && !preg_match('/^[a-z0-9]{26}$/i', xtc_session_id()) 
     && !preg_match('/^[a-z0-9]{32}$/i', xtc_session_id())
+    && !preg_match('/^[a-z0-9]{40}$/i', xtc_session_id())
     && !preg_match('/^[a-z0-9]{52}$/i', xtc_session_id())
     )
 {
