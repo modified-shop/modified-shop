@@ -23,7 +23,7 @@
         $ip_address = preg_replace('/(?!\w{1,4}\:)\w/', '', $ip_address);    
         $ip_address .= 'xxxx';
       }
-    } elseif ($type == '') {
+    } elseif ($type == '' || $type == 'false') {
       $ip_address = '';
     }
   
