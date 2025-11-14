@@ -16,6 +16,7 @@ include('includes/application_top.php');
 
 // include needed functions
 require_once(DIR_FS_INC.'get_external_content.inc.php');
+require_once(DIR_FS_INC.'get_country_id.inc.php');
 
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
@@ -42,7 +43,8 @@ if (is_array($request)
     $check_query = xtc_db_query("SELECT p.*,
                                         o.orders_status,
                                         o.payment_class,
-                                        o.customers_id
+                                        o.customers_id,
+                                        o.customers_country_iso_code_2
                                    FROM ".TABLE_PAYPAL_PAYMENT." p
                                    JOIN ".TABLE_ORDERS." o
                                         ON o.orders_id = p.orders_id
@@ -68,7 +70,23 @@ if (is_array($request)
           {
             $smarty = new Smarty();
             $insert_id = $check['orders_id'];
+            
             $_SESSION['customer_id'] = $check['customers_id'];
+            $_SESSION['customer_country_id'] = get_country_id($check['customers_country_iso_code_2']);
+            $_SESSION['customer_zone_id'] = -1;
+            if ($_SESSION['customer_country_id'] > 0) {
+              $zones_query = xtc_db_query("SELECT z.zone_id
+                                             FROM ".TABLE_ORDERS." o
+                                             JOIN ".TABLE_ZONES." z
+                                                  ON z.zone_name = o.delivery_state
+                                            WHERE o.customers_id = '".(int)$_SESSION['customer_id']."'
+                                              AND z.zone_country_id = '".(int)$_SESSION['customer_country_id']."'");
+              if (xtc_db_num_rows($zones_query) > 0) {
+                $zones = xtc_db_fetch_array($zones_query);
+                $_SESSION['customer_zone_id'] = $zones['zone_id'];
+              }
+            }
+            
             include(DIR_FS_CATALOG.'send_order.php');
             unset($_SESSION['customer_id']);
             $notified = 1;
