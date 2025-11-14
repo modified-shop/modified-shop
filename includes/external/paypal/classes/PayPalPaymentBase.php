@@ -1322,8 +1322,17 @@ class PayPalPaymentBase extends PayPalCommon {
         }
       }
     }
+
+    // set success to wait
+    $sql_data_array = array(
+      array(
+        'config_key' => 'PAYPAL_ORDER_STATUS_SUCCESS_ID',
+        'config_value' => $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID', false),
+      )
+    );
+    $this->save_config($sql_data_array);
   }
-    
+  
   
   function paypal_update() {
     $table_array = array(

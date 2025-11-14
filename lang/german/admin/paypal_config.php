@@ -70,7 +70,7 @@ $lang_array = array(
   'TEXT_PAYPAL_INSTALLMENT_BANNER_COLOR_INFO' => 'W&auml;hlen Sie die Farbe f&uuml;r das Banner aus.',
 
   'TEXT_PAYPAL_CONFIG_STATE_SUCCESS' => 'Status Erfolg:',
-  'TEXT_PAYPAL_CONFIG_STATE_SUCCESS_INFO' => 'Status bei erfolgreicher Bestellung',
+  'TEXT_PAYPAL_CONFIG_STATE_SUCCESS_INFO' => 'Status bei erfolgreicher Bestellung.<br/><br/><b>Hinweis:</b> der Status sollte unbedingt per Webhook (PAYMENT.CAPTURE.COMPLETED) auf "bezahlt" gesetzt werden um sicher zu gehen, dass PayPal die Zahlung ausf&uuml;hrt.',
 
   'TEXT_PAYPAL_CONFIG_STATE_REJECTED' => 'Status Abgelehnt:',
   'TEXT_PAYPAL_CONFIG_STATE_REJECTED_INFO' => 'Status bei abgelehnter Bestellung',
