@@ -70,7 +70,7 @@ $lang_array = array(
   'TEXT_PAYPAL_INSTALLMENT_BANNER_COLOR_INFO' => 'Choose color for the banner.',
 
   'TEXT_PAYPAL_CONFIG_STATE_SUCCESS' => 'Status success:',
-  'TEXT_PAYPAL_CONFIG_STATE_SUCCESS_INFO' => 'Status for success order',
+  'TEXT_PAYPAL_CONFIG_STATE_SUCCESS_INFO' => 'Status for success order<br/><br/><b>Note:</b> The status must be set to "paid" via webhook (PAYMENT.CAPTURE.COMPLETED) to ensure that PayPal executes the payment.',
 
   'TEXT_PAYPAL_CONFIG_STATE_REJECTED' => 'Status rejected:',
   'TEXT_PAYPAL_CONFIG_STATE_REJECTED_INFO' => 'Status for rejected order',
