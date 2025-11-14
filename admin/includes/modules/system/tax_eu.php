@@ -127,29 +127,31 @@ class tax_eu
           }
                                                   
           foreach ($tax_rates_info as $tax_class_id => $tax_rate) {
-            if ($tax_rate != '') {
-              $check_query = xtc_db_query("SELECT *
-                                             FROM ".TABLE_TAX_RATES."
-                                            WHERE tax_class_id = ".$tax_class_id."
-                                              AND tax_zone_id = ".$geo_zones_array[$iso_code_2]);
-              if (xtc_db_num_rows($check_query) == 0) {
-                $sql_data_array = array(
-                  'tax_zone_id' => $geo_zones_array[$iso_code_2],
-                  'tax_class_id' => $tax_class_id,
-                  'tax_priority' => '1',
-                  'tax_rate' => $tax_rate,
-                  'tax_description' => sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate),
-                  'date_added' => 'now()'
-                );
-                xtc_db_perform(TABLE_TAX_RATES, $sql_data_array);
-              } else {
-                $check = xtc_db_fetch_array($check_query);
-                               
+            $check_query = xtc_db_query("SELECT *
+                                           FROM ".TABLE_TAX_RATES."
+                                          WHERE tax_class_id = ".$tax_class_id."
+                                            AND tax_zone_id = ".$geo_zones_array[$iso_code_2]);
+            if (xtc_db_num_rows($check_query) == 0 && $tax_rate != '') {
+              $sql_data_array = array(
+                'tax_zone_id' => $geo_zones_array[$iso_code_2],
+                'tax_class_id' => $tax_class_id,
+                'tax_priority' => '1',
+                'tax_rate' => $tax_rate,
+                'tax_description' => sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate),
+                'date_added' => 'now()'
+              );
+              xtc_db_perform(TABLE_TAX_RATES, $sql_data_array);
+            } else {
+              $check = xtc_db_fetch_array($check_query);
+                             
+              if ($tax_rate != '') {
                 xtc_db_query("UPDATE ".TABLE_TAX_RATES."
                                  SET tax_rate = ".$tax_rate.",
                                      tax_description = '".xtc_db_input(sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate))."',
                                      last_modified = now()
                                WHERE tax_rates_id = ".$check['tax_rates_id']);
+              } else {
+                xtc_db_query("DELETE FROM ".TABLE_TAX_RATES." WHERE tax_rates_id = ".$check['tax_rates_id']);
               }
             }
           }
