@@ -102,9 +102,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       ${$key} = xtc_db_prepare_input($value);
     }
   }
-
-  $error = false;
   
+  $error = false;
+
   if (mb_strlen($firstname, $_SESSION['language_charset']) < ENTRY_FIRST_NAME_MIN_LENGTH) {
     $error = true;
     $messageStack->add('create_account', ENTRY_FIRST_NAME_ERROR);
@@ -130,7 +130,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   // New VAT Check
   if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
     if (!isset($vat)) $vat = '';
-    require_once (DIR_WS_CLASSES . 'vat_validation.php');
+    require_once(DIR_WS_CLASSES.'vat_validation.php');
     $vatID = new vat_validation($vat, '', '', (int)$country, true);
     $customers_status = $vatID->vat_info['status'];
     $customers_vat_id_status = isset($vatID->vat_info['vat_id_status']) ? $vatID->vat_info['vat_id_status'] : '';
@@ -239,7 +239,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('create_account', ENTRY_TOKEN_ERROR);
     $error = true;
   }
-
+  
   if ($error == false) {
     $customers_password_time = time();
     
@@ -250,7 +250,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         $customers_status = 1;
       }
     }
-    
+
     $sql_data_array = array(
       'customers_status' => (int)$customers_status,
       'customers_firstname' => $firstname,
@@ -312,10 +312,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     $address_id = xtc_db_insert_id();
 
-    xtc_db_query("UPDATE " . TABLE_CUSTOMERS . " 
-                     SET customers_default_address_id = '" . (int)$address_id . "' 
-                   WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-    
+    xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
+                     SET customers_default_address_id = '".(int)$address_id."' 
+                   WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+  
     $sql_data_array = array(
       'customers_info_id' => (int)$_SESSION['customer_id'],
       'customers_info_number_of_logons' => '1',
@@ -377,7 +377,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'createaccount';
-require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($messageStack->size('create_account') > 0) {
   $smarty->assign('error_message', $messageStack->output('create_account'));
@@ -387,51 +387,51 @@ $smarty->assign('FORM_ACTION', xtc_draw_form('create_account', xtc_href_link(FIL
 
 if (ACCOUNT_GENDER == 'true') {
   $smarty->assign('gender', '1');
-  $smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array('name' => 'gender', 'text' => (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender(), ((isset($gender)) ? $gender : '')));
+  $smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array('name' => 'gender', 'text' => (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender(), ((isset($gender)) ? $gender : ''), 'autocomplete="sex"'));
 } else {
   $smarty->assign('gender', '0');
 }
 
-$smarty->assign('INPUT_FIRSTNAME', xtc_draw_input_fieldNote(array('name' => 'firstname', 'text' => (xtc_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>' : ''))));
-$smarty->assign('INPUT_LASTNAME', xtc_draw_input_fieldNote(array('name' => 'lastname', 'text' => (xtc_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>' : ''))));
+$smarty->assign('INPUT_FIRSTNAME', xtc_draw_input_fieldNote(array('name' => 'firstname', 'text' => (xtc_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">'.ENTRY_FIRST_NAME_TEXT.'</span>' : '')), '', 'autocomplete="given-name"'));
+$smarty->assign('INPUT_LASTNAME', xtc_draw_input_fieldNote(array('name' => 'lastname', 'text' => (xtc_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">'.ENTRY_LAST_NAME_TEXT.'</span>' : '')), '', 'autocomplete="family-name"'));
 
 if (ACCOUNT_DOB == 'true') {
   $smarty->assign('birthdate', '1');
-  $smarty->assign('INPUT_DOB', xtc_draw_input_fieldNote(array('name' => 'dob', 'text' => (xtc_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '<span class="inputRequirement">' . ENTRY_DATE_OF_BIRTH_TEXT . '</span>' : ''))));
+  $smarty->assign('INPUT_DOB', xtc_draw_input_fieldNote(array('name' => 'dob', 'text' => (xtc_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '<span class="inputRequirement">'.ENTRY_DATE_OF_BIRTH_TEXT.'</span>' : '')), '', 'autocomplete="bday"'));
   $smarty->assign('TEXT_DOB_NOTE', ENTRY_DATE_OF_BIRTH_NOTE);
 } else {
   $smarty->assign('birthdate', '0');
 }
 
-$smarty->assign('INPUT_EMAIL', xtc_draw_input_fieldNote(array('name' => 'email_address', 'text' => (xtc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">' . ENTRY_EMAIL_ADDRESS_TEXT . '</span>' : '')), '',''));
-$smarty->assign('INPUT_CONFIRM_EMAIL', xtc_draw_input_fieldNote(array('name' => 'confirm_email_address', 'text' => (xtc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">'.ENTRY_EMAIL_ADDRESS_TEXT.'</span>' : '')), '',''));
+$smarty->assign('INPUT_EMAIL', xtc_draw_input_fieldNote(array('name' => 'email_address', 'text' => (xtc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">'.ENTRY_EMAIL_ADDRESS_TEXT.'</span>' : '')), '', 'autocomplete="email"'));
+$smarty->assign('INPUT_CONFIRM_EMAIL', xtc_draw_input_fieldNote(array('name' => 'confirm_email_address', 'text' => (xtc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">'.ENTRY_EMAIL_ADDRESS_TEXT.'</span>' : '')), '', 'autocomplete="email"'));
 
 if (ACCOUNT_COMPANY == 'true') {
   $smarty->assign('company', '1');
-  $smarty->assign('INPUT_COMPANY', xtc_draw_input_fieldNote(array('name' => 'company', 'text' => (xtc_not_null(ENTRY_COMPANY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COMPANY_TEXT . '</span>' : ''))));
+  $smarty->assign('INPUT_COMPANY', xtc_draw_input_fieldNote(array('name' => 'company', 'text' => (xtc_not_null(ENTRY_COMPANY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COMPANY_TEXT . '</span>' : '')), '', 'autocomplete="organization"'));
 } else {
   $smarty->assign('company', '0');
 }
 
 if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
   $smarty->assign('vat', '1');
-  $smarty->assign('INPUT_VAT', xtc_draw_input_fieldNote(array('name' => 'vat', 'text' => (xtc_not_null(ENTRY_VAT_TEXT) ? '<span class="inputRequirement">' . ENTRY_VAT_TEXT . '</span>' : ''))));
+  $smarty->assign('INPUT_VAT', xtc_draw_input_fieldNote(array('name' => 'vat', 'text' => (xtc_not_null(ENTRY_VAT_TEXT) ? '<span class="inputRequirement">'.ENTRY_VAT_TEXT.'</span>' : ''))));
   $smarty->assign('TEXT_VAT_NOTE', ENTRY_VAT_NOTE);
 } else {
   $smarty->assign('vat', '0');
 }
 
-$smarty->assign('INPUT_STREET', xtc_draw_input_fieldNote(array('name' => 'street_address', 'text' => (xtc_not_null(ENTRY_STREET_ADDRESS_TEXT) ? '<span class="inputRequirement">' . ENTRY_STREET_ADDRESS_TEXT . '</span>' : ''))));
+$smarty->assign('INPUT_STREET', xtc_draw_input_fieldNote(array('name' => 'street_address', 'text' => (xtc_not_null(ENTRY_STREET_ADDRESS_TEXT) ? '<span class="inputRequirement">'.ENTRY_STREET_ADDRESS_TEXT.'</span>' : '')), '', 'autocomplete="street-address"'));
 
 if (ACCOUNT_SUBURB == 'true') {
   $smarty->assign('suburb', '1');
-  $smarty->assign('INPUT_SUBURB', xtc_draw_input_fieldNote(array('name' => 'suburb', 'text' => (xtc_not_null(ENTRY_SUBURB_TEXT) ? '<span class="inputRequirement">' . ENTRY_SUBURB_TEXT . '</span>' : ''))));
+  $smarty->assign('INPUT_SUBURB', xtc_draw_input_fieldNote(array('name' => 'suburb', 'text' => (xtc_not_null(ENTRY_SUBURB_TEXT) ? '<span class="inputRequirement">'.ENTRY_SUBURB_TEXT.'</span>' : '')), '', 'autocomplete="address-level4"'));
 } else {
   $smarty->assign('suburb', '0');
 }
 
-$smarty->assign('INPUT_CODE', xtc_draw_input_fieldNote(array('name' => 'postcode', 'text' => (xtc_not_null(ENTRY_POST_CODE_TEXT) ? '<span class="inputRequirement">' . ENTRY_POST_CODE_TEXT . '</span>' : ''))));
-$smarty->assign('INPUT_CITY', xtc_draw_input_fieldNote(array('name' => 'city', 'text' => (xtc_not_null(ENTRY_CITY_TEXT) ? '<span class="inputRequirement">' . ENTRY_CITY_TEXT . '</span>' : ''))));
+$smarty->assign('INPUT_CODE', xtc_draw_input_fieldNote(array('name' => 'postcode', 'text' => (xtc_not_null(ENTRY_POST_CODE_TEXT) ? '<span class="inputRequirement">'.ENTRY_POST_CODE_TEXT.'</span>' : '')), '', 'autocomplete="postal-code"'));
+$smarty->assign('INPUT_CITY', xtc_draw_input_fieldNote(array('name' => 'city', 'text' => (xtc_not_null(ENTRY_CITY_TEXT) ? '<span class="inputRequirement">'.ENTRY_CITY_TEXT.'</span>' : '')), '', 'autocomplete="address-level2"'));
 
 if (ACCOUNT_STATE == 'true') { //important no $required_zones because of ajax loader
   $smarty->assign('state', '1');
@@ -441,8 +441,8 @@ if (ACCOUNT_STATE == 'true') { //important no $required_zones because of ajax lo
       $zones_array = array();
       $zones_query = xtDBquery("SELECT zone_id, 
                                        zone_name 
-                                  FROM " . TABLE_ZONES . " 
-                                 WHERE zone_country_id = '" . (int)$country . "' 
+                                  FROM ".TABLE_ZONES." 
+                                 WHERE zone_country_id = '".(int)$country."' 
                               ORDER BY zone_name");
       while ($zones_values = xtc_db_fetch_array($zones_query, true)) {
         $zones_array[] = array(
@@ -450,16 +450,16 @@ if (ACCOUNT_STATE == 'true') { //important no $required_zones because of ajax lo
           'text' => $zones_values['zone_name']
         );
       }
-      $state_input = xtc_draw_pull_down_menuNote(array('name' => 'state', 'text' => (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>' : '')), $zones_array, $zone_id);
+      $state_input = xtc_draw_pull_down_menuNote(array('name' => 'state', 'text' => (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">'.ENTRY_STATE_TEXT.'</span>' : '')), $zones_array, $zone_id, 'autocomplete="address-level1"');
     } else {
-      $state_input = xtc_draw_input_fieldNote(array('name' => 'state', 'text' => (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>' : '')));
+      $state_input = xtc_draw_input_fieldNote(array('name' => 'state', 'text' => (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">'.ENTRY_STATE_TEXT.'</span>' : '')), '', 'autocomplete="address-level1"');
       if (!$required_zones) {
         $state_input = '<input type="hidden" value="0" name="state">';
         $smarty->assign('display_state', ' style="display:none"');        
       }
     }
   } else {
-    $state_input = xtc_draw_input_fieldNote(array('name' => 'state', 'text' => (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>' : '')));
+    $state_input = xtc_draw_input_fieldNote(array('name' => 'state', 'text' => (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">'.ENTRY_STATE_TEXT.'</span>' : '')), '', 'autocomplete="address-level1"');
     if (!$required_zones) {
       $state_input = '<input type="hidden" value="0" name="state">';
       $smarty->assign('display_state', ' style="display:none"');     
@@ -472,7 +472,7 @@ if (ACCOUNT_STATE == 'true') { //important no $required_zones because of ajax lo
 
 if (ACCOUNT_FAX == 'true') {
   $smarty->assign('fax', '1');
-  $smarty->assign('INPUT_FAX', xtc_draw_input_fieldNote(array('name' => 'fax', 'text' => (xtc_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="inputRequirement">' . ENTRY_FAX_NUMBER_TEXT . '</span>' : ''))));
+  $smarty->assign('INPUT_FAX', xtc_draw_input_fieldNote(array('name' => 'fax', 'text' => (xtc_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="inputRequirement">'.ENTRY_FAX_NUMBER_TEXT.'</span>' : '')), '', 'autocomplete="fax"'));
 } else {
   $smarty->assign('fax', '0');
 }
@@ -481,8 +481,8 @@ if (in_array('create_account', $use_captcha)) {
   $smarty->assign('VVIMG', $mod_captcha->get_image_code());
   $smarty->assign('INPUT_VVCODE', $mod_captcha->get_input_code());
 }
-$smarty->assign('SELECT_COUNTRY', xtc_get_country_list(array('name' => 'country', 'text' => (xtc_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>' : '')), (int)$country));
-$smarty->assign('INPUT_TEL', xtc_draw_input_fieldNote(array('name' => 'telephone', 'text' => ((ACCOUNT_TELEPHONE_OPTIONAL == 'false' && xtc_not_null(ENTRY_TELEPHONE_NUMBER_TEXT)) ? '<span class="inputRequirement">' . ENTRY_TELEPHONE_NUMBER_TEXT . '</span>' : ''))));
+$smarty->assign('SELECT_COUNTRY', xtc_get_country_list(array('name' => 'country', 'text' => (xtc_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">'.ENTRY_COUNTRY_TEXT.'</span>' : '')), (int)$country, 'autocomplete="country"'));
+$smarty->assign('INPUT_TEL', xtc_draw_input_fieldNote(array('name' => 'telephone', 'text' => ((ACCOUNT_TELEPHONE_OPTIONAL == 'false' && xtc_not_null(ENTRY_TELEPHONE_NUMBER_TEXT)) ? '<span class="inputRequirement">'.ENTRY_TELEPHONE_NUMBER_TEXT.'</span>' : '')), '', 'autocomplete="tel"'));
 if (defined('MODULE_NEWSLETTER_STATUS') && MODULE_NEWSLETTER_STATUS == 'true') {
   $smarty->assign('CHECKBOX_NEWSLETTER', xtc_draw_checkbox_field('newsletter', '1', false, 'id="newsletter"').(xtc_not_null(ENTRY_NEWSLETTER_TEXT) ? '<span class="inputRequirement">'.ENTRY_NEWSLETTER_TEXT.'</span>' : ''));
 }
@@ -499,5 +499,5 @@ $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/create_account_guest.
 $smarty->assign('main_content', $main_content);
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE . '/index.html');
+$smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
