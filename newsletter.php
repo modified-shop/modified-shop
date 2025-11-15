@@ -129,7 +129,7 @@ if ($newsletter->message_class != '') {
   $smarty->assign('message_class', $newsletter->message_class);
 }
 $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_NEWSLETTER, 'action=process', 'SSL')).secure_form('newsletter'));
-$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($_GET['email']) && xtc_db_input($_GET['email'])!='') ? xtc_db_input($_GET['email']):((isset($_POST['email']) && xtc_db_input($_POST['email']))?xtc_db_input($_POST['email']):''))));
+$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($_GET['email']) && xtc_db_input($_GET['email'])!='') ? xtc_db_input($_GET['email']):((isset($_POST['email']) && xtc_db_input($_POST['email']))?xtc_db_input($_POST['email']):'')), 'autocomplete="current-password"'));
 
 if(isset($_POST['check']) && $_POST['check'] == 'inp') {$inp = 'true'; $del = '';}
 if(isset($_POST['check']) && $_POST['check'] == 'del') {$inp = ''; $del = 'true';}	

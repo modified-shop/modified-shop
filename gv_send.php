@@ -191,8 +191,8 @@ elseif (!isset($_GET['action']) || $_GET['action'] == '' || $error !== false) {
   $smarty->assign('action', '');
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_send', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'), 'post'));
   $smarty->assign('LINK_SEND', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'));
-  $smarty->assign('INPUT_TO_NAME', xtc_draw_input_field('to_name'));
-  $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('to_email'));
+  $smarty->assign('INPUT_TO_NAME', xtc_draw_input_field('to_name', '', 'autocomplete="name"'));
+  $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('to_email', '', 'autocomplete="email"'));
   $smarty->assign('INPUT_AMOUNT', xtc_draw_input_field('amount', '', '', 'text', false));
   $smarty->assign('TEXTAREA_MESSAGE', xtc_draw_textarea_field('message', 'soft', 50, 15));
   $smarty->assign('LINK_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));

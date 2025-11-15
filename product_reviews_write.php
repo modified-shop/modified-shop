@@ -176,7 +176,7 @@ if ($product->isProduct() === false) {
     $smarty->assign($key, $value);
   }
 
-  $smarty->assign('INPUT_AUTHOR', xtc_draw_input_field('author', $author, 'style="width:235px;"'));
+  $smarty->assign('INPUT_AUTHOR', xtc_draw_input_field('author', $author, 'autocomplete="name"'));
   $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('review', 'soft', '60', '15', $review));
   $smarty->assign('FORM_ACTION', xtc_draw_form('product_reviews_write', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_get_all_get_params(array('action')).'action=process')).xtc_draw_hidden_field('get_params', xtc_get_all_get_params(array('action'))).secure_form('product_reviews_write'));
   $smarty->assign('BUTTON_BACK', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');

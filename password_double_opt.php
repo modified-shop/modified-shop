@@ -215,8 +215,8 @@ switch ($case) {
       $smarty->assign('error_message', $messageStack->output('password_double_opt_in'));
     }
     $smarty->assign('FORM_ACTION', xtc_draw_form('password_double_opt_in', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, xtc_get_all_get_params(), 'SSL'), 'post').xtc_draw_hidden_field('action', 'process'));
-    $smarty->assign('INPUT_NEW', xtc_draw_password_fieldNote(array('name' => 'password_new', 'text' => (xtc_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_NEW_TEXT.'</span>' : ''))));
-    $smarty->assign('INPUT_CONFIRM', xtc_draw_password_fieldNote(array('name' => 'password_confirmation', 'text' => (xtc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_CONFIRMATION_TEXT.'</span>' : ''))));
+    $smarty->assign('INPUT_NEW', xtc_draw_password_fieldNote(array('name' => 'password_new', 'text' => (xtc_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_NEW_TEXT.'</span>' : '')), '', 'autocomplete="new-password"'));
+    $smarty->assign('INPUT_CONFIRM', xtc_draw_password_fieldNote(array('name' => 'password_confirmation', 'text' => (xtc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_CONFIRMATION_TEXT.'</span>' : '')), '', 'autocomplete="new-password"'));
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
     $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
     $smarty->assign('BUTTON_SUBMIT_SAVE', xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));
@@ -248,7 +248,7 @@ switch ($case) {
     $smarty->assign('message', TEXT_PASSWORD_FORGOTTEN);
     $smarty->assign('SHOP_NAME', STORE_NAME);
     $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=first_opt_in', 'SSL')).secure_form('password_double_opt'));
-    $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', xtc_db_input(isset($_POST['email']) ? $_POST['email'] : ''), '', 'text', false));
+    $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', xtc_db_input(isset($_POST['email']) ? $_POST['email'] : ''), 'autocomplete="email"', 'text', false));
     $smarty->assign('BUTTON_SEND', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
     $smarty->assign('FORM_END', '</form>');
 

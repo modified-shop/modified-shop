@@ -59,59 +59,62 @@ function xss_secure_params($secvalue, $ip, $type)
     switch ($type) 
     {    
         case 'get':
-            if ((preg_match("/<[^>]*script.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/.*[[:space:]](or|and)[[:space:]].*(=|like).*/i", $secvalue)) ||
-                (preg_match("/<[^>]*object.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*iframe.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*applet.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*meta.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*style.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*form.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*window.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*alert.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*img.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*document.*\"?[^>]*>/i", $secvalue)) ||
+            if ((preg_match("/<[^>]*script[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*object[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*iframe[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*applet[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*meta[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*style[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*form[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*window[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*alert[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*img[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*document[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*cookie[^>]*>?/i", $secvalue)) ||
                 (preg_match("/(.*)select(.*)/i", $secvalue)) ||
                 (preg_match("/(.*)concat(.*)/i", $secvalue)) ||
-                (preg_match("/<[^>]*cookie.*\"?[^>]*>/i", $secvalue))) 
+                (preg_match("/.*[[:space:]](or|and)[[:space:]].*(=|like).*/i", $secvalue))
+                ) 
             {
                 $error = true;
             }
             break;
 
         case 'post':        
-            if ((preg_match("/<[^>]*script.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*object.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*iframe.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*applet.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*window.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*alert.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*document.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*cookie.*\"?[^>]*>/i", $secvalue)) ||
+            if ((preg_match("/<[^>]*script[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*object[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*iframe[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*applet[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*window[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*alert[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*document[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*cookie[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*meta[^>]*>?/i", $secvalue)) ||
                 (preg_match("/(.*)select(.*)/i", $secvalue)) ||
-                (preg_match("/(.*)concat(.*)/i", $secvalue)) ||
-                (preg_match("/<[^>]*meta.*\"?[^>]*>/i", $secvalue))) 
+                (preg_match("/(.*)concat(.*)/i", $secvalue))
+                ) 
             {
                 $error = true;
             }
             break;
 
         case 'cookie':        
-            if ((preg_match("/<[^>]*script.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/.*[[:space:]](or|and)[[:space:]].*(=|like).*/i", $secvalue)) ||
-                (preg_match("/<[^>]*object.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*iframe.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*applet.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*meta.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*style.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*form.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*window.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*alert.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*document.*\"?[^>]*>/i", $secvalue)) ||
-                (preg_match("/<[^>]*cookie.*\"?[^>]*>/i", $secvalue)) ||
+            if ((preg_match("/<[^>]*script[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*object[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*iframe[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*applet[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*meta[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*style[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*form[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*window[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*alert[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*document[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*cookie[^>]*>?/i", $secvalue)) ||
+                (preg_match("/<[^>]*img[^>]*>?/i", $secvalue)) ||
                 (preg_match("/(.*)select(.*)/i", $secvalue)) ||
                 (preg_match("/(.*)concat(.*)/i", $secvalue)) ||
-                (preg_match("/<[^>]*img.*\"?[^>]*>/i", $secvalue))) 
+                (preg_match("/.*[[:space:]](or|and)[[:space:]].*(=|like).*/i", $secvalue))
+                ) 
             {
                 $error = true;
             }
