@@ -17,6 +17,10 @@ require('includes/application_top.php');
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalAdmin.php');
 $paypal = new PayPalAdmin();
 
+if ($paypal->check_webhooks() === true) {
+  $messageStack->add(TEXT_PAYPAL_ERROR_WEBHOOKS);
+}
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="../includes/external/paypal/css/stylesheet.css">  

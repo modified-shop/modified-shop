@@ -159,6 +159,10 @@ $log_level_array = array(
 $paypal_live = $paypal->getOnboardingLink('live');
 $paypal_sandbox = $paypal->getOnboardingLink('sandbox');
 
+if ($paypal->check_webhooks() === true) {
+  $messageStack->add(TEXT_PAYPAL_ERROR_WEBHOOKS);
+}
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="../includes/external/paypal/css/stylesheet.css"> 

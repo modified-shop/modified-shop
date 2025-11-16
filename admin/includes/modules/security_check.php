@@ -255,6 +255,16 @@ foreach ($requirement_array as $k => $requirement) {
 }
 
 /*******************************************************************************
+ ** requirements modules configure:
+ ******************************************************************************/
+require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalAdmin.php');
+$paypal = new PayPalAdmin();
+
+if ($paypal->check_webhooks() === true) {
+  $warnings[] = TEXT_PAYPAL_ERROR_WEBHOOKS;
+}
+
+/*******************************************************************************
  ** output warnings:
  ******************************************************************************/
 if (!empty($warnings)) {

@@ -520,6 +520,28 @@ class PayPalAdmin extends PayPalPayment {
     return $list_array;    
   }
 
+
+  function check_webhooks() {
+    global $messageStack;
+    
+    $check_query = xtc_db_query("SELECT configuration_key 
+                                   FROM ".TABLE_CONFIGURATION." 
+                                  WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL%_STATUS'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      $list = $this->list_webhooks();
+      if (count($list) > 0) {
+        foreach ($list as $data) {
+          if ($data['url'] == xtc_catalog_href_link('callback/paypal/webhook.php', '', 'SSL', false)) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    
+    return false;
+  }
+
   
   function get_partner_details($mode) {
     modified_api::reset();

@@ -138,6 +138,7 @@ $lang_array = array(
   'TEXT_PAYPAL_ERROR_CANCEL' => 'Bei der Stornierung ist ein Fehler aufgetreten.',
   'TEXT_PAYPAL_ERROR_SUBSCRIPTION_PRODUCTS' => 'Sie haben einen Abo Artikel im Warenkorb welcher nur alleine gekauft werden kann.',
   'TEXT_PAYPAL_ERROR_NOT_AVAILABLE' => 'Diese Zahlart steht gerade nicht zur Verf&uuml;gung.<br>Bitte w&auml;hlen Sie eine andere Zahlart.',
+  'TEXT_PAYPAL_ERROR_WEBHOOKS' => 'Damit PayPal ordnungsgem&auml;&szlig; funktioniert m&uuml;ssen die Webhooks installiert werden!',
   
   // diverse
   'MODULE_PAYMENT_PAYPAL_TEXT_ORDER' => 'Ihre Bestellung bei '.(defined('STORE_NAME') ? STORE_NAME : ''),

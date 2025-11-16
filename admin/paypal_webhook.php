@@ -67,7 +67,10 @@ $webhook_active_array = array(
   'PAYMENT.CAPTURE.REVERSED',
 );
 
-//$locale_code = array(
+if ($paypal->check_webhooks() === true) {
+  $messageStack->add(TEXT_PAYPAL_ERROR_WEBHOOKS);
+}
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="../includes/external/paypal/css/stylesheet.css">  

@@ -138,6 +138,7 @@ $lang_array = array(
   'TEXT_PAYPAL_ERROR_CANCEL' => 'An error occurred while canceling.',
   'TEXT_PAYPAL_ERROR_SUBSCRIPTION_PRODUCTS' => 'You have a subscription product in your shopping cart which can only be bought alone.',  
   'TEXT_PAYPAL_ERROR_NOT_AVAILABLE' => 'This payment method is currently not available.<br>Please select another payment method.',
+  'TEXT_PAYPAL_ERROR_WEBHOOKS' => 'For PayPal to function properly, the webhooks must be installed!',
   
   // diverse
   'MODULE_PAYMENT_PAYPAL_TEXT_ORDER' => 'Your order at '.(defined('STORE_NAME') ? STORE_NAME : ''),
