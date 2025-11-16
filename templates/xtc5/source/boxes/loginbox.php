@@ -25,8 +25,8 @@ if (!isset($_SESSION['customer_id'])) {
   require_once (DIR_FS_INC.'xtc_draw_password_field.inc.php');
   
   $box_smarty->assign('FORM_ACTION', xtc_draw_form('loginbox', xtc_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', 'class="box-login"'));
-  $box_smarty->assign('FIELD_EMAIL', xtc_draw_input_field('email_address', '', 'maxlength="50"'));
-  $box_smarty->assign('FIELD_PWD', xtc_draw_password_field('password'));
+  $box_smarty->assign('FIELD_EMAIL', xtc_draw_input_field('email_address', '', 'autocomplete="email"'));
+  $box_smarty->assign('FIELD_PWD', xtc_draw_password_field('password', '', 'autocomplete="current-password"'));
   $box_smarty->assign('BUTTON', xtc_image_submit('button_login_small.gif', IMAGE_BUTTON_LOGIN));
   $box_smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, '', 'SSL'));
   $box_smarty->assign('FORM_END', '</form>');
