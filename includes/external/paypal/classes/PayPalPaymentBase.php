@@ -934,24 +934,24 @@ class PayPalPaymentBase extends PayPalCommon {
       require_once(DIR_WS_CLASSES.'product.php');
       require_once(DIR_WS_CLASSES.'order.php');
       require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
-    
-      $order = new order();
-    
-      $countries_id = isset($_SESSION['customer_country_id']) ? $_SESSION['customer_country_id'] : STORE_COUNTRY;
-      if (isset($_SESSION['country'])) {
-        $countries_id = $_SESSION['country'];
+            
+      $countries_id = STORE_COUNTRY;
+      if (isset($_SESSION['customer_country_id'])) {
+        $countries = xtc_get_countriesList($_SESSION['customer_country_id']);
+        if ($countries !== false) {
+          $countries_id = $countries['countries_id'];
+        }
       }
     
-      $country = xtc_get_countriesList($countries_id, true);
-    
-      $order->delivery['country']['iso_code_2'] = $country['countries_iso_code_2'];
-      $order->delivery['country']['title'] = $country['countries_name'];
-      $order->delivery['country']['id'] = $country['countries_id'];
-      $order->delivery['country_id'] = $country['countries_id'];
-      $order->delivery['zone_id'] = 0;
- 
-      $order->delivery['shipping'] = $order->delivery['country'];
-      $order->delivery['shipping']['zone_id'] = $order->delivery['zone_id'];
+      if (isset($_SESSION['country'])) {
+        $countries = xtc_get_countriesList($_SESSION['country']);
+        $countries_id = (($countries !== false) ? $countries['countries_id'] : $countries_id);
+      }
+      $_SESSION['country'] = $countries_id;
+
+      if ($plain === false || !isset($order) || !is_object($order)) {
+        $order = new order();
+      }
    
       $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
       if (isset($order->delivery['delivery_zone']) && $order->delivery['delivery_zone'] != '') {
@@ -971,7 +971,12 @@ class PayPalPaymentBase extends PayPalCommon {
         $order_total_modules->process();
       }
 
-      $shipping_modules->quote();
+      $quotes = $shipping_modules->quote();
+      
+      if ($plain === true) {
+        return $quotes;
+      }
+      
       $shipping_data = $shipping_modules->cheapest();
       unset($_SESSION['delivery_zone']);
     
@@ -1000,6 +1005,35 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function set_order_object() {
+    global $order, $xtPrice;
+    
+    if (isset($_SESSION['shipping']) 
+        && $_SESSION['shipping'] != false
+        )
+    {
+      require_once (DIR_WS_CLASSES . 'shipping.php');
+      $shipping_modules = new shipping($_SESSION['shipping']);
+    }
+
+    $order = new order();
+    
+    $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
+    if (isset($order->delivery['delivery_zone']) && $order->delivery['delivery_zone'] != '') {
+      $_SESSION['delivery_zone'] = $order->delivery['delivery_zone'];
+    }
+
+    if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
+      require_once (DIR_WS_CLASSES . 'order_total.php');
+      $order_total_modules = new order_total();
+      $order_total_modules->pre_confirmation_check();
+      $order_total_modules->process();
+    }
+    
+    return $order;
+  }
+  
+  
   function install() {
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_STATUS', 'True', '6', '1', NULL, now(), '', 'xtc_cfg_select_option(array(\'True\', \'False\'),' )");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_SORT_ORDER', '0', '6', '2', NULL, now(), '', '')");

@@ -592,6 +592,26 @@
       if (!isset($this->delivery['zone_id'])) $this->delivery['zone_id'] = -1;
       if (!isset($this->billing['zone_id'])) $this->billing['zone_id'] = -1;
       
+      if (isset($_SESSION['country']) && strpos(basename($PHP_SELF), 'checkout') === false) {
+        $delivery_zone_query = xtDBquery("SELECT countries_id,
+                                                 countries_iso_code_2,
+                                                 countries_iso_code_3,
+                                                 countries_name
+                                            FROM ".TABLE_COUNTRIES."
+                                           WHERE countries_id = '". (int)$_SESSION['country']."'");
+        $delivery_zone = xtc_db_fetch_array($delivery_zone_query, true);
+      
+        $this->delivery['country']['iso_code_2'] = $delivery_zone['countries_iso_code_2'];
+        $this->delivery['country']['iso_code_3'] = $delivery_zone['countries_iso_code_3'];
+        $this->delivery['country']['title'] = $delivery_zone['countries_name'];
+        $this->delivery['country']['id'] = $delivery_zone['countries_id'];
+        $this->delivery['country_id'] = $delivery_zone['countries_id'];
+        $this->delivery['zone_id'] = 0;
+      
+        $this->delivery['shipping'] = $this->delivery['country'];
+        $this->delivery['shipping']['zone_id'] = $this->delivery['zone_id'];
+      }
+
       // set shipping
       $this->delivery['shipping'] = $this->delivery['country'];
       $this->delivery['shipping']['zone_id'] = $this->delivery['zone_id'];

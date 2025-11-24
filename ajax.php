@@ -17,6 +17,9 @@ error_reporting(0);
 // prevent redirect to cart
 define('DISPLAY_CART', 'false');
 
+// use always session_id from URL for payment providers
+define('SESSION_FORCE_COOKIE_USE', 'False');
+
 if (isset($_REQUEST['speed'])) {
   // Start the clock for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime(true));

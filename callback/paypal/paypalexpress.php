@@ -44,11 +44,17 @@ if (isset($_SESSION['paypal'])
       $customers_data['payment']['payment_'.$key] = $value;
       $customers_data['plain'][$key] = $value;
     }
-    $customers_data['info']['email_address'] = $PayPalOrder->payer->email_address;
     $customers_data['info']['gender'] = '';
-    $customers_data['info']['telephone'] = ((isset($PayPalOrder->payer->phone) && isset($PayPalOrder->payer->phone->phone_number) && isset($PayPalOrder->payer->phone->phone_number->national_number)) ? $PayPalOrder->payer->phone->phone_number->national_number : '');
     $customers_data['info']['dob'] = ((isset($PayPalOrder->payer->birth_date)) ? $PayPalOrder->payer->birth_date : '');    
-   
+    $customers_data['info']['email_address'] = $PayPalOrder->payer->email_address;
+    if (isset($PayPalOrder->purchase_units[0]->shipping->email_address)) {
+      $customers_data['info']['email_address'] = $PayPalOrder->purchase_units[0]->shipping->email_address;
+    }
+    $customers_data['info']['telephone'] = ((isset($PayPalOrder->payer->phone->phone_number->national_number)) ? $PayPalOrder->payer->phone->phone_number->national_number : '');
+    if (isset($PayPalOrder->purchase_units[0]->shipping->phone_number)) {
+      $customers_data['info']['telephone'] = $PayPalOrder->purchase_units[0]->shipping->phone_number->national_number;
+    }
+    
     if (isset($PayPalOrder->payer->name)) {
       $customers_data['customers']['customers_name'] = $PayPalOrder->payer->address_array['name'];
       $customers_data['customers']['customers_firstname'] = $PayPalOrder->payer->name->given_name;
@@ -88,6 +94,30 @@ if (isset($_SESSION['paypal'])
   
     // shipping
     $_SESSION['shipping'] = '';
+    if (isset($PayPalOrder->purchase_units[0]->shipping->options[0])) {
+      $quotes = $paypal->get_shipping_data(true);
+      foreach ($quotes as $quote) {
+        if (!isset($quote['error'])) {
+          foreach ($quote['methods'] as $methods) {
+            $id = sprintf("%u", crc32($quote['id'].'_'.$methods['id']));
+            if ($PayPalOrder->purchase_units[0]->shipping->options[0]->id == $id) {
+              $title = $quote['module'];
+              if (!defined('SHOW_SHIPPING_MODULE_TITLE') || SHOW_SHIPPING_MODULE_TITLE == 'shipping_default') {
+                $title .= ((trim($methods['title']) != '') ? ' ('.$methods['title'].')' : '');
+              } elseif (SHOW_SHIPPING_MODULE_TITLE == 'shipping_custom' && parse_multi_language_value(CUSTOM_SHIPPING_TITLE, $_SESSION['language_code']) != '') {
+                $title = parse_multi_language_value(CUSTOM_SHIPPING_TITLE, $_SESSION['language_code']);
+              }
+  
+              $_SESSION['shipping'] = array (
+                'id' => $quote['id'].'_'.$methods['id'], 
+                'title' => $title, 
+                'cost' => $methods['cost']
+              );
+            }
+          }
+        }
+      }
+    }
   
     $order = new order();
   
