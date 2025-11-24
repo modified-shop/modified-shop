@@ -19,21 +19,15 @@
   function create_paypal_order() {
     global $order;
     
-    if (isset($_SESSION['shipping']) 
-        && $_SESSION['shipping'] != false
+    if (!isset($_SESSION['cart'])
+        || $_SESSION['cart']->count_contents() <= 0
         )
     {
-      require_once (DIR_WS_CLASSES . 'shipping.php');
-      $shipping_modules = new shipping($_SESSION['shipping']);
+      return;
     }
-
-    $order = new order();
-
-    $order_total_modules = new order_total();
-    $order_total_modules->pre_confirmation_check();
-    $order_total_modules->process();
-
+    
     $paypal = new PayPalPaymentV2(isset($_REQUEST['payment_method']) ? $_REQUEST['payment_method'] : 'paypal');
+    $order = $paypal->set_order_object();
         
     $payment_source = array();
     if (isset($_POST['save_payment']) 

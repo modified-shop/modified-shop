@@ -121,13 +121,6 @@
             
       // shipping cost
       $order->info['shipping_cost'] = 0;
-      if ($this->code == 'paypalexpress') {
-        $shipping_data = $this->get_shipping_data();
-        if (is_array($shipping_data)) {
-          $order->info['shipping_cost'] = $shipping_data['total'];
-          $order->info['tax'] += $shipping_data['tax'];
-        }
-      }
       
       $this->set_number_format($order->info['currency']);
       
@@ -285,6 +278,7 @@
           'name' => array(
             'full_name' => $this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']),
           ),
+          'email_address' => $this->encode_utf8($order->customer['email_address']),
           'address' => array(
             'address_line_1' => $this->encode_utf8($order->delivery['street_address']),
             'address_line_2' => $this->encode_utf8($order->delivery['suburb']),
@@ -365,7 +359,20 @@
       if (count($payment_source) > 0) {
         $request->body = array_merge_recursive($request->body, $payment_source);
       }
+
+      if ($this->code == 'paypal') {
+        $request->body['payment_source'][$pm_source]['experience_context']['contact_preference'] = 'UPDATE_CONTACT_INFO';
+      }
       
+      if ($this->code == 'paypalexpress') {
+        $request->body['payment_source'][$pm_source]['experience_context']['contact_preference'] = 'UPDATE_CONTACT_INFO';
+        $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'GET_FROM_FILE';
+        $request->body['payment_source'][$pm_source]['experience_context']['order_update_callback_config'] = array(
+          'callback_events' => array('SHIPPING_OPTIONS'),
+          'callback_url' => $this->link_encoding(xtc_href_link('ajax.php', 'ext=get_shipping_methods&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
+        );
+      }
+            
       if ($this->code == 'paypalpui') {
         $request->payPalClientMetadataId($_SESSION['paypal']['FraudNetID']);
       }
@@ -723,6 +730,18 @@
       
       if (isset($result->payer->payer_id)) {
         $_SESSION['paypal']['PayerID'] = $result->payer->payer_id;
+      }
+ 
+      $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
+      $sql_data_array = array();
+      if (isset($PayPalOrder->purchase_units[0]->shipping->email_address)) {
+        $sql_data_array['customers_email_address'] = $PayPalOrder->purchase_units[0]->shipping->email_address;
+      }
+      if (isset($PayPalOrder->purchase_units[0]->shipping->phone_number)) {
+        $sql_data_array['customers_telephone'] = $PayPalOrder->purchase_units[0]->shipping->phone_number->national_number;
+      }
+      if (count($sql_data_array) > 0) {
+        xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', "orders_id = '".(int)$order_id."'");
       }
       
       $sql_data_array = array(
