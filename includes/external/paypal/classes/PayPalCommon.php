@@ -637,8 +637,7 @@ class PayPalCommon extends PayPalAuth {
                                             AND entry_street_address = '".xtc_db_input($data['delivery_street_address'])."'
                                             AND entry_postcode = '".xtc_db_input($data['delivery_postcode'])."'
                                             AND entry_city = '".xtc_db_input($data['delivery_city'])."'
-                                            AND entry_lastname = '".xtc_db_input($data['delivery_lastname'])."'
-                                            AND entry_lastname = '".xtc_db_input($data['delivery_lastname'])."'");
+                                            AND entry_country_id = '".xtc_db_input($data['delivery_country_id'])."'");
     if (xtc_db_num_rows($check_address_query) == 1) {
       $check_address = xtc_db_fetch_array($check_address_query);
       $address_id = $check_address['address_book_id'];
