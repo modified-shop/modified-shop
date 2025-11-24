@@ -55,12 +55,14 @@ if (!isset($order->delivery['country']['iso_code_2'])
 {
   $delivery_zone_query = xtDBquery("SELECT countries_id,
                                            countries_iso_code_2,
+                                           countries_iso_code_3,
                                            countries_name
                                       FROM ".TABLE_COUNTRIES."
                                      WHERE countries_id = '". (int)$selected."'");
   $delivery_zone = xtc_db_fetch_array($delivery_zone_query, true);
 
   $order->delivery['country']['iso_code_2'] = $delivery_zone['countries_iso_code_2'];
+  $order->delivery['country']['iso_code_3'] = $delivery_zone['countries_iso_code_3'];
   $order->delivery['country']['title'] = $delivery_zone['countries_name'];
   $order->delivery['country']['id'] = $delivery_zone['countries_id'];
   $order->delivery['country_id'] = $delivery_zone['countries_id'];
