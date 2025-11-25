@@ -35,7 +35,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function init() {    
-    $this->klarna_version = '1.20';
+    $this->klarna_version = '1.21';
     
     $this->title = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '';
     $this->description = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') : '';
