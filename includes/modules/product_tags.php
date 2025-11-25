@@ -46,11 +46,12 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_tags.html', $ca
                                   ptv.values_content_group
                              FROM ".TABLE_PRODUCTS_TAGS." pt
                              JOIN ".TABLE_PRODUCTS_TAGS_OPTIONS." pto
-                                  ON pt.options_id = pto.options_id
+                                  ON pto.options_id = pt.options_id
                                      AND pto.status = '1'
                                      AND pto.languages_id = '".(int)$_SESSION['languages_id']."'
                              JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv
                                   ON ptv.values_id = pt.values_id
+                                     AND ptv.options_id = pt.options_id
                                      AND ptv.status = '1'
                                      AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
                             WHERE pt.products_id = '".$product->data['products_id']."'
