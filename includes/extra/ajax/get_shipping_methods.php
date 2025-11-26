@@ -71,41 +71,43 @@
     $quotes = $paypal->get_shipping_data(true);
 
     $shipping_option = array();
-    foreach ($quotes as $quote) {
-      if (!isset($quote['error'])) {
-        foreach ($quote['methods'] as $methods) {
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) {
-            $quote['tax'] = 0;
-          }
-          $methods['price'] = $xtPrice->xtcFormat($xtPrice->xtcAddTax($methods['cost'], $quote['tax'], false), false);						
-
-          $selected = false;
-          $id = sprintf("%u", crc32($quote['id'].'_'.$methods['id']));
-          if ((isset($shipping_option_id) && $shipping_option_id == $id)
-              || !isset($shipping_option_id)
-              )
-          {
-            $selected = true;
-            $shipping_option_id = $id;
-          }          
-          $shipping_option[] = array(
-            'id' => $id,
-            'amount' => array(
-              'currency_code' => $_SESSION['currency'],
-              'value' => sprintf($paypal->numberFormat, $methods['price'])
-            ),
-            'type' => 'SHIPPING',
-            'label' => $quote['module'].(($methods['title'] != '') ? ' ('.$methods['title'].')' : ''),
-            'selected' => $selected
-          );
-          
-          if ($selected === true) {
-            $_SESSION['shipping'] = array (
-              'id' => $quote['id'].'_'.$methods['id'], 
-              'title' => $quote['module'], 
-              'cost' => $methods['cost']
+    if (is_array($quotes) && count($quotes) > 0) {
+      foreach ($quotes as $quote) {
+        if (!isset($quote['error'])) {
+          foreach ($quote['methods'] as $methods) {
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) {
+              $quote['tax'] = 0;
+            }
+            $methods['price'] = $xtPrice->xtcFormat($xtPrice->xtcAddTax($methods['cost'], $quote['tax'], false), false);						
+  
+            $selected = false;
+            $id = sprintf("%u", crc32($quote['id'].'_'.$methods['id']));
+            if ((isset($shipping_option_id) && $shipping_option_id == $id)
+                || !isset($shipping_option_id)
+                )
+            {
+              $selected = true;
+              $shipping_option_id = $id;
+            }          
+            $shipping_option[] = array(
+              'id' => $id,
+              'amount' => array(
+                'currency_code' => $_SESSION['currency'],
+                'value' => sprintf($paypal->numberFormat, $methods['price'])
+              ),
+              'type' => 'SHIPPING',
+              'label' => $quote['module'].(($methods['title'] != '') ? ' ('.$methods['title'].')' : ''),
+              'selected' => $selected
             );
-            $order = $paypal->set_order_object();
+            
+            if ($selected === true) {
+              $_SESSION['shipping'] = array (
+                'id' => $quote['id'].'_'.$methods['id'], 
+                'title' => $quote['module'], 
+                'cost' => $methods['cost']
+              );
+              $order = $paypal->set_order_object();
+            }
           }
         }
       }
