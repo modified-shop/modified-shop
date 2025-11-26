@@ -18,7 +18,7 @@
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
   
     $paypal = new PayPalPayment('paypalinstallment'); 
-    if ($paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1
+    if ($paypal->get_config('PAYPAL_INSTALLMENT_BANNER_CART_DISPLAY') == 1
         && $paypal->get_config('PAYPAL_CLIENT_ID_'.strtoupper($paypal->get_config('PAYPAL_MODE'))) != ''
         )
     {

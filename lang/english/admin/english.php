@@ -591,6 +591,7 @@ define('FILEUPLOAD_BTN_TXT', 'Search');
 define('CHECK_LABEL_PRICE', 'Check price');
 
 define('TEXT_PAYPAL_TAB_CONFIG', 'PayPal Configuration');
+define('TEXT_PAYPAL_TAB_BANNER', 'PayPal Banner');
 define('TEXT_PAYPAL_TAB_PROFILE', 'PayPal Profile');
 define('TEXT_PAYPAL_TAB_WEBHOOK', 'PayPal Webhook');
 define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Products');

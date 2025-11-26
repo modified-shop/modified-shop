@@ -235,35 +235,21 @@
       }
     }
         
-    if (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT
-        || basename($PHP_SELF) == FILENAME_PRODUCT_INFO
-        || (basename($PHP_SELF) == FILENAME_SHOPPING_CART 
-            && $_SESSION['cart']->count_contents() > 0
-            )
-        )
-    {
+    if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {
       $paypal = new PayPalPayment('paypalinstallment');
       
-      if ($paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1
+      if ($paypal->get_config('PAYPAL_INSTALLMENT_BANNER_PRODUCT_DISPLAY') == 1
           && $paypal->get_config('MODULE_PAYMENT_PAYPAL_SAVE_PAYMENT') != 1
           )
       {
         $total = 0;  
-        if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO 
-            && is_object($product) 
+        if (is_object($product) 
             && $product->isProduct() !== false
             )
         {
           $country = xtc_get_countriesList(((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)), true);
           $countries_iso_code_2 = $country['countries_iso_code_2'];
           $total = $xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'], $product->data['products_price']); 
-        } elseif (basename($PHP_SELF) == FILENAME_SHOPPING_CART) {
-          $country = xtc_get_countriesList(((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)), true);
-          $countries_iso_code_2 = $country['countries_iso_code_2'];
-          $total = $_SESSION['cart']->show_total();
-        } elseif (isset($order) && is_object($order)) {
-          $countries_iso_code_2 = $order->billing["country"]["iso_code_2"];
-          $total = $order->info['total'];
         }
         
         if ($total > 0) {
@@ -272,17 +258,97 @@
             paypal.Messages({
               amount: '.sprintf($paypal->numberFormat, $total).',
               countryCode: "'.$countries_iso_code_2.'",
+              placement: "product",
               style: {
-                layout: "'.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? 'text' : 'flex').'",
-                color: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_COLOR').'",
-                ratio: "8x1"
+                layout: "text",
+                logo: {
+                  type: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_PRODUCT_LOGOTYPE').'",
+                  position: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_PRODUCT_LOGOPOSITION').'"
+                },
+                text: {
+                  color: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_PRODUCT_TEXTCOLOR').'",
+                  size: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_PRODUCT_TEXTSIZE').'"
+                }
+              },
+              onError: function (err) {
+                $(".pp-message").hide();
+                console.error("failed to load PayPal banner", err);
+              }
+            }).render(".pp-message");
+          }
+          ';
+        }
+      }
+    }
+
+    if (basename($PHP_SELF) == FILENAME_SHOPPING_CART 
+        && $_SESSION['cart']->count_contents() > 0
+        )
+    {
+      $paypal = new PayPalPayment('paypalinstallment');
+      
+      if ($paypal->get_config('PAYPAL_INSTALLMENT_BANNER_CART_DISPLAY') == 1
+          && $paypal->get_config('MODULE_PAYMENT_PAYPAL_SAVE_PAYMENT') != 1
+          )
+      {
+        $country = xtc_get_countriesList(((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)), true);
+        $countries_iso_code_2 = $country['countries_iso_code_2'];
+        $total = $_SESSION['cart']->show_total();
+        
+        if ($total > 0) {
+          $paypalscript .= '
+          if ($(".pp-message").length) {
+            paypal.Messages({
+              amount: '.sprintf($paypal->numberFormat, $total).',
+              countryCode: "'.$countries_iso_code_2.'",
+              placement: "cart",
+              style: {
+                layout: "flex",
+                color: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_CART_COLOR').'",
+                ratio: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_CART_SIZE').'",
               },
               onError: function (err) {
                 $(".pp-message").hide();
                 console.error("failed to load PayPal banner", err);
               },
               onRender: function() { 
-                '.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? '' : '$(".pp-message").css("margin-top", "20px");').'
+                $(".pp-message").css("margin-top", "20px");
+              }
+            }).render(".pp-message");
+          }
+          ';
+        }
+      }
+    }
+
+    if (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) {
+      $paypal = new PayPalPayment('paypalinstallment');
+      
+      if ($paypal->get_config('PAYPAL_INSTALLMENT_BANNER_CHECKOUT_DISPLAY') == 1
+          && $paypal->get_config('MODULE_PAYMENT_PAYPAL_SAVE_PAYMENT') != 1
+          )
+      {
+        $countries_iso_code_2 = $order->billing["country"]["iso_code_2"];
+        $total = $order->info['total'];
+        
+        if ($total > 0) {
+          $paypalscript .= '
+          if ($(".pp-message").length) {
+            paypal.Messages({
+              amount: '.sprintf($paypal->numberFormat, $total).',
+              countryCode: "'.$countries_iso_code_2.'",
+              placement: "cart",
+              style: {
+                layout: "flex",
+                color: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_CHECKOUT_COLOR').'",
+                ratio: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_CHECKOUT_SIZE').'",
+              },
+              onError: function (err) {
+                $(".pp-message").hide();
+                console.error("failed to load PayPal banner", err);
+              },
+              onRender: function() { 
+                $(".pp-message").css("margin-top", "20px");
               }
             }).render(".pp-message");
           }

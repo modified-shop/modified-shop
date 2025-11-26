@@ -65,6 +65,7 @@ class PayPalPaymentBase extends PayPalCommon {
       'paypal_module',
       'paypal_profile',
       'paypal_webhook',
+      'paypal_banner',
     );
 
     $this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '');
@@ -1469,21 +1470,63 @@ class PayPalPaymentBase extends PayPalCommon {
     );
     $this->save_config($sql_data_array);
     
-    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY', false) == '') {
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_PRODUCT_DISPLAY', false) == '') {
       $sql_data_array = array(
         array(
-          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_DISPLAY',
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_DISPLAY',
           'config_value' => '1',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_LOGOTYPE',
+          'config_value' => 'primary',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_LOGOPOSITION',
+          'config_value' => 'left',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_TEXTCOLOR',
+          'config_value' => 'black',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_TEXTSIZE',
+          'config_value' => '12',
         )
       );
       $this->save_config($sql_data_array);
     }
 
-    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_COLOR', false) == '') {
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_CART_DISPLAY', false) == '') {
       $sql_data_array = array(
         array(
-          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_COLOR',
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CART_DISPLAY',
+          'config_value' => '1',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CART_COLOR',
           'config_value' => 'white',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CART_SIZE',
+          'config_value' => '8x1',
+        )
+      );
+      $this->save_config($sql_data_array);
+    }
+
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_CHECKOUT_DISPLAY', false) == '') {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CHECKOUT_DISPLAY',
+          'config_value' => '1',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CHECKOUT_COLOR',
+          'config_value' => 'white',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CHECKOUT_SIZE',
+          'config_value' => '8x1',
         )
       );
       $this->save_config($sql_data_array);
@@ -1626,7 +1669,72 @@ class PayPalPaymentBase extends PayPalCommon {
         $this->save_config($sql_data_array);
       }
     }
+
+    $this->delete_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY');
+    $this->delete_config('PAYPAL_INSTALLMENT_BANNER_COLOR');
     
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_PRODUCT_DISPLAY', false) == '') {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_DISPLAY',
+          'config_value' => '1',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_LOGOTYPE',
+          'config_value' => 'primary',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_LOGOPOSITION',
+          'config_value' => 'left',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_TEXTCOLOR',
+          'config_value' => 'black',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_PRODUCT_TEXTSIZE',
+          'config_value' => '12',
+        )
+      );
+      $this->save_config($sql_data_array);
+    }
+
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_CART_DISPLAY', false) == '') {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CART_DISPLAY',
+          'config_value' => '1',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CART_COLOR',
+          'config_value' => 'white',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CART_SIZE',
+          'config_value' => '8x1',
+        )
+      );
+      $this->save_config($sql_data_array);
+    }
+
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_CHECKOUT_DISPLAY', false) == '') {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CHECKOUT_DISPLAY',
+          'config_value' => '1',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CHECKOUT_COLOR',
+          'config_value' => 'white',
+        ),
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_CHECKOUT_SIZE',
+          'config_value' => '8x1',
+        )
+      );
+      $this->save_config($sql_data_array);
+    }
+
     // set buttons
     if ($this->get_config('PAYPAL_BUTTON_LAYOUT', false) == '') {
       $sql_data_array = array(

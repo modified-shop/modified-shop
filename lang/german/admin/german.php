@@ -590,6 +590,7 @@ define('FILEUPLOAD_BTN_TXT', 'Durchsuchen');
 define('CHECK_LABEL_PRICE', 'Preis abfragen');
 
 define('TEXT_PAYPAL_TAB_CONFIG', 'PayPal Konfiguration');
+define('TEXT_PAYPAL_TAB_BANNER', 'PayPal Banner');
 define('TEXT_PAYPAL_TAB_PROFILE', 'PayPal Profil');
 define('TEXT_PAYPAL_TAB_WEBHOOK', 'PayPal Webhook');
 define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Produkte');
