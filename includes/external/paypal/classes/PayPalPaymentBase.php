@@ -923,7 +923,7 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
-  function get_shipping_data() {
+  function get_shipping_data($plain = false) {
     global $order, $xtPrice, $free_shipping, $total_weight, $total_count;
     
     if ($_SESSION['cart']->count_contents() > 0
