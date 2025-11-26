@@ -143,15 +143,17 @@ class tax_eu
               xtc_db_perform(TABLE_TAX_RATES, $sql_data_array);
             } else {
               $check = xtc_db_fetch_array($check_query);
-                             
-              if ($tax_rate != '') {
-                xtc_db_query("UPDATE ".TABLE_TAX_RATES."
-                                 SET tax_rate = ".$tax_rate.",
-                                     tax_description = '".xtc_db_input(sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate))."',
-                                     last_modified = now()
-                               WHERE tax_rates_id = ".$check['tax_rates_id']);
-              } else {
-                xtc_db_query("DELETE FROM ".TABLE_TAX_RATES." WHERE tax_rates_id = ".$check['tax_rates_id']);
+              
+              if (isset($check['tax_rates_id'])) {       
+                if ($tax_rate != '') {
+                  xtc_db_query("UPDATE ".TABLE_TAX_RATES."
+                                   SET tax_rate = ".$tax_rate.",
+                                       tax_description = '".xtc_db_input(sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate))."',
+                                       last_modified = now()
+                                 WHERE tax_rates_id = ".$check['tax_rates_id']);
+                } else {
+                  xtc_db_query("DELETE FROM ".TABLE_TAX_RATES." WHERE tax_rates_id = ".$check['tax_rates_id']);
+                }
               }
             }
           }
