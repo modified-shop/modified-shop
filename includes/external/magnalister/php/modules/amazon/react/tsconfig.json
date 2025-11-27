@@ -1,0 +1,48 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "es6"
+        ],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": false,
+        "declaration": true,
+        "declarationMap": true,
+        "outDir": "./dist",
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        }
+    },
+    "include": [
+        "src/index.ts",
+        "src/AmazonVariationsSimple.tsx",
+        "src/AmazonVariations.tsx",
+        "src/types/**/*",
+        "src/hooks/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/*.test.*",
+        "**/*.spec.*",
+        "src/components/**/*",
+        "src/AmazonVariationsExample.tsx",
+        "src/test/**/*"
+    ]
+}

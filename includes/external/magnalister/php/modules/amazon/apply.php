@@ -43,6 +43,62 @@ function amazonSanitizeDesc($str) {
 	return AmazonHelper::gi()->truncateString($str, 2000);
 }
 
+function getMultiPrepareData($genericDataStructure = array()) {
+    global $_MagnaSession;
+    $mpID = $_MagnaSession['mpID'];
+
+    $query = '
+        SELECT ap.products_id, ap.category, ap.data
+        FROM '.TABLE_MAGNA_AMAZON_APPLY.' ap
+        INNER JOIN '.TABLE_MAGNA_SELECTION.' ms ON ap.products_id = ms.pID AND ap.mpID = ms.mpID
+        WHERE selectionname="apply" 
+              AND ms.mpID = "'.$mpID.'" 
+              AND session_id="'.session_id().'" 
+              AND ap.products_id IS NOT NULL 
+              AND TRIM(ap.products_id) <> ""
+    ';
+
+    $prepData = MagnaDB::gi()->fetchArray($query);
+    $dbData = false;
+    if (!empty($prepData)) {
+        $prepData = reset($prepData);
+        $dbData = $prepData['data'];
+    }
+
+    $prepData['category'] = base64_decode($prepData['category']);
+    $prepData['category'] = unserialize($prepData['category']);
+    $dbData = base64_decode($dbData);
+    $dbData = unserialize($dbData);
+
+    if(isset($dbData['Keywords']) && is_array($dbData['Keywords'])){
+        $dbData['Keywords'] = implode(' ', $dbData['Keywords']);
+    }
+    if (is_array($prepData['category']) && !empty($prepData['category'])
+        && is_array($dbData) && !empty($dbData)
+    ) {
+        $genericDataStructure = array_merge(
+            $genericDataStructure,
+            $prepData['category'],
+            $dbData
+        );
+    }
+    $genericDataStructure['LeadtimeToShip'] = $prepData['leadtimeToShip'];
+    $genericDataStructure['ConditionType'] = $prepData['ConditionType'];
+    $genericDataStructure['ConditionNote'] = $prepData['ConditionNote'];
+
+    if($prepData['ShippingTemplate'] !== null){
+        $genericDataStructure['ShippingTemplate'] = $prepData['ShippingTemplate'];
+    }
+
+    if (($hp = magnaContribVerify('AmazonApply_populateGenericData', 1)) !== false) {
+        require($hp);
+    }
+
+
+    return $genericDataStructure;
+}
+
+
 function populateGenericData($pID, $edit = false) {
 	global $_MagnaSession;
 
@@ -90,7 +146,8 @@ function populateGenericData($pID, $edit = false) {
 		if ($edit) {
 			$genericDataStructure['LeadtimeToShip'] = 'X';
 		}
-		return $genericDataStructure;
+        $result = getMultiPrepareData($genericDataStructure);
+        return $result;
 	}
 	$product = MLProduct::gi()->getProductByIdOld(
 		$pID, getDBConfigValue('amazon.lang', $mpId, $_SESSION['languages_id'])
@@ -157,7 +214,7 @@ function populateGenericData($pID, $edit = false) {
     $genericDataStructure['Keywords'] = substr($genericDataStructure['Keywords'], 0, strpos(wordwrap($genericDataStructure['Keywords'], 1000, "\n", true) . "\n", "\n"));
 
 	$prepData = MagnaDB::gi()->fetchRow('
-		SELECT category, data, leadtimeToShip, ConditionType, ConditionNote, ShippingTemplate
+		SELECT category, data, DataId, leadtimeToShip, ConditionType, ConditionNote, ShippingTemplate
 		  FROM ' . TABLE_MAGNA_AMAZON_APPLY . '
 		 WHERE mpID=\'' . $mpId . '\' AND
 		       ' . ((getDBConfigValue('general.keytype', '0') == 'artNr')
@@ -176,7 +233,28 @@ function populateGenericData($pID, $edit = false) {
 	if (!$edit) {
 		# Attributes matching shouldn't be reset
 		$dataForShopVariation = unserialize(base64_decode($dbData));
-		$genericDataStructure['ShopVariation'] = $dataForShopVariation['ShopVariation'];
+        $shopVariationData = null;
+
+        // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
+        // PRIMARY: Try to load from longtext table (new format)
+        if (!empty($prepData['DataId'])) {
+            $longtextRow = MagnaDB::gi()->fetchRow("
+				SELECT Value
+				FROM magnalister_amazon_prepare_longtext
+				WHERE TextId = '" . MagnaDB::gi()->escape($prepData['DataId']) . "'
+				  AND ReferenceFieldName = 'data'
+			");
+            if (!empty($longtextRow['Value'])) {
+                $shopVariationData = $longtextRow['Value'];
+            }
+        }
+
+        // FALLBACK: If not found in longtext, try old format from data column
+        if (empty($shopVariationData) && isset($dataForShopVariation['ShopVariation'])) {
+            $shopVariationData = $dataForShopVariation['ShopVariation'];
+        }
+
+        $genericDataStructure['ShopVariation'] = $shopVariationData;
 		$dbData = false;
 	}
 
@@ -210,7 +288,7 @@ function populateGenericData($pID, $edit = false) {
 		$genericDataStructure['LeadtimeToShip'] = $prepData['leadtimeToShip'];
 		$genericDataStructure['ConditionType'] = $prepData['ConditionType'];
 		$genericDataStructure['ConditionNote'] = $prepData['ConditionNote'];
-		
+
 		if($prepData['ShippingTemplate'] !== null){
 			$genericDataStructure['ShippingTemplate'] = $prepData['ShippingTemplate'];
 		}
@@ -300,7 +378,7 @@ if (!empty($_POST) && isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 		$applyAction = $_GET['applyAction'];
 	}
 }
-
+//$line = __FILE__.__LINE__;die($line);
 /**
  * Daten speichern
  */
@@ -321,7 +399,6 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 	);
 
 	$sMainCategory = $_POST['MainCategory'];
-	$sProductType = $_POST['ProductType'];
 
 	$pIDs = MagnaDB::gi()->fetchArray('
 		SELECT pID FROM ' . TABLE_MAGNA_SELECTION . '
@@ -348,7 +425,7 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 		true,
 		count($pIDs) == 1,
 		$variationThemeAttributes,
-		$sProductType
+        $sMainCategory
 	);
 
 	unset($_POST['ml']);
@@ -384,8 +461,12 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
     }
 
 	if (!empty($pIDs)) {
-		$missingItems = array();
 		$preparedTs = date('Y-m-d H:i:s');
+        $verificationErrors = array(); // Collect verification errors
+        $allVerifiedSuccessfully = true;
+        $batchData = array(); // Collect all product data for batch insert
+
+        // First pass: Prepare all product data and verify with Amazon API
 		foreach ($pIDs as $pID) {
 			$data = array_merge(
 				populateGenericData($pID),
@@ -398,11 +479,7 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 				$leadtimeToShip = $data['LeadtimeToShip'];
 			}
 
-			foreach ($requiredData as $key => $title) {
-				if (empty($data[$key]) || ($data[$key] == 'null')) {
-					$missingItems[$pID][] = $title;
-				}
-			}
+            // Client-side validation removed - now using Amazon API verification via is_incomplete field
 
 			$productModel = MagnaDB::gi()->fetchOne('
 				SELECT products_model
@@ -434,49 +511,174 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 			// recreate indexes from 0 (because if u select a top ten category you have index keys like 6 or 9)
             $c['BrowseNodes'] = array_values($c['BrowseNodes']);
 
-			#echo print_m($missingItems);
-			$data = array(
-				'mpID' => $_MagnaSession['mpID'],
-				'products_id' => $pID,
-				'products_model' => $productModel,
-				'category' => base64_encode(serialize($c)),
-				'data' => base64_encode(serialize($data)),
-				'is_incomplete' => array_key_exists($pID, $missingItems) || $invalidAttributes ? 'true' : 'false',
-				'leadtimeToShip' => $leadtimeToShip,
-				'topMainCategory' => $c['MainCategory'] == null ? '' : $c['MainCategory'],
-				'topProductType' => $c['ProductType'] == null ? '' : $c['ProductType'],
-				'topBrowseNode1' => $c['BrowseNodes'][0] == null ? '' : $c['BrowseNodes'][0],
-				'topBrowseNode2' => (!isset($c['BrowseNodes'][1]) || ($c['BrowseNodes'][1] == null)) ? '' : $c['BrowseNodes'][1],
-				'ConditionType' => $c['ConditionType'],
-				'ConditionNote' => $c['ConditionNote'],
-				'PreparedTs' => $preparedTs,
-				'variation_theme' => $data['variationTheme']
-			);
-			
-			if ($shippingTemplate !== null) {
-				$data['ShippingTemplate'] = $shippingTemplate;
-			}
-			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
-				? array('products_model' => MagnaDB::gi()->escape($data['products_model']))
-				: array('products_id' => $data['products_id']);
-			$where['mpID'] = $_MagnaSession['mpID'];
+            $isIncomplete = 'true'; // Default to incomplete until verification succeeds
 
-			$swhere = 'WHERE ';
-			foreach ($where as $key => $value) {
-				$swhere .= '`' . $key . '` = \'' . $value . '\' AND ';
-			}
+            // Verify product with Amazon API (only if category is selected)
+            if (!empty($c['MainCategory']) && $c['MainCategory'] !== 'none') {
+                require_once(DIR_MAGNALISTER_MODULES . 'amazon/classes/AmazonCheckinSubmit.php');
 
-			$swhere = rtrim($swhere, ' AND ');
+                try {
+                    $checkinSubmit = new AmazonCheckinSubmit(array(
+                        'itemsPerBatch' => 1,
+                        'selectionName' => 'prepare',
+                        'marketplace'   => 'amazon',
+                    ));
 
-			if (($count = (int)MagnaDB::gi()->fetchOne('SELECT count(*) FROM `' . TABLE_MAGNA_AMAZON_APPLY . '` ' . $swhere)) > 0) {
-				if ($count > 1) {
-					MagnaDB::gi()->query('DELETE FROM `' . TABLE_MAGNA_AMAZON_APPLY . '` ' . $swhere . ' LIMIT ' . ($count - 1));
-				}
-				MagnaDB::gi()->update(TABLE_MAGNA_AMAZON_APPLY, $data, $where);
-			} else {
-				MagnaDB::gi()->insert(TABLE_MAGNA_AMAZON_APPLY, $data);
-			}
-			if (!array_key_exists($pID, $missingItems) && !$postAction && empty($errors)) {
+                    $verificationResult = $checkinSubmit->verifyOneItem($pID);
+                    // Check verification status
+                    if ($verificationResult['status'] === 'OK') {
+                        // Only set to false if verification succeeded
+                        $isIncomplete = 'false';
+                    } else {
+                        $isIncomplete = 'true';
+                        $allVerifiedSuccessfully = false;
+
+                        // Extract error messages from API response
+                        $errorMessages = array();
+
+                        // Helper function to encode UTF-8 to HTML entities (works with or without mbstring)
+                        $encodeToHtmlEntities = function($str) {
+                            if (function_exists('mb_convert_encoding')) {
+                                // Use mbstring if available (best option - handles all Unicode)
+                                return mb_convert_encoding($str, 'HTML-ENTITIES', 'UTF-8');
+                            } else {
+                                // Fallback: Use htmlentities (works without mbstring)
+                                return htmlentities($str, ENT_QUOTES | ENT_HTML5, 'UTF-8', false);
+                            }
+                        };
+
+                        // Check for top-level error message
+                        if (isset($verificationResult['result']['ERRORMESSAGE'])) {
+                            $errorMessages[] = $encodeToHtmlEntities($verificationResult['result']['ERRORMESSAGE']);
+                        }
+
+                        // Check for ERRORS array at top level (Amazon API standard format)
+                        if (isset($verificationResult['result']['ERRORS']) && is_array($verificationResult['result']['ERRORS'])) {
+                            foreach ($verificationResult['result']['ERRORS'] as $error) {
+                                if (isset($error['ERRORMESSAGE'])) {
+                                    $errorMessages[] = $encodeToHtmlEntities($error['ERRORMESSAGE']);
+                                }
+                            }
+                        }
+                        // Check for errors in RESPONSEDATA (fallback for other formats)
+                        if (isset($verificationResult['result']['RESPONSEDATA']) && is_array($verificationResult['result']['RESPONSEDATA'])) {
+                            foreach ($verificationResult['result']['RESPONSEDATA'] as $responseData) {
+                                if (isset($responseData['ERRORS']) && is_array($responseData['ERRORS'])) {
+                                    foreach ($responseData['ERRORS'] as $error) {
+                                        if (isset($error['ERRORMESSAGE'])) {
+                                            $errorMessages[] = $encodeToHtmlEntities($error['ERRORMESSAGE']);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Store errors for this product
+                        $product = MLProduct::gi()->getProductByIdOld($pID);
+                        $verificationErrors[] = array(
+                            'productId'   => $pID,
+                            'productName' => $product['products_name'],
+                            'errors'      => $errorMessages
+                        );
+                    }
+
+                    // Always log verification result (visible in HTML source)
+                    echo '<!-- Amazon Verification: Product ' . $pID . ' => ' . $verificationResult['status'];
+                    if ($verificationResult['status'] === 'ERROR' && isset($verificationResult['result']['ERRORMESSAGE'])) {
+                        echo ' - Error: ' . htmlspecialchars($verificationResult['result']['ERRORMESSAGE']);
+                    }
+                    echo ' -->';
+                } catch (Exception $e) {
+                    $isIncomplete = 'true';
+                    $allVerifiedSuccessfully = false;
+                    // Always log exception (visible in HTML source)
+                    echo '<!-- Amazon Verification Exception: Product ' . $pID . ' => ' . htmlspecialchars($e->getMessage()) . ' -->';
+                }
+            }
+
+            $rowData = array(
+                'mpID'            => $_MagnaSession['mpID'],
+                'products_id'     => $pID,
+                'products_model'  => $productModel,
+                'category'        => base64_encode(serialize($c)),
+                'data'            => base64_encode(serialize($data)),
+                'is_incomplete'   => $isIncomplete,
+                // Legacy field, now using iscomplete from API verification
+                'leadtimeToShip'  => $leadtimeToShip,
+                'topMainCategory' => $c['MainCategory'] == null ? '' : $c['MainCategory'],
+                'topProductType'  => $c['ProductType'] == null ? '' : $c['ProductType'],
+                'topBrowseNode1'  => $c['BrowseNodes'] == null ? '' : json_encode([$c['MainCategory'] => $c['BrowseNodes']]),
+                'ConditionType'   => $c['ConditionType'],
+                'ConditionNote'   => $c['ConditionNote'],
+                'PreparedTs'      => $preparedTs,
+                'variation_theme' => $data['variationTheme']
+            );
+
+            if ($shippingTemplate !== null) {
+                $rowData['ShippingTemplate'] = $shippingTemplate;
+            }
+
+            $batchData[] = $rowData;
+        }
+
+        // Second pass: Batch insert/update all products at once using ON DUPLICATE KEY UPDATE
+        if (!empty($batchData)) {
+            // Define fields to update on duplicate (all fields except primary key: mpID, products_id, products_model)
+            $fieldsToUpdate = array(
+                'category',
+                'data',
+                'is_incomplete',
+                'leadtimeToShip',
+                'topMainCategory',
+                'topProductType',
+                'topBrowseNode1',
+                'ConditionType',
+                'ConditionNote',
+                'PreparedTs',
+                'variation_theme'
+            );
+
+            // Add ShippingTemplate if it exists in any row
+            $hasShippingTemplate = false;
+            foreach ($batchData as $row) {
+                if (isset($row['ShippingTemplate'])) {
+                    $hasShippingTemplate = true;
+                    break;
+                }
+            }
+            if ($hasShippingTemplate) {
+                $fieldsToUpdate[] = 'ShippingTemplate';
+            }
+
+            // Use batchinsert with ON DUPLICATE KEY UPDATE
+            MagnaDB::gi()->batchinsert(TABLE_MAGNA_AMAZON_APPLY, $batchData, false, // Don't use REPLACE
+                $fieldsToUpdate // Update these fields on duplicate key
+            );
+        }
+
+        // Display verification errors if any
+        if (!empty($verificationErrors) && !$postAction) {
+            foreach ($verificationErrors as $errorInfo) {
+                echo '<p class="errorBox">';
+                echo '<span class="error bold larger">' . ML_ERROR_LABEL . ':</span><br>';
+                if (!empty($errorInfo['errors'])) {
+                    foreach ($errorInfo['errors'] as $errorMsg) {
+                        // $errorMsg is already converted to HTML entities by mb_convert_encoding()
+                        // Just output it directly (already safe for any charset)
+                        echo '&bull; Amazon: ' . $errorMsg . '<br>';
+                    }
+                } else {
+                    echo '&bull; Amazon verification failed<br>';
+                }
+                echo '</p>';
+            }
+            // Force stay in preparation form
+            $_POST['apply'] = 'prepare';
+        }
+
+        // Delete selection ONLY if all products verified successfully
+        if ($allVerifiedSuccessfully && !$postAction) {
+            foreach ($pIDs as $pID) {
 				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 					'pID' => $pID,
 					'mpID' => $_MagnaSession['mpID'],
@@ -484,48 +686,17 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 					'session_id' => session_id()
 				));
 			}
+
+            // Show success message
+            if (count($pIDs) == 1) {
+                echo '<div class="successBox">' . ML_AMAZON_LABEL_PREPARED_SUCCESS . '</div>';
+            } else {
+                echo '<div class="successBox">' . ML_AMAZON_LABEL_PREPARED_SUCCESS_MULTI . '</div>';
+            }
 		}
 
 		if (!$postAction && isset($errors)) {
 			echo $errors;
-		}
-
-		if (!$postAction && !empty($missingItems) && $_GET['kind'] !== 'ajax') {
-			echo '
-				<p class="noticeBox">' . ML_AMAZON_TEXT_APPLY_DATA_INCOMPLETE . '</p>
-				<table class="datagrid">
-					<thead><tr>
-						<th>' . ML_LABEL_PRODUCTS_ID . '</th>
-						<th>' . ML_LABEL_ARTICLE_NUMBER . '</th>
-						<th>' . ML_LABEL_PRODUCT_NAME . '</th>
-						<th>' . ML_AMAZON_LABEL_MISSING_FIELDS . '</th>
-						<th>&nbsp;</th>
-					</tr></thead>
-					<tbody>';
-			$oddEven = true;
-			$i = 0;
-			foreach ($missingItems as $pID => $items) {
-				if ($i > 20) {
-					echo '
-						<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
-							<td colspan="5" class="textcenter bold">&hellip;</td>
-						</tr>';
-					break;
-				}
-				$product = MLProduct::gi()->getProductByIdOld($pID);
-				echo '
-						<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
-							<td>' . $pID . '</td>
-							<td>' . $product['products_model'] . '</td>
-							<td>' . $product['products_name'] . '</td>
-							<td>' . implode(',', $items) . '</td>
-							<td><a class="gfxbutton edit" title="bearbeiten" target="_blank" href="' . toURL($_url, array('edit' => $pID)) . '">&nbsp;</a></td>
-						</tr>';
-				++$i;
-			}
-			echo '
-					</tbody>
-				</table>';
 		}
 	}
 }
@@ -671,7 +842,8 @@ if (array_key_exists('apply', $_POST) && (!empty($_POST['apply']))) {
 	}
 }
 
-if (($applyAction == 'singleapplication') || ($applyAction == 'multiapplication')) {
+if (($applyAction === 'singleapplication') || ($applyAction === 'multiapplication') || ($applyAction === 'react')) {
+//	 die('stop');
 	include_once(DIR_MAGNALISTER_MODULES.'amazon/application/applicationviews.php');
 } else if (isset($_GET['where']) && $_GET['where'] === 'varmatchView') {
 	if (isset($_POST['Action']) && $_POST['Action'] === 'DBMatchingColumns') {
@@ -686,14 +858,18 @@ if (($applyAction == 'singleapplication') || ($applyAction == 'multiapplication'
 		if (isset($pIDs[0])) {
 			$pID = $pIDs[0];
 		} else {
-			$pID = MagnaDB::gi()->fetchOne('
+			$pIDs = MagnaDB::gi()->fetchArray('
 				SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
 				 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
 					   selectionname=\''.$applySetting['selectionName'].'\' AND
 					   session_id=\''.session_id().'\'
 			', true);
 		}
-
+        if (!empty($pIDs)) {
+            $pID = reset($pIDs);
+        } else {
+            $pID = false;
+        }
 		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
 			$productModel = MagnaDB::gi()->fetchOne('
                 SELECT products_model

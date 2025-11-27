@@ -17,14 +17,12 @@ class AmazonTopTen extends TopTen {
 		switch ($sField) {
 			case 'topMainCategory':{
 				$sWhere = "1 = 1";
-				$sUnion = null;
 				break;
 			}
 			
 			case 'topBrowseNode':{
 				$sField = 'topBrowseNode1';
 				$sWhere = "1 = 1";
-				$sUnion = 'topBrowseNode2';
 				break;
 			}
 			
@@ -61,22 +59,40 @@ class AmazonTopTen extends TopTen {
 			";
 		}
 		$aTopTen = MagnaDB::gi()->fetchArray($sSql, true);
+        if ($sField == 'topBrowseNode1' && !empty($aTopTen)) {
+            $firstValue = reset($aTopTen);
+
+            if (!empty($firstValue)) {
+                $aTopTenDecoded = json_decode($firstValue, true);
+
+                if (is_array($aTopTenDecoded)) {
+                    reset($aTopTenDecoded);
+                    $aTopTen = $aTopTenDecoded[key($aTopTenDecoded)];
+                } else {
+                    $aTopTen = []; // oder Fallback
+                }
+            } else {
+                $aTopTen = []; // kein Wert im ersten Array
+            }
+        }
 		$aOut = array();
 		try {
 			switch ($sField) {
 				case 'topMainCategory':{
 					$aCategories = MagnaConnector::gi()->submitRequest(array(
-						'ACTION' => 'GetMainCategories',
+						'ACTION' => 'GetAllProductTypes',
 					));
-					$aCategories=$aCategories['DATA'];
+					$aCategories = isset($aCategories['DATA']) ? $aCategories['DATA'] : array();
 					break;
 				}
-				case 'topBrowseNode1':{
+                case 'topBrowseNode1':{
 					$aCategories = MagnaConnector::gi()->submitRequest(array(
 						'ACTION' => 'GetBrowseNodes',
-						'CATEGORY' => $sParent
+						'CATEGORY' => $sParent,
+                        'NewResponse' => 'ALL',
+                        'Version' => 2
 					));
-					$aCategories = $aCategories['DATA'];
+					$aCategories = isset($aCategories['DATA']) ? $aCategories['DATA'] : array();
 					break;
 				}
 			}

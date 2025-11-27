@@ -59,3 +59,19 @@
 		});
 	});
 })(jQuery);
+
+let numberOfLoading = 0;
+
+function mlShowLoading() {
+	jQuery.blockUI(blockUILoading);
+	numberOfLoading++;
+//        alert(numberOfLoading);
+}
+
+function mlHideLoading() {
+	numberOfLoading--;
+//        alert(numberOfLoading);
+	if (numberOfLoading <= 0) {
+		jQuery.unblockUI();
+	}
+}

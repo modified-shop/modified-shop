@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -82,6 +82,8 @@ class OttoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'PrimaryCategoryName' => $properties['PrimaryCategoryName'],
             'DeliveryType' => $properties['DeliveryType'],
             'DeliveryTime' => $properties['DeliveryTime'],
+            'ShippingProfile' => $properties['ShippingProfile'],
+            'ProcessingTime' => $properties['ProcessingTime'],
             'MarketplaceAttributes' => $properties['ShopVariation'],
             'CategoryIndependentAttributes' => $properties['CategoryIndependentShopVariation'],
         );
@@ -179,6 +181,8 @@ class OttoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'PrimaryCategoryName' => $masterData['PrimaryCategoryName'],
                 'DeliveryType' => $masterData['DeliveryType'],
                 'DeliveryTime' => $masterData['DeliveryTime'],
+                'ShippingProfile' => $masterData['ShippingProfile'],
+                'ProcessingTime' => $masterData['ProcessingTime'],
                 'Images' => $masterData['Images'], // handled below, if any more
                 'VAT' => $masterData['VAT'],
                 'MarketplaceAttributes' => array_merge(OttoHelper::gi()->convertMatchingToNameValue(

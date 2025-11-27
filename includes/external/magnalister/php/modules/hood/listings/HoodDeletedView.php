@@ -354,6 +354,11 @@ class HoodDeletedView {
 			 	'Currency' => $item['Currency'],
 			))));
 
+			if (    empty($item['SKU']) 
+			     && empty($item['ShopTitle'])) {
+				$item['ShopTitle'] = '&mdash;';
+				$item['ShopVarText'] = '';
+			}
 
 			$renderedShopPrice = (0 != $item['ShopPrice'])?$this->simplePrice->setPriceAndCurrency($item['ShopPrice'], $item['Currency'])->format():'&mdash;';
 			switch ($item['DeletedBy']) {
@@ -368,7 +373,7 @@ class HoodDeletedView {
 					<td>'.$item['SKU'].'</td>
 					<td title="'.fixHTMLUTF8Entities($item['ShopTitle'], ENT_COMPAT).'">'.$item['ShopTitle'].'<br /><span class="small">'.$item['ShopVarText'].'</span></td>
 					<td title="'.fixHTMLUTF8Entities($item['Title'], ENT_COMPAT).'">'.$item['ItemTitleShort'].'<br /><span class="small">'.$item['VariationAttributesText'].'</span></td>
-					<td><a href="http://www.hood.de/00' . $item['AuctionId'] . '.htm" target="_blank">' . $item['AuctionId'] . '</a></td>
+					<td>'.$this->getItemLink($item).'</td>
 					<td>'.$renderedShopPrice.' / '.$this->simplePrice->setPriceAndCurrency($item['Price'], $item['Currency'])->format().'</td>
 					<td>'.date("d.m.Y", $item['LastSync']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['LastSync']).'</span></td>
 					<td>'.date("d.m.Y", $item['StartTime']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['StartTime']).'</span><br />'.('&mdash;' == $item['EndTime']? '&mdash;' : date("d.m.Y", $item['EndTime']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['EndTime']).'</span>').'</td>
@@ -516,4 +521,17 @@ $(document).ready(function() {
 			/*]]>*/</script>';
 	}
 	
+	protected function getItemLink($item) {
+		if (function_exists('mb_strtolower')) {
+			$sTitleNormalized0 = mb_strtolower(trim($item['Title'])) . '-';
+		} else {
+			$sTitleNormalized0 = strtolower(trim($item['Title'])) . '-';
+		}
+		$sTitleNormalized = 
+			str_replace(array('----', '---', '--'), '-',
+			str_replace(array('ä', 'ö', 'ü', 'ß', ' ', '/', '"', '&quot;', '&apos;', ','), array('ae', 'oe', 'ue', 'ss', '-', '-', '', '', '', '', ''),
+			$sTitleNormalized0));
+		return '<a href="https://www.hood.de/i/' . $sTitleNormalized . $item['AuctionId'] .'.htm">' . $item['AuctionId'] . '</a>';
+	}
+
 }

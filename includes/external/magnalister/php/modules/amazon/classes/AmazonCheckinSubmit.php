@@ -23,7 +23,7 @@ require_once(DIR_MAGNALISTER_MODULES.'amazon/AmazonHelper.php');
 
 class AmazonCheckinSubmit extends CheckinSubmit {
 	private $checkinDetails = array();
-	
+    private $verify = false;
 	public function __construct($settings = array()) {
 		global $_MagnaSession;
 		/* Setzen der Currency nicht noetig, da Preisberechnungen bereits in 
@@ -36,20 +36,20 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			'keytype' => getDBConfigValue('general.keytype', '0'),
 			'skuAsMfrPartNo' => getDBConfigValue(array('amazon.checkin.SkuAsMfrPartNo', 'val'), $_MagnaSession['mpID'], false),
 		), $settings);
-		
+
 		parent::__construct($settings);
 	}
-	
+
 	protected function setUpMLProduct() {
 		parent::setUpMLProduct();
-		
+
 		if (!$this->settings['mlProductsUseLegacy']) {
 			$useGambioVariations = (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties');
-			
+
 			if ($useGambioVariations) {
 				MLProduct::gi()->setOptions(array('useGambioProperties' => true));
 			}
-			
+
 			MLProduct::gi()
 				->setPriceConfig(AmazonHelper::loadPriceSettings($this->mpID))
 				->setQuantityConfig(AmazonHelper::loadQuantitySettings($this->mpID))
@@ -60,17 +60,47 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			;
 		}
 	}
-	
+
 	public function makeSelectionFromErrorLog() {}
-	
-	protected function generateRequestHeader() {
-		return array(
-			'ACTION' => 'AddItems',
-			'MODE' => $this->submitSession['mode']
-		);
-	}
-	
-	protected function markAsFailed($sku) {
+
+    protected function generateRequestHeader() {
+        # das Request braucht nur action, subsystem und data
+        return array(
+            'ACTION'    => ($this->verify ? 'VerifyAddItems' : 'AddItems'),
+            'MODE'      => $this->submitSession['mode'],
+            'VERSION' => 2,
+            'SUBSYSTEM' => 'Amazon'
+        );
+    }
+
+    protected function initSelection($offset, $limit) {
+        if ($this->verify) {
+            # fuer Verify nur Artikel mit gueltiger Menge und Preis nehmen, ausser man findet keine
+            $verifySelectionResult = MagnaDB::gi()->query('
+			    SELECT ms.pID pID, ms.data data
+			      FROM ' . TABLE_MAGNA_SELECTION . ' ms, ' . TABLE_PRODUCTS . ' p, ' . TABLE_PRODUCTS_DESCRIPTION . ' pd
+			     WHERE mpID="' . $this->_magnasession['mpID'] . '" AND
+			           selectionname="' . $this->settings['selectionName'] . '" AND
+			           session_id="' . session_id() . '" AND
+			           pd.language_id = "' . $this->settings['language'] . '" AND
+			           p.products_quantity > 0 AND p.products_price > 0.0 AND
+			           p.products_id = ms.pID AND
+			           pd.products_id = ms.pID
+			  ORDER BY pd.products_name ASC
+			     LIMIT ' . $offset . ',' . $limit . '
+			');
+            $this->selection = array();
+            while ($row = MagnaDB::gi()->fetchNext($verifySelectionResult)) {
+                $this->selection[$row['pID']] = unserialize($row['data']);
+            }
+            if (!empty($this->selection)) {
+                return;
+            }
+        }
+        parent::initSelection($offset, $limit);
+    }
+
+    protected function markAsFailed($sku) {
 		MagnaDB::gi()->insert(
 			TABLE_MAGNA_AMAZON_ERRORLOG, array(
 			'mpID' => $this->_magnasession['mpID'],
@@ -129,7 +159,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				$this->setB2BData($data, $pID, $product, $b2bOnly);
 			}
 		}
-		
+
 		$productVariations = isset($product['Variations']) && is_array($product['Variations'])? $product['Variations'] : array();
 		$preparedVariations = array();
 
@@ -137,7 +167,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		if (isset($product['PriceReduced'])) {
 			$data['submit']['Price'] = $product['PriceReduced'];
 		}
-		
+
 		foreach ($productVariations as $variation) {
 			$variationProduct = array(
 				'ProductsModel' => $variation['MarketplaceSku'], 
@@ -158,36 +188,64 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		$data['submit']['Variations'] = empty($preparedVariations) ? array() : $preparedVariations;
 		return true;
 	}
-	
+
 	protected function appendApplyData($pID, $product, &$data) {
 		$productApply = MagnaDB::gi()->fetchRow("
-			SELECT data, category, leadtimeToShip, ConditionType, ConditionNote, ShippingTemplate, variation_theme
+			SELECT data, category, leadtimeToShip, ConditionType, ConditionNote, ShippingTemplate, variation_theme, DataId
 			  FROM `".TABLE_MAGNA_AMAZON_APPLY."`
 			 WHERE data<>''
 			       AND ".(($this->settings['keytype'] == 'artNr')
 			            ? 'products_model="'.MagnaDb::gi()->escape($product['ProductsModel']).'"'
 			            : 'products_id="'.$pID.'"'
 			       )."
-			       AND is_incomplete='false'
 			       AND mpID='".$this->_magnasession['mpID']."'
 			 LIMIT 1
 		");
+			       //AND is_incomplete='false'
 
 		#echo print_m($productApply, '$productApply');
 		if ($productApply === false) {
 			return false;
 		}
 
+        // Always decode the base64-serialized data column first (contains full product data)
 		$productApply['data'] = @unserialize(@base64_decode($productApply['data']));
 		if (empty($productApply['data']) || !is_array($productApply['data'])) {
 			$productApply['data'] = array();
-		}
+        }
+
+        // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
+        $shopVariationData = null;
+
+        // PRIMARY: Try to load from longtext table (new format)
+        if (!empty($productApply['DataId'])) {
+            $longtextRow = MagnaDB::gi()->fetchRow("
+				SELECT Value
+				FROM magnalister_amazon_prepare_longtext
+				WHERE TextId = '" . MagnaDB::gi()->escape($productApply['DataId']) . "'
+				  AND ReferenceFieldName = 'data'
+			");
+
+            if (!empty($longtextRow['Value'])) {
+                $shopVariationData = $longtextRow['Value'];
+            }
+        }
+
+        // FALLBACK: If not found in longtext, try old format from data column
+        if (empty($shopVariationData) && isset($productApply['data']['ShopVariation'])) {
+            $shopVariationData = $productApply['data']['ShopVariation'];
+        }
+
+        // Set the final ShopVariation data
+        if (!empty($shopVariationData)) {
+            $productApply['data']['ShopVariation'] = $shopVariationData;
+        }
 
 		$productApply['category'] = @unserialize(@base64_decode($productApply['category']));
 		if (empty($productApply['category']) || !is_array($productApply['category'])) {
 			$productApply['category'] = array();
 		}
-		
+
 		$productApply['data'] = array_merge($productApply['category'], $productApply['data']);
 		if (empty($productApply['data'])) {
 			return false;
@@ -244,12 +302,12 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		$data['submit']['SKU'] = ($this->settings['keytype'] == 'artNr')
 			? $product['MarketplaceSku']
 			: $product['MarketplaceId'];
-		
+
 		#echo print_m($productApply, '$productApply');
-		
+
 		$data['submit']['ConditionType'] = empty($productApply['ConditionType']) ? $data['submit']['ConditionType'] : $productApply['ConditionType'];
 		$data['submit']['ConditionNote'] = empty($productApply['ConditionNote']) ? sanitizeProductDescription($data['submit']['ConditionNote']) : sanitizeProductDescription($productApply['ConditionNote']);
-		
+
 		if (!empty($data['submit']['BrowseNodes'])) {
 			foreach ($data['submit']['BrowseNodes'] as $i => $bn) {
 				if ($bn == 'null') {
@@ -259,7 +317,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				}
 			}
 		}
-		
+
 		if (!empty($product['Attributes'])) {
 			$data['submit']['CustomAttributes'] = array();
 			foreach ($product['Attributes'] as $attribSet) {
@@ -296,7 +354,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		if (is_numeric($productApply['leadtimeToShip'])) {
 			$data['submit']['LeadtimeToShip'] = $productApply['leadtimeToShip'];
 		}
-			
+
 		if (isset($product['Weight']) && is_array($product['Weight'])) {
 			$data['submit']['Weight'] = $product['Weight'];
 		}
@@ -333,7 +391,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			$vItem['SKU'] = ($this->settings['keytype'] == 'artNr')
 				? $vItem['MarketplaceSku']
 				: $vItem['MarketplaceId'];
-				
+
 			if (is_numeric($productApply['leadtimeToShip'])) {
 				$vItem['LeadtimeToShip'] = $productApply['leadtimeToShip'];
 			}
@@ -403,7 +461,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				$this->unsetB2BData($vItem);
 			}
 		}
-		
+
 		if (
 			(!isset($data['submit']['ManufacturerPartNumber']) || empty($data['submit']['ManufacturerPartNumber']))
 			&& $this->settings['skuAsMfrPartNo']
@@ -562,12 +620,12 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			return $this->appendAdditionalDataOld($pID, $product, $data); 
 		}
 		#echo print_m(func_get_args(), __METHOD__);
-		
-		
+
+
 		if ($data['quantity'] < 0) {
 			$data['quantity'] = 0;
 		}
-		
+
 		$data['submit']['Quantity'] = $data['quantity'];
 		$data['submit']['SKU'] = magnaPID2SKU($pID);
 
@@ -577,12 +635,12 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			// if the reduced price is available here it has been enabled in the module configuration and should be used.
 			$data['submit']['Price'] = $product['PriceReduced'];
 		}
-		
+
 		#VPE
 		if ((isset($product['BasePrice']['Value'])) && ($product['BasePrice']['Value'] > 0)) {
 			$data['submit']['BasePrice'] = $product['BasePrice'];
 		}
-		
+
 		$data['submit']['ConditionType'] = getDBConfigValue('amazon.itemCondition', $this->_magnasession['mpID']);
 		if (false === $this->appendMatchingData($pID, $product, $data)) {
 			if (false === $this->appendApplyData($pID, $product, $data)) {
@@ -603,7 +661,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			}
 		}
 	}
-	
+
 	protected function getVariations($pID, $product, &$data) {
 		$variationTheme = array();
 		if (defined('MAGNA_FIELD_ATTRIBUTES_EAN') 
@@ -729,14 +787,14 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			    )->getPrice();
 			unset($item['aPrice']);
 			unset($item['aPricePrefix']);
-			
+
 			if ($this->settings['skuAsMfrPartNo']
 				&& (!isset($item['ManufacturerPartNumber']) || empty($item['ManufacturerPartNumber']))
 			) {
 				$item['ManufacturerPartNumber'] = $item['SKU'];
 			}
 		}
-	
+
 		$data['submit']['Variations'] = $variationTheme;
 		#echo print_m($variationTheme);
 	}
@@ -744,9 +802,9 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 	protected function appendAdditionalDataOld($pID, $product, &$data) {
 
 		$conditionType = getDBConfigValue('amazon.itemCondition', $this->_magnasession['mpID']);
-		
+
 		$productMatching = $productApply = false;
-		
+
 		if ($data['quantity'] < 0) {
 			$data['quantity'] = 0;
 		}
@@ -773,18 +831,43 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			}
 
 		} else if (($productApply = MagnaDB::gi()->fetchRow('
-			SELECT category, data, leadtimeToShip
+			SELECT category, data, leadtimeToShip, DataId
 			  FROM `'.TABLE_MAGNA_AMAZON_APPLY.'`
 			 WHERE data<>\'\'
 			       AND '.((getDBConfigValue('general.keytype', '0') == 'artNr')
 			            ? 'products_model=\''.MagnaDB::gi()->escape($product['products_model']).'\''
 			            : 'products_id=\''.$pID.'\''
 			       ).'
-			       AND is_incomplete=\'false\'
 			       AND mpID=\''.$this->_magnasession['mpID'].'\'
 			 LIMIT 1
 		')) !== false) {
+			       //AND is_incomplete=\'false\'
 			$productApply['data'] = (array)@unserialize(@base64_decode($productApply['data']));
+            $shopVariationData = null;
+
+            // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
+            // PRIMARY: Try to load from longtext table (new format)
+            if (!empty($productApply['DataId'])) {
+                $longtextRow = MagnaDB::gi()->fetchRow("
+				SELECT Value
+				FROM magnalister_amazon_prepare_longtext
+				WHERE TextId = '" . MagnaDB::gi()->escape($productApply['DataId']) . "'
+				  AND ReferenceFieldName = 'data'
+			");
+                if (!empty($longtextRow['Value'])) {
+                    $shopVariationData = $longtextRow['Value'];
+                }
+            }
+
+            // FALLBACK: If not found in longtext, try old format from data column
+            if (empty($shopVariationData) && isset($productApply['data']['ShopVariation'])) {
+                $shopVariationData = $productApply['data']['ShopVariation'];
+            }
+
+            // Set the final ShopVariation data
+            if (!empty($shopVariationData)) {
+                $productApply['data']['ShopVariation'] = $shopVariationData;
+            }
 			$productApply['data'] = array_merge(
 				(array)@unserialize(@base64_decode($productApply['category'])),
 				$productApply['data']
@@ -824,11 +907,11 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				}
 				$data['submit']['Images'] = $images;
 			}
-			
+
 			if (is_numeric($productApply['leadtimeToShip'])) {
 				$data['submit']['LeadtimeToShip'] = $productApply['leadtimeToShip'];
 			}
-			
+
 			if ((float)$product['products_weight'] > 0) {
 				$data['submit']['Weight'] = array (
 					'Unit' => 'kg',
@@ -839,7 +922,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			$this->markAsFailed($pID);
 			return;
 		}
-		
+
 		# BasePrice = Grundpreis
 		if ((isset($product['products_vpe_name'])) && ($product['products_vpe_value'] > 0)) {
 			$data['submit']['BasePrice'] = array (
@@ -847,18 +930,18 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				'Value' => $product['products_vpe_value'],
 			);
 		}
-		
+
 		if ($productApply === false) {
 			return;
 		}
-		
+
 		if (
 			(!isset($data['submit']['ManufacturerPartNumber']) || empty($data['submit']['ManufacturerPartNumber']))
 			&& $this->settings['skuAsMfrPartNo']
 		) {
 			$data['submit']['ManufacturerPartNumber'] = $data['submit']['SKU'];
 		}
-		
+
 		$this->getVariations($pID, $product, $data);
 	}
 
@@ -1028,4 +1111,103 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 
 		return $fixCatAttributes;
 	}
+
+    /**
+     * Verify a single prepared item using Amazon VerifyAddItems API
+     * Similar to eBay's verifyOneItem() method
+     *
+     * @param int $productID Product ID to verify
+     * @return array Verification result with status and errors
+     */
+    public function verifyOneItem($productID) {
+        // Set verify mode flag (CRITICAL: must match eBay implementation)
+        $this->verify = true;
+        $originalMode = isset($this->submitSession['mode']) ? $this->submitSession['mode'] : 'prepare';
+        $this->submitSession['mode'] = 'ADD';
+
+        // Save original selection name
+        $oldSelectionName = $this->settings['selectionName'];
+        $this->settings['selectionName'] = $oldSelectionName . 'Verify';
+
+        // Clear any existing verify selection
+        MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+            'mpID'          => $this->_magnasession['mpID'],
+            'selectionname' => $this->settings['selectionName'],
+            'session_id'    => session_id()
+        ));
+
+        // Load product to populate selection data with fallback values
+        $this->setUpMLProduct();
+        $product = $this->getProduct($productID);
+
+        // Prepare selection data with fallback values from product
+        // This ensures appendAdditionalData() has proper values even without prepare data
+        $selectionData = array();
+
+        // Set quantity from product (fallback)
+        if (isset($product['Quantity'])) {
+            $selectionData['quantity'] = $product['Quantity'];
+        }
+
+        // Set price from product (fallback)
+        if (isset($product['Price']) && $product['Price'] > 0) {
+            $selectionData['price'] = $product['Price'];
+        } elseif (isset($product['PriceReduced']) && $product['PriceReduced'] > 0) {
+            $selectionData['price'] = $product['PriceReduced'];
+        }
+
+        // Add product to verify selection with fallback data
+        MagnaDB::gi()->insert(TABLE_MAGNA_SELECTION, array(
+            'mpID'          => $this->_magnasession['mpID'],
+            'selectionname' => $this->settings['selectionName'],
+            'session_id'    => session_id(),
+            'pID'           => $productID,
+            'data' => serialize($selectionData)
+        ));
+
+
+        // Initialize selection with single item
+        $this->initSelection(0, 1);
+
+        // Populate selection with prepare data
+        $this->populateSelectionWithData();
+
+        // Send verify request to Amazon
+        try {
+            $result = $this->sendRequest();
+        } catch (Exception $e) {
+            $result = array(
+                'STATUS'       => 'ERROR',
+                'ERRORMESSAGE' => $e->getMessage()
+            );
+        }
+
+        // Clean up verify selection
+        MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+            'mpID'          => $this->_magnasession['mpID'],
+            'selectionname' => $this->settings['selectionName'],
+            'session_id'    => session_id()
+        ));
+
+        // Restore original selection name and mode
+        $this->settings['selectionName'] = $oldSelectionName;
+        $this->submitSession['mode'] = $originalMode;
+
+        // Process result and update verification status in amazon_apply table
+        $verificationStatus = 'ERROR';
+        if (isset($result['STATUS']) && $result['STATUS'] === 'SUCCESS') {
+            $verificationStatus = 'OK';
+        }
+
+        // Update iscomplete status in amazon_apply table
+        MagnaDB::gi()->update(TABLE_MAGNA_AMAZON_APPLY, array('is_incomplete' => $verificationStatus === 'OK' ? 'false' : 'true'), array(
+                'mpID'        => $this->_magnasession['mpID'],
+                'products_id' => $productID
+            ));
+
+        return array(
+            'status' => $verificationStatus,
+            'result' => $result
+        );
+    }
 }

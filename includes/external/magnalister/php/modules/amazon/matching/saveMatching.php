@@ -208,7 +208,7 @@ if (array_key_exists('amazonProperties', $_POST)) {
 		
 		$data['category_id'] = isset($_POST['catID'][$asin]) ? $_POST['catID'][$asin] : '';
 		$data['category_name'] = isset($_POST['catName'][$asin]) ? $_POST['catName'][$asin] : '';
-		$data['lowestprice'] = isset($_POST['lowprice'][$asin]) ? $_POST['lowprice'][$asin] : '0.0';
+		$data['lowestprice'] = !empty($_POST['lowprice'][$asin]) ? $_POST['lowprice'][$asin] : '0.0';
 		$data['B2BActive'] = isset($_POST['B2BActive']) ? $_POST['B2BActive'] : 'false';
 	} else {
 		$data['asin'] = $data['item_note'] = $data['category_id'] = $data['category_name'] = $data['item_condition'] = '';
@@ -260,7 +260,7 @@ if (array_key_exists('action', $_GET) && ($_GET['action'] == 'multimatching') &&
 
 			$data['category_id'] = isset($_POST['catID'][$asin]) ? $_POST['catID'][$asin] : '';
 			$data['category_name'] = isset($_POST['catName'][$asin]) ? $_POST['catName'][$asin] : '';
-			$data['lowestprice'] = isset($_POST['lowprice'][$asin]) ? $_POST['lowprice'][$asin] : '0.0';
+			$data['lowestprice'] = !empty($_POST['lowprice'][$asin]) ? $_POST['lowprice'][$asin] : '0.0';
 			
 			if (defined('DEVELOPMENT_TEST')) {
 				$data['item_note'] = DEVELOPMENT_TEST;

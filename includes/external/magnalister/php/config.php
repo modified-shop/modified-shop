@@ -84,7 +84,7 @@ function loadMaranonCacheConfig($purge = false) {
 			return true;
 		}
 	}
-	/* In case this is loaded from the magnaCallback and the magnalister server 
+	/* In case this is loaded from the magnaCallback and the magnalister server
 	   is in the coffee shop for a small break, RUN AWAY */
 	if (defined('MAGNA_CALLBACK_MODE') && (CURRENT_CLIENT_VERSION == 0)) {
 		return false;

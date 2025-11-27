@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -25,28 +25,20 @@ class CdiscountConfigure extends MagnaCompatibleConfigure {
     /** @var null|array $deliveryModes */
     private static $deliveryModes = null;
 
-	protected function getAuthValuesFromPost() {
-		$nMPUser = trim($_POST['conf'][$this->marketplace.'.mpusername']);
-		$nMPPass = trim($_POST['conf'][$this->marketplace.'.mppassword']);
-		$nMPPass = $this->processPasswordFromPost('mppassword', $nMPPass);
-		
-		if (empty($nMPUser)) {
-			unset($_POST['conf'][$this->marketplace.'.mpusername']);
-		}
-		
-		if ($nMPPass === false) {
-			unset($_POST['conf'][$this->marketplace.'.mppassword']);
-			return false;
-		}
-		
-		$data = array (
-			'MPUSERNAME' => $nMPUser,
-			'MPPASSWORD' => $nMPPass,
-		);
-		#echo print_m($data);
-		return $data;
-	}
-	
+    /**
+     * Retrieves authentication values from the POST request.
+     *
+     * @return array An associative array containing authentication parameters,
+     *               such as the SellerId extracted and trimmed from the POST data.
+     */
+    protected function getAuthValuesFromPost() {
+        $sellerId = trim($_POST['conf'][$this->marketplace.'.sellerid']);
+
+        return array(
+            'SellerId' => $sellerId,
+        );
+    }
+
 	protected function getFormFiles() {
 		$forms = parent::getFormFiles();
 		$forms[] = 'prepareadd';
@@ -84,6 +76,7 @@ class CdiscountConfigure extends MagnaCompatibleConfigure {
 		parent::loadChoiseValues();
 		if ($this->isAuthed) {
 			CdiscountHelper::GetConditionTypesConfig($this->form['prepare']['fields']['condition']);
+			CdiscountHelper::GetOrderCancellationReasons($this->form['orderSyncState']['fields']['cancelreason']);
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
             $this->form['orderSyncState']['fields']['send.carrier']['values'] = $this->loadCarrierCodesExtended();
@@ -251,6 +244,7 @@ class CdiscountConfigure extends MagnaCompatibleConfigure {
         </script>
         <?php
     }
+
     public function selectFieldOptionRemoverScript() {
         ?>
         <script>
@@ -296,5 +290,33 @@ class CdiscountConfigure extends MagnaCompatibleConfigure {
         <?php
     }
 
+    /**
+     * Processes authentication by checking and updating the seller ID in the database.
+     *
+     * If the seller ID is not set in the database configuration, it attempts to retrieve
+     * it using a request to an external API. If successful, the seller ID is saved in
+     * the database configuration. In case of failure or exceptions, an empty value is set.
+     *
+     * @return void
+     */
+    protected function processAuth() {
+        if (null === getDBConfigValue('cdiscount.sellerid', $this->mpID)) {
+            try {
+                $response = MagnaConnector::gi()->submitRequest(array(
+                    'ACTION' => 'IsAuthed',
+                ));
+
+                if (!empty($response['DATA']['SellerId'])) {
+                    setDBConfigValue('cdiscount.sellerid', $this->mpID, $response['DATA']['SellerId'], true);
+                } else {
+                    setDBConfigValue('cdiscount.sellerid', $this->mpID, '', true);
+                }
+            } catch (MagnaException $oEx) {
+                setDBConfigValue('cdiscount.sellerid', $this->mpID, '', true);
+            } catch (Exception $oEx) {}
+        }
+
+        parent::processAuth();
+    }
 
 }

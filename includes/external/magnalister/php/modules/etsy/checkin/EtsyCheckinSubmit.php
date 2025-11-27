@@ -34,6 +34,33 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         $this->summaryAddText = "<br />\n".ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED;
     }
 
+    /**
+     * @param $attributeName
+     * @return array|string|string[]
+     */
+    public function getCorrectAttributeName($attributeName)
+    {
+        $modifiedString = preg_replace('/\s*\([^)]*\)/', '', $attributeName);
+        return str_replace(' ', '', $modifiedString);
+    }
+
+    /**
+     * @param $aProperties
+     * @param $product
+     * @return array
+     */
+    public function getCategoryAttributeValues($aProperties, $product)
+    {
+        $aMatchedValues = EtsyHelper::gi()->convertMatchingToNameValue($aProperties, $product);
+        foreach ($aProperties as $sPropertyName => &$aProperty) {
+            if (array_key_exists($sPropertyName, $aMatchedValues)
+                && ($aProperty['Values'] === true || $aProperty['Values'] === 'true')) {
+                $aProperty['Values'] = $aMatchedValues[$sPropertyName];
+            }
+        }
+        return json_encode(array_values($aProperties));
+    }
+
     protected function generateRequestHeader() {
         return array(
             'ACTION' => 'AddItems',
@@ -76,6 +103,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
         $this->filterOutZeroStockVariations($product['Variations'], $pID);
         $CategoryAttributesBySKU = $this->translateCategoryAttributesForVariations($masterData['CategoryAttributes'], $product['Variations'], $sSkuKey, $masterData['Primarycategory']);
+        $CategoryOptionalAttributesBySKU = $this->translateCategoryAttributesForVariations($masterData['CategoryOptionalAttributes'], $product['Variations'], $sSkuKey, $masterData['Primarycategory']);
         $varNameAdditionyBySKU = $this->varNameAdditions($product['Variations'], $sSkuKey);
         $varImagesByVarId = $this->varImages($product);
         $i = 0;
@@ -94,6 +122,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'Language' => $masterData['Language'],
                 'Currency' => $masterData['Currency'],
                 'ShippingProfile' => $masterData['ShippingProfile'],
+                'ProcessingProfile' => $masterData['ProcessingProfile'],
                 'Primarycategory' => $masterData['Primarycategory'],
                 'Verified' => $masterData['Verified'],
                 'Description' => $masterData['MasterDescription'],
@@ -101,6 +130,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'ProductId' => $masterData['ProductId'],
                 'PreparedTS' => $masterData['PreparedTS'],
                 'CategoryAttributes' => $CategoryAttributesBySKU[$aVariation[$sSkuKey]],
+                'CategoryOptionalAttributes' => $CategoryOptionalAttributesBySKU[$aVariation[$sSkuKey]],
                 'MasterTitle' => $masterData['MasterTitle'],
                 'MasterDescription' => $masterData['MasterDescription'],
             );
@@ -131,14 +161,25 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         ");
 
         $aProperties = json_decode($properties['ShopVariation'], true);
-        $aMatchedValues = EtsyHelper::gi()->convertMatchingToNameValue($aProperties, $product);
-        foreach ($aProperties as $sPropertyName => &$aProperty) {
-             if (    array_key_exists($sPropertyName, $aMatchedValues)
-                  && ($aProperty['Values'] === true || $aProperty['Values'] === 'true')) {
-                 $aProperty['Values'] = $aMatchedValues[$sPropertyName];
-             }
+        $categoryOptionalAttributes = array();
+        $categoryVariationAttributes = array();
+        foreach ($aProperties as $key => $aCategoryAttribute) {
+            if (strpos($key, 'Extra_') !== 0) {
+                $categoryVariationAttributes[$key] = $aCategoryAttribute;
+            }
+            if (strpos($key, 'Extra_') === 0) {
+                $categoryOptionalAttributes[$key] = $aCategoryAttribute;
+            }
         }
-        $jProperties = json_encode(array_values($aProperties));
+
+        if (!empty($categoryOptionalAttributes)) {
+            $categoryOptionalAttributeValues = $this->getCategoryAttributeValues($categoryOptionalAttributes, $product);
+        }
+
+        if (!empty($categoryVariationAttributes)) {
+            $categoryVariationAttributesValues = $this->getCategoryAttributeValues($categoryVariationAttributes, $product);
+        }
+
         $data['submit'] = array(
             'SKU' => '', // handled below
             'MasterSKU' => '', // handled below
@@ -153,11 +194,13 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'Language' => getDBConfigValue('etsy.shop.language', $this->mpID),
             'Currency' => getDBConfigValue('etsy.currency', $this->mpID),
             'ShippingProfile' => $properties['ShippingProfile'],
+            'ProcessingProfile' => $properties['ProcessingProfile'],
             'Primarycategory' => $properties['Primarycategory'],
             'Verified' => 'OK',
             'ProductId' => $pID,
             'PreparedTS' => $properties['PreparedTS'],
-            'CategoryAttributes' => $jProperties,
+            'CategoryAttributes' => $categoryVariationAttributesValues,
+            'CategoryOptionalAttributes' => $categoryOptionalAttributeValues,
             'MasterTitle' => $properties['Title'],
             'MasterDescription' => $properties['Description']
         );
@@ -182,7 +225,8 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         }
         if (!array_key_exists('Variations', $product)
             || empty($product['Variations'])) {
-            $data['submit']['CategoryAttributes'] = $this->translateCategoryAttributes($properties['ShopVariation'], $properties['Primarycategory']);
+            $data['submit']['CategoryAttributes'] = $this->translateCategoryAttributes($categoryVariationAttributes, $properties['Primarycategory']);
+            $data['submit']['CategoryOptionalAttributes'] = $this->translateCategoryAttributes($categoryOptionalAttributes, $properties['Primarycategory']);
         } else {
             $this->getVariations($pID, $product, $data);
         }
@@ -207,10 +251,11 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 $aFixedAttributes[] = $this->completePropertyNameAndValue($property, $categoryId);
             } else if (    is_string($aCategoryAttribute['Values'])
                         && $aCategoryAttribute['Kind'] == 'FreeText') {
+                $aAttributeName = $this->getCorrectAttributeName($aCategoryAttribute['AttributeName']);
                 $property = array(
                     'property_id' => '',
                     'value_ids' => array(''),
-                    'property_name' => $aCategoryAttribute['AttributeName'],
+                    'property_name' => $aAttributeName,
                     'values' => array($aCategoryAttribute['Values']),
                 );
                 $aFixedAttributes[$sCategoryAttributeKey] = $this->completePropertyNameAndValue($property, $categoryId);
@@ -336,12 +381,14 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                         continue;
                     }
 
+                    $attributeName = isset($aPredefinedAttrNames[$aNameValue['Name']])
+                        ? $aPredefinedAttrNames[$aNameValue['Name']]
+                        : $aNameValue['Name'];
+                    $aAttributeName = $this->getCorrectAttributeName($attributeName);
                     $aRes[$sCurrKey]['property_values'][$i] = array(
                         'property_id' => ($countCustomAttribute[$sCurrKey] === 1) ? 513 : 514,
                         'value_ids' => array(),
-                        'property_name' => isset($aPredefinedAttrNames[$aNameValue['Name']])
-                            ? $aPredefinedAttrNames[$aNameValue['Name']]
-                            : $aNameValue['Name'],
+                        'property_name' => $aAttributeName,
                         'values' => array($aVarValuesShop2Etsy[$aNameValue['Name']][$aNameValue['Value']])
                     );
                 }
@@ -361,8 +408,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
     /*
      * for simple Items
      */
-    function translateCategoryAttributes($jShopVariation, $categoryId) {
-        $aShopVariation = json_decode($jShopVariation, true);
+    function translateCategoryAttributes($aShopVariation, $categoryId) {
         if (empty($aShopVariation))
             return json_encode(array());
         $pv = array();
@@ -383,8 +429,9 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 $pv[$i]['values'][0] = '';
                 $pv[$i] = $this->completePropertyNameAndValue($pv[$i], $categoryId);
             } else {
+                $aAttributeName = $this->getCorrectAttributeName($prop['AttributeName']);
                 $pv[$i]['property_id'] = 513;
-                $pv[$i]['property_name'] = $prop['AttributeName'];
+                $pv[$i]['property_name'] = $aAttributeName;
                 $pv[$i]['values'] = array($prop['Values']);
             }
         }
@@ -513,12 +560,11 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         $propertyId = $property['property_id'];
         $propertyValueId = current($property['value_ids']);
         foreach ($aAttributes['attributes'] as $attributeKey => $attribute) {
-            if ((int)$attribute['id'] === (int)$propertyId) {
-}
             if ((int)$attribute['id'] === (int)$propertyId
                 && (!empty($attribute['values']))
                 && (array_key_exists($propertyId . '-' . $propertyValueId, $attribute['values']))) {
-                $property['property_name'] = $attribute['title'];
+                $aAttributeName = $this->getCorrectAttributeName($attribute['title']);
+                $property['property_name'] = $aAttributeName;
                 $property['values'][0] = $attribute['values'][$propertyId . '-' . $propertyValueId];
                 #break;
             } else if (    empty($propertyId)

@@ -747,6 +747,12 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
         if(!$this->isExtendedOrderToAdd()) {
             return;
         }
+        // #2025022510000732
+        // customer complaints: Buyer ordered several identical auction items, order incomplete
+        // no one else complained, workaround for this 1 customer
+        if (22686 == $this->mpID) {
+            return;
+        }
         $aRepeatedProducts = MagnaDB::gi()->fetchArray(eecho("SELECT products_id, products_model, products_price, COUNT(*) cnt
 			 FROM ".TABLE_ORDERS_PRODUCTS." 
 			WHERE orders_id = ".$this->cur['OrderID']."
@@ -839,7 +845,6 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 						  AND orders_products_id = $sLastOrdersProductsId", $this->verbose));
                     $this->db->query(eecho("DELETE FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
 						WHERE orders_id = ".$this->cur['OrderID']."
-						  AND products_id = ".$row['products_id']."
 						  AND orders_products_id = $sLastOrdersProductsId", $this->verbose));
                 }
             } // if $this->gambioPropertiesEnabled - else

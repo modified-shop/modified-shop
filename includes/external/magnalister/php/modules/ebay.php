@@ -146,6 +146,9 @@ if (! MagnaDB::gi()->columnExistsInTable('GalleryURL', TABLE_MAGNA_EBAY_PROPERTI
 	MagnaDB::gi()->query('ALTER TABLE `'.TABLE_MAGNA_EBAY_PROPERTIES.'` ADD COLUMN `GalleryURL` varchar(255) NOT NULL  AFTER `PictureURL`');
 }
 
+# remove an old filter value, no longer in the config so not accessible, filtering stuff out
+MagnaDB::gi()->query('DELETE FROM `'.TABLE_MAGNA_CONFIG.'` WHERE `mkey` = \'ebay.prepare.status\'');
+
 if ($GLOBALS['MagnaAjax']) {
 	exit();
 }

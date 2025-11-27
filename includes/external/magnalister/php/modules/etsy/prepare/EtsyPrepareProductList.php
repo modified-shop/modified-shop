@@ -49,6 +49,8 @@ class EtsyPrepareProductList extends MLProductListEtsyAbstract {
 			return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_HOOD_PRODUCT_PREPARED_OK, 9, 9);
 		} elseif ('EMPTY' == $sVerified) {
 			return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/white_dot.png', ML_EBAY_PRODUCT_PREPARED_FAULTY_BUT_MP, 9, 9);
+		}elseif ('OPEN' == $sVerified) {
+			return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/yellow_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_INCOMPLETE, 9, 9);
 		} else {
 			return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_HOOD_PRODUCT_PREPARED_FAULTY, 9, 9);
 		}

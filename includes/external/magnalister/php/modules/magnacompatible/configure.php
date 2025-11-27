@@ -241,8 +241,18 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 			'PASSWORD' => $nPass,
 		);
 	}
-	
-	protected function processAuth() {
+
+    /**
+     * Handles the authentication process for the marketplace. It checks for existing authentication
+     * values in the database, verifies missing configuration keys, processes POST data, and sets
+     * necessary credentials if required. It also handles API requests to verify or update the
+     * authentication state and renders error messages or success notifications as applicable.
+     *
+     * @return void This method does not return any value. It modifies the $this->boxes and
+     * $this->isAuthed properties to reflect the authentication status and possible content generated
+     * during the process.
+     */
+    protected function processAuth() {
 		$auth = getDBConfigValue($this->marketplace.'.authed', $this->mpID, false);
 		$missingKeys = array();
 		if ((!is_array($auth) || !$auth['state'])

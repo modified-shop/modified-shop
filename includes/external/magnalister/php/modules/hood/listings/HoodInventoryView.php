@@ -179,9 +179,6 @@ class HoodInventoryView {
 					//*/
 					try {
 						$result = MagnaConnector::gi()->submitRequest($request);
-						$result = MagnaConnector::gi()->submitRequest(array(
-							'ACTION' => 'UploadItems',
-						));
 					} catch (MagnaException $e) {
 						$result = array(
 							'STATUS' => 'ERROR'
@@ -466,6 +463,11 @@ class HoodInventoryView {
 			}
 
 			$renderedShopPrice = (0 != $item['ShopPrice']) ? $this->simplePrice->format() : '&mdash;';
+			if (    empty($item['SKU']) 
+			     && empty($item['ShopTitle'])) {
+				$item['ShopTitle'] = '&mdash;';
+				$item['ShopVarText'] = '';
+			}
 			$addStyle = ('&mdash;' == $item['ShopTitle']) ? 'style="color:#900;"' : '';
 			$icon = ((isset($item["ListingType"]) && "shopProduct" == $item['ListingType']) 
 				? '&nbsp;<img src="' . DIR_MAGNALISTER . '/images/magnalister_11px_icon_color.png" width=11 height=11 />' 
@@ -481,7 +483,7 @@ class HoodInventoryView {
 					<td>' . fixHTMLUTF8Entities($item['SKU'], ENT_COMPAT) . '</td>
 					<td title="' . fixHTMLUTF8Entities($item['ShopTitle'], ENT_COMPAT) . '">' . $item['ShopTitle'] . '<br /><span class="small">' . $item['ShopVarText'] . '</span></td>
 					<td title="' . fixHTMLUTF8Entities($item['Title'], ENT_COMPAT) . '">' . $item['ItemTitleShort'] . '<br /><span class="small">' . $item['VariationAttributesText'] . '</span></td>
-					<td><a href="http://www.hood.de/00' . $item['AuctionId'] . '.htm" target="_blank">' . $item['AuctionId'] . '</a></td>
+					<td>'.$this->getItemLink($item).'</td>
 					<td>'.$textListingType.'</td>
 					<td>' . $renderedShopPrice . ' / ' . $this->simplePrice->setPriceAndCurrency($item['Price'], 'EUR')->format() . '</td>
 					<td>' . $item['ShopQuantity'] . ' / ' . $item['Quantity'] . '<br />' . date("d.m.Y", $item['LastSync']) . ' &nbsp;&nbsp;<span class="small">' . date("H:i", $item['LastSync']) . '</span></td>
@@ -590,9 +592,9 @@ class HoodInventoryView {
 		<script type="text/javascript">/*<![CDATA[*/
 			$(document).ready(function() {
 				$('#listingDelete').click(function() {
-					if (($('#hoodinventory input[type="checkbox"]:checked').length > 0) &&
-							confirm(unescape(<?php echo "'" . html2url(sprintf(ML_GENERIC_DELETE_LISTINGS, $_modules[$this->magnasession['currentPlatform']]['title'])) . "'"; ?>))
-							) {
+                    if (($('#hoodinventory input[type="checkbox"]:checked').length > 0)
+                        && confirm(<?php echo json_encode(sprintf(ML_GENERIC_DELETE_LISTINGS_ASYNCHRONIOUS, $_modules[$this->magnasession['currentPlatform']]['title'])); ?>)
+                    ) {
 						$('#action').val('delete');
 						$(this).parents('form').submit();
 					}
@@ -638,6 +640,19 @@ class HoodInventoryView {
 					});
 				});
 			/*]]>*/</script>';
+	}
+
+	protected function getItemLink($item) {
+		if (function_exists('mb_strtolower')) {
+			$sTitleNormalized0 = mb_strtolower(trim($item['Title'])) . '-';
+		} else {
+			$sTitleNormalized0 = strtolower(trim($item['Title'])) . '-';
+		}
+		$sTitleNormalized = 
+			str_replace(array('----', '---', '--'), '-',
+			str_replace(array('ä', 'ö', 'ü', 'ß', ' ', '/', '"', '&quot;', '&apos;', ','), array('ae', 'oe', 'ue', 'ss', '-', '-', '', '', '', '', ''),
+			$sTitleNormalized0));
+		return '<a href="https://www.hood.de/i/' . $sTitleNormalized . $item['AuctionId'] .'.htm">' . $item['AuctionId'] . '</a>';
 	}
 
 }

@@ -903,7 +903,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	}
 	
 	protected function insertOrder() {
-		$this->comment = $this->o['order']['comments'];
+		$this->comment = isset($this->o['order']['comments']) ? $this->o['order']['comments'] : '';
 		$this->o['order']['customers_id'] = $this->cur['customer']['ID'];
 
 		$this->o['order']['customers_address_format_id'] = 
@@ -987,11 +987,11 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		//if ($this->verbose) {
 		//	echo print_m($this->o['order'], 'InsertOrder');
 		//}
-		// for modified: gender (set to 'm', we don't get the info from MPs), customers_country_iso_code_2, customers_ip, languages_id, campaign, ibn_billdate
-		$this->o['order']['customers_gender'] = 'm';
+		// for modified: gender (set to '', we don't get the info from MPs), customers_country_iso_code_2, customers_ip, languages_id, campaign, ibn_billdate
+		$this->o['order']['customers_gender'] = '';
 		$this->o['order']['customers_country_iso_code_2'] = $this->o['order']['billing_country_iso_code_2'];
-		$this->o['order']['billing_gender'] = 'm';
-		$this->o['order']['delivery_gender'] = 'm';
+		$this->o['order']['billing_gender'] = '';
+		$this->o['order']['delivery_gender'] = '';
 		$this->o['order']['customers_ip'] = '0.0.0.0';
 		$this->o['order']['languages_id'] = MagnaDB::gi()->fetchOne("
 			SELECT languages_id FROM ".TABLE_LANGUAGES." WHERE directory = '".$this->language."'
@@ -2214,6 +2214,9 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				if (($hp = magnaContribVerify('MagnaCompatibleImportOrders_PostOrderImport', 1)) !== false) {
 					require($hp);
 				}
+			}
+			if (($hp = magnaContribVerify('MagnaCompatibleImportOrders_BeforeAcknowledge', 1)) !== false) {
+				require($hp);
 			}
 			$this->acknowledgeImportedOrders();
 		}

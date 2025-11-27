@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -64,8 +64,11 @@ class OttoProductSaver {
         }
 
         $aRow['Description'] = strip_tags($aItemDetails['Description'], '<p><ul><ol><li><span><br><b>');
-        $aRow['DeliveryType'] = $aItemDetails['DeliveryType'];
-        $aRow['DeliveryTime'] = $aItemDetails['DeliveryTime'];
+        $aRow['DeliveryType'] = null;
+        $aRow['DeliveryTime'] = 0;
+        $aRow['ShippingProfile'] = $aItemDetails['ShippingProfile'];
+        $aRow['ProcessingTime'] = $aItemDetails['ProcessingTime'];
+
         if (empty($aItemDetails['GalleryPictures'])
             || !isset($aItemDetails['GalleryPictures']['Images'])
             || empty($aItemDetails['GalleryPictures']['Images'])) {
@@ -85,6 +88,7 @@ class OttoProductSaver {
         if (!empty($aItemDetails['MainImage'])) {
             $aRow['MainImage'] = $aItemDetails['MainImage'];
         }
+
         $this->insertPrepareData($aRow);
     }
 
@@ -205,8 +209,10 @@ class OttoProductSaver {
                 $aRow['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<b>${1}</b>', $aRow['Description']);
             }
 
-            $aRow['DeliveryType'] = $aItemDetails['DeliveryType'];
-            $aRow['DeliveryTime'] = $aItemDetails['DeliveryTime'];
+            $aRow['DeliveryType'] = null;
+            $aRow['DeliveryTime'] = 0;
+            $aRow['ShippingProfile'] = $aItemDetails['ShippingProfile'];
+            $aRow['ProcessingTime'] = $aItemDetails['ProcessingTime'];
             $aRow['Images'] = json_encode($aProductDescDataByPId[$iProductId]['images']);
             $this->insertPrepareData($aRow);
         }

@@ -261,7 +261,6 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/magnalister_general.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/classes/JSClass.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/loading-timer.js"></script>
-
 <?php if (defined('MERCARI_INSTALLED')) { 
 		global $tage, $monate;
 ?>

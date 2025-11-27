@@ -47,19 +47,16 @@
             "delivery": {
                 "label": "Versand",
                 "morefields": {
-                    "delivery.type": {
-                        "label": "Art der Zustellung",
-                        "key": "_#_platform_#_.delivery.type",
-                        "type": "selection",
-                        "values": {
-                            "PARCEL": "Paketware",
-                            "FORWARDER_PREFERREDLOCATION": "Spediteur - bevorzugter Standort",
-                            "FORWARDER_CURBSIDE": "Spediteur - Bordsteinkante"
-                        }
-                    },
-                    "delivery.time": {
+                    "delivery.shippingprofile": {
                         "label": "Lieferzeit in Tagen",
-                        "key": "_#_platform_#_.delivery.time",
+                        "key": "_#_platform_#_.delivery.shippingprofile",
+                        "desc": "Wenn „Aus Versandprofil übernehmen“ ausgewählt ist, wird die Standardbearbeitungszeit aus dem Versandprofil verwendet. Andernfalls wird diese überschrieben und bleibt unverändert, selbst wenn das Versandprofil geändert wird.",
+                        "type": "selection"
+                    },
+                    "delivery.processingtime": {
+                        "label": "Bearbeitungszeit in Tagen",
+                        "key": "_#_platform_#_.delivery.processingtime",
+                        "desc": "Die Bearbeitungszeit gibt an, wie lange der Händler benötigt, um eine Bestellung für den Versand vorzubereiten.<br><br>Hinweis: Die Bearbeitungszeit wird in „Arbeitstagen“ angegeben. Sie beschreibt die Zeit von der Auftragsfreigabe bis zur Übergabe an den Versanddienstleister. Eine „1“ gilt bis zur Cut-Off-Zeit als taggleicher Versand (0 Tage).",
                         "type": "selection"
                     }
                 }

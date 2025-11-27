@@ -55,7 +55,7 @@
                     "__calc__":"range(1,30)"
                 }
             },
-            "mfn":{  
+            "mfn":{
                 "label":"Alternativ-Hersteller",
                 "desc":"Falls ein Produkt keinen Hersteller hinterlegt hat, wird der hier angegebene Hersteller verwendet.",
                 "key":"_#_platform_#_.checkin.manufacturerfallback",

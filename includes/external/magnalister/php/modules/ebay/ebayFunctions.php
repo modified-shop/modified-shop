@@ -89,9 +89,9 @@ function ebayGetPossibleOptions($kind, $mpID = false) {
 		global $_MagnaSession;
 		$mpID = $_MagnaSession['mpID'];
 	}
-	
+
 	initArrayIfNecessary($_MagnaSession, array($mpID, $kind));
-	
+
 	if (empty($_MagnaSession[$mpID][$kind])) {
 		try {
 			$result = MagnaConnector::gi()->submitRequest(array(
@@ -952,6 +952,28 @@ function VariationsEnabled($cID) {
     }
     if (isset($VariationsEnabledResult['DATA']['VariationsEnabled'])
         && ('true' == (string)$VariationsEnabledResult['DATA']['VariationsEnabled'])
+    ) {
+        return true;
+    }
+    return false;
+}
+
+function AutoPayEnabled($cID) {
+    global $_MagnaSession;
+    if (empty($cID)) {
+        return false;
+    }
+    try {
+        $AutoPayEnabledResult = MagnaConnector::gi()->submitRequest(array(
+            'ACTION' => 'AutoPayEnabled',
+            'DATA' => array('CategoryID' => $cID,
+                'Site' => getDBConfigValue('ebay.site', $_MagnaSession['mpID'])),
+        ));
+    } catch (MagnaException $e) {
+        return false;
+    }
+    if (isset($AutoPayEnabledResult['DATA']['AutoPayEnabled'])
+        && ('true' == (string)$AutoPayEnabledResult['DATA']['AutoPayEnabled'])
     ) {
         return true;
     }
@@ -1849,6 +1871,9 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
     if (array_key_exists('privateListing', $itemDetails) && ('on' == $itemDetails['privateListing'])) {
         $row['PrivateListing'] = '1';
     }
+    if (array_key_exists('autoPay', $itemDetails) && ('on' == $itemDetails['autoPay'])) {
+        $row['AutoPay'] = '1';
+    }
     if (array_key_exists('bestOfferEnabled', $itemDetails) && ('on' == $itemDetails['bestOfferEnabled']) && ('Chinese' != $itemDetails['ListingType'])) {
         $row['BestOfferEnabled'] = '1';
     }
@@ -1978,6 +2003,9 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
         }
         if ('on' == $itemDetails['privateListing']) {
             $row['PrivateListing'] = '1';
+        }
+        if ('on' == $itemDetails['autoPay']) {
+            $row['AutoPay'] = '1';
         }
         if (('on' == $itemDetails['bestOfferEnabled']) && ('Chinese' != $itemDetails['ListingType'])) {
             $row['BestOfferEnabled'] = '1';

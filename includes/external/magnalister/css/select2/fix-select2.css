@@ -219,3 +219,192 @@ td .select2 {
 body.magna .select2-container {
     font-size: 12px;
 }
+
+body.magna .ml-searchable-select {
+    display: inline-block;
+    text-align: left;
+    font-size: 12px;
+}
+
+body.magna .select2-container--default .select2-selection--single {
+    border-radius: 0;
+}
+
+body.magna .select2-dropdown {
+    border-radius: 0;
+}
+
+body.magna .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 23px;
+}
+
+body.magna .select2-container .select2-selection--single {
+    line-height: 23px;
+    height: 23px;
+}
+
+body.magna .select2-container {
+    margin-top: -5px;
+}
+
+body.magna .select2-container--open .select2-dropdown--above,
+body.magna .select2-container--open .select2-dropdown--below {
+    margin-top: 5px;
+}
+
+body.magna .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 23px;
+}
+
+.select2-selection__rendered {
+    box-sizing: border-box !important;
+}
+
+body.magna .select2-container--open .select2-dropdown--above, body.magna .select2-container--open .select2-dropdown--below {
+    margin-top: -24px;
+}
+
+/* Remove the search icon from the main selection */
+.select2-selection__rendered::before {
+    display: none;
+}
+
+/* Remove the search icon from the dropdown search */
+.select2-search--dropdown::before {
+    display: none;
+}
+
+.select2-search--dropdown .select2-search__field {
+    width: 100%;
+}
+
+.select2-search__field, .select2-search__field:focus, .select2-search__field:active {
+    outline: none !important;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 4px;
+}
+
+.select2-search--dropdown {
+    padding: 4px 0 6px 0 !important;
+    border-bottom: 1px solid #ededed;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    border: 0;
+    margin-left: 0;
+    display: block;
+}
+
+#modal-otto_prepare_variations_field_variationgroups_value {
+    overflow: hidden !important;
+}
+
+#select2-mlfilter-container {
+    line-height: 28px;
+}
+
+.select2-selection__rendered {
+    padding-right: 0px !important;
+}
+
+.ml-category-selecr2-search span {
+    width: 404px !important;
+    height: 30px !important;
+    border-radius: 0 !important;
+    overflow-x: none !important;
+}
+
+.select2-selection__arrow b {
+    left: 97% !important;
+}
+
+.last-sync-category {
+    color: gray !important;
+    font-size: 9px !important;
+    line-height: 1.5;
+    font-weight: normal;
+    left: 0;
+    float: right;
+    margin-right: 49px;
+    padding-top: 9px;
+    text-align: right
+}
+
+.last-category-import-date {
+    color: gray !important;
+    font-size: 9px !important;
+    font-weight: normal;
+    left: 0;
+    float: left;
+    text-align: right;
+}
+
+.ui-dialog-titlebar {
+    padding-bottom: 0.7rem !important;
+}
+
+.ui-dialog-buttonset {
+    float: right;
+    margin-right: 18px;
+}
+
+
+.ml-ui-dialog-titlebar-additional {
+    padding-right: 0 !important
+}
+
+#ui-id-1 {
+    margin-top: 13px;
+}
+
+.mlbtnreset {
+    background-color: #E31A1C !important;
+    color: #fff !important;
+    border: 1px solid #E31A1C !important;
+}
+
+.mlbtnreset:hover {
+    background-color: #666666 !important;
+    border-color: #666666 !important;
+}
+
+/* New? */
+table.attributesTable th span, span.bull {
+    font-size: 12px !important;
+    vertical-align: text-top;
+}
+
+.select2-selection--single {
+    height: 29px !important;
+}
+
+.select2-selection--single {
+    height: 25px !important;
+}
+
+.select2-selection__arrow b {
+    margin-left: -14px !important;
+}
+
+body.magna .select2-container--open .select2-dropdown--above, body.magna .select2-container--open .select2-dropdown--below {
+    margin-top: 0
+}
+
+.select2-selection {
+    padding-right: 20px;
+}
+
+td .select2 {
+    margin-top: 0px !important;
+    min-width: 25em !important;
+}
+
+.optionalAttribute th .select2 {
+    width: 15em !important;
+}
+
+body.magna .select2-container {
+    font-size: 12px;
+}

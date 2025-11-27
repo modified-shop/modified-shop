@@ -129,6 +129,18 @@ class eBayCheckinSubmit extends CheckinSubmit {
 					'Column' => $tecDocKType['column'],
 					'Alias' => $pIDAlias,
 				));
+				$tecDocConstraints = getDBConfigValue('ebay.tecdoc.constraints.column', $this->_magnasession['mpID'], false);
+				if (is_array($tecDocConstraints) && !empty($tecDocConstraints['column']) && !empty($tecDocConstraints['table'])) {
+						$pIDAlias = getDBConfigValue('ebay.tecdoc.constraints.alias', $this->_magnasession['mpID'], false);
+						if (!$pIDAlias) {
+							$pIDAlias = 'products_id';
+						}
+						MLProduct::gi()->setDbMatching('tecDocConstraints', array (
+							'Table' => $tecDocConstraints['table'],
+							'Column' => $tecDocConstraints['column'],
+							'Alias' => $pIDAlias,
+						));
+				}
 			}
 		}
 		return parent::getProduct($pID);
@@ -226,6 +238,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			array('var' => 'db',		'varKey' => 'ebay.location',		'submitKey' => 'Location',		'empty' => true),
 			array('var' => 'db',		'varKey' => 'ebay.postalcode',		'submitKey' => 'PostalCode',		'empty' => true),
 			array('var' => 'product',	'varKey' => 'tecDocKType',		'submitKey' => 'tecDocKType',		'empty' => false),
+			array('var' => 'product',	'varKey' => 'tecDocConstraints',		'submitKey' => 'tecDocKTypeConstraints',	'empty' => false),
 			array('var' => 'property',	'varKey' => 'PaymentMethods',		'submitKey' => 'PaymentMethods',	'empty' => false, 'sanitize' => 'json'),
 			array('var' => 'property',	'varKey' => 'PrimaryCategory',		'submitKey' => 'PrimaryCategory',		'empty' => true),
 			array('var' => 'property',	'varKey' => 'ListingType',		'submitKey' => 'ListingType',		'empty' => true),
@@ -250,6 +263,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			array('var' => 'property',	'varKey' => 'ItemSpecifics',		'submitKey' => 'ItemSpecifics',		    'empty' => false, 'sanitize' => 'json'),
 			array('var' => 'property',	'varKey' => 'GalleryType',		'submitKey' => 'GalleryType',	                      'default' => getDBConfigValue('ebay.gallery.type', $this->_magnasession['mpID'], 'Gallery')),
 			array('var' => 'property',	'varKey' => 'PrivateListing',		'submitKey' => 'PrivateListing',		    'empty' => false, 'sanitize' => 'bool'),
+			array('var' => 'property',	'varKey' => 'AutoPay',		'submitKey' => 'AutoPay',		    'empty' => false, 'sanitize' => 'bool'),
 			array('var' => 'property',	'varKey' => 'VariationDimensionForPictures',	'submitKey' => 'VariationDimensionForPictures', 'empty' => false, 'sanitize' => 'string'),
 			array('var' => 'property',	'varKey' => 'eBayPicturePackPurge',                 'submitKey' => 'PurgePictures',                            'empty' => false, 'sanitize' => 'bool','condition'=>$isPicturePackActive ),
 			array('var' => 'db',                          'varKey' => 'ebay.picturepack',		'submitKey' => 'PicturePack',                               'empty' => false, 'sanitize' => 'bool','condition'=>$isPicturePackActive ),

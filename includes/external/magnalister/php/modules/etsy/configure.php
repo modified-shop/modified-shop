@@ -120,8 +120,10 @@ $(document).ready(function() {
         mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
         if ($this->isAuthed) {
             $this->form['prepare']['fields']['shippingprofile']['values'] = EtsyHelper::showShippingProfiles();
+            $this->form['prepare']['fields']['processingprofile']['values'] = EtsyHelper::showProcessingProfiles();
         } else {
             $this->form['prepare']['fields']['shippingprofile']['values'] = array('');
+            $this->form['prepare']['fields']['processingprofile']['values'] = array('');
         }
         # Etsy changes the "whenmade" entry "2020-...." each year
         $tmpWhenmadeValues = array_slice($this->form['prepare']['fields']['whenmade']['values'], 0, 1);
@@ -167,6 +169,11 @@ $(document).ready(function() {
     public function process() {
         parent::process();
         echo $this->zeroStockSyncConfirmationPopup();
+
+        // Load Etsy processing profile JavaScript for configuration page
+        if (file_exists(DIR_MAGNALISTER_WS . 'js/marketplaces/etsy/etsy.processing_profile.js')) {
+            echo '<script type="text/javascript" src="' . DIR_MAGNALISTER_WS . 'js/marketplaces/etsy/etsy.processing_profile.js?' . CLIENT_BUILD_VERSION . '"></script>';
+        }
     }
 
     protected function finalizeForm() {
@@ -177,6 +184,20 @@ $(document).ready(function() {
         ) {
             $aResponse = MagnaConnector::gi()->submitRequest(array(
                 'ACTION' => 'GetShippingProfiles'
+            ));
+
+            if (!empty($aResponse['ERRORS'])) {
+                foreach ($aResponse['ERRORS'] as $sError) {
+                    $this->boxes .= '<p class="errorBox">'.$sError.'</p>';
+                }
+            }
+        }
+
+        if (    (isset($_POST['conf'][$this->marketplace.'.ProcessingProfile']) && empty($_POST['conf'][$this->marketplace.'.ProcessingProfile']))
+                || empty($this->form['prepare']['fields']['processingprofile']['values'])
+        ) {
+            $aResponse = MagnaConnector::gi()->submitRequest(array(
+                    'ACTION' => 'GetProcessingProfiles'
             ));
 
             if (!empty($aResponse['ERRORS'])) {

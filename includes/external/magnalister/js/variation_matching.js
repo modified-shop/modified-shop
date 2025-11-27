@@ -1308,7 +1308,7 @@
             if (['select', 'multiSelect'.toLowerCase()].indexOf(mpDataType) != -1) {
                 $(select).find("option[data-type='text']").attr('disabled', 'disabled');
                 $(select).find('option[value=freetext]').attr('disabled', 'disabled');
-                $(select).find("option[value='database_value']").attr('disabled', 'disabled');
+                // Database values are now allowed even if there is a predefined set of values
             }
 
             if ('text' == mpDataType || 'freetext' == mpDataType) {
@@ -1966,13 +1966,13 @@
                     $(this).val(tinymce.get($(this).attr('name')).getContent());
                 });
             }
-            
+
             var newForm,
                 self = this,
                 clickedActionButton = $('[type=submit][data-clicked=true]'),
                 clickedActionButtonName = clickedActionButton.attr('name') || 'mlSubmitButton',
                 clickedActionButtonValue = clickedActionButton.val();
-            
+
             // add index to multipleselects
             $('td.input select[name$="[]"]').each(function() {
                 var options = $(this).find('option');
@@ -1990,7 +1990,7 @@
                 settedArrays[name] = settedArrays[name] === undefined ? 0 : settedArrays[name] + 1;
                 $(this).attr('name',  name.replace('[]', '['+ settedArrays[name] +']'));
             });
-            
+
             if (clickedActionButtonValue) {
                 self.elements.form.append('<input type="hidden" value="' + clickedActionButtonValue + '" name="' + clickedActionButtonName + '">');
             }

@@ -1,1 +1,13 @@
-{"checkin":{"fields":{"imagepath":{"label":"Bilder-Verzeichnis","key":"_#_platform_#_.imagepath","type":"text","expertsetting":false,"desc":"Verzeichnis, aus dem die Produktbilder genommen werden sollen."}}}}
+{
+    "checkin": {
+        "fields": {
+            "imagepath": {
+                "label": "Bilder-Verzeichnis",
+                "key": "_#_platform_#_.imagepath",
+                "type": "text",
+                "expertsetting": false,
+                "desc": "Verzeichnis, aus dem die Produktbilder genommen werden sollen."
+            }
+        }
+    }
+}

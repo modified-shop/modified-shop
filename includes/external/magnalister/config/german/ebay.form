@@ -341,7 +341,7 @@
                     "Plus": "Plus"
                 },
                 "default": "Gallery",
-                "desc": "<b>Galerie-Bilder</b><br /><br /> Mit Aktivieren dieser Funktion werden in der eBay Suchergebnis-Liste Ihre Angebote mit einem kleinen Vorschaubild platziert. Dies erh&ouml;ht Ihre Verkaufschancen ma&szlig;geblich, da K&auml;ufer Angebote ohne Galeriebilder in der Regel weniger aufrufen.<br /><br /> <b>Galerie Plus</b><br /><br /> Durch Aktivierung der Galerie Plus Bilder &ouml;ffnet sich ein Fenster mit einer vergr&ouml;&szlig;erten Darstellung des Galeriebildes, wenn der K&auml;ufer in den Suchergebnissen mit der Maus auf Ihr Angebot zeigt.Bitte beachten Sie, dass die Bilder <b>mindestens 800x800 px</b> gro&szlig; sein m&uuml;ssen.<br /><br /> <b>Besonderheit &quot;Kleidung & Accessoires&quot;</b><br /><br /> Wenn Sie einen Artikel in der Kategorie &quot;Kleidung & Accessoires&quot; einstellen und Galerie oder Galerie Plus ausw&auml;hlen, bieten Sie den K&auml;ufern auf der Suchergebnisseite die M&ouml;glichkeit zum &quot;Schnellen &Uuml;berblick&quot;. Galerie Plus muss nicht zus&auml;tzlich in Ihrem eBay-Account aktiviert werden.<br /><br /> <b>eBay-Geb&uuml;hren</b><br /><br /> Durch Nutzung von &quot;Galerie Plus&quot; k&ouml;nnen im Hintergrund <span style='color:red'>zus&auml;tzliche Geb&uuml;hren von eBay</span> erhoben werden! RedGecko GmbH &uuml;bernimmt f&uuml;r die anfallenden Geb&uuml;hren keine Haftung.<br /><br /> <b>Weitere Infos</b><br /><br /> Besuchen Sie f&uuml;r weitere Infos zu dem Thema die <a href='http://pages.ebay.de/help/sell/gallery-upgrade.html' target='_blank'>eBay Hilfeseiten</a>."
+                "desc": "<b>Galerie-Bilder</b><br /><br /> Mit Aktivieren dieser Funktion werden in der eBay Suchergebnis-Liste Ihre Angebote mit einem kleinen Vorschaubild platziert. Dies erh&ouml;ht Ihre Verkaufschancen ma&szlig;geblich, da K&auml;ufer Angebote ohne Galeriebilder in der Regel weniger aufrufen.<br /><br /> <b>Galerie Plus</b><br /><br /> Durch Aktivierung der Galerie Plus Bilder &ouml;ffnet sich ein Fenster mit einer vergr&ouml;&szlig;erten Darstellung des Galeriebildes, wenn der K&auml;ufer in den Suchergebnissen mit der Maus auf Ihr Angebot zeigt.Bitte beachten Sie, dass die Bilder <b>mindestens 800x800 px</b> gro&szlig; sein m&uuml;ssen.<br /><br /> <b>Besonderheit &quot;Kleidung & Accessoires&quot;</b><br /><br /> Wenn Sie einen Artikel in der Kategorie &quot;Kleidung & Accessoires&quot; einstellen und Galerie oder Galerie Plus ausw&auml;hlen, bieten Sie den K&auml;ufern auf der Suchergebnisseite die M&ouml;glichkeit zum &quot;Schnellen &Uuml;berblick&quot;. Galerie Plus muss nicht zus&auml;tzlich in Ihrem eBay-Account aktiviert werden.<br /><br /> <b>eBay-Geb&uuml;hren</b><br /><br /> Durch Nutzung von &quot;Galerie Plus&quot; k&ouml;nnen im Hintergrund <span style='color:red'>zus&auml;tzliche Geb&uuml;hren von eBay</span> erhoben werden! RedGecko GmbH &uuml;bernimmt f&uuml;r die anfallenden Geb&uuml;hren keine Haftung.<br /><br /> <b>Weitere Infos</b><br /><br /> Besuchen Sie f&uuml;r weitere Infos zu dem Thema die <a href='https://www.ebay.de/help/selling/listings/angeboten-bilder-hinzufgen?id=4148' target='_blank'>eBay Hilfeseiten</a>."
             },
             "picturepack": {
                 "label": "Bilderpaket",
@@ -394,6 +394,21 @@
                     }
                 }
             },
+            "tecdocktypeconstraints": {
+                "label": "TecDoc KType Einschr&auml;nkungen",
+                "desc": "<strong>Nur f&uuml;r KFZ- und Motorradteile<\/strong><br \/><br \/>\n                Falls Sie den <strong>TecDoc KType<\/strong> in der Shop-Datenbank mitf&uuml;hren und zu eBay &uuml;bertragen, k&ouml;nnen Sie hier die Datenbank-Spalte eingeben, wo sich Hinweise zu Einschr&auml;nkungen befinden, die entsprechend bei eBay angezeigt werden sollen.<br \/><br \/>\n                Nutzen Sie dieses Feld nur dann, wenn Sie auch <strong>TecDoc KType</strong> (oder ePID Nummern f&uuml;r Zweir&auml;der) &uuml;bertragen.",
+                "key": "ebay.tecdoc.constraints.column",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class=\"tt\">`products_id`<\/span> Alias",
+                        "key": "ebay.tecdoc.constraints.alias",
+                        "type": "text",
+                        "cssClasses": ["autoWidth"]
+                    }
+                }
+            },
             "privatelisting": {
                 "label": "Privat-Listings",
                 "desc": "Funktion aktiviert: Listings werden als 'privat' gekennzeichnet, das hei&szlig;t, die K&auml;ufer- bzw. Bieterliste ist nicht &ouml;ffentlich einsehbar.",
@@ -406,18 +421,30 @@
                     "val": false
                 }
             },
-			"restricttobusiness": {
-				"label":"Nur Gesch&auml;ftskunden",
-				"desc":"Funktion aktiviert: Artikel k&ouml;nnen nur von Gesch&auml;ftskunden gekauft werden.",
-				"key":"ebay.restrictToBusiness",
-				"type":"checkbox",
-				"values": {
-					"val":"Artikel nur f&uuml;r Gesch&auml;ftskunden kaufbar"
-				},
-				"default": {
-					"val":false
-				}
-			}
+            "restricttobusiness": {
+                "label":"Nur Gesch&auml;ftskunden",
+                "desc":"Funktion aktiviert: Artikel k&ouml;nnen nur von Gesch&auml;ftskunden gekauft werden.",
+                "key":"ebay.restrictToBusiness",
+                "type":"checkbox",
+                "values": {
+                    "val":"Artikel nur f&uuml;r Gesch&auml;ftskunden kaufbar"
+                },
+                "default": {
+                    "val":false
+                }
+            },
+            "autopay": {
+                "label":"AutoPay",
+                "desc":"Funktion aktiviert: Sofort-Kaufen-Artikel m&uuml;ssen sofort bezahlt werden.<br \/><br \/> <strong>Hinweise:</strong><ul> <li>Diese Funktion ist nicht f&uuml; alle H&auml;ndler verf&uuml;gbar. Pr&uuml;fen Sie in Ihrem eBay Account, ob Sie hierf&uuml;r freigeschaltet sind, ggf. beantragen Sie die Freischaltung bei eBay.</li><br /><li>Diese Funktion ist nicht in allen Kategorien anwendbar, insbesondere nicht in Immobilen-Kategorien. Wenn Sie in der Artikelvorbereitung keine Checkbox daf&uuml;r sehen, ist sie nicht anwendbar.</li><br /><li>Bei Steigerungsauktionen greift die Funktion nur dann, wenn noch kein Gebot abgegeben wurde und ein K&auml;ufer zum Sofortkauf-Preis kauft.</li></ul>",
+                "key":"ebay.AutoPay",
+                "type":"checkbox",
+                "values": {
+                    "val":"Sofort-Kaufen-Artikel m&uuml;ssen sofort bezahlt werden"
+                },
+                "default": {
+                    "val":false
+                }
+            }
         }
     },
     "fixedsettings": {
@@ -484,7 +511,7 @@
             "whichprice": {
                 "label": "Verkaufspreis aus Kundengruppe",
                 "leftlabel": "Preis aus Kundengruppe",
-				"desc": "Mit dieser Funktion k&ouml;nnen Sie abweichende Preise zum Marktplatz &uuml;bergeben und automatisch synchronisieren lassen.<br \/><br \/> W&auml;hlen Sie dazu &uuml;ber das nebenstehende Dropdown eine Kundengruppe aus Ihrem Webshop.<br \/><br \/> Wenn Sie keinen Preis in der neuen Kundengruppe eintragen, wird automatisch der Standard-Preis aus dem Webshop verwendet. Somit ist es sehr einfach, auch f&uuml;r nur wenige Artikel einen abweichenden Preis zu hinterlegen. Die &uuml;brigen Konfigurationen zum Preis finden ebenfalls Anwendung.<br \/><br \/> <b>Anwendungsbeispiel:<\/b><ul> <li> Hinterlegen Sie in Ihrem Web-Shop eine Kundengruppe z.B. &quot;_#_platformName_#_-Kunden&quot;<\/li> <li> F&uuml;gen Sie in Ihrem Web-Shop an den Artikeln in der neuen Kundengruppe die gew&uuml;nschten Preise ein.<\/li><\/ul>",
+                "desc": "Mit dieser Funktion k&ouml;nnen Sie abweichende Preise zum Marktplatz &uuml;bergeben und automatisch synchronisieren lassen.<br \/><br \/> W&auml;hlen Sie dazu &uuml;ber das nebenstehende Dropdown eine Kundengruppe aus Ihrem Webshop.<br \/><br \/> Wenn Sie keinen Preis in der neuen Kundengruppe eintragen, wird automatisch der Standard-Preis aus dem Webshop verwendet. Somit ist es sehr einfach, auch f&uuml;r nur wenige Artikel einen abweichenden Preis zu hinterlegen. Die &uuml;brigen Konfigurationen zum Preis finden ebenfalls Anwendung.<br \/><br \/> <b>Anwendungsbeispiel:<\/b><ul> <li> Hinterlegen Sie in Ihrem Web-Shop eine Kundengruppe z.B. &quot;_#_platformName_#_-Kunden&quot;<\/li> <li> F&uuml;gen Sie in Ihrem Web-Shop an den Artikeln in der neuen Kundengruppe die gew&uuml;nschten Preise ein.<\/li><\/ul>",
                 "key": "ebay.fixed.price.group",
                 "type": "selection",
                 "values": null,
@@ -596,7 +623,7 @@
             },
 			"ebayplus": {
 				"label": "eBay Plus",
-				"desc": "<a href='http://verkaeuferportal.ebay.de/ebay-plus' target='_blank'>eBay Plus</a> kann &uuml;ber den eBay Account aktiviert werden, sofern Sie von eBay daf&uuml;r freigeschaltet wurden. Dieses Feature wird z.Zt. nur bei eBay Deutschland angeboten.<br /><br />\n\n Die Checkbox hier ist eine Voreinstellung f&uuml;r das Hochladen &uuml;ber magnalister. Sie ist anklickbar wenn eBay Plus in Ihrem Account aktiv ist. Sie hat keinen Einflu&szlig; auf die eBay Voreinstellung f&uuml;r alle Artikel (diese kann nur &uuml;ber den eBay Account aktiviert werden).<br /><br />\n\n Sollte die Checkbox nicht anklickbar sein, obwohl Sie die Funktion bei eBay aktiviert haben, speichern Sie bitte die Konfiguration einmal ab (dabei ruft magnalister die aktuellen Einstellungen von eBay ab).<br /><br />\n\n<b>Hinweise:</b><ul>\n<li>Damit die Checkbox-Einstellung sich auch auf bereits vorbereitete Artikel auswirkt, m&uuml;ssen Sie die Vorbereitung neu durchf&uuml;hren, bevor Sie die Artikel hochladen.</li>\n<li>F&uuml;r eBay Plus Listings m&uuml;ssen weitere Bedingungen erf&uuml;t werden: 1 Monat R&uuml;cknahmefrist, M&ouml;glichkeit der PayPal Zahlung, eine <a href='http://verkaeuferportal.ebay.de/versand-bei-ebay-plus' target='_blank'>f&uuml;r eBay Plus zugelassene Versandart</a>. Wir bekommen <b>keine R&uuml;ckmeldung</b> von eBay, ob diese Bedingungen zutreffen, Sie m&uuml;ssen selbst darauf achten.</li>\n<li>Bitte lassen Sie Bestell-&Auml;nderungen zu (unter Bestellsynchronisation), oder verwenden Sie die Funktion &quotNur bezahlt-markierte Bestellungen importieren&quot (unter Bestellimport). Die eBay Plus Kennzeichnung f&uuml;r Bestellungen wird uns nicht mit der ersten Bestell-Nachricht von eBay mitgeteilt, sondern erst dann, wenn der K&auml;ufer Zahlungs- und Versandart gew&auml;hlt hat.</li>\n<li>Es kommt vor, dass eBay Plus Bestellungen mit nicht zugelassenen Versandarten ankommen. In der Detailansicht der Bestellung wird in solchen F&auml;llen eine Warnung angezeigt.</li></ul>",
+				"desc": "<a href='https://www.ebay.de/verkaeuferportal/verkaufen-bei-ebay/ebay-plus' target='_blank'>eBay Plus</a> kann &uuml;ber den eBay Account aktiviert werden, sofern Sie von eBay daf&uuml;r freigeschaltet wurden. Dieses Feature wird z.Zt. nur bei eBay Deutschland angeboten.<br /><br />\n\n Die Checkbox hier ist eine Voreinstellung f&uuml;r das Hochladen &uuml;ber magnalister. Sie ist anklickbar wenn eBay Plus in Ihrem Account aktiv ist. Sie hat keinen Einflu&szlig; auf die eBay Voreinstellung f&uuml;r alle Artikel (diese kann nur &uuml;ber den eBay Account aktiviert werden).<br /><br />\n\n Sollte die Checkbox nicht anklickbar sein, obwohl Sie die Funktion bei eBay aktiviert haben, speichern Sie bitte die Konfiguration einmal ab (dabei ruft magnalister die aktuellen Einstellungen von eBay ab).<br /><br />\n\n<b>Hinweise:</b><ul>\n<li>Damit die Checkbox-Einstellung sich auch auf bereits vorbereitete Artikel auswirkt, m&uuml;ssen Sie die Vorbereitung neu durchf&uuml;hren, bevor Sie die Artikel hochladen.</li>\n<li>F&uuml;r eBay Plus Listings m&uuml;ssen weitere Bedingungen erf&uuml;t werden: 1 Monat R&uuml;cknahmefrist, M&ouml;glichkeit der PayPal Zahlung, eine <a href='https://www.ebay.de/verkaeuferportal/verkaufen-bei-ebay/ebay-plus' target='_blank'>f&uuml;r eBay Plus zugelassene Versandart</a>. Wir bekommen <b>keine R&uuml;ckmeldung</b> von eBay, ob diese Bedingungen zutreffen, Sie m&uuml;ssen selbst darauf achten.</li>\n<li>Bitte lassen Sie Bestell-&Auml;nderungen zu (unter Bestellsynchronisation), oder verwenden Sie die Funktion &quotNur bezahlt-markierte Bestellungen importieren&quot (unter Bestellimport). Die eBay Plus Kennzeichnung f&uuml;r Bestellungen wird uns nicht mit der ersten Bestell-Nachricht von eBay mitgeteilt, sondern erst dann, wenn der K&auml;ufer Zahlungs- und Versandart gew&auml;hlt hat.</li>\n<li>Es kommt vor, dass eBay Plus Bestellungen mit nicht zugelassenen Versandarten ankommen. In der Detailansicht der Bestellung wird in solchen F&auml;llen eine Warnung angezeigt.</li></ul>",
 				"key": "ebay.plus",
 				"type": "checkbox",
 				"values": {
@@ -966,7 +993,7 @@
         "fields": {
             "ebayrefundconfig": {
                 "label": "R&uuml;ckerstattung ausl&ouml;sen mit",
-                "desc": "\n                      <p>          Mit dieser Funktion k&ouml;nnen Sie eine R&uuml;ckerstattung f&uuml;r importierte eBay Bestellungen ausl&ouml;sen. Voraussetzung daf&uuml;r ist die Teilnahme an der &quot;Zahlungsabwicklung durch eBay&quot;.\n                    <\/p><p>\n                    F&uuml;r jeden von eBay vorgegebenen R&uuml;ckerstattungsgrund k&ouml;nnen Sie je einen Webshop-Bestellstatus definieren (&quot;+&quot; Button) und einen Kommentar zuweisen. Dieser wird dem K&auml;ufer und eBay &uuml;bermittelt.\n                    <\/p><p>\n                                        <strong>&quot;Bestellstatus im Webshop&quot;<\/strong><br>\n                                        W&auml;hlen Sie hier einen Bestellstatus aus dem\n                                        Webshop aus, mit dem eine R&uuml;ckerstattung an\n                                        den K&auml;ufer ausgel&ouml;st wird.\n                    <\/p><p>\n                                        <strong>&quot;R&uuml;ckerstattungs-Grund&quot;<\/strong><br>\n                                        W&auml;hlen Sie hier einen von eBay vorgegebenen\n                                        R&uuml;ckerstattungsgrund aus.\n                    <\/p><p>\n                                        <strong>&quot;Kommentar zur R&uuml;ckerstattung&quot;<\/strong><br>\n                                        Hinterlegen Sie einen Kommentar, der mit dem\n                                        ausgew&auml;hlten R&uuml;ckerstattungsgrund an den\n                                        K&auml;ufer und eBay &uuml;bermittelt wird.\n                    <\/p><p>\n                    <strong>Wichtige Hinweise:<\/strong><br>\n                    <ul>\n                    <li>Die meisten Shopsysteme sind nicht in der Lage, mehrere, in einer Bestellung zusammengefasste Artikel, aufzusplitten und die korrekten R&uuml;ckerstattungsbetr&auml;ge bereitzustellen. Daher k&ouml;nnen Bestellungen mit mehr als einem Artikel  via magnalister nicht r&uuml;ckerstattet werden.<\/li>\n\n\n                    <li>L&ouml;sung: Eine teilweise R&uuml;ckerstattung sollten Sie direkt im eBay Seller Hub vornehmen. Einen Direktlink zu Ihrer Bestellung im eBay Seller Hub finden Sie in den magnalister Bestelldetails.<\/li>\n                    <\/ul>\n                    <\/p>",
+                "desc": "\n                      <p>          Mit dieser Funktion k&ouml;nnen Sie eine R&uuml;ckerstattung f&uuml;r importierte eBay Bestellungen ausl&ouml;sen. Voraussetzung daf&uuml;r ist die Teilnahme an der &quot;Zahlungsabwicklung durch eBay&quot;.\n                    <\/p><p>\n                    F&uuml;r jeden von eBay vorgegebenen R&uuml;ckerstattungsgrund k&ouml;nnen Sie je einen Webshop-Bestellstatus definieren (&quot;+&quot; Button) und einen Kommentar zuweisen. Dieser wird dem K&auml;ufer und eBay &uuml;bermittelt.\n                    <\/p><p>\n                                        <strong>&quot;Bestellstatus im Webshop&quot;<\/strong><br>\n                                        W&auml;hlen Sie hier einen Bestellstatus aus dem\n                                        Webshop aus, mit dem eine R&uuml;ckerstattung an\n                                        den K&auml;ufer ausgel&ouml;st wird.\n                    <\/p><p>\n                                        <strong>&quot;R&uuml;ckerstattungs-Grund&quot;<\/strong><br>\n                                        W&auml;hlen Sie hier einen von eBay vorgegebenen\n                                        R&uuml;ckerstattungsgrund aus.\n                    <\/p><p>\n                                        <strong>&quot;Kommentar zur R&uuml;ckerstattung&quot;<\/strong><br>\n                                        Hinterlegen Sie einen Kommentar, der mit dem\n                                        ausgew&auml;hlten R&uuml;ckerstattungsgrund an den\n                                        K&auml;ufer und eBay &uuml;bermittelt wird.\n                    <\/p><p>\n                    <strong>Wichtige Hinweise:<\/strong><br>\n                    <ul>\n                    <li>magnalister unterst&uuml;tzt keine Teilr&uuml;ckerstattungen. Liegt Ihnen eine Bestellung mit mehr als einem Artikel vor, so kann nur die R&uuml;ckerstattung der gesamten Bestellung per magnalister angestoßen werden.<\/li>\n\n\n                    <li>Bestellungen, die mehrere unterschiedliche Artikel enthalten, k&ouml;nnen nur dann via magnalister r&uuml;ckerstattet werden, wenn Sie die Option &quot;Nur bezahlt-markierte Bestellungen importieren&quot; aktiviert haben.<\/li>\n\n\n                    <li>Wenn Sie Bestellzusammenfassung verwenden, k&ouml;nnen wir nicht sicher sein, ob die Bestellung im Shop genauso zusammengesetzt ist, wie bei eBay. Daher k&ouml;nnen in dem Fall Bestellungen mit mehr als einem Artikel via magnalister nicht r&uuml;ckerstattet werden.<\/li>\n\n\n                    <li>L&ouml;sung: Eine teilweise R&uuml;ckerstattung sollten Sie direkt im eBay Seller Hub vornehmen. Einen Direktlink zu Ihrer Bestellung im eBay Seller Hub finden Sie in den magnalister Bestelldetails.<\/li>\n                    <\/ul>\n                    <\/p>",
                 "key": "ebay.refundconfig",
                 "type": "extern",
                 "procFunc": "mlEbayRefundConfig",

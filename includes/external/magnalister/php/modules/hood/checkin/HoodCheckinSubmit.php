@@ -152,7 +152,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		  ORDER BY '.($this->hasAttributesSortOrder? 'pa.sortorder ASC, ' : '').'pov.products_options_values_name ASC
 		', false));
 		
-		if ($variationTheme == false) {
+		if (!$variationTheme) {
 			return false;
 		}
 		
@@ -163,7 +163,12 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             $sSkuKey = 'MarketplaceId';
         }
         $newVersionProduct = MLProduct::gi()->getProductById($pID);
-        $CategoryAttributesBySKU = $this->translateCategoryAttributesForVariations($data['submit']['MarketplaceAttributes'], $newVersionProduct['Variations'], $sSkuKey);
+        if (empty($newVersionProduct['Variations'])) {
+            return false;
+        }
+        if (!empty($data['submit']['MarketplaceAttributes'])) {
+            $CategoryAttributesBySKU = $this->translateCategoryAttributesForVariations($data['submit']['MarketplaceAttributes'], $newVersionProduct['Variations'], $sSkuKey);
+        }
 		// fetch the netto baseprice for this item
 		$basePrice = $this->simpleprice->setPriceFromDB($pID, $this->_magnasession['mpID'], $this->priceConfig['Fixed'])->getPrice();
 		
@@ -174,7 +179,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				'SKU' => magnaAID2SKU($v['aID']),
 				'Price' => $v['VPrice'] * (($v['VPricePrefix'] == '+') ? 1 : -1),
 				'Quantity' => $v['Quantity'],
-                'MarketplaceAttributes' =>  $CategoryAttributesBySKU[$v[$sSkuKey]],
+                'MarketplaceAttributes' => isset($CategoryAttributesBySKU[$v[$sSkuKey]]) ? $CategoryAttributesBySKU[$v[$sSkuKey]] : null,
 				'Variation' => array (array (
 					'Name' => $v['VariationTitle'],
 					'Value' => $v['VariationValue']
@@ -211,45 +216,54 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		return true;
 	}
 
-	private function getProperties($pID, $product, &$data) {
+    private function getProperties($pID, $product, &$data) {
         MLProduct::gi()->setPriceConfig($this->priceConfig['Fixed']);
-		MLProduct::gi()->setOptions(array ('useGambioProperties' => true));
-		$p = MLProduct::gi()->getProductById($pID);
-		$vars = array();
-		$mainQuantity = 0;
+        MLProduct::gi()->setOptions(array('useGambioProperties' => true));
+        $p = MLProduct::gi()->getProductById($pID);
+        $vars = array();
+        $mainQuantity = 0;
         if (getDBConfigValue('general.keytype', '0') == 'artNr') {
             $sSkuKey = 'MarketplaceSku';
         } else {
             $sSkuKey = 'MarketplaceId';
         }
-        $CategoryAttributesBySKU = $this->translateCategoryAttributesForVariations($data['submit']['MarketplaceAttributes'], $p['Variations'], $sSkuKey);
-		foreach ($p['Variations'] as $i => $v) {
-			$vars[$i] = array (
-			'SKU' => ((getDBConfigValue('general.keytype', '0') == 'artNr')
-				? $v['MarketplaceSku']
-				: $v['MarketplaceId']),
-			'Price' => $v['Price'],
-			'Quantity' => $v['Quantity'],
-            'MarketplaceAttributes' =>  $CategoryAttributesBySKU[$v[$sSkuKey]],
-			'Variation' => array(),
-			); 
-			foreach ($v['Variation'] as $vv) {
-				$vars[$i]['Variation'][] = array(
-				'Name' => $vv['Name'],
-				'Value' => $vv['Value']
-				);
-			}
-			if (    array_key_exists('BasePrice', $v)
-			     && !empty($v['BasePrice'])) {
-				$vars[$i]['BasePrice'] = $v['BasePrice'];
-			}
-			$mainQuantity += $v['Quantity'];
-		}
-		if (!empty($vars)) {
-			$data['submit']['Quantity'] = $mainQuantity;
-			$data['submit']['Variations'] = $vars;
-		}
-	}
+        if (empty($p['Variations'])) {
+            return;
+        }
+
+        // during sync this is empty
+        $CategoryAttributesBySKU = array();
+        if (!empty($data['submit']['MarketplaceAttributes'])) {
+            $CategoryAttributesBySKU = $this->translateCategoryAttributesForVariations($data['submit']['MarketplaceAttributes'], $p['Variations'], $sSkuKey);
+        }
+        foreach ($p['Variations'] as $i => $v) {
+            $vars[$i] = array(
+                'SKU' => ((getDBConfigValue('general.keytype', '0') == 'artNr')
+                    ? $v['MarketplaceSku']
+                    : $v['MarketplaceId']),
+                'Price' => $v['Price'],
+                'Quantity' => $v['Quantity'],
+                'MarketplaceAttributes' => isset($CategoryAttributesBySKU[$v[$sSkuKey]]) ? $CategoryAttributesBySKU[$v[$sSkuKey]] : null,
+                'Variation' => array(),
+            );
+            foreach ($v['Variation'] as $vv) {
+                $vars[$i]['Variation'][] = array(
+                    'Name' => $vv['Name'],
+                    'Value' => $vv['Value']
+                );
+            }
+            if (array_key_exists('BasePrice', $v)
+                && !empty($v['BasePrice'])
+            ) {
+                $vars[$i]['BasePrice'] = $v['BasePrice'];
+            }
+            $mainQuantity += $v['Quantity'];
+        }
+        if (!empty($vars)) {
+            $data['submit']['Quantity'] = $mainQuantity;
+            $data['submit']['Variations'] = $vars;
+        }
+    }
 
     /*
      * Map matched variation attributes to be exported in 'MarketplaceAttributes'

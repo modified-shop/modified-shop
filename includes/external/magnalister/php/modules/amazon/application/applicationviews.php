@@ -32,70 +32,28 @@ function renderFlat($data, $prefix = '') {
 	return $finalArray;
 }
 
-
-function renderAmazonTopTen($sField, $aConfig = array()) {
-	global $_MagnaSession;
-	require_once (DIR_MAGNALISTER_MODULES.DIRECTORY_SEPARATOR.'amazon'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'amazonTopTen.php');
-	$oTopTen = new amazonTopTen();
-	$oTopTen->setMarketPlaceId($_MagnaSession['mpID']);
-	$aTopTen = $oTopTen->getTopTenCategories($sField, $aConfig);
-	if (empty($aTopTen)) {
-		return '';
-	}
-	$sOut = '<optgroup label="' . ML_TOPTEN_TEXT . '">';
-	foreach ($aTopTen as $sKey => $sValue) {
-		$sOut .= '<option value="' . $sKey . '">' . fixHTMLUTF8Entities($sValue) . '</option>';
-	}
-	$sOut .= '</optgroup>';
-	return $sOut;
-}
-
-function getProductTypesAndAttributes($category, $selected = null) {
-	try {
-		$result = MagnaConnector::gi()->submitRequest(array(
-			'ACTION' => 'GetProductTypesAndAttributes',
-			'CATEGORY' => $category
-		));
-		$result = $result['DATA'];
-	} catch (MagnaException $e) {
-		$result = array(
-			'ProductTypes' => array('null' => ML_AMAZON_ERROR_APPLY_CANNOT_FETCH_SUBCATS),
-			'Attributes' => false
-		);
-	}
-
-	if ($result['ProductTypes'] !== false) {
-		$html = '';
-		foreach ($result['ProductTypes'] as $key => $value) {
-			$setSelected = $key == $selected ? ' selected="selected"' : '';
-			$html .= '<option value="' . $key . '"' . $setSelected . '>' . $value . '</option>';
-		}
-
-		$result['ProductTypes'] = $html;
-	}
-
-	return $result;
-}
-
-function getBrowseNodes($category, $subcategory, $selectedNode = null, $newStyle = 'ALL') {
+function getBrowseNodes($category, $selectedNodes = array(), $newStyle = 'ALL') {
 	try {
 		$browseNodes = MagnaConnector::gi()->submitRequest(array(
 			'ACTION' => 'GetBrowseNodes',
 			'CATEGORY' => $category,
-			'SUBCATEGORY' => $subcategory,
 			'NewResponse' => $newStyle,
+            'Version' => 2
 		));
-		$browseNodes = $browseNodes['DATA'];
+
+        $browseNodes = isset($browseNodes['DATA']) ? $browseNodes['DATA'] : array();
 	} catch (MagnaException $e) {
 	}
-	if (!isset($browseNodes) || empty($browseNodes)) {
-		$browseNodes = array('null' => ML_AMAZON_LABEL_APPLY_SELECT_MAIN_SUB_CAT_FIRST);
-	}
-	$html = '
-			<option value="null">' . ML_AMAZON_LABEL_APPLY_BROWSENODE_NOT_SELECTED . '</option>';
-	$html .= renderAmazonTopTen('topBrowseNode', array($category));
+
+    // to ensure that its an array
+    if (!is_array($selectedNodes)) {
+        $selectedNodes = array();
+    }
+
+	$html = renderAmazonTopTen('topBrowseNode', array($category));
+	$html .= '<optgroup label="' . fixHTMLUTF8Entities(ML_AMAZON_LABEL_APPLY_BROWSENODES) . '">';
 	foreach ($browseNodes as $nodeID => $nodeName) {
-		$selected = $nodeID == $selectedNode ? 'selected="selected"' : '';
+		$selected = in_array($nodeID, $selectedNodes) ? 'selected="selected"' : '';
 		$html .= '
 			<option value="' . $nodeID . '" ' . $selected . '>'.str_replace(
 				array('\\/',  '/',        '#\\#'),
@@ -103,6 +61,7 @@ function getBrowseNodes($category, $subcategory, $selectedNode = null, $newStyle
 				fixHTMLUTF8Entities($nodeName)
 			).'</option>';
 	}
+     $html .= '</optgroup>';
 	return $html;
 }
 
@@ -124,21 +83,6 @@ function checkCondition(&$attributes, $selected = false) {
 		$attributes['ConditionType'] = false;
 	}
 
-	/*
-		try {
-			$conditions = MagnaConnector::gi()->submitRequest(array(
-				'ACTION' => 'GetConditionTypes',
-				'SUBSYSTEM' => 'Amazon',
-				'MARKETPLACEID' => $_MagnaSession['mpID'],
-			));
-			$conditions = $conditions['DATA'];
-		} catch (MagnaException $e) {
-		}
-		$html = '';
-		foreach($conditions as $conditions_key=>$conditions_val){
-			$html .= '<option '.((getDBConfigValue('amazon.itemCondition', $_MagnaSession['mpID'], false)==$conditions_key)?'selected':'').'>'.$conditions_val.'</option>';
-		}
-	*/
 	return $html;
 }
 
@@ -191,19 +135,18 @@ function convertAttrArrayToHTML($data, $usrData = array()) {
 }
 
 function renderMultiApplication($data) {
-	global $_url, $applyAction, $conditionHtml, $_MagnaSession;
+	global $_url, $applyAction, $_MagnaSession;
 
 	$categories = array('DATA' => array());
 	try {
 		$categories = MagnaConnector::gi()->submitRequest(array(
-			'ACTION' => 'GetMainCategories',
+			'ACTION' => 'GetAllProductTypes',
 		));
 	} catch (MagnaException $e) {
 		//echo print_m($e->getErrorArray(), 'Error: '.$e->getMessage(), true);
 	}
-
-	$htmlCategories = '
-				<option value="null">' . ML_AMAZON_LABEL_APPLY_PLEASE_SELECT . '</option>';
+    $htmlCategories = renderAmazonTopTen('topMainCategory');
+	$htmlCategories .= '<optgroup label="' . ML_LABEL_CATEGORY . '">';
 	if (!empty($categories['DATA'])) {
 		foreach ($categories['DATA'] as $catKey => $catName) {
 			$htmlCategories .= '
@@ -216,28 +159,9 @@ function renderMultiApplication($data) {
 			'<option value="' . $data['MainCategory'] . '" selected="selected">',
 			$htmlCategories
 		);
-		$cna = getProductTypesAndAttributes($data['MainCategory'], $data['ProductType']);
-		$conditionHtml = checkCondition($cna, $data['ConditionType']);
-		$htmlSubCategories = $cna['ProductTypes'];
-	} else {
-		$htmlSubCategories = '<option value="null">' . ML_AMAZON_LABEL_APPLY_SELECT_MAIN_CAT_FIRST . '</option>';
 	}
-
-	if (($data['MainCategory'] != '') && ($data['MainCategory'] != 'null')
-		&& (array_key_exists('ProductType', $data) || !empty($data['Attributes']))
-	) {
-		if (!array_key_exists('ProductType', $data) || ($data['ProductType'] == '')
-			|| ($data['ProductType'] == 'null')
-		) {
-			$htmlSubCategories = str_replace(
-				'<option value="' . $data['ProductType'] . '">',
-				'<option value="' . $data['ProductType'] . '" selected="selected">',
-				$htmlSubCategories
-			);
-		} else {
-			$data['ProductType'] = false;
-		}
-
+    $htmlCategories .= '</optgroup>';
+	if (($data['MainCategory'] != '') && ($data['MainCategory'] != 'null')|| !empty($data['Attributes'])) {
 		$mNewResponse = 'ALL';
 		if (isset($data['BrowseNodes'][0]) && !empty($data['BrowseNodes'][0])) {
 			preg_match("/([0-9]*)__([0-9]*)__([0-9]*)/", $data['BrowseNodes'][0], $aOutput);
@@ -252,27 +176,43 @@ function renderMultiApplication($data) {
                 }
             }
 		}
-		$browseNodes = getBrowseNodes($data['MainCategory'], $data['ProductType'], null, $mNewResponse);
-		$browseNodes = array(
-			0 => $browseNodes,
-			1 => $browseNodes,
-		);
-		for ($i = 0; $i < 2; ++$i) {
-			if (isset($data['BrowseNodes'][$i]) && $data['BrowseNodes'][$i] != '') {
-				$browseNodes[$i] = str_replace(
-					'<option value="' . $data['BrowseNodes'][$i] . '" >',
-					'<option value="' . $data['BrowseNodes'][$i] . '" selected="selected">',
-					$browseNodes[$i]
-				);
-			}
-		}
+		$browseNodes = getBrowseNodes($data['MainCategory'], $data['BrowseNodes'], $mNewResponse);
 	} else {
-		$browseNodes = '<option value="null">' . ML_AMAZON_LABEL_APPLY_SELECT_MAIN_SUB_CAT_FIRST . '</option>';
-		$browseNodes = array(
-			0 => $browseNodes,
-			1 => $browseNodes,
-		);
+		$browseNodes = '';
 	}
+
+	if (!empty($browseNodes)) $browseNodesStyle = '';
+	else $browseNodesStyle = 'display: none';
+
+    // Load variation themes if MainCategory is set
+    $variationThemes = array();
+    $variationDesignStyle = 'display: none';
+    $variationThemeOptions = '<option value="">Please select...</option>';
+    $selectedVariationTheme = isset($data['VariationTheme']) ? $data['VariationTheme'] : '';
+
+    if (($data['MainCategory'] != '') && ($data['MainCategory'] != 'null')) {
+        try {
+            $result = MagnaConnector::gi()->submitRequest(array(
+                    'ACTION' => 'GetCategoryDetails',
+                    'DATA'   => array(
+                            'PRODUCTTYPE' => $data['MainCategory'],
+                            'INCLUDE_CONDITIONAL_RULES' => true
+                    ),
+            ));
+            if (isset($result['DATA']['variation_details']) && !empty($result['DATA']['variation_details'])) {
+                $variationThemes = $result['DATA']['variation_details'];
+                $variationDesignStyle = ''; // Show the row
+
+                foreach ($variationThemes as $themeCode => $themeData) {
+                    $selected = ($selectedVariationTheme === $themeCode) ? 'selected="selected"' : '';
+                    $themeName = isset($themeData['name']) ? fixHTMLUTF8Entities($themeData['name']) : $themeCode;
+                    $variationThemeOptions .= '<option value="' . $themeCode . '" ' . $selected . '>' . $themeName . '</option>';
+                }
+            }
+        } catch (MagnaException $e) {
+            // If API fails, just hide the dropdown
+        }
+    }
 
 	$html = '
 		<tbody id="variationMatcher" class="attributesTable">
@@ -288,20 +228,20 @@ function renderMultiApplication($data) {
 				</td>
 				<td class="info">&nbsp;</td>
 			</tr>
-			<tr id="subCategory" class="even" ' . (empty($htmlSubCategories) ? 'style="display:none;"' : '') . '>
-				<th>' . ML_LABEL_SUBCATEGORY . ' <span>&bull;</span></th>
+			<tr class="even" id="variation-design-row" style="' . $variationDesignStyle . '">
+				<th>' . ML_AMAZON_LABEL_VARIATION_THEME . ' <span>&bull;</span></th>
 				<td class="input">
-					<select name="ProductType" id="subcat" class="fullWidth">
-						' . $htmlSubCategories . '
+					<select name="VariationTheme" id="variation-design" style="width: 100%">
+						' . $variationThemeOptions . '
 					</select>
 				</td>
 				<td class="info">&nbsp;</td>
 			</tr>
-			<tr class="odd">
+			<tr class="odd" style="'.$browseNodesStyle.'">
 				<th>' . ML_AMAZON_LABEL_APPLY_BROWSENODES . ' <span>&bull;</span></th>
 				<td class="input" id="browsenodes">
-					<select name="BrowseNodes[]" id="browsenode" style="width: 100%">
-						' . $browseNodes[0] . '
+					<select multiple name="BrowseNodes[]" id="browsenode" style="width: 100%">
+						' . $browseNodes . '
 					</select>
 				</td>
 				<td class="info">&nbsp;</td>
@@ -312,46 +252,131 @@ function renderMultiApplication($data) {
 	ob_start();
 	?>
 	<script type="text/javascript">/*<![CDATA[*/
-		function loadBrowseNodes(subCat) {
-			jQuery.blockUI(blockUILoading);
+		function loadBrowseNodes(mainCat) {
+            mlShowLoading();
 			jQuery.ajax({
 				type: 'POST',
 				url: '<?php echo toURL($_url, array('kind' => 'ajax', 'applyAction' => $applyAction, 'ts' => time()), true);?>',
 				dataType: 'html',
 				data: {
 					'type': 'browsenodes',
-					'category': $('#maincat').val(),
-					'subcategory': subCat,
+					'category': mainCat,
 					'selected': $('#browsenodes select').val()
 				},
 				success: function (data) {
 					$('#browsenodes select').html(data);
-					jQuery.unblockUI();
+                    toggleBrowseNodesRow(true);
+                    mlHideLoading();
 				},
 				error: function (xhr, status, error) {
-					$('#browsenodes select').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_SUB_CAT_FIRST; ?></option>');
-					$('#subcat').val('null');
+					if ($('#browsenodes select option').length <= 1) {
+						$('#browsenodes select').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_SUB_CAT_FIRST; ?></option>');
+					}
 					myConsole.log(arguments);
-					jQuery.unblockUI();
+                    mlHideLoading();
 				}
 			});
 		}
 
-		$(document).ready(function () {
-            $('#browsenode').select2({});
+        // Function to conditionally show row based on some condition
+        function toggleBrowseNodesRow(show) {
+            $('#browsenodes').closest('tr').toggle(show);
+        }
+
+
+
+        $(document).ready(function () {
+            // Single select options
+            var singleSelectOptions = {
+                width: 'resolve',
+                placeholder: '<?php echo addslashes(html_entity_decode((ML_AMAZON_LABEL_APPLY_PLEASE_SELECT))); ?>',
+            };
+
+            // Multiselect options
+            var multiSelectOptions = {
+                width: 'resolve',
+                multiple: true,
+                allowClear: true,
+                minimumResultsForSearch: Infinity,
+                placeholder: '<?php echo addslashes(html_entity_decode((ML_AMAZON_LABEL_APPLY_PLEASE_SELECT))); ?>'
+            };
+
+            $('#maincat').select2(singleSelectOptions);
+            $('#browsenode').select2(multiSelectOptions);
+
 			$('#maincat').change(function () {
 				if ($(this).val() == 'null') {
-					$('#subcat').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_CAT_FIRST; ?></option>').css({'display': 'block'});
-					$('#browsenodes select').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_SUB_CAT_FIRST; ?></option>');
+                    toggleBrowseNodesRow(false);
+					if ($('#browsenodes select option').length <= 1) {
+						$('#browsenodes select').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_SUB_CAT_FIRST; ?></option>');
+					}
 					$('#additionalAttributes').css({'display': 'none'});
 					$('#additionalAttributes td.input').html('');
-				}
+                    // Hide variation-design dropdown
+                    $('#variation-design-row').hide();
+				} else {
+                    loadBrowseNodes($(this).val());
+                    // Load variation themes
+                    loadVariationDesign($(this).val());
+                }
 			});
-			$('#subcat').change(function () {
-				if ($(this).val() != 'null') {
-					loadBrowseNodes($(this).val());
-				}
-			});
+
+            // Function to load variation themes (variation-design) for selected category
+            function loadVariationDesign(categoryId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php echo toURL($_url, array('kind'        => 'ajax',
+                                                        'applyAction' => $applyAction,
+                                                        'ts'          => time()
+                    ), true);?>',
+                    dataType: 'json',
+                    data: {
+                        'type': 'variationthemes',
+                        'category': categoryId
+                    },
+                    success: function (data) {
+                        if (data && data.success && data.variation_details) {
+                            var variationDetails = data.variation_details;
+                            var $variationDesign = $('#variation-design');
+
+                            // Clear existing options
+                            $variationDesign.html('<option value="">Please select...</option>');
+
+                            // Add variation theme options
+                            var hasThemes = false;
+                            for (var themeCode in variationDetails) {
+                                if (variationDetails.hasOwnProperty(themeCode)) {
+                                    var theme = variationDetails[themeCode];
+                                    $variationDesign.append(
+                                        '<option value="' + themeCode + '">' + theme.name + '</option>'
+                                    );
+                                    hasThemes = true;
+                                }
+                            }
+
+                            // Show/hide row based on whether themes exist
+                            if (hasThemes) {
+                                $('#variation-design-row').show();
+                                // Initialize select2 if not already initialized
+                                if (!$variationDesign.data('select2')) {
+                                    $variationDesign.select2({
+                                        width: '100%'
+                                    });
+                                }
+                            } else {
+                                $('#variation-design-row').hide();
+                            }
+                        } else {
+                            // No variation themes available
+                            $('#variation-design-row').hide();
+                        }
+                    },
+                    error: function () {
+                        // Hide on error
+                        $('#variation-design-row').hide();
+                    }
+                });
+            }
 		});
 		/*]]>*/</script><?php
 	$html .= ob_get_contents();
@@ -737,7 +762,7 @@ function renderB2B($data) {
 }
 
 function renderGenericApplication($data) {
-	global $conditionStatus, $conditionHtml, $_MagnaSession;
+	global $_MagnaSession;
     $opts = array(
         '-' => ML_AMAZON_SHIPPING_TIME_DEFAULT_VALUE,
         '0' => ML_AMAZON_SHIPPING_TIME_SAMEDAY_VALUE
@@ -794,12 +819,11 @@ function renderGenericApplication($data) {
 }
 
 $conditionStatus = false;
-$conditionHtml = '';
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 	if (isset($_POST['type']) && ($_POST['type'] == 'LoadCustomIdentifiers') && isset($_POST['SelectValue'])) {
 		die(json_encode(AmazonHelper::gi()->getCustomIdentifiers($_POST['SelectValue'])));
 	}
-	if (isset($_POST['type']) && ($_POST['type'] == 'browsenodes') && isset($_POST['category']) && isset($_POST['subcategory'])) {
+	if (isset($_POST['type']) && ($_POST['type'] == 'browsenodes') && isset($_POST['category'])) {
         $mNewResponse = 'ALL';
 		if (isset($_POST['selected']) && !empty($_POST['selected']) && $_POST['selected'] != 'null') {
             preg_match("/([0-9]*)__([0-9]*)__([0-9]*)/", $_POST['selected'], $aOutput);
@@ -814,8 +838,38 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
                 }
             }
 		}
-		die(getBrowseNodes($_POST['category'], $_POST['subcategory'], $_POST['selected'], $mNewResponse));
+		die(getBrowseNodes($_POST['category'], $_POST['selected'], $mNewResponse));
 	}
+    if (isset($_POST['type']) && ($_POST['type'] == 'variationthemes') && isset($_POST['category'])) {
+        global $_MagnaSession;
+        try {
+            $result = MagnaConnector::gi()->submitRequest(array(
+                    'ACTION' => 'GetCategoryDetails',
+                    'DATA'   => array(
+                            'PRODUCTTYPE' => $_POST['category'],
+                            'INCLUDE_CONDITIONAL_RULES' => true
+                    ),
+                    //                'MARKETPLACEID' => $_MagnaSession['mpID'],
+                    //				'PrimaryCategory' => $_POST['category']
+            ));
+
+            if (isset($result['DATA']['variation_details'])) {
+                die(json_encode(array(
+                        'success'           => true,
+                        'variation_details' => $result['DATA']['variation_details']
+                )));
+            } else {
+                // Return the full result for debugging
+                die(json_encode(array(
+                        'success'           => false,
+                        'variation_details' => array(),
+                        'debug_response'    => $result
+                )));
+            }
+        } catch (MagnaException $e) {
+            die(json_encode(array('success' => false, 'error' => $e->getMessage())));
+        }
+    }
 	if (isset($_POST['type']) && ($_POST['type'] == 'resetToDefaults') && isset($_POST['pID']) && ctype_digit($_POST['pID'])) {
 		$pID = $_POST['pID'];
 
@@ -841,6 +895,31 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 		$dataReset['Description'] = html_entity_decode($dataReset['Description'], ENT_COMPAT, 'UTF-8');
 		die(json_encode($dataReset));
 	}
+
+    // React attribute matching save handler (supports both V2 and V3 formats)
+    // V2 format: $_POST['type'] = 'saveAttributeMatching'
+    // V3 format: $_POST['ml']['action'] = 'saveAttributeMatching'
+    if ((isset($_POST['type']) && $_POST['type'] == 'saveAttributeMatching') || (isset($_POST['ml']['action']) && $_POST['ml']['action'] == 'saveAttributeMatching')) {
+        require_once(DIR_MAGNALISTER_MODULES . 'amazon/application/applicationviews_react.php');
+        handleSaveAttributeMatching();
+        exit;
+    }
+
+    // React attribute matching batch save handler
+    // V3 format: $_POST['ml']['action'] = 'saveAttributeMatchingBatch'
+    if (isset($_POST['ml']['action']) && $_POST['ml']['action'] == 'saveAttributeMatchingBatch') {
+        require_once(DIR_MAGNALISTER_MODULES . 'amazon/application/applicationviews_react.php');
+        handleSaveAttributeMatchingBatch();
+        exit;
+    }
+
+    // React component data reload handler (for category changes)
+    if (isset($_POST['type']) && ($_POST['type'] == 'getReactComponentData')) {
+        require_once(DIR_MAGNALISTER_MODULES . 'amazon/application/applicationviews_react.php');
+        handleGetReactComponentData();
+        exit;
+    }
+
 	die();
 }
 
@@ -868,12 +947,18 @@ if ($applyAction != 'multiapplication') {
 	$data = populateGenericData(0, $multiEdit);
 }
 
-echo '
+// Load React integration
+require_once(DIR_MAGNALISTER_MODULES . 'amazon/application/applicationviews_react.php');
+try {
+
+    // Use React component
+    echo '
 <form name="apply" method="post" action="' . toURL($_url) . '">
 	<input type="hidden" name="saveApplyData" value="true"/>
 	<p>' . ML_AMAZON_TEXT_APPLY_REQUIERD_FIELDS . '</p>
 	<table class="attributesTable">
 		' . renderMultiApplication($data) . '
+		' . renderReactVariationMatching($pID, $data) . '
 		' . (($applyAction != 'multiapplication') ? renderSingleApplication($data) : '') . '
 		' . renderB2B($data) . '
 		' . renderGenericApplication($data) . '
@@ -883,28 +968,18 @@ echo '
 		<tbody>
 			<tr class="firstChild"><td>
 				<table><tbody><tr>
-					<td class="firstChild">' . (($applyAction == 'singleapplication')
-		? '<input id="resetToDefaults" class="ml-button" type="button" value="' . ML_BUTTON_LABEL_REVERT . '"/>'
-		: ''
-	) . '</td>
-					<td class="lastChild">' . '<input class="ml-button mlbtn-action" type="submit" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>' . '</td>
+					<td class="firstChild">' . (($applyAction == 'singleapplication') ? '<input id="resetToDefaults" class="ml-button" type="button" value="' . ML_BUTTON_LABEL_REVERT . '"/>' : '') . '</td>
+					<td class="lastChild">' . '<input class="ml-button mlbtn-action" type="button" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>' . '</td>
 				</tr></tbody></table>
 			</td></tr>
 		</tbody>
 	</table>
 </form>
-<script type="text/javascript" src="' . DIR_MAGNALISTER_WS . 'js/variation_matching.js?'.CLIENT_BUILD_VERSION.'"></script>
-<script type="text/javascript" src="' . DIR_MAGNALISTER_WS . 'js/marketplaces/amazon/variation_matching.js?'.CLIENT_BUILD_VERSION.'"></script>
-<script>
-	var ml_vm_config = {
-		url: "' . toURL($_url, array('applyAction' => 'variations', 'kind' => 'ajax'), true) . '",
-		viewName: "varmatchView",
-		handleCategoryChange: false,
-		i18n: ' . json_encode(AmazonHelper::gi()->getVarMatchTranslations()) . ',
-		shopVariations : '. json_encode(AmazonHelper::gi()->getShopVariations()) . '
-	};
-	</script>
 ';
+
+} catch (\Throwable $ex) {
+    echo $ex->getMessage() . "\n" . $ex->getFile() . ':' . $ex->getLine();
+}
 if ($applyAction != 'multiapplication') {
 ?>
 	<script type="text/javascript">/*<![CDATA[*/

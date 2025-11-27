@@ -301,10 +301,11 @@ abstract class MLProductList {
 		}
 		foreach ($aFilterKeyType as $sType  => $aFilterIdents) {
 			if ($aFilterIdents !== null) {
+				// use fallbackEscape, cos MagnaDB::gi()->escape may take even 20 seconds for 10,000 products
 				$this->oQuery->where("
 					p.".((getDBConfigValue('general.keytype', '0') == 'artNr') ? 'products_model' : 'products_id')." ".
 					(($sType == 'in') ? "IN" : "NOT IN")."
-					('".implode("', '", MagnaDB::gi()->escape($aFilterIdents))."')"
+					('".implode("', '", MagnaDBDriver::fallbackEscape($aFilterIdents))."')"
 				);
 			}
 		}

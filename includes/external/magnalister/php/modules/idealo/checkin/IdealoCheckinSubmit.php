@@ -25,7 +25,19 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 	protected $quantitySub = false;
 	protected $quantityLumb = false;
 
-	protected function setUpMLProduct() {
+    protected function getProduct($pID) {
+        if ($this->settings['mlProductsUseLegacy']) {
+            $product = MLProduct::gi()->getProductByIdOld($pID, $this->settings['language']);
+        } else {
+            // set countryID to get the price with the correct VAT rate for the country
+            // -1 is the default value for SimplePrice::getTaxByClassId, so that it uses shop's default
+            $settings = array('countryID' => getDBConfigValue('idealo.shipping.country', $this->_magnasession['mpID'], '-1'));
+            $product = MLProduct::gi()->getProductById($pID, $settings);
+        }
+        return $product;
+    }
+
+    protected function setUpMLProduct() {
 		parent::setUpMLProduct();
 		MLProduct::gi()->setOptions(array(
 			'sameVariationsToAttributes' => false,

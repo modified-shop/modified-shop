@@ -1,0 +1,381 @@
+/*
+ * Amazon Variations React Component Styles
+ *
+ * This file is automatically processed during build:
+ * 1. Source: /src/components/AmazonVariations/styles.css
+ * 2. Built: /dist/style.css (temporary)
+ * 3. Final: ../../css/react/dist/style.css (auto-copied)
+ *
+ * For PHP integration, reference: ../css/react/dist/style.css
+ */
+
+/* Amazon Value Selector Styles */
+.amazon-value-selector-container {
+    margin-top: 15px;
+    /* Add your specific styles here */
+}
+
+.amazon-value-input-container {
+    margin-top: 15px;
+    /* Add your specific styles here */
+}
+
+/* Freetext Input Styles */
+.freetext-input-container {
+    margin-top: 15px;
+    /* Add your specific styles here */
+}
+
+/* ================================================
+   FORM ELEMENT STANDARDIZATION - MINIMAL OVERRIDE
+   ================================================ */
+
+/* Only set essential sizing - let Magnalister handle all styling */
+.amazon-variations-container select,
+.amazon-variations-container input[type="text"],
+.amazon-variations-container .react-select-container,
+.amazon-variations-container .amazon-value-react-select {
+  width: 100%;
+  max-width: 300px;
+  /* Remove all custom styling - use Magnalister defaults */
+}
+
+/* React-Select container - minimal width override only */
+.amazon-variations-container .react-select-container {
+  width: 100% !important;
+  max-width: 300px;
+}
+
+/* React-Select control - remove all custom styling */
+.amazon-variations-container .react-select-container .react-select__control {
+  /* Let Magnalister CSS handle all styling */
+}
+
+/* ================================================
+   DISABLED OPTIONS STYLING
+   ================================================ */
+
+/* Native select disabled options - higher specificity */
+.amazon-variations-container .attribute-selector-container select option:disabled,
+.amazon-variations-container select.attribute-selector option:disabled {
+  color: #999 !important;
+  background-color: #f5f5f5 !important;
+  font-style: italic !important;
+  opacity: 0.6 !important;
+}
+
+/* React-Select disabled options - using unique ml-amazon-* prefixes */
+.amazon-variations-container .ml-amazon-attr-selector__option--is-disabled,
+.amazon-variations-container .ml-amazon-optional-attr__option--is-disabled,
+.amazon-variations-container .ml-amazon-shop-val__option--is-disabled,
+.amazon-variations-container .ml-amazon-match-val__option--is-disabled,
+.amazon-variations-container .ml-amazon-value__option--is-disabled,
+div[class*="ml-amazon-"][class*="__option--is-disabled"] {
+  color: #999 !important;
+  background-color: #f5f5f5 !important;
+  font-style: italic !important;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+/* React-Select disabled option hover state */
+.amazon-variations-container .ml-amazon-attr-selector__option--is-disabled:hover,
+.amazon-variations-container .ml-amazon-optional-attr__option--is-disabled:hover,
+.amazon-variations-container .ml-amazon-shop-val__option--is-disabled:hover,
+.amazon-variations-container .ml-amazon-match-val__option--is-disabled:hover,
+.amazon-variations-container .ml-amazon-value__option--is-disabled:hover,
+div[class*="ml-amazon-"][class*="__option--is-disabled"]:hover {
+  background-color: #f5f5f5 !important;
+  color: #999 !important;
+}
+
+/* ================================================
+   REACT-SELECT INPUT FIELD - REMOVE BORDERS
+   ================================================ */
+
+/* Remove focus states from react-select input - High specificity to override prestashop styles */
+/* Using unique ml-amazon-* prefixes to avoid conflicts with other components */
+body .amazon-variations-container .ml-amazon-attr-selector__input-container,
+body .amazon-variations-container .ml-amazon-optional-attr__input-container,
+body .amazon-variations-container .ml-amazon-shop-val__input-container,
+body .amazon-variations-container .ml-amazon-match-val__input-container,
+body .amazon-variations-container .ml-amazon-value__input-container {
+    position: absolute;
+    width: 100%;
+}
+
+/* Remove focus states from react-select input - Ultra high specificity to override PrestaShop */
+/* Using :not() pseudo-classes to increase specificity like PrestaShop does */
+body:not(.ml-dummy-class-1) .amazon-variations-container:not(.ml-dummy-class-2) input[type="text"].ml-amazon-attr-selector__input:focus,
+body:not(.ml-dummy-class-1) .amazon-variations-container:not(.ml-dummy-class-2) input[type="text"].ml-amazon-optional-attr__input:focus,
+body:not(.ml-dummy-class-1) .amazon-variations-container:not(.ml-dummy-class-2) input[type="text"].ml-amazon-shop-val__input:focus,
+body:not(.ml-dummy-class-1) .amazon-variations-container:not(.ml-dummy-class-2) input[type="text"].ml-amazon-match-val__input:focus,
+body:not(.ml-dummy-class-1) .amazon-variations-container:not(.ml-dummy-class-2) input[type="text"].ml-amazon-value__input:focus {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* ================================================
+   LAYOUT IMPROVEMENTS
+   ================================================ */
+
+/* Flex layout for attribute input areas */
+.amazon-variations-container .attribute-input-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+    border-bottom: none;
+    border-top: none;
+}
+.js-field.attribute-row.required-attribute,
+.js-field.attribute-row.optional-attribute{
+    border-bottom: solid 0.5px #dadada;
+}
+
+/* Container for shop attribute selector and remove button */
+.amazon-variations-container .shop-attribute-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.amazon-variations-container .shop-attribute-container > *:first-child {
+  flex: 1;
+}
+
+/* Value input containers */
+.amazon-variations-container .amazon-value-selector-container,
+.amazon-variations-container .amazon-value-input-container,
+.amazon-variations-container .freetext-input-container {
+  width: 100%;
+  margin-top: 15px;
+}
+
+/* ================================================
+   BUTTON STYLING - USE MAGNALISTER DEFAULTS
+   ================================================ */
+
+/* Remove all custom button styling - let Magnalister handle it */
+.amazon-variations-container .mlbtn,
+.amazon-variations-container button {
+  /* Use original Magnalister button styling */
+}
+
+/* ================================================
+   VALUE MATCHING TABLE - USE MAGNALISTER DEFAULTS
+   ================================================ */
+
+/* Value matching table layout - minimal styling to let Magnalister handle appearance */
+.amazon-variations-container .value-matching-table {
+  width: 100%;
+  margin-top: 12px;
+  /* Remove custom borders and styling - let Magnalister handle it */
+}
+
+.amazon-variations-container .value-matching-table th,
+.amazon-variations-container .value-matching-table td {
+  /* Remove custom padding and styling - let Magnalister handle it */
+  vertical-align: middle;
+}
+
+.amazon-variations-container .value-matching-table th {
+  /* Remove custom background, borders, and colors - let Magnalister handle it */
+}
+
+/* Table column widths */
+.amazon-variations-container .value-matching-table .shop-value-column {
+  width: 40%;
+}
+
+.amazon-variations-container .value-matching-table .amazon-value-column {
+  width: 40%;
+}
+
+.amazon-variations-container .value-matching-table .action-column {
+  width: 20%;
+  text-align: center;
+}
+
+/* Matching row form elements */
+.amazon-variations-container .value-matching-table select,
+.amazon-variations-container .value-matching-table .react-select-container {
+  width: 100%;
+  max-width: none;
+}
+
+/* ================================================
+   RESPONSIVE DESIGN
+   ================================================ */
+
+@media (max-width: 768px) {
+  .amazon-variations-container .attribute-name-column {
+    width: 30%;
+    min-width: 120px;
+  }
+
+  .amazon-variations-container .attribute-input-column {
+    width: 65%;
+    min-width: 250px;
+  }
+
+  .amazon-variations-container select,
+  .amazon-variations-container input[type="text"],
+  .amazon-variations-container .react-select-container {
+    max-width: 250px;
+  }
+
+  .amazon-variations-container .value-matching-table .shop-value-column,
+  .amazon-variations-container .value-matching-table .amazon-value-column {
+    width: 35%;
+  }
+
+  .amazon-variations-container .value-matching-table .action-column {
+    width: 30%;
+  }
+}
+
+@media (max-width: 480px) {
+  .amazon-variations-container .attribute-input-column {
+    width: 100%;
+  }
+
+  .amazon-variations-container select,
+  .amazon-variations-container input[type="text"],
+  .amazon-variations-container .react-select-container {
+    max-width: 200px;
+  }
+
+  .amazon-variations-container .shop-attribute-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+}
+
+/* ================================================
+   CONDITIONAL RULE HIGHLIGHT ANIMATION
+   ================================================ */
+
+/**
+ * Keyframes animation for highlighting Amazon value selectors
+ * when conditional rules are applied and options are filtered.
+ *
+ * Effect: Border flashes yellow 3 times smoothly (2.4s total)
+ * - Each flash takes 0.8 seconds
+ * - Yellow color: #ffc107 (warning/attention color)
+ * - Returns to original border color automatically
+ */
+@keyframes highlight-filter {
+  0%, 100% {
+    border-color: #ced4da; /* Original/default border color */
+  }
+  8.33%, 16.66% {
+    border-color: #ffc107; /* Yellow highlight - Flash 1 */
+  }
+  33.33%, 41.66% {
+    border-color: #ffc107; /* Yellow highlight - Flash 2 */
+  }
+  58.33%, 66.66% {
+    border-color: #ffc107; /* Yellow highlight - Flash 3 */
+  }
+}
+
+/* Apply animation to Amazon value selector container */
+.amazon-variations-container .amazon-value-selector-container.highlight-conditional-filter,
+.amazon-variations-container .amazon-value-input-container.highlight-conditional-filter {
+  /* Target the select/input elements inside */
+}
+
+/* Animation for native select element */
+.amazon-variations-container .amazon-value-selector-container.highlight-conditional-filter select {
+  animation: highlight-filter 2.4s ease-in-out !important;
+  border-width: 3px !important;
+  border-style: solid !important;
+}
+
+/* Animation for react-select control */
+.amazon-variations-container .amazon-value-selector-container.highlight-conditional-filter .react-select__control {
+  animation: highlight-filter 2.4s ease-in-out !important;
+  border-width: 3px !important;
+  border-style: solid !important;
+}
+
+/* Animation for text input (freetext Amazon values) */
+.amazon-variations-container .amazon-value-input-container.highlight-conditional-filter input[type="text"] {
+  animation: highlight-filter 2.4s ease-in-out !important;
+  border-width: 3px !important;
+  border-style: solid !important;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .amazon-variations-container .amazon-value-selector-container.highlight-conditional-filter select,
+  .amazon-variations-container .amazon-value-selector-container.highlight-conditional-filter .react-select__control,
+  .amazon-variations-container .amazon-value-input-container.highlight-conditional-filter input[type="text"] {
+    animation: none;
+    /* Show single flash instead of animation for users with motion sensitivity */
+    border-color: #ffc107 !important;
+    transition: border-color 0.3s ease;
+  }
+}
+
+.optional-attribute-react-select {
+    margin-top: 10px;
+}
+
+/* ================================================
+   SUCCESS MESSAGE ANIMATION
+   ================================================ */
+
+/**
+ * Keyframes animation for success message slide-in from right
+ * Effect: Smoothly slides in from right side
+ */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Respect user's motion preferences for success message */
+@media (prefers-reduced-motion: reduce) {
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+}
+
+/* ================================================
+   VALIDATION ERROR STYLING
+   ================================================ */
+
+/* Static red border for error state - visible when has-error is present */
+.amazon-variations-container select.has-error,
+.amazon-variations-container .attribute-selector.has-error {
+  border-color: #e31a1c !important;
+  border-width: 2px !important;
+  box-shadow: 0 0 5px rgba(227, 26, 28, 0.5) !important;
+}
+
+/* Static red border for React-Select error state */
+.amazon-variations-container .attribute-selector-react-select.has-error .ml-amazon-attr-selector__control {
+  border-color: #e31a1c !important;
+  border-width: 2px !important;
+  box-shadow: 0 0 5px rgba(227, 26, 28, 0.5) !important;
+}
+

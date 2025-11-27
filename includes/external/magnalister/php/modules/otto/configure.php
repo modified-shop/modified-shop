@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -72,6 +72,8 @@ class OttoConfigure extends MagnaCompatibleConfigure {
                 }
             }
         }
+
+        $this->checkForAppVersionMigration();
 
         $this->finalizeForm();
 
@@ -427,8 +429,6 @@ class OttoConfigure extends MagnaCompatibleConfigure {
     protected function loadChoiseValues() {
         parent::loadChoiseValues();
         if ($this->isAuthed) {
-            $this->form['prepare']['fields']['delivery']['morefields']['delivery.time']['values'] =
-                array_combine(range(1,99),range(1,99));
             mlGetOrderStatus($this->form['order']['fields']['orders.status.processable']);
             mlGetCustomersStatus($this->form['order']['fields']['customersgroup']);
             mlGetOrderStatus($this->form['order']['fields']['orders.cancel.with']);
@@ -443,6 +443,10 @@ class OttoConfigure extends MagnaCompatibleConfigure {
             $this->form['order']['fields']['send.carrier']['values'] = $this->loadCarrierCodesExtended('standard');
             $this->form['order']['fields']['forwarding.carrier']['values'] = $this->loadCarrierCodesExtended('forwarding');
             $this->form['order']['fields']['return.carrier']['values'] = $this->loadCarrierCodesExtended('return');
+
+            // extend prepare fields
+            $this->mlGetShippingProfiles($this->form['prepare']['fields']['delivery']['morefields']['delivery.shippingprofile']);
+            $this->mlGetProcessingTimes($this->form['prepare']['fields']['delivery']['morefields']['delivery.processingtime']);
         }
     }
 
@@ -469,7 +473,7 @@ class OttoConfigure extends MagnaCompatibleConfigure {
         $apiRequest = 'GetOauthTokenCreationLink';
         $buttonId = 'requestToken';
 
-        $content = '<input class="ml-button mlbtn-action" type="button" value="'.ML_BUTTON_TOKEN_NEW.'" id="'.$buttonId.'"/>';
+        $content = '<input class="ml-button mlbtn-action" type="button" value="App autorisieren / aktualisieren" id="'.$buttonId.'"/>';
 
         ob_start(); ?>
 
@@ -513,6 +517,68 @@ class OttoConfigure extends MagnaCompatibleConfigure {
     }
     protected function needToSetCredential() {
         return false;
+    }
+
+    /**
+     * Retrieves and assigns shipping profiles to the provided fields.
+     *
+     * @param array &$fields Reference to the fields array where shipping profiles will be assigned.
+     * @return void
+     */
+    private function mlGetShippingProfiles(&$fields) {
+        $fields['values'] = OttoApiConfigValues::gi()->getShippingProfiles(); 
+    }
+
+    /**
+     * Populates the provided fields array with processing time options.
+     *
+     * @param array $fields The array to be populated with processing time values.
+     * @return void
+     */
+    private function mlGetProcessingTimes(&$fields) {
+        $fields['values']['DEFAULT'] = 'Aus Versandprofil übernehmen';
+        $fields['values'] += array_combine(range(1, 99), range(1, 99));
+    }
+
+    private function checkForAppVersionMigration() {
+        if (!$this->isAuthed) {
+            return;
+        }
+
+        $result = array();
+        try {
+            $response = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'IsAuthed',
+            ));
+            if (!empty($response['DATA'])) {
+                $result = $response['DATA'];
+            }
+        } catch (MagnaException $e) {
+
+        }
+
+        if (array_key_exists('AppVersion', $result)) {
+            $currentAppVersion = $result['AppVersion']['Current'];
+            $lastestAppVersion = $result['AppVersion']['Lastest'];
+
+            $dbAppVersion = getDBConfigValue('otto.appversion', $this->mpID, 'v0');
+
+            if ((string)$dbAppVersion !== (string)$currentAppVersion) {
+                // update in database
+                setDBConfigValue('otto.appversion', $this->mpID, (string)$currentAppVersion);
+            }
+            if ((string)$lastestAppVersion !== (string)$currentAppVersion) {
+                $this->boxes .= '<div class="noticeBox"><h2>🚀 Neue Version verfügbar: magnalister OTTO App 🚀</h2>
+                    <p>Eine neue Version der magnalister OTTO App ist jetzt verfügbar! Bitte aktualisieren Sie die App-Version, um alle neuen Funktionen und Verbesserungen zu nutzen.</p>
+                    <p><strong>So aktualisieren Sie:</strong></p>
+                    <ul>
+                        <li>Starten Sie die Aktualisierung ganz einfach über den "App autorisieren / aktualisieren"-Button.</li> 
+                    </ul>
+                    <p><strong>Hinweis:</strong> Eine zeitnahe Aktualisierung wird dringend empfohlen, um die Kompatibilität und Funktionalität der App zu gewährleisten.</p>
+                    </div>
+                ';
+            }
+        }
     }
 }
 

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -764,5 +764,24 @@ class CdiscountHelper extends AttributesMatchingHelper {
             })
         </script>
         <?php
+    }
+
+    /**
+     * Retrieves the reasons for order cancellations and updates the provided field with the data.
+     *
+     * @param array $field Reference to the field that will be updated with the cancellation reasons.
+     * @return void
+     */
+    public static function GetOrderCancellationReasons(&$field) {
+        try {
+            $orderStatusConditions = MagnaConnector::gi()->submitRequest(array('ACTION' => 'GetCancellationReasons'));
+        } catch (MagnaException $me) {
+            $orderStatusConditions = array(
+                'DATA' => array(
+                )
+            );
+        }
+
+        $field['values'] = $orderStatusConditions['DATA'];
     }
 }

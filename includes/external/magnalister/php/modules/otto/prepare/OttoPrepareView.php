@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -254,7 +254,7 @@ class OttoPrepareView extends MagnaCompatibleBase {
 					<td colspan="3"><h4>'.ML_OTTO_PREPARE_PRODUCT_GENERAL_SETTINGS.'</h4></td>
 				</tr>
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
-				'. $this->renderDelivery($data['DeliveryType'], $data['DeliveryTime']).'
+				'. $this->renderDelivery($data['ShippingProfile'], $data['ProcessingTime']).'
 				</tr>
 			    <tr class="spacer">
 			        <td colspan="3">
@@ -283,60 +283,73 @@ class OttoPrepareView extends MagnaCompatibleBase {
         return $html;
     }
 
-    protected function renderDelivery($selectedDeliveryType = '', $selectedDeliveryTime = '') {
-        if (empty($selectedDeliveryType) and  empty($selectedDeliveryTime)) {
+    protected function renderDelivery($selectedShippingProfile = '', $selectedProcessingTime = '') {
+        if (empty($selectedShippingProfile) and  empty($selectedProcessingTime)) {
             // if delivery type and time are not prepared load it from the configuration
-            $selectedDeliveryType = getDBConfigValue($this->marketplace.'.delivery.type', $this->mpID);
-            $selectedDeliveryTime = getDBConfigValue($this->marketplace.'.delivery.time', $this->mpID);
+            $selectedShippingProfile = getDBConfigValue($this->marketplace.'.delivery.shippingprofile', $this->mpID);
+            $selectedProcessingTime = getDBConfigValue($this->marketplace.'.delivery.processingtime', $this->mpID);
         }
         return '<th>'.ML_OTTO_PREPARE_PRODUCT_DELIVERY.'</th>
 					<td class="input">
 						<table><tbody>
 							<tr>
-								<td style="border: none" class="label">'.ML_OTTO_PREPARE_PRODUCT_DELIVERY_TYPE.':</td>
+								<td style="border: none" class="label">Versandprofil:</td>
 								<td style="border: none">
 									<div class="catVisual">
-										<select id="DeliveryType" name="DeliveryType" style="width:100%">
-											'.$this->renderDeliveryType($selectedDeliveryType).'
+										<select id="ShippingProfile" name="ShippingProfile" style="width:100%">
+											'.$this->renderShippingProfiles($selectedShippingProfile).'
 										</select>
 									</div>
 								</td>
-								<td style="border: none" class="label">'.ML_OTTO_PREPARE_PRODUCT_DELIVERY_TIME.':</td>
+								<td style="border: none" class="label">Bearbeitungszeit:</td>
 								<td style="border: none">
 									<div class="catVisual">
-										<select id="DeliveryType" name="DeliveryTime" style="width:100%">
-											'.$this->renderDeliveryTime($selectedDeliveryTime).'
+										<select id="ProcessingTime" name="ProcessingTime" style="width:100%">
+											'.$this->renderProcessingTime($selectedProcessingTime).'
 										</select>
 									</div>
 								</td>
 							</tr>
 						</tbody></table>
 					</td>
+					<input type="hidden" name="DeliveryType" value=""/>
+					<input type="hidden" name="DeliveryTime" value=""/>
 					<td class="info">&nbsp;</td>';
     }
 
-    protected function renderDeliveryType($selectedDeliveryType) {
-        $deliveryTypes = array(
-            "PARCEL" => ML_OTTO_PREPARE_PRODUCT_PARCEL,
-            "FORWARDER_PREFERREDLOCATION" => ML_OTTO_PREPARE_PRODUCT_FORWARDER_PREFERREDLOCATION,
-            "FORWARDER_CURBSIDE" => ML_OTTO_PREPARE_PRODUCT_FORWARDER_CURBSIDE);
+    /**
+     * Generates an HTML string of shipping profile options for a dropdown menu.
+     *
+     * @param string $selectedShippingProfile The ID of the currently selected delivery type.
+     * @return string An HTML string with <option> elements representing the shipping profiles.
+     */
+    protected function renderShippingProfiles($selectedShippingProfile) {
+        $shippingProfiles = OttoApiConfigValues::gi()->getShippingProfiles();
+
         $opt = '';
-        foreach ($deliveryTypes as $deliveryType => $translation) {
+        foreach ($shippingProfiles as $shippingProfileId => $profileName) {
             $selected = '';
-            if ($deliveryType == $selectedDeliveryType) {
+            if ($shippingProfileId == $selectedShippingProfile) {
                 $selected = ' selected="selected" ';
             }
-            $opt .= '<option '.$selected.' value="'.$deliveryType.'">'.$translation.'</option>'."\n";
+            $opt .= '<option '.$selected.' value="'.$shippingProfileId.'">'.$profileName.'</option>'."\n";
         }
 
         return $opt;
     }
 
-    protected function renderDeliveryTime($selectedDeliveryTime) {
-        $opt = '';
-        foreach (range(1, 90) as $value) {
+    /**
+     * Generates a dropdown HTML string for selecting processing time.
+     *
+     * @param mixed $selectedProcessingTime The currently selected processing time value. Can be 'DEFAULT'
+     *                                      or a numeric value representing the processing time.
+     * @return string Returns the HTML string containing option elements for the processing time dropdown.
+     */
+    protected function renderProcessingTime($selectedProcessingTime) {
+        $opt = '<option value="DEFAULT"'.($selectedProcessingTime === 'DEFAULT' ? ' selected="selected"' : '').'>Aus Versandprofil übernehmen</option>'."\n";
+        foreach (range(1, 99) as $value) {
             $selected = '';
-            if ($value == $selectedDeliveryTime) {
+            if ($value == $selectedProcessingTime) {
                 $selected = ' selected="selected"';
             }
 
@@ -558,7 +571,7 @@ class OttoPrepareView extends MagnaCompatibleBase {
 
         # Daten aus magnalister_otto_prepare (bereits frueher vorbereitet)
         $dbOldSelectionQuery = '
-		    SELECT ep.products_id, ep.products_model, ep.Description, ep.DeliveryTime, ep.DeliveryType,
+		    SELECT ep.products_id, ep.products_model, ep.Description, ep.ShippingProfile, ep.ProcessingTime,
 		           ep.PrimaryCategory, ep.PrimaryCategoryName, ep.ShopVariation, ep.CategoryIndependentShopVariation, 
 		           ep.MainImage
 		      FROM '.TABLE_MAGNA_OTTO_PREPARE.' ep

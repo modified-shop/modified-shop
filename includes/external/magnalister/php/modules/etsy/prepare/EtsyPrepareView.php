@@ -34,7 +34,9 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 	protected $businessSeller = false;
 	protected $defaultListingType = 'shopProduct'; // hood
 	protected $defaultShippingProfile = '';
-	
+
+	protected $defaultProcessingProfile = '';
+
 	protected function initCatMatching() {
 		$params = array();
 		foreach (array('mpID', 'marketplace', 'marketplaceName') as $attr) {
@@ -47,6 +49,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 	public function __construct(&$params) {
 		parent::__construct($params);
 		$this->defaultShippingProfile = getDBConfigValue('etsy.ShippingProfile', $this->mpID);
+		$this->defaultProcessingProfile = getDBConfigValue('etsy.ProcessingProfile', $this->mpID);
 	}
 	
 	protected function getSelection() {
@@ -59,7 +62,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		    SELECT ep.products_id, ep.products_model,
 		           ep.Title, ep.Description, 
 		           ep.PrimaryCategory, ep.ShopVariation,
-		           ep.ShippingProfile, ep.Whomade, ep.Whenmade, ep.IsSupply, ep.Image,
+		           ep.ShippingProfile, ep.ProcessingProfile, ep.Whomade, ep.Whenmade, ep.IsSupply, ep.Image,
 		           pd.products_name, pd.products_description
 		      FROM ' . TABLE_MAGNA_ETSY_PREPARE . ' ep
 		';
@@ -287,6 +290,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		$preSelected = array (
 			'PrimaryCategory' => array(),
 			'ShippingProfile' => array(),
+			'ProcessingProfile' => array(),
 			'Whomade' => array(),
 			'Whenmade' => array(),
 			'IsSupply' => array(),
@@ -313,6 +317,9 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		// add some usefull defaults in case of multiple selections
 		if ($preSelected['ShippingProfile'] === null) {
 			$preSelected['ShippingProfile'] = $this->defaultShippingProfile;
+		}
+        if ($preSelected['ProcessingProfile'] === null) {
+			$preSelected['ProcessingProfile'] = $this->defaultProcessingProfile;
 		}
 		if ($preSelected['Whomade'] === null) {
 			$preSelected['Whomade'] = getDBConfigValue('etsy.whomade', $this->mpID);
@@ -412,6 +419,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 			'true'  => ML_ETSY_ISSUPLY_YES
 		);
 		$aShippingProfileValues = EtsyHelper::showShippingProfiles();
+        $aProcessingProfileValues = EtsyHelper::showProcessingProfiles();
 		$html .= '
 			<tbody>
 				<tr class="headline">
@@ -445,7 +453,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 				$html .= '
 						</select>
 					</td>
-					<td class="info">&nbsp;</td>
+					<td class="info"></td>
 				</tr>
 				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
 					<th>' . ML_ETSY_ISSUPLY . '</th>
@@ -473,6 +481,39 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 							<option '.$s.' value='.$k.'>'.$v.'</option>';
 				}
 				$html .= '
+						</select>
+					</td>
+					<td class="info"></td>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+                    <th>
+                        <table class="nostyle actions">
+                            <tr>
+                                <td>' . ML_ETSY_PROCESSING_PROFILE . '</td>
+                                <td style="width: 20px;">
+                                    <div class="desc" title="'. ML_LABEL_INFO .'">
+                                        <span style="display: none">' .ML_ETSY_PROCESSING_PROFILE_HELP . '</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+					</th>
+					<td class="input">
+						<select name="processingprofile">';
+                        foreach ($aProcessingProfileValues as $processingStateLabel => $processingProfiles) {
+                            if (is_array($processingProfiles) && !empty($processingProfiles)) {
+                                $html .= '<optgroup label="' . $processingStateLabel . '">';
+                                foreach ($processingProfiles as $k => $v) {
+                                    if ($preSelected['ProcessingProfile'] == $k) $s = 'selected="selected"';
+                                    else $s = '';
+                                    $html .= '<option ' . $s . ' value=' . $k . '>' . $v . '</option>';
+                                }
+                                $html .= '</optgroup>';
+                            } else {
+                                $html .= '<option  value=' . $processingStateLabel . '>' . $processingProfiles . '</option>';
+                            }
+                        }
+                        $html .= '
 						</select>
 					</td>
 					<td class="info">&nbsp;</td>
@@ -574,6 +615,9 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		?>
 	<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
 	<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/marketplaces/etsy/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+	<?php if (file_exists(DIR_MAGNALISTER_WS . 'js/marketplaces/etsy/etsy.processing_profile.js')) { ?>
+	<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/marketplaces/etsy/etsy.processing_profile.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+	<?php } ?>
 	<script type="text/javascript">
 		/*<![CDATA[*/
 		var ml_vm_config = {
@@ -585,7 +629,15 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 			i18n: <?php echo json_encode(EtsyHelper::gi()->getVarMatchTranslations());?>,
 			shopVariations : <?php echo json_encode(EtsyHelper::gi()->getShopVariations()); ?>
 		};
-		/*]]>*/</script><?php
+        $(document).ready(function () {
+            $('table.actions div.desc').click(function () {
+                var d = $(this).find('span').html();
+                $('<div class="dialog2" title="<?php echo ML_LABEL_INFORMATION ?>"></div>').html(d)
+                    .jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
+            });
+        });
+		/*]]>*/</script>
+        <?php
 		$sAttrMatchJS = ob_get_contents();
 		ob_end_clean();
 		return $sAttrMatchJS;

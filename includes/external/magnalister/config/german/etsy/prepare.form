@@ -55,9 +55,7 @@
                 "key": "_#_platform_#_.filter.manufacturer",
                 "type": "multicheckbox",
                 "desc": "Alle hier markierten Hersteller werden bei der Produkt-Vorbereitung nicht mit angezeigt.",
-                "default": [
-                    
-                ],
+                "default": [],
                 "expertsetting": true
             },
             "lang": {
@@ -71,6 +69,13 @@
                 "key": "_#_platform_#_.ShippingProfile",
                 "type": "selection",
                 "desc": "Die Etsy Versandgruppen enthalten Angaben zum Versand:<br \/><ul><li>Land, aus dem Sie versenden,<\/li><li>Land oder Region, in die Sie versenden,<\/li><li>Versandkosten bei Einzellieferung,<\/li><li>Versandkosten wenn der Artikel zusammen mit anderen versendet wird.<\/li><\/ul><br \/>Die Angabe des Versanddienstleisters ist nicht vorgesehen.",
+                "values": null
+            },
+            "processingprofile" : {
+                "label": "Etsy Bearbeitungsprofil",
+                "key": "_#_platform_#_.ProcessingProfile",
+                "type": "selection",
+                "desc": "Ein Bearbeitungsprofil definiert, wie und wann Ihre Bestellung und deren Produkt vorbereitet und an den Kunden versandt werden. Bei Etsy umfasst dies Optionen wie:\n<ul>\n    <li>\"<strong>Versandfertig<\/strong>\" - das Produkt ist bereits hergestellt und kann sofort versandt werden<\/li>\n    <li>\"<strong>Auf Bestellung gefertigt<\/strong>\" - das Produkt wird nach dem Kauf hergestellt<\/li>\n<\/ul>\n<strong>Bearbeitungsprofile erstellen:<\/strong><br>\nNeue Bearbeitungsprofile müssen direkt bei Etsy erstellt werden:<br>\n→ <a href=\"https:\/\/www.etsy.com\/your\/shops\/me\/tools\/shipping-profiles\" target=\"_blank\">https:\/\/www.etsy.com\/your\/shops\/me\/tools\/shipping-profiles<\/a><br>\noder im Etsy-Portal unter <strong>Einstellungen → Versandeinstellungen<\/strong>.<br>\nNach der Erstellung bei Etsy warten Sie einige Minuten und aktualisieren dann diese Seite (F5), damit die Profile hier erscheinen.<br><br>\nDas Bearbeitungsprofil hilft Käufern, die erwartete Versandzeit für jedes Produkt zu verstehen.",
                 "values": null
             }
         }

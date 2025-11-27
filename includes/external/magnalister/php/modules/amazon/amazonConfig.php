@@ -356,7 +356,7 @@ function renderB2BTaxMatchingCategory($args) {
     $categoryKey = 'amazon.b2b.tax_code_category';
     $matchingKey = 'amazon.b2b.tax_code_specific';
 
-    $categories = MagnaConnector::gi()->submitRequest(array('ACTION' => 'GetMainCategories'));
+    $categories = MagnaConnector::gi()->submitRequest(array('ACTION' => 'GetAllProductTypes'));
     $configCategories = getDBConfigValue($categoryKey, $mpId, array());
     $configMatching = getDBConfigValue($matchingKey, $mpId, array());
 

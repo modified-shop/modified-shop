@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -217,8 +217,7 @@ $_modules = array(
 		'displayAlways' => false,
 		'requiredConfigKeys' => array (
 			'cdiscount.firstactivation',
-			'cdiscount.mpusername',
-			'cdiscount.mppassword',
+			'cdiscount.sellerid',
 			'cdiscount.lang',
 			'cdiscount.itemcondition',
 			'cdiscount.import',
@@ -246,7 +245,7 @@ $_modules = array(
 		),
 		'settings' => array (
 			'defaultpage' => 'prepare',
-			'subsystem' => 'Cdiscount',
+			'subsystem' => 'Octopia',
 			'currency' => 'EUR',
 			'hasOrderImport' => true,
 		),

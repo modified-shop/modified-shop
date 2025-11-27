@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -266,7 +266,9 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		}
 
         // for modified 2.0+ > if table "orders_tracking" exists
-        if (false == $mCarrier && MagnaDB::gi()->tableExists('orders_tracking')) {
+        // if the merchant configures this table, we got carrier_id, but we need carrier_name
+        if (    (false == $mCarrier && MagnaDB::gi()->tableExists('orders_tracking'))
+             || (is_numeric($mCarrier) && ('orders_tracking' == $this->config['CarrierMatchingTable']))) {
             $sCarrierId = MagnaDB::gi()->fetchOne("
                 SELECT carrier_id
                   FROM orders_tracking
@@ -334,6 +336,8 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		$cncl = array (
 			'MOrderID' => $this->oOrder['special']
 		);
+
+        $cncl = $this->manipulateCancelOrderRequestData($cncl);
 		
 		$this->oOrder['data']['ML_LABEL_ORDER_CANCELLED'] = $date;
 		// flag order as dirty, meaning that it has to be saved.
@@ -745,4 +749,14 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		//*/
 		return true;
 	}
+
+    /**
+     * Manipulates the cancel order request data.
+     *
+     * @param array $requestData The cancel order request data to be manipulated.
+     * @return array The manipulated cancel order request data.
+     */
+    public function manipulateCancelOrderRequestData($requestData) {
+        return $requestData;
+    }
 }

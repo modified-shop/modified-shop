@@ -406,25 +406,25 @@
                   ]
                 },
 
-"orders.return.tracking.key": {
-    "label": "Retouren-Sendungsnummer des Retourenschein",
-    "desc": "W&auml;hlen Sie hier aus der Datenbank die Tabelle und Spalte aus, in welcher Sie Ihre Retourensendungsnummer f&uuml;r jede Bestellung hinterlegen.<br><span style='color: red'>Hinweis: Die Angabe der Retouren-Sendungsnummer ist f&uuml;r die Versandbest&auml;tigung bei OTTO verpflichtend!</span>",
-    "key": "_#_platform_#_.orders.return.tracking.key.DBMatching.table",
-    "type": "dbfieldselector",
-    "morefields":{
-       "alias":{
-            "label":"<span class=\"tt\">`orders_id`<\/span> Alias",
-            "key":"_#_platform_#_.orders.return.tracking.key.DBMatching.alias",
-            "type":"text",
-            "cssClasses":[
-                "autoWidth"
-            ]
-       }
-    },
-    "cssClasses": [
-        "orderConfig"
-    ]
-},
+                "orders.return.tracking.key": {
+                    "label": "Retouren-Sendungsnummer des Retourenschein",
+                    "desc": "W&auml;hlen Sie hier aus der Datenbank die Tabelle und Spalte aus, in welcher Sie Ihre Retourensendungsnummer f&uuml;r jede Bestellung hinterlegen.<br><span style='color: red'>Hinweis: Die Angabe der Retouren-Sendungsnummer ist f&uuml;r die Versandbest&auml;tigung bei OTTO verpflichtend!</span>",
+                    "key": "_#_platform_#_.orders.return.tracking.key.DBMatching.table",
+                    "type": "dbfieldselector",
+                    "morefields":{
+                       "alias":{
+                            "label":"<span class=\"tt\">`orders_id`<\/span> Alias",
+                            "key":"_#_platform_#_.orders.return.tracking.key.DBMatching.alias",
+                            "type":"text",
+                            "cssClasses":[
+                                "autoWidth"
+                            ]
+                       }
+                    },
+                    "cssClasses": [
+                        "orderConfig"
+                    ]
+                },
 
             "orders.cancel.with": {
                 "label": "Bestellung stornieren mit",
@@ -437,7 +437,19 @@
                 "cssClasses": [
                     "orderConfig"
                 ]
-            }
+            },
+             "blacklistemailaddress": {
+                 "label": "Blacklist E-Mail Address",
+                 "desc": "<b>Avoid Shipping Notifications to OTTO Buyers<\/b><br \/>\n                            <br \/>\n                            The option \u201cBlacklist OTTO&apos;s customer e-mail address\u201d is used to suppress e-mails that are sent from the shopping system (for orders imported via magnalister). This means that they will not reach the OTTO buyer.<br \/>\n                            <br \/>\n                            Important notes:<ul>\n                            <li>Blacklisting is deactivated by default. If activated, you will receive a mailer daemon (information from the mail server that the email could not be delivered) the moment the shopping system sends an email to the OTTO buyer.<\/li>\n                            <li>magnalister only puts the prefix \"blacklisted-\" in front of the OTTO e-mail address (e.g. blacklisted-12345@otto.de). If you still want to contact the OTTO buyer, simply remove the prefix \"blacklisted-\".<\/li>\n                            <\/ul>",
+                 "key": "_#_platform_#_.mailaddress.blacklist",
+                 "type": "checkbox",
+                 "values": {
+                     "val": "Blacklist OTTO&apos;s customer e-mail address"
+                 },
+                 "default": {
+                     "val": false
+                 }
+             }
         }
     }
 }

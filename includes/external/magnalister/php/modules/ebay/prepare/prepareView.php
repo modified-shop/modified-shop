@@ -412,7 +412,7 @@ function renderMultiPrepareView($data) {
 		if (!empty($row['ePID'])) {
 			$ePidsFilled++;
 		}
-		
+
         $lastI = $i;
 		++$i;
 	}
@@ -842,6 +842,34 @@ function renderMultiPrepareView($data) {
 	$html .= '/>'.ML_EBAY_PRIVATE_LISTING_YES_NO.'
 				</td>
 				<td class="info">'.ML_EBAY_PRIVATE_LISTING.'<span style="color:red;"> '.ML_EBAY_CAUSES_COSTS.'</span></td>
+			</tr>
+			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'" name="autoPayRow" id="autoPayRow">
+				<th>'.ML_EBAY_AUTOPAY_SHORT.'</th>
+				<td class="input">
+                    <input type="checkbox" name="autoPay" id="autoPay" ';
+    $products_id_list = '';
+    foreach ($data as $item) {
+    	$products_id_list .= ', '.$item['products_id'];
+    }
+    $products_id_list = trim($products_id_list, ', ');
+    $autoPaySet = MagnaDB::gi()->fetchArray('
+    	SELECT SQL_CALC_FOUND_ROWS DISTINCT AutoPay
+          FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
+         WHERE products_id IN ('.$products_id_list.')
+		   AND mpID = '.$_MagnaSession['mpID'].'
+    ');
+    if (1 == (int)MagnaDB::gi()->foundRows()) {
+        if ('1' == $autoPaySet[0]['AutoPay']) {
+            $html .= ' checked="checked" ';
+        }
+    } else {
+        if (getDBConfigValue(array('ebay.AutoPay', 'val'), $_MagnaSession['mpID'])) {
+            $html .= ' checked="checked" ';
+        }
+    }
+	$html .= '/>'.ML_EBAY_AUTOPAY_YES_NO.'
+				</td>
+				<td class="info">'.ML_EBAY_AUTOPAY.'<div id="noteAutoPayEnabled" name="noteAutoPayEnabled"></div></td>
 			</tr>
 			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'" name="bestOfferRow" id="bestOfferRow">
 				<th>'.ML_EBAY_BESTPRICE_SHORT.'</th>
@@ -1586,8 +1614,10 @@ $(document).ready(function() {
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
 			if ($('#SecondaryCategory').val() != '') {
 				VariationsEnabled2(cID, $('#SecondaryCategory').val(), $('#noteVariationsEnabled'));
+				AutoPayEnabled2(cID, $('#SecondaryCategory').val(), $('#noteAutoPayEnabled'));
 			} else {
 				VariationsEnabled(cID, $('#noteVariationsEnabled'));
+				AutoPayEnabled(cID, $('#noteAutoPayEnabled'));
 			}
 			ProductRequired(cID, $('#noteProductRequired'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID))
@@ -1605,8 +1635,10 @@ $(document).ready(function() {
 			generateEbayCategoryPath(cID, $('#SecondaryCategoryVisual'));
 			if ($('#PrimaryCategory').val() != '') {
 				VariationsEnabled2($('#PrimaryCategory').val(), cID, $('#noteVariationsEnabled'));
+				AutoPayEnabled2($('#PrimaryCategory').val(), cID, $('#noteAutoPayEnabled'));
 			} else {
 				VariationsEnabled(cID, $('#noteVariationsEnabled'));
+				AutoPayEnabled(cID, $('#noteAutoPayEnabled'));
 			}
 			return true;
 		}
@@ -1628,8 +1660,10 @@ $(document).ready(function() {
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
 			if ($('#SecondaryCategory').val() != '') {
 				VariationsEnabled2(cID, $('#SecondaryCategory').val(), $('#noteVariationsEnabled'));
+				AutoPayEnabled2(cID, $('#SecondaryCategory').val(), $('#noteAutoPayEnabled'));
 			} else {
 				VariationsEnabled(cID, $('#noteVariationsEnabled'));
+				AutoPayEnabled(cID, $('#noteAutoPayEnabled'));
 			}
 			ProductRequired(cID, $('#noteProductRequired'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>);
@@ -1644,8 +1678,10 @@ $(document).ready(function() {
 			generateEbayCategoryPath(cID, $('#SecondaryCategoryVisual'));
 			if ($('#PrimaryCategory').val() != '') {
 				VariationsEnabled2($('#PrimaryCategory').val(), cID, $('#noteVariationsEnabled'));
+				AutoPayEnabled2($('#PrimaryCategory').val(), cID, $('#noteAutoPayEnabled'));
 			} else {
 				VariationsEnabled(cID, $('#noteVariationsEnabled'));
+				AutoPayEnabled(cID, $('#noteAutoPayEnabled'));
 			}
 		}, 'eBay');
 	});
@@ -1888,6 +1924,7 @@ jQuery.blockUI(blockUILoading);
 function ebayPicturePackPropertiesListHtml($products_id, $selected_property ){
 	global $_MagnaSession;
 	$html ='';
+	$oddEven = false;
 	if (getDBConfigValue(array('ebay.picturepack', 'val'), $_MagnaSession['mpID'])){
 	// properties are the normal case (but only for Gambio). The other, Attribute images, need a custom extension.
 	$blUseProperties = true;

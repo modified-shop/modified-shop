@@ -333,7 +333,7 @@
                     "Plus": "Plus"
                 },
                 "default": "Gallery",
-                "desc": "<b>Gallery Image<\/b><br \/><br \/>\n\t\t\t\tGallery images appear in the search result list on eBay. This improves the visibility of your items, and thus also the potential selling outcome.<br \/><br \/>\n\t\t\t\t<b>Gallery Plus<\/b><br \/><br \/>\n\t\t\t\tGallery Plus means a  pop-up window with a bigger view of the item, when the customer points with the mouse on the item within the search result list. Please note that the image size must be <b>at least 800x800 px<\/b>.<br \/><br \/>\n\t\t\t\t<b>eBay Fees<\/b><br \/><br \/>\n\t\t\t\t&quot;Gallery Plus&quot; is <span style=\"color:red\">subject to fee on eBay<\/span> in some categories! RedGecko GmbH does not care responsibility for any eBay fees caused.<br \/><br \/>\n\t\t\t\t<b>Further information<\/b><br \/><br \/>\n\t\t\t\tPlease refer to the <a href=\"http:\/\/pages.ebay.com\/help\/sell\/gallery-upgrade.html\" target=\"_blank\">eBay help pages<\/a> for further information."
+                "desc": "<b>Gallery Image<\/b><br \/><br \/>\n\t\t\t\tGallery images appear in the search result list on eBay. This improves the visibility of your items, and thus also the potential selling outcome.<br \/><br \/>\n\t\t\t\t<b>Gallery Plus<\/b><br \/><br \/>\n\t\t\t\tGallery Plus means a  pop-up window with a bigger view of the item, when the customer points with the mouse on the item within the search result list. Please note that the image size must be <b>at least 800x800 px<\/b>.<br \/><br \/>\n\t\t\t\t<b>eBay Fees<\/b><br \/><br \/>\n\t\t\t\t&quot;Gallery Plus&quot; is <span style=\"color:red\">subject to fee on eBay<\/span> in some categories! RedGecko GmbH does not care responsibility for any eBay fees caused.<br \/><br \/>\n\t\t\t\t<b>Further information<\/b><br \/><br \/>\n\t\t\t\tPlease refer to the <a href=\"https:\/\/www.ebay.com\/help\/selling\/listings\/adding-pictures-listings?id=4148\" target=\"_blank\">eBay help pages<\/a> for further information."
             },
             "picturepack": {
                 "label": "Picture Pack",
@@ -388,6 +388,21 @@
                     }
                 }
             },
+            "tecdocktypeconstraints": {
+                "label": "TecDoc KType Constraints",
+                "desc": "<strong>For Motor parts only<\/strong><br \/><br \/>\n                If you store the <strong>TecDoc KType<\/strong> in the store database and transfer it to eBay, you can enter the database column here where you have notes on restrictions that should be displayed accordingly on eBay.<br \/><br \/>\n Only use this field if you are also transferring <strong>TecDoc KType<\/strong> (or ePID numbers for motorcycles).",
+                "key": "ebay.tecdoc.constraints.column",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class=\"tt\">`products_id`<\/span> Alias",
+                        "key": "ebay.tecdoc.constraints.alias",
+                        "type": "text",
+                        "cssClasses": ["autoWidth"]
+                    }
+                }
+            },
             "privatelisting": {
                 "label": "Private Listings",
                 "desc": "If activated, listings are marked as 'private', that means, the buyers or bidders list cannot be viewed by others.",
@@ -407,6 +422,18 @@
                 "type": "checkbox",
                 "values": {
                     "val": "Items can be bought only by business customers"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "autopay": {
+                "label": "AutoPay",
+                "desc": "Function activated: Require immediate payment when buyer uses Buy It Now.<br \/><br \/> <strong>Notes:</strong><ul> <li>This function is not available for all sellers. Check in your eBay account if you are authorized for this, or apply for authorization from eBay if necessary.</li><br /><li>This function is not applicable in all categories, especially not in real estate categories. If you don't see a checkbox for it in the item preparation, it's not applicable.</li><br /><li>For auction-style listings, the function only applies if no bid has been placed yet and a buyer purchases at the Buy It Now price.</li></ul>",
+                "key": "ebay.AutoPay",
+                "type": "checkbox",
+                "values": {
+                    "val": "Require immediate payment when buyer uses Buy It Now"
                 },
                 "default": {
                     "val": false
@@ -590,7 +617,7 @@
             },
             "ebayplus": {
                 "label": "eBay Plus",
-                "desc": "eBay Plus is a special feature, at the moment available only for approved merchants in eBay Germany. The feature can be activated in the eBay account.<br \/><br \/>\n                           This check box defines a default setting for Item upload from magnalister. It&apos;s clickable if you have the eBay Plus feature active. It has no influence on the setting for all Items on eBay (which can be made only on the eBay website).<br \/><br \/>\n                           In case if the check box is not clickable, although you have eBay Plus activated, please save the configuration (this causes magnalister to fetch the current settings from eBay).<br \/><br \/>\n                           <b>Notes:<\/b><ul>\n                           <li>If you want to upload Items with eBay Plus, and the Items are prepared before, please prepare them anew and make sure that the eBay Plus checkbox is set on.<\/li>\n                           <li>There are further requirements for eBay Plus listings (details see <a href=\"http:\/\/verkaeuferportal.ebay.de\/ebay-plus\" target=\"_blank\">eBay seller&apos;s site<\/a> (in German)). We don&apos;t get any feedback from eBay, whether these requirements are met, you have to care for it.<\/li>\n                           <li>If you use eBay Plus, please activate order update (in Order Synchronisation) or use the function &quot;Import only &apos;Paid&apos;-marked orders&quot; (in Orders Import). The eBay Plus mark for orders doesn&apos;t appear in the initial order message we get from eBay, but later, as soon as the buyer has chosen the payment and shipping service.<\/li>\n                           <li>It may happen that an eBay Plus order has a shipping service which is not allowed for eBay Plus. In that case, a warning is shown in the order detail view.<\/li><\/ul>",
+                "desc": "eBay Plus is a special feature, at the moment available only for approved merchants in eBay Germany. The feature can be activated in the eBay account.<br \/><br \/>\n                           This check box defines a default setting for Item upload from magnalister. It&apos;s clickable if you have the eBay Plus feature active. It has no influence on the setting for all Items on eBay (which can be made only on the eBay website).<br \/><br \/>\n                           In case if the check box is not clickable, although you have eBay Plus activated, please save the configuration (this causes magnalister to fetch the current settings from eBay).<br \/><br \/>\n                           <b>Notes:<\/b><ul>\n                           <li>If you want to upload Items with eBay Plus, and the Items are prepared before, please prepare them anew and make sure that the eBay Plus checkbox is set on.<\/li>\n                           <li>There are further requirements for eBay Plus listings (details see <a href=\"https:\/\/www.ebay.de\/verkaeuferportal\/verkaufen-bei-ebay\/ebay-plus\" target=\"_blank\">eBay seller&apos;s site<\/a> (in German)). We don&apos;t get any feedback from eBay, whether these requirements are met, you have to care for it.<\/li>\n                           <li>If you use eBay Plus, please activate order update (in Order Synchronisation) or use the function &quot;Import only &apos;Paid&apos;-marked orders&quot; (in Orders Import). The eBay Plus mark for orders doesn&apos;t appear in the initial order message we get from eBay, but later, as soon as the buyer has chosen the payment and shipping service.<\/li>\n                           <li>It may happen that an eBay Plus order has a shipping service which is not allowed for eBay Plus. In that case, a warning is shown in the order detail view.<\/li><\/ul>",
                 "key": "ebay.plus",
                 "type": "checkbox",
                 "values": {
@@ -989,7 +1016,7 @@
         "fields": {
             "ebayrefundconfig": {
                 "label": "Initiate refund with",
-                "desc": "\n                    <p>With this function you can initiate a refund for imported eBay orders. The requirement for this is participating in \u201eeBay Managed Payments\u201d.<\/p>\n\n                    <p>For each refund reason given by eBay you can define a webshop order status (\"+\" button) and assign a comment. This comment will be sent to the buyer and eBay.<\/p>\n                    <p>\n                    <strong>&ldquo;Shop order status&rdquo;<\/strong><br>\n                    Select an order status from your web shop that will initiate a refund to the buyer.\n                    <\/p>\n                    <p>\n                    <strong>&ldquo;Reason for refund&rdquo;<\/strong><br>\n                    Select a refund reason given by eBay here.\n                    &ldquo;Remarks for the refund&rdquo;\n                    <\/p><p>\n\n                    Enter a comment, which is transmitted together with the refund to the buyer and eBay.\n                    <\/p>\n                    <p>\n\n                    <strong>Important notes:<\/strong><br>\n                    <ul>\n                    Most shop systems are not able to split one order into multiple items and provide the correct refund amounts. Therefore partial refunds cannot be processed via magnalister.\n                    <\/li><li>\n                    Solution: A partial refund should be made directly in the eBay Seller Hub. You can find a direct link to your order in the eBay Seller Hub in the magnalister order details.\n                    <\/li>\n                    <\/ul>\n                    <\/p>",
+                "desc": "\n                    <p>With this function you can initiate a refund for imported eBay orders. The requirement for this is participating in \u201eeBay Managed Payments\u201d.<\/p>\n\n                    <p>For each refund reason given by eBay you can define a webshop order status (\"+\" button) and assign a comment. This comment will be sent to the buyer and eBay.<\/p>\n                    <p>\n                    <strong>&ldquo;Shop order status&rdquo;<\/strong><br>\n                    Select an order status from your web shop that will initiate a refund to the buyer.\n                    <\/p>\n                    <p>\n                    <strong>&ldquo;Reason for refund&rdquo;<\/strong><br>\n                    Select a refund reason given by eBay here.\n                    &ldquo;Remarks for the refund&rdquo;\n                    <\/p><p>\n\n                    Enter a comment, which is transmitted together with the refund to the buyer and eBay.\n                    <\/p>\n                    <p>\n\n                    <strong>Important notes:<\/strong><br>\n                    <ul>\n                    <li>magnalister does not support partial refunds. If you have an order with more than one item, only the refund of the entire order can be initiated via magnalister.<\/li><li>Orders that contain several different items can only be refunded via magnalister if you have activated the option &quot;Import Only &quot;Paid&quot;-marked Orders&quot;.\n<\/li><li>\nIf you use &quot;Order Summary&quot;, we cannot be sure that the order in the store is composed in the same way as on eBay. In this case, orders with more than one item cannot be refunded via magnalister.\n                                        <\/li><li>\n                    Solution: A partial refund should be made directly in the eBay Seller Hub. You can find a direct link to your order in the eBay Seller Hub in the magnalister order details.\n                    <\/li>\n                    <\/ul>\n                    <\/p>",
                 "key": "ebay.refundconfig",
                 "type": "extern",
                 "procFunc": "mlEbayRefundConfig",

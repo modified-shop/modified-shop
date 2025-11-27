@@ -28,7 +28,12 @@
                 "type": "selection",
                 "values": null
             },
-
+            "cancelreason": {
+                "label": "Bestellung stornieren - Grund",
+                "key": "_#_platform_#_.orderstatus.cancelreason",
+                "type": "selection",
+                "values": null
+            },
             "carrier.key.values":{
                 "key":"carrier.key.values._#_platform_#_",
                 "type":"hidden"

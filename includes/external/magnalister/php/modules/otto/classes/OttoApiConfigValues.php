@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -89,5 +89,27 @@ class OttoApiConfigValues extends MagnaCompatibleApiConfigValues {
         }
 
         return $result;
+    }
+
+    /**
+     * Retrieves shipping profiles from the MagnaConnector service.
+     *
+     * @return array An array containing shipping profile data if retrieved successfully,
+     *               or a default array with an error message if the request fails.
+     */
+    public function getShippingProfiles() {
+        try {
+            $result = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'GetShippingProfiles'
+            ));
+            if (isset($result['DATA'])) {
+                return $result['DATA'];
+            }
+        } catch (MagnaException $e) {
+        }
+
+        return array(
+            'noselection' => 'The magnalister-Service-Layer reports an error. Your request could not be processed.'
+        );
     }
 }

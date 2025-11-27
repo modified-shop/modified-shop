@@ -72,7 +72,13 @@
                 "type": "selection",
                 "desc": "Etsy delivery profile  contain delivery information:<br \/><ul><li>Origin country (where you send from),<\/li><li>Destination country or region,<\/li><li>Primary shipping costs (if the Item is shipped alone),<\/li><li>Secondary shipping costs (if the Item is shipped together with others).<\/li><\/ul><br \/>An indication of the shipping service is not included.",
                 "values": null
+            },
+            "processingprofile" : {
+                "label": "Etsy Processing Profiles",
+                "key": "_#_platform_#_.ProcessingProfile",
+                "type": "selection",
+                "desc": "A Processing Profile defines how and when your order and its product will be prepared and shipped to the customer. In Etsy this includes options like:\n<ul>\n    <li>\"<strong>Ready to Ship<\/strong>\" - the product is already made and can be shipped immediately<\/li>\n    <li>\"<strong>Made to Order<\/strong>\" - the product is created after purchase<\/li>\n<\/ul>\n<strong>Creating Processing Profiles:<\/strong><br>\nNew Processing Profiles must be created directly on Etsy:<br>\n→ <a href=\"https:\/\/www.etsy.com\/your\/shops\/me\/tools\/shipping-profiles\" target=\"_blank\">https:\/\/www.etsy.com\/your\/shops\/me\/tools\/shipping-profiles<\/a><br>\nor in the Etsy portal under <strong>Settings → Shipping Settings<\/strong>.<br>\nAfter creating them on Etsy, wait a few minutes and refresh this page (F5) so the profiles appear here.<br><br>\nThe Processing Profile helps buyers understand the expected shipping time for each product.",
+                "values": null
             }
-        }
     }
 }

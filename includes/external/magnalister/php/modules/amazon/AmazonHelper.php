@@ -106,7 +106,7 @@ class AmazonHelper extends AttributesMatchingHelper {
 
         if ($prepare) {
 	        $dataFromDB = MagnaDB::gi()->fetchRow(eecho('
-				SELECT `data`, `topProductType`
+				SELECT `data`, `topProductType`, `DataId`
 				FROM ' . TABLE_MAGNA_AMAZON_APPLY . '
 				WHERE mpID = ' . $this->mpId . '
 					AND topMainCategory = "' . $category . '"
@@ -122,6 +122,32 @@ class AmazonHelper extends AttributesMatchingHelper {
             // fix for prepare because it was set as an attribute (but we have separate column in db)
             if (isset($dataDB['Attributes']) && (count($dataDB['Attributes']) == 1) && isset($dataDB['Attributes']['MerchantShippingGroupName'])) {
                 unset($dataDB['Attributes']['MerchantShippingGroupName']);
+            }
+
+            // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
+            $shopVariationData = null;
+
+            // PRIMARY: Try to load from longtext table (new format)
+            if (!empty($dataFromDB['DataId'])) {
+                $longtextRow = MagnaDB::gi()->fetchRow("
+			        SELECT Value
+			        FROM magnalister_amazon_prepare_longtext
+			        WHERE TextId = '" . MagnaDB::gi()->escape($dataFromDB['DataId']) . "'
+			          AND ReferenceFieldName = 'data'
+		        ");
+                if (!empty($longtextRow['Value'])) {
+                    $shopVariationData = $longtextRow['Value'];
+                }
+            }
+
+            // FALLBACK: If not found in longtext, try old format from data column
+            if (empty($shopVariationData) && isset($dataDB['ShopVariation'])) {
+                $shopVariationData = $dataDB['ShopVariation'];
+            }
+
+            // Set the final ShopVariation data
+            if (!empty($shopVariationData)) {
+                $dataDB['ShopVariation'] = $shopVariationData;
             }
 
 	        if (!empty($dataDB['ShopVariation'])) {
@@ -154,7 +180,7 @@ class AmazonHelper extends AttributesMatchingHelper {
     protected function getPreparedProductsData($category, $customIdentifier = '') {
 	// LIMIT 4096 to prevent unprocessable long data
         $dataFromDB = MagnaDB::gi()->fetchArray(eecho('
-				SELECT `data`, `topProductType`
+				SELECT `data`, `topProductType`, `DataId`
 				 FROM ' . TABLE_MAGNA_AMAZON_APPLY . '
 				 WHERE mpID = ' . $this->mpId . '
 				 AND topMainCategory = "' . $category . '"
@@ -165,6 +191,32 @@ class AmazonHelper extends AttributesMatchingHelper {
             $result = array();
             foreach ($dataFromDB as $preparedData) {
                 $data = unserialize(base64_decode($preparedData['data']));
+                $shopVariationData = null;
+
+                // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
+                // PRIMARY: Try to load from longtext table (new format)
+                if (!empty($preparedData['DataId'])) {
+                    $longtextRow = MagnaDB::gi()->fetchRow("
+                        SELECT Value
+                        FROM magnalister_amazon_prepare_longtext
+                        WHERE TextId = '" . MagnaDB::gi()->escape($preparedData['DataId']) . "'
+                          AND ReferenceFieldName = 'data'
+                    ");
+                    if (!empty($longtextRow['Value'])) {
+                        $shopVariationData = $longtextRow['Value'];
+                    }
+                }
+
+                // FALLBACK: If not found in longtext, try old format from data column
+                if (empty($shopVariationData) && isset($data['ShopVariation'])) {
+                    $shopVariationData = $data['ShopVariation'];
+                }
+
+                // Set the final ShopVariation data
+                if (!empty($shopVariationData)) {
+                    $data['ShopVariation'] = $shopVariationData;
+                }
+
                 if ($data['ShopVariation'] && isset($dataFromDB['topProductType']) && ($customIdentifier == $dataFromDB['topProductType'])) {
                     $result[] = json_decode($data['ShopVariation'], true);
                 }
@@ -178,18 +230,20 @@ class AmazonHelper extends AttributesMatchingHelper {
 
     public function getCustomIdentifiers($category, $prepare = false, $getDate = false)
     {
-	    return $this->getProductTypes($category);
+	    return $this->getCategoryDetails($category);
     }
 
-    protected function getAttributesFromMP($category, $additionalData = null, $customIdentifier = '')
+    public function getAttributesFromMP($category, $additionalData = null, $customIdentifier = '')
     {
         $data = false;
         try {
             $result = MagnaConnector::gi()->submitRequest(array(
                 'ACTION' => 'GetCategoryDetails',
                 'MARKETPLACEID' => $this->mpId,
-                'CATEGORY' => $category,
-                'PRODUCTTYPE' => $customIdentifier,
+                'DATA' => array(
+                    'PRODUCTTYPE' => $category,
+                    'INCLUDE_CONDITIONAL_RULES' => true
+                ),
             ));
             if (!empty($result['DATA'])) {
                 $data = $result['DATA'];
@@ -226,33 +280,6 @@ class AmazonHelper extends AttributesMatchingHelper {
         return $data;
     }
 
-    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $displayCategory = true, $customIdentifierHtml = '')
-    {
-        $customIdentifierHtml = '
-            <tr id="mpCustomIdentifierSelector">
-                <th>'.ML_LABEL_SUBCATEGORY.'</th>
-                <td class="input">
-                    <table class="inner middle fullwidth customIdentifierSelect">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <div class="hoodCatVisual" id="CustomIdentifierVisual">
-                                    <select id="CustomIdentifier" name="CustomIdentifier" style="width:100%">
-                                        '. $this->renderCustomIdentifierOptions() .'
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-                <td class="info"></td>
-            </tr>
-        ';
-        // amazon does not have category pick button
-        return parent::renderMatchingTable($url, $categoryOptions, false, $displayCategory, $customIdentifierHtml);
-    }
-
 	private function renderCustomIdentifierOptions()
 	{
 		$noProductTypeOption = '<option value="">'.ML_AMAZON_LABEL_APPLY_PLEASE_SELECT.'</option>' . "\n";
@@ -263,7 +290,7 @@ class AmazonHelper extends AttributesMatchingHelper {
 			return $noProductTypeOption;
 		}
 
-		$productTypes = $this->getProductTypes($category);
+		$productTypes = $this->getCategoryDetails($category);
 
 		$out = '';
 		foreach ($productTypes as $productTypeKey => $productType) {
@@ -308,7 +335,7 @@ class AmazonHelper extends AttributesMatchingHelper {
         return json_encode($matching['ShopVariation']);
     }
 
-    private function getProductTypes($category)
+    private function getCategoryDetails($category)
     {
         $productTypes = array();
 
@@ -320,11 +347,14 @@ class AmazonHelper extends AttributesMatchingHelper {
             $result = MagnaConnector::gi()->submitRequest(array(
                 'ACTION' => 'GetCategoryDetails',
                 'MARKETPLACEID' => $this->mpId,
-                'CATEGORY' => $category,
+                'DATA' => array(
+                    'PRODUCTTYPE'               => $category,
+                    'INCLUDE_CONDITIONAL_RULES' => true
+                ),
             ));
 
-            if (!empty($result['DATA']['productTypes'])) {
-                $productTypes = $result['DATA']['productTypes'];
+            if (!empty($result['DATA']['attributes'])) {
+                $productTypes = $result['DATA']['attributes'];
             }
 
         } catch (MagnaException $e) {
@@ -356,5 +386,68 @@ class AmazonHelper extends AttributesMatchingHelper {
         $variationTheme = json_decode($variationTheme, true);
 
         return is_array($variationTheme) ? key($variationTheme) : '';
+    }
+
+    /**
+     * Call VerifyAddItems API to detect mandatory attributes (attributes with missing values)
+     * Based on V3: magnalister/Codepool/80_Modules/010_Amazon/Model/Modul.php:389
+     *
+     * @param string $category Main Category (Product Type)
+     * @param string|null $variationTheme Variation Theme (optional)
+     * @return array Array of errors from API response
+     */
+    public static function verifyItemByMarketplaceToGetMandatoryAttributes($category, $variationTheme = null) {
+        if (empty($category) || $category === 'none') {
+            return array();
+        }
+
+        try {
+            // Cache key based on category and variation theme
+            static $cache = array();
+            $cacheKey = $category . (!empty($variationTheme) ? '_' . $variationTheme : '');
+
+            if (isset($cache[$cacheKey])) {
+                return $cache[$cacheKey];
+            }
+
+            // Prepare API request
+            $requestParams = array(
+                'ACTION' => 'VerifyAddItems',
+                'MODE'   => 'ATTRIBUTE_MATCHING',
+                'DATA'   => array(
+                    array(
+                        'MainCategory'    => $category,
+                        'variation_theme' => array(
+                            $variationTheme => array()
+                        ),
+                    )
+                )
+            );
+
+            $data = array();
+            try {
+                // Call API - expected to fail with validation errors
+                MagnaConnector::gi()->submitRequest($requestParams);
+            } catch (MagnaException $e) {
+                // Get errors from exception response
+                $response = $e->getResponse();
+                $data = $response;
+            }
+
+            // Extract errors array
+            $errors = isset($data['ERRORS']) && is_array($data['ERRORS']) ? $data['ERRORS'] : array();
+
+            // Cache result
+            $cache[$cacheKey] = $errors;
+
+            return $errors;
+
+        } catch (Exception $e) {
+            if (defined('MAGNA_DEBUG') && MAGNA_DEBUG) {
+                error_log('[AmazonHelper] verifyItemByMarketplaceToGetMandatoryAttributes Error: ' . $e->getMessage());
+            }
+        }
+
+        return array();
     }
 }

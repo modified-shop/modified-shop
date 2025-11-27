@@ -447,6 +447,7 @@ function VariationsEnabled(cID, viewElem) {
 		},
 		success: function(data) {
 			var msg;
+			data=data.trim();
 			if(data == 'true') msg='<?php echo ML_EBAY_NOTE_VARIATIONS_ENABLED ?>';
 			else msg='<?php echo ML_EBAY_NOTE_VARIATIONS_DISABLED ?>';
 			viewElem.html(msg);
@@ -468,9 +469,72 @@ function VariationsEnabled2(cID1, cID2, viewElem) {
 		},
 		success: function(data) {
 			var msg;
+			data=data.trim();
 			if(data == 'true') msg='<?php echo ML_EBAY_NOTE_VARIATIONS_ENABLED ?>';
 			else msg='<?php echo ML_EBAY_NOTE_VARIATIONS_DISABLED ?>';
 			viewElem.html(msg);
+		},
+		error: function() {
+		},
+		dataType: 'html'
+	});
+}
+
+// Variable to store the previous state of the AutoPay checkbox
+var autoPayPreviousState = false;
+
+function AutoPayEnabled(cID, viewElem) {
+	jQuery.ajax({
+		type: 'POST',
+		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+		data: {
+			'action': 'AutoPayEnabled',
+			'id': cID
+		},
+		success: function(data) {
+			data=data.trim();
+			if(data == 'true' || cID == '') {
+				$('#autoPayRow').show();
+				// If coming back to an AutoPay enabled category, restore previous state if it was true
+				if (autoPayPreviousState) {
+					$('#autoPay').prop('checked', true);
+				}
+			} else {
+				// Store the current state before hiding
+				autoPayPreviousState = $('#autoPay').prop('checked');
+				$('#autoPayRow').hide();
+				$('#autoPay').prop('checked', false);
+			}
+		},
+		error: function() {
+		},
+		dataType: 'html'
+	});
+}
+
+function AutoPayEnabled2(cID1, cID2, viewElem) {
+	jQuery.ajax({
+		type: 'POST',
+		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+		data: {
+			'action': 'AutoPayEnabled2',
+			'id1': cID1,
+			'id2': cID2
+		},
+		success: function(data) {
+			data=data.trim();
+			if(data == 'true' || (cID1 == '' && cID2 == '')) {
+				$('#autoPayRow').show();
+				// If coming back to an AutoPay enabled category, restore previous state if it was true
+				if (autoPayPreviousState) {
+					$('#autoPay').prop('checked', true);
+				}
+			} else {
+				// Store the current state before hiding
+				autoPayPreviousState = $('#autoPay').prop('checked');
+				$('#autoPayRow').hide();
+				$('#autoPay').prop('checked', false);
+			}
 		},
 		error: function() {
 		},
@@ -651,7 +715,7 @@ $(document).ready(function() {
 		if (isset($_POST['iConditionID'])) {
 			$iConditionID = $_POST['iConditionID'];
 		}
-		
+
 		$this->isStoreCategory = (array_key_exists('isStoreCategory', $_POST))
 			? (($_POST['isStoreCategory'] == 'false')
 				? false
@@ -714,6 +778,17 @@ $(document).ready(function() {
 				} else {
 					return (    VariationsEnabled($id1)
 					         && VariationsEnabled($id2)) ?'true':'false';
+				}
+			}
+			case 'AutoPayEnabled': {
+				return AutoPayEnabled($id)?'true':'false';
+			}
+			case 'AutoPayEnabled2': {
+				if (empty($id2)) {
+					return AutoPayEnabled($id1)?'true':'false';
+				} else {
+					return (    AutoPayEnabled($id1)
+					         || AutoPayEnabled($id2)) ?'true':'false';
 				}
 			}
 			case 'ProductRequired': {

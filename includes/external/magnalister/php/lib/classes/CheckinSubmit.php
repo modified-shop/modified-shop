@@ -28,25 +28,25 @@ abstract class CheckinSubmit {
 	protected $_magnashopsession = array();
 	protected $magnaConfig = array();
 	protected $url = array();
-	
+
 	protected $settings = array();
-	
+
 	protected $selection = array();
 	protected $variationCount = 0;
 	protected $badItems = array();
 	protected $disabledItems = array();
-	
+
 	protected $submitSession = array();
 	protected $initSession = array();
-	
+
 	protected $ajaxReply = array();
-	
+
 	protected $lastRequest = array();
-	
+
 	protected $simpleprice = null;
-	
+
 	protected $ignoreErrors = false;
-	
+
 	private $_timer;
 
 	protected $summaryAddText = ''; # extra Text, je nach Plattform (momentan belegt bei eBay und Hitmeister)
@@ -55,15 +55,15 @@ abstract class CheckinSubmit {
 	protected $lastResponse = array();
 
 	protected $additionalSplitProducts = array();
-	
+
 	public function __construct($settings = array()) {
 		global $_MagnaSession, $_MagnaShopSession, $magnaConfig, $_magnaQuery, $_url;
-		
+
 		$this->_timer = microtime(true);
-		
+
 		$this->mpID = $_MagnaSession['mpID'];
 		$this->marketplace = $settings['marketplace'];
-		
+
 		$this->settings = array_merge(array(
 			'itemsPerBatch'   => 50,
 			'selectionName'   => 'checkin',
@@ -81,17 +81,17 @@ abstract class CheckinSubmit {
 			'mode' => (isset($_magnaQuery['mode']) ? $_magnaQuery['mode'] : ''),
 			'view' => (isset($_magnaQuery['view']) ? $_magnaQuery['view'] : '')
 		);
-		
+
 		$this->simpleprice = new SimplePrice();
 		/* /!\ Muss in erbenden Klassen entsprechend des Marketplaces gesetzt werden! /!\ */
 		$this->simpleprice->setCurrency($this->settings['currency']);
-		
+
 		initArrayIfNecessary($this->_magnasession, array($this->mpID, 'submit'));
 		$this->submitSession = &$this->_magnasession[$this->mpID]['submit'];
 		initArrayIfNecessary($this->_magnasession, array($this->mpID, 'init'));
 		$this->initSession = &$this->_magnasession[$this->mpID]['init'];
 	}
-	
+
 	public function init($mode, $items = -1) {
 		if ($items == -1) {
 			$items = (int)MagnaDB::gi()->fetchOne('
@@ -118,9 +118,9 @@ abstract class CheckinSubmit {
 		$this->submitSession['initialmode'] = $mode;
 		#echo print_m($this, __METHOD__.'('.__LINE__.')');
 	}
-	
+
 	abstract public function makeSelectionFromErrorLog();
-	
+
 	protected function initSelection($offset, $limit) {
 		$newSelectionResult = MagnaDB::gi()->query('
 		    SELECT ms.pID, ms.data
@@ -158,7 +158,7 @@ abstract class CheckinSubmit {
 			);
 		}
 	}
-	
+
 	/**
 	 * Verify the data before it is processed. 
 	 * Allows fixing of missing data or removing the product before bad things may happen.
@@ -175,14 +175,14 @@ abstract class CheckinSubmit {
 		}
 		return $product;
 	}
-	
+
 	protected function setUpMLProduct() {
 		// reset everything to the defaults
 		MLProduct::gi()->resetOptions();
-		
+
 		// Set the language
 		MLProduct::gi()->setLanguage($this->settings['language']);
-		
+
 		// Set a db matching (e.g. 'ManufacturerPartNumber')
 		/*
 		MLProduct::gi()->setDbMatching('ManufacturerPartNumber', array (
@@ -191,24 +191,24 @@ abstract class CheckinSubmit {
 			'Alias' => 'products_id',
 		));
 		//*/
-		
+
 		// Set the list of allowed options_ids.
 		//MLProduct::gi()->setVariationDimensionBlacklist(array('1'));
 		// or
 		//MLProduct::gi()->setVariationDimensionWhitelist(array('1', '2', ...));
-		
+
 		// Use multi dimensional variations
 		// MLProduct::gi()->useMultiDimensionalVariations(true);
 	}
-	
+
 	protected function populateSelectionWithData() {
 		$this->setUpMLProduct();
-		
+
 		foreach ($this->selection as $pID => &$data) {
 			if (!isset($data['submit']) || !is_array($data['submit'])) {
 				$data['submit'] = array();
 			}
-			
+
 			$product = $this->getProduct($pID);
 			if (!$this->checkSingleItem($pID, $product, $data) || !is_array($product)) {
 				$this->badItems[] = $pID;
@@ -272,34 +272,42 @@ abstract class CheckinSubmit {
 		}
 		return empty($failed);
 	}
-	
+
 	abstract protected function appendAdditionalData($pID, $product, &$data);
 	abstract protected function filterSelection();
 
 	abstract protected function generateRequestHeader();
-	
+
 	abstract protected function generateRedirectURL($state);
 
 	protected function processException($e) {}
 
 	protected function sendRequest($abort = false, $echoRequest = false) {
 		$retResponse = array ();
-		
+
 		$request = $this->generateRequestHeader();
 		$request['SUBSYSTEM'] = MagnaConnector::gi()->getSubSystem();
 		$request['DATA'] = array();
-		
+
 		foreach ($this->selection as $pID => &$data) {
 			$request['DATA'][] = $data['submit'];
 		}
 		arrayEntitiesToUTF8($request['DATA']);
-		
+
+		// Ensure DATA is not empty before sending request
+		if (empty($request['DATA'])) {
+			return array(
+				'STATUS' => 'ERROR',
+				'ERRORMESSAGE' => 'Empty DATA field in request'
+			);
+		}
+
 		$this->preSubmit($request);
-		
+
 		$this->lastRequest = $request;
-		
+
 		$this->ajaxReply['ignoreErrors'] = true;
-		
+
 		try {
 			/* Hau raus! :D */
 			if ($abort || $echoRequest) {
@@ -313,7 +321,7 @@ abstract class CheckinSubmit {
 			#sleep(5);
 			#$checkInResult = array ('STATUS' => 'SUCCESS', 'ERRORS' => array());
 			//$this->ajaxReply['result'] = $checkInResult;
-			
+
 			$this->processSubmitResult($checkInResult);
 			if (!array_key_exists('state', $this->submitSession)) {
 				$this->submitSession['state'] = array();
@@ -326,7 +334,7 @@ abstract class CheckinSubmit {
 			}
 			$this->submitSession['state']['success'] += count($this->selection) - $this->variationCount;
 			$this->submitSession['state']['failed']  += count($this->badItems);
-			
+
 			if (isset($this->submitSession['api'])) {
 				unset($this->submitSession['api']);
 			}
@@ -337,14 +345,14 @@ abstract class CheckinSubmit {
 
 			$this->ajaxReply['exception'] = $e->getMessage();
 			$this->submitSession['api']['exception'] = $e->getErrorArray();
-			
+
 			$subsystem = $e->getSubsystem();
 			if (($subsystem != 'Core') && ($subsystem != 'PHP') && ($subsystem != 'Database')) {
 				$this->ajaxReply['ignoreErrors'] = $this->ignoreErrors;
 			} else {
 				$this->ajaxReply['ignoreErrors'] = false;
 			}
-			
+
 			//$this->ajaxReply['request'] = $this->submitSession['api']['exception']['REQUEST'];
 			if (is_array($this->submitSession['api']['exception']) && array_key_exists('REQUEST', $this->submitSession['api']['exception'])) {
 				unset($this->submitSession['api']['exception']['REQUEST']);
@@ -354,14 +362,14 @@ abstract class CheckinSubmit {
 				'mode' => $this->realUrl['mode']
 			));
 			$retResponse = $this->submitSession['api']['exception'];
-			
+
 			$this->processException($e);
 		}
 		return $retResponse;
 	}
-	
+
 	protected function preSubmit(&$request) {}
-	
+
 	abstract protected function postSubmit();
 	abstract protected function processSubmitResult($result);
 
@@ -381,19 +389,19 @@ abstract class CheckinSubmit {
 		$this->initSelection(0, $this->settings['itemsPerBatch']);
 		$this->ajaxReply['ignoreErrors'] = array_key_exists('ignoreErrors', $this->ajaxReply) ? $this->ajaxReply['ignoreErrors'] : $this->ignoreErrors;
 		$this->ajaxReply['itemsPerBatch'] = $this->settings['itemsPerBatch'];
-		
+
 		/* Spaetestens beim 2. Durchgang muessen die Artukel hinzugefuegt werden,
 		   da sie sonst die Artikel des 1. Durchganges zuvor loeschen wuerden. */
 		if ($this->submitSession['state']['submitted'] > 0) {
 			$this->submitSession['mode'] = 'ADD';
 		}
-		
+
 		$this->submitSession['state']['submitted'] += count($this->selection);
 
 		$this->populateSelectionWithData();
 		$this->afterPopulateSelectionWithData();
 		$this->filterSelection();
-		
+
 		/* Wenn Artikel deaktiviert wurden (nicht fehlgeschlagen, z. B. Artikelanzahl == 0), 
 		   werden sie nicht mit uebermittelt */
 		$this->submitSession['state']['total'] -= count($this->disabledItems);
@@ -402,7 +410,7 @@ abstract class CheckinSubmit {
 		echo print_m($this->selection);
 		die();
 		*/
-		
+
 		if (!empty($this->selection)) {
 			MagnaConnector::gi()->setTimeOutInSeconds(600);
 			@set_time_limit(600);
@@ -412,7 +420,7 @@ abstract class CheckinSubmit {
 		} else {
 			$this->submitSession['state']['failed'] += count($this->badItems);
 		}
-		
+
 		if (isset($this->submitSession['selectionFromErrorLog']) && !empty($this->submitSession['selectionFromErrorLog'])) {
 			$this->submitSession['selectionFromErrorLog'] = array_diff($this->submitSession['selectionFromErrorLog'], $this->badItems);
 		}
@@ -428,7 +436,7 @@ abstract class CheckinSubmit {
 			$this->ajaxReply['api']['customhtml'] = $this->generateCustomErrorHTML();
 			/* ... in the following list. */
 			$this->ajaxReply['api']['html'] = MagnaError::gi()->exceptionsToHTML(false);
-			
+
 			#print_r($this->ajaxReply['api']['exception']);
 		}
 
@@ -447,7 +455,7 @@ abstract class CheckinSubmit {
 				} else {
 					$this->ajaxReply['redirect'] = $this->generateRedirectURL('success');
 				}
-				
+
 				if ($this->submitSession['state']['success'] > 0) {
 					$this->postSubmit();
 					if (isset($this->submitSession['selectionFromErrorLog'])) {
@@ -459,10 +467,10 @@ abstract class CheckinSubmit {
 				$this->ajaxReply['proceed'] = $this->submitSession['proceed'] = true;
 			}
 		}
-		
+
 		$this->ajaxReply['timer'] = microtime2human(microtime(true) -  $this->_timer);
 		$this->ajaxReply['memory'] = memory_usage();
-		
+
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');
 		header('Content-type: application/json');
@@ -481,15 +489,15 @@ abstract class CheckinSubmit {
 		*/
 		return array();
 	}
-	
+
 	public function getLastRequest() {
 		return $this->lastRequest;
 	}
-	
+
 	public function renderBasicHTMLStructure() {
 		//$this->initSelection(0, $this->settings['itemsPerBatch']);
 		//$this->populateSelectionWithData();
-		
+
 		//$html = print_m($this->selection, '$this->selection').'
 		$html = '
 			<div id="checkinSubmit">
@@ -510,9 +518,9 @@ abstract class CheckinSubmit {
 					<div style="display: none; text-align: left; background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.2); border-radius: 3px 3px 3px 3px; margin-bottom: 1em; padding: 0 7px 7px;" id="checkinSubmitDebug">'.print_m($this->submitSession, 'submitSession').'</div>
 				 </div>
 			 </div>
-			
+
 		';
-		
+
 		ob_start();?>
 <script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/classes/CheckinSubmit.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
 <script type="text/javascript">/*<![CDATA[*/
@@ -538,9 +546,9 @@ $(document).ready(function() {
 		ob_end_clean();
 		return $html;
 	}
-		
+
 	protected function afterSendRequest() {
-		
+
 	}
 
 	/**
@@ -569,9 +577,9 @@ $(document).ready(function() {
 				) {
 					continue;
 				}
-	
+
 				$matchedAttributeFormatted[$matchedAttribute['Code']][$mpAttributeCode] = array();
-	
+
 				// Go through all its values.
 				foreach ($matchedAttribute['Values'] as $matchedAttributeValue) {
 					// Check if that value is already added. If it is don`t add it again.
@@ -667,10 +675,10 @@ $(document).ready(function() {
 			}
 			$variantForSubmit['ItemTitle'] .= ' : ' . join(', ', $masterProductTitleSuffix);
 		}
-		
+
 		$variationsForSubmit[$masterProductSku][] = $variantForSubmit;
 	}
-	
+
 	protected function shouldSendShopData() 
 	{
 		return false;

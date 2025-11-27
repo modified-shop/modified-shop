@@ -21,14 +21,14 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 class MagnaCompatibleErrorView {
-	private $errorLog = array();
-	
-	private $settings = array();
-	private $sort = array();
-	private $currentPage = 1;
-	private $pages = 1;
-	
-	private $url = array();
+	protected $errorLog = array();
+
+    protected $settings = array();
+    protected $sort = array();
+    protected $currentPage = 1;
+    protected $pages = 1;
+
+    protected $url = array();
 	
 	protected $mpID = 0;
 	protected $marketplace = '';
@@ -110,7 +110,7 @@ class MagnaCompatibleErrorView {
 		$this->offset = ($this->currentPage - 1) * $this->settings['itemLimit'];
 
 		$this->errorLog = MagnaDB::gi()->fetchArray('
-		    SELECT al.id, al.BatchId, al.origin, al.dateadded, al.errormessage, al.recommendation, al.additionaldata
+		    SELECT al.id, al.BatchId, al.origin, al.dateadded, al.ErrorCode, al.errormessage, al.recommendation, al.additionaldata
 		      FROM '.TABLE_MAGNA_COMPAT_ERRORLOG.' al
 		     WHERE al.mpID=\''.$this->mpID.'\'
 		  GROUP BY al.id
@@ -188,6 +188,7 @@ class MagnaCompatibleErrorView {
 					'BatchId' => !empty($item['BatchId']) ? $item['BatchId'] : null,
 					'origin' => isset($item['Origin']) ? $item['Origin'] : '',
 					'dateadded' => $item['DateAdded'],
+					'ErrorCode' => !empty($item['ErrorCode']) ? $item['ErrorCode'] : null,
 					'errormessage' => $item['ErrorMessage'],
 					'additionaldata' => serialize($item['ErrorData']),
 				);
@@ -206,7 +207,7 @@ class MagnaCompatibleErrorView {
 		}
 	}
 	
-	private function sortByType($type) {
+	protected function sortByType($type) {
 		return '
 			<span class="nowrap">
 				<a href="'.toURL($this->url, array('sorting' => $type.'')).'" title="'.ML_LABEL_SORT_ASCENDING.'" class="sorting">

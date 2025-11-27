@@ -1,0 +1,277 @@
+/**
+ * V2 Custom Styles for React-Select Dropdowns
+ *
+ * Overrides default heights and widths for attribute selectors
+ */
+
+/* Attribute Selector - Main dropdown */
+/*.ml-amazon-attr-selector__control {*/
+/*  height: 23px !important;*/
+/*  min-height: 23px !important;*/
+/*}*/
+
+.mlbtn.action {
+    background-image: none !important;
+    background-color: rgb(220, 53, 69);
+    height: 39px !important;
+    width: 39px !important;
+    color: white;
+    border: none;
+}
+
+input.database-input,
+input.freetext-input {
+    height: 39px !important;
+}
+select.amazon-value-selector,
+.matching-row select,
+.shop-value-select,
+.amazon-matching-select {
+    border: 1px solid rgb(206, 212, 218) !important;
+    height: 39px !important;
+    color: gray !important;
+    font-size: larger !important;
+}
+
+div.database-value-input-container {
+    margin: 8px !important;
+}
+
+select.amazon-value-selector:focus,
+.matching-row select:focus,
+.shop-value-select:focus,
+.amazon-matching-select:focus {
+    border-color: #5b9dd9 !important;
+    box-shadow: 0 0 2px rgba(91, 157, 217, 0.8) !important;
+    outline: none !important;
+}
+
+/* Value Matching Dropdowns - Compact V2 Style */
+select.amazon-value-selector,
+.matching-row select,
+.shop-value-select,
+.amazon-matching-select {
+    padding: 0 8px !important;
+    font-size: 12px !important;
+    color: #333 !important;
+    background-color: #fff !important;
+}
+
+select.amazon-value-selector:disabled,
+.matching-row select:disabled,
+.shop-value-select:disabled,
+.amazon-matching-select:disabled {
+    background-color: #f5f5f5 !important;
+    cursor: not-allowed !important;
+}
+
+/* React-Select dropdowns in Value Matching */
+.ml-amazon-shop-val__control,
+.ml-amazon-match-val__control {
+    min-height: 39px !important;
+    height: 39px !important;
+    border: 1px solid #ddd !important;
+    font-size: 12px !important;
+    background-color: #fff !important;
+}
+
+.ml-amazon-shop-val__control:hover,
+.ml-amazon-match-val__control:hover {
+    border-color: #aaa !important;
+}
+
+.ml-amazon-shop-val__control--is-focused,
+.ml-amazon-match-val__control--is-focused {
+    border-color: #5b9dd9 !important;
+    box-shadow: 0 0 2px rgba(91, 157, 217, 0.8) !important;
+}
+
+.ml-amazon-shop-val__control--is-disabled,
+.ml-amazon-match-val__control--is-disabled {
+    background-color: #f5f5f5 !important;
+}
+
+.ml-amazon-shop-val__value-container,
+.ml-amazon-match-val__value-container {
+    height: 39px !important;
+    padding: 0 8px !important;
+}
+
+.ml-amazon-shop-val__indicators,
+.ml-amazon-match-val__indicators {
+    height: 39px !important;
+}
+
+.ml-amazon-shop-val__indicator,
+.ml-amazon-match-val__indicator {
+    padding: 4px !important;
+}
+
+.ml-amazon-shop-val__single-value,
+.ml-amazon-match-val__single-value {
+    font-size: 12px !important;
+    color: #333 !important;
+}
+
+.ml-amazon-shop-val__placeholder,
+.ml-amazon-match-val__placeholder {
+    font-size: 12px !important;
+    color: #999 !important;
+}
+
+.ml-amazon-shop-val__input,
+.ml-amazon-match-val__input {
+    font-size: 12px !important;
+}
+
+.ml-amazon-shop-val__menu,
+.ml-amazon-match-val__menu {
+    font-size: 12px !important;
+    z-index: 9999 !important;
+    border: 1px solid #ddd !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+.ml-amazon-shop-val__option,
+.ml-amazon-match-val__option {
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+}
+
+.ml-amazon-shop-val__option--is-selected,
+.ml-amazon-match-val__option--is-selected {
+    background-color: #5b9dd9 !important;
+    color: #fff !important;
+}
+
+.ml-amazon-shop-val__option--is-focused,
+.ml-amazon-match-val__option--is-focused {
+    background-color: #e8f4f8 !important;
+    color: #333 !important;
+}
+.ml-amazon-attr-selector__value-container {
+    padding: 4px 8px !important;
+}
+
+.ml-amazon-attr-selector__menu {
+    min-width: 350px !important;
+    max-height: 280px !important;
+    z-index: 9999 !important;
+}
+
+.ml-amazon-attr-selector__menu-list {
+    max-height: 250px !important;
+}
+
+.ml-amazon-attr-selector__option {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+}
+
+/* Optional Attribute Selector */
+.ml-amazon-optional-attr__control {
+    min-height: 34px !important;
+    height: auto !important;
+}
+
+.ml-amazon-optional-attr__value-container {
+    padding: 4px 8px !important;
+}
+
+.ml-amazon-optional-attr__menu {
+    min-width: 400px !important;
+    max-height: 320px !important;
+    z-index: 9999 !important;
+}
+
+.ml-amazon-optional-attr__menu-list {
+    max-height: 290px !important;
+}
+
+.ml-amazon-optional-attr__option {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+}
+
+/* Compact mode for V2 */
+.ml-amazon-attr-selector__single-value,
+.ml-amazon-optional-attr__single-value {
+    font-size: 13px !important;
+}
+
+.ml-amazon-attr-selector__placeholder,
+.ml-amazon-optional-attr__placeholder {
+    font-size: 13px !important;
+}
+
+/* Input field inside dropdown */
+.ml-amazon-attr-selector__input-container,
+.ml-amazon-optional-attr__input-container {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Dropdown indicator (arrow) */
+.ml-amazon-attr-selector__indicator,
+.ml-amazon-optional-attr__indicator {
+    padding: 6px !important;
+}
+
+/* V2 FIX: Hide Value Matching table when attribute_value, freetext, or database_value is selected */
+/* These options have their own dedicated inputs and don't need value matching tables */
+.attribute-amazon-value ~ .value-matching-table-container,
+.attribute-freetext-input ~ .value-matching-table-container,
+.attribute-database-input ~ .value-matching-table-container {
+    display: none !important;
+}
+
+/* Ensure dropdowns can appear above table elements */
+.ml-js-attribute-matching {
+    position: relative;
+    z-index: 1;
+}
+
+.ml-js-attribute-matching td {
+    overflow: visible !important;
+}
+
+.ml-js-attribute-matching .attribute-input-column {
+    position: relative;
+    overflow: visible !important;
+}
+
+/* React-Select dropdown menu */
+.ml-amazon-attr-selector__menu {
+    z-index: 9999 !important;
+    position: absolute !important;
+}
+
+.ml-amazon-attr-selector__menu-list {
+    max-height: 300px !important;
+}
+
+/* Ensure dropdown portal renders correctly */
+.ml-amazon-attr-selector__menu-portal {
+    z-index: 9999 !important;
+}
+
+/* Ensure wrapper element with display: contents doesn't block pointer events */
+#amazon-variations-root {
+    pointer-events: none !important; /* Wrapper doesn't capture events */
+}
+
+/* Re-enable pointer events for actual content */
+#amazon-variations-root > * {
+    pointer-events: auto !important; /* React content captures events */
+}
+
+/* Required field indicator - Pure CSS bullet (no encoding issues) */
+.required-indicator {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background-color: #e31a1c;
+    border-radius: 50%;
+    margin-left: 5px;
+    vertical-align: middle;
+}

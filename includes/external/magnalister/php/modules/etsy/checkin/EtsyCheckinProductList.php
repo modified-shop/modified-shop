@@ -85,6 +85,7 @@ class EtsyCheckinProductList extends MLProductListEtsyAbstract{
 				)."
 					AND mcc.mpID = '".$this->aMagnaSession['mpID']."'
 					AND mcc.Primarycategory<>''
+					AND mcc.Verified = 'OK'
 				"
 			),
 			ML_Database_Model_Query_Select::JOIN_TYPE_INNER

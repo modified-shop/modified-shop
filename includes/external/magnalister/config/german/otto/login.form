@@ -3,7 +3,7 @@
         "headline": "_#_platformName_#_ Zugangsdaten",
         "fields": [
             {
-                "label": "OTTO API-Token",
+                "label": "OTTO API Zugriff",
                 "key": "_#_platform_#_.token",
                 "desc": "",
                 "type": "extern",

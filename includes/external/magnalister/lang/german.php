@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2024 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -463,6 +463,7 @@ define('ML_ERROR_LABEL_LEVEL', 'Level');
 define('ML_ERROR_LABEL_TYPE', 'Typ');
 define('ML_ERROR_LABEL_SUBSYSTEM', 'Subsystem');
 define('ML_ERROR_LABEL_MESSAGE', 'Meldung');
+define('ML_ERROR_SAVE', 'Fehler beim Speichern');
 define('ML_ERROR_CANNOT_CONNECT_TO_SERVICE_LAYER_HEADLINE', 'Fehler bei Anfrage an den magnalister-Service Layer');
 define('ML_ERROR_CANNOT_CONNECT_TO_SERVICE_LAYER_TEXT', 'Der magnalister-Service-Layer ist entweder nicht erreichbar oder die
 	Anfrage schlug fehl. Sollte der Fehler weiterhin bestehen wenden Sie sich bitte an den Support von '.MAGNA_SUPPORT_URL.'.'
@@ -635,6 +636,7 @@ define('ML_GENERIC_ORDER_THROUGH_COMPARISON_SHOPPING', 'Der Kunde der diese Best
 define('ML_GENERIC_STATUS_LOGIN_SAVED', 'Die Zugangsdaten wurden erfolgreich an den magnalister-Service &uuml;bermittelt.');
 define('ML_GENERIC_STATUS_LOGIN_SAVEERROR','Die Zugangsdaten konnten nicht an den magnalister-Service &uuml;bermittelt werden.');
 define('ML_GENERIC_DELETE_LISTINGS', 'M&ouml;chten Sie die markierten Produkte wirklich bei %s l&ouml;schen?');
+define('ML_GENERIC_DELETE_LISTINGS_ASYNCHRONIOUS', 'M&ouml;chten Sie die markierten Produkte wirklich bei %s l&ouml;schen? Bitte beachten Sie, dass die Verarbeitung bis zu einer Stunde dauern kann, bevor die &Auml;nderungen auf dem Marktplatz sichtbar werden.');
 define('ML_GENERIC_DELETE_ERROR_MESSAGES', 'M&ouml;chten Sie wirklich die markierten Fehlermeldungen unwiderruflich l&ouml;schen?');
 define('ML_GENERIC_CONFIRM_DELETE_ENTIRE_ERROR_PROTOCOL', 'M&ouml;chten Sie wirklich das gesamte Fehlerprotokoll unwiderruflich l&ouml;schen?');
 
@@ -716,6 +718,7 @@ define('ML_AMAZON_LABEL_APPLY_PLEASE_SELECT', 'Bitte w&auml;hlen');
 define('ML_AMAZON_LABEL_APPLY_REQUIRED_ATTRIBUTES', 'Pflichtattribute');
 define('ML_AMAZON_LABEL_APPLY_ATTRIBUTES', 'Attribute');
 define('ML_AMAZON_LABEL_APPLY_BROWSENODES', 'Browsenodes');
+define('ML_AMAZON_LABEL_VARIATION_THEME', 'Variationsdesign');
 define('ML_AMAZON_LABEL_APPLY_BULLETPOINTS', 'Bulletpoints');
 define('ML_AMAZON_LABEL_APPLY_KEYWORDS', 'Allgemeine Schl&uuml;sselw&ouml;rter');
 define('ML_AMAZON_INFO_APPLY_KEYWORDS', '<h3>Produkt-Ranking mit Amazon Schl&uuml;sselw&ouml;rtern optimieren</h3>
@@ -761,6 +764,8 @@ define('ML_AMAZON_CATEGORY_MATCHED_ALL', 'Alle erfolgreich vorbereitet');
 define('ML_AMAZON_CATEGORY_MATCHED_INCOMPLETE', 'Unvollst&auml;ndig vorbereitet');
 define('ML_AMAZON_ITEMS_PREPARED', 'Daten sind vorbereitet');
 define('ML_AMAZON_ITEMS_NOT_PREPARED', 'Daten sind nicht vorbereitet');
+define('ML_AMAZON_LABEL_PREPARED_SUCCESS', 'Artikel wurde erfolgreich vorbereitet und kann hochgeladen werden.');
+define('ML_AMAZON_LABEL_PREPARED_SUCCESS_MULTI', 'Artikel wurden erfolgreich vorbereitet und k&ouml;nnen hochgeladen werden.');
 define('ML_AMAZON_BUTTON_PREPARE', 'Beantragen vorbereiten');
 define('ML_AMAZON_BUTTON_SELECTED', 'Ausgew&auml;hlte &uuml;bertragen');
 define('ML_AMAZON_BUTTON_APPLY_DELETE', 'Vorbereitung aufheben');
@@ -1367,6 +1372,9 @@ define('ML_EBAY_SITE', 'eBay-Marketplace, auf dem Sie einstellen.');
 define('ML_EBAY_PRIVATE_LISTING_SHORT', 'Privat-Listing');
 define('ML_EBAY_PRIVATE_LISTING_YES_NO', 'K&auml;ufer / Bieterliste nicht &ouml;ffentlich');
 define('ML_EBAY_PRIVATE_LISTING', 'Wenn aktiv, kann die K&auml;ufer / Bieterliste nicht von Dritten eingesehen werden');
+define('ML_EBAY_AUTOPAY_SHORT', 'AutoPay');
+define('ML_EBAY_AUTOPAY_YES_NO', 'Sofort-Kaufen-Artikel m&uuml;ssen sofort bezahlt werden');
+define('ML_EBAY_AUTOPAY', 'Wenn aktiviert, m&uuml;ssen Sofort-Kaufen-Artikel sofort bezahlt werden.');
 define('ML_EBAY_BESTPRICE_SHORT', 'Preisvorschlag');
 define('ML_EBAY_BESTPRICE_YES_NO', '\'Preisvorschlag\' aktivieren (nur f&uuml;r Artikel ohne Varianten)');
 define('ML_EBAY_BESTPRICE', 'Wenn aktiv, k&ouml;nnen K&auml;ufer eigene Preise vorschlagen');
@@ -1681,6 +1689,9 @@ define('ML_GENERAL_VARMATCH_RESET_MATCHING', 'Matchen aufheben');
 define('ML_GENERAL_VARMATCH_MANUAL_MATCHING', 'Eigene Angaben machen');
 define('ML_GENERAL_VARMATCH_SHOP_VALUE', 'Shop-Wert');
 define('ML_GENERAL_VARMATCH_RESET_INFO', 'Wollen Sie das Matching wirklich aufheben?');
+define('ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM', 'Alle zugeordneten Attribute für diese Kategorie zurücksetzen?');
+define('ML_GENERAL_VARMATCH_RESET_SUCCESS', 'Attributzuordnung erfolgreich zurückgesetzt');
+define('ML_GENERAL_VARMATCH_RESET_ERROR', 'Fehler');
 define('ML_GENERAL_VARMATCH_FREE_TEXT_LABEL', 'Eigene Angaben machen');
 define('ML_GENERAL_VARMATCH_ADDITIONAL_ATTRIBUTE_LABEL', 'Eigene Attribute');
 define('ML_GENERAL_VARMATCH_ADDITIONAL_CATEGORY_LABEL', 'Additional category');
@@ -1723,14 +1734,63 @@ define('ML_GENERAL_VARMATCH_ATTRIBUTE_VALUE_DELETED_ON_SHOP', 'Dieses Attributwe
 Bitte matchen Sie bei Bedarf erneut auf ein geeignetes shop Attribut.');
 define('ML_GENERAL_VARMATCH_CATEGORY_WITHOUT_ATTRIBUTES_INFO', 'F&uuml;r die ausgew&auml;hlte Kategorie unterst&uuml;tzt %marketplace% keine Attribute.');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_VALUE', 'W&auml;hle Datenbank-Werte (f&uuml;r Experten)');
-define('ML_GENERAL_VARMATCH_CHOOSE_DB_TABLE', 'Choose table: ');
-define('ML_GENERAL_VARMATCH_CHOOSE_DB_COLUMN', 'Choose column: ');
+define('ML_GENERAL_VARMATCH_CHOOSE_DB_TABLE', 'Tabelle w&auml;hlen: ');
+define('ML_GENERAL_VARMATCH_CHOOSE_DB_COLUMN', 'Spalte w&auml;hlen: ');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS', 'Alias products_id or manufacturers_id: ');
+define('ML_GENERAL_VARMATCH_SELECT_TABLE_PLACEHOLDER', 'Tabelle w&auml;hlen...');
+define('ML_GENERAL_VARMATCH_SELECT_COLUMN_PLACEHOLDER', 'Spalte w&auml;hlen...');
+define('ML_GENERAL_VARMATCH_SELECT_TABLE_FIRST_PLACEHOLDER', 'Bitte erst Tabelle w&auml;hlen');
+define('ML_GENERAL_VARMATCH_ENTER_ALIAS_PLACEHOLDER', 'Produkt-ID-Alias eingeben');
 define('ML_GENERAL_VARMATCH_ALREADY_MATCHED', '(bereits gematcht)');
 define('ML_GENERAL_VARMATCH_MULTI_SELECT', 'Multiselect');
 define('ML_GENERAL_VARMATCH_PRODUCTS_PREPARED_DIFFERENTLY', 'Bitte beachten Sie, dass Sie einige Artikel der gew&auml;hlten Kategorie "%category_name%" abweichend unter „Produkte vorbereiten“ gematcht haben. Es werden die dort gespeicherten Werte zum Marktplatz &uuml;bermittelt.');
 define('ML_GENERAL_INVENTORY_IS_SPLIT', 'Is split');
 define('ML_GENERAL_VARMATCH_MULTISELECTHINT', 'Dr&uuml;cke CMD und w&auml;hlen alle zur &Uuml;bermittlung gew&uuml;nschten Attribute');
+
+// React Component Translations (added for new attribute matching UI)
+define('ML_GENERAL_VARMATCH_ENTER_FREETEXT', 'Eigenen Wert eingeben');
+define('ML_GENERAL_VARMATCH_USE_SHOP_VALUES', 'Shop-Werte verwenden');
+define('ML_GENERAL_VARMATCH_REQUIRED_ATTRIBUTES_TITLE', 'Pflicht-Attribute');
+define('ML_GENERAL_VARMATCH_ATTRIBUTES_MATCHING_TITLE', 'Attribut-Matching');
+define('ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTES_TITLE', 'Optionale Attribute');
+define('ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTE_MATCHING', 'Optionales Attribut-Matching');
+define('ML_GENERAL_VARMATCH_SAVE_SUCCESS', 'Attribut-Matching erfolgreich gespeichert');
+define('ML_GENERAL_VARMATCH_ADD_OPTIONAL_ATTRIBUTE', 'Optionales Attribut hinzuf&uuml;gen');
+define('ML_GENERAL_VARMATCH_SELECT_OPTIONAL_ATTRIBUTE', 'W&auml;hlen Sie ein optionales Attribut aus...');
+define('ML_GENERAL_VARMATCH_REMOVE_OPTIONAL_ATTRIBUTE', 'Optionales Attribut entfernen');
+define('ML_GENERAL_VARMATCH_NO_MORE_OPTIONAL_ATTRIBUTES', 'Keine weiteren optionalen Attribute verf&uuml;gbar');
+define('ML_GENERAL_VARMATCH_VALUE_MATCHING_TITLE', 'Wert-Matching');
+define('ML_GENERAL_VARMATCH_VALUE_MATCHING_DESCRIPTION', 'Ordnen Sie Ihre Shop-Attributwerte den Amazon-Attributwerten zu:');
+define('ML_GENERAL_VARMATCH_SHOP_VALUE_COLUMN', 'Shop-Wert');
+define('ML_GENERAL_VARMATCH_AMAZON_VALUE_COLUMN', 'Amazon-Wert');
+define('ML_GENERAL_VARMATCH_ACTION_COLUMN', 'Aktion');
+define('ML_GENERAL_VARMATCH_LOADING_SHOP_VALUES', 'Shop-Attributwerte werden geladen...');
+define('ML_GENERAL_VARMATCH_LOAD_ERROR_MESSAGE', 'Fehler beim Laden der Shop-Attributwerte');
+define('ML_GENERAL_VARMATCH_NO_SHOP_VALUES_MESSAGE', 'Das ausgew&auml;hlte Shop-Attribut hat keine Werte zum Matchen');
+define('ML_GENERAL_VARMATCH_USE_SHOP_VALUES_CHECKBOX', 'Vom Webshop bereitgestellten Wert verwenden');
+define('ML_GENERAL_VARMATCH_USE_SHOP_VALUES_DESCRIPTION', 'Shop-Attributwerte werden direkt an Amazon &uuml;bertragen ohne manuelles Matching');
+define('ML_GENERAL_VARMATCH_AUTO_MATCH_RESULTS', 'Auto-Match-Ergebnisse:');
+define('ML_GENERAL_VARMATCH_EXACT_MATCHES', 'Exakte &Uuml;bereinstimmung(en)');
+define('ML_GENERAL_VARMATCH_NO_MATCHES', 'Keine &Uuml;bereinstimmung(en)');
+define('ML_GENERAL_VARMATCH_SEARCH_MATCHINGS', 'Matchings durchsuchen...');
+define('ML_GENERAL_VARMATCH_SHOWING_RESULTS', 'Zeige');
+define('ML_GENERAL_VARMATCH_OF', 'von');
+define('ML_GENERAL_VARMATCH_MATCHINGS', 'Matchings');
+define('ML_GENERAL_VARMATCH_CLEAR_ALL_MATCHINGS', 'Alle Matchings l&ouml;schen');
+define('ML_GENERAL_VARMATCH_MAKE_CUSTOM_ENTRY', 'Eigenen Eintrag erstellen');
+define('ML_GENERAL_VARMATCH_ENTER_CUSTOM_AMAZON_VALUE', 'Eigenen Amazon-Wert eingeben');
+define('ML_GENERAL_VARMATCH_REMOVE_MATCHING_ROW', 'Matching-Zeile entfernen');
+define('ML_GENERAL_VARMATCH_SELECT_AMAZON_VALUE', 'Amazon-Wert w&auml;hlen...');
+define('ML_GENERAL_VARMATCH_ENTER_AMAZON_VALUE', 'Amazon-Wert eingeben');
+define('ML_GENERAL_VARMATCH_FIX_ERRORS', 'Bitte beheben Sie folgende Fehler:');
+
+// Database value input translations (v2 only)
+define('ML_GENERAL_VARMATCH_DATABASE_TABLE_LABEL', 'Tabelle');
+define('ML_GENERAL_VARMATCH_DATABASE_COLUMN_LABEL', 'Spalte');
+define('ML_GENERAL_VARMATCH_DATABASE_ALIAS_LABEL', 'Alias');
+define('ML_GENERAL_VARMATCH_DATABASE_TABLE_PLACEHOLDER', 'Tabellenname eingeben');
+define('ML_GENERAL_VARMATCH_DATABASE_COLUMN_PLACEHOLDER', 'Spaltenname eingeben');
+define('ML_GENERAL_VARMATCH_DATABASE_ALIAS_PLACEHOLDER', 'Produkt-ID-Alias eingeben');
 
 /* Cdiscount */
 
@@ -1877,6 +1937,7 @@ define('ML_TOPTEN_DELETE_HEAD', 'L&ouml;schen');
 define('ML_TOPTEN_DELETE_DESC', 'Markieren Sie mehrere Eintr&auml;ge indem Sie STRG gedr&uuml;ckt halten.');
 define('ML_TOPTEN_DELETE_INFO', 'Schnellauswahl-Kateogrien wurden gel&ouml;scht');
 define('ML_TOPTEN_TEXT', 'Schnellauswahl-Kateogrien');
+define('ML_TOPTEN_TEXT_BROWSENODES', 'Schnellauswahl-Browsenodes');
 
 
 /* hood */
@@ -2278,8 +2339,50 @@ define('ML_ETSY_PRICE_FOR_ETSY', 'Preis f&uuml;r Etsy');
 define('ML_ETSY_STOCK_FOR_ETSY', 'Bestand f&uuml;r Etsy');
 define('ML_ETSY_LISTING_ID', 'Etsy ListingId');
 define('ML_ETSY_LABEL_TITLE', 'Etsy Titel');
+define('ML_ETSY_VARIATION_ATTRIBUTE_LABEL', '(Attribute für Produktvarianten)');
 define('ML_TITLE_ETSY_WARNING_ZERO_STOCK_COST', 'Automatische Synchronisierung mit Null-Bestand (empfohlen)');
 define('ML_TEXT_ETSY_WARNING_ZERO_STOCK_COST', 'Die Option bewirkt, dass Ihre Angebote reaktiviert werden, wenn der Lagerbestand im Webshop > 0 ist. Bei einer Lagerbestands&auml;nderung auf < 1 werden Ihre Angebote deaktiviert. F&uuml;r die Reaktivierung von Angeboten werden Ihnen seitens Etsy Geb&uuml;hren berechnet.');
+
+define('ML_ETSY_PROCESSING_PROFILE', 'Etsy Verarbeitungsprofile');
+define('ML_ETSY_PROCESSING_PROFILE_HELP', '
+Ein Bearbeitungsprofil definiert, wie und wann Ihre Bestellung und deren Produkt vorbereitet und an den Kunden versandt werden. Bei Etsy umfasst dies Optionen wie:
+<ul>
+    <li>"<strong>Versandfertig</strong>" - das Produkt ist bereits hergestellt und kann sofort versandt werden</li>
+    <li>"<strong>Auf Bestellung gefertigt</strong>" - das Produkt wird nach dem Kauf hergestellt</li>
+</ul>
+<strong>Bearbeitungsprofile erstellen:</strong><br>
+Neue Bearbeitungsprofile müssen direkt bei Etsy erstellt werden:<br>
+→ <a href="https://www.etsy.com/your/shops/me/tools/shipping-profiles" target="_blank">https://www.etsy.com/your/shops/me/tools/shipping-profiles</a><br>
+oder im Etsy-Portal unter <strong>Einstellungen → Versandeinstellungen</strong>.<br>
+Nach der Erstellung bei Etsy warten Sie einige Minuten und aktualisieren dann diese Seite (F5), damit die Profile hier erscheinen.<br><br>
+Das Bearbeitungsprofil hilft Käufern, die erwartete Versandzeit für jedes Produkt zu verstehen.
+');
+define('ML_ETSY_READINESS_STATE_READY_TO_SHIP', 'Versandfertig');
+define('ML_ETSY_READINESS_STATE_MADE_TO_ORDER', 'Auf Bestellung gefertigt');
+define('ML_ETSY_EMPTY_LIST_PROCESSING_PROFILES', 'Bitte erstellen Sie zunächst ein Bearbeitungsprofil in Ihrem Etsy-Konto');
+
+/* Etsy Processing Profile Notice */
+define('ML_ETSY_PROCESSING_PROFILE_NOTICE_HTML', '
+<h3>Wichtiger Hinweis nach dem Update: Bearbeitungsprofile erforderlich</h3>
+<p><strong>Warum ist dieser Schritt notwendig?</strong></p>
+<p>Etsy verlangt nun für alle Artikel verpflichtend die Angabe von Bearbeitungsprofilen (Processing Profiles). Diese Profile enthalten wichtige Informationen wie:</p>
+<ul>
+    <li>Werden Ihre Artikel erst nach Bestellung hergestellt oder sind sie sofort versandbereit? Diese Information hilft Käufern einzuschätzen, wie schnell sie mit dem Versand rechnen können.</li>
+    <li>Minimale und maximale Bearbeitungszeit</li>
+</ul>
+<p><strong>Was müssen Sie jetzt tun?</strong></p>
+<ol>
+    <li>Erstellen Sie Bearbeitungsprofile direkt bei Etsy:<br>
+        &rarr; <a href="https://www.etsy.com/your/shops/me/tools/shipping-profiles" target="_blank">https://www.etsy.com/your/shops/me/tools/shipping-profiles</a><br>
+        oder im Etsy-Portal unter <strong>Einstellungen &rarr; Versandeinstellungen</strong></li>
+    <li>Warten Sie einige Minuten, bis die Profile synchronisiert sind</li>
+    <li>Aktualisieren Sie die magnalister-Seite (F5)</li>
+    <li>Gehen Sie zu <strong>Konfiguration &rarr; Artikelvorbereitung &rarr; Bearbeitungsprofile</strong> und wählen Sie Ihr Standard-Profil</li>
+    <li>Danach können Sie Ihre Artikel erneut vorbereiten und hochladen</li>
+</ol>
+<p><strong>Status Ihrer Artikel:</strong> Alle bestehenden Artikel haben den Status "Vorbereitung erneut erforderlich" erhalten und müssen nach der Konfiguration des Bearbeitungsprofils neu vorbereitet werden, bevor sie hochgeladen werden können.</p>
+<p><em>Sie können diese Nachricht durch Klicken auf die Schaltfläche Schließen ausblenden.</em></p>
+');
 
 /* Google Shopping */
 define('ML_GOOGLESHOPPING_PRICE', 'Preis');
@@ -2421,6 +2524,7 @@ define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_DELETE', 'Angebot wird gel&ouml;scht')
 define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_CREATION', 'Warten auf &Uuml;bertragung an OTTO');
 define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_UPDATE', 'Produkt wird auf OTTO aktualisiert');
 define('ML_MATCH_OTTO_CARRIER_TO_SHIPPING_MODULE', 'Von Otto vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop  Versandkosten-Modul matchen');
+define('ML_OTTO_ERROR_CODE', 'OTTO Fehlercode');
 
 define('ML_DUPLCIATE_HOVERTEXTS', 'Bitte speichern Sie die Konfiguration / Vorbereitung bevor Sie Zeilen hinzuf&uuml;gen oder entfernen');
 define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_AND_UNIT', 'Artikelgewicht (Wert und Einheit als Text)');
@@ -2430,3 +2534,4 @@ define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_UNIT', 'Artikelgewicht (Nur die Einh
 define('ML_BUTTON_TOKEN_NEW', 'Token beantragen / &auml;ndern');
 define('ML_ERROR_CREATE_TOKEN_LINK_HEADLINE', 'Fehler beim Herstellen der Verbindung zu {#marketplace#}');
 define('ML_ERROR_CREATE_TOKEN_LINK_TEXT', 'Es konnte keine Verbindung zu {#marketplace#} aufgebaut werden. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut.<br><br>Sollte der Fehler wiederholt auftreten, setzen Sie sich mit dem magnalister-Support in Verbindung.');
+

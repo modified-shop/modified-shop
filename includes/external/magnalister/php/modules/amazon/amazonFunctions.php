@@ -1106,3 +1106,22 @@ function upgradeOrderSyncSettings() {
 		}
         }
 }
+
+function renderAmazonTopTen($sField, $aConfig = array()) {
+    global $_MagnaSession;
+    require_once (DIR_MAGNALISTER_MODULES.DIRECTORY_SEPARATOR.'amazon'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'amazonTopTen.php');
+    $oTopTen = new amazonTopTen();
+    $oTopTen->setMarketPlaceId($_MagnaSession['mpID']);
+    $aTopTen = $oTopTen->getTopTenCategories($sField, $aConfig);
+    $sOptGroupLabel = $sField == 'topMainCategory'? ML_TOPTEN_TEXT : ML_TOPTEN_TEXT_BROWSENODES;
+    $sOut = '<option value="null">' . ML_AMAZON_LABEL_APPLY_PLEASE_SELECT . '</option>';
+    if (empty($aTopTen)) {
+        return $sOut;
+    }
+    $sOut .= '<optgroup label="' . $sOptGroupLabel . '">';
+    foreach ($aTopTen as $sKey => $sValue) {
+        $sOut .= '<option value="' . $sKey . '">' . fixHTMLUTF8Entities($sValue) . '</option>';
+    }
+    $sOut .= '</optgroup>';
+    return $sOut;
+}

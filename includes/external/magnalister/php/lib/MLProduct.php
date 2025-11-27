@@ -1261,13 +1261,7 @@ class MLProduct {
                       ORDER BY product_image_list_image_sort_order ASC
                     ");
 
-                    $firstImage = current($variationImages);
-                    if (is_array($firstImage)) {
-                        $v['Image'] = $firstImage['product_image_list_image_local_path'];
-                    } else {
-                        $v['Image'] = '';
-                    }
-
+                    $firstImage = '';
                     $v['Images'] = array();
                     foreach ($variationImages as $variationImage) {
                         $localPath = $variationImage['product_image_list_image_local_path'];
@@ -1278,7 +1272,11 @@ class MLProduct {
                             $localPath = 'images/product_images/original_images/'.$localPath;
                         }
                         $v['Images'][] = $localPath;
+                        if (empty($firstImage)) {
+                            $firstImage = $localPath;
+                        }
                     }
+                    $v['Image'] = $firstImage;
                 }
 
 				$attrs[] = $v;
@@ -1304,11 +1302,19 @@ class MLProduct {
 		if (empty($this->dbMatchings[$matchingName]['Alias'])) {
 			$this->dbMatchings[$matchingName]['Alias'] = 'products_id';
 		}
+        if (MagnaDB::gi()->columnExistsInTable('language_id', $this->dbMatchings[$matchingName]['Table'])
+        && count($this->languagesSelected['values']) == 1) {
+            // if the table has language_id, and we have one selected, use it
+            $andLanguage = 'AND language_id = '.current(array_keys($this->languagesSelected['values'])).'
+            ';
+        } else {
+            $andLanguage = '';
+        }
 		$product[$matchingName] = MagnaDB::gi()->fetchOne('
 			SELECT `' . $this->dbMatchings[$matchingName]['Column'] . '`
 			  FROM `' . $this->dbMatchings[$matchingName]['Table'] . '`
 			 WHERE `' . $this->dbMatchings[$matchingName]['Alias'] . '`="' . $product['ProductId'] . '"
-			 LIMIT 1
+			 '.$andLanguage.' LIMIT 1
 		');
 	}
 
@@ -1601,7 +1607,7 @@ $images = array (
 			if (!isset($this->cache['Tax'])) {
 				$this->cache['Tax'] = array();
 			}
-			$this->cache['Tax'][$product['TaxClass']] = SimplePrice::getTaxByClassID($product['TaxClass']);
+			$this->cache['Tax'][$product['TaxClass']] = SimplePrice::getTaxByClassID($product['TaxClass'], $this->optionsTmp['countryID']);
 		}
 		$product['TaxPercent'] = (float)$this->cache['Tax'][$product['TaxClass']];
 	}
@@ -2004,6 +2010,12 @@ $images = array (
 		// Loads Manufacturer Part Number to Product 'ManufacturerPartNumber' field
 		$this->getManufacturerPartNumber($product);
 
+        if (!empty($optionsTmp['countryID'])) {
+            // set countryID for tax calculation, if argument provided
+            $this->optionsTmp['countryID'] = $optionsTmp['countryID'];
+        } else if (empty($this->optionsTmp['countryID'])) {
+            $this->optionsTmp['countryID'] = -1;
+        }
 		$this->completeTax($product);
 		$this->getAllDataByMatching($product);
 		$this->completeBasePrice($product);
@@ -2070,8 +2082,12 @@ $images = array (
 		}
 		
 		$product['MarketplaceId'] = 'ML'.$product['MarketplaceId'];
-		
-		$this->completeTax($product);
+
+        if (empty($this->optionsTmp['countryID'])) {
+            // fallback value as used in SimplePrice::getTaxByClassID
+            $this->optionsTmp['countryID'] = -1;
+        }
+        $this->completeTax($product);
 		$this->prepareParentPrices($product);
 		
 		$product['Variations'] = $this->fetchVariations($product, true);

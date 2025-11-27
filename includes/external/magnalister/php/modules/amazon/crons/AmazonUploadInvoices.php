@@ -105,7 +105,7 @@ class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
                         }
 
                         if (empty($sPDFBase64) && in_array($this->config[$this->sInvoiceOptionConfigKey], array('webshop', 'erp'), true)) {
-                            $this->out('    '.'No pdf is available for '.$aOrder['special']." \n");
+                            $this->out('    '.'No pdf is available for '.$aOrder['AmazonOrderId']." \n");
                         }
                     }
                     $this->out("}\n");

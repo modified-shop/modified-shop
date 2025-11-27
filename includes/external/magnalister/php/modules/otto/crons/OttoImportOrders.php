@@ -62,4 +62,47 @@ class OttoImportOrders extends MagnaCompatibleImportOrders {
             $this->comment
         );
     }
+
+    /**
+     * add 'blacklisted-' to customer's e-mail address
+     *  if configured so (not recommended)
+     *
+     * @return array
+     */
+    protected function insertCustomer() {
+        if (getDBConfigValue(array($this->marketplace . '.mailaddress.blacklist', 'val'), $this->mpID, false)) {
+            if ($this->verbose) echo __FUNCTION__.": otto.mailaddress.blacklist == true\n";
+            $this->o['customer']['customers_email_address'] = 'blacklisted-'.$this->o['customer']['customers_email_address'];
+        }
+
+        return parent::insertCustomer();
+    }
+
+    /**
+     * Remove "blacklisted-" from mail if present and used from customer to ensure to send the promotion mail
+     */
+    protected function sendPromoMail() {
+        if (($this->config['MailSend'] != 'true') || (get_class($this->db) == 'MagnaTestDB')) {
+            return;
+        }
+        // mail addresses for OTTO customers can have a 'blacklisted-' added by us,
+        // if the customer configured so. Therefore, if the merchant wishes to send an e-mail, we have to
+        // remove this prefix.
+        sendSaleConfirmationMail(
+            $this->mpID,
+            str_replace('blacklisted-', '', $this->o['customer']['customers_email_address']),
+            $this->generatePromoMailContent()
+        );
+    }
+
+    /**
+     * add 'blacklisted-' to customer's e-mail address
+     *  if configured so (not recommended)
+     */
+    protected function doBeforeInsertOrder() {
+        if (getDBConfigValue(array($this->marketplace . '.mailaddress.blacklist', 'val'), $this->mpID, false)) {
+            if ($this->verbose) echo __FUNCTION__.": otto.mailaddress.blacklist == true\n";
+            $this->o['order']['customers_email_address'] = 'blacklisted-'.$this->o['order']['customers_email_address'];
+        }
+    }
 }

@@ -2,15 +2,15 @@
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/MLProductList.php');
 
 abstract class MLProductListAmazonAbstract extends MLProductList {
-	
+
 	protected $aPrepareData = array();
-	
+
 	protected function getPrepareData($aRow, $sFieldName = null) {
 		if (!isset($this->aPrepareData[$aRow['products_id']])) {
 			$this->aPrepareData[$aRow['products_id']] = MagnaDB::gi()->fetchRow("
-				SELECT * 
-				FROM ".TABLE_MAGNA_AMAZON_APPLY." 
-				WHERE 
+				SELECT *
+				FROM " . TABLE_MAGNA_AMAZON_APPLY . "
+				WHERE
 					".(
 						(getDBConfigValue('general.keytype', '0') == 'artNr')
 							? 'products_model=\''.MagnaDB::gi()->escape($aRow['products_model']).'\''
@@ -20,9 +20,9 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 			");
 			if (empty($this->aPrepareData[$aRow['products_id']])) {//not in apply maybe in properties?
 				$this->aPrepareData[$aRow['products_id']] = MagnaDB::gi()->fetchRow("
-					SELECT * 
-					FROM ".TABLE_MAGNA_AMAZON_PROPERTIES." 
-					WHERE 
+					SELECT *
+					FROM " . TABLE_MAGNA_AMAZON_PROPERTIES . "
+					WHERE
 						".(
 							(getDBConfigValue('general.keytype', '0') == 'artNr')
 								? 'products_model=\''.MagnaDB::gi()->escape($aRow['products_model']).'\''
@@ -43,8 +43,8 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 			return isset($this->aPrepareData[$aRow['products_id']][$sFieldName]) ? $this->aPrepareData[$aRow['products_id']][$sFieldName] : null;
 		}
 	}
-	
-	protected function getPreparedStatusIndicator($aRow){
+
+    protected function getPreparedStatusIndicator($aRow){
 		$aData = $this->getPrepareData($aRow);
 		if (empty($aData)) {
 			return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/grey_dot.png', ML_AMAZON_LABEL_APPLY_NOT_PREPARED, 9, 9);
@@ -65,21 +65,44 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 		if (!empty($aData) && !empty($aCategoryData)) {
 			$aData = unserialize(base64_decode($aData));
 			$aCategoryData = unserialize(base64_decode($aCategoryData));
-			if (!isset($aData['ShopVariation'])) {
-				// product prepared before attributes matching - if it has attributes before then it is prepared differently
+
+            // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
+            $shopVariationData = null;
+            $dataId = $this->getPrepareData($aRow, 'DataId');
+
+            // PRIMARY: Try to load from longtext table (new format)
+            if (!empty($dataId)) {
+                $longtextRow = MagnaDB::gi()->fetchRow("
+					SELECT Value
+					FROM magnalister_amazon_prepare_longtext
+					WHERE TextId = '" . MagnaDB::gi()->escape($dataId) . "'
+					  AND ReferenceFieldName = 'data'
+				");
+                if (!empty($longtextRow['Value'])) {
+                    $shopVariationData = $longtextRow['Value'];
+                }
+            }
+
+            // FALLBACK: If not found in longtext, try old format from data column
+            if (empty($shopVariationData) && isset($aData['ShopVariation'])) {
+                $shopVariationData = $aData['ShopVariation'];
+            }
+
+            // If still not found, it's old format without attributes matching
+            if (empty($shopVariationData)) {
 				return isset($aData['Attributes']);
 			}
 
 			$category = $aCategoryData['MainCategory'];
 			$categoryMatching = AmazonHelper::gi()->getCategoryMatching($category);
-			$shopVariation = is_array($aData['ShopVariation']) ? $aData['ShopVariation'] : json_decode($aData['ShopVariation'], true);
+            $shopVariation = is_array($shopVariationData) ? $shopVariationData : json_decode($shopVariationData, true);
 			return AmazonHelper::gi()->detectChanges($categoryMatching, $shopVariation);
 		}
 
 		return false;
 	}
-	
-	protected function getLowestPrice($aRow){
+
+    protected function getLowestPrice($aRow){
 		$fLowestPrice = $this->getPrepareData($aRow, 'lowestprice');
 		return $fLowestPrice > 0 ? $this->getPrice()->setPrice($fLowestPrice)->format() : '&mdash;';
 	}
@@ -100,7 +123,7 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 				}
 			}
 		}
-		
-		return false;
+
+        return false;
 	}
 }

@@ -36,8 +36,9 @@ if (function_exists('magnaDumpSqlErrorlog')) {
 }
 
 echo str_repeat('</div>', $_additionalDivs);
-
-if (MAGNA_DEBUG && MAGNA_DEBUG_TF && !MLBrowserDetect::gi()->is(array ('Browser' => 'msie', 'BVersion' => '>= 6.0'))) {
+$debugMode = (defined('MAGNA_DEBUG') && MAGNA_DEBUG) ||
+                (isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] === 'true'));
+if ($debugMode && defined('MAGNA_DEBUG_TF') && MAGNA_DEBUG_TF && !MLBrowserDetect::gi()->is(array ('Browser' => 'msie', 'BVersion' => '>= 6.0'))) {
 	echo '<textarea id="debugBox" wrap="off" readonly="readonly" spellcheck="false">';
 	echo '$_magnaQuery :: '.print_r($_magnaQuery, true)."\n";
 	echo '$_MagnaShopSession :: '.print_r($_MagnaShopSession, true)."\n";
@@ -59,7 +60,7 @@ echo '
 if (class_exists('MagnaDB') && class_exists('MagnaConnector')) {
 	$_executionTime = microtime(true) -  $_executionTime;
 	$memory = memory_usage();
-	echo (MAGNA_DEBUG ? '<div class="debug">' : '<!--').'
+	echo ($debugMode ? '<div class="debug">' : '<!--').'
 		Entire page served in <b>'.microtime2human($_executionTime).'.</b><br/><hr/>
 		Updater Time: '.microtime2human($_updaterTime).'. <br/>
 		API-Request Time: '.microtime2human(MagnaConnector::gi()->getRequestTime()).'. <br/>
@@ -68,7 +69,7 @@ if (class_exists('MagnaDB') && class_exists('MagnaConnector')) {
 		DB-Stats: <br/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Queries used: <b>'.MagnaDB::gi()->getQueryCount().'</b><br/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Query time: '.microtime2human(MagnaDB::gi()->getRealQueryTime()).'
-		'.(MAGNA_DEBUG ? '</div>' : '-->');
+		'.($debugMode ? '</div>' : '-->');
 }
 echo '
 												<span class="customerinfo">
@@ -96,7 +97,7 @@ echo '
 									</tbody></table>
 								</div>';
 
-if (MAGNA_DEBUG && class_exists('MagnaConnector')) {
+if ($debugMode && class_exists('MagnaConnector')) {
 	$tpR = MagnaConnector::gi()->getTimePerRequest();
 	if (!empty($tpR)) {
 		echo '<textarea class="apiRequestTime" readonly="readonly" spellcheck="false" wrap="off">';
@@ -106,7 +107,7 @@ if (MAGNA_DEBUG && class_exists('MagnaConnector')) {
 		echo '</textarea>';
 	}
 }
-if (MAGNA_DEBUG && class_exists('MagnaDB')) {
+if ($debugMode && class_exists('MagnaDB')) {
 	$tpR = MagnaDB::gi()->getTimePerQuery();
 	if (!empty($tpR)) {
 		echo '<textarea class="apiRequestTime" readonly="readonly" spellcheck="false" wrap="off">';
@@ -167,6 +168,7 @@ if (MAGNA_DEBUG && class_exists('MagnaDB')) {
 		</script>
         <?php
         global $_magnaLanguage;
+        /*
         switch (strtolower($_magnaLanguage)) {
             case 'german': {
                 // German
@@ -184,18 +186,19 @@ if (MAGNA_DEBUG && class_exists('MagnaDB')) {
                 break;
             }
         }
+        */
         ?>
         <!--Start of Tawk.to Script-->
         <script type="text/javascript">
-            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-            (function(){
-                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-                s1.async=true;
-                s1.src='<?php echo $sUrl; ?>';
-                s1.charset='UTF-8';
-                s1.setAttribute('crossorigin','*');
-                s0.parentNode.insertBefore(s1,s0);
-            })();
+            //var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            //(function(){
+            //    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            //    s1.async=true;
+            //    s1.src='<?php //echo $sUrl; ?>';
+            //    s1.charset='UTF-8';
+            //    s1.setAttribute('crossorigin','*');
+            //    s0.parentNode.insertBefore(s1,s0);
+            //})();
         </script>
         <!--End of Tawk.to Script-->
 	</body>

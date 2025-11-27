@@ -137,7 +137,8 @@ class MagnaDBDriverMysqli extends MagnaDBDriver {
 			// in order to detect that the connection has been closed,
 			// which is a shame.
 			//*/
-			return is_object($this->oInstance) && @$this->oInstance->ping();
+			// 20251126 mysqli::ping() is deprecated in PHP 8.4
+			return is_object($this->oInstance) && @$this->oInstance->query('DO 1');
 			
 			/*/
 			ob_start();
@@ -799,10 +800,14 @@ class MagnaDB {
 		$t = microtime(true) - $t;
 		$this->querytime += $t;
 		if ($this->doLogQueryTimes) {
-			$this->timePerQuery[] = array (
-				'query' => $this->query,
-				'time' => $t
-			);
+            $queryData = array(
+                'query'  => $this->query,
+                'time'   => $t,
+                'result' => $this->result,
+                'error'  => $this->prepareError(),
+                'trace'  => $this->getTraceString()
+            );
+            $this->timePerQuery[] = $queryData;
 		}
 		++$this->count;
 		//echo print_m(debug_backtrace());
@@ -813,7 +818,14 @@ class MagnaDB {
 		
 		return $this->result;
 	}
-	
+
+    function getTraceString() {
+        try {
+            throw new \Exception();
+        } catch (\Exception $ex) {
+            return $ex->getTraceAsString();
+        }
+    }
 
 	/**
 	 * Set the isolation level for the next transaction. So call *BEFORE* beginTransation()!
@@ -1055,7 +1067,16 @@ class MagnaDB {
 				return false;
 			}
 		}
-		
+        // update last item of timePerQuery with $row as result index
+        if (!empty($this->timePerQuery) && is_array($this->timePerQuery)) {
+
+            end($this->timePerQuery);
+            $lastKey = key($this->timePerQuery);
+            if ($lastKey !== null) {
+                $this->timePerQuery[$lastKey]['row'] = $row;
+            }
+            reset($this->timePerQuery);
+        }
 		return $row;
 	}
 
@@ -1354,13 +1375,41 @@ class MagnaDB {
 	}
 
 	/**
-	 * Insert an array of values
+     * Insert an array of values with support for INSERT ... ON DUPLICATE KEY UPDATE
+     *
+     * @param string $tableName Table name
+     * @param array $data Array of data rows to insert
+     * @param bool $replace Use REPLACE INTO instead of INSERT (deprecated - use $onDuplicateUpdate instead)
+     * @param array|false $onDuplicateUpdate Array of field names to update on duplicate key, or false to disable
+     *
+     * @return bool Success state
+     *
+     * USAGE EXAMPLES:
+     *
+     * 1. Simple INSERT:
+     *    $db->batchinsert('table', $data);
+     *
+     * 2. REPLACE INTO (old method - resets all fields):
+     *    $db->batchinsert('table', $data, true);
+     *
+     * 3. INSERT ... ON DUPLICATE KEY UPDATE (recommended - preserves existing fields):
+     *    $db->batchinsert('table', $data, false, ['field1', 'field2', 'field3']);
 	 */
-	public function batchinsert($tableName, $data, $replace = false) {
+    public function batchinsert($tableName, $data, $replace = false, $onDuplicateUpdate = false) {
 		if (!is_array($data)) {
 			$this->error = __METHOD__.' expects an array as 2nd argument.';
 			return false;
 		}
+        // Validate onDuplicateUpdate parameter
+        if ($onDuplicateUpdate !== false && !is_array($onDuplicateUpdate)) {
+            $this->error = __METHOD__ . ' expects 4th parameter to be an array of field names or false.';
+            return false;
+        }
+        // Cannot use both REPLACE and ON DUPLICATE KEY UPDATE
+        if ($replace && $onDuplicateUpdate !== false) {
+            $this->error = __METHOD__ . ' cannot use both REPLACE and ON DUPLICATE KEY UPDATE. Use one or the other.';
+            return false;
+        }
 		$state = true;
 
 		$cols = '(';
@@ -1368,6 +1417,21 @@ class MagnaDB {
 			$cols .= "`" . $key . "`, ";
 		}
 		$cols = rtrim($cols, ", ") . ")";
+
+        // Build ON DUPLICATE KEY UPDATE clause if requested
+        $onDuplicateClause = '';
+        if ($onDuplicateUpdate !== false && is_array($onDuplicateUpdate) && !empty($onDuplicateUpdate)) {
+            $updateParts = array();
+            foreach ($onDuplicateUpdate as $field) {
+                // Validate field exists in data
+                if (!array_key_exists($field, $data[0])) {
+                    $this->error = __METHOD__ . ' field "' . $field . '" in onDuplicateUpdate not found in data columns.';
+                    return false;
+                }
+                $updateParts[] = "`" . $field . "` = VALUES(`" . $field . "`)";
+            }
+            $onDuplicateClause = ' ON DUPLICATE KEY UPDATE ' . implode(', ', $updateParts);
+        }
 
 		$block = array_chunk($data, 20);
 		
@@ -1391,7 +1455,8 @@ class MagnaDB {
 			$values = rtrim($values, ",\n");
 	
 			//echo ($replace ? 'REPLACE' : 'INSERT').' INTO `'.$tableName.'` '.$cols.' VALUES '.$values;
-			$state = $state && $this->query(($replace ? 'REPLACE' : 'INSERT').' INTO `'.$tableName.'` '.$cols.' VALUES '.$values);
+            $query = ($replace ? 'REPLACE' : 'INSERT') . ' INTO `' . $tableName . '` ' . $cols . ' VALUES ' . $values . $onDuplicateClause;
+            $state = $state && $this->query($query);
 		}
 		return $state;
 	}

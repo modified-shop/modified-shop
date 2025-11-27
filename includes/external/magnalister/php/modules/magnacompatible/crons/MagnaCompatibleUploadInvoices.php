@@ -131,7 +131,7 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
                         }
 
                         if (empty($sPDFBase64) && in_array($this->config[$this->sInvoiceOptionConfigKey], array('webshop', 'erp'), true)) {
-                            $this->out('    '.'No pdf is available for '.$aOrder['special']." \n");
+                            $this->out('    '.'No pdf is available for '.$aOrder['MarketplaceOrderId']." \n");
                         }
                     }
                     $this->out("}\n");
