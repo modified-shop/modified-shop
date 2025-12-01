@@ -26,11 +26,7 @@
   require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
   require_once (DIR_FS_INC.'get_customers_gender.inc.php');
   require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
-  
-  // include needed classes
-  require_once (DIR_WS_CLASSES.'order.php');
-  require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
-  
+    
 
   function get_customers_taxprice_status($status_id = '') {
     global $order, $lang;

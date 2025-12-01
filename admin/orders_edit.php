@@ -24,6 +24,10 @@
   // include needed functions
   require_once (DIR_WS_FUNCTIONS.'orders_functions.php');
 
+  // include needed classes
+  require_once (DIR_WS_CLASSES.'order.php');
+  require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
+
   if (!isset($_GET['oID']) && isset($_POST['oID'])) {
     $_GET['oID'] = $_POST['oID'];
   }
