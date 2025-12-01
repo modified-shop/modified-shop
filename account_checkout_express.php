@@ -114,9 +114,9 @@ if ($account['checkout_shipping'] == 'cheapest_cheapest') {
 $module_name = 'cheapest_cheapest';
 $module_shipping = array(
   array(
-    'FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == 'cheapest_cheapest') ? true : false), 'id="shipping_'.strtok($module_name,'_').'"'),
+    'FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == 'cheapest_cheapest') ? true : false), 'id="shipping_'.$module_name.'"'),
     'NAME' => TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST,
-    'ID' => strtok($module_name,'_')
+    'ID' => $module_name
   )
 );
 
@@ -131,9 +131,9 @@ foreach ($quotes as $shipping) {
         $check_shipping = true;
       }
       $module_shipping[] = array(
-        'FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == $module_name) ? true : false), 'id="shipping_'.strtok($module_name,'_').'"'),
+        'FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == $module_name) ? true : false), 'id="shipping_'.$module_name.'"'),
         'NAME' => strip_tags($shipping['module'].(($methods['title'] != '') ? ' - '.$methods['title'] : '')),
-        'ID' => strtok($module_name,'_')
+        'ID' => $module_name
       );
     }
   }
