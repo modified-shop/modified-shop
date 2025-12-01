@@ -35,7 +35,7 @@
   class TeambankPayment {
 
     var $code;
-    var $version;
+    var $version = '1.29';
     var $webshopId;
     var $token;
     var $secret;
@@ -50,7 +50,6 @@
     
     function init($class) {
       $this->code = $class;
-      $this->version = '1.23';
       
       $this->webshopId = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SHOP_ID')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SHOP_ID') : '');
       $this->token = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SHOP_TOKEN')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SHOP_TOKEN') : '');
