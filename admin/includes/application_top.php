@@ -125,16 +125,17 @@ require_once(DIR_FS_INC . 'xtc_manufacturer_link.inc.php');
 require_once(DIR_FS_INC . 'xtc_content_link.inc.php');
 require_once(DIR_FS_INC . 'get_admin_access.inc.php');
 
+// make a connection to the database... now
+xtc_db_connect() or die('Unable to connect to database server!');
+
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/functions/','php') as $file) require ($file);
 
 // design layout (wide of boxes in pixels) (default: 125)
 define('BOX_WIDTH', 125);
 
-// make a connection to the database... now
-xtc_db_connect() or die('Unable to connect to database server!');
-
 // set application wide parameters
 define('DB_CACHE', 'false');
+
 $duplicate_configuration = array();
 $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION . '');
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
