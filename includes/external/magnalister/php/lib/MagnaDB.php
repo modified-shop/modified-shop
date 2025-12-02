@@ -138,7 +138,8 @@ class MagnaDBDriverMysqli extends MagnaDBDriver {
 			// which is a shame.
 			//*/
 			// 20251126 mysqli::ping() is deprecated in PHP 8.4
-			return is_object($this->oInstance) && @$this->oInstance->query('DO 1');
+			// Using stat() instead of query() to avoid resetting insert_id
+			return is_object($this->oInstance) && @$this->oInstance->stat() !== false;
 			
 			/*/
 			ob_start();

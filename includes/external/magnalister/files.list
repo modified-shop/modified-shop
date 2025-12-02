@@ -495,6 +495,7 @@ db/151.sql.php	ccc9b361d9bdede31b2e31eaf90a06a0
 db/152.sql.php	b7d0ec8ed448bfe9dcd1638ebd71060c
 db/153.sql.php	862b2c0a261ceeb349809f2ac7219479
 db/154.sql.php	99d4d2a24e358f2295953e2ecd68fbc7
+db/155.sql.php	829e91b4a4a6ea2e6b7c2c69de342a7e
 files.list	d41d8cd98f00b204e9800998ecf8427e
 ftp.php	8693351e3583d8ab29fe3f24772708ec
 images/	0
@@ -877,7 +878,7 @@ php/lib/	0
 php/lib/MLProduct.php	a242105371bbd505999f1ff28ac10938
 php/lib/MLTables.php	b758e96784f9f731c725b78f14f1b4e0
 php/lib/MagnaConnector.php	5f0b4309e475cd29aea107d9387398d5
-php/lib/MagnaDB.php	89b4875218d7b2cb1b283a0bf8df7821
+php/lib/MagnaDB.php	a0f5cc227410355450fac1ae713df208
 php/lib/MagnaError.php	5f94ce0cd3625b25a4ee2c8427b9978c
 php/lib/MagnaException.php	8a3516f5e08c293586863120d1595c24
 php/lib/MagnaTestDB.php	4718bca46518537194234da684fb7862
