@@ -149,15 +149,14 @@ require_once (DIR_FS_INC.'xtc_get_tax_rate_from_desc.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require_once ($file);
-
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
+
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require_once ($file);
 
 // load configuration
 $configuration_query = xtc_db_query("SELECT configuration_key, configuration_value FROM ".TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
-  if (function_exists('extra_configuration')) extra_configuration();
   defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
