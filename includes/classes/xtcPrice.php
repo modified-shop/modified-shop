@@ -317,7 +317,7 @@ class xtcPrice {
         krsort($graduated_price_array[$this->actualGroup][$pID]);
       }
       
-      $graduated_price_array[$this->actualGroup][$pID] = $this->priceModules->xtcGetGraduatedPrice($pID, $qty, $graduated);
+      $graduated_price_array[$this->actualGroup][$pID] = $this->priceModules->xtcGetGraduatedPrice($graduated_price_array[$this->actualGroup][$pID], $pID, $qty, $graduated);
     }
     
     if (count($graduated_price_array[$this->actualGroup][$pID]) > 0) {
