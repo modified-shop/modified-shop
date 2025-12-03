@@ -120,10 +120,10 @@ class priceModules {
         return $this->call_module_method($pData, $pID);
     }
 
-    function xtcGetGraduatedPrice($pID, $qty, $graduated)
+    function xtcGetGraduatedPrice($price_array, $pID, $qty, $graduated)
     {
         $this->function_call = 'xtcGetGraduatedPrice';
-        return $this->call_module_method($pID, $qty, $graduated);
+        return $this->call_module_method($price_array, $pID, $qty, $graduated);
     }
     
     function CheckExtension($price, $pID)
