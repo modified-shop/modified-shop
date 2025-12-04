@@ -194,10 +194,14 @@
                 <td class="dataTableContent txta-c"><?php echo gmdate('H:i:s', $time_online); ?></td>
                 <td class="dataTableContent txta-c"><?php echo $whos_online['customer_id']; ?></td>
                 <td class="dataTableContent txta-c"><?php echo $whos_online['full_name']; ?></td>
-                <td class="dataTableContent txta-c"><a href="<?php echo WHOS_ONLINE_IP_WHOIS_SERVICE.$whos_online['ip_address']; ?>" style="font-weight:bold; text-decoration:underline;" target="_blank"><?php echo $whos_online['ip_address']; ?></a><?php  echo (isset($whos_online_hostname) ? $whos_online_hostname : ''); ?></td>
-                <!--td class="dataTableContent"><?php if (isset($geoip_data['geoplugin_countryName'])) {
-                                                                        echo $geoip_data['geoplugin_countryName'].' ('.$geoip_data['geoplugin_countryCode'].')';
-                                                                      } ?></td-->
+                <td class="dataTableContent txta-c">
+                <?php 
+                  if (SAVE_IP_LOG == 'true') {
+                    echo '<a href="'.WHOS_ONLINE_IP_WHOIS_SERVICE.$whos_online['ip_address'].'" style="font-weight:bold; text-decoration:underline;" target="_blank">'.$whos_online['ip_address'].'</a>';
+                  }
+                  echo (isset($whos_online_hostname) ? $whos_online_hostname : '&nbsp;');
+                ?>
+                </td>
                 <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                 <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
                 <td class="dataTableContent"><?php echo encode_htmlspecialchars($last_page_url); ?>&nbsp;</td>
