@@ -87,7 +87,8 @@
       
       if (!isset($pics_array)) {
         $pics_array = array();
-      
+        $pics_array[] = 'noimage.gif';
+        
         switch ($type) {
           case 'product_images':
             $pics_query = xtc_db_query("SELECT products_image 
