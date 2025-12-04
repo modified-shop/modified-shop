@@ -175,46 +175,48 @@ require (DIR_WS_INCLUDES.'head.php');
                     </tr>
                     <?php
                     foreach ($modules as $module => $data) {
-                      $data['module'] = $module;
-              
-                      if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $data['module']))) && !isset($mInfo)) {
-                        $mInfo = new objectInfo($data);
+                      if (!isset($data['path']) || is_file(DIR_FS_CATALOG.$data['path'])) {
+                        $data['module'] = $module;
+                
+                        if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $data['module']))) && !isset($mInfo)) {
+                          $mInfo = new objectInfo($data);
+                        }
+  
+                        if (isset($mInfo) && is_object($mInfo) && ($data['module'] == $mInfo->module) ) {
+                          echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'module=' . $mInfo->module . '&action=edit') . '\'">' . "\n";
+                        } else {
+                          echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'module=' . $data['module']) . '\'">' . "\n";
+                        }
+                        ?>
+                          <td class="dataTableContent"><?php echo $data['title']; ?></td>
+                          <td class="dataTableContent txta-c">
+                            <?php 
+                            if ($data['installed'] == '1') {
+                              echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_INSTALLED, 12, 12, 'style="margin-left: 5px;"');
+                            } elseif ($data['installed'] == '2') {
+                              echo xtc_image(DIR_WS_IMAGES . 'icon_status_yellow.gif', IMAGE_ICON_STATUS_INACTIVE, 12, 12, 'style="margin-left: 5px;"');
+                            } else {
+                              echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_NOT_INSTALLED, 12, 12, 'style="margin-left: 5px;"');
+                            }
+                            ?>
+                          </td>
+                          <td class="dataTableContent txta-c">
+                            <?php 
+                            if ($data['shop'] == 'undefined') {
+                              echo xtc_image(DIR_WS_IMAGES . 'icon_status_yellow.gif', IMAGE_ICON_STATUS_UPDATE, 12, 12, 'style="margin-left: 5px;"');
+                            } elseif ($data['update']) {
+                              echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_UPDATE, 12, 12, 'style="margin-left: 5px;"');
+                            } else {
+                              echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_OK, 12, 12, 'style="margin-left: 5px;"');
+                            }
+                            ?>
+                          </td>
+                          <td class="dataTableContent txta-r"><?php echo $data['shop']; ?></td>
+                          <td class="dataTableContent txta-r"><?php echo $data['version']; ?></td> 
+                          <td class="dataTableContent txta-r"><?php if (isset($mInfo) && is_object($mInfo) && ($data['module'] == $mInfo->module) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'module=' . $data['module']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                        </tr>
+                        <?php
                       }
-
-                      if (isset($mInfo) && is_object($mInfo) && ($data['module'] == $mInfo->module) ) {
-                        echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'module=' . $mInfo->module . '&action=edit') . '\'">' . "\n";
-                      } else {
-                        echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'module=' . $data['module']) . '\'">' . "\n";
-                      }
-                      ?>
-                        <td class="dataTableContent"><?php echo $data['title']; ?></td>
-                        <td class="dataTableContent txta-c">
-                          <?php 
-                          if ($data['installed'] == '1') {
-                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_INSTALLED, 12, 12, 'style="margin-left: 5px;"');
-                          } elseif ($data['installed'] == '2') {
-                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_yellow.gif', IMAGE_ICON_STATUS_INACTIVE, 12, 12, 'style="margin-left: 5px;"');
-                          } else {
-                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_NOT_INSTALLED, 12, 12, 'style="margin-left: 5px;"');
-                          }
-                          ?>
-                        </td>
-                        <td class="dataTableContent txta-c">
-                          <?php 
-                          if ($data['shop'] == 'undefined') {
-                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_yellow.gif', IMAGE_ICON_STATUS_UPDATE, 12, 12, 'style="margin-left: 5px;"');
-                          } elseif ($data['update']) {
-                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_UPDATE, 12, 12, 'style="margin-left: 5px;"');
-                          } else {
-                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_OK, 12, 12, 'style="margin-left: 5px;"');
-                          }
-                          ?>
-                        </td>
-                        <td class="dataTableContent txta-r"><?php echo $data['shop']; ?></td>
-                        <td class="dataTableContent txta-r"><?php echo $data['version']; ?></td> 
-                        <td class="dataTableContent txta-r"><?php if (isset($mInfo) && is_object($mInfo) && ($data['module'] == $mInfo->module) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'module=' . $data['module']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-                      </tr>
-                      <?php
                     }
                     echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>';
                   }
