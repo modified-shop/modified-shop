@@ -14,14 +14,14 @@
 ?>
 
 <script>
-  var aip_debug = false;
+  var aip_debug = true;
   var total = 0;
 
   jQuery(document).submit(function(e){
     var form = jQuery(e.target);
     if (form.is("#form_image_processing")) {
         e.preventDefault();
-        $('.ajax_responce').show();
+        $('.ajax_response').show();
         $('.ajax_imgname').show();
         $('.ajax_loading').show();
         $('.ajax_ready_info').hide();
@@ -63,6 +63,8 @@
     
     $('.ajax_imgname').html(response.imgname);
     $('.ajax_count').html(response.count);
+    $('.ajax_path').html(response.path);
+    $('#ajax_total').html(response.total);
     updateProgressBar(response.total,'image',response.start);
 
     if (response.start < response.total) {
