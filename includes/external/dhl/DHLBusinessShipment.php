@@ -146,7 +146,7 @@
           
           if (isset($items['validationMessages']) && $this->loglevel == 'INFO') {
             foreach ($items['validationMessages'] as $messages) {
-              $this->message['warning'][] = sprintf('Property %s: %s', $messages['property'], $messages['validationMessage']);
+              $this->message['warning'][] = sprintf('Property %s: %s', ((isset($messages['property'])) ? $messages['property'] : ''), $messages['validationMessage']);
             }
           }
         }
@@ -157,7 +157,7 @@
           foreach ($error['items'] as $items) {
             if (isset($items['validationMessages'])) {
               foreach ($items['validationMessages'] as $messages) {
-                $this->message['error'][] = sprintf('Property %s: %s', $messages['property'], $messages['validationMessage']);
+                $this->message['error'][] = sprintf('Property %s: %s', ((isset($messages['property'])) ? $messages['property'] : ''), $messages['validationMessage']);
               }
             }
           }
