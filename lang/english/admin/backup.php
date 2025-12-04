@@ -26,7 +26,8 @@ define('TEXT_INFO_HEADING_NEW_BACKUP', 'New Backup');
 define('TEXT_INFO_HEADING_RESTORE_LOCAL', 'Restore Local');
 define('TEXT_INFO_NEW_BACKUP', 'Do not interrupt the backup process which might take a couple of minutes.');
 define('TEXT_INFO_UNPACK', '<br /><br />(after unpacking the file from the archive)');
-define('TEXT_INFO_RESTORE', 'Do not interrupt the restoration process.<br /><br />The larger the backup, the longer this process takes!<br /><br />If possible, use the mysql client.<br /><br />For example:<br /><br /><b>mysql -h' . DB_SERVER . ' -u' . DB_SERVER_USERNAME . ' -p ' . DB_DATABASE . ' < %s </b> %s');
+define('TEXT_INFO_RESTORE', 'Do not interrupt the restoration process.<br /><br />The larger the backup, the longer this process takes!');
+define('TEXT_INFO_RESTORE_CLIENT', 'If possible, use the mysql client.<br /><br />For example:<br /><br /><b>mysql -h' . DB_SERVER . ' -u' . DB_SERVER_USERNAME . ' -p ' . DB_DATABASE . ' < %s </b> %s');
 define('TEXT_INFO_RESTORE_LOCAL', 'Do not interrupt the restoration process.<br /><br />The larger the backup, the longer this process takes!');
 define('TEXT_INFO_RESTORE_LOCAL_RAW_FILE', 'The file uploaded must be a raw sql (text) file.');
 define('TEXT_INFO_DATE', 'Date:');
@@ -55,6 +56,7 @@ define('SUCCESS_BACKUP_UPLOAD', 'Success: The backup file has been uploaded.');
 
 //TEXT_COMPLETE_INSERTS
 define('TEXT_COMPLETE_INSERTS', "<b>Complete 'INSERT's</b><br> - field names are entered into each row INSERT (increased backup)");
+define('TEXT_SINGLE_FILES', "<b>Single files per table</b><br> - A single file is created for each database table. Single tables can be restored from this backup.");
 
 define('TEXT_INFO_TABLES_IN_BACKUP', '<br />' . "\n" .'<b>Tables in this backup:</b>' . "\n");
 define('TEXT_INFO_NO_INFORMATION', 'No information available');
@@ -71,9 +73,10 @@ define('TEXT_REMOVE_ENGINE', "<b>Without storage engines 'ENGINE'</b><br> - The 
 define('TEXT_IMPORT_UTF8_NOTICE', '<b>Attention:</b> the database is converted to UTF-8.');
 define('TEXT_INFO_CHARSET', 'Charset:');
 
+define('TEXT_TABLES_RESTORE_TYPE', '<b>Restore</b><br> - Which tables should be restored?');
 define('TEXT_TABLES_BACKUP_TYPE', '<b>Backup</b><br> - Which tables should be saved?');
-define('TEXT_BACKUP_ALL', 'All tables');
-define('TEXT_BACKUP_CUSTOM', 'Selected tables');
+define('TEXT_TABLES_ALL', 'All tables');
+define('TEXT_TABLES_CUSTOM', 'Selected tables');
+define('TEXT_TABLES_CHECK_ALL', 'Select all tables');
 define('TEXT_TABLES_TO_BACKUP', '<b>The following tables should be saved:</b>');
-define('TEXT_CHECK_ALL_TABLES', 'Select all tables');
-?>
+define('TEXT_TABLES_TO_RESTORE', '<b>The following tables should be restored:</b>');

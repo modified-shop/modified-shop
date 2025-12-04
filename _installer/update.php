@@ -354,6 +354,7 @@
         $smarty->assign('INPUT_REMOVE_COLLATE', xtc_draw_checkbox_field('remove_collate', 'yes', false, 'id="remove_collate"'));
         $smarty->assign('INPUT_REMOVE_ENGINE', xtc_draw_checkbox_field('remove_engine', 'yes', false, 'id="remove_engine"'));
         $smarty->assign('INPUT_COMPLETE_INSERTS', xtc_draw_checkbox_field('complete_inserts', 'yes', true, 'id="complete_inserts"'));
+        $smarty->assign('INPUT_SINGLE_FILES', xtc_draw_checkbox_field('single_files', 'yes', true, 'id="single_files"'));
 
         $type_array = array();
         $type_array[] = array('id' => 'all', 'text' => TEXT_DB_BACKUP_ALL);
@@ -432,8 +433,13 @@
         $sql_files_array = array();
         $dir = opendir(DIR_FS_BACKUP);
         while($file = readdir($dir)) {
-          if (strpos($file, '.sql') !== false || strpos($file, '.gz') !== false) {
+          if (is_file($file) && strpos($file, '.sql') !== false || strpos($file, '.gz') !== false) {
             $sql_files_array[] = $file;
+          } else {
+            $schema = check_schema($file);
+            if ($schema != '') {
+              $sql_files_array[] = $file;
+            }
           }
         }
         rsort($sql_files_array);
@@ -442,7 +448,7 @@
           $sql_data_array[] = array(
             'NAME' => $file,
             'MTIME' => filemtime(DIR_FS_BACKUP.$file),
-            'SIZE' => number_format(filesize(DIR_FS_BACKUP.$file)).' bytes',
+            'SIZE' => calculate_filesize($file).' bytes',
             'DATE' => date('Y-m-d H:i:s', filemtime(DIR_FS_BACKUP.$file)),
             'CHECKBOX' => xtc_draw_radio_field('restore_file', $file, false, 'id="'.$file.'"'),
           );
@@ -457,23 +463,40 @@
         {
           define('_VALID_XTC', true);
           include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
-
+          
           $action = (isset($_GET['action']) ? $_GET['action'] : '');
           if (isset($_POST['action']) && $_POST['action'] == 'restorenow') {
+            unset($_SESSION['restore']);
             $action = 'restorenow';
             $_GET['file'] = $_POST['restore_file'];
-          } else {
+          } elseif (isset($_SESSION['dump']) && isset($_SESSION['dump']['file'])) {
             $_GET['file'] = basename($_SESSION['dump']['file']);
           }
-
-
-          $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
-          $utf8_array = xtc_db_fetch_array($utf8_query);
-          $check_utf8 = (strpos($utf8_array['Collation'], 'utf8') === false ? false : true);
-
-          $file_array = getBackupData($_GET['file']);
-          if (!$check_utf8 && $file_array['charset'] == 'utf8') {
-            $_POST['utf8-convert'] = 'yes';
+          
+          if (!isset($_SESSION['restore'])) {
+            $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
+            $utf8_array = xtc_db_fetch_array($utf8_query);
+            $check_utf8 = (strpos($utf8_array['Collation'], 'utf8') === false ? false : true);
+  
+            $restore['restore_dir'] = '';
+            if (is_dir(DIR_FS_BACKUP.$_GET['file'])) {
+              $restore['restore_dir'] = $_GET['file'];
+              $schema = check_schema($_GET['file']);
+              if ($schema != '') {
+                $file_array = getBackupData($schema, $_GET['file'].'/');
+              }
+            } else {
+              $file_array = getBackupData($_GET['file']);
+            }
+  
+            if (!$check_utf8 && $file_array['charset'] == 'utf8') {
+              $_POST['utf8-convert'] = 'yes';
+            }
+            
+            $_POST['restore_type'] = 'all';
+            $_POST['restore_dir'] = $restore['restore_dir'];
+          } else {
+            $_GET['file'] = $_SESSION['restore']['restore_file'];
           }
           
           include (DIR_FS_CATALOG.DIR_ADMIN.'includes/db_actions.php');

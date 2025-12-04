@@ -92,6 +92,24 @@
   }
   
   
+  function check_schema($entry) {
+    $schema = glob(DIR_FS_BACKUP . $entry . "/schema.{sql,sql.gz,gz,zip}", GLOB_BRACE);
+    if (isset($schema[0])) return basename($schema[0]);
+  }
+
+
+  function calculate_filesize($entry) {
+    if (is_dir(DIR_FS_BACKUP . $entry)) {
+      $total = 0;      
+      foreach (glob(DIR_FS_BACKUP . $entry . "/*.{sql,gz,zip}", GLOB_BRACE) as $files) {      
+        $total += filesize($files);
+      }
+      return number_format($total);
+    }
+    return number_format(filesize(DIR_FS_BACKUP . $entry));
+  }
+
+
   function remove_comments($sql, $remark) {
     $lines = explode("\n", $sql);
     $sql = '';

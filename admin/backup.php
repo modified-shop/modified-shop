@@ -54,8 +54,23 @@
     }
   }
   
-  function createDBTableList($data)
-  {
+  function check_schema($entry) {
+    $schema = glob(DIR_FS_BACKUP . $entry . "/schema.{sql,sql.gz,gz,zip}", GLOB_BRACE);
+    if (isset($schema[0])) return basename($schema[0]);
+  }
+  
+  function calculate_filesize($entry) {
+    if (is_dir(DIR_FS_BACKUP . $entry)) {
+      $total = 0;      
+      foreach (glob(DIR_FS_BACKUP . $entry . "/*.{sql,gz,zip}", GLOB_BRACE) as $files) {      
+        $total += filesize($files);
+      }
+      return number_format($total);
+    }
+    return number_format(filesize(DIR_FS_BACKUP . $entry));
+  }
+  
+  function createDBTableList($data) {
     if(!is_array($data)) return $data;
     $newdata = array();
     foreach($data as $keys) {
@@ -154,21 +169,27 @@
                 <?php
                   if ($dir_ok) {
                     $dir = dir(DIR_FS_BACKUP);
-                    $contents_array = array();
+                    $contents_files_array = array();
                     $exts = array("sql","sql.zip","sql.gz");
                     while ($file = $dir->read()) {
                       if (!is_dir(DIR_FS_BACKUP . $file)) {
                         foreach ($exts as $value) {
                           if (xtc_CheckExt($file, $value)) {
-                            $contents_array[(date('Y-m-d', filemtime(rtrim($dir->path, '/').'/'.$file)))][] = $file;
+                            $contents_files_array[(date('Y-m-d', filemtime(rtrim($dir->path, '/').'/'.$file)))][] = $file;
                           }
+                        }
+                      } else {
+                        $schema = check_schema($file);
+                        if ($schema != '') {
+                          $contents_files_array[(date('Y-m-d', filemtime(rtrim($dir->path, '/').'/'.$file)))][] = $file;
                         }
                       }
                     }
-                    ksort($contents_array);
-                    $contents_array = array_reverse($contents_array);
-                    if (count($contents_array) > 0) {
-                      foreach ($contents_array as $date => $contents) {
+                    ksort($contents_files_array);
+                    $contents_files_array = array_reverse($contents_files_array);
+
+                    if (count($contents_files_array) > 0) {
+                      foreach ($contents_files_array as $date => $contents) {
                         ?>
                         <tr class="dataTableHeadingRow">
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TITLE; ?></td>
@@ -182,12 +203,19 @@
                           $entry = $contents[$files];
                           $check = 0;
                           if ((!isset($_GET['file']) || ($_GET['file'] == $entry)) && !isset($buInfo) && ($action != 'backup') && ($action != 'restorelocal')) {
-                            $file_array = getBackupData($entry);
+                            if (is_dir(DIR_FS_BACKUP.$entry)) {
+                              $schema = check_schema($entry);
+                              if ($schema != '') {
+                                $file_array = getBackupData($schema, $entry.'/');
+                              }
+                            } else {
+                              $file_array = getBackupData($entry);
+                            }
                             $file_array['table_list'] = !$file_array['table_list'] ? TEXT_INFO_NO_INFORMATION : $file_array['table_list'];
                             
                             $buInfo = new objectInfo($file_array);
                           }
-                          if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) {
+                          if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file || $entry == $buInfo->dir)) {
                             echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'">' . "\n";
                             $onclick_link = 'file=' . $buInfo->file . '&action=restore';
                           } else {
@@ -195,14 +223,14 @@
                             $onclick_link = 'file=' . $entry;
                           }
                           ?>
-                            <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
+                            <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo $entry; ?></td>
                             <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
-                            <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
-                            <td class="dataTableContent txta-r" ><?php if ( (isset($buInfo) && is_object($buInfo)) && ($entry == $buInfo->file) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                            <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo calculate_filesize($entry); ?> bytes</td>
+                            <td class="dataTableContent txta-r" ><?php if ( (isset($buInfo) && is_object($buInfo)) && ($entry == $buInfo->file || $entry == $buInfo->dir) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                           </tr>
                           <?php
                         }
-                        echo '<tr><td colspan="3">&nbsp;</td></tr>';
+                        echo '<tr><td colspan="4">&nbsp;</td></tr>';
                       }
                     } else {
                       ?>
@@ -252,17 +280,18 @@
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('remove_collate', 'yes', false) . ' ' . TEXT_REMOVE_COLLATE);
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('remove_engine', 'yes', false) . ' ' . TEXT_REMOVE_ENGINE);
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('complete_inserts', 'yes', true) . ' ' . TEXT_COMPLETE_INSERTS);
+                  $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('single_files', 'yes', true) . ' ' . TEXT_SINGLE_FILES);
                   if (!$check_utf8) {
                     $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_CONVERT_TO_UTF);
                   }
                   
                   $type_array = array();
-                  $type_array[] = array('id' => 'all', 'text' => TEXT_BACKUP_ALL);
-                  $type_array[] = array('id' => 'custom', 'text' => TEXT_BACKUP_CUSTOM);
+                  $type_array[] = array('id' => 'all', 'text' => TEXT_TABLES_ALL);
+                  $type_array[] = array('id' => 'custom', 'text' => TEXT_TABLES_CUSTOM);
                   
                   $contents[] = array('text' => '<br />' . TEXT_TABLES_BACKUP_TYPE . '<br />' . xtc_draw_pull_down_menu('backup_type', $type_array, 'all', 'id="backup_type"'));
                   
-                  $tables_data = xtc_draw_checkbox_field('backup_all_tables', false) . ' ' . TEXT_CHECK_ALL_TABLES . '<br />';
+                  $tables_data = xtc_draw_checkbox_field('backup_all_tables', false) . ' ' . TEXT_TABLES_CHECK_ALL . '<br />';
                   $tables_query = xtc_db_query("SHOW TABLES FROM `".DB_DATABASE."`");
                   while ($tables = xtc_db_fetch_array($tables_query)) {
                     $tables_data .= xtc_draw_checkbox_field('backup_tables[]', $tables['Tables_in_'.DB_DATABASE]) . ' ' . $tables['Tables_in_'.DB_DATABASE] . '<br />';
@@ -273,9 +302,11 @@
                   break;
                 case 'restore':
                   $heading[] = array('text' => $info_heading);
-                  $contents = array('form' => xtc_draw_form('restore', RS_FILENAME, 'action=restorenow&file=' . $buInfo->file));
-                  //$heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
-                  $contents[] = array('text' => sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''));
+                  $contents = array('form' => xtc_draw_form('restore', RS_FILENAME, 'action=restorenow&file=' . (($buInfo->dir != '') ? $buInfo->dir : $buInfo->file)));
+                  $contents[] = array('text' => TEXT_INFO_RESTORE);
+                  if ($buInfo->dir == '') {
+                    $contents[] = array('text' => sprintf(TEXT_INFO_RESTORE_CLIENT, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''));
+                  }
                   if (!$check_utf8 && $buInfo->charset == 'utf8') {
                     $contents[] = array('text' => '<div class="messageStackError">' . TEXT_IMPORT_UTF8_NOTICE . '</div>' . xtc_draw_hidden_field('utf8-convert', 'yes'));
                   }
@@ -283,7 +314,22 @@
                   $_SESSION['SECName'] = xtc_RandomString(6);
                   $_SESSION['SECToken'] = xtc_RandomString(32);
                   $contents[] = array('text' => '<input type="hidden" name="'.$_SESSION['SECName'].'" value="'.$_SESSION['SECToken'].'">');
-                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_RESTORE . '"/>&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file) . '">' . BUTTON_CANCEL . '</a>');
+
+                  if ($buInfo->dir != '') {
+                    $type_array = array();
+                    $type_array[] = array('id' => 'all', 'text' => TEXT_TABLES_ALL);
+                    $type_array[] = array('id' => 'custom', 'text' => TEXT_TABLES_CUSTOM);
+                    
+                    $contents[] = array('text' => '<br />' . TEXT_TABLES_RESTORE_TYPE . '<br />' . xtc_draw_pull_down_menu('restore_type', $type_array, 'all', 'id="restore_type"'));
+
+                    $tables_data = xtc_draw_checkbox_field('restore_all_tables', false) . ' ' . TEXT_TABLES_CHECK_ALL . '<br />';
+                    foreach ($buInfo->table_list as $table) {
+                      $tables_data .= xtc_draw_checkbox_field('restore_tables[]', $table['file']) . ' ' . $table['name'] . ' [' . $table['rows'] . ']<br />';
+                    }
+                    $tables_data .= '<input type="hidden" name="restore_dir" value="'.$buInfo->dir.'">';
+                    $contents[] = array('text' => '<div id="tables_restore" style="display:none;"><br />' . TEXT_TABLES_TO_RESTORE . '<br />' . $tables_data . '</div>');
+                  }
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_RESTORE . '"/>&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . (($buInfo->dir != '') ? $buInfo->dir : $buInfo->file)) . '">' . BUTTON_CANCEL . '</a>');
                   break;
 
                 case 'restorelocal':
@@ -297,16 +343,20 @@
 
                 case 'delete':
                   $heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
-                  $contents = array('form' => xtc_draw_form('delete', FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=deleteconfirm'));
+                  $contents = array('form' => xtc_draw_form('delete', FILENAME_BACKUP, 'file=' . (($buInfo->dir != '') ? $buInfo->dir : $buInfo->file) . '&action=deleteconfirm'));
                   $contents[] = array('text' => TEXT_DELETE_INTRO);
-                  $contents[] = array('text' => '<br /><b>' . $buInfo->file . '</b>');
-                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file) . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('text' => '<br /><b>' . (($buInfo->dir != '') ? $buInfo->dir : $buInfo->file) . '</b>');
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . (($buInfo->dir != '') ? $buInfo->dir : $buInfo->file)) . '">' . BUTTON_CANCEL . '</a>');
                   break;
 
                 default:
                   if (isset($buInfo) && is_object($buInfo)) {
                     $heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
-                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restore') . '">' . BUTTON_RESTORE . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=delete') . '">' . BUTTON_DELETE . '</a>'. '&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=download') . '">' . 'Download' . '</a>');
+                    if ($buInfo->dir != '') {
+                      $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->dir . '&action=restore') . '">' . BUTTON_RESTORE . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->dir . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                    } else {
+                      $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restore') . '">' . BUTTON_RESTORE . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=delete') . '">' . BUTTON_DELETE . '</a>'. '&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=download') . '">' . 'Download' . '</a>');
+                    }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_DATE . ' ' . $buInfo->date);
                     $contents[] = array('text' => TEXT_INFO_SIZE . ' ' . $buInfo->size);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_COMPRESSION . ' ' . $buInfo->compression);
@@ -343,6 +393,16 @@
         $('#tables_backup').show();
       } else {
         $('#tables_backup').hide();
+      }
+    });
+    $('input[name="restore_all_tables"]').click(function () {    
+      $('input[name*="restore_tables"]').prop('checked', this.checked);
+    });
+    $('#restore_type').on('change', function() {
+      if ($(this).val() == 'custom') {
+        $('#tables_restore').show();
+      } else {
+        $('#tables_restore').hide();
       }
     });
   </script>

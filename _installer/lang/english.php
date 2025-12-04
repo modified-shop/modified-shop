@@ -104,6 +104,7 @@
   define('TEXT_DB_REMOVE_COLLATE', 'Without encoding \'COLLATE\' and \'DEFAULT CHARSET\'');
   define('TEXT_DB_REMOVE_ENGINE', 'Without storage engines \'ENGINE\'');
   define('TEXT_DB_COMPLETE_INSERTS', 'Complete \'INSERT\'s');
+  define('TEXT_DB_SINGLE_FILES', 'Single files per table');
   define('TEXT_DB_UFT8_CONVERT', 'Convert database to UTF-8');
   define('TEXT_DB_COMPRESS_GZIP', 'Use GZIP');
   define('TEXT_DB_COMPRESS_RAW', 'No Compression (Pure SQL)');
