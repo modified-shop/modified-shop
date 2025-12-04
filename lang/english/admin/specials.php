@@ -51,11 +51,8 @@ define('TEXT_INFO_HEADING_DELETE_ELEMENTS', 'Delete Elements');
 define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Delete Special');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the special products price?');
 
-define('TEXT_IMAGE_NONEXISTENT','No image available!'); 
-
 define('TEXT_SPECIALS_PRICE_TIP', 'You can enter a percentage to deduct in the Specials Price field, for example: <strong>20%</strong><br>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <strong>49.99</strong>');
 define('TEXT_SPECIALS_QUANTITY_TIP', 'You can enter the item quantity in the field <strong>Quantity</strong> for products the special price apply to.<br>You can decide whether to check stock of specials or not under "Configuration" -> "Stock Options" -> "Check Specials Stock".');
 define('TEXT_SPECIALS_START_DATE_TIP', 'Enter the date from when the offer price will apply.<br>');
 define('TEXT_SPECIALS_EXPIRES_DATE_TIP', 'Leave the <strong>expiry date</strong> empty for no expiration.<br>');
 define('TEXT_SPECIALS_PRODUCTS_PRICE_TIP', 'Enter the lowest price of the last 30 days. If you leave the field blank, the current product price will be used.');
-?>

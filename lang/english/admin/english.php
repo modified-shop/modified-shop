@@ -625,3 +625,4 @@ define('TXT_PER',' per ');
 define('TEXT_NO_PAYMENT', 'No payment method');
 
 define('TEXT_ERROR_EMPTY_NOT_ALLOWED', '<span class="error_message" style="display:inline-block;">Mandatory (please fill in)</span>');
+define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');

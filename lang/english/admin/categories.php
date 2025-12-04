@@ -67,7 +67,6 @@ define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_DATE_AVAILABLE', 'Date Available:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_PRODUCTS_ORDERED', 'Sold Products:');
-define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
 define('TEXT_NO_CHILD_CATEGORIES_OR_PRODUCTS', 'Please insert a new category or product in <br />&nbsp;<br /><b>%s</b>');
 define('TEXT_PRODUCT_MORE_INFORMATION', 'For more information, please visit this products <a href="http://%s" target="_blank"><u>webpage</u></a>.');
 define('TEXT_PRODUCT_DATE_ADDED', 'This product was added to our catalog on %s.');
@@ -272,4 +271,3 @@ define('TEXT_TAGS_COPY_INFO', 'Also copy product features<br />Only recommended 
 define('TEXT_PRODUCTS_LAST_MODIFIED', 'Last modified:');
 define('TEXT_STOCK_UPDATE_SUCCESS', 'Stock saved');
 define('TEXT_STOCK_UPDATE_ERROR', 'Stock not saved');
-?>
