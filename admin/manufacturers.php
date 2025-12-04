@@ -18,6 +18,12 @@
 
   require('includes/application_top.php');
   
+  if (defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
+    $admin_thumbs_size = 'style="'.USE_ADMIN_THUMBS_IN_LIST_STYLE.'"';
+  } else {
+    $admin_thumbs_size = 'style="max-width: 40px; max-height: 40px;"';
+  }
+
   $styles = ' style="width:200px;"';
   require(DIR_WS_INCLUDES . 'get_states.php');
 
@@ -711,6 +717,13 @@ if (USE_WYSIWYG == 'true') {
                 <table class="tableBoxCenter collapse">
                   <tr class="dataTableHeadingRow">
                     <td class="dataTableHeadingContent" width="10%"><?php echo TABLE_HEADING_SORTING.xtc_sorting(FILENAME_MANUFACTURERS, 'sort'); ?></td>
+                    <?php
+                    if (USE_ADMIN_THUMBS_IN_LIST == 'true') {
+                      ?>
+                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_IMAGE; ?></td>
+                      <?php
+                    }
+                    ?>
                     <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MANUFACTURERS.xtc_sorting(FILENAME_MANUFACTURERS, 'name'); ?></td>
                     <td class="dataTableHeadingContent txta-c" width="10%"><?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_MANUFACTURERS, 'status'); ?></td>
                     <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
@@ -767,6 +780,17 @@ if (USE_WYSIWYG == 'true') {
                     }
                     ?>
                     <td class="dataTableContent"><?php echo $manufacturers['sort_order']; ?></td>
+                    <?php
+                    if (USE_ADMIN_THUMBS_IN_LIST == 'true') {
+                      ?>
+                      <td class="dataTableContent txta-c">
+                        <?php
+                        echo xtc_info_image('manufacturers/'.$manufacturers['manufacturers_image'], $manufacturers['manufacturers_image'], '', '', $admin_thumbs_size);
+                        ?>
+                      </td>
+                      <?php
+                    }
+                    ?>
                     <td class="dataTableContent"><?php echo $manufacturers['manufacturers_name']; ?></td>
                     <td class="dataTableContent txta-c">
                       <?php
