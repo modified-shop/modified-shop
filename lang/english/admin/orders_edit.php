@@ -116,6 +116,5 @@ define('TEXT_PRODUCTS_QTY', 'Stock:');
 define('TEXT_PRODUCTS_EAN', 'GTIN/EAN:');
 define('TEXT_PRODUCTS_TAX_RATE', 'Tax:');
 define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date available:');
-define('TEXT_IMAGE_NONEXISTENT', '---');
 
 define('ERROR_STATUS_CHANGE', 'ATTENTION: After changing the customer group, shipping costs, surcharges and discounts may need to be adjusted manually.');

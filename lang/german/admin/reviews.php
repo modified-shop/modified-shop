@@ -36,7 +36,6 @@ define('TEXT_INFO_DELETE_REVIEW_INTRO', 'Sind Sie sicher, dass Sie diese Rezensi
 
 define('TEXT_INFO_DATE_ADDED', 'hinzugef&uuml;gt am:');
 define('TEXT_INFO_LAST_MODIFIED', 'letzte &Auml;nderung:');
-define('TEXT_IMAGE_NONEXISTENT', 'BILD EXISTIERT NICHT');
 
 define('TEXT_INFO_REVIEW_AUTHOR', 'geschrieben von:');
 define('TEXT_INFO_REVIEW_RATING', 'Bewertung:');
@@ -50,4 +49,3 @@ define('TEXT_OF_5_STARS', '%s von 5 Sternen!');
 define('TEXT_GOOD', '<span class="smallText colorRed"><b>GUT</b></span>');
 define('TEXT_BAD', '<span class="smallText colorRed"><b>SCHLECHT</b></span>');
 define('TEXT_INFO_HEADING_DELETE_REVIEW', 'Rezension l&ouml;schen');
-?>

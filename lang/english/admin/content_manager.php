@@ -106,6 +106,4 @@
   define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Duplicate Content Group Index! Please save again. The problem is thus automatically corrected!');
   defined('TEXT_CHARACTERS') OR define('TEXT_CHARACTERS','Signs');
   define('TEXT_KEEP_FILENAME', 'Keep filename:');
-  defined('TEXT_IMAGE_NONEXISTENT') OR define('TEXT_IMAGE_NONEXISTENT','No image available!'); 
   define('TEXT_CONTENT_HELP', 'To create a new attachment, use the search');
-?>
