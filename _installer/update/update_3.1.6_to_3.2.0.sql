@@ -19,4 +19,16 @@ INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `edit`,
 #GTB - 2025-12-02 - removed removeoldpics
 ALTER TABLE `admin_access` DROP `removeoldpics`;
 
+#GTB - 2025-12-02 - update countries
+UPDATE `countries` SET `countries_name` = 'Kingdom of Eswatini' WHERE countries_iso_code_2 = 'SZ';
+UPDATE `countries` SET `countries_name` = 'Republic of Cote d\'Ivoire' WHERE countries_iso_code_2 = 'CI';
+UPDATE `countries` SET `countries_name` = 'Republic of the Sudan' WHERE countries_iso_code_2 = 'SD';
+UPDATE `countries` SET `countries_name` = 'Republic of the Congo' WHERE countries_iso_code_2 = 'CG';
+
+INSERT INTO `countries` VALUES (243,'Republic of South Sudan','SS','SSD',1,1,0,100);
+INSERT INTO `countries` VALUES (244,'Democratic Republic of the Congo','CD','COD',1,1,0, 100);
+INSERT INTO `countries` VALUES (245,'Bonaire','BQ','BES',1,1,0, 100);
+
+DELETE FROM `countries` WHERE countries_iso_code_2 = 'ZR';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
