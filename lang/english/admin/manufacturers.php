@@ -20,6 +20,7 @@ define('HEADING_TITLE', 'Manufacturers');
 
 define('TABLE_HEADING_MANUFACTURERS', 'Manufacturers');
 define('TABLE_HEADING_SORTING', 'Sorting');
+define('TABLE_HEADING_IMAGE', 'Image');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
 
@@ -31,7 +32,6 @@ define('TEXT_MANUFACTURERS', 'Manufacturers:');
 define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_PRODUCTS', 'Products:');
-define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
 define('TEXT_MANUFACTURER_STATUS', 'Manufacturer status:');
 define('TEXT_MANUFACTURERS_SORT_ORDER', 'Sort order:');
 define('TEXT_MANUFACTURERS_PRODUCT_SORT_ORDER', 'Product Sorting:');
