@@ -173,7 +173,6 @@ if (count($admin_access) > 0) {
     $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=content') . '" class="menuBoxContentLink"> -' . BOX_CONTENT_CONTENT . '</a></li>';
     $menu_access[] = '</ul></li>';
   }
-  if ($admin_access['removeoldpics'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_REMOVEOLDPICS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_REMOVEOLDPICS . '</a></li>';
   if ($admin_access['backup'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_BACKUP) . '" class="menuBoxContentLink"> -' . BOX_BACKUP . '</a></li>';
   if (defined('MODULE_BANNER_MANAGER_STATUS') && MODULE_BANNER_MANAGER_STATUS == 'true') {
     if ($admin_access['banner_manager'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_BANNER_MANAGER) . '" class="menuBoxContentLink"> -' . BOX_BANNER_MANAGER . '</a></li>';

@@ -169,7 +169,6 @@ define('BOX_IMPORT','Import/Export');
 define('BOX_PRODUCTS_VPE','Verpackungseinheit');
 define('BOX_CAMPAIGNS_REPORT','Kampagnen Report');
 define('BOX_ORDERS_XSELL_GROUP','Cross-Marketing Gruppen');
-define('BOX_REMOVEOLDPICS','Alte Bilder l&ouml;schen'); // Remove old pictures - franky_n - 20110105
 define('BOX_JANOLAW','janolaw AGB Hosting'); // Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
 define('BOX_HAENDLERBUND','H&auml;ndlerbund AGB Service'); // Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
 define('BOX_SHOP','Shop');
