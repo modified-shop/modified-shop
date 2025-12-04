@@ -171,6 +171,9 @@ ErrorDocument 500 /error.php?error=500
   ##-- Sitemap
   RewriteRule ^sitemap(.*)\.html$ shop_content.php?coID=8 [QSA,L]
 
+  ##-- Robots
+  RewriteRule robots.txt robots.php [QSA,L]
+  
   ##----------------------------------------------------------------------------------
   ##-- When working with SEO-Urls you can decide, whether to use a colon ":" or a dash "-" symbol
   ##-- (Windows Servers might have problems with colon as delimiter!)
