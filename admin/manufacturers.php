@@ -720,7 +720,7 @@ if (USE_WYSIWYG == 'true') {
                     <?php
                     if (USE_ADMIN_THUMBS_IN_LIST == 'true') {
                       ?>
-                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_IMAGE; ?></td>
+                      <td class="dataTableHeadingContent txta-c" width="10%"><?php echo TABLE_HEADING_IMAGE; ?></td>
                       <?php
                     }
                     ?>
