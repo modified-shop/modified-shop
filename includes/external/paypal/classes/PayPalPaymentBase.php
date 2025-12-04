@@ -166,6 +166,48 @@ class PayPalPaymentBase extends PayPalCommon {
 
   
   function is_enabled() {
+    global $product;
+
+    if ($this->code == 'paypalexpress'
+        && defined('MODULE_PRODUCTS_ABO_STATUS') 
+        && MODULE_PRODUCTS_ABO_STATUS == 'true'
+        )
+    {
+      if ($this->enabled === true
+          && $_SESSION['cart']->count_contents()
+          )
+      {
+        $products = $_SESSION['cart']->get_products();
+        for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
+          if (isset ($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
+            foreach ($products[$i]['attributes'] as $option => $value) {
+              if ($option == (int)MODULE_PRODUCTS_ABO_OPTION_ID
+                  && $value == (int)MODULE_PRODUCTS_ABO_VALUES_ID
+                  )
+              {
+                $this->enabled = false;
+              }
+            }
+          }
+        }
+      }
+
+      if ($this->enabled === true
+          && is_object($product)
+          && $product->isProduct() === true 
+          )
+      {
+        $check_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                      WHERE products_id = '".(int)$product->data['products_id']."'
+                                        AND options_id = '".(int)MODULE_PRODUCTS_ABO_OPTION_ID."'
+                                        AND options_values_id = '".(int)MODULE_PRODUCTS_ABO_VALUES_ID."'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $this->enabled = false;
+        }
+      }      
+    }
+    
     if ($this->enabled === true) {
       $unallowed_modules_string = $_SESSION['customers_status']['customers_status_payment_unallowed'];
       $unallowed_modules_string = preg_replace("'[\r\n\s]+'", '', $unallowed_modules_string);

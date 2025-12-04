@@ -59,42 +59,45 @@ if (is_array($request)
         $paypal = new PayPalPayment($check['payment_class']);
       } else {
         $paypal = new PayPalPaymentV2($check['payment_class']);
+        $PayPalOrder = $paypal->GetOrder($check['payment_id']);
+        
         if ($check['payment_class'] == 'paypalpui') {
-          $PayPalOrder = $paypal->GetOrder($check['payment_id']);
           $paypal->FinishOrderPui($check['orders_id'], $PayPalOrder);
+        }
+
+        if (is_object($PayPalOrder)
+            && $PayPalOrder->status == 'COMPLETED'
+            && $check['send_order'] == 1
+            )
+        {
+          $smarty = new Smarty();
+          $insert_id = $check['orders_id'];
           
-          if (is_object($PayPalOrder)
-              && $PayPalOrder->status == 'COMPLETED'
-              && $check['send_order'] == 1
-              )
-          {
-            $smarty = new Smarty();
-            $insert_id = $check['orders_id'];
-            
-            $_SESSION['customer_id'] = $check['customers_id'];
-            $_SESSION['customer_country_id'] = get_country_id($check['customers_country_iso_code_2']);
-            $_SESSION['customer_zone_id'] = -1;
-            if ($_SESSION['customer_country_id'] > 0) {
-              $zones_query = xtc_db_query("SELECT z.zone_id
-                                             FROM ".TABLE_ORDERS." o
-                                             JOIN ".TABLE_ZONES." z
-                                                  ON z.zone_name = o.delivery_state
-                                            WHERE o.customers_id = '".(int)$_SESSION['customer_id']."'
-                                              AND z.zone_country_id = '".(int)$_SESSION['customer_country_id']."'");
-              if (xtc_db_num_rows($zones_query) > 0) {
-                $zones = xtc_db_fetch_array($zones_query);
-                $_SESSION['customer_zone_id'] = $zones['zone_id'];
-              }
+          $_SESSION['customer_id'] = $check['customers_id'];
+          $_SESSION['customer_country_id'] = get_country_id($check['customers_country_iso_code_2']);
+          $_SESSION['customer_zone_id'] = -1;
+          if ($_SESSION['customer_country_id'] > 0) {
+            $zones_query = xtc_db_query("SELECT z.zone_id
+                                           FROM ".TABLE_ORDERS." o
+                                           JOIN ".TABLE_ZONES." z
+                                                ON z.zone_name = o.delivery_state
+                                          WHERE o.customers_id = '".(int)$_SESSION['customer_id']."'
+                                            AND z.zone_country_id = '".(int)$_SESSION['customer_country_id']."'");
+            if (xtc_db_num_rows($zones_query) > 0) {
+              $zones = xtc_db_fetch_array($zones_query);
+              $_SESSION['customer_zone_id'] = $zones['zone_id'];
             }
-            
-            include(DIR_FS_CATALOG.'send_order.php');
-            unset($_SESSION['customer_id']);
-            $notified = 1;
-            
-            xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
-                             SET send_order = 0
-                           WHERE paypal_id = '".(int)$check['paypal_id']."'");
           }
+          
+          include(DIR_FS_CATALOG.'send_order.php');
+          unset($_SESSION['customer_id']);
+          unset($_SESSION['customer_country_id']);
+          unset($_SESSION['customer_zone_id']);
+          $notified = 1;
+          
+          xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
+                           SET send_order = 0
+                         WHERE paypal_id = '".(int)$check['paypal_id']."'");
         }
       }
       

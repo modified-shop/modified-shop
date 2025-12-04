@@ -96,7 +96,10 @@
       $client = $this->GetClient();
       
       $customer_id = NULL;
-      if (isset($_SESSION['customer_id'])) {
+      if (isset($_SESSION['customer_id'])
+          && $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SAVE_PAYMENT') == 1
+          )
+      {
         $customer_id = $this->getCustomerId($_SESSION['customer_id']);
       }
       
@@ -362,8 +365,90 @@
 
       if ($this->code == 'paypal') {
         $request->body['payment_source'][$pm_source]['experience_context']['contact_preference'] = 'UPDATE_CONTACT_INFO';
+
+        if (defined('MODULE_PRODUCTS_ABO_STATUS') 
+            && MODULE_PRODUCTS_ABO_STATUS == 'true'
+            )
+        {
+          $items = $sum_net = $sum_tax = array();
+          foreach ($order->products as $product) {
+            $product['price_net'] = $product['final_price'];
+            $product['tax_value'] = 0;
+            $product['single_price_net'] = $product['price'];
+            $product['single_tax_value'] = 0;
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 && $product['tax'] > 0) {
+              $product['price_net'] = round($xtPrice->xtcRemoveTax($product['final_price'], $product['tax']), 2);
+              $product['tax_value'] = round($xtPrice->xtcGetTax($product['final_price'], $product['tax']), 2);
+              $product['single_price_net'] = round($xtPrice->xtcRemoveTax($product['price'], $product['tax']), 2);
+              $product['single_tax_value'] = round($xtPrice->xtcGetTax($product['price'], $product['tax']), 2);
+            }
+            
+            $product['tax'] = (string)$product['tax'];
+            if (!isset($sum_net[$product['tax']])) $sum_net[$product['tax']] = 0;
+            if (!isset($sum_tax[$product['tax']])) $sum_tax[$product['tax']] = 0;
+            
+            if (isset($product['attributes'])
+                && is_array($product['attributes'])
+                && count($product['attributes']) > 0
+                )
+            {
+              foreach ($product['attributes'] as $attributes) {
+                if ($attributes['option_id'] == (int)MODULE_PRODUCTS_ABO_OPTION_ID
+                    && $attributes['value_id'] == (int)MODULE_PRODUCTS_ABO_VALUES_ID
+                    )
+                {
+                  $sum_net[$product['tax']] += $product['price_net'];
+                  $sum_tax[$product['tax']] += $product['tax_value'];
+
+                  $items[] = array(
+                    'description' => $this->encode_utf8($product['name']),
+                    'quantity' => $product['qty']
+                  );
+                }
+              }
+            }
+          }
+          
+          if (count($items) > 0) {
+            $request->body['payment_source'][$pm_source]['attributes'] = array(
+              'vault' => array(
+                'store_in_vault' => 'ON_SUCCESS',
+                'usage_type' => 'MERCHANT',
+                'customer_type' => 'CONSUMER',
+                'permit_multiple_payment_tokens' => true,
+              )
+            );
+            $request->body['payment_source'][$pm_source]['permit_multiple_payment_tokens'] = 'false';
+            $request->body['payment_source'][$pm_source]['usage_type'] = 'MERCHANT';
+            $request->body['payment_source'][$pm_source]['customer_type'] = 'CONSUMER';
+            $request->body['payment_source'][$pm_source]['usage_pattern'] = 'SUBSCRIPTION_PREPAID';
+            $request->body['payment_source'][$pm_source]['shipping'] = $purchase_unit['shipping'];
+            $request->body['payment_source'][$pm_source]['billing_plan']['billing_cycles'] = array(
+              array(
+                'tenure_type' => 'REGULAR',
+                'pricing_scheme' => array(
+                  'pricing_model' => 'VARIABLE',
+                  'price' => array(
+                    'value' => sprintf($this->numberFormat, array_sum($sum_net)),
+                    'currency_code' => $this->encode_utf8($order->info['currency'])
+                  ),
+                ),
+                'frequency' => array(
+                  'interval_unit' => 'DAY',
+                  'interval_count' => $_SESSION['orders_frequency'],
+                ),
+                'total_cycles' => '0',
+                'sequence' => '1',
+                'start_date' => date('Y-m-d'),
+              )
+            );
+
+            $request->body['payment_source'][$pm_source]['billing_plan']['product'] = $items;
+            $request->body['payment_source'][$pm_source]['billing_plan']['name'] = $this->encode_utf8(STORE_NAME);
+          }
+        }
       }
-      
+            
       if ($this->code == 'paypalexpress') {
         $request->body['payment_source'][$pm_source]['experience_context']['contact_preference'] = 'UPDATE_CONTACT_INFO';
         $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'GET_FROM_FILE';
@@ -407,6 +492,61 @@
       }
     }
     
+
+    function CreateRecurringOrder($source, $order_id, $vault_id) {
+      global $order, $xtPrice;
+      
+      // auth
+      $client = $this->GetClient();
+
+      $request = new OrdersCreateRequest();
+      $request->payPalRequestId(md5($this->code.$order_id));
+      $request->prefer('return=representation');
+
+      $purchase_unit = array(
+        'description' => $this->encode_utf8(mb_substr(MODULE_PAYMENT_PAYPAL_TEXT_ORDER, 0, 127)),
+        'soft_descriptor' => $this->encode_utf8(mb_substr(STORE_NAME, 0, 22)),
+        'invoice_id' => $this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$order_id,
+        'amount' => array(
+          'value' => sprintf($this->numberFormat, round(($order->info['pp_total']), 2)),
+          'currency_code' => $this->encode_utf8($order->info['currency'])
+        )
+      );
+
+      $request->body = array(
+        'intent' => 'CAPTURE',
+        'purchase_units' => array($purchase_unit),
+        'payment_source' => array(
+          $source => array(
+            'vault_id' => $vault_id,
+            'stored_credential' => array(
+              'payment_initiator' => 'MERCHANT',
+              'usage' => 'SUBSEQUENT',
+              'usage_pattern' => 'SUBSCRIPTION_PREPAID',              
+            )
+          )
+        ) 
+      );
+      
+      try {
+        $response = $client->execute($request);
+
+        $sql_data_array = array(
+          'orders_id' => $order_id,
+          'payment_id' => $response->result->id,
+          'payer_id' => $response->result->payer->payer_id,
+          'transaction_id' => $response->result->purchase_units[0]->payments->captures[0]->id,
+          'send_order' => 1,
+        );
+        xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
+        
+      } catch (PayPalHttp\HttpException $ex) {
+        $this->LoggingManager->log('WARNING', 'CreateOrder', array('exception' => $ex));
+      } catch (Exception $ex) {
+        $this->LoggingManager->log('DEBUG', 'CreateOrder', array('exception' => $ex));
+      }
+    }
+
 
     function CaptureOrder($OrderID, $error = false) {
       global $insert_id;
