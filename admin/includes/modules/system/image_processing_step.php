@@ -22,9 +22,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-if ( !class_exists( "image_processing_step" ) ) {
   class image_processing_step {
 
     var $code;
@@ -46,47 +45,47 @@ if ( !class_exists( "image_processing_step" ) ) {
 
     function __construct() {
       global $current_page;
+      
       $this->code = 'image_processing_step';
       $this->title = MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE;
       $this->description = sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION, 5);
-      $this->sort_order = defined('MODULE_STEP_IMAGE_PROCESS_SORT_ORDER') ? MODULE_STEP_IMAGE_PROCESS_SORT_ORDER:'';
+      $this->sort_order = defined('MODULE_STEP_IMAGE_PROCESS_SORT_ORDER') ? MODULE_STEP_IMAGE_PROCESS_SORT_ORDER : '';
       $this->enabled = ((defined('MODULE_STEP_IMAGE_PROCESS_STATUS') && MODULE_STEP_IMAGE_PROCESS_STATUS == 'True') ? true : false);
       
       $this->module_filename = $current_page;
+      $this->logfile = DIR_FS_CATALOG.'log/mod_image_processing_*.log';
       $this->properties = array();
       $this->files = array();
-      $this->logfile = DIR_FS_CATALOG.'log/mod_image_processing_*.log';
+      $this->get_params = array();
+      $this->post_params = array();
       $this->images_type_array = array(
         '',
         '_list',
         '_mobile'
       );
 
-      //define used get parameters
-      $this->get_params = array();
-      //define used post parameters
-      $this->post_params = array();
-
       $this->properties['form_edit'] = xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=' . $this->code . '&action=custom','post', 'id="form_image_processing"');
     }
     
-    function get_images_files($filedir,$offset=1,$limit=1) {
+    function get_images_files($filedir, $offset = 1, $limit = 1) {
       $this->data_volume = 0;
       $this->max_files = 0;
       
-      $ext_array = array('gif','jpg','jpeg','png'); //G�ltige Dateiendungen
+      $ext_array = array('gif','jpg','jpeg','png');
+
+      $max_files = 0;
       $files = array();
       if ($dir = opendir($filedir)) {
-        $max_files = 0;
-        while  ($file = readdir($dir)) {
+        while ($file = readdir($dir)) {
           $tmp = explode('.',$file);
-          if(is_array($tmp)) {
+          if (is_array($tmp)) {
             $ext = strtolower($tmp[count($tmp)-1]);
-            if (is_file($filedir.$file) && in_array($ext,$ext_array) ){
+            if (is_file($filedir.$file) && in_array($ext,$ext_array)) {
               if ($max_files >= $offset && $max_files < $limit) {
-                $files[$max_files]= array(
-                                 'id' => $file,
-                                 'text' =>$file);
+                $files[$max_files] = array(
+                  'id' => $file,
+                  'text' => $file
+                );
               }
               $this->data_volume += filesize($filedir.$file);
               $max_files ++;
@@ -164,7 +163,7 @@ if ( !class_exists( "image_processing_step" ) ) {
         if ($i >= $this->max_files) {
           $rData['start'] = $limit;
           $rData['count'] = $count;
-          return $rData; // step is done
+          return $rData;
         }
         $image_name = $image_name_process = $files[$i]['text'];
 
@@ -378,7 +377,7 @@ if ( !class_exists( "image_processing_step" ) ) {
               }
               break;
           }
-          $count += 1;
+          $count ++;
           if (isset($_POST['logging']) && $_POST['logging'] == 1) {
             $handle = fopen($this->logfile, "a"); fwrite($handle, $image_name.'|processed'."\n"); fclose($handle);
           }
@@ -411,7 +410,6 @@ if ( !class_exists( "image_processing_step" ) ) {
     }
 
     function display() {
-
       $max_array = array (array ('id' => '1', 'text' => '1'));
       $max_array[] = array ('id' => '5', 'text' => '5');
       $max_array[] = array ('id' => '10', 'text' => '10');
@@ -420,10 +418,10 @@ if ( !class_exists( "image_processing_step" ) ) {
       $max_array[] = array ('id' => '50', 'text' => '50');
       
       $process_type_array = array();
-      $process_type_array[] = array ('id' => 'products', 'text' => TEXT_PRODUCTS);
-      $process_type_array[] = array ('id' => 'categories', 'text' => TEXT_CATEGORIES);
-      $process_type_array[] = array ('id' => 'manufacturers', 'text' => TEXT_MANUFACTURERS);
-      $process_type_array[] = array ('id' => 'banners', 'text' => TEXT_BANNERS);
+      $process_type_array[] = array ('id' => 'products', 'text' => MODULE_STEP_IMAGE_PROCESS_TEXT_PRODUCTS);
+      $process_type_array[] = array ('id' => 'categories', 'text' => MODULE_STEP_IMAGE_PROCESS_TEXT_CATEGORIES);
+      $process_type_array[] = array ('id' => 'manufacturers', 'text' => MODULE_STEP_IMAGE_PROCESS_TEXT_MANUFACTURERS);
+      $process_type_array[] = array ('id' => 'banners', 'text' => MODULE_STEP_IMAGE_PROCESS_TEXT_BANNERS);
 
       $this->get_images_files(DIR_FS_CATALOG_IMAGES.'product_images/original_images/', 1, 1);
       $max_files_products = $this->max_files;
@@ -443,61 +441,62 @@ if ( !class_exists( "image_processing_step" ) ) {
       
       require (DIR_WS_INCLUDES.'javascript/jquery.image_processing.js.php');
       
-      $ajax_img = '<img src="images/loading.gif" class="ajax_loading"> ';
+      $ajax_img = '<img src="images/loading.gif" class="ajax_loading">';
 
       return array('text' => xtc_draw_hidden_field('process','module_processing_do').
                              xtc_draw_hidden_field('ajax_url',xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module='.$this->code). '&action=custom').
                              xtc_draw_hidden_field('ajax','1').
                              xtc_draw_hidden_field('start','0').
                              '<input id="total" type="hidden" name="total" value="'.(int)$max_files_products.'"/>'.
-                             IMAGE_EXPORT_TYPE.'<br />'.
-                             IMAGE_EXPORT.'<br />'.
+                             MODULE_STEP_IMAGE_PROCESS_TEXT_IMAGE_EXPORT_TYPE.'<br />'.
+                             MODULE_STEP_IMAGE_PROCESS_TEXT_IMAGE_EXPORT.'<br />'.
                              
-                             '<br />'.TEXT_MAX_IMAGES.
+                             '<br />'.MODULE_STEP_IMAGE_PROCESS_TEXT_MAX_IMAGES.
                              '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, '5') . '<br />'.
 
-                             '<br />'.TEXT_PROCESS_TYPE.
+                             '<br />'.MODULE_STEP_IMAGE_PROCESS_TEXT_PROCESS_TYPE.
                              '<br />' . xtc_draw_pull_down_menu('process_type', $process_type_array, 'products', 'id="process_type"') . '<br />'.
 
                              '<div id="products">' . 
-                               '<br />' . sprintf(IMAGE_COUNT_INFO, 'original_images', '<span id="products_total">'.$max_files_products.'</span>') . '['.$this->formatBytes($data_volume_products).']'.'<br />'.
-                               '<br />' . xtc_draw_checkbox_field('products[mini_images]', '1', false, '', 'class="mini_images"') . ' ' . TEXT_PRODUCTS_MINI_IMAGES.
-                               '<br />' . xtc_draw_checkbox_field('products[thumbnail_images]', '1', false, '', 'class="thumbnail_images"') . ' ' . TEXT_PRODUCTS_THUMBNAIL_IMAGES.
-                               '<br />' . xtc_draw_checkbox_field('products[midi_images]', '1', false, '', 'class="midi_images"') . ' ' . TEXT_PRODUCTS_MIDI_IMAGES.
-                               '<br />' . xtc_draw_checkbox_field('products[info_images]', '1', false, '', 'class="info_images"') . ' ' . TEXT_PRODUCTS_INFO_IMAGES. 
-                               '<br />' . xtc_draw_checkbox_field('products[popup_images]', '1', false, '', 'class="popup_images"') . ' ' . TEXT_PRODUCTS_POPUP_IMAGES. 
+                               '<br />' . sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_COUNT_INFO, 'original_images', '<span id="products_total">'.$max_files_products.'</span>') . '['.$this->formatBytes($data_volume_products).']'.'<br />'.
+                               '<br />' . xtc_draw_checkbox_field('products[mini_images]', '1', false, '', 'class="mini_images"') . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_PRODUCTS_MINI_IMAGES.
+                               '<br />' . xtc_draw_checkbox_field('products[thumbnail_images]', '1', false, '', 'class="thumbnail_images"') . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_PRODUCTS_THUMBNAIL_IMAGES.
+                               '<br />' . xtc_draw_checkbox_field('products[midi_images]', '1', false, '', 'class="midi_images"') . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_PRODUCTS_MIDI_IMAGES.
+                               '<br />' . xtc_draw_checkbox_field('products[info_images]', '1', false, '', 'class="info_images"') . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_PRODUCTS_INFO_IMAGES. 
+                               '<br />' . xtc_draw_checkbox_field('products[popup_images]', '1', false, '', 'class="popup_images"') . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_PRODUCTS_POPUP_IMAGES. 
                              '</div>' .
 
                              '<div id="categories" style="display:none;">' . 
-                               '<br />' . sprintf(IMAGE_COUNT_INFO, 'original_images', '<span id="categories_total">'.$max_files_categories.'</span>') . '['.$this->formatBytes($data_volume_categories).']'.'<br />'.
-                               '<br />' . xtc_draw_checkbox_field('categories_image[_default]', '1', false) . ' ' . TEXT_CATEGORIES_IMAGES.
-                               '<br />' . xtc_draw_checkbox_field('categories_image[_list]', '1', false) . ' ' . TEXT_CATEGORIES_LIST_IMAGES.
-                               '<br />' . xtc_draw_checkbox_field('categories_image[_mobile]', '1', false) . ' ' . TEXT_CATEGORIES_MOBILE_IMAGES.
+                               '<br />' . sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_COUNT_INFO, 'original_images', '<span id="categories_total">'.$max_files_categories.'</span>') . '['.$this->formatBytes($data_volume_categories).']'.'<br />'.
+                               '<br />' . xtc_draw_checkbox_field('categories_image[_default]', '1', false) . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_CATEGORIES_IMAGES.
+                               '<br />' . xtc_draw_checkbox_field('categories_image[_list]', '1', false) . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_CATEGORIES_LIST_IMAGES.
+                               '<br />' . xtc_draw_checkbox_field('categories_image[_mobile]', '1', false) . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_CATEGORIES_MOBILE_IMAGES.
                              '</div>' .
 
                              '<div id="manufacturers" style="display:none;">' . 
-                               '<br />' . sprintf(IMAGE_COUNT_INFO, 'original_images', '<span id="manufacturers_total">'.$max_files_manufacturers.'</span>') . '['.$this->formatBytes($data_volume_manufacturers).']'.'<br />'.
-                               '<br />' . xtc_draw_checkbox_field('manufacturers', '1', false) . ' ' . TEXT_MANUFACTURERS_IMAGES.
+                               '<br />' . sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_COUNT_INFO, 'original_images', '<span id="manufacturers_total">'.$max_files_manufacturers.'</span>') . '['.$this->formatBytes($data_volume_manufacturers).']'.'<br />'.
+                               '<br />' . xtc_draw_checkbox_field('manufacturers', '1', false) . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_MANUFACTURERS_IMAGES.
                              '</div>' .
 
                              '<div id="banners" style="display:none;">' . 
-                               '<br />' . sprintf(IMAGE_COUNT_INFO, 'original_images', '<span id="banners_total">'.$max_files_banners.'</span>') . '['.$this->formatBytes($data_volume_banners).']'.'<br />'.
-                               '<br />' . xtc_draw_checkbox_field('banners_image[_default]', '1', false) . ' ' . TEXT_BANNERS_IMAGES.
-                               '<br />' . xtc_draw_checkbox_field('banners_image[_mobile]', '1', false) . ' ' . TEXT_BANNERS_MOBILE_IMAGES.
+                               '<br />' . sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_COUNT_INFO, 'original_images', '<span id="banners_total">'.$max_files_banners.'</span>') . '['.$this->formatBytes($data_volume_banners).']'.'<br />'.
+                               '<br />' . xtc_draw_checkbox_field('banners_image[_default]', '1', false) . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_BANNERS_IMAGES.
+                               '<br />' . xtc_draw_checkbox_field('banners_image[_mobile]', '1', false) . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_BANNERS_MOBILE_IMAGES.
                              '</div>' .
 
-                             '<br />'.TEXT_SETTINGS.
-                             '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', false, '', 'class="only_missing_images"') . ' ' . TEXT_ONLY_MISSING_IMAGES.
-                             '<br />' . xtc_draw_checkbox_field('lower_file_ext', '1', false, '', 'class="lower_file_ext"') . ' ' . TEXT_LOWER_FILE_EXT. '<br />'.
+                             '<br />'.MODULE_STEP_IMAGE_PROCESS_TEXT_SETTINGS.
+                             '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', false, '', 'class="only_missing_images"') . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_ONLY_MISSING_IMAGES.
+                             '<br />' . xtc_draw_checkbox_field('lower_file_ext', '1', false, '', 'class="lower_file_ext"') . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_LOWER_FILE_EXT. '<br />'.
                              
-                             '<br />'.TEXT_LOGGING.
-                             '<br />' . xtc_draw_checkbox_field('logging', '1', false, '', 'class="logfile"') . ' ' . TEXT_LOGFILE. '<br />'.
+                             '<br />'.MODULE_STEP_IMAGE_PROCESS_TEXT_LOGGING.
+                             '<br />' . xtc_draw_checkbox_field('logging', '1', false, '', 'class="logfile"') . ' ' . MODULE_STEP_IMAGE_PROCESS_TEXT_LOGFILE. '<br />'.
+                             
                              '<br />' . xtc_button(BUTTON_START). '&nbsp;' .
                              xtc_button_link(BUTTON_CANCEL, xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module='.$this->code)) .
                              
-                             '<div class="ajax_responce" style="margin-bottom:15px;"><hr>'.
+                             '<div class="ajax_response" style="margin-bottom:15px;"><hr>'.
                              '<div class="ajax_imgname"></div>'.
-                               sprintf(MODULE_STEP_READY_STYLE_TEXT,$ajax_img . IMAGE_STEP_INFO . '<span class="ajax_count"></span> / <span id="ajax_total">' .(int)$max_files_products . '</span><span class="ajax_ready_info">' . IMAGE_STEP_INFO_READY .'<span>') . 
+                               sprintf(MODULE_STEP_READY_STYLE_TEXT,$ajax_img . MODULE_STEP_IMAGE_PROCESS_TEXT_STEP_INFO . '<span class="ajax_count"></span> / <span id="ajax_total">' .(int)$max_files_products . '</span><span class="ajax_ready_info">' . MODULE_STEP_IMAGE_PROCESS_TEXT_STEP_INFO_READY .'<span>') . 
                                '<div class="process_wrapper">
                                 <div class="process_inner_wrapper">
                                   <div id="show_image_process" style="width:'. 0 .'%;"></div>
@@ -510,7 +509,7 @@ if ( !class_exists( "image_processing_step" ) ) {
                                 var selector = $(this).val();
                                 var total = parseInt($("#"+selector+"_total").text());
                                                         
-                                $("#products, #categories, #manufacturers, #banners, .ajax_responce").hide();
+                                $("#products, #categories, #manufacturers, #banners, .ajax_response").hide();
                                 $("#"+selector).show();
                                 $("#total").val(total);
                                 $("#ajax_total").text(total);
@@ -518,7 +517,6 @@ if ( !class_exists( "image_processing_step" ) ) {
                              </script>
                              '
                    );
-
     }
 
     function check() {
@@ -559,4 +557,3 @@ if ( !class_exists( "image_processing_step" ) ) {
         return round($bytes, $precision) . ' ' . $units[$pow];
     }
   }
-}
