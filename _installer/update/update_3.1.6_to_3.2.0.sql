@@ -16,4 +16,7 @@ DELETE FROM configuration_group WHERE configuration_group_id = '31';
 #GTB - 2025-10-16 - insert scheduled tasks for customers ip maintenance
 INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `edit`, `tasks`) VALUES (1, 'd', 0, 1, 'customers_ip_maintenance');
 
+#GTB - 2025-12-02 - removed removeoldpics
+ALTER TABLE `admin_access` DROP `removeoldpics`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
