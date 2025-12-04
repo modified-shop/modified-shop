@@ -311,7 +311,7 @@
    * @return
    */
   function xtc_info_image($image, $alt, $width = '', $height = '', $params = '') {
-    if (($image) && (file_exists(DIR_FS_CATALOG_IMAGES.$image))) {
+    if (($image) && (is_file(DIR_FS_CATALOG_IMAGES.$image))) {
       $image .= '?t='.filemtime(DIR_FS_CATALOG_IMAGES.$image);
       $image = xtc_image(DIR_WS_CATALOG_IMAGES.$image, $alt, $width, $height, $params);
     } else {
@@ -331,7 +331,7 @@
    * @return
    */
   function xtc_info_image_c($image, $alt, $width = '', $height = '', $params = '') {
-    if (($image) && (file_exists(DIR_FS_CATALOG_IMAGES.'categories/'.$image))) {
+    if (($image) && (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$image))) {
       $image .= '?t='.filemtime(DIR_FS_CATALOG_IMAGES.'categories/'.$image);
       $image = xtc_image(DIR_WS_CATALOG_IMAGES.'categories/'.$image, $alt, $width, $height, $params);
     } else {
@@ -351,7 +351,7 @@
    * @return
    */
   function xtc_product_thumb_image($image, $alt, $width = '', $height = '', $params = '') {
-    if (($image) && (file_exists(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image))) {
+    if (($image) && (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image))) {
       $image .= '?t='.filemtime(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image);
       $image = xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$image, $alt, $width, $height, $params);
     } else {
