@@ -28,6 +28,8 @@
     var $get_params;
     var $post_params;
     var $max_files;
+    var $path;
+    var $image_path;
 
     function __construct() {
       global $current_page;
