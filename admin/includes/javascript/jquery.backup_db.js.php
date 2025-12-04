@@ -76,7 +76,11 @@
       if (maxReloadsText != '') infoText = maxReloadsText;
       $('#info_text').html(infoText);
     
-      var button_back = '<a href="backup.php?file=' + response.file + '&<?php echo xtc_session_name() . "=" . xtc_session_id(); ?>" class="button"><?php echo BUTTON_BACK;?></a>';
+      var file = response.file;
+      if ("dir" in response) {
+        file = response.dir;
+      }
+      var button_back = '<a href="backup.php?file=' + file + '&<?php echo xtc_session_name() . "=" . xtc_session_id(); ?>" class="button"><?php echo BUTTON_BACK;?></a>';
       $('#button_back').html(button_back);
       
     }

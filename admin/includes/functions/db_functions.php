@@ -581,6 +581,13 @@ function WriteToDumpFile($data) {
   global $dump;
   
   $df = $dump['file'];
+  if (isset($dump['single_files']) && $dump['single_files'] == 'yes') {
+    $df = $dump['dir'].$dump['file'].'.sql';
+    if ($dump['compress'] == true) {
+      $df .= '.gz';
+    }
+  }
+    
   if (isset($data) && $data!='') {
     if (isset($dump['utf8-convert']) && $dump['utf8-convert'] == 'yes') {
       $data = mb_convert_encoding($data, 'UTF-8', 'ISO-8859-15');
@@ -674,8 +681,12 @@ function GetTableInfo($table) {
   $data .= "/*!40000 ALTER TABLE `$table` DISABLE KEYS */;\n";
   //EOF NEW TABLE  STRUCTURE  - LIKE MYSQLDUMPER
 
+  if (isset($dump['single_files']) && $dump['single_files'] == 'yes') {
+    $dump['file'] = $table;
+    WriteToDumpFile($dump['schema']);
+  }
   WriteToDumpFile($data);
-
+  
   //Datensaetze feststellen
   $sql="SELECT count(*) as `count_records` FROM `".$table."`";
   $res=@xtc_db_query($sql);
@@ -769,20 +780,31 @@ function GetTableData($table) {
   }
 }
 
-function getBackupData($file) {
+function getBackupData($file, $dir = '') {
   $file_array = array();
   $file_array['file'] = $file;
-  $file_array['date'] = date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $file));
-  $file_array['size'] = number_format(filesize(DIR_FS_BACKUP . $file)) . ' bytes';
+  $file_array['dir'] = rtrim($dir, '/');
+  $file_array['date'] = date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $dir . $file));
+  $file_array['size'] = number_format(filesize(DIR_FS_BACKUP . $dir . $file)) . ' bytes';
   $file_array['table_list'] = array();
   $file_array['tables_row_count'] = 0;
+  
+  if ($file_array['dir'] != '') {
+    $filesize = 0;
+    $files_array = glob(DIR_FS_BACKUP . $dir . "*.{sql,gz}", GLOB_BRACE);
+    foreach ($files_array as $sqlfile) {
+      $filesize += filesize($sqlfile);
+    }
+    $file_array['size'] = number_format($filesize) . ' bytes';
+  }
+  
   switch (substr($file, -3)) {
     case 'zip': 
       $file_array['compression'] = 'ZIP'; 
       break;
     case '.gz': 
       $file_array['compression'] = 'GZIP';
-      if ($fp = gzopen(DIR_FS_BACKUP . $file, 'r')) {
+      if ($fp = gzopen(DIR_FS_BACKUP . $dir . $file, 'r')) {
         while ( ! gzeof($fp) ) {
           $line = gzgets($fp, 4096);
           if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
@@ -790,6 +812,7 @@ function getBackupData($file) {
             $table_info = explode('|',trim(substr($line, 9)));
             $file_array['table_list'][] = array(
               'name' => $table_info[0],
+              'file' => $table_info[0].'.sql.gz',
               'rows' => $table_info[1],
               'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
               'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
@@ -804,7 +827,7 @@ function getBackupData($file) {
       break;
     default: 
       $file_array['compression'] = TEXT_NO_EXTENSION; 
-      if ($fp = fopen(DIR_FS_BACKUP . $file, 'r')) {
+      if ($fp = fopen(DIR_FS_BACKUP . $dir . $file, 'r')) {
         while ( ! feof($fp) ) {
           $line = fgets($fp, 4096);
           if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
@@ -812,6 +835,7 @@ function getBackupData($file) {
             $table_info = explode('|',trim(substr($line, 9)));
             $file_array['table_list'][] = array(
               'name' => $table_info[0],
+              'file' => $table_info[0].'.sql',
               'rows' => $table_info[1],
               'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
               'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
