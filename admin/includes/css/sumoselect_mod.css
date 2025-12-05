@@ -45,3 +45,5 @@ td.dataTableConfig.col-middle .SumoSelect {width:100%; }
 .select_f12 { font-size:12px; }
 .page {vertical-align:middle;}
 .SumoSelect > p.SlectBox {margin-top:-28px;}
+form[name=option_order_by] .SumoSelect > p.SlectBox {margin-top:-10px;}
+form[name=sales_report] .SumoSelect > p.SlectBox {margin-top:-23px;}
