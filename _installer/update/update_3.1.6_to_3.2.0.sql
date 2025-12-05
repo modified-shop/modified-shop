@@ -29,6 +29,11 @@ INSERT INTO `countries` VALUES (243,'Republic of South Sudan','SS','SSD',1,1,0,1
 INSERT INTO `countries` VALUES (244,'Democratic Republic of the Congo','CD','COD',1,1,0, 100);
 INSERT INTO `countries` VALUES (245,'Bonaire','BQ','BES',1,1,0, 100);
 
+DELETE ztgz
+  FROM zones_to_geo_zones AS ztgz
+  JOIN countries AS co 
+       ON co.countries_id = ztgz.zone_country_id
+          AND co.countries_iso_code_2 = 'ZR';
 DELETE FROM `countries` WHERE countries_iso_code_2 = 'ZR';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
