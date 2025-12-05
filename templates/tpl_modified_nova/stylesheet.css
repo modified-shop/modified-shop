@@ -229,7 +229,7 @@ strong, b, .strong, .bold {
   font-weight:700;
 }
 
- /* global for p and table */
+/* global for p, table and iframe */
 p {
   margin:14px 0;
 }
@@ -244,6 +244,10 @@ table td {
 }
 .td_full {
   width:100%;
+}
+
+iframe {
+  display:block;
 }
 
 /* global products image handling */

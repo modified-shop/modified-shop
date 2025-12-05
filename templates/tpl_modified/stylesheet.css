@@ -258,6 +258,9 @@ table td {
 .td_full {
   width:100%;
 }
+iframe {
+  display:block;
+}
 /* END globals */
 
 

@@ -444,6 +444,9 @@ table td {
   width:100%;
 }
 
+iframe {
+  display:block;
+}
 /* Start sidebar */
 #sidebar_marker {
   display: none;
