@@ -29,7 +29,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>">
   <title><?php echo TITLE; ?></title>
   <meta http-equiv="pragma" content="no-cache">
-  <link rel="shortcut icon" href="<?php echo DIR_WS_IMAGES.'favicon.ico'; ?>" />
+  <link rel="shortcut icon" href="<?php echo ((is_dir(DIR_FS_ADMIN.DIR_WS_IMAGES.'favicon/') && is_file(DIR_FS_ADMIN.DIR_WS_IMAGES.'favicon/favicon.ico')) ? DIR_WS_IMAGES.'favicon/favicon.ico?v='.filemtime(DIR_FS_ADMIN.DIR_WS_IMAGES.'favicon/favicon.ico') : DIR_WS_IMAGES.'favicon.ico?v='.filemtime(DIR_FS_ADMIN.DIR_WS_IMAGES.'favicon.ico')); ?>" />
   <link rel="stylesheet" type="text/css" href="includes/stylesheet.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/stylesheet.css'); ?>">  
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/searchbar_menu/searchbar_menu.css'); ?>" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/css/tooltip.css'); ?>">
