@@ -27,3 +27,10 @@ define('MODULE_CAO_FAKTURA_ORDERS_STATUS_DESC', 'Select the order status which s
 define('MODULE_CAO_FAKTURA_LOG_TITLE', 'Logging');
 define('MODULE_CAO_FAKTURA_LOG_DESC', 'Enable CAO Logging?');
 
+define('MODULE_CAO_FAKTURA_PRICE_GROUPS_TITLE', 'Number of price groups');
+define('MODULE_CAO_FAKTURA_PRICE_GROUPS_DESC', 'Enter the number of existing price groups in CAO.');
+
+define('MODULE_CAO_FAKTURA_STATUSES_PRICES_TITLE', 'Assignment of price groups');
+define('MODULE_CAO_FAKTURA_STATUSES_PRICES_DESC', 'Select the appropriate price group.');
+
+define('MODULE_CAO_FAKTURA_TEXT_NO_PRICE', 'Do not transfer any price');
