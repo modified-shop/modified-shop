@@ -155,3 +155,10 @@
       }
     }
   }
+
+
+  function xtc_db_data($data, $query = 'configuration') {
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/db_data/','php') as $file) require_once ($file);
+
+    return $data;
+  }
