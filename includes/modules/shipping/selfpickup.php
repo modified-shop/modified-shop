@@ -83,7 +83,7 @@ class selfpickup
         global $PHP_SELF;
         
         $address_format = '';
-        if (basename($PHP_SELF) != FILENAME_SHOPPING_CART) {
+        if (!in_array(basename($PHP_SELF), array(FILENAME_SHOPPING_CART, 'ajax.php'))) {
           $address = $this->address();
           if ($address !== false) {
             $address_format = '<span class="address_pickup" style="display:block;margin-top:10px;">'.xtc_address_format($address['format_id'], $address, true, ' ', '<br>').'</span>';
