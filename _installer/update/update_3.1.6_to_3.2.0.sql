@@ -25,9 +25,13 @@ UPDATE `countries` SET `countries_name` = 'Republic of Cote d\'Ivoire' WHERE cou
 UPDATE `countries` SET `countries_name` = 'Republic of the Sudan' WHERE countries_iso_code_2 = 'SD';
 UPDATE `countries` SET `countries_name` = 'Republic of the Congo' WHERE countries_iso_code_2 = 'CG';
 
-INSERT INTO `countries` VALUES (243,'Republic of South Sudan','SS','SSD',1,1,0,100);
-INSERT INTO `countries` VALUES (244,'Democratic Republic of the Congo','CD','COD',1,1,0, 100);
-INSERT INTO `countries` VALUES (245,'Bonaire','BQ','BES',1,1,0, 100);
+INSERT INTO `countries` (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`, `sort_order`) VALUES ('Republic of South Sudan','SS','SSD',1,1,0,100);
+INSERT INTO `countries` (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`, `sort_order`) VALUES ('Democratic Republic of the Congo','CD','COD',1,1,0, 100);
+INSERT INTO `countries` (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`, `sort_order`) VALUES ('Bonaire','BQ','BES',1,1,0, 100);
+
+INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES ((SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'SS'), (SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'SS'), 0, 6, NULL, NOW());
+INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES ((SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'CD'), (SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'CD'), 0, 6, NULL, NOW());
+INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES ((SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'BQ'), (SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'BQ'), 0, 6, NULL, NOW());
 
 DELETE ztgz
   FROM zones_to_geo_zones AS ztgz
