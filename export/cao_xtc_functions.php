@@ -1901,20 +1901,30 @@ function ProductsUpdate ()
     }
   }
 
-  $customers_statuses_query = xtc_db_query("select * from " . TABLE_CUSTOMERS_STATUS . " where language_id = '".$LangID."' order by customers_status_id");
-  while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
-    xtc_db_query("delete from personal_offers_by_customers_status_" . $customers_statuses['customers_status_id'] . " where products_id='" . $products_id . "'");
-    
-    if (isset($_POST['products_vk'.$customers_statuses['customers_status_id']])) {
-      $sql_data_array = array(
-        'products_id' => $products_id,
-        'quantity' => '1',
-        'personal_offer' => xtc_db_prepare_input($_POST['products_vk'.$customers_statuses['customers_status_id']]),
-      );
-      xtc_db_perform('personal_offers_by_customers_status_' . $customers_statuses['customers_status_id'] , $sql_data_array);
+  if (defined('MODULE_CAO_FAKTURA_PRICES')) {
+    $prices_array = json_decode(MODULE_CAO_FAKTURA_PRICES, true); 
+    $customers_statuses_query = xtc_db_query("SELECT * 
+                                                FROM " . TABLE_CUSTOMERS_STATUS . " 
+                                               WHERE language_id = '".$LangID."' 
+                                            ORDER BY customers_status_id");
+    while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
+      xtc_db_query("DELETE FROM personal_offers_by_customers_status_" . $customers_statuses['customers_status_id'] . " WHERE products_id='" . $products_id . "'");
+      
+      if (isset($prices_array[$customers_statuses['customers_status_id']])
+          && $prices_array[$customers_statuses['customers_status_id']] != ''
+          && isset($_POST['products_vk'.$prices_array[$customers_statuses['customers_status_id']]])
+          )
+      {
+        $sql_data_array = array(
+          'products_id' => $products_id,
+          'quantity' => '1',
+          'personal_offer' => xtc_db_prepare_input($_POST['products_vk'.$prices_array[$customers_statuses['customers_status_id']]]),
+        );
+        xtc_db_perform('personal_offers_by_customers_status_' . $customers_statuses['customers_status_id'] , $sql_data_array);    
+      }
     }
   }
-
+  
   if (file_exists('cao_produpd_2.php')) { include('cao_produpd_2.php'); }
 
   print_xml_status (0, $_POST['action'], 'OK', $mode, 'PRODUCTS_ID', $products_id);

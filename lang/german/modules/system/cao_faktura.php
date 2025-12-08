@@ -26,3 +26,11 @@ define('MODULE_CAO_FAKTURA_ORDERS_STATUS_DESC', 'Geben Sie die Bestellstatus an,
 
 define('MODULE_CAO_FAKTURA_LOG_TITLE', 'Logging');
 define('MODULE_CAO_FAKTURA_LOG_DESC', 'CAO Logging aktivieren?');
+
+define('MODULE_CAO_FAKTURA_PRICE_GROUPS_TITLE', 'Anzahl Preisgruppen');
+define('MODULE_CAO_FAKTURA_PRICE_GROUPS_DESC', 'Geben Sie die Anzahl der vorhandenen Preisgruppen in CAO ein.');
+
+define('MODULE_CAO_FAKTURA_STATUSES_PRICES_TITLE', 'Zuordnung Preisgruppen');
+define('MODULE_CAO_FAKTURA_STATUSES_PRICES_DESC', 'W&auml;hlen Sie die entsprechende Preisgruppe.');
+
+define('MODULE_CAO_FAKTURA_TEXT_NO_PRICE', 'keinen Preis &uuml;bertragen');
