@@ -96,7 +96,7 @@
                 'value' => sprintf($paypal->numberFormat, $methods['price'])
               ),
               'type' => 'SHIPPING',
-              'label' => $quote['module'].(($methods['title'] != '') ? ' ('.$methods['title'].')' : ''),
+              'label' => decode_htmlentities($quote['module'].(($methods['title'] != '') ? ' ('.$methods['title'].')' : '')),
               'selected' => $selected
             );
             

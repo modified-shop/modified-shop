@@ -494,7 +494,9 @@
     
 
     function CreateRecurringOrder($source, $order_id, $vault_id) {
-      global $order, $xtPrice;
+      global $xtPrice;
+      
+      $order = new order($order_id);
       
       // auth
       $client = $this->GetClient();
@@ -539,7 +541,31 @@
           'send_order' => 1,
         );
         xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
-        
+
+        if (defined('MODULE_PRODUCTS_ABO_STATUS') 
+            && MODULE_PRODUCTS_ABO_STATUS == 'true'
+            )
+        {
+          foreach ($order->products as $product) {
+            if (isset($product['attributes'])
+                && is_array($product['attributes'])
+                && count($product['attributes']) > 0
+                )
+            {
+              foreach ($product['attributes'] as $attributes) {
+                if ($attributes['orders_products_options_id'] == (int)MODULE_PRODUCTS_ABO_OPTION_ID
+                    && $attributes['orders_products_options_values_id'] == (int)MODULE_PRODUCTS_ABO_VALUES_ID
+                    )
+                {
+                  xtc_db_query("UPDATE ".TABLE_ORDERS."
+                                   SET orders_recurring_status = 1
+                                 WHERE orders_id = '".(int)$order_id."'");
+                  break;
+                }
+              }
+            }
+          }
+        }
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'CreateOrder', array('exception' => $ex));
       } catch (Exception $ex) {
