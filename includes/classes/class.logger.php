@@ -314,7 +314,7 @@ class LoggingManager implements \Psr\Log\LoggerInterface
      *
      * @return array  [exception, data (without exception)]
      */
-    private function handleException(array $context = null)
+    private function handleException(?array $context = null)
     {
         $exception_data = '{}';
         if (array_key_exists('exception', $context)) {
