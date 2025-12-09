@@ -277,10 +277,10 @@ class vat_validation {
       trigger_error('SOAP-Fehler: (Fehlernummer: '. $e->faultcode .', Fehlermeldung: '. $e->faultstring .')', E_USER_WARNING);
     }
 
-    if ($client) {
+    if (isset($client) && is_object($client)) {
       try {
         $result = $client->checkVat($params);
-        if ($result->valid == true){
+        if ($result->valid === true) {
           return 1;  // VAT-ID is valid
         } else {
           return 0;   // VAT-ID is NOT valid
