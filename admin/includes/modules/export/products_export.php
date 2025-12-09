@@ -48,6 +48,9 @@
       if ($enclosure == '') $enclosure = '"';
       if ($separator == '') $separator = ',';
       $escape = "\\";
+
+      $group_check = (GROUP_CHECK == 'true') ? " AND p.group_permission_".(int)$_POST['status']." = 1 " : '';
+      $fsk_lock = ($xtPrice->cStatus['customers_fsk18_display'] == '0') ? " AND p.products_fsk18 != 1 " : '';
       
       $export_query = xtc_db_query("SELECT p.*,
                                            pd.products_name,
@@ -71,6 +74,8 @@
                                            ON p.products_shippingtime = ss.shipping_status_id
                                               AND ss.language_id= '".$lng->language['id']."'
                                      WHERE p.products_status = 1
+                                           ".$group_check."
+                                           ".$fsk_lock."
                                   GROUP BY p.products_id");
       
       $i = 0;
