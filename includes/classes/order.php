@@ -606,7 +606,7 @@
         $this->delivery['country']['title'] = $delivery_zone['countries_name'];
         $this->delivery['country']['id'] = $delivery_zone['countries_id'];
         $this->delivery['country_id'] = $delivery_zone['countries_id'];
-        $this->delivery['zone_id'] = 0;
+        $this->delivery['zone_id'] = -1;
       
         $this->delivery['shipping'] = $this->delivery['country'];
         $this->delivery['shipping']['zone_id'] = $this->delivery['zone_id'];
