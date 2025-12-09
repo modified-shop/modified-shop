@@ -18,19 +18,16 @@
 // include needed functions
 include_once(DIR_FS_INC . 'xtc_get_countries.inc.php');
 
-require_once(DIR_FS_EXTERNAL . 'nusoap/nusoap.php');
-
-define ('VAT_LIVE_CHECK_URL', 'https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl');
 
 class vat_validation {
   
   var $vat_info;
   var $vat_errors;
   var $live_check;
+  var $live_check_url = 'https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl';
   
   
   function __construct($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
-
     $vat_id = str_replace(' ', '', $vat_id);
     $this->vat_info = array ();
     $this->vat_errors = array(
@@ -42,6 +39,7 @@ class vat_validation {
       'SERVER_BUSY' => '98',
       );
     $this->live_check = ACCOUNT_COMPANY_VAT_LIVE_CHECK;
+    
     if (xtc_not_null($vat_id)) {
       $this->getInfo($vat_id, $customers_id, $customers_status, $country_id, $guest);
     } else {
@@ -55,14 +53,16 @@ class vat_validation {
 
 
   function getInfo($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
-    
     $customers_status_id = DEFAULT_CUSTOMERS_STATUS_ID;
     $customers_vat_status_id = DEFAULT_CUSTOMERS_VAT_STATUS_ID;
     $customers_vat_status_id_local = DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL;
     
     $error = false;
     if ($vat_id != '') {
-      $validate_vatid = $this->validate_vatid($vat_id, $country_id);
+      $validate_vatid = $this->validate_vatid($vat_id, $country_id, false);
+      if ($this->live_check == 'true' && $validate_vatid == '1') {
+        $validate_vatid = $this->validate_vatid($vat_id, $country_id, true);
+      }
       $vat_id_status = $validate_vatid;
 
       switch ($validate_vatid) {
@@ -141,8 +141,9 @@ class vat_validation {
   }
 
 
-  function validate_vatid($vat_id, $country_id) {
-
+  function validate_vatid($vat_id, $country_id, $live_check = false) {
+    static $country_check;
+    
     // remove special chars
     $remove = array (' ', '-', '/', '\\', '.', ':', ',');
     $vat_id = trim(chop($vat_id));
@@ -177,8 +178,10 @@ class vat_validation {
     );
     
     // check country 
-    $country_check = xtc_get_countriesList($country_id, true);
-
+    if (!isset($country_check)) {
+      $country_check = xtc_get_countriesList($country_id, true);
+    }
+    
     // fix for Greece
     $search_array = array('gr');
     $replace_array = array('el');
@@ -201,7 +204,7 @@ class vat_validation {
         
     $country_iso_code = strtoupper($country);
     
-    if ($this->live_check == 'true') {
+    if ($live_check === true) {
       
       //Check VAT for EU countries only
       switch ($country_iso_code) {
@@ -233,7 +236,7 @@ class vat_validation {
         case 'SE':
         case 'SI':
         case 'SK':
-          $t_result = $this->checkVatID_EU($vatNumber, $country_iso_code);
+          $t_result = $this->checkVatID($vatNumber, $country_iso_code);
           break;
         default:
           $t_result = 8; //unknown country
@@ -249,45 +252,18 @@ class vat_validation {
           break;
       }
       $vat_id = $country_iso_code . $vatNumber;
-      $t_result = $this->validate_vatid_offline($country, $vat_id);
+      $t_result = $this->checkVatIDSyntax($country, $vat_id);
     }
 
     return $results[$t_result];
   }
   
   
-  function checkVatID_EU($vatNumber, $country_iso_code) {
-
+  function checkVatID($vatNumber, $country_iso_code) {
     $params = array(
       'countryCode' => $country_iso_code, 
-      'vatNumber' => $vatNumber,
+      'vatNumber' => $vatNumber
     );
-
-    $soap_client = new nusoap_client(VAT_LIVE_CHECK_URL, true);
-    $soap_proxy = $soap_client->getProxy();
-
-    // check connection
-    if (!$soap_client->getError() && is_object($soap_proxy)) {
-      $result = $soap_proxy->checkVat($params);
-
-      if (is_array($result) && isset($result['valid']) && $result['valid'] == 'true') {
-        return 1; // VAT-ID is valid
-      } elseif (is_array($result) && isset($result['valid']) && $result['valid'] == 'false') {
-        return $this->_checkVatID_EU($vatNumber, $country_iso_code);
-        return 0; // VAT-ID is NOT valid
-      } elseif (is_array($result) && isset($result['faultstring'])) {
-        return $this->vat_errors[$result['faultstring']];
-      }      
-    }
-
-    return $this->_checkVatID_EU($vatNumber, $country_iso_code);
-  }
-
-
-  function _checkVatID_EU($vatNumber, $country_iso_code) {
-
-    $params = array('countryCode' => $country_iso_code, 
-                    'vatNumber' => $vatNumber);
 
     try {
       $options = array(
@@ -295,9 +271,8 @@ class vat_validation {
         'exceptions' => true,
         'trace' => 1,
         'cache_wsdl' => WSDL_CACHE_NONE,
-        'user_agent' => 'Mozilla',
       );
-      $client = new SoapClient(VAT_LIVE_CHECK_URL, $options);
+      $client = new SoapClient($this->live_check_url, $options);
     } catch (Exception $e) {
       trigger_error('SOAP-Fehler: (Fehlernummer: '. $e->faultcode .', Fehlermeldung: '. $e->faultstring .')', E_USER_WARNING);
     }
@@ -315,15 +290,12 @@ class vat_validation {
       }
     }
     
-    return false;
+    return 95;
   }
   
   
-  function validate_vatid_offline($country, $vat_id) {
+  function checkVatIDSyntax($country, $vat_id) {
     switch ($country) {
-      default:
-        return 8;
-      break;
       // oesterreich
       case 'at' :
         if (strlen($vat_id) != 11 && strtoupper($vat_id[2]) != 'U') {
@@ -337,7 +309,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // belgien
       case 'be' :
@@ -352,11 +324,10 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // bulgarien
       case 'bg' :
-
         $number = str_replace($country, '', strtolower($vat_id));
 
         if (strlen($vat_id) == 11) {
@@ -374,9 +345,7 @@ class vat_validation {
         } else {
           return 0;
         }
-
-
-      break;
+        break;
 
       // zypern
       case 'cy' :
@@ -391,7 +360,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // tschechische republik
       case 'cz' :
@@ -417,8 +386,7 @@ class vat_validation {
         } else {
           return 0;
         }
-
-      break;
+        break;
 
       // deutschland
       case 'de' :
@@ -432,8 +400,7 @@ class vat_validation {
         } else {
           return 0;
         }
-
-      break;
+        break;
 
       // dänemark
       case 'dk' :
@@ -447,7 +414,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // estland
       case 'ee' :
@@ -461,7 +428,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // griechenland
       case 'el' :
@@ -475,7 +442,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // spanien
       case 'es' :
@@ -489,7 +456,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // finnland
       case 'fi' :
@@ -503,7 +470,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // frankreich
       case 'fr' :
@@ -517,7 +484,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // england
       case 'gb' :
@@ -537,7 +504,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // ungarn
       case 'hu' :
@@ -551,7 +518,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // irland
       case 'ie' :
@@ -565,7 +532,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // italien
       case 'it' :
@@ -579,7 +546,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // litauen
       case 'lt' :
@@ -599,7 +566,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // luxemburg
       case 'lu' :
@@ -613,7 +580,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // lettland
       case 'lv' :
@@ -627,7 +594,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // malta
       case 'mt' :
@@ -641,7 +608,8 @@ class vat_validation {
         } else {
           return 0;
         }
-
+        break;
+        
       // niederlande
       case 'nl' :
         $number = str_replace($country, '', strtolower($vat_id));
@@ -654,7 +622,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // polen
       case 'pl' :
@@ -668,7 +636,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // portugal
       case 'pt' :
@@ -682,7 +650,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // rumänien
       case 'ro' :
@@ -697,7 +665,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // schweden
       case 'se' :
@@ -725,7 +693,7 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
       // slowakei
       case 'sk' :
@@ -739,538 +707,11 @@ class vat_validation {
         } else {
           return 0;
         }
-      break;
+        break;
 
+      default:
+        return 8;
     }
   }
 
-  /********************************************************************
-  * landesabhaengige Hilfsfunktionen zur Berechnung                   *
-  ********************************************************************/
-
-  // Canada
-  function checkVatID_c($vat_id) {
-    if (strlen($vat_id) != 10)
-      return 0;
-
-    // LUHN-10 code http://www.ee.unb.ca/tervo/ee4253/luhn.html
-
-    $id = substr($vat_id, 1);
-    $checksum = 0;
-    for ($i = 9; $i > 0; $i --) {
-      $digit = $vat_id[$i];
-      if ($i % 2 == 1)
-        $digit *= 2;
-      if ($digit >= 10) {
-        $checksum += $digit -10 + 1;
-      } else {
-        $checksum += $digit;
-      }
-    }
-    if ($this->modulo($checksum, 10) == 0)
-      return 1;
-
-    return 0;
-  } // Canada
-
-  // belgien
-  function checkVatID_be($vat_id) {
-    if (strlen($vat_id) != 11)
-      return 0;
-
-    $checkvals = (int) substr($vat_id, 2, -2);
-    $checksum = (int) substr($vat_id, -2);
-
-    if (97 - $this->modulo($checkvals, 97) != $checksum)
-      return 0;
-
-    return 1;
-  } // end belgien
-
-  // daenemark
-  function checkVatID_dk($vat_id) {
-    if (strlen($vat_id) != 10)
-      return 0;
-
-    $weights = array (2, 7, 6, 5, 4, 3, 2, 1);
-    $checksum = 0;
-
-    for ($i = 0; $i < 8; $i ++)
-      $checksum += (int) $vat_id[$i +2] * $weights[$i];
-    if ($this->modulo($checksum, 11) > 0)
-      return 0;
-
-    return 1;
-  } // end daenemark
-
-  // deutschland
-  function checkVatID_de($vat_id) {
-    if (strlen($vat_id) != 11)
-      return 0;
-
-    $prod = 10;
-    $checkval = 0;
-    $checksum = (int) substr($vat_id, -1);
-
-    for ($i = 2; $i < 10; $i ++) {
-      $checkval = $this->modulo((int) $vat_id[$i] + $prod, 10);
-      if ($checkval == 0)
-        $checkval = 10;
-      $prod = $this->modulo($checkval * 2, 11);
-    } // end for($i = 2; $i < 10; $i++)
-    $prod = $prod == 1 ? 11 : $prod;
-    if (11 - $prod != $checksum)
-      return 0;
-
-    return 1;
-  } // end deutschland
-
-  // estland
-  function checkVatID_ee($vat_id) {
-
-    if (strlen($vat_id) != 11)
-      return 0;
-    if (!is_numeric(substr($vat_id, 2)))
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-  } // end estland
-
-  // finnland
-  function checkVatID_fi($vat_id) {
-    if (strlen($vat_id) != 10)
-      return 0;
-
-    $weights = array (7, 9, 10, 5, 8, 4, 2);
-    $checkval = 0;
-    $checksum = (int) substr($vat_id, -1);
-
-    for ($i = 0; $i < 8; $i ++)
-      $checkval += (int) $vat_id[$i +2] * $weights[$i];
-
-    if (11 - $this->modulo($checkval, 11) != $checksum)
-      return 0;
-
-    return 1;
-  } // end finnland
-
-  // frankreich
-  function checkVatID_fr($vat_id) {
-    if (strlen($vat_id) != 13)
-      return 0;
-    if (!is_numeric(substr($vat_id), 4))
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-
-  } // end frankreich
-
-  // griechenland
-  function checkVatID_el($vat_id) {
-    if (strlen($vat_id) != 11)
-      return 0;
-
-    $checksum = substr($vat_id, -1);
-    $checkval = 0;
-
-    for ($i = 1; $i <= 8; $i ++)
-      $checkval += (int) $vat_id[10 - $i] * pow(2, $i);
-    $checkval = $this->modulo($checkval, 11) > 9 ? 0 : $this->modulo($checkval, 11);
-    if ($checkval != $checksum)
-      return 0;
-
-    return 1;
-  } // end griechenland
-
-  // grossbrittanien
-  function checkVatID_gb($vat_id) {
-    if (strlen($vat_id) != 11 && strlen($vat_id) != 14)
-      return 0;
-    if (!is_numeric(substr($vat_id, 2)))
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-
-  } // end grossbrittanien
-
-  /********************************************
-  * irland                                    *
-  ********************************************/
-  // irland switch
-  function checkVatID_ie($vat_id) {
-    if (strlen($vat_id) != 10)
-      return 0;
-    if (!checkVatID_ie_new($vat_id) && !checkVatID_ie_old($vat_id))
-      return 0;
-
-    return 1;
-  } // end irland switch
-
-  // irland alte methode
-  function checkVatID_ie_old($vat_id) {
-    // in neue form umwandeln
-    $transform = array (substr($vat_id, 0, 2), '0', substr($vat_id, 4, 5), $vat_id[2], $vat_id[9]);
-    $vat_id = join('', $transform);
-
-    // nach neuer form pruefen
-    return checkVatID_ie_new($vat_id);
-  } // end irland alte methode
-
-  // irland neue methode
-  function checkVatID_ie_new($vat_id) {
-    $checksum = strtoupper(substr($vat_id, -1));
-    $checkval = 0;
-    $checkchar = 'A';
-    for ($i = 2; $i <= 8; $i ++)
-      $checkval += (int) $vat_id[10 - $i] * $i;
-    $checkval = $this->modulo($checkval, 23);
-    if ($checkval == 0) {
-      $checkchar = 'W';
-    } else {
-      for ($i = $checkval -1; $i > 0; $i --)
-        $checkchar ++;
-    }
-    if ($checkchar != $checksum)
-      return false;
-
-    return true;
-  } // end irland neue methode
-  /* end irland
-  ********************************************/
-
-  // italien
-  function checkVatID_it($vat_id) {
-    if (strlen($vat_id) != 13)
-      return 0;
-
-    $checksum = (int) substr($vat_id, -1);
-    $checkval = 0;
-    for ($i = 0; $i <= 9; $i ++)
-      //echo $vat_id[11-$i];
-      $checkval += (int) $vat_id[11 - $i] * ($this->is_even($i) ? 2 : 1);
-    if ($checksum != $this->modulo($checkval, 10))
-      return 0;
-
-    return 1;
-  } // end italien
-
-  // lettland
-  function checkVatID_lv($vat_id) {
-
-    if (strlen($vat_id) != 13)
-      return 0;
-    if (!is_numeric(substr($vat_id, 2)))
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-  } // end lettland
-
-  // litauen
-  function checkVatID_lt($vat_id) {
-
-    if ((strlen($vat_id) != 13) || (strlen($vat_id) != 11))
-      return 0;
-    if (!is_numeric(substr($vat_id, 2)))
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-  } // end litauen
-
-  // luxemburg
-  function checkVatID_lu($vat_id) {
-    if (strlen($vat_id) != 10)
-      return 0;
-
-    $checksum = (int) substr($vat_id, -2);
-    $checkval = (int) substr($vat_id, 2, 6);
-    if ($this->modulo($checkval, 89) != $checksum)
-      return 0;
-
-    return 1;
-  } // luxemburg
-
-  // malta
-  function checkVatID_mt($vat_id) {
-
-    if (strlen($vat_id) != 10)
-      return 0;
-    if (!is_numeric(substr($vat_id, 2)))
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-  } // end malta
-
-  // niederlande
-  function checkVatID_nl($vat_id) {
-    if (strlen($vat_id) != 14)
-      return 0;
-    if (strtoupper($vat_id[11]) != 'B')
-      return 0;
-    if ((int) $vat_id[12] == 0 || (int) $vat_id[13] == 0)
-      return 0;
-
-    $checksum = (int) $vat_id[10];
-    $checkval = 0;
-
-    for ($i = 2; $i <= 9; $i ++)
-      $checkval += (int) $vat_id[11 - $i] * $i;
-    $checkval = $this->modulo($checkval, 11) > 9 ? 0 : $this->modulo($checkval, 11);
-
-    if ($checkval != $checksum)
-      return 0;
-
-    return 1;
-  } // end niederlande
-
-  // oesterreich
-  function checkVatID_at($vat_id) {
-    if (strlen($vat_id) != 11)
-      return 0;
-    if (strtoupper($vat_id[2]) != 'U')
-      return 0;
-
-    $checksum = (int) $vat_id[10];
-    $checkval = 0;
-
-    for ($i = 3; $i < 10; $i ++)
-      $checkval += $this->cross_summa((int) $vat_id[$i] * ($this->is_even($i) ? 2 : 1));
-    $checkval = substr((string) (96 - $checkval), -1);
-
-    if ($checksum != $checkval)
-      return 0;
-
-    return 1;
-  } // end oesterreich
-
-  // polen
-  function checkVatID_pl($vat_id) {
-    if (strlen($vat_id) != 12)
-      return 0;
-
-    $weights = array (6, 5, 7, 2, 3, 4, 5, 6, 7);
-    $checksum = (int) $vat_id[11];
-    $checkval = 0;
-    for ($i = 0; $i < count($weights); $i ++)
-      $checkval += (int) $vat_id[$i +2] * $weights[$i];
-    $checkval = $this->modulo($checkval, 11);
-
-    if ($checkval != $checksum)
-      return 0;
-
-    return 1;
-  } // end polen
-
-  // portugal
-  function checkVatID_pt($vat_id) {
-    if (strlen($vat_id) != 11)
-      return 0;
-
-    $checksum = (int) $vat_id[10];
-    $checkval = 0;
-
-    for ($i = 2; $i < 10; $i ++) {
-      $checkval += (int) $vat_id[11 - $i] * $i;
-    }
-    $checkval = (11 - $this->modulo($checkval, 11)) > 9 ? 0 : (11 - $this->modulo($checkval, 11));
-    if ($checksum != $checkval)
-      return 0;
-
-    return 1;
-  } // end portugal
-
-  // schweden
-  function checkVatID_se($vat_id) {
-    if (strlen($vat_id) != 14)
-      return 0;
-    if ((int) substr($vat_id, -2) < 1 || (int) substr($vat_id, -2) > 94)
-      return 0;
-    $checksum = (int) $vat_id[11];
-    $checkval = 0;
-
-    for ($i = 0; $i < 10; $i ++)
-      $checkval += $this->cross_summa((int) $vat_id[10 - $i] * ($this->is_even($i) ? 2 : 1));
-    if ($checksum != ($this->modulo($checkval, 10) == 0 ? 0 : 10 - $this->modulo($checkval, 10)))
-      return 0;
-
-    $checkval = 0;
-    for ($i = 0; $i < 13; $i ++)
-      $checkval += (int) $vat_id[13 - $i] * ($this->is_even($i) ? 2 : 1);
-    if ($this->modulo($checkval, 10) > 0)
-      return 0;
-
-    return 1;
-  } // end schweden
-
-  // slowakische republik
-  function checkVatID_sk($vat_id) {
-    if (strlen($vat_id) != 12)
-      return 0;
-    if (!is_numeric(substr($vat_id, 2)))
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-
-  } // end slowakische republik
-
-  // slowenien
-  function checkVatID_si($vat_id) {
-    if (strlen($vat_id) != 10)
-      return 0;
-    if ((int) $vat_id[2] == 0)
-      return 0;
-
-    $checksum = (int) $vat_id[9];
-    $checkval = 0;
-
-    for ($i = 2; $i <= 8; $i ++)
-      $checkval += (int) $vat_id[10 - $i] * $i;
-    $checkval = $this->modulo($checkval, 11) == 10 ? 0 : 11 - $this->modulo($checkval, 11);
-    if ($checksum != $checkval)
-      return 0;
-
-    return 1;
-  } // end slowenien
-
-  // spanien
-  function checkVatID_es($vat_id) {
-    if (strlen($vat_id) != 11)
-      return 0;
-
-    $allowed = array ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'Q');
-    $checkval = false;
-
-    for ($i = 0; $i < count($allowed); $i ++) {
-      if (strtoupper($vat_id[2]) == $allowed[$i])
-        $checkval = true;
-    } // end for($i=0; $i<count($allowed); $i++)
-    if (!$checkval)
-      return 0;
-
-    $checksum = (int) $vat_id[10];
-    $checkval = 0;
-
-    for ($i = 2; $i <= 8; $i ++)
-      $checkval += $this->cross_summa((int) $vat_id[11 - $i] * ($this->is_even($i) ? 2 : 1));
-    if ($checksum != 10 - $this->modulo($checkval, 10))
-      return 0;
-
-    return 1;
-  } // end spanien
-
-  // tschechien
-  function checkVatID_cz($vat_id) {
-
-    if ((strlen($vat_id) != 10) || (strlen($vat_id) != 11) || (strlen($vat_id) != 12))
-      return 0;
-    if (!is_numeric(substr($vat_id, 2)))
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-  } // end tschechien
-
-  // ungarn
-  function checkVatID_hu($vat_id) {
-
-    if (strlen($vat_id) != 10)
-      return 0;
-    if (!is_numeric(substr($vat_id, 2)))
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-  } // end ungarn
-
-  // zypern
-  function checkVatID_cy($vat_id) {
-
-    if (strlen($vat_id) != 11)
-      return 0;
-
-    if ($this->live_check == 'true') {
-
-      return $this->live($vat_id);
-
-    } else {
-      return 9; // es gibt keinen algorithmus
-    }
-  } // end zypern
-
-  /*******************************************************************/
-
-  /********************************************************************
-  * mathematische Hilfsfunktionen                                     *
-  ********************************************************************/
-  // modulo berechnet den rest einer division von $val durch $param
-  function modulo($val, $param) {
-    return $val - (floor($val / $param) * $param);
-  } // end function modulo($val, $param)
-
-  // stellt fest, ob eine zahl gerade ist
-  function is_even($val) {
-    return ($val / 2 == floor($val / 2)) ? true : false;
-  } // end function is_even($val)
-
-  // errechnet die quersumme von $val
-  function cross_summa($val) {
-    $val = (string) $val;
-    $sum = 0;
-    for ($i = 0; $i < strlen($val); $i ++)
-      $sum += (int) $val[$i];
-    return $sum;
-  } // end function cross_summa((string) $val)
-  /*******************************************************************/
 }
-?>
