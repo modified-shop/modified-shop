@@ -54,7 +54,7 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
     }
     $paypal_smarty->caching = 0;
     $paypal_smarty->assign('PAYMENT_INFO', $paypal_payment_info);
-    $paypal_smarty->assign('language', $_SESSION['language']);
+    $paypal_smarty->assign('language', $order->info['language']);
     $payment_info_content = $paypal_smarty->fetch($tpl_file);
 
     $smarty->assign('PAYMENT_INFO_HTML', $payment_info_content);
@@ -72,7 +72,7 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
       }
       $paypal_smarty->caching = 0;
       $paypal_smarty->assign('PAYMENT_INFO', $paypal_payment_info);
-      $paypal_smarty->assign('language', $_SESSION['language']);
+      $paypal_smarty->assign('language', $order->info['language']);
       
       $payment_info_content = $paypal_smarty->fetch($tpl_file);
   
