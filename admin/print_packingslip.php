@@ -58,7 +58,7 @@
     require_once (DIR_FS_CATALOG.DIR_WS_CLASSES . 'payment.php');
     $payment_modules = new payment($order->info['payment_method']);
     $payment_method = $payment_modules::payment_title($order->info['payment_method'],$order->info['order_id']);
-    $smarty->assign('PAYMENT_METHOD', $payment_modules::payment_title($order->info['payment_method'],$order->info['order_id']));
+    $smarty->assign('PAYMENT_METHOD', $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']));
   }
   $smarty->assign('COMMENTS', nl2br($order->info['comments']));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
