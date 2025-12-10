@@ -37,7 +37,7 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
       $payment_modules = new payment($order->info['payment_class']);
     }
     $paypal_payment_info = array(
-      array ('title' => $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id']).': ', 
+      array ('title' => $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']).': ', 
              'class' => $paypal->code,
              'fields' => array(array('title' => '',
                                      'field' => sprintf(constant('MODULE_PAYMENT_'.strtoupper($paypal->code).'_TEXT_SUCCESS'), $paypal->create_paypal_link($order->info['order_id'])),
