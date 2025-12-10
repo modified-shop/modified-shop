@@ -76,6 +76,12 @@ class shoppingCartModules {
     }
     
     //----- SHOPPING CART METHODS -----//
+    public static function construct($dataArray, $type)
+    {
+        self::$function_call = 'construct';
+        return self::call_module_method($dataArray, $type);
+    }
+
     public static function restore_contents_customer_id($customer_id, $type)
     {
         self::$function_call = 'restore_contents_customer_id';
