@@ -84,7 +84,12 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $tmp = false;
   }
 
-  if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
+  if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+      && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+      && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+      && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
+      ) 
+  {
     $discount = $_SESSION['customers_status']['customers_status_ot_discount'];
   } else {
     $discount = '0.00';

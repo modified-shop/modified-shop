@@ -572,7 +572,12 @@ class shoppingCart {
           if ($product['products_tax_class_id'] != 0) {
 
             $products_price_total = $products_price + $attribute_price;
-            if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
+            if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+                && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+                && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+                && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
+                ) 
+            {
               // Rabatt für die Steuerberechnung
               // der eigentliche Rabatt wird im order-details_cart abgezogen
               $products_price_tax = $products_price - ($products_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
@@ -604,7 +609,12 @@ class shoppingCart {
               $this->tax[$product['products_tax_class_id']]['desc'] = TAX_NO_TAX.$products_tax_description;
               $this->total += $tax;
                    
-              if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
+              if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+                  && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+                  && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+                  && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
+                  ) 
+              {
                 if (!isset($this->tax_discount[$product['products_tax_class_id']])) $this->tax_discount[$product['products_tax_class_id']] = 0;
                 $this->tax_discount[$product['products_tax_class_id']] += $tax;
               } 

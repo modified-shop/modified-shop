@@ -504,6 +504,8 @@ class ot_coupon {
     
     if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
         && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+        && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+        && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
         && (int)MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER < (int)$this->sort_order
         ) 
     {
@@ -524,6 +526,8 @@ class ot_coupon {
 
       if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
           && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+          && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+          && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
           && (int)MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER < (int)$this->sort_order
           ) 
       {

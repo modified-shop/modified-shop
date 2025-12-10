@@ -156,8 +156,10 @@ class PayPalPayment extends PayPalPaymentBase {
       }    
     
       $total = $price = $_SESSION['cart']->show_total();
-      if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1 
+      if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
           && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+          && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+          && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
           ) 
       {
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 

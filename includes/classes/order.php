@@ -754,7 +754,12 @@
 
         $shown_price = $this->products[$index]['final_price'];
         $this->info['subtotal'] += $shown_price;
-        if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1'){
+        if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+            && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+            && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+            && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
+            ) 
+        {
           $shown_price_tax = $shown_price - ($shown_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
         }
 
@@ -765,7 +770,12 @@
           if (!isset($this->info['tax_groups'][$tax_index])) {
             $this->info['tax_groups'][$tax_index] = 0;
           }
-          if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
+          if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+              && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+              && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+              && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
+              ) 
+          {
             $this->info['tax'] += $shown_price_tax - ($shown_price_tax / (1 + $products_tax / 100));
             $this->info['tax_groups'][$tax_index] += (($shown_price_tax / (100 + $products_tax)) * $products_tax);
           } else {
@@ -783,7 +793,12 @@
           if (!isset($this->info['tax_groups'][$tax_index])) {
             $this->info['tax_groups'][$tax_index] = 0;
           }
-          if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
+          if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+              && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+              && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+              && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
+              ) 
+          {
             if (!isset($this->tax_discount[$products[$i]['tax_class_id']])) $this->tax_discount[$products[$i]['tax_class_id']] = 0;
             $this->tax_discount[$products[$i]['tax_class_id']] += ($shown_price_tax / 100) * $products_tax;
             $this->info['tax_groups'][$tax_index] += ($shown_price_tax / 100) * ($products_tax);

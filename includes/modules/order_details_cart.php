@@ -135,7 +135,12 @@ $smarty->assign('HIDDEN_OPTIONS', $hidden_options);
 $discount = 0;
 $total_content = '';
 $total =$_SESSION['cart']->show_total();
-if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00') {
+if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+    && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+    && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+    && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
+    ) 
+{
   if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
     $price = $total-$_SESSION['cart']->show_tax(false);
   } else {

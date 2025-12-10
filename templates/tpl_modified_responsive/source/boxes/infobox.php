@@ -41,7 +41,12 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_infobox.html', $cache_i
     if ($_SESSION['customers_status']['customers_status_discount'] != '0.00') {
       $box_content .= ' | ' . BOX_LOGINBOX_DISCOUNT . ' ' . $_SESSION['customers_status']['customers_status_discount'] . '%';
     }
-    if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1 && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00') {
+    if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+        && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+        && defined('MODULE_ORDER_TOTAL_DISCOUNT_STATUS')
+        && MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true'
+        ) 
+    {
       $box_content .= ' | ' . BOX_LOGINBOX_DISCOUNT_TEXT . ' ' . $_SESSION['customers_status']['customers_status_ot_discount'] . ' % ' . BOX_LOGINBOX_DISCOUNT_OT . '';
     }
   }
