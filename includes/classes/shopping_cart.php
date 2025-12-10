@@ -51,6 +51,8 @@ class shoppingCart {
   var $attr_price; 
   var $attr_weight; 
   var $type; 
+  var $save_to_db;
+  var $add_up_saved_qty;
   var $table_basket; 
   var $table_basket_attributes; 
   var $shoppingCartModules;
@@ -58,20 +60,31 @@ class shoppingCart {
   function __construct($type = 'cart') {
     //new module support
     $this->shoppingCartModules = new shoppingCartModules();
+    
     $this->type = $type;
     
-    $this->table_basket = TABLE_CUSTOMERS_BASKET;
-    $this->table_basket_attributes = TABLE_CUSTOMERS_BASKET_ATTRIBUTES;
+    $dataArray = array(
+      'save_to_db' => true,
+      'add_up_saved_qty' => false,
+      'table_basket' => TABLE_CUSTOMERS_BASKET,
+      'table_basket_attributes' => TABLE_CUSTOMERS_BASKET_ATTRIBUTES,
+    );
     
     if (defined('MODULE_WISHLIST_SYSTEM_STATUS') 
         && MODULE_WISHLIST_SYSTEM_STATUS == 'true'
         && $this->type == 'wishlist'
         )
     {
-      $this->table_basket = TABLE_CUSTOMERS_WISHLIST;
-      $this->table_basket_attributes = TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES;
+      $dataArray['table_basket'] = TABLE_CUSTOMERS_WISHLIST;
+      $dataArray['table_basket_attributes'] = TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES;
     }
-
+    
+    $dataArray = $this->shoppingCartModules->construct($dataArray, $this->type);
+    
+    foreach ($dataArray as $key => $value) {
+      $this->$key = $value;
+    }
+    
     $this->reset();
   }
 
@@ -92,109 +105,112 @@ class shoppingCart {
     if ($customer_id === false) {
       return false;
     }
-    
-    $products_list = array();
-    
+        
     // insert current cart contents in database
-    if (is_array($this->contents)) {
-      foreach ($this->contents as $products_id => $data) {
-        if ($this->check_products_status_permission($products_id) === true) {
-          $qty = $this->contents[$products_id]['qty'];
-          $product_query = xtc_db_query("SELECT products_id,
-                                                customers_basket_quantity
-                                           FROM ".$this->table_basket."
-                                          WHERE customers_id = '".xtc_db_input($customer_id)."'
-                                            AND products_id = '".xtc_db_input($products_id)."'");
-          if (xtc_db_num_rows($product_query) < 1) {
-            $sql_data_array = array(
-              'customers_id' => $customer_id,
-              'products_id' => $products_id,
-              'customers_basket_quantity' => $qty,
-              'customers_basket_date_added' => 'now()'
-            );
+    if ($this->save_to_db === true) {
+      $products_list = array();
 
-            //new module support    
-            $sql_data_array = $this->shoppingCartModules->restore_contents_products_db($sql_data_array, $products_id, $this->table_basket, $qty, $this->type);
-            xtc_db_perform($this->table_basket, $sql_data_array);
-
-            if (isset($this->contents[$products_id]['attributes'])) {
-              foreach ($this->contents[$products_id]['attributes'] as $option => $value) {
-                $sql_data_array = array(
-                  'customers_id' => $customer_id,
-                  'products_id' => $products_id,
-                  'products_options_id' => (int)$option,
-                  'products_options_value_id' => (int)$value
-                );
-                
-                //new module support    
-                $sql_data_array = $this->shoppingCartModules->restore_contents_attributes_db($sql_data_array, $products_id, $value, $this->type);
-                xtc_db_perform($this->table_basket_attributes, $sql_data_array);
+      if (is_array($this->contents)) {
+        foreach ($this->contents as $products_id => $data) {
+          if ($this->check_products_status_permission($products_id) === true) {
+            $qty = $this->contents[$products_id]['qty'];
+            $product_query = xtc_db_query("SELECT products_id,
+                                                  customers_basket_quantity
+                                             FROM ".$this->table_basket."
+                                            WHERE customers_id = '".xtc_db_input($customer_id)."'
+                                              AND products_id = '".xtc_db_input($products_id)."'");
+            if (xtc_db_num_rows($product_query) < 1) {
+              $sql_data_array = array(
+                'customers_id' => $customer_id,
+                'products_id' => $products_id,
+                'customers_basket_quantity' => $qty,
+                'customers_basket_date_added' => 'now()'
+              );
+  
+              //new module support    
+              $sql_data_array = $this->shoppingCartModules->restore_contents_products_db($sql_data_array, $products_id, $this->table_basket, $qty, $this->type);
+              xtc_db_perform($this->table_basket, $sql_data_array);
+  
+              if (isset($this->contents[$products_id]['attributes'])) {
+                foreach ($this->contents[$products_id]['attributes'] as $option => $value) {
+                  $sql_data_array = array(
+                    'customers_id' => $customer_id,
+                    'products_id' => $products_id,
+                    'products_options_id' => (int)$option,
+                    'products_options_value_id' => (int)$value
+                  );
+                  
+                  //new module support    
+                  $sql_data_array = $this->shoppingCartModules->restore_contents_attributes_db($sql_data_array, $products_id, $value, $this->type);
+                  xtc_db_perform($this->table_basket_attributes, $sql_data_array);
+                }
               }
+            } else {
+              if ($this->add_up_saved_qty === true) {
+                $product = xtc_db_fetch_array($product_query);
+    
+                $qty += $product['customers_basket_quantity'];
+                $this->contents[$products_id] = array ('qty' => $qty);
+              }
+              
+              xtc_db_query("UPDATE ".$this->table_basket."
+                               SET customers_basket_quantity = '".xtc_db_input($qty)."'
+                             WHERE customers_id = '".xtc_db_input($customer_id)."'
+                               AND products_id = '".xtc_db_input($products_id)."'");
             }
+        
+            $products_list[] = $products_id;
           } else {
-            /* use this code to add up saved qty
-            $product = xtc_db_fetch_array($product_query);
-
-            $qty += $product['customers_basket_quantity'];
-            $this->contents[$products_id] = array ('qty' => $qty);
-            */
-            xtc_db_query("UPDATE ".$this->table_basket."
-                             SET customers_basket_quantity = '".xtc_db_input($qty)."'
-                           WHERE customers_id = '".xtc_db_input($customer_id)."'
-                             AND products_id = '".xtc_db_input($products_id)."'");
+            // no permission
+            $this->remove($products_id);
           }
-      
-          $products_list[] = $products_id;
-        } else {
-          // no permission
-          $this->remove($products_id);
         }
       }
-    }
 
-    // restore saved content
-    $_SESSION['old_customers_basket_'.$this->type] = false;
-    $products_query = xtc_db_query("SELECT products_id,
-                                           customers_basket_quantity
-                                      FROM ".$this->table_basket."
-                                     WHERE customers_id = '".xtc_db_input($customer_id)."'
-                                       AND products_id NOT IN ('".implode("', '", $products_list)."') 
-                                  ORDER BY customers_basket_id");
-    if (xtc_db_num_rows($products_query) > 0) {
-      while ($products = xtc_db_fetch_array($products_query)) {
-        if ($this->check_products_status_permission($products['products_id']) === true) {
-          $this->contents[$products['products_id']] = array(
-            'qty' => $products['customers_basket_quantity']
-          );
-            
-          //new module support 
-          $this->shoppingCartModules->restore_contents_products_session($products, $this->table_basket, $this->type);
-            
-          // attributes
-          $attributes_query = xtc_db_query("SELECT products_options_id,
-                                                   products_options_value_id
-                                              FROM ".$this->table_basket_attributes."
-                                             WHERE customers_id = '".xtc_db_input($customer_id)."'
-                                               AND products_id = '".xtc_db_input($products['products_id'])."'
-                                          ORDER BY customers_basket_attributes_id");
-          if (xtc_db_num_rows($attributes_query) > 0) {
-            while ($attributes = xtc_db_fetch_array($attributes_query)) {
-              $this->contents[$products['products_id']]['attributes'][$attributes['products_options_id']] = $attributes['products_options_value_id'];
-            }
-            
+      // restore saved content
+      $_SESSION['old_customers_basket_'.$this->type] = false;
+      $products_query = xtc_db_query("SELECT products_id,
+                                             customers_basket_quantity
+                                        FROM ".$this->table_basket."
+                                       WHERE customers_id = '".xtc_db_input($customer_id)."'
+                                         AND products_id NOT IN ('".implode("', '", $products_list)."') 
+                                    ORDER BY customers_basket_id");
+      if (xtc_db_num_rows($products_query) > 0) {
+        while ($products = xtc_db_fetch_array($products_query)) {
+          if ($this->check_products_status_permission($products['products_id']) === true) {
+            $this->contents[$products['products_id']] = array(
+              'qty' => $products['customers_basket_quantity']
+            );
+              
             //new module support 
-            $this->shoppingCartModules->restore_contents_attributes_session($products,$this->table_basket_attributes, $this->type);
-            
-            if (ATTRIBUTES_VALID_CHECK == 'true' && !$this->validate_attributes($products['products_id'], $this->contents[$products['products_id']]['attributes'], 'restore_contents')) {
-              $this->remove($products['products_id']); //TODO info message
+            $this->shoppingCartModules->restore_contents_products_session($products, $this->table_basket, $this->type);
+              
+            // attributes
+            $attributes_query = xtc_db_query("SELECT products_options_id,
+                                                     products_options_value_id
+                                                FROM ".$this->table_basket_attributes."
+                                               WHERE customers_id = '".xtc_db_input($customer_id)."'
+                                                 AND products_id = '".xtc_db_input($products['products_id'])."'
+                                            ORDER BY customers_basket_attributes_id");
+            if (xtc_db_num_rows($attributes_query) > 0) {
+              while ($attributes = xtc_db_fetch_array($attributes_query)) {
+                $this->contents[$products['products_id']]['attributes'][$attributes['products_options_id']] = $attributes['products_options_value_id'];
+              }
+              
+              //new module support 
+              $this->shoppingCartModules->restore_contents_attributes_session($products,$this->table_basket_attributes, $this->type);
+              
+              if (ATTRIBUTES_VALID_CHECK == 'true' && !$this->validate_attributes($products['products_id'], $this->contents[$products['products_id']]['attributes'], 'restore_contents')) {
+                $this->remove($products['products_id']); //TODO info message
+              }
             }
+            if ($this->get_quantity($products['products_id']) > 0) {
+              $_SESSION['old_customers_basket_'.$this->type] = true;
+            }
+          } else {
+            // no permission
+            $this->remove($products['products_id']);
           }
-          if ($this->get_quantity($products['products_id']) > 0) {
-            $_SESSION['old_customers_basket_'.$this->type] = true;
-          }
-        } else {
-          // no permission
-          $this->remove($products['products_id']);
         }
       }
     }
@@ -220,7 +236,11 @@ class shoppingCart {
     $this->tax = array ();
     $this->tax_discount = array();
     
-    if (isset($_SESSION['customer_id']) && $reset_database == true) {
+    if ($this->save_to_db === true
+        && isset($_SESSION['customer_id']) 
+        && $reset_database == true
+        )
+    {
       xtc_db_query("DELETE FROM ".$this->table_basket." 
                           WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
       
@@ -268,7 +288,7 @@ class shoppingCart {
       //new module support           
       $this->shoppingCartModules->add_cart_products_session($products_id, $this->type, $qty, $attributes);
 
-      if (isset($_SESSION['customer_id'])) {
+      if ($this->save_to_db === true && isset($_SESSION['customer_id'])) {
         $sql_data_array = array(
           'customers_id' => (int)$_SESSION['customer_id'],
           'products_id' => $products_id,
@@ -288,7 +308,7 @@ class shoppingCart {
           //new module support           
           $this->shoppingCartModules->add_cart_attributes_session($value, $this->type, $products_id, $option);
          
-          if (isset($_SESSION['customer_id'])) {
+          if ($this->save_to_db === true && isset($_SESSION['customer_id'])) {
             $sql_data_array = array(
               'customers_id' => (int)$_SESSION['customer_id'],
               'products_id' => $products_id,
@@ -331,7 +351,7 @@ class shoppingCart {
     $this->shoppingCartModules->update_cart_products_session($products_id, $this->type, $quantity, $attributes);
     
     // update database
-    if (isset($_SESSION['customer_id'])){
+    if ($this->save_to_db === true && isset($_SESSION['customer_id'])){
       $sql_data_array = array(
         'customers_basket_quantity' => (int)$quantity,
         'customers_basket_date_added' => 'now()'
@@ -350,7 +370,7 @@ class shoppingCart {
         //new module support           
         $this->shoppingCartModules->update_cart_attributes_session($value, $this->type, $products_id, $option);
         
-        if (isset($_SESSION['customer_id'])) {
+        if ($this->save_to_db === true && isset($_SESSION['customer_id'])) {
           $sql_data_array = array(
             'products_options_value_id' => (int)$value,
           );
@@ -376,7 +396,7 @@ class shoppingCart {
       if (isset($this->contents[$products_id]['qty']) && $this->contents[$products_id]['qty'] < 1) {
         unset ($this->contents[$products_id]);
 
-        if (isset($_SESSION['customer_id'])) {
+        if ($this->save_to_db === true && isset($_SESSION['customer_id'])) {
           xtc_db_query("DELETE FROM ".$this->table_basket." 
                               WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
                                 AND products_id = '".xtc_db_input($products_id)."'");
@@ -447,7 +467,7 @@ class shoppingCart {
     $this->shoppingCartModules->remove_custom_inputs_session($products_id, $this->type);
     
     // remove from database
-    if (isset($_SESSION['customer_id'])) { 
+    if ($this->save_to_db === true && isset($_SESSION['customer_id'])) { 
       xtc_db_query("DELETE FROM ".$this->table_basket." 
                           WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
                             AND products_id = '".xtc_db_input($products_id)."'");
