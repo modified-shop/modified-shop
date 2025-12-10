@@ -93,7 +93,7 @@
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
     require_once (DIR_FS_CATALOG.DIR_WS_CLASSES . 'payment.php');
     $payment_modules = new payment($order->info['payment_method']);
-    $payment_method = $payment_modules::payment_title($order->info['payment_method'],$order->info['order_id']);
+    $payment_method = $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']);
 
     if (in_array($order->info['payment_method'], array('paypalplus', 'paypalpui'))) {
       require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
