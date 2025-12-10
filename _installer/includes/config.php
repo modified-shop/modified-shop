@@ -23,7 +23,7 @@
   // min / max  
   define('SSL_VERSION_MIN', '1.2');
   define('PHP_VERSION_MIN', '8.0.0');
-  define('PHP_VERSION_MAX', '8.3.99');
+  define('PHP_VERSION_MAX', '8.4.99');
   
   // permission
   define('CHMOD_WRITEABLE', 0775);
