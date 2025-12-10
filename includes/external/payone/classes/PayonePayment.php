@@ -336,7 +336,7 @@ class PayonePayment {
 
 		// credit risk check
 		$active_genre = $this->_getActiveGenreIdentifier();
-    $credit_risk_checked = ($_SESSION['payone_cr_hash'] == $this->payone->getAddressHash($_SESSION['billto']));
+    $credit_risk_checked = ((isset($_SESSION['payone_cr_hash'])) ? $_SESSION['payone_cr_hash'] == $this->payone->getAddressHash($_SESSION['billto']) : false);
 		if (!$credit_risk_checked && in_array($active_genre, $this->config['credit_risk']['checkforgenre']) && $this->config['credit_risk']['active'] == 'true' && $this->config['credit_risk']['timeofcheck'] == 'after') {
       $this->_credit_risk_check();
       if ($this->config[$active_genre]['allow_'.$_SESSION['payone_cr_result']] != 'true') {
@@ -349,7 +349,7 @@ class PayonePayment {
 
 	function confirmation() {
 		$confirmation = array(
-			'title' => @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION').' conf_DESC',
+			'title' => @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION'),
 		);
 		return $confirmation;
 	}
