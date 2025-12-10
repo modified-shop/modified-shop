@@ -133,7 +133,9 @@ define('MAX_DISPLAY_PAGE_LINKS_DESC' , 'Anzahl der Einzelseiten, f&uuml;r die ei
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Sonderangebote');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum Anzahl an Sonderangeboten (specials.php), die pro Seite angezeigt werden sollen.');
 define('MAX_DISPLAY_NEW_PRODUCTS_TITLE' , 'Neue Artikel Anzeigemodul');
-define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum Anzahl an neuen Artikeln, die bei den Warenkategorien und als "TOP-Artikel" auf der Startseite angezeigt werden sollen.');
+define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum Anzahl an neuen Artikeln, die in den Kategorien und in der Box "Neue Artikel" angezeigt werden sollen.');
+define('MAX_DISPLAY_PRODUCTS_STARTPAGE_TITLE' , 'Artikel Startseite');
+define('MAX_DISPLAY_PRODUCTS_STARTPAGE_DESC' , 'Maximum Anzahl an Artikeln, die als "TOP-Artikel" auf der Startseite angezeigt werden sollen.');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_TITLE' , 'Erwartete Artikel Anzeigemodul');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_DESC' , 'Maximum Anzahl an erwarteten Artikeln die auf der Startseite angezeigt werden sollen.');
 define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_TITLE' , 'Hersteller-Liste Schwellenwert');

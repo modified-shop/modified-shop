@@ -25,6 +25,8 @@ $value_limits['MAX_DISPLAY_ADVANCED_SEARCH_RESULTS'] = array('min' => 1);
 $value_limits['MAX_DISPLAY_SEARCH_AC_RESULTS'] = array('min' => 1, 'max' => 20);
 $value_limits['MAX_DISPLAY_PRODUCTS_NEW'] = array('min' => 1);
 $value_limits['MAX_DISPLAY_PAGE_LINKS'] = array('min' => 1);
+$value_limits['MAX_DISPLAY_NEW_PRODUCTS'] = array('min' => 0);
+$value_limits['MAX_DISPLAY_PRODUCTS_STARTPAGE'] = array('min' => 0);
 
 $value_limits['STORE_DB_SLOW_QUERY_TIME'] = array('min' => 0);
 $value_limits['STORE_PAGE_PARSE_TIME_THRESHOLD'] = array('min' => 0);

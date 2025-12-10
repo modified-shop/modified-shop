@@ -37,7 +37,7 @@ if (!CacheCheck()) {
 }
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.html', $cache_id) || !$cache) {
-  if (MAX_DISPLAY_NEW_PRODUCTS != '0') {
+  if (MAX_DISPLAY_PRODUCTS_STARTPAGE != '0') {
     //count products on startpage
     $count_query = xtc_db_query("SELECT count(*) as total
                                    FROM ".TABLE_PRODUCTS." p
@@ -58,7 +58,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.ht
     $startpage_total = $count['total'];
 
     $order_by = "p.products_startpage_sort ASC";
-    if ($startpage_total > MAX_DISPLAY_NEW_PRODUCTS) {
+    if ($startpage_total > MAX_DISPLAY_PRODUCTS_STARTPAGE) {
       $order_by .= ",MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP))";
     }
 
@@ -83,7 +83,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.ht
                                     ".PRODUCTS_CONDITIONS_P."
                            GROUP BY p.products_id
                            ORDER BY ".$order_by."
-                              LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
+                              LIMIT ".MAX_DISPLAY_PRODUCTS_STARTPAGE;
 
       $check_new_products_query = xtDBquery($new_products_query);
       $startpage_total = xtc_db_num_rows($check_new_products_query, true);
@@ -91,8 +91,8 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.ht
 
     if ($startpage_total < 1) {
       $days = '';
-      if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
-        $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
+      if (MAX_DISPLAY_PRODUCTS_STARTPAGE_DAYS != '0') {
+        $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_PRODUCTS_STARTPAGE_DAYS, date("Y")));
         $days = " AND p.products_date_added > '".$date_new_products."' ";
       }
       $new_products_query = "SELECT ".$product->default_select.",
@@ -115,7 +115,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.ht
                                     ".$days."
                            GROUP BY p.products_id
                            ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP))
-                              LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
+                              LIMIT ".MAX_DISPLAY_PRODUCTS_STARTPAGE;
     }
 
     $module_content = array();

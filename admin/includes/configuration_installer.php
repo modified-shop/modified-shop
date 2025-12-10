@@ -89,6 +89,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'MAX_DISPLAY_SEARCH_AC_RESULTS', '10', '3', '24', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_CROSS_SELLS', '0', '3', '16', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_REVERSE_CROSS_SELLS', '0', '3', '16', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MAX_DISPLAY_PRODUCTS_STARTPAGE', '9', '3', '5', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 4 --- "Bild Optionen"
   $values[] = "(NULL, 'IMAGE_TYPE_EXTENSION', 'default', '4', '1', NULL, NOW(), NULL, 'xtc_cfg_image_extension(');";
