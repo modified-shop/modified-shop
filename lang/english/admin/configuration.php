@@ -135,7 +135,7 @@ define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Specials');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum number of specials (specials.php) to be displayed per page.');
 define('MAX_DISPLAY_NEW_PRODUCTS_TITLE' , 'New Products Module');
 define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum number of new products to display in a category and "whats new" box');
-define('MAX_DISPLAY_NEW_PRODUCTS_STARTPAGE_TITLE' , 'Products Startpage');
+define('MAX_DISPLAY_NEW_PRODUCTS_STARTPAGE_TITLE' , 'Number of products Startpage');
 define('MAX_DISPLAY_NEW_PRODUCTS_STARTPAGE_DESC' , 'Maximum number of products to display as "TOP-products" on startpage');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_TITLE' , 'Upcoming Products');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_DESC' , 'Maximum number of upcoming products to display on startpage');
