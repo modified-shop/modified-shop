@@ -43,7 +43,10 @@
   $smarty->assign('order_total', $order_total['data']);
 
   // assign language to template for caching
-  $languages_query = xtc_db_query("select code, language_charset from " . TABLE_LANGUAGES . " WHERE directory ='". $order->info['language'] ."'");
+  $languages_query = xtc_db_query("SELECT code, 
+                                          language_charset 
+                                     FROM " . TABLE_LANGUAGES . " 
+                                    WHERE directory ='". $order->info['language'] ."'");
   $langcode = xtc_db_fetch_array($languages_query);
   $smarty->assign('langcode', $langcode['code']);
   $smarty->assign('charset', $langcode['language_charset']);
@@ -56,9 +59,7 @@
   $smarty->assign('oID',$order->info['order_id']);
   if ($order->info['payment_method']!='' && $order->info['payment_method']!='no_payment') {
     require_once (DIR_FS_CATALOG.DIR_WS_CLASSES . 'payment.php');
-    $payment_modules = new payment($order->info['payment_method']);
-    $payment_method = $payment_modules::payment_title($order->info['payment_method'],$order->info['order_id']);
-    $smarty->assign('PAYMENT_METHOD', $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']));
+    $smarty->assign('PAYMENT_METHOD', payment::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']));
   }
   $smarty->assign('COMMENTS', nl2br($order->info['comments']));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
