@@ -72,11 +72,8 @@ if ((isset($_SESSION['customer_id'])
   //payment method
   $payment_method = $payment_class = '';
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {    
-    if (!isset($payment_modules) || !is_object($payment_modules)) {
-      require_once (DIR_FS_CATALOG.'includes/classes/payment.php');
-      $payment_modules = new payment($order->info['payment_class']);
-    }
-    $payment_method = $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']);
+    require_once (DIR_FS_CATALOG.'includes/classes/payment.php');
+    $payment_method = payment::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']);
     $payment_class = $order->info['payment_class'];
   }
   $smarty->assign('PAYMENT_METHOD', $payment_method);

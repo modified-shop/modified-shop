@@ -65,12 +65,13 @@ if ($customer_id > 0
 
   // Payment Method
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {  
-    $_SESSION['billing_zone'] = $order->billing['country_iso_2'];
-    $last_order = $order->info['order_id'];
     require_once (DIR_WS_CLASSES . 'payment.php');
+    $smarty->assign('PAYMENT_METHOD',payment::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']));
+
+    $last_order = $order->info['order_id'];
+    $_SESSION['billing_zone'] = $order->billing['country_iso_2'];
     $payment_modules = new payment($order->info['payment_class']);
     $smarty->assign('PAYMENT_INFO', $payment_modules->success());
-    $smarty->assign('PAYMENT_METHOD', $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']));
     unset($_SESSION['billing_zone']);
   }
 
