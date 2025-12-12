@@ -88,6 +88,7 @@
     'includes/external/Phpfastcache/Drivers/Solr',
     'includes/external/Phpfastcache/src',
     'includes/external/phpmailer/language',
+    'includes/external/Psr/Http/Factory',
     'includes/external/shopgate',
     'includes/external/shopgate/shopgate_library',
     'includes/external/sofort',
