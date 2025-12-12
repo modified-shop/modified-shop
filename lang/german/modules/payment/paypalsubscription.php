@@ -13,7 +13,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_TITLE' => 'PayPal Abonnement',
-  'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_ADMIN_TITLE' => 'PayPal Abonnement (f&uuml;r wiederkehrende Zahlungen)',
+  'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_ADMIN_TITLE' => 'PayPal Abonnement (f&uuml;r wiederkehrende Zahlungen)<span style="background:#dd2400;color: #fff;font-weight: bold;padding: 2px 5px;border-radius: 4px;margin: 0 0 0 5px;">ALT</span>',
   'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_DESCRIPTION' => 'PayPal als Zahlungslink der den Kunden erst nach Bestellabschluss zur Verf&uuml;gung steht. Entscheiden Sie selber, wo der Kunde die Aufforderung zur Zahlung erh&auml;lt.<br /><br /><strong><font color="red">ACHTUNG:</font></strong> Damit der Bestellstatus korrekt gesetzt wird, m&uuml;ssen folgende <a href="'.xtc_href_link('paypal_webhook.php').'">Webhooks</a> in der PayPal Konfiguration eingestellt werden, damit der Status korrekt umgestellt wird:<ul><li>BILLING.SUBSCRIPTION.ACTIVATED</li><li>BILLING.SUBSCRIPTION.CANCELLED</li><li>BILLING.SUBSCRIPTION.CREATED</li><li>BILLING.SUBSCRIPTION.EXPIRED</li><li>BILLING.SUBSCRIPTION.PAYMENT.FAILED</li><li>BILLING.SUBSCRIPTION.RE-ACTIVATED</li><li>BILLING.SUBSCRIPTION.RENEWED</li><li>BILLING.SUBSCRIPTION.SUSPENDED</li><li>BILLING.SUBSCRIPTION.UPDATED</li></ul>',
   'MODULE_PAYMENT_PAYPALSUBSCRIPTION_ALLOWED_TITLE' => 'Erlaubte Zonen',

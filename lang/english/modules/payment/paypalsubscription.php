@@ -13,7 +13,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_TITLE' => 'PayPal Subscription',
-  'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_ADMIN_TITLE' => 'PayPal Subscription (for recurring payments)',
+  'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_ADMIN_TITLE' => 'PayPal Subscription (for recurring payments)<span style="background:#dd2400;color: #fff;font-weight: bold;padding: 2px 5px;border-radius: 4px;margin: 0 0 0 5px;">OLD</span>',
   'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALSUBSCRIPTION_TEXT_DESCRIPTION' => 'After "confirm" the customer will be routet to PayPal to pay the order.<br />Back in shop he will get your order-mail.<br />PayPal is the safer way to pay online. We keep your details safe from others and can help you get your money back if something ever goes wrong.<br /><br /><strong><font color="red">ATTENTION:</font></strong> In order for the order status to be set correctly, the following <a href="'.xtc_href_link('paypal_webhook.php').'">webhooks</a> must be set in the PayPal configuration so that the status is changed correctly:<ul><li>BILLING.SUBSCRIPTION.ACTIVATED</li><li>BILLING.SUBSCRIPTION.CANCELLED</li><li>BILLING.SUBSCRIPTION.CREATED</li><li>BILLING.SUBSCRIPTION.EXPIRED</li><li>BILLING.SUBSCRIPTION.PAYMENT.FAILED</li><li>BILLING.SUBSCRIPTION.RE-ACTIVATED</li><li>BILLING.SUBSCRIPTION.RENEWED</li><li>BILLING.SUBSCRIPTION.SUSPENDED</li><li>BILLING.SUBSCRIPTION.UPDATED</li></ul>',
   'MODULE_PAYMENT_PAYPALSUBSCRIPTION_ALLOWED_TITLE' => 'Allowed zones',
