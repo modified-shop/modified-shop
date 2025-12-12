@@ -113,7 +113,7 @@
   require_once(DIR_FS_CATALOG.'includes/classes/main.php');
   $main = new main();
 
-  $invoice_data = $main->getContentData(INVOICE_INFOS);
+  $invoice_data = $main->getContentData(INVOICE_INFOS, $order->info['languages_id']);
   $smarty->assign('ADDRESS_SMALL', $invoice_data['content_heading']);
   $smarty->assign('ADDRESS_LARGE', $invoice_data['content_text']);
 
