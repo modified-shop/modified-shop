@@ -26,7 +26,7 @@ if (!class_exists('cookie_consent')) {
     var $_check;
 
     function __construct() {
-      $this->version = '1.52';
+      $this->version = '1.53';
       $this->code = 'cookie_consent';
       $this->title = 'Cookie Consent';
       $this->description = 'Cookie Consent-Modul based on oil.js';
