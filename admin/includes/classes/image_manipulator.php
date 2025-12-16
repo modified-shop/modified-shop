@@ -436,21 +436,21 @@
           ob_start();
           switch ($image_type) {
             case IMAGETYPE_GIF:
-              $image = imagecreatefrom($this->d, $image_type);
+              $image = $this->imagecreatefrom($this->d, $image_type);
               imagepalettetotruecolor($image);
               imagealphablending($image, true);
               imagesavealpha($image, true);
               break;
   
             case IMAGETYPE_PNG:
-              $image = imagecreatefrom($this->d, $image_type);
+              $image = $this->imagecreatefrom($this->d, $image_type);
               imagepalettetotruecolor($image);
               imagealphablending($image, true);
               imagesavealpha($image, true);
               break;
   
             case IMAGETYPE_JPEG:
-              $image = imagecreatefrom($this->d, $image_type);
+              $image = $this->imagecreatefrom($this->d, $image_type);
               break;
           }
           imagewebp($image, $destination);
