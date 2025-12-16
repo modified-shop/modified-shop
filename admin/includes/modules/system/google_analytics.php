@@ -58,6 +58,7 @@ class google_analytics {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_TAG_ID', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_ADS_ID', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_ITEM_ID', 'model',  '6', '1', 'xtc_cfg_select_option(array(\'model\', \'id\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_ECOMMERCE', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_LINKID', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
@@ -74,6 +75,7 @@ class google_analytics {
       'MODULE_GOOGLE_ANALYTICS_TAG_ID',
       'MODULE_GOOGLE_ANALYTICS_ADS_ID',
       'MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID',
+      'MODULE_GOOGLE_ANALYTICS_ITEM_ID',
       'MODULE_GOOGLE_ANALYTICS_ECOMMERCE',
       'MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN',
       'MODULE_GOOGLE_ANALYTICS_LINKID',

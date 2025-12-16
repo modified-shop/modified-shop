@@ -36,3 +36,6 @@
   
   define('MODULE_GOOGLE_ANALYTICS_DISPLAY_TITLE', 'Google Analytics Displayfeature');
   define('MODULE_GOOGLE_ANALYTICS_DISPLAY_DESC', 'Die Bereiche zu demografischen Merkmalen und zum Interesse enthalten eine &Uuml;bersicht sowie neue Berichte zur Leistung nach Alter, Geschlecht und Interessenkategorien.');
+
+  define('MODULE_GOOGLE_ANALYTICS_ITEM_ID_TITLE' , 'Item ID');
+  define('MODULE_GOOGLE_ANALYTICS_ITEM_ID_DESC' , 'Soll f&uuml;r das Tracking die Artikelnummer oder die Artikel ID verwendet werden?');

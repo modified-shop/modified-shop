@@ -36,3 +36,6 @@
   
   define('MODULE_GOOGLE_ANALYTICS_DISPLAY_TITLE', 'Google Analytics Displayfeature');
   define('MODULE_GOOGLE_ANALYTICS_DISPLAY_DESC', 'The areas to demographics and interests included an overview and new reports about the performance by age, gender and interest categories.');
+
+  define('MODULE_GOOGLE_ANALYTICS_ITEM_ID_TITLE' , 'Item ID');
+  define('MODULE_GOOGLE_ANALYTICS_ITEM_ID_DESC' , 'Should the products model or the products ID be used for tracking?');
