@@ -45,7 +45,7 @@
     // Support for transparency, enhanced PNG & GIF processing
     function imagecopyresampled_adv($image_type, &$dest, $source, $d_x, $d_y, $s_x, $s_y, $d_w, $d_h, $s_w, $s_h) {
       switch ($image_type) {
-        case 1:
+        case IMAGETYPE_GIF:
           $transcol = imagecolortransparent($source);
           $dest = imagecreate($d_w, $d_h);
           imagepalettecopy($dest, $source);
@@ -55,7 +55,7 @@
           imagecolortransparent($dest, $transcol);
           break;
 
-        case 3:
+        case IMAGETYPE_PNG:
           $dest = imageCreateTrueColor($d_w, $d_h);
           imagealphablending($dest, false);
           imagesavealpha($dest, true);
@@ -69,7 +69,7 @@
           //imagecolortransparent($dest,$transparent); //imagecolortransparent much faster on big images
           break;
 
-        default:
+        case IMAGETYPE_JPEG:
           $dest = imageCreateTrueColor($d_w, $d_h);
           break;
       }
@@ -102,7 +102,7 @@
         $this->q = ($this->o > $this->p) ? $this->m : round($this->i / $this->p); // width
         $this->r = ($this->o > $this->p) ? round($this->j / $this->o) : $this->n; // height
 
-        $this->s = ($this->k < 4) ? ($this->k < 3) ? ($this->k < 2) ? ($this->k < 1) ? Null : imagecreatefromgif($this->a) : imagecreatefromjpeg($this->a) : imagecreatefrompng($this->a) : Null;
+        $this->s = $this->imagecreatefrom($this->a, $this->k);
       }
       if($this->s !== Null) {
         // Creates an new image: $this->t. $this->k is the image type.
@@ -250,7 +250,7 @@
       $this->md = @getimagesize($this->mi);
       $this->mw = $this->md[0];
       $this->mh = $this->md[1];
-      $this->mm = ($this->md[2] < 4) ? ($this->md[2] < 3) ? ($this->md[2] < 2) ? imagecreatefromgif($this->mi) : imagecreatefromjpeg($this->mi) : imagecreatefrompng($this->mi) : Null;
+      $this->mm = $this->imagecreatefrom($this->mi, $this->md[2]);
       for($this->ypo = 0; $this->ypo < $this->mh; $this->ypo++) {
         for($this->xpo = 0; $this->xpo < $this->mw; $this->xpo++) {
           $this->indx_ref = @imagecolorat($this->mm, $this->xpo, $this->ypo);
@@ -371,34 +371,56 @@
       }
     }
     
+    function imagecreatefrom($image, $image_type) {
+      if (in_array($image_type, array(IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG))) {
+        switch ($image_type) {
+          case IMAGETYPE_GIF:
+            return imagecreatefromgif($image);
+            break;
+
+          case IMAGETYPE_PNG:
+            return imagecreatefrompng($image);
+            break;
+
+          case IMAGETYPE_JPEG:
+            return imagecreatefromjpeg($image);
+            break;
+        }
+      }
+      
+      return NULL;
+    }
+    
     function create() {
       if($this->s !== Null) {
         if(isset($this->k) && $this->d !== "") {
           $image_type = $this->k;
 
-          ob_start();
-          switch ($image_type) {
-            case 1:
-              $transcol = imagecolortransparent($this->s);
-              imagecolortransparent($this->t, $transcol);
-              $this->sharpen();
-              imagegif($this->t, $this->d);
-              break;
-
-            case 3:
-              imagealphablending($this->t, true);
-              imagesavealpha($this->t, true);
-              $this->sharpen();
-              imagepng($this->t, $this->d);
-              break;
-
-            default:
-              imageinterlace($this->t, true);
-              $this->sharpen();
-              imagejpeg($this->t, $this->d, $this->e);
-              break;
+          if (in_array($image_type, array(IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG))) {
+            ob_start();
+            switch ($image_type) {
+              case IMAGETYPE_GIF:
+                $transcol = imagecolortransparent($this->s);
+                imagecolortransparent($this->t, $transcol);
+                $this->sharpen();
+                imagegif($this->t, $this->d);
+                break;
+  
+              case IMAGETYPE_PNG:
+                imagealphablending($this->t, true);
+                imagesavealpha($this->t, true);
+                $this->sharpen();
+                imagepng($this->t, $this->d);
+                break;
+  
+              case IMAGETYPE_JPEG:
+                imageinterlace($this->t, true);
+                $this->sharpen();
+                imagejpeg($this->t, $this->d, $this->e);
+                break;
+            }
+            ob_end_clean();
           }
-          ob_end_clean();
         }
         imagedestroy($this->s);
         imagedestroy($this->t);
@@ -410,30 +432,32 @@
         $image_type = $this->k;
         $destination = substr($this->d, 0, strrpos($this->d, '.')).'.webp';
 
-        ob_start();
-        switch ($image_type) {
-          case 1:
-            $image = imagecreatefromgif($this->d);
-            imagepalettetotruecolor($image);
-            imagealphablending($image, true);
-            imagesavealpha($image, true);
-            break;
-
-          case 3:
-            $image = imagecreatefrompng($this->d);            
-            imagepalettetotruecolor($image);
-            imagealphablending($image, true);
-            imagesavealpha($image, true);
-            break;
-
-          default:
-            $image = imagecreatefromjpeg($this->d);
-            break;
+        if (in_array($image_type, array(IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG))) {
+          ob_start();
+          switch ($image_type) {
+            case IMAGETYPE_GIF:
+              $image = imagecreatefrom($this->d, $image_type);
+              imagepalettetotruecolor($image);
+              imagealphablending($image, true);
+              imagesavealpha($image, true);
+              break;
+  
+            case IMAGETYPE_PNG:
+              $image = imagecreatefrom($this->d, $image_type);
+              imagepalettetotruecolor($image);
+              imagealphablending($image, true);
+              imagesavealpha($image, true);
+              break;
+  
+            case IMAGETYPE_JPEG:
+              $image = imagecreatefrom($this->d, $image_type);
+              break;
+          }
+          imagewebp($image, $destination);
+          ob_end_clean();
+          
+          imagedestroy($image);
         }
-        imagewebp($image, $destination);
-        ob_end_clean();
-        
-        imagedestroy($image);
       }
     }
     
@@ -504,4 +528,3 @@
     }
 
   }
-?>
