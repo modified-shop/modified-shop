@@ -28,7 +28,7 @@ class paypalacdc extends PayPalPaymentV2 {
   function __construct() {
     global $order;
 
-    $this->allowed_zones = array('DE', 'FR', 'IT', 'ES', 'US', 'GB', 'AU', 'CA', 'JP', 'MX');
+    $this->allowed_zones = array('AU', 'AT', 'BE', 'BG', 'CA', 'CN', 'CY', 'CZ', 'DE', 'DK', 'EE', 'FI', 'FR', 'GR', 'HK', 'HU', 'IE', 'IT', 'JP', 'LV', 'LI', 'LT', 'LU', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SG', 'SK', 'SI', 'ES', 'SE', 'GB', 'US');
 
     PayPalPaymentV2::__construct('paypalacdc');
 
@@ -43,6 +43,10 @@ class paypalacdc extends PayPalPaymentV2 {
   function update_status() {
     global $order;
 
+    if ($order->info['currency'] == 'MXN') {
+      $this->allowed_zones[] = 'MX';
+    }
+    
     $this->enabled = false;
     if (isset($order->billing['country']['iso_code_2'])
         && in_array($order->billing['country']['iso_code_2'], $this->allowed_zones)
