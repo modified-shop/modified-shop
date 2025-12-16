@@ -154,6 +154,7 @@
     DIR_ADMIN.'images/trustedshops/trustmark-widget-de-AT-CH-DE-w300-h245-v1.png',
     DIR_ADMIN.'images/trustedshops/trustmark-widget-eu-EU-v1.png',
     DIR_ADMIN.'images/icon_info.gif.jpg',
+    DIR_ADMIN.'images/logo.gif',
     DIR_ADMIN.'images/top_credits.gif',
     DIR_ADMIN.'images/top_end.jpg',
     DIR_ADMIN.'images/top_index.gif',
