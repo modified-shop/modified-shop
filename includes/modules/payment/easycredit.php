@@ -97,7 +97,7 @@
         $this->total_amount = $this->calculate_total();
 
         $this->enabled = false;
-        if ($this->WebshopDetails->getBillPaymentActive() === true
+        if ($this->WebshopDetails->getInstallmentPaymentActive() === true
             && $this->total_amount >= $this->WebshopDetails->getMinInstallmentValue()
             && $this->total_amount < $this->WebshopDetails->getMaxInstallmentValue()
             )
