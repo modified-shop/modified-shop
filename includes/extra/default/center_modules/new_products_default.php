@@ -91,8 +91,8 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.ht
 
     if ($startpage_total < 1) {
       $days = '';
-      if (MAX_DISPLAY_PRODUCTS_STARTPAGE_DAYS != '0') {
-        $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_PRODUCTS_STARTPAGE_DAYS, date("Y")));
+      if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
+        $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
         $days = " AND p.products_date_added > '".$date_new_products."' ";
       }
       $new_products_query = "SELECT ".$product->default_select.",
