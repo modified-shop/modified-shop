@@ -952,12 +952,12 @@
                 $contents[] = array('text' => '<b>' . TEXT_SINGLECOPY_CATEGORY);
                 $contents[] = array('text' => xtc_draw_pull_down_menu('dest_category_id', $category_tree, $current_category_id) . '<hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_HOW_TO_COPY . '</strong><br />' . xtc_draw_radio_field('copy_as', 'link', true) . ' ' . TEXT_COPY_AS_LINK . '<br />' . xtc_draw_radio_field('copy_as', 'duplicate') . ' ' . TEXT_COPY_AS_DUPLICATE . '<br /><hr noshade>');
-                $contents[] = array('text' => TEXT_HOW_TO_LINK . '<br />' . xtc_draw_checkbox_field('link_to_product', 'link_to_product', false) . ' ' . TEXT_HOW_TO_LINK_INFO . '<br /><hr noshade>');
-                $contents[] = array('text' => '<strong>' . TEXT_ATTRIBUTE_COPY . '</strong><br />' . xtc_draw_checkbox_field('attr_copy', 'attr_copy', false) . ' ' . TEXT_ATTRIBUTE_COPY_INFO . '<br /><hr noshade>');
-                $contents[] = array('text' => '<strong>' . TEXT_CONTENT_COPY . '</strong><br />' . xtc_draw_checkbox_field('cnt_copy', 'cnt_copy', false) . ' ' . TEXT_CONTENT_COPY_INFO . '<br /><hr noshade>');
-                $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . xtc_draw_checkbox_field('links_copy', 'links_copy', false) . ' ' . TEXT_LINKS_COPY_INFO . '<br /><hr noshade>');
-                $contents[] = array('text' => '<strong>' . TEXT_TAGS_COPY . '</strong><br />' . xtc_draw_checkbox_field('tags_copy', 'tags_copy', false) . ' ' . TEXT_TAGS_COPY_INFO . '<br /><hr noshade>');
-                $contents[] = array('text' => '<strong>' . TEXT_XSELL_COPY . '</strong><br />' . xtc_draw_checkbox_field('xsell_copy', 'xsell_copy', false) . ' ' . TEXT_XSELL_COPY_INFO . '<br /><hr noshade>');
+                $contents[] = array('text' => TEXT_HOW_TO_LINK . '<br />' . xtc_draw_checkbox_field('link_to_product', 'link_to_product', false, '', 'class="copy_as"') . ' ' . TEXT_HOW_TO_LINK_INFO . '<br /><hr noshade>');
+                $contents[] = array('text' => '<strong>' . TEXT_ATTRIBUTE_COPY . '</strong><br />' . xtc_draw_checkbox_field('attr_copy', 'attr_copy', false, '', 'class="copy_as"') . ' ' . TEXT_ATTRIBUTE_COPY_INFO . '<br /><hr noshade>');
+                $contents[] = array('text' => '<strong>' . TEXT_CONTENT_COPY . '</strong><br />' . xtc_draw_checkbox_field('cnt_copy', 'cnt_copy', false, '', 'class="copy_as"') . ' ' . TEXT_CONTENT_COPY_INFO . '<br /><hr noshade>');
+                $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . xtc_draw_checkbox_field('links_copy', 'links_copy', false, '', 'class="copy_as"') . ' ' . TEXT_LINKS_COPY_INFO . '<br /><hr noshade>');
+                $contents[] = array('text' => '<strong>' . TEXT_TAGS_COPY . '</strong><br />' . xtc_draw_checkbox_field('tags_copy', 'tags_copy', false, '', 'class="copy_as"') . ' ' . TEXT_TAGS_COPY_INFO . '<br /><hr noshade>');
+                $contents[] = array('text' => '<strong>' . TEXT_XSELL_COPY . '</strong><br />' . xtc_draw_checkbox_field('xsell_copy', 'xsell_copy', false, '', 'class="copy_as"') . ' ' . TEXT_XSELL_COPY_INFO . '<br /><hr noshade>');
                 $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . (isset($_GET['cPath']) ? 'cPath=' . $cPath : '') . $params) . '">' . BUTTON_CANCEL . '</a>');
               }
               // multi_copy confirm ENDS
@@ -1144,4 +1144,11 @@
             action = false;
           }
         });
+        $('input:radio[name="copy_as"]').on('change', function() {
+          if ($(this).val() == 'duplicate') {
+            $('.copy_as').each(function(){ this.checked = true; });
+          } else {
+            $('.copy_as').each(function(){ this.checked = false; });
+          }
+        })
       </script>
