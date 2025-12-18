@@ -176,7 +176,7 @@
     DIR_ADMIN.'includes/extra/modules/orders/orders_action/easybill.php',
     DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/dhl.php',
     DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/easybill.php',
-    DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/moneybookers.php',
+    DIR_ADMIN.'includes/extra/modules/orders/orders_info_payment/moneybookers.php',
     DIR_ADMIN.'includes/functions/compatibility.php',
     DIR_ADMIN.'includes/functions/database.php',
     DIR_ADMIN.'includes/functions/db_restore.php',
