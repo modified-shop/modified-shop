@@ -1096,6 +1096,20 @@ class categories {
         xtc_db_perform(TABLE_PRODUCTS_TAGS, $sql_data_array);
       }
     }
+
+    //dublicate products xsell
+    if (isset($_POST['xsell_copy']) && $_POST['xsell_copy'] == 'xsell_copy') {
+      $xsell_copy_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_PRODUCTS_XSELL."
+                                        WHERE products_id = '".$src_products_id."'");
+      while ($xsell_copy_data = xtc_db_fetch_array($xsell_copy_query)) {
+        $sql_data_array = $xsell_copy_data;
+        unset($sql_data_array['ID']);
+        $sql_data_array['products_id'] = $this->dup_products_id;
+        //write tags data to DB
+        xtc_db_perform(TABLE_PRODUCTS_XSELL, $sql_data_array);
+      }
+    }
     
     // duplicate products content and links, Timo Paul (mail[at]timopaul[dot]biz)
     if (isset($_POST['cnt_copy']) && $_POST['cnt_copy'] == 'cnt_copy') {

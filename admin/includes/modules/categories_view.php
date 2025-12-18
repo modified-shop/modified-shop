@@ -957,6 +957,7 @@
                 $contents[] = array('text' => '<strong>' . TEXT_CONTENT_COPY . '</strong><br />' . xtc_draw_checkbox_field('cnt_copy', 'cnt_copy', false) . ' ' . TEXT_CONTENT_COPY_INFO . '<br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . xtc_draw_checkbox_field('links_copy', 'links_copy', false) . ' ' . TEXT_LINKS_COPY_INFO . '<br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_TAGS_COPY . '</strong><br />' . xtc_draw_checkbox_field('tags_copy', 'tags_copy', false) . ' ' . TEXT_TAGS_COPY_INFO . '<br /><hr noshade>');
+                $contents[] = array('text' => '<strong>' . TEXT_XSELL_COPY . '</strong><br />' . xtc_draw_checkbox_field('xsell_copy', 'xsell_copy', false) . ' ' . TEXT_XSELL_COPY_INFO . '<br /><hr noshade>');
                 $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . (isset($_GET['cPath']) ? 'cPath=' . $cPath : '') . $params) . '">' . BUTTON_CANCEL . '</a>');
               }
               // multi_copy confirm ENDS

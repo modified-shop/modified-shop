@@ -271,3 +271,6 @@ define('TEXT_TAGS_COPY_INFO', 'Also copy product features<br />Only recommended 
 define('TEXT_PRODUCTS_LAST_MODIFIED', 'Last modified:');
 define('TEXT_STOCK_UPDATE_SUCCESS', 'Stock saved');
 define('TEXT_STOCK_UPDATE_ERROR', 'Stock not saved');
+
+define('TEXT_XSELL_COPY', 'Also copy product cross selling');
+define('TEXT_XSELL_COPY_INFO', 'Also copy product cross selling<br />Only recommended for single copy (1 item)');

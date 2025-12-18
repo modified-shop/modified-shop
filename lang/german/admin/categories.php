@@ -271,3 +271,6 @@ define('TEXT_TAGS_COPY_INFO', 'Artikeleigenschaften mitkopieren<br/ >Nur bei Ein
 define('TEXT_PRODUCTS_LAST_MODIFIED', 'Zuletzt aktualisiert:');
 define('TEXT_STOCK_UPDATE_SUCCESS', 'Lagerbestand aktualisiert');
 define('TEXT_STOCK_UPDATE_ERROR', 'Lagerbestand nicht aktualisiert');
+
+define('TEXT_XSELL_COPY', 'Cross Selling mitkopieren');
+define('TEXT_XSELL_COPY_INFO', 'Cross Selling mitkopieren<br/ >Nur bei Einzelkopie (1 Artikel) empfohlen');
