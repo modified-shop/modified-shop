@@ -56,7 +56,7 @@
           }
         }
         
-        return false;
+        return '';
       }
   
       function write(string $session_id, string $val): bool 
