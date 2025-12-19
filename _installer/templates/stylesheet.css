@@ -434,6 +434,15 @@ html[lang|="en"] .installer_languages img[alt~="flag_en"] {
   border-bottom: 1px solid #2d98da;
 }
 
+.infomessage pre {
+  width: 100%;
+}
+
+pre[class*="language-"]::after, pre[class*="language-"]::before {
+  content: '';
+  display: none !important;
+}
+
 .warningmessage {
   background: rgba(255,187,55,0.2); 
   border: 1px solid rgba(255,187,55,0.4);
