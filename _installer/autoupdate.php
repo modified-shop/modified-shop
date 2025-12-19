@@ -463,14 +463,31 @@
       case 'download':
         $filename = ((isset($_GET['file'])) ? $_GET['file'] : '');
         if (is_file(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$filename)) {
-          xtc_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
-          $tempdir = xtc_random_name();
-          umask(0000);
-          mkdir(DIR_FS_DOWNLOAD_PUBLIC.$tempdir, 0777);
-          if (!symlink(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$filename, DIR_FS_DOWNLOAD_PUBLIC.$tempdir.'/'.$filename)) {
-            link(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$filename, DIR_FS_DOWNLOAD_PUBLIC.$tempdir.'/'.$filename); 
+          if (function_exists('symlink')) {
+            xtc_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
+            $tempdir = xtc_random_name();
+            umask(0000);
+            mkdir(DIR_FS_DOWNLOAD_PUBLIC.$tempdir, 0777);
+            if (!symlink(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$filename, DIR_FS_DOWNLOAD_PUBLIC.$tempdir.'/'.$filename)) {
+              link(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$filename, DIR_FS_DOWNLOAD_PUBLIC.$tempdir.'/'.$filename); 
+            }
+            xtc_redirect(DIR_WS_DOWNLOAD_PUBLIC.$tempdir.'/'.$filename);
+          } else {
+            //Set chunk size for download
+            $chunksize = 1 * (1024 * 1024);
+            // Now send the file with header() magic
+            header("Expires: Mon, 26 Nov 1962 00:00:00 GMT");
+            header("Last-Modified: ".gmdate("D,d M Y H:i:s")." GMT");
+            header("Cache-Control: no-cache, must-revalidate");
+            header("Pragma: no-cache");
+            header("Content-Type: Application/octet-stream");
+            header("Content-Length: ".filesize(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$filename));
+            header("Content-disposition: attachment; filename=\"".$filename."\"");
+            // This will work on all systems, but will need considerable resources
+            // We could also loop with fread($fp, 4096) to save memory
+            readfile_chunked(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$filename, $chunksize);
+            exit();
           }
-          xtc_redirect(DIR_WS_DOWNLOAD_PUBLIC.$tempdir.'/'.$filename);
         }
         break;
 

@@ -97,7 +97,7 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
                              SET download_count = download_count-1 
                            WHERE orders_products_download_id = '".(int) $_GET['id']."'");
 
-            if (DOWNLOAD_BY_REDIRECT == 'true') {
+            if (DOWNLOAD_BY_REDIRECT == 'true' && function_exists('symlink')) {
               // This will work only on Unix/Linux hosts
               xtc_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
               $tempdir = xtc_random_name();
