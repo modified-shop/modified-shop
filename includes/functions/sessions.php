@@ -32,15 +32,18 @@
   if (STORE_SESSIONS == 'mysql') {
     class ModifiedSessionHandler implements SessionHandlerInterface {
   
-      function open($save_path, $session_name) {
+      function open(string $save_path, string $session_name): bool 
+      {
         return true;
       }
   
-      function close() {
+      function close(): bool
+      {
         return true;
       }
   
-      function read($session_id) {
+      function read(string $session_id): string|false
+      {
         $value_query = xtc_db_query("SELECT value
                                        FROM " . TABLE_SESSIONS . "
                                       WHERE sesskey = '" . xtc_db_input($session_id) . "'
@@ -53,10 +56,11 @@
           }
         }
         
-        return '';
+        return false;
       }
   
-      function write($session_id, $val) {
+      function write(string $session_id, string $val): bool 
+      {
         global $SESS_LIFE;
   
         $flag = '';
@@ -77,13 +81,15 @@
         return true;
       }
   
-      function destroy($session_id) {
+      function destroy(string $session_id): bool 
+      {
         xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($session_id) . "'");
         
         return true;
       }
   
-      function gc($maxlifetime) {
+      function gc(int $maxlifetime): int|false 
+      {
         if (defined('DELETE_GUEST_ACCOUNT') && DELETE_GUEST_ACCOUNT == 'true') {
           $session_query = xtc_db_query("SELECT sesskey,
                                                 value
@@ -101,7 +107,7 @@
         }
         xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
         
-        return true;
+        return xtc_db_affected_rows();
       }
     }
     
