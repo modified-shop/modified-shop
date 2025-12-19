@@ -376,6 +376,7 @@ html[lang|="en"] .installer_languages img[alt~="flag_en"] {
   text-align:left;
   margin: 0px 0px;
   padding: 0px 0px;
+  width: 100%;
 }
 .errormessage a, .successmessage a, .infomessage a, .warningmessage a {
   text-decoration:none;

@@ -436,6 +436,12 @@
       case 'finish':
         $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER, 'action=shop', $request_type).'">'.BUTTON_SHOP.'</a>');
         $smarty->assign('FINISH_INFO', TEXT_AUTOUPDATER_FINISH_INFO);
+
+        modified_api::reset();
+        $notes = modified_api::request('modified/version/notes/'.$_SESSION['dbversion']);
+        if (is_array($notes) && count($notes) > 0) {
+          $smarty->assign('NOTES', $notes);
+        }
                 
         if (isset($_SESSION['offline'])
             && $_SESSION['offline'] == 2
