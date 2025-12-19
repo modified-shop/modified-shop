@@ -228,7 +228,7 @@
             foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/whos_online/','php') as $file) require ($file);
             
             if (STORE_SESSIONS == 'mysql') {
-              $session_data = _sess_read($info['session_id']);
+              $session_data = $modified_session_handler->read($info['session_id']);
             } elseif (STORE_SESSIONS == 'files') {
               if ( (file_exists(xtc_session_save_path() . '/sess_' . $info['session_id'])) && (filesize(xtc_session_save_path() . '/sess_' . $info['session_id']) > 0) ) {
                 $session_data = file(xtc_session_save_path() . '/sess_' . $info['session_id']);
