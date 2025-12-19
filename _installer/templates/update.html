@@ -108,7 +108,14 @@
 
     {if isset($FINISH_INFO)}
       <br />
-      <div class="infomessage">{$FINISH_INFO}</div>
+      <div class="infomessage">
+        <p>{$FINISH_INFO}</p>
+        {if isset($NOTES)}
+          {foreach name=inner item=note from=$NOTES}
+            <p>{$note}</p>
+          {/foreach}
+        {/if}      
+      </div>
     {/if}
 
     {if isset($PROCESSING)}
