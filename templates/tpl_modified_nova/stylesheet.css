@@ -6273,6 +6273,7 @@ a.view_box.active {
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
   border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
 }
 .pd_tabs .resp-tabs-list li.resp-tab-active {
   border-bottom: none;
