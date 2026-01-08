@@ -118,9 +118,8 @@ if ($search_id != '') {
 
   if (xtc_db_num_rows($orders_search_query) == 1) {
     $orders_search = xtc_db_fetch_array($orders_search_query);
-    $_GET['oID'] = $oID = $orders_search['orders_id'];
-    $_GET['action'] = $action = 'edit';
-    $order_exists = true;
+    
+    xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'action=edit&oID='.$orders_search['orders_id']));
   }
 }
 

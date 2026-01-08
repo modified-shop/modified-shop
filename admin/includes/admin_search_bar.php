@@ -49,19 +49,16 @@
     <div class="col25">
       <?php echo xtc_draw_form('search_customer', FILENAME_CUSTOMERS, '', 'get'); ?>
         <input name="search" type="text" value="<?php echo $search_cus;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_CUSTOMER; ?>" />
-        <input name="asb" type="hidden" value="asb" />
       </form>
     </div>
     <div class="col25">
       <?php echo xtc_draw_form('search_order', FILENAME_ORDERS, '', 'get'); ?>
         <input name="search" type="text" value="<?php echo $search_ord;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_ORDER; ?>" />
-        <input type="hidden" name="action" value="search" />
       </form>
     </div>
     <div class="col25">
       <?php echo xtc_draw_form('search_order_id', FILENAME_ORDERS, '', 'get'); ?>
         <input name="search_id" type="text" value="<?php echo $search_oid;?>" size="7" placeholder="<?php echo $placeholder_order; ?>" />
-        <input type="hidden" name="action" value="search" />
       </form>
     </div>
     <div class="col25">
