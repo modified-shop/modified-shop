@@ -196,6 +196,7 @@
             $orders_query_raw = "SELECT o.*
                                    FROM ".TABLE_ORDERS." o
                                   WHERE (o.orders_id LIKE '%".xtc_db_input($search)."%'
+                                         OR o.customers_cid LIKE '%".xtc_db_input($search)."%'
                                          OR o.customers_email_address LIKE '%".xtc_db_input($search)."%'
                                          OR o.customers_name LIKE '%".xtc_db_input($search)."%'
                                          OR o.customers_firstname LIKE '%".xtc_db_input($search)."%'
