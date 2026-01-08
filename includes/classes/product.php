@@ -805,46 +805,50 @@ class product {
    * @return string
    */
   function productImage($name, $type) {
-    switch ($type) {
-      case 'mini':
-        $path = DIR_WS_MINI_IMAGES;
-        break;
-      case 'thumbnail':
-        $path = DIR_WS_THUMBNAIL_IMAGES;
-        break;
-      case 'midi':
-        $path = DIR_WS_MIDI_IMAGES;
-        break;
-      case 'info':
-        $path = DIR_WS_INFO_IMAGES;
-        break;
-      case 'popup':
-        $path = DIR_WS_POPUP_IMAGES;
-        break;
-    }
-
-    if (defined('IMAGE_TYPE_EXTENSION') 
-        && IMAGE_TYPE_EXTENSION != 'default'
-        && $name != ''
-        )
-    {
-      $name_extension = substr($name, 0, strrpos($name, '.')).'.'.IMAGE_TYPE_EXTENSION;
-      if (is_file(DIR_FS_CATALOG.$path.$name_extension)) {
-        $name = $name_extension;
-      }
-    }
-
-    $returnName = $name;
-    if ($returnName == '' || !is_file(DIR_FS_CATALOG.$path.$returnName)) {
-      $returnName = '';
-      if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file(DIR_FS_CATALOG.$path.$this->standardImage)) {
-        $returnName = $this->standardImage;
-      }
-    }
+    $returnName = $this->productModules->productImageName(false, $name, $type);
     
-    $returnName = ($returnName != '') ? DIR_WS_BASE.$path.$returnName : '';
-
-    $returnName = $this->productModules->productImage($returnName, $name, $type ,$path);
+    if ($returnName === false) {
+      switch ($type) {
+        case 'mini':
+          $path = DIR_WS_MINI_IMAGES;
+          break;
+        case 'thumbnail':
+          $path = DIR_WS_THUMBNAIL_IMAGES;
+          break;
+        case 'midi':
+          $path = DIR_WS_MIDI_IMAGES;
+          break;
+        case 'info':
+          $path = DIR_WS_INFO_IMAGES;
+          break;
+        case 'popup':
+          $path = DIR_WS_POPUP_IMAGES;
+          break;
+      }
+  
+      if (defined('IMAGE_TYPE_EXTENSION') 
+          && IMAGE_TYPE_EXTENSION != 'default'
+          && $name != ''
+          )
+      {
+        $name_extension = substr($name, 0, strrpos($name, '.')).'.'.IMAGE_TYPE_EXTENSION;
+        if (is_file(DIR_FS_CATALOG.$path.$name_extension)) {
+          $name = $name_extension;
+        }
+      }
+  
+      $returnName = $name;
+      if ($returnName == '' || !is_file(DIR_FS_CATALOG.$path.$returnName)) {
+        $returnName = '';
+        if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file(DIR_FS_CATALOG.$path.$this->standardImage)) {
+          $returnName = $this->standardImage;
+        }
+      }
+      
+      $returnName = ($returnName != '') ? DIR_WS_BASE.$path.$returnName : '';
+  
+      $returnName = $this->productModules->productImage($returnName, $name, $type ,$path);
+    }
     
     return $returnName;
   }

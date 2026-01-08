@@ -85,10 +85,16 @@ class productModules {
         return $this->call_module_method($productData,$array,$image);
     }
 
-    function productImage($returnName, $name, $type ,$path)
+    function productImageName($returnName, $name, $type)
+    {
+        $this->function_call = 'productImageName';
+        return $this->call_module_method($returnName, $name, $type);
+    }
+
+    function productImage($returnName, $name, $type, $path)
     {
         $this->function_call = 'productImage';
-        return $this->call_module_method($returnName, $name, $type ,$path);
+        return $this->call_module_method($returnName, $name, $type, $path);
     }
     
 }
