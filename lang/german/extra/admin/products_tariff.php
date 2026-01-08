@@ -14,3 +14,4 @@
   define('TEXT_PRODUCTS_ORIGIN', 'Herstellungsland:');
   define('TEXT_PRODUCTS_TARIFF', 'Zolltarifnummer:');
   define('TEXT_PRODUCTS_TARIFF_TITLE', 'Zollbeschreibung:');
+  define('BUTTON_PRODUCTS_TARIFF', 'Zolltarifnummer');
