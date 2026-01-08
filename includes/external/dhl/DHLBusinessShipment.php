@@ -151,21 +151,28 @@
           }
         }
       } catch (Exception $ex) {
-        $error = json_decode($ex->getResponse()->getBody(), true);      
-
-        if (isset($error['items'])) {
-          foreach ($error['items'] as $items) {
-            if (isset($items['validationMessages'])) {
-              foreach ($items['validationMessages'] as $messages) {
-                $this->message['error'][] = sprintf('Property %s: %s', ((isset($messages['property'])) ? $messages['property'] : ''), $messages['validationMessage']);
+        if (is_object($ex)
+            && method_exists($ex, 'getResponse')
+            )
+        {
+          $error = json_decode($ex->getResponse()->getBody(), true);      
+  
+          if (isset($error['items'])) {
+            foreach ($error['items'] as $items) {
+              if (isset($items['validationMessages'])) {
+                foreach ($items['validationMessages'] as $messages) {
+                  $this->message['error'][] = sprintf('Property %s: %s', ((isset($messages['property'])) ? $messages['property'] : ''), $messages['validationMessage']);
+                }
               }
             }
+          } elseif (isset($error['detail'])) {
+            $this->message['error'][] = $error['detail'];
           }
-        } elseif (isset($error['detail'])) {
-          $this->message['error'][] = $error['detail'];
+  
+          $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $error));
+        } else {
+          $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $ex));
         }
-
-        $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $error));
       }
       
       $result['message'] = $this->message;
@@ -205,15 +212,22 @@
         $response = $this->client->send($request);
         $response = json_decode($response->getBody()->getContents(), true);        
       } catch (Exception $ex) {
-        $error = json_decode($ex->getResponse()->getBody(), true);      
-
-        foreach ($error['items'] as $items) {
-          if (isset($items['sstatus'])) {
-            $this->message['error'][] = sprintf('Status %s: %s', $items['sstatus']['status'], $items['sstatus']['detail']);
+        if (is_object($ex)
+            && method_exists($ex, 'getResponse')
+            )
+        {
+          $error = json_decode($ex->getResponse()->getBody(), true);      
+  
+          foreach ($error['items'] as $items) {
+            if (isset($items['sstatus'])) {
+              $this->message['error'][] = sprintf('Status %s: %s', $items['sstatus']['status'], $items['sstatus']['detail']);
+            }
           }
+  
+          $this->LoggingManager->log('ERROR', 'DeleteLabel', array('exception' => $error));
+        } else {
+          $this->LoggingManager->log('ERROR', 'DeleteLabel', array('exception' => $ex));
         }
-
-        $this->LoggingManager->log('ERROR', 'DeleteLabel', array('exception' => $error));
       }
 
       $result['message'] = $this->message;
@@ -245,11 +259,18 @@
           $response = json_decode($response->getBody()->getContents(), true);
           $this->data['access_token'] = $response['access_token'];   
         } catch (Exception $ex) {
-          $error = json_decode($ex->getResponse()->getBody(), true);      
-
-          $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
-
-          $this->LoggingManager->log('ERROR', 'getAccessToken', array('exception' => $error));
+          if (is_object($ex)
+              && method_exists($ex, 'getResponse')
+              )
+          {
+            $error = json_decode($ex->getResponse()->getBody(), true);      
+  
+            $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
+  
+            $this->LoggingManager->log('ERROR', 'getAccessToken', array('exception' => $error));
+          } else {
+            $this->LoggingManager->log('ERROR', 'getAccessToken', array('exception' => $ex));
+          }        
         }
       }
     }
