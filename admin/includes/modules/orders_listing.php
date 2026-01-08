@@ -190,25 +190,25 @@
                                   WHERE o.orders_status = '".(int)$status."'
                                         ".$filter.$sort;
 
-          } elseif ($action == 'search' && $search && $customer == '') {
+          } elseif ($search_id != '') {
              // ADMIN SEARCH BAR $orders_query_raw moved it to the top
-          } elseif ($action == 'search' && $customer) {
+          } elseif ($search != '') {
             $orders_query_raw = "SELECT o.*
                                    FROM ".TABLE_ORDERS." o
-                                  WHERE (o.orders_id LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.customers_email_address LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.customers_name LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.customers_company LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.delivery_name LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.delivery_firstname LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.delivery_lastname LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.delivery_company LIKE '%".xtc_db_input($customer)."%'              
-                                         OR o.billing_name LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.billing_firstname LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.billing_lastname LIKE '%".xtc_db_input($customer)."%'
-                                         OR o.billing_company LIKE '%".xtc_db_input($customer)."%'
+                                  WHERE (o.orders_id LIKE '%".xtc_db_input($search)."%'
+                                         OR o.customers_email_address LIKE '%".xtc_db_input($search)."%'
+                                         OR o.customers_name LIKE '%".xtc_db_input($search)."%'
+                                         OR o.customers_firstname LIKE '%".xtc_db_input($search)."%'
+                                         OR o.customers_lastname LIKE '%".xtc_db_input($search)."%'
+                                         OR o.customers_company LIKE '%".xtc_db_input($search)."%'
+                                         OR o.delivery_name LIKE '%".xtc_db_input($search)."%'
+                                         OR o.delivery_firstname LIKE '%".xtc_db_input($search)."%'
+                                         OR o.delivery_lastname LIKE '%".xtc_db_input($search)."%'
+                                         OR o.delivery_company LIKE '%".xtc_db_input($search)."%'              
+                                         OR o.billing_name LIKE '%".xtc_db_input($search)."%'
+                                         OR o.billing_firstname LIKE '%".xtc_db_input($search)."%'
+                                         OR o.billing_lastname LIKE '%".xtc_db_input($search)."%'
+                                         OR o.billing_company LIKE '%".xtc_db_input($search)."%'
                                          )
                                         ".$filter.$sort;
           } else {

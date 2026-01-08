@@ -24,8 +24,8 @@
     $search_cus = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
   }
   if (strpos($page_filename, 'orders.php') !== false) {
-    $search_oid = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
-    $search_ord = htmlentities(isset($_GET['customer']) ? $_GET['customer'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
+    $search_oid = htmlentities(isset($_GET['search_id']) ? $_GET['search_id'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
+    $search_ord = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
   }
   if (strpos($page_filename, 'categories.php') !== false){
     $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
@@ -54,13 +54,13 @@
     </div>
     <div class="col25">
       <?php echo xtc_draw_form('search_order', FILENAME_ORDERS, '', 'get'); ?>
-        <input name="customer" type="text" value="<?php echo $search_ord;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_ORDER; ?>" />
+        <input name="search" type="text" value="<?php echo $search_ord;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_ORDER; ?>" />
         <input type="hidden" name="action" value="search" />
       </form>
     </div>
     <div class="col25">
       <?php echo xtc_draw_form('search_order_id', FILENAME_ORDERS, '', 'get'); ?>
-        <input name="search" type="text" value="<?php echo $search_oid;?>" size="7" placeholder="<?php echo $placeholder_order; ?>" />
+        <input name="search_id" type="text" value="<?php echo $search_oid;?>" size="7" placeholder="<?php echo $placeholder_order; ?>" />
         <input type="hidden" name="action" value="search" />
       </form>
     </div>

@@ -51,10 +51,10 @@ $smarty = new Smarty();
 $currencies = new currencies();
 
 $order_exists = false;
-$oID = isset($_GET['oID']) ? (int) $_GET['oID'] : '';
+$oID = isset($_GET['oID']) ? (int)$_GET['oID'] : '';
 $action = (isset($_GET['action']) ? xtc_db_prepare_input($_GET['action']) : '');
-$customer = (isset($_GET['customer']) ? xtc_db_prepare_input($_GET['customer']) : '');
 $search = (isset($_GET['search']) ? xtc_db_prepare_input($_GET['search']) : '');
+$search_id = (isset($_GET['search_id']) ? xtc_db_prepare_input($_GET['search_id']) : '');
 $email_preview = isset($_POST['email_preview']) && $_POST['email_preview'] == 1 ? true : false;
 
 if ($email_preview) {
@@ -73,13 +73,13 @@ if (($action == 'edit' || $action == 'update_order') && $oID) {
 }
 
 // search
-if ($action == 'search' && $search && $customer == '') {
+if ($search_id != '') {
   $where = $join = '';
   if (defined('MODULE_INVOICE_NUMBER_STATUS') 
       && MODULE_INVOICE_NUMBER_STATUS == 'True'
       )
   {
-     $where .= " OR o.ibn_billnr LIKE '%".xtc_db_input($search)."%' ";
+     $where .= " OR o.ibn_billnr LIKE '%".xtc_db_input($search_id)."%' ";
   }
   $orders_query_raw = "SELECT o.*,
                               s.orders_status_name
@@ -87,7 +87,7 @@ if ($action == 'search' && $search && $customer == '') {
                     LEFT JOIN ".TABLE_ORDERS_STATUS." s
                               ON o.orders_status = s.orders_status_id 
                                  AND s.language_id = '".(int)$_SESSION['languages_id']."'
-                        WHERE (o.orders_id LIKE '%".xtc_db_input($search)."%'
+                        WHERE (o.orders_id LIKE '%".xtc_db_input($search_id)."%'
                                ".$where.")
                      ORDER BY o.orders_id DESC";
   $orders_search_query = xtc_db_query($orders_query_raw);
@@ -99,7 +99,7 @@ if ($action == 'search' && $search && $customer == '') {
     {
       $join .= " LEFT JOIN magnalister_orders mo
                            ON o.orders_id = mo.orders_id ";
-      $where .= " OR mo.special LIKE '%".xtc_db_input($search)."%' ";
+      $where .= " OR mo.special LIKE '%".xtc_db_input($search_id)."%' ";
     }
     $orders_query_raw = "SELECT o.*,
                                 s.orders_status_name
@@ -108,9 +108,9 @@ if ($action == 'search' && $search && $customer == '') {
                       LEFT JOIN ".TABLE_ORDERS_STATUS." s
                                 ON o.orders_status = s.orders_status_id 
                                    AND s.language_id = '".(int)$_SESSION['languages_id']."'
-                          WHERE (o.orders_id LIKE '%".xtc_db_input($search)."%'
-                                 OR o.orders_ident_key LIKE '%".xtc_db_input($search)."%'
-                                 OR o.comments LIKE '%".xtc_db_input($search)."%'
+                          WHERE (o.orders_id LIKE '%".xtc_db_input($search_id)."%'
+                                 OR o.orders_ident_key LIKE '%".xtc_db_input($search_id)."%'
+                                 OR o.comments LIKE '%".xtc_db_input($search_id)."%'
                                  ".$where.")
                        ORDER BY o.orders_id DESC";    
     $orders_search_query = xtc_db_query($orders_query_raw);
