@@ -847,7 +847,7 @@ class product {
       
       $returnName = ($returnName != '') ? DIR_WS_BASE.$path.$returnName : '';
   
-      $returnName = $this->productModules->productImage($returnName, $name, $type ,$path);
+      $returnName = $this->productModules->productImage($returnName, $name, $type, $path);
     }
     
     return $returnName;
