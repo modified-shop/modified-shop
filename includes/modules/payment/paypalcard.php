@@ -73,7 +73,7 @@ class paypalcard extends PayPalPaymentV2 {
     if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html')) {
       $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html';
     }
-    $paypal_smarty->assign('error_message', TEXT_PAYPAL_ERROR_NOT_AVAILABLE);
+    $paypal_smarty->assign('error_message', addslashes(TEXT_PAYPAL_ERROR_NOT_AVAILABLE));
     $info = $paypal_smarty->fetch($tpl_file);
     $info = trim(str_replace(array("\r", "\n"), '', $info));
 
