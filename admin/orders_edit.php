@@ -106,6 +106,9 @@
       }
       xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=options&oID='.(int)$_POST['oID'].'&pID='.(int)$products_id.'&opID='.(int)$_POST['opID']));
       break;
+    case 'custom':
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_edit_products/action/','php') as $file) require ($file);
+      break;
 
     case 'ot_edit':
       if ($_POST['ot_class'] == 'ot_shipping') {
@@ -186,6 +189,8 @@
                   include (DIR_WS_MODULES.'orders_edit_other.php');
                 } elseif ($_GET['edit_action'] == 'options') {
                   include (DIR_WS_MODULES.'orders_edit_options.php');
+                } elseif ($_GET['edit_action'] == 'custom') {
+                  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_edit_products/data/','php') as $file) require ($file);
                 }
               }
               ?>
@@ -196,10 +201,12 @@
                   echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
                   echo '<input type="submit" class="button" onclick="this.blur();" value="'.BUTTON_SAVE.'"/>';
                   if (isset($_GET['edit_action'])) {
-                    echo '&nbsp;&nbsp;&nbsp;';
-                    echo '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'oID='.(int)$_GET['oID']).'">'.BUTTON_BACK.'</a>';
+                    if (in_array($_GET['edit_action'], array('options', 'custom'))) {
+                      echo '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=products&oID='.(int)$_GET['oID']).'">'.BUTTON_BACK.'</a>';
+                    } else {
+                      echo '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'oID='.(int)$_GET['oID']).'">'.BUTTON_BACK.'</a>';
+                    }
                   } else {
-                    echo '&nbsp;&nbsp;&nbsp;';
                     echo '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS, 'action=edit&oID='.(int)$_GET['oID']).'">'.BUTTON_BACK.'</a>';
                   }
                   ?>

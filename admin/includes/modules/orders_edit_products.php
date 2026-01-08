@@ -93,6 +93,7 @@
                 if (xtc_has_product_attributes($order->products[$i]['id']) === true) {
                   echo '<br><a class="button" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, xtc_get_all_get_params(array('edit_action', 'pID')).'edit_action=options&pID='.$order->products[$i]['id'].'&opID='.$order->products[$i]['opid']).'">' . BUTTON_PRODUCT_OPTIONS . '</a>';
                 }
+                foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_edit_products/button/','php') as $file) require ($file);
               ?>
             </td>
           </tr>
