@@ -316,7 +316,7 @@ function xss_read_blacklist()
     flock($fp, LOCK_EX);
     
     $count = 0;
-    while (($blacklist_val = @fgetcsv($fp, 4096, ';')) !== false) {
+    while (($blacklist_val = @fgetcsv($fp, 4096, ";", "\"", "\\")) !== false) {
       if (is_array($blacklist_val) && count($blacklist_val) == 2) {
         if (($blacklist_val[1]+XSS_BLACKLIST_TIME) > time()) {
           $blacklist_arr[$blacklist_val[0]] = $blacklist_val[1];
