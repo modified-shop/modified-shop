@@ -16,5 +16,5 @@
       && MODULE_PRODUCTS_TARIFF_STATUS == 'true'
       )
   {
-    echo '<br><a class="button" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, xtc_get_all_get_params(array('edit_action', 'pID')).'edit_action=custom&subaction=tariff&pID='.$order->products[$i]['id'].'&opID='.$order->products[$i]['opid']).'">' . TEXT_PRODUCTS_TARIFF_HEADING . '</a>';
+    echo '<br><a class="button" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, xtc_get_all_get_params(array('edit_action', 'pID')).'edit_action=custom&subaction=tariff&pID='.$order->products[$i]['id'].'&opID='.$order->products[$i]['opid']).'">' . BUTTON_PRODUCTS_TARIFF . '</a>';
   }
