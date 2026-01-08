@@ -107,10 +107,10 @@
   }
 
   // order status
-  $srStatus = (isset($_GET['status']) && preg_match("/^[0-9\,]+$/", $_GET['status'])) ? $_GET['status'] : 0;
+  $srStatus = (isset($_GET['status']) && preg_match("/^[0-9\-]+$/", $_GET['status'])) ? $_GET['status'] : ((defined('ORDER_STATUSES_FOR_SALES_STATISTICS') && ORDER_STATUSES_FOR_SALES_STATISTICS != '') ? '0' : '-1');
   
   // customers status/group
-  $srCgroup = (isset($_GET['cgroup']) && preg_match("/^[0-9\,]+$/", $_GET['cgroup'])) ? $_GET['cgroup'] : '';
+  $srCgroup = (isset($_GET['cgroup']) && preg_match("/^[0-9]+$/", $_GET['cgroup'])) ? $_GET['cgroup'] : '';
   
   // paymenttype
   if (isset($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
@@ -225,9 +225,9 @@
     }
   }
 
-  $status_array = array(array('id' => 0, 'text' => REPORT_ALL));
-  if (strpos(ORDER_STATUSES_FOR_SALES_STATISTICS, ',') !== false) {
-    $status_array[] = array('id' => ORDER_STATUSES_FOR_SALES_STATISTICS, 'text' => REPORT_SALES_STATISTICS);
+  $status_array = array(array('id' => '-1', 'text' => REPORT_ALL));
+  if (defined('ORDER_STATUSES_FOR_SALES_STATISTICS') && ORDER_STATUSES_FOR_SALES_STATISTICS != '') {
+    $status_array[] = array('id' => '0', 'text' => REPORT_SALES_STATISTICS);
   }
   foreach ($sr->status as $value) {
     $status_array[] = array('id' => $value['orders_status_id'], 'text' => $value['orders_status_name']);
