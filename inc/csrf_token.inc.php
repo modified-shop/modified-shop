@@ -73,7 +73,7 @@ if (is_array($_POST) && count($_POST) > 0) {
     unset($_GET['saction']);
     
     // create CSRF Token
-    $_SESSION['CSRFName'] = xtc_RandomString(6);
+    $_SESSION['CSRFName'] = 'x'.xtc_RandomString(5);
     $_SESSION['CSRFToken'] = xtc_RandomString(32);
 
     if (defined('RUN_MODE_ADMIN')) {
@@ -82,7 +82,6 @@ if (is_array($_POST) && count($_POST) > 0) {
   }
 } elseif ($CSRFKeep === false) {
   // create CSRF Token
-  $_SESSION['CSRFName'] = xtc_RandomString(6);
+  $_SESSION['CSRFName'] = 'x'.xtc_RandomString(5);
   $_SESSION['CSRFToken'] = xtc_RandomString(32);
 }
-?>
