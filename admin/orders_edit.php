@@ -31,6 +31,14 @@
   if (!isset($_GET['oID']) && isset($_POST['oID'])) {
     $_GET['oID'] = $_POST['oID'];
   }
+
+  $orders_query = xtc_db_query("SELECT orders_id
+                                  FROM ".TABLE_ORDERS."
+                                 WHERE orders_id = '".(int)$_GET['oID']."'");
+  if (xtc_db_num_rows($orders_query) < 1) {
+    xtc_redirect(xtc_href_link(FILENAME_ORDERS));
+  }
+
   $order = new order((int)$_GET['oID']);
 
   $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
