@@ -530,6 +530,8 @@
     $data_array['products_price'] = calculate_price_tax($data_array['products_price'], $tax_rate, $product['allow_tax'], $allow_tax);
     
     $final_price = $data_array['products_price'] * (int)$data_array['products_quantity'];
+    
+    $new_qty = (double)$data_array['old_qty'] - (double)$data_array['products_quantity'];
   
     $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
     $product['products_order_description'] = !empty($product['products_order_description']) ? nl2br($product['products_order_description']) : $product['products_short_description'];
@@ -548,10 +550,11 @@
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
 
-    $new_qty = (double)$data_array['old_qty'] - (double)$data_array['products_quantity'];
+    // Update Products Stock
     xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
-                     SET products_quantity = products_quantity + " . $new_qty . " 
-                   WHERE products_id = '" . (int)$data_array['products_id'] . "'");
+                     SET products_ordered = products_ordered - ".sprintf('%d', $new_qty).",
+                         products_quantity = products_quantity + ".sprintf('%d', $new_qty)." 
+                   WHERE products_id = '".(int)$data_array['products_id']."'");
 
     // Update Attributes Stock
     if (STOCK_LIMITED == 'true') {
@@ -566,11 +569,6 @@
                          AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
       }
     }
-
-    // Update products_ordered
-    xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
-                     SET products_ordered = products_ordered - ".sprintf('%d', $new_qty)." 
-                   WHERE products_id = '".(int)$data_array['products_id']."'");
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
     
