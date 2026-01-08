@@ -194,6 +194,38 @@ class ApiManager implements ApiManagerInterface
         return $this->adapter->action('get', "/v3/receivers.json/{$email}/groups");
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getWebhooks()
+    {
+        return $this->adapter->action('get', "/hooks/eventhook");
+    }
+
+    /**
+    * {@inheritdoc}
+    */
+    public function registerWebhook(string $url, string $event, string $groupId, string $secret)
+    {
+        return $this->adapter->action(
+            'post',
+            "/hooks/eventhook",
+            [
+                'url' => $url,
+                'event' => $event,
+                'condition' => $groupId,
+                'verify' => $secret,
+            ]
+        );
+    }
+
+     /**
+     * {@inheritdoc}
+     */
+    public function deleteWebhook(string $eventname)
+    {
+        return $this->adapter->action('delete', "/hooks/eventhook/{$eventname}");
+    }
 
     /**
      * Returns the HTTP adapter.
@@ -203,5 +235,19 @@ class ApiManager implements ApiManagerInterface
     public function getAdapter()
     {
         return $this->adapter;
+    }
+
+    /**
+     * Decode webhook data.
+     *
+     * @return mixed
+     */
+    function decode($encrypted, $secret) {
+        $enc_bin = hex2bin($encrypted);
+        $key = hash('sha256', $secret, true);
+        $iv = substr($enc_bin, 0, 16);
+        $decoded = openssl_decrypt(substr($enc_bin, 16), 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    
+        return $decoded;
     }
 }

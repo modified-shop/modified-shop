@@ -143,4 +143,32 @@ interface ApiManagerInterface
      * @return mixed
      */
     public function getSubscriberGroups(string $email);
+
+    /**
+     * Retrieves an array of webhooks registered
+     *
+     * @return mixed
+     */
+    public function getWebhooks();
+
+    /**
+     * Register a webhook for an event
+     *
+     * @param string $url
+     * @param string $event
+     * @param string $groupId
+     * @param string $secret
+     *
+     * @return mixed
+     */
+    public function registerWebhook(string $url, string $event, string $groupId, string $secret);
+
+    /**
+     * Deletes a webhook for a given event
+     *
+     * @param string $email
+     *
+     * @return mixed
+     */
+    public function deleteWebhook(string $eventname);
 }

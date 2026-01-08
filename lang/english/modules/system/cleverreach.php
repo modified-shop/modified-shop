@@ -20,3 +20,6 @@
   define('MODULE_CLEVERREACH_SECRET_DESC', 'Enter the API Secret here.');
   define('MODULE_CLEVERREACH_GROUP_TITLE', 'CleverReach Group ID');
   define('MODULE_CLEVERREACH_GROUP_DESC', 'Enter the Group ID for your Newsletter.');
+
+  define('MODULE_CLEVERREACH_TEXT_WEBHOOK_INSTALL', 'Webhook install');
+  define('MODULE_CLEVERREACH_TEXT_WEBHOOK_UNINSTALL', 'Webhook uninstall');
