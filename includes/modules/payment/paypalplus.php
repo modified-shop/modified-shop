@@ -130,7 +130,7 @@ class paypalplus extends PayPalPayment {
     $js = 'if (payment_value == "' . $this->code . '") {' . "\n" .
           '  var pp_payment = ppp.getPaymentMethod();' . "\n" .
           '  if (!pp_payment || pp_payment.length === 0) {' . "\n" .
-          '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_NO_PAYMENT_MODULE_SELECTED) . '");' . "\n" .
+          '    error_message = error_message + decodeURIComponent("' . xtc_js_lang(JS_ERROR_NO_PAYMENT_MODULE_SELECTED) . '");' . "\n" .
           '    error = 1;' . "\n" .
           '  }' . "\n" .
           '}' . "\n";
