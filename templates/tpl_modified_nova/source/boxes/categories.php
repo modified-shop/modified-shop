@@ -25,7 +25,7 @@
     $categories_string = '';
     $category_tree_array = xtc_get_category_tree_array();
   
-    if (count($category_tree_array) > 0) {
+    if (!empty($category_tree_array)) {
       xtc_show_category(0, '', $category_tree_array);    
     }
   
