@@ -102,6 +102,9 @@
   }
 
   $module_smarty->assign('language', $_SESSION['language']);
+
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/address_book_smarty_data','php') as $file) require ($file);
+
   $module_smarty->caching = 0;
   $main_content=$module_smarty->fetch(CURRENT_TEMPLATE . '/module/address_book_details.html');
   $smarty->assign('MODULE_address_book_details',$main_content);

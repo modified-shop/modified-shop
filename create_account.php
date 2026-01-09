@@ -278,6 +278,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $error = true;
   }
   
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_check_data','php') as $file) require ($file);
+
   if ($error == false) {
     $customers_password_time = time();
     
@@ -314,6 +316,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $sql_data_array['customers_vat_id'] = $vat;
       $sql_data_array['customers_vat_id_status'] = $customers_vat_id_status;
     }
+
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_customer_data','php') as $file) require ($file);
     
     // check email again
     $check_email_query = xtc_db_query("SELECT count(*) as total
@@ -352,6 +356,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         $sql_data_array['entry_zone_id'] = (isset($zone_id) ? (int)$zone_id : 0);
         $sql_data_array['entry_state'] = ((isset($state) && !empty($state)) ? $state : '');
       }
+
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_address_data','php') as $file) require ($file);
 
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
@@ -530,6 +536,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         $newsletter = new newsletter;
         $newsletter->AddUserAuto($email_address);
       }
+
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_before_redirect','php') as $file) require ($file);
       
       if ($_SESSION['cart']->count_contents() > 0) {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
@@ -669,6 +677,9 @@ $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('BUTTON_SUBMIT_SAVE', xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_smarty_data','php') as $file) require ($file);
+
+$smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/create_account.html');
 $smarty->assign('main_content', $main_content);
 if (!defined('RM'))

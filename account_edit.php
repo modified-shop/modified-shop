@@ -145,6 +145,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     $error = true;
   }
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_edit_check_data','php') as $file) require ($file);
+
   if ($error == false) {
     $sql_data_array = array(
       'customers_vat_id' => $vat, 
@@ -174,6 +176,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     if (ACCOUNT_DOB == 'true') {
       $sql_data_array['customers_dob'] = xtc_date_raw($dob);
     }
+
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_edit_customer_data','php') as $file) require ($file);
     
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."'");
 
@@ -261,6 +265,8 @@ $smarty->assign('BUTTON_SUBMIT_SAVE', xtc_image_submit('button_save.gif', IMAGE_
 $smarty->assign('BUTTON_SUBMIT_UPDATE', xtc_image_submit('button_update.gif', IMAGE_BUTTON_UPDATE));
 $smarty->assign('FORM_END', '</form>');
 $smarty->assign('language', $_SESSION['language']);
+
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_edit_smarty_data','php') as $file) require ($file);
 
 $smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_edit.html');

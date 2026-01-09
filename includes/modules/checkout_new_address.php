@@ -133,6 +133,8 @@ if (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT_ADDRESS
 }
 $module_smarty->assign('language', $_SESSION['language']);
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/checkout_address_smarty_data','php') as $file) require ($file);
+
 $module_smarty->caching = 0;
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_new_address.html');
 
