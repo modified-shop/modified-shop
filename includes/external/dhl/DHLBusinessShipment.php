@@ -40,7 +40,7 @@
     protected $sandbox;
 
 
-    function __construct($data) {
+    function __construct($data, $init = true) {
       $this->sandbox = (MODULE_DHL_BUSINESS_MODE === 'sandbox');    
       $this->loglevel = defined('MODULE_DHL_BUSINESS_LOGLEVEL') ? MODULE_DHL_BUSINESS_LOGLEVEL : 'ERROR';
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_dhl_%s_%s.log', 'dhl', strtolower($this->loglevel));
@@ -106,8 +106,10 @@
         2 => '25000',
       );
       
-      $this->client = new \GuzzleHttp\Client();
-      $this->getAccessToken();
+      if ($init === true) {
+        $this->client = new \GuzzleHttp\Client();
+        $this->getAccessToken();
+      }
     }
 
 
