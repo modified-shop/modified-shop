@@ -133,8 +133,15 @@
               foreach ($pics as $key => $val) {
                 if ($pics[$key] != '' || $pics[$key] != NULL) {
                   $pics_array[] = $val;
-                }             
-              }              
+
+                  if (defined('IMAGE_TYPE_EXTENSION') 
+                      && IMAGE_TYPE_EXTENSION != 'default'
+                      )
+                  {
+                    $pics_array[] = substr($val, 0, strrpos($val, '.')).'.'.IMAGE_TYPE_EXTENSION;
+                  }
+                }
+              }
             }
             break;
 
@@ -145,8 +152,15 @@
               foreach ($pics as $key => $val) {
                 if ($pics[$key] != '' || $pics[$key] != NULL) {
                   $pics_array[] = $val;
-                }             
-              }              
+
+                  if (defined('IMAGE_TYPE_EXTENSION') 
+                      && IMAGE_TYPE_EXTENSION != 'default'
+                      )
+                  {
+                    $pics_array[] = substr($val, 0, strrpos($val, '.')).'.'.IMAGE_TYPE_EXTENSION;
+                  }
+                }
+              }
             }
             break;
 
@@ -158,8 +172,15 @@
               foreach ($pics as $key => $val) {
                 if ($pics[$key] != '' || $pics[$key] != NULL) {
                   $pics_array[] = $val;
-                }             
-              }              
+
+                  if (defined('IMAGE_TYPE_EXTENSION') 
+                      && IMAGE_TYPE_EXTENSION != 'default'
+                      )
+                  {
+                    $pics_array[] = substr($val, 0, strrpos($val, '.')).'.'.IMAGE_TYPE_EXTENSION;
+                  }
+                }
+              }
             }
             break;
         }
