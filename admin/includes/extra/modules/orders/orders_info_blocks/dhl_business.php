@@ -67,7 +67,7 @@
               }
               
               require_once(DIR_FS_EXTERNAL.'dhl/DHLBusinessShipment.php');
-              $dhl = new DHLBusinessShipment(array());
+              $dhl = new DHLBusinessShipment(array(), false);
               $weight = $dhl->calculate_weight($oID);
               $weight = sprintf("%01.2f", round($weight, 2));
               
