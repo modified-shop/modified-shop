@@ -41,11 +41,12 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $mailsmarty->compile_dir = DIR_FS_CATALOG.'templates_c';
   
   //set language parameters
-  $lang_data = array();
-  $lang_data['directory'] = isset($_SESSION['language']) ? $_SESSION['language'] : '';
-  $lang_data['language_charset'] = isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : '';
-  $lang_data['code'] = isset($_SESSION['language_code']) ? $_SESSION['language_code'] : '';
-  $lang_data['languages_id'] = isset($_SESSION['languages_id']) ? $_SESSION['languages_id'] : '';
+  $lang_data = array(
+    'directory' => (isset($_SESSION['language']) ? $_SESSION['language'] : ''),
+    'language_charset' => (isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : ''),
+    'code' => (isset($_SESSION['language_code']) ? $_SESSION['language_code'] : ''),
+    'languages_id' => (isset($_SESSION['languages_id']) ? $_SESSION['languages_id'] : ''),
+  );
   
   $where= '';
   if (empty($lang_data['directory']) 
@@ -196,7 +197,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   }
 
   //Subject
-  $mail->Subject = encode_utf8($email_subject);
+  $mail->Subject = encode_utf8($email_subject, $lang_data['language_charset']);
 
   //Recipients
   $mail->setFrom($from_email_address, $from_email_name);
