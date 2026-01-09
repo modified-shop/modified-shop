@@ -13,8 +13,12 @@
 
   function xtc_count_products_in_category_array($parent_id, $category_tree_array) {
     $products_in_category = 0;
-    foreach ($category_tree_array[$parent_id] as $categories) {
-      $products_in_category += mod_count_products_in_category($categories['id']);
+    if (mod_count_products_in_category($categories['id']) > 1) {
+      foreach ($category_tree_array[$parent_id] as $categories) {
+        $products_in_category += mod_count_products_in_category($categories['id']);
+      }
+    } else {
+      $products_in_category = 1;
     }
     
     return $products_in_category;
@@ -33,7 +37,7 @@
   function xtc_get_category_tree_array($parent_id = 0, $max_depth = CATEGORIES_MAX_DEPTH, $level = 1, $category_tree_array = array()) {
     $categories_data_array = xtc_get_categories_tree_data($parent_id, $level);
 
-    if (count($categories_data_array) > 0) {
+    if (!empty($categories_data_array)) {
       $category_tree_array[$parent_id] =  $categories_data_array;
       
       foreach ($categories_data_array as $categories_data) {
@@ -50,38 +54,41 @@
 
 
   function xtc_get_categories_tree_data($parent_id, $level) {
-    static $category_data_array;
+    static $category_data_array = null;
     
-    if (!isset($category_data_array)) $category_data_array = array();
-    
-    if (!isset($category_data_array[$parent_id])) {
-      $category_data_array[$parent_id] = array();
+    if ($category_data_array === null) {
+      $category_data_array = array();
       
       $categories_query = xtDBquery("SELECT c.categories_id,
                                             cd.categories_name,
                                             c.parent_id
                                        FROM ".TABLE_CATEGORIES." c
                                        JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
-                                            ON c.categories_id = cd.categories_id
+                                            ON cd.categories_id = c.categories_id
                                                AND cd.language_id = '".(int)$_SESSION['languages_id']."'
                                                AND trim(cd.categories_name) != ''
-                                      WHERE c.parent_id = '".(int)$parent_id."'
-                                        AND c.categories_status = '1'
+                                      WHERE c.categories_status = '1'
                                             ".CATEGORIES_CONDITIONS_C."
                                    ORDER BY c.sort_order, cd.categories_name");
-      if (xtc_db_num_rows($categories_query, true) > 0) {
-        while ($categories = xtc_db_fetch_array($categories_query, true)) {
-          $category_data_array[$parent_id][$categories['categories_id']] = array(
-            'name' => $categories['categories_name'],
-            'parent' => $categories['parent_id'],
-            'id' => $categories['categories_id'],
-            'level' => $level,
-          );
-        }
+
+      while ($categories = xtc_db_fetch_array($categories_query, true)) {
+        $category_data_array[$categories['parent_id']][$categories['categories_id']] = array(
+          'name' => $categories['categories_name'],
+          'parent' => $categories['parent_id'],
+          'id' => $categories['categories_id'],
+        );
       }
     }
         
-    return $category_data_array[$parent_id];
+    $result = array();
+    if (isset($category_data_array[$parent_id])) {
+      foreach ($category_data_array[$parent_id] as $id => $category) {
+        $category['level'] = $level;
+        $result[$id] = $category;
+      }
+    }
+    
+    return $result;
   }
   
   
@@ -109,10 +116,10 @@
 
         // mark subs
         $hasSubs = '';
+        $children = xtc_get_categories_tree_data($categories['id'], $level + 1);
+        $count_children = !empty($children);
         if (defined('CATEGORIES_CHECK_SUBS') && (CATEGORIES_CHECK_SUBS == true)) {
-          require_once (DIR_FS_INC . 'xtc_has_category_subcategories.inc.php');
-          $tmpCheck = xtc_has_category_subcategories($categories['id']);
-          if ($tmpCheck) {
+          if($count_children === true) {
             $hasSubs = ' has_sub_cats';
           }
         }
@@ -135,7 +142,7 @@
 
         $categories_string .= '</a>';
         if (isset($category_tree_array[$categories['id']])) {
-          if (xtc_count_products_in_category_array($categories['id'], $category_tree_array) > 0) {
+          if ($count_children === true) {
             $categories_string .= "\n";
             xtc_show_sub_category($level, true);
 
