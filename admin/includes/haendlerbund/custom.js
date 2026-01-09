@@ -33,7 +33,7 @@ $(function () {
     api_ready = api_ok.value;
 
     if (api_ready == 0) {
-      alert(unescape('Ihr API Key ist leider ung%FCltig!'));
+      alert(decodeURIComponent('Ihr API Key ist leider ung%FCltig!'));
     } else {
       $('form').submit();
     }

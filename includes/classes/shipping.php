@@ -208,7 +208,7 @@
         $js = '<script type="text/javascript"><!-- ' . "\n" .
               'function check_form() {' . "\n" .
               '  var error = 0;' . "\n" .
-              '  var error_message = unescape("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
+              '  var error_message = decodeURIComponent("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
               '  var shipping_value = null;' . "\n" .
               '  if (document.getElementById("checkout_address").shipping.length) {' . "\n" .
               '    for (var i=0; i<document.getElementById("checkout_address").shipping.length; i++) {' . "\n" .
@@ -233,7 +233,7 @@
           }
         }
         $js .= "\n" . '  if (shipping_value == null) {' . "\n" .
-               '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_NO_SHIPPING_MODULE_SELECTED) . '");' . "\n" .
+               '    error_message = error_message + decodeURIComponent("' . xtc_js_lang(JS_ERROR_NO_SHIPPING_MODULE_SELECTED) . '");' . "\n" .
                '    error = 1;' . "\n" .
                '  }' . "\n\n" .
                '  if (error == 1) {' . "\n" . 

@@ -1081,7 +1081,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
 		eval('document.' + this.formName + '.' + this.textBoxName + '.value = \'\'');
 		this.hide();
 		if (this.JStoRunOnClear!=null)
-			eval(unescape(this.JStoRunOnClear));
+			eval(decodeURIComponent(this.JStoRunOnClear));
 
 		eval('document.'+this.formName+'.'+this.textBoxName).className = "cal-TextBox";
 		if (this.required) {
@@ -1100,7 +1100,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
 		this.textBox().value=calMgr.scFormatDate(dteCur,this.dateFormat);
 		this.hide();
 		if (this.JStoRunOnSelect!=null)
-			eval(unescape(this.JStoRunOnSelect));
+			eval(decodeURIComponent(this.JStoRunOnSelect));
 
 		eval('document.'+this.formName+'.'+this.textBoxName).className = "cal-TextBox";
 
