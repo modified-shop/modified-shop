@@ -29,6 +29,7 @@ class cleverreach {
   var $sort_order;
   var $enabled;
   var $_check;
+  var $properties;
 
   function __construct() {
     $this->code = 'cleverreach';
