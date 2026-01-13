@@ -125,22 +125,22 @@ if ((isset($_SESSION['customer_id'])
   $shop_content_data = $main->getContentData(REVOCATION_ID, $lang_id, $order->info['status']);
   //Image path correction - absolute path needed
   $shop_content_data = str_replace('src="'.DIR_WS_CATALOG.'images/', 'src="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'images/', $shop_content_data);
-  $smarty->assign('REVOCATION_HTML', $shop_content_data['content_text']);
-  $smarty->assign('REVOCATION_TXT', $shop_content_data['content_text']);
+  $smarty->assign('REVOCATION_HTML', ((isset($shop_content_data['content_text'])) ? $shop_content_data['content_text'] : ''));
+  $smarty->assign('REVOCATION_TXT', ((isset($shop_content_data['content_text'])) ? $shop_content_data['content_text'] : ''));
 
   // agb to email 
   $shop_content_data = $main->getContentData(3, $lang_id, $order->info['status']);
   //Image path correction - absolute path needed
   $shop_content_data = str_replace('src="'.DIR_WS_CATALOG.'images/', 'src="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'images/', $shop_content_data);
-  $smarty->assign('AGB_HTML', $shop_content_data['content_text']);
-  $smarty->assign('AGB_TXT', $shop_content_data['content_text']);
+  $smarty->assign('AGB_HTML', ((isset($shop_content_data['content_text'])) ? $shop_content_data['content_text'] : ''));
+  $smarty->assign('AGB_TXT', ((isset($shop_content_data['content_text'])) ? $shop_content_data['content_text'] : ''));
 
   // privacy policy to email 
   $shop_content_data = $main->getContentData(2, $lang_id, $order->info['status']);
   //Image path correction - absolute path needed
   $shop_content_data = str_replace('src="'.DIR_WS_CATALOG.'images/', 'src="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'images/', $shop_content_data);
-  $smarty->assign('PRIVACY_POLICY_HTML', $shop_content_data['content_text']);
-  $smarty->assign('PRIVACY_POLICY_TXT', $shop_content_data['content_text']);
+  $smarty->assign('PRIVACY_POLICY_HTML', ((isset($shop_content_data['content_text'])) ? $shop_content_data['content_text'] : ''));
+  $smarty->assign('PRIVACY_POLICY_TXT', ((isset($shop_content_data['content_text'])) ? $shop_content_data['content_text'] : ''));
 
 
   if (DOWNLOAD_ENABLED == 'true') {

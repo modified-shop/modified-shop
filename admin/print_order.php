@@ -114,8 +114,8 @@
   $main = new main();
 
   $invoice_data = $main->getContentData(INVOICE_INFOS, $order->info['languages_id']);
-  $smarty->assign('ADDRESS_SMALL', $invoice_data['content_heading']);
-  $smarty->assign('ADDRESS_LARGE', $invoice_data['content_text']);
+  $smarty->assign('ADDRESS_SMALL', ((isset($invoice_data['content_heading'])) ? $invoice_data['content_heading'] : ''));
+  $smarty->assign('ADDRESS_LARGE', ((isset($invoice_data['content_text'])) ? $invoice_data['content_text'] : ''));
 
   foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_print/','php') as $file) require ($file);
 

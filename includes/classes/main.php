@@ -59,7 +59,7 @@ class main {
   function getShippingStatusName($id, $link = false) {
     global $request_type;
     
-    if (!defined('SHIPPING_STATUS_INFOS') || $link === false) {
+    if (!defined('SHIPPING_STATUS_INFOS') || SHIPPING_STATUS_INFOS == '' || $link === false) {
       return (isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '');
     }
     
