@@ -20,6 +20,12 @@ define('DISPLAY_CART', 'false');
 // use always session_id from URL for payment providers
 define('SESSION_FORCE_COOKIE_USE', 'False');
 
+// disable cache
+if (!isset($_REQUEST['cache'])) {
+  define('DB_CACHE', 'false');
+  define('USE_CACHE', 'false');
+}
+
 if (isset($_REQUEST['speed'])) {
   // Start the clock for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime(true));
