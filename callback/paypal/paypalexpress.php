@@ -135,6 +135,10 @@ if (isset($_SESSION['paypal'])
       }
     }
   
+    // register a random ID in the session to check throughout the checkout procedure
+    // against alterations in the shopping cart contents
+    $_SESSION['cartID'] = $_SESSION['cart']->cartID;
+
     // payment
     $_SESSION['payment'] = 'paypalexpress';
   
