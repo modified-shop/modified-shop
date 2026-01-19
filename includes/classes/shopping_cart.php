@@ -382,6 +382,35 @@ class shoppingCart {
         }
       }
     }
+
+    // unique ID to the order contents
+    $this->cartID = $this->generate_cart_id();
+  }
+
+  /**
+   * remove a product from cart
+   *
+   * @param integer $products_id
+   */
+  function remove($products_id) {
+    unset($this->contents[$products_id]);
+
+    //new module support 
+    $this->shoppingCartModules->remove_custom_inputs_session($products_id, $this->type);
+    
+    // remove from database
+    if ($this->save_to_db === true && isset($_SESSION['customer_id'])) { 
+      xtc_db_query("DELETE FROM ".$this->table_basket." 
+                          WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
+                            AND products_id = '".xtc_db_input($products_id)."'");
+
+      xtc_db_query("DELETE FROM ".$this->table_basket_attributes." 
+                          WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
+                            AND products_id = '".xtc_db_input($products_id)."'");
+    }
+    
+    // unique ID to the order contents
+    $this->cartID = $this->generate_cart_id();
   }
 
   /**
@@ -453,40 +482,6 @@ class shoppingCart {
     } else {
       return false;
     }
-  }
-
-  /**
-   * remove a product from cart
-   *
-   * @param integer $products_id
-   */
-  function remove($products_id) {
-    unset($this->contents[$products_id]);
-
-    //new module support 
-    $this->shoppingCartModules->remove_custom_inputs_session($products_id, $this->type);
-    
-    // remove from database
-    if ($this->save_to_db === true && isset($_SESSION['customer_id'])) { 
-      xtc_db_query("DELETE FROM ".$this->table_basket." 
-                          WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
-                            AND products_id = '".xtc_db_input($products_id)."'");
-
-      xtc_db_query("DELETE FROM ".$this->table_basket_attributes." 
-                          WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
-                            AND products_id = '".xtc_db_input($products_id)."'");
-    }
-    
-    // unique ID to the order contents
-    $this->cartID = $this->generate_cart_id();
-  }
-
-  /**
-   * alias for reset
-   *
-   */
-  function remove_all() {
-    $this->reset();
   }
 
   /**
@@ -897,6 +892,14 @@ class shoppingCart {
     }
     
     return $tax; 
+  }
+
+  /**
+   * alias for reset
+   *
+   */
+  function remove_all() {
+    $this->reset();
   }
 
   /**
