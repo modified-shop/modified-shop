@@ -60,4 +60,3 @@ if ($order->billing['country']['iso_code_2'] != '') {
 $_SESSION['paypal']['payment_modules'] = 'paypalcart.php';
 
 xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'NONSSL'));
-?>
