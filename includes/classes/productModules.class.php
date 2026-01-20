@@ -79,10 +79,10 @@ class productModules {
         return $this->call_module_method($data);
     }
 
-    function buildDataArray($productData,$array,$image)
+    function buildDataArray($productData, $array, $image, $cache)
     {
         $this->function_call = 'buildDataArray';
-        return $this->call_module_method($productData,$array,$image);
+        return $this->call_module_method($productData, $array, $image, $cache);
     }
 
     function productImageName($returnName, $name, $type)
