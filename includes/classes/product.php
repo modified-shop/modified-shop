@@ -23,6 +23,7 @@ class product {
   var $useStandardImage;
   var $ShippingLink;
   var $getTaxInfo;
+  var $reviews_lang;
   var $isProduct;
   var $default_select;
   var $productModules;
@@ -68,8 +69,11 @@ class product {
     // default values
     $this->ShippingLink = '';
     $this->getTaxInfo = array();
+    $this->reviews_lang = true;
+
+    $this = $this->productModules->defaults($this);
     
-    if ($pID == 0) {
+    if ($this->pID === 0) {
       $this->isProduct = false;
       return;
     }
@@ -157,12 +161,17 @@ class product {
       $pID = $this->pID;
     }
     
+    $join = '';
+    if ($this->reviews_lang === true) {
+      $join = "JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
+                    ON r.reviews_id = rd.reviews_id
+                       AND rd.languages_id = '".(int)$_SESSION['languages_id']."'";
+    }
+    
     if (!isset($reviews_count_array[$pID])) {
       $reviews_query = xtc_db_query("SELECT count(*) AS total
                                        FROM ".TABLE_REVIEWS." r
-                                       JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
-                                            ON r.reviews_id = rd.reviews_id
-                                               AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
+                                            ".$join."
                                       WHERE r.products_id = '".(int)$pID."'
                                         AND r.reviews_status = '1'");
       $reviews = xtc_db_fetch_array($reviews_query);
@@ -218,6 +227,11 @@ class product {
       $pID = $this->pID;
     }
 
+    $join_where = '';
+    if ($this->reviews_lang === true) {
+      $join_where = "AND rd.languages_id = '".(int)$_SESSION['languages_id']."'";
+    }
+
     if (!isset($reviews_array[$pID])) {
       $reviews_array[$pID] = array();
       $reviews_query = xtc_db_query("SELECT r.reviews_rating,
@@ -231,12 +245,13 @@ class product {
                                        FROM ".TABLE_REVIEWS." r
                                        JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                                             ON r.reviews_id = rd.reviews_id
-                                               AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
+                                               ".$join_where."
                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                             ON r.products_id = pd.products_id
                                                AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                       WHERE r.products_id = '".(int)$pID."'
                                         AND r.reviews_status = '1'
+                                   GROUP BY r.reviews_id
                                    ORDER BY r.date_added DESC");
       if (xtc_db_num_rows($reviews_query)) {
         $i = 0;
