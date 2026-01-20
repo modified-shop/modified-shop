@@ -147,7 +147,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $info_smarty->assign('FORM_END', '</form>');
   
   // load all definitions from product class
-  $productDataArray = $product->buildDataArray($product->data, 'info');
+  $productDataArray = $product->buildDataArray($product->data, 'info', false);
   foreach ($productDataArray as $key => $value) {
     $info_smarty->assign($key, $value);
   }
@@ -156,6 +156,8 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
    * assign smarty additional variables or overwrite them
    * START
    */
+  $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');  
+  $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
    
   // show expiry date of active special products
   if ($_SESSION['customers_status']['customers_status_specials'] != '0') {
@@ -175,12 +177,9 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     }
   }
 
-  $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');  
+  // print
   $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', PRINTVIEW_INFO_TITLE, 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id'], $request_type).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRODUCT_PRINT_SIZE.'\')"'));
   $info_smarty->assign('PRODUCTS_PRINT_LAYER', '<a class="iframe" target="_blank" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id'], $request_type). '" title="'.PRINTVIEW_INFO_TITLE.'">'.PRINTVIEW_INFO_TEXT.'</a>');
-  $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
-  $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes($product->data['products_short_description']));
-  $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
 
   // more images
   if (MO_PICS != '0') {
@@ -222,8 +221,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
             )
   {
     $info_smarty->assign('PRODUCTS_ADDED', sprintf(TEXT_DATE_ADDED, xtc_date_long($product->data['products_date_added'])));
-  }
-  
+  }  
   /*
    * assign smarty additional variables or overwrite them
    * END

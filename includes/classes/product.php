@@ -657,7 +657,7 @@ class product {
    * @param array $array
    * @return array
    */
-  function buildDataArray(&$array, $image = 'thumbnail') {
+  function buildDataArray(&$array, $image = 'thumbnail', $cache = true) {
     global $xtPrice, $main;        
     static $productData;
     
@@ -665,7 +665,7 @@ class product {
       $productData = array();
     }
 
-    if (!isset($productData[$array['products_id']])) {
+    if (!isset($productData[$array['products_id']]) || $cache === false) {
       $productData[$array['products_id']] = array();
 
       $array['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($array['products_id'], $array['products_tax_class_id']);
@@ -743,12 +743,20 @@ class product {
       if (defined('DB_CACHE') && DB_CACHE == 'true') {
         $array['products_quantity'] = xtc_get_products_stock($array['products_id']);
       }
-  
+            
       //products data array
       foreach((array)$array as $key => $entry) {                  
         $productData[$array['products_id']][strtoupper($key)] = $entry;
       }
   
+      // stripslashes description
+      if (isset($array['products_short_description'])) {
+        $productData[$array['products_id']]['PRODUCTS_SHORT_DESCRIPTION'] = stripslashes($array['products_short_description']);
+      }
+      if (isset($array['products_description'])) {
+        $productData[$array['products_id']]['PRODUCTS_DESCRIPTION'] = stripslashes($array['products_description']);
+      }
+
       if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && isset($array['products_date_added'])) {    
         $date_new_products = mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y"));
         if (strtotime($array['products_date_added']) >= $date_new_products) {
@@ -791,7 +799,7 @@ class product {
       }
       $productData[$array['products_id']]['PRODUCTS_PRICE_ARRAY'][0]['PRICE_ALLOWED'] = $productData[$array['products_id']]['PRICE_ALLOWED'];
   
-      $productData[$array['products_id']] = $this->productModules->buildDataArray($productData[$array['products_id']], $array, $image);
+      $productData[$array['products_id']] = $this->productModules->buildDataArray($productData[$array['products_id']], $array, $image, $cache);
     }
     
     return $productData[$array['products_id']];
