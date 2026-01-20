@@ -89,7 +89,6 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
    * assign smarty additional variables or overwrite them
    * START
    */
-  $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');  
   $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
   
   // show expiry date of active special products
