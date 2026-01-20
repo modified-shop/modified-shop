@@ -73,6 +73,12 @@ class productModules {
 
     
     //----- PRODUCT FUNCTIONS -----//
+    function defaults($data)
+    {
+        $this->function_call = 'defaults';
+        return $this->call_module_method($data);
+    }
+
     function construct($data)
     {
         $this->function_call = 'construct';

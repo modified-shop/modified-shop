@@ -20,6 +20,7 @@ class main {
   var $SHIPPING;
   var $vpe_name;
   var $mainModules;
+  var $standardImage;
 
   /**
    * class constructor function
@@ -33,21 +34,25 @@ class main {
     require_once (DIR_FS_CATALOG.'includes/classes/mainModules.class.php');
     $this->mainModules = new mainModules();
     
-    $this->SHIPPING = array();
+    $this->standardImage = 'noimage.gif';
 
     // prefetch shipping status
+    $this->SHIPPING = array();
     $status_query = xtDBquery("SELECT shipping_status_name,
                                       shipping_status_image,
                                       shipping_status_id
-                               FROM ".TABLE_SHIPPING_STATUS."
-                               WHERE language_id = '".(int)$language_id."'");
+                                 FROM ".TABLE_SHIPPING_STATUS."
+                                WHERE language_id = '".(int)$language_id."'");
 
     while ($status_data=xtc_db_fetch_array($status_query,true)) {
       $this->SHIPPING[$status_data['shipping_status_id']] = array(
-        'name'=>$status_data['shipping_status_name'],
-        'image'=>$status_data['shipping_status_image']
+        'name' => $status_data['shipping_status_name'],
+        'image' => $status_data['shipping_status_image']
       );
     }
+    
+    //new module support
+    $this = $this->mainModules->defaults($this);
   }
 
   /**
@@ -449,7 +454,7 @@ class main {
    *
    * @return string
    */
-  function getImage($image, $dir = 'categories/', $check = CATEGORIES_IMAGE_SHOW_NO_IMAGE, $noImg = 'noimage.gif') {
+  function getImage($image, $dir = 'categories/', $check = CATEGORIES_IMAGE_SHOW_NO_IMAGE) {
 
     $imageOrigin = $image;
     
@@ -465,11 +470,11 @@ class main {
     }
 
     if (!is_file(DIR_FS_CATALOG.$image)) {
-      $image = (($check == 'true') ? DIR_WS_IMAGES . $dir . $noImg : '');
+      $image = (($check == 'true' && $this->standardImage != '' && is_file(DIR_FS_CATALOG.DIR_WS_IMAGES.$dir.$this->standardImage)) ? DIR_WS_IMAGES.$dir.$this->standardImage : '');
     }
     
     //new module support
-    $image = $this->mainModules->getImage($image, $dir, $check, $noImg, $imageOrigin);
+    $image = $this->mainModules->getImage($image, $dir, $check, $this->standardImage, $imageOrigin);
     
     return $image;
   }
