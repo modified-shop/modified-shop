@@ -123,7 +123,6 @@
                 <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CUSTOMER_ID; ?></td>
                 <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_FULL_NAME; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_IP_ADDRESS; ?></td>
-                <!--td class="dataTableHeadingContent txta-c"><?php //echo TABLE_HEADING_COUNTRY; ?></td-->
                 <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_ENTRY_TIME; ?></td>
                 <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_LAST_CLICK; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LAST_PAGE_URL; ?></td>
@@ -174,16 +173,6 @@
                   echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_WHOS_ONLINE, xtc_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online['session_id'], 'NONSSL') . '\'">' . "\n";
                 }
 
-                //BOF - DokuMan - 2011-03-16 - added GEOIP-function (show customers country)
-                $geoip_data = array();
-                //$geoip_response = xtc_get_geoip_data($whos_online['ip_address']);
-                //$geoip_data = @unserialize($geoip_response);
-                //BOF - DokuMan - 2011-03-16 - added GEOIP-function (show customers country)
-
-                //BOF web28 2010-12-03 added Hostname to whois online
-                //$whos_online_hostname = '<div style="font-weight: normal; font-style: italic;"> ('.@gethostbyaddr($whos_online['ip_address']).')</div>';
-                //EOF web28 2010-12-03 added Hostname to whois online
-                
                 // last_page_url
                 if (preg_match('/^(.*)' . xtc_session_name() . '=[a-z,0-9]+[&]*(.*)/i', $whos_online['last_page_url'], $array)) {
                   $last_page_url = $array[1] . $array[2];
@@ -194,14 +183,7 @@
                 <td class="dataTableContent txta-c"><?php echo gmdate('H:i:s', $time_online); ?></td>
                 <td class="dataTableContent txta-c"><?php echo $whos_online['customer_id']; ?></td>
                 <td class="dataTableContent txta-c"><?php echo $whos_online['full_name']; ?></td>
-                <td class="dataTableContent txta-c">
-                <?php 
-                  if (SAVE_IP_LOG == 'true') {
-                    echo '<a href="'.WHOS_ONLINE_IP_WHOIS_SERVICE.$whos_online['ip_address'].'" style="font-weight:bold; text-decoration:underline;" target="_blank">'.$whos_online['ip_address'].'</a>';
-                  }
-                  echo (isset($whos_online_hostname) ? $whos_online_hostname : '&nbsp;');
-                ?>
-                </td>
+                <td class="dataTableContent txta-c"><?php echo '<a href="'.WHOS_ONLINE_IP_WHOIS_SERVICE.$whos_online['ip_address'].'" style="font-weight:bold; text-decoration:underline;" target="_blank">'.$whos_online['ip_address'].'</a>'; ?></td>
                 <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                 <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
                 <td class="dataTableContent"><?php echo encode_htmlspecialchars($last_page_url); ?>&nbsp;</td>
@@ -241,10 +223,10 @@
               
               $xtPrice = new xtcPrice($user_session['currency'], $user_session['customers_status']['customers_status_id']);
               
+              $products = array();
               if (is_array($user_session['cart']->contents)) {  
                 $products = $user_session['cart']->get_products();
               }
-              //$products = xtc_get_products($user_session);
               for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
                 $contents[] = array('align' => 'right','text' => $products[$i]['quantity'] . ' x ' . $products[$i]['name']);
               }
