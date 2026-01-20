@@ -56,7 +56,7 @@
       $wo_cart_status = (($_SESSION['cart']->count_contents() > 0) ? 1 : 0);
     }
 
-    $wo_ip_address = xtc_db_prepare_input(ip_clearing($_SESSION['tracking']['ip']));
+    $wo_ip_address = xtc_db_prepare_input($_SESSION['tracking']['ip']);
     $wo_last_page_url = xtc_db_prepare_input(end($_SESSION['tracking']['pageview_history']));
     $wo_referer = xtc_db_prepare_input($_SESSION['tracking']['http_referer']['url']);
 
