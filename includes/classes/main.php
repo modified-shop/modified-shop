@@ -52,7 +52,11 @@ class main {
     }
     
     //new module support
-    $this = $this->mainModules->defaults($this);
+    $dataArray = $this->mainModules->defaults(array(), $this);
+
+    foreach ($dataArray as $key => $value) {
+      $this->$key = $value;
+    }    
   }
 
   /**

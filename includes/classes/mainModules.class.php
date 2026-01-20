@@ -72,10 +72,10 @@ class mainModules {
     }
 
     //----- MAIN CUSTOM METHODS -----//
-    function defaults($data)
+    function defaults($dataArray, $defaults)
     {
         $this->function_call = 'defaults';
-        return $this->call_module_method($data);
+        return $this->call_module_method($dataArray, $defaults);
     }
 
     function getTaxInfo($tax_info,$tax_rate)
