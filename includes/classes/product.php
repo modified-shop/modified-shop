@@ -71,7 +71,11 @@ class product {
     $this->getTaxInfo = array();
     $this->reviews_lang = true;
 
-    $this = $this->productModules->defaults($this);
+    $dataArray = $this->productModules->defaults(array(), $this);
+
+    foreach ($dataArray as $key => $value) {
+      $this->$key = $value;
+    }    
     
     if ($this->pID === 0) {
       $this->isProduct = false;
