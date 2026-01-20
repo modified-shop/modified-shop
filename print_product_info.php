@@ -80,7 +80,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
 
   // load all definitions from product class
-  $productDataArray = $product->buildDataArray($product->data, 'info');
+  $productDataArray = $product->buildDataArray($product->data, 'info', false);
   foreach ($productDataArray as $key => $value) {
     $info_smarty->assign($key, $value);
   }
@@ -89,6 +89,8 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
    * assign smarty additional variables or overwrite them
    * START
    */
+  $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');  
+  $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
   
   // show expiry date of active special products
   if ($_SESSION['customers_status']['customers_status_specials'] != '0') {
@@ -103,11 +105,6 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
       $info_smarty->assign('PRODUCTS_EXPIRES_C', $sDate['expires_date'] != '0000-00-00 00:00:00' ? date('c', strtotime($sDate['expires_date'])) : '');
     }
   }
-
-  $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');  
-  $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
-  $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes($product->data['products_short_description']));
-  $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
 
   // more images
   if (MO_PICS != '0') {
@@ -137,13 +134,19 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
 
   // date available/added
-  if (isset($product->data['products_date_available']) && $product->data['products_date_available'] > date('Y-m-d H:i:s')) {
+  if (isset($product->data['products_date_available']) 
+      && $product->data['products_date_available'] > date('Y-m-d H:i:s')
+      )
+  {
     $info_smarty->assign('PRODUCTS_DATE_AVIABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available'])));
     $info_smarty->assign('PRODUCTS_DATE_AVAILABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available']))); 
-  } elseif (isset($product->data['products_date_added']) && $product->data['products_date_added'] != '0000-00-00 00:00:00') {
+  } elseif (DISPLAY_PRODUCTS_ADDED == 'true' 
+            && isset($product->data['products_date_added']) 
+            && strtotime($product->data['products_date_added']) > 0
+            )
+  {
     $info_smarty->assign('PRODUCTS_ADDED', sprintf(TEXT_DATE_ADDED, xtc_date_long($product->data['products_date_added'])));
-  }
-
+  }  
   /*
    * assign smarty additional variables or overwrite them
    * END
