@@ -38,8 +38,6 @@
   define('MODULE_DHL_BUSINESS_STATUS_UPDATE_DESC', 'The customer will be notified by mail including tracking information and the order will be set to this status.');
   define('MODULE_DHL_BUSINESS_CODING_TITLE', 'Coding');
   define('MODULE_DHL_BUSINESS_CODING_DESC', 'Set Coding preselected as default');
-  define('MODULE_DHL_BUSINESS_PRODUCT_TITLE', 'Product');
-  define('MODULE_DHL_BUSINESS_PRODUCT_DESC', 'Which product should be preselected as default?');
   define('MODULE_DHL_BUSINESS_DISPLAY_LABEL_TITLE', 'Display Label');
   define('MODULE_DHL_BUSINESS_DISPLAY_LABEL_DESC', 'Should the DHL Label be displayed (popup) after generation?');
   define('MODULE_DHL_BUSINESS_RETOURE_TITLE', 'Returns Label');
