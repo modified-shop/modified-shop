@@ -211,7 +211,7 @@
           </div>
         {/if}
         
-        {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == 'true'}<div class="fskmessage">{#products_fsk18_check#}</div>{/if}
+        {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == '1'}<div class="fskmessage">{#products_fsk18_check#}</div>{/if}
         {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<div class="errormessage mt_20 mb_0">{#products_gift_forbidden#}</div>{/if}  
 
         {if $EASYCREDIT && !$PAYPALPLAN}{$EASYCREDIT}{/if}

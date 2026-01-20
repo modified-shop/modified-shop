@@ -54,8 +54,8 @@
           {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<meta itemprop="mpn" content="{$PRODUCTS_MANUFACTURERS_MODEL}" />{/if}
           <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
   
-          <div class="pd_price{if $PRODUCTS_FSK18 == 'true'} pd_fsk_padding{/if}">
-            {if $PRODUCTS_FSK18 == 'true'}<div class="pd_fsk18"></div>{/if}
+          <div class="pd_price{if $PRODUCTS_FSK18 == '1'} pd_fsk_padding{/if}">
+            {if $PRODUCTS_FSK18 == '1'}<div class="pd_fsk18"></div>{/if}
             <div id="pd_puprice">
               {foreach name=inner item=price_data from=$PRODUCTS_PRICE_ARRAY}
                 {include file="module/includes/price_info.html"}
@@ -64,7 +64,7 @@
           </div>
           {if $PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
             {if $PRODUCTS_VPE}<div class="pd_vpe">{$PRODUCTS_VPE}</div>{/if}
-            <div class="pd_tax{if $PRODUCTS_FSK18 == 'true'} pd_fsk_padding{/if}">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
+            <div class="pd_tax{if $PRODUCTS_FSK18 == '1'} pd_fsk_padding{/if}">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
           {/if}
           {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
           {if isset($MODULE_product_options) && $MODULE_product_options != ''}
@@ -111,7 +111,7 @@
             {$EASYCREDIT}
           {/if}
   
-          {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == 'true'}<div class="pd_inforow_message">{#products_fsk18_check#}</div>{/if}
+          {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == '1'}<div class="pd_inforow_message">{#products_fsk18_check#}</div>{/if}
           {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<div class="pd_inforow_message">{#products_gift_forbidden#}</div>{/if}
           {if isset($PRODUCTS_DATE_AVAILABLE) && $PRODUCTS_DATE_AVAILABLE != ''}<div class="pd_inforow_message">{$PRODUCTS_DATE_AVAILABLE}</div>{/if}
         </div>
