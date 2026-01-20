@@ -555,7 +555,7 @@ define('ML_GENERIC_DELETED', 'Gel&ouml;schte');
 define('ML_GENERIC_REJECTED', 'Zur&uuml;ckgewiesen');
 define('ML_GENERIC_FAILED', 'Fehlgeschlagene');
 define('ML_GENERIC_ERRORLOG', 'Fehlerlog');
-define('ML_GENERIC_VARIANTEN_MATCHING', 'Attributes Matching');
+define('ML_GENERIC_VARIANTEN_MATCHING', 'Attribut-Matching');
 define('ML_GENERIC_MP_CATEGORY', '%marketplace% Kategorie');
 define('ML_GENERIC_USE_CATEGORY_BUTTON', 'Bitte Auswahlbutton rechts verwenden');
 define('ML_GENERIC_STORE', 'Store');
@@ -1225,6 +1225,9 @@ define('ML_EBAY_LABEL_PRODUCT_REJECTED', 'Von eBay abgelehnt'); /* deprecated */
 define('ML_EBAY_VAT', 'Mehrwertsteuersatz');
 define('ML_EBAY_VAT_HINT', 'Mehrwertsteuersatz f&uuml;r dieses Produkt in %');
 
+define('ML_EBAY_BUYER_USERNAME',  'eBay Benutzername des Käufers');
+define('ML_EBAY_SELLER_USERNAME', 'Unser eBay Benutzername      ');
+
 
 /* Inventory View */
 define('ML_EBAY_INVENTORY_STATUS_PENDING_UPLOAD', 'Artikel wird eingestellt<br /><span class="small">Verarbeitung bei magnalister</span>');
@@ -1675,7 +1678,7 @@ define('ML_GENERAL_VARIATION_THEME', 'Varianten-Design');
 define('ML_GENERAL_VARIATION_THEME_SKIP_VARIATIONS', 'Nur Stammartikel &uuml;bergeben');
 define('ML_PROPERTY', 'Eigenschaften');
 define('ML_PRODUCT_DEFAULT_FIELDS', 'Produkt Angaben');
-define('ML_GENERAL_VARMATCH_MP_ATTRIBUTE', '%marketplace%s Pflicht-Attribute');
+define('ML_GENERAL_VARMATCH_MP_ATTRIBUTE', '%marketplace% Pflicht-Attribute');
 define('ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE', '%marketplace% optionale Attribute');
 define('ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE', 'Eigene Attribute');
 define('ML_GENERAL_VARMATCH_DEFINE_NAME', 'Bitte geben Sie einen Bezeichner ein.');
@@ -1694,17 +1697,17 @@ define('ML_GENERAL_VARMATCH_RESET_SUCCESS', 'Attributzuordnung erfolgreich zurü
 define('ML_GENERAL_VARMATCH_RESET_ERROR', 'Fehler');
 define('ML_GENERAL_VARMATCH_FREE_TEXT_LABEL', 'Eigene Angaben machen');
 define('ML_GENERAL_VARMATCH_ADDITIONAL_ATTRIBUTE_LABEL', 'Eigene Attribute');
-define('ML_GENERAL_VARMATCH_ADDITIONAL_CATEGORY_LABEL', 'Additional category');
+define('ML_GENERAL_VARMATCH_ADDITIONAL_CATEGORY_LABEL', 'Zus&auml;tzliche Kategorie');
 define('ML_GENERAL_VARMATCH_DONT_TRANSMIT', 'Nicht &uuml;bertragen');
 define('ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB', 'Attribut- und Attributswert-Matching');
 define('ML_GENERAL_VARMATCH_WEBSHOP_ATTRIB', 'Web-Shop Attribut');
 define('ML_GENERAL_VARMATCH_DELETE_CUSTOM_BTN_TITLE', 'Varianten-Matching-Gruppe l&ouml;schen');
 define('ML_GENERAL_VARMATCH_DELETE_CUSTOM_BTN_CONTENT', 'Wollen Sie die eigene Gruppe wirklich l&ouml;schen?<br />Alle zugeh&ouml;rigen Variantenmatchings werden dann ebenfalls gel&ouml;scht.');
 define('ML_GENERAL_VARMATCH_ERROR_MESSAGE_REQUIRED', 'Das Attribut &quot;%attribute_name%&quot; ist ein Pflichtfeld. Bitte ordnen Sie alle Werte zu.');
-define('ML_GENERAL_VARMATCH_ERROR_EMPTY_CUSTOM_ATTRIBUTE_NAME', 'Name of custom attribute cannot be empty. Please choose the attribute name.');
-define('ML_GENERAL_VARMATCH_MAX_NUMBER_OF_ADDITIONAL_ATTRIBUTES_EXCEEDED', 'Maximal number of additional attributes is %number_of_attributes%. Please choose %number_of_attributes% additional attributes.');
-define('ML_GENERAL_VARMATCH_CHOOSE_VARIATION_THEME', 'Please choose variations option');
-define('ML_GENERAL_VARMATCH_ERROR_CUSTOM_ATTRIBUTE_NAME_INVALID', 'Custom attribute %attributeName% can not be the same as any predefined %marketplace% attribute or other custom attribute. Please choose different name.');
+define('ML_GENERAL_VARMATCH_ERROR_EMPTY_CUSTOM_ATTRIBUTE_NAME', 'Der Name des eigenen Attributs darf nicht leer sein. Bitte w&auml;hlen Sie einen Attributnamen.');
+define('ML_GENERAL_VARMATCH_MAX_NUMBER_OF_ADDITIONAL_ATTRIBUTES_EXCEEDED', 'Die maximale Anzahl zus&auml;tzlicher Attribute ist %number_of_attributes%. Bitte w&auml;hlen Sie maximal %number_of_attributes% zus&auml;tzliche Attribute.');
+define('ML_GENERAL_VARMATCH_CHOOSE_VARIATION_THEME', 'Bitte w&auml;hlen Sie eine Variantenoption');
+define('ML_GENERAL_VARMATCH_ERROR_CUSTOM_ATTRIBUTE_NAME_INVALID', 'Das eigene Attribut %attributeName% darf nicht den gleichen Namen wie ein vordefiniertes %marketplace%-Attribut oder ein anderes eigenes Attribut haben. Bitte w&auml;hlen Sie einen anderen Namen.');
 define('ML_GENERAL_VARMATCH_ERROR_MESSAGE_FREE_TEXT', ': Das Freitext Feld darf nicht leer sein.');
 define('ML_GENERAL_VARMATCH_SAVED_SUCCESSFULLY', 'Es wurden alle ausgew&auml;hlten Werte erfolgreich gematcht. Sie k&ouml;nnen nun Produkte mit den gematchten Attributen vorbereiten, oder mit dem Matching hier fortfahren.');
 define('ML_GENERAL_VARMATCH_NOTICE_NOT_ALL_AUTO_MATCHED', 'Es konnten nicht alle ausgew&auml;hlten Werte gematcht werden. Nicht-gematchte Werte werden weiterhin in den DropDown-Feldern angezeigt. Bereits gematchte Werte werden in der Produktvorbereitung ber&uuml;cksichtigt.');
@@ -1736,7 +1739,7 @@ define('ML_GENERAL_VARMATCH_CATEGORY_WITHOUT_ATTRIBUTES_INFO', 'F&uuml;r die aus
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_VALUE', 'W&auml;hle Datenbank-Werte (f&uuml;r Experten)');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_TABLE', 'Tabelle w&auml;hlen: ');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_COLUMN', 'Spalte w&auml;hlen: ');
-define('ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS', 'Alias products_id or manufacturers_id: ');
+define('ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS', 'Alias f&uuml;r products_id oder manufacturers_id: ');
 define('ML_GENERAL_VARMATCH_SELECT_TABLE_PLACEHOLDER', 'Tabelle w&auml;hlen...');
 define('ML_GENERAL_VARMATCH_SELECT_COLUMN_PLACEHOLDER', 'Spalte w&auml;hlen...');
 define('ML_GENERAL_VARMATCH_SELECT_TABLE_FIRST_PLACEHOLDER', 'Bitte erst Tabelle w&auml;hlen');
@@ -1750,9 +1753,9 @@ define('ML_GENERAL_VARMATCH_MULTISELECTHINT', 'Dr&uuml;cke CMD und w&auml;hlen a
 // React Component Translations (added for new attribute matching UI)
 define('ML_GENERAL_VARMATCH_ENTER_FREETEXT', 'Eigenen Wert eingeben');
 define('ML_GENERAL_VARMATCH_USE_SHOP_VALUES', 'Shop-Werte verwenden');
-define('ML_GENERAL_VARMATCH_REQUIRED_ATTRIBUTES_TITLE', 'Pflicht-Attribute');
+define('ML_GENERAL_VARMATCH_REQUIRED_ATTRIBUTES_TITLE', '%marketplace% Pflicht-Attribute');
 define('ML_GENERAL_VARMATCH_ATTRIBUTES_MATCHING_TITLE', 'Attribut-Matching');
-define('ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTES_TITLE', 'Optionale Attribute');
+define('ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTES_TITLE', '%marketplace% Optionale Attribute');
 define('ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTE_MATCHING', 'Optionales Attribut-Matching');
 define('ML_GENERAL_VARMATCH_SAVE_SUCCESS', 'Attribut-Matching erfolgreich gespeichert');
 define('ML_GENERAL_VARMATCH_ADD_OPTIONAL_ATTRIBUTE', 'Optionales Attribut hinzuf&uuml;gen');
@@ -2262,15 +2265,23 @@ define('ML_CHECK24_RESPONSIBLE_PHONE', 'Verantwortliche Person f&uuml;r EU: Tele
 define('ML_CHECK24_OPTIONAL_SHIPPING_DATA', 'Optionale Angaben f&uuml;r den Versand');
 define('ML_CHECK24_DELIVERY_MODE', 'Art des Versands');
 define('ML_CHECK24_2MEN_HANDLING', 'Lieferung bis zum Aufstellort');
+define('ML_CHECK24_2MEN_HANDLING_INFO', 'Preis eintragen, sofern zutreffend.');
 define('ML_CHECK24_INSTALLATION_SERVICE', 'Installation des Artikels');
+define('ML_CHECK24_INSTALLATION_SERVICE_INFO', 'Preis eintragen, sofern zutreffend.');
 define('ML_CHECK24_REMOVAL_OLD_ITEM', 'Mitnahme des Altger&auml;ts');
+define('ML_CHECK24_REMOVAL_OLD_ITEM_INFO', 'Preis eintragen, sofern zutreffend.');
 define('ML_CHECK24_REMOVAL_PACKAGING', 'Mitnahme der Verpackung');
+define('ML_CHECK24_REMOVAL_PACKAGING_INFO', 'Preis eintragen, sofern zutreffend.');
 define('ML_CHECK24_AVAILABLE_SERVICE_PRODUCT_IDS', 'Zubuchbare Services');
 define('ML_CHECK24_LOGISTICS_PROVIDER', 'Logistikdienstleister');
 define('ML_CHECK24_CUSTOM_TARIFFS_NUMBER', 'TARIC Nummer');
 define('ML_CHECK24_RETURN_SHIPPING_COSTS', 'Kosten f&uuml;r Retoure');
 define('ML_CHECK24_ERROR_SHIPPING_COST', 'Die Versandkosten k&ouml;nnen nicht leer sein.');
 define('ML_CHECK24_TEXT_AFTER_UPLOAD', '<br> Items are not immediately online. Please check your inventory and error log in 30minutes.');
+define('ML_CHECK24_CATEGORY_INDEPENDENT_ATTRIBUTES_REQUIRED', 'Check24\'s Pflicht-Attribute');
+define('ML_CHECK24_CATEGORY_INDEPENDENT_ATTRIBUTES_REQUIRED_INFO', 'Attribut- und Attributswert-Matching');
+define('ML_CHECK24_CATEGORY_INDEPENDENT_ATTRIBUTES_OTIONAL', 'CHECK24 optionale Attribute');
+define('ML_CHECK24_CATEGORY_INDEPENDENT_ATTRIBUTES_OTIONAL_INFO', 'Attribut- und Attributswert-Matching');
 
 /* Fyndiq */
 define('ML_FYNDIQ_SHIPPING', 'Versand');

@@ -69,6 +69,7 @@ function buildReactComponentProps($mpID, $productID, $mainCategory, $variationTh
                     'productID' => $productID
             ),
             'i18n'                  => $helper->getTranslations(),
+            'databaseTables' => $helper->getDatabaseTablesAndColumns(), // For database_value matching dropdowns
             'apiEndpoint'           => $apiEndpoint,
             'debugMode'             => $debugMode,
             // V2-specific props: render only tbody elements without wrapper table
@@ -251,9 +252,6 @@ function renderReactVariationMatching($productID, $data) {
                             if (isset($marketplaceAttributes[$attributeName])) {
                                 $marketplaceAttributes[$attributeName]['required'] = true;
 
-                                if ($debugMode) {
-                                    echo '<!-- DEBUG: Marked attribute as mandatory via VerifyItems: ' . $attributeName . ' -->';
-                                }
                             }
                         }
                     }
@@ -587,6 +585,11 @@ function renderReactVariationMatching($productID, $data) {
 
                             console.log('[Amazon Variations] Form validation passed');
 
+                            // Show loading indicator before starting save/submit process
+                            if (typeof mlShowLoading === 'function') {
+                                mlShowLoading();
+                            }
+
                             // Prevent default button action
                             e.preventDefault();
                             e.stopPropagation();
@@ -595,10 +598,41 @@ function renderReactVariationMatching($productID, $data) {
                             var proceedWithSubmit = function () {
                                 console.log('[Amazon Variations] Proceeding with form submission after save');
 
-                                // Don't call form.submit() directly as it bypasses other event handlers
-                                // Instead, create and dispatch a submit event
+                                // V3 COMPATIBILITY: Disable old attribute matching inputs before form submission
+                                // React saves attribute matching via AJAX, so we don't want old ml[match] fields to be submitted
+                                // Find all inputs/selects with name starting with "ml[match]" and disable them
+                                var attributeMatchingInputs = form.querySelectorAll('[name^="ml[match]"], [name^="ml[match"]');
+                                console.log('[Amazon Variations] Disabling ' + attributeMatchingInputs.length + ' old attribute matching inputs');
+                                attributeMatchingInputs.forEach(function (input) {
+                                    input.disabled = true;
+                                    console.log('[Amazon Variations] Disabled input:', input.name);
+                                });
+
+                                // Also disable any hidden inputs in the amazon-variations container
+                                // (in case React component has any form fields - though it shouldn't)
+                                var reactContainer = document.getElementById('amazon-variations-root');
+                                if (reactContainer) {
+                                    var reactInputs = reactContainer.querySelectorAll('input, select, textarea');
+                                    reactInputs.forEach(function (input) {
+                                        if (input.name) {
+                                            input.disabled = true;
+                                            console.log('[Amazon Variations] Disabled React input:', input.name);
+                                        }
+                                    });
+                                }
+
+                                // Submit the form
+                                // Note: form.submit() bypasses event handlers but actually submits the form
+                                // Dispatch event first for any listeners, then submit
                                 var submitEvent = new Event('submit', {bubbles: true, cancelable: true});
-                                form.dispatchEvent(submitEvent);
+                                var cancelled = !form.dispatchEvent(submitEvent);
+
+                                if (!cancelled) {
+                                    console.log('[Amazon Variations] Submitting form...');
+                                    form.submit();
+                                } else {
+                                    console.log('[Amazon Variations] Form submission was cancelled by another handler');
+                                }
                             };
 
                             // IMPORTANT: Save pending changes BEFORE submitting form
@@ -803,59 +837,6 @@ function handleSaveAttributeMatchingBatch() {
         // Verify item with Amazon API (only for product-specific mode, not global template)
         $verificationResult = null;
         if ($productID > 0 && $variationGroup !== 'none') {
-            require_once(DIR_MAGNALISTER_MODULES . 'amazon/classes/AmazonCheckinSubmit.php');
-
-            try {
-                $checkinSubmit = new AmazonCheckinSubmit(array(
-                        'itemsPerBatch' => 1,
-                        'selectionName' => 'prepare',
-                        'marketplace'   => 'amazon',
-                ));
-
-                $verificationResult = $checkinSubmit->verifyOneItem($productID);
-
-                if ($verificationResult['status'] === 'OK') {
-                    // Verification passed
-                    $response = array(
-                            'success'            => true,
-                            'verified'           => true,
-                            'verificationStatus' => 'OK'
-                    );
-                } else {
-                    // Verification failed - extract errors
-                    $errors = array();
-                    if (isset($verificationResult['result']['ERRORMESSAGE'])) {
-                        $errors[] = $verificationResult['result']['ERRORMESSAGE'];
-                    }
-                    if (isset($verificationResult['result']['RESPONSEDATA']) && is_array($verificationResult['result']['RESPONSEDATA'])) {
-                        foreach ($verificationResult['result']['RESPONSEDATA'] as $responseData) {
-                            if (isset($responseData['ERRORS']) && is_array($responseData['ERRORS'])) {
-                                foreach ($responseData['ERRORS'] as $error) {
-                                    if (isset($error['ERRORMESSAGE'])) {
-                                        $errors[] = $error['ERRORMESSAGE'];
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    $response = array(
-                            'success'            => true, // Save succeeded, but verification failed
-                            'verified'           => false,
-                            'verificationStatus' => 'ERROR',
-                            'verificationErrors' => $errors
-                    );
-                }
-            } catch (Exception $e) {
-                // Verification threw exception - treat as error but don't fail the save
-                $response = array(
-                        'success'            => true, // Save succeeded
-                        'verified'           => false,
-                        'verificationStatus' => 'ERROR',
-                        'verificationErrors' => array($e->getMessage())
-                );
-            }
-        } else {
             // No verification needed (global template or no category selected)
             $response = array('success' => $result);
         }
@@ -991,10 +972,6 @@ function handleGetReactComponentData() {
                         foreach ($errorData['error_attributeNames'] as $attributeName) {
                             if (isset($marketplaceAttributes[$attributeName])) {
                                 $marketplaceAttributes[$attributeName]['required'] = true;
-
-                                if ($debugMode) {
-                                    echo ('[ReactHelper] Marked attribute as mandatory via VerifyItems: ' . $attributeName);
-                                }
                             }
                         }
                     }

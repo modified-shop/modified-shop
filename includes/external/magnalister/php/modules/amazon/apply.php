@@ -418,15 +418,19 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 		}
 	}
 
-	$_POST['ShopVariation'] = AmazonHelper::gi()->saveMatching(
-		$sMainCategory,
-		$_POST['ml']['match'],
-		!$postAction,
-		true,
-		count($pIDs) == 1,
-		$variationThemeAttributes,
-        $sMainCategory
-	);
+    // V3 COMPATIBILITY: Skip old attribute matching when React is used
+    // React component saves attribute matching via AJAX separately (see applicationviews_react.php)
+    // When $_POST['ml']['match'] is empty, React already saved the data - don't process old logic
+    if (!empty($_POST['ml']['match'])) {
+        // Old V2 logic: Process attribute matching from form POST
+        $_POST['ShopVariation'] = AmazonHelper::gi()->saveMatching($sMainCategory, $_POST['ml']['match'], !$postAction, true, count($pIDs) == 1, $variationThemeAttributes, $sMainCategory);
+    } else {
+        // React-based save: Data already saved via AJAX, read from database
+        // ShopVariation is stored in magnalister_amazon_apply.ShopVariation column
+        // or in magnalister_longtext table (for large data via TextId)
+        // IMPORTANT: unset instead of null to prevent overwriting loaded value in array_merge
+        unset($_POST['ShopVariation']);
+    }
 
 	unset($_POST['ml']);
 
@@ -547,17 +551,23 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
                             }
                         };
 
+                        // Collect raw errors for storage (will be processed later by verifyItemByMarketplaceToGetMandatoryAttributes)
+                        $rawErrors = array();
+
                         // Check for top-level error message
                         if (isset($verificationResult['result']['ERRORMESSAGE'])) {
-                            $errorMessages[] = $encodeToHtmlEntities($verificationResult['result']['ERRORMESSAGE']);
+                            $errorMessages[] = AmazonHelper::convertAttributeKeysToScrollLinks($encodeToHtmlEntities($verificationResult['result']['ERRORMESSAGE']));
+                            $rawErrors[] = array('ERRORMESSAGE' => $verificationResult['result']['ERRORMESSAGE']);
                         }
 
                         // Check for ERRORS array at top level (Amazon API standard format)
                         if (isset($verificationResult['result']['ERRORS']) && is_array($verificationResult['result']['ERRORS'])) {
                             foreach ($verificationResult['result']['ERRORS'] as $error) {
                                 if (isset($error['ERRORMESSAGE'])) {
-                                    $errorMessages[] = $encodeToHtmlEntities($error['ERRORMESSAGE']);
+                                    $errorMessages[] = AmazonHelper::convertAttributeKeysToScrollLinks($encodeToHtmlEntities($error['ERRORMESSAGE']));
                                 }
+                                // Store full error structure for verifyItemByMarketplaceToGetMandatoryAttributes
+                                $rawErrors[] = $error;
                             }
                         }
                         // Check for errors in RESPONSEDATA (fallback for other formats)
@@ -566,14 +576,22 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
                                 if (isset($responseData['ERRORS']) && is_array($responseData['ERRORS'])) {
                                     foreach ($responseData['ERRORS'] as $error) {
                                         if (isset($error['ERRORMESSAGE'])) {
-                                            $errorMessages[] = $encodeToHtmlEntities($error['ERRORMESSAGE']);
+                                            $errorMessages[] = AmazonHelper::convertAttributeKeysToScrollLinks($encodeToHtmlEntities($error['ERRORMESSAGE']));
                                         }
+                                        // Store full error structure for verifyItemByMarketplaceToGetMandatoryAttributes
+                                        $rawErrors[] = $error;
                                     }
                                 }
                             }
                         }
 
-                        // Store errors for this product
+                        // Store raw errors for later use by verifyItemByMarketplaceToGetMandatoryAttributes
+                        // This allows the React component to show these errors with clickable scroll links
+                        if (!empty($rawErrors)) {
+                            AmazonHelper::storeVerificationErrors($rawErrors);
+                        }
+
+                        // Store errors for this product (for display in verification summary)
                         $product = MLProduct::gi()->getProductByIdOld($pID);
                         $verificationErrors[] = array(
                             'productId'   => $pID,

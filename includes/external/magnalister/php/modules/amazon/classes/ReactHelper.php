@@ -276,11 +276,27 @@ class ReactHelper {
     public function loadFromApplyTable($productID) {
         $oDB = MagnaDB::gi();
 
+        // Build WHERE clause based on keytype setting
+        $useArticleNumber = (getDBConfigValue('general.keytype', '0') == 'artNr');
+        $productWhereClause = 'products_id = ' . (int)$productID; // Default fallback
+
+        if ($useArticleNumber) {
+            $productModel = $oDB->fetchOne("
+                SELECT products_model
+                FROM " . TABLE_PRODUCTS . "
+                WHERE products_id = " . (int)$productID . "
+            ");
+            // Only use products_model if it's not empty, otherwise fallback to products_id
+            if (!empty($productModel)) {
+                $productWhereClause = "products_model = '" . $oDB->escape($productModel) . "'";
+            }
+        }
+
         $row = $oDB->fetchRow("
             SELECT data, DataId
             FROM " . TABLE_MAGNA_AMAZON_APPLY . "
             WHERE mpID = " . (int)$this->mpID . "
-              AND products_id = " . (int)$productID . "
+              AND " . $productWhereClause . "
         ");
 
         if (empty($row)) {
@@ -483,11 +499,27 @@ class ReactHelper {
         // Build category structure
         $existingRow = null;
         if (!empty($this->productID)) {
+            // Build WHERE clause based on keytype setting
+            $useArticleNumber = (getDBConfigValue('general.keytype', '0') === 'artNr');
+            $productWhereClause = 'products_id = ' . (int)$this->productID; // Default fallback
+
+            if ($useArticleNumber) {
+                $productModel = $oDB->fetchOne("
+                    SELECT products_model
+                    FROM " . TABLE_PRODUCTS . "
+                    WHERE products_id = " . (int)$this->productID . "
+                ");
+                // Only use products_model if it's not empty, otherwise fallback to products_id
+                if (!empty($productModel)) {
+                    $productWhereClause = "products_model = '" . $oDB->escape($productModel) . "'";
+                }
+            }
+
             $existingRow = $oDB->fetchRow("
                 SELECT category, topMainCategory, topProductType, topBrowseNode1, ConditionType, ConditionNote
                 FROM " . TABLE_MAGNA_AMAZON_APPLY . "
                 WHERE mpID = " . $this->mpID . "
-                  AND products_id = " . (int)$this->productID . "
+                  AND " . $productWhereClause . "
             ");
         }
 
@@ -523,6 +555,8 @@ class ReactHelper {
 
         // Prepare batch data
         $batchData = array();
+        $useArticleNumber = (getDBConfigValue('general.keytype', '0') === 'artNr');
+
         foreach ($this->productIDs as $pID) {
             $productModel = $oDB->fetchOne("
                 SELECT products_model
@@ -530,11 +564,17 @@ class ReactHelper {
                 WHERE products_id = " . (int)$pID . "
             ");
 
+            // Build WHERE clause - fallback to products_id if products_model is empty
+            $productWhereClause = 'products_id = ' . (int)$pID;
+            if ($useArticleNumber && !empty($productModel)) {
+                $productWhereClause = "products_model = '" . $oDB->escape($productModel) . "'";
+            }
+
             $existingDataRow = $oDB->fetchRow("
                 SELECT data
                 FROM " . TABLE_MAGNA_AMAZON_APPLY . "
                 WHERE mpID = " . $this->mpID . "
-                  AND products_id = " . (int)$pID . "
+                  AND " . $productWhereClause . "
             ");
 
             $dataArray = array();
@@ -578,6 +618,97 @@ class ReactHelper {
         }
 
         return true;
+    }
+
+    /**
+     * Get database tables and their columns for database_value matching
+     * Uses MagnaDB to fetch real table/column information
+     *
+     * @return array Array with 'tables' list and 'columns' map (tableName => columns[])
+     */
+    public function getDatabaseTablesAndColumns() {
+        $oDB = MagnaDB::gi();
+
+        // Get list of all tables in the database
+        $allTables = $oDB->fetchArray("SHOW TABLES", true);
+
+        if (empty($allTables)) {
+            return array(
+                'tables'  => array(),
+                'columns' => array()
+            );
+        }
+
+        // Filter to only include relevant tables (products, categories, manufacturers, etc.)
+        // and exclude magnalister internal tables for safety
+        $relevantPrefixes = array(
+            'products',
+            'categories',
+            'manufacturers',
+            'customers',
+            'orders',
+            'tax',
+            'shipping',
+            'specials',
+            'articles'
+        );
+
+        $excludePrefixes = array(
+            'magnalister_',
+            'magna_',
+            'ml_'
+        );
+
+        $tables = array();
+        $columns = array();
+
+        foreach ($allTables as $tableName) {
+            // Skip magnalister internal tables
+            $skip = false;
+            foreach ($excludePrefixes as $prefix) {
+                if (stripos($tableName, $prefix) === 0) {
+                    $skip = true;
+                    break;
+                }
+            }
+            if ($skip) {
+                continue;
+            }
+
+            // Check if table has relevant prefix or just include all non-magnalister tables
+            $isRelevant = false;
+            foreach ($relevantPrefixes as $prefix) {
+                if (stripos($tableName, $prefix) !== false) {
+                    $isRelevant = true;
+                    break;
+                }
+            }
+
+            // Include all non-magnalister tables (user can filter themselves)
+            $tables[] = $tableName;
+
+            // Get columns for this table
+            $tableColumns = $oDB->fetchArray("SHOW COLUMNS FROM `" . $oDB->escape($tableName) . "`");
+            if (!empty($tableColumns)) {
+                $columns[$tableName] = array();
+                foreach ($tableColumns as $col) {
+                    // fetchArray returns indexed array, first element is column name (Field)
+                    if (isset($col['Field'])) {
+                        $columns[$tableName][] = $col['Field'];
+                    } elseif (is_array($col) && isset($col[0])) {
+                        $columns[$tableName][] = $col[0];
+                    }
+                }
+            }
+        }
+
+        // Sort tables alphabetically
+        sort($tables);
+
+        return array(
+            'tables'  => $tables,
+            'columns' => $columns
+        );
     }
 
     /**
@@ -775,12 +906,28 @@ class ReactHelper {
         // PRODUCT-SPECIFIC MODE: Save variation theme to amazon_apply table
         $oDB = MagnaDB::gi();
 
+        // Build WHERE clause based on keytype setting
+        $useArticleNumber = (getDBConfigValue('general.keytype', '0') === 'artNr');
+        $whereClause = 'products_id = ' . (int)$this->productID; // Default fallback
+
+        if ($useArticleNumber) {
+            $productModel = $oDB->fetchOne("
+                SELECT products_model
+                FROM " . TABLE_PRODUCTS . "
+                WHERE products_id = " . (int)$this->productID . "
+            ");
+            // Only use products_model if it's not empty, otherwise fallback to products_id
+            if (!empty($productModel)) {
+                $whereClause = "products_model = '" . $oDB->escape($productModel) . "'";
+            }
+        }
+
         // Load existing category and data from database
         $existing = $oDB->fetchRow("
             SELECT category, data
             FROM " . TABLE_MAGNA_AMAZON_APPLY . "
             WHERE mpID = " . $this->mpID . "
-              AND products_id = " . $this->productID . "
+              AND " . $whereClause . "
         ");
 
         // Decode existing category data (base64 + serialized)
@@ -815,7 +962,7 @@ class ReactHelper {
                 category = '" . $oDB->escape(base64_encode(serialize($categoryData))) . "',
                 data = '" . $oDB->escape(base64_encode(serialize($dataColumn))) . "'
             WHERE mpID = " . $this->mpID . "
-              AND products_id = " . $this->productID . "
+              AND " . $whereClause . "
         ");
 
         return true;

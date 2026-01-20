@@ -29,6 +29,7 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
                                                                conditionalRules = [],
                                                                neededFormFields = {},
                                                                i18n = {},
+                                                               databaseTables,
                                                                onValuesChange,
                                                                onValidationError,
                                                                className,
@@ -863,6 +864,7 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
                         marketplaceName={marketplaceName}
                         shopAttributes={shopAttributes}
                         i18n={i18n}
+                        databaseTables={databaseTables}
                         disabled={disabled}
                         debugMode={debugMode}
                         hideHelpColumn={hideHelpColumn}
@@ -906,6 +908,7 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
                         marketplaceName={marketplaceName}
                         shopAttributes={shopAttributes}
                         i18n={i18n}
+                        databaseTables={databaseTables}
                         disabled={disabled}
                         debugMode={debugMode}
                         hideHelpColumn={hideHelpColumn}

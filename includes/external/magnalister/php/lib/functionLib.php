@@ -910,6 +910,28 @@ function myUnserialize($serialized) {
 	return unserialize($serialized);
 }
 
+/**
+ * Secure unserialize that blocks object instantiation.
+ * Prevents PHP Object Injection attacks (CVE-style RCE via __destruct/__wakeup).
+ *
+ * @param string $data Serialized string
+ * @return mixed Unserialized data (arrays, scalars only) or false on failure/blocked objects
+ */
+function magnaSafeUnserialize($data) {
+	if (!is_string($data)) {
+		return false;
+	}
+	// PHP 7.0+: use allowed_classes parameter
+	if (PHP_VERSION_ID >= 70000) {
+		return @unserialize($data, ['allowed_classes' => false]);
+	}
+	// PHP 5.6: Block serialized objects via regex (O:123:"ClassName" or C:123:"ClassName")
+	if (preg_match('/[oOcC]:\d+:"/', $data)) {
+		return false;
+	}
+	return @unserialize($data);
+}
+
 # #2016042910000453: Umlaut broken in json encoding (backslash stripped). Cannot properly be decoded,
 # so use this function before decoding
 function fixBrokenJsonUmlauts($sString) {

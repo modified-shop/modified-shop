@@ -846,7 +846,14 @@ $_modules = array(
 			'check24.access.FTPSERVER',
 		),
 		'pages' => array (
-			'prepare' => ML_GENERIC_PREPARE,
+            'prepare' => array (
+                'title' => ML_GENERIC_PREPARE,
+                'views' => array (
+                    'apply' => ML_AMAZON_NEW_ITMES,
+                    #'match' => ML_AMAZON_PRODUCT_MATCHING,     #PBSE# suspended
+                    'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+                )
+            ),
 			'checkin' => ML_GENERIC_CHECKIN,
 			'listings' => array (
 				'title' => ML_GENERIC_LISTINGS,

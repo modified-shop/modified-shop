@@ -934,10 +934,10 @@ function magnaCallbackRun() {
 		($_POST['passphrase'] == getDBConfigValue('general.passphrase', 0)) &&
 		array_key_exists('function', $_POST)
 	) {
-		$arguments = array_key_exists('arguments', $_POST) ? unserialize($_POST['arguments']) : array();
+		$arguments = array_key_exists('arguments', $_POST) ? magnaSafeUnserialize($_POST['arguments']) : array();
 		$arguments = is_array($arguments) ? $arguments : array();
 
-		$includes = array_key_exists('includes', $_POST) ? unserialize($_POST['includes']) : array();
+		$includes = array_key_exists('includes', $_POST) ? magnaSafeUnserialize($_POST['includes']) : array();
 		$includes = is_array($includes) ? $includes : array();
 
 		MagnaDB::gi()->setShowDebugOutput(false);

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ConditionalRule,
+    DatabaseTablesData,
   I18nStrings,
   MarketplaceAttribute,
   MatchingValue,
@@ -36,6 +37,7 @@ interface AttributeRowProps {
     marketplaceName: string;
     shopAttributes: ShopAttributes;
     i18n: I18nStrings;
+    databaseTables?: DatabaseTablesData; // Database tables/columns for database_value matching (v2 only)
     disabled?: boolean;
     debugMode?: boolean;
     hideHelpColumn?: boolean; // Hide help column (v2 compatibility)
@@ -66,6 +68,7 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
                                                        marketplaceName,
                                                        shopAttributes,
                                                        i18n,
+                                                       databaseTables,
                                                        disabled = false,
                                                        debugMode = false,
                                                        hideHelpColumn = false,
@@ -493,6 +496,7 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
     return (
         <tr
             ref={rowRef}
+            id={`attr-row-${attributeKey}`}
             data-attribute-key={attributeKey}
             className={`js-field attribute-row ${isRequired ? 'required-attribute' : 'optional-attribute'}`}
         >
@@ -575,6 +579,7 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
                         onChange={handleDatabaseValueChange}
                         disabled={disabled}
                         i18n={i18n}
+                        databaseTables={databaseTables}
                         className="attribute-database-input"
                     />
                 )}

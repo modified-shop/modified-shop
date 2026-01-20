@@ -187,7 +187,7 @@ function renderMultiApplication($data) {
     // Load variation themes if MainCategory is set
     $variationThemes = array();
     $variationDesignStyle = 'display: none';
-    $variationThemeOptions = '<option value="">Please select...</option>';
+    $variationThemeOptions = '<option value="">'.ML_GENERAL_VARMATCH_PLEASE_SELECT.'</option>';
     $selectedVariationTheme = isset($data['VariationTheme']) ? $data['VariationTheme'] : '';
 
     if (($data['MainCategory'] != '') && ($data['MainCategory'] != 'null')) {
@@ -340,7 +340,7 @@ function renderMultiApplication($data) {
                             var $variationDesign = $('#variation-design');
 
                             // Clear existing options
-                            $variationDesign.html('<option value="">Please select...</option>');
+                            $variationDesign.html('<option value=""><?php echo ML_GENERAL_VARMATCH_PLEASE_SELECT; ?></option>');
 
                             // Add variation theme options
                             var hasThemes = false;

@@ -100,10 +100,6 @@ function renderSimpleAttributeMatching($params = array()) {
                             foreach ($errorData['error_attributeNames'] as $attributeName) {
                                 if (isset($marketplaceAttributes[$attributeName])) {
                                     $marketplaceAttributes[$attributeName]['required'] = true;
-
-                                    if (defined('MAGNA_DEBUG') && MAGNA_DEBUG) {
-                                        error_log('[AmazonVariations] Marked attribute as mandatory via VerifyItems: ' . $attributeName);
-                                    }
                                 }
                             }
                         }

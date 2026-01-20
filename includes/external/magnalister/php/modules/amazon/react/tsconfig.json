@@ -26,6 +26,12 @@
         "paths": {
             "@/*": [
                 "src/*"
+            ],
+            "@/components/AmazonVariations/AttributeRow": [
+                "v2-overrides/AttributeRow.tsx"
+            ],
+            "@/components/AmazonVariations/ValueMatching/ValueMatchingTable": [
+                "v2-overrides/ValueMatchingTable.tsx"
             ]
         }
     },

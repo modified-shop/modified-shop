@@ -180,7 +180,7 @@ class DeletedView {
 						$request['DATA'][] = array (
 							'ItemID' => $itemID,
 						);
-						$pDetails = unserialize(str_replace('\\"', '"', $_POST['details'][$itemID]));
+						$pDetails = magnaSafeUnserialize(str_replace('\\"', '"', $_POST['details'][$itemID]));
 						$pID = magnaSKU2pID($sku);
 						$model = '';
 						if ($pID > 0) {

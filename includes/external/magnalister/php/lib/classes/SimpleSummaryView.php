@@ -230,7 +230,7 @@ class SimpleSummaryView {
 	private function updateSelectionState() {
 		if (array_key_exists('tmplcb', $_POST) && is_array($_POST['tmplcb']) && !empty($_POST['tmplcb'])) {
 			/* selected in data speichern */
-			$pIDs = array_keys($_POST['tmplcb']);
+			$pIDs = array_map('intval', array_keys($_POST['tmplcb']));
 			$itemsResult = MagnaDB::gi()->query('
 				SELECT pID, data
 				  FROM '.TABLE_MAGNA_SELECTION.'
@@ -499,7 +499,7 @@ class SimpleSummaryView {
 		                AND pd.language_id = \''.$_SESSION['languages_id'].'\' 
 		           )
 		'.$addFrom.'
-		     WHERE p.products_id IN (\''.implode('\', \'', array_keys($this->selection)).'\') 
+		     WHERE p.products_id IN (\''.implode('\', \'', array_map('intval', array_keys($this->selection))).'\') 
 		           '.$addWhere.' 
 		     ORDER BY pd.products_name ASC';
 		//echo print_m($this->dbQuery, '$this->dbQuery');

@@ -10,8 +10,6 @@
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
- * -----------------------------------------------------------------------------
- *
  * (c) 2010 - 2025 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------

@@ -59,6 +59,7 @@ class AmazonSyncInventory extends MagnaCompatibleSyncInventory {
             $data['BusinessPrice'] = $businessPrice;
 
             // the price needs to be submitted if its not only B2B otherwise it will be after only B2B on Amazon
+            // if we got 0.00 as B2C price, that means there's only B2B
             if (!array_key_exists('Price', $data) && ((float)$this->cItem['Price'] !== 0.0 && $this->cItem['Price'] !== null)) {
                 $data['Price'] = parent::updatePrice();
 
@@ -67,7 +68,7 @@ class AmazonSyncInventory extends MagnaCompatibleSyncInventory {
                     $data['Price'] = (float)$this->cItem['Price'];
                 }
             }
-        } elseif ($this->cItem['Price'] !== null && (float)$this->cItem['Price'] !== 0.0) {
+        } elseif ($this->cItem['Price'] !== null) {
             // if b2b price is not changed we need to check also for default price
             $price = parent::updatePrice();
 

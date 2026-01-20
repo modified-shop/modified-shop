@@ -231,7 +231,14 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
     private function getEbayBuyerUserName () {
         return (empty($this->o['orderInfo']['eBayBuyerUsername']))
             ? ''
-            : "\neBay User:   ".$this->o['orderInfo']['eBayBuyerUsername']
+            : "\n".ML_EBAY_BUYER_USERNAME.": ".$this->o['orderInfo']['eBayBuyerUsername']
+            ;
+    }
+
+    private function getEbaySellerUserName () {
+        return (empty($this->o['orderInfo']['SellerUsername']))
+            ? ''
+            : "\n".ML_EBAY_SELLER_USERNAME.": ".$this->o['orderInfo']['SellerUsername']
             ;
     }
 
@@ -269,6 +276,7 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
             'eBayOrderID: '.$this->getMarketplaceOrderID().
             $this->getExtendedOrderID().
             $this->getEbaySalesRecordNumber().
+            $this->getEbaySellerUserName().
             $this->getEbayBuyerUserName()."\n\n".
             $this->comment
         );

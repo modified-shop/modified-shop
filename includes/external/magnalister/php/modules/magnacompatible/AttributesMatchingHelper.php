@@ -29,6 +29,8 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
     protected $mpId;
     protected $marketplace;
     protected $defaultLanguage;
+    /** @var array|null Cache for flatShopVariations() result */
+    protected $cachedFlatShopVariations = null;
 
     public function __construct() {
         global $_MagnaSession;
@@ -43,7 +45,8 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
 
         if (    defined('TABLE_PRODUCTS_OPTIONS')
              && MagnaDB::gi()->tableExists(TABLE_PRODUCTS_OPTIONS)
-             && (getDBConfigValue('general.options', '0', 'old') != 'gambioProperties')) {
+             && (getDBConfigValue('general.options', '0', 'old') != 'gambioProperties')
+        ) {
             $defaultGroupsOptions = $this->getVariationGroupsOptions($this->defaultLanguage);
             $groupsOptions = $this->getVariationGroupsOptions($languageId);
 
@@ -1071,6 +1074,10 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
      * @return array
      */
     public function flatShopVariations() {
+        if ($this->cachedFlatShopVariations !== null) {
+            return $this->cachedFlatShopVariations;
+        }
+
         $aFlatVariations = array();
         foreach ($this->getShopVariations() as $sVariationKey => $aVariationValue) {
             foreach ($aVariationValue as $sAttributeCodeKey => $aAttributeCodeValue) {
@@ -1078,6 +1085,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             }
         }
 
+        $this->cachedFlatShopVariations = $aFlatVariations;
         return $aFlatVariations;
     }
 
@@ -1458,6 +1466,9 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             'alreadyMatched' => ML_GENERAL_VARMATCH_ALREADY_MATCHED,
             'multiSelect' => ML_GENERAL_VARMATCH_MULTI_SELECT,
             'multiselectHint' => ML_GENERAL_VARMATCH_MULTISELECTHINT,
+            'requiredAttributesTitle' => str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_REQUIRED_ATTRIBUTES_TITLE),
+            'attributesMatchingTitle' => ML_GENERAL_VARMATCH_ATTRIBUTES_MATCHING_TITLE,
+            'optionalAttributesTitle' => str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTES_TITLE),
         );
     }
 
@@ -1801,25 +1812,16 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
 
         // Check if manufacturers_id column exists in the target table
         $bManufacturersIdExists = MagnaDB::gi()->columnExistsInTable('manufacturers_id', $tableSettings['Table']['table']);
-
-        if ($bManufacturersIdExists) {
-            // Simple query: manufacturers_id exists in target table
-            $iResultCount = (int)MagnaDB::gi()->fetchOne('
-                SELECT COUNT(DISTINCT ' . $tableSettings['Table']['column'] . ')
-                 FROM `' . $tableSettings['Table']['table'] . '`
-                WHERE `manufacturers_id` = ' . $sManufacturersId . '
-                  AND `' . $tableSettings['Table']['column'] . '` <> \'\'
-            ');
-        } else {
-            // JOIN query: manufacturers_id only exists in products table
-            $iResultCount = (int)MagnaDB::gi()->fetchOne('
-                SELECT COUNT(DISTINCT t.`' . $tableSettings['Table']['column'] . '`)
-                 FROM `' . $tableSettings['Table']['table'] . '` t
-                 INNER JOIN `' . TABLE_PRODUCTS . '` p ON t.`products_id` = p.`products_id`
-                WHERE p.`manufacturers_id` = ' . $sManufacturersId . '
-                  AND t.`' . $tableSettings['Table']['column'] . '` <> \'\'
-            ');
+        if (!$bManufacturersIdExists) {
+            return '';
         }
+        // Simple query: manufacturers_id exists in target table
+        $iResultCount = (int)MagnaDB::gi()->fetchOne('
+        SELECT COUNT(DISTINCT ' . $tableSettings['Table']['column'] . ')
+        FROM `' . $tableSettings['Table']['table'] . '`
+        WHERE `manufacturers_id` = ' . $sManufacturersId . '
+          AND `' . $tableSettings['Table']['column'] . '` <> \'\'
+        ');
 
         switch ($iResultCount) {
             case (0) : {
@@ -1835,16 +1837,9 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                           AND `' . $tableSettings['Table']['column'] . '` <> \'\'
                         ');
                 } else {
-                    // JOIN query: manufacturers_id only exists in products table
-                    $sResult = (string)MagnaDB::gi()->fetchOne('
-                        SELECT DISTINCT t.`' . $tableSettings['Table']['column'] . '`
-                         FROM `' . $tableSettings['Table']['table'] . '` t
-                         INNER JOIN `' . TABLE_PRODUCTS . '` p ON t.`products_id` = p.`products_id`
-                        WHERE p.`manufacturers_id` = ' . $sManufacturersId . '
-                          AND t.`' . $tableSettings['Table']['column'] . '` <> \'\'
-                        ');
+                    return '';
                 }
-                break;
+                break; 
             }
             default: {
                 // language column is sometimes called language_id, sometimes languages_id
@@ -1856,28 +1851,15 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                     return '';
                 }
                 if (getDBConfigValue($this->marketplace.'.lang' , $this->mpId, 0) != 0) {
-                    if ($bManufacturersIdExists) {
-                        // Simple query: manufacturers_id exists in target table
-                        $sResult = (string)MagnaDB::gi()->fetchOne('
-                            SELECT DISTINCT `' . $tableSettings['Table']['column'] . '`
-                             FROM `' . $tableSettings['Table']['table'] . '`
-                            WHERE `manufacturers_id` = ' . $sManufacturersId . '
-                              AND `' . $tableSettings['Table']['column'] . '` <> \'\'
-                              AND `' . $sLanguageColumn . '` = ' . (int)getDBConfigValue($this->marketplace . '.lang', $this->mpId, 0) . '
-                            LIMIT 1
-                            ');
-                    } else {
-                        // JOIN query: manufacturers_id only exists in products table
-                        $sResult = (string)MagnaDB::gi()->fetchOne('
-                            SELECT DISTINCT t.`' . $tableSettings['Table']['column'] . '`
-                             FROM `' . $tableSettings['Table']['table'] . '` t
-                             INNER JOIN `' . TABLE_PRODUCTS . '` p ON t.`products_id` = p.`products_id`
-                            WHERE p.`manufacturers_id` = ' . $sManufacturersId . '
-                              AND t.`' . $tableSettings['Table']['column'] . '` <> \'\'
-                              AND t.`' . $sLanguageColumn . '` = ' . (int)getDBConfigValue($this->marketplace . '.lang', $this->mpId, 0) . '
-                            LIMIT 1
-                            ');
-                    }
+                    // Simple query: manufacturers_id exists in target table
+                    $sResult = (string)MagnaDB::gi()->fetchOne('
+                        SELECT DISTINCT `' . $tableSettings['Table']['column'] . '`
+                         FROM `' . $tableSettings['Table']['table'] . '`
+                        WHERE `manufacturers_id` = ' . $sManufacturersId . '
+                          AND `' . $tableSettings['Table']['column'] . '` <> \'\'
+                          AND `' . $sLanguageColumn . '` = ' . (int)getDBConfigValue($this->marketplace . '.lang', $this->mpId, 0) . '
+                        LIMIT 1
+                        ');
                 } else {
                     return '';
                 }

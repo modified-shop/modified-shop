@@ -157,7 +157,7 @@ class InventoryView {
 						$itemdata[] = array (
 							'SKU' => $sku,
 						);
-						$pDetails = unserialize(str_replace('\\"', '"', $_POST['details'][$sku]));
+						$pDetails = magnaSafeUnserialize(str_replace('\\"', '"', $_POST['details'][$sku]));
 						$pID = magnaSKU2pID($sku);
 						$model = '';
 						if ($pID > 0) {

@@ -87,37 +87,28 @@ class Check24ProductSaver {
 		}
 		$aRow['ItemHandlingData'] = json_encode($aItemHandlingData);
 
-		$aGPSRDataKeys = array (
-			'Marke',
-			'Hersteller_Name',
-			'Hersteller_Strasse_Hausnummer',
-			'Hersteller_PLZ',
-			'Hersteller_Stadt',
-			'Hersteller_Land',
-			'Hersteller_Email',
-			'Hersteller_Telefonnummer',
-			'Verantwortliche_Person_fuer_EU_Name',
-			'Verantwortliche_Person_fuer_EU_Strasse_Hausnummer',
-			'Verantwortliche_Person_fuer_EU_PLZ',
-			'Verantwortliche_Person_fuer_EU_Stadt',
-			'Verantwortliche_Person_fuer_EU_Land',
-			'Verantwortliche_Person_fuer_EU_Email',
-			'Verantwortliche_Person_fuer_EU_Telefonnummer'
-		);
-		$aGPSRData = array();
-		foreach ($aGPSRDataKeys as $sGPSRKey) {
-			if (!empty($aItemDetails[$sGPSRKey])) {
-				$aGPSRData[$sGPSRKey] = $aItemDetails[$sGPSRKey];
-				unset($aItemDetails[$sGPSRKey]);
-			} else {
-				// all mandatory, except Tel-Nr.
-				if (strpos($sGPSRKey, 'Telefonnummer') == false) {
-					$aRow['Verified'] = 'ERROR';
-					$this->aErrors[] = sprintf(ML_ERROR_MANDATORY_FIELD_MISSING, $sGPSRKey);
-				}
-			}
-		}
-		$aRow['GPSRData'] = json_encode($aGPSRData);
+        $aGPSRDataKeys = array (
+            'Marke',
+            'Hersteller_Name',
+            'Hersteller_Strasse_Hausnummer',
+            'Hersteller_PLZ',
+            'Hersteller_Stadt',
+            'Hersteller_Land',
+            'Hersteller_Email',
+            'Hersteller_Telefonnummer',
+        );
+        //store old GPSRdata
+        $aPropertiesRow = MagnaDB::gi()->fetchRow('
+			SELECT * FROM '.TABLE_MAGNA_CHECK24_PROPERTIES.'
+			 WHERE products_id = "'.$iProductId.'" AND mpID = '. $this->mpId );
+        if(isset($aPropertiesRow)){
+            if(isset($aPropertiesRow['GPSRData']) && !empty($aPropertiesRow['GPSRData'])){
+                $aRow['GPSRData'] =$aPropertiesRow['GPSRData'];
+            }
+        }
+        //echo print_m($aItemDetails['CategoryIndependentShopVariation'],'$itemDetails[CategoryIndependentShopVariation]');
+        $aRow['GPSRData'] = $aItemDetails['CategoryIndependentShopVariation'];
+        $aRow['CategoryIndependentShopVariation'] = $aItemDetails['CategoryIndependentShopVariation'];
 
 		if ($aItemDetails['ShippingCost'] === '') {
 			$aRow['Verified'] = 'ERROR';
@@ -130,9 +121,9 @@ class Check24ProductSaver {
 				$this->aErrors[] = ML_CHECK24_ERROR_SHIPPING_COST;
 			}
 		}
-		
+
 		$aRow['ShippingCost'] = $aItemDetails['ShippingCost'];
-		
+
 		return $aRow;
 	}
 
@@ -149,7 +140,7 @@ class Check24ProductSaver {
 			$this->insertPrepareData($aRow);
 		}
 	}
-	
+
 	private function addToErrorLog($errorMessage, $sku) {
 		$errorData = array('SKU' => $sku);
 		$error = array (

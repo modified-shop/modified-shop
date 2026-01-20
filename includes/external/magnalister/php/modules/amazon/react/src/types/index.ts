@@ -190,6 +190,14 @@ export interface SelectOptionGroup {
 
 export type SelectOptions = (SelectOption | SelectOptionGroup)[];
 
+/**
+ * Database tables and columns data for database_value matching dropdowns
+ */
+export interface DatabaseTablesData {
+  tables: string[];
+  columns: { [tableName: string]: string[] };
+}
+
 export interface AmazonVariationsProps {
   variationGroup: string;
   customIdentifier: string;
@@ -201,6 +209,7 @@ export interface AmazonVariationsProps {
   conditionalRules?: ConditionalRule[]; // Conditional logic rules from Amazon API
   neededFormFields?: { [key: string]: string }; // Platform-specific form fields (e.g., Magento form_key)
   i18n?: I18nStrings;
+  databaseTables?: DatabaseTablesData; // Database tables/columns for database_value matching (v2 only)
   onValuesChange?: (values: SavedValues) => void;
   onValidationError?: (errors: ValidationError[]) => void;
   className?: string;

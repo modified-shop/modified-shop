@@ -752,9 +752,9 @@ define('ML_GENERAL_VARMATCH_MULTI_SELECT', 'Multiselect');
 // React Component Translations (added for new attribute matching UI)
 define('ML_GENERAL_VARMATCH_ENTER_FREETEXT', 'Enter custom value');
 define('ML_GENERAL_VARMATCH_USE_SHOP_VALUES', 'Use shop values');
-define('ML_GENERAL_VARMATCH_REQUIRED_ATTRIBUTES_TITLE', 'Required Attributes');
-define('ML_GENERAL_VARMATCH_ATTRIBUTES_MATCHING_TITLE', 'Attribute Matching');
-define('ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTES_TITLE', 'Optional Attributes');
+define('ML_GENERAL_VARMATCH_REQUIRED_ATTRIBUTES_TITLE', '%marketplace% Required Attributes');
+define('ML_GENERAL_VARMATCH_ATTRIBUTES_MATCHING_TITLE', 'Attributes Matching');
+define('ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTES_TITLE', '%marketplace% Optional Attributes');
 define('ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTE_MATCHING', 'Optional Attribute Matching');
 define('ML_GENERAL_VARMATCH_SAVE_SUCCESS', 'Attribute matching saved successfully');
 define('ML_GENERAL_VARMATCH_ADD_OPTIONAL_ATTRIBUTE', 'Add optional attribute');
@@ -1298,9 +1298,13 @@ define('ML_CHECK24_SHIPPING_COST', 'Shipping costs');
 define('ML_CHECK24_SHIPPING_TIME', 'Shipping time');
 define('ML_CHECK24_TEXT_AFTER_UPLOAD', '<br> Items are not immediately online. Please check your inventory and error log in 30minutes.');
 define('ML_CHECK24_2MEN_HANDLING', 'Delivery to the installation site');
+define('ML_CHECK24_2MEN_HANDLING_INFO', 'prices are expected');
 define('ML_CHECK24_INSTALLATION_SERVICE', 'Installation service');
+define('ML_CHECK24_INSTALLATION_SERVICE_INFO', 'prices are expected');
 define('ML_CHECK24_REMOVAL_OLD_ITEM', 'Removal of old devices');
+define('ML_CHECK24_REMOVAL_OLD_ITEM_INFO', 'prices are expected');
 define('ML_CHECK24_REMOVAL_PACKAGING', 'Removal of packaging');
+define('ML_CHECK24_REMOVAL_PACKAGING_INFO', 'prices are expected');
 define('ML_CHECK24_AVAILABLE_SERVICE_PRODUCT_IDS', 'Available additional services');
 define('ML_CHECK24_LOGISTICS_PROVIDER', 'Logistics provider');
 define('ML_CHECK24_CUSTOM_TARIFFS_NUMBER', 'TARIC number');
@@ -1652,6 +1656,8 @@ define('ML_EBAY_LABEL_LISTINGDURATION_DAYS_1', '1 day');
 define('ML_TEXT_WARNING_EBAY_GALLERY_PLUS_COSTS', 'Gallery Plus means a  pop-up window with a bigger view of the item, when the customer points with the mouse on the item within the search result list. Please note that the image size must be <b>at least 800x800 px</b>.<br /><br />The usage of <b>Gallery Plus</b> can <span style="color:red">cause extra fees</span> in some eBay categories. See <a href="http://pages.ebay.com/help/sell/gallery-upgrade.html" target="_blank">eBay help page</a> for details.<br /><br />RedGecko GmbH is not responsible for any costs caused.<br /><br />Please confirm with &apos;yes&apos; if you want to proceed, or cancel with &apos;no&apos;.');
 define('ML_TITLE_EBAY_WARNING_STRIKE_PRICE_REQUIREMENTS', 'Activating Strike Prices');
 define('ML_TEXT_EBAY_WARNING_STRIKE_PRICE_REQUIREMENTS', '<b>Please note</b>: Strike prices are only available on eBay for merchants with <b>premium</b> or <b>platinum</b> stores (for more details on the different eBay store options, see the eBay help pages).<br /><br />If you do not use an eBay plan that includes eBay strike prices and you still try to upload strike price items, <b>eBay will reject these items with an error message</b>.');
+define('ML_EBAY_BUYER_USERNAME',  'Buyer&apos;s eBay Username');
+define('ML_EBAY_SELLER_USERNAME', 'Our eBay Username         ');
 
 // ==================== Etsy ====================
 

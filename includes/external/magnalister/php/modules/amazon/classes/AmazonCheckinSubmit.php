@@ -288,6 +288,14 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 
 		$data['submit'] = array_merge($data['submit'], $productApply['data']);
 
+        // Apply $_POST data if available (highest priority) - for validation errors
+        if (!empty($_POST) && isset($_POST['saveApplyData'])) {
+            foreach ($_POST as $key => $value) {
+                if ($value !== '' && $key !== 'saveApplyData' && $key !== 'ml') {
+                    $data['submit'][$key] = $value;
+                }
+            }
+        }
 		if (isset($productApply['variation_theme'])) {
 			$data['submit']['variation_theme'] = json_decode($productApply['variation_theme'], true);
 			unset($data['submit']['variationTheme']);
@@ -884,8 +892,16 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 					'Quantity' => $data['quantity'],
 					'ConditionType' => $conditionType,
 				),
-				$productApply['data']
-			); 
+				$productApply['data']);
+
+            // Apply $_POST data if available (highest priority) - for validation errors
+            if (!empty($_POST) && isset($_POST['saveApplyData'])) {
+                foreach ($_POST as $key => $value) {
+                    if ($value !== '' && $key !== 'saveApplyData' && $key !== 'ml') {
+                        $data['submit'][$key] = $value;
+                    }
+                }
+            }
 			if (!empty($data['submit']['BrowseNodes'])) {
 				foreach ($data['submit']['BrowseNodes'] as $i => $bn) {
 					if ($bn == 'null') {
@@ -1162,7 +1178,8 @@ class AmazonCheckinSubmit extends CheckinSubmit {
             'selectionname' => $this->settings['selectionName'],
             'session_id'    => session_id(),
             'pID'           => $productID,
-            'data' => serialize($selectionData)
+            'data'    => serialize($selectionData),
+            'expires' => gmdate('Y-m-d H:i:s')
         ));
 
 

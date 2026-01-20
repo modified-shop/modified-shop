@@ -389,15 +389,105 @@ class AmazonHelper extends AttributesMatchingHelper {
     }
 
     /**
+     * Static storage for verification errors from verifyOneItem
+     * These errors will be included in verifyItemByMarketplaceToGetMandatoryAttributes
+     * @var array
+     */
+    protected static $storedVerificationErrors = array();
+
+    /**
+     * Store verification errors from verifyOneItem for later use
+     *
+     * @param array $errors Array of errors from verifyOneItem
+     */
+    public static function storeVerificationErrors($errors) {
+        if (!empty($errors) && is_array($errors)) {
+            self::$storedVerificationErrors = array_merge(self::$storedVerificationErrors, $errors);
+        }
+    }
+
+    /**
+     * Get stored verification errors
+     *
+     * @return array
+     */
+    public static function getStoredVerificationErrors() {
+        return self::$storedVerificationErrors;
+    }
+
+    /**
+     * Clear stored verification errors
+     */
+    public static function clearStoredVerificationErrors() {
+        self::$storedVerificationErrors = array();
+    }
+
+    /**
+     * Converts attribute keys in error messages to clickable scroll links.
+     * Parses patterns like "(Attribute: key1, key2, key3)" and wraps each key
+     * in an anchor tag that scrolls to the corresponding attribute row in React component.
+     *
+     * If the attribute row doesn't exist (optional attribute not yet added),
+     * it will automatically add the attribute via React's magnalisterAddOptionalAttribute()
+     * function, then scroll to it.
+     *
+     * @param string $message The error message containing attribute keys
+     * @return string The message with attribute keys converted to clickable links
+     */
+    public static function convertAttributeKeysToScrollLinks($message) {
+        // Pattern to match (Attribute: key1, key2, ...) or (Attribute: key1)
+        $pattern = '/\(Attribute:\s*([^)]+)\)/';
+
+        return preg_replace_callback($pattern, function ($matches) {
+            $attributesPart = $matches[1];
+            // Split by comma and process each attribute key
+            $keys = array_map('trim', explode(',', $attributesPart));
+            $linkedKeys = array();
+
+            foreach ($keys as $key) {
+                if (!empty($key)) {
+                    $escapedKey = htmlspecialchars($key);
+
+                    // Build onclick handler:
+                    // 1. If element exists -> scroll to it
+                    // 2. If not exists -> add as optional attribute via React, then scroll
+                    $onclick = "(function(e){" . "e.preventDefault();" // Helper function to scroll and highlight
+                        . "function scrollHL(el){" . "el.scrollIntoView({behavior:'smooth',block:'center'});" . "el.style.animation='ml-attr-highlight 0.4s ease-in-out 6';" . "setTimeout(function(){el.style.animation='';},2500);" . "}" // Check if element exists
+                        . "var el=document.getElementById('attr-row-" . $escapedKey . "');" . "if(el){" . "scrollHL(el);" . "}else if(typeof window.magnalisterAddOptionalAttribute==='function'){" // Add optional attribute, then scroll in callback
+                        . "window.magnalisterAddOptionalAttribute('" . $escapedKey . "',function(){" . "setTimeout(function(){" . "var newEl=document.getElementById('attr-row-" . $escapedKey . "');" . "if(newEl){scrollHL(newEl);}" . "},150);" . "});" . "}" . "})(event);return false;";
+
+                    $linkedKeys[] = '<a href="#attr-row-' . $escapedKey . '" ' . 'class="ml-js-noBlockUi ml-attribute-scroll-link" ' . 'data-attribute-key="' . $escapedKey . '" ' . 'onclick="' . $onclick . '"' . 'style="text-decoration:underline;">' . $escapedKey . '</a>';
+                }
+            }
+
+            return '(Attribute: ' . implode(', ', $linkedKeys) . ')';
+        }, $message);
+    }
+
+    /**
      * Call VerifyAddItems API to detect mandatory attributes (attributes with missing values)
      * Based on V3: magnalister/Codepool/80_Modules/010_Amazon/Model/Modul.php:389
      *
+     * Also includes stored verification errors from verifyOneItem and applies
+     * convertAttributeKeysToScrollLinks to error messages.
+     *
      * @param string $category Main Category (Product Type)
      * @param string|null $variationTheme Variation Theme (optional)
-     * @return array Array of errors from API response
+     * @return array Array of errors from API response + stored errors
      */
     public static function verifyItemByMarketplaceToGetMandatoryAttributes($category, $variationTheme = null) {
         if (empty($category) || $category === 'none') {
+            // Even if no category, return stored errors if any
+            $storedErrors = self::getStoredVerificationErrors();
+            if (!empty($storedErrors)) {
+                // Apply scroll links to stored errors
+                foreach ($storedErrors as &$error) {
+                    if (isset($error['ERRORMESSAGE'])) {
+                        $error['ERRORMESSAGE'] = self::convertAttributeKeysToScrollLinks($error['ERRORMESSAGE']);
+                    }
+                }
+                return $storedErrors;
+            }
             return array();
         }
 
@@ -434,13 +524,26 @@ class AmazonHelper extends AttributesMatchingHelper {
                 $data = $response;
             }
 
-            // Extract errors array
-            $errors = isset($data['ERRORS']) && is_array($data['ERRORS']) ? $data['ERRORS'] : array();
+            // Extract errors array from API
+            $apiErrors = isset($data['ERRORS']) && is_array($data['ERRORS']) ? $data['ERRORS'] : array();
+
+            // Get stored errors from verifyOneItem
+            $storedErrors = self::getStoredVerificationErrors();
+
+            // Merge API errors with stored errors
+            $allErrors = array_merge($apiErrors, $storedErrors);
+
+            // Apply convertAttributeKeysToScrollLinks to all error messages
+            foreach ($allErrors as &$error) {
+                if (isset($error['ERRORMESSAGE'])) {
+                    $error['ERRORMESSAGE'] = self::convertAttributeKeysToScrollLinks($error['ERRORMESSAGE']);
+                }
+            }
 
             // Cache result
-            $cache[$cacheKey] = $errors;
+            $cache[$cacheKey] = $allErrors;
 
-            return $errors;
+            return $allErrors;
 
         } catch (Exception $e) {
             if (defined('MAGNA_DEBUG') && MAGNA_DEBUG) {
