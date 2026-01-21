@@ -89,7 +89,7 @@
       
       if (!isset($pics_array)) {
         $pics_array = array();
-        $pics_array[] = 'noimage.gif';
+        $pics_array[] = 'noimage.png';
         
         switch ($type) {
           case 'product_images':

@@ -18,6 +18,8 @@
 
   require('includes/application_top.php');
 
+  $admin_thumbs_size = 'style="border:0;max-width:200px;max-height:60px;"';
+  
   // include needed classes
   require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
 
@@ -638,7 +640,11 @@
                         }
                         ?>
                         <tr <?php echo $tr_attributes;?>>
-                          <td class="dataTableContent"><img style="border:0;max-width:200px;max-height:60px;" src="<?php echo DIR_WS_CATALOG_IMAGES.'banner/'.(($banners['banners_image'] != '') ? $banners['banners_image'] : 'noimage.gif'); ?>" /></td>
+                          <td class="dataTableContent">
+                            <?php
+                            echo xtc_info_image('banner/'.$banners['banners_image'], $banners['banners_image'], '', '', $admin_thumbs_size);
+                            ?>
+                          </td>
                           <td class="dataTableContent txta-c"><?php echo $banners['banners_sort']; ?></td>
                           <td class="dataTableContent"><?php echo $banners['banners_title']; ?></td>
                           <td class="dataTableContent txta-c"><?php echo $banners['banners_group']; ?></td>
