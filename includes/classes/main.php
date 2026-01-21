@@ -34,7 +34,7 @@ class main {
     require_once (DIR_FS_CATALOG.'includes/classes/mainModules.class.php');
     $this->mainModules = new mainModules();
     
-    $this->standardImage = 'noimage.gif';
+    $this->standardImage = 'noimage.png';
 
     // prefetch shipping status
     $this->SHIPPING = array();
@@ -454,7 +454,6 @@ class main {
    * @param string $image
    * @param string $dir
    * @param string $check
-   * @param string $noImg
    *
    * @return string
    */
@@ -473,8 +472,18 @@ class main {
       }
     }
 
-    if (!is_file(DIR_FS_CATALOG.$image)) {
-      $image = (($check == 'true' && $this->standardImage != '' && is_file(DIR_FS_CATALOG.DIR_WS_IMAGES.$dir.$this->standardImage)) ? DIR_WS_IMAGES.$dir.$this->standardImage : '');
+    if ($image == '' || !is_file(DIR_FS_CATALOG.$image)) {
+      $image = '';
+      if ($check == 'true' && $this->standardImage != '') {
+        $noimage = $this->standardImage;
+        if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+          $noimage_extension = substr($noimage, 0, strrpos($noimage, '.')).'.'.IMAGE_TYPE_EXTENSION;
+          if (is_file(DIR_FS_CATALOG.DIR_WS_IMAGES.$dir.$noimage_extension)) {
+            $noimage = $noimage_extension;
+          }
+        }
+        if (is_file(DIR_FS_CATALOG.DIR_WS_IMAGES.$dir.$noimage)) $image = DIR_WS_IMAGES . $dir . $noimage;
+      }
     }
     
     //new module support

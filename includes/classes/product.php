@@ -64,7 +64,7 @@ class product {
 
     // default products image
     $this->useStandardImage = PRODUCT_IMAGE_SHOW_NO_IMAGE;
-    $this->standardImage = 'noimage.gif';
+    $this->standardImage = 'noimage.png';
     
     // default values
     $this->ShippingLink = '';
@@ -867,8 +867,15 @@ class product {
       $returnName = $name;
       if ($returnName == '' || !is_file(DIR_FS_CATALOG.$path.$returnName)) {
         $returnName = '';
-        if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file(DIR_FS_CATALOG.$path.$this->standardImage)) {
-          $returnName = $this->standardImage;
+        if ($this->useStandardImage == 'true' && $this->standardImage != '') {
+          $noimage = $this->standardImage;
+          if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+            $noimage_extension = substr($noimage, 0, strrpos($noimage, '.')).'.'.IMAGE_TYPE_EXTENSION;
+            if (is_file(DIR_FS_CATALOG.$path.$noimage_extension)) {
+              $noimage = $noimage_extension;
+            }
+          }
+          if (is_file(DIR_FS_CATALOG.$path.$noimage)) $returnName = $noimage;
         }
       }
       
