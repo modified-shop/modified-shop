@@ -836,12 +836,12 @@ define('SEARCH_RESULTS_SORT_DESC', 'Das ist die Reihenfolge, wie Suchergebnisse 
 define('SEARCH_RESULTS_FIELD_TITLE', 'Sortierfeld f&uuml;r Suchergebnisse');
 define('SEARCH_RESULTS_FIELD_DESC', 'Das ist die Spalte, die zum Sortieren der Suchergebnisse benutzt wird.');
 
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Artikel noimage.gif');
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif, wenn kein Artikelbild angegeben wurde.');
-define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_TITLE', 'Kategorie noimage.gif');
-define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif, wenn kein Kategoriebild angegeben wurde.');
-define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_TITLE', 'Hersteller noimage.gif');
-define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif, wenn kein Herstellerbild angegeben wurde.');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Artikel Standardbild');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des Standardbildes, wenn kein Artikelbild angegeben wurde.');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_TITLE', 'Kategorie Standardbild');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des Standardbildes, wenn kein Kategoriebild angegeben wurde.');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_TITLE', 'Hersteller Standardbild');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des Standardbildes, wenn kein Herstellerbild angegeben wurde.');
 
 define('MODULE_SMALL_BUSINESS_TITLE', 'Kleinunternehmer');
 define('MODULE_SMALL_BUSINESS_DESC', 'Soll der Shop umgestellt werden auf Kleinunternehmer nach &sect; 19 UStG.?<br /><b>Wichtig:</b> Unter "Module" -> "Zusammenfassung" muss das Modul "ot_tax" <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_tax').'"><b>hier</b></a> deaktiviert oder deinstalliert werden. Zudem muss in den einzelnen <a href="'.xtc_href_link(FILENAME_CUSTOMERS_STATUS, '').'"><b>Kundengruppen</b></a> "Preise inkl. MwSt." auf "Nein" gesetzt werden.');

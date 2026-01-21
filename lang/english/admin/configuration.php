@@ -836,12 +836,12 @@ define('SEARCH_RESULTS_SORT_DESC', 'This is the sort order used for search.');
 define('SEARCH_RESULTS_FIELD_TITLE', 'Search Sort Field');
 define('SEARCH_RESULTS_FIELD_DESC', 'The column to sort by for search.');
 
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Product noimage.gif');
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no product image assigned');
-define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_TITLE', 'Category noimage.gif');
-define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no category image assigned');
-define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_TITLE', 'Manufacturer noimage.gif');
-define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no manufacturer image assigned');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Product default image');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show default image if there is no product image assigned');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_TITLE', 'Category default image');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Show default image if there is no category image assigned');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_TITLE', 'Manufacturer default image');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Show default image if there is no manufacturer image assigned');
 
 define('MODULE_SMALL_BUSINESS_TITLE', 'Small Business');
 define('MODULE_SMALL_BUSINESS_DESC', 'Shall the store be switched to small business according to &sect; 19 UStG.<br/><b>Important:</b> Under "Modules" -> "Order Total" the module "ot_tax" must be disabled or uninstalled <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_tax').'"><b>here</b></a>. In addition you have to set "Prices incl. Tax" to "No" in the particular <a href="'.xtc_href_link(FILENAME_CUSTOMERS_STATUS, '').'"><b>customer groups</b></a>.');
