@@ -43,7 +43,8 @@
       $lang_query = xtc_db_query("SELECT *,
                                          languages_id as id,
                                          language_charset as charset
-                                    FROM ".TABLE_LANGUAGES);
+                                    FROM ".TABLE_LANGUAGES."
+                                   WHERE status = '1'");
       if (xtc_db_num_rows($lang_query) > 0) {
         while ($lang =  xtc_db_fetch_array($lang_query)) {          
           if (isset($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
