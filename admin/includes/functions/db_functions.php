@@ -656,6 +656,46 @@ function remove_engine($table,$data) {
   return $data;
 }
 
+function GetCharsetCollation() {
+  static $charcol_array;
+  
+  if (!isset($charcol_array)) {
+    $charcol_array = array(
+      'charset' => 'utf8',
+      'collation' => 'utf8_general_ci',
+    );
+    
+    $charcol_data_array = array(
+      'utf8mb4' => array(
+        'utf8mb4_german2_ci',
+        'utf8mb4_general_ci',
+      ), 
+      'utf8mb3' => array(
+        'utf8mb3_german2_ci',
+        'utf8mb3_general_ci',
+      ),
+      'utf8' => array(
+        'utf8_german2_ci',
+      ),
+    );
+    
+    foreach ($charcol_data_array as $charset => $data) {
+      foreach ($data as $collation) {
+        $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = '".xtc_db_input($charset)."' AND COLLATION = '".xtc_db_input($collation)."'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $charcol_array = array(
+            'charset' => $charset,
+            'collation' => $collation,
+          );
+          break 2;
+        }
+      }
+    }
+  }
+  
+  return $charcol_array;
+}
+
 function GetTableInfo($table) {
   global $dump;
   
@@ -675,7 +715,8 @@ function GetTableInfo($table) {
     $check_utf8 = xtc_db_query("SHOW TABLE STATUS WHERE Name='".$table."'");
     $utf8 = xtc_db_fetch_array($check_utf8);
     if (strpos($utf8['Collation'], 'utf8') === false) {
-      $data .= "ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8 COLLATE utf8_german2_ci;\n\n";
+      $charcol_array = GetCharsetCollation();
+      $data .= "ALTER TABLE `$table` CONVERT TO CHARACTER SET ".$charcol_array['charset']." COLLATE ".$charcol_array['collation'].";\n\n";
     }
   }
   $data .= "/*!40000 ALTER TABLE `$table` DISABLE KEYS */;\n";
