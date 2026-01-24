@@ -34,6 +34,10 @@
   if (isset($_SESSION['restore'])) {
     $restore = $_SESSION['restore'];
   }
+
+  if (isset($_SESSION['convert'])) {
+    $convert = $_SESSION['convert'];
+  }
   
   if (RESTORE_TEST) $sim = TEXT_SIMULATION; else $sim = '';
     
@@ -41,10 +45,6 @@
     case 'backupnow':
       $info_text = TEXT_INFO_DO_BACKUP;
 
-      $restore = array();
-      if (isset($_SESSION['restore'])) {
-        unset($_SESSION['restore']);
-      }
       $dump = array();
       if (isset($_SESSION['dump'])) {
         unset($_SESSION['dump']);
@@ -87,28 +87,19 @@
       }
       
       $schema .= '-- Charset: ' . ((isset($dump['utf8-convert'])) ? 'utf8' : $charset) . "\n";
-      $dump['schema'] = $schema . "\n";
-      
-      $file = 'dbd_' . DB_DATABASE . '_' . date('Y-m-d-H-i-s');
-      $dump['file'] = DIR_FS_BACKUP.$file.'.sql';
-      $dump['dir'] = '';
 
+      
+      $backup_file = 'dbd_' . DB_DATABASE . '_' . date('Y-m-d-H-i-s');
+      $dump['file'] = DIR_FS_BACKUP . $backup_file;
+      
       if (isset($_POST['compress']) && $_POST['compress'] == 'gzip') {
         $dump['compress'] = true;
-        $dump['file'] .= '.gz';
+        $dump['file'] .= '.sql.gz';
       } else {
         $dump['compress'] = false;
+        $dump['file'] .= '.sql';
       }
-      
-      if (isset($_POST['single_files']) && $_POST['single_files'] == 'yes') {
-        $dump['single_files'] = 'yes';
-        $backup_dir = $file;
-        mkdir(DIR_FS_BACKUP . $backup_dir);
-        
-        $dump['dir'] = DIR_FS_BACKUP . $backup_dir . '/';
-        $dump['file'] = 'schema';
-      }
-      
+
       if (isset($_POST['remove_collate']) && $_POST['remove_collate'] == 'yes') {
         $dump['remove_collate'] = 'yes';
       }
@@ -133,7 +124,7 @@
       $dump['num_rows'] = 0;
       
       $table_info = '--' . "\n";
-      $table_info .= '-- BOF TABLE-INFO' . "\n";
+      $table_info .= '-- TABLE-INFO' . "\n";
       
       $dump['tables'] = array();
       if ($dump['num_tables'] > 0) {
@@ -163,7 +154,7 @@
 
             $data_query = xtc_db_query("SELECT count(*) as `count_records` FROM `". $erg['Name'] ."`");
             $data_array = xtc_db_fetch_array($data_query);
-            
+          
             $erg['Rows'] = $data_array['count_records'];
             $dump['num_rows'] += $erg['Rows'];
 
@@ -177,6 +168,7 @@
       $dump['num_tables'] = count($dump['tables']);
       
       $table_info .= '-- EOF TABLE-INFO' . "\n";
+      $table_info .= '--' . "\n\n";
       
       $dump['collations'] = array_keys($table_collations);
       $dump['engines'] = array_keys($table_engines);
@@ -237,10 +229,7 @@
         $json_output['anzahl_zeilen'] = $dump['anzahl_zeilen'];
         $json_output['file'] = basename($dump['file']);
         $json_output['dump'] = base64_encode(serialize($dump));
-        if (isset($dump['single_files']) && $dump['single_files'] == 'yes') {
-          $json_output['dir'] = basename($dump['dir']);
-        }
-        
+
         if (isset($_SESSION['CSRFName']) && isset($_SESSION['CSRFToken'])) {
           $json_output[$_SESSION['CSRFName']] = $_SESSION['CSRFToken'];
         }
@@ -266,33 +255,6 @@
       if (substr($vers,0,1) > 4) {
         xtc_db_query("SET SESSION sql_mode=''");
       }
-      
-      if (isset($_POST['restore_file'])) {
-        $restore['restore_file'] = $_POST['restore_file'];
-      }
-      
-      $restore['restore_dir'] = ((isset($_POST['restore_dir'])) ? $_POST['restore_dir'].'/' : '');
-      if (isset($_POST['restore_tables']) && count($_POST['restore_tables']) > 0) {
-        $restore['restore_tables'] = $_POST['restore_tables'];
-      }
-
-      if (isset($_POST['restore_type']) && $_POST['restore_type'] == 'all') {
-        $dir = dir(DIR_FS_BACKUP.$restore['restore_dir']);
-        $restore['restore_tables'] = array();
-        while ($file = $dir->read()) {
-          if (is_file(DIR_FS_BACKUP.$restore['restore_dir'].$file)
-              && strpos($file, 'schema.sql') === false
-              )
-          {
-            $restore['restore_tables'][] = $file;
-          }
-        }
-      }
-
-      if ($restore['restore_dir'] != '') {
-        sort($restore['restore_tables']);
-        $_GET['file'] = array_shift($restore['restore_tables']);
-      }
 
       $_GET['file'] = isset($_GET['file']) ? basename($_GET['file']) : '';
       $_GET['file'] = preg_replace('/[^0-9a-zA-Z._-]/','',$_GET['file']);
@@ -300,7 +262,7 @@
       if (is_file($_GET['file'])) {
         $restore['file'] =  $_GET['file'];
       } else {
-        $restore['file'] = DIR_FS_BACKUP . $restore['restore_dir'] . $_GET['file'];
+        $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
       }
 
       $extension = substr($restore['file'], -3);
@@ -347,6 +309,10 @@
 
       $info_text = TEXT_INFO_DO_RESTORE . $sim;
       $restore['filehandle']=($restore['compressed'] == true) ? gzopen($restore['file'],'r') : fopen($restore['file'],'r');
+      if (!$restore['compressed']) {
+        $filegroesse = filesize($restore['file']);
+      }
+
       ($restore['compressed']) ? gzseek($restore['filehandle'],$restore['offset']) : fseek($restore['filehandle'],$restore['offset']);
 
       $a = 0;
@@ -407,25 +373,6 @@
       }
       $restore['time_gap'] = time();
 
-      if ($restore['fileEOF'] 
-          && isset($restore['restore_tables']) 
-          && count($restore['restore_tables']) > 0
-          )
-      {
-        $file = array_shift($restore['restore_tables']);
-        $restore['file'] = DIR_FS_BACKUP . $restore['restore_dir'] . $file;
-        $restore['anzahl_zeilen'] = RESTORE_ROWS;
-        $restore['offset'] = 0;
-        $restore['minspeed'] = 1;
-        $actual_table = substr($file, 0, strpos($file, '.'));
-
-        $restore['filehandle']=($restore['compressed'] == true) ? gzopen($restore['file'],'r') : fopen($restore['file'],'r');
-        ($restore['compressed']) ? gzseek($restore['filehandle'],$restore['offset']) : fseek($restore['filehandle'],$restore['offset']);
-
-        $restore['EOB'] = false;
-        $restore['fileEOF'] = false;
-      }
-      
       if (isset($_SESSION['restore'])) {
         $_SESSION['restore'] = $restore;
       }
@@ -457,5 +404,96 @@
       $json_output = json_encode($json_output);
       echo $json_output;
       exit();
+      break;
+  
+    case 'convertnow':
+      $info_text = TEXT_INFO_DO_CONVERT;
+
+      $convert = array();
+      if (isset($_SESSION['convert'])) {
+        unset($_SESSION['convert']);
+      }
+      $convert['starttime'] = time();
+    
+      xtc_set_time_limit(0);
+
+      $vers = xtc_db_get_client_info();
+      if (substr($vers,0,1) > 4) {
+        xtc_db_query("SET SESSION sql_mode=''");
+      }
+
+      $tables_query = xtc_db_query('SHOW TABLE STATUS');
+      $convert['num_tables'] = xtc_db_num_rows($tables_query);
+
+      $convert['tables'] = array();
+      if ($convert['num_tables'] > 0) {
+        for ($i=0; $i < $convert['num_tables']; $i++) {
+          $erg = xtc_db_fetch_array($tables_query);
+
+          $convert['tables'][$i] = $erg['Name'];
+        }
+        $convert['nr'] = 0;
+      }
+      $convert['aufruf'] = 0;
+      $convert['offset'] = 0;
+      $convert['table_ready'] = 0;
+
+      $convert['db_charset'] = $_POST['db_charset'];
+
+      $collation = 'latin1_german1_ci';
+      if ($convert['db_charset'] == 'utf8') {
+        $convert['db_collation'] = 'utf8_german2_ci';
+      }
+      if ($convert['db_charset'] == 'utf8mb3') {
+        $convert['db_collation'] = 'utf8mb3_german2_ci';
+      }
+      if ($convert['db_charset'] == 'utf8mb4') {
+        $convert['db_collation'] = 'utf8mb4_german2_ci';
+      }
+      $convert['db_engine'] = $_POST['db_engine'];
+      
+      $_SESSION['convert'] = isset($convert) ? $convert : '';
+      break;
+
+    case 'convertdb':
+      if ($convert['num_tables'] > 0) {
+        $info_text = TEXT_INFO_DO_CONVERT;
+        xtc_set_time_limit(0);
+        $nr = $convert['nr'];
+    
+        if ($convert['aufruf'] == 0) {
+          xtc_db_query("SET GLOBAL default_storage_engine = ".xtc_db_input($convert['db_engine']));
+          xtc_db_query("ALTER DATABASE ".DB_DATABASE." CHARACTER SET ".xtc_db_input($convert['db_charset'])." COLLATE ".xtc_db_input($convert['db_collation']));
+        } else {
+          $convert['nr'] ++;
+          xtc_db_query("ALTER TABLE ".$convert['tables'][$nr]." ENGINE = ".xtc_db_input($convert['db_engine']));
+          xtc_db_query("ALTER TABLE ".$convert['tables'][$nr]." CONVERT TO CHARACTER SET ".xtc_db_input($convert['db_charset'])." COLLATE ".xtc_db_input($convert['db_collation']));
+        }
+
+        $convert['aufruf']++;
+        
+        if (isset($_SESSION['convert'])) {
+          $_SESSION['convert'] = $convert;
+        }
+    
+        $sec = time() - $convert['starttime']; 
+        $time = sprintf('%d:%02d Min.', floor($sec/60), $sec % 60);
+        
+        $json_output = array();
+        $json_output['aufruf'] = $convert['aufruf'];
+        $json_output['nr'] = $convert['nr'];
+        $json_output['num_tables'] = $convert['num_tables'];
+        $json_output['time'] = $time;
+        $json_output['actual_table'] = $convert['tables'][$nr];
+        $json_output['convert'] = base64_encode(serialize($convert));
+
+        if (isset($_SESSION['CSRFName']) && isset($_SESSION['CSRFToken'])) {
+          $json_output[$_SESSION['CSRFName']] = $_SESSION['CSRFToken'];
+        }
+    
+        $json_output = json_encode($json_output);
+        echo $json_output;
+        exit();
+      }
       break;
   }

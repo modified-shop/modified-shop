@@ -376,3 +376,416 @@
 
   {$FORM_END}
 {/if}
+{if isset($error_message)}<div class="errormessage">{$error_message}</div>{/if}
+{if isset($success_message)}<div class="successmessage">{$success_message}</div>{/if}
+
+{if !isset($UPDATE_ACTION)}
+  {*
+  <p>{$smarty.const.TEXT_UPDATER}</p>
+  <br />
+  *}
+
+  {$JAVASCRIPTCHECK}
+  <noscript><div class="errormessage"><strong>{$smarty.const.TEXT_ERROR_JAVASCRIPT}</strong></div></noscript>
+
+  {if isset($BUTTON_REQUEST_UPDATE) || isset($BUTTON_TEMPLATE_UPDATE)}
+  {if !isset($smarty.get.uaction) && $SITE == 'autoupdate'}<div class="infomessage"><strong>{$smarty.const.TEXT_INFO_TEMPLATE_UPDATE}</strong></div>{/if}
+  <div class="field_row">
+    {if isset($BUTTON_TEMPLATE_UPDATE)}
+      <div class="field_item">
+        <h2>{$smarty.const.TEXT_AUTOUPDATER_TEMPLATE_HEADING}</h2>      
+        <p>{$smarty.const.TEXT_AUTOUPDATER_TEMPLATE_INFO}</p>
+        <div class="cssButtonRow_Plain">
+          <div class="cssButton cssColor_4">{$BUTTON_TEMPLATE_UPDATE}</div>
+        </div>
+      </div>
+    {/if}
+    {if isset($BUTTON_REQUEST_UPDATE)}
+      <div class="field_item">
+        <h2>{$smarty.const.TEXT_AUTOUPDATER_SUPPORT_HEADING}</h2>      
+        <p>{$smarty.const.TEXT_AUTOUPDATER_SUPPORT_INFO}</p>
+        {if !isset($smarty.session.template_request)}
+          <div class="cssButtonRow_Plain">
+            <div class="cssButton cssColor_3">{$BUTTON_REQUEST_UPDATE}</div>
+          </div>
+        {/if}
+      </div>
+    {/if}
+  </div>
+  <br />
+  {/if}
+
+  {if isset($LINK_DB_BACKUP) || isset($LINK_DB_RESTORE)}
+    <h2>{$smarty.const.TEXT_DB_BACKUP_OPTIONS}</h2> 
+    {* if isset($BUTTON_DB_BACKUP) || isset($BUTTON_DB_RESTORE)}{$smarty.const.TEXT_UPDATER_HEADING}{else}{$smarty.const.TEXT_AUTOUPDATER_HEADING}{/if *}
+  
+    <ul class="modulelist">
+      {if isset($LINK_DB_BACKUP)}
+        <li>
+          <a href="{$LINK_DB_BACKUP}" class="ActionLink" style="display:none">
+            <span class="ml_row">
+              <span class="ml_title">{$smarty.const.TEXT_DB_BACKUP}</span>
+              <span class="ml_action">{$smarty.const.BUTTON_DB_BACKUP}</span>
+            </span>
+          </a>
+        </li>
+      {/if}
+      {if isset($LINK_DB_RESTORE)}
+        <li>
+          <a href="{$LINK_DB_RESTORE}" class="ActionLink" style="display:none">
+            <span class="ml_row">
+              <span class="ml_title">{$smarty.const.TEXT_DB_RESTORE}</span>
+              <span class="ml_action">{$smarty.const.BUTTON_DB_RESTORE}</span>
+            </span>
+          </a>
+        </li>
+      {/if}
+      {if isset($LINK_DB_CONVERT)}
+        <li>
+          <a href="{$LINK_DB_CONVERT}" class="ActionLink" style="display:none">
+            <span class="ml_row">
+              <span class="ml_title">{$smarty.const.TEXT_DB_CONVERT}</span>
+              <span class="ml_action">{$smarty.const.BUTTON_DB_CONVERT}</span>
+            </span>
+          </a>
+        </li>
+      {/if}
+      {if isset($LINK_SQL_MANUELL)}
+        <li>
+          <a href="{$LINK_SQL_MANUELL}" class="ActionLink" style="display:none">
+            <span class="ml_row">
+              <span class="ml_title">{$smarty.const.TEXT_SQL_MANUELL}</span>
+              <span class="ml_action">{$smarty.const.BUTTON_SQL_MANUELL}</span>
+            </span>
+          </a>
+        </li>
+      {/if}
+    </ul>
+    <br />
+    <br />
+  {/if}
+
+  {if isset($ERROR)}
+    {$ERROR}
+    {if isset($BUTTON_BACK)}
+      <div class="cssButtonRow">
+        <div class="cssButton cssColor_2">{$BUTTON_BACK}</div>
+      </div>
+    {/if}
+  {else}
+    <h2>{$smarty.const.TEXT_UPDATER_ORDER}</h2>
+    <ul class="modulelist">
+      {foreach key=count name=aussen item=module from=$modulelist}
+        <li{if ($module.VISITED == true)} class="updated"{/if}>
+          <a style="display:none;" class="ActionLink" href="{$module.LINK}">
+            <span class="ml_row">
+              <span class="ml_counter">{$count + 1}.</span>
+              <span class="ml_title">{$module.NAME}</span>
+              <span class="ml_action"><span class="cinner">{$module.BUTTON}</span></span>
+            </span>
+          </a>
+        </li>      
+      {/foreach}
+    </ul>
+    <br />
+
+    {if isset($UPDATE_ERROR)}
+      <br />
+      {$UPDATE_ERROR}
+    {/if}
+
+    {if isset($FINISH_INFO)}
+      <br />
+      <div class="infomessage">
+        <p>{$FINISH_INFO}</p>
+        {if isset($NOTES)}
+          {foreach name=inner item=note from=$NOTES}
+            {$note}
+          {/foreach}
+        {/if}      
+      </div>
+    {/if}
+
+    {if isset($PROCESSING)}
+      <p id="info_text">{$smarty.const.TEXT_INFO_DO_UPDATE}</p>
+      <br />
+      <div class="processingmessage">
+        <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+        <div class="process_wrapper">
+          <div class="process_inner_wrapper">
+            <div id="backup_process"></div>
+          </div>
+        </div>
+        <div id="backup_precents">0%</div>
+        <div id="data_ok"></div>
+        {$JAVASCRIPT}
+      </div>
+    {/if}
+        
+    <div class="cssButtonRow">
+      {if isset($BUTTON_BACK)}<div class="cssButton cssColor_2">{$BUTTON_BACK}</div>{/if}
+      {if isset($FORM_ACTION)}
+        {if isset($BUTTON_SUBMIT)}<div class="cssButton cssColor_3">{/if}
+        {$FORM_ACTION}
+          {if isset($BUTTON_SUBMIT)}{$BUTTON_SUBMIT}{/if}
+        {$FORM_END}
+        {if isset($BUTTON_SUBMIT)}</div>{/if}
+      {/if}
+    </div>
+  {/if}
+{else}
+  {$FORM_ACTION}
+
+    {if $UPDATE_ACTION == 'configure'}
+      <p>{$smarty.const.TEXT_CONFIGURE_DESC}</p>
+      <br />
+      <br />
+      <h2>{$smarty.const.TEXT_CONFIGURE}</h2>
+
+    {elseif $UPDATE_ACTION == 'sql_update'}
+
+      {if isset($PROCESSING)}
+        <p id="info_text">{$smarty.const.TEXT_INFO_DO_UPDATE}</p>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="process_wrapper">
+            <div class="process_inner_wrapper">
+              <div id="backup_process"></div>
+            </div>
+          </div>
+          <div id="backup_precents">0%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+        <p>{$smarty.const.TEXT_SQL_UPDATE_DESC}</p>
+        <br />
+        <br />
+        <h2>{$smarty.const.TEXT_SQL_UPDATE_HEADING}</h2>
+        {if isset($sql_data_array) && count($sql_data_array) > 0}
+          <ul class="modulelist">
+            {foreach name=aussen item=sql_data from=$sql_data_array}
+              <li>
+                <span class="ml_row">
+                  <span class="ml_title">
+                    {$sql_data.CHECKBOX}
+                    <label for="{$sql_data.NAME}">{$sql_data.NAME}</label>
+                  </span>
+                </span>
+              </li>
+            {/foreach}
+          </ul>
+        {else}
+          <div class="successmessage">{$smarty.const.TEXT_SQL_NO_UPDATE_FILES}</div>
+        {/if}
+      {/if}
+
+    {elseif $UPDATE_ACTION == 'sql_manuell'}
+
+      <p>{$smarty.const.TEXT_SQL_MANUELL_DESC}</p>
+      <br />
+      <br />
+      <h2>{$smarty.const.TEXT_SQL_MANUELL_HEADING}</h2>
+      <div class="sql_textarea">{$SQL_MANUELL}</div>
+
+    {elseif $UPDATE_ACTION == 'db_update'}
+
+      {if isset($PROCESSING)}
+        <p id="info_text">{$smarty.const.TEXT_INFO_DO_UPDATE}</p>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="process_wrapper">
+            <div class="process_inner_wrapper">
+              <div id="backup_process"></div>
+            </div>
+          </div>
+          <div id="backup_precents">0%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+        <p>{$smarty.const.TEXT_DB_UPDATE_DESC}</p>
+      {/if}
+      
+    {elseif $UPDATE_ACTION == 'db_backup'}
+
+      {if isset($PROCESSING)}
+        <p id="info_text">{$smarty.const.TEXT_INFO_DO_BACKUP}</p>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="process_wrapper">
+            <div class="process_inner_wrapper">
+              <div id="backup_process"></div>
+            </div>
+          </div>
+          <div id="backup_precents">0%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+
+        <p>{$smarty.const.TEXT_DB_BACKUP_DESC}</p>
+        <br />
+        <br />
+        <h2>{$smarty.const.TEXT_DB_BACKUP}</h2>
+        <ul class="modulelist">
+          <li>
+            <span class="ml_column">
+              {$INPUT_COMPRESS_GZIP}
+              <label for="compress_gzip">{$smarty.const.TEXT_DB_COMPRESS_GZIP}</label>
+            </span>
+          </li>
+          <li>
+            <span class="ml_column">
+              {$INPUT_COMPRESS_RAW}
+              <label for="compress_raw">{$smarty.const.TEXT_DB_COMPRESS_RAW}</label>
+            </span>
+          </li>
+        </ul>
+
+        <br />
+        <h2>{$smarty.const.TEXT_DB_BACKUP_OPTIONS}</h2>
+        <ul class="modulelist">
+          <li>
+            <span class="ml_column">
+              {$INPUT_REMOVE_COLLATE}
+              <label for="remove_collate">{$smarty.const.TEXT_DB_REMOVE_COLLATE}</label>
+            </span>
+          </li>
+          <li>
+            <span class="ml_column">
+              {$INPUT_REMOVE_ENGINE}
+              <label for="remove_engine">{$smarty.const.TEXT_DB_REMOVE_ENGINE}</label>
+            </span>
+          </li>
+          <li>
+            <span class="ml_column">
+              {$INPUT_COMPLETE_INSERTS}
+              <label for="complete_inserts">{$smarty.const.TEXT_DB_COMPLETE_INSERTS}</label>
+            </span>
+          </li>
+          <li>
+            <span class="ml_column">
+              {$INPUT_SINGLE_FILES}
+              <label for="single_files">{$smarty.const.TEXT_DB_SINGLE_FILES}</label>
+            </span>
+          </li>
+          {if isset($INPUT_UFT8_CONVERT)}
+            <li>
+              <span class="ml_column">
+                {$INPUT_UFT8_CONVERT}
+                <label for="utf8-convert">{$smarty.const.TEXT_DB_UFT8_CONVERT}</label>
+              </span>
+            </li>
+          {/if}
+        </ul>
+
+        <br />
+        <h2>{$smarty.const.TEXT_DB_BACKUP_TABLES}</h2>
+        {$INPUT_BACKUP_TYPE}
+        <ul style="margin-top:10px; display:none;" class="modulelist" id="backup_tables">
+          {foreach name=inner item=backup_tables from=$BACKUP_TABLES_ARRAY}
+            <li>
+              <span class="ml_column">
+                {$backup_tables.CHECKBOX}
+                <label for="{$backup_tables.ID}">{$backup_tables.TABLE}</label>
+              </span>
+            </li>
+          {/foreach}
+        </ul>
+
+        <script>
+          $('input[name="backup_all_tables"]').click(function () {    
+            $('input[name*="backup_tables"]').prop('checked', this.checked);
+          });
+          $('#backup_type').on('change', function() {          
+            if ($(this).val() == 'custom') {
+              $('#backup_tables').show();
+            } else {
+              $('#backup_tables').hide();
+            }
+          });
+        </script>
+      {/if}
+    {elseif $UPDATE_ACTION == 'db_restore'}
+      {if isset($PROCESSING)}
+        <p id="info_text">{$smarty.const.TEXT_INFO_DO_RESTORE}</p>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="processing_bar"><img src="images/processing.gif" alt="" /></div>
+          <div class="process_wrapper" style="display:none;">
+            <div class="process_inner_wrapper">
+              <div id="backup_process" style="width:100%"></div>
+            </div>
+          </div>
+          <div id="backup_precents" style="display:none;">100%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+        <p>{$smarty.const.TEXT_DB_RESTORE_DESC}</p>
+        <br />
+        <br />
+        <h2>
+          <span class="ml_column head">
+            <span class="mlc_1">{$smarty.const.TEXT_DB_RESTORE}</span>
+            <span class="mlc_2">{$smarty.const.TEXT_DB_SIZE}</span>
+            <span class="mlc_3">{$smarty.const.TEXT_DB_DATE}</span>
+          </span>
+        </h2>
+        {if isset($sql_data_array)}
+          <ul class="modulelist">
+            {foreach name=aussen item=sql_data from=$sql_data_array}
+              <li>
+                <span class="ml_column">
+                  {$sql_data.CHECKBOX}
+                  <label for="{$sql_data.NAME}">
+                    <span class="mlc_1">{$sql_data.NAME}</span>
+                    <span class="mlc_2"><span class="mlc_mobile">{$smarty.const.TEXT_DB_SIZE}:</span>{$sql_data.SIZE}</span>
+                    <span class="mlc_3"><span class="mlc_mobile">{$smarty.const.TEXT_DB_DATE}:</span>{$sql_data.DATE}</span>
+                  </label>
+                </span>
+              </li>
+            {/foreach}
+          </ul>
+        {/if}
+      {/if}
+    {elseif $UPDATE_ACTION == 'db_convert'}
+      {if isset($PROCESSING)}
+        <p id="info_text">{$smarty.const.TEXT_INFO_DO_CONVERT}</p>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="processing_bar"><img src="images/processing.gif" alt="" /></div>
+          <div class="process_wrapper" style="display:none;">
+            <div class="process_inner_wrapper">
+              <div id="backup_process" style="width:100%"></div>
+            </div>
+          </div>
+          <div id="backup_precents" style="display:none;">100%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+        <p>{$smarty.const.TEXT_DB_CONVERT_DESC}</p>
+        <br />
+        <div class="field_row">
+          <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_DB_CHARSET}</div>{$INPUT_DB_CHARSET}</div>
+          <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_DB_ENGINE}</div>{$INPUT_DB_ENGINE}</div>
+        </div>
+        {$JAVASCRIPTDBCHECK}
+      {/if}
+    {/if}
+
+    <div class="cssButtonRow">
+      <div class="cssButton cssColor_2"><span id="button_back">{if isset($BUTTON_BACK)}{$BUTTON_BACK}{/if}</span></div>
+      {if isset($BUTTON_SUBMIT)}<div class="cssButton cssColor_3">{$BUTTON_SUBMIT}</div>{/if}
+    </div>
+
+
+  {$FORM_END}
+{/if}
