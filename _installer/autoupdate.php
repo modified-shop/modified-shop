@@ -101,6 +101,7 @@
 
   $smarty->assign('LINK_DB_BACKUP', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type));
   $smarty->assign('LINK_DB_RESTORE', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type));
+  $smarty->assign('LINK_DB_CONVERT', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_convert', $request_type));
   
   $smarty->assign('SITE', 'autoupdate');
   $smarty->assign('BUTTON_TEMPLATE_UPDATE', '<a target="_blank" href="https://www.modified-shop.org/wiki/Tutorial:_Template_eines_xt:Commerce_Shops_in_der_modified_eCommerce_Shopsoftware_weiter_verwenden">'.BUTTON_TEMPLATE_UPDATE.'</a>');
@@ -571,6 +572,116 @@
           $smarty->assign('JAVASCRIPT', $javascript);
           
           $smarty->assign('PROCESSING', 'db_backup');
+          $smarty->clear_assign('BUTTON_SUBMIT');
+          $smarty->clear_assign('BUTTON_BACK');
+        }
+        break;
+
+      case 'db_convert':
+      case 'convertdb':        
+        // form
+        $smarty->assign('FORM_ACTION', xtc_draw_form('db_convert', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_convert', $request_type), 'post', 'name="db_convert"').xtc_draw_hidden_field('action', 'convertnow').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+        $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
+        $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
+        $smarty->assign('FORM_END', '</form>');
+        
+        // database 
+        $default_query = xtc_db_query("SELECT @@character_set_database as dbcharset");
+        $default = xtc_db_fetch_array($default_query);
+
+        $db_engine_array = array(
+          array('id' => 'MyISAM', 'text' => 'MyISAM'),
+          array('id' => 'InnoDB', 'text' => 'InnoDB'),
+        );
+        
+        $db_charset = 'latin1';
+        $db_engine = 'MyISAM';
+        
+        $db_charset_array = array(
+          array('id' => 'latin1', 'text' => 'ISO-8859-15'),
+        );
+        $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = 'utf8mb4'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          array_unshift($db_charset_array, array('id' => 'utf8mb4', 'text' => 'UTF-8 MB4'));
+          if ($default['dbcharset'] == 'utf8mb4') {
+            $db_charset = 'utf8mb4';
+            $db_engine = 'InnoDB';
+          }
+        }
+        $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = 'utf8mb3'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          array_unshift($db_charset_array, array('id' => 'utf8mb3', 'text' => 'UTF-8 MB3'));
+          if ($default['dbcharset'] == 'utf8mb3') {
+            $db_charset = 'utf8mb3';
+          }
+        }
+        $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = 'utf8'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          array_unshift($db_charset_array, array('id' => 'utf8', 'text' => 'UTF-8'));
+          if ($default['dbcharset'] == 'utf8') {
+            $db_charset = 'utf8';
+          }
+        }
+        
+        $smarty->assign('INPUT_DB_CHARSET', xtc_draw_pull_down_menuNote(array ('name' => 'db_charset'), $db_charset_array, $db_charset));
+        $smarty->assign('INPUT_DB_ENGINE', xtc_draw_pull_down_menuNote(array ('name' => 'db_engine'), $db_engine_array, $db_engine));
+        
+        $javascriptdbcheck = '
+        <script type="text/javascript">
+          $(document).ready(function(){	
+            $("select[name=\"db_charset\"]").on("change", function(){
+              if ($(this).val() == "utf8mb4") {
+                $("select[name=\"db_engine\"]").val("InnoDB");
+              }
+            });
+            $("select[name=\"db_engine\"]").on("change", function(){
+              if ($(this).val() == "MyISAM"
+                  && $("select[name=\"db_charset\"]").val() == "utf8mb4"
+                  )
+              {
+                $("select[name=\"db_charset\"]").val($("select[name=\"db_charset\"] option:first").val());
+              }
+            });
+          });
+        </script>
+        ';
+        $smarty->assign('JAVASCRIPTDBCHECK', $javascriptdbcheck);
+
+        $smarty->assign('UPDATE_ACTION', 'db_convert');
+        if ((isset($_POST['action']) && $_POST['action'] == 'convertnow') 
+            || (isset($_GET['action']) && $_GET['action'] == 'convertdb')
+            )
+        {
+          define('_VALID_XTC', true);
+          $action = (isset($_GET['action']) ? $_GET['action'] : '');
+          if (isset($_POST['action']) && $_POST['action'] == 'convertnow') {
+            $action = 'convertnow';
+
+            $new_db_charset = $_POST['db_charset'];
+            $new_db_engine = $_POST['db_engine'];
+            include(DIR_FS_INSTALLER.'includes/update_configure.php');             
+          }
+
+          include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
+          include (DIR_FS_CATALOG.DIR_ADMIN.'includes/db_actions.php');
+          
+          $javascript = '
+          <script type="text/javascript">
+            var debug = true;
+            var button_back = \'<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>\';
+            var ajax_url = \''.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=convertdb', $request_type).'\';
+            var maxReloads = '.MAX_RELOADS.';
+          </script>
+          ';
+
+          ob_start();
+          $process = 'convert';
+          require(DIR_FS_INSTALLER.'templates/javascript/jquery.database.js.php');
+          $javascript .= ob_get_contents();
+          ob_end_clean();
+          $smarty->assign('JAVASCRIPT', $javascript);
+          
+          $smarty->assign('PROCESSING', 'db_convert');
           $smarty->clear_assign('BUTTON_SUBMIT');
           $smarty->clear_assign('BUTTON_BACK');
         }
