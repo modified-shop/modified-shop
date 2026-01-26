@@ -31,7 +31,7 @@ define('MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION', 'Es werden alle Bilder in d
 /images/manufacturers/ <br /> 
 /images/banner/ <br /> 
 <br /> neu erstellt.<br /> <br />
-Hierzu verarbeitet das Script nur eine begrenzte Anzahl von %s Bildern und ruft sich danach selbst wieder auf.<br /> <br />');
+Hierzu verarbeitet das Script nur eine begrenzte Anzahl von Bildern und ruft sich danach selbst wieder auf.<br /> <br />');
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Bilder Prozessing');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Modulstatus');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_TITLE','Status');

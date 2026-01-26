@@ -36,7 +36,7 @@
       
       $this->code = 'image_delete';
       $this->title = MODULE_IMAGE_DELETE_TEXT_TITLE;
-      $this->description = sprintf(MODULE_IMAGE_DELETE_TEXT_DESCRIPTION, 20);
+      $this->description = MODULE_IMAGE_DELETE_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_IMAGE_DELETE_SORT_ORDER') ? MODULE_IMAGE_DELETE_SORT_ORDER : '';
       $this->enabled = ((defined('MODULE_IMAGE_DELETE_STATUS') && MODULE_IMAGE_DELETE_STATUS == 'True') ? true : false);
       

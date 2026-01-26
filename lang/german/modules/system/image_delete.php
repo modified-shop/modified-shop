@@ -21,7 +21,7 @@
   /images/manufacturers/ <br /> 
   /images/banner/ <br /> 
   <br /> gel&ouml;scht.<br /> <br />
-  Hierzu verarbeitet das Script nur eine begrenzte Anzahl von %s Bildern und ruft sich danach selbst wieder auf.<br /> <br />');
+  Hierzu verarbeitet das Script nur eine begrenzte Anzahl von Bildern und ruft sich danach selbst wieder auf.<br /> <br />');
   
   define('MODULE_IMAGE_DELETE_STATUS_DESC','Modulstatus');
   define('MODULE_IMAGE_DELETE_STATUS_TITLE','Status');

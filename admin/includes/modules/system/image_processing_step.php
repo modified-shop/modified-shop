@@ -48,7 +48,7 @@
       
       $this->code = 'image_processing_step';
       $this->title = MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE;
-      $this->description = sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION, 5);
+      $this->description = MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_STEP_IMAGE_PROCESS_SORT_ORDER') ? MODULE_STEP_IMAGE_PROCESS_SORT_ORDER : '';
       $this->enabled = ((defined('MODULE_STEP_IMAGE_PROCESS_STATUS') && MODULE_STEP_IMAGE_PROCESS_STATUS == 'True') ? true : false);
       
