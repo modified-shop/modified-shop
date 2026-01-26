@@ -14,7 +14,6 @@
   
   // include needed function
   require_once(DIR_FS_INC.'xtc_href_link_from_admin.inc.php');
-  require_once(DIR_FS_INC.'xtc_php_mail.inc.php');
   
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_NEWSLETTER_RECIPIENTS_RESULTS';
