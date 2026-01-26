@@ -56,7 +56,7 @@ if (xtc_count_customer_orders() > 0) {
                       
   $history_split = new splitPageResults($history_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_ORDER_HISTORY);
   
-  if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
+  if (!defined('TEMPLATE_PAGINATION') || TEMPLATE_PAGINATION != 'true') {
     $pagination = '<div class="smallText" style="clear:both;">
                      <div style="float:left;">'.$history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS).'</div>
                      <div align="right">'.TEXT_RESULT_PAGE.' '.$history_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
