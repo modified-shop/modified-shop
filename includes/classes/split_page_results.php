@@ -160,7 +160,7 @@
         $display_links_string .= '&nbsp;'.$display_links_array['next'].'&nbsp;';
       }
       
-      if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
+      if (defined('TEMPLATE_PAGINATION') && TEMPLATE_PAGINATION == 'true') {
         return $display_links_array;
       }
       return $display_links_string;
@@ -182,4 +182,3 @@
       return sprintf($text_output, $from_num, $to_num, $this->number_of_rows);
     }
   }
-?>

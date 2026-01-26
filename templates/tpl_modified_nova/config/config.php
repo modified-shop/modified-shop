@@ -34,6 +34,7 @@
   define('TEMPLATE_ENGINE', 'smarty_4'); 
   define('TEMPLATE_HTML_ENGINE', 'html5');
   define('TEMPLATE_RESPONSIVE', 'true');
+  define('TEMPLATE_PAGINATION', 'true');
   defined('COMPRESS_JAVASCRIPT') or define('COMPRESS_JAVASCRIPT', true);
 
   // categories

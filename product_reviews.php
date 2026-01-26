@@ -72,7 +72,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $module_data = array ();
   if ($reviews_split->number_of_rows > 0) {
 
-    if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
+    if (!defined('TEMPLATE_PAGINATION') || TEMPLATE_PAGINATION != 'true') {
       $pagination = '<div style="width:100%;font-size:smaller">
                        <div style="float:left">'.$reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS).'</div>
                        <div style="float:right">'.TEXT_RESULT_PAGE.' '.$reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>

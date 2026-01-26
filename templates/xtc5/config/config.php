@@ -34,6 +34,7 @@
   define('TEMPLATE_ENGINE', 'smarty_4'); // smarty_4 or smarty_3 or smarty_2
   define('TEMPLATE_HTML_ENGINE', 'xhtml'); // html5 or xhtml
   define('TEMPLATE_RESPONSIVE', 'false'); // 'true' oder 'false' -> Nicht ändern!
+  define('TEMPLATE_PAGINATION', 'true'); // 'true' oder 'false' -> Nicht ändern!
   defined('COMPRESS_JAVASCRIPT') or define('COMPRESS_JAVASCRIPT', true); // 'true' kombiniert & komprimiert die zusätzliche JS-Dateien / 'false' bindet alle JS-Dateien einzeln ein
   
   
