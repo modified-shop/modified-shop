@@ -221,6 +221,16 @@
       xtc_set_time_limit(0);
 
       $rData = array();    
+      if ((!isset($_POST['process_type']) || !isset($_POST[$_POST['process_type']])) && $_POST['start'] == 0) {
+        $rData['valid_files'] = array();
+        $rData['remove_files'] = array();
+        $rData['start'] = 0;
+        $rData['total'] = 0;
+        $rData['count'] = 0;
+
+        return $rData;
+      }
+      
       $rData['valid_files'] = isset($_POST['valid_files']) ? json_decode(base64_decode($_POST['valid_files']), true) : $this->get_all_valid_images($_POST['process_type']);
       $rData['remove_files'] = isset($_POST['remove_files']) ? json_decode(base64_decode($_POST['remove_files']), true) : array();
             

@@ -53,7 +53,7 @@
       $this->enabled = ((defined('MODULE_STEP_IMAGE_PROCESS_STATUS') && MODULE_STEP_IMAGE_PROCESS_STATUS == 'True') ? true : false);
       
       $this->module_filename = $current_page;
-      $this->logfile = DIR_FS_CATALOG.'log/mod_image_processing_*.log';
+      $this->logfile = DIR_FS_CATALOG.'log/mod_image_processing_'.date('Y-m-d').'.log';
       $this->properties = array();
       $this->files = array();
       $this->get_params = array();
@@ -120,13 +120,7 @@
       $step = (int)$_POST['max_datasets'];
       $count = isset($_POST['count']) ? (int)$_POST['count'] : 0;
       $limit = $offset + $step;
- 
-      $rData = array();
-      
-      $rData['file_time'] = isset($_POST['file_time']) ? $_POST['file_time'] : date("Y-m-d-His");
-      
-      $this->logfile = str_replace('*',$rData['file_time'],$this->logfile);
-      
+       
       // set memory limit
       $memory_limit = $this->getMemoryLimitBytes();
       if ($memory_limit > 0
@@ -138,6 +132,15 @@
       
       // set timeout
       xtc_set_time_limit(0);
+
+      $rData = array();
+      if ((!isset($_POST['process_type']) || (!isset($_POST[$_POST['process_type']]) && !isset($_POST[$_POST['process_type'].'_image']))) && $_POST['start'] == 0) {
+        $rData['start'] = 0;
+        $rData['total'] = 0;
+        $rData['count'] = 0;
+
+        return $rData;
+      }      
 
       switch ($_POST['process_type']) {
         case 'products':
