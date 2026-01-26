@@ -31,7 +31,7 @@ define('MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION', 'All Images in these direct
 /images/manufacturers/ <br /> 
 /images/banner/ <br /> 
 <br /> are getting processed.<br /> <br />
-For this purpose, the script uses only a limited number of images and calls himself afterwards again.<br /> <br />');
+For this purpose, the script uses only a limited number of images and calls itself afterwards again.<br /> <br />');
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing - product images');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Module status');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_TITLE','Status');

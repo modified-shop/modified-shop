@@ -21,7 +21,7 @@
   /images/manufacturers/ <br /> 
   /images/banner/ <br /> 
   <br /> getting deleted.<br /> <br />
-  For this purpose, the script uses only a limited number of images and calls himself afterwards again.<br /> <br />');
+  For this purpose, the script uses only a limited number of images and calls itself afterwards again.<br /> <br />');
   
   define('MODULE_IMAGE_DELETE_STATUS_DESC','Module status');
   define('MODULE_IMAGE_DELETE_STATUS_TITLE','Status');
