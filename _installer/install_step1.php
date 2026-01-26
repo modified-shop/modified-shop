@@ -66,6 +66,27 @@
     DIR_FS_INSTALLER.'includes/sql/banktransfer_blz.sql',
   );
 
+  if (!isset($_SESSION['invalid_charset'])) $_SESSION['invalid_charset'] = array();
+
+  $charcol_data_array = array(
+    'utf8' => array(
+      'utf8_german2_ci',
+      'utf8_general_ci',
+    ),
+    'utf8mb3' => array(
+      'utf8mb3_german2_ci',
+      'utf8mb3_general_ci',
+    ),
+    'utf8mb4' => array(
+      'utf8mb4_german2_ci',
+      'utf8mb4_general_ci',
+    ), 
+    'latin1' => array(
+      'latin1_german2_ci',
+      'latin1_general_ci',
+    ),
+  );
+
   if (isset($_POST['action']) && $_POST['action'] == 'process') {
     $valid_params = array(
       'db_server',
@@ -124,19 +145,29 @@
           $error = true;
         }
       }
+
+      $error_charset = false;
+      $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = '".xtc_db_input($db_charset)."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        $_SESSION['invalid_charset'][] = $db_charset;
+        $messageStack->add('install_step1', ERROR_DATABASE_COLLATION_NOT_AVAILABLE);
+        $error = true;
+        $error_charset = true;
+      }
+            
+      if (($error === false || isset($db_install) || isset($write_configure)) && $error_charset === false) {
+        if ($error === false || isset($db_install)) {        
+          foreach ($charcol_data_array[$db_charset] as $db_collation) {
+            $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = '".xtc_db_input($db_charset)."' AND COLLATION = '".xtc_db_input($db_collation)."'");
+            if (xtc_db_num_rows($check_query) > 0) {
+              $collation = $db_collation;
+              break;
+            }
+          }
           
-      if ($error === false || isset($db_install) || isset($write_configure)) {
-        if ($error === false || isset($db_install)) {     
-          $collation = 'latin1_german1_ci';
-          if ($db_charset == 'utf8') {
-            $collation = 'utf8_german2_ci';
-          }
-          if ($db_charset == 'utf8mb4') {
-            $collation = 'utf8mb4_german2_ci';
-          }
           xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
           xtc_db_query('SET NAMES '.$db_charset.' COLLATE '.$collation);
-      
+          
           $engine = '';
           $engine = $db_engine;
           xtc_db_query("CREATE TABLE IF NOT EXISTS `engine` (`type` VARCHAR( 16 ) NOT NULL)");
@@ -180,7 +211,7 @@
         }
       }
     
-      if ($error === false || isset($db_install)) {
+      if (($error === false || isset($db_install)) && $error_charset === false) {
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', 'action=restorenow&sql=0', $request_type));
       }
     } else {
@@ -313,11 +344,11 @@
   }
 
   // database 
-  $db_charset_array = array(
-    array('id' => 'utf8', 'text' => 'UTF-8'),
-    array('id' => 'utf8mb4', 'text' => 'UTF-8 MB4'),
-    array('id' => 'latin1', 'text' => 'ISO-8859-15'),
-  );
+  $db_charset_array = array();
+  foreach ($charcol_data_array as $charset => $data) {
+    if (!in_array($charset, $_SESSION['invalid_charset'])) $db_charset_array[] = array('id' => $charset, 'text' => strtoupper($charset));
+  }
+
   $db_engine_array = array(
     array('id' => 'MyISAM', 'text' => 'MyISAM'),
     array('id' => 'InnoDB', 'text' => 'InnoDB'),
@@ -375,7 +406,12 @@
             && $("select[name=\"db_charset\"]").val() == "utf8mb4"
             )
         {
-          $("select[name=\"db_charset\"]").val($("select[name=\"db_charset\"] option:first").val());
+          $("select[name=\"db_charset\"] option").each(function(i){
+            if ($(this).val() != "utf8mb4") {
+              $("select[name=\"db_charset\"]").val($(this).val());
+              return false;
+            }
+          });
         }
       });
     });

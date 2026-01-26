@@ -639,7 +639,12 @@
                   && $("select[name=\"db_charset\"]").val() == "utf8mb4"
                   )
               {
-                $("select[name=\"db_charset\"]").val($("select[name=\"db_charset\"] option:first").val());
+                $("select[name=\"db_charset\"] option").each(function(i){
+                  if ($(this).val() != "utf8mb4") {
+                    $("select[name=\"db_charset\"]").val($(this).val());
+                    return false;
+                  }
+                });
               }
             });
           });

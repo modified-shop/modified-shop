@@ -219,7 +219,8 @@
   
   // errors
   define('ERROR_DATABASE_CONNECTION', 'Bitte DB Daten pr&uuml;fen');
-  define('ERROR_DATABASE_NOT_EMPTY', '<b>ACHTUNG:</b>: Die angegebene Datenbank enth&auml;lt bereits Tabellen!');
+  define('ERROR_DATABASE_NOT_EMPTY', '<b>ACHTUNG:</b> Die angegebene Datenbank enth&auml;lt bereits Tabellen!');
+  define('ERROR_DATABASE_COLLATION_NOT_AVAILABLE', 'Die angegebene Datenbank Zeichensatz ist nicht verf&uuml;gbar!');
   define('ERROR_MODULES_PAYMENT', 'Leider konnten wir diese Zahlart nicht finden...');
   define('ERROR_SQL_UPDATE_NO_FILE', 'Leider konnten wir keine SQL-Update-Datei finden...');
   define('ERROR_FTP_LOGIN_NOT_POSSIBLE', 'FTP-Zugangsdaten fehlerhaft, Host nicht erreichbar');
