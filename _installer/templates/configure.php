@@ -22,8 +22,8 @@ $file_contents =
 '  // * DIR_WS_* = Webserver directories (virtual/URL)' . PHP_EOL .
 '' . PHP_EOL .
 '  // global defines' . PHP_EOL .
-'  defined(\'DIR_FS_DOCUMENT_ROOT\') OR define(\'DIR_FS_DOCUMENT_ROOT\', \'' . DIR_FS_DOCUMENT_ROOT . '\'); // absolut path' . PHP_EOL .
-'  defined(\'DIR_FS_CATALOG\') OR define(\'DIR_FS_CATALOG\', DIR_FS_DOCUMENT_ROOT); // absolut path' . PHP_EOL .
+'  defined(\'DIR_FS_DOCUMENT_ROOT\') OR define(\'DIR_FS_DOCUMENT_ROOT\', \'' . DIR_FS_DOCUMENT_ROOT . '\'); // absolute path' . PHP_EOL .
+'  defined(\'DIR_FS_CATALOG\') OR define(\'DIR_FS_CATALOG\', DIR_FS_DOCUMENT_ROOT); // absolute path' . PHP_EOL .
 '  defined(\'DIR_WS_CATALOG\') OR define(\'DIR_WS_CATALOG\', \'' . DIR_WS_CATALOG . '\'); // relative path' . PHP_EOL .
 '' . PHP_EOL .
 '  if (is_file(DIR_FS_CATALOG.\'inc/auto_include.inc.php\')' . PHP_EOL . 
