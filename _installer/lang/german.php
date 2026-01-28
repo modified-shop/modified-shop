@@ -229,7 +229,7 @@
   define('ERROR_FILE_INTEGRITY', 'Es wurden %s Dateien im Vergleich zur orginalen Installation ver&auml;ndert (z.B. durch Modulupdates oder Bugfixes). Sie k&ouml;nnen diese Dateien als Backup herunterladen und das Update fortf&uuml;hren.<br><br><b>ACHTUNG:</b> Beim Update werden ALLE ge&auml;nderten Dateien &uuml;berschrieben!');
   define('ERROR_CREATE_TMP_DIR', 'Das tempor&auml;re Verzeichnis f&uuml;r das Update konnte nicht erstellt werden');
   define('ERROR_INVALID_UPDATE_DOWNLOAD', 'Das Update Paket konnte nicht heruntergeladen werden');
-  define('ERROR_WRITE_CONFIGURE', 'Die configure.php konnte nicht geschreiben werden.');
+  define('ERROR_WRITE_CONFIGURE', 'Die configure.php konnte nicht geschrieben werden.');
 
   // warning
   define('WARNING_INVALID_DOMAIN', 'Ihre Shop Domain konnte nicht validiert werden (M&ouml;gliche Ursachen: Fehler beim Format der Domain oder internationalisierte Domainnamen (internationalized domain name, IDN) - Umlautdomain)');
