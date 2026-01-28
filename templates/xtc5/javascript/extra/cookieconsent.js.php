@@ -108,7 +108,7 @@ function cc_popup_content(trgt) {
   // Register event handler
   eventer(messageEvent, receiveMessage, false);
   
-  $(document).on('click', '[trigger-cookie-consent-panel]',  function () {
+  $(document).on('click', '[data-trigger-cookie-consent-panel]',  function () {
 	
 		window.AS_OIL.showPreferenceCenter();
 
