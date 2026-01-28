@@ -106,7 +106,7 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_
     // Register event handler
     eventer(messageEvent, receiveMessage, false);
   
-    $(document).on('click', '[trigger-cookie-consent-panel]',  function () {
+    $(document).on('click', '[data-trigger-cookie-consent-panel]',  function () {
   
       window.AS_OIL.showPreferenceCenter();
 
