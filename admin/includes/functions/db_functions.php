@@ -670,10 +670,6 @@ function GetCharsetCollation() {
         'utf8mb4_german2_ci',
         'utf8mb4_general_ci',
       ), 
-      'utf8mb3' => array(
-        'utf8mb3_german2_ci',
-        'utf8mb3_general_ci',
-      ),
       'utf8' => array(
         'utf8_german2_ci',
       ),

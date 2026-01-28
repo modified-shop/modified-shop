@@ -608,13 +608,6 @@
             $db_engine = 'InnoDB';
           }
         }
-        $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = 'utf8mb3'");
-        if (xtc_db_num_rows($check_query) > 0) {
-          array_unshift($db_charset_array, array('id' => 'utf8mb3', 'text' => 'UTF-8 MB3'));
-          if ($default['dbcharset'] == 'utf8mb3') {
-            $db_charset = 'utf8mb3';
-          }
-        }
         $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = 'utf8'");
         if (xtc_db_num_rows($check_query) > 0) {
           array_unshift($db_charset_array, array('id' => 'utf8', 'text' => 'UTF-8'));

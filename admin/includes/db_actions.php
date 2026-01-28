@@ -497,9 +497,6 @@
       if ($convert['db_charset'] == 'utf8') {
         $convert['db_collation'] = 'utf8_german2_ci';
       }
-      if ($convert['db_charset'] == 'utf8mb3') {
-        $convert['db_collation'] = 'utf8mb3_german2_ci';
-      }
       if ($convert['db_charset'] == 'utf8mb4') {
         $convert['db_collation'] = 'utf8mb4_german2_ci';
       }
