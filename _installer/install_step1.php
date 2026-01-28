@@ -209,21 +209,14 @@
           }
 
           //create  includes/configure.php
-          $timestamp = time();
           include (DIR_FS_INSTALLER.'templates/configure.php');
           if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {
-            $configfile = DIR_FS_CATALOG . 'includes/local/configure.php';
+            $fp = fopen(DIR_FS_CATALOG . 'includes/local/configure.php', 'w');
           } else {
-            $configfile = DIR_FS_CATALOG . 'includes/configure.php';
+            $fp = fopen(DIR_FS_CATALOG . 'includes/configure.php', 'w');
           }
-          $fp = fopen($configfile, 'w');
           fputs($fp, $file_contents);
           fclose($fp);
-          
-          // wait for configure
-          do {
-            sleep(0.1);
-          } while ($timestamp > filemtime($configfile));
         }
           
         if (isset($write_configure) && $error === true) {
