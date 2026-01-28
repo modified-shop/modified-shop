@@ -73,10 +73,6 @@
       'utf8_german2_ci',
       'utf8_general_ci',
     ),
-    'utf8mb3' => array(
-      'utf8mb3_german2_ci',
-      'utf8mb3_general_ci',
-    ),
     'utf8mb4' => array(
       'utf8mb4_german2_ci',
       'utf8mb4_general_ci',
@@ -151,10 +147,14 @@
       if (xtc_db_num_rows($check_query) < 1) {
         $_SESSION['invalid_charset'][] = $db_charset;
         $messageStack->add('install_step1', ERROR_DATABASE_COLLATION_NOT_AVAILABLE);
-        $error = true;
         $error_charset = true;
       }
-            
+
+      if ($db_charset == 'utf8mb4' && $db_engine != 'InnoDB') {
+        $messageStack->add('install_step1', ERROR_DATABASE_ENGINE_NOT_VALID);
+        $error_charset = true;
+      }
+      
       if (($error === false || isset($db_install) || isset($write_configure)) && $error_charset === false) {
         if ($error === false || isset($db_install)) {        
           foreach ($charcol_data_array[$db_charset] as $db_collation) {
@@ -419,8 +419,10 @@
   ';
   $smarty->assign('JAVASCRIPTCHECK', $javascriptcheck);
   
-  // checks  
-  require_once('includes/checks.php');
+  // checks
+  if (!isset($error_charset) || $error_charset === false) {
+    require_once('includes/checks.php');
+  }
 
   // form
   $smarty->assign('FORM_ACTION', xtc_draw_form('db_connection', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type), 'post').xtc_draw_hidden_field('db_type', 'mysqli').xtc_draw_hidden_field('action', 'process').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
