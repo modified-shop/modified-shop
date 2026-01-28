@@ -10,8 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('TEXT_PRODUCTS_TARIFF_HEADING', 'Customs:');
+  define('TEXT_PRODUCTS_TARIFF_HEADING', 'Customs data:');
   define('TEXT_PRODUCTS_ORIGIN', 'Country of Origin:');
   define('TEXT_PRODUCTS_TARIFF', 'Tariff Code:');
   define('TEXT_PRODUCTS_TARIFF_TITLE', 'Tariff Description:');
-  define('BUTTON_PRODUCTS_TARIFF', 'Tariff Code');
+  define('BUTTON_PRODUCTS_TARIFF', 'Customs data');
