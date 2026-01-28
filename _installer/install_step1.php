@@ -29,6 +29,19 @@
     }
   }
   defined('CURRENT_TEMPLATE') OR define('CURRENT_TEMPLATE', DEFAULT_TEMPLATE);
+
+  if (isset($_GET['action']) && $_GET['action'] == 'restorenow') {
+    if (isset($_GET['reload']) && $_GET['reload'] > 5) {
+      $messageStack->add_session('install_step1', ERROR_WRITE_CONFIGURE);
+      xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', '', $request_type));
+    }
+    
+    if (DB_SERVER_USERNAME == '') {
+      sleep(1);
+      $reload = ((isset($_GET['reload'])) ? (int)$_GET['reload'] : 0) + 1;
+      xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', xtc_get_all_get_params(array('reload')).'reload='.$reload, $request_type));
+    }
+  }
   
   // language
   require_once(DIR_FS_INSTALLER.'lang/'.$_SESSION['language'].'.php');
@@ -196,14 +209,21 @@
           }
 
           //create  includes/configure.php
+          $timestamp = time();
           include (DIR_FS_INSTALLER.'templates/configure.php');
           if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {
-            $fp = fopen(DIR_FS_CATALOG . 'includes/local/configure.php', 'w');
+            $configfile = DIR_FS_CATALOG . 'includes/local/configure.php';
           } else {
-            $fp = fopen(DIR_FS_CATALOG . 'includes/configure.php', 'w');
+            $configfile = DIR_FS_CATALOG . 'includes/configure.php';
           }
+          $fp = fopen($configfile, 'w');
           fputs($fp, $file_contents);
           fclose($fp);
+          
+          // wait for configure
+          do {
+            sleep(0.1);
+          } while ($timestamp > filemtime($configfile));
         }
           
         if (isset($write_configure) && $error === true) {
@@ -420,7 +440,10 @@
   $smarty->assign('JAVASCRIPTCHECK', $javascriptcheck);
   
   // checks
-  if (!isset($error_charset) || $error_charset === false) {
+  if ((!isset($error_charset) || $error_charset === false)
+      && !isset($_GET['action'])
+      )
+  {
     require_once('includes/checks.php');
   }
 

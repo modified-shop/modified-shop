@@ -228,6 +228,7 @@
   define('ERROR_FILE_INTEGRITY', '%s Files have been changed compared to the original installation (e.g. module updates or bugfixes). You can download these files as a backup and continue the update.<br><br><b>ATTENTION:</b> During the update ALL changed files will be overwritten!');
   define('ERROR_CREATE_TMP_DIR', 'Could not create tmp directory');
   define('ERROR_INVALID_UPDATE_DOWNLOAD', 'Update package could not be downloaded');
+  define('ERROR_WRITE_CONFIGURE', 'The configure.php file could not be written.');
 
   // warning
   define('WARNING_INVALID_DOMAIN', 'Your shop domain could not be validated (Possible reasons: Invalid format or internationalized domain name (IDN)');
