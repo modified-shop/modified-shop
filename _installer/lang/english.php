@@ -217,9 +217,10 @@
   define('ERROR_AUTOUPDATE', 'An autoupdate is not possible due to the necessary requirements.');
   
   // errors
-  define('ERROR_DATABASE_CONNECTION', 'Please check DB data');
+  define('ERROR_DATABASE_CONNECTION', 'Please check the Information about the database.');
   define('ERROR_DATABASE_NOT_EMPTY', '<b>ATTENTION:</b> Your database already contains tables!');
   define('ERROR_DATABASE_COLLATION_NOT_AVAILABLE', 'The database character set is not available!');
+  define('ERROR_DATABASE_ENGINE_NOT_VALID', 'The specified database engine is not compatible with the character set!');
   define('ERROR_MODULES_PAYMENT', 'Unfortunately we could not find this type of payment...');
   define('ERROR_SQL_UPDATE_NO_FILE', 'Unfortunately we could not find any SQL update file...');
   define('ERROR_FTP_LOGIN_NOT_POSSIBLE', 'FTP access data incorrect, host not available');
