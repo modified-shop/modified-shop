@@ -38,6 +38,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
     require (DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php');
   }
   $mailsmarty= new Smarty();
+  $mailsmarty->caching = 0;
   $mailsmarty->compile_dir = DIR_FS_CATALOG.'templates_c';
   
   //set language parameters
