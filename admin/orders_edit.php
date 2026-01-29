@@ -190,6 +190,7 @@
                 <div class="main important_info">
                   <?php echo TEXT_ORDERS_EDIT_INFO;?>
                 </div>
+                <br /><br />
                 <?php
               } else {
                 if ($_GET['edit_action'] == 'address') {                  
