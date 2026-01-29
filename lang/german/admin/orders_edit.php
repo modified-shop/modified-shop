@@ -19,7 +19,7 @@
 // Allgemeine Texte
 define('TABLE_HEADING', 'Bestelldaten bearbeiten');
 define('TABLE_HEADING_ORDER', 'Bestellung Nr:&nbsp;');
-define('TEXT_SAVE_ORDER', 'Bestellung abschlie&szlig;en und neu berechnen.&nbsp;');
+define('TEXT_SAVE_ORDER', 'Bestellung abschlie&szlig;en und neu berechnen.');
 
 define('TEXT_EDIT_ADDRESS', 'Adress- und Kundendaten');
 define('TEXT_EDIT_PRODUCTS', 'Artikel, Artikeloptionen und Preise');
@@ -118,3 +118,4 @@ define('TEXT_PRODUCTS_TAX_RATE', 'Steuersatz:');
 define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Erscheinungsdatum:');
 
 define('ERROR_STATUS_CHANGE', 'ACHTUNG: Nach &Auml;nderung der Kundengruppe m&uuml;ssen eventuell Versandkosten, Zuschl&auml;ge und Rabatte manuell angepasst werden.');
+define('TEXT_SUCCESS_ORDER_RECALCULATE', 'Die Bestellung wurde neu berechnet.');

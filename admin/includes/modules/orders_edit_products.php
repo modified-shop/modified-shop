@@ -130,11 +130,11 @@
       </form>
     </tr>
   </table>
-  <br /><br />
   
   <?php
   if (isset($_GET['action']) && $_GET['action'] =='product_search') {  
     ?>
+    <br /><br />
     <table class="tableBoxCenter collapse">
       <tr class="dataTableHeadingRow">
         <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td> 
