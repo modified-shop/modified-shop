@@ -19,7 +19,7 @@
 // Allgemeine Texte
 define('TABLE_HEADING', 'Edit Order');
 define('TABLE_HEADING_ORDER', 'Order #:&nbsp;');
-define('TEXT_SAVE_ORDER', 'Complete and recalculate order.&nbsp;');
+define('TEXT_SAVE_ORDER', 'Complete and recalculate order.');
 
 define('TEXT_EDIT_ADDRESS', 'Address and customer details');
 define('TEXT_EDIT_PRODUCTS', 'Products, products options and prices');
@@ -118,3 +118,4 @@ define('TEXT_PRODUCTS_TAX_RATE', 'Tax:');
 define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date available:');
 
 define('ERROR_STATUS_CHANGE', 'ATTENTION: After changing the customer group, shipping costs, surcharges and discounts may need to be adjusted manually.');
+define('TEXT_SUCCESS_ORDER_RECALCULATE', 'The order has been recalculated.');

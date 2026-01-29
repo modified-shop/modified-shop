@@ -147,7 +147,10 @@
       break;
 
     case 'save_order':
-      orders_save_order($_POST['oID'], $_POST);
+      if (isset($_POST['recalculate']) && $_POST['recalculate'] == 'on') {
+        orders_save_order($_POST['oID'], $_POST);
+        $messageStack->add_session(TEXT_SUCCESS_ORDER_RECALCULATE, 'success');
+      }
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'action=edit&oID='.(int)$_POST['oID']));
       break;
   }
@@ -204,9 +207,10 @@
               ?>
               <div class="clear smallText pdg2 flt-r mrg5">
               <?php
-                echo TEXT_SAVE_ORDER;
                 echo xtc_draw_form('save_order', FILENAME_ORDERS_EDIT, 'action=save_order', 'post');
                   echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
+                  echo '<p>' . xtc_draw_checkbox_field('recalculate', false) . ' <span>' . TEXT_SAVE_ORDER . '</span></p>';
+                  echo '<div class="flt-r">';
                   echo '<input type="submit" class="button" onclick="this.blur();" value="'.BUTTON_SAVE.'"/>';
                   if (isset($_GET['edit_action'])) {
                     if (in_array($_GET['edit_action'], array('options', 'custom'))) {
@@ -217,6 +221,7 @@
                   } else {
                     echo '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS, 'action=edit&oID='.(int)$_GET['oID']).'">'.BUTTON_BACK.'</a>';
                   }
+                  echo '</div>';
                   ?>
                 </form>                    
               </div>
