@@ -1,0 +1,32 @@
+name: Bug Report
+description: Melde einen Fehler im modified-shop System
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke für deinen Bugreport.
+        Beschreibe den Fehler bitte so gut du kannst.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Fehlerbeschreibung
+      description: Was funktioniert nicht? Was passiert stattdessen?
+      placeholder: |
+        Beschreibe kurz das Problem.
+
+        Optional kannst du auch schreiben:
+        - Wie man den Fehler auslöst
+        - Was du erwartet hast
+        - Fehlermeldungen oder Screenshots
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Weitere Informationen (optional)
+      description: Links, Screenshots, Logs oder zusätzliche Hinweise
+      required: false
