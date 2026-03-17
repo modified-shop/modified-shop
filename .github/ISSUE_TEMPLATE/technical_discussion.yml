@@ -1,0 +1,21 @@
+name: Technical Discussion
+description: Diskutiere technische Themen rund um modified-shop
+labels: ["discussion"]
+
+body:
+  - type: textarea
+    id: topic
+    attributes:
+      label: Thema / Beschreibung
+      description: Worum geht es in der Diskussion?
+      placeholder: |
+        Beschreibe das Thema oder die Fragestellung.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Weitere Informationen (optional)
+      description: Links, Beispiele oder Hintergrund
+      required: false

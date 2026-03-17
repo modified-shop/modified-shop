@@ -1,0 +1,21 @@
+name: Feature Request
+description: Schlage eine neue Funktion oder Verbesserung vor
+labels: ["enhancement"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Beschreibung
+      description: Welche Funktion oder Verbesserung wünschst du dir?
+      placeholder: |
+        Beschreibe kurz deine Idee oder den Use-Case.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Weitere Informationen (optional)
+      description: Beispiele, Links oder Hintergrund
+      required: false
