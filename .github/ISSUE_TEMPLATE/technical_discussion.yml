@@ -18,4 +18,3 @@ body:
     attributes:
       label: Weitere Informationen (optional)
       description: Links, Beispiele oder Hintergrund
-      required: false
