@@ -29,4 +29,3 @@ body:
     attributes:
       label: Weitere Informationen (optional)
       description: Links, Screenshots, Logs oder zusätzliche Hinweise
-      required: false
