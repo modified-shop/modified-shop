@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: modified-shop Support-Forum
+    url: https://www.modified-shop.org/forum
+    about: Für allgemeine Fragen und Support bitte zuerst hier nachsehen oder nachfragen.
+  - name: Dokumentation
+    url: https://www.modified-shop.org/wiki
+    about: Offizielle Dokumentation zum modified-shop System
