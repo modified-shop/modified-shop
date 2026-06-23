@@ -1,12 +1,12 @@
-name: Funktionswunsch
-description: Schlage eine neue Funktion oder Verbesserung vor
+name: Feature Request
+description: Suggest a new feature or improvement
 
 body:
   - type: markdown
     attributes:
       value: |
-        Danke für deinen Funktionswunsch.
-        Beschreibe den Funktionswunsch bitte so gut du kannst.
+        Thank you for your feature request.
+        Please describe the feature request as best you can.
 
   - type: dropdown
     id: issue_type
@@ -21,7 +21,7 @@ body:
     id: affected_version
     attributes:
       label: Affected version
-      description: Welche modified-shop Version ist betroffen?
+      description: Which version of modified-shop is affected?
       options:
         - "1.06"
         - "2.0.0.0"
@@ -60,7 +60,7 @@ body:
     id: priority
     attributes:
       label: Priority
-      description: Wie wichtig ist das Thema?
+      description: How important is this issue?
       options:
         - low
         - medium
@@ -72,7 +72,7 @@ body:
     id: component
     attributes:
       label: Component
-      description: Welcher Bereich ist betroffen?
+      description: Which component is affected?
       options:
         - Admin
         - Installer
@@ -86,15 +86,15 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Beschreibung
-      description: Welche Funktion oder Verbesserung wünschst du dir?
+      label: Festure Description
+      description: What feature or improvement would you like to see?
       placeholder: |
-        Beschreibe kurz deine Idee oder den Use-Case.
+        Briefly describe your idea or use case.
     validations:
       required: true
 
   - type: textarea
     id: additional
     attributes:
-      label: Weitere Informationen (optional)
-      description: Beispiele, Links oder Hintergrund
+      label: Additional information (optional)
+      description: Links, Examples, or Background Information

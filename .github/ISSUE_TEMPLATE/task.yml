@@ -1,12 +1,12 @@
-name: Aufgabe
-description: Erstelle eine neue Aufgabe
+name: Task
+description: Create a new task
 
 body:
   - type: markdown
     attributes:
       value: |
-        Danke für deine Aufgabe.
-        Beschreibe die Aufgabe bitte so gut du kannst.
+        Thank you for your task.
+        Please describe the task as best you can.
 
   - type: dropdown
     id: issue_type
@@ -21,7 +21,7 @@ body:
     id: affected_version
     attributes:
       label: Affected version
-      description: Welche modified-shop Version ist betroffen?
+      description: Which version of modified-shop is affected?
       options:
         - "1.06"
         - "2.0.0.0"
@@ -60,7 +60,7 @@ body:
     id: priority
     attributes:
       label: Priority
-      description: Wie wichtig ist das Thema?
+      description: How important is this issue?
       options:
         - low
         - medium
@@ -72,7 +72,7 @@ body:
     id: component
     attributes:
       label: Component
-      description: Welcher Bereich ist betroffen?
+      description: Which component is affected?
       options:
         - Admin
         - Installer
@@ -86,15 +86,15 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Beschreibung
-      description: Welche Aufgabe möchtest du erstellen?
+      label: Task Description
+      description: What kind of task would you like to create?
       placeholder: |
-        Beschreibe kurz deine Aufgabe.
+        Briefly describe your task.
     validations:
       required: true
 
   - type: textarea
     id: additional
     attributes:
-      label: Weitere Informationen (optional)
-      description: Beispiele, Links oder Hintergrund
+      label: Additional information (optional)
+      description: Links, Examples, or Background Information

@@ -1,12 +1,12 @@
-name: Fehler melden
-description: Melde einen Fehler im modified-shop System
+name: Bug Report
+description: Report a bug in the modified-shop system
 
 body:
   - type: markdown
     attributes:
       value: |
-        Danke für deinen Bugreport.
-        Beschreibe den Fehler bitte so gut du kannst.
+        Thank you for your bug report.
+        Please describe the bug as best you can.
 
   - type: dropdown
     id: issue_type
@@ -21,7 +21,7 @@ body:
     id: affected_version
     attributes:
       label: Affected version
-      description: Welche modified-shop Version ist betroffen?
+      description: Which version of modified-shop is affected?
       options:
         - "1.06"
         - "2.0.0.0"
@@ -60,7 +60,7 @@ body:
     id: priority
     attributes:
       label: Priority
-      description: Wie wichtig ist das Thema?
+      description: How important is this issue?
       options:
         - low
         - medium
@@ -72,7 +72,7 @@ body:
     id: component
     attributes:
       label: Component
-      description: Welcher Bereich ist betroffen?
+      description: Which component is affected?
       options:
         - Admin
         - Installer
@@ -86,20 +86,20 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Fehlerbeschreibung
-      description: Was funktioniert nicht? Was passiert stattdessen?
+      label: Error Description
+      description: What isn't working? What happens instead?
       placeholder: |
-        Beschreibe kurz das Problem.
+        Briefly describe the problem.
 
-        Optional kannst du auch schreiben:
-        - Wie man den Fehler auslöst
-        - Was du erwartet hast
-        - Fehlermeldungen oder Screenshots
+        Optionally, you can also include:
+        - How to reproduce the error
+        - What you expected to happen
+        - Error messages or screenshots
     validations:
       required: true
 
   - type: textarea
     id: additional
     attributes:
-      label: Weitere Informationen (optional)
-      description: Links, Screenshots, Logs oder zusätzliche Hinweise
+      label: Additional information (optional)
+      description: Links, Examples, or Background Information

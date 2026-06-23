@@ -1,12 +1,12 @@
-name: Technische Diskussion
-description: Diskutiere technische Themen rund um modified-shop
+name: Technical Discussion
+description: Discuss technical topics related to modified-shop
 
 body:
   - type: markdown
     attributes:
       value: |
-        Danke für deine Frage.
-        Stelle deine Frage bitte so gut du kannst.
+        Thank you for your question.
+        Please ask your question as clearly as you can.
 
   - type: dropdown
     id: issue_type
@@ -21,7 +21,7 @@ body:
     id: affected_version
     attributes:
       label: Affected version
-      description: Welche modified-shop Version ist betroffen?
+      description: Which version of modified-shop is affected?
       options:
         - "1.06"
         - "2.0.0.0"
@@ -60,7 +60,7 @@ body:
     id: priority
     attributes:
       label: Priority
-      description: Wie wichtig ist das Thema?
+      description: How important is this issue?
       options:
         - low
         - medium
@@ -72,7 +72,7 @@ body:
     id: component
     attributes:
       label: Component
-      description: Welcher Bereich ist betroffen?
+      description: Which component is affected?
       options:
         - Admin
         - Installer
@@ -86,15 +86,15 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Thema / Beschreibung
-      description: Worum geht es in der Diskussion?
+      label: Topic / Description
+      description: What is this discussion about?
       placeholder: |
-        Beschreibe das Thema oder die Fragestellung.
+        Describe the topic or the research question.
     validations:
       required: true
 
   - type: textarea
     id: additional
     attributes:
-      label: Weitere Informationen (optional)
-      description: Links, Beispiele oder Hintergrund
+      label: Additional information (optional)
+      description: Links, Examples, or Background Information
