@@ -1,10 +1,90 @@
-name: Technical Discussion
+name: Technische Diskussion
 description: Diskutiere technische Themen rund um modified-shop
-labels: ["discussion"]
 
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke für deine Frage.
+        Stelle deine Frage bitte so gut du kannst.
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue Type
+      options:
+        - Question
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected_version
+    attributes:
+      label: Affected version
+      description: Welche modified-shop Version ist betroffen?
+      options:
+        - "1.06"
+        - "2.0.0.0"
+        - "2.0.1.0"
+        - "2.0.2.0"
+        - "2.0.2.1"
+        - "2.0.2.2"
+        - "2.0.3.0"
+        - "2.0.4.0"
+        - "2.0.4.1"
+        - "2.0.4.2"
+        - "2.0.5.0"
+        - "2.0.5.1"
+        - "2.0.6.0"
+        - "2.0.7.0"
+        - "2.0.7.1"
+        - "2.0.7.2"
+        - "3.0.0"
+        - "3.0.1"
+        - "3.0.2"
+        - "3.1.0"
+        - "3.1.1"
+        - "3.1.2"
+        - "3.1.3"
+        - "3.1.4"
+        - "3.1.5"
+        - "3.1.6"
+        - "3.2.0"
+        - "3.2.1"
+        - "3.3.0"
+        - "trunk"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: Wie wichtig ist das Thema?
+      options:
+        - low
+        - medium
+        - high
+    validations:
+      required: false
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Welcher Bereich ist betroffen?
+      options:
+        - Admin
+        - Installer
+        - Shop
+        - Module
+        - Security
+        - Template
+    validations:
+      required: false
+
   - type: textarea
-    id: topic
+    id: description
     attributes:
       label: Thema / Beschreibung
       description: Worum geht es in der Diskussion?

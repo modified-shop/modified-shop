@@ -1,0 +1,197 @@
+# .github/workflows/set-issue-type.yml
+
+name: Set issue type and fields
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  set-issue-type-and-fields:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set issue type and custom issue fields
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          set -euo pipefail
+
+          DATA_FILE="/tmp/issue-form-data.json"
+          CLEAN_BODY_FILE="/tmp/issue-body-cleaned.md"
+          SUMMARY_FILE="/tmp/issue-fields-summary.md"
+
+          python3 <<'PY' > "$DATA_FILE"
+          import json
+          import os
+          import re
+
+          body = os.environ.get("ISSUE_BODY", "")
+
+          ignored_values = {
+              "",
+              "None",
+              "none",
+              "No response",
+              "_No response_",
+              "Bitte auswählen...",
+              "Bitte auswählen",
+          }
+
+          def normalize(value: str) -> str:
+              return value.strip().strip("` ").strip()
+
+          def extract_section(title: str) -> str:
+              pattern = rf"^### {re.escape(title)}\s*$\n+(.*?)(?=\n### |\Z)"
+              match = re.search(pattern, body, flags=re.MULTILINE | re.DOTALL)
+              if not match:
+                  return ""
+
+              raw = match.group(1).strip()
+              for line in raw.splitlines():
+                  line = normalize(line)
+                  if line:
+                      return line
+              return ""
+
+          values = {
+              "issue_type": extract_section("Issue Type"),
+              "affected_version": extract_section("Affected version"),
+              "priority": extract_section("Priority"),
+              "component": extract_section("Component"),
+          }
+
+          clean_body = body
+          for title in ("Issue Type", "Affected version", "Priority", "Component"):
+              clean_body = re.sub(
+                  rf"(?:^|\n)### {re.escape(title)}\s*\n+.*?(?=\n### |\Z)",
+                  "",
+                  clean_body,
+                  flags=re.MULTILINE | re.DOTALL,
+              )
+
+          clean_body = re.sub(r"\n{3,}", "\n\n", clean_body).strip() + "\n"
+
+          with open("/tmp/issue-body-cleaned.md", "w", encoding="utf-8") as f:
+              f.write(clean_body)
+
+          values = {
+              key: value
+              for key, value in values.items()
+              if normalize(value) not in ignored_values
+          }
+
+          print(json.dumps(values, ensure_ascii=False))
+          PY
+
+          echo "Detected form values:"
+          cat "$DATA_FILE"
+          echo
+
+          {
+            echo "## Issue field update"
+            echo
+          } > "$SUMMARY_FILE"
+
+          log_success() {
+            local label="$1"
+            local value="$2"
+            echo "✓ $label: $value"
+            echo "- ✓ $label: $value" >> "$SUMMARY_FILE"
+          }
+
+          log_skipped() {
+            local label="$1"
+            echo "- $label: skipped"
+            echo "- - $label: skipped" >> "$SUMMARY_FILE"
+          }
+
+          log_warning() {
+            local label="$1"
+            local value="$2"
+            local message="$3"
+            echo "::warning::$label '$value' could not be set. $message"
+            echo "- ⚠ $label: $value — $message" >> "$SUMMARY_FILE"
+          }
+
+          TYPE=$(jq -r '.issue_type // empty' "$DATA_FILE")
+
+          case "$TYPE" in
+            Bug|Feature|Task|Question)
+              echo "Setting issue type to '$TYPE'..."
+              gh api \
+                --method PATCH \
+                -H "Accept: application/vnd.github+json" \
+                "/repos/${REPO}/issues/${ISSUE_NUMBER}" \
+                -f type="$TYPE"
+              log_success "Issue Type" "$TYPE"
+              ;;
+            "")
+              echo "No issue type found."
+              echo "- ✗ Issue Type: missing" >> "$SUMMARY_FILE"
+              cat "$SUMMARY_FILE" >> "$GITHUB_STEP_SUMMARY"
+              exit 1
+              ;;
+            *)
+              echo "Invalid issue type: '$TYPE'"
+              echo "- ✗ Issue Type: invalid value '$TYPE'" >> "$SUMMARY_FILE"
+              cat "$SUMMARY_FILE" >> "$GITHUB_STEP_SUMMARY"
+              exit 1
+              ;;
+          esac
+
+          add_issue_field_value() {
+            local json_key="$1"
+            local field_id="$2"
+            local field_label="$3"
+            local value
+
+            value=$(jq -r --arg key "$json_key" '.[$key] // empty' "$DATA_FILE")
+
+            if [ -z "$value" ]; then
+              log_skipped "$field_label"
+              return 0
+            fi
+
+            echo "Adding $field_label: '$value'..."
+
+            jq -n \
+              --argjson field_id "$field_id" \
+              --arg value "$value" \
+              '{issue_field_values: [{field_id: $field_id, value: $value}]}' \
+              > "/tmp/issue-field-${json_key}.json"
+
+            if gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/issues/${ISSUE_NUMBER}/issue-field-values" \
+              --input "/tmp/issue-field-${json_key}.json" > /tmp/issue-field-response.json; then
+              log_success "$field_label" "$value"
+            else
+              log_warning "$field_label" "$value" "Check whether this option exists in GitHub and whether field ID $field_id is correct."
+              return 0
+            fi
+          }
+
+          add_issue_field_value "affected_version" 42433212 "Affected version"
+          add_issue_field_value "priority" 34066654 "Priority"
+          add_issue_field_value "component" 42433962 "Component"
+
+          echo "Cleaning issue body..."
+          gh api \
+            --method PATCH \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${REPO}/issues/${ISSUE_NUMBER}" \
+            -f body="$(cat "$CLEAN_BODY_FILE")"
+
+          log_success "Issue body" "cleaned"
+
+          cat "$SUMMARY_FILE" >> "$GITHUB_STEP_SUMMARY"
+
+          echo "Done."

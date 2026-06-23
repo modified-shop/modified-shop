@@ -1,19 +1,19 @@
-name: Fehler melden
-description: Melde einen Fehler im modified-shop System
+name: Aufgabe
+description: Erstelle eine neue Aufgabe
 
 body:
   - type: markdown
     attributes:
       value: |
-        Danke für deinen Bugreport.
-        Beschreibe den Fehler bitte so gut du kannst.
+        Danke für deine Aufgabe.
+        Beschreibe die Aufgabe bitte so gut du kannst.
 
   - type: dropdown
     id: issue_type
     attributes:
       label: Issue Type
       options:
-        - Bug
+        - Task
     validations:
       required: true
 
@@ -86,15 +86,10 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Fehlerbeschreibung
-      description: Was funktioniert nicht? Was passiert stattdessen?
+      label: Beschreibung
+      description: Welche Aufgabe möchtest du erstellen?
       placeholder: |
-        Beschreibe kurz das Problem.
-
-        Optional kannst du auch schreiben:
-        - Wie man den Fehler auslöst
-        - Was du erwartet hast
-        - Fehlermeldungen oder Screenshots
+        Beschreibe kurz deine Aufgabe.
     validations:
       required: true
 
@@ -102,4 +97,4 @@ body:
     id: additional
     attributes:
       label: Weitere Informationen (optional)
-      description: Links, Screenshots, Logs oder zusätzliche Hinweise
+      description: Beispiele, Links oder Hintergrund
