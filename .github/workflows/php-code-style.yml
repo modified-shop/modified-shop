@@ -18,7 +18,9 @@ jobs:
 
   # ---------------------------------------------------------------------------
   # PHPCS (PHP_CodeSniffer)
-  # Prüft den Code gegen die Regeln aus der phpcs.xml.dist
+  # Prüft den Code gegen die Regeln aus der phpcs.xml.dist.
+  # Bei Pull Requests werden alle geänderten PHP-Dateien des PRs geprüft.
+  # Bei Pushes wird nur der aktuelle Commit geprüft.
   # Die Prüfung läuft gegen alle unterstützten PHP-Versionen.
   # ---------------------------------------------------------------------------
   phpcs:
@@ -43,8 +45,11 @@ jobs:
     steps:
 
       # Schritt 1: Code aus dem Repository laden
-      # Hier verwenden wir eine vorgefertigte Action von GitHub
+      # fetch-depth: 0 lädt die vollständige Git-Historie.
+      # Das ist nötig, damit der Vergleich zwischen PR-Base und PR-Head sicher funktioniert.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # Schritt 2: PHP installieren und phpcs einrichten
       # Hier verwenden wir eine vorgefertigte Action von shivammathur
@@ -54,15 +59,48 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: phpcs
 
-      # Schritt 3: Code-Style prüfen
-      # PHPCS findet phpcs.xml.dist automatisch im Repository-Root
-      # Der Punkt prüft rekursiv alle passenden Dateien gemäß phpcs.xml.dist
+      # Schritt 3: Geänderte PHP-Dateien ermitteln
+      # Pull Request: alle geänderten PHP-Dateien des gesamten PRs
+      # Push: nur die geänderten PHP-Dateien des aktuellen Commits
+      # --diff-filter=ACMR ignoriert gelöschte Dateien
+      - name: Get changed PHP files
+        id: changed-files
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+            git diff --name-only --diff-filter=ACMR "$BASE_SHA" "$HEAD_SHA" -- '*.php' > changed-php-files.txt
+          else
+            if git rev-parse HEAD^ >/dev/null 2>&1; then
+              git diff --name-only --diff-filter=ACMR HEAD^ HEAD -- '*.php' > changed-php-files.txt
+            else
+              git ls-tree -r --name-only HEAD -- '*.php' > changed-php-files.txt
+            fi
+          fi
+
+          if [ -s changed-php-files.txt ]; then
+            echo "has_files=true" >> "$GITHUB_OUTPUT"
+            echo "Geänderte PHP-Dateien:"
+            cat changed-php-files.txt
+          else
+            echo "has_files=false" >> "$GITHUB_OUTPUT"
+            echo "Keine PHP-Dateien geändert."
+          fi
+
+      # Schritt 4: Code-Style nur für geänderte PHP-Dateien prüfen
+      # PHPCS verwendet die phpcs.xml.dist im Repository-Root.
       - name: Check PHP Code Style
-        run: phpcs --cache --standard=phpcs.xml.dist .
+        if: steps.changed-files.outputs.has_files == 'true'
+        shell: bash
+        run: |
+          mapfile -t PHP_FILES < changed-php-files.txt
+          phpcs --cache --standard=phpcs.xml.dist "${PHP_FILES[@]}"
 
   # ---------------------------------------------------------------------------
   # PHP-CS-Fixer
-  # Prüft, ob Dateien automatisch formatiert werden müssten.
+  # Prüft, ob geänderte PHP-Dateien automatisch formatiert werden müssten.
   # Es werden keine Änderungen vorgenommen.
   # ---------------------------------------------------------------------------
   php-cs-fixer:
@@ -75,7 +113,11 @@ jobs:
     steps:
 
       # Repository auschecken
+      # fetch-depth: 0 lädt die vollständige Git-Historie.
+      # Das ist nötig, damit der Vergleich zwischen PR-Base und PR-Head sicher funktioniert.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # Aktuelle PHP-Version und PHP-CS-Fixer installieren
       # Der Fixer muss nicht gegen alle PHP-Versionen laufen.
@@ -85,8 +127,42 @@ jobs:
           php-version: '8.5'
           tools: php-cs-fixer
 
-      # Prüfen, ob Dateien formatiert werden müssten
+      # Geänderte PHP-Dateien ermitteln
+      # Pull Request: alle geänderten PHP-Dateien des gesamten PRs
+      # Push: nur die geänderten PHP-Dateien des aktuellen Commits
+      # --diff-filter=ACMR ignoriert gelöschte Dateien
+      - name: Get changed PHP files
+        id: changed-files
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+            git diff --name-only --diff-filter=ACMR "$BASE_SHA" "$HEAD_SHA" -- '*.php' > changed-php-files.txt
+          else
+            if git rev-parse HEAD^ >/dev/null 2>&1; then
+              git diff --name-only --diff-filter=ACMR HEAD^ HEAD -- '*.php' > changed-php-files.txt
+            else
+              git ls-tree -r --name-only HEAD -- '*.php' > changed-php-files.txt
+            fi
+          fi
+
+          if [ -s changed-php-files.txt ]; then
+            echo "has_files=true" >> "$GITHUB_OUTPUT"
+            echo "Geänderte PHP-Dateien:"
+            cat changed-php-files.txt
+          else
+            echo "has_files=false" >> "$GITHUB_OUTPUT"
+            echo "Keine PHP-Dateien geändert."
+          fi
+
+      # Prüfen, ob geänderte PHP-Dateien formatiert werden müssten
       # --dry-run: keine Änderungen durchführen
       # --diff: Unterschiede im Log anzeigen
       - name: Check PHP-CS-Fixer
-        run: php-cs-fixer fix --dry-run --diff
+        if: steps.changed-files.outputs.has_files == 'true'
+        shell: bash
+        run: |
+          mapfile -t PHP_FILES < changed-php-files.txt
+          php-cs-fixer fix --dry-run --diff "${PHP_FILES[@]}"
