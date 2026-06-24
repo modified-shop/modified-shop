@@ -1,0 +1,92 @@
+# Name der GitHub Action, der im Actions-Tab angezeigt wird
+name: PHP Code Style
+
+# Trigger:
+# - Bei jedem Push auf einen Branch
+# - Bei jedem Pull Request
+on:
+  push:
+  pull_request:
+#     branches:
+#       - main
+#       - maintenance
+#       - feat
+#       - feature
+#       - develop
+
+jobs:
+
+  # ---------------------------------------------------------------------------
+  # PHPCS (PHP_CodeSniffer)
+  # Prüft den Code gegen die Regeln aus der phpcs.xml.dist
+  # Die Prüfung läuft gegen alle unterstützten PHP-Versionen.
+  # ---------------------------------------------------------------------------
+  phpcs:
+    # Job-Name mit aktueller PHP-Version
+    name: PHPCS PHP ${{ matrix.php }}
+
+    # Ubuntu Linux Container
+    runs-on: ubuntu-latest
+
+    # PHP-Versionen, gegen die geprüft werden soll
+    strategy:
+      fail-fast: false
+      matrix:
+        php:
+          - '8.0'
+          - '8.1'
+          - '8.2'
+          - '8.3'
+          - '8.4'
+          - '8.5'
+
+    steps:
+
+      # Schritt 1: Code aus dem Repository laden
+      # Hier verwenden wir eine vorgefertigte Action von GitHub
+      - uses: actions/checkout@v4
+
+      # Schritt 2: PHP installieren und phpcs einrichten
+      # Hier verwenden wir eine vorgefertigte Action von shivammathur
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: phpcs
+
+      # Schritt 3: Code-Style prüfen
+      # PHPCS findet phpcs.xml.dist automatisch im Repository-Root
+      # Der Punkt prüft rekursiv alle passenden Dateien gemäß phpcs.xml.dist
+      - name: Check PHP Code Style
+        run: phpcs --cache --standard=phpcs.xml.dist .
+
+  # ---------------------------------------------------------------------------
+  # PHP-CS-Fixer
+  # Prüft, ob Dateien automatisch formatiert werden müssten.
+  # Es werden keine Änderungen vorgenommen.
+  # ---------------------------------------------------------------------------
+  php-cs-fixer:
+    # Anzeigename des Jobs im Actions-Tab
+    name: PHP-CS-Fixer
+
+    # GitHub-hosted Ubuntu Runner
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Repository auschecken
+      - uses: actions/checkout@v4
+
+      # Aktuelle PHP-Version und PHP-CS-Fixer installieren
+      # Der Fixer muss nicht gegen alle PHP-Versionen laufen.
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          tools: php-cs-fixer
+
+      # Prüfen, ob Dateien formatiert werden müssten
+      # --dry-run: keine Änderungen durchführen
+      # --diff: Unterschiede im Log anzeigen
+      - name: Check PHP-CS-Fixer
+        run: php-cs-fixer fix --dry-run --diff

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ruleset name="Project PSR-12 Style Only">
+    <description>
+        PSR-12 als Basis, aber alle „logiknahen“ Regeln (Namespaces, Side Effects,
+        Strict Types, Typ-Decls etc.) sind deaktiviert. Es bleiben vor allem
+        Whitespace- und Formatierungsregeln übrig.
+    </description>
+
+    <!-- Repository-Root prüfen -->
+
+    <file>.</file>
+
+    <!-- Farbausgabe aktivieren -->
+    <arg name="colors"/>
+
+    <!-- Fortschrittsanzeige aktivieren: s = Standards anzeigen, p = Fortschritt anzeigen -->
+    <arg value="sp"/>
+
+
+    <!-- Nur PHP-Dateien prüfen -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Was nie geprüft werden soll -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/.vscode/*</exclude-pattern>
+    <exclude-pattern>*/includes/external/GuzzleHttp/*</exclude-pattern>
+    <exclude-pattern>*/includes/external/magnalister/*</exclude-pattern>
+    <exclude-pattern>*/includes/external/nusoap/*</exclude-pattern>
+    <exclude-pattern>*/includes/external/Phpfastcache/*</exclude-pattern>
+    <exclude-pattern>*/includes/external/phpmailer/*</exclude-pattern>
+    <exclude-pattern>*/includes/external/Psr/*</exclude-pattern>
+    <exclude-pattern>*/includes/external/smarty/*</exclude-pattern>
+
+    <!-- Basis: kompletter PSR-12 Standard -->
+    <rule ref="PSR12"/>
+
+    <!-- =========
+         LOGIK-/STRUKTUR-REGELN DEAKTIVIEREN
+         ========= -->
+
+    <!-- Side Effects & "1 Klasse pro Datei + Namespace" -->
+    <rule ref="PSR1.Files.SideEffects">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="PSR1.Classes.ClassDeclaration">
+        <severity>0</severity>
+    </rule>
+
+    <!-- declare(strict_types=1) & Co. -->
+    <rule ref="PSR12.Files.DeclareStatement">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Typed Parameter & Return Types -->
+    <rule ref="PSR12.Functions.NullableTypeDeclaration">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="PSR12.Functions.ReturnTypeDeclaration">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Kurzformen von Typkeywords (bool/int/...) -->
+    <rule ref="PSR12.Keywords.ShortFormTypeKeywords">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Namespace-Struktur -->
+    <rule ref="PSR12.Namespaces.CompoundNamespaceDepth">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Sichtbarkeit von Konstanten erzwingen (kann Backward Compatibility sein) -->
+    <rule ref="PSR12.Properties.ConstantVisibility">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Optional: Wenn du noch mehr "Logik-Nähe" rauswerfen willst,
+         kannst du hier weitere Sniffs nach Bedarf auf severity=0 setzen. -->
+
+    <!-- Nur Infos: Warnungen kannst du komplett ausblenden, wenn du magst -->
+    <!-- <arg name="warning-severity" value="0"/> -->
+</ruleset>
