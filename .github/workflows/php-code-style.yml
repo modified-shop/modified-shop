@@ -157,6 +157,16 @@ jobs:
             echo "Keine PHP-Dateien geändert."
           fi
 
+      # composer.json für PHP-CS-Fixer bereitstellen, falls das Projekt keine hat
+      # PHP 8.0 ist die niedrigste unterstützte Version in der Matrix.
+      - name: Ensure composer.json exists for PHP-CS-Fixer
+        shell: bash
+        run: |
+          if [ ! -f composer.json ]; then
+            echo '{"require":{"php":"^8.0"}}' > composer.json
+            echo "Created temporary composer.json for PHP-CS-Fixer."
+          fi
+
       # Prüfen, ob geänderte PHP-Dateien formatiert werden müssten
       # --dry-run: keine Änderungen durchführen
       # --diff: Unterschiede im Log anzeigen
