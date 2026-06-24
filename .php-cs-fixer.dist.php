@@ -79,7 +79,6 @@ return (new PhpCsFixer\Config())
     ->setUnsupportedPhpVersionAllowed(true)
 
     ->setRules([
-
         // -----------------------------------------------------------------
         // STUFE 1 (AKTIV)
         // Locker:
