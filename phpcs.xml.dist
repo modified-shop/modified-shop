@@ -35,6 +35,12 @@
     <!-- Basis: kompletter PSR-12 Standard -->
     <rule ref="PSR12"/>
 
+    <!-- Zeilenlänge: Legacy-Code enthält Zeilen von mehreren hundert bis über 20.000 Zeichen
+         (z.B. generierte Arrays/SQL). Ein sinnvolles Limit lässt sich dafür nicht festlegen. -->
+    <rule ref="Generic.Files.LineLength">
+        <severity>0</severity>
+    </rule>
+
     <!-- =========
          LOGIK-/STRUKTUR-REGELN DEAKTIVIEREN
          ========= -->
