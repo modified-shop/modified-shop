@@ -86,7 +86,7 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Festure Description
+      label: Feature Description
       description: What feature or improvement would you like to see?
       placeholder: |
         Briefly describe your idea or use case.
