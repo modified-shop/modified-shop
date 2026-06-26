@@ -131,6 +131,16 @@ jobs:
           #done < changed-php-files.txt
           #echo
 
+          #echo "=== Debug: GitHub Event ==="
+          #echo "EVENT_NAME=${{ github.event_name }}"
+          #
+          #if [ "${{ github.event_name }}" = "pull_request" ]; then
+          #    echo "BASE_SHA=${{ github.event.pull_request.base.sha }}"
+          #    echo "HEAD_SHA=${{ github.event.pull_request.head.sha }}"
+          #fi
+          #
+          #echo
+
           #echo "=== Debug: PHP_ARGS ==="
           #printf '%q\n' "${PHP_ARGS[@]}"
           #echo
@@ -252,6 +262,16 @@ jobs:
           #    printf 'hex: '
           #    printf '%s' "$line" | xxd -p
           #done < changed-php-files.txt
+          #echo
+
+          #echo "=== Debug: GitHub Event ==="
+          #echo "EVENT_NAME=${{ github.event_name }}"
+          #
+          #if [ "${{ github.event_name }}" = "pull_request" ]; then
+          #    echo "BASE_SHA=${{ github.event.pull_request.base.sha }}"
+          #    echo "HEAD_SHA=${{ github.event.pull_request.head.sha }}"
+          #fi
+          #
           #echo
 
           #echo "=== Debug: PHP_ARGS ==="
