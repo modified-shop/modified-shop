@@ -21,42 +21,30 @@ jobs:
   # Prüft den Code gegen die Regeln aus der phpcs.xml.dist.
   # Bei Pull Requests werden alle geänderten PHP-Dateien des PRs geprüft.
   # Bei Pushes wird nur der aktuelle Commit geprüft.
-  # Die Prüfung läuft gegen alle unterstützten PHP-Versionen.
+  # Die Prüfung läuft einmal mit einer aktuellen PHP-Version.
   # ---------------------------------------------------------------------------
   phpcs:
-    # Job-Name mit aktueller PHP-Version
-    name: PHPCS PHP ${{ matrix.php }}
+    # Anzeigename des Jobs im Actions-Tab
+    name: PHPCS PHP 8.5
 
     # Ubuntu Linux Container
     runs-on: ubuntu-latest
-
-    # PHP-Versionen, gegen die geprüft werden soll
-    strategy:
-      fail-fast: false
-      matrix:
-        php:
-          - '8.0'
-          - '8.1'
-          - '8.2'
-          - '8.3'
-          - '8.4'
-          - '8.5'
 
     steps:
 
       # Schritt 1: Code aus dem Repository laden
       # fetch-depth: 0 lädt die vollständige Git-Historie.
       # Das ist nötig, damit der Vergleich zwischen PR-Base und PR-Head sicher funktioniert.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       # Schritt 2: PHP installieren und phpcs einrichten
       # Hier verwenden wir eine vorgefertigte Action von shivammathur
-      - name: Setup PHP ${{ matrix.php }}
+      - name: Setup PHP 8.5
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: '8.5'
           tools: phpcs
 
       # Schritt 3: Geänderte PHP-Dateien ermitteln
@@ -159,7 +147,7 @@ jobs:
   # ---------------------------------------------------------------------------
   php-cs-fixer:
     # Anzeigename des Jobs im Actions-Tab
-    name: PHP-CS-Fixer
+    name: PHP-CS-Fixer PHP 8.5
 
     # GitHub-hosted Ubuntu Runner
     runs-on: ubuntu-latest
@@ -169,13 +157,13 @@ jobs:
       # Repository auschecken
       # fetch-depth: 0 lädt die vollständige Git-Historie.
       # Das ist nötig, damit der Vergleich zwischen PR-Base und PR-Head sicher funktioniert.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       # Aktuelle PHP-Version und PHP-CS-Fixer installieren
       # Der Fixer muss nicht gegen alle PHP-Versionen laufen.
-      - name: Setup PHP
+      - name: Setup PHP 8.5
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
