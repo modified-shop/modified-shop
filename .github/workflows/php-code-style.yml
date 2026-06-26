@@ -96,7 +96,51 @@ jobs:
         shell: bash
         run: |
           mapfile -t PHP_FILES < changed-php-files.txt
-          phpcs --cache --standard=phpcs.xml.dist "${PHP_FILES[@]}"
+
+          PHP_ARGS=()
+          for f in "${PHP_FILES[@]}"; do
+              if [ -n "$f" ]; then
+                  PHP_ARGS+=("$f")
+              fi
+          done
+
+          if [ ${#PHP_ARGS[@]} -eq 0 ]; then
+              echo "No PHP files to check. Exiting."
+              exit 0
+          fi
+
+          # -----------------------------------------------------------------------
+          # DEBUG (bei Bedarf aktivieren)
+          #
+          # Hilft bei der Fehlersuche, wenn PHPCS Dateien nicht korrekt verarbeitet
+          # oder unerwartete Fehler meldet.
+          #
+          # Zum Aktivieren einfach die führenden '#' entfernen.
+          # -----------------------------------------------------------------------
+
+          #echo "=== Debug: PHPCS ==="
+          #phpcs --version || true
+          #which phpcs || true
+          #echo
+
+          #echo "=== Debug: Geänderte PHP-Dateien ==="
+          #while IFS= read -r line; do
+          #    printf '%s\n' "$line"
+          #    printf 'hex: '
+          #    printf '%s' "$line" | xxd -p
+          #done < changed-php-files.txt
+          #echo
+
+          #echo "=== Debug: PHP_ARGS ==="
+          #printf '%q\n' "${PHP_ARGS[@]}"
+          #echo
+
+          #echo "=== Debug: Auszuführender Befehl ==="
+          #printf 'phpcs --cache --standard=phpcs.xml.dist --'
+          #printf ' %q' "${PHP_ARGS[@]}"
+          #echo
+
+          phpcs --cache --standard=phpcs.xml.dist -- "${PHP_ARGS[@]}"
 
   # ---------------------------------------------------------------------------
   # PHP-CS-Fixer
@@ -175,4 +219,48 @@ jobs:
         shell: bash
         run: |
           mapfile -t PHP_FILES < changed-php-files.txt
-          php-cs-fixer fix --dry-run --diff "${PHP_FILES[@]}"
+
+          PHP_ARGS=()
+          for f in "${PHP_FILES[@]}"; do
+              if [ -n "$f" ]; then
+                  PHP_ARGS+=("$f")
+              fi
+          done
+
+          if [ ${#PHP_ARGS[@]} -eq 0 ]; then
+              echo "No PHP files to check after sanitization. Exiting."
+              exit 0
+          fi
+
+          # -----------------------------------------------------------------------
+          # DEBUG (bei Bedarf aktivieren)
+          #
+          # Hilft bei der Fehlersuche, wenn PHP-CS-Fixer nur die Hilfe anzeigt,
+          # Dateien nicht korrekt verarbeitet oder unerwartete Fehler meldet.
+          #
+          # Zum Aktivieren einfach die führenden '#' entfernen.
+          # -----------------------------------------------------------------------
+
+          #echo "=== Debug: php-cs-fixer ==="
+          #php-cs-fixer --version || true
+          #which php-cs-fixer || true
+          #echo
+
+          #echo "=== Debug: Geänderte PHP-Dateien ==="
+          #while IFS= read -r line; do
+          #    printf '%s\n' "$line"
+          #    printf 'hex: '
+          #    printf '%s' "$line" | xxd -p
+          #done < changed-php-files.txt
+          #echo
+
+          #echo "=== Debug: PHP_ARGS ==="
+          #printf '%q\n' "${PHP_ARGS[@]}"
+          #echo
+
+          #echo "=== Debug: Auszuführender Befehl ==="
+          #printf 'php-cs-fixer fix --dry-run --diff --'
+          #printf ' %q' "${PHP_ARGS[@]}"
+          #echo
+
+          php-cs-fixer fix --dry-run --diff -- "${PHP_ARGS[@]}"
