@@ -83,6 +83,11 @@
         <severity>0</severity>
     </rule>
 
+    <!-- Methodennamen müssen camelCase sein (Legacy-Code enthält andere Konventionen) -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName">
+        <severity>0</severity>
+    </rule>
+
     <!-- Optional: Wenn du noch mehr "Logik-Nähe" rauswerfen willst,
          kannst du hier weitere Sniffs nach Bedarf auf severity=0 setzen. -->
 
