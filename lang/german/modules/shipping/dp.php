@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
    Third Party contributions:
-   German Post (Deutsche Post WorldNet)         	Autor:	Copyright (C) 2002 - 2003 TheMedia, Dipl.-Ing Thomas Plänkers | http://www.themedia.at & http://www.oscommerce.at
+   German Post (Deutsche Post WorldNet)         	Autor:	Copyright (C) 2002 - 2003 TheMedia, Dipl.-Ing Thomas Plï¿½nkers | http://www.themedia.at & http://www.oscommerce.at
 
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ define('MODULE_SHIPPING_DP_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn kein
 if (defined('MODULE_SHIPPING_DP_NUMBER_ZONES')) {
   for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= MODULE_SHIPPING_DP_NUMBER_ZONES; $module_shipping_dp_i ++) {
     define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , '<hr/>DP Zone '.$module_shipping_dp_i.' L&auml;nder');
-    define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_DESC' , 'Kommagetrennte Liste von den 2-stelligen ISO country codes der Zone '.$module_shipping_dp_i.' (WORLD eintragen f&uuml;r den Rest der Welt.).');
+    define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_DESC' , 'Kommagetrennte Liste von den 2-stelligen ISO L&auml;ndercodes der Zone '.$module_shipping_dp_i.' (WORLD eintragen f&uuml;r den Rest der Welt.).');
     define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' Versandtabelle');
     define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_DESC' , 'Versandkosten der Zone '.$module_shipping_dp_i.' bezogen auf Bestellungsgewicht. Beispiel: 3:8.50,7:10.50,99999:12.00... Gewichte gr&ouml;&szlig;er 0 und kleiner 3 kosten 8.50, kleiner als 7 kostet 10.50 f&uuml;r Zone '.$module_shipping_dp_i.'.');
   }
