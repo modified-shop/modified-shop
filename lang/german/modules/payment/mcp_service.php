@@ -77,7 +77,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_PENDING_PAYMENT','Payment pending. Automatic 
 define('MODULE_PAYMENT_MCP_PREPAY_EXPIRED','No receipt of payment, automatic cancellation');
 
 define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_TITLE','L&ouml;schen von nicht bezahlten Bestellungen');
-define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_DESC','Wie lang kann eine Bestellung sich noch im Status "Bezahlung steht aus" befinden, bevor sie vom "Bestellung aufr&auml;umen" Button entfernt wird. Bitte legen Sie die Anzahl von Tagen fest. WICHTIG: Hierbei werden keine Vorkassen Bestellungen entfernt.');
+define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_DESC','Wie lang kann eine Bestellung sich noch im Status "Bezahlung steht aus" befinden, bevor sie vom "Bestellung aufr&auml;umen" Button entfernt wird. Bitte legen Sie die Anzahl von Tagen fest. WICHTIG: Hierbei werden keine Vorkasse-Bestellungen entfernt.');
 
 define('MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION','%s<div class="mcp_notice_register">Es steht eine neue micropayment&trade; Modul-Version mit neuen Funktionen und Features f&uuml;r Ihr Shopsystem zur Verf&uuml;gung. <a href="http://ecommerce.micropayment.de/modifiedshop/" target="_new">Zur neuen Modulversion.</a></div>');
 
