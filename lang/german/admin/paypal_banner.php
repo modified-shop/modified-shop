@@ -34,7 +34,7 @@ $lang_array = array(
   'TEXT_PAYPAL_INSTALLMENT_BANNER_TEXTSIZE_INFO' => 'W&auml;hlen Sie die Textgr&ouml;&szlig;e f&uuml;r das Banner aus.',
 
   'TEXT_PAYPAL_INSTALLMENT_BANNER_LOGOTYPE' => 'Logo Typ:',
-  'TEXT_PAYPAL_INSTALLMENT_BANNER_LOGOTYPE_INFO' => 'W&auml;hlen Sie dien Logo Typ f&uuml;r das Banner aus.',
+  'TEXT_PAYPAL_INSTALLMENT_BANNER_LOGOTYPE_INFO' => 'W&auml;hlen Sie den Logo Typ f&uuml;r das Banner aus.',
 
   'TEXT_PAYPAL_INSTALLMENT_BANNER_LOGOPOSITION' => 'Logo Position:',
   'TEXT_PAYPAL_INSTALLMENT_BANNER_LOGOPOSITION_INFO' => 'W&auml;hlen Sie die Logo Position f&uuml;r das Banner aus.',

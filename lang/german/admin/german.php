@@ -348,7 +348,7 @@ define('TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES', 'Angezeigt werden <b>%d</b> bis <b>
 define('TEXT_DISPLAY_NUMBER_OF_TAX_ZONES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Steuerzonen)');
 define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Steuers&auml;tzen)');
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Bundesl&auml;ndern)');
-define('TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Kunden die online sind)');
+define('TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Kunden, die online sind)');
 
 define('PREVNEXT_BUTTON_PREV', '&laquo;');
 define('PREVNEXT_BUTTON_NEXT', '&raquo;');
@@ -417,7 +417,7 @@ define('_NOVEMBER', 'November');
 define('_DECEMBER', 'Dezember');
 
 // Beschreibung f&uuml;r Abmeldelink im Newsletter
-define('TEXT_NEWSLETTER_REMOVE', 'Um sich von unserem Newsletter abzumelden klicken Sie hier:');
+define('TEXT_NEWSLETTER_REMOVE', 'Um sich von unserem Newsletter abzumelden, klicken Sie hier:');
 
 define('TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Gutscheinen)');
 define('TEXT_DISPLAY_NUMBER_OF_COUPONS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Coupons)');
@@ -445,7 +445,7 @@ define('TEXT_VAT_SERVICE_UNAVAILABLE','<span class="messageStackError">Nicht gep
 define('TEXT_VAT_MS_UNAVAILABLE','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service des Mitgliedsstaats ist nicht erreichbar, versuchen Sie es sp&auml;ter noch einmal oder mit einem anderen Mitgliedsstaat!</span>');
 define('TEXT_VAT_TIMEOUT','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service des Mitgliedsstaats konnte nicht erreicht werden (timeout), versuchen Sie es sp&auml;ter noch einmal oder mit einem anderen Mitgliedsstaat!</span>');
 define('TEXT_VAT_SERVER_BUSY','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service kann Ihre Anfrage nicht bearbeiten. Versuchen Sie es sp&auml;ter noch einmal!</span>');
-define('TEXT_VAT_NO_PHP5_SOAP_SUPPORT','<span class="messageStackError">Nicht gepr&uuml;ft/Unterst&uumltzung f&uumlr PHP5 SOAP ist nicht vorhanden!</span>');
+define('TEXT_VAT_NO_PHP5_SOAP_SUPPORT','<span class="messageStackError">Nicht gepr&uuml;ft/Unterst&uuml;tzung f&uuml;r PHP5 SOAP ist nicht vorhanden!</span>');
 define('TEXT_VAT_CONNECTION_NOT_POSSIBLE','<span class="messageStackError">FEHLER: Verbindung zu Webservice nicht m&ouml;glich (SOAP-FEHLER)!</span>');
 
 define('ERROR_GIF_MERGE','Fehlender GDlib Gif Support, kein Wasserzeichen (Merge) m&ouml;glich');
@@ -530,7 +530,7 @@ define('SPECIALS_DATE_START_TT', 'Angebote starten um 00:00:00 Uhr');
 define('SPECIALS_DATE_END_TT', 'Angebote enden um Mitternacht (23:59:59 Uhr)');
 
 define('BOX_PARCEL_CARRIERS', 'Paketdienstleister');
-define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Paketdienstleister)');
+define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Paketdienstleistern)');
 
 define('RSS_FEED_TITLE', 'Aktuelle Information von modified eCommerce Shopsoftware Blog');
 define('RSS_FEED_DESCRIPTION', 'Aktuelle Information von modified eCommerce Shopsoftware Support Forum');

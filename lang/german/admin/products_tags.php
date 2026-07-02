@@ -59,7 +59,7 @@ define('TEXT_INFO_OPTION_SORT', 'Sortierung:');
 
 define('TEXT_INFO_NUMBER_OPTION', 'Anzahl der Werte:');
 define('TEXT_INFO_HEADING_NEW_OPTION', 'Neue Eigenschaft');
-define('TEXT_INFO_NEW_OPTION_INTRO', 'Bitte geben Sie den neue Eigenschaft mit allen relevanten Daten ein');
+define('TEXT_INFO_NEW_OPTION_INTRO', 'Bitte geben Sie die neue Eigenschaft mit allen relevanten Daten ein');
 define('TEXT_INFO_HEADING_EDIT_OPTION', 'Eigenschaft bearbeiten');
 define('TEXT_INFO_EDIT_OPTION_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch.');
 define('TEXT_INFO_HEADING_DELETE_OPTION', 'Eigenschaft l&ouml;schen');

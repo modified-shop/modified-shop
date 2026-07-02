@@ -29,7 +29,7 @@ define('MODULE_PAYMENT_COD_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste 
 define('MODULE_PAYMENT_COD_ORDER_STATUS_ID_TITLE', 'Bestellstatus festlegen');
 define('MODULE_PAYMENT_COD_ORDER_STATUS_ID_DESC', 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
 define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_TITLE', 'Maximalbetrag');
-define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_DESC', 'Ab welchem Betrag soll Nachnahme nicht mehr erlaubt werden?<br />Der eingegebene Wert wird mit der Zwischensumme (subtotal) verglichen, welche gerundet wird.<br />Das bedeutet, dass der nur reine Warenwert, ohne Versandkosten und evtl. Zuschl&auml;ge ber&uuml;cksichtigt wird.');
+define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_DESC', 'Ab welchem Betrag soll Nachnahme nicht mehr erlaubt werden?<br />Der eingegebene Wert wird mit der Zwischensumme (subtotal) verglichen, welche gerundet wird.<br />Das bedeutet, dass nur der reine Warenwert, ohne Versandkosten und evtl. Zuschl&auml;ge ber&uuml;cksichtigt wird.');
 define('MODULE_PAYMENT_COD_DISPLAY_INFO_TITLE', 'Anzeige im Checkout');
 define('MODULE_PAYMENT_COD_DISPLAY_INFO_DESC', 'Soll ein Hinweis auf zus&auml;tzlich anfallende Kosten im Checkout angezeigt werden?');
 define('MODULE_PAYMENT_COD_DISPLAY_INFO_TEXT', '<div class="infomessage">Der Rechnungsbetrag ist bei Sendungs&uuml;bergabe an den Zusteller zu entrichten.</div>');

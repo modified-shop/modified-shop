@@ -33,7 +33,7 @@ define('MODULE_PAYMENT_MCP_DEBIT_TEXT_INFO', '
   </div>
 </div>');
 define('MODULE_PAYMENT_MCP_DEBIT_STATUS_TITLE','Direct Debit');
-define('MODULE_PAYMENT_MCP_DEBIT_STATUS_DESC','Debit Debit module by micropayment&trade;');
+define('MODULE_PAYMENT_MCP_DEBIT_STATUS_DESC','Direct Debit module by micropayment&trade;');
 define('MODULE_PAYMENT_MCP_DEBIT_MINIMUM_AMOUNT_TITLE','Minimum amount');
 define('MODULE_PAYMENT_MCP_DEBIT_MINIMUM_AMOUNT_DESC','Minimum amount for this payment method');
 define('MODULE_PAYMENT_MCP_DEBIT_MAXIMUM_AMOUNT_TITLE','Maximum amount');
@@ -41,4 +41,4 @@ define('MODULE_PAYMENT_MCP_DEBIT_MAXIMUM_AMOUNT_DESC','Maximum amount for this p
 define('MODULE_PAYMENT_MCP_DEBIT_SORT_ORDER_TITLE','Positioning');
 define('MODULE_PAYMENT_MCP_DEBIT_SORT_ORDER_DESC','Positioning in the payment method selection');
 define('MODULE_PAYMENT_MCP_DEBIT_ALLOWED_TITLE','Country selection');
-define('MODULE_PAYMENT_MCP_DEBIT_ALLOWED_DESC','Allow orders only from these countries (Comma seperated list DE,EN)');
+define('MODULE_PAYMENT_MCP_DEBIT_ALLOWED_DESC','Allow orders only from these countries (Comma separated list DE,EN)');

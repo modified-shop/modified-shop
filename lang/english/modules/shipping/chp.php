@@ -36,11 +36,11 @@ define('MODULE_SHIPPING_CHP_HANDLING_DESC' , 'Handling fee for this shipping met
 define('MODULE_SHIPPING_CHP_TAX_CLASS_TITLE' , 'Tax');
 define('MODULE_SHIPPING_CHP_TAX_CLASS_DESC' , 'Please choose the tax rate for shipping.');
 define('MODULE_SHIPPING_CHP_ZONE_TITLE' , 'Shipping Zone');
-define('MODULE_SHIPPING_CHP_ZONE_DESC' , 'If you choose a zone only this shipping zones used.');
+define('MODULE_SHIPPING_CHP_ZONE_DESC' , 'If you choose a zone only this shipping zone is used.');
 define('MODULE_SHIPPING_CHP_SORT_ORDER_TITLE' , 'Display order');
 define('MODULE_SHIPPING_CHP_SORT_ORDER_DESC' , 'Lowermost shown first.');
 define('MODULE_SHIPPING_CHP_ALLOWED_TITLE' , 'Individual shipping zones');
-define('MODULE_SHIPPING_CHP_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_CHP_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 
 define('MODULE_SHIPPING_CHP_COUNTRIES_1_TITLE' , 'Zone 0 Countries');
 define('MODULE_SHIPPING_CHP_COUNTRIES_1_DESC' , 'Inland Zone');

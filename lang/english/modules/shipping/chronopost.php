@@ -40,7 +40,7 @@ define('MODULE_SHIPPING_CHRONOPOST_ZONE_DESC' , 'If a zone is selected, only ena
 define('MODULE_SHIPPING_CHRONOPOST_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_CHRONOPOST_SORT_ORDER_DESC' , 'Sort order of display');
 define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_TITLE' , 'Allowed Shipping Zones');
-define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 
 for ($module_shipping_chp_i = 1; $module_shipping_chp_i <= 10; $module_shipping_chp_i ++) {
   define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_'.$module_shipping_chp_i.'_TITLE' , '<hr/>Chronopost Zone '.$module_shipping_chp_i.' Countries');

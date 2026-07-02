@@ -531,7 +531,7 @@ define('HEADER_QTY', 'Anzahl');
 define('HEADER_ARTICLE', 'Artikel');    
 define('HEADER_SINGLE', 'Einzelpreis');
 define('HEADER_TOTAL','Summe');
-define('HEADER_MODEL', 'Artikel Nr.');
+define('HEADER_MODEL', 'Artikel-Nr.');
 
 ### PayPal API Modul
 define('ERROR_ADDRESS_NOT_ACCEPTED', '* Solange Sie Ihre Rechnungs- und Versandadresse nicht akzeptieren,\n k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
@@ -559,7 +559,7 @@ define('ERROR_REVIEW_AUTHOR', 'Bitte geben Sie Ihren Namen ein.');
 define('ERROR_REVIEW_PRODUCT_PURCHASED', 'Es k&ouml;nnen nur Artikel bewertet werden, die auch bei uns gekauft wurden.');
 
 define('GV_NO_PAYMENT_INFO', '<div class="infomessage">Sie k&ouml;nnen mit Ihrem Guthaben die Bestellung komplett bezahlen. Wenn Sie Ihr Guthaben nicht einl&ouml;sen m&ouml;chten, deaktivieren Sie die Guthabenauswahl und w&auml;hlen eine Zahlungsweise!</div>');
-define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nicht aus bzw. kann nicht auf alle Positionen angewendet werden um die Bestellung komplett zu bezahlen. Bitte w&auml;hlen Sie zus&auml;tzlich eine Zahlungsweise!</div>');
+define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nicht aus bzw. kann nicht auf alle Positionen angewendet werden, um die Bestellung komplett zu bezahlen. Bitte w&auml;hlen Sie zus&auml;tzlich eine Zahlungsweise!</div>');
 
 define('_SHIPPING_FREE','Versandkostenfrei');
 define('TEXT_INFO_FREE_SHIPPING_COUPON', 'Die Versandkosten werden durch Ihren Coupon abgedeckt.');
@@ -647,7 +647,7 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1030', 'IBAN entspricht nicht dem f&uu
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1040', 'Pr&uuml;fziffern der IBAN (Stellen 3 und 4) nicht korrekt -> Tippfehler in der IBAN.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1050', 'BIC hat ung&uuml;ltiges Format.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1060', 'BIC-L&auml;nge falsch: Zu viele Zeichen eingegeben. 8 oder 11 Zeichen sind erforderlich.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-L&auml;nge falsch: Zu wenige Zeichen angeben. 8 oder 11 Zeichen sind erforderlich.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-L&auml;nge falsch: Zu wenige Zeichen angegeben. 8 oder 11 Zeichen sind erforderlich.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-L&auml;nge ung&uuml;ltig: 8 oder 11 Zeichen erforderlich.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1200', 'IBANs aus dem angegebenen Land (1. und 2. Stelle der IBAN) k&ouml;nnen wir leider nicht akzeptieren.');
 
@@ -666,7 +666,7 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2128', 'Interner Fehler bei Pr&uuml;fu
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_UNKNOWN', 'Unbekannter Fehler bei Pr&uuml;fung der Bankverbindung.');
 
 define('PRODUCT_REVIEWS_SUCCESS', 'Vielen Dank f&uuml;r Ihre Rezension.');
-define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Vielen Dank f&uuml;r Ihre Rezension. Diese wird nun gepr&uuml;ft bevor sie freigeschaltet wird.');
+define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Vielen Dank f&uuml;r Ihre Rezension. Diese wird nun gepr&uuml;ft, bevor sie freigeschaltet wird.');
 
 define('TITLE_PRODUCTS_NEW', 'Neue Artikel');
 define('TITLE_SPECIALS', 'Angebote');
@@ -684,7 +684,7 @@ define('TEXT_ERROR_HANDLER_500', 'Fehler 500: Beim Server gab es einen internen 
 
 define('ERROR_PRODUCTS_MISSING_CONFIGURATION_NOT_ADDED', 'Einige Artikel aus Ihrer Bestellung sind nicht mehr in der gew&uuml;nschten Konfiguration erh&auml;ltlich und wurden nicht in den Warenkorb gelegt.');
 
-define('TEXT_MAX_ADDRESS_NOTE', 'Achtung, es steht keine neue Adresse zur Verf&uuml;gung. Sie haben die maximale Anzahl von %s Adressen erreicht. Diese Adresse wird auch als Versandadresse &uuml;bernommen. Sofern sie eine abweichende Rechnungsadresse ben&ouml;tigen, w&auml;hlen sie eine Adresse aus ihrem Adressbuch aus.');
+define('TEXT_MAX_ADDRESS_NOTE', 'Achtung, es steht keine neue Adresse zur Verf&uuml;gung. Sie haben die maximale Anzahl von %s Adressen erreicht. Diese Adresse wird auch als Versandadresse &uuml;bernommen. Sofern Sie eine abweichende Rechnungsadresse ben&ouml;tigen, w&auml;hlen Sie eine Adresse aus Ihrem Adressbuch aus.');
 
 define('TEXT_FILTER_SET_LABEL', 'Artikel pro Seite');
 define('TEXT_FILTER_SORT_LABEL', 'Sortierung');

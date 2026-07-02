@@ -31,7 +31,7 @@ define('MODULE_SHIPPING_DP_INVALID_ZONE', 'Es ist leider kein Versand in dieses 
 define('MODULE_SHIPPING_DP_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Moment nicht errechnet werden');
 
 define('MODULE_SHIPPING_DP_STATUS_TITLE' , 'Deutsche Post WorldNet');
-define('MODULE_SHIPPING_DP_STATUS_DESC' , 'Wollen Sie den Versand &uuml;ber die deutsche Post anbieten?');
+define('MODULE_SHIPPING_DP_STATUS_DESC' , 'Wollen Sie den Versand &uuml;ber die Deutsche Post anbieten?');
 define('MODULE_SHIPPING_DP_HANDLING_TITLE' , 'Bearbeitungsgeb&uuml;hr');
 define('MODULE_SHIPPING_DP_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart');
 define('MODULE_SHIPPING_DP_TAX_CLASS_TITLE' , 'Steuerklasse');
@@ -50,7 +50,7 @@ define('MODULE_SHIPPING_DP_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn kein
 if (defined('MODULE_SHIPPING_DP_NUMBER_ZONES')) {
   for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= MODULE_SHIPPING_DP_NUMBER_ZONES; $module_shipping_dp_i ++) {
     define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , '<hr/>DP Zone '.$module_shipping_dp_i.' L&auml;nder');
-    define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_DESC' , 'Kommagetrennte Liste von der 2stelligen ISO country codes der Zone '.$module_shipping_dp_i.' (WORLD eintragen f&uuml;r den Rest der Welt.).');
+    define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_DESC' , 'Kommagetrennte Liste von den 2-stelligen ISO country codes der Zone '.$module_shipping_dp_i.' (WORLD eintragen f&uuml;r den Rest der Welt.).');
     define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' Versandtabelle');
     define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_DESC' , 'Versandkosten der Zone '.$module_shipping_dp_i.' bezogen auf Bestellungsgewicht. Beispiel: 3:8.50,7:10.50,99999:12.00... Gewichte gr&ouml;&szlig;er 0 und kleiner 3 kosten 8.50, kleiner als 7 kostet 10.50 f&uuml;r Zone '.$module_shipping_dp_i.'.');
   }

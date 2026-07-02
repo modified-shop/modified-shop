@@ -33,7 +33,7 @@ define('UNIQUE_TODAY','Einzelne Besucher:');
 define('DAILY_AVERAGE','T&auml;glicher Durchschnitt:');
 define('TOTAL_VISITS','Besuche insgesamt:');
 define('TOTAL_UNIQUE','Einzelbesucher insgesamt:');
-define('TOP_REFFERER','Top Refferer:');
+define('TOP_REFFERER','Top Referrer:');
 define('TOP_ENGINE','Top Suchmaschine:');
 define('DAY_SUMMARY','30 Tage &Uuml;bersicht:');
 define('VERY_LAST_VISITORS','Letzte 10 Besucher:');
@@ -52,10 +52,10 @@ define('TOP_REFERRERS','Top 10 Referrer');
 define('TOP_HOSTS','Top Ten Hosts');
 define('LIST_ALL','Alle anzeigen');
 define('SEARCH_ENGINE_SUMMARY','Suchmaschinen &Uuml;bersicht');
-define('SEARCH_ENGINE_SUMMARY_TEXT',' ( Prozentangaben basieren auf die Gesamtzahl der Besuche &uuml;ber Suchmaschinen. )');
+define('SEARCH_ENGINE_SUMMARY_TEXT',' ( Prozentangaben basieren auf der Gesamtzahl der Besuche &uuml;ber Suchmaschinen. )');
 define('SEARCH_QUERY_SUMMARY','Suchanfragen &Uuml;bersicht');
-define('SEARCH_QUERY_SUMMARY_TEXT',' ) ( Prozentangaben basieren auf die Gesamtzahl der Suchanfragen die geloggt wurden. )');
-define('REFERRING_URL','Refferrer Url');
+define('SEARCH_QUERY_SUMMARY_TEXT',' ) ( Prozentangaben basieren auf der Gesamtzahl der Suchanfragen, die geloggt wurden. )');
+define('REFERRING_URL','Referrer Url');
 define('HITS','Hits');
 define('PERCENTAGE','Prozentanteil');
 define('HOST','Host');
@@ -157,7 +157,7 @@ define('ERROR_EMAIL_CHECK_INFO', '%s: &lt;%s&gt;');
 define('WARNING_DB_FILE_PRIVILEGES', '<strong>WARNUNG:</strong> FILE-Privileges sind in der Datenbank &rsquo;'.DB_DATABASE.'&lsquo; f&uuml;r den Shop-User &rsquo;'.DB_SERVER_USERNAME.'&lsquo; aktiviert!');
 
 // register_globals check
-define('WARNING_REGISTER_GLOBALS', '<strong>WARNUNG:</strong> Dieses Feature ist seit PHP 5.3.0 <strong>DEPRECATED</strong> (veraltet) und seit PHP 5.4.0 <strong>ENTFERNT</strong>. Bitte wenden Sie sich an Ihren Hoster um &quot;register_globals&quot; zu deaktivieren.');
+define('WARNING_REGISTER_GLOBALS', '<strong>WARNUNG:</strong> Dieses Feature ist seit PHP 5.3.0 <strong>DEPRECATED</strong> (veraltet) und seit PHP 5.4.0 <strong>ENTFERNT</strong>. Bitte wenden Sie sich an Ihren Hoster, um &quot;register_globals&quot; zu deaktivieren.');
 
 // domain check
 define('WARNING_DOMAIN_INVALID', '<strong>WARNUNG:</strong> Ihre Shop Domain konnte nicht validiert werden (M&ouml;gliche Ursachen: Fehler beim Format der Domain oder internationalisierte Domainnamen (internationalized domain name, IDN) - Umlautdomain)');

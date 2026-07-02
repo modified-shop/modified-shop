@@ -24,7 +24,7 @@ define('MODULE_SHIPPING_ITEM_INVALID_ZONE', 'Unfortunately it is not possible to
 define('MODULE_SHIPPING_ITEM_STATUS_TITLE' , 'Enable Item Shipping');
 define('MODULE_SHIPPING_ITEM_STATUS_DESC' , 'Do you want to offer per item rate shipping?');
 define('MODULE_SHIPPING_ITEM_ALLOWED_TITLE' , 'Allowed Zones');
-define('MODULE_SHIPPING_ITEM_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_ITEM_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_ITEM_TAX_CLASS_TITLE' , 'Tax Class');
 define('MODULE_SHIPPING_ITEM_TAX_CLASS_DESC' , 'Use the following tax class on the shipping fee.');
 define('MODULE_SHIPPING_ITEM_ZONE_TITLE' , 'Shipping Zone');

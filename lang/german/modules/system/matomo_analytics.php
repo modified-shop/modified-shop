@@ -17,7 +17,7 @@
   define('MODULE_MATOMO_ANALYTICS_STATUS_DESC', 'Modulstatus');
   
   define('MODULE_MATOMO_ANALYTICS_ID_TITLE' , 'Matomo Seiten-ID');
-  define('MODULE_MATOMO_ANALYTICS_ID_DESC' , 'In der Matomo Administrationsoberfl&auml;che wird pro angelegter Domain wird eine ID vergeben (meist "1")');
+  define('MODULE_MATOMO_ANALYTICS_ID_DESC' , 'In der Matomo Administrationsoberfl&auml;che wird pro angelegter Domain eine ID vergeben (meist "1")');
 
   define('MODULE_MATOMO_ANALYTICS_LOCAL_PATH_TITLE' , 'Matomo Installationsverzeichnis (ohne "http://")');
   define('MODULE_MATOMO_ANALYTICS_LOCAL_PATH_DESC' , 'Tragen Sie hier das Verzeichnis ein, nachdem Matomo erfolgreich installiert worden ist. Als Pfad ist hier der komplette Domainname ohne "http://" einzutragen, z.B. "www.example.com/matomo".');

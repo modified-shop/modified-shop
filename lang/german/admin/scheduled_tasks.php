@@ -21,8 +21,8 @@
   define('TEXT_INFO_HEADING_EDIT_TASKS', 'Aufgabe bearbeiten');
   define('TEXT_INFO_EDIT_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch');
 
-  define('TEXT_INFO_LAST_EXECUTED', 'letzte Ausf&uuml;rung am:');
-  define('TEXT_INFO_LAST_DURATION', 'Ausf&uuml;rungszeit:');
+  define('TEXT_INFO_LAST_EXECUTED', 'letzte Ausf&uuml;hrung am:');
+  define('TEXT_INFO_LAST_DURATION', 'Ausf&uuml;hrungszeit:');
 
   define('TEXT_INFO_TIME_REGULARITY', ' Wiederhole Aufgabe jede(n):');
   define('TEXT_INFO_TIME_UNIT', 'Einheit:');

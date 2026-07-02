@@ -43,7 +43,7 @@ define('TEXT_INFO_VALUE_SORT', 'Sort:');
 define('TEXT_INFO_DELETE_VALUE_IMAGE', 'Delete image?');
 
 define('TEXT_INFO_HEADING_NEW_VALUE', 'New value');
-define('TEXT_INFO_NEW_VALUE_INTRO', 'Please enter the new valua including all relevant data');
+define('TEXT_INFO_NEW_VALUE_INTRO', 'Please enter the new value including all relevant data');
 define('TEXT_INFO_HEADING_EDIT_VALUE', 'Edit value');
 define('TEXT_INFO_EDIT_VALUE_INTRO', 'Please make any necessary changes.');
 define('TEXT_INFO_HEADING_DELETE_VALUE', 'Delete value');
