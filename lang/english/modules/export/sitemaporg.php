@@ -34,6 +34,6 @@
   define('MODULE_SITEMAPORG_ROOT_TITLE', '<hr /><b>Installation in Shoproot?</b>');
   define('MODULE_SITEMAPORG_ROOT_DESC', 'Save the sitemap file in root directory?');
   define('MODULE_SITEMAPORG_GZIP_TITLE', '<b>Use gzip compression?</b>');
-  define('MODULE_SITEMAPORG_GZIP_DESC', 'File extension ".gz" is extended automatically added!');
+  define('MODULE_SITEMAPORG_GZIP_DESC', 'File extension ".gz" is automatically added!');
   define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_TITLE', 'Customer group');
   define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_DESC','Enter here which customer group should be used for the export of sitemap.xml.');

@@ -12,7 +12,7 @@
 
 define('HEADING_TITLE', 'Blacklist Logs'); 
 
-define('TABLE_HEADING_IP', 'IP adress');
+define('TABLE_HEADING_IP', 'IP address');
 define('TABLE_HEADING_BANNED', 'Time banned');
 define('TABLE_HEADING_ACTION', 'Action');
 

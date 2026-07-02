@@ -81,8 +81,8 @@ define('TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO', '<strong>Products review
 define('TEXT_INFO_CUSTOMERS_STATUS_REVIEWS_STATUS_INTRO', '<strong>Products review status</strong>');
 
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this customer group?');
-define('TEXT_INFO_EDIT_INTRO', 'Please make all neccessary changes');
-define('TEXT_INFO_INSERT_INTRO', 'Please create a new customer group within all neccessary values.');
+define('TEXT_INFO_EDIT_INTRO', 'Please make all necessary changes');
+define('TEXT_INFO_INSERT_INTRO', 'Please create a new customer group with all necessary values.');
 
 define('TEXT_INFO_HEADING_DELETE_CUSTOMERS_STATUS', 'Delete Customer Group');
 define('TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS','Edit Group Data');

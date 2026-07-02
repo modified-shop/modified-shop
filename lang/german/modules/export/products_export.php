@@ -23,7 +23,7 @@
   define('MODULE_PRODUCTS_EXPORT_ENCLOSURE_DESC', 'Geben Sie das Zeichen an, das den Inhalt kennzeichnet.');
 
   define('MODULE_PRODUCTS_EXPORT_CUSTOMERS_STATUS_TITLE','<br><strong>Kundengruppe:</strong>');
-  define('MODULE_PRODUCTS_EXPORT_CUSTOMERS_STATUS_DESC','Bitte w&auml;hlen Sie die Kundengruppe, die Basis f&uuml;r den Exportierten Preis bildet. (Falls Sie keine Kundengruppenpreise haben, w&auml;hlen Sie <i>Gast</i>):');
+  define('MODULE_PRODUCTS_EXPORT_CUSTOMERS_STATUS_DESC','Bitte w&auml;hlen Sie die Kundengruppe, die Basis f&uuml;r den exportierten Preis bildet. (Falls Sie keine Kundengruppenpreise haben, w&auml;hlen Sie <i>Gast</i>):');
   define('MODULE_PRODUCTS_EXPORT_LANGUAGE_TITLE','<br><strong>Sprache:</strong>');
   define('MODULE_PRODUCTS_EXPORT_LANGUAGE_DESC','Sprache in der Exportdatei');
   define('MODULE_PRODUCTS_EXPORT_CURRENCY_TITLE','<br><strong>W&auml;hrung:</strong>');

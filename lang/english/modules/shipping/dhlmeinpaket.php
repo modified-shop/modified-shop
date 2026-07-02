@@ -21,7 +21,7 @@ define('MODULE_SHIPPING_DHLMEINPAKET_TEXT_DESCRIPTION', 'Shipping with DHL speci
 define('MODULE_SHIPPING_YATEGO_SORT_ORDER', 'Sort Order');
 define('MODULE_SHIPPING_DHLMEINPAKET_TEXT_WAY', MODULE_SHIPPING_DHLMEINPAKET_TEXT_DESCRIPTION);
 define('MODULE_SHIPPING_YATEGO_ALLOWED_TITLE' , 'Allowed Zones');
-define('MODULE_SHIPPING_YATEGO_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_YATEGO_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_YATEGO_STATUS_TITLE', 'Enable Shipping through MeinPaket');
 define('MODULE_SHIPPING_YATEGO_STATUS_DESC', 'Do you want to offer pickup by the customer?');
 define('MODULE_SHIPPING_YATEGO_SORT_ORDER_TITLE', 'Sort Order');

@@ -15,7 +15,7 @@ $lang_array = array(
   'TEXT_PAYPAL_PROFILE_HEADING_TITLE' => 'PayPal Profile',
 
   'TEXT_PAYPAL_PROFILE_STATUS' => 'Default:',
-  'TEXT_PAYPAL_PROFILE_STATUS_INFO' => 'Should this be the default profile?<br/><br/><b>Note:</b> You can be assign a language-dependent profile for each single module.',
+  'TEXT_PAYPAL_PROFILE_STATUS_INFO' => 'Should this be the default profile?<br/><br/><b>Note:</b> You can assign a language-dependent profile for each single module.',
   
   'TEXT_PAYPAL_PROFILE_NAME' => 'Internal name:',
   'TEXT_PAYPAL_PROFILE_NAME_INFO' => '',

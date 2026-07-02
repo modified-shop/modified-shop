@@ -39,7 +39,7 @@
   define('MODULE_ORDER_TOTAL_GV_QUEUE_DESC', 'Sollen bestellte Geschenkgutscheine zuerst in die Freigabeliste?');
   define('MODULE_ORDER_TOTAL_GV_INC_SHIPPING_TITLE', 'Inklusive Versandkosten');
   define('MODULE_ORDER_TOTAL_GV_INC_SHIPPING_DESC', 'Versandkosten an den Warenwert anrechnen');
-  define('MODULE_ORDER_TOTAL_GV_INC_TAX_TITLE', 'Inklusiv MwSt.');
+  define('MODULE_ORDER_TOTAL_GV_INC_TAX_TITLE', 'Inklusive MwSt.');
   define('MODULE_ORDER_TOTAL_GV_INC_TAX_DESC', 'MwSt. an den Warenwert anrechnen.');
   define('MODULE_ORDER_TOTAL_GV_CALC_TAX_TITLE', 'MwSt. neu berechnen');
   define('MODULE_ORDER_TOTAL_GV_CALC_TAX_DESC', 'MwSt. neu berechnen');

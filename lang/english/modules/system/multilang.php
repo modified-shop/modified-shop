@@ -14,7 +14,7 @@
   define('MODULE_MULTILANG_TEXT_DESCRIPTION', 'Activated SEO URL will get extended with the language parameters');    
 
   define('MODULE_MULTILANG_STATUS_TITLE', 'Status');
-  define('MODULE_MULTILANG_STATUS_DESC', 'Modulestatus');
+  define('MODULE_MULTILANG_STATUS_DESC', 'Module status');
 
   define('MODULE_MULTILANG_ADD_DEFAULT_LANGUAGE_TITLE', 'Extend default language');
   define('MODULE_MULTILANG_ADD_DEFAULT_LANGUAGE_DESC', 'Also extend the default language?');

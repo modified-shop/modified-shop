@@ -41,7 +41,7 @@ define('MODULE_STEP_IMAGE_PROCESS_TEXT_IMAGE_EXPORT_TYPE','<hr noshade><strong>B
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_STEP_INFO','Images created: ');
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_STEP_INFO_READY',' - Finished!');
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_MAX_IMAGES','max. images for each reload');
-define('MODULE_STEP_IMAGE_PROCESS_TEXT_PROCESS_TYPE', '<b>Imageprozessing:</b>');
+define('MODULE_STEP_IMAGE_PROCESS_TEXT_PROCESS_TYPE', '<b>Imageprocessing:</b>');
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_SETTINGS', '<b>Settings:</b>');
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_LOGGING', '<b>Log:</b>');
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_ONLY_MISSING_IMAGES','Create only missing images');

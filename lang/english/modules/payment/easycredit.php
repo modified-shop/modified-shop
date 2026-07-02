@@ -21,7 +21,7 @@
     'MODULE_PAYMENT_EASYCREDIT_SORT_ORDER_TITLE' => 'Sort order',
     'MODULE_PAYMENT_EASYCREDIT_SORT_ORDER_DESC' => 'Sort order of display. Lowest is displayed first.',
     'MODULE_PAYMENT_EASYCREDIT_ZONE_TITLE' => 'Payment zone',
-    'MODULE_PAYMENT_EASYCREDIT_ZONE_DESC' => 'If a zone is choosen, the payment method will be valid for this zone only.',
+    'MODULE_PAYMENT_EASYCREDIT_ZONE_DESC' => 'If a zone is chosen, the payment method will be valid for this zone only.',
     'MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_ID_TITLE' => 'Temporary order status',
     'MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_ID_DESC' => 'Specify the order status for unconfirmed orders',
     'MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_SUCCESS_ID_TITLE' => 'Successful order status',

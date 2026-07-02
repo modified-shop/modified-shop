@@ -41,7 +41,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE_TITLE','Security field val
 define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE_DESC','Please enter a private security code which should not be passed on to customers. The micropayment&trade; server will process this code with each notification for improved security.');
 
 define('MODULE_PAYMENT_MCP_SERVICE_SUCCESS_TRANSACTION','The order has been paid. The Auth-Code is: %s');
-define('MODULE_PAYMENT_MCP_SERVICE_IP_NOT_ALLOWED','The IP-Adress is invalid.');
+define('MODULE_PAYMENT_MCP_SERVICE_IP_NOT_ALLOWED','The IP-Address is invalid.');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_TERMINATED','The request is invalid.');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_UNKNOWN_ORDER_ID','This order does not exist');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_SECRET_FIELD_MISSMATCH','Security field wrong!');
@@ -61,7 +61,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID_TITLE','Order statu
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID_DESC','If a back posting occurs, this status is set');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_TITLE','Order status: Refunded');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_DESC','If a refund raised, this status is set.');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_DESC','If a refund is raised, this status is set.');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_TITLE','Order status: Payment review');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_DESC','This status is set if a problem has occurred and the payment needs to be reviewed');
@@ -79,7 +79,7 @@ define('MODULE_PAYMENT_MCP_PREPAY_EXPIRED','No receipt of payment, automatic can
 define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_TITLE','Deletion of unpaid orders');
 define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_DESC','How many days old can an order be with the status "pending payment" before being deleted by the "clear old orders" button. Important: Prepayment orders will not be deleted.');
 
-define('MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION','%s<div class="mcp_notice_register">New version of micropayment&trade; Payment modules are avaiable. <a href="http://ecommerce.micropayment.de/modifiedshop/?lang=EN" target="_new">Click here for Download.</a></div>');
+define('MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION','%s<div class="mcp_notice_register">New version of micropayment&trade; Payment modules is available. <a href="http://ecommerce.micropayment.de/modifiedshop/?lang=EN" target="_new">Click here for Download.</a></div>');
 
 define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">In order to ensure functionality of the micropayment&trade; Payment modules, please first register an account and create a project. <a href="https://%s.micropayment.de" target="blank">Click here to register.</a></div>');
 define('MODULE_PAYMENT_MCP_SERVICE_CSS','
