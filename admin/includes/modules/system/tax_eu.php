@@ -76,7 +76,7 @@ class tax_eu
     global $messageStack;
     
     // include needed classes
-    require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
+    require_once (DIR_FS_CATALOG.'includes/classes/modified_api.php');
 
     modified_api::reset();
     $tax_rates_array = modified_api::request('modified/tax/');
