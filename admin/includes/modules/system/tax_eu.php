@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-defined('_VALID_XTC') or die( 'Direct Access to this location is not allowed.' );
+defined( '_VALID_XTC' ) || defined('RUN_MODE_TASKS') or die( 'Direct Access to this location is not allowed.' );
 
 class tax_eu
 {
@@ -27,8 +27,8 @@ class tax_eu
 
   function __construct() {
     $this->code = 'tax_eu';
-    $this->title = MODULE_TAX_EU_TEXT_TITLE;
-    $this->description = MODULE_TAX_EU_TEXT_DESCRIPTION;
+    $this->title = defined('MODULE_TAX_EU_TEXT_TITLE') ? MODULE_TAX_EU_TEXT_TITLE : '';
+    $this->description = defined('MODULE_TAX_EU_TEXT_DESCRIPTION') ? MODULE_TAX_EU_TEXT_DESCRIPTION : '';
     $this->sort_order = ((defined('MODULE_TAX_EU_SORT_ORDER')) ? MODULE_TAX_EU_SORT_ORDER : '');
     $this->enabled = ((defined('MODULE_TAX_EU_STATUS') && MODULE_TAX_EU_STATUS == 'true') ? true : false);
 
