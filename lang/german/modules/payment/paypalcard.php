@@ -12,7 +12,7 @@
 
 
 $lang_array = array(
-  'MODULE_PAYMENT_PAYPALCARD_TEXT_TITLE' => 'Kreditkarte via PayPal',
+  'MODULE_PAYMENT_PAYPALCARD_TEXT_TITLE' => 'Kreditkarte',
   'MODULE_PAYMENT_PAYPALCARD_TEXT_ADMIN_TITLE' => 'Kreditkarte via PayPal',
   'MODULE_PAYMENT_PAYPALCARD_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal_creditcard.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALCARD_TEXT_DESCRIPTION' => 'Der K&auml;ufer wird nach dem "Best&auml;tigen" zu PayPal geleitet, um hier die Bestellung zu bezahlen.<br />Danach gelangt er zur&uuml;ck in den Shop und erh&auml;lt Ihre Bestell-Best&auml;tigung.<br />Jetzt schneller bezahlen mit unbegrenztem PayPal-K&auml;uferschutz - nat&uuml;rlich kostenlos.<br /><br /><strong><font color="red">ACHTUNG:</font></strong> Damit der Bestellstatus korrekt gesetzt wird, m&uuml;ssen folgende <a href="'.xtc_href_link('paypal_webhook.php').'">Webhooks</a> in der PayPal Konfiguration eingestellt werden, damit der Status korrekt umgestellt wird:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DECLINED</li><li>PAYMENT.CAPTURE.DENIED</li><li>PAYMENT.CAPTURE.PENDING</li></ul>',

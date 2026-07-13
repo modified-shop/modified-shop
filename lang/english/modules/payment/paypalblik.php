@@ -12,7 +12,7 @@
 
 
 $lang_array = array(
-  'MODULE_PAYMENT_PAYPALBLIK_TEXT_TITLE' => 'BLIK via PayPal',
+  'MODULE_PAYMENT_PAYPALBLIK_TEXT_TITLE' => 'BLIK',
   'MODULE_PAYMENT_PAYPALBLIK_TEXT_ADMIN_TITLE' => 'BLIK via PayPal',
   'MODULE_PAYMENT_PAYPALBLIK_TEXT_INFO' => '<img src="https://www.paypalobjects.com/images/checkout/alternative_payments/paypal_blik_color.svg" />',
   'MODULE_PAYMENT_PAYPALBLIK_TEXT_DESCRIPTION' => 'After "confirm" the customer will be routet to BLIK to pay the order.<br />Back in shop he will get your order-mail.<br />PayPal is the safer way to pay online. We keep your details safe from others and can help you get your money back if something ever goes wrong.<br /><br /><strong><font color="red">ATTENTION:</font></strong> In order for the order status to be set correctly, the following <a href="'.xtc_href_link('paypal_webhook.php').'">webhooks</a> must be set in the PayPal configuration so that the status is changed correctly:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DECLINED</li><li>PAYMENT.CAPTURE.DENIED</li><li>PAYMENT.CAPTURE.PENDING</li></ul>',
