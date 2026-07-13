@@ -12,7 +12,7 @@
 
 
 $lang_array = array(
-  'MODULE_PAYMENT_PAYPALEPS_TEXT_TITLE' => 'EPS',
+  'MODULE_PAYMENT_PAYPALEPS_TEXT_TITLE' => 'EPS via PayPal',
   'MODULE_PAYMENT_PAYPALEPS_TEXT_ADMIN_TITLE' => 'EPS via PayPal',
   'MODULE_PAYMENT_PAYPALEPS_TEXT_INFO' => '<img src="https://www.paypalobjects.com/images/checkout/alternative_payments/paypal_eps_color.svg" />',
   'MODULE_PAYMENT_PAYPALEPS_TEXT_DESCRIPTION' => 'Der K&auml;ufer wird nach dem "Best&auml;tigen" zu EPS geleitet, um hier die Bestellung zu bezahlen.<br />Danach gelangt er zur&uuml;ck in den Shop und erh&auml;lt Ihre Bestell-Best&auml;tigung.<br />Jetzt schneller bezahlen mit unbegrenztem PayPal-K&auml;uferschutz - nat&uuml;rlich kostenlos.<br /><br /><strong><font color="red">ACHTUNG:</font></strong> Damit der Bestellstatus korrekt gesetzt wird, m&uuml;ssen folgende <a href="'.xtc_href_link('paypal_webhook.php').'">Webhooks</a> in der PayPal Konfiguration eingestellt werden, damit der Status korrekt umgestellt wird:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DECLINED</li><li>PAYMENT.CAPTURE.DENIED</li><li>PAYMENT.CAPTURE.PENDING</li></ul>',

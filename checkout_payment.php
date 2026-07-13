@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
    Third Party contributions:
-   agree_conditions_1.01          Autor:  Thomas Plï¿½nkers (webmaster@oscommerce.at)
+   agree_conditions_1.01          Autor:  Thomas Plänkers (webmaster@oscommerce.at)
 
    Customers Status v3.x  (c) 2002-2003 Copyright Elari elari@free.fr | www.unlockgsm.com/dload-osc/ | CVS : http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/elari/?sortby=date#dirlist
 
@@ -48,8 +48,6 @@ $smarty = new Smarty();
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 unset ($_SESSION['tmp_oID']);
-
-print_r($_SESSION['paypal']);
 
 //if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);
 if (isset($_SESSION['cot_gv']) /*&& isset($_SESSION['payment'])*/) {
