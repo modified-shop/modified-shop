@@ -239,8 +239,8 @@ class micropayment_method extends micropayment_helper
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_GFX', '', '6', '0','');
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_BGCOLOR', '', '6', '0','');
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_BGGFX', '', '6', '0','');
-        $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD', md5(time()), '6', '0','');
-        $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE',  md5(time()+rand(10000,99999999)) , '6', '0','');
+        $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD', bin2hex(random_bytes(16)), '6', '0', '');
+        $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE', bin2hex(random_bytes(32)), '6', '0', '');
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_STATUS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\',\'False\'),');
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS', '30', '6', '0','');
         $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID', $pendingPaymentId ,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
