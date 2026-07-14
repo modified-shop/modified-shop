@@ -60,7 +60,17 @@
           $messageStack->add('output_warning', WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT);
         }
       }
-      
+
+      // warn if a .git directory exists
+      if (is_dir(DIR_FS_CATALOG . '.git')) {
+        $messageStack->add('output_warning', sprintf(WARNING_GIT_DIRECTORY_EXISTS, DIR_FS_CATALOG . '.git'));
+      }
+
+      // warn if the _installer.php file exists
+      if (is_file(DIR_FS_CATALOG . '_installer.php')) {
+        $messageStack->add('output_warning', sprintf(WARNING_INSTALLER_FILE_EXISTS, DIR_FS_CATALOG . '_installer.php'));
+      }
+
       if ($messageStack->size('output_warning') > 0) {
         echo '<div class="errormessage shopsystem">' . $messageStack->output('output_warning') . '</div>';
       }

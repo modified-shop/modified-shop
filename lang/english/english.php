@@ -273,6 +273,8 @@ define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warning: Directory for sesssio
 define('WARNING_SESSION_DIRECTORY_NOT_WRITEABLE', 'Warning: The modified eCommerce Shopsoftware is not able to write into the session directory: ' . xtc_session_save_path() . '. Sessions will not work until the user access rights for this directory have been changed!');
 define('WARNING_SESSION_AUTO_START', 'Warning: session.auto_start is activated (enabled) - Please deactivate (disable) this PHP feature in php.ini and restart your web server!');
 define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warning: Directory for article download does not exist: ' . DIR_FS_DOWNLOAD . '. This feature will not work until this directory has been created!');
+define('WARNING_GIT_DIRECTORY_EXISTS', 'Warning: A .git directory was found in: %s. This indicates a direct development checkout, which is not intended for production use. Please deploy an official release package instead and delete this directory for security reasons!');
+define('WARNING_INSTALLER_FILE_EXISTS', 'Warning: The file %s is still available. Please delete this file for security reasons!');
 
 define('SUCCESS_ACCOUNT_UPDATED', 'Your account has been updated successfully.');
 define('SUCCESS_PASSWORD_UPDATED', 'Your password has been changed successfully!');
