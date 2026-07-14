@@ -59,8 +59,8 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
     echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.3.0' . PHP_EOL;
     echo 'ACCOUNT-ID: ' . substr($accId,0,1).str_repeat('x',strlen($accId)-2).substr($accId,strlen($accId)-1) . PHP_EOL;
     echo 'ACCESSKEY: ' . substr($accKey,0,1).str_repeat('x',strlen($accKey)-2).substr($accKey,strlen($accKey)-1) . PHP_EOL;
-    echo 'SECRET_FIELD: ' . substr($secretField,0,1).str_repeat('x',strlen($secretField)-2).substr($secretField,strlen($secretField)-1) . PHP_EOL;
-    echo 'SECRET_VALUE: ' . substr($secretValue,0,1).str_repeat('x',strlen($secretValue)-2).substr($secretValue,strlen($secretValue)-1) . PHP_EOL;
+    echo 'SECRET_FIELD: ' . ($secretField !== '' ? '***configured***' : '***not configured***') . PHP_EOL;
+    echo 'SECRET_VALUE: ' . ($secretValue !== '' ? '***configured***' : '***not configured***') . PHP_EOL;
     echo 'LAST_REFRESH: ' . $lastRefresh . ' ; INTERVAL: ' . $interval . 's' . PHP_EOL;
     echo '</pre>';
     exit();
@@ -248,10 +248,10 @@ class micropayment_callback
         $secretField = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD;
         $secretValue = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE;
 
-        if(!isset($data[$secretField])) {
+        if(!isset($data[$secretField]) || !is_string($data[$secretField])) {
             $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
         }
-        if($data[$secretField] !== $secretValue) {
+        if(!hash_equals((string)$secretValue, $data[$secretField])) {
             $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
         }
 
