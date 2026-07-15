@@ -21,11 +21,18 @@ if (STORE_SESSIONS == 'files') {
   xtc_session_save_path(SESSION_WRITE_DIRECTORY);
 }
 
+// compute the cookie attributes once so deletion and setting use the same values
+$session_cookie_path = DIR_WS_CATALOG;
+$session_cookie_domain = (xtc_not_null($current_domain) ? '.'.$current_domain : '');
+$session_cookie_secure = ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false);
+$session_cookie_httponly = true;
+$session_cookie_samesite = 'Lax';
+
 if (STORE_SESSIONS == 'mysql') {
   // check valid session_id
   if (isset($_GET[xtc_session_name()]) && $_GET[xtc_session_name()] != '') {
-    $check_query = xtc_db_query("SELECT sesskey 
-                                   FROM ".TABLE_SESSIONS." 
+    $check_query = xtc_db_query("SELECT sesskey
+                                   FROM ".TABLE_SESSIONS."
                                   WHERE sesskey = '".xtc_db_input(preg_replace('/[^0-9a-zA-Z]/', '', $_GET[xtc_session_name()]))."'");
     if (xtc_db_num_rows($check_query) < 1) {
       redirect_invalid_session();
@@ -33,23 +40,22 @@ if (STORE_SESSIONS == 'mysql') {
   }
   // delete expired cookie
   if (isset($_COOKIE[xtc_session_name()])) {
-    $check_query = xtc_db_query("SELECT expiry 
-                                   FROM ".TABLE_SESSIONS." 
+    $check_query = xtc_db_query("SELECT expiry
+                                   FROM ".TABLE_SESSIONS."
                                   WHERE sesskey = '".xtc_db_input(preg_replace('/[^0-9a-zA-Z]/', '', $_COOKIE[xtc_session_name()]))."'");
     if (xtc_db_num_rows($check_query) > 0) {
       $check = xtc_db_fetch_array($check_query);
       if (($check['expiry'] + (int)$SESS_LIFE) < time()) {
-        $cookie_params = session_get_cookie_params();
-        xtc_setcookie(xtc_session_name(), '', time()-3600, $cookie_params['path'], $cookie_params['domain']);
+        xtc_setcookie(xtc_session_name(), '', time()-3600, $session_cookie_path, $session_cookie_domain, $session_cookie_secure, $session_cookie_httponly, $session_cookie_samesite);
       }
     }
   }
 }
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_session_and_cookie_parameters/','php') as $file) require_once ($file); 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_session_and_cookie_parameters/','php') as $file) require_once ($file);
 
 // delete old cookie
-if (is_array($current_domain_delete) 
+if (is_array($current_domain_delete)
     && count($current_domain_delete) > 0
     && defined('SESSION_DELETE_OLD_COOKIES')
     && SESSION_DELETE_OLD_COOKIES == 'True'
@@ -57,15 +63,15 @@ if (is_array($current_domain_delete)
 {
   foreach ($current_domain_delete as $domain) {
     xtc_setcookie(xtc_session_name(), '', time()-3600, '/', '.'.$domain);
-    xtc_setcookie(xtc_session_name(), '', time()-3600, '/', '.'.$domain, ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true, '');
+    xtc_setcookie(xtc_session_name(), '', time()-3600, '/', '.'.$domain, $session_cookie_secure, true, '');
 
-    xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, '.'.$domain);    
-    xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, '.'.$domain, ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true, '');
+    xtc_setcookie(xtc_session_name(), '', time()-3600, $session_cookie_path, '.'.$domain);
+    xtc_setcookie(xtc_session_name(), '', time()-3600, $session_cookie_path, '.'.$domain, $session_cookie_secure, true, '');
   }
 }
 
 // set the session cookie
-set_session_cookie(0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''), ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true, 'Lax');
+set_session_cookie(0, $session_cookie_path, $session_cookie_domain, $session_cookie_secure, $session_cookie_httponly, $session_cookie_samesite);
 
 // set the session ID if it exists
 if (SESSION_FORCE_COOKIE_USE != 'True') {
@@ -86,7 +92,7 @@ if (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
   $truncate_session_id = true;
   $session_started = false;
   // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
-  if (stripos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false 
+  if (stripos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false
       || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])
       )
   {
