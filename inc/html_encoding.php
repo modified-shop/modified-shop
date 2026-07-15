@@ -19,7 +19,7 @@ define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-15');
  */
 function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
-  if (!empty($string)) {
+  if ($string !== null && $string !== '') {
     $encoding = get_default_encoding($encoding);
     return htmlentities($string, $flags , $encoding);
   } else {
@@ -32,7 +32,7 @@ function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
  */
 function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 {
-  if (!empty($string)) {
+  if ($string !== null && $string !== '') {
     $encoding = get_default_encoding($encoding);
     return htmlspecialchars($string, $flags , $encoding);
   } else {
@@ -45,7 +45,9 @@ function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
  */
 function encode_utf8($string, $encoding = '', $force_utf8 = false)
 {
-  if (!empty($string) && (strtolower($_SESSION['language_charset']) == 'utf-8' || $force_utf8 === true)) {
+  $language_charset = isset($_SESSION['language_charset']) ? strtolower($_SESSION['language_charset']) : '';
+
+  if ($string !== null && $string !== '' && ($language_charset == 'utf-8' || $force_utf8 === true)) {
     $cur_encoding = !empty($encoding) && in_array(strtoupper($encoding), get_supported_charset()) ? strtoupper($encoding) : detect_encoding($string);
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
       return $string;
@@ -62,7 +64,7 @@ function encode_utf8($string, $encoding = '', $force_utf8 = false)
  */
 function decode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
-  if (!empty($string)) {
+  if ($string !== null && $string !== '') {
     $encoding = get_default_encoding($encoding);
     return html_entity_decode($string, $flags , $encoding);
   } else {
@@ -75,7 +77,7 @@ function decode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
  */
 function decode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 {
-  if (!empty($string)) {
+  if ($string !== null && $string !== '') {
     $encoding = get_default_encoding($encoding);
     return htmlspecialchars_decode($string, $flags , $encoding);
   } else {
@@ -86,11 +88,13 @@ function decode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 /**
  * decode_utf8
  */
-function decode_utf8($string, $encoding = '', $force_utf8 = false) 
+function decode_utf8($string, $encoding = '', $force_utf8 = false)
 {
-  if (strtolower($_SESSION['language_charset']) != 'utf-8' || $force_utf8 === true) {
+  $language_charset = isset($_SESSION['language_charset']) ? strtolower($_SESSION['language_charset']) : '';
+
+  if ($string !== null && $string !== '' && ($language_charset != 'utf-8' || $force_utf8 === true)) {
     $encoding = get_default_encoding($encoding);
-    
+
     $cur_encoding = detect_encoding($string, 'UTF-8');
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
       return mb_convert_encoding($string, $encoding, 'UTF-8');
@@ -107,7 +111,12 @@ function decode_utf8($string, $encoding = '', $force_utf8 = false)
  */
 function get_supported_charset()
 {
-  $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));
+  static $supported_charsets;
+
+  if (!isset($supported_charsets)) {
+    $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));
+  }
+
   return $supported_charsets;
 }
 
