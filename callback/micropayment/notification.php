@@ -29,8 +29,8 @@ define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_EVENT_CONFLICT','EVENT-WORKFLOW-
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INFO','ERR: %s - %s');
 
 
-if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
-    && isset($_REQUEST['function'])
+if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS') 
+    && isset($_REQUEST['function']) 
     && $_REQUEST['function'] == 'test'
     )
 {
@@ -41,19 +41,19 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
     $accId       = MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID;
     $secretField = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD;
     $secretValue = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE;
-
+    
     $lastRefresh = '-';
     $interval = '0';
-    $refreshQuery = xtc_db_query('SELECT *
-                                    FROM '.TABLE_CONFIGURATION.'
+    $refreshQuery = xtc_db_query('SELECT * 
+                                    FROM '.TABLE_CONFIGURATION.' 
                                    WHERE configuration_key = "MODULE_PAYMENT_MCP_SERVICE_REFRESH_INTERVAL"');
     if (xtc_db_num_rows($refreshQuery) > 0) {
       $refresh = xtc_db_fetch_array($refreshQuery);
-
+      
       $lastRefresh = $refresh['last_modified'];
       $interval = $refresh['configuration_value'];
     }
-
+    
     echo '<pre>';
     echo 'MICROPAYMENT GATEWAY TEST FUNCTION' . PHP_EOL;
     echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.3.1' . PHP_EOL;
@@ -318,7 +318,7 @@ class micropayment_callback
                 try {
                     $this->sendNewOrderEmail();
                 } catch(Exception $e) {
-
+                    
                 }
                 $customer_notification = 0;
                 $order_status          = MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID;
@@ -635,10 +635,10 @@ class micropayment_callback
 
         //must be set for send_order.php (also $insert_id)
         global $smarty, $order, $insert_id, $send_by_admin, $redirect_to_admin, $messageStack;
-
+        
         $send_by_admin = true;
         $redirect_to_admin = false;
-
+        
         defined('COMMENT_SEND_ORDER_BY_ADMIN') OR define('COMMENT_SEND_ORDER_BY_ADMIN', 'new order email send by notification from micropayment');
         defined('SUCCESS_ORDER_SEND') OR define('SUCCESS_ORDER_SEND', 'Order confirmation sent successfully');
 
