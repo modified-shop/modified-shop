@@ -75,11 +75,10 @@ function decode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 /**
  * decode_htmlspecialchars
  */
-function decode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
+function decode_htmlspecialchars($string, $flags = ENT_COMPAT)
 {
   if ($string !== null && $string !== '') {
-    $encoding = get_default_encoding($encoding);
-    return htmlspecialchars_decode($string, $flags , $encoding);
+    return htmlspecialchars_decode($string, $flags);
   } else {
     return $string;
   }
