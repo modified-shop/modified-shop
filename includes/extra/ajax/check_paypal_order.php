@@ -15,45 +15,15 @@
   require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
   function check_paypal_order() {
-    if (isset($_SESSION['paypal']) 
+    if (isset($_SESSION['paypal'])
         && isset($_SESSION['paypal']['OrderID'])
         && isset($_GET['payment_method'])
-        && $_GET['payment_method'] != ''
+        && in_array($_GET['payment_method'], array('paypalacdc'))
         )
     {
       $paypal = new PayPalPaymentV2($_GET['payment_method']);
-      $order = $paypal->GetOrder($_SESSION['paypal']['OrderID'], 'fields=payment_source');
-      
-      if (isset($order->payment_source)
-          && isset($order->payment_source->card)
-          && isset($order->payment_source->card->authentication_result)
-          )
-      {
-        $authentication_result = $order->payment_source->card->authentication_result;
-        
-        if (isset($authentication_result->liability_shift)) {
-          // with 3D secure
-          if ($authentication_result->liability_shift == 'POSSIBLE'
-              && isset($authentication_result->three_d_secure)
-              && $authentication_result->three_d_secure->enrollment_status == 'Y'
-              && in_array($authentication_result->three_d_secure->authentication_status, array('Y', 'A'))
-              )
-          {
-            return true;
-          }
-          
-          // without 3D secure
-          if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_EXTEND_CARDS') == '1'
-              && $authentication_result->liability_shift == 'NO'
-              && in_array($authentication_result->three_d_secure->enrollment_status, array('N', 'U', 'B'))
-              )
-          {
-            return true;
-          }
-        }
-        
-      }      
+      return $paypal->CheckLiabilityShift($_SESSION['paypal']['OrderID']);
     }
-    
+
     return false;
   }

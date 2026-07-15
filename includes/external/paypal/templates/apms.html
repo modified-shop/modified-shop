@@ -1,49 +1,63 @@
-<link rel="stylesheet" property="stylesheet" href="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/css/apms.css" type="text/css" media="screen" />
+<link rel="stylesheet" property="stylesheet" href="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/css/apms.css?v=20" type="text/css" media="screen" />
 {if isset($paypalapplepay)}
-  <script src="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/js/applepay.js?v=2"></script>
-  <script src="https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js"></script>
+<script src="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/js/applepay.js?v=20"></script>
+<script src="https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js?v=20"></script>
 {/if}
 {if isset($paypalgooglepay)}
-  <script src="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/js/googlepay.js"></script>
-  <script src="https://pay.google.com/gp/p/js/pay.js"></script>
+<script src="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/js/googlepay.js?v=23"></script>
+<script src="https://pay.google.com/gp/p/js/pay.js?v=20"></script>
 {/if}
 
 <div class="apms_form_button{if !isset($checkout)} apms_nocheckout{if isset($product)} apms_product{/if}{/if}">
   {if isset($SAVE_PAYMENT_CHECKBOX)}
-    <div class="apms_notice cus_check cus_check_small">
-      {$SAVE_PAYMENT_CHECKBOX}
-      <label for="save_payment">{$smarty.const.MODULE_PAYMENT_PAYPAL_TEXT_SAVE_PAYMENT}</label>
-    </div>
+  <div class="apms_notice cus_check cus_check_small">
+    {$SAVE_PAYMENT_CHECKBOX}
+    <label for="save_payment">{$smarty.const.MODULE_PAYMENT_PAYPAL_TEXT_SAVE_PAYMENT}</label>
+  </div>
   {/if}
 
   {if isset($checkout) || isset($paypalexpress) || isset($paypalapplepay) || isset($paypalgooglepay)}
-    <div id="apms_buttons" class="apms_form_button_inner">
-      {if isset($checkout)}
-        <div id="apms_button"></div>
-      {/if}
-      
-      {if isset($paypalexpress)}
-        <div id="apms_button1"></div>
-      {/if}
+  <div id="apms_buttons" class="apms_form_button_inner">
+    {if isset($checkout)}
+    <div id="apms_button"></div>
+    {/if}
 
-      {if isset($paypalapplepay)}
-        <div id="apms_button3"></div>
-      {/if}
+    {if isset($paypalexpress)}
+    <div id="apms_button1"></div>
+    {/if}
 
-      {if isset($paypalgooglepay)}
-        <div id="apms_button4"></div>
-      {/if}
-        
-      <div class="apms_form_button_overlay"></div>
-    </div>
+    {if isset($paypalapplepay) && isset($checkout)}
+    <div id="apms_button5"></div>
+    {/if}
+
+    {if isset($paypalgooglepay) && isset($checkout)}
+    <div id="apms_button6"></div>
+    {/if}
+
+    <div class="apms_form_button_overlay"></div>
+  </div>
   {/if}
-  
+
   {if isset($paypalbnpl)}
-    <div id="apms_bnpl" class="apms_form_button_inner">
-      <div id="apms_button2"></div>
-      {if !isset($checkout) && !isset($paypalexpress)}
-        <div class="apms_form_button_overlay"></div>
-      {/if}
-    </div>
+  <div id="apms_bnpl" class="apms_form_button_inner">
+    <div id="apms_button2"></div>
+    {if !isset($checkout) && !isset($paypalexpress)}
+    <div class="apms_form_button_overlay"></div>
+    {/if}
+  </div>
+  {/if}
+
+  {if (isset($paypalapplepay) || isset($paypalgooglepay)) && !isset($checkout)}
+  <div id="apms_apgp" class="apms_form_button_inner">
+    {if isset($paypalapplepay)}
+    <div id="apms_button5"></div>
+    {/if}
+    {if isset($paypalgooglepay)}
+    <div id="apms_button6"></div>
+    {/if}
+    {if !isset($paypalexpress)}
+    <div class="apms_form_button_overlay"></div>
+    {/if}
+  </div>
   {/if}
 </div>

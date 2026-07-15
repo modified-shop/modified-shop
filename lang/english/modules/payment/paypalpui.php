@@ -18,7 +18,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALPUI_TEXT_DESCRIPTION' => '<strong><font color="red">NOTE:</font></strong> This payment method is only for consumers.<br /><br /><strong><font color="red">ATTENTION:</font></strong> In order for the order status to be set correctly, the following <a href="'.xtc_href_link('paypal_webhook.php').'">webhooks</a> must be set in the PayPal configuration so that the status is changed correctly:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DECLINED</li><li>PAYMENT.CAPTURE.DENIED</li><li>PAYMENT.CAPTURE.PENDING</li></ul>',
   'MODULE_PAYMENT_PAYPALPUI_ALLOWED_TITLE' => 'Allowed zones',
   'MODULE_PAYMENT_PAYPALPUI_ALLOWED_DESC' => 'The module can be used for the following zones.',
-  'MODULE_PAYMENT_PAYPALPUI_STATUS_TITLE' => 'Enable Pay upon invoice via PayPal',
+  'MODULE_PAYMENT_PAYPALPUI_STATUS_TITLE' => 'Enable Pay upon invoice',
   'MODULE_PAYMENT_PAYPALPUI_STATUS_DESC' => 'Do you want to accept PayPal Pay upon invoice payments?',
   'MODULE_PAYMENT_PAYPALPUI_SORT_ORDER_TITLE' => 'Sort order',
   'MODULE_PAYMENT_PAYPALPUI_SORT_ORDER_DESC' => 'Sort order of the view. Lowest numeral will be displayed first',

@@ -269,8 +269,9 @@ class PayPalPayment extends PayPalPaymentBase {
         $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PROCESS, xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
                      ->setCancelUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
       } else {
-        $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'oID='.$order->info['order_id'].'&key='.md5($order->customer['email_address']).'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
-                     ->setCancelUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'payment_error='.$this->code.'&oID='.$order->info['order_id'].'&key='.md5($order->customer['email_address']).'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
+        $link_token = $this->get_paypal_link_token($order->info['order_id'], $order->customer['email_address']);
+        $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'oID='.$order->info['order_id'].'&key='.$link_token.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
+                     ->setCancelUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'payment_error='.$this->code.'&oID='.$order->info['order_id'].'&key='.$link_token.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
       }
     }
     

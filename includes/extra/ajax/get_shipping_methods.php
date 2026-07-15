@@ -66,6 +66,10 @@
       $_SESSION['country'] = $countries_id;
     }
 
+    // reinitialize the price class to get the correct prices
+    $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
+    $_SESSION['cart']->calculate();
+    
     $order = $paypal->set_order_object();
         
     $quotes = $paypal->get_shipping_data(true);
@@ -142,6 +146,6 @@
         )
       )
     );
-        
+  
     return $response;
   }

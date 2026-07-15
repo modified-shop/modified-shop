@@ -33,18 +33,23 @@ class paypalapplepay extends PayPalPaymentV2 {
 
 
   function update_status() {
-    global $order;
-    
+    global $order, $PHP_SELF;
+
     $this->enabled = false;
-    if (isset($_SESSION['paypal_instruments'])
-        && is_array($_SESSION['paypal_instruments'])
-        && in_array($this->paypal_code, $_SESSION['paypal_instruments'])
+    if ((strpos(basename($PHP_SELF), 'checkout') === false
+         && isset($_SESSION['cart'])
+         && $_SESSION['cart']->count_contents() > 0
+         )
+        || (isset($_SESSION['paypal_instruments'])
+            && is_array($_SESSION['paypal_instruments'])
+            && in_array($this->paypal_code, $_SESSION['paypal_instruments'])
+            )
         )
     {
       $this->enabled = true;
     }
-    
-	  parent::update_status();	  
+
+    parent::update_status();
   }
 
 
@@ -110,7 +115,7 @@ class paypalapplepay extends PayPalPaymentV2 {
     }
 
     $paypalscript = '
-    if ($("#apms_button3").length) {    
+    if ($("#apms_button5").length) {    
       // eslint-disable-next-line no-undef
       if (typeof ApplePaySession != "undefined" && ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()) {
         setupApplepay().catch(console.error);

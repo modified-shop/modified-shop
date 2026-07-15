@@ -18,11 +18,11 @@ include('includes/application_top.php');
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');                                      
 
 
-if (isset($_GET['oID']) 
-    && is_numeric($_GET['oID']) 
-    && isset($_GET['key']) 
-    && strlen($_GET['key']) == '32'
-    ) 
+if (isset($_GET['oID'])
+    && is_numeric($_GET['oID'])
+    && isset($_GET['key'])
+    && strlen($_GET['key']) == 64
+    )
 {
 
   // include needed function
@@ -32,16 +32,16 @@ if (isset($_GET['oID'])
   require_once (DIR_WS_CLASSES . 'order.php');
 
   $order = new order((int)$_GET['oID']);
-  $hash = md5($order->customer['email_address']);
-    
-  if ($_GET['key'] == $hash) {
+  $paypal = new PayPalPayment('paypallink');
+  $hash = $paypal->get_paypal_link_token((int)$_GET['oID'], $order->customer['email_address']);
+
+  if (hash_equals($hash, $_GET['key'])) {
 
     if (!isset($_SESSION['customer_id'])) {
       $_SESSION['customers_status'] = get_customers_status_by_id($order->info['status']);
       $_SESSION['customers_status']['customers_status'] = $order->info['status'];
     }
 
-    $paypal = new PayPalPayment('paypallink');
     include_once(DIR_WS_LANGUAGES . $order->info['language'] . '/modules/payment/paypallink.php');
 
 		// confirmed

@@ -24,6 +24,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
   function __construct() {
     global $order;
   
+    $this->paypal_code = 'googlepay';
     PayPalPaymentV2::__construct('paypalgooglepay');
     $this->tmpOrders = false;
   }
@@ -91,7 +92,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
     }
 
     $paypalscript = '
-    if ($("#apms_button4").length) {
+    if ($("#apms_button6").length) {
       if (google && paypal.Googlepay) {
         onGooglePayLoaded();
       } else {
@@ -127,7 +128,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
           buttonLocale: "'.$_SESSION['language_code'].'",
           onClick: onGooglePaymentButtonClicked
         });
-        document.getElementById("apms_button4").appendChild(button);
+        document.getElementById("apms_button6").appendChild(button);
         document.getElementsByClassName("apms_form_button_overlay")[0].style.display = "none";
       }
       

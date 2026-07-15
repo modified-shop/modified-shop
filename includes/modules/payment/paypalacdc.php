@@ -127,110 +127,116 @@ class paypalacdc extends PayPalPaymentV2 {
     $order_url = DIR_WS_BASE.'ajax.php?ext=create_paypal_order';
     $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
 
-    $process_button .= sprintf($this->get_js_sdk('true', $this->GenerateClientToken()->client_token), "
-      if (paypal.HostedFields.isEligible()) {
-        let orderId;
+    $process_button .= sprintf($this->get_js_sdk('true'), "
+      var el_acdc_error = document.querySelector('#apms_error');
+      var el_acdc_overlay = document.querySelector('.apms_overlay');
+      var el_checkout_confirmation = document.querySelector('#checkout_confirmation');
+      var el_button_checkout_confirmation = document.querySelector('#button_checkout_confirmation');
 
-        var el_acdc_error = document.querySelector('#apms_error');
-        var el_acdc_overlay = document.querySelector('.apms_overlay');
-        var el_checkout_confirmation = document.querySelector('#checkout_confirmation');
-        var el_button_checkout_confirmation = document.querySelector('#button_checkout_confirmation');
+      for (let i = 0; i < el_checkout_confirmation.children.length; i++) {
+        if (el_checkout_confirmation.children[i].className != 'apms_form'
+            && el_checkout_confirmation.children[i].tagName != 'apms_alternate'
+            && el_checkout_confirmation.children[i].className.indexOf('apms_notice') < 0
+            && el_checkout_confirmation.children[i].tagName != 'SCRIPT'
+            && el_checkout_confirmation.children[i].tagName != 'LINK'
+            )
+        {
+          el_checkout_confirmation.children[i].classList.add('el_payment_confirmation');
+        }
+      }
+      var el_payment_confirmation = document.querySelector('.el_payment_confirmation');
+      var el_payment_confirmation_style = window.getComputedStyle(el_payment_confirmation, null).display;
 
-        for (let i = 0; i < el_checkout_confirmation.children.length; i++) {
-          if (el_checkout_confirmation.children[i].className != 'apms_form'
-              && el_checkout_confirmation.children[i].tagName != 'apms_alternate'
-              && el_checkout_confirmation.children[i].className.indexOf('apms_notice') < 0
-              && el_checkout_confirmation.children[i].tagName != 'SCRIPT'
-              && el_checkout_confirmation.children[i].tagName != 'LINK'
-              )
-          {
-            el_checkout_confirmation.children[i].classList.add('el_payment_confirmation');
+      el_button_checkout_confirmation.addEventListener('click', (event) => {
+        el_acdc_error.innerHTML = '';
+        el_acdc_error.style = 'display: none';
+        el_acdc_overlay.style = 'display: block';
+      });
+
+      const cardFields = paypal.CardFields({
+        createOrder: function () {
+          var formdata = $('#checkout_confirmation').serializeArray();
+          return $.ajax({
+            type: 'POST',
+            url: '".$order_url."',
+            data: formdata,
+            dataType: 'json'
+          });
+        },
+        onApprove: function (data) {
+          $.get('".DIR_WS_BASE."ajax.php', {ext: 'check_paypal_order', payment_method: 'paypalacdc'}, function(result) {
+            if (result === true) {
+              // redirect to complete order
+              window.location.href = '".xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')."';
+            } else {
+              var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
+              display_error_acdc(msg);
+            }
+          }).fail(function() {
+            var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
+            display_error_acdc(msg);
+          });
+        },
+        onError: function (err) {
+          var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
+          display_error_acdc(msg);
+        },
+        style: {
+          'input': {
+            'height': '42px',
+            'font-size': '14px',
+          },
+          '.invalid': {
+            'color': '#e74c3c'
           }
         }
-        var el_payment_confirmation = document.querySelector('.el_payment_confirmation');
-        var el_payment_confirmation_style = window.getComputedStyle(el_payment_confirmation, null).display;
+      });
 
-        el_button_checkout_confirmation.addEventListener('click', (event) => {
-          el_acdc_error.innerHTML = '';
-          el_acdc_error.style = 'display: none';
-          el_acdc_overlay.style = 'display: block';
-        });
-
-        paypal.HostedFields.render({
-          createOrder: function () {
-            var formdata = $('#checkout_confirmation').serializeArray(); 
-            return $.ajax({
-              type: 'POST',
-              url: '".$order_url."',
-              data: formdata,
-              dataType: 'json'
-            });
-          },
-          styles: {
-            '.invalid': {
-              'color': '#e74c3c'
-            }
-          },
-          fields: {
-            number: {
-              selector: '#card-number',
-              placeholder: '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_CARDNUMBER_PLACEHOLDER)."'
-            },
-            cvv: {
-              selector: '#cvv',
-              placeholder: '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_CVV_PLACEHOLDER)."'
-            },
-            expirationDate: {
-              selector: '#expiration-date',
-              placeholder: '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_EXPIRATION_PLACEHOLDER)."'
-            }
-          }
-        }).then(function (cardFields) {
+      if (cardFields.isEligible()) {
+        Promise.all([
+          cardFields.NumberField({
+            placeholder: '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_CARDNUMBER_PLACEHOLDER)."'
+          }).render('#card-number'),
+          cardFields.ExpiryField({
+            placeholder: '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_EXPIRATION_PLACEHOLDER)."'
+          }).render('#expiration-date'),
+          cardFields.CVVField({
+            placeholder: '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_CVV_PLACEHOLDER)."'
+          }).render('#cvv'),
+          cardFields.NameField({
+            placeholder: '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_CARDHOLDER_PLACEHOLDER)."'
+          }).render('#card-holder')
+        ]).then(function () {
           el_acdc_overlay.style = 'display: none';
 
           el_checkout_confirmation.addEventListener('submit', (event) => {
             event.preventDefault();
 
             cardFields.submit({
-              contingencies: ['SCA_WHEN_REQUIRED'],
-              cardholderName: document.getElementById('card-holder').value,
               billingAddress: {
-                streetAddress: '".$this->encode_utf8($order->billing['street_address'])."',
-                ".(($order->billing['suburb'] != '') ? "extendedAddress: '".$this->encode_utf8($order->billing['suburb'])."'," : '')."
-                ".((isset($order->billing['state']) && $order->billing['state'] != '') ? "region: '".$this->encode_utf8(xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']))."'," : '')."
-                locality: '".$this->encode_utf8($order->billing['city'])."',
+                addressLine1: '".$this->encode_utf8($order->billing['street_address'])."',
+                ".(($order->billing['suburb'] != '') ? "addressLine2: '".$this->encode_utf8($order->billing['suburb'])."'," : '')."
+                ".((isset($order->billing['state']) && $order->billing['state'] != '') ? "adminArea1: '".$this->encode_utf8(xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']))."'," : '')."
+                adminArea2: '".$this->encode_utf8($order->billing['city'])."',
                 postalCode: '".$this->encode_utf8($order->billing['postcode'])."',
-                countryCodeAlpha2: '".$this->encode_utf8($order->billing['country']['iso_code_2'])."'
-              }
-            }).then(function (data) {
-              if (data.liabilityShift === 'POSSIBLE') {
-                $.get('".DIR_WS_BASE."ajax.php', {ext: 'check_paypal_order', payment_method: 'paypalacdc'}, function(result) {
-                  if (result === true) {
-                    // redirect to complete order
-                    window.location.href = '".xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')."';
-                  } else {
-                    var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
-                    display_error_acdc(msg);
-                  }
-                }).fail(function() {
-                  var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
-                  display_error_acdc(msg);
-                });
-              } else {
-                var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
-                display_error_acdc(msg);
+                countryCode: '".$this->encode_utf8($order->billing['country']['iso_code_2'])."'
               }
             }).catch(function (err) {
+              console.log(err);
               var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
               display_error_acdc(msg);
             });
           });
+        }).catch(function (err) {
+          console.log(err);
+          var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
+          display_error_acdc(msg);
         });
       } else {
         // redirects if the merchant isn't eligible
         window.location.href = '".$error_url."';
       }
-      
+
       function display_error_acdc(msg) {
         el_acdc_overlay.style = 'display: none';
         el_acdc_error.style = 'display: block';
@@ -289,12 +295,27 @@ class paypalacdc extends PayPalPaymentV2 {
 	function payment_action() {
     global $insert_id;
 
+    // card fields flow: enforce liability shift policy server-side
+    // (vault flow posts payment_method and is verified in before_process)
+    if (!isset($_POST['payment_method'])) {
+      if (!isset($_SESSION['paypal']['OrderID'])
+          || $this->CheckLiabilityShift($_SESSION['paypal']['OrderID']) !== true
+          )
+      {
+        // cancel pp order
+        unset($_SESSION['paypal']);
+        $this->remove_order($_SESSION['tmp_oID']);
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+      }
+    }
+
     $result = $this->FinishOrder($insert_id);
     if ($result->status == 'COMPLETED' && $result->transaction_status == 'COMPLETED') {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
     }
 
     // cancel pp order
+    unset($_SESSION['paypal']);
     $this->remove_order($_SESSION['tmp_oID']);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
   }

@@ -16,6 +16,9 @@ require(DIR_FS_EXTERNAL.'paypal/classes/PayPalBootstrap.php');
 $bootstrap = new PayPalBootstrap();
 $bootstrap->init();
 
+// include needed classes
+require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalAuthInjector.php');
+
 
 // used classes
 use PayPal\Rest\ApiContext;
@@ -74,7 +77,20 @@ class PayPalAuth {
   
 
   protected function GetClient() {
-    return new PayPalHttpClient($this->GetEnvironment());
+    $environment = $this->GetEnvironment();
+    $client = new PayPalHttpClient($environment);
+
+    // replace the SDK auth injector with the caching variant
+    // to reuse the oauth token across requests
+    $authInjector = new PayPalAuthInjector($client, $environment, NULL, NULL, $this->get_config('PAYPAL_MODE'));
+    foreach ($client->injectors as $key => $injector) {
+      if ($injector instanceof PayPalCheckoutSdk\Core\AuthorizationInjector) {
+        $client->injectors[$key] = $authInjector;
+      }
+    }
+    $client->authInjector = $authInjector;
+
+    return $client;
   }
 
 

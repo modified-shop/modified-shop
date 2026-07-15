@@ -325,6 +325,9 @@
     }
 
     function selection() {
+      // rotate the payment nonce whenever the payment selection is presented
+      $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
+
       $selection_array = array();
       if (is_array($this->modules)) {
         foreach ($this->modules as $value) {

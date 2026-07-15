@@ -24,6 +24,7 @@
   // include needed functions
   require_once(DIR_FS_EXTERNAL.'paypal/functions/PayPalFunctions.php');
   require_once(DIR_FS_INC.'xtc_random_charcode.inc.php');
+  require_once(DIR_FS_INC.'get_country_id.inc.php');
 
   // include needed classes
   require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentBase.php');
@@ -104,6 +105,15 @@
       }
       
       try {
+        // use the cached generic token if no customer relation is required
+        if (is_null($customer_id)
+            && isset($client->authInjector)
+            && $client->authInjector instanceof PayPalAuthInjector
+            )
+        {
+          return $client->authInjector->getAccessToken();
+        }
+
         $accessTokenResponse = $client->execute(new AccessTokenRequest($this->GetEnvironment(), NULL, $customer_id));
         $accessToken = $accessTokenResponse->result;
         return new AccessToken($accessToken->access_token, $accessToken->id_token, $accessToken->token_type, $accessToken->expires_in);
@@ -331,32 +341,49 @@
         }
       }
       
+      // the request id keeps CreateOrder idempotent
+      $request_nonce = ((isset($_SESSION['payment_nonce'])) ? $_SESSION['payment_nonce'] : '');
+
+      $experience_context = array(
+        'cancel_url' => $this->link_encoding(xtc_href_link('callback/paypal/error.php', 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
+        'return_url' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PROCESS, xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
+      );
+
+      // the card experience context only supports the redirect urls
+      if ($pm_source != 'card') {
+        $experience_context = array_merge(array(
+          'brand_name' => $this->encode_utf8(STORE_NAME),
+          'locale' => $locale_array[0].'-'.strtoupper($locale_array[1]),
+          'landing_page' => 'LOGIN',
+          'user_action' => 'CONTINUE',
+        ), $experience_context);
+      }
+
       $request = new OrdersCreateRequest();
-      $request->payPalRequestId(md5($this->code.$_SESSION['cart']->cartID));
+      $request->payPalRequestId(md5($this->code.$_SESSION['cart']->cartID.$request_nonce));
       $request->prefer('return=representation');
       $request->body = array(
         'intent' => $this->intent,
         'purchase_units' => array($purchase_unit),
         'payment_source' => array(
           $pm_source => array(
-            'experience_context' => array(
-              'brand_name' => $this->encode_utf8(STORE_NAME),
-              'locale' => $locale_array[0].'-'.strtoupper($locale_array[1]),
-              'landing_page' => 'LOGIN',
-              'user_action' => 'CONTINUE',
-              'cancel_url' => $this->link_encoding(xtc_href_link('callback/paypal/error.php', 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
-              'return_url' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PROCESS, xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
-            )
+            'experience_context' => $experience_context
           )
-        ) 
+        )
       );
-      
-      if (isset($_SESSION['customer_id'])) {
+
+      if ($pm_source != 'card'
+          && (isset($_SESSION['customer_id'])
+              || $this->code == 'paypalapplepay'
+              || $this->code == 'paypalgooglepay'
+              )
+          )
+      {
         $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'SET_PROVIDED_ADDRESS';
       }
       
-      if (isset($payer)) {
-        $request->body['payer'] = $payer;
+      if (isset($payer) && $pm_source == 'paypal') {
+        $request->body['payment_source']['paypal'] = array_merge($request->body['payment_source']['paypal'], $payer);
       }
       
       if (count($payment_source) > 0) {
@@ -630,6 +657,8 @@
       {
         $_SESSION['paypal_payment_error'] = strtoupper($details->details[0]->issue);
       }
+
+      unset($_SESSION['paypal']);
       
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')); 
     }
@@ -686,6 +715,8 @@
       {
         $_SESSION['paypal_payment_error'] = strtoupper($details->details[0]->issue);
       }
+
+      unset($_SESSION['paypal']);
        
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')); 
     }
@@ -768,6 +799,10 @@
 
       $this->set_number_format($order->info['currency']);
       
+      // check if shipping object exists in order, if not we need to add it instead of replace
+      $existing_order = $this->GetOrder($orderID);
+      $shipping_op = isset($existing_order->purchase_units[0]->shipping) ? 'replace' : 'add';
+
       $request = new OrdersPatchRequest($orderID);
       $request->body = array(
         array(
@@ -779,14 +814,14 @@
           )
         ),
         array(
-          'op' => 'replace',
+          'op' => $shipping_op,
           'path' => "/purchase_units/@reference_id=='default'/shipping/name",
           'value' => array(
             'full_name' => $this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname'])
           )
         ),
         array(
-          'op' => 'replace',
+          'op' => $shipping_op,
           'path' => "/purchase_units/@reference_id=='default'/shipping/address",
           'value' => $shipping_address
         ),
@@ -802,6 +837,7 @@
       
       try {
         $response = $client->execute($request);
+
         return $response->result;
         
       } catch (PayPalHttp\HttpException $ex) {
@@ -875,6 +911,48 @@
       }
     }
         
+
+    function CheckLiabilityShift($OrderID) {
+      $order = $this->GetOrder($OrderID, 'fields=payment_source');
+      
+      // no 3D secure was performed at all (e.g. card issued outside the PSD2/SCA area)
+      if (isset($order->payment_source->card)
+          && !isset($order->payment_source->card->authentication_result)
+          )
+      {
+        return ($this->get_config('MODULE_PAYMENT_' . strtoupper($this->code) . '_EXTEND_CARDS') == '1');
+      }
+      
+      if (isset($order->payment_source->card->authentication_result)) {
+        $authentication_result = $order->payment_source->card->authentication_result;
+    
+        if (isset($authentication_result->liability_shift)) {
+          // with 3D secure
+          if ($authentication_result->liability_shift == 'POSSIBLE'
+              && isset($authentication_result->three_d_secure->enrollment_status)
+              && $authentication_result->three_d_secure->enrollment_status == 'Y'
+              && isset($authentication_result->three_d_secure->authentication_status)
+              && in_array($authentication_result->three_d_secure->authentication_status, array('Y', 'A'))
+              )
+          {
+            return true;
+          }
+  
+          // without 3D secure
+          if ($this->get_config('MODULE_PAYMENT_' . strtoupper($this->code) . '_EXTEND_CARDS') == '1'
+              && $authentication_result->liability_shift == 'NO'
+              && isset($authentication_result->three_d_secure->enrollment_status)
+              && in_array($authentication_result->three_d_secure->enrollment_status, array('N', 'U', 'B'))
+              )
+          {
+            return true;
+          }
+        }
+      }
+      
+      return false;
+    }
+
     
     function FinishOrder($order_id) {
       $this->PatchOrder($_SESSION['paypal']['OrderID']);
@@ -1109,6 +1187,33 @@
         'country_iso_code_2' => ((isset($address->address->country_code)) ? $address->address->country_code : ''),
       );
 
+      $data = $this->get_country_state_from_iso($data);
+
+      return $data;
+    }
+
+
+    function parse_contact($contact) {
+      $data = array(
+        'name' => trim((isset($contact['givenName']) ? $contact['givenName'] : '') . ' ' . (isset($contact['familyName']) ? $contact['familyName'] : '')),
+        'company' => '',
+        'firstname' => (isset($contact['givenName']) ? $contact['givenName'] : ''),
+        'lastname' => (isset($contact['familyName']) ? $contact['familyName'] : ''),
+        'street_address' => (isset($contact['addressLines'][0]) ? $contact['addressLines'][0] : ''),
+        'suburb' => (isset($contact['addressLines'][1]) ? $contact['addressLines'][1] : ''),
+        'state' => (isset($contact['administrativeArea']) ? $contact['administrativeArea'] : ''),
+        'city' => (isset($contact['locality']) ? $contact['locality'] : ''),
+        'postcode' => (isset($contact['postalCode']) ? $contact['postalCode'] : ''),
+        'country_iso_code_2' => (isset($contact['countryCode']) ? strtoupper($contact['countryCode']) : ''),
+      );
+
+      $data = $this->get_country_state_from_iso($data);
+
+      return $data;
+    }
+
+
+    function get_country_state_from_iso($data) {
       $country_iso_query = xtc_db_query("SELECT countries_id,
                                                 countries_name,
                                                 countries_iso_code_2,
@@ -1141,8 +1246,6 @@
         if (xtc_db_num_rows($zone_query) == 1) {
           $zone = xtc_db_fetch_array($zone_query);
           $data['zone_id'] = $zone['zone_id'];
-        } else {
-          $data['state'] = '';
         }
       }
       

@@ -24,6 +24,22 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 require_once(DIR_WS_CLASSES.'order.php');
 
 $request_json = get_external_content('php://input', 3, false);
+
+$webhook_headers = array(
+  'PAYPAL-AUTH-ALGO' => (isset($_SERVER['HTTP_PAYPAL_AUTH_ALGO']) ? $_SERVER['HTTP_PAYPAL_AUTH_ALGO'] : ''),
+  'PAYPAL-CERT-URL' => (isset($_SERVER['HTTP_PAYPAL_CERT_URL']) ? $_SERVER['HTTP_PAYPAL_CERT_URL'] : ''),
+  'PAYPAL-TRANSMISSION-ID' => (isset($_SERVER['HTTP_PAYPAL_TRANSMISSION_ID']) ? $_SERVER['HTTP_PAYPAL_TRANSMISSION_ID'] : ''),
+  'PAYPAL-TRANSMISSION-SIG' => (isset($_SERVER['HTTP_PAYPAL_TRANSMISSION_SIG']) ? $_SERVER['HTTP_PAYPAL_TRANSMISSION_SIG'] : ''),
+  'PAYPAL-TRANSMISSION-TIME' => (isset($_SERVER['HTTP_PAYPAL_TRANSMISSION_TIME']) ? $_SERVER['HTTP_PAYPAL_TRANSMISSION_TIME'] : ''),
+);
+
+$paypal_webhook_auth = new PayPalPayment('paypal');
+if (!$paypal_webhook_auth->verify_webhook_signature($webhook_headers, $request_json)) {
+  header("HTTP/1.0 403 Forbidden");
+  header("Status: 403 Forbidden");
+  exit();
+}
+
 $request = json_decode($request_json, true);
 
 if (is_array($request)

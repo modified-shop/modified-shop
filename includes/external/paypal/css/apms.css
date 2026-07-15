@@ -37,7 +37,7 @@
 
   .apms_container {
     margin: 0px 0px 0px 0px;
-    padding: 5px 0px;
+    padding: 5px 0px 15px 0px;
     background:#fafafa;
   }
   .apms_container_row {
@@ -70,11 +70,13 @@
   }
   .apms_container .apms_field {
     box-sizing:border-box;
-    padding:5px 10px;
-    border: 1px solid #ddd;
-    height:40px;
-    background:#fff;    
-  }  
+    height:42px;
+  }
+  .apms_container .apms_field > div,
+  .apms_container .apms_field iframe {
+    width:100%;
+    height:100%;
+  }
   .apms_container input {
     width: 100%;
     height:28px;
@@ -220,7 +222,7 @@
   .apms_form_button .apms_notice {
     margin: -5px 0 15px 0;
   }
-  .gpay-card-info-container {
+  .gpay-card-info-container, .gpay-button {
     width:100%;
   }
   apple-pay-button {
@@ -234,7 +236,7 @@
   
   @media only screen and (min-width: 759px) {
     .apms_form_button.apms_nocheckout {
-      height:35px;
+      height:140px;
       margin-bottom: 0;
     }
     .apms_form_button.apms_nocheckout.apms_product {

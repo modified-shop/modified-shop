@@ -234,7 +234,151 @@
         }
       }
     }
-        
+
+    if (strpos(basename($PHP_SELF), 'checkout') === false
+        && $_SESSION['cart']->count_contents() > 0
+        )
+    {
+      $paypal = new PayPalPaymentV2('paypalapplepay');
+
+      if ($paypal->is_enabled()
+          && ((basename($PHP_SELF) == FILENAME_SHOPPING_CART && $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_CART') == '1')
+              || (basename($PHP_SELF) != FILENAME_SHOPPING_CART && $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_BOX_CART') == '1')
+              )
+          && (!isset($_SESSION['paypal_instruments'])
+              || (is_array($_SESSION['paypal_instruments']) && in_array('applepay', $_SESSION['paypal_instruments']))
+              )
+          )
+      {
+        $order_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=create_paypal_order&payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $shipping_methods_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=get_shipping_methods&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $patch_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=patch_paypal_amount&payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $contact_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=set_paypal_contact&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $success_url = xtc_href_link('callback/paypal/paypalwalletexpress.php', 'payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false);
+        $error_url = xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL');
+
+        $total = $paypal->calculate_total(1);
+
+        if ($total > 0) {
+          echo '
+        <script>
+          function getAppleCartOrderUrl() {
+            return "'.$order_url.'";
+          }
+    
+          function getAppleCartShippingMethodsUrl() {
+            return "'.$shipping_methods_url.'";
+          }
+    
+          function getAppleCartPatchUrl() {
+            return "'.$patch_url.'";
+          }
+    
+          function getAppleCartContactUrl() {
+            return "'.$contact_url.'";
+          }
+    
+          function getAppleCartSuccessUrl() {
+            return "'.$success_url.'";
+          }
+    
+          function getAppleCartTransactionInfo() {
+            return {
+              currencyIsoCode: "'.$_SESSION['currency'].'",
+              totalPrice: "'.sprintf($paypal->numberFormat, round($total, 2)).'",
+              totalLabel: "'.$paypal->encode_utf8($paypal->get_config('PAYPAL_COMPANY_LABEL')).'",
+            };
+          }
+    
+          function redirectAppleCartError() {
+            window.location.href = "'.$error_url.'";
+          }
+        </script>
+            ';
+    
+            $paypalscript .= '
+          if ($("#apms_button5").length) {
+            if (typeof ApplePaySession != "undefined" && ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()) {
+              setupApplepayCart().catch(console.error);
+            }
+          }
+          ';
+        }
+      }
+
+      $paypal = new PayPalPaymentV2('paypalgooglepay');
+
+      if ($paypal->is_enabled()
+          && ((basename($PHP_SELF) == FILENAME_SHOPPING_CART && $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_CART') == '1')
+              || (basename($PHP_SELF) != FILENAME_SHOPPING_CART && $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_BOX_CART') == '1')
+              )
+          )
+      {
+        $order_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=create_paypal_order&payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $shipping_methods_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=get_shipping_methods&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $patch_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=patch_paypal_amount&payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $contact_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=set_paypal_contact&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $success_url = xtc_href_link('callback/paypal/paypalwalletexpress.php', 'payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false);
+        $error_url = xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL');
+
+        $total = $paypal->calculate_total(1);
+
+        if ($total > 0) {
+            echo '
+        <script>
+          function getGoogleCartOrderUrl() {
+            return "'.$order_url.'";
+          }
+
+          function getGoogleCartShippingMethodsUrl() {
+            return "'.$shipping_methods_url.'";
+          }
+
+          function getGoogleCartPatchUrl() {
+            return "'.$patch_url.'";
+          }
+
+          function getGoogleCartContactUrl() {
+            return "'.$contact_url.'";
+          }
+
+          function getGoogleCartSuccessUrl() {
+            return "'.$success_url.'";
+          }
+
+          function getGoogleCartTransactionInfo() {
+            return {
+              currencyIsoCode: "'.$_SESSION['currency'].'",
+              totalPrice: "'.sprintf($paypal->numberFormat, round($total, 2)).'",
+              totalLabel: "'.$paypal->encode_utf8($paypal->get_config('PAYPAL_COMPANY_LABEL')).'",
+            };
+          }
+
+          function getGoogleCartLocale() {
+            return "'.$_SESSION['language_code'].'";
+          }
+
+          function getGoogleEnviroment() {
+            return "'.(($paypal->get_config('PAYPAL_MODE') == 'live') ? 'PRODUCTION' : 'TEST').'";
+          }
+
+          function redirectGoogleCartError() {
+            window.location.href = "'.$error_url.'";
+          }
+        </script>
+        ';
+
+            $paypalscript .= '
+          if ($("#apms_button6").length) {
+            if (typeof google != "undefined" && paypal.Googlepay) {
+              setupGooglepayCart().catch(console.error);
+            }
+          }
+          ';
+        }
+      }
+    }
+
     if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {
       $paypal = new PayPalPayment('paypalinstallment');
       

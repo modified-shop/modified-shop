@@ -92,6 +92,18 @@ $lang_array = array(
 
   'TEXT_PAYPAL_COMPANY_LABEL' => 'Company Label',
   'TEXT_PAYPAL_COMPANY_LABEL_INFO' => 'Use the company name what should be displayed on the bank or credit card statement. <b>Attention:</b> no specialchars or german umlauts allowed!',
+
+  'TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_CART' => 'Apple Pay button in cart',
+  'TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_CART_INFO' => 'Shall the Apple Pay button be displayed on the shopping cart page?',
+
+  'TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_CART' => 'Google Pay button in cart',
+  'TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_CART_INFO' => 'Shall the Google Pay button be displayed on the shopping cart page?',
+
+  'TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_BOX_CART' => 'Apple Pay button in cart box',
+  'TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_BOX_CART_INFO' => 'Shall the Apple Pay button be displayed in the cart flyout box?',
+
+  'TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_BOX_CART' => 'Google Pay button in cart box',
+  'TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_BOX_CART_INFO' => 'Shall the Google Pay button be displayed in the cart flyout box?',
 );
 
 
