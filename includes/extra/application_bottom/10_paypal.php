@@ -254,8 +254,8 @@
         $shipping_methods_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=get_shipping_methods&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
         $patch_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=patch_paypal_amount&payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
         $contact_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=set_paypal_contact&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
-        $success_url = xtc_href_link('callback/paypal/paypalwalletexpress.php', 'payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false);
-        $error_url = xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL');
+        $success_url = str_replace('&amp;', '&', xtc_href_link('callback/paypal/paypalwalletexpress.php', 'payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $error_url = str_replace('&amp;', '&', xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL'));
 
         $total = $paypal->calculate_total(1);
 
@@ -318,8 +318,8 @@
         $shipping_methods_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=get_shipping_methods&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
         $patch_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=patch_paypal_amount&payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
         $contact_url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=set_paypal_contact&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
-        $success_url = xtc_href_link('callback/paypal/paypalwalletexpress.php', 'payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false);
-        $error_url = xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL');
+        $success_url = str_replace('&amp;', '&', xtc_href_link('callback/paypal/paypalwalletexpress.php', 'payment_method='.$paypal->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false));
+        $error_url = str_replace('&amp;', '&', xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL'));
 
         $total = $paypal->calculate_total(1);
 
