@@ -7,7 +7,7 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
@@ -24,8 +24,8 @@
 
     function __construct() {
       global $order;
-      
-      $this->version = '1.44';
+
+      $this->version = '1.45';
       $this->code = 'dhl_business';
       $this->title = MODULE_DHL_BUSINESS_TEXT_TITLE;
       $this->description = MODULE_DHL_BUSINESS_TEXT_DESCRIPTION.'<br><br><br><b>Version</b><br>'.$this->version;
@@ -70,7 +70,7 @@
           'MODULE_DHL_IBAN' => 'MODULE_DHL_BUSINESS_IBAN',
           'MODULE_DHL_BIC' => 'MODULE_DHL_BUSINESS_BIC',
         );
-  
+
         foreach ($config_array as $old_config => $new_config) {
           if (!defined($new_config)) {
             xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
@@ -79,7 +79,7 @@
           }
           xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key = '".$old_config."'");
         }
-  
+
         $delete_files_array = array(
           DIR_ADMIN.'includes/extra/modules/orders/orders_action/dhl.php',
           DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/dhl.php',
@@ -89,14 +89,14 @@
           'lang/german/extra/admin/dhl.php',
           'lang/german/modules/system/dhl.php',
         );
-  
+
         foreach ($delete_files_array as $delete_files) {
           if (is_file(DIR_FS_CATALOG.$delete_files)) {
             unlink(DIR_FS_CATALOG.$delete_files);
           }
         }
       }
-      
+
       if (defined('MODULE_DHL_BUSINESS_ACCOUNT_NUMBER')) {
         xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
                             WHERE configuration_key = 'MODULE_DHL_BUSINESS_ACCOUNT_NUMBER'");
@@ -124,8 +124,8 @@
         if (defined('MODULE_DHL_BUSINESS_STATUS')) {
           $this->_check = true;
         } else {
-          $check_query = xtc_db_query("SELECT configuration_value 
-                                         FROM " . TABLE_CONFIGURATION . " 
+          $check_query = xtc_db_query("SELECT configuration_value
+                                         FROM " . TABLE_CONFIGURATION . "
                                         WHERE configuration_key = 'MODULE_DHL_BUSINESS_STATUS'");
           $this->_check = xtc_db_num_rows($check_query);
         }
@@ -169,7 +169,7 @@
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_POSTCODE', '',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_CITY', '',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_TELEPHONE', '',  '6', '1', '', now())");
-    
+
       // bank data
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_ACCOUNT_OWNER', '',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_BANK_NAME', '',  '6', '1', '', now())");
@@ -204,7 +204,7 @@
         'MODULE_DHL_BUSINESS_WEIGHT_CN23',
         'MODULE_DHL_BUSINESS_LOGLEVEL',
         'MODULE_DHL_BUSINESS_MODE',
-        
+
         'MODULE_DHL_BUSINESS_NOTIFICATION',
         'MODULE_DHL_BUSINESS_STATUS_UPDATE',
         'MODULE_DHL_BUSINESS_CODING',
@@ -221,7 +221,7 @@
         'MODULE_DHL_BUSINESS_DUTYPAID',
         'MODULE_DHL_BUSINESS_DROPPOINT',
         'MODULE_DHL_BUSINESS_SIGNED',
-        
+
         'MODULE_DHL_BUSINESS_COMPANY',
         'MODULE_DHL_BUSINESS_FIRSTNAME',
         'MODULE_DHL_BUSINESS_LASTNAME',
@@ -240,7 +240,7 @@
 
 
   if (!function_exists('xtc_cfg_get_dhl_orders_status')) {
-    function xtc_cfg_get_dhl_orders_status($cfg_value, $cfg_key) {    
+    function xtc_cfg_get_dhl_orders_status($cfg_value, $cfg_key) {
       return xtc_draw_pull_down_menu('configuration['.$cfg_key.']', array_merge(array(array('id' => '-1', 'text' => TEXT_DHL_BUSINESS_NO),array('id' => '0', 'text' => TEXT_DHL_BUSINESS_NO_STATUS_CHANGE)), xtc_get_orders_status()), $cfg_value);
     }
   }
