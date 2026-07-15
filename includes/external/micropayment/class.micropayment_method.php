@@ -31,7 +31,7 @@ class micropayment_method extends micropayment_helper
     function __construct()
     {
         global $order;
-        
+
         $this->form_action_url = 'not_used';
         $this->tmpOrders = true;
         $this->tmpStatus = ((defined('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID')) ? MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID : '');
@@ -158,7 +158,7 @@ class micropayment_method extends micropayment_helper
     {
         return true;
     }
-    
+
     function update_status()
     {
         global $order;
@@ -187,7 +187,7 @@ class micropayment_method extends micropayment_helper
     {
         if (!$this->check_is_service_installed()) {
           require_once(dirname(__FILE__).'/../../../lang/'.$_SESSION['language'].'/modules/payment/mcp_service.php');
-          
+
           $lastStatusArray = xtc_db_query('SELECT MAX(`orders_status_id`) last_id FROM '.TABLE_ORDERS_STATUS);
           $t               = xtc_db_fetch_array($lastStatusArray);
           $nextId          = $t['last_id'] + 1;
