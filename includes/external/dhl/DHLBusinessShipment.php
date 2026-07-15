@@ -7,7 +7,7 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
   // include needed function
@@ -41,10 +41,10 @@
 
 
     function __construct($data, $init = true) {
-      $this->sandbox = (MODULE_DHL_BUSINESS_MODE === 'sandbox');    
+      $this->sandbox = (MODULE_DHL_BUSINESS_MODE === 'sandbox');
       $this->loglevel = defined('MODULE_DHL_BUSINESS_LOGLEVEL') ? MODULE_DHL_BUSINESS_LOGLEVEL : 'ERROR';
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_dhl_%s_%s.log', 'dhl', strtolower($this->loglevel));
-      
+
       $this->data = array(
         'user'          => MODULE_DHL_BUSINESS_USER,
         'signature'     => MODULE_DHL_BUSINESS_SIGNATURE,
@@ -52,8 +52,8 @@
         'api_user'      => 'lWh2GbG4I1VyVRvADeWNiWGNKVPI4Wfk',
         'api_password'  => 'PUrMdYgQnh9ko8ii',
       );
-      
-      $account_data = preg_split("/[:,]/", MODULE_DHL_BUSINESS_ACCOUNT); 
+
+      $account_data = preg_split("/[:,]/", MODULE_DHL_BUSINESS_ACCOUNT);
       for ($i=0, $n=count($account_data); $i<$n; $i+=2) {
         if (!isset($this->data['account'][$account_data[$i]])) {
           $this->data['account'][$account_data[$i]] = array();
@@ -73,9 +73,9 @@
           $this->data['account'][$account_data[$i]]['RT'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
         }
       }
-      
+
       $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
-     
+
       $this->info = array(
         'name'            => MODULE_DHL_BUSINESS_FIRSTNAME . ' ' . MODULE_DHL_BUSINESS_LASTNAME,
         'firstname'       => MODULE_DHL_BUSINESS_FIRSTNAME,
@@ -91,21 +91,21 @@
         'telephone'       => preg_replace('/[^\+\d]/', '', MODULE_DHL_BUSINESS_TELEPHONE),
       );
       $this->info = $this->encode_request($this->info);
-      
+
       foreach ($data as $k => $v) {
         $this->$k = $v;
       }
-      
+
       if (isset($this->weight)) {
         $this->weight = str_replace(',', '.', $this->weight);
       }
-      
+
       $this->insurance_array = array(
         0 => '500',
         1 => '2500',
         2 => '25000',
       );
-      
+
       if ($init === true) {
         $this->client = new \GuzzleHttp\Client();
         $this->getAccessToken();
@@ -115,7 +115,7 @@
 
     public function CreateLabel($order_id) {
       $this->order = new order($order_id);
-          
+
       $headers = array(
         'Authorization' => 'Bearer '.$this->data['access_token'],
         'Content-Type' => 'application/json'
@@ -129,23 +129,23 @@
       );
 
       $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/orders?includeDocs=URL'.(($this->codeable == true) ? '&mustEncode=true' : '')), $headers, $body);
-     
+
       try {
         $response = $this->client->send($request);
         $response = json_decode($response->getBody()->getContents(), true);
-        
+
         foreach ($response['items'] as $items) {
           $tracking_id = $this->SaveLabel(
-            $items['shipmentNo'], 
-            $items['label']['url'], 
-            ((isset($items['customsDoc'])) ? $items['customsDoc']['url'] : ''), 
+            $items['shipmentNo'],
+            $items['label']['url'],
+            ((isset($items['customsDoc'])) ? $items['customsDoc']['url'] : ''),
           );
 
           $result['label'][] = array(
             'tracking_id' => $tracking_id,
             'parcel_id' => $items['shipmentNo'],
-          ); 
-          
+          );
+
           if (isset($items['validationMessages']) && $this->loglevel == 'INFO') {
             foreach ($items['validationMessages'] as $messages) {
               $this->message['warning'][] = sprintf('Property %s: %s', ((isset($messages['property'])) ? $messages['property'] : ''), $messages['validationMessage']);
@@ -157,8 +157,8 @@
             && method_exists($ex, 'getResponse')
             )
         {
-          $error = json_decode($ex->getResponse()->getBody(), true);      
-  
+          $error = json_decode($ex->getResponse()->getBody(), true);
+
           if (isset($error['items'])) {
             foreach ($error['items'] as $items) {
               if (isset($items['validationMessages'])) {
@@ -170,15 +170,15 @@
           } elseif (isset($error['detail'])) {
             $this->message['error'][] = $error['detail'];
           }
-  
+
           $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $error));
         } else {
           $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $ex));
         }
       }
-      
+
       $result['message'] = $this->message;
-      
+
       return $result;
     }
 
@@ -194,7 +194,7 @@
         'dhl_export_url' => $dhl_export_url,
       );
       xtc_db_perform(TABLE_ORDERS_TRACKING, $sql_data_array);
-      
+
       return xtc_db_insert_id();
     }
 
@@ -212,20 +212,20 @@
 
       try {
         $response = $this->client->send($request);
-        $response = json_decode($response->getBody()->getContents(), true);        
+        $response = json_decode($response->getBody()->getContents(), true);
       } catch (Exception $ex) {
         if (is_object($ex)
             && method_exists($ex, 'getResponse')
             )
         {
-          $error = json_decode($ex->getResponse()->getBody(), true);      
-  
+          $error = json_decode($ex->getResponse()->getBody(), true);
+
           foreach ($error['items'] as $items) {
             if (isset($items['sstatus'])) {
               $this->message['error'][] = sprintf('Status %s: %s', $items['sstatus']['status'], $items['sstatus']['detail']);
             }
           }
-  
+
           $this->LoggingManager->log('ERROR', 'DeleteLabel', array('exception' => $error));
         } else {
           $this->LoggingManager->log('ERROR', 'DeleteLabel', array('exception' => $ex));
@@ -233,7 +233,7 @@
       }
 
       $result['message'] = $this->message;
-      
+
       return $result;
     }
 
@@ -242,7 +242,7 @@
       $headers = array(
         'Content-Type' => 'application/x-www-form-urlencoded'
       );
-      
+
       $options = array(
         'form_params' => array(
           'client_id' => $this->data['api_user'],
@@ -252,27 +252,27 @@
           'grant_type' => 'password',
         )
       );
-      
+
       if (!isset($this->data['access_token'])) {
         $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_AUTH, '/token'), $headers);
-        
+
         try {
           $response = $this->client->send($request, $options);
           $response = json_decode($response->getBody()->getContents(), true);
-          $this->data['access_token'] = $response['access_token'];   
+          $this->data['access_token'] = $response['access_token'];
         } catch (Exception $ex) {
           if (is_object($ex)
               && method_exists($ex, 'getResponse')
               )
           {
-            $error = json_decode($ex->getResponse()->getBody(), true);      
-  
+            $error = json_decode($ex->getResponse()->getBody(), true);
+
             $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
-  
+
             $this->LoggingManager->log('ERROR', 'getAccessToken', array('exception' => $error));
           } else {
             $this->LoggingManager->log('ERROR', 'getAccessToken', array('exception' => $ex));
-          }        
+          }
         }
       }
     }
@@ -291,7 +291,7 @@
     private function buildLabelData() {
       // customers_data
       $customers_data = $this->buildCustomersData();
-            
+
       // Service
       $Service = new stdClass();
 
@@ -311,22 +311,22 @@
 
       // Shipper
       $Shipper = $this->buildShippingDetails($this->info, 'sender');
-            
+
       // ReturnReceiver
       $ReturnReceiver = $this->buildShippingDetails($this->info, 'sender');
 
       // Receiver
       $Receiver = $this->buildShippingDetails($customers_data, 'receiver');
-      
+
       // cod
-      if ($this->data['payment_class'] == 'cod') {        
+      if ($this->data['payment_class'] == 'cod') {
         // bankdata
         $BankData = new stdClass();
         $BankData->accountHolder = MODULE_DHL_BUSINESS_ACCOUNT_OWNER;
         $BankData->bankName = MODULE_DHL_BUSINESS_BANK_NAME;
         $BankData->iban = MODULE_DHL_BUSINESS_IBAN;
         $BankData->bic = MODULE_DHL_BUSINESS_BIC;
-        
+
         $Service->cashOnDelivery = array(
           'amount' => array(
             'currency' => $this->data['currency'],
@@ -336,7 +336,7 @@
           'transferNote1' => $this->data['reference'],
         );
       }
-      
+
       // insurance
       if ($this->insurance > 0) {
         $Service->additionalInsurance = array(
@@ -344,17 +344,17 @@
           'value' => $this->insurance_array[$this->insurance]
         );
       }
-      
+
       // avs
       if ($this->avs > 0) {
         $Service->visualCheckOfAge = 'A'.$this->avs;
       }
-      
+
       // personal
       if ($this->personal > 0) {
         $Service->namedPersonOnly = true;
       }
-      
+
       // no neighbour
       if ($this->no_neighbour > 0) {
         $Service->noNeighbourDelivery = true;
@@ -369,7 +369,7 @@
       }
 
       // signed
-      if ($this->data['product'] == 'V01PAK' 
+      if ($this->data['product'] == 'V01PAK'
           && $this->signed > 0
           )
       {
@@ -380,69 +380,69 @@
       if ($this->bulky > 0) {
         $Service->bulkyGoods = true;
       }
-      
+
       // ident
-      if ($this->ident > 0) {        
+      if ($this->ident > 0) {
         $Ident = new stdClass();
         $Ident->lastName = $this->order->delivery['lastname'];
         $Ident->firstName = $this->order->delivery['firstname'];
         $Ident->dateOfBirth = date('Y-m-d', strtotime($this->dob));
         $Ident->minimumAge = 'A'.$this->ident;
-        
+
         $Service->identCheck = $Ident;
       }
-      
+
       // endorsement
       if (in_array($this->data['product_code'], array('53', '66'))) {
         $Service->endorsement = $this->endorsement;
       }
-      
-      // retoure      
+
+      // retoure
       if ($this->retoure > 0) {
         $Retoure = new stdClass();
         $Retoure->billingNumber = $this->data['ekp'].'07'.((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']]['RT'] : $this->data['account']['WORLD']['RT']);
         $Retoure->refNo = $this->data['reference'];
         $Retoure->returnAddress = $ReturnReceiver;
-        
+
         $Service->dhlRetoure = $Retoure;
       }
-            
+
       // Details
       $Details = new stdClass();
       $Details->weight = array(
         'uom' => 'kg',
         'value' => (double)sprintf("%01.2f", $this->data['weight']),
       );
-      
+
       // Shipment
       $Shipment = new stdClass();
       $Shipment->product = $this->data['product'];
       $Shipment->billingNumber = $this->data['ekp'].$this->data['product_code'].((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']][$this->data['product_type']] : $this->data['account']['WORLD'][$this->data['product_type']]);
       $Shipment->shipDate = date('Y-m-d');
       $Shipment->refNo = $this->data['reference'];
-      $Shipment->shipper = $Shipper;    
+      $Shipment->shipper = $Shipper;
       $Shipment->consignee = $Receiver;
       $Shipment->details = $Details;
       $Shipment->services = $Service;
-            
-      $tax_rate = 0;                        
-      $tax_rates_query = xtc_db_query("SELECT tr.* 
+
+      $tax_rate = 0;
+      $tax_rates_query = xtc_db_query("SELECT tr.*
                                          FROM " . TABLE_COUNTRIES . " c
-                                         JOIN " . TABLE_ZONES_TO_GEO_ZONES . " ztgz 
+                                         JOIN " . TABLE_ZONES_TO_GEO_ZONES . " ztgz
                                               ON c.countries_id = ztgz.zone_country_id
-                                         JOIN " . TABLE_TAX_RATES . " tr 
+                                         JOIN " . TABLE_TAX_RATES . " tr
                                               ON tr.tax_zone_id = ztgz.geo_zone_id
                                         WHERE c.countries_iso_code_2 = '".xtc_db_input($customers_data['country_iso_2'])."'
                                      GROUP BY ztgz.zone_country_id");
       while ($tax_rates = xtc_db_fetch_array($tax_rates_query, true)) {
         $tax_rate += $tax_rates['tax_rate'];
       }
-      
+
       if ($tax_rate == 0) {
         $Shipment->customs = $this->buildExportDocument();
         $Shipment->services->endorsement = $this->endorsement;
       }
-          
+
       // request
       $request = new stdClass();
       $request->shipments = array($Shipment);
@@ -451,7 +451,7 @@
     }
 
 
-    private function buildCustomersData() { 
+    private function buildCustomersData() {
       $customers_data = array(
         'name' => $this->order->delivery['name'],
         'firstname' => $this->order->delivery['firstname'],
@@ -461,6 +461,7 @@
         'street_address' => $this->order->delivery['street_address'],
         'postcode' => $this->order->delivery['postcode'],
         'city' => $this->order->delivery['city'],
+        'state' => $this->order->delivery['state'],
         'country' => $this->order->delivery['country'],
         'country_iso_2' => $this->order->delivery['country_iso_2'],
         'country_iso_3' => $this->get_country_iso_3($this->order->delivery['country_iso_2']),
@@ -470,8 +471,8 @@
         'postnumber' => '',
         'telephone' => preg_replace('/[^\+\d]/', '', $this->order->customer['telephone']),
       );
-      
-      if ($customers_data['packstation'] === true || $customers_data['postfiliale'] === true) {        
+
+      if ($customers_data['packstation'] === true || $customers_data['postfiliale'] === true) {
         if (preg_replace('/[^0-9]/', '', $customers_data['company']) != '') {
           $customers_data['postnumber'] = preg_replace('/[^0-9]/', '', $customers_data['company']);
           $customers_data['company'] = '';
@@ -485,7 +486,7 @@
       }
 
       $customers_data = $this->encode_request($customers_data);
-      
+
       // global data
       $this->data['orders_id'] = $this->order->info['order_id'];
       $this->data['reference'] = $this->getReference();
@@ -497,7 +498,7 @@
       $this->data['email_address'] = $this->order->customer['email_address'];
       $this->data['weight'] = ($this->weight > 0) ? $this->weight : $this->calculate_weight($this->order->info['order_id']);
       $this->data['product_type'] = 'PK';
-      
+
       // create product code
       switch ($this->order->delivery['country_iso_2']) {
         case 'DE':
@@ -520,7 +521,7 @@
           break;
       }
       $this->data = $this->encode_request($this->data);
-  
+
       return $customers_data;
     }
 
@@ -534,10 +535,10 @@
       {
          $Address->name2 = substr(($data['firstname'] . ' ' . $data['lastname']), 0, 35);
       }
-      
+
       if (isset($data['suburb'])
-          && $data['suburb'] != '' 
-          ) 
+          && $data['suburb'] != ''
+          )
       {
         if (!isset($Address->name2)) {
           $Address->name2 = $data['suburb'];
@@ -546,8 +547,13 @@
         }
       }
       $Address->addressStreet = $this->format_street_address($data['street_address']);
-      $Address->postalCode = $data['postcode'];
+      if ($this->hasValidPostcode($data['postcode'])) {
+        $Address->postalCode = $data['postcode'];
+      }
       $Address->city = $data['city'];
+      if (!empty($data['state'])) {
+        $Address->state = $data['state'];
+      }
       $Address->country = $data['country_iso_3'];
       if ($this->notification == 1 || $type == 'sender') {
         if ($data['telephone'] != '') {
@@ -555,13 +561,15 @@
         }
         $Address->email = $data['email_address'];
       }
-  
+
       if (isset($data['packstation']) && $data['packstation'] === true) {
         $Packstation = new stdClass();
         $Packstation->name = (($Address->name2 != '') ? $Address->name2 : $Address->name1);
         $Packstation->lockerID = preg_replace('/[^0-9]/', '', $data['street_address']);
         $Packstation->postNumber = $data['postnumber'];
-        $Packstation->postalCode = $data['postcode'];
+        if ($this->hasValidPostcode($data['postcode'])) {
+          $Packstation->postalCode = $data['postcode'];
+        }
         $Packstation->city = $data['city'];
         $Packstation->country = $data['country_iso_3'];
         if ($this->notification == 1) {
@@ -574,20 +582,22 @@
         $Postfiliale->name = (($Address->name2 != '') ? $Address->name2 : $Address->name1);
         $Postfiliale->retailID = preg_replace('/[^0-9]/', '', $data['street_address']);
         $Postfiliale->postNumber = $data['postnumber'];
-        $Postfiliale->postalCode = $data['postcode'];
+        if ($this->hasValidPostcode($data['postcode'])) {
+          $Postfiliale->postalCode = $data['postcode'];
+        }
         $Postfiliale->city = $data['city'];
         $Postfiliale->country = $data['country_iso_3'];
         if ($this->notification == 1) {
           $Postfiliale->email = $data['email_address'];
         }
       }
-      
+
       switch ($type) {
         case 'sender':
           $shipping_details = $Address;
           break;
-    
-        case 'receiver':         
+
+        case 'receiver':
           if (isset($Packstation) && is_object($Packstation)) {
             $shipping_details = $Packstation;
           } elseif (isset($Postfiliale) && is_object($Postfiliale)) {
@@ -597,7 +607,7 @@
           }
           break;
       }
-  
+
       return $shipping_details;
     }
 
@@ -608,11 +618,11 @@
       if ($length < 8) {
         $reference = MODULE_DHL_BUSINESS_PREFIX.str_pad($this->data['orders_id'], (8 - mb_strlen(MODULE_DHL_BUSINESS_PREFIX)), '0', STR_PAD_LEFT);
       }
-      
+
       return $reference;
     }
-    
-    
+
+
     private function buildExportDocument() {
       $ExportDocument = new stdClass();
       $ExportDocument->exportType = 'COMMERCIAL_GOODS';
@@ -628,7 +638,7 @@
 //       if ($this->mrn != '') {
 //         $ExportDocument->MRN = $this->mrn;
 //       }
-      
+
       $ExportDocument->items = array();
       $this->order->products = $this->encode_request($this->order->products);
       for ($i=0, $n=count($this->order->products); $i<$n; $i++) {
@@ -649,7 +659,7 @@
           'value' => (double)sprintf("%01.2f", $this->order->products[$i]['price']),
         );
       }
-      
+
       return $ExportDocument;
     }
 
@@ -658,12 +668,12 @@
       if (!isset($this->order)) {
         $this->order = new order($order_id);
       }
-            
+
       $weight = 0;
       for ($i = 0, $n = count($this->order->products); $i < $n; $i++) {
         $weight += ($this->order->products[$i]['qty'] * $this->order->products[$i]['weight']);
       }
-      
+
       if ($weight > 0) {
         if ((double)SHIPPING_BOX_WEIGHT >= ($weight * (double)SHIPPING_BOX_PADDING / 100)) {
           $weight = $weight + (double)SHIPPING_BOX_WEIGHT;
@@ -673,11 +683,11 @@
       } else {
         $weight = (double)SHIPPING_BOX_WEIGHT;
       }
-      
+
       if ($weight == 0) {
         $weight = 1;
       }
-    
+
       return $weight;
     }
 
@@ -691,15 +701,15 @@
         preg_match_all("![0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER);
       }
       $addr = end($matches);
-      
+
       $address = array(
         'street_name' => ((isset($addr[0])) ? trim(str_replace(trim($addr[0]), '', $street_address), ', ') : $street_address),
         'street_number' => ((isset($addr[0])) ? trim($addr[0]) : ''),
       );
-      
+
       $street_address = implode(' ', $address);
       $street_address = preg_replace('/\s+/', ' ', $street_address);
-      
+
       return $street_address;
     }
 
@@ -712,20 +722,35 @@
           $array[$key] = ((!is_bool($value)) ? encode_utf8(decode_htmlentities($value), $_SESSION['language_charset'], true) : $value);
         }
       }
-    
+
       return $array;
     }
 
-    
+
     private function get_country_iso_3($iso_code_2) {
-      $country_query = xtc_db_query("SELECT countries_iso_code_3 
+      $country_query = xtc_db_query("SELECT countries_iso_code_3
                                        FROM ".TABLE_COUNTRIES."
                                       WHERE countries_iso_code_2 = '".xtc_db_input($iso_code_2)."'");
       if (xtc_db_num_rows($country_query) > 0) {
         $country = xtc_db_fetch_array($country_query);
         return $country['countries_iso_code_3'];
       }
-      
+
       return $iso_code_2;
     }
+
+
+    private function hasValidPostcode($postcode) {
+      if (empty($postcode)) {
+        return false;
+      }
+
+      $digits = preg_replace('/[^0-9]/', '', $postcode);
+      if ($digits === '') {
+        return true;
+      }
+
+      return array_sum(str_split($digits)) > 0;
+    }
+
   }
