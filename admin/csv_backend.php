@@ -94,60 +94,6 @@ require (DIR_WS_INCLUDES.'head.php');
             $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '20' order by sort_order");
 
             while ($configuration = xtc_db_fetch_array($configuration_query)) {
-              if (isset($_GET['gID']) && $_GET['gID'] == 6) {
-                switch ($configuration['configuration_key']) {
-                  case 'MODULE_PAYMENT_INSTALLED':
-                    if ($configuration['configuration_value'] != '') {
-                      $payment_installed = explode(';', $configuration['configuration_value']);
-                      for ($i = 0, $n = sizeof($payment_installed); $i < $n; $i++) {
-                        include(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/payment/' . $payment_installed[$i]);
-                      }
-                    }
-                    break;
-
-                  case 'MODULE_SHIPPING_INSTALLED':
-                    if ($configuration['configuration_value'] != '') {
-                      $shipping_installed = explode(';', $configuration['configuration_value']);
-                      for ($i = 0, $n = sizeof($shipping_installed); $i < $n; $i++) {
-                        include(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/shipping/' . $shipping_installed[$i]);
-                      }
-                    }
-                    break;
-
-                  case 'MODULE_ORDER_TOTAL_INSTALLED':
-                    if ($configuration['configuration_value'] != '') {
-                      $ot_installed = explode(';', $configuration['configuration_value']);
-                      for ($i = 0, $n = sizeof($ot_installed); $i < $n; $i++) {
-                        include(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/order_total/' . $ot_installed[$i]);
-                      }
-                    }
-                    break;
-                }
-              }
-              if (xtc_not_null($configuration['use_function'])) {
-                $use_function = $configuration['use_function'];
-                if (preg_match('/->/', $use_function)) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
-                  $class_method = explode('->', $use_function);
-                  if (!is_object(${$class_method[0]})) {
-                    include(DIR_WS_CLASSES . $class_method[0] . '.php');
-                    ${$class_method[0]} = new $class_method[0]();
-                  }
-                  $cfgValue = xtc_call_function($class_method[1], $configuration['configuration_value'], ${$class_method[0]});
-                } else {
-                  $cfgValue = xtc_call_function($use_function, $configuration['configuration_value']);
-                }
-              } else {
-                $cfgValue = $configuration['configuration_value'];
-              }
-
-              if ((!isset($_GET['cID']) || $_GET['cID'] == $configuration['configuration_id']) && !isset($cInfo) && substr($action, 0, 3) != 'new') {
-                $cfg_extra_query = xtc_db_query("select configuration_key,configuration_value, date_added, last_modified, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_id = '" . $configuration['configuration_id'] . "'");
-                $cfg_extra = xtc_db_fetch_array($cfg_extra_query);
-
-                $cInfo_array = array_merge($configuration, $cfg_extra);
-                $cInfo = new objectInfo($cInfo_array);
-              }
-              
               if ($configuration['set_function']) {
                 eval('$value_field = ' . $configuration['set_function'] . '"' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
               } else {
