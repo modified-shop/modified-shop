@@ -234,6 +234,13 @@ class paypalpui extends PayPalPaymentV2 {
   function payment_action() {
     global $order, $messageStack;
 
+    // check for existing FraudNetID
+    if (empty($_SESSION['paypal']['FraudNetID'])) {
+      $this->LoggingManager->log('WARNING', 'PUI payment_action aborted', array('reason' => 'missing FraudNetID'));
+      $messageStack->add_session('paypalpui', MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE);
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    }
+
     $payment_source = array(
       'processing_instruction' => 'ORDER_COMPLETE_ON_PAYMENT_APPROVAL',
       'payment_source' => array(
