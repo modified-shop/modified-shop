@@ -110,8 +110,14 @@ if (ORDER_STATUSES_FOR_SALES_STATISTICS != '') {
   $where = " AND o.orders_status IN ('".implode("','", $status_array)."') ";
 }
 
-// everything except 'total' only needs the current and previous calendar year
-$turnover_stats_from = date('Y-01-01', strtotime('-1 year'));
+// everything except 'total' only needs the current and previous calendar year,
+// plus (in January) the December of two years ago that 'last_month_last_year'
+// pulls in, since MySQL's dashless "interval 1 year_month" is parsed as just
+// 1 month, making that column effectively "current_date minus 13 months"
+$turnover_stats_from = min(
+    date('Y-01-01', strtotime('-1 year')),
+    date('Y-m-01', strtotime('-13 months'))
+);
 $turnover_query = xtc_db_query("SELECT round(coalesce(sum(if(date(o.date_purchased) = current_date, ot.value/o.currency_value, null)), 0), 2) today,
                                        round(coalesce(sum(if(date(o.date_purchased) = current_date - interval 1 day, ot.value/o.currency_value, null)), 0), 2) yesterday,
                                        round(coalesce(sum(if(extract(year_month from o.date_purchased) = extract(year_month from current_date), ot.value/o.currency_value, null)), 0), 2) this_month,
