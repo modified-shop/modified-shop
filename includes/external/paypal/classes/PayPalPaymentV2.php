@@ -287,25 +287,32 @@
       }
 
       if (isset($_SESSION['customer_id'])) {
-        $purchase_unit['shipping'] = array(
-          'name' => array(
-            'full_name' => $this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']),
-          ),
-          'email_address' => $this->encode_utf8($order->customer['email_address']),
-          'address' => array(
-            'address_line_1' => $this->encode_utf8($order->delivery['street_address']),
-            'address_line_2' => $this->encode_utf8($order->delivery['suburb']),
-            'admin_area_1' => $this->encode_utf8((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : ''), // state
-            'admin_area_2' => $this->encode_utf8($order->delivery['city']), // city
-            'postal_code' => $this->encode_utf8($order->delivery['postcode']),
-            'country_code' => $this->encode_utf8($order->delivery['country']['iso_code_2'])
-          )
-        );
+        // virtual orders have no shipping address to send PayPal at all
+        if ($order->content_type != 'virtual') {
+          if ($order->delivery === false) {
+            $order->delivery = $order->billing;
+          }
 
-        if ($order->delivery['company'] != '') {
-          $purchase_unit['shipping']['address']['address_line_2'] = $this->encode_utf8($order->delivery['company']);
-          if ($order->delivery['suburb'] != '') {
-            $purchase_unit['shipping']['address']['address_line_1'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
+          $purchase_unit['shipping'] = array(
+            'name' => array(
+              'full_name' => $this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']),
+            ),
+            'email_address' => $this->encode_utf8($order->customer['email_address']),
+            'address' => array(
+              'address_line_1' => $this->encode_utf8($order->delivery['street_address']),
+              'address_line_2' => $this->encode_utf8($order->delivery['suburb']),
+              'admin_area_1' => $this->encode_utf8((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : ''), // state
+              'admin_area_2' => $this->encode_utf8($order->delivery['city']), // city
+              'postal_code' => $this->encode_utf8($order->delivery['postcode']),
+              'country_code' => $this->encode_utf8($order->delivery['country']['iso_code_2'])
+            )
+          );
+
+          if ($order->delivery['company'] != '') {
+            $purchase_unit['shipping']['address']['address_line_2'] = $this->encode_utf8($order->delivery['company']);
+            if ($order->delivery['suburb'] != '') {
+              $purchase_unit['shipping']['address']['address_line_1'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
+            }
           }
         }
 
@@ -762,22 +769,30 @@
         $order = new order($insert_id);
       }
 
+      // virtual orders have no shipping address to send PayPal at all
+      $has_shipping = ($order->content_type != 'virtual');
+      if ($order->delivery === false) {
+        $order->delivery = $order->billing;
+      }
+
       // auth
       $client = $this->GetClient();
 
-      $shipping_address = array(
-        'address_line_1' => $this->encode_utf8($order->delivery['street_address']),
-        'address_line_2' => $this->encode_utf8($order->delivery['suburb']),
-        'admin_area_1' => $this->encode_utf8((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], ((isset($order->delivery['zone_id'])) ? $order->delivery['zone_id'] : 0), $order->delivery['state']) : ''), // state
-        'admin_area_2' => $this->encode_utf8($order->delivery['city']), // city
-        'postal_code' => $this->encode_utf8($order->delivery['postcode']),
-        'country_code' => $this->encode_utf8((isset($order->customer['country']['iso_code_2'])) ? $order->customer['country']['iso_code_2'] : $order->delivery['country_iso_2'])
-      );
+      if ($has_shipping) {
+        $shipping_address = array(
+          'address_line_1' => $this->encode_utf8($order->delivery['street_address']),
+          'address_line_2' => $this->encode_utf8($order->delivery['suburb']),
+          'admin_area_1' => $this->encode_utf8((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], ((isset($order->delivery['zone_id'])) ? $order->delivery['zone_id'] : 0), $order->delivery['state']) : ''), // state
+          'admin_area_2' => $this->encode_utf8($order->delivery['city']), // city
+          'postal_code' => $this->encode_utf8($order->delivery['postcode']),
+          'country_code' => $this->encode_utf8((isset($order->customer['country']['iso_code_2'])) ? $order->customer['country']['iso_code_2'] : $order->delivery['country_iso_2'])
+        );
 
-      if ($order->delivery['company'] != '') {
-        $shipping_address['address_line_2'] = $this->encode_utf8($order->delivery['company']);
-        if ($order->delivery['suburb'] != '') {
-          $shipping_address['address_line_1'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
+        if ($order->delivery['company'] != '') {
+          $shipping_address['address_line_2'] = $this->encode_utf8($order->delivery['company']);
+          if ($order->delivery['suburb'] != '') {
+            $shipping_address['address_line_1'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
+          }
         }
       }
 
@@ -799,9 +814,9 @@
 
       $this->set_number_format($order->info['currency']);
 
-      // check if shipping object exists in order, if not we need to add it instead of replace
+      // check if a shipping object already exists on the order
       $existing_order = $this->GetOrder($orderID);
-      $shipping_op = isset($existing_order->purchase_units[0]->shipping) ? 'replace' : 'add';
+      $existing_has_shipping = isset($existing_order->purchase_units[0]->shipping);
 
       $request = new OrdersPatchRequest($orderID);
       $request->body = array(
@@ -813,19 +828,29 @@
             'value' => sprintf($this->numberFormat, round($total, 2))
           )
         ),
-        array(
+      );
+
+      if ($has_shipping) {
+        $shipping_op = $existing_has_shipping ? 'replace' : 'add';
+
+        $request->body[] = array(
           'op' => $shipping_op,
           'path' => "/purchase_units/@reference_id=='default'/shipping/name",
           'value' => array(
             'full_name' => $this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname'])
           )
-        ),
-        array(
+        );
+        $request->body[] = array(
           'op' => $shipping_op,
           'path' => "/purchase_units/@reference_id=='default'/shipping/address",
           'value' => $shipping_address
-        ),
-      );
+        );
+      } elseif ($existing_has_shipping) {
+        $request->body[] = array(
+          'op' => 'remove',
+          'path' => "/purchase_units/@reference_id=='default'/shipping",
+        );
+      }
 
       if (xtc_not_null($insert_id)) {
         $request->body[] = array(
