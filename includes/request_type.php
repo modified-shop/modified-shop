@@ -1,7 +1,7 @@
 <?php
 /* -----------------------------------------------------------------------------------------
    $Id: request_type.php 1259 2010-09-03 12:01:51Z web28 $
- 
+
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
@@ -9,7 +9,7 @@
   -----------------------------------------------------------------------------------------
    based on:
    @copyright Copyright 2003-2010 Zen Cart Development Team
- 
+
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
@@ -20,11 +20,12 @@ $is_https = isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' |
 $is_forwarded_by_ssl = isset($_SERVER['HTTP_X_FORWARDED_BY'])
     && strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_BY']), 'SSL') !== false;
 
-$https_server_host = defined('HTTPS_SERVER') ? str_replace('https://', '', HTTPS_SERVER) : ($_SERVER['HTTP_HOST'] ?? '');
+$https_server_host = defined('HTTPS_SERVER') ? str_replace('https://', '', HTTPS_SERVER) : '';
 
 $is_forwarded_host_ssl = isset($_SERVER['HTTP_X_FORWARDED_HOST'])
     && (strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']), 'SSL') !== false
-        || strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']), strtoupper($https_server_host)) !== false);
+        || ($https_server_host !== ''
+            && strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']), strtoupper($https_server_host)) !== false));
 
 $is_script_uri_https = isset($_SERVER['SCRIPT_URI'])
     && strtolower(substr($_SERVER['SCRIPT_URI'], 0, 6)) == 'https:';
