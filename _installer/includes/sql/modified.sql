@@ -1031,7 +1031,8 @@ CREATE TABLE orders_total (
   sort_order INT(11) NOT NULL,
   PRIMARY KEY (orders_total_id),
   KEY idx_orders_id (orders_id),
-  KEY idx_sort_order (sort_order)
+  KEY idx_sort_order (sort_order),
+  KEY idx_class (class, orders_id)
 );
 
 DROP TABLE IF EXISTS orders_tracking;
@@ -2347,7 +2348,7 @@ INSERT INTO currencies VALUES (3,'Schweizer Franken','CHF', 'CHF', '', '.', '', 
 INSERT INTO currencies VALUES (4,'Great Britain Pound','GBP', '', '£', '.', ',', '2','0.8094',NOW(),'0');
 
 # database Version
-INSERT INTO database_version(version, date_added) VALUES ('MOD_3.3.0', NOW());
+INSERT INTO database_version(version, date_added) VALUES ('MOD_3.3.1', NOW());
 
 # languages
 INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'iso-8859-15',1,1);
