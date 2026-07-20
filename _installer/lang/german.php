@@ -48,10 +48,10 @@
   define('TEXT_START_INSTALL_TEXT', 'Komplette Neuinstallation des modified Shops. Eine bestehende Datenbank wird &uuml;berschrieben.');
 
   define('TEXT_SQL_SUCCESS', '%s');
-  define('TEXT_INFO_DONATIONS_IMG_ALT','Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
-  define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.modified-shop.org/images/content/btn_donateCC_LS.png" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
+  define('TEXT_INFO_DONATIONS_IMG_ALT', 'Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
+  define('BUTTON_DONATE', '<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.modified-shop.org/images/content/btn_donateCC_LS.png" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START_TITLE', 'Willkommen zur modified eCommerce Shopsoftware Installation');
-  define('TEXT_START', 'Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP '.PHP_VERSION_MIN.') und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.');
+  define('TEXT_START', 'Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Ihre out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP '.PHP_VERSION_MIN.') und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.');
   define('TEXT_DONATE', 'Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine <b>Spende</b> als kleine Anerkennung freuen.<br /><br />' . BUTTON_DONATE);
   define('TEXT_COPYRIGHT', '<span class="magenta">mod</span><span class="darkgrey">ified</span> eCommerce Shopsoftware &copy; 2009 - '.date('Y'));
   define('TEXT_AUTOUPDATER_HEADING', 'Aktualisierung');
@@ -76,7 +76,7 @@
   define('TEXT_INFO_TEMPLATE_UPDATE', 'Drittanbieter und umbenannte Templates m&uuml;ssen manuell vor dem Update des Shops aktualisiert werden!<br />Es werden nur die mitgelieferten Standard-Templates automatisch aktualisiert!');
 
   define('TEXT_CONFIGURE', 'Konfigurations-Datei (configure.php) aktualisieren');
-  define('TEXT_CONFIGURE_DESC', 'Hier k&ouml;nnen Sie die configure.php Datei aktualisieren um sicher zu gehen, dass sie dem aktuelle Stand entspricht.');
+  define('TEXT_CONFIGURE_DESC', 'Hier k&ouml;nnen Sie die configure.php Datei aktualisieren um sicher zu gehen, dass sie dem aktuellen Stand entspricht.');
   define('TEXT_CONFIGURE_SUCCESS', 'Die Konfigurations-Datei wurde neu geschrieben');
   define('TEXT_CONFIGURE_ERROR', 'Die Konfigurations-Datei konnte nicht geschrieben werden');
   
@@ -91,9 +91,9 @@
   define('TEXT_SQL_MANUELL_DESC', 'SQL-Befehle m&uuml;ssen mit einem Semikolon ( ; ) abgeschlossen werden!');
 
   define('TEXT_DB_CONVERT', 'Datenbank Konvertierung');
-  define('TEXT_DB_CONVERT_DESC', 'Sie k&ouml;nnen hier Ihre Datenbank kovertieren.<div class="errormessage">Es erfolgt keine Konvertierung der Inhalte. Es wird nur die Collation und die Charset der Tabellen ge&auml;ndert.</div>');
-  define('TEXT_INFO_DO_CONVERT', 'Die Datenbank wird kovertiert!');
-  define('TEXT_INFO_DO_CONVERT_OK', 'Die Datenbank wurde erfolgreich kovertiert!');
+  define('TEXT_DB_CONVERT_DESC', 'Sie k&ouml;nnen hier Ihre Datenbank konvertieren.<div class="errormessage">Es erfolgt keine Konvertierung der Inhalte. Es wird nur die Collation und die Charset der Tabellen ge&auml;ndert.</div>');
+  define('TEXT_INFO_DO_CONVERT', 'Die Datenbank wird konvertiert!');
+  define('TEXT_INFO_DO_CONVERT_OK', 'Die Datenbank wurde erfolgreich konvertiert!');
 
   define('TEXT_DB_RESTORE', 'Datenbank Wiederherstellung');
   define('TEXT_DB_RESTORE_DESC', 'Sie k&ouml;nnen hier Ihre Datenbank aus einem vorhandenen Backup wiederherstellen.');
@@ -111,7 +111,7 @@
   define('TEXT_DB_REMOVE_ENGINE', 'Ohne Speicherengines \'ENGINE\'');
   define('TEXT_DB_COMPLETE_INSERTS', 'Vollst&auml;ndige \'INSERT\'s');
   define('TEXT_DB_SINGLE_FILES', 'Einzelne Dateien pro Tabelle');
-  define('TEXT_DB_UFT8_CONVERT', 'Datenbank auf UTF-8 konvertieren');
+  define('TEXT_DB_UTF8_CONVERT', 'Datenbank auf UTF-8 konvertieren');
   define('TEXT_DB_COMPRESS_GZIP', 'Mit GZIP');
   define('TEXT_DB_COMPRESS_RAW', 'Keine Komprimierung (Raw SQL)');
   define('TEXT_DB_SIZE', 'Gr&ouml;&szlig;e');
@@ -141,7 +141,7 @@
   
   define('TEXT_DB_UPDATE', 'Datenbankstruktur Update');
   define('TEXT_DB_UPDATE_DESC', 'Hier k&ouml;nnen Sie die Datenbank Ihrer Shopinstallation auf den aktuellen Stand bringen.');
-  define('TEXT_DB_UPDATE_FINISHED', 'DB Update erfolgreich abgesclossen!');
+  define('TEXT_DB_UPDATE_FINISHED', 'DB Update erfolgreich abgeschlossen!');
   define('TEXT_FROM', ' von ');
   define('TEXT_YES', 'Ja');
   define('TEXT_NO', 'Nein');
@@ -164,7 +164,7 @@
   define('TEXT_DB_ENGINE', 'Engine:');
   define('TEXT_DB_PCONNECT', 'Persistent:');
   define('TEXT_DB_EXISTS', 'Datenbank existiert bereits');
-  define('TEXT_DB_EXISTS_DESC', 'Wenn Sie "Best&auml;tigen" klicken werden alle Tabellen dieser Datenbank &uuml;berschrieben! Wenn Sie dies nicht m&ouml;chten, dann klicken Sie auf "Zur&uuml;ck" und geben eine andere Datenbank an. Andersfalls klicken Sie auf "Best&auml;tigen".');
+  define('TEXT_DB_EXISTS_DESC', 'Wenn Sie "Best&auml;tigen" klicken werden alle Tabellen dieser Datenbank &uuml;berschrieben! Wenn Sie dies nicht m&ouml;chten, dann klicken Sie auf "Zur&uuml;ck" und geben eine andere Datenbank an. Andernfalls klicken Sie auf "Best&auml;tigen".');
   define('TEXT_DB_INSTALL', 'Datenbank Installation (Zwingend erforderlich bei Erstinstallation). Bestehende Tabellen werden dabei geleert!');
 
   define('TEXT_SERVER_HEADING', 'Angaben zum Shop:');
@@ -173,11 +173,11 @@
   define('TEXT_SERVER_USE_SSL', 'SSL:');
   define('TEXT_SERVER_SESSION', 'Session:');
 
-  define('TEXT_ADMIN_DIRECTORY_HEADING','Admin Verzeichnis:');
+  define('TEXT_ADMIN_DIRECTORY_HEADING', 'Admin Verzeichnis:');
   define('TEXT_ADMIN_DIRECTORY_DESCRIPTION', 'Bitte &auml;ndern Sie aus Sicherheitsgr&uuml;nden den Namen des Admin Verzeichnisses.');
   define('TEXT_ADMIN_DIRECTORY', 'Ein per Zufallsgenerator erzeugter Vorschlag:');
 
-  define('TEXT_ACCOUNT','Der Installer richtet den Admin-Account ein und schreibt noch diverse Daten in die Datenbank.<br />Die angegebenen Daten f&uuml;r <b>Land</b> und <b>PLZ</b> werden f&uuml;r die Versand- und Steuerberechnungen genutzt.');
+  define('TEXT_ACCOUNT', 'Der Installer richtet den Admin-Account ein und schreibt noch diverse Daten in die Datenbank.<br />Die angegebenen Daten f&uuml;r <b>Land</b> und <b>PLZ</b> werden f&uuml;r die Versand- und Steuerberechnungen genutzt.');
   define('TEXT_ACCOUNT_HEADING', 'Angaben zum Account:');
   define('TEXT_ACCOUNT_LOGIN_HEADING', 'Angaben zum Login:');
   define('TEXT_ACCOUNT_FIRSTNAME', 'Vorname:');
@@ -198,7 +198,7 @@
   define('TEXT_MODULES_UNINSTALLED', 'Nicht installiert:');
   define('TEXT_INFO_DO_INSTALL', 'Die Datenbank wird installiert.');
   
-  define('TEXT_ERROR_JAVASCRIPT','In ihrem Browser ist Javascript deaktiviert. Sie m&uuml;ssen Javascript aktivieren, um den Installer ausf&uuml;hren zu k&ouml;nnen.');
+  define('TEXT_ERROR_JAVASCRIPT', 'In Ihrem Browser ist Javascript deaktiviert. Sie m&uuml;ssen Javascript aktivieren, um den Installer ausf&uuml;hren zu k&ouml;nnen.');
   define('TEXT_ERROR_PERMISSION_FILES', 'Die folgenden Dateien ben&ouml;tigen Schreibrechte (CHMOD 777):');
   define('TEXT_ERROR_PERMISSION_FOLDER', 'Die folgenden Ordner ben&ouml;tigen Schreibrechte (CHMOD 777):');
   define('TEXT_ERROR_PERMISSION_RFOLDER', 'Folgende Ordner inklusive aller Dateien und Unterordner ben&ouml;tigen rekursive Schreibrechte (CHMOD 777):');
@@ -215,7 +215,7 @@
   define('TEXT_ERROR_FTP_PASS', 'FTP Passwort:');
   define('TEXT_ERROR_UNLINK_FILES', 'Folgende Dateien m&uuml;ssen gel&ouml;scht werden:');
   define('TEXT_ERROR_UNLINK_FOLDER', 'Folgende Ordner m&uuml;ssen gel&ouml;scht werden:');
-  define('ERROR_AUTOUPDATE', 'Ein Autoupdate ist Aufgrund der notwendigen Voraussetzungen nicht m&ouml;glich.');
+  define('ERROR_AUTOUPDATE', 'Ein Autoupdate ist aufgrund der notwendigen Voraussetzungen nicht m&ouml;glich.');
   
   // errors
   define('ERROR_DATABASE_CONNECTION', 'Bitte pr&uuml;fen Sie Ihre Angaben zur Datenbank.');
@@ -226,7 +226,7 @@
   define('ERROR_SQL_UPDATE_NO_FILE', 'Leider konnten wir keine SQL-Update-Datei finden...');
   define('ERROR_FTP_LOGIN_NOT_POSSIBLE', 'FTP-Zugangsdaten fehlerhaft, Host nicht erreichbar');
   define('ERROR_FTP_CHMOD_WAS_NOT_SUCCESSFUL', '&Auml;ndern der Verzeichnisrechte war nicht erfolgreich');
-  define('ERROR_FILE_INTEGRITY', 'Es wurden %s Dateien im Vergleich zur orginalen Installation ver&auml;ndert (z.B. durch Modulupdates oder Bugfixes). Sie k&ouml;nnen diese Dateien als Backup herunterladen und das Update fortf&uuml;hren.<br><br><b>ACHTUNG:</b> Beim Update werden ALLE ge&auml;nderten Dateien &uuml;berschrieben!');
+  define('ERROR_FILE_INTEGRITY', 'Es wurden %s Dateien im Vergleich zur originalen Installation ver&auml;ndert (z.B. durch Modulupdates oder Bugfixes). Sie k&ouml;nnen diese Dateien als Backup herunterladen und das Update fortf&uuml;hren.<br><br><b>ACHTUNG:</b> Beim Update werden ALLE ge&auml;nderten Dateien &uuml;berschrieben!');
   define('ERROR_CREATE_TMP_DIR', 'Das tempor&auml;re Verzeichnis f&uuml;r das Update konnte nicht erstellt werden');
   define('ERROR_INVALID_UPDATE_DOWNLOAD', 'Das Update Paket konnte nicht heruntergeladen werden');
   define('ERROR_WRITE_CONFIGURE', 'Die configure.php konnte nicht geschrieben werden.');
@@ -247,7 +247,7 @@
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Grossbuchstaben enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Ihr Passwort muss mindestens %s Zahl enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Ihr Passwort muss mindestens %s Sonderzeichen enthalten.');
-  define('ENTRY_PASSWORD_ERROR_INVALID_CHAR', 'Ihr Passwort enht&auml;lt ung&uuml;ltige Zeichen. Bitte verwenden Sie ein anderes Passwort.');
+  define('ENTRY_PASSWORD_ERROR_INVALID_CHAR', 'Ihr Passwort enth&auml;lt ung&uuml;ltige Zeichen. Bitte verwenden Sie ein anderes Passwort.');
   define('ENTRY_PASSWORD_ERROR_NOT_MATCHING', 'Ihre Passw&ouml;rter stimmen nicht &uuml;berein.');
   define('ENTRY_PASSWORD_CURRENT_ERROR', 'Ihr aktuelles Passwort darf nicht leer sein.');
   
