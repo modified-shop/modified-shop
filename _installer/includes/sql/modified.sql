@@ -1031,7 +1031,8 @@ CREATE TABLE orders_total (
   sort_order INT(11) NOT NULL,
   PRIMARY KEY (orders_total_id),
   KEY idx_orders_id (orders_id),
-  KEY idx_sort_order (sort_order)
+  KEY idx_sort_order (sort_order),
+  KEY idx_class (class, orders_id)
 );
 
 DROP TABLE IF EXISTS orders_tracking;

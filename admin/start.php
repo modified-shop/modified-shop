@@ -41,24 +41,30 @@ $xx_mins_ago = (time() - $time_last_click);
 xtc_db_query("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE time_last_click < '" . $xx_mins_ago . "'");
 
 // customer stats
-$customers_query = xtc_db_query("SELECT cs.customers_status_name cust_group, 
-                                        count(*) cust_count   
-                                   FROM " . TABLE_CUSTOMERS . " c
-                                   JOIN " . TABLE_CUSTOMERS_STATUS . " cs 
-                                        ON cs.customers_status_id = c.customers_status
-                                  --  exclude admin
-                                  WHERE c.customers_status > 0
-                                    -- restrict to current language setting
-                                    AND cs.language_id = '" . (int) $_SESSION['languages_id'] . "'
-                               GROUP BY 1
-                                  UNION (SELECT '" . TOTAL_CUSTOMERS . "', count(*)   
-                                           FROM " . TABLE_CUSTOMERS . ")
-                               ORDER BY 2 DESC");
-// save query result
-$customers = array();
-while ($row = xtc_db_fetch_array($customers_query)) {
-  $customers[] = $row;
+$customer_status_query = xtc_db_query("SELECT customers_status_id, customers_status_name
+                                          FROM " . TABLE_CUSTOMERS_STATUS . "
+                                         WHERE language_id = '" . (int) $_SESSION['languages_id'] . "'");
+$customer_status_names = array();
+while ($row = xtc_db_fetch_array($customer_status_query)) {
+  $customer_status_names[$row['customers_status_id']] = $row['customers_status_name'];
 }
+
+$customers_query = xtc_db_query("SELECT customers_status, count(*) cust_count
+                                    FROM " . TABLE_CUSTOMERS . "
+                                GROUP BY 1");
+$customers = array();
+$customers_total = 0;
+while ($row = xtc_db_fetch_array($customers_query)) {
+  $customers_total += $row['cust_count'];
+  // exclude admin
+  if ($row['customers_status'] > 0 && isset($customer_status_names[$row['customers_status']])) {
+    $customers[] = array('cust_group' => $customer_status_names[$row['customers_status']], 'cust_count' => $row['cust_count']);
+  }
+}
+$customers[] = array('cust_group' => TOTAL_CUSTOMERS, 'cust_count' => $customers_total);
+usort($customers, function($a, $b) {
+  return $b['cust_count'] - $a['cust_count'];
+});
 
 // newsletter
 $newsletter_query = xtc_db_query("SELECT count(*) as count 
@@ -73,25 +79,24 @@ $products_query = xtc_db_query("SELECT count(if(products_status = 0, products_id
                                   FROM ".TABLE_PRODUCTS);
 $products = xtc_db_fetch_array($products_query);            
     
-// orders (status)    
-$orders_query = xtc_db_query("SELECT os.orders_status_name AS status,
-                                     os.orders_status_id AS id,
-                                     coalesce(o.order_count, 0) order_count
-                                FROM " . TABLE_ORDERS_STATUS . " os
-                           LEFT JOIN (SELECT orders_status, 
-                                             count(*) order_count
-                                        FROM " . TABLE_ORDERS . " 
-                                    GROUP BY 1) o 
-                                     ON o.orders_status = os.orders_status_id
-                               WHERE os.language_id = '" . (int) $_SESSION['languages_id'] . "'
-                            ORDER BY os.orders_status_id");
+// orders (status)
+$orders_status_counts_query = xtc_db_query("SELECT orders_status, count(*) order_count
+                                               FROM " . TABLE_ORDERS . "
+                                           GROUP BY 1");
+$orders_status_counts = array();
+while ($row = xtc_db_fetch_array($orders_status_counts_query)) {
+  $orders_status_counts[$row['orders_status']] = $row['order_count'];
+}
+
+$orders_status_query = xtc_db_query("SELECT orders_status_id, orders_status_name
+                                        FROM " . TABLE_ORDERS_STATUS . "
+                                       WHERE language_id = '" . (int) $_SESSION['languages_id'] . "'
+                                    ORDER BY orders_status_id");
 $orders = array();
-$orders_status_validating = xtc_db_num_rows(xtc_db_query("SELECT orders_status 
-                                                            FROM " . TABLE_ORDERS ." 
-                                                           WHERE orders_status ='0'"));
-$orders[] = array('status' => TEXT_VALIDATING, 'order_count' => $orders_status_validating);
-while ($row = xtc_db_fetch_array($orders_query)) {
-  $orders[] = $row;
+$orders[] = array('status' => TEXT_VALIDATING, 'order_count' => (isset($orders_status_counts[0]) ? $orders_status_counts[0] : 0));
+while ($row = xtc_db_fetch_array($orders_status_query)) {
+  $order_count = isset($orders_status_counts[$row['orders_status_id']]) ? $orders_status_counts[$row['orders_status_id']] : 0;
+  $orders[] = array('status' => $row['orders_status_name'], 'id' => $row['orders_status_id'], 'order_count' => $order_count);
 }
 
 // specials 
@@ -104,6 +109,15 @@ if (ORDER_STATUSES_FOR_SALES_STATISTICS != '') {
   $status_array = explode(',', ORDER_STATUSES_FOR_SALES_STATISTICS);
   $where = " AND o.orders_status IN ('".implode("','", $status_array)."') ";
 }
+
+// everything except 'total' only needs the current and previous calendar year,
+// plus (in January) the December of two years ago that 'last_month_last_year'
+// pulls in, since MySQL's dashless "interval 1 year_month" is parsed as just
+// 1 month, making that column effectively "current_date minus 13 months"
+$turnover_stats_from = min(
+    date('Y-01-01', strtotime('-1 year')),
+    date('Y-m-01', strtotime('-13 months'))
+);
 $turnover_query = xtc_db_query("SELECT round(coalesce(sum(if(date(o.date_purchased) = current_date, ot.value/o.currency_value, null)), 0), 2) today,
                                        round(coalesce(sum(if(date(o.date_purchased) = current_date - interval 1 day, ot.value/o.currency_value, null)), 0), 2) yesterday,
                                        round(coalesce(sum(if(extract(year_month from o.date_purchased) = extract(year_month from current_date), ot.value/o.currency_value, null)), 0), 2) this_month,
@@ -112,14 +126,24 @@ $turnover_query = xtc_db_query("SELECT round(coalesce(sum(if(date(o.date_purchas
                                        round(coalesce(sum(if(extract(year_month from o.date_purchased) = extract(year_month from current_date - interval 1 year_month - interval 1 year), ot.value/o.currency_value, null)), 0), 2) last_month_last_year,
                                        round(coalesce(sum(if(extract(year_month from o.date_purchased) = extract(year_month from current_date - interval 1 year_month) and o.orders_status <> 1, ot.value/o.currency_value, null)), 0), 2) last_month_paid,
                                        round(coalesce(sum(if(extract(year from o.date_purchased) = extract(year from current_date - interval 1 year), ot.value/o.currency_value, null)), 0), 2) last_year,
-                                       round(coalesce(sum(if(extract(year from o.date_purchased) = extract(year from current_date), ot.value/o.currency_value, null)), 0), 2) this_year,
-                                       round(coalesce(sum(ot.value/o.currency_value), 0), 2) total  
+                                       round(coalesce(sum(if(extract(year from o.date_purchased) = extract(year from current_date), ot.value/o.currency_value, null)), 0), 2) this_year
                                   FROM " . TABLE_ORDERS . " o
-                                  JOIN " . TABLE_ORDERS_TOTAL . " ot 
+                                  JOIN " . TABLE_ORDERS_TOTAL . " ot
                                        ON ot.orders_id = o.orders_id
                                  WHERE ot.class = 'ot_total'
+                                       AND o.date_purchased >= '".$turnover_stats_from."'
                                        ".$where);
-$turnover = xtc_db_fetch_array($turnover_query);  
+$turnover = xtc_db_fetch_array($turnover_query);
+
+// all-time total needs the full order history, kept as its own lightweight query
+$turnover_total_query = xtc_db_query("SELECT round(coalesce(sum(ot.value/o.currency_value), 0), 2) total
+                                         FROM " . TABLE_ORDERS . " o
+                                         JOIN " . TABLE_ORDERS_TOTAL . " ot
+                                              ON ot.orders_id = o.orders_id
+                                        WHERE ot.class = 'ot_total'
+                                              ".$where);
+$turnover_total = xtc_db_fetch_array($turnover_total_query);
+$turnover['total'] = $turnover_total['total'];
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
