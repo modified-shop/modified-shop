@@ -1,11 +1,11 @@
 <link rel="stylesheet" property="stylesheet" href="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/css/apms.css?v=20" type="text/css" media="screen" />
 {if isset($paypalapplepay)}
 <script src="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/js/applepay.js?v=20"></script>
-<script src="https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js?v=20"></script>
+<script src="https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js"></script>
 {/if}
 {if isset($paypalgooglepay)}
-<script src="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/js/googlepay.js?v=23"></script>
-<script src="https://pay.google.com/gp/p/js/pay.js?v=20"></script>
+<script src="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/js/googlepay.js?v=20"></script>
+<script src="https://pay.google.com/gp/p/js/pay.js"></script>
 {/if}
 
 <div class="apms_form_button{if !isset($checkout)} apms_nocheckout{if isset($product)} apms_product{/if}{/if}">
