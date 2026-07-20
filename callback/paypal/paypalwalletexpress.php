@@ -35,6 +35,11 @@ if ($payment_method != ''
     $PayPalOrder = $paypal->GetOrder($_SESSION['paypal']['OrderID']);
 
     if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+      $paypal->LoggingManager->log('WARNING', 'Wallet callback aborted', array(
+        'reason' => 'order status',
+        'status' => $PayPalOrder->status,
+        'order_id' => $_SESSION['paypal']['OrderID'],
+      ));
       unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
     }
@@ -69,6 +74,11 @@ if ($payment_method != ''
         || $_SESSION['paypal']['cartID'] != $_SESSION['cart']->cartID
         )
     {
+      $paypal->LoggingManager->log('WARNING', 'Wallet callback aborted', array(
+        'reason' => 'customer/cart mismatch',
+        'has_customer_id' => isset($_SESSION['customer_id']),
+        'cart_id_match' => (isset($_SESSION['paypal']['cartID']) ? ($_SESSION['paypal']['cartID'] == $_SESSION['cart']->cartID) : null),
+      ));
       unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
     }
@@ -116,5 +126,13 @@ if ($payment_method != ''
 
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
 } else {
+    $paypal = new PayPalPaymentV2(($payment_method != '') ? $payment_method : 'paypalgooglepay');
+    $paypal->LoggingManager->log('WARNING', 'Wallet callback aborted', array(
+      'reason' => 'missing prerequisites',
+      'payment_method' => $payment_method,
+      'has_session_paypal' => isset($_SESSION['paypal']),
+      'has_order_id' => isset($_SESSION['paypal']['OrderID']),
+      'has_shipping_contact' => isset($_SESSION['paypal']['contact']['shipping']),
+    ));
     xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
 }

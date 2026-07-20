@@ -9,6 +9,28 @@
  Released under the GNU General Public License
  --------------------------------------------------------------*/
 
+// reports otherwise-invisible client-side Apple Pay failures to the server
+function reportApplePayError(step, err) {
+  try {
+    var payload = new URLSearchParams({
+      step: step,
+      name: err && err.name ? err.name : "",
+      message: err && err.message ? err.message : String(err),
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(DIR_WS_BASE + "ajax.php?ext=log_paypal_client_error&payment_method=paypalapplepay", payload);
+    } else {
+      $.post(DIR_WS_BASE + "ajax.php?ext=log_paypal_client_error&payment_method=paypalapplepay", {
+        step: step,
+        name: err && err.name ? err.name : "",
+        message: err && err.message ? err.message : String(err),
+      });
+    }
+  } catch (e) {
+    // reporting must never itself break the payment flow
+  }
+}
+
 async function setupApplepay() {
 
   const { currencyIsoCode, totalPrice, totalPriceStatus, totalLabel, countryIsoCode } = getAppleTransactionInfo();
@@ -22,6 +44,7 @@ async function setupApplepay() {
   } = await applepay.config();
 
   if (!isEligible) {
+    reportApplePayError("config", { message: "not eligible" });
     redirectAppleError();
   }
 
@@ -64,6 +87,7 @@ async function setupApplepay() {
           session.completeMerchantValidation(payload.merchantSession);
         })
         .catch((err) => {
+          reportApplePayError("validateMerchant", err);
           session.abort();
         });
     };
@@ -79,7 +103,7 @@ async function setupApplepay() {
         const id = getAppleOrderID();
 
         /**
-         * Confirm Payment 
+         * Confirm Payment
          */
         await applepay.confirmOrder({
           orderId: id,
@@ -94,6 +118,7 @@ async function setupApplepay() {
 
         redirectAppleSuccess();
       } catch (err) {
+        reportApplePayError("paymentAuthorized", err);
         session.completePayment({
           status: window.ApplePaySession.STATUS_FAILURE,
         });
@@ -123,6 +148,7 @@ async function setupApplepayCart() {
   } = await applepay.config();
 
   if (!isEligible) {
+    reportApplePayError("cartConfig", { message: "not eligible" });
     return;
   }
 
@@ -173,6 +199,7 @@ async function setupApplepayCart() {
           session.completeMerchantValidation(payload.merchantSession);
         })
         .catch((err) => {
+          reportApplePayError("cartValidateMerchant", err);
           session.abort();
         });
     };
@@ -205,6 +232,7 @@ async function setupApplepayCart() {
           newLineItems: [],
         });
       }).catch((err) => {
+        reportApplePayError("cartShippingContactSelected", err);
         session.completeShippingContactSelection({
           newShippingMethods: [],
           newTotal: paymentRequest.total,
@@ -235,6 +263,7 @@ async function setupApplepayCart() {
           newLineItems: [],
         });
       }).catch((err) => {
+        reportApplePayError("cartShippingMethodSelected", err);
         session.completeShippingMethodSelection({
           newTotal: paymentRequest.total,
           newLineItems: [],
@@ -272,6 +301,7 @@ async function setupApplepayCart() {
 
         window.location.href = getAppleCartSuccessUrl();
       } catch (err) {
+        reportApplePayError("cartPaymentAuthorized", err);
         session.completePayment({
           status: window.ApplePaySession.STATUS_FAILURE,
         });

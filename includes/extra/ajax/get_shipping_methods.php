@@ -20,18 +20,25 @@
   require_once(DIR_WS_CLASSES.'order_total.php');
   require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
-  
+
   function get_shipping_methods() {
     global $xtPrice;
-    
+
     $request_json = get_external_content('php://input', 3, false);
     $request = json_decode($request_json, true);
-    
+
+    $paypal = new PayPalPaymentV2('paypalexpress');
+
     if (!isset($request['id'])
         || !isset($_SESSION['paypal']['OrderID'])
         || $_SESSION['paypal']['OrderID'] != $request['id']
         )
     {
+      $paypal->LoggingManager->log('WARNING', 'Wallet get_shipping_methods aborted', array(
+        'reason' => 'order id mismatch',
+        'request_id' => (isset($request['id']) ? $request['id'] : null),
+        'session_order_id' => (isset($_SESSION['paypal']['OrderID']) ? $_SESSION['paypal']['OrderID'] : null),
+      ));
       return;
     }
 
@@ -41,9 +48,7 @@
     unset($_SESSION['customer_id']);
     unset($_SESSION['sendto']);
     unset($_SESSION['billto']);
-    
-    $paypal = new PayPalPaymentV2('paypalexpress');
-    
+
     if (isset($request['shipping_address'])) {
       $_SESSION['country'] = get_country_id($request['shipping_address']['country_code']);
     }
@@ -116,7 +121,13 @@
         }
       }
     }
-    
+
+    if (empty($shipping_option)) {
+      $paypal->LoggingManager->log('INFO', 'Wallet get_shipping_methods no options', array(
+        'country' => (isset($_SESSION['country']) ? $_SESSION['country'] : null),
+      ));
+    }
+
     $total = $order->info['total'];
     if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1

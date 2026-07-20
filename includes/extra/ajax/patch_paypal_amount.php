@@ -20,16 +20,19 @@
   function patch_paypal_amount() {
     global $order;
 
+    $paypal = new PayPalPaymentV2(isset($_REQUEST['payment_method']) ? $_REQUEST['payment_method'] : 'paypalapplepay');
+
     if (!isset($_SESSION['cart'])
         || $_SESSION['cart']->count_contents() <= 0
         || !isset($_SESSION['paypal']['OrderID'])
         || $_SESSION['paypal']['OrderID'] == ''
         )
     {
+      $paypal->LoggingManager->log('WARNING', 'Wallet PatchOrder aborted', array(
+        'reason' => (!isset($_SESSION['cart']) || $_SESSION['cart']->count_contents() <= 0) ? 'empty cart' : 'missing OrderID',
+      ));
       return array('success' => false);
     }
-
-    $paypal = new PayPalPaymentV2(isset($_REQUEST['payment_method']) ? $_REQUEST['payment_method'] : 'paypalapplepay');
 
     // rebuild the order object (uses $_SESSION['shipping'] set during the
     // shipping selection) so the patched amount matches the sheet total
@@ -58,5 +61,9 @@
 
     $result = $paypal->PatchOrder($_SESSION['paypal']['OrderID']);
 
-    return array('success' => ($result !== null && $result !== false));
+    if ($result !== true) {
+      $paypal->LoggingManager->log('WARNING', 'Wallet PatchOrder failed', array('order_id' => $_SESSION['paypal']['OrderID']));
+    }
+
+    return array('success' => ($result === true));
   }

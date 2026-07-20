@@ -48,7 +48,7 @@
   use PayPalCheckoutSdk\Payments\CapturesRefundRequest;
   use PayPalCheckoutSdk\Payments\AuthorizationsCaptureRequest;
   use PayPalCheckoutSdk\Vault\VaultGetRequest;
-  
+
   // language
   if (is_file(DIR_FS_EXTERNAL.'paypal/lang/'.$_SESSION['language'].'.php')) {
     require_once(DIR_FS_EXTERNAL.'paypal/lang/'.$_SESSION['language'].'.php');
@@ -66,36 +66,36 @@
     var $intent;
 
     function __construct($class) {
-      $this->loglevel = ((PayPalPaymentBase::check_install() === true) ? $this->get_config('PAYPAL_LOG_LEVEL') : 'INFO'); 
-      $this->logmode = ((PayPalPaymentBase::check_install() === true) ? $this->get_config('PAYPAL_MODE') : 'paypal'); 
+      $this->loglevel = ((PayPalPaymentBase::check_install() === true) ? $this->get_config('PAYPAL_LOG_LEVEL') : 'INFO');
+      $this->logmode = ((PayPalPaymentBase::check_install() === true) ? $this->get_config('PAYPAL_MODE') : 'paypal');
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_paypal_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', $this->logmode, strtolower($this->loglevel));
 
       PayPalPaymentBase::init($class);
     }
-    
-    
+
+
     function GenerateClientToken() {
       // auth
       $client = $this->GetClient();
-    
+
       $request = new GenerateClientTokenRequest();
 
       try {
         $response = $client->execute($request);
         return $response->result;
-        
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'GenerateClientToken', array('exception' => $ex));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GenerateClientToken', array('exception' => $ex));
       }
     }
-    
+
 
     function GenerateUserToken() {
       // auth
       $client = $this->GetClient();
-      
+
       $customer_id = NULL;
       if (isset($_SESSION['customer_id'])
           && $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SAVE_PAYMENT') == 1
@@ -103,7 +103,7 @@
       {
         $customer_id = $this->getCustomerId($_SESSION['customer_id']);
       }
-      
+
       try {
         // use the cached generic token if no customer relation is required
         if (is_null($customer_id)
@@ -117,26 +117,26 @@
         $accessTokenResponse = $client->execute(new AccessTokenRequest($this->GetEnvironment(), NULL, $customer_id));
         $accessToken = $accessTokenResponse->result;
         return new AccessToken($accessToken->access_token, $accessToken->id_token, $accessToken->token_type, $accessToken->expires_in);
-        
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'GenerateUserToken', array('exception' => $ex));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GenerateUserToken', array('exception' => $ex));
       }
     }
-    
-        
+
+
     function CreateOrder($payment_source = array(), $error = false) {
       global $order, $xtPrice;
-      
+
       // auth
       $client = $this->GetClient();
-            
+
       // shipping cost
       $order->info['shipping_cost'] = 0;
-      
+
       $this->set_number_format($order->info['currency']);
-      
+
       $purchase_unit = array(
         'description' => $this->encode_utf8(mb_substr(MODULE_PAYMENT_PAYPAL_TEXT_ORDER, 0, 127)),
         'soft_descriptor' => $this->encode_utf8(mb_substr(STORE_NAME, 0, 22)),
@@ -146,17 +146,17 @@
         )
       );
 
-      if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+      if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
            && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-           ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-                 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0 
+           ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
+                 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
                  && $order->delivery['country_id'] == STORE_COUNTRY
                  )
-          ) 
+          )
       {
         $purchase_unit['amount']['value'] = sprintf($this->numberFormat, round(($order->info['total'] + $order->info['shipping_cost'] + $order->info['tax']), 2));
       }
-      
+
       $pm_source = 'paypal';
       if ($this->code == 'paypalpui') {
         $pm_source = 'pay_upon_invoice';
@@ -185,7 +185,7 @@
                   );
                 } else {
                   $purchase_unit['amount']['breakdown']['handling']['value'] += sprintf($this->numberFormat, round($total['value'], 2));
-                }              
+                }
               } else {
                 if (!isset($purchase_unit['amount']['breakdown']['discount'])) {
                   $purchase_unit['amount']['breakdown']['discount'] = array(
@@ -199,9 +199,9 @@
               break;
           }
         }
-        
+
         $sum_net = $sum_tax = array();
-        $purchase_unit['items'] = array();    
+        $purchase_unit['items'] = array();
         foreach ($order->products as $product) {
           $product['price_net'] = $product['final_price'];
           $product['tax_value'] = 0;
@@ -213,14 +213,14 @@
             $product['single_price_net'] = round($xtPrice->xtcRemoveTax($product['price'], $product['tax']), 2);
             $product['single_tax_value'] = round($xtPrice->xtcGetTax($product['price'], $product['tax']), 2);
           }
-          
+
           $product['tax'] = (string)$product['tax'];
           if (!isset($sum_net[$product['tax']])) $sum_net[$product['tax']] = 0;
           if (!isset($sum_tax[$product['tax']])) $sum_tax[$product['tax']] = 0;
-          
+
           $sum_net[$product['tax']] += $product['price_net'];
           $sum_tax[$product['tax']] += $product['tax_value'];
-          
+
           $item = array(
             'name' => $this->encode_utf8($product['name']),
             'category' => 'PHYSICAL_GOODS',
@@ -235,13 +235,13 @@
             'tax_rate' => sprintf($this->numberFormat, round($product['tax'], 2)),
             'quantity' => $product['qty'],
           );
-      
+
           $purchase_unit['items'][] = $item;
         }
 
-        if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0') { 
+        if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0') {
           $purchase_unit['items'] = array();
-          
+
           foreach ($sum_net as $tax => $sum) {
             $item = array(
               'name' => $this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER),
@@ -258,7 +258,7 @@
               'quantity' => 1,
             );
           }
-          
+
           $purchase_unit['items'][] = $item;
         }
 
@@ -270,22 +270,22 @@
           'value' => sprintf($this->numberFormat, array_sum($sum_tax)),
           'currency_code' => $this->encode_utf8($order->info['currency'])
         );
-        
+
         if (isset($_SESSION['tmp_oID'])) {
           $purchase_unit['invoice_id'] = $this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$_SESSION['tmp_oID'];
         }
       } elseif ($this->code == 'paypalacdc') {
         $pm_source = 'card';
       }
- 
+
       if (isset($payment_source['payment_source'])
           && is_array($payment_source['payment_source'])
           && count($payment_source['payment_source']) == 1
           )
       {
-        $pm_source = key($payment_source['payment_source']);        
+        $pm_source = key($payment_source['payment_source']);
       }
-     
+
       if (isset($_SESSION['customer_id'])) {
         $purchase_unit['shipping'] = array(
           'name' => array(
@@ -332,7 +332,7 @@
           }
         }
       }
-      
+
       $locale_array = preg_split("/[-_]/", strtolower($_SESSION['language_code']));
       if (count($locale_array) == 1) {
         $locale_array[1] = $locale_array[0];
@@ -340,7 +340,7 @@
           $locale_array[1] = 'GB';
         }
       }
-      
+
       // the request id keeps CreateOrder idempotent
       $request_nonce = ((isset($_SESSION['payment_nonce'])) ? $_SESSION['payment_nonce'] : '');
 
@@ -381,11 +381,11 @@
       {
         $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'SET_PROVIDED_ADDRESS';
       }
-      
+
       if (isset($payer) && $pm_source == 'paypal') {
         $request->body['payment_source']['paypal'] = array_merge($request->body['payment_source']['paypal'], $payer);
       }
-      
+
       if (count($payment_source) > 0) {
         $request->body = array_merge_recursive($request->body, $payment_source);
       }
@@ -393,7 +393,7 @@
       if ($this->code == 'paypal') {
         $request->body['payment_source'][$pm_source]['experience_context']['contact_preference'] = 'UPDATE_CONTACT_INFO';
 
-        if (defined('MODULE_PRODUCTS_ABO_STATUS') 
+        if (defined('MODULE_PRODUCTS_ABO_STATUS')
             && MODULE_PRODUCTS_ABO_STATUS == 'true'
             )
         {
@@ -409,11 +409,11 @@
               $product['single_price_net'] = round($xtPrice->xtcRemoveTax($product['price'], $product['tax']), 2);
               $product['single_tax_value'] = round($xtPrice->xtcGetTax($product['price'], $product['tax']), 2);
             }
-            
+
             $product['tax'] = (string)$product['tax'];
             if (!isset($sum_net[$product['tax']])) $sum_net[$product['tax']] = 0;
             if (!isset($sum_tax[$product['tax']])) $sum_tax[$product['tax']] = 0;
-            
+
             if (isset($product['attributes'])
                 && is_array($product['attributes'])
                 && count($product['attributes']) > 0
@@ -435,7 +435,7 @@
               }
             }
           }
-          
+
           if (count($items) > 0) {
             $request->body['payment_source'][$pm_source]['attributes'] = array(
               'vault' => array(
@@ -475,7 +475,7 @@
           }
         }
       }
-            
+
       if ($this->code == 'paypalexpress') {
         $request->body['payment_source'][$pm_source]['experience_context']['contact_preference'] = 'UPDATE_CONTACT_INFO';
         $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'GET_FROM_FILE';
@@ -484,7 +484,7 @@
           'callback_url' => $this->link_encoding(xtc_href_link('ajax.php', 'ext=get_shipping_methods&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
         );
       }
-            
+
       if ($this->code == 'paypalpui') {
         $request->payPalClientMetadataId($_SESSION['paypal']['FraudNetID']);
       }
@@ -500,17 +500,17 @@
             'cartID' => $_SESSION['cart']->cartID,
             'OrderID' => $response->result->id
           );
-          
+
           $this->redirectOrder($response->result->links, 'payer-action');
         }
 
         return $response->result->id;
-        
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'CreateOrder', array('exception' => $ex));
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
-        }      
+        }
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'CreateOrder', array('exception' => $ex));
         if ($error === true) {
@@ -518,13 +518,13 @@
         }
       }
     }
-    
+
 
     function CreateRecurringOrder($source, $order_id, $vault_id) {
       global $xtPrice;
-      
+
       $order = new order($order_id);
-      
+
       // auth
       $client = $this->GetClient();
 
@@ -551,12 +551,12 @@
             'stored_credential' => array(
               'payment_initiator' => 'MERCHANT',
               'usage' => 'SUBSEQUENT',
-              'usage_pattern' => 'SUBSCRIPTION_PREPAID',              
+              'usage_pattern' => 'SUBSCRIPTION_PREPAID',
             )
           )
-        ) 
+        )
       );
-      
+
       try {
         $response = $client->execute($request);
 
@@ -569,7 +569,7 @@
         );
         xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
 
-        if (defined('MODULE_PRODUCTS_ABO_STATUS') 
+        if (defined('MODULE_PRODUCTS_ABO_STATUS')
             && MODULE_PRODUCTS_ABO_STATUS == 'true'
             )
         {
@@ -603,17 +603,17 @@
 
     function CaptureOrder($OrderID, $error = false) {
       global $insert_id;
-      
+
       // auth
       $client = $this->GetClient();
 
       $request = new OrdersCaptureRequest($OrderID);
       $request->prefer('return=representation');
-      
+
       try {
         $response = $client->execute($request);
         return $response->result;
-        
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'CaptureOrder', array('exception' => $ex));
 
@@ -627,23 +627,23 @@
         {
           $this->redirectOrder($details->links, 'payer-action');
         }
-      
+
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
-        }      
+        }
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'CaptureOrder', array('exception' => $ex));
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }
       }
-      
+
       $PayPalOrder = $this->GetOrder($OrderID);
 
       if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
         $this->redirectOrder($PayPalOrder->links, 'payer-action');
       }
-      
+
       if (isset($insert_id) && (int)$insert_id > 0) {
         $this->remove_order($insert_id);
       }
@@ -659,21 +659,21 @@
       }
 
       unset($_SESSION['paypal']);
-      
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')); 
+
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
 
 
     function AuthorizeOrder($OrderID, $error = false) {
       global $insert_id;
-      
+
       // auth
       $client = $this->GetClient();
 
       $request = new OrdersAuthorizeRequest($OrderID);
       $request->body = '{}';
       $request->prefer('return=representation');
-            
+
       try {
         $response = $client->execute($request);
 
@@ -683,17 +683,17 @@
           return $this->GetOrder($_SESSION['paypal']['OrderID']);
         }
         return $response->result;
-        
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'AuthorizeOrder', array('exception' => $ex));
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
-        }      
+        }
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'AuthorizeOrder', array('exception' => $ex));
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
-        }      
+        }
       }
 
       $PayPalOrder = $this->GetOrder($OrderID);
@@ -717,18 +717,18 @@
       }
 
       unset($_SESSION['paypal']);
-       
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')); 
+
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
 
 
     function CaptureAuthorizedOrder($authorize_id, $amount, $currency, $final_capture = false) {
-      
+
       // auth
       $client = $this->GetClient();
-      
+
       $this->set_number_format($currency);
-      
+
       $request = new AuthorizationsCaptureRequest($authorize_id);
       $request->body = array(
         'amount' => array(
@@ -736,35 +736,35 @@
           'currency_code' => $this->encode_utf8($currency)
         )
       );
-      
+
       if ($final_capture == true) {
         $request->body['final_capture'] = true;
       }
-      
+
       try {
         $response = $client->execute($request);
         return $response->result;
-        
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'CaptureAuthorizedOrder', array('exception' => $ex));
-        
+
         return $ex;
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'CaptureAuthorizedOrder', array('exception' => $ex));
       }
     }
-    
-    
+
+
     function PatchOrder($orderID) {
       global $insert_id, $order;
-      
+
       if (xtc_not_null($insert_id)) {
         $order = new order($insert_id);
       }
-      
+
       // auth
       $client = $this->GetClient();
-      
+
       $shipping_address = array(
         'address_line_1' => $this->encode_utf8($order->delivery['street_address']),
         'address_line_2' => $this->encode_utf8($order->delivery['suburb']),
@@ -773,32 +773,32 @@
         'postal_code' => $this->encode_utf8($order->delivery['postcode']),
         'country_code' => $this->encode_utf8((isset($order->customer['country']['iso_code_2'])) ? $order->customer['country']['iso_code_2'] : $order->delivery['country_iso_2'])
       );
-      
+
       if ($order->delivery['company'] != '') {
         $shipping_address['address_line_2'] = $this->encode_utf8($order->delivery['company']);
         if ($order->delivery['suburb'] != '') {
           $shipping_address['address_line_1'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
         }
       }
-      
+
       if (isset($order->info['pp_total'])) {
         $total = $order->info['pp_total'];
       } else {
         $total = $order->info['total'];
-        if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+        if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-             ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-                   && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0 
+             ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
+                   && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
                    && $order->delivery['country_id'] == STORE_COUNTRY
                    )
-            ) 
+            )
         {
           $total += $order->info['tax'];
         }
       }
 
       $this->set_number_format($order->info['currency']);
-      
+
       // check if shipping object exists in order, if not we need to add it instead of replace
       $existing_order = $this->GetOrder($orderID);
       $shipping_op = isset($existing_order->purchase_units[0]->shipping) ? 'replace' : 'add';
@@ -826,7 +826,7 @@
           'value' => $shipping_address
         ),
       );
-      
+
       if (xtc_not_null($insert_id)) {
         $request->body[] = array(
           'op' => 'add',
@@ -834,22 +834,23 @@
           'value' => $this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$insert_id
         );
       }
-      
-      try {
-        $response = $client->execute($request);
 
-        return $response->result;
-        
+      try {
+        $client->execute($request);
+        return true;
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'PatchOrder', array('exception' => $ex));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'PatchOrder', array('exception' => $ex));
       }
+
+      return false;
     }
-    
-    
+
+
     function refundOrder($captureId, $amount, $currency, $comment) {
-      
+
       // auth
       $client = $this->GetClient();
 
@@ -860,18 +861,18 @@
           'currency_code' => $this->encode_utf8($currency)
         ),
       );
-      
+
       if ($comment != '') {
         $request->body['note_to_payer'] = $this->encode_utf8($comment);
       }
-      
+
       try {
         $response = $client->execute($request);
         return $response->result;
-        
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'refundOrder', array('exception' => $ex));
-        
+
         return $ex;
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'refundOrder', array('exception' => $ex));
@@ -885,36 +886,36 @@
       $client = $this->GetClient();
 
       $request = new OrdersGetRequest($OrderID, $params);
-      
+
       try {
         $response = $client->execute($request);
         return $response->result;
-          
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'GetOrder', array('exception' => $ex));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GetOrder', array('exception' => $ex));
       }
     }
-    
-    
+
+
     function GetOrderDetails($order_id) {
       $OrderID = $this->getOrderID($order_id);
-      
+
       if ($OrderID != '') {
         $response = $this->GetOrder($OrderID);
         if (isset($response->purchase_units[0]->shipping)) {
           $response->purchase_units[0]->shipping->address_array = $this->parse_address($response->purchase_units[0]->shipping);
         }
-        
+
         return $response;
       }
     }
-        
+
 
     function CheckLiabilityShift($OrderID) {
       $order = $this->GetOrder($OrderID, 'fields=payment_source');
-      
+
       // no 3D secure was performed at all (e.g. card issued outside the PSD2/SCA area)
       if (isset($order->payment_source->card)
           && !isset($order->payment_source->card->authentication_result)
@@ -922,10 +923,10 @@
       {
         return ($this->get_config('MODULE_PAYMENT_' . strtoupper($this->code) . '_EXTEND_CARDS') == '1');
       }
-      
+
       if (isset($order->payment_source->card->authentication_result)) {
         $authentication_result = $order->payment_source->card->authentication_result;
-    
+
         if (isset($authentication_result->liability_shift)) {
           // with 3D secure
           if ($authentication_result->liability_shift == 'POSSIBLE'
@@ -937,7 +938,7 @@
           {
             return true;
           }
-  
+
           // without 3D secure
           if ($this->get_config('MODULE_PAYMENT_' . strtoupper($this->code) . '_EXTEND_CARDS') == '1'
               && $authentication_result->liability_shift == 'NO'
@@ -949,14 +950,14 @@
           }
         }
       }
-      
+
       return false;
     }
 
-    
+
     function FinishOrder($order_id) {
       $this->PatchOrder($_SESSION['paypal']['OrderID']);
-      
+
       if ($this->intent == 'CAPTURE') {
         $result = $this->CaptureOrder($_SESSION['paypal']['OrderID']);
         $result->transaction_id = $result->purchase_units[0]->payments->captures[0]->id;
@@ -971,11 +972,11 @@
           $result->transaction_status = $result->purchase_units[0]->payments->authorizations[0]->status;
         }
       }
-      
+
       if (isset($result->payer->payer_id)) {
         $_SESSION['paypal']['PayerID'] = $result->payer->payer_id;
       }
- 
+
       $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
       $sql_data_array = array();
       if (isset($PayPalOrder->purchase_units[0]->shipping->email_address)) {
@@ -987,7 +988,7 @@
       if (count($sql_data_array) > 0) {
         xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', "orders_id = '".(int)$order_id."'");
       }
-      
+
       $sql_data_array = array(
         'orders_id' => $order_id,
         'payment_id' => $_SESSION['paypal']['OrderID'],
@@ -995,7 +996,7 @@
         'transaction_id' => $result->transaction_id,
       );
       xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
-      
+
       $status_id = $this->order_status_pending;
       if ($result->status == 'COMPLETED') {
         if ($result->transaction_status == 'COMPLETED') {
@@ -1004,23 +1005,23 @@
       }
       $this->update_order('Order ID: '.$_SESSION['paypal']['OrderID'], $status_id, $order_id);
       unset($_SESSION['paypal']);
-      
+
       return $result;
     }
-    
+
 
     function FinishOrderPui($order_id, $PayPalOrder = '') {
       $check_query = xtc_db_query("SELECT *
                                      FROM ".TABLE_PAYPAL_INSTRUCTIONS."
                                     WHERE orders_id = '".(int)$order_id."'");
-      if (xtc_db_num_rows($check_query) < 1) {                       
+      if (xtc_db_num_rows($check_query) < 1) {
         if (!is_object($PayPalOrder)) {
           $OrderID = $this->getOrderID($order_id);
-          if ($OrderID != '') {        
+          if ($OrderID != '') {
             $PayPalOrder = $this->GetOrder($OrderID);
           }
         }
-                
+
         if (is_object($PayPalOrder)) {
           if (isset($PayPalOrder->payment_source->pay_upon_invoice)
               && isset($PayPalOrder->payment_source->pay_upon_invoice->deposit_bank_details)
@@ -1040,14 +1041,14 @@
             );
             xtc_db_perform(TABLE_PAYPAL_INSTRUCTIONS, $sql_data_array);
           }
-          
+
           if (isset($PayPalOrder->purchase_units[0]->payments)) {
             $sql_data_array = array(
               'transaction_id' => $PayPalOrder->purchase_units[0]->payments->captures[0]->id,
-            );          
+            );
             xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array, 'update', "orders_id = '".(int)$order_id."'");
           }
-          
+
           return $PayPalOrder;
         }
       }
@@ -1067,27 +1068,27 @@
                                        WHERE pp.orders_id = '".(int)$orders_id."'");
       if (xtc_db_num_rows($tracking_query) > 0) {
         $tracking = xtc_db_fetch_array($tracking_query);
-  
+
         // auth
         $client = $this->GetClient();
-  
+
         $OrderID = $this->getOrderID($orders_id);
-        
+
         $request = new OrdersTrackRequest($OrderID);
-        
+
         $request->body = array(
           'capture_id' => $tracking['transaction_id'],
           'tracking_number' => $tracking['parcel_id'],
           'carrier' => strtoupper($tracking['carrier_name']),
           'notify_payer' => false
         );
-        
+
         try {
           $response = $client->execute($request);
-          
+
           end($response->result->purchase_units[0]->shipping->trackers);
           $key = key($response->result->purchase_units[0]->shipping->trackers);
-          
+
           $sql_data_array = array(
             'tracking_id' => $tracking['tracking_id'],
             'orders_id' => $tracking['orders_id'],
@@ -1100,7 +1101,7 @@
           xtc_db_perform(TABLE_PAYPAL_TRACKING, $sql_data_array);
 
           return $response->result;
-          
+
         } catch (PayPalHttp\HttpException $ex) {
           $this->LoggingManager->log('WARNING', 'AddOrderTracking', array('exception' => $ex));
         } catch (Exception $ex) {
@@ -1117,12 +1118,12 @@
                                          AND tracking_id = '".(int)$tracking_id."'");
       if (xtc_db_num_rows($tracking_query) > 0) {
         $tracking = xtc_db_fetch_array($tracking_query);
-  
+
         // auth
         $client = $this->GetClient();
 
         $OrderID = $this->getOrderID($orders_id);
-  
+
         $request = new OrdersPatchTrackRequest($OrderID, $tracking['trackers_id']);
         $request->body = array(
           array(
@@ -1131,10 +1132,10 @@
             'value' => 'CANCELLED',
           ),
         );
-        
+
         try {
           $response = $client->execute($request);
-  
+
           xtc_db_query("DELETE FROM ".TABLE_PAYPAL_TRACKING."
                               WHERE tracking_id = '".(int)$tracking_id."'");
         } catch (PayPalHttp\HttpException $ex) {
@@ -1145,17 +1146,17 @@
       }
     }
 
-    
+
     function GetVaultDetails($vault_id) {
       // auth
       $client = $this->GetClient();
-    
+
       $request = new VaultGetRequest($vault_id);
 
       try {
         $response = $client->execute($request);
         return $response->result;
-        
+
       } catch (PayPalHttp\HttpException $ex) {
         $this->LoggingManager->log('WARNING', 'GetVaultDetails', array('exception' => $ex));
       } catch (Exception $ex) {
@@ -1163,7 +1164,7 @@
       }
     }
 
-    
+
     function parse_address($address) {
       if (isset($address->name->full_name)) {
         $name = explode(' ', $address->name->full_name, 2);
@@ -1173,7 +1174,7 @@
           $address->name->surname
         );
       }
-      
+
       $data = array(
         'name' => implode(' ', $name),
         'company' => '',
@@ -1218,7 +1219,7 @@
                                                 countries_name,
                                                 countries_iso_code_2,
                                                 countries_iso_code_3
-                                           FROM ".TABLE_COUNTRIES." 
+                                           FROM ".TABLE_COUNTRIES."
                                           WHERE countries_iso_code_2 = '".xtc_db_input($data['country_iso_code_2'])."'");
       $country_iso = xtc_db_fetch_array($country_iso_query);
       $data['country_id'] = $country_iso['countries_id'];
@@ -1230,8 +1231,8 @@
       );
 
       $data['zone_id'] = 0;
-      $check_query = xtc_db_query("SELECT count(*) AS total 
-                                     FROM ".TABLE_ZONES." 
+      $check_query = xtc_db_query("SELECT count(*) AS total
+                                     FROM ".TABLE_ZONES."
                                     WHERE zone_country_id = '".(int)$data['country_id']."'");
       $check = xtc_db_fetch_array($check_query);
       $entry_state_has_zones = ($check['total'] > 0);
@@ -1248,7 +1249,7 @@
           $data['zone_id'] = $zone['zone_id'];
         }
       }
-      
+
       return $data;
     }
 
@@ -1262,10 +1263,10 @@
       if (xtc_db_num_rows($orders_query) > 0) {
         $orders = xtc_db_fetch_array($orders_query);
         return $orders['payment_id'];
-      }    
+      }
     }
-    
-    
+
+
     function getCustomerId($customer_id) {
       $customers_query = xtc_db_query("SELECT *
                                          FROM ".TABLE_PAYPAL_VAULT."
@@ -1274,7 +1275,7 @@
         $customers = xtc_db_fetch_array($customers_query);
         return $customers['paypal_customers_id'];
       }
-      
+
       return NULL;
     }
 
@@ -1288,7 +1289,7 @@
         $vault = xtc_db_fetch_array($vault_query);
         return $vault['vault_id'];
       }
-      
+
       return NULL;
     }
 

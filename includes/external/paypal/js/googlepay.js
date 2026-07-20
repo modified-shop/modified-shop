@@ -16,7 +16,29 @@ const baseRequest = {
 let paymentsClient = null,
   allowedPaymentMethods = null,
   merchantInfo = null;
-  
+
+// reports otherwise-invisible client-side Google Pay failures (SDK
+function reportGooglePayError(step, err) {
+  try {
+    var payload = new URLSearchParams({
+      step: step,
+      name: err && err.name ? err.name : "",
+      message: err && err.message ? err.message : String(err),
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(DIR_WS_BASE + "ajax.php?ext=log_paypal_client_error&payment_method=paypalgooglepay", payload);
+    } else {
+      $.post(DIR_WS_BASE + "ajax.php?ext=log_paypal_client_error&payment_method=paypalgooglepay", {
+        step: step,
+        name: err && err.name ? err.name : "",
+        message: err && err.message ? err.message : String(err),
+      });
+    }
+  } catch (e) {
+    // reporting must never itself break the payment flow
+  }
+}
+
 function getGoogleIsReadyToPayRequest(allowedPaymentMethods) {
   return Object.assign({}, baseRequest, {
     allowedPaymentMethods: allowedPaymentMethods,
@@ -59,6 +81,7 @@ function onPaymentAuthorized(paymentData) {
         resolve({ transactionState: "SUCCESS" });
       })
       .catch(function (errDetails) {
+        reportGooglePayError("onPaymentAuthorized", errDetails);
         resolve({ transactionState: "ERROR" });
       });
   });
@@ -101,6 +124,7 @@ async function onGooglePayLoaded() {
       }
     })
     .catch(function (err) {
+      reportGooglePayError("isReadyToPay", err);
       console.error(err);
     });
 }
@@ -127,31 +151,37 @@ async function processPayment(paymentData) {
         },
       ],
     };
-        
+
     /* Create Order */
     const id = getGoogleOrderID();
-           
+
     const { status } = await paypal.Googlepay().confirmOrder({
       orderId: id,
       paymentMethodData: paymentData.paymentMethodData,
     });
-    
+
     if (status === "PAYER_ACTION_REQUIRED") {
       paypal
         .Googlepay()
         .initiatePayerAction({ orderId: id })
         .then(async () => {
           orderResponse = await fetch(DIR_WS_BASE+'ajax.php?ext=check_paypal_order&payment_method=paypalgooglepay');
-          if (orderResponse.ok) { 
+          if (orderResponse.ok) {
             valid = await orderResponse.json();
             if (valid === true) {
               redirectGoogleSuccess();
             } else {
+              reportGooglePayError("checkPaypalOrder", { message: "order not approved after payer action" });
               redirectGoogleError();
             }
           } else {
+            reportGooglePayError("checkPaypalOrder", { message: "HTTP " + orderResponse.status });
             redirectGoogleError();
           }
+        })
+        .catch(function (err) {
+          reportGooglePayError("initiatePayerAction", err);
+          redirectGoogleError();
         });
     } else if (status === "APPROVED") {
       redirectGoogleSuccess();
@@ -159,6 +189,7 @@ async function processPayment(paymentData) {
       redirectGoogleError();
     }
   } catch (err) {
+    reportGooglePayError("processPayment", err);
     redirectGoogleError();
   }
 }
@@ -257,6 +288,7 @@ async function setupGooglepayCart() {
 
       return {};
     } catch (err) {
+      reportGooglePayError("onPaymentDataChanged:" + intermediatePaymentData.callbackTrigger, err);
       return {
         error: {
           reason: "SHIPPING_ADDRESS_UNSERVICEABLE",
@@ -276,7 +308,8 @@ async function setupGooglepayCart() {
         .then(function () {
           resolve({ transactionState: "SUCCESS" });
         })
-        .catch(function () {
+        .catch(function (err) {
+          reportGooglePayError("cartPaymentAuthorized", err);
           resolve({ transactionState: "ERROR" });
         });
     });
@@ -379,10 +412,12 @@ async function processGoogleCartPayment(orderId, paymentData) {
         if (orderResponse.ok && (await orderResponse.json()) === true) {
           window.location.href = getGoogleCartSuccessUrl();
         } else {
+          reportGooglePayError("cartCheckPaypalOrder", { message: orderResponse.ok ? "order not approved after payer action" : "HTTP " + orderResponse.status });
           redirectGoogleCartError();
         }
       })
-      .catch(function () {
+      .catch(function (err) {
+        reportGooglePayError("cartInitiatePayerAction", err);
         redirectGoogleCartError();
       });
     return;

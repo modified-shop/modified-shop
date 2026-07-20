@@ -95,6 +95,10 @@
       'OrderID' => $paypal->CreateOrder($payment_source)
     );
 
+    if (empty($_SESSION['paypal']['OrderID']) || !is_string($_SESSION['paypal']['OrderID'])) {
+      $paypal->LoggingManager->log('WARNING', 'Wallet CreateOrder failed', array('code' => $paypal->code));
+    }
+
     if (!in_array($paypal->code, $express_payments)) {
       $paypal->PatchOrder($_SESSION['paypal']['OrderID']);
     }
