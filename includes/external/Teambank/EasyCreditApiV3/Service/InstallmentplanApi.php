@@ -16,6 +16,7 @@ namespace Teambank\EasyCreditApiV3\Service;
 use Psr\Http\Client\ClientInterface;
 
 use Teambank\EasyCreditApiV3\ApiException;
+use Teambank\EasyCreditApiV3\NetworkException;
 use Teambank\EasyCreditApiV3\Configuration;
 use Teambank\EasyCreditApiV3\HeaderSelector;
 use Teambank\EasyCreditApiV3\ObjectSerializer;
@@ -134,6 +135,13 @@ class InstallmentplanApi
             // $options = $this->createHttpClientOption();
             try {
                 $response = $this->client->sendRequest($request);
+            } catch (NetworkException $e) {
+                throw new ApiException(
+                    $e->getMessage(),
+                    0,
+                    null,
+                    null
+                );
             } catch (RequestException $e) {
                 throw new ApiException(
                     "[{$e->getCode()}] {$e->getMessage()}",
