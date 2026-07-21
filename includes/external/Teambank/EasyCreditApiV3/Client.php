@@ -108,7 +108,7 @@ class Client implements ClientInterface
                 // 'follow_location' =>,
                 // 'max_redirects' =>,
                 'protocol_version'=> $request->getProtocolVersion(),
-                // 'timeout' =>,
+                'timeout' => 10,
                 'ignore_errors' => true
             )
         );
@@ -117,9 +117,16 @@ class Client implements ClientInterface
             $context['http']['content'] = (string)$request->getBody();
         }
 
-        $responseBody = file_get_contents($request->getUri(), false, stream_context_create($context));
-        $responseHeaders = $this->parseHeaders($http_response_header);
-        $statusHeader = $this->parseStatusHeader($http_response_header);
+        $responseBody = @file_get_contents($request->getUri(), false, stream_context_create($context));
+
+        if ($responseBody === false) {
+            $error = error_get_last();
+            throw new \Exception('EasyCredit API request failed: ' . ($error['message'] ?? 'unknown error'));
+        }
+
+        $rawResponseHeaders = http_get_last_response_headers() ?? [];
+        $responseHeaders = $this->parseHeaders($rawResponseHeaders);
+        $statusHeader = $this->parseStatusHeader($rawResponseHeaders);
 
         $response = new Response(
             $statusHeader['status'],
