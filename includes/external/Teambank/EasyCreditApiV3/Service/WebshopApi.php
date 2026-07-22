@@ -16,6 +16,7 @@ namespace Teambank\EasyCreditApiV3\Service;
 use Psr\Http\Client\ClientInterface;
 
 use Teambank\EasyCreditApiV3\ApiException;
+use Psr\Http\Client\NetworkExceptionInterface;
 use Teambank\EasyCreditApiV3\Configuration;
 use Teambank\EasyCreditApiV3\HeaderSelector;
 use Teambank\EasyCreditApiV3\ObjectSerializer;
@@ -57,9 +58,9 @@ class WebshopApi
      * @param int             $hostIndex (Optional) host index to select the list of hosts if defined in the OpenAPI spec
      */
     public function __construct(
-        ClientInterface $client = null,
-        Configuration $config = null,
-        HeaderSelector $selector = null,
+        ?ClientInterface $client = null,
+        ?Configuration $config = null,
+        ?HeaderSelector $selector = null,
         $hostIndex = 0
     ) {
         $this->client = $client ?: new Client();
@@ -130,6 +131,13 @@ class WebshopApi
             // $options = $this->createHttpClientOption();
             try {
                 $response = $this->client->sendRequest($request);
+            } catch (NetworkExceptionInterface $e) {
+                throw new ApiException(
+                    $e->getMessage(),
+                    0,
+                    null,
+                    null
+                );
             } catch (RequestException $e) {
                 throw new ApiException(
                     "[{$e->getCode()}] {$e->getMessage()}",
@@ -367,6 +375,13 @@ class WebshopApi
             // $options = $this->createHttpClientOption();
             try {
                 $response = $this->client->sendRequest($request);
+            } catch (NetworkExceptionInterface $e) {
+                throw new ApiException(
+                    $e->getMessage(),
+                    0,
+                    null,
+                    null
+                );
             } catch (RequestException $e) {
                 throw new ApiException(
                     "[{$e->getCode()}] {$e->getMessage()}",
@@ -631,6 +646,13 @@ class WebshopApi
             // $options = $this->createHttpClientOption();
             try {
                 $response = $this->client->sendRequest($request);
+            } catch (NetworkExceptionInterface $e) {
+                throw new ApiException(
+                    $e->getMessage(),
+                    0,
+                    null,
+                    null
+                );
             } catch (RequestException $e) {
                 throw new ApiException(
                     "[{$e->getCode()}] {$e->getMessage()}",
