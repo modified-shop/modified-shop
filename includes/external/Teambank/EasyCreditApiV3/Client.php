@@ -131,7 +131,7 @@ class Client implements ClientInterface
         // (includes/application_top.php), so fall back to the deprecated-on-8.4
         // $http_response_header superglobal-like variable on older versions.
         $rawResponseHeaders = function_exists('http_get_last_response_headers')
-            ? (http_get_last_response_headers() ?? [])
+            ? (http_get_last_response_headers() ?: [])
             : ($http_response_header ?? []);
         $responseHeaders = $this->parseHeaders($rawResponseHeaders);
         $statusHeader = $this->parseStatusHeader($rawResponseHeaders);
