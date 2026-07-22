@@ -47,7 +47,7 @@
           $title = constant('MODULE_SHIPPING_'.$shipping_code.'_TEXT_TITLE');
         }
         //support for ot_shipping
-        $title = $shipping_code == 'FREE' ? 'Free Shipping (order total modul ot_shipping)' : $title;
+        $title = $shipping_code == 'FREE' ? 'Free Shipping (order total module ot_shipping)' : $title;
         
         $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
 

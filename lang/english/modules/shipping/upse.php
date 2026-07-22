@@ -37,11 +37,11 @@ define('MODULE_SHIPPING_UPSE_HANDLING_DESC' , 'Handling fee for this shipping me
 define('MODULE_SHIPPING_UPSE_TAX_CLASS_TITLE' , 'Tax');
 define('MODULE_SHIPPING_UPSE_TAX_CLASS_DESC' , 'Please choose the tax rate for shipping.');
 define('MODULE_SHIPPING_UPSE_ZONE_TITLE' , 'Shipping Zone');
-define('MODULE_SHIPPING_UPSE_ZONE_DESC' , 'If you choose a zone only this shipping zones used.');
+define('MODULE_SHIPPING_UPSE_ZONE_DESC' , 'If you choose a zone only this shipping zone is used.');
 define('MODULE_SHIPPING_UPSE_SORT_ORDER_TITLE' , 'Display order');
 define('MODULE_SHIPPING_UPSE_SORT_ORDER_DESC' , 'Lowermost shown first.');
 define('MODULE_SHIPPING_UPSE_ALLOWED_TITLE' , 'Individual shipping zones');
-define('MODULE_SHIPPING_UPSE_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_UPSE_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 
 
 

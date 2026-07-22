@@ -44,10 +44,10 @@ define('TEXT_NEWSLETTER_CUSTOMERS', 'Alle Newsletter Abonnenten');
 define('TEXT_CONFIRM_DELETE', 'Soll dieser Coupon wirklich gel&ouml;scht werden?');
 
 define('TEXT_TO_REDEEM', 'Sie k&ouml;nnen den Gutschein bei Ihrer Bestellung einl&ouml;sen. Dazu geben Sie Ihren Gutschein-Code in das daf&uuml;r vorgesehene Feld ein, und klicken Sie den "Einl&ouml;sen"-Button.');
-define('TEXT_IN_CASE', ' Falls es wider Erwarten zu Problemen beim verbuchen kommen sollte.');
+define('TEXT_IN_CASE', ' Falls es wider Erwarten zu Problemen beim Verbuchen kommen sollte.');
 define('TEXT_VOUCHER_IS', 'Ihr Gutschein-Code lautet: ');
 define('TEXT_REMEMBER', 'Bewahren Sie Ihren Gutschein-Code gut auf, damit Sie von diesem Angebot profitieren k&ouml;nnen');
-define('TEXT_VISIT', 'wenn Sie uns das n&auml;chste mal unter ' . HTTP_SERVER . DIR_WS_CATALOG. ' besuchen.');
+define('TEXT_VISIT', 'wenn Sie uns das n&auml;chste Mal unter ' . HTTP_SERVER . DIR_WS_CATALOG. ' besuchen.');
 define('TEXT_ENTER_CODE', ' und den Code eingeben ');
 
 define('TABLE_HEADING_ACTION', 'Aktion');
@@ -83,7 +83,7 @@ define('VOUCHER_NUMBER_USED', 'Anzahl Verwendet');
 define('DATE_CREATED', 'erstellt am');
 define('DATE_MODIFIED', 'ge&auml;ndert am');
 define('TEXT_HEADING_NEW_COUPON', 'Neuen Coupon erstellen');
-define('TEXT_NEW_INTRO', 'Bitte geben Sie die folgende Informationen f&uuml;r den neuen Coupon an.<br />');
+define('TEXT_NEW_INTRO', 'Bitte geben Sie die folgenden Informationen f&uuml;r den neuen Coupon an.<br />');
 
 define('COUPON_NAME_HELP', 'Eine Kurzbezeichnung f&uuml;r den Coupon');
 define('COUPON_AMOUNT_HELP', 'Tragen Sie hier den Rabatt f&uuml;r diesen Coupon ein. Entweder einen festen Betrag oder einen prozentualen Rabatt wie z.B. 10%');

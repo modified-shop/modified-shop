@@ -17,7 +17,7 @@
   define('MODULE_CLEVERREACH_CLIENT_ID_TITLE', 'CleverReach API Client ID');
   define('MODULE_CLEVERREACH_CLIENT_ID_DESC', 'Tragen Sie hier die API Client ID ein.');
   define('MODULE_CLEVERREACH_SECRET_TITLE', 'CleverReach API Secret');
-  define('MODULE_CLEVERREACH_SECRET_DESC', 'Tragen Sie hier die API Secret ein.');
+  define('MODULE_CLEVERREACH_SECRET_DESC', 'Tragen Sie hier das API Secret ein.');
   define('MODULE_CLEVERREACH_GROUP_TITLE', 'CleverReach Gruppen ID');
   define('MODULE_CLEVERREACH_GROUP_DESC', 'Tragen Sie hier die Gruppen ID f&uuml;r den Newsletter ein.');
 

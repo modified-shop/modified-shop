@@ -49,7 +49,7 @@ define('MODULE_SHIPPING_GLS_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn kei
 define('MODULE_SHIPPING_GLS_POSTCODE_TITLE' , 'GLS Inselzuschlag - Postleitzahlen');
 define('MODULE_SHIPPING_GLS_POSTCODE_DESC' , 'Postleitzahlengebiete');
 define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_TITLE' , 'GLS Inselzuschlag - Kosten');
-define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_DESC' , 'Inselzuschlag: Tragen Sie hier ein, wieviel auf die Versandkosten aufgeschlagen werden soll, wenn die Lieferadresse auf einer Deutschen Insel liegt');
+define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_DESC' , 'Inselzuschlag: Tragen Sie hier ein, wie viel auf die Versandkosten aufgeschlagen werden soll, wenn die Lieferadresse auf einer deutschen Insel liegt');
 
 for ($module_shipping_gls_i = 1; $module_shipping_gls_i <= 6; $module_shipping_gls_i ++) {
   define('MODULE_SHIPPING_GLS_COUNTRIES_'.$module_shipping_gls_i.'_TITLE' , '<hr/>Zone '.$module_shipping_gls_i.' L&auml;nder');

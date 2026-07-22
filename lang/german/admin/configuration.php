@@ -147,15 +147,15 @@ define('MAX_DISPLAY_MANUFACTURER_NAME_LEN_DESC' , 'In der Hersteller Box; Maximu
 define('MAX_DISPLAY_NEW_REVIEWS_TITLE' , 'Neue Rezensionen');
 define('MAX_DISPLAY_NEW_REVIEWS_DESC' , 'Maximum Anzahl an neuen Rezensionen die angezeigt werden sollen.');
 define('MAX_RANDOM_SELECT_REVIEWS_TITLE' , 'Auswahlpool der Rezensionen');
-define('MAX_RANDOM_SELECT_REVIEWS_DESC' , 'Aus wie vielen Rezensionen sollen die zuf&auml;llig angezeigten Rezensionen in der Box ausgew&auml;hlt werden? Bei Templates auf der Basis vom xtc5 entspricht es der Anzahl der angezeigten Rezensionen. Ansonsten ist es der Auswahlpool aus denen ein oder mehrere Rezensionen angezeigt werden.');
+define('MAX_RANDOM_SELECT_REVIEWS_DESC' , 'Aus wie vielen Rezensionen sollen die zuf&auml;llig angezeigten Rezensionen in der Box ausgew&auml;hlt werden? Bei Templates auf der Basis vom xtc5 entspricht es der Anzahl der angezeigten Rezensionen. Ansonsten ist es der Auswahlpool, aus dem eine oder mehrere Rezensionen angezeigt werden.');
 define('MAX_RANDOM_SELECT_NEW_TITLE' , 'Auswahlpool der Neuen Artikel');
-define('MAX_RANDOM_SELECT_NEW_DESC' , 'Aus wie vielen neuen Artikeln sollen die zuf&auml;llig angezeigten neuen Artikel in der Box ausgew&auml;hlt werden? Bei Templates auf der Basis vom xtc5 entspricht es der Anzahl der angezeigten Artikeln. Ansonsten ist es der Auswahlpool aus denen ein oder mehrere Artikeln angezeigt werden.');
+define('MAX_RANDOM_SELECT_NEW_DESC' , 'Aus wie vielen neuen Artikeln sollen die zuf&auml;llig angezeigten neuen Artikel in der Box ausgew&auml;hlt werden? Bei Templates auf der Basis vom xtc5 entspricht es der Anzahl der angezeigten Artikel. Ansonsten ist es der Auswahlpool, aus dem ein oder mehrere Artikel angezeigt werden.');
 define('MAX_RANDOM_SELECT_SPECIALS_TITLE' , 'Auswahlpool der Sonderangebote');
-define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'Aus wie vielen Sonderangeboten sollen die zuf&auml;llig angezeigten Sonderangebote in der Box ausgew&auml;hlt werden? Bei Templates auf der Basis vom xtc5 entspricht es der Anzahl der angezeigten Sonderangebote. Ansonsten ist es der Auswahlpool aus denen ein oder mehrere Sonderangebote angezeigt werden.');
+define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'Aus wie vielen Sonderangeboten sollen die zuf&auml;llig angezeigten Sonderangebote in der Box ausgew&auml;hlt werden? Bei Templates auf der Basis vom xtc5 entspricht es der Anzahl der angezeigten Sonderangebote. Ansonsten ist es der Auswahlpool, aus dem ein oder mehrere Sonderangebote angezeigt werden.');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Anzahl Kategorien pro Zeile');
-define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Anzahl an Unterkategorien, die pro Zeile in der Kategorie&uuml;bersicht angezeigt werden sollen. Werte &uuml;ber 1 greifen nur in Tabellenbasierten Templates wie dem xtc5. F&uuml;r alle anderen Templates kann die Anzeige der Unterkategorien mit 1 (aktiviert) und 0 (deaktiviert) werden.');
+define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Anzahl an Unterkategorien, die pro Zeile in der Kategorie&uuml;bersicht angezeigt werden sollen. Werte &uuml;ber 1 greifen nur in tabellenbasierten Templates wie dem xtc5. F&uuml;r alle anderen Templates kann die Anzeige der Unterkategorien mit 1 (aktiviert) und 0 (deaktiviert) werden.');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'Neue Artikel Liste');
-define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum Anzahl neuer Artikel die pro Seite von "Neue Artikel" (products_new.php) angezeigt werden sollen."');
+define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum Anzahl neuer Artikel die pro Seite von "Neue Artikel" (products_new.php) angezeigt werden sollen.');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Bestsellers');
 define('MAX_DISPLAY_BESTSELLERS_DESC' , 'Maximum Anzahl an Bestsellern die angezeigt werden sollen.');
 define('MAX_DISPLAY_BESTSELLERS_DAYS_TITLE' , 'Anzahl der Tage f&uuml;r Bestsellers');
@@ -235,7 +235,7 @@ define('BANNERS_IMAGE_MOBILE_HEIGHT_DESC' , 'Maximale H&ouml;he der Banner Bilde
 define('SMALL_IMAGE_WIDTH_TITLE' , 'Breite der Artikel Bilder');
 define('SMALL_IMAGE_WIDTH_DESC' , 'Maximale Breite der Artikel Bilder in Pixeln.');
 define('SMALL_IMAGE_HEIGHT_TITLE' , 'H&ouml;he der Artikel Bilder');
-define('SMALL_IMAGE_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel Bilderin Pixeln.');
+define('SMALL_IMAGE_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel Bilder in Pixeln.');
 
 define('SUBCATEGORY_IMAGE_WIDTH_TITLE' , 'Breite der Subkategorie- (Warengruppen-) Bilder');
 define('SUBCATEGORY_IMAGE_WIDTH_DESC' , 'Maximale Breite der Subkategorie- (Warengruppen-) Bilder in Pixeln.');
@@ -514,7 +514,7 @@ define('MODULE_SHIPPING_INSTALLED_DESC' , 'Liste der Versandmodul-Dateinamen (ge
 define('CACHE_LIFETIME_TITLE','Template Cache Lebenszeit');
 define('CACHE_LIFETIME_DESC','Zeit in Sekunden, bevor die Template Cache Dateien automatisch &uuml;berschrieben werden.');
 define('CACHE_CHECK_TITLE','Pr&uuml;fe Template Cache');
-define('CACHE_CHECK_DESC','Wenn aktiv, werden If-Modified-Since headers bei gecachetem Content ber&uuml;cksichtigt und passende HTTP headers werden ausgegeben. Somit werden regelm&auml;ssig aufgerufene Seiten nicht jedesmal neu an den Client versandt.');
+define('CACHE_CHECK_DESC','Wenn aktiv, werden If-Modified-Since headers bei gecachetem Content ber&uuml;cksichtigt und passende HTTP headers werden ausgegeben. Somit werden regelm&auml;&szlig;ig aufgerufene Seiten nicht jedes Mal neu an den Client versandt.');
 
 define('PRODUCT_REVIEWS_VIEW_TITLE','Rezensionen in Artikeldetails');
 define('PRODUCT_REVIEWS_VIEW_DESC','Anzahl der angezeigten Rezensionen in der Artikeldetailansicht');
@@ -580,7 +580,7 @@ define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_DESC' , 'W&auml;hlen Sie den Kundenstatu
 define('ACCOUNT_COMPANY_VAT_CHECK_TITLE' , 'USt-IdNr. abfragen');
 define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Die USt-IdNr. soll durch Kunden eingegeben werden k&ouml;nnen. Bei false wird das Eingabefeld nicht mehr angezeigt.<br /><b>Hinweis:</b> Unter "Konfiguration" -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=5').'"><strong>"Kunden Details"</strong></a> muss "Firma" auf "Ja" gestellt werden.');
 define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'USt-IdNr. online auf Plausibilit&auml;t &uuml;berpr&uuml;fen');
-define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Die USt-IdNr. wird online auf Plausibilit&auml;t &uuml;berpr&uuml;ft. Dazu wird der Webservice des Steuerportals der EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Ben&ouml;tigt PHP5 mit aktivierter "SOAP" Unterst&uuml;tzung!<br/><br/><span class="messageStackSuccess">Die "PHP5 SOAP"-Unterst&uuml;tzung ist derzeit '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NICHT</span>').' aktiviert!</span><br/><br/>');
+define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Die USt-IdNr. wird online auf Plausibilit&auml;t &uuml;berpr&uuml;ft. Dazu wird der Webservice des Steuerportals der EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>) verwendet.<br/>Ben&ouml;tigt PHP5 mit aktivierter "SOAP" Unterst&uuml;tzung!<br/><br/><span class="messageStackSuccess">Die "PHP5 SOAP"-Unterst&uuml;tzung ist derzeit '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NICHT</span>').' aktiviert!</span><br/><br/>');
 define('ACCOUNT_COMPANY_VAT_GROUP_TITLE' , 'Kundengruppe nach USt-IdNr. Check anpassen?');
 define('ACCOUNT_COMPANY_VAT_GROUP_DESC' , 'Durch Einschalten dieser Option wird die Kundengruppe nach einem positiven USt-IdNr. Check ge&auml;ndert');
 define('ACCOUNT_VAT_BLOCK_ERROR_TITLE' , 'Eintragung falscher oder ungepr&uuml;fter USt-IdNr. Nummern sperren?');
@@ -611,9 +611,9 @@ define('AFTERBUY_ORDERSTATUS_TITLE','Bestellstatus');
 define('AFTERBUY_ORDERSTATUS_DESC','Bestellstatus nach erfolgreicher &Uuml;bertragung der Bestelldaten');
 define('AFTERBUY_URL','Eine Beschreibung von Afterbuy finden Sie hier: <a href="http://www.afterbuy.de" target="new">http://www.afterbuy.de</a>');
 define('AFTERBUY_DEALERS_TITLE', 'Als H&auml;ndler markieren');
-define('AFTERBUY_DEALERS_DESC', 'geben Sie hier die Gruppen IDs der H&auml;ndler ein, die in Afterbuy als H&auml;ndler eingehen sollen.<br />Beispiel: <em>6,5,8</em>. Es d&uuml;rfen keine Leerzeichen enhalten sein!');
+define('AFTERBUY_DEALERS_DESC', 'geben Sie hier die Gruppen IDs der H&auml;ndler ein, die in Afterbuy als H&auml;ndler eingehen sollen.<br />Beispiel: <em>6,5,8</em>. Es d&uuml;rfen keine Leerzeichen enthalten sein!');
 define('AFTERBUY_IGNORE_GROUPE_TITLE', 'Kundengruppe ignorieren');
-define('AFTERBUY_IGNORE_GROUPE_DESC', 'welche Kundengruppen sollen ignoiert werden?<br />Beispiel: <em>6,5,8</em>. Es d&uuml;rfen keine Leerzeichen enhalten sein!');
+define('AFTERBUY_IGNORE_GROUPE_DESC', 'welche Kundengruppen sollen ignoriert werden?<br />Beispiel: <em>6,5,8</em>. Es d&uuml;rfen keine Leerzeichen enthalten sein!');
 
 // Search-Options
 define('SEARCH_MIN_LENGTH_TITLE', 'Suche Zeichenanzahl');
@@ -696,7 +696,7 @@ define('SESSION_LIFE_CUSTOMERS_DESC', 'Zeitdauer in Sekunden, nach der die Sessi
 
 //checkout confirmation options
 define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_TITLE','Kurzbeschreibung in Bestell-/Auftragsbest&auml;tigung und auf Bestellbest&auml;tigungsseite?');
-define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_DESC','Wenn "Ja" wird an genannten Punkten die Kurzbeschreibung angezeigt, falls die Bestellbeschreibung leer ist.<br />Sollte auch die Kurzbeschreibung leer sein, wird die Langbeschreibung verwendet, gek&uuml;rzt auf die unten bei "L&auml;nge der Beschreibung, wenn Kurzbeschreibung leer" angebene Zeichenanzahl.');
+define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_DESC','Wenn "Ja" wird an genannten Punkten die Kurzbeschreibung angezeigt, falls die Bestellbeschreibung leer ist.<br />Sollte auch die Kurzbeschreibung leer sein, wird die Langbeschreibung verwendet, gek&uuml;rzt auf die unten bei "L&auml;nge der Beschreibung, wenn Kurzbeschreibung leer" angegebene Zeichenanzahl.');
 define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_TITLE','L&auml;nge der Beschreibung, wenn Kurzbeschreibung leer');
 define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_DESC','Bei welcher L&auml;nge soll die Beschreibung abgeschnitten werden, wenn keine Kurzbeschreibung verf&uuml;gbar ist? (Text wird mit [...] erg&auml;nzt)<br />Greift nur, wenn oben "<i>Kurzbeschreibung in Bestell-/Auftragsbest&auml;tigung und auf Bestellbest&auml;tigungsseite</i>" auf "Ja" steht.');
 define('CHECKOUT_SHOW_PRODUCTS_IMAGES_TITLE','Bestellbest&auml;tigungsseite: Produktbilder');
@@ -745,7 +745,7 @@ define('CONFIRM_SAVE_ENTRY_DESC', 'Soll eine Best&auml;tigungsabfrage beim Speic
 define('WHOS_ONLINE_IP_WHOIS_SERVICE_TITLE', 'Wer ist Online - Whois Lookup URL');
 define('WHOS_ONLINE_IP_WHOIS_SERVICE_DESC', 'https://utrace.me/?query= oder https://whois.domaintools.com/');
 
-define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_TITLE', 'Bestellabschlu&szlig; - Ausverkaufte Artikel deaktivieren');
+define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_TITLE', 'Bestellabschluss - Ausverkaufte Artikel deaktivieren');
 define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_DESC', 'Soll ein ausverkaufter Artikel (Lagermenge 0) am Ende der Bestellung automatisch deaktiviert werden? Der Artikel ist dann nicht mehr im Shop sichtbar!<br />Bei Artikeln die in K&uuml;rze wieder lieferbar sind, sollte die Option auf "false" gesetzt werden');
 
 define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In f&uuml;r Newsletteranmeldung');
@@ -775,7 +775,7 @@ define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile 
 //define('USE_PAGINATION_LIST_DESC', 'Verwende eine HTML Liste (ul / li Tag) f&uuml;r die Pagination / Seitenschaltung.<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!'); // Tomcraft - 2017-07-12 - Not used anymore since r10840, see: http://trac.modified-shop.org/ticket/1238
 
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Umsatzstatistik Filter');
-define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier die Bestellstatus ausw&auml;hlen, die f&uuml;r die Umsatzstatistik auf der Admin-Startseite und im Status-Dowpdown bei Verwendung des Status "Umsatzstatistik Filter" ber&uuml;cksichtig werden sollen.<br />(Um nur anzuzeigen was effektiv an Umsatz gemacht wurde, den Status w&auml;hlen, der bei abgeschlossener Bestellung verwendet wird.)<br /><b>Hinweis:</b> Damit der Filter "Umsatzstatistik Filter" im Umsatzstatistik-Dropdown angezeigt wird, sind mindestens zwei Status zu w&auml;hlen. Ansonsten kann &uuml;ber das Dropdown der gew&uuml;nschte Status direkt ausgew&auml;hlt werden.');
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier die Bestellstatus ausw&auml;hlen, die f&uuml;r die Umsatzstatistik auf der Admin-Startseite und im Status-Dropdown bei Verwendung des Status "Umsatzstatistik Filter" ber&uuml;cksichtigt werden sollen.<br />(Um nur anzuzeigen was effektiv an Umsatz gemacht wurde, den Status w&auml;hlen, der bei abgeschlossener Bestellung verwendet wird.)<br /><b>Hinweis:</b> Damit der Filter "Umsatzstatistik Filter" im Umsatzstatistik-Dropdown angezeigt wird, sind mindestens zwei Status zu w&auml;hlen. Ansonsten kann &uuml;ber das Dropdown der gew&uuml;nschte Status direkt ausgew&auml;hlt werden.');
 
 define('SAVE_IP_LOG_TITLE', 'IP-Adresse speichern');
 define('SAVE_IP_LOG_DESC', 'Soll die IP-Adresse in der Datenbank gespeichert werden?<br/>Bei der Option xxx werden die letzten Stellen der IP anonymisiert.');
@@ -820,7 +820,7 @@ define('SHIPPING_STATUS_INFOS_TITLE', 'Lieferzeit');
 define('SHIPPING_STATUS_INFOS_DESC', 'W&auml;hle den Content zur Anzeige der Informationen zur Lieferzeit.');
 
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Datum im Kurzformat anzeigen');
-define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.03.2014</b> anstatt <b>Samstag, 01. M&auml;rz 2014</b><br />Empfohlen bei Darstellungsfehlern mit dem langen Datumsformat, wie falscher Sprache oder Umlautproblemem!');
+define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.03.2014</b> anstatt <b>Samstag, 01. M&auml;rz 2014</b><br />Empfohlen bei Darstellungsfehlern mit dem langen Datumsformat, wie falscher Sprache oder Umlautproblemen!');
 
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie.');

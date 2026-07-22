@@ -83,13 +83,13 @@ define('TEXT_ACTUAL', 'actual:');
 define('TEXT_NEW', 'new:');
 
 define('TEXT_ORDERS_EDIT_INFO', '<b>Important Notes:</b><br />
-Please chose the right customer group with the address/customer data!<br />
+Please choose the right customer group with the address/customer data!<br />
 When changing the customer group, every invoice item has to be newly saved!<br />
 Shipping costs must be changed manually!<br />
 In this case, shipping costs have to be entered gross or net depending on the customer group!<br />
 ');
 
-define('TEXT_CUSTOMER_GROUP_INFO', ' When you change the customer group, all invoice items are newly save!');
+define('TEXT_CUSTOMER_GROUP_INFO', ' When you change the customer group, all invoice items are newly saved!');
 
 define('TEXT_ORDER_TITLE', 'Title:');
 define('TEXT_ORDER_VALUE', 'Value:');

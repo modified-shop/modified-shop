@@ -40,5 +40,5 @@ define('MODULE_ADMIN_LOG_SHOW_DETAILS_FULL_DESC', 'Vollst&auml;ndige &Auml;nderu
 define('MODULE_ADMIN_LOG_SCHEDULED_TASKS_TITLE', 'Logs bereinigen');
 define('MODULE_ADMIN_LOG_SCHEDULED_TASKS_DESC', 'Sollen die Logs regelm&auml;&szlig;ig bereinigt werden?');
 
-define('MODULE_ADMIN_LOG_TRESHOLD_DAYS_TITLE', 'Vorbehaltezeit Logs');
+define('MODULE_ADMIN_LOG_TRESHOLD_DAYS_TITLE', 'Vorhaltezeit Logs');
 define('MODULE_ADMIN_LOG_TRESHOLD_DAYS_DESC', 'Wie viele Tage sollen die Logs aufbewahrt werden?');

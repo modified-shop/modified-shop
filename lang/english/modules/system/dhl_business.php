@@ -83,9 +83,9 @@
   define('MODULE_DHL_BUSINESS_ACCOUNT_OWNER_TITLE', '<hr noshade>Bank data<br/>');
   define('MODULE_DHL_BUSINESS_ACCOUNT_OWNER_DESC', 'Account holder:');
   define('MODULE_DHL_BUSINESS_ACCOUNT_NUMBER_TITLE', '');
-  define('MODULE_DHL_BUSINESS_ACCOUNT_NUMBER_DESC', 'Kontonummer:');
+  define('MODULE_DHL_BUSINESS_ACCOUNT_NUMBER_DESC', 'Account number:');
   define('MODULE_DHL_BUSINESS_BANK_CODE_TITLE', '');
-  define('MODULE_DHL_BUSINESS_BANK_CODE_DESC', 'Account number:');
+  define('MODULE_DHL_BUSINESS_BANK_CODE_DESC', 'Bank code:');
   define('MODULE_DHL_BUSINESS_BANK_NAME_TITLE', '');
   define('MODULE_DHL_BUSINESS_BANK_NAME_DESC', 'Bank name:');
   define('MODULE_DHL_BUSINESS_IBAN_TITLE', '');

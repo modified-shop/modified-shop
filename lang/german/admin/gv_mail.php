@@ -47,7 +47,7 @@ define('ERROR_NO_AMOUNT_SELECTED', 'Fehler: Sie haben keinen Betrag f&uuml;r den
 define('TEXT_GV_WORTH', 'Der Gutscheinwert betr&auml;gt ');
 define('TEXT_TO_REDEEM', 'Um Ihren Gutschein zu verbuchen, klicken Sie auf den unten stehenden Link. Bitte notieren Sie sich zur Sicherheit Ihren pers&ouml;nlichen Gutschein-Code.');
 define('TEXT_WHICH_IS', 'Ihr Gutscheincode lautet: ');
-define('TEXT_IN_CASE', ' Falls es wider Erwarten zu Problemen beim verbuchen kommen sollte.');
+define('TEXT_IN_CASE', ' Falls es wider Erwarten zu Problemen beim Verbuchen kommen sollte.');
 define('TEXT_OR_VISIT', 'besuchen Sie unsere Webseite ');
 define('TEXT_ENTER_CODE', ' und geben den Gutschein-Code bitte manuell ein ');
 

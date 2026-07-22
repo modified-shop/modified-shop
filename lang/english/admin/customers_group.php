@@ -21,8 +21,8 @@ define('TEXT_SEND', 'Send');
 
 define('ERROR_PLEASE_SELECT_CUSTOMER_GROUP', 'Please choose at least one customer group');
 define('ERROR_PLEASE_SELECT_SHOP_AREA', 'Please choose at least one shop section');
-define('TEXT_CATEGORIES_SUCCESSFULLY_SET', 'Categorie authorizations successfully set.');
-define('TEXT_CATEGORIES_SUCCESSFULLY_UNSET', 'Categorie authorizations successfully removed.');
+define('TEXT_CATEGORIES_SUCCESSFULLY_SET', 'Category authorizations successfully set.');
+define('TEXT_CATEGORIES_SUCCESSFULLY_UNSET', 'Category authorizations successfully removed.');
 define('TEXT_PRODUCTS_SUCCESSFULLY_SET', 'Product authorizations successfully set.');
 define('TEXT_PRODUCTS_SUCCESSFULLY_UNSET', 'Product authorizations successfully removed.');
 define('TEXT_CONTENT_MANAGER_SUCCESSFULLY_SET', 'Content sites authorizations successfully set.');

@@ -18,17 +18,17 @@
 define('HEADING_TITLE', 'Cross-sell groups');
 
 define('TABLE_HEADING_XSELL_GROUP_ID', 'ID');
-define('TABLE_HEADING_XSELL_GROUP_NAME', 'Groupname');
+define('TABLE_HEADING_XSELL_GROUP_NAME', 'Group name');
 define('TABLE_HEADING_XSELL_GROUP_SORT_ORDER', 'Sort order');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_INFO_EDIT_INTRO', 'Please make any necessary changes');
-define('TEXT_INFO_XSELL_GROUP_NAME', 'Groupname:');
+define('TEXT_INFO_XSELL_GROUP_NAME', 'Group name:');
 define('TEXT_INFO_XSELL_GROUP_SORT_ORDER', 'Sort order:');
-define('TEXT_INFO_INSERT_INTRO', 'Please enter the new groupname with its related data');
+define('TEXT_INFO_INSERT_INTRO', 'Please enter the new group name with its related data');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this order status?');
-define('TEXT_INFO_HEADING_NEW_XSELL_GROUP', 'New gruppenname');
-define('TEXT_INFO_HEADING_EDIT_XSELL_GROUP', 'Edit gruppenname');
-define('TEXT_INFO_HEADING_DELETE_XSELL_GROUP', 'Delete gruppenname');
+define('TEXT_INFO_HEADING_NEW_XSELL_GROUP', 'New group name');
+define('TEXT_INFO_HEADING_EDIT_XSELL_GROUP', 'Edit group name');
+define('TEXT_INFO_HEADING_DELETE_XSELL_GROUP', 'Delete group name');
 define('ERROR_STATUS_USED_IN_CROSS_SELLS', 'Error: This group is currently used in cross-sell articles.');
 ?>

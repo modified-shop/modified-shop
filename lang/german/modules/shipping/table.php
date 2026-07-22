@@ -26,7 +26,7 @@ define('MODULE_SHIPPING_TABLE_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im
 define('MODULE_SHIPPING_TABLE_INVALID_ZONE', 'Es ist kein Versand in dieses Land m&ouml;glich!');
 
 define('MODULE_SHIPPING_TABLE_STATUS_TITLE' , 'Tabellarische Versandkosten aktivieren');
-define('MODULE_SHIPPING_TABLE_STATUS_DESC' , 'M&ouml;chten Sie Tabellarische Versandkosten anbieten?');
+define('MODULE_SHIPPING_TABLE_STATUS_DESC' , 'M&ouml;chten Sie tabellarische Versandkosten anbieten?');
 define('MODULE_SHIPPING_TABLE_ALLOWED_TITLE' , 'Erlaubte Versandzonen');
 define('MODULE_SHIPPING_TABLE_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
 define('MODULE_SHIPPING_TABLE_MODE_TITLE' , 'Versandkosten Methode');

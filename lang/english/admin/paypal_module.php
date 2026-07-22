@@ -46,7 +46,7 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO' => 'Shall the PayPal button be displayed in the checkout?',
 
   'TEXT_PAYPAL_MODULE_BOX_CART' => 'Button in box cart',
-  'TEXT_PAYPAL_MODULE_BOX_CART_INFO' => 'Shall the PayPal button be displayed in the pbox cart?',
+  'TEXT_PAYPAL_MODULE_BOX_CART_INFO' => 'Shall the PayPal button be displayed in the box cart?',
 
   'TEXT_PAYPAL_MODULE_BOX_CART_BNPL' => 'BNPL Button in box cart',
   'TEXT_PAYPAL_MODULE_BOX_CART_BNPL_INFO' => 'Shall the PayPal button be displayed in the box cart?',
@@ -91,7 +91,7 @@ $lang_array = array(
   'TEXT_PAYPAL_BUTTON_HEIGHT_INFO' => 'Select the button height in pixels (min: 22 max: 55)',
 
   'TEXT_PAYPAL_COMPANY_LABEL' => 'Company Label',
-  'TEXT_PAYPAL_COMPANY_LABEL_INFO' => 'Use the company name what should be displayed on the bank or credit card statement. <b>Attention:</b> no specialchars or german umlauts allowed!',
+  'TEXT_PAYPAL_COMPANY_LABEL_INFO' => 'Use the company name that should be displayed on the bank or credit card statement. <b>Attention:</b> no specialchars or German umlauts allowed!',
 );
 
 

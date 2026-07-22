@@ -44,7 +44,7 @@ define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die
 
 for ($module_shipping_chp_i = 1; $module_shipping_chp_i <= 10; $module_shipping_chp_i ++) {
   define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_'.$module_shipping_chp_i.'_TITLE' , '<hr/>Chronopost Zone '.$module_shipping_chp_i.' L&auml;nder');
-  define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_'.$module_shipping_chp_i.'_DESC' , 'Kommagetrennte Liste von der 2stelligen ISO country codes der Zone '.$module_shipping_chp_i.' (WORLD eintragen f&uuml;r den Rest der Welt.).');
+  define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_'.$module_shipping_chp_i.'_DESC' , 'Kommagetrennte Liste von den 2-stelligen ISO L&auml;ndercodes der Zone '.$module_shipping_chp_i.' (WORLD eintragen f&uuml;r den Rest der Welt.).');
   define('MODULE_SHIPPING_CHRONOPOST_COST_'.$module_shipping_chp_i.'_TITLE' , 'Chronopost Zone '.$module_shipping_chp_i.' Versandtabelle');
   define('MODULE_SHIPPING_CHRONOPOST_COST_'.$module_shipping_chp_i.'_DESC' , 'Versandkosten der Zone '.$module_shipping_chp_i.' bezogen auf Bestellungsgewicht. Beispiel: 0-2000:28.71,2000-5000:34.38... Gewichte gr&ouml;&szlig;er 0 und kleiner 2 kosten 28,71, kleiner als 5 kostet 34.38 f&uuml;r Zone '.$module_shipping_chp_i.'.');
 }

@@ -219,7 +219,7 @@ define('TXT_TOOLS','Tools');
 define('TEXT_ACCOUNTING','Admin-access for:');
 
 // javascript messages
-define('JS_ERROR', 'Error have occured during the process of your form!\nPlease make the following corrections:\n\n');
+define('JS_ERROR', 'An error has occurred during the processing of your form!\nPlease make the following corrections:\n\n');
 
 define('JS_OPTIONS_VALUE_PRICE', '* The new product attribute needs a price value\n');
 define('JS_OPTIONS_VALUE_PRICE_PREFIX', '* The new product attribute needs a price prefix (+/-)\n');
@@ -267,7 +267,7 @@ define('ENTRY_DATE_OF_BIRTH', 'Date of Birth:');
 define('ENTRY_DATE_OF_BIRTH_ERROR', '&nbsp;<span class="errorText">(e.g. 21/05/1970)</span>');
 define('ENTRY_EMAIL_ADDRESS', 'E-Mail Address:');
 define('ENTRY_EMAIL_ADDRESS_ERROR', '&nbsp;<span class="errorText">min. ' . (defined('ENTRY_EMAIL_ADDRESS_MIN_LENGTH') ? ENTRY_EMAIL_ADDRESS_MIN_LENGTH : 0) . ' chars</span>');
-define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', '&nbsp;<span class="errorText">Invalid E-Mail Address! (We currently don\'t support german umlauts in e-mail addresses.)</span>');
+define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', '&nbsp;<span class="errorText">Invalid E-Mail Address! (We currently don\'t support German umlauts in e-mail addresses.)</span>');
 define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', '&nbsp;<span class="errorText">This e-mail address already exists!</span>');
 define('ENTRY_COMPANY', 'Company name:');
 define('ENTRY_STREET_ADDRESS', 'Street Address:');
@@ -374,7 +374,7 @@ define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination is not writeable.'
 define('ERROR_FILE_NOT_SAVED', 'Error: File upload not saved.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully.');
-define('WARNING_NO_FILE_UPLOADED', 'Warnung: No file uploaded.');
+define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Error: File not removed.');
 
 define('DELETE_ENTRY','Delete entry?');
@@ -513,7 +513,7 @@ define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Products Model');
 define ('TEXT_INFO_MODULE_RESTORE', 'Do you want to restore the saved settings?<br /><br /><b>WARNING</b>: This will overwrite any current settings!');
 define ('TEXT_INFO_MODULE_REMOVE', 'Do you want to uninstall the module?<br /><br /><b>WARNING</b>: All module settings are also deleted!');
 define ('TEXT_INFO_MODULE_BACKUP', 'Do you want to backup the module settings?');
-define ('MODULE_BACKUP_CONFIRM', 'The module settings were backuped successfully!');
+define ('MODULE_BACKUP_CONFIRM', 'The module settings were backed up successfully!');
 define ('MODULE_RESTORE_CONFIRM', 'The module settings were restored successfully!');
 define ('MODULE_UPDATE_CONFIRM', 'The module settings were updated successfully!');
 
@@ -533,10 +533,10 @@ define('SPECIALS_DATE_END_TT', 'Offers end at midnight (23:59:59)');
 define('BOX_PARCEL_CARRIERS', 'Parcel carriers');
 define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> carriers)');
 
-define('RSS_FEED_TITLE', 'Latest informations from modified eCommerce Shopsoftware Blog');
-define('RSS_FEED_DESCRIPTION', 'Latest informations from modified eCommerce Shopsoftware Support Forum');
+define('RSS_FEED_TITLE', 'Latest information from modified eCommerce Shopsoftware Blog');
+define('RSS_FEED_DESCRIPTION', 'Latest information from modified eCommerce Shopsoftware Support Forum');
 define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
-define('RSS_FEED_ALTERNATIVE', 'Unfortunately the latest news cannot be displayed in the RSS feed. Please visit our Blog at <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> to get important informations for shop maintainers concerning the following topics: <ul><li>Important Updates and Fixes</li><li>Function extensions</li><li>jurisdictions</li><li>News</li><li>Gossip</li></ul>');
+define('RSS_FEED_ALTERNATIVE', 'Unfortunately the latest news cannot be displayed in the RSS feed. Please visit our Blog at <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> to get important information for shop maintainers concerning the following topics: <ul><li>Important Updates and Fixes</li><li>Function extensions</li><li>jurisdictions</li><li>News</li><li>Gossip</li></ul>');
 define('RSS_FEED_NOT_REACHABLE', 'The newsfeed could not be updated for a long time.<br>Do not miss any important news, offers and much more. Visit us <a target="_blank" href="https://www.modified-shop.org/blog">www.modified-shop.org/blog</a><br>');
 define('TEXT_DISPLAY_NUMBER_OF_NEWSFEED', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> News)');
 
@@ -578,7 +578,7 @@ define('CSRF_TOKEN_NOT_DEFINED', 'CSRFToken not defined (Due to security aspects
 
 define('TEXT_ACCOUNTING_INFO','The main admin [1] cannot be deprived of the access rights.');
 
-define('JAVASCRIPT_DISABLED_INFO', 'JavaScript seem to be disabled in your browser. Enable JavaScript to be able to use all functions of this site and all site content');
+define('JAVASCRIPT_DISABLED_INFO', 'JavaScript seems to be disabled in your browser. Enable JavaScript to be able to use all functions of this site and all site content');
 
 define('BOX_MODULE_TYPE', 'Class Extensions');
 

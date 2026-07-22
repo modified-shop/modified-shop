@@ -45,14 +45,14 @@ define('MODULE_PAYMENT_MCP_SERVICE_IP_NOT_ALLOWED','The IP-Adress is invalid.');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_TERMINATED','Die Anfrage ist ung&uuml;ltig.');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_UNKNOWN_ORDER_ID','Die Bestellung existiert nicht');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_SECRET_FIELD_MISSMATCH','Sicherheitsfeld stimmt nicht &uuml;berein!');
-define('MODULE_PAYMENT_MCP_SERVICE_ERROR_AMOUNT_MISSMATCH','Die Summe stimmt nicht mit dem Bezahltem Wert &uuml;berein! Ist: %s  Soll: %s');
+define('MODULE_PAYMENT_MCP_SERVICE_ERROR_AMOUNT_MISSMATCH','Die Summe stimmt nicht mit dem bezahlten Wert &uuml;berein! Ist: %s  Soll: %s');
 define('MODULE_PAYMENT_MCP_SERVICE_PAYIN_MESSAGE','%s %s has been paid.');
 define('MODULE_PAYMENT_MCP_SERVICE_UNKNOWN_FUNCTION','Funktion ist nicht bekannt.');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_INVALID_AUTH_CODE','Auth code ist fehlerhaft');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_INVALID_AMOUNT_VALUE','Der Amount ist fehlerhaft');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_TITLE',' Bestellstatus: in Bezahlung');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_DESC','Kunde ist am bezahlen der Bestellung');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_DESC','Kunde ist am Bezahlen der Bestellung');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID_TITLE',' Bestellstatus: bezahlt');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID_DESC','Kunde hat erfolgreich bezahlt.');
@@ -64,10 +64,10 @@ define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_TITLE',' Bestellstat
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_DESC','Wenn ein Refund ausgel&ouml;st wird, wird dieser Status gesetzt');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_TITLE',' Bestellstatus: Bezahlung pr&uuml;fen');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_DESC','Bei problemen, wird dieser Status gesetzt, damit Sie dies pr&uuml;fen k&ouml;nnen.');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_DESC','Bei Problemen, wird dieser Status gesetzt, damit Sie dies pr&uuml;fen k&ouml;nnen.');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID_TITLE',' Bestellstatus: Konflikt');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID_DESC','Sollte es zu einem abweichendem Event-Workflow kommen, wird dieser Status gesetzt.');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID_DESC','Sollte es zu einem abweichenden Event-Workflow kommen, wird dieser Status gesetzt.');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID_TITLE',' Bestellstatus: Vorkasse - Teilzahlung');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID_DESC','Wenn ein Zahlungseingang bei Vorkasse gemeldet wird, die Bestellung aber nicht voll bezahlt ist, wird dieser Status gesetzt.');
@@ -77,11 +77,11 @@ define('MODULE_PAYMENT_MCP_SERVICE_PENDING_PAYMENT','Payment pending. Automatic 
 define('MODULE_PAYMENT_MCP_PREPAY_EXPIRED','No receipt of payment, automatic cancellation');
 
 define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_TITLE','L&ouml;schen von nicht bezahlten Bestellungen');
-define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_DESC','Wie lang kann eine Bestellung sich noch im Status "Bezahlung steht aus" befinden, bevor Sie vom "Bestellung aufr&auml;umen" Button entfernt wird. Bitte legen Sie die Anzahl von Tagen fest. WICHTIG: Hierbei werden keine Vorkassen Bestellung entfernt.');
+define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_DESC','Wie lang kann eine Bestellung sich noch im Status "Bezahlung steht aus" befinden, bevor sie vom "Bestellung aufr&auml;umen" Button entfernt wird. Bitte legen Sie die Anzahl von Tagen fest. WICHTIG: Hierbei werden keine Vorkasse-Bestellungen entfernt.');
 
 define('MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION','%s<div class="mcp_notice_register">Es steht eine neue micropayment&trade; Modul-Version mit neuen Funktionen und Features f&uuml;r Ihr Shopsystem zur Verf&uuml;gung. <a href="http://ecommerce.micropayment.de/modifiedshop/" target="_new">Zur neuen Modulversion.</a></div>');
 
-define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">Damit die Bezahlmodule von Micropayment&trade; funktionieren, m&uuml;ssen Sie einen Account bei Micropayment&trade; anlegen und ein Projekt erstellen. <a href="https://%s.micropayment.de" target="blank">Klicken Sie hier um sich zu Registrieren.</a></div>');
+define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">Damit die Bezahlmodule von Micropayment&trade; funktionieren, m&uuml;ssen Sie einen Account bei Micropayment&trade; anlegen und ein Projekt erstellen. <a href="https://%s.micropayment.de" target="blank">Klicken Sie hier um sich zu registrieren.</a></div>');
 define('MODULE_PAYMENT_MCP_SERVICE_CSS','
 <style type="text/css">
 .mcp_notice_register {

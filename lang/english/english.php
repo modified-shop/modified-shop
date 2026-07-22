@@ -94,7 +94,7 @@ define('PULL_DOWN_DEFAULT', 'Please choose');
 // javascript messages
 define('JS_ERROR', 'Missing necessary information!\nPlease fill in completely.\n\n');
 
-define('JS_REVIEW_TEXT', '* The text must consist of at least ' . REVIEW_TEXT_MIN_LENGTH . ' characters..\n');
+define('JS_REVIEW_TEXT', '* The text must consist of at least ' . REVIEW_TEXT_MIN_LENGTH . ' characters.\n');
 define('JS_REVIEW_RATING', '* Enter your review.\n');
 define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Please choose a method of payment for your order.\n');
 define('JS_ERROR_SUBMITTED', 'This page has already been confirmed. Please click OK and wait until the process has finished.');
@@ -121,7 +121,7 @@ define('ENTRY_FIRST_NAME_ERROR', 'Your first name must consist of at least  ' . 
 define('ENTRY_FIRST_NAME_TEXT', '*');
 define('ENTRY_LAST_NAME_ERROR', 'Your last name must consist of at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.');
 define('ENTRY_LAST_NAME_TEXT', '*');
-define('ENTRY_DATE_OF_BIRTH_ERROR', 'Your date of birth needs to be entered in the following form DD/MM/YYYY (e.g. 21/05/1970) '); //Dokuman - 2009-06-03 - correct english date format
+define('ENTRY_DATE_OF_BIRTH_ERROR', 'Your date of birth needs to be entered in the following form DD/MM/YYYY (e.g. 21/05/1970) '); //Dokuman - 2009-06-03 - correct English date format
 define('ENTRY_DATE_OF_BIRTH_TEXT', '*');
 define('ENTRY_DATE_OF_BIRTH_NOTE', 'e.g. 21/05/1970');
 define('ENTRY_EMAIL_ADDRESS_ERROR', 'Your e-mail address must consist of at least  ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.');
@@ -149,7 +149,7 @@ define('ENTRY_PASSWORD_ERROR', 'Your password must consist of at least ' . ENTRY
 define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Password must contain at least %s lowercase characters');
 define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Password must contain at least %s uppercase characters');
 define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Password must contain at least %s numbers');
-define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Password must contain at least %s non-aplhanumeric characters');
+define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Password must contain at least %s non-alphanumeric characters');
 define('ENTRY_PASSWORD_ERROR_INVALID_CHAR', 'Your password contains invalid characters. Please use a different password.');
 define('ENTRY_PASSWORD_ERROR_NOT_MATCHING', 'Your passwords do not match.');
 define('ENTRY_PASSWORD_TEXT', '*');
@@ -269,7 +269,7 @@ define('TEXT_UNKNOWN_TAX_RATE', 'Unknown tax rate');
 
 define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warning: The installation directory is still available on: %s. Please delete this directory for security reasons!');
 define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: The modified eCommerce Shopsoftware is able to write to the configuration directory: %s. That represents a possible safety hazard - please correct the user access rights for this directory!');
-define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warning: Directory for sesssions doesn&acute;t exist: ' . xtc_session_save_path() . '. Sessions will not work until this directory has been created!');
+define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warning: Directory for sessions doesn&acute;t exist: ' . xtc_session_save_path() . '. Sessions will not work until this directory has been created!');
 define('WARNING_SESSION_DIRECTORY_NOT_WRITEABLE', 'Warning: The modified eCommerce Shopsoftware is not able to write into the session directory: ' . xtc_session_save_path() . '. Sessions will not work until the user access rights for this directory have been changed!');
 define('WARNING_SESSION_AUTO_START', 'Warning: session.auto_start is activated (enabled) - Please deactivate (disable) this PHP feature in php.ini and restart your web server!');
 define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warning: Directory for article download does not exist: ' . DIR_FS_DOWNLOAD . '. This feature will not work until this directory has been created!');
@@ -281,7 +281,7 @@ define('SUCCESS_PASSWORD_UPDATED', 'Your password has been changed successfully!
 define('ERROR_CURRENT_PASSWORD_NOT_MATCHING', 'The entered password does not match with the stored password. Please try again.');
 define('TEXT_MAXIMUM_ENTRIES', '<strong>Reference:</strong> You are able to choose out of %s entries in your address book!');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_DELETED', 'The selected entry has been deleted successfully.');
-define('SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED', 'Your address book has been updated sucessfully!');
+define('SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED', 'Your address book has been updated successfully!');
 define('WARNING_PRIMARY_ADDRESS_DELETION', 'The standard postal address can not be deleted. Please create another address and define it as standard postal address first. Then this entry can be deleted.');
 define('ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY', 'This address book entry is not available.');
 define('ERROR_ADDRESS_BOOK_FULL', 'Your addressbook is full. In order to add new addresses, please erase previous ones first.');
@@ -317,7 +317,7 @@ define('TEXT_AC_ALL_CATEGORIES', 'All');
 define('TEXT_ALL_CATEGORIES', 'All categories');
 define('TEXT_ALL_MANUFACTURERS', 'All manufacturers');
 define('JS_AT_LEAST_ONE_INPUT', '* One of the following fields must be filled out:\n    Keywords\n    Date added from\n    Date added to\n    Price over\n    Price up to\n');
-define('AT_LEAST_ONE_INPUT', 'One of the following fields must be filled out:<br />keywords consisting at least 3 characters<br />Price over<br />Price up to<br />');
+define('AT_LEAST_ONE_INPUT', 'One of the following fields must be filled out:<br />keywords consisting of at least 3 characters<br />Price over<br />Price up to<br />');
 define('TEXT_SEARCH_TERM','Your search for: ');
 define('JS_INVALID_FROM_DATE', '* Invalid from date\n');
 define('JS_INVALID_TO_DATE', '* Invalid up to Date\n');
@@ -423,14 +423,14 @@ define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','This e-mail address is registered but n
 define('TEXT_EMAIL_EXIST_NEWSLETTER','This e-mail address is already registered for the newsletter!');
 define('TEXT_EMAIL_NOT_EXIST','This e-mail address is not registered for newsletters!');
 define('TEXT_EMAIL_DEL','Your e-mail address was deleted successfully from our newsletter-database.');
-define('TEXT_EMAIL_DEL_ERROR','An Error occured, your e-mail address has not been removed from our database!');
+define('TEXT_EMAIL_DEL_ERROR','An Error occurred, your e-mail address has not been removed from our database!');
 define('TEXT_EMAIL_ACTIVE','Your e-mail address has successfully been registered for the newsletter!');
-define('TEXT_EMAIL_ACTIVE_ERROR','An error occured, your e-mail address has not been registered for the newsletter!');
+define('TEXT_EMAIL_ACTIVE_ERROR','An error occurred, your e-mail address has not been registered for the newsletter!');
 define('TEXT_EMAIL_SUBJECT','Your newsletter account');
 
 define('TEXT_CUSTOMER_GUEST','Guest');
 
-define('TEXT_LINK_MAIL_SENDED','Your new password request must be confirmed.<br />An e-mail with a confirmation link has been send out. Click the link in order to complete your request.<br/><br/>The confirmation link is %s minutes valid.');
+define('TEXT_LINK_MAIL_SENDED','Your new password request must be confirmed.<br />An e-mail with a confirmation link has been sent out. Click the link in order to complete your request.<br/><br/>The confirmation link is %s minutes valid.');
 define('TEXT_PASSWORD_MAIL_SENDED','You will receive an e-mail with your new password within minutes.<br />Please change your password after your first login.');
 define('TEXT_CODE_ERROR','The security code you entered was not correct.<br />Please try again.');
 define('TEXT_EMAIL_ERROR','The e-mail address you entered was not correct.<br />Please try again.');
@@ -448,7 +448,7 @@ define('ERROR_NO_REDEEM_CODE', 'You did not enter a redeem code.');
 define('ERROR_NO_INVALID_REDEEM_GV', 'Invalid gift voucher code');
 define('TABLE_HEADING_CREDIT', 'Credits available');
 define('EMAIL_GV_TEXT_SUBJECT', 'A gift from %s');
-define('MAIN_MESSAGE', 'You have decided to send a gift voucher worth %s to %s who\'s e-mail address is %s<br /><br />Following text will be included in the e-mail:<br /><br />Dear %s<br /><br />You have received a Gift voucher worth %s by %s');
+define('MAIN_MESSAGE', 'You have decided to send a gift voucher worth %s to %s whose e-mail address is %s<br /><br />Following text will be included in the e-mail:<br /><br />Dear %s<br /><br />You have received a Gift voucher worth %s by %s');
 define('REDEEMED_AMOUNT','Your gift voucher was successfully added to your account. Gift voucher amount: %s');
 define('REDEEMED_COUPON','Your voucher has been successfully credited to your account and will be cashed automatically on your purchase.');
 define('REDEEMED_COUPON_NO_SPECIALS','Your voucher has been successfully credited to your account and will be cashed automatically on your purchase, but can not be used for specials.');
@@ -543,7 +543,7 @@ define('BASICPRICE_VPE_TEXT','in this volume only ');
 define('GRADUATED_PRICE_MAX_VALUE', 'from');
 define('_SHIPPING_TO', 'shipping to ');
 
-define('ERROR_SQL_DB_QUERY','We are sorry, but an database error has occurred somewhere on this page!');
+define('ERROR_SQL_DB_QUERY','We are sorry, but a database error has occurred somewhere on this page!');
 define('ERROR_SQL_DB_QUERY_REDIRECT','You will be redirected back to our home page in %s seconds!');
 
 define('TEXT_AGB_CHECKOUT','Please take note of our General Terms & Conditions %s and Privacy Policy %s.');
@@ -604,13 +604,13 @@ define('TEXT_FILTER_SORTING_DATE_ASC', 'Oldest products first');
 define('TEXT_FILTER_SORTING_ORDER_DESC', 'Most selling products');
 
 define('NAVBAR_TITLE_ACCOUNT_CHECKOUT_EXPRESS_EDIT', 'Settings for my quick purchase');
-define('SUCCESS_CHECKOUT_EXPRESS_UPDATED', 'The settings for My Quick purchase has been saved .');
+define('SUCCESS_CHECKOUT_EXPRESS_UPDATED', 'The settings for My Quick purchase have been saved.');
 define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_ADDRESS', 'Please select a shipping address');
 define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_MODULE', 'Please select a shipping method');
 define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_ADDRESS', 'Please select a billing address');
 define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_MODULE', 'Please select a payment method');
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK', 'My quick purchase');
-define('TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE', 'More Informationen for my quick purchase &raquo;');
+define('TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE', 'More information for my quick purchase &raquo;');
 define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Select always the cheapest shipping method');
 
 define('AC_SHOW_PAGE', 'Page ');
@@ -645,10 +645,10 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1000', 'In IBAN included country code 
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1010', 'IBAN length wrong: Too many points entered.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1020', 'IBAN length wrong: Too few points entered.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1030', 'IBAN is not equivalent to that established for the country format.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1040', 'Check digits of IBAN (points 3 and 4) not correctly -> Typo in the IBAN.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1040', 'Check digits of IBAN (points 3 and 4) not correct -> Typo in the IBAN.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1050', 'BIC has invalid format.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1060', 'BIC-length wrong: Too many characters entered. 8 or 11 characters are required.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-length wrong: Zu wenige Zeichen angeben. 8 or 11 characters are required.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-length wrong: Too few characters entered. 8 or 11 characters are required.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-length invalid: 8 or 11 characters are required.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1200', 'IBANs from the specified country (1st and 2nd place of the IBAN) are not accepted.');
 

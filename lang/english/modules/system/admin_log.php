@@ -38,7 +38,7 @@ define('MODULE_ADMIN_LOG_SHOW_DETAILS_FULL_TITLE', 'Show full Details?');
 define('MODULE_ADMIN_LOG_SHOW_DETAILS_FULL_DESC', 'Show full changes as an Array');
 
 define('MODULE_ADMIN_LOG_SCHEDULED_TASKS_TITLE', 'Logs cleanup');
-define('MODULE_ADMIN_LOG_SCHEDULED_TASKS_DESC', 'Should the logs get regulary cleaned?');
+define('MODULE_ADMIN_LOG_SCHEDULED_TASKS_DESC', 'Should the logs get regularly cleaned?');
 
-define('MODULE_ADMIN_LOG_TRESHOLD_DAYS_TITLE', 'Treshold Logs');
+define('MODULE_ADMIN_LOG_TRESHOLD_DAYS_TITLE', 'Threshold Logs');
 define('MODULE_ADMIN_LOG_TRESHOLD_DAYS_DESC', 'How many days should the logs be kept?');

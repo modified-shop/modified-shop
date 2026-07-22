@@ -43,7 +43,7 @@ define('STORE_ZONE_DESC' , 'The state my store is located in.');
 
 define('EXPECTED_PRODUCTS_SORT_TITLE' , 'Expected Products Sort Order');
 define('EXPECTED_PRODUCTS_SORT_DESC' , 'This is the sort order used in the expected products box.');
-define('EXPECTED_PRODUCTS_FIELD_TITLE' , 'Expexted Products Sort Field');
+define('EXPECTED_PRODUCTS_FIELD_TITLE' , 'Expected Products Sort Field');
 define('EXPECTED_PRODUCTS_FIELD_DESC' , 'The column to sort by in the expected products box.');
 
 define('PRODUCTS_NEW_SORT_TITLE', 'New Products Sort Order');
@@ -262,7 +262,7 @@ define('PRODUCT_IMAGE_POPUP_MERGE_TITLE' , 'Product Popup Images:Merge');
 define('PRODUCT_IMAGE_POPUP_MERGE_DESC' , 'Product Popup Images:Merge<br /><br />Default-values: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Usage:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity,transparent colour on merge image)');
 
 define('IMAGE_MANIPULATOR_TITLE','GDlib processing');
-define('IMAGE_MANIPULATOR_DESC','Image Manipulator for GD2 or GD1<br /><br /><b>NOTE:</b> image_manipulator_GD2_advanced.php support transparent PNG\s');
+define('IMAGE_MANIPULATOR_DESC','Image Manipulator for GD2 or GD1<br /><br /><b>NOTE:</b> image_manipulator_GD2_advanced.php supports transparent PNGs');
 
 define('IMAGE_TYPE_EXTENSION_TITLE','Imagetype');
 define('IMAGE_TYPE_EXTENSION_DESC','Which image type should be delivered?<br /><br /><b>NOTE:</b> After changing, <a href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=image_processing_step').'"><b>Imageprocessing - product images</b></a> must be started to generate the images.');
@@ -315,10 +315,10 @@ define('PRODUCT_LIST_FILTER_TITLE' , 'Display Category/Manufacturer Filter (fals
 define('PRODUCT_LIST_FILTER_DESC' , 'Do you want to display the Category/Manufacturer Filter?');
 
 define('STOCK_CHECK_TITLE' , 'Check Stock Level');
-define('STOCK_CHECK_DESC' , 'Check to see if sufficent stock is available');
+define('STOCK_CHECK_DESC' , 'Check to see if sufficient stock is available');
 
 define('ATTRIBUTE_STOCK_CHECK_TITLE' , 'Check Attribute Stock Level');
-define('ATTRIBUTE_STOCK_CHECK_DESC' , 'Check to see if sufficent attribute stock is available');
+define('ATTRIBUTE_STOCK_CHECK_DESC' , 'Check to see if sufficient attribute stock is available');
 define('STOCK_LIMITED_TITLE' , 'Subtract stock');
 define('STOCK_LIMITED_DESC' , 'Subtract product quantity in order from quantity of products in stock');
 define('STOCK_LIMITED_DOWNLOADS_TITLE' , 'Subtract stock for downloads');
@@ -336,7 +336,7 @@ define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'The date format (Default: Y-m-d H:
 define('STORE_DB_SLOW_QUERY_TITLE' , 'Slow Query Log');
 define('STORE_DB_SLOW_QUERY_DESC' , 'Should only slow SQL Queries be saved?<br/><strong>Caution: Store Database Queries must be enabled!</strong>.<br/><strong>Caution: File can get very big in size in long logging sessions!</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Time');
-define('STORE_DB_SLOW_QUERY_TIME_DESC' , 'Time for the slow querys wich should be logged.');
+define('STORE_DB_SLOW_QUERY_TIME_DESC' , 'Time for the slow queries which should be logged.');
 
 define('DISPLAY_PAGE_PARSE_TIME_TITLE' , 'Display The Page Parse Time');
 define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Display the page parse time<br /><strong>none</strong>: deactivated<br /><strong>admin</strong>: Only the admin sees the page parse time<br /><strong>all</strong>: Everybody sees the page parse time');
@@ -407,7 +407,7 @@ define('CONTACT_US_FORWARDING_STRING_DESC' , 'Please enter e-mail addresses (sep
 define('CONTACT_US_REPLY_ADDRESS_TITLE' , 'Contact Us - Reply-To');
 define('CONTACT_US_REPLY_ADDRESS_DESC' , 'Please enter an e-mail address where customers can reply to.');
 define('CONTACT_US_REPLY_ADDRESS_NAME_TITLE' , 'Contact Us - Reply-To Name');
-define('CONTACT_US_REPLY_ADDRESS_NAME_DESC' , 'Please enter a name to be used in the reply-to field of "Contact Us" meesages.');
+define('CONTACT_US_REPLY_ADDRESS_NAME_DESC' , 'Please enter a name to be used in the reply-to field of "Contact Us" messages.');
 define('CONTACT_US_EMAIL_SUBJECT_TITLE' , 'Contact Us - E-Mail Subject');
 define('CONTACT_US_EMAIL_SUBJECT_DESC' , 'Please enter an e-mail subject for "Contact Us" messages.');
 
@@ -417,7 +417,7 @@ define('EMAIL_SUPPORT_ADDRESS_DESC' , 'Please enter an e-mail address for sendin
 define('EMAIL_SUPPORT_NAME_TITLE' , 'Technical Support - E-Mail Name');
 define('EMAIL_SUPPORT_NAME_DESC' , 'Please enter a name for sending E-Mails over the <b>Support System</b>.');
 define('EMAIL_SUPPORT_FORWARDING_STRING_TITLE' , 'Technical Support - Forwarding-To');
-define('EMAIL_SUPPORT_FORWARDING_STRING_DESC' , 'Please enter forwarding addresses for mails of the <b>Support System</b> (seperated by , )');
+define('EMAIL_SUPPORT_FORWARDING_STRING_DESC' , 'Please enter forwarding addresses for mails of the <b>Support System</b> (separated by , )');
 define('EMAIL_SUPPORT_REPLY_ADDRESS_TITLE' , 'Technical Support - Reply-To');
 define('EMAIL_SUPPORT_REPLY_ADDRESS_DESC' , 'Please enter an e-mail address for replies of your customers.');
 define('EMAIL_SUPPORT_REPLY_ADDRESS_NAME_TITLE' , 'Technical Support - Reply-To Name');
@@ -431,7 +431,7 @@ define('EMAIL_BILLING_ADDRESS_DESC' , 'Please enter an E-Mail address for sendin
 define('EMAIL_BILLING_NAME_TITLE' , 'Billing - E-Mail Name');
 define('EMAIL_BILLING_NAME_DESC' , 'Please enter a name for sending e-mails over the <b>Billing System</b> (order confirmations, status changes, ...).');
 define('EMAIL_BILLING_FORWARDING_STRING_TITLE' , 'Billing - Forwarding-To');
-define('EMAIL_BILLING_FORWARDING_STRING_DESC' , 'Please enter forwarding addresses for mails of the <b>Billing System</b> (seperated by , )');
+define('EMAIL_BILLING_FORWARDING_STRING_DESC' , 'Please enter forwarding addresses for mails of the <b>Billing System</b> (separated by , )');
 define('EMAIL_BILLING_REPLY_ADDRESS_TITLE' , 'Billing - Reply-To');
 define('EMAIL_BILLING_REPLY_ADDRESS_DESC' , 'Please enter an e-mail address for replies of your customers.');
 define('EMAIL_BILLING_REPLY_ADDRESS_NAME_TITLE' , 'Billing - Reply-To Name');
@@ -479,7 +479,7 @@ define('SESSION_DELETE_OLD_COOKIES_DESC' , 'Should old session cookies be delete
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_TITLE' , 'Display Conditions on Checkout');
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Display terms and conditions on checkout.');
 define('SIGN_CONDITIONS_ON_CHECKOUT_TITLE' , 'Sign Conditions on Checkout');
-define('SIGN_CONDITIONS_ON_CHECKOUT_DESC' , 'Request approval of terms and conditions and on checkout.<br/><b>Attention:</b> "Display Conditions on Checkout" must be enabled.');
+define('SIGN_CONDITIONS_ON_CHECKOUT_DESC' , 'Request approval of terms and conditions on checkout.<br/><b>Attention:</b> "Display Conditions on Checkout" must be enabled.');
 
 define('META_MIN_KEYWORD_LENGTH_TITLE' , 'Min. Meta-Keyword Length');
 define('META_MIN_KEYWORD_LENGTH_DESC' , 'min. length of a single keyword (generated from products description)');
@@ -520,7 +520,7 @@ define('PRODUCT_REVIEWS_VIEW_TITLE','Reviews in Product Details');
 define('PRODUCT_REVIEWS_VIEW_DESC','Number of reviews displayed on the product details page');
 
 define('DELETE_GUEST_ACCOUNT_TITLE','Delete Guest Accounts');
-define('DELETE_GUEST_ACCOUNT_DESC','Shold guest accounts be deleted after placing orders? (Order data will be saved)');
+define('DELETE_GUEST_ACCOUNT_DESC','Should guest accounts be deleted after placing orders? (Order data will be saved)');
 
 define('USE_WYSIWYG_TITLE','Activate WYSIWYG Editor');
 define('USE_WYSIWYG_DESC','Activate WYSIWYG editor for CMS and products');
@@ -579,8 +579,8 @@ define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_TITLE' , 'Customers Group Approved VAT R
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_DESC' , 'Customers group for customers whose VAT Reg No has been checked and approved, shop country <> customer\'s country');
 define('ACCOUNT_COMPANY_VAT_CHECK_TITLE' , 'Validate VAT Reg No');
 define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Customers may enter a VAT Registration number. If false, the box disappears.<br /><b>Attention:</b> Under "Configuration" -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=5').'"><strong>"Customer Details"</strong></a> the setting "Company" must be set to "Yes".');
-define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'Validate VAT Reg No online for plausability');
-define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Validate VAT Registration number online for plausability using the webservice of the taxation portal of the EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Requires PHP5 with activated "SOAP" support!<br/><br/><span class="messageStackSuccess">The "PHP5 SOAP"-support is actually '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NOT</span>').' active!</span><br/><br/>');
+define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'Validate VAT Reg No online for plausibility');
+define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Validate VAT Registration number online for plausibility using the webservice of the taxation portal of the EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Requires PHP5 with activated "SOAP" support!<br/><br/><span class="messageStackSuccess">The "PHP5 SOAP"-support is actually '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NOT</span>').' active!</span><br/><br/>');
 define('ACCOUNT_COMPANY_VAT_GROUP_TITLE' , 'Automatic Pruning?');
 define('ACCOUNT_COMPANY_VAT_GROUP_DESC' , 'Set to true, the customers group will be changed automatically if a valid VAT Reg No is used');
 define('ACCOUNT_VAT_BLOCK_ERROR_TITLE' , 'Allow Invalid VAT Reg No?');
@@ -612,7 +612,7 @@ define('AFTERBUY_ORDERSTATUS_DESC','Order status for exported orders');
 define('AFTERBUY_URL','You will find detailed Afterbuy info here: <a href="http://www.afterbuy.de" target="new">http://www.afterbuy.de</a>');
 define('AFTERBUY_DEALERS_TITLE', 'mark as Dealer');
 define('AFTERBUY_DEALERS_DESC', 'Example: <em>6,5,8</em>');
-define('AFTERBUY_IGNORE_GROUPE_TITLE', 'Customer group ignor');
+define('AFTERBUY_IGNORE_GROUPE_TITLE', 'Customer group ignore');
 define('AFTERBUY_IGNORE_GROUPE_DESC', 'Example: <em>6,5,8</em>.');
 
 // Search-Options
@@ -686,7 +686,7 @@ define('MAX_DISPLAY_LIST_PRODUCTS_DESC', 'Maximum number of products that are to
 
 // Whos online
 define ('WHOS_ONLINE_TIME_LAST_CLICK_TITLE', 'Who\'s Online - Display period in seconds');
-define ('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Timing of online users in the "Who\'s Online" table, afterwhich time the entries are deleted (min value: 900).');
+define ('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Timing of online users in the "Who\'s Online" table, after which time the entries are deleted (min value: 900).');
 
 //Sessions
 define ('SESSION_LIFE_ADMIN_TITLE', 'Session Lifetime Admin');
@@ -749,12 +749,12 @@ define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_TITLE', 'Completion of order - dis
 define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_DESC', 'If a sold-out items (stock 0) be disabled at the end of the order automatically? The article is no longer visible in the shop! <br /> On Products are available again shortly, the option should be set to "false"');
 
 define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In for Newsletter registration.');
-define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','If "true" an eMail will be send where the Registration have to be confirmed. This  only works if send eMails is activated.');
+define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','If "true" an eMail will be sent where the Registration has to be confirmed. This  only works if send eMails is activated.');
 
 define('USE_ADMIN_FIXED_TOP_TITLE', 'Fixate admin page header?'); 
-define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header always be visable when scrolling?');
+define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header always be visible when scrolling?');
 define('USE_ADMIN_FIXED_SEARCH_TITLE', 'Always display admin searchbar?'); 
-define('USE_ADMIN_FIXED_SEARCH_DESC', 'Shall the admin searchbar always be visable?');
+define('USE_ADMIN_FIXED_SEARCH_DESC', 'Shall the admin searchbar always be visible?');
 
 define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
 define('SMTP_SECURE_DESC' , 'Does the SMTP server require a secure connection? Contact your ISP for the appropriate settings.');
@@ -869,25 +869,25 @@ define('ORDER_EMAIL_SEND_COPY_TO_ADMIN_TITLE', 'E-Mail order confirmation to adm
 define('ORDER_EMAIL_SEND_COPY_TO_ADMIN_DESC', 'Send a copy of the order confirmation E-Mail to admin?');
 
 define('STOCK_CHECK_SPECIALS_TITLE', 'Check Specials Stock');
-define('STOCK_CHECK_SPECIALS_DESC', 'Check to see if sufficent specials stock is available<br/><br/><b>ATTENTION:</b> If there is insufficient specials stock, the order can only be processed after a reduction of the quantity.');
+define('STOCK_CHECK_SPECIALS_DESC', 'Check to see if sufficient specials stock is available<br/><br/><b>ATTENTION:</b> If there is insufficient specials stock, the order can only be processed after a reduction of the quantity.');
 
 define('DOWNLOAD_SHOW_LANG_DROPDOWN_TITLE', 'Countries dropdown in cart');
-define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Show countries dropdown in cart if only download products are buyed?');
+define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Show countries dropdown in cart if only download products are bought?');
 
 define('GUEST_ACCOUNT_EDIT_TITLE', 'Edit guest accounts');
-define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit avvount details?');
+define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit account details?');
 
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail signature');
 define('EMAIL_SIGNATURE_ID_DESC', 'Select the content to be used for the signature in shop E-Mails.');
 
 define('POLICY_MIN_LOWER_CHARS_TITLE', 'Password lower case');
-define('POLICY_MIN_LOWER_CHARS_DESC', 'How many lower case signs should to the password at least have?');
+define('POLICY_MIN_LOWER_CHARS_DESC', 'How many lower case signs should the password at least have?');
 define('POLICY_MIN_UPPER_CHARS_TITLE', 'Password upper case');
-define('POLICY_MIN_UPPER_CHARS_DESC', 'How many upper case signs should to the password at least have?');
+define('POLICY_MIN_UPPER_CHARS_DESC', 'How many upper case signs should the password at least have?');
 define('POLICY_MIN_NUMERIC_CHARS_TITLE', 'Password Numbers');
-define('POLICY_MIN_NUMERIC_CHARS_DESC', 'How many numeric signs should to the password at least have?');
+define('POLICY_MIN_NUMERIC_CHARS_DESC', 'How many numeric signs should the password at least have?');
 define('POLICY_MIN_SPECIAL_CHARS_TITLE', 'Password special chars');
-define('POLICY_MIN_SPECIAL_CHARS_DESC', 'How many special chars signs should to the password at least have?');
+define('POLICY_MIN_SPECIAL_CHARS_DESC', 'How many special chars should the password at least have?');
 
 define('SHOW_SHIPPING_EXCL_TITLE', 'Shippingcost excl.');
 define('SHOW_SHIPPING_EXCL_DESC', 'Show excl. or incl. shippingcost');
@@ -950,7 +950,7 @@ define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'Preselect cheapest shipping metho
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Shall the cheapest shipping method be preselected in checkout for the customer?');
 
 define('DISPLAY_PRIVACY_CHECK_TITLE', 'Sign privacy notice');
-define('DISPLAY_PRIVACY_CHECK_DESC', 'Request approval of privacy notice during account creation, contact page, newsletter registration and checkout?)');
+define('DISPLAY_PRIVACY_CHECK_DESC', 'Request approval of privacy notice during account creation, contact page, newsletter registration and checkout?');
 
 define('SHOW_SELFPICKUP_FREE_TITLE', 'Shipping module "Self Pickup" on "free shipping"');
 define('SHOW_SELFPICKUP_FREE_DESC', 'Shall the shipping module "Self Pickup (selfpickup)" (if installed) be displayed upon reaching the amount for "free shipping" in module "Shipping (ot_shipping)"?');

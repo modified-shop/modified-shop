@@ -37,7 +37,7 @@ define('TEXT_INFO_USE_GZIP', 'Use GZIP');
 define('TEXT_INFO_USE_ZIP', 'Use ZIP');
 define('TEXT_INFO_USE_NO_COMPRESSION', 'No Compression (Pure SQL)');
 define('TEXT_INFO_DOWNLOAD_ONLY', 'Download only (do not store server side)');
-define('TEXT_INFO_BEST_THROUGH_HTTPS', 'Best through a HTTPS connection');
+define('TEXT_INFO_BEST_THROUGH_HTTPS', 'Best through an HTTPS connection');
 define('TEXT_DELETE_INTRO', 'Are you sure you want to delete this backup?');
 define('TEXT_NO_EXTENSION', 'None');
 define('TEXT_BACKUP_DIRECTORY', 'Backup Directory:');
@@ -65,10 +65,10 @@ define('TEXT_CONVERT_TO_UTF', 'Convert database to UTF-8');
 define('TEXT_IMPORT_UTF', 'Restore UTF-8 database');
 
 //TEXT_REMOVE_COLLATE
-define('TEXT_REMOVE_COLLATE', "<b>Without encoding 'COLLATE' and 'DEFAULT CHARSET'</b><br> - The encoding statements are not beeing inserted. Usefull when migrating to another database encoding.");
+define('TEXT_REMOVE_COLLATE', "<b>Without encoding 'COLLATE' and 'DEFAULT CHARSET'</b><br> - The encoding statements are not being inserted. Useful when migrating to another database encoding.");
 
 //TEXT_REMOVE_ENGINE
-define('TEXT_REMOVE_ENGINE', "<b>Without storage engines 'ENGINE'</b><br> - The storage engine statements (MyISAM,InnoDB) are not beeing inserted.");
+define('TEXT_REMOVE_ENGINE', "<b>Without storage engines 'ENGINE'</b><br> - The storage engine statements (MyISAM,InnoDB) are not being inserted.");
 
 define('TEXT_IMPORT_UTF8_NOTICE', '<b>Attention:</b> the database is converted to UTF-8.');
 define('TEXT_INFO_CHARSET', 'Charset:');
