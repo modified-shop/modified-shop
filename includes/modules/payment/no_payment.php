@@ -33,7 +33,7 @@ class no_payment {
     
     if ($this->check() > 0) {
       if ((int) MODULE_PAYMENT_NO_PAYMENT_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_NO_PAYMENT_ORDER_STATUS_ID;
+        $this->order_status = (int) MODULE_PAYMENT_NO_PAYMENT_ORDER_STATUS_ID;
       }
     }
   }
