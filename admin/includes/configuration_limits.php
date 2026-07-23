@@ -52,5 +52,11 @@ $value_limits['META_KEYWORDS_NUMBER'] = array('min' => 0);
 
 $value_limits['ENTRY_STATE_MIN_LENGTH'] = array('min' => 0, 'max' => 0);
 
-$value_limits['ENTRY_PASSWORD_MIN_LENGTH'] = array('min' => 1, 'max' => 72);
-$value_limits['ENTRY_PASSWORD_MAX_LENGTH'] = array('min' => 8, 'max' => 4096);
+$value_limits['ENTRY_PASSWORD_MIN_LENGTH'] = array(
+  'min' => 1,
+  'max' => (defined('ENTRY_PASSWORD_MAX_LENGTH') ? (int)ENTRY_PASSWORD_MAX_LENGTH : 72),
+);
+$value_limits['ENTRY_PASSWORD_MAX_LENGTH'] = array(
+  'min' => max(8, (defined('ENTRY_PASSWORD_MIN_LENGTH') ? (int)ENTRY_PASSWORD_MIN_LENGTH : 8)),
+  'max' => 4096,
+);
