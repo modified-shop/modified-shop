@@ -21,7 +21,7 @@
 
     $level = $content_array[$counter]['level']+1;
 
-    //BOF +++ UL LI Verschachtelung  mit Quelltext Tab Einzügen +++    
+    //BOF +++ UL LI Verschachtelung  mit Quelltext Tab EinzÃ¼gen +++    
     $ul = $tab = '';  
     for ($i = 1; $i <= $level; $i++) {
       $tab .= "\t";
@@ -31,10 +31,10 @@
       $ul = "\n" . $tab. '<ul>'. "\n";
       $content_string = rtrim($content_string, "\n"); //Zeilenumbruch entfernen
       $content_string = substr($content_string, 0, -5);  //letztes  </li>  entfernen  
-    } elseif ($level < $oldlevel) { //zurück zur höheren Ebene
+    } elseif ($level < $oldlevel) { //zurÃ¼ck zur hÃ¶heren Ebene
       $ul = close_ul_tags($level,$oldlevel);      
     }
-    //EOF +++ UL LI Verschachtelung  mit Quelltext Tab Einzügen +++
+    //EOF +++ UL LI Verschachtelung  mit Quelltext Tab EinzÃ¼gen +++
 
     //BOF +++ Content markieren +++
     $content_path = explode('_',$coPath); //Contentpfad in Array einlesen
@@ -55,14 +55,14 @@
     $content_string .= $ul; //UL LI Versschachtelung
     $content_string .= $tab; //Tabulator Codedarstellung
     $content_string .= '<li class="level'.$level.$content_active.$content_active_parent.'">';
-    $content_string .= '<a href="'.xtc_href_link(FILENAME_CONTENT, xtc_content_link($content_array[$counter]['coID'], $content_array[$counter]['name'])).'" title="'. $content_array[$counter]['name'] . '">';
+    $content_string .= '<a href="'.xtc_href_link(FILENAME_CONTENT, xtc_content_link($content_array[$counter]['coID'], $content_array[$counter]['name'])).'" title="'.encode_htmlentities($content_array[$counter]['name']).'">';
     $content_string .= '<i class="fas fa-angle-right"></i>';
     $content_string .= $content_array[$counter]['name'];
     $content_string .= '</a></li>';
     $content_string .= "\n"; //Zeilenschaltung Codedarstellung  
     //EOF  +++ Content Linkerstellung +++
 
-    //Nächste Content
+    //NÃ¤chste Content
     if ($content_array[$counter]['next_id']) {
       xtc_show_content($content_array[$counter]['next_id'], $level);
     } else {  
