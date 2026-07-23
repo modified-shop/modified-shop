@@ -230,9 +230,12 @@
       $js = '';
       if (is_array($this->modules)) {
         $js = '<script type="text/javascript"><!-- ' . "\n" .
+              'function xtc_js_decode(str) {' . "\n" .
+              '  return str.replace(/%([0-9A-Fa-f]{2})/g, function(m, hex) { return String.fromCharCode(parseInt(hex, 16)); });' . "\n" .
+              '}' . "\n" .
               'function check_form_payment() {' . "\n" .
               '  var error = 0;' . "\n" .
-              '  var error_message = decodeURIComponent("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
+              '  var error_message = xtc_js_decode("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
               '  var payment_value = null;' . "\n" .
               '  if (document.getElementById("checkout_payment").payment) {' . "\n" .
               '    if (document.getElementById("checkout_payment").payment.length) {' . "\n" .
@@ -270,21 +273,21 @@
                '      if (gv_value >= cot_value) {' . "\n" .
                '        payment_value = "use_gv";' . "\n" .
                '        error = 0;' . "\n" .
-               '        error_message = decodeURIComponent("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
+               '        error_message = xtc_js_decode("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
                '      }' . "\n" .  
                '    }' . "\n" .       
                '  }' . "\n\n";
 
         if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true' && SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
           $js .= "\n" . '  if (!document.getElementById("checkout_payment").conditions.checked) {' . "\n" .
-                 '    error_message = error_message + decodeURIComponent("' . xtc_js_lang(JS_ERROR_CONDITIONS_NOT_ACCEPTED) . '");' . "\n" .
+                 '    error_message = error_message + xtc_js_decode("' . xtc_js_lang(JS_ERROR_CONDITIONS_NOT_ACCEPTED) . '");' . "\n" .
                  '    error = 1;' . "\n" .
                  '  }' . "\n\n";
         }
 
         if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && DISPLAY_PRIVACY_CHECK == 'true') {
           $js .= "\n" . '  if (!document.getElementById("checkout_payment").privacy.checked) {' . "\n" .
-                 '    error_message = error_message + decodeURIComponent("' . xtc_js_lang(JS_ERROR_PRIVACY_NOTICE_NOT_ACCEPTED) . '");' . "\n" .
+                 '    error_message = error_message + xtc_js_decode("' . xtc_js_lang(JS_ERROR_PRIVACY_NOTICE_NOT_ACCEPTED) . '");' . "\n" .
                  '    error = 1;' . "\n" .
                  '  }' . "\n\n";
         }
@@ -295,7 +298,7 @@
             )
         {
           $js .= "\n" . '  if (!document.getElementById("checkout_payment").revocation.checked) {' . "\n" .
-                 '    error_message = error_message + decodeURIComponent("' . xtc_js_lang(JS_ERROR_REVOCATION_NOT_ACCEPTED) . '");' . "\n" .
+                 '    error_message = error_message + xtc_js_decode("' . xtc_js_lang(JS_ERROR_REVOCATION_NOT_ACCEPTED) . '");' . "\n" .
                  '    error = 1;' . "\n" .
                  '  }' . "\n\n";
         }
@@ -309,7 +312,7 @@
                '  }' . "\n\n"; 
        
         $js .= "\n" . '  if (payment_value == null) {' . "\n" .
-               '    error_message = error_message + decodeURIComponent("' . xtc_js_lang(JS_ERROR_NO_PAYMENT_MODULE_SELECTED) . '");' . "\n" .
+               '    error_message = error_message + xtc_js_decode("' . xtc_js_lang(JS_ERROR_NO_PAYMENT_MODULE_SELECTED) . '");' . "\n" .
                '    error = 1;' . "\n" .
                '  }' . "\n\n" .
                '  if (error == 1 && submitter != 1) {' . "\n" . 
