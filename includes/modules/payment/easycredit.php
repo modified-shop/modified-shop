@@ -41,7 +41,7 @@
           $this->order_status = (int) MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_ID;
         }
         if ((int) MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_SUCCESS_ID > 0) {
-          $this->order_status_success = MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_SUCCESS_ID;
+          $this->order_status_success = (int) MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_SUCCESS_ID;
         }
         
         TeambankPayment::init($this->code);
