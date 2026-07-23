@@ -240,7 +240,7 @@
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_4'");
         }
         if ($i == 5) {
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'AF,AO,AI,AG,GQ,AR,BS,BD,BB,BZ,BM,BT,BO,BW,BR,BN,BI,KY,CL,CN,CR,DM,DO,EC,SV,FK,GF,GA,GD,GP,GT,GY,HT,HN,HK,IN,ID,TP,JM,JP,KH,KE,CO,KM,CG,KP,KR,CU,LA,LS' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_5'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'AF,AO,AI,AG,GQ,AR,BS,BD,BB,BZ,BM,BT,BO,BW,BR,BN,BI,KY,CL,CN,CR,DM,DO,EC,SV,FK,GF,GA,GD,GP,GT,GY,HT,HN,HK,IN,ID,TL,JM,JP,KH,KE,CO,KM,CG,KP,KR,CU,LA,LS' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_5'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '1:19.62,2:28.34,3:37.06,4:45.78,5:54.50,6:63.22,7:71.94,8:80.66,9:89.38,10:98.10,11:106.82,12:115.54,13:124.26,14:132.98,15:141.70,16:150.42,17:159.14,18:167.86,19:176.58,20:185.30' WHERE  configuration_key = 'MODULE_SHIPPING_AP_COST_5'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_5'");
         }
