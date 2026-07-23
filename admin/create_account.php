@@ -94,7 +94,7 @@
       $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
     }
 
-    if (strlen($customers_password) < ENTRY_PASSWORD_MIN_LENGTH) {
+    if (strlen($customers_password_encrypted) < ENTRY_PASSWORD_MIN_LENGTH || strlen($customers_password_encrypted) > ENTRY_PASSWORD_MAX_LENGTH) {
       $error = $entry_password_error = true;
     }
 

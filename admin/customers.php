@@ -529,7 +529,7 @@
             $entry_telephone_error = false;
           }
 
-          if (strlen($password) > 0 && strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
+          if (strlen($password) > 0 && (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH || strlen($password) > ENTRY_PASSWORD_MAX_LENGTH)) {
             $error = true;
             $entry_password_error = true;
           } else {

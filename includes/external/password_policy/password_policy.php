@@ -43,7 +43,12 @@ class password_policy
             'value' => ENTRY_PASSWORD_MIN_LENGTH,
             'test'  => 'return strlen($p) >= $v;',
             'error' => ENTRY_PASSWORD_ERROR);
-                        
+
+        $this->rules['max_length'] = array(
+            'value' => (defined('ENTRY_PASSWORD_MAX_LENGTH') ? ENTRY_PASSWORD_MAX_LENGTH : 72),
+            'test'  => 'return strlen($p) <= $v;',
+            'error' => ENTRY_PASSWORD_ERROR_MAX_LENGTH);
+
         $this->rules['min_lowercase_chars'] = array(
             'value' => ((POLICY_MIN_LOWER_CHARS > 0) ? POLICY_MIN_LOWER_CHARS : false),
             'test'  => 'return preg_match_all("/[a-z]/", $p, $x) >= $v;',

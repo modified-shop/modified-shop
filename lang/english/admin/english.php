@@ -290,7 +290,7 @@ define('ENTRY_NEWSLETTER_YES', 'Subscribed');
 define('ENTRY_NEWSLETTER_NO', 'Unsubscribed');
 define('ENTRY_MAIL_ERROR','&nbsp;<span class="errorText">Please choose an option</span>');
 define('ENTRY_PASSWORD','Password (generated)');
-define('ENTRY_PASSWORD_ERROR','&nbsp;<span class="errorText">min. ' . (defined('ENTRY_PASSWORD_MIN_LENGTH') ? ENTRY_PASSWORD_MIN_LENGTH : 0) . ' chars</span>');
+define('ENTRY_PASSWORD_ERROR','&nbsp;<span class="errorText">' . (defined('ENTRY_PASSWORD_MIN_LENGTH') ? ENTRY_PASSWORD_MIN_LENGTH : 0) . '-' . (defined('ENTRY_PASSWORD_MAX_LENGTH') ? ENTRY_PASSWORD_MAX_LENGTH : 72) . ' chars</span>');
 define('ENTRY_MAIL_COMMENTS','additional e-mail text:');
 
 define('ENTRY_MAIL','Send e-mail with password to customer?');
