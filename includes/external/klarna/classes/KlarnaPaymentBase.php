@@ -47,7 +47,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     if ($this->check() > 0) {
       $this->order_status = DEFAULT_ORDERS_STATUS_ID;
       if ((int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID') > 0) {
-        $this->order_status = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
+        $this->order_status = (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
       }
     }
     
