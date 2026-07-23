@@ -41,7 +41,7 @@ class invoice {
     if ($this->check() > 0) {
       $this->min_order = MODULE_PAYMENT_INVOICE_MIN_ORDER;
       if ((int) MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID;
+        $this->order_status = (int) MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID;
       }
     }
     
