@@ -308,6 +308,14 @@
           );
         }
 
+        if ($products['products_order_description'] != '') {
+          $products_array['attributes'][] = array(
+            'key' => 'description_order',
+            'value' => $this->getText($products['products_order_description']),
+            'userGroups' => $this->customers_status_all_array,
+          );
+        }
+
         if ($products['products_ean'] != '') {
           $products_array['attributes'][] = array(
             'key' => 'ean',
@@ -348,10 +356,10 @@
           );
         }      
       
-        $reviews_avg = $product->getReviewsAverage($products['products_id']);
+        $reviews_avg = $product->getReviewsAverage($products['products_id'], 1);
         $products_array['attributes'][] = array(
           'key' => 'reviews_avg',
-          'value' => $reviews_avg,
+          'value' => number_format($reviews_avg, 1, ',', ''),
           'userGroups' => $this->customers_status_all_array,
         );
 
@@ -362,14 +370,21 @@
             'value' => $reviews_count,
             'userGroups' => $this->customers_status_all_array,
           );
-        
-          for($i=1; $i<=$reviews_avg; $i++) {
+          
+          $reviews_key = $this->buildReviewsArray($reviews_avg);
+          foreach ($reviews_key as $k => $v) {
             $products_array['attributes'][] = array(
-              'key' => 'reviews_avg_'.$i,
-              'value' => 1,
+              'key' => 'reviews_avg_'.$k,
+              'value' => $v,
               'userGroups' => $this->customers_status_all_array,
             );
           }
+        } else {
+          $products_array['attributes'][] = array(
+            'key' => 'reviews_zero',
+            'value' => 1,
+            'userGroups' => $this->customers_status_all_array,
+          );
         }
       
         if ((int)$products['products_shippingtime'] > 0 && ACTIVATE_SHIPPING_STATUS == 'true') {
@@ -429,7 +444,7 @@
           if (!isset($price_array[$products_price['hash']])) {
             $price_array[$products_price['hash']] = array(
               'key' => 'price',
-              'value' => $products_price['plain'],
+              'value' => number_format($products_price['plain'], 4, ',', ''),
               'userGroups' => array(),
             );
 
@@ -662,6 +677,31 @@
       }
     
       return $string;  
+    }
+
+
+    function buildReviewsArray(float $value) {
+      $intPart = (int) floor($value);
+      $existing = [];
+    
+      for ($i = 1; $i <= $intPart; $i++) {
+        $existing[$i * 10] = true;
+      }
+    
+      $frac = round($value - $intPart, 5);
+      if ($frac > 0) {
+        $extra = (int) round($frac * 10 / 5) * 5;
+        if ($extra > 0) {
+          $existing[$intPart * 10 + $extra] = true;
+        }
+      }
+    
+      $result = [];
+      for ($k = 5; $k <= 50; $k += 5) {
+        $result[$k] = isset($existing[$k]) ? 1 : 0;
+      }
+    
+      return $result;
     }
 
   }
