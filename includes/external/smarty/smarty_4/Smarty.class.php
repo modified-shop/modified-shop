@@ -699,15 +699,20 @@ class Smarty extends Smarty_Compatibility
         $this->start_time = microtime(true);
 
         // set default dirs
+        $templateChain = class_exists('Template', false) ? Template::chain() : array(MY_CURRENT_TEMPLATE);
         $this->setTemplateDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR)
-             ->addTemplateDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . MY_CURRENT_TEMPLATE . DIRECTORY_SEPARATOR)
              ->setCompileDir(DIR_FS_CATALOG . 'templates_c' . DIRECTORY_SEPARATOR)
              ->setPluginsDir(SMARTY_PLUGINS_DIR)
              ->setCacheDir(DIR_FS_CATALOG . 'cache' . DIRECTORY_SEPARATOR)
-             ->setConfigDir(DIR_FS_CATALOG . 'lang' . DIRECTORY_SEPARATOR)
-             ->addConfigDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . MY_CURRENT_TEMPLATE . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR)
-             ->addPluginsDir(MY_TEMPLATE_PLUGINS)
-             ->addPluginsDir(MY_SHOP_PLUGINS);
+             ->setConfigDir(DIR_FS_CATALOG . 'lang' . DIRECTORY_SEPARATOR);
+        foreach ($templateChain as $template) {
+            $this->addTemplateDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . $template . DIRECTORY_SEPARATOR)
+                 ->addConfigDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . $template . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR)
+                 ->addPluginsDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . $template . DIRECTORY_SEPARATOR . 'smarty' . DIRECTORY_SEPARATOR);
+        }
+        $this->addPluginsDir(MY_SHOP_PLUGINS);
+        require_once(__DIR__ . '/../resources/smarty_resource_template_parent.php');
+        $this->registerResource('parent', new Smarty_Resource_Template_Parent());
         
         if (!defined('RUN_MODE_INSTALLER')) {
           $this->registerCacheResource('phpfastcache', new Smarty_CacheResource_Phpfastcache());
