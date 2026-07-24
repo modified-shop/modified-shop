@@ -1,6 +1,6 @@
 <?php
 
-namespace Modified\Storefront\Template;
+namespace Modified\Storefront\Template\Exception;
 
 use InvalidArgumentException;
 
