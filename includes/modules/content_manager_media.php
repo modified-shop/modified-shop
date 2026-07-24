@@ -34,7 +34,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|coID:'.(int)$_GET['coID']);
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/products_media.html'), $cache_id) || !$cache) {
   //get downloads
   $content_query = xtDBquery("SELECT *
                                 FROM ".TABLE_CONTENT_MANAGER_CONTENT."
@@ -96,7 +96,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_media.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/products_media.html'), $cache_id);
 
 $smarty->assign('MODULE_conent_manager_media', !empty($module) ? trim($module) : $module);
 $smarty->assign('MODULE_content_manager_media', !empty($module) ? trim($module) : $module); // Additional Smarty for fix typo

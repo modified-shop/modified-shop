@@ -30,7 +30,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|coID:'.$shop_content_data['content_id']);
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sub_content_listing.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/sub_content_listing.html'), $cache_id) || !$cache) {
   $result = false;
   if ($shop_content_data['parent_id'] == '0') { 
     $shop_content_sub_query_1 = xtDBquery("SELECT c2.content_title,
@@ -124,5 +124,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sub_content_listing.htm
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/sub_content_listing.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/sub_content_listing.html'), $cache_id);
 $smarty->assign('SUB_CONTENT_LISTING', !empty($module) ? trim($module) : $module);

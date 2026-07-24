@@ -16,7 +16,7 @@
   // reset cache id
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|date:'.date('Y-m-d-H:i').'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 
-  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_specials.html', $cache_id) || !$cache) {
+  if (!$box_smarty->is_cached(Template::resolve('boxes/box_specials.html'), $cache_id) || !$cache) {
     $specials_query = xtc_db_query("SELECT ".$product->default_select."
                                       FROM ".TABLE_PRODUCTS." p
                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
@@ -56,6 +56,6 @@
     $box_smarty->assign('SPECIALS_LINK', xtc_href_link(FILENAME_SPECIALS));
   }
 
-  $box_specials = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_specials.html', $cache_id);
+  $box_specials = $box_smarty->fetch(Template::resolve('boxes/box_specials.html'), $cache_id);
 
   $smarty->assign('box_SPECIALS', $box_specials);

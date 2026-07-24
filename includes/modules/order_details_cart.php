@@ -177,6 +177,6 @@ $module_smarty->assign('module_content', $module_content);
 $module_smarty->assign('TOTAL_WEIGHT', $shipping_weight);
 
 $module_smarty->caching = 0;
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/order_details.html');
+$module = $module_smarty->fetch(Template::resolve('module/order_details.html'));
 
 $smarty->assign('MODULE_order_details', $module);

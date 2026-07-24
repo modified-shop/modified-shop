@@ -251,10 +251,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   // get default product_info template
   if ($product->data['product_template'] == '' 
       || $product->data['product_template'] == 'default'
-      || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template'])
+      || Template::findPath('module/product_info/' . $product->data['product_template']) === null
       )
   {
-    $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/','html'), function($file) {
+    $files = array_filter(auto_include(Template::path('module/product_info/'),'html'), function($file) {
       return false === strpos($file, 'index.html');
     });
     $product->data['product_template'] = basename($files[0]);
@@ -281,7 +281,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
   
   $info_smarty->caching = 0;
-  $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template']);
+  $product_info = $info_smarty->fetch(Template::resolve('module/product_info/' . $product->data['product_template']));
   
   $smarty->assign('main_content', $product_info);
   $display_mode = 'productinfo';

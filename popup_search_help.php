@@ -37,4 +37,4 @@ $popup_help = implode(', ', $popup_help_array);
 $popup_smarty->assign('TEXT_HELP', sprintf(TEXT_SEARCH_HELP, (($popup_help != '') ? ', ' . $popup_help.' ' : ' ')));
 
 $popup_smarty->caching = 0;
-$popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_search_help.html');
+$popup_smarty->display(Template::resolve('module/popup_search_help.html'));

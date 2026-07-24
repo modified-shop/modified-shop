@@ -82,7 +82,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
       $smarty->assign('DISPLAY_COUNT', $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS));
       $smarty->assign('DISPLAY_LINKS', $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
       $smarty->caching = 0;
-      $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+      $pagination = $smarty->fetch(Template::resolve('module/pagination.html'));
     }
     $smarty->assign('NAVBAR', $pagination);
     $smarty->assign('PAGINATION', $pagination);
@@ -124,7 +124,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
 
   $smarty->caching = 0;
-  $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews.html');
+  $main_content = $smarty->fetch(Template::resolve('module/product_reviews.html'));
 
   $smarty->assign('main_content', $main_content);
   $display_mode = 'reviews';
@@ -137,10 +137,10 @@ $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_RE
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $smarty->caching = 0;
 if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

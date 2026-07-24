@@ -18,7 +18,7 @@
     // set cache id
     $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|history:'.implode(',', $_SESSION['tracking']['products_history']).'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 
-    if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html', $cache_id) || !$cache) {
+    if (!$box_smarty->is_cached(Template::resolve('boxes/box_last_viewed.html'), $cache_id) || !$cache) {
 
       $last_viewed_query = xtDBquery("SELECT ".$product->default_select.",
                                              p2c.categories_id,
@@ -51,7 +51,7 @@
       $box_smarty->assign('MY_PERSONAL_PAGE', xtc_href_link(FILENAME_ACCOUNT));
     }
 
-    $box_last_viewed = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html', $cache_id);
+    $box_last_viewed = $box_smarty->fetch(Template::resolve('boxes/box_last_viewed.html'), $cache_id);
 
     $smarty->assign('box_LAST_VIEWED', $box_last_viewed);
   }

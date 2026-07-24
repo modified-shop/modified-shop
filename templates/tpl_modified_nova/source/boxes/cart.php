@@ -145,6 +145,6 @@
   }
   
   $box_smarty->caching = 0;
-  $box_cart = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_cart.html');
+  $box_cart = $box_smarty->fetch(Template::resolve('boxes/box_cart.html'));
 
   $smarty->assign('box_CART', $box_cart);

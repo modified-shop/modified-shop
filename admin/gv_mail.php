@@ -77,8 +77,8 @@
     $smarty->assign('language', $_SESSION['language']);
     $smarty->caching = 0;
 
-    $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/'.$template.'.html');
-    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/'.$template.'.txt');
+    $html_mail = $smarty->fetch(Template::resolve('admin/mail/' . $_SESSION['language'] . '/' . $template . '.html'));
+    $txt_mail = $smarty->fetch(Template::resolve('admin/mail/' . $_SESSION['language'] . '/' . $template . '.txt'));
     $txt_mail = strip_tags($txt_mail);
     
     xtc_php_mail(EMAIL_BILLING_ADDRESS,

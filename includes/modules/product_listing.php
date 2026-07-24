@@ -61,7 +61,7 @@ if ($listing_split->number_of_rows > 0) {
     $module_smarty->assign('DISPLAY_COUNT', $listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS));
     $module_smarty->assign('DISPLAY_LINKS', $listing_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y', 'keywords')).(isset($_GET['keywords'])?'keywords='. urlencode($_GET['keywords']):'')));
     $module_smarty->caching = 0;
-    $pagination = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+    $pagination = $module_smarty->fetch(Template::resolve('module/pagination.html'));
   }
   $module_smarty->assign('NAVIGATION', $pagination);
   $module_smarty->assign('PAGINATION', $pagination);
@@ -146,10 +146,10 @@ if ($listing_split->number_of_rows > 0) {
   if (!isset($category['listing_template'])
       || $category['listing_template'] == '' 
       || $category['listing_template'] == 'default'
-      || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'])
+      || Template::findPath('module/product_listing/' . $category['listing_template']) === null
       )
   {
-    $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/','html'), function($file) {
+    $files = array_filter(auto_include(Template::path('module/product_listing/'),'html'), function($file) {
       return false === strpos($file, 'index.html');
     });
     $category['listing_template'] = basename($files[0]);
@@ -171,7 +171,7 @@ if ($listing_split->number_of_rows > 0) {
   }
 
   $module_smarty->caching = 0;
-  $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template']);
+  $module = $module_smarty->fetch(Template::resolve('module/product_listing/' . $category['listing_template']));
 
   $smarty->assign('main_content', $module);
 } elseif (isset($current_category_id) && $current_category_id > 0) {
@@ -199,17 +199,17 @@ if ($listing_split->number_of_rows > 0) {
     // get default template
     if ($category['categories_template'] == '' 
         || $category['categories_template'] == 'default'
-        || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template'])
+        || Template::findPath('module/categorie_listing/' . $category['categories_template']) === null
         )
     {
-      $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/','html'), function($file) {
+      $files = array_filter(auto_include(Template::path('module/categorie_listing/'),'html'), function($file) {
         return false === strpos($file, 'index.html');
       });
       $category['categories_template'] = basename($files[0]);
     }
     
     $module_smarty->caching = 0;
-    $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
+    $main_content = $module_smarty->fetch(Template::resolve('module/categorie_listing/' . $category['categories_template']));
     
     $smarty->assign('main_content', $main_content);
     $display_mode = 'category';
@@ -244,17 +244,17 @@ if ($listing_split->number_of_rows > 0) {
     // get default template
     if ($manufacturer['categories_template'] == '' 
         || $manufacturer['categories_template'] == 'default'
-        || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer['categories_template'])
+        || Template::findPath('module/categorie_listing/' . $manufacturer['categories_template']) === null
         )
     {
-      $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/','html'), function($file) {
+      $files = array_filter(auto_include(Template::path('module/categorie_listing/'),'html'), function($file) {
         return false === strpos($file, 'index.html');
       });
       $manufacturer['categories_template'] = basename($files[0]);
     }
   
     $module_smarty->caching = 0;
-    $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer['categories_template']);
+    $main_content = $module_smarty->fetch(Template::resolve('module/categorie_listing/' . $manufacturer['categories_template']));
     
     $smarty->assign('main_content', $main_content);
     $display_mode = 'manufacturer';

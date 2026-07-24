@@ -70,7 +70,7 @@ if ($reviews_split->number_of_rows > 0) {
     $smarty->assign('DISPLAY_COUNT', $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS));
     $smarty->assign('DISPLAY_LINKS', $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
     $smarty->caching = 0;
-    $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+    $pagination = $smarty->fetch(Template::resolve('module/pagination.html'));
   }
   $smarty->assign('NAVBAR', $pagination);
   $smarty->assign('PAGINATION', $pagination);
@@ -101,7 +101,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'reviews';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 if ($messageStack->size('product_reviews') > 0) {
   $smarty->assign('error_message', $messageStack->output('product_reviews'));
@@ -118,11 +118,11 @@ if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
 }
 
 $smarty->caching = 0;
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/reviews.html');
+$main_content = $smarty->fetch(Template::resolve('module/reviews.html'));
 
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

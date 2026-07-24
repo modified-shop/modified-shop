@@ -25,7 +25,7 @@ if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['trackin
   // set cache id
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|history:'.$_SESSION['tracking']['products_history'][$random_last_viewed].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 
-  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html', $cache_id) || !$cache) {
+  if (!$box_smarty->is_cached(Template::resolve('boxes/box_last_viewed.html'), $cache_id) || !$cache) {
 
     $random_query = "SELECT ".$product->default_select.",
                             p2c.categories_id,
@@ -60,9 +60,9 @@ if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['trackin
   }
 
   if (!$cache) {
-    $box_last_viewed = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html');
+    $box_last_viewed = $box_smarty->fetch(Template::resolve('boxes/box_last_viewed.html'));
   } else {
-    $box_last_viewed = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html', $cache_id);
+    $box_last_viewed = $box_smarty->fetch(Template::resolve('boxes/box_last_viewed.html'), $cache_id);
   }
 
   $smarty->assign('box_LAST_VIEWED', $box_last_viewed);

@@ -65,6 +65,6 @@ include(DIR_FS_BOXES_INC . 'smarty_default.php');
   $box_smarty->assign('BOX_CONTENT', $box_content);
 
   $box_smarty->caching = 0;
-  $box_admin= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_admin.html');
+  $box_admin= $box_smarty->fetch(Template::resolve('boxes/box_admin.html'));
   $smarty->assign('box_ADMIN',$box_admin);
 ?>

@@ -136,6 +136,6 @@ $module_smarty->assign('language', $_SESSION['language']);
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/checkout_address_smarty_data/','php') as $file) require ($file);
 
 $module_smarty->caching = 0;
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_new_address.html');
+$module = $module_smarty->fetch(Template::resolve('module/checkout_new_address.html'));
 
 $smarty->assign('MODULE_new_address', $module);

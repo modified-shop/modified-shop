@@ -58,13 +58,13 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   require (DIR_WS_INCLUDES . 'header.php');
 
   // include boxes
-  require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+  require Template::path('source/boxes.php');
 
   $smarty->assign('language', $_SESSION['language']);
   $smarty->caching = 0;
   if (!defined('RM'))
     $smarty->load_filter('output', 'note');
-  $smarty->display(CURRENT_TEMPLATE.'/index.html');
+  $smarty->display(Template::resolve('index.html'));
 
   include ('includes/application_bottom.php');
 } else {
@@ -188,5 +188,5 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $info_smarty->assign('CanonicalLink', $canonical_link);
  
   $info_smarty->caching = 0;
-  $info_smarty->display(CURRENT_TEMPLATE.'/module/print_product_info.html');
+  $info_smarty->display(Template::resolve('module/print_product_info.html'));
 }

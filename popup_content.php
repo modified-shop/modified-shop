@@ -38,4 +38,4 @@ $popup_smarty->assign('content_heading', $content_data['content_heading']);
 $popup_smarty->assign('content_text', $content_data['content_text']);
 
 $popup_smarty->caching = 0;
-$popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_content.html');
+$popup_smarty->display(Template::resolve('module/popup_content.html'));

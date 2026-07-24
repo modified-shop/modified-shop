@@ -27,7 +27,7 @@ $script_array = array(
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
 
-$this_f_time = filemtime(DIR_FS_CATALOG.DIR_TMPL_JS.'general_bottom.js.php');
+$this_f_time = filemtime(Template::path('javascript/general_bottom.js.php'));
   
 if (COMPRESS_JAVASCRIPT == 'true') {
   require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');

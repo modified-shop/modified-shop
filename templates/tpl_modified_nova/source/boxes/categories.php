@@ -16,7 +16,7 @@
   // set cache id
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|cP:'.$cPath.(((defined('SPECIALS_CATEGORIES') && SPECIALS_CATEGORIES === true) || (defined('WHATSNEW_CATEGORIES') && WHATSNEW_CATEGORIES === true)) ? '|self:'.basename($PHP_SELF) : ''));
 
-  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cache_id) || !$cache) {
+  if (!$box_smarty->is_cached(Template::resolve('boxes/box_categories.html'), $cache_id) || !$cache) {
 
     // include needed functions
     require_once (DIR_FS_BOXES_INC.'xtc_show_category.inc.php');
@@ -32,6 +32,6 @@
     $box_smarty->assign('BOX_CONTENT', $categories_string);
   }
 
-  $box_categories = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cache_id);
+  $box_categories = $box_smarty->fetch(Template::resolve('boxes/box_categories.html'), $cache_id);
 
   $smarty->assign('box_CATEGORIES', $box_categories);

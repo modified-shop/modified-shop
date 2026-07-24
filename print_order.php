@@ -77,7 +77,7 @@ if ($customer_id > 0
 
   // dont allow cache
   $smarty->caching =0;
-  $smarty->display(CURRENT_TEMPLATE.'/module/print_order.html');
+  $smarty->display(Template::resolve('module/print_order.html'));
 } else {
   die('You are not allowed to view this order!');
 }
