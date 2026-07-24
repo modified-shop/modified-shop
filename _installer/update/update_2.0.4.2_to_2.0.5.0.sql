@@ -61,7 +61,7 @@ DELETE FROM `zones_to_geo_zones` WHERE `association_id` = 74;
 DELETE FROM `zones_to_geo_zones` WHERE `association_id` = 236;
 
 #Tomcraft - 2019-01-09 - Update Tracking Link for HERMES
-UPDATE `carriers` SET `carrier_tracking_link` = 'https://tracking.hermesworld.com/?TrackID=$1' WHERE `carrier_name` = 'HERMES';
+UPDATE `carriers` SET `carrier_tracking_link` = 'https://tracking.hermesworld.com/?TrackID=$1' WHERE `carrier_tracking_link` = 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1';
 
 #Tomcraft - 2019-01-18 - Added Monaco to EU Zones
 UPDATE `zones_to_geo_zones` SET `geo_zone_id` = 5 WHERE `zone_country_id` = 141;
