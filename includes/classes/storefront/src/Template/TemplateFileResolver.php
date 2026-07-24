@@ -50,13 +50,9 @@ final class TemplateFileResolver
 
         $currentRealPath = str_replace('\\', '/', $currentRealPath);
         foreach ($this->chain as $index => $templateId) {
-            $candidate = TemplatePath::joinFilesystem(
-                $this->manifestRepository->templateDirectory($templateId),
-                $logicalName
-            );
-            $candidateRealPath = realpath($candidate);
+            $candidateRealPath = $this->realCandidatePath($templateId, $logicalName);
 
-            if ($candidateRealPath !== false && str_replace('\\', '/', $candidateRealPath) === $currentRealPath) {
+            if ($candidateRealPath !== null && $candidateRealPath === $currentRealPath) {
                 $resolved = $this->findFromIndex($logicalName, $index + 1);
                 if ($resolved !== null) {
                     return $resolved;
@@ -91,16 +87,38 @@ final class TemplateFileResolver
     {
         for ($index = $startIndex; $index < $this->chain->count(); ++$index) {
             $templateId = $this->chain->at($index);
-            $absolutePath = TemplatePath::joinFilesystem(
-                $this->manifestRepository->templateDirectory($templateId),
-                $logicalName
-            );
+            $absolutePath = $this->realCandidatePath($templateId, $logicalName);
 
-            if (file_exists($absolutePath)) {
+            if ($absolutePath !== null) {
                 return new ResolvedTemplateFile($templateId, $logicalName, $absolutePath);
             }
         }
 
         return null;
+    }
+
+    private function realCandidatePath(TemplateId $templateId, string $logicalName): ?string
+    {
+        $templateDirectory = $this->manifestRepository->templateDirectory($templateId);
+        $candidate = TemplatePath::joinFilesystem($templateDirectory, $logicalName);
+        $realCandidate = realpath($candidate);
+
+        if ($realCandidate === false) {
+            return null;
+        }
+
+        $realCandidate = str_replace('\\', '/', $realCandidate);
+        if (
+            $realCandidate !== $templateDirectory
+            && !str_starts_with($realCandidate, $templateDirectory . '/')
+        ) {
+            throw new InvalidTemplatePathException(sprintf(
+                'Die Template-Datei "%s" verlässt das Verzeichnis des Templates "%s".',
+                $logicalName,
+                $templateId->value()
+            ));
+        }
+
+        return $realCandidate;
     }
 }
