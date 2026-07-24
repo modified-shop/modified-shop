@@ -74,6 +74,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'POLICY_MIN_UPPER_CHARS', '1', '2', '12', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'POLICY_MIN_NUMERIC_CHARS', '1', '2', '12', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'POLICY_MIN_SPECIAL_CHARS', '1', '2', '12', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'ENTRY_PASSWORD_MAX_LENGTH', '72', '2', '13', NULL, NOW(), NULL, NULL);";
 
   $values_update[] = array (
                            'values' => "configuration_group_id = '6', configuration_value = '0'",

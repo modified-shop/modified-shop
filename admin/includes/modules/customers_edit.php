@@ -449,7 +449,8 @@
               <?php
                 if ($error == true) {
                   if (isset($entry_password_error) && $entry_password_error == true) {
-                    echo xtc_draw_password_field('customers_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"').'&nbsp;'.ENTRY_PASSWORD_ERROR;
+                    echo xtc_draw_password_field('customers_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"').
+                         (!empty($entry_password_bcrypt_error) ? ENTRY_PASSWORD_ERROR_BCRYPT_LENGTH : ENTRY_PASSWORD_ERROR);
                   } else {
                     echo xtc_draw_password_field('customers_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"');
                   }

@@ -243,6 +243,8 @@
   define('ENTRY_POST_CODE_ERROR', 'Ihre Postleitzahl muss aus mindestens ' . ENTRY_POSTCODE_MIN_LENGTH . ' Zeichen bestehen.');
   define('ENTRY_CITY_ERROR', 'Ort muss aus mindestens ' . ENTRY_CITY_MIN_LENGTH . ' Zeichen bestehen.');
   define('ENTRY_PASSWORD_ERROR', 'Ihr Passwort muss aus mindestens ' . ENTRY_PASSWORD_MIN_LENGTH . ' Zeichen bestehen.');
+  define('ENTRY_PASSWORD_ERROR_MAX_LENGTH', 'Ihr Passwort darf aus h&ouml;chstens %s Zeichen bestehen.');
+  define('ENTRY_PASSWORD_ERROR_BCRYPT_LENGTH', 'Ihr Passwort ist f&uuml;r die aktive Verschl&uuml;sselungsmethode zu lang. Bitte verwenden Sie ein k&uuml;rzeres Passwort.');
   define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Ihr Passwort muss mindestens %s Kleinbuchstaben enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Grossbuchstaben enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Ihr Passwort muss mindestens %s Zahl enthalten.');
@@ -250,4 +252,3 @@
   define('ENTRY_PASSWORD_ERROR_INVALID_CHAR', 'Ihr Passwort enth&auml;lt ung&uuml;ltige Zeichen. Bitte verwenden Sie ein anderes Passwort.');
   define('ENTRY_PASSWORD_ERROR_NOT_MATCHING', 'Ihre Passw&ouml;rter stimmen nicht &uuml;berein.');
   define('ENTRY_PASSWORD_CURRENT_ERROR', 'Ihr aktuelles Passwort darf nicht leer sein.');
-  
