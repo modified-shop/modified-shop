@@ -78,8 +78,6 @@ class google_mail {
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_GOOGLE_MAIL_%'");
   }
 
-  // MODULE_GOOGLE_MAIL_REFRESH_TOKEN is deliberately excluded here - it is
-  // managed internally via custom()/remove(), never shown as an editable field.
   function keys() {
     return array(
       'MODULE_GOOGLE_MAIL_STATUS',
@@ -89,13 +87,16 @@ class google_mail {
     );
   }
 
-  // Handles both directions of the OAuth dance via the same action=custom
-  // redirect URI: without ?code we start the flow, with ?code Google is
-  // returning from the consent screen.
+  // Stable, admin-folder-independent redirect_uri to register with Google.
+  private function get_redirect_uri() {
+    return HTTPS_SERVER . DIR_WS_CATALOG . 'callback/phpmailer/xoauth_callback.php?module=' . $this->code;
+  }
+
+  // Handles both directions of the OAuth dance via the same redirect_uri
   function custom() {
     global $messageStack;
 
-    $redirect_uri = xtc_href_link(FILENAME_MODULES, 'set=system&module=' . $this->code . '&action=custom', 'SSL');
+    $redirect_uri = $this->get_redirect_uri();
 
     if (isset($_GET['code']) && $_GET['code'] != '') {
       if (!isset($_SESSION['google_mail_oauth_state'])
