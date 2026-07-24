@@ -138,4 +138,4 @@ if (xtc_db_num_rows($coupon_query) > 0) {
 $popup_smarty->assign('TEXT_HELP', $text_coupon_help);
 
 $popup_smarty->caching = 0;
-$popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_coupon_help.html');
+$popup_smarty->display(Template::resolve('module/popup_coupon_help.html'));

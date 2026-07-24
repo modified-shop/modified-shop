@@ -28,7 +28,7 @@ $box_smarty->assign('SUBMIT_BUTTON', xtc_image_submit('button_add_quick.gif', BO
 $box_smarty->assign('FORM_END', '</form>');
 
 $box_smarty->caching = 0;
-$box_add_a_quickie = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_add_a_quickie.html');
+$box_add_a_quickie = $box_smarty->fetch(Template::resolve('boxes/box_add_a_quickie.html'));
 
 $smarty->assign('box_ADD_QUICKIE', $box_add_a_quickie);
 ?>

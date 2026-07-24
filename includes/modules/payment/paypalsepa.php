@@ -64,14 +64,14 @@ class paypalsepa extends PayPalPaymentV2 {
     $paypal_smarty->caching = 0;
 
     $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/apms.html';
-    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/apms.html')) {
-      $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/apms.html';
+    if (Template::findPath('module/paypal/apms.html') !== null) {
+      $tpl_file = Template::path('module/paypal/apms.html');
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
 
     $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/pui_error.html';
-    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html')) {
-      $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html';
+    if (Template::findPath('module/paypal/pui_error.html') !== null) {
+      $tpl_file = Template::path('module/paypal/pui_error.html');
     }
     $paypal_smarty->assign('error_message', addslashes(TEXT_PAYPAL_ERROR_NOT_AVAILABLE));
     $info = $paypal_smarty->fetch($tpl_file);

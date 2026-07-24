@@ -92,6 +92,6 @@
     $box_smarty->assign('BOX_CONTENT', $box_content);
   }
 
-  $box_reviews = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id);
+  $box_reviews = $box_smarty->fetch(Template::resolve('boxes/box_reviews.html'), $cache_id);
 
   $smarty->assign('box_REVIEWS', $box_reviews);

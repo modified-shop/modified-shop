@@ -42,10 +42,10 @@
         if ($banner = xtc_banner_exists('dynamic', $groups['banners_group'])) {
           $banner_array = xtc_display_banner('static', $banner);
 
-          if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/banners.html')) {
+          if (Template::findPath('module/banners.html') !== null) {
             $banner_smarty->assign('banner_data', $banner_array);
             $banner_smarty->caching = 0;
-            $banners = $banner_smarty->fetch(CURRENT_TEMPLATE.'/module/banners.html');
+            $banners = $banner_smarty->fetch(Template::resolve('module/banners.html'));
           } else {
             if (xtc_not_null($banner_array['TEXT'])) {
               $banners = $banner_array['TEXT'];

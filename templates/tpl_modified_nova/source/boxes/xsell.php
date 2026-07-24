@@ -46,7 +46,7 @@
     }
     
     $box_smarty->caching = 0;
-    $box_xsell = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_xsell.html');
+    $box_xsell = $box_smarty->fetch(Template::resolve('boxes/box_xsell.html'));
   
     $smarty->assign('box_XSELL', $box_xsell);
   }

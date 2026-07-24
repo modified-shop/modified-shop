@@ -85,7 +85,7 @@ require (DIR_WS_INCLUDES.'header.php');
 
 // include boxes
 $display_mode = 'account';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 if ($messageStack->size('account_delete') > 0) {
   $smarty->assign('error_message', $messageStack->output('account_delete'));
@@ -105,10 +105,10 @@ if ($success === true) {
 $smarty->assign('language', $_SESSION['language']);
 
 $smarty->caching = 0;
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_delete.html');
+$main_content = $smarty->fetch(Template::resolve('module/account_delete.html'));
 
 $smarty->assign('main_content', $main_content);
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

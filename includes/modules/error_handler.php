@@ -43,7 +43,7 @@ $module_smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_search.gif', IM
 $module_smarty->assign('LINK_ADVANCED', xtc_href_link(FILENAME_ADVANCED_SEARCH));
 $module_smarty->assign('FORM_END', '</form>');
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/error_message.html');
+$module = $module_smarty->fetch(Template::resolve('module/error_message.html'));
 
 $smarty->assign('main_content', $module);
 $display_mode = 'error';

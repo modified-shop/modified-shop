@@ -34,7 +34,7 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
     $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
   }
 
-  if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/upcoming_products.html', $cache_id) || !$cache) {
+  if (!$module_smarty->is_cached(Template::resolve('module/upcoming_products.html'), $cache_id) || !$cache) {
     $expected_query = xtDBquery("SELECT ".$product->default_select.",
                                         p.products_date_available,
                                         p.products_date_available as date_expected
@@ -69,7 +69,7 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
     }
   }
   
-  $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/upcoming_products.html', $cache_id);
+  $module = $module_smarty->fetch(Template::resolve('module/upcoming_products.html'), $cache_id);
   $default_smarty->assign('MODULE_upcoming_products', $module);
   $smarty->assign('MODULE_upcoming_products', $module);
 }

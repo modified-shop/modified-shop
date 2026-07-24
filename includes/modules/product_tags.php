@@ -30,7 +30,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$product->data['products_id']);
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_tags.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/product_tags.html'), $cache_id) || !$cache) {
   $module_content = array();
   $tags_query = xtDBquery("SELECT ".ADD_TAGS_SELECT."
                                   pto.options_id,
@@ -89,7 +89,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_tags.html', $ca
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_tags.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/product_tags.html'), $cache_id);
 $info_smarty->assign('MODULE_product_tags', !empty($module) ? trim($module) : $module);
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_tags_bottom/','php') as $file) require ($file);

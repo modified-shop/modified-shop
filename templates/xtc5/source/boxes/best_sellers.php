@@ -27,7 +27,7 @@ $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_statu
 
 if (MIN_DISPLAY_BESTSELLERS > 0
     && MAX_DISPLAY_BESTSELLERS > 0
-    && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $cache_id) || !$cache)
+    && (!$box_smarty->is_cached(Template::resolve('boxes/box_best_sellers.html'), $cache_id) || !$cache)
     ) 
 {	
 	// include needed functions
@@ -140,9 +140,9 @@ if (MIN_DISPLAY_BESTSELLERS > 0
 }
 
 if (!$cache) {
-  $box_best_sellers = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html');
+  $box_best_sellers = $box_smarty->fetch(Template::resolve('boxes/box_best_sellers.html'));
 } else {
-  $box_best_sellers = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $cache_id);
+  $box_best_sellers = $box_smarty->fetch(Template::resolve('boxes/box_best_sellers.html'), $cache_id);
 }
 
 $smarty->assign('box_BESTSELLERS', $box_best_sellers);

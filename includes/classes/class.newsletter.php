@@ -373,8 +373,8 @@ class newsletter {
       $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
       
       $smarty->caching = 0;
-      $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.html');
-      $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.txt');
+      $html_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/newsletter_mail.html'));
+      $txt_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/newsletter_mail.txt'));
       
       xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
                    EMAIL_SUPPORT_NAME,

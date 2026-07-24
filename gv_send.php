@@ -137,8 +137,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     // dont allow cache
     $smarty->caching = 0;
 
-    $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/send_gift_to_friend.html');
-    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/send_gift_to_friend.txt');
+    $html_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/send_gift_to_friend.html'));
+    $txt_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/send_gift_to_friend.txt'));
 
     // send mail
     xtc_php_mail(EMAIL_BILLING_ADDRESS, 
@@ -165,7 +165,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'gv';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $smarty->assign('action', 'process');
@@ -206,10 +206,10 @@ $smarty->assign('GV_FAQ_LINK', $main->getContentLink(6, MORE_INFO,'NONSSL'));
 $smarty->assign('FORM_END', '</form>');
 $smarty->assign('language', $_SESSION['language']);
 
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/gv_send.html');
+$main_content = $smarty->fetch(Template::resolve('module/gv_send.html'));
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

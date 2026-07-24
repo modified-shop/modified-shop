@@ -34,7 +34,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id']);
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/products_media.html'), $cache_id) || !$cache) {
   $content_query = xtDBquery("SELECT *
                                 FROM ".TABLE_PRODUCTS_CONTENT."
                                WHERE products_id = '".$product->data['products_id']."'
@@ -95,5 +95,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_media.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/products_media.html'), $cache_id);
 $info_smarty->assign('MODULE_products_media', !empty($module) ? trim($module) : $module);

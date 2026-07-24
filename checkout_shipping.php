@@ -187,7 +187,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'checkout';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('checkout_address', xtc_href_link(FILENAME_CHECKOUT_SHIPPING, xtc_get_all_get_params(), 'SSL'), 'post', 'onSubmit="return check_form();"').xtc_draw_hidden_field('action', 'process'));
 $smarty->assign('ADDRESS_LABEL', xtc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'));
@@ -252,10 +252,10 @@ require(DIR_WS_INCLUDES.'shipping_block.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('SHIPPING_BLOCK', $shipping_block);
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_shipping.html');
+$main_content = $smarty->fetch(Template::resolve('module/checkout_shipping.html'));
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

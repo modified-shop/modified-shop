@@ -25,7 +25,7 @@
   );
   $css_min = DIR_TMPL.'stylesheet.min.css';
 
-  $this_f_time = filemtime(DIR_FS_CATALOG.DIR_TMPL_CSS.'general.css.php');
+  $this_f_time = filemtime(Template::path('css/general.css.php'));
 
   if (COMPRESS_STYLESHEET == 'true') {
     require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');

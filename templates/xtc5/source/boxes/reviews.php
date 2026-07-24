@@ -27,7 +27,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
   // set cache id
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
   
-  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id) || !$cache) {
+  if (!$box_smarty->is_cached(Template::resolve('boxes/box_reviews.html'), $cache_id) || !$cache) {
     // display 'write a review' box
     $box_smarty->assign('REVIEWS_WRITE_REVIEW',BOX_REVIEWS_WRITE_REVIEW);
     $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
@@ -79,7 +79,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
     // set cache id
     $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.($product->isProduct() === true ? $product->data['products_id'] : 0).'|rID:'.$reviews['reviews_id'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
     
-    if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id) || !$cache) {
+    if (!$box_smarty->is_cached(Template::resolve('boxes/box_reviews.html'), $cache_id) || !$cache) {
 
       // include needed functions
       require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
@@ -111,9 +111,9 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
 }
 
 if (!$cache) {
-  $box_reviews = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html');
+  $box_reviews = $box_smarty->fetch(Template::resolve('boxes/box_reviews.html'));
 } else {
-  $box_reviews = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id);
+  $box_reviews = $box_smarty->fetch(Template::resolve('boxes/box_reviews.html'), $cache_id);
 }
 
 $smarty->assign('box_REVIEWS', $box_reviews);

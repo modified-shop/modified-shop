@@ -27,10 +27,10 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_
 
 if ($product->data['options_template'] == '' 
     || $product->data['options_template'] == 'default'
-    || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'.$product->data['options_template'])
+    || Template::findPath('module/product_options/' . $product->data['options_template']) === null
     )
 {
-  $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/','html'), function($file) {
+  $files = array_filter(auto_include(Template::path('module/product_options/'),'html'), function($file) {
     return false === strpos($file, 'index.html');
   });
   $product->data['options_template'] = basename($files[0]);
@@ -53,7 +53,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$_GET['products_id'].'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$product->data['options_template'], $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/product_options/' . $product->data['options_template']), $cache_id) || !$cache) {
   if ($product->getAttributesCount() > 0) {
 
     $attrib_checked_array = array();
@@ -189,7 +189,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_options/'.$product->data['options_template'], $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/product_options/' . $product->data['options_template']), $cache_id);
 
 $info_smarty->assign('MODULE_product_options_template', $product->data['options_template']);
 $info_smarty->assign('MODULE_product_options', !empty($module) ? trim($module) : $module);
