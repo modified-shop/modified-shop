@@ -63,3 +63,6 @@
 
   define('TEXT_HEADING_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Kunden IP Log');
   define('TEXT_INFO_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Kunden IP Log bereinigen bis auf das letzte Jahr');
+
+  define('TEXT_HEADING_TASKS_TAX_EU_MAINTENANCE', 'Update OSS Steuers&auml;tze');
+  define('TEXT_INFO_TASKS_TAX_EU_MAINTENANCE', 'Sync mit modified API für Steuers&auml;tze wenn System-Modul <i>tax_eu</i> verwendet wird');

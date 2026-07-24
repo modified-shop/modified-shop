@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+defined( '_VALID_XTC' ) || defined('RUN_MODE_TASKS') or die( 'Direct Access to this location is not allowed.' );
 
 class tax_eu
 {
@@ -21,13 +21,14 @@ class tax_eu
   var $enabled;
   var $properties;
   var $_check;
+  var $scheduled_task_exists;
 
   var $additional_countries;
 
   function __construct() {
     $this->code = 'tax_eu';
-    $this->title = MODULE_TAX_EU_TEXT_TITLE;
-    $this->description = MODULE_TAX_EU_TEXT_DESCRIPTION;
+    $this->title = defined('MODULE_TAX_EU_TEXT_TITLE') ? MODULE_TAX_EU_TEXT_TITLE : '';
+    $this->description = defined('MODULE_TAX_EU_TEXT_DESCRIPTION') ? MODULE_TAX_EU_TEXT_DESCRIPTION : '';
     $this->sort_order = ((defined('MODULE_TAX_EU_SORT_ORDER')) ? MODULE_TAX_EU_SORT_ORDER : '');
     $this->enabled = ((defined('MODULE_TAX_EU_STATUS') && MODULE_TAX_EU_STATUS == 'true') ? true : false);
 
@@ -38,6 +39,15 @@ class tax_eu
         'MC', // Monaco
       ),
     );
+    
+    //check scheduled task
+    $this->scheduled_task_exists = false;
+    $check_query = xtc_db_query("SELECT *
+                                   FROM ".TABLE_SCHEDULED_TASKS."
+                                  WHERE tasks = 'tax_eu_maintenance'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      $this->scheduled_task_exists = true;
+    }
   }
 
   function process($file) {
@@ -66,7 +76,7 @@ class tax_eu
     global $messageStack;
     
     // include needed classes
-    require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
+    require_once (DIR_FS_CATALOG.'includes/classes/modified_api.php');
 
     modified_api::reset();
     $tax_rates_array = modified_api::request('modified/tax/');
@@ -177,6 +187,11 @@ class tax_eu
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_TAX_EU_TAX_CLASS_ID', '',  '6', '1', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_TAX_EU_GEO_ZONES', '',  '6', '1', now())");
     $this->update();
+
+    //create a scheduled task
+    if ($this->scheduled_task_exists === false) {
+      xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('7', 'd',  '1', 'tax_eu_maintenance')");
+    }
   }
 
   function remove() {
@@ -215,11 +230,21 @@ class tax_eu
 
       xtc_db_query("DELETE FROM ".TABLE_GEO_ZONES." WHERE geo_zone_id = '".$tax_zone_id."'");
       xtc_db_query("DELETE FROM ".TABLE_TAX_RATES." WHERE tax_zone_id = '".$tax_zone_id."'");      
-    }    
+    }
+
+    //delete scheduled task
+    xtc_db_query("DELETE FROM " . TABLE_SCHEDULED_TASKS . " WHERE tasks = 'tax_eu_maintenance'");
   }
 
   // keys
   function keys() {  
-    return array();
+    $keys = array();
+
+    //trigger "update needed"
+    if ($this->scheduled_task_exists === false) {
+      $keys[] = 'MODULE_TAX_EU_REINSTALL_NEEDED';
+    }
+
+    return $keys;
   }
 }

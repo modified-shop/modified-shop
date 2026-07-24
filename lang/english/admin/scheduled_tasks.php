@@ -63,3 +63,6 @@
 
   define('TEXT_HEADING_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Customer IP Log');
   define('TEXT_INFO_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Cleanup Customer IP log older than 1 year');
+  
+  define('TEXT_HEADING_TASKS_TAX_EU_MAINTENANCE', 'Update OSS tax rates');
+  define('TEXT_INFO_TASKS_TAX_EU_MAINTENANCE', 'Sync with modified API for tax rates when using system module <i>tax_eu</i>');
