@@ -147,6 +147,7 @@ define('ENTRY_FAX_NUMBER_TEXT', '');
 define('ENTRY_NEWSLETTER_TEXT', '');
 define('ENTRY_PASSWORD_ERROR', 'Ihr Passwort muss aus mindestens ' . ENTRY_PASSWORD_MIN_LENGTH . ' Zeichen bestehen.');
 define('ENTRY_PASSWORD_ERROR_MAX_LENGTH', 'Ihr Passwort darf aus h&ouml;chstens %s Zeichen bestehen.');
+define('ENTRY_PASSWORD_ERROR_BCRYPT_LENGTH', 'Ihr Passwort ist f&uuml;r die aktive Verschl&uuml;sselungsmethode zu lang. Bitte verwenden Sie ein k&uuml;rzeres Passwort.');
 define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Ihr Passwort muss mindestens %s Kleinbuchstaben enthalten.');
 define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Gro&szlig;buchstaben enthalten.');
 define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Ihr Passwort muss mindestens %s Zahl enthalten.');
@@ -696,4 +697,3 @@ define('TEXT_COUNTRY_LABEL', 'Land');
 define('TEXT_STATE_LABEL', 'Bundesland');
 
 define('TEXT_IMG_VVCODE', 'Sicherheitscode');
-

@@ -243,6 +243,7 @@
   define('ENTRY_CITY_ERROR', 'City must consist of at least ' . ENTRY_CITY_MIN_LENGTH . ' characters.');
   define('ENTRY_PASSWORD_ERROR', 'Your password must consist of at least ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
   define('ENTRY_PASSWORD_ERROR_MAX_LENGTH', 'Your password must not exceed %s characters.');
+  define('ENTRY_PASSWORD_ERROR_BCRYPT_LENGTH', 'Your password is too long for the active encryption method. Please use a shorter password.');
   define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Password must contain at least %s lowercase characters');
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Password must contain at least %s uppercase characters');
   define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Password must contain at least %s numbers');

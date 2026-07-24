@@ -94,7 +94,14 @@
       $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
     }
 
-    if (strlen($customers_password_encrypted) < ENTRY_PASSWORD_MIN_LENGTH || strlen($customers_password_encrypted) > ENTRY_PASSWORD_MAX_LENGTH) {
+    $password_length = mb_strlen($customers_password_encrypted, 'UTF-8');
+    $password_exceeds_bcrypt_limit = (!defined('PASSWORD_HMAC') || PASSWORD_HMAC === '')
+                                     && strlen($customers_password_encrypted) > 72;
+    if ($password_length < ENTRY_PASSWORD_MIN_LENGTH
+        || $password_length > ENTRY_PASSWORD_MAX_LENGTH
+        || $password_exceeds_bcrypt_limit
+        )
+    {
       $error = $entry_password_error = true;
     }
 

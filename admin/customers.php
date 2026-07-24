@@ -529,7 +529,16 @@
             $entry_telephone_error = false;
           }
 
-          if (strlen($password) > 0 && (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH || strlen($password) > ENTRY_PASSWORD_MAX_LENGTH)) {
+          $password_length = mb_strlen($password, 'UTF-8');
+          $password_exceeds_bcrypt_limit = (!defined('PASSWORD_HMAC') || PASSWORD_HMAC === '')
+                                           && strlen($password) > 72;
+          if ($password_length > 0
+              && ($password_length < ENTRY_PASSWORD_MIN_LENGTH
+                  || $password_length > ENTRY_PASSWORD_MAX_LENGTH
+                  || $password_exceeds_bcrypt_limit
+                 )
+              )
+          {
             $error = true;
             $entry_password_error = true;
           } else {

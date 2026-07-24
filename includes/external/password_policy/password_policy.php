@@ -41,32 +41,51 @@ class password_policy
          */
         $this->rules['min_length'] = array(
             'value' => ENTRY_PASSWORD_MIN_LENGTH,
-            'test'  => 'return strlen($p) >= $v;',
+            'test'  => function ($password, $value) {
+                return mb_strlen($password, 'UTF-8') >= $value;
+            },
             'error' => ENTRY_PASSWORD_ERROR);
 
         $this->rules['max_length'] = array(
             'value' => (defined('ENTRY_PASSWORD_MAX_LENGTH') ? ENTRY_PASSWORD_MAX_LENGTH : 72),
-            'test'  => 'return strlen($p) <= $v;',
+            'test'  => function ($password, $value) {
+                return mb_strlen($password, 'UTF-8') <= $value;
+            },
             'error' => ENTRY_PASSWORD_ERROR_MAX_LENGTH);
+
+        $this->rules['bcrypt_max_bytes'] = array(
+            'value' => (!defined('PASSWORD_HMAC') || PASSWORD_HMAC === '' ? 72 : false),
+            'test'  => function ($password, $value) {
+                return strlen($password) <= $value;
+            },
+            'error' => ENTRY_PASSWORD_ERROR_BCRYPT_LENGTH);
 
         $this->rules['min_lowercase_chars'] = array(
             'value' => ((POLICY_MIN_LOWER_CHARS > 0) ? POLICY_MIN_LOWER_CHARS : false),
-            'test'  => 'return preg_match_all("/[a-z]/", $p, $x) >= $v;',
+            'test'  => function ($password, $value) {
+                return preg_match_all('/\p{Ll}/u', $password, $matches) >= $value;
+            },
             'error' => ENTRY_PASSWORD_ERROR_MIN_LOWER);
                         
         $this->rules['min_uppercase_chars'] = array(
             'value' => ((POLICY_MIN_UPPER_CHARS > 0) ? POLICY_MIN_UPPER_CHARS : false),
-            'test'  => 'return preg_match_all("/[A-Z]/", $p, $x) >= $v;',
+            'test'  => function ($password, $value) {
+                return preg_match_all('/\p{Lu}/u', $password, $matches) >= $value;
+            },
             'error' => ENTRY_PASSWORD_ERROR_MIN_UPPER);
                                     
         $this->rules['min_numeric_chars'] = array(
             'value' => ((POLICY_MIN_NUMERIC_CHARS > 0) ? POLICY_MIN_NUMERIC_CHARS : false),
-            'test'  => 'return preg_match_all("/[0-9]/", $p, $x) >= $v;',
+            'test'  => function ($password, $value) {
+                return preg_match_all('/\p{Nd}/u', $password, $matches) >= $value;
+            },
             'error' => ENTRY_PASSWORD_ERROR_MIN_NUM);
                                 
         $this->rules['min_nonalphanumeric_chars'] = array(
             'value' => ((POLICY_MIN_SPECIAL_CHARS > 0) ? POLICY_MIN_SPECIAL_CHARS : false),
-            'test'  => 'return preg_match_all("/[\W_]/", $p, $x) >= $v;',
+            'test'  => function ($password, $value) {
+                return preg_match_all('/[^\p{L}\p{M}\p{N}]/u', $password, $matches) >= $value;
+            },
             'error' => ENTRY_PASSWORD_ERROR_MIN_CHAR);
 
         $this->rules['invalid_chars'] = array(
@@ -84,14 +103,12 @@ class password_policy
      */
     public function validate($password)
     {
+        $this->errors = array();
+
         foreach ($this->rules as $k=>$rule)
         {
-            // Aliases for password and rule value
-            $p = $password;
-            $v = $rule['value'];
-            
             // Apply each configured rule in turn
-            if ($rule['value'] !== false && !eval($rule['test']))
+            if ($rule['value'] !== false && !$rule['test']($password, $rule['value']))
             {
                 $this->errors[$k] = $this->get_rule_error($k);
             }
