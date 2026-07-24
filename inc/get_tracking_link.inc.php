@@ -15,11 +15,24 @@
 
   function get_tracking_link($orders_id, $lang_code, $tracking_id = array()) {
     if ($lang_code != 'de' && $lang_code != 'en') {
-      $lang_code == DEFAULT_LANGUAGE;
+      $lang_code = DEFAULT_LANGUAGE;
     }
     $where = '';
+    if (!is_array($tracking_id)) {
+      $tracking_id = array($tracking_id);
+    }
     if (count($tracking_id) > 0) {
-      $where = " AND ortr.tracking_id IN ('".implode("', '", $tracking_id)."')";
+      $tracking_ids = array();
+      foreach ($tracking_id as $id) {
+        if (is_int($id) || (is_string($id) && ctype_digit($id))) {
+          $tracking_ids[] = (int)$id;
+        }
+      }
+      if (count($tracking_ids) > 0) {
+        $where = ' AND ortr.tracking_id IN ('.implode(', ', $tracking_ids).')';
+      } else {
+        $where = ' AND 1 = 0'; // invalid tracking_id provided, return no results
+      }
     }
     $parcel_link = array();
     $tracking_links_query = xtc_db_query("SELECT * 
@@ -40,4 +53,3 @@
 
     return $parcel_link;
   }
-?>
