@@ -58,5 +58,5 @@ $value_limits['ENTRY_PASSWORD_MIN_LENGTH'] = array(
 );
 $value_limits['ENTRY_PASSWORD_MAX_LENGTH'] = array(
   'min' => max(8, (defined('ENTRY_PASSWORD_MIN_LENGTH') ? (int)ENTRY_PASSWORD_MIN_LENGTH : 8)),
-  'max' => 4096,
+  'max' => (defined('PASSWORD_HMAC') && PASSWORD_HMAC !== '' ? 4096 : 72),
 );
