@@ -30,7 +30,13 @@ class google_mail {
     $this->description = MODULE_GOOGLE_MAIL_TEXT_DESCRIPTION;
     $this->sort_order = ((defined('MODULE_GOOGLE_MAIL_SORT_ORDER')) ? MODULE_GOOGLE_MAIL_SORT_ORDER : '');
     $this->enabled = ((defined('MODULE_GOOGLE_MAIL_STATUS') && MODULE_GOOGLE_MAIL_STATUS == 'true') ? true : false);
-    $this->properties = array();
+    $this->properties = array(
+      'form_restore' => xtc_draw_form(
+        'modules',
+        FILENAME_MODULE_EXPORT,
+        'set=system&module=' . $this->code . '&action=custom&oauth_action=restore'
+      ),
+    );
   }
 
   function process($file) {
@@ -97,6 +103,9 @@ class google_mail {
   }
 
   function remove() {
+    if (defined('MODULE_GOOGLE_MAIL_REFRESH_TOKEN') && MODULE_GOOGLE_MAIL_REFRESH_TOKEN != '') {
+      $this->revoke_token(MODULE_GOOGLE_MAIL_REFRESH_TOKEN);
+    }
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_GOOGLE_MAIL_%'");
   }
 
@@ -149,6 +158,9 @@ class google_mail {
           && (string)$configuration[$key] !== (string)constant($key)
           )
       {
+        if (defined('MODULE_GOOGLE_MAIL_REFRESH_TOKEN') && MODULE_GOOGLE_MAIL_REFRESH_TOKEN != '') {
+          $this->revoke_token(MODULE_GOOGLE_MAIL_REFRESH_TOKEN);
+        }
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                          SET configuration_value = ''
                        WHERE configuration_key = 'MODULE_GOOGLE_MAIL_REFRESH_TOKEN'");
@@ -159,6 +171,18 @@ class google_mail {
 
   function custom() {
     global $messageStack;
+
+    if (isset($_GET['oauth_action']) && $_GET['oauth_action'] === 'restore') {
+      if (defined('MODULE_GOOGLE_MAIL_REFRESH_TOKEN') && MODULE_GOOGLE_MAIL_REFRESH_TOKEN != '') {
+        $this->revoke_token(MODULE_GOOGLE_MAIL_REFRESH_TOKEN);
+      }
+      xtc_restore_configuration($this->keys());
+      xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                       SET configuration_value = ''
+                     WHERE configuration_key = 'MODULE_GOOGLE_MAIL_REFRESH_TOKEN'");
+      $messageStack->add_session(MODULE_RESTORE_CONFIRM, 'success');
+      xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
+    }
 
     $posted = $this->save_posted_configuration();
 
@@ -173,10 +197,10 @@ class google_mail {
 
     if (isset($_GET['oauth_error'])) {
       if (!$this->has_valid_oauth_state()) {
-        unset($_SESSION['google_mail_oauth_state']);
+        $this->clear_oauth_state();
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
       } else {
-        unset($_SESSION['google_mail_oauth_state']);
+        $this->clear_oauth_state();
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_CONNECT_CANCELLED, 'error');
       }
       xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
@@ -185,11 +209,11 @@ class google_mail {
     if (isset($_GET['code']) && $_GET['code'] != '') {
       if (!$this->has_valid_oauth_state())
       {
-        unset($_SESSION['google_mail_oauth_state']);
+        $this->clear_oauth_state();
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
         xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
       }
-      unset($_SESSION['google_mail_oauth_state']);
+      $this->clear_oauth_state();
 
       $token_data = $this->exchange_code_for_tokens($_GET['code'], $redirect_uri, $client_id, $client_secret);
 
@@ -222,6 +246,10 @@ class google_mail {
 
       $state = xtc_random_charcode(32);
       $_SESSION['google_mail_oauth_state'] = $state;
+      $_SESSION['xoauth_callback'] = array(
+        'module' => $this->code,
+        'state' => $state,
+      );
 
       $params = array(
         'client_id' => $client_id,
@@ -241,6 +269,10 @@ class google_mail {
     return isset($_SESSION['google_mail_oauth_state'])
       && isset($_GET['state'])
       && hash_equals($_SESSION['google_mail_oauth_state'], $_GET['state']);
+  }
+
+  private function clear_oauth_state() {
+    unset($_SESSION['google_mail_oauth_state'], $_SESSION['xoauth_callback']);
   }
 
   private function has_required_mail_scope($token_data) {
@@ -312,5 +344,23 @@ class google_mail {
     }
 
     return $data['email'];
+  }
+
+  private function revoke_token($token) {
+    if ($token == '') {
+      return;
+    }
+
+    $ch = curl_init('https://oauth2.googleapis.com/revoke');
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('token' => $token)));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+    curl_exec($ch);
+    curl_close($ch);
   }
 }

@@ -23,6 +23,22 @@ if (!preg_match('/^[a-z0-9_]+$/', $module)
   exit('Invalid OAuth callback request.');
 }
 
+$oauth_callback = isset($_SESSION['xoauth_callback']) && is_array($_SESSION['xoauth_callback'])
+  ? $_SESSION['xoauth_callback']
+  : array();
+
+if (!isset($oauth_callback['module'], $oauth_callback['state'], $_GET['state'])
+    || !hash_equals((string)$oauth_callback['module'], (string)$module)
+    || !hash_equals((string)$oauth_callback['state'], (string)$_GET['state'])
+    )
+{
+  unset($_SESSION['xoauth_callback']);
+  http_response_code(400);
+  exit('Invalid OAuth callback state.');
+}
+
+unset($_SESSION['xoauth_callback']);
+
 $parameters = array(
   'set' => 'system',
   'action' => 'custom',

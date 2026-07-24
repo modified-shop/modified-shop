@@ -15,9 +15,11 @@ if (defined('MODULE_GOOGLE_MAIL_STATUS') && MODULE_GOOGLE_MAIL_STATUS == 'true'
     )
 {
   require_once(DIR_FS_EXTERNAL . 'phpmailer/SMTP.php');
+  require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/xoauth_smtp.php');
   require_once (DIR_FS_EXTERNAL.'phpmailer/classes/oauth_token_provider.php');
 
   $mail->isSMTP();
+  $mail->setSMTPInstance(new xoauth_smtp());
   $mail->SMTPKeepAlive = true;
   $mail->Host = 'smtp.gmail.com';
   $mail->Port = 587;
@@ -26,6 +28,13 @@ if (defined('MODULE_GOOGLE_MAIL_STATUS') && MODULE_GOOGLE_MAIL_STATUS == 'true'
   $mail->AuthType = 'XOAUTH2';
   $mail->Username = MODULE_GOOGLE_MAIL_SENDER_EMAIL;
   $mail->SMTPDebug = (defined('SMTP_DEBUG') ? (int)SMTP_DEBUG : 0);
+  $mail->SMTPOptions = array(
+    'ssl' => array(
+      'verify_peer' => true,
+      'verify_peer_name' => true,
+      'allow_self_signed' => false,
+    ),
+  );
   $mail->setOAuth(new oauth_token_provider(array(
     'token_endpoint' => 'https://oauth2.googleapis.com/token',
     'client_id' => MODULE_GOOGLE_MAIL_CLIENT_ID,
