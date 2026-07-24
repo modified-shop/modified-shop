@@ -14,10 +14,6 @@ require_once(DIR_FS_EXTERNAL.'phpmailer/OAuthTokenProvider.php');
 
 use PHPMailer\PHPMailer\OAuthTokenProvider;
 
-// Generic OAuth2 refresh-token provider for PHPMailer's XOAUTH2 SMTP auth.
-// Works for any provider that implements the standard RFC 6749 refresh_token
-// grant (Google, Microsoft/Azure, ...) - only the token endpoint and
-// credentials differ between providers, so one class covers all of them.
 class oauth_token_provider implements OAuthTokenProvider
 {
     protected $tokenEndpoint;
@@ -26,7 +22,6 @@ class oauth_token_provider implements OAuthTokenProvider
     protected $refreshToken;
     protected $userEmail;
 
-    // $options: token_endpoint, client_id, client_secret, refresh_token, user_email
     public function __construct($options)
     {
         $this->tokenEndpoint = $options['token_endpoint'];

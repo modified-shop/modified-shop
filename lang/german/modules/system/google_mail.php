@@ -31,5 +31,16 @@
   define('MODULE_GOOGLE_MAIL_TEXT_FROM_ADDRESS_HINT', 'Hinweis: Gmail erwartet, dass die Absenderadresse ausgehender Mails mit dem verbundenen Postfach &uuml;bereinstimmt (oder einem dort konfigurierten "Senden als"-Alias).');
   define('MODULE_GOOGLE_MAIL_TEXT_CONNECT_SUCCESS', 'Erfolgreich mit Google verbunden.');
   define('MODULE_GOOGLE_MAIL_TEXT_CONNECT_ERROR', 'Die Verbindung zu Google ist fehlgeschlagen. Bitte erneut versuchen.');
+  define('MODULE_GOOGLE_MAIL_TEXT_CONNECT_CANCELLED', 'Die Verbindung mit Google wurde abgebrochen.');
   define('MODULE_GOOGLE_MAIL_TEXT_OAUTH_STATE_ERROR', 'Die OAuth-Autorisierung konnte nicht verifiziert werden (state stimmt nicht &uuml;berein). Bitte erneut verbinden.');
+  define('MODULE_GOOGLE_MAIL_TEXT_ACCOUNT_MISMATCH', 'Das bei Google ausgew&auml;hlte Konto stimmt nicht mit der eingetragenen Gmail-Adresse &uuml;berein.');
+  define('MODULE_GOOGLE_MAIL_TEXT_SCOPE_MISSING', 'Die erforderliche Gmail-Berechtigung wurde nicht erteilt. Bitte erneut verbinden und den Zugriff auf Gmail ausdr&uuml;cklich zulassen.');
   define('MODULE_GOOGLE_MAIL_TEXT_MISSING_CREDENTIALS', 'Bitte zuerst OAuth Client-ID und Client-Secret eintragen und speichern, bevor Sie sich verbinden.');
+
+  define('MODULE_GOOGLE_MAIL_TEXT_SETUP_GUIDE', 'So erstellen Sie die ben&ouml;tigte OAuth Client-ID/Secret:<br>
+<ol>
+<li>In der <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> ein Projekt anlegen oder ausw&auml;hlen, dann die <b>Gmail API</b> aktivieren (APIs &amp; Services &rarr; Library).</li>
+<li>Unter <b>APIs &amp; Services &rarr; OAuth consent screen</b>: <b>Internal</b> w&auml;hlen bei einem Google-Workspace-Konto (keine Verifizierung n&ouml;tig), oder <b>External</b> bei einem privaten @gmail.com-Konto. Als Scope <code>https://mail.google.com/</code> hinzuf&uuml;gen. Bei External + Status "Testing" die Gmail-Adresse als Testnutzer eintragen - Achtung: Refresh-Tokens im Testing-Status laufen nach 7 Tagen ab; f&uuml;r dauerhaften Betrieb ohne erneutes Verbinden muss die App entweder bei Google verifiziert werden, oder es wird stattdessen ein Workspace-/Internal-Konto verwendet.</li>
+<li>Unter <b>APIs &amp; Services &rarr; Credentials &rarr; Create Credentials &rarr; OAuth client ID</b>: Anwendungstyp <b>Web application</b>, und genau diese Authorized redirect URI eintragen:<br><code>%s</code></li>
+<li>Die erhaltene Client-ID und das Client-Secret oben eintragen, speichern, dann auf "Mit Google verbinden" klicken.</li>
+</ol>');

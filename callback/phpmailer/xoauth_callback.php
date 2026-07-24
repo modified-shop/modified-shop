@@ -23,5 +23,26 @@ if (!preg_match('/^[a-z0-9_]+$/', $module)
   exit('Invalid OAuth callback request.');
 }
 
-// Redirect to the system module with the original query parameters intact
-xtc_redirect(xtc_href_link_admin(DIR_ADMIN . 'modules.php', xtc_get_all_get_params(array('set', 'module', 'action')).'set=system&action=custom&module=' . $module, 'SSL', false));
+$parameters = array(
+  'set' => 'system',
+  'action' => 'custom',
+  'module' => $module,
+);
+
+if (isset($_GET['state'])) {
+  $parameters['state'] = $_GET['state'];
+}
+if (isset($_GET['code'])) {
+  $parameters['code'] = $_GET['code'];
+}
+if (isset($_GET['error'])) {
+  $parameters['oauth_error'] = $_GET['error'];
+}
+if (isset($_GET['error_description'])) {
+  $parameters['oauth_error_description'] = $_GET['error_description'];
+}
+if (isset($_GET['session_state'])) {
+  $parameters['session_state'] = $_GET['session_state'];
+}
+
+xtc_redirect(xtc_href_link_admin(DIR_ADMIN . 'module_export.php', http_build_query($parameters), 'SSL', false));
