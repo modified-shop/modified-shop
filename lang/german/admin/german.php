@@ -291,6 +291,7 @@ define('ENTRY_NEWSLETTER_NO', 'nicht abonniert');
 define('ENTRY_MAIL_ERROR','&nbsp;<span class="errorText">Bitte treffen Sie eine Auswahl</span>');
 define('ENTRY_PASSWORD','Passwort (autom. erstellt)');
 define('ENTRY_PASSWORD_ERROR','&nbsp;<span class="errorText">Ihr Passwort muss zwischen ' . (defined('ENTRY_PASSWORD_MIN_LENGTH') ? ENTRY_PASSWORD_MIN_LENGTH : 0) . ' und ' . (defined('ENTRY_PASSWORD_MAX_LENGTH') ? ENTRY_PASSWORD_MAX_LENGTH : 72) . ' Zeichen lang sein.</span>');
+define('ENTRY_PASSWORD_ERROR_BCRYPT_LENGTH','&nbsp;<span class="errorText">Das Passwort &uuml;berschreitet die 72-Byte-Grenze der aktiven Verschl&uuml;sselungsmethode.</span>');
 define('ENTRY_MAIL_COMMENTS','Zus&auml;tzlicher E-Mail-Text:');
 
 define('ENTRY_MAIL','E-Mail mit Passwort an Kunden versenden?');

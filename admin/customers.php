@@ -52,6 +52,7 @@
 
   $processed = false;
   $error = false;
+  $entry_password_bcrypt_error = false;
   $entry_vat_error_text = '';
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $saction = (isset($_GET['saction']) ? $_GET['saction'] : '');
@@ -529,9 +530,13 @@
             $entry_telephone_error = false;
           }
 
-          $password_length = mb_strlen($password, 'UTF-8');
+          $password_charset = isset($_SESSION['language_charset']) && $_SESSION['language_charset'] != ''
+                              ? $_SESSION['language_charset']
+                              : 'UTF-8';
+          $password_length = mb_strlen($password, $password_charset);
           $password_exceeds_bcrypt_limit = (!defined('PASSWORD_HMAC') || PASSWORD_HMAC === '')
                                            && strlen($password) > 72;
+          $entry_password_bcrypt_error = $password_exceeds_bcrypt_limit;
           if ($password_length > 0
               && ($password_length < ENTRY_PASSWORD_MIN_LENGTH
                   || $password_length > ENTRY_PASSWORD_MAX_LENGTH
