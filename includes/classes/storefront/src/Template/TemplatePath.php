@@ -4,8 +4,20 @@ namespace Modified\Storefront\Template;
 
 use Modified\Storefront\Template\Exception\InvalidTemplatePathException;
 
+/**
+ * Provides safe path operations shared by the template system.
+ *
+ * It rejects absolute or traversing logical names such as "../file.html" and
+ * consistently combines validated relative names with filesystem paths or URLs.
+ */
 final class TemplatePath
 {
+    /**
+     * Validates and returns a safe template-relative logical file name.
+     *
+     * Names such as "module/product.html" are accepted; absolute paths, empty
+     * segments, and traversal through "." or ".." are rejected.
+     */
     public static function normalizeLogicalName(string $logicalName, bool $allowEmpty = false): string
     {
         if (str_contains($logicalName, "\0")) {
@@ -55,6 +67,9 @@ final class TemplatePath
         return $logicalName;
     }
 
+    /**
+     * Joins a filesystem base directory with an optional relative path.
+     */
     public static function joinFilesystem(string $baseDirectory, string $relativePath = ''): string
     {
         $baseDirectory = rtrim(str_replace('\\', '/', $baseDirectory), '/');
@@ -64,6 +79,9 @@ final class TemplatePath
             : $baseDirectory . '/' . ltrim($relativePath, '/');
     }
 
+    /**
+     * Joins a URL base with a relative path while normalizing their boundary slash.
+     */
     public static function joinUrl(string $baseUrl, string $relativePath): string
     {
         $baseUrl = rtrim($baseUrl, '/');
