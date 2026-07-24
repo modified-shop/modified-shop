@@ -18,15 +18,15 @@
     // load the signatures only, if the appropriate file(s) exists
     $html_signatur = '';
     $txt_signatur = '';
-    if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/signatur.html')) {
+    if (Template::findPath('mail/' . $order->info['language'] . '/signatur.html') !== null) {
       $shop_content_data = $main->getContentData(EMAIL_SIGNATURE_ID, $order->info['languages_id']);    
       $smarty->assign('SIGNATURE_HTML', $shop_content_data['content_text']);
-      $html_signatur = $smarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/signatur.html'); 
+      $html_signatur = $smarty->fetch(Template::path('mail/' . $order->info['language'] . '/signatur.html'));
     }
-    if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/signatur.txt')) {
+    if (Template::findPath('mail/' . $order->info['language'] . '/signatur.txt') !== null) {
       $shop_content_data = $main->getContentData(EMAIL_SIGNATURE_ID, $order->info['languages_id']);
       $smarty->assign('SIGNATURE_TXT', $shop_content_data['content_text']);
-      $txt_signatur = $smarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/signatur.txt'); 
+      $txt_signatur = $smarty->fetch(Template::path('mail/' . $order->info['language'] . '/signatur.txt'));
     }
 
     //Platzhalter [NOSIGNATUR] falls keine Signatir notwendig (zB Newsletter)

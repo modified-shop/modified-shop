@@ -111,14 +111,14 @@ class paypalacdc extends PayPalPaymentV2 {
     }
     
     $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/acdc.html';
-    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/acdc.html')) {
-      $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/acdc.html';
+    if (Template::findPath('module/paypal/acdc.html') !== null) {
+      $tpl_file = Template::path('module/paypal/acdc.html');
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
 
     $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/pui_error.html';
-    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html')) {
-      $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html';
+    if (Template::findPath('module/paypal/pui_error.html') !== null) {
+      $tpl_file = Template::path('module/paypal/pui_error.html');
     }
     $paypal_smarty->assign('error_message', addslashes(TEXT_PAYPAL_ERROR_NOT_AVAILABLE));
     $info = $paypal_smarty->fetch($tpl_file);

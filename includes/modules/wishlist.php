@@ -29,6 +29,6 @@ $module_smarty->assign('wishlist_cart', true);
 $module_smarty->assign('language', $_SESSION['language']);
 
 $module_smarty->caching = 0;
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/wishlist.html');
+$module = $module_smarty->fetch(Template::resolve('module/wishlist.html'));
 
 $smarty->assign('MODULE_wishlist', !empty($module) ? trim($module) : $module);

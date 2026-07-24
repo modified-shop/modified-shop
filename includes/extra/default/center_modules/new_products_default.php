@@ -36,7 +36,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/new_products_default.html'), $cache_id) || !$cache) {
   if (MAX_DISPLAY_PRODUCTS_STARTPAGE != '0') {
     //count products on startpage
     $count_query = xtc_db_query("SELECT count(*) as total
@@ -138,6 +138,6 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.ht
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/new_products_default.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/new_products_default.html'), $cache_id);
 $default_smarty->assign('MODULE_new_products', $module);
 $smarty->assign('MODULE_new_products', $module);

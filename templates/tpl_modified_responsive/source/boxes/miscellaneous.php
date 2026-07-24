@@ -24,9 +24,9 @@ $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_statu
 
 
 if (!$cache) {
-  $box_miscellaneous = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_miscellaneous.html');
+  $box_miscellaneous = $box_smarty->fetch(Template::resolve('boxes/box_miscellaneous.html'));
 } else {
-  $box_miscellaneous = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_miscellaneous.html', $cache_id);
+  $box_miscellaneous = $box_smarty->fetch(Template::resolve('boxes/box_miscellaneous.html'), $cache_id);
 }
 
 $smarty->assign('box_MISCELLANEOUS', $box_miscellaneous);

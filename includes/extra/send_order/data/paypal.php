@@ -27,8 +27,8 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
   $paypal = new PayPalPayment($order->info['payment_method']);
   
   $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/payment_info.html';
-  if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/payment_info.html')) {
-    $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/payment_info.html';
+  if (Template::findPath('module/paypal/payment_info.html') !== null) {
+    $tpl_file = Template::path('module/paypal/payment_info.html');
   }
 
   if (strpos($order->info['payment_method'], 'link') !== false) {

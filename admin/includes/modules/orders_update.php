@@ -68,8 +68,8 @@
       $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
       $smarty->config_dir = DIR_FS_CATALOG.'lang';
     
-      $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/admin/mail/'.$order->info['language'].'/change_order_mail.html');
-      $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/admin/mail/'.$order->info['language'].'/change_order_mail.txt');
+      $html_mail = $smarty->fetch(Template::resolve('admin/mail/' . $order->info['language'] . '/change_order_mail.html'));
+      $txt_mail = $smarty->fetch(Template::resolve('admin/mail/' . $order->info['language'] . '/change_order_mail.txt'));
       $order_subject_search = array('{$nr}', '{$date}', '{$lastname}', '{$firstname}');
       $order_subject_replace = array($oID, xtc_date_long($order->info['date_purchased']), $order->customer['lastname'], $order->customer['firstname']);
       $order_subject = str_replace($order_subject_search, $order_subject_replace, EMAIL_BILLING_SUBJECT);

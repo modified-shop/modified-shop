@@ -16,10 +16,10 @@
   // set cache id
   $cache_id = md5('lID:'.$_SESSION['language']);
 
-  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_trustedshops.html', $cache_id) || !$cache) {
+  if (!$box_smarty->is_cached(Template::resolve('boxes/box_trustedshops.html'), $cache_id) || !$cache) {
     $box_smarty->assign('STICKER_CODE', MODULE_TS_REVIEW_STICKER);
   }
 
-  $box_trustedshops = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_trustedshops.html', $cache_id);
+  $box_trustedshops = $box_smarty->fetch(Template::resolve('boxes/box_trustedshops.html'), $cache_id);
 
   $smarty->assign('box_TRUSTEDSHOPS', $box_trustedshops);

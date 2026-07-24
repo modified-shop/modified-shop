@@ -114,5 +114,5 @@ if (is_dir($fs_dir)) {
     }
   }
 } else {
-  echo '<link rel="shortcut icon" href="'.xtc_href_link('templates/'.CURRENT_TEMPLATE.'/favicon.ico','', $request_type, false).'" />'."\n";
+  echo '<link rel="shortcut icon" href="'.xtc_href_link(Template::url('favicon.ico'),'', $request_type, false).'" />'."\n";
 }

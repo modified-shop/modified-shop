@@ -79,8 +79,8 @@
         $smarty->assign('FIRSTNAME', $mail['customers_firstname']);
         $smarty->assign('LASTNAME', $mail['customers_lastname']);
 
-        $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.html');
-        $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.txt');
+        $html_mail = $smarty->fetch(Template::resolve('admin/mail/' . $_SESSION['language'] . '/gift_accepted.html'));
+        $txt_mail = $smarty->fetch(Template::resolve('admin/mail/' . $_SESSION['language'] . '/gift_accepted.txt'));
 
         // create subject
         $order_subject = str_replace('{$nr}', $gv['order_id'], EMAIL_BILLING_SUBJECT_ORDER);

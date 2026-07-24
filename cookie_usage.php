@@ -36,7 +36,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'cookieusage';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 // set cache ID
 if (!CacheCheck()) {
@@ -51,16 +51,16 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language']);
 }
 
-if (!$smarty->is_cached(CURRENT_TEMPLATE.'/module/cookie_usage.html', $cache_id) || !$cache) {
+if (!$smarty->is_cached(Template::resolve('module/cookie_usage.html'), $cache_id) || !$cache) {
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 }
 
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/cookie_usage.html', $cache_id);
+$main_content = $smarty->fetch(Template::resolve('module/cookie_usage.html'), $cache_id);
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

@@ -29,13 +29,13 @@
     DIR_TMPL_CSS.'cookieconsent.css',
   );
 
-  if (is_file(DIR_FS_CATALOG.DIR_TMPL_CSS.'tpl_custom_bottom.css')) {
+  if (Template::findPath('css/tpl_custom_bottom.css') !== null) {
     array_push($css_array, DIR_TMPL_CSS.'tpl_custom_bottom.css');
   }
 
   $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
 
-  $this_f_time = filemtime(DIR_FS_CATALOG.DIR_TMPL_CSS.'general_bottom.css.php');
+  $this_f_time = filemtime(Template::path('css/general_bottom.css.php'));
 
   if (COMPRESS_STYLESHEET == 'true') {
     require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');

@@ -44,6 +44,6 @@
   }
 
   $box_smarty->caching = 0;
-  $box_login = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_login.html');
+  $box_login = $box_smarty->fetch(Template::resolve('boxes/box_login.html'));
   
   $smarty->assign('box_LOGIN', $box_login);

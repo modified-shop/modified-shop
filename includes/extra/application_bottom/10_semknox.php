@@ -33,14 +33,14 @@
       $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency']);
     }
 
-    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/semknox_suggest.html')) {
-      $template_suggest_file = CURRENT_TEMPLATE.'/module/semknox_suggest.html';
+    if (Template::findPath('module/semknox_suggest.html') !== null) {
+      $template_suggest_file = Template::resolve('module/semknox_suggest.html');
     } else {
       $template_suggest_file = DIR_FS_EXTERNAL.'semknox/templates/semknox_suggest.html';
     }
 
-    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/semknox_result.html')) {
-      $template_result_file = CURRENT_TEMPLATE.'/module/semknox_result.html';
+    if (Template::findPath('module/semknox_result.html') !== null) {
+      $template_result_file = Template::resolve('module/semknox_result.html');
     } else {
       $template_result_file = DIR_FS_EXTERNAL.'semknox/templates/semknox_result.html';
     }
@@ -71,14 +71,14 @@
     $template_result = $compactor->squeeze($template_result);
     
     $callback_js = '';
-    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/javascript/semknox_callback.js')) {
-      $callback_js = file_get_contents(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/javascript/semknox_callback.js');
+    if (Template::findPath('javascript/semknox_callback.js') !== null) {
+      $callback_js = file_get_contents(Template::path('javascript/semknox_callback.js'));
     } 
     
     if (MODULE_SEMKNOX_SYSTEM_DEFAULT_CSS != 'true') {
       $css_file = DIR_WS_EXTERNAL.'semknox/css/stylesheet.css';
-      if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/semknox.css')) {
-        $css_file = DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/semknox.css';
+      if (Template::findPath('css/semknox.css') !== null) {
+        $css_file = Template::catalogUrl('css/semknox.css');
       }
       echo '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.$css_file.'?'.time().'" type="text/css" media="screen" />';
     }

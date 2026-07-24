@@ -124,4 +124,4 @@
   $smarty->template_dir = DIR_FS_CATALOG.'templates';
   $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
   $smarty->config_dir = DIR_FS_CATALOG.'lang';
-  $smarty->display(CURRENT_TEMPLATE . '/admin/print_order.html');
+  $smarty->display(Template::resolve('admin/print_order.html'));

@@ -1333,9 +1333,10 @@ class categories {
 
   function create_templates_dropdown_menu($template, $path, $default_value, $style = '') {
     $files = array();
+    $template_path = Template::findPath($path);
     
-    if (is_dir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path)) {
-      foreach(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path,'html') as $file) {
+    if ($template_path !== null && is_dir($template_path)) {
+      foreach(auto_include($template_path, 'html') as $file) {
         $files[] = array(
           'id' => basename($file), 
           'text' => basename($file),
