@@ -30,6 +30,7 @@
 
   define('MODULE_OFFICE365_MAIL_TEXT_CONNECTED_AS', 'Connected for <b>%s</b>.');
   define('MODULE_OFFICE365_MAIL_TEXT_NOT_CONNECTED', 'Not connected yet.');
+  define('MODULE_OFFICE365_MAIL_TEXT_CONNECTION_ERROR', 'OAuth connection error: <b>%s</b>. Please reconnect.');
   define('MODULE_OFFICE365_MAIL_TEXT_CONNECT_BUTTON', 'Connect with Microsoft');
   define('MODULE_OFFICE365_MAIL_TEXT_FROM_ADDRESS_HINT', 'The From address must match the mailbox or an address for which it has Send As permission. For shared mailboxes, sign in as an authorized user but keep the shared mailbox address configured here.');
   define('MODULE_OFFICE365_MAIL_TEXT_CONNECT_SUCCESS', 'Successfully connected to Microsoft 365.');

@@ -23,6 +23,10 @@ class oauth_token_provider implements OAuthTokenProvider
     protected $userEmail;
     protected $scope;
     protected $refreshTokenConfigurationKey;
+    protected $oauthErrorConfigurationKey;
+    protected $oauthError;
+    protected static $tokenCache = array();
+    protected static $tokenErrors = array();
 
     public function __construct($options)
     {
@@ -35,6 +39,10 @@ class oauth_token_provider implements OAuthTokenProvider
         $this->refreshTokenConfigurationKey = isset($options['refresh_token_configuration_key'])
             ? $options['refresh_token_configuration_key']
             : '';
+        $this->oauthErrorConfigurationKey = isset($options['oauth_error_configuration_key'])
+            ? $options['oauth_error_configuration_key']
+            : '';
+        $this->oauthError = isset($options['oauth_error']) ? $options['oauth_error'] : '';
     }
 
     public function getOauth64()
@@ -50,6 +58,19 @@ class oauth_token_provider implements OAuthTokenProvider
 
     protected function fetchAccessToken()
     {
+        $cacheKey = $this->getCacheKey();
+
+        if (isset(self::$tokenErrors[$cacheKey])) {
+            throw new Exception(self::$tokenErrors[$cacheKey]);
+        }
+
+        if (isset(self::$tokenCache[$cacheKey])) {
+            $this->refreshToken = self::$tokenCache[$cacheKey]['refresh_token'];
+            if (self::$tokenCache[$cacheKey]['expires_at'] > (time() + 60)) {
+                return self::$tokenCache[$cacheKey]['access_token'];
+            }
+        }
+
         $parameters = array(
             'grant_type' => 'refresh_token',
             'refresh_token' => $this->refreshToken,
@@ -62,6 +83,48 @@ class oauth_token_provider implements OAuthTokenProvider
 
         $postFields = http_build_query($parameters);
 
+        $tokenResponse = $this->requestToken($postFields);
+        $response = $tokenResponse['response'];
+        $httpCode = $tokenResponse['http_code'];
+        $curlError = $tokenResponse['curl_error'];
+
+        if ($response === false) {
+            $message = 'OAuth token endpoint request failed: ' . $curlError;
+            $this->saveOauthError('request_failed');
+            self::$tokenErrors[$cacheKey] = $message;
+            throw new Exception($message);
+        }
+
+        $data = json_decode($response, true);
+
+        if ($httpCode < 200 || $httpCode >= 300 || !isset($data['access_token'])) {
+            $oauthError = (is_array($data) && isset($data['error'])) ? $data['error'] : 'invalid_response';
+            $oauthError = $this->normalizeOauthError($oauthError);
+            $message = 'OAuth token endpoint returned an error (HTTP ' . $httpCode . ', ' . $oauthError . ')';
+            $this->saveOauthError($oauthError);
+            self::$tokenErrors[$cacheKey] = $message;
+            throw new Exception($message);
+        }
+
+        if (isset($data['refresh_token']) && $data['refresh_token'] != $this->refreshToken) {
+            $this->saveRefreshToken($data['refresh_token']);
+        }
+
+        $this->clearOauthError();
+
+        if (isset($data['expires_in']) && (int)$data['expires_in'] > 0) {
+            self::$tokenCache[$cacheKey] = array(
+                'access_token' => $data['access_token'],
+                'refresh_token' => $this->refreshToken,
+                'expires_at' => time() + (int)$data['expires_in'],
+            );
+        }
+
+        return $data['access_token'];
+    }
+
+    protected function requestToken($postFields)
+    {
         $ch = curl_init($this->tokenEndpoint);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
@@ -77,32 +140,61 @@ class oauth_token_provider implements OAuthTokenProvider
         $curlError = curl_error($ch);
         curl_close($ch);
 
-        if ($response === false) {
-            throw new Exception('OAuth token endpoint request failed: ' . $curlError);
-        }
-
-        $data = json_decode($response, true);
-
-        if ($httpCode < 200 || $httpCode >= 300 || !isset($data['access_token'])) {
-            $oauthError = (is_array($data) && isset($data['error'])) ? $data['error'] : 'invalid_response';
-            throw new Exception(
-                'OAuth token endpoint returned an error (HTTP ' . $httpCode . ', ' . $oauthError . ')'
-            );
-        }
-
-        if (isset($data['refresh_token']) && $data['refresh_token'] != $this->refreshToken) {
-            $this->saveRefreshToken($data['refresh_token']);
-        }
-
-        return $data['access_token'];
+        return array(
+            'response' => $response,
+            'http_code' => $httpCode,
+            'curl_error' => $curlError,
+        );
     }
 
     protected function saveRefreshToken($refreshToken)
     {
         $this->refreshToken = $refreshToken;
+        $this->saveConfigurationValue($this->refreshTokenConfigurationKey, $refreshToken);
+    }
 
-        if ($this->refreshTokenConfigurationKey == ''
-            || !preg_match('/^[A-Z0-9_]+$/', $this->refreshTokenConfigurationKey)
+    protected function getCacheKey()
+    {
+        return hash(
+            'sha256',
+            implode("\0", array(
+                $this->tokenEndpoint,
+                $this->clientId,
+                $this->clientSecret,
+                $this->userEmail,
+                $this->scope,
+            ))
+        );
+    }
+
+    protected function normalizeOauthError($oauthError)
+    {
+        if (!is_scalar($oauthError)) {
+            return 'invalid_response';
+        }
+        $oauthError = strtolower((string)$oauthError);
+        $oauthError = preg_replace('/[^a-z0-9_.-]/', '_', $oauthError);
+        return ($oauthError != '' ? substr($oauthError, 0, 64) : 'invalid_response');
+    }
+
+    protected function saveOauthError($oauthError)
+    {
+        $this->oauthError = $this->normalizeOauthError($oauthError);
+        $this->saveConfigurationValue($this->oauthErrorConfigurationKey, $this->oauthError);
+    }
+
+    protected function clearOauthError()
+    {
+        if ($this->oauthError != '') {
+            $this->saveConfigurationValue($this->oauthErrorConfigurationKey, '');
+            $this->oauthError = '';
+        }
+    }
+
+    protected function saveConfigurationValue($configurationKey, $value)
+    {
+        if ($configurationKey == ''
+            || !preg_match('/^[A-Z0-9_]+$/', $configurationKey)
             || !defined('TABLE_CONFIGURATION')
             || !function_exists('xtc_db_query')
             || !function_exists('xtc_db_input')
@@ -112,8 +204,8 @@ class oauth_token_provider implements OAuthTokenProvider
 
         xtc_db_query(
             "UPDATE " . TABLE_CONFIGURATION . "
-                SET configuration_value = '" . xtc_db_input($refreshToken) . "'
-              WHERE configuration_key = '" . $this->refreshTokenConfigurationKey . "'"
+                SET configuration_value = '" . xtc_db_input($value) . "'
+              WHERE configuration_key = '" . $configurationKey . "'"
         );
     }
 }

@@ -53,12 +53,23 @@ class google_mail {
   }
 
   function display() {
-    $connected = (defined('MODULE_GOOGLE_MAIL_REFRESH_TOKEN') && MODULE_GOOGLE_MAIL_REFRESH_TOKEN != '');
+    $oauth_error = MODULE_GOOGLE_MAIL_OAUTH_ERROR;
+    $connected = ($oauth_error == ''
+      && defined('MODULE_GOOGLE_MAIL_REFRESH_TOKEN')
+      && MODULE_GOOGLE_MAIL_REFRESH_TOKEN != ''
+    );
     $sender = (defined('MODULE_GOOGLE_MAIL_SENDER_EMAIL') ? MODULE_GOOGLE_MAIL_SENDER_EMAIL : '');
 
-    $status_text = $connected
-      ? sprintf(MODULE_GOOGLE_MAIL_TEXT_CONNECTED_AS, $sender)
-      : MODULE_GOOGLE_MAIL_TEXT_NOT_CONNECTED;
+    if ($oauth_error != '') {
+      $status_text = sprintf(
+        MODULE_GOOGLE_MAIL_TEXT_CONNECTION_ERROR,
+        htmlspecialchars($oauth_error, ENT_QUOTES, 'UTF-8')
+      );
+    } else {
+      $status_text = $connected
+        ? sprintf(MODULE_GOOGLE_MAIL_TEXT_CONNECTED_AS, $sender)
+        : MODULE_GOOGLE_MAIL_TEXT_NOT_CONNECTED;
+    }
 
     $connect_href = xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=custom');
     $connect_button = '<button type="submit" class="button" onclick="this.blur();" formaction="' . $connect_href . '">' . MODULE_GOOGLE_MAIL_TEXT_CONNECT_BUTTON . '</button>';
@@ -107,6 +118,7 @@ class google_mail {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_GOOGLE_MAIL_CLIENT_SECRET', '', '6', '3', 'xtc_cfg_display_password', 'xtc_cfg_password_field_module(', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_GOOGLE_MAIL_SENDER_EMAIL', '', '6', '4', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_GOOGLE_MAIL_REFRESH_TOKEN', '', '6', '5', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_GOOGLE_MAIL_OAUTH_ERROR', '', '6', '6', now())");
   }
 
   function remove() {
@@ -170,7 +182,7 @@ class google_mail {
         }
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                          SET configuration_value = ''
-                       WHERE configuration_key = 'MODULE_GOOGLE_MAIL_REFRESH_TOKEN'");
+                       WHERE configuration_key IN ('MODULE_GOOGLE_MAIL_REFRESH_TOKEN', 'MODULE_GOOGLE_MAIL_OAUTH_ERROR')");
         break;
       }
     }
@@ -186,7 +198,7 @@ class google_mail {
       xtc_restore_configuration($this->keys());
       xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                        SET configuration_value = ''
-                     WHERE configuration_key = 'MODULE_GOOGLE_MAIL_REFRESH_TOKEN'");
+                     WHERE configuration_key IN ('MODULE_GOOGLE_MAIL_REFRESH_TOKEN', 'MODULE_GOOGLE_MAIL_OAUTH_ERROR')");
       $messageStack->add_session(MODULE_RESTORE_CONFIRM, 'success');
       xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
     }
@@ -199,11 +211,21 @@ class google_mail {
     $client_secret = isset($posted['MODULE_GOOGLE_MAIL_CLIENT_SECRET'])
       ? $posted['MODULE_GOOGLE_MAIL_CLIENT_SECRET']
       : (defined('MODULE_GOOGLE_MAIL_CLIENT_SECRET') ? MODULE_GOOGLE_MAIL_CLIENT_SECRET : '');
+    $sender_email = isset($posted['MODULE_GOOGLE_MAIL_SENDER_EMAIL'])
+      ? trim($posted['MODULE_GOOGLE_MAIL_SENDER_EMAIL'])
+      : (defined('MODULE_GOOGLE_MAIL_SENDER_EMAIL') ? trim(MODULE_GOOGLE_MAIL_SENDER_EMAIL) : '');
 
     $redirect_uri = $this->get_redirect_uri();
+    $oauth_response = $this->get_oauth_response();
 
-    if (isset($_GET['oauth_error'])) {
-      if (!$this->has_valid_oauth_state()) {
+    if (isset($_GET['oauth_callback']) && $oauth_response === false) {
+      $this->clear_oauth_state();
+      $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
+      xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
+    }
+
+    if (is_array($oauth_response) && isset($oauth_response['error'])) {
+      if (!$this->has_valid_oauth_state($oauth_response['state'])) {
         $this->clear_oauth_state();
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
       } else {
@@ -213,8 +235,8 @@ class google_mail {
       xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
     }
 
-    if (isset($_GET['code']) && $_GET['code'] != '') {
-      if (!$this->has_valid_oauth_state())
+    if (is_array($oauth_response) && isset($oauth_response['code']) && $oauth_response['code'] != '') {
+      if (!$this->has_valid_oauth_state($oauth_response['state']))
       {
         $this->clear_oauth_state();
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
@@ -222,25 +244,28 @@ class google_mail {
       }
       $this->clear_oauth_state();
 
-      $token_data = $this->exchange_code_for_tokens($_GET['code'], $redirect_uri, $client_id, $client_secret);
+      $token_data = $this->exchange_code_for_tokens(
+        $oauth_response['code'],
+        $redirect_uri,
+        $client_id,
+        $client_secret
+      );
 
       $connected_email = (($token_data !== false) ? $this->get_connected_email($token_data, $client_id) : false);
-      $sender_email = (defined('MODULE_GOOGLE_MAIL_SENDER_EMAIL') ? MODULE_GOOGLE_MAIL_SENDER_EMAIL : '');
-
-      if (isset($posted['MODULE_GOOGLE_MAIL_SENDER_EMAIL'])) {
-        $sender_email = $posted['MODULE_GOOGLE_MAIL_SENDER_EMAIL'];
-      }
 
       if ($token_data === false || !isset($token_data['refresh_token'])) {
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_CONNECT_ERROR, 'error');
       } elseif (!$this->has_required_mail_scope($token_data)) {
+        $this->revoke_token($token_data['refresh_token']);
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_SCOPE_MISSING, 'error');
       } elseif ($connected_email === false || strcasecmp($connected_email, trim($sender_email)) !== 0) {
+        $this->revoke_token($token_data['refresh_token']);
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_ACCOUNT_MISMATCH, 'error');
       } else {
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                          SET configuration_value = '" . xtc_db_input($token_data['refresh_token']) . "'
                        WHERE configuration_key = 'MODULE_GOOGLE_MAIL_REFRESH_TOKEN'");
+        $this->clear_oauth_error();
         if (defined('MODULE_GOOGLE_MAIL_STATUS') && MODULE_GOOGLE_MAIL_STATUS == 'true') {
           $this->disable_office365_mail();
         }
@@ -249,17 +274,18 @@ class google_mail {
 
       xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
     } else {
-      if ($client_id == '' || $client_secret == '') {
+      if ($client_id == '' || $client_secret == '' || $sender_email == '') {
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_MISSING_CREDENTIALS, 'error');
         xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
       }
 
-      $state = xtc_random_charcode(32);
+      $state = xtc_random_charcode(32) . '.' . xtc_session_id();
       $_SESSION['google_mail_oauth_state'] = $state;
       $_SESSION['xoauth_callback'] = array(
         'module' => $this->code,
         'state' => $state,
       );
+      unset($_SESSION['xoauth_callback_response']);
 
       $params = array(
         'client_id' => $client_id,
@@ -275,14 +301,39 @@ class google_mail {
     }
   }
 
-  private function has_valid_oauth_state() {
+  private function get_oauth_response() {
+    if (!isset($_GET['oauth_callback'])) {
+      return null;
+    }
+
+    $response = isset($_SESSION['xoauth_callback_response'])
+      && is_array($_SESSION['xoauth_callback_response'])
+      ? $_SESSION['xoauth_callback_response']
+      : false;
+    unset($_SESSION['xoauth_callback_response']);
+
+    if (!is_array($response)
+        || !isset($response['module'], $response['state'])
+        || !hash_equals($this->code, (string)$response['module'])
+        )
+    {
+      return false;
+    }
+
+    return $response;
+  }
+
+  private function has_valid_oauth_state($state) {
     return isset($_SESSION['google_mail_oauth_state'])
-      && isset($_GET['state'])
-      && hash_equals($_SESSION['google_mail_oauth_state'], $_GET['state']);
+      && hash_equals($_SESSION['google_mail_oauth_state'], (string)$state);
   }
 
   private function clear_oauth_state() {
-    unset($_SESSION['google_mail_oauth_state'], $_SESSION['xoauth_callback']);
+    unset(
+      $_SESSION['google_mail_oauth_state'],
+      $_SESSION['xoauth_callback'],
+      $_SESSION['xoauth_callback_response']
+    );
   }
 
   private function has_required_mail_scope($token_data) {
@@ -378,5 +429,11 @@ class google_mail {
     xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                      SET configuration_value = 'false'
                    WHERE configuration_key = 'MODULE_OFFICE365_MAIL_STATUS'");
+  }
+
+  private function clear_oauth_error() {
+    xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                     SET configuration_value = ''
+                   WHERE configuration_key = 'MODULE_GOOGLE_MAIL_OAUTH_ERROR'");
   }
 }

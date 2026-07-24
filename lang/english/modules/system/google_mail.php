@@ -27,6 +27,7 @@
 
   define('MODULE_GOOGLE_MAIL_TEXT_CONNECTED_AS', 'Connected as <b>%s</b>.');
   define('MODULE_GOOGLE_MAIL_TEXT_NOT_CONNECTED', 'Not connected yet.');
+  define('MODULE_GOOGLE_MAIL_TEXT_CONNECTION_ERROR', 'OAuth connection error: <b>%s</b>. Please reconnect.');
   define('MODULE_GOOGLE_MAIL_TEXT_CONNECT_BUTTON', 'Connect with Google');
   define('MODULE_GOOGLE_MAIL_TEXT_FROM_ADDRESS_HINT', 'Note: Gmail expects the "From" address of outgoing mails to match the connected mailbox (or a configured "Send As" alias of it).');
   define('MODULE_GOOGLE_MAIL_TEXT_CONNECT_SUCCESS', 'Successfully connected to Google.');
@@ -35,7 +36,7 @@
   define('MODULE_GOOGLE_MAIL_TEXT_OAUTH_STATE_ERROR', 'The OAuth authorization could not be verified (state mismatch). Please try connecting again.');
   define('MODULE_GOOGLE_MAIL_TEXT_ACCOUNT_MISMATCH', 'The Google account selected during authorization does not match the configured Gmail address.');
   define('MODULE_GOOGLE_MAIL_TEXT_SCOPE_MISSING', 'The required Gmail permission was not granted. Please reconnect and explicitly allow access to Gmail.');
-  define('MODULE_GOOGLE_MAIL_TEXT_MISSING_CREDENTIALS', 'Please enter and save the OAuth Client ID and Client Secret before connecting.');
+  define('MODULE_GOOGLE_MAIL_TEXT_MISSING_CREDENTIALS', 'Please enter and save the OAuth Client ID, Client Secret and Gmail address before connecting.');
 
   define('MODULE_GOOGLE_MAIL_TEXT_SETUP_GUIDE', 'To create the required OAuth Client ID/Secret:<br>
 <ol>

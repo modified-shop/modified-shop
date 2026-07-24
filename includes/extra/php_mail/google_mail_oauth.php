@@ -46,5 +46,8 @@ if (defined('MODULE_GOOGLE_MAIL_STATUS') && MODULE_GOOGLE_MAIL_STATUS == 'true'
     'client_secret' => MODULE_GOOGLE_MAIL_CLIENT_SECRET,
     'refresh_token' => MODULE_GOOGLE_MAIL_REFRESH_TOKEN,
     'user_email' => MODULE_GOOGLE_MAIL_SENDER_EMAIL,
+    'refresh_token_configuration_key' => 'MODULE_GOOGLE_MAIL_REFRESH_TOKEN',
+    'oauth_error_configuration_key' => 'MODULE_GOOGLE_MAIL_OAUTH_ERROR',
+    'oauth_error' => MODULE_GOOGLE_MAIL_OAUTH_ERROR,
   )));
 }

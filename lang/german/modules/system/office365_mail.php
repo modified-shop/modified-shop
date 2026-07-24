@@ -30,6 +30,7 @@
 
   define('MODULE_OFFICE365_MAIL_TEXT_CONNECTED_AS', 'Verbunden f&uuml;r <b>%s</b>.');
   define('MODULE_OFFICE365_MAIL_TEXT_NOT_CONNECTED', 'Noch nicht verbunden.');
+  define('MODULE_OFFICE365_MAIL_TEXT_CONNECTION_ERROR', 'OAuth-Verbindungsfehler: <b>%s</b>. Bitte erneut verbinden.');
   define('MODULE_OFFICE365_MAIL_TEXT_CONNECT_BUTTON', 'Mit Microsoft verbinden');
   define('MODULE_OFFICE365_MAIL_TEXT_FROM_ADDRESS_HINT', 'Die Absenderadresse muss dem Postfach oder einer dort erlaubten "Senden als"-Adresse entsprechen. Bei freigegebenen Postf&auml;chern melden Sie sich mit einem berechtigten Benutzer an, lassen hier aber die Adresse des freigegebenen Postfachs stehen.');
   define('MODULE_OFFICE365_MAIL_TEXT_CONNECT_SUCCESS', 'Erfolgreich mit Microsoft 365 verbunden.');

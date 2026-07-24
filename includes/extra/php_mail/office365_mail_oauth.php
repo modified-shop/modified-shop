@@ -45,5 +45,7 @@ if (defined('MODULE_OFFICE365_MAIL_STATUS') && MODULE_OFFICE365_MAIL_STATUS == '
     'user_email' => MODULE_OFFICE365_MAIL_SENDER_EMAIL,
     'scope' => 'https://outlook.office.com/SMTP.Send',
     'refresh_token_configuration_key' => 'MODULE_OFFICE365_MAIL_REFRESH_TOKEN',
+    'oauth_error_configuration_key' => 'MODULE_OFFICE365_MAIL_OAUTH_ERROR',
+    'oauth_error' => MODULE_OFFICE365_MAIL_OAUTH_ERROR,
   )));
 }

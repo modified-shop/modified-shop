@@ -14,6 +14,21 @@ use PHPMailer\PHPMailer\SMTP;
 
 class xoauth_smtp extends SMTP
 {
+    public function authenticate($username, $password, $authtype = null, $OAuth = null)
+    {
+        try {
+            return parent::authenticate($username, $password, $authtype, $OAuth);
+        } catch (\Exception $exception) {
+            if ($exception->getPrevious() instanceof \Exception) {
+                $this->edebug(
+                    'OAuth: ' . $exception->getPrevious()->getMessage(),
+                    self::DEBUG_CLIENT
+                );
+            }
+            throw $exception;
+        }
+    }
+
     public function client_send($data, $command = '')
     {
         if (!in_array($command, array('AUTH', 'OAuth TOKEN'), true)) {

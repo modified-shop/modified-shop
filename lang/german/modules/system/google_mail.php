@@ -27,6 +27,7 @@
 
   define('MODULE_GOOGLE_MAIL_TEXT_CONNECTED_AS', 'Verbunden als <b>%s</b>.');
   define('MODULE_GOOGLE_MAIL_TEXT_NOT_CONNECTED', 'Noch nicht verbunden.');
+  define('MODULE_GOOGLE_MAIL_TEXT_CONNECTION_ERROR', 'OAuth-Verbindungsfehler: <b>%s</b>. Bitte erneut verbinden.');
   define('MODULE_GOOGLE_MAIL_TEXT_CONNECT_BUTTON', 'Mit Google verbinden');
   define('MODULE_GOOGLE_MAIL_TEXT_FROM_ADDRESS_HINT', 'Hinweis: Gmail erwartet, dass die Absenderadresse ausgehender Mails mit dem verbundenen Postfach &uuml;bereinstimmt (oder einem dort konfigurierten "Senden als"-Alias).');
   define('MODULE_GOOGLE_MAIL_TEXT_CONNECT_SUCCESS', 'Erfolgreich mit Google verbunden.');
@@ -35,7 +36,7 @@
   define('MODULE_GOOGLE_MAIL_TEXT_OAUTH_STATE_ERROR', 'Die OAuth-Autorisierung konnte nicht verifiziert werden (state stimmt nicht &uuml;berein). Bitte erneut verbinden.');
   define('MODULE_GOOGLE_MAIL_TEXT_ACCOUNT_MISMATCH', 'Das bei Google ausgew&auml;hlte Konto stimmt nicht mit der eingetragenen Gmail-Adresse &uuml;berein.');
   define('MODULE_GOOGLE_MAIL_TEXT_SCOPE_MISSING', 'Die erforderliche Gmail-Berechtigung wurde nicht erteilt. Bitte erneut verbinden und den Zugriff auf Gmail ausdr&uuml;cklich zulassen.');
-  define('MODULE_GOOGLE_MAIL_TEXT_MISSING_CREDENTIALS', 'Bitte zuerst OAuth Client-ID und Client-Secret eintragen und speichern, bevor Sie sich verbinden.');
+  define('MODULE_GOOGLE_MAIL_TEXT_MISSING_CREDENTIALS', 'Bitte zuerst OAuth Client-ID, Client-Secret und Gmail-Adresse vollst&auml;ndig eintragen und speichern.');
 
   define('MODULE_GOOGLE_MAIL_TEXT_SETUP_GUIDE', 'So erstellen Sie die ben&ouml;tigte OAuth Client-ID/Secret:<br>
 <ol>

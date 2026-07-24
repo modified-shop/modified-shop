@@ -53,12 +53,23 @@ class office365_mail {
   }
 
   function display() {
-    $connected = (defined('MODULE_OFFICE365_MAIL_REFRESH_TOKEN') && MODULE_OFFICE365_MAIL_REFRESH_TOKEN != '');
+    $oauth_error = MODULE_OFFICE365_MAIL_OAUTH_ERROR;
+    $connected = ($oauth_error == ''
+      && defined('MODULE_OFFICE365_MAIL_REFRESH_TOKEN')
+      && MODULE_OFFICE365_MAIL_REFRESH_TOKEN != ''
+    );
     $sender = (defined('MODULE_OFFICE365_MAIL_SENDER_EMAIL') ? MODULE_OFFICE365_MAIL_SENDER_EMAIL : '');
 
-    $status_text = $connected
-      ? sprintf(MODULE_OFFICE365_MAIL_TEXT_CONNECTED_AS, $sender)
-      : MODULE_OFFICE365_MAIL_TEXT_NOT_CONNECTED;
+    if ($oauth_error != '') {
+      $status_text = sprintf(
+        MODULE_OFFICE365_MAIL_TEXT_CONNECTION_ERROR,
+        htmlspecialchars($oauth_error, ENT_QUOTES, 'UTF-8')
+      );
+    } else {
+      $status_text = $connected
+        ? sprintf(MODULE_OFFICE365_MAIL_TEXT_CONNECTED_AS, $sender)
+        : MODULE_OFFICE365_MAIL_TEXT_NOT_CONNECTED;
+    }
 
     $connect_href = xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=custom');
     $connect_button = '<button type="submit" class="button" onclick="this.blur();" formaction="' . $connect_href . '">' . MODULE_OFFICE365_MAIL_TEXT_CONNECT_BUTTON . '</button>';
@@ -108,6 +119,7 @@ class office365_mail {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_OFFICE365_MAIL_CLIENT_SECRET', '', '6', '4', 'xtc_cfg_display_password', 'xtc_cfg_password_field_module(', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_OFFICE365_MAIL_SENDER_EMAIL', '', '6', '5', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_OFFICE365_MAIL_REFRESH_TOKEN', '', '6', '6', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_OFFICE365_MAIL_OAUTH_ERROR', '', '6', '7', now())");
   }
 
   function remove() {
@@ -150,9 +162,16 @@ class office365_mail {
     $client_secret = $this->get_configuration_value($posted, 'MODULE_OFFICE365_MAIL_CLIENT_SECRET');
     $sender_email = $this->get_configuration_value($posted, 'MODULE_OFFICE365_MAIL_SENDER_EMAIL');
     $redirect_uri = $this->get_redirect_uri();
+    $oauth_response = $this->get_oauth_response();
 
-    if (isset($_GET['oauth_error'])) {
-      if (!$this->has_valid_oauth_state(false)) {
+    if (isset($_GET['oauth_callback']) && $oauth_response === false) {
+      $this->clear_oauth_state();
+      $messageStack->add_session(MODULE_OFFICE365_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
+      xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
+    }
+
+    if (is_array($oauth_response) && isset($oauth_response['error'])) {
+      if (!$this->has_valid_oauth_state($oauth_response['state'], false)) {
         $messageStack->add_session(MODULE_OFFICE365_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
       } else {
         $messageStack->add_session(MODULE_OFFICE365_MAIL_TEXT_CONNECT_CANCELLED, 'error');
@@ -161,8 +180,8 @@ class office365_mail {
       xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
     }
 
-    if (isset($_GET['code']) && $_GET['code'] != '') {
-      if (!$this->has_valid_oauth_state(true)) {
+    if (is_array($oauth_response) && isset($oauth_response['code']) && $oauth_response['code'] != '') {
+      if (!$this->has_valid_oauth_state($oauth_response['state'], true)) {
         $this->clear_oauth_state();
         $messageStack->add_session(MODULE_OFFICE365_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
         xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
@@ -172,7 +191,7 @@ class office365_mail {
       $this->clear_oauth_state();
 
       $token_data = $this->exchange_code_for_tokens(
-        $_GET['code'],
+        $oauth_response['code'],
         $redirect_uri,
         $tenant,
         $client_id,
@@ -188,6 +207,7 @@ class office365_mail {
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                          SET configuration_value = '" . xtc_db_input($token_data['refresh_token']) . "'
                        WHERE configuration_key = 'MODULE_OFFICE365_MAIL_REFRESH_TOKEN'");
+        $this->clear_oauth_error();
         if (defined('MODULE_OFFICE365_MAIL_STATUS') && MODULE_OFFICE365_MAIL_STATUS == 'true') {
           $this->disable_google_mail();
         }
@@ -207,7 +227,7 @@ class office365_mail {
       xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
     }
 
-    $state = xtc_random_charcode(64);
+    $state = xtc_random_charcode(64) . '.' . xtc_session_id();
     $code_verifier = xtc_random_charcode(96);
     $_SESSION['office365_mail_oauth_state'] = $state;
     $_SESSION['office365_mail_code_verifier'] = $code_verifier;
@@ -215,6 +235,7 @@ class office365_mail {
       'module' => $this->code,
       'state' => $state,
     );
+    unset($_SESSION['xoauth_callback_response']);
 
     $params = array(
       'client_id' => $client_id,
@@ -288,7 +309,7 @@ class office365_mail {
   private function delete_refresh_token() {
     xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                      SET configuration_value = ''
-                   WHERE configuration_key = 'MODULE_OFFICE365_MAIL_REFRESH_TOKEN'");
+                   WHERE configuration_key IN ('MODULE_OFFICE365_MAIL_REFRESH_TOKEN', 'MODULE_OFFICE365_MAIL_OAUTH_ERROR')");
   }
 
   private function disable_google_mail() {
@@ -303,10 +324,31 @@ class office365_mail {
       && preg_match('/^(?:organizations|common|consumers|[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?)$/i', $tenant);
   }
 
-  private function has_valid_oauth_state($require_code_verifier) {
+  private function get_oauth_response() {
+    if (!isset($_GET['oauth_callback'])) {
+      return null;
+    }
+
+    $response = isset($_SESSION['xoauth_callback_response'])
+      && is_array($_SESSION['xoauth_callback_response'])
+      ? $_SESSION['xoauth_callback_response']
+      : false;
+    unset($_SESSION['xoauth_callback_response']);
+
+    if (!is_array($response)
+        || !isset($response['module'], $response['state'])
+        || !hash_equals($this->code, (string)$response['module'])
+        )
+    {
+      return false;
+    }
+
+    return $response;
+  }
+
+  private function has_valid_oauth_state($state, $require_code_verifier) {
     $valid = isset($_SESSION['office365_mail_oauth_state'])
-      && isset($_GET['state'])
-      && hash_equals($_SESSION['office365_mail_oauth_state'], $_GET['state']);
+      && hash_equals($_SESSION['office365_mail_oauth_state'], (string)$state);
 
     if ($require_code_verifier) {
       $valid = $valid
@@ -321,7 +363,8 @@ class office365_mail {
     unset(
       $_SESSION['office365_mail_oauth_state'],
       $_SESSION['office365_mail_code_verifier'],
-      $_SESSION['xoauth_callback']
+      $_SESSION['xoauth_callback'],
+      $_SESSION['xoauth_callback_response']
     );
   }
 
@@ -376,5 +419,11 @@ class office365_mail {
 
   private function base64url_encode($value) {
     return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
+  }
+
+  private function clear_oauth_error() {
+    xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                     SET configuration_value = ''
+                   WHERE configuration_key = 'MODULE_OFFICE365_MAIL_OAUTH_ERROR'");
   }
 }
