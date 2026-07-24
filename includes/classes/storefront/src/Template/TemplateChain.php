@@ -5,6 +5,7 @@ namespace Modified\Storefront\Template;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use Modified\Storefront\Template\Exception\InvalidTemplateIdException;
 use Traversable;
 
 final class TemplateChain implements Countable, IteratorAggregate

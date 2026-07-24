@@ -1,13 +1,13 @@
 <?php
 
-use Modified\Storefront\Template\InvalidTemplatePathException;
-use Modified\Storefront\Template\ParentTemplateNotFoundException;
+use Modified\Storefront\Template\Exception\InvalidTemplatePathException;
+use Modified\Storefront\Template\Exception\ParentTemplateNotFoundException;
+use Modified\Storefront\Template\Exception\TemplateFileNotFoundException;
+use Modified\Storefront\Template\Exception\TemplateInheritanceCycleException;
+use Modified\Storefront\Template\Exception\TemplateManifestInvalidException;
 use Modified\Storefront\Template\TemplateChainResolver;
-use Modified\Storefront\Template\TemplateFileNotFoundException;
 use Modified\Storefront\Template\TemplateFileResolver;
 use Modified\Storefront\Template\TemplateId;
-use Modified\Storefront\Template\TemplateInheritanceCycleException;
-use Modified\Storefront\Template\TemplateManifestInvalidException;
 use Modified\Storefront\Template\TemplateManifestRepository;
 use Modified\Storefront\Template\TemplateRuntime;
 use Modified\Storefront\Template\TemplateUrlGenerator;

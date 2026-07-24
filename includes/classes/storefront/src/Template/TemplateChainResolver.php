@@ -2,6 +2,9 @@
 
 namespace Modified\Storefront\Template;
 
+use Modified\Storefront\Template\Exception\ParentTemplateNotFoundException;
+use Modified\Storefront\Template\Exception\TemplateInheritanceCycleException;
+
 final class TemplateChainResolver
 {
     private TemplateManifestRepository $manifestRepository;
