@@ -2,12 +2,21 @@
 
 namespace Modified\Storefront\Template;
 
+/**
+ * Generates browser URLs for resolved template files.
+ *
+ * It combines the requested URL base with the actual source template, so an
+ * inherited asset is linked from "templates/base/..." instead of the child.
+ */
 final class TemplateUrlGenerator
 {
     private string $relativeBase;
     private string $catalogBase;
     private string $absoluteBase;
 
+    /**
+     * Creates a generator with the URL bases used by the different shop contexts.
+     */
     public function __construct(string $relativeBase, string $catalogBase, string $absoluteBase)
     {
         $this->relativeBase = $relativeBase;
@@ -15,6 +24,9 @@ final class TemplateUrlGenerator
         $this->absoluteBase = $absoluteBase;
     }
 
+    /**
+     * Creates a generator from the shop URL and SSL constants.
+     */
     public static function fromGlobals(): self
     {
         $catalogBase = self::constantString('DIR_WS_CATALOG');
@@ -29,16 +41,25 @@ final class TemplateUrlGenerator
         );
     }
 
+    /**
+     * Returns a URL relative to the configured shop base.
+     */
     public function relativeUrl(ResolvedTemplateFile $file): string
     {
         return $this->generate($this->relativeBase, $file);
     }
 
+    /**
+     * Returns a URL rooted at the catalog path.
+     */
     public function catalogUrl(ResolvedTemplateFile $file): string
     {
         return $this->generate($this->catalogBase, $file);
     }
 
+    /**
+     * Returns a fully qualified URL including the configured HTTP or HTTPS server.
+     */
     public function absoluteUrl(ResolvedTemplateFile $file): string
     {
         return $this->generate($this->absoluteBase, $file);

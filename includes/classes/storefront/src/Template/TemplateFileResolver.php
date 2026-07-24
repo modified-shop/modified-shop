@@ -6,11 +6,20 @@ use Modified\Storefront\Template\Exception\CurrentTemplateFileException;
 use Modified\Storefront\Template\Exception\InvalidTemplatePathException;
 use Modified\Storefront\Template\Exception\TemplateFileNotFoundException;
 
+/**
+ * Locates logical template files along an inheritance chain.
+ *
+ * It returns the first matching override or, when resolving after the current
+ * file, the next parent implementation of the same logical file.
+ */
 final class TemplateFileResolver
 {
     private TemplateChain $chain;
     private TemplateManifestRepository $manifestRepository;
 
+    /**
+     * Creates a file resolver for an already resolved template inheritance chain.
+     */
     public function __construct(
         TemplateChain $chain,
         TemplateManifestRepository $manifestRepository
@@ -19,6 +28,11 @@ final class TemplateFileResolver
         $this->manifestRepository = $manifestRepository;
     }
 
+    /**
+     * Returns the first matching file in the chain or fails when none exists.
+     *
+     * For example, "module/product.html" may resolve to an override in the child.
+     */
     public function resolve(string $logicalName): ResolvedTemplateFile
     {
         $resolved = $this->find($logicalName);
@@ -33,6 +47,9 @@ final class TemplateFileResolver
         return $resolved;
     }
 
+    /**
+     * Finds the first matching file in the chain, returning null when none exists.
+     */
     public function find(string $logicalName): ?ResolvedTemplateFile
     {
         $logicalName = TemplatePath::normalizeLogicalName($logicalName);
@@ -40,6 +57,11 @@ final class TemplateFileResolver
         return $this->findFromIndex($logicalName, 0);
     }
 
+    /**
+     * Resolves the next inherited implementation after the specified current file.
+     *
+     * This lets a child override include the corresponding file from its parent.
+     */
     public function resolveAfter(string $logicalName, string $currentAbsolutePath): ResolvedTemplateFile
     {
         $logicalName = TemplatePath::normalizeLogicalName($logicalName);
@@ -77,11 +99,17 @@ final class TemplateFileResolver
         ));
     }
 
+    /**
+     * Returns the inheritance chain searched by this resolver.
+     */
     public function chain(): TemplateChain
     {
         return $this->chain;
     }
 
+    /**
+     * Returns the canonical filesystem directory for a template in the repository.
+     */
     public function templateDirectory(TemplateId $templateId): string
     {
         return $this->manifestRepository->templateDirectory($templateId);
