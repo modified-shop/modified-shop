@@ -160,6 +160,7 @@ try {
     writeTestFile($templatesDirectory . '/parent-a/continuation.html', 'parent-a');
     writeTestFile($templatesDirectory . '/current/continuation.html', 'current');
     writeTestFile($templatesDirectory . '/parent-a/img/logo.png', 'image');
+    writeTestFile($templatesDirectory . '/parent-a/source/boxes/categories.php', 'categories');
     writeTestFile(
         $templatesDirectory . '/current/layout.html',
         '{extends file="parent:layout.html"}{block name="body"}child-{$smarty.block.parent}{/block}'
@@ -236,6 +237,16 @@ try {
         realpath($templatesDirectory) . '/parent-a/inherited.html',
         Template::path('inherited.html'),
         'Die Fassade muss einen verpflichtenden absoluten Pfad liefern.'
+    );
+    assertSameValue(
+        realpath($templatesDirectory) . '/parent-a/source/boxes/',
+        Template::path('source/boxes/'),
+        'Ein angeforderter Verzeichnispfad muss seinen abschließenden Slash behalten.'
+    );
+    assertSameValue(
+        realpath($templatesDirectory) . '/parent-a/source/boxes/categories.php',
+        Template::path('source/boxes/') . 'categories.php',
+        'Ein aufgelöster Verzeichnispfad muss mit einem Dateinamen verkettet werden können.'
     );
     assertSameValue(
         'parent-a/inherited.html',

@@ -27,6 +27,10 @@ final class ResolvedTemplateFile
 
     public function absolutePath(): string
     {
+        if (str_ends_with($this->logicalName, '/') && !str_ends_with($this->absolutePath, '/')) {
+            return $this->absolutePath . '/';
+        }
+
         return $this->absolutePath;
     }
 
