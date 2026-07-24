@@ -42,6 +42,13 @@ class google_mail {
   function process($file) {
     if (isset($_POST['configuration']) && is_array($_POST['configuration'])) {
       $this->invalidate_refresh_token_on_configuration_change($_POST['configuration']);
+
+      if (isset($_POST['configuration']['MODULE_GOOGLE_MAIL_STATUS'])
+          && $_POST['configuration']['MODULE_GOOGLE_MAIL_STATUS'] == 'true'
+          )
+      {
+        $this->disable_office365_mail();
+      }
     }
   }
 
@@ -234,6 +241,9 @@ class google_mail {
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                          SET configuration_value = '" . xtc_db_input($token_data['refresh_token']) . "'
                        WHERE configuration_key = 'MODULE_GOOGLE_MAIL_REFRESH_TOKEN'");
+        if (defined('MODULE_GOOGLE_MAIL_STATUS') && MODULE_GOOGLE_MAIL_STATUS == 'true') {
+          $this->disable_office365_mail();
+        }
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_CONNECT_SUCCESS, 'success');
       }
 
@@ -362,5 +372,11 @@ class google_mail {
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
     curl_exec($ch);
     curl_close($ch);
+  }
+
+  private function disable_office365_mail() {
+    xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                     SET configuration_value = 'false'
+                   WHERE configuration_key = 'MODULE_OFFICE365_MAIL_STATUS'");
   }
 }

@@ -14,7 +14,7 @@
   define('MODULE_GOOGLE_MAIL_TEXT_DESCRIPTION', 'Versendet ausgehende E-Mails &uuml;ber ein Google/Gmail-Konto per OAuth2 (XOAUTH2) anstelle eines herk&ouml;mmlichen SMTP-Passworts. Ben&ouml;tigt eine OAuth Client-ID und ein Client-Secret aus der <a href="https://console.cloud.google.com/" target="_blank"><b>Google Cloud Console</b></a> mit aktivierter Gmail API.');
 
   define('MODULE_GOOGLE_MAIL_STATUS_TITLE', 'Status');
-  define('MODULE_GOOGLE_MAIL_STATUS_DESC', 'Modulstatus');
+  define('MODULE_GOOGLE_MAIL_STATUS_DESC', 'Modulstatus. Beim Aktivieren wird Microsoft 365 Mail (OAuth2) deaktiviert.');
 
   define('MODULE_GOOGLE_MAIL_CLIENT_ID_TITLE', 'OAuth Client-ID');
   define('MODULE_GOOGLE_MAIL_CLIENT_ID_DESC', 'Die OAuth 2.0 Client-ID aus Ihrem Google-Cloud-Projekt.');
