@@ -1537,7 +1537,7 @@ INSERT INTO banners VALUES (2, 1, 'modified eCommerce Shopsoftware', 'http://www
 
 # carriers
 INSERT INTO carriers VALUES (1, 'DHL', 'https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
-INSERT INTO carriers VALUES (2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', '20', NOW(), '');
+INSERT INTO carriers VALUES (2, 'DPD', 'https://my.dpd.de/redirect.aspx?action=2&parcelno=$1&locale=$2', '20', NOW(), '');
 INSERT INTO carriers VALUES (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', '30', NOW(), '');
 INSERT INTO carriers VALUES (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', '40', NOW(), '');
 INSERT INTO carriers VALUES (5, 'HERMES', 'https://tracking.hermesworld.com/?TrackID=$1', '50', NOW(), '');

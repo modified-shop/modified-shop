@@ -13,4 +13,7 @@ INSERT INTO `database_version` (`version`, `date_added`) VALUES ('MOD_3.3.1', NO
 #GTB - 2026-07-20 - set index to speed up admin dashboard turnover query
 ALTER TABLE `orders_total` ADD INDEX `idx_class` (`class`, `orders_id`);
 
+#GTB - 2026-07-24 - update DPD tracking link
+UPDATE `carriers` SET `carrier_tracking_link` = 'https://my.dpd.de/redirect.aspx?action=2&parcelno=$1&locale=$2' WHERE `carrier_name` = 'DPD';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
