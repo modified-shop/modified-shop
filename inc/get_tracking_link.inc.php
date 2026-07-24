@@ -18,15 +18,20 @@
       $lang_code = DEFAULT_LANGUAGE;
     }
     $where = '';
-    if (is_array($tracking_id) && count($tracking_id) > 0) {
+    if (!is_array($tracking_id)) {
+      $tracking_id = array($tracking_id);
+    }
+    if (count($tracking_id) > 0) {
       $tracking_ids = array();
       foreach ($tracking_id as $id) {
-        if (is_scalar($id)) {
-          $tracking_ids[] = xtc_db_input((string)$id);
+        if (is_int($id) || (is_string($id) && ctype_digit($id))) {
+          $tracking_ids[] = (int)$id;
         }
       }
       if (count($tracking_ids) > 0) {
-        $where = " AND ortr.tracking_id IN ('".implode("', '", $tracking_ids)."')";
+        $where = ' AND ortr.tracking_id IN ('.implode(', ', $tracking_ids).')';
+      } else {
+        $where = ' AND 1 = 0'; // invalid tracking_id provided, return no results
       }
     }
     $parcel_link = array();
