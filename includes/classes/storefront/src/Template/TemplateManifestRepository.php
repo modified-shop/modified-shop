@@ -30,9 +30,24 @@ final class TemplateManifestRepository
             return $this->cache[$key];
         }
 
-        $manifestPath = TemplatePath::joinFilesystem($this->templateDirectory($templateId), 'template.json');
+        $templateDirectory = $this->templateDirectory($templateId);
+        $manifestPath = TemplatePath::joinFilesystem($templateDirectory, 'template.json');
         if (!is_file($manifestPath)) {
             return $this->cache[$key] = TemplateManifest::empty($templateId);
+        }
+
+        $realManifestPath = realpath($manifestPath);
+        if (
+            $realManifestPath === false
+            || !str_starts_with(
+                str_replace('\\', '/', $realManifestPath),
+                $templateDirectory . '/'
+            )
+        ) {
+            throw new TemplateManifestInvalidException(sprintf(
+                'Das Template-Manifest für "%s" liegt außerhalb seines Template-Verzeichnisses.',
+                $templateId->value()
+            ));
         }
 
         $contents = file_get_contents($manifestPath);
