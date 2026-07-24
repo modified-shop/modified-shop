@@ -8,11 +8,20 @@ use Modified\Storefront\Template\Exception\TemplateManifestInvalidException;
 use Modified\Storefront\Template\Exception\TemplateNotFoundException;
 use stdClass;
 
+/**
+ * Loads and caches manifests from the configured templates directory.
+ *
+ * It validates template directories and template.json files, and supplies an
+ * empty manifest when an existing template has no manifest of its own.
+ */
 final class TemplateManifestRepository
 {
     private string $templatesDirectory;
     private array $cache = [];
 
+    /**
+     * Creates a repository rooted at an existing templates directory.
+     */
     public function __construct(string $templatesDirectory)
     {
         $realDirectory = realpath($templatesDirectory);
@@ -26,6 +35,9 @@ final class TemplateManifestRepository
         $this->templatesDirectory = rtrim(str_replace('\\', '/', $realDirectory), '/');
     }
 
+    /**
+     * Loads and caches a template manifest, or returns an empty one if absent.
+     */
     public function get(TemplateId $templateId): TemplateManifest
     {
         $key = $templateId->value();
@@ -84,11 +96,17 @@ final class TemplateManifestRepository
         return $this->cache[$key] = new TemplateManifest($templateId, $parent, $rawData);
     }
 
+    /**
+     * Reports whether a directory currently exists for the given template ID.
+     */
     public function templateExists(TemplateId $templateId): bool
     {
         return is_dir($this->unresolvedTemplateDirectory($templateId));
     }
 
+    /**
+     * Returns the canonical template directory and ensures it stays within the root.
+     */
     public function templateDirectory(TemplateId $templateId): string
     {
         $directory = $this->unresolvedTemplateDirectory($templateId);
@@ -112,11 +130,17 @@ final class TemplateManifestRepository
         return $realDirectory;
     }
 
+    /**
+     * Returns the canonical root directory containing all templates.
+     */
     public function templatesDirectory(): string
     {
         return $this->templatesDirectory;
     }
 
+    /**
+     * Clears all cached manifests so subsequent reads use the filesystem again.
+     */
     public function clear(): void
     {
         $this->cache = [];
