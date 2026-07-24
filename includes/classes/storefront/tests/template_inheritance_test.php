@@ -165,6 +165,8 @@ try {
         '{extends file="parent:layout.html"}{block name="body"}child-{$smarty.block.parent}{/block}'
     );
     writeTestFile($templatesDirectory . '/parent-a/layout.html', '{block name="body"}base{/block}');
+    writeTestFile($temporaryDirectory . '/outside.html', 'outside');
+    symlink($temporaryDirectory . '/outside.html', $templatesDirectory . '/current/outside.html');
 
     $manifest = $repository->get(new TemplateId('current'));
     assertSameValue(
@@ -206,6 +208,11 @@ try {
         InvalidTemplatePathException::class,
         static fn () => $resolver->resolve('../outside.php'),
         'Pfadtraversierung muss abgelehnt werden.'
+    );
+    assertThrowsException(
+        InvalidTemplatePathException::class,
+        static fn () => $resolver->resolve('outside.html'),
+        'Ein Symlink darf die Auflösung nicht aus dem Template-Verzeichnis herausführen.'
     );
 
     $continued = $resolver->resolveAfter(
