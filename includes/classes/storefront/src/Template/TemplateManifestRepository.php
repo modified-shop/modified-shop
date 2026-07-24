@@ -3,6 +3,9 @@
 namespace Modified\Storefront\Template;
 
 use JsonException;
+use Modified\Storefront\Template\Exception\InvalidTemplateIdException;
+use Modified\Storefront\Template\Exception\TemplateManifestInvalidException;
+use Modified\Storefront\Template\Exception\TemplateNotFoundException;
 use stdClass;
 
 final class TemplateManifestRepository

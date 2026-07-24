@@ -1,7 +1,7 @@
 <?php
 
-use Modified\Storefront\Template\CurrentTemplateFileException;
-use Modified\Storefront\Template\TemplateFileNotFoundException;
+use Modified\Storefront\Template\Exception\CurrentTemplateFileException;
+use Modified\Storefront\Template\Exception\TemplateFileNotFoundException;
 use Modified\Storefront\Template\TemplateFileResolver;
 use Modified\Storefront\Template\TemplateRuntime;
 

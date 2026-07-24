@@ -2,6 +2,8 @@
 
 namespace Modified\Storefront\Template;
 
+use Modified\Storefront\Template\Exception\InvalidTemplatePathException;
+
 final class TemplatePath
 {
     public static function normalizeLogicalName(string $logicalName, bool $allowEmpty = false): string

@@ -2,6 +2,7 @@
 
 namespace Modified\Storefront\Template;
 
+use Modified\Storefront\Template\Exception\InvalidTemplateIdException;
 use Stringable;
 
 final class TemplateId implements Stringable

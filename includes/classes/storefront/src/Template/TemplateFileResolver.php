@@ -2,6 +2,10 @@
 
 namespace Modified\Storefront\Template;
 
+use Modified\Storefront\Template\Exception\CurrentTemplateFileException;
+use Modified\Storefront\Template\Exception\InvalidTemplatePathException;
+use Modified\Storefront\Template\Exception\TemplateFileNotFoundException;
+
 final class TemplateFileResolver
 {
     private TemplateChain $chain;
