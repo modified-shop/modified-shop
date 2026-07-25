@@ -12,7 +12,8 @@
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-require_once(DIR_FS_INC . 'xtc_random_charcode.inc.php');
+require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/oauth_callback_state.php');
+require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/oauth_http_client.php');
 
 class google_mail {
 
@@ -23,6 +24,7 @@ class google_mail {
     var $enabled;
     var $_check;
     var $properties;
+    var $httpClient;
 
   function __construct() {
     $this->code = 'google_mail';
@@ -113,6 +115,7 @@ class google_mail {
   }
 
   function install() {
+    oauth_callback_state::install();
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_MAIL_STATUS', 'false', '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_GOOGLE_MAIL_CLIENT_ID', '', '6', '2', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_GOOGLE_MAIL_CLIENT_SECRET', '', '6', '3', 'xtc_cfg_display_password', 'xtc_cfg_password_field_module(', now())");
@@ -125,6 +128,7 @@ class google_mail {
     if (defined('MODULE_GOOGLE_MAIL_REFRESH_TOKEN') && MODULE_GOOGLE_MAIL_REFRESH_TOKEN != '') {
       $this->revoke_token(MODULE_GOOGLE_MAIL_REFRESH_TOKEN);
     }
+    oauth_callback_state::deleteModuleStates($this->code);
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_GOOGLE_MAIL_%'");
   }
 
@@ -145,7 +149,7 @@ class google_mail {
   }
 
   private function get_redirect_uri() {
-    return HTTPS_SERVER . DIR_WS_CATALOG . 'callback/phpmailer/xoauth_callback.php?module=' . $this->code;
+    return HTTPS_SERVER . DIR_WS_CATALOG . 'callback/phpmailer/xoauth_callback.php';
   }
 
   private function save_posted_configuration() {
@@ -204,6 +208,13 @@ class google_mail {
     }
 
     $posted = $this->save_posted_configuration();
+
+    $status = isset($posted['MODULE_GOOGLE_MAIL_STATUS'])
+      ? $posted['MODULE_GOOGLE_MAIL_STATUS']
+      : (defined('MODULE_GOOGLE_MAIL_STATUS') ? MODULE_GOOGLE_MAIL_STATUS : 'false');
+    if ($status == 'true') {
+      $this->disable_office365_mail();
+    }
 
     $client_id = isset($posted['MODULE_GOOGLE_MAIL_CLIENT_ID'])
       ? $posted['MODULE_GOOGLE_MAIL_CLIENT_ID']
@@ -266,9 +277,6 @@ class google_mail {
                          SET configuration_value = '" . xtc_db_input($token_data['refresh_token']) . "'
                        WHERE configuration_key = 'MODULE_GOOGLE_MAIL_REFRESH_TOKEN'");
         $this->clear_oauth_error();
-        if (defined('MODULE_GOOGLE_MAIL_STATUS') && MODULE_GOOGLE_MAIL_STATUS == 'true') {
-          $this->disable_office365_mail();
-        }
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_CONNECT_SUCCESS, 'success');
       }
 
@@ -279,7 +287,11 @@ class google_mail {
         xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
       }
 
-      $state = xtc_random_charcode(32) . '.' . xtc_session_id();
+      $state = oauth_callback_state::create($this->code, xtc_session_id());
+      if ($state === false) {
+        $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
+        xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
+      }
       $_SESSION['google_mail_oauth_state'] = $state;
       $_SESSION['xoauth_callback'] = array(
         'module' => $this->code,
@@ -346,32 +358,29 @@ class google_mail {
   }
 
   private function exchange_code_for_tokens($code, $redirect_uri, $client_id, $client_secret) {
-    $post_fields = http_build_query(array(
-      'grant_type' => 'authorization_code',
-      'code' => $code,
-      'client_id' => $client_id,
-      'client_secret' => $client_secret,
-      'redirect_uri' => $redirect_uri,
-    ));
+    $result = $this->get_http_client()->request(
+      'POST',
+      'https://oauth2.googleapis.com/token',
+      array(
+        'form_params' => array(
+          'grant_type' => 'authorization_code',
+          'code' => $code,
+          'client_id' => $client_id,
+          'client_secret' => $client_secret,
+          'redirect_uri' => $redirect_uri,
+        ),
+      )
+    );
 
-    $ch = curl_init('https://oauth2.googleapis.com/token');
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($response === false || $http_code < 200 || $http_code >= 300) {
+    if ($result['response'] === false
+        || $result['http_code'] < 200
+        || $result['http_code'] >= 300
+        )
+    {
       return false;
     }
 
-    $data = json_decode($response, true);
+    $data = json_decode($result['response'], true);
     return (is_array($data) ? $data : false);
   }
 
@@ -380,21 +389,25 @@ class google_mail {
       return false;
     }
 
-    $ch = curl_init('https://oauth2.googleapis.com/tokeninfo?id_token=' . rawurlencode($token_data['id_token']));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    $result = $this->get_http_client()->request(
+      'GET',
+      'https://oauth2.googleapis.com/tokeninfo',
+      array(
+        'query' => array(
+          'id_token' => $token_data['id_token'],
+        ),
+      )
+    );
 
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($response === false || $http_code < 200 || $http_code >= 300) {
+    if ($result['response'] === false
+        || $result['http_code'] < 200
+        || $result['http_code'] >= 300
+        )
+    {
       return false;
     }
 
-    $data = json_decode($response, true);
+    $data = json_decode($result['response'], true);
     if (!is_array($data)
         || !isset($data['aud'], $data['email'], $data['email_verified'])
         || !hash_equals((string)$client_id, (string)$data['aud'])
@@ -412,17 +425,23 @@ class google_mail {
       return;
     }
 
-    $ch = curl_init('https://oauth2.googleapis.com/revoke');
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('token' => $token)));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-    curl_exec($ch);
-    curl_close($ch);
+    $this->get_http_client()->request(
+      'POST',
+      'https://oauth2.googleapis.com/revoke',
+      array(
+        'form_params' => array(
+          'token' => $token,
+        ),
+        'timeout' => 10,
+      )
+    );
+  }
+
+  private function get_http_client() {
+    if (!isset($this->httpClient)) {
+      $this->httpClient = new oauth_http_client();
+    }
+    return $this->httpClient;
   }
 
   private function disable_office365_mail() {

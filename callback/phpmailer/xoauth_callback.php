@@ -10,24 +10,19 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// use always session_id from URL for OAuth providers
+// restore the session assigned to the one-time OAuth state
 define('SESSION_FORCE_COOKIE_USE', 'False');
-
-$oauth_state = isset($_GET['state']) ? (string)$_GET['state'] : '';
-if (preg_match(
-    '/^[a-z0-9]{32,64}\.([a-z0-9]{26}|[a-z0-9]{32}|[a-z0-9]{40}|[a-z0-9]{52})$/i',
-    $oauth_state,
-    $matches
-    ))
-{
-  $_GET['MODsid'] = $matches[1];
-  $_REQUEST['MODsid'] = $matches[1];
-}
+define('RUN_MODE_XOAUTH_CALLBACK', true);
 
 chdir('../../');
 require_once('includes/application_top_callback.php');
 
-$module = isset($_GET['module']) ? $_GET['module'] : '';
+$module = defined('XOAUTH_CALLBACK_MODULE') ? XOAUTH_CALLBACK_MODULE : '';
+
+if ($module == '') {
+  http_response_code(400);
+  exit('Invalid OAuth callback state.');
+}
 
 if (!preg_match('/^[a-z0-9_]+$/', $module)
     || !is_file(DIR_FS_CATALOG . DIR_ADMIN . 'includes/modules/system/' . $module . '.php')
@@ -72,4 +67,11 @@ $parameters = array(
   'oauth_callback' => '1',
 );
 
-xtc_redirect(xtc_href_link_admin(DIR_ADMIN . 'module_export.php', http_build_query($parameters), 'SSL'));
+xtc_redirect(
+  xtc_href_link_admin(
+    DIR_ADMIN . 'module_export.php',
+    http_build_query($parameters),
+    'SSL',
+    false
+  )
+);

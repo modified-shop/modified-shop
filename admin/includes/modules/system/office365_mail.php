@@ -13,6 +13,8 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_FS_INC . 'xtc_random_charcode.inc.php');
+require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/oauth_callback_state.php');
+require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/oauth_http_client.php');
 
 class office365_mail {
 
@@ -23,6 +25,7 @@ class office365_mail {
     var $enabled;
     var $_check;
     var $properties;
+    var $httpClient;
 
   function __construct() {
     $this->code = 'office365_mail';
@@ -113,6 +116,7 @@ class office365_mail {
   }
 
   function install() {
+    oauth_callback_state::install();
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_OFFICE365_MAIL_STATUS', 'false', '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_OFFICE365_MAIL_TENANT', '', '6', '2', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_OFFICE365_MAIL_CLIENT_ID', '', '6', '3', now())");
@@ -124,6 +128,7 @@ class office365_mail {
 
   function remove() {
     $this->clear_oauth_state();
+    oauth_callback_state::deleteModuleStates($this->code);
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_OFFICE365_MAIL_%'");
   }
 
@@ -156,6 +161,13 @@ class office365_mail {
     }
 
     $posted = $this->save_posted_configuration();
+
+    $status = isset($posted['MODULE_OFFICE365_MAIL_STATUS'])
+      ? $posted['MODULE_OFFICE365_MAIL_STATUS']
+      : (defined('MODULE_OFFICE365_MAIL_STATUS') ? MODULE_OFFICE365_MAIL_STATUS : 'false');
+    if ($status == 'true') {
+      $this->disable_google_mail();
+    }
 
     $tenant = $this->get_configuration_value($posted, 'MODULE_OFFICE365_MAIL_TENANT');
     $client_id = $this->get_configuration_value($posted, 'MODULE_OFFICE365_MAIL_CLIENT_ID');
@@ -208,9 +220,6 @@ class office365_mail {
                          SET configuration_value = '" . xtc_db_input($token_data['refresh_token']) . "'
                        WHERE configuration_key = 'MODULE_OFFICE365_MAIL_REFRESH_TOKEN'");
         $this->clear_oauth_error();
-        if (defined('MODULE_OFFICE365_MAIL_STATUS') && MODULE_OFFICE365_MAIL_STATUS == 'true') {
-          $this->disable_google_mail();
-        }
         $messageStack->add_session(MODULE_OFFICE365_MAIL_TEXT_CONNECT_SUCCESS, 'success');
       }
 
@@ -227,7 +236,11 @@ class office365_mail {
       xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
     }
 
-    $state = xtc_random_charcode(64) . '.' . xtc_session_id();
+    $state = oauth_callback_state::create($this->code, xtc_session_id());
+    if ($state === false) {
+      $messageStack->add_session(MODULE_OFFICE365_MAIL_TEXT_OAUTH_STATE_ERROR, 'error');
+      xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code));
+    }
     $code_verifier = xtc_random_charcode(96);
     $_SESSION['office365_mail_oauth_state'] = $state;
     $_SESSION['office365_mail_code_verifier'] = $code_verifier;
@@ -256,7 +269,7 @@ class office365_mail {
   }
 
   private function get_redirect_uri() {
-    return HTTPS_SERVER . DIR_WS_CATALOG . 'callback/phpmailer/xoauth_callback.php?module=' . $this->code;
+    return HTTPS_SERVER . DIR_WS_CATALOG . 'callback/phpmailer/xoauth_callback.php';
   }
 
   private function get_oauth_scope() {
@@ -383,38 +396,39 @@ class office365_mail {
   }
 
   private function exchange_code_for_tokens($code, $redirect_uri, $tenant, $client_id, $client_secret, $code_verifier) {
-    $post_fields = http_build_query(array(
-      'grant_type' => 'authorization_code',
-      'code' => $code,
-      'client_id' => $client_id,
-      'client_secret' => $client_secret,
-      'redirect_uri' => $redirect_uri,
-      'scope' => $this->get_oauth_scope(),
-      'code_verifier' => $code_verifier,
-    ));
-
-    $ch = curl_init(
-      'https://login.microsoftonline.com/' . rawurlencode($tenant) . '/oauth2/v2.0/token'
+    $result = $this->get_http_client()->request(
+      'POST',
+      'https://login.microsoftonline.com/' . rawurlencode($tenant) . '/oauth2/v2.0/token',
+      array(
+        'form_params' => array(
+          'grant_type' => 'authorization_code',
+          'code' => $code,
+          'client_id' => $client_id,
+          'client_secret' => $client_secret,
+          'redirect_uri' => $redirect_uri,
+          'scope' => $this->get_oauth_scope(),
+          'code_verifier' => $code_verifier,
+        ),
+      )
     );
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
 
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($response === false || $http_code < 200 || $http_code >= 300) {
+    if ($result['response'] === false
+        || $result['http_code'] < 200
+        || $result['http_code'] >= 300
+        )
+    {
       return false;
     }
 
-    $data = json_decode($response, true);
+    $data = json_decode($result['response'], true);
     return (is_array($data) ? $data : false);
+  }
+
+  private function get_http_client() {
+    if (!isset($this->httpClient)) {
+      $this->httpClient = new oauth_http_client();
+    }
+    return $this->httpClient;
   }
 
   private function base64url_encode($value) {

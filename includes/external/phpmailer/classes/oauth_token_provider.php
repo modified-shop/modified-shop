@@ -11,6 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 require_once(DIR_FS_EXTERNAL.'phpmailer/OAuthTokenProvider.php');
+require_once(DIR_FS_EXTERNAL.'phpmailer/classes/oauth_http_client.php');
 
 use PHPMailer\PHPMailer\OAuthTokenProvider;
 
@@ -25,6 +26,7 @@ class oauth_token_provider implements OAuthTokenProvider
     protected $refreshTokenConfigurationKey;
     protected $oauthErrorConfigurationKey;
     protected $oauthError;
+    protected $httpClient;
     protected static $tokenCache = array();
     protected static $tokenErrors = array();
 
@@ -43,6 +45,9 @@ class oauth_token_provider implements OAuthTokenProvider
             ? $options['oauth_error_configuration_key']
             : '';
         $this->oauthError = isset($options['oauth_error']) ? $options['oauth_error'] : '';
+        $this->httpClient = isset($options['http_client'])
+            ? $options['http_client']
+            : new oauth_http_client();
     }
 
     public function getOauth64()
@@ -81,15 +86,13 @@ class oauth_token_provider implements OAuthTokenProvider
             $parameters['scope'] = $this->scope;
         }
 
-        $postFields = http_build_query($parameters);
-
-        $tokenResponse = $this->requestToken($postFields);
+        $tokenResponse = $this->requestToken($parameters);
         $response = $tokenResponse['response'];
         $httpCode = $tokenResponse['http_code'];
-        $curlError = $tokenResponse['curl_error'];
+        $requestError = $tokenResponse['error'];
 
         if ($response === false) {
-            $message = 'OAuth token endpoint request failed: ' . $curlError;
+            $message = 'OAuth token endpoint request failed: ' . $requestError;
             $this->saveOauthError('request_failed');
             self::$tokenErrors[$cacheKey] = $message;
             throw new Exception($message);
@@ -123,27 +126,14 @@ class oauth_token_provider implements OAuthTokenProvider
         return $data['access_token'];
     }
 
-    protected function requestToken($postFields)
+    protected function requestToken($parameters)
     {
-        $ch = curl_init($this->tokenEndpoint);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-        curl_close($ch);
-
-        return array(
-            'response' => $response,
-            'http_code' => $httpCode,
-            'curl_error' => $curlError,
+        return $this->httpClient->request(
+            'POST',
+            $this->tokenEndpoint,
+            array(
+                'form_params' => $parameters,
+            )
         );
     }
 
