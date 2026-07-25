@@ -75,9 +75,13 @@ class google_mail {
 
     $connect_href = xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=custom');
     $connect_button = '<button type="submit" class="button" onclick="this.blur();" formaction="' . $connect_href . '">' . MODULE_GOOGLE_MAIL_TEXT_CONNECT_BUTTON . '</button>';
+    $cancel_button = xtc_button_link(
+      BUTTON_CANCEL,
+      xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code)
+    );
 
     return array('text' => '<br>' . $status_text .
-                           '<br><br>' . $connect_button .
+                           '<br><br>' . $connect_button . $cancel_button .
                            '<br><br>' . MODULE_GOOGLE_MAIL_TEXT_FROM_ADDRESS_HINT .
                            '<br><br>' . sprintf(MODULE_GOOGLE_MAIL_TEXT_SETUP_GUIDE, $this->get_redirect_uri())
                  );

@@ -185,9 +185,6 @@ class oauth_token_provider implements OAuthTokenProvider
     {
         if ($configurationKey == ''
             || !preg_match('/^[A-Z0-9_]+$/', $configurationKey)
-            || !defined('TABLE_CONFIGURATION')
-            || !function_exists('xtc_db_query')
-            || !function_exists('xtc_db_input')
         ) {
             return;
         }
