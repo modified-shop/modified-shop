@@ -40,13 +40,20 @@ class oauth_callback_state
         self::cleanup();
 
         $state = bin2hex(random_bytes(32));
-        $sql_data_array = array(
-            'state_hash' => hash('sha256', $state),
-            'session_id' => $sessionId,
-            'module' => $module,
-            'expires_at' => date('Y-m-d H:i:s', time() + self::LIFETIME),
+        $stateHash = hash('sha256', $state);
+        $sessionHash = hash('sha256', (string)$sessionId);
+        $lifetime = (int)self::LIFETIME;
+
+        xtc_db_query(
+            "INSERT INTO `" . self::TABLE . "`
+                (`state_hash`, `session_id`, `module`, `expires_at`)
+             VALUES (
+                '" . xtc_db_input($stateHash) . "',
+                '" . xtc_db_input($sessionHash) . "',
+                '" . xtc_db_input($module) . "',
+                DATE_ADD(NOW(), INTERVAL " . $lifetime . " SECOND)
+             )"
         );
-        xtc_db_perform(self::TABLE, $sql_data_array);
 
         return $state;
     }
@@ -64,11 +71,12 @@ class oauth_callback_state
         }
 
         $stateHash = hash('sha256', $state);
+        $sessionHash = hash('sha256', (string)$sessionId);
         $stateQuery = xtc_db_query(
             "SELECT `session_id`, `module`
                FROM `" . self::TABLE . "`
               WHERE `state_hash` = '" . xtc_db_input($stateHash) . "'
-                AND `session_id` = '" . xtc_db_input($sessionId) . "'
+                AND `session_id` = '" . xtc_db_input($sessionHash) . "'
                 AND `expires_at` >= NOW()
                 AND `consumed_at` IS NULL"
         );
@@ -89,7 +97,7 @@ class oauth_callback_state
             "UPDATE `" . self::TABLE . "`
                 SET `consumed_at` = NOW()
               WHERE `state_hash` = '" . xtc_db_input($stateHash) . "'
-                AND `session_id` = '" . xtc_db_input($sessionId) . "'
+                AND `session_id` = '" . xtc_db_input($sessionHash) . "'
                 AND `expires_at` >= NOW()
                 AND `consumed_at` IS NULL"
         );
@@ -136,6 +144,9 @@ class oauth_callback_state
 
     private static function isValidSessionId($sessionId)
     {
-        return preg_match('/^(?:[a-z0-9]{26}|[a-z0-9]{32}|[a-z0-9]{40}|[a-z0-9]{52})$/i', (string)$sessionId);
+        return is_string($sessionId)
+            && strlen($sessionId) >= 1
+            && strlen($sessionId) <= 256
+            && preg_match('/^[a-zA-Z0-9,-]+$/', $sessionId);
     }
 }

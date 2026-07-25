@@ -39,7 +39,6 @@ if (!isset($oauth_callback['module'], $oauth_callback['state'], $_GET['state'])
     || !hash_equals((string)$oauth_callback['state'], (string)$_GET['state'])
     )
 {
-  unset($_SESSION['xoauth_callback'], $_SESSION['xoauth_callback_response']);
   http_response_code(400);
   exit('Invalid OAuth callback state.');
 }

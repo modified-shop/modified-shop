@@ -43,17 +43,19 @@ class office365_mail {
 
     if (defined('MODULE_OFFICE365_MAIL_STATUS')) {
       $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' .
-        xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=custom') .
+        xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=custom', 'SSL') .
         '">' . MODULE_OFFICE365_MAIL_TEXT_CONNECT_BUTTON . '</a>';
     }
   }
 
   function process($file) {
     if (isset($_POST['configuration']) && is_array($_POST['configuration'])) {
-      $this->invalidate_refresh_token_on_configuration_change($_POST['configuration']);
+      $configuration = $this->normalize_configuration($_POST['configuration']);
+      $this->invalidate_refresh_token_on_configuration_change($configuration);
+      $this->save_configuration_values($configuration);
 
-      if (isset($_POST['configuration']['MODULE_OFFICE365_MAIL_STATUS'])
-          && $_POST['configuration']['MODULE_OFFICE365_MAIL_STATUS'] == 'true'
+      if (isset($configuration['MODULE_OFFICE365_MAIL_STATUS'])
+          && $configuration['MODULE_OFFICE365_MAIL_STATUS'] == 'true'
           )
       {
         $this->disable_google_mail();
@@ -297,28 +299,49 @@ class office365_mail {
   private function save_posted_configuration() {
     $posted = array();
     if (isset($_POST['configuration']) && is_array($_POST['configuration'])) {
-      $this->invalidate_refresh_token_on_configuration_change($_POST['configuration']);
-      foreach ($_POST['configuration'] as $key => $value) {
-        if (in_array($key, $this->keys(), true)) {
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
-                           SET configuration_value = '" . xtc_db_input($value) . "'
-                         WHERE configuration_key = '" . xtc_db_input($key) . "'");
-          $posted[$key] = $value;
-        }
-      }
+      $configuration = $this->normalize_configuration($_POST['configuration']);
+      $this->invalidate_refresh_token_on_configuration_change($configuration);
+      $posted = $this->save_configuration_values($configuration);
     }
     return $posted;
   }
 
-  private function invalidate_refresh_token_on_configuration_change($configuration) {
-    $connection_keys = array(
+  private function get_connection_keys() {
+    return array(
       'MODULE_OFFICE365_MAIL_TENANT',
       'MODULE_OFFICE365_MAIL_CLIENT_ID',
       'MODULE_OFFICE365_MAIL_CLIENT_SECRET',
       'MODULE_OFFICE365_MAIL_SENDER_EMAIL',
     );
+  }
 
-    foreach ($connection_keys as $key) {
+  private function normalize_configuration($configuration) {
+    foreach ($this->get_connection_keys() as $key) {
+      if (array_key_exists($key, $configuration)) {
+        $configuration[$key] = is_scalar($configuration[$key])
+          ? trim((string)$configuration[$key])
+          : '';
+      }
+    }
+    return $configuration;
+  }
+
+  private function save_configuration_values($configuration) {
+    $saved = array();
+    foreach ($configuration as $key => $value) {
+      if (in_array($key, $this->keys(), true) && is_scalar($value)) {
+        $value = (string)$value;
+        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                         SET configuration_value = '" . xtc_db_input($value) . "'
+                       WHERE configuration_key = '" . xtc_db_input($key) . "'");
+        $saved[$key] = $value;
+      }
+    }
+    return $saved;
+  }
+
+  private function invalidate_refresh_token_on_configuration_change($configuration) {
+    foreach ($this->get_connection_keys() as $key) {
       if (array_key_exists($key, $configuration)
           && defined($key)
           && (string)$configuration[$key] !== (string)constant($key)

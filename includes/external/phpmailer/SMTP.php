@@ -672,10 +672,8 @@ class SMTP
                         return false;
                     }
                     //If the server answers with 334, send an empty line and wait for a 235
-                    if (
-                        substr($this->last_reply, 0, 3) === '334'
-                        && $this->sendCommand('AUTH End', '', 235)
-                    ) {
+                    if (substr($this->last_reply, 0, 3) === '334') {
+                        $this->sendCommand('AUTH End', '', 235);
                         return false;
                     }
                 }

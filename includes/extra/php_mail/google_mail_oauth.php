@@ -31,7 +31,7 @@ if (defined('MODULE_GOOGLE_MAIL_STATUS') && MODULE_GOOGLE_MAIL_STATUS == 'true'
   $mail->SMTPSecure = 'tls';
   $mail->SMTPAuth = true;
   $mail->AuthType = 'XOAUTH2';
-  $mail->Username = MODULE_GOOGLE_MAIL_SENDER_EMAIL;
+  $mail->Username = trim(MODULE_GOOGLE_MAIL_SENDER_EMAIL);
   $mail->SMTPDebug = (defined('SMTP_DEBUG') ? (int)SMTP_DEBUG : 0);
   $mail->SMTPOptions = array(
     'ssl' => array(
@@ -42,10 +42,10 @@ if (defined('MODULE_GOOGLE_MAIL_STATUS') && MODULE_GOOGLE_MAIL_STATUS == 'true'
   );
   $mail->setOAuth(new oauth_token_provider(array(
     'token_endpoint' => 'https://oauth2.googleapis.com/token',
-    'client_id' => MODULE_GOOGLE_MAIL_CLIENT_ID,
-    'client_secret' => MODULE_GOOGLE_MAIL_CLIENT_SECRET,
+    'client_id' => trim(MODULE_GOOGLE_MAIL_CLIENT_ID),
+    'client_secret' => trim(MODULE_GOOGLE_MAIL_CLIENT_SECRET),
     'refresh_token' => MODULE_GOOGLE_MAIL_REFRESH_TOKEN,
-    'user_email' => MODULE_GOOGLE_MAIL_SENDER_EMAIL,
+    'user_email' => trim(MODULE_GOOGLE_MAIL_SENDER_EMAIL),
     'refresh_token_configuration_key' => 'MODULE_GOOGLE_MAIL_REFRESH_TOKEN',
     'oauth_error_configuration_key' => 'MODULE_GOOGLE_MAIL_OAUTH_ERROR',
     'oauth_error' => MODULE_GOOGLE_MAIL_OAUTH_ERROR,
