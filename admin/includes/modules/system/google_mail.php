@@ -10,21 +10,21 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/oauth_callback_state.php');
 require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/oauth_http_client.php');
 
 class google_mail {
 
-    var $code;
-    var $title;
-    var $description;
-    var $sort_order;
-    var $enabled;
-    var $_check;
-    var $properties;
-    var $httpClient;
+  var $code;
+  var $title;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $_check;
+  var $properties;
+  var $httpClient;
 
   function __construct() {
     $this->code = 'google_mail';
@@ -39,6 +39,12 @@ class google_mail {
         'set=system&module=' . $this->code . '&action=custom&oauth_action=restore'
       ),
     );
+
+    if (defined('MODULE_GOOGLE_MAIL_STATUS')) {
+      $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' .
+        xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=custom') .
+        '">' . MODULE_GOOGLE_MAIL_TEXT_CONNECT_BUTTON . '</a>';
+    }
   }
 
   function process($file) {
@@ -73,17 +79,15 @@ class google_mail {
         : MODULE_GOOGLE_MAIL_TEXT_NOT_CONNECTED;
     }
 
-    $connect_href = xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=custom');
-    $connect_button = '<button type="submit" class="button" onclick="this.blur();" formaction="' . $connect_href . '">' . MODULE_GOOGLE_MAIL_TEXT_CONNECT_BUTTON . '</button>';
     $cancel_button = xtc_button_link(
       BUTTON_CANCEL,
       xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code)
     );
 
     return array('text' => '<br>' . $status_text .
-                           '<br><br>' . $connect_button . $cancel_button .
                            '<br><br>' . MODULE_GOOGLE_MAIL_TEXT_FROM_ADDRESS_HINT .
-                           '<br><br>' . sprintf(MODULE_GOOGLE_MAIL_TEXT_SETUP_GUIDE, $this->get_redirect_uri())
+                           '<br><br>' . sprintf(MODULE_GOOGLE_MAIL_TEXT_SETUP_GUIDE, $this->get_redirect_uri()) .
+                           '<br><br><div align="center">' . xtc_button(BUTTON_SAVE) . $cancel_button . '</div>'
                  );
   }
 
@@ -108,7 +112,10 @@ class google_mail {
               || $secret_config['set_function'] !== 'xtc_cfg_password_field_module('
               )
           {
-            $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' .
+            $this->properties['button_update'] = (isset($this->properties['button_update'])
+              ? $this->properties['button_update']
+              : '') .
+              '<a class="button btnbox" onclick="this.blur();" href="' .
               xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=update') .
               '">' . BUTTON_UPDATE . '</a>';
           }
@@ -132,6 +139,7 @@ class google_mail {
     if (defined('MODULE_GOOGLE_MAIL_REFRESH_TOKEN') && MODULE_GOOGLE_MAIL_REFRESH_TOKEN != '') {
       $this->revoke_token(MODULE_GOOGLE_MAIL_REFRESH_TOKEN);
     }
+    $this->clear_oauth_state();
     oauth_callback_state::deleteModuleStates($this->code);
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_GOOGLE_MAIL_%'");
   }
@@ -150,50 +158,6 @@ class google_mail {
       'MODULE_GOOGLE_MAIL_CLIENT_SECRET',
       'MODULE_GOOGLE_MAIL_SENDER_EMAIL',
     );
-  }
-
-  private function get_redirect_uri() {
-    return HTTPS_SERVER . DIR_WS_CATALOG . 'callback/phpmailer/xoauth_callback.php';
-  }
-
-  private function save_posted_configuration() {
-    $posted = array();
-    if (isset($_POST['configuration']) && is_array($_POST['configuration'])) {
-      $this->invalidate_refresh_token_on_configuration_change($_POST['configuration']);
-      foreach ($_POST['configuration'] as $key => $value) {
-        if (in_array($key, $this->keys(), true)) {
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
-                           SET configuration_value = '" . xtc_db_input($value) . "'
-                         WHERE configuration_key = '" . xtc_db_input($key) . "'");
-          $posted[$key] = $value;
-        }
-      }
-    }
-    return $posted;
-  }
-
-  private function invalidate_refresh_token_on_configuration_change($configuration) {
-    $connection_keys = array(
-      'MODULE_GOOGLE_MAIL_CLIENT_ID',
-      'MODULE_GOOGLE_MAIL_CLIENT_SECRET',
-      'MODULE_GOOGLE_MAIL_SENDER_EMAIL',
-    );
-
-    foreach ($connection_keys as $key) {
-      if (array_key_exists($key, $configuration)
-          && defined($key)
-          && (string)$configuration[$key] !== (string)constant($key)
-          )
-      {
-        if (defined('MODULE_GOOGLE_MAIL_REFRESH_TOKEN') && MODULE_GOOGLE_MAIL_REFRESH_TOKEN != '') {
-          $this->revoke_token(MODULE_GOOGLE_MAIL_REFRESH_TOKEN);
-        }
-        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
-                         SET configuration_value = ''
-                       WHERE configuration_key IN ('MODULE_GOOGLE_MAIL_REFRESH_TOKEN', 'MODULE_GOOGLE_MAIL_OAUTH_ERROR')");
-        break;
-      }
-    }
   }
 
   function custom() {
@@ -314,6 +278,50 @@ class google_mail {
       );
 
       xtc_redirect('https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query($params));
+    }
+  }
+
+  private function get_redirect_uri() {
+    return HTTPS_SERVER . DIR_WS_CATALOG . 'callback/phpmailer/xoauth_callback.php';
+  }
+
+  private function save_posted_configuration() {
+    $posted = array();
+    if (isset($_POST['configuration']) && is_array($_POST['configuration'])) {
+      $this->invalidate_refresh_token_on_configuration_change($_POST['configuration']);
+      foreach ($_POST['configuration'] as $key => $value) {
+        if (in_array($key, $this->keys(), true)) {
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                           SET configuration_value = '" . xtc_db_input($value) . "'
+                         WHERE configuration_key = '" . xtc_db_input($key) . "'");
+          $posted[$key] = $value;
+        }
+      }
+    }
+    return $posted;
+  }
+
+  private function invalidate_refresh_token_on_configuration_change($configuration) {
+    $connection_keys = array(
+      'MODULE_GOOGLE_MAIL_CLIENT_ID',
+      'MODULE_GOOGLE_MAIL_CLIENT_SECRET',
+      'MODULE_GOOGLE_MAIL_SENDER_EMAIL',
+    );
+
+    foreach ($connection_keys as $key) {
+      if (array_key_exists($key, $configuration)
+          && defined($key)
+          && (string)$configuration[$key] !== (string)constant($key)
+          )
+      {
+        if (defined('MODULE_GOOGLE_MAIL_REFRESH_TOKEN') && MODULE_GOOGLE_MAIL_REFRESH_TOKEN != '') {
+          $this->revoke_token(MODULE_GOOGLE_MAIL_REFRESH_TOKEN);
+        }
+        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                         SET configuration_value = ''
+                       WHERE configuration_key IN ('MODULE_GOOGLE_MAIL_REFRESH_TOKEN', 'MODULE_GOOGLE_MAIL_OAUTH_ERROR')");
+        break;
+      }
     }
   }
 

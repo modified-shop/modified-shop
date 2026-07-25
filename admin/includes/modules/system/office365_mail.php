@@ -18,14 +18,14 @@ require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/oauth_http_client.php');
 
 class office365_mail {
 
-    var $code;
-    var $title;
-    var $description;
-    var $sort_order;
-    var $enabled;
-    var $_check;
-    var $properties;
-    var $httpClient;
+  var $code;
+  var $title;
+  var $description;
+  var $sort_order;
+  var $enabled;
+  var $_check;
+  var $properties;
+  var $httpClient;
 
   function __construct() {
     $this->code = 'office365_mail';
@@ -40,6 +40,12 @@ class office365_mail {
         'set=system&module=' . $this->code . '&action=custom&oauth_action=restore'
       ),
     );
+
+    if (defined('MODULE_OFFICE365_MAIL_STATUS')) {
+      $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' .
+        xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=custom') .
+        '">' . MODULE_OFFICE365_MAIL_TEXT_CONNECT_BUTTON . '</a>';
+    }
   }
 
   function process($file) {
@@ -74,17 +80,15 @@ class office365_mail {
         : MODULE_OFFICE365_MAIL_TEXT_NOT_CONNECTED;
     }
 
-    $connect_href = xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=custom');
-    $connect_button = '<button type="submit" class="button" onclick="this.blur();" formaction="' . $connect_href . '">' . MODULE_OFFICE365_MAIL_TEXT_CONNECT_BUTTON . '</button>';
     $cancel_button = xtc_button_link(
       BUTTON_CANCEL,
       xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code)
     );
 
     return array('text' => '<br>' . $status_text .
-                           '<br><br>' . $connect_button . $cancel_button .
                            '<br><br>' . MODULE_OFFICE365_MAIL_TEXT_FROM_ADDRESS_HINT .
-                           '<br><br>' . sprintf(MODULE_OFFICE365_MAIL_TEXT_SETUP_GUIDE, $this->get_redirect_uri())
+                           '<br><br>' . sprintf(MODULE_OFFICE365_MAIL_TEXT_SETUP_GUIDE, $this->get_redirect_uri()) .
+                           '<br><br><div align="center">' . xtc_button(BUTTON_SAVE) . $cancel_button . '</div>'
                  );
   }
 
@@ -109,7 +113,10 @@ class office365_mail {
               || $secret_config['set_function'] !== 'xtc_cfg_password_field_module('
               )
           {
-            $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' .
+            $this->properties['button_update'] = (isset($this->properties['button_update'])
+              ? $this->properties['button_update']
+              : '') .
+              '<a class="button btnbox" onclick="this.blur();" href="' .
               xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=update') .
               '">' . BUTTON_UPDATE . '</a>';
           }
