@@ -266,7 +266,7 @@ class google_mail {
         $client_secret
       );
 
-      $connected_email = (($token_data !== false) ? $this->get_connected_email($token_data, $client_id) : false);
+      $connected_email = (($token_data !== false) ? $this->get_connected_email($token_data) : false);
 
       if ($token_data === false || !isset($token_data['refresh_token'])) {
         $messageStack->add_session(MODULE_GOOGLE_MAIL_TEXT_CONNECT_ERROR, 'error');
@@ -388,17 +388,22 @@ class google_mail {
     return (is_array($data) ? $data : false);
   }
 
-  private function get_connected_email($token_data, $client_id) {
-    if (!isset($token_data['id_token'])) {
+  private function get_connected_email($token_data) {
+    if (!isset($token_data['access_token'])
+        || !is_string($token_data['access_token'])
+        || $token_data['access_token'] == ''
+        )
+    {
       return false;
     }
 
     $result = $this->get_http_client()->request(
       'GET',
-      'https://oauth2.googleapis.com/tokeninfo',
+      'https://openidconnect.googleapis.com/v1/userinfo',
       array(
-        'query' => array(
-          'id_token' => $token_data['id_token'],
+        'headers' => array(
+          'Authorization' => 'Bearer ' . $token_data['access_token'],
+          'Accept' => 'application/json',
         ),
       )
     );
@@ -413,8 +418,8 @@ class google_mail {
 
     $data = json_decode($result['response'], true);
     if (!is_array($data)
-        || !isset($data['aud'], $data['email'], $data['email_verified'])
-        || !hash_equals((string)$client_id, (string)$data['aud'])
+        || !isset($data['email'], $data['email_verified'])
+        || !is_string($data['email'])
         || !in_array($data['email_verified'], array(true, 'true', 1, '1'), true)
         )
     {
