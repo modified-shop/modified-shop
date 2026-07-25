@@ -10,8 +10,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// restore the session assigned to the one-time OAuth state
-define('SESSION_FORCE_COOKIE_USE', 'False');
 define('RUN_MODE_XOAUTH_CALLBACK', true);
 
 chdir('../../');

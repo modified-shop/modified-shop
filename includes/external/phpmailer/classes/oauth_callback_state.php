@@ -51,9 +51,12 @@ class oauth_callback_state
         return $state;
     }
 
-    public static function consume($state)
+    public static function consume($state, $sessionId)
     {
-        if (!preg_match('/^[a-f0-9]{64}$/', (string)$state)) {
+        if (!preg_match('/^[a-f0-9]{64}$/', (string)$state)
+            || !self::isValidSessionId($sessionId)
+            )
+        {
             return false;
         }
         if (!self::tableExists()) {
@@ -65,6 +68,7 @@ class oauth_callback_state
             "SELECT `session_id`, `module`
                FROM `" . self::TABLE . "`
               WHERE `state_hash` = '" . xtc_db_input($stateHash) . "'
+                AND `session_id` = '" . xtc_db_input($sessionId) . "'
                 AND `expires_at` >= NOW()
                 AND `consumed_at` IS NULL"
         );
@@ -85,6 +89,7 @@ class oauth_callback_state
             "UPDATE `" . self::TABLE . "`
                 SET `consumed_at` = NOW()
               WHERE `state_hash` = '" . xtc_db_input($stateHash) . "'
+                AND `session_id` = '" . xtc_db_input($sessionId) . "'
                 AND `expires_at` >= NOW()
                 AND `consumed_at` IS NULL"
         );

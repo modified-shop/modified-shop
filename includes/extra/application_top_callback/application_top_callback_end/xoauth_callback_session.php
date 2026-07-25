@@ -14,12 +14,11 @@ if (defined('RUN_MODE_XOAUTH_CALLBACK')) {
     require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/oauth_callback_state.php');
 
     $oauthCallbackState = oauth_callback_state::consume(
-        isset($_GET['state']) ? (string)$_GET['state'] : ''
+        isset($_GET['state']) ? (string)$_GET['state'] : '',
+        xtc_session_id()
     );
 
     if (is_array($oauthCallbackState)) {
-        $_GET['MODsid'] = $oauthCallbackState['session_id'];
-        $_REQUEST['MODsid'] = $oauthCallbackState['session_id'];
         define('XOAUTH_CALLBACK_MODULE', $oauthCallbackState['module']);
     }
 }
