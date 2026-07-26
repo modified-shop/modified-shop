@@ -58,8 +58,8 @@ class PayonePayment {
 		$this->payone = new PayoneModified();
 		if ($this->check() > 0) {
 			$this->config = $this->payone->getConfig();
-      $this->tmpStatus = ((isset($this->config['orders_status'])) ? $this->config['orders_status']['tmp'] : -1);
-  		$this->order_status = ((isset($this->config['orders_status'])) ? $this->config['orders_status']['paid'] : -1);
+      $this->tmpStatus = (int) ((isset($this->config['orders_status'])) ? $this->config['orders_status']['tmp'] : -1);
+  		$this->order_status = (int) ((isset($this->config['orders_status'])) ? $this->config['orders_status']['paid'] : -1);
 
       if (strpos(basename($PHP_SELF), 'checkout') !== false) {
         $this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];

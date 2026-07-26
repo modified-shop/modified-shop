@@ -44,7 +44,7 @@ class eustandardtransfer {
           && (int) MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID > 0
           )
       {
-        $this->order_status = MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID;
+        $this->order_status = (int) MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID;
       }
     }
     

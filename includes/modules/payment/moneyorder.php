@@ -42,7 +42,7 @@ class moneyorder {
     if ($this->check() > 0) {
       $this->info_success = ((defined('MODULE_PAYMENT_MONEYORDER_SUCCESS') && MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') ? $this->description : $this->info);
       if ((int) MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID;
+        $this->order_status = (int) MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID;
       }
     }
     
