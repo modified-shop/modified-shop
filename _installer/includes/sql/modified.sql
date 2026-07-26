@@ -2155,7 +2155,7 @@ INSERT INTO countries VALUES (57,'Denmark','DK','DNK',1,1,0, 100);
 INSERT INTO countries VALUES (58,'Djibouti','DJ','DJI',1,1,0, 100);
 INSERT INTO countries VALUES (59,'Dominica','DM','DMA',1,1,0, 100);
 INSERT INTO countries VALUES (60,'Dominican Republic','DO','DOM',1,1,0, 100);
-INSERT INTO countries VALUES (61,'East Timor','TL','TLS',1,1,0, 100);
+INSERT INTO countries VALUES (61,'Timor-Leste','TL','TLS',1,1,0, 100);
 INSERT INTO countries VALUES (62,'Ecuador','EC','ECU',1,1,0, 100);
 INSERT INTO countries VALUES (63,'Egypt','EG','EGY',1,1,0, 100);
 INSERT INTO countries VALUES (64,'El Salvador','SV','SLV',1,1,0, 100);
