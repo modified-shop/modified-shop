@@ -12,8 +12,7 @@ INSERT INTO `database_version` (`version`, `date_added`) VALUES ('MOD_3.3.1', NO
 
 #GTB - 2026-07-27 - preserve country IDs and settings and ensure missing non-EU tax-zone assignments
 INSERT INTO `countries`
-  (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`,
-   `address_format_id`, `status`, `required_zones`, `sort_order`)
+  (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`, `sort_order`)
 VALUES
   ('Republic of South Sudan', 'SS', 'SSD', 1, 1, 0, 100),
   ('Democratic Republic of the Congo', 'CD', 'COD', 1, 1, 0, 100),
@@ -23,8 +22,7 @@ ON DUPLICATE KEY UPDATE
   `countries_iso_code_3` = VALUES(`countries_iso_code_3`);
 
 INSERT INTO `zones_to_geo_zones`
-  (`zone_country_id`, `zone_id`, `geo_zone_id`,
-   `last_modified`, `date_added`)
+  (`zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`)
 SELECT
   c.`countries_id`,
   0,
@@ -44,8 +42,7 @@ ORDER BY c.`countries_id`;
 
 #Tomcraft - 2026-07-27 - restore scheduled task defaults without replacing its primary key
 INSERT INTO `scheduled_tasks`
-  (`time_next`, `time_offset`, `time_regularity`,
-   `time_unit`, `status`, `edit`, `tasks`)
+  (`time_next`, `time_offset`, `time_regularity`, `time_unit`, `status`, `edit`, `tasks`)
 VALUES
   (0, 0, 1, 'd', 0, 1, 'customers_ip_maintenance')
 ON DUPLICATE KEY UPDATE
@@ -58,8 +55,7 @@ ON DUPLICATE KEY UPDATE
 
 #Tomcraft - 2026-07-27 - ensure countries and missing non-EU tax-zone assignments from previous updates
 INSERT INTO `countries`
-  (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`,
-   `address_format_id`, `status`, `required_zones`, `sort_order`)
+  (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`, `sort_order`)
 VALUES
   ('Serbia', 'RS', 'SRB', 1, 1, 0, 100),
   ('Montenegro', 'ME', 'MNE', 1, 1, 0, 100),
@@ -68,9 +64,9 @@ ON DUPLICATE KEY UPDATE
   `countries_name` = VALUES(`countries_name`),
   `countries_iso_code_3` = VALUES(`countries_iso_code_3`);
 
+#Tomcraft - 2026-07-27 - ensure historical tax-zone assignments without fixed association IDs
 INSERT INTO `zones_to_geo_zones`
-  (`zone_country_id`, `zone_id`, `geo_zone_id`,
-   `last_modified`, `date_added`)
+  (`zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`)
 SELECT
   c.`countries_id`,
   0,
@@ -100,6 +96,7 @@ UPDATE `countries` SET `countries_name` = 'Timor-Leste', `countries_iso_code_2` 
 UPDATE `configuration` SET `configuration_value` = TRIM(BOTH ',' FROM REPLACE(CONCAT(',', `configuration_value`, ','), ',TP,', ',TL,')) WHERE `configuration_key` = 'MODULE_SHIPPING_DHL_COUNTRIES_10';
 UPDATE `configuration` SET `configuration_value` = TRIM(BOTH ',' FROM REPLACE(CONCAT(',', `configuration_value`, ','), ',TP,', ',TL,')) WHERE `configuration_key` = 'MODULE_SHIPPING_CHP_COUNTRIES_7';
 UPDATE `configuration` SET `configuration_value` = TRIM(BOTH ',' FROM REPLACE(CONCAT(',', `configuration_value`, ','), ',TP,', ',TL,')) WHERE `configuration_key` = 'MODULE_SHIPPING_AP_COUNTRIES_5';
+
 #GTB - 2026-07-24 - update DPD tracking link
 UPDATE `carriers` SET `carrier_tracking_link` = 'https://my.dpd.de/redirect.aspx?action=2&parcelno=$1&locale=$2' WHERE `carrier_tracking_link` = 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2';
 

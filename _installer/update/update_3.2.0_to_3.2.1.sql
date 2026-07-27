@@ -18,8 +18,7 @@ INSERT INTO `database_version` (`version`, `date_added`) VALUES ('MOD_3.2.1', NO
 DELETE FROM configuration_group WHERE configuration_group_id = '31';
 
 INSERT INTO `scheduled_tasks`
-  (`time_next`, `time_offset`, `time_regularity`,
-   `time_unit`, `status`, `edit`, `tasks`)
+  (`time_next`, `time_offset`, `time_regularity`, `time_unit`, `status`, `edit`, `tasks`)
 VALUES
   (0, 0, 1, 'd', 0, 1, 'customers_ip_maintenance')
 ON DUPLICATE KEY UPDATE

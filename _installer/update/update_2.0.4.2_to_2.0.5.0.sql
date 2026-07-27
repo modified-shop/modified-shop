@@ -245,8 +245,7 @@ ALTER TABLE `carriers` ADD UNIQUE KEY `idx_carrier_name` (`carrier_name`);
 
 #Tomcraft - 2019-11-15 - Fix last entry from tax_zones_standard.sql / tax_zones_switzerland.sql was not written to database due to missing empty line at the end of SQL files
 INSERT INTO `zones_to_geo_zones`
-  (`zone_country_id`, `zone_id`, `geo_zone_id`,
-   `last_modified`, `date_added`)
+  (`zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`)
 SELECT
   c.`countries_id`,
   0,

@@ -203,8 +203,7 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 
 #GTB - 2016-05-18 - insert kosovo
 INSERT INTO `countries`
-  (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`,
-   `address_format_id`, `status`, `required_zones`)
+  (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`)
 VALUES
   ('Kosovo', 'CS', 'SCG', 1, 1, 0)
 ON DUPLICATE KEY UPDATE
@@ -219,8 +218,7 @@ DELETE FROM configuration WHERE configuration_key = 'COMPRESS_STYLESHEET_TIME';
 
 #Tomcraft - 2016-06-07 - insert missing zones_to_geo_zones from r975 for Serbia (ID 240) and Montenegro (ID 241)
 INSERT INTO `zones_to_geo_zones`
-  (`zone_country_id`, `zone_id`, `geo_zone_id`,
-   `last_modified`, `date_added`)
+  (`zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`)
 SELECT
   c.`countries_id`,
   0,
