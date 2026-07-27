@@ -11,26 +11,12 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  function xtc_count_products_in_category_array($parent_id, $category_tree_array) {
-    $products_in_category = 0;
-    if (mod_count_products_in_category($categories['id']) > 1) {
-      foreach ($category_tree_array[$parent_id] as $categories) {
-        $products_in_category += mod_count_products_in_category($categories['id']);
-      }
-    } else {
-      $products_in_category = 1;
-    }
-    
-    return $products_in_category;
-  }
-  
-  
-  function mod_count_products_in_category($categories_id) {
+  function mod_count_products_in_category($categories_id, $product_counts = array()) {
     if (!defined('CATEGORIES_HIDE_EMPTY') || CATEGORIES_HIDE_EMPTY === false) {
       return 1;
     }
     
-    return xtc_count_products_in_category($categories_id);
+    return isset($product_counts[$categories_id]) ? $product_counts[$categories_id] : 0;
   }
   
   
@@ -90,13 +76,172 @@
     
     return $result;
   }
+
+
+  function xtc_get_category_product_counts($category_tree_array) {
+    global $modified_cache;
+
+    if ((!defined('CATEGORIES_HIDE_EMPTY') || CATEGORIES_HIDE_EMPTY === false)
+        && SHOW_COUNTS != 'true'
+        )
+    {
+      return array();
+    }
+
+    $displayed_category_ids = array();
+    foreach ($category_tree_array as $categories) {
+      foreach ($categories as $category) {
+        $displayed_category_ids[(int)$category['id']] = true;
+      }
+    }
+
+    if (empty($displayed_category_ids)) {
+      return array();
+    }
+
+    $cache_enabled = defined('DB_CACHE') && DB_CACHE == 'true';
+    if ($cache_enabled && !is_object($modified_cache)) {
+      include(DIR_FS_CATALOG.'includes/modified_cache.php');
+    }
+
+    if ($cache_enabled) {
+      $aggregate_cache_id = 'category_product_totals_'.md5(
+        'language:'.(int)$_SESSION['languages_id']
+        .'|product_conditions:'.PRODUCTS_CONDITIONS_P
+        .'|category_conditions:'.CATEGORIES_CONDITIONS_C
+      );
+      $modified_cache->setId($aggregate_cache_id);
+      if ($modified_cache->isHit() === true) {
+        $all_product_counts = $modified_cache->get();
+        if (is_array($all_product_counts)) {
+          $product_counts = array();
+          foreach ($displayed_category_ids as $category_id => $unused) {
+            $product_counts[$category_id] = isset($all_product_counts[$category_id])
+              ? $all_product_counts[$category_id]
+              : 0;
+          }
+
+          return $product_counts;
+        }
+      }
+    }
+
+    // Product counts include all visible descendants. Walking the cached
+    // adjacency list preserves the existing behavior that traversal stops at
+    // hidden, unnamed, or customer-group-inaccessible nodes.
+    $visible_category_ids = array();
+    $category_parent_ids = array();
+    $category_depths = array();
+    $pending_categories = array(
+      array(
+        'parent_id' => 0,
+        'depth' => 0,
+      ),
+    );
+
+    while (!empty($pending_categories)) {
+      $pending = array_pop($pending_categories);
+      $categories = xtc_get_categories_tree_data($pending['parent_id'], 1);
+
+      foreach ($categories as $category) {
+        $category_id = (int)$category['id'];
+
+        if (isset($visible_category_ids[$category_id])) {
+          continue;
+        }
+
+        $visible_category_ids[$category_id] = true;
+        $category_parent_ids[$category_id] = (int)$category['parent'];
+        $category_depths[$category_id] = $pending['depth'] + 1;
+        $pending_categories[] = array(
+          'parent_id' => $category_id,
+          'depth' => $pending['depth'] + 1,
+        );
+      }
+    }
+
+    $direct_product_counts = array();
+    $counts_cached = false;
+
+    if ($cache_enabled) {
+      $cache_id = 'category_product_counts_'.md5(
+        'language:'.(int)$_SESSION['languages_id']
+        .'|product_conditions:'.PRODUCTS_CONDITIONS_P
+      );
+      $modified_cache->setId($cache_id);
+      if ($modified_cache->isHit() === true) {
+        $direct_product_counts = $modified_cache->get();
+        $counts_cached = is_array($direct_product_counts);
+      }
+    }
+
+    if ($counts_cached === false) {
+      $direct_product_counts = array();
+      $products_query = xtDBquery(
+        "SELECT p2c.categories_id,
+                COUNT(*) AS total
+           FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+  STRAIGHT_JOIN ".TABLE_PRODUCTS." p
+             ON p.products_id = p2c.products_id
+            AND p.products_status = '1'
+  STRAIGHT_JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+             ON pd.products_id = p.products_id
+            AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+            AND TRIM(pd.products_name) != ''
+          WHERE 1 = 1
+                ".PRODUCTS_CONDITIONS_P."
+       GROUP BY p2c.categories_id"
+      );
+      while ($category = xtc_db_fetch_array($products_query, true)) {
+        $direct_product_counts[(int)$category['categories_id']] = (int)$category['total'];
+      }
+
+      if ($cache_enabled) {
+        $modified_cache->setId($cache_id);
+        $modified_cache->set($direct_product_counts);
+      }
+    }
+
+    $all_product_counts = array();
+    foreach ($visible_category_ids as $category_id => $unused) {
+      $all_product_counts[$category_id] = isset($direct_product_counts[$category_id])
+        ? $direct_product_counts[$category_id]
+        : 0;
+    }
+
+    arsort($category_depths);
+    foreach ($category_depths as $category_id => $depth) {
+      $parent_id = $category_parent_ids[$category_id];
+      if ($parent_id > 0 && isset($all_product_counts[$parent_id])) {
+        $all_product_counts[$parent_id] += $all_product_counts[$category_id];
+      }
+    }
+
+    if ($cache_enabled) {
+      $modified_cache->setId($aggregate_cache_id);
+      $modified_cache->set($all_product_counts);
+    }
+
+    $product_counts = array();
+    foreach ($displayed_category_ids as $category_id => $unused) {
+      $product_counts[$category_id] = isset($all_product_counts[$category_id])
+        ? $all_product_counts[$category_id]
+        : 0;
+    }
+
+    return $product_counts;
+  }
   
   
-  function xtc_show_category($parent_id = 0, $path = '', $category_tree_array = array()) {
+  function xtc_show_category($parent_id = 0, $path = '', $category_tree_array = array(), $product_counts = null) {
     global $categories_string, $cPath;
-    
+
+    if ($product_counts === null) {
+      $product_counts = xtc_get_category_product_counts($category_tree_array);
+    }
+
     foreach ($category_tree_array[$parent_id] as $categories) {
-      if (mod_count_products_in_category($categories['id']) > 0) {
+      if (mod_count_products_in_category($categories['id'], $product_counts) > 0) {
         $level = $categories['level'];
         $tab = str_repeat("\t", $level);
         $category_path = explode('_', $cPath);
@@ -134,7 +279,7 @@
         }
 
         if (SHOW_COUNTS == 'true') {
-          $products_in_category = xtc_count_products_in_category($categories['id']);
+          $products_in_category = isset($product_counts[$categories['id']]) ? $product_counts[$categories['id']] : 0;
           if ($products_in_category > 0) {
             $categories_string .= '<span class="counts">(' . $products_in_category . ')</span>';
           }
@@ -151,7 +296,7 @@
             $categories_string .= '<a href="'.$link.'" title="'.encode_htmlentities($categories['name']).'">';
             $categories_string .= '<i class="fa-solid fa-circle-chevron-right"></i>' . TEXT_SHOW_CATEGORY . ' ' . $categories['name'];
             if (SHOW_COUNTS == 'true') {
-              $products_in_category = xtc_count_products_in_category($categories['id']);
+              $products_in_category = isset($product_counts[$categories['id']]) ? $product_counts[$categories['id']] : 0;
               if ($products_in_category > 0) {
                 $categories_string .= '<span class="counts">(' . $products_in_category . ')</span>';
               }
@@ -160,7 +305,7 @@
             $categories_string .= '</li>';
 
             $categories_string .= "\n";
-            xtc_show_category($categories['id'], $link_path, $category_tree_array);
+            xtc_show_category($categories['id'], $link_path, $category_tree_array, $product_counts);
             xtc_show_sub_category($level, false);
             $categories_string .= "\n".$tab;            
           }
