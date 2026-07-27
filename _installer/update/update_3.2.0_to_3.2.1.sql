@@ -17,7 +17,18 @@ INSERT INTO `database_version` (`version`, `date_added`) VALUES ('MOD_3.2.1', NO
 #GTB - 2025-12-19 - fix errors due to problems with update API
 DELETE FROM configuration_group WHERE configuration_group_id = '31';
 
-REPLACE INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `edit`, `tasks`) VALUES (1, 'd', 0, 1, 'customers_ip_maintenance');
+INSERT INTO `scheduled_tasks`
+  (`time_next`, `time_offset`, `time_regularity`,
+   `time_unit`, `status`, `edit`, `tasks`)
+VALUES
+  (0, 0, 1, 'd', 0, 1, 'customers_ip_maintenance')
+ON DUPLICATE KEY UPDATE
+  `time_next` = VALUES(`time_next`),
+  `time_offset` = VALUES(`time_offset`),
+  `time_regularity` = VALUES(`time_regularity`),
+  `time_unit` = VALUES(`time_unit`),
+  `status` = VALUES(`status`),
+  `edit` = VALUES(`edit`);
 
 ALTER TABLE `admin_access` DROP `removeoldpics`;
 

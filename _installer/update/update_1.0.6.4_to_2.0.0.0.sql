@@ -474,10 +474,19 @@ UPDATE admin_access SET shopgate = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #Tomcraft - 2015-02-16 - Added status for cancelled orders
 #(Set next available number for status ID in both languages)
-INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
-  SELECT MAX(orders_status_id)+1, 1, 'Reversed' FROM orders_status;
-INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
-  SELECT MAX(orders_status_id)+1, 2, 'Storniert' FROM orders_status;
+INSERT INTO `orders_status`
+  (`orders_status_id`, `language_id`, `orders_status_name`)
+SELECT
+  COALESCE(MAX(`orders_status_id`), 0) + 1,
+  1,
+  'Reversed'
+FROM `orders_status`
+UNION ALL
+SELECT
+  COALESCE(MAX(`orders_status_id`), 0) + 1,
+  2,
+  'Storniert'
+FROM `orders_status`;
 
 #GTB - 2015-02-18 - remove tables
 DROP TABLE IF EXISTS counter;
