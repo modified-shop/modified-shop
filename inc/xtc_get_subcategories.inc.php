@@ -22,11 +22,19 @@
     if (!isset($subcategories_cache)) {
       $subcategories_cache = array();
     }
-  
-    if (defined('DB_CACHE') && DB_CACHE == 'true') {
-      include(DIR_FS_CATALOG.'includes/modified_cache.php');
 
-      $modified_cache->setId('sc_'.$parent_id);
+    $cache_enabled = defined('DB_CACHE') && DB_CACHE == 'true';
+    if ($cache_enabled) {
+      if (!is_object($modified_cache)) {
+        include(DIR_FS_CATALOG.'includes/modified_cache.php');
+      }
+
+      $cache_id = 'sc_'.md5(
+        'parent:'.(int)$parent_id
+        .'|language:'.(int)$_SESSION['languages_id']
+        .'|category_conditions:'.(defined('RUN_MODE_ADMIN') ? 'admin' : CATEGORIES_CONDITIONS_C)
+      );
+      $modified_cache->setId($cache_id);
       if ($modified_cache->isHit() !== false) {
         $subcategories_cache[$parent_id] = $modified_cache->get();
       }
@@ -36,12 +44,12 @@
       $subcategories_cache_array = array();
       xtc_get_subcategories_data($subcategories_cache_array, $parent_id);
       $subcategories_cache[$parent_id] = $subcategories_cache_array;
-    }
 
-    if (defined('DB_CACHE') && DB_CACHE == 'true') {
-      $modified_cache->setId('sc_'.$parent_id);
-      $modified_cache->set($subcategories_cache[$parent_id]);
-      $modified_cache->setTags(array('categories', 'subcategories'));
+      if ($cache_enabled) {
+        $modified_cache->setId($cache_id);
+        $modified_cache->set($subcategories_cache[$parent_id]);
+        $modified_cache->setTags(array('categories', 'subcategories'));
+      }
     }
     
     $subcategories_array = $subcategories_cache[$parent_id];
