@@ -100,7 +100,7 @@
                           IFNULL(s.specials_new_products_price, p.products_price) AS price ";
   
     if (PRODUCT_LIST_FILTER == 'true') { 
-      $select_str = "SELECT p.products_id ";
+      $select_str = "SELECT DISTINCT p.products_id ";
     }
   
     $from_str  = "FROM ".TABLE_PRODUCTS." AS p 
@@ -108,13 +108,19 @@
                        ON p.products_id = pd.products_id 
                           AND trim(pd.products_name) != '' 
                           AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                  ";
+                  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                       ON p2c.products_id = p.products_id
+                          ".$p2c_condition."
+                  JOIN ".TABLE_CATEGORIES." c
+                       ON c.categories_id = p2c.categories_id
+                          AND c.categories_status = 1
+                              ".CATEGORIES_CONDITIONS_C." ";
                            
     $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON p.products_id = pa.products_id
                                               LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON pa.options_values_id = pov.products_options_values_id AND pov.language_id = '".(int) $_SESSION['languages_id']."' " : "";
     $from_str .= "LEFT JOIN ".TABLE_SPECIALS." AS s ON p.products_id = s.products_id ".SPECIALS_CONDITIONS_S." ";
     $from_str .= SEARCH_IN_MANU == 'true' ? " LEFT JOIN ".TABLE_MANUFACTURERS." AS m ON p.manufacturers_id = m.manufacturers_id AND m.manufacturers_status = 1 " : "";
-  
+
     if (SEARCH_IN_FILTER == 'true') {
       $from_str .= "LEFT JOIN ".TABLE_PRODUCTS_TAGS." pt ON pt.products_id = p.products_id
                     LEFT JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv ON ptv.options_id = pt.options_id AND ptv.values_id = pt.values_id AND ptv.status = '1' AND ptv.languages_id = '".(int)$_SESSION['languages_id']."' ";
@@ -135,16 +141,6 @@
     //where-string
     $where_str = " WHERE p.products_status = '1' "  
     .PRODUCTS_CONDITIONS_P
-    ." AND EXISTS (
-          SELECT 1
-            FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-            JOIN ".TABLE_CATEGORIES." c
-              ON c.categories_id = p2c.categories_id
-             AND c.categories_status = 1
-                 ".CATEGORIES_CONDITIONS_C."
-           WHERE p2c.products_id = p.products_id
-                 ".$p2c_condition."
-        ) "
     .$filter_where
     .$manu_check
     .$tax_where
@@ -158,7 +154,6 @@
 
     //go for keywords... this is the main search process
     if ($keywords && $keywordcheck) {
-    
       include(DIR_WS_INCLUDES.'build_search_query.php');
     
       if (PRODUCT_LIST_FILTER != 'true') { 
