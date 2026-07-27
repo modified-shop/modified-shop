@@ -45,17 +45,21 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.ht
                                         ON p.products_id = pd.products_id
                                            AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                            AND trim(pd.products_name) != ''
-                                   JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                        ON p.products_id = p2c.products_id
-                                   JOIN ".TABLE_CATEGORIES." c
-                                        ON c.categories_id = p2c.categories_id
-                                           AND c.categories_status = 1
-                                               ".CATEGORIES_CONDITIONS_C."
                                   WHERE p.products_status = 1
                                     AND p.products_startpage = 1
-                                        ".PRODUCTS_CONDITIONS_P);
+                                        ".PRODUCTS_CONDITIONS_P."
+                                    AND EXISTS (
+                                          SELECT 1
+                                            FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                            JOIN ".TABLE_CATEGORIES." c
+                                              ON c.categories_id = p2c.categories_id
+                                             AND c.categories_status = 1
+                                                 ".CATEGORIES_CONDITIONS_C."
+                                           WHERE p2c.products_id = p.products_id
+                                        )");
     $count = xtc_db_fetch_array($count_query);
     $startpage_total = $count['total'];
+    $new_products_result = false;
 
     $order_by = "p.products_startpage_sort ASC";
     if ($startpage_total > MAX_DISPLAY_PRODUCTS_STARTPAGE) {
@@ -70,23 +74,25 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.ht
                                     ON p.products_id = pd.products_id
                                        AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                        AND trim(pd.products_name) != ''
-                               JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                    ON p.products_id = p2c.products_id
-                               JOIN ".TABLE_CATEGORIES." c
-                                    ON c.categories_id = p2c.categories_id
-                                       AND c.categories_status = 1
-                                           ".CATEGORIES_CONDITIONS_C."
                           LEFT JOIN ".TABLE_MANUFACTURERS." m
                                     ON p.manufacturers_id = m.manufacturers_id
                               WHERE p.products_status = 1
                                 AND p.products_startpage = 1
                                     ".PRODUCTS_CONDITIONS_P."
-                           GROUP BY p.products_id
+                                AND EXISTS (
+                                      SELECT 1
+                                        FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                        JOIN ".TABLE_CATEGORIES." c
+                                          ON c.categories_id = p2c.categories_id
+                                         AND c.categories_status = 1
+                                             ".CATEGORIES_CONDITIONS_C."
+                                       WHERE p2c.products_id = p.products_id
+                                    )
                            ORDER BY ".$order_by."
                               LIMIT ".MAX_DISPLAY_PRODUCTS_STARTPAGE;
 
-      $check_new_products_query = xtDBquery($new_products_query);
-      $startpage_total = xtc_db_num_rows($check_new_products_query, true);
+      $new_products_result = xtDBquery($new_products_query);
+      $startpage_total = xtc_db_num_rows($new_products_result, true);
     }
 
     if ($startpage_total < 1) {
@@ -102,25 +108,28 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products_default.ht
                                     ON p.products_id = pd.products_id
                                        AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                        AND trim(pd.products_name) != ''
-                               JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                    ON p.products_id = p2c.products_id
-                               JOIN ".TABLE_CATEGORIES." c
-                                    ON c.categories_id = p2c.categories_id
-                                       AND c.categories_status = 1
-                                           ".CATEGORIES_CONDITIONS_C."
                           LEFT JOIN ".TABLE_MANUFACTURERS." m
                                     ON p.manufacturers_id = m.manufacturers_id
                               WHERE p.products_status = 1
                                     ".PRODUCTS_CONDITIONS_P."
                                     ".$days."
-                           GROUP BY p.products_id
+                                AND EXISTS (
+                                      SELECT 1
+                                        FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                        JOIN ".TABLE_CATEGORIES." c
+                                          ON c.categories_id = p2c.categories_id
+                                         AND c.categories_status = 1
+                                             ".CATEGORIES_CONDITIONS_C."
+                                       WHERE p2c.products_id = p.products_id
+                                    )
                            ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP))
                               LIMIT ".MAX_DISPLAY_PRODUCTS_STARTPAGE;
+
+      $new_products_result = xtDBquery($new_products_query);
     }
 
     $module_content = array();
-    $new_products_query = xtDBquery($new_products_query);
-    while ($new_products = xtc_db_fetch_array($new_products_query, true)) {
+    while ($new_products = xtc_db_fetch_array($new_products_result, true)) {
       $module_content[] = $product->buildDataArray($new_products);
     }
 

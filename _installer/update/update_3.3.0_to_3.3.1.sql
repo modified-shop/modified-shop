@@ -18,6 +18,21 @@ UPDATE `countries` SET `countries_iso_code_3` = 'AUS' WHERE countries_iso_code_2
 UPDATE `countries` SET `countries_iso_code_3` = 'ROU' WHERE countries_iso_code_2 = 'RO' AND countries_iso_code_3 = 'ROM';
 UPDATE `countries` SET `countries_name` = 'Timor-Leste', `countries_iso_code_2` = 'TL', `countries_iso_code_3` = 'TLS' WHERE countries_iso_code_2 = 'TP' AND countries_iso_code_3 = 'TMP';
 
+#GTB - 2026-07-27 - speed up startpage product selection
+ALTER TABLE `products`
+  ADD INDEX `idx_products_startpage_status_sort` (`products_startpage`, `products_status`, `products_startpage_sort`);
+
+#GTB - 2026-07-27 - speed up bestseller aggregation
+ALTER TABLE `orders_products`
+  ADD INDEX `idx_orders_products_bestsellers` (`orders_id`, `products_id`, `products_quantity`);
+
+ALTER TABLE `products`
+  ADD INDEX `idx_products_status_ordered` (`products_status`, `products_ordered`);
+
+#GTB - 2026-07-27 - speed up upcoming products selection
+ALTER TABLE `products`
+  ADD INDEX `idx_products_status_date_available` (`products_status`, `products_date_available`);
+
 #GTB - 2026-07-23 - migrate TP to TL in saved shipping module country lists (East Timor iso code change above)
 UPDATE `configuration` SET `configuration_value` = TRIM(BOTH ',' FROM REPLACE(CONCAT(',', `configuration_value`, ','), ',TP,', ',TL,')) WHERE `configuration_key` = 'MODULE_SHIPPING_DHL_COUNTRIES_10';
 UPDATE `configuration` SET `configuration_value` = TRIM(BOTH ',' FROM REPLACE(CONCAT(',', `configuration_value`, ','), ',TP,', ',TL,')) WHERE `configuration_key` = 'MODULE_SHIPPING_CHP_COUNTRIES_7';

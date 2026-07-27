@@ -108,13 +108,7 @@
                        ON p.products_id = pd.products_id 
                           AND trim(pd.products_name) != '' 
                           AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                       ON p2c.products_id = pd.products_id
-                          ".$p2c_condition."
-                  JOIN ".TABLE_CATEGORIES." c
-                       ON c.categories_id = p2c.categories_id
-                          AND c.categories_status = 1
-                              ".CATEGORIES_CONDITIONS_C." ";
+                  ";
                            
     $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON p.products_id = pa.products_id
                                               LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON pa.options_values_id = pov.products_options_values_id AND pov.language_id = '".(int) $_SESSION['languages_id']."' " : "";
@@ -141,6 +135,16 @@
     //where-string
     $where_str = " WHERE p.products_status = '1' "  
     .PRODUCTS_CONDITIONS_P
+    ." AND EXISTS (
+          SELECT 1
+            FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+            JOIN ".TABLE_CATEGORIES." c
+              ON c.categories_id = p2c.categories_id
+             AND c.categories_status = 1
+                 ".CATEGORIES_CONDITIONS_C."
+           WHERE p2c.products_id = p.products_id
+                 ".$p2c_condition."
+        ) "
     .$filter_where
     .$manu_check
     .$tax_where

@@ -370,12 +370,6 @@ class product {
                                           ON pd.products_id = p.products_id
                                              AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                              AND trim(pd.products_name) != ''
-                                     JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                          ON p.products_id = p2c.products_id
-                                     JOIN ".TABLE_CATEGORIES." c
-                                          ON c.categories_id = p2c.categories_id
-                                             AND c.categories_status = 1
-                                                 ".CATEGORIES_CONDITIONS_C."
                                     WHERE op.orders_id IN (SELECT * 
                                                              FROM (SELECT orders_id 
                                                                      FROM ".TABLE_ORDERS_PRODUCTS." 
@@ -383,9 +377,18 @@ class product {
                                                                  GROUP BY orders_id 
                                                                  ORDER BY orders_id DESC
                                                                     LIMIT ".MAX_DISPLAY_ALSO_PURCHASED_ORDERS."
-                                                                  ) o
+                                                                 ) o
                                                            )
                                           ".PRODUCTS_CONDITIONS_P." 
+                                      AND EXISTS (
+                                            SELECT 1
+                                              FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                              JOIN ".TABLE_CATEGORIES." c
+                                                ON c.categories_id = p2c.categories_id
+                                               AND c.categories_status = 1
+                                                   ".CATEGORIES_CONDITIONS_C."
+                                             WHERE p2c.products_id = p.products_id
+                                          )
                                  GROUP BY p.products_id
                                  ORDER BY op.orders_id DESC
                                     LIMIT ".MAX_DISPLAY_ALSO_PURCHASED);
@@ -440,15 +443,18 @@ class product {
                                            ON p.products_id = pd.products_id
                                               AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                               AND trim(pd.products_name) != ''
-                                      JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                           ON p.products_id = p2c.products_id
-                                      JOIN ".TABLE_CATEGORIES." c
-                                           ON c.categories_id = p2c.categories_id
-                                              AND c.categories_status = 1
-                                                  ".CATEGORIES_CONDITIONS_C."
                                      WHERE xp.products_id = '".(int)$pID."'
                                        AND xp.products_xsell_grp_name_id='".$cross_sells['products_xsell_grp_name_id']."'
                                            ".PRODUCTS_CONDITIONS_P."
+                                       AND EXISTS (
+                                             SELECT 1
+                                               FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                               JOIN ".TABLE_CATEGORIES." c
+                                                 ON c.categories_id = p2c.categories_id
+                                                AND c.categories_status = 1
+                                                    ".CATEGORIES_CONDITIONS_C."
+                                              WHERE p2c.products_id = p.products_id
+                                           )
                                   GROUP BY p.products_id
                                   ORDER BY xp.sort_order ASC
                                            ".$limit);
@@ -499,14 +505,17 @@ class product {
                                        ON p.products_id = pd.products_id
                                           AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                           AND trim(pd.products_name) != ''
-                                  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                       ON p.products_id = p2c.products_id
-                                  JOIN ".TABLE_CATEGORIES." c
-                                       ON c.categories_id = p2c.categories_id
-                                          AND c.categories_status = 1
-                                              ".CATEGORIES_CONDITIONS_C."
                                  WHERE xp.xsell_id = '".(int)$pID."'
                                        ".PRODUCTS_CONDITIONS_P."
+                                   AND EXISTS (
+                                         SELECT 1
+                                           FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                           JOIN ".TABLE_CATEGORIES." c
+                                             ON c.categories_id = p2c.categories_id
+                                            AND c.categories_status = 1
+                                                ".CATEGORIES_CONDITIONS_C."
+                                          WHERE p2c.products_id = p.products_id
+                                       )
                               GROUP BY p.products_id
                               ORDER BY xp.sort_order ASC
                                        ".$limit);

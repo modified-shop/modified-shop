@@ -95,13 +95,6 @@
                                              ON p.products_id = pd.products_id
                                                 AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                                 AND trim(pd.products_name) != ''
-                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                                             ON p2c.products_id = pd.products_id
-                                                ".$p2c_condition."
-                                        JOIN ".TABLE_CATEGORIES." c
-                                             ON c.categories_id = p2c.categories_id
-                                                AND c.categories_status = 1
-                                                    ".CATEGORIES_CONDITIONS_C."
                                              ".$from_str."
                                    LEFT JOIN ".TABLE_SPECIALS." s 
                                              ON p.products_id = s.products_id 
@@ -109,6 +102,16 @@
                                        WHERE p.products_status = '1'
                                              ".$where_str."
                                              ".PRODUCTS_CONDITIONS_P."
+                                         AND EXISTS (
+                                               SELECT 1
+                                                 FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                                 JOIN ".TABLE_CATEGORIES." c
+                                                   ON c.categories_id = p2c.categories_id
+                                                  AND c.categories_status = 1
+                                                      ".CATEGORIES_CONDITIONS_C."
+                                                WHERE p2c.products_id = p.products_id
+                                                      ".$p2c_condition."
+                                             )
                                     GROUP BY p.products_id 
                                              ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
       

@@ -946,7 +946,8 @@ CREATE TABLE orders_products (
   products_vpe_value DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (orders_products_id),
   KEY idx_orders_id (orders_id),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (products_id),
+  KEY idx_orders_products_bestsellers (orders_id, products_id, products_quantity)
 );
 
 DROP TABLE IF EXISTS orders_products_attributes;
@@ -1084,7 +1085,10 @@ CREATE TABLE products (
   KEY idx_products_date_added (products_date_added),
   KEY idx_products_model (products_model),
   KEY idx_products_status (products_status),
+  KEY idx_products_status_ordered (products_status, products_ordered),
+  KEY idx_products_status_date_available (products_status, products_date_available),
   KEY idx_products_startpage (products_startpage),
+  KEY idx_products_startpage_status_sort (products_startpage, products_status, products_startpage_sort),
   KEY idx_manufacturers_id (manufacturers_id),
   KEY idx_products_sort (products_sort),
   KEY idx_products_startpage_sort (products_startpage_sort),
