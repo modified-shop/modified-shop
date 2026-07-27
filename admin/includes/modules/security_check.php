@@ -50,6 +50,8 @@ $countries_without_tax_zone_query = xtc_db_query(
     WHERE NOT EXISTS (
             SELECT 1
               FROM ".TABLE_ZONES_TO_GEO_ZONES." z
+              JOIN ".TABLE_GEO_ZONES." g
+                ON g.geo_zone_id = z.geo_zone_id
              WHERE z.zone_country_id = c.countries_id
           )
  ORDER BY c.countries_name"
