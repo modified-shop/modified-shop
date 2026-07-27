@@ -40,6 +40,33 @@ if (!empty($check)) {
 }
 
 /*******************************************************************************
+ ** check countries without tax zone assignment
+ ******************************************************************************/
+$check = array();
+$countries_without_tax_zone_query = xtc_db_query(
+  "SELECT c.countries_name,
+          c.countries_iso_code_2
+     FROM ".TABLE_COUNTRIES." c
+    WHERE NOT EXISTS (
+            SELECT 1
+              FROM ".TABLE_ZONES_TO_GEO_ZONES." z
+             WHERE z.zone_country_id = c.countries_id
+          )
+ ORDER BY c.countries_name"
+);
+while ($country = xtc_db_fetch_array($countries_without_tax_zone_query)) {
+  $check[] = encode_htmlentities($country['countries_name'])
+             .' ('.encode_htmlentities($country['countries_iso_code_2']).')';
+}
+
+if (!empty($check)) {
+  $warnings[] = sprintf(
+    WARNING_COUNTRIES_WITHOUT_TAX_ZONE,
+    xtc_href_link(FILENAME_GEO_ZONES)
+  ).'<ul><li>'.implode('</li><li>', $check).'</li></ul>';
+}
+
+/*******************************************************************************
  ** check file permissions
  ******************************************************************************/
 if (WARN_CONFIG_WRITEABLE == 'true') {

@@ -149,6 +149,9 @@ define('HEADING_CAPTION_STATISTIC', 'Statistics');
 define('ERROR_DB_VERSION_UPDATE', 'WARNING: Your DB needs to be updated, please start the <a href="'.DIR_WS_CATALOG.'_installer/">installer</a>:');
 define('ERROR_DB_VERSION_UPDATE_INFO', 'DB needs update from release %s to %s.');
 
+// tax zone check
+define('WARNING_COUNTRIES_WITHOUT_TAX_ZONE', '<strong>WARNING:</strong> The following countries are not assigned to a <a href="%s">tax zone</a>:');
+
 // EMail check
 define('ERROR_EMAIL_CHECK', '<strong>WARNING:</strong> The following EMail-Address looks incorrect:');
 define('ERROR_EMAIL_CHECK_INFO', '%s: &lt;%s&gt;');
