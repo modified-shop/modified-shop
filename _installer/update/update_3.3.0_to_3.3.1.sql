@@ -10,7 +10,7 @@
 #GTB - 2026-07-20 - changed database_version
 INSERT INTO `database_version` (`version`, `date_added`) VALUES ('MOD_3.3.1', NOW());
 
-#GTB - 2026-07-27 - preserve country IDs and ensure missing non-EU tax-zone assignments
+#GTB - 2026-07-27 - preserve country IDs and settings and ensure missing non-EU tax-zone assignments
 INSERT INTO `countries`
   (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`,
    `address_format_id`, `status`, `required_zones`, `sort_order`)
@@ -20,11 +20,7 @@ VALUES
   ('Bonaire', 'BQ', 'BES', 1, 1, 0, 100)
 ON DUPLICATE KEY UPDATE
   `countries_name` = VALUES(`countries_name`),
-  `countries_iso_code_3` = VALUES(`countries_iso_code_3`),
-  `address_format_id` = VALUES(`address_format_id`),
-  `status` = VALUES(`status`),
-  `required_zones` = VALUES(`required_zones`),
-  `sort_order` = VALUES(`sort_order`);
+  `countries_iso_code_3` = VALUES(`countries_iso_code_3`);
 
 INSERT INTO `zones_to_geo_zones`
   (`zone_country_id`, `zone_id`, `geo_zone_id`,

@@ -47,7 +47,8 @@ $countries_without_tax_zone_query = xtc_db_query(
   "SELECT c.countries_name,
           c.countries_iso_code_2
      FROM ".TABLE_COUNTRIES." c
-    WHERE NOT EXISTS (
+    WHERE c.status = 1
+      AND NOT EXISTS (
             SELECT 1
               FROM ".TABLE_ZONES_TO_GEO_ZONES." z
               JOIN ".TABLE_GEO_ZONES." g
