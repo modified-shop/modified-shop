@@ -48,7 +48,33 @@ if ($payment_method != ''
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
     }
 
-    $shipping_address = $paypal->parse_contact($_SESSION['paypal']['contact']['shipping']);
+    $requires_shipping = ($_SESSION['cart']->get_content_type() != 'virtual');
+    if ($requires_shipping === true) {
+      $paypal_shipping = isset($PayPalOrder->purchase_units[0]->shipping)
+                         ? $PayPalOrder->purchase_units[0]->shipping
+                         : null;
+
+      if (!is_object($paypal_shipping)
+          || !isset($paypal_shipping->address)
+          || trim((isset($paypal_shipping->name->full_name) ? $paypal_shipping->name->full_name : '')) == ''
+          || trim((isset($paypal_shipping->address->address_line_1) ? $paypal_shipping->address->address_line_1 : '')) == ''
+          || trim((isset($paypal_shipping->address->postal_code) ? $paypal_shipping->address->postal_code : '')) == ''
+          || trim((isset($paypal_shipping->address->admin_area_2) ? $paypal_shipping->address->admin_area_2 : '')) == ''
+          || trim((isset($paypal_shipping->address->country_code) ? $paypal_shipping->address->country_code : '')) == ''
+          )
+      {
+        $paypal->LoggingManager->log('WARNING', 'Wallet callback aborted', array(
+          'reason' => 'incomplete PayPal shipping address',
+          'order_id' => $_SESSION['paypal']['OrderID'],
+        ));
+        unset($_SESSION['paypal']);
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
+      }
+
+      $shipping_address = $paypal->parse_address($paypal_shipping);
+    } else {
+      $shipping_address = $paypal->parse_contact($_SESSION['paypal']['contact']['shipping']);
+    }
     $billing_address = (isset($_SESSION['paypal']['contact']['billing'])) ? $paypal->parse_contact($_SESSION['paypal']['contact']['billing']) : $shipping_address;
 
     $customers_data = array();
