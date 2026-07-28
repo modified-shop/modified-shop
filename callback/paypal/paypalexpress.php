@@ -25,7 +25,11 @@ if (isset($_SESSION['paypal'])
   $paypal = new PayPalPaymentV2('paypalexpress');
   $PayPalOrder = $paypal->GetOrder($_SESSION['paypal']['OrderID']);
   
-  if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+  if (!is_object($PayPalOrder)
+      || !isset($PayPalOrder->status)
+      || !in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)
+      )
+  {
     unset($_SESSION['paypal']);
     xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL'));
   } else {

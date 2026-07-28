@@ -34,10 +34,14 @@ if ($payment_method != ''
     $paypal = new PayPalPaymentV2($payment_method);
     $PayPalOrder = $paypal->GetOrder($_SESSION['paypal']['OrderID']);
 
-    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+    if (!is_object($PayPalOrder)
+        || !isset($PayPalOrder->status)
+        || !in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)
+        )
+    {
       $paypal->LoggingManager->log('WARNING', 'Wallet callback aborted', array(
         'reason' => 'order status',
-        'status' => $PayPalOrder->status,
+        'status' => ((is_object($PayPalOrder) && isset($PayPalOrder->status)) ? $PayPalOrder->status : null),
         'order_id' => $_SESSION['paypal']['OrderID'],
       ));
       unset($_SESSION['paypal']);

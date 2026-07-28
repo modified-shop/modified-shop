@@ -166,6 +166,13 @@ class paypalapplepay extends PayPalPaymentV2 {
   function before_process() {	  
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
 
+    if (!is_object($PayPalOrder)
+        || !isset($PayPalOrder->status)
+        )
+    {
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
+
     if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
       $this->redirectOrder($PayPalOrder->links, 'payer-action');
     }
@@ -174,7 +181,7 @@ class paypalapplepay extends PayPalPaymentV2 {
       $_SESSION['paypal']['PayerID'] = $PayPalOrder->payer->payer_id;
     }
   
-    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)) {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }

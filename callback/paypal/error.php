@@ -24,7 +24,11 @@ $paypal = new PayPalPaymentV2('paypal');
 if (isset($_SESSION['tmp_oID'])) {
   if (isset($_SESSION['paypal']['OrderID'])) {
     $PayPalOrder = $paypal->GetOrder($_SESSION['paypal']['OrderID']);
-    if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
+    if (is_object($PayPalOrder)
+        && isset($PayPalOrder->status)
+        && $PayPalOrder->status == 'PAYER_ACTION_REQUIRED'
+        )
+    {
       $paypal->remove_order($_SESSION['tmp_oID']);
     }
   }

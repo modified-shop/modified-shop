@@ -657,7 +657,11 @@
 
       $PayPalOrder = $this->GetOrder($OrderID);
 
-      if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
+      if (is_object($PayPalOrder)
+          && isset($PayPalOrder->status)
+          && $PayPalOrder->status == 'PAYER_ACTION_REQUIRED'
+          )
+      {
         $this->redirectOrder($PayPalOrder->links, 'payer-action');
       }
 
@@ -717,7 +721,11 @@
 
       $PayPalOrder = $this->GetOrder($OrderID);
 
-      if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
+      if (is_object($PayPalOrder)
+          && isset($PayPalOrder->status)
+          && $PayPalOrder->status == 'PAYER_ACTION_REQUIRED'
+          )
+      {
         $this->redirectOrder($PayPalOrder->links, 'payer-action');
       }
 

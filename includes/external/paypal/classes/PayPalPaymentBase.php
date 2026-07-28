@@ -644,7 +644,11 @@ class PayPalPaymentBase extends PayPalCommon {
       if ($this->code == 'paypalexpress') {
         $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
         
-        if (isset($PayPalOrder->status) && !in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+        if (!is_object($PayPalOrder)
+            || !isset($PayPalOrder->status)
+            || !in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)
+            )
+        {
           unset($_SESSION['paypal']);
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
         }
