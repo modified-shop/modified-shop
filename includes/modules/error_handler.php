@@ -20,7 +20,7 @@ $error = array(
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // caching disabled: cache ID leaked referrer link / session ID across visitors
 $module_smarty->caching = 0;

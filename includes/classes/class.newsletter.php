@@ -369,8 +369,8 @@ class newsletter {
     
     if ($sendmail === true) {
       $smarty->assign('language', $_SESSION['language']);
-      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+      $smarty->assign('tpl_path', Template::absoluteUrl(''));
+      $smarty->assign('logo_path', Template::absoluteUrl('img/'));
       
       $smarty->caching = 0;
       $html_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/newsletter_mail.html'));

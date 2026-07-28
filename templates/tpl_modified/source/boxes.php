@@ -152,7 +152,7 @@ if ((isset($display_mode) && $display_mode == 'error') || (in_array(basename($PH
 }
 // -----------------------------------------------------------------------------------------
 
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', Template::url(''));
 
 $content_data_query = xtDBquery("SELECT *
                                    FROM ".TABLE_CONTENT_MANAGER."

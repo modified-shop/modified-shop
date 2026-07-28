@@ -12,7 +12,7 @@
 
 $box_smarty = new Smarty();
 $box_smarty->assign('language', $_SESSION['language']);
-$box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$box_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {

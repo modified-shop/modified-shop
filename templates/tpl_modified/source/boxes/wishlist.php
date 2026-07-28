@@ -14,7 +14,7 @@
   require_once(DIR_FS_INC.'get_wishlist_content.inc.php');
 
   $box_smarty = new Smarty();
-  $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+  $box_smarty->assign('tpl_path', Template::url(''));
 
   // define defaults
   $products_in_wishlist = array ();

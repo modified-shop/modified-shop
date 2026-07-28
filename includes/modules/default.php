@@ -38,7 +38,7 @@ require_once (DIR_FS_INC.'get_filter_tags.inc.php');
 
 $default_smarty = new Smarty();
 $default_smarty->assign('language', $_SESSION['language']);
-$default_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$default_smarty->assign('tpl_path', Template::url(''));
 $default_smarty->assign('session', xtc_session_id());
 
 // define defaults

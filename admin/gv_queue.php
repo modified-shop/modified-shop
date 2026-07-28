@@ -70,8 +70,8 @@
         $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
         $smarty->config_dir = DIR_FS_CATALOG.'lang';
 
-        $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-        $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+        $smarty->assign('tpl_path', Template::absoluteUrl(''));
+        $smarty->assign('logo_path', Template::absoluteUrl('img/'));
 
         $smarty->assign('AMMOUNT',$currencies->format($gv_amount));
         $smarty->assign('NAME', $mail['customers_firstname'].' '.$mail['customers_lastname']);

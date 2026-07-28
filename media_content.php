@@ -70,7 +70,7 @@ if (isset($_GET['coID']) && (int)$_GET['coID'] > 0) {
 
 $popup_smarty = new Smarty();
 $popup_smarty->assign('language', $_SESSION['language']);
-$popup_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$popup_smarty->assign('tpl_path', Template::url(''));
 $popup_smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
 $popup_smarty->assign('doctype', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''));
 $popup_smarty->assign('charset', $_SESSION['language_charset']);

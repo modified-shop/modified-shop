@@ -13,7 +13,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('DIR_TMPL', 'templates/'.CURRENT_TEMPLATE.'/');
+  define('DIR_TMPL', Template::url(''));
   define('DIR_TMPL_CSS', DIR_TMPL.'css/');
 
   if ($_SESSION['customers_status']['customers_status'] == '0') {
