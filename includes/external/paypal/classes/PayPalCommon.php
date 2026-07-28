@@ -509,7 +509,7 @@ class PayPalCommon extends PayPalAuth {
   }
   
   
-  function create_account($customer) {
+  function create_account($customer, $force_guest = false) {
         
     // include needed function
     require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
@@ -532,7 +532,7 @@ class PayPalCommon extends PayPalAuth {
       'account_type' => '1',
     );
 
-    if (ACCOUNT_OPTIONS == 'account') {
+    if (ACCOUNT_OPTIONS == 'account' && $force_guest !== true) {
       $sql_data_array['account_type'] = '0';
       $sql_data_array['customers_cid'] = generate_customers_cid(true);
       $sql_data_array['customers_status'] = DEFAULT_CUSTOMERS_STATUS_ID;

@@ -217,9 +217,9 @@ async function setupGooglepayCart() {
     });
   }
 
-  // order creation can happen in parallel, it is only needed once the
-  // shipping/payment callbacks below actually fire
-  const orderIdPromise = $.post(getGoogleCartOrderUrl());
+  // Created for each payment attempt in the click handler below and shared
+  // with the shipping/payment callbacks fired by that Google Pay sheet.
+  let orderIdPromise = null;
 
   googlePaymentDataChangedHandler = async function (intermediatePaymentData) {
     try {
@@ -323,6 +323,8 @@ async function setupGooglepayCart() {
     buttonLocale: getGoogleCartLocale(),
     onClick: function () {
       const { totalPrice } = getGoogleCartTransactionInfo();
+
+      orderIdPromise = $.post(getGoogleCartOrderUrl());
 
       paymentsClient.loadPaymentData(
         Object.assign({}, baseRequest, {

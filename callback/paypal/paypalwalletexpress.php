@@ -66,7 +66,9 @@ if ($payment_method != ''
         && $customers_data['info']['email_address'] != ''
         )
     {
-      $paypal->login_customer($customers_data);
+      // Wallet contact data originates in the browser and must not be used
+      // for a passwordless login to an existing customer account.
+      $paypal->create_account($customers_data, true);
     }
 
     if (!isset($_SESSION['customer_id'])
