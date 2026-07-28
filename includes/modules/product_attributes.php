@@ -30,7 +30,7 @@ if ($product->data['options_template'] == ''
     || Template::findPath('module/product_options/' . $product->data['options_template']) === null
     )
 {
-  $files = array_filter(auto_include(Template::path('module/product_options/'),'html'), function($file) {
+  $files = array_filter(Template::files('module/product_options/', 'html'), function($file) {
     return false === strpos($file, 'index.html');
   });
   $product->data['options_template'] = basename($files[0]);
