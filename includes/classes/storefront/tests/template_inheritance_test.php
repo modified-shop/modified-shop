@@ -160,6 +160,13 @@ try {
     writeTestFile($templatesDirectory . '/parent-a/continuation.html', 'parent-a');
     writeTestFile($templatesDirectory . '/current/continuation.html', 'current');
     writeTestFile($templatesDirectory . '/parent-a/img/logo.png', 'image');
+    writeTestFile($templatesDirectory . '/parent-a/img/stars_5.png', 'stars');
+    writeTestFile($templatesDirectory . '/parent-a/stylesheet.css', 'css');
+    writeTestFile($templatesDirectory . '/parent-a/stylesheet.min.css', 'minified-css');
+    writeTestFile(
+        $templatesDirectory . '/current/template-asset.html',
+        '{template_asset path=\'img/logo.png\'}|{template_asset path="img/stars_`$rating`.png"}|{if $smarty.const.COMPRESS_STYLESHEET == \'true\'}{template_asset path=\'stylesheet.min.css\'}{else}{template_asset path=\'stylesheet.css\'}{/if}'
+    );
     writeTestFile($templatesDirectory . '/parent-a/source/boxes/categories.php', 'categories');
     writeTestFile(
         $templatesDirectory . '/current/layout.html',
@@ -277,10 +284,17 @@ try {
     define('DIR_FS_CATALOG', $temporaryDirectory . '/');
     define('DIR_FS_EXTERNAL', dirname(__DIR__, 4) . '/includes/external/');
     define('CURRENT_TEMPLATE', 'current');
+    define('COMPRESS_STYLESHEET', 'true');
     define('RUN_MODE_INSTALLER', true);
     require dirname(__DIR__, 4) . '/includes/external/smarty/smarty_4/Smarty.class.php';
 
     $smarty = new Smarty();
+    $smarty->assign('rating', 5);
+    assertSameValue(
+        '/base/templates/parent-a/img/logo.png|/base/templates/parent-a/img/stars_5.png|/base/templates/parent-a/stylesheet.min.css',
+        $smarty->fetch(Template::resolve('template-asset.html')),
+        'template_asset muss statische, dynamische und bedingte Assetpfade über die Template-Kette auflösen.'
+    );
     assertSameValue(
         'child-base',
         $smarty->fetch(Template::resolve('layout.html')),
