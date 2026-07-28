@@ -44,19 +44,8 @@
         )
     {
       $address = $paypal->parse_contact($_SESSION['paypal']['contact']['shipping']);
-
-      $order->delivery['firstname'] = $address['firstname'];
-      $order->delivery['lastname'] = $address['lastname'];
-      $order->delivery['company'] = $address['company'];
-      $order->delivery['street_address'] = $address['street_address'];
-      $order->delivery['suburb'] = $address['suburb'];
-      $order->delivery['city'] = $address['city'];
-      $order->delivery['postcode'] = $address['postcode'];
-      $order->delivery['state'] = $address['state'];
-      $order->delivery['zone_id'] = $address['zone_id'];
-      $order->delivery['country_id'] = $address['country_id'];
-      $order->delivery['country_iso_2'] = $address['country_iso_code_2'];
-      $order->customer['country']['iso_code_2'] = $address['country_iso_code_2'];
+      $order = $paypal->apply_address_to_delivery($order, $address);
+      $order->customer['country']['iso_code_2'] = $order->delivery['country_iso_2'];
     }
 
     $result = $paypal->PatchOrder($_SESSION['paypal']['OrderID']);

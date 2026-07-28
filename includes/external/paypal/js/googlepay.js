@@ -233,7 +233,7 @@ async function setupGooglepayCart() {
         const requestPayload = {
           id: orderId,
           purchase_units: [{ reference_id: "default" }],
-          shipping_address: { country_code: intermediatePaymentData.shippingAddress.countryCode },
+          shipping_contact: googleAddressToContact(intermediatePaymentData.shippingAddress, ""),
         };
 
         const data = await $.ajax({

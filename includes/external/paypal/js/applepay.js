@@ -213,7 +213,7 @@ async function setupApplepayCart() {
         data: JSON.stringify({
           id: orderId,
           purchase_units: [{ reference_id: "default" }],
-          shipping_address: { country_code: event.shippingContact.countryCode },
+          shipping_contact: event.shippingContact,
         }),
       })).then((data) => {
         const purchaseUnit = data.purchase_units[0];

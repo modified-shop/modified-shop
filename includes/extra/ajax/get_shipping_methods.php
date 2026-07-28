@@ -11,7 +11,6 @@
    ---------------------------------------------------------------------------------------*/
 
   // include needed functions
-  require_once(DIR_FS_INC.'get_country_id.inc.php');
   require_once(DIR_FS_INC.'get_external_content.inc.php');
   require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
 
@@ -22,7 +21,7 @@
 
 
   function get_shipping_methods() {
-    global $xtPrice;
+    global $order, $xtPrice;
 
     $request_json = get_external_content('php://input', 3, false);
     $request = json_decode($request_json, true);
@@ -54,9 +53,32 @@
       unset($_SESSION['sendto']);
       unset($_SESSION['billto']);
 
-      if (isset($request['shipping_address'])) {
-        $_SESSION['country'] = get_country_id($request['shipping_address']['country_code']);
+      if (isset($request['shipping_contact']) && is_array($request['shipping_contact'])) {
+        $_SESSION['paypal']['contact']['shipping_quote'] = $request['shipping_contact'];
       }
+
+      $shipping_contact = isset($_SESSION['paypal']['contact']['shipping_quote'])
+                          && is_array($_SESSION['paypal']['contact']['shipping_quote'])
+                          ? $_SESSION['paypal']['contact']['shipping_quote']
+                          : array();
+      $country_code = isset($shipping_contact['countryCode']) ? trim($shipping_contact['countryCode']) : '';
+      $postcode = isset($shipping_contact['postalCode']) ? trim($shipping_contact['postalCode']) : '';
+
+      if ($country_code == '' || $postcode == '') {
+        $paypal->LoggingManager->log('WARNING', 'Wallet get_shipping_methods aborted', array(
+          'reason' => 'incomplete shipping contact',
+          'country_code' => $country_code,
+          'postcode' => $postcode,
+        ));
+        return;
+      }
+
+      $shipping_contact['countryCode'] = strtoupper($country_code);
+      $shipping_contact['postalCode'] = $postcode;
+      $_SESSION['paypal']['contact']['shipping_quote'] = $shipping_contact;
+
+      $shipping_address = $paypal->parse_contact($shipping_contact);
+      $_SESSION['country'] = $shipping_address['country_id'];
 
       if (isset($request['shipping_option'])) {
         $shipping_option_id = $request['shipping_option']['id'];
@@ -80,7 +102,7 @@
       $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
       $_SESSION['cart']->calculate();
 
-      $order = $paypal->set_order_object();
+      $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
 
       $quotes = $paypal->get_shipping_data(true);
 
@@ -120,7 +142,7 @@
                   'title' => $quote['module'],
                   'cost' => $methods['cost']
                 );
-                $order = $paypal->set_order_object();
+                $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
               }
             }
           }

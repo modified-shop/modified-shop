@@ -1293,6 +1293,34 @@
     }
 
 
+    function apply_address_to_delivery($order, $address) {
+      $address_keys = array(
+        'name',
+        'company',
+        'firstname',
+        'lastname',
+        'street_address',
+        'suburb',
+        'state',
+        'city',
+        'postcode',
+        'country_id',
+        'country',
+        'zone_id',
+      );
+
+      foreach ($address_keys as $address_key) {
+        $order->delivery[$address_key] = $address[$address_key];
+      }
+      $order->delivery['country_iso_2'] = $address['country_iso_code_2'];
+      $order->delivery['shipping'] = $address['country'];
+      $order->delivery['shipping']['zone_id'] = $address['zone_id'];
+      $order->delivery['delivery_zone'] = $address['country_iso_code_2'];
+
+      return $order;
+    }
+
+
     function get_country_state_from_iso($data) {
       $country_iso_query = xtc_db_query("SELECT countries_id,
                                                 countries_name,
