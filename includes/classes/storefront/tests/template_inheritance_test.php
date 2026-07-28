@@ -175,6 +175,18 @@ try {
         '{template_asset path=\'img/current.png\'}|{template_asset path=\'img/logo.png\'}|{template_asset path=\'img/logo.png\' versioned=true}|{template_asset path=\'img/logo.png\' absolute=true versioned=true}|{template_asset path="img/stars_`$rating`.png"}|{if $smarty.const.COMPRESS_STYLESHEET == \'true\'}{template_asset path=\'stylesheet.min.css\'}{else}{template_asset path=\'stylesheet.css\'}{/if}'
     );
     writeTestFile($templatesDirectory . '/parent-a/source/boxes/categories.php', 'categories');
+    writeTestFile($templatesDirectory . '/current/module/product_info/product_10.html', 'current-10');
+    writeTestFile($templatesDirectory . '/current/module/product_info/shared.html', 'current-shared');
+    writeTestFile($templatesDirectory . '/current/module/product_info/ignored.php', 'ignored');
+    writeTestFile($templatesDirectory . '/parent-b/module/product_info/product_2.html', 'parent-b-2');
+    writeTestFile($templatesDirectory . '/parent-b/module/product_info/shared.html', 'parent-b-shared');
+    writeTestFile($templatesDirectory . '/parent-a/module/product_info/product_1.html', 'parent-a-1');
+    writeTestFile($templatesDirectory . '/parent-a/module/product_info/shared.html', 'parent-a-shared');
+    mkdir($templatesDirectory . '/current/module/unsafe_listing', 0777, true);
+    symlink(
+        $temporaryDirectory . '/outside.html',
+        $templatesDirectory . '/current/module/unsafe_listing/outside.html'
+    );
     writeTestFile(
         $templatesDirectory . '/current/layout.html',
         '{extends file="parent:layout.html"}{block name="body"}child-{$smarty.block.parent}{/block}'
@@ -229,6 +241,39 @@ try {
         static fn () => $resolver->resolve('outside.html'),
         'Ein Symlink darf die Auflösung nicht aus dem Template-Verzeichnis herausführen.'
     );
+    assertSameValue(
+        [
+            realpath($templatesDirectory) . '/parent-a/module/product_info/product_1.html',
+            realpath($templatesDirectory) . '/parent-b/module/product_info/product_2.html',
+            realpath($templatesDirectory) . '/current/module/product_info/product_10.html',
+            realpath($templatesDirectory) . '/current/module/product_info/shared.html',
+        ],
+        array_map(
+            static fn ($file): string => $file->absolutePath(),
+            $resolver->findAll('module/product_info/', 'html')
+        ),
+        'Eine Dateiliste muss Parent-Dateien erben, Child-Varianten bevorzugen und natürlich sortieren.'
+    );
+    assertSameValue(
+        [],
+        $resolver->findAll('module/missing/', 'html'),
+        'Ein nicht vorhandenes Verzeichnis muss eine leere Dateiliste liefern.'
+    );
+    assertThrowsException(
+        InvalidTemplatePathException::class,
+        static fn () => $resolver->findAll('../outside/', 'html'),
+        'Auch bei Dateilisten muss Pfadtraversierung abgelehnt werden.'
+    );
+    assertThrowsException(
+        InvalidTemplatePathException::class,
+        static fn () => $resolver->findAll('module/product_info/', '../html'),
+        'Eine unsichere Dateiendung muss abgelehnt werden.'
+    );
+    assertThrowsException(
+        InvalidTemplatePathException::class,
+        static fn () => $resolver->findAll('module/unsafe_listing/', 'html'),
+        'Eine Dateiliste darf keinem Symlink aus dem Template-Verzeichnis heraus folgen.'
+    );
 
     $continued = $resolver->resolveAfter(
         'continuation.html',
@@ -266,6 +311,16 @@ try {
         'parent-a/inherited.html',
         Template::resolve('inherited.html'),
         'Die Fassade muss eine durch Smarty verwendbare Referenz liefern.'
+    );
+    assertSameValue(
+        [
+            realpath($templatesDirectory) . '/parent-a/module/product_info/product_1.html',
+            realpath($templatesDirectory) . '/parent-b/module/product_info/product_2.html',
+            realpath($templatesDirectory) . '/current/module/product_info/product_10.html',
+            realpath($templatesDirectory) . '/current/module/product_info/shared.html',
+        ],
+        Template::files('module/product_info/', 'html'),
+        'Die Fassade muss die absoluten Pfade der wirksamen Dateiliste liefern.'
     );
     assertSameValue(
         '/base/templates/parent-a/img/logo.png',
