@@ -223,8 +223,8 @@ if (!$action || in_array($action, array('delete', 'list'))) {
     'contact_us',
   );
 
-  $template_array = auto_include(Template::path('mail/' . $_SESSION['language'] . '/'),'html');
-  $template_array = array_merge($template_array, auto_include(Template::path('admin/mail/' . $_SESSION['language'] . '/'),'html'));
+  $template_array = Template::files('mail/' . $_SESSION['language'] . '/', 'html');
+  $template_array = array_merge($template_array, Template::files('admin/mail/' . $_SESSION['language'] . '/', 'html'));
 
   foreach ($template_array as $index => $template) {
     $template = strstr(basename($template), '.html', true);

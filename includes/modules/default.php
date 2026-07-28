@@ -140,7 +140,7 @@ switch ($category_depth) {
         || Template::findPath('module/categorie_listing/' . $category['categories_template']) === null
         )
     {
-      $files = array_filter(auto_include(Template::path('module/categorie_listing/'),'html'), function($file) {
+      $files = array_filter(Template::files('module/categorie_listing/', 'html'), function($file) {
         return false === strpos($file, 'index.html');
       });
       $category['categories_template'] = basename($files[0]);
