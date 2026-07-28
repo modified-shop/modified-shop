@@ -322,22 +322,26 @@ async function setupGooglepayCart() {
     buttonType: "buy",
     buttonLocale: getGoogleCartLocale(),
     onClick: function () {
-      const { totalPrice } = getGoogleCartTransactionInfo();
+      const { totalPrice, requiresShipping } = getGoogleCartTransactionInfo();
 
       orderIdPromise = $.post(getGoogleCartOrderUrl());
 
-      paymentsClient.loadPaymentData(
-        Object.assign({}, baseRequest, {
-          allowedPaymentMethods: cartPaymentMethods,
-          merchantInfo,
-          transactionInfo: buildGoogleCartTransactionInfo(totalPrice, "ESTIMATED"),
-          emailRequired: true,
-          shippingAddressRequired: true,
-          shippingAddressParameters: { phoneNumberRequired: true },
-          shippingOptionRequired: true,
-          callbackIntents: ["SHIPPING_ADDRESS", "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"],
-        })
-      );
+      const paymentDataRequest = Object.assign({}, baseRequest, {
+        allowedPaymentMethods: cartPaymentMethods,
+        merchantInfo,
+        transactionInfo: buildGoogleCartTransactionInfo(totalPrice, "ESTIMATED"),
+        emailRequired: true,
+        callbackIntents: ["PAYMENT_AUTHORIZATION"],
+      });
+
+      if (requiresShipping) {
+        paymentDataRequest.shippingAddressRequired = true;
+        paymentDataRequest.shippingAddressParameters = { phoneNumberRequired: true };
+        paymentDataRequest.shippingOptionRequired = true;
+        paymentDataRequest.callbackIntents.push("SHIPPING_ADDRESS", "SHIPPING_OPTION");
+      }
+
+      paymentsClient.loadPaymentData(paymentDataRequest);
     },
   });
 
@@ -382,8 +386,8 @@ function googleAddressToContact(address, email) {
 }
 
 async function processGoogleCartPayment(orderId, paymentData) {
-  const shippingAddress = paymentData.shippingAddress;
   const billingAddress = paymentData.paymentMethodData.info.billingAddress;
+  const shippingAddress = paymentData.shippingAddress || billingAddress;
   const email = paymentData.email || "";
 
   // store the wallet contact first: the patch step below reads it from the

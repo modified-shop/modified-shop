@@ -239,6 +239,8 @@
         && $_SESSION['cart']->count_contents() > 0
         )
     {
+      $requires_shipping = ($_SESSION['cart']->get_content_type() != 'virtual');
+
       $paypal = new PayPalPaymentV2('paypalapplepay');
 
       if ($paypal->is_enabled()
@@ -290,6 +292,7 @@
                 $paypal->encode_utf8($paypal->get_config('PAYPAL_COMPANY_LABEL')),
                 JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
               ).',
+              requiresShipping: '.($requires_shipping ? 'true' : 'false').',
             };
           }
 
@@ -357,6 +360,7 @@
                 $paypal->encode_utf8($paypal->get_config('PAYPAL_COMPANY_LABEL')),
                 JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
               ).',
+              requiresShipping: '.($requires_shipping ? 'true' : 'false').',
             };
           }
 

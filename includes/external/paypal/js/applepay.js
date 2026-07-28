@@ -156,7 +156,7 @@ async function setupApplepayCart() {
   document.getElementById("btn-apple-pay-cart").addEventListener("click", onClickCart);
 
   function onClickCart() {
-    const { currencyIsoCode, totalPrice, totalLabel } = getAppleCartTransactionInfo();
+    const { currencyIsoCode, totalPrice, totalLabel, requiresShipping } = getAppleCartTransactionInfo();
 
     const paymentRequest = {
       countryCode,
@@ -168,17 +168,20 @@ async function setupApplepayCart() {
         "email",
         "postalAddress",
       ],
-      requiredShippingContactFields: [
-        "name",
-        "email",
-        "postalAddress",
-      ],
       total: {
         label: decodeAppleLabel(totalLabel),
         amount: totalPrice,
         type: "pending",
       },
     };
+
+    if (requiresShipping) {
+      paymentRequest.requiredShippingContactFields = [
+        "name",
+        "email",
+        "postalAddress",
+      ];
+    }
 
     // ApplePaySession must be created synchronously, directly in the click
     // handler - any await before this point loses the user-gesture context
@@ -204,82 +207,85 @@ async function setupApplepayCart() {
         });
     };
 
-    session.onshippingcontactselected = (event) => {
-      orderIdPromise.then((orderId) => $.ajax({
-        type: "POST",
-        url: getAppleCartShippingMethodsUrl(),
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          id: orderId,
-          purchase_units: [{ reference_id: "default" }],
-          shipping_contact: event.shippingContact,
-        }),
-      })).then((data) => {
-        const purchaseUnit = data.purchase_units[0];
-        session.completeShippingContactSelection({
-          newShippingMethods: purchaseUnit.shipping_options.map((option) => ({
-            label: option.label,
-            detail: "",
-            amount: option.amount.value,
-            identifier: option.id,
-          })),
-          newTotal: {
-            label: decodeAppleLabel(totalLabel),
-            amount: purchaseUnit.amount.value,
-            type: "final",
-          },
-          newLineItems: [],
+    if (requiresShipping) {
+      session.onshippingcontactselected = (event) => {
+        orderIdPromise.then((orderId) => $.ajax({
+          type: "POST",
+          url: getAppleCartShippingMethodsUrl(),
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            id: orderId,
+            purchase_units: [{ reference_id: "default" }],
+            shipping_contact: event.shippingContact,
+          }),
+        })).then((data) => {
+          const purchaseUnit = data.purchase_units[0];
+          session.completeShippingContactSelection({
+            newShippingMethods: purchaseUnit.shipping_options.map((option) => ({
+              label: option.label,
+              detail: "",
+              amount: option.amount.value,
+              identifier: option.id,
+            })),
+            newTotal: {
+              label: decodeAppleLabel(totalLabel),
+              amount: purchaseUnit.amount.value,
+              type: "final",
+            },
+            newLineItems: [],
+          });
+        }).catch((err) => {
+          reportApplePayError("cartShippingContactSelected", err);
+          session.completeShippingContactSelection({
+            newShippingMethods: [],
+            newTotal: paymentRequest.total,
+            newLineItems: [],
+          });
         });
-      }).catch((err) => {
-        reportApplePayError("cartShippingContactSelected", err);
-        session.completeShippingContactSelection({
-          newShippingMethods: [],
-          newTotal: paymentRequest.total,
-          newLineItems: [],
-        });
-      });
-    };
+      };
 
-    session.onshippingmethodselected = (event) => {
-      orderIdPromise.then((orderId) => $.ajax({
-        type: "POST",
-        url: getAppleCartShippingMethodsUrl(),
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          id: orderId,
-          purchase_units: [{ reference_id: "default" }],
-          shipping_option: { id: event.shippingMethod.identifier },
-        }),
-      })).then((data) => {
-        const purchaseUnit = data.purchase_units[0];
-        session.completeShippingMethodSelection({
-          newTotal: {
-            label: decodeAppleLabel(totalLabel),
-            amount: purchaseUnit.amount.value,
-            type: "final",
-          },
-          newLineItems: [],
+      session.onshippingmethodselected = (event) => {
+        orderIdPromise.then((orderId) => $.ajax({
+          type: "POST",
+          url: getAppleCartShippingMethodsUrl(),
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            id: orderId,
+            purchase_units: [{ reference_id: "default" }],
+            shipping_option: { id: event.shippingMethod.identifier },
+          }),
+        })).then((data) => {
+          const purchaseUnit = data.purchase_units[0];
+          session.completeShippingMethodSelection({
+            newTotal: {
+              label: decodeAppleLabel(totalLabel),
+              amount: purchaseUnit.amount.value,
+              type: "final",
+            },
+            newLineItems: [],
+          });
+        }).catch((err) => {
+          reportApplePayError("cartShippingMethodSelected", err);
+          session.completeShippingMethodSelection({
+            newTotal: paymentRequest.total,
+            newLineItems: [],
+          });
         });
-      }).catch((err) => {
-        reportApplePayError("cartShippingMethodSelected", err);
-        session.completeShippingMethodSelection({
-          newTotal: paymentRequest.total,
-          newLineItems: [],
-        });
-      });
-    };
+      };
+    }
 
     session.onpaymentauthorized = async (event) => {
       try {
         const orderId = await orderIdPromise;
+        const shippingContact = event.payment.shippingContact || event.payment.billingContact;
 
         // store the Apple Pay contact first: the patch step below reads it from
         // the session to attach the shipping address to the PayPal order, and
         // the success callback uses it to create the customer
         await $.post(getAppleCartContactUrl(), {
-          shippingContact: JSON.stringify(event.payment.shippingContact),
+          shippingContact: JSON.stringify(shippingContact),
           billingContact: JSON.stringify(event.payment.billingContact),
         });
 
@@ -295,7 +301,7 @@ async function setupApplepayCart() {
           orderId,
           token: event.payment.token,
           billingContact: event.payment.billingContact,
-          shippingContact: event.payment.shippingContact,
+          shippingContact,
         });
 
         session.completePayment({
