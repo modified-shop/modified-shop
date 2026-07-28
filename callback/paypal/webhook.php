@@ -82,6 +82,7 @@ if (is_array($request)
         }
 
         if (is_object($PayPalOrder)
+            && isset($PayPalOrder->status)
             && $PayPalOrder->status == 'COMPLETED'
             && $check['send_order'] == 1
             )

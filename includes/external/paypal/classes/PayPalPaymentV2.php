@@ -701,7 +701,8 @@
         if ($this->get_config('PAYPAL_CAPTURE_MANUELL') == '0' && $error === false) {
           $order = new order($insert_id);
           $this->CaptureAuthorizedOrder($response->result->purchase_units[0]->payments->authorizations[0]->id, $order->info['pp_total'], $order->info['currency'], true);
-          return $this->GetOrder($_SESSION['paypal']['OrderID']);
+          $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
+          return ((is_object($PayPalOrder)) ? $PayPalOrder : $response->result);
         }
         return $response->result;
 
