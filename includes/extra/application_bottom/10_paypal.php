@@ -286,7 +286,10 @@
             return {
               currencyIsoCode: "'.$_SESSION['currency'].'",
               totalPrice: "'.sprintf($paypal->numberFormat, round($total, 2)).'",
-              totalLabel: "'.$paypal->encode_utf8($paypal->get_config('PAYPAL_COMPANY_LABEL')).'",
+              totalLabel: '.json_encode(
+                $paypal->encode_utf8($paypal->get_config('PAYPAL_COMPANY_LABEL')),
+                JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+              ).',
             };
           }
     
@@ -350,7 +353,10 @@
             return {
               currencyIsoCode: "'.$_SESSION['currency'].'",
               totalPrice: "'.sprintf($paypal->numberFormat, round($total, 2)).'",
-              totalLabel: "'.$paypal->encode_utf8($paypal->get_config('PAYPAL_COMPANY_LABEL')).'",
+              totalLabel: '.json_encode(
+                $paypal->encode_utf8($paypal->get_config('PAYPAL_COMPANY_LABEL')),
+                JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+              ).',
             };
           }
 

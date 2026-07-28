@@ -311,6 +311,8 @@ async function setupGooglepayCart() {
         .catch(function (err) {
           reportGooglePayError("cartPaymentAuthorized", err);
           resolve({ transactionState: "ERROR" });
+          // Let Google Pay process the ERROR result before leaving the page.
+          setTimeout(redirectGoogleCartError, 0);
         });
     });
   };
@@ -393,7 +395,10 @@ async function processGoogleCartPayment(orderId, paymentData) {
   // bring the PayPal order total in line with the shipping the buyer
   // selected in the sheet and attach the shipping address before confirming,
   // otherwise PayPal rejects with an APPROVE validation error
-  await $.post(getGoogleCartPatchUrl());
+  const patchResult = await $.post(getGoogleCartPatchUrl());
+  if (!patchResult || patchResult.success !== true) {
+    throw new Error("Unable to update PayPal order");
+  }
 
   const { status } = await paypal.Googlepay().confirmOrder({
     orderId: orderId,

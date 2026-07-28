@@ -286,7 +286,10 @@ async function setupApplepayCart() {
         // bring the PayPal order total in line with the shipping the buyer
         // selected in the sheet and attach the shipping address before confirming,
         // otherwise PayPal rejects with APPROVE_APPLE_PAY_VALIDATION_ERROR
-        await $.post(getAppleCartPatchUrl());
+        const patchResult = await $.post(getAppleCartPatchUrl());
+        if (!patchResult || patchResult.success !== true) {
+          throw new Error("Unable to update PayPal order");
+        }
 
         await applepay.confirmOrder({
           orderId,
