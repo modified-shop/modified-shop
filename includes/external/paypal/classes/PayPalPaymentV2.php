@@ -383,14 +383,16 @@
         )
       );
 
-      if ($pm_source != 'card'
-          && (isset($_SESSION['customer_id'])
-              || $this->code == 'paypalapplepay'
-              || $this->code == 'paypalgooglepay'
-              )
-          )
-      {
-        $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'SET_PROVIDED_ADDRESS';
+      if ($pm_source != 'card') {
+        if ($order->content_type == 'virtual') {
+          $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'NO_SHIPPING';
+        } elseif (isset($_SESSION['customer_id'])
+                  || $this->code == 'paypalapplepay'
+                  || $this->code == 'paypalgooglepay'
+                  )
+        {
+          $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'SET_PROVIDED_ADDRESS';
+        }
       }
 
       if (isset($payer) && $pm_source == 'paypal') {
