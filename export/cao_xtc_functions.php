@@ -324,7 +324,12 @@ function SendOrders ()
       $cust_dob = '';
       $cust_gender = '';
     }
-    if ($orders['billing_name'] == '' && $orders['billing_street_address'] == '') {
+    if ($orders['billing_name'] == ''
+        && $orders['billing_street_address'] == ''
+        && $orders['billing_postcode'] == ''
+        && $orders['billing_city'] == ''
+        )
+    {
       $orders['billing_company'] = $orders['delivery_company'];
       $orders['billing_name'] = $orders['delivery_name'];
       $orders['billing_lastname'] = $orders['delivery_lastname'];
