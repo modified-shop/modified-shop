@@ -57,8 +57,8 @@
               );
 
               $endorsement_array = array(
-                array('id' => 'IMMEDIATE', 'text' => CFG_TXT_IMMEDIATE),
-                array('id' => 'ABANDONMENT', 'text' => CFG_TXT_ABANDONMENT),
+                array('id' => 'RETURN', 'text' => CFG_TXT_IMMEDIATE),
+                array('id' => 'ABANDON', 'text' => CFG_TXT_ABANDONMENT),
               );
 
               $orders_statuses_selected = MODULE_DHL_BUSINESS_STATUS_UPDATE;
