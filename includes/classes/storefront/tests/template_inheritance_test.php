@@ -159,13 +159,20 @@ try {
     writeTestFile($templatesDirectory . '/parent-a/inherited.html', 'inherited');
     writeTestFile($templatesDirectory . '/parent-a/continuation.html', 'parent-a');
     writeTestFile($templatesDirectory . '/current/continuation.html', 'current');
-    writeTestFile($templatesDirectory . '/parent-a/img/logo.png', 'image');
+    mkdir($templatesDirectory . '/current/img');
+    writeTestFile($templatesDirectory . '/current/img/current.png', 'current-image');
+    $logoPath = $templatesDirectory . '/parent-a/img/logo.png';
+    writeTestFile($logoPath, 'image');
+    if (!touch($logoPath, 1700000000)) {
+        throw new RuntimeException('Die feste Änderungszeit für das Test-Asset konnte nicht gesetzt werden.');
+    }
+    clearstatcache(true, $logoPath);
     writeTestFile($templatesDirectory . '/parent-a/img/stars_5.png', 'stars');
     writeTestFile($templatesDirectory . '/parent-a/stylesheet.css', 'css');
     writeTestFile($templatesDirectory . '/parent-a/stylesheet.min.css', 'minified-css');
     writeTestFile(
         $templatesDirectory . '/current/template-asset.html',
-        '{template_asset path=\'img/logo.png\'}|{template_asset path="img/stars_`$rating`.png"}|{if $smarty.const.COMPRESS_STYLESHEET == \'true\'}{template_asset path=\'stylesheet.min.css\'}{else}{template_asset path=\'stylesheet.css\'}{/if}'
+        '{template_asset path=\'img/current.png\'}|{template_asset path=\'img/logo.png\'}|{template_asset path=\'img/logo.png\' versioned=true}|{template_asset path=\'img/logo.png\' absolute=true versioned=true}|{template_asset path="img/stars_`$rating`.png"}|{if $smarty.const.COMPRESS_STYLESHEET == \'true\'}{template_asset path=\'stylesheet.min.css\'}{else}{template_asset path=\'stylesheet.css\'}{/if}'
     );
     writeTestFile($templatesDirectory . '/parent-a/source/boxes/categories.php', 'categories');
     writeTestFile(
@@ -266,14 +273,29 @@ try {
         'Relative URL und Dateisystempfad müssen getrennte Ergebnisarten bleiben.'
     );
     assertSameValue(
+        '/base/templates/parent-a/img/logo.png?v=1700000000',
+        Template::url('img/logo.png', true),
+        'Die relative URL muss die Version der tatsächlich aufgelösten Datei verwenden.'
+    );
+    assertSameValue(
         '/catalog/templates/parent-a/img/logo.png',
         Template::catalogUrl('img/logo.png'),
         'Die Katalog-URL muss ihre eigene Basis verwenden.'
     );
     assertSameValue(
+        '/catalog/templates/parent-a/img/logo.png?v=1700000000',
+        Template::catalogUrl('img/logo.png', true),
+        'Die versionierte Katalog-URL muss ihre eigene Basis verwenden.'
+    );
+    assertSameValue(
         'https://shop.example/catalog/templates/parent-a/img/logo.png',
         Template::absoluteUrl('img/logo.png'),
         'Die absolute URL muss Schema und Host enthalten.'
+    );
+    assertSameValue(
+        'https://shop.example/catalog/templates/parent-a/img/logo.png?v=1700000000',
+        Template::absoluteUrl('img/logo.png', true),
+        'Die versionierte absolute URL muss Schema, Host und Dateiversion enthalten.'
     );
     assertSameValue(
         ['current', 'parent-b', 'parent-a'],
@@ -291,9 +313,9 @@ try {
     $smarty = new Smarty();
     $smarty->assign('rating', 5);
     assertSameValue(
-        '/base/templates/parent-a/img/logo.png|/base/templates/parent-a/img/stars_5.png|/base/templates/parent-a/stylesheet.min.css',
+        '/base/templates/current/img/current.png|/base/templates/parent-a/img/logo.png|/base/templates/parent-a/img/logo.png?v=1700000000|https://shop.example/catalog/templates/parent-a/img/logo.png?v=1700000000|/base/templates/parent-a/img/stars_5.png|/base/templates/parent-a/stylesheet.min.css',
         $smarty->fetch(Template::resolve('template-asset.html')),
-        'template_asset muss statische, dynamische und bedingte Assetpfade über die Template-Kette auflösen.'
+        'template_asset muss statische, dynamische, absolute, versionierte und bedingte Assetpfade über die Template-Kette auflösen.'
     );
     assertSameValue(
         'child-base',

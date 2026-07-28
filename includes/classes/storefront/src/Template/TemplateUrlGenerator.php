@@ -44,33 +44,41 @@ final class TemplateUrlGenerator
     /**
      * Returns a URL relative to the configured shop base.
      */
-    public function relativeUrl(ResolvedTemplateFile $file): string
+    public function relativeUrl(ResolvedTemplateFile $file, bool $versioned = false): string
     {
-        return $this->generate($this->relativeBase, $file);
+        return $this->generate($this->relativeBase, $file, $versioned);
     }
 
     /**
      * Returns a URL rooted at the catalog path.
      */
-    public function catalogUrl(ResolvedTemplateFile $file): string
+    public function catalogUrl(ResolvedTemplateFile $file, bool $versioned = false): string
     {
-        return $this->generate($this->catalogBase, $file);
+        return $this->generate($this->catalogBase, $file, $versioned);
     }
 
     /**
      * Returns a fully qualified URL including the configured HTTP or HTTPS server.
      */
-    public function absoluteUrl(ResolvedTemplateFile $file): string
+    public function absoluteUrl(ResolvedTemplateFile $file, bool $versioned = false): string
     {
-        return $this->generate($this->absoluteBase, $file);
+        return $this->generate($this->absoluteBase, $file, $versioned);
     }
 
-    private function generate(string $base, ResolvedTemplateFile $file): string
+    private function generate(string $base, ResolvedTemplateFile $file, bool $versioned): string
     {
-        return TemplatePath::joinUrl(
+        $url = TemplatePath::joinUrl(
             $base,
             'templates/' . $file->sourceTemplate()->value() . '/' . $file->logicalName()
         );
+
+        if (!$versioned || $file->logicalName() === '' || str_ends_with($file->logicalName(), '/')) {
+            return $url;
+        }
+
+        $modificationTime = filemtime($file->absolutePath());
+
+        return $modificationTime === false ? $url : $url . '?v=' . $modificationTime;
     }
 
     private static function constantString(string $name): string
