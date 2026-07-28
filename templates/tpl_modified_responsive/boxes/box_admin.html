@@ -4,7 +4,7 @@
 <div id="admin">
   <ul class="cf">
     <li class="logo">
-      {if isset($START)}<a href="{$START}" title="{#ab_admin#}">{/if}<img src="{$tpl_path}img/adminbar_logo.png" alt="{#ab_admin#}" />{if isset($START)}</a>{/if}
+      {if isset($START)}<a href="{$START}" title="{#ab_admin#}">{/if}<img src="{template_asset path='img/adminbar_logo.png'}" alt="{#ab_admin#}" />{if isset($START)}</a>{/if}
     </li>
   
     {if isset($LANGUAGES) && $LANGUAGES != ''}
@@ -13,13 +13,13 @@
   
     {if isset($START)}
       <li>
-        <a class="togglelink" href="{$START}" title="{#ab_admin#}"><img src="{$tpl_path}img/adminbar_adminarea.png" alt="{#ab_admin#}" /></a>
+        <a class="togglelink" href="{$START}" title="{#ab_admin#}"><img src="{template_asset path='img/adminbar_adminarea.png'}" alt="{#ab_admin#}" /></a>
       </li>
     {/if}
 
     {if isset($ORDERS)}
       <li class="togglemenu">
-        <a class="togglelink" href="{$ORDERS}"><img src="{$tpl_path}img/adminbar_orders.png" alt="{#ab_orders#}" /></a>
+        <a class="togglelink" href="{$ORDERS}"><img src="{template_asset path='img/adminbar_orders.png'}" alt="{#ab_orders#}" /></a>
         <ul>
           {$ORDERS_CONTENT}
         </ul>
@@ -28,7 +28,7 @@
   
     {if isset($CUSTOMERS)}
       <li class="togglemenu">
-        <a class="togglelink" href="{$CUSTOMERS}"><img src="{$tpl_path}img/adminbar_customers.png" alt="{#ab_customers#}" /></a>
+        <a class="togglelink" href="{$CUSTOMERS}"><img src="{template_asset path='img/adminbar_customers.png'}" alt="{#ab_customers#}" /></a>
         <ul>
           <li class="info">{$CUSTOMERS_INFO}</li>
         </ul>
@@ -37,7 +37,7 @@
 
     {if isset($CATEGORIES) || isset($MANUFACTURERS)}
       <li class="togglemenu">
-        <a class="togglelink" href="{if isset($EDIT_MANUFACTURER)}{$MANUFACTURERS}{else}{$CATEGORIES}{/if}"><img src="{$tpl_path}img/adminbar_categories.png" alt="{#ab_category#}" /></a>
+        <a class="togglelink" href="{if isset($EDIT_MANUFACTURER)}{$MANUFACTURERS}{else}{$CATEGORIES}{/if}"><img src="{template_asset path='img/adminbar_categories.png'}" alt="{#ab_category#}" /></a>
         <ul>
           {if isset($EDIT_MANUFACTURER)}
             {if isset($EDIT_MANUFACTURER)}<li><a href="{$EDIT_MANUFACTURER}">{#ab_edit_manufacturer#}</a></li>{/if}
@@ -57,7 +57,7 @@
 
     {if isset($CONTENT_MANAGER)}
       <li class="togglemenu">
-        <a class="togglelink" href="{$CONTENT_MANAGER}" {if !isset($EDIT_CONTENT)}title="{#ab_contentmanager#}"{/if}><img src="{$tpl_path}img/adminbar_content.png" alt="{#ab_contentmanager#}" /></a>
+        <a class="togglelink" href="{$CONTENT_MANAGER}" {if !isset($EDIT_CONTENT)}title="{#ab_contentmanager#}"{/if}><img src="{template_asset path='img/adminbar_content.png'}" alt="{#ab_contentmanager#}" /></a>
         {if isset($EDIT_CONTENT)}
         <ul>
           <li><a href="{$EDIT_CONTENT}">{#ab_edit_content#}</a></li>
@@ -68,23 +68,23 @@
   
     {if isset($CACHING)}
       <li class="togglemenu">
-        {if isset($CACHING_LINK)}<a class="togglelink" href="{$CACHING_LINK}" title="{#ab_caching#}">{/if}<img src="{$tpl_path}img/adminbar_attention.png" alt="{#ab_caching#}" />{if isset($CACHING_LINK)}</a>{/if}
+        {if isset($CACHING_LINK)}<a class="togglelink" href="{$CACHING_LINK}" title="{#ab_caching#}">{/if}<img src="{template_asset path='img/adminbar_attention.png'}" alt="{#ab_caching#}" />{if isset($CACHING_LINK)}</a>{/if}
       </li>
     {/if}
 
     {if isset($SHOP_OFFLINE)}
       <li class="togglemenu">
-        {if isset($SHOP_OFFLINE_LINK)}<a class="togglelink" href="{$SHOP_OFFLINE_LINK}" title="{#ab_offline#}">{/if}<img src="{$tpl_path}img/adminbar_offline.png" alt="{#ab_offline#}" />{if isset($SHOP_OFFLINE_LINK)}</a>{/if}
+        {if isset($SHOP_OFFLINE_LINK)}<a class="togglelink" href="{$SHOP_OFFLINE_LINK}" title="{#ab_offline#}">{/if}<img src="{template_asset path='img/adminbar_offline.png'}" alt="{#ab_offline#}" />{if isset($SHOP_OFFLINE_LINK)}</a>{/if}
       </li>
     {/if}
     
     <li class="right nomargin">
-      <a class="togglelink" href="{$smarty.const.FILENAME_LOGOFF|xtc_href_link}" title="{#ab_logoff#}"><img src="{$tpl_path}img/adminbar_logoff.png" alt="{#ab_logoff#}" /></a>
+      <a class="togglelink" href="{$smarty.const.FILENAME_LOGOFF|xtc_href_link}" title="{#ab_logoff#}"><img src="{template_asset path='img/adminbar_logoff.png'}" alt="{#ab_logoff#}" /></a>
     </li>
     
     {if isset($NEWSFEED)}
       <li class="right">
-        <a class="togglelink" href="{$NEWSFEED}" title="{#ab_news#}"><img src="{$tpl_path}img/adminbar_feed.png" alt="{#ab_news#}" />
+        <a class="togglelink" href="{$NEWSFEED}" title="{#ab_news#}"><img src="{template_asset path='img/adminbar_feed.png'}" alt="{#ab_news#}" />
         {if $NEWSFEED_COUNT > 0}<span class="icon_count">{$NEWSFEED_COUNT}</span>{/if}
         </a>
       </li>
@@ -92,7 +92,7 @@
     
     {if isset($UPDATE)}
       <li class="right">
-        <a class="togglelink" href="{$UPDATE}" title="{#ab_update#}"><img src="{$tpl_path}img/adminbar_update.png" alt="{#ab_update#}" />
+        <a class="togglelink" href="{$UPDATE}" title="{#ab_update#}"><img src="{template_asset path='img/adminbar_update.png'}" alt="{#ab_update#}" />
         {if $UPDATE_COUNT > 0}<span class="icon_count">{$UPDATE_COUNT}</span>{/if}
         </a>
       </li>
@@ -100,11 +100,11 @@
     
     {if isset($SUPPORT)}
       <li class="right">
-        <a class="togglelink" href="{$SUPPORT}" title="Support"><img src="{$tpl_path}img/adminbar_support.png" alt="{#ab_support#}" /></a>
+        <a class="togglelink" href="{$SUPPORT}" title="Support"><img src="{template_asset path='img/adminbar_support.png'}" alt="{#ab_support#}" /></a>
       </li>
     {/if}
     <li class="right">
-      <a class="togglelink" target="_blank" href="https://www.modified-shop.org/shop/" title="Shop"><img src="{$tpl_path}img/adminbar_shop.png" alt="{#ab_shop#}" /></a>
+      <a class="togglelink" target="_blank" href="https://www.modified-shop.org/shop/" title="Shop"><img src="{template_asset path='img/adminbar_shop.png'}" alt="{#ab_shop#}" /></a>
     </li>
   </ul>
 </div>

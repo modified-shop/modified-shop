@@ -8,7 +8,7 @@
       <tr>
         <td style="padding-right:20px;">
           {if $PRODUCTS_IMAGE != ''}
-            <a title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" class="thickbox" rel="{$PRODUCTS_ID}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" class="productimage" /><br /><br /><img src="{$tpl_path}img/magnifier.gif" alt="Zoom" border="0" />&nbsp;{#text_zoom#}</a>
+            <a title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" class="thickbox" rel="{$PRODUCTS_ID}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" class="productimage" /><br /><br /><img src="{template_asset path='img/magnifier.gif'}" alt="Zoom" border="0" />&nbsp;{#text_zoom#}</a>
           {/if}
         </td>
         <td style="vertical-align:top">
@@ -34,7 +34,7 @@
               <div class="hrlightgrey"></div>{$PRODUCTS_DISCOUNT}
             {/if}
             {if $PRODUCTS_FSK18 == '1'}
-              <div class="hrlightgrey"></div><img src="{$tpl_path}img/fsk18.gif" alt="" style="cursor:default" />
+              <div class="hrlightgrey"></div><img src="{template_asset path='img/fsk18.gif'}" alt="" style="cursor:default" />
             {/if}
             {if $PRODUCTS_EXPIRES}
               <p class="taxandshippinginfo">{#text_expires_date#} {$PRODUCTS_EXPIRES}</p>
