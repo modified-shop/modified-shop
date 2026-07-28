@@ -32,7 +32,7 @@ if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
 
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', Template::url(''));
 
 if (!is_object($product) || $product->isProduct() === false || $language_not_found === true) {
 
@@ -85,7 +85,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $smarty->assign('AUTHOR', $product_reviews['customers_name']);
     $smarty->assign('DATE', xtc_date_long($product_reviews['date_added']));
     $smarty->assign('REVIEWS_TEXT', nl2br(xtc_break_string(encode_htmlspecialchars($product_reviews['reviews_text']), 60, '-<br />')));
-    $smarty->assign('RATING', xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$product_reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $product_reviews['reviews_rating'])));
+    $rating_image = 'img/stars_' . $product_reviews['reviews_rating'] . '.gif';
+    if (Template::findPath($rating_image) === null) {
+      $rating_image = 'img/stars_' . $product_reviews['reviews_rating'] . '.png';
+    }
+    $smarty->assign('RATING', xtc_image(Template::url($rating_image), sprintf(TEXT_OF_5_STARS, $product_reviews['reviews_rating'])));
     $smarty->assign('RATING_VOTE', $product_reviews['reviews_rating']);
     $smarty->assign('PRODUCTS_NAME', $product_reviews['products_name']);
     $smarty->assign('PRODUCTS_HEADING_TITLE', $product_reviews['products_heading_title']);

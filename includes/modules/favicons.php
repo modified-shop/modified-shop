@@ -10,7 +10,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-$ws_dir = 'templates/'.CURRENT_TEMPLATE.'/favicons/';
+$ws_dir = Template::url('favicons/');
 $fs_dir = DIR_FS_CATALOG.$ws_dir;
 
 if (is_dir($fs_dir)) {
