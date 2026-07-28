@@ -17,7 +17,7 @@
   define('DIR_TMPL_CSS', DIR_TMPL.'css/');
 
   $css_array = array(
-    DIR_TMPL.'stylesheet.css',
+    'templates/' . Template::resolve('stylesheet.css'),
   );
   $css_min = DIR_TMPL.'stylesheet.min.css';
   
