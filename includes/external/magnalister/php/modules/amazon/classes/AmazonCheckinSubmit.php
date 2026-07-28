@@ -91,7 +91,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			');
             $this->selection = array();
             while ($row = MagnaDB::gi()->fetchNext($verifySelectionResult)) {
-                $this->selection[$row['pID']] = unserialize($row['data']);
+                $this->selection[$row['pID']] = magnaSafeUnserialize($row['data']);
             }
             if (!empty($this->selection)) {
                 return;
@@ -209,7 +209,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		}
 
         // Always decode the base64-serialized data column first (contains full product data)
-		$productApply['data'] = @unserialize(@base64_decode($productApply['data']));
+		$productApply['data'] = magnaSafeUnserialize(base64_decode($productApply['data']));
 		if (empty($productApply['data']) || !is_array($productApply['data'])) {
 			$productApply['data'] = array();
         }
@@ -241,7 +241,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
             $productApply['data']['ShopVariation'] = $shopVariationData;
         }
 
-		$productApply['category'] = @unserialize(@base64_decode($productApply['category']));
+		$productApply['category'] = magnaSafeUnserialize(base64_decode($productApply['category']));
 		if (empty($productApply['category']) || !is_array($productApply['category'])) {
 			$productApply['category'] = array();
 		}
@@ -392,6 +392,9 @@ class AmazonCheckinSubmit extends CheckinSubmit {
         }
         if (!is_array($sVariationTheme)) {
             $sVariationTheme = array();
+        }
+        if ((empty($sVariationTheme) || key($sVariationTheme) === '') && !empty($data['submit']['VariationTheme'])) {
+            $sVariationTheme = array($data['submit']['VariationTheme'] => null);
         }
 
         $preparedAttributes = $this->getPreparedAttributes($productApply);
@@ -850,7 +853,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			 LIMIT 1
 		')) !== false) {
 			       //AND is_incomplete=\'false\'
-			$productApply['data'] = (array)@unserialize(@base64_decode($productApply['data']));
+			$productApply['data'] = (array)magnaSafeUnserialize(base64_decode($productApply['data']));
             $shopVariationData = null;
 
             // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
@@ -877,7 +880,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
                 $productApply['data']['ShopVariation'] = $shopVariationData;
             }
 			$productApply['data'] = array_merge(
-				(array)@unserialize(@base64_decode($productApply['category'])),
+				(array)magnaSafeUnserialize(base64_decode($productApply['category'])),
 				$productApply['data']
 			);
 			unset($productApply['category']);

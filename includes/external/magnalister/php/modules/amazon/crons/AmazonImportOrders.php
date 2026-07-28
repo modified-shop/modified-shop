@@ -26,10 +26,70 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 		parent::__construct($mpID, $marketplace);
 		$this->gambioPropertiesEnabled = (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties');
 	}
-	
+
+    /**
+     * Reverse-charge fix: actively SET ForceMPTax based on mwstbusiness config,
+     * UstId + Company check (like v3), and country comparison.
+     * Reverse-charge only applies when ALL conditions are met:
+     *   1. mwstbusiness config enabled
+     *   2. Buyer has UstId (VAT ID) AND Company name
+     *   3. Seller country != Buyer country (cross-border / intra-EU)
+     *
+     * TEST: 4 scenarios for reverse-charge (mwstbusiness=true, seller=DE)
+     * SC1: API ForceMPTax=true, tax=12, ship=AT, UstId+Company ✓  → Expected: tax=0 (B2B cross-border)
+     * SC2: ForceMPTax=false, ship=DE, UstId empty, Company ✓      → Expected: shop tax (domestic, no UstId)
+     * SC3: ForceMPTax=false, ship=AT, UstId+Company ✓             → Expected: tax=0 (B2B cross-border)
+     * SC4: API ForceMPTax=true, tax=12, ship=DE, UstId+Company ✓  → Expected: tax=12 (domestic, override API to false)
+     */
+    protected function prepareOrderInfo() {
+        parent::prepareOrderInfo();
+
+        // mwstbusiness must be enabled for reverse-charge
+        if (!getDBConfigValue(array($this->marketplace . '.mwstbusiness', 'val'), $this->mpID, false)) {
+            return;
+        }
+
+        // Reverse-charge applies if: FulfillmentChannel=Business (Amazon B2B) OR (UstId + Company both filled)
+        $bIsBusinessOrder = isset($this->o['orderInfo']['FulfillmentChannel']) && $this->o['orderInfo']['FulfillmentChannel'] === 'Business';
+        $sUstId = isset($this->o['customer']['customers_vat_id']) ? trim($this->o['customer']['customers_vat_id']) : '';
+        $sCompany = isset($this->o['order']['billing_company']) ? trim($this->o['order']['billing_company']) : '';
+        if (!$bIsBusinessOrder && (empty($sUstId) || empty($sCompany))) {
+            $this->o['orderInfo']['ForceMPTax'] = false;
+            return;
+        }
+
+        // Priority 1: configured shipping label sender address country
+        $sSellerCountry = '';
+        $aShipFromCountry = getDBConfigValue($this->marketplace . '.shippinglabel.address.country', $this->mpID, array());
+        if (is_array($aShipFromCountry)) {
+            foreach ($aShipFromCountry as $sCountry) {
+                if (!empty($sCountry)) {
+                    $sSellerCountry = strtoupper($sCountry);
+                    break;
+                }
+            }
+        } elseif (!empty($aShipFromCountry)) {
+            $sSellerCountry = strtoupper($aShipFromCountry);
+        }
+        // Priority 2: Amazon site as fallback
+        if (empty($sSellerCountry)) {
+            $sSellerCountry = strtoupper(getDBConfigValue($this->marketplace . '.site', $this->mpID, ''));
+        }
+
+        $sBuyerCountry = strtoupper($this->o['orderInfo']['ShippingCountryISO']);
+
+        // Cross-border delivery = reverse-charge (tax 0)
+        if (!empty($sSellerCountry) && !empty($sBuyerCountry) && $sSellerCountry !== $sBuyerCountry) {
+            $this->o['orderInfo']['ForceMPTax'] = true;
+        } else {
+            // Same country (domestic) or missing data = no reverse-charge
+            $this->o['orderInfo']['ForceMPTax'] = false;
+        }
+    }
+
 	protected function getConfigKeys() {
 		$keys = parent::getConfigKeys();
-		
+
 		// a random inconsistency appears...
 		$keys['MwStFallback']['key'] = 'mwstfallback';
 		
@@ -204,8 +264,19 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 
 	/**
 	 * Amazon Discount and Shipping Discount: VAT rate follows the highest product's tax rate
+     * Reverse-charge: when ForceMPTax is true, force tax to 0 for ALL products (including discounts)
 	 */
 	protected function setProductsTax() {
+        // Reverse-charge: force tax 0 and let parent handle the rest
+        if (getDBConfigValue(array(
+                $this->marketplace . '.mwstbusiness',
+                'val'
+            ), $this->mpID, false) && $this->o['orderInfo']['ForceMPTax']) {
+            $this->p['products_tax'] = 0;
+            parent::setProductsTax();
+            return;
+        }
+
 		if (    $this->p['products_model'] != $this->config['AmazonPromotionsDiscountProductSKU']
 		     && $this->p['products_model'] != $this->config['AmazonPromotionsDiscountShippingSKU']) {
 			parent::setProductsTax();

@@ -612,7 +612,7 @@ function refreshCurrentClientVersion() {
 function magnaDetermineCurrentClientVersion() {
 	#$_t = microtime(true);
 	$cCVDB = MagnaDB::gi()->fetchOne('SELECT value FROM '.TABLE_MAGNA_CONFIG.' WHERE mpID=0 AND mkey=\'CurrentClientVersion\'');
-	$cCVDB = @unserialize($cCVDB);
+	$cCVDB = magnaSafeUnserialize($cCVDB);
 	$cCV = array();
 	do {
 		if (    !is_array($cCVDB)

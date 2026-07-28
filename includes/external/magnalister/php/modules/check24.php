@@ -28,8 +28,6 @@ class Check24Marketplace extends MagnaCompatMarketplace {
 		$this->authConfigKeys = array(
 			$this->marketplace.'.access.MPUSERNAME',
 			$this->marketplace.'.access.MPPASSWORD',
-			$this->marketplace.'.access.PORT',
-			$this->marketplace.'.access.FTPSERVER',
 		);
 	}
 }

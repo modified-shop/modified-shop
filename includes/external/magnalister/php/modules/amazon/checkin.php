@@ -41,14 +41,4 @@ $cm = new CheckinManager(
 		'marketplace' => $_Marketplace
 	)
 );
-try {
-	$result = MagnaConnector::gi()->submitRequest(array(
-		'ACTION' => 'GetPublicDir',
-		'SUBSYSTEM' => 'Amazon',
-	));
-	$cm->extendTopFormHtml('
-		<a class="ml-button" target="_blank" title="'.ML_LABEL_HISTORY.'" href="'.$result['DATA'].'">'.ML_LABEL_HISTORY.'</a>
-	');	
-} catch (MagnaException $e) { }
-
 echo $cm->mainRoutine();

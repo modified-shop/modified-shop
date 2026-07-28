@@ -121,9 +121,11 @@ $(document).ready(function() {
         if ($this->isAuthed) {
             $this->form['prepare']['fields']['shippingprofile']['values'] = EtsyHelper::showShippingProfiles();
             $this->form['prepare']['fields']['processingprofile']['values'] = EtsyHelper::showProcessingProfiles();
+            $this->form['prepare']['fields']['returnpolicy']['values'] = EtsyHelper::showReturnPolicies();
         } else {
             $this->form['prepare']['fields']['shippingprofile']['values'] = array('');
             $this->form['prepare']['fields']['processingprofile']['values'] = array('');
+            $this->form['prepare']['fields']['returnpolicy']['values'] = array('');
         }
         # Etsy changes the "whenmade" entry "2020-...." each year
         $tmpWhenmadeValues = array_slice($this->form['prepare']['fields']['whenmade']['values'], 0, 1);
@@ -166,9 +168,63 @@ $(document).ready(function() {
         return $sPopup;
     }
 
+    /**
+     * Sends the "Use Dummy Addresses" setting to the API as a string ("true"/"false")
+     * whenever the configuration is saved.
+     *
+     * The checkbox is stored locally as an array (array('val' => true|false)), so it cannot
+     * be transmitted via the form's "submit" key (which would send the raw JSON). Instead we
+     * translate it here to the plain string value the API expects for Orders.Import.UseDummyData.
+     */
+    protected function sendUseDummyDataToApi() {
+        if (!array_key_exists('conf', $_POST)) {
+            return;
+        }
+        $mValue = getDBConfigValue($this->marketplace.'.orderimport.usedummydata', $this->mpID, array('val' => false));
+        $bUseDummyData = is_array($mValue) ? !empty($mValue['val']) : !empty($mValue);
+        try {
+            MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'SetConfigValues',
+                'DATA'   => array(
+                    'Orders.Import.UseDummyData' => $bUseDummyData ? 'true' : 'false',
+                ),
+            ));
+        } catch (MagnaException $e) {
+        }
+    }
+
+    public static function useDummyDataConfirmationPopup() {
+        $sCheckboxId = 'conf_etsy.orderimport.usedummydata_val';
+        ob_start();
+?><script type="text/javascript">/*<![CDATA[*/
+    $('input[id="<?php echo $sCheckboxId; ?>"]').change(function() {
+        var chbx = $(this);
+        if (!chbx.is(':checked')) {
+            return true;
+        }
+        chbx.prop('checked', false);
+        $('<div></div>').html(<?php echo json_encode(ML_TEXT_ETSY_WARNING_USE_DUMMY_DATA); ?>).jDialog({
+            title: <?php echo json_encode(ML_TITLE_ETSY_WARNING_USE_DUMMY_DATA); ?>,
+            buttons: {
+                <?php echo json_encode(ML_BUTTON_LABEL_ABORT); ?>: function() {
+                    jQuery(this).dialog('close');
+                },
+                <?php echo json_encode(ML_BUTTON_LABEL_ACCEPT); ?>: function() {
+                    chbx.prop('checked', true);
+                    jQuery(this).dialog('close');
+                }
+            }
+        });
+    });
+/*]]>*/</script><?php
+        return ob_get_clean();
+    }
+
     public function process() {
         parent::process();
+        $this->sendUseDummyDataToApi();
         echo $this->zeroStockSyncConfirmationPopup();
+        echo $this->useDummyDataConfirmationPopup();
 
         // Load Etsy processing profile JavaScript for configuration page
         if (file_exists(DIR_MAGNALISTER_WS . 'js/marketplaces/etsy/etsy.processing_profile.js')) {
@@ -198,6 +254,20 @@ $(document).ready(function() {
         ) {
             $aResponse = MagnaConnector::gi()->submitRequest(array(
                     'ACTION' => 'GetProcessingProfiles'
+            ));
+
+            if (!empty($aResponse['ERRORS'])) {
+                foreach ($aResponse['ERRORS'] as $sError) {
+                    $this->boxes .= '<p class="errorBox">'.$sError.'</p>';
+                }
+            }
+        }
+
+        if (    (isset($_POST['conf'][$this->marketplace.'.ReturnPolicy']) && empty($_POST['conf'][$this->marketplace.'.ReturnPolicy']))
+                || empty($this->form['prepare']['fields']['returnpolicy']['values'])
+        ) {
+            $aResponse = MagnaConnector::gi()->submitRequest(array(
+                    'ACTION' => 'GetReturnPolicies'
             ));
 
             if (!empty($aResponse['ERRORS'])) {

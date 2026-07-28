@@ -104,7 +104,7 @@ function performItemSearch($asin, $ean, $productsName) {
 		}
 	}
 	if (!empty($searchResults)) {
-		$searchResults = array_map('unserialize', array_unique(array_map('serialize', $searchResults)));
+		$searchResults = array_map('magnaSafeUnserialize', array_unique(array_map('serialize', $searchResults)));
 		foreach ($searchResults as &$data) {
 			if (!empty($data['Author'])) {
 				$data['Title'] .= ' ('.$data['Author'].')';
@@ -791,11 +791,11 @@ function autoupdateAmazonOrdersStatus($mpID) {
 
 	$iCounter = 0;
 	foreach ($orders as $key => &$order) {
-		$order['data'] = @unserialize($order['data']);
+		$order['data'] = magnaSafeUnserialize($order['data']);
 		if (!is_array($order['data'])) {
 			$order['data'] = array();
 		}
-		$order['internaldata'] = @unserialize($order['internaldata']);
+		$order['internaldata'] = magnaSafeUnserialize($order['internaldata']);
 		if (!is_array($order['internaldata'])) {
 			$order['internaldata'] = array();
 		}

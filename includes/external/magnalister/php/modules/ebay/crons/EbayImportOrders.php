@@ -488,7 +488,7 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
         } else {
             # We found the order to which we can add this order and make it merged.
             $this->cur['OrderID'] = (int)$existingOpenOrder['orders_id'];
-            $magnaOrdersDataArr = unserialize($existingOpenOrder['data']);
+            $magnaOrdersDataArr = magnaSafeUnserialize($existingOpenOrder['data']);
 
             # Merge order to merged or single order.
             foreach (array('eBayOrderID', 'ExtendedOrderID', 'eBaySalesRecordNumber') as $sOrderKey) {
@@ -881,7 +881,7 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
             // in magnalister DB, one of the items has the shipping costs for all, the others 0
             return max($existingShippingCost, $currItemShippingCost);
         }
-        $internaldataArray = unserialize($this->o['internaldata']);
+        $internaldataArray = magnaSafeUnserialize($this->o['internaldata']);
 
         if (array_key_exists('addCost', $internaldataArray)) {# $addCost gesetzt
             $addCost = $internaldataArray['addCost'];
@@ -1229,7 +1229,7 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
             // always use the rules of the Item with the biggest ShippingCost
             // (so, if the current one is smaller, use the old one)
             // if ShippingCosts are equal, use the old one
-            $existingInternalDataArray = unserialize($existingInternalData);
+            $existingInternalDataArray = magnaSafeUnserialize($existingInternalData);
             if (
                 is_array($existingInternalDataArray)
                 && array_key_exists('singleShippingCost', $existingInternalDataArray)

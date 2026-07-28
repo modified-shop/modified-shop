@@ -24,7 +24,6 @@ class EtsyHelper extends AttributesMatchingHelper {
     private static $instance;
     protected $marketplaceTitle = 'Etsy';
 
-    // 0 because custom attributes are not allowed
     protected $numberOfMaxAdditionalAttributes = 0;
 
     /**
@@ -248,9 +247,35 @@ class EtsyHelper extends AttributesMatchingHelper {
         ));
 
         $aRet = array();
-        if (array_key_exists('ShippingProfiles', $aShippingProfiles['DATA'])) {
-            foreach ($aShippingProfiles['DATA']['ShippingProfiles'] as $aTemplate) {
+        $aData = isset($aShippingProfiles['DATA']) && is_array($aShippingProfiles['DATA']) ? $aShippingProfiles['DATA'] : array();
+        if (array_key_exists('ShippingProfiles', $aData)) {
+            foreach ($aData['ShippingProfiles'] as $aTemplate) {
                 $aRet[(string)$aTemplate['shippingProfileId']] = $aTemplate['title']; // cast Id to string to catch problems with too long numbers
+            }
+        }
+
+        return $aRet;
+    }
+
+    public static function showReturnPolicies() {
+        try {
+            $aReturnPolicies = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'GetReturnPolicies'
+            ));
+        } catch (Exception $e) {
+            return array('' => 'Error: ' . $e->getMessage());
+        }
+
+        // Optional field — prepend empty "Please choose" so the merchant can leave it unset.
+        // When empty, EtsyCheckinSubmit falls back to global etsy.ReturnPolicy config, and ultimately
+        // the API !empty() guard skips return_policy_id entirely if both are empty.
+        // html_entity_decode unescapes umlauts in the constant (e.g. DE "Bitte w&auml;hlen...") so the
+        // prepare-form's htmlspecialchars() in EtsyPrepareView.php:537 doesn't double-escape them.
+        $aRet = array('' => html_entity_decode(constant('ML_GENERAL_VARMATCH_PLEASE_SELECT'), ENT_QUOTES, 'UTF-8'));
+        $aData = isset($aReturnPolicies['DATA']) && is_array($aReturnPolicies['DATA']) ? $aReturnPolicies['DATA'] : array();
+        if (array_key_exists('ReturnPolicies', $aData)) {
+            foreach ($aData['ReturnPolicies'] as $aPolicy) {
+                $aRet[(string)$aPolicy['returnPolicyId']] = $aPolicy['title']; // cast Id to string to catch problems with too long numbers
             }
         }
 
@@ -268,8 +293,9 @@ class EtsyHelper extends AttributesMatchingHelper {
         }
 
         $aRet = array();
-        if (array_key_exists('ProcessingProfiles', $aProcessingProfiles['DATA'])) {
-            foreach ($aProcessingProfiles['DATA']['ProcessingProfiles'] as $readinessState => $groupedProcessingProfiles) {
+        $aData = isset($aProcessingProfiles['DATA']) && is_array($aProcessingProfiles['DATA']) ? $aProcessingProfiles['DATA'] : array();
+        if (array_key_exists('ProcessingProfiles', $aData)) {
+            foreach ($aData['ProcessingProfiles'] as $readinessState => $groupedProcessingProfiles) {
                 if ($readinessState == 'ready_to_ship') {
                     $aRet[ML_ETSY_READINESS_STATE_READY_TO_SHIP] =
                         self::getProcessingProfileKeyPairValues($groupedProcessingProfiles);
