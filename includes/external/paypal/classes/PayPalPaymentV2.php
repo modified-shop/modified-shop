@@ -917,7 +917,12 @@
         return $response->result;
 
       } catch (PayPalHttp\HttpException $ex) {
-        $this->LoggingManager->log('WARNING', 'GetOrder', array('exception' => $ex));
+        $this->LoggingManager->log('WARNING', 'GetOrder', array(
+          'status_code' => $ex->statusCode,
+          'headers' => $ex->headers,
+          'message' => $ex->getMessage(),
+          'exception' => $ex,
+        ));
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GetOrder', array('exception' => $ex));
       }

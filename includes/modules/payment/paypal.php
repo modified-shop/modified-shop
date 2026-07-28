@@ -147,7 +147,11 @@ class paypal extends PayPalPaymentV2 {
   function before_process() {	  
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
         
-    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+    if (!is_object($PayPalOrder)
+        || !isset($PayPalOrder->status)
+        || !in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)
+        )
+    {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }
