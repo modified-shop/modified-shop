@@ -138,7 +138,7 @@
           $tracking_id = $this->SaveLabel(
             $items['shipmentNo'],
             $items['label']['url'],
-            ((isset($items['customsDoc'])) ? $items['customsDoc']['url'] : ''),
+            ((isset($items['customsDoc'])) ? $items['customsDoc']['url'] : '')
           );
 
           $result['label'][] = array(
