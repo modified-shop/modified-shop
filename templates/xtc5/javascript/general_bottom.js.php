@@ -17,13 +17,13 @@
   defined('DIR_TMPL') OR define('DIR_TMPL', 'templates/'.CURRENT_TEMPLATE.'/');
   defined('DIR_TMPL_JS') OR define('DIR_TMPL_JS', DIR_TMPL.'javascript/');
 ?>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.min.js" type="text/javascript"></script>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-migrate-1.4.1.min.js" type="text/javascript"></script>
+<script src="<?php echo Template::url('javascript/jquery.min.js'); ?>" type="text/javascript"></script>
+<script src="<?php echo Template::url('javascript/jquery-migrate-1.4.1.min.js'); ?>" type="text/javascript"></script>
 
 <?php
 $script_array = array(
-  DIR_TMPL_JS.'thickbox.js',
-  DIR_TMPL_JS.'jquery.alertable.min.js',
+  'templates/' . Template::resolve('javascript/thickbox.js'),
+  'templates/' . Template::resolve('javascript/jquery.alertable.min.js'),
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
 
@@ -40,7 +40,7 @@ foreach ($script_array as $script) {
 }
 
 ob_start();
-foreach(auto_include(DIR_FS_CATALOG.DIR_TMPL_JS.'/extra/','php') as $file) require ($file);
+foreach(auto_include(Template::path('javascript/extra/'),'php') as $file) require ($file);
 $javascript = ob_get_clean();
 if (COMPRESS_JAVASCRIPT == 'true') {
   require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
