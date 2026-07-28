@@ -19,12 +19,12 @@
   defined('DIR_TMPL_CSS') OR define('DIR_TMPL_CSS', DIR_TMPL.'css/');
 
   $css_array = array(
-    DIR_TMPL_CSS.'jquery.colorbox.css',
-    DIR_TMPL_CSS.'jquery.sumoselect.css',
-    DIR_TMPL_CSS.'jquery.alertable.css',
-    DIR_TMPL_CSS.'jquery.slick.css',
-    DIR_TMPL_CSS.'fontawesome-all.css',
-    DIR_TMPL_CSS.'cookieconsent.css',
+    'templates/' . Template::resolve('css/jquery.colorbox.css'),
+    'templates/' . Template::resolve('css/jquery.sumoselect.css'),
+    'templates/' . Template::resolve('css/jquery.alertable.css'),
+    'templates/' . Template::resolve('css/jquery.slick.css'),
+    'templates/' . Template::resolve('css/fontawesome-all.css'),
+    'templates/' . Template::resolve('css/cookieconsent.css'),
   );
   $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
 
@@ -41,5 +41,5 @@
   }
 ?>
 <!--[if lte IE 8]>
-<link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.DIR_TMPL_CSS; ?>ie8fix.css" type="text/css" media="screen" />
+<link rel="stylesheet" property="stylesheet" href="<?php echo Template::url('css/ie8fix.css'); ?>" type="text/css" media="screen" />
 <![endif]-->

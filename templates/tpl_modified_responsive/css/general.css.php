@@ -17,11 +17,11 @@
   define('DIR_TMPL_CSS', DIR_TMPL.'css/');
 
   if ($_SESSION['customers_status']['customers_status'] == '0') {
-    echo '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_TMPL_CSS.'adminbar.css" type="text/css" media="screen" />';
+    echo '<link rel="stylesheet" property="stylesheet" href="'.Template::url('css/adminbar.css').'" type="text/css" media="screen" />';
   }
 
   $css_array = array(
-    DIR_TMPL.'stylesheet.css',
+    'templates/' . Template::resolve('stylesheet.css'),
   );
   $css_min = DIR_TMPL.'stylesheet.min.css';
 
