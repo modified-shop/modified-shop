@@ -254,7 +254,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
       || Template::findPath('module/product_info/' . $product->data['product_template']) === null
       )
   {
-    $files = array_filter(auto_include(Template::path('module/product_info/'),'html'), function($file) {
+    $files = array_filter(Template::files('module/product_info/', 'html'), function($file) {
       return false === strpos($file, 'index.html');
     });
     $product->data['product_template'] = basename($files[0]);

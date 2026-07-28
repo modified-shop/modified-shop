@@ -42,7 +42,7 @@ foreach ($script_array as $script) {
 }
 
 ob_start();
-foreach(auto_include(Template::path('javascript/extra/'),'php') as $file) require ($file);
+foreach(Template::files('javascript/extra/', 'php') as $file) require ($file);
 $javascript = ob_get_clean();
 if (COMPRESS_JAVASCRIPT == 'true') {
   require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');

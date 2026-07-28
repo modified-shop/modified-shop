@@ -1051,45 +1051,36 @@ function SendShopConfig ()
 
   //Ausgabe ProductListingTemplates
   $schema = '<PRODUCT_LISTING_TEMPLATES>' . "\n";
-  if ($dir = opendir(Template::path('module/product_listing/')))
+  foreach (Template::files("module/product_listing/", "html") as $file)
   {
-      while (($file = readdir($dir)) != false)
-      {
-          if (Template::findPath('module/product_listing/' . $file) !== null and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-             $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
-         } //if
-     } // while
-     closedir($dir);
+      $file = basename($file);
+      if ($file != "index.html") {
+         $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
+      }
   }
   $schema .= '</PRODUCT_LISTING_TEMPLATES>' . "\n";
   echo $schema;
 
   //Ausgabe ProductInfoTemplates
   $schema = '<PRODUCT_DETAILS_TEMPLATES>' . "\n";
-  if ($dir = opendir(Template::path('module/product_info/')))
+  foreach (Template::files("module/product_info/", "html") as $file)
   {
-      while (($file = readdir($dir)) != false)
-      {
-          if (Template::findPath('module/product_info/' . $file) !== null and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-             $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
-         } //if
-     } // while
-     closedir($dir);
+      $file = basename($file);
+      if ($file != "index.html") {
+         $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
+      }
   }
   $schema .= '</PRODUCT_DETAILS_TEMPLATES>' . "\n";
   echo $schema;
 
   //Ausgabe ProductOptionsTemplates
   $schema = '<PRODUCT_OPTIONS_TEMPLATES>' . "\n";
-  if ($dir = opendir(Template::path('module/product_options/')))
+  foreach (Template::files("module/product_options/", "html") as $file)
   {
-      while (($file = readdir($dir)) != false)
-      {
-           if (Template::findPath('module/product_options/' . $file) !== null and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-             $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
-         } //if
-     } // while
-     closedir($dir);
+      $file = basename($file);
+      if ($file != "index.html") {
+         $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
+      }
   }
   $schema .= '</PRODUCT_OPTIONS_TEMPLATES>' . "\n";
   echo $schema;
