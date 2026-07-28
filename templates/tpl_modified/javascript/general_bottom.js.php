@@ -18,14 +18,14 @@
   defined('DIR_TMPL_JS') OR define('DIR_TMPL_JS', DIR_TMPL.'javascript/');
 ?>
 
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.min.js" type="text/javascript"></script>
+<script src="<?php echo Template::url('javascript/jquery.min.js'); ?>" type="text/javascript"></script>
 <?php
 $script_array = array(
-  DIR_TMPL_JS.'jquery.colorbox.min.js',
-  DIR_TMPL_JS.'jquery.lazysizes.min.js',
-  DIR_TMPL_JS.'jquery.bxslider.min.js',
-  DIR_TMPL_JS.'jquery.easyTabs.js',
-  DIR_TMPL_JS.'jquery.alertable.min.js',
+  'templates/' . Template::resolve('javascript/jquery.colorbox.min.js'),
+  'templates/' . Template::resolve('javascript/jquery.lazysizes.min.js'),
+  'templates/' . Template::resolve('javascript/jquery.bxslider.min.js'),
+  'templates/' . Template::resolve('javascript/jquery.easyTabs.js'),
+  'templates/' . Template::resolve('javascript/jquery.alertable.min.js'),
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
   
@@ -42,7 +42,7 @@ foreach ($script_array as $script) {
 }
 
 ob_start();
-foreach(auto_include(DIR_FS_CATALOG.DIR_TMPL_JS.'/extra/','php') as $file) require ($file);
+foreach(auto_include(Template::path('javascript/extra/'),'php') as $file) require ($file);
 $javascript = ob_get_clean();
 if (COMPRESS_JAVASCRIPT == 'true') {
   require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
@@ -54,7 +54,7 @@ echo $javascript.PHP_EOL;
 if (basename($PHP_SELF) == FILENAME_CONTENT && isset($_GET['coID']) && $_GET['coID'] == 8) {
 ?>
 <!--[if lt IE 10]>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.css3-multi-column.js"></script>
+<script src="<?php echo Template::url('javascript/jquery.css3-multi-column.js'); ?>"></script>
 <![endif]-->
 <?php 
 }
