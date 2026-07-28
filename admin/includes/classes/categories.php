@@ -1335,7 +1335,7 @@ class categories {
     $files = array();
     
     if (is_dir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path)) {
-      foreach(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path, 'html') as $file) {
+      foreach(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path,'html') as $file) {
         $files[] = array(
           'id' => basename($file), 
           'text' => basename($file),
