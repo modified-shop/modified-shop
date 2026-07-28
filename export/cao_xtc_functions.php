@@ -324,17 +324,19 @@ function SendOrders ()
       $cust_dob = '';
       $cust_gender = '';
     }
-    if ($orders['billing_company']=='') $orders['billing_company']=$orders['delivery_company'];
-    if ($orders['billing_name']=='')  $orders['billing_name']=$orders['delivery_name'];
-    if ($orders['billing_lastname']=='') $orders['billing_lastname']=$orders['delivery_lastname'];
-    if ($orders['billing_firstname']=='') $orders['billing_firstname']=$orders['delivery_firstname'];
-    if ($orders['billing_street_address']=='') $orders['billing_street_address']=$orders['delivery_street_address'];
-    if ($orders['billing_postcode']=='')  $orders['billing_postcode']=$orders['delivery_postcode'];
-    if ($orders['billing_city']=='')  $orders['billing_city']=$orders['delivery_city'];
-    if ($orders['billing_suburb']=='') $orders['billing_suburb']=$orders['delivery_suburb'];
-    if ($orders['billing_state']=='')  $orders['billing_state']=$orders['delivery_state'];
-    if ($orders['billing_country']=='')  $orders['billing_country']=$orders['delivery_country'];
-    if ($orders['billing_country_iso_code_2']=='') $orders['billing_country_iso_code_2']=$orders['delivery_country_iso_code_2'];
+    if ($orders['billing_name'] == '' && $orders['billing_street_address'] == '') {
+      $orders['billing_company'] = $orders['delivery_company'];
+      $orders['billing_name'] = $orders['delivery_name'];
+      $orders['billing_lastname'] = $orders['delivery_lastname'];
+      $orders['billing_firstname'] = $orders['delivery_firstname'];
+      $orders['billing_street_address'] = $orders['delivery_street_address'];
+      $orders['billing_postcode'] = $orders['delivery_postcode'];
+      $orders['billing_city'] = $orders['delivery_city'];
+      $orders['billing_suburb'] = $orders['delivery_suburb'];
+      $orders['billing_state'] = $orders['delivery_state'];
+      $orders['billing_country'] = $orders['delivery_country'];
+      $orders['billing_country_iso_code_2'] = $orders['delivery_country_iso_code_2'];
+    }
 
     $schema  = '<ORDER_INFO>' . "\n" .
                '<ORDER_HEADER>' . "\n" .
