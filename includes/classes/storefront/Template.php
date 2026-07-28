@@ -93,6 +93,7 @@ final class Template
      * the URL names the template that actually supplies it, including a parent.
      *
      * @param string $logicalName Template-relative file name, or an empty string for the template root.
+     * @param bool $versioned Whether to append the resolved file's modification time as a cache-busting query.
      *
      * @return string A URL such as "/base/templates/parent-a/img/logo.png".
      *
@@ -102,11 +103,14 @@ final class Template
      * @throws \Modified\Storefront\Template\Exception\InvalidTemplatePathException
      * @throws \Modified\Storefront\Template\Exception\TemplateFileNotFoundException
      */
-    public static function url(string $logicalName = ''): string
+    public static function url(string $logicalName = '', bool $versioned = false): string
     {
         $runtime = self::runtime();
 
-        return $runtime->urlGenerator()->relativeUrl(self::resolveForUrl($runtime, $logicalName));
+        return $runtime->urlGenerator()->relativeUrl(
+            self::resolveForUrl($runtime, $logicalName),
+            $versioned
+        );
     }
 
     /**
@@ -116,6 +120,7 @@ final class Template
      * than the base-relative form returned by {@see self::url()}.
      *
      * @param string $logicalName Template-relative file name, or an empty string for the template root.
+     * @param bool $versioned Whether to append the resolved file's modification time as a cache-busting query.
      *
      * @return string A URL such as "/catalog/templates/parent-a/img/logo.png".
      *
@@ -125,11 +130,14 @@ final class Template
      * @throws \Modified\Storefront\Template\Exception\InvalidTemplatePathException
      * @throws \Modified\Storefront\Template\Exception\TemplateFileNotFoundException
      */
-    public static function catalogUrl(string $logicalName = ''): string
+    public static function catalogUrl(string $logicalName = '', bool $versioned = false): string
     {
         $runtime = self::runtime();
 
-        return $runtime->urlGenerator()->catalogUrl(self::resolveForUrl($runtime, $logicalName));
+        return $runtime->urlGenerator()->catalogUrl(
+            self::resolveForUrl($runtime, $logicalName),
+            $versioned
+        );
     }
 
     /**
@@ -139,6 +147,7 @@ final class Template
      * are combined into a URL suitable for external responses such as emails.
      *
      * @param string $logicalName Template-relative file name, or an empty string for the template root.
+     * @param bool $versioned Whether to append the resolved file's modification time as a cache-busting query.
      *
      * @return string A URL such as "https://shop.example/catalog/templates/parent-a/img/logo.png".
      *
@@ -149,11 +158,14 @@ final class Template
      * @throws \Modified\Storefront\Template\Exception\InvalidTemplatePathException
      * @throws \Modified\Storefront\Template\Exception\TemplateFileNotFoundException
      */
-    public static function absoluteUrl(string $logicalName = ''): string
+    public static function absoluteUrl(string $logicalName = '', bool $versioned = false): string
     {
         $runtime = self::runtime();
 
-        return $runtime->urlGenerator()->absoluteUrl(self::resolveForUrl($runtime, $logicalName));
+        return $runtime->urlGenerator()->absoluteUrl(
+            self::resolveForUrl($runtime, $logicalName),
+            $versioned
+        );
     }
 
     /**
