@@ -60,6 +60,14 @@
                 array('id' => 'RETURN', 'text' => CFG_TXT_IMMEDIATE),
                 array('id' => 'ABANDON', 'text' => CFG_TXT_ABANDONMENT),
               );
+              $endorsement_mapping = array(
+                'IMMEDIATE' => 'RETURN',
+                'ABANDONMENT' => 'ABANDON',
+              );
+              $endorsement = MODULE_DHL_BUSINESS_ENDORSEMENT;
+              if (isset($endorsement_mapping[$endorsement])) {
+                $endorsement = $endorsement_mapping[$endorsement];
+              }
 
               $orders_statuses_selected = MODULE_DHL_BUSINESS_STATUS_UPDATE;
               if (MODULE_DHL_BUSINESS_STATUS_UPDATE == '0') {
@@ -125,7 +133,7 @@
               </tr>
               <tr class="dhl_expand dhl_toggle">
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_ENDORSEMENT; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('endorsement', $endorsement_array, MODULE_DHL_BUSINESS_ENDORSEMENT, 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('endorsement', $endorsement_array, $endorsement, 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_DUTYPAID; ?></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('dutypaid', 'checkbox', ((MODULE_DHL_BUSINESS_DUTYPAID == 'True') ? true : false), 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_DROPPOINT; ?></td>
