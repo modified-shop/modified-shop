@@ -87,6 +87,31 @@ final class Template
     }
 
     /**
+     * Returns all effective files in an inherited template directory.
+     *
+     * A child file replaces a parent file with the same logical name. Files that
+     * exist only in a parent are inherited. The returned paths are naturally
+     * sorted by their logical file names.
+     *
+     * @param string $logicalDirectory Template-relative directory, for example "module/product_info/".
+     * @param string $extension File extension without a leading dot, for example "html".
+     *
+     * @return list<string> Absolute paths of the effective files.
+     *
+     * @example
+     * Template::files('module/product_info/', 'html');
+     *
+     * @throws \Modified\Storefront\Template\Exception\InvalidTemplatePathException
+     */
+    public static function files(string $logicalDirectory, string $extension): array
+    {
+        return array_map(
+            static fn (ResolvedTemplateFile $file): string => $file->absolutePath(),
+            self::runtime()->fileResolver()->findAll($logicalDirectory, $extension)
+        );
+    }
+
+    /**
      * Returns the resolved file URL relative to the configured shop base.
      *
      * Passing an empty string returns the active template's root URL. For a file,

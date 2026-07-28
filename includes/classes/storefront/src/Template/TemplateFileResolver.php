@@ -58,6 +58,73 @@ final class TemplateFileResolver
     }
 
     /**
+     * Returns all effective files in a directory, merged along the inheritance chain.
+     *
+     * Files are identified by their logical name. The first occurrence in the
+     * chain wins, while files that exist only in a parent remain available.
+     * The resulting effective list is naturally sorted by logical file name.
+     *
+     * @return list<ResolvedTemplateFile>
+     */
+    public function findAll(string $logicalDirectory, string $extension): array
+    {
+        $logicalDirectory = rtrim(
+            TemplatePath::normalizeLogicalName($logicalDirectory),
+            '/'
+        ) . '/';
+        $extension = $this->normalizeExtension($extension);
+        $filesByLogicalName = [];
+
+        foreach ($this->chain as $templateId) {
+            $absoluteDirectory = $this->realCandidatePath($templateId, $logicalDirectory);
+
+            if ($absoluteDirectory === null || !is_dir($absoluteDirectory)) {
+                continue;
+            }
+
+            foreach (new \DirectoryIterator($absoluteDirectory) as $entry) {
+                $fileName = $entry->getFilename();
+
+                if (
+                    $entry->isDot()
+                    || str_starts_with($fileName, '.')
+                    || !$entry->isFile()
+                    || !str_ends_with($fileName, '.' . $extension)
+                ) {
+                    continue;
+                }
+
+                $logicalName = $logicalDirectory . $fileName;
+                if (isset($filesByLogicalName[$logicalName])) {
+                    continue;
+                }
+
+                $absolutePath = $this->realCandidatePath($templateId, $logicalName);
+                if ($absolutePath !== null) {
+                    $filesByLogicalName[$logicalName] = new ResolvedTemplateFile(
+                        $templateId,
+                        $logicalName,
+                        $absolutePath
+                    );
+                }
+            }
+        }
+
+        uksort(
+            $filesByLogicalName,
+            static function (string $left, string $right): int {
+                $naturalComparison = strnatcasecmp($left, $right);
+
+                return $naturalComparison !== 0
+                    ? $naturalComparison
+                    : strcmp($left, $right);
+            }
+        );
+
+        return array_values($filesByLogicalName);
+    }
+
+    /**
      * Resolves the next inherited implementation after the specified current file.
      *
      * This lets a child override include the corresponding file from its parent.
@@ -152,5 +219,20 @@ final class TemplateFileResolver
         }
 
         return $realCandidate;
+    }
+
+    private function normalizeExtension(string $extension): string
+    {
+        if (
+            $extension === ''
+            || preg_match('/^[a-zA-Z0-9]+$/D', $extension) !== 1
+        ) {
+            throw new InvalidTemplatePathException(sprintf(
+                'Die Template-Dateiendung "%s" ist ungültig.',
+                $extension
+            ));
+        }
+
+        return $extension;
     }
 }
