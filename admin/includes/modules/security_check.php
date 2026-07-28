@@ -279,7 +279,10 @@ if (isset($_POST['action'])
  ******************************************************************************/
 require_once(DIR_WS_MODULES.'check_requirements.php');
 foreach ($requirement_array as $k => $requirement) {
-  if ($requirement['status'] !== true) {
+  if ($requirement['status'] !== true
+      && $requirement['status'] !== null
+      )
+  {
     $warnings[] = sprintf(WARNING_REQUIREMENTS, $requirement['name'], $requirement['version'], $requirement['version_min'], $requirement['version_max']);
   }
 }
