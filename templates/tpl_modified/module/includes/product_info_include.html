@@ -7,7 +7,7 @@
       {/if}
       <div class="lb_image">
       {if $module_data.PRODUCTS_IMAGE != ''}
-        <a href="{$module_data.PRODUCTS_LINK}"><img class="lazyload" src="{$tpl_path}css/images/loading.gif" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
+        <a href="{$module_data.PRODUCTS_LINK}"><img class="lazyload" src="{template_asset path='css/images/loading.gif'}" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
         <noscript><a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
       {else}
         &nbsp;
@@ -17,7 +17,7 @@
       <div class="lb_shipping">{if $module_data.PRODUCTS_SHIPPING_NAME}{#text_shippingtime#} {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lb_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}{$module_data.PRODUCTS_SHIPPING_NAME_LINK}{else}&nbsp;{/if}</div>
       {if isset($module_data.PRODUCTS_REVIEWS_COUNT)}
         <div class="lb_rating_icons{if $module_data.PRODUCTS_REVIEWS_COUNT < 1} no_reviews{/if}">
-          <span class="lb_rating_image"><img src="{$tpl_path}img/stars_{$module_data.PRODUCTS_REVIEWS_AVERAGE}.png" alt="" /></span>
+          <span class="lb_rating_image"><img src="{template_asset path="img/stars_`$module_data.PRODUCTS_REVIEWS_AVERAGE`.png"}" alt="" /></span>
           <span class="lb_rating_count">({$module_data.PRODUCTS_REVIEWS_COUNT})</span>
         </div>
       {/if}  
@@ -45,7 +45,7 @@
       {/if}
       <div class="lr_image">
       {if $module_data.PRODUCTS_IMAGE != ''}
-        <a href="{$module_data.PRODUCTS_LINK}"><img class="lazyload" src="{$tpl_path}css/images/loading.gif" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
+        <a href="{$module_data.PRODUCTS_LINK}"><img class="lazyload" src="{template_asset path='css/images/loading.gif'}" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
         <noscript><a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
       {else}
         &nbsp;
@@ -56,7 +56,7 @@
         <div class="lr_desc_box">
           {if isset($module_data.PRODUCTS_REVIEWS_COUNT)}
             <div class="lr_rating_icons{if $module_data.PRODUCTS_REVIEWS_COUNT < 1} no_reviews{/if}">
-              <span class="lr_rating_image"><img src="{$tpl_path}img/stars_{$module_data.PRODUCTS_REVIEWS_AVERAGE}.png" alt="" /></span>
+              <span class="lr_rating_image"><img src="{template_asset path="img/stars_`$module_data.PRODUCTS_REVIEWS_AVERAGE`.png"}" alt="" /></span>
               <span class="lr_rating_count">({$module_data.PRODUCTS_REVIEWS_COUNT})</span>
             </div>
           {/if}  

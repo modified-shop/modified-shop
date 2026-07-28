@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <meta name="robots" content="noindex, nofollow, noodp" />
     {if $base_href}<base href="{$base_href}" />{/if}
-    <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet{if $smarty.const.COMPRESS_STYLESHEET == 'true'}.min{/if}.css" />
+    <link rel="stylesheet" type="text/css" href="{if $smarty.const.COMPRESS_STYLESHEET == 'true'}{template_asset path='stylesheet.min.css'}{else}{template_asset path='stylesheet.css'}{/if}" />
   </head>
   <body class="popupprintorder" onload="window.print()">
     <table width="100%" border="0" cellspacing="0" cellpadding="2">
