@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include smarty
-  include(DIR_FS_BOXES_INC . 'smarty_default.php');
+  include(Template::path('source/inc/smarty_default.php'));
 
   if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['tracking']['products_history']) > 0) {
 

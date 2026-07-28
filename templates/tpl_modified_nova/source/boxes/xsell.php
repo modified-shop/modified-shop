@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include smarty
-  include(DIR_FS_BOXES_INC . 'smarty_default.php');
+  include(Template::path('source/inc/smarty_default.php'));
 
   if ($_SESSION['cart']->count_contents() > 0) {
     $products_id_array = $_SESSION['cart']->get_product_id_array();

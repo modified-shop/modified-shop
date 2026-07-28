@@ -23,7 +23,7 @@ if (defined('MODULE_BANNER_MANAGER_STATUS')) {
 }
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // reset cache id
 $cache_id = '';

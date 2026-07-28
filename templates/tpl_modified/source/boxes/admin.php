@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
   
 // newsfeed
 require_once(DIR_FS_INC.'get_newsfeed.inc.php');

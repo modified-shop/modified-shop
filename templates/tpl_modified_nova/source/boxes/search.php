@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include smarty
-  include(DIR_FS_BOXES_INC . 'smarty_default.php');
+  include(Template::path('source/inc/smarty_default.php'));
 
   // include needed functions
   require_once (DIR_FS_INC.'xtc_get_categories.inc.php');

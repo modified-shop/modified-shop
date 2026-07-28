@@ -22,7 +22,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // set cache id
 $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|cP:'.$cPath.(((defined('SPECIALS_CATEGORIES') && SPECIALS_CATEGORIES === true) || (defined('WHATSNEW_CATEGORIES') && WHATSNEW_CATEGORIES === true)) ? '|self:'.basename($PHP_SELF) : ''));
