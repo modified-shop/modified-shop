@@ -29,7 +29,7 @@
   $this_f_time = filemtime(Template::path('css/general_bottom.css.php'));
 
   if (COMPRESS_STYLESHEET == 'true') {
-    require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');
+    require_once(Template::path('source/inc/combine_files.inc.php'));
     $css_array = combine_files($css_array,$css_min,true,$this_f_time);
   }
   

@@ -49,9 +49,9 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
 //	full content
 // -----------------------------------------------------------------------------------------
   if (!in_array(basename($PHP_SELF), $fullcontent) || (isset($display_mode) && $display_mode == 'error')) {
-    require_once(DIR_FS_BOXES . 'categories.php');
-    require_once(DIR_FS_BOXES . 'manufacturers.php');
-    require_once(DIR_FS_BOXES . 'last_viewed.php');
+    require_once(Template::path('source/boxes/categories.php'));
+    require_once(Template::path('source/boxes/manufacturers.php'));
+    require_once(Template::path('source/boxes/last_viewed.php'));
   } else {
     // smarty full content
     $smarty->assign('fullcontent', true);  
@@ -60,74 +60,74 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
 // -----------------------------------------------------------------------------------------
 //	always visible
 // -----------------------------------------------------------------------------------------
-  require_once(DIR_FS_BOXES . 'search.php');
-  require_once(DIR_FS_BOXES . 'content.php');
-  require_once(DIR_FS_BOXES . 'information.php');
-  require_once(DIR_FS_BOXES . 'miscellaneous.php');
-  require_once(DIR_FS_BOXES . 'languages.php'); 
-  require_once(DIR_FS_BOXES . 'infobox.php');
-  require_once(DIR_FS_BOXES . 'loginbox.php');
+  require_once(Template::path('source/boxes/search.php'));
+  require_once(Template::path('source/boxes/content.php'));
+  require_once(Template::path('source/boxes/information.php'));
+  require_once(Template::path('source/boxes/miscellaneous.php'));
+  require_once(Template::path('source/boxes/languages.php')); 
+  require_once(Template::path('source/boxes/infobox.php'));
+  require_once(Template::path('source/boxes/loginbox.php'));
   if (!defined('MODULE_NEWSLETTER_STATUS') || MODULE_NEWSLETTER_STATUS == 'true') {
-    require_once(DIR_FS_BOXES . 'newsletter.php');
+    require_once(Template::path('source/boxes/newsletter.php'));
   }
   if (defined('MODULE_TS_TRUSTEDSHOPS_ID') 
       && MODULE_TS_REVIEW_STICKER != '' 
       && MODULE_TS_REVIEW_STICKER_STATUS == '1'
       ) 
   {
-    require_once(DIR_FS_BOXES . 'trustedshops.php');
+    require_once(Template::path('source/boxes/trustedshops.php'));
   }
 // -----------------------------------------------------------------------------------------
 //	only if show price
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
-    require_once(DIR_FS_BOXES . 'add_a_quickie.php');
-    require_once(DIR_FS_BOXES . 'shopping_cart.php');
+    require_once(Template::path('source/boxes/add_a_quickie.php'));
+    require_once(Template::path('source/boxes/shopping_cart.php'));
     if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
-      require_once(DIR_FS_BOXES . 'wishlist.php');
+      require_once(Template::path('source/boxes/wishlist.php'));
     }
   }
 // -----------------------------------------------------------------------------------------
 //	hide in search
 // -----------------------------------------------------------------------------------------
   if (substr(basename($PHP_SELF), 0,8) != 'advanced' && WHATSNEW_CATEGORIES === false) {
-    require_once(DIR_FS_BOXES . 'whats_new.php'); 
+    require_once(Template::path('source/boxes/whats_new.php')); 
   }
 // -----------------------------------------------------------------------------------------
 //	admins only
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status'] == '0') {
-    require_once(DIR_FS_BOXES . 'admin.php');
+    require_once(Template::path('source/boxes/admin.php'));
     $smarty->assign('is_admin', true);
   }
 // -----------------------------------------------------------------------------------------
 //	product details
 // -----------------------------------------------------------------------------------------
   if ($product->isProduct() === true) {
-    require_once(DIR_FS_BOXES . 'manufacturer_info.php');
+    require_once(Template::path('source/boxes/manufacturer_info.php'));
   } else {
     if ($_SESSION['customers_status']['customers_status_specials'] == '1' && SPECIALS_CATEGORIES === false) {
-      require_once(DIR_FS_BOXES . 'specials.php');
+      require_once(Template::path('source/boxes/specials.php'));
     }
   }
 // -----------------------------------------------------------------------------------------
 //	only logged id users
 // -----------------------------------------------------------------------------------------
   if (isset($_SESSION['customer_id'])) {
-    require_once(DIR_FS_BOXES . 'order_history.php');
+    require_once(Template::path('source/boxes/order_history.php'));
   }
 // -----------------------------------------------------------------------------------------
 //	only if reviews allowed
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status_read_reviews'] == '1') {
-    require_once(DIR_FS_BOXES . 'reviews.php');
+    require_once(Template::path('source/boxes/reviews.php'));
   }
 // -----------------------------------------------------------------------------------------
 //	hide during checkout
 // -----------------------------------------------------------------------------------------
   if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
-    require_once(DIR_FS_BOXES . 'currencies.php');
-    require_once(DIR_FS_BOXES . 'shipping_country.php');
+    require_once(Template::path('source/boxes/currencies.php'));
+    require_once(Template::path('source/boxes/shipping_country.php'));
   }
 // -----------------------------------------------------------------------------------------
 
@@ -147,7 +147,7 @@ $bestsellers = array(FILENAME_DEFAULT,
                      FILENAME_NEWSLETTER
                      );
 if ((isset($display_mode) && $display_mode == 'error') || (in_array(basename($PHP_SELF), $bestsellers) && !isset($_GET['cPath']) && !isset($_GET['manufacturers_id']))) {
-  require_once(DIR_FS_BOXES . 'best_sellers.php');
+  require_once(Template::path('source/boxes/best_sellers.php'));
   $smarty->assign('bestseller', true);
 }
 // -----------------------------------------------------------------------------------------
