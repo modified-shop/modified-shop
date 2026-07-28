@@ -89,8 +89,8 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
         $box_smarty->assign($key, $value);
       }
       
-      $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
-      $review_image_microtag = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');
+      $review_image = xtc_image(Template::url('img/stars_' . $reviews['reviews_rating'] . '.png') , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
+      $review_image_microtag = xtc_image(Template::url('img/stars_' . $reviews['reviews_rating'] . '.png') , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');
             
       $box_smarty->assign('REVIEWS_VOTE', $reviews['reviews_rating']);
       $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));

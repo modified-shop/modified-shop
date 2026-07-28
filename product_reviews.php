@@ -33,7 +33,7 @@ if (!isset($_GET['products_id'])) {
 // create smarty
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', Template::url(''));
 
 if (!is_object($product) || $product->isProduct() === false || $language_not_found === true) {
 
@@ -89,6 +89,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   
     $reviews_query = xtc_db_query($reviews_split->sql_query);
     while ($reviews = xtc_db_fetch_array($reviews_query)) {
+      $rating_image = 'img/stars_' . $reviews['reviews_rating'] . '.gif';
+      if (Template::findPath($rating_image) === null) {
+        $rating_image = 'img/stars_' . $reviews['reviews_rating'] . '.png';
+      }
       $module_data[] = array (
         'PRODUCTS_IMAGE' => $product->productImage($reviews['products_image'], 'thumbnail'),
         'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id='.$reviews['products_id'].'&reviews_id='.$reviews['reviews_id']),
@@ -98,7 +102,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
         'DATE' => xtc_date_short($reviews['date_added']),
         'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).') <br />'.nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
         'TEXT_PLAIN' => nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
-        'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+        'RATING' => xtc_image(Template::url($rating_image), sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
         'RATING_VOTE' => $reviews['reviews_rating']
       );
     }
