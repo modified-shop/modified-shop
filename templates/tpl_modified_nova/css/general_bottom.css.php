@@ -19,18 +19,18 @@
   defined('DIR_TMPL_CSS') OR define('DIR_TMPL_CSS', DIR_TMPL.'css/');
 
   $css_array = array(
-    DIR_TMPL_CSS.'jquery.colorbox.css',
-    DIR_TMPL_CSS.'jquery.sumoselect.css',
-    DIR_TMPL_CSS.'jquery.alertable.css',
-    DIR_TMPL_CSS.'splide.css',
-    DIR_TMPL_CSS.'jquery.viewer.css',
-    DIR_TMPL_CSS.'jquery.mmenulight.css',
-    DIR_TMPL_CSS.'fontawesome-6-custom.css',
-    DIR_TMPL_CSS.'cookieconsent.css',
+    'templates/' . Template::resolve('css/jquery.colorbox.css'),
+    'templates/' . Template::resolve('css/jquery.sumoselect.css'),
+    'templates/' . Template::resolve('css/jquery.alertable.css'),
+    'templates/' . Template::resolve('css/splide.css'),
+    'templates/' . Template::resolve('css/jquery.viewer.css'),
+    'templates/' . Template::resolve('css/jquery.mmenulight.css'),
+    'templates/' . Template::resolve('css/fontawesome-6-custom.css'),
+    'templates/' . Template::resolve('css/cookieconsent.css'),
   );
 
   if (Template::findPath('css/tpl_custom_bottom.css') !== null) {
-    array_push($css_array, DIR_TMPL_CSS.'tpl_custom_bottom.css');
+    array_push($css_array, 'templates/' . Template::resolve('css/tpl_custom_bottom.css'));
   }
 
   $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';

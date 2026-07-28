@@ -17,22 +17,22 @@
   define('DIR_TMPL_CSS', DIR_TMPL.'css/');
 
   if ($_SESSION['customers_status']['customers_status'] == '0') {
-    echo '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_TMPL_CSS.'adminbar.css" type="text/css" media="screen" />';
+    echo '<link rel="stylesheet" property="stylesheet" href="'.Template::url('css/adminbar.css').'" type="text/css" media="screen" />';
   }
 
   $css_array = array(
-    DIR_TMPL.'stylesheet.css',
+    'templates/' . Template::resolve('stylesheet.css'),
   );
   
-  if (defined('THEME_COLOR')
-      && is_file(DIR_FS_CATALOG.DIR_TMPL_CSS.'themes/'.THEME_COLOR.'.css')
-      )
-  {
-    array_unshift($css_array, DIR_TMPL_CSS.'themes/'.THEME_COLOR.'.css');
+  if (defined('THEME_COLOR')) {
+    $theme_css = 'css/themes/'.THEME_COLOR.'.css';
+    if (Template::findPath($theme_css) !== null) {
+      array_unshift($css_array, 'templates/' . Template::resolve($theme_css));
+    }
   }
   
   if (Template::findPath('css/tpl_custom.css') !== null) {
-     array_push($css_array, DIR_TMPL_CSS.'tpl_custom.css');
+     array_push($css_array, 'templates/' . Template::resolve('css/tpl_custom.css'));
   }
   
   $css_min = DIR_TMPL.'stylesheet.min.css';
