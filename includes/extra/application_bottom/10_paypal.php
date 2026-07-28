@@ -265,23 +265,23 @@
           function getAppleCartOrderUrl() {
             return "'.$order_url.'";
           }
-    
+
           function getAppleCartShippingMethodsUrl() {
             return "'.$shipping_methods_url.'";
           }
-    
+
           function getAppleCartPatchUrl() {
             return "'.$patch_url.'";
           }
-    
+
           function getAppleCartContactUrl() {
             return "'.$contact_url.'";
           }
-    
+
           function getAppleCartSuccessUrl() {
             return "'.$success_url.'";
           }
-    
+
           function getAppleCartTransactionInfo() {
             return {
               currencyIsoCode: "'.$_SESSION['currency'].'",
@@ -292,13 +292,13 @@
               ).',
             };
           }
-    
+
           function redirectAppleCartError() {
             window.location.href = "'.$error_url.'";
           }
         </script>
             ';
-    
+
             $paypalscript .= '
           if ($("#apms_button5").length) {
             if (typeof ApplePaySession != "undefined" && ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()) {
