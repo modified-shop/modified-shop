@@ -22,49 +22,71 @@
   if (defined('RUN_MODE_ADMIN')) {
     $SESS_LIFE = defined('SESSION_LIFE_ADMIN') ? (int)SESSION_LIFE_ADMIN : (int)SESSION_LIFE_ADMIN_DEFAULT;
   }
-  
+
   @ini_set("session.gc_maxlifetime", $SESS_LIFE);
   @ini_set("session.gc_probability", 100);
   @ini_set('session.cookie_httponly', true);
-  
+
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/sessions/','php') as $file) require_once ($file);
-  
+
+  defined('SESSION_LOCK_TIMEOUT') or define('SESSION_LOCK_TIMEOUT', 30);
+
   if (STORE_SESSIONS == 'mysql') {
     class ModifiedSessionHandler implements SessionHandlerInterface {
-  
-      function open(string $save_path, string $session_name): bool 
+
+      private $session_id = null;
+      private $lock_acquired = false;
+
+      function open(string $save_path, string $session_name): bool
       {
         return true;
       }
-  
+
       function close(): bool
       {
+        if ($this->lock_acquired && $this->session_id !== null) {
+          xtc_db_query("SELECT RELEASE_LOCK('" . xtc_db_input('MODsid_' . $this->session_id) . "')");
+          $this->lock_acquired = false;
+        }
+
         return true;
       }
-  
+
       function read(string $session_id): string|false
       {
+        global $LoggingManager;
+
+        $this->session_id = $session_id;
+
+        $lock_query = xtc_db_query("SELECT GET_LOCK('" . xtc_db_input('MODsid_' . $session_id) . "', " . (int)SESSION_LOCK_TIMEOUT . ") AS session_lock");
+        $lock_result = xtc_db_fetch_array($lock_query);
+        $this->lock_acquired = (isset($lock_result['session_lock']) && $lock_result['session_lock'] == '1');
+
+        if (!$this->lock_acquired && isset($LoggingManager)) {
+          $LoggingManager->warning('Session lock for "' . $session_id . '" could not be acquired within ' . SESSION_LOCK_TIMEOUT . 's, continuing without lock');
+        }
+
         $value_query = xtc_db_query("SELECT value
                                        FROM " . TABLE_SESSIONS . "
                                       WHERE sesskey = '" . xtc_db_input($session_id) . "'
                                         AND expiry > '" . time() . "'");
         if (xtc_db_num_rows($value_query) == 1) {
           $value = xtc_db_fetch_array($value_query);
-  
+
           if (isset($value['value']) && $value['value'] != '') {
             return base64_decode($value['value']);
           }
         }
-        
+
         return '';
       }
-  
-      function write(string $session_id, string $val): bool 
+
+      function write(string $session_id, string $val): bool
       {
         global $SESS_LIFE;
-  
+
         $flag = '';
-        if (isset($_SESSION['customers_status']['customers_status']) 
+        if (isset($_SESSION['customers_status']['customers_status'])
             && $_SESSION['customers_status']['customers_status'] == '0'
             )
         {
@@ -73,22 +95,22 @@
         }
         $expiry = time() + (int)$SESS_LIFE;
         $value = base64_encode($val);
-  
+
         $result = xtc_db_query("INSERT INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
                                 VALUES ('". xtc_db_input($session_id) ."', '".(int)$expiry."', '".xtc_db_input($value)."', '".xtc_db_input($flag)."')
                                 ON DUPLICATE KEY UPDATE expiry = '".(int)$expiry."', value = '".xtc_db_input($value)."', flag = '".xtc_db_input($flag)."'");
-  
+
         return true;
       }
-  
-      function destroy(string $session_id): bool 
+
+      function destroy(string $session_id): bool
       {
         xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($session_id) . "'");
-        
+
         return true;
       }
-  
-      function gc(int $maxlifetime): int|false 
+
+      function gc(int $maxlifetime): int|false
       {
         if (defined('DELETE_GUEST_ACCOUNT') && DELETE_GUEST_ACCOUNT == 'true') {
           $session_query = xtc_db_query("SELECT sesskey,
@@ -103,14 +125,14 @@
               xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$customers['customer_id']."'");
               xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$customers['customer_id']."'");
             }
-          }                                       
+          }
         }
         xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
-        
+
         return xtc_db_affected_rows();
       }
     }
-    
+
     $modified_session_handler = new ModifiedSessionHandler();
     session_set_save_handler($modified_session_handler, true);
   }
@@ -120,7 +142,7 @@
       xtc_session_id(xtc_generate_session_id());
     }
     $temp = session_start();
-        
+
     return $temp;
   }
 
@@ -155,7 +177,7 @@
   function xtc_session_destroy() {
     if (isset($_COOKIE[xtc_session_name()])) {
       $cookie_params = session_get_cookie_params();
-      xtc_setcookie(xtc_session_name(), '', time()-3600, $cookie_params['path'], $cookie_params['domain']);
+      xtc_setcookie(xtc_session_name(), '', time()-3600, $cookie_params['path'], $cookie_params['domain'], $cookie_params['secure'], $cookie_params['httponly'], $cookie_params['samesite']);
     }
     if (session_status() === PHP_SESSION_ACTIVE) {
       return session_destroy();
@@ -166,12 +188,12 @@
     if (!empty($path)) {
       $path = realpath($path);
       if (strpos($path, '/') === false
-          || !is_dir($path) 
+          || !is_dir($path)
           || !is_writeable($path)
           )
       {
         $path = sys_get_temp_dir();
-      }      
+      }
       return session_save_path($path);
     } else {
       return session_save_path();
@@ -180,15 +202,15 @@
 
   function xtc_session_recreate() {
     global $http_domain, $https_domain;
-    
+
     if ($http_domain == $https_domain) {
       // backup old session
       $session_backup = $_SESSION;
       $old_session_id = xtc_session_id();
-      
+
       // delete old session
       session_write_close();
-      
+
       // set new session
       $new_session_id = xtc_generate_session_id();
       xtc_session_id($new_session_id);
@@ -202,15 +224,15 @@
       // update whos_online
       if (!defined('MODULE_WHOS_ONLINE_STATUS') || MODULE_WHOS_ONLINE_STATUS == 'true') {
         xtc_db_query("UPDATE " . TABLE_WHOS_ONLINE . "
-                         SET session_id = '".xtc_db_input($new_session_id)."' 
-                       WHERE session_id = '".xtc_db_input($old_session_id)."'"); 
-      }     
+                         SET session_id = '".xtc_db_input($new_session_id)."'
+                       WHERE session_id = '".xtc_db_input($old_session_id)."'");
+      }
     }
   }
-  
+
   function xtc_generate_session_id() {
     require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
-    
+
     $session_id = md5(xtc_random_charcode(256));
     if (STORE_SESSIONS == 'mysql') {
       $check_query = xtc_db_query("SELECT sesskey
@@ -230,7 +252,7 @@
     }
     return $session_id;
   }
-  
+
   function xtc_session_reset() {
     $valid_session_array = array(
       'customers_status',
@@ -253,14 +275,14 @@
       }
     }
   }
-  
+
   function unserialize_session_data( $session_data ) {
     //check for suhosin
     if (suhosin_check()) return 'ENCRYPTED';
- 
-    //check for correct session value  
+
+    //check for correct session value
     if (strpos($session_data, 'customers_status|') === false) $session_data = '';
-   
+
     if ($session_data != '') {
       $variables = array();
       $a = preg_split("/(\w+)\|/", $session_data, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
@@ -274,7 +296,7 @@
 
   function suhosin_check() {
     if (extension_loaded('suhosin') && xtc_get_cfg_var('suhosin.session.encrypt')) {
-      return true;      
+      return true;
     }
     return false;
   }
@@ -285,6 +307,6 @@
     } catch (Exception $e) {
       $ini_option_value = ini_get($ini_option);
       trigger_error($e->getMessage(), E_WARNING);
-    }       
+    }
     return $ini_option_value;
   }

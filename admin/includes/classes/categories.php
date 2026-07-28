@@ -1335,7 +1335,7 @@ class categories {
     $files = array();
     
     if (is_dir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path)) {
-      foreach(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path, 'html') as $file) {
+      foreach(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path,'html') as $file) {
         $files[] = array(
           'id' => basename($file), 
           'text' => basename($file),
@@ -1504,7 +1504,7 @@ class categories {
         if ($dup_check['total'] < 2) {
           xtc_del_image_file($products_data['products_previous_image_'. ($img +1)]);
         }
-        rename(DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$pIMG->filename, DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$products_image_name);
+        rename(DIR_FS_CATALOG_ORIGINAL_IMAGES.$pIMG->filename, DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image_name);
         //get data & write to table
         $mo_img = array(
           'products_id' => xtc_db_prepare_input($products_id), 

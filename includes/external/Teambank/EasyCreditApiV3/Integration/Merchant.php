@@ -32,7 +32,7 @@ class Merchant implements MerchantInterface {
         return call_user_func_array([$this->transactionApi, 'apiMerchantV3TransactionTransactionIdCapturePost'],[$transactionId, $captureRequest]);
     }
 
-    public function cancelOrder(string $transactionId, float $amount = null) {
+    public function cancelOrder(string $transactionId, ?float $amount = null) {
         $refundRequest = null;
         if ($amount !== null) {
             $refundRequest = new RefundRequest(['value' => $amount]);

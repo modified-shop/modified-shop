@@ -43,6 +43,7 @@
 
   $error = false;
   $entry_password_error = false;
+  $entry_password_bcrypt_error = false;
   $entry_mail_error = false;
   $entry_firstname_error = false;
   $entry_lastname_error = false;
@@ -94,7 +95,18 @@
       $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
     }
 
-    if (strlen($customers_password) < ENTRY_PASSWORD_MIN_LENGTH) {
+    $password_charset = isset($_SESSION['language_charset']) && $_SESSION['language_charset'] != ''
+                        ? $_SESSION['language_charset']
+                        : 'UTF-8';
+    $password_length = mb_strlen($customers_password_encrypted, $password_charset);
+    $password_exceeds_bcrypt_limit = (!defined('PASSWORD_HMAC') || PASSWORD_HMAC === '')
+                                     && strlen($customers_password_encrypted) > 72;
+    $entry_password_bcrypt_error = $password_exceeds_bcrypt_limit;
+    if ($password_length < ENTRY_PASSWORD_MIN_LENGTH
+        || $password_length > ENTRY_PASSWORD_MAX_LENGTH
+        || $password_exceeds_bcrypt_limit
+        )
+    {
       $error = $entry_password_error = true;
     }
 
@@ -657,7 +669,11 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-single-right bg_notice<?php echo (($error == true && $entry_password_error == true) ? ' col-error' : ''); ?>">
                       <?php
                         echo xtc_draw_password_field('entry_password', isset($customers_password_encrypted)?$customers_password_encrypted:'', true, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"');
-                        if ($error && $entry_password_error) echo '&nbsp;'.ENTRY_PASSWORD_ERROR;
+                        if ($error && $entry_password_error) {
+                          echo $entry_password_bcrypt_error
+                            ? ENTRY_PASSWORD_ERROR_BCRYPT_LENGTH
+                            : ENTRY_PASSWORD_ERROR;
+                        }
                       ?>
                       </td>
                     </tr>

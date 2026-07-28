@@ -13,7 +13,8 @@ require_once(DIR_FS_CATALOG.'includes/classes/modified_cache.php');
 class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueStore {
     
     private $cache = null;
-    
+    private $prefix = '';
+
     public function __construct()
     {
         global $modified_cache;

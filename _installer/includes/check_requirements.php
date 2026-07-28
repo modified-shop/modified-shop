@@ -33,7 +33,7 @@
   
   
   $status = false;
-  $status_tls = false;
+  $status_tls = null;
   $ssl_version = 'undefined';
   $curl_version = array(
     'version' => 'undefined'
@@ -55,19 +55,27 @@
       curl_setopt($ch, CURLOPT_TIMEOUT, 3);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
       $data = curl_exec($ch);
+      $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
       curl_close($ch);
-      $json = json_decode($data);
-      if (is_object($json)) {
-        $ssl_version = $json->tls_version;
+      if ($data !== false
+          && $http_status >= 200
+          && $http_status < 300
+          )
+      {
+        $json = json_decode($data);
+        if (is_object($json)
+            && isset($json->tls_version)
+            && is_string($json->tls_version)
+            && preg_match('/^TLS\s+([0-9]+(?:\.[0-9]+)+)$/i', $json->tls_version, $matches) === 1
+            )
+        {
+          $ssl_version = $json->tls_version;
+          $status_tls = version_compare($matches[1], SSL_VERSION_MIN, '>=');
+          if ($status_tls === false) {
+            $error = true;
+          }
+        }
       }
-      if (version_compare(preg_replace('/[^0-9.]/', '', $ssl_version), SSL_VERSION_MIN, "<")) {
-        $status_tls = false;
-        $error = true;
-      } else {
-        $status_tls = true;
-      }
-    } else {
-      $status_tls = false;
     }
   } else {
     $error = true;
