@@ -67,8 +67,8 @@
       $content_array = array_slice($content_array, 0, MAX_PRODUCTS_BOX);
 
       foreach ($content_array as $reviews) {
-        $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
-        $review_image_microtag = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');
+        $review_image = xtc_image(Template::url('img/stars_' . $reviews['reviews_rating'] . '.png') , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
+        $review_image_microtag = xtc_image(Template::url('img/stars_' . $reviews['reviews_rating'] . '.png') , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');
 
         $box_content[$reviews['reviews_id']] = $product->buildDataArray($reviews);
         $box_content[$reviews['reviews_id']]['REVIEWS_VOTE'] = $reviews['reviews_rating'];
