@@ -26,7 +26,7 @@ if (isset($_GET['return_to'])
 
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', Template::url(''));
 
 // build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_COOKIE_USAGE, xtc_href_link(FILENAME_COOKIE_USAGE));

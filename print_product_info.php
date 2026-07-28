@@ -26,7 +26,7 @@ require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 // create smarty elements
 $info_smarty = new Smarty();
 $info_smarty->assign('language', $_SESSION['language']);
-$info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$info_smarty->assign('tpl_path', Template::url(''));
 $info_smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
 $info_smarty->assign('doctype', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''));
 $info_smarty->assign('charset', $_SESSION['language_charset']);

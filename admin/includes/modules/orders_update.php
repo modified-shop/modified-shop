@@ -40,8 +40,8 @@
       $smarty->assign('order', $order);
       $smarty->assign('order_data', $order->getOrderData($oID));
 
-      $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+      $smarty->assign('tpl_path',Template::url(''));
+      $smarty->assign('logo_path', Template::absoluteUrl('img/'));
       $smarty->assign('NAME', $order->customer['name']);
       $smarty->assign('ORDER_NR', $order->info['order_id']);
       $smarty->assign('ORDER_ID', $oID);

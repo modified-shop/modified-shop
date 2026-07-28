@@ -29,7 +29,7 @@ require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 // create smarty elements
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', Template::url(''));
 
 if ($language_not_found === true) {
   $site_error = TEXT_CONTENT_NOT_FOUND;

@@ -19,7 +19,7 @@ include ('includes/application_top.php');
 
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', Template::url(''));
 
 // build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_SSL_CHECK, xtc_href_link(FILENAME_SSL_CHECK));
