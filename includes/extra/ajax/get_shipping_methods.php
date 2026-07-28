@@ -42,121 +42,128 @@
       return;
     }
 
-    if (isset($_SESSION['customer_id'])) {
-      $customer_id = $_SESSION['customer_id'];
-    }
-    unset($_SESSION['customer_id']);
-    unset($_SESSION['sendto']);
-    unset($_SESSION['billto']);
-
-    if (isset($request['shipping_address'])) {
-      $_SESSION['country'] = get_country_id($request['shipping_address']['country_code']);
-    }
- 
-    if (isset($request['shipping_option'])) {
-      $shipping_option_id = $request['shipping_option']['id'];
-    }
-
-    $countries_id = STORE_COUNTRY;
-    if (isset($_SESSION['customer_country_id'])) {
-      $countries = xtc_get_countriesList($_SESSION['customer_country_id']);
-      if ($countries !== false) {
-        $countries_id = $countries['countries_id'];
+    $session_backup = array();
+    foreach (array('customer_id', 'sendto', 'billto') as $session_key) {
+      if (array_key_exists($session_key, $_SESSION)) {
+        $session_backup[$session_key] = $_SESSION[$session_key];
       }
     }
-  
-    if (isset($_SESSION['country'])) {
-      $countries = xtc_get_countriesList($_SESSION['country']);
-      $countries_id = (($countries !== false) ? $countries['countries_id'] : $countries_id);
-      $_SESSION['country'] = $countries_id;
-    }
 
-    // reinitialize the price class to get the correct prices
-    $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
-    $_SESSION['cart']->calculate();
-    
-    $order = $paypal->set_order_object();
-        
-    $quotes = $paypal->get_shipping_data(true);
+    try {
+      unset($_SESSION['customer_id']);
+      unset($_SESSION['sendto']);
+      unset($_SESSION['billto']);
 
-    $shipping_option = array();
-    if (is_array($quotes) && count($quotes) > 0) {
-      foreach ($quotes as $quote) {
-        if (!isset($quote['error'])) {
-          foreach ($quote['methods'] as $methods) {
-            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) {
-              $quote['tax'] = 0;
-            }
-            $methods['price'] = $xtPrice->xtcFormat($xtPrice->xtcAddTax($methods['cost'], $quote['tax'], false), false);						
-  
-            $selected = false;
-            $id = sprintf("%u", crc32($quote['id'].'_'.$methods['id']));
-            if ((isset($shipping_option_id) && $shipping_option_id == $id)
-                || !isset($shipping_option_id)
-                )
-            {
-              $selected = true;
-              $shipping_option_id = $id;
-            }          
-            $shipping_option[] = array(
-              'id' => $id,
-              'amount' => array(
-                'currency_code' => $_SESSION['currency'],
-                'value' => sprintf($paypal->numberFormat, $methods['price'])
-              ),
-              'type' => 'SHIPPING',
-              'label' => decode_htmlentities($paypal->encode_utf8($quote['module'].(($methods['title'] != '') ? ' ('.$methods['title'].')' : ''))),
-              'selected' => $selected
-            );
-            
-            if ($selected === true) {
-              $_SESSION['shipping'] = array (
-                'id' => $quote['id'].'_'.$methods['id'], 
-                'title' => $quote['module'], 
-                'cost' => $methods['cost']
+      if (isset($request['shipping_address'])) {
+        $_SESSION['country'] = get_country_id($request['shipping_address']['country_code']);
+      }
+
+      if (isset($request['shipping_option'])) {
+        $shipping_option_id = $request['shipping_option']['id'];
+      }
+
+      $countries_id = STORE_COUNTRY;
+      if (isset($_SESSION['customer_country_id'])) {
+        $countries = xtc_get_countriesList($_SESSION['customer_country_id']);
+        if ($countries !== false) {
+          $countries_id = $countries['countries_id'];
+        }
+      }
+
+      if (isset($_SESSION['country'])) {
+        $countries = xtc_get_countriesList($_SESSION['country']);
+        $countries_id = (($countries !== false) ? $countries['countries_id'] : $countries_id);
+        $_SESSION['country'] = $countries_id;
+      }
+
+      // reinitialize the price class to get the correct prices
+      $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
+      $_SESSION['cart']->calculate();
+
+      $order = $paypal->set_order_object();
+
+      $quotes = $paypal->get_shipping_data(true);
+
+      $shipping_option = array();
+      if (is_array($quotes) && count($quotes) > 0) {
+        foreach ($quotes as $quote) {
+          if (!isset($quote['error'])) {
+            foreach ($quote['methods'] as $methods) {
+              if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) {
+                $quote['tax'] = 0;
+              }
+              $methods['price'] = $xtPrice->xtcFormat($xtPrice->xtcAddTax($methods['cost'], $quote['tax'], false), false);
+
+              $selected = false;
+              $id = sprintf("%u", crc32($quote['id'].'_'.$methods['id']));
+              if ((isset($shipping_option_id) && $shipping_option_id == $id)
+                  || !isset($shipping_option_id)
+                  )
+              {
+                $selected = true;
+                $shipping_option_id = $id;
+              }
+              $shipping_option[] = array(
+                'id' => $id,
+                'amount' => array(
+                  'currency_code' => $_SESSION['currency'],
+                  'value' => sprintf($paypal->numberFormat, $methods['price'])
+                ),
+                'type' => 'SHIPPING',
+                'label' => decode_htmlentities($paypal->encode_utf8($quote['module'].(($methods['title'] != '') ? ' ('.$methods['title'].')' : ''))),
+                'selected' => $selected
               );
-              $order = $paypal->set_order_object();
+
+              if ($selected === true) {
+                $_SESSION['shipping'] = array (
+                  'id' => $quote['id'].'_'.$methods['id'],
+                  'title' => $quote['module'],
+                  'cost' => $methods['cost']
+                );
+                $order = $paypal->set_order_object();
+              }
             }
           }
         }
       }
-    }
 
-    if (empty($shipping_option)) {
-      $paypal->LoggingManager->log('INFO', 'Wallet get_shipping_methods no options', array(
-        'country' => (isset($_SESSION['country']) ? $_SESSION['country'] : null),
-      ));
-    }
+      if (empty($shipping_option)) {
+        $paypal->LoggingManager->log('INFO', 'Wallet get_shipping_methods no options', array(
+          'country' => (isset($_SESSION['country']) ? $_SESSION['country'] : null),
+        ));
+      }
 
-    $total = $order->info['total'];
-    if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-         && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-         ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0 
-               && $order->delivery['country_id'] == STORE_COUNTRY
-               )
-        ) 
-    {
-      $total += $order->info['tax'];
-    }
- 
-    if (isset($customer_id)) {
-      $_SESSION['customer_id'] = $customer_id;
-    }
-     
-    $response = array(
-      'id' => $request['id'],
-      'purchase_units' => array(
-        array(
-          'reference_id' => $request['purchase_units'][0]['reference_id'],
-          'amount' => array(
-            'currency_code' => $_SESSION['currency'],
-            'value' => sprintf($paypal->numberFormat, $total),
-          ),
-          'shipping_options' => $shipping_option,
+      $total = $order->info['total'];
+      if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
+           && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+           ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
+                 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                 && $order->delivery['country_id'] == STORE_COUNTRY
+                 )
+          )
+      {
+        $total += $order->info['tax'];
+      }
+
+      return array(
+        'id' => $request['id'],
+        'purchase_units' => array(
+          array(
+            'reference_id' => $request['purchase_units'][0]['reference_id'],
+            'amount' => array(
+              'currency_code' => $_SESSION['currency'],
+              'value' => sprintf($paypal->numberFormat, $total),
+            ),
+            'shipping_options' => $shipping_option,
+          )
         )
-      )
-    );
-  
-    return $response;
+      );
+    } finally {
+      foreach (array('customer_id', 'sendto', 'billto') as $session_key) {
+        unset($_SESSION[$session_key]);
+        if (array_key_exists($session_key, $session_backup)) {
+          $_SESSION[$session_key] = $session_backup[$session_key];
+        }
+      }
+    }
   }
