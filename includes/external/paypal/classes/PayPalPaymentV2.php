@@ -86,6 +86,8 @@
 
       } catch (PayPalHttp\HttpException $ex) {
         $this->logHttpException('GenerateClientToken', $ex);
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('GenerateClientToken', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GenerateClientToken', array('exception' => $ex));
       }
@@ -120,6 +122,8 @@
 
       } catch (PayPalHttp\HttpException $ex) {
         $this->logHttpException('GenerateUserToken', $ex);
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('GenerateUserToken', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GenerateUserToken', array('exception' => $ex));
       }
@@ -518,6 +522,8 @@
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('CreateOrder', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'CreateOrder', array('exception' => $ex));
         if ($error === true) {
@@ -602,6 +608,8 @@
         }
       } catch (PayPalHttp\HttpException $ex) {
         $this->logHttpException('CreateOrder', $ex);
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('CreateOrder', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'CreateOrder', array('exception' => $ex));
       }
@@ -638,6 +646,8 @@
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('CaptureOrder', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'CaptureOrder', array('exception' => $ex));
         if ($error === true) {
@@ -696,6 +706,8 @@
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('AuthorizeOrder', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'AuthorizeOrder', array('exception' => $ex));
         if ($error === true) {
@@ -756,6 +768,8 @@
         $this->logHttpException('CaptureAuthorizedOrder', $ex);
 
         return $ex;
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('CaptureAuthorizedOrder', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'CaptureAuthorizedOrder', array('exception' => $ex));
       }
@@ -866,6 +880,8 @@
 
       } catch (PayPalHttp\HttpException $ex) {
         $this->logHttpException('PatchOrder', $ex);
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('PatchOrder', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'PatchOrder', array('exception' => $ex));
       }
@@ -899,6 +915,8 @@
         $this->logHttpException('refundOrder', $ex);
 
         return $ex;
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('refundOrder', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'refundOrder', array('exception' => $ex));
       }
@@ -909,6 +927,15 @@
       $this->LoggingManager->log('WARNING', $operation, array(
         'status_code' => $exception->statusCode,
         'headers' => $exception->headers,
+        'message' => $exception->getMessage(),
+        'exception' => $exception,
+      ));
+    }
+
+
+    private function logIOException($operation, PayPalHttp\IOException $exception) {
+      $this->LoggingManager->log('WARNING', $operation, array(
+        'error_code' => $exception->getCode(),
         'message' => $exception->getMessage(),
         'exception' => $exception,
       ));
@@ -928,6 +955,8 @@
 
       } catch (PayPalHttp\HttpException $ex) {
         $this->logHttpException('GetOrder', $ex);
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('GetOrder', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GetOrder', array('exception' => $ex));
       }
@@ -1139,6 +1168,8 @@
 
         } catch (PayPalHttp\HttpException $ex) {
           $this->logHttpException('AddOrderTracking', $ex);
+        } catch (PayPalHttp\IOException $ex) {
+          $this->logIOException('AddOrderTracking', $ex);
         } catch (Exception $ex) {
           $this->LoggingManager->log('DEBUG', 'AddOrderTracking', array('exception' => $ex));
         }
@@ -1175,6 +1206,8 @@
                               WHERE tracking_id = '".(int)$tracking_id."'");
         } catch (PayPalHttp\HttpException $ex) {
           $this->logHttpException('PatchOrderTracking', $ex);
+        } catch (PayPalHttp\IOException $ex) {
+          $this->logIOException('PatchOrderTracking', $ex);
         } catch (Exception $ex) {
           $this->LoggingManager->log('DEBUG', 'PatchOrderTracking', array('exception' => $ex));
         }
@@ -1194,6 +1227,8 @@
 
       } catch (PayPalHttp\HttpException $ex) {
         $this->logHttpException('GetVaultDetails', $ex);
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('GetVaultDetails', $ex);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'GetVaultDetails', array('exception' => $ex));
       }
