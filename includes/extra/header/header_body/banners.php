@@ -24,7 +24,7 @@
   {
     $banner_smarty = new Smarty();
     $banner_smarty->caching = 0;
-    $banner_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+    $banner_smarty->assign('tpl_path', Template::url(''));
     $banner_smarty->assign('language', $_SESSION['language']);
 
     $banners_group_condition = ((isset($banners_group_condition)) ? $banners_group_condition : '');

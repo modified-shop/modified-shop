@@ -124,8 +124,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $gv_email_subject = sprintf(EMAIL_GV_TEXT_SUBJECT, $send_name);
 
     $smarty->assign('language', $_SESSION['language']);
-    $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
-    $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+    $smarty->assign('tpl_path', Template::absoluteUrl(''));
+    $smarty->assign('logo_path', Template::absoluteUrl('img/'));
     $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$gv_code, 'NONSSL', false));
     $smarty->assign('AMMOUNT', $xtPrice->xtcFormat($gv_amount, true));
     $smarty->assign('AMOUNT', $xtPrice->xtcFormat($gv_amount, true));
