@@ -79,12 +79,6 @@
       foreach ($modules_data as $heading => $modules) {
         foreach ($modules as $module => $data) {
           $data['path'] = str_replace('DIR_ADMIN/', DIR_ADMIN, $data['path']);
-          if (isset($data['path2'])) {
-            $data['path'] = str_replace('DIR_ADMIN/', DIR_ADMIN, $data['path2']);
-            if (isset($data['class2'])) {
-              $data['class'] = $data['class2'];
-            }
-          }
           $data['lang'] = str_replace('DIR_LANG', $_SESSION['language'], $data['lang']);
           
           $details[$heading][$module] = $data;

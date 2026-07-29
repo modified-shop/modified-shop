@@ -21,6 +21,5 @@
   define('TEXT_IM_LABEL', 'Create label');
   define('TEXT_INTERNETMARKE_PORTO', 'Please update the price data and select the desired shipment formats in the module.');
 
-  define('TEXT_IM_LABEL_CREATED', 'Label created');
-  define('TEXT_IM_LABEL_DELETED', 'Label deleted <b>Attention:</b> Label was only deleted not canceled!');
-?>
+  define('TEXT_IM_LABEL_CREATED', 'Internetmarke Label was created');
+  define('TEXT_IM_LABEL_DELETED', 'Internetmarke Label was deleted');

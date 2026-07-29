@@ -13,10 +13,8 @@
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
   if (defined('MODULE_INTERNETMARKE_STATUS') && MODULE_INTERNETMARKE_STATUS == 'true') {
-    require_once(DIR_FS_EXTERNAL.'internetmarke/internetmarke.php');
-    $internetmarke = new mod_internetmarke($oID);
-    
-    if ($internetmarke->error === false) {
+    require_once(DIR_FS_EXTERNAL.'dhl/DHLInternetmarke.php');
+    $DHLInternetmarke = new DHLInternetmarke(array());
     ?>
     <div class="heading"><?php echo TABLE_HEADING_INTERNETMARKE; ?></div>
     <?php echo xtc_draw_form('internetmarke', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=custom&subaction=im_insert'); ?>
@@ -31,10 +29,7 @@
           $tracking_array = get_tracking_link($oID, $lang_code);
           if (count($tracking_array) > 0) {
             foreach($tracking_array as $tracking) {
-              if ($tracking['external'] == '1'
-                  && $tracking['im_orders_id'] != ''
-                  )
-              {
+              if ($tracking['external'] == '3') {
                 ?>
                 <tr>
                   <td class="smallText" align="center"><?php echo $tracking['carrier_name']; ?></td>
@@ -56,19 +51,26 @@
         ?>
         <tr>
           <?php            
-            $PageFormats = $internetmarke->getPageFormats(MODULE_INTERNETMARKE_PAGEFORMATS);
-            $id = key($PageFormats);
-        
+            $result = $DHLInternetmarke->getPageFormats(MODULE_INTERNETMARKE_PAGEFORMATS);
             $row_array = array();
-            for($i = 1, $n = $PageFormats[$id]['labelY']; $i <= $n; $i ++) {
-              $row_array[] = array('id' => $i, 'text' => $i);
-            }
-        
             $column_array = array();
-            for($i = 1, $n = $PageFormats[$id]['labelX']; $i <= $n; $i ++) {
-              $column_array[] = array('id' => $i, 'text' => constant('TEXT_IM_COLUMN_'.$i));
+            
+            if (isset($result['formats'])
+                && is_array($result['formats'])
+                && count($result['formats']) > 0
+                )
+            {
+              $id = key($result['formats']);
+                  
+              for($i = 1, $n = $result['formats'][$id]['labelY']; $i <= $n; $i ++) {
+                $row_array[] = array('id' => $i, 'text' => $i);
+              }
+         
+              for($i = 1, $n = $result['formats'][$id]['labelX']; $i <= $n; $i ++) {
+                $column_array[] = array('id' => $i, 'text' => constant('TEXT_IM_COLUMN_'.$i));
+              }
             }
-      
+            
             $price_array = array();
             $price_query = xtc_db_query("SELECT *
                                            FROM `internetmarke`
@@ -77,16 +79,20 @@
               while ($price = xtc_db_fetch_array($price_query)) {
                 $price_array[] = array(
                   'id' => $price['PROID'],
-                  'text' => $price['PRODNAME'],
+                  'text' => $price['PRODNAME'].' - '.trim(format_price($price['PROPR'], 1, $order->info['currency'], 0, 0))
                 );
               }
             }
-            if (count($price_array) > 0) {
+            if (count($price_array) > 0
+                && count($row_array) > 0
+                && count($column_array) > 0
+                ) 
+            {
             ?>
               <td class="smallText" align="center" style="padding:0;" colspan="3">
                 <table cellpadding="5">
                   <tr>
-                    <td class="smallText" style="border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_FORMAT.'</div>'.xtc_draw_pull_down_menu('format', $PageFormats, $id, 'id="im_format" style="width:270px;"'); ?></td>
+                    <td class="smallText" style="border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_FORMAT.'</div>'.xtc_draw_pull_down_menu('format', $result['formats'], $id, 'id="im_format" style="width:270px;"'); ?></td>
                     <td class="smallText" style="white-space:nowrap; border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_ROW.'</div>'.xtc_draw_pull_down_menu('row', $row_array, '', 'id="im_row"'); ?></td>
                     <td class="smallText" style="white-space:nowrap; border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_COLUMN.'</div>'.xtc_draw_pull_down_menu('column', $column_array, '', 'id="im_column"'); ?></td>
                     <td class="smallText" style="border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_PORTO.'</div>'.xtc_draw_pull_down_menu('product', $price_array, '', 'style="width:320px;"'); ?></td>
@@ -152,6 +158,4 @@
       }
     </script>
     <?php
-    }
   }
-?>
