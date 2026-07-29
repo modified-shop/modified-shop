@@ -20,7 +20,7 @@ class micropayment_method extends micropayment_helper
     var $_check;
 
     var $enabled = true;
-    var $version = '2.3.3';
+    var $version = '2.3.4';
     var $rslcode = 'r120';
     var $get_url_called = false;
 
@@ -166,8 +166,8 @@ class micropayment_method extends micropayment_helper
         if (!$this->check()) {
             $this->enabled = false;
         }
-        $minimumAmount = (double)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MINIMUM_AMOUNT');
-        $maximumAmount = (double)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MAXIMUM_AMOUNT');
+        $minimumAmount = (float)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MINIMUM_AMOUNT');
+        $maximumAmount = (float)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MAXIMUM_AMOUNT');
         $order_total = $order->info['total'];
 
         if (($minimumAmount > 0 && $order_total < $minimumAmount) || ($maximumAmount > 0 && $order_total > $maximumAmount)) {
@@ -185,7 +185,16 @@ class micropayment_method extends micropayment_helper
 
     function install()
     {
-        if (!$this->check_is_service_installed()) {
+        if ($this->check_is_service_installed()) {
+          // Reuse existing order status IDs when installing another Micropayment payment method
+          $pendingPaymentId = $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID');
+          $processingId     = $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID');
+          $cancelledId      = $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID');
+          $paymentReviewId  = $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID');
+          $conflictId       = $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID');
+          $partPayId        = $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID');
+          $refundedId       = $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID');
+        } else {
           require_once(dirname(__FILE__).'/../../../lang/'.$_SESSION['language'].'/modules/payment/mcp_service.php');
           
           $lastStatusArray = xtc_db_query('SELECT MAX(`orders_status_id`) last_id FROM '.TABLE_ORDERS_STATUS);
