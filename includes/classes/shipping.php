@@ -88,7 +88,11 @@
                 || count($allowed_zones) == 0
                 )
             {
-              include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
+              language::load(
+                DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file'],
+                $_SESSION['language_code'],
+                true
+              );
               include_once(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
               
               if (class_exists($include_modules[$i]['class'])) {
@@ -264,7 +268,11 @@
       if (!isset($static_shipping_array[$shipping_class])) {
         $static_shipping_array[$shipping_class] = $shipping_method;
         if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_class.'.php')){
-          include_once(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_class.'.php');
+          language::load(
+            DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_class.'.php',
+            $_SESSION['language_code'],
+            true
+          );
           $static_shipping_array[$shipping_class] = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class.'_TEXT_TITLE'));
         }
       }

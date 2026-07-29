@@ -254,7 +254,11 @@ include_once (DIR_WS_INCLUDES.'tracking.php');
 include_once (DIR_WS_MODULES.'set_language_sessions.php');
 
 // language translations
-require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/'.$_SESSION['language'].'.php');
+language::load(
+  DIR_WS_LANGUAGES.$_SESSION['language'].'/'.$_SESSION['language'].'.php',
+  $_SESSION['language_code'],
+  true
+);
 
 // currency
 include_once (DIR_WS_MODULES.'set_currency_session.php');

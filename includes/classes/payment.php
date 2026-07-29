@@ -173,7 +173,11 @@
                 )
             {
               if ($include_modules[$i]['file'] != 'no_payment') {
-                include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
+                language::load(
+                  DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file'],
+                  $_SESSION['language_code'],
+                  true
+                );
                 include_once(DIR_WS_MODULES . 'payment/' . $include_modules[$i]['file']);
               }
               if (class_exists($include_modules[$i]['class'])) {
@@ -535,7 +539,16 @@
         if (!isset($static_payment_array[$payment_method][(int)$order_id])) { 
           if (is_file(DIR_FS_CATALOG . 'includes/modules/payment/' . $payment_method . '.php')) {
             if ($language == '') $language = $_SESSION['language'];
-            include_once(DIR_FS_CATALOG . 'lang/' . $language . '/modules/payment/' . $payment_method . '.php');
+            $language_file = DIR_FS_CATALOG . 'lang/' . $language . '/modules/payment/' . $payment_method . '.php';
+            if ($language == $_SESSION['language']) {
+              language::load(
+                $language_file,
+                $_SESSION['language_code'],
+                true
+              );
+            } else {
+              include_once($language_file);
+            }
             $payment_name = strip_tags(constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE')));
 
             if ($payment_method == 'paypalplus' && (int)$order_id > 0) {

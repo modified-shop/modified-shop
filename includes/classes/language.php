@@ -26,6 +26,9 @@
     var $catalog_languages;
     var $browser_languages;
 
+    private static $definitions = array();
+    private static $loaded_files = array();
+
     function __construct($lng = '') {
       $this->languages = array(
         'ar' => array('ar([-_][[:alpha:]]{2})?|arabic', 'arabic', 'ar'),
@@ -115,6 +118,137 @@
           }
         }
       }
+    }
+
+    /**
+     * Load an array based language file or a legacy language file using define().
+     *
+     * @param string $file
+     * @param string $language_code
+     * @param bool   $define_constants
+     *
+     * @return array
+     */
+    public static function load($file, $language_code, $define_constants = false) {
+      $loaded_file = $language_code.':'.$file;
+
+      if (!isset(self::$loaded_files[$loaded_file])) {
+        $constants_before = self::get_user_constants();
+        $language_definitions = require_once $file;
+        $constants_after = self::get_user_constants();
+        $legacy_definitions = array_diff_key($constants_after, $constants_before);
+
+        if (!is_array($language_definitions)) {
+          $language_definitions = array();
+        }
+
+        self::register(
+          $language_code,
+          array_replace($legacy_definitions, $language_definitions)
+        );
+        self::$loaded_files[$loaded_file] = true;
+      }
+
+      if ($define_constants === true) {
+        self::define_constants($language_code);
+      }
+
+      return isset(self::$definitions[$language_code])
+        ? self::$definitions[$language_code]
+        : array();
+    }
+
+    /**
+     * Register language definitions without defining global constants.
+     *
+     * @param string $language_code
+     * @param array  $definitions
+     *
+     * @return void
+     */
+    public static function register($language_code, array $definitions) {
+      if (!isset(self::$definitions[$language_code])) {
+        self::$definitions[$language_code] = array();
+      }
+
+      self::$definitions[$language_code] = array_replace(
+        self::$definitions[$language_code],
+        $definitions
+      );
+    }
+
+    /**
+     * Define the constants for the active language.
+     *
+     * Missing definitions are taken from DEFAULT_LANGUAGE when it has already
+     * been loaded. Existing constants are never overwritten.
+     *
+     * @param string $language_code
+     *
+     * @return void
+     */
+    public static function define_constants($language_code) {
+      $definitions = array();
+
+      if (defined('DEFAULT_LANGUAGE')
+          && isset(self::$definitions[DEFAULT_LANGUAGE])
+          )
+      {
+        $definitions = self::$definitions[DEFAULT_LANGUAGE];
+      }
+
+      if (isset(self::$definitions[$language_code])) {
+        $definitions = array_replace(
+          $definitions,
+          self::$definitions[$language_code]
+        );
+      }
+
+      foreach ($definitions as $key => $value) {
+        defined($key) OR define($key, $value);
+      }
+    }
+
+    /**
+     * Get a definition in a specific language without changing active constants.
+     *
+     * @param string $key
+     * @param string $language_code
+     *
+     * @return mixed
+     */
+    public static function get($key, $language_code) {
+      if (isset(self::$definitions[$language_code])
+          && array_key_exists($key, self::$definitions[$language_code])
+          )
+      {
+        return self::$definitions[$language_code][$key];
+      }
+
+      if (defined('DEFAULT_LANGUAGE')
+          && isset(self::$definitions[DEFAULT_LANGUAGE])
+          && array_key_exists($key, self::$definitions[DEFAULT_LANGUAGE])
+          )
+      {
+        return self::$definitions[DEFAULT_LANGUAGE][$key];
+      }
+
+      if (defined($key)) {
+        return constant($key);
+      }
+
+      return $key;
+    }
+
+    /**
+     * Return all user-defined constants.
+     *
+     * @return array
+     */
+    private static function get_user_constants() {
+      $constants = get_defined_constants(true);
+
+      return isset($constants['user']) ? $constants['user'] : array();
     }
   
   }
