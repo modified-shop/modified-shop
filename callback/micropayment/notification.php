@@ -57,8 +57,8 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
     echo '<pre>';
     echo 'MICROPAYMENT GATEWAY TEST FUNCTION' . PHP_EOL;
     echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.3.2' . PHP_EOL;
-    echo 'ACCOUNT-ID: ' . substr($accId,0,1).str_repeat('x',strlen($accId)-2).substr($accId,strlen($accId)-1) . PHP_EOL;
-    echo 'ACCESSKEY: ' . substr($accKey,0,1).str_repeat('x',strlen($accKey)-2).substr($accKey,strlen($accKey)-1) . PHP_EOL;
+    echo 'ACCOUNT-ID: ' . ((strlen($accId) > 2) ? substr($accId, 0, 1).str_repeat('x', strlen($accId) - 2).substr($accId, -1) : str_repeat('x', strlen($accId))) . PHP_EOL;
+    echo 'ACCESSKEY: ' . ((strlen($accKey) > 2) ? substr($accKey, 0, 1).str_repeat('x', strlen($accKey) - 2).substr($accKey, -1) : str_repeat('x', strlen($accKey))) . PHP_EOL;
     echo 'SECRET_FIELD: ' . ($secretField !== '' ? '***configured***' : '***not configured***') . PHP_EOL;
     echo 'SECRET_VALUE: ' . ($secretValue !== '' ? '***configured***' : '***not configured***') . PHP_EOL;
     echo 'LAST_REFRESH: ' . $lastRefresh . ' ; INTERVAL: ' . $interval . 's' . PHP_EOL;
@@ -161,8 +161,8 @@ class micropayment_callback
      */
     function getParam($key,$allowed)
     {
-        if(isset($_REQUEST[$key])) {
-            if(is_array($allowed) && in_array($_REQUEST[$key],$allowed)) {
+        if(isset($_REQUEST[$key]) && is_string($_REQUEST[$key])) {
+            if(is_array($allowed) && in_array($_REQUEST[$key],$allowed,true)) {
                 return $_REQUEST[$key];
             } elseif(!is_array($allowed) && preg_match($allowed,$_REQUEST[$key])) {
                 return $_REQUEST[$key];
@@ -243,7 +243,6 @@ class micropayment_callback
 
     function verifyRequest()
     {
-        $ok          = true;
         $data        = $_REQUEST;
         $secretField = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD;
         $secretValue = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE;
@@ -258,22 +257,22 @@ class micropayment_callback
         foreach($data as $key=>$value) {
             switch($key) {
                 case 'auth':
-                    if(!preg_match(self::REGEX_SIMPLE_TEXT,$value)) {
+                    if(!is_string($value) || !preg_match(self::REGEX_SIMPLE_TEXT,$value)) {
                         $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
                     }
                 break;
                 case 'orderid':
-                    if(!preg_match(self::REGEX_INTEGER,$value)) {
+                    if(!is_string($value) || !preg_match(self::REGEX_INTEGER,$value)) {
                         $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
                     }
                 break;
                 case 'amount':
-                    if(!preg_match(self::REGEX_INTEGER,$value)) {
+                    if(!is_string($value) || !preg_match(self::REGEX_INTEGER,$value)) {
                         $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
                     }
                 break;
                 case 'function':
-                    if(!in_array($value,$this->allowedFunctions)) {
+                    if(!is_string($value) || !in_array($value,$this->allowedFunctions,true)) {
                         $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
                     }
                 break;
@@ -292,20 +291,27 @@ class micropayment_callback
             )
         );
 
-        if($ok && (xtc_db_num_rows($order_query) != 1)) {
+        $orderExists = (xtc_db_num_rows($order_query) == 1);
+        $isDuplicateExpire = (!$orderExists
+                              && $this->getParam('function',$this->allowedFunctions) == self::FUNCTION_EXPIRE
+                              && $this->isDuplicateEvent()
+                             );
+
+        if(!$orderExists && !$isDuplicateExpire) {
             $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
         }
-        return $ok;
+        return true;
     }
 
     function processFunction()
     {
-
-
-        $aOrder    = $this->fetchOrder();
-        $order     = $aOrder['order'];
         $lastEvent = $this->getLastEventFromMicropaymentLog();
         $function  = $this->getParam('function',$this->allowedFunctions);
+
+        if($this->isDuplicateEvent()) {
+            $this->setSuccessStatus($function);
+            return true;
+        }
 
         $this->addToMicropaymentLog();
 
@@ -398,26 +404,12 @@ class micropayment_callback
                 $this->returnStatus = self::STATUS_OK;
             break;
             case self::FUNCTION_EXPIRE:
-                $order_status = MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID;
-                $order_id     = $this->getParam('orderid',self::REGEX_INTEGER);
-                $comment      = sprintf(
-                    MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_EXPIRE,
-                    $this->getParam('auth',self::REGEX_SIMPLE_TEXT)
-                );
+                $order_id = $this->getParam('orderid',self::REGEX_INTEGER);
 
-                $sql_data_array = array(
-                    'orders_id'         => $order_id,
-                    'orders_status_id'  => $order_status,
-                    'date_added'        => 'now()' ,
-                    'customer_notified' => 0,
-                    'comments'          => $comment
-                );
-                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-
-                $model = new micropayment_method();
-                $model->mcp_remove_order($order_id,true);
+                require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+                xtc_remove_order((int)$order_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
                 xtc_db_query(sprintf('DELETE FROM micropayment_orders WHERE order_id = "%s"',$order_id));
-                xtc_db_query(sprintf('DELETE FROM micropayment_log WHERE order_id = "%s"',$order_id));
+                xtc_db_query(sprintf('DELETE FROM micropayment_log WHERE order_id = "%s" AND `function` != "%s"',$order_id,self::FUNCTION_EXPIRE));
                 $this->returnStatus = self::STATUS_OK;
             break;
             case self::FUNCTION_BACKPAY:
@@ -506,6 +498,35 @@ class micropayment_callback
         return true;
     }
 
+    function setSuccessStatus($function)
+    {
+        $this->returnStatus = self::STATUS_OK;
+
+        if(in_array($function,array(self::FUNCTION_BILLING,self::FUNCTION_INIT),true)) {
+            $this->returnUrl = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL',true);
+        }
+    }
+
+    function isDuplicateEvent()
+    {
+        $event = xtc_db_query(
+            sprintf(
+                'SELECT `id` FROM `micropayment_log`
+                  WHERE `order_id` = "%s"
+                    AND `auth` = "%s"
+                    AND `amount` = "%s"
+                    AND `function` = "%s"
+                  LIMIT 1',
+                xtc_db_prepare_input($this->getParam('orderid',self::REGEX_INTEGER)),
+                xtc_db_prepare_input($this->getParam('auth',self::REGEX_SIMPLE_TEXT)),
+                xtc_db_prepare_input($this->getParam('amount',self::REGEX_INTEGER)),
+                xtc_db_prepare_input($this->getParam('function',$this->allowedFunctions))
+            )
+        );
+
+        return xtc_db_num_rows($event) > 0;
+    }
+
     function addToMicropaymentLog()
     {
         xtc_db_query(
@@ -522,13 +543,14 @@ class micropayment_callback
     function getLastEventFromMicropaymentLog()
     {
         $orderid = $this->getParam('orderid',self::REGEX_INTEGER);
-        $event = xtc_db_query(sprintf('SELECT `function` FROM `micropayment_log` WHERE `order_id` = "%s" ORDER BY `created` DESC LIMIT 1',xtc_db_prepare_input($orderid)));
+        $event = xtc_db_query(sprintf('SELECT `function` FROM `micropayment_log` WHERE `order_id` = "%s" ORDER BY `created` DESC, `id` DESC LIMIT 1',xtc_db_prepare_input($orderid)));
         $event = xtc_db_fetch_array($event);
-        if(count($event)>0) {
+
+        if(is_array($event) && isset($event['function'])) {
             return $event['function'];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     function checkEventState($actualEvent,$newEvent)
