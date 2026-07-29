@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-require_once (DIR_WS_INCLUDES.'functions/checkout_processing.php');
+require_once (DIR_WS_CLASSES.'checkout.php');
 
 function get_checkout_processing_status()
 {
@@ -20,7 +20,8 @@ function get_checkout_processing_status()
       && preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_key'])
       )
   {
-    $processing = checkout_processing_find($_SESSION['checkout_processing_key'], $_SESSION['customer_id']);
+    $checkout = new checkout($_SESSION['customer_id']);
+    $processing = $checkout->find();
     if (is_array($processing)) {
       $response['status'] = $processing['processing_status'];
 

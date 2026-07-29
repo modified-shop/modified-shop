@@ -34,15 +34,13 @@ define('SESSION_FORCE_COOKIE_USE', 'False');
 
 include ('includes/application_top.php');
 
-require_once (DIR_WS_INCLUDES.'functions/checkout_processing.php');
+require_once (DIR_WS_CLASSES.'checkout.php');
 
 // A repeated request may arrive after the first request has already cleared the
 // checkout session variables. Handle completed attempts before the requirements.
-if (isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'])
-    && preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_key'])
-    )
-{
-  $completed_checkout = checkout_processing_find($_SESSION['checkout_processing_key'], $_SESSION['customer_id']);
+if (isset($_SESSION['customer_id'])) {
+  $checkout = new checkout($_SESSION['customer_id']);
+  $completed_checkout = $checkout->find();
   if (is_array($completed_checkout)
       && $completed_checkout['processing_status'] === 'completed'
       && (int)$completed_checkout['orders_id'] > 0
@@ -83,7 +81,6 @@ $shipping_modules = new shipping($_SESSION['shipping']);
 require_once(DIR_WS_CLASSES.'order.php');
 $order = new order();
 
-$checkout_processing_key = checkout_processing_get_key();
 $checkout_processing_owner = false;
 $creates_tmp_order = !isset($_SESSION['tmp_oID'])
                      && isset(${$_SESSION['payment']}->form_action_url)
@@ -97,7 +94,7 @@ $payment_modules->before_process();
 // This intentionally runs after before_process(), because payment modules may use
 // that hook for a provider redirect and return to checkout_process.php afterwards.
 if (!isset($_SESSION['tmp_oID']) && !$creates_tmp_order) {
-  $checkout_processing_owner = checkout_processing_claim($checkout_processing_key, $_SESSION['customer_id']);
+  $checkout_processing_owner = $checkout->claim();
   if (!$checkout_processing_owner) {
     // Do not let a request that continued after a session-lock timeout write
     // its stale checkout data back over the owning request's session.
@@ -236,7 +233,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $insert_id = xtc_db_insert_id();
   $_SESSION['tmp_oID'] = $insert_id;
   if ($checkout_processing_owner) {
-    checkout_processing_set_order($checkout_processing_key, $_SESSION['customer_id'], $insert_id);
+    $checkout->set_order($insert_id);
   }
 
   for ($i = 0, $n = sizeof($order_totals); $i < $n; $i ++) {
@@ -531,7 +528,7 @@ if (!$tmp) {
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_end/','php') as $file) require ($file);
 
   if ($checkout_processing_owner) {
-    checkout_processing_complete($checkout_processing_key, $_SESSION['customer_id'], $insert_id);
+    $checkout->complete($insert_id);
     $_SESSION['checkout_completed_order_id'] = (int)$insert_id;
   }
 

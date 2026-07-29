@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
-require_once (DIR_WS_INCLUDES.'functions/checkout_processing.php');
+require_once (DIR_WS_CLASSES.'checkout.php');
 
 if (!isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'])
     || !preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_key'])
@@ -20,7 +20,8 @@ if (!isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'])
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
 }
 
-$processing = checkout_processing_find($_SESSION['checkout_processing_key'], $_SESSION['customer_id']);
+$checkout = new checkout($_SESSION['customer_id']);
+$processing = $checkout->find();
 if (!is_array($processing)) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
 }

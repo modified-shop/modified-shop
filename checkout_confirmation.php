@@ -43,15 +43,15 @@ require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 $smarty = new Smarty();
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
-require_once (DIR_WS_INCLUDES.'functions/checkout_processing.php');
+require_once (DIR_WS_CLASSES.'checkout.php');
 
-$checkout_processing_key = checkout_processing_get_key();
-$checkout_processing = checkout_processing_find($checkout_processing_key, $_SESSION['customer_id']);
+$checkout = new checkout($_SESSION['customer_id']);
+$checkout_processing = $checkout->find();
 if (is_array($checkout_processing)
     && in_array($checkout_processing['processing_status'], array('completed', 'failed'), true)
     )
 {
-  $checkout_processing_key = checkout_processing_create_key();
+  $checkout->create_key();
 }
 
 if (isset($_POST['payment'])) {
