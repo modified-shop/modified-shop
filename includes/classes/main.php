@@ -331,7 +331,9 @@ class main {
       require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
       
       $this->vpe_name = xtc_get_vpe_name($products['products_vpe']);
-      $vpeText = $xtPrice->xtcFormatCurrency(($price * (1 / $products['products_vpe_value'])), 0, true).TXT_PER.$this->vpe_name;
+      $decimal_places = $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places'];
+      $rounded_price = round((float)$price, $decimal_places);
+      $vpeText = $xtPrice->xtcFormatCurrency(($rounded_price * (1 / $products['products_vpe_value'])), 0, true).TXT_PER.$this->vpe_name;
     }
     
     //new module support
