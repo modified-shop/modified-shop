@@ -583,7 +583,8 @@
         }
 
         foreach ($checksum_array as $data) {
-          if ($zip->addFile($data['absolutePath'], $data['relativePath']) === false) {
+          $relative_path = ltrim(str_replace('\\', '/', $data['relativePath']), '/');
+          if ($zip->addFile($data['absolutePath'], $relative_path) === false) {
             $zip->close();
             unlink($temporary_path);
             return false;
