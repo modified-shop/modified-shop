@@ -553,21 +553,47 @@
     
     if (count($checksum_array) > 0) {
       $checksum_backup_array = array();
-      foreach ($checksum_array as $data) {
+      $backup_entry_array = array();
+      foreach ($checksum_array as $index => $data) {
         $checksum_backup_array[$data['relativePath']] = array(
           'checkSum' => $data['checkSum'],
           'checkSumOrig' => $data['checkSumOrig'],
         );
+        $backup_entry_array[$index] = ltrim(str_replace('\\', '/', $data['relativePath']), '/');
       }
       ksort($checksum_backup_array);
       $checksum_backup = md5(serialize($checksum_backup_array));
       $backup_dir = DIR_FS_CATALOG.DIR_ADMIN.'backups/';
       $backup_files = glob($backup_dir.'backup_*_'.$checksum_backup.'.zip');
+      $backup_file = false;
 
       if (is_array($backup_files) && count($backup_files) > 0) {
         sort($backup_files);
-        $backup_file = basename($backup_files[0]);
-      } else {
+        foreach ($backup_files as $backup_path) {
+          $zip = new ZipArchive();
+          $valid_backup = $zip->open($backup_path, ZipArchive::CHECKCONS) === true;
+
+          if ($valid_backup === true) {
+            $valid_backup = $zip->numFiles === count($backup_entry_array);
+            foreach ($backup_entry_array as $backup_entry) {
+              if ($zip->locateName($backup_entry) === false) {
+                $valid_backup = false;
+                break;
+              }
+            }
+            $zip->close();
+          }
+
+          if ($valid_backup === true) {
+            $backup_file = basename($backup_path);
+            break;
+          }
+
+          unlink($backup_path);
+        }
+      }
+
+      if ($backup_file === false) {
         $backup_file = 'backup_'.date('Y-m-d-H-i-s').'_'.$checksum_backup.'.zip';
         $backup_path = $backup_dir.$backup_file;
         $temporary_path = tempnam($backup_dir, 'backup_diff_');
@@ -582,9 +608,8 @@
           return false;
         }
 
-        foreach ($checksum_array as $data) {
-          $relative_path = ltrim(str_replace('\\', '/', $data['relativePath']), '/');
-          if ($zip->addFile($data['absolutePath'], $relative_path) === false) {
+        foreach ($checksum_array as $index => $data) {
+          if ($zip->addFile($data['absolutePath'], $backup_entry_array[$index]) === false) {
             $zip->close();
             unlink($temporary_path);
             return false;
