@@ -554,77 +554,101 @@
     if (count($checksum_array) > 0) {
       $checksum_backup_array = array();
       $backup_entry_array = array();
+      $backup_checksum_array = array();
       foreach ($checksum_array as $index => $data) {
         $checksum_backup_array[$data['relativePath']] = array(
           'checkSum' => $data['checkSum'],
           'checkSumOrig' => $data['checkSumOrig'],
         );
         $backup_entry_array[$index] = ltrim(str_replace('\\', '/', $data['relativePath']), '/');
+        $backup_checksum_array[$backup_entry_array[$index]] = $data['checkSum'];
       }
       ksort($checksum_backup_array);
       $checksum_backup = md5(serialize($checksum_backup_array));
       $backup_dir = DIR_FS_CATALOG.DIR_ADMIN.'backups/';
-      $backup_files = glob($backup_dir.'backup_*_'.$checksum_backup.'.zip');
       $backup_file = false;
+      $lock_handle = fopen($backup_dir.'backup_'.$checksum_backup.'.lock', 'c');
 
-      if (is_array($backup_files) && count($backup_files) > 0) {
-        sort($backup_files);
-        foreach ($backup_files as $backup_path) {
-          $zip = new ZipArchive();
-          $valid_backup = $zip->open($backup_path, ZipArchive::CHECKCONS) === true;
-
-          if ($valid_backup === true) {
-            $valid_backup = $zip->numFiles === count($backup_entry_array);
-            foreach ($backup_entry_array as $backup_entry) {
-              if ($zip->locateName($backup_entry) === false) {
-                $valid_backup = false;
-                break;
-              }
-            }
-            $zip->close();
-          }
-
-          if ($valid_backup === true) {
-            $backup_file = basename($backup_path);
-            break;
-          }
-
-          unlink($backup_path);
+      if ($lock_handle === false || flock($lock_handle, LOCK_EX) === false) {
+        if (is_resource($lock_handle)) {
+          fclose($lock_handle);
         }
+        return false;
       }
 
-      if ($backup_file === false) {
-        $backup_file = 'backup_'.date('Y-m-d-H-i-s').'_'.$checksum_backup.'.zip';
-        $backup_path = $backup_dir.$backup_file;
-        $temporary_path = tempnam($backup_dir, 'backup_diff_');
+      try {
+        $backup_files = glob($backup_dir.'backup_*_'.$checksum_backup.'.zip');
 
-        if ($temporary_path === false) {
-          return false;
+        if (is_array($backup_files) && count($backup_files) > 0) {
+          sort($backup_files);
+          foreach ($backup_files as $backup_path) {
+            $zip = new ZipArchive();
+            $valid_backup = $zip->open($backup_path, ZipArchive::CHECKCONS) === true;
+
+            if ($valid_backup === true) {
+              $valid_backup = $zip->numFiles === count($backup_entry_array);
+              foreach ($backup_checksum_array as $backup_entry => $expected_checksum) {
+                $backup_data = $zip->getFromName($backup_entry);
+                if ($backup_data === false
+                    || md5(preg_replace("'[\r\n\s]+'", '', $backup_data)) !== $expected_checksum
+                    )
+                {
+                  $valid_backup = false;
+                  break;
+                }
+              }
+              $zip->close();
+            }
+
+            if ($valid_backup === true) {
+              $backup_file = basename($backup_path);
+              break;
+            }
+
+            unlink($backup_path);
+          }
         }
 
-        $zip = new ZipArchive();
-        if ($zip->open($temporary_path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-          unlink($temporary_path);
-          return false;
-        }
+        if ($backup_file === false) {
+          $backup_file = 'backup_'.date('Y-m-d-H-i-s').'_'.$checksum_backup.'.zip';
+          $backup_path = $backup_dir.$backup_file;
+          $temporary_path = tempnam($backup_dir, 'backup_diff_');
 
-        foreach ($checksum_array as $index => $data) {
-          if ($zip->addFile($data['absolutePath'], $backup_entry_array[$index]) === false) {
-            $zip->close();
+          if ($temporary_path === false) {
+            return false;
+          }
+
+          $zip = new ZipArchive();
+          if ($zip->open($temporary_path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             unlink($temporary_path);
             return false;
           }
-        }
 
-        if ($zip->close() === false
-            || rename($temporary_path, $backup_path) === false
-            )
-        {
-          if (is_file($temporary_path)) {
-            unlink($temporary_path);
+          foreach ($checksum_array as $index => $data) {
+            if ($zip->addFile($data['absolutePath'], $backup_entry_array[$index]) === false) {
+              $zip->close();
+              unlink($temporary_path);
+              return false;
+            }
           }
-          return false;
+
+          if ($zip->close() === false
+              || rename($temporary_path, $backup_path) === false
+              )
+          {
+            if (is_file($temporary_path)) {
+              unlink($temporary_path);
+            }
+            return false;
+          }
         }
+      } finally {
+        flock($lock_handle, LOCK_UN);
+        fclose($lock_handle);
+      }
+
+      if ($backup_file === false || !is_file($backup_dir.$backup_file)) {
+        return false;
       }
 
       $backup = array(array(

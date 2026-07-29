@@ -152,6 +152,7 @@
   
   define('TEXT_BACKUP_DIFF', 'Backup Diff');
   define('TEXT_BACKUP_DIFF_UNZIP', 'Hinweis: Sollte sich das ZIP-Archiv unter Windows nicht mit dem integrierten Entpacker &ouml;ffnen lassen, verwenden Sie bitte ein Programm wie 7-Zip.');
+  define('ERROR_BACKUP_DIFF', 'Das Backup der ge&auml;nderten Dateien konnte nicht erstellt werden. Das Update wurde abgebrochen. Bitte pr&uuml;fen Sie die Schreibrechte des Backup-Verzeichnisses und versuchen Sie es erneut.');
   define('TEXT_BACKUP_SIZE', 'Gr&ouml;&szlig;e');
   define('TEXT_BACKUP_DATE', 'Datum');
   
