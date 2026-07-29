@@ -112,6 +112,7 @@
   define('TEXT_DB_COMPLETE_INSERTS', 'Complete \'INSERT\'s');
   define('TEXT_DB_SINGLE_FILES', 'Single files per table');
   define('TEXT_DB_UTF8_CONVERT', 'Convert database to UTF-8');
+  define('TEXT_DB_UTF8_CONVERT_COLLATION_INFO', 'The first collation supported by the database server is used for the conversion in this order: <code>utf8mb4_german2_ci</code>, <code>utf8mb4_general_ci</code>, <code>utf8_german2_ci</code>. <code>utf8_general_ci</code> is used as the fallback.');
   define('TEXT_DB_COMPRESS_GZIP', 'Use GZIP');
   define('TEXT_DB_COMPRESS_RAW', 'No Compression (Pure SQL)');
   define('TEXT_DB_SIZE', 'Size');
