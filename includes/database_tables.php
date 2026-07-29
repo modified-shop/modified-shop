@@ -62,6 +62,7 @@ $database_table_array = array(
   'TABLE_NEWSLETTERS' => 'newsletters',
   'TABLE_NEWSLETTERS_HISTORY' => 'newsletters_history',
   'TABLE_ORDERS' => 'orders',
+  'TABLE_CHECKOUT_PROCESSING' => 'checkout_processing',
   'TABLE_ORDERS_PRODUCTS' => 'orders_products',
   'TABLE_ORDERS_PRODUCTS_ATTRIBUTES' => 'orders_products_attributes',
   'TABLE_ORDERS_PRODUCTS_DOWNLOAD' => 'orders_products_download',

@@ -923,6 +923,20 @@ CREATE TABLE orders (
   KEY idx_payment_class (payment_class)
 );
 
+DROP TABLE IF EXISTS checkout_processing;
+CREATE TABLE checkout_processing (
+  checkout_key CHAR(64) NOT NULL,
+  customers_id INT(11) NOT NULL,
+  orders_id INT(11),
+  processing_status VARCHAR(16) NOT NULL DEFAULT 'processing',
+  date_added DATETIME NOT NULL,
+  last_modified DATETIME NOT NULL,
+  PRIMARY KEY (checkout_key),
+  UNIQUE KEY idx_orders_id (orders_id),
+  KEY idx_customers_id (customers_id),
+  KEY idx_processing_status (processing_status)
+);
+
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
   orders_products_id INT(11) NOT NULL AUTO_INCREMENT,

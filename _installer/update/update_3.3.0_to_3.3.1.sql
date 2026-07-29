@@ -10,6 +10,20 @@
 #GTB - 2026-07-20 - changed database_version
 INSERT INTO `database_version` (`version`, `date_added`) VALUES ('MOD_3.3.1', NOW());
 
+# checkout idempotency and processing state
+CREATE TABLE IF NOT EXISTS `checkout_processing` (
+  `checkout_key` CHAR(64) NOT NULL,
+  `customers_id` INT(11) NOT NULL,
+  `orders_id` INT(11),
+  `processing_status` VARCHAR(16) NOT NULL DEFAULT 'processing',
+  `date_added` DATETIME NOT NULL,
+  `last_modified` DATETIME NOT NULL,
+  PRIMARY KEY (`checkout_key`),
+  UNIQUE KEY `idx_orders_id` (`orders_id`),
+  KEY `idx_customers_id` (`customers_id`),
+  KEY `idx_processing_status` (`processing_status`)
+);
+
 #GTB - 2026-07-27 - preserve country IDs and settings and ensure missing non-EU tax-zone assignments
 INSERT INTO `countries`
   (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`, `sort_order`)

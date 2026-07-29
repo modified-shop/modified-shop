@@ -42,9 +42,15 @@ if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
 }
 
+$orders_id_condition = '';
+if (isset($_SESSION['checkout_completed_order_id']) && (int)$_SESSION['checkout_completed_order_id'] > 0) {
+  $orders_id_condition = " AND orders_id = '" . (int)$_SESSION['checkout_completed_order_id'] . "'";
+}
+
 $orders_query = xtc_db_query("SELECT orders_id
                                 FROM ".TABLE_ORDERS."
                                WHERE customers_id = '".(int)$_SESSION['customer_id']."'
+                                     ".$orders_id_condition."
                                  AND unix_timestamp(date_purchased) > (unix_timestamp(now()) - '".(int)SESSION_LIFE_CUSTOMERS."')
                             ORDER BY orders_id DESC
                                LIMIT 1");
