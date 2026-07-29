@@ -551,22 +551,61 @@
   function create_backup($checksum_array) {
     global $PHP_SELF;
     
-    $backup_file = 'backup_'.date('Y-m-d-H-i').'.zip';
-    
     if (count($checksum_array) > 0) {
-      $zip = new ZipArchive();
-      if ($zip->open(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file, ZipArchive::CREATE) === true) {
-        foreach ($checksum_array as $data) {      
-          $zip->addFile($data['absolutePath'], $data['relativePath']);      
+      $checksum_backup_array = array();
+      foreach ($checksum_array as $data) {
+        $checksum_backup_array[$data['relativePath']] = array(
+          'checkSum' => $data['checkSum'],
+          'checkSumOrig' => $data['checkSumOrig'],
+        );
+      }
+      ksort($checksum_backup_array);
+      $checksum_backup = md5(serialize($checksum_backup_array));
+      $backup_dir = DIR_FS_CATALOG.DIR_ADMIN.'backups/';
+      $backup_files = glob($backup_dir.'backup_*_'.$checksum_backup.'.zip');
+
+      if (is_array($backup_files) && count($backup_files) > 0) {
+        sort($backup_files);
+        $backup_file = basename($backup_files[0]);
+      } else {
+        $backup_file = 'backup_'.date('Y-m-d-H-i-s').'_'.$checksum_backup.'.zip';
+        $backup_path = $backup_dir.$backup_file;
+        $temporary_path = tempnam($backup_dir, 'backup_diff_');
+
+        if ($temporary_path === false) {
+          return false;
+        }
+
+        $zip = new ZipArchive();
+        if ($zip->open($temporary_path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+          unlink($temporary_path);
+          return false;
+        }
+
+        foreach ($checksum_array as $data) {
+          if ($zip->addFile($data['absolutePath'], $data['relativePath']) === false) {
+            $zip->close();
+            unlink($temporary_path);
+            return false;
+          }
+        }
+
+        if ($zip->close() === false
+            || rename($temporary_path, $backup_path) === false
+            )
+        {
+          if (is_file($temporary_path)) {
+            unlink($temporary_path);
+          }
+          return false;
         }
       }
-      $zip->close();
-      
+
       $backup = array(array(
         'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=download&file='.$backup_file),
         'NAME' => $backup_file,
-        'SIZE' => number_format(filesize(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file)).' bytes',
-        'DATE' => date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file))
+        'SIZE' => number_format(filesize($backup_dir.$backup_file)).' bytes',
+        'DATE' => date(PHP_DATE_TIME_FORMAT, filemtime($backup_dir.$backup_file))
       ));
 
       return $backup;

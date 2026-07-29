@@ -150,6 +150,7 @@
   //define('TEXT_DB_UPDATE_AFTER', 'Text after'); // Not used yet
 
   define('TEXT_BACKUP_DIFF', 'Backup Diff');
+  define('TEXT_BACKUP_DIFF_UNZIP', 'Note: If the ZIP archive cannot be opened with the integrated Windows extraction tool, please use a program such as 7-Zip.');
   define('TEXT_BACKUP_SIZE', 'Size');
   define('TEXT_BACKUP_DATE', 'Date');
 

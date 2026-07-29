@@ -151,6 +151,7 @@
   //define('TEXT_DB_UPDATE_AFTER', 'Text danach'); // Not used yet
   
   define('TEXT_BACKUP_DIFF', 'Backup Diff');
+  define('TEXT_BACKUP_DIFF_UNZIP', 'Hinweis: Sollte sich das ZIP-Archiv unter Windows nicht mit dem integrierten Entpacker &ouml;ffnen lassen, verwenden Sie bitte ein Programm wie 7-Zip.');
   define('TEXT_BACKUP_SIZE', 'Gr&ouml;&szlig;e');
   define('TEXT_BACKUP_DATE', 'Datum');
   
