@@ -243,6 +243,7 @@ class micropayment_callback
 
     function verifyRequest()
     {
+        $ok          = true;
         $data        = $_REQUEST;
         $secretField = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD;
         $secretValue = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE;
@@ -291,27 +292,20 @@ class micropayment_callback
             )
         );
 
-        $orderExists = (xtc_db_num_rows($order_query) == 1);
-        $isDuplicateExpire = (!$orderExists
-                              && $this->getParam('function',$this->allowedFunctions) == self::FUNCTION_EXPIRE
-                              && $this->isDuplicateEvent()
-                             );
-
-        if(!$orderExists && !$isDuplicateExpire) {
+        if($ok && (xtc_db_num_rows($order_query) != 1)) {
             $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
         }
-        return true;
+        return $ok;
     }
 
     function processFunction()
     {
+
+
+        $aOrder    = $this->fetchOrder();
+        $order     = $aOrder['order'];
         $lastEvent = $this->getLastEventFromMicropaymentLog();
         $function  = $this->getParam('function',$this->allowedFunctions);
-
-        if($this->isDuplicateEvent()) {
-            $this->setSuccessStatus($function);
-            return true;
-        }
 
         $this->addToMicropaymentLog();
 
@@ -404,12 +398,26 @@ class micropayment_callback
                 $this->returnStatus = self::STATUS_OK;
             break;
             case self::FUNCTION_EXPIRE:
-                $order_id = $this->getParam('orderid',self::REGEX_INTEGER);
+                $order_status = MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID;
+                $order_id     = $this->getParam('orderid',self::REGEX_INTEGER);
+                $comment      = sprintf(
+                    MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_EXPIRE,
+                    $this->getParam('auth',self::REGEX_SIMPLE_TEXT)
+                );
+
+                $sql_data_array = array(
+                    'orders_id'         => $order_id,
+                    'orders_status_id'  => $order_status,
+                    'date_added'        => 'now()' ,
+                    'customer_notified' => 0,
+                    'comments'          => $comment
+                );
+                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
                 require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
                 xtc_remove_order((int)$order_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
                 xtc_db_query(sprintf('DELETE FROM micropayment_orders WHERE order_id = "%s"',$order_id));
-                xtc_db_query(sprintf('DELETE FROM micropayment_log WHERE order_id = "%s" AND `function` != "%s"',$order_id,self::FUNCTION_EXPIRE));
+                xtc_db_query(sprintf('DELETE FROM micropayment_log WHERE order_id = "%s"',$order_id));
                 $this->returnStatus = self::STATUS_OK;
             break;
             case self::FUNCTION_BACKPAY:
@@ -496,35 +504,6 @@ class micropayment_callback
             break;
         }
         return true;
-    }
-
-    function setSuccessStatus($function)
-    {
-        $this->returnStatus = self::STATUS_OK;
-
-        if(in_array($function,array(self::FUNCTION_BILLING,self::FUNCTION_INIT),true)) {
-            $this->returnUrl = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL',true);
-        }
-    }
-
-    function isDuplicateEvent()
-    {
-        $event = xtc_db_query(
-            sprintf(
-                'SELECT `id` FROM `micropayment_log`
-                  WHERE `order_id` = "%s"
-                    AND `auth` = "%s"
-                    AND `amount` = "%s"
-                    AND `function` = "%s"
-                  LIMIT 1',
-                xtc_db_prepare_input($this->getParam('orderid',self::REGEX_INTEGER)),
-                xtc_db_prepare_input($this->getParam('auth',self::REGEX_SIMPLE_TEXT)),
-                xtc_db_prepare_input($this->getParam('amount',self::REGEX_INTEGER)),
-                xtc_db_prepare_input($this->getParam('function',$this->allowedFunctions))
-            )
-        );
-
-        return xtc_db_num_rows($event) > 0;
     }
 
     function addToMicropaymentLog()
