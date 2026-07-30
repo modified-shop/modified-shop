@@ -290,6 +290,20 @@ CREATE TABLE categories_description (
   KEY idx_categories_heading_title (categories_heading_title)
 );
 
+DROP TABLE IF EXISTS checkout_processing;
+CREATE TABLE checkout_processing (
+  checkout_key CHAR(64) NOT NULL,
+  customers_id INT(11) NOT NULL,
+  orders_id INT(11),
+  processing_status VARCHAR(16) NOT NULL DEFAULT 'processing',
+  date_added DATETIME NOT NULL,
+  last_modified DATETIME NOT NULL,
+  PRIMARY KEY (checkout_key),
+  UNIQUE KEY idx_orders_id (orders_id),
+  KEY idx_customers_id (customers_id),
+  KEY idx_processing_status (processing_status)
+);
+
 DROP TABLE IF EXISTS cm_file_flags;
 CREATE TABLE cm_file_flags (
   file_flag INT(11) NOT NULL,
@@ -921,20 +935,6 @@ CREATE TABLE orders (
   KEY idx_date_purchased (date_purchased),
   KEY idx_customers_status (customers_status),
   KEY idx_payment_class (payment_class)
-);
-
-DROP TABLE IF EXISTS checkout_processing;
-CREATE TABLE checkout_processing (
-  checkout_key CHAR(64) NOT NULL,
-  customers_id INT(11) NOT NULL,
-  orders_id INT(11),
-  processing_status VARCHAR(16) NOT NULL DEFAULT 'processing',
-  date_added DATETIME NOT NULL,
-  last_modified DATETIME NOT NULL,
-  PRIMARY KEY (checkout_key),
-  UNIQUE KEY idx_orders_id (orders_id),
-  KEY idx_customers_id (customers_id),
-  KEY idx_processing_status (processing_status)
 );
 
 DROP TABLE IF EXISTS orders_products;
