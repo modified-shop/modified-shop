@@ -42,9 +42,6 @@ $display_mode = 'checkout';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('CHECKOUT_PROCESSING_TITLE', TEXT_CHECKOUT_PROCESSING_TITLE);
-$smarty->assign('CHECKOUT_PROCESSING_MESSAGE', TEXT_CHECKOUT_PROCESSING_MESSAGE);
-$smarty->assign('CHECKOUT_PROCESSING_WAIT', TEXT_CHECKOUT_PROCESSING_WAIT);
 $smarty->assign('CHECKOUT_PROCESSING_STATUS_URL', xtc_href_link('ajax.php', 'ext=get_checkout_processing_status', 'SSL'));
 $smarty->assign('CHECKOUT_PROCESSING_ERROR_URL', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'processing_error=1', 'SSL'));
 

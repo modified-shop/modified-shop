@@ -1,1 +1,10 @@
-{include file="tpl_modified_nova/module/checkout_processing.html"}
+<div class="checkout_processing"
+     data-status-url="{$CHECKOUT_PROCESSING_STATUS_URL}"
+     data-error-url="{$CHECKOUT_PROCESSING_ERROR_URL}">
+  <div class="checkout-processing-content">
+    <div class="checkout-processing-spinner"></div>
+    <h1>{$smarty.const.TEXT_CHECKOUT_PROCESSING_TITLE}</h1>
+    <p>{$smarty.const.TEXT_CHECKOUT_PROCESSING_MESSAGE}</p>
+    <p class="checkout-processing-wait">{$smarty.const.TEXT_CHECKOUT_PROCESSING_WAIT}</p>
+  </div>
+</div>

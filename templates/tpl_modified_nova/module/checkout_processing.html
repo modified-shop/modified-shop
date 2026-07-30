@@ -1,42 +1,10 @@
 <div class="checkout_processing"
      data-status-url="{$CHECKOUT_PROCESSING_STATUS_URL}"
      data-error-url="{$CHECKOUT_PROCESSING_ERROR_URL}">
-  <div style="max-width:620px;margin:60px auto;text-align:center;">
-    <div style="width:42px;height:42px;margin:0 auto 20px;border:5px solid #ddd;border-top-color:#555;border-radius:50%;animation:checkout-processing-spin .8s linear infinite;"></div>
-    <h1>{$CHECKOUT_PROCESSING_TITLE}</h1>
-    <p>{$CHECKOUT_PROCESSING_MESSAGE}</p>
-    <p class="checkout-processing-wait">{$CHECKOUT_PROCESSING_WAIT}</p>
+  <div class="checkout-processing-content">
+    <div class="checkout-processing-spinner"></div>
+    <h1>{$smarty.const.TEXT_CHECKOUT_PROCESSING_TITLE}</h1>
+    <p>{$smarty.const.TEXT_CHECKOUT_PROCESSING_MESSAGE}</p>
+    <p class="checkout-processing-wait">{$smarty.const.TEXT_CHECKOUT_PROCESSING_WAIT}</p>
   </div>
 </div>
-<style>@keyframes checkout-processing-spin { to { transform:rotate(360deg); } }</style>
-{literal}
-<script>
-  (function () {
-    var container = document.querySelector(".checkout_processing");
-
-    function poll() {
-      fetch(container.getAttribute("data-status-url"), {
-        credentials: "same-origin",
-        cache: "no-store"
-      })
-        .then(function (response) { return response.json(); })
-        .then(function (result) {
-          if (result.status === "completed" && result.redirect) {
-            window.location.replace(result.redirect);
-            return;
-          }
-          if (result.status === "failed") {
-            window.location.replace(container.getAttribute("data-error-url"));
-            return;
-          }
-          window.setTimeout(poll, 2000);
-        })
-        .catch(function () {
-          window.setTimeout(poll, 4000);
-        });
-    }
-
-    window.setTimeout(poll, 1000);
-  }());
-</script>
-{/literal}

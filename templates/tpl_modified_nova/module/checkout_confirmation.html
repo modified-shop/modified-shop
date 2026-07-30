@@ -232,4 +232,13 @@
   
   </div>  
 </div>
-{$CHECKOUT_PROCESSING_OVERLAY}
+<div id="checkout-processing-overlay"
+     role="status"
+     aria-live="polite"
+     aria-hidden="true">
+  <div class="checkout-processing-overlay-content">
+    <div class="checkout-processing-spinner"></div>
+    <h2>{$smarty.const.TEXT_CHECKOUT_PROCESSING_TITLE}</h2>
+    <p>{$smarty.const.TEXT_CHECKOUT_PROCESSING_MESSAGE}</p>
+  </div>
+</div>

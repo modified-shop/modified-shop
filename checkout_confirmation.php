@@ -262,43 +262,6 @@ $smarty->assign('CHECKOUT_FORM', xtc_draw_form('checkout_confirmation', $form_ac
 $smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, (($_SESSION['payment'] == 'payone_cc') ? 'onclick="return payoneCheck();"' : '') . ' id="button_checkout_confirmation"'));
 $smarty->assign('CHECKOUT_FORM_END', '</form>');
 
-$checkout_processing_overlay = '
-  <div id="checkout-processing-overlay" role="status" aria-live="polite" aria-hidden="true" style="display:none;position:fixed;z-index:100000;inset:0;background:rgba(255,255,255,.94);">
-    <div style="position:absolute;top:50%;left:50%;width:calc(100% - 40px);max-width:520px;transform:translate(-50%,-50%);text-align:center;">
-      <div style="width:42px;height:42px;margin:0 auto 20px;border:5px solid #ddd;border-top-color:#555;border-radius:50%;animation:checkout-processing-spin .8s linear infinite;"></div>
-      <h2>'.TEXT_CHECKOUT_PROCESSING_TITLE.'</h2>
-      <p>'.TEXT_CHECKOUT_PROCESSING_MESSAGE.'</p>
-    </div>
-  </div>
-  <style>@keyframes checkout-processing-spin { to { transform:rotate(360deg); } }</style>
-  <script>
-    (function () {
-      function showCheckoutProcessing() {
-        var overlay = document.getElementById("checkout-processing-overlay");
-        if (overlay) {
-          overlay.style.display = "block";
-          overlay.setAttribute("aria-hidden", "false");
-        }
-      }
-
-      document.addEventListener("click", function (event) {
-        if (event.target && event.target.closest && event.target.closest("#button_checkout_confirmation")) {
-          window.setTimeout(function () {
-            if (!event.defaultPrevented) {
-              showCheckoutProcessing();
-            }
-          }, 0);
-        }
-      });
-
-      var form = document.getElementById("checkout_confirmation");
-      if (form) {
-        form.addEventListener("submit", showCheckoutProcessing);
-      }
-    }());
-  </script>';
-$smarty->assign('CHECKOUT_PROCESSING_OVERLAY', $checkout_processing_overlay);
-
 $smarty->assign('MODULE_BUTTONS', (is_array($payment_modules->modules) ? $payment_modules->process_button() : ''));
 
 //express checkout
