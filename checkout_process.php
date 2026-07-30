@@ -36,8 +36,6 @@ include ('includes/application_top.php');
 
 require_once (DIR_WS_CLASSES.'checkout.php');
 
-// A repeated request may arrive after the first request has already cleared the
-// checkout session variables. Handle completed attempts before the requirements.
 if (isset($_SESSION['customer_id'])) {
   $checkout = new checkout($_SESSION['customer_id']);
   $completed_checkout = $checkout->find();
@@ -89,15 +87,9 @@ $creates_tmp_order = !isset($_SESSION['tmp_oID'])
 // load the before_process function from the payment modules
 $payment_modules->before_process();
 
-// Temporary orders already use tmp_oID as their stable reference. For regular
-// orders, reserve this checkout attempt before creating the order or changing stock.
-// This intentionally runs after before_process(), because payment modules may use
-// that hook for a provider redirect and return to checkout_process.php afterwards.
 if (!isset($_SESSION['tmp_oID']) && !$creates_tmp_order) {
   $checkout_processing_owner = $checkout->claim();
   if (!$checkout_processing_owner) {
-    // Do not let a request that continued after a session-lock timeout write
-    // its stale checkout data back over the owning request's session.
     session_write_close();
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESSING, '', 'SSL'));
   }

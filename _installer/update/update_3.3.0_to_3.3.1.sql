@@ -10,7 +10,6 @@
 #GTB - 2026-07-20 - changed database_version
 INSERT INTO `database_version` (`version`, `date_added`) VALUES ('MOD_3.3.1', NOW());
 
-# checkout idempotency and processing state
 CREATE TABLE IF NOT EXISTS `checkout_processing` (
   `checkout_key` CHAR(64) NOT NULL,
   `customers_id` INT(11) NOT NULL,
