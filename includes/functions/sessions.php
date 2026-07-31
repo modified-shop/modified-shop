@@ -63,7 +63,7 @@
         $this->lock_acquired = (isset($lock_result['session_lock']) && $lock_result['session_lock'] == '1');
 
         if (!$this->lock_acquired && isset($LoggingManager)) {
-          $LoggingManager->warning('Session lock for "' . $session_id . '" could not be acquired within ' . SESSION_LOCK_TIMEOUT . 's, continuing without lock');
+          $LoggingManager->warning('Session lock for "' . $session_id . '" could not be acquired within ' . SESSION_LOCK_TIMEOUT . 's, session changes will not be saved');
         }
 
         $value_query = xtc_db_query("SELECT value
@@ -84,6 +84,10 @@
       function write(string $session_id, string $val): bool
       {
         global $SESS_LIFE;
+
+        if (!$this->lock_acquired || $this->session_id !== $session_id) {
+          return true;
+        }
 
         $flag = '';
         if (isset($_SESSION['customers_status']['customers_status'])
