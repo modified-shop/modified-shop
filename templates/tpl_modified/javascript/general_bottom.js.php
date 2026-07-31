@@ -27,7 +27,7 @@ $script_array = array(
   'templates/' . Template::resolve('javascript/jquery.easyTabs.js'),
   'templates/' . Template::resolve('javascript/jquery.alertable.min.js'),
 );
-$script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
+$script_min = 'templates/'.CURRENT_TEMPLATE.'/javascript/tpl_plugins.min.js';
   
 $this_f_time = filemtime(Template::path('javascript/general_bottom.js.php'));
   
