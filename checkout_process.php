@@ -81,7 +81,12 @@ $order = new order();
 
 $checkout_processing_owner = $checkout->claim();
 if (!$checkout_processing_owner) {
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESSING, '', 'SSL'));
+  $processing_parameters = $checkout->get_processing_parameters();
+  $processing_url = xtc_href_link(FILENAME_CHECKOUT_PROCESSING, 'language=' . rawurlencode($_SESSION['language']), 'SSL', false);
+  if ($processing_parameters !== false) {
+    $processing_url .= '#' . $processing_parameters;
+  }
+  xtc_redirect($processing_url);
 }
 
 if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
@@ -518,7 +523,12 @@ if (!$tmp) {
   if ($checkout_processing_owner && $checkout->complete($insert_id)) {
     $_SESSION['checkout_completed_order_id'] = (int)$insert_id;
   } else {
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESSING, '', 'SSL'));
+    $processing_parameters = $checkout->get_processing_parameters();
+    $processing_url = xtc_href_link(FILENAME_CHECKOUT_PROCESSING, 'language=' . rawurlencode($_SESSION['language']), 'SSL', false);
+    if ($processing_parameters !== false) {
+      $processing_url .= '#' . $processing_parameters;
+    }
+    xtc_redirect($processing_url);
   }
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));

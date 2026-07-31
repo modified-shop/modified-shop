@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `checkout_processing` (
   `checkout_key` CHAR(64) NOT NULL,
   `customers_id` INT(11) NOT NULL,
   `owner_token` CHAR(64) NOT NULL,
+  `status_token` CHAR(64) NOT NULL,
   `request_fingerprint` CHAR(64) NOT NULL,
   `orders_id` INT(11),
   `processing_status` VARCHAR(16) NOT NULL DEFAULT 'processing',

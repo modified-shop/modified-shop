@@ -10,27 +10,27 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+if (isset($_REQUEST['speed'])) {
+  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once (DIR_FS_INC.'db_functions.inc.php');
+  require_once (DIR_WS_INCLUDES.'database_tables.php');
+}
+
 require_once (DIR_WS_CLASSES.'checkout.php');
 
 function get_checkout_processing_status()
 {
   $response = array('status' => 'unknown');
 
-  if (isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'])
-      && preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_key'])
-      )
-  {
-    $checkout = new checkout($_SESSION['customer_id']);
-    $checkout->expire();
-    $processing = $checkout->find();
-    if (is_array($processing)) {
-      $response['status'] = $processing['processing_status'];
+  if (isset($_REQUEST['speed'])) {
+    xtc_db_connect() or die('Unable to connect to database server!');
+  }
 
-      if ($processing['processing_status'] === 'completed' && (int)$processing['orders_id'] > 0) {
-        $_SESSION['checkout_completed_order_id'] = (int)$processing['orders_id'];
-        $response['redirect'] = xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
-      }
-    }
+  $processing_key = isset($_GET['checkout_key']) ? $_GET['checkout_key'] : '';
+  $status_token = isset($_GET['status_token']) ? $_GET['status_token'] : '';
+  $processing = checkout::find_status($processing_key, $status_token);
+  if (is_array($processing)) {
+    $response['status'] = $processing['processing_status'];
   }
 
   return $response;
