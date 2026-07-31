@@ -35,7 +35,7 @@
      array_push($css_array, 'templates/' . Template::resolve('css/tpl_custom.css'));
   }
   
-  $css_min = DIR_TMPL.'stylesheet.min.css';
+  $css_min = 'templates/'.CURRENT_TEMPLATE.'/stylesheet.min.css';
 
   $this_f_time = filemtime(Template::path('css/general.css.php'));
 

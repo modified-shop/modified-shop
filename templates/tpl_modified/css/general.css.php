@@ -23,7 +23,7 @@
   $css_array = array(
     'templates/' . Template::resolve('stylesheet.css'),
   );
-  $css_min = DIR_TMPL.'stylesheet.min.css';
+  $css_min = 'templates/'.CURRENT_TEMPLATE.'/stylesheet.min.css';
 
   $this_f_time = filemtime(Template::path('css/general.css.php'));
 
