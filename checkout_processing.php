@@ -44,6 +44,7 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('CHECKOUT_PROCESSING_STATUS_URL', xtc_href_link('ajax.php', 'ext=get_checkout_processing_status', 'SSL'));
 $smarty->assign('CHECKOUT_PROCESSING_ERROR_URL', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'processing_error=1', 'SSL'));
+$smarty->assign('CHECKOUT_JAVASCRIPT', $checkout->javascript_processing());
 
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_processing.html');
 $smarty->assign('main_content', $main_content);

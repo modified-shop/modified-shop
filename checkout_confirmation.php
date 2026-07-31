@@ -367,6 +367,7 @@ if ($messageStack->size('checkout_confirmation') > 0) {
 }
 
 $smarty->assign('language', $_SESSION['language']);
+$smarty->assign('CHECKOUT_JAVASCRIPT', $checkout->javascript_confirmation());
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_confirmation.html');
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;

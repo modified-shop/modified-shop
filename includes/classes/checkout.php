@@ -89,6 +89,86 @@ class checkout
                      AND processing_status = 'processing'");
   }
 
+  function javascript_confirmation()
+  {
+    $js = '<script type="text/javascript">' . "\n" .
+          '  (function () {' . "\n" .
+          '    function initializeCheckoutProcessing() {' . "\n" .
+          '      function showCheckoutProcessing() {' . "\n" .
+          '        var overlay = document.getElementById("checkout-processing-overlay");' . "\n" .
+          '        if (overlay) {' . "\n" .
+          '          overlay.style.display = "block";' . "\n" .
+          '          overlay.setAttribute("aria-hidden", "false");' . "\n" .
+          '        }' . "\n" .
+          '      }' . "\n\n" .
+          '      document.addEventListener("click", function (event) {' . "\n" .
+          '        if (event.target && event.target.closest && event.target.closest("#button_checkout_confirmation")) {' . "\n" .
+          '          window.setTimeout(function () {' . "\n" .
+          '            if (!event.defaultPrevented) {' . "\n" .
+          '              showCheckoutProcessing();' . "\n" .
+          '            }' . "\n" .
+          '          }, 0);' . "\n" .
+          '        }' . "\n" .
+          '      });' . "\n\n" .
+          '      var form = document.getElementById("checkout_confirmation");' . "\n" .
+          '      if (form) {' . "\n" .
+          '        form.addEventListener("submit", showCheckoutProcessing);' . "\n" .
+          '        if (window.jQuery) {' . "\n" .
+          '          window.jQuery(form).on("submit.checkoutProcessing", showCheckoutProcessing);' . "\n" .
+          '        }' . "\n" .
+          '      }' . "\n" .
+          '    }' . "\n\n" .
+          '    if (document.readyState === "loading") {' . "\n" .
+          '      document.addEventListener("DOMContentLoaded", initializeCheckoutProcessing);' . "\n" .
+          '    } else {' . "\n" .
+          '      initializeCheckoutProcessing();' . "\n" .
+          '    }' . "\n" .
+          '  }());' . "\n" .
+          '</script>' . "\n";
+
+    return $js;
+  }
+
+  function javascript_processing()
+  {
+    $js = '<script type="text/javascript">' . "\n" .
+          '  (function () {' . "\n" .
+          '    function initializeCheckoutProcessing() {' . "\n" .
+          '      var container = document.querySelector(".checkout_processing");' . "\n\n" .
+          '      function poll() {' . "\n" .
+          '        fetch(container.getAttribute("data-status-url"), {' . "\n" .
+          '          credentials: "same-origin",' . "\n" .
+          '          cache: "no-store"' . "\n" .
+          '        })' . "\n" .
+          '          .then(function (response) { return response.json(); })' . "\n" .
+          '          .then(function (result) {' . "\n" .
+          '            if (result.status === "completed" && result.redirect) {' . "\n" .
+          '              window.location.replace(result.redirect);' . "\n" .
+          '              return;' . "\n" .
+          '            }' . "\n" .
+          '            if (result.status === "failed") {' . "\n" .
+          '              window.location.replace(container.getAttribute("data-error-url"));' . "\n" .
+          '              return;' . "\n" .
+          '            }' . "\n" .
+          '            window.setTimeout(poll, 2000);' . "\n" .
+          '          })' . "\n" .
+          '          .catch(function () {' . "\n" .
+          '            window.setTimeout(poll, 4000);' . "\n" .
+          '          });' . "\n" .
+          '      }' . "\n\n" .
+          '      window.setTimeout(poll, 1000);' . "\n" .
+          '    }' . "\n\n" .
+          '    if (document.readyState === "loading") {' . "\n" .
+          '      document.addEventListener("DOMContentLoaded", initializeCheckoutProcessing);' . "\n" .
+          '    } else {' . "\n" .
+          '      initializeCheckoutProcessing();' . "\n" .
+          '    }' . "\n" .
+          '  }());' . "\n" .
+          '</script>' . "\n";
+
+    return $js;
+  }
+
   private function get_or_create_key()
   {
     if (!isset($_SESSION['checkout_processing_key'])
