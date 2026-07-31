@@ -329,6 +329,11 @@ try {
         'Relative URL und Dateisystempfad müssen getrennte Ergebnisarten bleiben.'
     );
     assertSameValue(
+        '/base/templates/current/',
+        Template::url(''),
+        'Die Template-Wurzel-URL muss immer auf das aktive Child zeigen.'
+    );
+    assertSameValue(
         '/base/templates/parent-a/img/logo.png?v=1700000000',
         Template::url('img/logo.png', true),
         'Die relative URL muss die Version der tatsächlich aufgelösten Datei verwenden.'
