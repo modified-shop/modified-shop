@@ -18,7 +18,6 @@
 
   $css_array = array(
     DIR_TMPL.'stylesheet.css',
-    DIR_TMPL_CSS.'checkout_processing.css',
   );
   $css_min = DIR_TMPL.'stylesheet.min.css';
   

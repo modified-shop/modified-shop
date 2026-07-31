@@ -22,6 +22,7 @@
     DIR_TMPL_CSS.'thickbox.css',
     DIR_TMPL_CSS.'cookieconsent.css',
     DIR_TMPL_CSS.'jquery.alertable.css',
+    DIR_TMPL_CSS.'checkout_processing.css',
   );
   $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
   

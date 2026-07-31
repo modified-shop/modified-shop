@@ -22,7 +22,6 @@
 
   $css_array = array(
     DIR_TMPL.'stylesheet.css',
-    DIR_TMPL_CSS.'checkout_processing.css',
   );
   
   if (defined('THEME_COLOR')
