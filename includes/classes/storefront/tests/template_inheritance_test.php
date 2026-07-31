@@ -170,6 +170,7 @@ try {
     writeTestFile($templatesDirectory . '/parent-a/img/stars_5.png', 'stars');
     writeTestFile($templatesDirectory . '/parent-a/stylesheet.css', 'css');
     writeTestFile($templatesDirectory . '/parent-a/stylesheet.min.css', 'minified-css');
+    writeTestFile($templatesDirectory . '/parent-a/buttons/german/button_parent.gif', 'button');
     writeTestFile(
         $templatesDirectory . '/current/template-asset.html',
         '{template_asset path=\'img/current.png\'}|{template_asset path=\'img/logo.png\'}|{template_asset path=\'img/logo.png\' versioned=true}|{template_asset path=\'img/logo.png\' absolute=true versioned=true}|{template_asset path="img/stars_`$rating`.png"}|{if $smarty.const.COMPRESS_STYLESHEET == \'true\'}{template_asset path=\'stylesheet.min.css\'}{else}{template_asset path=\'stylesheet.css\'}{/if}'
@@ -360,10 +361,29 @@ try {
 
     define('DIR_FS_CATALOG', $temporaryDirectory . '/');
     define('DIR_FS_EXTERNAL', dirname(__DIR__, 4) . '/includes/external/');
+    define('DIR_FS_INC', dirname(__DIR__, 4) . '/inc/');
+    define('DIR_WS_BASE', '/base/');
+    define('DIR_WS_IMAGES', 'images/');
+    define('DIR_WS_THUMBNAIL_IMAGES', 'images/product_images/thumbnail_images/');
     define('CURRENT_TEMPLATE', 'current');
     define('COMPRESS_STYLESHEET', 'true');
     define('RUN_MODE_INSTALLER', true);
+    require dirname(__DIR__, 4) . '/inc/xtc_image.inc.php';
+    require dirname(__DIR__, 4) . '/inc/xtc_image_button.inc.php';
+    require dirname(__DIR__, 4) . '/inc/xtc_image_submit.inc.php';
     require dirname(__DIR__, 4) . '/includes/external/smarty/smarty_4/Smarty.class.php';
+
+    $_SESSION['language'] = 'german';
+    assertSameValue(
+        '<img src="/base/templates/parent-a/buttons/german/button_parent.gif" alt="Parent button" />',
+        xtc_image_button('button_parent.gif', 'Parent button', '', false),
+        'xtc_image_button muss einen ausschließlich im Parent vorhandenen Button ohne doppelte URL-Basis ausgeben.'
+    );
+    assertSameValue(
+        '<input type="image" src="/base/templates/parent-a/buttons/german/button_parent.gif" alt="Parent submit" title="Parent submit" />',
+        xtc_image_submit('button_parent.gif', 'Parent submit', '', false),
+        'xtc_image_submit muss einen ausschließlich im Parent vorhandenen Button auflösen.'
+    );
 
     $smarty = new Smarty();
     $smarty->assign('rating', 5);
