@@ -21,6 +21,7 @@ function get_checkout_processing_status()
       )
   {
     $checkout = new checkout($_SESSION['customer_id']);
+    $checkout->expire();
     $processing = $checkout->find();
     if (is_array($processing)) {
       $response['status'] = $processing['processing_status'];

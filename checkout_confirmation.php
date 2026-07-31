@@ -46,6 +46,10 @@ require (DIR_WS_INCLUDES.'checkout_requirements.php');
 require_once (DIR_WS_CLASSES.'checkout.php');
 
 $checkout = new checkout($_SESSION['customer_id']);
+if (isset($_GET['payment_error'])) {
+  $checkout->fail();
+}
+$checkout->expire();
 $checkout_processing = $checkout->find();
 if (is_array($checkout_processing)
     && in_array($checkout_processing['processing_status'], array('completed', 'failed'), true)

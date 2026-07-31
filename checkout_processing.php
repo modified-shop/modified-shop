@@ -21,6 +21,7 @@ if (!isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'])
 }
 
 $checkout = new checkout($_SESSION['customer_id']);
+$checkout->expire();
 $processing = $checkout->find();
 if (!is_array($processing)) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));

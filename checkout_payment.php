@@ -47,6 +47,16 @@ $smarty = new Smarty();
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
+if (isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'])
+    && (isset($_GET['payment_error']) || isset($_GET['processing_error']))
+    )
+{
+  require_once (DIR_WS_CLASSES.'checkout.php');
+  $checkout = new checkout($_SESSION['customer_id']);
+  $checkout->fail();
+  $checkout->create_key();
+}
+
 unset ($_SESSION['tmp_oID']);
 
 //if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);

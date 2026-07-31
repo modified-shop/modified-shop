@@ -31,6 +31,7 @@ class checkout
     $this->processing_key = bin2hex(random_bytes(32));
     $_SESSION['checkout_processing_key'] = $this->processing_key;
     unset($_SESSION['checkout_completed_order_id']);
+    unset($_SESSION['checkout_processing_owner_token']);
 
     return $this->processing_key;
   }
@@ -57,36 +58,134 @@ class checkout
 
   function claim()
   {
+    $owner_token = bin2hex(random_bytes(32));
+    $request_fingerprint = $this->get_request_fingerprint();
+
     xtc_db_query("INSERT IGNORE INTO " . TABLE_CHECKOUT_PROCESSING . "
-                              (checkout_key, customers_id, processing_status, date_added, last_modified)
+                              (checkout_key, customers_id, owner_token, request_fingerprint, processing_status, date_added, last_modified)
                        VALUES ('" . xtc_db_input($this->processing_key) . "',
                                '" . $this->customers_id . "',
+                               '" . xtc_db_input($owner_token) . "',
+                               '" . xtc_db_input($request_fingerprint) . "',
                                'processing',
                                NOW(),
                                NOW())");
 
-    return xtc_db_affected_rows() === 1;
+    if (xtc_db_affected_rows() === 1) {
+      $_SESSION['checkout_processing_owner_token'] = $owner_token;
+
+      return true;
+    }
+
+    $previous_owner_token = $this->get_owner_token();
+    if ($previous_owner_token !== false) {
+      xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
+                       SET owner_token = '" . xtc_db_input($owner_token) . "',
+                           request_fingerprint = '" . xtc_db_input($request_fingerprint) . "',
+                           last_modified = NOW()
+                     WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
+                       AND customers_id = '" . $this->customers_id . "'
+                       AND owner_token = '" . xtc_db_input($previous_owner_token) . "'
+                       AND request_fingerprint != '" . xtc_db_input($request_fingerprint) . "'
+                       AND processing_status = 'processing'");
+
+      if (xtc_db_affected_rows() === 1) {
+        $_SESSION['checkout_processing_owner_token'] = $owner_token;
+
+        return true;
+      }
+    }
+
+    return false;
   }
 
   function set_order($orders_id)
   {
+    $owner_token = $this->get_owner_token();
+    if ($owner_token === false) {
+      return false;
+    }
+
     xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
                      SET orders_id = '" . (int)$orders_id . "',
                          last_modified = NOW()
                    WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
                      AND customers_id = '" . $this->customers_id . "'
+                     AND owner_token = '" . xtc_db_input($owner_token) . "'
                      AND processing_status = 'processing'");
+
+    return xtc_db_affected_rows() === 1;
   }
 
   function complete($orders_id)
   {
+    $owner_token = $this->get_owner_token();
+    if ($owner_token === false) {
+      return false;
+    }
+
     xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
                      SET orders_id = '" . (int)$orders_id . "',
                          processing_status = 'completed',
                          last_modified = NOW()
                    WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
                      AND customers_id = '" . $this->customers_id . "'
+                     AND owner_token = '" . xtc_db_input($owner_token) . "'
                      AND processing_status = 'processing'");
+
+    if (xtc_db_affected_rows() === 1) {
+      unset($_SESSION['checkout_processing_owner_token']);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  function fail()
+  {
+    $owner_token = $this->get_owner_token();
+    if ($owner_token === false) {
+      return false;
+    }
+
+    xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
+                     SET processing_status = 'failed',
+                         last_modified = NOW()
+                   WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
+                     AND customers_id = '" . $this->customers_id . "'
+                     AND owner_token = '" . xtc_db_input($owner_token) . "'
+                     AND processing_status = 'processing'");
+
+    if (xtc_db_affected_rows() === 1) {
+      unset($_SESSION['checkout_processing_owner_token']);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  function expire()
+  {
+    $timeout = defined('CHECKOUT_PROCESSING_TIMEOUT') ? (int)CHECKOUT_PROCESSING_TIMEOUT : 1800;
+    $timeout = max(1, $timeout);
+
+    xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
+                     SET processing_status = 'failed',
+                         last_modified = NOW()
+                   WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
+                     AND customers_id = '" . $this->customers_id . "'
+                     AND processing_status = 'processing'
+                     AND last_modified < DATE_SUB(NOW(), INTERVAL " . $timeout . " SECOND)");
+
+    if (xtc_db_affected_rows() === 1) {
+      unset($_SESSION['checkout_processing_owner_token']);
+
+      return true;
+    }
+
+    return false;
   }
 
   function javascript_confirmation()
@@ -179,5 +278,29 @@ class checkout
     }
 
     return $_SESSION['checkout_processing_key'];
+  }
+
+  private function get_owner_token()
+  {
+    if (isset($_SESSION['checkout_processing_owner_token'])
+        && preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_owner_token'])
+        )
+    {
+      return $_SESSION['checkout_processing_owner_token'];
+    }
+
+    return false;
+  }
+
+  private function get_request_fingerprint()
+  {
+    $request_data = array(
+      'method' => isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '',
+      'script' => isset($_SERVER['PHP_SELF']) ? basename($_SERVER['PHP_SELF']) : '',
+      'get' => $_GET,
+      'post' => $_POST,
+    );
+
+    return hash('sha256', serialize($request_data));
   }
 }

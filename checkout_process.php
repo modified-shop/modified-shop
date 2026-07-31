@@ -79,21 +79,17 @@ $shipping_modules = new shipping($_SESSION['shipping']);
 require_once(DIR_WS_CLASSES.'order.php');
 $order = new order();
 
-$checkout_processing_owner = false;
-$creates_tmp_order = !isset($_SESSION['tmp_oID'])
-                     && isset(${$_SESSION['payment']}->form_action_url)
-                     && ${$_SESSION['payment']}->tmpOrders;
+$checkout_processing_owner = $checkout->claim();
+if (!$checkout_processing_owner) {
+  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESSING, '', 'SSL'));
+}
+
+if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
+  $checkout->set_order($_SESSION['tmp_oID']);
+}
 
 // load the before_process function from the payment modules
 $payment_modules->before_process();
-
-if (!isset($_SESSION['tmp_oID']) && !$creates_tmp_order) {
-  $checkout_processing_owner = $checkout->claim();
-  if (!$checkout_processing_owner) {
-    session_write_close();
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESSING, '', 'SSL'));
-  }
-}
 
 require_once(DIR_WS_CLASSES.'order_total.php');
 $order_total_modules = new order_total();
@@ -519,9 +515,10 @@ if (!$tmp) {
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_end/','php') as $file) require ($file);
 
-  if ($checkout_processing_owner) {
-    $checkout->complete($insert_id);
+  if ($checkout_processing_owner && $checkout->complete($insert_id)) {
     $_SESSION['checkout_completed_order_id'] = (int)$insert_id;
+  } else {
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESSING, '', 'SSL'));
   }
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
