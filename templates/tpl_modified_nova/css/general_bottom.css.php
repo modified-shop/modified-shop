@@ -33,7 +33,7 @@
     array_push($css_array, 'templates/' . Template::resolve('css/tpl_custom_bottom.css'));
   }
 
-  $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
+  $css_min = 'templates/'.CURRENT_TEMPLATE.'/css/tpl_plugins.min.css';
 
   $this_f_time = filemtime(Template::path('css/general_bottom.css.php'));
 
