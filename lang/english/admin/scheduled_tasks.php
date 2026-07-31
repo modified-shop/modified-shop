@@ -63,3 +63,6 @@
 
   define('TEXT_HEADING_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Customer IP Log');
   define('TEXT_INFO_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Cleanup Customer IP log older than 1 year');
+
+  define('TEXT_HEADING_TASKS_CHECKOUT_PROCESSING_MAINTENANCE', 'Checkout processing');
+  define('TEXT_INFO_TASKS_CHECKOUT_PROCESSING_MAINTENANCE', 'Cleanup abandoned and more than 30 days old checkout processing records');

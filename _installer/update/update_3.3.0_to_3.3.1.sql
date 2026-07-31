@@ -114,7 +114,20 @@ CREATE TABLE IF NOT EXISTS `checkout_processing` (
   PRIMARY KEY (`checkout_key`),
   UNIQUE KEY `idx_orders_id` (`orders_id`),
   KEY `idx_customers_id` (`customers_id`),
-  KEY `idx_processing_status` (`processing_status`)
+  KEY `idx_processing_status` (`processing_status`, `last_modified`)
 );
+
+#GTB - 2026-07-31 - add daily checkout processing cleanup
+INSERT INTO `scheduled_tasks`
+  (`time_next`, `time_offset`, `time_regularity`, `time_unit`, `status`, `edit`, `tasks`)
+VALUES
+  (0, 0, 1, 'd', 1, 0, 'checkout_processing_maintenance')
+ON DUPLICATE KEY UPDATE
+  `time_next` = VALUES(`time_next`),
+  `time_offset` = VALUES(`time_offset`),
+  `time_regularity` = VALUES(`time_regularity`),
+  `time_unit` = VALUES(`time_unit`),
+  `status` = VALUES(`status`),
+  `edit` = VALUES(`edit`);
 
 # Keep an empty line at the end of this file for the db_updater to work properly

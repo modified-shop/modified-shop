@@ -304,7 +304,7 @@ CREATE TABLE checkout_processing (
   PRIMARY KEY (checkout_key),
   UNIQUE KEY idx_orders_id (orders_id),
   KEY idx_customers_id (customers_id),
-  KEY idx_processing_status (processing_status)
+  KEY idx_processing_status (processing_status, last_modified)
 );
 
 DROP TABLE IF EXISTS cm_file_flags;
@@ -2390,6 +2390,7 @@ INSERT INTO scheduled_tasks VALUES (4, 0, 0, 1, 'd', 0, 1, 'db_backup');
 INSERT INTO scheduled_tasks VALUES (5, 0, 0, 1, 'd', 0, 1, 'logs_maintenance');
 INSERT INTO scheduled_tasks VALUES (6, 0, 0, 1, 'd', 0, 1, 'currencies_update');
 INSERT INTO scheduled_tasks VALUES (7, 0, 0, 1, 'd', 0, 1, 'customers_ip_maintenance');
+INSERT INTO scheduled_tasks VALUES (8, 0, 0, 1, 'd', 1, 0, 'checkout_processing_maintenance');
 
 # shipping status
 INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '', 1);
