@@ -316,20 +316,23 @@ class checkout
           '          overlay.setAttribute("aria-hidden", "false");' . "\n" .
           '        }' . "\n" .
           '      }' . "\n\n" .
-          '      document.addEventListener("click", function (event) {' . "\n" .
-          '        if (event.target && event.target.closest && event.target.closest("#button_checkout_confirmation")) {' . "\n" .
-          '          window.setTimeout(function () {' . "\n" .
-          '            if (!event.defaultPrevented) {' . "\n" .
-          '              showCheckoutProcessing();' . "\n" .
-          '            }' . "\n" .
-          '          }, 0);' . "\n" .
-          '        }' . "\n" .
-          '      });' . "\n\n" .
+          '      function handleCheckoutSubmit(event) {' . "\n" .
+          '        window.setTimeout(function () {' . "\n" .
+          '          var originalEvent = event.originalEvent;' . "\n" .
+          '          var defaultPrevented = event.defaultPrevented' . "\n" .
+          '                                 || (originalEvent && originalEvent.defaultPrevented)' . "\n" .
+          '                                 || (typeof event.isDefaultPrevented === "function" && event.isDefaultPrevented());' . "\n" .
+          '          if (!defaultPrevented) {' . "\n" .
+          '            showCheckoutProcessing();' . "\n" .
+          '          }' . "\n" .
+          '        }, 0);' . "\n" .
+          '      }' . "\n\n" .
           '      var form = document.getElementById("checkout_confirmation");' . "\n" .
           '      if (form) {' . "\n" .
-          '        form.addEventListener("submit", showCheckoutProcessing);' . "\n" .
           '        if (window.jQuery) {' . "\n" .
-          '          window.jQuery(form).on("submit.checkoutProcessing", showCheckoutProcessing);' . "\n" .
+          '          window.jQuery(form).on("submit.checkoutProcessing", handleCheckoutSubmit);' . "\n" .
+          '        } else {' . "\n" .
+          '          form.addEventListener("submit", handleCheckoutSubmit);' . "\n" .
           '        }' . "\n" .
           '      }' . "\n";
 
