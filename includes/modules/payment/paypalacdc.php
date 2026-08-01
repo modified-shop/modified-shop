@@ -167,6 +167,7 @@ class paypalacdc extends PayPalPaymentV2 {
           $.get('".DIR_WS_BASE."ajax.php', {ext: 'check_paypal_order', payment_method: 'paypalacdc'}, function(result) {
             if (result === true) {
               // redirect to complete order
+              document.dispatchEvent(new Event('checkout:processing'));
               window.location.href = '".xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')."';
             } else {
               var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
