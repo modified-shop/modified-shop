@@ -47,14 +47,34 @@ $smarty = new Smarty();
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
-if (isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'])
-    && (isset($_GET['payment_error']) || isset($_GET['processing_error']))
+if (isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'], $_GET['payment_error'])
+    && is_string($_GET['payment_error'])
     )
 {
   require_once (DIR_WS_CLASSES.'checkout.php');
   $checkout = new checkout($_SESSION['customer_id']);
-  $checkout->fail();
-  $checkout->create_key();
+  $checkout->prepare_retry();
+}
+
+if (isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'],
+          $_POST['processing_error'], $_POST['checkout_key'], $_POST['status_token'])
+    && is_string($_POST['checkout_key'])
+    && is_string($_POST['status_token'])
+    )
+{
+  require_once (DIR_WS_CLASSES.'checkout.php');
+  $checkout = new checkout($_SESSION['customer_id']);
+  $processing_key = $_POST['checkout_key'];
+  $status_token = $_POST['status_token'];
+  $checkout_processing = checkout::find_status($processing_key, $status_token);
+
+  if (hash_equals($checkout->get_key(), $processing_key)
+      && is_array($checkout_processing)
+      && $checkout_processing['processing_status'] === 'failed'
+      )
+  {
+    $checkout->create_key();
+  }
 }
 
 unset ($_SESSION['tmp_oID']);

@@ -89,8 +89,14 @@ class checkout
     $_SESSION['checkout_processing_key'] = $this->processing_key;
     unset($_SESSION['checkout_completed_order_id']);
     unset($_SESSION['checkout_processing_owner_token']);
+    unset($_SESSION['checkout_processing_retry_token']);
 
     return $this->processing_key;
+  }
+
+  function prepare_retry()
+  {
+    $_SESSION['checkout_processing_retry_token'] = bin2hex(random_bytes(32));
   }
 
   function find()
@@ -115,7 +121,9 @@ class checkout
 
   static function find_status($processing_key, $status_token)
   {
-    if (!preg_match('/^[a-f0-9]{64}$/', $processing_key)
+    if (!is_string($processing_key)
+        || !is_string($status_token)
+        || !preg_match('/^[a-f0-9]{64}$/', $processing_key)
         || !preg_match('/^[a-f0-9]{64}$/', $status_token)
         )
     {
@@ -255,6 +263,7 @@ class checkout
 
     if (xtc_db_affected_rows() === 1) {
       unset($_SESSION['checkout_processing_owner_token']);
+      unset($_SESSION['checkout_processing_retry_token']);
 
       return true;
     }
@@ -279,6 +288,7 @@ class checkout
 
     if (xtc_db_affected_rows() === 1) {
       unset($_SESSION['checkout_processing_owner_token']);
+      unset($_SESSION['checkout_processing_retry_token']);
 
       return true;
     }
@@ -343,6 +353,25 @@ class checkout
   static function javascript_processing()
   {
     $js = '      var container = document.querySelector(".checkout_processing");' . "\n\n" .
+          '      function redirectToError(checkoutKey, statusToken) {' . "\n" .
+          '        var form = document.createElement("form");' . "\n" .
+          '        form.method = "post";' . "\n" .
+          '        form.action = container.getAttribute("data-error-url");' . "\n" .
+          '        var parameters = {' . "\n" .
+          '          processing_error: "1",' . "\n" .
+          '          checkout_key: checkoutKey,' . "\n" .
+          '          status_token: statusToken' . "\n" .
+          '        };' . "\n" .
+          '        Object.keys(parameters).forEach(function (name) {' . "\n" .
+          '          var input = document.createElement("input");' . "\n" .
+          '          input.type = "hidden";' . "\n" .
+          '          input.name = name;' . "\n" .
+          '          input.value = parameters[name];' . "\n" .
+          '          form.appendChild(input);' . "\n" .
+          '        });' . "\n" .
+          '        document.body.appendChild(form);' . "\n" .
+          '        form.submit();' . "\n" .
+          '      }' . "\n\n" .
           '      var status = new URLSearchParams(window.location.hash.substring(1));' . "\n" .
           '      var checkoutKey = status.get("checkout_key");' . "\n" .
           '      var statusToken = status.get("status_token");' . "\n" .
@@ -367,7 +396,7 @@ class checkout
           '              return;' . "\n" .
           '            }' . "\n" .
           '            if (result.status === "failed" || result.status === "unknown") {' . "\n" .
-          '              window.location.replace(container.getAttribute("data-error-url"));' . "\n" .
+          '              redirectToError(checkoutKey, statusToken);' . "\n" .
           '              return;' . "\n" .
           '            }' . "\n" .
           '            window.setTimeout(poll, 2000);' . "\n" .
@@ -428,6 +457,7 @@ class checkout
       'script' => isset($_SERVER['PHP_SELF']) ? basename($_SERVER['PHP_SELF']) : '',
       'get' => $_GET,
       'post' => $_POST,
+      'retry' => isset($_SESSION['checkout_processing_retry_token']) ? $_SESSION['checkout_processing_retry_token'] : '',
     );
 
     return hash('sha256', serialize($request_data));

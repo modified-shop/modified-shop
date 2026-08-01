@@ -26,8 +26,8 @@ function get_checkout_processing_status()
     xtc_db_connect() or die('Unable to connect to database server!');
   }
 
-  $processing_key = isset($_POST['checkout_key']) ? $_POST['checkout_key'] : '';
-  $status_token = isset($_POST['status_token']) ? $_POST['status_token'] : '';
+  $processing_key = isset($_POST['checkout_key']) && is_string($_POST['checkout_key']) ? $_POST['checkout_key'] : '';
+  $status_token = isset($_POST['status_token']) && is_string($_POST['status_token']) ? $_POST['status_token'] : '';
   $processing = checkout::find_status($processing_key, $status_token);
   if (is_array($processing)) {
     $response['status'] = $processing['processing_status'];
