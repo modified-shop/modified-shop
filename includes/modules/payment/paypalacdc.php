@@ -293,7 +293,7 @@ class paypalacdc extends PayPalPaymentV2 {
   
   
 	function payment_action() {
-    global $insert_id;
+    global $insert_id, $tmp;
 
     // card fields flow: enforce liability shift policy server-side
     // (vault flow posts payment_method and is verified in before_process)
@@ -311,7 +311,8 @@ class paypalacdc extends PayPalPaymentV2 {
 
     $result = $this->FinishOrder($insert_id);
     if ($result->status == 'COMPLETED' && $result->transaction_status == 'COMPLETED') {
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
+      $tmp = false;
+      return;
     }
 
     // cancel pp order
