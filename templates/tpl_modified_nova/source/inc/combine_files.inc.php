@@ -31,8 +31,12 @@
     if ($f_min_ts !== false && ($f_min_ts === 0 || $compress === true || filesize($f_min_path) == 0 || $f_time > $f_min_ts)) {
       require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
       $compactor = new Compactor(array('strip_php_comments' => true, 'compress_css' => $compress_css));
+      $css_url_rewriter = $compress_css ? \Modified\Storefront\Template\CatalogCssFileRewriter::fromGlobals() : null;
       foreach ($f_array as $f_plain) {
-        $compactor->add(DIR_FS_CATALOG.$f_plain);
+        $compactor->add($css_url_rewriter !== null
+          ? $css_url_rewriter->rewriteFile($f_plain)
+          : DIR_FS_CATALOG.$f_plain
+        );
       }
       if ($compactor->save($f_min_path) === true) {
         $f_min_ts = is_writeable($f_min_path) ? filemtime($f_min_path) : false;
