@@ -5,7 +5,7 @@
     {foreach key=key_data item=item_data from=$required_fields}
       <tr>
         <td class="label">{$key_data|constant}</td>
-        <td><input id="{$key_data}" name="{$key_data}" type="text" value="{$item_data}"></td>
+        <td><input id="{$key_data|escape:'html'}" name="{$key_data|escape:'html'}" type="text" value="{$item_data|escape:'html'}"></td>
       </tr>
     {/foreach}
   {/if}
@@ -15,7 +15,7 @@
       <td>
         <select name="bankgrouptype" id="bankgrouptype">
           {foreach key=key_data item=item_data from=$bank_group}
-            <option value="{$key_data}">{$item_data}</option>
+            <option value="{$key_data|escape:'html'}">{$item_data|escape:'html'}</option>
           {/foreach}
         </select>
       </td>
