@@ -334,7 +334,8 @@ class checkout
           '        } else {' . "\n" .
           '          form.addEventListener("submit", handleCheckoutSubmit);' . "\n" .
           '        }' . "\n" .
-          '      }' . "\n";
+          '      }' . "\n\n" .
+          '      document.addEventListener("checkout:processing", showCheckoutProcessing);' . "\n";
 
     return self::javascript_wrapper($js);
   }
