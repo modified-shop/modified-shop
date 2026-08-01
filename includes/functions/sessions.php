@@ -66,6 +66,11 @@
           $LoggingManager->warning('Session lock for "' . $session_id . '" could not be acquired within ' . SESSION_LOCK_TIMEOUT . 's, session changes will not be saved');
         }
 
+        return $this->readWithoutLock($session_id);
+      }
+
+      function readWithoutLock(string $session_id): string|false
+      {
         $value_query = xtc_db_query("SELECT value
                                        FROM " . TABLE_SESSIONS . "
                                       WHERE sesskey = '" . xtc_db_input($session_id) . "'
