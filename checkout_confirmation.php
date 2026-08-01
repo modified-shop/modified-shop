@@ -52,7 +52,7 @@ if (isset($_GET['payment_error'])) {
 $checkout->expire();
 $checkout_processing = $checkout->find();
 if (is_array($checkout_processing)
-    && in_array($checkout_processing['processing_status'], array('completed', 'failed'), true)
+    && $checkout_processing['processing_status'] === 'completed'
     )
 {
   $checkout->create_key();

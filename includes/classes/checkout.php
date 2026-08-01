@@ -47,6 +47,42 @@ class checkout
     return false;
   }
 
+  function get_processing_url($language)
+  {
+    $url_parameters = 'language=' . rawurlencode($language);
+    $session_parameters = self::get_url_session_parameters();
+    if ($session_parameters !== '') {
+      $url_parameters .= '&' . $session_parameters;
+    }
+
+    $processing_url = xtc_href_link(FILENAME_CHECKOUT_PROCESSING, $url_parameters, 'SSL', false);
+    $processing_parameters = $this->get_processing_parameters();
+    if ($processing_parameters !== false) {
+      $processing_url .= '#' . $processing_parameters;
+    }
+
+    return $processing_url;
+  }
+
+  static function get_url_session_parameters()
+  {
+    global $cookie, $session_started;
+
+    $session_name = xtc_session_name();
+    $session_id = xtc_session_id();
+    $session_id_in_url = isset($_GET[$session_name])
+                         && is_string($_GET[$session_name])
+                         && hash_equals($_GET[$session_name], $session_id);
+    if (($session_id_in_url || ($session_started === true && $cookie === false))
+        && preg_match('/^(?:[a-z0-9]{26}|[a-z0-9]{32}|[a-z0-9]{40}|[a-z0-9]{52})$/i', $session_id)
+        )
+    {
+      return $session_name . '=' . rawurlencode($session_id);
+    }
+
+    return '';
+  }
+
   function create_key()
   {
     $this->processing_key = bin2hex(random_bytes(32));
@@ -132,6 +168,22 @@ class checkout
       return true;
     }
 
+    xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
+                     SET owner_token = '" . xtc_db_input($owner_token) . "',
+                         status_token = '" . xtc_db_input($status_token) . "',
+                         request_fingerprint = '" . xtc_db_input($request_fingerprint) . "',
+                         processing_status = 'processing',
+                         last_modified = NOW()
+                   WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
+                     AND customers_id = '" . $this->customers_id . "'
+                     AND processing_status = 'failed'");
+
+    if (xtc_db_affected_rows() === 1) {
+      $_SESSION['checkout_processing_owner_token'] = $owner_token;
+
+      return true;
+    }
+
     $previous_owner_token = $this->get_owner_token();
     if ($previous_owner_token !== false) {
       xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
@@ -169,7 +221,20 @@ class checkout
                      AND owner_token = '" . xtc_db_input($owner_token) . "'
                      AND processing_status = 'processing'");
 
-    return xtc_db_affected_rows() === 1;
+    if (xtc_db_affected_rows() === 1) {
+      return true;
+    }
+
+    $processing_query = xtc_db_query("SELECT orders_id
+                                        FROM " . TABLE_CHECKOUT_PROCESSING . "
+                                       WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
+                                         AND customers_id = '" . $this->customers_id . "'
+                                         AND owner_token = '" . xtc_db_input($owner_token) . "'
+                                         AND orders_id = '" . (int)$orders_id . "'
+                                         AND processing_status = 'processing'
+                                       LIMIT 1");
+
+    return xtc_db_num_rows($processing_query) === 1;
   }
 
   function complete($orders_id)

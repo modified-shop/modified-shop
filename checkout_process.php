@@ -81,16 +81,15 @@ $order = new order();
 
 $checkout_processing_owner = $checkout->claim();
 if (!$checkout_processing_owner) {
-  $processing_parameters = $checkout->get_processing_parameters();
-  $processing_url = xtc_href_link(FILENAME_CHECKOUT_PROCESSING, 'language=' . rawurlencode($_SESSION['language']), 'SSL', false);
-  if ($processing_parameters !== false) {
-    $processing_url .= '#' . $processing_parameters;
-  }
-  xtc_redirect($processing_url);
+  xtc_redirect($checkout->get_processing_url($_SESSION['language']));
 }
 
-if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
-  $checkout->set_order($_SESSION['tmp_oID']);
+if (isset($_SESSION['tmp_oID'])
+    && is_numeric($_SESSION['tmp_oID'])
+    && !$checkout->set_order($_SESSION['tmp_oID'])
+    )
+{
+  xtc_redirect($checkout->get_processing_url($_SESSION['language']));
 }
 
 // load the before_process function from the payment modules
@@ -225,8 +224,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();
   $_SESSION['tmp_oID'] = $insert_id;
-  if ($checkout_processing_owner) {
-    $checkout->set_order($insert_id);
+  if ($checkout_processing_owner && !$checkout->set_order($insert_id)) {
+    xtc_redirect($checkout->get_processing_url($_SESSION['language']));
   }
 
   for ($i = 0, $n = sizeof($order_totals); $i < $n; $i ++) {
@@ -523,12 +522,7 @@ if (!$tmp) {
   if ($checkout_processing_owner && $checkout->complete($insert_id)) {
     $_SESSION['checkout_completed_order_id'] = (int)$insert_id;
   } else {
-    $processing_parameters = $checkout->get_processing_parameters();
-    $processing_url = xtc_href_link(FILENAME_CHECKOUT_PROCESSING, 'language=' . rawurlencode($_SESSION['language']), 'SSL', false);
-    if ($processing_parameters !== false) {
-      $processing_url .= '#' . $processing_parameters;
-    }
-    xtc_redirect($processing_url);
+    xtc_redirect($checkout->get_processing_url($_SESSION['language']));
   }
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));

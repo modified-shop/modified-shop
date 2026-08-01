@@ -10,6 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// Preserve URL sessions without starting the configured session handler.
+define('SESSION_FORCE_COOKIE_USE', 'False');
 define('RUN_MODE_NOSESSION', true);
 
 include ('includes/application_top.php');
@@ -25,10 +27,16 @@ require (DIR_WS_INCLUDES . 'header.php');
 $display_mode = 'checkout';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
+$session_parameters = checkout::get_url_session_parameters();
+$error_parameters = 'processing_error=1';
+if ($session_parameters !== '') {
+  $error_parameters .= '&' . $session_parameters;
+}
+
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('CHECKOUT_PROCESSING_STATUS_URL', xtc_href_link('ajax.php', 'speed=1&ext=get_checkout_processing_status', 'SSL'));
-$smarty->assign('CHECKOUT_PROCESSING_SUCCESS_URL', xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL', false));
-$smarty->assign('CHECKOUT_PROCESSING_ERROR_URL', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'processing_error=1', 'SSL'));
+$smarty->assign('CHECKOUT_PROCESSING_SUCCESS_URL', xtc_href_link(FILENAME_CHECKOUT_SUCCESS, $session_parameters, 'SSL', false));
+$smarty->assign('CHECKOUT_PROCESSING_ERROR_URL', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $error_parameters, 'SSL', false));
 $smarty->assign('CHECKOUT_JAVASCRIPT', checkout::javascript_processing());
 
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_processing.html');
