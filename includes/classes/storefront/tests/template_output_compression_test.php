@@ -47,6 +47,7 @@ function removeOutputTestDirectory(string $directory): void
 try {
     define('DIR_FS_CATALOG', $temporaryDirectory . '/');
     define('DIR_FS_EXTERNAL', $repositoryRoot . '/includes/external/');
+    define('DIR_FS_INC', $repositoryRoot . '/inc/');
     define('CURRENT_TEMPLATE', 'child');
 
     $source = 'templates/parent/assets/source.js';
@@ -73,6 +74,61 @@ try {
         assertOutput(count($result) === 1 && str_starts_with($result[0], $target . '?v='), sprintf('Die erzeugte Child-Ausgabe "%s" muss ausgeliefert werden.', $logicalOutput));
         assertOutput(file_get_contents(DIR_FS_CATALOG . 'templates/parent/' . $logicalOutput) === 'parent-output', sprintf('Die Parent-Ausgabe "%s" darf nicht verändert werden.', $logicalOutput));
     }
+
+    $parentCss = 'templates/parent/css/parent.css';
+    $childCss = 'templates/child/css/child.css';
+    $parentAsset = 'templates/parent/fonts/parent.woff2';
+    $childAsset = 'templates/child/css/images/child.svg';
+    writeOutputTestFile(DIR_FS_CATALOG . $parentAsset, 'parent-font');
+    writeOutputTestFile(DIR_FS_CATALOG . $childAsset, 'child-image');
+    writeOutputTestFile(
+        DIR_FS_CATALOG . $parentCss,
+        '.parent{src:url(../fonts/parent.woff2?v=1#font)} .data{src:url(data:image/svg+xml;base64,PHN2Zz4=)}'
+    );
+    writeOutputTestFile(
+        DIR_FS_CATALOG . $childCss,
+        '.child{background:url(images/child.svg)} .external{src:url(https://cdn.example/font.woff2)} .absolute{src:url(/images/root.svg)} .fragment{filter:url(#icon)}'
+    );
+
+    $cssTarget = 'templates/' . CURRENT_TEMPLATE . '/css/combined.min.css';
+    $cssResult = combine_files(array($parentCss, $childCss), $cssTarget, true);
+    $combinedCss = file_get_contents(DIR_FS_CATALOG . $cssTarget);
+    assertOutput(
+        count($cssResult) === 1 && str_starts_with($cssResult[0], $cssTarget . '?v='),
+        'Das kombinierte CSS muss als Child-Ausgabe ausgeliefert werden.'
+    );
+    assertOutput(
+        is_string($combinedCss) && str_contains($combinedCss, '../../parent/fonts/parent.woff2?v=1#font'),
+        'Das kombinierte CSS muss Parent-URLs relativ zur Child-Ausgabe umschreiben.'
+    );
+    assertOutput(
+        realpath(dirname(DIR_FS_CATALOG . $cssTarget) . '/../../parent/fonts/parent.woff2') === realpath(DIR_FS_CATALOG . $parentAsset),
+        'Die umgeschriebene Parent-URL muss auf das physische Parent-Asset zeigen.'
+    );
+    assertOutput(
+        is_string($combinedCss) && str_contains($combinedCss, 'url(images/child.svg)'),
+        'Das kombinierte CSS muss Child-URLs relativ zur Child-Ausgabe erhalten.'
+    );
+    assertOutput(
+        realpath(dirname(DIR_FS_CATALOG . $cssTarget) . '/images/child.svg') === realpath(DIR_FS_CATALOG . $childAsset),
+        'Die Child-URL muss auf das physische Child-Asset zeigen.'
+    );
+    assertOutput(
+        is_string($combinedCss) && str_contains($combinedCss, 'url(data:image/svg+xml;base64,PHN2Zz4=)'),
+        'Eingebettete data:-URLs dürfen nicht verändert werden.'
+    );
+    assertOutput(
+        is_string($combinedCss) && str_contains($combinedCss, 'url(https://cdn.example/font.woff2)'),
+        'Externe URLs dürfen nicht verändert werden.'
+    );
+    assertOutput(
+        is_string($combinedCss) && str_contains($combinedCss, 'url(/images/root.svg)'),
+        'Absolute URLs dürfen nicht verändert werden.'
+    );
+    assertOutput(
+        is_string($combinedCss) && str_contains($combinedCss, 'url(#icon)'),
+        'Fragment-URLs dürfen nicht verändert werden.'
+    );
 
     echo sprintf("Template-Komprimierung: %d Assertions erfolgreich.\n", $assertions);
 } finally {
