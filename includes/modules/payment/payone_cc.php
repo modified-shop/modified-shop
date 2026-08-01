@@ -149,10 +149,22 @@ class payone_cc extends PayonePayment {
       return false;
     }
 
+    function payoneDispatchCheckoutProcessing() {
+      if (typeof document.createEvent !== "function"
+          || typeof document.dispatchEvent !== "function") {
+        return;
+      }
+
+      var processingEvent = document.createEvent("Event");
+      processingEvent.initEvent("checkout:processing", false, false);
+      document.dispatchEvent(processingEvent);
+    }
+
     function checkCallback(response) { 
       if (response.status === "VALID") {
         document.getElementById("pseudocardpan").value = response.pseudocardpan; 
         document.getElementById("truncatedcardpan").value = response.truncatedcardpan;
+        payoneDispatchCheckoutProcessing();
         document.checkout_confirmation.submit();
       } else {
         if(typeof jQuery != \'undefined\') {
