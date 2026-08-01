@@ -274,16 +274,20 @@ class checkout
   static function javascript_processing()
   {
     $js = '      var container = document.querySelector(".checkout_processing");' . "\n\n" .
-          '      var status = window.location.hash.match(/^#checkout_key=([a-f0-9]{64})&status_token=([a-f0-9]{64})$/);' . "\n" .
-          '      if (!status) {' . "\n" .
+          '      var status = new URLSearchParams(window.location.hash.substring(1));' . "\n" .
+          '      var checkoutKey = status.get("checkout_key");' . "\n" .
+          '      var statusToken = status.get("status_token");' . "\n" .
+          '      if (!/^[a-f0-9]{64}$/.test(checkoutKey) || !/^[a-f0-9]{64}$/.test(statusToken)) {' . "\n" .
           '        window.location.replace(container.getAttribute("data-error-url"));' . "\n" .
           '        return;' . "\n" .
           '      }' . "\n" .
-          '      var statusUrl = container.getAttribute("data-status-url")' . "\n" .
-          '                      + "&checkout_key=" + encodeURIComponent(status[1])' . "\n" .
-          '                      + "&status_token=" + encodeURIComponent(status[2]);' . "\n\n" .
+          '      var statusData = new FormData();' . "\n" .
+          '      statusData.append("checkout_key", checkoutKey);' . "\n" .
+          '      statusData.append("status_token", statusToken);' . "\n\n" .
           '      function poll() {' . "\n" .
-          '        fetch(statusUrl, {' . "\n" .
+          '        fetch(container.getAttribute("data-status-url"), {' . "\n" .
+          '          method: "POST",' . "\n" .
+          '          body: statusData,' . "\n" .
           '          credentials: "omit",' . "\n" .
           '          cache: "no-store"' . "\n" .
           '        })' . "\n" .
