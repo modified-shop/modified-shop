@@ -228,6 +228,10 @@
         if (count($checksum_array) > 0) {
           $integrity_error = true;
           $backup_content = create_backup($checksum_array);
+          if ($backup_content === false) {
+            $error = true;
+            $messageStack->add('update', ERROR_BACKUP_DIFF);
+          }
         }
         $requirement_array[] = array(
           'name' => 'FILE INTEGRITY',
@@ -267,7 +271,11 @@
             $smarty->assign('error_message', $messageStack->output('ftp_message'));
           }
           
-          if ($error === false && count($checksum_array) > 0) {
+          if ($error === false
+              && isset($backup_content)
+              && is_array($backup_content)
+              )
+          {
             $smarty->assign('backup_content', $backup_content);
           }
           

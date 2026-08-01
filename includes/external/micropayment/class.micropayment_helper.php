@@ -169,7 +169,7 @@ class micropayment_helper
 
     }
 
-    private function setConfig($name,$value)
+    protected function setConfig($name,$value)
     {
         xtc_db_query(
             'UPDATE `' . TABLE_CONFIGURATION . '`
