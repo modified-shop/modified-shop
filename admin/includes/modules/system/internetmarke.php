@@ -29,7 +29,7 @@
     var $carrier_tracking_link = 'https://www.deutschepost.de/sendung/simpleQueryResult.html?form.sendungsnummer=$1&form.einlieferungsdatum_tag=$3&form.einlieferungsdatum_monat=$4&form.einlieferungsdatum_jahr=$5';
 
     function __construct() {
-      $this->version = '1.22';
+      $this->version = '1.23';
       $this->code = 'internetmarke';
       $this->title = MODULE_INTERNETMARKE_TEXT_TITLE;
       $this->description = MODULE_INTERNETMARKE_TEXT_DESCRIPTION;
