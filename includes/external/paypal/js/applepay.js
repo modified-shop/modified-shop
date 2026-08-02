@@ -195,7 +195,9 @@ async function setupApplepayCart() {
 
     // order creation can happen in parallel, it is only needed once the
     // shipping/payment callbacks below actually fire
-    const orderIdPromise = $.post(getAppleCartOrderUrl());
+    const orderIdPromise = $.post(getAppleCartOrderUrl(), {
+      paypal_ajax_token: window.paypalAjaxToken,
+    });
 
     session.onvalidatemerchant = (event) => {
       applepay
@@ -289,15 +291,21 @@ async function setupApplepayCart() {
         // store the Apple Pay contact first: the patch step below reads it from
         // the session to attach the shipping address to the PayPal order, and
         // the success callback uses it to create the customer
-        await $.post(getAppleCartContactUrl(), {
+        const contactResult = await $.post(getAppleCartContactUrl(), {
           shippingContact: JSON.stringify(shippingContact),
           billingContact: JSON.stringify(event.payment.billingContact),
+          paypal_ajax_token: window.paypalAjaxToken,
         });
+        if (!contactResult || contactResult.success !== true) {
+          throw new Error("Unable to store wallet contact");
+        }
 
         // bring the PayPal order total in line with the shipping the buyer
         // selected in the sheet and attach the shipping address before confirming,
         // otherwise PayPal rejects with APPROVE_APPLE_PAY_VALIDATION_ERROR
-        const patchResult = await $.post(getAppleCartPatchUrl());
+        const patchResult = await $.post(getAppleCartPatchUrl(), {
+          paypal_ajax_token: window.paypalAjaxToken,
+        });
         if (!patchResult || patchResult.success !== true) {
           throw new Error("Unable to update PayPal order");
         }

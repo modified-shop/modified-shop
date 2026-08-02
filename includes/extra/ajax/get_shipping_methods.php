@@ -80,8 +80,13 @@
       $shipping_address = $paypal->parse_contact($shipping_contact);
       $_SESSION['country'] = $shipping_address['country_id'];
 
-      if (isset($request['shipping_option'])) {
-        $shipping_option_id = $request['shipping_option']['id'];
+      if (isset($request['shipping_option'])
+          && is_array($request['shipping_option'])
+          && isset($request['shipping_option']['id'])
+          && is_scalar($request['shipping_option']['id'])
+          )
+      {
+        $shipping_option_id = (string)$request['shipping_option']['id'];
       }
 
       $countries_id = STORE_COUNTRY;

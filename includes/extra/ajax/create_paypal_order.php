@@ -18,6 +18,23 @@
 
   function create_paypal_order() {
     global $order;
+
+    $allowed_payment_methods = array('paypal', 'paypalexpress', 'paypalapplepay', 'paypalgooglepay', 'paypalacdc', 'paypalcard', 'paypalsepa');
+    $payment_method = 'paypal';
+    if (isset($_GET['payment_method']) && is_string($_GET['payment_method'])) {
+      $payment_method = $_GET['payment_method'];
+    } elseif (isset($_POST['payment_method']) && is_string($_POST['payment_method'])) {
+      $payment_method = $_POST['payment_method'];
+    }
+
+    if (!in_array($payment_method, $allowed_payment_methods, true)) {
+      return false;
+    }
+
+    $paypal = new PayPalPaymentV2($payment_method);
+    if (!$paypal->is_valid_ajax_token()) {
+      return false;
+    }
     
     if (!isset($_SESSION['cart'])
         || $_SESSION['cart']->count_contents() <= 0
@@ -28,7 +45,6 @@
     
     $express_payments = array('paypalexpress', 'paypalapplepay', 'paypalgooglepay');
 
-    $paypal = new PayPalPaymentV2(isset($_REQUEST['payment_method']) ? $_REQUEST['payment_method'] : 'paypal');
     $order = $paypal->set_order_object();
 
     // rotate the nonce so every express attempt creates a fresh PayPal order

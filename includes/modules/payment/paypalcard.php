@@ -93,6 +93,7 @@ class paypalcard extends PayPalPaymentV2 {
           return $.ajax({
             type: "POST",
             url: "'.$order_url.'",
+            data: {paypal_ajax_token: "'.$this->get_ajax_token().'"},
             dataType: "json"
           });
         },

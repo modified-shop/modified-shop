@@ -124,7 +124,7 @@ class paypalacdc extends PayPalPaymentV2 {
     $info = $paypal_smarty->fetch($tpl_file);
     $info = trim(str_replace(array("\r", "\n"), '', $info));
 
-    $order_url = DIR_WS_BASE.'ajax.php?ext=create_paypal_order';
+    $order_url = DIR_WS_BASE.'ajax.php?ext=create_paypal_order&payment_method='.$this->code;
     $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
 
     $process_button .= sprintf($this->get_js_sdk('true'), "
@@ -156,6 +156,7 @@ class paypalacdc extends PayPalPaymentV2 {
       const cardFields = paypal.CardFields({
         createOrder: function () {
           var formdata = $('#checkout_confirmation').serializeArray();
+          formdata.push({name: 'paypal_ajax_token', value: '".$this->get_ajax_token()."'});
           return $.ajax({
             type: 'POST',
             url: '".$order_url."',
@@ -293,21 +294,18 @@ class paypalacdc extends PayPalPaymentV2 {
   }
   
   
-	function payment_action() {
+  function payment_action() {
     global $insert_id, $tmp;
 
-    // card fields flow: enforce liability shift policy server-side
-    // (vault flow posts payment_method and is verified in before_process)
-    if (!isset($_POST['payment_method'])) {
-      if (!isset($_SESSION['paypal']['OrderID'])
-          || $this->CheckLiabilityShift($_SESSION['paypal']['OrderID']) !== true
-          )
-      {
-        // cancel pp order
-        unset($_SESSION['paypal']);
-        $this->remove_order($_SESSION['tmp_oID']);
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-      }
+    // enforce the configured liability-shift policy for card fields and vault cards
+    if (!isset($_SESSION['paypal']['OrderID'])
+        || $this->CheckLiabilityShift($_SESSION['paypal']['OrderID']) !== true
+        )
+    {
+      // cancel pp order
+      unset($_SESSION['paypal']);
+      $this->remove_order($_SESSION['tmp_oID']);
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
 
     $result = $this->FinishOrder($insert_id);

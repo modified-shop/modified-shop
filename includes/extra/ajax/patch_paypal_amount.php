@@ -20,7 +20,17 @@
   function patch_paypal_amount() {
     global $order;
 
-    $paypal = new PayPalPaymentV2(isset($_REQUEST['payment_method']) ? $_REQUEST['payment_method'] : 'paypalapplepay');
+    $allowed_payment_methods = array('paypalapplepay', 'paypalgooglepay');
+    $payment_method = ((isset($_GET['payment_method']) && is_string($_GET['payment_method'])) ? $_GET['payment_method'] : '');
+
+    if (!in_array($payment_method, $allowed_payment_methods, true)) {
+      return array('success' => false);
+    }
+
+    $paypal = new PayPalPaymentV2($payment_method);
+    if (!$paypal->is_valid_ajax_token()) {
+      return array('success' => false);
+    }
 
     if (!isset($_SESSION['cart'])
         || $_SESSION['cart']->count_contents() <= 0

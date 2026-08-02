@@ -100,7 +100,8 @@
                 height: '.$paypal->get_config('PAYPAL_BUTTON_HEIGHT').'
               },
               createOrder: function(data, actions) {              
-                var formdata = '.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? '$("#cart_quantity").serializeArray()' : "''").'; 
+                var formdata = '.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? '$("#cart_quantity").serializeArray()' : '[]').';
+                formdata.push({name: "paypal_ajax_token", value: "'.$paypal->get_ajax_token().'"});
 
                 return $.ajax({
                   type: "POST",
@@ -268,6 +269,7 @@
           }
 
           window.paypalClientErrorToken = "'.$paypal->get_client_error_token().'";
+          window.paypalAjaxToken = "'.$paypal->get_ajax_token().'";
 
           function getAppleCartShippingMethodsUrl() {
             return "'.$shipping_methods_url.'";
@@ -338,6 +340,7 @@
           }
 
           window.paypalClientErrorToken = "'.$paypal->get_client_error_token().'";
+          window.paypalAjaxToken = "'.$paypal->get_ajax_token().'";
 
           function getGoogleCartShippingMethodsUrl() {
             return "'.$shipping_methods_url.'";

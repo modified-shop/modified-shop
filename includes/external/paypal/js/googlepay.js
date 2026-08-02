@@ -313,7 +313,9 @@ async function setupGooglepayCart() {
     onClick: function () {
       const { totalPrice, requiresShipping } = getGoogleCartTransactionInfo();
 
-      orderIdPromise = $.post(getGoogleCartOrderUrl());
+      orderIdPromise = $.post(getGoogleCartOrderUrl(), {
+        paypal_ajax_token: window.paypalAjaxToken,
+      });
 
       const paymentDataRequest = Object.assign({}, baseRequest, {
         allowedPaymentMethods: cartPaymentMethods,
@@ -382,15 +384,21 @@ async function processGoogleCartPayment(orderId, paymentData) {
   // store the wallet contact first: the patch step below reads it from the
   // session to attach the shipping address to the PayPal order, and the
   // success callback uses it to create the customer
-  await $.post(getGoogleCartContactUrl(), {
+  const contactResult = await $.post(getGoogleCartContactUrl(), {
     shippingContact: JSON.stringify(googleAddressToContact(shippingAddress, email)),
     billingContact: JSON.stringify(googleAddressToContact(billingAddress, email)),
+    paypal_ajax_token: window.paypalAjaxToken,
   });
+  if (!contactResult || contactResult.success !== true) {
+    throw new Error("Unable to store wallet contact");
+  }
 
   // bring the PayPal order total in line with the shipping the buyer
   // selected in the sheet and attach the shipping address before confirming,
   // otherwise PayPal rejects with an APPROVE validation error
-  const patchResult = await $.post(getGoogleCartPatchUrl());
+  const patchResult = await $.post(getGoogleCartPatchUrl(), {
+    paypal_ajax_token: window.paypalAjaxToken,
+  });
   if (!patchResult || patchResult.success !== true) {
     throw new Error("Unable to update PayPal order");
   }

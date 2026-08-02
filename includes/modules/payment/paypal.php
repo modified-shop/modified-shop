@@ -82,7 +82,8 @@ class paypal extends PayPalPaymentV2 {
           label: "buynow"
         },
         createOrder: function(data, actions) {
-          var formdata = $("#checkout_confirmation").serializeArray(); 
+          var formdata = $("#checkout_confirmation").serializeArray();
+          formdata.push({name: "paypal_ajax_token", value: "'.$this->get_ajax_token().'"});
           return $.ajax({
             type: "POST",
             url: "'.$order_url.'",
@@ -115,7 +116,8 @@ class paypal extends PayPalPaymentV2 {
             height: '.$this->get_config('PAYPAL_BUTTON_HEIGHT').'
           },
           createOrder: function(data, actions) {
-            var formdata = $("#checkout_confirmation").serializeArray(); 
+            var formdata = $("#checkout_confirmation").serializeArray();
+            formdata.push({name: "paypal_ajax_token", value: "'.$this->get_ajax_token().'"});
             return $.ajax({
               type: "POST",
               url: "'.$order_url.'",

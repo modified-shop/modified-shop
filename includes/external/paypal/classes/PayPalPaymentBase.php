@@ -957,6 +957,21 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function get_ajax_token($context = 'payment') {
+    $secret = ((defined('MODULE_PAYMENT_PAYPAL_SECRET')) ? MODULE_PAYMENT_PAYPAL_SECRET : '');
+    return hash_hmac('sha256', xtc_session_id().'|paypal_ajax|'.$context, $secret);
+  }
+
+
+  function is_valid_ajax_token($context = 'payment') {
+    return (isset($_SERVER['REQUEST_METHOD'])
+            && $_SERVER['REQUEST_METHOD'] == 'POST'
+            && isset($_POST['paypal_ajax_token'])
+            && is_string($_POST['paypal_ajax_token'])
+            && hash_equals($this->get_ajax_token($context), $_POST['paypal_ajax_token']));
+  }
+
+
   function order_requires_shipping($order = null) {
     $content_type = ((is_object($order) && isset($order->content_type)) ? $order->content_type : '');
     if ($content_type == ''
