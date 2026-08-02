@@ -23,3 +23,7 @@
 
   define('TEXT_IM_LABEL_CREATED', 'Internetmarke Label was created');
   define('TEXT_IM_LABEL_DELETED', 'Internetmarke Label was deleted');
+  define('TEXT_IM_LABEL_NOT_FOUND', 'The Internetmarke label does not belong to this order or no longer exists.');
+  define('TEXT_IM_LABEL_DELETE_ERROR', 'The Internetmarke label could not be canceled.');
+  define('TEXT_IM_LABEL_LOCAL_DELETE_ERROR', 'The Internetmarke label was canceled, but its local tracking entry could not be deleted.');
+  define('TEXT_IM_LABEL_DELETE_CONFIRM', 'Do you really want to cancel this Internetmarke label?');
