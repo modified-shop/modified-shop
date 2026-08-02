@@ -24,7 +24,7 @@
           $oID = (int)$_GET['oID'];
           $DHLInternetmarke = new DHLInternetmarke($_POST);
           $response = $DHLInternetmarke->CreateLabel($oID);
-          
+
           if (is_array($response['message']) && count($response['message']) > 0) {
             foreach ($response['message'] as $error => $messages) {
               if (!is_array($messages)) {
@@ -41,9 +41,9 @@
           if (is_array($response['label']) && count($response['label']) > 0) {
             $messageStack->add_session(TEXT_IM_LABEL_CREATED, 'success');
           }
-          xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction')).'action=edit'));              
+          xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction')).'action=edit'));
           break;
-       
+
         case 'im_delete':
           if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'tID', 'subaction')).'action=edit'));
@@ -51,8 +51,8 @@
 
           $tracking_id = (int)$_GET['tID'];
           $oID = (int)$_GET['oID'];
-          
-          $tracking_links_query = xtc_db_query("SELECT * 
+
+          $tracking_links_query = xtc_db_query("SELECT *
                                                   FROM ".TABLE_ORDERS_TRACKING."
                                                  WHERE tracking_id = '".(int)$tracking_id."'
                                                    AND orders_id = '".(int)$oID."'

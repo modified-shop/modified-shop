@@ -65,7 +65,7 @@
           }
         ?>
         <tr>
-          <?php            
+          <?php
             $result = $DHLInternetmarke->getPageFormats(MODULE_INTERNETMARKE_PAGEFORMATS);
             $row_array = array();
             $column_array = array();
@@ -97,7 +97,7 @@
               $row_array = $format_service_array[$id]['row'];
               $column_array = $format_service_array[$id]['column'];
             }
-            
+
             $price_array = array();
             $price_query = xtc_db_query("SELECT *
                                            FROM `internetmarke`
@@ -113,7 +113,7 @@
             if (count($price_array) > 0
                 && count($row_array) > 0
                 && count($column_array) > 0
-                ) 
+                )
             {
             ?>
               <td class="smallText" align="center" style="padding:0;" colspan="3">
