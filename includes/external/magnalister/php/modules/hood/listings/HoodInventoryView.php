@@ -593,7 +593,7 @@ class HoodInventoryView {
 			$(document).ready(function() {
 				$('#listingDelete').click(function() {
                     if (($('#hoodinventory input[type="checkbox"]:checked').length > 0)
-                        && confirm(<?php echo json_encode(sprintf(ML_GENERIC_DELETE_LISTINGS_ASYNCHRONIOUS, $_modules[$this->magnasession['currentPlatform']]['title'])); ?>)
+                        && confirm(<?php echo json_encode(html_entity_decode(sprintf(ML_GENERIC_DELETE_LISTINGS_ASYNCHRONIOUS, $_modules[$this->magnasession['currentPlatform']]['title']), ENT_QUOTES, 'UTF-8')); ?>)
                     ) {
 						$('#action').val('delete');
 						$(this).parents('form').submit();

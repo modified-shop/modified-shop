@@ -240,7 +240,7 @@ class SimpleCategoryView {
 		');
 		$this->selection = array();
 		while ($row = MagnaDB::gi()->fetchNext($newSelectionResult)) {
-			$this->selection[$row['pID']] = unserialize($row['data']);
+			$this->selection[$row['pID']] = magnaSafeUnserialize($row['data']);
 		}
 	}
 	

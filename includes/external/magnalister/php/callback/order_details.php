@@ -36,11 +36,11 @@ function magnaLoadOrder($oID, $mpID = false) {
 	if ($order === false) {
 		return false;
 	}
-	$order['data'] = @unserialize($order['data']);
+	$order['data'] = magnaSafeUnserialize($order['data']);
 	if (!is_array($order['data'])) {
 		$order['data'] = array();
 	}
-	$order['internaldata'] = @unserialize($order['internaldata']);
+	$order['internaldata'] = magnaSafeUnserialize($order['internaldata']);
 	if (!is_array($order['internaldata'])) {
 		$order['internaldata'] = array();
 	}

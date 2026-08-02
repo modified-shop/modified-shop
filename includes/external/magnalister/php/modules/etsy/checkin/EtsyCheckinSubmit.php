@@ -58,7 +58,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 $aProperty['Values'] = $aMatchedValues[$sPropertyName];
             }
         }
-        return json_encode(array_values($aProperties));
+        return json_encode($aProperties);
     }
 
     protected function generateRequestHeader() {
@@ -123,6 +123,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'Currency' => $masterData['Currency'],
                 'ShippingProfile' => $masterData['ShippingProfile'],
                 'ProcessingProfile' => $masterData['ProcessingProfile'],
+                'ReturnPolicy' => isset($masterData['ReturnPolicy']) ? $masterData['ReturnPolicy'] : '',
                 'Primarycategory' => $masterData['Primarycategory'],
                 'Verified' => $masterData['Verified'],
                 'Description' => $masterData['MasterDescription'],
@@ -147,6 +148,15 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
     protected function appendAdditionalData($pID, $product, &$data) {
         if ($data['quantity'] < 0) {
             $data['quantity'] = 0;
+        }
+        // Skip simple products (no variations) with zero stock — Etsy requires quantity >= 1
+        if ((!array_key_exists('Variations', $product) || empty($product['Variations']))
+            && isset($product['Quantity']) && (int)$product['Quantity'] <= 0
+        ) {
+            $this->logZeroStockError($pID);
+            $this->disabledItems[] = $pID;
+            $this->ajaxReply['ignoreErrors'] = true;
+            return;
         }
         if (getDBConfigValue('general.keytype', '0') == 'artNr') {
             $sPropertiesWhere = "products_model = '".MagnaDB::gi()->escape(MagnaDB::gi()->fetchOne("SELECT products_model FROM ".TABLE_PRODUCTS." WHERE products_id = '".$pID."'"))."'";
@@ -195,6 +205,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'Currency' => getDBConfigValue('etsy.currency', $this->mpID),
             'ShippingProfile' => $properties['ShippingProfile'],
             'ProcessingProfile' => $properties['ProcessingProfile'],
+            'ReturnPolicy' => !empty($properties['ReturnPolicy']) ? $properties['ReturnPolicy'] : getDBConfigValue('etsy.ReturnPolicy', $this->mpID, ''),
             'Primarycategory' => $properties['Primarycategory'],
             'Verified' => 'OK',
             'ProductId' => $pID,
@@ -251,14 +262,32 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 $aFixedAttributes[] = $this->completePropertyNameAndValue($property, $categoryId);
             } else if (    is_string($aCategoryAttribute['Values'])
                         && $aCategoryAttribute['Kind'] == 'FreeText') {
-                $aAttributeName = $this->getCorrectAttributeName($aCategoryAttribute['AttributeName']);
+                // Use CustomPropertyName if set, otherwise fall back to Etsy attribute name
+                if (!empty($aCategoryAttribute['CustomPropertyName'])) {
+                    $aAttributeName = $this->sanitizeCustomPropertyName($aCategoryAttribute['CustomPropertyName']);
+                } else {
+                    $aAttributeName = $this->getCorrectAttributeName($aCategoryAttribute['AttributeName']);
+                }
+                // Determine property_id: Custom1/Extra_Custom1 → 513, Custom2/Extra_Custom2 → 514
+                $baseKey = str_replace('Extra_', '', $sCategoryAttributeKey);
+                if ($baseKey === 'Custom1') {
+                    $propertyId = 513;
+                } else if ($baseKey === 'Custom2') {
+                    $propertyId = 514;
+                } else {
+                    $propertyId = '';
+                }
                 $property = array(
-                    'property_id' => '',
-                    'value_ids' => array(''),
+                    'property_id' => $propertyId,
+                    'value_ids' => array(),
                     'property_name' => $aAttributeName,
                     'values' => array($aCategoryAttribute['Values']),
                 );
-                $aFixedAttributes[$sCategoryAttributeKey] = $this->completePropertyNameAndValue($property, $categoryId);
+                if (empty($propertyId)) {
+                    $aFixedAttributes[$sCategoryAttributeKey] = $this->completePropertyNameAndValue($property, $categoryId);
+                } else {
+                    $aFixedAttributes[$sCategoryAttributeKey] = $property;
+                }
             }
         }
         unset($aCategoryAttribute);
@@ -313,6 +342,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         $aVarValuesShop2Etsy = array();
         $aVarValuesShop2KeysEtsy = array();
         $aPredefinedAttrNames = array(); // case: FreeText (optional) with predefined name
+        $aCustomPropertyNames = array(); // user-defined property names (not processed by getCorrectAttributeName)
         foreach ($aVariationNamesByCode as $iShopVarCode => $sShopVarName) {
             foreach ($aCategoryAttributes as $key => $aAttr) {
                 if (($aAttr['Kind'] == 'Matching')
@@ -327,11 +357,16 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                     }
                     unset($aAVal);
                 } else if (($aAttr['Kind'] == 'FreeText')
-                    && (in_array($key, array('Custom1', 'Custom2')))
+                    && (in_array($key, array('Custom1', 'Custom2'))
+                        || in_array(str_replace('Extra_', '', $key), array('Custom1', 'Custom2')))
                 ) {
-                    // Etsy attribute Custom1 and Custom2
+                    // Etsy attribute Custom1/Custom2 (also with Extra_ prefix for optional attributes)
                     foreach ($aAttr['Values'] as $aAVal) {
                         $aVarValuesShop2Etsy[$sShopVarName][$aAVal['Shop']['Value']] = $aAVal['Marketplace']['Value'];
+                    }
+                    // Use CustomPropertyName if set by user, otherwise shop variation name is used
+                    if (!empty($aAttr['CustomPropertyName'])) {
+                        $aCustomPropertyNames[$sShopVarName] = $this->sanitizeCustomPropertyName($aAttr['CustomPropertyName']);
                     }
                     unset($aAVal);
                 } else if (    $aAttr['Kind'] == 'FreeText'
@@ -340,7 +375,11 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                     foreach ($aAttr['Values'] as $aAVal) {
                         $aVarValuesShop2Etsy[$sShopVarName][$aAVal['Shop']['Value']] = $aAVal['Marketplace']['Value'];
                     }
-                    $aPredefinedAttrNames[$sShopVarName] = $aAttr['AttributeName'];
+                    if (!empty($aAttr['CustomPropertyName'])) {
+                        $aCustomPropertyNames[$sShopVarName] = $this->sanitizeCustomPropertyName($aAttr['CustomPropertyName']);
+                    } else {
+                        $aPredefinedAttrNames[$sShopVarName] = $aAttr['AttributeName'];
+                    }
                     unset($aAVal);
                 }
             }
@@ -381,10 +420,14 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                         continue;
                     }
 
-                    $attributeName = isset($aPredefinedAttrNames[$aNameValue['Name']])
-                        ? $aPredefinedAttrNames[$aNameValue['Name']]
-                        : $aNameValue['Name'];
-                    $aAttributeName = $this->getCorrectAttributeName($attributeName);
+                    // Priority: 1) user-defined CustomPropertyName, 2) predefined Etsy name, 3) shop variation name
+                    if (isset($aCustomPropertyNames[$aNameValue['Name']])) {
+                        $aAttributeName = $aCustomPropertyNames[$aNameValue['Name']];
+                    } else if (isset($aPredefinedAttrNames[$aNameValue['Name']])) {
+                        $aAttributeName = $this->getCorrectAttributeName($aPredefinedAttrNames[$aNameValue['Name']]);
+                    } else {
+                        $aAttributeName = $aNameValue['Name'];
+                    }
                     $aRes[$sCurrKey]['property_values'][$i] = array(
                         'property_id' => ($countCustomAttribute[$sCurrKey] === 1) ? 513 : 514,
                         'value_ids' => array(),
@@ -429,9 +472,12 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 $pv[$i]['values'][0] = '';
                 $pv[$i] = $this->completePropertyNameAndValue($pv[$i], $categoryId);
             } else {
-                $aAttributeName = $this->getCorrectAttributeName($prop['AttributeName']);
+                // Use CustomPropertyName if set by user, otherwise fall back to Etsy attribute name
+                $propertyName = !empty($prop['CustomPropertyName'])
+                    ? $this->sanitizeCustomPropertyName($prop['CustomPropertyName'])
+                    : $this->getCorrectAttributeName($prop['AttributeName']);
                 $pv[$i]['property_id'] = 513;
-                $pv[$i]['property_name'] = $aAttributeName;
+                $pv[$i]['property_name'] = $propertyName;
                 $pv[$i]['values'] = array($prop['Values']);
             }
         }
@@ -458,13 +504,17 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
     }
 
     private function filterOutZeroStockVariations(&$aVariations, $iProductId) {
-        foreach ($aVariations as $i => $aVariation) {
-            if ($aVariation['Quantity'] <= 0) {
-                unset($aVariations[$i]);
+        $hasStock = false;
+        foreach ($aVariations as $aVariation) {
+            if ($aVariation['Quantity'] > 0) {
+                $hasStock = true;
+                break;
             }
         }
 
-        if (empty($aVariations)) {
+        if (!$hasStock) {
+            $aVariations = array();
+            $this->logZeroStockError($iProductId);
             $this->disabledItems[] = $iProductId;
             $this->ajaxReply['ignoreErrors'] = true;
         }
@@ -553,6 +603,55 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'mode' => ($state == 'fail') ? 'errorlog' : 'listings'
         ), true);
 
+    }
+
+    private function logZeroStockError($pID) {
+        if (!isset($this->submitSession['zeroStockItems'])) {
+            $this->submitSession['zeroStockItems'] = array();
+        }
+        $this->submitSession['zeroStockItems'][] = $pID;
+        MagnaDB::gi()->insert(
+            TABLE_MAGNA_COMPAT_ERRORLOG,
+            array(
+                'mpID' => $this->mpID,
+                'errormessage' => ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED,
+                'dateadded' => gmdate('Y-m-d H:i:s'),
+                'additionaldata' => serialize(array(
+                    'ProductID' => $pID
+                ))
+            )
+        );
+    }
+
+    protected function getFinalDialogs() {
+        $dialogs = array();
+        if (!empty($this->submitSession['zeroStockItems'])) {
+            $sProductIds = implode(', ', $this->submitSession['zeroStockItems']);
+            $dialogs[] = array(
+                'headline' => ML_LABEL_INFORMATION,
+                'message' => sprintf(
+                    ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED . '<br /><br />'
+                    . 'Product ID(s): %s',
+                    $sProductIds
+                )
+            );
+        }
+        return $dialogs;
+    }
+
+    /**
+     * @param string $value
+     * @return string sanitized property name (max 45 chars, Etsy API limit)
+     */
+    private function sanitizeCustomPropertyName($value) {
+        $clean = trim(strip_tags($value));
+        $clean = preg_replace('/[\x00-\x1F\x7F]/u', '', $clean);
+        if (function_exists('mb_substr')) {
+            $clean = mb_substr($clean, 0, 45, 'UTF-8');
+        } else {
+            $clean = substr($clean, 0, 45);
+        }
+        return $clean;
     }
 
     protected function completePropertyNameAndValue($property, $categoryId) {

@@ -184,10 +184,10 @@ class SimpleSummaryView {
 
 		$this->selection = array();
 		while ($row = MagnaDB::gi()->fetchNext($selectionResult)) {
-			$this->selection[$row['pID']] = unserialize($row['data']);
+			$this->selection[$row['pID']] = magnaSafeUnserialize($row['data']);
 		}
 	}
-	
+
 	protected function updateCurrency() {
 		$updateExchangeRate = getDBConfigValue(array($this->marketplace.'.exchangerate', 'update'), $this->mpID, false);
 		if (!$updateExchangeRate || ($this->settings['currency'] == DEFAULT_CURRENCY)) {
@@ -222,7 +222,7 @@ class SimpleSummaryView {
 		');
 
 		while ($row = MagnaDB::gi()->fetchNext($selectionResult)) {
-			$this->selection[$row['pID']] = unserialize($row['data']);
+			$this->selection[$row['pID']] = magnaSafeUnserialize($row['data']);
 		}
 		MagnaDB::gi()->freeResult($selectionResult);
 	}
@@ -240,7 +240,7 @@ class SimpleSummaryView {
 				       session_id=\''.session_id().'\'
 			');
 			while ($row = MagnaDB::gi()->fetchNext($itemsResult)) {
-				$row['data'] = unserialize($row['data']);
+				$row['data'] = magnaSafeUnserialize($row['data']);
 				$row['data']['selected'] = ($_POST['tmplcb'][$row['pID']] == 'true') ? true : false;
 				//echo var_dump_pre($row['data']['selected'], $row['pID']);
 				MagnaDB::gi()->insert(TABLE_MAGNA_SELECTION, array (
@@ -297,7 +297,7 @@ class SimpleSummaryView {
 			$tmplSelection = array();
 
 			while ($row = MagnaDB::gi()->fetchNext($selectionResult)) {
-				$row['data'] = unserialize($row['data']);
+				$row['data'] = magnaSafeUnserialize($row['data']);
 
 				/* Get rid of Selection */
 				unset($row['data']['selected']);
@@ -349,7 +349,7 @@ class SimpleSummaryView {
 			');
 			$tmplSelection = array();
 			while ($row = MagnaDB::gi()->fetchNext($selectionResult)) {
-				$row['data'] = unserialize($row['data']);
+				$row['data'] = magnaSafeUnserialize($row['data']);
 				if ( !isset($row['data']['selected']) || ($row['data']['selected'] == true) ) {
 					unset($row['data']['selected']);
 					$this->extendProductAttributes($row['pID'], $row['data']);
@@ -614,7 +614,7 @@ $(document).ready(function() {
 		while ($row = MagnaDB::gi()->fetchNext($itemsResult)) {
 			++$fetchedElements;
 
-			$row['data'] = unserialize($row['data']);
+			$row['data'] = magnaSafeUnserialize($row['data']);
 
 			if (!array_key_exists($reset, $row['data'])) {
 				$this->ajaxReply['skiped'][] = $row['pID'];

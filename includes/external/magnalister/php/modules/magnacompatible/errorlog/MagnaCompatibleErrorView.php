@@ -121,7 +121,7 @@ class MagnaCompatibleErrorView {
 			foreach ($this->errorLog as &$item) {
 				$item['errormessage'] = fixHTMLUTF8Entities($item['errormessage']);
 				if ($this->blRecommendationColumn && !empty($item['recommendation'])) $item['recommendation'] = fixHTMLUTF8Entities($item['recommendation']);
-				$item['additionaldata'] = @unserialize($item['additionaldata']);
+				$item['additionaldata'] = magnaSafeUnserialize($item['additionaldata']);
 			}
 		}
 	}
@@ -133,7 +133,7 @@ class MagnaCompatibleErrorView {
 				 WHERE special=\''.MagnaDB::gi()->escape($data['MOrderID']).'\'
 			');
 			if ($o === false) return;
-			$o = @unserialize($o);
+			$o = magnaSafeUnserialize($o);
 			if (!is_array($o)) {
 				$o = array();
 			}
@@ -230,13 +230,13 @@ $(document).ready(function() {
 		var btnAction = $(this).attr('name');
 		
 		if ((btnAction == 'deleteall')
-			&& confirm(unescape(<?php echo "'".html2url(ML_GENERIC_CONFIRM_DELETE_ENTIRE_ERROR_PROTOCOL)."'"; ?>))
+			&& confirm(decodeURIComponent(<?php echo "'".html2url(ML_GENERIC_CONFIRM_DELETE_ENTIRE_ERROR_PROTOCOL)."'"; ?>))
 		) {
 			$('#action').val(btnAction);
 			$(this).parents('form').submit();
 			
 		} else if (($('#errorlog input[type="checkbox"]:checked').length > 0)
-			&& confirm(unescape(<?php echo "'".html2url(ML_GENERIC_DELETE_ERROR_MESSAGES)."'"; ?>))
+			&& confirm(decodeURIComponent(<?php echo "'".html2url(ML_GENERIC_DELETE_ERROR_MESSAGES)."'"; ?>))
 		) {
 			$('#action').val(btnAction);
 			$(this).parents('form').submit();

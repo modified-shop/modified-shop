@@ -305,7 +305,7 @@ function convertAmazonApplyTmpStuffNSuch() {
 		if (substr($row['data'], 0, 3) == 'YTo') {
 			$row['data'] = base64_decode($row['data']);
 		}
-		$row['data'] = myUnserialize($row['data']);
+		$row['data'] = magnaSafeUnserialize($row['data']);
 		if (!is_array($row['data'])) {
 			continue;
 		}
@@ -499,7 +499,7 @@ function magnaOrdersUpdateAmazon() {
 		LIMIT '.$iLimit.'
 	');
 	while (($row = MagnaDB::gi()->fetchNext($aoid)) !== false) {
-		$row['data'] = @unserialize($row['data']);
+		$row['data'] = magnaSafeUnserialize($row['data']);
 		if (!is_array($row['data'])) {
 			$row['data'] = array();
 		}
@@ -509,7 +509,7 @@ function magnaOrdersUpdateAmazon() {
 		}
 		$row['data'] = serialize($row['data']);
 
-		$row['internaldata'] = @unserialize($row['internaldata']);
+		$row['internaldata'] = magnaSafeUnserialize($row['internaldata']);
 		if (!is_array($row['internaldata'])) {
 			$row['internaldata'] = array();
 		}

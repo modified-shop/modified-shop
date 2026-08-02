@@ -128,7 +128,7 @@ $(document).ready(function() {
 			price = convertPriceToFloat(val, formatShippingcostOptions);
 			myConsole.log(price);
 			if (price < 0) {
-				alert(unescape(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
+				alert(decodeURIComponent(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
 				$(e).val(formatPriceWoCur($('#backup_'+tfID).val(), formatShippingcostOptions));
 			} else {
 				jQuery.ajax({

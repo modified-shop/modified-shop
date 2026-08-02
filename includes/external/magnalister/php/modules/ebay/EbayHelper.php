@@ -50,7 +50,7 @@ class EbayHelper extends AttributesMatchingHelper
 	public static function getPriceSettingsByListingType($mpId, $listingType){
 		if ($listingType == 'Chinese') {
 			$priceTypes = array('chinese.buyitnow', 'chinese');
-		} else { //StoresFixedPrice, FixedPriceItem
+		} else { //FixedPriceItem
 			$priceTypes = array('fixed');
 			if ($sStrikePriceKind = getDBConfigValue('ebay.strike.price.kind', $mpId, 'DontUse') != 'DontUse') {
 				$priceTypes[] = 'strike';
