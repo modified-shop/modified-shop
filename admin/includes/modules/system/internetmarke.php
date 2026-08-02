@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-    
+
   // include needed classes
   require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
 
@@ -24,11 +24,11 @@
     var $version;
     var $_check;
     var $properties;
-    
+
     var $carrier_name = 'Deutsche Post';
     var $carrier_tracking_link = 'https://www.deutschepost.de/sendung/simpleQueryResult.html?form.sendungsnummer=$1&form.einlieferungsdatum_tag=$3&form.einlieferungsdatum_monat=$4&form.einlieferungsdatum_jahr=$5';
-    
-    function __construct() {          
+
+    function __construct() {
       $this->version = '1.22';
       $this->code = 'internetmarke';
       $this->title = MODULE_INTERNETMARKE_TEXT_TITLE;
@@ -68,7 +68,7 @@
 
     function process($file) {
       global $messageStack;
-      
+
       if (isset($_POST)
           && count($_POST) > 0
           && !isset($_GET['subaction'])
@@ -78,14 +78,14 @@
         xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                          SET configuration_value = '".xtc_db_input(implode(',', $pageformats))."'
                        WHERE configuration_key = 'MODULE_INTERNETMARKE_PAGEFORMATS'");
-        
+
         xtc_db_query("UPDATE `internetmarke` SET SEL = 0");
         $prices = $this->normalizeIntegerArray(isset($_POST['price']) ? $_POST['price'] : array());
         if (count($prices) > 0) {
            xtc_db_query("UPDATE `internetmarke`
                             SET SEL = 1
                           WHERE PROID IN (".implode(',', $prices).")");
-         
+
         }
 
         if (isset($_POST['configuration']['MODULE_INTERNETMARKE_CARRIER'])) {
@@ -97,7 +97,7 @@
           $this->configureCarrier($carrier_id);
         }
       }
-      
+
       if (isset($_GET['subaction'])) {
         if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
           return;
@@ -107,10 +107,10 @@
           case 'im_update':
             $filename = DIR_FS_CATALOG.'cache/ppl.csv';
             $downloaded = false;
-            
+
             modified_api::reset();
             $response = modified_api::request('internetmarke/pplupdate');
-            
+
             if ($response != null
                 && is_array($response)
                 && isset($response['requestURL'])
@@ -200,7 +200,7 @@
               $messageStack->add_session(MODULE_INTERNETMARKE_TEXT_UPDATE_ERROR, 'error');
             }
             break;
-          
+
           case 'im_install':
             if (MODULE_INTERNETMARKE_CARRIER_STATUS != 'true') {
               $carrier_id = $this->getCarrierId();
@@ -236,7 +236,7 @@
         $DHLInternetmarke = new DHLInternetmarke(array());
         $formats_array = explode(',', MODULE_INTERNETMARKE_PAGEFORMATS);
         $result = $DHLInternetmarke->getPageFormats();
-                    
+
         if (isset($result['formats'])
             && is_array($result['formats'])
             && count($result['formats']) > 0
@@ -264,20 +264,20 @@
           $formats_string .= '</div>';
         }
       }
-      
+
       $price_string = '';
       $price_query = xtc_db_query("SELECT *
                                      FROM `internetmarke`");
       while ($price = xtc_db_fetch_array($price_query)) {
         $price_string .= xtc_draw_checkbox_field('price[]', $price['PROID'], ($price['SEL'] != 0)).' '.encode_htmlspecialchars($price['PRODNAME']).'<br>';
       }
-      
+
       return array(
-        'text' => (($formats_string != '') ? 
+        'text' => (($formats_string != '') ?
                     MODULE_INTERNETMARKE_PAGEFORMAT_TITLE.
                     MODULE_INTERNETMARKE_PAGEFORMAT_DESC.
                     $formats_string : '').
-                  (($price_string != '') ? 
+                  (($price_string != '') ?
                     MODULE_INTERNETMARKE_PRICE_TITLE.
                     MODULE_INTERNETMARKE_PRICE_DESC.
                     $price_string : '').
@@ -291,8 +291,8 @@
         if (defined('MODULE_INTERNETMARKE_STATUS')) {
           $this->_check = true;
         } else {
-          $check_query = xtc_db_query("SELECT configuration_value 
-                                         FROM " . TABLE_CONFIGURATION . " 
+          $check_query = xtc_db_query("SELECT configuration_value
+                                         FROM " . TABLE_CONFIGURATION . "
                                         WHERE configuration_key = 'MODULE_INTERNETMARKE_STATUS'");
           $this->_check = xtc_db_num_rows($check_query);
         }
@@ -301,7 +301,7 @@
     }
 
     function install() {
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_INTERNETMARKE_STATUS', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");  
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_INTERNETMARKE_STATUS', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_INTERNETMARKE_PORTO_USER', '',  '6', '1', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_INTERNETMARKE_PORTO_PASS', '',  '6', '1', 'xtc_cfg_password_field_module(', 'xtc_cfg_display_password', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_INTERNETMARKE_CARRIER_STATUS', 'false',  '6', '1', now())");
@@ -478,27 +478,27 @@
       );
     }
   }
-  
+
   if (!function_exists('xtc_cfg_select_carrier')) {
     function xtc_cfg_select_carrier($cfg_value, $cfg_key) {
       $carriers = array();
-      $carriers_query = xtc_db_query("SELECT carrier_id, 
-                                             carrier_name 
-                                        FROM ".TABLE_CARRIERS." 
+      $carriers_query = xtc_db_query("SELECT carrier_id,
+                                             carrier_name
+                                        FROM ".TABLE_CARRIERS."
                                     ORDER BY carrier_sort_order ASC");
       while ($carrier = xtc_db_fetch_array($carriers_query)) {
         $carriers[] = array('id' => $carrier['carrier_id'], 'text' => $carrier['carrier_name']);
       }
 
       return xtc_draw_pull_down_menu('configuration['.$cfg_key.']', $carriers, $cfg_value);
-    }    
+    }
   }
 
   if (!function_exists('xtc_cfg_display_carrier')) {
     function xtc_cfg_display_carrier($cfg_value) {
       $carriers = array();
-      $carriers_query = xtc_db_query("SELECT carrier_name 
-                                        FROM ".TABLE_CARRIERS." 
+      $carriers_query = xtc_db_query("SELECT carrier_name
+                                        FROM ".TABLE_CARRIERS."
                                        WHERE carrier_id = '".(int)$cfg_value."'");
       if (xtc_db_num_rows($carriers_query) > 0) {
         $carrier = xtc_db_fetch_array($carriers_query);

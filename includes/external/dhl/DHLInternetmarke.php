@@ -7,7 +7,7 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
   // include needed function
@@ -43,16 +43,16 @@
     function __construct($data, $init = true) {
       $this->loglevel = defined('MODULE_INTERNETMARKE_LOGLEVEL') ? MODULE_INTERNETMARKE_LOGLEVEL : 'ERROR';
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_dhl_internetmarke_%s_%s.log', 'internetmarke', strtolower($this->loglevel));
-      
+
       $this->data = array(
         'user'          => MODULE_INTERNETMARKE_PORTO_USER,
         'signature'     => MODULE_INTERNETMARKE_PORTO_PASS,
         'api_user'      => 'lWh2GbG4I1VyVRvADeWNiWGNKVPI4Wfk',
         'api_password'  => 'PUrMdYgQnh9ko8ii',
       );
-      
+
       $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
-     
+
       $this->info = array(
         'name'            => MODULE_INTERNETMARKE_FIRSTNAME . ' ' . MODULE_INTERNETMARKE_LASTNAME,
         'firstname'       => MODULE_INTERNETMARKE_FIRSTNAME,
@@ -67,12 +67,12 @@
         'country_iso_3'   => $country['countries_iso_code_3'],
       );
       $this->info = $this->encode_request($this->info);
-      
+
       $this->format = isset($data['format']) && is_scalar($data['format']) ? (int)$data['format'] : 0;
       $this->row = isset($data['row']) && is_scalar($data['row']) ? (int)$data['row'] : 0;
       $this->column = isset($data['column']) && is_scalar($data['column']) ? (int)$data['column'] : 0;
       $this->product = isset($data['product']) && is_scalar($data['product']) ? (int)$data['product'] : 0;
-               
+
       if ($init === true
           && $this->data['user'] != ''
           && $this->data['signature'] != ''
@@ -107,7 +107,7 @@
         $result['message'] = $this->message;
         return $result;
       }
-          
+
       $headers = array(
         'Authorization' => 'Bearer '.$this->data['access_token'],
         'Content-Type' => 'application/json'
@@ -121,7 +121,7 @@
       }
 
       $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/app/shoppingcart/pdf'), $headers, $body);
-     
+
       try {
         $response = $this->client->send($request);
         $response = json_decode($response->getBody()->getContents(), true);
@@ -156,9 +156,9 @@
           $this->message['error'][] = $exception_message;
         }
       }
-      
+
       $result['message'] = $this->message;
-      
+
       return $result;
     }
 
@@ -662,7 +662,7 @@
     }
 
 
-    public function getPageFormats($id = '', $single = false) {      
+    public function getPageFormats($id = '', $single = false) {
       $formats_array = array();
 
       $result = array(
@@ -721,16 +721,16 @@
         } else {
           $this->message['error'][] = 'The Internetmarke API returned an unexpected response.';
         }
-        
+
       } catch (Exception $ex) {
         $this->handleException($ex, 'getPageFormats');
       }
-      
+
       $result['message'] = $this->message;
-      
+
       if ($id != '') {
         $id_array = explode(',', $id);
-                
+
         if ($single === false) {
           $selected_formats_array = array();
           foreach ($id_array as $id) {
@@ -743,7 +743,7 @@
           $result['formats'] = isset($formats_array[$id_array[0]]) ? $formats_array[$id_array[0]] : array();
         }
       }
-      
+
       return $result;
     }
 
@@ -752,7 +752,7 @@
       $headers = array(
         'Content-Type' => 'application/x-www-form-urlencoded'
       );
-      
+
       $options = array(
         'form_params' => array(
           'client_id' => $this->data['api_user'],
@@ -762,9 +762,9 @@
           'grant_type' => 'client_credentials',
         )
       );
-      
+
       if (!isset($this->data['access_token'])) {
-        $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/user'), $headers);      
+        $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/user'), $headers);
 
         try {
           $response = $this->client->send($request, $options);
@@ -935,7 +935,7 @@
     private function buildLabelData() {
       // customers_data
       $customers_data = $this->buildCustomersData();
-            
+
       $Shipment = new stdClass();
       $Shipment->type = 'AppShoppingCartPDFRequest';
       $Shipment->shopOrderId = $this->data['shopOrderId'];
@@ -949,21 +949,21 @@
       $Address = new stdClass();
       $Address->sender = $this->buildShippingDetails($this->info);
       $Address->receiver = $this->buildShippingDetails($customers_data);
-      
+
       $Position = new stdClass();
       $Position->labelX = $this->column;
       $Position->labelY = $this->row;
       $Position->page = 1;
-      
+
       $Positions = new stdClass();
       $Positions->productCode = $this->product;
       $Positions->address = $Address;
       $Positions->voucherLayout = 'ADDRESS_ZONE';
       $Positions->position = $Position;
       $Positions->positionType = 'AppShoppingCartPDFPosition';
-      
+
       $Shipment->positions[] = $Positions;
-      
+
       return $Shipment;
     }
 
@@ -1070,7 +1070,7 @@
     }
 
 
-    private function buildCustomersData() { 
+    private function buildCustomersData() {
       $customers_data = array(
         'name' => $this->order->delivery['name'],
         'firstname' => $this->order->delivery['firstname'],
@@ -1086,10 +1086,10 @@
       );
 
       $customers_data = $this->encode_request($customers_data);
-      
+
       // global data
       $this->data['orders_id'] = $this->order->info['order_id'];
-  
+
       return $customers_data;
     }
 
@@ -1103,10 +1103,10 @@
       {
          $Address->additionalName = $this->truncateText(($data['firstname'] . ' ' . $data['lastname']), 35);
       }
-      
+
       if (isset($data['suburb'])
-          && $data['suburb'] != '' 
-          ) 
+          && $data['suburb'] != ''
+          )
       {
         $Address->addressLine2 = $data['suburb'];
       }
@@ -1114,7 +1114,7 @@
       $Address->postalCode = $data['postcode'];
       $Address->city = $data['city'];
       $Address->country = $data['country_iso_3'];
-  
+
       return $Address;
     }
 
@@ -1133,15 +1133,15 @@
         preg_match_all("![0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER);
       }
       $addr = end($matches);
-      
+
       $address = array(
         'street_name' => ((isset($addr[0])) ? trim(str_replace(trim($addr[0]), '', $street_address), ', ') : $street_address),
         'street_number' => ((isset($addr[0])) ? trim($addr[0]) : ''),
       );
-      
+
       $street_address = implode(' ', $address);
       $street_address = preg_replace('/\s+/', ' ', $street_address);
-      
+
       return $street_address;
     }
 
@@ -1154,20 +1154,20 @@
           $array[$key] = ((!is_bool($value)) ? encode_utf8(decode_htmlentities($value), $_SESSION['language_charset'], true) : $value);
         }
       }
-    
+
       return $array;
     }
 
-    
+
     private function get_country_iso_3($iso_code_2) {
-      $country_query = xtc_db_query("SELECT countries_iso_code_3 
+      $country_query = xtc_db_query("SELECT countries_iso_code_3
                                        FROM ".TABLE_COUNTRIES."
                                       WHERE countries_iso_code_2 = '".xtc_db_input($iso_code_2)."'");
       if (xtc_db_num_rows($country_query) > 0) {
         $country = xtc_db_fetch_array($country_query);
         return $country['countries_iso_code_3'];
       }
-      
+
       return $iso_code_2;
     }
   }
