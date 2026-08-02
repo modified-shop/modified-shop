@@ -42,6 +42,26 @@ if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
 }
 
+if (isset($_POST['processing_success'])) {
+  unset($_SESSION['checkout_completed_order_id']);
+
+  $processing_key = isset($_POST['checkout_key']) && is_string($_POST['checkout_key']) ? $_POST['checkout_key'] : '';
+  $status_token = isset($_POST['status_token']) && is_string($_POST['status_token']) ? $_POST['status_token'] : '';
+
+  require_once (DIR_WS_CLASSES.'checkout.php');
+  $checkout_processing = checkout::find_status($processing_key, $status_token);
+  if (!is_array($checkout_processing)
+      || $checkout_processing['processing_status'] !== 'completed'
+      || (int)$checkout_processing['customers_id'] !== (int)$_SESSION['customer_id']
+      || (int)$checkout_processing['orders_id'] <= 0
+      )
+  {
+    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
+  }
+
+  $_SESSION['checkout_completed_order_id'] = (int)$checkout_processing['orders_id'];
+}
+
 $orders_id_condition = '';
 if (isset($_SESSION['checkout_completed_order_id']) && (int)$_SESSION['checkout_completed_order_id'] > 0) {
   $orders_id_condition = " AND orders_id = '" . (int)$_SESSION['checkout_completed_order_id'] . "'";

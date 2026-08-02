@@ -13,12 +13,14 @@
 class checkout
 {
   private $customers_id;
+  private $phase_token;
   private $processing_key;
 
   function __construct($customers_id)
   {
     $this->customers_id = (int)$customers_id;
     $this->processing_key = $this->get_or_create_key();
+    $this->phase_token = $this->get_or_create_phase_token();
   }
 
   function get_key()
@@ -90,6 +92,7 @@ class checkout
     unset($_SESSION['checkout_completed_order_id']);
     unset($_SESSION['checkout_processing_owner_token']);
     unset($_SESSION['checkout_processing_retry_token']);
+    $this->rotate_phase_token();
 
     return $this->processing_key;
   }
@@ -97,6 +100,7 @@ class checkout
   function prepare_retry()
   {
     $_SESSION['checkout_processing_retry_token'] = bin2hex(random_bytes(32));
+    $this->rotate_phase_token();
   }
 
   function find()
@@ -139,7 +143,8 @@ class checkout
                      AND processing_status = 'processing'
                      AND last_modified < DATE_SUB(NOW(), INTERVAL " . $timeout . " SECOND)");
 
-    $processing_query = xtc_db_query("SELECT orders_id,
+    $processing_query = xtc_db_query("SELECT customers_id,
+                                             orders_id,
                                              processing_status
                                         FROM " . TABLE_CHECKOUT_PROCESSING . "
                                        WHERE checkout_key = '" . xtc_db_input($processing_key) . "'
@@ -155,6 +160,16 @@ class checkout
 
   function claim()
   {
+    $request_token = '';
+    if (isset($_GET['checkout_token']) && is_string($_GET['checkout_token'])) {
+      $request_token = $_GET['checkout_token'];
+    } elseif (isset($_POST['checkout_token']) && is_string($_POST['checkout_token'])) {
+      $request_token = $_POST['checkout_token'];
+    }
+    if (!hash_equals($this->phase_token, $request_token)) {
+      return false;
+    }
+
     $owner_token = bin2hex(random_bytes(32));
     $status_token = bin2hex(random_bytes(32));
     $request_fingerprint = $this->get_request_fingerprint();
@@ -172,6 +187,7 @@ class checkout
 
     if (xtc_db_affected_rows() === 1) {
       $_SESSION['checkout_processing_owner_token'] = $owner_token;
+      $this->rotate_phase_token();
 
       return true;
     }
@@ -188,6 +204,7 @@ class checkout
 
     if (xtc_db_affected_rows() === 1) {
       $_SESSION['checkout_processing_owner_token'] = $owner_token;
+      $this->rotate_phase_token();
 
       return true;
     }
@@ -206,6 +223,7 @@ class checkout
 
       if (xtc_db_affected_rows() === 1) {
         $_SESSION['checkout_processing_owner_token'] = $owner_token;
+        $this->rotate_phase_token();
 
         return true;
       }
@@ -319,8 +337,32 @@ class checkout
 
   function javascript_confirmation()
   {
-    $js = '      function showCheckoutProcessing() {' . "\n" .
+    $js = '      function getCheckoutProcessingOverlay() {' . "\n" .
           '        var overlay = document.getElementById("checkout-processing-overlay");' . "\n" .
+          '        if (!overlay) {' . "\n" .
+          '          overlay = document.createElement("div");' . "\n" .
+          '          overlay.id = "checkout-processing-overlay";' . "\n" .
+          '          overlay.setAttribute("role", "status");' . "\n" .
+          '          overlay.setAttribute("aria-live", "polite");' . "\n" .
+          '          overlay.setAttribute("aria-hidden", "true");' . "\n" .
+          '          var content = document.createElement("div");' . "\n" .
+          '          content.className = "checkout-processing-overlay-content";' . "\n" .
+          '          var spinner = document.createElement("div");' . "\n" .
+          '          spinner.className = "checkout-processing-spinner";' . "\n" .
+          '          var title = document.createElement("h2");' . "\n" .
+          '          title.textContent = ' . json_encode(TEXT_CHECKOUT_PROCESSING_TITLE, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';' . "\n" .
+          '          var message = document.createElement("p");' . "\n" .
+          '          message.textContent = ' . json_encode(TEXT_CHECKOUT_PROCESSING_MESSAGE, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';' . "\n" .
+          '          content.appendChild(spinner);' . "\n" .
+          '          content.appendChild(title);' . "\n" .
+          '          content.appendChild(message);' . "\n" .
+          '          overlay.appendChild(content);' . "\n" .
+          '          document.body.appendChild(overlay);' . "\n" .
+          '        }' . "\n" .
+          '        return overlay;' . "\n" .
+          '      }' . "\n\n" .
+          '      function showCheckoutProcessing() {' . "\n" .
+          '        var overlay = getCheckoutProcessingOverlay();' . "\n" .
           '        if (overlay) {' . "\n" .
           '          overlay.style.display = "block";' . "\n" .
           '          overlay.setAttribute("aria-hidden", "false");' . "\n" .
@@ -338,6 +380,7 @@ class checkout
           '        }, 0);' . "\n" .
           '      }' . "\n\n" .
           '      var form = document.getElementById("checkout_confirmation");' . "\n" .
+          '      getCheckoutProcessingOverlay();' . "\n" .
           '      if (form) {' . "\n" .
           '        if (window.jQuery) {' . "\n" .
           '          window.jQuery(form).on("submit.checkoutProcessing", handleCheckoutSubmit);' . "\n" .
@@ -353,15 +396,10 @@ class checkout
   static function javascript_processing()
   {
     $js = '      var container = document.querySelector(".checkout_processing");' . "\n\n" .
-          '      function redirectToError(checkoutKey, statusToken) {' . "\n" .
+          '      function postRedirect(url, parameters) {' . "\n" .
           '        var form = document.createElement("form");' . "\n" .
           '        form.method = "post";' . "\n" .
-          '        form.action = container.getAttribute("data-error-url");' . "\n" .
-          '        var parameters = {' . "\n" .
-          '          processing_error: "1",' . "\n" .
-          '          checkout_key: checkoutKey,' . "\n" .
-          '          status_token: statusToken' . "\n" .
-          '        };' . "\n" .
+          '        form.action = url;' . "\n" .
           '        Object.keys(parameters).forEach(function (name) {' . "\n" .
           '          var input = document.createElement("input");' . "\n" .
           '          input.type = "hidden";' . "\n" .
@@ -371,6 +409,20 @@ class checkout
           '        });' . "\n" .
           '        document.body.appendChild(form);' . "\n" .
           '        form.submit();' . "\n" .
+          '      }' . "\n\n" .
+          '      function redirectToSuccess(checkoutKey, statusToken) {' . "\n" .
+          '        postRedirect(container.getAttribute("data-success-url"), {' . "\n" .
+          '          processing_success: "1",' . "\n" .
+          '          checkout_key: checkoutKey,' . "\n" .
+          '          status_token: statusToken' . "\n" .
+          '        });' . "\n" .
+          '      }' . "\n\n" .
+          '      function redirectToError(checkoutKey, statusToken) {' . "\n" .
+          '        postRedirect(container.getAttribute("data-error-url"), {' . "\n" .
+          '          processing_error: "1",' . "\n" .
+          '          checkout_key: checkoutKey,' . "\n" .
+          '          status_token: statusToken' . "\n" .
+          '        });' . "\n" .
           '      }' . "\n\n" .
           '      var status = new URLSearchParams(window.location.hash.substring(1));' . "\n" .
           '      var checkoutKey = status.get("checkout_key");' . "\n" .
@@ -392,7 +444,7 @@ class checkout
           '          .then(function (response) { return response.json(); })' . "\n" .
           '          .then(function (result) {' . "\n" .
           '            if (result.status === "completed") {' . "\n" .
-          '              window.location.replace(container.getAttribute("data-success-url"));' . "\n" .
+          '              redirectToSuccess(checkoutKey, statusToken);' . "\n" .
           '              return;' . "\n" .
           '            }' . "\n" .
           '            if (result.status === "failed" || result.status === "unknown") {' . "\n" .
@@ -429,6 +481,7 @@ class checkout
   private function get_or_create_key()
   {
     if (!isset($_SESSION['checkout_processing_key'])
+        || !is_string($_SESSION['checkout_processing_key'])
         || !preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_key'])
         )
     {
@@ -441,6 +494,7 @@ class checkout
   private function get_owner_token()
   {
     if (isset($_SESSION['checkout_processing_owner_token'])
+        && is_string($_SESSION['checkout_processing_owner_token'])
         && preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_owner_token'])
         )
     {
@@ -448,6 +502,27 @@ class checkout
     }
 
     return false;
+  }
+
+  private function get_or_create_phase_token()
+  {
+    if (!isset($_SESSION['checkout_processing_phase_token'])
+        || !is_string($_SESSION['checkout_processing_phase_token'])
+        || !preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_phase_token'])
+        )
+    {
+      return $this->rotate_phase_token();
+    }
+
+    return $_SESSION['checkout_processing_phase_token'];
+  }
+
+  private function rotate_phase_token()
+  {
+    $this->phase_token = bin2hex(random_bytes(32));
+    $_SESSION['checkout_processing_phase_token'] = $this->phase_token;
+
+    return $this->phase_token;
   }
 
   private function get_request_fingerprint()

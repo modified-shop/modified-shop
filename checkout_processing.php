@@ -35,7 +35,17 @@ $smarty->assign('CHECKOUT_PROCESSING_SUCCESS_URL', xtc_href_link(FILENAME_CHECKO
 $smarty->assign('CHECKOUT_PROCESSING_ERROR_URL', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $session_parameters, 'SSL', false));
 $smarty->assign('CHECKOUT_JAVASCRIPT', checkout::javascript_processing());
 
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_processing.html');
+$checkout_template = CURRENT_TEMPLATE.'/module/checkout_processing.html';
+if (!is_file(DIR_FS_CATALOG.'templates/'.$checkout_template)) {
+  $checkout_template = 'tpl_modified/module/checkout_processing.html';
+}
+
+$main_content = $smarty->fetch($checkout_template);
+if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/checkout_processing.css')) {
+  $main_content = '<link rel="stylesheet" property="stylesheet" href="'
+                  .DIR_WS_BASE.'templates/tpl_modified/css/checkout_processing.css" type="text/css" media="screen" />'
+                  .$main_content;
+}
 $smarty->assign('main_content', $main_content);
 
 $smarty->caching = 0;

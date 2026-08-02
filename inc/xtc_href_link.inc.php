@@ -27,6 +27,26 @@
         
     $parameters = str_replace('&amp;', '&', $parameters); // undo W3C-Conform link
 
+    if (defined('FILENAME_CHECKOUT_PROCESS')
+        && $page == FILENAME_CHECKOUT_PROCESS
+        && isset($_SESSION['customer_id'])
+        )
+    {
+      if (!isset($_SESSION['checkout_processing_phase_token'])
+          || !is_string($_SESSION['checkout_processing_phase_token'])
+          || !preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_phase_token'])
+          )
+      {
+        $_SESSION['checkout_processing_phase_token'] = bin2hex(random_bytes(32));
+      }
+
+      parse_str($parameters, $checkout_parameters);
+      if (!isset($checkout_parameters['checkout_token'])) {
+        $parameters .= (($parameters != '') ? '&' : '')
+                       . 'checkout_token=' . rawurlencode($_SESSION['checkout_processing_phase_token']);
+      }
+    }
+
     $link = $connection == 'SSL' && (ENABLE_SSL || $request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER;
 
     if (defined('RUN_MODE_ADMIN') && $admin === false) {
