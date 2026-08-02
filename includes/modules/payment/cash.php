@@ -39,7 +39,7 @@ class cash {
     $this->info = MODULE_PAYMENT_CASH_TEXT_INFO;
     if ($this->check() > 0) {
       if ((int) MODULE_PAYMENT_CASH_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_CASH_ORDER_STATUS_ID;
+        $this->order_status = (int) MODULE_PAYMENT_CASH_ORDER_STATUS_ID;
       }
     }
 		if (!defined('RUN_MODE_ADMIN') && is_object($order)) {

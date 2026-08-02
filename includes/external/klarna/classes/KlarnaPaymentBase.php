@@ -35,7 +35,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function init() {    
-    $this->klarna_version = '1.21';
+    $this->klarna_version = '1.22';
     
     $this->title = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '';
     $this->description = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') : '';
@@ -47,7 +47,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     if ($this->check() > 0) {
       $this->order_status = DEFAULT_ORDERS_STATUS_ID;
       if ((int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID') > 0) {
-        $this->order_status = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
+        $this->order_status = (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
       }
     }
     

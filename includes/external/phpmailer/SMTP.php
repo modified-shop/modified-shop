@@ -36,7 +36,7 @@ class SMTP
      * @var string
      * @deprecated This constant will be removed in PHPMailer 8.0. Use `PHPMailer::VERSION` instead.
      */
-    const VERSION = '7.0.2';
+    const VERSION = '7.1.1';
 
     /**
      * SMTP line break constant.
@@ -672,10 +672,8 @@ class SMTP
                         return false;
                     }
                     //If the server answers with 334, send an empty line and wait for a 235
-                    if (
-                        substr($this->last_reply, 0, 3) === '334'
-                        && $this->sendCommand('AUTH End', '', 235)
-                    ) {
+                    if (substr($this->last_reply, 0, 3) === '334') {
+                        $this->sendCommand('AUTH End', '', 235);
                         return false;
                     }
                 }
@@ -1243,7 +1241,7 @@ class SMTP
         //it can leak credentials, so hide credentials in all but lowest level
         if (
             self::DEBUG_LOWLEVEL > $this->do_debug &&
-            in_array($command, ['User & Password', 'Username', 'Password'], true)
+            in_array($command, ['User & Password', 'Username', 'Password', 'AUTH', 'OAuth TOKEN'], true)
         ) {
             $this->edebug('CLIENT -> SERVER: [credentials hidden]', self::DEBUG_CLIENT);
         } else {
@@ -1289,7 +1287,7 @@ class SMTP
      *   3. EHLO has been sent -
      *     $name == 'HELO'|'EHLO': returns the server name
      *     $name == any other string: if extension $name exists, returns True
-     *       or its options (e.g. AUTH mechanisms supported). Otherwise returns False.
+     *       or its options (e.g. AUTH mechanisms supported). Otherwise, returns False.
      *
      * @param string $name Name of SMTP extension or 'HELO'|'EHLO'
      *

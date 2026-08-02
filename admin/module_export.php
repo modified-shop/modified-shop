@@ -237,7 +237,7 @@
     );
     $alphabet = range('A', 'Z');
   
-    foreach(auto_include($module_directory, substr($file_extension, 1)) as $file) {
+    foreach(auto_include($module_directory,substr($file_extension, 1)) as $file) {
       $filename = basename($file);
     
       if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename)) {

@@ -26,7 +26,7 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
     $query = xtc_db_query(
         sprintf(
             'SELECT *,
-                (SELECT `function` FROM `micropayment_log` WHERE `order_id` = `micropayment_orders`.`order_id` ORDER BY `created` DESC LIMIT 1) `mcp_status` FROM micropayment_orders
+                (SELECT `function` FROM `micropayment_log` WHERE `order_id` = `micropayment_orders`.`order_id` ORDER BY `created` DESC, `id` DESC LIMIT 1) `mcp_status` FROM micropayment_orders
              LEFT JOIN `orders` ON `orders`.`orders_id` = `micropayment_orders`.`order_id`
              WHERE `micropayment_orders`.`createdon` <= DATE_SUB(NOW(),INTERVAL %s DAY)
              ',
@@ -39,8 +39,8 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
         } elseif($data['orders_status'] != 1 && $data['orders_status'] != MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID) {
             continue;
         } else {
-            $model = new micropayment_method();
-            $model->mcp_remove_order($data['order_id'],true);
+            require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+            xtc_remove_order((int)$data['order_id'], ((STOCK_LIMITED == 'true') ? 'on' : false));
             xtc_db_query(sprintf('DELETE FROM micropayment_orders WHERE order_id = "%s"',$data['order_id']));
             xtc_db_query(sprintf('DELETE FROM micropayment_log WHERE order_id = "%s"',$data['order_id']));
         }

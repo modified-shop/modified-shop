@@ -369,7 +369,8 @@
             && $order_data_values['products_price'] > 0
             )
         {
-          $order_data[$index]['PRODUCTS_VPE'] = $xtPrice->xtcFormatCurrency(($order_data_values['products_price'] * (1 / $order_data_values['products_vpe_value'])), 0, true).TXT_PER.$order_data_values['products_vpe'];
+          $products_price = round((float)$order_data_values['products_price'], $xtPrice->get_decimal_places());
+          $order_data[$index]['PRODUCTS_VPE'] = $xtPrice->xtcFormatCurrency(($products_price * (1 / $order_data_values['products_vpe_value'])), 0, true).TXT_PER.$order_data_values['products_vpe'];
         }
         
         if (!defined('RUN_MODE_ADMIN')) {

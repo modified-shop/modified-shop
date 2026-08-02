@@ -20,7 +20,7 @@ class micropayment_method extends micropayment_helper
     var $_check;
 
     var $enabled = true;
-    var $version = '2.3.1';
+    var $version = '2.3.4';
     var $rslcode = 'r120';
     var $get_url_called = false;
 
@@ -34,7 +34,7 @@ class micropayment_method extends micropayment_helper
         
         $this->form_action_url = 'not_used';
         $this->tmpOrders = true;
-        $this->tmpStatus = ((defined('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID')) ? MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID : '');
+        $this->tmpStatus = (int) ((defined('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID')) ? MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID : DEFAULT_ORDERS_STATUS_ID);
         if (isset($this->code) && $this->code != '') {
           $this->check_enabled();
           $this->check();
@@ -166,8 +166,8 @@ class micropayment_method extends micropayment_helper
         if (!$this->check()) {
             $this->enabled = false;
         }
-        $minimumAmount = (double)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MINIMUM_AMOUNT');
-        $maximumAmount = (double)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MAXIMUM_AMOUNT');
+        $minimumAmount = (float)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MINIMUM_AMOUNT');
+        $maximumAmount = (float)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MAXIMUM_AMOUNT');
         $order_total = $order->info['total'];
 
         if (($minimumAmount > 0 && $order_total < $minimumAmount) || ($maximumAmount > 0 && $order_total > $maximumAmount)) {
@@ -183,9 +183,36 @@ class micropayment_method extends micropayment_helper
         return false;
     }
 
+    protected function getOrCreateOrderStatusId($configurationKey, $germanTitle, $englishTitle)
+    {
+        $statusId = $this->getConfig($configurationKey);
+        if ($statusId !== null) {
+            return $statusId;
+        }
+
+        $lastStatusArray = xtc_db_query('SELECT MAX(`orders_status_id`) last_id FROM '.TABLE_ORDERS_STATUS);
+        $lastStatus      = xtc_db_fetch_array($lastStatusArray);
+        $statusId        = $lastStatus['last_id'] + 1;
+
+        $this->_createOrderStatus($statusId, 2, $germanTitle);
+        $statusId = $this->_createOrderStatus($statusId, 1, $englishTitle);
+        $this->setConfig($configurationKey, $statusId);
+
+        return $statusId;
+    }
+
     function install()
     {
-        if (!$this->check_is_service_installed()) {
+        if ($this->check_is_service_installed()) {
+          // Reuse existing order status IDs when installing another Micropayment payment method
+          $pendingPaymentId = $this->getOrCreateOrderStatusId('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID', MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_GERMAN_TITLE, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ENGLISH_TITLE);
+          $processingId     = $this->getOrCreateOrderStatusId('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID', MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_GERMAN_TITLE, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ENGLISH_TITLE);
+          $cancelledId      = $this->getOrCreateOrderStatusId('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID', MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_GERMAN_TITLE, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ENGLISH_TITLE);
+          $paymentReviewId  = $this->getOrCreateOrderStatusId('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID', MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_GERMAN_TITLE, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ENGLISH_TITLE);
+          $conflictId       = $this->getOrCreateOrderStatusId('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID', MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_GERMAN_TITLE, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ENGLISH_TITLE);
+          $partPayId        = $this->getOrCreateOrderStatusId('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID', MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_GERMAN_TITLE, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ENGLISH_TITLE);
+          $refundedId       = $this->getOrCreateOrderStatusId('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID', MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_GERMAN_TITLE, MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ENGLISH_TITLE);
+        } else {
           require_once(dirname(__FILE__).'/../../../lang/'.$_SESSION['language'].'/modules/payment/mcp_service.php');
           
           $lastStatusArray = xtc_db_query('SELECT MAX(`orders_status_id`) last_id FROM '.TABLE_ORDERS_STATUS);

@@ -169,7 +169,7 @@ class micropayment_helper
 
     }
 
-    private function setConfig($name,$value)
+    protected function setConfig($name,$value)
     {
         xtc_db_query(
             'UPDATE `' . TABLE_CONFIGURATION . '`
@@ -239,13 +239,14 @@ class micropayment_helper
 
     function getLastEventFromMicropaymentLog($orderId)
     {
-        $event = xtc_db_query(sprintf('SELECT `function` FROM `micropayment_log` WHERE `order_id` = "%s" ORDER BY `created` DESC LIMIT 1',xtc_db_prepare_input($orderId)));
+        $event = xtc_db_query(sprintf('SELECT `function` FROM `micropayment_log` WHERE `order_id` = "%s" ORDER BY `created` DESC, `id` DESC LIMIT 1',xtc_db_prepare_input($orderId)));
         $event = xtc_db_fetch_array($event);
-        if(count($event)>0) {
+
+        if(is_array($event) && isset($event['function'])) {
             return $event['function'];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
 }

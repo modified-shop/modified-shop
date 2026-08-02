@@ -324,17 +324,24 @@ function SendOrders ()
       $cust_dob = '';
       $cust_gender = '';
     }
-    if ($orders['billing_company']=='') $orders['billing_company']=$orders['delivery_company'];
-    if ($orders['billing_name']=='')  $orders['billing_name']=$orders['delivery_name'];
-    if ($orders['billing_lastname']=='') $orders['billing_lastname']=$orders['delivery_lastname'];
-    if ($orders['billing_firstname']=='') $orders['billing_firstname']=$orders['delivery_firstname'];
-    if ($orders['billing_street_address']=='') $orders['billing_street_address']=$orders['delivery_street_address'];
-    if ($orders['billing_postcode']=='')  $orders['billing_postcode']=$orders['delivery_postcode'];
-    if ($orders['billing_city']=='')  $orders['billing_city']=$orders['delivery_city'];
-    if ($orders['billing_suburb']=='') $orders['billing_suburb']=$orders['delivery_suburb'];
-    if ($orders['billing_state']=='')  $orders['billing_state']=$orders['delivery_state'];
-    if ($orders['billing_country']=='')  $orders['billing_country']=$orders['delivery_country'];
-    if ($orders['billing_country_iso_code_2']=='') $orders['billing_country_iso_code_2']=$orders['delivery_country_iso_code_2'];
+    if ($orders['billing_name'] == ''
+        && $orders['billing_street_address'] == ''
+        && $orders['billing_postcode'] == ''
+        && $orders['billing_city'] == ''
+        )
+    {
+      $orders['billing_company'] = $orders['delivery_company'];
+      $orders['billing_name'] = $orders['delivery_name'];
+      $orders['billing_lastname'] = $orders['delivery_lastname'];
+      $orders['billing_firstname'] = $orders['delivery_firstname'];
+      $orders['billing_street_address'] = $orders['delivery_street_address'];
+      $orders['billing_postcode'] = $orders['delivery_postcode'];
+      $orders['billing_city'] = $orders['delivery_city'];
+      $orders['billing_suburb'] = $orders['delivery_suburb'];
+      $orders['billing_state'] = $orders['delivery_state'];
+      $orders['billing_country'] = $orders['delivery_country'];
+      $orders['billing_country_iso_code_2'] = $orders['delivery_country_iso_code_2'];
+    }
 
     $schema  = '<ORDER_INFO>' . "\n" .
                '<ORDER_HEADER>' . "\n" .
@@ -1295,46 +1302,66 @@ function xtc_remove_product($product_id)
 
 function ManufacturersImageUpload ()
 {
-  global $_GET, $_POST;
+  global $_GET, $_POST, $accepted_image_extensions, $accepted_image_mime_types;
 
-  if ($manufacturers_image = &xtc_try_upload('manufacturers_image',DIR_FS_CATALOG.DIR_WS_IMAGES,'777', '', true))
+  $filename = '';
+  if ($manufacturers_image = xtc_try_upload('manufacturers_image',DIR_FS_CATALOG.DIR_WS_IMAGES.'manufacturers/original_images/','777', $accepted_image_extensions, $accepted_image_mime_types))
   {
+    $filename = $manufacturers_image->filename;
+    $manufacturers_image_name_process = $manufacturers_image_name = $manufacturers_image->filename;
+    define('DIR_FS_ADMIN', DIR_FS_CATALOG.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/'));
+    define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG.DIR_WS_IMAGES);
+
+    // generate images
+    require(DIR_FS_ADMIN.'includes/manufacturers_image.php');
+
     $code = 0;
     $message = 'OK';
   } else {
     $code = -1;
     $message = 'UPLOAD FAILED';
   }
-  print_xml_status ($code, $_POST['action'], $message, '', 'FILE_NAME', $manufacturers_image->filename);
+  print_xml_status ($code, $_POST['action'], $message, '', 'FILE_NAME', $filename);
 }
 
 //--------------------------------------------------------------
 
 function CategoriesImageUpload ()
 {
-  global $_GET, $_POST;
-  if ( $categories_image = &xtc_try_upload('categories_image',DIR_FS_CATALOG.DIR_WS_IMAGES.'categories/','777', '', true))
+  global $_GET, $_POST, $accepted_image_extensions, $accepted_image_mime_types;
+
+  $filename = '';
+  if ( $categories_image = xtc_try_upload('categories_image',DIR_FS_CATALOG.DIR_WS_IMAGES.'categories/original_images/','777', $accepted_image_extensions, $accepted_image_mime_types))
   {
+    $filename = $categories_image->filename;
+    $categories_image_name_process = $categories_image_name = $categories_image->filename;
+    define('DIR_FS_ADMIN', DIR_FS_CATALOG.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/'));
+    define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG.DIR_WS_IMAGES);
+
+    // generate images
+    require(DIR_FS_ADMIN.'includes/categories_image.php');
+
     $code = 0;
     $message = 'OK';
   } else {
     $code = -1;
     $message = 'UPLOAD FAILED';
   }
-  print_xml_status ($code, $_POST['action'], $message, '', 'FILE_NAME', $categories_image->filename);
+  print_xml_status ($code, $_POST['action'], $message, '', 'FILE_NAME', $filename);
 }
 
 //--------------------------------------------------------------
 
 function ProductsImageUpload ()
 {
-  global $_GET, $_POST;
+  global $_GET, $_POST, $accepted_image_extensions, $accepted_image_mime_types;
   
-  if ($products_image = &xtc_try_upload('products_image',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES,'777', '', true))
+  $filename = '';
+  if ($products_image = xtc_try_upload('products_image',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES,'777', $accepted_image_extensions, $accepted_image_mime_types))
   {
+    $filename = $products_image->filename;
     $products_image_name = $products_image_name_process = $products_image->filename;
     
-    // rewrite values to use resample classes
     define('DIR_FS_ADMIN', DIR_FS_CATALOG.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/'));
     define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
     define('DIR_FS_CATALOG_MIDI_IMAGES',DIR_FS_CATALOG.DIR_WS_MIDI_IMAGES);
@@ -1344,7 +1371,7 @@ function ProductsImageUpload ()
     define('DIR_FS_CATALOG_MINI_IMAGES',DIR_FS_CATALOG.DIR_WS_MINI_IMAGES);
     define('DIR_FS_CATALOG_IMAGES',DIR_FS_CATALOG.DIR_WS_IMAGES);
 
-    // generate resampled images
+    // generate images
     require(DIR_FS_ADMIN.'includes/product_thumbnail_images.php');
     require(DIR_FS_ADMIN.'includes/product_mini_images.php');
     require(DIR_FS_ADMIN.'includes/product_info_images.php');
@@ -1357,7 +1384,7 @@ function ProductsImageUpload ()
     $code = -1;
     $message = 'UPLOAD FAILED';
   }
-  print_xml_status ($code, $_POST['action'], $message, '', 'FILE_NAME', $products_image->filename);
+  print_xml_status ($code, $_POST['action'], $message, '', 'FILE_NAME', $filename);
 }
 
 //--------------------------------------------------------------
