@@ -31,12 +31,20 @@ class paypalgooglepay extends PayPalPaymentV2 {
 
 
   function confirmation() {
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::confirmation();
+    }
+
     return array ('title' => $this->description);
   }
 
 
   function process_button() {
     global $smarty, $order;
+
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::process_button();
+    }
     
     $smarty->clear_assign('CHECKOUT_BUTTON');
     
@@ -152,7 +160,11 @@ class paypalgooglepay extends PayPalPaymentV2 {
   }
 
 
-  function before_process() {	  
+  function before_process() {
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::before_process();
+    }
+
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
 
     if (!is_object($PayPalOrder)

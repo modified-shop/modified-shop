@@ -163,36 +163,23 @@ async function processPayment(paymentData) {
     });
 
     if (status === "PAYER_ACTION_REQUIRED") {
-      paypal
-        .Googlepay()
-        .initiatePayerAction({ orderId: id })
-        .then(async () => {
-          orderResponse = await fetch(DIR_WS_BASE+'ajax.php?ext=check_paypal_order&payment_method=paypalgooglepay');
-          if (orderResponse.ok) {
-            valid = await orderResponse.json();
-            if (valid === true) {
-              redirectGoogleSuccess();
-            } else {
-              reportGooglePayError("checkPaypalOrder", { message: "order not approved after payer action" });
-              redirectGoogleError();
-            }
-          } else {
-            reportGooglePayError("checkPaypalOrder", { message: "HTTP " + orderResponse.status });
-            redirectGoogleError();
-          }
-        })
-        .catch(function (err) {
-          reportGooglePayError("initiatePayerAction", err);
-          redirectGoogleError();
-        });
+      await paypal.Googlepay().initiatePayerAction({ orderId: id });
+
+      const orderResponse = await fetch(DIR_WS_BASE+'ajax.php?ext=check_paypal_order&payment_method=paypalgooglepay');
+      if (!orderResponse.ok || (await orderResponse.json()) !== true) {
+        throw new Error(orderResponse.ok ? "liability shift check failed" : "HTTP " + orderResponse.status);
+      }
+
+      redirectGoogleSuccess();
     } else if (status === "APPROVED") {
       redirectGoogleSuccess();
     } else {
-      redirectGoogleError();
+      throw new Error("Google Pay order not approved: " + status);
     }
   } catch (err) {
     reportGooglePayError("processPayment", err);
     redirectGoogleError();
+    throw err;
   }
 }
 
@@ -414,29 +401,15 @@ async function processGoogleCartPayment(orderId, paymentData) {
   });
 
   if (status === "PAYER_ACTION_REQUIRED") {
-    // resolved asynchronously - by the time this settles, the Google Pay
-    // sheet has already been closed with SUCCESS below, mirroring the
-    // checkout flow's processPayment()
-    paypal
-      .Googlepay()
-      .initiatePayerAction({ orderId: orderId })
-      .then(async function () {
-        const orderResponse = await fetch(DIR_WS_BASE + "ajax.php?ext=check_paypal_order&payment_method=paypalgooglepay");
-        if (orderResponse.ok && (await orderResponse.json()) === true) {
-          window.location.href = getGoogleCartSuccessUrl();
-        } else {
-          reportGooglePayError("cartCheckPaypalOrder", { message: orderResponse.ok ? "order not approved after payer action" : "HTTP " + orderResponse.status });
-          redirectGoogleCartError();
-        }
-      })
-      .catch(function (err) {
-        reportGooglePayError("cartInitiatePayerAction", err);
-        redirectGoogleCartError();
-      });
-    return;
+    await paypal.Googlepay().initiatePayerAction({ orderId: orderId });
+
+    const orderResponse = await fetch(DIR_WS_BASE + "ajax.php?ext=check_paypal_order&payment_method=paypalgooglepay");
+    if (!orderResponse.ok || (await orderResponse.json()) !== true) {
+      throw new Error(orderResponse.ok ? "liability shift check failed" : "HTTP " + orderResponse.status);
+    }
   }
 
-  if (status !== "APPROVED") {
+  if (status !== "APPROVED" && status !== "PAYER_ACTION_REQUIRED") {
     throw new Error("Google Pay order not approved: " + status);
   }
 

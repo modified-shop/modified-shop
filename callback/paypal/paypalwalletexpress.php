@@ -93,6 +93,20 @@ if ($payment_method != ''
     $customers_data = $paypal->decode_utf8($customers_data);
 
     if (!isset($_SESSION['customer_id'])
+        && defined('ACCOUNT_TELEPHONE_OPTIONAL')
+        && ACCOUNT_TELEPHONE_OPTIONAL == 'false'
+        && strlen($customers_data['info']['telephone']) < ENTRY_TELEPHONE_MIN_LENGTH
+        )
+    {
+      $paypal->LoggingManager->log('WARNING', 'Wallet callback aborted', array(
+        'reason' => 'missing required telephone',
+        'order_id' => $_SESSION['paypal']['OrderID'],
+      ));
+      unset($_SESSION['paypal']);
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
+    }
+
+    if (!isset($_SESSION['customer_id'])
         && $customers_data['info']['email_address'] != ''
         )
     {
@@ -156,7 +170,11 @@ if ($payment_method != ''
       $_SESSION['paypal']['PayerID'] = $PayPalOrder->payer->payer_id;
     }
 
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
+    // The wallet has approved the PayPal order, but the shop's mandatory
+    // confirmations (address, terms, privacy and revocation) still have to be
+    // collected before the order is created and captured.
+    $_SESSION['paypal']['wallet_express'] = true;
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'SSL'));
 } else {
     $paypal = new PayPalPaymentV2(($payment_method != '') ? $payment_method : 'paypalgooglepay');
     $paypal->LoggingManager->log('WARNING', 'Wallet callback aborted', array(

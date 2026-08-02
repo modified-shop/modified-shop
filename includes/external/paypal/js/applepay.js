@@ -66,6 +66,7 @@ async function setupApplepay() {
       requiredBillingContactFields: [
         "name",
         "email",
+        "phone",
         "postalAddress",
       ],
       requiredShippingContactFields: [],
@@ -168,6 +169,7 @@ async function setupApplepayCart() {
       requiredBillingContactFields: [
         "name",
         "email",
+        "phone",
         "postalAddress",
       ],
       total: {
@@ -181,6 +183,7 @@ async function setupApplepayCart() {
       paymentRequest.requiredShippingContactFields = [
         "name",
         "email",
+        "phone",
         "postalAddress",
       ];
     }

@@ -24,16 +24,33 @@
     }
 
     // card fields: liability shift (3D Secure) is the relevant check
-    if (in_array($_GET['payment_method'], array('paypalacdc'))) {
+    if (in_array($_GET['payment_method'], array('paypalacdc'), true)) {
       $paypal = new PayPalPaymentV2($_GET['payment_method']);
       return $paypal->CheckLiabilityShift($_SESSION['paypal']['OrderID']);
     }
 
-    // wallets (Apple Pay / Google Pay)
-    if (in_array($_GET['payment_method'], array('paypalapplepay', 'paypalgooglepay'))) {
+    // Google Pay after payer action: an approved order alone is not enough;
+    // the 3D Secure result must actually carry the liability shift.
+    if ($_GET['payment_method'] == 'paypalgooglepay') {
+      $paypal = new PayPalPaymentV2($_GET['payment_method']);
+      $approved = $paypal->CheckGooglePayLiabilityShift($_SESSION['paypal']['OrderID']);
+
+      if (!$approved) {
+        $paypal->LoggingManager->log('WARNING', 'Google Pay liability shift check failed', array(
+          'order_id' => $_SESSION['paypal']['OrderID'],
+        ));
+      }
+
+      return $approved;
+    }
+
+    // Apple Pay
+    if ($_GET['payment_method'] == 'paypalapplepay') {
       $paypal = new PayPalPaymentV2($_GET['payment_method']);
       $PayPalOrder = $paypal->GetOrder($_SESSION['paypal']['OrderID']);
-      $approved = (isset($PayPalOrder->status) && in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED')));
+      $approved = (is_object($PayPalOrder)
+                   && isset($PayPalOrder->status)
+                   && in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true));
 
       if (!$approved) {
         $paypal->LoggingManager->log('WARNING', 'Wallet check_paypal_order not approved', array(

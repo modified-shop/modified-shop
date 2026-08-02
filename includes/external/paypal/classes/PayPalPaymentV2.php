@@ -1044,6 +1044,28 @@
     }
 
 
+    function CheckGooglePayLiabilityShift($OrderID) {
+      $order = $this->GetOrder($OrderID, 'fields=payment_source');
+
+      if (isset($order->payment_source->google_pay->card->authentication_result)) {
+        $authentication_result = $order->payment_source->google_pay->card->authentication_result;
+
+        if (isset($authentication_result->liability_shift)
+            && $authentication_result->liability_shift == 'POSSIBLE'
+            && isset($authentication_result->three_d_secure->enrollment_status)
+            && $authentication_result->three_d_secure->enrollment_status == 'Y'
+            && isset($authentication_result->three_d_secure->authentication_status)
+            && in_array($authentication_result->three_d_secure->authentication_status, array('Y', 'A'), true)
+            )
+        {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+
     function FinishOrder($order_id) {
       if ($this->PatchOrder($_SESSION['paypal']['OrderID']) !== true) {
         $this->LoggingManager->log('WARNING', 'FinishOrder aborted', array(

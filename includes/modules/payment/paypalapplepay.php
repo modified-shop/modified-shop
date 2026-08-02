@@ -40,6 +40,9 @@ class paypalapplepay extends PayPalPaymentV2 {
          && isset($_SESSION['cart'])
          && $_SESSION['cart']->count_contents() > 0
          )
+        || (isset($_SESSION['paypal']['wallet_express'])
+            && $_SESSION['paypal']['wallet_express'] === true
+            )
         || (isset($_SESSION['paypal_instruments'])
             && is_array($_SESSION['paypal_instruments'])
             && in_array($this->paypal_code, $_SESSION['paypal_instruments'])
@@ -54,12 +57,20 @@ class paypalapplepay extends PayPalPaymentV2 {
 
 
   function confirmation() {
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::confirmation();
+    }
+
     return array ('title' => $this->description);
   }
 
 
   function process_button() {
     global $smarty, $order;
+
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::process_button();
+    }
     
     $smarty->clear_assign('CHECKOUT_BUTTON');
     
@@ -164,7 +175,11 @@ class paypalapplepay extends PayPalPaymentV2 {
   }
 
 
-  function before_process() {	  
+  function before_process() {
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::before_process();
+    }
+
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
 
     if (!is_object($PayPalOrder)

@@ -57,7 +57,7 @@ class PayPalPaymentBase extends PayPalCommon {
     global $order;
 
     $this->code = $class;
-    $this->paypal_version = '1.109';
+    $this->paypal_version = '1.110';
 
     $this->admin_access_array = array(
       'paypal_info',
@@ -241,10 +241,22 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function use_express_checkout_confirmation() {
+    if (in_array($this->code, array('paypalcart', 'paypalexpress'), true)) {
+      return (defined('MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT')
+              && MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT != 'False');
+    }
+
+    return (in_array($this->code, array('paypalapplepay', 'paypalgooglepay'), true)
+            && isset($_SESSION['paypal']['wallet_express'])
+            && $_SESSION['paypal']['wallet_express'] === true);
+  }
+
+
   function pre_confirmation_check() {
     global $order, $smarty, $total_weight, $total_count, $free_shipping;
     
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
+    if ($this->use_express_checkout_confirmation() !== true) {
       return false;
     }
 
@@ -296,7 +308,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function confirmation() {
     global $order, $smarty, $xtPrice, $main, $messageStack, $total_weight, $total_count, $free_shipping;
     
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
+    if ($this->use_express_checkout_confirmation() !== true) {
       return false;
     }
 
@@ -488,7 +500,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function process_button() {
     global $smarty, $main, $messageStack;
     
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
+    if ($this->use_express_checkout_confirmation() !== true) {
       return false;
     }
 
@@ -573,7 +585,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function before_process() {
     global $messageStack, $order;
 
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False' || isset($_SESSION['tmp_oID'])) {
+    if ($this->use_express_checkout_confirmation() !== true || isset($_SESSION['tmp_oID'])) {
       return false;
     }
         
@@ -641,7 +653,7 @@ class PayPalPaymentBase extends PayPalCommon {
         }
       }
 
-      if ($this->code == 'paypalexpress') {
+      if (in_array($this->code, array('paypalexpress', 'paypalapplepay', 'paypalgooglepay'), true)) {
         $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
         
         if (!is_object($PayPalOrder)
@@ -1989,6 +2001,40 @@ class PayPalPaymentBase extends PayPalCommon {
           'config_value' => '1',
         ),
       );
+      $this->save_config($sql_data_array);
+    }
+
+    if (defined('MODULE_PAYMENT_PAYPALAPPLEPAY_STATUS')) {
+      $sql_data_array = array();
+      if ($this->get_config('MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_CART', false) == '') {
+        $sql_data_array[] = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_CART',
+          'config_value' => '1',
+        );
+      }
+      if ($this->get_config('MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_BOX_CART', false) == '') {
+        $sql_data_array[] = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_BOX_CART',
+          'config_value' => '1',
+        );
+      }
+      $this->save_config($sql_data_array);
+    }
+
+    if (defined('MODULE_PAYMENT_PAYPALGOOGLEPAY_STATUS')) {
+      $sql_data_array = array();
+      if ($this->get_config('MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_CART', false) == '') {
+        $sql_data_array[] = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_CART',
+          'config_value' => '1',
+        );
+      }
+      if ($this->get_config('MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_BOX_CART', false) == '') {
+        $sql_data_array[] = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_BOX_CART',
+          'config_value' => '1',
+        );
+      }
       $this->save_config($sql_data_array);
     }
     
