@@ -78,7 +78,10 @@
           && $this->data['signature'] != ''
           )
       {
-        $this->client = new \GuzzleHttp\Client();
+        $this->client = new \GuzzleHttp\Client(array(
+          'connect_timeout' => 5,
+          'timeout' => 20,
+        ));
         $this->getAccessToken();
       }
     }
@@ -122,114 +125,134 @@
       try {
         $response = $this->client->send($request);
         $response = json_decode($response->getBody()->getContents(), true);
-
-        $shopping_cart_id = isset($response['shoppingCart']['shopOrderId'])
-                            && is_scalar($response['shoppingCart']['shopOrderId'])
-          ? trim((string)$response['shoppingCart']['shopOrderId'])
-          : '';
-        $expected_shopping_cart_id = isset($this->data['shopOrderId']) ? (string)$this->data['shopOrderId'] : '';
-        $label_url = isset($response['link']) && is_scalar($response['link'])
-          ? trim((string)$response['link'])
-          : '';
-        $label_url_scheme = ($label_url != '') ? parse_url($label_url, PHP_URL_SCHEME) : false;
-
-        if (!is_array($response)
-            || !isset($response['shoppingCart'])
-            || !is_array($response['shoppingCart'])
-            || !isset($response['shoppingCart']['voucherList'])
-            || !is_array($response['shoppingCart']['voucherList'])
-            || count($response['shoppingCart']['voucherList']) < 1
-            || $shopping_cart_id == ''
-            || $shopping_cart_id !== $expected_shopping_cart_id
-            || strlen($shopping_cart_id) > 80
-            || strlen($label_url) > 512
-            || filter_var($label_url, FILTER_VALIDATE_URL) === false
-            || !is_string($label_url_scheme)
-            || strtolower($label_url_scheme) != 'https'
-            )
-        {
-          $this->handleUnexpectedPurchaseResponse($response, $expected_shopping_cart_id, $label_url);
-        } else {
-          $voucher_array = array();
-          foreach ($response['shoppingCart']['voucherList'] as $items) {
-            if (!is_array($items)
-                || !isset($items['voucherId'])
-                || !is_scalar($items['voucherId'])
-                || trim((string)$items['voucherId']) == ''
-                || (isset($items['trackId']) && !is_scalar($items['trackId']))
-                )
-            {
-              $voucher_array = array();
-              break;
-            }
-
-            $voucher_id = trim((string)$items['voucherId']);
-            $parcel_id = isset($items['trackId']) && trim((string)$items['trackId']) != ''
-              ? trim((string)$items['trackId'])
-              : $voucher_id;
-            if (strlen($voucher_id) > 80 || strlen($parcel_id) > 80) {
-              $voucher_array = array();
-              break;
-            }
-            $voucher_array[] = array(
-              'voucher_id' => $voucher_id,
-              'parcel_id' => $parcel_id,
-            );
-          }
-
-          if (count($voucher_array) != count($response['shoppingCart']['voucherList'])) {
-            $this->handleUnexpectedPurchaseResponse($response, $shopping_cart_id, $label_url);
-          } else {
-            foreach ($voucher_array as $voucher) {
-              $tracking_id = $this->SaveLabel(
-                $voucher['parcel_id'],
-                $voucher['voucher_id'],
-                $label_url,
-                $shopping_cart_id
-              );
-
-              if ($tracking_id === false) {
-                $recovery_data = array(
-                  'orders_id' => $this->order->info['order_id'],
-                  'voucher_id' => $voucher['voucher_id'],
-                  'parcel_id' => $voucher['parcel_id'],
-                  'shopping_cart_id' => $shopping_cart_id,
-                  'label_url' => $label_url,
-                );
-                $this->cancelUnstoredLabel($voucher['voucher_id'], 'voucherId', $recovery_data);
-                continue;
-              }
-
-              $result['label'][] = array(
-                'tracking_id' => $tracking_id,
-                'parcel_id' => $voucher['parcel_id'],
-              );
-            }
-          }
-        }
+        $this->processPurchaseResponse($response, $result);
       } catch (Exception $ex) {
-        $this->handleException($ex, 'CreateLabel');
-        if ((!method_exists($ex, 'getResponse') || !is_object($ex->getResponse()))
+        $ambiguous_purchase = $this->isAmbiguousPurchaseException($ex);
+        $exception_message = $this->handleException($ex, 'CreateLabel', $ambiguous_purchase === false);
+
+        if ($ambiguous_purchase === true
             && isset($this->data['shopOrderId'])
             && $this->data['shopOrderId'] != ''
             )
         {
-          $this->cancelUnstoredLabel(
-            $this->data['shopOrderId'],
-            'shopOrderId',
-            array(
-              'orders_id' => $this->order->info['order_id'],
-              'shopping_cart_id' => $this->data['shopOrderId'],
-              'checkout_status' => 'unknown',
-              'exception' => $ex->getMessage(),
-            )
-          );
+          $recovery = $this->retrieveShoppingCart($this->data['shopOrderId']);
+          if ($recovery['status'] == 'found') {
+            $this->processPurchaseResponse($recovery['response'], $result);
+          } elseif ($recovery['status'] == 'unknown') {
+            $this->cancelUnstoredLabel(
+              $this->data['shopOrderId'],
+              'shopOrderId',
+              array(
+                'orders_id' => $this->order->info['order_id'],
+                'shopping_cart_id' => $this->data['shopOrderId'],
+                'checkout_status' => 'unknown',
+                'exception' => $ex->getMessage(),
+              )
+            );
+          } elseif ($recovery['status'] == 'not_found') {
+            $this->message['error'][] = $exception_message;
+          }
+        } elseif ($ambiguous_purchase === true) {
+          $this->message['error'][] = $exception_message;
         }
       }
       
       $result['message'] = $this->message;
       
       return $result;
+    }
+
+
+    private function processPurchaseResponse($response, &$result) {
+      $shopping_cart_id = is_array($response)
+                          && isset($response['shoppingCart'])
+                          && is_array($response['shoppingCart'])
+                          && isset($response['shoppingCart']['shopOrderId'])
+                          && is_scalar($response['shoppingCart']['shopOrderId'])
+        ? trim((string)$response['shoppingCart']['shopOrderId'])
+        : '';
+      $expected_shopping_cart_id = isset($this->data['shopOrderId']) ? (string)$this->data['shopOrderId'] : '';
+      $label_url = is_array($response) && isset($response['link']) && is_scalar($response['link'])
+        ? trim((string)$response['link'])
+        : '';
+      $label_url_scheme = ($label_url != '') ? parse_url($label_url, PHP_URL_SCHEME) : false;
+
+      if (!is_array($response)
+          || !isset($response['shoppingCart'])
+          || !is_array($response['shoppingCart'])
+          || !isset($response['shoppingCart']['voucherList'])
+          || !is_array($response['shoppingCart']['voucherList'])
+          || count($response['shoppingCart']['voucherList']) < 1
+          || $shopping_cart_id == ''
+          || $shopping_cart_id !== $expected_shopping_cart_id
+          || strlen($shopping_cart_id) > 80
+          || strlen($label_url) > 512
+          || filter_var($label_url, FILTER_VALIDATE_URL) === false
+          || !is_string($label_url_scheme)
+          || strtolower($label_url_scheme) != 'https'
+          )
+      {
+        $this->handleUnexpectedPurchaseResponse($response, $expected_shopping_cart_id, $label_url);
+        return;
+      }
+
+      $voucher_array = array();
+      foreach ($response['shoppingCart']['voucherList'] as $items) {
+        if (!is_array($items)
+            || !isset($items['voucherId'])
+            || !is_scalar($items['voucherId'])
+            || trim((string)$items['voucherId']) == ''
+            || (isset($items['trackId']) && !is_scalar($items['trackId']))
+            )
+        {
+          $voucher_array = array();
+          break;
+        }
+
+        $voucher_id = trim((string)$items['voucherId']);
+        $parcel_id = isset($items['trackId']) && trim((string)$items['trackId']) != ''
+          ? trim((string)$items['trackId'])
+          : $voucher_id;
+        if (strlen($voucher_id) > 80 || strlen($parcel_id) > 80) {
+          $voucher_array = array();
+          break;
+        }
+        $voucher_array[] = array(
+          'voucher_id' => $voucher_id,
+          'parcel_id' => $parcel_id,
+        );
+      }
+
+      if (count($voucher_array) != count($response['shoppingCart']['voucherList'])) {
+        $this->handleUnexpectedPurchaseResponse($response, $shopping_cart_id, $label_url);
+        return;
+      }
+
+      foreach ($voucher_array as $voucher) {
+        $tracking_id = $this->SaveLabel(
+          $voucher['parcel_id'],
+          $voucher['voucher_id'],
+          $label_url,
+          $shopping_cart_id
+        );
+
+        if ($tracking_id === false) {
+          $recovery_data = array(
+            'orders_id' => $this->order->info['order_id'],
+            'voucher_id' => $voucher['voucher_id'],
+            'parcel_id' => $voucher['parcel_id'],
+            'shopping_cart_id' => $shopping_cart_id,
+            'label_url' => $label_url,
+          );
+          $this->cancelUnstoredLabel($voucher['voucher_id'], 'voucherId', $recovery_data);
+          continue;
+        }
+
+        $result['label'][] = array(
+          'tracking_id' => $tracking_id,
+          'parcel_id' => $voucher['parcel_id'],
+        );
+      }
     }
 
 
@@ -313,13 +336,16 @@
       $this->logPersistenceFailure($recovery_data);
 
       $refund = $this->DeleteLabel($shipment_number, $identifier);
-      if (isset($refund['label'])
-          && is_array($refund['label'])
-          && count($refund['label']) > 0
-          )
-      {
+      if (isset($refund['refund']) && is_array($refund['refund'])) {
+        $recovery_data = array_merge($recovery_data, $refund['refund']);
+      }
+
+      if (isset($refund['status']) && $refund['status'] == 'successful') {
         $recovery_data['refund_status'] = 'successful';
         $this->message['error'][] = 'The Internetmarke purchase could not be saved locally and was cancelled automatically.';
+      } elseif (isset($refund['status']) && $refund['status'] == 'pending') {
+        $recovery_data['refund_status'] = 'pending';
+        $this->message['error'][] = 'The Internetmarke purchase could not be saved locally. Its automatic cancellation is pending; check the Internetmarke error log for recovery data.';
       } else {
         $recovery_data['refund_status'] = 'failed';
         $this->message['error'][] = 'The Internetmarke purchase could not be saved locally or cancelled automatically. Check the Internetmarke error log for recovery data.';
@@ -341,6 +367,8 @@
     public function DeleteLabel($shipmentNumber, $identifier = 'voucherId') {
       $result = array(
         'label' => array(),
+        'refund' => array(),
+        'status' => 'failed',
         'message' => array(),
       );
 
@@ -352,7 +380,7 @@
         return $result;
       }
 
-      if (!in_array($identifier, array('voucherId', 'trackId', 'shopOrderId', 'auto'), true)) {
+      if (!in_array($identifier, array('voucherId', 'trackId', 'shopOrderId'), true)) {
         $result['message']['error'][] = 'The Internetmarke label identifier is invalid.';
         return $result;
       }
@@ -372,57 +400,265 @@
         'Content-Type' => 'application/json'
       ];
 
-      $identifiers = $identifier == 'auto' ? array('voucherId', 'trackId') : array($identifier);
-      $last_exception = null;
-      foreach ($identifiers as $identifier_type) {
-        $shoppingCart = new stdClass();
-        if ($identifier_type == 'shopOrderId') {
-          $shoppingCart->shopOrderId = $shipmentNumber;
-        } else {
-          $voucherList = new stdClass();
-          $voucherList->{$identifier_type} = $shipmentNumber;
-          $shoppingCart->voucherList = array($voucherList);
-        }
-
-        $data = new stdClass();
-        $data->shoppingCart = $shoppingCart;
-
-        $body = json_encode($data);
-        if ($body === false) {
-          $this->message['error'][] = 'The Internetmarke cancellation data could not be encoded.';
-          $result['message'] = $this->message;
-          return $result;
-        }
-        $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/app/retoure'), $headers, $body);
-
-        try {
-          $response = $this->client->send($request);
-          $response = json_decode($response->getBody()->getContents(), true);
-
-          if (isset($response['retoureTransactionId'])
-              && is_scalar($response['retoureTransactionId'])
-              && trim((string)$response['retoureTransactionId']) != ''
-              && isset($response['shopRetoureId'])
-              && is_scalar($response['shopRetoureId'])
-              && trim((string)$response['shopRetoureId']) != ''
-              )
-          {
-            $result['label'] = $response;
-            return $result;
-          }
-        } catch (Exception $ex) {
-          $last_exception = $ex;
-        }
-      }
-
-      if ($last_exception !== null) {
-        $this->handleException($last_exception, 'DeleteLabel');
+      $shoppingCart = new stdClass();
+      if ($identifier == 'shopOrderId') {
+        $shoppingCart->shopOrderId = $shipmentNumber;
       } else {
-        $this->message['error'][] = 'The Internetmarke API returned an unexpected response.';
+        $voucherList = new stdClass();
+        $voucherList->{$identifier} = $shipmentNumber;
+        $shoppingCart->voucherList = array($voucherList);
       }
+
+      $data = new stdClass();
+      $data->shoppingCart = $shoppingCart;
+
+      $body = json_encode($data);
+      if ($body === false) {
+        $this->message['error'][] = 'The Internetmarke cancellation data could not be encoded.';
+        $result['message'] = $this->message;
+        return $result;
+      }
+      $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/app/retoure'), $headers, $body);
+
+      try {
+        $response = $this->client->send($request);
+        $response = json_decode($response->getBody()->getContents(), true);
+
+        if (isset($response['retoureTransactionId'])
+            && is_scalar($response['retoureTransactionId'])
+            && trim((string)$response['retoureTransactionId']) != ''
+            && strlen(trim((string)$response['retoureTransactionId'])) <= 80
+            && isset($response['shopRetoureId'])
+            && is_scalar($response['shopRetoureId'])
+            && trim((string)$response['shopRetoureId']) != ''
+            && strlen(trim((string)$response['shopRetoureId'])) <= 80
+            )
+        {
+          $result['refund'] = array(
+            'retoure_transaction_id' => trim((string)$response['retoureTransactionId']),
+            'shop_retoure_id' => trim((string)$response['shopRetoureId']),
+          );
+
+          return $this->GetRefundStatus(
+            $result['refund']['retoure_transaction_id'],
+            $result['refund']['shop_retoure_id'],
+            $shipmentNumber,
+            $identifier
+          );
+        }
+      } catch (Exception $ex) {
+        $this->handleException($ex, 'DeleteLabel');
+        $result['message'] = $this->message;
+        return $result;
+      }
+
+      $this->message['error'][] = 'The Internetmarke API returned an unexpected response.';
       $result['message'] = $this->message;
 
       return $result;
+    }
+
+
+    public function GetRefundStatus($retoure_transaction_id, $shop_retoure_id, $shipment_number, $identifier) {
+      $result = array(
+        'label' => array(),
+        'refund' => array(),
+        'status' => 'pending',
+        'message' => array(),
+      );
+
+      if (!isset($this->data['access_token']) || $this->data['access_token'] == '') {
+        if (count($this->message) == 0) {
+          $this->message['error'][] = 'Authentication with the Internetmarke API failed.';
+        }
+        $result['message'] = $this->message;
+        return $result;
+      }
+
+      if (!$this->isValidRefundIdentifier($retoure_transaction_id)
+          || !$this->isValidRefundIdentifier($shop_retoure_id)
+          || !$this->isValidRefundIdentifier($shipment_number)
+          || !in_array($identifier, array('voucherId', 'trackId', 'shopOrderId'), true)
+          )
+      {
+        $result['status'] = 'failed';
+        $result['message']['error'][] = 'The Internetmarke refund identifier is invalid.';
+        return $result;
+      }
+
+      $retoure_transaction_id = trim((string)$retoure_transaction_id);
+      $shop_retoure_id = trim((string)$shop_retoure_id);
+      $shipment_number = trim((string)$shipment_number);
+      $result['refund'] = array(
+        'retoure_transaction_id' => $retoure_transaction_id,
+        'shop_retoure_id' => $shop_retoure_id,
+      );
+
+      $headers = array(
+        'Authorization' => 'Bearer '.$this->data['access_token'],
+      );
+      $query = http_build_query(array(
+        'retoureTransactionId' => $retoure_transaction_id,
+        'shopRetoureId' => $shop_retoure_id,
+      ));
+      $request = new \GuzzleHttp\Psr7\Request('GET', $this->getUrl(self::DHL_API_URL, '/app/retoure?'.$query), $headers);
+
+      try {
+        $response = $this->client->send($request);
+        $response = json_decode($response->getBody()->getContents(), true);
+      } catch (Exception $ex) {
+        $this->handleException($ex, 'GetRefundStatus');
+        $result['message'] = $this->message;
+        return $result;
+      }
+
+      $states = isset($response['RetrieveRetoureStateResponse'])
+                && is_array($response['RetrieveRetoureStateResponse'])
+        ? $response['RetrieveRetoureStateResponse']
+        : array();
+      foreach ($states as $state) {
+        if (!is_array($state)
+            || !isset($state['retoureTransactionId'], $state['shopRetoureId'])
+            || (string)$state['retoureTransactionId'] !== $retoure_transaction_id
+            || (string)$state['shopRetoureId'] !== $shop_retoure_id
+            )
+        {
+          continue;
+        }
+
+        if (!isset($state['countStillOpen']) || !is_numeric($state['countStillOpen'])) {
+          return $result;
+        }
+        $count_still_open = (int)$state['countStillOpen'];
+        if ($count_still_open > 0) {
+          return $result;
+        }
+
+        if (!isset($state['refundedVouchers'], $state['notRefundedVouchers'])
+            || !is_array($state['refundedVouchers'])
+            || !is_array($state['notRefundedVouchers'])
+            )
+        {
+          return $result;
+        }
+        $refunded_vouchers = $state['refundedVouchers'];
+        $not_refunded_vouchers = $state['notRefundedVouchers'];
+
+        if ($identifier == 'shopOrderId') {
+          if (!isset($state['totalCount']) || !is_numeric($state['totalCount'])) {
+            return $result;
+          }
+          $total_count = (int)$state['totalCount'];
+          if ($total_count > 0
+              && count($refunded_vouchers) >= $total_count
+              && count($not_refunded_vouchers) == 0
+              )
+          {
+            $result['status'] = 'successful';
+            $result['label'] = $state;
+          } else {
+            $result['status'] = 'failed';
+          }
+          return $result;
+        }
+
+        if ($this->refundVoucherExists($refunded_vouchers, $shipment_number, $identifier)) {
+          $result['status'] = 'successful';
+          $result['label'] = $state;
+        } elseif ($this->refundVoucherExists($not_refunded_vouchers, $shipment_number, $identifier)) {
+          $result['status'] = 'failed';
+        } else {
+          $result['status'] = 'failed';
+        }
+        return $result;
+      }
+
+      return $result;
+    }
+
+
+    public function SaveRefundReference($tracking_id, $orders_id, $refund) {
+      if ((int)$tracking_id < 1
+          || (int)$orders_id < 1
+          || !is_array($refund)
+          || !isset($refund['retoure_transaction_id'], $refund['shop_retoure_id'])
+          || !$this->isValidRefundIdentifier($refund['retoure_transaction_id'])
+          || !$this->isValidRefundIdentifier($refund['shop_retoure_id'])
+          )
+      {
+        return false;
+      }
+
+      $retoure_transaction_id = trim((string)$refund['retoure_transaction_id']);
+      $shop_retoure_id = trim((string)$refund['shop_retoure_id']);
+      $update_query = xtc_db_query("UPDATE ".TABLE_ORDERS_TRACKING."
+                                       SET im_retoure_transaction_id = '".xtc_db_input($retoure_transaction_id)."',
+                                           im_retoure_id = '".xtc_db_input($shop_retoure_id)."'
+                                     WHERE tracking_id = '".(int)$tracking_id."'
+                                       AND orders_id = '".(int)$orders_id."'");
+      if ($update_query !== false) {
+        $reference_query = xtc_db_query("SELECT im_retoure_transaction_id,
+                                               im_retoure_id
+                                          FROM ".TABLE_ORDERS_TRACKING."
+                                         WHERE tracking_id = '".(int)$tracking_id."'
+                                           AND orders_id = '".(int)$orders_id."'");
+        if (xtc_db_num_rows($reference_query) > 0) {
+          $reference = xtc_db_fetch_array($reference_query);
+          if ((string)$reference['im_retoure_transaction_id'] === $retoure_transaction_id
+              && (string)$reference['im_retoure_id'] === $shop_retoure_id
+              )
+          {
+            return true;
+          }
+        }
+      }
+
+      $this->logPersistenceFailure(array(
+        'orders_id' => (int)$orders_id,
+        'tracking_id' => (int)$tracking_id,
+        'retoure_transaction_id' => $refund['retoure_transaction_id'],
+        'shop_retoure_id' => $refund['shop_retoure_id'],
+        'refund_status' => 'reference_not_saved',
+      ));
+      return false;
+    }
+
+
+    public function ClearRefundReference($tracking_id, $orders_id) {
+      if ((int)$tracking_id < 1 || (int)$orders_id < 1) {
+        return false;
+      }
+
+      $update_query = xtc_db_query("UPDATE ".TABLE_ORDERS_TRACKING."
+                                       SET im_retoure_transaction_id = NULL,
+                                           im_retoure_id = NULL
+                                     WHERE tracking_id = '".(int)$tracking_id."'
+                                       AND orders_id = '".(int)$orders_id."'");
+      return $update_query !== false;
+    }
+
+
+    private function isValidRefundIdentifier($value) {
+      return is_scalar($value)
+             && trim((string)$value) != ''
+             && strlen(trim((string)$value)) <= 80;
+    }
+
+
+    private function refundVoucherExists($vouchers, $shipment_number, $identifier) {
+      $field = $identifier == 'trackId' ? 'trackId' : 'voucherId';
+      foreach ($vouchers as $voucher) {
+        if (is_array($voucher)
+            && isset($voucher[$field])
+            && is_scalar($voucher[$field])
+            && trim((string)$voucher[$field]) === $shipment_number
+            )
+        {
+          return true;
+        }
+      }
+
+      return false;
     }
 
 
@@ -584,7 +820,66 @@
     }
 
 
-    private function handleException($ex, $method) {
+    private function isAmbiguousPurchaseException($ex) {
+      if (!is_object($ex)
+          || !method_exists($ex, 'getResponse')
+          || !is_object($ex->getResponse())
+          )
+      {
+        return true;
+      }
+
+      $status_code = (int)$ex->getResponse()->getStatusCode();
+      return $status_code == 408 || $status_code >= 500;
+    }
+
+
+    private function retrieveShoppingCart($shopping_cart_id) {
+      $result = array(
+        'status' => 'unknown',
+        'response' => array(),
+      );
+
+      if (!isset($this->data['access_token'])
+          || $this->data['access_token'] == ''
+          || !$this->isValidRefundIdentifier($shopping_cart_id)
+          )
+      {
+        return $result;
+      }
+
+      $headers = array(
+        'Authorization' => 'Bearer '.$this->data['access_token'],
+      );
+      $request = new \GuzzleHttp\Psr7\Request(
+        'GET',
+        $this->getUrl(self::DHL_API_URL, '/app/shoppingcart/'.rawurlencode(trim((string)$shopping_cart_id))),
+        $headers
+      );
+
+      try {
+        $response = $this->client->send($request);
+        $response = json_decode($response->getBody()->getContents(), true);
+        if (is_array($response)) {
+          $result['status'] = 'found';
+          $result['response'] = $response;
+        }
+      } catch (Exception $ex) {
+        if (method_exists($ex, 'getResponse')
+            && is_object($ex->getResponse())
+            && (int)$ex->getResponse()->getStatusCode() == 404
+            )
+        {
+          $result['status'] = 'not_found';
+        }
+        $this->handleException($ex, 'retrieveShoppingCart', false);
+      }
+
+      return $result;
+    }
+
+
+    private function handleException($ex, $method, $add_message = true) {
       $error = array();
 
       if (is_object($ex)
@@ -602,20 +897,24 @@
           && isset($error['detail']) && is_scalar($error['detail'])
           )
       {
-        $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
+        $message = sprintf('Status %s: %s', $error['status'], $error['detail']);
       } elseif (isset($error['statusCode']) && is_scalar($error['statusCode'])
                 && isset($error['description']) && is_scalar($error['description'])
                 )
       {
-        $this->message['error'][] = sprintf('Status %s: %s', $error['statusCode'], $error['description']);
+        $message = sprintf('Status %s: %s', $error['statusCode'], $error['description']);
       } elseif (isset($error['description']) && is_scalar($error['description'])) {
-        $this->message['error'][] = (string)$error['description'];
+        $message = (string)$error['description'];
       } elseif (isset($error['detail']) && is_scalar($error['detail'])) {
-        $this->message['error'][] = (string)$error['detail'];
+        $message = (string)$error['detail'];
       } elseif (isset($error['title']) && is_scalar($error['title'])) {
-        $this->message['error'][] = (string)$error['title'];
+        $message = (string)$error['title'];
       } else {
-        $this->message['error'][] = $ex->getMessage();
+        $message = $ex->getMessage();
+      }
+
+      if ($add_message === true) {
+        $this->message['error'][] = $message;
       }
 
       try {
@@ -623,6 +922,8 @@
       } catch (Throwable $logging_exception) {
         error_log('Internetmarke '.$method.' error: '.$ex->getMessage());
       }
+
+      return $message;
     }
 
 
@@ -727,10 +1028,17 @@
 
 
     private function validatePersistenceConfiguration() {
-      $column_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE 'im_voucher_id'");
-      if (xtc_db_num_rows($column_query) < 1) {
-        $this->message['error'][] = 'The Internetmarke module must be updated before labels can be created.';
-        return false;
+      $required_columns = array(
+        'im_voucher_id',
+        'im_retoure_transaction_id',
+        'im_retoure_id',
+      );
+      foreach ($required_columns as $column) {
+        $column_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE '".$column."'");
+        if (xtc_db_num_rows($column_query) < 1) {
+          $this->message['error'][] = 'The Internetmarke module must be updated before labels can be created.';
+          return false;
+        }
       }
 
       $cart_column_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE 'im_orders_id'");
