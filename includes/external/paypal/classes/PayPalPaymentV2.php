@@ -1102,7 +1102,7 @@
         $sql_data_array['customers_email_address'] = $PayPalOrder->purchase_units[0]->shipping->email_address;
       }
       if (isset($PayPalOrder->purchase_units[0]->shipping->phone_number)) {
-        $sql_data_array['customers_telephone'] = $PayPalOrder->purchase_units[0]->shipping->phone_number->national_number;
+        $sql_data_array['customers_telephone'] = $this->format_phone_number($PayPalOrder->purchase_units[0]->shipping->phone_number);
       }
       if (count($sql_data_array) > 0) {
         xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', "orders_id = '".(int)$order_id."'");
@@ -1316,6 +1316,21 @@
       $data = $this->get_country_state_from_iso($data);
 
       return $data;
+    }
+
+
+    function format_phone_number($phone_number) {
+      $national_number = ((isset($phone_number->national_number)) ? trim($phone_number->national_number) : '');
+      if ($national_number == '') {
+        return '';
+      }
+
+      $country_code = ((isset($phone_number->country_code)) ? ltrim(trim($phone_number->country_code), '+') : '');
+      if ($country_code != '' && substr($national_number, 0, 1) != '+') {
+        return '+'.$country_code.$national_number;
+      }
+
+      return $national_number;
     }
 
 

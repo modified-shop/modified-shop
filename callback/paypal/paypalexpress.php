@@ -73,9 +73,9 @@ if (isset($_SESSION['paypal'])
     if (isset($PayPalOrder->purchase_units[0]->shipping->email_address)) {
       $customers_data['info']['email_address'] = $PayPalOrder->purchase_units[0]->shipping->email_address;
     }
-    $customers_data['info']['telephone'] = ((isset($PayPalOrder->payer->phone->phone_number->national_number)) ? $PayPalOrder->payer->phone->phone_number->national_number : '');
+    $customers_data['info']['telephone'] = ((isset($PayPalOrder->payer->phone->phone_number)) ? $paypal->format_phone_number($PayPalOrder->payer->phone->phone_number) : '');
     if (isset($PayPalOrder->purchase_units[0]->shipping->phone_number)) {
-      $customers_data['info']['telephone'] = $PayPalOrder->purchase_units[0]->shipping->phone_number->national_number;
+      $customers_data['info']['telephone'] = $paypal->format_phone_number($PayPalOrder->purchase_units[0]->shipping->phone_number);
     }
     $customers_data = $paypal->decode_utf8($customers_data);
     
