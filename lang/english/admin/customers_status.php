@@ -70,7 +70,7 @@ define('TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_PRICE', 'Discount (0 to 100%):');
 define('TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_PRICE_INTRO', '<strong>Please define a discount between 0 and 100% which is used on each displayed product.</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_GRADUATED_PRICES_INTRO','<strong>Graduated Prices</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_IMAGE', '<strong>Customers Group Image:</strong>');
-define('TEXT_INFO_CUSTOMERS_STATUS_NAME','<strong>Groupname</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_NAME','<strong>Group Name</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_PAYMENT_UNALLOWED_INTRO','<strong>not allowed Payment Methods</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_PUBLIC_INTRO','<strong>Show Public?</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHIPPING_UNALLOWED_INTRO','<strong>not allowed Shipping Modules</strong>');
@@ -81,8 +81,8 @@ define('TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO', '<strong>Products review
 define('TEXT_INFO_CUSTOMERS_STATUS_REVIEWS_STATUS_INTRO', '<strong>Products review status</strong>');
 
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this customer group?');
-define('TEXT_INFO_EDIT_INTRO', 'Please make all neccessary changes');
-define('TEXT_INFO_INSERT_INTRO', 'Please create a new customer group within all neccessary values.');
+define('TEXT_INFO_EDIT_INTRO', 'Please make all necessary changes');
+define('TEXT_INFO_INSERT_INTRO', 'Please create a new customer group with all necessary values.');
 
 define('TEXT_INFO_HEADING_DELETE_CUSTOMERS_STATUS', 'Delete Customer Group');
 define('TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS','Edit Group Data');

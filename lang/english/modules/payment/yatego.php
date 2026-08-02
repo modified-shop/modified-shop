@@ -28,4 +28,4 @@ define('MODULE_PAYMENT_YATEGO_SORT_ORDER_DESC', 'Sort order of display. Lowest i
 define('MODULE_PAYMENT_YATEGO_ZONE_TITLE', 'Payment Zone');
 define('MODULE_PAYMENT_YATEGO_ZONE_DESC', 'If a zone is selected, only enable this payment method for that zone.');
 define('MODULE_PAYMENT_YATEGO_ALLOWED_TITLE', 'Allowed zones');
-define('MODULE_PAYMENT_YATEGO_ALLOWED_DESC', 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_PAYMENT_YATEGO_ALLOWED_DESC', 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');

@@ -42,7 +42,7 @@ define('TABLE_HEADING_IMAGE','Image');
 // EOF - Hendrik - 2010-08-11 - Thumbnails in admin products list
 
 define('TEXT_ACTIVE_ELEMENT','Active Element');
-define('TEXT_INFORMATIONS','Informations');
+define('TEXT_INFORMATIONS','Information');
 define('TEXT_MARKED_ELEMENTS','Marked Elements');
 define('TEXT_INSERT_ELEMENT','New Element');
 define('TEXT_SHOW_NO_MANUFACTURERS', 'without Manufacturers');
@@ -68,7 +68,7 @@ define('TEXT_DATE_AVAILABLE', 'Date Available:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_PRODUCTS_ORDERED', 'Sold Products:');
 define('TEXT_NO_CHILD_CATEGORIES_OR_PRODUCTS', 'Please insert a new category or product in <br />&nbsp;<br /><b>%s</b>');
-define('TEXT_PRODUCT_MORE_INFORMATION', 'For more information, please visit this products <a href="http://%s" target="_blank"><u>webpage</u></a>.');
+define('TEXT_PRODUCT_MORE_INFORMATION', 'For more information, please visit this product\'s <a href="http://%s" target="_blank"><u>webpage</u></a>.');
 define('TEXT_PRODUCT_DATE_ADDED', 'This product was added to our catalog on %s.');
 define('TEXT_PRODUCT_DATE_AVAILABLE', 'This product will be in stock on %s.');
 
@@ -194,7 +194,7 @@ define('TXT_MODEL','Products Model');
 // EOF - Tomcraft - 2009-09-12 - add option to sort by date and products model
 
 define('TEXT_MULTICOPY','Multiple');
-define('TEXT_MULTICOPY_DESC','Copy elements into following categories (If one box selected, Single settings will be ignored.)');
+define('TEXT_MULTICOPY_DESC','Copy elements into following categories (If one box is selected, Single settings will be ignored.)');
 define('TEXT_SINGLECOPY','Single');
 define('TEXT_SINGLECOPY_DESC','Copy elements into following category');
 define('TEXT_SINGLECOPY_CATEGORY','Category:');

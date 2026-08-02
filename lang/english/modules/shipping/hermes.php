@@ -25,7 +25,7 @@ define('MODULE_SHIPPING_HERMES_TAX_CLASS_TITLE' , 'Tax Rate');
 define('MODULE_SHIPPING_HERMES_TAX_CLASS_DESC' , 'Choose the tax rate for this shipping type.');
 
 define('MODULE_SHIPPING_HERMES_STATUS_TITLE' , 'Enable Hermes Paket Shop');
-define('MODULE_SHIPPING_HERMES_STATUS_DESC' , 'Modul by Leonid Lezner');
+define('MODULE_SHIPPING_HERMES_STATUS_DESC' , 'Module by Leonid Lezner');
 
 define('MODULE_SHIPPING_HERMES_NATIONAL_TITLE' , 'National shipping (DE)');
 define('MODULE_SHIPPING_HERMES_NATIONAL_DESC' , 'Price for Classes: S;M;L');
@@ -43,4 +43,4 @@ define('MODULE_SHIPPING_HERMES_SORT_ORDER_TITLE' , 'Display order');
 define('MODULE_SHIPPING_HERMES_SORT_ORDER_DESC' , 'Lowermost shown first.');
 
 define('MODULE_SHIPPING_HERMES_ALLOWED_TITLE' , 'Individual shipping zones');
-define('MODULE_SHIPPING_HERMES_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_HERMES_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');

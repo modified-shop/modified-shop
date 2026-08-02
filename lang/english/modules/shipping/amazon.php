@@ -21,7 +21,7 @@ define('MODULE_SHIPPING_AMAZON_TEXT_DESCRIPTION', 'Shipping specified through Am
 define('MODULE_SHIPPING_AMAZON_SORT_ORDER', 'Sort Order');
 define('MODULE_SHIPPING_AMAZON_TEXT_WAY', 'Shipping specified through Amazon');
 define('MODULE_SHIPPING_AMAZON_ALLOWED_TITLE' , 'Allowed Zones');
-define('MODULE_SHIPPING_AMAZON_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_AMAZON_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_AMAZON_STATUS_TITLE', 'Enable Self Pickup');
 define('MODULE_SHIPPING_AMAZON_STATUS_DESC', 'Do you want to offer pickup by the customer?');
 define('MODULE_SHIPPING_AMAZON_SORT_ORDER_TITLE', 'Sort Order');

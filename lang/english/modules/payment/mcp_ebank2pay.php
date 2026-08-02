@@ -41,4 +41,4 @@ define('MODULE_PAYMENT_MCP_EBANK2PAY_MAXIMUM_AMOUNT_DESC','Maximum amount for th
 define('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER_TITLE','Positioning');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER_DESC','Positioning in the payment method selection');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_ALLOWED_TITLE','Country selection');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_ALLOWED_DESC','Allow orders only from these countries (Comma seperated list DE,EN)');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_ALLOWED_DESC','Allow orders only from these countries (Comma separated list DE,EN)');

@@ -40,7 +40,7 @@ define('MODULE_SHIPPING_DHL_ZONE_DESC' , 'If a zone is selected, only enable thi
 define('MODULE_SHIPPING_DHL_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_DHL_SORT_ORDER_DESC' , 'Sort order of display');
 define('MODULE_SHIPPING_DHL_ALLOWED_TITLE' , 'Allowed Shipping Zones');
-define('MODULE_SHIPPING_DHL_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_DHL_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_1_TITLE' , 'Shipping Zone 0');
 define('MODULE_SHIPPING_DHL_COUNTRIES_1_DESC' , 'Domestic Zone');

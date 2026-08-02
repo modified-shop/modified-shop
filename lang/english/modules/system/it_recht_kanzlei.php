@@ -18,7 +18,7 @@ define('MODULE_API_IT_RECHT_KANZLEI_TEXT_DESCRIPTION', 'IT-Recht Kanzlei - Auto 
 define('MODULE_API_IT_RECHT_KANZLEI_STATUS_TITLE', 'Status');
 define('MODULE_API_IT_RECHT_KANZLEI_STATUS_DESC', 'Module status');
 define('MODULE_API_IT_RECHT_KANZLEI_TOKEN_TITLE', 'Auth-Token');
-define('MODULE_API_IT_RECHT_KANZLEI_TOKEN_DESC', 'Auth-Token you hvae to tell the IT-Recht Kanzlei.');
+define('MODULE_API_IT_RECHT_KANZLEI_TOKEN_DESC', 'Auth-Token you have to tell the IT-Recht Kanzlei.');
 define('MODULE_API_IT_RECHT_KANZLEI_VERSION_TITLE', 'API Version');
 define('MODULE_API_IT_RECHT_KANZLEI_VERSION_DESC', 'This should only be changed if you are told by the IT-Recht Kanzlei to do so. (Default: 1.0)');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB_TITLE', '<hr noshade>Legal text Terms');

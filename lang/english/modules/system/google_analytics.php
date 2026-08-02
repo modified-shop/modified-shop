@@ -29,10 +29,10 @@
   define('MODULE_GOOGLE_ANALYTICS_ECOMMERCE_DESC' , 'Set up an E-Commerce tracking to find out what visitors buy from your website or app. In addition, you receive the following information:<br><br><strong>Products:</strong> Purchased products and the quantities and the revenues from these products<br><strong>Transactions:</strong> Information about sales, tax, shipping costs and quantities for each transaction<br><strong>time to Purchase:</strong> Number of days and visits, starting from the current campaign until the completion of the transaction');
 
   define('MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN_TITLE' , 'Count page views of the shop owner');
-  define('MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN_DESC' , 'By activating this option, all page views of the administration usersof the shop owner will be counted as well. This will falsify the visitor stats.');
+  define('MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN_DESC' , 'By activating this option, all page views of the administration users of the shop owner will be counted as well. This will falsify the visitor stats.');
 
   define('MODULE_GOOGLE_ANALYTICS_LINKID_TITLE', 'Google Analytics LinkID');
-  define('MODULE_GOOGLE_ANALYTICS_LINKID_DESC', 'You can see separate information on multiple links on a page that all have the same goal. If there is for example two links are on the same side, both lead to the contact page, you will see separate click information for each link.');
+  define('MODULE_GOOGLE_ANALYTICS_LINKID_DESC', 'You can see separate information on multiple links on a page that all have the same goal. If there are for example two links on the same page that both lead to the contact page, you will see separate click information for each link.');
   
   define('MODULE_GOOGLE_ANALYTICS_DISPLAY_TITLE', 'Google Analytics Displayfeature');
   define('MODULE_GOOGLE_ANALYTICS_DISPLAY_DESC', 'The areas to demographics and interests included an overview and new reports about the performance by age, gender and interest categories.');

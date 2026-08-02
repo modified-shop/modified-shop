@@ -41,4 +41,4 @@ define('MODULE_PAYMENT_MCP_PAYSAFECARD_MAXIMUM_AMOUNT_DESC','Maximum amount');
 define('MODULE_PAYMENT_MCP_PAYSAFECARD_SORT_ORDER_TITLE','Positioning');
 define('MODULE_PAYMENT_MCP_PAYSAFECARD_SORT_ORDER_DESC','Positioning in the payment method selection');
 define('MODULE_PAYMENT_MCP_PAYSAFECARD_ALLOWED_TITLE','Country selection');
-define('MODULE_PAYMENT_MCP_PAYSAFECARD_ALLOWED_DESC','Allow orders only from these countries (Comma seperated list DE,EN)');
+define('MODULE_PAYMENT_MCP_PAYSAFECARD_ALLOWED_DESC','Allow orders only from these countries (Comma separated list DE,EN)');

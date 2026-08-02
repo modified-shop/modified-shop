@@ -46,7 +46,7 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail Benachrichtigung');
   define('MODULE_SHIPCLOUD_EMAIL_DESC', 'Soll der Kunde per E-Mail benachrichtigt werden?');
   define('MODULE_SHIPCLOUD_EMAIL_TYPE_TITLE', '<hr noshade>Benachrichtigung');
-  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Soll der Kunde vom Shop oder von shipcloud benachrichtigt werden?<br><Hinweis:</b>F&uuml;r eine Benachrichtigung vom Shop muss ein Webhook auf diese URL: '.((defined('RUN_MODE_ADMIN') && function_exists('xtc_catalog_href_link')) ? xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false) : '').' in shipcloud erstelt werden.');
+  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Soll der Kunde vom Shop oder von shipcloud benachrichtigt werden?<br><Hinweis:</b>F&uuml;r eine Benachrichtigung vom Shop muss ein Webhook auf diese URL: '.((defined('RUN_MODE_ADMIN') && function_exists('xtc_catalog_href_link')) ? xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false) : '').' in shipcloud erstellt werden.');
 }
 
 define('SHIPMENT.TRACKING.SHIPCLOUD_LABEL_CREATED', 'Paketschein bei shipcloud erstellt');
@@ -60,6 +60,6 @@ define('SHIPMENT.TRACKING.CANCELED', 'Paketschein wurde gel&ouml;scht');
 define('SHIPMENT.TRACKING.DELAYED', 'Auslieferung verz&ouml;gert sich');
 define('SHIPMENT.TRACKING.EXCEPTION', 'Ein Problem wurde festgestellt');
 define('SHIPMENT.TRACKING.NOT_DELIVERED', 'nicht zugestellt');
-define('SHIPMENT.TRACKING.NOTIFICATION', 'Interne Mitteilung: Tracking- Ereignisse innerhalb der Sendung ben&ouml;tigt aufw&auml;ndigere Informationen.');
+define('SHIPMENT.TRACKING.NOTIFICATION', 'Interne Mitteilung: Tracking-Ereignisse innerhalb der Sendung ben&ouml;tigen aufw&auml;ndigere Informationen.');
 define('SHIPMENT.TRACKING.UNKNOWN', 'Status unbekannt');
 ?>
