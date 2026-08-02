@@ -1086,9 +1086,18 @@ class PayoneModified {
 		return false;
 	}
 
+	protected function getTransactionStatusCredentialIdentity($txstatus) {
+		return array(
+			'portalid' => (string)$txstatus['portalid'],
+			'aid' => (string)$txstatus['aid'],
+			'credential_hash' => hash('sha256', strtolower((string)$txstatus['key'])),
+		);
+	}
+
 	protected function transactionStatusCredentialMatches($transaction_credential, $status_credential) {
 		return hash_equals((string)$transaction_credential['portalid'], (string)$status_credential['portalid'])
-		       && hash_equals((string)$transaction_credential['aid'], (string)$status_credential['aid']);
+		       && hash_equals((string)$transaction_credential['aid'], (string)$status_credential['aid'])
+		       && hash_equals((string)$transaction_credential['credential_hash'], (string)$status_credential['credential_hash']);
 	}
 
 	protected function getTransactionStatusEventHash($txstatus) {
@@ -1236,6 +1245,34 @@ class PayoneModified {
 		return false;
 	}
 
+	protected function getLatestAppliedTransactionStatusSequence($orders_id, $txid) {
+		$query = xtc_db_query("SELECT MAX(CAST(d_sequence.`value` AS UNSIGNED)) AS max_sequence
+		                         FROM payone_txstatus s
+		                         JOIN payone_txstatus_data d_txid
+		                           ON d_txid.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_txid.`key` = 'txid'
+		                          AND d_txid.`value` = '".xtc_db_input($txid)."'
+		                         JOIN payone_txstatus_data d_sequence
+		                           ON d_sequence.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_sequence.`key` = 'sequencenumber'
+		                    LEFT JOIN payone_txstatus_data d_processed
+		                           ON d_processed.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_processed.`key` = '_modified_processed'
+		                    LEFT JOIN payone_txstatus_data d_applied
+		                           ON d_applied.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_applied.`key` = '_modified_applied'
+		                        WHERE s.orders_id = '".(int)$orders_id."'
+		                          AND (d_applied.`value` = '1'
+		                               OR (d_applied.payone_txstatus_data_id IS NULL
+		                                   AND (d_processed.`value` = '1'
+		                                        OR d_processed.payone_txstatus_data_id IS NULL)))");
+		if ($query === false) {
+			return false;
+		}
+		$row = xtc_db_fetch_array($query);
+		return (($row === false || $row['max_sequence'] === null) ? null : (int)$row['max_sequence']);
+	}
+
 	protected function applyTransactionStatus($txstatus_id, $txstatus, $config) {
 		$orders_id = (int)$txstatus['reference'];
 		$txid = (string)$txstatus['txid'];
@@ -1370,6 +1407,10 @@ class PayoneModified {
 			if ($config === null) {
 				$config = $this->getConfig();
 			}
+			$latest_applied_sequence = $this->getLatestAppliedTransactionStatusSequence($orders_id, $txid);
+			if ($latest_applied_sequence === false) {
+				return false;
+			}
 
 			do {
 				$pending = array();
@@ -1383,8 +1424,11 @@ class PayoneModified {
 				                           ON d_processed.payone_txstatus_id = s.payone_txstatus_id
 				                          AND d_processed.`key` = '_modified_processed'
 				                          AND d_processed.`value` = '0'
+				                         JOIN payone_txstatus_data d_sequence
+				                           ON d_sequence.payone_txstatus_id = s.payone_txstatus_id
+				                          AND d_sequence.`key` = 'sequencenumber'
 				                        WHERE s.orders_id = '".$orders_id."'
-				                        ORDER BY s.payone_txstatus_id");
+				                        ORDER BY CAST(d_sequence.`value` AS UNSIGNED), s.payone_txstatus_id");
 				while ($row = xtc_db_fetch_array($query)) {
 					$pending[] = (int)$row['payone_txstatus_id'];
 				}
@@ -1397,6 +1441,7 @@ class PayoneModified {
 					$status_credential = array(
 						'portalid' => ((isset($txstatus['portalid'])) ? $txstatus['portalid'] : ''),
 						'aid' => ((isset($txstatus['aid'])) ? $txstatus['aid'] : ''),
+						'credential_hash' => ((isset($txstatus['_modified_credential_hash'])) ? $txstatus['_modified_credential_hash'] : ''),
 					);
 					if (!$this->transactionStatusCredentialMatches($transaction_credential, $status_credential)) {
 						if (!$this->markTransactionStatusProcessed($pending_txstatus_id)) {
@@ -1421,9 +1466,31 @@ class PayoneModified {
 						continue;
 					}
 
+					$sequence = ((isset($txstatus['sequencenumber']) && ctype_digit((string)$txstatus['sequencenumber']))
+						? (int)$txstatus['sequencenumber']
+						: null);
+					if ($sequence === null) {
+						if (!$this->markTransactionStatusProcessed($pending_txstatus_id)) {
+							return false;
+						}
+						$this->log("ignored TxStatus without valid sequence for transaction $txid / order $orders_id");
+						continue;
+					}
+					// PAYONE can send different events with the same sequence number.
+					if ($latest_applied_sequence !== null && $sequence < $latest_applied_sequence) {
+						if (!$this->markTransactionStatusProcessed($pending_txstatus_id)) {
+							return false;
+						}
+						$this->log("ignored obsolete TxStatus sequence $sequence for transaction $txid / order $orders_id");
+						continue;
+					}
+
 					if (!$this->applyTransactionStatus($pending_txstatus_id, $txstatus, $config)) {
 						$this->log("could not apply TxStatus $pending_txstatus_id for transaction $txid / order $orders_id");
 						return false;
+					}
+					if ($latest_applied_sequence === null || $sequence > $latest_applied_sequence) {
+						$latest_applied_sequence = $sequence;
 					}
 				}
 			} while (count($pending) > 0);
@@ -1494,35 +1561,42 @@ class PayoneModified {
 
 		$orders_id = (int)$txstatus['reference'];
 		$txid = (string)$txstatus['txid'];
-		$config = $this->getConfig();
-		$status_credential = $this->getTransactionStatusCredential($txstatus, $config);
-		if ($status_credential === false) {
-			$this->log("received TxStatus with invalid credentials! TxStatus will not be processed.");
-			return false;
-		}
-
 		$transaction_query = xtc_db_query("SELECT payone_transactions_id
 		                                     FROM payone_transactions
 		                                    WHERE orders_id = '".$orders_id."'
 		                                      AND txid = '".xtc_db_input($txid)."'
 		                                    LIMIT 1");
 		$transaction_exists = (xtc_db_num_rows($transaction_query) > 0);
+		$config = $this->getConfig();
+		$status_credential = false;
 		if ($transaction_exists) {
 			$transaction_credential = $this->getTransactionCredential($orders_id, $txid);
-			if ($transaction_credential !== false
-			    && !$this->transactionStatusCredentialMatches($transaction_credential, $status_credential)
-			    )
-			{
-				$this->log("received TxStatus with credentials not assigned to transaction $txid / order $orders_id!");
-				return false;
+			if ($transaction_credential !== false) {
+				// Keep callbacks valid after a key rotation by checking the credential bound to the transaction.
+				$status_credential = $this->getTransactionStatusCredentialIdentity($txstatus);
+				if (!$this->transactionStatusCredentialMatches($transaction_credential, $status_credential)) {
+					$this->log("received TxStatus with credentials not assigned to transaction $txid / order $orders_id!");
+					return false;
+				}
 			}
 			if ($transaction_credential === false) {
+				$status_credential = $this->getTransactionStatusCredential($txstatus, $config);
+				if ($status_credential === false) {
+					$this->log("received TxStatus with invalid credentials! TxStatus will not be processed.");
+					return false;
+				}
 				if (!$this->saveTransactionCredentialIdentity($orders_id, $txid, $status_credential)) {
 					$this->transaction_status_error = self::TRANSACTION_STATUS_ERROR_PERSISTENCE;
 					$this->log("could not bind authenticated TxStatus credentials to transaction $txid / order $orders_id");
 					return false;
 				}
 				$this->log("bound authenticated TxStatus credentials to legacy transaction $txid / order $orders_id");
+			}
+		} else {
+			$status_credential = $this->getTransactionStatusCredential($txstatus, $config);
+			if ($status_credential === false) {
+				$this->log("received TxStatus with invalid credentials! TxStatus will not be processed.");
+				return false;
 			}
 		}
 
