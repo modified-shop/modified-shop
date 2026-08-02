@@ -114,6 +114,22 @@
                 }
               }
 
+              $reference_saved = !empty($tracking_links['im_retoure_transaction_id'])
+                                 && !empty($tracking_links['im_retoure_id']);
+              if ($reference_saved === false
+                  && isset($response['status'])
+                  && in_array($response['status'], array('successful', 'pending'), true)
+                  && isset($response['refund'])
+                  && is_array($response['refund'])
+                  )
+              {
+                $reference_saved = $DHLInternetmarke->SaveRefundReference(
+                  $tracking_id,
+                  $oID,
+                  $response['refund']
+                );
+              }
+
               if (isset($response['status']) && $response['status'] == 'successful') {
                 $delete_query = xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING."
                                                     WHERE tracking_id = '".(int)$tracking_id."'
@@ -122,20 +138,10 @@
                   $delete_query !== false ? TEXT_IM_LABEL_DELETED : TEXT_IM_LABEL_LOCAL_DELETE_ERROR,
                   $delete_query !== false ? 'success' : 'warning'
                 );
-              } elseif (isset($response['status']) && $response['status'] == 'pending') {
-                $reference_saved = !empty($tracking_links['im_retoure_transaction_id'])
-                                   && !empty($tracking_links['im_retoure_id']);
-                if ($reference_saved === false
-                    && isset($response['refund'])
-                    && is_array($response['refund'])
-                    )
-                {
-                  $reference_saved = $DHLInternetmarke->SaveRefundReference(
-                    $tracking_id,
-                    $oID,
-                    $response['refund']
-                  );
+                if ($delete_query === false && $reference_saved === false) {
+                  $messageStack->add_session(TEXT_IM_LABEL_REFUND_REFERENCE_ERROR, 'warning');
                 }
+              } elseif (isset($response['status']) && $response['status'] == 'pending') {
                 $messageStack->add_session(
                   $reference_saved === true ? TEXT_IM_LABEL_REFUND_PENDING : TEXT_IM_LABEL_REFUND_REFERENCE_ERROR,
                   'warning'
