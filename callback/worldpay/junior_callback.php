@@ -84,14 +84,7 @@
                      AND payment_class = 'worldpay_junior'
                      AND orders_status = '".$prepare_status."'");
 
-    $success_order_query = xtc_db_query("SELECT orders_id
-                                           FROM ".TABLE_ORDERS."
-                                          WHERE orders_id = '".(int)$callback['order_id']."'
-                                            AND customers_id = '".(int)$callback['customers_id']."'
-                                            AND payment_class = 'worldpay_junior'
-                                            AND orders_status = '".$success_status."'
-                                          LIMIT 1");
-    if (xtc_db_num_rows($success_order_query) === 1) {
+    if (xtc_db_affected_rows() === 1) {
       $sql_data_array = array(
         'orders_id' => (int)$callback['order_id'],
         'orders_status_id' => $success_status,
