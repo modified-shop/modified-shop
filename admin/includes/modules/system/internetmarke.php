@@ -374,6 +374,8 @@
         array('column' => 'im_orders_id', 'default' => 'VARCHAR(80) DEFAULT NULL'),
         array('column' => 'im_url', 'default' => 'VARCHAR(512)'),
         array('column' => 'im_voucher_id', 'default' => 'VARCHAR(80) DEFAULT NULL'),
+        array('column' => 'im_retoure_transaction_id', 'default' => 'VARCHAR(80) DEFAULT NULL'),
+        array('column' => 'im_retoure_id', 'default' => 'VARCHAR(80) DEFAULT NULL'),
       );
       foreach ($table_array as $table) {
         $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE '".xtc_db_input($table['column'])."'");

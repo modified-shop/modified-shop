@@ -27,3 +27,6 @@
   define('TEXT_IM_LABEL_DELETE_ERROR', 'The Internetmarke label could not be canceled.');
   define('TEXT_IM_LABEL_LOCAL_DELETE_ERROR', 'The Internetmarke label was canceled, but its local tracking entry could not be deleted.');
   define('TEXT_IM_LABEL_DELETE_CONFIRM', 'Do you really want to cancel this Internetmarke label?');
+  define('TEXT_IM_LABEL_REFUND_PENDING', 'The Internetmarke cancellation was requested and is still being processed by Deutsche Post. Use the delete icon again to check its status.');
+  define('TEXT_IM_LABEL_REFUND_REFERENCE_ERROR', 'The cancellation was requested, but its refund reference could not be saved locally. Check the Internetmarke error log.');
+  define('TEXT_IM_MODULE_UPDATE_REQUIRED', 'Please update the Internetmarke module first.');

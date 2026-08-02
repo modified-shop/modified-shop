@@ -62,38 +62,95 @@
           if (xtc_db_num_rows($tracking_links_query) > 0) {
             $tracking_links = xtc_db_fetch_array($tracking_links_query);
 
-            require_once(DIR_FS_EXTERNAL.'dhl/DHLInternetmarke.php');
-            $DHLInternetmarke = new DHLInternetmarke(array());
-            if ($tracking_links['external'] == '1') {
-              $response = $DHLInternetmarke->DeleteLabel($tracking_links['parcel_id'], 'auto');
+            if (!array_key_exists('im_retoure_transaction_id', $tracking_links)
+                || !array_key_exists('im_retoure_id', $tracking_links)
+                )
+            {
+              $messageStack->add_session(TEXT_IM_MODULE_UPDATE_REQUIRED, 'warning');
             } else {
-              $voucher_id = isset($tracking_links['im_voucher_id']) && $tracking_links['im_voucher_id'] != ''
-                ? $tracking_links['im_voucher_id']
-                : $tracking_links['parcel_id'];
-              $response = $DHLInternetmarke->DeleteLabel($voucher_id, 'voucherId');
-            }
+              require_once(DIR_FS_EXTERNAL.'dhl/DHLInternetmarke.php');
+              $DHLInternetmarke = new DHLInternetmarke(array());
 
-            if (is_array($response['message']) && count($response['message']) > 0) {
-              foreach ($response['message'] as $error => $messages) {
-                if (!is_array($messages)) {
-                  continue;
-                }
-                foreach ($messages as $message) {
-                  if (is_scalar($message)) {
-                    $messageStack->add_session(encode_htmlspecialchars((string)$message), 'warning');
+              if ($tracking_links['external'] == '1') {
+                $shipment_number = $tracking_links['im_orders_id'];
+                $identifier = 'shopOrderId';
+              } else {
+                $shipment_number = isset($tracking_links['im_voucher_id']) && $tracking_links['im_voucher_id'] != ''
+                  ? $tracking_links['im_voucher_id']
+                  : $tracking_links['parcel_id'];
+                $identifier = 'voucherId';
+              }
+
+              if (!empty($tracking_links['im_retoure_transaction_id'])
+                  && !empty($tracking_links['im_retoure_id'])
+                  )
+              {
+                $response = $DHLInternetmarke->GetRefundStatus(
+                  $tracking_links['im_retoure_transaction_id'],
+                  $tracking_links['im_retoure_id'],
+                  $shipment_number,
+                  $identifier
+                );
+              } else {
+                $response = $DHLInternetmarke->DeleteLabel($shipment_number, $identifier);
+              }
+
+              $has_messages = false;
+              if (isset($response['message'])
+                  && is_array($response['message'])
+                  && count($response['message']) > 0
+                  )
+              {
+                foreach ($response['message'] as $error => $messages) {
+                  if (!is_array($messages)) {
+                    continue;
+                  }
+                  foreach ($messages as $message) {
+                    if (is_scalar($message)) {
+                      $has_messages = true;
+                      $messageStack->add_session(encode_htmlspecialchars((string)$message), 'warning');
+                    }
                   }
                 }
               }
-            } elseif (is_array($response['label']) && count($response['label']) > 0) {
-              $delete_query = xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING."
-                                                  WHERE tracking_id = '".(int)$tracking_id."'
-                                                    AND orders_id = '".(int)$oID."'");
-              $messageStack->add_session(
-                $delete_query !== false ? TEXT_IM_LABEL_DELETED : TEXT_IM_LABEL_LOCAL_DELETE_ERROR,
-                $delete_query !== false ? 'success' : 'warning'
-              );
-            } else {
-              $messageStack->add_session(TEXT_IM_LABEL_DELETE_ERROR, 'warning');
+
+              if (isset($response['status']) && $response['status'] == 'successful') {
+                $delete_query = xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING."
+                                                    WHERE tracking_id = '".(int)$tracking_id."'
+                                                      AND orders_id = '".(int)$oID."'");
+                $messageStack->add_session(
+                  $delete_query !== false ? TEXT_IM_LABEL_DELETED : TEXT_IM_LABEL_LOCAL_DELETE_ERROR,
+                  $delete_query !== false ? 'success' : 'warning'
+                );
+              } elseif (isset($response['status']) && $response['status'] == 'pending') {
+                $reference_saved = !empty($tracking_links['im_retoure_transaction_id'])
+                                   && !empty($tracking_links['im_retoure_id']);
+                if ($reference_saved === false
+                    && isset($response['refund'])
+                    && is_array($response['refund'])
+                    )
+                {
+                  $reference_saved = $DHLInternetmarke->SaveRefundReference(
+                    $tracking_id,
+                    $oID,
+                    $response['refund']
+                  );
+                }
+                $messageStack->add_session(
+                  $reference_saved === true ? TEXT_IM_LABEL_REFUND_PENDING : TEXT_IM_LABEL_REFUND_REFERENCE_ERROR,
+                  'warning'
+                );
+              } else {
+                if (!empty($tracking_links['im_retoure_transaction_id'])
+                    && !empty($tracking_links['im_retoure_id'])
+                    )
+                {
+                  $DHLInternetmarke->ClearRefundReference($tracking_id, $oID);
+                }
+                if ($has_messages === false) {
+                  $messageStack->add_session(TEXT_IM_LABEL_DELETE_ERROR, 'warning');
+                }
+              }
             }
           } else {
             $messageStack->add_session(TEXT_IM_LABEL_NOT_FOUND, 'warning');
