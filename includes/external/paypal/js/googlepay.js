@@ -21,6 +21,7 @@ let paymentsClient = null,
 function reportGooglePayError(step, err) {
   try {
     var payload = new URLSearchParams({
+      token: window.paypalClientErrorToken || "",
       step: step,
       name: err && err.name ? err.name : "",
       message: err && err.message ? err.message : String(err),
@@ -29,6 +30,7 @@ function reportGooglePayError(step, err) {
       navigator.sendBeacon(DIR_WS_BASE + "ajax.php?ext=log_paypal_client_error&payment_method=paypalgooglepay", payload);
     } else {
       $.post(DIR_WS_BASE + "ajax.php?ext=log_paypal_client_error&payment_method=paypalgooglepay", {
+        token: window.paypalClientErrorToken || "",
         step: step,
         name: err && err.name ? err.name : "",
         message: err && err.message ? err.message : String(err),

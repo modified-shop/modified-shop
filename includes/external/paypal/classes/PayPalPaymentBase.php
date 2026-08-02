@@ -937,10 +937,63 @@ class PayPalPaymentBase extends PayPalCommon {
   function get_js_sdk($commit = 'true', $client_token = false, $user_token = false, $custom = false) {
     return get_paypal_js_sdk($this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))), $_SESSION['currency'], $this->intent, $commit, $client_token, $user_token, $custom);
   }
+
+
+  function get_client_error_token() {
+    $secret = ((defined('MODULE_PAYMENT_PAYPAL_SECRET')) ? MODULE_PAYMENT_PAYPAL_SECRET : '');
+    return hash_hmac('sha256', xtc_session_id().'|paypal_client_error', $secret);
+  }
+
+
+  function order_requires_shipping($order = null) {
+    $content_type = ((is_object($order) && isset($order->content_type)) ? $order->content_type : '');
+    if ($content_type == ''
+        && isset($_SESSION['cart'])
+        && is_object($_SESSION['cart'])
+        )
+    {
+      $content_type = $_SESSION['cart']->get_content_type();
+    }
+
+    if (in_array($content_type, array('virtual', 'virtual_weight'), true)) {
+      return false;
+    }
+    if (isset($_SESSION['cart'])
+        && is_object($_SESSION['cart'])
+        && $_SESSION['cart']->count_contents_virtual() == 0
+        )
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  function get_webhook_config_key($mode = '') {
+    if ($mode == '') {
+      $mode = $this->get_config('PAYPAL_MODE');
+    }
+    $client_id = $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($mode));
+
+    return 'PAYPAL_WEBHOOK_ID_'.strtoupper($mode).'_'.substr(hash('sha256', $client_id), 0, 16);
+  }
+
+
+  function save_webhook_id($webhook_id) {
+    $this->save_config(array(array('config_key' => $this->get_webhook_config_key(), 'config_value' => $webhook_id)));
+    $this->delete_config('PAYPAL_WEBHOOK_ID');
+  }
+
+
+  function delete_webhook_id() {
+    $this->delete_config($this->get_webhook_config_key());
+    $this->delete_config('PAYPAL_WEBHOOK_ID');
+  }
   
   
   function verify_webhook_signature($headers, $body) {
-    $webhook_id = $this->get_config('PAYPAL_WEBHOOK_ID', false);
+    $webhook_id = $this->get_config($this->get_webhook_config_key(), false);
     if ($webhook_id == '') {
       $webhook_id = $this->lookup_webhook_id();
     }
@@ -992,7 +1045,7 @@ class PayPalPaymentBase extends PayPalCommon {
       for ($w=0, $z=count($webhooks); $w<$z; $w++) {
         if ($webhooks[$w]->getUrl() == $webhook_url) {
           $webhook_id = $webhooks[$w]->getId();
-          $this->save_config(array(array('config_key' => 'PAYPAL_WEBHOOK_ID', 'config_value' => $webhook_id)));
+          $this->save_webhook_id($webhook_id);
           return $webhook_id;
         }
       }

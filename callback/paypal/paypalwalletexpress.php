@@ -48,7 +48,7 @@ if ($payment_method != ''
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
     }
 
-    $requires_shipping = ($_SESSION['cart']->get_content_type() != 'virtual');
+    $requires_shipping = $paypal->order_requires_shipping();
     if ($requires_shipping === true) {
       $paypal_shipping = isset($PayPalOrder->purchase_units[0]->shipping)
                          ? $PayPalOrder->purchase_units[0]->shipping

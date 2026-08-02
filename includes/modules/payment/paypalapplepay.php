@@ -115,6 +115,7 @@ class paypalapplepay extends PayPalPaymentV2 {
     }
 
     $paypalscript = '
+    window.paypalClientErrorToken = "'.$this->get_client_error_token().'";
     if ($("#apms_button5").length) {
       // eslint-disable-next-line no-undef
       if (typeof ApplePaySession != "undefined" && ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()) {

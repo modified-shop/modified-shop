@@ -133,6 +133,8 @@
     function CreateOrder($payment_source = array(), $error = false) {
       global $order, $xtPrice;
 
+      $requires_shipping = $this->order_requires_shipping($order);
+
       // auth
       $client = $this->GetClient();
 
@@ -292,7 +294,7 @@
 
       if (isset($_SESSION['customer_id'])) {
         // virtual orders have no shipping address to send PayPal at all
-        if ($order->content_type != 'virtual') {
+        if ($requires_shipping === true) {
           if ($order->delivery === false) {
             $order->delivery = $order->billing;
           }
@@ -384,11 +386,13 @@
       );
 
       if ($pm_source != 'card') {
-        if ($order->content_type == 'virtual') {
+        if ($requires_shipping === false && $this->code != 'paypalexpress') {
           $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'NO_SHIPPING';
-        } elseif (isset($_SESSION['customer_id'])
+        } elseif ($requires_shipping === true
+                  && (isset($_SESSION['customer_id'])
                   || $this->code == 'paypalapplepay'
                   || $this->code == 'paypalgooglepay'
+                  )
                   )
         {
           $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'SET_PROVIDED_ADDRESS';
@@ -795,7 +799,7 @@
       }
 
       // virtual orders have no shipping address to send PayPal at all
-      $has_shipping = ($order->content_type != 'virtual');
+      $has_shipping = $this->order_requires_shipping($order);
       if ($order->delivery === false) {
         $order->delivery = $order->billing;
       }
@@ -810,7 +814,7 @@
           'admin_area_1' => $this->encode_utf8((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], ((isset($order->delivery['zone_id'])) ? $order->delivery['zone_id'] : 0), $order->delivery['state']) : ''), // state
           'admin_area_2' => $this->encode_utf8($order->delivery['city']), // city
           'postal_code' => $this->encode_utf8($order->delivery['postcode']),
-          'country_code' => $this->encode_utf8((isset($order->customer['country']['iso_code_2'])) ? $order->customer['country']['iso_code_2'] : $order->delivery['country_iso_2'])
+          'country_code' => $this->encode_utf8((isset($order->delivery['country']['iso_code_2'])) ? $order->delivery['country']['iso_code_2'] : $order->delivery['country_iso_2'])
         );
 
         if ($order->delivery['company'] != '') {
@@ -841,6 +845,16 @@
 
       // check if a shipping object already exists on the order
       $existing_order = $this->GetOrder($orderID);
+      if (!is_object($existing_order)
+          || !isset($existing_order->purchase_units[0])
+          )
+      {
+        $this->LoggingManager->log('WARNING', 'PatchOrder aborted', array(
+          'reason' => 'PayPal order unavailable',
+          'order_id' => $orderID,
+        ));
+        return false;
+      }
       $existing_has_shipping = isset($existing_order->purchase_units[0]->shipping);
 
       $request = new OrdersPatchRequest($orderID);
@@ -1031,7 +1045,15 @@
 
 
     function FinishOrder($order_id) {
-      $this->PatchOrder($_SESSION['paypal']['OrderID']);
+      if ($this->PatchOrder($_SESSION['paypal']['OrderID']) !== true) {
+        $this->LoggingManager->log('WARNING', 'FinishOrder aborted', array(
+          'reason' => 'PatchOrder failed',
+          'order_id' => $_SESSION['paypal']['OrderID'],
+        ));
+        $this->remove_order($order_id);
+        unset($_SESSION['paypal']);
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+      }
 
       if ($this->intent == 'CAPTURE') {
         $result = $this->CaptureOrder($_SESSION['paypal']['OrderID']);

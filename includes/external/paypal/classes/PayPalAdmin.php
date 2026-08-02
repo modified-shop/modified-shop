@@ -316,7 +316,7 @@ class PayPalAdmin extends PayPalPayment {
 
     try {
       $WebhookList = $webhook->create($apiContext);
-      $this->save_config(array(array('config_key' => 'PAYPAL_WEBHOOK_ID', 'config_value' => $WebhookList->getId())));
+      $this->save_webhook_id($WebhookList->getId());
     } catch (Exception $ex) {
       $this->LoggingManager->log('DEBUG', 'Webhook', array('exception' => $ex));
     }
@@ -470,7 +470,7 @@ class PayPalAdmin extends PayPalPayment {
     if ($valid === true) {
       try {
         $WebhookList->delete($apiContext);
-        $this->delete_config('PAYPAL_WEBHOOK_ID');
+        $this->delete_webhook_id();
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'Webhook', array('exception' => $ex));
       }

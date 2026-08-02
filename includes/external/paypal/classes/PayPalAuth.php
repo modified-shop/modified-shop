@@ -79,10 +79,13 @@ class PayPalAuth {
   protected function GetClient() {
     $environment = $this->GetEnvironment();
     $client = new PayPalHttpClient($environment);
+    $mode = $this->get_config('PAYPAL_MODE');
+    $client_id = $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($mode));
+    $client_secret = $this->get_config('PAYPAL_SECRET_'.strtoupper($mode));
 
     // replace the SDK auth injector with the caching variant
     // to reuse the oauth token across requests
-    $authInjector = new PayPalAuthInjector($client, $environment, NULL, NULL, $this->get_config('PAYPAL_MODE'));
+    $authInjector = new PayPalAuthInjector($client, $environment, NULL, NULL, $mode, $client_id, $client_secret);
     foreach ($client->injectors as $key => $injector) {
       if ($injector instanceof PayPalCheckoutSdk\Core\AuthorizationInjector) {
         $client->injectors[$key] = $authInjector;

@@ -27,14 +27,16 @@ class PayPalAuthInjector extends AuthorizationInjector {
   private $cache_refreshToken;
   private $cache_customer_id;
   private $cache_file;
+  private $cache_key;
 
-  public function __construct(HttpClient $client, PayPalEnvironment $environment, $refreshToken, $customer_id, $mode) {
+  public function __construct(HttpClient $client, PayPalEnvironment $environment, $refreshToken, $customer_id, $mode, $client_id, $client_secret) {
     parent::__construct($client, $environment, $refreshToken, $customer_id);
 
     $this->cache_client = $client;
     $this->cache_environment = $environment;
     $this->cache_refreshToken = $refreshToken;
     $this->cache_customer_id = $customer_id;
+    $this->cache_key = hash('sha256', $mode.'|'.$client_id.'|'.$client_secret);
     $this->cache_file = SQL_CACHEDIR.'pp_auth_v2_'.$mode.'.cache';
   }
 
@@ -65,9 +67,21 @@ class PayPalAuthInjector extends AuthorizationInjector {
     $use_cache = (is_null($this->cache_refreshToken) && is_null($this->cache_customer_id));
 
     if ($use_cache === true && is_file($this->cache_file)) {
-      $cached = json_decode(file_get_contents($this->cache_file), true);
+      $cached = false;
+      $cache_handle = fopen($this->cache_file, 'r');
+      if ($cache_handle !== false) {
+        if (flock($cache_handle, LOCK_SH)) {
+          $cached = json_decode(stream_get_contents($cache_handle), true);
+          flock($cache_handle, LOCK_UN);
+        }
+        fclose($cache_handle);
+      }
       if (is_array($cached)
+          && isset($cached['cache_key'])
+          && hash_equals($this->cache_key, $cached['cache_key'])
           && isset($cached['access_token'])
+          && array_key_exists('id_token', $cached)
+          && isset($cached['token_type'])
           && isset($cached['expires_at'])
           && $cached['expires_at'] > time()
           && ($require_id_token === false
@@ -109,12 +123,13 @@ class PayPalAuthInjector extends AuthorizationInjector {
       }
 
       file_put_contents($this->cache_file, json_encode(array(
+        'cache_key' => $this->cache_key,
         'access_token' => $accessToken->access_token,
         'id_token' => $id_token,
         'token_type' => $accessToken->token_type,
         'expires_at' => $expires_at,
         'id_expires_at' => $id_expires_at,
-      )));
+      )), LOCK_EX);
     }
 
     return new AccessToken($accessToken->access_token, $id_token, $accessToken->token_type, $accessToken->expires_in);

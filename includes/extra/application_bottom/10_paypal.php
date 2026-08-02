@@ -239,9 +239,8 @@
         && $_SESSION['cart']->count_contents() > 0
         )
     {
-      $requires_shipping = ($_SESSION['cart']->get_content_type() != 'virtual');
-
       $paypal = new PayPalPaymentV2('paypalapplepay');
+      $requires_shipping = $paypal->order_requires_shipping();
 
       if ($paypal->is_enabled()
           && ((basename($PHP_SELF) == FILENAME_SHOPPING_CART && $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_CART') == '1')
@@ -267,6 +266,8 @@
           function getAppleCartOrderUrl() {
             return "'.$order_url.'";
           }
+
+          window.paypalClientErrorToken = "'.$paypal->get_client_error_token().'";
 
           function getAppleCartShippingMethodsUrl() {
             return "'.$shipping_methods_url.'";
@@ -335,6 +336,8 @@
           function getGoogleCartOrderUrl() {
             return "'.$order_url.'";
           }
+
+          window.paypalClientErrorToken = "'.$paypal->get_client_error_token().'";
 
           function getGoogleCartShippingMethodsUrl() {
             return "'.$shipping_methods_url.'";

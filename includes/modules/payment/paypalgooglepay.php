@@ -92,6 +92,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
     }
 
     $paypalscript = '
+    window.paypalClientErrorToken = "'.$this->get_client_error_token().'";
     if ($("#apms_button6").length) {
       if (google && paypal.Googlepay) {
         onGooglePayLoaded();

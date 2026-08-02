@@ -33,6 +33,18 @@ if (isset($_SESSION['paypal'])
     unset($_SESSION['paypal']);
     xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL'));
   } else {
+    if (!isset($PayPalOrder->purchase_units[0]->shipping)
+        || !is_object($PayPalOrder->purchase_units[0]->shipping)
+        )
+    {
+      $paypal->LoggingManager->log('WARNING', 'PayPal Express callback aborted', array(
+        'reason' => 'missing shipping address',
+        'order_id' => $_SESSION['paypal']['OrderID'],
+      ));
+      unset($_SESSION['paypal']);
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL'));
+    }
+
     $shipping_address = $paypal->parse_address($PayPalOrder->purchase_units[0]->shipping);
     $billing_address = (isset($PayPalOrder->payer)) ? $paypal->parse_address($PayPalOrder->payer) : $shipping_address;
 
