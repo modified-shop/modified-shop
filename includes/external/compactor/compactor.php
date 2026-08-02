@@ -346,7 +346,15 @@
 		private function _compressVertically($html)
 		{
 			$html = $this->_extractPreservedBlocks($html);
-      // remove the line breaks
+			// preserve token separation in multiline tags, including quoted angle brackets
+			$html = preg_replace_callback(
+				'#<(?:/?[A-Za-z]|![A-Za-z]|\?)(?:[^>"\']|"[^"]*"|\'[^\']*\')*>#s',
+				function($matches) {
+					return str_replace($this->_options['line_break'], ' ', $matches[0]);
+				},
+				$html
+			);
+	      // remove the line breaks
 			return str_replace($this->_options['line_break'], '', $html);
 		}
 		
