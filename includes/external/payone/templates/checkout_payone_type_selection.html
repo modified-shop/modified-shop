@@ -3,10 +3,10 @@
 	<tr>
 		<td class="label">{$smarty.const.selection_type}</td>
 		<td>
-			<select name="{$code}_type" id="{$code}_type">
+				<select name="{$code|escape:'html'}_type" id="{$code|escape:'html'}_type">
 			  {foreach key=key_data item=item_data from=$genre_config}
 			    {if $item_data.active == 'true'}
-					  <option value="{$key_data}">{$item_data.name|constant}</option>
+						  <option value="{$key_data|escape:'html'}">{$item_data.name|constant}</option>
 					{/if}
 			  {/foreach}
 			</select>
@@ -15,8 +15,8 @@
 	{if $required_fields}
     {foreach key=key_data item=item_data from=$required_fields}
       <tr>
-        <td class="label">{$key_data|constant}</td>
-        <td><input id="{$key_data}" name="{$key_data}" type="text" value="{$item_data}"></td>
+	        <td class="label">{$key_data|constant}</td>
+	        <td><input id="{$key_data|escape:'html'}" name="{$key_data|escape:'html'}" type="text" value="{$item_data|escape:'html'}"></td>
       </tr>
     {/foreach}
   {/if}

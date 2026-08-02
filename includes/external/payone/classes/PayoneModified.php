@@ -20,12 +20,18 @@
 require_once (DIR_FS_EXTERNAL.'payone/php/Payone/Bootstrap.php');
 
 class PayoneModified {
+	const EMPTY_ARRAY_VALUE = '__PAYONE_EMPTY_ARRAY__';
+	const TRANSACTION_STATUS_ERROR_NONE = '';
+	const TRANSACTION_STATUS_ERROR_PERSISTENCE = 'persistence';
+
+	protected static $transaction_status_support_ready = false;
+	protected $transaction_status_error = self::TRANSACTION_STATUS_ERROR_NONE;
 
 	protected $_client_api_url;
 	protected $_frontend_url;
 	protected $_server_api_url;
   
-  public $integrator_version = '1.26';
+  public $integrator_version = '1.27';
   public $api_version = '3.10';
   public $logging = false;
   
@@ -80,6 +86,7 @@ class PayoneModified {
     if ($this->checkConfig() === false) {
       include(DIR_FS_EXTERNAL.'payone/install/payone_install.php');
     }
+		return $this->installTransactionStatusSupport();
   }
   
 	public function getStatusNames() {
@@ -88,6 +95,7 @@ class PayoneModified {
       'appointed', 
       'capture', 
       'paid', 
+      'failed',
       'underpaid', 
       'cancelation', 
       'refund', 
@@ -173,6 +181,14 @@ class PayoneModified {
 			'orders_status' => array(
 				'tmp' => '1',
 			),
+			'orders_status_redirect' => array(
+				'url' => array(
+					'tmp' => '',
+				),
+				'timeout' => array(
+					'tmp' => '30',
+				),
+			),
 
 			'global' => array(
 				'merchant_id' => 'no_id',
@@ -232,6 +248,8 @@ class PayoneModified {
 
 		foreach($this->getStatusNames() as $sname) {
 			$config['orders_status'][$sname] = '1';
+			$config['orders_status_redirect']['url'][$sname] = '';
+			$config['orders_status_redirect']['timeout'][$sname] = '30';
 		}
 
 		return $config;
@@ -264,7 +282,7 @@ class PayoneModified {
 			'genre' => $genre,
 			'global_override' => 'false',
 			'global' => $default_config['global'],
-			'name' => constant('PAYGENRE_'.strtoupper($genre)).' '.uniqid(),
+			'name' => ((defined('PAYGENRE_'.strtoupper($genre))) ? constant('PAYGENRE_'.strtoupper($genre)) : $genre).' '.uniqid(),
 			'active' => 'false',
 			'order' => 0,
 			'min_cart_value' => 0,
@@ -318,6 +336,19 @@ class PayoneModified {
       $default_config = $this->_getDefaultConfig();
 
       $configuration = $this->mergeConfigs($default_config, $configuration);
+			foreach ($configuration as $config_identifier => $genre_config) {
+				if (strpos($config_identifier, 'paymentgenre_') === 0
+				    && is_array($genre_config)
+				    && isset($genre_config['genre'])
+				    && in_array($genre_config['genre'], array_keys($this->getPaymentTypes()))
+				    )
+				{
+					$configuration[$config_identifier] = $this->mergeConfigs(
+						$this->_getPaymentGenreDefaultConfig($genre_config['genre']),
+						$genre_config
+					);
+				}
+			}
       if (!empty($identifier) && array_key_exists($identifier, $configuration)) {
         return $configuration[$identifier];
       }
@@ -374,60 +405,43 @@ class PayoneModified {
 		xtc_db_query("UPDATE `configuration` SET `configuration_value` = '".xtc_db_input(implode(';', $payment_modules))."' WHERE `configuration_key` = 'MODULE_PAYMENT_INSTALLED'");
 	}
 
-	public function mergeConfigs($old_config, $new_config) {
-		$old_keys = array_keys($old_config);
-		if (is_array($old_keys) && isset($old_keys[0]) && $old_keys[0] === 0)
-		{
-			# special case: numerically indexed array, e.g. list of countries
-			$merged = array_values(array_unique($new_config));
-		}
-		else
-		{
-			$merged = array();
-			foreach($old_config as $key => $value) {
-				if (isset($new_config[$key]) && empty($new_config[$key]) && !is_numeric($new_config[$key])) {
-					if (array_key_exists($key, $new_config)) {
-						if (is_array($value)) {
-							$merged[$key] = array();
-						}
-						else if ($value == 'true' || $value == 'false') {
-							$merged[$key] = 'false';
-						}
-						else {
-							$merged[$key] = '';
-						}
-					}
-					else {
-						if ($value == 'true' || $value == 'false') {
-							$merged[$key] = 'false';
-						}
-						else {
-							$merged[$key] = $value;
-						}
-					}
-				}
-				else {
-					if (is_array($value)) {
-						$merged[$key] = $this->mergeConfigs($value, $new_config[$key]);
-					}
-					else if ($value == 'true' || $value == 'false') {
-						$merged[$key] = $new_config[$key] == 'true' ? 'true' : 'false';
-					}
-					else {
-						$merged[$key] = $new_config[$key];
-					}
-				}
+	protected function isListArray($value) {
+		return is_array($value)
+		       && (empty($value) || array_keys($value) === range(0, count($value) - 1));
+	}
 
-				if ($value == 'true' || $value == 'false') {
-					$merged[$key] = $new_config[$key] == 'true' ? 'true' : 'false';
+	public function mergeConfigs($old_config, $new_config) {
+		if (is_array($old_config) && $new_config === '') {
+			return array();
+		}
+
+		if (!is_array($new_config)) {
+			return $old_config;
+		}
+
+		if ($this->isListArray($old_config) && $this->isListArray($new_config)) {
+			return array_values(array_unique($new_config));
+		}
+
+		$merged = array();
+		foreach($old_config as $key => $value) {
+			if (array_key_exists($key, $new_config)) {
+				if (is_array($value)) {
+					$merged[$key] = $this->mergeConfigs($value, $new_config[$key]);
+				} else {
+					$merged[$key] = $new_config[$key];
 				}
-			}
-			foreach($new_config as $nkey => $nvalue) {
-				if (!array_key_exists($nkey, $merged)) {
-					$merged[$nkey] = $nvalue;
-				}
+			} else {
+				$merged[$key] = $value;
 			}
 		}
+
+		foreach($new_config as $key => $value) {
+			if (!array_key_exists($key, $old_config)) {
+				$merged[$key] = $value;
+			}
+		}
+
 		return $merged;
 	}
 
@@ -440,7 +454,7 @@ class PayoneModified {
 		foreach($input as $key => $value) {
 			if (is_array($value)) {
 				if (empty($value)) {
-					$output[$prefix.$key] = '';
+					$output[$prefix.$key] = self::EMPTY_ARRAY_VALUE;
 				}
 				else {
 					$flattened = $this->_flattenArray($value, $key);
@@ -470,22 +484,35 @@ class PayoneModified {
 				$subarray =& $subarray[$subkey];
 			}
 			$final_key = array_shift($keys);
-			$subarray[$final_key] = $value;
+			$subarray[$final_key] = (($value === self::EMPTY_ARRAY_VALUE) ? array() : $value);
 		}
 		return $output;
 	}
 
 	public function dumpConfig() {
-		$t_filename = DIR_FS_CATALOG.'cache/payone-config-'.uniqid().'.cfg';
-		$t_fh = @fopen($t_filename, 'w');
+		try {
+			$random = bin2hex(random_bytes(16));
+		} catch (Exception $e) {
+			return false;
+		}
+		$t_filename = DIR_FS_LOG.'mod_payone_config_'.$random.'.log';
+		$t_fh = @fopen($t_filename, 'x');
 		if ($t_fh == false)
 		{
+			return false;
+		}
+		if (!@chmod($t_filename, 0600)) {
+			fclose($t_fh);
+			@unlink($t_filename);
 			return false;
 		}
 		$config_array = $this->getConfig();
 		$config_flat_array = $this->_flattenArray($config_array);
 		foreach($config_flat_array as $cfg_key => $cfg_value)
 		{
+			if (preg_match('#(^|/)[^/]*(key|password|pwd)$#i', $cfg_key)) {
+				$cfg_value = '[FILTERED]';
+			}
 			fwrite($t_fh, $cfg_key. "\t". $cfg_value ."\n");
 		}
 		fclose($t_fh);
@@ -702,7 +729,208 @@ class PayoneModified {
 		return $hash;
 	}
 
-	public function saveTransaction($orders_id, $status, $txid, $userid) {
+	protected function checkTransactionStatusSupport() {
+		if (self::$transaction_status_support_ready === true) {
+			return true;
+		}
+
+		$table_query = xtc_db_query("SHOW TABLES LIKE 'payone_transaction_credentials'");
+		if ($table_query === false || xtc_db_num_rows($table_query) !== 1) {
+			return false;
+		}
+
+		$task_query = xtc_db_query("SELECT tasks_id
+		                              FROM scheduled_tasks
+		                             WHERE tasks = 'payone_txstatus'
+		                             LIMIT 1");
+		if ($task_query === false || xtc_db_num_rows($task_query) !== 1) {
+			return false;
+		}
+
+		self::$transaction_status_support_ready = true;
+		return true;
+	}
+
+	protected function hasInstalledPaymentModule() {
+		$query = xtc_db_query("SELECT configuration_key
+		                         FROM ".TABLE_CONFIGURATION."
+		                        WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYONE%_STATUS'
+		                        LIMIT 1");
+		return $query !== false && xtc_db_num_rows($query) > 0;
+	}
+
+	public function prepareTransactionStatusSupport($payment_module_installed = false) {
+		if ($this->checkTransactionStatusSupport()) {
+			return true;
+		}
+		if ($payment_module_installed !== true && !$this->hasInstalledPaymentModule()) {
+			return null;
+		}
+		return $this->installTransactionStatusSupport();
+	}
+
+	protected function installTransactionStatusSupport() {
+		$table_created = xtc_db_query("CREATE TABLE IF NOT EXISTS `payone_transaction_credentials` (
+			  `orders_id` int(10) unsigned NOT NULL,
+			  `txid` varchar(100) NOT NULL,
+			  `portalid` varchar(64) NOT NULL,
+			  `aid` varchar(64) NOT NULL,
+			  `credential_hash` char(64) NOT NULL,
+			  `created` datetime DEFAULT NULL,
+			  PRIMARY KEY (`orders_id`,`txid`)
+			)");
+		if ($table_created === false) {
+			return false;
+		}
+
+		$task_created = xtc_db_query("INSERT INTO scheduled_tasks
+		              (time_next, time_offset, time_regularity, time_unit, status, edit, tasks)
+		              VALUES
+		              (0, 0, 1, 'm', 1, 0, 'payone_txstatus')
+		              ON DUPLICATE KEY UPDATE
+		                time_regularity = VALUES(time_regularity),
+		                time_unit = VALUES(time_unit),
+		                status = VALUES(status),
+		                edit = VALUES(edit)");
+		if ($task_created === false) {
+			return false;
+		}
+
+		self::$transaction_status_support_ready = true;
+		return true;
+	}
+
+	protected function saveTransactionCredential($orders_id, $txid, $credential) {
+		if (!is_array($credential)
+		    || empty($credential['portal_id'])
+		    || empty($credential['subaccount_id'])
+		    || empty($credential['key'])
+		    || $credential['key'] === 'no_key'
+		    )
+		{
+			$this->log("cannot bind credentials to transaction $txid / order $orders_id");
+			return false;
+		}
+		return $this->saveTransactionCredentialIdentity($orders_id, $txid, array(
+			'portalid' => (string)$credential['portal_id'],
+			'aid' => (string)$credential['subaccount_id'],
+			'credential_hash' => hash('sha256', md5((string)$credential['key'])),
+		));
+	}
+
+	protected function saveTransactionCredentialIdentity($orders_id, $txid, $credential) {
+		$result = xtc_db_query("REPLACE INTO payone_transaction_credentials
+		                        (orders_id, txid, portalid, aid, credential_hash, created)
+		                        VALUES
+		                        ('".(int)$orders_id."',
+		                         '".xtc_db_input($txid)."',
+		                         '".xtc_db_input($credential['portalid'])."',
+		                         '".xtc_db_input($credential['aid'])."',
+		                         '".xtc_db_input($credential['credential_hash'])."',
+		                         now())");
+		return $result !== false;
+	}
+
+	protected function getTransactionCredential($orders_id, $txid) {
+		$query = xtc_db_query("SELECT portalid, aid, credential_hash
+		                         FROM payone_transaction_credentials
+		                        WHERE orders_id = '".(int)$orders_id."'
+		                          AND txid = '".xtc_db_input($txid)."'
+		                        LIMIT 1");
+		return ((xtc_db_num_rows($query) === 1) ? xtc_db_fetch_array($query) : false);
+	}
+
+	protected function bindStoredTransactionCredential($orders_id, $txid) {
+		$query = xtc_db_query("SELECT s.payone_txstatus_id
+		                         FROM payone_txstatus s
+		                         JOIN payone_txstatus_data d_txid
+		                           ON d_txid.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_txid.`key` = 'txid'
+		                          AND d_txid.`value` = '".xtc_db_input($txid)."'
+		                        WHERE s.orders_id = '".(int)$orders_id."'
+		                     ORDER BY s.payone_txstatus_id
+		                        LIMIT 1");
+		if ($query === false || xtc_db_num_rows($query) !== 1) {
+			return false;
+		}
+
+		$row = xtc_db_fetch_array($query);
+		$txstatus = $this->getStoredTransactionStatus($row['payone_txstatus_id']);
+		if ($txstatus === false
+		    || empty($txstatus['portalid'])
+		    || empty($txstatus['aid'])
+		    || empty($txstatus['_modified_credential_hash'])
+		    )
+		{
+			return false;
+		}
+
+		return $this->saveTransactionCredentialIdentity($orders_id, $txid, array(
+			'portalid' => $txstatus['portalid'],
+			'aid' => $txstatus['aid'],
+			'credential_hash' => $txstatus['_modified_credential_hash'],
+		));
+	}
+
+	protected function getConfiguredCredentials($config, $active_only = true) {
+		$credentials = array();
+		if (isset($config['global']) && is_array($config['global'])) {
+			$credentials[] = $config['global'];
+		}
+
+		foreach($config as $identifier => $genre_config) {
+			if (strpos($identifier, 'paymentgenre_') === 0
+			    && isset($genre_config['global'])
+			    && is_array($genre_config['global'])
+			    && ($active_only === false
+			        || (isset($genre_config['global_override']) && $genre_config['global_override'] === 'true'))
+			    )
+			{
+				$credentials[] = $genre_config['global'];
+			}
+		}
+
+		return $credentials;
+	}
+
+	protected function getTransactionGlobalConfig($orders_id, $txid) {
+		$transaction_query = xtc_db_query("SELECT payone_transactions_id
+		                                     FROM payone_transactions
+		                                    WHERE orders_id = '".(int)$orders_id."'
+		                                      AND txid = '".xtc_db_input($txid)."'
+		                                    LIMIT 1");
+		if (xtc_db_num_rows($transaction_query) < 1) {
+			return false;
+		}
+
+		$config = $this->getConfig();
+		$transaction_credential = $this->getTransactionCredential($orders_id, $txid);
+		if ($transaction_credential === false) {
+			return ((isset($config['global']) && is_array($config['global'])) ? $config['global'] : false);
+		}
+
+		foreach($this->getConfiguredCredentials($config, false) as $credential) {
+			if (empty($credential['key'])
+			    || empty($credential['portal_id'])
+			    || empty($credential['subaccount_id'])
+			    )
+			{
+				continue;
+			}
+			$credential_identity = array(
+				'portalid' => (string)$credential['portal_id'],
+				'aid' => (string)$credential['subaccount_id'],
+				'credential_hash' => hash('sha256', md5((string)$credential['key'])),
+			);
+			if ($this->transactionStatusCredentialMatches($transaction_credential, $credential_identity)) {
+				return $credential;
+			}
+		}
+
+		return false;
+	}
+
+	public function saveTransaction($orders_id, $status, $txid, $userid, $credential = array()) {
 	  $sql_data_transactions_array = array(
 	    'orders_id' => (int)$orders_id,
       'status' => $status,
@@ -717,9 +945,70 @@ class PayoneModified {
       $sql_data_transactions_array['type'] = $_SESSION['payone_elv']['elv_type'];
     } elseif (isset($_SESSION['payone_invoice']['invoice_type'])) {
       $sql_data_transactions_array['type'] = $_SESSION['payone_invoice']['invoice_type'];
-    }
+	  }
 	  xtc_db_perform('payone_transactions', $sql_data_transactions_array);  
 		$this->log("transaction saved: orders_id $orders_id, status $status, txid $txid, userid $userid");
+		if (!$this->saveTransactionCredential($orders_id, $txid, $credential)) {
+			$this->log("could not bind credentials to transaction $txid / order $orders_id");
+		}
+		$this->processDeferredTransactionStatus($orders_id, $txid);
+	}
+
+	public function isTransactionApprovedForCheckout($orders_id) {
+		$approved_status = array('APPROVED', 'APPOINTED', 'CAPTURE', 'PAID');
+		$latest_transaction_status = $this->getLatestAppliedTransactionStatusByTxid($orders_id);
+
+		$query = xtc_db_query("SELECT status, txid
+		                         FROM payone_transactions
+		                        WHERE orders_id = '".(int)$orders_id."'");
+		while ($transaction = xtc_db_fetch_array($query)) {
+			$status = strtoupper((string)$transaction['status']);
+			if (!in_array($status, $approved_status, true)) {
+				continue;
+			}
+			if ($status === 'APPROVED') {
+				return true;
+			}
+			$txid = (string)$transaction['txid'];
+			if (!isset($latest_transaction_status[$txid]['transaction_status'])
+			    || strtolower((string)$latest_transaction_status[$txid]['transaction_status']) !== 'pending'
+			    )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public function hasPendingTransactionForCheckout($orders_id) {
+		foreach($this->getLatestAppliedTransactionStatusByTxid($orders_id) as $txstatus) {
+			if (isset($txstatus['transaction_status'])
+			    && strtolower((string)$txstatus['transaction_status']) === 'pending'
+			    )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected function getLatestAppliedTransactionStatusByTxid($orders_id) {
+		$known_transactions = array();
+		$query = xtc_db_query("SELECT txid
+		                         FROM payone_transactions
+		                        WHERE orders_id = '".(int)$orders_id."'");
+		while ($transaction = xtc_db_fetch_array($query)) {
+			$known_transactions[(string)$transaction['txid']] = true;
+		}
+
+		$latest_transaction_status = array();
+		foreach($this->getTransactionStatus($orders_id, true) as $txstatus) {
+			$txid = ((isset($txstatus['data']['txid'])) ? (string)$txstatus['data']['txid'] : '');
+			if (isset($known_transactions[$txid])) {
+				$latest_transaction_status[$txid] = $txstatus['data'];
+			}
+		}
+		return $latest_transaction_status;
 	}
 
 	public function getOrdersData($orders_id) {
@@ -736,7 +1025,7 @@ class PayoneModified {
 		return $data;
 	}
 
-  protected function sendTransactionStatus($url, $params, $timeout) {
+	protected function sendTransactionStatus($url, $params, $timeout) {
     if ($timeout == '' || $timeout < 1) {
       $timeout = 30;
     }
@@ -751,107 +1040,609 @@ class PayoneModified {
 
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params, null, '&'));
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($curl, CURLOPT_TIMEOUT, (int)$timeout);
 
-    $result = curl_exec($curl);
+    curl_exec($curl);
 
-    if (curl_getinfo($curl, CURLINFO_HTTP_CODE) != 200) {
-      $this->log("sendTransactionStatus invalid:\n".print_r($result, true));
-    } elseif (curl_error($curl)) {
+    if (curl_error($curl)) {
       $this->log("sendTransactionStatus error ".curl_errno($curl) . ": " . curl_error($curl));
+    } elseif (curl_getinfo($curl, CURLINFO_HTTP_CODE) != 200) {
+      $this->log("sendTransactionStatus invalid HTTP status ".curl_getinfo($curl, CURLINFO_HTTP_CODE));
     } else {
-      $this->log("sendTransactionStatus success:\n".print_r($result, true));
+      $this->log("sendTransactionStatus success");
     }
     curl_close($curl);
   }
 
-	public function saveTransactionStatus($txstatus) {
-		if (empty($txstatus['reference'])) {
-			$this->log("received TxStatus w/o reference!");
-			return;
+	protected function getTransactionStatusCredential($txstatus, $config) {
+		foreach($this->getConfiguredCredentials($config) as $credential) {
+			if (empty($credential['key'])
+			    || $credential['key'] == 'no_key'
+			    || empty($credential['portal_id'])
+			    || $credential['portal_id'] == 'no_id'
+			    || empty($credential['subaccount_id'])
+			    || $credential['subaccount_id'] == 'no_id'
+			    )
+			{
+				continue;
+			}
+
+			if (hash_equals(md5((string)$credential['key']), strtolower((string)$txstatus['key']))
+			    && hash_equals((string)$credential['portal_id'], (string)$txstatus['portalid'])
+			    && hash_equals((string)$credential['subaccount_id'], (string)$txstatus['aid'])
+			    )
+			{
+				return array(
+					'portalid' => (string)$credential['portal_id'],
+					'aid' => (string)$credential['subaccount_id'],
+					'credential_hash' => hash('sha256', md5((string)$credential['key'])),
+				);
+			}
 		}
-		$config = $this->getConfig();
-		$key_valid = false;
-		if (md5($config['global']['key']) == $txstatus['key']) {
-			$key_valid = true;
+
+		return false;
+	}
+
+	protected function getTransactionStatusCredentialIdentity($txstatus) {
+		return array(
+			'portalid' => (string)$txstatus['portalid'],
+			'aid' => (string)$txstatus['aid'],
+			'credential_hash' => hash('sha256', strtolower((string)$txstatus['key'])),
+		);
+	}
+
+	protected function transactionStatusCredentialMatches($transaction_credential, $status_credential) {
+		return hash_equals((string)$transaction_credential['portalid'], (string)$status_credential['portalid'])
+		       && hash_equals((string)$transaction_credential['aid'], (string)$status_credential['aid'])
+		       && hash_equals((string)$transaction_credential['credential_hash'], (string)$status_credential['credential_hash']);
+	}
+
+	protected function getTransactionStatusEventHash($txstatus) {
+		$event_data = array();
+		foreach($txstatus as $key => $value) {
+			if ($key === 'key' || strpos($key, '_modified_') === 0) {
+				continue;
+			}
+			$event_data[$key] = ((is_array($value)) ? implode('||', $value) : (string)$value);
 		}
-		else {
-			$paymentgenre_identifiers = $this->getPaymentGenreIdentifiers();
-			foreach($paymentgenre_identifiers as $pg_id) {
-				if (md5($config[$pg_id]['global']['key']) == $txstatus['key']) {
-					$key_valid = true;
+		ksort($event_data);
+		return hash('sha256', serialize($event_data));
+	}
+
+	protected function storeTransactionStatus($txstatus, $credential_hash) {
+		if (xtc_db_query('START TRANSACTION') === false) {
+			return false;
+		}
+
+		$sql_data_status_array = array(
+			'orders_id' => (int)$txstatus['reference'],
+			'received' => 'now()',
+		);
+		if (xtc_db_perform('payone_txstatus', $sql_data_status_array) === false) {
+			xtc_db_query('ROLLBACK');
+			return false;
+		}
+		$txstatus_id = xtc_db_insert_id();
+		if ((int)$txstatus_id <= 0) {
+			xtc_db_query('ROLLBACK');
+			return false;
+		}
+
+		foreach($txstatus as $key => $value) {
+			if ($key === 'key' || strpos($key, '_modified_') === 0) {
+				continue;
+			}
+			$value = ((is_array($value)) ? implode('||', $value) : $value);
+			$result = xtc_db_query("INSERT INTO payone_txstatus_data (payone_txstatus_id, `key`, `value`)
+			                        VALUES ('".(int)$txstatus_id."', '".xtc_db_input($key)."', '".xtc_db_input($value)."')");
+			if ($result === false) {
+				xtc_db_query('ROLLBACK');
+				return false;
+			}
+		}
+		foreach(array(
+			'_modified_credential_hash' => $credential_hash,
+			'_modified_event_hash' => $this->getTransactionStatusEventHash($txstatus),
+			'_modified_processed' => '0',
+			'_modified_applied' => '0',
+		) as $key => $value) {
+			$result = xtc_db_query("INSERT INTO payone_txstatus_data (payone_txstatus_id, `key`, `value`)
+			                        VALUES ('".(int)$txstatus_id."', '".xtc_db_input($key)."', '".xtc_db_input($value)."')");
+			if ($result === false) {
+				xtc_db_query('ROLLBACK');
+				return false;
+			}
+		}
+		if (xtc_db_query('COMMIT') === false) {
+			xtc_db_query('ROLLBACK');
+			return false;
+		}
+		return $txstatus_id;
+	}
+
+	protected function getStoredTransactionStatus($txstatus_id) {
+		$txstatus = array();
+		$query = xtc_db_query("SELECT `key`, `value`
+		                         FROM payone_txstatus_data
+		                        WHERE payone_txstatus_id = '".(int)$txstatus_id."'");
+		if ($query === false) {
+			return false;
+		}
+		while ($row = xtc_db_fetch_array($query)) {
+			$txstatus[$row['key']] = $row['value'];
+		}
+		return $txstatus;
+	}
+
+	protected function markTransactionStatusProcessed($txstatus_id, $applied = false) {
+		$processed = xtc_db_query("UPDATE payone_txstatus_data
+		                            SET `value` = '1'
+		                          WHERE payone_txstatus_id = '".(int)$txstatus_id."'
+		                            AND `key` = '_modified_processed'");
+		if ($processed === false) {
+			return false;
+		}
+		if ($applied === true) {
+			$applied_result = xtc_db_query("UPDATE payone_txstatus_data
+			                                SET `value` = '1'
+			                              WHERE payone_txstatus_id = '".(int)$txstatus_id."'
+			                                AND `key` = '_modified_applied'");
+			if ($applied_result === false) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	protected function getTransactionStatusLockName($orders_id, $txid) {
+		return 'payone_txstatus_'.substr(hash('sha256', (int)$orders_id.'|'.$txid), 0, 40);
+	}
+
+	protected function acquireTransactionStatusLock($orders_id, $txid) {
+		$lock_name = $this->getTransactionStatusLockName($orders_id, $txid);
+		$query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($lock_name)."', 120) AS lock_acquired");
+		$row = xtc_db_fetch_array($query);
+		return isset($row['lock_acquired']) && (int)$row['lock_acquired'] === 1;
+	}
+
+	protected function releaseTransactionStatusLock($orders_id, $txid) {
+		$lock_name = $this->getTransactionStatusLockName($orders_id, $txid);
+		xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($lock_name)."')");
+	}
+
+	protected function isTransactionStatusEventProcessed($txstatus_id, $orders_id, $txid, $event_hash) {
+		$query = xtc_db_query("SELECT s.payone_txstatus_id
+		                         FROM payone_txstatus s
+		                         JOIN payone_txstatus_data d_txid
+		                           ON d_txid.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_txid.`key` = 'txid'
+		                          AND d_txid.`value` = '".xtc_db_input($txid)."'
+		                    LEFT JOIN payone_txstatus_data d_processed
+		                           ON d_processed.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_processed.`key` = '_modified_processed'
+		                        WHERE s.orders_id = '".(int)$orders_id."'
+		                          AND s.payone_txstatus_id != '".(int)$txstatus_id."'
+		                          AND (d_processed.`value` = '1'
+		                               OR d_processed.payone_txstatus_data_id IS NULL)");
+		if ($query === false) {
+			return null;
+		}
+		while ($row = xtc_db_fetch_array($query)) {
+			$processed_status = $this->getStoredTransactionStatus($row['payone_txstatus_id']);
+			if ($processed_status === false) {
+				return null;
+			}
+			$processed_hash = ((isset($processed_status['_modified_event_hash']))
+				? (string)$processed_status['_modified_event_hash']
+				: $this->getTransactionStatusEventHash($processed_status));
+			if (hash_equals($processed_hash, $event_hash)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected function getLatestAppliedTransactionStatusSequence($orders_id, $txid) {
+		$query = xtc_db_query("SELECT MAX(CAST(d_sequence.`value` AS UNSIGNED)) AS max_sequence
+		                         FROM payone_txstatus s
+		                         JOIN payone_txstatus_data d_txid
+		                           ON d_txid.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_txid.`key` = 'txid'
+		                          AND d_txid.`value` = '".xtc_db_input($txid)."'
+		                         JOIN payone_txstatus_data d_sequence
+		                           ON d_sequence.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_sequence.`key` = 'sequencenumber'
+		                    LEFT JOIN payone_txstatus_data d_processed
+		                           ON d_processed.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_processed.`key` = '_modified_processed'
+		                    LEFT JOIN payone_txstatus_data d_applied
+		                           ON d_applied.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_applied.`key` = '_modified_applied'
+		                        WHERE s.orders_id = '".(int)$orders_id."'
+		                          AND (d_applied.`value` = '1'
+		                               OR (d_applied.payone_txstatus_data_id IS NULL
+		                                   AND (d_processed.`value` = '1'
+		                                        OR d_processed.payone_txstatus_data_id IS NULL)))");
+		if ($query === false) {
+			return false;
+		}
+		$row = xtc_db_fetch_array($query);
+		return (($row === false || $row['max_sequence'] === null) ? null : (int)$row['max_sequence']);
+	}
+
+	protected function applyTransactionStatus($txstatus_id, $txstatus, $config) {
+		$orders_id = (int)$txstatus['reference'];
+		$txid = (string)$txstatus['txid'];
+		$txaction = strtolower((string)$txstatus['txaction']);
+		$public_txstatus = array();
+		foreach($txstatus as $name => $value) {
+			if ($name !== 'key' && strpos($name, '_modified_') !== 0) {
+				$public_txstatus[$name] = $value;
+			}
+		}
+		if (xtc_db_query('START TRANSACTION') === false) {
+			return false;
+		}
+
+		$sql_data_transactions_array = array(
+			'status' => strtoupper($txaction),
+			'last_modified' => 'now()',
+		);
+		if (xtc_db_perform('payone_transactions', $sql_data_transactions_array, 'update', "orders_id='".$orders_id."' AND txid='".xtc_db_input($txid)."'") === false) {
+			xtc_db_query('ROLLBACK');
+			return false;
+		}
+
+		if (in_array($txaction, $this->getStatusNames(), true)) {
+			if (isset($config['orders_status'][$txaction]) && (int)$config['orders_status'][$txaction] > 0) {
+				$sql_data_orders_array = array(
+					'orders_status' => (int)$config['orders_status'][$txaction],
+					'last_modified' => 'now()',
+				);
+				if (xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id='".$orders_id."'") === false) {
+					xtc_db_query('ROLLBACK');
+					return false;
+				}
+
+				$sql_data_array = array(
+					'orders_id' => $orders_id,
+					'orders_status_id' => (int)$config['orders_status'][$txaction],
+					'date_added' => 'now()',
+					'customer_notified' => '0',
+					'comments' => STATUS_UPDATED_BY_PAYONE,
+					'comments_sent' => '0',
+				);
+				if (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false) {
+					xtc_db_query('ROLLBACK');
+					return false;
 				}
 			}
 		}
-		if ($key_valid == true) {
-		  $sql_data_status_array = array('orders_id' => (int)$txstatus['reference'],
-		                                 'received' => 'now()');
-		  xtc_db_perform('payone_txstatus', $sql_data_status_array);                              
-			$txstatus_id = xtc_db_insert_id();
-			
-			foreach($txstatus as $key => $value) {
-        $sql_data_statusdata_array = array(
-          'payone_txstatus_id' => $txstatus_id,
-          'key' => $key,
-          'value' => ((is_array($value)) ? implode('||', $value) : $value)
-        );
-        xtc_db_perform('payone_txstatus_data', $sql_data_statusdata_array);
-			}
 
-		  $sql_data_transactions_array = array('status' => strtoupper($txstatus['txaction']),
-		                                       'last_modified' => 'now()');
-		  xtc_db_perform('payone_transactions', $sql_data_transactions_array, 'update', "txid='".$txstatus['txid']."'");                              
-			
-			if (in_array($txstatus['txaction'], $this->getStatusNames())) {
-			  if ((int)$config['orders_status'][$txstatus['txaction']] > 0) {
-          $sql_data_orders_array = array('orders_status' => (int)$config['orders_status'][$txstatus['txaction']],
-                                         'last_modified' => 'now()');
-          xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id='".(int)$txstatus['reference']."'");                              
-
-          $sql_data_array = array(
-            'orders_id' => (int)$txstatus['reference'],
-            'orders_status_id' => (int)$config['orders_status'][$txstatus['txaction']],
-            'date_added' => 'now()',
-            'customer_notified' => '0',
-            'comments' => STATUS_UPDATED_BY_PAYONE,
-            'comments_sent' => '0'
-          );
-          xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        }
-        // send Transaction Status
-        if ($config['orders_status_redirect']['url'][$txstatus['txaction']] != '') {
-          $this->sendTransactionStatus($config['orders_status_redirect']['url'][$txstatus['txaction']], $txstatus, $config['orders_status_redirect']['timeout'][$txstatus['txaction']]);
-        }
-			}
-		} else {
-			$this->log("received TxStatus with an invalid key! TxStatus will not be processed.");
-		}
-
-		// logging
 		$message_parts = array();
-		foreach($txstatus as $name => $value) {
+		foreach($public_txstatus as $name => $value) {
+			$value = ((is_array($value)) ? implode('||', $value) : $value);
 			$message_parts[] = "$name=$value";
 		}
-		$message = implode('|', $message_parts);
 		list($msec, $sec) = explode(' ', microtime());
 		$sql_data_array = array(
-		  'event_id' => (int)(($sec + $msec) * 1000),
-      'date_created' => 'now()',
-      'log_count' => '0',
-      'log_level' => '0',
-      'message' => $message,
-      'customers_id' => '0'
-    );
-		xtc_db_perform('payone_transactions_log', $sql_data_array);
+			'event_id' => (int)(($sec + $msec) * 1000),
+			'date_created' => 'now()',
+			'log_count' => '0',
+			'log_level' => '0',
+			'message' => implode('|', $message_parts),
+			'customers_id' => '0',
+		);
+		if (xtc_db_perform('payone_transactions_log', $sql_data_array) === false
+		    || !$this->markTransactionStatusProcessed($txstatus_id, true)
+		    )
+		{
+			xtc_db_query('ROLLBACK');
+			return false;
+		}
+		if (xtc_db_query('COMMIT') === false) {
+			xtc_db_query('ROLLBACK');
+			return false;
+		}
+
+		if (in_array($txaction, $this->getStatusNames(), true)
+		    && !empty($config['orders_status_redirect']['url'][$txaction])
+		    )
+		{
+			$this->sendTransactionStatus($config['orders_status_redirect']['url'][$txaction], $public_txstatus, $config['orders_status_redirect']['timeout'][$txaction]);
+		}
+		return true;
 	}
 
-	public function getTransactionStatus($orders_id) {
+	protected function processStoredTransactionStatus($txstatus_id, $config = null) {
+		$txstatus = $this->getStoredTransactionStatus($txstatus_id);
+		if ($txstatus === false) {
+			return false;
+		}
+		$orders_id = ((isset($txstatus['reference'])) ? (int)$txstatus['reference'] : 0);
+		$txid = ((isset($txstatus['txid'])) ? (string)$txstatus['txid'] : '');
+		if ($orders_id <= 0 || $txid === '') {
+			$this->log("cannot process invalid stored TxStatus $txstatus_id");
+			return false;
+		}
+		return $this->processTransactionStatus($orders_id, $txid, $config);
+	}
+
+	public function processTransactionStatus($orders_id, $txid, $config = null) {
+		$orders_id = (int)$orders_id;
+		$txid = (string)$txid;
+		if ($orders_id <= 0 || $txid === '') {
+			return false;
+		}
+		if (!$this->acquireTransactionStatusLock($orders_id, $txid)) {
+			$this->log("could not acquire TxStatus lock for transaction $txid / order $orders_id");
+			return false;
+		}
+
+		try {
+			$transaction_query = xtc_db_query("SELECT payone_transactions_id
+			                                     FROM payone_transactions
+			                                    WHERE orders_id = '".$orders_id."'
+			                                      AND txid = '".xtc_db_input($txid)."'
+			                                    LIMIT 1");
+			if (xtc_db_num_rows($transaction_query) < 1) {
+				return false;
+			}
+
+			$transaction_credential = $this->getTransactionCredential($orders_id, $txid);
+			if ($transaction_credential === false
+			    && $this->bindStoredTransactionCredential($orders_id, $txid)
+			    )
+			{
+				$transaction_credential = $this->getTransactionCredential($orders_id, $txid);
+			}
+			if ($transaction_credential === false) {
+				$this->log("missing credential binding for transaction $txid / order $orders_id");
+				return false;
+			}
+
+			if ($config === null) {
+				$config = $this->getConfig();
+			}
+			$latest_applied_sequence = $this->getLatestAppliedTransactionStatusSequence($orders_id, $txid);
+			if ($latest_applied_sequence === false) {
+				return false;
+			}
+
+			do {
+				$pending = array();
+				$query = xtc_db_query("SELECT s.payone_txstatus_id
+				                         FROM payone_txstatus s
+				                         JOIN payone_txstatus_data d_txid
+				                           ON d_txid.payone_txstatus_id = s.payone_txstatus_id
+				                          AND d_txid.`key` = 'txid'
+				                          AND d_txid.`value` = '".xtc_db_input($txid)."'
+				                         JOIN payone_txstatus_data d_processed
+				                           ON d_processed.payone_txstatus_id = s.payone_txstatus_id
+				                          AND d_processed.`key` = '_modified_processed'
+				                          AND d_processed.`value` = '0'
+				                         JOIN payone_txstatus_data d_sequence
+				                           ON d_sequence.payone_txstatus_id = s.payone_txstatus_id
+				                          AND d_sequence.`key` = 'sequencenumber'
+				                        WHERE s.orders_id = '".$orders_id."'
+				                        ORDER BY CAST(d_sequence.`value` AS UNSIGNED), s.payone_txstatus_id");
+				while ($row = xtc_db_fetch_array($query)) {
+					$pending[] = (int)$row['payone_txstatus_id'];
+				}
+
+				foreach($pending as $pending_txstatus_id) {
+					$txstatus = $this->getStoredTransactionStatus($pending_txstatus_id);
+					if ($txstatus === false) {
+						return false;
+					}
+					$status_credential = array(
+						'portalid' => ((isset($txstatus['portalid'])) ? $txstatus['portalid'] : ''),
+						'aid' => ((isset($txstatus['aid'])) ? $txstatus['aid'] : ''),
+						'credential_hash' => ((isset($txstatus['_modified_credential_hash'])) ? $txstatus['_modified_credential_hash'] : ''),
+					);
+					if (!$this->transactionStatusCredentialMatches($transaction_credential, $status_credential)) {
+						if (!$this->markTransactionStatusProcessed($pending_txstatus_id)) {
+							return false;
+						}
+						$this->log("stored TxStatus credential mismatch for transaction $txid / order $orders_id");
+						continue;
+					}
+
+					$event_hash = ((isset($txstatus['_modified_event_hash']))
+						? (string)$txstatus['_modified_event_hash']
+						: $this->getTransactionStatusEventHash($txstatus));
+					$event_processed = $this->isTransactionStatusEventProcessed($pending_txstatus_id, $orders_id, $txid, $event_hash);
+					if ($event_processed === null) {
+						return false;
+					}
+					if ($event_processed === true) {
+						if (!$this->markTransactionStatusProcessed($pending_txstatus_id)) {
+							return false;
+						}
+						$this->log("ignored duplicate TxStatus event for transaction $txid / order $orders_id");
+						continue;
+					}
+
+					$sequence = ((isset($txstatus['sequencenumber']) && ctype_digit((string)$txstatus['sequencenumber']))
+						? (int)$txstatus['sequencenumber']
+						: null);
+					if ($sequence === null) {
+						if (!$this->markTransactionStatusProcessed($pending_txstatus_id)) {
+							return false;
+						}
+						$this->log("ignored TxStatus without valid sequence for transaction $txid / order $orders_id");
+						continue;
+					}
+					// PAYONE can send different events with the same sequence number.
+					if ($latest_applied_sequence !== null && $sequence < $latest_applied_sequence) {
+						if (!$this->markTransactionStatusProcessed($pending_txstatus_id)) {
+							return false;
+						}
+						$this->log("ignored obsolete TxStatus sequence $sequence for transaction $txid / order $orders_id");
+						continue;
+					}
+
+					if (!$this->applyTransactionStatus($pending_txstatus_id, $txstatus, $config)) {
+						$this->log("could not apply TxStatus $pending_txstatus_id for transaction $txid / order $orders_id");
+						return false;
+					}
+					if ($latest_applied_sequence === null || $sequence > $latest_applied_sequence) {
+						$latest_applied_sequence = $sequence;
+					}
+				}
+			} while (count($pending) > 0);
+			return true;
+		} finally {
+			$this->releaseTransactionStatusLock($orders_id, $txid);
+		}
+	}
+
+	public function processPendingTransactionStatuses($limit = 50) {
+		$limit = max(1, min(500, (int)$limit));
+		$pending = array();
+		$query = xtc_db_query("SELECT s.orders_id,
+		                              d_txid.`value` AS txid,
+		                              MIN(s.payone_txstatus_id) AS first_status_id
+		                         FROM payone_txstatus s
+		                         JOIN payone_txstatus_data d_txid
+		                           ON d_txid.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_txid.`key` = 'txid'
+		                         JOIN payone_txstatus_data d_processed
+		                           ON d_processed.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_processed.`key` = '_modified_processed'
+		                          AND d_processed.`value` = '0'
+		                         JOIN payone_transactions t
+		                           ON t.orders_id = s.orders_id
+		                          AND t.txid = d_txid.`value`
+		                     GROUP BY s.orders_id, d_txid.`value`
+		                     ORDER BY first_status_id
+		                        LIMIT ".$limit);
+		while ($row = xtc_db_fetch_array($query)) {
+			$pending[] = array(
+				'orders_id' => (int)$row['orders_id'],
+				'txid' => (string)$row['txid'],
+			);
+		}
+
+		$config = $this->getConfig();
+		foreach($pending as $transaction) {
+			$this->processTransactionStatus($transaction['orders_id'], $transaction['txid'], $config);
+		}
+		return count($pending);
+	}
+
+	protected function processDeferredTransactionStatus($orders_id, $txid) {
+		$this->processTransactionStatus($orders_id, $txid);
+	}
+
+	public function saveTransactionStatus($txstatus, $process = true) {
+		$this->transaction_status_error = self::TRANSACTION_STATUS_ERROR_NONE;
+		$required = array('reference', 'txid', 'txaction', 'key', 'portalid', 'aid', 'sequencenumber');
+		foreach($required as $parameter) {
+			if (!isset($txstatus[$parameter]) || !is_scalar($txstatus[$parameter]) || $txstatus[$parameter] === '') {
+				$this->log("received TxStatus w/o required parameter $parameter!");
+				return false;
+			}
+		}
+
+		if (!ctype_digit((string)$txstatus['reference'])
+		    || !ctype_digit((string)$txstatus['txid'])
+		    || !ctype_digit((string)$txstatus['sequencenumber'])
+		    || strlen((string)$txstatus['key']) !== 32
+		    || !ctype_xdigit((string)$txstatus['key'])
+		    )
+		{
+			$this->log('received TxStatus with invalid parameter format!');
+			return false;
+		}
+
+		$orders_id = (int)$txstatus['reference'];
+		$txid = (string)$txstatus['txid'];
+		$transaction_query = xtc_db_query("SELECT payone_transactions_id
+		                                     FROM payone_transactions
+		                                    WHERE orders_id = '".$orders_id."'
+		                                      AND txid = '".xtc_db_input($txid)."'
+		                                    LIMIT 1");
+		$transaction_exists = (xtc_db_num_rows($transaction_query) > 0);
+		$config = $this->getConfig();
+		$status_credential = false;
+		if ($transaction_exists) {
+			$transaction_credential = $this->getTransactionCredential($orders_id, $txid);
+			if ($transaction_credential !== false) {
+				// Keep callbacks valid after a key rotation by checking the credential bound to the transaction.
+				$status_credential = $this->getTransactionStatusCredentialIdentity($txstatus);
+				if (!$this->transactionStatusCredentialMatches($transaction_credential, $status_credential)) {
+					$this->log("received TxStatus with credentials not assigned to transaction $txid / order $orders_id!");
+					return false;
+				}
+			}
+			if ($transaction_credential === false) {
+				$status_credential = $this->getTransactionStatusCredential($txstatus, $config);
+				if ($status_credential === false) {
+					$this->log("received TxStatus with invalid credentials! TxStatus will not be processed.");
+					return false;
+				}
+				if (!$this->saveTransactionCredentialIdentity($orders_id, $txid, $status_credential)) {
+					$this->transaction_status_error = self::TRANSACTION_STATUS_ERROR_PERSISTENCE;
+					$this->log("could not bind authenticated TxStatus credentials to transaction $txid / order $orders_id");
+					return false;
+				}
+				$this->log("bound authenticated TxStatus credentials to legacy transaction $txid / order $orders_id");
+			}
+		} else {
+			$status_credential = $this->getTransactionStatusCredential($txstatus, $config);
+			if ($status_credential === false) {
+				$this->log("received TxStatus with invalid credentials! TxStatus will not be processed.");
+				return false;
+			}
+		}
+
+		$txstatus_id = $this->storeTransactionStatus($txstatus, $status_credential['credential_hash']);
+		if ($txstatus_id === false) {
+			$this->transaction_status_error = self::TRANSACTION_STATUS_ERROR_PERSISTENCE;
+			$this->log("could not persist TxStatus for transaction $txid / order $orders_id");
+			return false;
+		}
+		if (!$transaction_exists) {
+			$this->log("deferred TxStatus for transaction $txid / order $orders_id until the transaction is stored");
+			return true;
+		}
+
+		if ($process === true) {
+			$this->processStoredTransactionStatus($txstatus_id, $config);
+		}
+		return true;
+	}
+
+	public function getTransactionStatusError() {
+		return $this->transaction_status_error;
+	}
+
+	public function getTransactionStatus($orders_id, $applied_only = false) {
 		// get metadata first
 		$txstatus = array();
-		$txstatus_query = xtc_db_query("SELECT * FROM `payone_txstatus` WHERE orders_id = '".(int)$orders_id."'");
+		$applied_join = '';
+		$applied_where = '';
+		if ($applied_only === true) {
+			$processed_join = " LEFT JOIN payone_txstatus_data d_processed
+			                     ON d_processed.payone_txstatus_id = s.payone_txstatus_id
+			                    AND d_processed.`key` = '_modified_processed'";
+			$applied_join = $processed_join." LEFT JOIN payone_txstatus_data d_applied
+			                                  ON d_applied.payone_txstatus_id = s.payone_txstatus_id
+			                                 AND d_applied.`key` = '_modified_applied'";
+			$applied_where = " AND (d_applied.`value` = '1'
+			                              OR (d_applied.payone_txstatus_data_id IS NULL
+			                                  AND (d_processed.`value` = '1' OR d_processed.payone_txstatus_data_id IS NULL)))";
+		}
+		$txstatus_query = xtc_db_query("SELECT DISTINCT s.*
+		                                  FROM payone_txstatus s
+		                                  ".$applied_join."
+		                                 WHERE s.orders_id = '".(int)$orders_id."'
+		                                  ".$applied_where."
+		                              ORDER BY s.payone_txstatus_id");
 		while($txstatus_row = xtc_db_fetch_array($txstatus_query)) {
 			$txstatus_row['data'] = array();
 			$txstatus[] = $txstatus_row;
@@ -861,7 +1652,9 @@ class PayoneModified {
 		foreach($txstatus as $idx => $txs) {
 			$txstatusdata_query = xtc_db_query("SELECT * FROM `payone_txstatus_data` WHERE payone_txstatus_id = '".(int)$txs['payone_txstatus_id']."'");
 			while($txsd_row = xtc_db_fetch_array($txstatusdata_query)) {
-				$txstatus[$idx]['data'][$txsd_row['key']] = $txsd_row['value'];
+				if (strpos($txsd_row['key'], '_modified_') !== 0) {
+					$txstatus[$idx]['data'][$txsd_row['key']] = $txsd_row['value'];
+				}
 			}
 		}
 
@@ -872,9 +1665,15 @@ class PayoneModified {
 		// a transaction can be captured if it is "appointed"
 		$capture_data = false; // i.e. cannot be captured
 		$orders_data = $this->getOrdersData($orders_id);
-		foreach($orders_data['transaction_status'] as $tstatus) {
+		$known_transactions = array();
+		foreach($orders_data['transactions'] as $transaction) {
+			$known_transactions[(string)$transaction['txid']] = true;
+		}
+		foreach($this->getTransactionStatus($orders_id, true) as $tstatus) {
 			if (isset($tstatus['data']['txaction']) 
 			    && strtoupper($tstatus['data']['txaction']) == 'APPOINTED'
+			    && isset($tstatus['data']['txid'])
+			    && isset($known_transactions[(string)$tstatus['data']['txid']])
 			    )
 			{
 				$capture_data = array(
@@ -892,20 +1691,37 @@ class PayoneModified {
 	}
 
 	protected function _getNextSequencenumber($txid) {
-		$query = "SELECT MAX(`d`.`value`) AS max_sequence 
-		            FROM `payone_transactions` t
-			     LEFT JOIN `payone_txstatus` s 
-			               ON s.orders_id = t.orders_id
-			     LEFT JOIN payone_txstatus_data d 
-			               ON d.payone_txstatus_id = s.payone_txstatus_id 
-			                  AND d.key = 'sequencenumber'
-			         WHERE t.txid = '".(int)$txid."'";
+		$query = "SELECT MAX(CAST(d_sequence.`value` AS UNSIGNED)) AS max_sequence
+			            FROM payone_txstatus s
+			            JOIN payone_txstatus_data d_txid
+			              ON d_txid.payone_txstatus_id = s.payone_txstatus_id
+			             AND d_txid.`key` = 'txid'
+			             AND d_txid.`value` = '".xtc_db_input($txid)."'
+			            JOIN payone_txstatus_data d_sequence
+			              ON d_sequence.payone_txstatus_id = s.payone_txstatus_id
+			             AND d_sequence.`key` = 'sequencenumber'
+			       LEFT JOIN payone_txstatus_data d_processed
+			              ON d_processed.payone_txstatus_id = s.payone_txstatus_id
+			             AND d_processed.`key` = '_modified_processed'
+			       LEFT JOIN payone_txstatus_data d_applied
+			              ON d_applied.payone_txstatus_id = s.payone_txstatus_id
+			             AND d_applied.`key` = '_modified_applied'
+			           WHERE d_applied.`value` = '1'
+			              OR (d_applied.payone_txstatus_data_id IS NULL
+			                  AND (d_processed.`value` = '1' OR d_processed.payone_txstatus_data_id IS NULL))";
 		$result = xtc_db_query($query);
-		$next_seqnum = 0;
-		while($row = xtc_db_fetch_array($result)) {
-			$next_seqnum = $row['max_sequence'] + 1;
-		}
-		return $next_seqnum;
+		$row = xtc_db_fetch_array($result);
+		return ((int)$row['max_sequence'] + 1);
+	}
+
+	protected function getTransactionRequestError($message) {
+		$this->log($message);
+		return new Payone_Api_Response_Error(array(
+			'status' => 'ERROR',
+			'errorcode' => 'CONFIGURATION',
+			'errormessage' => $message,
+			'customermessage' => $message,
+		));
 	}
 
   protected function _getInvoicingTransaction($data) {
@@ -1064,10 +1880,21 @@ class PayoneModified {
   }
 
 	public function captureAmount($data) {
-		$this->log("capturing ".print_r($data, true));
+		$this->log("capturing transaction ".((isset($data['txid'])) ? $data['txid'] : 'unknown'));
 
-		$config = $this->getConfig();
-		$global_config = $config['global'];
+		if (!isset($data['oID'], $data['txid'])
+		    || !is_scalar($data['oID'])
+		    || !is_scalar($data['txid'])
+		    || !ctype_digit((string)$data['oID'])
+		    || !ctype_digit((string)$data['txid'])
+		    )
+		{
+			return $this->getTransactionRequestError('Invalid PAYONE capture transaction data');
+		}
+		$global_config = $this->getTransactionGlobalConfig((int)$data['oID'], (string)$data['txid']);
+		if ($global_config === false) {
+			return $this->getTransactionRequestError('No configured PAYONE credentials match the capture transaction');
+		}
 
 		$standard_parameters = $this->getStandardParameters('capture', $global_config);
 		unset($standard_parameters['responsetype']);
@@ -1086,7 +1913,7 @@ class PayoneModified {
 
 		$request = new Payone_Api_Request_Capture($params);
 		$request->setTxid($data['txid']);
-		$request->setPortalid($data['portalid']);
+		$request->setPortalid($global_config['portal_id']);
 		$request->setSequencenumber($this->_getNextSequencenumber($data['txid']));
 		$request->setCurrency($data['currency']);
     
@@ -1100,19 +1927,30 @@ class PayoneModified {
 		$response = $service->capture($request);
     
     if ($response instanceof Payone_Api_Response_Capture_Approved) {
-      $this->log("SUCCESS capture response:\n".print_r($response, true));
+      $this->log("SUCCESS capture response ".$response->getStatus());
     } else if ($response instanceof Payone_Api_Response_Error) {
-      $this->log("ERROR capture response:\n".print_r($response, true));
+      $this->log("ERROR capture response ".$response->getStatus());
     }
     		
 		return $response;
 	}
 
 	public function refundAmount($data) {
-		$this->log("refunding amount\n".print_r($data, true));
+		$this->log("refunding transaction ".((isset($data['txid'])) ? $data['txid'] : 'unknown'));
 		
-		$config = $this->getConfig();
-		$global_config = $config['global'];
+		if (!isset($data['oID'], $data['txid'])
+		    || !is_scalar($data['oID'])
+		    || !is_scalar($data['txid'])
+		    || !ctype_digit((string)$data['oID'])
+		    || !ctype_digit((string)$data['txid'])
+		    )
+		{
+			return $this->getTransactionRequestError('Invalid PAYONE refund transaction data');
+		}
+		$global_config = $this->getTransactionGlobalConfig((int)$data['oID'], (string)$data['txid']);
+		if ($global_config === false) {
+			return $this->getTransactionRequestError('No configured PAYONE credentials match the refund transaction');
+		}
 		
 		$standard_parameters = $this->getStandardParameters('debit', $global_config);
 		unset($standard_parameters['responsetype']);
@@ -1154,9 +1992,9 @@ class PayoneModified {
 		$response = $service->debit($request);
 		
     if ($response instanceof Payone_Api_Response_Debit_Approved) {
-      $this->log("SUCCESS refunding response:\n".print_r($response, true));
+      $this->log("SUCCESS refunding response ".$response->getStatus());
     } else if ($response instanceof Payone_Api_Response_Error) {
-      $this->log("ERROR refunding response:\n".print_r($response, true));
+      $this->log("ERROR refunding response ".$response->getStatus());
     }
 		
 		return $response;
@@ -1216,7 +2054,7 @@ class PayoneModified {
 			'zip' => $cdata['entry_postcode'],
 			'city' => $cdata['entry_city'],
 			'country' => $cdata['countries_iso_code_2'],
-			'birthday' => date('Ymd', strtotime($cdata['dob_date'])),
+			'birthday' => ((!empty($cdata['dob_date'])) ? date('Ymd', strtotime($cdata['dob_date'])) : ''),
 			'telephonenumber' => $cdata['customers_telephone'],
 		);
 		$address_hash = md5(implode('', $addressData));
@@ -1226,9 +2064,9 @@ class PayoneModified {
 			$requestData = array_merge($standard_parameters, $requestData, $addressData);
 			$request = new Payone_Api_Request_AddressCheck($requestData);
 			$this->log("addressCheck hash: ".$address_hash."\n");
-			$this->log("addressCheck request:\n".print_r($request, true));
+			$this->log("addressCheck request");
 			$response = $service->check($request);
-			$this->log("addressCheck response:\n".print_r($response, true));
+			$this->log("addressCheck response ".$response->getStatus());
 		} else {
 			$this->log("addressCheck cache hit");
 		}
@@ -1306,7 +2144,7 @@ class PayoneModified {
 			case 'iscoreall':
 				$scoretype = 'IA';
 				break;
-			case 'iscorebscore';
+			case 'iscorebscore':
 				$scoretype = 'IB';
 				break;
 			default:
@@ -1329,7 +2167,7 @@ class PayoneModified {
 			'zip' => $cdata['entry_postcode'],
 			'city' => $cdata['entry_city'],
 			'country' => $cdata['countries_iso_code_2'],
-			'birthday' => date('Ymd', strtotime($cdate['dob_date'])),
+			'birthday' => ((!empty($cdata['dob_date'])) ? date('Ymd', strtotime($cdata['dob_date'])) : ''),
 			'telephonenumber' => $cdata['customers_telephone'],
 		);
 		$address_hash = md5(implode('', $addressData));
@@ -1338,9 +2176,9 @@ class PayoneModified {
 			$this->log("creditRisk cache miss");
 			$requestData = array_merge($standard_parameters, $requestData, $addressData);
 			$request = new Payone_Api_Request_Consumerscore($requestData);
-			$this->log("scoreCustomer request:\n".print_r($request, true));
+			$this->log("scoreCustomer request");
 			$response = $service->score($request);
-			$this->log("scoreCustomer response:\n".print_r($response, true));
+			$this->log("scoreCustomer response ".$response->getStatus());
 		}
 		else {
 			$this->log("creditRisk cache hit");

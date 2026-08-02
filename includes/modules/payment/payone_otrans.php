@@ -26,6 +26,7 @@ class payone_otrans extends PayonePayment {
   var $code;
   var $form_action_url;
   var $banktransfertypes;
+  var $banktransfercountries;
 
   var $config;
   var $payone;
@@ -36,6 +37,8 @@ class payone_otrans extends PayonePayment {
   var $builder;
 
 	function __construct() {
+		global $order;
+
 		$this->code = 'payone_otrans';
 		parent::__construct();
 
@@ -48,6 +51,49 @@ class payone_otrans extends PayonePayment {
 			'pfcard' => 'PFC',
 			'ideal' => 'IDL',
 		);
+		$this->banktransfercountries = array(
+			'sofortueberweisung' => array('DE', 'AT', 'CH', 'NL', 'PL', 'BE'),
+			'giropay' => array('DE'),
+			'eps' => array('AT'),
+			'pfefinance' => array('CH'),
+			'pfcard' => array('CH'),
+			'ideal' => array('NL'),
+		);
+
+		if ($this->enabled && is_object($order)) {
+			$active_genre = $this->_getActiveGenreIdentifier();
+			$type_available = false;
+			foreach(array_keys($this->banktransfertypes) as $type) {
+				if ($active_genre !== false && $this->_isOnlineTransferTypeAvailable($type, $active_genre)) {
+					$type_available = true;
+					break;
+				}
+			}
+			if ($type_available === false) {
+				$this->enabled = false;
+			}
+		}
+	}
+
+	function _isOnlineTransferTypeAvailable($type, $active_genre_identifier) {
+		global $order;
+
+		$billing_country = ((is_object($order) && isset($order->billing['country']['iso_code_2'])) ? $order->billing['country']['iso_code_2'] : '');
+		return is_string($type)
+		       && isset($this->banktransfertypes[$type])
+		       && isset($this->banktransfercountries[$type])
+		       && in_array($billing_country, $this->banktransfercountries[$type], true)
+		       && isset($this->config[$active_genre_identifier]['types'][$type]['active'])
+		       && $this->config[$active_genre_identifier]['types'][$type]['active'] == 'true';
+	}
+
+	function _getOnlineTransferBankCountry($type) {
+		global $order;
+
+		if ($type === 'sofortueberweisung') {
+			return $order->billing['country']['iso_code_2'];
+		}
+		return $this->banktransfercountries[$type][0];
 	}
 
 	function _paymentDataFormProcess($active_genre_identifier) {
@@ -56,33 +102,16 @@ class payone_otrans extends PayonePayment {
 	  $payment_smarty = new Smarty();
 	  $payment_smarty->template_dir = DIR_FS_EXTERNAL.'payone/templates/';
     
-    $genre_config = $this->config[$active_genre_identifier];
-    $global_config = $genre_config['global_override'] == 'true' ? $genre_config['global'] : $this->config['global'];
-
-    $available_genre = array();
-    foreach ($genre_config['types'] as $type_name => $type_config) {
-      if ($type_config['active'] == 'true') {
-        $available_genre[] = $type_name;
-      }
+    $otrans_type = ((isset($_SESSION[$this->code]['otrans_type'])) ? $_SESSION[$this->code]['otrans_type'] : '');
+    if (!$this->_isOnlineTransferTypeAvailable($otrans_type, $active_genre_identifier)) {
+      $_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
     }
-        
-    if (in_array($_POST[$this->code.'_type'], $available_genre)) {
-      $bank_group = '';
-      $bgroups = $this->payone->getBankGroups();
-      switch ($_POST[$this->code.'_type']) {
+
+    $bank_group = '';
+    $bgroups = $this->payone->getBankGroups();
+    switch ($otrans_type) {
         case 'sofortueberweisung':
-          if ($order->billing['country']['iso_code_2'] == 'CH') {
-            $required_fields = array('bankaccountholder' => $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'],
-                                     'bankcode' => '', 
-                                     'bankaccount' => '', 
-                                     );
-          } else {
-            $required_fields = array('bankaccountholder' => $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'],
-                                     'iban' => '', 
-                                     'bic' => '', 
-                                     );
-          }
-          break;
         case 'giropay':
           $required_fields = array('bankaccountholder' => $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'], 
                                    'iban' => '', 
@@ -92,7 +121,7 @@ class payone_otrans extends PayonePayment {
         case 'eps':
           $required_fields = array('bankaccountholder' => $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'],
                                    );
-          $bank_group = $bgroups['eps'];
+          $bank_group = ((isset($bgroups['eps']) && is_array($bgroups['eps'])) ? $bgroups['eps'] : array());
           break;
         case 'pfefinance':
         case 'pfcard':
@@ -101,16 +130,12 @@ class payone_otrans extends PayonePayment {
         case 'ideal':
           $required_fields = array('bankaccountholder' => $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'],
                                    );
-          $bank_group = $bgroups['ideal'];
+          $bank_group = ((isset($bgroups['ideal']) && is_array($bgroups['ideal'])) ? $bgroups['ideal'] : array());
           break;        
-      }
-      
-      // assign to session
-      $_SESSION[$this->code]['otrans_type'] = $_POST[$this->code.'_type'];
     }
     
     $payment_smarty->assign('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
-    $payment_smarty->assign('otrans_type', $_POST[$this->code.'_type']);
+    $payment_smarty->assign('otrans_type', $otrans_type);
     $payment_smarty->assign('required_fields', $required_fields);
     $payment_smarty->assign('bank_group', $bank_group);
         
@@ -125,6 +150,11 @@ class payone_otrans extends PayonePayment {
     $payment_smarty->template_dir = DIR_FS_EXTERNAL.'payone/templates/';
     
 		$genre_config = $this->config[$active_genre_identifier];
+		foreach($genre_config['types'] as $type => $type_config) {
+			if (!$this->_isOnlineTransferTypeAvailable($type, $active_genre_identifier)) {
+				unset($genre_config['types'][$type]);
+			}
+		}
     $payment_smarty->assign('genre_config', $genre_config['types']);
     $payment_smarty->assign('code', $this->code);
     
@@ -140,12 +170,23 @@ class payone_otrans extends PayonePayment {
 
 	function pre_confirmation_check() {
 		parent::pre_confirmation_check();
+
+		$active_genre = $this->_getActiveGenreIdentifier();
+		$otrans_type = ((isset($_POST[$this->code.'_type']))
+		                ? $_POST[$this->code.'_type']
+		                : ((isset($_SESSION[$this->code]['otrans_type'])) ? $_SESSION[$this->code]['otrans_type'] : ''));
+		if ($active_genre === false || !$this->_isOnlineTransferTypeAvailable($otrans_type, $active_genre)) {
+			$_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
+			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
+		}
+		$_SESSION[$this->code]['otrans_type'] = $otrans_type;
 	}
 
 	function confirmation() {
+		$otrans_type = ((isset($_SESSION[$this->code]['otrans_type'])) ? $_SESSION[$this->code]['otrans_type'] : '');
     $confirmation = array('title' => constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE'),
                           'fields' => array(array('title' => '',
-                                                  'field' => constant('paymenttype_'.$_POST[$this->code.'_type']),
+                                                  'field' => constant('paymenttype_'.$otrans_type),
                                             )));
 
 		return $confirmation;
@@ -168,9 +209,23 @@ class payone_otrans extends PayonePayment {
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		  foreach ($valid_request as $key) {
 		    if (isset($_POST[$key])) {
-		      $_SESSION[$this->code]['otrans_'.$key] = $_POST[$key];
-		    }
-		  }
+					if (!is_scalar($_POST[$key])) {
+						$_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
+						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
+					}
+		      $_SESSION[$this->code]['otrans_'.$key] = (string)$_POST[$key];
+			  }
+			}
+		}
+
+		$otrans_type = ((isset($_SESSION[$this->code]['otrans_type'])) ? $_SESSION[$this->code]['otrans_type'] : '');
+		if ($otrans_type === 'eps' || $otrans_type === 'ideal') {
+			$bankgroups = $this->payone->getBankGroups();
+			$selected_bankgroup = ((isset($_SESSION[$this->code]['otrans_bankgrouptype'])) ? $_SESSION[$this->code]['otrans_bankgrouptype'] : '');
+			if ($selected_bankgroup !== '' && !isset($bankgroups[$otrans_type][$selected_bankgroup])) {
+				$_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
+				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
+			}
 		}
 	}
 
@@ -179,6 +234,14 @@ class payone_otrans extends PayonePayment {
    
     if (!isset($insert_id) || $insert_id == '') {
 		  $insert_id = $_SESSION['tmp_oID'];
+		}
+
+		$active_genre = $this->_getActiveGenreIdentifier();
+		$otrans_type = ((isset($_SESSION[$this->code]['otrans_type'])) ? $_SESSION[$this->code]['otrans_type'] : '');
+		if ($active_genre === false || !$this->_isOnlineTransferTypeAvailable($otrans_type, $active_genre)) {
+			$_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
+			$this->_remove_order($insert_id);
+			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
 		}
 		
 		$this->payone->log("(pre-)authorizing $this->code payment");
@@ -191,23 +254,24 @@ class payone_otrans extends PayonePayment {
 		parent::_set_customers_shipping_params();
     
     $bankgroup = '';
-		if ($_SESSION[$this->code]['otrans_type'] == 'eps' || $_SESSION[$this->code]['otrans_type'] == 'ideal') {
-    	$bankgroup = $_SESSION[$this->code]['otrans_bankgrouptype'];
+		if ($otrans_type == 'eps' || $otrans_type == 'ideal') {
+			$bankgroup = ((isset($_SESSION[$this->code]['otrans_bankgrouptype'])) ? $_SESSION[$this->code]['otrans_bankgrouptype'] : '');
 		}
-    $_SESSION[$this->code]['otrans_bankcountry'] = ((isset($_SESSION[$this->code]['otrans_bankcountry'])) ? $_SESSION[$this->code]['otrans_bankcountry'] : $order->billing['country']['iso_code_2']);
+    $_SESSION[$this->code]['otrans_bankcountry'] = $this->_getOnlineTransferBankCountry($otrans_type);
     
 		$this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_OnlineBankTransfer();
-		$this->payment_method->setOnlinebanktransfertype($this->banktransfertypes[$_SESSION[$this->code]['otrans_type']]);
+		$this->payment_method->setOnlinebanktransfertype($this->banktransfertypes[$otrans_type]);
 		$this->payment_method->setBankcountry($_SESSION[$this->code]['otrans_bankcountry']);
-		if ($_SESSION[$this->code]['otrans_type'] == 'sofortueberweisung' && $_SESSION[$this->code]['otrans_country'] == 'CH') {
-			$this->payment_method->setBankaccount($_SESSION[$this->code]['otrans_bankaccount']);
-			$this->payment_method->setBankcode($_SESSION[$this->code]['otrans_bankcode']);
-		} else {
+		if (!empty($_SESSION[$this->code]['otrans_iban'])) {
 			$this->payment_method->setIban($_SESSION[$this->code]['otrans_iban']);
+		}
+		if (!empty($_SESSION[$this->code]['otrans_bic'])) {
 			$this->payment_method->setBic($_SESSION[$this->code]['otrans_bic']);
 		}
-		$this->payment_method->setBankgrouptype($bankgroup);
-		$this->payment_method->setSuccessurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id());
+		if ($bankgroup !== '') {
+			$this->payment_method->setBankgrouptype($bankgroup);
+		}
+		$this->payment_method->setSuccessurl($this->getCheckoutSuccessUrl($insert_id));
 		$this->payment_method->setBackurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id());
 		$this->payment_method->setErrorurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id().'&payment_error='.$this->code);
 
