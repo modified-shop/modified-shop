@@ -52,6 +52,24 @@ require (DIR_WS_INCLUDES.'checkout_requirements.php');
 require_once(DIR_WS_CLASSES.'payment.php');
 $payment_modules = new payment($_SESSION['payment']);
 
+$wallet_express_checkout = (isset($_SESSION['paypal']['wallet_express'])
+                            && $_SESSION['paypal']['wallet_express'] === true);
+if ($wallet_express_checkout) {
+  $selected_payment_module = isset($_SESSION['payment']) && is_string($_SESSION['payment']) ? $_SESSION['payment'] : '';
+  if (!in_array($selected_payment_module, array('paypalapplepay', 'paypalgooglepay'), true)
+      || !isset($GLOBALS[$selected_payment_module])
+      || !is_object($GLOBALS[$selected_payment_module])
+      || $GLOBALS[$selected_payment_module]->enabled !== true
+      )
+  {
+    unset($_SESSION['paypal']);
+    unset($_SESSION['payment_nonce']);
+    unset($_SESSION['payment']);
+    $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED);
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+  }
+}
+
 // if no shipping method has been selected, redirect the customer to the shipping page
 if (!isset($_SESSION['shipping'])) {
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));

@@ -23,7 +23,43 @@ require_once(DIR_FS_EXTERNAL . 'paypal/classes/PayPalPaymentV2.php');
 // shared guest-checkout callback for wallet cart flows
 $allowed_wallet_payment_methods = array('paypalapplepay', 'paypalgooglepay');
 
-$payment_method = (isset($_GET['payment_method']) && in_array($_GET['payment_method'], $allowed_wallet_payment_methods)) ? $_GET['payment_method'] : '';
+$payment_method = (isset($_GET['payment_method'])
+                   && is_string($_GET['payment_method'])
+                   && in_array($_GET['payment_method'], $allowed_wallet_payment_methods, true)
+                   ) ? $_GET['payment_method'] : '';
+$session_payment_method = (isset($_SESSION['paypal']['payment_method'])
+                           && is_string($_SESSION['paypal']['payment_method'])
+                           ) ? $_SESSION['paypal']['payment_method'] : '';
+$module_status = 'MODULE_PAYMENT_' . strtoupper($payment_method) . '_STATUS';
+$module_installed = ($payment_method != ''
+                     && defined('MODULE_PAYMENT_INSTALLED')
+                     && in_array($payment_method . '.php', explode(';', MODULE_PAYMENT_INSTALLED), true)
+                     );
+$module_enabled = ($module_installed
+                   && defined($module_status)
+                   && strtolower(constant($module_status)) == 'true'
+                   );
+
+if ($payment_method == ''
+    || $session_payment_method !== $payment_method
+    || $module_enabled !== true
+    )
+{
+    $log_payment_method = in_array($session_payment_method, $allowed_wallet_payment_methods, true)
+                          ? $session_payment_method
+                          : (in_array($payment_method, $allowed_wallet_payment_methods, true) ? $payment_method : 'paypalgooglepay');
+    $paypal = new PayPalPaymentV2($log_payment_method);
+    $paypal->LoggingManager->log('WARNING', 'Wallet callback aborted', array(
+      'reason' => 'payment method mismatch or disabled module',
+      'payment_method' => $payment_method,
+      'session_payment_method' => $session_payment_method,
+      'module_installed' => $module_installed,
+      'module_enabled' => $module_enabled,
+      'order_id' => (isset($_SESSION['paypal']['OrderID']) ? $_SESSION['paypal']['OrderID'] : null),
+    ));
+    PayPalPaymentBase::clear_wallet_checkout_state();
+    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+}
 
 if ($payment_method != ''
     && isset($_SESSION['paypal'])
@@ -44,7 +80,7 @@ if ($payment_method != ''
         'status' => ((is_object($PayPalOrder) && isset($PayPalOrder->status)) ? $PayPalOrder->status : null),
         'order_id' => $_SESSION['paypal']['OrderID'],
       ));
-      unset($_SESSION['paypal']);
+      PayPalPaymentBase::clear_wallet_checkout_state();
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
     }
 
@@ -67,7 +103,7 @@ if ($payment_method != ''
           'reason' => 'incomplete PayPal shipping address',
           'order_id' => $_SESSION['paypal']['OrderID'],
         ));
-        unset($_SESSION['paypal']);
+        PayPalPaymentBase::clear_wallet_checkout_state();
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
       }
 
@@ -102,7 +138,7 @@ if ($payment_method != ''
         'reason' => 'missing required telephone',
         'order_id' => $_SESSION['paypal']['OrderID'],
       ));
-      unset($_SESSION['paypal']);
+      PayPalPaymentBase::clear_wallet_checkout_state();
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
     }
 
@@ -125,7 +161,7 @@ if ($payment_method != ''
         'has_customer_id' => isset($_SESSION['customer_id']),
         'cart_id_match' => (isset($_SESSION['paypal']['cartID']) ? ($_SESSION['paypal']['cartID'] == $_SESSION['cart']->cartID) : null),
       ));
-      unset($_SESSION['paypal']);
+      PayPalPaymentBase::clear_wallet_checkout_state();
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
     }
 
@@ -184,5 +220,6 @@ if ($payment_method != ''
       'has_order_id' => isset($_SESSION['paypal']['OrderID']),
       'has_shipping_contact' => isset($_SESSION['paypal']['contact']['shipping']),
     ));
+    PayPalPaymentBase::clear_wallet_checkout_state();
     xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
 }

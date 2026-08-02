@@ -108,6 +108,7 @@
     
     $_SESSION['paypal'] = array(
       'cartID' => $_SESSION['cart']->cartID,
+      'payment_method' => $paypal->code,
       'OrderID' => $paypal->CreateOrder($payment_source)
     );
 

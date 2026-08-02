@@ -21,7 +21,8 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 if (isset($_GET['oID'])
     && is_numeric($_GET['oID'])
     && isset($_GET['key'])
-    && strlen($_GET['key']) == 64
+    && is_string($_GET['key'])
+    && in_array(strlen($_GET['key']), array(32, 64), true)
     )
 {
 
@@ -33,9 +34,8 @@ if (isset($_GET['oID'])
 
   $order = new order((int)$_GET['oID']);
   $paypal = new PayPalPayment('paypalpluslink');
-  $hash = $paypal->get_paypal_link_token((int)$_GET['oID'], $order->customer['email_address']);
 
-  if (hash_equals($hash, $_GET['key'])) {
+  if ($paypal->is_valid_paypal_link_token($_GET['key'], (int)$_GET['oID'], $order->customer['email_address'])) {
 
     if (!isset($_SESSION['customer_id'])) {
       $_SESSION['customers_status'] = get_customers_status_by_id($order->info['status']);
@@ -132,4 +132,4 @@ if (isset($_GET['oID'])
   die('Direct Access to this location is not allowed.');
 }
 
-include ('includes/application_bottom.php'); 
+include ('includes/application_bottom.php');

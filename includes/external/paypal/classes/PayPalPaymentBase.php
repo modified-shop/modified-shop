@@ -57,7 +57,7 @@ class PayPalPaymentBase extends PayPalCommon {
     global $order;
 
     $this->code = $class;
-    $this->paypal_version = '1.110';
+    $this->paypal_version = '1.111';
 
     $this->admin_access_array = array(
       'paypal_info',
@@ -253,6 +253,19 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  static function clear_wallet_checkout_state() {
+    unset($_SESSION['paypal']);
+    unset($_SESSION['payment_nonce']);
+
+    if (isset($_SESSION['payment'])
+        && in_array($_SESSION['payment'], array('paypalapplepay', 'paypalgooglepay'), true)
+        )
+    {
+      unset($_SESSION['payment']);
+    }
+  }
+
+
   function pre_confirmation_check() {
     global $order, $smarty, $total_weight, $total_count, $free_shipping;
     
@@ -348,6 +361,12 @@ class PayPalPaymentBase extends PayPalCommon {
         )
     {
       $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
+      if (isset($_SESSION['paypal']['wallet_express'])
+          && $_SESSION['paypal']['wallet_express'] === true
+          )
+      {
+        self::clear_wallet_checkout_state();
+      }
       xtc_redirect(xtc_href_link((($this->code == 'paypalcart') ? FILENAME_CHECKOUT_SHIPPING : FILENAME_CHECKOUT_PAYMENT), '', 'SSL'));
     }
     
@@ -905,6 +924,52 @@ class PayPalPaymentBase extends PayPalCommon {
   function get_paypal_link_token($orders_id, $email) {
     $secret = ((defined('MODULE_PAYMENT_PAYPAL_SECRET')) ? MODULE_PAYMENT_PAYPAL_SECRET : '');
     return hash_hmac('sha256', $orders_id.'|'.$email, $secret);
+  }
+
+
+  function is_valid_paypal_link_token($key, $orders_id, $email) {
+    if (!is_string($key)) {
+      return false;
+    }
+
+    $token = $this->get_paypal_link_token($orders_id, $email);
+    if (strlen($key) === 64) {
+      return hash_equals($token, $key);
+    }
+
+    if (strlen($key) !== 32) {
+      return false;
+    }
+
+    $migration_timestamp = (int)$this->get_config('PAYPAL_LINK_TOKEN_MIGRATION_TIMESTAMP', false);
+    if ($migration_timestamp <= 0
+        || time() > ($migration_timestamp + 30 * 24 * 60 * 60)
+        )
+    {
+      return false;
+    }
+
+    $order_query = xtc_db_query("SELECT UNIX_TIMESTAMP(o.date_purchased) AS order_timestamp,
+                                        (SELECT COUNT(*)
+                                           FROM " . TABLE_PAYPAL_PAYMENT . " pp
+                                          WHERE pp.orders_id = o.orders_id
+                                            AND pp.transaction_id != '') AS completed_payments
+                                   FROM " . TABLE_ORDERS . " o
+                                  WHERE o.orders_id = '" . (int)$orders_id . "'
+                                  LIMIT 1");
+    if (xtc_db_num_rows($order_query) !== 1) {
+      return false;
+    }
+
+    $order = xtc_db_fetch_array($order_query);
+    if ((int)$order['order_timestamp'] >= $migration_timestamp
+        || (int)$order['completed_payments'] > 0
+        )
+    {
+      return false;
+    }
+
+    return hash_equals(md5($email), $key);
   }
 
 
@@ -1610,6 +1675,22 @@ class PayPalPaymentBase extends PayPalCommon {
   
   
   function paypal_update() {
+    $installed_paypal_version = $this->get_config('PAYPAL_VERSION', false);
+    if ($installed_paypal_version != ''
+        && version_compare($installed_paypal_version, '1.111', '<')
+        && $this->get_config('PAYPAL_LINK_TOKEN_MIGRATION_TIMESTAMP', false) == ''
+        )
+    {
+      $migration_query = xtc_db_query("SELECT UNIX_TIMESTAMP() AS migration_timestamp");
+      $migration = xtc_db_fetch_array($migration_query);
+      $this->save_config(array(
+        array(
+          'config_key' => 'PAYPAL_LINK_TOKEN_MIGRATION_TIMESTAMP',
+          'config_value' => (int)$migration['migration_timestamp'],
+        ),
+      ));
+    }
+
     $table_array = array(
       array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL DEFAULT ''"),
       array('column' => 'send_order', 'default' => "int(1) NOT NULL default '0'"),

@@ -131,6 +131,17 @@ $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
 // GV Code End
 
+$wallet_express_checkout = (isset($_SESSION['paypal']['wallet_express'])
+                            && $_SESSION['paypal']['wallet_express'] === true);
+$selected_payment_module = isset($_SESSION['payment']) && is_string($_SESSION['payment']) ? $_SESSION['payment'] : '';
+$wallet_payment_invalid = ($wallet_express_checkout
+                           && (!in_array($selected_payment_module, array('paypalapplepay', 'paypalgooglepay'), true)
+                               || !isset($GLOBALS[$selected_payment_module])
+                               || !is_object($GLOBALS[$selected_payment_module])
+                               || $GLOBALS[$selected_payment_module]->enabled !== true
+                               )
+                           );
+
 // GV Code line changed
 if ((is_array($payment_modules->modules) 
      && sizeof($payment_modules->modules) > 0 
@@ -145,8 +156,14 @@ if ((is_array($payment_modules->modules)
      && $_SESSION['cot_gv'] > 0
      && $xtPrice->xtcFormat($order->info['total'], false) > $_SESSION['cot_gv']
      && $_SESSION['payment'] == 'no_payment')
+    || $wallet_payment_invalid
   ) 
 {
+  if ($wallet_express_checkout) {
+    unset($_SESSION['paypal']);
+    unset($_SESSION['payment_nonce']);
+    unset($_SESSION['payment']);
+  }
   $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
   xtc_redirect(xtc_href_link(((isset($payment_modules->selected_module) && $payment_modules->selected_module == 'paypalcart') ? FILENAME_CHECKOUT_SHIPPING : FILENAME_CHECKOUT_PAYMENT), '', 'SSL'));
 }
