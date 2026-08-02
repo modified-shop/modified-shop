@@ -22,7 +22,6 @@
   require_once(DIR_WS_CLASSES.'order.php');
 
 
-  #[AllowDynamicProperties]
   class DHLInternetmarke {
 
     const DHL_API_URL = 'https://api-eu.dhl.com/post/de/shipping/im/v1';
@@ -33,7 +32,12 @@
     private $order;
     private $loglevel;
     private $LoggingManager;
-    private $message;
+    private $message = array();
+    private $format = 0;
+    private $row = 0;
+    private $column = 0;
+    private $product = 0;
+    private $price = 0;
 
 
     function __construct($data, $init = true) {
@@ -54,6 +58,7 @@
         'firstname'       => MODULE_INTERNETMARKE_FIRSTNAME,
         'lastname'        => MODULE_INTERNETMARKE_LASTNAME,
         'company'         => MODULE_INTERNETMARKE_COMPANY,
+        'suburb'           => MODULE_INTERNETMARKE_SUBURB,
         'street_address'  => MODULE_INTERNETMARKE_STREET,
         'postcode'        => MODULE_INTERNETMARKE_PLZ,
         'city'            => MODULE_INTERNETMARKE_CITY,
@@ -63,21 +68,42 @@
       );
       $this->info = $this->encode_request($this->info);
       
-      foreach ($data as $k => $v) {
-        $this->$k = $v;
-      }
+      $this->format = isset($data['format']) && is_scalar($data['format']) ? (int)$data['format'] : 0;
+      $this->row = isset($data['row']) && is_scalar($data['row']) ? (int)$data['row'] : 0;
+      $this->column = isset($data['column']) && is_scalar($data['column']) ? (int)$data['column'] : 0;
+      $this->product = isset($data['product']) && is_scalar($data['product']) ? (int)$data['product'] : 0;
                
-      if ($init === true) {
+      if ($init === true
+          && $this->data['user'] != ''
+          && $this->data['signature'] != ''
+          )
+      {
         $this->client = new \GuzzleHttp\Client();
         $this->getAccessToken();
-      } 
+      }
     }
 
 
     public function CreateLabel($order_id) {
-      $this->initShoppingCart();
+      $result = array(
+        'label' => array(),
+        'message' => array(),
+      );
 
-      $this->order = new order($order_id);
+      if ($this->loadOrder($order_id) !== true) {
+        $result['message'] = $this->message;
+        return $result;
+      }
+
+      if ($this->validateLabelData() !== true) {
+        $result['message'] = $this->message;
+        return $result;
+      }
+
+      if ($this->initShoppingCart() !== true) {
+        $result['message'] = $this->message;
+        return $result;
+      }
           
       $headers = array(
         'Authorization' => 'Bearer '.$this->data['access_token'],
@@ -85,11 +111,11 @@
       );
 
       $body = json_encode($this->buildLabelData());
-
-      $result = array(
-        'label' => array(),
-        'message' => array(),
-      );
+      if ($body === false) {
+        $this->message['error'][] = 'The Internetmarke label data could not be encoded.';
+        $result['message'] = $this->message;
+        return $result;
+      }
 
       $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/app/shoppingcart/pdf'), $headers, $body);
      
@@ -97,30 +123,107 @@
         $response = $this->client->send($request);
         $response = json_decode($response->getBody()->getContents(), true);
 
-        foreach ($response['shoppingCart']['voucherList'] as $items) {
-          $tracking_id = $this->SaveLabel(
-            $items['voucherId'], 
-            $response['link'], 
-            $response['shoppingCart']['shopOrderId'], 
-          );
+        $shopping_cart_id = isset($response['shoppingCart']['shopOrderId'])
+                            && is_scalar($response['shoppingCart']['shopOrderId'])
+          ? trim((string)$response['shoppingCart']['shopOrderId'])
+          : '';
+        $expected_shopping_cart_id = isset($this->data['shopOrderId']) ? (string)$this->data['shopOrderId'] : '';
+        $label_url = isset($response['link']) && is_scalar($response['link'])
+          ? trim((string)$response['link'])
+          : '';
+        $label_url_scheme = ($label_url != '') ? parse_url($label_url, PHP_URL_SCHEME) : false;
 
-          $result['label'][] = array(
-            'tracking_id' => $tracking_id,
-            'parcel_id' => $items['voucherId'],
-          ); 
-        }
-      } catch (Exception $ex) {
-        if (is_object($ex)
-            && method_exists($ex, 'getResponse')
+        if (!is_array($response)
+            || !isset($response['shoppingCart'])
+            || !is_array($response['shoppingCart'])
+            || !isset($response['shoppingCart']['voucherList'])
+            || !is_array($response['shoppingCart']['voucherList'])
+            || count($response['shoppingCart']['voucherList']) < 1
+            || $shopping_cart_id == ''
+            || $shopping_cart_id !== $expected_shopping_cart_id
+            || strlen($shopping_cart_id) > 80
+            || strlen($label_url) > 512
+            || filter_var($label_url, FILTER_VALIDATE_URL) === false
+            || !is_string($label_url_scheme)
+            || strtolower($label_url_scheme) != 'https'
             )
         {
-          $error = json_decode($ex->getResponse()->getBody(), true);      
-  
-          $this->message['error'][] = $error['description'];
-  
-          $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $error));
+          $this->handleUnexpectedPurchaseResponse($response, $expected_shopping_cart_id, $label_url);
         } else {
-          $this->LoggingManager->log('ERROR', 'CreateLabel', array('exception' => $ex));
+          $voucher_array = array();
+          foreach ($response['shoppingCart']['voucherList'] as $items) {
+            if (!is_array($items)
+                || !isset($items['voucherId'])
+                || !is_scalar($items['voucherId'])
+                || trim((string)$items['voucherId']) == ''
+                || (isset($items['trackId']) && !is_scalar($items['trackId']))
+                )
+            {
+              $voucher_array = array();
+              break;
+            }
+
+            $voucher_id = trim((string)$items['voucherId']);
+            $parcel_id = isset($items['trackId']) && trim((string)$items['trackId']) != ''
+              ? trim((string)$items['trackId'])
+              : $voucher_id;
+            if (strlen($voucher_id) > 80 || strlen($parcel_id) > 80) {
+              $voucher_array = array();
+              break;
+            }
+            $voucher_array[] = array(
+              'voucher_id' => $voucher_id,
+              'parcel_id' => $parcel_id,
+            );
+          }
+
+          if (count($voucher_array) != count($response['shoppingCart']['voucherList'])) {
+            $this->handleUnexpectedPurchaseResponse($response, $shopping_cart_id, $label_url);
+          } else {
+            foreach ($voucher_array as $voucher) {
+              $tracking_id = $this->SaveLabel(
+                $voucher['parcel_id'],
+                $voucher['voucher_id'],
+                $label_url,
+                $shopping_cart_id
+              );
+
+              if ($tracking_id === false) {
+                $recovery_data = array(
+                  'orders_id' => $this->order->info['order_id'],
+                  'voucher_id' => $voucher['voucher_id'],
+                  'parcel_id' => $voucher['parcel_id'],
+                  'shopping_cart_id' => $shopping_cart_id,
+                  'label_url' => $label_url,
+                );
+                $this->cancelUnstoredLabel($voucher['voucher_id'], 'voucherId', $recovery_data);
+                continue;
+              }
+
+              $result['label'][] = array(
+                'tracking_id' => $tracking_id,
+                'parcel_id' => $voucher['parcel_id'],
+              );
+            }
+          }
+        }
+      } catch (Exception $ex) {
+        $this->handleException($ex, 'CreateLabel');
+        if ((!method_exists($ex, 'getResponse') || !is_object($ex->getResponse()))
+            && isset($this->data['shopOrderId'])
+            && $this->data['shopOrderId'] != ''
+            )
+        {
+          $this->cancelUnstoredLabel(
+            $this->data['shopOrderId'],
+            'shopOrderId',
+            array(
+              'orders_id' => $this->order->info['order_id'],
+              'shopping_cart_id' => $this->data['shopOrderId'],
+              'checkout_status' => 'unknown',
+              'exception' => $ex->getMessage(),
+            )
+          );
         }
       }
       
@@ -130,7 +233,27 @@
     }
 
 
-    private function SaveLabel($shipment_number, $label_url, $cart_id) {
+    private function loadOrder($order_id) {
+      $order_id = (int)$order_id;
+      if ($order_id < 1) {
+        $this->message['error'][] = 'The Internetmarke order is invalid.';
+        return false;
+      }
+
+      $order_query = xtc_db_query("SELECT orders_id
+                                      FROM ".TABLE_ORDERS."
+                                     WHERE orders_id = '".$order_id."'");
+      if (xtc_db_num_rows($order_query) < 1) {
+        $this->message['error'][] = 'The Internetmarke order does not exist.';
+        return false;
+      }
+
+      $this->order = new order($order_id);
+      return true;
+    }
+
+
+    private function SaveLabel($shipment_number, $voucher_id, $label_url, $cart_id) {
       $sql_data_array = array(
         'orders_id' => $this->order->info['order_id'],
         'carrier_id' => (int)MODULE_INTERNETMARKE_CARRIER,
@@ -139,116 +262,232 @@
         'parcel_id' => $shipment_number,
         'im_orders_id' => $cart_id,
         'im_url' => $label_url,
+        'im_voucher_id' => $voucher_id,
       );
-      xtc_db_perform(TABLE_ORDERS_TRACKING, $sql_data_array);
-      
-      return xtc_db_insert_id();
+      if (xtc_db_perform(TABLE_ORDERS_TRACKING, $sql_data_array) === false) {
+        return false;
+      }
+
+      $tracking_id = (int)xtc_db_insert_id();
+      if ($tracking_id > 0) {
+        return $tracking_id;
+      }
+
+      $tracking_query = xtc_db_query("SELECT tracking_id
+                                        FROM ".TABLE_ORDERS_TRACKING."
+                                       WHERE orders_id = '".(int)$this->order->info['order_id']."'
+                                         AND carrier_id = '".(int)MODULE_INTERNETMARKE_CARRIER."'
+                                         AND im_voucher_id = '".xtc_db_input($voucher_id)."'
+                                         AND im_orders_id = '".xtc_db_input($cart_id)."'
+                                    ORDER BY tracking_id DESC
+                                       LIMIT 1");
+      if (xtc_db_num_rows($tracking_query) > 0) {
+        $tracking = xtc_db_fetch_array($tracking_query);
+        return (int)$tracking['tracking_id'];
+      }
+
+      return false;
     }
 
 
-    public function DeleteLabel($shipmentNumber) {
-      $headers = [
-        'Authorization' => 'Bearer '.$this->data['access_token'],
-        'Content-Type' => 'application/json'
-      ];
+    private function handleUnexpectedPurchaseResponse($response, $shopping_cart_id, $label_url) {
+      $recovery_data = array(
+        'orders_id' => $this->order->info['order_id'],
+        'shopping_cart_id' => $shopping_cart_id,
+        'label_url' => $label_url,
+        'api_response' => $response,
+      );
 
+      if ($shopping_cart_id != '') {
+        $this->cancelUnstoredLabel($shopping_cart_id, 'shopOrderId', $recovery_data);
+      } else {
+        $recovery_data['refund_status'] = 'not_possible';
+        $this->logPersistenceFailure($recovery_data);
+        $this->message['error'][] = 'The Internetmarke API returned an unexpected response. Check the Internetmarke error log for recovery data.';
+      }
+    }
+
+
+    private function cancelUnstoredLabel($shipment_number, $identifier, $recovery_data) {
+      $recovery_data['refund_status'] = 'pending';
+      $this->logPersistenceFailure($recovery_data);
+
+      $refund = $this->DeleteLabel($shipment_number, $identifier);
+      if (isset($refund['label'])
+          && is_array($refund['label'])
+          && count($refund['label']) > 0
+          )
+      {
+        $recovery_data['refund_status'] = 'successful';
+        $this->message['error'][] = 'The Internetmarke purchase could not be saved locally and was cancelled automatically.';
+      } else {
+        $recovery_data['refund_status'] = 'failed';
+        $this->message['error'][] = 'The Internetmarke purchase could not be saved locally or cancelled automatically. Check the Internetmarke error log for recovery data.';
+      }
+      $this->logPersistenceFailure($recovery_data);
+    }
+
+
+    private function logPersistenceFailure($recovery_data) {
+      try {
+        $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_dhl_internetmarke_%s_%s.log', 'internetmarke', 'error');
+        $LoggingManager->log('ERROR', 'SaveLabel', $recovery_data);
+      } catch (Throwable $ex) {
+        error_log('Internetmarke SaveLabel recovery data: '.json_encode($recovery_data));
+      }
+    }
+
+
+    public function DeleteLabel($shipmentNumber, $identifier = 'voucherId') {
       $result = array(
         'label' => array(),
         'message' => array(),
       );
 
-      $voucherList = new stdClass();
-      $voucherList->voucherId = $shipmentNumber;
-      
-      $shoppingCart = new stdClass();
-      $shoppingCart->voucherList = array();
-      $shoppingCart->voucherList[] = $voucherList;
-      
-      $data = new stdClass();
-      $data->shoppingCart = $shoppingCart;
+      if (!isset($this->data['access_token']) || $this->data['access_token'] == '') {
+        if (count($this->message) == 0) {
+          $this->message['error'][] = 'Authentication with the Internetmarke API failed.';
+        }
+        $result['message'] = $this->message;
+        return $result;
+      }
 
-      $body = json_encode($data);
+      if (!in_array($identifier, array('voucherId', 'trackId', 'shopOrderId', 'auto'), true)) {
+        $result['message']['error'][] = 'The Internetmarke label identifier is invalid.';
+        return $result;
+      }
 
-      $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/app/retoure'), $headers, $body);
+      if (!is_scalar($shipmentNumber)
+          || trim((string)$shipmentNumber) == ''
+          || strlen(trim((string)$shipmentNumber)) > 80
+          )
+      {
+        $result['message']['error'][] = 'The Internetmarke label identifier is invalid.';
+        return $result;
+      }
+      $shipmentNumber = trim((string)$shipmentNumber);
 
-      try {
-        $response = $this->client->send($request);
-        $response = json_decode($response->getBody()->getContents(), true);        
+      $headers = [
+        'Authorization' => 'Bearer '.$this->data['access_token'],
+        'Content-Type' => 'application/json'
+      ];
 
-        $result['label'] = $response;
-        
-      } catch (Exception $ex) {
-        if (is_object($ex)
-            && method_exists($ex, 'getResponse')
-            )
-        {
-          $error = json_decode($ex->getResponse()->getBody(), true);      
-
-          if (isset($error['status'])) {
-            $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
-          }
-          if (isset($error['statusCode'])) {
-            $this->message['error'][] = sprintf('Status %s: %s', $error['statusCode'], $error['description']);
-          }
-          
-          $this->LoggingManager->log('ERROR', 'DeleteLabel', array('exception' => $error));
+      $identifiers = $identifier == 'auto' ? array('voucherId', 'trackId') : array($identifier);
+      $last_exception = null;
+      foreach ($identifiers as $identifier_type) {
+        $shoppingCart = new stdClass();
+        if ($identifier_type == 'shopOrderId') {
+          $shoppingCart->shopOrderId = $shipmentNumber;
         } else {
-          $this->LoggingManager->log('ERROR', 'DeleteLabel', array('exception' => $ex));
+          $voucherList = new stdClass();
+          $voucherList->{$identifier_type} = $shipmentNumber;
+          $shoppingCart->voucherList = array($voucherList);
+        }
+
+        $data = new stdClass();
+        $data->shoppingCart = $shoppingCart;
+
+        $body = json_encode($data);
+        if ($body === false) {
+          $this->message['error'][] = 'The Internetmarke cancellation data could not be encoded.';
+          $result['message'] = $this->message;
+          return $result;
+        }
+        $request = new \GuzzleHttp\Psr7\Request('POST', $this->getUrl(self::DHL_API_URL, '/app/retoure'), $headers, $body);
+
+        try {
+          $response = $this->client->send($request);
+          $response = json_decode($response->getBody()->getContents(), true);
+
+          if (isset($response['retoureTransactionId'])
+              && is_scalar($response['retoureTransactionId'])
+              && trim((string)$response['retoureTransactionId']) != ''
+              && isset($response['shopRetoureId'])
+              && is_scalar($response['shopRetoureId'])
+              && trim((string)$response['shopRetoureId']) != ''
+              )
+          {
+            $result['label'] = $response;
+            return $result;
+          }
+        } catch (Exception $ex) {
+          $last_exception = $ex;
         }
       }
 
+      if ($last_exception !== null) {
+        $this->handleException($last_exception, 'DeleteLabel');
+      } else {
+        $this->message['error'][] = 'The Internetmarke API returned an unexpected response.';
+      }
       $result['message'] = $this->message;
-      
+
       return $result;
     }
 
 
     public function getPageFormats($id = '', $single = false) {      
-      $headers = [
-        'Authorization' => 'Bearer '.$this->data['access_token'],
-      ];
+      $formats_array = array();
 
       $result = array(
         'formats' => array(),
         'message' => array(),
       );
 
+      if (!isset($this->data['access_token']) || $this->data['access_token'] == '') {
+        if (count($this->message) == 0) {
+          $this->message['error'][] = 'Authentication with the Internetmarke API failed.';
+        }
+        $result['message'] = $this->message;
+        return $result;
+      }
+
+      $headers = [
+        'Authorization' => 'Bearer '.$this->data['access_token'],
+      ];
+
       $request = new \GuzzleHttp\Psr7\Request('GET', $this->getUrl(self::DHL_API_URL, '/app/catalog?types=PAGE_FORMATS'), $headers);
 
       try {
         $response = $this->client->send($request);
         $response = json_decode($response->getBody()->getContents(), true);
-        
-        $formats_array = array();
-        foreach ($response['pageFormats'] as $PageFormat) {
-          $formats_array[$PageFormat['id']] = array(
-            'id' => $PageFormat['id'],
-            'text' => $PageFormat['name'],
-            'labelX' => $PageFormat['pageLayout']['labelCount']['labelX'],
-            'labelY' => $PageFormat['pageLayout']['labelCount']['labelY'],
-          );
+
+        if (isset($response['pageFormats']) && is_array($response['pageFormats'])) {
+          foreach ($response['pageFormats'] as $PageFormat) {
+            if (!is_array($PageFormat)
+                || !isset($PageFormat['id'], $PageFormat['name'], $PageFormat['pageLayout']['labelCount']['labelX'], $PageFormat['pageLayout']['labelCount']['labelY'])
+                || !is_scalar($PageFormat['id'])
+                || !is_scalar($PageFormat['name'])
+                || !is_scalar($PageFormat['pageLayout']['labelCount']['labelX'])
+                || !is_scalar($PageFormat['pageLayout']['labelCount']['labelY'])
+                || !$this->isPositiveIntegerValue($PageFormat['id'])
+                || !$this->isPositiveIntegerValue($PageFormat['pageLayout']['labelCount']['labelX'])
+                || !$this->isPositiveIntegerValue($PageFormat['pageLayout']['labelCount']['labelY'])
+                )
+            {
+              continue;
+            }
+
+            $format_id = (int)$PageFormat['id'];
+            $formats_array[$format_id] = array(
+              'id' => $format_id,
+              'text' => (string)$PageFormat['name'],
+              'labelX' => (int)$PageFormat['pageLayout']['labelCount']['labelX'],
+              'labelY' => (int)$PageFormat['pageLayout']['labelCount']['labelY'],
+            );
+          }
+          if (count($formats_array) > 0) {
+            ksort($formats_array);
+            $result['formats'] = $formats_array;
+          } else {
+            $this->message['error'][] = 'The Internetmarke API returned no valid page formats.';
+          }
+        } else {
+          $this->message['error'][] = 'The Internetmarke API returned an unexpected response.';
         }
-        ksort($formats_array);
-        $result['formats'] = $formats_array;
         
       } catch (Exception $ex) {
-        if (is_object($ex)
-            && method_exists($ex, 'getResponse')
-            )
-        {
-          $error = json_decode($ex->getResponse()->getBody(), true);      
-                    
-          if (isset($error['status'])) {
-            $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
-          }
-          if (isset($error['statusCode'])) {
-            $this->message['error'][] = sprintf('Status %s: %s', $error['statusCode'], $error['description']);
-          }
-
-          $this->LoggingManager->log('ERROR', 'getPageFormats', array('exception' => $error));
-        } else {
-          $this->LoggingManager->log('ERROR', 'getPageFormats', array('exception' => $ex));
-        }        
+        $this->handleException($ex, 'getPageFormats');
       }
       
       $result['message'] = $this->message;
@@ -259,11 +498,13 @@
         if ($single === false) {
           $selected_formats_array = array();
           foreach ($id_array as $id) {
-            $selected_formats_array[$id] = $formats_array[$id];
+            if (isset($formats_array[$id])) {
+              $selected_formats_array[$id] = $formats_array[$id];
+            }
           }
           $result['formats'] = $selected_formats_array;
         } else {
-          $result['formats'] = $formats_array[$id_array[0]];
+          $result['formats'] = isset($formats_array[$id_array[0]]) ? $formats_array[$id_array[0]] : array();
         }
       }
       
@@ -292,31 +533,30 @@
         try {
           $response = $this->client->send($request, $options);
           $response = json_decode($response->getBody()->getContents(), true);
-          $this->data['access_token'] = $response['access_token'];   
-        } catch (Exception $ex) {
-          if (is_object($ex)
-              && method_exists($ex, 'getResponse')
+          if (isset($response['access_token'])
+              && is_scalar($response['access_token'])
+              && trim((string)$response['access_token']) != ''
               )
           {
-            $error = json_decode($ex->getResponse()->getBody(), true);      
-  
-            if (isset($error['status'])) {
-              $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
-            }
-            if (isset($error['statusCode'])) {
-              $this->message['error'][] = sprintf('Status %s: %s', $error['statusCode'], $error['description']);
-            }
-  
-            $this->LoggingManager->log('ERROR', 'getAccessToken', array('exception' => $error));
+            $this->data['access_token'] = trim((string)$response['access_token']);
           } else {
-            $this->LoggingManager->log('ERROR', 'getAccessToken', array('exception' => $ex));
-          }        
+            $this->message['error'][] = 'The Internetmarke API did not return an access token.';
+          }
+        } catch (Exception $ex) {
+          $this->handleException($ex, 'getAccessToken');
         }
       }
     }
 
 
     private function initShoppingCart() {
+      if (!isset($this->data['access_token']) || $this->data['access_token'] == '') {
+        if (count($this->message) == 0) {
+          $this->message['error'][] = 'Authentication with the Internetmarke API failed.';
+        }
+        return false;
+      }
+
       $headers = [
         'Authorization' => 'Bearer '.$this->data['access_token'],
       ];
@@ -326,25 +566,62 @@
       try {
         $response = $this->client->send($request);
         $response = json_decode($response->getBody()->getContents(), true);
-        $this->data['shopOrderId'] = $response['shopOrderId'];   
-      } catch (Exception $ex) {
-        if (is_object($ex)
-            && method_exists($ex, 'getResponse')
+        if (isset($response['shopOrderId'])
+            && is_scalar($response['shopOrderId'])
+            && trim((string)$response['shopOrderId']) != ''
+            && strlen(trim((string)$response['shopOrderId'])) <= 80
             )
         {
-          $error = json_decode($ex->getResponse()->getBody(), true);      
+          $this->data['shopOrderId'] = trim((string)$response['shopOrderId']);
+          return true;
+        }
+        $this->message['error'][] = 'The Internetmarke API did not return a shopping cart ID.';
+      } catch (Exception $ex) {
+        $this->handleException($ex, 'initShoppingCart');
+      }
 
-          if (isset($error['status'])) {
-            $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
-          }
-          if (isset($error['statusCode'])) {
-            $this->message['error'][] = sprintf('Status %s: %s', $error['statusCode'], $error['description']);
-          }
+      return false;
+    }
 
-          $this->LoggingManager->log('ERROR', 'initShoppingCart', array('exception' => $error));
-        } else {
-          $this->LoggingManager->log('ERROR', 'initShoppingCart', array('exception' => $ex));
-        }        
+
+    private function handleException($ex, $method) {
+      $error = array();
+
+      if (is_object($ex)
+          && method_exists($ex, 'getResponse')
+          && is_object($ex->getResponse())
+          )
+      {
+        $error = json_decode($ex->getResponse()->getBody()->getContents(), true);
+        if (!is_array($error)) {
+          $error = array();
+        }
+      }
+
+      if (isset($error['status']) && is_scalar($error['status'])
+          && isset($error['detail']) && is_scalar($error['detail'])
+          )
+      {
+        $this->message['error'][] = sprintf('Status %s: %s', $error['status'], $error['detail']);
+      } elseif (isset($error['statusCode']) && is_scalar($error['statusCode'])
+                && isset($error['description']) && is_scalar($error['description'])
+                )
+      {
+        $this->message['error'][] = sprintf('Status %s: %s', $error['statusCode'], $error['description']);
+      } elseif (isset($error['description']) && is_scalar($error['description'])) {
+        $this->message['error'][] = (string)$error['description'];
+      } elseif (isset($error['detail']) && is_scalar($error['detail'])) {
+        $this->message['error'][] = (string)$error['detail'];
+      } elseif (isset($error['title']) && is_scalar($error['title'])) {
+        $this->message['error'][] = (string)$error['title'];
+      } else {
+        $this->message['error'][] = $ex->getMessage();
+      }
+
+      try {
+        $this->LoggingManager->log('ERROR', $method, array('exception' => count($error) > 0 ? $error : $ex));
+      } catch (Throwable $logging_exception) {
+        error_log('Internetmarke '.$method.' error: '.$ex->getMessage());
       }
     }
 
@@ -355,11 +632,6 @@
 
 
     private function buildLabelData() {
-      $price_query = xtc_db_query("SELECT PROPR
-                                     FROM `internetmarke`
-                                    WHERE PROID = '".(int)$this->product."'");
-      $price = xtc_db_fetch_array($price_query);
-
       // customers_data
       $customers_data = $this->buildCustomersData();
             
@@ -368,9 +640,9 @@
       $Shipment->shopOrderId = $this->data['shopOrderId'];
       $Shipment->pageFormatId = $this->format;
       $Shipment->positions = array();
-      $Shipment->total = ($price['PROPR'] * 100);
+      $Shipment->total = (int)round($this->price * 100);
       $Shipment->createManifest = true;
-      $Shipment->createShippingList = '1';
+      $Shipment->createShippingList = '2';
       $Shipment->dpi = 'DPI300';
 
       $Address = new stdClass();
@@ -392,6 +664,101 @@
       $Shipment->positions[] = $Positions;
       
       return $Shipment;
+    }
+
+
+    private function validateLabelData() {
+      if ($this->format < 1
+          || $this->row < 1
+          || $this->column < 1
+          || $this->product < 1
+          )
+      {
+        $this->message['error'][] = 'The Internetmarke label data is invalid.';
+        return false;
+      }
+
+      if ($this->validatePersistenceConfiguration() !== true) {
+        return false;
+      }
+
+      $allowed_formats = array_filter(array_map('intval', explode(',', MODULE_INTERNETMARKE_PAGEFORMATS)));
+      if (!in_array($this->format, $allowed_formats, true)) {
+        $this->message['error'][] = 'The selected Internetmarke page format is not configured.';
+        return false;
+      }
+
+      $price_query = xtc_db_query("SELECT PROID, PROPR
+                                     FROM `internetmarke`
+                                    WHERE PROID = '".(int)$this->product."'
+                                      AND SEL != 0");
+      if (xtc_db_num_rows($price_query) < 1) {
+        $this->message['error'][] = 'The selected Internetmarke product is not configured.';
+        return false;
+      }
+      $price = xtc_db_fetch_array($price_query);
+      if (!isset($price['PROPR']) || !is_numeric($price['PROPR']) || (float)$price['PROPR'] <= 0) {
+        $this->message['error'][] = 'The selected Internetmarke product price is invalid.';
+        return false;
+      }
+      $this->price = (float)$price['PROPR'];
+
+      $result = $this->getPageFormats((string)$this->format, true);
+      if (!isset($result['formats']['labelX'])
+          || !isset($result['formats']['labelY'])
+          || $this->column > (int)$result['formats']['labelX']
+          || $this->row > (int)$result['formats']['labelY']
+          )
+      {
+        if (count($this->message) == 0) {
+          $this->message['error'][] = 'The selected Internetmarke label position is invalid.';
+        }
+        return false;
+      }
+
+      return true;
+    }
+
+
+    private function isPositiveIntegerValue($value) {
+      return (is_int($value) && $value > 0)
+             || (is_string($value) && ctype_digit($value) && (int)$value > 0);
+    }
+
+
+    private function validatePersistenceConfiguration() {
+      $column_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE 'im_voucher_id'");
+      if (xtc_db_num_rows($column_query) < 1) {
+        $this->message['error'][] = 'The Internetmarke module must be updated before labels can be created.';
+        return false;
+      }
+
+      $cart_column_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE 'im_orders_id'");
+      if (xtc_db_num_rows($cart_column_query) < 1) {
+        $this->message['error'][] = 'The Internetmarke module must be updated before labels can be created.';
+        return false;
+      }
+      $cart_column = xtc_db_fetch_array($cart_column_query);
+      if (!isset($cart_column['Type']) || strtolower($cart_column['Type']) != 'varchar(80)') {
+        $this->message['error'][] = 'The Internetmarke module must be updated before labels can be created.';
+        return false;
+      }
+
+      $carrier_id = defined('MODULE_INTERNETMARKE_CARRIER') ? (int)MODULE_INTERNETMARKE_CARRIER : 0;
+      if ($carrier_id < 1) {
+        $this->message['error'][] = 'The Deutsche Post carrier must be installed before Internetmarke labels can be created.';
+        return false;
+      }
+
+      $carrier_query = xtc_db_query("SELECT carrier_id
+                                       FROM ".TABLE_CARRIERS."
+                                      WHERE carrier_id = '".$carrier_id."'");
+      if (xtc_db_num_rows($carrier_query) < 1) {
+        $this->message['error'][] = 'The configured Deutsche Post carrier is invalid.';
+        return false;
+      }
+
+      return true;
     }
 
 
@@ -421,12 +788,12 @@
 
     private function buildShippingDetails($data) {
       $Address = new stdClass();
-      $Address->name = (($data['company'] != '') ? substr($data['company'], 0, 35) : substr(($data['firstname'] . ' ' . $data['lastname']), 0, 35));
+      $Address->name = (($data['company'] != '') ? $this->truncateText($data['company'], 35) : $this->truncateText(($data['firstname'] . ' ' . $data['lastname']), 35));
       if ($data['company'] != ''
           && ($data['firstname'] != '' || $data['lastname'] != '')
           )
       {
-         $Address->additionalName = substr(($data['firstname'] . ' ' . $data['lastname']), 0, 35);
+         $Address->additionalName = $this->truncateText(($data['firstname'] . ' ' . $data['lastname']), 35);
       }
       
       if (isset($data['suburb'])
@@ -441,6 +808,11 @@
       $Address->country = $data['country_iso_3'];
   
       return $Address;
+    }
+
+
+    private function truncateText($text, $length) {
+      return function_exists('mb_substr') ? mb_substr($text, 0, $length, 'UTF-8') : substr($text, 0, $length);
     }
 
 

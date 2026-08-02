@@ -23,3 +23,7 @@
 
   define('TEXT_IM_LABEL_CREATED', 'Internetmarke Label wurde erstellt');
   define('TEXT_IM_LABEL_DELETED', 'Internetmarke Label wurde gel&ouml;scht');
+  define('TEXT_IM_LABEL_NOT_FOUND', 'Das Internetmarke Label geh&ouml;rt nicht zu dieser Bestellung oder existiert nicht mehr.');
+  define('TEXT_IM_LABEL_DELETE_ERROR', 'Das Internetmarke Label konnte nicht storniert werden.');
+  define('TEXT_IM_LABEL_LOCAL_DELETE_ERROR', 'Das Internetmarke Label wurde storniert, der lokale Tracking-Eintrag konnte aber nicht gel&ouml;scht werden.');
+  define('TEXT_IM_LABEL_DELETE_CONFIRM', 'Internetmarke wirklich stornieren?');
