@@ -49,7 +49,7 @@ class checkout
     return false;
   }
 
-  function get_processing_url($language)
+  function get_processing_url($language, $resume_token = '')
   {
     $url_parameters = 'language=' . rawurlencode($language);
     $session_parameters = self::get_url_session_parameters();
@@ -60,6 +60,9 @@ class checkout
     $processing_url = xtc_href_link(FILENAME_CHECKOUT_PROCESSING, $url_parameters, 'SSL', false);
     $processing_parameters = $this->get_processing_parameters();
     if ($processing_parameters !== false) {
+      if (is_string($resume_token) && preg_match('/^[a-f0-9]{64}$/', $resume_token)) {
+        $processing_parameters .= '&checkout_token=' . rawurlencode($resume_token);
+      }
       $processing_url .= '#' . $processing_parameters;
     }
 
@@ -123,6 +126,26 @@ class checkout
     return false;
   }
 
+  function find_pending_order()
+  {
+    $order_query = xtc_db_query("SELECT cp.orders_id,
+                                        o.payment_class
+                                   FROM " . TABLE_CHECKOUT_PROCESSING . " cp
+                                   JOIN " . TABLE_ORDERS . " o
+                                     ON o.orders_id = cp.orders_id
+                                    AND o.customers_id = cp.customers_id
+                                  WHERE cp.checkout_key = '" . xtc_db_input($this->processing_key) . "'
+                                    AND cp.customers_id = '" . $this->customers_id . "'
+                                    AND cp.processing_status IN ('processing', 'waiting', 'ready')
+                                  LIMIT 1");
+
+    if (xtc_db_num_rows($order_query) === 1) {
+      return xtc_db_fetch_array($order_query);
+    }
+
+    return false;
+  }
+
   static function find_status($processing_key, $status_token)
   {
     if (!is_string($processing_key)
@@ -140,7 +163,7 @@ class checkout
                          last_modified = NOW()
                    WHERE checkout_key = '" . xtc_db_input($processing_key) . "'
                      AND status_token = '" . xtc_db_input($status_token) . "'
-                     AND processing_status = 'processing'
+                     AND processing_status IN ('processing', 'waiting')
                      AND last_modified < DATE_SUB(NOW(), INTERVAL " . $timeout . " SECOND)");
 
     $processing_query = xtc_db_query("SELECT customers_id,
@@ -158,7 +181,7 @@ class checkout
     return false;
   }
 
-  function claim()
+  function claim($orders_id = 0)
   {
     $request_token = '';
     if (isset($_GET['checkout_token']) && is_string($_GET['checkout_token'])) {
@@ -184,6 +207,25 @@ class checkout
                                'processing',
                                NOW(),
                                NOW())");
+
+    if (xtc_db_affected_rows() === 1) {
+      $_SESSION['checkout_processing_owner_token'] = $owner_token;
+      $this->rotate_phase_token();
+
+      return true;
+    }
+
+    // A provider callback publishes a verified payment as ready. Only one
+    // browser request may consume it and continue the checkout.
+    xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
+                     SET owner_token = '" . xtc_db_input($owner_token) . "',
+                         request_fingerprint = '" . xtc_db_input($request_fingerprint) . "',
+                         processing_status = 'processing',
+                         last_modified = NOW()
+                   WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
+                     AND customers_id = '" . $this->customers_id . "'
+                     AND orders_id = '" . (int)$orders_id . "'
+                     AND processing_status = 'ready'");
 
     if (xtc_db_affected_rows() === 1) {
       $_SESSION['checkout_processing_owner_token'] = $owner_token;
@@ -230,6 +272,68 @@ class checkout
     }
 
     return false;
+  }
+
+  function wait_for_payment($orders_id)
+  {
+    $owner_token = $this->get_owner_token();
+    if ($owner_token === false || (int)$orders_id < 1) {
+      return false;
+    }
+
+    xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
+                     SET processing_status = 'waiting',
+                         last_modified = NOW()
+                   WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
+                     AND customers_id = '" . $this->customers_id . "'
+                     AND owner_token = '" . xtc_db_input($owner_token) . "'
+                     AND orders_id = '" . (int)$orders_id . "'
+                     AND processing_status = 'processing'");
+
+    if (xtc_db_affected_rows() === 1) {
+      unset($_SESSION['checkout_processing_owner_token']);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  static function mark_payment_ready($processing_key, $customers_id, $orders_id)
+  {
+    if (!is_string($processing_key)
+        || !preg_match('/^[a-f0-9]{64}$/', $processing_key)
+        || (int)$customers_id < 1
+        || (int)$orders_id < 1
+        )
+    {
+      return false;
+    }
+
+    xtc_db_query("UPDATE " . TABLE_CHECKOUT_PROCESSING . "
+                     SET processing_status = 'ready',
+                         last_modified = NOW()
+                   WHERE checkout_key = '" . xtc_db_input($processing_key) . "'
+                     AND customers_id = '" . (int)$customers_id . "'
+                     AND orders_id = '" . (int)$orders_id . "'
+                     AND processing_status IN ('waiting', 'failed')");
+
+    if (xtc_db_affected_rows() === 1) {
+      return true;
+    }
+
+    // Idempotent provider retries must acknowledge a payment that has already
+    // been published, consumed by the browser, or fully completed. Never move
+    // any of those states back to ready.
+    $processing_query = xtc_db_query("SELECT checkout_key
+                                        FROM " . TABLE_CHECKOUT_PROCESSING . "
+                                       WHERE checkout_key = '" . xtc_db_input($processing_key) . "'
+                                         AND customers_id = '" . (int)$customers_id . "'
+                                         AND orders_id = '" . (int)$orders_id . "'
+                                         AND processing_status IN ('ready', 'processing', 'completed')
+                                       LIMIT 1");
+
+    return xtc_db_num_rows($processing_query) === 1;
   }
 
   function set_order($orders_id)
@@ -323,7 +427,7 @@ class checkout
                          last_modified = NOW()
                    WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
                      AND customers_id = '" . $this->customers_id . "'
-                     AND processing_status = 'processing'
+                     AND processing_status IN ('processing', 'waiting')
                      AND last_modified < DATE_SUB(NOW(), INTERVAL " . $timeout . " SECOND)");
 
     if (xtc_db_affected_rows() === 1) {
@@ -393,9 +497,11 @@ class checkout
     return self::javascript_wrapper($js);
   }
 
-  static function javascript_processing()
+  static function javascript_processing($fallback_resume_url = '')
   {
+    $fallback_resume_url = is_string($fallback_resume_url) ? $fallback_resume_url : '';
     $js = '      var container = document.querySelector(".checkout_processing");' . "\n\n" .
+          '      var resumeUrl = container.getAttribute("data-resume-url") || ' . json_encode($fallback_resume_url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';' . "\n\n" .
           '      function postRedirect(url, parameters) {' . "\n" .
           '        var form = document.createElement("form");' . "\n" .
           '        form.method = "post";' . "\n" .
@@ -424,9 +530,15 @@ class checkout
           '          status_token: statusToken' . "\n" .
           '        });' . "\n" .
           '      }' . "\n\n" .
+          '      function resumeCheckout(checkoutToken) {' . "\n" .
+          '        postRedirect(resumeUrl, {' . "\n" .
+          '          checkout_token: checkoutToken' . "\n" .
+          '        });' . "\n" .
+          '      }' . "\n\n" .
           '      var status = new URLSearchParams(window.location.hash.substring(1));' . "\n" .
           '      var checkoutKey = status.get("checkout_key");' . "\n" .
           '      var statusToken = status.get("status_token");' . "\n" .
+          '      var checkoutToken = status.get("checkout_token");' . "\n" .
           '      if (!/^[a-f0-9]{64}$/.test(checkoutKey) || !/^[a-f0-9]{64}$/.test(statusToken)) {' . "\n" .
           '        window.location.replace(container.getAttribute("data-error-url"));' . "\n" .
           '        return;' . "\n" .
@@ -443,6 +555,14 @@ class checkout
           '        })' . "\n" .
           '          .then(function (response) { return response.json(); })' . "\n" .
           '          .then(function (result) {' . "\n" .
+          '            if (result.status === "ready") {' . "\n" .
+          '              if (/^[a-f0-9]{64}$/.test(checkoutToken)) {' . "\n" .
+          '                resumeCheckout(checkoutToken);' . "\n" .
+          '              } else {' . "\n" .
+          '                redirectToError(checkoutKey, statusToken);' . "\n" .
+          '              }' . "\n" .
+          '              return;' . "\n" .
+          '            }' . "\n" .
           '            if (result.status === "completed") {' . "\n" .
           '              redirectToSuccess(checkoutKey, statusToken);' . "\n" .
           '              return;' . "\n" .

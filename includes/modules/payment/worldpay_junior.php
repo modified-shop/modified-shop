@@ -8,17 +8,17 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2008 osCommerce(worldpay_junior.php 1807 2008-01-13 ); www.oscommerce.com
-
-   UPDATED 07-05-2011
-   Updated RBS WorldPay form URL
+   (c) 2000-2001 The Exchange Project (earlier name of osCommerce)
+   (c) 2008 osCommerce(worldpay_junior.php 1807 2008-01-13); www.oscommerce.com
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
   class worldpay_junior {
-  
+
+    const TRANSACTION_STATUS_PENDING = 'verification_pending';
+    const TRANSACTION_STATUS_VERIFIED = 'verified';
+
     var $code;
     var $title;
     var $info;
@@ -27,638 +27,1428 @@
     var $enabled;
     var $order_status;
     var $form_action_url;
+    var $tmpOrders;
+    var $tmpStatus;
     var $_check;
-    
     var $signature;
 
-    // class constructor
+    private $gateway_url = 'https://secure.wp3.rbsworldpay.com/wcc/purchase';
+    private $configuration_valid = false;
+    private $transaction_table_ready = false;
+    private $available = true;
+
+
     function __construct() {
       global $order;
 
-      $this->signature = 'worldpay|worldpay_junior|1.0|2.2';
+      $this->signature = 'worldpay|worldpay_junior|1.1|2.2';
       $this->code = 'worldpay_junior';
       $this->title = MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_TITLE;
       $this->description = MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESCRIPTION;
-      $this->sort_order = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER')?MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER:'';
-      $this->enabled = ((defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS') && MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS == 'True') ? true : false);
+      $this->sort_order = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER') ? MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER : '';
+      $this->enabled = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS') && MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS == 'True';
 
-      if (defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID > 0) {
-        $this->order_status = (int) MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID;
+      $this->order_status = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID')
+        ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID
+        : 0;
+      $this->tmpOrders = true;
+      $this->tmpStatus = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID')
+        ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID
+        : (int)DEFAULT_ORDERS_STATUS_ID;
+      $this->form_action_url = '';
+      $this->transaction_table_ready = $this->update() !== false;
+
+      $credentials_valid = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID')
+                           && trim((string)MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID) != ''
+                           && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD')
+                           && (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD != ''
+                           && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD')
+                           && (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD != '';
+      $this->configuration_valid = $credentials_valid;
+
+      if (defined('RUN_MODE_ADMIN')
+          && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_ADMIN_CONFIGURATION')
+          )
+      {
+        $this->description .= '<br><br>'.MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_ADMIN_CONFIGURATION;
+      }
+
+      if (defined('RUN_MODE_ADMIN')
+          && $this->enabled
+          && $credentials_valid === false
+          && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONFIGURATION_WARNING')
+          )
+      {
+        $this->description .= '<div class="error_message">'.MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONFIGURATION_WARNING.'</div>';
       }
 
       if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
         $this->update_status();
       }
-
-      $this->form_action_url = 'https://secure.wp3.rbsworldpay.com/wcc/purchase';
     }
 
-    // class methods
+
     function update_status() {
       global $order;
 
-      if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE > 0) ) {
+      if ($this->enabled == true && (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE > 0) {
         $check_flag = false;
-        $check_query = xtc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        $check_query = xtc_db_query("SELECT zone_id
+                                       FROM ".TABLE_ZONES_TO_GEO_ZONES."
+                                      WHERE geo_zone_id = '".(int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE."'
+                                        AND zone_country_id = '".(int)$order->billing['country']['id']."'
+                                   ORDER BY zone_id");
         while ($check = xtc_db_fetch_array($check_query)) {
-          if ($check['zone_id'] < 1) {
-            $check_flag = true;
-            break;
-          } elseif ($check['zone_id'] == $order->billing['zone_id']) {
+          if ((int)$check['zone_id'] < 1 || (int)$check['zone_id'] == (int)$order->billing['zone_id']) {
             $check_flag = true;
             break;
           }
         }
 
         if ($check_flag == false) {
-          $this->enabled = false;
+          $this->available = false;
         }
       }
     }
+
 
     function javascript_validation() {
       return false;
     }
 
+
     function selection() {
-
-      if (! empty($_SESSION['cart_Worldpay_Junior_ID'])) {
-        $order_id = substr($_SESSION['cart_Worldpay_Junior_ID'], strpos($_SESSION['cart_Worldpay_Junior_ID'], '-')+1);
-
-        $check_query = xtc_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
-
-        if (xtc_db_num_rows($check_query) < 1) {
-          xtc_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '"');
-          xtc_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$order_id . '"');
-          xtc_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '"');
-          xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$order_id . '"');
-          xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
-          xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
-
-          unset($_SESSION['cart_Worldpay_Junior_ID']);
-        }
+      if ($this->transaction_table_ready === false
+          || $this->configuration_valid === false
+          || $this->available === false
+          )
+      {
+        return false;
       }
 
-      return array('id' => $this->code,
-                    'module' => $this->title,
-                    'description'=>$this->description);
+      return array(
+        'id' => $this->code,
+        'module' => $this->title,
+        'description' => $this->description,
+      );
     }
+
 
     function pre_confirmation_check() {
-      /*
-      global $cartID, $cart;
-      if (empty($cart->cartID)) {
-        $cartID = $cart->cartID = $cart->generate_cart_id();
-      }
-
-      if (!xtc_session_is_registered('cartID')) {
-        xtc_session_register('cartID');
-      }
-      */
-      if (empty($_SESSION['cart']->cartID)) {
-        $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
-      }
       return false;
     }
+
 
     function confirmation() {
-      global $order, $order_total_modules;
+      return false;
+    }
 
-      $insert_order = false;
 
-      //if (xtc_session_is_registered('cart_Worldpay_Junior_ID')) {
-      if (! empty($_SESSION['cart_Worldpay_Junior_ID'])) {
-        $order_id = substr($_SESSION['cart_Worldpay_Junior_ID'], strpos($_SESSION['cart_Worldpay_Junior_ID'], '-')+1);
+    function process_button() {
+      return false;
+    }
 
-        $cartID = substr($_SESSION['cart_Worldpay_Junior_ID'], 0, strlen($_SESSION['cart']->cartID));
 
-        $curr_check = xtc_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
-        $curr = xtc_db_fetch_array($curr_check);
+    function before_process() {
+      global $checkout, $order;
 
-        if ( ($curr['currency'] != $order->info['currency']) || ($cartID != $_SESSION['cart']->cartID) ) {
-          $check_query = xtc_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
-
-          if (xtc_db_num_rows($check_query) < 1) {
-            xtc_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '"');
-            xtc_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$order_id . '"');
-            xtc_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '"');
-            xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$order_id . '"');
-            xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
-            xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
-          }
-
-          $insert_order = true;
+      if ($this->configuration_valid === false || $this->available === false) {
+        if (is_object($checkout)) {
+          $checkout->fail();
         }
-      } else {
-        $insert_order = true;
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
       }
 
-      if ($insert_order == true) {
-        $order_totals = array();
-        if (is_array($order_total_modules->modules)) {
-          foreach ($order_total_modules->modules as $value) {
-            $class = substr($value, 0, strrpos($value, '.'));
-            if ($GLOBALS[$class]->enabled) {
-              for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
-                if (xtc_not_null($GLOBALS[$class]->output[$i]['title']) && xtc_not_null($GLOBALS[$class]->output[$i]['text'])) {
-                  $order_totals[] = array('code' => $GLOBALS[$class]->code,
-                                          'title' => $GLOBALS[$class]->output[$i]['title'],
-                                          'text' => $GLOBALS[$class]->output[$i]['text'],
-                                          'value' => $GLOBALS[$class]->output[$i]['value'],
-                                          'sort_order' => $GLOBALS[$class]->sort_order);
-                }
-              }
-            }
+      if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
+        $orders_id = (int)$_SESSION['tmp_oID'];
+        if (!self::is_verified_order($orders_id, (int)$_SESSION['customer_id'])) {
+          if (is_object($checkout)) {
+            $checkout->fail();
           }
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
         }
 
-        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
-                                'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
-                                'customers_company' => $order->customer['company'],
-                                'customers_street_address' => $order->customer['street_address'],
-                                'customers_suburb' => $order->customer['suburb'],
-                                'customers_city' => $order->customer['city'],
-                                'customers_postcode' => $order->customer['postcode'],
-                                'customers_state' => $order->customer['state'],
-                                'customers_country' => $order->customer['country']['title'],
-                                'customers_telephone' => $order->customer['telephone'],
-                                'customers_email_address' => $order->customer['email_address'],
-                                'customers_address_format_id' => $order->customer['format_id'],
-                                'delivery_name' => $order->delivery['firstname'] . ' ' . $order->delivery['lastname'],
-                                'delivery_company' => $order->delivery['company'],
-                                'delivery_street_address' => $order->delivery['street_address'],
-                                'delivery_suburb' => $order->delivery['suburb'],
-                                'delivery_city' => $order->delivery['city'],
-                                'delivery_postcode' => $order->delivery['postcode'],
-                                'delivery_state' => $order->delivery['state'],
-                                'delivery_country' => $order->delivery['country']['title'],
-                                'delivery_address_format_id' => $order->delivery['format_id'],
-                                'billing_name' => $order->billing['firstname'] . ' ' . $order->billing['lastname'],
-                                'billing_company' => $order->billing['company'],
-                                'billing_street_address' => $order->billing['street_address'],
-                                'billing_suburb' => $order->billing['suburb'],
-                                'billing_city' => $order->billing['city'],
-                                'billing_postcode' => $order->billing['postcode'],
-                                'billing_state' => $order->billing['state'],
-                                'billing_country' => $order->billing['country']['title'],
-                                'billing_address_format_id' => $order->billing['format_id'],
-                                'payment_method' => $order->info['payment_method'],
-                                'cc_type' => $order->info['cc_type'],
-                                'cc_owner' => $order->info['cc_owner'],
-                                'cc_number' => $order->info['cc_number'],
-                                'cc_expires' => $order->info['cc_expires'],
-                                'date_purchased' => 'now()',
-                                'orders_status' => $order->info['order_status'],
-                                'currency' => $order->info['currency'],
-                                'currency_value' => $order->info['currency_value']);
-
-        xtc_db_perform(TABLE_ORDERS, $sql_data_array);
-
-        $insert_id = xtc_db_insert_id();
-
-        for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
-          $sql_data_array = array('orders_id' => $insert_id,
-                                  'title' => $order_totals[$i]['title'],
-                                  'text' => $order_totals[$i]['text'],
-                                  'value' => $order_totals[$i]['value'],
-                                  'class' => $order_totals[$i]['code'],
-                                  'sort_order' => $order_totals[$i]['sort_order']);
-
-          xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
-        }
-
-        for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-          $sql_data_array = array('orders_id' => $insert_id,
-                                  'products_id' => xtc_get_prid($order->products[$i]['id']),
-                                  'products_model' => $order->products[$i]['model'],
-                                  'products_name' => $order->products[$i]['name'],
-                                  'products_price' => $order->products[$i]['price'],
-                                  'final_price' => $order->products[$i]['final_price'],
-                                  'products_tax' => $order->products[$i]['tax'],
-                                  'products_quantity' => $order->products[$i]['qty']);
-
-          xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
-
-          $order_products_id = xtc_db_insert_id();
-
-          $attributes_exist = '0';
-          if (isset($order->products[$i]['attributes'])) {
-            $attributes_exist = '1';
-            for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
-              if (DOWNLOAD_ENABLED == 'true') {
-                $attributes_query = "select popt.products_options_name,
-                                            poval.products_options_values_name,
-                                            pa.options_values_price,
-                                            pa.price_prefix,
-                                            pad.products_attributes_maxdays,
-                                            pad.products_attributes_maxcount,
-                                            pad.products_attributes_filename
-                                     from " . TABLE_PRODUCTS_OPTIONS . " popt,
-                                          " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval,
-                                          " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                     left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                     on pa.products_attributes_id=pad.products_attributes_id
-                                     where pa.products_id = '" . $order->products[$i]['id'] . "'
-                                     and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "'
-                                     and pa.options_id = popt.products_options_id
-                                     and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
-                                     and pa.options_values_id = poval.products_options_values_id
-                                     and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                     and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
-                $attributes = xtc_db_query($attributes_query);
-              } else {
-                $attributes = xtc_db_query("select popt.products_options_name,
-                                                   poval.products_options_values_name,
-                                                   pa.options_values_price,
-                                                   pa.price_prefix
-                                            from " . TABLE_PRODUCTS_OPTIONS . " popt,
-                                                 " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval,
-                                                 " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                            where pa.products_id = '" . $order->products[$i]['id'] . "'
-                                            and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "'
-                                            and pa.options_id = popt.products_options_id
-                                            and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
-                                            and pa.options_values_id = poval.products_options_values_id
-                                            and popt.language_id = '" . (int)$_SESSION['languages_id']. "'
-                                            and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-              }
-              $attributes_values = xtc_db_fetch_array($attributes);
-
-              $sql_data_array = array('orders_id' => $insert_id,
-                                      'orders_products_id' => $order_products_id,
-                                      'products_options' => $attributes_values['products_options_name'],
-                                      'products_options_values' => $attributes_values['products_options_values_name'],
-                                      'options_values_price' => $attributes_values['options_values_price'],
-                                      'price_prefix' => $attributes_values['price_prefix']);
-
-              xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
-
-              if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values['products_attributes_filename']) && xtc_not_null($attributes_values['products_attributes_filename'])) {
-                $sql_data_array = array('orders_id' => $insert_id,
-                                        'orders_products_id' => $order_products_id,
-                                        'orders_products_filename' => $attributes_values['products_attributes_filename'],
-                                        'download_maxdays' => $attributes_values['products_attributes_maxdays'],
-                                        'download_count' => $attributes_values['products_attributes_maxcount']);
-
-                xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
-              }
-            }
-          }
-        }
-
-        //$cart_Worldpay_Junior_ID = $cartID . '-' . $insert_id;
-        //xtc_session_register('cart_Worldpay_Junior_ID');
-        $_SESSION['cart_Worldpay_Junior_ID'] = $cartID . '-' . $insert_id;
+        $order->info['order_status'] = $this->get_success_status();
       }
 
       return false;
     }
 
-    function process_button() {
-      global $order;
 
-      $order_id = substr($_SESSION['cart_Worldpay_Junior_ID'], strpos($_SESSION['cart_Worldpay_Junior_ID'], '-')+1);
-
-      $lang_query = xtc_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
-      $lang = xtc_db_fetch_array($lang_query);
-
-      $process_button_string = xtc_draw_hidden_field('instId', MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID) .
-                               xtc_draw_hidden_field('amount', $this->format_raw($order->info['total'])) .
-                               xtc_draw_hidden_field('currency', $_SESSION['currency']) .
-                               xtc_draw_hidden_field('hideCurrency', 'true') .
-                               xtc_draw_hidden_field('cartId', $order_id) .
-                               xtc_draw_hidden_field('desc', STORE_NAME) .
-                               xtc_draw_hidden_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
-                               xtc_draw_hidden_field('address', $order->billing['street_address']) .
-                               xtc_draw_hidden_field('postcode', $order->billing['postcode']) .
-                               xtc_draw_hidden_field('country', $order->billing['country']['iso_code_2']) .
-                               xtc_draw_hidden_field('tel', $order->customer['telephone']) .
-                               xtc_draw_hidden_field('email', $order->customer['email_address']) .
-                               xtc_draw_hidden_field('fixContact', 'Y') .
-                               xtc_draw_hidden_field('lang', strtoupper($lang['code'])) .
-                               xtc_draw_hidden_field('signatureFields', 'amount:currency:cartId') .
-                               xtc_draw_hidden_field('signature', md5(MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $_SESSION['currency'] . ':' . $order_id)) .
-                               xtc_draw_hidden_field('MC_callback', substr(xtc_href_link('callback/worldpay/junior_callback.php', '', 'NONSSL', false, false), strpos(xtc_href_link('callback/worldpay/junior_callback.php', '', 'NONSSL', false, false), '://')+3));
-
-      if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD == 'Pre-Authorization') {
-        $process_button_string .= xtc_draw_hidden_field('authMode', 'E');
+    function before_checkout_claim($checkout) {
+      $customers_id = isset($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0;
+      if (!is_object($checkout) || $customers_id < 1) {
+        return false;
       }
 
-      if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True') {
-        $process_button_string .= xtc_draw_hidden_field('testMode', '100');
+      $session_orders_id = isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])
+        ? (int)$_SESSION['tmp_oID']
+        : 0;
+      $processing = $checkout->find();
+      $processing_is_authoritative = is_array($processing)
+                                     && array_key_exists('orders_id', $processing)
+                                     && isset($processing['processing_status'])
+                                     && in_array(
+                                          $processing['processing_status'],
+                                          array('processing', 'waiting', 'ready', 'failed'),
+                                          true
+                                        );
+      if ($processing_is_authoritative) {
+        $orders_id = (int)$processing['orders_id'];
+        if ($orders_id > 0) {
+          $_SESSION['tmp_oID'] = $orders_id;
+        } else {
+          unset($_SESSION['tmp_oID']);
+        }
+      } else {
+        $orders_id = $session_orders_id;
       }
 
-      $process_button_string .= xtc_draw_hidden_field('M_sid', xtc_session_id()) .
-                                xtc_draw_hidden_field('M_cid', $_SESSION['customer_id']) .
-                                xtc_draw_hidden_field('M_lang', $_SESSION['language']) .
-                                xtc_draw_hidden_field('M_hash', md5(xtc_session_id() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD));
+      // There is no previous temporary order during the initial checkout.
+      if ($orders_id < 1) {
+        return false;
+      }
 
-      return $process_button_string;
+      $resume_token = isset($_SESSION['checkout_processing_phase_token'])
+                      && is_string($_SESSION['checkout_processing_phase_token'])
+                      && preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_phase_token'])
+        ? $_SESSION['checkout_processing_phase_token']
+        : '';
+      $language = isset($_SESSION['language']) ? (string)$_SESSION['language'] : 'english';
+
+      $payment_state = self::get_order_payment_state($orders_id, $customers_id);
+      if (is_array($payment_state)
+          && $payment_state['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED
+          )
+      {
+        // Close the small window between the committed payment result and the
+        // callback publishing the waiting checkout as ready.
+        $payment_ready = checkout::mark_payment_ready($checkout->get_key(), $customers_id, $orders_id);
+        if (!$payment_ready
+            && is_array($processing)
+            && isset($processing['orders_id'])
+            && (int)$processing['orders_id'] === $orders_id
+            )
+        {
+          $processing_url = $checkout->get_processing_url($language, $resume_token);
+          session_write_close();
+          xtc_redirect($processing_url);
+        }
+
+        // A verified legacy order without a checkout-processing row may still
+        // use the normal claim path.
+        return false;
+      }
+
+      if (is_array($payment_state)
+          && $processing_is_authoritative
+          && (int)$processing['orders_id'] === $orders_id
+          && ($payment_state['transaction_status'] === self::TRANSACTION_STATUS_PENDING
+              || ($payment_state['transaction_status'] === ''
+                  && (int)$payment_state['orders_status'] === self::get_prepare_status()
+                  && $processing['processing_status'] !== 'failed'))
+          )
+      {
+        // Keep the checkout binding while the provider result is still
+        // pending or a retry repairs a partial database update.
+        $processing_url = $checkout->get_processing_url($language, $resume_token);
+        session_write_close();
+        xtc_redirect($processing_url);
+      }
+
+      unset($_SESSION['tmp_oID']);
+      $checkout->fail();
+      $checkout->create_key();
+      $error_url = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL');
+      session_write_close();
+      xtc_redirect($error_url);
     }
 
-    function before_process() {
-      global $order, $xtPrice, $order_totals, $payment, $currencies;
-      global ${$payment};
 
-      $order_id = substr($_SESSION['cart_Worldpay_Junior_ID'], strpos($_SESSION['cart_Worldpay_Junior_ID'], '-')+1);
-
-      $check_query = xtc_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
-      if (xtc_db_num_rows($check_query)) {
-        $check = xtc_db_fetch_array($check_query);
-
-        if ($check['orders_status'] == MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID) {
-          $hash_result = false;
-
-          if (isset(${$_GET['hash']}) && !empty(${$_GET['hash']}) && (${$_GET['hash']} == md5(xtc_session_name() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD))) {
-            $hash_result = true;
-          }
-
-          $sql_data_array = array('orders_id' => $order_id,
-                                  'orders_status_id' => MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID,
-                                  'date_added' => 'now()',
-                                  'customer_notified' => '0',
-                                  'comments' => (($hash_result == true) ? 'WorldPay: Transaction Verified' : 'WorldPay: Incorrect Transaction Hash'));
-
-          xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-
-          if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True') {
-            $sql_data_array = array('orders_id' => $order_id,
-                                    'orders_status_id' => MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID,
-                                    'date_added' => 'now()',
-                                    'customer_notified' => '0',
-                                    'comments' => MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE);
-
-            xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-          }
-        }
-      }
-
-      xtc_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID) . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
-
-      $sql_data_array = array('orders_id' => $order_id,
-                              'orders_status_id' => (MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID),
-                              'date_added' => 'now()',
-                              'customer_notified' => (SEND_EMAILS == 'true') ? '1' : '0',
-                              'comments' => $order->info['comments']);
-
-      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-
-      // initialized for the email confirmation
-      $products_ordered = '';
-      $subtotal = 0;
-      $total_tax = 0;
-
-      for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        // Stock Update - Joao Correia
-        if (STOCK_LIMITED == 'true') {
-          if (DOWNLOAD_ENABLED == 'true') {
-            $stock_query_raw = "SELECT products_quantity, pad.products_attributes_filename
-                                FROM " . TABLE_PRODUCTS . " p
-                                LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                ON p.products_id=pa.products_id
-                                LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                ON pa.products_attributes_id=pad.products_attributes_id
-                                WHERE p.products_id = '" . xtc_get_prid($order->products[$i]['id']) . "'";
-            // Will work with only one option for downloadable products
-            // otherwise, we have to build the query dynamically with a loop
-            $products_attributes = $order->products[$i]['attributes'];
-            if (is_array($products_attributes)) {
-              $stock_query_raw .= " AND pa.options_id = '" . $products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . $products_attributes[0]['value_id'] . "'";
-            }
-            $stock_query = xtc_db_query($stock_query_raw);
-          } else {
-            $stock_query = xtc_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . xtc_get_prid($order->products[$i]['id']) . "'");
-          }
-          if (xtc_db_num_rows($stock_query) > 0) {
-            $stock_values = xtc_db_fetch_array($stock_query);
-            // do not decrement quantities if products_attributes_filename exists
-            if ((DOWNLOAD_ENABLED != 'true') || (!$stock_values['products_attributes_filename'])) {
-              $stock_left = $stock_values['products_quantity'] - $order->products[$i]['qty'];
-            } else {
-              $stock_left = $stock_values['products_quantity'];
-            }
-            xtc_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . xtc_get_prid($order->products[$i]['id']) . "'");
-            if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
-              xtc_db_query("update " . TABLE_PRODUCTS . " set products_status = '0' where products_id = '" . xtc_get_prid($order->products[$i]['id']) . "'");
-            }
-          }
-        }
-
-        // Update products_ordered (for bestsellers list)
-        xtc_db_query("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . xtc_get_prid($order->products[$i]['id']) . "'");
-
-        //------insert customer choosen option to order--------
-        $attributes_exist = '0';
-        $products_ordered_attributes = '';
-        if (isset($order->products[$i]['attributes'])) {
-          $attributes_exist = '1';
-          for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
-            if (DOWNLOAD_ENABLED == 'true') {
-              $attributes_query = "select popt.products_options_name,
-                                          poval.products_options_values_name,
-                                          pa.options_values_price,
-                                          pa.price_prefix,
-                                          pad.products_attributes_maxdays,
-                                          pad.products_attributes_maxcount,
-                                          pad.products_attributes_filename
-                                   from " . TABLE_PRODUCTS_OPTIONS . " popt,
-                                        " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval,
-                                        " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                   left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                   on pa.products_attributes_id=pad.products_attributes_id
-                                   where pa.products_id = '" . $order->products[$i]['id'] . "'
-                                   and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "'
-                                   and pa.options_id = popt.products_options_id
-                                   and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
-                                   and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                   and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
-              $attributes = xtc_db_query($attributes_query);
-            } else {
-              $attributes = xtc_db_query("select popt.products_options_name,
-                                                 poval.products_options_values_name,
-                                                 pa.options_values_price,
-                                                 pa.price_prefix
-                                          from " . TABLE_PRODUCTS_OPTIONS . " popt,
-                                               " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval,
-                                               " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                         where pa.products_id = '" . $order->products[$i]['id'] . "'
-                                         and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "'
-                                         and pa.options_id = popt.products_options_id
-                                         and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
-                                         and pa.options_values_id = poval.products_options_values_id
-                                         and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                         and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-            }
-            $attributes_values = xtc_db_fetch_array($attributes);
-
-            $products_ordered_attributes .= "\n\t" . $attributes_values['products_options_name'] . ' ' . $attributes_values['products_options_values_name'];
-          }
-        }
-        //------insert customer choosen option eof ----
-        $total_weight += ($order->products[$i]['qty'] * $order->products[$i]['weight']);
-        $total_tax += $xtPrice->calcTax($total_products_price, $products_tax) * $order->products[$i]['qty'];
-        $total_cost += $total_products_price;
-
-        $products_ordered .= $order->products[$i]['qty'] . ' x ' . $order->products[$i]['name'] . ' (' . $order->products[$i]['model'] . ') = ' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . $products_ordered_attributes . "\n";
-      }
-
-      // lets start with the email confirmation
-      $email_order = STORE_NAME . "\n" .
-                     EMAIL_SEPARATOR . "\n" .
-                     EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
-                     EMAIL_TEXT_INVOICE_URL . ' ' . xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
-                     EMAIL_TEXT_DATE_ORDERED . ' ' . date(DATE_FORMAT) . "\n\n";
-      if ($order->info['comments']) {
-        $email_order .= xtc_db_output($order->info['comments']) . "\n\n";
-      }
-      $email_order .= EMAIL_TEXT_PRODUCTS . "\n" .
-                      EMAIL_SEPARATOR . "\n" .
-                      $products_ordered .
-                      EMAIL_SEPARATOR . "\n";
-
-      for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
-        $email_order .= strip_tags($order_totals[$i]['title']) . ' ' . strip_tags($order_totals[$i]['text']) . "\n";
-      }
-
-      if ($order->content_type != 'virtual') {
-        $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
-                        EMAIL_SEPARATOR . "\n" .
-                        xtc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
-      }
-
-      $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
-                      EMAIL_SEPARATOR . "\n" .
-                      xtc_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
-
-      if (is_object(${$payment})) {
-        $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
-                        EMAIL_SEPARATOR . "\n";
-        $payment_class = ${$payment};
-        $email_order .= $payment_class->title . "\n\n";
-        if ($payment_class->email_footer) {
-          $email_order .= $payment_class->email_footer . "\n\n";
-        }
-      }
-
-      xtc_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
-
-      // send emails to other people
-      if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
-        xtc_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
-      }
-
-      // load the after_process function from the payment modules
-      $this->after_process();
-
-      $_SESSION['cart']->reset(true);
-
-      // unregister session variables used during checkout
-      // xtc_session_unregister('sendto');
-      // xtc_session_unregister('billto');
-      // xtc_session_unregister('shipping');
-      // xtc_session_unregister('payment');
-      // xtc_session_unregister('comments');
-      // xtc_session_unregister('cart_Worldpay_Junior_ID');
-      unset($_SESSION['sendto']);
-      unset($_SESSION['billto']);
-      unset($_SESSION['shipping']);
-      unset($_SESSION['payment']);
-      unset($_SESSION['comments']);
-      unset($_SESSION['cart_Worldpay_Junior_ID']);
-
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+    function before_create_order() {
+      return false;
     }
+
+
+    function payment_action() {
+      global $checkout, $insert_id, $order;
+
+      $orders_id = (int)$insert_id;
+      $checkout_key = is_object($checkout) ? $checkout->get_key() : '';
+      if ($orders_id < 1
+          || !preg_match('/^[a-f0-9]{64}$/', $checkout_key)
+          || !is_object($checkout)
+          )
+      {
+        if (is_object($checkout)) {
+          $checkout->fail();
+        }
+        throw new RuntimeException('Unable to prepare WorldPay temporary order');
+      }
+
+      $checkout_token = isset($_SESSION['checkout_processing_phase_token'])
+                        && is_string($_SESSION['checkout_processing_phase_token'])
+        ? $_SESSION['checkout_processing_phase_token']
+        : '';
+      if (!preg_match('/^[a-f0-9]{64}$/', $checkout_token)) {
+        $checkout->fail();
+        throw new RuntimeException('Unable to prepare WorldPay checkout return');
+      }
+
+      $amount = $this->format_raw($order->info['total']);
+      $currency = (string)$_SESSION['currency'];
+      $session_id = xtc_session_id();
+      $customers_id = (int)$_SESSION['customer_id'];
+      $language = (string)$_SESSION['language'];
+      $auth_mode = MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD == 'Pre-Authorization' ? 'E' : 'A';
+      $test_mode = MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True' ? '100' : '0';
+      $callback_url = $this->get_callback_url();
+      $signature_fields = 'instId:amount:currency:cartId:authMode:testMode:MC_callback:M_auth_mode:M_test_mode';
+      $signature = md5(
+        MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD
+        .':'.MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID
+        .':'.$amount
+        .':'.$currency
+        .':'.$orders_id
+        .':'.$auth_mode
+        .':'.$test_mode
+        .':'.$callback_url
+        .':'.$auth_mode
+        .':'.$test_mode
+      );
+      $return_url = decode_htmlentities(xtc_href_link(
+        FILENAME_CHECKOUT_PROCESS,
+        xtc_session_name().'='.rawurlencode($session_id)
+          .'&checkout_token='.rawurlencode($checkout_token),
+        'SSL',
+        false,
+        false
+      ));
+      $fields = array(
+        'instId' => MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID,
+        'amount' => $amount,
+        'currency' => $currency,
+        'hideCurrency' => 'true',
+        'cartId' => $orders_id,
+        'desc' => STORE_NAME,
+        'name' => $order->billing['firstname'].' '.$order->billing['lastname'],
+        'address' => $order->billing['street_address'],
+        'postcode' => $order->billing['postcode'],
+        'country' => $order->billing['country']['iso_code_2'],
+        'tel' => $order->customer['telephone'],
+        'email' => $order->customer['email_address'],
+        'fixContact' => 'Y',
+        'lang' => $this->get_worldpay_language(),
+        'authMode' => $auth_mode,
+        'testMode' => $test_mode,
+        'signatureFields' => $signature_fields,
+        'signature' => $signature,
+        'MC_callback' => $callback_url,
+        'MC_returnurl' => $return_url,
+        'M_sid' => $session_id,
+        'M_cid' => $customers_id,
+        'M_lang' => $language,
+        'M_checkout_key' => $checkout_key,
+        'M_checkout_token' => $checkout_token,
+        'M_auth_mode' => $auth_mode,
+        'M_test_mode' => $test_mode,
+        'M_hash' => self::callback_hash($session_id, $customers_id, $orders_id, $checkout_key, $language, $amount, $currency, $checkout_token, $auth_mode, $test_mode),
+      );
+
+      if (!$checkout->wait_for_payment($orders_id)) {
+        $checkout->fail();
+        throw new RuntimeException('Unable to wait for the WorldPay payment result');
+      }
+
+      $this->output_redirect_form($fields);
+    }
+
+
+    function before_send_order() {
+      global $insert_id;
+
+      if (!self::is_verified_order((int)$insert_id, (int)$_SESSION['customer_id'])) {
+        throw new RuntimeException('WorldPay temporary order is not verified');
+      }
+
+      return false;
+    }
+
 
     function after_process() {
       return false;
     }
 
+
     function get_error() {
-      return false;
+      return array('error' => MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_UNSUCCESSFUL_TRANSACTION);
     }
+
 
     function check() {
       if (!isset($this->_check)) {
         if (defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS')) {
           $this->_check = true;
         } else {
-          $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS'");
+          $check_query = xtc_db_query("SELECT configuration_value
+                                         FROM ".TABLE_CONFIGURATION."
+                                        WHERE configuration_key = 'MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS'");
           $this->_check = xtc_db_num_rows($check_query);
         }
       }
+
       return $this->_check;
     }
 
+
     function install() {
-      $check_query = xtc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Preparing [WorldPay]' limit 1");
+      global $messageStack;
 
+      if (!self::ensure_transaction_table()) {
+        if (isset($messageStack) && is_object($messageStack)) {
+          $message = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_INSTALLATION_ERROR')
+            ? MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_INSTALLATION_ERROR
+            : 'The WorldPay transaction table could not be created.';
+          $messageStack->add_session($message, 'error');
+        }
+
+        return false;
+      }
+
+      $check_query = xtc_db_query("SELECT orders_status_id
+                                     FROM ".TABLE_ORDERS_STATUS."
+                                    WHERE orders_status_name = 'Preparing [WorldPay]'
+                                    LIMIT 1");
       if (xtc_db_num_rows($check_query) < 1) {
-        $status_query = xtc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+        $status_query = xtc_db_query("SELECT MAX(orders_status_id) AS status_id
+                                        FROM ".TABLE_ORDERS_STATUS);
         $status = xtc_db_fetch_array($status_query);
-
-        $status_id = $status['status_id']+1;
+        $status_id = (int)$status['status_id'] + 1;
 
         $languages = xtc_get_languages();
-
-        for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-          xtc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $languages[$i]['id'] . "', 'Preparing [WorldPay]')");
+        foreach ($languages as $language) {
+          xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS."
+                                   (orders_status_id, language_id, orders_status_name)
+                            VALUES ('".$status_id."', '".(int)$language['id']."', 'Preparing [WorldPay]')");
         }
 
-        $flags_query = xtc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-        if (xtc_db_num_rows($flags_query) == 1) {
-          xtc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+        $flags_query = xtc_db_query("DESCRIBE ".TABLE_ORDERS_STATUS." public_flag");
+        if (xtc_db_num_rows($flags_query) === 1) {
+          xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS."
+                           SET public_flag = 0,
+                               downloads_flag = 0
+                         WHERE orders_status_id = '".$status_id."'");
         }
       } else {
-        $check = xtc_db_fetch_array($check_query);
-
-        $status_id = $check['orders_status_id'];
+        $status = xtc_db_fetch_array($check_query);
+        $status_id = (int)$status['orders_status_id'];
       }
 
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ALLOWED', '', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID', '', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD', '', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD', '', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD', 'Capture', '6', '0', 'xtc_cfg_select_option(array(\'Pre-Authorization\', \'Capture\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER', '0', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', '" . (int)$status_id . "', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ALLOWED', '', '6', '0', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID', '', '6', '0', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD', '', '6', '0', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD', '', '6', '0', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD', 'Capture', '6', '0', 'xtc_cfg_select_option(array(\'Pre-Authorization\', \'Capture\'), ', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER', '0', '6', '0', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', '".$status_id."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
     }
+
+
+    function update() {
+      if ($this->check() < 1) {
+        return false;
+      }
+
+      return self::ensure_transaction_table() ? '' : false;
+    }
+
 
     function remove() {
-      xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
+                          WHERE configuration_key IN ('".implode("', '", $this->keys())."')");
     }
+
 
     function keys() {
-      return array('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_ALLOWED',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER',
-                   );
+      return array(
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_ALLOWED',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID',
+        'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER',
+      );
     }
 
-    // format prices without currency formatting
-    function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies;
 
-      if (empty($currency_code) || !$this->is_set($currency_code)) {
+    function format_raw($number, $currency_code = '', $currency_value = '') {
+      global $xtPrice;
+
+      if (empty($currency_code) || !isset($xtPrice->currencies[$currency_code])) {
         $currency_code = $_SESSION['currency'];
       }
-
       if (empty($currency_value) || !is_numeric($currency_value)) {
-        $currency_value = $currencies->currencies[$currency_code]['value'];
+        $currency_value = $xtPrice->currencies[$currency_code]['value'];
       }
 
-      return number_format(xtc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(
+        xtc_round($number * $currency_value, $xtPrice->currencies[$currency_code]['decimal_places']),
+        $xtPrice->currencies[$currency_code]['decimal_places'],
+        '.',
+        ''
+      );
+    }
+
+
+    static function process_callback($callback, $success, $provider_transaction_id = '') {
+      if (!self::callback_can_be_processed($callback)) {
+        return false;
+      }
+
+      $callback_lock = self::acquire_callback_lock((int)$callback['orders_id']);
+      if ($callback_lock === false) {
+        return false;
+      }
+
+      try {
+        return $success === false
+          ? self::process_cancellation($callback)
+          : self::process_successful_callback($callback, $provider_transaction_id);
+      } finally {
+        self::release_callback_lock($callback_lock);
+      }
+    }
+
+
+    private static function process_successful_callback($callback, $provider_transaction_id) {
+      $provider_transaction_id = self::normalize_transaction_id($provider_transaction_id);
+      if ($provider_transaction_id === false) {
+        return false;
+      }
+
+      // Persist the authenticated provider result before changing the order.
+      // This row is the durable retry journal even when shop tables use a
+      // non-transactional storage engine.
+      if (xtc_db_query('START TRANSACTION') === false) {
+        return false;
+      }
+
+      $temporary_order = self::lock_callback_order($callback);
+      if ($temporary_order === false) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      $payment_transaction = self::ensure_pending_transaction(
+        $callback,
+        $temporary_order,
+        $provider_transaction_id
+      );
+      if ($payment_transaction === false) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      if (xtc_db_query('COMMIT') === false) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      if ($payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED) {
+        return array(
+          'orders_id' => (int)$callback['orders_id'],
+          'success' => true,
+        );
+      }
+
+      if (xtc_db_query('START TRANSACTION') === false) {
+        return false;
+      }
+
+      $temporary_order = self::lock_callback_order($callback);
+      if ($temporary_order === false) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      $payment_transaction = self::get_payment_transaction((int)$callback['orders_id']);
+      if (!is_array($payment_transaction)
+          || !self::payment_transaction_matches(
+                $payment_transaction,
+                $callback,
+                $provider_transaction_id
+              )
+          )
+      {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      if ($payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED) {
+        if (xtc_db_query('COMMIT') === false) {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+
+        return array(
+          'orders_id' => (int)$callback['orders_id'],
+          'success' => true,
+        );
+      }
+
+      if ($payment_transaction['transaction_status'] !== self::TRANSACTION_STATUS_PENDING
+          || self::complete_successful_callback(
+               $callback,
+               $temporary_order
+             ) === false
+          )
+      {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      if (xtc_db_query('COMMIT') === false) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      // Publish paid only after the order status and audit history are durable.
+      if (!self::mark_transaction_verified($callback, $provider_transaction_id)) {
+        return false;
+      }
+
+      return array(
+        'orders_id' => (int)$callback['orders_id'],
+        'success' => true,
+      );
+    }
+
+
+    private static function complete_successful_callback($callback, $temporary_order) {
+      $orders_id = (int)$callback['orders_id'];
+      $success_status = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID')
+                        && (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID > 0
+        ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID
+        : (int)DEFAULT_ORDERS_STATUS_ID;
+      if ((int)$temporary_order['orders_status'] === self::get_prepare_status()) {
+        $update_result = xtc_db_query("UPDATE ".TABLE_ORDERS."
+                                         SET orders_status = '".$success_status."',
+                                             last_modified = NOW()
+                                       WHERE orders_id = '".$orders_id."'
+                                         AND customers_id = '".(int)$callback['customers_id']."'");
+        // MySQL may report zero changed rows when both configured statuses
+        // are identical, so only a query error is a failure here.
+        if ($update_result === false) {
+          return false;
+        }
+      }
+
+      $test_mode = isset($callback['test_mode']) && $callback['test_mode'] === '100';
+      $test_warning_exists = false;
+      if ($test_mode
+          && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE')
+          )
+      {
+        $test_warning_exists = self::order_history_exists(
+          $orders_id,
+          MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE
+        );
+        if ($test_warning_exists === null) {
+          return false;
+        }
+      }
+      if ($test_mode
+          && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE')
+          && $test_warning_exists === false
+          )
+      {
+        if (self::add_order_history(
+              $orders_id,
+              $success_status,
+              MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE
+            ) === false)
+        {
+          return false;
+        }
+      }
+
+      return array(
+        'orders_id' => $orders_id,
+        'success' => true,
+      );
+    }
+
+
+    static function cancel_temporary_order($callback) {
+      if (!self::callback_can_be_processed($callback)) {
+        return false;
+      }
+
+      $callback_lock = self::acquire_callback_lock((int)$callback['orders_id']);
+      if ($callback_lock === false) {
+        return false;
+      }
+
+      try {
+        $result = self::process_cancellation($callback);
+      } finally {
+        self::release_callback_lock($callback_lock);
+      }
+
+      return is_array($result) && $result['success'] === false;
+    }
+
+
+    private static function process_cancellation($callback) {
+      if (!self::callback_can_be_processed($callback)
+          || xtc_db_query('START TRANSACTION') === false
+          )
+      {
+        return false;
+      }
+
+      $orders_id = (int)$callback['orders_id'];
+      $temporary_order = self::lock_callback_order($callback);
+      if ($temporary_order === false) {
+        $already_cancelled = self::checkout_cancellation_exists($callback)
+                             || (!empty($callback['legacy'])
+                                 && self::callback_order_is_missing($orders_id));
+        if (xtc_db_query('COMMIT') === false) {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+
+        return $already_cancelled
+          ? array('orders_id' => $orders_id, 'success' => false)
+          : false;
+      }
+
+      // A successful notification, including a retryable partial database
+      // update, always wins over a later cancellation. Order history is not a
+      // trust source; only the authenticated transaction row is authoritative.
+      $payment_transaction = self::get_payment_transaction($orders_id);
+      if ($payment_transaction === null) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+      if (is_array($payment_transaction)) {
+        if (!self::payment_transaction_matches(
+              $payment_transaction,
+              $callback,
+              $payment_transaction['transaction_id']
+            )
+            || ($payment_transaction['transaction_status'] !== self::TRANSACTION_STATUS_PENDING
+                && $payment_transaction['transaction_status'] !== self::TRANSACTION_STATUS_VERIFIED)
+            )
+        {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+
+        if ($payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_PENDING
+            && self::complete_successful_callback(
+                 $callback,
+                 $temporary_order
+               ) === false
+            )
+        {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+
+        if (xtc_db_query('COMMIT') === false) {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+
+        if (!self::mark_transaction_verified(
+              $callback,
+              $payment_transaction['transaction_id']
+            ))
+        {
+          return false;
+        }
+
+        return array(
+          'orders_id' => $orders_id,
+          'success' => true,
+        );
+      }
+
+      if ((int)$temporary_order['orders_status'] !== self::get_prepare_status()) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      if (empty($callback['legacy'])) {
+        if (!isset($callback['checkout_key'])
+            || !preg_match('/^[a-f0-9]{64}$/', (string)$callback['checkout_key'])
+            )
+        {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+
+        $update_result = xtc_db_query("UPDATE ".TABLE_CHECKOUT_PROCESSING."
+                                         SET processing_status = 'failed',
+                                             last_modified = NOW()
+                                       WHERE checkout_key = '".xtc_db_input($callback['checkout_key'])."'
+                                         AND customers_id = '".(int)$callback['customers_id']."'
+                                         AND orders_id = '".$orders_id."'
+                                         AND processing_status = 'waiting'");
+        if ($update_result === false) {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+        if (xtc_db_affected_rows() !== 1 && !self::checkout_cancellation_exists($callback)) {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+      }
+
+      require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+      xtc_remove_order(
+        $orders_id,
+        defined('STOCK_LIMITED') && STOCK_LIMITED == 'true' ? 'on' : false,
+        defined('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS') && STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true'
+      );
+      if (!self::callback_order_is_missing($orders_id)) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      if (xtc_db_query('COMMIT') === false) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      return array(
+        'orders_id' => $orders_id,
+        'success' => false,
+      );
+    }
+
+
+    private static function callback_can_be_processed($callback) {
+      return is_array($callback)
+             && isset(
+                  $callback['orders_id'],
+                  $callback['customers_id'],
+                  $callback['amount'],
+                  $callback['currency']
+                )
+             && is_scalar($callback['orders_id'])
+             && is_scalar($callback['customers_id'])
+             && is_scalar($callback['amount'])
+             && is_scalar($callback['currency'])
+             && (int)$callback['orders_id'] > 0
+             && (int)$callback['customers_id'] > 0
+             && is_numeric($callback['amount'])
+             && (float)$callback['amount'] > 0
+             && is_finite((float)$callback['amount'])
+             && (float)$callback['amount'] <= 99999999999.9999
+             && preg_match('/^[A-Z]{3}$/', (string)$callback['currency']);
+    }
+
+
+    private static function acquire_callback_lock($orders_id) {
+      $database = defined('DB_DATABASE') ? (string)DB_DATABASE : '';
+      $lock_scope = $database.':'.TABLE_ORDERS;
+      $lock_name = 'mshop_wp_'.substr(hash('sha256', $lock_scope), 0, 16).'_'.(int)$orders_id;
+      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($lock_name)."', 10) AS callback_lock");
+      if ($lock_query === false || xtc_db_num_rows($lock_query) !== 1) {
+        return false;
+      }
+
+      $lock = xtc_db_fetch_array($lock_query);
+      return isset($lock['callback_lock']) && (int)$lock['callback_lock'] === 1
+        ? $lock_name
+        : false;
+    }
+
+
+    private static function release_callback_lock($lock_name) {
+      xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($lock_name)."')");
+    }
+
+
+    private static function lock_callback_order($callback) {
+      $payment_condition = !empty($callback['legacy'])
+        ? "(payment_class = '' OR payment_class IS NULL OR payment_class = 'worldpay_junior')"
+        : "payment_class = 'worldpay_junior'";
+      $order_query = xtc_db_query("SELECT orders_id,
+                                          orders_status
+                                     FROM ".TABLE_ORDERS."
+                                    WHERE orders_id = '".(int)$callback['orders_id']."'
+                                      AND customers_id = '".(int)$callback['customers_id']."'
+                                      AND currency = '".xtc_db_input($callback['currency'])."'
+                                      AND ".$payment_condition."
+                                    LIMIT 1
+                                   FOR UPDATE");
+      if ($order_query === false || xtc_db_num_rows($order_query) !== 1) {
+        return false;
+      }
+
+      return xtc_db_fetch_array($order_query);
+    }
+
+
+    private static function callback_order_is_missing($orders_id) {
+      $order_query = xtc_db_query("SELECT orders_id
+                                     FROM ".TABLE_ORDERS."
+                                    WHERE orders_id = '".(int)$orders_id."'
+                                    LIMIT 1");
+
+      return $order_query !== false && xtc_db_num_rows($order_query) === 0;
+    }
+
+
+    private static function checkout_cancellation_exists($callback) {
+      if (!empty($callback['legacy'])
+          || !isset($callback['checkout_key'])
+          || !preg_match('/^[a-f0-9]{64}$/', (string)$callback['checkout_key'])
+          )
+      {
+        return false;
+      }
+
+      $processing_query = xtc_db_query("SELECT checkout_key
+                                          FROM ".TABLE_CHECKOUT_PROCESSING."
+                                         WHERE checkout_key = '".xtc_db_input($callback['checkout_key'])."'
+                                           AND customers_id = '".(int)$callback['customers_id']."'
+                                           AND orders_id = '".(int)$callback['orders_id']."'
+                                           AND processing_status = 'failed'
+                                         LIMIT 1");
+
+      return $processing_query !== false && xtc_db_num_rows($processing_query) === 1;
+    }
+
+
+    public static function ensure_transaction_table() {
+      if (!defined('TABLE_WORLDPAY_JUNIOR_TRANSACTIONS')) {
+        return false;
+      }
+
+      $table_pattern = addcslashes(TABLE_WORLDPAY_JUNIOR_TRANSACTIONS, '\\_%');
+      $table_query = xtc_db_query("SHOW TABLES LIKE '".xtc_db_input($table_pattern)."'");
+      if ($table_query === false) {
+        return false;
+      }
+
+      return xtc_db_num_rows($table_query) === 1 || self::create_transaction_table();
+    }
+
+
+    private static function create_transaction_table() {
+      return xtc_db_query("CREATE TABLE IF NOT EXISTS `".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS."` (
+                             `orders_id` INT(11) NOT NULL,
+                             `transaction_id` VARBINARY(128) NOT NULL,
+                             `transaction_status` VARCHAR(24) NOT NULL DEFAULT '".self::TRANSACTION_STATUS_PENDING."',
+                             `amount` DECIMAL(15,4) NOT NULL,
+                             `currency` CHAR(3) NOT NULL,
+                             `date_added` DATETIME NOT NULL,
+                             `last_modified` DATETIME NOT NULL,
+                             PRIMARY KEY (`orders_id`),
+                             UNIQUE KEY `idx_transaction_id` (`transaction_id`),
+                             KEY `idx_transaction_status` (`transaction_status`, `last_modified`)
+                           )") !== false;
+    }
+
+
+    private static function get_order_payment_state($orders_id, $customers_id) {
+      if ($orders_id < 1 || $customers_id < 1) {
+        return false;
+      }
+
+      $order_query = xtc_db_query("SELECT o.orders_id,
+                                          o.orders_status,
+                                          wjt.transaction_status
+                                     FROM ".TABLE_ORDERS." o
+                                LEFT JOIN ".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS." wjt
+                                       ON wjt.orders_id = o.orders_id
+                                    WHERE o.orders_id = '".(int)$orders_id."'
+                                      AND o.customers_id = '".(int)$customers_id."'
+                                      AND (o.payment_class = ''
+                                           OR o.payment_class IS NULL
+                                           OR o.payment_class = 'worldpay_junior')
+                                    LIMIT 1");
+      if ($order_query === false) {
+        return null;
+      }
+      if (xtc_db_num_rows($order_query) !== 1) {
+        return false;
+      }
+
+      $payment_state = xtc_db_fetch_array($order_query);
+      $payment_state['transaction_status'] = isset($payment_state['transaction_status'])
+        ? (string)$payment_state['transaction_status']
+        : '';
+
+      return $payment_state;
+    }
+
+
+    private static function is_verified_order($orders_id, $customers_id) {
+      $payment_state = self::get_order_payment_state($orders_id, $customers_id);
+
+      return is_array($payment_state)
+             && $payment_state['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED;
+    }
+
+
+    private static function get_payment_transaction($orders_id) {
+      $transaction_query = xtc_db_query("SELECT orders_id,
+                                                transaction_id,
+                                                transaction_status,
+                                                amount,
+                                                currency
+                                           FROM ".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS."
+                                          WHERE orders_id = '".(int)$orders_id."'
+                                          LIMIT 1");
+      if ($transaction_query === false) {
+        return null;
+      }
+      if (xtc_db_num_rows($transaction_query) !== 1) {
+        return false;
+      }
+
+      return xtc_db_fetch_array($transaction_query);
+    }
+
+
+    private static function ensure_pending_transaction($callback, $temporary_order, $transaction_id) {
+      $payment_transaction = self::get_payment_transaction((int)$callback['orders_id']);
+      if ($payment_transaction === null) {
+        return false;
+      }
+      if (is_array($payment_transaction)) {
+        return self::payment_transaction_matches(
+                 $payment_transaction,
+                 $callback,
+                 $transaction_id
+               )
+               && ($payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_PENDING
+                   || $payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED)
+          ? $payment_transaction
+          : false;
+      }
+
+      if ((int)$temporary_order['orders_status'] !== self::get_prepare_status()) {
+        return false;
+      }
+
+      $amount = self::normalize_amount($callback['amount']);
+      $insert_result = xtc_db_query("INSERT INTO ".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS."
+                                                (orders_id,
+                                                 transaction_id,
+                                                 transaction_status,
+                                                 amount,
+                                                 currency,
+                                                 date_added,
+                                                 last_modified)
+                                         VALUES ('".(int)$callback['orders_id']."',
+                                                 '".xtc_db_input($transaction_id)."',
+                                                 '".self::TRANSACTION_STATUS_PENDING."',
+                                                 '".xtc_db_input($amount)."',
+                                                 '".xtc_db_input($callback['currency'])."',
+                                                 NOW(),
+                                                 NOW())");
+      if ($insert_result === false) {
+        return false;
+      }
+
+      return array(
+        'orders_id' => (int)$callback['orders_id'],
+        'transaction_id' => $transaction_id,
+        'transaction_status' => self::TRANSACTION_STATUS_PENDING,
+        'amount' => $amount,
+        'currency' => (string)$callback['currency'],
+      );
+    }
+
+
+    private static function payment_transaction_matches($payment_transaction, $callback, $transaction_id) {
+      return is_array($payment_transaction)
+             && isset(
+                  $payment_transaction['transaction_id'],
+                  $payment_transaction['transaction_status'],
+                  $payment_transaction['amount'],
+                  $payment_transaction['currency']
+                )
+             && hash_equals((string)$payment_transaction['transaction_id'], (string)$transaction_id)
+             && self::normalize_amount($payment_transaction['amount']) === self::normalize_amount($callback['amount'])
+             && (string)$payment_transaction['currency'] === (string)$callback['currency'];
+    }
+
+
+    private static function mark_transaction_verified($callback, $transaction_id) {
+      $amount = self::normalize_amount($callback['amount']);
+      $update_result = xtc_db_query("UPDATE ".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS."
+                                       SET transaction_status = '".self::TRANSACTION_STATUS_VERIFIED."',
+                                           last_modified = NOW()
+                                     WHERE orders_id = '".(int)$callback['orders_id']."'
+                                       AND transaction_id = '".xtc_db_input($transaction_id)."'
+                                       AND transaction_status = '".self::TRANSACTION_STATUS_PENDING."'
+                                       AND amount = '".xtc_db_input($amount)."'
+                                       AND currency = '".xtc_db_input($callback['currency'])."'");
+      if ($update_result === false) {
+        return false;
+      }
+      if (xtc_db_affected_rows() === 1) {
+        return true;
+      }
+
+      $payment_transaction = self::get_payment_transaction((int)$callback['orders_id']);
+
+      return is_array($payment_transaction)
+             && $payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED
+             && self::payment_transaction_matches(
+                  $payment_transaction,
+                  $callback,
+                  $transaction_id
+                );
+    }
+
+
+    private static function normalize_transaction_id($transaction_id) {
+      if (!is_scalar($transaction_id)) {
+        return false;
+      }
+
+      $transaction_id = trim((string)$transaction_id, ' ');
+
+      return preg_match('/^[\x21-\x7e]{1,128}$/D', $transaction_id)
+        ? $transaction_id
+        : false;
+    }
+
+
+    private static function add_order_history($orders_id, $orders_status_id, $comments) {
+      $sql_data_array = array(
+        'orders_id' => (int)$orders_id,
+        'orders_status_id' => (int)$orders_status_id,
+        'date_added' => 'now()',
+        'customer_notified' => '0',
+        'comments' => $comments,
+      );
+      return xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+    }
+
+
+    private static function order_history_exists($orders_id, $comments) {
+      $history_query = xtc_db_query("SELECT orders_status_history_id
+                                       FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                      WHERE orders_id = '".(int)$orders_id."'
+                                        AND comments = '".xtc_db_input($comments)."'
+                                      LIMIT 1");
+
+      if ($history_query === false) {
+        return null;
+      }
+
+      return xtc_db_num_rows($history_query) === 1;
+    }
+
+
+    private static function get_prepare_status() {
+      return defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID')
+        ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID
+        : 0;
+    }
+
+
+    static function callback_hash($session_id, $customers_id, $orders_id, $checkout_key, $language, $amount, $currency, $checkout_token, $auth_mode = '', $test_mode = '') {
+      $amount = self::normalize_amount($amount);
+      $payload_fields = array(
+        (string)$session_id,
+        (int)$customers_id,
+        (int)$orders_id,
+        (string)$checkout_key,
+        (string)$language,
+        $amount,
+        (string)$currency,
+        (string)$checkout_token,
+      );
+      if ($auth_mode !== '' || $test_mode !== '') {
+        $payload_fields[] = (string)$auth_mode;
+        $payload_fields[] = (string)$test_mode;
+      }
+      $payload = implode("\n", $payload_fields);
+
+      return hash_hmac('sha256', $payload, (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD);
+    }
+
+
+    static function validate_callback($post) {
+      if (!defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD')
+          || (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD == ''
+          )
+      {
+        return false;
+      }
+
+      $callback_modes = self::get_callback_modes($post);
+      if ($callback_modes === false) {
+        return false;
+      }
+
+      if (!isset($post['M_checkout_key'])) {
+        $data = self::validate_legacy_callback($post);
+        return is_array($data) ? array_merge($data, $callback_modes) : false;
+      }
+
+      if (!defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD')
+          || (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD == ''
+          || !isset($post['callbackPW'])
+          || !is_scalar($post['callbackPW'])
+          || !hash_equals((string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD, (string)$post['callbackPW'])
+          )
+      {
+        return false;
+      }
+
+      $required = array(
+        'M_sid',
+        'M_cid',
+        'cartId',
+        'M_lang',
+        'amount',
+        'currency',
+        'M_checkout_key',
+        'M_checkout_token',
+        'M_hash',
+      );
+      foreach ($required as $name) {
+        if (!isset($post[$name]) || !is_scalar($post[$name])) {
+          return false;
+        }
+      }
+
+      $data = array(
+        'session_id' => trim((string)$post['M_sid']),
+        'customers_id' => (int)$post['M_cid'],
+        'orders_id' => (int)$post['cartId'],
+        'language' => basename(trim((string)$post['M_lang'])),
+        'amount' => trim((string)$post['amount']),
+        'currency' => strtoupper(trim((string)$post['currency'])),
+        'checkout_key' => trim((string)$post['M_checkout_key']),
+        'checkout_token' => trim((string)$post['M_checkout_token']),
+        'hash' => trim((string)$post['M_hash']),
+        'auth_mode' => $callback_modes['auth_mode'],
+        'test_mode' => $callback_modes['test_mode'],
+        'modes_bound' => $callback_modes['modes_bound'],
+        'legacy' => false,
+      );
+
+      if (!preg_match('/^(?:[a-z0-9]{26}|[a-z0-9]{32}|[a-z0-9]{40}|[a-z0-9]{52})$/i', $data['session_id'])
+          || $data['customers_id'] < 1
+          || $data['orders_id'] < 1
+          || !preg_match('/^[a-z0-9_-]{1,32}$/i', $data['language'])
+          || !is_numeric($data['amount'])
+          || (float)$data['amount'] <= 0
+          || !is_finite((float)$data['amount'])
+          || (float)$data['amount'] > 99999999999.9999
+          || !preg_match('/^[A-Z]{3}$/', $data['currency'])
+          || !preg_match('/^[a-f0-9]{64}$/', $data['checkout_key'])
+          || !preg_match('/^[a-f0-9]{64}$/', $data['checkout_token'])
+          || !preg_match('/^[a-f0-9]{64}$/', $data['hash'])
+          )
+      {
+        return false;
+      }
+
+      $data['amount'] = self::normalize_amount($data['amount']);
+      $expected_hash = self::callback_hash(
+        $data['session_id'],
+        $data['customers_id'],
+        $data['orders_id'],
+        $data['checkout_key'],
+        $data['language'],
+        $data['amount'],
+        $data['currency'],
+        $data['checkout_token'],
+        $data['modes_bound'] ? $data['auth_mode'] : '',
+        $data['modes_bound'] ? $data['test_mode'] : ''
+      );
+      if (!hash_equals($expected_hash, $data['hash'])) {
+        return false;
+      }
+
+      return $data;
+    }
+
+
+    private static function get_callback_modes($post) {
+      $has_transaction_auth_mode = array_key_exists('M_auth_mode', $post);
+      $has_transaction_test_mode = array_key_exists('M_test_mode', $post);
+      if ($has_transaction_auth_mode !== $has_transaction_test_mode) {
+        return false;
+      }
+
+      if ($has_transaction_auth_mode) {
+        if (!is_scalar($post['M_auth_mode']) || !is_scalar($post['M_test_mode'])) {
+          return false;
+        }
+        $auth_mode = trim((string)$post['M_auth_mode']);
+        $test_mode = trim((string)$post['M_test_mode']);
+        if (!in_array($auth_mode, array('A', 'E'), true)
+            || !in_array($test_mode, array('0', '100'), true)
+            )
+        {
+          return false;
+        }
+      } else {
+        $auth_mode = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD')
+                     && MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD == 'Pre-Authorization'
+          ? 'E'
+          : 'A';
+        $test_mode = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE')
+                     && MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True'
+          ? '100'
+          : '0';
+      }
+
+      $allowed_auth_modes = $auth_mode === 'E' ? array('E', 'O') : array('A');
+      if (array_key_exists('authMode', $post)
+          && (!is_scalar($post['authMode'])
+              || !in_array(trim((string)$post['authMode']), $allowed_auth_modes, true))
+          )
+      {
+        return false;
+      }
+
+      if (array_key_exists('testMode', $post)
+          && (!is_scalar($post['testMode']) || trim((string)$post['testMode']) !== $test_mode)
+          )
+      {
+        return false;
+      }
+
+      return array(
+        'auth_mode' => $auth_mode,
+        'test_mode' => $test_mode,
+        'modes_bound' => $has_transaction_auth_mode,
+      );
+    }
+
+
+    private static function validate_legacy_callback($post) {
+      $required = array('M_sid', 'M_cid', 'cartId', 'M_lang', 'amount', 'currency', 'M_hash');
+      foreach ($required as $name) {
+        if (!isset($post[$name]) || !is_scalar($post[$name])) {
+          return false;
+        }
+      }
+
+      if (!defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD')
+          || (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD == ''
+          || !isset($post['callbackPW'])
+          || !is_scalar($post['callbackPW'])
+          || !hash_equals((string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD, (string)$post['callbackPW'])
+          )
+      {
+        return false;
+      }
+
+      $data = array(
+        'session_id' => trim((string)$post['M_sid']),
+        'customers_id' => (int)$post['M_cid'],
+        'orders_id' => (int)$post['cartId'],
+        'language' => basename(trim((string)$post['M_lang'])),
+        'amount' => trim((string)$post['amount']),
+        'currency' => strtoupper(trim((string)$post['currency'])),
+        'hash' => strtolower(trim((string)$post['M_hash'])),
+        'legacy' => true,
+      );
+      if (!preg_match('/^(?:[a-z0-9]{26}|[a-z0-9]{32}|[a-z0-9]{40}|[a-z0-9]{52})$/i', $data['session_id'])
+          || $data['customers_id'] < 1
+          || $data['orders_id'] < 1
+          || !preg_match('/^[a-z0-9_-]{1,32}$/i', $data['language'])
+          || !is_numeric($data['amount'])
+          || (float)$data['amount'] <= 0
+          || !is_finite((float)$data['amount'])
+          || (float)$data['amount'] > 99999999999.9999
+          || !preg_match('/^[A-Z]{3}$/', $data['currency'])
+          || !preg_match('/^[a-f0-9]{32}$/', $data['hash'])
+          )
+      {
+        return false;
+      }
+
+      $expected_hash = md5(
+        $data['session_id']
+        .$data['customers_id']
+        .$data['orders_id']
+        .$data['language']
+        .number_format((float)$data['amount'], 2)
+        .MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD
+      );
+      if (!hash_equals($expected_hash, $data['hash'])) {
+        return false;
+      }
+
+      $data['amount'] = self::normalize_amount($data['amount']);
+      return $data;
+    }
+
+
+    private static function normalize_amount($amount) {
+      return number_format((float)$amount, 4, '.', '');
+    }
+
+
+    private function get_worldpay_language() {
+      $language_query = xtc_db_query("SELECT code
+                                        FROM ".TABLE_LANGUAGES."
+                                       WHERE languages_id = '".(int)$_SESSION['languages_id']."'");
+      if (xtc_db_num_rows($language_query) > 0) {
+        $language = xtc_db_fetch_array($language_query);
+        if (isset($language['code']) && is_scalar($language['code'])) {
+          return strtoupper((string)$language['code']);
+        }
+      }
+
+      return 'EN';
+    }
+
+
+    private function get_callback_url() {
+      $url = xtc_href_link('callback/worldpay/junior_callback.php', '', 'SSL', false, false);
+      $url = decode_htmlentities($url);
+      $scheme_position = strpos($url, '://');
+
+      return $scheme_position === false ? $url : substr($url, $scheme_position + 3);
+    }
+
+
+    private function output_redirect_form($fields) {
+      $charset = isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : 'UTF-8';
+
+      session_write_close();
+
+      echo '<!DOCTYPE html>';
+      echo '<html><head><meta charset="'.htmlspecialchars($charset, ENT_QUOTES, $charset).'">';
+      echo '<title>'.htmlspecialchars($this->title, ENT_QUOTES, $charset).'</title></head><body>';
+      echo '<form id="worldpay_checkout" action="'.htmlspecialchars($this->gateway_url, ENT_QUOTES, $charset).'" method="post">';
+      foreach ($fields as $name => $value) {
+        echo '<input type="hidden" name="'.htmlspecialchars($name, ENT_QUOTES, $charset).'" value="'.htmlspecialchars((string)$value, ENT_QUOTES, $charset).'">';
+      }
+      echo '<noscript><button type="submit">'.htmlspecialchars(sprintf(MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONTINUE_BUTTON, STORE_NAME), ENT_QUOTES, $charset).'</button></noscript>';
+      echo '</form><script>document.getElementById("worldpay_checkout").submit();</script></body></html>';
+      exit;
+    }
+
+
+    private function get_success_status() {
+      return $this->order_status > 0 ? $this->order_status : (int)DEFAULT_ORDERS_STATUS_ID;
     }
   }
