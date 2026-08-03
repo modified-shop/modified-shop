@@ -19,6 +19,7 @@
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_SUCCESSFUL_TRANSACTION', 'Die Zahlungs Transaktion wurde erfolgreich durchgef&uuml;hrt!');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_UNSUCCESSFUL_TRANSACTION', 'Ihre Zahlung war nicht erfolgreich!');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONTINUE_BUTTON', 'Klicken Sie hier um zu %s fortzufahren');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONFIGURATION_WARNING', '<b>Konfiguration erforderlich:</b> WorldPay Junior wird im Checkout erst angeboten, wenn Installations-ID, MD5-Geheimnis und Zahlungs-Antwort-Passwort konfiguriert sind. Das Zahlungs-Antwort-Passwort muss auch im WorldPay Customer Management System hinterlegt werden.');
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_TITLE', 'WorldPay Junior');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESC', 'Worldpay Zahlungsmodul');
@@ -52,9 +53,6 @@
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE_TITLE', 'Zahlungszone');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE_DESC', 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.');
-
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID_TITLE', 'Tempor&auml;rer Bestellstatus');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID_DESC', 'Bestellstatus f&uuml;r noch nicht abgeschlossene Transaktionen');
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID_TITLE', 'Bestellstatus festlegen');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID_DESC', 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen.');

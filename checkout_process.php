@@ -103,6 +103,10 @@ require_once(DIR_WS_CLASSES.'order_total.php');
 $order_total_modules = new order_total();
 $order_totals = $order_total_modules->process();
 
+// Allow redirect payment modules to start the external payment only after the
+// final order total has been calculated, but before order side effects occur.
+$payment_modules->before_create_order();
+
 // check if tmp order id exists
 if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $tmp = false;

@@ -14,6 +14,15 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  if (isset($_POST['M_sid'])
+      && is_scalar($_POST['M_sid'])
+      && preg_match('/^(?:[a-z0-9]{26}|[a-z0-9]{32}|[a-z0-9]{40}|[a-z0-9]{52})$/i', (string)$_POST['M_sid'])
+      )
+  {
+    define('SESSION_FORCE_COOKIE_USE', 'False');
+    $_GET['MODsid'] = (string)$_POST['M_sid'];
+  }
+
   chdir('../../');
   require('includes/application_top.php');
   require_once(DIR_WS_MODULES.'payment/worldpay_junior.php');
@@ -22,6 +31,9 @@
   if ($callback === false
       || !isset($_POST['transStatus'])
       || !is_scalar($_POST['transStatus'])
+      || !isset($_SESSION['customer_id'])
+      || (int)$_SESSION['customer_id'] !== (int)$callback['customers_id']
+      || !hash_equals(xtc_session_id(), $callback['session_id'])
       )
   {
     http_response_code(403);
@@ -36,92 +48,112 @@
     require_once(DIR_WS_LANGUAGES.'english/modules/payment/worldpay_junior.php');
   }
 
-  $order_query = xtc_db_query("SELECT orders_id,
-                                      orders_status,
-                                      currency,
-                                      payment_class
-                                 FROM ".TABLE_ORDERS."
-                                WHERE orders_id = '".(int)$callback['order_id']."'
-                                  AND customers_id = '".(int)$callback['customers_id']."'
-                                  AND payment_class = 'worldpay_junior'
-                                LIMIT 1");
-  if (xtc_db_num_rows($order_query) !== 1) {
-    http_response_code(404);
-    exit;
-  }
-
-  $order = xtc_db_fetch_array($order_query);
-  if ((string)$order['currency'] !== $callback['currency']) {
-    http_response_code(403);
-    exit;
-  }
-
   $success = (string)$_POST['transStatus'] === 'Y';
-  $verified = false;
-  $prepare_status = MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID > 0
-    ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID
-    : (int)DEFAULT_ORDERS_STATUS_ID;
-  $success_status = MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID > 0
-    ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID
-    : (int)DEFAULT_ORDERS_STATUS_ID;
 
-  $verified_query = xtc_db_query("SELECT orders_status_history_id
-                                   FROM ".TABLE_ORDERS_STATUS_HISTORY."
-                                   WHERE orders_id = '".(int)$callback['order_id']."'
-                                     AND comments = '".xtc_db_input(worldpay_junior::VERIFIED_COMMENT)."'
-                                   LIMIT 1");
-  $already_verified = xtc_db_num_rows($verified_query) === 1;
-
-  if ($already_verified === true) {
-    $success = true;
-    $verified = true;
-  } elseif ($success === true) {
-    xtc_db_query("UPDATE ".TABLE_ORDERS."
-                     SET orders_status = '".$success_status."',
-                         last_modified = NOW()
-                   WHERE orders_id = '".(int)$callback['order_id']."'
-                     AND customers_id = '".(int)$callback['customers_id']."'
-                     AND payment_class = 'worldpay_junior'
-                     AND orders_status = '".$prepare_status."'");
-
-    if (xtc_db_affected_rows() === 1) {
-      $sql_data_array = array(
-        'orders_id' => (int)$callback['order_id'],
-        'orders_status_id' => $success_status,
-        'date_added' => 'now()',
-        'customer_notified' => '0',
-        'comments' => worldpay_junior::VERIFIED_COMMENT,
-      );
-      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-
-      if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True') {
-        $sql_data_array['comments'] = MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE;
-        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-      }
+  if ($callback['legacy'] === true) {
+    // Resume legacy transactions created shortly before the update.
+    $legacy_transaction = worldpay_junior::find_legacy_transaction(
+      $callback['legacy_order_id'],
+      $callback['customers_id'],
+      $callback['session_id']
+    );
+    $legacy_order_query = xtc_db_query("SELECT o.orders_id,
+                                               o.currency
+                                          FROM ".TABLE_ORDERS." o
+                                         WHERE o.orders_id = '".(int)$callback['legacy_order_id']."'
+                                           AND o.customers_id = '".(int)$callback['customers_id']."'
+                                           AND (o.payment_class = ''
+                                                OR o.payment_class IS NULL
+                                                OR o.payment_class = 'worldpay_junior')
+                                           AND o.currency = '".xtc_db_input($callback['currency'])."'
+                                           AND o.date_purchased >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                                           AND NOT EXISTS (
+                                                 SELECT 1
+                                                   FROM ".TABLE_ORDERS_STATUS_HISTORY." osh
+                                                  WHERE osh.orders_id = o.orders_id
+                                               )
+                                         LIMIT 1");
+    $legacy_order_exists = xtc_db_num_rows($legacy_order_query) === 1;
+    if ($legacy_order_exists === false && $legacy_transaction === false) {
+      http_response_code(404);
+      exit;
     }
 
-    $verified_query = xtc_db_query("SELECT o.orders_id
-                                      FROM ".TABLE_ORDERS." o
-                                     WHERE o.orders_id = '".(int)$callback['order_id']."'
-                                       AND o.customers_id = '".(int)$callback['customers_id']."'
-                                       AND o.payment_class = 'worldpay_junior'
-                                       AND o.orders_status = '".$success_status."'
-                                       AND EXISTS (
-                                             SELECT 1
-                                              FROM ".TABLE_ORDERS_STATUS_HISTORY." osh
-                                              WHERE osh.orders_id = o.orders_id
-                                                AND osh.comments = '".xtc_db_input(worldpay_junior::VERIFIED_COMMENT)."'
-                                           )
-                                     LIMIT 1");
-    $verified = xtc_db_num_rows($verified_query) === 1;
-  } elseif ((int)$order['orders_status'] === $prepare_status) {
-    require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-    xtc_remove_order((int)$callback['order_id'], STOCK_LIMITED == 'true' ? 'on' : false);
+    require_once(DIR_WS_CLASSES.'checkout.php');
+    $checkout = new checkout($callback['customers_id']);
+    if (is_array($legacy_transaction)) {
+      $checkout_key = $legacy_transaction['checkout_key'];
+      $checkout_token = $legacy_transaction['checkout_token'];
+    } else {
+      $checkout_key = $checkout->get_key();
+      $checkout_token = isset($_SESSION['checkout_processing_phase_token'])
+                        && is_string($_SESSION['checkout_processing_phase_token'])
+        ? $_SESSION['checkout_processing_phase_token']
+        : '';
+    }
+    if (!preg_match('/^[a-f0-9]{64}$/', $checkout_key)
+        || !preg_match('/^[a-f0-9]{64}$/', $checkout_token)
+        )
+    {
+      http_response_code(409);
+      exit;
+    }
+
+    $transaction = worldpay_junior::migrate_legacy_transaction(
+      $callback,
+      $checkout_key,
+      $checkout_token,
+      $success
+    );
+    if (!is_array($transaction)) {
+      http_response_code(409);
+      exit;
+    }
+
+    if ($legacy_order_exists) {
+      require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+      xtc_remove_order((int)$callback['legacy_order_id'], false);
+    }
+    unset($_SESSION['cart_Worldpay_Junior_ID'], $_SESSION['tmp_oID'], $_SESSION['tmp_worldpay_oID']);
+    $_SESSION['payment'] = 'worldpay_junior';
+
+    if (in_array($transaction['transaction_status'], array('verified', 'completed'))) {
+      $success = true;
+    }
+    $callback['checkout_token'] = $checkout_token;
+  } else {
+    $provider_transaction_id = isset($_POST['transId']) && is_scalar($_POST['transId'])
+      ? substr(trim((string)$_POST['transId']), 0, 128)
+      : '';
+    $transaction = worldpay_junior::process_callback($callback, $success, $provider_transaction_id);
+    if (!is_array($transaction)) {
+      http_response_code(409);
+      exit;
+    }
+
+    if (in_array($transaction['transaction_status'], array('verified', 'completed'))) {
+      $success = true;
+    }
   }
 
-  if ($success === true && $verified === false) {
-    http_response_code(409);
-    exit;
+  if ($success === false) {
+    if (!isset($checkout) || !is_object($checkout)) {
+      require_once(DIR_WS_CLASSES.'checkout.php');
+      $checkout = new checkout($callback['customers_id']);
+    }
+    if ($callback['legacy'] === true || hash_equals($checkout->get_key(), $callback['checkout_key'])) {
+      $checkout->fail();
+    }
+  } else {
+    $_SESSION['payment'] = 'worldpay_junior';
+    $_SESSION['worldpay_junior_callback_transaction_id'] = (int)$transaction['worldpay_id'];
+    if (isset($_SESSION['checkout_processing_phase_token'])
+        && is_string($_SESSION['checkout_processing_phase_token'])
+        && preg_match('/^[a-f0-9]{64}$/', $_SESSION['checkout_processing_phase_token'])
+        )
+    {
+      $callback['checkout_token'] = $_SESSION['checkout_processing_phase_token'];
+    }
   }
 
   if ($success === true) {
@@ -137,6 +169,7 @@
   }
 
   $charset = isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : 'UTF-8';
+  session_write_close();
 ?>
 <!DOCTYPE html>
 <html>

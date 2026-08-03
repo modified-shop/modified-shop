@@ -414,6 +414,19 @@
       }
     }
 
+    function before_create_order() {
+      if (is_array($this->modules)) {
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module])
+            && $GLOBALS[$this->selected_module]->enabled
+            && method_exists($GLOBALS[$this->selected_module], 'before_create_order')
+            )
+        {
+          return $GLOBALS[$this->selected_module]->before_create_order();
+        }
+      }
+    }
+
     function payment_action() {
       if (is_array($this->modules)) {
         if (isset($GLOBALS[$this->selected_module])
