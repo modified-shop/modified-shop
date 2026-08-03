@@ -12,26 +12,39 @@
 
 function combine_files($f_array,$f_min,$compress_css = false,$f_time = 0)
 {
-    $f_min_ts = is_writeable(DIR_FS_CATALOG.$f_min) ? filemtime(DIR_FS_CATALOG.$f_min) : false;
+    $f_min_path = DIR_FS_CATALOG.$f_min;
+    $f_min_ts = is_file($f_min_path) ? filemtime($f_min_path) : false;
+    $f_min_directory_writable = is_writable(dirname($f_min_path));
+    $f_min_writable = is_file($f_min_path)
+      ? (is_writable($f_min_path) || (!is_link($f_min_path) && $f_min_directory_writable))
+      : $f_min_directory_writable;
+    $compactor_path = DIR_FS_EXTERNAL.'compactor/compactor.php';
+    require_once($compactor_path);
+    $compactor_time = Compactor::getImplementationTime();
+    $f_time = max((int)$f_time, (int)$compactor_time);
     $compress = false;
+    $sources_readable = true;
     foreach ($f_array as $f_plain) {
-      if (filemtime(DIR_FS_CATALOG.$f_plain) > $f_min_ts) {
-        $compress = true;
+      $f_plain_path = DIR_FS_CATALOG.$f_plain;
+      if (!is_file($f_plain_path) || !is_readable($f_plain_path)) {
+        $sources_readable = false;
         break;
+      }
+      if ($f_min_ts === false || filemtime($f_plain_path) > $f_min_ts) {
+        $compress = true;
       }
     }
     
-    if ($f_min_ts && ($compress === true || filesize(DIR_FS_CATALOG.$f_min) == 0 || $f_time > $f_min_ts)) {
-      require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
-      $compactor = new Compactor(array('strip_php_comments' => true, 'compress_css' => $compress_css));
+    if ($sources_readable && $f_min_writable && ($f_min_ts === false || $compress || filesize($f_min_path) == 0 || $f_time > $f_min_ts)) {
+      $compactor = new Compactor(array('compress_css' => $compress_css));
       foreach ($f_array as $f_plain) {
         $compactor->add(DIR_FS_CATALOG.$f_plain);
       }
-      if ($compactor->save($f_min) === true) {
-        $f_min_ts = is_writeable(DIR_FS_CATALOG.$f_min) ? filemtime(DIR_FS_CATALOG.$f_min) : false;
+      if ($compactor->save($f_min_path) === true) {
+        $f_min_ts = filemtime($f_min_path);
         $f_array = array($f_min.'?v='.$f_min_ts);
       }
-    } elseif ($f_min_ts) {
+    } elseif ($f_min_ts !== false) {
       $f_array = array($f_min.'?v='.$f_min_ts);
     }
     

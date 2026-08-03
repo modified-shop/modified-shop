@@ -50,7 +50,7 @@
   $javascript = ob_get_clean();
   if (COMPRESS_JAVASCRIPT == 'true') {
     require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
-    $compactor = new Compactor(array('strip_php_comments' => false, 'compress_css' => false, 'compress_scripts' => true));
+    $compactor = new Compactor(array('compress_css' => false, 'compress_scripts' => true, 'force_script_line_breaks' => true));
     $javascript = $compactor->squeeze($javascript);
   }
   echo $javascript.PHP_EOL;
