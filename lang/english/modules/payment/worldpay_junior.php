@@ -21,6 +21,7 @@
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_UNSUCCESSFUL_TRANSACTION', 'Your payment has been unsuccessful!');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONTINUE_BUTTON', 'Click here to continue to %s');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONFIGURATION_WARNING', '<b>Configuration required:</b> WorldPay Junior is not offered in the checkout until the Installation ID, MD5 secret and Payment Response password are configured. The Payment Response password must also be entered in the WorldPay Customer Management System.');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_INSTALLATION_ERROR', 'The WorldPay transaction table could not be created. The module was not installed.');
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_TITLE', 'WorldPay Junior');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESC', 'Worldpay Payment Module');

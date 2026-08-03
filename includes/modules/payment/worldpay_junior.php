@@ -16,8 +16,8 @@
 
   class worldpay_junior {
 
-    const VERIFICATION_PENDING_COMMENT = 'WorldPay: Transaction Verification Pending';
-    const VERIFIED_COMMENT = 'WorldPay: Transaction Verified';
+    const TRANSACTION_STATUS_PENDING = 'verification_pending';
+    const TRANSACTION_STATUS_VERIFIED = 'verified';
 
     var $code;
     var $title;
@@ -34,6 +34,7 @@
 
     private $gateway_url = 'https://secure.wp3.rbsworldpay.com/wcc/purchase';
     private $configuration_valid = false;
+    private $transaction_table_ready = false;
     private $available = true;
 
 
@@ -55,13 +56,15 @@
         ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID
         : (int)DEFAULT_ORDERS_STATUS_ID;
       $this->form_action_url = '';
+      $this->transaction_table_ready = $this->update() !== false;
 
-      $this->configuration_valid = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID')
-                                   && trim((string)MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID) != ''
-                                   && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD')
-                                   && (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD != ''
-                                   && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD')
-                                   && (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD != '';
+      $credentials_valid = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID')
+                           && trim((string)MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID) != ''
+                           && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD')
+                           && (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD != ''
+                           && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD')
+                           && (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD != '';
+      $this->configuration_valid = $credentials_valid;
 
       if (defined('RUN_MODE_ADMIN')
           && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_ADMIN_CONFIGURATION')
@@ -72,7 +75,7 @@
 
       if (defined('RUN_MODE_ADMIN')
           && $this->enabled
-          && $this->configuration_valid === false
+          && $credentials_valid === false
           && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONFIGURATION_WARNING')
           )
       {
@@ -115,7 +118,11 @@
 
 
     function selection() {
-      if ($this->configuration_valid === false || $this->available === false) {
+      if ($this->transaction_table_ready === false
+          || $this->configuration_valid === false
+          || $this->available === false
+          )
+      {
         return false;
       }
 
@@ -209,8 +216,12 @@
         : '';
       $language = isset($_SESSION['language']) ? (string)$_SESSION['language'] : 'english';
 
-      if (self::is_verified_order($orders_id, $customers_id)) {
-        // Close the small window between the committed payment history and the
+      $payment_state = self::get_order_payment_state($orders_id, $customers_id);
+      if (is_array($payment_state)
+          && $payment_state['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED
+          )
+      {
+        // Close the small window between the committed payment result and the
         // callback publishing the waiting checkout as ready.
         $payment_ready = checkout::mark_payment_ready($checkout->get_key(), $customers_id, $orders_id);
         if (!$payment_ready
@@ -229,23 +240,16 @@
         return false;
       }
 
-      $verification_pending = self::order_history_exists(
-        $orders_id,
-        self::VERIFICATION_PENDING_COMMENT
-      );
-      if (($verification_pending === true || $verification_pending === null)
+      if (is_array($payment_state)
+          && ($payment_state['transaction_status'] === self::TRANSACTION_STATUS_PENDING
+              || ($payment_state['transaction_status'] === ''
+                  && (int)$payment_state['orders_status'] === self::get_prepare_status()))
           && $processing_is_authoritative
           && (int)$processing['orders_id'] === $orders_id
           )
       {
-        // Keep the checkout binding while a retry repairs a MyISAM partial
-        // commit between the provider status update and Verified history.
-        $processing_url = $checkout->get_processing_url($language, $resume_token);
-        session_write_close();
-        xtc_redirect($processing_url);
-      }
-
-      if (self::is_temporary_order($orders_id, $customers_id)) {
+        // Keep the checkout binding while the provider result is still
+        // pending or a retry repairs a partial database update.
         $processing_url = $checkout->get_processing_url($language, $resume_token);
         session_write_close();
         xtc_redirect($processing_url);
@@ -384,6 +388,19 @@
 
 
     function install() {
+      global $messageStack;
+
+      if (!self::create_transaction_table()) {
+        if (isset($messageStack) && is_object($messageStack)) {
+          $message = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_INSTALLATION_ERROR')
+            ? MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_INSTALLATION_ERROR
+            : 'The WorldPay transaction table could not be created.';
+          $messageStack->add_session($message, 'error');
+        }
+
+        return false;
+      }
+
       $check_query = xtc_db_query("SELECT orders_status_id
                                      FROM ".TABLE_ORDERS_STATUS."
                                     WHERE orders_status_name = 'Preparing [WorldPay]'
@@ -424,6 +441,15 @@
       xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
       xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', '".$status_id."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
       xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+    }
+
+
+    function update() {
+      if ($this->check() < 1) {
+        return false;
+      }
+
+      return self::create_transaction_table() ? '' : false;
     }
 
 
@@ -490,6 +516,14 @@
 
 
     private static function process_successful_callback($callback, $provider_transaction_id) {
+      $provider_transaction_id = self::normalize_transaction_id($provider_transaction_id);
+      if ($provider_transaction_id === false) {
+        return false;
+      }
+
+      // Persist the authenticated provider result before changing the order.
+      // This row is the durable retry journal even when shop tables use a
+      // non-transactional storage engine.
       if (xtc_db_query('START TRANSACTION') === false) {
         return false;
       }
@@ -500,12 +534,12 @@
         return false;
       }
 
-      $result = self::complete_successful_callback(
+      $payment_transaction = self::ensure_pending_transaction(
         $callback,
         $temporary_order,
         $provider_transaction_id
       );
-      if ($result === false) {
+      if ($payment_transaction === false) {
         xtc_db_query('ROLLBACK');
         return false;
       }
@@ -515,67 +549,92 @@
         return false;
       }
 
-      return $result;
-    }
+      if ($payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED) {
+        return array(
+          'orders_id' => (int)$callback['orders_id'],
+          'success' => true,
+        );
+      }
 
-
-    private static function complete_successful_callback($callback, $temporary_order, $provider_transaction_id) {
-      $orders_id = (int)$callback['orders_id'];
-      $verified = self::order_history_exists($orders_id, self::VERIFIED_COMMENT);
-      $verification_pending = self::order_history_exists(
-        $orders_id,
-        self::VERIFICATION_PENDING_COMMENT
-      );
-      if ($verified === null || $verification_pending === null) {
+      if (xtc_db_query('START TRANSACTION') === false) {
         return false;
       }
 
-      if ($verified === false && $verification_pending === false) {
-        if ((int)$temporary_order['orders_status'] !== self::get_prepare_status()
-            || self::add_order_history(
-                 $orders_id,
-                 (int)$temporary_order['orders_status'],
-                 self::VERIFICATION_PENDING_COMMENT
-               ) === false
-            )
-        {
-          return false;
-        }
+      $temporary_order = self::lock_callback_order($callback);
+      if ($temporary_order === false) {
+        xtc_db_query('ROLLBACK');
+        return false;
       }
 
+      $payment_transaction = self::get_payment_transaction((int)$callback['orders_id']);
+      if (!is_array($payment_transaction)
+          || !self::payment_transaction_matches(
+                $payment_transaction,
+                $callback,
+                $provider_transaction_id
+              )
+          )
+      {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      if ($payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED) {
+        if (xtc_db_query('COMMIT') === false) {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+
+        return array(
+          'orders_id' => (int)$callback['orders_id'],
+          'success' => true,
+        );
+      }
+
+      if ($payment_transaction['transaction_status'] !== self::TRANSACTION_STATUS_PENDING
+          || self::complete_successful_callback(
+               $callback,
+               $temporary_order
+             ) === false
+          )
+      {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      if (xtc_db_query('COMMIT') === false) {
+        xtc_db_query('ROLLBACK');
+        return false;
+      }
+
+      // Publish paid only after the order status and audit history are durable.
+      if (!self::mark_transaction_verified($callback, $provider_transaction_id)) {
+        return false;
+      }
+
+      return array(
+        'orders_id' => (int)$callback['orders_id'],
+        'success' => true,
+      );
+    }
+
+
+    private static function complete_successful_callback($callback, $temporary_order) {
+      $orders_id = (int)$callback['orders_id'];
       $success_status = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID')
                         && (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID > 0
         ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID
         : (int)DEFAULT_ORDERS_STATUS_ID;
-      if ($verified === false) {
-        // The pending history entry is a durable retry journal for MyISAM. If
-        // this update or the final history insert fails, the next Y or C
-        // notification resumes here instead of rejecting the paid order.
-        if ((int)$temporary_order['orders_status'] === self::get_prepare_status()) {
-          $update_result = xtc_db_query("UPDATE ".TABLE_ORDERS."
-                                           SET orders_status = '".$success_status."',
-                                               last_modified = NOW()
-                                         WHERE orders_id = '".$orders_id."'
-                                           AND customers_id = '".(int)$callback['customers_id']."'");
-          // MySQL may report zero changed rows when both configured statuses
-          // are identical, so only a query error is a failure here.
-          if ($update_result === false) {
-            return false;
-          }
-        }
-      }
-
-      $provider_transaction_id = substr(trim((string)$provider_transaction_id), 0, 128);
-      if ($provider_transaction_id !== '') {
-        $transaction_comment = 'WorldPay transaction ID: '.$provider_transaction_id;
-        $transaction_exists = self::order_history_exists($orders_id, $transaction_comment);
-        if ($transaction_exists === null) {
+      if ((int)$temporary_order['orders_status'] === self::get_prepare_status()) {
+        $update_result = xtc_db_query("UPDATE ".TABLE_ORDERS."
+                                         SET orders_status = '".$success_status."',
+                                             last_modified = NOW()
+                                       WHERE orders_id = '".$orders_id."'
+                                         AND customers_id = '".(int)$callback['customers_id']."'");
+        // MySQL may report zero changed rows when both configured statuses
+        // are identical, so only a query error is a failure here.
+        if ($update_result === false) {
           return false;
-        }
-        if ($transaction_exists === false) {
-          if (self::add_order_history($orders_id, $success_status, $transaction_comment) === false) {
-            return false;
-          }
         }
       }
 
@@ -607,16 +666,6 @@
         {
           return false;
         }
-      }
-
-      // Publish the verified marker last. Browser checkout recovery only
-      // treats the provider result as complete after the status and all audit
-      // history available in this notification have been persisted.
-      if ($verified === false
-          && self::add_order_history($orders_id, $success_status, self::VERIFIED_COMMENT) === false
-          )
-      {
-        return false;
       }
 
       return array(
@@ -670,20 +719,35 @@
           : false;
       }
 
-      // A successful notification, including a retryable MyISAM partial
-      // commit, always wins over a later cancellation.
-      $verified = self::order_history_exists($orders_id, self::VERIFIED_COMMENT);
-      $verification_pending = self::order_history_exists(
-        $orders_id,
-        self::VERIFICATION_PENDING_COMMENT
-      );
-      if ($verified === null || $verification_pending === null) {
+      // A successful notification, including a retryable partial database
+      // update, always wins over a later cancellation. Order history is not a
+      // trust source; only the authenticated transaction row is authoritative.
+      $payment_transaction = self::get_payment_transaction($orders_id);
+      if ($payment_transaction === null) {
         xtc_db_query('ROLLBACK');
         return false;
       }
-      if ($verified === true || $verification_pending === true) {
-        $result = self::complete_successful_callback($callback, $temporary_order, '');
-        if ($result === false) {
+      if (is_array($payment_transaction)) {
+        if (!self::payment_transaction_matches(
+              $payment_transaction,
+              $callback,
+              $payment_transaction['transaction_id']
+            )
+            || ($payment_transaction['transaction_status'] !== self::TRANSACTION_STATUS_PENDING
+                && $payment_transaction['transaction_status'] !== self::TRANSACTION_STATUS_VERIFIED)
+            )
+        {
+          xtc_db_query('ROLLBACK');
+          return false;
+        }
+
+        if ($payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_PENDING
+            && self::complete_successful_callback(
+                 $callback,
+                 $temporary_order
+               ) === false
+            )
+        {
           xtc_db_query('ROLLBACK');
           return false;
         }
@@ -693,7 +757,18 @@
           return false;
         }
 
-        return $result;
+        if (!self::mark_transaction_verified(
+              $callback,
+              $payment_transaction['transaction_id']
+            ))
+        {
+          return false;
+        }
+
+        return array(
+          'orders_id' => $orders_id,
+          'success' => true,
+        );
       }
 
       if ((int)$temporary_order['orders_status'] !== self::get_prepare_status()) {
@@ -752,9 +827,23 @@
 
     private static function callback_can_be_processed($callback) {
       return is_array($callback)
-             && isset($callback['orders_id'], $callback['customers_id'], $callback['currency'])
+             && isset(
+                  $callback['orders_id'],
+                  $callback['customers_id'],
+                  $callback['amount'],
+                  $callback['currency']
+                )
+             && is_scalar($callback['orders_id'])
+             && is_scalar($callback['customers_id'])
+             && is_scalar($callback['amount'])
+             && is_scalar($callback['currency'])
              && (int)$callback['orders_id'] > 0
-             && (int)$callback['customers_id'] > 0;
+             && (int)$callback['customers_id'] > 0
+             && is_numeric($callback['amount'])
+             && (float)$callback['amount'] > 0
+             && is_finite((float)$callback['amount'])
+             && (float)$callback['amount'] <= 99999999999.9999
+             && preg_match('/^[A-Z]{3}$/', (string)$callback['currency']);
     }
 
 
@@ -831,46 +920,191 @@
     }
 
 
-    private static function is_temporary_order($orders_id, $customers_id) {
-      if ($orders_id < 1 || $customers_id < 1) {
+    private static function create_transaction_table() {
+      if (!defined('TABLE_WORLDPAY_JUNIOR_TRANSACTIONS')) {
         return false;
       }
 
-      $order_query = xtc_db_query("SELECT orders_id
-                                     FROM ".TABLE_ORDERS."
-                                    WHERE orders_id = '".(int)$orders_id."'
-                                      AND customers_id = '".(int)$customers_id."'
-                                      AND orders_status = '".self::get_prepare_status()."'
-                                      AND (payment_class = ''
-                                           OR payment_class IS NULL
-                                           OR payment_class = 'worldpay_junior')
-                                    LIMIT 1");
-
-      return xtc_db_num_rows($order_query) === 1;
+      return xtc_db_query("CREATE TABLE IF NOT EXISTS `".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS."` (
+                             `orders_id` INT(11) NOT NULL,
+                             `transaction_id` VARBINARY(128) NOT NULL,
+                             `transaction_status` VARCHAR(24) NOT NULL DEFAULT '".self::TRANSACTION_STATUS_PENDING."',
+                             `amount` DECIMAL(15,4) NOT NULL,
+                             `currency` CHAR(3) NOT NULL,
+                             `date_added` DATETIME NOT NULL,
+                             `last_modified` DATETIME NOT NULL,
+                             PRIMARY KEY (`orders_id`),
+                             UNIQUE KEY `idx_transaction_id` (`transaction_id`),
+                             KEY `idx_transaction_status` (`transaction_status`, `last_modified`)
+                           )") !== false;
     }
 
 
-    private static function is_verified_order($orders_id, $customers_id) {
+    private static function get_order_payment_state($orders_id, $customers_id) {
       if ($orders_id < 1 || $customers_id < 1) {
         return false;
       }
 
-      $order_query = xtc_db_query("SELECT o.orders_id
+      $order_query = xtc_db_query("SELECT o.orders_id,
+                                          o.orders_status,
+                                          wjt.transaction_status
                                      FROM ".TABLE_ORDERS." o
+                                LEFT JOIN ".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS." wjt
+                                       ON wjt.orders_id = o.orders_id
                                     WHERE o.orders_id = '".(int)$orders_id."'
                                       AND o.customers_id = '".(int)$customers_id."'
                                       AND (o.payment_class = ''
                                            OR o.payment_class IS NULL
                                            OR o.payment_class = 'worldpay_junior')
-                                      AND EXISTS (
-                                            SELECT 1
-                                              FROM ".TABLE_ORDERS_STATUS_HISTORY." osh
-                                             WHERE osh.orders_id = o.orders_id
-                                               AND osh.comments = '".xtc_db_input(self::VERIFIED_COMMENT)."'
-                                          )
                                     LIMIT 1");
+      if ($order_query === false) {
+        return null;
+      }
+      if (xtc_db_num_rows($order_query) !== 1) {
+        return false;
+      }
 
-      return xtc_db_num_rows($order_query) === 1;
+      $payment_state = xtc_db_fetch_array($order_query);
+      $payment_state['transaction_status'] = isset($payment_state['transaction_status'])
+        ? (string)$payment_state['transaction_status']
+        : '';
+
+      return $payment_state;
+    }
+
+
+    private static function is_verified_order($orders_id, $customers_id) {
+      $payment_state = self::get_order_payment_state($orders_id, $customers_id);
+
+      return is_array($payment_state)
+             && $payment_state['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED;
+    }
+
+
+    private static function get_payment_transaction($orders_id) {
+      $transaction_query = xtc_db_query("SELECT orders_id,
+                                                transaction_id,
+                                                transaction_status,
+                                                amount,
+                                                currency
+                                           FROM ".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS."
+                                          WHERE orders_id = '".(int)$orders_id."'
+                                          LIMIT 1");
+      if ($transaction_query === false) {
+        return null;
+      }
+      if (xtc_db_num_rows($transaction_query) !== 1) {
+        return false;
+      }
+
+      return xtc_db_fetch_array($transaction_query);
+    }
+
+
+    private static function ensure_pending_transaction($callback, $temporary_order, $transaction_id) {
+      $payment_transaction = self::get_payment_transaction((int)$callback['orders_id']);
+      if ($payment_transaction === null) {
+        return false;
+      }
+      if (is_array($payment_transaction)) {
+        return self::payment_transaction_matches(
+                 $payment_transaction,
+                 $callback,
+                 $transaction_id
+               )
+               && ($payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_PENDING
+                   || $payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED)
+          ? $payment_transaction
+          : false;
+      }
+
+      if ((int)$temporary_order['orders_status'] !== self::get_prepare_status()) {
+        return false;
+      }
+
+      $amount = self::normalize_amount($callback['amount']);
+      $insert_result = xtc_db_query("INSERT INTO ".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS."
+                                                (orders_id,
+                                                 transaction_id,
+                                                 transaction_status,
+                                                 amount,
+                                                 currency,
+                                                 date_added,
+                                                 last_modified)
+                                         VALUES ('".(int)$callback['orders_id']."',
+                                                 '".xtc_db_input($transaction_id)."',
+                                                 '".self::TRANSACTION_STATUS_PENDING."',
+                                                 '".xtc_db_input($amount)."',
+                                                 '".xtc_db_input($callback['currency'])."',
+                                                 NOW(),
+                                                 NOW())");
+      if ($insert_result === false) {
+        return false;
+      }
+
+      return array(
+        'orders_id' => (int)$callback['orders_id'],
+        'transaction_id' => $transaction_id,
+        'transaction_status' => self::TRANSACTION_STATUS_PENDING,
+        'amount' => $amount,
+        'currency' => (string)$callback['currency'],
+      );
+    }
+
+
+    private static function payment_transaction_matches($payment_transaction, $callback, $transaction_id) {
+      return is_array($payment_transaction)
+             && isset(
+                  $payment_transaction['transaction_id'],
+                  $payment_transaction['transaction_status'],
+                  $payment_transaction['amount'],
+                  $payment_transaction['currency']
+                )
+             && hash_equals((string)$payment_transaction['transaction_id'], (string)$transaction_id)
+             && self::normalize_amount($payment_transaction['amount']) === self::normalize_amount($callback['amount'])
+             && (string)$payment_transaction['currency'] === (string)$callback['currency'];
+    }
+
+
+    private static function mark_transaction_verified($callback, $transaction_id) {
+      $amount = self::normalize_amount($callback['amount']);
+      $update_result = xtc_db_query("UPDATE ".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS."
+                                       SET transaction_status = '".self::TRANSACTION_STATUS_VERIFIED."',
+                                           last_modified = NOW()
+                                     WHERE orders_id = '".(int)$callback['orders_id']."'
+                                       AND transaction_id = '".xtc_db_input($transaction_id)."'
+                                       AND transaction_status = '".self::TRANSACTION_STATUS_PENDING."'
+                                       AND amount = '".xtc_db_input($amount)."'
+                                       AND currency = '".xtc_db_input($callback['currency'])."'");
+      if ($update_result === false) {
+        return false;
+      }
+      if (xtc_db_affected_rows() === 1) {
+        return true;
+      }
+
+      $payment_transaction = self::get_payment_transaction((int)$callback['orders_id']);
+
+      return is_array($payment_transaction)
+             && $payment_transaction['transaction_status'] === self::TRANSACTION_STATUS_VERIFIED
+             && self::payment_transaction_matches(
+                  $payment_transaction,
+                  $callback,
+                  $transaction_id
+                );
+    }
+
+
+    private static function normalize_transaction_id($transaction_id) {
+      if (!is_scalar($transaction_id)) {
+        return false;
+      }
+
+      $transaction_id = trim((string)$transaction_id, ' ');
+
+      return preg_match('/^[\x21-\x7e]{1,128}$/D', $transaction_id)
+        ? $transaction_id
+        : false;
     }
 
 
@@ -983,6 +1217,8 @@
           || !preg_match('/^[a-z0-9_-]{1,32}$/i', $data['language'])
           || !is_numeric($data['amount'])
           || (float)$data['amount'] <= 0
+          || !is_finite((float)$data['amount'])
+          || (float)$data['amount'] > 99999999999.9999
           || !preg_match('/^[A-Z]{3}$/', $data['currency'])
           || !preg_match('/^[a-f0-9]{64}$/', $data['checkout_key'])
           || !preg_match('/^[a-f0-9]{64}$/', $data['checkout_token'])
@@ -1019,11 +1255,11 @@
         }
       }
 
-      if (defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD')
-          && (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD != ''
-          && (!isset($post['callbackPW'])
-              || !is_scalar($post['callbackPW'])
-              || !hash_equals((string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD, (string)$post['callbackPW']))
+      if (!defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD')
+          || (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD == ''
+          || !isset($post['callbackPW'])
+          || !is_scalar($post['callbackPW'])
+          || !hash_equals((string)MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD, (string)$post['callbackPW'])
           )
       {
         return false;
@@ -1045,6 +1281,8 @@
           || !preg_match('/^[a-z0-9_-]{1,32}$/i', $data['language'])
           || !is_numeric($data['amount'])
           || (float)$data['amount'] <= 0
+          || !is_finite((float)$data['amount'])
+          || (float)$data['amount'] > 99999999999.9999
           || !preg_match('/^[A-Z]{3}$/', $data['currency'])
           || !preg_match('/^[a-f0-9]{32}$/', $data['hash'])
           )
