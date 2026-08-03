@@ -47,6 +47,20 @@ if (isset($_SESSION['customer_id'])) {
     $_SESSION['checkout_completed_order_id'] = (int)$completed_checkout['orders_id'];
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
   }
+
+  // Restore an order already bound to this checkout before stock, payment and
+  // order objects inspect session state. The database binding is authoritative.
+  $pending_order = $checkout->find_pending_order();
+  if (is_array($pending_order) && (int)$pending_order['orders_id'] > 0) {
+    $_SESSION['tmp_oID'] = (int)$pending_order['orders_id'];
+    if (isset($pending_order['payment_class'])
+        && is_string($pending_order['payment_class'])
+        && $pending_order['payment_class'] !== ''
+        )
+    {
+      $_SESSION['payment'] = $pending_order['payment_class'];
+    }
+  }
 }
 
 // stock decrement for downloads
@@ -79,7 +93,14 @@ $shipping_modules = new shipping($_SESSION['shipping']);
 require_once(DIR_WS_CLASSES.'order.php');
 $order = new order();
 
-$checkout_processing_owner = $checkout->claim();
+// Allow asynchronous payment modules to wait for their authenticated provider
+// callback before a browser request attempts to claim and finalize the order.
+$payment_modules->before_checkout_claim($checkout);
+
+$claim_orders_id = isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])
+  ? (int)$_SESSION['tmp_oID']
+  : 0;
+$checkout_processing_owner = $checkout->claim($claim_orders_id);
 if (!$checkout_processing_owner) {
   $processing_url = $checkout->get_processing_url($_SESSION['language']);
   session_abort();

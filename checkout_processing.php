@@ -31,6 +31,7 @@ $session_parameters = checkout::get_url_session_parameters();
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('CHECKOUT_PROCESSING_STATUS_URL', xtc_href_link('ajax.php', 'speed=1&ext=get_checkout_processing_status', 'SSL'));
+$smarty->assign('CHECKOUT_PROCESSING_RESUME_URL', xtc_href_link(FILENAME_CHECKOUT_PROCESS, $session_parameters, 'SSL', false));
 $smarty->assign('CHECKOUT_PROCESSING_SUCCESS_URL', xtc_href_link(FILENAME_CHECKOUT_SUCCESS, $session_parameters, 'SSL', false));
 $smarty->assign('CHECKOUT_PROCESSING_ERROR_URL', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $session_parameters, 'SSL', false));
 $smarty->assign('CHECKOUT_JAVASCRIPT', checkout::javascript_processing());

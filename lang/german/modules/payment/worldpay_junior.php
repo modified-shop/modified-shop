@@ -14,7 +14,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="http://www.worldpay.com" target="_blank" style="text-decoration: underline; font-weight: bold;">WorldPay Webseite besuchen</a>');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.worldpay.com" target="_blank" style="text-decoration: underline; font-weight: bold;">WorldPay Webseite besuchen</a>');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_ADMIN_CONFIGURATION', '<b>WorldPay-Einrichtung:</b> Die Zahlungsantwort (Payment Response) aktivieren und deren Passwort konfigurieren. Als Payment Response URL <code>https://&lt;wpdisplay item=&quot;MC_callback&quot;&gt;</code> eintragen. <i>Enable Shopper Response</i> auf <b>No</b> stellen. Als Shopper Redirect URL <code>&lt;wpdisplay item=&quot;MC_returnurl&quot;&gt;</code> eintragen und <i>Enable Shopper Redirect button</i> auf <b>Yes</b> stellen, damit der Kunde direkt zum Shop-Checkout zur&uuml;ckkehrt.<br><b>Wichtig:</b> Eine tempor&auml;re Bestellung ohne authentifizierten WorldPay-Status wird nicht automatisch gel&ouml;scht. Vor einer manuellen Bereinigung muss die Zahlung im WorldPay-Backend gepr&uuml;ft werden.');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE', 'In Pr&uuml;fung: Transaktion in Demo Modus durchgef&uuml;hrt.');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_SUCCESSFUL_TRANSACTION', 'Die Zahlungs Transaktion wurde erfolgreich durchgef&uuml;hrt!');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_UNSUCCESSFUL_TRANSACTION', 'Ihre Zahlung war nicht erfolgreich!');
