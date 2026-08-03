@@ -1333,15 +1333,12 @@ class categories {
 
   function create_templates_dropdown_menu($template, $path, $default_value, $style = '') {
     $files = array();
-    $template_path = Template::findPath($path);
-    
-    if ($template_path !== null && is_dir($template_path)) {
-      foreach(auto_include($template_path, 'html') as $file) {
-        $files[] = array(
-          'id' => basename($file), 
-          'text' => basename($file),
-        );
-      }
+
+    foreach (Template::files($path, 'html') as $file) {
+      $files[] = array(
+        'id' => basename($file),
+        'text' => basename($file),
+      );
     }
     
     $default_array = array(array('id' => 'default', 'text' => (count($files) > 0) ? TEXT_SELECT : TEXT_NO_FILE));
