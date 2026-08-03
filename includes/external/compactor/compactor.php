@@ -1,472 +1,754 @@
 <?php
-	/**
-	 * @author Oliver Lillie (aka buggedcom) <publicmail@buggedcom.co.uk>
-	 *
-	 * @license BSD
-	 * @copyright Copyright (c) 2008 Oliver Lillie <http://www.buggedcom.co.uk>
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
-	 * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
-	 * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-	 * is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be
-	 * included in all copies or substantial portions of the Software.
-	 *
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-	 * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-	 * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-	 * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-	 *
-	 * @name Compactor
-	 * @version 0.6.0
-	 * @abstract This class can be used in speeding up delivery of webpages front the server to the client browser, by compacting
-	 * the whitespace. There are multiple options for compacting, including both horizontal and vertical whitespace removal and
-	 * css/javascript compacting also. The class can also compact the output of a php script using automatic output buffering. 
-	 *
-	 * @example compressor.example1.php Compacts HTML using the default options.
-	 * @example compressor.example2.php Compacts remote HTML with custom javascript compression.
-	 * @example
-	 * <?php
-	 * 		// this example will automatically compact any buffered output from the script
-	 * 		$compactor = new Compactor(array(
-	 * 			'use_buffer'			=> true,
-	 * 			'buffer_echo'			=> true,
-	 * 			'compact_on_shutdown'	=> true
-	 * 		));
-	 * ?>
-	 *
-	 * @note The functions to provide deflate functionality are partially lifted from 
-	 * minify http://code.google.com/p/minify/
-	 *
-	 *
-	 * @note This class has been modified by Martin Nilsson (martin.nilsson@haxtech.se) to integrate
-	 * better with Yii framework thus minimize the impact on server by removing unnecessary functions.
-	 */
+/**
+ * @author Oliver Lillie (aka buggedcom) <publicmail@buggedcom.co.uk>
+ *
+ * @license BSD
+ * @copyright Copyright (c) 2008 Oliver Lillie <http://www.buggedcom.co.uk>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @name Compactor
+ * @version 0.7.0
+ * @abstract Compacts HTML and acts as the central facade for CSS and JavaScript minification.
+ */
 
-	class Compactor
-	{
-    var $data;
-    
-		/**
-		 * Holds the options array
-		 * @access private
-		 * @var array
-		 */
-		private $_options = array(
-			// line_break; string; The type of line break used in the HTML that you are processing.
-			// ie, \r, \r\n, \n or PHP_EOL
-			'line_break' => PHP_EOL,
-			// preserved_tags; array; An array of html tags whose innerHTML contents format require preserving.
-			'preserved_tags' => array('textarea', 'pre', 'script', 'style', 'code'),
-			// preserved_boundry; string; The holding block that is used to replace the contents of the preserved tags
-			// while the compacting is taking place.
-			'preserved_boundry' => '@@PRESERVEDTAG@@',
-			// strip_comments; boolean; This will strip html comments from the html. NOTE, if the below option 'keep_conditional_comments'
-			// is not set to true then conditional Internet Explorer comments will also be stripped.
-			'strip_comments' => true,
-			'strip_php_comments' => false,
-			// keep_conditional_comments; boolean; Only applies if the baove option 'strip_comments' is set to true.
-			// Only if the client browser is Internet Explorer then the conditional comments are kept.
-			'keep_conditional_comments' => true,
-			// conditional_boundries; array; The holding block boudries that are used to replace the opening and
-			// closing tags of the conditional comments.
-			'conditional_boundries' => array('@@IECOND-OPEN@@', '@@IECOND-CLOSE@@'),
-			// compress_horizontal; boolean; Removes horizontal whitespace of the HTML, ie left to right whitespace (spaces and tabs).
-			'compress_horizontal' => true,
-			// compress_vertical; boolean; Removes vertical whitespace of the HTML, ie line breaks.		
-			'compress_vertical' => true,
-			// compress_scripts; boolean; Compresses content from script tags using a simple algorythm. Removes javascript comments,
-			// and horizontal and vertical whitespace. Note as only a simple algorythm is used there are limitations to the script 
-			// and you may want to use a more complex script like 'minify' http://code.google.com/p/minify/ or 'jsmin'
-			// http://code.google.com/p/jsmin-php/ See test3.php for an example.
-			'compress_scripts' => false,
-			// script_compression_callback; boolean; The name of a callback for custom js compression. See test3.php for an example.	
-			'script_compression_callback' => false,
-			// script_compression_callback_args; array; Any additional args for the callback. The javascript will be put to the
-			// front of the array.
-			'script_compression_callback_args' => array(),
-			// compress_css; boolean; Compresses CSS style tags.		
-			'compress_css' => true,
-		);
-		
-		/**
-		 * Holds the preserved blocks so multiple scans of the html don't have to be made.
-		 * @access private
-		 * @var mixed 
-		 */
-		private $_preserved_blocks  = false;
-
-		/**
-		 * Constructor
-		 */
-		function __construct($options=array())
-		{
-			$this->setOption($options);
-		}
-		
-		/**
-		 * Sets an option in the option array();
-		 * 
-		 * @access public
-		 * @param mixed $varname Can take the form of an array of options to set a string of an option name.
-		 * @param mixed $varvalue The value of the option you are setting.
-		 **/
-		public function setOption($varname, $varvalue=null)
-		{
-			$keys = array_keys($this->_options);
-			if(gettype($varname) == 'array')
-			{
-				foreach($varname as $name=>$value)
-				{
-					if(in_array($name, $keys))
-					{
-						$this->_options[$name] = $value;
-					}
-				}
-			}
-			else
-			{
-				if(in_array($varname, $keys))
-				{
-					$this->_options[$varname] = $varvalue;
-				}
-			}
-		}
-		
+class Compactor
+{
     /**
-     * Add a file
+     * Files or source strings to combine and minify.
+     *
+     * @var array
+     */
+    public $data = array();
+
+    /**
+     * @var array
+     */
+    private $_options = array(
+        'line_break' => PHP_EOL,
+        'preserved_tags' => array('head', 'textarea', 'pre', 'script', 'style', 'code'),
+        'preserved_boundry' => '@@PRESERVEDTAG@@',
+        'strip_comments' => true,
+        'keep_conditional_comments' => true,
+        'compress_horizontal' => true,
+        'compress_vertical' => true,
+        'compress_scripts' => false,
+        'compress_css' => true,
+        'script_line_breaks' => true,
+        'force_script_line_breaks' => false,
+    );
+
+    /**
+     * @var array
+     */
+    private $_preserved_blocks = array();
+
+    /**
+     * @var string
+     */
+    private $_preserved_boundary = '';
+
+    /**
+     * @var array
+     */
+    private $_script_markers = array();
+
+    /**
+     * @param array $options
+     */
+    public function __construct($options = array())
+    {
+        $this->setOption($options);
+    }
+
+    /**
+     * @param array|string $varname
+     * @param mixed $varvalue
+     */
+    public function setOption($varname, $varvalue = null)
+    {
+        if (is_array($varname)) {
+            foreach ($varname as $name => $value) {
+                if (array_key_exists($name, $this->_options)) {
+                    $this->_options[$name] = $value;
+                }
+            }
+
+            return;
+        }
+
+        if (array_key_exists($varname, $this->_options)) {
+            $this->_options[$varname] = $varvalue;
+        }
+    }
+
+    /**
+     * Return the newest modification time of the facade and its vendored
+     * minifier implementation for bundle cache invalidation.
+     *
+     * @return int
+     */
+    public static function getImplementationTime()
+    {
+        static $implementation_time;
+
+        if ($implementation_time !== null) {
+            return $implementation_time;
+        }
+
+        $implementation_time = (int)@filemtime(__FILE__);
+        $vendor_directory = dirname(__DIR__).'/matthiasmullie';
+        if (!is_dir($vendor_directory)) {
+            return $implementation_time;
+        }
+        $implementation_time = max($implementation_time, (int)@filemtime($vendor_directory));
+
+        try {
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($vendor_directory, FilesystemIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::SELF_FIRST
+            );
+            foreach ($iterator as $file) {
+                $implementation_time = max($implementation_time, $file->getMTime());
+            }
+        } catch (Throwable $exception) {
+            // The facade time still invalidates bundles when the vendor tree cannot be inspected.
+        }
+
+        return $implementation_time;
+    }
+
+    /**
+     * Add a file or source string for CSS or JavaScript minification.
      *
      * @param string $data
+     * @return $this
      */
     public function add($data)
     {
-        // load data
-        $value = $this->load($data);
-        $key = ($data != $value) ? $data : count($this->data);
-        
-        // store data
-        $this->data[$key] = $value;
+        $this->data[] = $data;
+
+        return $this;
     }
 
     /**
-     * Load data.
+     * Combine and minify the previously added CSS or JavaScript sources.
      *
-     * @param  string $data path to a file
-     * @return string
-     */
-    protected function load($data)
-    {
-        // check if the data is a file
-        if (file_exists($data) && is_file($data)) {
-            if (($data = file_get_contents($data)) !== false) {
-                // strip BOM, if any
-                if (substr($data, 0, 3) == "\xef\xbb\xbf") {
-                    $data = substr($data, 3);
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Save to file
-     *
-     * @param  string    $content The minified data.
-     * @param  string    $path    The path to save the minified data to.
-     * @throws Exception
+     * @param string $path
+     * @return bool
      */
     public function save($path)
     {
-        $content = '';
-        foreach ($this->data as $data) {
-            $content .= $this->squeeze($data)."\n";
+        try {
+            $minifier = $this->_createMinifier((bool)$this->_options['compress_css']);
+            foreach ($this->data as $data) {
+                $minifier->add($data);
+            }
+
+            return $this->_saveAtomically($path, $minifier->execute($path));
+        } catch (Throwable $exception) {
+            return false;
         }
-        
-        if (file_put_contents($path, $content, LOCK_EX) !== false) {
+    }
+
+    /**
+     * Minify JavaScript source. The original source is returned on failure.
+     *
+     * @param string $javascript
+     * @return string
+     */
+    public function minifyJavascript($javascript)
+    {
+        try {
+            $minifier = $this->_createMinifier(false);
+
+            return $minifier->add($javascript)->minify();
+        } catch (Throwable $exception) {
+            return $javascript;
+        }
+    }
+
+    /**
+     * Minify CSS source. The original source is returned on failure.
+     *
+     * @param string $css
+     * @return string
+     */
+    public function minifyCss($css)
+    {
+        try {
+            $minifier = $this->_createMinifier(true);
+
+            return $minifier->add($css)->minify();
+        } catch (Throwable $exception) {
+            return $css;
+        }
+    }
+
+    /**
+     * Compact HTML without changing formatting-sensitive blocks.
+     *
+     * @param string|null $html
+     * @return string
+     */
+    public function squeeze($html = null)
+    {
+        $html = is_string($html) ? $html : '';
+        $this->_preserved_blocks = array();
+        $this->_preserved_boundary = '';
+        $this->_script_markers = array();
+
+        $html = $this->_unifyLineBreaks($html);
+        if ($this->_options['compress_scripts'] || $this->_options['compress_css']) {
+            $html = $this->_compressScriptAndStyleTags($html);
+        }
+
+        $html = $this->_extractPreservedBlocks($html);
+        if ($this->_options['strip_comments']) {
+            $html = $this->_stripHTMLComments($html);
+        }
+        if ($this->_options['compress_horizontal'] || $this->_options['compress_vertical']) {
+            $html = $this->_compressTagWhitespace(
+                $html,
+                $this->_options['compress_horizontal'],
+                $this->_options['compress_vertical']
+            );
+            $html = $this->_compressTextWhitespace(
+                $html,
+                $this->_options['compress_horizontal'],
+                $this->_options['compress_vertical']
+            );
+        }
+
+        $html = $this->_reinstatePreservedBlocks($html);
+        $this->_preserved_blocks = array();
+        $this->_preserved_boundary = '';
+        $this->_script_markers = array();
+
+        return $html;
+    }
+
+    /**
+     * @param string $html
+     * @return string
+     */
+    private function _stripHTMLComments($html)
+    {
+        $keep_conditionals = ($this->_options['keep_conditional_comments']
+            && isset($_SERVER['HTTP_USER_AGENT'])
+            && preg_match('/msie\s(.*).*(win)/i', $_SERVER['HTTP_USER_AGENT'])
+        );
+
+        return preg_replace_callback(
+            '#<(?:/?[A-Za-z]|![A-Za-z]|\?)(?:[^>"\']|"[^"]*"|\'[^\']*\')*>|<!--[\s\S]*?-->#',
+            function ($matches) use ($keep_conditionals) {
+                if (substr($matches[0], 0, 4) != '<!--') {
+                    return $matches[0];
+                }
+
+                if ($keep_conditionals && preg_match('/^<!--\[if\b[\s\S]*<!\[endif\]-->$/i', $matches[0])) {
+                    return $matches[0];
+                }
+
+                return '';
+            },
+            $html
+        );
+    }
+
+    /**
+     * @param string $html
+     * @return string
+     */
+    private function _extractPreservedBlocks($html)
+    {
+        $tags = array_map(function ($tag) {
+            return preg_quote($tag, '!');
+        }, $this->_options['preserved_tags']);
+        if (count($tags) == 0) {
+            return $html;
+        }
+
+        $boundary = (is_string($this->_options['preserved_boundry']) && $this->_options['preserved_boundry'] != '')
+            ? $this->_options['preserved_boundry']
+            : '@@PRESERVEDTAG@@';
+        while (strpos($html, $boundary) !== false) {
+            $boundary .= '_';
+        }
+        $this->_preserved_boundary = $boundary;
+
+        $head_key = array_search('head', array_map('strtolower', $tags));
+        if ($head_key !== false) {
+            $html = $this->_extractHeadBlock($html);
+            unset($tags[$head_key]);
+        }
+        if (count($tags) == 0) {
+            return $html;
+        }
+
+        $pattern = '!([ \\t\\r\\n]*)(<(?P<preserved_tag>'.implode('|', $tags).')(?=[\\s/>])(?:[^>"\']|"[^"]*"|\'[^\']*\')*>.*?</(?P=preserved_tag)\\s*>)!is';
+
+        return preg_replace_callback($pattern, function ($matches) {
+            $marker = $this->_preserved_boundary.count($this->_preserved_blocks).'@@';
+            $this->_preserved_blocks[$marker] = $matches[2];
+            if (strtolower($matches['preserved_tag']) == 'script') {
+                $this->_script_markers[$marker] = ($matches[1] != '');
+            }
+
+            return $matches[1].$marker;
+        }, $html);
+    }
+
+    /**
+     * Preserve the complete head element. Its closing tag must be found with
+     * awareness of HTML comments, tag attributes and raw-text elements because
+     * those can legally contain the literal string "</head>".
+     *
+     * @param string $html
+     * @return string
+     */
+    private function _extractHeadBlock($html)
+    {
+        $head_start = false;
+        $offset = 0;
+        $length = strlen($html);
+        $raw_text_tags = array('iframe', 'noembed', 'noframes', 'noscript', 'script', 'style', 'textarea', 'title', 'xmp');
+
+        while ($offset < $length && ($tag_start = strpos($html, '<', $offset)) !== false) {
+            if (substr($html, $tag_start, 4) === '<!--') {
+                $comment_end = strpos($html, '-->', $tag_start + 4);
+                if ($comment_end === false) {
+                    break;
+                }
+                $offset = $comment_end + 3;
+                continue;
+            }
+
+            if (!preg_match(
+                '#\\G<(?:/?[A-Za-z]|![A-Za-z]|\\?)(?:[^>"\']|"[^"]*"|\'[^\']*\')*>#s',
+                $html,
+                $tag_match,
+                0,
+                $tag_start
+            )) {
+                $offset = $tag_start + 1;
+                continue;
+            }
+
+            $tag = $tag_match[0];
+            $tag_end = $tag_start + strlen($tag);
+            if (!preg_match('#^<(/?)([A-Za-z][A-Za-z0-9:-]*)#', $tag, $name_match)) {
+                $offset = $tag_end;
+                continue;
+            }
+
+            $closing = ($name_match[1] === '/');
+            $name = strtolower($name_match[2]);
+            if ($head_start === false) {
+                if (!$closing && $name === 'head') {
+                    $head_start = $tag_start;
+                }
+                $offset = $tag_end;
+                continue;
+            }
+
+            if ($closing && $name === 'head') {
+                $marker = $this->_preserved_boundary.count($this->_preserved_blocks).'@@';
+                $this->_preserved_blocks[$marker] = substr($html, $head_start, $tag_end - $head_start);
+
+                return substr($html, 0, $head_start).$marker.substr($html, $tag_end);
+            }
+
+            if (!$closing && in_array($name, $raw_text_tags)) {
+                $closing_pattern = '#</'.preg_quote($name, '#')
+                    .'(?=[\\s/>])(?:[^>"\']|"[^"]*"|\'[^\']*\')*>#is';
+                if (!preg_match($closing_pattern, $html, $closing_match, PREG_OFFSET_CAPTURE, $tag_end)) {
+                    break;
+                }
+                $offset = $closing_match[0][1] + strlen($closing_match[0][0]);
+                continue;
+            }
+
+            $offset = $tag_end;
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param string $html
+     * @return string
+     */
+    private function _reinstatePreservedBlocks($html)
+    {
+        if ($this->_options['script_line_breaks']) {
+            $html = $this->_addScriptLineBreaks($html);
+        }
+
+        return strtr($html, $this->_preserved_blocks);
+    }
+
+    /**
+     * Place every opening script tag at the beginning of a new line. Script
+     * contents are still represented by markers and cannot be modified here.
+     *
+     * @param string $html
+     * @return string
+     */
+    private function _addScriptLineBreaks($html)
+    {
+        $line_break = $this->_options['line_break'];
+        $line_break_length = strlen($line_break);
+        if ($line_break_length == 0) {
+            return $html;
+        }
+
+        foreach ($this->_script_markers as $marker => $has_leading_whitespace) {
+            if (!$has_leading_whitespace && !$this->_options['force_script_line_breaks']) {
+                continue;
+            }
+
+            $position = strpos($html, $marker);
+            if ($position === false || $position == 0) {
+                continue;
+            }
+
+            $before = rtrim(substr($html, 0, $position), " \t");
+            if (substr($before, -$line_break_length) !== $line_break) {
+                $before .= $line_break;
+            }
+            $html = $before.substr($html, $position);
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param string $html
+     * @param bool $compress_tabs
+     * @param bool $compress_line_breaks
+     * @return string
+     */
+    private function _compressTagWhitespace($html, $compress_tabs, $compress_line_breaks)
+    {
+        $line_break = $this->_options['line_break'];
+        $line_break_length = strlen($line_break);
+
+        return preg_replace_callback(
+            '#<(?:/?[A-Za-z]|![A-Za-z]|\?)(?:[^>"\']|"[^"]*"|\'[^\']*\')*>#s',
+            function ($matches) use ($compress_tabs, $compress_line_breaks, $line_break, $line_break_length) {
+                $tag = $matches[0];
+                $has_tabs = ($compress_tabs && strpos($tag, "\t") !== false);
+                $has_line_breaks = ($compress_line_breaks
+                    && $line_break_length > 0
+                    && strpos($tag, $line_break) !== false
+                );
+                if (!$has_tabs && !$has_line_breaks) {
+                    return $tag;
+                }
+
+                $result = '';
+                $quote = '';
+                $length = strlen($tag);
+                for ($i = 0; $i < $length; $i++) {
+                    $character = $tag[$i];
+                    if ($quote != '') {
+                        $result .= $character;
+                        if ($character == $quote) {
+                            $quote = '';
+                        }
+                        continue;
+                    }
+
+                    if ($character == '"' || $character == "'") {
+                        $quote = $character;
+                        $result .= $character;
+                        continue;
+                    }
+
+                    $is_line_break = ($compress_line_breaks
+                        && $line_break_length > 0
+                        && substr($tag, $i, $line_break_length) === $line_break
+                    );
+                    if (($compress_tabs && $character == "\t") || $is_line_break) {
+                        $ends_with_line_break = ($line_break_length > 0
+                            && substr($result, -$line_break_length) === $line_break
+                        );
+                        if ($result != '' && substr($result, -1) != ' ' && !$ends_with_line_break) {
+                            $result .= ' ';
+                        }
+                        if ($is_line_break) {
+                            $i += $line_break_length - 1;
+                        }
+                        while ($i + 1 < $length && ($tag[$i + 1] == ' ' || $tag[$i + 1] == "\t")) {
+                            $i++;
+                        }
+                        continue;
+                    }
+
+                    $result .= $character;
+                }
+
+                return $result;
+            },
+            $html
+        );
+    }
+
+    /**
+     * Collapse tabs and line breaks in text segments without touching tag
+     * attributes. Whitespace is replaced by one space instead of being removed,
+     * because it can separate adjacent inline elements or words.
+     *
+     * @param string $html
+     * @param bool $compress_tabs
+     * @param bool $compress_line_breaks
+     * @return string
+     */
+    private function _compressTextWhitespace($html, $compress_tabs, $compress_line_breaks)
+    {
+        $parts = preg_split(
+            '#(<(?:/?[A-Za-z]|![A-Za-z]|\?)(?:[^>"\']|"[^"]*"|\'[^\']*\')*>)#s',
+            $html,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE
+        );
+        if ($parts === false) {
+            return $html;
+        }
+
+        $line_break = preg_quote($this->_options['line_break'], '#');
+        foreach ($parts as $index => $part) {
+            // Delimiters are the tags; only process the text between them.
+            if ($index % 2 != 0) {
+                continue;
+            }
+
+            if ($compress_line_breaks && $line_break != '') {
+                $part = preg_replace(
+                    '#[ \t]*'.$line_break.'[ \t]*(?:'.$line_break.'[ \t]*)*#',
+                    ' ',
+                    $part
+                );
+            }
+            if ($compress_tabs) {
+                $part = preg_replace('/\t+/', ' ', $part);
+            }
+            $parts[$index] = $part;
+        }
+
+        return implode('', $parts);
+    }
+
+    /**
+     * @param string $html
+     * @return string
+     */
+    private function _unifyLineBreaks($html)
+    {
+        return preg_replace("/\015\012|\015|\012/", $this->_options['line_break'], $html);
+    }
+
+    /**
+     * @param string $html
+     * @return string
+     */
+    private function _compressScriptAndStyleTags($html)
+    {
+        return preg_replace_callback(
+            '#(<(?P<tag>style|script)\\b(?:[^>"\']|"[^"]*"|\'[^\']*\')*>)(?P<code>.*?)(</(?P=tag)\\s*>)#is',
+            function ($matches) {
+                $tag = strtolower($matches['tag']);
+                if ($tag == 'script') {
+                    if (!$this->_options['compress_scripts'] || !$this->_isJavascriptTag($matches[1])) {
+                        return $matches[0];
+                    }
+                    $code = $this->minifyJavascript(trim($matches['code']));
+                } else {
+                    if (!$this->_options['compress_css']) {
+                        return $matches[0];
+                    }
+                    $code = $this->minifyCss(trim($matches['code']));
+                }
+
+                return $matches[1].$code.$matches[4];
+            },
+            $html
+        );
+    }
+
+    /**
+     * @param string $opening_tag
+     * @return bool
+     */
+    private function _isJavascriptTag($opening_tag)
+    {
+        if (!preg_match('/\\stype\\s*=\\s*(?:(["\'])(.*?)\\1|([^\\s>]+))/is', $opening_tag, $matches)) {
             return true;
         }
+
+        $type = (isset($matches[1]) && $matches[1] != '')
+            ? $matches[2]
+            : $matches[3];
+        $type = strtolower(trim(explode(';', $type, 2)[0]));
+        if ($type == '') {
+            return true;
+        }
+
+        return in_array($type, array(
+            'application/ecmascript',
+            'application/javascript',
+            'module',
+            'text/ecmascript',
+            'text/javascript',
+        ));
     }
 
-		/**
-		 * Compresses the html, either that is supplied to the function or if the use_buffer
-		 * option is enabled then the buffer is grabbed for compression.
-		 * 
-		 * @access public
-		 * @param string $html HTML string required for compression, however if the use_buffer option
-		 * 		is enabled the param can be left out because it will be ignored anyway.
-		 * @return string
-		 */
-		public function squeeze($html=null)
-		{
-      // unify the line breaks so we have clean html to work with
-			$html = $this->_unifyLineBreaks($html);
-      // compress any script tags if required
-			if($this->_options['compress_scripts'] || $this->_options['compress_css'])
-			{
-				$html = $this->_compressScriptAndStyleTags($html);
-			}
-      // make the compressions
-			if($this->_options['strip_php_comments'])
-			{
-				$html = $this->_stripPHPComments($html);
-			}
-			if($this->_options['strip_comments'])
-			{
-				$html = $this->_stripHTMLComments($html);
-			}
-			if($this->_options['compress_horizontal'])
-			{
-				$html = $this->_compressHorizontally($html);
-			}
-			if($this->_options['compress_vertical'])
-			{
-				$html = $this->_compressVertically($html);
-			}
-      // replace the preserved blocks with their original content
-			$html = $this->_reinstatePreservedBlocks($html);
-
-			return $html;
-		}
-		
-		/**
-		 * Strips HTML Comments from the buffer whilst making a check to see if
-		 * Inernet Explorer conditional comments should be stripped or not.
-		 *
-		 * @access private
-		 * @param string $html The HTML string for comment removal.
-		 * @return string
-		 */
-		private function _stripHTMLComments($html)
-		{
-			$keep_conditionals = false;
-      // only process if the Internet Explorer conditional statements are to be kept
-			if($this->_options['keep_conditional_comments'])
-			{
-        // check that the opening browser is internet explorer
-				$msie = '/msie\s(.*).*(win)/i';
-        $keep_conditionals = (isset($_SERVER['HTTP_USER_AGENT']) && preg_match($msie, $_SERVER['HTTP_USER_AGENT']));
-        /*
-        $keep_doctype = false;
-        if(strpos($html, '<!DOCTYPE'))
-         {
-           $html = str_replace('<!DOCTYPE', '--**@@DOCTYPE@@**--', $html);
-           $keep_doctype = true;
-         }
-         */
-        // ie conditionals are to be kept so substitute
-				if($keep_conditionals)
-				{
-					$html = str_replace(array('<!--[if', '<![endif]-->'), $this->_options['conditional_boundries'], $html);
-				}
-			}			
-      // remove comments
-		  $html = preg_replace('/(?=<!--)([\s\S]*?-->)/', '', $html);
-      // $html = preg_replace ('@<![\s\S]*?--[ \t\n\r]*>@', '', $html);
-      // re sub-in the conditionals if required.
-			if($keep_conditionals)
-			{
-				$html = str_replace($this->_options['conditional_boundries'], array('<!--[if', '<![endif]-->'), $html);
-			}
-      /*
-      if($keep_doctype)
-      {
-      $html = str_replace('--**@@DOCTYPE@@**--', '<!DOCTYPE', $html);
-      }
-      */
-      // return the buffer
-			return $html;
-		}
-		
-		/**
-		 * Finds html blocks to preserve the formatting for.
-		 * 
-		 * @access private
-		 * @param string $html
-		 * @return string
-		 */
-		private function _extractPreservedBlocks($html)
-		{
-			if($this->_preserved_blocks !== false)
-			{
-				return $html;
-			}
- 			$tag_string = implode('|', $this->_options['preserved_tags']);
-      // get the textarea matches
-			preg_match_all("!<(".$tag_string.")[^>]*>.*?</(".$tag_string.")>!is", $html, $preserved_area_match);
-			$this->_preserved_blocks = $preserved_area_match[0];
-      // replace the textareas inerds with markers
-			return preg_replace("!<(".$tag_string.")[^>]*>.*?</(".$tag_string.")>!is", $this->_options['preserved_boundry'], $html);
-		}
-		
-		/**
-		 * Replaces any preservations made with the original content.
-		 * 
-		 * @access private
-		 * @param string $html
-		 * @return string
-		 */
-		private function _reinstatePreservedBlocks($html)
-		{
-			if($this->_preserved_blocks === false)
-			{
-				return $html;
-			}
-			foreach($this->_preserved_blocks as $curr_block)
-			{
-				$html = preg_replace("!".$this->_options['preserved_boundry']."!", $curr_block, $html, 1);
-			}
-			return $html;
-		}
-		
-		/**
-		 * Compresses white space horizontally (ie spaces, tabs etc) whilst preserving
-		 * textarea and pre content.
-		 *
-		 * @access private
-		 * @param string $html
-		 * @return string
-		 */
-		public function _compressHorizontally($html)
-		{
-			$html = $this->_extractPreservedBlocks($html);
-      // remove the white space
-			$html = preg_replace('/((?<!\?>)'.$this->_options['line_break'].')[\s]+/m', '\1', $html);
-      // Remove extra spaces
-			return preg_replace('/\t+/', '', $html);
-		}
-
-		/**
-		 * Compresses white space vertically (ie line breaks) whilst preserving
-		 * textarea and pre content.
-		 *
-		 * @access private
-		 * @param string $html
-		 * @param mixed $textarea_blocks false if no textarea blocks have already been taken out, otherwise an array.
-		 * @return unknown
-		 */
-		private function _compressVertically($html)
-		{
-			$html = $this->_extractPreservedBlocks($html);
-      // remove the line breaks
-			return str_replace($this->_options['line_break'], '', $html);
-		}
-		
-		/**
-		 * Converts line breaks from the different platforms onto the one type.
-		 *
-		 * @access private
-		 * @param string $html HTML string
-		 * @param string $break The format of the line break you want to unify to. ie \r\n or \n
-		 * @return string
-		 */
-		private function _unifyLineBreaks($html)
-		{
-		    return preg_replace ("/\015\012|\015|\012/", $this->_options['line_break'], $html);
-		}
-		
-		/**
-		 * Compresses white space vertically (ie line breaks) whilst preserving
-		 * textarea and pre content. This uses the classes '_simpleCodeCompress' to compress
-		 * the javascript, however it would be advisable to use another library such as 
-		 * 'minify' http://code.google.com/p/minify/ because this function has certain 
-		 * limitations with comments and other regex expressions. You can set another function 
-		 * callback using the 'compress_js_callback' option.
-		 *
-		 * @access private
-		 * @param string $html
-		 * @return string
-		 */
-		private function _compressScriptAndStyleTags($html)
-		{
-			$compress_scripts = $this->_options['compress_scripts'];
-			$compress_css = $this->_options['compress_css'];
-			$use_script_callback = $this->_options['script_compression_callback'] != false;
-      // pregmatch all the script tags
-			$scripts = preg_match_all("!(<(style|script)[^>]*>(?:\\s*<\\!--)?)(.*?)((?://-->\\s*)?</(style|script)>)!is", $html, $scriptparts);
-      // collect and compress the parts
-			$compressed = array();
-			$parts = array();
-			for($i=0; $i<count($scriptparts[0]); $i++)
-			{
-				$code = trim($scriptparts[3][$i]);
-				$not_empty = !empty($code);
-				$is_script = ($compress_scripts && $scriptparts[2][$i] == 'script');
-				if($not_empty && ($is_script || ($compress_css && $scriptparts[2][$i] == 'style')))
-				{
-					if($is_script && $use_script_callback)
-					{
-						$callback_args = $this->_options['script_compression_callback_args'];
-						if(gettype($callback_args) !== 'array')
-						{
-							$callback_args = array($callback_args);
-						}
-						array_unshift($callback_args, $code);
-						$minified = call_user_func_array($this->_options['script_compression_callback'], $callback_args);
-					}
-					else
-					{
-						$minified = $this->_simpleCodeCompress($code);
-					}
-					array_push($parts, $scriptparts[0][$i]);
-					array_push($compressed, trim($scriptparts[1][$i]).$minified.trim($scriptparts[4][$i]));
-				}
-			}
-      // do the replacements and return
-			return str_replace($parts, $compressed, $html);
-		}
-		
-		/**
-		 * Use simple preg_replace to compresses code (ie javascript and css) whitespace.
-		 * It would be advisable to use another library such as 'minify' http://code.google.com/p/minify/
-		 * because this function has certain limitations with comments and other regex expressions.
-		 * You can set another function callback using the 'compress_js_callback' option.
-		 *
-		 * @access private
-		 * @param string $code Code string
-		 * @return string
-		 **/
-    private function _simpleCodeCompress($code)
+    /**
+     * @param bool $css
+     * @return MatthiasMullie\Minify\CSS|MatthiasMullie\Minify\JS
+     */
+    private function _createMinifier($css)
     {
-      $code = $this->_removeMultiLineAndSingleLineComments($code); 
-      // Remove extra spaces
-      $code = preg_replace('/\s+/', ' ', $code);
-      // prevent negative px styles
-      $code = preg_replace('/(?<!px)\s?(-)\s?/', "\\1", $code);
-      // Remove spaces that can be removed
-      $code = trim(preg_replace('/\s?([\{\};\=\(\)\/\+\*])\s?/', "\\1", $code));
-      // prevent media queries
-      $code = preg_replace('/(and\()/', "and (", $code);
+        require_once dirname(__DIR__).'/matthiasmullie/autoload.php';
 
-      return $code;
+        if ($css) {
+            $minifier = new class extends MatthiasMullie\Minify\CSS {
+                /**
+                 * Keep @import statements external. Their files are not part of the
+                 * combine_files() modification-time cache.
+                 *
+                 * @param string $source
+                 * @param string $content
+                 * @param array $parents
+                 * @return string
+                 */
+                protected function combineImports($source, $content, $parents)
+                {
+                    return $content;
+                }
+
+                /**
+                 * Fragment-only URLs, query-only URLs and URI schemes are not file paths.
+                 *
+                 * @param string $path
+                 * @return bool
+                 */
+                protected function canImportByPath($path)
+                {
+                    if ($path === ''
+                        || $path[0] === '#'
+                        || $path[0] === '?'
+                        || preg_match('/^[a-z][a-z0-9+.-]*:/i', $path)
+                    ) {
+                        return false;
+                    }
+
+                    return parent::canImportByPath($path);
+                }
+            };
+            // Combining files must not silently embed referenced assets into the bundle.
+            $minifier->setImportExtensions(array());
+
+            return $minifier;
+        }
+
+        return new class extends MatthiasMullie\Minify\JS {
+            /**
+             * Join statement and block boundaries that are safe to terminate.
+             * Other line breaks are kept because they can be significant for
+             * automatic semicolon insertion or template literals.
+             *
+             * @param string $content
+             * @return string
+             */
+            protected function stripWhitespace($content)
+            {
+                $content = parent::stripWhitespace($content);
+
+                $content = str_replace(";\n", ';', $content);
+
+                // Extracted strings, regular expressions and template literals
+                // can continue an expression across a line break. Preserved
+                // comments may occur at the same boundary.
+                return preg_replace('/}\n(?![\'"`]|\/\*\d+\*\/)/', '};', $content);
+            }
+        };
     }
 
-		/**
-		 * Strips PHP Comments from the buffer 
-		 *
-		 * @access private
-		 * @param string $html The HTML string for comment removal.
-		 * @return string
-		 */
-    private function _stripPHPComments($html) {
-      $html = $this->_removeMultiLineAndSingleLineComments($html); 
-      // Strip blank lines
-      $html = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $html);
-      return trim($html);
+    /**
+     * @param string $path
+     * @param string $content
+     * @return bool
+     */
+    private function _saveAtomically($path, $content)
+    {
+        $directory = dirname($path);
+        if (!is_dir($directory)) {
+            return false;
+        }
+
+        // Replacing a symlink would unlink it, and an existing writable bundle
+        // can still be updated when the template directory itself is read-only.
+        if (is_link($path) || !is_writable($directory)) {
+            return $this->_saveDirectly($path, $content);
+        }
+
+        $temporary_path = tempnam($directory, '.compactor-');
+        if ($temporary_path === false) {
+            return $this->_saveDirectly($path, $content);
+        }
+
+        $permissions = 0644;
+        if (is_file($path)) {
+            $current_permissions = @fileperms($path);
+            if ($current_permissions !== false) {
+                $permissions = $current_permissions & 0777;
+            }
+        }
+        if (file_put_contents($temporary_path, $content, LOCK_EX) === false
+            || !@chmod($temporary_path, $permissions)
+            || !@rename($temporary_path, $path)
+        ) {
+            if (is_file($temporary_path)) {
+                @unlink($temporary_path);
+            }
+
+            return $this->_saveDirectly($path, $content);
+        }
+
+        clearstatcache(true, $path);
+
+        return true;
     }
-    
-		/**
-		 * Strips Comments from the buffer 
-		 *
-		 * @access private
-		 * @param string $code Code string
-		 * @return string
-		 */
-    private function _removeMultiLineAndSingleLineComments($code) {  
-      // removes multi line '/* */' comments.
-      $code = preg_replace('/(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)/', '', $code);     
-      if ($this->_options['compress_css'] == false) { 
-        // removes single line '//' comments.
-        $code = preg_replace('/(?:(?<!\:|\\\|\'|\")\/\/.*)/', '', $code);
-      }        
-      return $code;
+
+    /**
+     * Update an existing bundle when atomic replacement is not possible.
+     *
+     * @param string $path
+     * @param string $content
+     * @return bool
+     */
+    private function _saveDirectly($path, $content)
+    {
+        if (!is_file($path) || !is_writable($path)) {
+            return false;
+        }
+
+        if (file_put_contents($path, $content, LOCK_EX) === false) {
+            return false;
+        }
+
+        clearstatcache(true, $path);
+
+        return true;
     }
-	}
+}
