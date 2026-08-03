@@ -241,11 +241,12 @@
       }
 
       if (is_array($payment_state)
-          && ($payment_state['transaction_status'] === self::TRANSACTION_STATUS_PENDING
-              || ($payment_state['transaction_status'] === ''
-                  && (int)$payment_state['orders_status'] === self::get_prepare_status()))
           && $processing_is_authoritative
           && (int)$processing['orders_id'] === $orders_id
+          && ($payment_state['transaction_status'] === self::TRANSACTION_STATUS_PENDING
+              || ($payment_state['transaction_status'] === ''
+                  && (int)$payment_state['orders_status'] === self::get_prepare_status()
+                  && $processing['processing_status'] !== 'failed'))
           )
       {
         // Keep the checkout binding while the provider result is still
@@ -299,6 +300,22 @@
       $session_id = xtc_session_id();
       $customers_id = (int)$_SESSION['customer_id'];
       $language = (string)$_SESSION['language'];
+      $auth_mode = MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD == 'Pre-Authorization' ? 'E' : 'A';
+      $test_mode = MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True' ? '100' : '0';
+      $callback_url = $this->get_callback_url();
+      $signature_fields = 'instId:amount:currency:cartId:authMode:testMode:MC_callback:M_auth_mode:M_test_mode';
+      $signature = md5(
+        MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD
+        .':'.MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID
+        .':'.$amount
+        .':'.$currency
+        .':'.$orders_id
+        .':'.$auth_mode
+        .':'.$test_mode
+        .':'.$callback_url
+        .':'.$auth_mode
+        .':'.$test_mode
+      );
       $return_url = decode_htmlentities(xtc_href_link(
         FILENAME_CHECKOUT_PROCESS,
         xtc_session_name().'='.rawurlencode($session_id)
@@ -322,24 +339,21 @@
         'email' => $order->customer['email_address'],
         'fixContact' => 'Y',
         'lang' => $this->get_worldpay_language(),
-        'signatureFields' => 'amount:currency:cartId',
-        'signature' => md5(MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD.':'.$amount.':'.$currency.':'.$orders_id),
-        'MC_callback' => $this->get_callback_url(),
+        'authMode' => $auth_mode,
+        'testMode' => $test_mode,
+        'signatureFields' => $signature_fields,
+        'signature' => $signature,
+        'MC_callback' => $callback_url,
         'MC_returnurl' => $return_url,
         'M_sid' => $session_id,
         'M_cid' => $customers_id,
         'M_lang' => $language,
         'M_checkout_key' => $checkout_key,
         'M_checkout_token' => $checkout_token,
-        'M_hash' => self::callback_hash($session_id, $customers_id, $orders_id, $checkout_key, $language, $amount, $currency, $checkout_token),
+        'M_auth_mode' => $auth_mode,
+        'M_test_mode' => $test_mode,
+        'M_hash' => self::callback_hash($session_id, $customers_id, $orders_id, $checkout_key, $language, $amount, $currency, $checkout_token, $auth_mode, $test_mode),
       );
-
-      if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD == 'Pre-Authorization') {
-        $fields['authMode'] = 'E';
-      }
-      if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True') {
-        $fields['testMode'] = '100';
-      }
 
       if (!$checkout->wait_for_payment($orders_id)) {
         $checkout->fail();
@@ -390,7 +404,7 @@
     function install() {
       global $messageStack;
 
-      if (!self::create_transaction_table()) {
+      if (!self::ensure_transaction_table()) {
         if (isset($messageStack) && is_object($messageStack)) {
           $message = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_INSTALLATION_ERROR')
             ? MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_INSTALLATION_ERROR
@@ -449,7 +463,7 @@
         return false;
       }
 
-      return self::create_transaction_table() ? '' : false;
+      return self::ensure_transaction_table() ? '' : false;
     }
 
 
@@ -638,9 +652,9 @@
         }
       }
 
+      $test_mode = isset($callback['test_mode']) && $callback['test_mode'] === '100';
       $test_warning_exists = false;
-      if (defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE')
-          && MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True'
+      if ($test_mode
           && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE')
           )
       {
@@ -652,8 +666,7 @@
           return false;
         }
       }
-      if (defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE')
-          && MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True'
+      if ($test_mode
           && defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE')
           && $test_warning_exists === false
           )
@@ -920,11 +933,22 @@
     }
 
 
-    private static function create_transaction_table() {
+    public static function ensure_transaction_table() {
       if (!defined('TABLE_WORLDPAY_JUNIOR_TRANSACTIONS')) {
         return false;
       }
 
+      $table_pattern = addcslashes(TABLE_WORLDPAY_JUNIOR_TRANSACTIONS, '\\_%');
+      $table_query = xtc_db_query("SHOW TABLES LIKE '".xtc_db_input($table_pattern)."'");
+      if ($table_query === false) {
+        return false;
+      }
+
+      return xtc_db_num_rows($table_query) === 1 || self::create_transaction_table();
+    }
+
+
+    private static function create_transaction_table() {
       return xtc_db_query("CREATE TABLE IF NOT EXISTS `".TABLE_WORLDPAY_JUNIOR_TRANSACTIONS."` (
                              `orders_id` INT(11) NOT NULL,
                              `transaction_id` VARBINARY(128) NOT NULL,
@@ -1142,9 +1166,9 @@
     }
 
 
-    static function callback_hash($session_id, $customers_id, $orders_id, $checkout_key, $language, $amount, $currency, $checkout_token) {
+    static function callback_hash($session_id, $customers_id, $orders_id, $checkout_key, $language, $amount, $currency, $checkout_token, $auth_mode = '', $test_mode = '') {
       $amount = self::normalize_amount($amount);
-      $payload = implode("\n", array(
+      $payload_fields = array(
         (string)$session_id,
         (int)$customers_id,
         (int)$orders_id,
@@ -1153,7 +1177,12 @@
         $amount,
         (string)$currency,
         (string)$checkout_token,
-      ));
+      );
+      if ($auth_mode !== '' || $test_mode !== '') {
+        $payload_fields[] = (string)$auth_mode;
+        $payload_fields[] = (string)$test_mode;
+      }
+      $payload = implode("\n", $payload_fields);
 
       return hash_hmac('sha256', $payload, (string)MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD);
     }
@@ -1167,8 +1196,14 @@
         return false;
       }
 
+      $callback_modes = self::get_callback_modes($post);
+      if ($callback_modes === false) {
+        return false;
+      }
+
       if (!isset($post['M_checkout_key'])) {
-        return self::validate_legacy_callback($post);
+        $data = self::validate_legacy_callback($post);
+        return is_array($data) ? array_merge($data, $callback_modes) : false;
       }
 
       if (!defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD')
@@ -1208,6 +1243,9 @@
         'checkout_key' => trim((string)$post['M_checkout_key']),
         'checkout_token' => trim((string)$post['M_checkout_token']),
         'hash' => trim((string)$post['M_hash']),
+        'auth_mode' => $callback_modes['auth_mode'],
+        'test_mode' => $callback_modes['test_mode'],
+        'modes_bound' => $callback_modes['modes_bound'],
         'legacy' => false,
       );
 
@@ -1237,13 +1275,69 @@
         $data['language'],
         $data['amount'],
         $data['currency'],
-        $data['checkout_token']
+        $data['checkout_token'],
+        $data['modes_bound'] ? $data['auth_mode'] : '',
+        $data['modes_bound'] ? $data['test_mode'] : ''
       );
       if (!hash_equals($expected_hash, $data['hash'])) {
         return false;
       }
 
       return $data;
+    }
+
+
+    private static function get_callback_modes($post) {
+      $has_transaction_auth_mode = array_key_exists('M_auth_mode', $post);
+      $has_transaction_test_mode = array_key_exists('M_test_mode', $post);
+      if ($has_transaction_auth_mode !== $has_transaction_test_mode) {
+        return false;
+      }
+
+      if ($has_transaction_auth_mode) {
+        if (!is_scalar($post['M_auth_mode']) || !is_scalar($post['M_test_mode'])) {
+          return false;
+        }
+        $auth_mode = trim((string)$post['M_auth_mode']);
+        $test_mode = trim((string)$post['M_test_mode']);
+        if (!in_array($auth_mode, array('A', 'E'), true)
+            || !in_array($test_mode, array('0', '100'), true)
+            )
+        {
+          return false;
+        }
+      } else {
+        $auth_mode = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD')
+                     && MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD == 'Pre-Authorization'
+          ? 'E'
+          : 'A';
+        $test_mode = defined('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE')
+                     && MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True'
+          ? '100'
+          : '0';
+      }
+
+      $allowed_auth_modes = $auth_mode === 'E' ? array('E', 'O') : array('A');
+      if (array_key_exists('authMode', $post)
+          && (!is_scalar($post['authMode'])
+              || !in_array(trim((string)$post['authMode']), $allowed_auth_modes, true))
+          )
+      {
+        return false;
+      }
+
+      if (array_key_exists('testMode', $post)
+          && (!is_scalar($post['testMode']) || trim((string)$post['testMode']) !== $test_mode)
+          )
+      {
+        return false;
+      }
+
+      return array(
+        'auth_mode' => $auth_mode,
+        'test_mode' => $test_mode,
+        'modes_bound' => $has_transaction_auth_mode,
+      );
     }
 
 

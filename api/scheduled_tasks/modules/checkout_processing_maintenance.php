@@ -17,7 +17,7 @@
     xtc_db_query("UPDATE ".TABLE_CHECKOUT_PROCESSING."
                      SET processing_status = 'failed',
                          last_modified = NOW()
-                   WHERE processing_status = 'processing'
+                   WHERE processing_status IN ('processing', 'waiting')
                      AND last_modified < DATE_SUB(NOW(), INTERVAL ".$timeout." SECOND)");
 
     $retention_days = defined('CHECKOUT_PROCESSING_RETENTION_DAYS') ? (int)CHECKOUT_PROCESSING_RETENTION_DAYS : 30;

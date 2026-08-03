@@ -41,6 +41,10 @@
     worldpay_junior_callback_response(403, 'Invalid callback');
   }
 
+  if (!worldpay_junior::ensure_transaction_table()) {
+    worldpay_junior_callback_response(503, 'Transaction storage unavailable');
+  }
+
   $language_file = DIR_WS_LANGUAGES.$callback['language'].'/modules/payment/worldpay_junior.php';
   if (is_file($language_file)) {
     require_once($language_file);

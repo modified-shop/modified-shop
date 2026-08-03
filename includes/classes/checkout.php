@@ -163,7 +163,7 @@ class checkout
                          last_modified = NOW()
                    WHERE checkout_key = '" . xtc_db_input($processing_key) . "'
                      AND status_token = '" . xtc_db_input($status_token) . "'
-                     AND processing_status = 'processing'
+                     AND processing_status IN ('processing', 'waiting')
                      AND last_modified < DATE_SUB(NOW(), INTERVAL " . $timeout . " SECOND)");
 
     $processing_query = xtc_db_query("SELECT customers_id,
@@ -427,7 +427,7 @@ class checkout
                          last_modified = NOW()
                    WHERE checkout_key = '" . xtc_db_input($this->processing_key) . "'
                      AND customers_id = '" . $this->customers_id . "'
-                     AND processing_status = 'processing'
+                     AND processing_status IN ('processing', 'waiting')
                      AND last_modified < DATE_SUB(NOW(), INTERVAL " . $timeout . " SECOND)");
 
     if (xtc_db_affected_rows() === 1) {
@@ -497,9 +497,11 @@ class checkout
     return self::javascript_wrapper($js);
   }
 
-  static function javascript_processing()
+  static function javascript_processing($fallback_resume_url = '')
   {
+    $fallback_resume_url = is_string($fallback_resume_url) ? $fallback_resume_url : '';
     $js = '      var container = document.querySelector(".checkout_processing");' . "\n\n" .
+          '      var resumeUrl = container.getAttribute("data-resume-url") || ' . json_encode($fallback_resume_url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';' . "\n\n" .
           '      function postRedirect(url, parameters) {' . "\n" .
           '        var form = document.createElement("form");' . "\n" .
           '        form.method = "post";' . "\n" .
@@ -529,7 +531,7 @@ class checkout
           '        });' . "\n" .
           '      }' . "\n\n" .
           '      function resumeCheckout(checkoutToken) {' . "\n" .
-          '        postRedirect(container.getAttribute("data-resume-url"), {' . "\n" .
+          '        postRedirect(resumeUrl, {' . "\n" .
           '          checkout_token: checkoutToken' . "\n" .
           '        });' . "\n" .
           '      }' . "\n\n" .
