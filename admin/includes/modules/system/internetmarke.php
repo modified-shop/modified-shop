@@ -29,23 +29,24 @@
     var $carrier_tracking_link = 'https://www.deutschepost.de/sendung/simpleQueryResult.html?form.sendungsnummer=$1&form.einlieferungsdatum_tag=$3&form.einlieferungsdatum_monat=$4&form.einlieferungsdatum_jahr=$5';
 
     function __construct() {
-      $this->version = '1.23';
+      $this->version = '1.24';
       $this->code = 'internetmarke';
       $this->title = MODULE_INTERNETMARKE_TEXT_TITLE;
       $this->description = MODULE_INTERNETMARKE_TEXT_DESCRIPTION;
       $this->sort_order = ((defined('MODULE_INTERNETMARKE_SORT_ORDER')) ? MODULE_INTERNETMARKE_SORT_ORDER : '');
       $this->enabled = ((defined('MODULE_INTERNETMARKE_STATUS') && MODULE_INTERNETMARKE_STATUS == 'true') ? true : false);
       $this->properties = array();
-      if (defined('MODULE_INTERNETMARKE_STATUS')) {
-        $this->properties['button_update'] = xtc_draw_form(
-          'internetmarke_module_update',
-          FILENAME_MODULE_EXPORT,
-          'set=system&module='.$this->code.'&action=update',
-          'post',
-          'style="display:inline;"'
-        ).xtc_button(BUTTON_UPDATE).'</form>';
-      }
-      if ($this->enabled) {
+      if (defined('RUN_MODE_ADMIN')) {
+        if (defined('MODULE_INTERNETMARKE_STATUS')) {
+          $this->properties['button_update'] = xtc_draw_form(
+            'internetmarke_module_update',
+            FILENAME_MODULE_EXPORT,
+            'set=system&module='.$this->code.'&action=update',
+            'post',
+            'style="display:inline;"'
+          ).xtc_button(BUTTON_UPDATE).'</form>';
+        }
+        if ($this->enabled) {
           $this->description .= '<hr><br>'.MODULE_INTERNETMARKE_TEXT_DESCRIPTION_UPLOAD;
           $this->description .= '<br>'.xtc_draw_form(
             'internetmarke_price_update',
@@ -62,6 +63,7 @@
               'post'
             ).xtc_button(BUTTON_IM_INSTALL).'</form><br><hr>';
           }
+        }
       }
 
     }
