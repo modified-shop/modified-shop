@@ -1031,7 +1031,8 @@ CREATE TABLE orders_total (
   sort_order INT(11) NOT NULL,
   PRIMARY KEY (orders_total_id),
   KEY idx_orders_id (orders_id),
-  KEY idx_sort_order (sort_order)
+  KEY idx_sort_order (sort_order),
+  KEY idx_class (class, orders_id)
 );
 
 DROP TABLE IF EXISTS orders_tracking;
@@ -1536,7 +1537,7 @@ INSERT INTO banners VALUES (2, 1, 'modified eCommerce Shopsoftware', 'http://www
 
 # carriers
 INSERT INTO carriers VALUES (1, 'DHL', 'https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
-INSERT INTO carriers VALUES (2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', '20', NOW(), '');
+INSERT INTO carriers VALUES (2, 'DPD', 'https://my.dpd.de/redirect.aspx?action=2&parcelno=$1&locale=$2', '20', NOW(), '');
 INSERT INTO carriers VALUES (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', '30', NOW(), '');
 INSERT INTO carriers VALUES (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', '40', NOW(), '');
 INSERT INTO carriers VALUES (5, 'HERMES', 'https://tracking.hermesworld.com/?TrackID=$1', '50', NOW(), '');
@@ -1596,6 +1597,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'POLICY_MIN_UPPER_CHARS', '1', 2, 12, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'POLICY_MIN_NUMERIC_CHARS', '1', 2, 12, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'POLICY_MIN_SPECIAL_CHARS', '1', 2, 12, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ENTRY_PASSWORD_MAX_LENGTH', '72', 2, 13, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'REVIEW_TEXT_MIN_LENGTH', '50', 2, 14, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MIN_DISPLAY_BESTSELLERS', '1', 2, 15, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MIN_DISPLAY_ALSO_PURCHASED', '1', 2, 16, NULL, NOW(), NULL, NULL);
@@ -2106,7 +2108,7 @@ INSERT INTO countries VALUES (9,'Antigua and Barbuda','AG','ATG',1,1,0, 100);
 INSERT INTO countries VALUES (10,'Argentina','AR','ARG',1,1,0, 100);
 INSERT INTO countries VALUES (11,'Armenia','AM','ARM',1,1,0, 100);
 INSERT INTO countries VALUES (12,'Aruba','AW','ABW',1,1,0, 100);
-INSERT INTO countries VALUES (13,'Australia','AU','AUD',1,1,0, 100);
+INSERT INTO countries VALUES (13,'Australia','AU','AUS',1,1,0, 100);
 INSERT INTO countries VALUES (14,'Austria','AT','AUT',5,1,0, 100);
 INSERT INTO countries VALUES (15,'Azerbaijan','AZ','AZE',1,1,0, 100);
 INSERT INTO countries VALUES (16,'Bahamas','BS','BHS',1,1,0, 100);
@@ -2154,7 +2156,7 @@ INSERT INTO countries VALUES (57,'Denmark','DK','DNK',1,1,0, 100);
 INSERT INTO countries VALUES (58,'Djibouti','DJ','DJI',1,1,0, 100);
 INSERT INTO countries VALUES (59,'Dominica','DM','DMA',1,1,0, 100);
 INSERT INTO countries VALUES (60,'Dominican Republic','DO','DOM',1,1,0, 100);
-INSERT INTO countries VALUES (61,'East Timor','TP','TMP',1,1,0, 100);
+INSERT INTO countries VALUES (61,'Timor-Leste','TL','TLS',1,1,0, 100);
 INSERT INTO countries VALUES (62,'Ecuador','EC','ECU',1,1,0, 100);
 INSERT INTO countries VALUES (63,'Egypt','EG','EGY',1,1,0, 100);
 INSERT INTO countries VALUES (64,'El Salvador','SV','SLV',1,1,0, 100);
@@ -2268,7 +2270,7 @@ INSERT INTO countries VALUES (171,'Portugal','PT','PRT',1,1,0, 100);
 INSERT INTO countries VALUES (172,'Puerto Rico','PR','PRI',1,1,0, 100);
 INSERT INTO countries VALUES (173,'Qatar','QA','QAT',1,1,0, 100);
 INSERT INTO countries VALUES (174,'Reunion','RE','REU',1,1,0, 100);
-INSERT INTO countries VALUES (175,'Romania','RO','ROM',1,1,0, 100);
+INSERT INTO countries VALUES (175,'Romania','RO','ROU',1,1,0, 100);
 INSERT INTO countries VALUES (176,'Russian Federation','RU','RUS',1,1,0, 100);
 INSERT INTO countries VALUES (177,'Rwanda','RW','RWA',1,1,0, 100);
 INSERT INTO countries VALUES (178,'Saint Kitts and Nevis','KN','KNA',1,1,0, 100);

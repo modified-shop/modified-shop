@@ -12,17 +12,22 @@
 
 function auto_include($dir, $ext = 'php', $expr = '*', $flags = 0)
 {
+  static $cache_array;
+
+  if (!isset($cache_array)) $cache_array = array();
+
   $dir = rtrim($dir,'/');
+  $key = $dir . '|' . $ext . '|' . $expr . '|' . $flags;
 
-  $files = glob("{$dir}/$expr.".$ext, $flags);
+  if (!isset($cache_array[$key])) {
+    $files = glob("{$dir}/$expr.".$ext, $flags);
 
-  $files = ((false !== $files) ? $files : array());
+    $files = ((false !== $files) ? $files : array());
 
-  natcasesort($files);
-  
-  if (function_exists('debugMessage')) {
-    debugMessage('auto_include',$files);
+    natcasesort($files);
+
+    $cache_array[$key] = $files;
   }
-  
-  return $files;
+
+  return $cache_array[$key];
 }

@@ -484,6 +484,7 @@
     'includes/external/sofort/classes/sofortLibIdealBanks.inc.php',
     'includes/external/sofort/classes/sofortLibSofortueberweisungGateway.inc.php',
     'includes/extra/ajax/cookie_consent.php',
+    'includes/extra/ajax/get_im_service.php',
     'includes/extra/application_bottom/10_easymarketing.php',
     'includes/extra/application_bottom/10_facebook.php',
     'includes/extra/application_bottom/10_findologic.php',

@@ -146,6 +146,8 @@ define('ENTRY_TELEPHONE_NUMBER_TEXT', '*');
 define('ENTRY_FAX_NUMBER_TEXT', '');
 define('ENTRY_NEWSLETTER_TEXT', '');
 define('ENTRY_PASSWORD_ERROR', 'Ihr Passwort muss aus mindestens ' . ENTRY_PASSWORD_MIN_LENGTH . ' Zeichen bestehen.');
+define('ENTRY_PASSWORD_ERROR_MAX_LENGTH', 'Ihr Passwort darf aus h&ouml;chstens %s Zeichen bestehen.');
+define('ENTRY_PASSWORD_ERROR_BCRYPT_LENGTH', 'Ihr Passwort ist f&uuml;r die aktive Verschl&uuml;sselungsmethode zu lang. Bitte verwenden Sie ein k&uuml;rzeres Passwort.');
 define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Ihr Passwort muss mindestens %s Kleinbuchstaben enthalten.');
 define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Gro&szlig;buchstaben enthalten.');
 define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Ihr Passwort muss mindestens %s Zahl enthalten.');
@@ -273,6 +275,8 @@ define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warnung: Das Verzeichnis f&uum
 define('WARNING_SESSION_DIRECTORY_NOT_WRITEABLE', 'Warnung: Die modified eCommerce Shopsoftware kann nicht in das Sessions Verzeichnis schreiben: ' . xtc_session_save_path() . '. Die Sessions werden nicht funktionieren, bis die richtigen Benutzerberechtigungen gesetzt wurden!');
 define('WARNING_SESSION_AUTO_START', 'Warnung: session.auto_start ist aktiviert (enabled) - Bitte deaktivieren (disabled) Sie dieses PHP Feature in der php.ini und starten Sie den WEB-Server neu!');
 define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warnung: Das Verzeichnis f&uuml;r den Artikel Download existiert nicht: ' . DIR_FS_DOWNLOAD . '. Diese Funktion wird nicht funktionieren, bis das Verzeichnis erstellt wurde!');
+define('WARNING_GIT_DIRECTORY_EXISTS', 'Warnung: Ein .git-Verzeichnis wurde gefunden auf: %s. Das deutet auf einen direkten Entwickler-Checkout hin, der nicht f&uuml;r den produktiven Einsatz vorgesehen ist. Bitte verwenden Sie stattdessen ein offizielles Release-Paket und l&ouml;schen Sie dieses Verzeichnis aus Gr&uuml;nden der Sicherheit!');
+define('WARNING_INSTALLER_FILE_EXISTS', 'Warnung: Die Datei %s ist noch vorhanden. Bitte l&ouml;schen Sie diese Datei aus Gr&uuml;nden der Sicherheit!');
 
 define('SUCCESS_ACCOUNT_UPDATED', 'Ihr Konto wurde erfolgreich aktualisiert.');
 define('SUCCESS_PASSWORD_UPDATED', 'Ihr Passwort wurde erfolgreich ge&auml;ndert!');
@@ -693,4 +697,3 @@ define('TEXT_COUNTRY_LABEL', 'Land');
 define('TEXT_STATE_LABEL', 'Bundesland');
 
 define('TEXT_IMG_VVCODE', 'Sicherheitscode');
-

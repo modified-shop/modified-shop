@@ -49,7 +49,7 @@
 
   define('TEXT_SQL_SUCCESS', '%s');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
-  define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.modified-shop.org/images/content/btn_donateCC_LS.png" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
+  define('BUTTON_DONATE', '<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.modified-shop.org/images/content/btn_donateCC_LS.png" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START_TITLE', 'Welcome to the modified eCommerce Shopsoftware installation process');
   define('TEXT_START', 'The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.');
   define('TEXT_DONATE', 'The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
@@ -111,7 +111,8 @@
   define('TEXT_DB_REMOVE_ENGINE', 'Without storage engines \'ENGINE\'');
   define('TEXT_DB_COMPLETE_INSERTS', 'Complete \'INSERT\'s');
   define('TEXT_DB_SINGLE_FILES', 'Single files per table');
-  define('TEXT_DB_UFT8_CONVERT', 'Convert database to UTF-8');
+  define('TEXT_DB_UTF8_CONVERT', 'Convert database to UTF-8');
+  define('TEXT_DB_UTF8_CONVERT_COLLATION_INFO', 'The first collation supported by the database server is used for the conversion in this order: <code>utf8mb4_german2_ci</code>, <code>utf8mb4_general_ci</code>, <code>utf8_german2_ci</code>. <code>utf8_general_ci</code> is used as the fallback.');
   define('TEXT_DB_COMPRESS_GZIP', 'Use GZIP');
   define('TEXT_DB_COMPRESS_RAW', 'No Compression (Pure SQL)');
   define('TEXT_DB_SIZE', 'Size');
@@ -150,6 +151,8 @@
   //define('TEXT_DB_UPDATE_AFTER', 'Text after'); // Not used yet
 
   define('TEXT_BACKUP_DIFF', 'Backup Diff');
+  define('TEXT_BACKUP_DIFF_UNZIP', 'Note: If the ZIP archive cannot be opened with the integrated Windows extraction tool, please use a program such as 7-Zip.');
+  define('ERROR_BACKUP_DIFF', 'The backup of modified files could not be created. The update was stopped. Please check the write permissions for the backup directory and try again.');
   define('TEXT_BACKUP_SIZE', 'Size');
   define('TEXT_BACKUP_DATE', 'Date');
 
@@ -172,11 +175,11 @@
   define('TEXT_SERVER_USE_SSL', 'SSL:');
   define('TEXT_SERVER_SESSION', 'Session:');
 
-  define('TEXT_ADMIN_DIRECTORY_HEADING','Admin Directory:');
+  define('TEXT_ADMIN_DIRECTORY_HEADING', 'Admin Directory:');
   define('TEXT_ADMIN_DIRECTORY_DESCRIPTION', 'Due to seurity reasons change the name of the admin directory.');
   define('TEXT_ADMIN_DIRECTORY', 'This is a generated suggestion:');
 
-  define('TEXT_ACCOUNT','The installer will create the admin account and will perform some db actions.<br /> The given information for <b>Country</b> and <b>Post Code</b> are used for shipping and tax callculations.');
+  define('TEXT_ACCOUNT', 'The installer will create the admin account and will perform some db actions.<br /> The given information for <b>Country</b> and <b>Post Code</b> are used for shipping and tax callculations.');
   define('TEXT_ACCOUNT_HEADING', 'Account details:');
   define('TEXT_ACCOUNT_LOGIN_HEADING', 'Account login:');
   define('TEXT_ACCOUNT_FIRSTNAME', 'First name:');
@@ -242,10 +245,12 @@
   define('ENTRY_POST_CODE_ERROR', 'Your postcode must consist of at least ' . ENTRY_POSTCODE_MIN_LENGTH . ' characters.');
   define('ENTRY_CITY_ERROR', 'City must consist of at least ' . ENTRY_CITY_MIN_LENGTH . ' characters.');
   define('ENTRY_PASSWORD_ERROR', 'Your password must consist of at least ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
+  define('ENTRY_PASSWORD_ERROR_MAX_LENGTH', 'Your password must not exceed %s characters.');
+  define('ENTRY_PASSWORD_ERROR_BCRYPT_LENGTH', 'Your password is too long for the active encryption method. Please use a shorter password.');
   define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Password must contain at least %s lowercase characters');
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Password must contain at least %s uppercase characters');
   define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Password must contain at least %s numbers');
   define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Password must contain at least %s non-aplhanumeric characters');
   define('ENTRY_PASSWORD_ERROR_INVALID_CHAR', 'Your password contains invalid characters. Please use a different password.');
   define('ENTRY_PASSWORD_ERROR_NOT_MATCHING', 'Your passwords do not match.');
-  define('ENTRY_PASSWORD_CURRENT_ERROR','Your current password must not be empty.');
+  define('ENTRY_PASSWORD_CURRENT_ERROR', 'Your current password must not be empty.');

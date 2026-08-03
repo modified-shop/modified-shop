@@ -108,7 +108,7 @@ class Client implements ClientInterface
                 // 'follow_location' =>,
                 // 'max_redirects' =>,
                 'protocol_version'=> $request->getProtocolVersion(),
-                // 'timeout' =>,
+                'timeout' => 10,
                 'ignore_errors' => true
             )
         );
@@ -117,9 +117,24 @@ class Client implements ClientInterface
             $context['http']['content'] = (string)$request->getBody();
         }
 
-        $responseBody = file_get_contents($request->getUri(), false, stream_context_create($context));
-        $responseHeaders = $this->parseHeaders($http_response_header);
-        $statusHeader = $this->parseStatusHeader($http_response_header);
+        $responseBody = @file_get_contents($request->getUri(), false, stream_context_create($context));
+
+        if ($responseBody === false) {
+            $error = error_get_last();
+            throw new NetworkException(
+                'EasyCredit API request failed: ' . ($error['message'] ?? 'unknown error'),
+                $request
+            );
+        }
+
+        // http_get_last_response_headers() needs PHP >= 8.4; this shop supports PHP >= 8.0
+        // (includes/application_top.php), so fall back to the deprecated-on-8.4
+        // $http_response_header superglobal-like variable on older versions.
+        $rawResponseHeaders = function_exists('http_get_last_response_headers')
+            ? (http_get_last_response_headers() ?: [])
+            : ($http_response_header ?? []);
+        $responseHeaders = $this->parseHeaders($rawResponseHeaders);
+        $statusHeader = $this->parseStatusHeader($rawResponseHeaders);
 
         $response = new Response(
             $statusHeader['status'],

@@ -112,7 +112,7 @@
   // smarty
   require_once(DIR_FS_EXTERNAL.'smarty/'.TEMPLATE_ENGINE.'/Smarty.class.php');
   class EvaledFileResource extends Smarty_Internal_Resource_File {
-      public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null) {
+      public function populate(Smarty_Template_Source $source, ?Smarty_Internal_Template $_template = null) {
           parent::populate($source, $_template);
           $source->recompiled = true;
       }

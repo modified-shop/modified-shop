@@ -25,7 +25,7 @@
     function __construct() {
       global $order;
       
-      $this->version = '1.44';
+      $this->version = '1.45';
       $this->code = 'dhl_business';
       $this->title = MODULE_DHL_BUSINESS_TEXT_TITLE;
       $this->description = MODULE_DHL_BUSINESS_TEXT_DESCRIPTION.'<br><br><br><b>Version</b><br>'.$this->version;
@@ -109,6 +109,20 @@
         xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
                             WHERE configuration_key = 'MODULE_DHL_BUSINESS_PRODUCT'");
       }
+      if (defined('MODULE_DHL_BUSINESS_ENDORSEMENT')) {
+        $endorsement_mapping = array(
+          'IMMEDIATE' => 'RETURN',
+          'ABANDONMENT' => 'ABANDON',
+        );
+        $endorsement = MODULE_DHL_BUSINESS_ENDORSEMENT;
+        if (isset($endorsement_mapping[$endorsement])) {
+          $endorsement = $endorsement_mapping[$endorsement];
+        }
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                        SET configuration_value = '".xtc_db_input($endorsement)."',
+                            set_function = 'xtc_cfg_select_option(array(\'RETURN\', \'ABANDON\'), '
+                      WHERE configuration_key = 'MODULE_DHL_BUSINESS_ENDORSEMENT'");
+      }
     }
 
     function process($file) {
@@ -156,7 +170,7 @@
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_PREMIUM', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_AVS', '0',  '6', '1', 'xtc_cfg_select_option(array(\'0\', \'16\', \'18\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_IDENT', '0',  '6', '1', 'xtc_cfg_select_option(array(\'0\', \'16\', \'18\'), ', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_ENDORSEMENT', 'IMMEDIATE',  '6', '1', 'xtc_cfg_select_option(array(\'IMMEDIATE\', \'ABANDONMENT\'), ', now())");
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_ENDORSEMENT', 'RETURN',  '6', '1', 'xtc_cfg_select_option(array(\'RETURN\', \'ABANDON\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_DUTYPAID', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_DROPPOINT', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_SIGNED', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");

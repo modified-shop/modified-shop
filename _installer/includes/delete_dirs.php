@@ -59,6 +59,7 @@
     'includes/external/easybill', 
     'includes/external/easycredit', 
     'includes/external/findologic',
+    'includes/external/internetmarke',
     'includes/external/klarna/KITT',
     'includes/external/klarna/api',
     'includes/external/klarna/template',

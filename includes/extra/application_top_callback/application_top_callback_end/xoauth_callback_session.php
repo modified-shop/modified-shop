@@ -10,13 +10,15 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  spl_autoload_register(function ($class) {  
-    $class = ltrim($class, '\\');
-    $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-    $class = __DIR__.DIRECTORY_SEPARATOR.$class.'.php';
-    
-    if (is_file($class)) {
-      require_once($class);
+if (defined('RUN_MODE_XOAUTH_CALLBACK')) {
+    require_once(DIR_FS_EXTERNAL . 'phpmailer/classes/oauth_callback_state.php');
+
+    $oauthCallbackState = oauth_callback_state::consume(
+        isset($_GET['state']) ? (string)$_GET['state'] : '',
+        xtc_session_id()
+    );
+
+    if (is_array($oauthCallbackState)) {
+        define('XOAUTH_CALLBACK_MODULE', $oauthCallbackState['module']);
     }
-  });
-?>
+}

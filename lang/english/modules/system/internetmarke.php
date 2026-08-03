@@ -29,6 +29,9 @@
   define('MODULE_INTERNETMARKE_CARRIER_TITLE', 'Parcel service');
   define('MODULE_INTERNETMARKE_CARRIER_DESC', 'Please enter the parcel service.');
 
+  define('MODULE_INTERNETMARKE_LOGLEVEL_TITLE', 'Log level');
+  define('MODULE_INTERNETMARKE_LOGLEVEL_DESC', 'Select the log level.');
+
   define('MODULE_INTERNETMARKE_COMPANY_TITLE', '<hr><br>Company');
   define('MODULE_INTERNETMARKE_COMPANY_DESC', 'Please enter the company.');
 
@@ -58,4 +61,3 @@
 
   define('MODULE_INTERNETMARKE_TEXT_UPDATE_SUCCESS', 'Price data successfully updated.');
   define('MODULE_INTERNETMARKE_TEXT_UPDATE_ERROR', 'The price data could not be updated.');
-?>

@@ -1,0 +1,29 @@
+# Normalize text files across macOS, Linux, and Windows.
+* text=auto eol=lf
+
+# Keep Windows command files compatible with Windows.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.psd binary
+
+# Fonts
+*.ttf binary
+*.otf binary
+*.eot binary
+*.woff binary
+*.woff2 binary
+
+# Documents and archives
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tgz binary
+*.7z binary

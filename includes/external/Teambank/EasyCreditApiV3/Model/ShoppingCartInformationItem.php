@@ -194,7 +194,7 @@ class ShoppingCartInformationItem implements ModelInterface, ArrayAccess, \JsonS
      * @param mixed[] $data Associated array of property values
      *                      initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $this->container['productName'] = $data['productName'] ?? null;
         $this->container['quantity'] = $data['quantity'] ?? null;

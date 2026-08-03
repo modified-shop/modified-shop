@@ -12,11 +12,11 @@
 	</tr>
 	<tr>
 		<td class="label">{$smarty.const.ELV_IBAN}</td>
-		<td><input type="text" id="p1_elv_iban" name="p1_elv_iban" value="{$smarty.session.payone_elv_data.iban}"></td>
+		<td><input type="text" id="p1_elv_iban" name="p1_elv_iban" value="{$bankdata.iban|escape:'html'}"></td>
 	</tr>
 	<tr>
 		<td class="label">{$smarty.const.ELV_BIC}</td>
-		<td><input type="text" id="p1_elv_bic" name="p1_elv_bic" value="{$smarty.session.payone_elv_data.bic}"></td>
+		<td><input type="text" id="p1_elv_bic" name="p1_elv_bic" value="{$bankdata.bic|escape:'html'}"></td>
 	</tr>
   {if $genre_specific.sepa_display_ktoblz == 'true'}
     <tr>
@@ -24,18 +24,18 @@
     </tr>
     <tr>
       <td class="label">{$smarty.const.ELV_ACCOUNT_NUMBER}</td>
-      <td><input type="text" id="p1_elv_accountnumber" name="p1_elv_accountnumber" value="{$smarty.session.payone_elv_data.accountnumber}"></td>
+	      <td><input type="text" id="p1_elv_accountnumber" name="p1_elv_accountnumber" value="{$bankdata.bankaccount|escape:'html'}"></td>
     </tr>
     <tr>
       <td class="label">{$smarty.const.ELV_BANKCODE}</td>
-      <td><input type="text" id="p1_elv_bankcode" name="p1_elv_bankcode" value="{$smarty.session.payone_elv_data.bankcode}"></td>
+	      <td><input type="text" id="p1_elv_bankcode" name="p1_elv_bankcode" value="{$bankdata.bankcode|escape:'html'}"></td>
     </tr>
 	{/if}
   {if $required_fields}
     {foreach key=key_data item=item_data from=$required_fields}
       <tr>
         <td class="label">{$key_data|constant}</td>
-        <td style="min-width: 120px;"><input id="{$key_data}" name="{$key_data}" type="text" value="{$item_data}"></td>
+        <td style="min-width: 120px;"><input id="{$key_data}" name="{$key_data}" type="text" value="{$item_data|escape:'html'}"></td>
       </tr>
     {/foreach}
   {/if}

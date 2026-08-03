@@ -57,9 +57,13 @@ class PayonePayment {
 
 		$this->payone = new PayoneModified();
 		if ($this->check() > 0) {
+			if ($this->payone->prepareTransactionStatusSupport(true) !== true) {
+				$this->payone->log("PAYONE transaction status support is not available for module $this->code");
+				$this->enabled = false;
+			}
 			$this->config = $this->payone->getConfig();
-      $this->tmpStatus = ((isset($this->config['orders_status'])) ? $this->config['orders_status']['tmp'] : -1);
-  		$this->order_status = ((isset($this->config['orders_status'])) ? $this->config['orders_status']['paid'] : -1);
+      $this->tmpStatus = (int) ((isset($this->config['orders_status'])) ? $this->config['orders_status']['tmp'] : -1);
+  		$this->order_status = (int) ((isset($this->config['orders_status'])) ? $this->config['orders_status']['paid'] : -1);
 
       if (strpos(basename($PHP_SELF), 'checkout') !== false) {
         $this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
@@ -362,6 +366,46 @@ class PayonePayment {
 	
 	function payment_action() {
 	}
+
+	function getCheckoutSuccessUrl($orders_id) {
+		try {
+			$return_token = bin2hex(random_bytes(32));
+		} catch (Exception $e) {
+			$this->payone->log("could not create checkout return token for orders_id ".(int)$orders_id);
+			return false;
+		}
+
+		if (!isset($_SESSION['payone_checkout_return_tokens'])
+		    || !is_array($_SESSION['payone_checkout_return_tokens'])
+		    )
+		{
+			$_SESSION['payone_checkout_return_tokens'] = array();
+		}
+		$_SESSION['payone_checkout_return_tokens'][(int)$orders_id] = hash('sha256', $return_token);
+
+		return ((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER)
+		       .DIR_WS_CATALOG
+		       .FILENAME_CHECKOUT_PROCESS
+		       .'?'.xtc_session_name().'='.xtc_session_id()
+		       .'&payone_return_token='.rawurlencode($return_token);
+	}
+
+	protected function consumeCheckoutReturnToken($orders_id) {
+		if (!isset($_GET['payone_return_token'])
+		    || !is_scalar($_GET['payone_return_token'])
+		    || !isset($_SESSION['payone_checkout_return_tokens'][(int)$orders_id])
+		    )
+		{
+			return false;
+		}
+
+		$expected_hash = (string)$_SESSION['payone_checkout_return_tokens'][(int)$orders_id];
+		$valid = hash_equals($expected_hash, hash('sha256', (string)$_GET['payone_return_token']));
+		if ($valid) {
+			unset($_SESSION['payone_checkout_return_tokens'][(int)$orders_id]);
+		}
+		return $valid;
+	}
   
 	function _getInvoicingTransaction($orders_id) {
 		global $order;
@@ -387,26 +431,22 @@ class PayonePayment {
 			$_SESSION['payone_error'] = 'address_changed';
 			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=payone', 'SSL'));
 		}
-		$returning_ok = !empty($_GET['status']) && !empty($_GET['txid']) && !empty($_GET['userid']);
-		$returning_error = !empty($_GET['status']) && !empty($_GET['errorcode']);
-		if ($tmporder_exists && $returning_ok) {
-			$this->payone->saveTransaction($_SESSION['tmp_oID'], $_GET['status'], $_GET['txid'], $_GET['userid']);
-			if (strtoupper($_GET['status']) == 'REDIRECT' && !empty($_GET['redirecturl'])) {
-				$this->payone->log("redirecting to ".$_GET['redirecturl']);
-				xtc_redirect($_GET['redirecturl']);
+		if ($tmporder_exists && !$this->payone->isTransactionApprovedForCheckout($_SESSION['tmp_oID'])) {
+			if ($this->payone->hasPendingTransactionForCheckout($_SESSION['tmp_oID'])
+			    || !$this->consumeCheckoutReturnToken($_SESSION['tmp_oID'])
+			    )
+			{
+				$this->payone->log("checkout return for orders_id ".$_SESSION['tmp_oID']." without approved PAYONE transaction");
+				$_SESSION['payone_error'] = PAYMENT_ERROR;
+				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=payone', 'SSL'));
 			}
-		}
-		if ($tmporder_exists && $returning_error) {
-			$this->payone->log($_GET['status']." for orders_id ".$_SESSION['tmp_oID'].": ".$_GET['errorcode']." - ".$_GET['errormessage']." - ".$_GET['customermessage']);
-			$_SESSION['payone_error_message'] = strip_tags($_GET['customermessage']);
-			unset($_SESSION['tmp_oID']);
-			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=payone', 'SSL'));
 		}
 		return false;
 	}
 
 	function after_process() {
 	  unset($_SESSION['tmp_payone_oID']);
+		unset($_SESSION['payone_checkout_return_tokens']);
 	}
 
 	function get_error() {
@@ -415,7 +455,7 @@ class PayonePayment {
 			unset($_SESSION['payone_error']);
 			return $error;
 		}
-		if (isset($_GET['payment_error']) && $_GET['payment_error'] = 'payone_error' && isset($_GET['customermessage']) && $_GET['customermessage'] != '') {
+		if (isset($_GET['payment_error']) && $_GET['payment_error'] === 'payone_error' && isset($_GET['customermessage']) && $_GET['customermessage'] != '') {
 		  $error = array('error' => strip_tags(decode_utf8($_GET['customermessage'])));
 		  return $error;
 		}
@@ -436,6 +476,7 @@ class PayonePayment {
 	}
 
 	function install() {
+		$this->payone->installConfig();
 		$config = $this->_configuration();
 		$sort_order = 0;
 		foreach($config as $key => $sql_data_array) {
@@ -492,8 +533,14 @@ class PayonePayment {
 		return $config;
 	}
 
-  function _remove_order($order_id) {  
-    $check_query = xtc_db_query("SELECT * FROM ".TABLE_ORDERS." WHERE orders_id = '".(int)$order_id."'");
+	function _remove_order($order_id) {
+		if (isset($_SESSION['payone_checkout_return_tokens'][(int)$order_id])) {
+			unset($_SESSION['payone_checkout_return_tokens'][(int)$order_id]);
+			if (empty($_SESSION['payone_checkout_return_tokens'])) {
+				unset($_SESSION['payone_checkout_return_tokens']);
+			}
+		}
+		$check_query = xtc_db_query("SELECT * FROM ".TABLE_ORDERS." WHERE orders_id = '".(int)$order_id."'");
     if (xtc_db_num_rows($check_query) > 0) {
       $check = xtc_db_fetch_array($check_query);
       if ($_SESSION['customer_id'] == $check['customers_id']) {
@@ -633,17 +680,17 @@ class PayonePayment {
 			$this->service = $this->builder->buildServicePaymentAuthorize();
 			$this->params['request'] = 'authorization';
 			$this->request = new Payone_Api_Request_Authorization($this->params);
-			$this->payone->log("$type authorize request:\n".print_r($this->request, true));
+			$this->payone->log("$type authorize request");
 			$this->response = $this->service->authorize($this->request);
-			$this->payone->log("$type authorize response:\n".print_r($this->response, true));
+			$this->payone->log("$type authorize response ".$this->response->getStatus());
 		}
 		else { // pre-auth
 			$this->service = $this->builder->buildServicePaymentPreauthorize();
 			$this->params['request'] = 'preauthorization';
 			$this->request = new Payone_Api_Request_Preauthorization($this->params);
-			$this->payone->log("$type preauthorize request:\n".print_r($this->request, true));
+			$this->payone->log("$type preauthorize request");
 			$this->response = $this->service->preauthorize($this->request);
-			$this->payone->log("$type preauthorize response:\n".print_r($this->response, true));
+			$this->payone->log("$type preauthorize response ".$this->response->getStatus());
 		}	
 	}
 	
@@ -667,18 +714,18 @@ class PayonePayment {
 
 		if ($this->response instanceof Payone_Api_Response_Preauthorization_Approved) {
 			$this->payone->log("preauthorization approved");
-			$this->payone->saveTransaction($insert_id, $this->response->getStatus(), $this->response->getTxid(), $this->response->getUserid());
+			$this->payone->saveTransaction($insert_id, $this->response->getStatus(), $this->response->getTxid(), $this->response->getUserid(), $this->global_config);
 			$this->_updateOrdersStatus($insert_id, $this->response->getTxid(), strtolower((string)$this->response->getStatus()), COMMENT_PREAUTH_APPROVED);
 		}
 		elseif ($this->response instanceof Payone_Api_Response_Authorization_Approved) {
 			$this->payone->log("authorization approved");
-			$this->payone->saveTransaction($insert_id, $this->response->getStatus(), $this->response->getTxid(), $this->response->getUserid());
+			$this->payone->saveTransaction($insert_id, $this->response->getStatus(), $this->response->getTxid(), $this->response->getUserid(), $this->global_config);
 			$this->_updateOrdersStatus($insert_id, $this->response->getTxid(), strtolower((string)$this->response->getStatus()), COMMENT_AUTH_APPROVED);
 		}
 		elseif ($this->response instanceof Payone_Api_Response_Authorization_Redirect) {
 			$this->payone->log("authorization for order ".$insert_id." initiated, txid = ".$this->response->getTxid());
 			if ($this->response->getStatus() == 'REDIRECT') {
-				$this->payone->saveTransaction($insert_id, $this->response->getStatus(), $this->response->getTxid(), $this->response->getUserid());
+				$this->payone->saveTransaction($insert_id, $this->response->getStatus(), $this->response->getTxid(), $this->response->getUserid(), $this->global_config);
 				$this->payone->log("redirecting to payment service");
 				$this->_updateOrdersStatus($insert_id, $this->response->getTxid(), strtolower((string)$this->response->getStatus()), COMMENT_REDIRECTION_INITIATED);
 				$redirect_url = $this->response->getRedirecturl();
@@ -692,7 +739,11 @@ class PayonePayment {
 			$this->_updateOrdersStatus($insert_id, '', strtolower((string)$this->response->getStatus()), COMMENT_ERROR);
 			$_SESSION['payone_error'] = $this->response->getCustomermessage();
 			$this->_remove_order($insert_id);
-			if ($_SESSION[$this->code]['installment_type'] == 'klarna') {
+			if ($this->code === 'payone_installment'
+			    && isset($_SESSION[$this->code]['installment_type'])
+			    && $_SESSION[$this->code]['installment_type'] === 'klarna'
+			    )
+			{
 			  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&payment_error='.$this->code));
 			} else {
 			  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code));

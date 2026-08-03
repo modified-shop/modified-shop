@@ -71,7 +71,7 @@
       if ($this->check() > 0) {
         $this->min_order = MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER;
         if ((int)MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID > 0) {
-          $this->order_status = MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID;
+          $this->order_status = (int) MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID;
         }
         if (isset($_POST['banktransfer_fax']) && $_POST['banktransfer_fax'] == "on") {
           $this->email_footer = MODULE_PAYMENT_BANKTRANSFER_TEXT_EMAIL_FOOTER;

@@ -203,7 +203,7 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
                   ?>
                     <div class="p1_txstatus">
                       <div class="p1_txstatus_received p1_received_icon">
-                        <?php echo $txstatus['received'] . (($txstatus['data']['txaction'] != '') ? ' ('.$txstatus['data']['txaction'].')' : ''); ?>
+                        <?php echo $txstatus['received'] . ((!empty($txstatus['data']['txaction'])) ? ' ('.$txstatus['data']['txaction'].')' : ''); ?>
                       </div>
                       <div class="p1_txstatus_data">
                           <?php 

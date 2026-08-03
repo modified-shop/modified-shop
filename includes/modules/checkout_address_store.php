@@ -121,7 +121,7 @@
     $error = true;
   }
 
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/checkout_address_check_data','php') as $file) require ($file);
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/checkout_address_check_data/','php') as $file) require ($file);
 
   if ($error == false) {
     $sql_data_array = array (
@@ -149,7 +149,7 @@
       $sql_data_array['entry_state'] = ((isset($state) && !empty($state)) ? $state : '');
     }
 
-    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/checkout_address_data','php') as $file) require ($file);
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/checkout_address_data/','php') as $file) require ($file);
     
     if (isset($address_book_id) || isset($edit_address_book_id)) {
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "address_book_id = '".((isset($edit_address_book_id)) ? (int)$edit_address_book_id : (int)$address_book_id)."'");

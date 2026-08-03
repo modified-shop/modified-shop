@@ -115,6 +115,8 @@ define('ENTRY_TELEPHONE_MIN_LENGTH_TITLE' , 'Telefon Nummer');
 define('ENTRY_TELEPHONE_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der Telefonnummer');
 define('ENTRY_PASSWORD_MIN_LENGTH_TITLE' , 'Passwort');
 define('ENTRY_PASSWORD_MIN_LENGTH_DESC' , 'Minimum L&auml;nge des Passworts');
+define('ENTRY_PASSWORD_MAX_LENGTH_TITLE' , 'Passwort (maximal)');
+define('ENTRY_PASSWORD_MAX_LENGTH_DESC' , 'Maximum L&auml;nge des Passworts');
 
 define('REVIEW_TEXT_MIN_LENGTH_TITLE' , 'Rezensionen');
 define('REVIEW_TEXT_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der Texteingabe bei Rezensionen');

@@ -431,9 +431,13 @@
     $subdir = $tmp[0];
     //Prüfen ob Domain im Pfad enthalten ist, wenn nein Pfad Stratopfad erzeugen: /home/strato/www/ersten zwei_buchstaben/www.wunschname.de/htdocs/
     if(stristr($document_root, $domain) === FALSE) {
-      //Korrektur Unterverzeichnis      
+      //Korrektur Unterverzeichnis
       $htdocs = str_replace($_SERVER["SCRIPT_NAME"],'',$_SERVER["SCRIPT_FILENAME"]);
-      $htdocs = '/htdocs' . str_replace($_SERVER["DOCUMENT_ROOT"],'',$htdocs);
+      if (strpos($htdocs, '/htdocs') !== false) {
+        $htdocs = substr($htdocs, strpos($htdocs, '/htdocs'));
+      } else {
+        $htdocs = '/htdocs' . str_replace($_SERVER["DOCUMENT_ROOT"],'',$htdocs);
+      }
       //MUSTER: /home/strato/www/wu/www.wunschname.de/htdocs/
       $document_root = '/home/strato/www/'.substr($domain, 0, 2). '/www.'.$domain.$htdocs.$subdir;
     } else {
@@ -547,22 +551,111 @@
   function create_backup($checksum_array) {
     global $PHP_SELF;
     
-    $backup_file = 'backup_'.date('Y-m-d-H-i').'.zip';
-    
     if (count($checksum_array) > 0) {
-      $zip = new ZipArchive();
-      if ($zip->open(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file, ZipArchive::CREATE) === true) {
-        foreach ($checksum_array as $data) {      
-          $zip->addFile($data['absolutePath'], $data['relativePath']);      
-        }
+      $checksum_backup_array = array();
+      $backup_entry_array = array();
+      $backup_checksum_array = array();
+      foreach ($checksum_array as $index => $data) {
+        $checksum_backup_array[$data['relativePath']] = array(
+          'checkSum' => $data['checkSum'],
+          'checkSumOrig' => $data['checkSumOrig'],
+        );
+        $backup_entry_array[$index] = ltrim(str_replace('\\', '/', $data['relativePath']), '/');
+        $backup_checksum_array[$backup_entry_array[$index]] = $data['checkSum'];
       }
-      $zip->close();
-      
+      ksort($checksum_backup_array);
+      $checksum_backup = md5(serialize($checksum_backup_array));
+      $backup_dir = DIR_FS_CATALOG.DIR_ADMIN.'backups/';
+      $backup_file = false;
+      $lock_handle = fopen($backup_dir.'backup_'.$checksum_backup.'.lock', 'c');
+
+      if ($lock_handle === false || flock($lock_handle, LOCK_EX) === false) {
+        if (is_resource($lock_handle)) {
+          fclose($lock_handle);
+        }
+        return false;
+      }
+
+      try {
+        $backup_files = glob($backup_dir.'backup_*_'.$checksum_backup.'.zip');
+
+        if (is_array($backup_files) && count($backup_files) > 0) {
+          sort($backup_files);
+          foreach ($backup_files as $backup_path) {
+            $zip = new ZipArchive();
+            $valid_backup = $zip->open($backup_path, ZipArchive::CHECKCONS) === true;
+
+            if ($valid_backup === true) {
+              $valid_backup = $zip->numFiles === count($backup_entry_array);
+              foreach ($backup_checksum_array as $backup_entry => $expected_checksum) {
+                $backup_data = $zip->getFromName($backup_entry);
+                if ($backup_data === false
+                    || md5(preg_replace("'[\r\n\s]+'", '', $backup_data)) !== $expected_checksum
+                    )
+                {
+                  $valid_backup = false;
+                  break;
+                }
+              }
+              $zip->close();
+            }
+
+            if ($valid_backup === true) {
+              $backup_file = basename($backup_path);
+              break;
+            }
+
+            unlink($backup_path);
+          }
+        }
+
+        if ($backup_file === false) {
+          $backup_file = 'backup_'.date('Y-m-d-H-i-s').'_'.$checksum_backup.'.zip';
+          $backup_path = $backup_dir.$backup_file;
+          $temporary_path = tempnam($backup_dir, 'backup_diff_');
+
+          if ($temporary_path === false) {
+            return false;
+          }
+
+          $zip = new ZipArchive();
+          if ($zip->open($temporary_path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            unlink($temporary_path);
+            return false;
+          }
+
+          foreach ($checksum_array as $index => $data) {
+            if ($zip->addFile($data['absolutePath'], $backup_entry_array[$index]) === false) {
+              $zip->close();
+              unlink($temporary_path);
+              return false;
+            }
+          }
+
+          if ($zip->close() === false
+              || rename($temporary_path, $backup_path) === false
+              )
+          {
+            if (is_file($temporary_path)) {
+              unlink($temporary_path);
+            }
+            return false;
+          }
+        }
+      } finally {
+        flock($lock_handle, LOCK_UN);
+        fclose($lock_handle);
+      }
+
+      if ($backup_file === false || !is_file($backup_dir.$backup_file)) {
+        return false;
+      }
+
       $backup = array(array(
         'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=download&file='.$backup_file),
         'NAME' => $backup_file,
-        'SIZE' => number_format(filesize(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file)).' bytes',
-        'DATE' => date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file))
+        'SIZE' => number_format(filesize($backup_dir.$backup_file)).' bytes',
+        'DATE' => date(PHP_DATE_TIME_FORMAT, filemtime($backup_dir.$backup_file))
       ));
 
       return $backup;
