@@ -372,6 +372,31 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[profile][PAYPAL_COMPANY_LABEL]', $paypal->get_config('PAYPAL_COMPANY_LABEL'), 'style="width: 300px;"'); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_COMPANY_LABEL_INFO; ?></td>
                     </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_CART; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CART]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CART') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_CART_INFO; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_BOX_CART; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_' . strtoupper($module->code) . '_SHOW_BOX_CART]', $status_array, (($paypal->get_config('MODULE_PAYMENT_' . strtoupper($module->code) . '_SHOW_BOX_CART') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_BOX_CART_INFO; ?></td>
+                    </tr>
+                    <?php
+                  }
+
+                  if ($module->code == 'paypalgooglepay') {
+                    ?>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_CART; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CART]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CART') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_CART_INFO; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_BOX_CART; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_' . strtoupper($module->code) . '_SHOW_BOX_CART]', $status_array, (($paypal->get_config('MODULE_PAYMENT_' . strtoupper($module->code) . '_SHOW_BOX_CART') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_BOX_CART_INFO; ?></td>
+                    </tr>
                     <?php
                   }
 

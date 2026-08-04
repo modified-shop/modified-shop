@@ -45,7 +45,7 @@ class paypalpui extends PayPalPaymentV2 {
 
     if (PayPalPaymentBase::check_install() === true) {
       $this->tmpOrders = true;
-      $this->tmpStatus = (($this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') : DEFAULT_ORDERS_STATUS_ID);
+      $this->tmpStatus = (int) (($this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') : DEFAULT_ORDERS_STATUS_ID);
       $this->form_action_url = '';
     }
   }
@@ -234,6 +234,13 @@ class paypalpui extends PayPalPaymentV2 {
   function payment_action() {
     global $order, $messageStack;
 
+    // check for existing FraudNetID
+    if (empty($_SESSION['paypal']['FraudNetID'])) {
+      $this->LoggingManager->log('WARNING', 'PUI payment_action aborted', array('reason' => 'missing FraudNetID'));
+      $messageStack->add_session('paypalpui', MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE);
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    }
+
     $payment_source = array(
       'processing_instruction' => 'ORDER_COMPLETE_ON_PAYMENT_APPROVAL',
       'payment_source' => array(
@@ -304,6 +311,13 @@ class paypalpui extends PayPalPaymentV2 {
       sleep($wait);
 
       $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
+      if (!is_object($PayPalOrder)
+          || !isset($PayPalOrder->status)
+          )
+      {
+        continue;
+      }
+
       if ($PayPalOrder->status == 'COMPLETED' || $PayPalOrder->status == 'PENDING_APPROVAL') {
 
         if ($PayPalOrder->status == 'COMPLETED') {
@@ -311,7 +325,7 @@ class paypalpui extends PayPalPaymentV2 {
         }
 
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
-      } elseif (in_array($PayPalOrder->status, array('DENIED', 'REVERSED'))) {
+      } elseif (in_array($PayPalOrder->status, array('DENIED', 'REVERSED'), true)) {
         break;
       }
     }
@@ -337,7 +351,10 @@ class paypalpui extends PayPalPaymentV2 {
     $transaction_id = '';
     $status_id = $this->order_status_pending;
     
-    if (is_object($PayPalOrder)) {
+    if (is_object($PayPalOrder)
+        && isset($PayPalOrder->status)
+        )
+    {
       if ($PayPalOrder->status == 'COMPLETED') {
         $status_id = $this->order_status_success;
       }
