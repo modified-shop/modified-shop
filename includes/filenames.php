@@ -36,6 +36,7 @@ $filename_array = array(
   'FILENAME_CHECKOUT_PAYMENT' => 'checkout_payment.php',
   'FILENAME_CHECKOUT_PAYMENT_ADDRESS' => 'checkout_payment_address.php',
   'FILENAME_CHECKOUT_PROCESS' => 'checkout_process.php',
+  'FILENAME_CHECKOUT_PROCESSING' => 'checkout_processing.php',
   'FILENAME_CHECKOUT_SHIPPING' => 'checkout_shipping.php',
   'FILENAME_CHECKOUT_SHIPPING_ADDRESS' => 'checkout_shipping_address.php',
   'FILENAME_CHECKOUT_SUCCESS' => 'checkout_success.php',

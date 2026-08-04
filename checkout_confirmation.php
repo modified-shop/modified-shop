@@ -43,6 +43,23 @@ require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 $smarty = new Smarty();
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
+require_once (DIR_WS_CLASSES.'checkout.php');
+
+$checkout = new checkout($_SESSION['customer_id']);
+if (isset($_GET['payment_error'])
+    && is_string($_GET['payment_error'])
+    )
+{
+  $checkout->prepare_retry();
+}
+$checkout->expire();
+$checkout_processing = $checkout->find();
+if (is_array($checkout_processing)
+    && $checkout_processing['processing_status'] === 'completed'
+    )
+{
+  $checkout->create_key();
+}
 
 if (isset($_POST['payment'])) {
   $_SESSION['payment'] = xtc_db_prepare_input($_POST['payment']);
@@ -357,7 +374,14 @@ if ($messageStack->size('checkout_confirmation') > 0) {
 }
 
 $smarty->assign('language', $_SESSION['language']);
+$smarty->assign('CHECKOUT_JAVASCRIPT', '');
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_confirmation.html');
+if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/checkout_processing.css')) {
+  $main_content = '<link rel="stylesheet" property="stylesheet" href="'
+                  .DIR_WS_BASE.'templates/tpl_modified/css/checkout_processing.css" type="text/css" media="screen" />'
+                  .$main_content;
+}
+$main_content .= $checkout->javascript_confirmation();
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))

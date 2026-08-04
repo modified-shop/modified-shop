@@ -100,4 +100,34 @@ UPDATE `configuration` SET `configuration_value` = TRIM(BOTH ',' FROM REPLACE(CO
 #GTB - 2026-07-24 - update DPD tracking link
 UPDATE `carriers` SET `carrier_tracking_link` = 'https://my.dpd.de/redirect.aspx?action=2&parcelno=$1&locale=$2' WHERE `carrier_tracking_link` = 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2';
 
+#GTB - 2026-07-31 - add checkout processing ownership
+CREATE TABLE IF NOT EXISTS `checkout_processing` (
+  `checkout_key` CHAR(64) NOT NULL,
+  `customers_id` INT(11) NOT NULL,
+  `owner_token` CHAR(64) NOT NULL,
+  `status_token` CHAR(64) NOT NULL,
+  `request_fingerprint` CHAR(64) NOT NULL,
+  `orders_id` INT(11),
+  `processing_status` VARCHAR(16) NOT NULL DEFAULT 'processing',
+  `date_added` DATETIME NOT NULL,
+  `last_modified` DATETIME NOT NULL,
+  PRIMARY KEY (`checkout_key`),
+  UNIQUE KEY `idx_orders_id` (`orders_id`),
+  KEY `idx_customers_id` (`customers_id`),
+  KEY `idx_processing_status` (`processing_status`, `last_modified`)
+);
+
+#GTB - 2026-07-31 - add daily checkout processing cleanup
+INSERT INTO `scheduled_tasks`
+  (`time_next`, `time_offset`, `time_regularity`, `time_unit`, `status`, `edit`, `tasks`)
+VALUES
+  (0, 0, 1, 'd', 1, 0, 'checkout_processing_maintenance')
+ON DUPLICATE KEY UPDATE
+  `time_next` = VALUES(`time_next`),
+  `time_offset` = VALUES(`time_offset`),
+  `time_regularity` = VALUES(`time_regularity`),
+  `time_unit` = VALUES(`time_unit`),
+  `status` = VALUES(`status`),
+  `edit` = VALUES(`edit`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly

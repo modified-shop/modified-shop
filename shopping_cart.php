@@ -27,6 +27,15 @@
 
 require ('includes/application_top.php');
 
+if (isset($_SESSION['customer_id'], $_SESSION['checkout_processing_key'], $_GET['payment_error'])
+    && is_string($_GET['payment_error'])
+    )
+{
+  require_once (DIR_WS_CLASSES.'checkout.php');
+  $checkout = new checkout($_SESSION['customer_id']);
+  $checkout->prepare_retry();
+}
+
 // create smarty elements
 $smarty = new Smarty();
 

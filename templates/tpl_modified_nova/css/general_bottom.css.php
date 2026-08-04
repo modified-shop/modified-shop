@@ -27,6 +27,7 @@
     DIR_TMPL_CSS.'jquery.mmenulight.css',
     DIR_TMPL_CSS.'fontawesome-6-custom.css',
     DIR_TMPL_CSS.'cookieconsent.css',
+    DIR_TMPL_CSS.'checkout_processing.css',
   );
 
   if (is_file(DIR_FS_CATALOG.DIR_TMPL_CSS.'tpl_custom_bottom.css')) {

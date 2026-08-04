@@ -88,7 +88,10 @@ if (SESSION_FORCE_COOKIE_USE != 'True') {
 // start the session
 $session_started = false;
 $truncate_session_id = false;
-if (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
+if (defined('RUN_MODE_NOSESSION') && RUN_MODE_NOSESSION === true) {
+  // Status polling uses its own token and must not invoke the configured session handler.
+  $_SESSION = array();
+} elseif (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
   $truncate_session_id = true;
   $session_started = false;
   // Redirect search engines with session id to the same url without session id to prevent indexing session id urls

@@ -290,6 +290,23 @@ CREATE TABLE categories_description (
   KEY idx_categories_heading_title (categories_heading_title)
 );
 
+DROP TABLE IF EXISTS checkout_processing;
+CREATE TABLE checkout_processing (
+  checkout_key CHAR(64) NOT NULL,
+  customers_id INT(11) NOT NULL,
+  owner_token CHAR(64) NOT NULL,
+  status_token CHAR(64) NOT NULL,
+  request_fingerprint CHAR(64) NOT NULL,
+  orders_id INT(11),
+  processing_status VARCHAR(16) NOT NULL DEFAULT 'processing',
+  date_added DATETIME NOT NULL,
+  last_modified DATETIME NOT NULL,
+  PRIMARY KEY (checkout_key),
+  UNIQUE KEY idx_orders_id (orders_id),
+  KEY idx_customers_id (customers_id),
+  KEY idx_processing_status (processing_status, last_modified)
+);
+
 DROP TABLE IF EXISTS cm_file_flags;
 CREATE TABLE cm_file_flags (
   file_flag INT(11) NOT NULL,
@@ -2373,6 +2390,7 @@ INSERT INTO scheduled_tasks VALUES (4, 0, 0, 1, 'd', 0, 1, 'db_backup');
 INSERT INTO scheduled_tasks VALUES (5, 0, 0, 1, 'd', 0, 1, 'logs_maintenance');
 INSERT INTO scheduled_tasks VALUES (6, 0, 0, 1, 'd', 0, 1, 'currencies_update');
 INSERT INTO scheduled_tasks VALUES (7, 0, 0, 1, 'd', 0, 1, 'customers_ip_maintenance');
+INSERT INTO scheduled_tasks VALUES (8, 0, 0, 1, 'd', 1, 0, 'checkout_processing_maintenance');
 
 # shipping status
 INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '', 1);
