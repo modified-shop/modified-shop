@@ -718,15 +718,20 @@ class Smarty extends Smarty_Compatibility
           $this->registerCacheResource('phpfastcache', new Smarty_CacheResource_Phpfastcache());
         }
         
-        if (is_file(MY_TEMPLATE_PLUGINS.'register_php_plugins.php')) {
-            include(MY_TEMPLATE_PLUGINS.'register_php_plugins.php');
-          
-            if (isset($register_php_plugins) && is_array($register_php_plugins)) {
-                $register_php_plugins = array_unique($register_php_plugins);
-                foreach ($register_php_plugins as $php_plugins) {
-                    $this->registerPlugin('modifier', $php_plugins, $php_plugins);
+        $inherited_php_plugins = array();
+        foreach (array_reverse($templateChain) as $template) {
+            $registration_file = DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . $template . DIRECTORY_SEPARATOR . 'smarty' . DIRECTORY_SEPARATOR . 'register_php_plugins.php';
+            if (is_file($registration_file)) {
+                $register_php_plugins = array();
+                include($registration_file);
+
+                if (is_array($register_php_plugins)) {
+                    $inherited_php_plugins = array_merge($inherited_php_plugins, $register_php_plugins);
                 }
             }
+        }
+        foreach (array_unique($inherited_php_plugins) as $php_plugins) {
+            $this->registerPlugin('modifier', $php_plugins, $php_plugins);
         }
 
         if (isset($_SERVER[ 'SCRIPT_NAME' ])) {
