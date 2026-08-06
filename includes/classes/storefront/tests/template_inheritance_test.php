@@ -157,6 +157,18 @@ try {
     writeTestFile($templatesDirectory . '/parent-a/template.json', '{}');
     writeTestFile($templatesDirectory . '/current/index.html', 'current');
     writeTestFile($templatesDirectory . '/parent-a/inherited.html', 'inherited');
+    writeTestFile(
+        $templatesDirectory . '/parent-a/smarty/register_php_plugins.php',
+        '<?php $register_php_plugins = array("defined");'
+    );
+    writeTestFile(
+        $templatesDirectory . '/current/smarty/register_php_plugins.php',
+        '<?php $register_php_plugins = array("sprintf");'
+    );
+    writeTestFile(
+        $templatesDirectory . '/parent-a/inherited-php-plugins.html',
+        '{if "MODIFIED_TEMPLATE_PLUGIN_INHERITANCE"|defined}{"%s"|sprintf:"registered"}{/if}'
+    );
     writeTestFile($templatesDirectory . '/parent-a/continuation.html', 'parent-a');
     writeTestFile($templatesDirectory . '/current/continuation.html', 'current');
     mkdir($templatesDirectory . '/current/img');
@@ -391,6 +403,34 @@ try {
     );
 
     $smarty = new Smarty();
+    assertSameValue(
+        true,
+        isset($smarty->registered_plugins['modifier']['defined']),
+        'Smarty muss PHP-Plugins aus einem Parent-Template registrieren.'
+    );
+    assertSameValue(
+        true,
+        isset($smarty->registered_plugins['modifier']['sprintf']),
+        'Smarty muss die PHP-Plugin-Liste des Child-Templates ergänzend registrieren.'
+    );
+    define('MODIFIED_TEMPLATE_PLUGIN_INHERITANCE', true);
+    set_error_handler(static function (int $severity, string $message): bool {
+        if ($severity === E_USER_DEPRECATED && strpos($message, 'Using unregistered function') !== false) {
+            throw new ErrorException($message, 0, $severity);
+        }
+
+        return false;
+    });
+    try {
+        $inheritedPhpPluginsOutput = $smarty->fetch(Template::resolve('inherited-php-plugins.html'));
+    } finally {
+        restore_error_handler();
+    }
+    assertSameValue(
+        'registered',
+        $inheritedPhpPluginsOutput,
+        'Ein geerbtes Template muss PHP-Plugins aus Parent und Child ohne Warnung verwenden können.'
+    );
     $smarty->assign('rating', 5);
     assertSameValue(
         '/base/templates/current/img/current.png|/base/templates/parent-a/img/logo.png|/base/templates/parent-a/img/logo.png?v=1700000000|https://shop.example/catalog/templates/parent-a/img/logo.png?v=1700000000|/base/templates/parent-a/img/stars_5.png|/base/templates/parent-a/stylesheet.min.css',
