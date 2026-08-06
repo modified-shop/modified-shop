@@ -10,10 +10,11 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-$ws_dir = Template::url('favicons/');
-$fs_dir = DIR_FS_CATALOG.$ws_dir;
+$fs_dir = Template::findPath('favicons/');
 
-if (is_dir($fs_dir)) {
+if ($fs_dir !== null) {
+  $ws_dir = 'templates/'.Template::resolve('favicons/');
+
   // favicon
   $favicon_array = glob($fs_dir.'favicon*');
   if (is_array($favicon_array) && count($favicon_array) > 0) {
@@ -114,5 +115,8 @@ if (is_dir($fs_dir)) {
     }
   }
 } else {
-  echo '<link rel="shortcut icon" href="'.xtc_href_link(Template::url('favicon.ico'),'', $request_type, false).'" />'."\n";
+  $favicon = Template::findPath('favicon.ico');
+  if ($favicon !== null) {
+    echo '<link rel="shortcut icon" href="'.xtc_href_link('templates/'.Template::resolve('favicon.ico'),'', $request_type, false).'" />'."\n";
+  }
 }
