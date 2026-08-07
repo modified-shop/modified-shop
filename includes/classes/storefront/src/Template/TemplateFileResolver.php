@@ -63,16 +63,19 @@ final class TemplateFileResolver
      * Files are identified by their logical name. The first occurrence in the
      * chain wins, while files that exist only in a parent remain available.
      * The resulting effective list is naturally sorted by logical file name.
+     * When no extension is given, all regular non-hidden files are returned.
      *
      * @return list<ResolvedTemplateFile>
      */
-    public function findAll(string $logicalDirectory, string $extension): array
+    public function findAll(string $logicalDirectory, ?string $extension = null): array
     {
         $logicalDirectory = rtrim(
             TemplatePath::normalizeLogicalName($logicalDirectory),
             '/'
         ) . '/';
-        $extension = $this->normalizeExtension($extension);
+        if ($extension !== null) {
+            $extension = $this->normalizeExtension($extension);
+        }
         $filesByLogicalName = [];
 
         foreach ($this->chain as $templateId) {
@@ -89,7 +92,7 @@ final class TemplateFileResolver
                     $entry->isDot()
                     || str_starts_with($fileName, '.')
                     || !$entry->isFile()
-                    || !str_ends_with($fileName, '.' . $extension)
+                    || ($extension !== null && !str_ends_with($fileName, '.' . $extension))
                 ) {
                     continue;
                 }
