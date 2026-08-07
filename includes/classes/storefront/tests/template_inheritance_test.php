@@ -106,9 +106,14 @@ function removeTestDirectory(string $directory): void
     rmdir($directory);
 }
 
-function xtc_href_link(): string
+function xtc_href_link(string $page = ''): string
 {
-    return '';
+    return $page;
+}
+
+function encode_htmlspecialchars(string $value): string
+{
+    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
 try {
@@ -195,6 +200,19 @@ try {
     writeTestFile($templatesDirectory . '/parent-b/module/product_info/shared.html', 'parent-b-shared');
     writeTestFile($templatesDirectory . '/parent-a/module/product_info/product_1.html', 'parent-a-1');
     writeTestFile($templatesDirectory . '/parent-a/module/product_info/shared.html', 'parent-a-shared');
+    writeTestFile($templatesDirectory . '/current/favicons/favicon.svg', 'current-favicon');
+    writeTestFile($templatesDirectory . '/parent-a/favicons/favicon.svg', 'parent-favicon');
+    writeTestFile($templatesDirectory . '/parent-a/favicons/favicon.ico', 'parent-icon');
+    writeTestFile($templatesDirectory . '/parent-a/favicons/apple-touch-icon.png', 'parent-apple-icon');
+    writeTestFile($templatesDirectory . '/parent-a/favicons/web-app-manifest-192x192.png', 'parent-web-app-icon');
+    $siteManifestPath = $templatesDirectory . '/parent-a/favicons/site.webmanifest';
+    writeTestFile($siteManifestPath, '{}');
+    if (!touch($siteManifestPath, 1)) {
+        throw new RuntimeException('Die feste Änderungszeit für das Testmanifest konnte nicht gesetzt werden.');
+    }
+    clearstatcache(true, $siteManifestPath);
+    writeTestFile($templatesDirectory . '/parent-a/favicons/.ignored', 'hidden');
+    writeTestFile($templatesDirectory . '/parent-a/favicons/nested/ignored.png', 'nested');
     mkdir($templatesDirectory . '/current/module/unsafe_listing', 0777, true);
     symlink(
         $temporaryDirectory . '/outside.html',
@@ -272,6 +290,20 @@ try {
         $resolver->findAll('module/missing/', 'html'),
         'Ein nicht vorhandenes Verzeichnis muss eine leere Dateiliste liefern.'
     );
+    assertSameValue(
+        [
+            realpath($templatesDirectory) . '/parent-a/favicons/apple-touch-icon.png',
+            realpath($templatesDirectory) . '/parent-a/favicons/favicon.ico',
+            realpath($templatesDirectory) . '/current/favicons/favicon.svg',
+            realpath($templatesDirectory) . '/parent-a/favicons/site.webmanifest',
+            realpath($templatesDirectory) . '/parent-a/favicons/web-app-manifest-192x192.png',
+        ],
+        array_map(
+            static fn ($file): string => $file->absolutePath(),
+            $resolver->findAll('favicons/')
+        ),
+        'Eine Dateiliste ohne Endungsfilter muss gemischte Dateitypen erben und gleichnamige Parent-Dateien überschreiben.'
+    );
     assertThrowsException(
         InvalidTemplatePathException::class,
         static fn () => $resolver->findAll('../outside/', 'html'),
@@ -281,6 +313,11 @@ try {
         InvalidTemplatePathException::class,
         static fn () => $resolver->findAll('module/product_info/', '../html'),
         'Eine unsichere Dateiendung muss abgelehnt werden.'
+    );
+    assertThrowsException(
+        InvalidTemplatePathException::class,
+        static fn () => $resolver->findAll('module/product_info/', ''),
+        'Eine leere Dateiendung muss trotz optionalem Filter ungültig bleiben.'
     );
     assertThrowsException(
         InvalidTemplatePathException::class,
@@ -336,6 +373,17 @@ try {
         'Die Fassade muss die absoluten Pfade der wirksamen Dateiliste liefern.'
     );
     assertSameValue(
+        [
+            realpath($templatesDirectory) . '/parent-a/favicons/apple-touch-icon.png',
+            realpath($templatesDirectory) . '/parent-a/favicons/favicon.ico',
+            realpath($templatesDirectory) . '/current/favicons/favicon.svg',
+            realpath($templatesDirectory) . '/parent-a/favicons/site.webmanifest',
+            realpath($templatesDirectory) . '/parent-a/favicons/web-app-manifest-192x192.png',
+        ],
+        Template::files('favicons/'),
+        'Die Fassade muss Dateilisten ohne Endungsfilter bereitstellen.'
+    );
+    assertSameValue(
         '/base/templates/parent-a/img/logo.png',
         Template::url('img/logo.png'),
         'Relative URL und Dateisystempfad müssen getrennte Ergebnisarten bleiben.'
@@ -384,7 +432,43 @@ try {
     define('DIR_WS_THUMBNAIL_IMAGES', 'images/product_images/thumbnail_images/');
     define('CURRENT_TEMPLATE', 'current');
     define('COMPRESS_STYLESHEET', 'true');
+    define('TITLE', 'Test shop');
     define('RUN_MODE_INSTALLER', true);
+    $request_type = 'NONSSL';
+    ob_start();
+    require dirname(__DIR__, 4) . '/includes/modules/favicons.php';
+    $faviconMarkup = ob_get_clean();
+    assertSameValue(
+        1,
+        substr_count($faviconMarkup, 'templates/current/favicons/favicon.svg'),
+        'Das Child-Favicon muss genau einmal ausgegeben werden.'
+    );
+    assertSameValue(
+        0,
+        substr_count($faviconMarkup, 'templates/parent-a/favicons/favicon.svg'),
+        'Die gleichnamige Parent-Variante des Child-Favicons darf nicht ausgegeben werden.'
+    );
+    assertSameValue(
+        1,
+        substr_count($faviconMarkup, 'templates/parent-a/favicons/favicon.ico'),
+        'Ein ausschließlich im Parent vorhandenes Favicon muss ausgegeben werden.'
+    );
+    assertSameValue(
+        1,
+        substr_count($faviconMarkup, 'templates/parent-a/favicons/apple-touch-icon.png'),
+        'Ein ausschließlich im Parent vorhandenes Apple-Touch-Icon muss ausgegeben werden.'
+    );
+    $generatedManifest = json_decode((string) file_get_contents($siteManifestPath), true);
+    assertSameValue(
+        'templates/parent-a/favicons/web-app-manifest-192x192.png',
+        $generatedManifest['icons'][0]['src'] ?? null,
+        'Ein ausschließlich im Parent vorhandenes Web-App-Icon muss im Manifest ausgegeben werden.'
+    );
+    assertSameValue(
+        1,
+        substr_count($faviconMarkup, 'templates/parent-a/favicons/site.webmanifest'),
+        'Ein ausschließlich im Parent vorhandenes Web-App-Manifest muss verlinkt werden.'
+    );
     require dirname(__DIR__, 4) . '/inc/xtc_image.inc.php';
     require dirname(__DIR__, 4) . '/inc/xtc_image_button.inc.php';
     require dirname(__DIR__, 4) . '/inc/xtc_image_submit.inc.php';
