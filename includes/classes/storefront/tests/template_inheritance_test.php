@@ -205,12 +205,21 @@ try {
     writeTestFile($templatesDirectory . '/parent-a/favicons/favicon.ico', 'parent-icon');
     writeTestFile($templatesDirectory . '/parent-a/favicons/apple-touch-icon.png', 'parent-apple-icon');
     writeTestFile($templatesDirectory . '/parent-a/favicons/web-app-manifest-192x192.png', 'parent-web-app-icon');
+    writeTestFile($templatesDirectory . '/current/favicons/web-app-manifest-192x192.png', 'current-web-app-icon');
     $siteManifestPath = $templatesDirectory . '/parent-a/favicons/site.webmanifest';
     writeTestFile($siteManifestPath, '{}');
     if (!touch($siteManifestPath, 1)) {
         throw new RuntimeException('Die feste Änderungszeit für das Testmanifest konnte nicht gesetzt werden.');
     }
     clearstatcache(true, $siteManifestPath);
+    writeTestFile($templatesDirectory . '/parent-a/favicons/mstile-150x150.png', 'parent-mstile-icon');
+    writeTestFile($templatesDirectory . '/current/favicons/mstile-150x150.png', 'current-mstile-icon');
+    $browserconfigPath = $templatesDirectory . '/parent-a/favicons/browserconfig.xml';
+    writeTestFile($browserconfigPath, '<parent-browserconfig/>');
+    if (!touch($browserconfigPath, 1)) {
+        throw new RuntimeException('Die feste Änderungszeit für die Test-Browserkonfiguration konnte nicht gesetzt werden.');
+    }
+    clearstatcache(true, $browserconfigPath);
     writeTestFile($templatesDirectory . '/parent-a/favicons/.ignored', 'hidden');
     writeTestFile($templatesDirectory . '/parent-a/favicons/nested/ignored.png', 'nested');
     mkdir($templatesDirectory . '/current/module/unsafe_listing', 0777, true);
@@ -293,10 +302,12 @@ try {
     assertSameValue(
         [
             realpath($templatesDirectory) . '/parent-a/favicons/apple-touch-icon.png',
+            realpath($templatesDirectory) . '/parent-a/favicons/browserconfig.xml',
             realpath($templatesDirectory) . '/parent-a/favicons/favicon.ico',
             realpath($templatesDirectory) . '/current/favicons/favicon.svg',
+            realpath($templatesDirectory) . '/current/favicons/mstile-150x150.png',
             realpath($templatesDirectory) . '/parent-a/favicons/site.webmanifest',
-            realpath($templatesDirectory) . '/parent-a/favicons/web-app-manifest-192x192.png',
+            realpath($templatesDirectory) . '/current/favicons/web-app-manifest-192x192.png',
         ],
         array_map(
             static fn ($file): string => $file->absolutePath(),
@@ -375,10 +386,12 @@ try {
     assertSameValue(
         [
             realpath($templatesDirectory) . '/parent-a/favicons/apple-touch-icon.png',
+            realpath($templatesDirectory) . '/parent-a/favicons/browserconfig.xml',
             realpath($templatesDirectory) . '/parent-a/favicons/favicon.ico',
             realpath($templatesDirectory) . '/current/favicons/favicon.svg',
+            realpath($templatesDirectory) . '/current/favicons/mstile-150x150.png',
             realpath($templatesDirectory) . '/parent-a/favicons/site.webmanifest',
-            realpath($templatesDirectory) . '/parent-a/favicons/web-app-manifest-192x192.png',
+            realpath($templatesDirectory) . '/current/favicons/web-app-manifest-192x192.png',
         ],
         Template::files('favicons/'),
         'Die Fassade muss Dateilisten ohne Endungsfilter bereitstellen.'
@@ -458,16 +471,38 @@ try {
         substr_count($faviconMarkup, 'templates/parent-a/favicons/apple-touch-icon.png'),
         'Ein ausschließlich im Parent vorhandenes Apple-Touch-Icon muss ausgegeben werden.'
     );
-    $generatedManifest = json_decode((string) file_get_contents($siteManifestPath), true);
     assertSameValue(
-        'templates/parent-a/favicons/web-app-manifest-192x192.png',
+        '{}',
+        file_get_contents($siteManifestPath),
+        'Das geerbte Parent-Manifest darf durch das aktive Child nicht verändert werden.'
+    );
+    $childManifestPath = $templatesDirectory . '/current/favicons/site.webmanifest';
+    $generatedManifest = json_decode((string) file_get_contents($childManifestPath), true);
+    assertSameValue(
+        'templates/current/favicons/web-app-manifest-192x192.png',
         $generatedManifest['icons'][0]['src'] ?? null,
-        'Ein ausschließlich im Parent vorhandenes Web-App-Icon muss im Manifest ausgegeben werden.'
+        'Das Child-Web-App-Icon muss im Child-eigenen Manifest ausgegeben werden.'
     );
     assertSameValue(
         1,
-        substr_count($faviconMarkup, 'templates/parent-a/favicons/site.webmanifest'),
-        'Ein ausschließlich im Parent vorhandenes Web-App-Manifest muss verlinkt werden.'
+        substr_count($faviconMarkup, 'templates/current/favicons/site.webmanifest'),
+        'Das generierte Child-Manifest muss verlinkt werden.'
+    );
+    assertSameValue(
+        '<parent-browserconfig/>',
+        file_get_contents($browserconfigPath),
+        'Die geerbte Parent-Browserkonfiguration darf durch das aktive Child nicht verändert werden.'
+    );
+    $childBrowserconfigPath = $templatesDirectory . '/current/favicons/browserconfig.xml';
+    assertSameValue(
+        true,
+        str_contains((string) file_get_contents($childBrowserconfigPath), 'templates/current/favicons/mstile-150x150.png'),
+        'Die Child-eigene Browserkonfiguration muss auf das Child-Mstile verweisen.'
+    );
+    assertSameValue(
+        1,
+        substr_count($faviconMarkup, 'templates/current/favicons/browserconfig.xml'),
+        'Die generierte Child-Browserkonfiguration muss verlinkt werden.'
     );
     require dirname(__DIR__, 4) . '/inc/xtc_image.inc.php';
     require dirname(__DIR__, 4) . '/inc/xtc_image_button.inc.php';
