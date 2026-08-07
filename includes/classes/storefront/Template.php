@@ -94,16 +94,17 @@ final class Template
      * sorted by their logical file names.
      *
      * @param string $logicalDirectory Template-relative directory, for example "module/product_info/".
-     * @param string $extension File extension without a leading dot, for example "html".
+     * @param string|null $extension Optional file extension without a leading dot, for example "html".
      *
      * @return list<string> Absolute paths of the effective files.
      *
      * @example
      * Template::files('module/product_info/', 'html');
+     * Template::files('favicons/');
      *
      * @throws \Modified\Storefront\Template\Exception\InvalidTemplatePathException
      */
-    public static function files(string $logicalDirectory, string $extension): array
+    public static function files(string $logicalDirectory, ?string $extension = null): array
     {
         return array_map(
             static fn (ResolvedTemplateFile $file): string => $file->absolutePath(),
