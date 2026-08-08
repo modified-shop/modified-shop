@@ -17,6 +17,7 @@ require_once dirname(__DIR__) . '/bootstrap.php';
 $assertions = 0;
 $temporaryDirectory = sys_get_temp_dir() . '/modified-template-pr1-' . bin2hex(random_bytes(8));
 $templatesDirectory = $temporaryDirectory . '/templates';
+$readOnlyTemplateDirectory = null;
 
 function assertSameValue($expected, $actual, string $message): void
 {
@@ -504,6 +505,109 @@ try {
         substr_count($faviconMarkup, 'templates/current/favicons/browserconfig.xml'),
         'Die generierte Child-Browserkonfiguration muss verlinkt werden.'
     );
+
+    $thinParentDirectory = $templatesDirectory . '/thin-parent';
+    $readOnlyTemplateDirectory = $templatesDirectory . '/thin-child';
+    mkdir($thinParentDirectory);
+    mkdir($readOnlyTemplateDirectory);
+    writeTestFile($thinParentDirectory . '/template.json', '{}');
+    writeTestFile($readOnlyTemplateDirectory . '/template.json', '{"parent":"thin-parent"}');
+    writeTestFile($thinParentDirectory . '/favicons/web-app-manifest-192x192.png', 'parent-web-app-icon');
+    $thinParentManifestPath = $thinParentDirectory . '/favicons/site.webmanifest';
+    writeTestFile($thinParentManifestPath, '{"parent":true}');
+    writeTestFile($thinParentDirectory . '/favicons/mstile-150x150.png', 'parent-mstile-icon');
+    $thinParentBrowserconfigPath = $thinParentDirectory . '/favicons/browserconfig.xml';
+    writeTestFile($thinParentBrowserconfigPath, '<parent-browserconfig/>');
+
+    $thinRepository = new TemplateManifestRepository($templatesDirectory);
+    $thinChain = (new TemplateChainResolver($thinRepository))->resolve(new TemplateId('thin-child'));
+    $thinRuntime = new TemplateRuntime(
+        $thinChain,
+        new TemplateFileResolver($thinChain, $thinRepository),
+        new TemplateUrlGenerator('/base/', '/catalog/', 'https://shop.example/catalog/')
+    );
+    TemplateRuntime::install($thinRuntime);
+
+    if (!chmod($readOnlyTemplateDirectory, 0555)) {
+        throw new RuntimeException('Das Thin-Child-Testtemplate konnte nicht schreibgeschützt werden.');
+    }
+    clearstatcache(true, $readOnlyTemplateDirectory);
+    assertSameValue(
+        false,
+        is_writable($readOnlyTemplateDirectory),
+        'Das Thin-Child-Testtemplate muss für den Regressionstest schreibgeschützt sein.'
+    );
+
+    $faviconWarnings = [];
+    set_error_handler(static function (int $severity, string $message) use (&$faviconWarnings): bool {
+        if (($severity & error_reporting()) !== 0) {
+            $faviconWarnings[] = $message;
+        }
+
+        return true;
+    });
+    try {
+        $thinFaviconMarkup = (new FaviconRenderer(
+            $temporaryDirectory,
+            'Test shop',
+            static fn (string $path): string => $path
+        ))->render();
+    } finally {
+        restore_error_handler();
+        chmod($readOnlyTemplateDirectory, 0755);
+        TemplateRuntime::install($runtime);
+    }
+
+    assertSameValue([], $faviconWarnings, 'Ein nicht beschreibbares Thin Child darf keine PHP-Warning ausgeben.');
+    assertSameValue(
+        1,
+        substr_count($thinFaviconMarkup, 'templates/thin-parent/favicons/site.webmanifest'),
+        'Ein Thin Child ohne eigene Web-App-Icons muss auf das geerbte Parent-Manifest zurückfallen.'
+    );
+    assertSameValue(
+        1,
+        substr_count($thinFaviconMarkup, 'templates/thin-parent/favicons/browserconfig.xml'),
+        'Ein Thin Child ohne eigene Mstile-Dateien muss auf die geerbte Parent-Browserkonfiguration zurückfallen.'
+    );
+    assertSameValue(
+        false,
+        is_dir($readOnlyTemplateDirectory . '/favicons'),
+        'Der fehlgeschlagene Schreibversuch darf kein unvollständiges Child-Favicon-Verzeichnis hinterlassen.'
+    );
+    assertSameValue(
+        '{"parent":true}',
+        file_get_contents($thinParentManifestPath),
+        'Der Read-only-Fallback darf das geerbte Parent-Manifest nicht verändern.'
+    );
+    assertSameValue(
+        '<parent-browserconfig/>',
+        file_get_contents($thinParentBrowserconfigPath),
+        'Der Read-only-Fallback darf die geerbte Parent-Browserkonfiguration nicht verändern.'
+    );
+
+    $thinChildFaviconDirectory = $readOnlyTemplateDirectory . '/favicons';
+    writeTestFile($thinChildFaviconDirectory . '/web-app-manifest-192x192.png', 'child-web-app-icon');
+    if (!chmod($thinChildFaviconDirectory, 0555)) {
+        throw new RuntimeException('Das Child-Favicon-Testverzeichnis konnte nicht schreibgeschützt werden.');
+    }
+    clearstatcache(true, $thinChildFaviconDirectory);
+    TemplateRuntime::install($thinRuntime);
+    try {
+        $childSpecificFaviconMarkup = (new FaviconRenderer(
+            $temporaryDirectory,
+            'Test shop',
+            static fn (string $path): string => $path
+        ))->render();
+    } finally {
+        chmod($thinChildFaviconDirectory, 0755);
+        TemplateRuntime::install($runtime);
+    }
+    assertSameValue(
+        0,
+        substr_count($childSpecificFaviconMarkup, 'rel="manifest"'),
+        'Ein Child mit eigenem Web-App-Icon darf bei fehlgeschlagener Generierung nicht auf das Parent-Manifest zurückfallen.'
+    );
+
     require dirname(__DIR__, 4) . '/inc/xtc_image.inc.php';
     require dirname(__DIR__, 4) . '/inc/xtc_image_button.inc.php';
     require dirname(__DIR__, 4) . '/inc/xtc_image_submit.inc.php';
@@ -572,5 +676,8 @@ try {
     echo sprintf("Template-Vererbung: %d Assertions erfolgreich.\n", $assertions);
 } finally {
     TemplateRuntime::reset();
+    if ($readOnlyTemplateDirectory !== null && is_dir($readOnlyTemplateDirectory)) {
+        chmod($readOnlyTemplateDirectory, 0755);
+    }
     removeTestDirectory($temporaryDirectory);
 }
