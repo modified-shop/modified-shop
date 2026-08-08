@@ -1,4 +1,5 @@
 <?php
+
 /* -----------------------------------------------------------------------------------------
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -10,262 +11,384 @@
 
 final class FaviconRenderer
 {
-  // Generated metadata is refreshed after one day.
-  private const METADATA_REFRESH_INTERVAL_SECONDS = 86400; // 24 Hours
+    // Generated metadata is refreshed after one day.
+    private const METADATA_REFRESH_INTERVAL_SECONDS = 86400; // 24 Hours
 
-  private string $catalog_directory;
-  private string $encoded_title;
-  private Closure $link_generator;
-
-  public function __construct(string $catalog_directory, string $encoded_title, callable $link_generator)
-  {
-    $this->catalog_directory = rtrim(str_replace('\\', '/', $catalog_directory), '/').'/';
-    $this->encoded_title = $encoded_title;
-    $this->link_generator = Closure::fromCallable($link_generator);
-  }
-
-  public static function fromGlobals(string $request_type): self
-  {
-    return new self(
-      DIR_FS_CATALOG,
-      encode_htmlspecialchars(TITLE),
-      static fn (string $path): string => xtc_href_link($path, '', $request_type, false)
-    );
-  }
-
-  public function render(): string
-  {
-    if (Template::findPath('favicons/') === null) {
-      return $this->renderFallbackFavicon();
-    }
-
-    $groups = $this->groupEffectiveFiles();
-
-    return $this->renderFavicons($groups['favicon'])
-      .$this->renderAppleTouchIcons($groups['apple_touch_icon'])
-      .$this->renderSafariPinnedTabs($groups['safari_pinned_tab'])
-      .$this->renderWindowsTiles($groups['mstile'])
-      .$this->renderWebAppManifest($groups['android_touch_icon']);
-  }
-
-  private function renderFallbackFavicon(): string
-  {
-    if (Template::findPath('favicon.ico') === null) {
-      return '';
-    }
-
-    return '<link rel="shortcut icon" href="'.$this->link('templates/'.Template::resolve('favicon.ico')).'" />'."\n";
-  }
-
-  private function groupEffectiveFiles(): array
-  {
-    $groups = [
-      'favicon' => [],
-      'apple_touch_icon' => [],
-      'safari_pinned_tab' => [],
-      'mstile' => [],
-      'android_touch_icon' => [],
+    private const RESOURCE_GROUPS = [
+        'favicon' => [
+            'prefixes' => ['favicon'],
+            'renderer' => 'renderFavicons',
+        ],
+        'apple_touch_icon' => [
+            'prefixes' => ['apple-touch-icon'],
+            'renderer' => 'renderAppleTouchIcons',
+        ],
+        'safari_pinned_tab' => [
+            'prefixes' => ['safari-pinned-tab'],
+            'renderer' => 'renderSafariPinnedTabs',
+        ],
+        'mstile' => [
+            'prefixes' => ['mstile'],
+            'renderer' => 'renderWindowsTiles',
+        ],
+        'android_touch_icon' => [
+            'prefixes' => ['android-chrome', 'web-app-manifest'],
+            'renderer' => 'renderWebAppManifest',
+        ],
     ];
 
-    foreach (Template::files('favicons/') as $path) {
-      $name = basename($path);
-      $group = $this->groupFor($name);
-      if ($group === null) {
-        continue;
-      }
+    private string $catalog_directory;
+    private string $encoded_title;
+    private Closure $link_generator;
 
-      $groups[$group][] = [
-        'name' => $name,
-        'extension' => pathinfo($path, PATHINFO_EXTENSION),
-        'url' => $this->link('templates/'.Template::resolve('favicons/'.$name)),
-      ];
+    public function __construct(string $catalog_directory, string $encoded_title, callable $link_generator)
+    {
+        $this->catalog_directory = rtrim(str_replace('\\', '/', $catalog_directory), '/') . '/';
+        $this->encoded_title = $encoded_title;
+        $this->link_generator = Closure::fromCallable($link_generator);
     }
 
-    return $groups;
-  }
-
-  private function groupFor(string $name): ?string
-  {
-    if (str_starts_with($name, 'favicon')) {
-      return 'favicon';
-    }
-    if (str_starts_with($name, 'apple-touch-icon')) {
-      return 'apple_touch_icon';
-    }
-    if (str_starts_with($name, 'safari-pinned-tab')) {
-      return 'safari_pinned_tab';
-    }
-    if (str_starts_with($name, 'mstile')) {
-      return 'mstile';
-    }
-    if (str_starts_with($name, 'android-chrome') || str_starts_with($name, 'web-app-manifest')) {
-      return 'android_touch_icon';
+    public static function fromGlobals(string $request_type): self
+    {
+        return new self(
+            DIR_FS_CATALOG,
+            encode_htmlspecialchars(TITLE),
+            static fn (string $path): string => xtc_href_link($path, '', $request_type, false)
+        );
     }
 
-    return null;
-  }
+    public function render(): string
+    {
+        if (Template::findPath('favicons/') === null) {
+            return $this->renderFallbackFavicon();
+        }
 
-  private function renderFavicons(array $favicons): string
-  {
-    $markup = '';
-    foreach ($favicons as $favicon) {
-      preg_match('/(\d+)x(\d+)/', $favicon['name'], $match);
-      if ($favicon['extension'] === 'ico') {
-        $markup .= '<link rel="shortcut icon" href="'.$favicon['url'].'" />'."\n";
-        continue;
-      }
+        $groups = $this->groupEffectiveFiles();
+        $markup = '';
 
-      $type = 'image/'.$favicon['extension'].($favicon['extension'] === 'svg' ? '+xml' : '');
-      $sizes = isset($match[0]) && $match[0] !== '' ? ' sizes="'.$match[0].'"' : '';
-      $markup .= '<link rel="icon" type="'.$type.'"'.$sizes.' href="'.$favicon['url'].'" />'."\n";
+        foreach (self::RESOURCE_GROUPS as $group_name => $definition) {
+            $renderer = $definition['renderer'];
+            $markup .= $this->{$renderer}($groups[$group_name]);
+        }
+
+        return $markup;
     }
 
-    return $markup;
-  }
+    // Renderers
 
-  private function renderAppleTouchIcons(array $icons): string
-  {
-    $markup = '';
-    foreach ($icons as $icon) {
-      preg_match('/(\d+)x(\d+)/', $icon['name'], $match);
-      $sizes = isset($match[0]) && $match[0] !== '' ? ' sizes="'.$match[0].'"' : '';
-      $markup .= '<link rel="apple-touch-icon"'.$sizes.' href="'.$icon['url'].'" />'."\n";
-    }
-    if (count($icons) > 0) {
-      $markup .= '<meta name="apple-mobile-web-app-title" content="'.$this->encoded_title.'" />'."\n";
+    private function renderFallbackFavicon(): string
+    {
+        if (Template::findPath('favicon.ico') === null) {
+            return '';
+        }
+
+        return '<link rel="shortcut icon" href="' . $this->link('templates/' . Template::resolve('favicon.ico')) . '" />' . "\n";
     }
 
-    return $markup;
-  }
+    private function renderFavicons(array $favicons): string
+    {
+        $markup = '';
+        foreach ($favicons as $favicon) {
+            if ($favicon['extension'] === 'ico') {
+                $markup .= '<link rel="shortcut icon" href="' . $favicon['url'] . '" />' . "\n";
+                continue;
+            }
 
-  private function renderSafariPinnedTabs(array $icons): string
-  {
-    $markup = '';
-    foreach ($icons as $icon) {
-      preg_match('/(\d+)x(\d+)/', $icon['name'], $match);
-      $sizes = isset($match[0]) && $match[0] !== '' ? ' sizes="'.$match[0].'"' : '';
-      $markup .= '<link rel="mask-icon"'.$sizes.' href="'.$icon['url'].'" color="#888888" />'."\n";
+            $type = 'image/' . $favicon['extension'];
+            if ($favicon['extension'] === 'svg') {
+                $type .= '+xml';
+            }
+
+            $sizes = $this->sizeAttribute($favicon['name']);
+            $markup .= '<link rel="icon" type="' . $type . '"' . $sizes . ' href="' . $favicon['url'] . '" />' . "\n";
+        }
+
+        return $markup;
     }
 
-    return $markup;
-  }
+    private function renderAppleTouchIcons(array $icons): string
+    {
+        $markup = '';
+        foreach ($icons as $icon) {
+            $sizes = $this->sizeAttribute($icon['name']);
+            $markup .= '<link rel="apple-touch-icon"' . $sizes . ' href="' . $icon['url'] . '" />' . "\n";
+        }
+        if (count($icons) > 0) {
+            $markup .= '<meta name="apple-mobile-web-app-title" content="' . $this->encoded_title . '" />' . "\n";
+        }
 
-  private function renderWindowsTiles(array $tiles): string
-  {
-    if (count($tiles) === 0) {
-      return '';
+        return $markup;
     }
 
-    $browserconfig = '<?xml version="1.0" encoding="utf-8"?><browserconfig><msapplication><tile>';
-    foreach ($tiles as $tile) {
-      preg_match('/(\d+)x(\d+)/', $tile['name'], $match);
-      if (!isset($match[0]) || $match[0] === '') {
-        continue;
-      }
+    private function renderSafariPinnedTabs(array $icons): string
+    {
+        $markup = '';
+        foreach ($icons as $icon) {
+            $sizes = $this->sizeAttribute($icon['name']);
+            $markup .= '<link rel="mask-icon"' . $sizes . ' href="' . $icon['url'] . '" color="#888888" />' . "\n";
+        }
 
-      $element = $match[1] > $match[2] ? 'wide' : 'square';
-      $browserconfig .= '<'.$element.$match[0].'logo src="'.$tile['url'].'"/>';
-    }
-    $browserconfig .= '<TileColor>#ffffff</TileColor></tile></msapplication></browserconfig>';
-
-    $relative_path = $this->writeMetadata('favicons/browserconfig.xml', $browserconfig);
-    $markup = '<meta name="msapplication-TileColor" content="#ffffff" />'."\n";
-    $markup .= '<meta name="theme-color" content="#ffffff" />'."\n";
-    if ($relative_path !== null) {
-      $markup .= '<meta name="msapplication-config" content="'.$this->link($relative_path).'" />'."\n";
+        return $markup;
     }
 
-    return $markup;
-  }
+    private function renderWindowsTiles(array $tiles): string
+    {
+        if (count($tiles) === 0) {
+            return '';
+        }
 
-  private function renderWebAppManifest(array $icons): string
-  {
-    if (count($icons) === 0) {
-      return '';
+        $browserconfig = '<?xml version="1.0" encoding="utf-8"?><browserconfig><msapplication><tile>';
+        foreach ($tiles as $tile) {
+            $element = $this->windowsTileElementName($tile['name']);
+            if ($element === null) {
+                continue;
+            }
+
+            $browserconfig .= '<' . $element . ' src="' . $tile['url'] . '"/>';
+        }
+        $browserconfig .= '<TileColor>#ffffff</TileColor></tile></msapplication></browserconfig>';
+
+        $allow_inherited_fallback = !$this->hasActiveTemplateFiles($tiles);
+        $relative_path = $this->writeMetadata(
+            'favicons/browserconfig.xml',
+            $browserconfig,
+            $allow_inherited_fallback
+        );
+        $markup = '<meta name="msapplication-TileColor" content="#ffffff" />' . "\n";
+        $markup .= '<meta name="theme-color" content="#ffffff" />' . "\n";
+        if ($relative_path !== null) {
+            $markup .= '<meta name="msapplication-config" content="' . $this->link($relative_path) . '" />' . "\n";
+        }
+
+        return $markup;
     }
 
-    $manifest = [
-      'name' => $this->encoded_title,
-      'short_name' => $this->encoded_title,
-      'icons' => [],
-      'theme_color' => '#ffffff',
-      'background_color' => '#ffffff',
-      'display' => 'standalone',
-    ];
+    private function renderWebAppManifest(array $icons): string
+    {
+        if (count($icons) === 0) {
+            return '';
+        }
 
-    foreach ($icons as $icon) {
-      preg_match('/(\d+)x(\d+)/', $icon['name'], $match);
-      if (!isset($match[0]) || $match[0] === '') {
-        continue;
-      }
+        $manifest = [
+          'name' => $this->encoded_title,
+          'short_name' => $this->encoded_title,
+          'icons' => [],
+          'theme_color' => '#ffffff',
+          'background_color' => '#ffffff',
+          'display' => 'standalone',
+        ];
 
-      $manifest['icons'][] = [
-        'src' => $icon['url'],
-        'sizes' => $match[0],
-        'type' => 'image/'.$icon['extension'],
-      ];
+        foreach ($icons as $icon) {
+            $dimensions = $this->dimensionsFromName($icon['name']);
+            if ($dimensions === null) {
+                continue;
+            }
+
+            $manifest['icons'][] = [
+              'src' => $icon['url'],
+              'sizes' => $dimensions['size'],
+              'type' => 'image/' . $icon['extension'],
+            ];
+        }
+
+        if (count($manifest['icons']) === 0) {
+            return '';
+        }
+
+        $contents = json_encode($manifest);
+        if ($contents === false) {
+            return '';
+        }
+
+        $allow_inherited_fallback = !$this->hasActiveTemplateFiles($icons);
+        $relative_path = $this->writeMetadata(
+            'favicons/site.webmanifest',
+            $contents,
+            $allow_inherited_fallback
+        );
+
+        if ($relative_path === null) {
+            return '';
+        }
+
+        return '<link rel="manifest" href="' . $this->link($relative_path) . '" />' . "\n";
     }
 
-    if (count($manifest['icons']) === 0) {
-      return '';
+    // Resource discovery
+
+    private function groupEffectiveFiles(): array
+    {
+        $active_template = Template::chain()[0];
+        $groups = array_fill_keys(array_keys(self::RESOURCE_GROUPS), []);
+
+        foreach (Template::files('favicons/') as $path) {
+            $name = basename($path);
+            $group = $this->groupFor($name);
+            if ($group === null) {
+                continue;
+            }
+
+            $resolved_template_path = Template::resolve('favicons/' . $name);
+
+            $groups[$group][] = [
+                'name' => $name,
+                'extension' => pathinfo($path, PATHINFO_EXTENSION),
+                'url' => $this->link('templates/' . $resolved_template_path),
+                'from_active_template' => str_starts_with($resolved_template_path, $active_template . '/'),
+            ];
+        }
+
+        return $groups;
     }
 
-    $contents = json_encode($manifest);
-    if ($contents === false) {
-      return '';
+    private function groupFor(string $name): ?string
+    {
+        foreach (self::RESOURCE_GROUPS as $group_name => $definition) {
+            foreach ($definition['prefixes'] as $prefix) {
+                if (str_starts_with($name, $prefix)) {
+                    return $group_name;
+                }
+            }
+        }
+
+        return null;
     }
 
-    $relative_path = $this->writeMetadata('favicons/site.webmanifest', $contents);
+    private function hasActiveTemplateFiles(array $files): bool
+    {
+        foreach ($files as $file) {
+            if ($file['from_active_template']) {
+                return true;
+            }
+        }
 
-    return $relative_path === null
-      ? ''
-      : '<link rel="manifest" href="'.$this->link($relative_path).'" />'."\n";
-  }
-
-  private function writeMetadata(string $logical_name, string $contents): ?string
-  {
-    if (Template::findPath($logical_name) === null) {
-      return null;
+        return false;
     }
 
-    $active_template = Template::chain()[0];
-    $relative_path = 'templates/'.$active_template.'/'.$logical_name;
-    $file_path = $this->catalog_directory.$relative_path;
-    if (!$this->ensureDirectory(dirname($file_path))) {
-      return null;
+    // Metadata persistence
+
+    private function writeMetadata(string $logical_name, string $contents, bool $allow_inherited_fallback): ?string
+    {
+        if (Template::findPath($logical_name) === null) {
+            return null;
+        }
+
+        $resolved_relative_path = 'templates/' . Template::resolve($logical_name);
+        $active_template = Template::chain()[0];
+        $relative_path = 'templates/' . $active_template . '/' . $logical_name;
+        $file_path = $this->catalog_directory . $relative_path;
+        if (!$this->ensureDirectory(dirname($file_path))) {
+            if ($allow_inherited_fallback) {
+                return $resolved_relative_path;
+            }
+
+            return null;
+        }
+
+        if ($this->needsRefresh($file_path)) {
+            $bytes_written = @file_put_contents($file_path, $contents, LOCK_EX);
+            if ($bytes_written === false) {
+                if (is_file($file_path)) {
+                    return $relative_path;
+                }
+                if ($allow_inherited_fallback) {
+                    return $resolved_relative_path;
+                }
+
+                return null;
+            }
+        }
+
+        if (is_file($file_path)) {
+            return $relative_path;
+        }
+        if ($allow_inherited_fallback) {
+            return $resolved_relative_path;
+        }
+
+        return null;
     }
 
-    if ($this->needsRefresh($file_path) && file_put_contents($file_path, $contents, LOCK_EX) === false) {
-      return null;
+    private function ensureDirectory(string $directory): bool
+    {
+        if (is_dir($directory)) {
+            return true;
+        }
+        if (@mkdir($directory, 0777, true)) {
+            return true;
+        }
+
+        return is_dir($directory);
     }
 
-    return is_file($file_path) ? $relative_path : null;
-  }
+    private function needsRefresh(string $file_path): bool
+    {
+        if (!is_file($file_path)) {
+            return is_writable(dirname($file_path));
+        }
+        if (!is_writable($file_path)) {
+            return false;
+        }
 
-  private function ensureDirectory(string $directory): bool
-  {
-    return is_dir($directory)
-      || mkdir($directory, 0777, true)
-      || is_dir($directory);
-  }
+        $modified_at = filemtime($file_path);
+        if ($modified_at === false) {
+            return false;
+        }
+        if (filesize($file_path) === 0) {
+            return true;
+        }
 
-  private function needsRefresh(string $file_path): bool
-  {
-    if (!is_file($file_path)) {
-      return is_writable(dirname($file_path));
+        return $modified_at < time() - self::METADATA_REFRESH_INTERVAL_SECONDS;
     }
-    if (!is_writable($file_path)) {
-      return false;
+
+    // File name metadata
+
+    private function sizeAttribute(string $name): string
+    {
+        $dimensions = $this->dimensionsFromName($name);
+        if ($dimensions === null) {
+            return '';
+        }
+
+        return ' sizes="' . $dimensions['size'] . '"';
     }
 
-    $modified_at = filemtime($file_path);
+    private function windowsTileElementName(string $name): ?string
+    {
+        $dimensions = $this->dimensionsFromName($name);
+        if ($dimensions === null) {
+            return null;
+        }
 
-    return $modified_at !== false
-      && ($modified_at < time() - self::METADATA_REFRESH_INTERVAL_SECONDS || filesize($file_path) === 0);
-  }
+        $element = 'square';
+        if ($dimensions['width'] > $dimensions['height']) {
+            $element = 'wide';
+        }
 
-  private function link(string $path): string
-  {
-    return ($this->link_generator)($path);
-  }
+        return $element . $dimensions['size'] . 'logo';
+    }
+
+    /**
+     * @return array{size: string, width: int, height: int}|null
+     */
+    private function dimensionsFromName(string $name): ?array
+    {
+        $matches = [];
+        if (preg_match('/(\d+)x(\d+)/', $name, $matches) !== 1) {
+            return null;
+        }
+
+        return [
+            'size' => $matches[0],
+            'width' => (int) $matches[1],
+            'height' => (int) $matches[2],
+        ];
+    }
+
+    // Link generation
+
+    private function link(string $path): string
+    {
+        return ($this->link_generator)($path);
+    }
 }
