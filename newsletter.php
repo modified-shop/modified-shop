@@ -116,7 +116,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'newsletter';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 if (in_array('newsletter', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
   $smarty->assign('VVIMG', $mod_captcha->get_image_code());
@@ -148,12 +148,12 @@ if (DISPLAY_PRIVACY_CHECK == 'true') {
 $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/newsletter.html');
+$main_content = $smarty->fetch(Template::resolve('module/newsletter.html'));
 $smarty->assign('main_content', $main_content);
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;
 if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

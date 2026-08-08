@@ -88,8 +88,8 @@
   $smarty->assign('charset', $langcode['language_charset']);
   $smarty->assign('language', $order->info['language']);
 
-  $smarty->assign('logo_path', DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-  $smarty->assign('tpl_path', DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+  $smarty->assign('logo_path', Template::catalogUrl('img/'));
+  $smarty->assign('tpl_path', Template::catalogUrl(''));
   $smarty->assign('base_href', xtc_catalog_href_link('', '', $request_type, false, false));
 
   $smarty->assign('oID',$order->info['order_id']);
@@ -124,4 +124,4 @@
   $smarty->template_dir = DIR_FS_CATALOG.'templates';
   $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
   $smarty->config_dir = DIR_FS_CATALOG.'lang';
-  $smarty->display(CURRENT_TEMPLATE . '/admin/print_order.html');
+  $smarty->display(Template::resolve('admin/print_order.html'));

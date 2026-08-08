@@ -72,10 +72,11 @@
       $productData['PRODUCTS_REVIEWS_COUNT'] = $product->getReviewsCount($array['products_id']);
       $productData['PRODUCTS_REVIEWS_AVERAGE'] = $product->getReviewsAverage($array['products_id']);
       
-      $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$productData['PRODUCTS_REVIEWS_AVERAGE'].'.gif';
-      if (!is_file(DIR_FS_CATALOG.$img)) {
-        $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$productData['PRODUCTS_REVIEWS_AVERAGE'].'.png';        
+      $rating_image = 'img/stars_' . $productData['PRODUCTS_REVIEWS_AVERAGE'] . '.gif';
+      if (Template::findPath($rating_image) === null) {
+        $rating_image = 'img/stars_' . $productData['PRODUCTS_REVIEWS_AVERAGE'] . '.png';
       }
+      $img = Template::url($rating_image);
       $productData['PRODUCTS_RATING_STARS'] = xtc_image($img, sprintf(TEXT_OF_5_STARS, $productData['PRODUCTS_REVIEWS_AVERAGE']));
       $productData['PRODUCTS_RATING_STARS_MICROTAG'] = xtc_image($img, sprintf(TEXT_OF_5_STARS, $productData['PRODUCTS_REVIEWS_AVERAGE']),'','','itemprop="rating"');
       

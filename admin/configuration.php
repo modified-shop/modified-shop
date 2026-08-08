@@ -113,7 +113,7 @@
                                    last_modified = NOW() 
                              WHERE configuration_key = '" . $configuration['configuration_key'] . "'");
              
-              // load template config install/uninstall if exist
+              // Template lifecycle hooks belong to the exact old/new packages and are intentionally not inherited.
               if ($configuration['configuration_key'] == 'CURRENT_TEMPLATE') {
                 if (is_file(DIR_FS_CATALOG.'templates/'.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php')) {
                   include(DIR_FS_CATALOG.'templates/'.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php');
@@ -140,9 +140,16 @@
         clear_dir(DIR_FS_CATALOG.'templates_c/');
         require_once(DIR_FS_CATALOG.'includes/modified_cache.php');
         $modified_cache->deleteByTag('template');
-        file_put_contents(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.min.css', '');
-        file_put_contents(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/tpl_plugins.min.css', '');        
-        file_put_contents(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/javascript/tpl_plugins.min.js', '');
+        $template_directory = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/';
+        if (is_file($template_directory.'stylesheet.min.css')) {
+          file_put_contents($template_directory.'stylesheet.min.css', '');
+        }
+        if (is_file($template_directory.'css/tpl_plugins.min.css')) {
+          file_put_contents($template_directory.'css/tpl_plugins.min.css', '');
+        }
+        if (is_file($template_directory.'javascript/tpl_plugins.min.js')) {
+          file_put_contents($template_directory.'javascript/tpl_plugins.min.js', '');
+        }
         $messageStack->add_session(DELETE_TEMP_CACHE_SUCCESSFUL, 'success');
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;

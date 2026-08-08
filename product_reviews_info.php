@@ -32,7 +32,7 @@ if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
 
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', Template::url(''));
 
 if (!is_object($product) || $product->isProduct() === false || $language_not_found === true) {
 
@@ -54,7 +54,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.(int)$_GET['products_id'].'|rID:'.(int)$_GET['reviews_id']);
   }
 
-  if (!$smarty->is_cached(CURRENT_TEMPLATE.'/module/product_reviews_info.html', $cache_id) || !$cache) {
+  if (!$smarty->is_cached(Template::resolve('module/product_reviews_info.html'), $cache_id) || !$cache) {
     $product_reviews_query = xtDBquery("SELECT r.*,
                                                rd.reviews_text,
                                                p.products_id,
@@ -85,7 +85,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $smarty->assign('AUTHOR', $product_reviews['customers_name']);
     $smarty->assign('DATE', xtc_date_long($product_reviews['date_added']));
     $smarty->assign('REVIEWS_TEXT', nl2br(xtc_break_string(encode_htmlspecialchars($product_reviews['reviews_text']), 60, '-<br />')));
-    $smarty->assign('RATING', xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$product_reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $product_reviews['reviews_rating'])));
+    $rating_image = 'img/stars_' . $product_reviews['reviews_rating'] . '.gif';
+    if (Template::findPath($rating_image) === null) {
+      $rating_image = 'img/stars_' . $product_reviews['reviews_rating'] . '.png';
+    }
+    $smarty->assign('RATING', xtc_image(Template::url($rating_image), sprintf(TEXT_OF_5_STARS, $product_reviews['reviews_rating'])));
     $smarty->assign('RATING_VOTE', $product_reviews['reviews_rating']);
     $smarty->assign('PRODUCTS_NAME', $product_reviews['products_name']);
     $smarty->assign('PRODUCTS_HEADING_TITLE', $product_reviews['products_heading_title']);
@@ -111,7 +115,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
                    SET reviews_read = reviews_read+1 
                  WHERE reviews_id = '".(int)$_GET['reviews_id']."'");
 
-  $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews_info.html', $cache_id);
+  $main_content = $smarty->fetch(Template::resolve('module/product_reviews_info.html'), $cache_id);
   $smarty->assign('main_content', $main_content);
   $display_mode = 'reviews';
 }
@@ -123,10 +127,10 @@ $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_RE
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $smarty->caching = 0;
 if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

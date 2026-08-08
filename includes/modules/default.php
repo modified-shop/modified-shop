@@ -38,7 +38,7 @@ require_once (DIR_FS_INC.'get_filter_tags.inc.php');
 
 $default_smarty = new Smarty();
 $default_smarty->assign('language', $_SESSION['language']);
-$default_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$default_smarty->assign('tpl_path', Template::url(''));
 $default_smarty->assign('session', xtc_session_id());
 
 // define defaults
@@ -137,10 +137,10 @@ switch ($category_depth) {
     // get default template
     if ($category['categories_template'] == '' 
         || $category['categories_template'] == 'default'
-        || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template'])
+        || Template::findPath('module/categorie_listing/' . $category['categories_template']) === null
         )
     {
-      $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/','html'), function($file) {
+      $files = array_filter(Template::files('module/categorie_listing/', 'html'), function($file) {
         return false === strpos($file, 'index.html');
       });
       $category['categories_template'] = basename($files[0]);
@@ -161,7 +161,7 @@ switch ($category_depth) {
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/categories_smarty/','php') as $file) require_once ($file);
 
     $default_smarty->caching = 0;
-    $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
+    $main_content = $default_smarty->fetch(Template::resolve('module/categorie_listing/' . $category['categories_template']));
     $smarty->assign('main_content', $main_content);
     $display_mode = 'category';
     break;
@@ -356,7 +356,7 @@ switch ($category_depth) {
     }
     
     $default_smarty->caching = 0;
-    $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_main_template);
+    $main_content = $default_smarty->fetch(Template::resolve('module/' . $content_main_template));
     $smarty->assign('main_content', $main_content);
     break;
 }

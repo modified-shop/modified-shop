@@ -51,8 +51,8 @@
   function send_gv_mail($data) {
     global $currencies, $smarty;
     
-    $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-    $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+    $smarty->assign('tpl_path', Template::absoluteUrl(''));
+    $smarty->assign('logo_path', Template::absoluteUrl('img/'));
 
     $smarty->assign('MESSAGE', $data['message']);
     $smarty->assign('WEBSITE', HTTP_SERVER.DIR_WS_CATALOG);
@@ -77,8 +77,8 @@
     $smarty->assign('language', $_SESSION['language']);
     $smarty->caching = 0;
 
-    $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/'.$template.'.html');
-    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/'.$template.'.txt');
+    $html_mail = $smarty->fetch(Template::resolve('admin/mail/' . $_SESSION['language'] . '/' . $template . '.html'));
+    $txt_mail = $smarty->fetch(Template::resolve('admin/mail/' . $_SESSION['language'] . '/' . $template . '.txt'));
     $txt_mail = strip_tags($txt_mail);
     
     xtc_php_mail(EMAIL_BILLING_ADDRESS,

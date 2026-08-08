@@ -20,7 +20,7 @@ require_once (DIR_FS_INC.'get_pictureset_data.inc.php');
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -35,7 +35,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/also_purchased.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/also_purchased.html'), $cache_id) || !$cache) {
   $data = $product->getAlsoPurchased();
   if (count($data) > 0
       && count($data) >= MIN_DISPLAY_ALSO_PURCHASED
@@ -52,5 +52,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/also_purchased.html', $
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/also_purchased.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/also_purchased.html'), $cache_id);
 $info_smarty->assign('MODULE_also_purchased', !empty($module) ? trim($module) : $module);

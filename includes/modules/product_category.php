@@ -15,7 +15,7 @@ require_once (DIR_FS_INC.'get_pictureset_data.inc.php');
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -30,7 +30,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|cID:'.$current_category_id.'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_category.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/products_category.html'), $cache_id) || !$cache) {
   $module_content = array();
   if (isset($current_category_id)) {
     $products_category_query = "SELECT * 
@@ -73,5 +73,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_category.html'
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_category.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/products_category.html'), $cache_id);
 $info_smarty->assign('MODULE_products_category', !empty($module) ? trim($module) : $module);

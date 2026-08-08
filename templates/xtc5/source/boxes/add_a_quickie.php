@@ -20,7 +20,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 $box_smarty->assign('FORM_ACTION',xtc_draw_form('quick_add', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array ('action')) . 'action=add_a_quickie', $request_type)));
 $box_smarty->assign('INPUT_FIELD',xtc_draw_input_field('quickie','','style="width:170px"'));
@@ -28,7 +28,7 @@ $box_smarty->assign('SUBMIT_BUTTON', xtc_image_submit('button_add_quick.gif', BO
 $box_smarty->assign('FORM_END', '</form>');
 
 $box_smarty->caching = 0;
-$box_add_a_quickie = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_add_a_quickie.html');
+$box_add_a_quickie = $box_smarty->fetch(Template::resolve('boxes/box_add_a_quickie.html'));
 
 $smarty->assign('box_ADD_QUICKIE', $box_add_a_quickie);
 ?>

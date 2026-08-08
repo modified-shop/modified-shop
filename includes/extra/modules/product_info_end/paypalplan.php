@@ -66,7 +66,7 @@
             $i ++;
           }
           $module_smarty->assign('module_content', $module_content);
-          $plan_content = $module_smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_payment_block.html');
+          $plan_content = $module_smarty->fetch(Template::resolve('module/checkout_payment_block.html'));
           
           $plan_content = str_replace('<div class="pp-message"></div>', '', $plan_content);      
           $plan_content = str_replace('id="horizontalAccordion"', 'id="horizontalAccordionPlan"', $plan_content);

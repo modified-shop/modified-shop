@@ -17,7 +17,7 @@
 include ('includes/application_top.php');
 
 $smarty = new Smarty();
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', Template::url(''));
 $smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
 $smarty->assign('doctype', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''));
 $smarty->assign('charset', $_SESSION['language_charset']);
@@ -77,7 +77,7 @@ if ($customer_id > 0
 
   // dont allow cache
   $smarty->caching =0;
-  $smarty->display(CURRENT_TEMPLATE.'/module/print_order.html');
+  $smarty->display(Template::resolve('module/print_order.html'));
 } else {
   die('You are not allowed to view this order!');
 }

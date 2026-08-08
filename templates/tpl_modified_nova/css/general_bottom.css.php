@@ -15,30 +15,30 @@
 
   // This CSS file get includes at the BOTTOM of every template page in shop
   // you can add your template specific css scripts here
-  defined('DIR_TMPL') OR define('DIR_TMPL', 'templates/'.CURRENT_TEMPLATE.'/');
+  defined('DIR_TMPL') OR define('DIR_TMPL', Template::url(''));
   defined('DIR_TMPL_CSS') OR define('DIR_TMPL_CSS', DIR_TMPL.'css/');
 
   $css_array = array(
-    DIR_TMPL_CSS.'jquery.colorbox.css',
-    DIR_TMPL_CSS.'jquery.sumoselect.css',
-    DIR_TMPL_CSS.'jquery.alertable.css',
-    DIR_TMPL_CSS.'splide.css',
-    DIR_TMPL_CSS.'jquery.viewer.css',
-    DIR_TMPL_CSS.'jquery.mmenulight.css',
-    DIR_TMPL_CSS.'fontawesome-6-custom.css',
-    DIR_TMPL_CSS.'cookieconsent.css',
+    'templates/' . Template::resolve('css/jquery.colorbox.css'),
+    'templates/' . Template::resolve('css/jquery.sumoselect.css'),
+    'templates/' . Template::resolve('css/jquery.alertable.css'),
+    'templates/' . Template::resolve('css/splide.css'),
+    'templates/' . Template::resolve('css/jquery.viewer.css'),
+    'templates/' . Template::resolve('css/jquery.mmenulight.css'),
+    'templates/' . Template::resolve('css/fontawesome-6-custom.css'),
+    'templates/' . Template::resolve('css/cookieconsent.css'),
   );
 
-  if (is_file(DIR_FS_CATALOG.DIR_TMPL_CSS.'tpl_custom_bottom.css')) {
-    array_push($css_array, DIR_TMPL_CSS.'tpl_custom_bottom.css');
+  if (Template::findPath('css/tpl_custom_bottom.css') !== null) {
+    array_push($css_array, 'templates/' . Template::resolve('css/tpl_custom_bottom.css'));
   }
 
-  $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
+  $css_min = 'templates/'.CURRENT_TEMPLATE.'/css/tpl_plugins.min.css';
 
-  $this_f_time = filemtime(DIR_FS_CATALOG.DIR_TMPL_CSS.'general_bottom.css.php');
+  $this_f_time = filemtime(Template::path('css/general_bottom.css.php'));
 
   if (COMPRESS_STYLESHEET == 'true') {
-    require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');
+    require_once(Template::path('source/inc/combine_files.inc.php'));
     $css_array = combine_files($css_array,$css_min,true,$this_f_time);
   }
   

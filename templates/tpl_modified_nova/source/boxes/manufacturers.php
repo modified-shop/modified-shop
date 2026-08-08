@@ -11,12 +11,12 @@
    ---------------------------------------------------------------------------------------*/
    
   // include smarty
-  include(DIR_FS_BOXES_INC . 'smarty_default.php');
+  include(Template::path('source/inc/smarty_default.php'));
 
   // set cache id
   $cache_id = md5('lID:'.$_SESSION['language'].'|mID:'.(isset($_GET['manufacturers_id']) ? (int)$_GET['manufacturers_id'] : '0'));
 
-  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $cache_id) || !$cache) {  
+  if (!$box_smarty->is_cached(Template::resolve('boxes/box_manufacturers.html'), $cache_id) || !$cache) {
     $manufacturers_query = xtDBquery("SELECT m.*
                                         FROM ".TABLE_MANUFACTURERS." as m
                                         JOIN ".TABLE_PRODUCTS." as p 
@@ -54,6 +54,6 @@
     }  
   }
 
-  $box_manufacturers = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $cache_id);
+  $box_manufacturers = $box_smarty->fetch(Template::resolve('boxes/box_manufacturers.html'), $cache_id);
 
   $smarty->assign('box_MANUFACTURERS', $box_manufacturers);

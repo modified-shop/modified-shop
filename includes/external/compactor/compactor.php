@@ -43,7 +43,7 @@
 
 	class Compactor
 	{
-    var $data;
+    var $data = array();
     
 		/**
 		 * Holds the options array
@@ -138,12 +138,17 @@
      */
     public function add($data)
     {
+        $is_file_path = file_exists($data) && is_file($data);
+
         // load data
         $value = $this->load($data);
-        $key = ($data != $value) ? $data : count($this->data);
-        
+
         // store data
-        $this->data[$key] = $value;
+        if ($is_file_path) {
+            $this->data[$data] = $value;
+        } else {
+            $this->data[] = $value;
+        }
     }
 
     /**

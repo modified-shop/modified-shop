@@ -11,12 +11,12 @@
    ---------------------------------------------------------------------------------------*/
 
   // include smarty
-  include(DIR_FS_BOXES_INC . 'smarty_default.php');
+  include(Template::path('source/inc/smarty_default.php'));
 
   // set cache id
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id']);
 
-  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_infobox.html', $cache_id) || !$cache) {
+  if (!$box_smarty->is_cached(Template::resolve('boxes/box_infobox.html'), $cache_id) || !$cache) {
 
     $box_content = '';
     if ($_SESSION['customers_status']['customers_status_image'] != '') {
@@ -44,6 +44,6 @@
     $box_smarty->assign('BOX_CONTENT', $box_content);
   }
 
-  $box_infobox = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_infobox.html', $cache_id);
+  $box_infobox = $box_smarty->fetch(Template::resolve('boxes/box_infobox.html'), $cache_id);
 
   $smarty->assign('box_INFOBOX', $box_infobox);

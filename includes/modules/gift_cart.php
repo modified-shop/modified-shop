@@ -29,7 +29,7 @@
    ---------------------------------------------------------------------------------------*/
 
 $gift_smarty = new Smarty();
-$gift_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$gift_smarty->assign('tpl_path', Template::url(''));
 
 if (ACTIVATE_GIFT_SYSTEM == 'true' 
     && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
@@ -100,5 +100,5 @@ $gift_smarty->assign('language', $_SESSION['language']);
 $gift_smarty->assign('FORM_END', '</form>');
 $gift_smarty->caching = 0;
 
-$module = $gift_smarty->fetch(CURRENT_TEMPLATE.'/module/gift_cart.html');
+$module = $gift_smarty->fetch(Template::resolve('module/gift_cart.html'));
 $smarty->assign('MODULE_gift_cart', !empty($module) ? trim($module) : $module);

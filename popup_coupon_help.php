@@ -23,7 +23,7 @@ if (!isset($_GET['cID']) || $_GET['cID'] == '') {
 
 $popup_smarty = new Smarty();
 $popup_smarty->assign('language', $_SESSION['language']);
-$popup_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$popup_smarty->assign('tpl_path', Template::url(''));
 $popup_smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
 $popup_smarty->assign('doctype', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''));
 $popup_smarty->assign('charset', $_SESSION['language_charset']);
@@ -138,4 +138,4 @@ if (xtc_db_num_rows($coupon_query) > 0) {
 $popup_smarty->assign('TEXT_HELP', $text_coupon_help);
 
 $popup_smarty->caching = 0;
-$popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_coupon_help.html');
+$popup_smarty->display(Template::resolve('module/popup_coupon_help.html'));

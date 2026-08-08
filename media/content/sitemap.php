@@ -19,7 +19,7 @@
 // include needed function
 require_once(DIR_FS_INC . 'xtc_get_category_tree.inc.php');
 require_once(DIR_FS_INC . 'xtc_count_products_in_category.inc.php');
-require_once(DIR_FS_BOXES_INC . 'xtc_show_category.inc.php');
+require_once(Template::path('source/inc/xtc_show_category.inc.php'));
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
@@ -38,7 +38,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID'.$_SESSION['customers_status']['customers_status_id'].((isset($_REQUEST['error'])) ? '|error:'.$_REQUEST['error'] : ''));
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_id) || !$cache) {  
+if (!$module_smarty->is_cached(Template::resolve('module/sitemap.html'), $cache_id) || !$cache) {
   $module_content = array();
 
   if (function_exists('xtc_get_category_tree_array')) {
@@ -80,5 +80,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_i
   }
 }
 
-$module_smarty->display(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_id);
+$module_smarty->display(Template::resolve('module/sitemap.html'), $cache_id);
 $display_mode = 'sitemap';

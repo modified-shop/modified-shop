@@ -41,9 +41,9 @@
       <div class="downloadrow cf">
         <div class="dl_icon">
           {if $dl_data.allowed}
-            <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download.png" alt="" border="0" /></a>
+            <a href="{$dl_data.pic_link}"><img src="{template_asset path='img/img_download.png'}" alt="" border="0" /></a>
           {else}
-            <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download_locked.png" alt="" border="0" /></a>
+            <a href="{$dl_data.pic_link}"><img src="{template_asset path='img/img_download_locked.png'}" alt="" border="0" /></a>
           {/if}
         </div>
         <div class="dl_content">

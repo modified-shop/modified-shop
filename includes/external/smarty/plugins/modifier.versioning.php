@@ -25,7 +25,7 @@
  * @return string
  */
 function smarty_modifier_versioning($filename) {
-  $file_path = DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/img/' . $filename;
+  $file_path = Template::findPath('img/' . $filename);
 
-  return $filename . (file_exists($file_path) ? '?v=' . filemtime($file_path) : '');
+  return $filename . ($file_path !== null ? '?v=' . filemtime($file_path) : '');
 }

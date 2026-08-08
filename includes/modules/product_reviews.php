@@ -22,7 +22,7 @@ require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
 // create smarty elements
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -37,7 +37,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|count:'.$product->getReviewsCount());
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_reviews.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/products_reviews.html'), $cache_id) || !$cache) {
   $button_preview = '';
   if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
     $button_preview = '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>';
@@ -63,5 +63,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_reviews.html',
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_reviews.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/products_reviews.html'), $cache_id);
 $info_smarty->assign('MODULE_products_reviews', !empty($module) ? trim($module) : $module);

@@ -31,7 +31,7 @@
 
 $module_smarty = new Smarty();
 
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
@@ -177,6 +177,6 @@ $module_smarty->assign('module_content', $module_content);
 $module_smarty->assign('TOTAL_WEIGHT', $shipping_weight);
 
 $module_smarty->caching = 0;
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/order_details.html');
+$module = $module_smarty->fetch(Template::resolve('module/order_details.html'));
 
 $smarty->assign('MODULE_order_details', $module);

@@ -26,7 +26,7 @@ require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 // create smarty elements
 $info_smarty = new Smarty();
 $info_smarty->assign('language', $_SESSION['language']);
-$info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$info_smarty->assign('tpl_path', Template::url(''));
 $info_smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
 $info_smarty->assign('doctype', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''));
 $info_smarty->assign('charset', $_SESSION['language_charset']);
@@ -58,13 +58,13 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   require (DIR_WS_INCLUDES . 'header.php');
 
   // include boxes
-  require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+  require Template::path('source/boxes.php');
 
   $smarty->assign('language', $_SESSION['language']);
   $smarty->caching = 0;
   if (!defined('RM'))
     $smarty->load_filter('output', 'note');
-  $smarty->display(CURRENT_TEMPLATE.'/index.html');
+  $smarty->display(Template::resolve('index.html'));
 
   include ('includes/application_bottom.php');
 } else {
@@ -188,5 +188,5 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $info_smarty->assign('CanonicalLink', $canonical_link);
  
   $info_smarty->caching = 0;
-  $info_smarty->display(CURRENT_TEMPLATE.'/module/print_product_info.html');
+  $info_smarty->display(Template::resolve('module/print_product_info.html'));
 }

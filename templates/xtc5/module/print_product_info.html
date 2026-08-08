@@ -8,7 +8,7 @@
   {if $CanonicalLink}<link href="{$CanonicalLink}" rel="canonical" />{/if}
   {if $base_href}<base href="{$base_href}" />{/if}
   <meta http-equiv="Content-Style-Type" content="text/css" />
-  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet{if $smarty.const.COMPRESS_STYLESHEET == 'true'}.min{/if}.css" />
+  <link rel="stylesheet" type="text/css" href="{if $smarty.const.COMPRESS_STYLESHEET == 'true'}{template_asset path='stylesheet.min.css'}{else}{template_asset path='stylesheet.css'}{/if}" />
   <style type="text/css">
   {literal}
     body {background: none;}

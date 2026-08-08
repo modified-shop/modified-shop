@@ -1051,45 +1051,36 @@ function SendShopConfig ()
 
   //Ausgabe ProductListingTemplates
   $schema = '<PRODUCT_LISTING_TEMPLATES>' . "\n";
-  if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'))
+  foreach (Template::files("module/product_listing/", "html") as $file)
   {
-      while (($file = readdir($dir)) != false)
-      {
-          if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-             $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
-         } //if
-     } // while
-     closedir($dir);
+      $file = basename($file);
+      if ($file != "index.html") {
+         $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
+      }
   }
   $schema .= '</PRODUCT_LISTING_TEMPLATES>' . "\n";
   echo $schema;
 
   //Ausgabe ProductInfoTemplates
   $schema = '<PRODUCT_DETAILS_TEMPLATES>' . "\n";
-  if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'))
+  foreach (Template::files("module/product_info/", "html") as $file)
   {
-      while (($file = readdir($dir)) != false)
-      {
-          if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-             $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
-         } //if
-     } // while
-     closedir($dir);
+      $file = basename($file);
+      if ($file != "index.html") {
+         $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
+      }
   }
   $schema .= '</PRODUCT_DETAILS_TEMPLATES>' . "\n";
   echo $schema;
 
   //Ausgabe ProductOptionsTemplates
   $schema = '<PRODUCT_OPTIONS_TEMPLATES>' . "\n";
-  if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'))
+  foreach (Template::files("module/product_options/", "html") as $file)
   {
-      while (($file = readdir($dir)) != false)
-      {
-           if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-             $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
-         } //if
-     } // while
-     closedir($dir);
+      $file = basename($file);
+      if ($file != "index.html") {
+         $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
+      }
   }
   $schema .= '</PRODUCT_OPTIONS_TEMPLATES>' . "\n";
   echo $schema;
@@ -2404,8 +2395,8 @@ function OrderUpdate ()
             $smarty->assign('PARCEL_ARRAY', $tracking_array);
           }
           
-          $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.html');
-          $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.txt');
+          $html_mail = $smarty->fetch(Template::resolve('admin/mail/' . $check_status['language'] . '/change_order_mail.html'));
+          $txt_mail = $smarty->fetch(Template::resolve('admin/mail/' . $check_status['language'] . '/change_order_mail.txt'));
 
           $order_subject_search = array('{$nr}', '{$date}', '{$lastname}', '{$firstname}');
           $order_subject_replace = array($oID, xtc_date_long($check_status['date_purchased']), $check_status['customers_lastname'], $check_status['customers_lfirstname']);
@@ -2611,8 +2602,8 @@ function CustomersUpdate ()
     //$smarty->assign('language', $Lang_folder);
     $smarty->assign('content', $module_content);
 
-    $html_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$Lang_folder.'/create_account_mail.html');
-    $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$Lang_folder.'/create_account_mail.txt');
+    $html_mail=$smarty->fetch(Template::resolve('admin/mail/' . $Lang_folder . '/create_account_mail.html'));
+    $txt_mail=$smarty->fetch(Template::resolve('admin/mail/' . $Lang_folder . '/create_account_mail.txt'));
 
     // send mail with html/txt template
     xtc_php_mail(EMAIL_SUPPORT_ADDRESS,

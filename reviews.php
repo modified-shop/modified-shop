@@ -29,7 +29,7 @@ if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
 // create smarty
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', Template::url(''));
 
 $reviews_query_raw = "SELECT r.reviews_id,
                         left(rd.reviews_text, 250) as reviews_text,
@@ -70,13 +70,17 @@ if ($reviews_split->number_of_rows > 0) {
     $smarty->assign('DISPLAY_COUNT', $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS));
     $smarty->assign('DISPLAY_LINKS', $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
     $smarty->caching = 0;
-    $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+    $pagination = $smarty->fetch(Template::resolve('module/pagination.html'));
   }
   $smarty->assign('NAVBAR', $pagination);
   $smarty->assign('PAGINATION', $pagination);
   
   $reviews_query = xtc_db_query($reviews_split->sql_query);
   while ($reviews = xtc_db_fetch_array($reviews_query)) {
+    $rating_image = 'img/stars_' . $reviews['reviews_rating'] . '.gif';
+    if (Template::findPath($rating_image) === null) {
+      $rating_image = 'img/stars_' . $reviews['reviews_rating'] . '.png';
+    }
     $module_data[] = array (
       'PRODUCTS_IMAGE' => $product->productImage($reviews['products_image'], 'thumbnail'),
       'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id='.$reviews['products_id'].'&reviews_id='.$reviews['reviews_id']),
@@ -86,7 +90,7 @@ if ($reviews_split->number_of_rows > 0) {
       'DATE' => xtc_date_short($reviews['date_added']),
       'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).') <br />'.nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
       'TEXT_PLAIN' => nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
-      'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+      'RATING' => xtc_image(Template::url($rating_image), sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
       'RATING_VOTE' => $reviews['reviews_rating']
     );
   }
@@ -101,7 +105,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'reviews';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 if ($messageStack->size('product_reviews') > 0) {
   $smarty->assign('error_message', $messageStack->output('product_reviews'));
@@ -118,11 +122,11 @@ if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
 }
 
 $smarty->caching = 0;
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/reviews.html');
+$main_content = $smarty->fetch(Template::resolve('module/reviews.html'));
 
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

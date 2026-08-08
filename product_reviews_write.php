@@ -137,7 +137,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'reviews';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 if ($product->isProduct() === false) {
   $smarty->assign('error_message', ERROR_INVALID_PRODUCT);
@@ -197,11 +197,11 @@ if ($product->isProduct() === false) {
 $smarty->assign('language', $_SESSION['language']);
 
 $smarty->caching = 0;
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews_write.html');
+$main_content = $smarty->fetch(Template::resolve('module/product_reviews_write.html'));
 
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

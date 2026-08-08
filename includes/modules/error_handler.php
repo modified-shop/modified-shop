@@ -20,7 +20,7 @@ $error = array(
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -35,7 +35,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|error:'.((isset($_REQUEST['error'])) ? $_REQUEST['error'] : $site_error).'|keyword:'.((isset($_GET['keywords'])) ? $_GET['keywords'] : ''));
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/error_message.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/error_message.html'), $cache_id) || !$cache) {
   $module_smarty->assign('ERROR', ((isset($_REQUEST['error']) && isset($error[$_REQUEST['error']])) ? $error[$_REQUEST['error']] : $site_error));
 
   $link = 'javascript:history.back(1)';
@@ -55,7 +55,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/error_message.html', $c
   $module_smarty->assign('FORM_END', '</form>');
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/error_message.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/error_message.html'), $cache_id);
 
 $smarty->assign('main_content', $module);
 $display_mode = 'error';

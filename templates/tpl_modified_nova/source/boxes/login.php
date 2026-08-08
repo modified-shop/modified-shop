@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include smarty
-  include(DIR_FS_BOXES_INC . 'smarty_default.php');
+  include(Template::path('source/inc/smarty_default.php'));
 
   if (!isset($_SESSION['customer_id'])) {
     // include needed functions
@@ -44,6 +44,6 @@
   }
 
   $box_smarty->caching = 0;
-  $box_login = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_login.html');
+  $box_login = $box_smarty->fetch(Template::resolve('boxes/box_login.html'));
   
   $smarty->assign('box_LOGIN', $box_login);

@@ -96,20 +96,20 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $mailsmarty->assign('SIGNATURE_HTML', $shop_content_data['content_text']);
     $mailsmarty->assign('SIGNATURE_TXT', $shop_content_data['content_text']);
   }
-  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html')) {
-    $html_signatur = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html'); 
+  if (Template::findPath('mail/' . $lang_data['directory'] . '/signatur.html') !== null) {
+    $html_signatur = $mailsmarty->fetch(Template::path('mail/' . $lang_data['directory'] . '/signatur.html'));
   }
-  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.txt')) {
-    $txt_signatur = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.txt'); 
+  if (Template::findPath('mail/' . $lang_data['directory'] . '/signatur.txt') !== null) {
+    $txt_signatur = $mailsmarty->fetch(Template::path('mail/' . $lang_data['directory'] . '/signatur.txt'));
   }
 
   $html_widerruf = '';
   $txt_widerruf = '';
-  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.html')) {
-    $html_widerruf = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.html'); 
+  if (Template::findPath('mail/' . $lang_data['directory'] . '/widerruf.html') !== null) {
+    $html_widerruf = $mailsmarty->fetch(Template::path('mail/' . $lang_data['directory'] . '/widerruf.html'));
   }
-  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.txt')) {
-    $txt_widerruf = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.txt'); 
+  if (Template::findPath('mail/' . $lang_data['directory'] . '/widerruf.txt') !== null) {
+    $txt_widerruf = $mailsmarty->fetch(Template::path('mail/' . $lang_data['directory'] . '/widerruf.txt'));
   }  
 
   //Platzhalter [WIDERRUF] durch Widerruf Text ersetzen

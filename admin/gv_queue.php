@@ -70,8 +70,8 @@
         $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
         $smarty->config_dir = DIR_FS_CATALOG.'lang';
 
-        $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-        $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+        $smarty->assign('tpl_path', Template::absoluteUrl(''));
+        $smarty->assign('logo_path', Template::absoluteUrl('img/'));
 
         $smarty->assign('AMMOUNT',$currencies->format($gv_amount));
         $smarty->assign('NAME', $mail['customers_firstname'].' '.$mail['customers_lastname']);
@@ -79,8 +79,8 @@
         $smarty->assign('FIRSTNAME', $mail['customers_firstname']);
         $smarty->assign('LASTNAME', $mail['customers_lastname']);
 
-        $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.html');
-        $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.txt');
+        $html_mail = $smarty->fetch(Template::resolve('admin/mail/' . $_SESSION['language'] . '/gift_accepted.html'));
+        $txt_mail = $smarty->fetch(Template::resolve('admin/mail/' . $_SESSION['language'] . '/gift_accepted.txt'));
 
         // create subject
         $order_subject = str_replace('{$nr}', $gv['order_id'], EMAIL_BILLING_SUBJECT_ORDER);

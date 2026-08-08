@@ -15,7 +15,7 @@ require_once (DIR_FS_INC.'get_filter_tags.inc.php');
 
 $filter_smarty = new Smarty();
 $filter_smarty->assign('language', $_SESSION['language']);
-$filter_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$filter_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -36,7 +36,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|self:'.basename($PHP_SELF).((isset($current_category_id)) ? '|cID:'.$current_category_id : '').$get_params);
 }
 
-if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $cache_id) || !$cache) {
+if (!$filter_smarty->is_cached(Template::resolve('module/listing_filter.html'), $cache_id) || !$cache) {
   $filter_set_dropdown = '';
   $filter_sort_dropdown = '';
   $manufacturer_dropdown = '';
@@ -382,7 +382,7 @@ if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
   $filter_smarty->assign('LINK_DISPLAY_BOX', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=box', 'NONSSL'));
 }
 
-$module = $filter_smarty->fetch(CURRENT_TEMPLATE.'/module/listing_filter.html', $cache_id);
+$module = $filter_smarty->fetch(Template::resolve('module/listing_filter.html'), $cache_id);
 
 if (isset($smarty) && is_object($smarty)) {
   $smarty->assign('LISTING_FILTER', !empty($module) ? trim($module) : $module);
