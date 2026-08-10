@@ -148,7 +148,10 @@ final class FaviconRenderer
         }
         $browserconfig .= '<TileColor>#ffffff</TileColor></tile></msapplication></browserconfig>';
 
-        $allow_inherited_fallback = !$this->hasActiveTemplateFiles($tiles);
+        $allow_inherited_fallback = $this->canUseInheritedMetadata(
+            'favicons/browserconfig.xml',
+            $tiles
+        );
         $relative_path = $this->writeMetadata(
             'favicons/browserconfig.xml',
             $browserconfig,
@@ -200,7 +203,10 @@ final class FaviconRenderer
             return '';
         }
 
-        $allow_inherited_fallback = !$this->hasActiveTemplateFiles($icons);
+        $allow_inherited_fallback = $this->canUseInheritedMetadata(
+            'favicons/site.webmanifest',
+            $icons
+        );
         $relative_path = $this->writeMetadata(
             'favicons/site.webmanifest',
             $contents,
@@ -218,7 +224,6 @@ final class FaviconRenderer
 
     private function groupEffectiveFiles(): array
     {
-        $active_template = Template::chain()[0];
         $groups = array_fill_keys(array_keys(self::RESOURCE_GROUPS), []);
 
         foreach (Template::files('favicons/') as $path) {
@@ -234,7 +239,7 @@ final class FaviconRenderer
                 'name' => $name,
                 'extension' => pathinfo($path, PATHINFO_EXTENSION),
                 'url' => $this->link('templates/' . $resolved_template_path),
-                'from_active_template' => str_starts_with($resolved_template_path, $active_template . '/'),
+                'source_template' => $this->sourceTemplateFromResolvedPath($resolved_template_path),
             ];
         }
 
@@ -254,15 +259,44 @@ final class FaviconRenderer
         return null;
     }
 
-    private function hasActiveTemplateFiles(array $files): bool
+    /**
+     * Checks whether inherited metadata can describe all effective resource files.
+     */
+    private function canUseInheritedMetadata(string $logical_name, array $files): bool
     {
+        if (Template::findPath($logical_name) === null) {
+            return false;
+        }
+
+        $chain_positions = array_flip(Template::chain());
+        $metadata_source = $this->sourceTemplateFromResolvedPath(Template::resolve($logical_name));
+        if (!isset($chain_positions[$metadata_source])) {
+            return false;
+        }
+
+        $metadata_position = $chain_positions[$metadata_source];
+        if ($metadata_position === 0) {
+            return false;
+        }
+
         foreach ($files as $file) {
-            if ($file['from_active_template']) {
-                return true;
+            $file_source = $file['source_template'];
+            if (!isset($chain_positions[$file_source])) {
+                return false;
+            }
+            if ($chain_positions[$file_source] < $metadata_position) {
+                return false;
             }
         }
 
-        return false;
+        return true;
+    }
+
+    private function sourceTemplateFromResolvedPath(string $resolved_path): string
+    {
+        $parts = explode('/', $resolved_path, 2);
+
+        return $parts[0];
     }
 
     // Metadata persistence

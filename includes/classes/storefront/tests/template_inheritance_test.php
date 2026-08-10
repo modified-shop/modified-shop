@@ -506,17 +506,20 @@ try {
         'Die generierte Child-Browserkonfiguration muss verlinkt werden.'
     );
 
-    $thinParentDirectory = $templatesDirectory . '/thin-parent';
+    $thinParentADirectory = $templatesDirectory . '/thin-parent-a';
+    $thinParentBDirectory = $templatesDirectory . '/thin-parent-b';
     $readOnlyTemplateDirectory = $templatesDirectory . '/thin-child';
-    mkdir($thinParentDirectory);
+    mkdir($thinParentADirectory);
+    mkdir($thinParentBDirectory);
     mkdir($readOnlyTemplateDirectory);
-    writeTestFile($thinParentDirectory . '/template.json', '{}');
-    writeTestFile($readOnlyTemplateDirectory . '/template.json', '{"parent":"thin-parent"}');
-    writeTestFile($thinParentDirectory . '/favicons/web-app-manifest-192x192.png', 'parent-web-app-icon');
-    $thinParentManifestPath = $thinParentDirectory . '/favicons/site.webmanifest';
+    writeTestFile($thinParentADirectory . '/template.json', '{}');
+    writeTestFile($thinParentBDirectory . '/template.json', '{"parent":"thin-parent-a"}');
+    writeTestFile($readOnlyTemplateDirectory . '/template.json', '{"parent":"thin-parent-b"}');
+    writeTestFile($thinParentADirectory . '/favicons/web-app-manifest-192x192.png', 'parent-web-app-icon');
+    $thinParentManifestPath = $thinParentADirectory . '/favicons/site.webmanifest';
     writeTestFile($thinParentManifestPath, '{"parent":true}');
-    writeTestFile($thinParentDirectory . '/favicons/mstile-150x150.png', 'parent-mstile-icon');
-    $thinParentBrowserconfigPath = $thinParentDirectory . '/favicons/browserconfig.xml';
+    writeTestFile($thinParentADirectory . '/favicons/mstile-150x150.png', 'parent-mstile-icon');
+    $thinParentBrowserconfigPath = $thinParentADirectory . '/favicons/browserconfig.xml';
     writeTestFile($thinParentBrowserconfigPath, '<parent-browserconfig/>');
 
     $thinRepository = new TemplateManifestRepository($templatesDirectory);
@@ -561,13 +564,13 @@ try {
     assertSameValue([], $faviconWarnings, 'Ein nicht beschreibbares Thin Child darf keine PHP-Warning ausgeben.');
     assertSameValue(
         1,
-        substr_count($thinFaviconMarkup, 'templates/thin-parent/favicons/site.webmanifest'),
-        'Ein Thin Child ohne eigene Web-App-Icons muss auf das geerbte Parent-Manifest zurückfallen.'
+        substr_count($thinFaviconMarkup, 'templates/thin-parent-a/favicons/site.webmanifest'),
+        'Ein Thin Child ohne jüngere Web-App-Icons muss über einen leeren Zwischen-Parent auf das geerbte Manifest zurückfallen.'
     );
     assertSameValue(
         1,
-        substr_count($thinFaviconMarkup, 'templates/thin-parent/favicons/browserconfig.xml'),
-        'Ein Thin Child ohne eigene Mstile-Dateien muss auf die geerbte Parent-Browserkonfiguration zurückfallen.'
+        substr_count($thinFaviconMarkup, 'templates/thin-parent-a/favicons/browserconfig.xml'),
+        'Ein Thin Child ohne jüngere Mstile-Dateien muss über einen leeren Zwischen-Parent auf die geerbte Browserkonfiguration zurückfallen.'
     );
     assertSameValue(
         false,
@@ -583,6 +586,44 @@ try {
         '<parent-browserconfig/>',
         file_get_contents($thinParentBrowserconfigPath),
         'Der Read-only-Fallback darf die geerbte Parent-Browserkonfiguration nicht verändern.'
+    );
+
+    writeTestFile($thinParentBDirectory . '/favicons/web-app-manifest-192x192.png', 'intermediate-web-app-icon');
+    writeTestFile($thinParentBDirectory . '/favicons/mstile-150x150.png', 'intermediate-mstile-icon');
+    if (!chmod($readOnlyTemplateDirectory, 0555)) {
+        throw new RuntimeException('Das Thin-Child-Testtemplate konnte nicht erneut schreibgeschützt werden.');
+    }
+    clearstatcache(true, $readOnlyTemplateDirectory);
+    TemplateRuntime::install($thinRuntime);
+    try {
+        $intermediateOverrideMarkup = (new FaviconRenderer(
+            $temporaryDirectory,
+            'Test shop',
+            static fn (string $path): string => $path
+        ))->render();
+    } finally {
+        chmod($readOnlyTemplateDirectory, 0755);
+        TemplateRuntime::install($runtime);
+    }
+    assertSameValue(
+        0,
+        substr_count($intermediateOverrideMarkup, 'rel="manifest"'),
+        'Ein Icon aus einem jüngeren Zwischen-Parent darf nicht mit dem Manifest eines älteren Parents kombiniert werden.'
+    );
+    assertSameValue(
+        0,
+        substr_count($intermediateOverrideMarkup, 'msapplication-config'),
+        'Ein Mstile aus einem jüngeren Zwischen-Parent darf nicht mit der Browserkonfiguration eines älteren Parents kombiniert werden.'
+    );
+    assertSameValue(
+        false,
+        is_file($thinParentBDirectory . '/favicons/site.webmanifest'),
+        'Der Renderer darf auch in einem beschreibbaren Zwischen-Parent kein Manifest erzeugen.'
+    );
+    assertSameValue(
+        false,
+        is_file($thinParentBDirectory . '/favicons/browserconfig.xml'),
+        'Der Renderer darf auch in einem beschreibbaren Zwischen-Parent keine Browserkonfiguration erzeugen.'
     );
 
     $thinChildFaviconDirectory = $readOnlyTemplateDirectory . '/favicons';
