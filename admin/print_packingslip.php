@@ -52,8 +52,11 @@
   $smarty->assign('charset', $langcode['language_charset']);
   $smarty->assign('language', $order->info['language']);
 
+  // Legacy compatibility for custom templates.
+  // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
   $smarty->assign('logo_path', Template::catalogUrl('img/'));
   $smarty->assign('tpl_path', Template::catalogUrl(''));
+
   $smarty->assign('base_href', xtc_catalog_href_link('', '', $request_type, false, false));
 
   $smarty->assign('oID',$order->info['order_id']);

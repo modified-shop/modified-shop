@@ -24,6 +24,9 @@
   {
     $banner_smarty = new Smarty();
     $banner_smarty->caching = 0;
+
+    // Legacy compatibility for custom templates.
+    // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
     $banner_smarty->assign('tpl_path', Template::url(''));
     $banner_smarty->assign('language', $_SESSION['language']);
 

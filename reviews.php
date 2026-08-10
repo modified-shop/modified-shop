@@ -29,6 +29,9 @@ if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
 // create smarty
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
 $smarty->assign('tpl_path', Template::url(''));
 
 $reviews_query_raw = "SELECT r.reviews_id,

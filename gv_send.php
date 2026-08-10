@@ -124,8 +124,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $gv_email_subject = sprintf(EMAIL_GV_TEXT_SUBJECT, $send_name);
 
     $smarty->assign('language', $_SESSION['language']);
+
+    // Legacy compatibility for custom templates.
+    // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
     $smarty->assign('tpl_path', Template::absoluteUrl(''));
     $smarty->assign('logo_path', Template::absoluteUrl('img/'));
+
     $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$gv_code, 'NONSSL', false));
     $smarty->assign('AMMOUNT', $xtPrice->xtcFormat($gv_amount, true));
     $smarty->assign('AMOUNT', $xtPrice->xtcFormat($gv_amount, true));

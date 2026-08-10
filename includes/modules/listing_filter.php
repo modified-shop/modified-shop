@@ -15,6 +15,9 @@ require_once (DIR_FS_INC.'get_filter_tags.inc.php');
 
 $filter_smarty = new Smarty();
 $filter_smarty->assign('language', $_SESSION['language']);
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
 $filter_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID

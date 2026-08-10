@@ -400,7 +400,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
       // assign data to smarty
       $smarty->assign('language', $_SESSION['language']);
+
+      // Legacy compatibility for custom templates.
+      // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
       $smarty->assign('logo_path', Template::absoluteUrl('img/'));
+
       $smarty->assign('content', $module_content);
       $smarty->assign('GENDER', ((ACCOUNT_GENDER == 'true') ? $gender : ''));
       $smarty->assign('FIRSTNAME', $firstname);

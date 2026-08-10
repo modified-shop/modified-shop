@@ -70,6 +70,8 @@
         $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
         $smarty->config_dir = DIR_FS_CATALOG.'lang';
 
+        // Legacy compatibility for custom templates.
+        // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
         $smarty->assign('tpl_path', Template::absoluteUrl(''));
         $smarty->assign('logo_path', Template::absoluteUrl('img/'));
 

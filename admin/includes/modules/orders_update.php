@@ -40,8 +40,11 @@
       $smarty->assign('order', $order);
       $smarty->assign('order_data', $order->getOrderData($oID));
 
+      // Legacy compatibility for custom templates.
+      // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
       $smarty->assign('tpl_path',Template::url(''));
       $smarty->assign('logo_path', Template::absoluteUrl('img/'));
+
       $smarty->assign('NAME', $order->customer['name']);
       $smarty->assign('ORDER_NR', $order->info['order_id']);
       $smarty->assign('ORDER_ID', $oID);
