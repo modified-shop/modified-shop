@@ -192,6 +192,9 @@ if ($messageStack->size('download') > 0)
 
 $smarty->assign('dl', (isset($dl) ? $dl : array()));
 $smarty->assign('language', $_SESSION['language']);
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
 $smarty->assign('tpl_path', Template::url(''));
 
 $smarty->caching = 0;

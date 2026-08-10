@@ -38,6 +38,9 @@ require_once (DIR_FS_INC.'get_filter_tags.inc.php');
 
 $default_smarty = new Smarty();
 $default_smarty->assign('language', $_SESSION['language']);
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
 $default_smarty->assign('tpl_path', Template::url(''));
 $default_smarty->assign('session', xtc_session_id());
 

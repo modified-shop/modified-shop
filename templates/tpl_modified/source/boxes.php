@@ -152,6 +152,8 @@ if ((isset($display_mode) && $display_mode == 'error') || (in_array(basename($PH
 }
 // -----------------------------------------------------------------------------------------
 
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
 $smarty->assign('tpl_path', Template::url(''));
 
 $content_data_query = xtDBquery("SELECT *

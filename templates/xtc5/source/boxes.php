@@ -105,4 +105,6 @@
 $smarty->assign('home', strpos($PHP_SELF, 'index')!==false && !isset($_GET['cPath']) && !isset($_GET['manufacturers_id']) ? 1 : 0);
 // -----------------------------------------------------------------------------------------
 
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
 $smarty->assign('tpl_path',Template::url(''));

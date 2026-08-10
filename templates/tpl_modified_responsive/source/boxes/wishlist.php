@@ -14,6 +14,9 @@
   require_once(DIR_FS_INC.'get_wishlist_content.inc.php');
 
   $box_smarty = new Smarty();
+
+  // Legacy compatibility for custom templates.
+  // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
   $box_smarty->assign('tpl_path', Template::url(''));
 
   // define defaults

@@ -117,8 +117,12 @@
           ) 
       {
         $smarty->assign('language', $_SESSION['language']);
-        $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
-        $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+        // Legacy compatibility for custom templates.
+        // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+        $smarty->assign('tpl_path', Template::absoluteUrl(''));
+        $smarty->assign('logo_path', Template::absoluteUrl('') . '/img/');
+
         $smarty->assign('NAME', $name);
         $smarty->assign('EMAIL', $email);
         $smarty->assign('DATE', $datum);

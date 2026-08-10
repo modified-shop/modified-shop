@@ -44,6 +44,9 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
   $info_smarty = new Smarty();
   $info_smarty->assign('language', $_SESSION['language']);
+
+  // Legacy compatibility for custom templates.
+  // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
   $info_smarty->assign('tpl_path', Template::url(''));
 
   // defaults

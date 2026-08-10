@@ -23,7 +23,10 @@
   // -----------------------------------------------------------------------------------------
   //	default smarty
   // -----------------------------------------------------------------------------------------
+  // Legacy compatibility for custom templates.
+  // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
   $smarty->assign('tpl_path', Template::url(''));
+
   $smarty->assign('theme_color', ((defined('THEME_COLOR')) ? 'theme_'.THEME_COLOR : 'theme_default'));
   $smarty->assign('display_mode', $display_mode);
   $smarty->assign('content_size', 'small');

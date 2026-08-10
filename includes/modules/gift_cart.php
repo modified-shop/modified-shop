@@ -29,6 +29,9 @@
    ---------------------------------------------------------------------------------------*/
 
 $gift_smarty = new Smarty();
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
 $gift_smarty->assign('tpl_path', Template::url(''));
 
 if (ACTIVATE_GIFT_SYSTEM == 'true' 
