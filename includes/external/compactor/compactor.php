@@ -44,6 +44,27 @@ class Compactor
         'compress_css' => true,
         'script_line_breaks' => true,
         'force_script_line_breaks' => false,
+        // A configured callback fully replaces minifyJavascript()'s own
+        // compression for inline <script> content, matching the pre-refactor
+        // behavior that older templates and modules may still rely on.
+        'script_compression_callback' => false,
+        'script_compression_callback_args' => array(),
+    );
+
+    /**
+     * Options that older releases accepted but this facade can no longer
+     * honor because HTML comment stripping is not part of the vendored
+     * minifier. setOption() must not throw for it: existing modules or
+     * custom templates still constructing a Compactor with e.g.
+     * 'strip_php_comments' (the previous combine_files.inc.php did exactly
+     * that) would otherwise fail with a fatal error on every page. A
+     * non-fatal E_USER_DEPRECATED notice documents the behavior change
+     * without breaking the request.
+     *
+     * @var string[]
+     */
+    private $_removed_options = array(
+        'strip_php_comments',
     );
 
     /**
@@ -77,6 +98,7 @@ class Compactor
     {
         if (is_array($varname)) {
             foreach ($varname as $name => $value) {
+                $this->_warnRemovedOption($name);
                 if (array_key_exists($name, $this->_options)) {
                     $this->_options[$name] = $value;
                 }
@@ -85,8 +107,23 @@ class Compactor
             return;
         }
 
+        $this->_warnRemovedOption($varname);
         if (array_key_exists($varname, $this->_options)) {
             $this->_options[$varname] = $varvalue;
+        }
+    }
+
+    /**
+     * @param string $name
+     */
+    private function _warnRemovedOption($name)
+    {
+        if (in_array($name, $this->_removed_options, true)) {
+            trigger_error(
+                'The Compactor option "' . $name . '" was removed and is no longer honored. '
+                . 'JavaScript and CSS compression is now delegated to the vendored minifier.',
+                E_USER_DEPRECATED
+            );
         }
     }
 
@@ -105,7 +142,7 @@ class Compactor
         }
 
         $implementation_time = (int)@filemtime(__FILE__);
-        $vendor_directory = dirname(__DIR__).'/matthiasmullie';
+        $vendor_directory = dirname(__DIR__).'/MatthiasMullie';
         if (!is_dir($vendor_directory)) {
             return $implementation_time;
         }
@@ -162,13 +199,29 @@ class Compactor
     /**
      * Minify JavaScript source. The original source is returned on failure.
      *
+     * A configured 'script_compression_callback' takes over entirely, exactly
+     * as it did before JavaScript compression was delegated to the vendored
+     * minifier: the callback's return value is used as-is, unguarded, so a
+     * configured callback that throws behaves the same as it always did.
+     *
      * @param string $javascript
      * @return string
      */
     public function minifyJavascript($javascript)
     {
+        if ($this->_options['script_compression_callback'] !== false) {
+            $callback_args = $this->_options['script_compression_callback_args'];
+            if (!is_array($callback_args)) {
+                $callback_args = array($callback_args);
+            }
+            array_unshift($callback_args, $javascript);
+
+            return call_user_func_array($this->_options['script_compression_callback'], $callback_args);
+        }
+
         try {
-            $minifier = $this->_createMinifier(false);
+            // Rendered script content must never be sniffed as a local file path.
+            $minifier = $this->_createMinifier(false, false);
 
             return $minifier->add($javascript)->minify();
         } catch (Throwable $exception) {
@@ -185,7 +238,8 @@ class Compactor
     public function minifyCss($css)
     {
         try {
-            $minifier = $this->_createMinifier(true);
+            // Rendered style content must never be sniffed as a local file path.
+            $minifier = $this->_createMinifier(true, false);
 
             return $minifier->add($css)->minify();
         } catch (Throwable $exception) {
@@ -432,6 +486,9 @@ class Compactor
     }
 
     /**
+     * Collapse tabs, runs of spaces, and line breaks within tag markup
+     * (outside of quoted attribute values).
+     *
      * @param string $html
      * @param bool $compress_tabs
      * @param bool $compress_line_breaks
@@ -447,11 +504,12 @@ class Compactor
             function ($matches) use ($compress_tabs, $compress_line_breaks, $line_break, $line_break_length) {
                 $tag = $matches[0];
                 $has_tabs = ($compress_tabs && strpos($tag, "\t") !== false);
+                $has_multi_space = ($compress_tabs && strpos($tag, '  ') !== false);
                 $has_line_breaks = ($compress_line_breaks
                     && $line_break_length > 0
                     && strpos($tag, $line_break) !== false
                 );
-                if (!$has_tabs && !$has_line_breaks) {
+                if (!$has_tabs && !$has_multi_space && !$has_line_breaks) {
                     return $tag;
                 }
 
@@ -478,7 +536,12 @@ class Compactor
                         && $line_break_length > 0
                         && substr($tag, $i, $line_break_length) === $line_break
                     );
-                    if (($compress_tabs && $character == "\t") || $is_line_break) {
+                    $is_multi_space = ($compress_tabs
+                        && $character == ' '
+                        && isset($tag[$i + 1])
+                        && $tag[$i + 1] == ' '
+                    );
+                    if (($compress_tabs && $character == "\t") || $is_line_break || $is_multi_space) {
                         $ends_with_line_break = ($line_break_length > 0
                             && substr($result, -$line_break_length) === $line_break
                         );
@@ -504,9 +567,29 @@ class Compactor
     }
 
     /**
-     * Collapse tabs and line breaks in text segments without touching tag
-     * attributes. Whitespace is replaced by one space instead of being removed,
-     * because it can separate adjacent inline elements or words.
+     * Tags that are always block-level in practice. A whitespace-only text
+     * node touching such a tag on both sides carries no visual meaning and
+     * can be dropped entirely, unlike whitespace next to an inline element
+     * (e.g. <span>a</span> <span>b</span>), where the collapsed single space
+     * is often the only remaining word separator and must be kept.
+     *
+     * @var string[]
+     */
+    private $_block_tags = array(
+        'html', 'body', 'header', 'footer', 'nav', 'main', 'section', 'article', 'aside',
+        'div', 'p', 'ul', 'ol', 'li', 'dl', 'dt', 'dd',
+        'table', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th', 'caption', 'colgroup',
+        'form', 'fieldset', 'legend',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'blockquote', 'address', 'figure', 'figcaption', 'details', 'summary', 'dialog', 'hr',
+    );
+
+    /**
+     * Collapse runs of spaces and tabs, and line breaks, in text segments
+     * without touching tag attributes. Whitespace is replaced by one space
+     * instead of being removed, because it can separate adjacent inline
+     * elements or words, unless the text node sits directly between two
+     * block-level tags, where it can be dropped entirely.
      *
      * @param string $html
      * @param bool $compress_tabs
@@ -532,6 +615,15 @@ class Compactor
                 continue;
             }
 
+            if (
+                $part !== '' && trim($part) === ''
+                && $this->_isBlockBoundaryTag($parts, $index - 1)
+                && $this->_isBlockBoundaryTag($parts, $index + 1)
+            ) {
+                $parts[$index] = '';
+                continue;
+            }
+
             if ($compress_line_breaks && $line_break != '') {
                 $part = preg_replace(
                     '#[ \t]*'.$line_break.'[ \t]*(?:'.$line_break.'[ \t]*)*#',
@@ -540,12 +632,30 @@ class Compactor
                 );
             }
             if ($compress_tabs) {
-                $part = preg_replace('/\t+/', ' ', $part);
+                $part = preg_replace('/[ \t]+/', ' ', $part);
             }
             $parts[$index] = $part;
         }
 
         return implode('', $parts);
+    }
+
+    /**
+     * @param string[] $parts
+     * @param int $index
+     * @return bool
+     */
+    private function _isBlockBoundaryTag($parts, $index)
+    {
+        if (!isset($parts[$index])) {
+            return false;
+        }
+
+        if (!preg_match('#^<(/?)([A-Za-z][A-Za-z0-9:-]*)#', $parts[$index], $match)) {
+            return false;
+        }
+
+        return in_array(strtolower($match[2]), $this->_block_tags, true);
     }
 
     /**
@@ -614,14 +724,22 @@ class Compactor
 
     /**
      * @param bool $css
+     * @param bool $allow_file_import Whether add() may treat its argument as a
+     *     file path. Must be false for rendered/inline source, which is never
+     *     a path even when it happens to match a readable file on disk.
      * @return MatthiasMullie\Minify\CSS|MatthiasMullie\Minify\JS
      */
-    private function _createMinifier($css)
+    private function _createMinifier($css, $allow_file_import = true)
     {
-        require_once dirname(__DIR__).'/matthiasmullie/autoload.php';
+        require_once dirname(__DIR__).'/MatthiasMullie/autoload.php';
 
         if ($css) {
             $minifier = new class extends MatthiasMullie\Minify\CSS {
+                /**
+                 * @var bool
+                 */
+                public $allowFileImport = true;
+
                 /**
                  * Keep @import statements external. Their files are not part of the
                  * combine_files() modification-time cache.
@@ -654,18 +772,36 @@ class Compactor
 
                     return parent::canImportByPath($path);
                 }
+
+                /**
+                 * @param string $path
+                 * @return bool
+                 */
+                protected function canImportFile($path)
+                {
+                    return $this->allowFileImport && parent::canImportFile($path);
+                }
             };
+            $minifier->allowFileImport = $allow_file_import;
             // Combining files must not silently embed referenced assets into the bundle.
             $minifier->setImportExtensions(array());
 
             return $minifier;
         }
 
-        return new class extends MatthiasMullie\Minify\JS {
+        $minifier = new class extends MatthiasMullie\Minify\JS {
+            /**
+             * @var bool
+             */
+            public $allowFileImport = true;
+
             /**
              * Join statement and block boundaries that are safe to terminate.
              * Other line breaks are kept because they can be significant for
-             * automatic semicolon insertion or template literals.
+             * automatic semicolon insertion or template literals. A boundary
+             * immediately followed by "while" is also left untouched: it may be
+             * the tail of a do-while statement, where a semicolon between the
+             * closing brace and "while" is a syntax error.
              *
              * @param string $content
              * @return string
@@ -679,9 +815,21 @@ class Compactor
                 // Extracted strings, regular expressions and template literals
                 // can continue an expression across a line break. Preserved
                 // comments may occur at the same boundary.
-                return preg_replace('/}\n(?![\'"`]|\/\*\d+\*\/)/', '};', $content);
+                return preg_replace('/}\n(?![\'"`]|\/\*\d+\*\/|[ \t]*while\b)/', '};', $content);
+            }
+
+            /**
+             * @param string $path
+             * @return bool
+             */
+            protected function canImportFile($path)
+            {
+                return $this->allowFileImport && parent::canImportFile($path);
             }
         };
+        $minifier->allowFileImport = $allow_file_import;
+
+        return $minifier;
     }
 
     /**

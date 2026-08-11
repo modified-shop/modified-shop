@@ -91,17 +91,65 @@ class CSS extends Minify
      */
     protected function moveImportsToTop($content)
     {
-        if (preg_match_all('/(;?)(@import (?<url>url\()?(?P<quotes>["\']?).+?(?P=quotes)(?(url)\)));?/', $content, $matches)) {
-            // remove from content
-            foreach ($matches[0] as $import) {
-                $content = str_replace($import, '', $content);
-            }
-
-            // add to top
-            $content = implode(';', $matches[2]) . ';' . trim($content, ';');
+        // Match complete @import statements, including any trailing media or
+        // supports condition, up to the terminating semicolon. Media
+        // conditions must travel with the import or the restriction they
+        // express (e.g. "print") is lost when the statement is moved.
+        $pattern = '/@import\s+(?:url\(\s*(?<q1>["\']?)(?<path1>.*?)(?P=q1)\s*\)|(?<q2>["\'])(?<path2>.*?)(?P=q2))\s*(?<media>[^;{}]*);/i';
+        if (!preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE)) {
+            return $content;
         }
 
-        return $content;
+        // A match inside a string literal (e.g. content: "@import url(x)")
+        // is not a real import statement and must be left untouched.
+        preg_match_all('/(["\'])(?:\\\\.|(?!\1).)*\1/s', $content, $string_matches, PREG_OFFSET_CAPTURE);
+        $string_ranges = array();
+        foreach ($string_matches[0] as $string_match) {
+            $string_ranges[] = array($string_match[1], $string_match[1] + strlen($string_match[0]));
+        }
+
+        $imports = array();
+        foreach ($matches[0] as $match) {
+            list($import, $offset) = $match;
+
+            $inside_string = false;
+            foreach ($string_ranges as $range) {
+                if ($offset >= $range[0] && $offset < $range[1]) {
+                    $inside_string = true;
+                    break;
+                }
+            }
+            if ($inside_string) {
+                continue;
+            }
+
+            $imports[] = array($offset, strlen($import), $import);
+        }
+
+        if (!$imports) {
+            return $content;
+        }
+
+        // Remove by the offset of each confirmed import instead of searching
+        // for its text: an identical string elsewhere (e.g. the same import
+        // text inside a CSS string value) must not be matched and corrupted
+        // instead. Removing from the highest offset down keeps the offsets
+        // of the remaining, not-yet-removed imports valid.
+        $removals = $imports;
+        usort($removals, function ($a, $b) {
+            return $b[0] - $a[0];
+        });
+        foreach ($removals as $removal) {
+            list($offset, $length) = $removal;
+            $content = substr_replace($content, '', $offset, $length);
+        }
+
+        $import_texts = array();
+        foreach ($imports as $import) {
+            $import_texts[] = $import[2];
+        }
+
+        return implode('', $import_texts) . trim($content);
     }
 
     /**
