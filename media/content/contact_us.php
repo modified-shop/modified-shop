@@ -121,7 +121,7 @@
         // Legacy compatibility for custom templates.
         // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
         $smarty->assign('tpl_path', Template::absoluteUrl(''));
-        $smarty->assign('logo_path', Template::absoluteUrl('') . '/img/');
+        $smarty->assign('logo_path', Template::absoluteUrl('') . 'img/');
 
         $smarty->assign('NAME', $name);
         $smarty->assign('EMAIL', $email);
