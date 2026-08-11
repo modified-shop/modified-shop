@@ -155,9 +155,8 @@ function mod_log_exception($e)
           continue;
         }
 
-        $location = isset($frame['line'])
-          ? sprintf('%s called at Line %d', $file, $frame['line'])
-          : $file;
+        $location = isset($frame['line']) ? sprintf('%s called at Line %d', $file, $frame['line']) : $file;
+
         $LoggingManager->log(
           $error['name'],
           sprintf('Backtrace #%d - %s', $traceIndex, $location)
