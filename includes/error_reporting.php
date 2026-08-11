@@ -103,7 +103,7 @@ function mod_log_exception($e)
   }
 
   if (is_object($e)) {
-    $backtrace = debug_backtrace();
+    $backtrace = $e->getTrace();
     $error = array();
     $error['number'] = (method_exists($e, 'getseverity') ? $e->getseverity() : 'UNDEFINED_ERROR');
     $error['name'] = (($error['number'] != 'UNDEFINED_ERROR') ? mod_error_level($error['number']) : 'ERROR');
