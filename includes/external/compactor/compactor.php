@@ -266,10 +266,14 @@ class Compactor
         }
 
         $html = $this->_extractPreservedBlocks($html);
+        $compress_whitespace = $this->_options['compress_horizontal'] || $this->_options['compress_vertical'];
+        if ($compress_whitespace) {
+            $html = $this->_extractWhitespaceSensitiveBlocks($html);
+        }
         if ($this->_options['strip_comments']) {
             $html = $this->_stripHTMLComments($html);
         }
-        if ($this->_options['compress_horizontal'] || $this->_options['compress_vertical']) {
+        if ($compress_whitespace) {
             $html = $this->_compressTagWhitespace(
                 $html,
                 $this->_options['compress_horizontal'],
@@ -324,13 +328,8 @@ class Compactor
      */
     private function _extractPreservedBlocks($html)
     {
-        $tags = array_map(function ($tag) {
-            return preg_quote($tag, '!');
-        }, $this->_options['preserved_tags']);
-        if (count($tags) == 0) {
-            return $html;
-        }
-
+        // Set up unconditionally: _extractWhitespaceSensitiveBlocks() relies
+        // on this boundary too, even when preserved_tags is empty.
         $boundary = (is_string($this->_options['preserved_boundry']) && $this->_options['preserved_boundry'] != '')
             ? $this->_options['preserved_boundry']
             : '@@PRESERVEDTAG@@';
@@ -338,6 +337,13 @@ class Compactor
             $boundary .= '_';
         }
         $this->_preserved_boundary = $boundary;
+
+        $tags = array_map(function ($tag) {
+            return preg_quote($tag, '!');
+        }, $this->_options['preserved_tags']);
+        if (count($tags) == 0) {
+            return $html;
+        }
 
         $head_key = array_search('head', array_map('strtolower', $tags));
         if ($head_key !== false) {
@@ -438,6 +444,171 @@ class Compactor
     }
 
     /**
+     * @var string[]
+     */
+    private $_void_tags = array(
+        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+        'link', 'meta', 'source', 'track', 'wbr',
+    );
+
+    /**
+     * @param string $attributes Raw attribute text of an opening tag
+     * @return bool
+     */
+    private function _isWhitespaceSensitiveTag($attributes)
+    {
+        if (preg_match('/\bxml:space\s*=\s*(["\'])preserve\1/i', $attributes)) {
+            return true;
+        }
+
+        return preg_match('/\bstyle\s*=\s*(["\'])(.*?)\1/is', $attributes, $style_match)
+            && preg_match('/(?:^|;)\s*white-space\s*:\s*(?:pre|pre-wrap|pre-line|break-spaces)\b/i', $style_match[2]);
+    }
+
+    /**
+     * Unlike preserved_tags, a whitespace-sensitive element can be any tag
+     * and can nest arbitrarily, so its closing tag is found by tracking
+     * depth rather than a simple non-greedy match.
+     *
+     * @param string $html
+     * @return string
+     */
+    private function _extractWhitespaceSensitiveBlocks($html)
+    {
+        if ($this->_preserved_boundary === '') {
+            return $html;
+        }
+
+        $raw_text_tags = array('iframe', 'noembed', 'noframes', 'noscript', 'script', 'style', 'textarea', 'title', 'xmp');
+        $offset = 0;
+        $length = strlen($html);
+        $result = '';
+
+        while ($offset < $length && ($tag_start = strpos($html, '<', $offset)) !== false) {
+            $result .= substr($html, $offset, $tag_start - $offset);
+
+            if (substr($html, $tag_start, 4) === '<!--') {
+                $comment_end = strpos($html, '-->', $tag_start + 4);
+                if ($comment_end === false) {
+                    $result .= substr($html, $tag_start);
+                    $offset = $length;
+                    break;
+                }
+                $result .= substr($html, $tag_start, $comment_end + 3 - $tag_start);
+                $offset = $comment_end + 3;
+                continue;
+            }
+
+            if (!preg_match(
+                '#\\G<(?P<closing>/?)(?P<name>[A-Za-z][A-Za-z0-9:-]*)(?P<attrs>(?:[^>"\']|"[^"]*"|\'[^\']*\')*)>#s',
+                $html,
+                $tag_match,
+                0,
+                $tag_start
+            )) {
+                $result .= substr($html, $tag_start, 1);
+                $offset = $tag_start + 1;
+                continue;
+            }
+
+            $tag = $tag_match[0];
+            $tag_end = $tag_start + strlen($tag);
+            $name = strtolower($tag_match['name']);
+            $self_closing = (substr($tag, -2, 1) === '/');
+
+            if (
+                $tag_match['closing'] === ''
+                && !$self_closing
+                && !in_array($name, $this->_void_tags, true)
+                && $this->_isWhitespaceSensitiveTag($tag_match['attrs'])
+            ) {
+                $end = $this->_findMatchingClosingTag($html, $tag_end, $name, $raw_text_tags);
+                if ($end !== false) {
+                    $marker = $this->_preserved_boundary.count($this->_preserved_blocks).'@@';
+                    $this->_preserved_blocks[$marker] = substr($html, $tag_start, $end - $tag_start);
+                    $result .= $marker;
+                    $offset = $end;
+                    continue;
+                }
+            }
+
+            $result .= $tag;
+            $offset = $tag_end;
+        }
+
+        $result .= substr($html, $offset);
+
+        return $result;
+    }
+
+    /**
+     * @param string $html
+     * @param int $offset Position right after the opening tag
+     * @param string $name Lowercase tag name to match
+     * @param string[] $raw_text_tags
+     * @return int|false Position right after the matching closing tag, or false if none is found
+     */
+    private function _findMatchingClosingTag($html, $offset, $name, $raw_text_tags)
+    {
+        $length = strlen($html);
+        $depth = 1;
+
+        while ($offset < $length && ($tag_start = strpos($html, '<', $offset)) !== false) {
+            if (substr($html, $tag_start, 4) === '<!--') {
+                $comment_end = strpos($html, '-->', $tag_start + 4);
+                if ($comment_end === false) {
+                    return false;
+                }
+                $offset = $comment_end + 3;
+                continue;
+            }
+
+            if (!preg_match(
+                '#\\G<(?P<closing>/?)(?P<name>[A-Za-z][A-Za-z0-9:-]*)(?:[^>"\']|"[^"]*"|\'[^\']*\')*>#s',
+                $html,
+                $tag_match,
+                0,
+                $tag_start
+            )) {
+                $offset = $tag_start + 1;
+                continue;
+            }
+
+            $tag_end = $tag_start + strlen($tag_match[0]);
+            $tag_name = strtolower($tag_match['name']);
+            $closing = ($tag_match['closing'] === '/');
+            $self_closing = (substr($tag_match[0], -2, 1) === '/');
+
+            if ($tag_name === $name) {
+                if ($closing) {
+                    $depth--;
+                    if ($depth === 0) {
+                        return $tag_end;
+                    }
+                } elseif (!$self_closing && !in_array($tag_name, $this->_void_tags, true)) {
+                    $depth++;
+                }
+                $offset = $tag_end;
+                continue;
+            }
+
+            if (!$closing && in_array($tag_name, $raw_text_tags, true)) {
+                $closing_pattern = '#</'.preg_quote($tag_name, '#')
+                    .'(?=[\\s/>])(?:[^>"\']|"[^"]*"|\'[^\']*\')*>#is';
+                if (!preg_match($closing_pattern, $html, $closing_match, PREG_OFFSET_CAPTURE, $tag_end)) {
+                    return false;
+                }
+                $offset = $closing_match[0][1] + strlen($closing_match[0][0]);
+                continue;
+            }
+
+            $offset = $tag_end;
+        }
+
+        return false;
+    }
+
+    /**
      * @param string $html
      * @return string
      */
@@ -447,7 +618,17 @@ class Compactor
             $html = $this->_addScriptLineBreaks($html);
         }
 
-        return strtr($html, $this->_preserved_blocks);
+        // A whitespace-sensitive block extracted after tag-based blocks can
+        // itself contain one of those markers. strtr() substitutes all keys
+        // in one simultaneous pass, so it won't resolve a marker that only
+        // appears inside another marker's own stored value; loop until a
+        // pass makes no further change.
+        do {
+            $before = $html;
+            $html = strtr($html, $this->_preserved_blocks);
+        } while ($html !== $before);
+
+        return $html;
     }
 
     /**

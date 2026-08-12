@@ -91,13 +91,25 @@ class CSS extends Minify
      */
     protected function moveImportsToTop($content)
     {
+        // Detach a leading BOM so it isn't relocated into the stylesheet
+        // body; other sources' BOMs are already stripped in Minify::load(),
+        // so no blanket removal happens here (it would corrupt a string
+        // literal that legitimately contains the byte sequence).
+        $bom = '';
+        if (substr($content, 0, 3) === "\xEF\xBB\xBF") {
+            $bom = "\xEF\xBB\xBF";
+            $content = substr($content, 3);
+        }
+
         // Match complete @import statements, including any trailing media or
-        // supports condition, up to the terminating semicolon. Media
-        // conditions must travel with the import or the restriction they
-        // express (e.g. "print") is lost when the statement is moved.
-        $pattern = '/@import\s+(?:url\(\s*(?<q1>["\']?)(?<path1>.*?)(?P=q1)\s*\)|(?<q2>["\'])(?<path2>.*?)(?P=q2))\s*(?<media>[^;{}]*);/i';
+        // supports condition, and a directly preceding statement-form
+        // "@layer name, name;" - both must travel with the import or its
+        // meaning changes when the statement is moved. A preserved comment
+        // next to the @layer (e.g. a license header) must not break that
+        // adjacency, so it may appear on either side of it.
+        $pattern = '/(?<layer>(?:\/\*.*?\*\/\s*)*@layer\s+[^{};]*;(?:\s*\/\*.*?\*\/)*\s*)?@import\s+(?:url\(\s*(?<q1>["\']?)(?<path1>.*?)(?P=q1)\s*\)|(?<q2>["\'])(?<path2>.*?)(?P=q2))\s*(?<media>[^;{}]*);/is';
         if (!preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE)) {
-            return $content;
+            return $bom . $content;
         }
 
         // Import-looking text inside a string literal (e.g. content: "@import
@@ -114,12 +126,20 @@ class CSS extends Minify
         }
 
         $imports = array();
-        foreach ($matches[0] as $match) {
+        foreach ($matches[0] as $index => $match) {
             list($import, $offset) = $match;
+
+            // Exclusion must be checked against the "@import" keyword itself,
+            // not the match's start: a captured leading @layer comment is
+            // itself one of the excluded_ranges below, and its position
+            // would otherwise falsely exclude a genuine import that happens
+            // to be preceded by one.
+            $layer_length = isset($matches['layer'][$index][0]) ? strlen($matches['layer'][$index][0]) : 0;
+            $import_offset = $offset + $layer_length;
 
             $excluded = false;
             foreach ($excluded_ranges as $range) {
-                if ($offset >= $range[0] && $offset < $range[1]) {
+                if ($import_offset >= $range[0] && $import_offset < $range[1]) {
                     $excluded = true;
                     break;
                 }
@@ -132,7 +152,7 @@ class CSS extends Minify
         }
 
         if (!$imports) {
-            return $content;
+            return $bom . $content;
         }
 
         // Remove by the offset of each confirmed import instead of searching
@@ -172,7 +192,7 @@ class CSS extends Minify
             $content = substr($content, strlen($preamble_match[0]));
         }
 
-        return $preamble . implode('', $import_texts) . trim($content);
+        return $bom . $preamble . implode('', $import_texts) . trim($content);
     }
 
     /**
