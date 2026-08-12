@@ -100,26 +100,31 @@ class CSS extends Minify
             return $content;
         }
 
-        // A match inside a string literal (e.g. content: "@import url(x)")
-        // is not a real import statement and must be left untouched.
-        preg_match_all('/(["\'])(?:\\\\.|(?!\1).)*\1/s', $content, $string_matches, PREG_OFFSET_CAPTURE);
-        $string_ranges = array();
-        foreach ($string_matches[0] as $string_match) {
-            $string_ranges[] = array($string_match[1], $string_match[1] + strlen($string_match[0]));
+        // Import-looking text inside a string literal (e.g. content: "@import
+        // url(x)") or inside a preserved comment (e.g. "/*! @import url(x) */"
+        // or an "@license"/"@preserve" block, already restored to literal text
+        // by the time this method runs) is not a real import statement and
+        // must be left untouched.
+        $excluded_ranges = array();
+        foreach (array('/(["\'])(?:\\\\.|(?!\1).)*\1/s', '#/\*.*?\*/#s') as $exclusion_pattern) {
+            preg_match_all($exclusion_pattern, $content, $exclusion_matches, PREG_OFFSET_CAPTURE);
+            foreach ($exclusion_matches[0] as $exclusion_match) {
+                $excluded_ranges[] = array($exclusion_match[1], $exclusion_match[1] + strlen($exclusion_match[0]));
+            }
         }
 
         $imports = array();
         foreach ($matches[0] as $match) {
             list($import, $offset) = $match;
 
-            $inside_string = false;
-            foreach ($string_ranges as $range) {
+            $excluded = false;
+            foreach ($excluded_ranges as $range) {
                 if ($offset >= $range[0] && $offset < $range[1]) {
-                    $inside_string = true;
+                    $excluded = true;
                     break;
                 }
             }
-            if ($inside_string) {
+            if ($excluded) {
                 continue;
             }
 
@@ -149,7 +154,25 @@ class CSS extends Minify
             $import_texts[] = $import[2];
         }
 
-        return implode('', $import_texts) . trim($content);
+        // @charset is only recognized by the browser as the very first thing
+        // in the stylesheet. A leading "@layer name, name;" statement (the
+        // statement form, not the "@layer name { ... }" block form) declares
+        // cascade layer order for layers an import assigns to via
+        // "layer(name)"; moving an import ahead of it would let the import
+        // establish that layer's priority instead. Both must stay ahead of
+        // the moved imports, in their original relative order. A preserved
+        // comment (e.g. a "/*! license */" or "@license" block) between or
+        // around them must not end this preamble early: it belongs to
+        // whatever follows it and has to travel along, not become a gap the
+        // loop stops at.
+        $preamble = '';
+        $preamble_pattern = '/^\s*(?:@charset\s+(["\']).*?\1\s*;|@layer\s+[^{};]*;|\/\*.*?\*\/)/is';
+        while (preg_match($preamble_pattern, $content, $preamble_match)) {
+            $preamble .= $preamble_match[0];
+            $content = substr($content, strlen($preamble_match[0]));
+        }
+
+        return $preamble . implode('', $import_texts) . trim($content);
     }
 
     /**

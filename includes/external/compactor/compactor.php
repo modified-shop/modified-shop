@@ -799,9 +799,12 @@ class Compactor
              * Join statement and block boundaries that are safe to terminate.
              * Other line breaks are kept because they can be significant for
              * automatic semicolon insertion or template literals. A boundary
-             * immediately followed by "while" is also left untouched: it may be
-             * the tail of a do-while statement, where a semicolon between the
-             * closing brace and "while" is a syntax error.
+             * immediately followed by one of the keywords below is also left
+             * untouched, because each of them must attach directly to the
+             * preceding construct, with no statement (not even an empty one)
+             * allowed in between: "while" (do-while), "catch"/"finally" (try),
+             * "else" (if), and "from" (the tail of a multiline
+             * `import {...} from "...";` or `export {...} from "...";`).
              *
              * @param string $content
              * @return string
@@ -815,7 +818,11 @@ class Compactor
                 // Extracted strings, regular expressions and template literals
                 // can continue an expression across a line break. Preserved
                 // comments may occur at the same boundary.
-                return preg_replace('/}\n(?![\'"`]|\/\*\d+\*\/|[ \t]*while\b)/', '};', $content);
+                return preg_replace(
+                    '/}\n(?![\'"`]|\/\*\d+\*\/|[ \t]*(?:while|catch|finally|else|from)\b)/',
+                    '};',
+                    $content
+                );
             }
 
             /**
