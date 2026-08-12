@@ -83,6 +83,16 @@ class Compactor
     private $_script_markers = array();
 
     /**
+     * [tag names, class names, id names] carrying a "white-space: pre*"
+     * declaration in an embedded <style> block of the document currently
+     * being squeezed, lowercased. Populated per squeeze() call; a linked,
+     * external stylesheet cannot be resolved this way.
+     *
+     * @var array{0: string[], 1: string[], 2: string[]}
+     */
+    private $_whitespace_sensitive_selectors = array(array(), array(), array());
+
+    /**
      * @param array $options
      */
     public function __construct($options = array())
@@ -265,8 +275,14 @@ class Compactor
             $html = $this->_compressScriptAndStyleTags($html);
         }
 
-        $html = $this->_extractPreservedBlocks($html);
         $compress_whitespace = $this->_options['compress_horizontal'] || $this->_options['compress_vertical'];
+        if ($compress_whitespace) {
+            // Must run before _extractPreservedBlocks() replaces <style>
+            // content with a marker below.
+            $this->_whitespace_sensitive_selectors = $this->_collectStyleBasedWhitespaceSelectors($html);
+        }
+
+        $html = $this->_extractPreservedBlocks($html);
         if ($compress_whitespace) {
             $html = $this->_extractWhitespaceSensitiveBlocks($html);
         }
@@ -290,6 +306,7 @@ class Compactor
         $this->_preserved_blocks = array();
         $this->_preserved_boundary = '';
         $this->_script_markers = array();
+        $this->_whitespace_sensitive_selectors = array(array(), array(), array());
 
         return $html;
     }
@@ -452,17 +469,100 @@ class Compactor
     );
 
     /**
+     * Find simple selectors ("tag", ".class", "#id" - no combinators or
+     * pseudo-classes) declaring "white-space: pre*" in an embedded <style>
+     * block, so elements they match can be protected the same way as an
+     * inline style. A later rule for the same selector setting
+     * "normal"/"nowrap" removes it again, since it's common for a reset to
+     * follow a component's own style block later in the document; this is
+     * not full cascade/specificity resolution.
+     *
+     * @param string $html
+     * @return array{0: string[], 1: string[], 2: string[]} [tags, classes, ids]
+     */
+    private function _collectStyleBasedWhitespaceSelectors($html)
+    {
+        $tags = array();
+        $classes = array();
+        $ids = array();
+
+        if (!preg_match_all('#<style\b(?:[^>"\']|"[^"]*"|\'[^\']*\')*>(.*?)</style\s*>#is', $html, $style_matches)) {
+            return array($tags, $classes, $ids);
+        }
+
+        foreach ($style_matches[1] as $css) {
+            if (!preg_match_all('#([^{}]+)\{([^{}]*)\}#s', $css, $rule_matches, PREG_SET_ORDER)) {
+                continue;
+            }
+
+            foreach ($rule_matches as $rule) {
+                $is_sensitive = (bool)preg_match('/white-space\s*:\s*(?:pre|pre-wrap|pre-line|break-spaces)\b/i', $rule[2]);
+                $is_reset = (bool)preg_match('/white-space\s*:\s*(?:normal|nowrap)\b/i', $rule[2]);
+                if (!$is_sensitive && !$is_reset) {
+                    continue;
+                }
+
+                foreach (explode(',', $rule[1]) as $selector) {
+                    $selector = strtolower(trim($selector));
+                    if (!preg_match('/^([.#]?)([a-z][a-z0-9_-]*)$/', $selector, $selector_match)) {
+                        continue;
+                    }
+
+                    $target = &$tags;
+                    if ($selector_match[1] === '.') {
+                        $target = &$classes;
+                    } elseif ($selector_match[1] === '#') {
+                        $target = &$ids;
+                    }
+
+                    if ($is_sensitive) {
+                        $target[$selector_match[2]] = true;
+                    } else {
+                        unset($target[$selector_match[2]]);
+                    }
+                    unset($target);
+                }
+            }
+        }
+
+        return array(array_keys($tags), array_keys($classes), array_keys($ids));
+    }
+
+    /**
+     * @param string $name Lowercase tag name
      * @param string $attributes Raw attribute text of an opening tag
      * @return bool
      */
-    private function _isWhitespaceSensitiveTag($attributes)
+    private function _isWhitespaceSensitiveTag($name, $attributes)
     {
         if (preg_match('/\bxml:space\s*=\s*(["\'])preserve\1/i', $attributes)) {
             return true;
         }
 
-        return preg_match('/\bstyle\s*=\s*(["\'])(.*?)\1/is', $attributes, $style_match)
-            && preg_match('/(?:^|;)\s*white-space\s*:\s*(?:pre|pre-wrap|pre-line|break-spaces)\b/i', $style_match[2]);
+        if (preg_match('/\bstyle\s*=\s*(["\'])(.*?)\1/is', $attributes, $style_match)
+            && preg_match('/(?:^|;)\s*white-space\s*:\s*(?:pre|pre-wrap|pre-line|break-spaces)\b/i', $style_match[2])
+        ) {
+            return true;
+        }
+
+        list($sensitive_tags, $sensitive_classes, $sensitive_ids) = $this->_whitespace_sensitive_selectors;
+        if ($sensitive_tags && in_array($name, $sensitive_tags, true)) {
+            return true;
+        }
+
+        if ($sensitive_classes && preg_match('/\bclass\s*=\s*(["\'])(.*?)\1/is', $attributes, $class_match)) {
+            foreach (preg_split('/\s+/', trim($class_match[2])) as $class) {
+                if ($class !== '' && in_array(strtolower($class), $sensitive_classes, true)) {
+                    return true;
+                }
+            }
+        }
+
+        if ($sensitive_ids && preg_match('/\bid\s*=\s*(["\'])(.*?)\1/is', $attributes, $id_match)) {
+            return in_array(strtolower(trim($id_match[2])), $sensitive_ids, true);
+        }
+
+        return false;
     }
 
     /**
@@ -520,7 +620,7 @@ class Compactor
                 $tag_match['closing'] === ''
                 && !$self_closing
                 && !in_array($name, $this->_void_tags, true)
-                && $this->_isWhitespaceSensitiveTag($tag_match['attrs'])
+                && $this->_isWhitespaceSensitiveTag($name, $tag_match['attrs'])
             ) {
                 $end = $this->_findMatchingClosingTag($html, $tag_end, $name, $raw_text_tags);
                 if ($end !== false) {

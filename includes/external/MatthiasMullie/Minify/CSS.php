@@ -102,23 +102,27 @@ class CSS extends Minify
         }
 
         // Match complete @import statements, including any trailing media or
-        // supports condition, and a directly preceding statement-form
-        // "@layer name, name;" - both must travel with the import or its
-        // meaning changes when the statement is moved. A preserved comment
-        // next to the @layer (e.g. a license header) must not break that
-        // adjacency, so it may appear on either side of it.
-        $pattern = '/(?<layer>(?:\/\*.*?\*\/\s*)*@layer\s+[^{};]*;(?:\s*\/\*.*?\*\/)*\s*)?@import\s+(?:url\(\s*(?<q1>["\']?)(?<path1>.*?)(?P=q1)\s*\)|(?<q2>["\'])(?<path2>.*?)(?P=q2))\s*(?<media>[^;{}]*);/is';
+        // supports condition, and any directly preceding statement-form
+        // "@layer name, name;" declarations (with comments interleaved
+        // anywhere among them) - all must travel with the import or its
+        // meaning changes when the statement is moved. Consecutive @layer
+        // statements each register their own layer order, so a single one
+        // isn't enough: "@layer a,b;\n@layer c,d;\n@import ... layer(d);"
+        // needs both to stay ahead of the moved import.
+        $pattern = '/(?<layer>(?:\s*(?:\/\*.*?\*\/|@layer\s+[^{};]*;))*\s*)@import\s+(?:url\(\s*(?<q1>["\']?)(?<path1>.*?)(?P=q1)\s*\)|(?<q2>["\'])(?<path2>.*?)(?P=q2))\s*(?<media>[^;{}]*);/is';
         if (!preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE)) {
             return $bom . $content;
         }
 
         // Import-looking text inside a string literal (e.g. content: "@import
-        // url(x)") or inside a preserved comment (e.g. "/*! @import url(x) */"
+        // url(x)"), inside a preserved comment (e.g. "/*! @import url(x) */"
         // or an "@license"/"@preserve" block, already restored to literal text
-        // by the time this method runs) is not a real import statement and
-        // must be left untouched.
+        // by the time this method runs), or inside a custom property's value
+        // (e.g. "--snippet: @import url(x);", restored the same way by
+        // extractCustomProperties()/restoreExtractedData()) is not a real
+        // import statement and must be left untouched.
         $excluded_ranges = array();
-        foreach (array('/(["\'])(?:\\\\.|(?!\1).)*\1/s', '#/\*.*?\*/#s') as $exclusion_pattern) {
+        foreach (array('/(["\'])(?:\\\\.|(?!\1).)*\1/s', '#/\*.*?\*/#s', '/--[a-zA-Z0-9_-]+\s*:[^;]*;/s') as $exclusion_pattern) {
             preg_match_all($exclusion_pattern, $content, $exclusion_matches, PREG_OFFSET_CAPTURE);
             foreach ($exclusion_matches[0] as $exclusion_match) {
                 $excluded_ranges[] = array($exclusion_match[1], $exclusion_match[1] + strlen($exclusion_match[0]));
@@ -515,23 +519,52 @@ class CSS extends Minify
             /ix',
         );
 
-        // find all relative urls in css
+        // Find all relative urls in css, with their position: a match
+        // inside a string or comment (e.g. content: "url(x)") is text, not
+        // a real url() reference, and must be recognized and left alone.
+        // Position is also needed to replace by offset rather than a
+        // content-wide string search, which would touch every occurrence
+        // of identical text regardless of where it came from.
         $matches = array();
         foreach ($relativeRegexes as $relativeRegex) {
-            if (preg_match_all($relativeRegex, $content, $regexMatches, PREG_SET_ORDER)) {
+            if (preg_match_all($relativeRegex, $content, $regexMatches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
                 $matches = array_merge($matches, $regexMatches);
             }
         }
+        if (!$matches) {
+            return $content;
+        }
 
-        $search = array();
-        $replace = array();
+        $excluded_ranges = array();
+        foreach (array('/(["\'])(?:\\\\.|(?!\1).)*\1/s', '#/\*.*?\*/#s') as $exclusion_pattern) {
+            preg_match_all($exclusion_pattern, $content, $exclusion_matches, PREG_OFFSET_CAPTURE);
+            foreach ($exclusion_matches[0] as $exclusion_match) {
+                $excluded_ranges[] = array($exclusion_match[1], $exclusion_match[1] + strlen($exclusion_match[0]));
+            }
+        }
+
+        $replacements = array();
 
         // loop all urls
         foreach ($matches as $match) {
-            // determine if it's a url() or an @import match
-            $type = (strpos($match[0], '@import') === 0 ? 'import' : 'url');
+            $text = $match[0][0];
+            $offset = $match[0][1];
 
-            $url = $match['path'];
+            $excluded = false;
+            foreach ($excluded_ranges as $range) {
+                if ($offset >= $range[0] && $offset < $range[1]) {
+                    $excluded = true;
+                    break;
+                }
+            }
+            if ($excluded) {
+                continue;
+            }
+
+            // determine if it's a url() or an @import match
+            $type = (strpos($text, '@import') === 0 ? 'import' : 'url');
+
+            $url = $match['path'][0];
             if ($this->canImportByPath($url)) {
                 // attempting to interpret GET-params makes no sense, so let's discard them for awhile
                 $params = strrchr($url, '?');
@@ -559,20 +592,32 @@ class CSS extends Minify
              */
             $url = trim($url);
             if (preg_match('/[\s\)\'"#\x{7f}-\x{9f}]/u', $url)) {
-                $url = $match['quotes'] . $url . $match['quotes'];
+                $url = $match['quotes'][0] . $url . $match['quotes'][0];
             }
 
             // build replacement
-            $search[] = $match[0];
             if ($type === 'url') {
-                $replace[] = 'url(' . $url . ')';
-            } elseif ($type === 'import') {
-                $replace[] = '@import "' . $url . '"';
+                $replacement = 'url(' . $url . ')';
+            } else {
+                $replacement = '@import "' . $url . '"';
             }
+            $replacements[] = array($offset, strlen($text), $replacement);
         }
 
-        // replace urls
-        return str_replace($search, $replace, $content);
+        if (!$replacements) {
+            return $content;
+        }
+
+        // Replace from the highest offset down so earlier offsets stay valid.
+        usort($replacements, function ($a, $b) {
+            return $b[0] - $a[0];
+        });
+        foreach ($replacements as $replacement) {
+            list($offset, $length, $text) = $replacement;
+            $content = substr_replace($content, $text, $offset, $length);
+        }
+
+        return $content;
     }
 
     /**
