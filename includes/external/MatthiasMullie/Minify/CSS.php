@@ -1148,6 +1148,31 @@ class CSS extends Minify
             return $content;
         }
 
+        // A custom property's value can itself contain another "--name:"
+        // that also passes as a real declaration (e.g. "--outer: { --inner:
+        // x }": "--inner" is preceded by "{" too), producing a range fully
+        // nested inside the outer one. Extracting the inner range first and
+        // then the outer one by its original offsets would corrupt the
+        // content once the inner replacement shifts it; extracting both
+        // independently would nest one placeholder inside the other's
+        // stored text, which the single-pass strtr() restore can't unwind.
+        // The inner text is part of the outer value's opaque token
+        // sequence, not a separate declaration - keep only the outermost
+        // range of each such group.
+        usort($ranges, function ($a, $b) {
+            return $a[0] !== $b[0] ? $a[0] - $b[0] : $b[1] - $a[1];
+        });
+        $outer_ranges = array();
+        $current_end = -1;
+        foreach ($ranges as $range) {
+            if ($range[0] < $current_end) {
+                continue;
+            }
+            $outer_ranges[] = $range;
+            $current_end = $range[1];
+        }
+        $ranges = $outer_ranges;
+
         // Replace from the highest offset down so earlier offsets stay valid.
         usort($ranges, function ($a, $b) {
             return $b[0] - $a[0];

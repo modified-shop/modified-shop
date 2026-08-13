@@ -180,6 +180,17 @@ class JS extends Minify
             // the regexes just a few lines earlier)
             $js = $this->replace($js);
 
+            // A regex right after an "if(...)"/"while(...)"/"for(...)" is
+            // ambiguous the same way one after any other bare ")" is - but
+            // unlike extractRegex()'s condition-agnostic "only followed by
+            // .test()/.exec()/etc." check for that general case, this one
+            // is a control statement's own expression statement, where a
+            // regex needs no particular follow-up at all to be valid. Runs
+            // after replace(): with strings/comments/other regexes already
+            // placeholdered by then, finding the "if"/"while"/"for" keyword
+            // and its condition's matching ")" is a plain paren count.
+            $js = $this->protectControlStatementRegex($js);
+
             $js = $this->propertyNotation($js);
             $js = $this->shortenBools($js);
             $js = $this->stripWhitespace($js);
@@ -562,6 +573,80 @@ class JS extends Minify
     }
 
     /**
+     * A regex right after "if(...)"/"while(...)"/"for(...)" is the start of
+     * that statement's own (single) expression statement - unlike a regex
+     * after any other bare ")", it needs no particular follow-up token to
+     * be valid, since extractRegex()'s own after-")" pattern (only followed
+     * by a RegExp property/method access) doesn't cover it. Must run after
+     * strings/comments/other regexes are already placeholdered: it doesn't
+     * re-derive their skipping logic, only a plain "()" depth count between
+     * the keyword and its condition's matching ")".
+     *
+     * @param string $content
+     * @return string
+     */
+    protected function protectControlStatementRegex($content)
+    {
+        $length = strlen($content);
+        if (!preg_match_all('/\b(?:if|while|for)\s*\(/', $content, $matches, PREG_OFFSET_CAPTURE)) {
+            return $content;
+        }
+
+        // Process from the highest offset down so earlier offsets stay valid.
+        $keyword_matches = array_reverse($matches[0]);
+        foreach ($keyword_matches as $match) {
+            list($text, $keyword_offset) = $match;
+            $offset = $keyword_offset + strlen($text) - 1; // position of "("
+
+            $depth = 0;
+            while ($offset < $length) {
+                $character = $content[$offset];
+                if ($character === '(') {
+                    $depth++;
+                } elseif ($character === ')') {
+                    $depth--;
+                    if ($depth === 0) {
+                        $offset++;
+                        break;
+                    }
+                }
+                $offset++;
+            }
+
+            $probe = $offset;
+            while ($probe < $length) {
+                $whitespace_length = $this->matchJsWhitespace($content, $probe, $length);
+                if ($whitespace_length === 0) {
+                    break;
+                }
+                $probe += $whitespace_length;
+            }
+
+            if ($probe >= $length || $content[$probe] !== '/') {
+                continue;
+            }
+            if ($probe + 1 < $length && ($content[$probe + 1] === '/' || $content[$probe + 1] === '*')) {
+                continue;
+            }
+
+            // Empty $last_char/$last_word simulate "start of expression",
+            // matching this position's actual meaning: canPrecedeRegex()
+            // treats that the same as a value being expected.
+            $regex_end = $this->tryMatchTemplateRegex($content, $probe, $length, '', '');
+            if ($regex_end === false) {
+                continue;
+            }
+
+            $count = count($this->extracted);
+            $placeholder = '"' . $count . '"';
+            $this->extracted[$placeholder] = substr($content, $probe, $regex_end - $probe);
+            $content = substr_replace($content, $placeholder, $probe, $regex_end - $probe);
+        }
+
+        return $content;
+    }
+
+    /**
      * JS can have /-delimited regular expressions, like: /ab+c/.match(string).
      *
      * The content inside the regex can contain characters that may be confused
@@ -931,6 +1016,166 @@ class JS extends Minify
     }
 
     /**
+     * "true"/"false" is only the boolean literal in an expression position.
+     * It's an IdentifierName instead - and must not be replaced - as: a
+     * property name (obj.true, {true: 1}), a method/getter/setter name
+     * ({true(){}}, {get true(){}}, a class's static/async true(){}), a
+     * class field name, initialized (class X {true = 1}) or not
+     * (class X {true;}), or an import/export rename target
+     * (import {true as x}, export {x as true}). A fixed regex exclusion
+     * list keeps missing cases like these; this walks the token stream
+     * instead, tracking enough context - what precedes it, what follows
+     * it, and whether it's a direct child of a class body rather than
+     * nested inside one of that class's own method bodies - to tell them
+     * apart directly instead of guessing from an incomplete enumeration.
+     *
+     * @param string $content
+     * @return string
+     */
+    private function replaceBoolLiterals($content)
+    {
+        $length = strlen($content);
+        $result = '';
+        $offset = 0;
+        $last_char = '';
+        $last_word = '';
+        $brace_kinds = array();
+        $expect_class_body = false;
+        $class_depth = 0;
+
+        while ($offset < $length) {
+            $character = $content[$offset];
+
+            if ($character === '{') {
+                $brace_kinds[] = ($expect_class_body && $class_depth === 0) ? 'class' : 'other';
+                $expect_class_body = false;
+                $result .= $character;
+                $offset++;
+                $last_char = '{';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === '}') {
+                array_pop($brace_kinds);
+                $result .= $character;
+                $offset++;
+                $last_char = '}';
+                $last_word = '';
+                continue;
+            }
+
+            if ($expect_class_body) {
+                if ($character === '(' || $character === '[') {
+                    $class_depth++;
+                } elseif ($character === ')' || $character === ']') {
+                    $class_depth = max(0, $class_depth - 1);
+                }
+            }
+
+            $prev_char = $last_char;
+            $prev_word = $last_word;
+            $new_offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
+            $token = substr($content, $offset, $new_offset - $offset);
+
+            if ($token === 'class') {
+                $expect_class_body = true;
+                $class_depth = 0;
+            }
+
+            if ($token === 'true' || $token === 'false') {
+                $in_class_body = ($brace_kinds && end($brace_kinds) === 'class');
+                $replacement = $this->resolveBoolLiteral($content, $token, $new_offset, $length, $prev_char, $prev_word, $in_class_body);
+                if ($replacement !== null) {
+                    $result .= $replacement;
+                    $offset = $new_offset;
+                    continue;
+                }
+            }
+
+            $result .= $token;
+            $offset = $new_offset;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $content
+     * @param string $word "true" or "false"
+     * @param int $offset Position right after $word
+     * @param int $length
+     * @param string $prev_char
+     * @param string $prev_word
+     * @param bool $in_class_body
+     * @return string|null "!0"/"!1" if $word is the boolean literal here, null if it's an IdentifierName
+     */
+    private function resolveBoolLiteral($content, $word, $offset, $length, $prev_char, $prev_word, $in_class_body)
+    {
+        // obj.true
+        if ($prev_char === '.') {
+            return null;
+        }
+
+        // export {x as true}
+        if ($prev_word === 'as') {
+            return null;
+        }
+
+        $probe = $offset;
+        while ($probe < $length) {
+            $whitespace_length = $this->matchJsWhitespace($content, $probe, $length);
+            if ($whitespace_length === 0) {
+                break;
+            }
+            $probe += $whitespace_length;
+        }
+
+        if ($probe >= $length) {
+            // End of source right after "true"/"false": only ambiguous as an
+            // uninitialized class field, so stay conservative there.
+            return $in_class_body ? null : ($word === 'true' ? '!0' : '!1');
+        }
+
+        $next = $content[$probe];
+
+        // {true: 1} - only when "true"/"false" itself starts a property (right
+        // after "{" or ","); otherwise a following ":" is a ternary's own,
+        // e.g. "x ? true : y", where "?" (not "{"/",") precedes it instead.
+        if ($next === ':' && ($prev_char === '{' || $prev_char === ',')) {
+            return null;
+        }
+
+        // {true(){}}, {get true(){}}, static/async true(){}
+        if ($next === '(') {
+            return null;
+        }
+
+        // class X {true = 1} ("==="/"==" stay real comparisons)
+        if ($next === '=' && ($probe + 1 >= $length || $content[$probe + 1] !== '=')) {
+            return null;
+        }
+
+        // import {true as x}
+        if ($this->isJsWordChar($next)) {
+            $word_end = $probe;
+            while ($word_end < $length && $this->isJsWordChar($content[$word_end])) {
+                $word_end++;
+            }
+            if (substr($content, $probe, $word_end - $probe) === 'as') {
+                return null;
+            }
+        }
+
+        // class X {true;} / {true,} / {true}
+        if ($in_class_body && ($next === ';' || $next === ',' || $next === '}')) {
+            return null;
+        }
+
+        return $word === 'true' ? '!0' : '!1';
+    }
+
+    /**
      * Replaces true & false by !0 and !1.
      *
      * @param string $content
@@ -939,29 +1184,7 @@ class JS extends Minify
      */
     protected function shortenBools($content)
     {
-        /*
-         * 'true' or 'false' could be used as a property name (obj.true,
-         * {true: 1}), a method/getter/setter name ({true(){}}, {get true(){}},
-         * a class's static/async true(){}), or a class field name
-         * (class X {true = 1}) - none of those are the boolean literal and
-         * must not be replaced.
-         * Since PHP doesn't allow variable-length (to account for the
-         * whitespace) lookbehind assertions, I need to capture the leading
-         * character and check if it's a `.`
-         */
-        $callback = function ($match) {
-            if (trim($match[1]) === '.') {
-                return $match[0];
-            }
-
-            return $match[1] . ($match[2] === 'true' ? '!0' : '!1');
-        };
-        // (?!:) property shorthand key; (?!\s*\() method/getter/setter name
-        // (always followed by its, possibly empty, parameter list);
-        // (?!\s*=(?!=)) class field name (a single "=" can only be an
-        // assignment target here - assigning to the literal true/false
-        // isn't valid JS - while "==="/"==" stay real comparisons).
-        $content = preg_replace_callback('/(^|.\s*)\b(true|false)\b(?!:)(?!\s*\()(?!\s*=(?!=))/', $callback, $content);
+        $content = $this->replaceBoolLiterals($content);
 
         // for(;;) is exactly the same as while(true), but shorter :)
         $content = preg_replace('/\bwhile\(!0\){/', 'for(;;){', $content);
