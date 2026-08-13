@@ -160,18 +160,22 @@ class JS extends Minify
          * Comments will be removed altogether, strings and regular expressions
          * will be replaced by placeholder text, which we'll restore later.
          */
-        // Backticks are handled separately: a template literal's `${...}`
-        // can contain another complete, nested template literal (with its
-        // own `${...}`, to any depth), so the plain "up to the next
-        // matching quote" approach extractStrings() uses for '/" would
-        // stop at the wrong backtick.
+        // Backticks are handled separately, as their own pre-pass: a
+        // template literal's `${...}` can contain another complete, nested
+        // template literal (with its own `${...}`, to any depth), so the
+        // plain "up to the next matching quote" approach extractStrings()
+        // uses for '/" would stop at the wrong backtick. It has to run as a
+        // plain PHP scan rather than a registerPattern() callback, because
+        // that callback only ever sees what its own regex matched, with no
+        // way to look ahead for a nested template's true end.
         $this->extractStrings('\'"');
-        $this->extractTemplateLiterals();
         $this->stripComments();
         $this->extractRegex();
 
         // loop files
         foreach ($this->data as $source => $js) {
+            $js = $this->extractTemplateLiterals($js);
+
             // take out strings, comments & regex (for which we've registered
             // the regexes just a few lines earlier)
             $js = $this->replace($js);
@@ -215,30 +219,284 @@ class JS extends Minify
     }
 
     /**
-     * Match a complete template literal, recursively accounting for a
-     * nested template literal (and its own strings/comments/braces) inside
-     * a `${...}` interpolation, to any depth. A bare "/" inside an
-     * interpolation is disambiguated the same way extractRegex() does for
-     * top-level code: it's a regex literal only right after an operator,
-     * opening bracket, or one of a few keywords (within a bounded run of
-     * whitespace - PCRE lookbehind can't be unbounded); otherwise it's
-     * division and consumed as an ordinary character.
+     * Find and placeholder every template literal in $content, recursively
+     * accounting for a nested template literal (and its own
+     * strings/comments/braces/regexes) inside a `${...}` interpolation, to
+     * any depth.
+     *
+     * This runs as a plain character scan rather than a single PCRE pattern
+     * (as an earlier version of this did): disambiguating a bare "/" inside
+     * an interpolation as division or the start of a regex literal needs
+     * the same kind of "what came before it" context extractRegex() tracks
+     * for top-level code, including its "regex after a bare ')' only if
+     * followed by .test(/.exec(/etc." special case - and PCRE lookbehind
+     * has no way to express an unbounded version of that (a bounded one,
+     * tried initially, silently misjudges anything past the bound, and
+     * bounded-but-nonzero-width lookbehind isn't even accepted by the PCRE2
+     * version PHP 8.0-8.3 - still within this project's supported range -
+     * ship with).
+     *
+     * @param string $content
+     * @return string
      */
-    protected function extractTemplateLiterals()
+    protected function extractTemplateLiterals($content)
     {
-        $minifier = $this;
-        $callback = function ($match) use ($minifier) {
-            $count = count($minifier->extracted);
-            $placeholder = '`' . $count . '`';
-            $minifier->extracted[$placeholder] = $match[0];
+        $length = strlen($content);
+        $result = '';
+        $offset = 0;
+        $last_char = '';
+        $last_word = '';
 
-            return $placeholder;
-        };
+        while ($offset < $length) {
+            $character = $content[$offset];
 
-        $this->registerPattern(
-            '/(?<TMPL>`(?:\\\\.|[^`\\\\$]|\$(?!\{)|\$\{(?<EXPR>(?:\\\\.|\'(?:[^\'\\\\]|\\\\.)*\'|"(?:[^"\\\\]|\\\\.)*"|\/\/[^\n]*|\/\*[\s\S]*?\*\/|(?<=[=:,;+\-*?\/}{\[&|!]\s{0,10}|\b(?:do|in|new|else|throw|yield|delete|return|typeof)\s{0,10})\/(?:[^\/\\\\\n\[]|\\\\.|\[(?:[^\]\\\\\n]|\\\\.)*\])+\/[dgimsuvy]*|(?&TMPL)|\{(?&EXPR)*\}|[^{}\'"`\/]|\/)*)\})*`)/',
-            $callback
+            if ($character === '`') {
+                $end = $this->findTemplateLiteralEnd($content, $offset + 1, $length);
+                $text = substr($content, $offset, $end - $offset);
+                $count = count($this->extracted);
+                $placeholder = '`' . $count . '`';
+                $this->extracted[$placeholder] = $text;
+                $result .= $placeholder;
+                $offset = $end;
+                $last_char = '`';
+                $last_word = '';
+                continue;
+            }
+
+            $new_offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
+            $result .= substr($content, $offset, $new_offset - $offset);
+            $offset = $new_offset;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $content
+     * @param int $offset Position right after the opening backtick
+     * @param int $length
+     * @return int Position right after the matching closing backtick
+     */
+    private function findTemplateLiteralEnd($content, $offset, $length)
+    {
+        while ($offset < $length) {
+            $character = $content[$offset];
+
+            if ($character === '\\') {
+                $offset += 2;
+                continue;
+            }
+
+            if ($character === '`') {
+                return $offset + 1;
+            }
+
+            if ($character === '$' && $offset + 1 < $length && $content[$offset + 1] === '{') {
+                $offset = $this->skipTemplateExpression($content, $offset + 2, $length);
+                continue;
+            }
+
+            $offset++;
+        }
+
+        return $length;
+    }
+
+    /**
+     * @param string $content
+     * @param int $offset Position right after "${"
+     * @param int $length
+     * @return int Position right after the matching "}"
+     */
+    private function skipTemplateExpression($content, $offset, $length)
+    {
+        $depth = 0;
+        $last_char = '{';
+        $last_word = '';
+
+        while ($offset < $length) {
+            $character = $content[$offset];
+
+            if ($character === '`') {
+                $offset = $this->findTemplateLiteralEnd($content, $offset + 1, $length);
+                $last_char = '`';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === '{') {
+                $depth++;
+                $offset++;
+                $last_char = '{';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === '}') {
+                if ($depth === 0) {
+                    return $offset + 1;
+                }
+                $depth--;
+                $offset++;
+                $last_char = '}';
+                $last_word = '';
+                continue;
+            }
+
+            $offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
+        }
+
+        return $length;
+    }
+
+    /**
+     * Skip one whitespace run, string, comment, regex literal, or ordinary
+     * character/identifier, tracking the last significant character/word
+     * seen so a subsequent "/" can be told apart from division.
+     *
+     * @param string $content
+     * @param int $offset
+     * @param int $length
+     * @param string $last_char
+     * @param string $last_word
+     * @return int Position right after the skipped token
+     */
+    private function skipJsToken($content, $offset, $length, &$last_char, &$last_word)
+    {
+        $character = $content[$offset];
+
+        if ($character === ' ' || $character === "\t" || $character === "\n" || $character === "\r") {
+            return $offset + 1;
+        }
+
+        if ($character === "'" || $character === '"') {
+            $quote = $character;
+            $offset++;
+            while ($offset < $length && $content[$offset] !== $quote) {
+                $offset += ($content[$offset] === '\\') ? 2 : 1;
+            }
+            $offset++;
+            $last_char = $quote;
+            $last_word = '';
+
+            return $offset;
+        }
+
+        if ($character === '/' && $offset + 1 < $length && $content[$offset + 1] === '/') {
+            $offset += 2;
+            while ($offset < $length
+                && $content[$offset] !== "\n"
+                && $content[$offset] !== "\r"
+                && substr($content, $offset, 3) !== "\xE2\x80\xA8"
+                && substr($content, $offset, 3) !== "\xE2\x80\xA9"
+            ) {
+                $offset++;
+            }
+
+            return $offset;
+        }
+
+        if ($character === '/' && $offset + 1 < $length && $content[$offset + 1] === '*') {
+            $end = strpos($content, '*/', $offset + 2);
+
+            return ($end === false) ? $length : $end + 2;
+        }
+
+        if ($character === '/') {
+            $regex_end = $this->tryMatchTemplateRegex($content, $offset, $length, $last_char, $last_word);
+            $last_char = '/';
+            $last_word = '';
+
+            return ($regex_end !== false) ? $regex_end : $offset + 1;
+        }
+
+        if ($this->isJsWordChar($character)) {
+            $word_start = $offset;
+            while ($offset < $length && $this->isJsWordChar($content[$offset])) {
+                $offset++;
+            }
+            $last_word = substr($content, $word_start, $offset - $word_start);
+            $last_char = '';
+
+            return $offset;
+        }
+
+        $last_char = $character;
+        $last_word = '';
+
+        return $offset + 1;
+    }
+
+    /**
+     * @param string $character
+     * @return bool
+     */
+    private function isJsWordChar($character)
+    {
+        return ($character >= 'a' && $character <= 'z')
+            || ($character >= 'A' && $character <= 'Z')
+            || ($character >= '0' && $character <= '9')
+            || $character === '_'
+            || $character === '$';
+    }
+
+    /**
+     * Mirrors extractRegex()'s "before" context (operator/opening
+     * bracket/keyword, or a bare ")" followed by a RegExp property/method
+     * access) to decide whether "/" opens a regex literal here. The regex
+     * body itself excludes bare "{"/"}" (unlike extractRegex()'s own, which
+     * doesn't need to): a false-positive match - dividing by a value,
+     * followed later by another "/" - must not be able to swallow past an
+     * unrelated "}" that would otherwise have closed the enclosing "${...}".
+     *
+     * @param string $content
+     * @param int $offset
+     * @param int $length
+     * @param string $last_char
+     * @param string $last_word
+     * @return int|false Position right after the regex literal, or false if "/" isn't one here
+     */
+    private function tryMatchTemplateRegex($content, $offset, $length, $last_char, $last_word)
+    {
+        static $keywords = array('do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof');
+        static $beforeChars = '=:,;+-*?/}({[&|!';
+        static $methods = array(
+            'constructor', 'flags', 'global', 'ignoreCase', 'multiline', 'source', 'sticky', 'unicode',
+            'compile(', 'exec(', 'test(', 'toSource(', 'toString(',
         );
+
+        $atStart = ($last_char === '' && $last_word === '');
+        $canPrecedeRegex = $atStart
+            || ($last_char !== '' && strpos($beforeChars, $last_char) !== false)
+            || ($last_word !== '' && in_array($last_word, $keywords, true));
+        $afterCloseParen = ($last_char === ')');
+
+        if (!$canPrecedeRegex && !$afterCloseParen) {
+            return false;
+        }
+
+        if (!preg_match(
+            '/\\/(?!\\*)(?:[^{}\\[\\/\\\\\n\r]++|(?:\\\\.)++|(?:\\[(?:[^\\]\\\\\n\r]++|(?:\\\\.)++)++\\])++)++\\/[dgimsuvy]*/A',
+            $content,
+            $matches,
+            0,
+            $offset
+        )) {
+            return false;
+        }
+
+        $end = $offset + strlen($matches[0]);
+
+        if ($afterCloseParen && !$canPrecedeRegex) {
+            $quoted = array_map(function ($method) {
+                return preg_quote($method, '/');
+            }, $methods);
+            if (!preg_match('/^\s*\.(?:' . implode('|', $quoted) . ')/', substr($content, $end))) {
+                return false;
+            }
+        }
+
+        return $end;
     }
 
     /**
