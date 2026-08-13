@@ -365,8 +365,9 @@ class JS extends Minify
     {
         $character = $content[$offset];
 
-        if ($character === ' ' || $character === "\t" || $character === "\n" || $character === "\r") {
-            return $offset + 1;
+        $whitespace_length = $this->matchJsWhitespace($content, $offset, $length);
+        if ($whitespace_length > 0) {
+            return $offset + $whitespace_length;
         }
 
         if ($character === "'" || $character === '"') {
@@ -441,13 +442,71 @@ class JS extends Minify
     }
 
     /**
+     * ECMAScript WhiteSpace/LineTerminator beyond plain space/tab/LF/CR:
+     * NBSP (U+00A0), the other Unicode Zs space separators, LS/PS
+     * (U+2028/U+2029), and ZWNBSP (U+FEFF). Left unrecognized, one of these
+     * between an operator/keyword and a following "/" would be treated as
+     * an ordinary character, overwriting the "last significant token" and
+     * making a regex there look like division instead.
+     *
+     * @param string $content
+     * @param int $offset
+     * @param int $length
+     * @return int Byte length of the whitespace character at $offset, or 0 if there isn't one
+     */
+    private function matchJsWhitespace($content, $offset, $length)
+    {
+        $character = $content[$offset];
+
+        if ($character === ' ' || $character === "\t" || $character === "\n" || $character === "\r"
+            || $character === "\x0B" || $character === "\x0C"
+        ) {
+            return 1;
+        }
+
+        if ($character === "\xC2" && $offset + 1 < $length && $content[$offset + 1] === "\xA0") {
+            return 2;
+        }
+
+        if ($character === "\xE1" && substr($content, $offset, 3) === "\xE1\x9A\x80") {
+            return 3;
+        }
+
+        if ($character === "\xE2" && $offset + 2 < $length) {
+            $third = $content[$offset + 2];
+            if ($content[$offset + 1] === "\x80"
+                && (($third >= "\x80" && $third <= "\x8A") || $third === "\xA8" || $third === "\xA9" || $third === "\xAF")
+            ) {
+                return 3;
+            }
+            if ($content[$offset + 1] === "\x81" && $third === "\x9F") {
+                return 3;
+            }
+        }
+
+        if ($character === "\xE3" && substr($content, $offset, 3) === "\xE3\x80\x80") {
+            return 3;
+        }
+
+        if ($character === "\xEF" && substr($content, $offset, 3) === "\xEF\xBB\xBF") {
+            return 3;
+        }
+
+        return 0;
+    }
+
+    /**
      * Mirrors extractRegex()'s "before" context (operator/opening
      * bracket/keyword, or a bare ")" followed by a RegExp property/method
-     * access) to decide whether "/" opens a regex literal here. The regex
-     * body itself excludes bare "{"/"}" (unlike extractRegex()'s own, which
-     * doesn't need to): a false-positive match - dividing by a value,
-     * followed later by another "/" - must not be able to swallow past an
-     * unrelated "}" that would otherwise have closed the enclosing "${...}".
+     * access) to decide whether "/" opens a regex literal here: a value
+     * (identifier, number, string, ")", "]", ...) immediately before it
+     * means division instead, and division can't immediately follow any of
+     * these contexts in valid JS, so a false-positive match here - one that
+     * could swallow past an unrelated "}" that should have closed the
+     * enclosing "${...}" - isn't possible for that part of the check. The
+     * regex body itself is allowed to contain "{"/"}" (e.g. a quantifier
+     * like "{2,4}", or the literal "}" in /}/) without affecting the
+     * interpolation's own brace depth, same as extractRegex()'s.
      *
      * @param string $content
      * @param int $offset
@@ -458,8 +517,11 @@ class JS extends Minify
      */
     private function tryMatchTemplateRegex($content, $offset, $length, $last_char, $last_word)
     {
-        static $keywords = array('do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof');
-        static $beforeChars = '=:,;+-*?/}({[&|!';
+        static $keywords = array(
+            'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
+            'case', 'await', 'void', 'default', 'instanceof', 'of',
+        );
+        static $beforeChars = '=:,;+-*/%^~<>?}({[&|!';
         static $methods = array(
             'constructor', 'flags', 'global', 'ignoreCase', 'multiline', 'source', 'sticky', 'unicode',
             'compile(', 'exec(', 'test(', 'toSource(', 'toString(',
@@ -476,7 +538,7 @@ class JS extends Minify
         }
 
         if (!preg_match(
-            '/\\/(?!\\*)(?:[^{}\\[\\/\\\\\n\r]++|(?:\\\\.)++|(?:\\[(?:[^\\]\\\\\n\r]++|(?:\\\\.)++)++\\])++)++\\/[dgimsuvy]*/A',
+            '/\\/(?!\\*)(?:[^\\[\\/\\\\\n\r]++|(?:\\\\.)++|(?:\\[(?:[^\\]\\\\\n\r]++|(?:\\\\.)++)++\\])++)++\\/[dgimsuvy]*/A',
             $content,
             $matches,
             0,
@@ -537,11 +599,16 @@ class JS extends Minify
         // escaped: anything inside `[]` can be ignored safely
         $pattern = '\\/(?!\*)(?:[^\\[\\/\\\\\n\r]++|(?:\\\\.)++|(?:\\[(?:[^\\]\\\\\n\r]++|(?:\\\\.)++)++\\])++)++\\/[dgimsuvy]*';
 
-        // a regular expression can only be followed by a few operators or some
-        // of the RegExp methods (a `\` followed by a variable or value is
-        // likely part of a division, not a regex)
-        $keywords = array('do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return',  'typeof');
-        $before = '(^|[=:,;\+\-\*\?\/\}\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
+        // A "/" can only start a regex where an expression is expected: right
+        // after an operator/opening-bracket punctuator or one of these
+        // keywords. A value (identifier, number, string, ")", "]", ...)
+        // immediately before it means division instead. "=>" and "<="/">="/
+        // "=="/"===" etc. are covered via their last character ("<"/">"/"=").
+        $keywords = array(
+            'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
+            'case', 'await', 'void', 'default', 'instanceof', 'of',
+        );
+        $before = '(^|[=:,;\+\-\*\/%\^~<>\?\}\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
         $propertiesAndMethods = array(
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Properties_2
             'constructor',
