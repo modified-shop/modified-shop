@@ -357,7 +357,7 @@ class Compactor
             $marker = $this->_preserved_boundary.count($this->_preserved_blocks).'@@';
             $this->_preserved_blocks[$marker] = $matches[2];
             if (strtolower($matches['preserved_tag']) == 'script') {
-                $this->_script_markers[$marker] = ($matches[1] != '');
+                $this->_script_markers[$marker] = (strpos($matches[1], $this->_options['line_break']) !== false);
             }
 
             return $matches[1].$marker;
@@ -714,8 +714,8 @@ class Compactor
             return $html;
         }
 
-        foreach ($this->_script_markers as $marker => $has_leading_whitespace) {
-            if (!$has_leading_whitespace && !$this->_options['force_script_line_breaks']) {
+        foreach ($this->_script_markers as $marker => $had_line_break) {
+            if (!$had_line_break && !$this->_options['force_script_line_breaks']) {
                 continue;
             }
 

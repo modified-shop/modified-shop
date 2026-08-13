@@ -218,8 +218,11 @@ class CSS extends Minify
      */
     private function findCustomPropertyRanges($content, array $string_comment_ranges)
     {
+        // Same identifier character class as extractCustomProperties(): a
+        // custom property name may contain non-ASCII characters and CSS
+        // escapes, not just [a-zA-Z0-9_-].
         $ranges = array();
-        if (!preg_match_all('/--[a-zA-Z0-9_-]+\s*:/', $content, $matches, PREG_OFFSET_CAPTURE)) {
+        if (!preg_match_all('/--[^:;{}"\'\s]+\s*:/', $content, $matches, PREG_OFFSET_CAPTURE)) {
             return $ranges;
         }
 
