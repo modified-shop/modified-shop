@@ -160,7 +160,13 @@ class JS extends Minify
          * Comments will be removed altogether, strings and regular expressions
          * will be replaced by placeholder text, which we'll restore later.
          */
-        $this->extractStrings('\'"`');
+        // Backticks are handled separately: a template literal's `${...}`
+        // can contain another complete, nested template literal (with its
+        // own `${...}`, to any depth), so the plain "up to the next
+        // matching quote" approach extractStrings() uses for '/" would
+        // stop at the wrong backtick.
+        $this->extractStrings('\'"');
+        $this->extractTemplateLiterals();
         $this->stripComments();
         $this->extractRegex();
 
@@ -200,6 +206,30 @@ class JS extends Minify
 
         // single-line comments
         $this->registerPattern('/\/\/.*$/m', '');
+    }
+
+    /**
+     * Match a complete template literal, recursively accounting for a
+     * nested template literal (and its own strings/comments/braces) inside
+     * a `${...}` interpolation, to any depth. A regex literal containing a
+     * bare "{" or "}" inside an interpolation isn't recognized as such and
+     * could throw off the brace count; this is not handled.
+     */
+    protected function extractTemplateLiterals()
+    {
+        $minifier = $this;
+        $callback = function ($match) use ($minifier) {
+            $count = count($minifier->extracted);
+            $placeholder = '`' . $count . '`';
+            $minifier->extracted[$placeholder] = $match[0];
+
+            return $placeholder;
+        };
+
+        $this->registerPattern(
+            '/(?<TMPL>`(?:\\\\.|[^`\\\\$]|\$(?!\{)|\$\{(?<EXPR>(?:\\\\.|\'(?:[^\'\\\\]|\\\\.)*\'|"(?:[^"\\\\]|\\\\.)*"|\/\/[^\n]*|\/\*[\s\S]*?\*\/|(?&TMPL)|\{(?&EXPR)*\}|[^{}\'"`\/])*)\})*`)/',
+            $callback
+        );
     }
 
     /**

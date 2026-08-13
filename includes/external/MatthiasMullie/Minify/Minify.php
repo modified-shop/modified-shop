@@ -288,10 +288,14 @@ abstract class Minify
                 $placeholder = '/*' . $count . '*/';
                 $minifier->extracted[$placeholder] = $match[0];
             } else {
-                // Discard the comment but keep any single line feed
-                $placeholder = strncmp($match[0], "\n", 1) === 0 || substr($match[0], -1) === "\n"
-                    ? "\n"
-                    : '';
+                // Discarding it outright can merge the tokens on either
+                // side into one (e.g. "typeof/**/foo" -> "typeoffoo", or
+                // CSS "@media/**/screen" -> "@mediascreen"). Keep a line
+                // feed if the comment - including its content, not just
+                // its immediate surroundings - contained one, since that
+                // can matter for automatic semicolon insertion; otherwise
+                // fall back to a plain space.
+                $placeholder = strpos($match[0], "\n") !== false ? "\n" : ' ';
             }
 
             return $placeholder;
