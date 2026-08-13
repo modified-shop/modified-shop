@@ -562,7 +562,10 @@ class CSS extends Minify
             }
 
             // determine if it's a url() or an @import match
-            $type = (strpos($text, '@import') === 0 ? 'import' : 'url');
+            // The matching regex is case-insensitive ("/i"), so "@IMPORT"
+            // must be recognized here too, or a case-differing import is
+            // misclassified as a url() and its @import text is dropped.
+            $type = (stripos($text, '@import') === 0 ? 'import' : 'url');
 
             $url = $match['path'][0];
             if ($this->canImportByPath($url)) {

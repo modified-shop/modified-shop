@@ -912,8 +912,15 @@ class Compactor
                     $part
                 );
             }
+            // Runs of plain spaces/tabs on the same line are left alone: a
+            // CSS rule reachable only through an external stylesheet,
+            // compound selector, or !important can set white-space:pre on
+            // an element this HTML-only pass has no way to see, and
+            // collapsing them would silently change what renders. Only a
+            // literal tab character - virtually never meaningful content -
+            // is still removed.
             if ($compress_tabs) {
-                $part = preg_replace('/[ \t]+/', ' ', $part);
+                $part = str_replace("\t", '', $part);
             }
             $parts[$index] = $part;
         }
