@@ -234,7 +234,7 @@ class CSS extends Minify
                     break;
                 }
             }
-            if ($in_string_or_comment) {
+            if ($in_string_or_comment || !$this->precededByDeclarationBoundary($content, $start, $string_comment_ranges)) {
                 continue;
             }
 
@@ -280,6 +280,41 @@ class CSS extends Minify
         }
 
         return $ranges;
+    }
+
+    /**
+     * A "--name:" is only a real custom property declaration when it
+     * begins one: preceded, ignoring whitespace/strings/comments, by "{"
+     * or ";". Otherwise "--name" is a selector identifier and the ":"
+     * starts a pseudo-class/element, as in ".--foo:hover" or
+     * "#--foo::before".
+     *
+     * @param string $content
+     * @param int $start
+     * @param array<int, array{0: int, 1: int}> $string_comment_ranges
+     * @return bool
+     */
+    private function precededByDeclarationBoundary($content, $start, array $string_comment_ranges)
+    {
+        $offset = $start;
+        while ($offset > 0) {
+            foreach ($string_comment_ranges as $range) {
+                if ($range[1] === $offset) {
+                    $offset = $range[0];
+                    continue 2;
+                }
+            }
+
+            $offset--;
+            $character = $content[$offset];
+            if ($character === ' ' || $character === "\t" || $character === "\n" || $character === "\r") {
+                continue;
+            }
+
+            return $character === '{' || $character === ';';
+        }
+
+        return false;
     }
 
     /**
