@@ -292,10 +292,15 @@ abstract class Minify
                 // side into one (e.g. "typeof/**/foo" -> "typeoffoo", or
                 // CSS "@media/**/screen" -> "@mediascreen"). Keep a line
                 // feed if the comment - including its content, not just
-                // its immediate surroundings - contained one, since that
-                // can matter for automatic semicolon insertion; otherwise
-                // fall back to a plain space.
-                $placeholder = strpos($match[0], "\n") !== false ? "\n" : ' ';
+                // its immediate surroundings - contained one (checking for
+                // U+2028/U+2029 too: ECMAScript LineTerminators besides
+                // "\n"), since that can matter for automatic semicolon
+                // insertion; otherwise fall back to a plain space.
+                $placeholder = (
+                    strpos($match[0], "\n") !== false
+                    || strpos($match[0], "\xE2\x80\xA8") !== false
+                    || strpos($match[0], "\xE2\x80\xA9") !== false
+                ) ? "\n" : ' ';
             }
 
             return $placeholder;

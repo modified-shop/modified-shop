@@ -226,7 +226,7 @@ class CSS extends Minify
         // the name and the colon.
         $ranges = array();
         if (!preg_match_all(
-            '/--(?:[^:;{}"\'\s\\\\]|\\\\(?:[0-9a-fA-F]{1,6}[ \t\n\r\f]?|[^\r\n\f0-9a-fA-F]))+(?:\s*\/\*.*?\*\/)*\s*:/',
+            '/--(?:[^:;{}"\'\s\\\\]|\\\\(?:[0-9a-fA-F]{1,6}[ \t\n\r\f]?|[^\r\n\f0-9a-fA-F]))+(?:\s*\/\*.*?\*\/)*\s*:/s',
             $content,
             $matches,
             PREG_OFFSET_CAPTURE

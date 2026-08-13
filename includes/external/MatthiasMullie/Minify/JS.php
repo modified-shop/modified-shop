@@ -204,16 +204,25 @@ class JS extends Minify
     {
         $this->stripMultilineComments();
 
-        // single-line comments
-        $this->registerPattern('/\/\/.*$/m', '');
+        // Single-line comments, stopped explicitly at any ECMAScript
+        // LineTerminator (LF, CR, U+2028, U+2029): "." with "$/m" only
+        // recognizes "\n", so a comment containing U+2028/U+2029 would
+        // otherwise keep matching straight through it and swallow
+        // arbitrarily more of the following, real code as "comment". U+2028
+        // and U+2029 are matched by their fixed UTF-8 byte sequences rather
+        // than "/u" mode, which would error out on non-UTF-8 source.
+        $this->registerPattern('/\/\/(?:(?!\r|\n|\xE2\x80\xA8|\xE2\x80\xA9).)*+/', '');
     }
 
     /**
      * Match a complete template literal, recursively accounting for a
      * nested template literal (and its own strings/comments/braces) inside
-     * a `${...}` interpolation, to any depth. A regex literal containing a
-     * bare "{" or "}" inside an interpolation isn't recognized as such and
-     * could throw off the brace count; this is not handled.
+     * a `${...}` interpolation, to any depth. A bare "/" inside an
+     * interpolation is disambiguated the same way extractRegex() does for
+     * top-level code: it's a regex literal only right after an operator,
+     * opening bracket, or one of a few keywords (within a bounded run of
+     * whitespace - PCRE lookbehind can't be unbounded); otherwise it's
+     * division and consumed as an ordinary character.
      */
     protected function extractTemplateLiterals()
     {
@@ -227,7 +236,7 @@ class JS extends Minify
         };
 
         $this->registerPattern(
-            '/(?<TMPL>`(?:\\\\.|[^`\\\\$]|\$(?!\{)|\$\{(?<EXPR>(?:\\\\.|\'(?:[^\'\\\\]|\\\\.)*\'|"(?:[^"\\\\]|\\\\.)*"|\/\/[^\n]*|\/\*[\s\S]*?\*\/|(?&TMPL)|\{(?&EXPR)*\}|[^{}\'"`\/])*)\})*`)/',
+            '/(?<TMPL>`(?:\\\\.|[^`\\\\$]|\$(?!\{)|\$\{(?<EXPR>(?:\\\\.|\'(?:[^\'\\\\]|\\\\.)*\'|"(?:[^"\\\\]|\\\\.)*"|\/\/[^\n]*|\/\*[\s\S]*?\*\/|(?<=[=:,;+\-*?\/}{\[&|!]\s{0,10}|\b(?:do|in|new|else|throw|yield|delete|return|typeof)\s{0,10})\/(?:[^\/\\\\\n\[]|\\\\.|\[(?:[^\]\\\\\n]|\\\\.)*\])+\/[dgimsuvy]*|(?&TMPL)|\{(?&EXPR)*\}|[^{}\'"`\/]|\/)*)\})*`)/',
             $callback
         );
     }
