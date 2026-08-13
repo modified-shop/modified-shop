@@ -180,16 +180,15 @@ class JS extends Minify
             // the regexes just a few lines earlier)
             $js = $this->replace($js);
 
-            // A regex right after an "if(...)"/"while(...)"/"for(...)" is
-            // ambiguous the same way one after any other bare ")" is - but
-            // unlike extractRegex()'s condition-agnostic "only followed by
-            // .test()/.exec()/etc." check for that general case, this one
-            // is a control statement's own expression statement, where a
-            // regex needs no particular follow-up at all to be valid. Runs
-            // after replace(): with strings/comments/other regexes already
-            // placeholdered by then, finding the "if"/"while"/"for" keyword
-            // and its condition's matching ")" is a plain paren count.
-            $js = $this->protectControlStatementRegex($js);
+            // A regex right after any block statement's "}" is ambiguous
+            // the same way one after any other bare ")" is - but unlike
+            // extractRegex()'s condition-agnostic "only followed by
+            // .test()/.exec()/etc." check for that general case, a block's
+            // own expression statement needs no particular follow-up at all
+            // to be valid. Runs after replace(): with strings/comments/
+            // other regexes already placeholdered by then, classifying
+            // each "{" is a plain forward scan.
+            $js = $this->protectBlockStatementRegex($js);
 
             $js = $this->propertyNotation($js);
             $js = $this->stripWhitespace($js);
@@ -426,7 +425,34 @@ class JS extends Minify
             while ($offset < $length && $this->isJsWordChar($content[$offset])) {
                 $offset++;
             }
-            $last_word = substr($content, $word_start, $offset - $word_start);
+            $word = substr($content, $word_start, $offset - $word_start);
+
+            // "break"/"continue" can only be followed by nothing, or - on
+            // the same line only, since a LineTerminator here forces ASI
+            // right at the keyword instead - a label identifier; nothing
+            // else can follow within the same statement. Consuming that
+            // label as part of this same token (rather than letting it
+            // overwrite $last_word with the label text on the next call)
+            // keeps a "/" right after it reading as regex-eligible too:
+            // "break outer\n/re/" is a fresh statement exactly like bare
+            // "break\n/re/" is.
+            if ($word === 'break' || $word === 'continue') {
+                $label_offset = $offset;
+                while ($label_offset < $length && ($content[$label_offset] === ' ' || $content[$label_offset] === "\t")) {
+                    $label_offset++;
+                }
+                if ($label_offset < $length && $this->isJsWordChar($content[$label_offset])
+                    && !($content[$label_offset] >= '0' && $content[$label_offset] <= '9')
+                ) {
+                    $label_end = $label_offset;
+                    while ($label_end < $length && $this->isJsWordChar($content[$label_end])) {
+                        $label_end++;
+                    }
+                    $offset = $label_end;
+                }
+            }
+
+            $last_word = $word;
             $last_char = '';
 
             return $offset;
@@ -441,6 +467,20 @@ class JS extends Minify
         if (($character === '+' || $character === '-') && $offset + 1 < $length && $content[$offset + 1] === $character) {
             $last_word = $character . $character;
             $last_char = '';
+
+            return $offset + 2;
+        }
+
+        // "=>": tracked in addition to $last_char (still set below exactly
+        // as any other "=" would be, so the existing "before a regex"
+        // character check is unaffected) so protectBlockStatementRegex()
+        // can tell this was specifically the arrow token, not just a bare
+        // "=" or ">" - its own body is unconditionally a block, never an
+        // object literal (which needs "=> ({...})" instead), unlike every
+        // other position that character check treats as value-expected.
+        if ($character === '=' && $offset + 1 < $length && $content[$offset + 1] === '>') {
+            $last_char = '>';
+            $last_word = '=>';
 
             return $offset + 2;
         }
@@ -519,6 +559,61 @@ class JS extends Minify
     }
 
     /**
+     * The canonical list of keywords after which an expression (rather
+     * than a value having just been produced) is expected: the shared
+     * source both extractRegex()'s "before" pattern and
+     * canPrecedeExpression()'s procedural check are built from, so the
+     * two can't drift apart into two different lists of the same thing.
+     *
+     * "break"/"continue"/"debugger" are unconditional triggers, unlike
+     * the rest of this list, which reads as division just as often as
+     * regex: none of these three ever takes an expression operand at
+     * all (break/continue take only an optional label, debugger takes
+     * nothing), so any of them directly followed by "/" isn't valid JS
+     * to begin with - the only way that combination occurs in real code
+     * is across an ASI line break, where "/" necessarily starts a new
+     * statement.
+     *
+     * @return string[]
+     */
+    private function regexTriggerKeywords()
+    {
+        static $keywords = array(
+            'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
+            'case', 'await', 'void', 'default', 'instanceof', 'of',
+            'break', 'continue', 'debugger',
+        );
+
+        return $keywords;
+    }
+
+    /**
+     * Whether an expression - rather than a value having just been
+     * produced - is expected right after $last_char/$last_word: the
+     * "before" context extractRegex()/tryMatchTemplateRegex() use to
+     * decide whether a "/" opens a regex (division otherwise), and
+     * protectBlockStatementRegex() uses to decide whether a "{" opens an
+     * object/class literal or destructuring pattern (a block statement
+     * otherwise - ECMAScript's own grammar reserves that ambiguity in
+     * favor of a block, so this same "value expected" check answers
+     * both questions).
+     *
+     * @param string $last_char
+     * @param string $last_word
+     * @return bool
+     */
+    private function canPrecedeExpression($last_char, $last_word)
+    {
+        static $beforeChars = '=:,;+-*/%^~<>?({[&|!';
+
+        $atStart = ($last_char === '' && $last_word === '');
+
+        return $atStart
+            || ($last_char !== '' && strpos($beforeChars, $last_char) !== false)
+            || ($last_word !== '' && in_array($last_word, $this->regexTriggerKeywords(), true));
+    }
+
+    /**
      * Mirrors extractRegex()'s "before" context (operator/opening
      * bracket/keyword, or a bare ")" followed by a RegExp property/method
      * access) to decide whether "/" opens a regex literal here: a value
@@ -544,20 +639,12 @@ class JS extends Minify
      */
     private function tryMatchTemplateRegex($content, $offset, $length, $last_char, $last_word)
     {
-        static $keywords = array(
-            'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
-            'case', 'await', 'void', 'default', 'instanceof', 'of', 'break', 'continue',
-        );
-        static $beforeChars = '=:,;+-*/%^~<>?({[&|!';
         static $methods = array(
             'constructor', 'flags', 'global', 'ignoreCase', 'multiline', 'source', 'sticky', 'unicode',
             'compile(', 'exec(', 'test(', 'toSource(', 'toString(',
         );
 
-        $atStart = ($last_char === '' && $last_word === '');
-        $canPrecedeRegex = $atStart
-            || ($last_char !== '' && strpos($beforeChars, $last_char) !== false)
-            || ($last_word !== '' && in_array($last_word, $keywords, true));
+        $canPrecedeRegex = $this->canPrecedeExpression($last_char, $last_word);
         $afterCloseParen = ($last_char === ')');
 
         if (!$canPrecedeRegex && !$afterCloseParen) {
@@ -589,132 +676,66 @@ class JS extends Minify
     }
 
     /**
-     * A regex right after "if(...)"/"while(...)"/"for(...)"/"for await
-     * (...)"/"with(...)"/"else" is the start of that statement's own body -
-     * whether that body is a single expression statement (no particular
-     * follow-up token needed, unlike extractRegex()'s own after-")" pattern,
-     * which only recognizes a RegExp property/method access there) or,
-     * after skipping a "{...}" block body first, the expression statement
-     * that follows the block. Must run after strings/comments/other regexes
-     * are already placeholdered: it doesn't re-derive their skipping logic
-     * beyond what skipJsToken() already provides for scanning past a block.
+     * A "{" can only be a genuine object/class literal or destructuring
+     * pattern where an expression is expected - canPrecedeExpression()'s
+     * exact same "before" check used for "/". Everywhere else - the start
+     * of a statement - ECMAScript's own grammar reserves "{" there for a
+     * block exclusively (an ExpressionStatement can never begin with one),
+     * so a block's matching "}" is always followed by a fresh statement,
+     * where a regex is valid the same way it is right after any other
+     * value-producing ")" - covering not just if/while/for/with/else, but
+     * every block: function/method/class bodies, try/catch/finally,
+     * switch, and standalone blocks alike, without enumerating each one.
+     * The same fresh-statement reasoning also covers a restricted-
+     * production keyword (and, for break/continue, its label -
+     * skipJsToken() already folds that into $last_word) directly followed
+     * by "/": since $last_word tracks that correctly on its own, this
+     * only needs to act on it - not track it separately.
+     *
+     * Two corrections on top of the shared "before" check: "do"/"else"
+     * always introduce their own body as a statement, and an arrow
+     * function's "() => {...}" is unconditionally its body block - never
+     * an object literal, which needs "=> ({...})" instead - even though
+     * both would otherwise read as value-expected via the character/
+     * keyword check alone.
+     *
+     * Extraction happens inline, immediately upon recognizing a regex,
+     * rather than in a separate pass over collected positions: unlike
+     * skipJsToken()'s own "/" handling (shared with callers that only
+     * need to skip past a regex without extracting it, copying its raw
+     * text through as-is), every regex found here must actually be
+     * placeholdered, since this is the only pass that will ever see these
+     * particular positions as expression-start context. Must run after
+     * strings/comments/other regexes are already placeholdered: it
+     * doesn't re-derive their skipping logic beyond what skipJsToken()
+     * already provides for anything other than "{"/"}"/"/".
      *
      * @param string $content
      * @return string
      */
-    protected function protectControlStatementRegex($content)
+    protected function protectBlockStatementRegex($content)
     {
         $length = strlen($content);
-        if (!preg_match_all(
-            '/\b(?:if|while|with)\s*\(|\bfor\s+await\s*\(|\bfor\s*\(|\belse\b/',
-            $content,
-            $matches,
-            PREG_OFFSET_CAPTURE
-        )) {
-            return $content;
-        }
-
-        // Process from the highest offset down so earlier offsets stay valid.
-        $keyword_matches = array_reverse($matches[0]);
-        foreach ($keyword_matches as $match) {
-            list($text, $keyword_offset) = $match;
-
-            if (substr($text, -1) === '(') {
-                // if/while/with/for/for-await: skip to the condition's
-                // matching ")".
-                $offset = $keyword_offset + strlen($text) - 1;
-                $depth = 0;
-                while ($offset < $length) {
-                    $character = $content[$offset];
-                    if ($character === '(') {
-                        $depth++;
-                    } elseif ($character === ')') {
-                        $depth--;
-                        if ($depth === 0) {
-                            $offset++;
-                            break;
-                        }
-                    }
-                    $offset++;
-                }
-            } else {
-                // else: nothing to skip; its body starts right after the word.
-                $offset = $keyword_offset + strlen($text);
-            }
-
-            $content = $this->extractRegexAfterControlStatement($content, $offset, $length);
-        }
-
-        return $content;
-    }
-
-    /**
-     * @param string $content
-     * @param int $offset Position right after a control statement's
-     *     condition ")" or the "else" keyword
-     * @param int $length
-     * @return string
-     */
-    private function extractRegexAfterControlStatement($content, $offset, $length)
-    {
-        $probe = $offset;
-        while ($probe < $length) {
-            $whitespace_length = $this->matchJsWhitespace($content, $probe, $length);
-            if ($whitespace_length === 0) {
-                break;
-            }
-            $probe += $whitespace_length;
-        }
-
-        if ($probe >= $length) {
-            return $content;
-        }
-
-        if ($content[$probe] === '{') {
-            // A block body: what follows it is a fresh statement too ("if
-            // (x) {} /re/"), so the same check applies again right after it.
-            return $this->extractRegexAfterControlStatement($content, $this->skipJsBlock($content, $probe, $length), $length);
-        }
-
-        if ($content[$probe] !== '/') {
-            return $content;
-        }
-        if ($probe + 1 < $length && ($content[$probe + 1] === '/' || $content[$probe + 1] === '*')) {
-            return $content;
-        }
-
-        // Empty $last_char/$last_word simulate "start of expression",
-        // matching this position's actual meaning: canPrecedeRegex()
-        // treats that the same as a value being expected.
-        $regex_end = $this->tryMatchTemplateRegex($content, $probe, $length, '', '');
-        if ($regex_end === false) {
-            return $content;
-        }
-
-        $count = count($this->extracted);
-        $placeholder = '"' . $count . '"';
-        $this->extracted[$placeholder] = substr($content, $probe, $regex_end - $probe);
-
-        return substr_replace($content, $placeholder, $probe, $regex_end - $probe);
-    }
-
-    /**
-     * @param string $content
-     * @param int $offset Position at the opening "{"
-     * @param int $length
-     * @return int Position right after the matching "}"
-     */
-    private function skipJsBlock($content, $offset, $length)
-    {
-        $depth = 0;
+        $offset = 0;
         $last_char = '';
         $last_word = '';
+        $brace_kinds = array();
 
         while ($offset < $length) {
             $character = $content[$offset];
 
             if ($character === '{') {
-                $depth++;
+                // Unlike "/", where start-of-program/statement (empty
+                // $last_char/$last_word) means a regex is valid there too,
+                // "{" at that same position is unconditionally a block:
+                // ECMAScript's ExpressionStatement can never begin with
+                // one, whether it's the program's first statement or any
+                // later one - so this is excluded here even though
+                // canPrecedeExpression() itself treats it as value-expected.
+                $is_value = !($last_char === '' && $last_word === '')
+                    && $last_word !== 'do' && $last_word !== 'else' && $last_word !== '=>'
+                    && $this->canPrecedeExpression($last_char, $last_word);
+                $brace_kinds[] = $is_value ? 'value' : 'block';
                 $offset++;
                 $last_char = '{';
                 $last_word = '';
@@ -722,20 +743,36 @@ class JS extends Minify
             }
 
             if ($character === '}') {
-                $depth--;
+                $kind = array_pop($brace_kinds);
                 $offset++;
-                if ($depth === 0) {
-                    return $offset;
-                }
-                $last_char = '}';
+                // Right after a block statement is a fresh statement
+                // boundary, not "a value was just produced" - empty
+                // $last_char/$last_word simulate that, matching how
+                // canPrecedeExpression() treats start-of-expression.
+                $last_char = ($kind === 'block') ? '' : '}';
                 $last_word = '';
                 continue;
+            }
+
+            if ($character === '/' && !($offset + 1 < $length && ($content[$offset + 1] === '/' || $content[$offset + 1] === '*'))) {
+                $regex_end = $this->tryMatchTemplateRegex($content, $offset, $length, $last_char, $last_word);
+                if ($regex_end !== false) {
+                    $count = count($this->extracted);
+                    $placeholder = '"' . $count . '"';
+                    $this->extracted[$placeholder] = substr($content, $offset, $regex_end - $offset);
+                    $content = substr_replace($content, $placeholder, $offset, $regex_end - $offset);
+                    $length = strlen($content);
+                    $offset += strlen($placeholder);
+                    $last_char = '"';
+                    $last_word = '';
+                    continue;
+                }
             }
 
             $offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
         }
 
-        return $length;
+        return $content;
     }
 
     /**
@@ -793,17 +830,10 @@ class JS extends Minify
         // used as a value ("{a:1} / 2") ends in "}" exactly like a block
         // statement does, and telling those apart would need tracking
         // every "{"'s own kind, not just the single character before "/".
-        // "break"/"continue" are unconditional triggers, unlike the other
-        // keywords here that read as division just as often as regex: they
-        // never take an expression operand at all (only an optional label,
-        // or nothing), so "break"/"continue" directly followed by "/" isn't
-        // valid JS to begin with - the only way that combination occurs in
-        // real code is across an ASI line break, where "/" starts a whole
-        // new statement and can only be a regex.
-        $keywords = array(
-            'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
-            'case', 'await', 'void', 'default', 'instanceof', 'of', 'break', 'continue',
-        );
+        // "break"/"continue"/"debugger" are unconditional triggers - see
+        // regexTriggerKeywords()'s docblock for why - unlike the rest of
+        // this list, which reads as division just as often as regex.
+        $keywords = $this->regexTriggerKeywords();
         $before = '(^|(?<!\+)\+(?:\+\+){0,3}(?!\+)|(?<!-)-(?:--){0,3}(?!-)|[=:,;\*\/%\^~<>\?\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
         $propertiesAndMethods = array(
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Properties_2
@@ -932,11 +962,16 @@ class JS extends Minify
 
         /*
          * Whitespace after `return` can be omitted in a few occasions
-         * (such as when followed by a string or regex)
+         * (such as when followed by a string or regex) - but only
+         * non-newline whitespace: `return` is a restricted production,
+         * so a real line break here already forces ASI (`return;`,
+         * with whatever follows becoming an unrelated statement) and
+         * must be left alone, or collapsing it would silently change
+         * which value gets returned.
          * Same for whitespace in between `)` and `{`, or between `{` and some
          * keywords.
          */
-        $content = preg_replace('/\breturn\s+(["\'\/\+\-])/', 'return$1', $content);
+        $content = preg_replace('/\breturn[^\S\n]+(["\'\/\+\-])/', 'return$1', $content);
         $content = preg_replace('/\)\s+\{/', '){', $content);
         $content = preg_replace('/}\n(else|catch|finally)\b/', '}$1', $content);
 
