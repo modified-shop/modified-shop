@@ -433,6 +433,19 @@ class JS extends Minify
             return $offset;
         }
 
+        // "++"/"--" (prefix or postfix) is not the same as a standalone "+"/
+        // "-": neither can be followed directly by a regex in valid JS (postfix
+        // just produced a value, so what follows divides it instead; prefix
+        // needs an assignable operand next, never a regex literal), unlike a
+        // lone "+"/"-", which is a normal operator a regex can follow. Track
+        // it as a non-triggering word so a following "/" reads as division.
+        if (($character === '+' || $character === '-') && $offset + 1 < $length && $content[$offset + 1] === $character) {
+            $last_word = $character . $character;
+            $last_char = '';
+
+            return $offset + 2;
+        }
+
         $last_char = $character;
         $last_word = '';
 
@@ -514,10 +527,14 @@ class JS extends Minify
      * means division instead, and division can't immediately follow any of
      * these contexts in valid JS, so a false-positive match here - one that
      * could swallow past an unrelated "}" that should have closed the
-     * enclosing "${...}" - isn't possible for that part of the check. The
-     * regex body itself is allowed to contain "{"/"}" (e.g. a quantifier
-     * like "{2,4}", or the literal "}" in /}/) without affecting the
-     * interpolation's own brace depth, same as extractRegex()'s.
+     * enclosing "${...}" - isn't possible for that part of the check. "}"
+     * itself isn't in $beforeChars: an object/class literal used as a value
+     * ("{a:1} / 2") ends in "}" exactly like a block statement does, and
+     * $last_char is just the one character, with no way to tell which kind
+     * of "}" this was. The regex body itself is still allowed to contain
+     * "{"/"}" (e.g. a quantifier like "{2,4}", or the literal "}" in /}/)
+     * without affecting the interpolation's own brace depth, same as
+     * extractRegex()'s - only the "before" context is affected.
      *
      * @param string $content
      * @param int $offset
@@ -532,7 +549,7 @@ class JS extends Minify
             'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
             'case', 'await', 'void', 'default', 'instanceof', 'of',
         );
-        static $beforeChars = '=:,;+-*/%^~<>?}({[&|!';
+        static $beforeChars = '=:,;+-*/%^~<>?({[&|!';
         static $methods = array(
             'constructor', 'flags', 'global', 'ignoreCase', 'multiline', 'source', 'sticky', 'unicode',
             'compile(', 'exec(', 'test(', 'toSource(', 'toString(',
@@ -689,11 +706,18 @@ class JS extends Minify
         // keywords. A value (identifier, number, string, ")", "]", ...)
         // immediately before it means division instead. "=>" and "<="/">="/
         // "=="/"===" etc. are covered via their last character ("<"/">"/"=").
+        // "+"/"-" only count standalone: doubled ("++"/"--", postfix or
+        // prefix) is looking at the wrong single character - "a++ / b" is
+        // division, not a regex starting right after "+". "}" is excluded
+        // entirely: an object/class literal used as a value ("{a:1} / 2")
+        // ends in "}" exactly like a block statement does, and telling
+        // those apart would need tracking every "{"'s own kind, not just
+        // the single character before "/".
         $keywords = array(
             'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
             'case', 'await', 'void', 'default', 'instanceof', 'of',
         );
-        $before = '(^|[=:,;\+\-\*\/%\^~<>\?\}\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
+        $before = '(^|(?<!\+)\+(?!\+)|(?<!-)-(?!-)|[=:,;\*\/%\^~<>\?\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
         $propertiesAndMethods = array(
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Properties_2
             'constructor',
@@ -1047,8 +1071,19 @@ class JS extends Minify
             $character = $content[$offset];
 
             if ($character === '{') {
-                $brace_kinds[] = ($expect_class_body && $class_depth === 0) ? 'class' : 'other';
-                $expect_class_body = false;
+                // A "{" nested inside the heritage expression's own "()"/"[]"
+                // (e.g. "class X extends mixin({a:1}) {"'s object-literal
+                // argument) isn't the class's own body: only a "{" reached
+                // with $class_depth back at 0 consumes $expect_class_body.
+                // Leaving it set otherwise means the real class body,
+                // however much heritage-expression content still follows,
+                // is still correctly recognized once its own "{" arrives.
+                if ($expect_class_body && $class_depth === 0) {
+                    $brace_kinds[] = 'class';
+                    $expect_class_body = false;
+                } else {
+                    $brace_kinds[] = 'other';
+                }
                 $result .= $character;
                 $offset++;
                 $last_char = '{';

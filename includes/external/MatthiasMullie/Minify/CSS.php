@@ -1148,6 +1148,18 @@ class CSS extends Minify
             return $content;
         }
 
+        // A fixed placeholder text (e.g. always "--custom-0:0") can collide
+        // with real source content it's never seen before extraction runs -
+        // a URL segment, a string, an unrelated selector - and
+        // restoreExtractedData()'s strtr() replaces every occurrence of the
+        // key text, not just the one instance actually inserted here. Pick
+        // a marker verified absent from this input first, the same way the
+        // HTML compactor's own boundary marker is chosen.
+        $marker = '--custom';
+        while (strpos($content, $marker) !== false) {
+            $marker .= '-x';
+        }
+
         // A custom property's value can itself contain another "--name:"
         // that also passes as a real declaration (e.g. "--outer: { --inner:
         // x }": "--inner" is preceded by "{" too), producing a range fully
@@ -1193,7 +1205,7 @@ class CSS extends Minify
             if ($end > $start && $content[$end - 1] === ';') {
                 $end--;
             }
-            $placeholder = '--custom-' . count($this->extracted) . ':0';
+            $placeholder = $marker . '-' . count($this->extracted) . ':0';
             $this->extracted[$placeholder] = substr($content, $start, $end - $start);
             $content = substr_replace($content, $placeholder, $start, $end - $start);
         }
