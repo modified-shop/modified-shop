@@ -192,7 +192,6 @@ class JS extends Minify
             $js = $this->protectControlStatementRegex($js);
 
             $js = $this->propertyNotation($js);
-            $js = $this->shortenBools($js);
             $js = $this->stripWhitespace($js);
 
             // combine js: separating the scripts by a ;
@@ -547,7 +546,7 @@ class JS extends Minify
     {
         static $keywords = array(
             'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
-            'case', 'await', 'void', 'default', 'instanceof', 'of',
+            'case', 'await', 'void', 'default', 'instanceof', 'of', 'break', 'continue',
         );
         static $beforeChars = '=:,;+-*/%^~<>?({[&|!';
         static $methods = array(
@@ -794,9 +793,16 @@ class JS extends Minify
         // used as a value ("{a:1} / 2") ends in "}" exactly like a block
         // statement does, and telling those apart would need tracking
         // every "{"'s own kind, not just the single character before "/".
+        // "break"/"continue" are unconditional triggers, unlike the other
+        // keywords here that read as division just as often as regex: they
+        // never take an expression operand at all (only an optional label,
+        // or nothing), so "break"/"continue" directly followed by "/" isn't
+        // valid JS to begin with - the only way that combination occurs in
+        // real code is across an ASI line break, where "/" starts a whole
+        // new statement and can only be a regex.
         $keywords = array(
             'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
-            'case', 'await', 'void', 'default', 'instanceof', 'of',
+            'case', 'await', 'void', 'default', 'instanceof', 'of', 'break', 'continue',
         );
         $before = '(^|(?<!\+)\+(?:\+\+){0,3}(?!\+)|(?<!-)-(?:--){0,3}(?!-)|[=:,;\*\/%\^~<>\?\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
         $propertiesAndMethods = array(
@@ -1118,221 +1124,5 @@ class JS extends Minify
         $keywords = '(?<!' . implode(')(?<!', $keywords) . ')';
 
         return preg_replace_callback('/(?<=' . $previousChar . '|\])' . $keywords . '\[\s*(([\'"])[0-9]+\\2)\s*\]/u', $callback, $content);
-    }
-
-    /**
-     * "true"/"false" is only the boolean literal in an expression position.
-     * It's an IdentifierName instead - and must not be replaced - as: a
-     * property name (obj.true, {true: 1}), a method/getter/setter name
-     * ({true(){}}, {get true(){}}, a class's static/async true(){}), a
-     * class field name, initialized (class X {true = 1}) or not
-     * (class X {true;}), or an import/export rename target
-     * (import {true as x}, export {x as true}). A fixed regex exclusion
-     * list keeps missing cases like these; this walks the token stream
-     * instead, tracking enough context - what precedes it, what follows
-     * it, and whether it's a direct child of a class body rather than
-     * nested inside one of that class's own method bodies - to tell them
-     * apart directly instead of guessing from an incomplete enumeration.
-     *
-     * @param string $content
-     * @return string
-     */
-    private function replaceBoolLiterals($content)
-    {
-        $length = strlen($content);
-        $result = '';
-        $offset = 0;
-        $last_char = '';
-        $last_word = '';
-        $brace_kinds = array();
-        // Stack of ['kind' => 'class'|'function', 'depth' => int]: each
-        // "class"/"function" keyword pushes its own entry (own depth, for
-        // its own "()"/"[]" - a heritage clause's or a parameter list's),
-        // popped by the next "{" reached at that entry's depth 0, whichever
-        // entry is topmost. A single flag can only track one such search at
-        // a time, but a heritage expression can itself be, or contain, a
-        // complete class or function expression with its own body
-        // ("extends class {...} {...}", "extends function(){} {...}") that
-        // needs its own independent search nested inside the outer one -
-        // LIFO matches how these constructs actually nest in valid syntax.
-        $pending_bodies = array();
-
-        while ($offset < $length) {
-            $character = $content[$offset];
-
-            if ($character === '{') {
-                $top_index = count($pending_bodies) - 1;
-                if ($top_index >= 0 && $pending_bodies[$top_index]['depth'] === 0) {
-                    $pending = array_pop($pending_bodies);
-                    $brace_kinds[] = ($pending['kind'] === 'class') ? 'class' : 'other';
-                } else {
-                    $brace_kinds[] = 'other';
-                }
-                $result .= $character;
-                $offset++;
-                $last_char = '{';
-                $last_word = '';
-                continue;
-            }
-
-            if ($character === '}') {
-                array_pop($brace_kinds);
-                $result .= $character;
-                $offset++;
-                $last_char = '}';
-                $last_word = '';
-                continue;
-            }
-
-            if ($pending_bodies) {
-                $top_index = count($pending_bodies) - 1;
-                if ($character === '(' || $character === '[') {
-                    $pending_bodies[$top_index]['depth']++;
-                } elseif ($character === ')' || $character === ']') {
-                    $pending_bodies[$top_index]['depth'] = max(0, $pending_bodies[$top_index]['depth'] - 1);
-                }
-            }
-
-            $prev_char = $last_char;
-            $prev_word = $last_word;
-            $new_offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
-            $token = substr($content, $offset, $new_offset - $offset);
-
-            if ($token === 'class' || $token === 'function') {
-                $pending_bodies[] = array('kind' => $token, 'depth' => 0);
-            }
-
-            if ($token === 'true' || $token === 'false') {
-                $in_class_body = ($brace_kinds && end($brace_kinds) === 'class');
-                $replacement = $this->resolveBoolLiteral($content, $token, $new_offset, $length, $prev_char, $prev_word, $in_class_body);
-                if ($replacement !== null) {
-                    $result .= $replacement;
-                    $offset = $new_offset;
-                    continue;
-                }
-            }
-
-            $result .= $token;
-            $offset = $new_offset;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $content
-     * @param string $word "true" or "false"
-     * @param int $offset Position right after $word
-     * @param int $length
-     * @param string $prev_char
-     * @param string $prev_word
-     * @param bool $in_class_body
-     * @return string|null "!0"/"!1" if $word is the boolean literal here, null if it's an IdentifierName
-     */
-    private function resolveBoolLiteral($content, $word, $offset, $length, $prev_char, $prev_word, $in_class_body)
-    {
-        // obj.true
-        if ($prev_char === '.') {
-            return null;
-        }
-
-        // export {x as true}
-        if ($prev_word === 'as') {
-            return null;
-        }
-
-        $probe = $offset;
-        while ($probe < $length) {
-            $whitespace_length = $this->matchJsWhitespace($content, $probe, $length);
-            if ($whitespace_length === 0) {
-                break;
-            }
-            $probe += $whitespace_length;
-        }
-
-        if ($probe >= $length) {
-            // End of source right after "true"/"false": only ambiguous as an
-            // uninitialized class field, so stay conservative there.
-            return $in_class_body ? null : ($word === 'true' ? '!0' : '!1');
-        }
-
-        $next = $content[$probe];
-
-        // {true: 1} - only when "true"/"false" itself starts a property (right
-        // after "{" or ","); otherwise a following ":" is a ternary's own,
-        // e.g. "x ? true : y", where "?" (not "{"/",") precedes it instead.
-        if ($next === ':' && ($prev_char === '{' || $prev_char === ',')) {
-            return null;
-        }
-
-        // {true(){}}, {get true(){}}, static/async true(){}
-        if ($next === '(') {
-            return null;
-        }
-
-        // class X {true = 1} ("==="/"==" stay real comparisons)
-        if ($next === '=' && ($probe + 1 >= $length || $content[$probe + 1] !== '=')) {
-            return null;
-        }
-
-        // import {true as x}
-        if ($this->isJsWordChar($next)) {
-            $word_end = $probe;
-            while ($word_end < $length && $this->isJsWordChar($content[$word_end])) {
-                $word_end++;
-            }
-            if (substr($content, $probe, $word_end - $probe) === 'as') {
-                return null;
-            }
-        }
-
-        // class X {true;} / {true,} / {true}
-        if ($in_class_body && ($next === ';' || $next === ',' || $next === '}')) {
-            return null;
-        }
-
-        return $word === 'true' ? '!0' : '!1';
-    }
-
-    /**
-     * Replaces true & false by !0 and !1.
-     *
-     * @param string $content
-     *
-     * @return string
-     */
-    protected function shortenBools($content)
-    {
-        $content = $this->replaceBoolLiterals($content);
-
-        // for(;;) is exactly the same as while(true), but shorter :)
-        $content = preg_replace('/\bwhile\(!0\){/', 'for(;;){', $content);
-
-        // now make sure we didn't turn any do ... while(true) into do ... for(;;)
-        preg_match_all('/\bdo\b/', $content, $dos, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
-
-        // go backward to make sure positional offsets aren't altered when $content changes
-        $dos = array_reverse($dos);
-        foreach ($dos as $do) {
-            $offsetDo = $do[0][1];
-
-            // find all `while` (now `for`) following `do`: one of those must be
-            // associated with the `do` and be turned back into `while`
-            preg_match_all('/\bfor\(;;\)/', $content, $whiles, PREG_OFFSET_CAPTURE | PREG_SET_ORDER, $offsetDo);
-            foreach ($whiles as $while) {
-                $offsetWhile = $while[0][1];
-
-                $open = substr_count($content, '{', $offsetDo, $offsetWhile - $offsetDo);
-                $close = substr_count($content, '}', $offsetDo, $offsetWhile - $offsetDo);
-                if ($open === $close) {
-                    // only restore `while` if amount of `{` and `}` are the same;
-                    // otherwise, that `for` isn't associated with this `do`
-                    $content = substr_replace($content, 'while(!0)', $offsetWhile, strlen('for(;;)'));
-                    break;
-                }
-            }
-        }
-
-        return $content;
     }
 }
