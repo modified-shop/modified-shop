@@ -44,22 +44,14 @@ class Compactor
         'compress_css' => true,
         'script_line_breaks' => true,
         'force_script_line_breaks' => false,
-        // A configured callback fully replaces minifyJavascript()'s own
-        // compression for inline <script> content, matching the pre-refactor
-        // behavior that older templates and modules may still rely on.
+        // Replaces minifyJavascript()'s own compression when set.
         'script_compression_callback' => false,
         'script_compression_callback_args' => array(),
     );
 
     /**
-     * Options that older releases accepted but this facade can no longer
-     * honor because HTML comment stripping is not part of the vendored
-     * minifier. setOption() must not throw for it: existing modules or
-     * custom templates still constructing a Compactor with e.g.
-     * 'strip_php_comments' (the previous combine_files.inc.php did exactly
-     * that) would otherwise fail with a fatal error on every page. A
-     * non-fatal E_USER_DEPRECATED notice documents the behavior change
-     * without breaking the request.
+     * Options older callers may still pass; ignored with a deprecation
+     * notice instead of a fatal error.
      *
      * @var string[]
      */
@@ -83,10 +75,8 @@ class Compactor
     private $_script_markers = array();
 
     /**
-     * [tag names, class names, id names] carrying a "white-space: pre*"
-     * declaration in an embedded <style> block of the document currently
-     * being squeezed, lowercased. Populated per squeeze() call; a linked,
-     * external stylesheet cannot be resolved this way.
+     * [tags, classes, ids] with "white-space: pre*" from an embedded
+     * <style> block, lowercased. Populated per squeeze() call.
      *
      * @var array{0: string[], 1: string[], 2: string[]}
      */
@@ -167,7 +157,6 @@ class Compactor
                 $implementation_time = max($implementation_time, $file->getMTime());
             }
         } catch (Throwable $exception) {
-            // The facade time still invalidates bundles when the vendor tree cannot be inspected.
         }
 
         return $implementation_time;
@@ -209,11 +198,6 @@ class Compactor
     /**
      * Minify JavaScript source. The original source is returned on failure.
      *
-     * A configured 'script_compression_callback' takes over entirely, exactly
-     * as it did before JavaScript compression was delegated to the vendored
-     * minifier: the callback's return value is used as-is, unguarded, so a
-     * configured callback that throws behaves the same as it always did.
-     *
      * @param string $javascript
      * @return string
      */
@@ -230,7 +214,6 @@ class Compactor
         }
 
         try {
-            // Rendered script content must never be sniffed as a local file path.
             $minifier = $this->_createMinifier(false, false);
 
             return $minifier->add($javascript)->minify();
@@ -248,7 +231,6 @@ class Compactor
     public function minifyCss($css)
     {
         try {
-            // Rendered style content must never be sniffed as a local file path.
             $minifier = $this->_createMinifier(true, false);
 
             return $minifier->add($css)->minify();
@@ -277,8 +259,7 @@ class Compactor
 
         $compress_whitespace = $this->_options['compress_horizontal'] || $this->_options['compress_vertical'];
         if ($compress_whitespace) {
-            // Must run before _extractPreservedBlocks() replaces <style>
-            // content with a marker below.
+            // Must run before <style> content is replaced by a marker below.
             $this->_whitespace_sensitive_selectors = $this->_collectStyleBasedWhitespaceSelectors($html);
         }
 
@@ -345,8 +326,7 @@ class Compactor
      */
     private function _extractPreservedBlocks($html)
     {
-        // Set up unconditionally: _extractWhitespaceSensitiveBlocks() relies
-        // on this boundary too, even when preserved_tags is empty.
+        // Needed even when preserved_tags is empty: _extractWhitespaceSensitiveBlocks() also uses it.
         $boundary = (is_string($this->_options['preserved_boundry']) && $this->_options['preserved_boundry'] != '')
             ? $this->_options['preserved_boundry']
             : '@@PRESERVEDTAG@@';
@@ -469,13 +449,8 @@ class Compactor
     );
 
     /**
-     * Find simple selectors ("tag", ".class", "#id" - no combinators or
-     * pseudo-classes) declaring "white-space: pre*" in an embedded <style>
-     * block, so elements they match can be protected the same way as an
-     * inline style. A later rule for the same selector setting
-     * "normal"/"nowrap" removes it again, since it's common for a reset to
-     * follow a component's own style block later in the document; this is
-     * not full cascade/specificity resolution.
+     * Simple selectors ("tag", ".class", "#id") declaring "white-space:
+     * pre*" in an embedded <style> block; not full cascade resolution.
      *
      * @param string $html
      * @return array{0: string[], 1: string[], 2: string[]} [tags, classes, ids]
@@ -566,10 +541,6 @@ class Compactor
     }
 
     /**
-     * Unlike preserved_tags, a whitespace-sensitive element can be any tag
-     * and can nest arbitrarily, so its closing tag is found by tracking
-     * depth rather than a simple non-greedy match.
-     *
      * @param string $html
      * @return string
      */
@@ -718,11 +689,8 @@ class Compactor
             $html = $this->_addScriptLineBreaks($html);
         }
 
-        // A whitespace-sensitive block extracted after tag-based blocks can
-        // itself contain one of those markers. strtr() substitutes all keys
-        // in one simultaneous pass, so it won't resolve a marker that only
-        // appears inside another marker's own stored value; loop until a
-        // pass makes no further change.
+        // A marker can be nested inside another marker's stored value;
+        // strtr() only substitutes in one pass, so repeat until stable.
         do {
             $before = $html;
             $html = strtr($html, $this->_preserved_blocks);
@@ -848,11 +816,8 @@ class Compactor
     }
 
     /**
-     * Tags that are always block-level in practice. A whitespace-only text
-     * node touching such a tag on both sides carries no visual meaning and
-     * can be dropped entirely, unlike whitespace next to an inline element
-     * (e.g. <span>a</span> <span>b</span>), where the collapsed single space
-     * is often the only remaining word separator and must be kept.
+     * Tags that are always block-level; whitespace-only text between two of
+     * these is dropped rather than collapsed to a space.
      *
      * @var string[]
      */
@@ -866,12 +831,6 @@ class Compactor
     );
 
     /**
-     * Collapse runs of spaces and tabs, and line breaks, in text segments
-     * without touching tag attributes. Whitespace is replaced by one space
-     * instead of being removed, because it can separate adjacent inline
-     * elements or words, unless the text node sits directly between two
-     * block-level tags, where it can be dropped entirely.
-     *
      * @param string $html
      * @param bool $compress_tabs
      * @param bool $compress_line_breaks
@@ -912,13 +871,8 @@ class Compactor
                     $part
                 );
             }
-            // Runs of plain spaces/tabs on the same line are left alone: a
-            // CSS rule reachable only through an external stylesheet,
-            // compound selector, or !important can set white-space:pre on
-            // an element this HTML-only pass has no way to see, and
-            // collapsing them would silently change what renders. Only a
-            // literal tab character - virtually never meaningful content -
-            // is still removed.
+            // Same-line space runs are left alone: white-space:pre may reach
+            // an element via CSS this pass can't see. Only tabs are removed.
             if ($compress_tabs) {
                 $part = str_replace("\t", '', $part);
             }
@@ -1029,8 +983,7 @@ class Compactor
                 public $allowFileImport = true;
 
                 /**
-                 * Keep @import statements external. Their files are not part of the
-                 * combine_files() modification-time cache.
+                 * Keep @import statements external.
                  *
                  * @param string $source
                  * @param string $content
@@ -1043,8 +996,6 @@ class Compactor
                 }
 
                 /**
-                 * Fragment-only URLs, query-only URLs and URI schemes are not file paths.
-                 *
                  * @param string $path
                  * @return bool
                  */
@@ -1071,7 +1022,6 @@ class Compactor
                 }
             };
             $minifier->allowFileImport = $allow_file_import;
-            // Combining files must not silently embed referenced assets into the bundle.
             $minifier->setImportExtensions(array());
 
             return $minifier;
@@ -1084,15 +1034,9 @@ class Compactor
             public $allowFileImport = true;
 
             /**
-             * Join statement and block boundaries that are safe to terminate.
-             * Other line breaks are kept because they can be significant for
-             * automatic semicolon insertion or template literals. A boundary
-             * immediately followed by one of the keywords below is also left
-             * untouched, because each of them must attach directly to the
-             * preceding construct, with no statement (not even an empty one)
-             * allowed in between: "while" (do-while), "catch"/"finally" (try),
-             * "else" (if), and "from" (the tail of a multiline
-             * `import {...} from "...";` or `export {...} from "...";`).
+             * Terminate "}\n" with a semicolon unless followed by a string,
+             * template literal, preserved comment, or a keyword that must
+             * attach to the preceding construct (while/catch/finally/else/from).
              *
              * @param string $content
              * @return string
@@ -1103,9 +1047,6 @@ class Compactor
 
                 $content = str_replace(";\n", ';', $content);
 
-                // Extracted strings, regular expressions and template literals
-                // can continue an expression across a line break. Preserved
-                // comments may occur at the same boundary.
                 return preg_replace(
                     '/}\n(?![\'"`]|\/\*\d+\*\/|[ \t]*(?:while|catch|finally|else|from)\b)/',
                     '};',
@@ -1139,8 +1080,6 @@ class Compactor
             return false;
         }
 
-        // Replacing a symlink would unlink it, and an existing writable bundle
-        // can still be updated when the template directory itself is read-only.
         if (is_link($path) || !is_writable($directory)) {
             return $this->_saveDirectly($path, $content);
         }
