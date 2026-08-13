@@ -121,8 +121,8 @@ class CSS extends Minify
         // (e.g. "--snippet: @import url(x);", restored the same way by
         // extractCustomProperties()/restoreExtractedData()) is not a real
         // import statement and must be left untouched.
-        $excluded_ranges = array();
-        foreach (array('/(["\'])(?:\\\\.|(?!\1).)*\1/s', '#/\*.*?\*/#s', '/--[a-zA-Z0-9_-]+\s*:[^;]*;/s') as $exclusion_pattern) {
+        $excluded_ranges = $this->findCustomPropertyRanges($content);
+        foreach (array('/(["\'])(?:\\\\.|(?!\1).)*\1/s', '#/\*.*?\*/#s') as $exclusion_pattern) {
             preg_match_all($exclusion_pattern, $content, $exclusion_matches, PREG_OFFSET_CAPTURE);
             foreach ($exclusion_matches[0] as $exclusion_match) {
                 $excluded_ranges[] = array($exclusion_match[1], $exclusion_match[1] + strlen($exclusion_match[0]));
@@ -197,6 +197,53 @@ class CSS extends Minify
         }
 
         return $bom . $preamble . implode('', $import_texts) . trim($content);
+    }
+
+    /**
+     * A custom property's value ends at the first top-level ";" - one not
+     * nested inside "()", "[]" or "{}" - or at the enclosing block's own
+     * "}" if there is no such semicolon. A fixed "up to the next ;" regex
+     * would stop early on a semicolon inside a nested function or block,
+     * such as "--snippet: foo(a; @import url(b.css); z);".
+     *
+     * @param string $content
+     * @return array<int, array{0: int, 1: int}>
+     */
+    private function findCustomPropertyRanges($content)
+    {
+        $ranges = array();
+        if (!preg_match_all('/--[a-zA-Z0-9_-]+\s*:/', $content, $matches, PREG_OFFSET_CAPTURE)) {
+            return $ranges;
+        }
+
+        $length = strlen($content);
+        foreach ($matches[0] as $match) {
+            $start = $match[1];
+            $offset = $start + strlen($match[0]);
+            $depth = 0;
+
+            while ($offset < $length) {
+                $character = $content[$offset];
+                if ($character === '(' || $character === '[' || $character === '{') {
+                    $depth++;
+                } elseif ($character === ')' || $character === ']') {
+                    $depth--;
+                } elseif ($character === '}') {
+                    if ($depth === 0) {
+                        break;
+                    }
+                    $depth--;
+                } elseif ($character === ';' && $depth === 0) {
+                    $offset++;
+                    break;
+                }
+                $offset++;
+            }
+
+            $ranges[] = array($start, $offset);
+        }
+
+        return $ranges;
     }
 
     /**

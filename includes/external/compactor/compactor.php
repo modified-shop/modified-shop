@@ -816,21 +816,6 @@ class Compactor
     }
 
     /**
-     * Tags that are always block-level; whitespace-only text between two of
-     * these is dropped rather than collapsed to a space.
-     *
-     * @var string[]
-     */
-    private $_block_tags = array(
-        'html', 'body', 'header', 'footer', 'nav', 'main', 'section', 'article', 'aside',
-        'div', 'p', 'ul', 'ol', 'li', 'dl', 'dt', 'dd',
-        'table', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th', 'caption', 'colgroup',
-        'form', 'fieldset', 'legend',
-        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-        'blockquote', 'address', 'figure', 'figcaption', 'details', 'summary', 'dialog', 'hr',
-    );
-
-    /**
      * @param string $html
      * @param bool $compress_tabs
      * @param bool $compress_line_breaks
@@ -855,15 +840,6 @@ class Compactor
                 continue;
             }
 
-            if (
-                $part !== '' && trim($part) === ''
-                && $this->_isBlockBoundaryTag($parts, $index - 1)
-                && $this->_isBlockBoundaryTag($parts, $index + 1)
-            ) {
-                $parts[$index] = '';
-                continue;
-            }
-
             if ($compress_line_breaks && $line_break != '') {
                 $part = preg_replace(
                     '#[ \t]*'.$line_break.'[ \t]*(?:'.$line_break.'[ \t]*)*#',
@@ -880,24 +856,6 @@ class Compactor
         }
 
         return implode('', $parts);
-    }
-
-    /**
-     * @param string[] $parts
-     * @param int $index
-     * @return bool
-     */
-    private function _isBlockBoundaryTag($parts, $index)
-    {
-        if (!isset($parts[$index])) {
-            return false;
-        }
-
-        if (!preg_match('#^<(/?)([A-Za-z][A-Za-z0-9:-]*)#', $parts[$index], $match)) {
-            return false;
-        }
-
-        return in_array(strtolower($match[2]), $this->_block_tags, true);
     }
 
     /**
