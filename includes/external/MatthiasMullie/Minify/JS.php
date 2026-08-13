@@ -590,14 +590,15 @@ class JS extends Minify
     }
 
     /**
-     * A regex right after "if(...)"/"while(...)"/"for(...)" is the start of
-     * that statement's own (single) expression statement - unlike a regex
-     * after any other bare ")", it needs no particular follow-up token to
-     * be valid, since extractRegex()'s own after-")" pattern (only followed
-     * by a RegExp property/method access) doesn't cover it. Must run after
-     * strings/comments/other regexes are already placeholdered: it doesn't
-     * re-derive their skipping logic, only a plain "()" depth count between
-     * the keyword and its condition's matching ")".
+     * A regex right after "if(...)"/"while(...)"/"for(...)"/"for await
+     * (...)"/"with(...)"/"else" is the start of that statement's own body -
+     * whether that body is a single expression statement (no particular
+     * follow-up token needed, unlike extractRegex()'s own after-")" pattern,
+     * which only recognizes a RegExp property/method access there) or,
+     * after skipping a "{...}" block body first, the expression statement
+     * that follows the block. Must run after strings/comments/other regexes
+     * are already placeholdered: it doesn't re-derive their skipping logic
+     * beyond what skipJsToken() already provides for scanning past a block.
      *
      * @param string $content
      * @return string
@@ -605,7 +606,12 @@ class JS extends Minify
     protected function protectControlStatementRegex($content)
     {
         $length = strlen($content);
-        if (!preg_match_all('/\b(?:if|while|for)\s*\(/', $content, $matches, PREG_OFFSET_CAPTURE)) {
+        if (!preg_match_all(
+            '/\b(?:if|while|with)\s*\(|\bfor\s+await\s*\(|\bfor\s*\(|\belse\b/',
+            $content,
+            $matches,
+            PREG_OFFSET_CAPTURE
+        )) {
             return $content;
         }
 
@@ -613,54 +619,124 @@ class JS extends Minify
         $keyword_matches = array_reverse($matches[0]);
         foreach ($keyword_matches as $match) {
             list($text, $keyword_offset) = $match;
-            $offset = $keyword_offset + strlen($text) - 1; // position of "("
 
-            $depth = 0;
-            while ($offset < $length) {
-                $character = $content[$offset];
-                if ($character === '(') {
-                    $depth++;
-                } elseif ($character === ')') {
-                    $depth--;
-                    if ($depth === 0) {
-                        $offset++;
-                        break;
+            if (substr($text, -1) === '(') {
+                // if/while/with/for/for-await: skip to the condition's
+                // matching ")".
+                $offset = $keyword_offset + strlen($text) - 1;
+                $depth = 0;
+                while ($offset < $length) {
+                    $character = $content[$offset];
+                    if ($character === '(') {
+                        $depth++;
+                    } elseif ($character === ')') {
+                        $depth--;
+                        if ($depth === 0) {
+                            $offset++;
+                            break;
+                        }
                     }
+                    $offset++;
                 }
-                $offset++;
+            } else {
+                // else: nothing to skip; its body starts right after the word.
+                $offset = $keyword_offset + strlen($text);
             }
 
-            $probe = $offset;
-            while ($probe < $length) {
-                $whitespace_length = $this->matchJsWhitespace($content, $probe, $length);
-                if ($whitespace_length === 0) {
-                    break;
-                }
-                $probe += $whitespace_length;
-            }
-
-            if ($probe >= $length || $content[$probe] !== '/') {
-                continue;
-            }
-            if ($probe + 1 < $length && ($content[$probe + 1] === '/' || $content[$probe + 1] === '*')) {
-                continue;
-            }
-
-            // Empty $last_char/$last_word simulate "start of expression",
-            // matching this position's actual meaning: canPrecedeRegex()
-            // treats that the same as a value being expected.
-            $regex_end = $this->tryMatchTemplateRegex($content, $probe, $length, '', '');
-            if ($regex_end === false) {
-                continue;
-            }
-
-            $count = count($this->extracted);
-            $placeholder = '"' . $count . '"';
-            $this->extracted[$placeholder] = substr($content, $probe, $regex_end - $probe);
-            $content = substr_replace($content, $placeholder, $probe, $regex_end - $probe);
+            $content = $this->extractRegexAfterControlStatement($content, $offset, $length);
         }
 
         return $content;
+    }
+
+    /**
+     * @param string $content
+     * @param int $offset Position right after a control statement's
+     *     condition ")" or the "else" keyword
+     * @param int $length
+     * @return string
+     */
+    private function extractRegexAfterControlStatement($content, $offset, $length)
+    {
+        $probe = $offset;
+        while ($probe < $length) {
+            $whitespace_length = $this->matchJsWhitespace($content, $probe, $length);
+            if ($whitespace_length === 0) {
+                break;
+            }
+            $probe += $whitespace_length;
+        }
+
+        if ($probe >= $length) {
+            return $content;
+        }
+
+        if ($content[$probe] === '{') {
+            // A block body: what follows it is a fresh statement too ("if
+            // (x) {} /re/"), so the same check applies again right after it.
+            return $this->extractRegexAfterControlStatement($content, $this->skipJsBlock($content, $probe, $length), $length);
+        }
+
+        if ($content[$probe] !== '/') {
+            return $content;
+        }
+        if ($probe + 1 < $length && ($content[$probe + 1] === '/' || $content[$probe + 1] === '*')) {
+            return $content;
+        }
+
+        // Empty $last_char/$last_word simulate "start of expression",
+        // matching this position's actual meaning: canPrecedeRegex()
+        // treats that the same as a value being expected.
+        $regex_end = $this->tryMatchTemplateRegex($content, $probe, $length, '', '');
+        if ($regex_end === false) {
+            return $content;
+        }
+
+        $count = count($this->extracted);
+        $placeholder = '"' . $count . '"';
+        $this->extracted[$placeholder] = substr($content, $probe, $regex_end - $probe);
+
+        return substr_replace($content, $placeholder, $probe, $regex_end - $probe);
+    }
+
+    /**
+     * @param string $content
+     * @param int $offset Position at the opening "{"
+     * @param int $length
+     * @return int Position right after the matching "}"
+     */
+    private function skipJsBlock($content, $offset, $length)
+    {
+        $depth = 0;
+        $last_char = '';
+        $last_word = '';
+
+        while ($offset < $length) {
+            $character = $content[$offset];
+
+            if ($character === '{') {
+                $depth++;
+                $offset++;
+                $last_char = '{';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === '}') {
+                $depth--;
+                $offset++;
+                if ($depth === 0) {
+                    return $offset;
+                }
+                $last_char = '}';
+                $last_word = '';
+                continue;
+            }
+
+            $offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
+        }
+
+        return $length;
     }
 
     /**
@@ -706,18 +782,23 @@ class JS extends Minify
         // keywords. A value (identifier, number, string, ")", "]", ...)
         // immediately before it means division instead. "=>" and "<="/">="/
         // "=="/"===" etc. are covered via their last character ("<"/">"/"=").
-        // "+"/"-" only count standalone: doubled ("++"/"--", postfix or
-        // prefix) is looking at the wrong single character - "a++ / b" is
-        // division, not a regex starting right after "+". "}" is excluded
-        // entirely: an object/class literal used as a value ("{a:1} / 2")
-        // ends in "}" exactly like a block statement does, and telling
-        // those apart would need tracking every "{"'s own kind, not just
-        // the single character before "/".
+        // "+"/"-" only count as a trigger when the run of consecutive "+"s
+        // (or "-"s) ending here has odd length: JS lexes greedy pairs, so
+        // "a++" is one postfix token (division follows), but "a+++" is
+        // postfix "++" followed by a separate, standalone "+" (a regex can
+        // follow that one) - looking at just the single last character
+        // can't tell those apart, and neither can excluding every run
+        // longer than one, since that also wrongly excludes "+++". Bounded
+        // to runs up to 7 characters, far beyond anything realistic code
+        // would have. "}" is excluded entirely: an object/class literal
+        // used as a value ("{a:1} / 2") ends in "}" exactly like a block
+        // statement does, and telling those apart would need tracking
+        // every "{"'s own kind, not just the single character before "/".
         $keywords = array(
             'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
             'case', 'await', 'void', 'default', 'instanceof', 'of',
         );
-        $before = '(^|(?<!\+)\+(?!\+)|(?<!-)-(?!-)|[=:,;\*\/%\^~<>\?\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
+        $before = '(^|(?<!\+)\+(?:\+\+){0,3}(?!\+)|(?<!-)-(?:--){0,3}(?!-)|[=:,;\*\/%\^~<>\?\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
         $propertiesAndMethods = array(
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Properties_2
             'constructor',
@@ -1064,23 +1145,26 @@ class JS extends Minify
         $last_char = '';
         $last_word = '';
         $brace_kinds = array();
-        $expect_class_body = false;
-        $class_depth = 0;
+        // Stack of ['kind' => 'class'|'function', 'depth' => int]: each
+        // "class"/"function" keyword pushes its own entry (own depth, for
+        // its own "()"/"[]" - a heritage clause's or a parameter list's),
+        // popped by the next "{" reached at that entry's depth 0, whichever
+        // entry is topmost. A single flag can only track one such search at
+        // a time, but a heritage expression can itself be, or contain, a
+        // complete class or function expression with its own body
+        // ("extends class {...} {...}", "extends function(){} {...}") that
+        // needs its own independent search nested inside the outer one -
+        // LIFO matches how these constructs actually nest in valid syntax.
+        $pending_bodies = array();
 
         while ($offset < $length) {
             $character = $content[$offset];
 
             if ($character === '{') {
-                // A "{" nested inside the heritage expression's own "()"/"[]"
-                // (e.g. "class X extends mixin({a:1}) {"'s object-literal
-                // argument) isn't the class's own body: only a "{" reached
-                // with $class_depth back at 0 consumes $expect_class_body.
-                // Leaving it set otherwise means the real class body,
-                // however much heritage-expression content still follows,
-                // is still correctly recognized once its own "{" arrives.
-                if ($expect_class_body && $class_depth === 0) {
-                    $brace_kinds[] = 'class';
-                    $expect_class_body = false;
+                $top_index = count($pending_bodies) - 1;
+                if ($top_index >= 0 && $pending_bodies[$top_index]['depth'] === 0) {
+                    $pending = array_pop($pending_bodies);
+                    $brace_kinds[] = ($pending['kind'] === 'class') ? 'class' : 'other';
                 } else {
                     $brace_kinds[] = 'other';
                 }
@@ -1100,11 +1184,12 @@ class JS extends Minify
                 continue;
             }
 
-            if ($expect_class_body) {
+            if ($pending_bodies) {
+                $top_index = count($pending_bodies) - 1;
                 if ($character === '(' || $character === '[') {
-                    $class_depth++;
+                    $pending_bodies[$top_index]['depth']++;
                 } elseif ($character === ')' || $character === ']') {
-                    $class_depth = max(0, $class_depth - 1);
+                    $pending_bodies[$top_index]['depth'] = max(0, $pending_bodies[$top_index]['depth'] - 1);
                 }
             }
 
@@ -1113,9 +1198,8 @@ class JS extends Minify
             $new_offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
             $token = substr($content, $offset, $new_offset - $offset);
 
-            if ($token === 'class') {
-                $expect_class_body = true;
-                $class_depth = 0;
+            if ($token === 'class' || $token === 'function') {
+                $pending_bodies[] = array('kind' => $token, 'depth' => 0);
             }
 
             if ($token === 'true' || $token === 'false') {
