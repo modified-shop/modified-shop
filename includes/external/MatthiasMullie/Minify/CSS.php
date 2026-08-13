@@ -121,13 +121,17 @@ class CSS extends Minify
         // (e.g. "--snippet: @import url(x);", restored the same way by
         // extractCustomProperties()/restoreExtractedData()) is not a real
         // import statement and must be left untouched.
-        $excluded_ranges = $this->findCustomPropertyRanges($content);
+        $string_comment_ranges = array();
         foreach (array('/(["\'])(?:\\\\.|(?!\1).)*\1/s', '#/\*.*?\*/#s') as $exclusion_pattern) {
             preg_match_all($exclusion_pattern, $content, $exclusion_matches, PREG_OFFSET_CAPTURE);
             foreach ($exclusion_matches[0] as $exclusion_match) {
-                $excluded_ranges[] = array($exclusion_match[1], $exclusion_match[1] + strlen($exclusion_match[0]));
+                $string_comment_ranges[] = array($exclusion_match[1], $exclusion_match[1] + strlen($exclusion_match[0]));
             }
         }
+        $excluded_ranges = array_merge(
+            $string_comment_ranges,
+            $this->findCustomPropertyRanges($content, $string_comment_ranges)
+        );
 
         $imports = array();
         foreach ($matches[0] as $index => $match) {
@@ -207,9 +211,12 @@ class CSS extends Minify
      * such as "--snippet: foo(a; @import url(b.css); z);".
      *
      * @param string $content
+     * @param array<int, array{0: int, 1: int}> $string_comment_ranges A
+     *     "--name:"-looking match starting inside one of these (e.g.
+     *     content: "--foo: (") is text, not a real declaration.
      * @return array<int, array{0: int, 1: int}>
      */
-    private function findCustomPropertyRanges($content)
+    private function findCustomPropertyRanges($content, array $string_comment_ranges)
     {
         $ranges = array();
         if (!preg_match_all('/--[a-zA-Z0-9_-]+\s*:/', $content, $matches, PREG_OFFSET_CAPTURE)) {
@@ -219,6 +226,18 @@ class CSS extends Minify
         $length = strlen($content);
         foreach ($matches[0] as $match) {
             $start = $match[1];
+
+            $in_string_or_comment = false;
+            foreach ($string_comment_ranges as $range) {
+                if ($start >= $range[0] && $start < $range[1]) {
+                    $in_string_or_comment = true;
+                    break;
+                }
+            }
+            if ($in_string_or_comment) {
+                continue;
+            }
+
             $offset = $start + strlen($match[0]);
             $depth = 0;
 
