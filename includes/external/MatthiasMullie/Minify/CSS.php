@@ -121,13 +121,7 @@ class CSS extends Minify
         // (e.g. "--snippet: @import url(x);", restored the same way by
         // extractCustomProperties()/restoreExtractedData()) is not a real
         // import statement and must be left untouched.
-        $string_comment_ranges = array();
-        foreach (array('/(["\'])(?:\\\\.|(?!\1).)*\1/s', '#/\*.*?\*/#s') as $exclusion_pattern) {
-            preg_match_all($exclusion_pattern, $content, $exclusion_matches, PREG_OFFSET_CAPTURE);
-            foreach ($exclusion_matches[0] as $exclusion_match) {
-                $string_comment_ranges[] = array($exclusion_match[1], $exclusion_match[1] + strlen($exclusion_match[0]));
-            }
-        }
+        $string_comment_ranges = $this->findStringAndCommentRanges($content);
         $excluded_ranges = array_merge(
             $string_comment_ranges,
             $this->findCustomPropertyRanges($content, $string_comment_ranges)
@@ -201,6 +195,23 @@ class CSS extends Minify
         }
 
         return $bom . $preamble . implode('', $import_texts) . trim($content);
+    }
+
+    /**
+     * @param string $content
+     * @return array<int, array{0: int, 1: int}>
+     */
+    private function findStringAndCommentRanges($content)
+    {
+        $ranges = array();
+        foreach (array('/(["\'])(?:\\\\.|(?!\1).)*\1/s', '#/\*.*?\*/#s') as $exclusion_pattern) {
+            preg_match_all($exclusion_pattern, $content, $exclusion_matches, PREG_OFFSET_CAPTURE);
+            foreach ($exclusion_matches[0] as $exclusion_match) {
+                $ranges[] = array($exclusion_match[1], $exclusion_match[1] + strlen($exclusion_match[0]));
+            }
+        }
+
+        return $ranges;
     }
 
     /**
@@ -530,6 +541,11 @@ class CSS extends Minify
 
         // loop CSS data (raw data and files)
         foreach ($this->data as $source => $css) {
+            // Must run before extractStrings(): it needs to see the raw
+            // source, with real quote characters rather than string
+            // placeholders, to correctly scan a custom property's value.
+            $css = $this->extractCustomProperties($css);
+
             /*
              * Let's first take out strings & comments, since we can't just
              * remove whitespace anywhere. If whitespace occurs inside a string,
@@ -539,7 +555,6 @@ class CSS extends Minify
             $this->extractStrings();
             $this->stripComments();
             $this->extractMath();
-            $this->extractCustomProperties();
             $css = $this->replace($css);
 
             $css = $this->stripWhitespace($css);
@@ -1108,21 +1123,57 @@ class CSS extends Minify
 
     /**
      * Replace custom properties, whose values may be used in scenarios where
-     * we wouldn't want them to be minified (e.g. inside calc).
+     * we wouldn't want them to be minified (e.g. inside calc) - a custom
+     * property's value is an opaque token sequence, not a normal CSS
+     * declaration, and deliberately isn't run through any other minifying
+     * step here.
+     *
+     * Runs as a pre-pass over the raw source rather than a registerPattern()
+     * callback (as an earlier version of this did, with a fixed "up to the
+     * next ; or non-escape-aware name" regex that findCustomPropertyRanges()
+     * no longer has): it shares that method's escape-aware name matching and
+     * depth-aware value scanning, so an escaped name like "--f\6f o" or a
+     * value with a nested ";" like "--x: fn(a; b)" round-trip unmodified
+     * exactly like ordinary ones do, instead of being subtly reformatted by
+     * a separately-maintained, looser pattern.
+     *
+     * @param string $content
+     * @return string
      */
-    protected function extractCustomProperties()
+    protected function extractCustomProperties($content)
     {
-        // PHP only supports $this inside anonymous functions since 5.4
-        $minifier = $this;
-        $this->registerPattern(
-            '/(?<=^|[;}{])\s*(--[^:;{}"\'\s]+)\s*:([^;{}]+)/m',
-            function ($match) use ($minifier) {
-                $placeholder = '--custom-' . count($minifier->extracted) . ':0';
-                $minifier->extracted[$placeholder] = $match[1] . ':' . trim($match[2]);
+        $string_comment_ranges = $this->findStringAndCommentRanges($content);
+        $ranges = $this->findCustomPropertyRanges($content, $string_comment_ranges);
+        if (!$ranges) {
+            return $content;
+        }
 
-                return $placeholder;
+        // Replace from the highest offset down so earlier offsets stay valid.
+        usort($ranges, function ($a, $b) {
+            return $b[0] - $a[0];
+        });
+        foreach ($ranges as $range) {
+            list($start, $end) = $range;
+            // findCustomPropertyRanges() includes the value's own terminating
+            // ";" in the range when there is one. Leave it in $content
+            // instead of folding it into the extracted text: a later step
+            // (e.g. redundant-";"-before-"}" stripping) can still rewrite
+            // text around the placeholder, and a ";" baked into the
+            // placeholder itself isn't safe from that - either it gets
+            // stripped as if redundant when it precedes a "}", leaving a
+            // placeholder text that no longer matches its $extracted key, or
+            // omitting it lets the placeholder merge into whatever follows.
+            // The property's own terminator, kept as ordinary content, has
+            // neither problem.
+            if ($end > $start && $content[$end - 1] === ';') {
+                $end--;
             }
-        );
+            $placeholder = '--custom-' . count($this->extracted) . ':0';
+            $this->extracted[$placeholder] = substr($content, $start, $end - $start);
+            $content = substr_replace($content, $placeholder, $start, $end - $start);
+        }
+
+        return $content;
     }
 
     /**

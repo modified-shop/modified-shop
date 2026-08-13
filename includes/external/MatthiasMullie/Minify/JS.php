@@ -628,8 +628,13 @@ class JS extends Minify
         );
         $delimiters = array_fill(0, count($propertiesAndMethods), '/');
         $propertiesAndMethods = array_map('preg_quote', $propertiesAndMethods, $delimiters);
-        $after = '(?=\s*([\.,;:\)\}&\|+]|\/\/|$|\.(' . implode('|', $propertiesAndMethods) . ')))';
-        $this->registerPattern('/' . $before . '\K' . $pattern . $after . '/', $callback);
+        // No "after" restriction: division can't immediately follow $before's
+        // context (it always needs a left operand), so once that context is
+        // confirmed, whatever comes after the regex - "]", "?", "==", the end
+        // of an array/ternary/comparison, or anything else - doesn't change
+        // that this is a regex literal. An incomplete positive list here
+        // previously left regexes in those positions unrecognized.
+        $this->registerPattern('/' . $before . '\K' . $pattern . '/', $callback);
 
         // regular expressions following a `)` are rather annoying to detect...
         // quite often, `/` after `)` is a division operator & if it happens to
@@ -935,8 +940,11 @@ class JS extends Minify
     protected function shortenBools($content)
     {
         /*
-         * 'true' or 'false' could be used as property names (which may be
-         * followed by whitespace) - we must not replace those!
+         * 'true' or 'false' could be used as a property name (obj.true,
+         * {true: 1}), a method/getter/setter name ({true(){}}, {get true(){}},
+         * a class's static/async true(){}), or a class field name
+         * (class X {true = 1}) - none of those are the boolean literal and
+         * must not be replaced.
          * Since PHP doesn't allow variable-length (to account for the
          * whitespace) lookbehind assertions, I need to capture the leading
          * character and check if it's a `.`
@@ -948,7 +956,12 @@ class JS extends Minify
 
             return $match[1] . ($match[2] === 'true' ? '!0' : '!1');
         };
-        $content = preg_replace_callback('/(^|.\s*)\b(true|false)\b(?!:)/', $callback, $content);
+        // (?!:) property shorthand key; (?!\s*\() method/getter/setter name
+        // (always followed by its, possibly empty, parameter list);
+        // (?!\s*=(?!=)) class field name (a single "=" can only be an
+        // assignment target here - assigning to the literal true/false
+        // isn't valid JS - while "==="/"==" stay real comparisons).
+        $content = preg_replace_callback('/(^|.\s*)\b(true|false)\b(?!:)(?!\s*\()(?!\s*=(?!=))/', $callback, $content);
 
         // for(;;) is exactly the same as while(true), but shorter :)
         $content = preg_replace('/\bwhile\(!0\){/', 'for(;;){', $content);
