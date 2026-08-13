@@ -224,6 +224,23 @@ class CSS extends Minify
 
             while ($offset < $length) {
                 $character = $content[$offset];
+
+                if ($character === '"' || $character === "'") {
+                    $quote = $character;
+                    $offset++;
+                    while ($offset < $length && $content[$offset] !== $quote) {
+                        $offset += ($content[$offset] === '\\') ? 2 : 1;
+                    }
+                    $offset++;
+                    continue;
+                }
+
+                if ($character === '/' && $offset + 1 < $length && $content[$offset + 1] === '*') {
+                    $comment_end = strpos($content, '*/', $offset + 2);
+                    $offset = ($comment_end === false) ? $length : $comment_end + 2;
+                    continue;
+                }
+
                 if ($character === '(' || $character === '[' || $character === '{') {
                     $depth++;
                 } elseif ($character === ')' || $character === ']') {
