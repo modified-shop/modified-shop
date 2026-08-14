@@ -440,8 +440,12 @@ class JS extends Minify
             // "break\n/re/" is.
             if ($word === 'break' || $word === 'continue') {
                 $label_offset = $offset;
-                while ($label_offset < $length && ($content[$label_offset] === ' ' || $content[$label_offset] === "\t")) {
-                    $label_offset++;
+                while ($label_offset < $length) {
+                    $inline_whitespace_length = $this->matchJsInlineWhitespace($content, $label_offset, $length);
+                    if ($inline_whitespace_length === 0) {
+                        break;
+                    }
+                    $label_offset += $inline_whitespace_length;
                 }
                 $label_char_length = ($label_offset < $length) ? $this->matchJsIdentifierChar($content, $label_offset, $length) : 0;
                 if ($label_char_length > 0 && !($content[$label_offset] >= '0' && $content[$label_offset] <= '9')) {
@@ -497,15 +501,25 @@ class JS extends Minify
      * Byte length of one identifier character at $offset, or 0 if there
      * isn't one - covering ASCII word characters, a raw multi-byte UTF-8
      * identifier character (Unicode letters like "π" are common in real
-     * source; matchJsWhitespace() already claims the Unicode whitespace/
-     * separator code points it recognizes before this is ever reached, so
-     * treating any other non-ASCII byte as "part of the word" - rather
-     * than needing a full ID_Start/ID_Continue table - is wrong only for
-     * the rare case of non-ASCII punctuation used somewhere an identifier
-     * character is expected, which isn't standard JS to begin with), and
-     * a "\uXXXX"/"\u{X...}" Unicode escape (identifiers may spell any of
-     * their characters this way - "π" in an identifier position
-     * means the same thing as a literal "π").
+     * source; explicitly excluding whatever matchJsWhitespace() already
+     * recognizes - rather than needing a full ID_Start/ID_Continue table
+     * for everything else - is wrong only for the rare case of non-ASCII
+     * punctuation used somewhere an identifier character is expected,
+     * which isn't standard JS to begin with), and a "\uXXXX"/"\u{X...}"
+     * Unicode escape (identifiers may spell any of their characters this
+     * way - "π" in an identifier position means the same thing as a
+     * literal "π").
+     *
+     * The whitespace exclusion has to be checked here explicitly, not
+     * merely relied on via skipJsToken() already checking
+     * matchJsWhitespace() first: that only ever runs once, at the very
+     * start of a fresh token, whereas this is also called repeatedly
+     * *within* an already-started identifier's own consuming loop (e.g.
+     * in skipJsToken() and the break/continue label peek) - so a
+     * multi-byte whitespace character (NBSP and the rest) immediately
+     * following an identifier, with no ASCII space to mark the boundary,
+     * would otherwise be swallowed as if it were more of that same
+     * identifier instead of ending it.
      *
      * @param string $content
      * @param int $offset
@@ -524,7 +538,7 @@ class JS extends Minify
             return 1;
         }
 
-        if ($character >= "\x80") {
+        if ($character >= "\x80" && $this->matchJsWhitespace($content, $offset, $length) === 0) {
             return 1;
         }
 
@@ -598,6 +612,38 @@ class JS extends Minify
         }
 
         return 0;
+    }
+
+    /**
+     * Same as matchJsWhitespace(), except a LineTerminator (LF, CR, or
+     * the U+2028/U+2029 forms matchJsWhitespace() also recognizes) never
+     * matches: used by the break/continue label peek, where ECMAScript's
+     * own restricted production requires no LineTerminator between the
+     * keyword and its label, so one has to end the scan rather than be
+     * skipped over - while every other kind of whitespace matchJsWhitespace()
+     * recognizes (not just plain space/tab, but NBSP, vertical tab, form
+     * feed, and the rest) is still fine to skip past there.
+     *
+     * @param string $content
+     * @param int $offset
+     * @param int $length
+     * @return int Byte length of the non-LineTerminator whitespace at $offset, or 0 if there isn't one
+     */
+    private function matchJsInlineWhitespace($content, $offset, $length)
+    {
+        $character = $content[$offset];
+
+        if ($character === "\n" || $character === "\r") {
+            return 0;
+        }
+
+        if ($character === "\xE2" && $offset + 2 < $length && $content[$offset + 1] === "\x80"
+            && ($content[$offset + 2] === "\xA8" || $content[$offset + 2] === "\xA9")
+        ) {
+            return 0;
+        }
+
+        return $this->matchJsWhitespace($content, $offset, $length);
     }
 
     /**
@@ -1087,10 +1133,19 @@ class JS extends Minify
         );
 
         // make sure + and - can't be mistaken for, or joined into ++ and --
+        // Only non-newline whitespace: a real line break in front of a
+        // unary +/- is ASI-relevant whenever what precedes it is a
+        // restricted production (return/yield/break/continue/debugger,
+        // none of which take an operand on the next line) - collapsing
+        // it here would silently undo the same-purpose fix already
+        // applied to "return" specifically (and, unlike "return", there
+        // isn't a per-keyword rule guarding the rest of them, so this
+        // blanket +/- rule is the only thing that would otherwise strip
+        // that newline for all of them).
         $content = preg_replace(
             array(
-                '/(?<![\+\-])\s*([\+\-])(?![\+\-])/',
-                '/(?<![\+\-])([\+\-])\s*(?![\+\-])/',
+                '/(?<![\+\-])[^\S\n]*([\+\-])(?![\+\-])/',
+                '/(?<![\+\-])([\+\-])[^\S\n]*(?![\+\-])/',
             ),
             '\\1',
             $content
