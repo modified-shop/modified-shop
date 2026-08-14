@@ -176,19 +176,29 @@ class JS extends Minify
         foreach ($this->data as $source => $js) {
             $js = $this->extractTemplateLiterals($js);
 
-            // take out strings, comments & regex (for which we've registered
-            // the regexes just a few lines earlier)
-            $js = $this->replace($js);
-
             // A regex right after any block statement's "}" is ambiguous
             // the same way one after any other bare ")" is - but unlike
             // extractRegex()'s condition-agnostic "only followed by
             // .test()/.exec()/etc." check for that general case, a block's
             // own expression statement needs no particular follow-up at all
-            // to be valid. Runs after replace(): with strings/comments/
-            // other regexes already placeholdered by then, classifying
-            // each "{" is a plain forward scan.
+            // to be valid. Must run *before* replace(), not after: it does
+            // its own complete string/comment/regex skipping (via
+            // skipJsToken()), so it doesn't need replace()'s patterns to
+            // have already placeholdered any of that first - and if it ran
+            // after instead, a regex literal it recognizes here that
+            // happens to contain a quote character (not yet known to be
+            // part of a regex at that point) would already have had that
+            // quote's span independently extracted as its own string
+            // placeholder by extractStrings()'s pattern. The regex text
+            // this method then stores would itself contain that nested
+            // placeholder, which restoreExtractedData()'s single strtr()
+            // pass never re-scans its own substitutions for, leaving the
+            // inner placeholder unresolved in the final output.
             $js = $this->protectBlockStatementRegex($js);
+
+            // take out strings, comments & regex (for which we've registered
+            // the regexes just a few lines earlier)
+            $js = $this->replace($js);
 
             $js = $this->propertyNotation($js);
             $js = $this->stripWhitespace($js);
@@ -763,17 +773,26 @@ class JS extends Minify
      * class literal or destructuring pattern) rather than a block
      * statement - protectBlockStatementRegex()'s classification, kept
      * separate from canPrecedeExpression() because the two questions
-     * aren't the same one (see that method's docblock).
+     * aren't the same one (see that method's docblock), but layered on
+     * top of it (rather than re-implementing its own copy of the same
+     * $beforeChars/regexTriggerKeywords() check) so every trigger that
+     * method already knows about - including ones added after this
+     * method was written, like "..." - applies here too unless
+     * specifically excluded below, instead of silently falling out of
+     * sync with it one trigger at a time.
      *
-     * $beforeChars here drops "{", ";", and ":" from canPrecedeExpression()'s
-     * set: right after any of these, ECMAScript still expects a STATEMENT
-     * (not necessarily an expression), and a statement-position "{" is
-     * unconditionally a block - covering a block nested directly inside
-     * another block ("{{ }...}"), a standalone block following a prior
-     * statement ("foo(); {}..."), and a block as a switch-case's or a
-     * labeled statement's own body ("case 1: {}...", "label: {}...").
-     * Programstart/right-after-a-block (empty $last_char/$last_word) is
-     * excluded the same way, for the same reason.
+     * Excluded on top of canPrecedeExpression()'s result: ";", ":", and
+     * "{" among the characters, right after which ECMAScript still
+     * expects a STATEMENT (not necessarily an expression) - a statement-
+     * position "{" is unconditionally a block - covering a block nested
+     * directly inside another block ("{{ }...}"), a standalone block
+     * following a prior statement ("foo(); {}..."), and a block as a
+     * switch-case's or a labeled statement's own body ("case 1: {}...",
+     * "label: {}..."); "do"/"else"/"break"/"continue"/"debugger" among
+     * the keywords, and "=>", for the same reason (see
+     * statementOnlyKeywords()'s docblock); and program start/right-after-
+     * a-block (empty $last_char/$last_word), excluded the same way and
+     * for the same reason as the characters above.
      *
      * This necessarily leaves one narrow case unresolved: ":" is also how
      * a ternary or an object literal's key introduces its (genuinely
@@ -794,17 +813,17 @@ class JS extends Minify
      */
     private function precedesValueBrace($last_char, $last_word)
     {
-        static $beforeChars = '=,+-*/%^~<>?([&|!';
-
         if ($last_char === '' && $last_word === '') {
             return false;
         }
         if ($last_word === '=>' || in_array($last_word, $this->statementOnlyKeywords(), true)) {
             return false;
         }
+        if ($last_char !== '' && strpos(';:{', $last_char) !== false) {
+            return false;
+        }
 
-        return ($last_char !== '' && strpos($beforeChars, $last_char) !== false)
-            || ($last_word !== '' && in_array($last_word, $this->regexTriggerKeywords(), true));
+        return $this->canPrecedeExpression($last_char, $last_word);
     }
 
     /**
@@ -981,13 +1000,30 @@ class JS extends Minify
             if ($character === '/' && !($offset + 1 < $length && ($content[$offset + 1] === '/' || $content[$offset + 1] === '*'))) {
                 $regex_end = $this->tryMatchTemplateRegex($content, $offset, $length, $last_char, $last_word);
                 if ($regex_end !== false) {
+                    // Backtick-delimited, not the double-quote placeholder
+                    // format extractRegex()'s own registerPattern()-based
+                    // extraction uses (that one runs *as part of*
+                    // replace()'s own single coordinated pass over the
+                    // original content, so its placeholders are never fed
+                    // back in as input to any pattern there - unlike this
+                    // method's, which runs before replace() specifically
+                    // so an unrecognized regex's own quotes don't get
+                    // independently claimed by extractStrings() first, and
+                    // so *does* have its output rescanned by replace()
+                    // afterward). A double-quoted placeholder here would
+                    // itself get matched and re-wrapped by extractStrings()'s
+                    // pattern as if it were a real string, leaving an
+                    // unresolvable nested placeholder behind exactly like
+                    // the bug this reordering was meant to fix. Matches
+                    // extractTemplateLiterals()'s own placeholder format,
+                    // used for the identical reason.
                     $count = count($this->extracted);
-                    $placeholder = '"' . $count . '"';
+                    $placeholder = '`' . $count . '`';
                     $this->extracted[$placeholder] = substr($content, $offset, $regex_end - $offset);
                     $content = substr_replace($content, $placeholder, $offset, $regex_end - $offset);
                     $length = strlen($content);
                     $offset += strlen($placeholder);
-                    $last_char = '"';
+                    $last_char = '`';
                     $last_word = '';
                     continue;
                 }
