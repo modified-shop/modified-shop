@@ -992,38 +992,36 @@ class Compactor
             public $allowFileImport = true;
 
             /**
-             * Terminate "}\n" with a semicolon unless followed by a string,
-             * template literal, preserved comment, a keyword that must
-             * attach to the preceding construct (while/catch/finally/else/
-             * from), or a unary +/- that may itself be continuing the
-             * preceding construct instead: unlike a block statement's "}"
-             * (which can't be extended by a following operator either way -
-             * blocks aren't expressions, so inserting ";" or leaving the
-             * newline as-is are equivalent there), this "}" might just as
-             * well be closing an object/class literal used as a *value*,
-             * where "+"/"-" right after really is the next token of the
-             * same expression (e.g. "{valueOf(){return 40}}\n+2" evaluates
-             * the object via valueOf() and adds 2 - forcing ";" here
-             * would silently turn that into two unrelated statements,
-             * leaving the variable holding the plain object instead of 42).
-             * parent::stripWhitespace() has already decided any newline
-             * still present here needs to stay, so the safe default is to
-             * leave it alone rather than guess.
+             * parent::stripWhitespace() already decides, correctly, whether
+             * a "}\n" needs to keep its newline: if the "}" closed a block
+             * statement, nothing can follow to continue it (blocks aren't
+             * expressions), so the newline there is already an unambiguous
+             * statement boundary exactly like an explicit ";" would be - no
+             * transformation needed. If it closed an object/class literal
+             * used as a *value* instead, whatever comes next - any binary
+             * operator, "?", ".", "[", "(", "instanceof", and so on, not
+             * just a "safe-looking" handful of them - might be the next
+             * token of the very same expression, and only leaving the
+             * newline alone (rather than guessing which follow-up tokens
+             * are safe to force a ";" in front of) preserves that.
              *
-             * Whitespace between "}\n" and the keyword/operator being
-             * checked for isn't restricted to ASCII space/tab: ECMAScript
-             * WhiteSpace also includes NBSP, vertical tab, form feed, and
-             * several other Unicode space separators (the exact set
-             * MatthiasMullie\Minify\JS::matchJsWhitespace() recognizes,
-             * mirrored here since that method is private and this is a
-             * plain regex rather than a byte-by-byte scan). Missing one of
-             * these before "while"/"catch"/etc. is the same class of
-             * correctness bug as missing one before +/-, not merely a
-             * missed optimization: "do{}\u{a0}while(x)" - a NBSP, not a
-             * space, between "}" and "while" - inserted as "do{};while(x)"
-             * is a SyntaxError (the "while(...)" a do-statement requires
-             * has been separated into an unrelated statement of its own),
-             * confirmed with `node --check`.
+             * An earlier version of this method tried to force a ";" onto
+             * "}\n" proactively, carving out exceptions for follow-ups
+             * that must stay attached (while/catch/finally/else/from) or
+             * might continue the expression (+/-) - but that list can never
+             * be complete (every other continuing operator - *, /, ==, &&,
+             * ?, instanceof, ., [, ( among them - hits the identical bug,
+             * confirmed with a NBSP before "*" the same way +/- was), and
+             * even the keywords it did carve out never needed the ";" to
+             * begin with: "do{}\nwhile(x)", "try{}\ncatch(e){}", etc. all
+             * parse identically with the newline left bare, confirmed with
+             * `node --check`. There's no case where forcing ";" here helps
+             * (same byte count as leaving "\n" either way) and every round
+             * of trying to enumerate the exceptions found another way it
+             * hurts, so this only keeps the one part that's unconditionally
+             * safe: collapsing a newline that follows an *already-present*
+             * ";" (nothing can continue past a real semicolon, so there's
+             * nothing to preserve).
              *
              * @param string $content
              * @return string
@@ -1032,15 +1030,7 @@ class Compactor
             {
                 $content = parent::stripWhitespace($content);
 
-                $content = str_replace(";\n", ';', $content);
-
-                $ws = '(?:[ \t\x0B\x0C]|\xC2\xA0|\xE1\x9A\x80|\xE2(?:\x80[\x80-\x8A\xA8\xA9\xAF]|\x81\x9F)|\xE3\x80\x80|\xEF\xBB\xBF)*';
-
-                return preg_replace(
-                    '/}\n(?![\'"`]|\/\*\d+\*\/|' . $ws . '(?:while|catch|finally|else|from)\b|' . $ws . '[+\-])/',
-                    '};',
-                    $content
-                );
+                return str_replace(";\n", ';', $content);
             }
 
             /**
