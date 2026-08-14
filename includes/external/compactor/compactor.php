@@ -993,8 +993,22 @@ class Compactor
 
             /**
              * Terminate "}\n" with a semicolon unless followed by a string,
-             * template literal, preserved comment, or a keyword that must
-             * attach to the preceding construct (while/catch/finally/else/from).
+             * template literal, preserved comment, a keyword that must
+             * attach to the preceding construct (while/catch/finally/else/
+             * from), or a unary +/- that may itself be continuing the
+             * preceding construct instead: unlike a block statement's "}"
+             * (which can't be extended by a following operator either way -
+             * blocks aren't expressions, so inserting ";" or leaving the
+             * newline as-is are equivalent there), this "}" might just as
+             * well be closing an object/class literal used as a *value*,
+             * where "+"/"-" right after really is the next token of the
+             * same expression (e.g. "{valueOf(){return 40}}\n+2" evaluates
+             * the object via valueOf() and adds 2 - forcing ";" here
+             * would silently turn that into two unrelated statements,
+             * leaving the variable holding the plain object instead of 42).
+             * parent::stripWhitespace() has already decided any newline
+             * still present here needs to stay, so the safe default is to
+             * leave it alone rather than guess.
              *
              * @param string $content
              * @return string
@@ -1006,7 +1020,7 @@ class Compactor
                 $content = str_replace(";\n", ';', $content);
 
                 return preg_replace(
-                    '/}\n(?![\'"`]|\/\*\d+\*\/|[ \t]*(?:while|catch|finally|else|from)\b)/',
+                    '/}\n(?![\'"`]|\/\*\d+\*\/|[ \t]*(?:while|catch|finally|else|from)\b|[ \t]*[+\-])/',
                     '};',
                     $content
                 );
