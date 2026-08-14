@@ -174,27 +174,32 @@ class JS extends Minify
 
         // loop files
         foreach ($this->data as $source => $js) {
-            $js = $this->extractTemplateLiterals($js);
-
             // A regex right after any block statement's "}" is ambiguous
             // the same way one after any other bare ")" is - but unlike
             // extractRegex()'s condition-agnostic "only followed by
             // .test()/.exec()/etc." check for that general case, a block's
             // own expression statement needs no particular follow-up at all
-            // to be valid. Must run *before* replace(), not after: it does
-            // its own complete string/comment/regex skipping (via
-            // skipJsToken()), so it doesn't need replace()'s patterns to
-            // have already placeholdered any of that first - and if it ran
-            // after instead, a regex literal it recognizes here that
-            // happens to contain a quote character (not yet known to be
+            // to be valid. Must run *before* both extractTemplateLiterals()
+            // and replace(), not after either: it does its own complete
+            // string/comment/template-literal/regex skipping (via
+            // skipJsToken(), which now handles a "`" the same
+            // findTemplateLiteralEnd()-based way extractTemplateLiterals()
+            // itself does), so it doesn't need either of them to have
+            // already placeholdered anything first - and if it ran after
+            // instead, a regex literal it recognizes here that happens to
+            // contain a quote or backtick character (not yet known to be
             // part of a regex at that point) would already have had that
-            // quote's span independently extracted as its own string
-            // placeholder by extractStrings()'s pattern. The regex text
-            // this method then stores would itself contain that nested
-            // placeholder, which restoreExtractedData()'s single strtr()
-            // pass never re-scans its own substitutions for, leaving the
-            // inner placeholder unresolved in the final output.
+            // character's span independently extracted as its own string
+            // or template-literal placeholder by extractStrings()'s
+            // pattern or extractTemplateLiterals()'s own scan. The regex
+            // text this method then stores would itself contain that
+            // nested placeholder, which restoreExtractedData()'s single
+            // strtr() pass never re-scans its own substitutions for,
+            // leaving the inner placeholder unresolved in the final
+            // output.
             $js = $this->protectBlockStatementRegex($js);
+
+            $js = $this->extractTemplateLiterals($js);
 
             // take out strings, comments & regex (for which we've registered
             // the regexes just a few lines earlier)
@@ -402,6 +407,26 @@ class JS extends Minify
             return $offset;
         }
 
+        // A template literal is skipped as one opaque token here too, not
+        // just by extractTemplateLiterals()'s own top-level backtick check:
+        // this is also reached directly by callers that run before
+        // extractTemplateLiterals() has placeholdered anything yet (namely
+        // protectBlockStatementRegex(), which specifically needs to run
+        // before it - see execute()'s docblock there), and without this,
+        // a bare "`" would otherwise fall through to the ordinary
+        // single-character handling below, scanning straight through the
+        // template literal's own text content (and any "${...}"
+        // interpolations) as if it were top-level code instead of skipping
+        // past the whole thing in one step via the same
+        // findTemplateLiteralEnd() extractTemplateLiterals() itself uses.
+        if ($character === '`') {
+            $offset = $this->findTemplateLiteralEnd($content, $offset + 1, $length);
+            $last_char = '`';
+            $last_word = '';
+
+            return $offset;
+        }
+
         if ($character === '/' && $offset + 1 < $length && $content[$offset + 1] === '/') {
             $offset += 2;
             while ($offset < $length
@@ -452,10 +477,33 @@ class JS extends Minify
                 $label_offset = $offset;
                 while ($label_offset < $length) {
                     $inline_whitespace_length = $this->matchJsInlineWhitespace($content, $label_offset, $length);
-                    if ($inline_whitespace_length === 0) {
-                        break;
+                    if ($inline_whitespace_length > 0) {
+                        $label_offset += $inline_whitespace_length;
+                        continue;
                     }
-                    $label_offset += $inline_whitespace_length;
+                    // A "/* ... */" comment is just as valid a separator
+                    // here as whitespace, as long as it doesn't itself span
+                    // a LineTerminator - which, per the same restricted-
+                    // production rule as a literal one, would still end
+                    // the peek right here rather than being skipped over.
+                    // A "//" comment never needs its own check: it always
+                    // extends to end-of-line, so whatever follows it is
+                    // necessarily on a different line already - the same
+                    // "not whitespace, not an identifier start" outcome
+                    // this loop already stops on for any other character.
+                    if ($content[$label_offset] === '/' && $label_offset + 1 < $length && $content[$label_offset + 1] === '*') {
+                        $comment_end = strpos($content, '*/', $label_offset + 2);
+                        if ($comment_end === false) {
+                            break;
+                        }
+                        $comment_end += 2;
+                        if ($this->rangeContainsLineTerminator($content, $label_offset, $comment_end)) {
+                            break;
+                        }
+                        $label_offset = $comment_end;
+                        continue;
+                    }
+                    break;
                 }
                 $label_char_length = ($label_offset < $length) ? $this->matchJsIdentifierChar($content, $label_offset, $length) : 0;
                 if ($label_char_length > 0 && !($content[$label_offset] >= '0' && $content[$label_offset] <= '9')) {
@@ -671,6 +719,38 @@ class JS extends Minify
         }
 
         return $this->matchJsWhitespace($content, $offset, $length);
+    }
+
+    /**
+     * Whether a LineTerminator (LF, CR, U+2028, U+2029) occurs anywhere in
+     * $content between $offset and $end: used by the break/continue label
+     * peek to tell an inline "/* ... *\/" comment - a valid separator
+     * between the keyword and its label, same as whitespace - apart from
+     * one that spans multiple lines, which counts as a LineTerminator for
+     * the same restricted-production rule a literal one would trigger,
+     * and so still has to end the peek rather than being skipped over.
+     *
+     * @param string $content
+     * @param int $offset
+     * @param int $end
+     * @return bool
+     */
+    private function rangeContainsLineTerminator($content, $offset, $end)
+    {
+        while ($offset < $end) {
+            if ($content[$offset] === "\n" || $content[$offset] === "\r") {
+                return true;
+            }
+            if ($content[$offset] === "\xE2" && $offset + 2 < $end
+                && $content[$offset + 1] === "\x80"
+                && ($content[$offset + 2] === "\xA8" || $content[$offset + 2] === "\xA9")
+            ) {
+                return true;
+            }
+            $offset++;
+        }
+
+        return false;
     }
 
     /**
@@ -1000,30 +1080,38 @@ class JS extends Minify
             if ($character === '/' && !($offset + 1 < $length && ($content[$offset + 1] === '/' || $content[$offset + 1] === '*'))) {
                 $regex_end = $this->tryMatchTemplateRegex($content, $offset, $length, $last_char, $last_word);
                 if ($regex_end !== false) {
-                    // Backtick-delimited, not the double-quote placeholder
-                    // format extractRegex()'s own registerPattern()-based
-                    // extraction uses (that one runs *as part of*
-                    // replace()'s own single coordinated pass over the
-                    // original content, so its placeholders are never fed
-                    // back in as input to any pattern there - unlike this
-                    // method's, which runs before replace() specifically
-                    // so an unrecognized regex's own quotes don't get
-                    // independently claimed by extractStrings() first, and
-                    // so *does* have its output rescanned by replace()
-                    // afterward). A double-quoted placeholder here would
-                    // itself get matched and re-wrapped by extractStrings()'s
-                    // pattern as if it were a real string, leaving an
+                    // Delimited with \x01, not the double-quote format
+                    // extractRegex()'s own registerPattern()-based
+                    // extraction uses, and not extractTemplateLiterals()'s
+                    // own backtick-delimited one either. Both of those run
+                    // *as part of* (extractRegex()) or *after*
+                    // (extractTemplateLiterals(), moved there specifically
+                    // so this method's own regex recognition comes first -
+                    // see execute()'s docblock) this method's own pass over
+                    // the original content - so a quote- or backtick-
+                    // delimited placeholder generated here would itself get
+                    // matched and re-wrapped by extractStrings()'s or
+                    // extractTemplateLiterals()'s pattern, as if it were a
+                    // real string or template literal, leaving an
                     // unresolvable nested placeholder behind exactly like
-                    // the bug this reordering was meant to fix. Matches
-                    // extractTemplateLiterals()'s own placeholder format,
-                    // used for the identical reason.
+                    // the bug this method's own reordering was meant to
+                    // fix - just one level further in. Not a NUL byte
+                    // either, despite that being just as unable to collide
+                    // with either delimiter: PHP's trim() (used both by
+                    // stripWhitespace()'s own final cleanup and by
+                    // Compactor's inline-<script>-content handling)
+                    // defaults to stripping " \t\n\r\0\x0B" - a NUL landing
+                    // at either end of what gets trimmed would silently
+                    // lose its delimiter. \x01 is in none of these three
+                    // "don't collide with" sets and, like a NUL, can't
+                    // appear in real, human-authored JS source.
                     $count = count($this->extracted);
-                    $placeholder = '`' . $count . '`';
+                    $placeholder = "\x01" . $count . "\x01";
                     $this->extracted[$placeholder] = substr($content, $offset, $regex_end - $offset);
                     $content = substr_replace($content, $placeholder, $offset, $regex_end - $offset);
                     $length = strlen($content);
                     $offset += strlen($placeholder);
-                    $last_char = '`';
+                    $last_char = "\x01";
                     $last_word = '';
                     continue;
                 }
