@@ -278,7 +278,7 @@
       }
     }
 
-    function getOrderData($oID) {
+    static function getOrderData($oID) {
       global $xtPrice, $PHP_SELF;
 
       require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
@@ -286,10 +286,13 @@
       require_once(DIR_FS_INC . 'xtc_get_description.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_products_image.inc.php');
       require_once(DIR_FS_INC . 'xtc_image_button.inc.php');
-      
+      require_once(DIR_FS_CATALOG.'includes/classes/orderModules.class.php');
+
+      $orderModules = new orderModules();
+
       $order_lang_query = xtDBquery("SELECT languages_id
-                                       FROM ".TABLE_LANGUAGES."
-                                      WHERE directory = '".$this->info['language']."'");
+                                       FROM ".TABLE_ORDERS."
+                                      WHERE orders_id = '".(int)$oID."'");
       $order_lang_array = xtc_db_fetch_array($order_lang_query, true);
       $order_lang_id = $order_lang_array['languages_id'];
 
@@ -332,7 +335,7 @@
           $attributes_model .= $attr_model_delimiter.$attrib_model;
           
           //new module support
-          $attributes_array[$subindex] = $this->orderModules->order_data_attributes($attributes_array[$subindex],$attributes_data_values,$order_data_values,$oID,$order_lang_id);
+          $attributes_array[$subindex] = $orderModules->order_data_attributes($attributes_array[$subindex],$attributes_data_values,$order_data_values,$oID,$order_lang_id);
           
           $subindex++;
         }
@@ -382,7 +385,7 @@
         }
         
         //new module support
-        $order_data[$index] = $this->orderModules->order_data($order_data[$index],$order_data_values,$oID,$order_lang_id);
+        $order_data[$index] = $orderModules->order_data($order_data[$index],$order_data_values,$oID,$order_lang_id);
 
         $index ++;
       }
