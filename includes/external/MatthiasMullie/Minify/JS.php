@@ -491,6 +491,23 @@ class JS extends Minify
             return $offset + 2;
         }
 
+        // "...": spread or rest, always followed by an expression (spread:
+        // an array/object literal's/a call's "...iterable") or a binding
+        // pattern (rest: a destructuring/parameter list's "...rest") -
+        // unlike a lone ".", which needs a property name right after and
+        // so is never a trigger, three dots unconditionally mean an
+        // expression/pattern is expected next. Tracked as its own
+        // three-character $last_word (canPrecedeExpression() checks for it
+        // explicitly) rather than falling through to the generic
+        // single-character handling below, which would leave $last_char
+        // as a lone "." indistinguishable from plain property access.
+        if ($character === '.' && $offset + 2 < $length && $content[$offset + 1] === '.' && $content[$offset + 2] === '.') {
+            $last_char = '';
+            $last_word = '...';
+
+            return $offset + 3;
+        }
+
         $last_char = $character;
         $last_word = '';
 
@@ -668,7 +685,7 @@ class JS extends Minify
     {
         static $keywords = array(
             'do', 'in', 'new', 'else', 'throw', 'yield', 'delete', 'return', 'typeof',
-            'case', 'await', 'void', 'default', 'instanceof', 'of',
+            'case', 'await', 'void', 'default', 'instanceof', 'of', 'extends',
             'break', 'continue', 'debugger',
         );
 
@@ -713,6 +730,18 @@ class JS extends Minify
      * whether the statement in question could also have been an
      * expression.
      *
+     * "..." (spread/rest) is checked separately from $beforeChars/
+     * regexTriggerKeywords(): unlike a lone ".", which needs a property
+     * name next and so is correctly never a trigger, three dots always
+     * precede an expression (spread) or binding pattern (rest) - and
+     * skipJsToken() tracks it as this exact three-character $last_word,
+     * distinct from the single "." a bare property-access dot leaves
+     * behind (itself just an ordinary character, via the generic
+     * fallback), so it can't be folded into the plain-keyword array
+     * without either wrongly matching every "." as a trigger too or (in
+     * extractRegex()'s PCRE pattern specifically) needing its own escaped
+     * alternative there regardless.
+     *
      * @param string $last_char
      * @param string $last_word
      * @return bool
@@ -725,6 +754,7 @@ class JS extends Minify
 
         return $atStart
             || ($last_char !== '' && strpos($beforeChars, $last_char) !== false)
+            || ($last_word === '...')
             || ($last_word !== '' && in_array($last_word, $this->regexTriggerKeywords(), true));
     }
 
@@ -1030,8 +1060,15 @@ class JS extends Minify
         // "break"/"continue"/"debugger" are unconditional triggers - see
         // regexTriggerKeywords()'s docblock for why - unlike the rest of
         // this list, which reads as division just as often as regex.
+        // "..." (spread/rest) is its own alternative rather than folded
+        // into the character class or $keywords: unlike a lone ".", which
+        // needs a property name next and so is never a trigger, three
+        // dots always precede an expression or binding pattern - and
+        // needs escaping here as a literal (unescaped "." is "any
+        // character" in a PCRE pattern), unlike the plain keywords, which
+        // is why it can't just be added to that shared array instead.
         $keywords = $this->regexTriggerKeywords();
-        $before = '(^|(?<!\+)\+(?:\+\+){0,3}(?!\+)|(?<!-)-(?:--){0,3}(?!-)|[=:,;\*\/%\^~<>\?\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
+        $before = '(^|(?<!\+)\+(?:\+\+){0,3}(?!\+)|(?<!-)-(?:--){0,3}(?!-)|\.\.\.|[=:,;\*\/%\^~<>\?\(\{\[&\|!]|' . implode('|', $keywords) . ')\s*';
         $propertiesAndMethods = array(
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Properties_2
             'constructor',
