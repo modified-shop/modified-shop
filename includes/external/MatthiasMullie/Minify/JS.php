@@ -420,10 +420,12 @@ class JS extends Minify
             return ($regex_end !== false) ? $regex_end : $offset + 1;
         }
 
-        if ($this->isJsWordChar($character)) {
+        $identifier_char_length = $this->matchJsIdentifierChar($content, $offset, $length);
+        if ($identifier_char_length > 0) {
             $word_start = $offset;
-            while ($offset < $length && $this->isJsWordChar($content[$offset])) {
-                $offset++;
+            while ($identifier_char_length > 0) {
+                $offset += $identifier_char_length;
+                $identifier_char_length = ($offset < $length) ? $this->matchJsIdentifierChar($content, $offset, $length) : 0;
             }
             $word = substr($content, $word_start, $offset - $word_start);
 
@@ -441,12 +443,12 @@ class JS extends Minify
                 while ($label_offset < $length && ($content[$label_offset] === ' ' || $content[$label_offset] === "\t")) {
                     $label_offset++;
                 }
-                if ($label_offset < $length && $this->isJsWordChar($content[$label_offset])
-                    && !($content[$label_offset] >= '0' && $content[$label_offset] <= '9')
-                ) {
+                $label_char_length = ($label_offset < $length) ? $this->matchJsIdentifierChar($content, $label_offset, $length) : 0;
+                if ($label_char_length > 0 && !($content[$label_offset] >= '0' && $content[$label_offset] <= '9')) {
                     $label_end = $label_offset;
-                    while ($label_end < $length && $this->isJsWordChar($content[$label_end])) {
-                        $label_end++;
+                    while ($label_char_length > 0) {
+                        $label_end += $label_char_length;
+                        $label_char_length = ($label_end < $length) ? $this->matchJsIdentifierChar($content, $label_end, $length) : 0;
                     }
                     $offset = $label_end;
                 }
@@ -492,16 +494,56 @@ class JS extends Minify
     }
 
     /**
-     * @param string $character
-     * @return bool
+     * Byte length of one identifier character at $offset, or 0 if there
+     * isn't one - covering ASCII word characters, a raw multi-byte UTF-8
+     * identifier character (Unicode letters like "π" are common in real
+     * source; matchJsWhitespace() already claims the Unicode whitespace/
+     * separator code points it recognizes before this is ever reached, so
+     * treating any other non-ASCII byte as "part of the word" - rather
+     * than needing a full ID_Start/ID_Continue table - is wrong only for
+     * the rare case of non-ASCII punctuation used somewhere an identifier
+     * character is expected, which isn't standard JS to begin with), and
+     * a "\uXXXX"/"\u{X...}" Unicode escape (identifiers may spell any of
+     * their characters this way - "π" in an identifier position
+     * means the same thing as a literal "π").
+     *
+     * @param string $content
+     * @param int $offset
+     * @param int $length
+     * @return int
      */
-    private function isJsWordChar($character)
+    private function matchJsIdentifierChar($content, $offset, $length)
     {
-        return ($character >= 'a' && $character <= 'z')
+        $character = $content[$offset];
+
+        if (($character >= 'a' && $character <= 'z')
             || ($character >= 'A' && $character <= 'Z')
             || ($character >= '0' && $character <= '9')
-            || $character === '_'
-            || $character === '$';
+            || $character === '_' || $character === '$'
+        ) {
+            return 1;
+        }
+
+        if ($character >= "\x80") {
+            return 1;
+        }
+
+        if ($character === '\\' && $offset + 1 < $length && $content[$offset + 1] === 'u') {
+            if ($offset + 2 < $length && $content[$offset + 2] === '{') {
+                $end = strpos($content, '}', $offset + 3);
+                if ($end !== false && $end > $offset + 3) {
+                    return $end + 1 - $offset;
+                }
+
+                return 0;
+            }
+
+            if ($offset + 5 < $length && ctype_xdigit(substr($content, $offset + 2, 4))) {
+                return 6;
+            }
+        }
+
+        return 0;
     }
 
     /**
@@ -588,15 +630,42 @@ class JS extends Minify
     }
 
     /**
+     * The subset of regexTriggerKeywords() that precedes a STATEMENT (or,
+     * for break/continue/debugger, nothing at all - a complete statement
+     * on its own) rather than an EXPRESSION: "do"/"else" introduce their
+     * own body as a statement, and "break"/"continue"/"debugger" never
+     * take an expression operand (only break/continue's optional label).
+     * A "/" right after any of these is still safely regex-eligible (a
+     * statement can itself be an expression-statement starting with a
+     * regex), but a "{" right after one of these is never an object
+     * literal, for the same reason a statement-position "{" never is -
+     * unlike the rest of regexTriggerKeywords(), which precedes a genuine
+     * expression, where "{" legitimately can be an object/class literal.
+     *
+     * @return string[]
+     */
+    private function statementOnlyKeywords()
+    {
+        static $keywords = array('do', 'else', 'break', 'continue', 'debugger');
+
+        return $keywords;
+    }
+
+    /**
      * Whether an expression - rather than a value having just been
      * produced - is expected right after $last_char/$last_word: the
      * "before" context extractRegex()/tryMatchTemplateRegex() use to
-     * decide whether a "/" opens a regex (division otherwise), and
-     * protectBlockStatementRegex() uses to decide whether a "{" opens an
-     * object/class literal or destructuring pattern (a block statement
-     * otherwise - ECMAScript's own grammar reserves that ambiguity in
-     * favor of a block, so this same "value expected" check answers
-     * both questions).
+     * decide whether a "/" opens a regex (division otherwise).
+     *
+     * Not used for "{" classification (see precedesValueBrace() instead):
+     * a handful of these same triggers - "{", ";", ":" among the
+     * characters, "do"/"else"/"break"/"continue"/"debugger" among the
+     * keywords - correctly mean "an expression may follow" for "/", since
+     * a fresh statement can itself be an expression-statement, but do NOT
+     * mean "the following '{' is a value": ECMAScript's grammar reserves
+     * a statement-position "{" for a block unconditionally, regardless of
+     * whether the statement in question could also have been an
+     * expression.
      *
      * @param string $last_char
      * @param string $last_word
@@ -610,6 +679,55 @@ class JS extends Minify
 
         return $atStart
             || ($last_char !== '' && strpos($beforeChars, $last_char) !== false)
+            || ($last_word !== '' && in_array($last_word, $this->regexTriggerKeywords(), true));
+    }
+
+    /**
+     * Whether a "{" right after $last_char/$last_word is a value (object/
+     * class literal or destructuring pattern) rather than a block
+     * statement - protectBlockStatementRegex()'s classification, kept
+     * separate from canPrecedeExpression() because the two questions
+     * aren't the same one (see that method's docblock).
+     *
+     * $beforeChars here drops "{", ";", and ":" from canPrecedeExpression()'s
+     * set: right after any of these, ECMAScript still expects a STATEMENT
+     * (not necessarily an expression), and a statement-position "{" is
+     * unconditionally a block - covering a block nested directly inside
+     * another block ("{{ }...}"), a standalone block following a prior
+     * statement ("foo(); {}..."), and a block as a switch-case's or a
+     * labeled statement's own body ("case 1: {}...", "label: {}...").
+     * Programstart/right-after-a-block (empty $last_char/$last_word) is
+     * excluded the same way, for the same reason.
+     *
+     * This necessarily leaves one narrow case unresolved: ":" is also how
+     * a ternary or an object literal's key introduces its (genuinely
+     * value-expected) branch/value, e.g. "cond ? {} : {}" or "{a: {}}" -
+     * excluding ":" here means those inner braces are misclassified as
+     * blocks too. That's harmless unless something that depends on the
+     * resulting state - a "/" - directly follows with nothing else
+     * (itself resetting the state first) in between, which in practice
+     * only happens for a value produced by a ternary/object-key branch
+     * immediately divided or compared right there with no intervening
+     * token - a vanishingly rare construct left as a residual gap rather
+     * than adding the ternary-pairing/object-key-vs-label state tracking
+     * it would take to fully disambiguate ":".
+     *
+     * @param string $last_char
+     * @param string $last_word
+     * @return bool
+     */
+    private function precedesValueBrace($last_char, $last_word)
+    {
+        static $beforeChars = '=,+-*/%^~<>?([&|!';
+
+        if ($last_char === '' && $last_word === '') {
+            return false;
+        }
+        if ($last_word === '=>' || in_array($last_word, $this->statementOnlyKeywords(), true)) {
+            return false;
+        }
+
+        return ($last_char !== '' && strpos($beforeChars, $last_char) !== false)
             || ($last_word !== '' && in_array($last_word, $this->regexTriggerKeywords(), true));
     }
 
@@ -677,27 +795,44 @@ class JS extends Minify
 
     /**
      * A "{" can only be a genuine object/class literal or destructuring
-     * pattern where an expression is expected - canPrecedeExpression()'s
-     * exact same "before" check used for "/". Everywhere else - the start
-     * of a statement - ECMAScript's own grammar reserves "{" there for a
-     * block exclusively (an ExpressionStatement can never begin with one),
-     * so a block's matching "}" is always followed by a fresh statement,
-     * where a regex is valid the same way it is right after any other
-     * value-producing ")" - covering not just if/while/for/with/else, but
-     * every block: function/method/class bodies, try/catch/finally,
-     * switch, and standalone blocks alike, without enumerating each one.
-     * The same fresh-statement reasoning also covers a restricted-
-     * production keyword (and, for break/continue, its label -
-     * skipJsToken() already folds that into $last_word) directly followed
-     * by "/": since $last_word tracks that correctly on its own, this
-     * only needs to act on it - not track it separately.
+     * pattern where an expression is expected - precedesValueBrace()'s
+     * check. Everywhere else - the start of a statement - ECMAScript's
+     * own grammar reserves "{" there for a block exclusively (an
+     * ExpressionStatement can never begin with one), so a block's
+     * matching "}" is always followed by a fresh statement, where a regex
+     * is valid the same way it is right after any other value-producing
+     * ")" - covering not just if/while/for/with/else, but every block:
+     * function/method/class bodies, try/catch/finally, switch, and
+     * standalone blocks alike, without enumerating each one. The same
+     * fresh-statement reasoning also covers a restricted-production
+     * keyword (and, for break/continue, its label - skipJsToken() already
+     * folds that into $last_word) directly followed by "/": since
+     * $last_word tracks that correctly on its own, this only needs to act
+     * on it - not track it separately.
      *
-     * Two corrections on top of the shared "before" check: "do"/"else"
-     * always introduce their own body as a statement, and an arrow
-     * function's "() => {...}" is unconditionally its body block - never
-     * an object literal, which needs "=> ({...})" instead - even though
-     * both would otherwise read as value-expected via the character/
-     * keyword check alone.
+     * A "(" gets the same "condition vs. ordinary" distinction for the
+     * same reason: if/while/with/for('s own, not a nested one)/for-await
+     * are the only statements whose body can be a bare, non-block
+     * statement directly - "if (x) /re/;" is valid without braces - so
+     * their condition's matching ")" must be treated as a fresh statement
+     * boundary too, same as a block's "}", rather than the ordinary
+     * "value produced, ambiguous without a qualifying follow-up" ")"
+     * tryMatchTemplateRegex() otherwise applies (built for the general
+     * "some function call or grouping just closed" case, where that
+     * caution is warranted - a bare ")" alone doesn't reveal which kind
+     * this was). switch/catch aren't included: both require an explicit
+     * "{...}" body, so there's no direct-regex-body case for their own
+     * condition/parameter list to protect.
+     *
+     * Two corrections on top of precedesValueBrace()'s own "before" check
+     * are handled by that method itself: "do"/"else"/"break"/"continue"/
+     * "debugger" always introduce their own body as a statement (or, for
+     * the latter three, are already a complete statement with no
+     * expression operand at all), and an arrow function's "() => {...}"
+     * is unconditionally its body block - never an object literal, which
+     * needs "=> ({...})" instead - even though all of these would
+     * otherwise read as value-expected via the character/keyword check
+     * alone.
      *
      * Extraction happens inline, immediately upon recognizing a regex,
      * rather than in a separate pass over collected positions: unlike
@@ -708,33 +843,28 @@ class JS extends Minify
      * particular positions as expression-start context. Must run after
      * strings/comments/other regexes are already placeholdered: it
      * doesn't re-derive their skipping logic beyond what skipJsToken()
-     * already provides for anything other than "{"/"}"/"/".
+     * already provides for anything other than "{"/"}"/"("/")"/"/".
      *
      * @param string $content
      * @return string
      */
     protected function protectBlockStatementRegex($content)
     {
+        static $conditionKeywords = array('if', 'while', 'with', 'for');
+
         $length = strlen($content);
         $offset = 0;
         $last_char = '';
         $last_word = '';
+        $word_before_last = '';
         $brace_kinds = array();
+        $paren_kinds = array();
 
         while ($offset < $length) {
             $character = $content[$offset];
 
             if ($character === '{') {
-                // Unlike "/", where start-of-program/statement (empty
-                // $last_char/$last_word) means a regex is valid there too,
-                // "{" at that same position is unconditionally a block:
-                // ECMAScript's ExpressionStatement can never begin with
-                // one, whether it's the program's first statement or any
-                // later one - so this is excluded here even though
-                // canPrecedeExpression() itself treats it as value-expected.
-                $is_value = !($last_char === '' && $last_word === '')
-                    && $last_word !== 'do' && $last_word !== 'else' && $last_word !== '=>'
-                    && $this->canPrecedeExpression($last_char, $last_word);
+                $is_value = $this->precedesValueBrace($last_char, $last_word);
                 $brace_kinds[] = $is_value ? 'value' : 'block';
                 $offset++;
                 $last_char = '{';
@@ -754,6 +884,24 @@ class JS extends Minify
                 continue;
             }
 
+            if ($character === '(') {
+                $is_condition = in_array($last_word, $conditionKeywords, true)
+                    || ($last_word === 'await' && $word_before_last === 'for');
+                $paren_kinds[] = $is_condition ? 'condition' : 'other';
+                $offset++;
+                $last_char = '(';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === ')') {
+                $kind = array_pop($paren_kinds);
+                $offset++;
+                $last_char = ($kind === 'condition') ? '' : ')';
+                $last_word = '';
+                continue;
+            }
+
             if ($character === '/' && !($offset + 1 < $length && ($content[$offset + 1] === '/' || $content[$offset + 1] === '*'))) {
                 $regex_end = $this->tryMatchTemplateRegex($content, $offset, $length, $last_char, $last_word);
                 if ($regex_end !== false) {
@@ -769,6 +917,9 @@ class JS extends Minify
                 }
             }
 
+            if ($this->matchJsIdentifierChar($content, $offset, $length) > 0) {
+                $word_before_last = $last_word;
+            }
             $offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
         }
 
