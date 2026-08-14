@@ -1010,6 +1010,21 @@ class Compactor
              * still present here needs to stay, so the safe default is to
              * leave it alone rather than guess.
              *
+             * Whitespace between "}\n" and the keyword/operator being
+             * checked for isn't restricted to ASCII space/tab: ECMAScript
+             * WhiteSpace also includes NBSP, vertical tab, form feed, and
+             * several other Unicode space separators (the exact set
+             * MatthiasMullie\Minify\JS::matchJsWhitespace() recognizes,
+             * mirrored here since that method is private and this is a
+             * plain regex rather than a byte-by-byte scan). Missing one of
+             * these before "while"/"catch"/etc. is the same class of
+             * correctness bug as missing one before +/-, not merely a
+             * missed optimization: "do{}\u{a0}while(x)" - a NBSP, not a
+             * space, between "}" and "while" - inserted as "do{};while(x)"
+             * is a SyntaxError (the "while(...)" a do-statement requires
+             * has been separated into an unrelated statement of its own),
+             * confirmed with `node --check`.
+             *
              * @param string $content
              * @return string
              */
@@ -1019,8 +1034,10 @@ class Compactor
 
                 $content = str_replace(";\n", ';', $content);
 
+                $ws = '(?:[ \t\x0B\x0C]|\xC2\xA0|\xE1\x9A\x80|\xE2(?:\x80[\x80-\x8A\xA8\xA9\xAF]|\x81\x9F)|\xE3\x80\x80|\xEF\xBB\xBF)*';
+
                 return preg_replace(
-                    '/}\n(?![\'"`]|\/\*\d+\*\/|[ \t]*(?:while|catch|finally|else|from)\b|[ \t]*[+\-])/',
+                    '/}\n(?![\'"`]|\/\*\d+\*\/|' . $ws . '(?:while|catch|finally|else|from)\b|' . $ws . '[+\-])/',
                     '};',
                     $content
                 );
