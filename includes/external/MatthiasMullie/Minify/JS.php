@@ -226,6 +226,38 @@ class JS extends Minify
     }
 
     /**
+     * stripWhitespace() (the vendored, generic version) strips whitespace
+     * around a "/" operator without knowing a placeholder right after it
+     * will be restored to text starting with its own "/" - e.g.
+     * "value / PLACEHOLDER" becoming "value/PLACEHOLDER" then, after
+     * restoration, "value//regex/...". Two adjacent "/" always starts a
+     * comment in real JS, regardless of the value before them, so this
+     * would silently truncate the rest of the line. Re-inserts a
+     * separating space before restoring wherever that's about to happen.
+     * The reverse (a regex's own closing "/" directly followed by
+     * another) never has this problem: that "/" was already consumed as
+     * part of the regex token, so it can't also combine with the next
+     * one into a comment-start.
+     *
+     * @param string $content
+     * @return string
+     */
+    protected function restoreExtractedData($content)
+    {
+        foreach ($this->extracted as $placeholder => $value) {
+            if ($value === '' || $value[0] !== '/') {
+                continue;
+            }
+            $position = strpos($content, $placeholder);
+            if ($position > 0 && $content[$position - 1] === '/') {
+                $content = substr_replace($content, ' ', $position, 0);
+            }
+        }
+
+        return parent::restoreExtractedData($content);
+    }
+
+    /**
      * Strip comments from source code.
      */
     protected function stripComments()
@@ -334,8 +366,20 @@ class JS extends Minify
      */
     private function skipTemplateExpression($content, $offset, $length)
     {
-        $depth = 0;
-        $last_char = '{';
+        static $conditionKeywords = array('if', 'while', 'with', 'for');
+
+        // Same "{"/"}"/"("/")"/"?"/":" state tracking as
+        // protectBlockStatementRegex(), needed here too since that method
+        // skips a whole template literal as one opaque token and never
+        // looks inside a "${...}" interpolation itself.
+        $brace_kinds = array();
+        $paren_kinds = array();
+        $ternary_depth = 0;
+        $word_before_last = '';
+        // Sentinel, not "{": interpolation content is always an
+        // expression, so a "{" right at the start (e.g. "${{a:1}}") must
+        // read as a value, unlike top-level statement position.
+        $last_char = '(';
         $last_word = '';
 
         while ($offset < $length) {
@@ -349,7 +393,8 @@ class JS extends Minify
             }
 
             if ($character === '{') {
-                $depth++;
+                $is_value = $this->precedesValueBrace($last_char, $last_word);
+                $brace_kinds[] = $is_value ? 'value' : 'block';
                 $offset++;
                 $last_char = '{';
                 $last_word = '';
@@ -357,16 +402,55 @@ class JS extends Minify
             }
 
             if ($character === '}') {
-                if ($depth === 0) {
+                if (!$brace_kinds) {
+                    // This "${...}" interpolation's own closing "}", not
+                    // a nested brace.
                     return $offset + 1;
                 }
-                $depth--;
+                $kind = array_pop($brace_kinds);
                 $offset++;
-                $last_char = '}';
+                $last_char = ($kind === 'block') ? '' : '}';
                 $last_word = '';
                 continue;
             }
 
+            if ($character === '(') {
+                $is_condition = in_array($last_word, $conditionKeywords, true)
+                    || ($last_word === 'await' && $word_before_last === 'for');
+                $paren_kinds[] = $is_condition ? 'condition' : 'other';
+                $offset++;
+                $last_char = '(';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === ')') {
+                $kind = array_pop($paren_kinds);
+                $offset++;
+                $last_char = ($kind === 'condition') ? '' : ')';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === '?' && !($offset + 1 < $length && ($content[$offset + 1] === '.' || $content[$offset + 1] === '?'))) {
+                $ternary_depth++;
+                $offset++;
+                $last_char = '?';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === ':' && $ternary_depth > 0 && (!$brace_kinds || end($brace_kinds) !== 'value')) {
+                $ternary_depth--;
+                $offset++;
+                $last_char = '';
+                $last_word = ':value';
+                continue;
+            }
+
+            if ($this->matchJsIdentifierChar($content, $offset, $length) > 0) {
+                $word_before_last = $last_word;
+            }
             $offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
         }
 
@@ -832,6 +916,10 @@ class JS extends Minify
      * extractRegex()'s PCRE pattern specifically) needing its own escaped
      * alternative there regardless.
      *
+     * ":value" is a second such sentinel: set by protectBlockStatementRegex()/
+     * skipTemplateExpression() for a ternary's own ":" or an object
+     * literal's key separator, as opposed to a label's or a case's.
+     *
      * @param string $last_char
      * @param string $last_word
      * @return bool
@@ -844,7 +932,7 @@ class JS extends Minify
 
         return $atStart
             || ($last_char !== '' && strpos($beforeChars, $last_char) !== false)
-            || ($last_word === '...')
+            || ($last_word === '...' || $last_word === ':value')
             || ($last_word !== '' && in_array($last_word, $this->regexTriggerKeywords(), true));
     }
 
@@ -1034,6 +1122,7 @@ class JS extends Minify
         $word_before_last = '';
         $brace_kinds = array();
         $paren_kinds = array();
+        $ternary_depth = 0;
 
         while ($offset < $length) {
             $character = $content[$offset];
@@ -1074,6 +1163,27 @@ class JS extends Minify
                 $offset++;
                 $last_char = ($kind === 'condition') ? '' : ')';
                 $last_word = '';
+                continue;
+            }
+
+            if ($character === '?' && !($offset + 1 < $length && ($content[$offset + 1] === '.' || $content[$offset + 1] === '?'))) {
+                // Bare "?" is the ternary operator; "?."/"??"/"??=" need
+                // no matching ":".
+                $ternary_depth++;
+                $offset++;
+                $last_char = '?';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === ':' && $ternary_depth > 0 && (!$brace_kinds || end($brace_kinds) !== 'value')) {
+                // An object key's own ":" (directly inside a "value"
+                // brace) takes precedence over a ternary still pending
+                // further out, e.g. "cond ? {a: 1} : b".
+                $ternary_depth--;
+                $offset++;
+                $last_char = '';
+                $last_word = ':value';
                 continue;
             }
 
