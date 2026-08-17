@@ -440,8 +440,15 @@ class JS extends Minify
                 continue;
             }
 
-            if ($character === ':' && $ternary_depth > 0 && (!$brace_kinds || end($brace_kinds) !== 'value')) {
+            if ($character === ':' && $ternary_depth > 0) {
                 $ternary_depth--;
+                $offset++;
+                $last_char = '';
+                $last_word = ':value';
+                continue;
+            }
+
+            if ($character === ':' && $brace_kinds && end($brace_kinds) === 'value') {
                 $offset++;
                 $last_char = '';
                 $last_word = ':value';
@@ -1176,11 +1183,15 @@ class JS extends Minify
                 continue;
             }
 
-            if ($character === ':' && $ternary_depth > 0 && (!$brace_kinds || end($brace_kinds) !== 'value')) {
-                // An object key's own ":" (directly inside a "value"
-                // brace) takes precedence over a ternary still pending
-                // further out, e.g. "cond ? {a: 1} : b".
+            if ($character === ':' && $ternary_depth > 0) {
                 $ternary_depth--;
+                $offset++;
+                $last_char = '';
+                $last_word = ':value';
+                continue;
+            }
+
+            if ($character === ':' && $brace_kinds && end($brace_kinds) === 'value') {
                 $offset++;
                 $last_char = '';
                 $last_word = ':value';
