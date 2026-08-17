@@ -355,11 +355,13 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
       if (isset($_GET['order_id']) && is_numeric($_GET['order_id'])
           && isset($_SESSION['customer_id'])) 
       {
-        $orders_info_query = xtc_db_query("SELECT customers_id 
-                                             FROM ".TABLE_ORDERS." 
+        $orders_info_query = xtc_db_query("SELECT customers_id,
+                                                  language
+                                             FROM ".TABLE_ORDERS."
                                             WHERE orders_id = '".(int)$_GET['order_id']."'
                                               AND customers_id = '".(int)$_SESSION['customer_id']."'");
         if (xtc_db_num_rows($orders_info_query) > 0) {
+          $orders_info = xtc_db_fetch_array($orders_info_query);
           require_once (DIR_WS_CLASSES.'order.php');
           $order_data_array = order::getOrderData((int)$_GET['order_id']);
           
@@ -371,7 +373,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                 foreach ($order_data['PRODUCTS_ATTRIBUTES_ARRAY'] as $attributes_data) {
                   if (empty($attributes_data['option_id']) || empty($attributes_data['value_id'])) {
                     require_once(DIR_FS_INC.'get_order_options_values_ids_by_names.inc.php');
-                    $possible_options = get_order_options_values_ids_by_names($order_data['PRODUCTS_ID'], $attributes_data['option'], $attributes_data['value'], $_SESSION['language']);
+                    $possible_options = get_order_options_values_ids_by_names($order_data['PRODUCTS_ID'], $attributes_data['option'], $attributes_data['value'], $orders_info['language']);
                     if ($possible_options['options_id'] > 0 && $possible_options['value_id'] > 0) {
                       $attributes_array[$possible_options['options_id']] = $possible_options['value_id'];
                       $sql_data_array = array(
