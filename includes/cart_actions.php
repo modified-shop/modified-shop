@@ -361,8 +361,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                                               AND customers_id = '".(int)$_SESSION['customer_id']."'");
         if (xtc_db_num_rows($orders_info_query) > 0) {
           require_once (DIR_WS_CLASSES.'order.php');
-          $order = new order((int)$_GET['order_id']);        
-          $order_data_array = $order->getOrderData((int)$_GET['order_id']);
+          $order_data_array = order::getOrderData((int)$_GET['order_id']);
           
           if (is_array($order_data_array) && count($order_data_array) > 0) {
             $count_products_missing_attributes = 0;
@@ -372,7 +371,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                 foreach ($order_data['PRODUCTS_ATTRIBUTES_ARRAY'] as $attributes_data) {
                   if (empty($attributes_data['option_id']) || empty($attributes_data['value_id'])) {
                     require_once(DIR_FS_INC.'get_order_options_values_ids_by_names.inc.php');
-                    $possible_options = get_order_options_values_ids_by_names($order_data['PRODUCTS_ID'], $attributes_data['option'], $attributes_data['value'], $order->info['language']);
+                    $possible_options = get_order_options_values_ids_by_names($order_data['PRODUCTS_ID'], $attributes_data['option'], $attributes_data['value'], $_SESSION['language']);
                     if ($possible_options['options_id'] > 0 && $possible_options['value_id'] > 0) {
                       $attributes_array[$possible_options['options_id']] = $possible_options['value_id'];
                       $sql_data_array = array(
