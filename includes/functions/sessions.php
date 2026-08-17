@@ -25,6 +25,7 @@
 
   @ini_set("session.gc_maxlifetime", $SESS_LIFE);
   @ini_set("session.gc_probability", 100);
+  @ini_set("session.gc_divisor", 100);
   @ini_set('session.cookie_httponly', true);
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/sessions/','php') as $file) require_once ($file);
@@ -129,21 +130,6 @@
 
       function gc(int $maxlifetime): int|false
       {
-        if (defined('DELETE_GUEST_ACCOUNT') && DELETE_GUEST_ACCOUNT == 'true') {
-          $session_query = xtc_db_query("SELECT sesskey,
-                                                value
-                                           FROM " . TABLE_SESSIONS . "
-                                          WHERE expiry < '" . time() . "'");
-          while ($session = xtc_db_fetch_array($session_query)) {
-            $customers = unserialize_session_data(base64_decode($session['value']));
-            if (is_array($customers) && isset($customers['customer_id']) && isset($customers['account_type']) && $customers['account_type'] != '0') {
-              xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers['customer_id']."'");
-              xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$customers['customer_id']."'");
-              xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$customers['customer_id']."'");
-              xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$customers['customer_id']."'");
-            }
-          }
-        }
         xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
 
         return xtc_db_affected_rows();

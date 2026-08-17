@@ -522,7 +522,10 @@ define('PRODUCT_REVIEWS_VIEW_TITLE','Rezensionen in Artikeldetails');
 define('PRODUCT_REVIEWS_VIEW_DESC','Anzahl der angezeigten Rezensionen in der Artikeldetailansicht');
 
 define('DELETE_GUEST_ACCOUNT_TITLE','L&ouml;schen von Gast-Konten');
-define('DELETE_GUEST_ACCOUNT_DESC','Sollen Gast-Konten nach erfolgter Bestellung gel&ouml;scht werden? (Bestelldaten bleiben erhalten)');
+define('DELETE_GUEST_ACCOUNT_DESC','Sollen Gast-Konten nach erfolgter Bestellung gel&ouml;scht werden? (Bestelldaten bleiben erhalten) Gast-Konten ohne abgeschlossene Bestellung werden zus&auml;tzlich &uuml;ber die geplante Aufgabe "guest_account_maintenance" bereinigt.');
+
+define('DELETE_GUEST_ACCOUNT_DAYS_TITLE','L&ouml;schen von Gast-Konten nach X Tagen');
+define('DELETE_GUEST_ACCOUNT_DAYS_DESC','Anzahl der Tage, nach denen Gast-Konten ohne abgeschlossene Bestellung durch die geplante Aufgabe "guest_account_maintenance" gel&ouml;scht werden. Greift nur, wenn "L&ouml;schen von Gast-Konten" aktiviert ist.');
 
 define('USE_WYSIWYG_TITLE','WYSIWYG-Editor aktivieren');
 define('USE_WYSIWYG_DESC','WYSIWYG-Editor f&uuml;r CMS und Artikel aktivieren?');
