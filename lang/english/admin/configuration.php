@@ -522,10 +522,10 @@ define('PRODUCT_REVIEWS_VIEW_TITLE','Reviews in Product Details');
 define('PRODUCT_REVIEWS_VIEW_DESC','Number of reviews displayed on the product details page');
 
 define('DELETE_GUEST_ACCOUNT_TITLE','Delete Guest Accounts');
-define('DELETE_GUEST_ACCOUNT_DESC','Shold guest accounts be deleted after placing orders? (Order data will be saved) Guest accounts without a completed order are additionally cleaned up by the "guest_account_maintenance" scheduled task.');
+define('DELETE_GUEST_ACCOUNT_DESC','Shold guest accounts be deleted after placing orders? (Order data will be saved) Guest accounts are additionally cleaned up after the retention period set in "Delete Guest Accounts After X Days" by the "guest_account_maintenance" scheduled task (order data is preserved as well).');
 
 define('DELETE_GUEST_ACCOUNT_DAYS_TITLE','Delete Guest Accounts After X Days');
-define('DELETE_GUEST_ACCOUNT_DAYS_DESC','Number of days after which guest accounts without a completed order are deleted by the "guest_account_maintenance" scheduled task. Only applies when "Delete Guest Accounts" is enabled.');
+define('DELETE_GUEST_ACCOUNT_DAYS_DESC','Number of days after which guest accounts are deleted by the "guest_account_maintenance" scheduled task (order data is preserved). Only applies when "Delete Guest Accounts" is enabled.');
 
 define('USE_WYSIWYG_TITLE','Activate WYSIWYG Editor');
 define('USE_WYSIWYG_DESC','Activate WYSIWYG editor for CMS and products');

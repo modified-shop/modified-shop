@@ -20,10 +20,8 @@
 
     $customers_query = xtc_db_query("SELECT c.customers_id
                                         FROM ".TABLE_CUSTOMERS." c
-                                   LEFT JOIN ".TABLE_ORDERS." o ON o.customers_id = c.customers_id
                                        WHERE c.account_type = 1
-                                         AND c.customers_date_added < '".xtc_db_input($date_threshold)."'
-                                         AND o.orders_id IS NULL");
+                                         AND c.customers_date_added < '".xtc_db_input($date_threshold)."'");
     while ($customers = xtc_db_fetch_array($customers_query)) {
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers['customers_id']."'");
       xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$customers['customers_id']."'");

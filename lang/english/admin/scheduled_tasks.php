@@ -65,4 +65,4 @@
   define('TEXT_INFO_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Cleanup Customer IP log older than 1 year');
 
   define('TEXT_HEADING_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'Guest account cleanup');
-  define('TEXT_INFO_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'Deletes guest accounts without a completed order. Only applies when "Delete Guest Accounts" is enabled, after the number of days set in "Delete Guest Accounts After X Days".');
+  define('TEXT_INFO_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'Deletes guest accounts after the retention period (order data is preserved). Only applies when "Delete Guest Accounts" is enabled, after the number of days set in "Delete Guest Accounts After X Days".');

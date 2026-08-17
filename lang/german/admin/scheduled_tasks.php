@@ -65,4 +65,4 @@
   define('TEXT_INFO_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Kunden IP Log bereinigen bis auf das letzte Jahr');
 
   define('TEXT_HEADING_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'Gast-Konten bereinigen');
-  define('TEXT_INFO_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'L&ouml;scht Gast-Konten ohne abgeschlossene Bestellung. Greift nur, wenn "L&ouml;schen von Gast-Konten" aktiviert ist, nach der dort unter "L&ouml;schen von Gast-Konten nach X Tagen" hinterlegten Anzahl an Tagen.');
+  define('TEXT_INFO_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'L&ouml;scht Gast-Konten nach Ablauf der Frist (Bestelldaten bleiben erhalten). Greift nur, wenn "L&ouml;schen von Gast-Konten" aktiviert ist, nach der dort unter "L&ouml;schen von Gast-Konten nach X Tagen" hinterlegten Anzahl an Tagen.');
