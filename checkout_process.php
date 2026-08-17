@@ -34,6 +34,21 @@ define('SESSION_FORCE_COOKIE_USE', 'False');
 
 include ('includes/application_top.php');
 
+require_once (DIR_WS_CLASSES.'checkout.php');
+
+if (isset($_SESSION['customer_id'])) {
+  $checkout = new checkout($_SESSION['customer_id']);
+  $completed_checkout = $checkout->find();
+  if (is_array($completed_checkout)
+      && $completed_checkout['processing_status'] === 'completed'
+      && (int)$completed_checkout['orders_id'] > 0
+      )
+  {
+    $_SESSION['checkout_completed_order_id'] = (int)$completed_checkout['orders_id'];
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+  }
+}
+
 // stock decrement for downloads
 defined('STOCK_LIMITED_DOWNLOADS') or define('STOCK_LIMITED_DOWNLOADS', 'false');
 
@@ -63,6 +78,23 @@ $shipping_modules = new shipping($_SESSION['shipping']);
 
 require_once(DIR_WS_CLASSES.'order.php');
 $order = new order();
+
+$checkout_processing_owner = $checkout->claim();
+if (!$checkout_processing_owner) {
+  $processing_url = $checkout->get_processing_url($_SESSION['language']);
+  session_abort();
+  xtc_redirect($processing_url);
+}
+
+if (isset($_SESSION['tmp_oID'])
+    && is_numeric($_SESSION['tmp_oID'])
+    && !$checkout->set_order($_SESSION['tmp_oID'])
+    )
+{
+  $processing_url = $checkout->get_processing_url($_SESSION['language']);
+  session_abort();
+  xtc_redirect($processing_url);
+}
 
 // load the before_process function from the payment modules
 $payment_modules->before_process();
@@ -196,6 +228,11 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();
   $_SESSION['tmp_oID'] = $insert_id;
+  if ($checkout_processing_owner && !$checkout->set_order($insert_id)) {
+    $processing_url = $checkout->get_processing_url($_SESSION['language']);
+    session_abort();
+    xtc_redirect($processing_url);
+  }
 
   for ($i = 0, $n = sizeof($order_totals); $i < $n; $i ++) {
     $sql_data_array = array(
@@ -487,6 +524,12 @@ if (!$tmp) {
   $order_total_modules->clear_posts();
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_end/','php') as $file) require ($file);
+
+  if ($checkout_processing_owner && $checkout->complete($insert_id)) {
+    $_SESSION['checkout_completed_order_id'] = (int)$insert_id;
+  } else {
+    xtc_redirect($checkout->get_processing_url($_SESSION['language']));
+  }
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
 }

@@ -22,7 +22,10 @@
   function xtc_update_whos_online() {
     global $PHP_SELF;
     
-    if (defined('MODULE_WHOS_ONLINE_STATUS') && MODULE_WHOS_ONLINE_STATUS == 'false') {
+    if (defined('RUN_MODE_NOSESSION')
+        || (defined('MODULE_WHOS_ONLINE_STATUS') && MODULE_WHOS_ONLINE_STATUS == 'false')
+        )
+    {
       return;
     }
 

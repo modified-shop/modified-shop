@@ -193,3 +193,14 @@
   <div class="button_right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}{$CHECKOUT_BUTTON}{$CHECKOUT_FORM_END}</div>
 
 </div>
+<div id="checkout-processing-overlay"
+     role="status"
+     aria-live="polite"
+     aria-hidden="true">
+  <div class="checkout-processing-overlay-content">
+    <div class="checkout-processing-spinner"></div>
+    <h2>{$smarty.const.TEXT_CHECKOUT_PROCESSING_TITLE}</h2>
+    <p>{$smarty.const.TEXT_CHECKOUT_PROCESSING_MESSAGE}</p>
+  </div>
+</div>
+{$CHECKOUT_JAVASCRIPT}

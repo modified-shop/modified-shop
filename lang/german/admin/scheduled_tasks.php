@@ -63,3 +63,6 @@
 
   define('TEXT_HEADING_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Kunden IP Log');
   define('TEXT_INFO_TASKS_CUSTOMERS_IP_MAINTENANCE', 'Kunden IP Log bereinigen bis auf das letzte Jahr');
+
+  define('TEXT_HEADING_TASKS_CHECKOUT_PROCESSING_MAINTENANCE', 'Checkout-Verarbeitung');
+  define('TEXT_INFO_TASKS_CHECKOUT_PROCESSING_MAINTENANCE', 'Verwaiste und mehr als 30 Tage alte Checkout-Verarbeitungen bereinigen');

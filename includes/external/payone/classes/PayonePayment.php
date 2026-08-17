@@ -383,11 +383,10 @@ class PayonePayment {
 		}
 		$_SESSION['payone_checkout_return_tokens'][(int)$orders_id] = hash('sha256', $return_token);
 
-		return ((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER)
-		       .DIR_WS_CATALOG
-		       .FILENAME_CHECKOUT_PROCESS
-		       .'?'.xtc_session_name().'='.xtc_session_id()
-		       .'&payone_return_token='.rawurlencode($return_token);
+		$return_parameters = xtc_session_name().'='.xtc_session_id()
+		                     .'&payone_return_token='.rawurlencode($return_token);
+
+		return str_replace('&amp;', '&', xtc_href_link(FILENAME_CHECKOUT_PROCESS, $return_parameters, 'SSL', false, false));
 	}
 
 	protected function consumeCheckoutReturnToken($orders_id) {

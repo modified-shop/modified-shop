@@ -1,0 +1,39 @@
+#checkout-processing-overlay {
+  display:none;
+  position:fixed;
+  z-index:100000;
+  inset:0;
+  background:rgba(255,255,255,.94);
+}
+
+#checkout-processing-overlay .checkout-processing-overlay-content {
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:calc(100% - 40px);
+  max-width:520px;
+  transform:translate(-50%,-50%);
+  text-align:center;
+}
+
+.checkout-processing-spinner {
+  width:42px;
+  height:42px;
+  margin:0 auto 20px;
+  border:5px solid #ddd;
+  border-top-color:#555;
+  border-radius:50%;
+  animation:checkout-processing-spin .8s linear infinite;
+}
+
+.checkout_processing .checkout-processing-content {
+  max-width:620px;
+  margin:60px auto;
+  text-align:center;
+}
+
+@keyframes checkout-processing-spin {
+  to {
+    transform:rotate(360deg);
+  }
+}
