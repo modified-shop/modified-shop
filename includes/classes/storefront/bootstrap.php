@@ -1,24 +1,24 @@
 <?php
 
 (static function (): void {
-    $selectSmartyEngine = static function (): int {
-        $selectedEngineVersion = defined('SMARTY_ENGINE_VERSION') ? SMARTY_ENGINE_VERSION : 4;
-        if (!is_int($selectedEngineVersion) || !in_array($selectedEngineVersion, [4, 5], true)) {
-            throw new RuntimeException('SMARTY_ENGINE_VERSION must be defined as the integer 4 or 5.');
+    $selectSmartyEngine = static function (): string {
+        $selectedEngine = defined('TEMPLATE_ENGINE') ? TEMPLATE_ENGINE : 'smarty_4';
+        if (!is_string($selectedEngine) || !in_array($selectedEngine, ['smarty_4', 'smarty_5'], true)) {
+            throw new RuntimeException("TEMPLATE_ENGINE must be defined as 'smarty_4' or 'smarty_5'.");
         }
 
-        return $selectedEngineVersion;
+        return $selectedEngine;
     };
 
-    $bootstrapSmartyEngine = static function (int $selectedEngineVersion): void {
-        $engineStateKey = '__modified_storefront_smarty_engine_version';
-        $loadedEngineVersion = $GLOBALS[$engineStateKey] ?? null;
+    $bootstrapSmartyEngine = static function (string $selectedEngine): void {
+        $engineStateKey = '__modified_storefront_template_engine';
+        $loadedEngine = $GLOBALS[$engineStateKey] ?? null;
 
-        if ($loadedEngineVersion !== null && $loadedEngineVersion !== $selectedEngineVersion) {
+        if ($loadedEngine !== null && $loadedEngine !== $selectedEngine) {
             throw new RuntimeException('The selected Smarty version conflicts with the engine already loaded by the storefront bootstrap.');
         }
 
-        if ($loadedEngineVersion !== null) {
+        if ($loadedEngine !== null) {
             return;
         }
 
@@ -31,28 +31,28 @@
         }
 
         $smartyRoot = dirname(__DIR__, 2) . '/external/smarty/';
-        $smartyEntry = $selectedEngineVersion === 5
+        $smartyEntry = $selectedEngine === 'smarty_5'
             ? $smartyRoot . 'smarty_5/libs/Smarty.class.php'
             : $smartyRoot . 'smarty_4/Smarty.class.php';
 
         if (!is_file($smartyEntry) || !is_readable($smartyEntry)) {
             throw new RuntimeException(sprintf(
-                'The Smarty %d entry file does not exist or is not readable: %s',
-                $selectedEngineVersion,
+                'The %s entry file does not exist or is not readable: %s',
+                $selectedEngine,
                 $smartyEntry
             ));
         }
 
         require_once $smartyEntry;
 
-        if ($selectedEngineVersion === 5 && !class_exists('Smarty\\Smarty')) {
+        if ($selectedEngine === 'smarty_5' && !class_exists('Smarty\\Smarty')) {
             throw new RuntimeException('The Smarty 5 entry file did not provide the expected vendor class Smarty\\Smarty.');
         }
-        if ($selectedEngineVersion === 4 && !class_exists('Smarty', false)) {
+        if ($selectedEngine === 'smarty_4' && !class_exists('Smarty', false)) {
             throw new RuntimeException('The Smarty 4 entry file did not provide the expected global vendor class Smarty.');
         }
 
-        $GLOBALS[$engineStateKey] = $selectedEngineVersion;
+        $GLOBALS[$engineStateKey] = $selectedEngine;
     };
 
     $registerStorefrontAutoloader = static function (): void {
@@ -85,16 +85,16 @@
         }
     };
 
-    $loadStorefrontEntryPoints = static function (int $selectedEngineVersion): void {
-        if ($selectedEngineVersion === 5) {
+    $loadStorefrontEntryPoints = static function (string $selectedEngine): void {
+        if ($selectedEngine === 'smarty_5') {
             require_once __DIR__ . '/Smarty.php';
         }
 
         require_once __DIR__ . '/Template.php';
     };
 
-    $selectedEngineVersion = $selectSmartyEngine();
-    $bootstrapSmartyEngine($selectedEngineVersion);
+    $selectedEngine = $selectSmartyEngine();
+    $bootstrapSmartyEngine($selectedEngine);
     $registerStorefrontAutoloader();
-    $loadStorefrontEntryPoints($selectedEngineVersion);
+    $loadStorefrontEntryPoints($selectedEngine);
 })();
