@@ -12,7 +12,7 @@
 
 
 $lang_array = array(
-  'TEXT_PAYPAL_INFO_HEADING_TITLE' => 'PayPal Informations',
+  'TEXT_PAYPAL_INFO_HEADING_TITLE' => 'PayPal Information',
 );
 
 

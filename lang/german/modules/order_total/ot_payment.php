@@ -39,7 +39,7 @@ Sollen mehr Rabattstaffeln m&ouml;glich sein (Standard sind <b>3</b>), muss vor 
 <p>Bedeutung:</p>
 <p>F&uuml;r Kunden aus <span class="blue">Deutschland</span> wird ab <span class="green">0&euro;</span> (also immer) ein Aufschlag von <span class="red">1,9%</span> zuz&uuml;glich <span class="lila">0,35&euro;</span> berechnet.</p>
 <p>F&uuml;r Kunden aus <span class="blue">allen restlichen L&auml;ndern (00=alle)</span> wird ab <span class="green">0&euro;</span> ein Aufschlag von <span class="red">3,4%</span> zuz&uuml;glich <span class="lila">0,35&euro;</span> berechnet.</p>
-<p>Wichtig ist hier die Reihenfolge der Eintr&auml;ge (alle restlichen L&auml;nder immer als letztes) und das &quot;Mehrfachberechnung&quot; auf &quot;false&quot; steht, sonst werden beide Zuschl&auml;ge berechnet.</p>
+<p>Wichtig ist hier die Reihenfolge der Eintr&auml;ge (alle restlichen L&auml;nder immer als letztes) und dass &quot;Mehrfachberechnung&quot; auf &quot;false&quot; steht, sonst werden beide Zuschl&auml;ge berechnet.</p>
 <h4>Beispiel f&uuml;r Festbetr&auml;ge</h4>
 <pre>   <span class="green">0</span>:<span class="red">0</span>&amp;<span class="lila">-2</span></pre>
 <p>Bedeutung:</p>
@@ -74,13 +74,13 @@ if (defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER')) {
 }
 
 define('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING_TITLE', '<hr>Inklusive Versandkosten');
-define('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING_DESC', 'Versandkosten werden mit Rabattiert');
+define('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING_DESC', 'Versandkosten werden mit rabattiert');
 
 define('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX_TITLE', '<hr>Inklusive Ust');
-define('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX_DESC', 'Ust wird mit Rabattiert');
+define('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX_DESC', 'Ust wird mit rabattiert');
 
 define('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX_TITLE', '<hr>Ust Berechnung');
-define('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX_DESC', 'erneutes berechnen der Ust Summe');
+define('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX_DESC', 'erneutes Berechnen der Ust Summe');
 
 define('MODULE_ORDER_TOTAL_PAYMENT_ALLOWED_TITLE', '<hr>Erlaubte Zonen');
 define('MODULE_ORDER_TOTAL_PAYMENT_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');

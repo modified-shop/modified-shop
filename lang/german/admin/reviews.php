@@ -39,7 +39,7 @@ define('TEXT_INFO_LAST_MODIFIED', 'letzte &Auml;nderung:');
 
 define('TEXT_INFO_REVIEW_AUTHOR', 'geschrieben von:');
 define('TEXT_INFO_REVIEW_RATING', 'Bewertung:');
-define('TEXT_INFO_REVIEW_READ', 'gelesen :');
+define('TEXT_INFO_REVIEW_READ', 'gelesen:');
 define('TEXT_INFO_REVIEW_SIZE', 'Gr&ouml;&szlig;e:');
 define('TEXT_INFO_PRODUCTS_AVERAGE_RATING', 'durchschnittl. Wertung:');
 define('TEXT_INFO_HEADING_EDIT_REVIEW', 'Produktrezensionen bearbeiten');

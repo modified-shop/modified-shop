@@ -23,7 +23,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALEXPRESS_SORT_ORDER_TITLE' => 'Sort order',
   'MODULE_PAYMENT_PAYPALEXPRESS_SORT_ORDER_DESC' => 'Sort order of the view. Lowest numeral will be displayed first',
   'MODULE_PAYMENT_PAYPALEXPRESS_ZONE_TITLE' => 'Payment zone',
-  'MODULE_PAYMENT_PAYPALEXPRESS_ZONE_DESC' => 'If a zone is choosen, the payment method will be valid for this zone only.',
+  'MODULE_PAYMENT_PAYPALEXPRESS_ZONE_DESC' => 'If a zone is chosen, the payment method will be valid for this zone only.',
   'MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT_TITLE' => 'Short Checkout',
   'MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT_DESC' => 'Should the redirect be made directly to confirmation page?',
   'MODULE_PAYMENT_PAYPALEXPRESS_LP' => '<br /><br />For this payment method you need a PayPal merchant account.<br /><a target="_blank" href="https://www.paypal.com/business"><strong>Create PayPal account now.</strong></a>',

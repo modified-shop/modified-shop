@@ -26,7 +26,7 @@ define('MODULE_PAYMENT_PAYONE_STATUS_DESC', 'Do you want to accept payments thro
 define('MODULE_PAYMENT_PAYONE_ALLOWED_TITLE', 'Allowed zones');
 define('MODULE_PAYMENT_PAYONE_ALLOWED_DESC', 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_PAYMENT_PAYONE_ZONE_TITLE', 'Payment zone');
-define('MODULE_PAYMENT_PAYONE_ZONE_DESC', 'If a zone is choosen, the payment method will be valid for this zone only.');
+define('MODULE_PAYMENT_PAYONE_ZONE_DESC', 'If a zone is chosen, the payment method will be valid for this zone only.');
 define('MODULE_PAYMENT_PAYONE_TMPORDER_STATUS_ID_TITLE', 'Temporary Order Status');
 define('MODULE_PAYMENT_PAYONE_TMPORDER_STATUS_ID_DESC', 'Order for not yet completed transactions');
 define('MODULE_PAYMENT_PAYONE_ORDER_STATUS_ID_TITLE', 'Set Order Status');

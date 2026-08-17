@@ -15,7 +15,7 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-define('HEADING_TITLE', 'Campain report');
+define('HEADING_TITLE', 'Campaign report');
 
 define('REPORT_TYPE_YEARLY', 'Yearly');
 define('REPORT_TYPE_MONTHLY', 'Monthly');

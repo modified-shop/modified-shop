@@ -41,7 +41,7 @@ define('MODULE_SHIPPING_FEDEXEU_ZONE_DESC' , 'If a zone is selected, only enable
 define('MODULE_SHIPPING_FEDEXEU_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_FEDEXEU_SORT_ORDER_DESC' , 'Sort order of display.');
 define('MODULE_SHIPPING_FEDEXEU_ALLOWED_TITLE' , 'Allowed Shipping Zones');
-define('MODULE_SHIPPING_FEDEXEU_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_FEDEXEU_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_1_TITLE' , 'Europe Zone 1 Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_1_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 1 (Enter WORLD for the rest of the world.).');
@@ -61,9 +61,9 @@ define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_1_DESC' , 'Extra charge for each add
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_2_TITLE' , 'Europe Zone 2 Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_2_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 2 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_FEDEXEU_COST_PAK_2_TITLE' , 'Shipping Table for Zone 2 up to 2.50 kg PAK');
-define('MODULE_SHIPPING_FEDEXEU_COST_PAK_2_DESC' , 'Shipping Table for die Zone 2, based on <b>\'PAK\'</b> up to 2.50 kg shipping weight.');
+define('MODULE_SHIPPING_FEDEXEU_COST_PAK_2_DESC' , 'Shipping Table for Zone 2, based on <b>\'PAK\'</b> up to 2.50 kg shipping weight.');
 define('MODULE_SHIPPING_FEDEXEU_COST_ENV_2_TITLE' , 'Shipping Table for Zone 2 up to 0.50 kg ENV');
-define('MODULE_SHIPPING_FEDEXEU_COST_ENV_2_DESC' , 'Shipping Table for die Zone 2, based on <b>\'ENV\'</b> up to 60 DIN A4 pages & 0.50 kg shipping weight.');
+define('MODULE_SHIPPING_FEDEXEU_COST_ENV_2_DESC' , 'Shipping Table for Zone 2, based on <b>\'ENV\'</b> up to 60 DIN A4 pages & 0.50 kg shipping weight.');
 define('MODULE_SHIPPING_FEDEXEU_COST_BOX_2_TITLE' , 'Shipping Table for Zone 2 up to 10 kg BOX');
 define('MODULE_SHIPPING_FEDEXEU_COST_BOX_2_DESC' , 'Shipping Table for Zone 2, based on <b>\'BOX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_2_TITLE' , 'Extra charge up to 20 kg BOX');

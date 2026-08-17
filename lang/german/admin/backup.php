@@ -25,11 +25,11 @@ define('TABLE_HEADING_ACTION', 'Aktion');
 define('TEXT_INFO_HEADING_NEW_BACKUP', 'Neue Sicherung');
 define('TEXT_INFO_HEADING_RESTORE_LOCAL', 'Lokal wiederherstellen');
 define('TEXT_INFO_NEW_BACKUP', 'Bitte den Sicherungsprozess AUF KEINEN FALL unterbrechen. Dieser kann einige Minuten in Anspruch nehmen.');
-define('TEXT_INFO_UNPACK', '<br /><br />(nach dem die Dateien aus dem Archiv extrahiert wurden)');
-define('TEXT_INFO_RESTORE', 'Den Wiederherstellungsprozess AUF KEINEN FALL unterbrechen.<br /><br />Umso mehr Datens&auml;tze vorhanden sind desto l&auml;nger dauert die Wiederherstellung!');
+define('TEXT_INFO_UNPACK', '<br /><br />(nachdem die Dateien aus dem Archiv extrahiert wurden)');
+define('TEXT_INFO_RESTORE', 'Den Wiederherstellungsprozess AUF KEINEN FALL unterbrechen.<br /><br />Je mehr Datens&auml;tze vorhanden sind, desto l&auml;nger dauert die Wiederherstellung!');
 define('TEXT_INFO_RESTORE_CLIENT', 'Bitte wenn m&ouml;glich den mysql client benutzen.<br /><br />Beispiel:<br /><br /><b>mysql -h' . DB_SERVER . ' -u' . DB_SERVER_USERNAME . ' -p ' . DB_DATABASE . ' < %s </b> %s');
 define('TEXT_INFO_RESTORE_LOCAL', 'Den Wiederherstellungsprozess AUF KEINEN FALL unterbrechen.<br /><br />Je gr&ouml;&szlig;er die Sicherungsdatei - desto l&auml;nger dauert die Wiederherstellung!');
-define('TEXT_INFO_RESTORE_LOCAL_RAW_FILE', 'Die Datei, welche hochgeladen wird muss eine sog. raw sql Datei sein (nur Text).');
+define('TEXT_INFO_RESTORE_LOCAL_RAW_FILE', 'Die Datei, welche hochgeladen wird, muss eine sog. raw sql Datei sein (nur Text).');
 define('TEXT_INFO_DATE', 'Datum:');
 define('TEXT_INFO_SIZE', 'Gr&ouml;&szlig;e:');
 define('TEXT_INFO_COMPRESSION', 'Komprimieren:');
@@ -59,7 +59,7 @@ define('TEXT_COMPLETE_INSERTS', "<b>Vollst&auml;ndige 'INSERT's</b><br> - Feldna
 define('TEXT_SINGLE_FILES', "<b>Einzelne Dateien pro Tabelle</b><br> - Es wird eine Datei pro Datenbanktabelle erstellt. Es können einzelne Tabellen daraus wiederhergestellt werden.");
 
 define('TEXT_INFO_TABLES_IN_BACKUP', '<br />' . "\n" .'<b>Tabellen in diesem Backup:</b>' . "\n");
-define('TEXT_INFO_NO_INFORMATION', 'Kein Informationen vorhanden');
+define('TEXT_INFO_NO_INFORMATION', 'Keine Informationen vorhanden');
 //UTF-8 convert
 define('TEXT_CONVERT_TO_UTF', 'Datenbank auf UTF-8 konvertieren');
 define('TEXT_IMPORT_UTF', 'UTF-8 Datenbank wiederherstellen');
@@ -79,4 +79,4 @@ define('TEXT_TABLES_ALL', 'Alle Tabellen');
 define('TEXT_TABLES_CUSTOM', 'Ausgew&auml;hlte Tabellen');
 define('TEXT_TABLES_CHECK_ALL', 'Alle Tabellen ausw&auml;hlen');
 define('TEXT_TABLES_TO_BACKUP', '<b>Folgende Tabellen sollen gesichert werden:</b>');
-define('TEXT_TABLES_TO_RESTORE', '<b>Folgende Tabellen sollen wiederhersgestellt werden:</b>');
+define('TEXT_TABLES_TO_RESTORE', '<b>Folgende Tabellen sollen wiederhergestellt werden:</b>');

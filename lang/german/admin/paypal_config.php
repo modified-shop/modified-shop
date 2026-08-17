@@ -33,23 +33,23 @@ $lang_array = array(
 
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID_LIVE' => 'Merchant ID Live:',
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID_SANDBOX' => 'Merchant ID Sandbox:',
-  'TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO' => 'Merchant ID Ihres H&auml;ndleraccounts. Sollten sie diese nicht zur Hand haben, fordern Sie erneut die Daten f&uuml;r Client ID und Secret an. Dadurch wird die Merchant ID automatisch ermittelt.',
+  'TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO' => 'Merchant ID Ihres H&auml;ndleraccounts. Sollten Sie diese nicht zur Hand haben, fordern Sie erneut die Daten f&uuml;r Client ID und Secret an. Dadurch wird die Merchant ID automatisch ermittelt.',
 
   'TEXT_PAYPAL_CONFIG_STATUS_ACDC_LIVE' => 'Status Kreditkarte Live:',
   'TEXT_PAYPAL_CONFIG_STATUS_ACDC_SANDBOX' => 'Status Kreditkarte Sandbox:',
-  'TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
+  'TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO' => 'Bei einem gelben Status wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_LIVE' => 'Status Kauf auf Rechnung Live:',
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_SANDBOX' => 'Status Kauf auf Rechnung Sandbox:',
-  'TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
+  'TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO' => 'Bei einem gelben Status wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
   'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_LIVE' => 'Status Apple Pay Live:',
   'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_SANDBOX' => 'Status Apple Pay Sandbox:',
-  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
+  'TEXT_PAYPAL_CONFIG_STATUS_APPLEPAY_INFO' => 'Bei einem gelben Status wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
   'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_LIVE' => 'Status Google Pay Live:',
   'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_SANDBOX' => 'Status Google Pay Sandbox:',
-  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
+  'TEXT_PAYPAL_CONFIG_STATUS_GOOGLEPAY_INFO' => 'Bei einem gelben Status wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Bestellnummer Pr&auml;fix:',
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Frei w&auml;hlbare Zeichenfolge (Pr&auml;fix), die der Bestellnummer vorangestellt und f&uuml;r die Erzeugung der PayPal-Rechnungsnummer genutzt wird.<br />Dadurch k&ouml;nnen mehrere Shops mit nur einer PayPal App arbeiten. Konflikte bei gleichen Bestellnummern werden vermieden. Jede Bestellung erh&auml;lt eine eigene Rechnungs-Nummer im PayPal Konto.',
@@ -64,7 +64,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_CART_INFO' => 'Soll der Warenkorb zu PayPal &uuml;bertragen werden?<br/><br/><b>Hinweis:</b> Diese Einstellung kann Probleme bei der Verwendung von ot-Modulen unter "Module" -> "Zusammenfassung" mit sich bringen, die einen Rabatt oder Aufschlag gew&auml;hren ("Rabatt [ot_discount]", "Rabatt Coupons [ot_coupon]", "Gutscheine [ot_gv]", "Rabatt &amp; Zuschlag auf Zahlungsarten [ot_payment]", etc.).<br/>Empfohlene Einstellung: "Nein"',
 
   'TEXT_PAYPAL_CONFIG_STATE_SUCCESS' => 'Status Erfolg:',
-  'TEXT_PAYPAL_CONFIG_STATE_SUCCESS_INFO' => 'Status bei erfolgreicher Bestellung.<br/><br/><b>Hinweis:</b> der Status sollte unbedingt per Webhook (PAYMENT.CAPTURE.COMPLETED) auf "bezahlt" gesetzt werden um sicher zu stellen, dass PayPal die Zahlung ausf&uuml;hrt.',
+  'TEXT_PAYPAL_CONFIG_STATE_SUCCESS_INFO' => 'Status bei erfolgreicher Bestellung.<br/><br/><b>Hinweis:</b> der Status sollte unbedingt per Webhook (PAYMENT.CAPTURE.COMPLETED) auf "bezahlt" gesetzt werden, um sicherzustellen, dass PayPal die Zahlung ausf&uuml;hrt.',
 
   'TEXT_PAYPAL_CONFIG_STATE_REJECTED' => 'Status Abgelehnt:',
   'TEXT_PAYPAL_CONFIG_STATE_REJECTED_INFO' => 'Status bei abgelehnter Bestellung',

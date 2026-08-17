@@ -38,7 +38,7 @@ define('MODULE_SHIPPING_AP_ZONE_DESC' , 'If a zone is selected, only enable this
 define('MODULE_SHIPPING_AP_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_AP_SORT_ORDER_DESC' , 'Sort order of display.');
 define('MODULE_SHIPPING_AP_ALLOWED_TITLE' , 'Allowed Zones');
-define('MODULE_SHIPPING_AP_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_AP_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_AP_NUMBER_ZONES_TITLE' , 'Number of zones');
 define('MODULE_SHIPPING_AP_NUMBER_ZONES_DESC' , 'Number of zones to use');
 define('MODULE_SHIPPING_AP_DISPLAY_TITLE' , 'Enable Display');

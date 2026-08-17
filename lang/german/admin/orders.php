@@ -81,7 +81,7 @@ define('ENTRY_NOTIFY_COMMENTS', 'Kommentare mitsenden:');
 define('ENTRY_PRINTABLE', 'Rechnung Drucken');
 
 define('TEXT_INFO_HEADING_DELETE_ORDER', 'Bestellung l&ouml;schen');
-define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, das Sie diese Bestellung l&ouml;schen m&ouml;chten?');
+define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese Bestellung l&ouml;schen m&ouml;chten?');
 define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Artikelanzahl dem Lager gutschreiben');
 define('TEXT_DATE_ORDER_CREATED', 'erstellt am:');
 define('TEXT_DATE_ORDER_LAST_MODIFIED', 'letzte &Auml;nderung:');
@@ -96,10 +96,10 @@ define('EMAIL_TEXT_SUBJECT', 'Status&auml;nderung Ihrer Bestellung');
 define('EMAIL_TEXT_ORDER_NUMBER', 'Bestell-Nr.:');
 define('EMAIL_TEXT_INVOICE_URL', 'Ihre Bestellung k&ouml;nnen Sie unter folgender Adresse einsehen:');
 define('EMAIL_TEXT_DATE_ORDERED', 'Bestelldatum:');
-define('EMAIL_TEXT_STATUS_UPDATE', 'Der Status Ihrer Bestellung wurde aktualisiert.' . "\n\n" . 'Neuer Status: %s' . "\n\n" . 'Bei Fragen zu Ihrer Bestellung antworten Sie bitte auf diese E-Mail.' . "\n\n" . 'Mit freundlichen Gr&uuml;ssen' . "\n");
+define('EMAIL_TEXT_STATUS_UPDATE', 'Der Status Ihrer Bestellung wurde aktualisiert.' . "\n\n" . 'Neuer Status: %s' . "\n\n" . 'Bei Fragen zu Ihrer Bestellung antworten Sie bitte auf diese E-Mail.' . "\n\n" . 'Mit freundlichen Gr&uuml;&szlig;en' . "\n");
 define('EMAIL_TEXT_COMMENTS_UPDATE', 'Anmerkungen und Kommentare zu Ihrer Bestellung:' . "\n\n%s\n\n");
 
-define('ERROR_ORDER_DOES_NOT_EXIST', 'Fehler: Die Bestellung existiert nicht!.');
+define('ERROR_ORDER_DOES_NOT_EXIST', 'Fehler: Die Bestellung existiert nicht!');
 define('SUCCESS_ORDER_UPDATED', 'Erfolg: Die Bestellung wurde erfolgreich aktualisiert.');
 define('WARNING_ORDER_NOT_UPDATED', 'Hinweis: Es wurde nichts ge&auml;ndert. Daher wurde diese Bestellung nicht aktualisiert.');
 
@@ -133,7 +133,7 @@ define('TABLE_HEADING_CARRIER', 'Versandart');
 define('TABLE_HEADING_PARCEL_LINK', 'Sendungsnummer / Paketscheinnummer / Auftragsnummer / Sendungs-ID / Trackingnummer');
 
 define('TEXT_INFO_HEADING_REVERSE_ORDER', 'Bestellung stornieren');
-define('TEXT_INFO_REVERSE_INTRO', 'Sind Sie sicher, das Sie diese Bestellung stornieren m&ouml;chten?');
+define('TEXT_INFO_REVERSE_INTRO', 'Sind Sie sicher, dass Sie diese Bestellung stornieren m&ouml;chten?');
 
 define('TABLE_HEADING_SHIPCLOUD', 'Shipcloud:');
 define('TABLE_HEADING_PARCEL_ID', 'Paketschein Nummer');

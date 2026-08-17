@@ -82,7 +82,7 @@
   define('TEXT_LINK','Link:');
   defined('TEXT_SORT_ORDER') OR define('TEXT_SORT_ORDER','Sort:'); 
   define('TEXT_GROUP','coID');
-  define('TEXT_GROUP_DESC','With this ID you link togehther similar subjects from different languages.');
+  define('TEXT_GROUP_DESC','With this ID you link together similar subjects from different languages.');
 
   define('TEXT_CONTENT_DESCRIPTION','With this Content Manager you can add any filetype to a product, like technical sheets, productdetails, videos. These elements will be displayed on the products detailpage.<br /><br />');
   define('TEXT_CONTENT_MANAGER_CONTENT', 'Content:');
@@ -95,7 +95,7 @@
   define('USED_SPACE','Used Space:');
   define('TABLE_HEADING_CONTENT_FILESIZE','Filesize');
   define('TEXT_CONTENT_NOINDEX','noindex (Disallow search engines from showing this page in their results.)');
-  define('TEXT_CONTENT_NOFOLLOW','nofollow (Tells the search engines robots to not follow any links on the page at all.)');
+  define('TEXT_CONTENT_NOFOLLOW','nofollow (Tells the search engine robots to not follow any links on the page at all.)');
   define('TEXT_CONTENT_NOODP','noodp (Blocks search engines from using the description for this page in DMOZ (aka ODP) as the snippet for your page in the search results.)');
   define('TEXT_CONTENT_META_ROBOTS','Meta Robots');
 

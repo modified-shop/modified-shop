@@ -37,11 +37,11 @@ define('MODULE_SHIPPING_DP_HANDLING_DESC' , 'Handling fee for this shipping meth
 define('MODULE_SHIPPING_DP_TAX_CLASS_TITLE' , 'Tax');
 define('MODULE_SHIPPING_DP_TAX_CLASS_DESC' , 'Please choose the tax rate for shipping.');
 define('MODULE_SHIPPING_DP_ZONE_TITLE' , 'Shipping Zone');
-define('MODULE_SHIPPING_DP_ZONE_DESC' , 'If you choose a zone only this shipping zones used.');
+define('MODULE_SHIPPING_DP_ZONE_DESC' , 'If you choose a zone only this shipping zone is used.');
 define('MODULE_SHIPPING_DP_SORT_ORDER_TITLE' , 'Display order');
 define('MODULE_SHIPPING_DP_SORT_ORDER_DESC' , 'Lowermost shown first.');
 define('MODULE_SHIPPING_DP_ALLOWED_TITLE' , 'Individual shipping zones');
-define('MODULE_SHIPPING_DP_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_DP_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_DP_NUMBER_ZONES_TITLE' , 'Number of zones');
 define('MODULE_SHIPPING_DP_NUMBER_ZONES_DESC' , 'Number of zones to use');
 define('MODULE_SHIPPING_DP_DISPLAY_TITLE' , 'Enable Display');

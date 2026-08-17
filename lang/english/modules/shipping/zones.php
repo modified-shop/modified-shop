@@ -26,11 +26,11 @@ define('MODULE_SHIPPING_ZONES_UNDEFINED_RATE', 'The shipping rate cannot be dete
 define('MODULE_SHIPPING_ZONES_STATUS_TITLE' , 'Enable Zones Method');
 define('MODULE_SHIPPING_ZONES_STATUS_DESC' , 'Do you want to offer zone rate shipping?');
 define('MODULE_SHIPPING_ZONES_ALLOWED_TITLE' , 'Allowed Zones');
-define('MODULE_SHIPPING_ZONES_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_ZONES_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_ZONES_TAX_CLASS_TITLE' , 'Tax Class');
 define('MODULE_SHIPPING_ZONES_TAX_CLASS_DESC' , 'Use the following tax class on the shipping fee.');
 define('MODULE_SHIPPING_ZONES_ZONE_TITLE' , 'Shipping Zone');
-define('MODULE_SHIPPING_ZONES_ZONE_DESC' , 'If you choose a zone only this shipping zones used.');
+define('MODULE_SHIPPING_ZONES_ZONE_DESC' , 'If you choose a zone only this shipping zone is used.');
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_DESC' , 'Sort order of display.');
 define('MODULE_SHIPPING_ZONES_NUMBER_ZONES_TITLE' , 'Number of zones');
