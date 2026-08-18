@@ -3,6 +3,8 @@
 /**
  * @phpcs:disable PSR1.Methods.CamelCapsMethodName
 */
+
+use Modified\Storefront\Template\Smarty\Legacy\LegacyApiDeprecationReporter;
 use Modified\Storefront\Template\Smarty\ResourceNameTransformerInterface;
 use Modified\Storefront\Template\Smarty\SmartyConfigurator;
 use Smarty\Resource\BasePlugin;
@@ -22,9 +24,12 @@ class Smarty extends BaseSmarty
     /** @var string[] */
     private array $legacyPluginDirectories = [];
 
+    private LegacyApiDeprecationReporter $legacyApiDeprecations;
+
     public function __construct()
     {
         parent::__construct();
+        $this->legacyApiDeprecations = new LegacyApiDeprecationReporter();
         (new SmartyConfigurator())->configure($this);
     }
 
@@ -98,6 +103,11 @@ class Smarty extends BaseSmarty
      */
     public function load_filter($type, $name)
     {
+        $this->reportLegacyApi(
+            'load_filter()',
+            'loadFilter(), addDefaultModifiers(), addExtension() or registerFilter()'
+        );
+
         // The snake_case entry point originates from modified/Smarty 4. Smarty 5 can still
         // register the filter function already loaded through the legacy plugin directories.
         return @$this->loadFilter($type, $name);
@@ -112,6 +122,8 @@ class Smarty extends BaseSmarty
      */
     public function is_cached($template, $cache_id = null, $compile_id = null)
     {
+        $this->reportLegacyApi('is_cached()', 'isCached()');
+
         return $this->isCached($template, $cache_id, $compile_id);
     }
 
@@ -122,6 +134,7 @@ class Smarty extends BaseSmarty
      */
     public function clear_assign($tpl_var)
     {
+        $this->reportLegacyApi('clear_assign()', 'clearAssign()');
         $this->clearAssign($tpl_var);
     }
 
@@ -133,6 +146,13 @@ class Smarty extends BaseSmarty
      * @deprecated Since Smarty 5. Use addExtension() or registerPlugin() instead.
      */
     public function addPluginsDir($plugins_dir)
+    {
+        $this->reportLegacyApi('addPluginsDir()', 'addExtension() or registerPlugin()');
+
+        return $this->addLegacyPluginDirectories($plugins_dir);
+    }
+
+    private function addLegacyPluginDirectories($plugins_dir)
     {
         foreach ((array)$plugins_dir as $directory) {
             $this->legacyPluginDirectories[] = $this->_realpath(
@@ -151,6 +171,8 @@ class Smarty extends BaseSmarty
      */
     public function getPluginsDir()
     {
+        $this->reportLegacyApi('getPluginsDir()', 'addExtension() or registerPlugin()');
+
         return $this->legacyPluginDirectories;
     }
 
@@ -163,9 +185,10 @@ class Smarty extends BaseSmarty
      */
     public function setPluginsDir($plugins_dir)
     {
+        $this->reportLegacyApi('setPluginsDir()', 'addExtension() or registerPlugin()');
         $this->legacyPluginDirectories = [];
 
-        return $this->addPluginsDir($plugins_dir);
+        return $this->addLegacyPluginDirectories($plugins_dir);
     }
 
     /**
@@ -179,6 +202,11 @@ class Smarty extends BaseSmarty
     {
         if (isset(self::LEGACY_DIRECTORY_ACCESSORS[$name])) {
             $method = 'get' . self::LEGACY_DIRECTORY_ACCESSORS[$name];
+            $this->reportLegacyApi('read $' . $name, $method . '()');
+
+            if ($name === 'plugins_dir') {
+                return $this->legacyPluginDirectories;
+            }
 
             return $this->{$method}();
         }
@@ -198,6 +226,15 @@ class Smarty extends BaseSmarty
     {
         if (isset(self::LEGACY_DIRECTORY_ACCESSORS[$name])) {
             $method = 'set' . self::LEGACY_DIRECTORY_ACCESSORS[$name];
+            $this->reportLegacyApi('write $' . $name, $method . '()');
+
+            if ($name === 'plugins_dir') {
+                $this->legacyPluginDirectories = [];
+                $this->addLegacyPluginDirectories($value);
+
+                return;
+            }
+
             $this->{$method}($value);
 
             return;
@@ -209,18 +246,23 @@ class Smarty extends BaseSmarty
     /** @deprecated Since Smarty 3.1. Use clearAllAssign() instead. */
     public function clear_all_assign()
     {
+        $this->reportLegacyApi('clear_all_assign()', 'clearAllAssign()');
         $this->clearAllAssign();
     }
 
     /** @deprecated Since Smarty 3.1. Use clearCache() instead. */
     public function clear_cache($tpl_file = null, $cache_id = null, $compile_id = null, $exp_time = null)
     {
+        $this->reportLegacyApi('clear_cache()', 'clearCache()');
+
         return $this->clearCache($tpl_file, $cache_id, $compile_id, $exp_time);
     }
 
     /** @deprecated Since Smarty 3.1. Use clearAllCache() instead. */
     public function clear_all_cache($exp_time = null)
     {
+        $this->reportLegacyApi('clear_all_cache()', 'clearAllCache()');
+
         return $this->clearAllCache($exp_time);
     }
 
@@ -235,36 +277,51 @@ class Smarty extends BaseSmarty
     /** @deprecated Since Smarty 3.1. Use templateExists() instead. */
     public function template_exists($tpl_file)
     {
+        $this->reportLegacyApi('template_exists()', 'templateExists()');
+
         return $this->templateExists($tpl_file);
     }
 
     /** @deprecated Since Smarty 3.1. Use getTemplateVars() instead. */
     public function get_template_vars($name = null)
     {
+        $this->reportLegacyApi('get_template_vars()', 'getTemplateVars()');
+
         return $this->getTemplateVars($name);
     }
 
     /** @deprecated Since Smarty 3.1. Use getConfigVars() instead. */
     public function get_config_vars($name = null)
     {
+        $this->reportLegacyApi('get_config_vars()', 'getConfigVars()');
+
         return $this->getConfigVars($name);
     }
 
     /** @deprecated Since Smarty 3.1. Use getRegisteredObject() instead. */
     public function get_registered_object($name)
     {
+        $this->reportLegacyApi('get_registered_object()', 'getRegisteredObject()');
+
         return $this->getRegisteredObject($name);
     }
 
     /** @deprecated Since Smarty 3.1. Use clearConfig() instead. */
     public function clear_config($var = null)
     {
+        $this->reportLegacyApi('clear_config()', 'clearConfig()');
         $this->clearConfig($var);
     }
 
     /** @deprecated Since Smarty 3.1. Use trigger_error() directly instead. */
     public function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
+        $this->reportLegacyApi('trigger_error()', 'PHP trigger_error()');
         trigger_error('Smarty error: ' . $error_msg, $error_type);
+    }
+
+    private function reportLegacyApi(string $legacyApi, string $replacement): void
+    {
+        $this->legacyApiDeprecations->report($legacyApi, $replacement);
     }
 }
