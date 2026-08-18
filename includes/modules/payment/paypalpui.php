@@ -281,6 +281,17 @@ class paypalpui extends PayPalPaymentV2 {
 
     $result = $this->CreateOrder($payment_source, true);
 
+    if (is_array($result)
+        && isset($result['details'][0]['issue'])
+        && $result['details'][0]['issue'] == 'DEVICE_DATA_NOT_AVAILABLE'
+        )
+    {
+      // FraudNet device data may not have reached PayPal yet, give it a moment and retry once
+      $this->LoggingManager->log('WARNING', 'PUI CreateOrder retry', array('reason' => 'DEVICE_DATA_NOT_AVAILABLE'));
+      sleep(2);
+      $result = $this->CreateOrder($payment_source, true);
+    }
+
     if (is_array($result)) {
       $disable = false;
       if (isset($result['details'])
