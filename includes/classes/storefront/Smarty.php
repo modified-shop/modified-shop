@@ -90,7 +90,7 @@ class Smarty extends BaseSmarty
      * @param string $type
      * @param string $name
      *
-     * @deprecated Since Smarty 5. Use Smarty::addDefaultModifiers(), Smarty::addExtension(),
+     * @deprecated Since Smarty 3.1. Use Smarty::addDefaultModifiers(), Smarty::addExtension(),
      * or Smarty::registerFilter() instead.
      */
     public function load_filter($type, $name)
@@ -105,7 +105,7 @@ class Smarty extends BaseSmarty
      * @param mixed|null $cache_id
      * @param mixed|null $compile_id
      *
-     * @deprecated Since Smarty 5. Use isCached() instead.
+     * @deprecated Since Smarty 3.1. Use isCached() instead.
      */
     public function is_cached($template, $cache_id = null, $compile_id = null)
     {
@@ -115,7 +115,7 @@ class Smarty extends BaseSmarty
     /**
      * @param string|array $tpl_var
      *
-     * @deprecated Since Smarty 5. Use clearAssign() instead.
+     * @deprecated Since Smarty 3.1. Use clearAssign() instead.
      */
     public function clear_assign($tpl_var)
     {
@@ -203,61 +203,63 @@ class Smarty extends BaseSmarty
         trigger_error('Undefined property: ' . static::class . '::$' . $name, E_USER_NOTICE);
     }
 
-    /** @deprecated Since Smarty 5. Use clearAllAssign() instead. */
+    /** @deprecated Since Smarty 3.1. Use clearAllAssign() instead. */
     public function clear_all_assign()
     {
         $this->clearAllAssign();
     }
 
-    /** @deprecated Since Smarty 5. Use clearCache() instead. */
+    /** @deprecated Since Smarty 3.1. Use clearCache() instead. */
     public function clear_cache($tpl_file = null, $cache_id = null, $compile_id = null, $exp_time = null)
     {
         return $this->clearCache($tpl_file, $cache_id, $compile_id, $exp_time);
     }
 
-    /** @deprecated Since Smarty 5. Use clearAllCache() instead. */
+    /** @deprecated Since Smarty 3.1. Use clearAllCache() instead. */
     public function clear_all_cache($exp_time = null)
     {
         return $this->clearAllCache($exp_time);
     }
 
-    /** @deprecated Since Smarty 5. Use clearCompiledTemplate() instead. */
+    /** @deprecated Since Smarty 3.1. Use clearCompiledTemplate() instead. */
     public function clear_compiled_tpl($tpl_file = null, $compile_id = null, $exp_time = null)
     {
+        $this->reportLegacyApi('clear_compiled_tpl()', 'clearCompiledTemplate()');
+
         return $this->clearCompiledTemplate($tpl_file, $compile_id, $exp_time);
     }
 
-    /** @deprecated Since Smarty 5. Use templateExists() instead. */
+    /** @deprecated Since Smarty 3.1. Use templateExists() instead. */
     public function template_exists($tpl_file)
     {
         return $this->templateExists($tpl_file);
     }
 
-    /** @deprecated Since Smarty 5. Use getTemplateVars() instead. */
+    /** @deprecated Since Smarty 3.1. Use getTemplateVars() instead. */
     public function get_template_vars($name = null)
     {
         return $this->getTemplateVars($name);
     }
 
-    /** @deprecated Since Smarty 5. Use getConfigVars() instead. */
+    /** @deprecated Since Smarty 3.1. Use getConfigVars() instead. */
     public function get_config_vars($name = null)
     {
         return $this->getConfigVars($name);
     }
 
-    /** @deprecated Since Smarty 5. Use getRegisteredObject() instead. */
+    /** @deprecated Since Smarty 3.1. Use getRegisteredObject() instead. */
     public function get_registered_object($name)
     {
         return $this->getRegisteredObject($name);
     }
 
-    /** @deprecated Since Smarty 5. Use clearConfig() instead. */
+    /** @deprecated Since Smarty 3.1. Use clearConfig() instead. */
     public function clear_config($var = null)
     {
         $this->clearConfig($var);
     }
 
-    /** @deprecated Since Smarty 5. Use trigger_error() directly instead. */
+    /** @deprecated Since Smarty 3.1. Use trigger_error() directly instead. */
     public function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
         trigger_error('Smarty error: ' . $error_msg, $error_type);
