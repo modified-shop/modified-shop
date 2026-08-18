@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @phpcs:disable PSR1.Methods.CamelCapsMethodName
+*/
 use Modified\Storefront\Template\Smarty\ResourceNameTransformerInterface;
 use Modified\Storefront\Template\Smarty\SmartyConfigurator;
 use Smarty\Resource\BasePlugin;
