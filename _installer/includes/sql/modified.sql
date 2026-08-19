@@ -1681,6 +1681,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ACCOUNT_FAX', 'false', 5, 80, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ACCOUNT_OPTIONS', 'account', 5, 100, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'account\', \'guest\', \'both\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'DELETE_GUEST_ACCOUNT', 'true', 5, 110, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'DELETE_GUEST_ACCOUNT_DAYS', '1', 5, 115, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'GUEST_ACCOUNT_EDIT', 'false', 5, 120, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 
 # configuration_group_id 6, Module Options
@@ -2373,6 +2374,7 @@ INSERT INTO scheduled_tasks VALUES (4, 0, 0, 1, 'd', 0, 1, 'db_backup');
 INSERT INTO scheduled_tasks VALUES (5, 0, 0, 1, 'd', 0, 1, 'logs_maintenance');
 INSERT INTO scheduled_tasks VALUES (6, 0, 0, 1, 'd', 0, 1, 'currencies_update');
 INSERT INTO scheduled_tasks VALUES (7, 0, 0, 1, 'd', 0, 1, 'customers_ip_maintenance');
+INSERT INTO scheduled_tasks VALUES (8, 0, 0, 1, 'd', 1, 0, 'guest_account_maintenance');
 
 # shipping status
 INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '', 1);

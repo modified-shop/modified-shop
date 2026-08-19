@@ -51,7 +51,7 @@ $ajax_ext = preg_replace("/[^a-z0-9\\.\\_]/i", "", $_REQUEST['ext']);
 $ajax_ext_file = DIR_WS_INCLUDES . 'extra/ajax/' . $ajax_ext . '.php';
 
 // response type (e.g. json, xml or html): default is json
-$ajax_rt = (isset($_REQUEST['type']) ?  preg_replace("/[^h-x]/i", "", $_REQUEST['type']) : 'json');
+$ajax_rt = (isset($_REQUEST['type']) ?  preg_replace("/[^a-z]/i", "", $_REQUEST['type']) : 'json');
 if (isset($_REQUEST['type1']) && isset($_REQUEST['type2'])) {
   $ajax_rt1 = (isset($_REQUEST['type1']) ?  preg_replace("/[^a-z]/i", "", $_REQUEST['type1']) : 'application');
   $ajax_rt2 = (isset($_REQUEST['type2']) ?  preg_replace("/[^a-z]/i", "", $_REQUEST['type2']) : 'json');  

@@ -312,7 +312,7 @@
 
       // Create insert into admin access table if admin is created.
       if ($customers_status_c == '0') {
-        xtc_db_query("INSERT INTO ".TABLE_ADMIN_ACCESS." (customers_id,start) VALUES ('".$cc_id."','1')");
+        xtc_db_query("INSERT INTO ".TABLE_ADMIN_ACCESS." (customers_id) VALUES ('".$cc_id."')");
       }
 
       // Create eMail

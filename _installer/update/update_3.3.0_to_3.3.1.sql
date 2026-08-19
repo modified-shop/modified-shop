@@ -100,6 +100,19 @@ UPDATE `configuration` SET `configuration_value` = TRIM(BOTH ',' FROM REPLACE(CO
 #GTB - 2026-07-24 - update DPD tracking link
 UPDATE `carriers` SET `carrier_tracking_link` = 'https://my.dpd.de/redirect.aspx?action=2&parcelno=$1&locale=$2' WHERE `carrier_tracking_link` = 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2';
 
+#GTB - 2026-08-17 - move orphaned guest account cleanup out of the session gc into its own scheduled task (#3087)
+INSERT INTO `scheduled_tasks`
+  (`time_next`, `time_offset`, `time_regularity`, `time_unit`, `status`, `edit`, `tasks`)
+VALUES
+  (0, 0, 1, 'd', 1, 0, 'guest_account_maintenance')
+ON DUPLICATE KEY UPDATE
+  `time_next` = VALUES(`time_next`),
+  `time_offset` = VALUES(`time_offset`),
+  `time_regularity` = VALUES(`time_regularity`),
+  `time_unit` = VALUES(`time_unit`),
+  `status` = VALUES(`status`),
+  `edit` = VALUES(`edit`);
+
 #GTB - 2026-08-17 - backfill orders.languages_id for orders placed before this column existed (added 2014-01-05, never backfilled), so order::getOrderData() can read it directly
 UPDATE `orders` AS o
 JOIN `languages` AS l ON l.`directory` = o.`language`
