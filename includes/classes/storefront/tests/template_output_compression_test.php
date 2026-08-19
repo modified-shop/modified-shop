@@ -7,6 +7,13 @@ $assertions = 0;
 $temporaryDirectory = sys_get_temp_dir() . '/modified-template-output-' . bin2hex(random_bytes(8));
 $repositoryRoot = dirname(__DIR__, 4);
 
+define('TEMPLATE_ENGINE', 'smarty_5');
+define('DIR_FS_CATALOG', $temporaryDirectory . '/');
+define('DIR_FS_EXTERNAL', $repositoryRoot . '/includes/external/');
+define('DIR_WS_CATALOG', '/catalog/');
+define('CURRENT_TEMPLATE', 'child');
+define('RUN_MODE_INSTALLER', true);
+
 require_once $repositoryRoot . '/includes/classes/storefront/bootstrap.php';
 
 function assertOutput(bool $condition, string $message): void
@@ -50,11 +57,6 @@ function removeOutputTestDirectory(string $directory): void
 }
 
 try {
-    define('DIR_FS_CATALOG', $temporaryDirectory . '/');
-    define('DIR_FS_EXTERNAL', $repositoryRoot . '/includes/external/');
-    define('DIR_WS_CATALOG', '/catalog/');
-    define('CURRENT_TEMPLATE', 'child');
-
     $source = 'templates/parent/assets/source.js';
     writeOutputTestFile(DIR_FS_CATALOG . $source, 'const inherited = true;');
 

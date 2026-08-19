@@ -15,7 +15,6 @@
   
   // config
   define('EMAIL_SQL_ERRORS', 'false');
-  define('TEMPLATE_ENGINE', 'smarty_5');
   define('SEARCH_ENGINE_FRIENDLY_URLS', 'false');
   define('SESSION_FORCE_COOKIE_USE', 'True');
   define('DEFAULT_TEMPLATE', 'tpl_modified_responsive');
