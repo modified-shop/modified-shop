@@ -55,11 +55,7 @@
   }
     
   // smarty
-  $smarty = new Smarty();
-  $smarty->setTemplateDir(__DIR__.'/templates')
-         ->registerResource('file', new EvaledFileResource())
-         ->setConfigDir(__DIR__.'/lang')
-         ->SetCaching(0);
+  $smarty = create_installer_smarty();
   
   $payment_methods_array = array(
     'paypal',
