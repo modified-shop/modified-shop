@@ -18,12 +18,12 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // set cache id
 $cache_id = md5('lID:'.$_SESSION['language'].'cID:'.((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : '0'));
 
-if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_order_history.html', $cache_id) || !$cache) {
+if (!$box_smarty->is_cached(Template::resolve('boxes/box_order_history.html'), $cache_id) || !$cache) {
 
   if (isset($_SESSION['customer_id'])) {
 
@@ -52,7 +52,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_order_history.html', $c
       while ($orders = xtc_db_fetch_array($orders_query)) {
         $customer_orders_array[] = array(
           'PRODUCTS_LINK' => '<a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($orders['products_id'], $orders['products_name'])) . '">' . $orders['products_name'] . '</a>',
-          'ORDER_LINK' => '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=add_order_product&order_id='.$orders['orders_id'].'&id='.$orders['orders_products_id']) . '">' . xtc_image_button('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART) . '</a>',
+          'ORDER_LINK' => '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=add_order_product&order_id='.$orders['orders_id'].'&id='.$orders['orders_products_id']) . '">' . xtc_image_button(Template::url('img/icon_cart.png') , ICON_CART) . '</a>',
         );
       }
     }
@@ -62,9 +62,9 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_order_history.html', $c
 }
 
 if (!$cache) {
-  $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html');
+  $box_order_history = $box_smarty->fetch(Template::resolve('boxes/box_order_history.html'));
 } else {
-  $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html', $cache_id);
+  $box_order_history = $box_smarty->fetch(Template::resolve('boxes/box_order_history.html'), $cache_id);
 }
 
 $smarty->assign('box_HISTORY', $box_order_history);

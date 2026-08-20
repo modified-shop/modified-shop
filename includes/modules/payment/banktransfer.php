@@ -438,7 +438,7 @@
         $smarty->assign('PAYMENT_BANKTRANSFER_IBAN', substr($banktransfer_data['banktransfer_iban'], 0, 8) . str_repeat('*', (strlen($banktransfer_data['banktransfer_iban']) - 10)) . substr($banktransfer_data['banktransfer_iban'], -2));
         $smarty->assign('PAYMENT_BANKTRANSFER_BANKNAME', $banktransfer_data['banktransfer_bankname']);
       
-        $sepa_info = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/sepa_info.html');
+        $sepa_info = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/sepa_info.html'));
         
         $success = array(
           array(

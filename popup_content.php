@@ -24,7 +24,11 @@ if (!isset($_GET['coID']) || $_GET['coID'] == '' || count($content_data) < 1) {
 
 $popup_smarty = new Smarty();
 $popup_smarty->assign('language', $_SESSION['language']);
-$popup_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$popup_smarty->assign('tpl_path', Template::url(''));
+
 $popup_smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
 $popup_smarty->assign('doctype', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''));
 $popup_smarty->assign('charset', $_SESSION['language_charset']);
@@ -38,4 +42,4 @@ $popup_smarty->assign('content_heading', $content_data['content_heading']);
 $popup_smarty->assign('content_text', $content_data['content_text']);
 
 $popup_smarty->caching = 0;
-$popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_content.html');
+$popup_smarty->display(Template::resolve('module/popup_content.html'));

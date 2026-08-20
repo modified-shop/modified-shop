@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include smarty
-  include (DIR_FS_BOXES_INC . 'smarty_default.php');
+  include (Template::path('source/inc/smarty_default.php'));
 
   // include needed functions
   require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
@@ -124,6 +124,6 @@
   }
   
   $box_smarty->caching = 0;
-  $box_cart = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_cart.html');
+  $box_cart = $box_smarty->fetch(Template::resolve('boxes/box_cart.html'));
 
   $smarty->assign('box_CART', $box_cart);

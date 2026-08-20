@@ -10,7 +10,7 @@
       <div class="layout_header_inner">
         <div class="flex_header_row">
 
-          <div class="col_logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name}"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name}" /></a></div>
+          <div class="col_logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name}"><img src="{template_asset path='img/logo_head.png'}" alt="{$store_name}" /></a></div>
           <div class="col_filler"></div>
     
           {if isset($box_SEARCH)}
@@ -91,7 +91,7 @@
     <div class="layout_header_checkout">
       <div class="layout_header_checkout_inner">
         <div class="flex_header_checkout_row">
-          <div class="col_logo_checkout"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name}" /></div>
+          <div class="col_logo_checkout"><img src="{template_asset path='img/logo_head.png'}" alt="{$store_name}" /></div>
           <div class="col_logo_back">
             {if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_CHECKOUT_SUCCESS) !== false}
               <a href="{$index}" title="{#link_index#} &bull; {$store_name}">{#header_back_to_shop#}</a>

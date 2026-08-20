@@ -12,7 +12,10 @@
 
 $categorie_smarty = new Smarty();
 $categorie_smarty->assign('language', $_SESSION['language']);
-$categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$categorie_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -30,7 +33,7 @@ if (!CacheCheck()) {
 $categorie_template = 'sub_categories_listing.html';
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/categories_listing/categories_smarty/','php') as $file) require_once ($file);
 
-if (!$categorie_smarty->is_cached(CURRENT_TEMPLATE.'/module/'.$categorie_template, $cache_id) || !$cache) {
+if (!$categorie_smarty->is_cached(Template::resolve('module/' . $categorie_template), $cache_id) || !$cache) {
   if (MAX_DISPLAY_CATEGORIES_PER_ROW > 0) {
     if (isset ($cPath) && preg_match('/_/', $cPath)) { 
       $category_links = array_reverse($cPath_array);
@@ -114,7 +117,7 @@ if (!$categorie_smarty->is_cached(CURRENT_TEMPLATE.'/module/'.$categorie_templat
   }
 }
 
-$module = $categorie_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$categorie_template, $cache_id);
+$module = $categorie_smarty->fetch(Template::resolve('module/' . $categorie_template), $cache_id);
 
 if (isset($module_smarty) && is_object($module_smarty)) {
   $module_smarty->assign('CATEGORIES_LISTING', !empty($module) ? trim($module) : $module);

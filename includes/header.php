@@ -111,14 +111,14 @@ Please visit our website: www.modified-shop.org
 if (DIR_WS_BASE == '') {
   echo '<base href="'.(($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'" />'.PHP_EOL;
 }
-if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
-  require(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/general.css.php');
+if (Template::findPath('css/general.css.php') !== null) {
+  require Template::path('css/general.css.php');
 } else { //Maintain backwards compatibility for older templates 
-  echo '<link rel="stylesheet" type="text/css" href="'.DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/stylesheet.css" />'.PHP_EOL;
+  echo '<link rel="stylesheet" type="text/css" href="' . Template::url('stylesheet.css') . '" />' . PHP_EOL;
 }
 
 // require theme based javascript
-require(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
+require Template::path('javascript/general.js.php');
 
 // require additional javascript
 switch(basename($PHP_SELF)) {
@@ -152,7 +152,7 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_head/','php') 
 if ($shop_is_offline) {
   $smarty->assign('language', $_SESSION['language']);
   $smarty->assign('shop_offline_msg', xtc_get_shop_conf('SHOP_OFFLINE_MSG'));	
-  $smarty->display(CURRENT_TEMPLATE.'/offline.html');	
+  $smarty->display(Template::resolve('offline.html'));
   include ('includes/application_bottom.php');
   exit();
 }

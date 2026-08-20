@@ -57,5 +57,5 @@
     }
     
     $module_smarty->caching = 0;
-    $shipping_block = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_shipping_block.html');
+    $shipping_block = $module_smarty->fetch(Template::resolve('module/checkout_shipping_block.html'));
   }

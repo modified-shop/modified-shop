@@ -18,7 +18,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_categories.inc.php');
@@ -36,7 +36,7 @@ $box_smarty->assign('FORM_END', '</form>');
 $box_smarty->assign('LINK_ADVANCED', xtc_href_link(FILENAME_ADVANCED_SEARCH));
 
 $box_smarty->caching = 0;
-$box_search = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_search.html');
+$box_search = $box_smarty->fetch(Template::resolve('boxes/box_search.html'));
 
 $smarty->assign('box_SEARCH',$box_search);
 ?>

@@ -17,12 +17,12 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // set cache id
 $cache_id = md5('lID:'.$_SESSION['language'].'|curr:'.$_SESSION['currency'].'|site:'.basename($PHP_SELF).'|params:'.xtc_get_all_get_params(array('currency', 'language')));
 
-if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cache_id) || !$cache) {
+if (!$box_smarty->is_cached(Template::resolve('boxes/box_currencies.html'), $cache_id) || !$cache) {
 
   $currencies_array = array();
   if (isset($xtPrice) && is_object($xtPrice)) {
@@ -58,9 +58,9 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cach
 }
 
 if (!$cache) {
-  $box_currencies = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_currencies.html');
+  $box_currencies = $box_smarty->fetch(Template::resolve('boxes/box_currencies.html'));
 } else {
-  $box_currencies = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cache_id);
+  $box_currencies = $box_smarty->fetch(Template::resolve('boxes/box_currencies.html'), $cache_id);
 }
 
 $smarty->assign('box_CURRENCIES', $box_currencies);

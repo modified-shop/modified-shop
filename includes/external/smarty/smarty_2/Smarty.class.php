@@ -35,8 +35,14 @@
  * define smarty plugindir in template
  */
 define('MY_TEMPLATE', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE); //modified shop
-define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty'); //modified shop
-define('MY_TEMPLATE_LANG', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/lang'); //modified shop
+define(
+    'MY_TEMPLATE_PLUGINS',
+    Template::findPath('smarty') ?? MY_TEMPLATE . '/smarty'
+); //modified shop
+define(
+    'MY_TEMPLATE_LANG',
+    Template::findPath('lang') ?? MY_TEMPLATE . '/lang'
+); //modified shop
 define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins');//modified shop
 
 /**

@@ -185,6 +185,8 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
+require_once (DIR_WS_CLASSES.'storefront/bootstrap.php');
+
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top/application_top_begin/','php') as $file) require ($file);
 
 // Set the length of the redeem code, the longer the more secure

@@ -53,8 +53,12 @@ if ((isset($_SESSION['customer_id'])
 
   // assign language to template for caching
   $smarty->assign('language', $order->info['language']);
-  $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-  $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+  // Legacy compatibility for custom templates.
+  // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+  $smarty->assign('tpl_path', Template::absoluteUrl(''));
+  $smarty->assign('logo_path', Template::absoluteUrl('img/'));
+
   $smarty->assign('oID', $order->info['order_id']);
 
   //shipping method
@@ -155,8 +159,8 @@ if ((isset($_SESSION['customer_id'])
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/data/','php') as $file) require ($file);
   
   $smarty->caching = 0;
-  $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
-  $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
+  $html_mail = $smarty->fetch(Template::resolve('mail/' . $order->info['language'] . '/order_mail.html'));
+  $txt_mail = $smarty->fetch(Template::resolve('mail/' . $order->info['language'] . '/order_mail.txt'));
   
   // create subject
   $order_subject = str_replace('{$nr}', $insert_id, EMAIL_BILLING_SUBJECT_ORDER);
@@ -272,5 +276,5 @@ if ((isset($_SESSION['customer_id'])
 } else {
   $smarty->assign('language', $_SESSION['language']);
   $smarty->assign('ERROR', 'You are not allowed to view this order!');
-  $smarty->display(CURRENT_TEMPLATE.'/module/error_message.html');
+  $smarty->display(Template::resolve('module/error_message.html'));
 }

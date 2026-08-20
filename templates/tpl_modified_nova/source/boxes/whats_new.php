@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include smarty
-  include(DIR_FS_BOXES_INC . 'smarty_default.php');
+  include(Template::path('source/inc/smarty_default.php'));
 
   $days = '';
   if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
@@ -23,7 +23,7 @@
   // reset cache id
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$products_id.'|days:'.(int)MAX_DISPLAY_NEW_PRODUCTS_DAYS.'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 
-  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_whatsnew.html', $cache_id) || !$cache) {
+  if (!$box_smarty->is_cached(Template::resolve('boxes/box_whatsnew.html'), $cache_id) || !$cache) {
     // get random product data
     if (MAX_DISPLAY_NEW_PRODUCTS != '0' || $current_category_id != 0) {
       $whats_new_query = xtDBquery("SELECT DISTINCT ".$product->default_select."
@@ -64,6 +64,6 @@
     }
   }
 
-  $box_whats_new = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_whatsnew.html', $cache_id);
+  $box_whats_new = $box_smarty->fetch(Template::resolve('boxes/box_whatsnew.html'), $cache_id);
 
   $smarty->assign('box_WHATSNEW', $box_whats_new);
