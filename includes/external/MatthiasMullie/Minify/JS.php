@@ -504,7 +504,7 @@ class JS extends Minify
                     $is_expression = ($word_before_last === 'async' && !$had_line_terminator)
                         ? $async_precedes_value
                         : ($precedes_value && !$after_default);
-                    if ($is_expression) {
+                    if ($is_expression && !$this->nextSignificantCharIsColon($content, $offset, $length)) {
                         $pending_expression_bodies[] = count($paren_kinds);
                     }
                 }
@@ -892,6 +892,55 @@ class JS extends Minify
                 return true;
             }
             $offset++;
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether the next significant character at/after $offset (skipping
+     * whitespace and comments) is ":" - no grammar production ever
+     * follows the "function"/"class" keyword directly with one, so this
+     * is an unambiguous signal that the word just consumed was actually
+     * a property/binding name (e.g. "{function: f}"), not the keyword.
+     *
+     * @param string $content
+     * @param int $offset
+     * @param int $length
+     * @return bool
+     */
+    private function nextSignificantCharIsColon($content, $offset, $length)
+    {
+        while ($offset < $length) {
+            $whitespace_length = $this->matchJsWhitespace($content, $offset, $length);
+            if ($whitespace_length > 0) {
+                $offset += $whitespace_length;
+                continue;
+            }
+
+            if ($content[$offset] === '/' && $offset + 1 < $length && $content[$offset + 1] === '/') {
+                $offset += 2;
+                while ($offset < $length
+                    && $content[$offset] !== "\n"
+                    && $content[$offset] !== "\r"
+                    && substr($content, $offset, 3) !== "\xE2\x80\xA8"
+                    && substr($content, $offset, 3) !== "\xE2\x80\xA9"
+                ) {
+                    $offset++;
+                }
+                continue;
+            }
+
+            if ($content[$offset] === '/' && $offset + 1 < $length && $content[$offset + 1] === '*') {
+                $comment_end = strpos($content, '*/', $offset + 2);
+                if ($comment_end === false) {
+                    return false;
+                }
+                $offset = $comment_end + 2;
+                continue;
+            }
+
+            return $content[$offset] === ':';
         }
 
         return false;
@@ -1342,7 +1391,7 @@ class JS extends Minify
                     $is_expression = ($word_before_last === 'async' && !$had_line_terminator)
                         ? $async_precedes_value
                         : ($precedes_value && !$after_default);
-                    if ($is_expression) {
+                    if ($is_expression && !$this->nextSignificantCharIsColon($content, $offset, $length)) {
                         $pending_expression_bodies[] = count($paren_kinds);
                     }
                 }
