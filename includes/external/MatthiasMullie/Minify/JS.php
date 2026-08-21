@@ -373,7 +373,9 @@ class JS extends Minify
         // skips a whole template literal as one opaque token and never
         // looks inside a "${...}" interpolation itself.
         $brace_kinds = array();
+        $brace_open_depths = array();
         $paren_kinds = array();
+        $bracket_depth = 0;
         $ternary_brace_depths = array();
         $pending_expression_bodies = array();
         $async_precedes_value = false;
@@ -403,6 +405,7 @@ class JS extends Minify
                     $is_value = $this->precedesValueBrace($last_char, $last_word);
                     $brace_kinds[] = $is_value ? 'value' : 'block';
                 }
+                $brace_open_depths[] = count($paren_kinds) + $bracket_depth;
                 $offset++;
                 $last_char = '{';
                 $last_word = '';
@@ -416,6 +419,7 @@ class JS extends Minify
                     return $offset + 1;
                 }
                 $kind = array_pop($brace_kinds);
+                array_pop($brace_open_depths);
                 $offset++;
                 $last_char = ($kind === 'block') ? '' : '}';
                 $last_word = '';
@@ -440,6 +444,22 @@ class JS extends Minify
                 continue;
             }
 
+            if ($character === '[') {
+                $bracket_depth++;
+                $offset++;
+                $last_char = '[';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === ']') {
+                $bracket_depth = max(0, $bracket_depth - 1);
+                $offset++;
+                $last_char = ']';
+                $last_word = '';
+                continue;
+            }
+
             if ($character === '?' && !($offset + 1 < $length && ($content[$offset + 1] === '.' || $content[$offset + 1] === '?'))) {
                 $ternary_brace_depths[] = count($brace_kinds);
                 $offset++;
@@ -456,7 +476,9 @@ class JS extends Minify
                 continue;
             }
 
-            if ($character === ':' && $brace_kinds && end($brace_kinds) === 'value') {
+            if ($character === ':' && $brace_kinds && end($brace_kinds) === 'value'
+                && end($brace_open_depths) === count($paren_kinds) + $bracket_depth
+            ) {
                 $offset++;
                 $last_char = '';
                 $last_word = ':value';
@@ -464,7 +486,8 @@ class JS extends Minify
             }
 
             $is_property_key_position = ($last_char === '{' || $last_char === ',')
-                && $brace_kinds && end($brace_kinds) === 'value';
+                && $brace_kinds && end($brace_kinds) === 'value'
+                && end($brace_open_depths) === count($paren_kinds) + $bracket_depth;
             $precedes_value = !$is_property_key_position && $this->precedesValueBrace($last_char, $last_word);
             $is_identifier_token = $this->matchJsIdentifierChar($content, $offset, $length) > 0;
             $token_start = $offset;
@@ -1158,7 +1181,9 @@ class JS extends Minify
         $last_word = '';
         $word_before_last = '';
         $brace_kinds = array();
+        $brace_open_depths = array();
         $paren_kinds = array();
+        $bracket_depth = 0;
         $ternary_brace_depths = array();
         $pending_expression_bodies = array();
         $async_precedes_value = false;
@@ -1175,6 +1200,7 @@ class JS extends Minify
                     $is_value = $this->precedesValueBrace($last_char, $last_word);
                     $brace_kinds[] = $is_value ? 'value' : 'block';
                 }
+                $brace_open_depths[] = count($paren_kinds) + $bracket_depth;
                 $offset++;
                 $last_char = '{';
                 $last_word = '';
@@ -1183,6 +1209,7 @@ class JS extends Minify
 
             if ($character === '}') {
                 $kind = array_pop($brace_kinds);
+                array_pop($brace_open_depths);
                 $offset++;
                 // Right after a block statement is a fresh statement
                 // boundary, not "a value was just produced" - empty
@@ -1211,6 +1238,22 @@ class JS extends Minify
                 continue;
             }
 
+            if ($character === '[') {
+                $bracket_depth++;
+                $offset++;
+                $last_char = '[';
+                $last_word = '';
+                continue;
+            }
+
+            if ($character === ']') {
+                $bracket_depth = max(0, $bracket_depth - 1);
+                $offset++;
+                $last_char = ']';
+                $last_word = '';
+                continue;
+            }
+
             if ($character === '?' && !($offset + 1 < $length && ($content[$offset + 1] === '.' || $content[$offset + 1] === '?'))) {
                 // Bare "?" is the ternary operator; "?."/"??"/"??=" need
                 // no matching ":". Records the brace nesting depth it was
@@ -1231,7 +1274,9 @@ class JS extends Minify
                 continue;
             }
 
-            if ($character === ':' && $brace_kinds && end($brace_kinds) === 'value') {
+            if ($character === ':' && $brace_kinds && end($brace_kinds) === 'value'
+                && end($brace_open_depths) === count($paren_kinds) + $bracket_depth
+            ) {
                 $offset++;
                 $last_char = '';
                 $last_word = ':value';
@@ -1279,7 +1324,8 @@ class JS extends Minify
             }
 
             $is_property_key_position = ($last_char === '{' || $last_char === ',')
-                && $brace_kinds && end($brace_kinds) === 'value';
+                && $brace_kinds && end($brace_kinds) === 'value'
+                && end($brace_open_depths) === count($paren_kinds) + $bracket_depth;
             $precedes_value = !$is_property_key_position && $this->precedesValueBrace($last_char, $last_word);
             $is_identifier_token = $this->matchJsIdentifierChar($content, $offset, $length) > 0;
             $token_start = $offset;
