@@ -374,7 +374,7 @@ class JS extends Minify
         // looks inside a "${...}" interpolation itself.
         $brace_kinds = array();
         $paren_kinds = array();
-        $ternary_depth = 0;
+        $ternary_brace_depths = array();
         $word_before_last = '';
         // Sentinel, not "{": interpolation content is always an
         // expression, so a "{" right at the start (e.g. "${{a:1}}") must
@@ -433,15 +433,15 @@ class JS extends Minify
             }
 
             if ($character === '?' && !($offset + 1 < $length && ($content[$offset + 1] === '.' || $content[$offset + 1] === '?'))) {
-                $ternary_depth++;
+                $ternary_brace_depths[] = count($brace_kinds);
                 $offset++;
                 $last_char = '?';
                 $last_word = '';
                 continue;
             }
 
-            if ($character === ':' && $ternary_depth > 0) {
-                $ternary_depth--;
+            if ($character === ':' && $ternary_brace_depths && end($ternary_brace_depths) === count($brace_kinds)) {
+                array_pop($ternary_brace_depths);
                 $offset++;
                 $last_char = '';
                 $last_word = ':value';
@@ -1129,7 +1129,7 @@ class JS extends Minify
         $word_before_last = '';
         $brace_kinds = array();
         $paren_kinds = array();
-        $ternary_depth = 0;
+        $ternary_brace_depths = array();
 
         while ($offset < $length) {
             $character = $content[$offset];
@@ -1175,16 +1175,18 @@ class JS extends Minify
 
             if ($character === '?' && !($offset + 1 < $length && ($content[$offset + 1] === '.' || $content[$offset + 1] === '?'))) {
                 // Bare "?" is the ternary operator; "?."/"??"/"??=" need
-                // no matching ":".
-                $ternary_depth++;
+                // no matching ":". Records the brace nesting depth it was
+                // seen at, so its own ":" can be told apart from a
+                // property colon at a deeper nesting level.
+                $ternary_brace_depths[] = count($brace_kinds);
                 $offset++;
                 $last_char = '?';
                 $last_word = '';
                 continue;
             }
 
-            if ($character === ':' && $ternary_depth > 0) {
-                $ternary_depth--;
+            if ($character === ':' && $ternary_brace_depths && end($ternary_brace_depths) === count($brace_kinds)) {
+                array_pop($ternary_brace_depths);
                 $offset++;
                 $last_char = '';
                 $last_word = ':value';
