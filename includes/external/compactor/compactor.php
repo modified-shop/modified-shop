@@ -142,15 +142,10 @@ class Compactor
         }
 
         $implementation_time = (int)@filemtime(__FILE__);
-        $vendor_directory = dirname(__DIR__).'/MatthiasMullie';
-        if (!is_dir($vendor_directory)) {
-            return $implementation_time;
-        }
-        $implementation_time = max($implementation_time, (int)@filemtime($vendor_directory));
 
         try {
             $iterator = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($vendor_directory, FilesystemIterator::SKIP_DOTS),
+                new RecursiveDirectoryIterator(__DIR__, FilesystemIterator::SKIP_DOTS),
                 RecursiveIteratorIterator::SELF_FIRST
             );
             foreach ($iterator as $file) {
@@ -931,7 +926,7 @@ class Compactor
      */
     private function _createMinifier($css, $allow_file_import = true)
     {
-        require_once dirname(__DIR__).'/MatthiasMullie/autoload.php';
+        require_once __DIR__.'/autoload.php';
 
         if ($css) {
             $minifier = new class extends MatthiasMullie\Minify\CSS {
