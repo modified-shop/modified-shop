@@ -377,6 +377,7 @@ class JS extends Minify
         $ternary_brace_depths = array();
         $pending_expression_bodies = array();
         $async_precedes_value = false;
+        $had_line_terminator = false;
         $word_before_last = '';
         // Sentinel, not "{": interpolation content is always an
         // expression, so a "{" right at the start (e.g. "${{a:1}}") must
@@ -462,22 +463,31 @@ class JS extends Minify
                 continue;
             }
 
-            $precedes_value = $this->precedesValueBrace($last_char, $last_word);
+            $is_property_key_position = ($last_char === '{' || $last_char === ',')
+                && $brace_kinds && end($brace_kinds) === 'value';
+            $precedes_value = !$is_property_key_position && $this->precedesValueBrace($last_char, $last_word);
             $is_identifier_token = $this->matchJsIdentifierChar($content, $offset, $length) > 0;
+            $token_start = $offset;
             if ($is_identifier_token) {
                 $word_before_last = $last_word;
             }
             $offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
 
             if ($is_identifier_token) {
+                $after_default = ($word_before_last === 'default');
                 if ($last_word === 'async') {
-                    $async_precedes_value = $precedes_value;
+                    $async_precedes_value = $precedes_value && !$after_default;
                 } elseif ($last_word === 'function' || $last_word === 'class') {
-                    $is_expression = ($word_before_last === 'async') ? $async_precedes_value : $precedes_value;
+                    $is_expression = ($word_before_last === 'async' && !$had_line_terminator)
+                        ? $async_precedes_value
+                        : ($precedes_value && !$after_default);
                     if ($is_expression) {
                         $pending_expression_bodies[] = count($paren_kinds);
                     }
                 }
+                $had_line_terminator = false;
+            } elseif ($this->rangeContainsLineTerminator($content, $token_start, $offset)) {
+                $had_line_terminator = true;
             }
         }
 
@@ -1152,6 +1162,7 @@ class JS extends Minify
         $ternary_brace_depths = array();
         $pending_expression_bodies = array();
         $async_precedes_value = false;
+        $had_line_terminator = false;
 
         while ($offset < $length) {
             $character = $content[$offset];
@@ -1267,22 +1278,31 @@ class JS extends Minify
                 }
             }
 
-            $precedes_value = $this->precedesValueBrace($last_char, $last_word);
+            $is_property_key_position = ($last_char === '{' || $last_char === ',')
+                && $brace_kinds && end($brace_kinds) === 'value';
+            $precedes_value = !$is_property_key_position && $this->precedesValueBrace($last_char, $last_word);
             $is_identifier_token = $this->matchJsIdentifierChar($content, $offset, $length) > 0;
+            $token_start = $offset;
             if ($is_identifier_token) {
                 $word_before_last = $last_word;
             }
             $offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
 
             if ($is_identifier_token) {
+                $after_default = ($word_before_last === 'default');
                 if ($last_word === 'async') {
-                    $async_precedes_value = $precedes_value;
+                    $async_precedes_value = $precedes_value && !$after_default;
                 } elseif ($last_word === 'function' || $last_word === 'class') {
-                    $is_expression = ($word_before_last === 'async') ? $async_precedes_value : $precedes_value;
+                    $is_expression = ($word_before_last === 'async' && !$had_line_terminator)
+                        ? $async_precedes_value
+                        : ($precedes_value && !$after_default);
                     if ($is_expression) {
                         $pending_expression_bodies[] = count($paren_kinds);
                     }
                 }
+                $had_line_terminator = false;
+            } elseif ($this->rangeContainsLineTerminator($content, $token_start, $offset)) {
+                $had_line_terminator = true;
             }
         }
 
