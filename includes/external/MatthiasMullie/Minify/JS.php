@@ -375,6 +375,8 @@ class JS extends Minify
         $brace_kinds = array();
         $paren_kinds = array();
         $ternary_brace_depths = array();
+        $pending_expression_bodies = array();
+        $async_precedes_value = false;
         $word_before_last = '';
         // Sentinel, not "{": interpolation content is always an
         // expression, so a "{" right at the start (e.g. "${{a:1}}") must
@@ -393,8 +395,13 @@ class JS extends Minify
             }
 
             if ($character === '{') {
-                $is_value = $this->precedesValueBrace($last_char, $last_word);
-                $brace_kinds[] = $is_value ? 'value' : 'block';
+                if ($pending_expression_bodies && end($pending_expression_bodies) === count($paren_kinds)) {
+                    array_pop($pending_expression_bodies);
+                    $brace_kinds[] = 'expression_body';
+                } else {
+                    $is_value = $this->precedesValueBrace($last_char, $last_word);
+                    $brace_kinds[] = $is_value ? 'value' : 'block';
+                }
                 $offset++;
                 $last_char = '{';
                 $last_word = '';
@@ -455,10 +462,23 @@ class JS extends Minify
                 continue;
             }
 
-            if ($this->matchJsIdentifierChar($content, $offset, $length) > 0) {
+            $precedes_value = $this->precedesValueBrace($last_char, $last_word);
+            $is_identifier_token = $this->matchJsIdentifierChar($content, $offset, $length) > 0;
+            if ($is_identifier_token) {
                 $word_before_last = $last_word;
             }
             $offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
+
+            if ($is_identifier_token) {
+                if ($last_word === 'async') {
+                    $async_precedes_value = $precedes_value;
+                } elseif ($last_word === 'function' || $last_word === 'class') {
+                    $is_expression = ($word_before_last === 'async') ? $async_precedes_value : $precedes_value;
+                    if ($is_expression) {
+                        $pending_expression_bodies[] = count($paren_kinds);
+                    }
+                }
+            }
         }
 
         return $length;
@@ -1130,13 +1150,20 @@ class JS extends Minify
         $brace_kinds = array();
         $paren_kinds = array();
         $ternary_brace_depths = array();
+        $pending_expression_bodies = array();
+        $async_precedes_value = false;
 
         while ($offset < $length) {
             $character = $content[$offset];
 
             if ($character === '{') {
-                $is_value = $this->precedesValueBrace($last_char, $last_word);
-                $brace_kinds[] = $is_value ? 'value' : 'block';
+                if ($pending_expression_bodies && end($pending_expression_bodies) === count($paren_kinds)) {
+                    array_pop($pending_expression_bodies);
+                    $brace_kinds[] = 'expression_body';
+                } else {
+                    $is_value = $this->precedesValueBrace($last_char, $last_word);
+                    $brace_kinds[] = $is_value ? 'value' : 'block';
+                }
                 $offset++;
                 $last_char = '{';
                 $last_word = '';
@@ -1240,10 +1267,23 @@ class JS extends Minify
                 }
             }
 
-            if ($this->matchJsIdentifierChar($content, $offset, $length) > 0) {
+            $precedes_value = $this->precedesValueBrace($last_char, $last_word);
+            $is_identifier_token = $this->matchJsIdentifierChar($content, $offset, $length) > 0;
+            if ($is_identifier_token) {
                 $word_before_last = $last_word;
             }
             $offset = $this->skipJsToken($content, $offset, $length, $last_char, $last_word);
+
+            if ($is_identifier_token) {
+                if ($last_word === 'async') {
+                    $async_precedes_value = $precedes_value;
+                } elseif ($last_word === 'function' || $last_word === 'class') {
+                    $is_expression = ($word_before_last === 'async') ? $async_precedes_value : $precedes_value;
+                    if ($is_expression) {
+                        $pending_expression_bodies[] = count($paren_kinds);
+                    }
+                }
+            }
         }
 
         return $content;
