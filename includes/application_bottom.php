@@ -72,8 +72,8 @@ session_write_close();
 xtc_db_close();
 
 // end of page
-echo '</body>';
-echo '</html>';
+echo PHP_EOL.'</body>';
+echo PHP_EOL.'</html>';
 
 // gzip compression
 if (GZIP_COMPRESSION == 'true' 
@@ -85,4 +85,3 @@ if (GZIP_COMPRESSION == 'true'
 {
   xtc_gzip_output(GZIP_LEVEL);
 }
-?>
