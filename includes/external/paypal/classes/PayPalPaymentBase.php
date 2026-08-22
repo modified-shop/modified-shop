@@ -57,7 +57,7 @@ class PayPalPaymentBase extends PayPalCommon {
     global $order;
 
     $this->code = $class;
-    $this->paypal_version = '1.109';
+    $this->paypal_version = '1.110';
 
     $this->admin_access_array = array(
       'paypal_info',
@@ -80,11 +80,11 @@ class PayPalPaymentBase extends PayPalCommon {
     $this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
   
     if ($this->check_install() === true) {
-      $this->order_status_success = (($this->get_config('PAYPAL_ORDER_STATUS_SUCCESS_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_SUCCESS_ID') : DEFAULT_ORDERS_STATUS_ID);
-      $this->order_status_rejected = (($this->get_config('PAYPAL_ORDER_STATUS_REJECTED_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_REJECTED_ID') : DEFAULT_ORDERS_STATUS_ID);
-      $this->order_status_pending = (($this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') : DEFAULT_ORDERS_STATUS_ID);
-      $this->order_status_capture = (($this->get_config('PAYPAL_ORDER_STATUS_CAPTURED_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_CAPTURED_ID') : DEFAULT_ORDERS_STATUS_ID);
-      $this->order_status_tmp = (($this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') : DEFAULT_ORDERS_STATUS_ID);
+      $this->order_status_success = (int) (($this->get_config('PAYPAL_ORDER_STATUS_SUCCESS_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_SUCCESS_ID') : DEFAULT_ORDERS_STATUS_ID);
+      $this->order_status_rejected = (int) (($this->get_config('PAYPAL_ORDER_STATUS_REJECTED_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_REJECTED_ID') : DEFAULT_ORDERS_STATUS_ID);
+      $this->order_status_pending = (int) (($this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') : DEFAULT_ORDERS_STATUS_ID);
+      $this->order_status_capture = (int) (($this->get_config('PAYPAL_ORDER_STATUS_CAPTURED_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_CAPTURED_ID') : DEFAULT_ORDERS_STATUS_ID);
+      $this->order_status_tmp = (int) (($this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') : DEFAULT_ORDERS_STATUS_ID);
 
       $this->tmpOrders = true;
       $this->tmpStatus = $this->order_status_tmp;
@@ -241,10 +241,35 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function use_express_checkout_confirmation() {
+    if (in_array($this->code, array('paypalcart', 'paypalexpress'), true)) {
+      return (defined('MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT')
+              && MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT != 'False');
+    }
+
+    return (in_array($this->code, array('paypalapplepay', 'paypalgooglepay'), true)
+            && isset($_SESSION['paypal']['wallet_express'])
+            && $_SESSION['paypal']['wallet_express'] === true);
+  }
+
+
+  static function clear_wallet_checkout_state() {
+    unset($_SESSION['paypal']);
+    unset($_SESSION['payment_nonce']);
+
+    if (isset($_SESSION['payment'])
+        && in_array($_SESSION['payment'], array('paypalapplepay', 'paypalgooglepay'), true)
+        )
+    {
+      unset($_SESSION['payment']);
+    }
+  }
+
+
   function pre_confirmation_check() {
     global $order, $smarty, $total_weight, $total_count, $free_shipping;
     
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
+    if ($this->use_express_checkout_confirmation() !== true) {
       return false;
     }
 
@@ -296,7 +321,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function confirmation() {
     global $order, $smarty, $xtPrice, $main, $messageStack, $total_weight, $total_count, $free_shipping;
     
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
+    if ($this->use_express_checkout_confirmation() !== true) {
       return false;
     }
 
@@ -336,6 +361,12 @@ class PayPalPaymentBase extends PayPalCommon {
         )
     {
       $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
+      if (isset($_SESSION['paypal']['wallet_express'])
+          && $_SESSION['paypal']['wallet_express'] === true
+          )
+      {
+        self::clear_wallet_checkout_state();
+      }
       xtc_redirect(xtc_href_link((($this->code == 'paypalcart') ? FILENAME_CHECKOUT_SHIPPING : FILENAME_CHECKOUT_PAYMENT), '', 'SSL'));
     }
     
@@ -488,7 +519,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function process_button() {
     global $smarty, $main, $messageStack;
     
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False') {
+    if ($this->use_express_checkout_confirmation() !== true) {
       return false;
     }
 
@@ -573,7 +604,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function before_process() {
     global $messageStack, $order;
 
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || MODULE_PAYMENT_PAYPALEXPRESS_SHORT_CHECKOUT == 'False' || isset($_SESSION['tmp_oID'])) {
+    if ($this->use_express_checkout_confirmation() !== true || isset($_SESSION['tmp_oID'])) {
       return false;
     }
         
@@ -641,10 +672,15 @@ class PayPalPaymentBase extends PayPalCommon {
         }
       }
 
-      if ($this->code == 'paypalexpress') {
+      if (in_array($this->code, array('paypalexpress', 'paypalapplepay', 'paypalgooglepay'), true)) {
         $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
         
-        if (isset($PayPalOrder->status) && !in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+        if (!is_object($PayPalOrder)
+            || !isset($PayPalOrder->status)
+            || !in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)
+            )
+        {
+          unset($_SESSION['paypal']);
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
         }
       }
@@ -885,6 +921,58 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function get_paypal_link_token($orders_id, $email) {
+    $secret = ((defined('MODULE_PAYMENT_PAYPAL_SECRET')) ? MODULE_PAYMENT_PAYPAL_SECRET : '');
+    return hash_hmac('sha256', $orders_id.'|'.$email, $secret);
+  }
+
+
+  function is_valid_paypal_link_token($key, $orders_id, $email) {
+    if (!is_string($key)) {
+      return false;
+    }
+
+    $token = $this->get_paypal_link_token($orders_id, $email);
+    if (strlen($key) === 64) {
+      return hash_equals($token, $key);
+    }
+
+    if (strlen($key) !== 32) {
+      return false;
+    }
+
+    $migration_timestamp = (int)$this->get_config('PAYPAL_LINK_TOKEN_MIGRATION_TIMESTAMP', false);
+    if ($migration_timestamp <= 0
+        || time() > ($migration_timestamp + 30 * 24 * 60 * 60)
+        )
+    {
+      return false;
+    }
+
+    $order_query = xtc_db_query("SELECT UNIX_TIMESTAMP(o.date_purchased) AS order_timestamp,
+                                        (SELECT COUNT(*)
+                                           FROM " . TABLE_PAYPAL_PAYMENT . " pp
+                                          WHERE pp.orders_id = o.orders_id
+                                            AND pp.transaction_id != '') AS completed_payments
+                                   FROM " . TABLE_ORDERS . " o
+                                  WHERE o.orders_id = '" . (int)$orders_id . "'
+                                  LIMIT 1");
+    if (xtc_db_num_rows($order_query) !== 1) {
+      return false;
+    }
+
+    $order = xtc_db_fetch_array($order_query);
+    if ((int)$order['order_timestamp'] >= $migration_timestamp
+        || (int)$order['completed_payments'] > 0
+        )
+    {
+      return false;
+    }
+
+    return hash_equals(md5($email), $key);
+  }
+
+
   function create_paypal_link($orders_id = '', $cleanlink = false) {
     global $last_order, $PHP_SELF;
   
@@ -899,7 +987,7 @@ class PayPalPaymentBase extends PayPalCommon {
     if (xtc_db_num_rows($check_query) < 1) {
       require_once (DIR_WS_CLASSES . 'order.php');
       $order = new order($orders_id);
-      $hash = md5($order->customer['email_address']);
+      $hash = $this->get_paypal_link_token($orders_id, $order->customer['email_address']);
       if (defined('RUN_MODE_ADMIN')) {
         $link = xtc_catalog_href_link('callback/paypal/'.$this->code.'.php', 'oID='.$orders_id.'&key='.$hash, 'SSL');
       } else {
@@ -926,8 +1014,141 @@ class PayPalPaymentBase extends PayPalCommon {
   function get_js_sdk($commit = 'true', $client_token = false, $user_token = false, $custom = false) {
     return get_paypal_js_sdk($this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))), $_SESSION['currency'], $this->intent, $commit, $client_token, $user_token, $custom);
   }
+
+
+  function get_client_error_token() {
+    $secret = ((defined('MODULE_PAYMENT_PAYPAL_SECRET')) ? MODULE_PAYMENT_PAYPAL_SECRET : '');
+    return hash_hmac('sha256', xtc_session_id().'|paypal_client_error', $secret);
+  }
+
+
+  function get_ajax_token($context = 'payment') {
+    $secret = ((defined('MODULE_PAYMENT_PAYPAL_SECRET')) ? MODULE_PAYMENT_PAYPAL_SECRET : '');
+    return hash_hmac('sha256', xtc_session_id().'|paypal_ajax|'.$context, $secret);
+  }
+
+
+  function is_valid_ajax_token($context = 'payment') {
+    return (isset($_SERVER['REQUEST_METHOD'])
+            && $_SERVER['REQUEST_METHOD'] == 'POST'
+            && isset($_POST['paypal_ajax_token'])
+            && is_string($_POST['paypal_ajax_token'])
+            && hash_equals($this->get_ajax_token($context), $_POST['paypal_ajax_token']));
+  }
+
+
+  function order_requires_shipping($order = null) {
+    $content_type = ((is_object($order) && isset($order->content_type)) ? $order->content_type : '');
+    if ($content_type == ''
+        && isset($_SESSION['cart'])
+        && is_object($_SESSION['cart'])
+        )
+    {
+      $content_type = $_SESSION['cart']->get_content_type();
+    }
+
+    if (in_array($content_type, array('virtual', 'virtual_weight'), true)) {
+      return false;
+    }
+    if (isset($_SESSION['cart'])
+        && is_object($_SESSION['cart'])
+        && $_SESSION['cart']->count_contents_virtual() == 0
+        )
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  function get_webhook_config_key($mode = '') {
+    if ($mode == '') {
+      $mode = $this->get_config('PAYPAL_MODE');
+    }
+    $client_id = $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($mode));
+
+    return 'PAYPAL_WEBHOOK_ID_'.strtoupper($mode).'_'.substr(hash('sha256', $client_id), 0, 16);
+  }
+
+
+  function save_webhook_id($webhook_id) {
+    $this->save_config(array(array('config_key' => $this->get_webhook_config_key(), 'config_value' => $webhook_id)));
+    $this->delete_config('PAYPAL_WEBHOOK_ID');
+  }
+
+
+  function delete_webhook_id() {
+    $this->delete_config($this->get_webhook_config_key());
+    $this->delete_config('PAYPAL_WEBHOOK_ID');
+  }
   
   
+  function verify_webhook_signature($headers, $body) {
+    $webhook_id = $this->get_config($this->get_webhook_config_key(), false);
+    if ($webhook_id == '') {
+      $webhook_id = $this->lookup_webhook_id();
+    }
+    if ($webhook_id == '') {
+      $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('error' => 'no webhook_id configured'));
+      return false;
+    }
+
+    $required_headers = array('PAYPAL-AUTH-ALGO', 'PAYPAL-CERT-URL', 'PAYPAL-TRANSMISSION-ID', 'PAYPAL-TRANSMISSION-SIG', 'PAYPAL-TRANSMISSION-TIME');
+    foreach ($required_headers as $required_header) {
+      if (!isset($headers[$required_header]) || $headers[$required_header] == '') {
+        return false;
+      }
+    }
+
+    try {
+      $apiContext = $this->apiContext();
+
+      $signatureVerification = new \PayPal\Api\VerifyWebhookSignature();
+      $signatureVerification->setAuthAlgo($headers['PAYPAL-AUTH-ALGO'])
+                             ->setCertUrl($headers['PAYPAL-CERT-URL'])
+                             ->setTransmissionId($headers['PAYPAL-TRANSMISSION-ID'])
+                             ->setTransmissionSig($headers['PAYPAL-TRANSMISSION-SIG'])
+                             ->setTransmissionTime($headers['PAYPAL-TRANSMISSION-TIME'])
+                             ->setWebhookId($webhook_id)
+                             ->setRequestBody($body);
+
+      $output = $signatureVerification->post($apiContext);
+    } catch (Exception $ex) {
+      $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('exception' => $ex));
+      return false;
+    }
+
+    return ($output->getVerificationStatus() == 'SUCCESS');
+  }
+
+
+  function lookup_webhook_id() {
+    try {
+      $apiContext = $this->apiContext();
+      $WebhookList = \PayPal\Api\Webhook::getAll($apiContext);
+      $webhooks = $WebhookList->getWebhooks();
+
+      if (defined('RUN_MODE_ADMIN')) {
+        $webhook_url = xtc_catalog_href_link('callback/paypal/webhook.php', '', 'SSL', false);
+      } else {
+        $webhook_url = xtc_href_link('callback/paypal/webhook.php', '', 'SSL', false);
+      }
+      for ($w=0, $z=count($webhooks); $w<$z; $w++) {
+        if ($webhooks[$w]->getUrl() == $webhook_url) {
+          $webhook_id = $webhooks[$w]->getId();
+          $this->save_webhook_id($webhook_id);
+          return $webhook_id;
+        }
+      }
+    } catch (Exception $ex) {
+      $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('exception' => $ex));
+    }
+
+    return '';
+  }
+
+
   function update_order($comment, $orders_status, $orders_id, $notified = 0) {
     $order_history_data = array(
       'orders_id' => (int)$orders_id,
@@ -946,7 +1167,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function remove_order($orders_id) {
-    $check_query = xtc_db_query("SELECT * 
+    $check_query = xtc_db_query("SELECT *
                                    FROM ".TABLE_ORDERS." 
                                   WHERE orders_id = '".(int)$orders_id."'");
     if (xtc_db_num_rows($check_query) > 0) {
@@ -1244,6 +1465,48 @@ class PayPalPaymentBase extends PayPalCommon {
       }
     }
 
+    if ($this->code == 'paypalapplepay') {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_CART', false) == '') {
+        $sql_data_array = array(
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_CART',
+            'config_value' => '1',
+          ),
+        );
+        $this->save_config($sql_data_array);
+      }
+      if ($this->get_config('MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_BOX_CART', false) == '') {
+        $sql_data_array = array(
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_BOX_CART',
+            'config_value' => '1',
+          ),
+        );
+        $this->save_config($sql_data_array);
+      }
+    }
+
+    if ($this->code == 'paypalgooglepay') {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_CART', false) == '') {
+        $sql_data_array = array(
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_CART',
+            'config_value' => '1',
+          ),
+        );
+        $this->save_config($sql_data_array);
+      }
+      if ($this->get_config('MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_BOX_CART', false) == '') {
+        $sql_data_array = array(
+          array(
+            'config_key' => 'MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_BOX_CART',
+            'config_value' => '1',
+          ),
+        );
+        $this->save_config($sql_data_array);
+      }
+    }
+
     // check 3D secure
     if ($this->code == 'paypalacdc') {
       if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS', false) == '') {
@@ -1412,6 +1675,22 @@ class PayPalPaymentBase extends PayPalCommon {
   
   
   function paypal_update() {
+    $installed_paypal_version = $this->get_config('PAYPAL_VERSION', false);
+    if ($installed_paypal_version != ''
+        && version_compare($installed_paypal_version, '1.111', '<')
+        && $this->get_config('PAYPAL_LINK_TOKEN_MIGRATION_TIMESTAMP', false) == ''
+        )
+    {
+      $migration_query = xtc_db_query("SELECT UNIX_TIMESTAMP() AS migration_timestamp");
+      $migration = xtc_db_fetch_array($migration_query);
+      $this->save_config(array(
+        array(
+          'config_key' => 'PAYPAL_LINK_TOKEN_MIGRATION_TIMESTAMP',
+          'config_value' => (int)$migration['migration_timestamp'],
+        ),
+      ));
+    }
+
     $table_array = array(
       array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL DEFAULT ''"),
       array('column' => 'send_order', 'default' => "int(1) NOT NULL default '0'"),
@@ -1818,6 +2097,40 @@ class PayPalPaymentBase extends PayPalCommon {
           'config_value' => '1',
         ),
       );
+      $this->save_config($sql_data_array);
+    }
+
+    if (defined('MODULE_PAYMENT_PAYPALAPPLEPAY_STATUS')) {
+      $sql_data_array = array();
+      if ($this->get_config('MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_CART', false) == '') {
+        $sql_data_array[] = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_CART',
+          'config_value' => '1',
+        );
+      }
+      if ($this->get_config('MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_BOX_CART', false) == '') {
+        $sql_data_array[] = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALAPPLEPAY_SHOW_BOX_CART',
+          'config_value' => '1',
+        );
+      }
+      $this->save_config($sql_data_array);
+    }
+
+    if (defined('MODULE_PAYMENT_PAYPALGOOGLEPAY_STATUS')) {
+      $sql_data_array = array();
+      if ($this->get_config('MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_CART', false) == '') {
+        $sql_data_array[] = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_CART',
+          'config_value' => '1',
+        );
+      }
+      if ($this->get_config('MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_BOX_CART', false) == '') {
+        $sql_data_array[] = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALGOOGLEPAY_SHOW_BOX_CART',
+          'config_value' => '1',
+        );
+      }
       $this->save_config($sql_data_array);
     }
     
