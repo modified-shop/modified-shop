@@ -166,7 +166,7 @@ class ErrorView {
 		if (!empty($this->errorLog)) {
 			foreach ($this->errorLog as &$item) {
                 $item['recommendation'] = fixHTMLUTF8Entities($item['recommendation']);
-				$item['additionaldata'] = @unserialize($item['additionaldata']);
+				$item['additionaldata'] = magnaSafeUnserialize($item['additionaldata']);
 			}
 		}
 	}
@@ -199,7 +199,7 @@ class ErrorView {
 				 WHERE special=\''.MagnaDB::gi()->escape($data['AmazonOrderID']).'\'
 			');
 			if ($o === false) return;
-			$o = @unserialize($o);
+			$o = magnaSafeUnserialize($o);
 			if (!is_array($o)) {
 				$o = array();
 			}
@@ -248,7 +248,7 @@ class ErrorView {
 $(document).ready(function() {
 	$('#errorLogDelete').click(function() {
 		if (($('#errorlog input[type="checkbox"]:checked').length > 0) &&
-			confirm(unescape(<?php echo "'".html2url(ML_GENERIC_DELETE_ERROR_MESSAGES)."'"; ?>))
+			confirm(decodeURIComponent(<?php echo "'".html2url(ML_GENERIC_DELETE_ERROR_MESSAGES)."'"; ?>))
 		) {
 			$('#action').val('delete');
 			$(this).parents('form').submit();

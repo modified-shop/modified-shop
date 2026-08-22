@@ -569,6 +569,36 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
         }));
     }, [marketplaceAttributes]);
 
+    // Handle adding multiple optional attributes at once (for error message links with sibling attributes)
+    const handleAddOptionalAttributes = React.useCallback((attributeKeys: string[]) => {
+        setActiveOptionalAttributes(prev => {
+            const existingSet = new Set(prev);
+            const newKeys = attributeKeys.filter(key =>
+                !existingSet.has(key) && marketplaceAttributes[key] && !marketplaceAttributes[key].required
+            );
+            if (newKeys.length === 0) return prev;
+            return [...prev, ...newKeys];
+        });
+
+        setAttributeValues(prev => {
+            const updates: SavedValues = {};
+            attributeKeys.forEach(key => {
+                if (!prev[key] && marketplaceAttributes[key] && !marketplaceAttributes[key].required) {
+                    const attribute = marketplaceAttributes[key];
+                    const dataType = attribute?.dataType?.toLowerCase() || '';
+                    const isTextType = dataType.includes('text');
+                    updates[key] = {
+                        Code: '',
+                        UseShopValues: isTextType ? true : undefined,
+                        Values: isTextType ? [] : undefined
+                    };
+                }
+            });
+            if (Object.keys(updates).length === 0) return prev;
+            return {...prev, ...updates};
+        });
+    }, [marketplaceAttributes]);
+
     // Handle removing an optional attribute
     const handleRemoveOptionalAttribute = React.useCallback((attributeKey: string) => {
         setActiveOptionalAttributes(prev => prev.filter(key => key !== attributeKey));
@@ -754,13 +784,44 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
             }
         };
 
+        // Create a globally accessible batch function to add multiple optional attributes at once
+        // Used by error message links where clicking one sub-attribute should add all sibling sub-attributes
+        (window as any).magnalisterAddOptionalAttributes = (attributeKeys: string[], callback?: () => void) => {
+            try {
+                if (debugMode) {
+                    console.log('[AmazonVariations] External request to add optional attributes (batch):', attributeKeys);
+                }
+
+                handleAddOptionalAttributes(attributeKeys);
+
+                if (debugMode) {
+                    console.log('[AmazonVariations] Batch optional attributes added:', attributeKeys);
+                }
+
+                if (callback && typeof callback === 'function') {
+                    // Longer timeout for batch since more DOM elements need to render
+                    setTimeout(() => {
+                        callback();
+                    }, 200);
+                }
+            } catch (error) {
+                console.error('[AmazonVariations] Failed to add optional attributes (batch):', error);
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            }
+        };
+
         // Cleanup on unmount
         return () => {
             if ((window as any).magnalisterAddOptionalAttribute) {
                 delete (window as any).magnalisterAddOptionalAttribute;
             }
+            if ((window as any).magnalisterAddOptionalAttributes) {
+                delete (window as any).magnalisterAddOptionalAttributes;
+            }
         };
-    }, [handleAddOptionalAttribute, activeOptionalAttributes, marketplaceAttributes, debugMode]);
+    }, [handleAddOptionalAttribute, handleAddOptionalAttributes, activeOptionalAttributes, marketplaceAttributes, debugMode]);
 
     // Initial save: batch save all attributes with Code !== '' on first render
     React.useEffect(() => {

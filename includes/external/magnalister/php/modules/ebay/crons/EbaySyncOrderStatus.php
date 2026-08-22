@@ -216,7 +216,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 
             try {
                 // in osc this $this->oOrder['data'] is at this point serialized but not in veyton
-                $aData = unserialize($this->oOrder['data']);
+                $aData = magnaSafeUnserialize($this->oOrder['data']);
                 if (!isset($aData['refund'])) {
                     MagnaConnector::gi()->submitRequest($request);
                     $aData['refund'] = 'requested';

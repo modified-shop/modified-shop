@@ -322,7 +322,7 @@ class eBaySummaryView extends SimpleSummaryView {
 
 			++$fetchedElements;
 
-			$row['data'] = unserialize($row['data']);
+			$row['data'] = magnaSafeUnserialize($row['data']);
 
 			if (!array_key_exists($reset, $row['data'])) {
 				$this->ajaxReply['skiped'][] = $row['pID'];
@@ -374,7 +374,7 @@ $(document).ready(function() {
 			val = jQuery.trim($(this).val());
 			tfID = $(this).attr('id');
 			if ((val == '') || !/^(-1|[0-9]*)$/.test(val) || (val < -1)) {
-				alert(unescape(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
+				alert(decodeURIComponent(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
 				val = $('#old_'+tfID).val();
 				$(this).val(val);
 			}
@@ -404,7 +404,7 @@ $(document).ready(function() {
 			price = convertPriceToFloat(val, formatPriceOptions);
 			myConsole.log(price);
 			if (price < 0) {
-				alert(unescape(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
+				alert(decodeURIComponent(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
 				$(e).val(formatPriceWoCur($('#backup_'+tfID).val(), formatPriceOptions));
 			} else {
 				jQuery.ajax({
