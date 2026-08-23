@@ -12,7 +12,8 @@
 
 
   defined('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION') OR define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION', 'true');
-  defined('DISCOUNT_MODULES') OR define('DISCOUNT_MODULES', 'ot_discount,ot_payment');
+  defined('DISCOUNT_MODULES') OR define('DISCOUNT_MODULES', 'ot_discount,ot_coupon,ot_payment');
+  defined('PRODUCT_DISCOUNT_MODULES') OR define('PRODUCT_DISCOUNT_MODULES', 'ot_discount,ot_coupon');
   defined('FORMAT_NEGATIVE') OR define('FORMAT_NEGATIVE', '<span class="color_ot_total"><b>%s</b></span>');
 
 
@@ -1088,15 +1089,22 @@
         
     xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id = '". (int)($oID). "' AND class = 'ot_subtotal'");
     
-    $discount = 0;
-    $subtotal = 0;
-    foreach ($order->totals as $totals) {
-      if ($totals['class'] == 'ot_subtotal') $subtotal = $totals['value'];
-      if ($totals['class'] == 'ot_discount') $discount = abs($totals['value']);
+    $product_discount_classes = array_map('trim', explode(",", PRODUCT_DISCOUNT_MODULES));
+    if (in_array('ot_coupon', $product_discount_classes)
+        && defined('MODULE_ORDER_TOTAL_COUPON_CALC_TAX')
+        && strtolower(MODULE_ORDER_TOTAL_COUPON_CALC_TAX) == 'none') {
+      $product_discount_classes = array_diff($product_discount_classes, array('ot_coupon'));
     }
-    
-    if ($discount > 0) {
-      $discount = $discount / $subtotal * 100;
+
+    $discount = 0;
+    foreach ($order->totals as $totals) {
+      if (in_array($totals['class'], $product_discount_classes)) $discount += abs($totals['value']);
+    }
+
+    if ($discount > 0 && $subtotal_final > 0) {
+      $discount = $discount / $subtotal_final * 100;
+    } else {
+      $discount = 0;
     }
     
     $products_query = xtc_db_query("SELECT final_price, 
@@ -1198,8 +1206,9 @@
       }
 
       if ($module_tax_rate == 0
+          && !in_array($module_value['class'], $product_discount_classes)
           && (defined('MODULE_ORDER_TOTAL_'.strtoupper($module_name).'_CALC_TAX')
-              && (strtolower(constant('MODULE_ORDER_TOTAL_'.strtoupper($module_name).'_CALC_TAX')) == 'true' 
+              && (strtolower(constant('MODULE_ORDER_TOTAL_'.strtoupper($module_name).'_CALC_TAX')) == 'true'
                   || strtolower(constant('MODULE_ORDER_TOTAL_'.strtoupper($module_name).'_CALC_TAX')) == 'standard'
                   )
               )
