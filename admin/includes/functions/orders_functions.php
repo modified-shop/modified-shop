@@ -849,7 +849,7 @@
 
     $status = get_customers_taxprice_status();
 
-    $options_values_price = $data_array['options_values_price'];
+    $options_values_price = (float)($data_array['options_values_price'] ?? 0);
     if (PRICE_IS_BRUTTO == 'true') {
       $products_tax_query = xtc_db_query("SELECT products_tax
                                             FROM ".TABLE_ORDERS_PRODUCTS."
