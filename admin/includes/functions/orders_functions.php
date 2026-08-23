@@ -120,6 +120,17 @@
   }
 
 
+  function get_product_discount_classes() {
+    $product_discount_classes = array_map('trim', explode(",", PRODUCT_DISCOUNT_MODULES));
+    if (in_array('ot_coupon', $product_discount_classes)
+        && defined('MODULE_ORDER_TOTAL_COUPON_CALC_TAX')
+        && strtolower(MODULE_ORDER_TOTAL_COUPON_CALC_TAX) == 'none') {
+      $product_discount_classes = array_diff($product_discount_classes, array('ot_coupon'));
+    }
+    return $product_discount_classes;
+  }
+
+
   function calculate_tax($amount, $oID, $tax_update = true) {
     global $xtPrice, $status;
 
@@ -130,7 +141,7 @@
 
     $where = "AND class != 'ot_tax'";
     if ($tax_update !== true) {
-      $where = "AND class IN ('products', 'ot_discount')";
+      $where = "AND class IN ('products', '".implode("', '", get_product_discount_classes())."')";
     }
                                         
     $sum_query = xtc_db_query("SELECT SUM(".$price.") as price 
@@ -1089,12 +1100,7 @@
         
     xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id = '". (int)($oID). "' AND class = 'ot_subtotal'");
     
-    $product_discount_classes = array_map('trim', explode(",", PRODUCT_DISCOUNT_MODULES));
-    if (in_array('ot_coupon', $product_discount_classes)
-        && defined('MODULE_ORDER_TOTAL_COUPON_CALC_TAX')
-        && strtolower(MODULE_ORDER_TOTAL_COUPON_CALC_TAX) == 'none') {
-      $product_discount_classes = array_diff($product_discount_classes, array('ot_coupon'));
-    }
+    $product_discount_classes = get_product_discount_classes();
 
     $discount = 0;
     foreach ($order->totals as $totals) {
@@ -1318,10 +1324,10 @@
     $check_no_tax_value = xtc_db_fetch_array($check_no_tax_value_query);
 
     $discount_no_tax = 0;
-    $total_discount_query = xtc_db_query("SELECT SUM(".$price.") as value 
-                                            FROM ".TABLE_ORDERS_RECALCULATE." 
+    $total_discount_query = xtc_db_query("SELECT SUM(".$price.") as value
+                                            FROM ".TABLE_ORDERS_RECALCULATE."
                                            WHERE orders_id = '".(int)$oID."'
-                                             AND class = 'ot_discount'");
+                                             AND class IN ('".implode("', '", get_product_discount_classes())."')");
     if (xtc_db_num_rows($total_discount_query) > 0) {
       $total_discount = xtc_db_fetch_array($total_discount_query);
       $discount_no_tax = abs(calculate_tax($total_discount['value'], $oID, false));
