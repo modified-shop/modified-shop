@@ -52,6 +52,7 @@ define('TEXT_ORDERS_ADDRESS_EDIT_INFO', 'Please note that the data you provide h
 // Artikelbearbeitung
 
 define('TEXT_SMALL_NETTO', '(net)');
+define('TEXT_SMALL_BRUTTO', '(gross)');
 define('TEXT_PRODUCT_ID', 'pID:');
 define('TEXT_PRODUCTS_MODEL', 'Product #:');
 define('TEXT_QUANTITY', 'Qty:');

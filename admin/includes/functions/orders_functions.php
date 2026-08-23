@@ -849,10 +849,19 @@
 
     $status = get_customers_taxprice_status();
 
+    $options_values_price = (float)($data_array['options_values_price'] ?? 0);
+    if (PRICE_IS_BRUTTO == 'true') {
+      $products_tax_query = xtc_db_query("SELECT products_tax
+                                            FROM ".TABLE_ORDERS_PRODUCTS."
+                                           WHERE orders_products_id = '".(int)$data_array['opID']."'");
+      $products_tax = xtc_db_fetch_array($products_tax_query);
+      $options_values_price = xtc_round($options_values_price / ($products_tax['products_tax'] + 100) * 100, PRICE_PRECISION);
+    }
+
     $sql_data_array = array(
       'products_options' => xtc_db_prepare_input($data_array['products_options']),
       'products_options_values' => xtc_db_prepare_input($data_array['products_options_values']),
-      'options_values_price' => xtc_db_prepare_input($data_array['options_values_price']),
+      'options_values_price' => xtc_db_prepare_input($options_values_price),
       'price_prefix' => xtc_db_prepare_input($data_array['price_prefix']),
       'options_values_weight' => xtc_db_prepare_input($data_array['options_values_weight']),
       'weight_prefix' => xtc_db_prepare_input($data_array['weight_prefix']),
