@@ -52,6 +52,7 @@ define('TEXT_ORDERS_ADDRESS_EDIT_INFO', 'Bitte beachten Sie, dass die hier einge
 // Artikelbearbeitung
 
 define('TEXT_SMALL_NETTO', '(Netto)');
+define('TEXT_SMALL_BRUTTO', '(Brutto)');
 define('TEXT_PRODUCT_ID', 'pID:');
 define('TEXT_PRODUCTS_MODEL', 'Art.Nr:');
 define('TEXT_QUANTITY', 'Anzahl:');
