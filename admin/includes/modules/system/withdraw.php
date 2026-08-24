@@ -84,7 +84,7 @@
                        SET content_status = '1'
                      WHERE content_file = 'withdraw.php'");
 
-      xtc_db_query("CREATE TABLE IF NOT EXISTS `orders_withdraw` (
+      xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_ORDERS_WITHDRAW." (
                      `orders_withdraw_id` int(11) NOT NULL AUTO_INCREMENT,
                      `orders_id` int(11) NOT NULL,
                      `date_added` datetime NOT NULL,
@@ -92,7 +92,7 @@
                      KEY `idx_orders_id` (`orders_id`)
                      )");
 
-      xtc_db_query("CREATE TABLE IF NOT EXISTS `orders_withdraw_products` (
+      xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_ORDERS_WITHDRAW_PRODUCTS." (
                      `orders_withdraw_products_id` int(11) NOT NULL AUTO_INCREMENT,
                      `orders_withdraw_id` int(11) NOT NULL,
                      `orders_id` int(11) NOT NULL,
@@ -105,7 +105,7 @@
                      )");
     
       // the confirmation link is opened in another browser, so the token cannot live in the session
-      xtc_db_query("CREATE TABLE IF NOT EXISTS `orders_withdraw_token` (
+      xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_ORDERS_WITHDRAW_TOKEN." (
                      `orders_withdraw_token_id` int(11) NOT NULL AUTO_INCREMENT,
                      `orders_id` int(11) NOT NULL,
                      `token` varchar(32) NOT NULL,
@@ -126,7 +126,7 @@
             'orders_id' => $migrate['orders_id'],
             'date_added' => 'now()',
           );
-          xtc_db_perform('orders_withdraw', $sql_data_array);
+          xtc_db_perform(TABLE_ORDERS_WITHDRAW, $sql_data_array);
           
           $orders_withdraw_id = xtc_db_insert_id();
           $migrate_products_query = xtc_db_query("SELECT *
@@ -140,7 +140,7 @@
               'products_id' => $migrate_products['products_id'],
               'products_quantity' => $migrate_products['products_quantity'],
             );
-            xtc_db_perform('orders_withdraw_products', $sql_data_array);
+            xtc_db_perform(TABLE_ORDERS_WITHDRAW_PRODUCTS, $sql_data_array);
           }
         }
         xtc_db_query("DROP TABLE `orders_products_withdraw`");
