@@ -1331,16 +1331,7 @@
                                                  AND class = 'ot_subtotal_no_tax'");
     $check_no_tax_value = xtc_db_fetch_array($check_no_tax_value_query);
 
-    // In gross-price display mode, ot_discount/ot_coupon store their raw
-    // (gross) entered value directly in n_price (module loop above, tax_class
-    // '0' branch) - it is not actually net, so its net-equivalent has to be
-    // computed via calculate_tax() and added on top of the subtotal_no_tax
-    // sum below. In net-price display mode, that same raw value already IS
-    // the correct net value, so no further correction is needed there.
-    // Only classes that actually pass the $where_array filter above (i.e.
-    // are themselves part of the subtotal_no_tax sum) may be corrected here -
-    // a discount/coupon module sorted past $sort_exlude is excluded from
-    // that sum entirely and must not get a correction added on top of it.
+    // Gross mode only: n_price holds the raw (not net) discount/coupon value; correct only classes included in the subtotal sum above.
     $discount_no_tax = 0;
     if ($status['customers_status_show_price_tax'] == 1) {
       $included_discount_classes = array();
