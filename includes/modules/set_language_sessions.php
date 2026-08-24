@@ -45,4 +45,12 @@ if (isset($_GET['language'])
 }
 
 // set default charset
+// an alias like "utf8" is rejected by the PHP html functions, resolve it to a supported name first
+if (!isset($_SESSION['language_charset'])
+    || !in_array(strtoupper($_SESSION['language_charset']), get_supported_charset())
+    )
+{
+  $_SESSION['language_charset'] = get_default_charset();
+}
+
 @ini_set('default_charset', $_SESSION['language_charset']);

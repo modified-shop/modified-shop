@@ -120,12 +120,49 @@ function get_supported_charset()
 }
 
 /**
+ * normalize_charset
+ */
+function normalize_charset($charset)
+{
+  static $charset_aliases;
+
+  $charset = strtoupper(trim((string)$charset));
+
+  if ($charset === '') {
+    return '';
+  }
+
+  if (in_array($charset, get_supported_charset())) {
+    return $charset;
+  }
+
+  if (!isset($charset_aliases)) {
+    $charset_aliases = array(
+      'LATIN1'      => 'ISO-8859-1',
+      'LATIN9'      => 'ISO-8859-15',
+      'WINDOWS1251' => 'CP1251',
+      'WINDOWS1252' => 'CP1252',
+      'SHIFTJIS'    => 'SJIS',
+      'USASCII'     => 'ASCII',
+    );
+    foreach (get_supported_charset() as $supported) {
+      $charset_aliases[preg_replace('/[^A-Z0-9]/', '', $supported)] = $supported;
+    }
+  }
+
+  // "utf8" and other separator-less spellings are rejected by the PHP html functions
+  $alias = preg_replace('/[^A-Z0-9]/', '', $charset);
+
+  return isset($charset_aliases[$alias]) ? $charset_aliases[$alias] : '';
+}
+
+/**
  * get_default_charset
  */
 function get_default_charset()
 {
-  $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), get_supported_charset()) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
-  return $default_charset;
+  $default_charset = isset($_SESSION['language_charset']) ? normalize_charset($_SESSION['language_charset']) : '';
+  return ($default_charset !== '') ? $default_charset : ENCODE_DEFAULT_CHARSET;
 }
 
 /**
@@ -133,8 +170,8 @@ function get_default_charset()
  */
 function get_default_encoding($encoding)
 {
-  $encoding = !empty($encoding) && in_array(strtoupper($encoding), get_supported_charset()) ? strtoupper($encoding) : get_default_charset();
-  return $encoding;
+  $encoding = normalize_charset($encoding);
+  return ($encoding !== '') ? $encoding : get_default_charset();
 }
 
 /**

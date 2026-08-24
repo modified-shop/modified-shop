@@ -33,6 +33,7 @@
 
   // include functions
   require_once(DIR_FS_INC.'auto_include.inc.php');
+  require_once(DIR_FS_INC.'html_encoding.php');
   require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'database_tables.php');
   require_once(DIR_FS_ADMIN.DIR_WS_FUNCTIONS.'general.php');
 
@@ -107,6 +108,11 @@
     $_SESSION['languages_id'] = $lng->language['id'];
     $_SESSION['language_charset'] = $lng->language['language_charset'];
     $_SESSION['language_code'] = $lng->language['code'];
+  }
+
+  // an alias like "utf8" is rejected by the PHP html functions, resolve it to a supported name first
+  if (!in_array(strtoupper($_SESSION['language_charset']), get_supported_charset())) {
+    $_SESSION['language_charset'] = get_default_charset();
   }
 
   // Global entries for the <html> tag
