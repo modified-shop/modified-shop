@@ -56,5 +56,5 @@ if (isset($_SESSION['language_charset'])
   }
 }
 
-// the ini drives every native html call and the Content-Type header, so it needs an html capable value
-@ini_set('default_charset', get_html_charset());
+// PHP derives the Content-Type header from this, so it has to stay the real response charset
+@ini_set('default_charset', $_SESSION['language_charset']);
