@@ -696,3 +696,18 @@ define('TEXT_COUNTRY_LABEL', 'Country');
 define('TEXT_STATE_LABEL', 'State');
 
 define('TEXT_IMG_VVCODE', 'Security Code');
+
+// withdrawal form
+define('ENTRY_ORDERS_ID_ERROR', 'Please provide your order number.');
+define('ENTRY_WITHDRAW_SUCCESS', 'Request sent successfully');
+define('ENTRY_ORDERS_ID_TEXT', '*');
+define('TEXT_WITHDRAW_HEADING', 'Declare withdrawal');
+define('TEXT_WITHDRAW_INFO', 'Your order %s from %s');
+define('TEXT_WITHDRAW_PRODUCTS_SELECT', 'Please specify the number of items you wish to return.');
+define('TEXT_WITHDRAW_NO_PRODUCTS', 'There are no items that could be returned.');
+define('TEXT_WITHDRAW_SUCCESS', 'Thank you very much for your enquiry.<br/>We have successfully received your cancellation and will process it as soon as possible.<br/><br/>Our team is reviewing your details and will take care of the next steps. You will shortly receive a confirmation and further information regarding the refund process.<br/><br/>Please bear in mind that processing may take some time. We will endeavour to resolve your matter as quickly as possible.');
+define('TEXT_WITHDRAW_PRODUCTS_SUCCESS', 'Here is a summary of the withdrawn products:');
+define('TEXT_WITHDRAW_PARTLY', 'You can also cancel only part of your order. To do so, we need to verify your email address through a double opt-in process. Please use this <a href="%s">LINK</a> to send an email with a confirmation link. You can also cancel the entire order by clicking the "'.TEXT_WITHDRAW_HEADING.'" button.');
+define('TEXT_WITHDRAW_VERIFY_INFO', 'We have just sent you an email to confirm your email address as part of the double opt-in process. Please open the email and click on the confirmation link inside to complete the process and gain access to your order details.');
+define('IMAGE_BUTTON_WITHDRAW', 'Declare withdrawal');
+define('EMAIL_WITHDRAW_SUBJECT', 'Withdrawal order {$nr} from {$date}');

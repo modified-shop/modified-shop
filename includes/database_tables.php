@@ -125,6 +125,11 @@ $database_table_array = array(
   // cookie consent
   'TABLE_COOKIE_CONSENT_COOKIES' => 'cookie_consent_cookies',
   'TABLE_COOKIE_CONSENT_CATEGORIES' => 'cookie_consent_categories',
+  
+  // withdrawal form
+  'TABLE_ORDERS_WITHDRAW' => 'orders_withdraw',
+  'TABLE_ORDERS_WITHDRAW_PRODUCTS' => 'orders_withdraw_products',
+  'TABLE_ORDERS_WITHDRAW_TOKEN' => 'orders_withdraw_token',
 );
 
 require_once(DIR_FS_INC.'auto_include.inc.php');

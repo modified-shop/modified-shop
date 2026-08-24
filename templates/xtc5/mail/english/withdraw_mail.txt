@@ -1,0 +1,32 @@
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+Withdrawal request
+
+Name: {$NAME}
+E-mail address: {$EMAIL}
+Order number: {$ORDERS_ID}
+
+{if isset($LINK)}
+To show you your personal order details securely, we need you to confirm your e-mail address as part of a double opt-in process.
+
+Please click the following confirmation link:
+
+{$LINK}
+
+Only after a successful confirmation will you gain access to your order details. This process makes sure that you alone, as the authorised person, can view your data and serves to protect your personal information.
+
+If you did not make this request yourself, you can simply ignore this e-mail. In that case your order details will not be unlocked.
+{/if}
+{if isset($PRODUCTS)}
+{foreach name=aussen item=order_data from=$PRODUCTS}
+{$order_data.PRODUCTS_QUANTITY} x {$order_data.PRODUCTS_NAME} {$order_data.PRODUCTS_PRICE}
+Model {$order_data.PRODUCTS_MODEL}
+{if count($order_data.PRODUCTS_ATTRIBUTES) > 0}
+{foreach name=inner item=attributes_data from=$order_data.PRODUCTS_ATTRIBUTES}
+{$attributes_data.OPTIONS_NAME}: {$attributes_data.VALUES_NAME}
+{/foreach}
+{/if}
+
+{/foreach}
+{/if}
+
+[SIGNATUR]

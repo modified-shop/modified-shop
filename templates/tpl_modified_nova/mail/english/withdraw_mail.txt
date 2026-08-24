@@ -1,0 +1,31 @@
+Request for a withdrawal
+
+Name: {$NAME}
+E-Mail Address: {$EMAIL}
+Order No.: {$ORDERS_ID}
+
+{if isset($LINK)}
+In order to securely display your personal order details, we need you to confirm your email address as part of a double opt-in process.
+
+Please click on the following confirmation link:
+
+{$LINK}
+
+You will only gain access to your order details after successful confirmation. This procedure ensures that only you, as the authorized person, can view your data and serves to protect your personal information.
+
+If you did not initiate this request yourself, you can ignore this email. In this case, your order details will not be activated.
+{/if}
+{if isset($PRODUCTS)}
+{foreach name=aussen item=order_data from=$PRODUCTS} 
+{$order_data.PRODUCTS_QUANTITY} x {$order_data.PRODUCTS_NAME} {$order_data.PRODUCTS_PRICE}
+Prod. No. {$order_data.PRODUCTS_MODEL}
+{if count($order_data.PRODUCTS_ATTRIBUTES) > 0}
+{foreach name=inner item=attributes_data from=$order_data.PRODUCTS_ATTRIBUTES}
+{$attributes_data.OPTIONS_NAME}: {$attributes_data.VALUES_NAME}
+{/foreach}
+{/if}
+
+{/foreach}
+{/if}
+
+[SIGNATUR]

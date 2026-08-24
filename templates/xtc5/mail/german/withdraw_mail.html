@@ -1,0 +1,63 @@
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+<table width="100%" border="0" align="center" cellpadding="4" cellspacing="0">
+  <tr>
+    <td style="border-bottom: 1px solid; border-color: #cccccc;"><div align="right"><img src="{$logo_path}{'logo.gif'|versioning}" /></div></td>
+  </tr>
+  <tr>
+    <td style="font-size:14px;text-transform:uppercase;padding:10px 5px;border-bottom: 1px solid #ccc;">
+      <font face="Tahoma, Verdana, sans-serif">Anfrage für einen Widerruf</font>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <br />
+      <font size="2" face="Tahoma, Verdana, sans-serif">
+      <strong>Name:</strong> {$NAME}<br />
+      <strong>E-Mail Adresse:</strong> {$EMAIL}<br />
+      <strong>Bestellnummer:</strong> {$ORDERS_ID}<br />
+      <br />
+      {if isset($LINK)}
+        Um Ihnen Ihre persönlichen Bestelldaten sicher anzeigen zu können, benötigen wir eine Bestätigung Ihrer E-Mail-Adresse im Rahmen eines Double-Opt-in-Verfahrens.<br />
+        <br />
+        Bitte klicken Sie auf den folgenden Bestätigungslink:<br />
+        <br />
+        <a href="{$LINK}">{$LINK}</a><br />
+        <br />
+        Erst nach erfolgreicher Bestätigung erhalten Sie Zugriff auf Ihre Bestelldetails. Dieses Verfahren stellt sicher, dass ausschließlich Sie als berechtigte Person Einsicht in Ihre Daten nehmen können und dient dem Schutz Ihrer personenbezogenen Informationen.<br />
+        <br />
+        Sollten Sie diese Anfrage nicht selbst ausgelöst haben, können Sie diese E-Mail ignorieren. In diesem Fall erfolgt keine Freischaltung Ihrer Bestelldaten.<br />
+      {/if}
+      {if isset($PRODUCTS)}
+      <table width="100%" border="0" cellpadding="4" cellspacing="0">
+        <tr>
+          <td style="padding:10px 5px;border-top:1px solid #ccc;border-bottom:1px solid #ccc;" align="right"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Stk.</strong></font></td>
+          <td style="padding:10px 5px;border-top:1px solid #ccc;border-bottom:1px solid #ccc;"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Produkt</strong></font></td>
+          <td style="padding:10px 5px;border-top:1px solid #ccc;border-bottom:1px solid #ccc;white-space:nowrap" width="50"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Art.-Nr.</strong></font></td>
+          <td style="padding:10px 5px;border-top:1px solid #ccc;border-bottom:1px solid #ccc;" width="80" align="right"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Einzelpreis</strong></font></td>
+        </tr>
+        {foreach name=aussen item=order_data from=$PRODUCTS}
+        <tr>
+          <td nowrap="nowrap" style="border-bottom:1px dotted #ccc;" valign="top" width="20" align="right"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_data.PRODUCTS_QUANTITY} x</font></td>
+          <td style="border-bottom:1px dotted #ccc;" valign="top"><font size="2" face="Tahoma, Verdana, sans-serif">
+            <strong>{$order_data.PRODUCTS_NAME}</strong>
+            {if count($order_data.PRODUCTS_ATTRIBUTES) > 0}
+              <div style="padding: 4px 0px 4px 0px;">
+                {foreach name=inner item=attributes_data from=$order_data.PRODUCTS_ATTRIBUTES}
+                  <em>{$attributes_data.OPTIONS_NAME}: {$attributes_data.VALUES_NAME}</em><br />
+                {/foreach}
+              </div>
+            {/if}
+            </font>
+          </td>
+          <td style="border-bottom:1px dotted #ccc;" valign="top"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_data.PRODUCTS_MODEL}</font></td>
+          <td style="border-bottom:1px dotted #ccc;" valign="top" align="right"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_data.PRODUCTS_PRICE}</font></td>
+        </tr>
+        {/foreach}
+      </table>
+      {/if}
+      </font>
+      <br /><br />
+    </td>
+  </tr>
+</table>
+[SIGNATUR]

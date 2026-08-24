@@ -54,7 +54,7 @@
     if (trim($content_string == '')) $content_string = "\n"; //Zeilenschaltung Codedarstellung  
     $content_string .= $ul; //UL LI Versschachtelung
     $content_string .= $tab; //Tabulator Codedarstellung
-    $content_string .= '<li class="level'.$level.$content_active.$content_active_parent.'">';
+    $content_string .= '<li class="level'.$level.$content_active.$content_active_parent.((defined('MODULE_WITHDRAW_CONTENT') && (int)MODULE_WITHDRAW_CONTENT == $content_array[$counter]['coID']) ? ' withdraw_link' : '').'">';
     $content_string .= '<a href="'.xtc_href_link(FILENAME_CONTENT, xtc_content_link($content_array[$counter]['coID'], $content_array[$counter]['name'])).'" title="'.encode_htmlentities($content_array[$counter]['name']).'">';
     $content_string .= '<i class="fas fa-angle-right"></i>';
     $content_string .= $content_array[$counter]['name'];
