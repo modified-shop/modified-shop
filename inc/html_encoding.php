@@ -20,7 +20,7 @@ define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-15');
 function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if ($string !== null && $string !== '') {
-    $encoding = get_default_encoding($encoding);
+    $encoding = get_html_charset($encoding);
     return htmlentities($string, $flags , $encoding);
   } else {
     return $string;
@@ -33,7 +33,7 @@ function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if ($string !== null && $string !== '') {
-    $encoding = get_default_encoding($encoding);
+    $encoding = get_html_charset($encoding);
     return htmlspecialchars($string, $flags , $encoding);
   } else {
     return $string;
@@ -65,7 +65,7 @@ function encode_utf8($string, $encoding = '', $force_utf8 = false)
 function decode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if ($string !== null && $string !== '') {
-    $encoding = get_default_encoding($encoding);
+    $encoding = get_html_charset($encoding);
     return html_entity_decode($string, $flags , $encoding);
   } else {
     return $string;
@@ -154,6 +154,23 @@ function normalize_charset($charset)
   $alias = preg_replace('/[^A-Z0-9]/', '', $charset);
 
   return isset($charset_aliases[$alias]) ? $charset_aliases[$alias] : '';
+}
+
+/**
+ * get_html_charset
+ */
+function get_html_charset($charset = '')
+{
+  static $html_charsets;
+
+  if (!isset($html_charsets)) {
+    // the PHP html functions know fewer charsets than mbstring, they reject these two and assume UTF-8
+    $html_charsets = array_diff(get_supported_charset(), array('ASCII', 'GB18030'));
+  }
+
+  $charset = get_default_encoding($charset);
+
+  return in_array($charset, $html_charsets) ? $charset : 'UTF-8';
 }
 
 /**

@@ -114,7 +114,7 @@ function mod_log_exception($e)
 
     if (!isset($error_exceptions[$error['name']][$index])) {
       // pass the charset explicitly, the ini default_charset may hold a value the html functions reject
-      $log_charset = function_exists('get_default_charset') ? get_default_charset() : 'UTF-8';
+      $log_charset = function_exists('get_html_charset') ? get_html_charset() : 'UTF-8';
       $message = html_entity_decode($error['message'], ENT_QUOTES | ENT_SUBSTITUTE, $log_charset);
 
       $error_exceptions[$error['name']][$index] = sprintf(
