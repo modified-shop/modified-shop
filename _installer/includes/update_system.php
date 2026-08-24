@@ -469,7 +469,7 @@
                    `date_expires` datetime NOT NULL,
                    PRIMARY KEY (`orders_withdraw_token_id`),
                    UNIQUE KEY `idx_token` (`token`),
-                   KEY `idx_orders_id` (`orders_id`)
+                   UNIQUE KEY `idx_orders_id` (`orders_id`)
                    )");
 
     $check_query = xtc_db_query("SHOW KEYS

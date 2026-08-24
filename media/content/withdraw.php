@@ -233,14 +233,16 @@
           $orders_id = (int)$withdraw_array['orders_id'];
           $orders = $withdraw_array['orders'];
 
-          // one pending token per order, expired ones are cleared on the way
           xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_TOKEN."
-                         WHERE orders_id = '".$orders_id."'
-                            OR date_expires < now()");
+                         WHERE date_expires < now()");
 
+          // orders_id is unique, so this replaces a pending token instead of adding a second one
           $key = xtc_random_charcode(32);
           xtc_db_query("INSERT INTO ".TABLE_ORDERS_WITHDRAW_TOKEN." (orders_id, token, date_added, date_expires)
-                             VALUES ('".$orders_id."', '".xtc_db_input($key)."', now(), now() + interval ".(int)MODULE_WITHDRAW_TOKEN_HOURS." hour)");
+                             VALUES ('".$orders_id."', '".xtc_db_input($key)."', now(), now() + interval ".(int)MODULE_WITHDRAW_TOKEN_HOURS." hour)
+        ON DUPLICATE KEY UPDATE token = VALUES(token),
+                                date_added = VALUES(date_added),
+                                date_expires = VALUES(date_expires)");
 
           $link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key', 'oID')).'action=validate&key='.$key, 'SSL');
     
@@ -375,8 +377,22 @@
               $booked += $affected;
             }
 
-            // a failed statement or a faster request leaves nothing worth keeping
-            if ($failed === true || $booked < 1) {
+            // the check inside the insert only holds while InnoDB locks the read, which it does not
+            // under READ COMMITTED, so verify afterwards that nothing exceeds the ordered quantity
+            $overbooked = false;
+            if ($failed === false && $booked > 0) {
+              $check_query = xtc_db_query("SELECT op.orders_products_id
+                                             FROM ".TABLE_ORDERS_PRODUCTS." op
+                                             JOIN ".TABLE_ORDERS_WITHDRAW_PRODUCTS." owp
+                                                  ON owp.orders_products_id = op.orders_products_id
+                                            WHERE op.orders_id = '".(int)$orders_id."'
+                                         GROUP BY op.orders_products_id, op.products_quantity
+                                           HAVING SUM(owp.products_quantity) > op.products_quantity");
+              $overbooked = (xtc_db_num_rows($check_query) > 0);
+            }
+
+            // a failed statement, a faster request or an overbooked position leaves nothing worth keeping
+            if ($failed === true || $booked < 1 || $overbooked === true) {
               // no transactions here, the shop also runs on MyISAM, so clean up by hand
               xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_PRODUCTS."
                              WHERE orders_withdraw_id = '".(int)$orders_withdraw_id."'");
