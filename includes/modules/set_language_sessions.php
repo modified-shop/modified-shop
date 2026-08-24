@@ -45,12 +45,16 @@ if (isset($_GET['language'])
 }
 
 // set default charset
-// an alias like "utf8" is rejected by the PHP html functions, resolve it to a supported name first
-if (!isset($_SESSION['language_charset'])
-    || !in_array(strtoupper($_SESSION['language_charset']), get_supported_charset())
+// resolve an alias like "utf8", but keep an unknown value, it may be a charset this shop really uses
+if (isset($_SESSION['language_charset'])
+    && !in_array(strtoupper($_SESSION['language_charset']), get_supported_charset())
     )
 {
-  $_SESSION['language_charset'] = get_default_charset();
+  $charset = normalize_charset($_SESSION['language_charset']);
+  if ($charset !== '') {
+    $_SESSION['language_charset'] = $charset;
+  }
 }
 
-@ini_set('default_charset', $_SESSION['language_charset']);
+// the ini drives every native html call and the Content-Type header, so it needs an html capable value
+@ini_set('default_charset', get_html_charset());

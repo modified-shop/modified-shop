@@ -13,6 +13,8 @@
 
 define('ENCODE_DEFINED_CHARSETS','ASCII,UTF-8,ISO-8859-1,ISO-8859-15,cp866,cp1251,cp1252,KOI8-R,GB18030,SJIS,EUC-JP');
 define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-15');
+// the PHP html functions accept a different set than mbstring, ASCII and GB18030 are missing there
+define('ENCODE_HTML_CHARSETS','UTF-8,ISO-8859-1,ISO-8859-5,ISO-8859-15,cp866,cp1251,cp1252,KOI8-R,BIG5,GB2312,SJIS,EUC-JP');
 
 /**
  * encode_htmlentities
@@ -164,13 +166,26 @@ function get_html_charset($charset = '')
   static $html_charsets;
 
   if (!isset($html_charsets)) {
-    // the PHP html functions know fewer charsets than mbstring, they reject these two and assume UTF-8
-    $html_charsets = array_diff(get_supported_charset(), array('ASCII', 'GB18030'));
+    $html_charsets = explode(',', strtoupper(ENCODE_HTML_CHARSETS));
   }
 
-  $charset = get_default_encoding($charset);
+  $charset = trim((string)$charset);
 
-  return in_array($charset, $html_charsets) ? $charset : 'UTF-8';
+  if ($charset === '') {
+    $charset = isset($_SESSION['language_charset']) ? trim((string)$_SESSION['language_charset']) : '';
+  }
+
+  if ($charset === '') {
+    $charset = ENCODE_DEFAULT_CHARSET;
+  }
+
+  // an unknown value is kept as it is, it may still be a charset the html functions know
+  $normalized = normalize_charset($charset);
+  if ($normalized !== '') {
+    $charset = $normalized;
+  }
+
+  return in_array(strtoupper($charset), $html_charsets) ? $charset : 'UTF-8';
 }
 
 /**
