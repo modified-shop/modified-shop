@@ -22,6 +22,7 @@
     require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
     require_once (DIR_FS_INC.'secure_form.inc.php');
     require_once (DIR_FS_INC.'xtc_date_long.inc.php');
+    require_once (DIR_FS_INC.'xtc_datetime_short.inc.php');
     require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
   
     // include needed classes
@@ -423,6 +424,12 @@
 
             $_SESSION['withdraw'][(int)$_REQUEST['oID']]['orders_withdraw_id'] = $orders_withdraw_id;
             
+            // the receipt has to carry the moment the declaration arrived, so read it back from the booking
+            $received_query = xtc_db_query("SELECT date_added
+                                              FROM ".TABLE_ORDERS_WITHDRAW."
+                                             WHERE orders_withdraw_id = '".(int)$orders_withdraw_id."'");
+            $received = xtc_db_fetch_array($received_query);
+
             // action send
             $smarty->assign('language', $_SESSION['language']);
             $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
@@ -430,6 +437,7 @@
             $smarty->assign('NAME', $orders['customers_name']);
             $smarty->assign('EMAIL', $orders['customers_email_address']);
             $smarty->assign('ORDERS_ID', $orders['orders_id']);
+            $smarty->assign('RECEIVED', xtc_datetime_short($received['date_added']));
 
             $orders_withdraw_products_array = array();
             $orders_withdraw_products_query = xtc_db_query("SELECT op.*,

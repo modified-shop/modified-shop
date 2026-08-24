@@ -713,5 +713,6 @@ define('TEXT_WITHDRAW_VERIFY_INFO', 'Wir haben Ihnen soeben eine E-Mail zur Best
 define('TEXT_WITHDRAW_HISTORY_HEADING', 'Widerrufene Artikel');
 define('TEXT_WITHDRAW_HISTORY_INFO', 'F&uuml;r die hier aufgef&uuml;hrten Artikel haben wir Ihren Widerruf erhalten. Sobald wir Ihre Angaben gepr&uuml;ft haben, erhalten Sie von uns eine R&uuml;ckmeldung zur weiteren Abwicklung.');
 define('TEXT_WITHDRAW_HISTORY_DATE', 'Widerrufen am');
+define('TEXT_WITHDRAW_RECEIVED', 'Eingegangen am');
 define('IMAGE_BUTTON_WITHDRAW', 'Widerruf erkl&auml;ren');
 define('EMAIL_WITHDRAW_SUBJECT', 'Widerruf Bestellung {$nr} vom {$date}');

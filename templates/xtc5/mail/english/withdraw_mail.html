@@ -15,6 +15,7 @@
       <strong>Name:</strong> {$NAME}<br />
       <strong>E-mail address:</strong> {$EMAIL}<br />
       <strong>Order number:</strong> {$ORDERS_ID}<br />
+      {if isset($RECEIVED)}<strong>Received on:</strong> {$RECEIVED}<br />{/if}
       <br />
       {if isset($LINK)}
         To show you your personal order details securely, we need you to confirm your e-mail address as part of a double opt-in process.<br />
