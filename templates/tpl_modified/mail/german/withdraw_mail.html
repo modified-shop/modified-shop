@@ -18,6 +18,7 @@
           <strong>Name:</strong> {$NAME}<br />
           <strong>E-Mail Adresse:</strong> {$EMAIL}<br />
           <strong>Bestellnummer:</strong> {$ORDERS_ID}<br />
+          {if isset($RECEIVED)}<strong>Eingegangen am:</strong> {$RECEIVED}<br />{/if}
           <br />
           {if isset($LINK)}
             Um Ihnen Ihre persönlichen Bestelldaten sicher anzeigen zu können, benötigen wir eine Bestätigung Ihrer E-Mail-Adresse im Rahmen eines Double-Opt-in-Verfahrens.<br />

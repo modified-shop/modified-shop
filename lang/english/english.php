@@ -712,5 +712,6 @@ define('TEXT_WITHDRAW_VERIFY_INFO', 'We have just sent you an email to confirm y
 define('TEXT_WITHDRAW_HISTORY_HEADING', 'Withdrawn items');
 define('TEXT_WITHDRAW_HISTORY_INFO', 'We have received your withdrawal for the items listed here. As soon as we have reviewed your details, we will get back to you regarding the next steps.');
 define('TEXT_WITHDRAW_HISTORY_DATE', 'Withdrawn on');
+define('TEXT_WITHDRAW_RECEIVED', 'Received on');
 define('IMAGE_BUTTON_WITHDRAW', 'Declare withdrawal');
 define('EMAIL_WITHDRAW_SUBJECT', 'Withdrawal order {$nr} from {$date}');

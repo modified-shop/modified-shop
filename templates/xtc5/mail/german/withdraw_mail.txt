@@ -4,6 +4,7 @@ Anfrage für einen Widerruf
 Name: {$NAME}
 E-Mail Adresse: {$EMAIL}
 Bestellnummer: {$ORDERS_ID}
+{if isset($RECEIVED)}Eingegangen am: {$RECEIVED}{/if}
 
 {if isset($LINK)}
 Um Ihnen Ihre persönlichen Bestelldaten sicher anzeigen zu können, benötigen wir eine Bestätigung Ihrer E-Mail-Adresse im Rahmen eines Double-Opt-in-Verfahrens.

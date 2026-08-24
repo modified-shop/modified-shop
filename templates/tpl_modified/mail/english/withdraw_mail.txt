@@ -5,6 +5,7 @@ Request for a withdrawal
 Name: {$NAME}
 E-Mail Address: {$EMAIL}
 Order No.: {$ORDERS_ID}
+{if isset($RECEIVED)}Received on: {$RECEIVED}{/if}
 
 {if isset($LINK)}
 In order to securely display your personal order details, we need you to confirm your email address as part of a double opt-in process.
