@@ -92,6 +92,18 @@ $lang_array = array(
 
   'TEXT_PAYPAL_COMPANY_LABEL' => 'Firmenname',
   'TEXT_PAYPAL_COMPANY_LABEL_INFO' => 'Firmenname, der auf der Bank- oder Kreditkartenabrechnung angezeigt wird. <b>Achtung:</b> Keine Sonderzeichen oder Umlaute!',
+
+  'TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_CART' => 'Apple Pay Button im Warenkorb',
+  'TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_CART_INFO' => 'Soll der Apple Pay Button auf der Warenkorbseite angezeigt werden?',
+
+  'TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_CART' => 'Google Pay Button im Warenkorb',
+  'TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_CART_INFO' => 'Soll der Google Pay Button auf der Warenkorbseite angezeigt werden?',
+
+  'TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_BOX_CART' => 'Apple Pay Button in der Warenkorb-Box',
+  'TEXT_PAYPAL_MODULE_APPLEPAY_SHOW_BOX_CART_INFO' => 'Soll der Apple Pay Button in der Warenkorb-Box (Flyout) angezeigt werden?',
+
+  'TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_BOX_CART' => 'Google Pay Button in der Warenkorb-Box',
+  'TEXT_PAYPAL_MODULE_GOOGLEPAY_SHOW_BOX_CART_INFO' => 'Soll der Google Pay Button in der Warenkorb-Box (Flyout) angezeigt werden?',
 );
 
 

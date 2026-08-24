@@ -316,9 +316,10 @@ class PayPalAdmin extends PayPalPayment {
 
     try {
       $WebhookList = $webhook->create($apiContext);
+      $this->save_webhook_id($WebhookList->getId());
     } catch (Exception $ex) {
       $this->LoggingManager->log('DEBUG', 'Webhook', array('exception' => $ex));
-    }    
+    }
 
     $sql_data_array = array();
     for ($i=0, $n=count($data['data']); $i<$n; $i++) {
@@ -466,16 +467,17 @@ class PayPalAdmin extends PayPalPayment {
       $valid = false;
     }
 
-    if ($valid === true) {      
+    if ($valid === true) {
       try {
         $WebhookList->delete($apiContext);
+        $this->delete_webhook_id();
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'Webhook', array('exception' => $ex));
       }
     }
 
     $avaliable_data = $this->available_webhooks();
-    for ($i=0, $n=count($avaliable_data); $i<$n; $i++) { 
+    for ($i=0, $n=count($avaliable_data); $i<$n; $i++) {
       $this->delete_config($avaliable_data[$i]['name']);
     }
   }

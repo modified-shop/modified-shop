@@ -33,28 +33,44 @@ class paypalapplepay extends PayPalPaymentV2 {
 
 
   function update_status() {
-    global $order;
-    
+    global $order, $PHP_SELF;
+
     $this->enabled = false;
-    if (isset($_SESSION['paypal_instruments'])
-        && is_array($_SESSION['paypal_instruments'])
-        && in_array($this->paypal_code, $_SESSION['paypal_instruments'])
+    if ((strpos(basename($PHP_SELF), 'checkout') === false
+         && isset($_SESSION['cart'])
+         && $_SESSION['cart']->count_contents() > 0
+         )
+        || (isset($_SESSION['paypal']['wallet_express'])
+            && $_SESSION['paypal']['wallet_express'] === true
+            )
+        || (isset($_SESSION['paypal_instruments'])
+            && is_array($_SESSION['paypal_instruments'])
+            && in_array($this->paypal_code, $_SESSION['paypal_instruments'])
+            )
         )
     {
       $this->enabled = true;
     }
-    
-	  parent::update_status();	  
+
+    parent::update_status();
   }
 
 
   function confirmation() {
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::confirmation();
+    }
+
     return array ('title' => $this->description);
   }
 
 
   function process_button() {
     global $smarty, $order;
+
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::process_button();
+    }
     
     $smarty->clear_assign('CHECKOUT_BUTTON');
     
@@ -110,7 +126,8 @@ class paypalapplepay extends PayPalPaymentV2 {
     }
 
     $paypalscript = '
-    if ($("#apms_button3").length) {    
+    window.paypalClientErrorToken = "'.$this->get_client_error_token().'";
+    if ($("#apms_button5").length) {
       // eslint-disable-next-line no-undef
       if (typeof ApplePaySession != "undefined" && ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()) {
         setupApplepay().catch(console.error);
@@ -136,7 +153,10 @@ class paypalapplepay extends PayPalPaymentV2 {
           currencyIsoCode: "'.$order->info['currency'].'",
           totalPrice: "'.sprintf($this->numberFormat, round($total, 2)).'",
           totalPriceStatus: "final",
-          totalLabel: "'.$this->encode_utf8($this->get_config('PAYPAL_COMPANY_LABEL')).'",
+          totalLabel: '.json_encode(
+            $this->encode_utf8($this->get_config('PAYPAL_COMPANY_LABEL')),
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+          ).',
         };
       }
       
@@ -155,8 +175,19 @@ class paypalapplepay extends PayPalPaymentV2 {
   }
 
 
-  function before_process() {	  
+  function before_process() {
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::before_process();
+    }
+
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
+
+    if (!is_object($PayPalOrder)
+        || !isset($PayPalOrder->status)
+        )
+    {
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
 
     if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
       $this->redirectOrder($PayPalOrder->links, 'payer-action');
@@ -166,7 +197,7 @@ class paypalapplepay extends PayPalPaymentV2 {
       $_SESSION['paypal']['PayerID'] = $PayPalOrder->payer->payer_id;
     }
   
-    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)) {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }
