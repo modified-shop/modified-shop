@@ -148,7 +148,7 @@
     }
     
     function remove() {
-      xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_WITHDRAW_%'");
 
       xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
                        SET content_status = '0'
@@ -156,9 +156,9 @@
     }
     
     function keys() {
+      // MODULE_WITHDRAW_CAPTCHA is deliberately absent, it stays a hidden setting
       $key = array(
         'MODULE_WITHDRAW_STATUS',
-        'MODULE_WITHDRAW_CAPTCHA',
         'MODULE_WITHDRAW_CONTENT',
       );
   
