@@ -1337,15 +1337,29 @@
     // computed via calculate_tax() and added on top of the subtotal_no_tax
     // sum below. In net-price display mode, that same raw value already IS
     // the correct net value, so no further correction is needed there.
+    // Only classes that actually pass the $where_array filter above (i.e.
+    // are themselves part of the subtotal_no_tax sum) may be corrected here -
+    // a discount/coupon module sorted past $sort_exlude is excluded from
+    // that sum entirely and must not get a correction added on top of it.
     $discount_no_tax = 0;
     if ($status['customers_status_show_price_tax'] == 1) {
-      $total_discount_query = xtc_db_query("SELECT SUM(".$price.") as value
-                                              FROM ".TABLE_ORDERS_RECALCULATE."
-                                             WHERE orders_id = '".(int)$oID."'
-                                               AND class IN ('".implode("', '", get_product_discount_classes())."')");
-      if (xtc_db_num_rows($total_discount_query) > 0) {
-        $total_discount = xtc_db_fetch_array($total_discount_query);
-        $discount_no_tax = abs(calculate_tax($total_discount['value'], $oID, false));
+      $included_discount_classes = array();
+      foreach (get_product_discount_classes() as $product_discount_class) {
+        $product_discount_class_name = str_replace('ot_', '', $product_discount_class);
+        if (!defined('MODULE_ORDER_TOTAL_'.strtoupper($product_discount_class_name).'_SORT_ORDER')
+            || constant('MODULE_ORDER_TOTAL_'.strtoupper($product_discount_class_name).'_SORT_ORDER') <= $sort_exlude) {
+          $included_discount_classes[] = $product_discount_class;
+        }
+      }
+      if (!empty($included_discount_classes)) {
+        $total_discount_query = xtc_db_query("SELECT SUM(".$price.") as value
+                                                FROM ".TABLE_ORDERS_RECALCULATE."
+                                               WHERE orders_id = '".(int)$oID."'
+                                                 AND class IN ('".implode("', '", $included_discount_classes)."')");
+        if (xtc_db_num_rows($total_discount_query) > 0) {
+          $total_discount = xtc_db_fetch_array($total_discount_query);
+          $discount_no_tax = abs(calculate_tax($total_discount['value'], $oID, false));
+        }
       }
     }
 
