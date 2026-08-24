@@ -126,6 +126,38 @@
         }
         break;
         
+      case 'customer':
+        // a logged in customer opening his own order is already identified, no double opt-in needed
+        if (isset($_REQUEST['oID'])
+            && isset($_SESSION['customer_id'])
+            && $_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+            )
+        {
+          $orders_query = xtc_db_query("SELECT *
+                                          FROM ".TABLE_ORDERS."
+                                         WHERE orders_id = '".(int)$_REQUEST['oID']."'
+                                           AND customers_id = '".(int)$_SESSION['customer_id']."'");
+          if (xtc_db_num_rows($orders_query) > 0) {
+            $orders = xtc_db_fetch_array($orders_query);
+
+            $_SESSION['withdraw'][(int)$_REQUEST['oID']] = array(
+              'valid' => true,
+              'success' => false,
+              'verified' => true,
+              'orders_id' => (int)$_REQUEST['oID'],
+              'email_address' => $orders['customers_email_address'],
+              'name' => $orders['customers_lastname'],
+              'orders' => $orders,
+            );
+
+            xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=validate', 'SSL'));
+          }
+        }
+
+        $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
+        xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'oID'))));
+        break;
+
       case 'validate':
         // the link is opened wherever the mail was read, so a token has to work without an existing session
         if (isset($_REQUEST['key']) && is_string($_REQUEST['key'])) {

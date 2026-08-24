@@ -148,6 +148,37 @@
     <br />
     {$downloads_content}
   {/if}
+  {if isset($WITHDRAW_PRODUCTS)}
+    <div class="hr_10"></div>
+    <h4>{$smarty.const.TEXT_WITHDRAW_HISTORY_HEADING}</h4>
+    <p>{$smarty.const.TEXT_WITHDRAW_HISTORY_INFO}</p>
+    <br />
+    <table class="ord_table">
+      <tr>
+        <td class="ord_table_left">{$smarty.const.HEADER_QTY}</td>
+        <td class="ord_table_left">{$smarty.const.HEADER_ARTICLE}</td>
+        <td class="ord_table_right">{$smarty.const.HEADER_MODEL}</td>
+        <td class="ord_table_right">{$smarty.const.TEXT_WITHDRAW_HISTORY_DATE}</td>
+      </tr>
+      {foreach name=withdraw item=withdraw_data from=$WITHDRAW_PRODUCTS}
+      <tr>
+        <td class="ord_table_left ord_width40">{$withdraw_data.PRODUCTS_QUANTITY}&nbsp;x</td>
+        <td class="ord_table_left">
+          <strong>{$withdraw_data.PRODUCTS_NAME}</strong>
+          {if count($withdraw_data.PRODUCTS_ATTRIBUTES) > 0}
+            <ul class="attributes_list">
+              {foreach name=inner item=attributes_data from=$withdraw_data.PRODUCTS_ATTRIBUTES}
+              <li><strong>{$attributes_data.OPTIONS_NAME}:</strong> {$attributes_data.VALUES_NAME}</li>
+              {/foreach}
+            </ul>
+          {/if}
+        </td>
+        <td class="ord_table_right ord_width120">{$withdraw_data.PRODUCTS_MODEL}</td>
+        <td class="ord_table_right ord_width120">{$withdraw_data.DATE_ADDED}</td>
+      </tr>
+      {/foreach}
+    </table>
+  {/if}
 </div>
 
 {if $text_print != ''}
@@ -162,4 +193,5 @@
 <div class="button_right">
   {if isset($BUTTON_CART_EXPRESS)}{$BUTTON_CART_EXPRESS}{/if}
   {$BUTTON_CART}
+  {if isset($BUTTON_WITHDRAW)}{$BUTTON_WITHDRAW}{/if}
 </div>

@@ -709,5 +709,8 @@ define('TEXT_WITHDRAW_SUCCESS', 'Thank you very much for your enquiry.<br/>We ha
 define('TEXT_WITHDRAW_PRODUCTS_SUCCESS', 'Here is a summary of the withdrawn products:');
 define('TEXT_WITHDRAW_PARTLY', 'You can also cancel only part of your order. To do so, we need to verify your email address through a double opt-in process. Please use this <a href="%s">LINK</a> to send an email with a confirmation link. You can also cancel the entire order by clicking the "'.TEXT_WITHDRAW_HEADING.'" button.');
 define('TEXT_WITHDRAW_VERIFY_INFO', 'We have just sent you an email to confirm your email address as part of the double opt-in process. Please open the email and click on the confirmation link inside to complete the process and gain access to your order details.');
+define('TEXT_WITHDRAW_HISTORY_HEADING', 'Withdrawn items');
+define('TEXT_WITHDRAW_HISTORY_INFO', 'We have received your withdrawal for the items listed here. As soon as we have reviewed your details, we will get back to you regarding the next steps.');
+define('TEXT_WITHDRAW_HISTORY_DATE', 'Withdrawn on');
 define('IMAGE_BUTTON_WITHDRAW', 'Declare withdrawal');
 define('EMAIL_WITHDRAW_SUBJECT', 'Withdrawal order {$nr} from {$date}');

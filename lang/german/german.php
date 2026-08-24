@@ -710,5 +710,8 @@ define('TEXT_WITHDRAW_SUCCESS', 'Vielen Dank f&uuml;r Ihre Anfrage.<br/>Wir habe
 define('TEXT_WITHDRAW_PRODUCTS_SUCCESS', 'Die widerrufenen Artikel nochmals zur &Uuml;bersicht:');
 define('TEXT_WITHDRAW_PARTLY', 'Sie k&ouml;nnen auch nur Teile Ihrer Bestellung widerrufen. Dazu ben&ouml;tigen wir eine Best&auml;tigung Ihrer E-Mail-Adresse im Rahmen eines Double-Opt-in-Verfahrens. Verwenden Sie dazu diesen <a href="%s">LINK</a> um eine Mail mit einem Best&auml;tigungslink zu senden. Sie k&ouml;nnen aber auch die gesamte Bestellung widerrufen indem sie den Button "'.TEXT_WITHDRAW_HEADING.'" verwenden.');
 define('TEXT_WITHDRAW_VERIFY_INFO', 'Wir haben Ihnen soeben eine E-Mail zur Best&auml;tigung Ihrer E-Mail-Adresse im Rahmen des Double-Opt-in-Verfahrens gesendet. Bitte &ouml;ffnen Sie die E-Mail und klicken Sie auf den enthaltenen Best&auml;tigungslink, um den Vorgang abzuschlie&szlig;en und Zugriff auf Ihre Bestelldaten zu erhalten.');
+define('TEXT_WITHDRAW_HISTORY_HEADING', 'Widerrufene Artikel');
+define('TEXT_WITHDRAW_HISTORY_INFO', 'F&uuml;r die hier aufgef&uuml;hrten Artikel haben wir Ihren Widerruf erhalten. Sobald wir Ihre Angaben gepr&uuml;ft haben, erhalten Sie von uns eine R&uuml;ckmeldung zur weiteren Abwicklung.');
+define('TEXT_WITHDRAW_HISTORY_DATE', 'Widerrufen am');
 define('IMAGE_BUTTON_WITHDRAW', 'Widerruf erkl&auml;ren');
 define('EMAIL_WITHDRAW_SUBJECT', 'Widerruf Bestellung {$nr} vom {$date}');

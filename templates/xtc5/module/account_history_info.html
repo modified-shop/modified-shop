@@ -83,9 +83,38 @@
   {if $downloads_content neq ''}
     <p>{$downloads_content}</p>
   {/if}
+  {if isset($WITHDRAW_PRODUCTS)}
+    <h2>{$smarty.const.TEXT_WITHDRAW_HISTORY_HEADING}</h2>
+    <p>{$smarty.const.TEXT_WITHDRAW_HISTORY_INFO}</p>
+    <br />
+    <table width="100%" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <td>{#head_units#}</td>
+        <td>{#head_products#}</td>
+        <td>{#head_artnr#}</td>
+        <td>{$smarty.const.TEXT_WITHDRAW_HISTORY_DATE}</td>
+      </tr>
+      {foreach name=withdraw item=withdraw_data from=$WITHDRAW_PRODUCTS}
+      <tr>
+        <td>{$withdraw_data.PRODUCTS_QUANTITY}&nbsp;x</td>
+        <td><strong>{$withdraw_data.PRODUCTS_NAME}</strong>
+          {if count($withdraw_data.PRODUCTS_ATTRIBUTES) > 0}
+            <ul>
+              {foreach name=inner item=attributes_data from=$withdraw_data.PRODUCTS_ATTRIBUTES}
+              <li><em>{$attributes_data.OPTIONS_NAME}: {$attributes_data.VALUES_NAME}</em></li>
+              {/foreach}
+            </ul>
+          {/if}
+        </td>
+        <td>{$withdraw_data.PRODUCTS_MODEL}</td>
+        <td>{$withdraw_data.DATE_ADDED}</td>
+      </tr>
+      {/foreach}
+    </table>
+  {/if}
 </div>
 {if $text_print != ''}
 <h2>{#title_print#}</h2>
 <p>{#text_print#}</p>
 {/if}
-<p>{$BUTTON_PRINT}{if isset($BUTTON_CART_EXPRESS)} {$BUTTON_CART_EXPRESS}{/if} {$BUTTON_CART}</p>
+<p>{$BUTTON_PRINT}{if isset($BUTTON_CART_EXPRESS)} {$BUTTON_CART_EXPRESS}{/if} {$BUTTON_CART}{if isset($BUTTON_WITHDRAW)} {$BUTTON_WITHDRAW}{/if}</p>
