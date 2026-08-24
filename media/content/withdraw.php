@@ -179,9 +179,13 @@
             $token = xtc_db_fetch_array($token_query);
             $orders_id = (int)$token['orders_id'];
 
-            // single use
+            // single use: only the request that actually removes the row has redeemed the token
             xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_TOKEN."
-                           WHERE orders_id = '".$orders_id."'");
+                           WHERE token = '".xtc_db_input($_REQUEST['key'])."'");
+            if (xtc_db_affected_rows() !== 1) {
+              $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
+              xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key', 'oID'))));
+            }
 
             $orders_query = xtc_db_query("SELECT *
                                             FROM ".TABLE_ORDERS."
@@ -339,12 +343,16 @@
               'date_added' => 'now()',
             );
             xtc_db_perform(TABLE_ORDERS_WITHDRAW, $sql_data_array);
-            
+
             $orders_withdraw_id = xtc_db_insert_id();
-            $_SESSION['withdraw'][(int)$_REQUEST['oID']]['orders_withdraw_id'] = $orders_withdraw_id;
+            if ((int)$orders_withdraw_id < 1) {
+              $messageStack->add('withdraw', ENTRY_TOKEN_ERROR);
+              break;
+            }
 
             // the quantity is checked inside the insert, so two parallel requests cannot both book the same rest
             $booked = 0;
+            $failed = false;
             foreach ($sql_array as $sql_data_array) {
               xtc_db_query("INSERT INTO ".TABLE_ORDERS_WITHDRAW_PRODUCTS." (orders_withdraw_id, orders_id, orders_products_id, products_id, products_quantity)
                                  SELECT '".(int)$orders_withdraw_id."',
@@ -359,17 +367,27 @@
                                     AND op.orders_products_id = '".(int)$sql_data_array['orders_products_id']."'
                                GROUP BY op.orders_products_id, op.products_quantity
                                  HAVING COALESCE(SUM(owp.products_quantity), 0) + ".(int)$sql_data_array['products_quantity']." <= op.products_quantity");
-              $booked += xtc_db_affected_rows();
+              $affected = xtc_db_affected_rows();
+              if ($affected < 0) {
+                $failed = true;
+                break;
+              }
+              $booked += $affected;
             }
 
-            // nothing got through, another request was faster
-            if ($booked < 1) {
+            // a failed statement or a faster request leaves nothing worth keeping
+            if ($failed === true || $booked < 1) {
+              // no transactions here, the shop also runs on MyISAM, so clean up by hand
+              xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_PRODUCTS."
+                             WHERE orders_withdraw_id = '".(int)$orders_withdraw_id."'");
               xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW."
                              WHERE orders_withdraw_id = '".(int)$orders_withdraw_id."'");
-              unset($_SESSION['withdraw'][(int)$_REQUEST['oID']]['orders_withdraw_id']);
+
               $messageStack->add('withdraw', ENTRY_TOKEN_ERROR);
               break;
             }
+
+            $_SESSION['withdraw'][(int)$_REQUEST['oID']]['orders_withdraw_id'] = $orders_withdraw_id;
             
             // action send
             $smarty->assign('language', $_SESSION['language']);
