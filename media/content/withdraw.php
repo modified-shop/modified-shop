@@ -301,7 +301,25 @@
           $orders_id = (int)$withdraw_array['orders_id'];
           $orders = $withdraw_array['orders'];
 
-          $products_qty = ((isset($_POST['products_qty']) && is_array($_POST['products_qty'])) ? $_POST['products_qty'] : array());
+          if ($withdraw_array['verified'] === true) {
+            $products_qty = ((isset($_POST['products_qty']) && is_array($_POST['products_qty'])) ? $_POST['products_qty'] : array());
+          } else {
+            // without the double opt-in only a full withdrawal is offered, so the positions come from the
+            // database and the post is ignored entirely, otherwise dropping a hidden field would make it partial
+            $products_qty = array();
+            $open_query = xtc_db_query("SELECT op.orders_products_id,
+                                               op.products_quantity,
+                                               COALESCE(SUM(owp.products_quantity), 0) AS withdraw_quantity
+                                          FROM ".TABLE_ORDERS_PRODUCTS." op
+                                     LEFT JOIN ".TABLE_ORDERS_WITHDRAW_PRODUCTS." owp
+                                            ON owp.orders_products_id = op.orders_products_id
+                                         WHERE op.orders_id = '".(int)$orders_id."'
+                                      GROUP BY op.orders_products_id, op.products_quantity
+                                        HAVING withdraw_quantity < op.products_quantity");
+            while ($open = xtc_db_fetch_array($open_query)) {
+              $products_qty[$open['orders_products_id']] = (int)$open['products_quantity'] - (int)$open['withdraw_quantity'];
+            }
+          }
 
           $sql_array = array();
           foreach ($products_qty as $orders_products_id => $orders_withdraw_products_qty) {
@@ -319,7 +337,7 @@
                                                           GROUP BY op.orders_products_id");
             $orders_withdraw_products = xtc_db_fetch_array($orders_withdraw_products_query);
 
-            // without the double opt-in the form only offers the full amount, so ignore any posted quantity
+            // second guard, the quantity is already the full rest when the list came from the database
             if ($withdraw_array['verified'] !== true) {
               $orders_withdraw_products_qty = (int)$orders_withdraw_products['products_quantity'] - (int)$orders_withdraw_products['withdraw_quantity'];
             }
