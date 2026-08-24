@@ -103,6 +103,15 @@
                      KEY `idx_orders_withdraw_id` (`orders_withdraw_id`),
                      KEY `idx_orders_products_id` (`orders_products_id`)
                      )");
+
+      // CREATE TABLE IF NOT EXISTS does not add a new index to an existing table.
+      $index_query = xtc_db_query("SHOW KEYS
+                                     FROM ".TABLE_ORDERS_WITHDRAW_PRODUCTS."
+                                    WHERE Key_name = 'idx_orders_products_id'");
+      if (xtc_db_num_rows($index_query) < 1) {
+        xtc_db_query("ALTER TABLE ".TABLE_ORDERS_WITHDRAW_PRODUCTS."
+                           ADD KEY `idx_orders_products_id` (`orders_products_id`)");
+      }
     
       // the confirmation link is opened in another browser, so the token cannot live in the session
       xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_ORDERS_WITHDRAW_TOKEN." (
@@ -118,9 +127,11 @@
 
       $check_query = xtc_db_query("SHOW TABLES LIKE 'orders_products_withdraw'");
       if (xtc_db_num_rows($check_query) > 0) {
-        $migrate_query = xtc_db_query("SELECT *
+        $migrate_query = xtc_db_query("SELECT withdraw_id,
+                                              orders_id
                                          FROM `orders_products_withdraw`
-                                     GROUP BY withdraw_id");
+                                     GROUP BY withdraw_id,
+                                              orders_id");
         while ($migrate = xtc_db_fetch_array($migrate_query)) {
           $sql_data_array = array(
             'orders_id' => $migrate['orders_id'],
