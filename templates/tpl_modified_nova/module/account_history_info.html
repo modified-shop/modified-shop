@@ -171,6 +171,51 @@
         <br />
         {$downloads_content}
       {/if}
+      {if isset($WITHDRAW_PRODUCTS)}
+        <br />
+        <div class="subline">{$smarty.const.TEXT_WITHDRAW_HISTORY_HEADING}</div>
+        <p>{$smarty.const.TEXT_WITHDRAW_HISTORY_INFO}</p>
+        <br />
+        <div class="orderflex">
+          <div class="orderflex_row orderflex_row_header">
+            <div class="of_header_col_flex">{$smarty.const.HEADER_ARTICLE}</div>
+            <div class="of_header_col_summary">
+              <div class="of_header_col_qty">{$smarty.const.HEADER_QTY}</div>
+              <div class="of_header_col_total">{$smarty.const.TEXT_WITHDRAW_HISTORY_DATE}</div>
+            </div>
+          </div>
+          {foreach name=withdraw item=withdraw_data from=$WITHDRAW_PRODUCTS}
+            <div class="orderflex_row">
+              <div class="of_col_flex">
+                <div class="of_productname"><strong>{$withdraw_data.PRODUCTS_NAME}</strong></div>
+                {if $withdraw_data.PRODUCTS_MODEL}
+                  <div class="of_inforows">
+                    <div class="of_infoline">{$smarty.const.HEADER_MODEL}: {$withdraw_data.PRODUCTS_MODEL}</div>
+                  </div>
+                {/if}
+                {if count($withdraw_data.PRODUCTS_ATTRIBUTES) > 0}
+                  <ul class="of_attributes" style="margin:11px 0 0 0;">
+                    {foreach name=inner item=attributes_data from=$withdraw_data.PRODUCTS_ATTRIBUTES}
+                      <li><strong>{$attributes_data.OPTIONS_NAME}</strong>: {$attributes_data.VALUES_NAME}</li>
+                    {/foreach}
+                  </ul>
+                {/if}
+              </div>
+              <div class="of_col_summary">
+                <div class="of_col_qty">
+                  <div class="of_col_qty_label">{$smarty.const.HEADER_QTY}</div>
+                  <div class="of_col_qty_inner">
+                    <div class="of_quantity_field">{$withdraw_data.PRODUCTS_QUANTITY}</div>
+                  </div>
+                </div>
+                <div class="of_col_total">
+                  <div class="of_col_total_inner">{$withdraw_data.DATE_ADDED}</div>
+                </div>
+              </div>
+            </div>
+          {/foreach}
+        </div>
+      {/if}
 
       <br />
       <div class="button_row">
@@ -179,6 +224,7 @@
         </div>
         <div class="br_right">
           <div class="br_btn_1">{$BUTTON_CART}</div>
+          {if isset($BUTTON_WITHDRAW)}<div class="br_btn_1">{$BUTTON_WITHDRAW}</div>{/if}
         </div>
         {if isset($BUTTON_CART_EXPRESS)}
           <div class="br_right">

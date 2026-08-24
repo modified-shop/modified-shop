@@ -1039,6 +1039,16 @@ ul.footerlist li li a:hover {
   color:#eee;
   text-decoration:none;
 }
+ul.footerlist li.withdraw_link a {
+  color:#aaa;
+  font-size:13px;
+  font-weight:600;
+  line-height:60px;
+  border-bottom:none;
+}
+ul.footerlist li.withdraw_link a i {
+  display:none;
+}
 
 p.box3_sub {
   margin: 10px 0px 2px 0px;

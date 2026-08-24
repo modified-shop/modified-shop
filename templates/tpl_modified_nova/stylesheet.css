@@ -3821,6 +3821,13 @@ a.view_box.active {
   font-size:10px;
   margin: -12px 0 0 0;
 }
+/* Widerrufsformular */
+ul.content_box_list li.withdraw_link a span {
+  color: var(--footer_box_header, #555);
+  font-size: 14px;
+  line-height: 40px;
+  font-weight: 700;
+}
 /* 22. END footer, copyright, parse time */
 
 

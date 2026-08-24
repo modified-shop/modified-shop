@@ -1,0 +1,33 @@
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+{config_load file="lang_`$language`.custom"}
+Anfrage für einen Widerruf
+
+Name: {$NAME}
+E-Mail Adresse: {$EMAIL}
+Bestellnummer: {$ORDERS_ID}
+
+{if isset($LINK)}
+Um Ihnen Ihre persönlichen Bestelldaten sicher anzeigen zu können, benötigen wir eine Bestätigung Ihrer E-Mail-Adresse im Rahmen eines Double-Opt-in-Verfahrens.
+
+Bitte klicken Sie auf den folgenden Bestätigungslink:
+
+{$LINK}
+
+Erst nach erfolgreicher Bestätigung erhalten Sie Zugriff auf Ihre Bestelldetails. Dieses Verfahren stellt sicher, dass ausschließlich Sie als berechtigte Person Einsicht in Ihre Daten nehmen können und dient dem Schutz Ihrer personenbezogenen Informationen.
+
+Sollten Sie diese Anfrage nicht selbst ausgelöst haben, können Sie diese E-Mail ignorieren. In diesem Fall erfolgt keine Freischaltung Ihrer Bestelldaten.
+{/if}
+{if isset($PRODUCTS)}
+{foreach name=aussen item=order_data from=$PRODUCTS} 
+{$order_data.PRODUCTS_QUANTITY} x {$order_data.PRODUCTS_NAME} {$order_data.PRODUCTS_PRICE}
+Art.-Nr. {$order_data.PRODUCTS_MODEL}
+{if count($order_data.PRODUCTS_ATTRIBUTES) > 0}
+{foreach name=inner item=attributes_data from=$order_data.PRODUCTS_ATTRIBUTES}
+{$attributes_data.OPTIONS_NAME}: {$attributes_data.VALUES_NAME}
+{/foreach}
+{/if}
+
+{/foreach}
+{/if}
+
+[SIGNATUR]

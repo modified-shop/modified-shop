@@ -131,6 +131,67 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
   $smarty->assign('BUTTON_CART_EXPRESS', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$order->info['order_id'], 'SSL').'">'.xtc_image_button('button_checkout_express.gif', IMAGE_BUTTON_IN_CART).'</a>');
 }
 
+// withdrawn positions, same overview as in the admin order view
+if (defined('MODULE_WITHDRAW_STATUS') && MODULE_WITHDRAW_STATUS == 'true') {
+  $withdraw_products_array = array();
+  $withdraw_query = xtc_db_query("SELECT op.products_name,
+                                         op.products_model,
+                                         op.orders_products_id,
+                                         ow.date_added,
+                                         owp.products_quantity
+                                    FROM ".TABLE_ORDERS_PRODUCTS." op
+                                    JOIN ".TABLE_ORDERS_WITHDRAW." ow
+                                         ON ow.orders_id = op.orders_id
+                                    JOIN ".TABLE_ORDERS_WITHDRAW_PRODUCTS." owp
+                                         ON owp.orders_withdraw_id = ow.orders_withdraw_id
+                                            AND owp.orders_products_id = op.orders_products_id
+                                   WHERE op.orders_id = '".(int)$_GET['order_id']."'
+                                ORDER BY ow.date_added, op.products_name");
+  while ($withdraw_products = xtc_db_fetch_array($withdraw_query)) {
+    $attributes_array = array();
+    $attributes_query = xtc_db_query("SELECT products_options,
+                                             products_options_values
+                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                       WHERE orders_id = '".(int)$_GET['order_id']."'
+                                         AND orders_products_id = '".(int)$withdraw_products['orders_products_id']."'");
+    while ($attributes = xtc_db_fetch_array($attributes_query)) {
+      $attributes_array[] = array(
+        'OPTIONS_NAME' => $attributes['products_options'],
+        'VALUES_NAME' => $attributes['products_options_values'],
+      );
+    }
+
+    $withdraw_products_array[] = array(
+      'PRODUCTS_NAME' => $withdraw_products['products_name'],
+      'PRODUCTS_MODEL' => $withdraw_products['products_model'],
+      'PRODUCTS_QUANTITY' => $withdraw_products['products_quantity'],
+      'PRODUCTS_ATTRIBUTES' => $attributes_array,
+      'DATE_ADDED' => xtc_date_short($withdraw_products['date_added']),
+    );
+  }
+
+  if (count($withdraw_products_array) > 0) {
+    $smarty->assign('WITHDRAW_PRODUCTS', $withdraw_products_array);
+  }
+
+  // straight into the verified form, the login already identifies the customer
+  if (defined('MODULE_WITHDRAW_CONTENT') && (int)MODULE_WITHDRAW_CONTENT > 0) {
+    // products_quantity has to be selected, HAVING cannot reach a column that is neither selected nor grouped
+    $open_query = xtc_db_query("SELECT op.orders_products_id,
+                                       op.products_quantity,
+                                       COALESCE(SUM(owp.products_quantity), 0) AS withdraw_quantity
+                                  FROM ".TABLE_ORDERS_PRODUCTS." op
+                             LEFT JOIN ".TABLE_ORDERS_WITHDRAW_PRODUCTS." owp
+                                    ON owp.orders_products_id = op.orders_products_id
+                                 WHERE op.orders_id = '".(int)$_GET['order_id']."'
+                              GROUP BY op.orders_products_id
+                                HAVING withdraw_quantity < op.products_quantity");
+    if (xtc_db_num_rows($open_query) > 0) {
+      $smarty->assign('BUTTON_WITHDRAW', '<a href="'.xtc_href_link(FILENAME_CONTENT, 'coID='.(int)MODULE_WITHDRAW_CONTENT.'&action=customer&oID='.(int)$_GET['order_id'], 'SSL').'">'.xtc_image_button('button_send.gif', IMAGE_BUTTON_WITHDRAW).'</a>');
+    }
+  }
+}
+
 // build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));

@@ -1,0 +1,68 @@
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+{config_load file="lang_`$language`.custom"}
+
+<div style="width:700px;margin: 0px auto;">
+  <table width="700" border="0" align="center" cellpadding="5" cellspacing="0">
+    <tr> 
+      <td align="center" style="padding: 10px 0px;"><img src="{$logo_path}{'logo.gif'|versioning}" /></td>
+    </tr>
+    <tr> 
+      <td style="font-size:14px;text-transform:uppercase;padding:10px 5px;border-top: 1px dotted #999;border-bottom: 1px dotted #999;">
+        <font face="Tahoma, Verdana, sans-serif">Request for a withdrawal</font>
+      </td>
+    </tr>
+    <tr> 
+      <td>
+        <br />
+        <font size="2" face="Tahoma, Verdana, sans-serif">
+          <strong>Name:</strong> {$NAME}<br />
+          <strong>E-Mail Address:</strong> {$EMAIL}<br />
+          <strong>Order No.:</strong> {$ORDERS_ID}<br />
+          <br />
+          {if isset($LINK)}
+            In order to securely display your personal order details, we need you to confirm your email address as part of a double opt-in process.<br />
+            <br />
+            Please click on the following confirmation link:<br />
+            <br />
+            <a href="{$LINK}">{$LINK}</a><br />
+            <br />
+            You will only gain access to your order details after successful confirmation. This procedure ensures that only you, as the authorized person, can view your data and serves to protect your personal information.<br />
+            <br />
+            If you did not initiate this request yourself, you can ignore this email. In this case, your order details will not be activated. <br />
+          {/if}
+          {if isset($PRODUCTS)}
+            <table width="100%" border="0" cellpadding="5" cellspacing="0">
+              <tr> 
+                <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;" align="right"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Pcs. </strong></font></td>
+                <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Product</strong></font></td>
+                <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;white-space:nowrap" width="50"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Prod. No.</strong></font></td>
+                <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;" width="80" align="right"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Singleprice</strong></font></td>
+              </tr>
+              {foreach name=aussen item=order_data from=$PRODUCTS} 
+              <tr> 
+                <td nowrap="nowrap" style="border-bottom:1px dotted #999;" valign="top" width="20" align="right"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_data.PRODUCTS_QUANTITY} x</font></td>
+                <td style="border-bottom:1px dotted #999;" valign="top"><font size="2" face="Tahoma, Verdana, sans-serif">
+                  <strong>{$order_data.PRODUCTS_NAME}</strong>
+    
+                  {if count($order_data.PRODUCTS_ATTRIBUTES) > 0}
+                    <div style="padding: 4px 0px 4px 0px;">
+                      {foreach name=inner item=attributes_data from=$order_data.PRODUCTS_ATTRIBUTES}
+                        <em>{$attributes_data.OPTIONS_NAME}: {$attributes_data.VALUES_NAME}</em><br>
+                      {/foreach}
+                    </div>
+                  {/if}
+                  </font>
+                </td>
+                <td style="border-bottom:1px dotted #999;" valign="top"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_data.PRODUCTS_MODEL}</font></td>
+                <td style="border-bottom:1px dotted #999;" valign="top" align="right"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_data.PRODUCTS_PRICE}</font></td>
+              </tr>
+              {/foreach} 
+            </table>      
+          {/if}
+        </font>
+        <br /><br />
+      </td>
+    </tr>
+  </table>
+  [SIGNATUR]
+</div>

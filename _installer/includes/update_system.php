@@ -459,6 +459,27 @@
     }
   }
 
+  // withdrawal form
+  if (defined('MODULE_WITHDRAW_STATUS')) {
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_ORDERS_WITHDRAW_TOKEN." (
+                   `orders_withdraw_token_id` int(11) NOT NULL AUTO_INCREMENT,
+                   `orders_id` int(11) NOT NULL,
+                   `token` varchar(32) NOT NULL,
+                   `date_added` datetime NOT NULL,
+                   `date_expires` datetime NOT NULL,
+                   PRIMARY KEY (`orders_withdraw_token_id`),
+                   UNIQUE KEY `idx_token` (`token`),
+                   UNIQUE KEY `idx_orders_id` (`orders_id`)
+                   )");
+
+    $check_query = xtc_db_query("SHOW KEYS
+                                  FROM ".TABLE_ORDERS_WITHDRAW_PRODUCTS."
+                                 WHERE Key_name = 'idx_orders_products_id'");
+    if (xtc_db_num_rows($check_query) < 1) {
+      xtc_db_query("ALTER TABLE ".TABLE_ORDERS_WITHDRAW_PRODUCTS." ADD KEY `idx_orders_products_id` (`orders_products_id`)");
+    }
+  }
+
   // cookie consent
   if (defined('MODULE_COOKIE_CONSENT_STATUS')) {
     $languages = array();

@@ -704,6 +704,11 @@ ul.footerlist li li a:hover {
   background: transparent url(img/footer_arrow.png) no-repeat 6px 10px;
   text-decoration:none;
 }
+ul.footerlist li.withdraw_link a {
+  color:#ffffff;
+  font-weight:bold;
+  border-bottom:none;
+}
 
 p.box3_sub {
   margin: 15px 0px 2px 0px;

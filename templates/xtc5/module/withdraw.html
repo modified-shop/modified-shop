@@ -1,0 +1,165 @@
+{config_load file="$language/lang_$language.conf" section="account"}
+{config_load file="$language/lang_$language.conf" section="create_account"}
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+{config_load file="$language/lang_$language.conf" section="contact_us"}
+<h1>{$WITHDRAW_HEADING}</h1>
+
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+{if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+
+{if $FORM_TYPE == 'auth'}
+
+{$WITHDRAW_CONTENT}<br /><br />
+{$FORM_ACTION}
+<div class="highlightbox">
+  <table width="100%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td width="41%">{#text_lastname#}</td>
+      <td width="59%">{$INPUT_NAME}</td>
+    </tr>
+    <tr>
+      <td>{#text_email#}</td>
+      <td width="59%">{$INPUT_EMAIL|replace:"type=\"text\"":"type=\"email\""}</td>
+    </tr>
+    <tr>
+      <td>{#text_oid#}</td>
+      <td width="59%">{$INPUT_ORDER}</td>
+    </tr>
+    {if $VVIMG}
+      <tr class="vvcode_img">
+        <td>{#text_sec_code#}</td>
+        <td width="59%">{$VVIMG}</td>
+      </tr>
+    {/if}
+    {if $INPUT_CODE}
+      <tr class="vvcode_sec">
+        <td>{#text_inp_code#}</td>
+        <td width="59%">{$INPUT_CODE}<span class="inputRequirement">*</span></td>
+      </tr>
+    {/if}
+    <tr>
+      <td>&nbsp;</td>
+      <td width="59%">{$BUTTON_SUBMIT}</td>
+    </tr>
+    <tr>
+      <th>{#text_hint#}</th>
+    </tr>
+  </table>
+  {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
+    <table width="100%" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        {if $PRIVACY_CHECKBOX}<td>{$PRIVACY_CHECKBOX}</td>{/if}
+        <td width="100%"><strong><label for="privacy">{#text_privacy_accept#|sprintf:$smarty.const.STORE_OWNER_EMAIL_ADDRESS}</label></strong> {$PRIVACY_LINK}</td>
+      </tr>
+    </table>
+  {else}
+    {if $PRIVACY_CHECKBOX}
+    <table width="100%" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <td>{$PRIVACY_CHECKBOX}</td>
+        <td width="100%"><strong><label for="privacy">{#text_privacy_accept#}</label></strong> {$PRIVACY_LINK}</td>
+      </tr>
+    </table>
+    {/if}
+  {/if}
+</div>
+{$FORM_END}
+
+{elseif $FORM_TYPE == 'products'}
+
+{$FORM_ACTION}
+<h2>{$WITHDRAW_INFO}</h2>
+
+{if isset($PRODUCTS) && is_array($PRODUCTS) && count($PRODUCTS) > 0}
+  {if $VERIFIED === true}
+    <p>{$smarty.const.TEXT_WITHDRAW_PRODUCTS_SELECT}</p>
+
+    <div class="highlightbox">
+      <table width="100%" border="0" cellspacing="0" cellpadding="4">
+        <tr>
+          <th align="left">{$smarty.const.HEADER_ARTICLE}</th>
+          <th align="left" width="20%">{$smarty.const.HEADER_MODEL}</th>
+          <th align="right" width="15%">{$smarty.const.HEADER_SINGLE}</th>
+          <th align="right" width="10%">{$smarty.const.HEADER_QTY}</th>
+        </tr>
+        {foreach name=aussen item=order_data from=$PRODUCTS}
+        <tr>
+          <td valign="top">
+            <strong>{$order_data.PRODUCTS_NAME}</strong>
+            {if count($order_data.PRODUCTS_ATTRIBUTES) > 0}
+              <ul>
+                {foreach name=inner item=attributes_data from=$order_data.PRODUCTS_ATTRIBUTES}
+                <li><strong>{$attributes_data.OPTIONS_NAME}:</strong> {$attributes_data.VALUES_NAME}</li>
+                {/foreach}
+              </ul>
+            {/if}
+          </td>
+          <td valign="top">{$order_data.PRODUCTS_MODEL}</td>
+          <td valign="top" align="right">{$order_data.PRODUCTS_PRICE}</td>
+          <td valign="top" align="right">{$order_data.PRODUCTS_QTY}</td>
+        </tr>
+        {/foreach}
+      </table>
+    </div>
+  {else}
+    <p>{$TEXT_WITHDRAW_PARTLY}</p>
+
+    {foreach name=aussen item=data from=$HIDDEN_DATA}
+      {$data}
+    {/foreach}
+  {/if}
+{else}
+  <div class="infomessage">{$smarty.const.TEXT_WITHDRAW_NO_PRODUCTS}</div>
+{/if}
+
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td align="left">{if isset($BUTTON_BACK)}{$BUTTON_BACK}{/if}</td>
+    <td align="right">{if isset($BUTTON_SUBMIT)}{$BUTTON_SUBMIT}{/if}</td>
+  </tr>
+</table>
+{$FORM_END}
+
+{elseif $FORM_TYPE == 'success'}
+
+<p>{$smarty.const.TEXT_WITHDRAW_SUCCESS}</p>
+
+{if $VERIFIED === true && isset($PRODUCTS) && is_array($PRODUCTS) && count($PRODUCTS) > 0}
+  <p>{$smarty.const.TEXT_WITHDRAW_PRODUCTS_SUCCESS}</p>
+
+  <div class="highlightbox">
+    <table width="100%" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <th align="right" width="10%">{$smarty.const.HEADER_QTY}</th>
+        <th align="left">{$smarty.const.HEADER_ARTICLE}</th>
+        <th align="left" width="20%">{$smarty.const.HEADER_MODEL}</th>
+        <th align="right" width="15%">{$smarty.const.HEADER_SINGLE}</th>
+      </tr>
+      {foreach name=aussen item=order_data from=$PRODUCTS}
+      <tr>
+        <td valign="top" align="right">{$order_data.PRODUCTS_QUANTITY}&nbsp;x</td>
+        <td valign="top">
+          <strong>{$order_data.PRODUCTS_NAME}</strong>
+          {if count($order_data.PRODUCTS_ATTRIBUTES) > 0}
+            <ul>
+              {foreach name=inner item=attributes_data from=$order_data.PRODUCTS_ATTRIBUTES}
+              <li><strong>{$attributes_data.OPTIONS_NAME}:</strong> {$attributes_data.VALUES_NAME}</li>
+              {/foreach}
+            </ul>
+          {/if}
+        </td>
+        <td valign="top">{$order_data.PRODUCTS_MODEL}</td>
+        <td valign="top" align="right">{$order_data.PRODUCTS_PRICE}</td>
+      </tr>
+      {/foreach}
+    </table>
+  </div>
+{/if}
+
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td align="right">{$BUTTON_CONTINUE}</td>
+  </tr>
+</table>
+
+{/if}

@@ -1599,6 +1599,10 @@ ul.contentmenu li.level1 a:hover {
   background-color:#e1e1e1;
   font-weight:bold;
 }
+ul.contentmenu li.withdraw_link a {
+  border-left:3px solid #333;
+  padding-left:3px;
+}
 ul.contentmenu li.activeparent1 a  { font-style:italic; background:#eee; }
 ul.contentmenu li.active1 a  {  font-style: italic; background: #d7c9d1;}
 /* 2nd TIER */

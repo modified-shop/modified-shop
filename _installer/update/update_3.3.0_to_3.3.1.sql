@@ -119,4 +119,32 @@ JOIN `languages` AS l ON l.`directory` = o.`language`
 SET o.`languages_id` = l.`languages_id`
 WHERE o.`languages_id` = 0;
 
+#GTB - 2026-08-24 - add withdrawal form content page for every language, but only if no content page uses withdraw.php yet
+INSERT INTO `content_manager`
+  (`categories_id`, `parent_id`, `group_ids`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_status`, `content_group`, `content_delete`, `content_meta_title`, `content_meta_description`, `content_meta_keywords`, `content_meta_robots`, `content_active`, `content_group_index`, `date_added`, `last_modified`)
+SELECT
+  0,
+  0,
+  '',
+  l.`languages_id`,
+  IF(l.`directory` = 'german', 'Vertrag widerrufen', 'Withdraw contract'),
+  IF(l.`directory` = 'german', 'Widerruf erklären', 'Declare withdrawal'),
+  IF(l.`directory` = 'german', '<p>Unser Widerrufsformular bietet Ihnen eine einfache Möglichkeit, Ihren Vertrag innerhalb der gesetzlichen Widerrufsfrist zu widerrufen.</p><p>Nach Eingang Ihres Widerrufs erhalten Sie von uns eine Bestätigung über den Erhalt.</p>', '<p>Our withdrawal form gives you an easy way to withdraw from your contract within the statutory withdrawal period.</p><p>Once we have received your withdrawal, we will send you a confirmation of receipt.</p>'),
+  0,
+  1,
+  'withdraw.php',
+  0,
+  g.`content_group`,
+  0,
+  '', '', '', '',
+  '1',
+  0,
+  NOW(),
+  NULL
+FROM `languages` AS l
+CROSS JOIN (SELECT COALESCE(MAX(`content_group`), 0) + 1 AS `content_group`,
+                   COALESCE(SUM(`content_file` = 'withdraw.php'), 0) AS `already_installed`
+              FROM `content_manager`) AS g
+WHERE g.`already_installed` = 0;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
