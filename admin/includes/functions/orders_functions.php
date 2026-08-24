@@ -1331,20 +1331,14 @@
                                                  AND class = 'ot_subtotal_no_tax'");
     $check_no_tax_value = xtc_db_fetch_array($check_no_tax_value_query);
 
-    // ot_discount/ot_coupon already carry their own n_price into the
-    // subtotal_no_tax_value sum below unless their module sort_order pushes
-    // them past $sort_exlude (excluded via $where_array). Only in that case
-    // do they need to be added back separately, to avoid double-counting them.
+    // In gross-price display mode, ot_discount/ot_coupon store their raw
+    // (gross) entered value directly in n_price (module loop above, tax_class
+    // '0' branch) - it is not actually net, so its net-equivalent has to be
+    // computed via calculate_tax() and added on top of the subtotal_no_tax
+    // sum below. In net-price display mode, that same raw value already IS
+    // the correct net value, so no further correction is needed there.
     $discount_no_tax = 0;
-    $product_discount_classes_excluded = false;
-    foreach (get_product_discount_classes() as $product_discount_class) {
-      $product_discount_class_name = str_replace('ot_', '', $product_discount_class);
-      if (defined('MODULE_ORDER_TOTAL_'.strtoupper($product_discount_class_name).'_SORT_ORDER')
-          && constant('MODULE_ORDER_TOTAL_'.strtoupper($product_discount_class_name).'_SORT_ORDER') > $sort_exlude) {
-        $product_discount_classes_excluded = true;
-      }
-    }
-    if ($product_discount_classes_excluded) {
+    if ($status['customers_status_show_price_tax'] == 1) {
       $total_discount_query = xtc_db_query("SELECT SUM(".$price.") as value
                                               FROM ".TABLE_ORDERS_RECALCULATE."
                                              WHERE orders_id = '".(int)$oID."'
