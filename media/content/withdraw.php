@@ -112,14 +112,21 @@
           if (xtc_db_num_rows($orders_query) < 1) {          
             $messageStack->add('withdraw', ENTRY_TOKEN_ERROR);
           } else {
+            $orders = xtc_db_fetch_array($orders_query);
+
+            // owning the order while logged in identifies the customer just as well as the double opt-in does
+            $verified = (isset($_SESSION['customer_id'])
+                         && $_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+                         && (int)$orders['customers_id'] === (int)$_SESSION['customer_id']);
+
             $_SESSION['withdraw'][(int)$orders_id] = array(
               'valid' => true,
               'success' => false,
-              'verified' => false,
+              'verified' => $verified,
               'orders_id' => $orders_id,
               'email_address' => $email_address,
               'name' => ((isset($name)) ? $name : ''),
-              'orders' => xtc_db_fetch_array($orders_query),
+              'orders' => $orders,
             );
             xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'oID')).'action=validate&oID='.(int)$orders_id, 'SSL'));
           }
@@ -336,9 +343,32 @@
             $orders_withdraw_id = xtc_db_insert_id();
             $_SESSION['withdraw'][(int)$_REQUEST['oID']]['orders_withdraw_id'] = $orders_withdraw_id;
 
+            // the quantity is checked inside the insert, so two parallel requests cannot both book the same rest
+            $booked = 0;
             foreach ($sql_array as $sql_data_array) {
-              $sql_data_array['orders_withdraw_id'] = $orders_withdraw_id;
-              xtc_db_perform(TABLE_ORDERS_WITHDRAW_PRODUCTS, $sql_data_array);
+              xtc_db_query("INSERT INTO ".TABLE_ORDERS_WITHDRAW_PRODUCTS." (orders_withdraw_id, orders_id, orders_products_id, products_id, products_quantity)
+                                 SELECT '".(int)$orders_withdraw_id."',
+                                        op.orders_id,
+                                        op.orders_products_id,
+                                        op.products_id,
+                                        '".(int)$sql_data_array['products_quantity']."'
+                                   FROM ".TABLE_ORDERS_PRODUCTS." op
+                              LEFT JOIN ".TABLE_ORDERS_WITHDRAW_PRODUCTS." owp
+                                     ON owp.orders_products_id = op.orders_products_id
+                                  WHERE op.orders_id = '".(int)$orders_id."'
+                                    AND op.orders_products_id = '".(int)$sql_data_array['orders_products_id']."'
+                               GROUP BY op.orders_products_id, op.products_quantity
+                                 HAVING COALESCE(SUM(owp.products_quantity), 0) + ".(int)$sql_data_array['products_quantity']." <= op.products_quantity");
+              $booked += xtc_db_affected_rows();
+            }
+
+            // nothing got through, another request was faster
+            if ($booked < 1) {
+              xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW."
+                             WHERE orders_withdraw_id = '".(int)$orders_withdraw_id."'");
+              unset($_SESSION['withdraw'][(int)$_REQUEST['oID']]['orders_withdraw_id']);
+              $messageStack->add('withdraw', ENTRY_TOKEN_ERROR);
+              break;
             }
             
             // action send

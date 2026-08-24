@@ -147,4 +147,39 @@ CROSS JOIN (SELECT COALESCE(MAX(`content_group`), 0) + 1 AS `content_group`,
               FROM `content_manager`) AS g
 WHERE g.`already_installed` = 0;
 
+
+
+#GTB - 2026-08-24 - make sure the tables exist before the index is added, shops without the former external module have none of them
+CREATE TABLE IF NOT EXISTS `orders_withdraw` (
+  `orders_withdraw_id` int(11) NOT NULL AUTO_INCREMENT,
+  `orders_id` int(11) NOT NULL,
+  `date_added` datetime NOT NULL,
+  PRIMARY KEY (`orders_withdraw_id`),
+  KEY `idx_orders_id` (`orders_id`)
+);
+
+CREATE TABLE IF NOT EXISTS `orders_withdraw_products` (
+  `orders_withdraw_products_id` int(11) NOT NULL AUTO_INCREMENT,
+  `orders_withdraw_id` int(11) NOT NULL,
+  `orders_id` int(11) NOT NULL,
+  `orders_products_id` int(11) NOT NULL,
+  `products_id` int(11) NOT NULL,
+  `products_quantity` int(11) NOT NULL,
+  PRIMARY KEY (`orders_withdraw_products_id`),
+  KEY `idx_orders_withdraw_id` (`orders_withdraw_id`)
+);
+#GTB - 2026-08-24 - the withdrawal token table is new in this version, shops running the former external module only have the two older tables
+CREATE TABLE IF NOT EXISTS `orders_withdraw_token` (
+  `orders_withdraw_token_id` int(11) NOT NULL AUTO_INCREMENT,
+  `orders_id` int(11) NOT NULL,
+  `token` varchar(32) NOT NULL,
+  `date_added` datetime NOT NULL,
+  `date_expires` datetime NOT NULL,
+  PRIMARY KEY (`orders_withdraw_token_id`),
+  UNIQUE KEY `idx_token` (`token`),
+  KEY `idx_orders_id` (`orders_id`)
+);
+
+#GTB - 2026-08-24 - the remaining quantity lookup joins over orders_products_id, which had no index
+ALTER TABLE `orders_withdraw_products` ADD INDEX `idx_orders_products_id` (`orders_products_id`);
 # Keep an empty line at the end of this file for the db_updater to work properly

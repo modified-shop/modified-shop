@@ -158,34 +158,38 @@
     <h4>{$smarty.const.TEXT_WITHDRAW_HISTORY_HEADING}</h4>
     <p>{$smarty.const.TEXT_WITHDRAW_HISTORY_INFO}</p>
     <br />
-    <div class="orderlist">
-      <div class="orderlist_row orderlist_head cf">
-        <span class="ol_quantity ol_width1">{$smarty.const.HEADER_QTY}</span>
-        <span class="ol_productsname ol_width3">{$smarty.const.HEADER_ARTICLE}</span>
-        <span class="ol_price_row ol_width4_header cf">
-          <span class="ol_totalprice ol_width5">{$smarty.const.TEXT_WITHDRAW_HISTORY_DATE}</span>
-        </span>
-      </div>
+    <ul class="orderlist account_history">
+      <li>
+        <div class="orderlist_header cf">
+          <span class="ol_quantity ol_width1">{$smarty.const.HEADER_QTY}</span>
+          <span class="ol_productsname ol_width3">{$smarty.const.HEADER_ARTICLE}</span>
+          <span class="ol_price_row ol_width4_header cf">
+            <span class="ol_totalprice ol_width5">{$smarty.const.TEXT_WITHDRAW_HISTORY_DATE}</span>
+          </span>
+        </div>
+      </li>
       {foreach name=withdraw item=withdraw_data from=$WITHDRAW_PRODUCTS}
-      <div class="orderlist_row {cycle values="ol_row1,ol_row2"} cf">
-        <span class="ol_quantity ol_width1"><span class="ol_distance">{$withdraw_data.PRODUCTS_QUANTITY}&nbsp;x</span></span>
-        <span class="ol_productsname ol_width3">
-          <span class="ol_distance"><strong>{$withdraw_data.PRODUCTS_NAME}</strong></span>
-          {if $withdraw_data.PRODUCTS_MODEL}<div class="ol_model">{$smarty.const.HEADER_MODEL}: {$withdraw_data.PRODUCTS_MODEL}</div>{/if}
-          {if count($withdraw_data.PRODUCTS_ATTRIBUTES) > 0}
-            <ul class="attributes_list">
-              {foreach name=inner item=attributes_data from=$withdraw_data.PRODUCTS_ATTRIBUTES}
-              <li><strong>{$attributes_data.OPTIONS_NAME}:</strong> {$attributes_data.VALUES_NAME}</li>
-              {/foreach}
-            </ul>
-          {/if}
-        </span>
-        <span class="ol_price_row ol_width4 cf">
-          <span class="ol_totalprice ol_width5"><span class="ol_distance">{$withdraw_data.DATE_ADDED}</span></span>
-        </span>
-      </div>
+      <li>
+        <div class="orderlist_row {cycle values="ol_row1,ol_row2"} cf">
+          <span class="ol_quantity ol_width1"><span class="ol_distance">{$withdraw_data.PRODUCTS_QUANTITY}&nbsp;x</span></span>
+          <span class="ol_productsname ol_width3">
+            <span class="ol_distance"><strong>{$withdraw_data.PRODUCTS_NAME}</strong></span>
+            {if $withdraw_data.PRODUCTS_MODEL}<div class="ol_model">{$smarty.const.HEADER_MODEL}: {$withdraw_data.PRODUCTS_MODEL}</div>{/if}
+            {if count($withdraw_data.PRODUCTS_ATTRIBUTES) > 0}
+              <ul class="attributes_list">
+                {foreach name=inner item=attributes_data from=$withdraw_data.PRODUCTS_ATTRIBUTES}
+                <li><strong>{$attributes_data.OPTIONS_NAME}:</strong> {$attributes_data.VALUES_NAME}</li>
+                {/foreach}
+              </ul>
+            {/if}
+          </span>
+          <span class="ol_price_row ol_width4 cf">
+            <span class="ol_totalprice ol_width5"><span class="ol_distance">{$withdraw_data.DATE_ADDED}</span></span>
+          </span>
+        </div>
+      </li>
       {/foreach}
-    </div>
+    </ul>
   {/if}
 </div>
 

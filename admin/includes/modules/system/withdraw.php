@@ -100,7 +100,8 @@
                      `products_id` int(11) NOT NULL,
                      `products_quantity` int(11) NOT NULL,
                      PRIMARY KEY (`orders_withdraw_products_id`),
-                     KEY `idx_orders_withdraw_id` (`orders_withdraw_id`)
+                     KEY `idx_orders_withdraw_id` (`orders_withdraw_id`),
+                     KEY `idx_orders_products_id` (`orders_products_id`)
                      )");
     
       // the confirmation link is opened in another browser, so the token cannot live in the session
