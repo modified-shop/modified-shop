@@ -113,6 +113,10 @@ function mod_log_exception($e)
     $index = md5($error['name'].$error['line'].$error['file'].$error['message']);
 
     if (!isset($error_exceptions[$error['name']][$index])) {
+      // pass the charset explicitly, the ini default_charset may hold a value the html functions reject
+      $log_charset = function_exists('get_default_charset') ? get_default_charset() : 'UTF-8';
+      $message = html_entity_decode($error['message'], ENT_QUOTES | ENT_SUBSTITUTE, $log_charset);
+
       $error_exceptions[$error['name']][$index] = sprintf(
         <<<'HTML'
         <table style="width: 1000px; display: inline-block;">
@@ -121,10 +125,11 @@ function mod_log_exception($e)
           <tr style="color:#000; background-color:#e6e6e6;"><th>File</th><td>%s</td></tr>
           <tr style="color:#000; background-color:#F0F0F0;"><th>Line</th><td>%s</td></tr>
         HTML,
-        $error['name'],
-        $error['message'],
-        $error['file'],
-        $error['line']
+        // an error message can carry request data, so escape everything that goes into the table
+        htmlspecialchars($error['name'], ENT_QUOTES | ENT_SUBSTITUTE, $log_charset),
+        htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, $log_charset),
+        htmlspecialchars($error['file'], ENT_QUOTES | ENT_SUBSTITUTE, $log_charset),
+        (int)$error['line']
       ) . PHP_EOL;
       $traceIndex = 0;
       foreach ($backtrace as $frame) {
@@ -138,7 +143,7 @@ function mod_log_exception($e)
         $error_exceptions[$error['name']][$index] .= sprintf(
           '  <tr style="color:#000; background-color:#e6e6e6;"><th>Backtrace #%d</th><td>%s</td></tr>%s',
           $traceIndex,
-          htmlspecialchars($location, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+          htmlspecialchars($location, ENT_QUOTES | ENT_SUBSTITUTE, $log_charset),
           PHP_EOL
         );
         $traceIndex++;
@@ -147,7 +152,10 @@ function mod_log_exception($e)
 
       // write Logfile
       $LoggingManager->log($error['name'], $error['name'].' found for URL: ' . mod_error_url());
-      $LoggingManager->log($error['name'], html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line']);
+      $LoggingManager->log(
+        $error['name'],
+        $message . ' in File: ' . $error['file'] . ' on Line: ' . $error['line']
+      );
       $traceIndex = 0;
       foreach ($backtrace as $frame) {
         $file = $frame['file'] ?? null;

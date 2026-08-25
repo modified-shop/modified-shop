@@ -45,4 +45,4 @@ if (isset($_GET['language'])
 }
 
 // set default charset
-@ini_set('default_charset', $_SESSION['language_charset']);
+set_session_charset();

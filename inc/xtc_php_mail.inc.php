@@ -71,6 +71,11 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $lang_data = xtc_db_fetch_array($lang_query, true);
   }
 
+  // the stored value may be an alias like "utf8", which the html functions and the mail header reject
+  if (is_array($lang_data)) {
+    $lang_data['language_charset'] = get_default_encoding(isset($lang_data['language_charset']) ? $lang_data['language_charset'] : '');
+  }
+
   // includes main class
   if (!is_object($main)) {
     require_once(DIR_FS_CATALOG.'includes/classes/main.php');
