@@ -10,12 +10,14 @@ use Modified\Storefront\Template\TemplateRuntime;
 use Modified\Storefront\Template\Smarty\Cache\ModifiedCacheResource;
 use Modified\Storefront\Template\Smarty\Legacy\LegacyTemplateEngineExtensionApi;
 use Modified\Storefront\Template\Smarty\Resource\ParentTemplateResource;
+use Modified\Storefront\Template\Smarty\Resource\SmartyResourceContext;
 use Smarty\Smarty;
 
 final class SmartyConfigurator
 {
-    public function configure(Smarty $smarty): void
+    public function configure(Smarty $smarty, ?SmartyResourceContext $resourceContext = null): void
     {
+        $resourceContext ??= new SmartyResourceContext();
         $catalogRoot = $this->catalogRoot();
         $runtime = $this->availableRuntime();
         $smarty->setCompileDir($catalogRoot . '/templates_c');
@@ -23,7 +25,7 @@ final class SmartyConfigurator
         $smarty->setTemplateDir($this->templateDirectories($catalogRoot, $runtime));
         $smarty->setConfigDir($this->configDirectories($catalogRoot, $runtime));
         (new LegacyTemplateEngineExtensionApi())->register($smarty, $runtime, $catalogRoot);
-        $smarty->registerResource('parent', new ParentTemplateResource());
+        $smarty->registerResource('parent', new ParentTemplateResource(null, $resourceContext));
         if (!defined('RUN_MODE_INSTALLER')) {
             $modifiedCache = $this->availableModifiedCache();
             if ($modifiedCache !== null) {
