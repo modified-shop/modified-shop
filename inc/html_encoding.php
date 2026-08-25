@@ -172,30 +172,9 @@ function get_language_charset($charset = '')
     $charset = normalize_charset(isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : '');
   }
 
-  // ENCODE_DEFAULT_CHARSET is part of ENCODE_LANGUAGE_CHARSETS, so the result is always allowed
+  // ENCODE_DEFAULT_CHARSET is part of ENCODE_LANGUAGE_CHARSETS, so the result is always a charset
+  // the PHP html functions accept, which is what ENCODE_DEFINED_CHARSETS never guaranteed
   return ($charset !== '') ? $charset : ENCODE_DEFAULT_CHARSET;
-}
-
-/**
- * get_html_charset
- */
-function get_html_charset($charset)
-{
-  // both are part of ENCODE_DEFINED_CHARSETS, but the PHP html functions reject them and assume UTF-8
-  static $html_charset_aliases = array('ASCII' => 'UTF-8', 'GB18030' => 'GB2312');
-
-  $charset = strtoupper(trim((string)$charset));
-
-  if (isset($html_charset_aliases[$charset])) {
-    return $html_charset_aliases[$charset];
-  }
-
-  // a legacy charset the shop still knows keeps working, only the admin choice is limited
-  if ($charset !== '' && in_array($charset, get_supported_charset())) {
-    return $charset;
-  }
-
-  return normalize_charset($charset);
 }
 
 /**
@@ -203,9 +182,7 @@ function get_html_charset($charset)
  */
 function get_default_charset()
 {
-  $charset = get_html_charset(isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : '');
-
-  return ($charset !== '') ? $charset : ENCODE_DEFAULT_CHARSET;
+  return get_language_charset();
 }
 
 /**
@@ -213,9 +190,7 @@ function get_default_charset()
  */
 function get_default_encoding($encoding)
 {
-  $encoding = get_html_charset($encoding);
-
-  return ($encoding !== '') ? $encoding : get_default_charset();
+  return get_language_charset($encoding);
 }
 
 /**
@@ -223,15 +198,7 @@ function get_default_encoding($encoding)
  */
 function set_session_charset()
 {
-  $charset = isset($_SESSION['language_charset']) ? trim((string)$_SESSION['language_charset']) : '';
-
-  // resolve an alias like "utf8", but keep an unknown value, it may be a charset this shop really uses
-  if ($charset !== '' && !in_array(strtoupper($charset), get_supported_charset())) {
-    $normalized_charset = normalize_charset($charset);
-    $charset = ($normalized_charset !== '') ? $normalized_charset : $charset;
-  }
-
-  $_SESSION['language_charset'] = ($charset !== '') ? $charset : get_default_charset();
+  $_SESSION['language_charset'] = get_language_charset();
 
   // PHP derives the Content-Type header from this, so it has to stay the real response charset
   @ini_set('default_charset', $_SESSION['language_charset']);

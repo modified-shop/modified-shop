@@ -169,5 +169,3 @@ if (!function_exists('draw_input_per_page')) {
     return $output;
   }
 }
-
-

@@ -18,75 +18,6 @@
 
   require('includes/application_top.php');
 
-  /**
-   * get_selectable_charsets
-   */
-  function get_selectable_charsets()
-  {
-    static $selectable_charsets;
-
-    if (!isset($selectable_charsets)) {
-      $selectable_charsets = array();
-      foreach (get_language_charsets() as $language_charset) {
-        $selectable_charsets[strtoupper($language_charset)] = $language_charset;
-      }
-
-      // a legacy shop keeps its own charset selectable, otherwise its languages drift apart
-      $charset_query = xtc_db_query("SELECT DISTINCT language_charset FROM " . TABLE_LANGUAGES);
-      while ($charset_data = xtc_db_fetch_array($charset_query)) {
-        $charset_in_use = trim((string)$charset_data['language_charset']);
-        // an alias like "utf8" resolves to an allowed charset and must not become selectable itself
-        if ($charset_in_use !== ''
-            && normalize_charset($charset_in_use) === ''
-            && !isset($selectable_charsets[strtoupper($charset_in_use)])
-            )
-        {
-          $selectable_charsets[strtoupper($charset_in_use)] = $charset_in_use;
-        }
-      }
-
-      $selectable_charsets = array_values($selectable_charsets);
-    }
-
-    return $selectable_charsets;
-  }
-
-  /**
-   * get_charset_options
-   */
-  function get_charset_options()
-  {
-    $charset_options = array();
-    foreach (get_selectable_charsets() as $selectable_charset) {
-      $charset_options[] = array('id' => $selectable_charset, 'text' => $selectable_charset);
-    }
-
-    return $charset_options;
-  }
-
-  /**
-   * get_charset_value
-   */
-  function get_charset_value($post_charset, $stored_charset = '')
-  {
-    // a post the shop does not offer must never replace the charset the language already has
-    foreach (array($post_charset, $stored_charset) as $charset) {
-      $charset_value = normalize_charset($charset);
-      if ($charset_value !== '') {
-        return $charset_value;
-      }
-
-      $charset = trim((string)$charset);
-      foreach (get_selectable_charsets() as $selectable_charset) {
-        if (strcasecmp($charset, $selectable_charset) === 0) {
-          return $selectable_charset;
-        }
-      }
-    }
-
-    return get_language_charset();
-  }
-
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_LANGUAGES_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
@@ -109,7 +40,8 @@
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
         break;
       case 'insert':
-        $charset_value = get_charset_value(isset($_POST['language_charset']) ? xtc_db_prepare_input($_POST['language_charset']) : '');
+        // a language may only use ENCODE_LANGUAGE_CHARSETS, never store anything else
+        $charset_value = get_language_charset(isset($_POST['language_charset']) ? xtc_db_prepare_input($_POST['language_charset']) : '');
         $sql_data_array = array(
             'name' => xtc_db_prepare_input($_POST['name']), 
             'code' => xtc_db_prepare_input($_POST['code']),  
@@ -147,14 +79,17 @@
       case 'save':
         $lID = (int)$_GET['lID'];
        
-        $charset_query = xtc_db_query("SELECT language_charset
-                                         FROM " . TABLE_LANGUAGES . "
-                                        WHERE languages_id = '" . (int)$lID . "'");
-        $charset_current = xtc_db_fetch_array($charset_query);
-        $charset_value = get_charset_value(
-          (isset($_POST['language_charset']) ? xtc_db_prepare_input($_POST['language_charset']) : ''),
-          (is_array($charset_current) ? $charset_current['language_charset'] : '')
-        );
+        // a language may only use ENCODE_LANGUAGE_CHARSETS, never store anything else
+        $charset_value = normalize_charset(isset($_POST['language_charset']) ? xtc_db_prepare_input($_POST['language_charset']) : '');
+
+        if ($charset_value === '') {
+          // an unusable post must not replace the charset the language already has
+          $charset_query = xtc_db_query("SELECT language_charset
+                                           FROM " . TABLE_LANGUAGES . "
+                                          WHERE languages_id = '" . (int)$lID . "'");
+          $charset_current = xtc_db_fetch_array($charset_query);
+          $charset_value = get_language_charset(is_array($charset_current) ? $charset_current['language_charset'] : '');
+        }
 
         $sql_data_array = array(
           'name' => xtc_db_prepare_input($_POST['name']), 
@@ -616,6 +551,11 @@
             $heading = array();
             $contents = array();
 
+            $charset_options = array();
+            foreach (get_language_charsets() as $language_charset) {
+              $charset_options[] = array('id' => $language_charset, 'text' => $language_charset);
+            }
+
             switch ($action) {
               case 'new':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_LANGUAGE . '</b>');
@@ -623,7 +563,7 @@
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . '<br />' . xtc_draw_input_field('name'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CODE . '<br />' . xtc_draw_input_field('code'));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_pull_down_menu('language_charset', get_charset_options(), get_charset_value(isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : '')));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_pull_down_menu('language_charset', $charset_options, get_language_charset()));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', 'icon.gif'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order'));
@@ -636,7 +576,7 @@
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . '<br />' . xtc_draw_input_field('name', $lInfo->name));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CODE . '<br />' . xtc_draw_input_field('code', $lInfo->code));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_pull_down_menu('language_charset', get_charset_options(), get_charset_value($lInfo->language_charset)));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_pull_down_menu('language_charset', $charset_options, get_language_charset($lInfo->language_charset)));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', $lInfo->image));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory', $lInfo->directory));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $lInfo->sort_order));
