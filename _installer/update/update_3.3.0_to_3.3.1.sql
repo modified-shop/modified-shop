@@ -147,4 +147,11 @@ CROSS JOIN (SELECT COALESCE(MAX(`content_group`), 0) + 1 AS `content_group`,
               FROM `content_manager`) AS g
 WHERE g.`already_installed` = 0;
 
+#GTB - 2026-08-25 - removed worldpay
+DELETE FROM `configuration` WHERE `configuration_key` LIKE 'MODULE_PAYMENT_WORLDPAY_%';
+
+UPDATE `configuration`
+   SET `configuration_value` = TRIM(BOTH ';' FROM REPLACE(REPLACE(CONCAT(';', `configuration_value`, ';'), ';worldpay_junior.php;', ';'), ';worldpay.php;', ';'))
+ WHERE `configuration_key` = 'MODULE_PAYMENT_INSTALLED';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

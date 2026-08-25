@@ -44,6 +44,7 @@
     'callback/moneybookers',
     'callback/pn_sofortueberweisung',
     'callback/sofort',
+    'callback/worldpay',
     'callback/xtbooster',
     'export/easybill',
     'export/idealo',
