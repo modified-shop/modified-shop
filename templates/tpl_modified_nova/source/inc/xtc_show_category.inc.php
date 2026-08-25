@@ -124,7 +124,7 @@
           }
         }
         $categories_string .= $tab.'<li class="level'.$level.$cat_active.$cat_active_parent.$hasSubs.'">';
-        $categories_string .= '<a href="'.$link.'" title="'.encode_htmlentities($categories['name']).'">';
+        $categories_string .= '<a href="'.$link.'" title="'.encode_htmlentities(strip_tags($categories['name'])).'">';
 
         $categories_string .= $categories['name'];
         if ($level == 1) {
@@ -148,7 +148,7 @@
 
             // show all
             $categories_string .= $tab.'<li class="overview level'.($level + 1).$cat_active.'">';
-            $categories_string .= '<a href="'.$link.'" title="'.encode_htmlentities($categories['name']).'">';
+            $categories_string .= '<a href="'.$link.'" title="'.encode_htmlentities(strip_tags($categories['name'])).'">';
             $categories_string .= '<i class="fa-solid fa-circle-chevron-right"></i>' . TEXT_SHOW_CATEGORY . ' ' . $categories['name'];
             if (SHOW_COUNTS == 'true') {
               $products_in_category = xtc_count_products_in_category($categories['id']);
