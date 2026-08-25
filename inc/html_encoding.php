@@ -13,10 +13,8 @@
 
 define('ENCODE_DEFINED_CHARSETS','ASCII,UTF-8,ISO-8859-1,ISO-8859-15,cp866,cp1251,cp1252,KOI8-R,GB18030,SJIS,EUC-JP');
 define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-15');
-// the PHP html functions accept a different set than mbstring, ASCII and GB18030 are missing there
-define('ENCODE_HTML_CHARSETS','UTF-8,ISO-8859-1,ISO-8859-5,ISO-8859-15,cp866,cp1251,cp1252,KOI8-R,BIG5,BIG5-HKSCS,GB2312,SJIS,EUC-JP,MacRoman');
-// htmlentities() only does basic substitution for these and warns about it, htmlspecialchars() does not
-define('ENCODE_HTML_BASIC_CHARSETS','BIG5,BIG5-HKSCS,GB2312,SJIS,EUC-JP');
+// the only charsets a language may use, ENCODE_DEFINED_CHARSETS stays the mb_detect_encoding list
+define('ENCODE_LANGUAGE_CHARSETS','UTF-8,ISO-8859-15');
 
 /**
  * encode_htmlentities
@@ -24,12 +22,7 @@ define('ENCODE_HTML_BASIC_CHARSETS','BIG5,BIG5-HKSCS,GB2312,SJIS,EUC-JP');
 function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if ($string !== null && $string !== '') {
-    $encoding = get_html_charset($encoding);
-
-    if (in_array($encoding, explode(',', ENCODE_HTML_BASIC_CHARSETS))) {
-      return htmlspecialchars($string, $flags , $encoding);
-    }
-
+    $encoding = get_default_encoding($encoding);
     return htmlentities($string, $flags , $encoding);
   } else {
     return $string;
@@ -42,7 +35,7 @@ function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if ($string !== null && $string !== '') {
-    $encoding = get_html_charset($encoding);
+    $encoding = get_default_encoding($encoding);
     return htmlspecialchars($string, $flags , $encoding);
   } else {
     return $string;
@@ -74,7 +67,7 @@ function encode_utf8($string, $encoding = '', $force_utf8 = false)
 function decode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if ($string !== null && $string !== '') {
-    $encoding = get_html_charset($encoding);
+    $encoding = get_default_encoding($encoding);
     return html_entity_decode($string, $flags , $encoding);
   } else {
     return $string;
@@ -129,6 +122,20 @@ function get_supported_charset()
 }
 
 /**
+ * get_language_charsets
+ */
+function get_language_charsets()
+{
+  static $language_charsets;
+
+  if (!isset($language_charsets)) {
+    $language_charsets = explode(',', strtoupper(ENCODE_LANGUAGE_CHARSETS));
+  }
+
+  return $language_charsets;
+}
+
+/**
  * normalize_charset
  */
 function normalize_charset($charset)
@@ -141,20 +148,13 @@ function normalize_charset($charset)
     return '';
   }
 
-  if (in_array($charset, get_supported_charset())) {
+  if (in_array($charset, get_language_charsets())) {
     return $charset;
   }
 
   if (!isset($charset_aliases)) {
-    $charset_aliases = array(
-      'LATIN1'      => 'ISO-8859-1',
-      'LATIN9'      => 'ISO-8859-15',
-      'WINDOWS1251' => 'CP1251',
-      'WINDOWS1252' => 'CP1252',
-      'SHIFTJIS'    => 'SJIS',
-      'USASCII'     => 'ASCII',
-    );
-    foreach (get_supported_charset() as $supported) {
+    $charset_aliases = array('LATIN9' => 'ISO-8859-15');
+    foreach (get_language_charsets() as $supported) {
       $charset_aliases[preg_replace('/[^A-Z0-9]/', '', $supported)] = $supported;
     }
   }
@@ -166,59 +166,20 @@ function normalize_charset($charset)
 }
 
 /**
- * get_html_charset
- */
-function get_html_charset($charset = '')
-{
-  static $html_charsets;
-
-  if (!isset($html_charsets)) {
-    // aliases the PHP html functions accept beyond the canonical spellings
-    $html_charsets = array(
-      'SHIFTJIS'    => 'SJIS',
-      'SJISWIN'     => 'SJIS',
-      'CP932'       => 'SJIS',
-      '932'         => 'SJIS',
-      'EUCJPWIN'    => 'EUC-JP',
-      'WINDOWS1251' => 'cp1251',
-      'WIN1251'     => 'cp1251',
-      'WINDOWS1252' => 'cp1252',
-      '1252'        => 'cp1252',
-      'IBM866'      => 'cp866',
-      '866'         => 'cp866',
-      'KOI8RU'      => 'KOI8-R',
-      '950'         => 'BIG5',
-      '936'         => 'GB2312',
-      'LATIN1'      => 'ISO-8859-1',
-      'LATIN9'      => 'ISO-8859-15',
-    );
-    foreach (explode(',', ENCODE_HTML_CHARSETS) as $supported) {
-      $html_charsets[preg_replace('/[^A-Z0-9]/', '', strtoupper($supported))] = $supported;
-    }
-  }
-
-  $charset = trim((string)$charset);
-
-  if ($charset === '') {
-    $charset = isset($_SESSION['language_charset']) ? trim((string)$_SESSION['language_charset']) : '';
-  }
-
-  if ($charset === '') {
-    $charset = ENCODE_DEFAULT_CHARSET;
-  }
-
-  $alias = preg_replace('/[^A-Z0-9]/', '', strtoupper($charset));
-
-  return isset($html_charsets[$alias]) ? $html_charsets[$alias] : 'UTF-8';
-}
-
-/**
  * get_default_charset
  */
 function get_default_charset()
 {
-  $default_charset = isset($_SESSION['language_charset']) ? normalize_charset($_SESSION['language_charset']) : '';
-  return ($default_charset !== '') ? $default_charset : ENCODE_DEFAULT_CHARSET;
+  $charset = isset($_SESSION['language_charset']) ? strtoupper(trim((string)$_SESSION['language_charset'])) : '';
+
+  // a legacy charset the shop still knows keeps working, only the admin choice is limited
+  if ($charset !== '' && in_array($charset, get_supported_charset())) {
+    return $charset;
+  }
+
+  $charset = normalize_charset($charset);
+
+  return ($charset !== '') ? $charset : ENCODE_DEFAULT_CHARSET;
 }
 
 /**
@@ -226,7 +187,14 @@ function get_default_charset()
  */
 function get_default_encoding($encoding)
 {
+  $encoding = strtoupper(trim((string)$encoding));
+
+  if ($encoding !== '' && in_array($encoding, get_supported_charset())) {
+    return $encoding;
+  }
+
   $encoding = normalize_charset($encoding);
+
   return ($encoding !== '') ? $encoding : get_default_charset();
 }
 

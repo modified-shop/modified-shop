@@ -552,7 +552,7 @@
             $contents = array();
 
             $charset_options = array();
-            foreach (get_supported_charset() as $supported_charset) {
+            foreach (get_language_charsets() as $supported_charset) {
               $charset_options[] = array('id' => $supported_charset, 'text' => $supported_charset);
             }
 
