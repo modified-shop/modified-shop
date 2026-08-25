@@ -411,6 +411,9 @@
 .transfer{
   margin-top:20px;
 }
+.SumoSelect.language_charset {
+  width: 100%;
+}
 </style>
 </head>
 <body>
