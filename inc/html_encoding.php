@@ -14,7 +14,9 @@
 define('ENCODE_DEFINED_CHARSETS','ASCII,UTF-8,ISO-8859-1,ISO-8859-15,cp866,cp1251,cp1252,KOI8-R,GB18030,SJIS,EUC-JP');
 define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-15');
 // the PHP html functions accept a different set than mbstring, ASCII and GB18030 are missing there
-define('ENCODE_HTML_CHARSETS','UTF-8,ISO-8859-1,ISO-8859-5,ISO-8859-15,cp866,cp1251,cp1252,KOI8-R,BIG5,GB2312,SJIS,EUC-JP');
+define('ENCODE_HTML_CHARSETS','UTF-8,ISO-8859-1,ISO-8859-5,ISO-8859-15,cp866,cp1251,cp1252,KOI8-R,BIG5,BIG5-HKSCS,GB2312,SJIS,EUC-JP,MacRoman');
+// htmlentities() only does basic substitution for these and warns about it, htmlspecialchars() does not
+define('ENCODE_HTML_BASIC_CHARSETS','BIG5,BIG5-HKSCS,GB2312,SJIS,EUC-JP');
 
 /**
  * encode_htmlentities
@@ -23,6 +25,11 @@ function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
   if ($string !== null && $string !== '') {
     $encoding = get_html_charset($encoding);
+
+    if (in_array($encoding, explode(',', ENCODE_HTML_BASIC_CHARSETS))) {
+      return htmlspecialchars($string, $flags , $encoding);
+    }
+
     return htmlentities($string, $flags , $encoding);
   } else {
     return $string;
@@ -166,7 +173,28 @@ function get_html_charset($charset = '')
   static $html_charsets;
 
   if (!isset($html_charsets)) {
-    $html_charsets = explode(',', strtoupper(ENCODE_HTML_CHARSETS));
+    // aliases the PHP html functions accept beyond the canonical spellings
+    $html_charsets = array(
+      'SHIFTJIS'    => 'SJIS',
+      'SJISWIN'     => 'SJIS',
+      'CP932'       => 'SJIS',
+      '932'         => 'SJIS',
+      'EUCJPWIN'    => 'EUC-JP',
+      'WINDOWS1251' => 'cp1251',
+      'WIN1251'     => 'cp1251',
+      'WINDOWS1252' => 'cp1252',
+      '1252'        => 'cp1252',
+      'IBM866'      => 'cp866',
+      '866'         => 'cp866',
+      'KOI8RU'      => 'KOI8-R',
+      '950'         => 'BIG5',
+      '936'         => 'GB2312',
+      'LATIN1'      => 'ISO-8859-1',
+      'LATIN9'      => 'ISO-8859-15',
+    );
+    foreach (explode(',', ENCODE_HTML_CHARSETS) as $supported) {
+      $html_charsets[preg_replace('/[^A-Z0-9]/', '', strtoupper($supported))] = $supported;
+    }
   }
 
   $charset = trim((string)$charset);
@@ -179,13 +207,9 @@ function get_html_charset($charset = '')
     $charset = ENCODE_DEFAULT_CHARSET;
   }
 
-  // an unknown value is kept as it is, it may still be a charset the html functions know
-  $normalized = normalize_charset($charset);
-  if ($normalized !== '') {
-    $charset = $normalized;
-  }
+  $alias = preg_replace('/[^A-Z0-9]/', '', strtoupper($charset));
 
-  return in_array(strtoupper($charset), $html_charsets) ? $charset : 'UTF-8';
+  return isset($html_charsets[$alias]) ? $html_charsets[$alias] : 'UTF-8';
 }
 
 /**
