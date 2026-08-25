@@ -166,6 +166,21 @@ function normalize_charset($charset)
 }
 
 /**
+ * get_language_charset
+ */
+function get_language_charset($charset = '')
+{
+  $charset = normalize_charset($charset);
+
+  if ($charset === '') {
+    $charset = normalize_charset(isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : '');
+  }
+
+  // ENCODE_DEFAULT_CHARSET is part of ENCODE_LANGUAGE_CHARSETS, so the result is always allowed
+  return ($charset !== '') ? $charset : ENCODE_DEFAULT_CHARSET;
+}
+
+/**
  * get_default_charset
  */
 function get_default_charset()

@@ -40,15 +40,15 @@
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
         break;
       case 'insert':
-        // an unsupported charset breaks the PHP html functions shop wide, so never store one
-        $charset_value = normalize_charset(xtc_db_prepare_input($_POST['language_charset']));
+        // a language may only use ENCODE_LANGUAGE_CHARSETS, never store anything else
+        $charset_value = get_language_charset(xtc_db_prepare_input($_POST['language_charset']));
         $sql_data_array = array(
             'name' => xtc_db_prepare_input($_POST['name']), 
             'code' => xtc_db_prepare_input($_POST['code']),  
             'image' => xtc_db_prepare_input($_POST['image']),  
             'directory' => xtc_db_prepare_input($_POST['directory']),  
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
-            'language_charset' => ($charset_value !== '') ? $charset_value : get_default_charset(),
+            'language_charset' => $charset_value,
           );
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array);      
         $lID = xtc_db_insert_id();
@@ -79,7 +79,7 @@
       case 'save':
         $lID = (int)$_GET['lID'];
        
-        // an unsupported charset breaks the PHP html functions shop wide, so never store a new one
+        // a language may only use ENCODE_LANGUAGE_CHARSETS, never store a new value outside it
         $post_charset = xtc_db_prepare_input($_POST['language_charset']);
         $charset_value = normalize_charset($post_charset);
 
@@ -91,7 +91,7 @@
           $charset_current = xtc_db_fetch_array($charset_query);
           $charset_value = (is_array($charset_current) && $post_charset === $charset_current['language_charset'])
                            ? $post_charset
-                           : get_default_charset();
+                           : get_language_charset();
         }
 
         $sql_data_array = array(
