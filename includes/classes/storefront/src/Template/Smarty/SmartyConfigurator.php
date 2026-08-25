@@ -4,8 +4,8 @@ namespace Modified\Storefront\Template\Smarty;
 
 use LogicException;
 use Modified\Storefront\Template\Exception\TemplateNotFoundException;
+use Modified\Storefront\Template\FilesystemPath;
 use Modified\Storefront\Template\TemplateManifestRepository;
-use Modified\Storefront\Template\TemplatePath;
 use Modified\Storefront\Template\TemplateRuntime;
 use Modified\Storefront\Template\Smarty\Cache\ModifiedCacheResource;
 use Modified\Storefront\Template\Smarty\Legacy\LegacyTemplateEngineExtensionApi;
