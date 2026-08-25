@@ -75,21 +75,10 @@ final class TemplatePath
     }
 
     /**
-     * Joins a URL base with a relative path while normalizing their boundary slash.
+     * Compatibility entry point for the PR-1 API; new code uses TemplateUrl directly.
      */
     public static function joinUrl(string $baseUrl, string $relativePath): string
     {
-        $baseUrl = rtrim($baseUrl, '/');
-        $relativePath = ltrim($relativePath, '/');
-
-        if ($baseUrl === '') {
-            return $relativePath;
-        }
-
-        if ($relativePath === '') {
-            return $baseUrl . '/';
-        }
-
-        return $baseUrl . '/' . $relativePath;
+        return TemplateUrl::join($baseUrl, $relativePath);
     }
 }
