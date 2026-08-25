@@ -5,10 +5,9 @@ namespace Modified\Storefront\Template;
 use Modified\Storefront\Template\Exception\InvalidTemplatePathException;
 
 /**
- * Provides safe path operations shared by the template system.
+ * Validates template-relative logical names used by the existing template API.
  *
- * It rejects absolute or traversing logical names such as "../file.html" and
- * consistently combines validated relative names with filesystem paths or URLs.
+ * It rejects absolute or traversing logical names such as "../file.html".
  */
 final class TemplatePath
 {
@@ -68,15 +67,11 @@ final class TemplatePath
     }
 
     /**
-     * Joins a filesystem base directory with an optional relative path.
+     * Compatibility entry point for the PR-1 API; new code uses FilesystemPath directly.
      */
     public static function joinFilesystem(string $baseDirectory, string $relativePath = ''): string
     {
-        $baseDirectory = rtrim(str_replace('\\', '/', $baseDirectory), '/');
-
-        return $relativePath === ''
-            ? $baseDirectory
-            : $baseDirectory . '/' . ltrim($relativePath, '/');
+        return FilesystemPath::join($baseDirectory, $relativePath);
     }
 
     /**

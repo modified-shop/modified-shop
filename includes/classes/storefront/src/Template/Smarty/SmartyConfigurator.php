@@ -37,9 +37,9 @@ final class SmartyConfigurator
      */
     private function configDirectories(string $catalogRoot, ?TemplateRuntime $runtime): array
     {
-        $canonicalCatalogRoot = realpath($catalogRoot);
-        $directories = [TemplatePath::joinFilesystem(
-            $canonicalCatalogRoot === false ? $catalogRoot : $canonicalCatalogRoot,
+        $canonicalCatalogRoot = FilesystemPath::canonicalize($catalogRoot);
+        $directories = [FilesystemPath::join(
+            $canonicalCatalogRoot ?? $catalogRoot,
             'lang'
         )];
         if ($runtime === null) {
@@ -47,7 +47,7 @@ final class SmartyConfigurator
         }
 
         foreach ($runtime->chain() as $templateId) {
-            $directories[] = TemplatePath::joinFilesystem(
+            $directories[] = FilesystemPath::join(
                 $runtime->fileResolver()->templateDirectory($templateId),
                 'lang'
             );
@@ -70,7 +70,7 @@ final class SmartyConfigurator
             return null;
         }
 
-        $cacheInitialization = rtrim((string) DIR_FS_CATALOG, '/\\') . '/includes/modified_cache.php';
+        $cacheInitialization = FilesystemPath::join((string) DIR_FS_CATALOG, 'includes/modified_cache.php');
         if (!is_file($cacheInitialization)) {
             return null;
         }
@@ -89,7 +89,7 @@ final class SmartyConfigurator
     {
         if ($runtime === null) {
             $repository = new TemplateManifestRepository(
-                TemplatePath::joinFilesystem($catalogRoot, 'templates')
+                FilesystemPath::join($catalogRoot, 'templates')
             );
 
             return [$this->directoryWithinRoot($repository->templatesDirectory(), $catalogRoot)];
@@ -125,11 +125,10 @@ final class SmartyConfigurator
 
     private function directoryWithinRoot(string $directory, string $root): string
     {
-        $canonicalRoot = realpath($root);
-        $directory = rtrim(str_replace('\\', '/', $directory), '/');
-        $canonicalRoot = $canonicalRoot === false ? '' : rtrim(str_replace('\\', '/', $canonicalRoot), '/');
+        $canonicalRoot = FilesystemPath::canonicalize($root);
+        $directory = FilesystemPath::normalize($directory);
 
-        if ($canonicalRoot === '' || !str_starts_with($directory . '/', $canonicalRoot . '/')) {
+        if ($canonicalRoot === null || !FilesystemPath::isWithin($directory, $canonicalRoot)) {
             throw new TemplateNotFoundException(sprintf(
                 'The template directory "%s" is outside the shop root "%s".',
                 $directory,
@@ -143,7 +142,7 @@ final class SmartyConfigurator
     private function catalogRoot(): string
     {
         if (defined('DIR_FS_CATALOG') && is_string(DIR_FS_CATALOG) && trim(DIR_FS_CATALOG) !== '') {
-            return rtrim(DIR_FS_CATALOG, '/\\');
+            return FilesystemPath::normalize(DIR_FS_CATALOG);
         }
 
         return dirname(__DIR__, 6);
