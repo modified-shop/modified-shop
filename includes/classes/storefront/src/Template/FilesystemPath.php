@@ -26,8 +26,8 @@ final class FilesystemPath
     /**
      * Returns the normalized canonical path when the filesystem entry exists.
      *
-     * Example: canonicalize('/shop/templates/../templates/NOVA') returns
-     * '/shop/templates/NOVA' when that directory exists.
+     * Example: canonicalize('/shop/templates/../templates/tpl_modified') returns
+     * '/shop/templates/tpl_modified' when that directory exists.
      */
     public static function canonicalize(string $path): ?string
     {
@@ -39,7 +39,7 @@ final class FilesystemPath
     /**
      * Joins a base path with any number of relative path segments.
      *
-     * Example: join('/shop', 'templates', 'NOVA') returns '/shop/templates/NOVA'.
+     * Example: join('/shop', 'templates', 'tpl_modified') returns '/shop/templates/tpl_modified'.
      */
     public static function join(string $basePath, string ...$relativePaths): string
     {
@@ -60,7 +60,7 @@ final class FilesystemPath
     /**
      * Checks containment at path-segment boundaries.
      *
-     * Example: isWithin('/shop/templates/NOVA', '/shop/templates') returns true.
+     * Example: isWithin('/shop/templates/tpl_modified', '/shop/templates') returns true.
      */
     public static function isWithin(string $path, string $root): bool
     {
