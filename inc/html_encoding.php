@@ -48,6 +48,12 @@ function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 function encode_utf8($string, $encoding = '', $force_utf8 = false)
 {
   if ($string !== null && $string !== '' && (get_default_charset() === 'UTF-8' || $force_utf8 === true)) {
+    // a language charset may be an alias, a technical encoding like ISO-8859-1 stays as it is
+    $charset = normalize_charset($encoding);
+    if ($charset !== '') {
+      $encoding = $charset;
+    }
+
     $cur_encoding = !empty($encoding) && in_array(strtoupper($encoding), get_supported_charset()) ? strtoupper($encoding) : detect_encoding($string);
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
       return $string;
