@@ -489,6 +489,77 @@
     while ($row = xtc_db_fetch_array($qr)) {
       $languages[$row['languages_id']] = $row;
     }
+
+    // the cookie settings link left the templates and needs a content page of its own now
+    if (!defined('MODULE_COOKIE_CONSENT_CONTENT')) {
+      $content_group = 0;
+      $content_query = xtc_db_query("SELECT content_group
+                                       FROM ".TABLE_CONTENT_MANAGER."
+                                      WHERE content_file = 'cookie_consent.php'
+                                   ORDER BY content_group
+                                      LIMIT 1");
+      if (xtc_db_num_rows($content_query) > 0) {
+        $content = xtc_db_fetch_array($content_query);
+        $content_group = (int)$content['content_group'];
+      } else {
+        $defined_texts = array(
+          'german' => array(
+            'title'   => 'Cookie-Einstellungen',
+            'heading' => 'Cookie-Einstellungen',
+            'text'    => '<p>Hier können Sie Ihre Entscheidung über die eingesetzten Cookies jederzeit einsehen und ändern.</p>'
+          ),
+          'english' => array(
+            'title'   => 'Cookie settings',
+            'heading' => 'Cookie settings',
+            'text'    => '<p>Here you can review and change your decision about the cookies in use at any time.</p>'
+          )
+        );
+
+        $next_query = xtc_db_query("SELECT MAX(content_group) AS content_group
+                                      FROM ".TABLE_CONTENT_MANAGER);
+        $next = xtc_db_fetch_array($next_query);
+        $content_group = (int)$next['content_group'] + 1;
+
+        $sort_query = xtc_db_query("SELECT MAX(sort_order) AS sort_order
+                                      FROM ".TABLE_CONTENT_MANAGER."
+                                     WHERE parent_id = '0'");
+        $sort = xtc_db_fetch_array($sort_query);
+        $sort_order = (int)$sort['sort_order'] + 1;
+
+        $content_status = ((strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true') ? '1' : '0');
+
+        // without the customer groups the group check hides the page for everybody
+        $group_ids = '';
+        $groups_query = xtc_db_query("SELECT DISTINCT customers_status_id
+                                        FROM ".TABLE_CUSTOMERS_STATUS);
+        while ($group = xtc_db_fetch_array($groups_query)) {
+          $group_ids .= 'c_'.(int)$group['customers_status_id'].'_group,';
+        }
+
+        foreach ($languages as $language_id => $language) {
+          $texts = (isset($defined_texts[$language['directory']]) ? $defined_texts[$language['directory']] : $defined_texts['english']);
+
+          $sql_data_array = array(
+            'group_ids'       => $group_ids,
+            'languages_id'    => $language_id,
+            'content_title'   => decode_utf8($texts['title'], $language['language_charset']),
+            'content_heading' => decode_utf8($texts['heading'], $language['language_charset']),
+            'content_text'    => decode_utf8($texts['text'], $language['language_charset']),
+            'sort_order'      => $sort_order,
+            'file_flag'       => '1',
+            'content_file'    => 'cookie_consent.php',
+            'content_status'  => $content_status,
+            'content_group'   => $content_group,
+            'content_delete'  => '0',
+            'content_active'  => '1',
+            'date_added'      => 'now()'
+          );
+          xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array);
+        }
+      }
+
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT', '".$content_group."', '6', '5', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
+    }
   
     // Trustedshops
     $defined_cookies[] = array(

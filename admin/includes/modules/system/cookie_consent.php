@@ -26,7 +26,7 @@ if (!class_exists('cookie_consent')) {
     var $_check;
 
     function __construct() {
-      $this->version = '1.54';
+      $this->version = '1.55';
       $this->code = 'cookie_consent';
       $this->title = 'Cookie Consent';
       $this->description = 'Cookie Consent-Modul based on oil.js';
@@ -38,7 +38,16 @@ if (!class_exists('cookie_consent')) {
     }
 
     function process($file) {
-    
+      // the status is already saved when this runs, so read it from the database instead of the stale constant
+      $status_query = xtc_db_query("SELECT configuration_value
+                                      FROM ".TABLE_CONFIGURATION."
+                                     WHERE configuration_key = 'MODULE_COOKIE_CONSENT_STATUS'");
+      $status = xtc_db_fetch_array($status_query);
+      $content_status = ((isset($status['configuration_value']) && strtolower($status['configuration_value']) == 'true') ? '1' : '0');
+
+      xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                       SET content_status = '".$content_status."'
+                     WHERE content_file = 'cookie_consent.php'");
     }
 
     function display() {
@@ -63,7 +72,9 @@ if (!class_exists('cookie_consent')) {
     }
 
     function install() {
-      
+      // the link in the content boxes needs a content page of its own
+      $content_group = $this->create_content();
+
       if (!defined('MODULE_COOKIE_CONSENT_STATUS')) {
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_STATUS', 'true', '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       }
@@ -76,6 +87,14 @@ if (!class_exists('cookie_consent')) {
       if (!defined('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE')) {
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE', 'false', '6', '4', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       }
+      if (!defined('MODULE_COOKIE_CONSENT_CONTENT')) {
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT', '".$content_group."', '6', '5', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
+      }
+
+      // an already existing page comes back into the content boxes on a reinstall
+      xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                       SET content_status = '1'
+                     WHERE content_file = 'cookie_consent.php'");
       
       // load language-data
       $languages = array();
@@ -403,14 +422,91 @@ if (!class_exists('cookie_consent')) {
 
     }
 
+    function create_content() {
+      $content_query = xtc_db_query("SELECT content_group
+                                       FROM ".TABLE_CONTENT_MANAGER."
+                                      WHERE content_file = 'cookie_consent.php'
+                                   ORDER BY content_group
+                                      LIMIT 1");
+      if (xtc_db_num_rows($content_query) > 0) {
+        $content = xtc_db_fetch_array($content_query);
+        return (int)$content['content_group'];
+      }
+
+      $defined_texts = array(
+        'german' => array(
+          'title'   => 'Cookie-Einstellungen',
+          'heading' => 'Cookie-Einstellungen',
+          'text'    => '<p>Hier können Sie Ihre Entscheidung über die eingesetzten Cookies jederzeit einsehen und ändern.</p>'
+        ),
+        'english' => array(
+          'title'   => 'Cookie settings',
+          'heading' => 'Cookie settings',
+          'text'    => '<p>Here you can review and change your decision about the cookies in use at any time.</p>'
+        )
+      );
+
+      // the new page gets its own group and goes to the end of the content boxes
+      $next_query = xtc_db_query("SELECT MAX(content_group) AS content_group
+                                    FROM ".TABLE_CONTENT_MANAGER);
+      $next = xtc_db_fetch_array($next_query);
+      $content_group = (int)$next['content_group'] + 1;
+
+      $sort_query = xtc_db_query("SELECT MAX(sort_order) AS sort_order
+                                    FROM ".TABLE_CONTENT_MANAGER."
+                                   WHERE parent_id = '0'");
+      $sort = xtc_db_fetch_array($sort_query);
+      $sort_order = (int)$sort['sort_order'] + 1;
+
+      // without the customer groups the group check hides the page for everybody
+      $group_ids = '';
+      $groups_query = xtc_db_query("SELECT DISTINCT customers_status_id
+                                      FROM ".TABLE_CUSTOMERS_STATUS);
+      while ($group = xtc_db_fetch_array($groups_query)) {
+        $group_ids .= 'c_'.(int)$group['customers_status_id'].'_group,';
+      }
+
+      $languages_query = xtc_db_query("SELECT languages_id,
+                                              directory,
+                                              language_charset
+                                         FROM ".TABLE_LANGUAGES);
+      while ($language = xtc_db_fetch_array($languages_query)) {
+        $texts = (isset($defined_texts[$language['directory']]) ? $defined_texts[$language['directory']] : $defined_texts['english']);
+
+        $sql_data_array = array(
+          'group_ids'       => $group_ids,
+          'languages_id'    => $language['languages_id'],
+          'content_title'   => decode_utf8($texts['title'], $language['language_charset']),
+          'content_heading' => decode_utf8($texts['heading'], $language['language_charset']),
+          'content_text'    => decode_utf8($texts['text'], $language['language_charset']),
+          'sort_order'      => $sort_order,
+          'file_flag'       => '1',
+          'content_file'    => 'cookie_consent.php',
+          'content_status'  => '1',
+          'content_group'   => $content_group,
+          'content_delete'  => '0',
+          'content_active'  => '1',
+          'date_added'      => 'now()'
+        );
+        xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array);
+      }
+
+      return $content_group;
+    }
+
     function remove() {
       xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` LIKE 'MODULE_COOKIE_CONSENT_%'");
+
+      xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                       SET content_status = '0'
+                     WHERE content_file = 'cookie_consent.php'");
     }
 
     function keys() {
       return array(
         'MODULE_COOKIE_CONSENT_STATUS',
-        'MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE'
+        'MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE',
+        'MODULE_COOKIE_CONSENT_CONTENT'
       );
     }
   }
