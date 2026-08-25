@@ -11,8 +11,10 @@
    ---------------------------------------------------------------------------------------*/
 
 
-defined('ENCODE_DEFINED_CHARSETS') or define('ENCODE_DEFINED_CHARSETS','ASCII,UTF-8,ISO-8859-1,ISO-8859-15,cp866,cp1251,cp1252,KOI8-R,GB18030,SJIS,EUC-JP'); 
-defined('ENCODE_DEFAULT_CHARSET') or define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-15');
+// use the shared encoding helpers, a local copy of them drifts apart from the rest of the shop
+if (!function_exists('get_default_encoding')) {
+  require_once(DIR_FS_INC.'html_encoding.php');
+}
 
 /*
  * helper functions
@@ -155,49 +157,6 @@ if (!function_exists('xtc_cfg_save_max_display_results')) {
 }
 
 
-if (!function_exists('encode_utf8')) {
-  function encode_utf8($in_str) {
-    if (strtolower($_SESSION['language_charset']) == 'utf-8') {
-      $cur_encoding = detect_encoding($in_str);
-      if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
-        return $in_str;
-      } else {
-        return mb_convert_encoding($in_str,"UTF-8","ISO-8859-15");
-      }
-    } else {
-      return $in_str;
-    }
-  }
-}
-
-
-if (!function_exists('decode_utf8')) {
-  function decode_utf8($in_str) {
-    if (strtolower($_SESSION['language_charset']) != 'utf-8') {
-      $cur_encoding = detect_encoding($in_str);
-      if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
-        return mb_convert_encoding($in_str,"ISO-8859-15","UTF-8");
-      } else {
-        return $in_str;
-      }
-    } else {
-      return $in_str;
-    }
-  }
-}
-
-
-if (!function_exists('detect_encoding')) {
-  function detect_encoding($string, $encodings = ENCODE_DEFINED_CHARSETS, $strict = true) {
-    $encoding = mb_detect_encoding($string, $encodings, $strict);
-    if ($encoding === false) {
-      $encoding = mb_detect_encoding($string, $encodings, false);
-    }
-    return $encoding;
-  }
-}
-
-
 if (!function_exists('draw_input_per_page')) {
   function draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results) {
     $output = '<div class="clear"></div>'. PHP_EOL;
@@ -212,21 +171,3 @@ if (!function_exists('draw_input_per_page')) {
 }
 
 
-if (!function_exists('decode_htmlentities')) {
-  function decode_htmlentities ($string, $flags = ENT_COMPAT, $encoding = '') {
-    $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));  
-    $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
-    $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;
-    return html_entity_decode($string, $flags , $encoding);
-  }
-}
-
-
-if (!function_exists('encode_htmlentities')) {
-  function encode_htmlentities ($string, $flags = ENT_COMPAT, $encoding = '') {
-    $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
-    $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
-    $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;  
-    return htmlentities($string, $flags , $encoding);
-  }
-}
