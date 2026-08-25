@@ -81,12 +81,14 @@ if (!class_exists('cookie_consent')) {
       if (!defined('MODULE_COOKIE_CONSENT_CONTENT')) {
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT', '".$content_group."', '6', '5', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
       }
+      // remembers that the module hid the page, so only it may bring it back
+      if (!defined('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN')) {
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN', '0', '6', '6', now())");
+      }
 
       // an already existing page comes back into the content boxes on a reinstall
       if ($this->own_content_selected()) {
-        xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
-                         SET content_status = '1'
-                       WHERE content_file = 'cookie_consent.php'");
+        $this->set_content_status('1');
       }
       
       // load language-data
@@ -416,12 +418,53 @@ if (!class_exists('cookie_consent')) {
     }
 
     function update_content_status() {
-      // whoever hid the page in the content manager keeps that decision, the module only takes the link away
-      if ($this->own_content_selected() === false) {
-        xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
-                         SET content_status = '0'
-                       WHERE content_file = 'cookie_consent.php'");
+      $content_status = $this->get_content_status();
+      if ($content_status === false) {
+        return;
       }
+
+      if ($this->own_content_selected() === false) {
+        // a page the shop owner switched off himself must not be marked as hidden by the module
+        if ($content_status == '1') {
+          $this->set_content_status('0');
+        }
+        return;
+      }
+
+      // only a page the module hid itself comes back, everything else stays with the content manager
+      $hidden_query = xtc_db_query("SELECT configuration_value
+                                      FROM ".TABLE_CONFIGURATION."
+                                     WHERE configuration_key = 'MODULE_COOKIE_CONSENT_CONTENT_HIDDEN'");
+      $hidden = xtc_db_fetch_array($hidden_query);
+
+      if (isset($hidden['configuration_value']) && $hidden['configuration_value'] == '1') {
+        $this->set_content_status('1');
+      }
+    }
+
+    function get_content_status() {
+      $content_query = xtc_db_query("SELECT content_status
+                                       FROM ".TABLE_CONTENT_MANAGER."
+                                      WHERE content_file = 'cookie_consent.php'
+                                      LIMIT 1");
+      if (xtc_db_num_rows($content_query) < 1) {
+        return false;
+      }
+
+      $content = xtc_db_fetch_array($content_query);
+
+      return $content['content_status'];
+    }
+
+    function set_content_status($content_status) {
+      xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                       SET content_status = '".(($content_status == '1') ? '1' : '0')."'
+                     WHERE content_file = 'cookie_consent.php'");
+
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".(($content_status == '1') ? '0' : '1')."',
+                           last_modified = now()
+                     WHERE configuration_key = 'MODULE_COOKIE_CONSENT_CONTENT_HIDDEN'");
     }
 
     function own_content_selected() {
@@ -539,6 +582,7 @@ if (!class_exists('cookie_consent')) {
     }
 
     function keys() {
+      // MODULE_COOKIE_CONSENT_CONTENT_HIDDEN is deliberately absent, it only tracks who hid the content page
       return array(
         'MODULE_COOKIE_CONSENT_STATUS',
         'MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE',

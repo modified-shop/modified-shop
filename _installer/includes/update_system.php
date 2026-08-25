@@ -560,6 +560,11 @@
 
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT', '".$content_group."', '6', '5', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
     }
+
+    // remembers that the module hid the page, so only it may bring it back
+    if (!defined('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN')) {
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN', '0', '6', '6', now())");
+    }
   
     // Trustedshops
     $defined_cookies[] = array(
