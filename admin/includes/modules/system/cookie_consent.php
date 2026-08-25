@@ -83,7 +83,11 @@ if (!class_exists('cookie_consent')) {
       }
 
       // an already existing page comes back into the content boxes on a reinstall
-      $this->update_content_status();
+      if ($this->own_content_selected()) {
+        xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                         SET content_status = '1'
+                       WHERE content_file = 'cookie_consent.php'");
+      }
       
       // load language-data
       $languages = array();
@@ -412,6 +416,15 @@ if (!class_exists('cookie_consent')) {
     }
 
     function update_content_status() {
+      // whoever hid the page in the content manager keeps that decision, the module only takes the link away
+      if ($this->own_content_selected() === false) {
+        xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                         SET content_status = '0'
+                       WHERE content_file = 'cookie_consent.php'");
+      }
+    }
+
+    function own_content_selected() {
       // the values are already saved when this runs, so read them from the database instead of the stale constants
       $config = array();
       $config_query = xtc_db_query("SELECT configuration_key,
@@ -422,27 +435,27 @@ if (!class_exists('cookie_consent')) {
         $config[$configuration['configuration_key']] = $configuration['configuration_value'];
       }
 
-      $content_group = 0;
+      if (!isset($config['MODULE_COOKIE_CONSENT_STATUS'])
+          || strtolower($config['MODULE_COOKIE_CONSENT_STATUS']) != 'true'
+          || !isset($config['MODULE_COOKIE_CONSENT_CONTENT'])
+          )
+      {
+        return false;
+      }
+
       $content_query = xtc_db_query("SELECT content_group
                                        FROM ".TABLE_CONTENT_MANAGER."
                                       WHERE content_file = 'cookie_consent.php'
                                    ORDER BY content_group
                                       LIMIT 1");
-      if (xtc_db_num_rows($content_query) > 0) {
-        $content = xtc_db_fetch_array($content_query);
-        $content_group = (int)$content['content_group'];
+      if (xtc_db_num_rows($content_query) < 1) {
+        return false;
       }
 
-      // the own page stays hidden while the module points at another content page
-      $content_status = (($content_group > 0
-                          && isset($config['MODULE_COOKIE_CONSENT_STATUS'])
-                          && strtolower($config['MODULE_COOKIE_CONSENT_STATUS']) == 'true'
-                          && isset($config['MODULE_COOKIE_CONSENT_CONTENT'])
-                          && (int)$config['MODULE_COOKIE_CONSENT_CONTENT'] == $content_group) ? '1' : '0');
+      $content = xtc_db_fetch_array($content_query);
 
-      xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
-                       SET content_status = '".$content_status."'
-                     WHERE content_file = 'cookie_consent.php'");
+      return ((int)$content['content_group'] > 0
+              && (int)$config['MODULE_COOKIE_CONSENT_CONTENT'] == (int)$content['content_group']);
     }
 
     function create_content() {
