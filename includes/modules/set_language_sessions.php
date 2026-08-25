@@ -45,16 +45,4 @@ if (isset($_GET['language'])
 }
 
 // set default charset
-// resolve an alias like "utf8", but keep an unknown value, it may be a charset this shop really uses
-if (isset($_SESSION['language_charset'])
-    && !in_array(strtoupper($_SESSION['language_charset']), get_supported_charset())
-    )
-{
-  $charset = normalize_charset($_SESSION['language_charset']);
-  if ($charset !== '') {
-    $_SESSION['language_charset'] = $charset;
-  }
-}
-
-// PHP derives the Content-Type header from this, so it has to stay the real response charset
-@ini_set('default_charset', $_SESSION['language_charset']);
+set_session_charset();

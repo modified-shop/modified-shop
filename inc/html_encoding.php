@@ -47,9 +47,7 @@ function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
  */
 function encode_utf8($string, $encoding = '', $force_utf8 = false)
 {
-  $language_charset = isset($_SESSION['language_charset']) ? strtolower($_SESSION['language_charset']) : '';
-
-  if ($string !== null && $string !== '' && ($language_charset == 'utf-8' || $force_utf8 === true)) {
+  if ($string !== null && $string !== '' && (get_default_charset() === 'UTF-8' || $force_utf8 === true)) {
     $cur_encoding = !empty($encoding) && in_array(strtoupper($encoding), get_supported_charset()) ? strtoupper($encoding) : detect_encoding($string);
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
       return $string;
@@ -91,9 +89,7 @@ function decode_htmlspecialchars($string, $flags = ENT_COMPAT)
  */
 function decode_utf8($string, $encoding = '', $force_utf8 = false)
 {
-  $language_charset = isset($_SESSION['language_charset']) ? strtolower($_SESSION['language_charset']) : '';
-
-  if ($string !== null && $string !== '' && ($language_charset != 'utf-8' || $force_utf8 === true)) {
+  if ($string !== null && $string !== '' && (get_default_charset() !== 'UTF-8' || $force_utf8 === true)) {
     $encoding = get_default_encoding($encoding);
 
     $cur_encoding = detect_encoding($string, 'UTF-8');
@@ -181,18 +177,33 @@ function get_language_charset($charset = '')
 }
 
 /**
- * get_default_charset
+ * get_html_charset
  */
-function get_default_charset()
+function get_html_charset($charset)
 {
-  $charset = isset($_SESSION['language_charset']) ? strtoupper(trim((string)$_SESSION['language_charset'])) : '';
+  // both are part of ENCODE_DEFINED_CHARSETS, but the PHP html functions reject them and assume UTF-8
+  static $html_charset_aliases = array('ASCII' => 'UTF-8', 'GB18030' => 'GB2312');
+
+  $charset = strtoupper(trim((string)$charset));
+
+  if (isset($html_charset_aliases[$charset])) {
+    return $html_charset_aliases[$charset];
+  }
 
   // a legacy charset the shop still knows keeps working, only the admin choice is limited
   if ($charset !== '' && in_array($charset, get_supported_charset())) {
     return $charset;
   }
 
-  $charset = normalize_charset($charset);
+  return normalize_charset($charset);
+}
+
+/**
+ * get_default_charset
+ */
+function get_default_charset()
+{
+  $charset = get_html_charset(isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : '');
 
   return ($charset !== '') ? $charset : ENCODE_DEFAULT_CHARSET;
 }
@@ -202,15 +213,28 @@ function get_default_charset()
  */
 function get_default_encoding($encoding)
 {
-  $encoding = strtoupper(trim((string)$encoding));
-
-  if ($encoding !== '' && in_array($encoding, get_supported_charset())) {
-    return $encoding;
-  }
-
-  $encoding = normalize_charset($encoding);
+  $encoding = get_html_charset($encoding);
 
   return ($encoding !== '') ? $encoding : get_default_charset();
+}
+
+/**
+ * set_session_charset
+ */
+function set_session_charset()
+{
+  $charset = isset($_SESSION['language_charset']) ? trim((string)$_SESSION['language_charset']) : '';
+
+  // resolve an alias like "utf8", but keep an unknown value, it may be a charset this shop really uses
+  if ($charset !== '' && !in_array(strtoupper($charset), get_supported_charset())) {
+    $normalized_charset = normalize_charset($charset);
+    $charset = ($normalized_charset !== '') ? $normalized_charset : $charset;
+  }
+
+  $_SESSION['language_charset'] = ($charset !== '') ? $charset : get_default_charset();
+
+  // PHP derives the Content-Type header from this, so it has to stay the real response charset
+  @ini_set('default_charset', $_SESSION['language_charset']);
 }
 
 /**
