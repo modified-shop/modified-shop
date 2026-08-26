@@ -201,8 +201,8 @@ class PayPalPayment extends PayPalPaymentBase {
         $i = count($item);
         $item[$i] = $shipping_cost;
 
-        $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_data['total'] + (double)$shipping_data['tax']);
-        $this->details->setTax($this->details->getTax() + (double)$shipping_data['tax']);
+        $this->amount->setTotal($this->amount->getTotal() + (float)$shipping_data['total'] + (float)$shipping_data['tax']);
+        $this->details->setTax($this->details->getTax() + (float)$shipping_data['tax']);
         $this->details->setSubtotal($this->amount->getTotal() - $this->details->getTax() + $this->details->getDiscount());
       }
       
@@ -294,7 +294,7 @@ class PayPalPayment extends PayPalPaymentBase {
     
       if (isset($shipping_cost) && is_object($shipping_cost)) {
         $item[1] = $shipping_cost;
-        $item[0]->setPrice($this->details->getSubtotal() - (double)$shipping_cost->getPrice());
+        $item[0]->setPrice($this->details->getSubtotal() - (float)$shipping_cost->getPrice());
       }    
     }
     $itemList->setItems($item);
