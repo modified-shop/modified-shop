@@ -174,6 +174,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, 'express=on', 'SSL'));
       } elseif (isset($_POST['products_id'])
                 && is_numeric($_POST['products_id'])
+                && !defined('RUN_MODE_AJAX')
                 )
       {
         xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . 'products_id=' . (int)$_POST['products_id'] . $info_message));

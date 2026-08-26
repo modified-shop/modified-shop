@@ -17,6 +17,9 @@ error_reporting(0);
 // prevent redirect to cart
 define('DISPLAY_CART', 'false');
 
+// keep the request method and post data of an ajax call
+define('RUN_MODE_AJAX', true);
+
 // use always session_id from URL for payment providers
 define('SESSION_FORCE_COOKIE_USE', 'False');
 
