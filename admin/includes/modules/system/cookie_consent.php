@@ -448,6 +448,10 @@ if (!class_exists('cookie_consent')) {
                        SET content_status = '0'
                      WHERE content_id IN (".implode(',', $hidden).")");
 
+      // a row that turns visible later is taken away too, without losing what an earlier save noted
+      $hidden = array_unique(array_merge($this->get_hidden_content(), $hidden));
+      sort($hidden);
+
       $this->set_hidden_content($hidden);
     }
 
