@@ -22,6 +22,19 @@
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_STATUS_HISTORY." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_RECALCULATE." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_BANKTRANSFER." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_QUEUE." WHERE order_id = '".(int)$order_id."'");
+
+    // these tables come with the withdraw module and can be missing
+    $withdraw_tables = array(TABLE_ORDERS_WITHDRAW, TABLE_ORDERS_WITHDRAW_PRODUCTS, TABLE_ORDERS_WITHDRAW_TOKEN);
+
+    foreach ($withdraw_tables as $withdraw_table) {
+      $table_query = xtc_db_query("SHOW TABLES LIKE '".str_replace('_', '\\_', $withdraw_table)."'");
+      if (xtc_db_num_rows($table_query) > 0) {
+        xtc_db_query("DELETE FROM ".$withdraw_table." WHERE orders_id = '".(int)$order_id."'");
+      }
+    }
   }
 ?>
