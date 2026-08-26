@@ -22,6 +22,16 @@
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_STATUS_HISTORY." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_RECALCULATE." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_BANKTRANSFER." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_QUEUE." WHERE order_id = '".(int)$order_id."'");
+
+    // the withdrawal tables only exist once the module has been installed
+    if (defined('MODULE_WITHDRAW_STATUS')) {
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW." WHERE orders_id = '".(int)$order_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_PRODUCTS." WHERE orders_id = '".(int)$order_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_TOKEN." WHERE orders_id = '".(int)$order_id."'");
+    }
   }
 ?>
