@@ -63,8 +63,8 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 		$aData = $this->getPrepareData($aRow, 'data');
 		$aCategoryData = $this->getPrepareData($aRow, 'category');
 		if (!empty($aData) && !empty($aCategoryData)) {
-			$aData = unserialize(base64_decode($aData));
-			$aCategoryData = unserialize(base64_decode($aCategoryData));
+			$aData = magnaSafeUnserialize(base64_decode($aData));
+			$aCategoryData = magnaSafeUnserialize(base64_decode($aCategoryData));
 
             // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
             $shopVariationData = null;
@@ -112,7 +112,7 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 		$aPrepareData = $this->getPrepareData($aRow, 'data');
 
 		if (!empty($aPrepareData) && !empty($categoryData)) {
-			$categoryData = unserialize(base64_decode($categoryData));
+			$categoryData = magnaSafeUnserialize(base64_decode($categoryData));
 			$matchedAttributes = $categoryData['MainCategory'];
 			$matchedAttributes = AmazonHelper::gi()->getCategoryMatching($matchedAttributes);
 			$shopAttributes = AmazonHelper::gi()->flatShopVariations();

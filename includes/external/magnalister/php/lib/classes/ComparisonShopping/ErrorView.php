@@ -146,7 +146,7 @@ class ErrorView {
 $(document).ready(function() {
 	$('#errorLogDelete').click(function() {
 		if (($('#errorlog input[type="checkbox"]:checked').length > 0) &&
-			confirm(unescape(<?php echo "'".html2url(ML_GENERIC_DELETE_ERROR_MESSAGES)."'"; ?>))
+			confirm(decodeURIComponent(<?php echo "'".html2url(ML_GENERIC_DELETE_ERROR_MESSAGES)."'"; ?>))
 		) {
 			$('#action').val('delete');
 			$(this).parents('form').submit();

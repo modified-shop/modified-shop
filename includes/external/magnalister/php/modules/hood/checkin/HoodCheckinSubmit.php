@@ -84,7 +84,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			     LIMIT '.$offset.','.$limit.'
 			');
 			while ($row = MagnaDB::gi()->fetchNext($verifySelectionResult)) {
-				$this->selection[$row['pID']] = unserialize($row['data']);
+				$this->selection[$row['pID']] = magnaSafeUnserialize($row['data']);
 			}
 			if (!empty($this->selection)) {
 				return;
@@ -361,16 +361,17 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			if (isset($data['submit']['Variations']) && (count($data['submit']['Variations']) == 0)) {
 				unset($data['submit']['Variations']);
 			}
-            if (!array_key_exists('Variations', $data['submit'])
-                || empty($data['submit']['Variations'])
-            ) {
-                $newVersionProduct = MLProduct::gi()->getProductById($pID);
-                $data['submit']['MarketplaceAttributes'] = HoodHelper::gi()->convertMatchingToNameValue(
-                    json_decode($data['submit']['MarketplaceAttributes'], true),
-                    $newVersionProduct
-                );
-            } else {
-                unset($data['submit']['MarketplaceAttributes']);
+            $newVersionProduct = MLProduct::gi()->getProductById($pID);
+            $data['submit']['MarketplaceAttributes'] = HoodHelper::gi()->convertMatchingToNameValue(
+                json_decode($data['submit']['MarketplaceAttributes'], true),
+                $newVersionProduct
+            );
+
+            // Remove attributes from MarketplaceAttributes that are already used as variation dimensions
+            if (!empty($data['submit']['Variations']) && is_array($data['submit']['MarketplaceAttributes'])) {
+                foreach ($data['submit']['Variations'][0]['Variation'] as $variationDimension) {
+                    unset($data['submit']['MarketplaceAttributes'][$variationDimension['Name']]);
+                }
             }
 		}
 	}

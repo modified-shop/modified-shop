@@ -20,6 +20,8 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+// Load functionLib early for magnaSafeUnserialize (needed for session handling)
+require_once(DIR_MAGNALISTER_INCLUDES . 'lib/functionLib.php');
 
 define('MAGNADB_ENABLE_LOGGING', MAGNA_DEBUG && false);
 
@@ -899,7 +901,8 @@ class MagnaDB {
 			       AND expire > "'.time().'"
 		', true);
 		if (!empty($result)) {
-			return @unserialize($result);
+			$unserialized = magnaSafeUnserialize($result);
+			return is_array($unserialized) ? $unserialized : array();
 		}
 		return array();
 	}
@@ -912,7 +915,8 @@ class MagnaDB {
 		', true);
 
 		if (!empty($result)) {
-			return @unserialize($result);
+			$unserialized = magnaSafeUnserialize($result);
+			return is_array($unserialized) ? $unserialized : array();
 		}
 		return array();
 	}

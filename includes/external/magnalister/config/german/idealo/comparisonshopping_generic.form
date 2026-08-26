@@ -72,7 +72,6 @@
     },
     "shop": {
         "headline": "Artikel hochladen: Voreinstellungen",
-        "desc": "<b>Preissuchmaschine und Direktkauf<\/b>",
         "fields": {
             "statusfilter": {
                 "label": "Statusfilter",
@@ -95,20 +94,16 @@
                     "size": "12"
                 },
                 "values": {
-                    "Direktkauf & Suchmaschine:": {
-                        "PAYPAL": "Sofort&uuml;berweisung",
-                        "CREDITCARD": "PayPal",
-                        "SOFORT": "Kreditkarte"
-                    },
-                    "Nur Suchmaschine:": {
-                        "PRE": "Vorkasse",
-                        "COD": "Nachnahme",
-                        "BANKENTER": "Bankeinzug",
-                        "BILL": "Rechnung",
-                        "GIROPAY": "Giropay",
-                        "CLICKBUY": "Click&Buy",
-                        "SKRILL": "Skrill"
-                    }
+                    "PAYPAL": "Sofort&uuml;berweisung",
+                    "CREDITCARD": "PayPal",
+                    "SOFORT": "Kreditkarte",
+                    "PRE": "Vorkasse",
+                    "COD": "Nachnahme",
+                    "BANKENTER": "Bankeinzug",
+                    "BILL": "Rechnung",
+                    "GIROPAY": "Giropay",
+                    "CLICKBUY": "Click&Buy",
+                    "SKRILL": "Skrill"
                 }
             },
             "quantity": {
@@ -181,7 +176,7 @@
     },
     "shipping": {
         "headline": "Versanddetails",
-        "desc": "Legt fest, mit welchen Versandeinstellungen die Produkte bei diesem Marketplace eingestellt werden sollen.<p><b>Preissuchmaschine und Direktkauf<\/b><\/p>",
+        "desc": "Legt fest, mit welchen Versandeinstellungen die Produkte bei diesem Marketplace eingestellt werden sollen.",
         "fields": {
             "country": {
                 "label": "Versand nach",
@@ -570,7 +565,7 @@
     },
     "inventoryupdate": {
         "headline": "Synchronisation des Inventars",
-        "desc": "Legt fest, welche Produkteigenschaften des Produktes in diesem Shop ebenfalls bei idealo.de automatisch aktualisiert werden sollen.<p><b>Preissuchmaschine und Direktkauf<\/b><\/p>",
+        "desc": "Legt fest, welche Produkteigenschaften des Produktes in diesem Shop ebenfalls bei idealo.de automatisch aktualisiert werden sollen.",
         "fields": [
             {
                 "label": "Lagerver&auml;nderung vom Shop",

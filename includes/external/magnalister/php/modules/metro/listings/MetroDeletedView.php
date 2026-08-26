@@ -63,11 +63,11 @@ class MetroDeletedView extends MagnaCompatibleInventoryView {
     }
 
     protected function getCategory($item) {
-        return '<td><ul><li>'.str_replace('<br>', '</li><li>', renderCategoryPath(unserialize($item['ProductData'])['CategoryID'], 'category')).'</li></ul></td>';
+        return '<td><ul><li>'.str_replace('<br>', '</li><li>', renderCategoryPath(magnaSafeUnserialize($item['ProductData'])['CategoryID'], 'category')).'</li></ul></td>';
     }
 
     protected function getTitle($item) {
-        return '<td>'.(empty($item['TitleShort']) ? unserialize($item['ProductData'])['Title'] : $item['TitleShort']).'</td>';
+        return '<td>'.(empty($item['TitleShort']) ? magnaSafeUnserialize($item['ProductData'])['Title'] : $item['TitleShort']).'</td>';
     }
 
     protected function getItemDateUpdated($item) {
@@ -170,7 +170,7 @@ class MetroDeletedView extends MagnaCompatibleInventoryView {
                     $iLanguageId = $this->settings['language'];
                 }
 
-                $item['MarketplaceTitle'] = unserialize($item['ProductData'])['Title'];
+                $item['MarketplaceTitle'] = magnaSafeUnserialize($item['ProductData'])['Title'];
                 $item['MarketplaceTitleShort'] = (mb_strlen($item['MarketplaceTitle'], 'UTF-8') > $this->settings['maxTitleChars'] + 2)
                     ? (fixHTMLUTF8Entities(mb_substr($item['MarketplaceTitle'], 0, $this->settings['maxTitleChars'], 'UTF-8')) . '&hellip;')
                     : fixHTMLUTF8Entities($item['MarketplaceTitle']);

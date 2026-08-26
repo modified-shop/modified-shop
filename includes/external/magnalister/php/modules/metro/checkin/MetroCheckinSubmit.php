@@ -148,7 +148,7 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         } else {
             $data['submit']['Images'] = array();
         }
-        $features = unserialize($properties['Feature']);
+        $features = magnaSafeUnserialize($properties['Feature']);
         $data['submit']['Features'] = !empty($features) ? $features : array();
 
         if (!array_key_exists('Variations', $product)

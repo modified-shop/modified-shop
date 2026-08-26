@@ -97,6 +97,7 @@ class EtsyProductSaver {
 		$aRow['ShopVariation'] = $aItemDetails['ShopVariation'];
 		$aRow['ShippingProfile'] = $aItemDetails['shippingprofile'];
 		$aRow['ProcessingProfile'] = $aItemDetails['processingprofile'];
+		$aRow['ReturnPolicy'] = isset($aItemDetails['returnpolicy']) ? $aItemDetails['returnpolicy'] : '';
 		$aRow['Whomade']  = $aItemDetails['whomade'];
 		$aRow['Whenmade'] = $aItemDetails['whenmade'];
 		$aRow['IsSupply'] = $aItemDetails['issuply'];

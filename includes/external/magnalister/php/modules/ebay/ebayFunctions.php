@@ -707,26 +707,6 @@ function geteBaySingleReturnPolicyDetail($detailName) {
     return $returnPolicyDetails[$detailName];
 }
 
-function geteBayPlusSettings() {
-    global $_MagnaSession;
-    $mpID = $_MagnaSession['mpID'];
-    $site = getDBConfigValue('ebay.site', $mpID);
-    initArrayIfNecessary($_MagnaSession, array($mpID, $site, 'eBayPlusSettings'));
-
-    if (!empty($_MagnaSession[$mpID][$site]['eBayPlusSettings'])) {
-        return $_MagnaSession[$mpID][$site]['eBayPlusSettings'];
-    }
-    try {
-        $eBayPlusSettings = MagnaConnector::gi()->submitRequest(array(
-            'ACTION' => 'GeteBayAccountSettings'
-        ));
-    } catch (MagnaException $e) {
-        $eBayPlusSettings = array('DATA' => array('eBayPlus' => 'false', 'eBayPlusListingDefault' => 'false'));
-    }
-    $_MagnaSession[$mpID][$site]['eBayPlusSettings'] = $eBayPlusSettings['DATA'];
-    return $_MagnaSession[$mpID][$site]['eBayPlusSettings'];
-}
-
 function getEBayAttributes($cID, $mode, $preselectedValues = array()) {
     global $_MagnaSession;
     # erst schauen obs ItemSpecifics gibt (sind neuer & das andere ist uU deprecated)
@@ -1123,7 +1103,7 @@ function makePrice($pID, $priceType, $takePrepared = false, $variationPrice = 0.
                 break;
             }
         default:
-            { # 'FixedPriceItem' oder 'StoresFixedPrice'
+            { # 'FixedPriceItem'
                 $which = 'fixed';
                 break;
             }
@@ -1245,7 +1225,7 @@ function makePriceByStrikePriceSettings($pID, $StrikePriceKind, $StrikePriceGrou
 }
 
 # Hilfsfunktion: Anzahl bestimmen
-function makeQuantity($pID, $ListingType = 'StoresFixedPrice') {
+function makeQuantity($pID, $ListingType = 'FixedPriceItem') {
     global $_MagnaSession;
     switch ($ListingType) {
         case 'Chinese':
@@ -1255,7 +1235,7 @@ function makeQuantity($pID, $ListingType = 'StoresFixedPrice') {
                 break;
             }
         default:
-            { # 'FixedPriceItem' oder 'StoresFixedPrice'
+            { # 'FixedPriceItem'
                 $calc_method = getDBConfigValue('ebay.fixed.quantity.type', $_MagnaSession['mpID']);
                 $qValue = (int)getDBConfigValue('ebay.fixed.quantity.value', $_MagnaSession['mpID']);
                 $maxQuantity = (int)getDBConfigValue('ebay.maxquantity', $_MagnaSession['mpID'], 0);
@@ -1877,9 +1857,6 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
     if (array_key_exists('bestOfferEnabled', $itemDetails) && ('on' == $itemDetails['bestOfferEnabled']) && ('Chinese' != $itemDetails['ListingType'])) {
         $row['BestOfferEnabled'] = '1';
     }
-    if (array_key_exists('plus', $itemDetails) && ('on' == $itemDetails['plus']) && ('Chinese' != $itemDetails['ListingType'])) {
-        $row['eBayPlus'] = '1';
-    }
     if (!empty($itemDetails['startTime'])) {
         $row['StartTime'] = $itemDetails['startTime'];
     }
@@ -2009,9 +1986,6 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
         }
         if (('on' == $itemDetails['bestOfferEnabled']) && ('Chinese' != $itemDetails['ListingType'])) {
             $row['BestOfferEnabled'] = '1';
-        }
-        if (('on' == $itemDetails['plus']) && ('Chinese' != $itemDetails['ListingType'])) {
-            $row['eBayPlus'] = '1';
         }
         if (!empty($itemDetails['startTime'])) {
             $row['StartTime'] = $itemDetails['startTime'];
