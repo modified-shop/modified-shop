@@ -493,6 +493,7 @@
     // the cookie settings link left the templates and needs a content page of its own now
     if (!defined('MODULE_COOKIE_CONSENT_CONTENT')) {
       $content_group = 0;
+      $hidden = array();
       $content_query = xtc_db_query("SELECT content_group
                                        FROM ".TABLE_CONTENT_MANAGER."
                                       WHERE content_file = 'cookie_consent.php'
@@ -501,6 +502,17 @@
       if (xtc_db_num_rows($content_query) > 0) {
         $content = xtc_db_fetch_array($content_query);
         $content_group = (int)$content['content_group'];
+
+        // a page left inactive because the module is off has to come back when it is switched on
+        if (strtolower(MODULE_COOKIE_CONSENT_STATUS) != 'true') {
+          $hidden_query = xtc_db_query("SELECT content_id
+                                          FROM ".TABLE_CONTENT_MANAGER."
+                                         WHERE content_file = 'cookie_consent.php'
+                                           AND content_status = '0'");
+          while ($hidden_content = xtc_db_fetch_array($hidden_query)) {
+            $hidden[] = (int)$hidden_content['content_id'];
+          }
+        }
       } else {
         $defined_texts = array(
           'german' => array(
@@ -555,15 +567,19 @@
             'date_added'      => 'now()'
           );
           xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array);
+
+          if ($content_status == '0') {
+            $hidden[] = (int)xtc_db_insert_id();
+          }
         }
       }
 
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT', '".$content_group."', '6', '5', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
-    }
 
-    // remembers that the module hid the page, so only it may bring it back
-    if (!defined('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN')) {
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN', '0', '6', '6', now())");
+      // holds the content rows left inactive by the module, so only it brings them back
+      if (!defined('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN')) {
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN', '".implode(',', $hidden)."', '6', '6', now())");
+      }
     }
   
     // Trustedshops

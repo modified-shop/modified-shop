@@ -81,14 +81,17 @@ if (!class_exists('cookie_consent')) {
       if (!defined('MODULE_COOKIE_CONSENT_CONTENT')) {
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT', '".$content_group."', '6', '5', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
       }
-      // remembers that the module hid the page, so only it may bring it back
+      // holds the content rows the module switched off itself, so only it brings them back
       if (!defined('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN')) {
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN', '0', '6', '6', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_CONTENT_HIDDEN', '', '6', '6', now())");
       }
 
-      // an already existing page comes back into the content boxes on a reinstall
+      // installing is a deliberate act, so it puts the whole page back into the content boxes
       if ($this->own_content_selected()) {
-        $this->set_content_status('1');
+        xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                         SET content_status = '1'
+                       WHERE content_file = 'cookie_consent.php'");
+        $this->set_hidden_content(array());
       }
       
       // load language-data
@@ -418,51 +421,74 @@ if (!class_exists('cookie_consent')) {
     }
 
     function update_content_status() {
-      $content_status = $this->get_content_status();
-      if ($content_status === false) {
-        return;
-      }
-
       if ($this->own_content_selected() === false) {
-        // a page the shop owner switched off himself must not be marked as hidden by the module
-        if ($content_status == '1') {
-          $this->set_content_status('0');
-        }
+        $this->hide_content();
+      } else {
+        $this->restore_content();
+      }
+    }
+
+    function hide_content() {
+      // the content manager keeps a status per language, so only the rows still visible are taken away
+      $hidden = array();
+      $content_query = xtc_db_query("SELECT content_id
+                                       FROM ".TABLE_CONTENT_MANAGER."
+                                      WHERE content_file = 'cookie_consent.php'
+                                        AND content_status = '1'");
+      while ($content = xtc_db_fetch_array($content_query)) {
+        $hidden[] = (int)$content['content_id'];
+      }
+
+      // saving again while the module stays off must not drop what it noted the first time
+      if (count($hidden) < 1) {
         return;
       }
 
-      // only a page the module hid itself comes back, everything else stays with the content manager
+      xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                       SET content_status = '0'
+                     WHERE content_id IN (".implode(',', $hidden).")");
+
+      $this->set_hidden_content($hidden);
+    }
+
+    function restore_content() {
+      // a row the shop owner switched off himself was never noted, so it stays hidden
+      $hidden = $this->get_hidden_content();
+      if (count($hidden) < 1) {
+        return;
+      }
+
+      xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                       SET content_status = '1'
+                     WHERE content_id IN (".implode(',', $hidden).")
+                       AND content_file = 'cookie_consent.php'");
+
+      $this->set_hidden_content(array());
+    }
+
+    function get_hidden_content() {
       $hidden_query = xtc_db_query("SELECT configuration_value
                                       FROM ".TABLE_CONFIGURATION."
                                      WHERE configuration_key = 'MODULE_COOKIE_CONSENT_CONTENT_HIDDEN'");
       $hidden = xtc_db_fetch_array($hidden_query);
 
-      if (isset($hidden['configuration_value']) && $hidden['configuration_value'] == '1') {
-        $this->set_content_status('1');
-      }
-    }
-
-    function get_content_status() {
-      $content_query = xtc_db_query("SELECT content_status
-                                       FROM ".TABLE_CONTENT_MANAGER."
-                                      WHERE content_file = 'cookie_consent.php'
-                                      LIMIT 1");
-      if (xtc_db_num_rows($content_query) < 1) {
-        return false;
+      if (!isset($hidden['configuration_value']) || trim($hidden['configuration_value']) == '') {
+        return array();
       }
 
-      $content = xtc_db_fetch_array($content_query);
+      $content_ids = array();
+      foreach (explode(',', $hidden['configuration_value']) as $content_id) {
+        if ((int)$content_id > 0) {
+          $content_ids[] = (int)$content_id;
+        }
+      }
 
-      return $content['content_status'];
+      return $content_ids;
     }
 
-    function set_content_status($content_status) {
-      xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
-                       SET content_status = '".(($content_status == '1') ? '1' : '0')."'
-                     WHERE content_file = 'cookie_consent.php'");
-
+    function set_hidden_content($content_ids) {
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                       SET configuration_value = '".(($content_status == '1') ? '0' : '1')."',
+                       SET configuration_value = '".implode(',', $content_ids)."',
                            last_modified = now()
                      WHERE configuration_key = 'MODULE_COOKIE_CONSENT_CONTENT_HIDDEN'");
     }
