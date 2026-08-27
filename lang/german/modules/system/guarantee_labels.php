@@ -21,6 +21,7 @@
 
   define('MODULE_GUARANTEE_LABELS_TEXT_INSTALL_SUCCESS', 'Die Datenbankstruktur f&uuml;r die EU-Kennzeichnungen wurde angelegt und gepr&uuml;ft.');
   define('MODULE_GUARANTEE_LABELS_TEXT_UPDATE_SUCCESS', 'Die Datenbankstruktur f&uuml;r die EU-Kennzeichnungen ist vollst&auml;ndig.');
+  define('MODULE_GUARANTEE_LABELS_TEXT_GD_ERROR', 'GD mit FreeType und die Funktion imagettfbbox() sind auf diesem Server nicht verf&uuml;gbar. Ohne sie l&auml;sst sich die Textbreite im GARAN-Label nicht messen. Das Modul wurde nicht installiert.');
   define('MODULE_GUARANTEE_LABELS_TEXT_SCHEMA_ERROR', 'Die Datenbankstruktur f&uuml;r die EU-Kennzeichnungen konnte nicht vollst&auml;ndig angelegt werden. Das Modul wurde nicht aktiviert.');
 
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_TABLE', 'Die Tabelle %s fehlt.');

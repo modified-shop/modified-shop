@@ -21,6 +21,7 @@
 
   define('MODULE_GUARANTEE_LABELS_TEXT_INSTALL_SUCCESS', 'The database structure for the EU labels has been created and verified.');
   define('MODULE_GUARANTEE_LABELS_TEXT_UPDATE_SUCCESS', 'The database structure for the EU labels is complete.');
+  define('MODULE_GUARANTEE_LABELS_TEXT_GD_ERROR', 'GD with FreeType and the function imagettfbbox() are not available on this server. Without them the text width of the GARAN label cannot be measured. The module has not been installed.');
   define('MODULE_GUARANTEE_LABELS_TEXT_SCHEMA_ERROR', 'The database structure for the EU labels could not be created completely. The module has not been enabled.');
 
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_TABLE', 'The table %s is missing.');

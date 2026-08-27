@@ -60,6 +60,12 @@
     function install() {
       global $messageStack;
 
+      // the label may neither be scaled down nor cut off, so a real text measurement is required
+      if ($this->renderer_available() === false) {
+        $messageStack->add_session(MODULE_GUARANTEE_LABELS_TEXT_GD_ERROR, 'error');
+        return;
+      }
+
       $errors = $this->apply_schema();
 
       // the caller redirects right after install(), so the status is only written on a verified schema
@@ -99,6 +105,14 @@
         'MODULE_GUARANTEE_LABELS_STATUS',
         'MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS',
       );
+    }
+
+    function renderer_available() {
+      require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'guarantee_labels_renderer.php');
+
+      $renderer = new guarantee_labels_renderer();
+
+      return $renderer->is_available();
     }
 
     /**
