@@ -345,6 +345,11 @@
         'sort_order' => $sort_order,
       );
 
+      // only touched when the field was rendered, so an existing marking survives an inactive module
+      if ($type == 'products' && isset($_POST['content_type'])) {
+        $sql_data_array['content_type'] = ($_POST['content_type'] == 'garan_terms') ? 'garan_terms' : '';
+      }
+
       if ($subaction == 'update') {
         $coID = xtc_db_prepare_input($_POST['coID']);
         xtc_db_perform($table, $sql_data_array, 'update', "content_id = '" . $coID . "'");

@@ -14,6 +14,10 @@
 
   class guarantee_labels {
 
+    // the article check runs as a categories class extension registered by this module
+    const EXTENSION_FILE = 'guarantee_labels_product.php';
+    const EXTENSION_CLASS = 'guarantee_labels_product';
+
     var $code;
     var $title;
     var $description;
@@ -76,6 +80,7 @@
 
       $this->add_configuration('MODULE_GUARANTEE_LABELS_STATUS', 'true', 'xtc_cfg_select_option(array(\'true\', \'false\'), ');
       $this->add_configuration('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '', 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses\', \'chr(44)\',');
+      $this->register_class_extension();
 
       $messageStack->add_session(MODULE_GUARANTEE_LABELS_TEXT_INSTALL_SUCCESS, 'success');
     }
@@ -92,12 +97,68 @@
 
       // only add keys introduced by a later version, never touch existing values
       $this->add_configuration('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '', 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses\', \'chr(44)\',');
+      $this->register_class_extension();
 
       return MODULE_GUARANTEE_LABELS_TEXT_UPDATE_SUCCESS;
     }
 
     function remove() {
+      $this->unregister_class_extension();
       xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_GUARANTEE_LABELS_%'");
+    }
+
+    /**
+     * The article check runs as a categories class extension. It is installed from here
+     * instead of separately, so the shop owner keeps one module and one switch. update()
+     * reinstalls it when it was removed by hand.
+     */
+    function register_class_extension() {
+      $extension = $this->class_extension();
+
+      if ($extension !== false && $extension->check() < 1) {
+        $extension->install();
+        $this->update_class_extensions();
+      }
+    }
+
+    function unregister_class_extension() {
+      $extension = $this->class_extension();
+
+      if ($extension !== false && $extension->check() > 0) {
+        $extension->remove();
+        $this->update_class_extensions();
+      }
+    }
+
+    /**
+     * Rebuilds MODULE_CATEGORIES_INSTALLED from the modules that are really installed, so
+     * other class extensions and their sort order stay untouched.
+     */
+    function update_class_extensions() {
+      require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+
+      update_module_configuration('categories');
+    }
+
+    /**
+     * @return mixed the class extension, false when its file is missing
+     */
+    function class_extension() {
+      $file = DIR_FS_ADMIN.'includes/modules/categories/'.self::EXTENSION_FILE;
+
+      if (!is_file($file)) {
+        return false;
+      }
+
+      require_once($file);
+
+      if (!class_exists(self::EXTENSION_CLASS)) {
+        return false;
+      }
+
+      $extension_class = self::EXTENSION_CLASS;
+
+      return new $extension_class();
     }
 
     function keys() {
