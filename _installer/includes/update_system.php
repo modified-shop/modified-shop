@@ -439,6 +439,8 @@
     array('table' => TABLE_ADMIN_ACCESS, 'group' => 5, 'column' => 'newsletter_recipients', 'default' => 'INT(1) NOT NULL DEFAULT 0', 'after' => 'paypal_module'),
     array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'semknox', 'default' => 'INT(1) NOT NULL DEFAULT 0', 'after' => 'newsletter_recipients'),
     array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'dhl', 'default' => 'INT(1) NOT NULL DEFAULT 0', 'after' => 'semknox'),
+    array('table' => TABLE_PRODUCTS, 'column' => 'products_garan_duration', 'default' => 'DECIMAL(4,1) NULL', 'after' => 'products_manufacturers_model'),
+    array('table' => TABLE_PRODUCTS_CONTENT, 'column' => 'content_type', 'default' => "VARCHAR(32) NOT NULL DEFAULT ''", 'after' => 'content_link'),
   );
   foreach ($table_array as $table) {
     $columns_array = array();
