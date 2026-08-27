@@ -181,4 +181,8 @@ UPDATE `configuration`
    SET `configuration_value` = TRIM(BOTH ';' FROM REPLACE(REPLACE(CONCAT(';', `configuration_value`, ';'), ';worldpay_junior.php;', ';'), ';worldpay.php;', ';'))
  WHERE `configuration_key` = 'MODULE_PAYMENT_INSTALLED';
 
+#GTB - 2026-08-27 - added orders_source to track where an order came from (shop, admin, api, third party)
+ALTER TABLE `orders` ADD `orders_source` VARCHAR(32) NOT NULL DEFAULT '' AFTER `content_type`;
+ALTER TABLE `orders` ADD INDEX `idx_orders_source` (`orders_source`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
