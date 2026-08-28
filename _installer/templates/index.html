@@ -11,11 +11,11 @@
       {/if}
     </div>
 
-    {if strpos($smarty.server.PHP_SELF, 'autoupdate') !== false}
+    {if isset($INSTALLER_MODE) && $INSTALLER_MODE == 'autoupdate'}
       <div class="installer_mode autoupdate">{$smarty.const.TEXT_MODE_AUTOUPDATE}</div>
-    {elseif strpos($smarty.server.PHP_SELF, 'update') !== false}
+    {elseif isset($INSTALLER_MODE) && $INSTALLER_MODE == 'update'}
       <div class="installer_mode update">{$smarty.const.TEXT_MODE_UPDATE}</div>
-    {elseif strpos($smarty.server.PHP_SELF, 'install_') !== false}
+    {elseif isset($INSTALLER_MODE) && $INSTALLER_MODE == 'install'}
       <div class="installer_mode install">{$smarty.const.TEXT_MODE_INSTALL}</div>
     {/if}
 
