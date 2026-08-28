@@ -162,6 +162,7 @@
         {/if}
         {if $data.vpe}<div class="shipping">{$data.vpe}</div>{/if}
         {if $data.shipping_time}<div class="shipping">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</div>{/if}
+        {if $data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$data.GUARANTEE_LABEL}</div>{/if}
       </td>
       <td class="ord_table_right ord_width120">{$data.model}</td>
       <td class="ord_table_right ord_width110">{$data.price_formated}</td>
@@ -190,6 +191,7 @@
     <div class="dutyinfo">{#text_duty_info#}</div>
   {/if}
   
+  {if $GUARANTEE_NOTICE}{$GUARANTEE_NOTICE}{/if}
   <div class="button_right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}{$CHECKOUT_BUTTON}{$CHECKOUT_FORM_END}</div>
 
 </div>

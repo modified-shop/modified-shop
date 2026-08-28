@@ -141,3 +141,48 @@
   margin: 8px auto 0;
   cursor: pointer;
 }
+
+/* The notice about the legal guarantee has to stand out before the order button. It is the
+   official A4 sheet, so it gets the width of its column and is capped where its text would
+   otherwise grow past a comfortable line length. */
+.guarantee-notice {
+  margin: 20px 0;
+  padding: 16px;
+  border: 2px solid #14488f;
+  border-radius: 4px;
+  background: #fff;
+  text-align: left;
+  max-width: 680px;
+}
+
+.guarantee-notice__title {
+  margin: 0 0 6px 0;
+  font-weight: 700;
+}
+
+.guarantee-notice__text,
+.guarantee-notice__mixed {
+  margin: 0 0 10px 0;
+}
+
+.guarantee-notice__preview img {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+
+.guarantee-notice__link {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* the enlarged sheet keeps the height of the viewport and scrolls, it is never cropped */
+.guarantee-notice__full img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 85vh;
+  height: auto;
+  margin: 0 auto;
+}

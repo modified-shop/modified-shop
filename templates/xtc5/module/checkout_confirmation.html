@@ -151,6 +151,7 @@
           {/if}
           {if $data.vpe}<br /><span class="nobr small">{$data.vpe}</span>{/if}
           {if $data.shipping_time}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</span>{/if}
+          {if $data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$data.GUARANTEE_LABEL}</div>{/if}
           {if is_array($data.attributes) && count($data.attributes) > 0}
             {foreach key=a_data item=attrib_data from=$data.attributes}
               {if $attrib_data.value != ''}<br /><span class="nobr small">&nbsp;<i> - {$attrib_data.option} : {$attrib_data.value}</i></span>{/if}
@@ -180,5 +181,6 @@
     <div style="font-size:11px; border:0px solid red;padding:5px;margin-top:8px;">{#text_duty_info#}</div>
   {/if}
   <br />
+  {if $GUARANTEE_NOTICE}{$GUARANTEE_NOTICE}{/if}
   <div style="text-align:right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}&nbsp;{$MODULE_BUTTONS}{/if}&nbsp;{$CHECKOUT_BUTTON}{$CHECKOUT_FORM_END}</div>
 </div>

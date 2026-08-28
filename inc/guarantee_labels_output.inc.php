@@ -316,3 +316,68 @@
 
     return preg_replace('/<svg\b/', '<svg'.$role, $svg, 1);
   }
+
+  /**
+   * guarantee_labels_notice()
+   *
+   * Builds the notice about the legal guarantee that has to stand before the order button.
+   *
+   * The graphic is an A4 sheet of about 640 kB that consists of outlined paths only. It carries
+   * no live text, so it is referenced as an image instead of being written into the document:
+   * the browser caches it and the page stays small. Enlarging it uses the same overlay as the
+   * GARAN label.
+   *
+   * @param mixed $content_type the content type of the cart, virtual for downloads only
+   * @return string empty when the module is off or the cart holds no physical goods
+   */
+  function guarantee_labels_notice($content_type = false) {
+    if (!guarantee_labels_active()) {
+      return '';
+    }
+
+    // digital content and services are not covered by the labelling duty
+    if ($content_type === 'virtual') {
+      return '';
+    }
+
+    $language = isset($_SESSION['language']) ? $_SESSION['language'] : '';
+    $file = 'lang/'.$language.'/notice.svg';
+
+    // a language package brings its own graphic, without one there is nothing to show
+    if ($language === '' || !is_file(DIR_FS_CATALOG.$file)) {
+      return '';
+    }
+
+    $source = encode_htmlspecialchars((defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').$file);
+    $alt = guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_ALT);
+
+    $link = '';
+
+    if (defined('TEXT_GUARANTEE_NOTICE_URL') && trim(TEXT_GUARANTEE_NOTICE_URL) !== '') {
+      $link = '<a class="guarantee-notice__link" href="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_URL).'" target="_blank" rel="noopener">'.TEXT_GUARANTEE_NOTICE_LINK.'</a>';
+    }
+
+    $mixed = ($content_type === 'mixed') ? '<p class="guarantee-notice__mixed">'.TEXT_GUARANTEE_NOTICE_MIXED.'</p>' : '';
+
+    static $counter = 0;
+    $id = 'guarantee-notice-content-'.(++$counter);
+
+    // the overlay classes of the label are reused, so both graphics open the same way
+    return '<div class="guarantee-notice">'.
+             '<p class="guarantee-notice__title">'.TEXT_GUARANTEE_NOTICE_TITLE.'</p>'.
+             '<p class="guarantee-notice__text">'.TEXT_GUARANTEE_NOTICE_TEXT.'</p>'.
+             $mixed.
+             '<button type="button" class="guarantee-label__compact guarantee-notice__preview" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'" title="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_OPEN).'">'.
+               '<img src="'.$source.'" alt="'.$alt.'" />'.
+             '</button>'.
+             '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
+               '<div class="guarantee-label__content" id="'.$id.'">'.
+                 '<div class="guarantee-label__full guarantee-notice__full">'.
+                   '<div class="guarantee-label__graphic"><img src="'.$source.'" alt="'.$alt.'" /></div>'.
+                 '</div>'.
+               '</div>'.
+               '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.
+             '</dialog>'.
+             $link.
+           '</div>';
+  }

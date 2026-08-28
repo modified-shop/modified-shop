@@ -167,6 +167,7 @@
                     {/foreach}
                   </ul>
                 {/if}
+                {if $data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$data.GUARANTEE_LABEL}</div>{/if}
 
               </div>
       
@@ -218,6 +219,7 @@
 
 
 
+          {if $GUARANTEE_NOTICE}{$GUARANTEE_NOTICE}{/if}
           <div class="button_row">
             <div class="br_right">
               <div class="br_btn_checkout">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}<div class="cssButtonPos12">{$CHECKOUT_BUTTON}</div>{$CHECKOUT_FORM_END}</div>

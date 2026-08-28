@@ -24,6 +24,13 @@
   // practical guidelines. A language package brings its own address here.
   define('TEXT_GUARANTEE_NOTICE_URL', 'https://europa.eu/youreurope/guarantees');
 
+  define('TEXT_GUARANTEE_NOTICE_TITLE', 'Legal guarantee');
+  define('TEXT_GUARANTEE_NOTICE_TEXT', 'Goods sold in the European Union come with a legal guarantee of conformity of at least two years.');
+  define('TEXT_GUARANTEE_NOTICE_MIXED', 'The notice applies to the physical goods of this order.');
+  define('TEXT_GUARANTEE_NOTICE_OPEN', 'Show the notice enlarged');
+  define('TEXT_GUARANTEE_NOTICE_LINK', 'Read up on your rights in your country');
+  define('TEXT_GUARANTEE_NOTICE_ALT', 'Notice of the European Union about the legal guarantee of at least two years.');
+
   // Text alternative of the graphic, filled with duration, manufacturer and model
   define('TEXT_GUARANTEE_LABEL_ALT', 'EU label for the commercial guarantee of durability: %1$s years of durability guarantee by the manufacturer %2$s for the model %3$s.');
   define('TEXT_GUARANTEE_LABEL_ALT_COMPACT', 'EU label for the commercial guarantee of durability: %s years.');

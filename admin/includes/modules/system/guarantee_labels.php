@@ -14,11 +14,13 @@
 
   class guarantee_labels {
 
-    // the article check and the label in article lists run as class extensions of the
-    // article administration and of the product class, both registered by this module
+    // the article check and the label in article lists and in the checkout run as class
+    // extensions of the article administration, the product class and the order class, all
+    // of them registered by this module
     const EXTENSIONS = array(
       'categories' => array('file' => 'guarantee_labels_product.php', 'class' => 'guarantee_labels_product'),
       'product' => array('file' => 'guarantee_labels_listing.php', 'class' => 'guarantee_labels_listing'),
+      'order' => array('file' => 'guarantee_labels_order.php', 'class' => 'guarantee_labels_order'),
     );
 
     var $code;
