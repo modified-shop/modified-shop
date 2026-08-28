@@ -45,6 +45,11 @@
   margin: 12px 0;
 }
 
+/* tpl_modified and tpl_modified_responsive set their whole price column to the right */
+.pd_summarybox .guarantee-label-row {
+  text-align: right;
+}
+
 .guarantee-label {
   display: inline-block;
   max-width: 100%;
