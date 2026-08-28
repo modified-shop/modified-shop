@@ -2,17 +2,14 @@
 
 namespace Modified\Storefront\Template\Smarty\Resource;
 
-use Modified\Storefront\Template\Exception\CurrentTemplateFileException;
 use Modified\Storefront\Template\ResolvedTemplateFile;
 use Modified\Storefront\Template\Smarty\ResourceNameTransformerInterface;
 use Modified\Storefront\Template\TemplateFileResolver;
 use Modified\Storefront\Template\TemplateRuntime;
 use RuntimeException;
 use Smarty\Resource\CustomPlugin;
-use Smarty\Resource\FilePlugin;
 use Smarty\Template;
 use Smarty\Template\Source;
-use WeakMap;
 
 /**
  * Resolves parent:<name> relative to the template file containing the call.
@@ -30,19 +27,19 @@ final class ParentTemplateResource extends CustomPlugin implements ResourceNameT
     private const RESOURCE_PREFIX = 'parent:';
 
     private ?TemplateFileResolver $resolver;
-
-    /** @var WeakMap<Source, ResolvedTemplateFile> */
-    private WeakMap $resolvedSources;
+    private SmartyResourceContext $resourceContext;
 
     private ?ResolvedTemplateFile $fetchContext = null;
 
     /**
      * Creates the resource with an optionally injected resolver for isolated tests.
      */
-    public function __construct(?TemplateFileResolver $resolver = null)
-    {
+    public function __construct(
+        ?TemplateFileResolver $resolver = null,
+        ?SmartyResourceContext $resourceContext = null
+    ) {
         $this->resolver = $resolver;
-        $this->resolvedSources = new WeakMap();
+        $this->resourceContext = $resourceContext ?? new SmartyResourceContext();
     }
 
     /**
@@ -54,19 +51,11 @@ final class ParentTemplateResource extends CustomPlugin implements ResourceNameT
      */
     public function transformResourceName(string $resourceName, ?Template $callingTemplate): string
     {
-        if (!str_starts_with($resourceName, self::RESOURCE_PREFIX)) {
-            return $resourceName;
-        }
-
-        $sourceName = substr($resourceName, strlen(self::RESOURCE_PREFIX));
-        if ($this->hasContextIdentifier($sourceName) || !$callingTemplate instanceof Template) {
-            return $resourceName;
-        }
-
-        return self::RESOURCE_PREFIX
-            . sha1($this->templatePath($callingTemplate))
-            . '@'
-            . $sourceName;
+        return $this->resourceContext->contextualize(
+            self::RESOURCE_PREFIX,
+            $resourceName,
+            $callingTemplate
+        );
     }
 
     /**
@@ -79,7 +68,7 @@ final class ParentTemplateResource extends CustomPlugin implements ResourceNameT
     {
         $resolved = $this->resolveParent($source, $template);
 
-        $this->rememberResolution($source, $resolved);
+        $this->resourceContext->remember($source, $resolved->absolutePath());
         $this->populateWithFetchContext($source, $template, $resolved);
         $this->setCompileIdentity($source, $resolved);
     }
@@ -106,17 +95,9 @@ final class ParentTemplateResource extends CustomPlugin implements ResourceNameT
     private function resolveParent(Source $source, ?Template $template): ResolvedTemplateFile
     {
         return $this->resolver()->resolveAfter(
-            $this->logicalName($source->name),
-            $this->currentTemplatePath($template)
+            $this->resourceContext->logicalName($source->name),
+            $this->resourceContext->callingTemplatePath($template, self::RESOURCE_PREFIX)
         );
-    }
-
-    /**
-     * Remembers the concrete origin of a parent: source for subsequent context resolution.
-     */
-    private function rememberResolution(Source $source, ResolvedTemplateFile $resolved): void
-    {
-        $this->resolvedSources[$source] = $resolved;
     }
 
     /**
@@ -153,7 +134,7 @@ final class ParentTemplateResource extends CustomPlugin implements ResourceNameT
      */
     private function requiredFetchContext(string $sourceName): ResolvedTemplateFile
     {
-        $logicalName = $this->logicalName($sourceName);
+        $logicalName = $this->resourceContext->logicalName($sourceName);
         if ($this->fetchContext === null || $this->fetchContext->logicalName() !== $logicalName) {
             throw new RuntimeException(sprintf(
                 'The parent: resource "%s" is missing the current template context.',
@@ -184,112 +165,6 @@ final class ParentTemplateResource extends CustomPlugin implements ResourceNameT
         }
     }
 
-    /**
-     * Returns the concrete path of the template file that invoked parent:.
-     */
-    private function currentTemplatePath(?Template $template): string
-    {
-        return $this->templatePath($this->callingTemplate($template));
-    }
-
-    /**
-     * Returns the Smarty template containing the parent: call.
-     */
-    private function callingTemplate(?Template $template): Template
-    {
-        $callingTemplate = $template?->getParent();
-        if (!$callingTemplate instanceof Template) {
-            throw new CurrentTemplateFileException(
-                'The parent: resource requires a calling template file.'
-            );
-        }
-
-        return $callingTemplate;
-    }
-
-    /**
-     * Returns the concrete path of a regular template or one already resolved through parent:.
-     */
-    private function templatePath(Template $template): string
-    {
-        $currentSource = $this->templateSource($template);
-        $rememberedPath = $this->rememberedParentPath($currentSource);
-        if ($rememberedPath !== null) {
-            return $rememberedPath;
-        }
-
-        $filePath = $this->fileTemplatePath($currentSource);
-        if ($filePath !== null) {
-            return $filePath;
-        }
-
-        throw new CurrentTemplateFileException(sprintf(
-            'The current template source "%s" does not have a resolvable file path.',
-            $currentSource->resource
-        ));
-    }
-
-    /**
-     * Determines the source of a Smarty template.
-     */
-    private function templateSource(Template $template): Source
-    {
-        $source = $template->getSource();
-        if (!$source instanceof Source) {
-            throw new CurrentTemplateFileException(
-                'The Smarty template does not have a resolvable source.'
-            );
-        }
-
-        return $source;
-    }
-
-    /**
-     * Returns the concrete path of a source that was itself resolved through parent:.
-     */
-    private function rememberedParentPath(Source $source): ?string
-    {
-        return isset($this->resolvedSources[$source])
-            ? $this->resolvedSources[$source]->absolutePath()
-            : null;
-    }
-
-    /**
-     * Determines the concrete path of a regular Smarty file: source.
-     */
-    private function fileTemplatePath(Source $source): ?string
-    {
-        if ($source->handler instanceof FilePlugin) {
-            $path = $source->handler->getFilePath(
-                $source->name,
-                $source->getSmarty(),
-                $source->isConfig
-            );
-            if (is_string($path)) {
-                return $path;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Removes the technical context identifier while preserving the logical path.
-     */
-    private function logicalName(string $sourceName): string
-    {
-        return $this->hasContextIdentifier($sourceName)
-            ? substr($sourceName, 41)
-            : $sourceName;
-    }
-
-    /**
-     * Detects the internal format <40-character SHA-1>@<logical path>.
-     */
-    private function hasContextIdentifier(string $sourceName): bool
-    {
-        return preg_match('/^[a-f0-9]{40}@/i', $sourceName) === 1;
-    }
 
     /**
      * Returns the injected resolver or the shared resolver of the current TemplateRuntime.

@@ -37,7 +37,7 @@ final class TemplateUrlGenerator
         return new self(
             self::constantString('DIR_WS_BASE'),
             $catalogBase,
-            TemplatePath::joinUrl($server, $catalogBase)
+            TemplateUrl::join($server, $catalogBase)
         );
     }
 
@@ -67,7 +67,7 @@ final class TemplateUrlGenerator
 
     private function generate(string $base, ResolvedTemplateFile $file, bool $versioned): string
     {
-        $url = TemplatePath::joinUrl(
+        $url = TemplateUrl::join(
             $base,
             'templates/' . $file->sourceTemplate()->value() . '/' . $file->logicalName()
         );
