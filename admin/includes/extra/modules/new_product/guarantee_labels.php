@@ -17,7 +17,7 @@
       )
   {
     // manufacturer and model are edited above, they are repeated here because both end up on the label
-    $guarantee_manufacturer = TEXT_GUARANTEE_LABELS_NONE;
+    $guarantee_manufacturer = '';
     if ((int)$pInfo->manufacturers_id > 0) {
       foreach ($manufacturers_array as $guarantee_entry) {
         if ($guarantee_entry['id'] == $pInfo->manufacturers_id) {
@@ -28,9 +28,6 @@
     }
 
     $guarantee_model = trim((string)$pInfo->products_manufacturers_model);
-    if ($guarantee_model === '') {
-      $guarantee_model = TEXT_GUARANTEE_LABELS_NONE;
-    }
 
     // the guarantee conditions are kept as a regular article attachment, so only their state is shown
     $guarantee_terms = array();
@@ -52,11 +49,11 @@
       <table class="tableInput border0">
         <tr>
           <td style="width:250px; line-height: 35px;"><span class="main"><?php echo TEXT_GUARANTEE_LABELS_MANUFACTURER; ?></span></td>
-          <td><span class="main"><?php echo htmlspecialchars($guarantee_manufacturer); ?></span></td>
+          <td><span class="main"><?php echo ($guarantee_manufacturer !== '') ? htmlspecialchars($guarantee_manufacturer) : TEXT_GUARANTEE_LABELS_NONE; ?></span></td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_GUARANTEE_LABELS_MODEL; ?></span></td>
-          <td><span class="main"><?php echo htmlspecialchars($guarantee_model); ?></span></td>
+          <td><span class="main"><?php echo ($guarantee_model !== '') ? htmlspecialchars($guarantee_model) : TEXT_GUARANTEE_LABELS_NONE; ?></span></td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_GUARANTEE_LABELS_DURATION; ?></span><?php echo draw_tooltip(TEXT_GUARANTEE_LABELS_INFO_RULES); ?></td>

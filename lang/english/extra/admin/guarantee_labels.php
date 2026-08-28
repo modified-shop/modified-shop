@@ -16,7 +16,7 @@
   define('TEXT_GUARANTEE_LABELS_DURATION', 'Guarantee duration in years:');
   define('TEXT_GUARANTEE_LABELS_TERMS', 'Guarantee conditions:');
 
-  define('TEXT_GUARANTEE_LABELS_NONE', 'not selected');
+  define('TEXT_GUARANTEE_LABELS_NONE', 'not entered');
   define('TEXT_GUARANTEE_LABELS_TERMS_MISSING', 'no attachment of type GARAN guarantee conditions');
 
   define('TEXT_GUARANTEE_LABELS_INFO', 'This field holds the duration of the durability guarantee of the manufacturer, in whole or half years from 2 on. It is independent of the legal guarantee: the shop points that one out in the checkout for the whole order without anything maintained on the article.');

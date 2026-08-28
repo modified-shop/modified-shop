@@ -16,7 +16,7 @@
   define('TEXT_GUARANTEE_LABELS_DURATION', 'Garantiedauer in Jahren:');
   define('TEXT_GUARANTEE_LABELS_TERMS', 'Garantiebedingungen:');
 
-  define('TEXT_GUARANTEE_LABELS_NONE', 'nicht ausgew&auml;hlt');
+  define('TEXT_GUARANTEE_LABELS_NONE', 'nicht angegeben');
   define('TEXT_GUARANTEE_LABELS_TERMS_MISSING', 'kein Anhang vom Typ GARAN-Garantiebedingungen hinterlegt');
 
   define('TEXT_GUARANTEE_LABELS_INFO', 'Dieses Feld nimmt die Dauer der Haltbarkeitsgarantie des Herstellers auf, in ganzen oder halben Jahren ab 2. Es ist unabh&auml;ngig von der gesetzlichen Gew&auml;hrleistung: Auf die weist der Shop im Checkout f&uuml;r die gesamte Bestellung hin, ohne dass Sie am Artikel etwas pflegen.');
