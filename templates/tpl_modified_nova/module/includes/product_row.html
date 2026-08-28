@@ -65,6 +65,8 @@
         {/if}
       {/if}
 
+      {if $module_data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$module_data.GUARANTEE_LABEL}</div>{/if}
+
       <div class="lr_shipping">
         {if $module_data.PRODUCTS_SHIPPING_NAME}
           <i class="fa-solid fa-truck-fast mr_5"></i>{#text_shippingtime#} 

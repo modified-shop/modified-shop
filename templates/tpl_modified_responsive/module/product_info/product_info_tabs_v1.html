@@ -48,7 +48,7 @@
             {if $PRODUCTS_VPE}<div class="pd_vpe">{$PRODUCTS_VPE}</div>{/if}
             <div class="pd_tax{if $PRODUCTS_FSK18 == '1'} pd_fsk_padding{/if}">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
           {/if}
-          {if $GUARANTEE_LABEL}<div class="guarantee-label-row">{$GUARANTEE_LABEL}</div>{/if}
+          {if $GUARANTEE_LABEL}<div class="guarantee-label-row guarantee-label-row--right">{$GUARANTEE_LABEL}</div>{/if}
           {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
           {if isset($MODULE_product_options) && $MODULE_product_options != ''}
             {if $MODULE_product_options_template == 'multi_options_1.html' || strpos($MODULE_product_options_template, 'dropdown') !== false}

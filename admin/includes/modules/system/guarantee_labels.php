@@ -14,9 +14,12 @@
 
   class guarantee_labels {
 
-    // the article check runs as a categories class extension registered by this module
-    const EXTENSION_FILE = 'guarantee_labels_product.php';
-    const EXTENSION_CLASS = 'guarantee_labels_product';
+    // the article check and the label in article lists run as class extensions of the
+    // article administration and of the product class, both registered by this module
+    const EXTENSIONS = array(
+      'categories' => array('file' => 'guarantee_labels_product.php', 'class' => 'guarantee_labels_product'),
+      'product' => array('file' => 'guarantee_labels_listing.php', 'class' => 'guarantee_labels_listing'),
+    );
 
     var $code;
     var $title;
@@ -138,43 +141,57 @@
     }
 
     /**
-     * The article check runs as a categories class extension. It is installed from here
-     * instead of separately, so the shop owner keeps one module and one switch. update()
-     * reinstalls it when it was removed by hand.
+     * The class extensions are installed from here instead of separately, so the shop owner
+     * keeps one module and one switch. update() reinstalls them when they were removed by
+     * hand.
      */
     function register_class_extension() {
-      $extension = $this->class_extension();
+      foreach (self::EXTENSIONS as $type => $data) {
+        $extension = $this->class_extension($type);
 
-      if ($extension !== false && $extension->check() < 1) {
-        $extension->install();
-        $this->update_class_extensions();
+        if ($extension !== false && $extension->check() < 1) {
+          $extension->install();
+          $this->update_class_extensions($type);
+        }
       }
     }
 
     function unregister_class_extension() {
-      $extension = $this->class_extension();
+      foreach (self::EXTENSIONS as $type => $data) {
+        $extension = $this->class_extension($type);
 
-      if ($extension !== false && $extension->check() > 0) {
-        $extension->remove();
-        $this->update_class_extensions();
+        if ($extension !== false && $extension->check() > 0) {
+          $extension->remove();
+          $this->update_class_extensions($type);
+        }
       }
     }
 
     /**
-     * Rebuilds MODULE_CATEGORIES_INSTALLED from the modules that are really installed, so
-     * other class extensions and their sort order stay untouched.
+     * Rebuilds MODULE_<TYPE>_INSTALLED from the modules that are really installed, so other
+     * class extensions and their sort order stay untouched.
      */
-    function update_class_extensions() {
+    function update_class_extensions($type) {
       require_once(DIR_FS_INC.'update_module_configuration.inc.php');
 
-      update_module_configuration('categories');
+      update_module_configuration($type);
     }
 
     /**
+     * @param string $type the module type the extension belongs to
      * @return mixed the class extension, false when its file is missing
      */
-    function class_extension() {
-      $file = DIR_FS_ADMIN.'includes/modules/categories/'.self::EXTENSION_FILE;
+    function class_extension($type) {
+      if (!isset(self::EXTENSIONS[$type])) {
+        return false;
+      }
+
+      // only the article administration lives below the admin directory
+      $directory = ($type === 'categories')
+                 ? DIR_FS_ADMIN.'includes/modules/categories/'
+                 : DIR_FS_CATALOG.'includes/modules/'.$type.'/';
+
+      $file = $directory.self::EXTENSIONS[$type]['file'];
 
       if (!is_file($file)) {
         return false;
@@ -182,11 +199,11 @@
 
       require_once($file);
 
-      if (!class_exists(self::EXTENSION_CLASS)) {
+      if (!class_exists(self::EXTENSIONS[$type]['class'])) {
         return false;
       }
 
-      $extension_class = self::EXTENSION_CLASS;
+      $extension_class = self::EXTENSIONS[$type]['class'];
 
       return new $extension_class();
     }

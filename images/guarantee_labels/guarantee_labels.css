@@ -45,8 +45,8 @@
   margin: 12px 0;
 }
 
-/* tpl_modified and tpl_modified_responsive set their whole price column to the right */
-.pd_summarybox .guarantee-label-row {
+/* the modifier a template sets where its price column is aligned to the right */
+.guarantee-label-row--right {
   text-align: right;
 }
 
