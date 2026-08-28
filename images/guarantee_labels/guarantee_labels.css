@@ -60,11 +60,12 @@
   max-width: 100%;
 }
 
-/* native size of the nested template is 368.5 x 56.69; it shrinks with a narrow column but is
-   never blown up, and the aspect ratio is kept by the svg itself */
+/* Native size of the nested template is 368.5 x 56.69. It is shown smaller, which the
+   guidelines allow for the nested label, and shrinks further with a narrow column. Change the
+   one width below to resize it; the aspect ratio is kept by the svg itself. */
 .guarantee-label__compact svg {
   display: block;
-  width: 368px;
+  width: 240px;
   max-width: 100%;
   height: auto;
 }

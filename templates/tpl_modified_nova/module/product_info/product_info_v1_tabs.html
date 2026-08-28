@@ -59,7 +59,6 @@
           {if $PRODUCTS_MODEL != ''}<div class="pd_heading_inforow"><strong>{#model#}</strong> <span itemprop="sku">{$PRODUCTS_MODEL}</span></div>{/if}
           {if $PRODUCTS_EAN != ''}<div class="pd_heading_inforow"><strong>{#ean#}</strong> <span itemprop="gtin{$PRODUCTS_EAN|strlen}">{$PRODUCTS_EAN}</span></div>{/if}
           {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<div class="pd_heading_inforow"><strong>{#products_manufacturer_model#}</strong> {$PRODUCTS_MANUFACTURERS_MODEL}</div>{/if}
-          {if $GUARANTEE_LABEL}<div class="guarantee-label-row">{$GUARANTEE_LABEL}</div>{/if}
 
         </div>
       </div>
@@ -175,6 +174,8 @@
             {/if}
             {if $PAYPAL_INSTALLMENT && !$PAYPALPLAN}{$PAYPAL_INSTALLMENT}{/if}
           </div>
+
+          {if $GUARANTEE_LABEL}<div class="guarantee-label-row">{$GUARANTEE_LABEL}</div>{/if}
 
           {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
           {if isset($MODULE_product_options) && $MODULE_product_options != ''}{$MODULE_product_options}{/if}
