@@ -38,8 +38,38 @@
     }
 
     function process($file) {
+      $this->save_b2b_customers_status();
+
       // runs after the configuration was saved, so any status or group change drops the stale output
       $this->clear_shop_cache();
+    }
+
+    /**
+     * An empty multi checkbox selection never reaches $_POST, so the generic save of the module
+     * administration keeps the previous value and the shop owner cannot clear the list again.
+     * The module therefore writes this key itself, the way cao_faktura writes its own fields.
+     */
+    function save_b2b_customers_status() {
+      $groups = array();
+
+      if (isset($_POST['configuration']['MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS'])
+          && is_array($_POST['configuration']['MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS'])
+          )
+      {
+        foreach ($_POST['configuration']['MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS'] as $group) {
+          if ((int)$group > 0) {
+            $groups[] = (int)$group;
+          }
+        }
+
+        $groups = array_unique($groups);
+        sort($groups);
+      }
+
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".xtc_db_input(implode(',', $groups))."',
+                           last_modified = now()
+                     WHERE configuration_key = 'MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS'");
     }
 
     function display() {
