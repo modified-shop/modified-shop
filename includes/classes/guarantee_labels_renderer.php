@@ -152,12 +152,8 @@
         return false;
       }
 
-      // the official template only holds two digits before the separator, one for half years
-      if (substr($value, -1) == '0' && (float)$value > 99) {
-        return false;
-      }
-
-      if (substr($value, -1) == '5' && (float)$value > 9.5) {
+      // the practical guidelines show full numbers up to two digits, half years included
+      if ((float)$value > 99.5) {
         return false;
       }
 
@@ -178,10 +174,11 @@
     }
 
     /**
-     * The value as it appears in the label: whole years without a decimal part.
+     * The value as it appears in the label. The practical guidelines require whole years
+     * without a decimal part and a comma in front of the half year.
      */
     function duration_text($duration) {
-      return (substr($duration, -1) == '0') ? (string)(int)$duration : $duration;
+      return (substr($duration, -1) == '0') ? (string)(int)$duration : str_replace('.', ',', $duration);
     }
 
     // ----------------------------------------------------------------- fits --
