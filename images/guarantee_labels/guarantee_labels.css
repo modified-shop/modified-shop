@@ -40,6 +40,11 @@
   src: url('fonts/Inter-ExtraBold.woff2') format('woff2');
 }
 
+/* the block a template places, kept neutral so every theme keeps its own rhythm */
+.guarantee-label-row {
+  margin: 12px 0;
+}
+
 .guarantee-label {
   display: inline-block;
   max-width: 100%;

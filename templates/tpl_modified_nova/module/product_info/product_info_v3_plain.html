@@ -59,6 +59,7 @@
           {if $PRODUCTS_MODEL != ''}<div class="pd_heading_inforow"><strong>{#model#}</strong> <span itemprop="sku">{$PRODUCTS_MODEL}</span></div>{/if}
           {if $PRODUCTS_EAN != ''}<div class="pd_heading_inforow"><strong>{#ean#}</strong> <span itemprop="gtin{$PRODUCTS_EAN|strlen}">{$PRODUCTS_EAN}</span></div>{/if}
           {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<div class="pd_heading_inforow"><strong>{#products_manufacturer_model#}</strong> {$PRODUCTS_MANUFACTURERS_MODEL}</div>{/if}
+          {if $GUARANTEE_LABEL}<div class="guarantee-label-row">{$GUARANTEE_LABEL}</div>{/if}
 
         </div>
       </div>
