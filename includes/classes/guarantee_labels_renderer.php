@@ -125,6 +125,10 @@
     /**
      * Accepts comma and point and returns the canonical database value.
      *
+     * Two years are stored as well, so the catalogue states plainly that the manufacturer
+     * grants exactly the period the legal guarantee already covers. Only a longer guarantee
+     * qualifies for a label, see qualifies().
+     *
      * @return mixed string with one decimal, false when the value is not a valid duration
      */
     function normalize_duration($value) {
@@ -136,8 +140,8 @@
 
       $value = number_format((float)$value, 1, '.', '');
 
-      // only more than two years qualifies, and only whole or half years exist
-      if ((float)$value <= 2.0 || !in_array(substr($value, -1), array('0', '5'))) {
+      // below the legal guarantee the value says nothing, and only whole or half years exist
+      if ((float)$value < 2.0 || !in_array(substr($value, -1), array('0', '5'))) {
         return false;
       }
 
@@ -151,6 +155,19 @@
       }
 
       return $value;
+    }
+
+    /**
+     * Only a guarantee longer than the legal two years may carry a label. A guarantee of
+     * exactly two years gives the customer nothing on top, so the implementing regulation
+     * reserves the label for longer periods.
+     *
+     * @return bool
+     */
+    function qualifies($duration) {
+      $duration = $this->normalize_duration($duration);
+
+      return ($duration !== false && (float)$duration > 2.0);
     }
 
     /**
@@ -246,7 +263,11 @@
     function label($manufacturer, $model, $duration) {
       $duration = $this->normalize_duration($duration);
 
-      if ($duration === false || trim((string)$manufacturer) === '' || trim((string)$model) === '') {
+      if ($duration === false || !$this->qualifies($duration)) {
+        return false;
+      }
+
+      if (trim((string)$manufacturer) === '' || trim((string)$model) === '') {
         return false;
       }
 

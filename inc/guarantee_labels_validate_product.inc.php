@@ -46,6 +46,12 @@
 
     $sql_data_array['products_garan_duration'] = $normalized;
 
+    // exactly two years is stored as documentation and never produces a label, so the data the
+    // label would need is not demanded here; an external system may deliver a plain 2
+    if (!$renderer->qualifies($normalized)) {
+      return array('data' => $sql_data_array, 'errors' => $errors);
+    }
+
     $manufacturers_id = isset($products_data['manufacturers_id']) ? (int)$products_data['manufacturers_id'] : 0;
     $manufacturers_name = '';
 
