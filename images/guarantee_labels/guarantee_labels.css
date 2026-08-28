@@ -120,6 +120,12 @@
   text-align: center;
 }
 
+/* thickbox pads and scrolls its own content box, so the label does not do it a second time */
+#TB_ajaxContent .guarantee-label__full {
+  padding: 0;
+  overflow: visible;
+}
+
 /* colorbox brings its own close control */
 .guarantee-label__colorbox .guarantee-label__close {
   display: none;

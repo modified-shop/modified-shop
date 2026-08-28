@@ -9,8 +9,9 @@
 
 // Opens the full GARAN label on the first click or touch of the compact one. The graphic is
 // fetched from the cache, because it carries the title in every EU language and would weigh
-// down every listing page. When the template brings colorbox the label uses it, so it behaves
-// like every other overlay of the shop; otherwise a dialog element takes over.
+// down every listing page. The label uses the lightbox of the template, colorbox or the
+// thickbox of xtc5, so it behaves like every other overlay of the shop; without one a dialog
+// element takes over.
 (function () {
   'use strict';
 
@@ -20,6 +21,20 @@
 
   function hasColorbox() {
     return (typeof window.jQuery === 'function' && typeof window.jQuery.colorbox === 'function');
+  }
+
+  function hasThickbox() {
+    return (typeof window.tb_show === 'function');
+  }
+
+  // Thickbox needs the size of the box before it opens it. The full label is 420 pixels wide
+  // plus its padding and the link below it, and shrinks with the viewport instead of leaving
+  // the screen.
+  function thickboxSize() {
+    var width = Math.min(460, Math.max(280, (window.innerWidth || 800) - 60));
+    var height = Math.min(520, Math.max(280, (window.innerHeight || 600) - 100));
+
+    return 'width=' + width + '&height=' + height;
   }
 
   // The shipped templates put a font awesome cross into the close control of colorbox. Whether
@@ -57,6 +72,12 @@
         fixed: true,
         className: 'guarantee-label__colorbox'
       });
+      return;
+    }
+
+    if (hasThickbox()) {
+      // thickbox moves the children of the referenced element into its box and back on close
+      window.tb_show(title, '#TB_inline?inlineId=' + id + '&' + thickboxSize(), false);
       return;
     }
 
