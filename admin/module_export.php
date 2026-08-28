@@ -97,10 +97,25 @@
         break;
       //EOF NEW MODULE PROCESSING
       case 'save':
+        $class = basename($module_class);
+        include_once($module_directory . $class . $file_extension);
+        $module = instantiate_class($class);
+
         if (isset($_POST['configuration']) 
             && is_array($_POST['configuration'])
             )
         {
+          // a multi checkbox posts nothing when nothing is selected, so the key would never
+          // reach this loop and the previous value would survive; the configuration
+          // administration applies the same default
+          if (method_exists($module, 'keys')) {
+            foreach ((array)$module->keys() as $module_key) {
+              if (!isset($_POST['configuration'][$module_key])) {
+                $_POST['configuration'][$module_key] = '';
+              }
+            }
+          }
+
           foreach ($_POST['configuration'] as $key => $value) {
             if (is_array($_POST['configuration'][$key])) {
               // multi language config
@@ -124,9 +139,6 @@
             if (@strpos($key,'FILE') !== false) $file = $value;
           }
         }
-        $class = basename($module_class);
-        include($module_directory . $class . $file_extension);
-        $module = instantiate_class($class);
         //BOF NEW MODULE PROCESSING
         if (isset($_POST['process']) && $_POST['process'] == 'module_processing_do') {
           $get_params = isset($module->get_params) ? $module->get_params : array();
