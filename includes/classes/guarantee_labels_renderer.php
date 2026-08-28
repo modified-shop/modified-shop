@@ -32,6 +32,10 @@
     // the measured text is rejected this much before the editable area really ends
     const WIDTH_TOLERANCE = 2;
 
+    // imagettfbbox() renders at 96 dpi while an svg user unit is one pixel, so a measured
+    // width has to be scaled before it can be compared with the template layout
+    const UNIT_SCALE = 0.75;
+
     var $asset_dir;
     var $font_dir;
     var $archive;
@@ -45,32 +49,35 @@
     }
 
     /**
-     * The three editable areas of the official templates.
+     * The editable areas of the official templates.
      *
-     * font_size and max_width have to be taken from the official template once and belong to
-     * the shipped asset version: font_size is the value imagettfbbox() is called with, max_width
-     * is the width of the editable area measured in the same unit. Both are zero as long as the
-     * official files have not been added, which keeps the module from rendering a wrong label.
+     * font, font_size and max_width are read from the shipped templates: the colour label sets
+     * the duration in Inter-ExtraBold at 80 and both text fields in Inter-Regular at 9, all in
+     * svg user units. max_width is the column the field may occupy, taken from the positions in
+     * the template: the manufacturer runs from x 6.32 up to the model column at 196.75, and the
+     * model from there to the right margin of the 269.29 wide canvas.
      */
     function areas() {
       return array(
-        'duration' => array('token' => self::TOKEN_DURATION, 'font' => 'Inter-ExtraBold.ttf', 'font_size' => 0, 'max_width' => 0),
-        'manufacturer' => array('token' => self::TOKEN_MANUFACTURER, 'font' => 'Inter-SemiBold.ttf', 'font_size' => 0, 'max_width' => 0),
-        'model' => array('token' => self::TOKEN_MODEL, 'font' => 'Inter-Regular.ttf', 'font_size' => 0, 'max_width' => 0),
+        'duration' => array('token' => self::TOKEN_DURATION, 'font' => 'Inter-ExtraBold.ttf', 'font_size' => 80, 'max_width' => 190.43),
+        'manufacturer' => array('token' => self::TOKEN_MANUFACTURER, 'font' => 'Inter-Regular.ttf', 'font_size' => 9, 'max_width' => 190.43),
+        'model' => array('token' => self::TOKEN_MODEL, 'font' => 'Inter-Regular.ttf', 'font_size' => 9, 'max_width' => 66.22),
       );
     }
 
+    /**
+     * The compact variant only carries the duration, the full label carries all three fields.
+     */
     function templates() {
       return array(
-        'colour.svg' => $this->asset_dir.'garan_label_colour.svg',
-        'nested.svg' => $this->asset_dir.'garan_label_nested.svg',
+        'colour.svg' => array('file' => $this->asset_dir.'garan_label_colour.svg', 'areas' => array('duration', 'manufacturer', 'model')),
+        'nested.svg' => array('file' => $this->asset_dir.'garan_label_nested.svg', 'areas' => array('duration')),
       );
     }
 
     function fonts() {
       return array(
         'Inter-Regular.ttf' => $this->font_dir.'Inter-Regular.ttf',
-        'Inter-SemiBold.ttf' => $this->font_dir.'Inter-SemiBold.ttf',
         'Inter-ExtraBold.ttf' => $this->font_dir.'Inter-ExtraBold.ttf',
       );
     }
@@ -95,9 +102,9 @@
         $missing[] = 'gd_freetype';
       }
 
-      foreach ($this->templates() as $name => $file) {
-        if (!is_file($file)) {
-          $missing[] = 'template:'.basename($file);
+      foreach ($this->templates() as $name => $template) {
+        if (!is_file($template['file'])) {
+          $missing[] = 'template:'.basename($template['file']);
         }
       }
 
@@ -204,7 +211,9 @@
         return false;
       }
 
-      return ((abs($box[2] - $box[0])) <= ($area['max_width'] - self::WIDTH_TOLERANCE));
+      $width = abs($box[2] - $box[0]) * self::UNIT_SCALE;
+
+      return ($width <= ($area['max_width'] - self::WIDTH_TOLERANCE));
     }
 
     // ----------------------------------------------------------------- hash --
@@ -244,7 +253,12 @@
 
       $stream = '';
 
-      foreach (array_merge($this->templates(), $this->fonts()) as $file) {
+      $files = $this->fonts();
+      foreach ($this->templates() as $template) {
+        $files[] = $template['file'];
+      }
+
+      foreach ($files as $file) {
         $stream .= is_file($file) ? hash_file('sha256', $file) : '-';
       }
 
@@ -301,23 +315,24 @@
      */
     function render($manufacturer, $model, $duration) {
       $values = array(
-        self::TOKEN_DURATION => $this->duration_text($duration),
-        self::TOKEN_MANUFACTURER => (string)$manufacturer,
-        self::TOKEN_MODEL => (string)$model,
+        'duration' => $this->duration_text($duration),
+        'manufacturer' => (string)$manufacturer,
+        'model' => (string)$model,
       );
 
+      $areas = $this->areas();
       $files = array();
 
-      foreach ($this->templates() as $name => $file) {
-        $svg = @file_get_contents($file);
+      foreach ($this->templates() as $name => $template) {
+        $svg = @file_get_contents($template['file']);
 
         if ($svg === false || $svg === '') {
-          $this->fail('template cannot be read: '.$file);
+          $this->fail('template cannot be read: '.$template['file']);
           return false;
         }
 
-        foreach ($values as $token => $value) {
-          $svg = $this->replace_token($svg, $token, $value, $name);
+        foreach ($template['areas'] as $area_name) {
+          $svg = $this->replace_area($svg, $areas[$area_name]['token'], $values[$area_name], $name);
 
           if ($svg === false) {
             return false;
@@ -331,28 +346,40 @@
     }
 
     /**
-     * Replaces one editable field. The token is only accepted as the complete text of an
-     * element and has to appear exactly once, otherwise the template does not match the
-     * expected official file and nothing is rendered.
+     * Replaces one editable field.
      *
-     * @return mixed the changed svg, false when the token does not appear exactly once
+     * The official templates split a field over several tspans to carry the kerning of the
+     * placeholder, so the token cannot be matched as plain text. The whole content of the text
+     * element whose text equals the token is replaced instead, which keeps the element itself
+     * with its position, class and font untouched. The kerning went with the placeholder and
+     * does not apply to the new value.
+     *
+     * The element has to appear exactly once, otherwise the template is not the expected
+     * official file and nothing is rendered.
+     *
+     * @return mixed the changed svg, false when the field does not appear exactly once
      */
-    function replace_token($svg, $token, $value, $template) {
-      $pattern = '/>(\s*)'.preg_quote($token, '/').'(\s*)</';
-      $count = preg_match_all($pattern, $svg);
+    function replace_area($svg, $token, $value, $template) {
+      // product data must never be able to inject own svg or html
+      $replacement = '<tspan x="0" y="0">'.htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8').'</tspan>';
+
+      $count = 0;
+      $result = preg_replace_callback('/(<text\b[^>]*>)(.*?)(<\/text>)/s', function ($match) use ($token, $replacement, &$count) {
+        if (trim(html_entity_decode(strip_tags($match[2]), ENT_QUOTES | ENT_XML1, 'UTF-8')) !== $token) {
+          return $match[0];
+        }
+
+        $count++;
+
+        return $match[1].$replacement.$match[3];
+      }, $svg);
 
       if ($count !== 1) {
-        $this->fail('token "'.$token.'" appears '.(int)$count.' times in '.$template.', expected exactly once');
+        $this->fail('field "'.$token.'" appears '.(int)$count.' times in '.$template.', expected exactly once');
         return false;
       }
 
-      // product data must never be able to inject own svg or html
-      $replacement = htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8');
-
-      // a callback keeps $ and \ inside the value from being read as a back reference
-      return preg_replace_callback($pattern, function ($match) use ($replacement) {
-        return '>'.$match[1].$replacement.$match[2].'<';
-      }, $svg, 1);
+      return $result;
     }
 
     // --------------------------------------------------------------- errors --

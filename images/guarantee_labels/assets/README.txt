@@ -1,43 +1,44 @@
 Official EU files for the GARAN label
 =====================================
 
-The module ships without the official artwork. Copy the unchanged EU files into
-this shop before the module can render a label.
+The files in this directory and in ../fonts/ are the unchanged official ones.
+Replace them only with a newer official version, never with an edited copy.
 
-1. Templates, into this directory:
+1. Templates, in this directory:
 
-   GARAN Label_colour.svg          ->  garan_label_colour.svg
-   GARAN Label_nested display.svg  ->  garan_label_nested.svg
+   garan_label_colour.svg   from GARAN Label_colour.svg
+   garan_label_nested.svg   from GARAN Label_nested display.svg
 
    Source: https://commission.europa.eu/publications/practical-guidelines-and-
            high-resolution-vector-files-eu-notice-and-label-product-guarantees_en
 
-   The files must stay unchanged. Only the three editable fields are replaced at
-   runtime and each of them has to appear exactly once as the complete text of an
-   element, otherwise nothing is rendered:
+   Three fields are replaced at runtime. Each one has to stay the complete text
+   of exactly one text element, otherwise nothing is rendered:
 
-   XX                 duration of the guarantee
-   Brand/Trademark    name of the manufacturer
-   Model identifier   model identifier of the manufacturer
+   XX                 duration of the guarantee, both templates
+   Brand/Trademark    name of the manufacturer, colour template only
+   Model identifier   model identifier, colour template only
 
-2. Fonts, into ../fonts/ :
+   The templates split a field over several tspans to carry the kerning of the
+   placeholder. The renderer therefore replaces the content of the whole text
+   element instead of the token, which keeps position, class and font.
+
+2. Fonts, in ../fonts/ :
 
    Inter-Regular.ttf     Inter-Regular.woff2
-   Inter-SemiBold.ttf    Inter-SemiBold.woff2
    Inter-ExtraBold.ttf   Inter-ExtraBold.woff2
 
-   Inter is licensed under the SIL Open Font License and may be shipped with the
-   shop. The TTF files are used for the server side text measurement, the WOFF2
-   files for the browser output. Direct HTTP access to TTF stays blocked by
-   images/.htaccess, WOFF2 is allowed.
+   Only these two weights are referenced by the templates. Inter is licensed
+   under the SIL Open Font License, see LICENSE.txt next to the files. The TTF
+   files are used for the server side text measurement, the WOFF2 files for the
+   browser output. Direct HTTP access to TTF stays blocked by images/.htaccess,
+   WOFF2 is allowed.
 
 3. Measurements, in includes/classes/guarantee_labels_renderer.php :
 
-   areas() carries font_size and max_width per editable field. Both are zero
-   while this list is unfinished, which keeps the module from rendering a wrong
-   label. Take the values from the official templates once: font_size is the size
-   imagettfbbox() is called with, max_width is the width of the editable area
-   measured in the same unit.
+   areas() carries font, font size and the available width per field, read from
+   the shipped templates. A new official template version may change them, so
+   check the values against the file before replacing it.
 
 The language dependent notice on the legal guarantee is not part of this
-directory. It belongs into the language packages as lang/<language>/notice.svg.
+directory. It lives in the language packages as lang/<language>/notice.svg.
