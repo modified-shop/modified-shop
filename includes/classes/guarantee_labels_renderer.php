@@ -11,7 +11,9 @@
    ---------------------------------------------------------------------------------------*/
 
   require_once(DIR_FS_CATALOG.'inc/guarantee_labels_log.inc.php');
-  require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'guarantee_labels_archive.php');
+  // the path is spelled out because DIR_WS_CLASSES is absolute in the storefront and relative
+  // in the administration, and this class runs in both
+  require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
 
   /**
    * Builds the GARAN label from the official EU templates.

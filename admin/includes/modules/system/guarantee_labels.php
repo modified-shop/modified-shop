@@ -199,7 +199,7 @@
     }
 
     function renderer_available() {
-      require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'guarantee_labels_renderer.php');
+      require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
 
       $renderer = new guarantee_labels_renderer();
 

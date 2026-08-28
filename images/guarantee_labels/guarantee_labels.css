@@ -1,0 +1,104 @@
+/* -----------------------------------------------------------------------------------------
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2026 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
+/* The official templates set their text in Inter. The svg is placed inline in the page, so the
+   font is loaded once here instead of being embedded into every generated file. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('fonts/Inter-ExtraBold.woff2') format('woff2');
+}
+
+/* the templates address the weights by their full name as well */
+@font-face {
+  font-family: 'Inter-Regular';
+  font-style: normal;
+  font-display: swap;
+  src: url('fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter-ExtraBold';
+  font-style: normal;
+  font-display: swap;
+  src: url('fonts/Inter-ExtraBold.woff2') format('woff2');
+}
+
+.guarantee-label {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* the compact label opens the full one, so it has to look and behave like a control */
+.guarantee-label__compact {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  max-width: 100%;
+}
+
+.guarantee-label__compact svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 320px;
+}
+
+.guarantee-label__dialog {
+  padding: 0;
+  border: 0;
+  background: none;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.guarantee-label__dialog::backdrop {
+  background: rgba(0, 0, 0, .6);
+}
+
+.guarantee-label__full {
+  display: block;
+  padding: 16px;
+  background: #fff;
+  border-radius: 4px;
+}
+
+/* the label may never be cropped, so it scales down as a whole */
+.guarantee-label__full svg {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(420px, 80vw);
+  max-height: 70vh;
+}
+
+.guarantee-label__link {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.guarantee-label__close {
+  display: block;
+  margin: 8px auto 0;
+  cursor: pointer;
+}

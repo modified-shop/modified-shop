@@ -24,7 +24,7 @@
    * @return array data with the normalised value and errors as ready to use messages
    */
   function guarantee_labels_validate_product($sql_data_array, $products_data) {
-    require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'guarantee_labels_renderer.php');
+    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
 
     $errors = array();
     $duration = isset($sql_data_array['products_garan_duration']) ? trim((string)$sql_data_array['products_garan_duration']) : '';

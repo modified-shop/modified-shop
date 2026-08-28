@@ -51,7 +51,7 @@
       return false;
     }
 
-    require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'guarantee_labels_renderer.php');
+    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
 
     $renderer = new guarantee_labels_renderer();
 
@@ -157,9 +157,61 @@
       return false;
     }
 
-    require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'guarantee_labels_renderer.php');
+    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
 
     $renderer = new guarantee_labels_renderer();
 
     return $renderer->label($names[$manufacturers_id], $product['products_manufacturers_model'], $product['products_garan_duration']);
+  }
+
+  /**
+   * guarantee_labels_markup()
+   *
+   * Wraps both label variants into the block a template places. The compact label opens the
+   * full one, which is what the implementing regulation allows for the GARAN label. Both svg
+   * are written inline, so they use the fonts the module loads once instead of carrying a copy.
+   *
+   * @param array $label the return value of guarantee_labels_product_label()
+   * @return string ready markup, empty when there is no label
+   */
+  function guarantee_labels_markup($label) {
+    if (!is_array($label) || !isset($label['colour.svg'], $label['nested.svg'])) {
+      return '';
+    }
+
+    $link = '';
+
+    if (defined('TEXT_GUARANTEE_LABEL_URL') && trim(TEXT_GUARANTEE_LABEL_URL) !== '') {
+      $link = '<a class="guarantee-label__link" href="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_URL).'" target="_blank" rel="noopener">'.TEXT_GUARANTEE_LABEL_LINK.'</a>';
+    }
+
+    return '<div class="guarantee-label">'.
+             '<button type="button" class="guarantee-label__compact" title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'">'.
+               guarantee_labels_inline_svg($label['nested.svg']).
+             '</button>'.
+             '<dialog class="guarantee-label__dialog" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'">'.
+               '<div class="guarantee-label__full">'.
+                 guarantee_labels_inline_svg($label['colour.svg']).
+                 $link.
+                 '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.
+               '</div>'.
+             '</dialog>'.
+           '</div>';
+  }
+
+  /**
+   * guarantee_labels_inline_svg()
+   *
+   * Strips the parts an inline svg must not carry inside an html document. The graphic itself
+   * stays untouched.
+   *
+   * @param string $svg
+   * @return string
+   */
+  function guarantee_labels_inline_svg($svg) {
+    $svg = preg_replace('/<\?xml.*?\?>/s', '', $svg);
+    $svg = preg_replace('/<!DOCTYPE.*?>/s', '', $svg);
+    $svg = preg_replace('/<!--.*?-->/s', '', $svg);
+
+    return trim($svg);
   }
