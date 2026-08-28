@@ -60,11 +60,13 @@
   max-width: 100%;
 }
 
+/* native size of the nested template is 368.5 x 56.69; it shrinks with a narrow column but is
+   never blown up, and the aspect ratio is kept by the svg itself */
 .guarantee-label__compact svg {
   display: block;
-  width: 100%;
+  width: 368px;
+  max-width: 100%;
   height: auto;
-  max-width: 320px;
 }
 
 .guarantee-label__dialog {
@@ -86,13 +88,20 @@
   border-radius: 4px;
 }
 
-/* the label may never be cropped, so it scales down as a whole */
+/* The manufacturer and the model identifier are set in 9 units on a canvas 269.29 units wide.
+   Below that width their text would fall under 9 pixels, so the full label never goes under its
+   native size; a narrow screen scrolls instead of shrinking it. The guidelines ask for a label
+   that stays legible at default size and is neither distorted nor cropped. */
 .guarantee-label__full svg {
   display: block;
-  width: auto;
+  width: 420px;
+  min-width: 270px;
+  max-width: 90vw;
   height: auto;
-  max-width: min(420px, 80vw);
-  max-height: 70vh;
+}
+
+.guarantee-label__full {
+  overflow: auto;
 }
 
 .guarantee-label__link {
