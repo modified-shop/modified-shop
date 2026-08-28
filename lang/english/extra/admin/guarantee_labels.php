@@ -29,6 +29,8 @@
   define('ERROR_GUARANTEE_LABELS_MODEL_WIDTH', 'EU durability guarantee: the model identifier &quot;%s&quot; does not fit into the editable area of the official template. The guarantee duration has not been saved.');
   define('ERROR_GUARANTEE_LABELS_NOT_READY', 'EU durability guarantee: the module cannot render a label yet (%s). The guarantee duration has not been saved.');
 
+  define('ERROR_GUARANTEE_LABELS_IMPORT', 'Article %s &ndash; %s');
+
   define('TEXT_GUARANTEE_LABELS_CONTENT_TYPE', 'Usage:');
   define('TEXT_GUARANTEE_LABELS_CONTENT_TYPE_DEFAULT', 'Standard');
   define('TEXT_GUARANTEE_LABELS_CONTENT_TYPE_TERMS', 'GARAN guarantee conditions');

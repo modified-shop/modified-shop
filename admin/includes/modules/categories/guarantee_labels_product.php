@@ -75,6 +75,47 @@
     }
 
     /**
+     * A duplicate is a different article. Its model identifier is almost never the one of the
+     * source, so GARAN data is never carried over in an active state.
+     *
+     * @param array $sql_data_array the product data being copied
+     * @return array
+     */
+    function duplicate_product_before($sql_data_array, $src_products_id, $dest_categories_id) {
+      if (!defined('MODULE_GUARANTEE_LABELS_STATUS') || MODULE_GUARANTEE_LABELS_STATUS != 'true') {
+        return $sql_data_array;
+      }
+
+      if (!isset($sql_data_array['products_garan_duration'])
+          || $sql_data_array['products_garan_duration'] === null
+          || trim((string)$sql_data_array['products_garan_duration']) === ''
+          )
+      {
+        return $sql_data_array;
+      }
+
+      // xtc_db_perform() turns the string null into a real NULL
+      $sql_data_array['products_garan_duration'] = 'null';
+      $sql_data_array['products_manufacturers_model'] = '';
+
+      return $sql_data_array;
+    }
+
+    /**
+     * Runs after the article attachments were copied, so a guarantee document of the source
+     * article cannot stay attached to the duplicate.
+     */
+    function duplicate_product_end($product_id) {
+      if (!defined('MODULE_GUARANTEE_LABELS_STATUS') || MODULE_GUARANTEE_LABELS_STATUS != 'true') {
+        return;
+      }
+
+      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT."
+                          WHERE products_id = '".(int)$product_id."'
+                            AND content_type = 'garan_terms'");
+    }
+
+    /**
      * Reports the check result, so the article administration returns to the mask instead of
      * saving the article away with a message the shop owner may miss.
      *
