@@ -22,12 +22,36 @@
     return (typeof window.jQuery === 'function' && typeof window.jQuery.colorbox === 'function');
   }
 
+  // The shipped templates put a font awesome cross into the close control of colorbox. Whether
+  // that font is there is asked once by reading the computed family of a probe element, so a
+  // template without it still gets a visible control instead of an empty box.
+  function closeControl() {
+    if (closeControl.markup !== undefined) {
+      return closeControl.markup;
+    }
+
+    var probe = document.createElement('i');
+    probe.className = 'fa-solid fa-xmark';
+    probe.style.display = 'none';
+    document.body.appendChild(probe);
+
+    var family = window.getComputedStyle(probe).getPropertyValue('font-family') || '';
+    document.body.removeChild(probe);
+
+    closeControl.markup = (family.toLowerCase().indexOf('awesome') !== -1)
+      ? '<i class="fa-solid fa-xmark"></i>'
+      : '<span aria-hidden="true">&times;</span>';
+
+    return closeControl.markup;
+  }
+
   function show(label, id, title) {
     if (hasColorbox()) {
       window.jQuery.colorbox({
         inline: true,
         href: '#' + id,
         title: title,
+        close: closeControl(),
         maxWidth: '100%',
         maxHeight: '100%',
         fixed: true,
