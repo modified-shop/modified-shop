@@ -48,11 +48,11 @@
     <div class="clear div_box mrg5">
       <table class="tableInput border0">
         <tr>
-          <td style="width:250px; line-height: 35px;"><span class="main"><?php echo TEXT_GUARANTEE_LABELS_MANUFACTURER; ?></span></td>
+          <td style="width:250px; line-height: 35px;"><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER; ?></span></td>
           <td><span class="main"><?php echo ($guarantee_manufacturer !== '') ? htmlspecialchars($guarantee_manufacturer) : TEXT_GUARANTEE_LABELS_NONE; ?></span></td>
         </tr>
         <tr>
-          <td><span class="main"><?php echo TEXT_GUARANTEE_LABELS_MODEL; ?></span></td>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER_MODEL; ?></span></td>
           <td><span class="main"><?php echo ($guarantee_model !== '') ? htmlspecialchars($guarantee_model) : TEXT_GUARANTEE_LABELS_NONE; ?></span></td>
         </tr>
         <tr>

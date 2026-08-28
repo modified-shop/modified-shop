@@ -11,8 +11,6 @@
    ---------------------------------------------------------------------------------------*/
 
   define('TEXT_GUARANTEE_LABELS_HEADING', 'EU durability guarantee:');
-  define('TEXT_GUARANTEE_LABELS_MANUFACTURER', 'Manufacturer/guarantor:');
-  define('TEXT_GUARANTEE_LABELS_MODEL', 'Manufacturer model identifier:');
   define('TEXT_GUARANTEE_LABELS_DURATION', 'Guarantee duration in years:');
   define('TEXT_GUARANTEE_LABELS_TERMS', 'Guarantee conditions:');
 
