@@ -159,6 +159,12 @@ class categoriesModules {
         $this->secure_call_module_method($product_id);
     }
 
+    function insert_product_error($error, $products_data, $products_id)
+    {
+        $this->function_call = 'insert_product_error';
+        return $this->call_module_method($error, $products_data, $products_id);
+    }
+
     function update_product($products_data, $products_id)
     {
         $this->function_call = 'update_product';
