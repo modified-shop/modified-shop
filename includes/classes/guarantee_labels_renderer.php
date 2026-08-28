@@ -125,9 +125,9 @@
     /**
      * Accepts comma and point and returns the canonical database value.
      *
-     * Two years are stored as well, so the catalogue states plainly that the manufacturer
-     * grants exactly the period the legal guarantee already covers. Only a longer guarantee
-     * qualifies for a label, see qualifies().
+     * Every duration a manufacturer states is stored, down to half a year, so the catalogue
+     * mirrors what a supplier delivered instead of dropping what does not qualify. Whether a
+     * label is built from it is a separate question, see qualifies().
      *
      * @return mixed string with one decimal, false when the value is not a valid duration
      */
@@ -140,8 +140,8 @@
 
       $value = number_format((float)$value, 1, '.', '');
 
-      // below the legal guarantee the value says nothing, and only whole or half years exist
-      if ((float)$value < 2.0 || !in_array(substr($value, -1), array('0', '5'))) {
+      // a zero duration is no statement, and only whole or half years exist
+      if ((float)$value < 0.5 || !in_array(substr($value, -1), array('0', '5'))) {
         return false;
       }
 
