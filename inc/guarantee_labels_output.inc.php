@@ -161,7 +161,18 @@
 
     $renderer = new guarantee_labels_renderer();
 
-    return $renderer->label($names[$manufacturers_id], $product['products_manufacturers_model'], $product['products_garan_duration']);
+    $label = $renderer->label($names[$manufacturers_id], $product['products_manufacturers_model'], $product['products_garan_duration']);
+
+    if ($label === false) {
+      return false;
+    }
+
+    // the text alternative of the graphic is built from the same values
+    $label['manufacturer'] = $names[$manufacturers_id];
+    $label['model'] = $product['products_manufacturers_model'];
+    $label['duration'] = $renderer->duration_text($renderer->normalize_duration($product['products_garan_duration']));
+
+    return $label;
   }
 
   /**
@@ -196,14 +207,18 @@
     static $counter = 0;
     $id = 'guarantee-label-content-'.(++$counter);
 
+    $duration = isset($label['duration']) ? $label['duration'] : '';
+    $alt_compact = sprintf(TEXT_GUARANTEE_LABEL_ALT_COMPACT, $duration);
+    $alt_full = sprintf(TEXT_GUARANTEE_LABEL_ALT, $duration, isset($label['manufacturer']) ? $label['manufacturer'] : '', isset($label['model']) ? $label['model'] : '');
+
     return '<div class="guarantee-label">'.
-             '<button type="button" class="guarantee-label__compact" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'" title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'">'.
+             '<button type="button" class="guarantee-label__compact" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'" title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.htmlspecialchars(html_entity_decode($alt_compact.' '.TEXT_GUARANTEE_LABEL_OPEN, ENT_QUOTES, 'UTF-8')).'">'.
                guarantee_labels_inline_svg($label['nested.svg']).
              '</button>'.
              '<dialog class="guarantee-label__dialog" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'">'.
                '<div class="guarantee-label__content" id="'.$id.'">'.
                  '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.htmlspecialchars($source).'" data-guarantee-label-error="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_RELOAD).'"' : '').'>'.
-                   '<div class="guarantee-label__graphic">'.$full.'</div>'.
+                   '<div class="guarantee-label__graphic" role="img" aria-label="'.htmlspecialchars(html_entity_decode($alt_full, ENT_QUOTES, 'UTF-8')).'">'.$full.'</div>'.
                    $link.
                  '</div>'.
                '</div>'.
@@ -245,7 +260,7 @@
    * @param string $svg
    * @return string
    */
-  function guarantee_labels_inline_svg($svg) {
+  function guarantee_labels_inline_svg($svg, $alt = '') {
     static $counter = 0;
 
     $svg = preg_replace('/<\?xml.*?\?>/s', '', $svg);
@@ -277,5 +292,10 @@
       return ' class="'.implode(' ', $classes).'"';
     }, $svg);
 
-    return trim($svg);
+    $svg = trim($svg);
+
+    // a graphic carrying information needs a text alternative; without one it is decoration
+    $role = ($alt === '') ? ' aria-hidden="true"' : ' role="img" aria-label="'.htmlspecialchars($alt).'"';
+
+    return preg_replace('/<svg\b/', '<svg'.$role, $svg, 1);
   }

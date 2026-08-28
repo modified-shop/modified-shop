@@ -17,7 +17,13 @@
 
   define('TEXT_GUARANTEE_LABEL_RELOAD', 'The full label could not be loaded. Please reload the page.');
 
-  // Target of the QR code inside the official GARAN label. The code is drawn as paths, so the
-  // address cannot be read from the file; it belongs to the language package. While this stays
-  // empty the label is shown without the additional link.
-  define('TEXT_GUARANTEE_LABEL_URL', '');
+  // Target of the QR code inside the official GARAN label, read from the code itself.
+  define('TEXT_GUARANTEE_LABEL_URL', 'https://europa.eu/youreurope/commercial-guarantee-durability');
+
+  // Language section of the Your Europe portal the notice points to, as listed in the
+  // practical guidelines. A language package brings its own address here.
+  define('TEXT_GUARANTEE_NOTICE_URL', 'https://europa.eu/youreurope/guarantees');
+
+  // Text alternative of the graphic, filled with duration, manufacturer and model
+  define('TEXT_GUARANTEE_LABEL_ALT', 'EU label for the commercial guarantee of durability: %1$s years of durability guarantee by the manufacturer %2$s for the model %3$s.');
+  define('TEXT_GUARANTEE_LABEL_ALT_COMPACT', 'EU label for the commercial guarantee of durability: %s years.');
