@@ -318,6 +318,19 @@
   }
 
   /**
+   * guarantee_labels_physical()
+   *
+   * Digital content and services are not covered by the labelling duty. The shop knows the
+   * content type of the cart, everything that is not purely virtual counts as physical here.
+   *
+   * @param mixed $content_type physical, virtual, mixed, or false while downloads are off
+   * @return bool
+   */
+  function guarantee_labels_physical($content_type) {
+    return !in_array($content_type, array('virtual', 'virtual_weight'), true);
+  }
+
+  /**
    * guarantee_labels_notice()
    *
    * Builds the notice about the legal guarantee that has to stand before the order button.
@@ -331,12 +344,7 @@
    * @return string empty when the module is off or the cart holds no physical goods
    */
   function guarantee_labels_notice($content_type = false) {
-    if (!guarantee_labels_active()) {
-      return '';
-    }
-
-    // digital content and services are not covered by the labelling duty
-    if ($content_type === 'virtual') {
+    if (!guarantee_labels_active() || !guarantee_labels_physical($content_type)) {
       return '';
     }
 

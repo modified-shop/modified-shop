@@ -29,6 +29,7 @@
   define('TEXT_GUARANTEE_NOTICE_MIXED', 'The notice applies to the physical goods of this order.');
   define('TEXT_GUARANTEE_NOTICE_OPEN', 'Show the notice enlarged');
   define('TEXT_GUARANTEE_NOTICE_LINK', 'Read up on your rights in your country');
+  define('TEXT_GUARANTEE_NOTICE_MAIL', 'The goods of this order sold in the European Union come with a legal guarantee of conformity of at least two years. The attached notice sums up your rights.');
   define('TEXT_GUARANTEE_NOTICE_ALT', 'Notice of the European Union about the legal guarantee of at least two years.');
 
   // Text alternative of the graphic, filled with duration, manufacturer and model
