@@ -39,7 +39,7 @@
     $normalized = $renderer->normalize_duration($duration);
 
     if ($normalized === false) {
-      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_DURATION, htmlspecialchars($duration));
+      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_DURATION, encode_htmlspecialchars($duration));
       $sql_data_array['products_garan_duration'] = 'null';
       return array('data' => $sql_data_array, 'errors' => $errors);
     }
@@ -78,11 +78,11 @@
 
     // the label may neither be cut off nor set in a smaller font, so the real width decides
     if ($manufacturers_name !== '' && $renderer->is_ready() && $renderer->fits('manufacturer', $manufacturers_name) === false) {
-      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MANUFACTURER_WIDTH, htmlspecialchars($manufacturers_name));
+      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MANUFACTURER_WIDTH, encode_htmlspecialchars($manufacturers_name));
     }
 
     if ($model !== '' && $renderer->is_ready() && $renderer->fits('model', $model) === false) {
-      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MODEL_WIDTH, htmlspecialchars($model));
+      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MODEL_WIDTH, encode_htmlspecialchars($model));
     }
 
     if (!$renderer->is_ready()) {

@@ -10,6 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  require_once(DIR_FS_CATALOG.'inc/html_encoding.php');
+
   /**
    * guarantee_labels_active()
    *
@@ -180,13 +182,14 @@
    *
    * Prepares a language constant for an html attribute. The language packages write umlauts as
    * entities, so escaping them again would turn the ampersand into &amp; and the attribute would
-   * show the entity itself. The text is decoded first and then escaped once.
+   * show the entity itself. The text is decoded first and then escaped once, through the shop
+   * helpers, so both steps use the charset the shop actually runs on.
    *
    * @param string $text
    * @return string
    */
   function guarantee_labels_attribute($text) {
-    return htmlspecialchars(html_entity_decode($text, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+    return encode_htmlspecialchars(decode_htmlentities($text, ENT_QUOTES), ENT_QUOTES);
   }
 
   /**
@@ -231,7 +234,7 @@
              '</button>'.
              '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_TITLE).'">'.
                '<div class="guarantee-label__content" id="'.$id.'">'.
-                 '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.htmlspecialchars($source).'" data-guarantee-label-error="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_RELOAD).'"' : '').'>'.
+                 '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.encode_htmlspecialchars($source).'" data-guarantee-label-error="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_RELOAD).'"' : '').'>'.
                    '<div class="guarantee-label__graphic" role="img" aria-label="'.guarantee_labels_attribute($alt_full).'">'.$full.'</div>'.
                    $link.
                  '</div>'.
@@ -309,7 +312,7 @@
     $svg = trim($svg);
 
     // a graphic carrying information needs a text alternative; without one it is decoration
-    $role = ($alt === '') ? ' aria-hidden="true"' : ' role="img" aria-label="'.htmlspecialchars($alt).'"';
+    $role = ($alt === '') ? ' aria-hidden="true"' : ' role="img" aria-label="'.encode_htmlspecialchars($alt).'"';
 
     return preg_replace('/<svg\b/', '<svg'.$role, $svg, 1);
   }

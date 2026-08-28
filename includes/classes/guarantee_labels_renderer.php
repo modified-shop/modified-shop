@@ -10,6 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  require_once(DIR_FS_CATALOG.'inc/html_encoding.php');
   require_once(DIR_FS_CATALOG.'inc/guarantee_labels_log.inc.php');
   // the path is spelled out because DIR_WS_CLASSES is absolute in the storefront and relative
   // in the administration, and this class runs in both
@@ -360,11 +361,11 @@
      */
     function replace_area($svg, $token, $value, $template) {
       // product data must never be able to inject own svg or html
-      $replacement = '<tspan x="0" y="0">'.htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8').'</tspan>';
+      $replacement = '<tspan x="0" y="0">'.encode_htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8').'</tspan>';
 
       $count = 0;
       $result = preg_replace_callback('/(<text\b[^>]*>)(.*?)(<\/text>)/s', function ($match) use ($token, $replacement, &$count) {
-        if (trim(html_entity_decode(strip_tags($match[2]), ENT_QUOTES | ENT_XML1, 'UTF-8')) !== $token) {
+        if (trim(decode_htmlentities(strip_tags($match[2]), ENT_QUOTES | ENT_XML1)) !== $token) {
           return $match[0];
         }
 

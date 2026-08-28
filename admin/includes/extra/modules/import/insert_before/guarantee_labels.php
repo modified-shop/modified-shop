@@ -58,6 +58,6 @@
 
     // the import has no redirect, so the message belongs to the current request
     foreach ($guarantee_labels_result['errors'] as $guarantee_labels_error) {
-      $messageStack->add(sprintf(ERROR_GUARANTEE_LABELS_IMPORT, htmlspecialchars($dataArray['p_model']), $guarantee_labels_error), 'error');
+      $messageStack->add(sprintf(ERROR_GUARANTEE_LABELS_IMPORT, encode_htmlspecialchars($dataArray['p_model']), $guarantee_labels_error), 'error');
     }
   }

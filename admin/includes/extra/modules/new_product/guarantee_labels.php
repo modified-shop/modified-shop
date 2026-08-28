@@ -49,11 +49,11 @@
       <table class="tableInput border0">
         <tr>
           <td style="width:250px; line-height: 35px;"><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER; ?></span></td>
-          <td><span class="main"><?php echo ($guarantee_manufacturer !== '') ? htmlspecialchars($guarantee_manufacturer) : TEXT_GUARANTEE_LABELS_NONE; ?></span></td>
+          <td><span class="main"><?php echo ($guarantee_manufacturer !== '') ? encode_htmlspecialchars($guarantee_manufacturer) : TEXT_GUARANTEE_LABELS_NONE; ?></span></td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER_MODEL; ?></span></td>
-          <td><span class="main"><?php echo ($guarantee_model !== '') ? htmlspecialchars($guarantee_model) : TEXT_GUARANTEE_LABELS_NONE; ?></span></td>
+          <td><span class="main"><?php echo ($guarantee_model !== '') ? encode_htmlspecialchars($guarantee_model) : TEXT_GUARANTEE_LABELS_NONE; ?></span></td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_GUARANTEE_LABELS_DURATION; ?></span><?php echo draw_tooltip(TEXT_GUARANTEE_LABELS_INFO_RULES); ?></td>
@@ -70,7 +70,7 @@
                   echo xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']).' ';
 
                   if (isset($guarantee_terms[$guarantee_language_id])) {
-                    echo htmlspecialchars($guarantee_terms[$guarantee_language_id]['content_name']);
+                    echo encode_htmlspecialchars($guarantee_terms[$guarantee_language_id]['content_name']);
                   } else {
                     echo TEXT_GUARANTEE_LABELS_TERMS_MISSING;
                   }
