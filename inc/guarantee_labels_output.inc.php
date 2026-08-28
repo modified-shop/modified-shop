@@ -197,7 +197,7 @@
     $id = 'guarantee-label-content-'.(++$counter);
 
     return '<div class="guarantee-label">'.
-             '<button type="button" class="guarantee-label__compact" data-guarantee-label-content="'.$id.'" title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'">'.
+             '<button type="button" class="guarantee-label__compact" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'" title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'">'.
                guarantee_labels_inline_svg($label['nested.svg']).
              '</button>'.
              '<dialog class="guarantee-label__dialog" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'">'.

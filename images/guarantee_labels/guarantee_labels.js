@@ -22,11 +22,12 @@
     return (typeof window.jQuery === 'function' && typeof window.jQuery.colorbox === 'function');
   }
 
-  function show(label, id) {
+  function show(label, id, title) {
     if (hasColorbox()) {
       window.jQuery.colorbox({
         inline: true,
         href: '#' + id,
+        title: title,
         maxWidth: '100%',
         maxHeight: '100%',
         fixed: true,
@@ -85,11 +86,12 @@
       var label = closest(compact, '.guarantee-label');
       var full = label ? label.querySelector('.guarantee-label__full') : null;
       var id = compact.getAttribute('data-guarantee-label-content');
+      var title = compact.getAttribute('data-guarantee-label-title') || '';
 
       if (full) {
-        load(full, function () { show(label, id); });
+        load(full, function () { show(label, id, title); });
       } else {
-        show(label, id);
+        show(label, id, title);
       }
 
       return;
