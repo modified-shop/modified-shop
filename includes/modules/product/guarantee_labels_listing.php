@@ -10,8 +10,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-
   /**
    * Adds the GARAN label to every article list built through the product class.
    *
