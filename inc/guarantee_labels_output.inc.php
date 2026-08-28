@@ -176,6 +176,20 @@
   }
 
   /**
+   * guarantee_labels_attribute()
+   *
+   * Prepares a language constant for an html attribute. The language packages write umlauts as
+   * entities, so escaping them again would turn the ampersand into &amp; and the attribute would
+   * show the entity itself. The text is decoded first and then escaped once.
+   *
+   * @param string $text
+   * @return string
+   */
+  function guarantee_labels_attribute($text) {
+    return htmlspecialchars(html_entity_decode($text, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+  }
+
+  /**
    * guarantee_labels_markup()
    *
    * Wraps both label variants into the block a template places. The compact label opens the
@@ -193,7 +207,7 @@
     $link = '';
 
     if (defined('TEXT_GUARANTEE_LABEL_URL') && trim(TEXT_GUARANTEE_LABEL_URL) !== '') {
-      $link = '<a class="guarantee-label__link" href="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_URL).'" target="_blank" rel="noopener">'.TEXT_GUARANTEE_LABEL_LINK.'</a>';
+      $link = '<a class="guarantee-label__link" href="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_URL).'" target="_blank" rel="noopener">'.TEXT_GUARANTEE_LABEL_LINK.'</a>';
     }
 
     // The full label carries the GARAN title in every EU language as outlined paths and weighs
@@ -212,13 +226,13 @@
     $alt_full = sprintf(TEXT_GUARANTEE_LABEL_ALT, $duration, isset($label['manufacturer']) ? $label['manufacturer'] : '', isset($label['model']) ? $label['model'] : '');
 
     return '<div class="guarantee-label">'.
-             '<button type="button" class="guarantee-label__compact" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'" title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.htmlspecialchars(html_entity_decode($alt_compact.' '.TEXT_GUARANTEE_LABEL_OPEN, ENT_QUOTES, 'UTF-8')).'">'.
+             '<button type="button" class="guarantee-label__compact" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_TITLE).'" title="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.guarantee_labels_attribute($alt_compact.' '.TEXT_GUARANTEE_LABEL_OPEN).'">'.
                guarantee_labels_inline_svg($label['nested.svg']).
              '</button>'.
-             '<dialog class="guarantee-label__dialog" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'">'.
+             '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_TITLE).'">'.
                '<div class="guarantee-label__content" id="'.$id.'">'.
-                 '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.htmlspecialchars($source).'" data-guarantee-label-error="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_RELOAD).'"' : '').'>'.
-                   '<div class="guarantee-label__graphic" role="img" aria-label="'.htmlspecialchars(html_entity_decode($alt_full, ENT_QUOTES, 'UTF-8')).'">'.$full.'</div>'.
+                 '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.htmlspecialchars($source).'" data-guarantee-label-error="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_RELOAD).'"' : '').'>'.
+                   '<div class="guarantee-label__graphic" role="img" aria-label="'.guarantee_labels_attribute($alt_full).'">'.$full.'</div>'.
                    $link.
                  '</div>'.
                '</div>'.
