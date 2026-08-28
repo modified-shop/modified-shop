@@ -89,6 +89,9 @@
           <td colspan="2" style="padding-top:8px;"><span class="smallText"><?php echo TEXT_GUARANTEE_LABELS_INFO; ?></span></td>
         </tr>
         <tr>
+          <td colspan="2"><span class="smallText"><?php echo TEXT_GUARANTEE_LABELS_INFO_RULES; ?></span></td>
+        </tr>
+        <tr>
           <td colspan="2"><span class="smallText"><?php echo TEXT_GUARANTEE_LABELS_INFO_TERMS; ?></span></td>
         </tr>
       </table>
