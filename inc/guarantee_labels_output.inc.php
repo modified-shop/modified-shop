@@ -191,16 +191,23 @@
     $source = guarantee_labels_cache_url($label['hash']);
     $full = ($source === '') ? guarantee_labels_inline_svg($label['colour.svg']) : '';
 
+    // the content is opened in the lightbox of the template when there is one, so the label
+    // behaves like every other overlay of the shop; the dialog is the fallback without it
+    static $counter = 0;
+    $id = 'guarantee-label-content-'.(++$counter);
+
     return '<div class="guarantee-label">'.
-             '<button type="button" class="guarantee-label__compact" title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'">'.
+             '<button type="button" class="guarantee-label__compact" data-guarantee-label-content="'.$id.'" title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'">'.
                guarantee_labels_inline_svg($label['nested.svg']).
              '</button>'.
              '<dialog class="guarantee-label__dialog" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'">'.
-               '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.htmlspecialchars($source).'" data-guarantee-label-error="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_RELOAD).'"' : '').'>'.
-                 '<div class="guarantee-label__graphic">'.$full.'</div>'.
-                 $link.
-                 '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.
+               '<div class="guarantee-label__content" id="'.$id.'">'.
+                 '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.htmlspecialchars($source).'" data-guarantee-label-error="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_RELOAD).'"' : '').'>'.
+                   '<div class="guarantee-label__graphic">'.$full.'</div>'.
+                   $link.
+                 '</div>'.
                '</div>'.
+               '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.
              '</dialog>'.
            '</div>';
   }
@@ -226,16 +233,49 @@
   /**
    * guarantee_labels_inline_svg()
    *
-   * Strips the parts an inline svg must not carry inside an html document. The graphic itself
-   * stays untouched.
+   * Prepares one graphic for being written into an html document.
+   *
+   * The official templates carry a style block with generic class names and ids: both files use
+   * cls-1 to cls-7 for entirely different things, and the full label clips through url(#clippath-6).
+   * Inline they all land in one global namespace, so the last definition would win for every copy
+   * on the page and a reference would resolve to the first element of that id in the document.
+   * Class names and ids are therefore given a prefix that is unique per occurrence. Nothing else
+   * is touched, the graphic renders exactly as the official file does.
    *
    * @param string $svg
    * @return string
    */
   function guarantee_labels_inline_svg($svg) {
+    static $counter = 0;
+
     $svg = preg_replace('/<\?xml.*?\?>/s', '', $svg);
     $svg = preg_replace('/<!DOCTYPE.*?>/s', '', $svg);
     $svg = preg_replace('/<!--.*?-->/s', '', $svg);
+
+    $prefix = 'gl'.(++$counter).'-';
+
+    // the ids the file defines itself, so a foreign reference is never rewritten
+    preg_match_all('/\sid="([^"]+)"/', $svg, $matches);
+    $ids = array_unique($matches[1]);
+
+    foreach ($ids as $id) {
+      $quoted = preg_quote($id, '/');
+      $svg = preg_replace('/(\sid=")'.$quoted.'(")/', '$1'.$prefix.$id.'$2', $svg);
+      $svg = preg_replace('/url\(#'.$quoted.'\)/', 'url(#'.$prefix.$id.')', $svg);
+      $svg = preg_replace('/((?:xlink:)?href=")#'.$quoted.'(")/', '$1#'.$prefix.$id.'$2', $svg);
+    }
+
+    // class names inside the style block and on the elements
+    $svg = preg_replace('/\.(cls-[0-9]+)/', '.'.$prefix.'$1', $svg);
+    $svg = preg_replace_callback('/\sclass="([^"]+)"/', function ($match) use ($prefix) {
+      $classes = array();
+
+      foreach (preg_split('/\s+/', trim($match[1])) as $class) {
+        $classes[] = (strpos($class, 'cls-') === 0) ? $prefix.$class : $class;
+      }
+
+      return ' class="'.implode(' ', $classes).'"';
+    }, $svg);
 
     return trim($svg);
   }

@@ -7,10 +7,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// Opens the full GARAN label on the first click or touch of the compact one and fetches the
-// graphic from the cache, because it carries the title in every EU language and would weigh
-// down every listing page. Kept free of any framework, so every shipped template behaves the
-// same without its own lightbox.
+// Opens the full GARAN label on the first click or touch of the compact one. The graphic is
+// fetched from the cache, because it carries the title in every EU language and would weigh
+// down every listing page. When the template brings colorbox the label uses it, so it behaves
+// like every other overlay of the shop; otherwise a dialog element takes over.
 (function () {
   'use strict';
 
@@ -18,11 +18,42 @@
     return (node && node.closest) ? node.closest(selector) : null;
   }
 
-  function load(full) {
+  function hasColorbox() {
+    return (typeof window.jQuery === 'function' && typeof window.jQuery.colorbox === 'function');
+  }
+
+  function show(label, id) {
+    if (hasColorbox()) {
+      window.jQuery.colorbox({
+        inline: true,
+        href: '#' + id,
+        maxWidth: '100%',
+        maxHeight: '100%',
+        fixed: true,
+        className: 'guarantee-label__colorbox'
+      });
+      return;
+    }
+
+    var dialog = label.querySelector('.guarantee-label__dialog');
+
+    if (!dialog) {
+      return;
+    }
+
+    if (typeof dialog.showModal === 'function') {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute('open', 'open');
+    }
+  }
+
+  function load(full, done) {
     var source = full.getAttribute('data-guarantee-label-src');
     var graphic = full.querySelector('.guarantee-label__graphic');
 
     if (!source || !graphic || full.getAttribute('data-guarantee-label-loaded')) {
+      done();
       return;
     }
 
@@ -36,32 +67,13 @@
     }).then(function (svg) {
       // inserted into the dom instead of an img, so the label uses the fonts of the page
       graphic.innerHTML = svg;
+      done();
     }).catch(function () {
       // the cache was cleared between page load and click, a reload rebuilds it
       full.removeAttribute('data-guarantee-label-loaded');
       graphic.textContent = full.getAttribute('data-guarantee-label-error') || '';
+      done();
     });
-  }
-
-  function open(label) {
-    var dialog = label.querySelector('.guarantee-label__dialog');
-    var full = label.querySelector('.guarantee-label__full');
-
-    if (!dialog) {
-      return;
-    }
-
-    if (full) {
-      load(full);
-    }
-
-    if (typeof dialog.showModal === 'function') {
-      dialog.showModal();
-      return;
-    }
-
-    // without dialog support the full label simply stays in the flow
-    dialog.setAttribute('open', 'open');
   }
 
   document.addEventListener('click', function (event) {
@@ -69,7 +81,17 @@
 
     if (compact) {
       event.preventDefault();
-      open(compact.parentNode);
+
+      var label = closest(compact, '.guarantee-label');
+      var full = label ? label.querySelector('.guarantee-label__full') : null;
+      var id = compact.getAttribute('data-guarantee-label-content');
+
+      if (full) {
+        load(full, function () { show(label, id); });
+      } else {
+        show(label, id);
+      }
+
       return;
     }
 

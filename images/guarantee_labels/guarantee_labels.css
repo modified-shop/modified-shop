@@ -70,12 +70,20 @@
   height: auto;
 }
 
+/* only used when the template brings no lightbox; margin auto is what centres a modal dialog
+   and a theme reset that sets margin 0 would otherwise pin it to the top left corner */
 .guarantee-label__dialog {
+  margin: auto;
   padding: 0;
   border: 0;
   background: none;
   max-width: 90vw;
   max-height: 90vh;
+}
+
+/* colorbox moves the content out of the dialog, so the dialog itself stays out of the flow */
+.guarantee-label__dialog:not([open]) {
+  display: none;
 }
 
 .guarantee-label__dialog::backdrop {
@@ -110,6 +118,11 @@
   margin-top: 8px;
   font-size: 12px;
   text-align: center;
+}
+
+/* colorbox brings its own close control */
+.guarantee-label__colorbox .guarantee-label__close {
+  display: none;
 }
 
 .guarantee-label__close {
