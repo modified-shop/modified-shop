@@ -47,7 +47,7 @@
     }
     ?>
     <div style="clear:both;"></div>
-    <div class="main div_header"><b><?php echo TEXT_GUARANTEE_LABELS_HEADING; ?></b></div>
+    <div class="main div_header"><b><?php echo TEXT_GUARANTEE_LABELS_HEADING; ?></b><?php echo draw_tooltip(TEXT_GUARANTEE_LABELS_INFO); ?></div>
     <div class="clear div_box mrg5">
       <table class="tableInput border0">
         <tr>
@@ -59,12 +59,12 @@
           <td><span class="main"><?php echo htmlspecialchars($guarantee_model); ?></span></td>
         </tr>
         <tr>
-          <td><span class="main"><?php echo TEXT_GUARANTEE_LABELS_DURATION; ?></span></td>
+          <td><span class="main"><?php echo TEXT_GUARANTEE_LABELS_DURATION; ?></span><?php echo draw_tooltip(TEXT_GUARANTEE_LABELS_INFO_RULES); ?></td>
           <td><span class="main"><?php echo xtc_draw_input_field('products_garan_duration', $pInfo->products_garan_duration, 'style="width: 155px"'); ?></span></td>
         </tr>
         <?php if ((int)$pInfo->products_id > 0) { ?>
         <tr>
-          <td style="vertical-align:top; padding-top:8px;"><span class="main"><?php echo TEXT_GUARANTEE_LABELS_TERMS; ?></span></td>
+          <td style="vertical-align:top; padding-top:8px;"><span class="main"><?php echo TEXT_GUARANTEE_LABELS_TERMS; ?></span><?php echo draw_tooltip(TEXT_GUARANTEE_LABELS_INFO_TERMS); ?></td>
           <td>
             <span class="main">
               <?php
@@ -85,15 +85,6 @@
           </td>
         </tr>
         <?php } ?>
-        <tr>
-          <td colspan="2" style="padding-top:8px;"><span class="smallText"><?php echo TEXT_GUARANTEE_LABELS_INFO; ?></span></td>
-        </tr>
-        <tr>
-          <td colspan="2"><span class="smallText"><?php echo TEXT_GUARANTEE_LABELS_INFO_RULES; ?></span></td>
-        </tr>
-        <tr>
-          <td colspan="2"><span class="smallText"><?php echo TEXT_GUARANTEE_LABELS_INFO_TERMS; ?></span></td>
-        </tr>
       </table>
     </div>
     <?php
