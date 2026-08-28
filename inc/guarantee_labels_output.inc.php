@@ -175,7 +175,7 @@
    * @return string ready markup, empty when there is no label
    */
   function guarantee_labels_markup($label) {
-    if (!is_array($label) || !isset($label['colour.svg'], $label['nested.svg'])) {
+    if (!is_array($label) || !isset($label['colour.svg'], $label['nested.svg'], $label['hash'])) {
       return '';
     }
 
@@ -185,18 +185,42 @@
       $link = '<a class="guarantee-label__link" href="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_URL).'" target="_blank" rel="noopener">'.TEXT_GUARANTEE_LABEL_LINK.'</a>';
     }
 
+    // The full label carries the GARAN title in every EU language as outlined paths and weighs
+    // around 290 kB. Only the compact one goes into the page; the full one is fetched from the
+    // cache on the first open. It is inserted into the dom, so it uses the fonts loaded once.
+    $source = guarantee_labels_cache_url($label['hash']);
+    $full = ($source === '') ? guarantee_labels_inline_svg($label['colour.svg']) : '';
+
     return '<div class="guarantee-label">'.
              '<button type="button" class="guarantee-label__compact" title="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_OPEN).'">'.
                guarantee_labels_inline_svg($label['nested.svg']).
              '</button>'.
              '<dialog class="guarantee-label__dialog" aria-label="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_TITLE).'">'.
-               '<div class="guarantee-label__full">'.
-                 guarantee_labels_inline_svg($label['colour.svg']).
+               '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.htmlspecialchars($source).'" data-guarantee-label-error="'.htmlspecialchars(TEXT_GUARANTEE_LABEL_RELOAD).'"' : '').'>'.
+                 '<div class="guarantee-label__graphic">'.$full.'</div>'.
                  $link.
                  '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.
                '</div>'.
              '</dialog>'.
            '</div>';
+  }
+
+  /**
+   * guarantee_labels_cache_url()
+   *
+   * The address the full label is fetched from. Empty when the cached file is missing, in which
+   * case the caller writes the graphic into the page instead of pointing at a file that is not
+   * there.
+   *
+   * @param string $hash
+   * @return string
+   */
+  function guarantee_labels_cache_url($hash) {
+    if (!is_file(DIR_FS_CATALOG.'cache/guarantee_labels/'.$hash.'/colour.svg')) {
+      return '';
+    }
+
+    return (defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').'cache/guarantee_labels/'.$hash.'/colour.svg';
   }
 
   /**

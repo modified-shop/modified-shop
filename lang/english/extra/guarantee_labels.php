@@ -15,6 +15,8 @@
   define('TEXT_GUARANTEE_LABEL_CLOSE', 'Close');
   define('TEXT_GUARANTEE_LABEL_LINK', 'More information about the GARAN label');
 
+  define('TEXT_GUARANTEE_LABEL_RELOAD', 'The full label could not be loaded. Please reload the page.');
+
   // Target of the QR code inside the official GARAN label. The code is drawn as paths, so the
   // address cannot be read from the file; it belongs to the language package. While this stays
   // empty the label is shown without the additional link.
