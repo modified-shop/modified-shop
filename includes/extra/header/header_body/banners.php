@@ -24,7 +24,10 @@
   {
     $banner_smarty = new Smarty();
     $banner_smarty->caching = 0;
-    $banner_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+    // Legacy compatibility for custom templates.
+    // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+    $banner_smarty->assign('tpl_path', Template::url(''));
     $banner_smarty->assign('language', $_SESSION['language']);
 
     $banners_group_condition = ((isset($banners_group_condition)) ? $banners_group_condition : '');
@@ -42,10 +45,10 @@
         if ($banner = xtc_banner_exists('dynamic', $groups['banners_group'])) {
           $banner_array = xtc_display_banner('static', $banner);
 
-          if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/banners.html')) {
+          if (Template::findPath('module/banners.html') !== null) {
             $banner_smarty->assign('banner_data', $banner_array);
             $banner_smarty->caching = 0;
-            $banners = $banner_smarty->fetch(CURRENT_TEMPLATE.'/module/banners.html');
+            $banners = $banner_smarty->fetch(Template::resolve('module/banners.html'));
           } else {
             if (xtc_not_null($banner_array['TEXT'])) {
               $banners = $banner_array['TEXT'];

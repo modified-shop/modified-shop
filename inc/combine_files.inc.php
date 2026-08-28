@@ -13,8 +13,13 @@
 function combine_files($f_array,$f_min,$compress_css = false,$f_time = 0)
 {
     $f_min_path = DIR_FS_CATALOG.$f_min;
+    $f_min_directory = dirname($f_min_path);
+    if (!is_dir($f_min_directory) && !mkdir($f_min_directory, 0777, true) && !is_dir($f_min_directory)) {
+      return $f_array;
+    }
+
     $f_min_ts = is_file($f_min_path) ? filemtime($f_min_path) : false;
-    $f_min_directory_writable = is_writable(dirname($f_min_path));
+    $f_min_directory_writable = is_writable($f_min_directory);
     $f_min_writable = is_file($f_min_path)
       ? (is_writable($f_min_path) || (!is_link($f_min_path) && $f_min_directory_writable))
       : $f_min_directory_writable;

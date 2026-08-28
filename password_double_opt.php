@@ -79,8 +79,11 @@ if (isset($_GET['action'])
 
       // assign language to template for caching
       $smarty->assign('language', $_SESSION['language']);
-      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+      // Legacy compatibility for custom templates.
+      // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+      $smarty->assign('tpl_path', Template::absoluteUrl(''));
+      $smarty->assign('logo_path', Template::absoluteUrl('img/'));
 
       // assign vars
       $smarty->assign('EMAIL', $check_customer['customers_email_address']);
@@ -92,8 +95,8 @@ if (isset($_GET['action'])
       $smarty->assign('language', $_SESSION['language']);
 
       // create mails
-      $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.html');
-      $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.txt');
+      $html_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/new_password_mail.html'));
+      $txt_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/new_password_mail.txt'));
       
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
                        SET password_request_key = '".xtc_db_input($vlcode)."',
@@ -207,7 +210,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'password';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 switch ($case) {
   case 'second_opt_in':
@@ -226,7 +229,7 @@ switch ($case) {
     // dont allow cache
     $smarty->caching = 0;
     $smarty->assign('language', $_SESSION['language']);
-    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_password.html');
+    $main_content = $smarty->fetch(Template::resolve('module/account_password.html'));
     break;
     
   case 'code_error' :
@@ -255,7 +258,7 @@ switch ($case) {
     // dont allow cache
     $smarty->caching = 0;
     $smarty->assign('language', $_SESSION['language']);
-    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/password_double_opt_in.html');
+    $main_content = $smarty->fetch(Template::resolve('module/password_double_opt_in.html'));
     break;
 }
 
@@ -265,5 +268,5 @@ $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

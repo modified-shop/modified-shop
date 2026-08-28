@@ -44,7 +44,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
   $info_smarty = new Smarty();
   $info_smarty->assign('language', $_SESSION['language']);
-  $info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+  // Legacy compatibility for custom templates.
+  // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+  $info_smarty->assign('tpl_path', Template::url(''));
 
   // defaults
   $hide_qty = 0;
@@ -251,10 +254,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   // get default product_info template
   if ($product->data['product_template'] == '' 
       || $product->data['product_template'] == 'default'
-      || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template'])
+      || Template::findPath('module/product_info/' . $product->data['product_template']) === null
       )
   {
-    $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/','html'), function($file) {
+    $files = array_filter(Template::files('module/product_info/', 'html'), function($file) {
       return false === strpos($file, 'index.html');
     });
     $product->data['product_template'] = basename($files[0]);
@@ -281,7 +284,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
   
   $info_smarty->caching = 0;
-  $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template']);
+  $product_info = $info_smarty->fetch(Template::resolve('module/product_info/' . $product->data['product_template']));
   
   $smarty->assign('main_content', $product_info);
   $display_mode = 'productinfo';

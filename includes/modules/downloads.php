@@ -122,13 +122,19 @@ if (isset($send_order)) {
     $module_smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
     $module_smarty->config_dir = DIR_FS_CATALOG.'lang';
   }
-  $module_smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-  $module_txt = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$language.'/downloads.txt');
-  $module_html = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$language.'/downloads.html');
+  // Legacy compatibility for custom templates.
+  // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+  $module_smarty->assign('tpl_path', Template::absoluteUrl(''));
+
+  $module_txt = $module_smarty->fetch(Template::resolve('mail/' . $language . '/downloads.txt'));
+  $module_html = $module_smarty->fetch(Template::resolve('mail/' . $language . '/downloads.html'));
   $smarty->assign('downloads_content_html', !empty($module_html) ? trim($module_html) : $module_html);
   $smarty->assign('downloads_content_txt', !empty($module_txt) ? trim($module_txt) : $module_txt);
 } else {
-  $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-  $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/downloads.html');
+  // Legacy compatibility for custom templates.
+  // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+  $module_smarty->assign('tpl_path', Template::url(''));
+
+  $module = $module_smarty->fetch(Template::resolve('module/downloads.html'));
   $smarty->assign('downloads_content', !empty($module) ? trim($module) : $module);
 }

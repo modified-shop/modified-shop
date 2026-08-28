@@ -17,8 +17,8 @@
   
   // load Template config
   if (defined('CURRENT_TEMPLATE') 
-      && file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/config.php')
+      && Template::findPath('config/config.php') !== null
       )
   {
-    require_once(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/config.php');
+    require_once Template::path('config/config.php');
   }

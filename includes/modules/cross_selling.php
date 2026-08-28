@@ -20,7 +20,10 @@ require_once (DIR_FS_INC.'get_pictureset_data.inc.php');
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -35,7 +38,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/cross_selling.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/cross_selling.html'), $cache_id) || !$cache) {
   if (ACTIVATE_CROSS_SELLING == 'true') {
     $data = $product->getCrossSells();
     if (count($data) > 0) {
@@ -51,11 +54,11 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/cross_selling.html', $c
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/cross_selling.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/cross_selling.html'), $cache_id);
 $info_smarty->assign('MODULE_cross_selling', !empty($module) ? trim($module) : $module);
 
 $module_smarty->clear_assign('module_content');
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/reverse_cross_selling.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/reverse_cross_selling.html'), $cache_id) || !$cache) {
   if (ACTIVATE_REVERSE_CROSS_SELLING == 'true') {
     $data = $product->getReverseCrossSells();	
     if (count($data) > 0) {
@@ -71,5 +74,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/reverse_cross_selling.h
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/reverse_cross_selling.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/reverse_cross_selling.html'), $cache_id);
 $info_smarty->assign('MODULE_reverse_cross_selling', !empty($module) ? trim($module) : $module);

@@ -11,8 +11,8 @@
    ---------------------------------------------------------------------------------------*/
 
   // paths
-  define('DIR_FS_BOXES', DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/boxes/');
-  define('DIR_FS_BOXES_INC', DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/inc/');
+  define('DIR_FS_BOXES', Template::path('source/boxes/'));
+  define('DIR_FS_BOXES_INC', Template::path('source/inc/'));
 
   // popup
   define('TPL_POPUP_SHIPPING_LINK_PARAMETERS', '');
@@ -91,6 +91,6 @@
   defined('DIR_WS_BASE') OR define('DIR_WS_BASE', xtc_href_link('', '', $request_type, false, false));
 
   // css buttons
-  if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php')) {
-    require_once(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php');
+  if (Template::findPath('source/inc/css_button.inc.php') !== null) {
+    require_once Template::path('source/inc/css_button.inc.php');
   }

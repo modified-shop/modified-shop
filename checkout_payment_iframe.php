@@ -53,7 +53,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'checkout';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $smarty->assign('iframe_url', $iframe_url);
 $main_content = '<iframe src="'.$iframe_url.'" width="100%" height="750" name="_top" frameborder="0"></iframe>';
@@ -63,5 +63,5 @@ $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE . '/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

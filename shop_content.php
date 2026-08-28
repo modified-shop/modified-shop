@@ -29,7 +29,10 @@ require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 // create smarty elements
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$smarty->assign('tpl_path', Template::url(''));
 
 if ($language_not_found === true) {
   $site_error = TEXT_CONTENT_NOT_FOUND;
@@ -106,7 +109,7 @@ if ($language_not_found === true) {
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shop_content_end/','php') as $file) require_once ($file);
 
     $smarty->caching = 0;
-    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
+    $main_content = $smarty->fetch(Template::resolve('module/' . $content_template));
     $smarty->assign('main_content', $main_content);
   }
 }
@@ -115,10 +118,10 @@ if ($language_not_found === true) {
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');
