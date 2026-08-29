@@ -23,11 +23,33 @@
   define('GUARANTEE_LABELS_NOTICE_VERSION', '1.00');
 
   /**
-   * The texts that belong to the notice of the current language.
+   * The texts that belong to the notice of one language.
    *
+   * The administration loads only lang/<language>/extra/admin/, so the storefront texts are
+   * pulled in here when they are missing. Constants live for the whole request, therefore a
+   * second language in the same request gets no snapshot instead of the wrong texts.
+   *
+   * @param string $language the language directory of the order
    * @return mixed array of text, link and url, false when the language is not fully kept
    */
-  function guarantee_labels_notice_texts() {
+  function guarantee_labels_notice_texts($language) {
+    static $loaded;
+
+    $language = trim((string)$language);
+
+    if (!defined('TEXT_GUARANTEE_NOTICE_MAIL')) {
+      $file = DIR_FS_CATALOG.'lang/'.$language.'/extra/guarantee_labels.php';
+
+      if (strpbrk($language, "/\\\0") !== false || !is_file($file)) {
+        return false;
+      }
+
+      require_once($file);
+      $loaded = $language;
+    } elseif (isset($loaded) && $loaded !== $language) {
+      return false;
+    }
+
     $constants = array(
       'text' => 'TEXT_GUARANTEE_NOTICE_MAIL',
       'link' => 'TEXT_GUARANTEE_NOTICE_LINK',
@@ -88,7 +110,7 @@
    */
   function guarantee_labels_notice_hash($language) {
     $file = guarantee_labels_notice_file($language);
-    $texts = guarantee_labels_notice_texts();
+    $texts = guarantee_labels_notice_texts($language);
 
     if ($file === false || $texts === false) {
       return false;
@@ -111,14 +133,15 @@
    *
    * @param int $orders_id
    * @param string $language the language directory of the order
+   * @param mixed $customers_status the group of the customer, null uses the session
    * @return bool false when the module is off, the language is incomplete or the archive fails
    */
-  function guarantee_labels_notice_snapshot($orders_id, $language) {
+  function guarantee_labels_notice_snapshot($orders_id, $language, $customers_status = null) {
     require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
     $orders_id = (int)$orders_id;
 
-    if ($orders_id < 1 || !guarantee_labels_active()) {
+    if ($orders_id < 1 || !guarantee_labels_active($customers_status)) {
       return false;
     }
 
@@ -137,7 +160,7 @@
       return true;
     }
 
-    $texts = guarantee_labels_notice_texts();
+    $texts = guarantee_labels_notice_texts($language);
     $file = guarantee_labels_notice_file($language);
 
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
@@ -275,15 +298,16 @@
    * @param int $orders_products_id the row that was just written to orders_products
    * @param array $product the article data with duration, model identifier and manufacturer
    * @param int $languages_id the language of the order, it selects the guarantee conditions
+   * @param mixed $customers_status the group of the customer, null uses the session
    * @return bool false when the article carries no complete GARAN data
    */
-  function guarantee_labels_product_snapshot($orders_id, $orders_products_id, $product, $languages_id) {
+  function guarantee_labels_product_snapshot($orders_id, $orders_products_id, $product, $languages_id, $customers_status = null) {
     require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
     $orders_id = (int)$orders_id;
     $orders_products_id = (int)$orders_products_id;
 
-    if ($orders_id < 1 || $orders_products_id < 1 || !guarantee_labels_active()) {
+    if ($orders_id < 1 || $orders_products_id < 1 || !guarantee_labels_active($customers_status)) {
       return false;
     }
 

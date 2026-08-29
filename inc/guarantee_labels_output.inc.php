@@ -20,7 +20,7 @@
    *
    * @return bool
    */
-  function guarantee_labels_active() {
+  function guarantee_labels_active($customers_status = null) {
     if (!defined('MODULE_GUARANTEE_LABELS_STATUS') || MODULE_GUARANTEE_LABELS_STATUS != 'true') {
       return false;
     }
@@ -29,7 +29,12 @@
       return true;
     }
 
-    $status = isset($_SESSION['customers_status']['customers_status_id']) ? (int)$_SESSION['customers_status']['customers_status_id'] : 0;
+    // the administration runs in the session of the admin, an order belongs to its customer
+    if ($customers_status !== null) {
+      $status = (int)$customers_status;
+    } else {
+      $status = isset($_SESSION['customers_status']['customers_status_id']) ? (int)$_SESSION['customers_status']['customers_status_id'] : 0;
+    }
     $b2b = array_map('intval', array_filter(array_map('trim', explode(',', MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS)), 'strlen'));
 
     return !in_array($status, $b2b, true);

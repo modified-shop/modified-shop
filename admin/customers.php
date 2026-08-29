@@ -205,6 +205,11 @@
           );
         xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
 
+        // the notice belongs to the order from the start, the admin can send a confirmation
+        // before the first position exists
+        require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
+        guarantee_labels_notice_snapshot($orders_id, $_SESSION['language'], $customers1['customers_status']);
+
         xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$orders_id.'&action=edit'));
         break;
 
