@@ -208,7 +208,8 @@
       return false;
     }
 
-    $products_query = xtc_db_query("SELECT products_garan_duration,
+    $products_query = xtc_db_query("SELECT products_id,
+                                           products_garan_duration,
                                            products_manufacturers_model,
                                            manufacturers_id
                                       FROM ".TABLE_PRODUCTS."
@@ -375,4 +376,41 @@
       'reference' => $reference,
       'errors' => implode(' | ', $errors),
     ));
+  }
+
+  /**
+   * Removes the snapshot of a deleted order position.
+   *
+   * The check for the table keeps the order editing working in a shop where the module was
+   * never installed, the same way xtc_remove_order() handles the withdrawal tables.
+   *
+   * @param int $orders_products_id
+   * @return void
+   */
+  function guarantee_labels_product_snapshot_delete($orders_products_id) {
+    $orders_products_id = (int)$orders_products_id;
+
+    if ($orders_products_id < 1 || !guarantee_labels_snapshot_table(TABLE_ORDERS_PRODUCTS_GUARANTEE)) {
+      return;
+    }
+
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE."
+                        WHERE orders_products_id = '".$orders_products_id."'");
+  }
+
+  /**
+   * The module tables survive an uninstall, so their presence is asked and not the status.
+   *
+   * @param string $table
+   * @return bool
+   */
+  function guarantee_labels_snapshot_table($table) {
+    static $known = array();
+
+    if (!isset($known[$table])) {
+      $table_query = xtc_db_query("SHOW TABLES LIKE '".str_replace('_', '\\_', $table)."'");
+      $known[$table] = (xtc_db_num_rows($table_query) > 0);
+    }
+
+    return $known[$table];
   }
