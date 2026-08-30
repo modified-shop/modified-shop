@@ -163,6 +163,16 @@
 
 [SIGNATUR]
 
+{if $GUARANTEE_NOTICE_HTML neq ''}
+<br />
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+  <tr>
+    <td style="border-top: 1px dotted #999;"><font size="1" face="Tahoma, Verdana, sans-serif">{$GUARANTEE_NOTICE_HTML}</font></td>
+  </tr>
+</table>
+<br />
+{/if}
+
 {if $REVOCATION_HTML neq ''}
 <br />
 <table width="100%" border="0" cellspacing="0" cellpadding="5">

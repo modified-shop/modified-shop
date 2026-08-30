@@ -71,6 +71,27 @@
       return $products_data;
     }
 
+    /**
+     * Hands the historical GARAN data of a position to the order.
+     *
+     * The order view and the mails read the snapshot, never the catalogue. Nothing is queried
+     * per position: the first call loads the whole order at once.
+     *
+     * @param array $products_data one position of the order
+     * @param array $orders_products the row of orders_products
+     * @return array
+     */
+    function add_products($products_data, $orders_products) {
+      require_once(DIR_FS_INC.'guarantee_labels_order.inc.php');
+
+      $guarantee = guarantee_labels_order_products($orders_products['orders_id']);
+      $orders_products_id = (int)$orders_products['orders_products_id'];
+
+      $products_data['guarantee'] = isset($guarantee[$orders_products_id]) ? $guarantee[$orders_products_id] : false;
+
+      return $products_data;
+    }
+
     function check() {
       if (!isset($this->_check)) {
         if (defined($this->name.'_STATUS')) {
