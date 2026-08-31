@@ -120,6 +120,14 @@
   </div>
 </div>
 {/if}
+{if $GUARANTEE_NOTICE_BODY != ''}
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4 class="checkout">{$GUARANTEE_NOTICE_TITLE}</h4>
+    {$GUARANTEE_NOTICE_BODY}
+  </div>
+</div>
+{/if}
 <br class="clearfix" /> 
 
 <br />
@@ -191,7 +199,6 @@
     <div class="dutyinfo">{#text_duty_info#}</div>
   {/if}
   
-  {if $GUARANTEE_NOTICE}{$GUARANTEE_NOTICE}{/if}
   <div class="button_right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}{$CHECKOUT_BUTTON}{$CHECKOUT_FORM_END}</div>
 
 </div>

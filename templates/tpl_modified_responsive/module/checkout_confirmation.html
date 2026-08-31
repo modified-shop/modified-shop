@@ -119,6 +119,14 @@
     {$MODULE_gift_cart}
   </div>
 {/if}
+{if $GUARANTEE_NOTICE_BODY != ''}
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4 class="checkout">{$GUARANTEE_NOTICE_TITLE}</h4>
+    {$GUARANTEE_NOTICE_BODY}
+  </div>
+</div>
+{/if}
 <br class="clearfix" /> 
 
 <br />
@@ -197,7 +205,6 @@
   {/if}
   
   <div class="clearer" style="height:15px;"></div>
-  {if $GUARANTEE_NOTICE}{$GUARANTEE_NOTICE}{/if}
   <div class="button_right_checkout">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}<div class="cssButtonPos12">{$CHECKOUT_BUTTON}</div>{$CHECKOUT_FORM_END}</div>
 
 </div>

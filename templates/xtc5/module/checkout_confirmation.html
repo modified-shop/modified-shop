@@ -81,6 +81,13 @@
       <p style="clear:both;">{$PAYMENT_METHOD}</p>
     </div>
   {/if}
+
+  {if $GUARANTEE_NOTICE_BODY != ''}
+    <div class="checkoutNav2Boxes">
+      <h2>{$GUARANTEE_NOTICE_TITLE}</h2>
+      <p style="clear:both;">{$GUARANTEE_NOTICE_BODY}</p>
+    </div>
+  {/if}
   <div style="clear:both"></div>
 
   {if $ORDER_COMMENTS != ''}
@@ -181,6 +188,5 @@
     <div style="font-size:11px; border:0px solid red;padding:5px;margin-top:8px;">{#text_duty_info#}</div>
   {/if}
   <br />
-  {if $GUARANTEE_NOTICE}{$GUARANTEE_NOTICE}{/if}
   <div style="text-align:right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}&nbsp;{$MODULE_BUTTONS}{/if}&nbsp;{$CHECKOUT_BUTTON}{$CHECKOUT_FORM_END}</div>
 </div>

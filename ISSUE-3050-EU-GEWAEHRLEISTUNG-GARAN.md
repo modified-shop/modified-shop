@@ -628,7 +628,9 @@ Die Sonderangebotsseite besitzt in diesem Stand keine eigene Abfrage unter `incl
 Der Checkout zeigt:
 
 1. Beim jeweiligen Artikel das GARAN-Label, sofern vorhanden.
-2. Vor dem Bestellbutton den vollstaendigen Gewaehrleistungshinweis.
+2. Den vollstaendigen Gewaehrleistungshinweis vor Abgabe der Bestellung.
+
+Der Hinweis steht in jedem mitgelieferten Template als eigener Block neben Versandart, Zahlungsweise und Bemerkungen, im jeweiligen Aufbau des Templates. Das Modul liefert ihn dafuer in Bestandteilen: `GUARANTEE_NOTICE_TITLE` und `GUARANTEE_NOTICE_BODY`. `GUARANTEE_NOTICE` enthaelt denselben Inhalt mit eigenem Rahmen und eigener Ueberschrift, fuer ein Template, das den Hinweis als fertiges Stueck setzen will.
 
 Der Gewaehrleistungshinweis wird nicht angezeigt, wenn der Warenkorb ausschliesslich digitale Inhalte oder Dienstleistungen enthaelt.
 
