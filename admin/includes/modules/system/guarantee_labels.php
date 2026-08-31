@@ -107,17 +107,28 @@
         return $this->diagnosis_table($rows);
       }
 
-      // an article without manufacturer or model identifier stays silent in the storefront
+      // only a duration above two years produces a label and therefore needs the core data
       $incomplete_query = xtc_db_query("SELECT COUNT(*) AS total
                                         FROM ".TABLE_PRODUCTS." p
                                         LEFT JOIN ".TABLE_MANUFACTURERS." m ON m.manufacturers_id = p.manufacturers_id
-                                        WHERE p.products_garan_duration > 0
+                                        WHERE p.products_garan_duration > 2.0
                                         AND (m.manufacturers_id IS NULL
                                              OR m.manufacturers_status != '1'
                                              OR TRIM(COALESCE(p.products_manufacturers_model, '')) = '')");
       $incomplete = xtc_db_fetch_array($incomplete_query);
       $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS, $incomplete['total'] < 1,
                       $incomplete['total'], MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED);
+
+      // a value written past the article administration, for example by a foreign system
+      $duration_query = xtc_db_query("SELECT COUNT(*) AS total
+                                      FROM ".TABLE_PRODUCTS."
+                                      WHERE products_garan_duration IS NOT NULL
+                                      AND (products_garan_duration < 0.5
+                                           OR products_garan_duration > 99.5
+                                           OR MOD(ROUND(products_garan_duration * 10), 5) != 0)");
+      $duration = xtc_db_fetch_array($duration_query);
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_DURATION, $duration['total'] < 1,
+                      $duration['total'], MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED);
 
       // a second attachment per language is ambiguous, the snapshot then refuses to archive one
       $ambiguous_query = xtc_db_query("SELECT COUNT(*) AS total FROM (
