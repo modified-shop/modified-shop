@@ -40,6 +40,70 @@
       $this->sort_order = '';
       $this->enabled = ((defined('MODULE_GUARANTEE_LABELS_STATUS') && MODULE_GUARANTEE_LABELS_STATUS == 'true') ? true : false);
       $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE . '</a>';
+
+      // only for the module being looked at, the list instantiates every module
+      if (isset($_GET['module']) && $_GET['module'] === $this->code && $this->check() > 0) {
+        $this->properties['add_content'] = $this->diagnosis();
+      }
+    }
+
+    /**
+     * Shows whether everything the module needs is in place.
+     *
+     * The parts sit in different places: two class extensions of the shop, one of the
+     * administration, columns added to the select lists, the official templates and fonts, and
+     * one graphic per language. A missing piece stays silent in the storefront, which is why it
+     * is listed here.
+     *
+     * @return string
+     */
+    function diagnosis() {
+      require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
+
+      $renderer = new guarantee_labels_renderer();
+      $rows = array();
+
+      foreach (self::EXTENSIONS as $type => $data) {
+        $installed = 'MODULE_'.strtoupper($type).'_INSTALLED';
+        $rows[] = array(
+          sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION, $data['file']),
+          defined($installed) && in_array($data['file'], explode(';', constant($installed)), true),
+        );
+      }
+
+      foreach (array('ADD_SELECT_DEFAULT' => 'products_garan_duration',
+                     'ADD_SELECT_SEARCH' => 'products_garan_duration',
+                     'ADD_SELECT_CART' => 'products_garan_duration',
+                     'ADD_SELECT_PRODUCT' => 'products_garan_duration') as $constant => $column) {
+        $rows[] = array(
+          sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SELECT, $constant),
+          defined($constant) && strpos(constant($constant), $column) !== false,
+        );
+      }
+
+      $missing = $renderer->missing_requirements();
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_RENDERER, count($missing) < 1, implode(', ', $missing));
+
+      $languages_query = xtc_db_query("SELECT directory, name FROM ".TABLE_LANGUAGES." ORDER BY sort_order");
+      while ($language = xtc_db_fetch_array($languages_query)) {
+        $rows[] = array(
+          sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_NOTICE, $language['name']),
+          is_file(DIR_FS_CATALOG.'lang/'.$language['directory'].'/notice.svg')
+          && is_file(DIR_FS_CATALOG.'lang/'.$language['directory'].'/extra/guarantee_labels.php'),
+        );
+      }
+
+      $content = '<div class="clear div_box mrg5"><table class="tableInput border0">';
+
+      foreach ($rows as $row) {
+        $note = (isset($row[2]) && $row[2] !== '') ? ' '.encode_htmlspecialchars($row[2]) : '';
+        $content .= '<tr><td style="width:420px;"><span class="main">'.$row[0].'</span></td>'.
+                    '<td><span class="main'.(($row[1] === true) ? '' : ' error').'">'.
+                    (($row[1] === true) ? MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED.$note).
+                    '</span></td></tr>';
+      }
+
+      return '<br /><div class="main div_header"><b>'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS.'</b></div>'.$content.'</table></div>';
     }
 
     /**

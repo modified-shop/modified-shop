@@ -29,6 +29,19 @@
 
     $guarantee_model = trim((string)$pInfo->products_manufacturers_model);
 
+    // the pull down above lists every manufacturer, the label only takes an active one
+    $guarantee_manufacturer_active = true;
+    if ((int)$pInfo->manufacturers_id > 0) {
+      $guarantee_status_query = xtc_db_query("SELECT manufacturers_status
+                                                FROM ".TABLE_MANUFACTURERS."
+                                               WHERE manufacturers_id = '".(int)$pInfo->manufacturers_id."'");
+
+      if (xtc_db_num_rows($guarantee_status_query) > 0) {
+        $guarantee_status = xtc_db_fetch_array($guarantee_status_query);
+        $guarantee_manufacturer_active = ((int)$guarantee_status['manufacturers_status'] === 1);
+      }
+    }
+
     // the guarantee conditions are kept as a regular article attachment, so only their state is shown
     $guarantee_terms = array();
     if ((int)$pInfo->products_id > 0) {
@@ -39,6 +52,8 @@
                                               WHERE products_id = '".(int)$pInfo->products_id."'
                                                 AND content_type = 'garan_terms'");
       while ($guarantee_terms_data = xtc_db_fetch_array($guarantee_terms_query)) {
+        // a row without its file is worse than no row: it looks maintained and sends nothing
+        $guarantee_terms_data['file_exists'] = is_file(DIR_FS_CATALOG.'media/products/'.$guarantee_terms_data['content_file']);
         $guarantee_terms[(int)$guarantee_terms_data['languages_id']] = $guarantee_terms_data;
       }
     }
@@ -49,7 +64,12 @@
       <table class="tableInput border0">
         <tr>
           <td style="width:250px; line-height: 35px;"><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER; ?></span></td>
-          <td><span class="main"><?php echo ($guarantee_manufacturer !== '') ? encode_htmlspecialchars($guarantee_manufacturer) : TEXT_GUARANTEE_LABELS_NONE; ?></span></td>
+          <td><span class="main"><?php
+            echo ($guarantee_manufacturer !== '') ? encode_htmlspecialchars($guarantee_manufacturer) : TEXT_GUARANTEE_LABELS_NONE;
+            if ($guarantee_manufacturer !== '' && $guarantee_manufacturer_active === false) {
+              echo ' <span class="error">'.TEXT_GUARANTEE_LABELS_MANUFACTURER_INACTIVE.'</span>';
+            }
+          ?></span></td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER_MODEL; ?></span></td>
@@ -69,10 +89,12 @@
                   $guarantee_language_id = (int)$languages[$i]['id'];
                   echo xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']).' ';
 
-                  if (isset($guarantee_terms[$guarantee_language_id])) {
-                    echo encode_htmlspecialchars($guarantee_terms[$guarantee_language_id]['content_name']);
-                  } else {
+                  if (!isset($guarantee_terms[$guarantee_language_id])) {
                     echo TEXT_GUARANTEE_LABELS_TERMS_MISSING;
+                  } elseif ($guarantee_terms[$guarantee_language_id]['file_exists'] === false) {
+                    echo '<span class="error">'.sprintf(TEXT_GUARANTEE_LABELS_TERMS_FILE_MISSING, encode_htmlspecialchars($guarantee_terms[$guarantee_language_id]['content_name'])).'</span>';
+                  } else {
+                    echo encode_htmlspecialchars($guarantee_terms[$guarantee_language_id]['content_name']);
                   }
 
                   echo '<br />';

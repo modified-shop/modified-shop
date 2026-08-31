@@ -28,3 +28,11 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_INDEX', 'The index %s of table %s is missing.');
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN', 'The column %s of table %s is missing.');
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_TYPE', 'The column %s of table %s has type %s, expected %s. The column has not been changed.');
+
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS', 'Check of the requirements');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK', 'in place');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED', 'missing');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION', 'class extension %s installed');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SELECT', 'guarantee duration part of %s');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_RENDERER', 'templates, fonts and GD for building the label');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_NOTICE', 'notice about the legal guarantee and texts for %s');

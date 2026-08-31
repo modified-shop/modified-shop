@@ -16,6 +16,8 @@
 
   define('TEXT_GUARANTEE_LABELS_NONE', 'not entered');
   define('TEXT_GUARANTEE_LABELS_TERMS_MISSING', 'no attachment of type GARAN guarantee conditions');
+  define('TEXT_GUARANTEE_LABELS_TERMS_FILE_MISSING', '%s &ndash; file is missing, it will not travel with the order confirmation');
+  define('TEXT_GUARANTEE_LABELS_MANUFACTURER_INACTIVE', 'manufacturer is not active, so no label is created');
 
   define('TEXT_GUARANTEE_LABELS_INFO', 'This field holds the duration of the durability guarantee of the manufacturer, in whole or half years. It is independent of the legal guarantee: the shop points that one out in the checkout for the whole order without anything maintained on the article.');
   define('TEXT_GUARANTEE_LABELS_INFO_RULES', 'A GARAN label starts at 2.5 years. Shorter periods are stored and record what the manufacturer grants; they produce no label, because a guarantee of up to two years gives the customer nothing on top of the legal guarantee. A label also requires the guarantee to be free of charge, to cover the whole product and to apply with the same duration and the same conditions in every country you deliver to. An empty field means that nothing is recorded about a manufacturer guarantee.');

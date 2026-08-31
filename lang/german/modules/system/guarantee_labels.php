@@ -28,3 +28,11 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_INDEX', 'Der Index %s der Tabelle %s fehlt.');
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN', 'Die Spalte %s der Tabelle %s fehlt.');
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_TYPE', 'Die Spalte %s der Tabelle %s hat den Typ %s, erwartet wird %s. Die Spalte wurde nicht ge&auml;ndert.');
+
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS', 'Pr&uuml;fung der Voraussetzungen');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK', 'in Ordnung');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED', 'fehlt');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION', 'Klassenerweiterung %s eingerichtet');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SELECT', 'Garantiedauer in %s enthalten');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_RENDERER', 'Vorlagen, Schriften und GD f&uuml;r die Labelerzeugung');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_NOTICE', 'Gew&auml;hrleistungshinweis und Texte f&uuml;r %s');
