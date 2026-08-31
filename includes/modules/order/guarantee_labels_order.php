@@ -111,9 +111,12 @@
 
       $guarantee = guarantee_labels_order_text($oID, $order_data_values['orders_products_id']);
 
+      // the confirmation names the attached conditions, they travel with it
       if ($guarantee !== false) {
-        $order_data['GUARANTEE_HTML'] = $guarantee['html'];
-        $order_data['GUARANTEE_TXT'] = $guarantee['txt'];
+        $order_data['GUARANTEE_HTML'] = $guarantee['label']['html'].
+                                        (($guarantee['terms']['html'] !== '') ? '<br />'.$guarantee['terms']['html'] : '');
+        $order_data['GUARANTEE_TXT'] = $guarantee['label']['txt'].
+                                       (($guarantee['terms']['txt'] !== '') ? "\n".$guarantee['terms']['txt'] : '');
       }
 
       return $order_data;

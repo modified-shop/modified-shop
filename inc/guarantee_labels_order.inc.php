@@ -196,9 +196,13 @@
    * graphic nor as a copy of its layout. What is written out is the promise behind it, so the
    * customer can tell which article the attached conditions belong to.
    *
+   * The guarantee and the attached conditions are kept apart: the order confirmation names
+   * the file because it travels with it, the order view in the administration does not.
+   *
    * @param int $orders_id
    * @param int $orders_products_id
-   * @return mixed array of an html and a text variant, false without a snapshot
+   * @return mixed array of label and terms, each with an html and a text variant, false
+   *         without a snapshot
    */
   function guarantee_labels_order_text($orders_id, $orders_products_id) {
     $products = guarantee_labels_order_products($orders_id);
@@ -221,12 +225,14 @@
 
     $renderer = new guarantee_labels_renderer();
 
-    $lines = array(sprintf(TEXT_GUARANTEE_ORDER_LABEL,
-                           $renderer->duration_text($product['garan_duration']),
-                           $product['manufacturers_name'],
-                           $product['manufacturers_model']));
+    $label = sprintf(TEXT_GUARANTEE_ORDER_LABEL,
+                     $renderer->duration_text($product['garan_duration']),
+                     $product['manufacturers_name'],
+                     $product['manufacturers_model']);
 
-    // named only when the file really travels with the mail
+    $terms = '';
+
+    // named only where the file really travels along
     if ($product['terms_filename'] !== null
         && $product['terms_hash'] !== null
         && defined('TEXT_GUARANTEE_ORDER_TERMS')
@@ -237,12 +243,12 @@
       $archive = new guarantee_labels_archive();
 
       if (is_file($archive->terms_path($product['terms_hash'], $product['terms_filename']))) {
-        $lines[] = sprintf(TEXT_GUARANTEE_ORDER_TERMS, $product['terms_filename']);
+        $terms = sprintf(TEXT_GUARANTEE_ORDER_TERMS, $product['terms_filename']);
       }
     }
 
     return array(
-      'html' => implode('<br />', $lines),
-      'txt' => implode("\n", array_map('decode_htmlentities', $lines)),
+      'label' => array('html' => $label, 'txt' => decode_htmlentities($label)),
+      'terms' => array('html' => $terms, 'txt' => ($terms === '') ? '' : decode_htmlentities($terms)),
     );
   }
