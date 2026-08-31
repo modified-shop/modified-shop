@@ -96,22 +96,39 @@
 
   function load(full, done) {
     var source = full.getAttribute('data-guarantee-label-src');
-    var graphic = full.querySelector('.guarantee-label__graphic');
 
     // the notice is a full page of outlined paths, an image keeps it out of the document and
     // out of the request until someone opens it
     var image = full.getAttribute('data-guarantee-label-img');
+    var graphic = full.querySelector('.guarantee-label__graphic');
 
-    if (image && graphic && !full.getAttribute('data-guarantee-label-loaded')) {
+    if (!graphic || full.getAttribute('data-guarantee-label-loaded')) {
+      done();
+      return;
+    }
+
+    if (image) {
       full.setAttribute('data-guarantee-label-loaded', '1');
 
       var element = document.createElement('img');
-      element.setAttribute('src', image);
+
+      // the overlay measures its content when it opens, so it may only open once the graphic
+      // knows its size
+      element.onload = done;
+      element.onerror = function () {
+        full.removeAttribute('data-guarantee-label-loaded');
+        graphic.textContent = full.getAttribute('data-guarantee-label-error') || '';
+        done();
+      };
+
       element.setAttribute('alt', full.getAttribute('data-guarantee-label-alt') || '');
       graphic.appendChild(element);
+      element.setAttribute('src', image);
+
+      return;
     }
 
-    if (!source || !graphic || full.getAttribute('data-guarantee-label-loaded')) {
+    if (!source) {
       done();
       return;
     }

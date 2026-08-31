@@ -183,12 +183,13 @@
   margin-top: 10px;
 }
 
-/* the enlarged sheet keeps the height of the viewport and scrolls, it is never cropped */
+/* The sheet keeps the height of the viewport and is never cropped. The width comes from the
+   A4 ratio, so the overlay has something to measure the moment the graphic is loaded. */
 .guarantee-notice__full img {
   display: block;
   width: auto;
-  max-width: 100%;
-  max-height: 85vh;
-  height: auto;
+  height: 80vh;
+  max-width: 90vw;
+  max-height: 80vh;
   margin: 0 auto;
 }

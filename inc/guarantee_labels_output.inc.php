@@ -386,7 +386,7 @@
                 '</button>'.
                 '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
                   '<div class="guarantee-label__content" id="'.$id.'">'.
-                    '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'">'.
+                    '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'" data-guarantee-label-error="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_RELOAD).'">'.
                       '<div class="guarantee-label__graphic"></div>'.
                     '</div>'.
                   '</div>'.
