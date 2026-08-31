@@ -40,6 +40,10 @@
       </table>
     {/foreach}
   {/if}
+  {if $GUARANTEE_NOTICE_BODY != ''}
+  <h2>{$GUARANTEE_NOTICE_TITLE}</h2>
+  <p>{$GUARANTEE_NOTICE_BODY}</p>
+  {/if}
   <h2>{#title_history#}:</h2>
   <p>{$HISTORY_BLOCK}</p>
   {if count($ORDER_TRACKING) > 0}

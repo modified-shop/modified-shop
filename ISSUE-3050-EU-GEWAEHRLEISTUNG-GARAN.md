@@ -717,7 +717,7 @@ Dieselben Snapshotwerte stehen ueberall bereit, wo `getOrderData()` die Position
 
 - Bestellansicht im Admin (`admin/includes/modules/orders_info_blocks.php`): die Zusage als Textzeile, ohne den Anhang.
 - Bestellung drucken (`admin/print_order.php`): ebenso als Textzeile, ohne den Anhang. Der Beleg fuehrt keine Datei mit.
-- Bestellansicht im Kundenkonto (`account_history_info.php`): das GARAN-Label als Grafik. Der Kunde sieht dort dieselbe Kennzeichnung wie beim Kauf. Die Grafik stammt aus dem Archiv der Bestellung, nicht aus dem Katalog; fehlt die Cachekopie, wird sie aus dem Archiv wiederhergestellt, weil das Archiv fuer HTTP gesperrt ist.
+- Bestellansicht im Kundenkonto (`account_history_info.php`): das GARAN-Label als Grafik und dazu der Gewaehrleistungshinweis der Bestellung, im Aufbau des jeweiligen Templates neben Versandart und Zahlungsweise. Beides stammt aus dem Archiv der Bestellung, nicht aus dem Katalog und nicht aus den heutigen Sprachdateien: Der Kunde sieht die Kennzeichnung und den Wortlaut, die zu seiner Bestellung gehoeren. Fehlt eine Cachekopie, wird sie aus dem Archiv wiederhergestellt, weil das Archiv fuer HTTP gesperrt ist.
 - Auftragsbestaetigung: Zusage und Dateiname der beigefuegten Garantiebedingungen, weil die Datei dort tatsaechlich mitgeht.
 
 Die Statuswechselmail (`admin/includes/modules/orders_update.php`) gibt keine Positionen aus und bleibt unveraendert.

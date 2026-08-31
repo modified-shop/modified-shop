@@ -69,6 +69,23 @@ $order_total = $order->getTotalData($order->info['order_id']);
 $smarty->assign('order_data', $order->getOrderData($order->info['order_id']));
 $smarty->assign('order_total', $order_total['data']);
 
+// the guarantee notice of this order, wording and graphic from its own archive
+$smarty->assign('GUARANTEE_NOTICE_TITLE', '');
+$smarty->assign('GUARANTEE_NOTICE_BODY', '');
+
+if (defined('MODULE_GUARANTEE_LABELS_STATUS') && MODULE_GUARANTEE_LABELS_STATUS == 'true') {
+  require_once(DIR_FS_INC.'guarantee_labels_order.inc.php');
+
+  $guarantee_labels_notice = guarantee_labels_order_notice_parts($order->info['order_id']);
+
+  if ($guarantee_labels_notice !== false) {
+    $smarty->assign('GUARANTEE_NOTICE_TITLE', $guarantee_labels_notice['title']);
+    $smarty->assign('GUARANTEE_NOTICE_BODY', $guarantee_labels_notice['body']);
+  }
+
+  unset($guarantee_labels_notice);
+}
+
 // Payment Method
 if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {  
   $_SESSION['billing_zone'] = $order->billing['country_iso_2'];

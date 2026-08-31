@@ -336,6 +336,20 @@
   }
 
   /**
+   * The address an archived notice graphic is served from.
+   *
+   * @param string $hash
+   * @return string empty when the cached copy is missing
+   */
+  function guarantee_labels_notice_cache_url($hash) {
+    if (!is_file(DIR_FS_CATALOG.'cache/guarantee_labels/'.$hash.'/notice.svg')) {
+      return '';
+    }
+
+    return (defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').'cache/guarantee_labels/'.$hash.'/notice.svg';
+  }
+
+  /**
    * guarantee_labels_inline_svg()
    *
    * Prepares one graphic for being written into an html document.
@@ -445,14 +459,29 @@
     // The sheet is a full A4 page. The checkout carries the wording and a control, the graphic
     // itself opens in the lightbox and is fetched on the first click, so the page stays light.
     // The overlay classes of the label are reused, both graphics therefore open the same way.
+    return guarantee_labels_notice_block(TEXT_GUARANTEE_NOTICE_TITLE, TEXT_GUARANTEE_NOTICE_TEXT, $link, $mixed, $source, $alt);
+  }
+
+  /**
+   * guarantee_labels_notice_block()
+   *
+   * Builds title and body of the notice from explicit values, so the checkout can show the
+   * current wording and an order view the one that was archived with it.
+   *
+   * @return array
+   */
+  function guarantee_labels_notice_block($title, $text, $link, $mixed, $source, $alt) {
+    static $counter = 0;
+    $id = 'guarantee-notice-content-'.(++$counter);
+
     return array(
-      'title' => TEXT_GUARANTEE_NOTICE_TITLE,
-      'body' => '<p class="guarantee-notice__text">'.TEXT_GUARANTEE_NOTICE_TEXT.'</p>'.
+      'title' => $title,
+      'body' => '<p class="guarantee-notice__text">'.$text.'</p>'.
                 $mixed.
-                '<button type="button" class="guarantee-label__compact guarantee-notice__open" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
+                '<button type="button" class="guarantee-label__compact guarantee-notice__open" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute($title).'">'.
                   TEXT_GUARANTEE_NOTICE_OPEN.
                 '</button>'.
-                '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
+                '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute($title).'">'.
                   '<div class="guarantee-label__content" id="'.$id.'">'.
                     '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'" data-guarantee-label-error="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_RELOAD).'">'.
                       '<div class="guarantee-label__graphic"></div>'.

@@ -306,3 +306,65 @@
       'duration' => $renderer->duration_text($product['garan_duration']),
     )));
   }
+
+  /**
+   * The historical guarantee notice of one order, ready for a template.
+   *
+   * Wording and graphic come from the archive of the order, so a customer looking at an old
+   * order sees the notice that belonged to it, not the one the shop shows today. The archive
+   * is closed to http, therefore the graphic is copied into the cache on demand, the same way
+   * the label does it.
+   *
+   * @param int $orders_id
+   * @return mixed array of title and body, false without a snapshot
+   */
+  function guarantee_labels_order_notice_parts($orders_id) {
+    require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
+
+    if (!guarantee_labels_active()) {
+      return false;
+    }
+
+    $notice = guarantee_labels_order_notice($orders_id);
+
+    if ($notice === false) {
+      return false;
+    }
+
+    // the labels of the block itself follow the language of the order
+    if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))
+        || !defined('TEXT_GUARANTEE_NOTICE_TITLE')
+        )
+    {
+      return false;
+    }
+
+    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
+
+    $archive = new guarantee_labels_archive();
+    $source = guarantee_labels_notice_cache_url($notice['hash']);
+
+    if ($source === '') {
+      $files = $archive->notice_read($notice['hash']);
+
+      if ($files === false) {
+        return false;
+      }
+
+      $archive->cache_write($notice['hash'], array('notice.svg' => $files['notice.svg']));
+      $source = guarantee_labels_notice_cache_url($notice['hash']);
+
+      if ($source === '') {
+        return false;
+      }
+    }
+
+    $link = '<a class="guarantee-notice__link" href="'.guarantee_labels_attribute($notice['url']).'" target="_blank" rel="noopener">'.$notice['link'].'</a>';
+
+    return guarantee_labels_notice_block(TEXT_GUARANTEE_NOTICE_TITLE,
+                                         $notice['text'],
+                                         $link,
+                                         '',
+                                         encode_htmlspecialchars($source),
+                                         guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_ALT));
+  }

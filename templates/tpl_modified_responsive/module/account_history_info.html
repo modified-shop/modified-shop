@@ -83,6 +83,12 @@
       {/foreach}
     </div>
     {/if}
+    {if $GUARANTEE_NOTICE_BODY != ''}
+    <div class="highlightbox plainleft">
+      <h4>{$GUARANTEE_NOTICE_TITLE}</h4>
+      {$GUARANTEE_NOTICE_BODY}
+    </div>
+    {/if}
     {if $ORDER_COMMENTS != ''}
     <div class="highlightbox plainleft">
       <h4>{#text_comments#}</h4>
