@@ -262,12 +262,15 @@
     $filename = guarantee_labels_terms_filename($terms['content_file']);
 
     if ($filename === false) {
+      guarantee_labels_snapshot_log('terms', $products_id, array('the name of the attached document cannot be used for a mail: '.$terms['content_file']));
       return false;
     }
 
     $source = DIR_FS_CATALOG.'media/products/'.$terms['content_file'];
 
+    // the article names a document the shop no longer holds, that is worth knowing about
     if (!is_file($source)) {
+      guarantee_labels_snapshot_log('terms', $products_id, array('attached document is missing: '.$terms['content_file']));
       return false;
     }
 
