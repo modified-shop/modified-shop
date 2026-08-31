@@ -278,6 +278,19 @@ Ist in der Bestellsprache ein Artikel-Anhang vom Typ `garan_terms` vorhanden, en
 
 `terms_hash` und `terms_filename` bilden ein optionales Wertepaar. Sobald einer der beiden Werte gesetzt ist, muss auch der andere gesetzt sein. Ihre Existenz beeinflusst die Anzeige des sprachneutralen GARAN-Labels nicht.
 
+#### Nachtraeglich geaenderte Kundengruppe
+
+`orders_address_edit()` in `admin/includes/functions/orders_functions.php` erlaubt es, `orders.customers_status` ueber das Pull-down im Adressblock zu aendern; der Shop meldet das selbst mit `ERROR_STATUS_CHANGE`. Fuer bereits vorhandene Snapshots hat diese Aenderung keine Folgen:
+
+- Wechselt eine Bestellung von B2C nach B2B, bleiben vorhandene Zeilen in `orders_guarantee` und `orders_products_guarantee` bestehen. Sie halten fest, was der Kunde tatsaechlich erhalten hat; ein erneuter Mailversand soll dasselbe Dokument reproduzieren und keine bereinigte Fassung.
+- Wechselt sie von B2B nach B2C, entstehen keine Snapshots nachtraeglich. Der Kunde hat den Hinweis im Checkout nie gesehen, eine spaeter erzeugte Zeile waere eine erfundene Historie.
+
+Das ist dieselbe Regel wie bei der Bestellsprache: Eine spaetere Aenderung erzeugt oder ersetzt vorhandene Snapshots nicht.
+
+Positionen, die **nach** der Aenderung eingefuegt werden, folgen dagegen der aktuellen Kundengruppe der Bestellung. `orders_product_insert()` liest sie aus `$order->info['status']`, also aus `orders.customers_status`, nicht aus dem Kundenstammsatz und nicht aus der Sitzung des Admins.
+
+Daraus kann eine Bestellung entstehen, die einen Hinweis-Snapshot hat, aber keine Positions-Snapshots, oder umgekehrt. Das ist kein Widerspruch: `orders_guarantee` bedeutet ausschliesslich `Hinweis-Snapshot vorhanden` und ist von den Positionen unabhaengig.
+
 ### Cache und Archiv
 
 Ein Hash in der Bestellung ist nur so gut wie die Dateien dahinter. Cache und Archiv sind deshalb getrennt.
