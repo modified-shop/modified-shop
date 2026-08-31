@@ -11,6 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   require_once(DIR_FS_INC.'guarantee_labels_order.inc.php');
+  require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
   // always assigned, so a mail template can place the variables without asking whether the
   // module is installed. Both variants follow AGB_HTML and AGB_TXT of the shop.
@@ -19,8 +20,12 @@
   $smarty->assign('GUARANTEE_NOTICE_HEADING_HTML', '');
   $smarty->assign('GUARANTEE_NOTICE_HEADING_TXT', '');
 
-  // the wording of the order, not the one the language files hold today
-  $guarantee_labels_notice = guarantee_labels_order_notice($order->info['order_id']);
+  // An inactive module sends nothing, not even from a snapshot that is still there. A manually
+  // created order carries its notice from the moment it is created, so whether it holds goods
+  // at all is decided here and not when the snapshot was written.
+  $guarantee_labels_notice = (guarantee_labels_active() && guarantee_labels_order_physical($order->info['order_id']))
+                           ? guarantee_labels_order_notice($order->info['order_id'])
+                           : false;
 
   if ($guarantee_labels_notice !== false) {
     $guarantee_labels_url = encode_htmlspecialchars($guarantee_labels_notice['url']);
@@ -45,7 +50,7 @@
 
   // The archived guarantee conditions travel with the confirmation. Neither the notice nor a
   // GARAN label is attached or embedded, they stay text and link in the mail.
-  $guarantee_labels_terms = guarantee_labels_order_terms($order->info['order_id']);
+  $guarantee_labels_terms = guarantee_labels_active() ? guarantee_labels_order_terms($order->info['order_id']) : array();
 
   if (count($guarantee_labels_terms) > 0) {
     $email_attachments = is_array($email_attachments)

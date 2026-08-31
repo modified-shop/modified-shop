@@ -21,8 +21,16 @@
   {
     require_once(DIR_FS_INC.'guarantee_labels_order.inc.php');
 
+    require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
+
     $guarantee_oID = (int)$_GET['oID'];
     $guarantee_opID = (int)$_GET['opID'];
+
+    // both come from the request, so the position has to belong to the order that is edited
+    if (!guarantee_labels_order_position($guarantee_oID, $guarantee_opID)) {
+      $messageStack->add(ERROR_GUARANTEE_LABELS_SNAPSHOT_UNKNOWN, 'error');
+      return;
+    }
 
     $guarantee_snapshot = guarantee_labels_order_products($guarantee_oID);
     $guarantee_snapshot = isset($guarantee_snapshot[$guarantee_opID]) ? $guarantee_snapshot[$guarantee_opID] : false;

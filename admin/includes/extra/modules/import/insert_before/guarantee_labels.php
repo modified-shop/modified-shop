@@ -54,7 +54,13 @@
     }
 
     $guarantee_labels_result = guarantee_labels_validate_product($guarantee_labels_data, $guarantee_labels_post);
-    $products_array = array_merge($products_array, array ('products_garan_duration' => $guarantee_labels_result['data']['products_garan_duration']));
+
+    // A rejected value never reaches the column. Leaving it out of the array means an update
+    // does not touch what the article already holds, and a new article keeps the default of
+    // the column. Writing the checked value would replace a good stored duration with NULL.
+    if (count($guarantee_labels_result['errors']) < 1) {
+      $products_array = array_merge($products_array, array('products_garan_duration' => $guarantee_labels_result['data']['products_garan_duration']));
+    }
 
     // the import has no redirect, so the message belongs to the current request
     foreach ($guarantee_labels_result['errors'] as $guarantee_labels_error) {

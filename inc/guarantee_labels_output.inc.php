@@ -251,6 +251,28 @@
   }
 
   /**
+   * guarantee_labels_texts_ready()
+   *
+   * Whether every text an output needs is really defined.
+   *
+   * A language package can be installed without the file of this module, or with an older one.
+   * Reading an undefined constant is a fatal error in PHP 8, so a shop would answer with a
+   * broken page instead of a page without the notice. Every output asks here first.
+   *
+   * @param array $constants
+   * @return bool
+   */
+  function guarantee_labels_texts_ready($constants) {
+    foreach ($constants as $constant) {
+      if (!defined($constant) || trim(constant($constant)) === '') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
    * guarantee_labels_attribute()
    *
    * Prepares a language constant for an html attribute. The language packages write umlauts as
@@ -277,6 +299,12 @@
    */
   function guarantee_labels_markup($label) {
     if (!is_array($label) || !isset($label['colour.svg'], $label['nested.svg'], $label['hash'])) {
+      return '';
+    }
+
+    if (!guarantee_labels_texts_ready(array('TEXT_GUARANTEE_LABEL_TITLE', 'TEXT_GUARANTEE_LABEL_OPEN',
+                                            'TEXT_GUARANTEE_LABEL_CLOSE', 'TEXT_GUARANTEE_LABEL_RELOAD',
+                                            'TEXT_GUARANTEE_LABEL_ALT', 'TEXT_GUARANTEE_LABEL_ALT_COMPACT'))) {
       return '';
     }
 
@@ -437,8 +465,17 @@
     $language = isset($_SESSION['language']) ? $_SESSION['language'] : '';
     $file = 'lang/'.$language.'/notice.svg';
 
-    // a language package brings its own graphic, without one there is nothing to show
-    if ($language === '' || !is_file(DIR_FS_CATALOG.$file)) {
+    // a language package brings its own graphic and its own texts, without either there is
+    // nothing to show; a missing constant would end the request instead of the notice
+    if ($language === ''
+        || !is_file(DIR_FS_CATALOG.$file)
+        || !guarantee_labels_texts_ready(array('TEXT_GUARANTEE_NOTICE_TITLE', 'TEXT_GUARANTEE_NOTICE_TEXT',
+                                               'TEXT_GUARANTEE_NOTICE_OPEN', 'TEXT_GUARANTEE_NOTICE_ALT',
+                                               'TEXT_GUARANTEE_NOTICE_LINK', 'TEXT_GUARANTEE_NOTICE_URL',
+                                               'TEXT_GUARANTEE_LABEL_CLOSE', 'TEXT_GUARANTEE_LABEL_RELOAD'))
+        || ($content_type === 'mixed' && !guarantee_labels_texts_ready(array('TEXT_GUARANTEE_NOTICE_MIXED')))
+        )
+    {
       return false;
     }
 

@@ -113,6 +113,11 @@
       $order_data['GUARANTEE_TEXT_TXT'] = '';
       $order_data['GUARANTEE_LABEL'] = '';
 
+      // an inactive module shows nothing, not even from a snapshot that is still there
+      if (!guarantee_labels_active()) {
+        return $order_data;
+      }
+
       $guarantee = guarantee_labels_order_text($oID, $order_data_values['orders_products_id']);
 
       // the graphic of the order, built from the archived files of its snapshot

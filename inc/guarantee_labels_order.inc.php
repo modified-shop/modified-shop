@@ -213,7 +213,7 @@
     }
 
     if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))
-        || !defined('TEXT_GUARANTEE_ORDER_LABEL')
+        || !guarantee_labels_texts_ready(array('TEXT_GUARANTEE_ORDER_LABEL'))
         )
     {
       return false;
@@ -279,10 +279,7 @@
     }
 
     // the markup needs the storefront texts, which the administration does not load by itself
-    if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))
-        || !defined('TEXT_GUARANTEE_LABEL_TITLE')
-        )
-    {
+    if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))) {
       return '';
     }
 
@@ -341,7 +338,9 @@
 
     // the labels of the block itself follow the language of the order
     if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))
-        || !defined('TEXT_GUARANTEE_NOTICE_TITLE')
+        || !guarantee_labels_texts_ready(array('TEXT_GUARANTEE_NOTICE_TITLE', 'TEXT_GUARANTEE_NOTICE_OPEN',
+                                               'TEXT_GUARANTEE_NOTICE_ALT', 'TEXT_GUARANTEE_LABEL_CLOSE',
+                                               'TEXT_GUARANTEE_LABEL_RELOAD'))
         )
     {
       return false;
@@ -375,4 +374,49 @@
                                          '',
                                          encode_htmlspecialchars($source),
                                          guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_ALT));
+  }
+
+  /**
+   * Whether an order contains goods at all.
+   *
+   * Asked of the order itself, not of the catalogue: a position counts as digital when the
+   * order carries a download for it. An order without positions has no goods either, which is
+   * the state a manually created order starts in.
+   *
+   * orders.content_type is not used. It is written once when the order is created and is not
+   * recalculated when the administration adds or removes positions.
+   *
+   * @param int $orders_id
+   * @return bool
+   */
+  function guarantee_labels_order_physical($orders_id) {
+    static $orders = array();
+
+    $orders_id = (int)$orders_id;
+
+    if (isset($orders[$orders_id])) {
+      return $orders[$orders_id];
+    }
+
+    $orders[$orders_id] = false;
+
+    if ($orders_id < 1) {
+      return false;
+    }
+
+    $products_query = xtc_db_query("SELECT op.orders_products_id,
+                                           opd.orders_products_download_id
+                                      FROM ".TABLE_ORDERS_PRODUCTS." op
+                                 LEFT JOIN ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd
+                                           ON opd.orders_products_id = op.orders_products_id
+                                     WHERE op.orders_id = '".$orders_id."'");
+
+    while ($product = xtc_db_fetch_array($products_query)) {
+      if ($product['orders_products_download_id'] === null) {
+        $orders[$orders_id] = true;
+        break;
+      }
+    }
+
+    return $orders[$orders_id];
   }

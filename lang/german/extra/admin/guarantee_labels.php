@@ -65,3 +65,8 @@
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_CONFIRM', 'EU-Haltbarkeitsgarantie: Die &Auml;nderung wurde nicht best&auml;tigt und deshalb nicht gespeichert.');
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_TERMS', 'EU-Haltbarkeitsgarantie: Die Garantiebedingungen konnten nicht archiviert werden (%s). Der bisherige Stand bleibt erhalten.');
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_NO_PRODUCT', 'EU-Haltbarkeitsgarantie: Der Katalogartikel liefert keine vollst&auml;ndigen GARAN-Daten.');
+
+  define('ERROR_GUARANTEE_LABELS_TERMS_LINK', 'GARAN-Garantiebedingungen: Ein reiner Link ist kein dauerhafter Datentr&auml;ger. Hinterlegen Sie eine Datei. Der Anhang wurde als normaler Anhang gespeichert.');
+  define('ERROR_GUARANTEE_LABELS_TERMS_NAME', 'GARAN-Garantiebedingungen: Der Dateiname &quot;%s&quot; eignet sich nicht als Mailanhang. Der Anhang wurde als normaler Anhang gespeichert.');
+  define('ERROR_GUARANTEE_LABELS_TERMS_FILE', 'GARAN-Garantiebedingungen: Die Datei &quot;%s&quot; liegt nicht unter media/products/. Der Anhang wurde als normaler Anhang gespeichert.');
+  define('ERROR_GUARANTEE_LABELS_TERMS_DUPLICATE', 'GARAN-Garantiebedingungen: F&uuml;r diesen Artikel und diese Sprache gibt es bereits einen solchen Anhang. Der Anhang wurde als normaler Anhang gespeichert.');

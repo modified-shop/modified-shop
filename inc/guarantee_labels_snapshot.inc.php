@@ -252,9 +252,19 @@
                                    FROM ".TABLE_PRODUCTS_CONTENT."
                                   WHERE products_id = '".(int)$products_id."'
                                     AND languages_id = '".(int)$languages_id."'
-                                    AND content_type = 'garan_terms'");
+                                    AND content_type = 'garan_terms'
+                               ORDER BY content_id");
 
-    if (xtc_db_num_rows($terms_query) < 1) {
+    $terms_rows = xtc_db_num_rows($terms_query);
+
+    if ($terms_rows < 1) {
+      return false;
+    }
+
+    // the attachment administration keeps this unique, an older stand may not be. Guessing one
+    // of several documents would put an arbitrary file into the order, so none is taken.
+    if ($terms_rows > 1) {
+      guarantee_labels_snapshot_log('terms', $products_id, array('more than one attachment of type garan_terms for language '.(int)$languages_id));
       return false;
     }
 
@@ -504,6 +514,25 @@
   }
 
   /**
+   * Whether a position really belongs to the order it is edited under.
+   *
+   * Order and position both come from the request. Without this check a prepared call could
+   * change the snapshot of a different order and log the change in the wrong history.
+   *
+   * @param int $orders_id
+   * @param int $orders_products_id
+   * @return bool
+   */
+  function guarantee_labels_order_position($orders_id, $orders_products_id) {
+    $position_query = xtc_db_query("SELECT orders_products_id
+                                      FROM ".TABLE_ORDERS_PRODUCTS."
+                                     WHERE orders_id = '".(int)$orders_id."'
+                                       AND orders_products_id = '".(int)$orders_products_id."'");
+
+    return (xtc_db_num_rows($position_query) > 0);
+  }
+
+  /**
    * Writes a corrected GARAN snapshot of one order position.
    *
    * Nothing is written before the graphics of the new values are archived and verified. A
@@ -520,7 +549,7 @@
     $orders_products_id = (int)$orders_products_id;
     $errors = array();
 
-    if ($orders_id < 1 || $orders_products_id < 1) {
+    if ($orders_id < 1 || $orders_products_id < 1 || !guarantee_labels_order_position($orders_id, $orders_products_id)) {
       return array(ERROR_GUARANTEE_LABELS_SNAPSHOT_UNKNOWN);
     }
 
@@ -566,10 +595,11 @@
 
     $existing_query = xtc_db_query("SELECT orders_products_guarantee_id
                                       FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE."
-                                     WHERE orders_products_id = '".$orders_products_id."'");
+                                     WHERE orders_id = '".$orders_id."'
+                                       AND orders_products_id = '".$orders_products_id."'");
 
     if (xtc_db_num_rows($existing_query) > 0) {
-      xtc_db_perform(TABLE_ORDERS_PRODUCTS_GUARANTEE, $sql_data_array, 'update', "orders_products_id = '".$orders_products_id."'");
+      xtc_db_perform(TABLE_ORDERS_PRODUCTS_GUARANTEE, $sql_data_array, 'update', "orders_id = '".$orders_id."' AND orders_products_id = '".$orders_products_id."'");
     } else {
       $sql_data_array['orders_id'] = $orders_id;
       $sql_data_array['orders_products_id'] = $orders_products_id;

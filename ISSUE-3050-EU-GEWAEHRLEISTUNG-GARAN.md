@@ -524,16 +524,13 @@ Alle weiteren Elemente, Farben, Abstaende, Schriftgroessen und QR-Codes bleiben 
 Die Schrift Inter muss in den vorgesehenen Schnitten bereitstehen:
 
 - Regular.
-- SemiBold.
 - ExtraBold.
 
 Die Schriftdateien liegen unter `images/guarantee_labels/fonts/`:
 
 - `Inter-Regular.ttf`
-- `Inter-SemiBold.ttf`
 - `Inter-ExtraBold.ttf`
 - `Inter-Regular.woff2`
-- `Inter-SemiBold.woff2`
 - `Inter-ExtraBold.woff2`
 
 Die TTF-Dateien dienen der serverseitigen Messung. Der Renderer verwendet `imagettfbbox()` mit genau dem Schriftschnitt und der Schriftgroesse des jeweiligen editierbaren Vorlagenbereichs. Er rechnet die gemessene Breite in SVG-Einheiten um und zieht eine kleine feste Sicherheitstoleranz vom verfuegbaren Bereich ab. Passt Herstellername oder Modellkennung nicht, lehnt die Artikelverwaltung das Speichern der GARAN-Daten mit einer konkreten Fehlermeldung ab. Die Schriftgroesse wird nicht verkleinert und der Text wird nicht abgeschnitten.
@@ -916,7 +913,7 @@ Der Admin entscheidet bei manuell angelegten Bestellungen weiterhin selbst, ob u
 
 Voraussichtlich betroffen sind:
 
-- `admin/includes/modules/system/` fuer die Modulklasse mit `code`, `version`, `install()`, `update()`, `process()`, `properties['button_update']` und `properties['add_content']`, fuer Modultabellen, die idempotente Anlage beider Core-Spalten, die Modulkonfiguration und die Cache-Leerung nach dem Speichern der Konfiguration.
+- `admin/includes/modules/system/` fuer die Modulklasse mit `code`, `version`, `install()`, `update()`, `process()`, `properties['button_update']` und `properties['add_content']`, fuer Modultabellen, die idempotente Anlage beider Core-Spalten und die Modulkonfiguration. `process()` speichert die B2B-Auswahl und leert keinen Cache.
 - `admin/module_export.php` als vorhandener Verwaltungsweg fuer Systemmodule, als Aufrufer von `install()`, `update()` und `process()` sowie als Renderer von `properties['button_update']` und `properties['add_content']`; am Frameworkpfad selbst ist keine Aenderung erforderlich. `admin/modules.php` ist fuer dieses Systemmodul nicht betroffen.
 - `admin/includes/functions/general.php` mit dem vorhandenen Helper `xtc_cfg_multi_checkbox()` und `inc/xtc_get_customers_statuses.inc.php` als vorhandene Datenquelle fuer die B2B-Mehrfachauswahl; an beiden Dateien ist keine Aenderung erforderlich.
 - `admin/includes/extra/modules/add_db_fields/`
@@ -986,7 +983,7 @@ Voraussichtlich betroffen sind:
 - `add_db_fields` traegt `products_garan_duration` in den Speicherweg der Artikelverwaltung ein, ohne als Ersatz fuer die Schemaaenderung behandelt zu werden.
 - In Systemmodul, `add_db_fields`, `define_add_select`, Storefront, Checkout und Admin pruefen, dass ausschliesslich `MODULE_GUARANTEE_LABELS_STATUS` als Statusschluessel verwendet wird.
 - Aktivieren, deaktivieren, entfernen und bestehende Bestelldaten bereinigen; diese Lebenszyklus- und Aufraeumvorgaenge funktionieren auch beim Wechsel zu oder aus dem inaktiven Status.
-- Modulstatus und B2B-Auswahl ueber `admin/module_export.php?set=system` speichern; `process()` wird nach dem Speichern aufgerufen, liest den neuen Status aus `TABLE_CONFIGURATION` statt aus der in diesem Request veralteten Konstante und leert den Shopcache genau einmal.
+- Modulstatus und B2B-Auswahl ueber `admin/module_export.php?set=system` speichern; `process()` wird nach dem Speichern aufgerufen, liest den neuen Status aus `TABLE_CONFIGURATION` statt aus der in diesem Request veralteten Konstante und leert keinen Cache.
 - GARAN-Systemmodul ueber den regulaeren Adminweg aufrufen; Installation, Bearbeitung, Aktualisierung und Diagnose laufen ausschliesslich ueber `admin/module_export.php?set=system`. `admin/modules.php` benoetigt fuer GARAN weder einen Speicherpfad noch eine Cache-Erweiterung.
 - B2B-Mehrfachauswahl in deutscher und englischer Adminsprache anzeigen; `xtc_cfg_multi_checkbox('xtc_get_customers_statuses', 'chr(44)', ...)` verwendet die lokalisierten Kundengruppen aus `xtc_get_customers_statuses()`.
 - Keine, eine und mehrere B2B-Kundengruppen speichern; `MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS` enthaelt entsprechend `''`, eine ID oder kommaseparierte IDs und wird beim Lesen in eindeutige positive Integerwerte normalisiert.
@@ -1010,7 +1007,7 @@ Voraussichtlich betroffen sind:
 - Sonderzeichen in Herstellername und Modellkennung sicher verarbeiten.
 - Sehr lange Werte erkennen und mit verstaendlicher Meldung ablehnen.
 - Modulaktivierung ohne GD-FreeType beziehungsweise ohne `imagettfbbox()` ablehnen und die konkrete Fehlermeldung ueber den `messageStack` ausgeben.
-- Textbreite mit Regular, SemiBold und ExtraBold jeweils gegen den vorgesehenen Vorlagenbereich pruefen.
+- Textbreite mit Regular und ExtraBold jeweils gegen den vorgesehenen Vorlagenbereich pruefen.
 - Eingaben mit `2,5` und `2.5` identisch normalisieren.
 - Ganzjahreswert groesser als `99` ablehnen.
 - Halbjahreswert groesser als `99.5` ablehnen.
@@ -1033,17 +1030,17 @@ Voraussichtlich betroffen sind:
 - Fehler aus Modulverwaltung, Artikelpflege, Anhangspflege, Import und Bestellbearbeitung jeweils ueber den bestehenden `messageStack` ausgeben.
 - Fehler in einem Pfad mit Redirect und in einem Pfad ohne Redirect ausloesen; die erste Meldung wird mit `add_session()` nach dem Redirect, die zweite mit `add()` im aktuellen Request angezeigt.
 - GARAN-Fehler ueber den `LoggingManager` in `mod_guarantee_labels_<level>_<YYYY-MM-DD>.log` schreiben und Anzeige sowie Aufraeumen ueber die bestehenden Logfunktionen pruefen.
-- Mit `USE_CACHE = true` einen GARAN-Artikel in Cross-Selling und im Block neuer Artikel cachen, danach seine Garantiedauer entfernen und speichern; beide Bloecke zeigen beim naechsten Aufruf kein Label mehr.
-- Herstellername oder Herstellerstatus ueber das Herstellerformular aendern; die Erweiterungsstelle unter `admin/includes/extra/modules/manufacturers/action/` leert nach erfolgreichem Speichern den Shopcache.
-- Herstellerstatus mit `setflag` aus der Herstellerliste aendern; der begrenzte Aufruf in `admin/manufacturers.php` leert den Shopcache trotz des sofortigen Redirects.
-- Hersteller ohne die Option `Artikel mitloeschen` loeschen; `manufacturers_id` der betroffenen GARAN-Artikel wird `''`, der Shopcache wird ueber die Hersteller-Erweiterungsstelle geleert, das Label verschwindet sofort und die Moduldiagnose listet die unvollstaendigen Artikel.
-- Hersteller mit der Option `Artikel mitloeschen` loeschen; die Hersteller-Erweiterungsstelle leert den Shopcache nach Abschluss ebenfalls.
-- Herstellerzuordnung und Hersteller-Modellkennung am Artikel jeweils aendern; nach erfolgreichem Speichern ist der Shopcache geleert und die naechste Ausgabe verwendet ausschliesslich den neuen gueltigen Stand.
-- GARAN-Modul bei gefuelltem Blockcache deaktivieren; die naechste Ausgabe enthaelt kein Label. Nach erneuter Aktivierung wird der Block mit aktuellen Daten neu aufgebaut.
-- Einen in `products_media.php` gecachten `garan_terms`-Anhang ersetzen und entfernen; nach erfolgreichem Speichern zeigt der Medienblock weder die alte Datei noch einen veralteten Link.
-- Mehrere GARAN-Datensaetze in einem CSV-Import aendern; der Shopcache wird nach erfolgreichem Abschluss genau einmal und nicht je importierter Zeile geleert.
+- Mit `USE_CACHE = true` einen GARAN-Artikel in Cross-Selling und im Block neuer Artikel cachen, danach seine Garantiedauer entfernen und speichern; beide Bloecke koennen das Label bis zum Ablauf von `CACHE_LIFETIME` weiter zeigen. Nach `admin/configuration.php?action=delcache` ist es verschwunden.
+- Herstellername oder Herstellerstatus ueber das Herstellerformular aendern; die naechste ungecachte Ausgabe verwendet den neuen Stand.
+- Herstellerstatus mit `setflag` aus der Herstellerliste aendern; das Label folgt dem neuen Status, sobald der Block nicht mehr aus dem Smarty-Cache stammt.
+- Hersteller ohne die Option `Artikel mitloeschen` loeschen; `manufacturers_id` der betroffenen GARAN-Artikel wird `''`, das Label verschwindet aus der ungecachten Ausgabe und die Moduldiagnose listet die unvollstaendigen Artikel.
+- Hersteller mit der Option `Artikel mitloeschen` loeschen; die zugehoerigen GARAN-Daten verschwinden mit den Artikeln.
+- Herstellerzuordnung und Hersteller-Modellkennung am Artikel jeweils aendern; die naechste ungecachte Ausgabe verwendet ausschliesslich den neuen gueltigen Stand.
+- GARAN-Modul bei gefuelltem Blockcache deaktivieren; gecachte Bloecke koennen das Label bis zum Ablauf von `CACHE_LIFETIME` weiter zeigen, jede ungecachte Ausgabe nicht mehr.
+- Einen in `products_media.php` gecachten `garan_terms`-Anhang ersetzen und entfernen; der ungecachte Medienblock zeigt weder die alte Datei noch einen veralteten Link.
+- Mehrere GARAN-Datensaetze in einem CSV-Import aendern; der Import leert keinen Cache.
 - Shopcache mit vorhandenem `cache/guarantee_labels/` leeren; das gesamte Unterverzeichnis verschwindet und der naechste Renderaufruf legt es samt Hashverzeichnis selbststaendig neu an.
-- Fehlgeschlagene GARAN-Aenderung pruefen; Daten und bestehender Shopcache bleiben unveraendert, die Fehlermeldung erscheint ueber den `messageStack`.
+- Fehlgeschlagene GARAN-Aenderung pruefen; die Daten bleiben unveraendert, die Fehlermeldung erscheint ueber den `messageStack`.
 
 ### Produktseite
 
@@ -1216,7 +1213,7 @@ Die Erweiterung ist fachlich fertig, wenn:
 - Der Produkt-CSV-Import und -Export verwendet ausschliesslich `p_garan_duration` fuer die Garantiedauer. `content_type` und Garantie-Anhaenge bleiben ausserhalb des CSV-Formats.
 - `includes/modules/products_media.php` stellt einen sichtbaren `garan_terms`-Anhang ueber den bestehenden Medienbereich bereit; ein neuer Storefront-Downloadweg ist nicht erforderlich.
 - Die Labeldaten werden nach dem Sammelprinzip bereitgestellt. Die vorhandenen `ADD_SELECT_*`-Arrays liefern Garantiedauer, Hersteller-Modellkennung und Hersteller-ID. Eine zentrale GARAN-Hilfsfunktion laedt die Namen der betroffenen aktiven Hersteller mit hoechstens einer Abfrage je Ergebnisblock nach. Ausschliesslich diese Namen werden fuer GARAN verwendet; bereits von anderen Abfragen gelieferte Herstellernamen bleiben unberuecksichtigt. Es werden weder Hersteller-JOINs in alle Kernabfragen noch Einzelabfragen je Artikel eingefuehrt.
-- Nach jeder erfolgreich gespeicherten Aenderung an GARAN-Produktdaten, Herstellername oder -status, Herstellerloeschung, `garan_terms` oder GARAN-Modulstatus wird der vollstaendige Shopcache wie bei `admin/configuration.php?action=delcache` geleert. Herstellerformular und `deleteconfirm` verwenden dafuer `admin/includes/extra/modules/manufacturers/action/`; nur `setflag` erfordert einen begrenzten Eingriff in `admin/manufacturers.php`. Konfigurationsaenderungen des Systemmoduls laufen ausschliesslich ueber `admin/module_export.php?set=system`; dessen anschliessender Aufruf von `process()` liest den neuen Status direkt aus `TABLE_CONFIGURATION` und leert den Cache. `admin/modules.php` ist dafuer nicht betroffen. Damit koennen Smarty-Blockcaches keine veralteten Labels oder Garantie-Anhaenge bis zum Ablauf von `CACHE_LIFETIME` ausliefern. Die historischen Archive werden nicht geloescht.
+- Das Modul leert keinen Cache. Der eigene Grafikcache liegt unter dem Inhaltshash und kann verwaisen, aber nicht falsch werden. Nur die Smarty-Blockcaches koennen ein veraltetes Label bis zum Ablauf von `CACHE_LIFETIME` weiter ausliefern; dafuer leert der Shopbetreiber den Cache ueber `admin/configuration.php?action=delcache`. Die Moduldiagnose weist darauf hin. Die historischen Archive werden dabei nicht geloescht.
 - `clear_dir(DIR_FS_CATALOG.'cache/')` entfernt `cache/guarantee_labels/` einschliesslich aller darin liegenden Schutzdateien und danach das Verzeichnis selbst. Der Renderer legt das Basisverzeichnis vor einem Schreibvorgang bei Bedarf rekursiv neu an. Dauerhafte `.htaccess`- oder `index.html`-Dateien sind in diesem Cache-Unterverzeichnis nicht vorgesehen.
 - Bei manuellen Bestellungen stammen `orders.language` und `orders.languages_id` aus der Backend-Sitzung beim Anlegen. Das Modul verwendet `orders.language` als massgebliche Bestellsprache fuer den Hinweis-Snapshot und die Auswahl von `garan_terms`; es ermittelt keine abweichende Kundensprache.
 - Der bestehende Admin-Ablauf befuellt `orders.content_type` beim Anlegen einer leeren Bestellung nicht. Das Modul fuehrt dessen Pflege fuer manuell bearbeitete Bestellungen ein. `''` bedeutet ebenso wie `virtual`, dass die Bestellung keine koerperliche Ware enthaelt und keinen Gewaehrleistungshinweis ausgibt.
