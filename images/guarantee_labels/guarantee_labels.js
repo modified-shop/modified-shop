@@ -60,7 +60,7 @@
     return closeControl.markup;
   }
 
-  function show(label, id, title) {
+  function show(content, id, title) {
     if (hasColorbox()) {
       window.jQuery.colorbox({
         inline: true,
@@ -81,7 +81,7 @@
       return;
     }
 
-    var dialog = label.querySelector('.guarantee-label__dialog');
+    var dialog = content ? closest(content, '.guarantee-label__dialog') : null;
 
     if (!dialog) {
       return;
@@ -141,15 +141,16 @@
     if (compact) {
       event.preventDefault();
 
-      var label = closest(compact, '.guarantee-label');
-      var full = label ? label.querySelector('.guarantee-label__full') : null;
+      // the content is found by its id, the label and the notice bring different wrappers
       var id = compact.getAttribute('data-guarantee-label-content');
+      var content = id ? document.getElementById(id) : null;
+      var full = content ? content.querySelector('.guarantee-label__full') : null;
       var title = compact.getAttribute('data-guarantee-label-title') || '';
 
       if (full) {
-        load(full, function () { show(label, id, title); });
+        load(full, function () { show(content, id, title); });
       } else {
-        show(label, id, title);
+        show(content, id, title);
       }
 
       return;
