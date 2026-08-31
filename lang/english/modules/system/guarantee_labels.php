@@ -30,6 +30,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_TYPE', 'The column %s of table %s has type %s, expected %s. The column has not been changed.');
 
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS', 'Check of the requirements');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE', 'With the shop cache switched on, cross selling, new articles and similar blocks keep their finished html including the label. After a change to a manufacturer or an article they can show an old label until the cache lifetime runs out. Empty the shop cache through configuration &raquo; cache in that case.');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK', 'in place');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED', 'missing');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION', 'class extension %s installed');

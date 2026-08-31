@@ -315,7 +315,13 @@ Nach einer erfolgreich gespeicherten GARAN-relevanten Aenderung leert der Admin 
 
 Die eigenen Dateien liegen unter ihrem Inhaltshash und sind deshalb nie falsch, sondern hoechstens verwaist: Eine geaenderte Dauer, ein anderer Herstellername oder eine neue Vorlagenversion ergeben einen neuen Hash und damit neue Dateien. Die Leerung ist Aufraeumen, keine Korrektur.
 
-Der Smarty-Blockcache dagegen haelt fertig gerendertes HTML mitsamt eingebettetem Label. Er wird hier nicht angefasst und kann bis zum Ablauf von `CACHE_LIFETIME` ein altes Label zeigen. Wer `USE_CACHE` aktiviert hat, leert ihn nach solchen Aenderungen ueber `delcache`. Das gilt fuer:
+Der Smarty-Blockcache dagegen haelt fertig gerendertes HTML mitsamt eingebettetem Label. Betroffen sind die Module, die ueber `CacheCheck()` zwischenspeichern und Labels enthalten: Cross-Selling, neue Artikel, Artikel einer Kategorie, ebenfalls gekaufte Artikel und die kommenden Artikel. Produktdetailseite und Kategorielisting setzen `caching = 0` und sind nicht betroffen.
+
+Ihre Cache-IDs bestehen aus Sprache, Kundengruppe, Artikel, Waehrung und Land; ein GARAN-Stand geht nicht ein. Ein umbenannter Hersteller aendert die ID deshalb nicht, und der Block wird bis zum Ablauf von `CACHE_LIFETIME` weiter aus dem Cache bedient. Das Modul greift dort bewusst nicht ein: Der Shopcache gehoert dem Shopbetreiber, und ihn bei jedem Artikelspeichern zu verwerfen wuerde die Arbeit aller anderen Module mit wegwerfen. Im Auslieferungszustand ist `USE_CACHE` abgeschaltet, dann entsteht die Lage gar nicht. Ist er aktiv, weist die Moduldiagnose darauf hin und der Shopbetreiber leert ihn ueber `delcache`.
+
+Eine saubere Loesung waere ein GARAN-Stand in den Cache-IDs der betroffenen Module. Das erfordert Eingriffe in sechs Kernmodule und gehoert nicht in diese Erweiterung.
+
+Das eigene Verzeichnis wird geleert bei:
 
 - Garantiedauer, Herstellerzuordnung oder Hersteller-Modellkennung eines Artikels,
 - Name, Aktivstatus oder Loeschung eines Herstellers,
@@ -945,7 +951,7 @@ Voraussichtlich betroffen sind:
 - `media/guarantee_labels/archive/` einschliesslich eigener `.htaccess` fuer historische GARAN-Dateien und Gewaehrleistungshinweise.
 - `media/products/garan_archive/` fuer atomar archivierte Garantie-Anhaenge.
 - `includes/classes/class.logger.php`, `admin/logs.php` und die vorhandene Logpflege fuer `mod_guarantee_labels_<level>_<datum>.log`.
-- `admin/configuration.php` und `includes/modified_cache.php` als bestehendes Vorbild fuer die vollstaendige Shopcache-Leerung nach GARAN-relevanten Aenderungen.
+- `admin/configuration.php` als vorhandener Weg, den Shopcache zu leeren. Das Modul selbst raeumt nur sein eigenes Verzeichnis `cache/guarantee_labels/` auf.
 
 ## Testfaelle
 

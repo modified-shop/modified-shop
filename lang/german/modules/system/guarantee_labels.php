@@ -30,6 +30,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_TYPE', 'Die Spalte %s der Tabelle %s hat den Typ %s, erwartet wird %s. Die Spalte wurde nicht ge&auml;ndert.');
 
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS', 'Pr&uuml;fung der Voraussetzungen');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE', 'Bei aktivem Shopcache halten Cross-Selling, neue Artikel und &auml;hnliche Bl&ouml;cke ihr fertiges HTML mitsamt Label. Nach einer Hersteller- oder Artikel&auml;nderung k&ouml;nnen sie bis zum Ablauf der Cache-Lebensdauer ein altes Label zeigen. Leeren Sie den Shopcache dann &uuml;ber Konfiguration &raquo; Cache.');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK', 'in Ordnung');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED', 'fehlt');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION', 'Klassenerweiterung %s eingerichtet');
