@@ -115,6 +115,8 @@
       'text' => $data['text'],
       'link' => $data['link'],
       'url' => $data['url'],
+      // archives written before the heading was stored fall back to the language file
+      'title' => isset($data['title']) ? $data['title'] : '',
     );
 
     return $orders[$orders_id];
@@ -250,10 +252,12 @@
       return false;
     }
 
-    if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))
-        || !guarantee_labels_texts_ready(array('TEXT_GUARANTEE_ORDER_LABEL'))
-        )
-    {
+    // The values are historical either way. Only the sentence around them comes from the
+    // language file, so a customer browsing in another language gets the wording of that
+    // language instead of no guarantee line at all.
+    guarantee_labels_language(guarantee_labels_order_language($orders_id));
+
+    if (!guarantee_labels_texts_ready(array('TEXT_GUARANTEE_ORDER_LABEL'))) {
       return false;
     }
 
@@ -263,24 +267,36 @@
 
     $renderer = new guarantee_labels_renderer();
 
-    $label = sprintf(TEXT_GUARANTEE_ORDER_LABEL,
-                     $renderer->duration_text($product['garan_duration']),
-                     $product['manufacturers_name'],
-                     $product['manufacturers_model']);
+    $duration = $renderer->duration_text($product['garan_duration']);
 
-    $terms = '';
+    // Both variants are built from the plain values instead of converting one into the other.
+    // A manufacturer name or a file name may carry angle brackets, and the html variant is
+    // printed unescaped by the order views and the mail template.
+    $label = array(
+      'html' => sprintf(TEXT_GUARANTEE_ORDER_LABEL,
+                        encode_htmlspecialchars($duration),
+                        encode_htmlspecialchars($product['manufacturers_name']),
+                        encode_htmlspecialchars($product['manufacturers_model'])),
+      'txt' => sprintf(decode_htmlentities(TEXT_GUARANTEE_ORDER_LABEL),
+                       $duration,
+                       $product['manufacturers_name'],
+                       $product['manufacturers_model']),
+    );
+
+    $terms = array('html' => '', 'txt' => '');
 
     // named only where the file really travels along
-    if (defined('TEXT_GUARANTEE_ORDER_TERMS')) {
-      if (guarantee_labels_terms_file($product, $orders_id) !== '') {
-        $terms = sprintf(TEXT_GUARANTEE_ORDER_TERMS, $product['terms_filename']);
-      }
+    if (defined('TEXT_GUARANTEE_ORDER_TERMS')
+        && guarantee_labels_terms_file($product, $orders_id) !== ''
+        )
+    {
+      $terms = array(
+        'html' => sprintf(TEXT_GUARANTEE_ORDER_TERMS, encode_htmlspecialchars($product['terms_filename'])),
+        'txt' => sprintf(decode_htmlentities(TEXT_GUARANTEE_ORDER_TERMS), $product['terms_filename']),
+      );
     }
 
-    return array(
-      'label' => array('html' => $label, 'txt' => decode_htmlentities($label)),
-      'terms' => array('html' => $terms, 'txt' => ($terms === '') ? '' : decode_htmlentities($terms)),
-    );
+    return array('label' => $label, 'terms' => $terms);
   }
 
   /**
@@ -308,10 +324,10 @@
       return '';
     }
 
-    // the markup needs the storefront texts, which the administration does not load by itself
-    if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))) {
-      return '';
-    }
+    // The administration does not load the storefront texts by itself, so loading is attempted
+    // here. It may fail because the customer browses in another language than the order was
+    // placed in; the label is language neutral and falls back to its own wording then.
+    guarantee_labels_language(guarantee_labels_order_language($orders_id));
 
     $product = $products[$orders_products_id];
 
@@ -366,15 +382,10 @@
       return false;
     }
 
-    // the labels of the block itself follow the language of the order
-    if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))
-        || !guarantee_labels_texts_ready(array('TEXT_GUARANTEE_NOTICE_TITLE', 'TEXT_GUARANTEE_NOTICE_OPEN',
-                                               'TEXT_GUARANTEE_NOTICE_ALT', 'TEXT_GUARANTEE_LABEL_CLOSE',
-                                               'TEXT_GUARANTEE_LABEL_RELOAD'))
-        )
-    {
-      return false;
-    }
+    // Text, link and address are historical and come from the archive. Only the heading and the
+    // chrome are read from the language file, so a mismatch costs the wording around the notice
+    // and never the notice itself.
+    guarantee_labels_language(guarantee_labels_order_language($orders_id));
 
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
 
@@ -398,12 +409,16 @@
 
     $link = '<a class="guarantee-notice__link" href="'.guarantee_labels_attribute($notice['url']).'" target="_blank" rel="noopener">'.$notice['link'].'</a>';
 
-    return guarantee_labels_notice_block(TEXT_GUARANTEE_NOTICE_TITLE,
+    $title = ($notice['title'] !== '')
+           ? $notice['title']
+           : guarantee_labels_text('TEXT_GUARANTEE_NOTICE_TITLE', 'GARAN');
+
+    return guarantee_labels_notice_block($title,
                                          $notice['text'],
                                          $link,
                                          '',
                                          encode_htmlspecialchars($source),
-                                         guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_ALT));
+                                         guarantee_labels_attribute(guarantee_labels_text('TEXT_GUARANTEE_NOTICE_ALT', $title)));
   }
 
   /**
@@ -496,15 +511,32 @@
       }
     }
 
+    // Counted per position, not joined: a position with a download attribute and a physical one
+    // carries a download row and would look purely digital to a join, although the shop counts
+    // it as mixed. The rule follows shopping_cart::get_content_type().
+    $multiple = (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true');
+
     $products_query = xtc_db_query("SELECT op.orders_products_id,
-                                           opd.orders_products_download_id
+                                           (SELECT COUNT(*)
+                                              FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
+                                             WHERE opa.orders_products_id = op.orders_products_id) AS attributes,
+                                           (SELECT COUNT(*)
+                                              FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd
+                                             WHERE opd.orders_products_id = op.orders_products_id) AS downloads
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
-                                 LEFT JOIN ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd
-                                           ON opd.orders_products_id = op.orders_products_id
                                      WHERE op.orders_id = '".$orders_id."'");
 
     while ($product = xtc_db_fetch_array($products_query)) {
-      if ($product['orders_products_download_id'] === null) {
+      $downloads = (int)$product['downloads'];
+
+      // no download at all makes the position physical in either setting
+      if ($downloads < 1) {
+        $orders[$orders_id] = true;
+        break;
+      }
+
+      // with multiple attributes allowed one download makes the whole position digital
+      if (!$multiple && (int)$product['attributes'] > $downloads) {
         $orders[$orders_id] = true;
         break;
       }

@@ -56,15 +56,17 @@
 
     $guarantee_labels_result = guarantee_labels_validate_product($guarantee_labels_data, $guarantee_labels_post);
 
-    // A rejected value never reaches the column. Leaving it out of the array means an update
-    // does not touch what the article already holds, and a new article keeps the default of
-    // the column. Writing the checked value would replace a good stored duration with NULL.
-    if ($guarantee_labels_has_duration
-        && count($guarantee_labels_result['errors']) < 1
-        && isset($guarantee_labels_result['data']['products_garan_duration'])
-        )
-    {
-      $products_array['products_garan_duration'] = $guarantee_labels_result['data']['products_garan_duration'];
+    if (count($guarantee_labels_result['errors']) < 1) {
+      if ($guarantee_labels_has_duration && isset($guarantee_labels_result['data']['products_garan_duration'])) {
+        $products_array['products_garan_duration'] = $guarantee_labels_result['data']['products_garan_duration'];
+      }
+    } else {
+      // The three core fields belong together. Importing a new manufacturer or model identifier
+      // next to a stored duration would leave an incomplete GARAN article behind, which is what
+      // the check exists for. The rest of the row is imported as usual.
+      unset($products_array['products_garan_duration'],
+            $products_array['products_manufacturers_model'],
+            $products_array['manufacturers_id']);
     }
 
     // the import has no redirect, so the message belongs to the current request

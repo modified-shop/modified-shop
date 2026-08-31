@@ -237,6 +237,8 @@
         'text' => $texts['text'],
         'link' => $texts['link'],
         'url' => $texts['url'],
+        // outside notice_hash, but archived so a later view does not need the language file
+        'title' => $texts['title'],
       )),
     ));
 

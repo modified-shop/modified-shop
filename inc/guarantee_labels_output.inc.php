@@ -558,16 +558,21 @@
     static $counter = 0;
     $id = 'guarantee-notice-content-'.(++$counter);
 
+    // the chrome around the archived text must not cost the notice its output
+    $open = guarantee_labels_text('TEXT_GUARANTEE_NOTICE_OPEN', 'GARAN');
+    $close = guarantee_labels_text('TEXT_GUARANTEE_LABEL_CLOSE', '&times;');
+    $reload = guarantee_labels_text('TEXT_GUARANTEE_LABEL_RELOAD', '');
+
     return array(
       'title' => $title,
       'body' => '<p class="guarantee-notice__text">'.$text.'</p>'.
                 $mixed.
                 '<button type="button" class="guarantee-label__compact guarantee-notice__open" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute($title).'">'.
-                  TEXT_GUARANTEE_NOTICE_OPEN.
+                  $open.
                 '</button>'.
                 '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute($title).'">'.
                   '<div class="guarantee-label__content" id="'.$id.'">'.
-                    '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'" data-guarantee-label-error="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_RELOAD).'">'.
+                    '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'"'.(($reload !== '') ? ' data-guarantee-label-error="'.guarantee_labels_attribute($reload).'"' : '').'>'.
                       '<div class="guarantee-label__graphic"></div>'.
                     '</div>'.
                   '</div>'.

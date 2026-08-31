@@ -284,18 +284,30 @@
       return @mkdir($path, 0777, true);
     }
 
+    /**
+     * Removes one hash directory. The caller has to know whether it worked: a damaged directory
+     * that survives would be served again, so a failure has to be reported instead of ignored.
+     *
+     * @param string $path
+     * @return bool true when the directory is gone
+     */
     function remove_dir($path) {
       if (!is_dir($path)) {
-        return;
+        return true;
       }
 
       foreach ((array)@scandir($path) as $entry) {
-        if ($entry != '.' && $entry != '..') {
-          @unlink($path.$entry);
+        if ($entry == '.' || $entry == '..') {
+          continue;
+        }
+
+        // hash directories hold files only, a directory here is not ours to walk into
+        if (is_dir($path.$entry) || @unlink($path.$entry) === false) {
+          return false;
         }
       }
 
-      @rmdir($path);
+      return (@rmdir($path) !== false);
     }
 
     function temp_name() {

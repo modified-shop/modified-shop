@@ -272,6 +272,8 @@ Die Schreibweise mit `+` beschreibt nur die fachlichen Bestandteile. Technisch w
 
 Aendert sich ein Bestandteil, aendert sich der zugehoerige Hash. `garan_hash` ist der gemeinsame Cache- und Archivschluessel fuer die zusammengehoerige farbige und kompakte Variante. `notice_hash` referenziert den vollstaendigen historischen Sprachstand aus Grafik, Mailtext, Linktext und URL.
 
+Die Zusage an der Bestellposition entsteht in zwei getrennten Fassungen. Die HTML-Fassung maskiert Garantiedauer, Herstellername, Modellkennung und Dateinamen einzeln, bevor sie in das Textmuster eingesetzt werden; die Textfassung verwendet die Rohwerte und loest nur die Entities des Musters auf. Eine Fassung aus der anderen abzuleiten wuerde entweder Maskierungen aufloesen oder Entities in die Textmail tragen. Der Dateinamenfilter laesst Zeichen wie `<` durch, weil sie einen Dateinamen nicht unbrauchbar machen; maskiert wird deshalb bei der Ausgabe.
+
 Mailtext und Anhangsliste fragen dieselbe Funktion `guarantee_labels_terms_file()`. Getrennt gefragt koennte der Text ein Dokument nennen, das die Anhangspruefung anschliessend als beschaedigt verwirft, und die Mail wuerde etwas behaupten, das sie nicht mitfuehrt.
 
 Ist in der Bestellsprache ein Artikel-Anhang vom Typ `garan_terms` vorhanden, enthaelt `orders_products_guarantee.terms_hash` den SHA-256-Hash seines Inhalts. Der Hash referenziert die Fassung der Garantiebedingungen, die zur Bestellposition gehoert. Ein erneuter Mailversand haengt genau diese archivierte Fassung an, unabhaengig davon, ob der Artikel-Anhang inzwischen ersetzt oder geloescht wurde. Fehlt ein solcher Anhang, bleiben `terms_hash` und `terms_filename` `NULL` und es wird keine Garantieerklaerung angehaengt.
@@ -432,10 +434,10 @@ Anzuzeigen sind:
 
 Der Hilfetext muss zuerst den Anwendungsbereich des Feldes klarstellen, weil sonst der Eindruck entsteht, ein leeres Feld sei ein Mangel:
 
-- Das Feld gilt ausschliesslich fuer eine Haltbarkeitsgarantie des Herstellers, die ueber die gesetzliche Gewaehrleistung hinausgeht.
-- Die gesetzlichen zwei Jahre gehoeren nicht in dieses Feld. Auf sie weist der Gewaehrleistungshinweis im Checkout fuer die gesamte Bestellung hin, ohne Pflege am Artikel.
+- Das Feld nimmt die Dauer der Haltbarkeitsgarantie des Herstellers auf. Es ist unabhaengig von der gesetzlichen Gewaehrleistung; auf die weist der Gewaehrleistungshinweis im Checkout fuer die gesamte Bestellung hin, ohne Pflege am Artikel.
 - Ein leeres Feld ist der Normalfall. Ein Artikel mit ausschliesslich der gesetzlichen Gewaehrleistung erhaelt korrekterweise kein GARAN-Label.
-- Genau zwei Jahre Herstellergarantie reichen nicht, weil sie dem Verbraucher nichts ueber die gesetzliche Gewaehrleistung hinaus geben. Auch die Fehlermeldung bei einer abgelehnten Eingabe nennt diesen Grund.
+- Ein Label entsteht erst ab `2.5`. Werte von `0.5` bis `2.0` werden gespeichert und dokumentieren, was der Hersteller zusagt; ein Label erzeugen sie nicht, weil eine Garantie bis zwei Jahre dem Verbraucher nichts ueber die gesetzliche Gewaehrleistung hinaus gibt. Der Hilfetext nennt diesen Grund.
+- Speichern und Ausgeben sind bewusst getrennt, siehe die Begruendung beim Datenmodell: Ein Fremdsystem liefert die Anzahl Jahre in beliebiger Hoehe, und ein Import darf an keinem dieser Werte scheitern.
 
 Danach muss der Hilfetext klarstellen, dass eine Laufzeit nur eingetragen werden darf, wenn:
 
@@ -464,7 +466,7 @@ Validierung beim Speichern:
 
 Bei unvollstaendigen GARAN-Kerndaten darf kein GARAN-Label im Storefront erscheinen. Ein fehlender Garantie-Anhang zaehlt nicht zu diesen Kerndaten und verhindert die Anzeige nicht. Die Artikelmaske soll Fehler und fehlende optionale Anhaenge konkret benennen. Jede bei einer Admin-Aktion entstehende Fehlermeldung wird ueber den bestehenden `messageStack` ausgegeben.
 
-Eine abgelehnte Eingabe erreicht die Spalte nicht. `insert_product_before()` entfernt `products_garan_duration` bei einem Fehler aus dem Datensatz, statt `NULL` einzutragen. Die Artikelverwaltung schreibt die Zeile, bevor sie ueber `insert_product_error()` vom Fehler erfaehrt; ein Eintrag an dieser Stelle wuerde also eine gueltige gespeicherte Garantie bei einem Speichervorgang loeschen, den der Shopbetreiber gar nicht durchbekommen hat. Ein bewusst geleertes Feld bleibt davon unberuehrt und setzt weiterhin `NULL`.
+Eine abgelehnte Eingabe erreicht die Spalten nicht. `insert_product_before()` entfernt bei einem Fehler alle drei GARAN-Kerndaten aus dem Datensatz: `products_garan_duration`, `products_manufacturers_model` und `manufacturers_id`. Sie gehoeren zusammen; einen Teil durchzulassen wuerde entweder eine gute gespeicherte Garantiedauer loeschen oder den Artikel mit einer Dauer ohne Hersteller dahinter zuruecklassen. Die Artikelverwaltung schreibt die Zeile, bevor sie ueber `insert_product_error()` vom Fehler erfaehrt; ein Eintrag an dieser Stelle wuerde also eine gueltige gespeicherte Garantie bei einem Speichervorgang loeschen, den der Shopbetreiber gar nicht durchbekommen hat. Ein bewusst geleertes Feld bleibt davon unberuehrt und setzt weiterhin `NULL`.
 
 ### Artikelpruefung als Klassenerweiterung
 
@@ -511,8 +513,8 @@ p_garan_duration
 - Ein leerer Wert wird als `NULL` gespeichert. Komma und Punkt werden wie in der Artikelverwaltung akzeptiert und kanonisch normalisiert.
 - Die Validierung verwendet den nach dem Import wirksamen Hersteller aus `p_manufacturer`, die Hersteller-Modellkennung aus `p_man` und die Garantiedauer aus `p_garan_duration`. Fehlt eines dieser Felder in der CSV, wird fuer die Pruefung der vorhandene Artikelwert verwendet.
 - Die Pruefung laeuft auch dann, wenn `p_garan_duration` gar nicht Teil der Datei ist. Eine Zeile, die nur `p_man` oder `p_manufacturer` aendert, kann eine gespeicherte Dauer unbrauchbar machen; ohne diesen Lauf entstuende dabei stillschweigend ein unvollstaendiger GARAN-Artikel.
-- Ist der resultierende GARAN-Datensatz unvollstaendig oder ungueltig, laesst der Import `products_garan_duration` unangetastet. Ein bestehender Artikel behaelt seine gespeicherte Dauer, ein neuer Artikel bekommt den Standardwert der Spalte. Der Admin erhaelt die konkrete Fehlermeldung ueber den `messageStack`.
-- Die uebrigen Felder der Produktzeile werden regulaer importiert. Die Erweiterungsstelle `insert_before` kann den Import einer Zeile nicht abbrechen, und ein ganzer Artikelimport soll nicht an einem einzelnen GARAN-Feld scheitern. Ausdruecklich nicht vorgesehen ist der umgekehrte Weg: den geprueften Wert trotzdem zu schreiben. Er wuerde eine gute gespeicherte Dauer durch `NULL` ersetzen, nur weil die CSV in dieser Zeile eine ungueltige Angabe enthielt.
+- Ist der resultierende GARAN-Datensatz unvollstaendig oder ungueltig, laesst der Import alle drei GARAN-Kerndaten unangetastet. Ein bestehender Artikel behaelt seinen gespeicherten Stand, ein neuer Artikel bekommt die Standardwerte der Spalten. Der Admin erhaelt die konkrete Fehlermeldung ueber den `messageStack`.
+- Die uebrigen Felder der Produktzeile werden regulaer importiert. Die Erweiterungsstelle `insert_before` kann den Import einer Zeile nicht abbrechen, und ein ganzer Artikelimport soll nicht an einem einzelnen GARAN-Feld scheitern. Zurueckgehalten werden deshalb genau die drei Felder, aus denen ein unvollstaendiger GARAN-Datensatz entstehen koennte, und nicht die ganze Zeile.
 - Der Export gibt `products_garan_duration` normalisiert als `p_garan_duration` aus; `NULL` wird als leeres Feld exportiert.
 - `products_content.content_type` und Garantie-Anhaenge sind nicht Bestandteil des Produkt-CSV-Formats. Sie werden weiterhin ausschliesslich ueber die Artikel-Anhangsverwaltung gepflegt.
 
@@ -701,7 +703,9 @@ Dafuer gelten folgende Regeln:
 - Ein erneuter Mailversand verwendet ausschliesslich die Werte der Bestellposition.
 - Eine frisch manuell angelegte Bestellung hat in `orders.content_type` den leeren Wert `''`, weil `admin/customers.php` das Feld nicht befuellt. Das Modul verlaesst sich deshalb nicht auf diese Spalte und schreibt sie auch nicht.
 - Ob eine Bestellung koerperliche Ware enthaelt, beantwortet `guarantee_labels_order_physical()`. Ist `orders.content_type` gefuellt, entscheidet dieser Wert: Der Checkout hat die Bestellung bereits eingestuft und kennt dabei die gewaehlten Attribute, die eine einzelne Position `mixed` machen koennen.
-- Nur bei leerem `orders.content_type`, also bei einer manuell angelegten Bestellung, entscheiden die Positionen: Eine Position ohne Zeile in `orders_products_download` ist koerperliche Ware. Sobald mindestens eine solche Position existiert, gilt die Bestellung als koerperlich. Eine Bestellung ohne Positionen gilt als nicht koerperlich.
+- Nur bei leerem `orders.content_type`, also bei einer manuell angelegten Bestellung, entscheiden die Positionen. Je Position werden ihre Attribute und ihre Downloadzeilen gezaehlt, nicht verknuepft: Eine Position ohne Downloadzeile ist koerperliche Ware; hat sie Downloadzeilen, aber mehr Attribute als Downloads, ist sie gemischt und zaehlt ebenfalls als koerperlich. Bei `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` macht schon eine Downloadzeile die ganze Position digital. Die Regel folgt damit `shopping_cart::get_content_type()`.
+- Ein `LEFT JOIN` auf `orders_products_download` reicht dafuer nicht: Eine Position mit einem Download- und einem koerperlichen Attribut traegt eine Downloadzeile und saehe darin rein digital aus.
+- Sobald mindestens eine koerperliche Position existiert, gilt die Bestellung als koerperlich. Eine Bestellung ohne Positionen gilt als nicht koerperlich.
 - Das Modul schreibt die Spalte nie. Eine spaetere Positionsaenderung wirkt sofort, weil nichts zwischengespeichert wird, das nachgezogen werden muesste.
 - Der Gewaehrleistungshinweis wird nur ausgegeben, wenn diese Pruefung koerperliche Ware findet.
 
@@ -838,7 +842,15 @@ lang/english/extra/guarantee_labels.php
 
 Sie definieren mindestens `TEXT_GUARANTEE_NOTICE_MAIL`, `TEXT_GUARANTEE_NOTICE_LINK` und `TEXT_GUARANTEE_NOTICE_URL`. Alle Storefront-Konstanten des Moduls tragen das Praefix `TEXT_GUARANTEE_`; `MODULE_GUARANTEE_LABELS_` bleibt der Modulkonfiguration vorbehalten. Storefront-Requests laden diese Dateien ueber die vorhandene `extra/`-Sprachlogik. Adminroutinen, die einen Hinweis-Snapshot erzeugen, laden die Datei aus `lang/<orders.language>/extra/guarantee_labels.php` ausdruecklich, weil die Admin-Sprachinitialisierung die Storefront-Datei nicht automatisch einbindet. Admintexte ausserhalb der Modulverwaltung liegen entsprechend unter `lang/german/extra/admin/guarantee_labels.php` und `lang/english/extra/admin/guarantee_labels.php`.
 
-`guarantee_labels_language()` gibt bereits geladene Konstanten nur frei, wenn sie zur angefragten Sprache gehoeren. Im Storefront stammen sie aus der Sprache der Sitzung, also der Sprache, in der der Kunde gerade blaettert, und nicht zwingend aus der Bestellsprache. Ohne diese Bindung wuerde die Bestellansicht im Kundenkonto eine englische Bestellung mit deutschen Beschriftungen versehen.
+`guarantee_labels_language()` gibt bereits geladene Konstanten nur frei, wenn sie zur angefragten Sprache gehoeren. Im Storefront stammen sie aus der Sprache der Sitzung, also der Sprache, in der der Kunde gerade blaettert, und nicht zwingend aus der Bestellsprache.
+
+Ein solcher Fehlschlag kostet aber nie historische Daten. Die Bestellansichten laden die Bestellsprache nur versuchsweise und geben in jedem Fall aus:
+
+- Das sprachneutrale GARAN-Label erscheint unveraendert; nur seine Beschriftungen fallen auf `GARAN` zurueck.
+- Gewaehrleistungstext, Linktext, Adresse und Ueberschrift des Hinweises stammen aus `notice.json` und sind damit immer der Stand der Bestellung. Nur die Bedienelemente des Blocks kaemen aus der Sprache der Sitzung.
+- Die Zusage an der Position nennt weiter die archivierten Werte; nur der Satz um sie herum folgt der geladenen Sprache.
+
+Die Ueberschrift des Hinweises wird deshalb im Archiv mitgefuehrt. Sie geht nicht in `notice_hash` ein, weil sie aus derselben Sprachdatei stammt wie der Text, der schon im Hash steckt. Aeltere Archive ohne dieses Feld greifen auf die Sprachkonstante zurueck.
 
 Die Konfigurationssprache des Systemmoduls liegt getrennt unter:
 
@@ -1040,6 +1052,7 @@ Voraussichtlich betroffen sind:
 - Vorhandenen Artikel-Anhang je Sprache als `garan_terms` markieren.
 - Reinen externen Link als Garantieerklaerung ablehnen.
 - Anhang eines anderen Artikels oder einer anderen Sprache ablehnen.
+- Herstellername, Modellkennung und Anhangsnamen mit `<`, `>`, `"` und `&` in Bestellansicht, Beleg und Mail pruefen; die HTML-Fassung maskiert sie, die Textfassung nicht. Ein Dateiname wie `<img src=x onerror=alert(1)>.pdf` besteht den Dateinamenfilter und darf trotzdem kein HTML einschleusen.
 - Anhang als `garan_terms` markieren, dessen `group_ids` eine Kundengruppe ausschliessen, die das Label sieht; die Markierung wird abgelehnt und die betroffene Gruppe benannt. Eine ausgeschlossene B2B-Gruppe fuehrt zu keinem Befund, eine leere Auswahl ebenfalls nicht.
 - Unterschiedliche von der vorhandenen Artikel-Anhangsverwaltung erlaubte Dateiformate als `garan_terms` verwenden und unveraendert archivieren.
 - Dateiname und Erweiterung sicher in `terms_filename` uebernehmen; Pfadbestandteile, Steuerzeichen und Kommas ablehnen.
@@ -1052,9 +1065,11 @@ Voraussichtlich betroffen sind:
 - Denselben Artikel bei abgeschaltetem Modul duplizieren; das Duplikat wird genauso bereinigt. Modellkennung und `content_type` gehoeren dem Ursprungsartikel, unabhaengig vom Modulstatus.
 - Artikel mit gueltiger gespeicherter Garantiedauer mit einer ungueltigen Dauer speichern; die Artikelverwaltung kehrt zur Maske zurueck und die gespeicherte Dauer ist unveraendert. Dasselbe mit geleertem Hersteller oder geleerter Modellkennung pruefen.
 - Garantiedauer bewusst leeren und speichern; die Spalte wird auf `NULL` gesetzt und es entsteht keine Fehlermeldung.
+- Modellkennung eines Artikels mit gueltiger Garantiedauer leeren und speichern; die Aenderung wird abgelehnt und weder Dauer noch Modellkennung noch Hersteller sind veraendert. Der Artikel bleibt vollstaendig.
 - `p_garan_duration` leer, mit Komma, mit Punkt sowie mit gueltigen und ungueltigen Werten importieren. Bei ungueltigem resultierendem GARAN-Datensatz bleibt `products_garan_duration` unveraendert und der Fehler erscheint im `messageStack`.
 - CSV ohne die Spalte `p_garan_duration` importieren, die `p_man` eines Artikels mit gespeicherter Garantiedauer leert; die Pruefung laeuft trotzdem und meldet den unvollstaendigen GARAN-Datensatz.
-- Einen Artikel mit gueltiger gespeicherter Garantiedauer mit einer CSV-Zeile importieren, deren GARAN-Daten unvollstaendig sind; die gespeicherte Dauer bleibt erhalten und wird nicht auf `NULL` gesetzt. Die uebrigen Felder der Zeile werden regulaer uebernommen.
+- Einen Artikel mit gueltiger gespeicherter Garantiedauer mit einer CSV-Zeile importieren, deren GARAN-Daten unvollstaendig sind; Dauer, Modellkennung und Hersteller bleiben unveraendert. Die uebrigen Felder der Zeile werden regulaer uebernommen.
+- Dieselbe Zeile mit geleertem `p_man` importieren; der Artikel behaelt seine bisherige Modellkennung und wird nicht unvollstaendig.
 - `products_garan_duration` als `p_garan_duration` exportieren; `NULL` wird leer und ein Wert wird kanonisch ausgegeben.
 - Pruefen, dass der Produkt-CSV weder `products_content.content_type` noch Garantie-Anhaenge importiert oder exportiert.
 - Fehler aus Modulverwaltung, Artikelpflege, Anhangspflege, Import und Bestellbearbeitung jeweils ueber den bestehenden `messageStack` ausgeben.
@@ -1151,6 +1166,7 @@ Voraussichtlich betroffen sind:
 - Einen Eintrag aus dem Sidecar entfernen und die zugehoerige Datei ersetzen; die fehlende Zeile deckt die Ersetzung nicht.
 - Ein Archivverzeichnis ohne Sidecar aus einer aelteren Fassung lesen; es bleibt lesbar.
 - In ein beschaedigtes Hashverzeichnis erneut schreiben; es wird verworfen und aus den Vorlagen neu angelegt.
+- Ein beschaedigtes Hashverzeichnis unentfernbar machen; `remove_dir()` meldet den Fehlschlag, der Schreibvorgang bricht mit einer konkreten Meldung ab und protokolliert sie.
 - Nicht beschreibbares oder unvollstaendig geschriebenes Archiv testen; die Bestellung laeuft weiter und keine Datenbankzeile verweist auf fehlende oder teilweise geschriebene Dateien.
 - Erneuter Mailversand nach dem Leeren des Cache liefert dieselben vorhandenen Garantieerklaerungen und keine GARAN-Grafik. Waren keine Bedingungen archiviert, bleibt der Versand ohne GARAN-Anhang.
 
@@ -1166,7 +1182,8 @@ Voraussichtlich betroffen sind:
 - Nur virtuelle Positionen einfuegen und entfernen; die Pruefung liefert durchgehend `false` und die Auftragsbestaetigung enthaelt keinen Hinweis.
 - Physische sowie gemischte Positionen einfuegen und entfernen; die Pruefung liefert `true`, solange mindestens eine Position ohne Downloadzeile verbleibt, und nach dem Entfernen der letzten solchen Position wieder `false`.
 - `orders.content_type` bleibt bei allen drei Faellen unveraendert; das Modul schreibt die Spalte nicht.
-- Storefront-Bestellung mit `orders.content_type = 'mixed'` pruefen; der Hinweis wird ausgegeben. Dieser Fall entsteht schon aus einer einzelnen Position, wenn `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED` abgeschaltet ist und nur eines ihrer Attribute einen Download traegt. Die Abfrage der Downloadzeilen kann das nicht sehen, deshalb entscheidet der gefuellte Wert der Spalte.
+- Storefront-Bestellung mit `orders.content_type = 'mixed'` pruefen; der Hinweis wird ausgegeben.
+- Manuelle Bestellung mit leerem `orders.content_type` und genau einer Position anlegen, die ein Download- und ein koerperliches Attribut traegt; die Bestellung gilt als koerperlich und der Hinweis erscheint. Denselben Fall mit `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` pruefen; dort gilt die Position als digital.
 - Dieselbe Bestellung mit `physical`, `virtual` und `virtual_weight` pruefen; nur die ersten beiden Faelle unterscheiden sich in der Ausgabe wie erwartet.
 - Reine Download-Bestellung behaelt den Hinweis-Snapshot, gibt ihn in der Auftragsbestaetigung aber nicht aus.
 - Physische oder gemischte Bestellung gibt den beim Anlegen gespeicherten Hinweis in der manuellen Auftragsbestaetigung aus.
@@ -1204,7 +1221,8 @@ Voraussichtlich betroffen sind:
 - Eine dritte Shopsprache ohne `lang/<Sprachverzeichnis>/extra/guarantee_labels.php` aufrufen; das sprachneutrale GARAN-Label erscheint weiterhin. Die Beschriftungen fallen auf `GARAN` zurueck und der Link zur Your-Europe-Seite entfaellt.
 - In derselben Sprache nur `TEXT_GUARANTEE_LABEL_URL` pflegen und den Linktext weglassen; der Link erscheint nicht und es entsteht kein PHP-Fehler.
 - Eine abgeschaltete Sprache anlegen; die Moduldiagnose prueft sie nicht.
-- Eine englische Bestellung im Kundenkonto einer deutschen Sitzung oeffnen; Label und Hinweis tragen die Beschriftungen der Bestellsprache, nicht die der Sitzung.
+- Eine englische Bestellung im Kundenkonto einer deutschen Sitzung oeffnen; das GARAN-Label, der archivierte Gewaehrleistungstext, sein Linktext, seine Adresse und seine Ueberschrift erscheinen unveraendert. Nichts davon darf wegen der abweichenden Sitzungssprache verschwinden.
+- Dieselbe Bestellung in ihrer eigenen Sprache oeffnen; zusaetzlich tragen auch die Bedienelemente des Blocks die Beschriftungen dieser Sprache.
 - Eine Bestellung in einer unvollstaendig gepflegten Sprache erzeugt keine Zeile in `orders_guarantee` und nimmt den Hinweis auch bei einem spaeteren Mailversand nicht nachtraeglich auf.
 - Wird eine Sprache spaeter vervollstaendigt, verwenden neue Bestellungen sie sofort; bestehende Bestellsnapshots bleiben unveraendert.
 - Deutscher Auftrag verwendet den deutschen Artikel-Anhang vom Typ `garan_terms`.
