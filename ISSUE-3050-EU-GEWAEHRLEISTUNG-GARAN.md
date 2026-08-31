@@ -502,7 +502,8 @@ p_garan_duration
 - Der Import schreibt `products.products_garan_duration`.
 - Ein leerer Wert wird als `NULL` gespeichert. Komma und Punkt werden wie in der Artikelverwaltung akzeptiert und kanonisch normalisiert.
 - Die Validierung verwendet den nach dem Import wirksamen Hersteller aus `p_manufacturer`, die Hersteller-Modellkennung aus `p_man` und die Garantiedauer aus `p_garan_duration`. Fehlt eines dieser Felder in der CSV, wird fuer die Pruefung der vorhandene Artikelwert verwendet.
-- Ist der resultierende GARAN-Datensatz unvollstaendig oder ungueltig, wird die betroffene Produktzeile nicht teilweise gespeichert. Der Admin erhaelt die konkrete Fehlermeldung ueber den `messageStack`.
+- Ist der resultierende GARAN-Datensatz unvollstaendig oder ungueltig, laesst der Import `products_garan_duration` unangetastet. Ein bestehender Artikel behaelt seine gespeicherte Dauer, ein neuer Artikel bekommt den Standardwert der Spalte. Der Admin erhaelt die konkrete Fehlermeldung ueber den `messageStack`.
+- Die uebrigen Felder der Produktzeile werden regulaer importiert. Die Erweiterungsstelle `insert_before` kann den Import einer Zeile nicht abbrechen, und ein ganzer Artikelimport soll nicht an einem einzelnen GARAN-Feld scheitern. Ausdruecklich nicht vorgesehen ist der umgekehrte Weg: den geprueften Wert trotzdem zu schreiben. Er wuerde eine gute gespeicherte Dauer durch `NULL` ersetzen, nur weil die CSV in dieser Zeile eine ungueltige Angabe enthielt.
 - Der Export gibt `products_garan_duration` normalisiert als `p_garan_duration` aus; `NULL` wird als leeres Feld exportiert.
 - `products_content.content_type` und Garantie-Anhaenge sind nicht Bestandteil des Produkt-CSV-Formats. Sie werden weiterhin ausschliesslich ueber die Artikel-Anhangsverwaltung gepflegt.
 
@@ -571,7 +572,7 @@ Zur Groesse sagt der Praxisleitfaden fuer die digitale Darstellung: Das Label mu
 
 Daraus folgen zwei Grenzen fuer die Ausgabe:
 
-- Das kompakte Label wird nicht ueber seine Groesse von 368,5 Einheiten hinaus vergroessert und schrumpft nur, wenn die Spalte schmaler ist.
+- Das kompakte Label wird mit 120 Pixeln Breite ausgegeben und schrumpft nur, wenn die Spalte schmaler ist. Es traegt ausschliesslich die Dauer, bleibt damit auch klein lesbar und dient als Einstieg in die vollstaendige Ansicht. Ueber seine Vorlagengroesse von 368,5 Einheiten hinaus wird es nie vergroessert.
 - Das vollstaendige Label wird nie schmaler als seine 269,29 Einheiten dargestellt. Herstellername und Modellkennung stehen dort in 9 Einheiten; darunter faellt ihr Text unter neun Pixel. Ein schmaler Bildschirm scrollt statt zu verkleinern.
 
 Die bestehende Erweiterungsstelle befindet sich in:
@@ -689,9 +690,10 @@ Dafuer gelten folgende Regeln:
 - Wird ein Artikel aus der Bestellung entfernt und erneut eingefuegt, werden die zu diesem Zeitpunkt aktuellen Artikeldaten uebernommen.
 - Die Bestellbearbeitung zeigt die GARAN-Snapshotwerte an und erlaubt eine ausdrueckliche Korrektur mit derselben Validierung wie die Artikelverwaltung.
 - Ein erneuter Mailversand verwendet ausschliesslich die Werte der Bestellposition.
-- Eine frisch manuell angelegte Bestellung hat in `orders.content_type` zunaechst den leeren Wert `''`, weil `admin/customers.php` das Feld heute nicht befuellt. Der leere Wert gilt fuer die Hinweis-Ausgabe als `keine koerperliche Ware`.
-- Das Modul fuehrt die Pflege von `orders.content_type` fuer manuell bearbeitete Bestellungen neu ein. Nach dem Einfuegen, Entfernen oder Aendern relevanter Positionen berechnet der Admin-Ablauf den Wert aus allen verbleibenden Positionen und speichert `physical`, `virtual` oder `mixed`. Hat die Bestellung keine Positionen, wird wieder `''` gespeichert.
-- Der Gewaehrleistungshinweis wird bei einer manuellen Bestellung nur ausgegeben, wenn `orders.content_type` koerperliche Ware enthaelt.
+- Eine frisch manuell angelegte Bestellung hat in `orders.content_type` den leeren Wert `''`, weil `admin/customers.php` das Feld nicht befuellt. Das Modul verlaesst sich deshalb nicht auf diese Spalte und schreibt sie auch nicht.
+- Ob eine Bestellung koerperliche Ware enthaelt, ermittelt `guarantee_labels_order_physical()` zum Zeitpunkt der Ausgabe aus den Positionen selbst: Eine Position ohne Zeile in `orders_products_download` ist koerperliche Ware. Sobald mindestens eine solche Position existiert, gilt die Bestellung als koerperlich. Eine Bestellung ohne Positionen gilt als nicht koerperlich.
+- Damit gilt fuer Storefront- und Adminbestellungen derselbe Weg, ohne eine Kernspalte zu schreiben, die der Shop an anderer Stelle selbst pflegt. Eine spaetere Positionsaenderung wirkt sofort, weil nichts zwischengespeichert wird, das nachgezogen werden muesste.
+- Der Gewaehrleistungshinweis wird nur ausgegeben, wenn diese Pruefung koerperliche Ware findet.
 
 Nach dem Insert in `orders_products` wird der GARAN-Snapshot direkt in `orders_product_insert()` in `admin/includes/functions/orders_functions.php` erzeugt. Direkt hinter `xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array)` wird die neue `orders_products_id` mit `xtc_db_insert_id()` ermittelt und die zugehoerige Zeile in `orders_products_guarantee` geschrieben. Dafuer wird keine neue Erweiterungsstelle angelegt.
 
@@ -762,12 +764,14 @@ Die Verantwortung fuer den rechtzeitigen Versand der Auftragsbestaetigung liegt 
 
 ### Leseweg
 
-Die Bestelldaten fuer Mailausgabe und Bestellansicht kommen aus `includes/classes/order.php`. Die Positionen werden dort per `SELECT *` aus `orders_products` geladen. Existieren die Modultabellen, kommen zwei Ergaenzungen hinzu:
+Die Bestelldaten fuer Mailausgabe und Bestellansicht kommen aus `includes/classes/order.php`. Die Positionen werden dort per `SELECT *` aus `orders_products` geladen. `order.php` wird dafuer nicht veraendert. Die Snapshotwerte holt das Modul selbst ueber zwei zentrale Funktionen in `inc/guarantee_labels_order.inc.php`:
 
-- ein LEFT JOIN auf `orders_products_guarantee` ueber `orders_products_id`,
-- eine Abfrage auf `orders_guarantee` fuer `notice_hash`; die Existenz der Zeile bedeutet, dass der Bestellung ein historischer Hinweis-Snapshot zugeordnet ist.
+- `guarantee_labels_order_products()` liest alle Zeilen aus `orders_products_guarantee` einer Bestellung mit genau einer Abfrage und merkt sie sich fuer die Dauer des Requests. Jede Ausgabestelle greift danach auf denselben Puffer zu, unabhaengig davon, wie oft sie aufgerufen wird.
+- `guarantee_labels_order_notice()` liest `notice_hash` aus `orders_guarantee` und daraus den archivierten Sprachstand; die Existenz der Zeile bedeutet, dass der Bestellung ein historischer Hinweis-Snapshot zugeordnet ist.
 
-Wurde das Modul nie installiert und fehlen die Tabellen, entfallen JOIN und Zusatzabfrage vollstaendig. Die Tabellenexistenz wird hoechstens einmal je Anfrage ermittelt und fuer weitere GARAN-Zugriffe derselben Anfrage wiederverwendet.
+Ein LEFT JOIN in der Kernabfrage waere der zweite Weg gewesen, haette aber `order.php` geaendert und die Modulspalten in jede Bestellansicht getragen, auch wo sie niemand liest. Die eigene gepufferte Abfrage kostet je Bestellung eine Abfrage und laesst die Kernklasse unberuehrt.
+
+Wurde das Modul nie installiert und fehlen die Tabellen, unterbleiben beide Abfragen vollstaendig. Die Tabellenexistenz wird hoechstens einmal je Anfrage ermittelt und fuer weitere GARAN-Zugriffe derselben Anfrage wiederverwendet.
 
 Ein allgemeiner Status `hat rechtliche Hinweise` wird bei Bedarf aus diesen beiden Modulabfragen gebildet. Er wird nicht redundant in `orders` gespeichert.
 
@@ -822,7 +826,7 @@ lang/german/extra/guarantee_labels.php
 lang/english/extra/guarantee_labels.php
 ```
 
-Sie definieren mindestens `MODULE_GUARANTEE_LABELS_MAIL_TEXT`, `MODULE_GUARANTEE_LABELS_LINK_TEXT` und `MODULE_GUARANTEE_LABELS_YOUR_EUROPE_URL`. Storefront-Requests laden diese Dateien ueber die vorhandene `extra/`-Sprachlogik. Adminroutinen, die einen Hinweis-Snapshot erzeugen, laden die Datei aus `lang/<orders.language>/extra/guarantee_labels.php` ausdruecklich, weil die Admin-Sprachinitialisierung die Storefront-Datei nicht automatisch einbindet. Admintexte ausserhalb der Modulverwaltung liegen entsprechend unter `lang/german/extra/admin/guarantee_labels.php` und `lang/english/extra/admin/guarantee_labels.php`.
+Sie definieren mindestens `TEXT_GUARANTEE_NOTICE_MAIL`, `TEXT_GUARANTEE_NOTICE_LINK` und `TEXT_GUARANTEE_NOTICE_URL`. Alle Storefront-Konstanten des Moduls tragen das Praefix `TEXT_GUARANTEE_`; `MODULE_GUARANTEE_LABELS_` bleibt der Modulkonfiguration vorbehalten. Storefront-Requests laden diese Dateien ueber die vorhandene `extra/`-Sprachlogik. Adminroutinen, die einen Hinweis-Snapshot erzeugen, laden die Datei aus `lang/<orders.language>/extra/guarantee_labels.php` ausdruecklich, weil die Admin-Sprachinitialisierung die Storefront-Datei nicht automatisch einbindet. Admintexte ausserhalb der Modulverwaltung liegen entsprechend unter `lang/german/extra/admin/guarantee_labels.php` und `lang/english/extra/admin/guarantee_labels.php`.
 
 Die Konfigurationssprache des Systemmoduls liegt getrennt unter:
 
@@ -922,29 +926,28 @@ Voraussichtlich betroffen sind:
 - `admin/includes/functions/general.php` mit dem vorhandenen Helper `xtc_cfg_multi_checkbox()` und `inc/xtc_get_customers_statuses.inc.php` als vorhandene Datenquelle fuer die B2B-Mehrfachauswahl; an beiden Dateien ist keine Aenderung erforderlich.
 - `admin/includes/extra/modules/add_db_fields/`
 - `admin/includes/extra/modules/new_product/`
-- `admin/includes/modules/new_products_content.php`
 - `admin/customers.php` fuer den Hinweis-Snapshot beim manuellen Anlegen einer Bestellung.
 - `admin/content_manager.php` und `admin/includes/modules/content_manager_products.php` fuer den Typ des Artikel-Anhangs.
 - `admin/includes/modules/categories/guarantee_labels_product.php` als Klassenerweiterung fuer Artikelpruefung und sicheres Duplizieren, dazu ihre Sprachdateien unter `lang/<Sprache>/modules/categories/`.
 - `admin/includes/classes/categoriesModules.class.php` und `admin/includes/classes/categories.php` fuer den allgemeinen Hook `insert_product_error()`; er wird getrennt von diesem Modul bereitgestellt.
 - `inc/update_module_configuration.inc.php` als vorhandene Funktion fuer das Ein- und Austragen der Klassenerweiterung; an dieser Datei ist keine Aenderung erforderlich.
 - `admin/languages.php` fuer das Kopieren von Artikel-Anhaengen beim Anlegen einer Sprache.
-- `admin/includes/functions/orders_functions.php`
-- `admin/includes/modules/orders_edit_products.php`
-- `admin/includes/classes/import.php` sowie `admin/includes/extra/modules/import/file_layout/`, `admin/includes/extra/modules/import/insert_before/`, `admin/includes/extra/modules/export/file_layout/` und `admin/includes/extra/modules/export/export_end/` fuer `p_garan_duration`.
+- `admin/includes/functions/orders_functions.php` mit den drei neuen Erweiterungsstellen `orders_functions/product_insert/`, `orders_functions/product_edit/` und `orders_functions/product_delete/`; sie werden getrennt von diesem Modul bereitgestellt.
+- `admin/includes/modules/orders_info_blocks.php` fuer die Garantiezeile in der Bestellansicht des Admins.
+- `admin/categories.php` als Aufrufer des Hooks `insert_product_error()`; er wird getrennt von diesem Modul bereitgestellt.
+- `account_history_info.php` fuer Label und historischen Hinweis in der Bestellansicht des Kundenkontos.
+- `_installer/includes/sql/modified.sql` und `_installer/includes/update_system.php` fuer beide Core-Spalten in Neuinstallation und Datenbankupdate.
+- `admin/includes/extra/modules/import/file_layout/`, `admin/includes/extra/modules/import/insert_before/`, `admin/includes/extra/modules/export/file_layout/` und `admin/includes/extra/modules/export/export_end/` fuer `p_garan_duration`; an `admin/includes/classes/import.php` ist keine Aenderung erforderlich.
 - `includes/database_tables.php`
-- `includes/classes/order.php`
-- `includes/classes/product.php` als Quelle von `$product->default_select` fuer neue Artikel, Cross-Selling, Reverse-Cross-Selling und weitere Produktbloecke.
-- `includes/classes/shopping_cart.php` fuer die GARAN-Daten im Warenkorb und in den daraus erzeugten Checkout-Produktdaten.
+- `inc/guarantee_labels_order.inc.php` als eigener gepufferter Leseweg fuer die Bestellsnapshots; an `includes/classes/order.php` ist keine Aenderung erforderlich.
+- `includes/classes/product.php` als Quelle von `$product->default_select` fuer neue Artikel, Cross-Selling, Reverse-Cross-Selling und weitere Produktbloecke; die zusaetzlichen Spalten kommen ueber `includes/extra/define_add_select/`, an der Klasse selbst ist keine Aenderung erforderlich.
+- `includes/classes/shopping_cart.php` als Quelle der Warenkorb- und Checkout-Produktdaten; die GARAN-Werte ergaenzt die Klassenerweiterung `includes/modules/order/guarantee_labels_order.php` ueber `cart_products()`, an der Klasse selbst ist keine Aenderung erforderlich.
 - `inc/xtc_remove_order.inc.php`
 - `includes/extra/define_add_select/` fuer `products_garan_duration`, `products_manufacturers_model` und die je Abfrage noch fehlende `manufacturers_id`.
 - Eine zentrale GARAN-Hilfsfunktion unter `inc/` fuer das gesammelte Nachladen aktiver Herstellernamen.
 - `includes/extra/modules/product_info_end/`
-- `includes/modules/default.php` und `includes/extra/default/listing_sql/99_advanced_search_result.php` als vorhandene Abfragen fuer Kategorie, Suche, Sonderangebote und neue Artikel.
-- `includes/modules/product_listing.php` fuer die gesammelte Anreicherung der Listingdaten vor der Labelausgabe.
-- `includes/modules/new_products.php` fuer den Block neuer Artikel.
-- `includes/modules/cross_selling.php` fuer Cross-Selling und Reverse-Cross-Selling.
-- `includes/modules/products_media.php` als vorhandener Storefront-Leseweg fuer `garan_terms`.
+- `includes/modules/product/guarantee_labels_listing.php` als Klassenerweiterung des Modultyps `product`. Ihr `buildDataArray()` ergaenzt das kompakte Label fuer jede Artikelliste, die ueber die Produktklasse laeuft: Kategorie, Suche, Sonderangebote, neue Artikel, Cross-Selling, Reverse-Cross-Selling, ebenfalls gekaufte Artikel, Artikel einer Kategorie und kommende Artikel. An `includes/modules/default.php`, `includes/modules/product_listing.php`, `includes/modules/new_products.php`, `includes/modules/cross_selling.php` und `includes/extra/default/listing_sql/99_advanced_search_result.php` ist deshalb keine Aenderung erforderlich.
+- `includes/modules/products_media.php` als vorhandener Storefront-Leseweg fuer `garan_terms`; die Datei bleibt unveraendert, weil der Typ die bestehende Ausgabe nicht beeinflusst.
 - `includes/extra/checkout/checkout_process_products_end/`
 - `includes/extra/checkout/checkout_process_order/`
 - `includes/extra/send_order/data/`
@@ -1028,7 +1031,8 @@ Voraussichtlich betroffen sind:
 - Loeschen eines zugeordneten Anhangs setzt beim naechsten Bestellsnapshot `terms_hash` und `terms_filename` auf `NULL`, ohne die GARAN-Ausgabe zu deaktivieren.
 - Artikel mit je Variante abweichender Garantie ablehnen.
 - Artikel mit GARAN-Daten duplizieren; das Duplikat erhaelt `products_garan_duration = NULL`, eine leere `products_manufacturers_model` und keine als `garan_terms` markierten Anhaenge. Andere zum Kopieren ausgewaehlte Artikel-Anhaenge werden weiterhin uebernommen.
-- `p_garan_duration` leer, mit Komma, mit Punkt sowie mit gueltigen und ungueltigen Werten importieren. Bei ungueltigem resultierendem GARAN-Datensatz bleibt die gesamte Produktzeile unveraendert und der Fehler erscheint im `messageStack`.
+- `p_garan_duration` leer, mit Komma, mit Punkt sowie mit gueltigen und ungueltigen Werten importieren. Bei ungueltigem resultierendem GARAN-Datensatz bleibt `products_garan_duration` unveraendert und der Fehler erscheint im `messageStack`.
+- Einen Artikel mit gueltiger gespeicherter Garantiedauer mit einer CSV-Zeile importieren, deren GARAN-Daten unvollstaendig sind; die gespeicherte Dauer bleibt erhalten und wird nicht auf `NULL` gesetzt. Die uebrigen Felder der Zeile werden regulaer uebernommen.
 - `products_garan_duration` als `p_garan_duration` exportieren; `NULL` wird leer und ein Wert wird kanonisch ausgegeben.
 - Pruefen, dass der Produkt-CSV weder `products_content.content_type` noch Garantie-Anhaenge importiert oder exportiert.
 - Fehler aus Modulverwaltung, Artikelpflege, Anhangspflege, Import und Bestellbearbeitung jeweils ueber den bestehenden `messageStack` ausgeben.
@@ -1043,7 +1047,7 @@ Voraussichtlich betroffen sind:
 - GARAN-Modul bei gefuelltem Blockcache deaktivieren; gecachte Bloecke koennen das Label bis zum Ablauf von `CACHE_LIFETIME` weiter zeigen, jede ungecachte Ausgabe nicht mehr.
 - Einen in `products_media.php` gecachten `garan_terms`-Anhang ersetzen und entfernen; der ungecachte Medienblock zeigt weder die alte Datei noch einen veralteten Link.
 - Mehrere GARAN-Datensaetze in einem CSV-Import aendern; der Import leert keinen Cache.
-- Shopcache mit vorhandenem `cache/guarantee_labels/` leeren; das gesamte Unterverzeichnis verschwindet und der naechste Renderaufruf legt es samt Hashverzeichnis selbststaendig neu an.
+- Shopcache ueber `admin/configuration.php?action=delcache` mit vorhandenem `cache/guarantee_labels/` leeren; das gesamte Unterverzeichnis verschwindet und der naechste Renderaufruf legt es samt Hashverzeichnis selbststaendig neu an. Das Modul selbst loest diese Leerung nie aus.
 - Fehlgeschlagene GARAN-Aenderung pruefen; die Daten bleiben unveraendert, die Fehlermeldung erscheint ueber den `messageStack`.
 
 ### Produktseite
@@ -1128,9 +1132,10 @@ Voraussichtlich betroffen sind:
 - Sprache der Backend-Sitzung nach dem Anlegen wechseln; die in `orders.language` gespeicherte Bestellsprache bleibt massgeblich, auch fuer danach eingefuegte Positionen, und bestehende Snapshots bleiben unveraendert.
 - Leere Bestellung bei inaktivem Modul, ausgeschlossener B2B-Kundengruppe oder unvollstaendiger Sprache anlegen; `orders_guarantee` bleibt leer.
 - Nach dem Anlegen Modulstatus, Kundengruppe oder Sprachdaten aendern; der bestehende Hinweis-Snapshot wird nicht automatisch erzeugt, ersetzt oder entfernt.
-- Frisch angelegte Bestellung ohne Positionen pruefen; `orders.content_type` ist `''` und der Gewaehrleistungshinweis wird nicht ausgegeben.
-- Nur virtuelle Positionen einfuegen und entfernen; `orders.content_type` wird auf `virtual` und nach dem Entfernen der letzten Position wieder auf `''` gesetzt.
-- Physische sowie gemischte Positionen einfuegen und entfernen; `orders.content_type` wird jeweils auf `physical`, `mixed` oder den aus den verbleibenden Positionen berechneten Wert gesetzt.
+- Frisch angelegte Bestellung ohne Positionen pruefen; `guarantee_labels_order_physical()` liefert `false` und der Gewaehrleistungshinweis wird nicht ausgegeben.
+- Nur virtuelle Positionen einfuegen und entfernen; die Pruefung liefert durchgehend `false` und die Auftragsbestaetigung enthaelt keinen Hinweis.
+- Physische sowie gemischte Positionen einfuegen und entfernen; die Pruefung liefert `true`, solange mindestens eine Position ohne Downloadzeile verbleibt, und nach dem Entfernen der letzten solchen Position wieder `false`.
+- `orders.content_type` bleibt bei allen drei Faellen unveraendert; das Modul schreibt die Spalte nicht.
 - Reine Download-Bestellung behaelt den Hinweis-Snapshot, gibt ihn in der Auftragsbestaetigung aber nicht aus.
 - Physische oder gemischte Bestellung gibt den beim Anlegen gespeicherten Hinweis in der manuellen Auftragsbestaetigung aus.
 - Leere Bestellung im Admin anlegen und einen Artikel ohne GARAN-Daten einfuegen.
@@ -1220,7 +1225,7 @@ Die Erweiterung ist fachlich fertig, wenn:
 - Das Modul leert keinen Cache. Der eigene Grafikcache liegt unter dem Inhaltshash und kann verwaisen, aber nicht falsch werden. Nur die Smarty-Blockcaches koennen ein veraltetes Label bis zum Ablauf von `CACHE_LIFETIME` weiter ausliefern; dafuer leert der Shopbetreiber den Cache ueber `admin/configuration.php?action=delcache`. Die Moduldiagnose weist darauf hin. Die historischen Archive werden dabei nicht geloescht.
 - `clear_dir(DIR_FS_CATALOG.'cache/')` entfernt `cache/guarantee_labels/` einschliesslich aller darin liegenden Schutzdateien und danach das Verzeichnis selbst. Der Renderer legt das Basisverzeichnis vor einem Schreibvorgang bei Bedarf rekursiv neu an. Dauerhafte `.htaccess`- oder `index.html`-Dateien sind in diesem Cache-Unterverzeichnis nicht vorgesehen.
 - Bei manuellen Bestellungen stammen `orders.language` und `orders.languages_id` aus der Backend-Sitzung beim Anlegen. Das Modul verwendet `orders.language` als massgebliche Bestellsprache fuer den Hinweis-Snapshot und die Auswahl von `garan_terms`; es ermittelt keine abweichende Kundensprache.
-- Der bestehende Admin-Ablauf befuellt `orders.content_type` beim Anlegen einer leeren Bestellung nicht. Das Modul fuehrt dessen Pflege fuer manuell bearbeitete Bestellungen ein. `''` bedeutet ebenso wie `virtual`, dass die Bestellung keine koerperliche Ware enthaelt und keinen Gewaehrleistungshinweis ausgibt.
+- Der bestehende Admin-Ablauf befuellt `orders.content_type` beim Anlegen einer leeren Bestellung nicht. Das Modul schreibt die Spalte ebenfalls nicht, sondern ermittelt die koerperliche Ware bei jeder Ausgabe aus den Positionen der Bestellung. Dadurch braucht es keinen zusaetzlich gepflegten Zustand, der nach einer Positionsaenderung falsch stehen bleiben koennte.
 - Storefront und Checkout erzeugen `colour.svg` und `nested.svg` gemeinsam unter `cache/guarantee_labels/<garan_hash>/`. Beim Bestellabschluss werden beide Dateien einmalig unter `media/guarantee_labels/archive/garan/<garan_hash>/` archiviert. Das Archiv ist per eigener `.htaccess` nicht direkt ueber HTTP erreichbar.
 - Der historische Gewaehrleistungshinweis liegt unter `media/guarantee_labels/archive/notice/<notice_hash>/`. `notice.svg` bewahrt die angezeigte Grafik; `notice.json` bewahrt Sprache, Mailtext, Linktext, Your-Europe-URL und Version. Ein erneuter Mailversand liest Text und Link aus diesem Snapshot statt aus aktuellen Sprachkonstanten. Fuer den aktuellen Hinweis im Storefront ist kein zusaetzlicher Cache erforderlich.
 - Die zulaessige Laenge von Herstellername und Modellkennung wird nicht ueber eine feste Zeichenzahl entschieden. Der Renderer misst die tatsaechliche Textbreite serverseitig mit `imagettfbbox()`, der jeweiligen Inter-TTF-Datei, der vorgegebenen Schriftgroesse und einer festen Sicherheitstoleranz. Nicht passende Werte werden abgelehnt. GD mit FreeType ist Voraussetzung; ImageMagick und eine neue PHP-Bibliothek werden nicht benoetigt.
