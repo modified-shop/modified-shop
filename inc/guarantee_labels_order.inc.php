@@ -278,6 +278,14 @@
       return '';
     }
 
+    // the markup needs the storefront texts, which the administration does not load by itself
+    if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))
+        || !defined('TEXT_GUARANTEE_LABEL_TITLE')
+        )
+    {
+      return '';
+    }
+
     $product = $products[$orders_products_id];
 
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
