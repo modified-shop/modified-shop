@@ -77,7 +77,12 @@ Art.-Nr. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}
 
 [SIGNATUR]
 
+{if $GUARANTEE_NOTICE_TXT != ''}
+----------------------------------------------------------------------
+Gesetzliche Gewährleistung
+----------------------------------------------------------------------
 {$GUARANTEE_NOTICE_TXT}
+{/if}
 
 {$REVOCATION_TXT}
 
