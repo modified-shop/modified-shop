@@ -103,12 +103,8 @@
                     '</span></td></tr>';
       }
 
-      // the module empties its own graphic cache, the block caches of the shop belong to their owner
-      $content .= '</table>';
-
-      if (defined('USE_CACHE') && USE_CACHE != 'false') {
-        $content .= '<div class="main mrg5">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE.'</div>';
-      }
+      // the module never empties a cache, that belongs to the shop owner
+      $content .= '</table><div class="main mrg5">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE.'</div>';
 
       return '<br /><div class="main div_header"><b>'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS.'</b></div>'.$content.'</div>';
     }

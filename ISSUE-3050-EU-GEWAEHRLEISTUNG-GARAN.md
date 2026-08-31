@@ -311,30 +311,17 @@ Cachedateien duerfen jederzeit geloescht und aus den versionierten Vorlagen neu 
 
 Der GARAN-Grafikcache ist vom Smarty-Blockcache zu unterscheiden. `includes/modules/cross_selling.php`, `includes/modules/new_products.php` und `includes/modules/products_media.php` koennen ihre gerenderte Ausgabe ueber `CacheCheck()` bis zu `CACHE_LIFETIME` zwischenspeichern. Ihre Cache-IDs enthalten keinen Stand der GARAN-Daten. Ohne ausdrueckliche Leerung koennten deshalb ein entferntes Label, ein geaenderter Hersteller oder eine geaenderte Garantiebedingung bis zum Ablauf des Blockcache sichtbar bleiben.
 
-Nach einer erfolgreich gespeicherten GARAN-relevanten Aenderung leert der Admin ausschliesslich das eigene Verzeichnis `cache/guarantee_labels/`. Der uebrige Shopcache bleibt unberuehrt: Er gehoert dem Shopbetreiber, und ihn bei jedem Artikelspeichern zu verwerfen wuerde die Arbeit aller anderen Module mit wegwerfen. Dafuer bleibt die Aktion `delcache` in `admin/configuration.php`.
+Das Modul leert von sich aus keinen Cache.
 
-Die eigenen Dateien liegen unter ihrem Inhaltshash und sind deshalb nie falsch, sondern hoechstens verwaist: Eine geaenderte Dauer, ein anderer Herstellername oder eine neue Vorlagenversion ergeben einen neuen Hash und damit neue Dateien. Die Leerung ist Aufraeumen, keine Korrektur.
+Die erzeugten Grafiken liegen unter ihrem Inhaltshash. Eine geaenderte Dauer, ein anderer Herstellername oder eine neue Vorlagenversion ergeben einen neuen Hash und damit neue Dateien; die alten werden nie wieder abgefragt. Der eigene Cache kann also verwaisen, aber nicht falsch werden. Eine automatische Leerung waere reines Aufraeumen gewesen und haette bei jeder Artikelaenderung die Grafiken aller uebrigen Artikel mit verworfen.
 
-Der Smarty-Blockcache dagegen haelt fertig gerendertes HTML mitsamt eingebettetem Label. Betroffen sind die Module, die ueber `CacheCheck()` zwischenspeichern und Labels enthalten: Cross-Selling, neue Artikel, Artikel einer Kategorie, ebenfalls gekaufte Artikel und die kommenden Artikel. Produktdetailseite und Kategorielisting setzen `caching = 0` und sind nicht betroffen.
+Der Smarty-Blockcache haelt dagegen fertig gerendertes HTML mitsamt eingebettetem Label. Betroffen sind die Module, die ueber `CacheCheck()` zwischenspeichern und Labels enthalten: Cross-Selling, neue Artikel, Artikel einer Kategorie, ebenfalls gekaufte Artikel und die kommenden Artikel. Produktdetailseite und Kategorielisting setzen `caching = 0` und sind nicht betroffen. Ihre Cache-IDs bestehen aus Sprache, Kundengruppe, Artikel, Waehrung und Land; ein GARAN-Stand geht nicht ein. Ein umbenannter Hersteller aendert die ID deshalb nicht, und der Block wird bis zum Ablauf von `CACHE_LIFETIME` weiter aus dem Cache bedient. Im Auslieferungszustand ist `USE_CACHE` abgeschaltet, dann entsteht die Lage gar nicht.
 
-Ihre Cache-IDs bestehen aus Sprache, Kundengruppe, Artikel, Waehrung und Land; ein GARAN-Stand geht nicht ein. Ein umbenannter Hersteller aendert die ID deshalb nicht, und der Block wird bis zum Ablauf von `CACHE_LIFETIME` weiter aus dem Cache bedient. Das Modul greift dort bewusst nicht ein: Der Shopcache gehoert dem Shopbetreiber, und ihn bei jedem Artikelspeichern zu verwerfen wuerde die Arbeit aller anderen Module mit wegwerfen. Im Auslieferungszustand ist `USE_CACHE` abgeschaltet, dann entsteht die Lage gar nicht. Ist er aktiv, weist die Moduldiagnose darauf hin und der Shopbetreiber leert ihn ueber `delcache`.
+Fuer beides gilt derselbe Weg: Der Shopbetreiber leert den Cache ueber die vorhandene Aktion `delcache` in `admin/configuration.php`. Die Moduldiagnose weist darauf hin. Der Shopcache gehoert dem Shopbetreiber; ihn bei jedem Artikelspeichern zu verwerfen wuerde die Arbeit aller anderen Module mit wegwerfen.
 
-Eine saubere Loesung waere ein GARAN-Stand in den Cache-IDs der betroffenen Module. Das erfordert Eingriffe in sechs Kernmodule und gehoert nicht in diese Erweiterung.
+Eine saubere automatische Loesung waere ein GARAN-Stand in den Cache-IDs der betroffenen Module. Das erfordert Eingriffe in sechs Kernmodule und gehoert nicht in diese Erweiterung.
 
-Das eigene Verzeichnis wird geleert bei:
-
-- Garantiedauer, Herstellerzuordnung oder Hersteller-Modellkennung eines Artikels,
-- Name, Aktivstatus oder Loeschung eines Herstellers,
-- Zuordnung, Austausch oder Entfernung eines Artikel-Anhangs vom Typ `garan_terms`,
-- Aktivierung, Deaktivierung oder eine ausgaberelevante Konfigurationsaenderung des GARAN-Moduls.
-
-Eine Aenderung der Modulkonfiguration selbst loest keine Cache-Leerung aus. Das Systemmodul wird ueber `admin/module_export.php?set=system` verwaltet; dieser Frameworkpfad ruft nach dem Speichern `process($file)` auf, das aber die Ausfuehrung eines Exportmoduls meint und zusaetzlich aus `module_processing_do` kommt. Eine Cache-Leerung dort haenge an einer Bedeutung, die die Methode nicht hat. Nach einem Statuswechsel oder einer geaenderten B2B-Auswahl leert der Shopbetreiber den Cache ueber die dafuer vorgesehene Aktion `delcache` in `admin/configuration.php`. Die automatische Leerung bleibt den Datenaenderungen vorbehalten, die der Shopbetreiber nicht als Cache-Thema erkennen kann.
-
-`admin/modules.php` verwaltet Versand-, Zahlungs- und Order-Total-Module, nicht das GARAN-Systemmodul. Fuer den GARAN-Statuswechsel ist dort deshalb weder eine zweite Cache-Leerung noch ein Core-Eingriff vorgesehen.
-
-Namens- und Statusaenderungen ueber das Herstellerformular sowie `deleteconfirm` verwenden die vorhandene Erweiterungsstelle `admin/includes/extra/modules/manufacturers/action/`, die am Ende dieser Aktionen ausgefuehrt wird. Nur der Statuswechsel `setflag` aus der Herstellerliste erreicht diese Erweiterungsstelle nicht. `admin/manufacturers.php` erhaelt deshalb ausschliesslich in diesem Fall direkt vor dem Redirect den zusaetzlichen Aufruf zur Cache-Leerung.
-
-Die Leerung erfolgt erst nach erfolgreichem Speichern. Fehlgeschlagene oder rein lesende Aktionen loesen sie nicht aus. Bei Sammelvorgaengen wie einem CSV-Import wird der Cache hoechstens einmal nach dem erfolgreichen Abschluss des gesamten Vorgangs geleert, nicht nach jeder Produktzeile. `clear_dir(DIR_FS_CATALOG.'cache/')` entfernt das Unterverzeichnis `cache/guarantee_labels/` vollstaendig. Der Renderer muss das Basisverzeichnis deshalb vor jedem Schreibvorgang bei Bedarf rekursiv neu anlegen, bevor er darin temporaere Nachbarverzeichnisse erzeugt. Historische Dateien in den Archivverzeichnissen bleiben unveraendert.
+`delcache` entfernt mit `clear_dir(DIR_FS_CATALOG.'cache/')` auch das Unterverzeichnis `cache/guarantee_labels/` vollstaendig. Der Renderer muss das Basisverzeichnis deshalb vor jedem Schreibvorgang bei Bedarf rekursiv neu anlegen, bevor er darin temporaere Nachbarverzeichnisse erzeugt. Historische Dateien in den Archivverzeichnissen bleiben unveraendert.
 
 In Unterverzeichnissen von `cache/` schuetzt `clear_dir()` weder `.htaccess` noch `index.html`: Der rekursive Aufruf verwendet `$basefiles = true` und entfernt anschliessend das Unterverzeichnis selbst. Fuer `cache/guarantee_labels/` sind deshalb keine dauerhaften Schutzdateien vorgesehen. Sollte das Verzeichnis spaeter eigene Schutzdateien benoetigen, muss die Cache-Leerung sie ausdruecklich wiederherstellen oder ausserhalb des geloeschten Unterverzeichnisses ablegen.
 
@@ -923,8 +910,6 @@ Voraussichtlich betroffen sind:
 - `admin/includes/extra/modules/new_product/`
 - `admin/includes/modules/new_products_content.php`
 - `admin/customers.php` fuer den Hinweis-Snapshot beim manuellen Anlegen einer Bestellung.
-- `admin/includes/extra/modules/manufacturers/action/` fuer die Cache-Leerung nach Herstellerformular-Aenderungen und nach `deleteconfirm`.
-- `admin/manufacturers.php` ausschliesslich fuer die Cache-Leerung beim Statuswechsel `setflag`, da dieser Pfad die vorhandene Erweiterungsstelle nicht durchlaeuft.
 - `admin/content_manager.php` und `admin/includes/modules/content_manager_products.php` fuer den Typ des Artikel-Anhangs.
 - `admin/includes/modules/categories/guarantee_labels_product.php` als Klassenerweiterung fuer Artikelpruefung und sicheres Duplizieren, dazu ihre Sprachdateien unter `lang/<Sprache>/modules/categories/`.
 - `admin/includes/classes/categoriesModules.class.php` und `admin/includes/classes/categories.php` fuer den allgemeinen Hook `insert_product_error()`; er wird getrennt von diesem Modul bereitgestellt.
@@ -966,7 +951,7 @@ Voraussichtlich betroffen sind:
 - `media/guarantee_labels/archive/` einschliesslich eigener `.htaccess` fuer historische GARAN-Dateien und Gewaehrleistungshinweise.
 - `media/products/garan_archive/` fuer atomar archivierte Garantie-Anhaenge.
 - `includes/classes/class.logger.php`, `admin/logs.php` und die vorhandene Logpflege fuer `mod_guarantee_labels_<level>_<datum>.log`.
-- `admin/configuration.php` als vorhandener Weg, den Shopcache zu leeren. Das Modul selbst raeumt nur sein eigenes Verzeichnis `cache/guarantee_labels/` auf.
+- `admin/configuration.php` als vorhandener Weg, den Shopcache zu leeren. Das Modul leert selbst keinen Cache.
 
 ## Testfaelle
 
