@@ -309,7 +309,11 @@ Cachedateien duerfen jederzeit geloescht und aus den versionierten Vorlagen neu 
 
 Der GARAN-Grafikcache ist vom Smarty-Blockcache zu unterscheiden. `includes/modules/cross_selling.php`, `includes/modules/new_products.php` und `includes/modules/products_media.php` koennen ihre gerenderte Ausgabe ueber `CacheCheck()` bis zu `CACHE_LIFETIME` zwischenspeichern. Ihre Cache-IDs enthalten keinen Stand der GARAN-Daten. Ohne ausdrueckliche Leerung koennten deshalb ein entferntes Label, ein geaenderter Hersteller oder eine geaenderte Garantiebedingung bis zum Ablauf des Blockcache sichtbar bleiben.
 
-Nach einer erfolgreich gespeicherten GARAN-relevanten Aenderung leert der Admin deshalb den vollstaendigen Shopcache mit derselben Folge wie die vorhandene Aktion `delcache` in `admin/configuration.php`: `clear_dir(DIR_FS_CATALOG.'cache/')` und danach `$modified_cache->clear()`. Das gilt fuer:
+Nach einer erfolgreich gespeicherten GARAN-relevanten Aenderung leert der Admin ausschliesslich das eigene Verzeichnis `cache/guarantee_labels/`. Der uebrige Shopcache bleibt unberuehrt: Er gehoert dem Shopbetreiber, und ihn bei jedem Artikelspeichern zu verwerfen wuerde die Arbeit aller anderen Module mit wegwerfen. Dafuer bleibt die Aktion `delcache` in `admin/configuration.php`.
+
+Die eigenen Dateien liegen unter ihrem Inhaltshash und sind deshalb nie falsch, sondern hoechstens verwaist: Eine geaenderte Dauer, ein anderer Herstellername oder eine neue Vorlagenversion ergeben einen neuen Hash und damit neue Dateien. Die Leerung ist Aufraeumen, keine Korrektur.
+
+Der Smarty-Blockcache dagegen haelt fertig gerendertes HTML mitsamt eingebettetem Label. Er wird hier nicht angefasst und kann bis zum Ablauf von `CACHE_LIFETIME` ein altes Label zeigen. Wer `USE_CACHE` aktiviert hat, leert ihn nach solchen Aenderungen ueber `delcache`. Das gilt fuer:
 
 - Garantiedauer, Herstellerzuordnung oder Hersteller-Modellkennung eines Artikels,
 - Name, Aktivstatus oder Loeschung eines Herstellers,

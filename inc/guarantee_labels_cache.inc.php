@@ -13,16 +13,17 @@
   /**
    * guarantee_labels_clear_cache()
    *
-   * Empties the shop cache after a data change that alters a rendered label.
+   * Empties the graphic cache of the module after a data change behind a label.
    *
-   * The block caches of the shop do not know the state of the GARAN data: a renamed
-   * manufacturer or a changed duration would stay visible until CACHE_LIFETIME runs out. A
-   * shop owner does not recognise that as a cache matter, which is why these changes clear it
-   * themselves. A change of the module configuration does not: for that the shop brings the
-   * delcache action in admin/configuration.php.
+   * Only cache/guarantee_labels/ is touched. The shop cache as a whole stays untouched: it
+   * belongs to the shop owner, and emptying it on every article save would throw away the work
+   * of every other module as well. For that the shop has the delcache action in
+   * admin/configuration.php.
    *
-   * The same effect as that action. It runs once per request, so a multi edit or an import
-   * does not empty the cache again for every row.
+   * clear_dir() keeps the directory itself and its protection files and removes the hash
+   * directories below it. The renderer creates what it needs again on the next request.
+   *
+   * Runs once per request, so a multi edit or an import does not empty it again for every row.
    *
    * @return bool whether this call did the work
    */
@@ -35,18 +36,7 @@
 
     $cleared = true;
 
-    global $modified_cache;
-
-    clear_dir(DIR_FS_CATALOG.'cache/');
-
-    // the admin usually carries the object already, only then is the bootstrap needed
-    if (!is_object($modified_cache)) {
-      require_once(DIR_FS_CATALOG.'includes/modified_cache.php');
-    }
-
-    if (is_object($modified_cache)) {
-      $modified_cache->clear();
-    }
+    clear_dir(DIR_FS_CATALOG.'cache/guarantee_labels/');
 
     return true;
   }
