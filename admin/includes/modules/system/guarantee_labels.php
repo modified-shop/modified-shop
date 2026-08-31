@@ -42,11 +42,14 @@
       $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE . '</a>';
     }
 
+    /**
+     * The module administration calls this after saving. It is the run of an export module,
+     * not a save hook, so nothing beyond the own configuration belongs here. After a status
+     * or group change the shop owner empties the cache through the action the shop brings for
+     * it, delcache in admin/configuration.php.
+     */
     function process($file) {
       $this->save_b2b_customers_status();
-
-      // runs after the configuration was saved, so any status or group change drops the stale output
-      $this->clear_shop_cache();
     }
 
     /**
