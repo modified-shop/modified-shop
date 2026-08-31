@@ -707,7 +707,7 @@ Die Bestellbearbeitung zeigt bei jeder Position einen eigenen Bereich `EU-Haltba
 - Hersteller/Garantiegeber aus `orders_products_guarantee.manufacturers_name`.
 - Hersteller-Modellkennung aus `orders_products_guarantee.manufacturers_model`.
 - Garantiedauer aus `orders_products_guarantee.garan_duration`.
-- Optional archivierte Garantieerklaerung aus `orders_products_guarantee.terms_hash` und `terms_filename` mit Download-, Ersetzen- und Entfernen-Funktion.
+- Optional archivierte Garantieerklaerung aus `orders_products_guarantee.terms_hash` und `terms_filename` mit Ersetzen- und Entfernen-Funktion. Die Maske nennt den Dateinamen; ein Download aus dem Admin ist nicht vorgesehen. Das Archiv ist fuer HTTP gesperrt, ein Auslieferungsweg mit eigener Rechtepruefung waere dafuer noetig und bringt gegenueber dem Dateinamen keinen Erkenntnisgewinn.
 
 Die Bearbeitung gilt fuer Bestellungen aus dem Storefront und fuer manuell angelegte Bestellungen.
 
