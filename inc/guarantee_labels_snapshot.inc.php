@@ -23,6 +23,37 @@
   define('GUARANTEE_LABELS_NOTICE_VERSION', '1.00');
 
   /**
+   * Makes sure the storefront texts of one language are available.
+   *
+   * The administration loads only lang/<language>/extra/admin/, so the file is pulled in here
+   * when it is missing. Constants live for the whole request, therefore a second language in
+   * the same request is refused instead of answered with the wrong wording.
+   *
+   * @param string $language the language directory of the order
+   * @return bool
+   */
+  function guarantee_labels_language($language) {
+    static $loaded;
+
+    $language = trim((string)$language);
+
+    if (!defined('TEXT_GUARANTEE_NOTICE_MAIL')) {
+      $file = DIR_FS_CATALOG.'lang/'.$language.'/extra/guarantee_labels.php';
+
+      if ($language === '' || strpbrk($language, "/\\\0") !== false || !is_file($file)) {
+        return false;
+      }
+
+      require_once($file);
+      $loaded = $language;
+
+      return true;
+    }
+
+    return (!isset($loaded) || $loaded === $language);
+  }
+
+  /**
    * The texts that belong to the notice of one language.
    *
    * The administration loads only lang/<language>/extra/admin/, so the storefront texts are
@@ -33,20 +64,7 @@
    * @return mixed array of text, link, url and title, false when the language is not fully kept
    */
   function guarantee_labels_notice_texts($language) {
-    static $loaded;
-
-    $language = trim((string)$language);
-
-    if (!defined('TEXT_GUARANTEE_NOTICE_MAIL')) {
-      $file = DIR_FS_CATALOG.'lang/'.$language.'/extra/guarantee_labels.php';
-
-      if (strpbrk($language, "/\\\0") !== false || !is_file($file)) {
-        return false;
-      }
-
-      require_once($file);
-      $loaded = $language;
-    } elseif (isset($loaded) && $loaded !== $language) {
+    if (!guarantee_labels_language($language)) {
       return false;
     }
 

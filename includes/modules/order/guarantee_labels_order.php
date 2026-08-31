@@ -92,6 +92,33 @@
       return $products_data;
     }
 
+    /**
+     * Writes the guarantee of a position into the order data the mails and the order view use.
+     *
+     * getOrderData() runs its own query, so this hook is needed next to add_products().
+     *
+     * @param array $order_data one position of the order
+     * @param array $order_data_values the row of orders_products
+     * @param int $oID
+     * @return array
+     */
+    function order_data($order_data, $order_data_values, $oID, $order_lang_id) {
+      require_once(DIR_FS_INC.'guarantee_labels_order.inc.php');
+
+      // always set, so a template can place the variables without asking for the module
+      $order_data['GUARANTEE_HTML'] = '';
+      $order_data['GUARANTEE_TXT'] = '';
+
+      $guarantee = guarantee_labels_order_text($oID, $order_data_values['orders_products_id']);
+
+      if ($guarantee !== false) {
+        $order_data['GUARANTEE_HTML'] = $guarantee['html'];
+        $order_data['GUARANTEE_TXT'] = $guarantee['txt'];
+      }
+
+      return $order_data;
+    }
+
     function check() {
       if (!isset($this->_check)) {
         if (defined($this->name.'_STATUS')) {

@@ -32,6 +32,10 @@
   define('TEXT_GUARANTEE_NOTICE_MAIL', 'The goods of this order sold in the European Union come with a legal guarantee of conformity of at least two years.');
   define('TEXT_GUARANTEE_NOTICE_ALT', 'Notice of the European Union about the legal guarantee of at least two years.');
 
+  // one line per order position, the label itself is never redrawn as text
+  define('TEXT_GUARANTEE_ORDER_LABEL', 'Manufacturer guarantee: %1$s years, %2$s, model %3$s');
+  define('TEXT_GUARANTEE_ORDER_TERMS', 'Guarantee conditions: %s (attached to this e-mail)');
+
   // Text alternative of the graphic, filled with duration, manufacturer and model
   define('TEXT_GUARANTEE_LABEL_ALT', 'EU label for the commercial guarantee of durability: %1$s years of durability guarantee by the manufacturer %2$s for the model %3$s.');
   define('TEXT_GUARANTEE_LABEL_ALT_COMPACT', 'EU label for the commercial guarantee of durability: %s years.');

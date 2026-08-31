@@ -155,3 +155,94 @@
 
     return $attachments;
   }
+
+  /**
+   * The language directory an order was placed in.
+   *
+   * getOrderData() only passes the language id, the storefront texts are kept per directory.
+   *
+   * @param int $orders_id
+   * @return string empty when the order is unknown
+   */
+  function guarantee_labels_order_language($orders_id) {
+    static $orders = array();
+
+    $orders_id = (int)$orders_id;
+
+    if (isset($orders[$orders_id])) {
+      return $orders[$orders_id];
+    }
+
+    $orders[$orders_id] = '';
+
+    if ($orders_id > 0) {
+      $language_query = xtc_db_query("SELECT language
+                                        FROM ".TABLE_ORDERS."
+                                       WHERE orders_id = '".$orders_id."'");
+
+      if (xtc_db_num_rows($language_query) > 0) {
+        $language = xtc_db_fetch_array($language_query);
+        $orders[$orders_id] = (string)$language['language'];
+      }
+    }
+
+    return $orders[$orders_id];
+  }
+
+  /**
+   * The guarantee of one order position in words.
+   *
+   * The label itself is a picture mark with strict rules and is never redrawn, neither as a
+   * graphic nor as a copy of its layout. What is written out is the promise behind it, so the
+   * customer can tell which article the attached conditions belong to.
+   *
+   * @param int $orders_id
+   * @param int $orders_products_id
+   * @return mixed array of an html and a text variant, false without a snapshot
+   */
+  function guarantee_labels_order_text($orders_id, $orders_products_id) {
+    $products = guarantee_labels_order_products($orders_id);
+    $orders_products_id = (int)$orders_products_id;
+
+    if (!isset($products[$orders_products_id])) {
+      return false;
+    }
+
+    if (!guarantee_labels_language(guarantee_labels_order_language($orders_id))
+        || !defined('TEXT_GUARANTEE_ORDER_LABEL')
+        )
+    {
+      return false;
+    }
+
+    $product = $products[$orders_products_id];
+
+    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
+
+    $renderer = new guarantee_labels_renderer();
+
+    $lines = array(sprintf(TEXT_GUARANTEE_ORDER_LABEL,
+                           $renderer->duration_text($product['garan_duration']),
+                           $product['manufacturers_name'],
+                           $product['manufacturers_model']));
+
+    // named only when the file really travels with the mail
+    if ($product['terms_filename'] !== null
+        && $product['terms_hash'] !== null
+        && defined('TEXT_GUARANTEE_ORDER_TERMS')
+        )
+    {
+      require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
+
+      $archive = new guarantee_labels_archive();
+
+      if (is_file($archive->terms_path($product['terms_hash'], $product['terms_filename']))) {
+        $lines[] = sprintf(TEXT_GUARANTEE_ORDER_TERMS, $product['terms_filename']);
+      }
+    }
+
+    return array(
+      'html' => implode('<br />', $lines),
+      'txt' => implode("\n", array_map('decode_htmlentities', $lines)),
+    );
+  }

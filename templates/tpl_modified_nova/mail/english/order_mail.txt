@@ -42,6 +42,8 @@ Prod. No. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL
 {/if}
 {if $order_values.PRODUCTS_SHIPPING_TIME != ''}Shipping time: {$order_values.PRODUCTS_SHIPPING_TIME}
 {/if}
+{if $order_values.GUARANTEE_TXT != ''}{$order_values.GUARANTEE_TXT}
+{/if}
 {if $order_values.PRODUCTS_ATTRIBUTES != ''}{$order_values.PRODUCTS_ATTRIBUTES}
 {/if}
 

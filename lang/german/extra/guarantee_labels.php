@@ -32,6 +32,10 @@
   define('TEXT_GUARANTEE_NOTICE_MAIL', 'F&uuml;r die in der Europ&auml;ischen Union verkauften Waren dieser Bestellung gilt eine gesetzliche Gew&auml;hrleistung von mindestens zwei Jahren.');
   define('TEXT_GUARANTEE_NOTICE_ALT', 'Hinweis der Europ&auml;ischen Union zur gesetzlichen Gew&auml;hrleistung von mindestens zwei Jahren.');
 
+  // one line per order position, the label itself is never redrawn as text
+  define('TEXT_GUARANTEE_ORDER_LABEL', 'Herstellergarantie: %1$s Jahre, %2$s, Modell %3$s');
+  define('TEXT_GUARANTEE_ORDER_TERMS', 'Garantiebedingungen: %s (dieser E-Mail beigef&uuml;gt)');
+
   // Text alternative of the graphic, filled with duration, manufacturer and model
   define('TEXT_GUARANTEE_LABEL_ALT', 'EU-Label f&uuml;r die gewerbliche Haltbarkeitsgarantie: %1$s Jahre Haltbarkeitsgarantie des Herstellers %2$s f&uuml;r das Modell %3$s.');
   define('TEXT_GUARANTEE_LABEL_ALT_COMPACT', 'EU-Label f&uuml;r die gewerbliche Haltbarkeitsgarantie: %s Jahre.');
