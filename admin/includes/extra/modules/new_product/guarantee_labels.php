@@ -77,7 +77,15 @@
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_GUARANTEE_LABELS_DURATION; ?></span><?php echo draw_tooltip(TEXT_GUARANTEE_LABELS_INFO_RULES); ?></td>
-          <td><span class="main"><?php echo xtc_draw_input_field('products_garan_duration', $pInfo->products_garan_duration, 'style="width: 155px"'); ?></span></td>
+          <td><span class="main"><?php
+            echo xtc_draw_input_field('products_garan_duration', $pInfo->products_garan_duration, 'style="width: 155px"');
+            if ((int)$pInfo->products_id > 0) {
+              require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
+              if (guarantee_labels_product_physical($pInfo->products_id) === false) {
+                echo '<br /><span class="error">'.TEXT_GUARANTEE_LABELS_VIRTUAL.'</span>';
+              }
+            }
+          ?></span></td>
         </tr>
         <?php if ((int)$pInfo->products_id > 0) { ?>
         <tr>

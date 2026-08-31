@@ -56,6 +56,7 @@
       }
 
       $product = array(
+        'products_id' => $products_id,
         'products_garan_duration' => isset($products_data['garan_duration']) ? $products_data['garan_duration'] : null,
         'products_manufacturers_model' => isset($products_data['manufacturers_model']) ? $products_data['manufacturers_model'] : '',
         'manufacturers_id' => isset($products_data['manufacturers_id']) ? $products_data['manufacturers_id'] : 0,

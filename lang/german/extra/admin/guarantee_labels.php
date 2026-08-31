@@ -18,6 +18,7 @@
   define('TEXT_GUARANTEE_LABELS_TERMS_MISSING', 'kein Anhang vom Typ GARAN-Garantiebedingungen hinterlegt');
   define('TEXT_GUARANTEE_LABELS_TERMS_FILE_MISSING', '%s &ndash; Datei fehlt, sie wird der Auftragsbest&auml;tigung nicht beigelegt');
   define('TEXT_GUARANTEE_LABELS_MANUFACTURER_INACTIVE', 'Hersteller ist nicht aktiv, deshalb entsteht kein Label');
+  define('TEXT_GUARANTEE_LABELS_VIRTUAL', 'Artikel enth&auml;lt ausschliesslich digitale Inhalte. Die Haltbarkeitsgarantie gilt f&uuml;r Waren, deshalb entsteht kein Label.');
 
   define('TEXT_GUARANTEE_LABELS_INFO', 'Dieses Feld nimmt die Dauer der Haltbarkeitsgarantie des Herstellers auf, in ganzen oder halben Jahren. Es ist unabh&auml;ngig von der gesetzlichen Gew&auml;hrleistung: Auf die weist der Shop im Checkout f&uuml;r die gesamte Bestellung hin, ohne dass Sie am Artikel etwas pflegen.');
   define('TEXT_GUARANTEE_LABELS_INFO_RULES', 'Ein GARAN-Label entsteht erst ab 2,5 Jahren. K&uuml;rzere Angaben werden gespeichert und dokumentieren, was der Hersteller zusagt; ein Label erzeugen sie nicht, weil eine Garantie bis zwei Jahre dem Kunden nichts &uuml;ber die gesetzliche Gew&auml;hrleistung hinaus gibt. F&uuml;r ein Label muss die Garantie ausserdem kostenlos sein, die gesamte Ware umfassen und mit derselben Dauer und denselben Bedingungen in allen von Ihnen belieferten L&auml;ndern gelten. Ein leeres Feld bedeutet, dass zur Herstellergarantie nichts hinterlegt ist.');

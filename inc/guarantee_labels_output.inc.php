@@ -58,11 +58,79 @@
       return false;
     }
 
+    if (!guarantee_labels_product_physical(isset($product['products_id']) ? $product['products_id'] : 0)) {
+      return false;
+    }
+
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
 
     $renderer = new guarantee_labels_renderer();
 
     return $renderer->qualifies($product['products_garan_duration']);
+  }
+
+  /**
+   * guarantee_labels_product_physical()
+   *
+   * The commercial guarantee of durability belongs to goods. Digital content and digital
+   * services fall under a different set of rules and know no such guarantee, so the label may
+   * not stand at a purely virtual article: it would name a promise that cannot exist there.
+   *
+   * An article with download and ordinary attributes carries goods as well and keeps its label.
+   *
+   * With downloads switched off the shop answers without a query, which is the default.
+   *
+   * @param int $products_id
+   * @return bool
+   */
+  function guarantee_labels_product_physical($products_id) {
+    global $xtPrice;
+
+    static $known = array();
+
+    $products_id = (int)$products_id;
+
+    if ($products_id < 1 || !defined('DOWNLOAD_ENABLED') || DOWNLOAD_ENABLED != 'true') {
+      return true;
+    }
+
+    // the storefront carries the price object, which answers this out of its own buffer
+    if (is_object($xtPrice) && method_exists($xtPrice, 'get_content_type_product')) {
+      return ($xtPrice->get_content_type_product($products_id) !== 'virtual');
+    }
+
+    // the administration does not, so the same two rules are asked here
+    if (isset($known[$products_id])) {
+      return $known[$products_id];
+    }
+
+    $download_query = xtc_db_query("SELECT COUNT(*) AS total
+                                      FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                      JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                           ON pa.products_attributes_id = pad.products_attributes_id
+                                     WHERE pa.products_id = '".$products_id."'");
+    $download = xtc_db_fetch_array($download_query);
+
+    if ((int)$download['total'] < 1) {
+      $known[$products_id] = true;
+      return true;
+    }
+
+    // with multiple downloads allowed one of them already makes the article virtual
+    if (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true') {
+      $known[$products_id] = false;
+      return false;
+    }
+
+    // otherwise it is virtual only when it has nothing but downloads
+    $total_query = xtc_db_query("SELECT COUNT(*) AS total
+                                   FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                  WHERE products_id = '".$products_id."'");
+    $total = xtc_db_fetch_array($total_query);
+
+    $known[$products_id] = ((int)$total['total'] > (int)$download['total']);
+
+    return $known[$products_id];
   }
 
   /**

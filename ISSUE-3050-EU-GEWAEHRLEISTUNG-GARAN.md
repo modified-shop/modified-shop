@@ -43,6 +43,8 @@ Eigenschaften:
 
 Digitale Inhalte und Dienstleistungen fallen nicht unter diese Kennzeichnungspflicht.
 
+Dasselbe gilt fuer das GARAN-Label: Die gewerbliche Haltbarkeitsgarantie ist an Waren geknuepft. An einem Artikel, der ausschliesslich digitale Inhalte liefert, darf das Label deshalb nicht stehen; es wuerde eine Zusage benennen, die dort rechtlich nicht bestehen kann. Massgeblich ist der Inhaltstyp des Artikels: `virtual` erhaelt kein Label, `mixed` behaelt es, weil koerperliche Ware enthalten ist. Bei abgeschalteten Downloads entfaellt die Pruefung ohne Abfrage. Die Regel gilt fuer jede Ausgabe und fuer den Bestellsnapshot; die Artikelverwaltung weist ausdruecklich darauf hin, statt das Label still wegzulassen.
+
 ### GARAN-Label
 
 Das GARAN-Label ist erforderlich, wenn alle folgenden Voraussetzungen erfuellt sind:

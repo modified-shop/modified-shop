@@ -19,6 +19,7 @@
   if (guarantee_labels_active()) {
     // the cart strips the products_ prefix, order_details_cart puts PRODUCTS_ in front again
     $guarantee_labels_product = array(
+      'products_id' => isset($module_content[$i]['PRODUCTS_ID']) ? $module_content[$i]['PRODUCTS_ID'] : 0,
       'products_garan_duration' => isset($module_content[$i]['PRODUCTS_GARAN_DURATION']) ? $module_content[$i]['PRODUCTS_GARAN_DURATION'] : null,
       'products_manufacturers_model' => isset($module_content[$i]['PRODUCTS_MANUFACTURERS_MODEL']) ? $module_content[$i]['PRODUCTS_MANUFACTURERS_MODEL'] : '',
       'manufacturers_id' => isset($module_content[$i]['PRODUCTS_MANUFACTURERS_ID']) ? $module_content[$i]['PRODUCTS_MANUFACTURERS_ID'] : 0,
