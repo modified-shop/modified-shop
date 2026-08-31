@@ -93,13 +93,79 @@
         );
       }
 
+      $schema_errors = $this->verify_schema();
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SCHEMA, count($schema_errors) < 1,
+                      implode(' ', $schema_errors), MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE);
+
+      foreach ($this->writable_dirs() as $label => $dir) {
+        $rows[] = array(sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_WRITABLE, $label),
+                        $this->dir_writable($dir), $dir, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED);
+      }
+
+      // a query against a missing table or column would only produce a database error
+      if (count($schema_errors) > 0) {
+        return $this->diagnosis_table($rows);
+      }
+
+      // an article without manufacturer or model identifier stays silent in the storefront
+      $incomplete_query = xtc_db_query("SELECT COUNT(*) AS total
+                                        FROM ".TABLE_PRODUCTS." p
+                                        LEFT JOIN ".TABLE_MANUFACTURERS." m ON m.manufacturers_id = p.manufacturers_id
+                                        WHERE p.products_garan_duration > 0
+                                        AND (m.manufacturers_id IS NULL
+                                             OR m.manufacturers_status != '1'
+                                             OR TRIM(COALESCE(p.products_manufacturers_model, '')) = '')");
+      $incomplete = xtc_db_fetch_array($incomplete_query);
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS, $incomplete['total'] < 1,
+                      $incomplete['total'], MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED);
+
+      // a second attachment per language is ambiguous, the snapshot then refuses to archive one
+      $ambiguous_query = xtc_db_query("SELECT COUNT(*) AS total FROM (
+                                         SELECT products_id, languages_id
+                                         FROM ".TABLE_PRODUCTS_CONTENT."
+                                         WHERE content_type = 'garan_terms'
+                                         GROUP BY products_id, languages_id
+                                         HAVING COUNT(*) > 1
+                                       ) AS ambiguous");
+      $ambiguous = xtc_db_fetch_array($ambiguous_query);
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AMBIGUOUS, $ambiguous['total'] < 1,
+                      $ambiguous['total'], MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED);
+
+      // one file for several languages can be correct, the shop owner has to decide
+      $shared_query = xtc_db_query("SELECT COUNT(*) AS total FROM (
+                                      SELECT content_file
+                                      FROM ".TABLE_PRODUCTS_CONTENT."
+                                      WHERE content_type = 'garan_terms' AND content_file != ''
+                                      GROUP BY content_file
+                                      HAVING COUNT(DISTINCT languages_id) > 1
+                                    ) AS shared");
+      $shared = xtc_db_fetch_array($shared_query);
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED, $shared['total'] < 1,
+                      $shared['total'], MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED);
+
+      $damaged = $this->damaged_archives();
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE, $damaged < 1,
+                      $damaged, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED);
+
+      return $this->diagnosis_table($rows);
+    }
+
+    /**
+     * Renders the collected diagnosis rows. Every dynamic part is escaped here, the callers
+     * hand over plain values.
+     *
+     * @param array $rows label, state, note, own failure label
+     * @return string
+     */
+    function diagnosis_table($rows) {
       $content = '<div class="clear div_box mrg5"><table class="tableInput border0">';
 
       foreach ($rows as $row) {
         $note = (isset($row[2]) && $row[2] !== '') ? ' '.encode_htmlspecialchars($row[2]) : '';
+        $failed = (isset($row[3]) && $row[3] !== '') ? $row[3] : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED;
         $content .= '<tr><td style="width:420px;"><span class="main">'.$row[0].'</span></td>'.
                     '<td><span class="main'.(($row[1] === true) ? '' : ' error').'">'.
-                    (($row[1] === true) ? MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED.$note).
+                    (($row[1] === true) ? MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK : $failed.$note).
                     '</span></td></tr>';
       }
 
@@ -115,6 +181,82 @@
      * or group change the shop owner empties the cache through the action the shop brings for
      * it, delcache in admin/configuration.php.
      */
+    /**
+     * The directories the module writes into. The cache subdirectory is not listed on purpose:
+     * "delcache" removes it and the renderer creates it again, so only its parent has to be writable.
+     *
+     * @return array label => absolute path
+     */
+    function writable_dirs() {
+      return array(
+        'cache/' => DIR_FS_CATALOG.'cache/',
+        'media/guarantee_labels/archive/garan/' => DIR_FS_CATALOG.'media/guarantee_labels/archive/garan/',
+        'media/guarantee_labels/archive/notice/' => DIR_FS_CATALOG.'media/guarantee_labels/archive/notice/',
+        'media/products/garan_archive/' => DIR_FS_CATALOG.'media/products/garan_archive/',
+      );
+    }
+
+    /**
+     * A directory the module creates on demand counts as writable when its nearest existing
+     * parent is writable.
+     *
+     * @param string $dir
+     * @return bool
+     */
+    function dir_writable($dir) {
+      $path = rtrim($dir, '/');
+
+      while ($path !== '' && !is_dir($path)) {
+        $parent = dirname($path);
+
+        if ($parent === $path) {
+          return false;
+        }
+
+        $path = $parent;
+      }
+
+      return ($path !== '' && is_writable($path));
+    }
+
+    /**
+     * Counts archived order rows whose files are gone. A mail sent later would silently drop the
+     * label or the guarantee conditions, so the shop owner has to see the number here.
+     *
+     * @return int
+     */
+    function damaged_archives() {
+      require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
+
+      $archive = new guarantee_labels_archive();
+      $damaged = 0;
+
+      $notice_query = xtc_db_query("SELECT DISTINCT notice_hash FROM ".TABLE_ORDERS_GUARANTEE);
+      while ($notice = xtc_db_fetch_array($notice_query)) {
+        if (!is_file($archive->notice_path($notice['notice_hash']).'notice.svg')) {
+          $damaged++;
+        }
+      }
+
+      $garan_query = xtc_db_query("SELECT DISTINCT garan_hash FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE);
+      while ($garan = xtc_db_fetch_array($garan_query)) {
+        if (!is_file($archive->garan_path($garan['garan_hash']).'colour.svg')) {
+          $damaged++;
+        }
+      }
+
+      $terms_query = xtc_db_query("SELECT DISTINCT terms_hash, terms_filename
+                                   FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE."
+                                   WHERE terms_hash IS NOT NULL AND terms_hash != ''");
+      while ($terms = xtc_db_fetch_array($terms_query)) {
+        if (!is_file($archive->terms_path($terms['terms_hash'], $terms['terms_filename']))) {
+          $damaged++;
+        }
+      }
+
+      return $damaged;
+    }
+
     function process($file) {
       $this->save_b2b_customers_status();
     }

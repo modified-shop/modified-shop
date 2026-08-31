@@ -22,6 +22,8 @@
    */
   class guarantee_labels_archive {
 
+    const CHECKSUM_FILE = 'checksums.json';
+
     var $cache_dir;
     var $garan_dir;
     var $notice_dir;
@@ -157,6 +159,7 @@
      */
     function read_files($dir, $names) {
       $files = array();
+      $checksums = $this->read_checksums($dir);
 
       foreach ($names as $name) {
         if (!is_file($dir.$name)) {
@@ -169,10 +172,33 @@
           return false;
         }
 
+        // archives written before the sidecar existed carry no checksum and stay readable
+        if (isset($checksums[$name]) && hash('sha256', $content) !== $checksums[$name]) {
+          return false;
+        }
+
         $files[$name] = $content;
       }
 
       return $files;
+    }
+
+    /**
+     * Reads the checksum sidecar of one hash directory. It is what makes a damaged archive
+     * distinguishable from an intact one, because the directory hash covers the input data
+     * of the label and not the bytes of the rendered files.
+     *
+     * @param string $dir
+     * @return array name => sha256, empty when no sidecar is there
+     */
+    function read_checksums($dir) {
+      if (!is_file($dir.self::CHECKSUM_FILE)) {
+        return array();
+      }
+
+      $data = @json_decode((string)@file_get_contents($dir.self::CHECKSUM_FILE), true);
+
+      return is_array($data) ? $data : array();
     }
 
     /**
@@ -200,6 +226,8 @@
         return false;
       }
 
+      $checksums = array();
+
       foreach ($files as $name => $content) {
         if (@file_put_contents($temp.$name, $content, LOCK_EX) === false
             || @file_get_contents($temp.$name) !== $content
@@ -209,6 +237,14 @@
           $this->fail($type, $temp.$name, 'file cannot be written completely');
           return false;
         }
+
+        $checksums[$name] = hash('sha256', $content);
+      }
+
+      if (@file_put_contents($temp.self::CHECKSUM_FILE, json_encode($checksums), LOCK_EX) === false) {
+        $this->remove_dir($temp);
+        $this->fail($type, $temp.self::CHECKSUM_FILE, 'checksums cannot be written');
+        return false;
       }
 
       if (@rename(rtrim($temp, '/'), rtrim($target, '/')) === false) {

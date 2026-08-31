@@ -148,9 +148,17 @@
       $file = $archive->terms_path($product['terms_hash'], $product['terms_filename']);
 
       // the same conditions may belong to more than one position of the order
-      if (is_file($file) && !in_array($file, $attachments, true)) {
-        $attachments[] = $file;
+      if (in_array($file, $attachments, true)) {
+        continue;
       }
+
+      // a replaced or truncated archive file would attach the wrong conditions to the mail
+      if (!is_file($file) || hash_file('sha256', $file) !== $product['terms_hash']) {
+        guarantee_labels_snapshot_log('terms read', $orders_id, array('archived guarantee conditions do not match '.$product['terms_hash']));
+        continue;
+      }
+
+      $attachments[] = $file;
     }
 
     return $attachments;

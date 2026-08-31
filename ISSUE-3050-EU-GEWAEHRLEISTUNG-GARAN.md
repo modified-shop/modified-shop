@@ -320,6 +320,10 @@ media/guarantee_labels/archive/
 
 `notice.json` speichert Sprache, Mailtext, Linktext, Your-Europe-URL und Version des bei der Snapshoterzeugung verwendeten Hinweises. Die erste und jede erneute Bestellbestaetigung lesen Text und Link anhand von `orders_guarantee.notice_hash` aus diesem Snapshot. Spaetere Aenderungen an Sprachkonstanten oder URLs veraendern bestehende Bestellungen nicht.
 
+Jedes Hashverzeichnis erhaelt beim Schreiben eine `checksums.json` mit dem SHA-256 jeder abgelegten Datei. Beim Lesen wird jede Datei gegen ihren Eintrag geprueft; ein Verzeichnis mit abweichendem Inhalt gilt als nicht lesbar. Der Verzeichnisname deckt die Eingangsdaten des Labels ab und nicht die Bytes der erzeugten Dateien, deshalb ist die Pruefsumme der einzige Weg, ein beschaedigtes Archiv von einem intakten zu unterscheiden. Aeltere Archive ohne Datei bleiben unveraendert lesbar.
+
+Der Anhang mit den Garantiebedingungen wird beim Mailversand zusaetzlich gegen `terms_hash` geprueft. Passt der Inhalt nicht mehr, protokolliert das Modul den Fall und laesst den Anhang weg, statt eine ersetzte Datei zu versenden.
+
 Cachedateien duerfen jederzeit geloescht und aus den versionierten Vorlagen neu erzeugt werden. Archivdateien werden nur einmal geschrieben und nie ueberschrieben. Mehrere Bestellungen duerfen dieselben Hash-Verzeichnisse referenzieren. Beim Loeschen einer Bestellung werden gemeinsam verwendete Archivdateien nicht entfernt. Eine automatische Archivbereinigung gehoert nicht zum ersten Umfang.
 
 Der GARAN-Grafikcache ist vom Smarty-Blockcache zu unterscheiden. `includes/modules/cross_selling.php`, `includes/modules/new_products.php` und `includes/modules/products_media.php` koennen ihre gerenderte Ausgabe ueber `CacheCheck()` bis zu `CACHE_LIFETIME` zwischenspeichern. Ihre Cache-IDs enthalten keinen Stand der GARAN-Daten. Ohne ausdrueckliche Leerung koennten deshalb ein entferntes Label, ein geaenderter Hersteller oder eine geaenderte Garantiebedingung bis zum Ablauf des Blockcache sichtbar bleiben.

@@ -37,3 +37,12 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SELECT', 'Garantiedauer in %s enthalten');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_RENDERER', 'Vorlagen, Schriften und GD f&uuml;r die Labelerzeugung');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_NOTICE', 'Gew&auml;hrleistungshinweis und Texte f&uuml;r %s');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SCHEMA', 'Tabellen, Indizes und Spalten des Moduls');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_WRITABLE', 'Schreibrecht auf %s');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS', 'Artikel mit Garantiedauer, aktivem Hersteller und Modellkennung');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AMBIGUOUS', 'Garantiebedingungen je Artikel und Sprache eindeutig');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED', 'Dieselbe Datei in mehreren Sprachen als Garantiebedingung markiert');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE', 'Archivierte Dateien zu bestehenden Bestellungen vorhanden');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE', 'unvollst&auml;ndig:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED', 'kein Schreibrecht:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED', 'betroffen:');

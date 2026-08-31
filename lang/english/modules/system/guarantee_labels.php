@@ -37,3 +37,12 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SELECT', 'guarantee duration part of %s');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_RENDERER', 'templates, fonts and GD for building the label');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_NOTICE', 'notice about the legal guarantee and texts for %s');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SCHEMA', 'tables, indexes and columns of the module');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_WRITABLE', 'write permission on %s');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS', 'articles with duration, active manufacturer and model identifier');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AMBIGUOUS', 'guarantee conditions unique per article and language');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED', 'the same file marked as guarantee conditions in several languages');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE', 'archived files of existing orders in place');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE', 'incomplete:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED', 'not writable:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED', 'affected:');
