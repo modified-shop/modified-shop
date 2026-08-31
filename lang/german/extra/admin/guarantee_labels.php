@@ -36,3 +36,32 @@
   define('TEXT_GUARANTEE_LABELS_CONTENT_TYPE', 'Verwendung:');
   define('TEXT_GUARANTEE_LABELS_CONTENT_TYPE_DEFAULT', 'Standard');
   define('TEXT_GUARANTEE_LABELS_CONTENT_TYPE_TERMS', 'GARAN-Garantiebedingungen');
+
+  define('BUTTON_GUARANTEE_LABELS_EDIT', 'EU-Haltbarkeitsgarantie');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_HEADING', 'EU-Haltbarkeitsgarantie der Bestellposition');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_INFO', 'Diese Werte geh&ouml;ren zur Bestellung und werden mit ihr aufbewahrt. Eine &Auml;nderung wirkt nicht auf den Katalogartikel. Leeren Sie Hersteller, Modellkennung und Dauer, wird die Zusage von der Position entfernt.');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_MANUFACTURER', 'Hersteller/Garantiegeber:');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_MODEL', 'Hersteller-Modellkennung:');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_DURATION', 'Garantiedauer in Jahren:');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_TERMS', 'Garantiebedingungen:');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_TERMS_NONE', 'keine hinterlegt');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_TERMS_KEEP', 'unver&auml;ndert lassen');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_TERMS_REMOVE', 'entfernen');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_TERMS_REPLACE', 'ersetzen durch:');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_PREVIEW', 'Aktuelles Label der Bestellposition:');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_PREVIEW_NONE', 'F&uuml;r diese Position ist kein Label hinterlegt.');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_FROM_PRODUCT', 'Aus Artikeldaten &uuml;bernehmen');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_CONFIRM', 'Die Auftragsbest&auml;tigung wurde bereits versendet. &Auml;nderung ausdr&uuml;cklich best&auml;tigen.');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_SAVED', 'Die EU-Haltbarkeitsgarantie der Bestellposition wurde gespeichert.');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_REMOVED', 'Die EU-Haltbarkeitsgarantie wurde von der Bestellposition entfernt.');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_HISTORY', 'EU-Haltbarkeitsgarantie der Position %1$s ge&auml;ndert: %2$s');
+  define('TEXT_GUARANTEE_LABELS_SNAPSHOT_HISTORY_FIELD', '%1$s von &quot;%2$s&quot; auf &quot;%3$s&quot;');
+
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_DURATION', 'EU-Haltbarkeitsgarantie: &quot;%s&quot; ist keine zul&auml;ssige Garantiedauer. F&uuml;r ein Label sind ganze und halbe Jahre &uuml;ber zwei bis 99,5 erlaubt.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_MANUFACTURER', 'EU-Haltbarkeitsgarantie: Der Hersteller/Garantiegeber fehlt.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_UNKNOWN', 'EU-Haltbarkeitsgarantie: Die Bestellposition wurde nicht gefunden.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_RENDER', 'EU-Haltbarkeitsgarantie: Das Label konnte nicht erzeugt werden (%s). Der bisherige Stand bleibt erhalten.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_ARCHIVE', 'EU-Haltbarkeitsgarantie: Das Label konnte nicht archiviert werden (%s). Der bisherige Stand bleibt erhalten.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_CONFIRM', 'EU-Haltbarkeitsgarantie: Die &Auml;nderung wurde nicht best&auml;tigt und deshalb nicht gespeichert.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_TERMS', 'EU-Haltbarkeitsgarantie: Die Garantiebedingungen konnten nicht archiviert werden (%s). Der bisherige Stand bleibt erhalten.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_NO_PRODUCT', 'EU-Haltbarkeitsgarantie: Der Katalogartikel liefert keine vollst&auml;ndigen GARAN-Daten.');
