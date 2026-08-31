@@ -15,7 +15,14 @@
   if (isset($smarty) && basename($PHP_SELF) === FILENAME_CHECKOUT_CONFIRMATION) {
     require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
-    // always assigned, so a template can place {$GUARANTEE_NOTICE} without asking whether the
-    // module is installed
-    $smarty->assign('GUARANTEE_NOTICE', guarantee_labels_notice($_SESSION['cart']->get_content_type()));
+    // Always assigned, so a template can place the notice without asking whether the module
+    // is installed. GUARANTEE_NOTICE is the complete block, title and body are the same
+    // content for a template that builds its own box around it.
+    $guarantee_labels_parts = guarantee_labels_notice_parts($_SESSION['cart']->get_content_type());
+
+    $smarty->assign('GUARANTEE_NOTICE', guarantee_labels_notice_wrap($guarantee_labels_parts));
+    $smarty->assign('GUARANTEE_NOTICE_TITLE', ($guarantee_labels_parts === false) ? '' : $guarantee_labels_parts['title']);
+    $smarty->assign('GUARANTEE_NOTICE_BODY', ($guarantee_labels_parts === false) ? '' : $guarantee_labels_parts['body']);
+
+    unset($guarantee_labels_parts);
   }

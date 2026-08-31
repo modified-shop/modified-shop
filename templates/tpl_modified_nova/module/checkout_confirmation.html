@@ -100,6 +100,13 @@
           {$ORDER_COMMENTS}
         </div>
       {/if}
+
+      {if $GUARANTEE_NOTICE_BODY != ''}
+        <div class="checkout_box">
+          <div class="subline">{$GUARANTEE_NOTICE_TITLE}</div>
+          {$GUARANTEE_NOTICE_BODY}
+        </div>
+      {/if}
   
       {if $IP_LOG == 'true'}
         <br />
@@ -219,7 +226,6 @@
 
 
 
-          {if $GUARANTEE_NOTICE}{$GUARANTEE_NOTICE}{/if}
           <div class="button_row">
             <div class="br_right">
               <div class="br_btn_checkout">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}<div class="cssButtonPos12">{$CHECKOUT_BUTTON}</div>{$CHECKOUT_FORM_END}</div>

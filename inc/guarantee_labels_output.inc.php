@@ -336,21 +336,20 @@
   }
 
   /**
-   * guarantee_labels_notice()
+   * guarantee_labels_notice_parts()
    *
-   * Builds the notice about the legal guarantee that has to stand before the order button.
+   * The parts of the notice about the legal guarantee that has to stand before the order
+   * button, so a template can place them in its own layout.
    *
    * The graphic is an A4 sheet of about 640 kB that consists of outlined paths only. It carries
-   * no live text, so it is referenced as an image instead of being written into the document:
-   * the browser caches it and the page stays small. Enlarging it uses the same overlay as the
-   * GARAN label.
+   * no live text and is therefore referenced as an image, fetched when the overlay opens.
    *
    * @param mixed $content_type the content type of the cart, virtual for downloads only
-   * @return string empty when the module is off or the cart holds no physical goods
+   * @return mixed array of title and body, false when the notice does not apply
    */
-  function guarantee_labels_notice($content_type = false) {
+  function guarantee_labels_notice_parts($content_type = false) {
     if (!guarantee_labels_active() || !guarantee_labels_physical($content_type)) {
-      return '';
+      return false;
     }
 
     $language = isset($_SESSION['language']) ? $_SESSION['language'] : '';
@@ -358,7 +357,7 @@
 
     // a language package brings its own graphic, without one there is nothing to show
     if ($language === '' || !is_file(DIR_FS_CATALOG.$file)) {
-      return '';
+      return false;
     }
 
     $source = encode_htmlspecialchars((defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').$file);
@@ -378,21 +377,51 @@
     // The sheet is a full A4 page. The checkout carries the wording and a control, the graphic
     // itself opens in the lightbox and is fetched on the first click, so the page stays light.
     // The overlay classes of the label are reused, both graphics therefore open the same way.
+    return array(
+      'title' => TEXT_GUARANTEE_NOTICE_TITLE,
+      'body' => '<p class="guarantee-notice__text">'.TEXT_GUARANTEE_NOTICE_TEXT.'</p>'.
+                $mixed.
+                '<button type="button" class="guarantee-label__compact guarantee-notice__open" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
+                  TEXT_GUARANTEE_NOTICE_OPEN.
+                '</button>'.
+                '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
+                  '<div class="guarantee-label__content" id="'.$id.'">'.
+                    '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'">'.
+                      '<div class="guarantee-label__graphic"></div>'.
+                    '</div>'.
+                  '</div>'.
+                  '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.
+                '</dialog>'.
+                $link,
+    );
+  }
+
+  /**
+   * guarantee_labels_notice()
+   *
+   * The complete block with its own frame and heading, for a template that places the notice
+   * as one piece. A template with its own box layout uses guarantee_labels_notice_parts().
+   *
+   * @param mixed $content_type the content type of the cart, virtual for downloads only
+   * @return string
+   */
+  function guarantee_labels_notice($content_type = false) {
+    return guarantee_labels_notice_wrap(guarantee_labels_notice_parts($content_type));
+  }
+
+  /**
+   * Puts frame and heading around the parts of the notice.
+   *
+   * @param mixed $parts the result of guarantee_labels_notice_parts()
+   * @return string
+   */
+  function guarantee_labels_notice_wrap($parts) {
+    if ($parts === false) {
+      return '';
+    }
+
     return '<div class="guarantee-notice">'.
-             '<p class="guarantee-notice__title">'.TEXT_GUARANTEE_NOTICE_TITLE.'</p>'.
-             '<p class="guarantee-notice__text">'.TEXT_GUARANTEE_NOTICE_TEXT.'</p>'.
-             $mixed.
-             '<button type="button" class="guarantee-label__compact guarantee-notice__open" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
-               TEXT_GUARANTEE_NOTICE_OPEN.
-             '</button>'.
-             '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
-               '<div class="guarantee-label__content" id="'.$id.'">'.
-                 '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'">'.
-                   '<div class="guarantee-label__graphic"></div>'.
-                 '</div>'.
-               '</div>'.
-               '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.
-             '</dialog>'.
-             $link.
+             '<p class="guarantee-notice__title">'.$parts['title'].'</p>'.
+             $parts['body'].
            '</div>';
   }
