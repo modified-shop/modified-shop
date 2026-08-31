@@ -30,7 +30,7 @@
    * second language in the same request gets no snapshot instead of the wrong texts.
    *
    * @param string $language the language directory of the order
-   * @return mixed array of text, link and url, false when the language is not fully kept
+   * @return mixed array of text, link, url and title, false when the language is not fully kept
    */
   function guarantee_labels_notice_texts($language) {
     static $loaded;
@@ -54,6 +54,8 @@
       'text' => 'TEXT_GUARANTEE_NOTICE_MAIL',
       'link' => 'TEXT_GUARANTEE_NOTICE_LINK',
       'url' => 'TEXT_GUARANTEE_NOTICE_URL',
+      // only labels the block and stays out of notice_hash, see guarantee_labels_notice_hash()
+      'title' => 'TEXT_GUARANTEE_NOTICE_TITLE',
     );
 
     $texts = array();
