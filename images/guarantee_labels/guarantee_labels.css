@@ -70,7 +70,7 @@
    one width below to resize it; the aspect ratio is kept by the svg itself. */
 .guarantee-label__compact svg {
   display: block;
-  width: 240px;
+  width: 120px;
   max-width: 100%;
   height: auto;
 }
