@@ -635,6 +635,8 @@
    * @return void
    */
   function guarantee_labels_snapshot_history($orders_id, $orders_products_id, $before, $after) {
+    require_once(DIR_FS_INC.'html_encoding.php');
+
     $fields = array(
       'manufacturers_name' => TEXT_GUARANTEE_LABELS_SNAPSHOT_MANUFACTURER,
       'manufacturers_model' => TEXT_GUARANTEE_LABELS_SNAPSHOT_MODEL,
@@ -654,7 +656,7 @@
       }
 
       if ($old !== $new) {
-        $changes[] = sprintf(TEXT_GUARANTEE_LABELS_SNAPSHOT_HISTORY_FIELD, $title, $old, $new);
+        $changes[] = sprintf(decode_htmlentities(TEXT_GUARANTEE_LABELS_SNAPSHOT_HISTORY_FIELD), decode_htmlentities($title), $old, $new);
       }
     }
 
@@ -672,6 +674,7 @@
       'orders_status_id' => (int)$status['orders_status'],
       'date_added' => 'now()',
       'customer_notified' => '0',
-      'comments' => sprintf(TEXT_GUARANTEE_LABELS_SNAPSHOT_HISTORY, (int)$orders_products_id, implode(', ', $changes)),
+      // the history is shown as plain text, entities would end up on the screen
+      'comments' => sprintf(decode_htmlentities(TEXT_GUARANTEE_LABELS_SNAPSHOT_HISTORY), (int)$orders_products_id, implode(', ', $changes)),
     ));
   }
