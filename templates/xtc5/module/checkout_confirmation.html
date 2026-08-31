@@ -82,12 +82,6 @@
     </div>
   {/if}
 
-  {if $GUARANTEE_NOTICE_BODY != ''}
-    <div class="checkoutNav2Boxes">
-      <h2>{$GUARANTEE_NOTICE_TITLE}</h2>
-      <p style="clear:both;">{$GUARANTEE_NOTICE_BODY}</p>
-    </div>
-  {/if}
   <div style="clear:both"></div>
 
   {if $ORDER_COMMENTS != ''}
@@ -109,6 +103,12 @@
         </tr>
       {/foreach}
     </table>
+  {/if}
+  {if $GUARANTEE_NOTICE_BODY != ''}
+    <div class="checkoutNav2Boxes">
+      <h2>{$GUARANTEE_NOTICE_TITLE}</h2>
+      <p style="clear:both;">{$GUARANTEE_NOTICE_BODY}</p>
+    </div>
   {/if}
 
   {if $MODULE_gift_cart}
