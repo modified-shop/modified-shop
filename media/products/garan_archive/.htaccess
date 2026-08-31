@@ -1,0 +1,30 @@
+#  -----------------------------------------------------------------------------------------
+#  $Id$
+#
+#  modified eCommerce Shopsoftware
+#  http://www.modified-shop.org
+#
+#  Copyright (c) 2009 - 2026 [www.modified-shop.org]
+#  -----------------------------------------------------------------------------------------
+#
+#  Released under the GNU General Public License
+#  -----------------------------------------------------------------------------------------
+#
+# This is used with Apache WebServers
+# The archive holds the guarantee conditions attached to existing orders.
+# PHP reads them locally for the order confirmation, direct HTTP requests are blocked.
+# The catalogue copy under media/products/ stays reachable, this historical one does not.
+
+<FilesMatch ".*">
+  <IfModule mod_authz_core.c>
+    # Apache 2.4
+    <RequireAll>
+      Require all denied
+    </RequireAll>
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    # Apache 2.2
+    Order Deny,Allow
+    Deny from all
+  </IfModule>
+</FilesMatch>

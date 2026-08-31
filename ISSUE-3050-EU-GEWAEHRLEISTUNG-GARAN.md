@@ -272,6 +272,8 @@ Die Schreibweise mit `+` beschreibt nur die fachlichen Bestandteile. Technisch w
 
 Aendert sich ein Bestandteil, aendert sich der zugehoerige Hash. `garan_hash` ist der gemeinsame Cache- und Archivschluessel fuer die zusammengehoerige farbige und kompakte Variante. `notice_hash` referenziert den vollstaendigen historischen Sprachstand aus Grafik, Mailtext, Linktext und URL.
 
+Mailtext und Anhangsliste fragen dieselbe Funktion `guarantee_labels_terms_file()`. Getrennt gefragt koennte der Text ein Dokument nennen, das die Anhangspruefung anschliessend als beschaedigt verwirft, und die Mail wuerde etwas behaupten, das sie nicht mitfuehrt.
+
 Ist in der Bestellsprache ein Artikel-Anhang vom Typ `garan_terms` vorhanden, enthaelt `orders_products_guarantee.terms_hash` den SHA-256-Hash seines Inhalts. Der Hash referenziert die Fassung der Garantiebedingungen, die zur Bestellposition gehoert. Ein erneuter Mailversand haengt genau diese archivierte Fassung an, unabhaengig davon, ob der Artikel-Anhang inzwischen ersetzt oder geloescht wurde. Fehlt ein solcher Anhang, bleiben `terms_hash` und `terms_filename` `NULL` und es wird keine Garantieerklaerung angehaengt.
 
 `terms_filename` speichert den bereinigten Dateinamen einschliesslich Erweiterung. Der bestehende Mailweg bietet keinen separaten Namen fuer den Anhang an, sondern uebergibt nur den Dateipfad an PHPMailer. Die Archivdatei muss deshalb selbst unter diesem Dateinamen gespeichert werden. Pfadbestandteile, Steuerzeichen, Kommas und sonstige unzulaessige Dateinamen sind abzulehnen. Ein Komma darf nicht ersetzt oder maskiert werden, weil `check_attachments()` die Anhangsliste mit `explode(',', ...)` zerlegt.
@@ -320,7 +322,9 @@ media/guarantee_labels/archive/
 
 `notice.json` speichert Sprache, Mailtext, Linktext, Your-Europe-URL und Version des bei der Snapshoterzeugung verwendeten Hinweises. Die erste und jede erneute Bestellbestaetigung lesen Text und Link anhand von `orders_guarantee.notice_hash` aus diesem Snapshot. Spaetere Aenderungen an Sprachkonstanten oder URLs veraendern bestehende Bestellungen nicht.
 
-Jedes Hashverzeichnis erhaelt beim Schreiben eine `checksums.json` mit dem SHA-256 jeder abgelegten Datei. Beim Lesen wird jede Datei gegen ihren Eintrag geprueft; ein Verzeichnis mit abweichendem Inhalt gilt als nicht lesbar. Der Verzeichnisname deckt die Eingangsdaten des Labels ab und nicht die Bytes der erzeugten Dateien, deshalb ist die Pruefsumme der einzige Weg, ein beschaedigtes Archiv von einem intakten zu unterscheiden. Aeltere Archive ohne Datei bleiben unveraendert lesbar.
+Jedes Hashverzeichnis erhaelt beim Schreiben eine `checksums.json` mit dem SHA-256 jeder abgelegten Datei. Beim Lesen wird jede Datei gegen ihren Eintrag geprueft; ein Verzeichnis mit abweichendem Inhalt gilt als nicht lesbar. Ein unlesbarer Sidecar zaehlt als Schaden und nicht als Archiv ohne Sidecar. Ist ein Sidecar vorhanden, muss er jede gelesene Datei nennen; ein entfernter Eintrag wuerde sonst eine ersetzte Datei decken. Ein beschaedigtes Hashverzeichnis wird beim naechsten Schreibvorgang verworfen und neu angelegt, weil sein Inhalt aus seinem Namen folgt.
+
+Auch die Cache-URL des vollstaendigen Labels wird gegen den Sidecar geprueft. Faellt die Pruefung durch, verweist die Seite nicht auf die Datei, sondern bettet die Grafik der aktuellen Anfrage ein. Der Verzeichnisname deckt die Eingangsdaten des Labels ab und nicht die Bytes der erzeugten Dateien, deshalb ist die Pruefsumme der einzige Weg, ein beschaedigtes Archiv von einem intakten zu unterscheiden. Aeltere Archive ohne Datei bleiben unveraendert lesbar.
 
 Der Anhang mit den Garantiebedingungen wird beim Mailversand zusaetzlich gegen `terms_hash` geprueft. Passt der Inhalt nicht mehr, protokolliert das Modul den Fall und laesst den Anhang weg, statt eine ersetzte Datei zu versenden.
 
@@ -452,13 +456,15 @@ Validierung beim Speichern:
 - Bis einschliesslich `2.0` wird der Wert gespeichert, ohne Hersteller, Modellkennung oder Textbreite zu verlangen. Aus dieser Dauer entsteht kein Label, also braucht es die Labeldaten nicht. Erst ab `2.5` gelten die folgenden Anforderungen.
 - Ein Hersteller muss ausgewaehlt sein.
 - `products_manufacturers_model` muss gefuellt sein.
-- Ein optional markierter Anhang muss lokal gespeichert und fuer die betroffenen B2C-Kundengruppen erreichbar sein.
+- Ein optional markierter Anhang muss lokal gespeichert und fuer die betroffenen B2C-Kundengruppen erreichbar sein. Die Anhangsverwaltung prueft die ausgewaehlten `group_ids` gegen die Kundengruppen, denen das Label gezeigt wird, und lehnt die Markierung ab, wenn eine davon das Dokument nicht sehen kann.
 - Herstellername und Modellkennung muessen in die offiziellen editierbaren Bereiche der Vorlage passen.
 - Werte duerfen weder abgeschnitten noch durch eine kleinere als die vorgegebene Schrift passend gemacht werden.
 - Bei Artikeln mit Varianten muss dieselbe Garantie fuer alle bestellbaren Auspraegungen gelten. Andernfalls darf im ersten Umfang kein GARAN-Label aktiviert werden.
 - Das Modul speichert keine Laenderzuordnung und fuehrt im Storefront keine Pruefung des Lieferlands durch. Mit dem Eintragen der Garantiedauer bestaetigt der Admin, dass die Garantie in allen belieferten Laendern identisch gilt.
 
 Bei unvollstaendigen GARAN-Kerndaten darf kein GARAN-Label im Storefront erscheinen. Ein fehlender Garantie-Anhang zaehlt nicht zu diesen Kerndaten und verhindert die Anzeige nicht. Die Artikelmaske soll Fehler und fehlende optionale Anhaenge konkret benennen. Jede bei einer Admin-Aktion entstehende Fehlermeldung wird ueber den bestehenden `messageStack` ausgegeben.
+
+Eine abgelehnte Eingabe erreicht die Spalte nicht. `insert_product_before()` entfernt `products_garan_duration` bei einem Fehler aus dem Datensatz, statt `NULL` einzutragen. Die Artikelverwaltung schreibt die Zeile, bevor sie ueber `insert_product_error()` vom Fehler erfaehrt; ein Eintrag an dieser Stelle wuerde also eine gueltige gespeicherte Garantie bei einem Speichervorgang loeschen, den der Shopbetreiber gar nicht durchbekommen hat. Ein bewusst geleertes Feld bleibt davon unberuehrt und setzt weiterhin `NULL`.
 
 ### Artikelpruefung als Klassenerweiterung
 
@@ -490,6 +496,8 @@ Dafuer werden zwei vorhandene Hooks verwendet:
 - `duplicate_product_end()` laeuft nach dem Kopierblock der Artikel-Anhaenge und entfernt die auf das Duplikat kopierten Zeilen mit `content_type = 'garan_terms'`.
 
 Damit kann ein duplizierter Artikel nicht allein durch kopierte Daten mit der Modellkennung oder Garantieerklaerung des Ursprungsartikels als GARAN-Artikel erscheinen.
+
+Beide Hooks pruefen den Modulstatus ausdruecklich nicht. Modellkennung und `content_type` sind Core-Felder und gehoeren dem Ursprungsartikel, unabhaengig davon, ob das Modul gerade laeuft. Ein spaeter eingeschaltetes Modul wuerde die mitkopierten Werte sonst als gueltige GARAN-Daten des Duplikats ausgeben.
 
 ### Import und Export
 
@@ -691,8 +699,9 @@ Dafuer gelten folgende Regeln:
 - Die Bestellbearbeitung zeigt die GARAN-Snapshotwerte an und erlaubt eine ausdrueckliche Korrektur mit derselben Validierung wie die Artikelverwaltung.
 - Ein erneuter Mailversand verwendet ausschliesslich die Werte der Bestellposition.
 - Eine frisch manuell angelegte Bestellung hat in `orders.content_type` den leeren Wert `''`, weil `admin/customers.php` das Feld nicht befuellt. Das Modul verlaesst sich deshalb nicht auf diese Spalte und schreibt sie auch nicht.
-- Ob eine Bestellung koerperliche Ware enthaelt, ermittelt `guarantee_labels_order_physical()` zum Zeitpunkt der Ausgabe aus den Positionen selbst: Eine Position ohne Zeile in `orders_products_download` ist koerperliche Ware. Sobald mindestens eine solche Position existiert, gilt die Bestellung als koerperlich. Eine Bestellung ohne Positionen gilt als nicht koerperlich.
-- Damit gilt fuer Storefront- und Adminbestellungen derselbe Weg, ohne eine Kernspalte zu schreiben, die der Shop an anderer Stelle selbst pflegt. Eine spaetere Positionsaenderung wirkt sofort, weil nichts zwischengespeichert wird, das nachgezogen werden muesste.
+- Ob eine Bestellung koerperliche Ware enthaelt, beantwortet `guarantee_labels_order_physical()`. Ist `orders.content_type` gefuellt, entscheidet dieser Wert: Der Checkout hat die Bestellung bereits eingestuft und kennt dabei die gewaehlten Attribute, die eine einzelne Position `mixed` machen koennen.
+- Nur bei leerem `orders.content_type`, also bei einer manuell angelegten Bestellung, entscheiden die Positionen: Eine Position ohne Zeile in `orders_products_download` ist koerperliche Ware. Sobald mindestens eine solche Position existiert, gilt die Bestellung als koerperlich. Eine Bestellung ohne Positionen gilt als nicht koerperlich.
+- Das Modul schreibt die Spalte nie. Eine spaetere Positionsaenderung wirkt sofort, weil nichts zwischengespeichert wird, das nachgezogen werden muesste.
 - Der Gewaehrleistungshinweis wird nur ausgegeben, wenn diese Pruefung koerperliche Ware findet.
 
 Nach dem Insert in `orders_products` wird der GARAN-Snapshot direkt in `orders_product_insert()` in `admin/includes/functions/orders_functions.php` erzeugt. Direkt hinter `xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array)` wird die neue `orders_products_id` mit `xtc_db_insert_id()` ermittelt und die zugehoerige Zeile in `orders_products_guarantee` geschrieben. Dafuer wird keine neue Erweiterungsstelle angelegt.
@@ -735,9 +744,9 @@ Regeln:
 - Bei gefuellter Garantiedauer sind Herstellername und Hersteller-Modellkennung Pflichtfelder.
 - Eine Garantieerklaerung ist optional. Beim Ersetzen wird die neue Datei archiviert und `terms_hash` sowie `terms_filename` werden neu bestimmt. Beim Entfernen werden beide Felder auf `NULL` gesetzt; das GARAN-Label bleibt aktiv.
 - `products_model` bleibt von der Hersteller-Modellkennung getrennt.
-- Vor dem Speichern zeigt der Admin eine Vorschau des resultierenden GARAN-Labels.
+- Vor dem Speichern zeigt der Admin eine Vorschau des GARAN-Labels, das aus den Werten in der Maske entstehen wuerde, nicht des gespeicherten Snapshots. Sonst bestaetigte die Vorschau eine Aenderung, die noch gar nicht vorgenommen wurde.
 - Beim Speichern werden `garan_hash` und die zugehoerige Archivgrafik neu bestimmt.
-- Eine ausdrueckliche Aktion `Aus Artikeldaten uebernehmen` ersetzt die Snapshotwerte durch die aktuell gepflegten Katalogwerte. Ein in der Bestellsprache vorhandener Artikel-Anhang wird ebenfalls uebernommen; fehlt er, bleiben `terms_hash` und `terms_filename` `NULL`.
+- Eine ausdrueckliche Aktion `Aus Artikeldaten uebernehmen` ersetzt die Snapshotwerte durch die aktuell gepflegten Katalogwerte. Ein in der Bestellsprache vorhandener Artikel-Anhang wird ebenfalls uebernommen; fehlt er, werden `terms_hash` und `terms_filename` auf `NULL` gesetzt. Sonst traege die Position aktuelle Kerndaten neben den Garantiebedingungen eines aelteren Stands. Der Artikel wird dabei ueber `orders_products.products_id` der bearbeiteten Position bestimmt und nicht ueber eine Artikelnummer aus dem Request.
 - Es erfolgt keine automatische Synchronisierung mit dem Katalog.
 - Bei bereits an den Kunden gesendeten Bestellungen muss der Admin die Aenderung gesondert bestaetigen.
 - Jede Aenderung wird mit Zeitpunkt, Admin-Benutzer sowie alten und neuen Werten in der Bestellhistorie protokolliert.
@@ -828,6 +837,8 @@ lang/english/extra/guarantee_labels.php
 
 Sie definieren mindestens `TEXT_GUARANTEE_NOTICE_MAIL`, `TEXT_GUARANTEE_NOTICE_LINK` und `TEXT_GUARANTEE_NOTICE_URL`. Alle Storefront-Konstanten des Moduls tragen das Praefix `TEXT_GUARANTEE_`; `MODULE_GUARANTEE_LABELS_` bleibt der Modulkonfiguration vorbehalten. Storefront-Requests laden diese Dateien ueber die vorhandene `extra/`-Sprachlogik. Adminroutinen, die einen Hinweis-Snapshot erzeugen, laden die Datei aus `lang/<orders.language>/extra/guarantee_labels.php` ausdruecklich, weil die Admin-Sprachinitialisierung die Storefront-Datei nicht automatisch einbindet. Admintexte ausserhalb der Modulverwaltung liegen entsprechend unter `lang/german/extra/admin/guarantee_labels.php` und `lang/english/extra/admin/guarantee_labels.php`.
 
+`guarantee_labels_language()` gibt bereits geladene Konstanten nur frei, wenn sie zur angefragten Sprache gehoeren. Im Storefront stammen sie aus der Sprache der Sitzung, also der Sprache, in der der Kunde gerade blaettert, und nicht zwingend aus der Bestellsprache. Ohne diese Bindung wuerde die Bestellansicht im Kundenkonto eine englische Bestellung mit deutschen Beschriftungen versehen.
+
 Die Konfigurationssprache des Systemmoduls liegt getrennt unter:
 
 ```text
@@ -847,7 +858,9 @@ Diese Stelle besitzt keine Erweiterungsstelle und wird deshalb als gezielter Ein
 
 Die Moduldiagnose warnt ausserdem, wenn dieselbe `content_file` in mehreren Sprachen als `garan_terms` markiert ist. Das kann bei einer bewusst mehrsprachigen Datei korrekt sein, muss vom Shopbetreiber aber geprueft werden. Die Warnung blockiert weder die Artikelpflege noch den Checkout.
 
-Fehlt einer der vier Bestandteile, gilt der Gewaehrleistungshinweis in dieser Sprache als nicht verfuegbar. Der Checkout laeuft ohne ihn weiter, die Moduldiagnose zeigt eine Warnung und fuer die Bestellung entsteht keine Zeile in `orders_guarantee`. Das sprachneutrale GARAN-Label bleibt davon unberuehrt.
+Fehlt einer der vier Bestandteile, gilt der Gewaehrleistungshinweis in dieser Sprache als nicht verfuegbar. Der Checkout laeuft ohne ihn weiter, die Moduldiagnose zeigt eine Warnung und fuer die Bestellung entsteht keine Zeile in `orders_guarantee`.
+
+Das sprachneutrale GARAN-Label bleibt davon unberuehrt und wird ausgegeben, auch wenn eine Sprache gar keine Modultexte mitbringt. Die Beschriftungen um die Grafik fallen dann auf `GARAN` zurueck, den offiziellen Namen des Labels, der keine Uebersetzung braucht. Der Link zur Your-Europe-Seite erscheint nur, wenn Adresse und Linktext beide gepflegt sind.
 
 ## Konfiguration
 
@@ -888,7 +901,7 @@ isset($_GET['module'])
 
 - GD-FreeType und `imagettfbbox()`,
 - Schreibrechte und Zustand der Cache- und Archivpfade,
-- Vollstaendigkeit der aktiven Sprachen,
+- Vollstaendigkeit der aktiven Sprachen mit Angabe der jeweils fehlenden Bestandteile aus `notice.svg`, Mailtext, Linktext und Your-Europe-URL; abgeschaltete Sprachen werden nicht geprueft,
 - unvollstaendige GARAN-Produktdaten,
 - dieselbe `content_file`, die in mehreren Sprachen als `garan_terms` markiert ist,
 - fehlende oder beschaedigte historische Archivdateien.
@@ -966,7 +979,7 @@ Voraussichtlich betroffen sind:
 - `images/.htaccess` fuer den HTTP-Zugriff auf die WOFF2-Schriften.
 - `cache/guarantee_labels/` fuer die gemeinsam gecachten GARAN-Varianten.
 - `media/guarantee_labels/archive/` einschliesslich eigener `.htaccess` fuer historische GARAN-Dateien und Gewaehrleistungshinweise.
-- `media/products/garan_archive/` fuer atomar archivierte Garantie-Anhaenge.
+- `media/products/garan_archive/` mit eigener `.htaccess` fuer atomar archivierte Garantie-Anhaenge. Die uebergeordnete `media/.htaccess` sperrt nur Skriptendungen; das historische Archiv braucht eine eigene Sperre, waehrend die Katalogdatei unter `media/products/` erreichbar bleibt.
 - `includes/classes/class.logger.php`, `admin/logs.php` und die vorhandene Logpflege fuer `mod_guarantee_labels_<level>_<datum>.log`.
 - `admin/configuration.php` als vorhandener Weg, den Shopcache zu leeren. Das Modul leert selbst keinen Cache.
 
@@ -990,7 +1003,7 @@ Voraussichtlich betroffen sind:
 - `add_db_fields` traegt `products_garan_duration` in den Speicherweg der Artikelverwaltung ein, ohne als Ersatz fuer die Schemaaenderung behandelt zu werden.
 - In Systemmodul, `add_db_fields`, `define_add_select`, Storefront, Checkout und Admin pruefen, dass ausschliesslich `MODULE_GUARANTEE_LABELS_STATUS` als Statusschluessel verwendet wird.
 - Aktivieren, deaktivieren, entfernen und bestehende Bestelldaten bereinigen; diese Lebenszyklus- und Aufraeumvorgaenge funktionieren auch beim Wechsel zu oder aus dem inaktiven Status.
-- Modulstatus und B2B-Auswahl ueber `admin/module_export.php?set=system` speichern; `process()` wird nach dem Speichern aufgerufen, liest den neuen Status aus `TABLE_CONFIGURATION` statt aus der in diesem Request veralteten Konstante und leert keinen Cache.
+- Modulstatus und B2B-Auswahl ueber `admin/module_export.php?set=system` speichern; `process()` wird nach dem Speichern aufgerufen, liest den neuen Status aus `TABLE_CONFIGURATION` statt aus der in diesem Request veralteten Konstante und leert keinen Cache. Wurde das Modul dabei ohne GD mit FreeType aktiviert, setzt `process()` den Status wieder auf `false` und meldet die fehlende Voraussetzung.
 - GARAN-Systemmodul ueber den regulaeren Adminweg aufrufen; Installation, Bearbeitung, Aktualisierung und Diagnose laufen ausschliesslich ueber `admin/module_export.php?set=system`. `admin/modules.php` benoetigt fuer GARAN weder einen Speicherpfad noch eine Cache-Erweiterung.
 - B2B-Mehrfachauswahl in deutscher und englischer Adminsprache anzeigen; `xtc_cfg_multi_checkbox('xtc_get_customers_statuses', 'chr(44)', ...)` verwendet die lokalisierten Kundengruppen aus `xtc_get_customers_statuses()`.
 - Keine, eine und mehrere B2B-Kundengruppen speichern; `MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS` enthaelt entsprechend `''`, eine ID oder kommaseparierte IDs und wird beim Lesen in eindeutige positive Integerwerte normalisiert.
@@ -1225,7 +1238,7 @@ Die Erweiterung ist fachlich fertig, wenn:
 - Das Modul leert keinen Cache. Der eigene Grafikcache liegt unter dem Inhaltshash und kann verwaisen, aber nicht falsch werden. Nur die Smarty-Blockcaches koennen ein veraltetes Label bis zum Ablauf von `CACHE_LIFETIME` weiter ausliefern; dafuer leert der Shopbetreiber den Cache ueber `admin/configuration.php?action=delcache`. Die Moduldiagnose weist darauf hin. Die historischen Archive werden dabei nicht geloescht.
 - `clear_dir(DIR_FS_CATALOG.'cache/')` entfernt `cache/guarantee_labels/` einschliesslich aller darin liegenden Schutzdateien und danach das Verzeichnis selbst. Der Renderer legt das Basisverzeichnis vor einem Schreibvorgang bei Bedarf rekursiv neu an. Dauerhafte `.htaccess`- oder `index.html`-Dateien sind in diesem Cache-Unterverzeichnis nicht vorgesehen.
 - Bei manuellen Bestellungen stammen `orders.language` und `orders.languages_id` aus der Backend-Sitzung beim Anlegen. Das Modul verwendet `orders.language` als massgebliche Bestellsprache fuer den Hinweis-Snapshot und die Auswahl von `garan_terms`; es ermittelt keine abweichende Kundensprache.
-- Der bestehende Admin-Ablauf befuellt `orders.content_type` beim Anlegen einer leeren Bestellung nicht. Das Modul schreibt die Spalte ebenfalls nicht, sondern ermittelt die koerperliche Ware bei jeder Ausgabe aus den Positionen der Bestellung. Dadurch braucht es keinen zusaetzlich gepflegten Zustand, der nach einer Positionsaenderung falsch stehen bleiben koennte.
+- Der bestehende Admin-Ablauf befuellt `orders.content_type` beim Anlegen einer leeren Bestellung nicht. Das Modul liest die Spalte, wenn sie gefuellt ist, und schreibt sie nie. Bei leerer Spalte entscheiden die Positionen der Bestellung. Dadurch braucht es keinen zusaetzlich gepflegten Zustand, der nach einer Positionsaenderung falsch stehen bleiben koennte.
 - Storefront und Checkout erzeugen `colour.svg` und `nested.svg` gemeinsam unter `cache/guarantee_labels/<garan_hash>/`. Beim Bestellabschluss werden beide Dateien einmalig unter `media/guarantee_labels/archive/garan/<garan_hash>/` archiviert. Das Archiv ist per eigener `.htaccess` nicht direkt ueber HTTP erreichbar.
 - Der historische Gewaehrleistungshinweis liegt unter `media/guarantee_labels/archive/notice/<notice_hash>/`. `notice.svg` bewahrt die angezeigte Grafik; `notice.json` bewahrt Sprache, Mailtext, Linktext, Your-Europe-URL und Version. Ein erneuter Mailversand liest Text und Link aus diesem Snapshot statt aus aktuellen Sprachkonstanten. Fuer den aktuellen Hinweis im Storefront ist kein zusaetzlicher Cache erforderlich.
 - Die zulaessige Laenge von Herstellername und Modellkennung wird nicht ueber eine feste Zeichenzahl entschieden. Der Renderer misst die tatsaechliche Textbreite serverseitig mit `imagettfbbox()`, der jeweiligen Inter-TTF-Datei, der vorgegebenen Schriftgroesse und einer festen Sicherheitstoleranz. Nicht passende Werte werden abgelehnt. GD mit FreeType ist Voraussetzung; ImageMagick und eine neue PHP-Bibliothek werden nicht benoetigt.

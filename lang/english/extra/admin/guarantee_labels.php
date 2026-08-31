@@ -70,3 +70,4 @@
   define('ERROR_GUARANTEE_LABELS_TERMS_NAME', 'GARAN guarantee conditions: the file name &quot;%s&quot; cannot be used as a mail attachment. The attachment was saved as an ordinary one.');
   define('ERROR_GUARANTEE_LABELS_TERMS_FILE', 'GARAN guarantee conditions: the file &quot;%s&quot; is not stored under media/products/. The attachment was saved as an ordinary one.');
   define('ERROR_GUARANTEE_LABELS_TERMS_DUPLICATE', 'GARAN guarantee conditions: this article and language already carry such an attachment. The attachment was saved as an ordinary one.');
+  define('ERROR_GUARANTEE_LABELS_TERMS_GROUPS', 'GARAN guarantee conditions: the attachment is not visible to these customer groups although they see the label: %s. It was saved as a normal attachment.');

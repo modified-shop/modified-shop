@@ -82,10 +82,9 @@
      * @return array
      */
     function duplicate_product_before($sql_data_array, $src_products_id, $dest_categories_id) {
-      if (!defined('MODULE_GUARANTEE_LABELS_STATUS') || MODULE_GUARANTEE_LABELS_STATUS != 'true') {
-        return $sql_data_array;
-      }
-
+      // No status check on purpose: the model identifier belongs to the source article whether
+      // the module runs or not. Carrying it over would make the duplicate claim a guarantee for
+      // an article it was never given for, and switching the module on later would show it.
       if (!isset($sql_data_array['products_garan_duration'])
           || $sql_data_array['products_garan_duration'] === null
           || trim((string)$sql_data_array['products_garan_duration']) === ''
@@ -106,10 +105,7 @@
      * article cannot stay attached to the duplicate.
      */
     function duplicate_product_end($product_id) {
-      if (!defined('MODULE_GUARANTEE_LABELS_STATUS') || MODULE_GUARANTEE_LABELS_STATUS != 'true') {
-        return;
-      }
-
+      // same reasoning as above, and content_type is a core column that exists either way
       xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT."
                           WHERE products_id = '".(int)$product_id."'
                             AND content_type = 'garan_terms'");

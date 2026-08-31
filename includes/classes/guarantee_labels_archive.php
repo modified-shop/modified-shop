@@ -161,6 +161,11 @@
       $files = array();
       $checksums = $this->read_checksums($dir);
 
+      // a sidecar that cannot be read means the directory cannot be vouched for any more
+      if ($checksums === false) {
+        return false;
+      }
+
       foreach ($names as $name) {
         if (!is_file($dir.$name)) {
           return false;
@@ -172,8 +177,13 @@
           return false;
         }
 
-        // archives written before the sidecar existed carry no checksum and stay readable
-        if (isset($checksums[$name]) && hash('sha256', $content) !== $checksums[$name]) {
+        // Archives written before the sidecar existed carry none at all and stay readable. As
+        // soon as one is there it has to cover every file, otherwise a replaced file could hide
+        // behind a removed entry.
+        if (count($checksums) > 0
+            && (!isset($checksums[$name]) || hash('sha256', $content) !== $checksums[$name])
+            )
+        {
           return false;
         }
 
@@ -198,7 +208,8 @@
 
       $data = @json_decode((string)@file_get_contents($dir.self::CHECKSUM_FILE), true);
 
-      return is_array($data) ? $data : array();
+      // an unreadable sidecar is a damaged archive, not an archive without one
+      return (is_array($data) && count($data) > 0) ? $data : false;
     }
 
     /**
@@ -211,7 +222,16 @@
       $target = $base_dir.$hash.'/';
 
       if (is_dir($target)) {
-        return ($this->read_files($target, array_keys($files)) !== false);
+        if ($this->read_files($target, array_keys($files)) !== false) {
+          return true;
+        }
+
+        // The content of a hash directory follows from its name, so a damaged one can always be
+        // rebuilt. Keeping it would serve the damaged files for good.
+        if ($this->remove_dir($target) === false) {
+          $this->fail($type, $target, 'damaged directory cannot be removed');
+          return false;
+        }
       }
 
       if ($this->create_dir($base_dir) === false) {

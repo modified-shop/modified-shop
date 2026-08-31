@@ -26,7 +26,7 @@
    * @param int $content_id the row being updated, zero for a new one
    * @return array the reasons the marking cannot be granted
    */
-  function guarantee_labels_check_terms($products_id, $languages_id, $content_file, $content_link, $content_id = 0) {
+  function guarantee_labels_check_terms($products_id, $languages_id, $content_file, $content_link, $content_id = 0, $group_ids = null) {
     require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
 
     $errors = array();
@@ -53,5 +53,55 @@
       $errors[] = ERROR_GUARANTEE_LABELS_TERMS_DUPLICATE;
     }
 
+    // The document has to reach every group the label is shown to. A restricted attachment would
+    // put a label in front of customers who can never see the conditions behind it.
+    if ($group_ids !== null) {
+      $missing = guarantee_labels_terms_missing_groups($group_ids);
+
+      if (count($missing) > 0) {
+        $errors[] = sprintf(ERROR_GUARANTEE_LABELS_TERMS_GROUPS, encode_htmlspecialchars(implode(', ', $missing)));
+      }
+    }
+
     return $errors;
+  }
+
+  /**
+   * The B2C groups a restricted attachment would keep out. An empty selection reaches everyone,
+   * which is why it produces no finding.
+   *
+   * @param mixed $group_ids the posted selection of the attachment administration
+   * @return array names of the groups that would not reach the document
+   */
+  function guarantee_labels_terms_missing_groups($group_ids) {
+    require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
+
+    // the attachment administration stores the selection as "c_<id>_group,"
+    $selected = array();
+
+    if (preg_match_all('/c_([0-9]+)_group/', (string)$group_ids, $matches)) {
+      $selected = array_map('intval', $matches[1]);
+    }
+
+    // no restriction at all, the attachment is visible to every group
+    if (count($selected) < 1) {
+      return array();
+    }
+
+    $missing = array();
+
+    $groups_query = xtc_db_query("SELECT customers_status_id, customers_status_name
+                                    FROM ".TABLE_CUSTOMERS_STATUS."
+                                   WHERE language_id = '".(int)$_SESSION['languages_id']."'");
+
+    while ($group = xtc_db_fetch_array($groups_query)) {
+      $id = (int)$group['customers_status_id'];
+
+      // only the groups the label is shown to matter, a b2b group sees neither
+      if (guarantee_labels_active($id) && !in_array($id, $selected, true)) {
+        $missing[] = $group['customers_status_name'];
+      }
+    }
+
+    return $missing;
   }

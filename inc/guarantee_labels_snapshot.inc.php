@@ -29,6 +29,11 @@
    * when it is missing. Constants live for the whole request, therefore a second language in
    * the same request is refused instead of answered with the wrong wording.
    *
+   * Already defined constants are not simply accepted: in the storefront they belong to the
+   * language of the session, which is the language the customer browses in and not necessarily
+   * the one the order was placed in. The order view of the customer account would otherwise
+   * label an English order with German wording.
+   *
    * @param string $language the language directory of the order
    * @return bool
    */
@@ -37,20 +42,57 @@
 
     $language = trim((string)$language);
 
-    if (!defined('TEXT_GUARANTEE_NOTICE_MAIL')) {
-      $file = DIR_FS_CATALOG.'lang/'.$language.'/extra/guarantee_labels.php';
-
-      if ($language === '' || strpbrk($language, "/\\\0") !== false || !is_file($file)) {
-        return false;
-      }
-
-      require_once($file);
-      $loaded = $language;
-
-      return true;
+    if ($language === '' || strpbrk($language, "/\\\0") !== false) {
+      return false;
     }
 
-    return (!isset($loaded) || $loaded === $language);
+    if (defined('TEXT_GUARANTEE_NOTICE_MAIL')) {
+      if (!isset($loaded)) {
+        // whoever loaded them did it for the language of this request
+        $loaded = isset($_SESSION['language']) ? trim((string)$_SESSION['language']) : '';
+
+        // without a session language the file itself says whether it is the same wording
+        if ($loaded === '') {
+          $loaded = guarantee_labels_language_of($language) ? $language : '';
+        }
+      }
+
+      return ($loaded !== '' && $loaded === $language);
+    }
+
+    $file = DIR_FS_CATALOG.'lang/'.$language.'/extra/guarantee_labels.php';
+
+    if (!is_file($file)) {
+      return false;
+    }
+
+    require_once($file);
+    $loaded = $language;
+
+    return true;
+  }
+
+  /**
+   * Whether the constants already in memory are the ones of this language. Only asked when the
+   * request carries no session language, so the answer cannot be taken from there.
+   *
+   * @param string $language the language directory
+   * @return bool
+   */
+  function guarantee_labels_language_of($language) {
+    $file = DIR_FS_CATALOG.'lang/'.$language.'/extra/guarantee_labels.php';
+
+    if (!is_file($file)) {
+      return false;
+    }
+
+    $content = (string)@file_get_contents($file);
+
+    if (!preg_match("/define\\s*\\(\\s*'TEXT_GUARANTEE_NOTICE_MAIL'\\s*,\\s*'((?:[^'\\\\]|\\\\.)*)'/", $content, $match)) {
+      return false;
+    }
+
+    return (stripslashes($match[1]) === TEXT_GUARANTEE_NOTICE_MAIL);
   }
 
   /**
@@ -511,6 +553,48 @@
       ),
       'errors' => $errors,
     );
+  }
+
+  /**
+   * The label the entered values would produce. The mask shows what is about to be saved, not
+   * what is stored, otherwise the preview would confirm a change that was never made.
+   *
+   * Rendering fills the cache under the resulting hash. That is the same directory a later save
+   * archives from, so nothing is written twice and nothing wrong can survive: the directory name
+   * follows from the values.
+   *
+   * @param array $values manufacturers_name, manufacturers_model, garan_duration
+   * @param string $language the language of the order, for the texts around the graphic
+   * @return string markup, empty when the values do not produce a label
+   */
+  function guarantee_labels_preview_label($values, $language) {
+    require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
+    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
+
+    $checked = guarantee_labels_validate_snapshot($values);
+
+    if ($checked['values'] === false) {
+      return '';
+    }
+
+    if (!guarantee_labels_language($language)) {
+      return '';
+    }
+
+    $renderer = new guarantee_labels_renderer();
+    $label = $renderer->label($checked['values']['manufacturers_name'],
+                              $checked['values']['manufacturers_model'],
+                              $checked['values']['garan_duration']);
+
+    if ($label === false) {
+      return '';
+    }
+
+    $label['duration'] = $renderer->duration_text($checked['values']['garan_duration']);
+    $label['manufacturer'] = $checked['values']['manufacturers_name'];
+    $label['model'] = $checked['values']['manufacturers_model'];
+
+    return guarantee_labels_markup($label);
   }
 
   /**

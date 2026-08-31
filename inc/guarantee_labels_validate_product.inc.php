@@ -19,6 +19,11 @@
    * An empty duration is allowed and clears the label. As soon as a duration is entered the
    * whole core data set has to be valid, otherwise the article would show an incomplete label.
    *
+   * A rejected value never reaches the column. The key is removed from the data instead, so
+   * an update leaves the stored duration untouched and a new article keeps the column default.
+   * The article administration writes the row before it learns about the error, so overwriting
+   * here would delete a good stored guarantee on a save the shop owner did not get through.
+   *
    * @param array $sql_data_array the prepared product data
    * @param array $products_data the posted or imported values
    * @return array data with the normalised value and errors as ready to use messages
@@ -40,7 +45,7 @@
 
     if ($normalized === false) {
       $errors[] = sprintf(ERROR_GUARANTEE_LABELS_DURATION, encode_htmlspecialchars($duration));
-      $sql_data_array['products_garan_duration'] = 'null';
+      unset($sql_data_array['products_garan_duration']);
       return array('data' => $sql_data_array, 'errors' => $errors);
     }
 
@@ -90,7 +95,7 @@
     }
 
     if (count($errors) > 0) {
-      $sql_data_array['products_garan_duration'] = 'null';
+      unset($sql_data_array['products_garan_duration']);
     }
 
     return array('data' => $sql_data_array, 'errors' => $errors);

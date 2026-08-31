@@ -34,15 +34,20 @@
       'garan_duration' => xtc_db_prepare_input($_POST['garan_duration']),
     );
 
+    // the article of the position, never the one the request claims
+    $guarantee_pID = guarantee_labels_order_position_product($guarantee_oID, $guarantee_opID);
+    $guarantee_from_product = false;
+
     // an explicit action, never an automatic synchronisation with the catalogue
     if (isset($_POST['guarantee_from_product'])) {
-      $guarantee_product = guarantee_labels_snapshot_product((int)$_POST['pID']);
+      $guarantee_product = ($guarantee_pID < 1) ? false : guarantee_labels_snapshot_product($guarantee_pID);
       $guarantee_names = ($guarantee_product === false) ? array() : guarantee_labels_manufacturer_names(array($guarantee_product['manufacturers_id']));
       $guarantee_label = ($guarantee_product === false) ? false : guarantee_labels_product_label($guarantee_product, $guarantee_names);
 
       if ($guarantee_label === false) {
         $guarantee_errors[] = ERROR_GUARANTEE_LABELS_SNAPSHOT_NO_PRODUCT;
       } else {
+        $guarantee_from_product = true;
         $guarantee_input = array(
           'manufacturers_name' => $guarantee_label['manufacturer'],
           'manufacturers_model' => $guarantee_product['products_manufacturers_model'],
@@ -69,6 +74,16 @@
     // the document is archived first, a failure there must not leave a half written snapshot
     if (count($guarantee_errors) < 1 && $guarantee_checked['values'] !== false) {
       $guarantee_terms = isset($_POST['terms_action']) ? $_POST['terms_action'] : 'keep';
+
+      // taking the article data means all of it, otherwise the position would carry current
+      // core values next to the guarantee conditions of an older stand
+      if ($guarantee_from_product === true) {
+        $guarantee_terms = 'keep';
+        $guarantee_snapshot_terms = guarantee_labels_terms_snapshot($guarantee_pID, guarantee_labels_order_language_id($guarantee_oID));
+
+        $guarantee_checked['values']['terms_hash'] = ($guarantee_snapshot_terms === false) ? null : $guarantee_snapshot_terms['hash'];
+        $guarantee_checked['values']['terms_filename'] = ($guarantee_snapshot_terms === false) ? null : $guarantee_snapshot_terms['filename'];
+      }
 
       if ($guarantee_terms == 'remove') {
         $guarantee_checked['values']['terms_hash'] = null;
@@ -104,5 +119,5 @@
                                  : TEXT_GUARANTEE_LABELS_SNAPSHOT_SAVED, 'success');
     }
 
-    xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action='.((count($guarantee_errors) > 0) ? 'custom&subaction=guarantee&pID='.(int)$_POST['pID'].'&opID='.$guarantee_opID : 'products').'&oID='.$guarantee_oID));
+    xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action='.((count($guarantee_errors) > 0) ? 'custom&subaction=guarantee&pID='.$guarantee_pID.'&opID='.$guarantee_opID : 'products').'&oID='.$guarantee_oID));
   }

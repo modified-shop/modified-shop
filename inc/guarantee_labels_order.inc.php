@@ -19,6 +19,7 @@
    */
 
   require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
+  require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
   /**
    * The snapshots of all positions of one order, keyed by orders_products_id.
@@ -128,6 +129,51 @@
    * @param int $orders_id
    * @return array
    */
+  /**
+   * The archived guarantee conditions of one position, verified against their hash.
+   *
+   * Mail text and attachment list both ask here. Asked separately, the text could name a
+   * document the attachment step then drops as damaged, and the mail would claim to carry
+   * something it does not.
+   *
+   * @param array $product one row of guarantee_labels_order_products()
+   * @param int $orders_id only for the log entry
+   * @return string absolute path, empty when there is none or it is damaged
+   */
+  function guarantee_labels_terms_file($product, $orders_id = 0) {
+    static $checked = array();
+
+    if (!isset($product['terms_hash'], $product['terms_filename'])
+        || $product['terms_hash'] === null
+        || $product['terms_filename'] === null
+        )
+    {
+      return '';
+    }
+
+    $key = $product['terms_hash'].'/'.$product['terms_filename'];
+
+    if (isset($checked[$key])) {
+      return $checked[$key];
+    }
+
+    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
+
+    $archive = new guarantee_labels_archive();
+    $file = $archive->terms_path($product['terms_hash'], $product['terms_filename']);
+
+    // a replaced or truncated archive file would attach the wrong conditions to the mail
+    if (!is_file($file) || hash_file('sha256', $file) !== $product['terms_hash']) {
+      guarantee_labels_snapshot_log('terms read', $orders_id, array('archived guarantee conditions do not match '.$product['terms_hash']));
+      $checked[$key] = '';
+      return '';
+    }
+
+    $checked[$key] = $file;
+
+    return $file;
+  }
+
   function guarantee_labels_order_terms($orders_id) {
     $attachments = array();
     $products = guarantee_labels_order_products($orders_id);
@@ -136,29 +182,13 @@
       return $attachments;
     }
 
-    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
-
-    $archive = new guarantee_labels_archive();
-
     foreach ($products as $product) {
-      if ($product['terms_hash'] === null || $product['terms_filename'] === null) {
-        continue;
-      }
-
-      $file = $archive->terms_path($product['terms_hash'], $product['terms_filename']);
+      $file = guarantee_labels_terms_file($product, $orders_id);
 
       // the same conditions may belong to more than one position of the order
-      if (in_array($file, $attachments, true)) {
-        continue;
+      if ($file !== '' && !in_array($file, $attachments, true)) {
+        $attachments[] = $file;
       }
-
-      // a replaced or truncated archive file would attach the wrong conditions to the mail
-      if (!is_file($file) || hash_file('sha256', $file) !== $product['terms_hash']) {
-        guarantee_labels_snapshot_log('terms read', $orders_id, array('archived guarantee conditions do not match '.$product['terms_hash']));
-        continue;
-      }
-
-      $attachments[] = $file;
     }
 
     return $attachments;
@@ -241,16 +271,8 @@
     $terms = '';
 
     // named only where the file really travels along
-    if ($product['terms_filename'] !== null
-        && $product['terms_hash'] !== null
-        && defined('TEXT_GUARANTEE_ORDER_TERMS')
-        )
-    {
-      require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
-
-      $archive = new guarantee_labels_archive();
-
-      if (is_file($archive->terms_path($product['terms_hash'], $product['terms_filename']))) {
+    if (defined('TEXT_GUARANTEE_ORDER_TERMS')) {
+      if (guarantee_labels_terms_file($product, $orders_id) !== '') {
         $terms = sprintf(TEXT_GUARANTEE_ORDER_TERMS, $product['terms_filename']);
       }
     }
@@ -391,12 +413,59 @@
    * order carries a download for it. An order without positions has no goods either, which is
    * the state a manually created order starts in.
    *
-   * orders.content_type is not used. It is written once when the order is created and is not
-   * recalculated when the administration adds or removes positions.
+   * orders.content_type decides whenever the shop filled it, because the checkout classifies a
+   * position by its selected attributes and can call a single position mixed. The module never
+   * writes that column; a manually created order leaves it empty and is asked position by
+   * position instead.
    *
    * @param int $orders_id
    * @return bool
    */
+  /**
+   * The article behind one position of one order. The order editing must not trust a products id
+   * from the request: it decides which article the values are taken from and which guarantee
+   * conditions are archived into the order.
+   *
+   * @param int $orders_id
+   * @param int $orders_products_id
+   * @return int zero when the position does not belong to this order
+   */
+  function guarantee_labels_order_position_product($orders_id, $orders_products_id) {
+    $products_query = xtc_db_query("SELECT products_id
+                                      FROM ".TABLE_ORDERS_PRODUCTS."
+                                     WHERE orders_id = '".(int)$orders_id."'
+                                       AND orders_products_id = '".(int)$orders_products_id."'");
+
+    if (xtc_db_num_rows($products_query) < 1) {
+      return 0;
+    }
+
+    $product = xtc_db_fetch_array($products_query);
+
+    return (int)$product['products_id'];
+  }
+
+  /**
+   * The language of the order as an id. It selects the guarantee conditions and may differ from
+   * the language of the backend session.
+   *
+   * @param int $orders_id
+   * @return int
+   */
+  function guarantee_labels_order_language_id($orders_id) {
+    $order_query = xtc_db_query("SELECT languages_id
+                                   FROM ".TABLE_ORDERS."
+                                  WHERE orders_id = '".(int)$orders_id."'");
+
+    if (xtc_db_num_rows($order_query) < 1) {
+      return 0;
+    }
+
+    $order = xtc_db_fetch_array($order_query);
+
+    return (int)$order['languages_id'];
+  }
+
   function guarantee_labels_order_physical($orders_id) {
     static $orders = array();
 
@@ -410,6 +479,21 @@
 
     if ($orders_id < 1) {
       return false;
+    }
+
+    $order_query = xtc_db_query("SELECT content_type
+                                   FROM ".TABLE_ORDERS."
+                                  WHERE orders_id = '".$orders_id."'");
+
+    if (xtc_db_num_rows($order_query) > 0) {
+      $order = xtc_db_fetch_array($order_query);
+      $content_type = trim((string)$order['content_type']);
+
+      // the checkout already decided, and it knows about attributes this query cannot see
+      if ($content_type !== '') {
+        $orders[$orders_id] = guarantee_labels_physical($content_type);
+        return $orders[$orders_id];
+      }
     }
 
     $products_query = xtc_db_query("SELECT op.orders_products_id,

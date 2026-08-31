@@ -356,7 +356,8 @@
                                                                  $content_language_id,
                                                                  $content_file_name,
                                                                  $content_link,
-                                                                 ($subaction == 'update') ? (int)$_POST['coID'] : 0);
+                                                                 ($subaction == 'update') ? (int)$_POST['coID'] : 0,
+                                                                 $group_ids);
 
           // an attachment that cannot serve as guarantee conditions is kept as a normal one
           if (count($guarantee_labels_errors) > 0) {

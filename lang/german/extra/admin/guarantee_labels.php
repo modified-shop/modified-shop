@@ -70,3 +70,4 @@
   define('ERROR_GUARANTEE_LABELS_TERMS_NAME', 'GARAN-Garantiebedingungen: Der Dateiname &quot;%s&quot; eignet sich nicht als Mailanhang. Der Anhang wurde als normaler Anhang gespeichert.');
   define('ERROR_GUARANTEE_LABELS_TERMS_FILE', 'GARAN-Garantiebedingungen: Die Datei &quot;%s&quot; liegt nicht unter media/products/. Der Anhang wurde als normaler Anhang gespeichert.');
   define('ERROR_GUARANTEE_LABELS_TERMS_DUPLICATE', 'GARAN-Garantiebedingungen: F&uuml;r diesen Artikel und diese Sprache gibt es bereits einen solchen Anhang. Der Anhang wurde als normaler Anhang gespeichert.');
+  define('ERROR_GUARANTEE_LABELS_TERMS_GROUPS', 'GARAN-Garantiebedingungen: Der Anhang ist f&uuml;r diese Kundengruppen nicht sichtbar, obwohl sie das Label sehen: %s. Der Anhang wurde als normaler Anhang gespeichert.');

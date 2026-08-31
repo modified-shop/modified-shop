@@ -264,12 +264,30 @@
    */
   function guarantee_labels_texts_ready($constants) {
     foreach ($constants as $constant) {
-      if (!defined($constant) || trim(constant($constant)) === '') {
+      if (guarantee_labels_text($constant) === '') {
         return false;
       }
     }
 
     return true;
+  }
+
+  /**
+   * One language constant with a fallback. A missing or empty constant must not reach sprintf()
+   * or the output, so every read of a module text goes through here.
+   *
+   * @param string $constant
+   * @param string $fallback
+   * @return string
+   */
+  function guarantee_labels_text($constant, $fallback = '') {
+    if (!defined($constant)) {
+      return $fallback;
+    }
+
+    $value = trim((string)constant($constant));
+
+    return ($value === '') ? $fallback : $value;
   }
 
   /**
@@ -302,15 +320,21 @@
       return '';
     }
 
-    if (!guarantee_labels_texts_ready(array('TEXT_GUARANTEE_LABEL_TITLE', 'TEXT_GUARANTEE_LABEL_OPEN',
-                                            'TEXT_GUARANTEE_LABEL_CLOSE', 'TEXT_GUARANTEE_LABEL_RELOAD',
-                                            'TEXT_GUARANTEE_LABEL_ALT', 'TEXT_GUARANTEE_LABEL_ALT_COMPACT'))) {
-      return '';
-    }
+    // The label itself is language neutral. A shop language without the module texts still gets
+    // the graphic; only the wording around it falls back. GARAN is the official name of the
+    // label and needs no translation.
+    $title = guarantee_labels_text('TEXT_GUARANTEE_LABEL_TITLE', 'GARAN');
+    $open = guarantee_labels_text('TEXT_GUARANTEE_LABEL_OPEN', $title);
+    $close = guarantee_labels_text('TEXT_GUARANTEE_LABEL_CLOSE', '&times;');
+    $reload = guarantee_labels_text('TEXT_GUARANTEE_LABEL_RELOAD', '');
 
     $link = '';
 
-    if (defined('TEXT_GUARANTEE_LABEL_URL') && trim(TEXT_GUARANTEE_LABEL_URL) !== '') {
+    // both parts are needed, a link without a text would be invisible
+    if (guarantee_labels_text('TEXT_GUARANTEE_LABEL_URL') !== ''
+        && guarantee_labels_text('TEXT_GUARANTEE_LABEL_LINK') !== ''
+        )
+    {
       $link = '<a class="guarantee-label__link" href="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_URL).'" target="_blank" rel="noopener">'.TEXT_GUARANTEE_LABEL_LINK.'</a>';
     }
 
@@ -326,21 +350,28 @@
     $id = 'guarantee-label-content-'.(++$counter);
 
     $duration = isset($label['duration']) ? $label['duration'] : '';
-    $alt_compact = sprintf(TEXT_GUARANTEE_LABEL_ALT_COMPACT, $duration);
-    $alt_full = sprintf(TEXT_GUARANTEE_LABEL_ALT, $duration, isset($label['manufacturer']) ? $label['manufacturer'] : '', isset($label['model']) ? $label['model'] : '');
+    $manufacturer = isset($label['manufacturer']) ? $label['manufacturer'] : '';
+    $model = isset($label['model']) ? $label['model'] : '';
+
+    $alt_compact = (guarantee_labels_text('TEXT_GUARANTEE_LABEL_ALT_COMPACT') !== '')
+                 ? sprintf(TEXT_GUARANTEE_LABEL_ALT_COMPACT, $duration)
+                 : trim($title.' '.$duration);
+    $alt_full = (guarantee_labels_text('TEXT_GUARANTEE_LABEL_ALT') !== '')
+              ? sprintf(TEXT_GUARANTEE_LABEL_ALT, $duration, $manufacturer, $model)
+              : trim($title.' '.$duration.' '.$manufacturer.' '.$model);
 
     return '<div class="guarantee-label">'.
-             '<button type="button" class="guarantee-label__compact" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_TITLE).'" title="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_OPEN).'" aria-label="'.guarantee_labels_attribute($alt_compact.' '.TEXT_GUARANTEE_LABEL_OPEN).'">'.
+             '<button type="button" class="guarantee-label__compact" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute($title).'" title="'.guarantee_labels_attribute($open).'" aria-label="'.guarantee_labels_attribute($alt_compact.' '.$open).'">'.
                guarantee_labels_inline_svg($label['nested.svg']).
              '</button>'.
-             '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_TITLE).'">'.
+             '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute($title).'">'.
                '<div class="guarantee-label__content" id="'.$id.'">'.
-                 '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.encode_htmlspecialchars($source).'" data-guarantee-label-error="'.guarantee_labels_attribute(TEXT_GUARANTEE_LABEL_RELOAD).'"' : '').'>'.
+                 '<div class="guarantee-label__full"'.($source !== '' ? ' data-guarantee-label-src="'.encode_htmlspecialchars($source).'"'.(($reload !== '') ? ' data-guarantee-label-error="'.guarantee_labels_attribute($reload).'"' : '') : '').'>'.
                    '<div class="guarantee-label__graphic" role="img" aria-label="'.guarantee_labels_attribute($alt_full).'">'.$full.'</div>'.
                    $link.
                  '</div>'.
                '</div>'.
-               '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.
+               '<button type="button" class="guarantee-label__close">'.$close.'</button>'.
              '</dialog>'.
            '</div>';
   }
@@ -356,11 +387,27 @@
    * @return string
    */
   function guarantee_labels_cache_url($hash) {
-    if (!is_file(DIR_FS_CATALOG.'cache/guarantee_labels/'.$hash.'/colour.svg')) {
+    if (guarantee_labels_cache_intact($hash, 'colour.svg') === false) {
       return '';
     }
 
     return (defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').'cache/guarantee_labels/'.$hash.'/colour.svg';
+  }
+
+  /**
+   * A cached file is only worth linking to when it still matches its checksum. Pointing the page
+   * at a damaged file would serve the damage instead of falling back to the inline graphic.
+   *
+   * @param string $hash the cache directory
+   * @param string $name the file inside it
+   * @return bool
+   */
+  function guarantee_labels_cache_intact($hash, $name) {
+    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
+
+    $archive = new guarantee_labels_archive();
+
+    return ($archive->cache_read($hash, array($name)) !== false);
   }
 
   /**
@@ -370,7 +417,7 @@
    * @return string empty when the cached copy is missing
    */
   function guarantee_labels_notice_cache_url($hash) {
-    if (!is_file(DIR_FS_CATALOG.'cache/guarantee_labels/'.$hash.'/notice.svg')) {
+    if (guarantee_labels_cache_intact($hash, 'notice.svg') === false) {
       return '';
     }
 
@@ -524,7 +571,7 @@
                       '<div class="guarantee-label__graphic"></div>'.
                     '</div>'.
                   '</div>'.
-                  '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.
+                  '<button type="button" class="guarantee-label__close">'.$close.'</button>'.
                 '</dialog>'.
                 $link,
     );

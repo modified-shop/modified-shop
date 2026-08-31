@@ -66,7 +66,7 @@
       foreach (self::EXTENSIONS as $type => $data) {
         $installed = 'MODULE_'.strtoupper($type).'_INSTALLED';
         $rows[] = array(
-          sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION, $data['file']),
+          sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION, encode_htmlspecialchars($data['file'])),
           defined($installed) && in_array($data['file'], explode(';', constant($installed)), true),
         );
       }
@@ -76,7 +76,7 @@
                      'ADD_SELECT_CART' => 'products_garan_duration',
                      'ADD_SELECT_PRODUCT' => 'products_garan_duration') as $constant => $column) {
         $rows[] = array(
-          sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SELECT, $constant),
+          sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SELECT, encode_htmlspecialchars($constant)),
           defined($constant) && strpos(constant($constant), $column) !== false,
         );
       }
@@ -84,12 +84,18 @@
       $missing = $renderer->missing_requirements();
       $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_RENDERER, count($missing) < 1, implode(', ', $missing));
 
-      $languages_query = xtc_db_query("SELECT directory, name FROM ".TABLE_LANGUAGES." ORDER BY sort_order");
+      // only languages the shop actually offers, a switched off one needs no texts
+      $languages_query = xtc_db_query("SELECT directory, name
+                                         FROM ".TABLE_LANGUAGES."
+                                        WHERE status = '1'
+                                     ORDER BY sort_order");
+
       while ($language = xtc_db_fetch_array($languages_query)) {
+        $missing_parts = $this->missing_language_parts($language['directory']);
         $rows[] = array(
-          sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_NOTICE, $language['name']),
-          is_file(DIR_FS_CATALOG.'lang/'.$language['directory'].'/notice.svg')
-          && is_file(DIR_FS_CATALOG.'lang/'.$language['directory'].'/extra/guarantee_labels.php'),
+          sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_NOTICE, encode_htmlspecialchars($language['name'])),
+          count($missing_parts) < 1,
+          implode(', ', $missing_parts),
         );
       }
 
@@ -98,7 +104,7 @@
                       implode(' ', $schema_errors), MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE);
 
       foreach ($this->writable_dirs() as $label => $dir) {
-        $rows[] = array(sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_WRITABLE, $label),
+        $rows[] = array(sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_WRITABLE, encode_htmlspecialchars($label)),
                         $this->dir_writable($dir), $dir, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED);
       }
 
@@ -162,8 +168,9 @@
     }
 
     /**
-     * Renders the collected diagnosis rows. Every dynamic part is escaped here, the callers
-     * hand over plain values.
+     * Renders the collected diagnosis rows. Labels arrive ready to print: their language
+     * constants carry entities of their own, so escaping happens where a dynamic value enters
+     * the sprintf and not once more here. Notes are plain values and are escaped below.
      *
      * @param array $rows label, state, note, own failure label
      * @return string
@@ -174,6 +181,7 @@
       foreach ($rows as $row) {
         $note = (isset($row[2]) && $row[2] !== '') ? ' '.encode_htmlspecialchars($row[2]) : '';
         $failed = (isset($row[3]) && $row[3] !== '') ? $row[3] : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED;
+
         $content .= '<tr><td style="width:420px;"><span class="main">'.$row[0].'</span></td>'.
                     '<td><span class="main'.(($row[1] === true) ? '' : ' error').'">'.
                     (($row[1] === true) ? MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK : $failed.$note).
@@ -242,16 +250,18 @@
       $archive = new guarantee_labels_archive();
       $damaged = 0;
 
+      // read_files() checks every file of the directory against its checksum, so a replaced
+      // graphic counts here just like a missing one
       $notice_query = xtc_db_query("SELECT DISTINCT notice_hash FROM ".TABLE_ORDERS_GUARANTEE);
       while ($notice = xtc_db_fetch_array($notice_query)) {
-        if (!is_file($archive->notice_path($notice['notice_hash']).'notice.svg')) {
+        if ($archive->notice_read($notice['notice_hash']) === false) {
           $damaged++;
         }
       }
 
       $garan_query = xtc_db_query("SELECT DISTINCT garan_hash FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE);
       while ($garan = xtc_db_fetch_array($garan_query)) {
-        if (!is_file($archive->garan_path($garan['garan_hash']).'colour.svg')) {
+        if ($archive->garan_read($garan['garan_hash']) === false) {
           $damaged++;
         }
       }
@@ -260,7 +270,9 @@
                                    FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE."
                                    WHERE terms_hash IS NOT NULL AND terms_hash != ''");
       while ($terms = xtc_db_fetch_array($terms_query)) {
-        if (!is_file($archive->terms_path($terms['terms_hash'], $terms['terms_filename']))) {
+        $file = $archive->terms_path($terms['terms_hash'], $terms['terms_filename']);
+
+        if (!is_file($file) || hash_file('sha256', $file) !== $terms['terms_hash']) {
           $damaged++;
         }
       }
@@ -269,6 +281,26 @@
     }
 
     function process($file) {
+      global $messageStack;
+
+      // The status is read from the table because the constant of this request is the old one.
+      // Activating without the renderer would leave every article without its label.
+      $status_query = xtc_db_query("SELECT configuration_value
+                                      FROM ".TABLE_CONFIGURATION."
+                                     WHERE configuration_key = 'MODULE_GUARANTEE_LABELS_STATUS'");
+
+      if (xtc_db_num_rows($status_query) > 0) {
+        $status = xtc_db_fetch_array($status_query);
+
+        if ($status['configuration_value'] == 'true' && $this->renderer_available() === false) {
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'false'
+                         WHERE configuration_key = 'MODULE_GUARANTEE_LABELS_STATUS'");
+
+          $messageStack->add_session(MODULE_GUARANTEE_LABELS_TEXT_GD_ERROR, 'error');
+        }
+      }
+
       $this->save_b2b_customers_status();
     }
 
@@ -438,6 +470,41 @@
         'MODULE_GUARANTEE_LABELS_STATUS',
         'MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS',
       );
+    }
+
+    /**
+     * The four parts a language needs for the notice: the graphic, the mail text, the link text
+     * and the country specific Your Europe address. Missing one of them means the notice cannot
+     * be shown in that language; the language neutral GARAN label is not affected.
+     *
+     * @param string $directory the language directory
+     * @return array names of the missing parts
+     */
+    function missing_language_parts($directory) {
+      $missing = array();
+      $file = DIR_FS_CATALOG.'lang/'.$directory.'/extra/guarantee_labels.php';
+
+      if (!is_file(DIR_FS_CATALOG.'lang/'.$directory.'/notice.svg')) {
+        $missing[] = 'notice.svg';
+      }
+
+      if (!is_file($file)) {
+        $missing[] = 'extra/guarantee_labels.php';
+        return $missing;
+      }
+
+      // reading the file is the only way to see the texts of a language that is not loaded
+      $content = (string)@file_get_contents($file);
+
+      foreach (array('TEXT_GUARANTEE_NOTICE_MAIL',
+                     'TEXT_GUARANTEE_NOTICE_LINK',
+                     'TEXT_GUARANTEE_NOTICE_URL') as $constant) {
+        if (!preg_match("/define\\s*\\(\\s*'".$constant."'\\s*,\\s*'[^']+'/", $content)) {
+          $missing[] = $constant;
+        }
+      }
+
+      return $missing;
     }
 
     function renderer_available() {

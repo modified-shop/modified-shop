@@ -101,7 +101,8 @@
         <td class="dataTableContent" style="vertical-align:top;"><?php echo TEXT_GUARANTEE_LABELS_SNAPSHOT_PREVIEW; ?></td>
         <td class="dataTableContent">
           <?php
-            $guarantee_preview = guarantee_labels_order_label($guarantee_oID, $guarantee_opID);
+            // the values in the mask, so the preview matches what the save would write
+            $guarantee_preview = guarantee_labels_preview_label($guarantee_value, guarantee_labels_order_language($guarantee_oID));
             echo ($guarantee_preview !== '') ? $guarantee_preview : TEXT_GUARANTEE_LABELS_SNAPSHOT_PREVIEW_NONE;
           ?>
         </td>
