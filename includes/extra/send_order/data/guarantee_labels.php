@@ -16,6 +16,8 @@
   // module is installed. Both variants follow AGB_HTML and AGB_TXT of the shop.
   $smarty->assign('GUARANTEE_NOTICE_HTML', '');
   $smarty->assign('GUARANTEE_NOTICE_TXT', '');
+  $smarty->assign('GUARANTEE_NOTICE_HEADING_HTML', '');
+  $smarty->assign('GUARANTEE_NOTICE_HEADING_TXT', '');
 
   // the wording of the order, not the one the language files hold today
   $guarantee_labels_notice = guarantee_labels_order_notice($order->info['order_id']);
@@ -28,6 +30,13 @@
 
     $smarty->assign('GUARANTEE_NOTICE_TXT', decode_htmlentities($guarantee_labels_notice['text'])."\n".
                                             decode_htmlentities($guarantee_labels_notice['link']).': '.$guarantee_labels_notice['url']);
+
+    // The heading is not part of the snapshot, it only labels the block. The mail templates
+    // hold no umlauts of their own, so it arrives as a variable in both encodings.
+    if (defined('TEXT_GUARANTEE_NOTICE_TITLE')) {
+      $smarty->assign('GUARANTEE_NOTICE_HEADING_HTML', TEXT_GUARANTEE_NOTICE_TITLE);
+      $smarty->assign('GUARANTEE_NOTICE_HEADING_TXT', decode_htmlentities(TEXT_GUARANTEE_NOTICE_TITLE));
+    }
   }
 
   // The archived guarantee conditions travel with the confirmation. Neither the notice nor a

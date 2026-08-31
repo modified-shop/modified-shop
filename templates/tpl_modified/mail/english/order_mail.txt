@@ -79,7 +79,7 @@ Prod. No. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL
 
 {if $GUARANTEE_NOTICE_TXT != ''}
 ----------------------------------------------------------------------
-Legal guarantee
+{$GUARANTEE_NOTICE_HEADING_TXT}
 ----------------------------------------------------------------------
 {$GUARANTEE_NOTICE_TXT}
 {/if}
