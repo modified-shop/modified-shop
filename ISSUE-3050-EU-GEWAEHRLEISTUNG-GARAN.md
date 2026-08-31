@@ -510,6 +510,7 @@ p_garan_duration
 - Der Import schreibt `products.products_garan_duration`.
 - Ein leerer Wert wird als `NULL` gespeichert. Komma und Punkt werden wie in der Artikelverwaltung akzeptiert und kanonisch normalisiert.
 - Die Validierung verwendet den nach dem Import wirksamen Hersteller aus `p_manufacturer`, die Hersteller-Modellkennung aus `p_man` und die Garantiedauer aus `p_garan_duration`. Fehlt eines dieser Felder in der CSV, wird fuer die Pruefung der vorhandene Artikelwert verwendet.
+- Die Pruefung laeuft auch dann, wenn `p_garan_duration` gar nicht Teil der Datei ist. Eine Zeile, die nur `p_man` oder `p_manufacturer` aendert, kann eine gespeicherte Dauer unbrauchbar machen; ohne diesen Lauf entstuende dabei stillschweigend ein unvollstaendiger GARAN-Artikel.
 - Ist der resultierende GARAN-Datensatz unvollstaendig oder ungueltig, laesst der Import `products_garan_duration` unangetastet. Ein bestehender Artikel behaelt seine gespeicherte Dauer, ein neuer Artikel bekommt den Standardwert der Spalte. Der Admin erhaelt die konkrete Fehlermeldung ueber den `messageStack`.
 - Die uebrigen Felder der Produktzeile werden regulaer importiert. Die Erweiterungsstelle `insert_before` kann den Import einer Zeile nicht abbrechen, und ein ganzer Artikelimport soll nicht an einem einzelnen GARAN-Feld scheitern. Ausdruecklich nicht vorgesehen ist der umgekehrte Weg: den geprueften Wert trotzdem zu schreiben. Er wuerde eine gute gespeicherte Dauer durch `NULL` ersetzen, nur weil die CSV in dieser Zeile eine ungueltige Angabe enthielt.
 - Der Export gibt `products_garan_duration` normalisiert als `p_garan_duration` aus; `NULL` wird als leeres Feld exportiert.
@@ -1003,7 +1004,8 @@ Voraussichtlich betroffen sind:
 - `add_db_fields` traegt `products_garan_duration` in den Speicherweg der Artikelverwaltung ein, ohne als Ersatz fuer die Schemaaenderung behandelt zu werden.
 - In Systemmodul, `add_db_fields`, `define_add_select`, Storefront, Checkout und Admin pruefen, dass ausschliesslich `MODULE_GUARANTEE_LABELS_STATUS` als Statusschluessel verwendet wird.
 - Aktivieren, deaktivieren, entfernen und bestehende Bestelldaten bereinigen; diese Lebenszyklus- und Aufraeumvorgaenge funktionieren auch beim Wechsel zu oder aus dem inaktiven Status.
-- Modulstatus und B2B-Auswahl ueber `admin/module_export.php?set=system` speichern; `process()` wird nach dem Speichern aufgerufen, liest den neuen Status aus `TABLE_CONFIGURATION` statt aus der in diesem Request veralteten Konstante und leert keinen Cache. Wurde das Modul dabei ohne GD mit FreeType aktiviert, setzt `process()` den Status wieder auf `false` und meldet die fehlende Voraussetzung.
+- Modulstatus und B2B-Auswahl ueber `admin/module_export.php?set=system` speichern; `process()` wird nach dem Speichern aufgerufen, liest den neuen Status aus `TABLE_CONFIGURATION` statt aus der in diesem Request veralteten Konstante und leert keinen Cache.
+- Modul bei fehlendem GD mit FreeType nachtraeglich aktivieren; `process()` setzt den Status wieder auf `false` und nennt die fehlende Voraussetzung ueber den `messageStack`. Bei vorhandenem Renderer bleibt der Status stehen, ein abgeschaltetes Modul wird gar nicht erst geprueft.
 - GARAN-Systemmodul ueber den regulaeren Adminweg aufrufen; Installation, Bearbeitung, Aktualisierung und Diagnose laufen ausschliesslich ueber `admin/module_export.php?set=system`. `admin/modules.php` benoetigt fuer GARAN weder einen Speicherpfad noch eine Cache-Erweiterung.
 - B2B-Mehrfachauswahl in deutscher und englischer Adminsprache anzeigen; `xtc_cfg_multi_checkbox('xtc_get_customers_statuses', 'chr(44)', ...)` verwendet die lokalisierten Kundengruppen aus `xtc_get_customers_statuses()`.
 - Keine, eine und mehrere B2B-Kundengruppen speichern; `MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS` enthaelt entsprechend `''`, eine ID oder kommaseparierte IDs und wird beim Lesen in eindeutige positive Integerwerte normalisiert.
@@ -1011,6 +1013,8 @@ Voraussichtlich betroffen sind:
 - Installiertes GARAN-Modul in `admin/module_export.php?set=system&module=guarantee_labels` ausdruecklich auswaehlen; die Bedingung aus `$_GET['module']`, `$this->code` und `check()` ist erfuellt und `properties['add_content']` zeigt die Diagnose direkt unter der Modul-Infobox.
 - Diagnose bei fehlender Modultabelle oder Core-Spalte aufrufen; sie meldet das fehlende Schema, ohne eine Abfrage gegen das fehlende Element auszufuehren.
 - Diagnose mit fehlendem GD-FreeType, nicht beschreibbarem Cache oder Archiv, unvollstaendiger Sprache, unvollstaendigem Produkt, mehrfach markierter `content_file` und fehlender Archivdatei pruefen.
+- Archivverzeichnis mit fehlender `nested.svg` oder `notice.json` sowie mit abweichender Pruefsumme anlegen; beide Faelle zaehlen als beschaedigt.
+- Artikel mit einer Garantiedauer zwischen `0.5` und `2.0` ohne Hersteller und Modellkennung anlegen; die Diagnose meldet ihn nicht, weil daraus kein Label entsteht.
 - Produktnamen, Pfade und Fehlermeldungen mit HTML-Sonderzeichen in der Diagnose pruefen; dynamische Inhalte werden maskiert.
 - Modulverwaltung ohne `module`-Parameter, mit einem anderen ausgewaehlten Modul und mit einem noch nicht installierten GARAN-Modul aufrufen; `properties['add_content']` wird nicht gesetzt und keine Diagnoseabfrage ausgefuehrt. Das gilt auch, wenn das Framework ohne Parameter GARAN als erstes `$mInfo` anzeigt.
 - Deutsche und englische Modulverwaltung pruefen; Titel, Beschreibung sowie Titel und Beschreibung beider Konfigurationsschluessel stammen aus den jeweiligen Dateien unter `lang/<Sprache>/modules/system/guarantee_labels.php`.
@@ -1036,6 +1040,7 @@ Voraussichtlich betroffen sind:
 - Vorhandenen Artikel-Anhang je Sprache als `garan_terms` markieren.
 - Reinen externen Link als Garantieerklaerung ablehnen.
 - Anhang eines anderen Artikels oder einer anderen Sprache ablehnen.
+- Anhang als `garan_terms` markieren, dessen `group_ids` eine Kundengruppe ausschliessen, die das Label sieht; die Markierung wird abgelehnt und die betroffene Gruppe benannt. Eine ausgeschlossene B2B-Gruppe fuehrt zu keinem Befund, eine leere Auswahl ebenfalls nicht.
 - Unterschiedliche von der vorhandenen Artikel-Anhangsverwaltung erlaubte Dateiformate als `garan_terms` verwenden und unveraendert archivieren.
 - Dateiname und Erweiterung sicher in `terms_filename` uebernehmen; Pfadbestandteile, Steuerzeichen und Kommas ablehnen.
 - Archivdatei unter `DIR_FS_DOCUMENT_ROOT . 'media/products/garan_archive/<terms_hash>/<terms_filename>'` anlegen und mit ihrem gespeicherten Dateinamen versenden.
@@ -1044,7 +1049,11 @@ Voraussichtlich betroffen sind:
 - Loeschen eines zugeordneten Anhangs setzt beim naechsten Bestellsnapshot `terms_hash` und `terms_filename` auf `NULL`, ohne die GARAN-Ausgabe zu deaktivieren.
 - Artikel mit je Variante abweichender Garantie ablehnen.
 - Artikel mit GARAN-Daten duplizieren; das Duplikat erhaelt `products_garan_duration = NULL`, eine leere `products_manufacturers_model` und keine als `garan_terms` markierten Anhaenge. Andere zum Kopieren ausgewaehlte Artikel-Anhaenge werden weiterhin uebernommen.
+- Denselben Artikel bei abgeschaltetem Modul duplizieren; das Duplikat wird genauso bereinigt. Modellkennung und `content_type` gehoeren dem Ursprungsartikel, unabhaengig vom Modulstatus.
+- Artikel mit gueltiger gespeicherter Garantiedauer mit einer ungueltigen Dauer speichern; die Artikelverwaltung kehrt zur Maske zurueck und die gespeicherte Dauer ist unveraendert. Dasselbe mit geleertem Hersteller oder geleerter Modellkennung pruefen.
+- Garantiedauer bewusst leeren und speichern; die Spalte wird auf `NULL` gesetzt und es entsteht keine Fehlermeldung.
 - `p_garan_duration` leer, mit Komma, mit Punkt sowie mit gueltigen und ungueltigen Werten importieren. Bei ungueltigem resultierendem GARAN-Datensatz bleibt `products_garan_duration` unveraendert und der Fehler erscheint im `messageStack`.
+- CSV ohne die Spalte `p_garan_duration` importieren, die `p_man` eines Artikels mit gespeicherter Garantiedauer leert; die Pruefung laeuft trotzdem und meldet den unvollstaendigen GARAN-Datensatz.
 - Einen Artikel mit gueltiger gespeicherter Garantiedauer mit einer CSV-Zeile importieren, deren GARAN-Daten unvollstaendig sind; die gespeicherte Dauer bleibt erhalten und wird nicht auf `NULL` gesetzt. Die uebrigen Felder der Zeile werden regulaer uebernommen.
 - `products_garan_duration` als `p_garan_duration` exportieren; `NULL` wird leer und ein Wert wird kanonisch ausgegeben.
 - Pruefen, dass der Produkt-CSV weder `products_content.content_type` noch Garantie-Anhaenge importiert oder exportiert.
@@ -1103,6 +1112,8 @@ Voraussichtlich betroffen sind:
 - Eine Zeile in `orders_guarantee` ausschliesslich als `Hinweis-Snapshot vorhanden` auswerten und weder bei Storefront- noch bei manuellen Bestellungen als allgemeinen Nachweis einer Checkout- oder Mailausgabe behandeln.
 - Kann beim erstmaligen Erzeugen das Archiv fuer den Gewaehrleistungshinweis nicht vollstaendig geschrieben und geprueft werden, laeuft die Bestellung weiter und es entsteht keine Zeile in `orders_guarantee`.
 - Kann beim erstmaligen Erzeugen das GARAN-Grafikarchiv fuer eine Position nicht vollstaendig geschrieben und geprueft werden, laeuft die Bestellung weiter und es entsteht keine Zeile in `orders_products_guarantee` fuer diese Position.
+- Eine archivierte Garantiebedingung nach dem Bestellabschluss durch eine andere Datei gleichen Namens ersetzen und die Auftragsbestaetigung erneut versenden; die Mail nennt das Dokument nicht und haengt es nicht an. Zusage und Gewaehrleistungshinweis bleiben erhalten.
+- Dieselbe Bestellung mit unveraendertem Archiv versenden; Mailtext und Anhangsliste nennen dieselbe Datei.
 - Schlaegt beim erstmaligen Erzeugen nur das Archivieren optionaler Garantiebedingungen fehl, bleibt der GARAN-Kerndatensatz erhalten; `terms_hash` und `terms_filename` bleiben `NULL` und der Fehler wird sichtbar protokolliert.
 - Produktdaten koennen nach der Bestellung geaendert werden, ohne die Bestellung zu veraendern.
 - Ersetzen oder Loeschen des Artikel-Anhangs veraendert die archivierte Garantieerklaerung einer Bestellung nicht.
@@ -1130,10 +1141,16 @@ Voraussichtlich betroffen sind:
 - Modul erneut installieren; vorhandene Tabellen bleiben unveraendert und behalten ihre Indizes.
 - Cache leeren; `colour.svg` und `nested.svg` werden unter demselben `garan_hash` neu erzeugt und archivierte SVG-Grafiken zu bestehenden Bestellungen bleiben verfuegbar.
 - Direkten HTTP-Aufruf einer Datei unter `media/guarantee_labels/archive/` durch die eigene `.htaccess` blockieren.
+- Direkten HTTP-Aufruf einer archivierten Garantiebedingung unter `media/products/garan_archive/` blockieren. Die uebergeordnete `media/.htaccess` sperrt nur Skriptendungen, deshalb braucht dieses Verzeichnis eine eigene Sperre. Die Katalogfassung derselben Datei unter `media/products/` bleibt erreichbar.
 - Zwei Bestellungen mit demselben `garan_hash` und `notice_hash` verwenden dieselben Archivverzeichnisse, ohne vorhandene Dateien zu ueberschreiben.
 - Zwei parallele Schreibvorgaenge fuer denselben Hash erzeugen durch temporaere Nachbarverzeichnisse und atomare Umbenennung keine unvollstaendigen Archivverzeichnisse.
 - Nicht beschreibbaren GARAN-Cache testen; die aktuelle Ausgabe verwendet die direkt erzeugten SVGs, der Fehler erscheint im Protokoll und in der Moduldiagnose.
-- Unvollstaendigen oder beschaedigten GARAN-Cache testen; er wird nicht ausgegeben und die aktuelle Anfrage verwendet direkt erzeugte SVGs.
+- Unvollstaendigen oder beschaedigten GARAN-Cache testen; er wird nicht ausgegeben und die aktuelle Anfrage verwendet direkt erzeugte SVGs. Die Seite verweist dann nicht auf die Cachedatei, sondern bettet die Grafik ein.
+- Eine Datei im Hashverzeichnis ersetzen und den Sidecar unveraendert lassen; das Verzeichnis gilt als nicht lesbar.
+- Den Sidecar unlesbar machen; das gilt als Schaden und nicht als Archiv ohne Sidecar.
+- Einen Eintrag aus dem Sidecar entfernen und die zugehoerige Datei ersetzen; die fehlende Zeile deckt die Ersetzung nicht.
+- Ein Archivverzeichnis ohne Sidecar aus einer aelteren Fassung lesen; es bleibt lesbar.
+- In ein beschaedigtes Hashverzeichnis erneut schreiben; es wird verworfen und aus den Vorlagen neu angelegt.
 - Nicht beschreibbares oder unvollstaendig geschriebenes Archiv testen; die Bestellung laeuft weiter und keine Datenbankzeile verweist auf fehlende oder teilweise geschriebene Dateien.
 - Erneuter Mailversand nach dem Leeren des Cache liefert dieselben vorhandenen Garantieerklaerungen und keine GARAN-Grafik. Waren keine Bedingungen archiviert, bleibt der Versand ohne GARAN-Anhang.
 
@@ -1149,6 +1166,8 @@ Voraussichtlich betroffen sind:
 - Nur virtuelle Positionen einfuegen und entfernen; die Pruefung liefert durchgehend `false` und die Auftragsbestaetigung enthaelt keinen Hinweis.
 - Physische sowie gemischte Positionen einfuegen und entfernen; die Pruefung liefert `true`, solange mindestens eine Position ohne Downloadzeile verbleibt, und nach dem Entfernen der letzten solchen Position wieder `false`.
 - `orders.content_type` bleibt bei allen drei Faellen unveraendert; das Modul schreibt die Spalte nicht.
+- Storefront-Bestellung mit `orders.content_type = 'mixed'` pruefen; der Hinweis wird ausgegeben. Dieser Fall entsteht schon aus einer einzelnen Position, wenn `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED` abgeschaltet ist und nur eines ihrer Attribute einen Download traegt. Die Abfrage der Downloadzeilen kann das nicht sehen, deshalb entscheidet der gefuellte Wert der Spalte.
+- Dieselbe Bestellung mit `physical`, `virtual` und `virtual_weight` pruefen; nur die ersten beiden Faelle unterscheiden sich in der Ausgabe wie erwartet.
 - Reine Download-Bestellung behaelt den Hinweis-Snapshot, gibt ihn in der Auftragsbestaetigung aber nicht aus.
 - Physische oder gemischte Bestellung gibt den beim Anlegen gespeicherten Hinweis in der manuellen Auftragsbestaetigung aus.
 - Leere Bestellung im Admin anlegen und einen Artikel ohne GARAN-Daten einfuegen.
@@ -1160,8 +1179,9 @@ Voraussichtlich betroffen sind:
 - Fehler beim Erzeugen oder Archivieren einer Snapshotaenderung ausloesen; die Aenderung wird abgelehnt, der bisherige Snapshot bleibt vollstaendig erhalten und der Admin erhaelt die Fehlermeldung ueber den `messageStack`.
 - Herstellername, Hersteller-Modellkennung und Garantiedauer nur als vollstaendigen Datensatz speichern.
 - Aenderung des Bestellsnapshots darf den Katalogartikel nicht veraendern.
-- Aktion `Aus Artikeldaten uebernehmen` pruefen.
-- Vorschau des GARAN-Labels vor dem Speichern pruefen.
+- Aktion `Aus Artikeldaten uebernehmen` pruefen; Herstellername, Modellkennung, Dauer und der `garan_terms`-Anhang der Bestellsprache werden gemeinsam uebernommen. Hat der Artikel keinen Anhang, werden `terms_hash` und `terms_filename` auf `NULL` gesetzt statt den bisherigen Anhang zu behalten.
+- Dieselbe Aktion mit einer fremden `pID` im Formular aufrufen; der Artikel der bearbeiteten Bestellposition entscheidet und die fremde Angabe bleibt wirkungslos.
+- Vorschau des GARAN-Labels vor dem Speichern pruefen; sie zeigt die Werte aus der Maske, auch wenn sie noch von den gespeicherten abweichen. Ungueltige Eingaben ergeben keine Vorschau.
 - Aenderung einer bereits versendeten Bestellung bestaetigen und in der Bestellhistorie pruefen.
 - Bestehende Bestellung mit leeren GARAN-Feldern manuell ergaenzen.
 - Bestehende Funktion `Auftragsbestaetigung senden` in der Bestellsprache pruefen.
@@ -1180,7 +1200,11 @@ Voraussichtlich betroffen sind:
 - Dieselbe `content_file` in mehreren Sprachen als `garan_terms` markieren und die Pruefwarnung in der Moduldiagnose kontrollieren.
 - QR-Code und direkter Link zeigen auf die passende Sprachseite.
 - Fehlende Sprachgrafik, fehlenden Mailtext, fehlenden Linktext und fehlende Your-Europe-URL jeweils einzeln testen.
-- Jeder fehlende Sprachbestandteil erzeugt eine Warnung in der Moduldiagnose. Der Checkout laeuft ohne Gewaehrleistungshinweis und ohne sprachlichen Fallback weiter.
+- Jeder fehlende Sprachbestandteil erzeugt eine Warnung in der Moduldiagnose und wird darin namentlich genannt. Der Checkout laeuft ohne Gewaehrleistungshinweis und ohne sprachlichen Fallback weiter.
+- Eine dritte Shopsprache ohne `lang/<Sprachverzeichnis>/extra/guarantee_labels.php` aufrufen; das sprachneutrale GARAN-Label erscheint weiterhin. Die Beschriftungen fallen auf `GARAN` zurueck und der Link zur Your-Europe-Seite entfaellt.
+- In derselben Sprache nur `TEXT_GUARANTEE_LABEL_URL` pflegen und den Linktext weglassen; der Link erscheint nicht und es entsteht kein PHP-Fehler.
+- Eine abgeschaltete Sprache anlegen; die Moduldiagnose prueft sie nicht.
+- Eine englische Bestellung im Kundenkonto einer deutschen Sitzung oeffnen; Label und Hinweis tragen die Beschriftungen der Bestellsprache, nicht die der Sitzung.
 - Eine Bestellung in einer unvollstaendig gepflegten Sprache erzeugt keine Zeile in `orders_guarantee` und nimmt den Hinweis auch bei einem spaeteren Mailversand nicht nachtraeglich auf.
 - Wird eine Sprache spaeter vervollstaendigt, verwenden neue Bestellungen sie sofort; bestehende Bestellsnapshots bleiben unveraendert.
 - Deutscher Auftrag verwendet den deutschen Artikel-Anhang vom Typ `garan_terms`.
@@ -1231,8 +1255,11 @@ Die Erweiterung ist fachlich fertig, wenn:
 - Vorhandene Garantiebedingungen werden unter `DIR_FS_DOCUMENT_ROOT . 'media/products/garan_archive/<terms_hash>/<terms_filename>'` atomar auf Dateiebene archiviert. Dadurch koennen Dateien mit identischem Inhalt und unterschiedlichen Namen dasselbe Hashverzeichnis verwenden. Der Mailweg verwendet den Pfad und damit den tatsaechlichen Namen der Archivdatei; er vergibt keinen abweichenden Anhangsnamen.
 - `products.products_garan_duration` und `products_content.content_type` werden ueber Installationsschema, Datenbankupdate und idempotent in `install()` angelegt. Die Modulinstallation prueft Modultabellen, Indizes und beide Core-Spalten, legt nur fehlende Bestandteile an und traegt den aktiven Status erst nach erfolgreicher Pruefung des gesamten Modulschemas ein. `add_db_fields` registriert nur `products_garan_duration` fuer den Speicherweg der Artikelverwaltung und ersetzt keine Schemaaenderung.
 - Die Modulklasse verwendet `$this->code = 'guarantee_labels'` und anfangs `$this->version = '1.00'`; funktionale und schemarelevante Modulupdates erhoehen die Version. Das Systemmodul implementiert `update()` und verwendet dort dieselbe zentrale, idempotente Schemaroutine wie in `install()`. Der Konstruktor stellt dafuer ueber `$this->properties['button_update']` die vorhandene Admin-Aktion `Modul aktualisieren` in `admin/module_export.php?set=system` bereit. Bereits installierte Shops erhalten so spaetere Tabellen-, Spalten- und Indexaenderungen; eine Deinstallation ist nicht erforderlich.
-- Beim Duplizieren eines GARAN-Artikels wird `products_garan_duration` auf `NULL` gesetzt, `products_manufacturers_model` geleert und `garan_terms` nicht mitkopiert. Bei Artikeln ohne GARAN-Daten bleibt das allgemeine Kopierverhalten unveraendert. Beim Anlegen einer Sprache werden Markierungen vom Typ `garan_terms` ebenfalls nicht aus einer anderen Sprache uebernommen.
-- Der Produkt-CSV-Import und -Export verwendet ausschliesslich `p_garan_duration` fuer die Garantiedauer. `content_type` und Garantie-Anhaenge bleiben ausserhalb des CSV-Formats.
+- Beim Duplizieren eines GARAN-Artikels wird `products_garan_duration` auf `NULL` gesetzt, `products_manufacturers_model` geleert und `garan_terms` nicht mitkopiert. Das gilt unabhaengig vom Modulstatus, weil beide Felder dem Ursprungsartikel gehoeren. Bei Artikeln ohne GARAN-Daten bleibt das allgemeine Kopierverhalten unveraendert. Beim Anlegen einer Sprache werden Markierungen vom Typ `garan_terms` ebenfalls nicht aus einer anderen Sprache uebernommen.
+- Der Produkt-CSV-Import und -Export verwendet ausschliesslich `p_garan_duration` fuer die Garantiedauer. `content_type` und Garantie-Anhaenge bleiben ausserhalb des CSV-Formats. Die Pruefung laeuft auch ohne diese Spalte in der Datei, weil schon eine geaenderte Modellkennung eine gespeicherte Dauer unbrauchbar machen kann.
+- Eine abgelehnte Garantiedauer erreicht die Spalte weder ueber die Artikelverwaltung noch ueber den Import. Der Schluessel wird aus dem Datensatz entfernt statt `NULL` einzutragen, damit ein misslungener Speichervorgang keine gueltige gespeicherte Garantie loescht.
+- Das sprachneutrale GARAN-Label haengt an keiner Sprachkonstante. Fehlen die Modultexte, faellt die Beschriftung auf `GARAN` zurueck und der Link zur Your-Europe-Seite entfaellt; die Grafik erscheint unveraendert.
+- Cache- und Archivdateien werden vor jeder Verwendung gegen ihre `checksums.json` geprueft. Ein beschaedigtes Verzeichnis wird nicht ausgeliefert, sondern beim naechsten Schreibvorgang neu erzeugt; der Mailanhang wird zusaetzlich gegen `terms_hash` geprueft und im Zweifel weggelassen, wobei der Mailtext ihn dann auch nicht nennt.
 - `includes/modules/products_media.php` stellt einen sichtbaren `garan_terms`-Anhang ueber den bestehenden Medienbereich bereit; ein neuer Storefront-Downloadweg ist nicht erforderlich.
 - Die Labeldaten werden nach dem Sammelprinzip bereitgestellt. Die vorhandenen `ADD_SELECT_*`-Arrays liefern Garantiedauer, Hersteller-Modellkennung und Hersteller-ID. Eine zentrale GARAN-Hilfsfunktion laedt die Namen der betroffenen aktiven Hersteller mit hoechstens einer Abfrage je Ergebnisblock nach. Ausschliesslich diese Namen werden fuer GARAN verwendet; bereits von anderen Abfragen gelieferte Herstellernamen bleiben unberuecksichtigt. Es werden weder Hersteller-JOINs in alle Kernabfragen noch Einzelabfragen je Artikel eingefuehrt.
 - Das Modul leert keinen Cache. Der eigene Grafikcache liegt unter dem Inhaltshash und kann verwaisen, aber nicht falsch werden. Nur die Smarty-Blockcaches koennen ein veraltetes Label bis zum Ablauf von `CACHE_LIFETIME` weiter ausliefern; dafuer leert der Shopbetreiber den Cache ueber `admin/configuration.php?action=delcache`. Die Moduldiagnose weist darauf hin. Die historischen Archive werden dabei nicht geloescht.
