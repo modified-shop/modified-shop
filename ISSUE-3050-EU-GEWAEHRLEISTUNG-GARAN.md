@@ -720,6 +720,8 @@ Dieselben Snapshotwerte stehen ueberall bereit, wo `getOrderData()` die Position
 
 Die Statuswechselmail (`admin/includes/modules/orders_update.php`) gibt keine Positionen aus und bleibt unveraendert.
 
+Das Systemmodul `order_mail_step` ersetzt die Auftragsbestaetigung durch `order_mail_step.html` und `order_mail_step.txt`. Diese Vorlagen erhalten dieselben Bloecke wie `order_mail`, sonst versendet ein Shop mit aktivem Modul eine Bestaetigung ohne den Gewaehrleistungshinweis.
+
 Regeln:
 
 - Aenderungen betreffen nur den Bestellsnapshot. Der Katalogartikel bleibt unveraendert.
