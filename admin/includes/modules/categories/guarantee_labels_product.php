@@ -29,6 +29,7 @@
     var $sort_order;
     var $_check;
     var $has_error;
+    var $cache_stale;
 
     function __construct() {
       $this->code = 'guarantee_labels_product';
@@ -52,10 +53,14 @@
 
       // one article save per call, a multi edit runs through here more than once
       $this->has_error = false;
+      $this->cache_stale = false;
 
       if (!defined('MODULE_GUARANTEE_LABELS_STATUS') || MODULE_GUARANTEE_LABELS_STATUS != 'true') {
         return $sql_data_array;
       }
+
+      // read before the write, afterwards the old values are gone
+      $this->cache_stale = $this->garan_data_changed($sql_data_array, $products_data);
 
       if (!isset($sql_data_array['products_garan_duration'])) {
         return $sql_data_array;
@@ -113,6 +118,71 @@
       xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT."
                           WHERE products_id = '".(int)$product_id."'
                             AND content_type = 'garan_terms'");
+    }
+
+    /**
+     * Whether this save changes a value a rendered label is built from.
+     *
+     * A new article has nothing cached yet, so only an existing one is compared.
+     *
+     * @return bool
+     */
+    function garan_data_changed($sql_data_array, $products_data) {
+      $products_id = isset($products_data['products_id']) ? (int)$products_data['products_id'] : 0;
+
+      if ($products_id < 1) {
+        return false;
+      }
+
+      $fields = array('products_garan_duration', 'products_manufacturers_model', 'manufacturers_id');
+
+      $products_query = xtc_db_query("SELECT products_garan_duration,
+                                             products_manufacturers_model,
+                                             manufacturers_id
+                                        FROM ".TABLE_PRODUCTS."
+                                       WHERE products_id = '".$products_id."'");
+
+      if (xtc_db_num_rows($products_query) < 1) {
+        return false;
+      }
+
+      $product = xtc_db_fetch_array($products_query);
+
+      foreach ($fields as $field) {
+        if (!isset($sql_data_array[$field])) {
+          continue;
+        }
+
+        // xtc_db_perform() turns the string null into a real NULL, so both mean the same here
+        $stored = ($product[$field] === null) ? 'null' : (string)$product[$field];
+        $saved = ((string)$sql_data_array[$field] === '') ? 'null' : (string)$sql_data_array[$field];
+
+        if ($field === 'products_garan_duration' && $stored !== 'null' && $saved !== 'null') {
+          $stored = (string)(float)$stored;
+          $saved = (string)(float)$saved;
+        }
+
+        if ($stored !== $saved) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Runs after the article was written. A changed duration, manufacturer or model identifier
+     * alters every label already rendered for this article, and the block caches of the shop
+     * do not know about it.
+     */
+    function insert_product_end($product_id) {
+      if ($this->cache_stale !== true) {
+        return;
+      }
+
+      require_once(DIR_FS_INC.'guarantee_labels_cache.inc.php');
+
+      guarantee_labels_clear_cache();
     }
 
     /**

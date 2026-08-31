@@ -371,19 +371,4 @@
       xtc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
     }
 
-    /**
-     * Same effect as the delcache action in admin/configuration.php. Smarty block caches do not
-     * know the state of the GARAN data, so a changed label has to drop them.
-     */
-    function clear_shop_cache() {
-      global $modified_cache;
-
-      clear_dir(DIR_FS_CATALOG.'cache/');
-
-      require_once(DIR_FS_CATALOG.'includes/modified_cache.php');
-      if (is_object($modified_cache)) {
-        $modified_cache->clear();
-      }
-    }
-
   }
