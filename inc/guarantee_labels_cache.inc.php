@@ -39,7 +39,10 @@
 
     clear_dir(DIR_FS_CATALOG.'cache/');
 
-    require_once(DIR_FS_CATALOG.'includes/modified_cache.php');
+    // the admin usually carries the object already, only then is the bootstrap needed
+    if (!is_object($modified_cache)) {
+      require_once(DIR_FS_CATALOG.'includes/modified_cache.php');
+    }
 
     if (is_object($modified_cache)) {
       $modified_cache->clear();
