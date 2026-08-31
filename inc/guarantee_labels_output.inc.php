@@ -375,18 +375,20 @@
     static $counter = 0;
     $id = 'guarantee-notice-content-'.(++$counter);
 
-    // the overlay classes of the label are reused, so both graphics open the same way
+    // The sheet is a full A4 page. The checkout carries the wording and a control, the graphic
+    // itself opens in the lightbox and is fetched on the first click, so the page stays light.
+    // The overlay classes of the label are reused, both graphics therefore open the same way.
     return '<div class="guarantee-notice">'.
              '<p class="guarantee-notice__title">'.TEXT_GUARANTEE_NOTICE_TITLE.'</p>'.
              '<p class="guarantee-notice__text">'.TEXT_GUARANTEE_NOTICE_TEXT.'</p>'.
              $mixed.
-             '<button type="button" class="guarantee-label__compact guarantee-notice__preview" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'" title="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_OPEN).'">'.
-               '<img src="'.$source.'" alt="'.$alt.'" />'.
+             '<button type="button" class="guarantee-label__compact guarantee-notice__open" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
+               TEXT_GUARANTEE_NOTICE_OPEN.
              '</button>'.
              '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_TITLE).'">'.
                '<div class="guarantee-label__content" id="'.$id.'">'.
-                 '<div class="guarantee-label__full guarantee-notice__full">'.
-                   '<div class="guarantee-label__graphic"><img src="'.$source.'" alt="'.$alt.'" /></div>'.
+                 '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'">'.
+                   '<div class="guarantee-label__graphic"></div>'.
                  '</div>'.
                '</div>'.
                '<button type="button" class="guarantee-label__close">'.TEXT_GUARANTEE_LABEL_CLOSE.'</button>'.

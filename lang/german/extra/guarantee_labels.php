@@ -27,7 +27,7 @@
   define('TEXT_GUARANTEE_NOTICE_TITLE', 'Gesetzliche Gew&auml;hrleistung');
   define('TEXT_GUARANTEE_NOTICE_TEXT', 'F&uuml;r Waren, die in der Europ&auml;ischen Union verkauft werden, gilt eine gesetzliche Gew&auml;hrleistung von mindestens zwei Jahren.');
   define('TEXT_GUARANTEE_NOTICE_MIXED', 'Der Hinweis gilt f&uuml;r die k&ouml;rperlichen Waren dieser Bestellung.');
-  define('TEXT_GUARANTEE_NOTICE_OPEN', 'Hinweis vergr&ouml;&szlig;ert anzeigen');
+  define('TEXT_GUARANTEE_NOTICE_OPEN', 'Hinweis zur gesetzlichen Gew&auml;hrleistung anzeigen');
   define('TEXT_GUARANTEE_NOTICE_LINK', 'Ihre Rechte im jeweiligen Land nachlesen');
   define('TEXT_GUARANTEE_NOTICE_MAIL', 'Auf die in der Europ&auml;ischen Union verkauften Waren dieser Bestellung besteht eine gesetzliche Gew&auml;hrleistung von mindestens zwei Jahren. Der beigef&uuml;gte Hinweis fasst Ihre Rechte zusammen.');
   define('TEXT_GUARANTEE_NOTICE_ALT', 'Hinweis der Europ&auml;ischen Union zur gesetzlichen Gew&auml;hrleistung von mindestens zwei Jahren.');

@@ -98,6 +98,19 @@
     var source = full.getAttribute('data-guarantee-label-src');
     var graphic = full.querySelector('.guarantee-label__graphic');
 
+    // the notice is a full page of outlined paths, an image keeps it out of the document and
+    // out of the request until someone opens it
+    var image = full.getAttribute('data-guarantee-label-img');
+
+    if (image && graphic && !full.getAttribute('data-guarantee-label-loaded')) {
+      full.setAttribute('data-guarantee-label-loaded', '1');
+
+      var element = document.createElement('img');
+      element.setAttribute('src', image);
+      element.setAttribute('alt', full.getAttribute('data-guarantee-label-alt') || '');
+      graphic.appendChild(element);
+    }
+
     if (!source || !graphic || full.getAttribute('data-guarantee-label-loaded')) {
       done();
       return;

@@ -165,11 +165,17 @@
   margin: 0 0 10px 0;
 }
 
-.guarantee-notice__preview img {
-  display: block;
-  width: 100%;
-  max-width: 640px;
-  height: auto;
+/* the control that opens the sheet, it carries the wording of the checkout */
+.guarantee-notice__open {
+  display: inline-block;
+  margin: 4px 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .guarantee-notice__link {
