@@ -109,11 +109,21 @@
       // always set, so a template can place the variables without asking for the module
       $order_data['GUARANTEE_HTML'] = '';
       $order_data['GUARANTEE_TXT'] = '';
+      $order_data['GUARANTEE_TEXT_HTML'] = '';
+      $order_data['GUARANTEE_TEXT_TXT'] = '';
+      $order_data['GUARANTEE_LABEL'] = '';
 
       $guarantee = guarantee_labels_order_text($oID, $order_data_values['orders_products_id']);
 
-      // the confirmation names the attached conditions, they travel with it
+      // the graphic of the order, built from the archived files of its snapshot
+      $order_data['GUARANTEE_LABEL'] = guarantee_labels_order_label($oID, $order_data_values['orders_products_id']);
+
       if ($guarantee !== false) {
+        // the wording alone, for every place that does not carry the document
+        $order_data['GUARANTEE_TEXT_HTML'] = $guarantee['label']['html'];
+        $order_data['GUARANTEE_TEXT_TXT'] = $guarantee['label']['txt'];
+
+        // the confirmation names the attached conditions, they travel with it
         $order_data['GUARANTEE_HTML'] = $guarantee['label']['html'].
                                         (($guarantee['terms']['html'] !== '') ? '<br />'.$guarantee['terms']['html'] : '');
         $order_data['GUARANTEE_TXT'] = $guarantee['label']['txt'].

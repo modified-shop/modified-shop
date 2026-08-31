@@ -709,6 +709,17 @@ Die Bestellbearbeitung zeigt bei jeder Position einen eigenen Bereich `EU-Haltba
 
 Die Bearbeitung gilt fuer Bestellungen aus dem Storefront und fuer manuell angelegte Bestellungen.
 
+#### Weitere Ansichten einer Bestellung
+
+Dieselben Snapshotwerte stehen ueberall bereit, wo `getOrderData()` die Positionen liefert. Ausgegeben wird je nach Zweck unterschiedlich:
+
+- Bestellansicht im Admin (`admin/includes/modules/orders_info_blocks.php`): die Zusage als Textzeile, ohne den Anhang.
+- Bestellung drucken (`admin/print_order.php`): ebenso als Textzeile, ohne den Anhang. Der Beleg fuehrt keine Datei mit.
+- Bestellansicht im Kundenkonto (`account_history_info.php`): das GARAN-Label als Grafik. Der Kunde sieht dort dieselbe Kennzeichnung wie beim Kauf. Die Grafik stammt aus dem Archiv der Bestellung, nicht aus dem Katalog; fehlt die Cachekopie, wird sie aus dem Archiv wiederhergestellt, weil das Archiv fuer HTTP gesperrt ist.
+- Auftragsbestaetigung: Zusage und Dateiname der beigefuegten Garantiebedingungen, weil die Datei dort tatsaechlich mitgeht.
+
+Die Statuswechselmail (`admin/includes/modules/orders_update.php`) gibt keine Positionen aus und bleibt unveraendert.
+
 Regeln:
 
 - Aenderungen betreffen nur den Bestellsnapshot. Der Katalogartikel bleibt unveraendert.
@@ -1166,7 +1177,6 @@ Voraussichtlich betroffen sind:
 - Ausgabe fuer stationaere Verkaufsstellen oder frei formulierte Angebote ausserhalb der Bestellbearbeitung.
 - Neue oder automatische Routinen fuer den Mailversand.
 - Automatische Uebertragung zu externen Marktplaetzen.
-- Ausgabe der GARAN-Positionssnapshots oder des historischen Gewaehrleistungshinweises in der Bestellansicht des Kundenkontos (`account_history_info.php`). Checkout, Admin-Bestellansicht und Auftragsbestaetigung sind geregelt; die Kundenkonto-Ansicht bleibt im ersten Umfang unveraendert.
 - Barrierefreiheitsanpassungen der bestehenden Templates. Dafuer ist ein separates neues Template vorgesehen.
 
 modified speichert Produktvarianten nicht als eigenstaendige, eindeutig adressierbare Kombinationen. Im ersten Schritt gelten GARAN-Daten deshalb immer fuer den gesamten Artikel.

@@ -45,6 +45,7 @@
           <td class="productname">
             <strong>{$order_values.PRODUCTS_NAME}</strong>
             <span style="font-size:11px;">{if $order_values.PRODUCTS_ORDER_DESCRIPTION}<br />{$order_values.PRODUCTS_ORDER_DESCRIPTION}{/if}
+            {if $order_values.GUARANTEE_TEXT_HTML}<div class="description">{$order_values.GUARANTEE_TEXT_HTML}</div>{/if}
             {if $order_values.PRODUCTS_ATTRIBUTES}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>{/if}</span>
           </td>
           <td class="model">{$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</td>

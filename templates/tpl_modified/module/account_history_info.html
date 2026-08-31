@@ -114,6 +114,7 @@
           </ul>
         {/if}
         {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<div class="shipping">{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}</div>{/if}
+        {if $order_values.GUARANTEE_LABEL}<div class="guarantee-label-row">{$order_values.GUARANTEE_LABEL}</div>{/if}
       </td>
       <td class="ord_table_right ord_width120">
         <span class="accounthistory_actions">

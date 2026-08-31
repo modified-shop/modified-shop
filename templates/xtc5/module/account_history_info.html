@@ -63,7 +63,7 @@
     <tr>
     <td>{$order_values.PRODUCTS_QTY}&nbsp;x</td>
     <td>{$order_values.PRODUCTS_NAME}</strong><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>
-      {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}<br />{/if}</td>
+      {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}<br />{/if}{if $order_values.GUARANTEE_LABEL}<div class="guarantee-label-row">{$order_values.GUARANTEE_LABEL}</div>{/if}</td>
     <td>{$order_values.PRODUCTS_MODEL}<em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></td>
     <td>{$order_values.PRODUCTS_SINGLE_PRICE}</td>
 	<td>{$order_values.PRODUCTS_PRICE}</td>
