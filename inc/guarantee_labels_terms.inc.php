@@ -88,13 +88,24 @@
       return array();
     }
 
+    static $groups;
+
+    // the module diagnosis asks this for every attachment of the shop, so the groups are read once
+    if (!isset($groups)) {
+      $groups = array();
+
+      $groups_query = xtc_db_query("SELECT customers_status_id, customers_status_name
+                                      FROM ".TABLE_CUSTOMERS_STATUS."
+                                     WHERE language_id = '".(int)$_SESSION['languages_id']."'");
+
+      while ($group = xtc_db_fetch_array($groups_query)) {
+        $groups[] = $group;
+      }
+    }
+
     $missing = array();
 
-    $groups_query = xtc_db_query("SELECT customers_status_id, customers_status_name
-                                    FROM ".TABLE_CUSTOMERS_STATUS."
-                                   WHERE language_id = '".(int)$_SESSION['languages_id']."'");
-
-    while ($group = xtc_db_fetch_array($groups_query)) {
+    foreach ($groups as $group) {
       $id = (int)$group['customers_status_id'];
 
       // only the groups the label is shown to matter, a b2b group sees neither

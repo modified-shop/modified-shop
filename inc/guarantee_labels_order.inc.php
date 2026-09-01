@@ -468,17 +468,27 @@
    * @return int
    */
   function guarantee_labels_order_language_id($orders_id) {
-    $order_query = xtc_db_query("SELECT languages_id
-                                   FROM ".TABLE_ORDERS."
-                                  WHERE orders_id = '".(int)$orders_id."'");
+    // Derived from orders.language, which is the language of the order. orders_address_edit()
+    // changes only that column when the administration switches the language, so the stored
+    // languages_id can point at the language the order was created in and would then pick the
+    // guarantee conditions of the wrong one.
+    $language = guarantee_labels_order_language($orders_id);
 
-    if (xtc_db_num_rows($order_query) < 1) {
+    if ($language === '') {
       return 0;
     }
 
-    $order = xtc_db_fetch_array($order_query);
+    $language_query = xtc_db_query("SELECT languages_id
+                                      FROM ".TABLE_LANGUAGES."
+                                     WHERE directory = '".xtc_db_input($language)."'");
 
-    return (int)$order['languages_id'];
+    if (xtc_db_num_rows($language_query) < 1) {
+      return 0;
+    }
+
+    $row = xtc_db_fetch_array($language_query);
+
+    return (int)$row['languages_id'];
   }
 
   function guarantee_labels_order_physical($orders_id) {

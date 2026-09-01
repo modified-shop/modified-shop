@@ -309,6 +309,12 @@
     $label = $renderer->label($names[$manufacturers_id], $product['products_manufacturers_model'], $product['products_garan_duration']);
 
     if ($label === false) {
+      // a name that does not fit, a missing template: an admin action has to be able to say so
+      if ($renderer->has_errors()) {
+        require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
+        guarantee_labels_snapshot_log('render', isset($product['products_id']) ? $product['products_id'] : 0, $renderer->get_errors());
+      }
+
       return false;
     }
 

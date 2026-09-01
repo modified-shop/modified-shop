@@ -191,7 +191,29 @@
      *
      * @return bool false when the value does not fit into its editable area
      */
+    /**
+     * One product value in the encoding the svg and the measurement expect.
+     *
+     * The charset of the shop is named instead of detected. mb_detect_encoding() tries
+     * ISO-8859-1 before ISO-8859-15 and would turn a euro sign into a currency sign, which the
+     * label would then carry for good.
+     *
+     * @param string $value
+     * @return string
+     */
+    function to_utf8($value) {
+      $charset = (defined('DB_SERVER_CHARSET') && strpos(DB_SERVER_CHARSET, 'utf8') === false)
+               ? 'ISO-8859-15'
+               : 'UTF-8';
+
+      return encode_utf8((string)$value, $charset, true);
+    }
+
     function fits($area_name, $text) {
+      // the same conversion the label does, otherwise the width of a latin1 value is measured
+      // on bytes that never reach the graphic
+      $text = $this->to_utf8($text);
+
       $areas = $this->areas();
 
       if (!isset($areas[$area_name])) {
@@ -284,8 +306,8 @@
       // The svg is utf-8 and so is imagettfbbox(). A shop on latin1 would otherwise hand in a
       // byte sequence that the xml escaping rejects, which drops the value from the label
       // without any error. Converted once here, so measuring, hashing and rendering agree.
-      $manufacturer = encode_utf8((string)$manufacturer, '', true);
-      $model = encode_utf8((string)$model, '', true);
+      $manufacturer = $this->to_utf8($manufacturer);
+      $model = $this->to_utf8($model);
 
       if (trim($manufacturer) === '' || trim($model) === '') {
         return false;

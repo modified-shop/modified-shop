@@ -15,6 +15,9 @@
   // The files may already be in place while the database update and the module installation
   // are not. Asking for the new article columns before that would break the order editing of
   // such a shop, so the status decides first.
+  // the hook runs inside a function, the stack is not in scope by itself
+  global $messageStack;
+
   if (defined('MODULE_GUARANTEE_LABELS_STATUS') && MODULE_GUARANTEE_LABELS_STATUS == 'true') {
     require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
 

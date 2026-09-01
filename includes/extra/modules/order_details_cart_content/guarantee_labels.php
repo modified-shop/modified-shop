@@ -25,7 +25,8 @@
       'manufacturers_id' => isset($module_content[$i]['PRODUCTS_MANUFACTURERS_ID']) ? $module_content[$i]['PRODUCTS_MANUFACTURERS_ID'] : 0,
     );
 
-    if (guarantee_labels_candidate($guarantee_labels_product)) {
+    // the cart id carries the chosen attributes, so the position decides and not the article
+    if (guarantee_labels_candidate($guarantee_labels_product, $guarantee_labels_product['products_id'])) {
       $guarantee_labels_names = guarantee_labels_manufacturer_names(array($guarantee_labels_product['manufacturers_id']));
       $module_content[$i]['GUARANTEE_LABEL'] = guarantee_labels_markup(guarantee_labels_product_label($guarantee_labels_product, $guarantee_labels_names));
     }

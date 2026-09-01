@@ -14,6 +14,9 @@
 
   // Also runs without p_garan_duration in the file: a row that only changes manufacturer or
   // model identifier can make a stored duration unusable, and that has to be reported too.
+  // the hook runs inside a function, the stack is not in scope by itself
+  global $messageStack;
+
   if (defined('MODULE_GUARANTEE_LABELS_STATUS') && MODULE_GUARANTEE_LABELS_STATUS == 'true') {
     require_once(DIR_FS_INC.'guarantee_labels_validate_product.inc.php');
 

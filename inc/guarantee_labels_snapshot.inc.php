@@ -293,8 +293,30 @@
    *
    * @return mixed array of hash and file name, false when there is no usable attachment
    */
-  function guarantee_labels_terms_snapshot($products_id, $languages_id) {
-    $terms_query = xtc_db_query("SELECT content_file
+  /**
+   * Whether one attachment is visible to the customer group of the order.
+   *
+   * An empty selection reaches everyone. The order decides, not the session: the administration
+   * creates an order for a customer of another group than its own.
+   *
+   * @param string $group_ids the selection of the attachment administration
+   * @param mixed $customers_status the group of the order, null uses the session
+   * @return bool
+   */
+  function guarantee_labels_terms_visible($group_ids, $customers_status = null) {
+    if (!preg_match_all('/c_([0-9]+)_group/', (string)$group_ids, $matches)) {
+      return true;
+    }
+
+    $status = ($customers_status === null && isset($_SESSION['customers_status']['customers_status_id']))
+            ? $_SESSION['customers_status']['customers_status_id']
+            : $customers_status;
+
+    return in_array((int)$status, array_map('intval', $matches[1]), true);
+  }
+
+  function guarantee_labels_terms_snapshot($products_id, $languages_id, $customers_status = null) {
+    $terms_query = xtc_db_query("SELECT content_file, group_ids
                                    FROM ".TABLE_PRODUCTS_CONTENT."
                                   WHERE products_id = '".(int)$products_id."'
                                     AND languages_id = '".(int)$languages_id."'
@@ -315,6 +337,14 @@
     }
 
     $terms = xtc_db_fetch_array($terms_query);
+
+    // The attachment administration restricts a document to customer groups. Archiving one the
+    // buyer may not see would attach it to the confirmation of a group that is excluded from it.
+    if (!guarantee_labels_terms_visible($terms['group_ids'], $customers_status)) {
+      guarantee_labels_snapshot_log('terms', $products_id, array('the attached document is not visible to the customer group of the order'));
+      return false;
+    }
+
     $filename = guarantee_labels_terms_filename($terms['content_file']);
 
     if ($filename === false) {
@@ -399,6 +429,7 @@
     $names = guarantee_labels_manufacturer_names(array($product['manufacturers_id']));
     $label = guarantee_labels_product_label($product, $names);
 
+
     // an inactive manufacturer or a failing renderer leaves the position without a snapshot
     if ($label === false) {
       return false;
@@ -422,7 +453,7 @@
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
 
     $renderer = new guarantee_labels_renderer();
-    $terms = guarantee_labels_terms_snapshot(isset($product['products_id']) ? $product['products_id'] : 0, $languages_id);
+    $terms = guarantee_labels_terms_snapshot(isset($product['products_id']) ? $product['products_id'] : 0, $languages_id, $customers_status);
 
     $sql_data_array = array(
       'orders_id' => $orders_id,

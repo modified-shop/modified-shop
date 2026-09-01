@@ -602,17 +602,29 @@
                      KEY `idx_orders_id` (`orders_id`)
                      )");
 
-      // CREATE TABLE IF NOT EXISTS does not add a new index to an existing table
-      foreach ($this->schema_indexes() as $index) {
-        if ($this->index_exists($index) === false) {
-          xtc_db_query("ALTER TABLE ".$index['table']." ADD ".$index['definition']);
-        }
-      }
-
+      // Columns before indexes: an index over a column that is not there yet cannot be created.
       foreach ($this->schema_columns() as $column) {
+        // A module table comes from CREATE TABLE above and is only verified. A column missing
+        // there means the table is not the one this module built, and adding a primary or auto
+        // increment column to it would fail anyway. Only the two core columns are added.
+        if ($column['after'] === '') {
+          continue;
+        }
+
         // an existing column is never changed silently, the shop data behind it is unknown
         if ($this->column_type($column['table'], $column['column']) === false) {
           xtc_db_query("ALTER TABLE ".$column['table']." ADD ".$column['column']." ".$column['definition']." AFTER ".$column['after']);
+        }
+      }
+
+      // CREATE TABLE IF NOT EXISTS does not add a new index to an existing table
+      foreach ($this->schema_indexes() as $index) {
+        // Only a name that is not there at all is created. An index of that name over other
+        // columns or without its uniqueness is left alone: adding it again fails on the
+        // duplicate name, and dropping it would touch an index the shop may use for its own
+        // reasons. verify_schema() reports it instead.
+        if ($this->index_named($index) === false) {
+          xtc_db_query("ALTER TABLE ".$index['table']." ADD ".$index['definition']);
         }
       }
 
@@ -706,6 +718,19 @@
      * @param array $index one entry of schema_indexes()
      * @return bool
      */
+    /**
+     * Whether an index of that name exists at all, whatever it is over.
+     *
+     * @param array $index one entry of schema_indexes()
+     * @return bool
+     */
+    function index_named($index) {
+      $index_query = xtc_db_query("SHOW KEYS FROM ".$index['table']."
+                                    WHERE Key_name = '".xtc_db_input($index['name'])."'");
+
+      return (xtc_db_num_rows($index_query) > 0);
+    }
+
     function index_exists($index) {
       $index_query = xtc_db_query("SHOW KEYS FROM ".$index['table']."
                                     WHERE Key_name = '".xtc_db_input($index['name'])."'
