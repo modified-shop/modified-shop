@@ -851,6 +851,78 @@
   }
 
 
+  /**
+   * Brings the download rows of one order position in line with its attributes.
+   *
+   * orders_product_option_insert() writes a row when a download attribute is added, but neither
+   * editing nor deleting an attribute removed it again. A position could therefore name a
+   * download it no longer carries, which makes it look virtual to everything that reads
+   * orders_products_download.
+   *
+   * Rows are matched by their file name instead of being rebuilt, so a download the customer has
+   * already used keeps its remaining count and its expiry.
+   */
+  function orders_product_downloads_update($oID, $orders_products_id) {
+    if (DOWNLOAD_ENABLED != 'true') {
+      return;
+    }
+
+    $orders_products_id = (int)$orders_products_id;
+    $wanted = array();
+
+    $attributes_query = xtc_db_query("SELECT pad.products_attributes_filename,
+                                             pad.products_attributes_maxdays,
+                                             pad.products_attributes_maxcount
+                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
+                                        JOIN ".TABLE_ORDERS_PRODUCTS." op
+                                             ON op.orders_products_id = opa.orders_products_id
+                                        JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                             ON pa.products_id = op.products_id
+                                                AND pa.options_id = opa.orders_products_options_id
+                                                AND pa.options_values_id = opa.orders_products_options_values_id
+                                        JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                             ON pad.products_attributes_id = pa.products_attributes_id
+                                       WHERE opa.orders_products_id = '".$orders_products_id."'");
+
+    while ($attribute = xtc_db_fetch_array($attributes_query)) {
+      if (xtc_not_null($attribute['products_attributes_filename'])) {
+        $wanted[$attribute['products_attributes_filename']] = $attribute;
+      }
+    }
+
+    $present = array();
+
+    $downloads_query = xtc_db_query("SELECT orders_products_download_id,
+                                            orders_products_filename
+                                       FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
+                                      WHERE orders_products_id = '".$orders_products_id."'");
+
+    while ($download = xtc_db_fetch_array($downloads_query)) {
+      if (isset($wanted[$download['orders_products_filename']])) {
+        $present[$download['orders_products_filename']] = true;
+        continue;
+      }
+
+      // the attribute behind this download is gone
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
+                          WHERE orders_products_download_id = '".(int)$download['orders_products_download_id']."'");
+    }
+
+    foreach ($wanted as $filename => $attribute) {
+      if (isset($present[$filename])) {
+        continue;
+      }
+
+      xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, array(
+        'orders_id' => (int)$oID,
+        'orders_products_id' => $orders_products_id,
+        'orders_products_filename' => $filename,
+        'download_maxdays' => $attribute['products_attributes_maxdays'],
+        'download_count' => $attribute['products_attributes_maxcount'],
+      ));
+    }
+  }
+
   function orders_product_option_edit($oID, $data_array) {
     global $order, $xtPrice, $lang;
   
@@ -879,6 +951,8 @@
       'weight_prefix' => xtc_db_prepare_input($data_array['weight_prefix']),
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array, 'update', "orders_products_attributes_id = '".xtc_db_input($data_array['opAID'])."'");
+
+    orders_product_downloads_update($oID, $data_array['opID']);
 
     $products_id = orders_product_update($oID, $data_array, $status);
 
@@ -1019,7 +1093,9 @@
     }
                
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_products_attributes_id = '".(int)($data_array['opAID'])."'");
-  
+
+    orders_product_downloads_update($oID, $data_array['opID']);
+
     $products_id = orders_product_update($oID, $data_array, $status);
 
     return $products_id;
