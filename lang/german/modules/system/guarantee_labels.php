@@ -29,6 +29,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_INDEX', 'Der Index %s der Tabelle %s fehlt.');
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN', 'Die Spalte %s der Tabelle %s fehlt.');
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_TYPE', 'Die Spalte %s der Tabelle %s hat den Typ %s, erwartet wird %s. Die Spalte wurde nicht ge&auml;ndert.');
+  define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_PROPERTY', 'Die Spalte %s der Tabelle %s stimmt in der Eigenschaft %s nicht mit dem vorgesehenen Schema &uuml;berein.');
 
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS', 'Pr&uuml;fung der Voraussetzungen');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE', 'Das Modul leert von sich aus keinen Cache. Erzeugte Labelgrafiken liegen unter ihrem Inhaltshash und sind nie falsch, nach einer &Auml;nderung aber verwaist. Bei aktivem Shopcache k&ouml;nnen Cross-Selling, neue Artikel und &auml;hnliche Bl&ouml;cke zudem bis zum Ablauf der Cache-Lebensdauer ein altes Label zeigen. Leeren Sie den Shopcache nach Hersteller- und Artikel&auml;nderungen &uuml;ber Konfiguration &raquo; Cache.');

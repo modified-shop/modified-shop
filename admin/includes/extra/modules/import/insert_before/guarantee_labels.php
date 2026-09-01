@@ -40,27 +40,29 @@
       }
     }
 
-    $guarantee_labels_duration = $guarantee_labels_has_duration
+    // the column may be part of the file layout and still be missing from a short row
+    $guarantee_labels_duration = ($guarantee_labels_has_duration && isset($dataArray['p_garan_duration']))
                                ? xtc_db_prepare_input($dataArray['p_garan_duration'])
-                               : (($guarantee_labels_stored !== false) ? $guarantee_labels_stored['products_garan_duration'] : '');
+                               : (isset($guarantee_labels_stored['products_garan_duration']) ? $guarantee_labels_stored['products_garan_duration'] : '');
 
     $guarantee_labels_data = array(
       'products_garan_duration' => $guarantee_labels_duration,
       'products_manufacturers_model' => isset($products_array['products_manufacturers_model'])
                                       ? $products_array['products_manufacturers_model']
-                                      : (($guarantee_labels_stored !== false) ? $guarantee_labels_stored['products_manufacturers_model'] : ''),
+                                      : (isset($guarantee_labels_stored['products_manufacturers_model']) ? $guarantee_labels_stored['products_manufacturers_model'] : ''),
     );
 
     $guarantee_labels_post = array(
       'manufacturers_id' => isset($products_array['manufacturers_id'])
                           ? $products_array['manufacturers_id']
-                          : (($guarantee_labels_stored !== false) ? $guarantee_labels_stored['manufacturers_id'] : 0),
+                          : (isset($guarantee_labels_stored['manufacturers_id']) ? $guarantee_labels_stored['manufacturers_id'] : 0),
     );
 
     $guarantee_labels_result = guarantee_labels_validate_product($guarantee_labels_data, $guarantee_labels_post);
 
     if (count($guarantee_labels_result['errors']) < 1) {
-      if ($guarantee_labels_has_duration && isset($guarantee_labels_result['data']['products_garan_duration'])) {
+      if ($guarantee_labels_has_duration && isset($dataArray['p_garan_duration'])
+          && isset($guarantee_labels_result['data']['products_garan_duration'])) {
         $products_array['products_garan_duration'] = $guarantee_labels_result['data']['products_garan_duration'];
       }
     } else {

@@ -67,8 +67,9 @@
   }
 
   /**
-   * The B2C groups a restricted attachment would keep out. An empty selection reaches everyone,
-   * which is why it produces no finding.
+   * The B2C groups an attachment would keep out. With GROUP_CHECK switched on a group has to be
+   * named in group_ids, so an empty selection reaches nobody; with it switched off group_ids is
+   * not read at all and nothing is unreachable. Same rule as includes/define_conditions.php.
    *
    * @param mixed $group_ids the posted selection of the attachment administration
    * @return array names of the groups that would not reach the document
@@ -76,16 +77,16 @@
   function guarantee_labels_terms_missing_groups($group_ids) {
     require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
+    // without the group check the storefront never reads group_ids, so nothing is unreachable
+    if (!defined('GROUP_CHECK') || GROUP_CHECK != 'true') {
+      return array();
+    }
+
     // the attachment administration stores the selection as "c_<id>_group,"
     $selected = array();
 
     if (preg_match_all('/c_([0-9]+)_group/', (string)$group_ids, $matches)) {
       $selected = array_map('intval', $matches[1]);
-    }
-
-    // no restriction at all, the attachment is visible to every group
-    if (count($selected) < 1) {
-      return array();
     }
 
     static $groups;

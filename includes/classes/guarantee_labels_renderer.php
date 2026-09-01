@@ -202,16 +202,21 @@
      * @return string
      */
     function to_utf8($value) {
-      $charset = (defined('DB_SERVER_CHARSET') && strpos(DB_SERVER_CHARSET, 'utf8') === false)
-               ? 'ISO-8859-15'
-               : 'UTF-8';
+      $value = (string)$value;
 
-      return encode_utf8((string)$value, $charset, true);
+      // Already utf-8, so there is nothing to convert. Without this a value that label() has
+      // converted would be read as latin1 a second time in fits(), and the width of a name like
+      // "Ä" would grow with every pass.
+      if (mb_check_encoding($value, 'UTF-8')) {
+        return $value;
+      }
+
+      return encode_utf8($value, 'ISO-8859-15', true);
     }
 
     function fits($area_name, $text) {
-      // the same conversion the label does, otherwise the width of a latin1 value is measured
-      // on bytes that never reach the graphic
+      // The same value the graphic will carry. to_utf8() leaves an already converted string
+      // alone, so calling it here and in label() measures the same bytes either way.
       $text = $this->to_utf8($text);
 
       $areas = $this->areas();
@@ -314,6 +319,7 @@
       }
 
       if (!$this->is_ready()) {
+        $this->fail('the renderer is not ready: '.implode(', ', $this->missing_requirements()));
         return false;
       }
 

@@ -79,10 +79,32 @@
       // core values next to the guarantee conditions of an older stand
       if ($guarantee_from_product === true) {
         $guarantee_terms = 'keep';
-        $guarantee_snapshot_terms = guarantee_labels_terms_snapshot($guarantee_pID, guarantee_labels_order_language_id($guarantee_oID));
 
-        $guarantee_checked['values']['terms_hash'] = ($guarantee_snapshot_terms === false) ? null : $guarantee_snapshot_terms['hash'];
-        $guarantee_checked['values']['terms_filename'] = ($guarantee_snapshot_terms === false) ? null : $guarantee_snapshot_terms['filename'];
+        // the group of the order, not of the administration: it decides whether the customer may
+        // see the document at all
+        $guarantee_status_query = xtc_db_query("SELECT customers_status
+                                                  FROM ".TABLE_ORDERS."
+                                                 WHERE orders_id = '".$guarantee_oID."'");
+        $guarantee_status = (xtc_db_num_rows($guarantee_status_query) > 0) ? xtc_db_fetch_array($guarantee_status_query) : array('customers_status' => 0);
+
+        guarantee_labels_snapshot_failures();
+
+        $guarantee_snapshot_terms = guarantee_labels_terms_snapshot($guarantee_pID,
+                                                                   guarantee_labels_order_language_id($guarantee_oID),
+                                                                   $guarantee_status['customers_status']);
+
+        // The article may simply have no document, that is no error. A failed archive or a
+        // refused visibility is one, and then the existing snapshot has to stay untouched.
+        $guarantee_terms_failures = guarantee_labels_snapshot_failures();
+
+        if (count($guarantee_terms_failures) > 0) {
+          foreach ($guarantee_terms_failures as $guarantee_terms_failure) {
+            $guarantee_errors[] = sprintf(ERROR_GUARANTEE_LABELS_SNAPSHOT_FAILED, encode_htmlspecialchars($guarantee_terms_failure));
+          }
+        } else {
+          $guarantee_checked['values']['terms_hash'] = ($guarantee_snapshot_terms === false) ? null : $guarantee_snapshot_terms['hash'];
+          $guarantee_checked['values']['terms_filename'] = ($guarantee_snapshot_terms === false) ? null : $guarantee_snapshot_terms['filename'];
+        }
       }
 
       if ($guarantee_terms == 'remove') {

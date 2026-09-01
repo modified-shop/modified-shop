@@ -29,6 +29,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_INDEX', 'The index %s of table %s is missing.');
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN', 'The column %s of table %s is missing.');
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_TYPE', 'The column %s of table %s has type %s, expected %s. The column has not been changed.');
+  define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_PROPERTY', 'The column %s of the table %s does not match the intended schema in its %s.');
 
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS', 'Check of the requirements');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE', 'The module empties no cache by itself. Rendered labels are stored under the hash of their content and are never wrong, only orphaned after a change. With the shop cache switched on, cross selling, new articles and similar blocks can also show an old label until the cache lifetime runs out. Empty the shop cache through configuration &raquo; cache after changes to manufacturers or articles.');

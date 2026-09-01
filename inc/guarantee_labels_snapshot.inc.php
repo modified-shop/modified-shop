@@ -296,15 +296,19 @@
   /**
    * Whether one attachment is visible to the customer group of the order.
    *
-   * An empty selection reaches everyone. The order decides, not the session: the administration
-   * creates an order for a customer of another group than its own.
+   * The same rule the storefront applies, see includes/define_conditions.php: with GROUP_CHECK
+   * switched on the group has to be named in group_ids, so an empty selection reaches nobody.
+   * With it switched off group_ids is not read at all and everything is visible.
+   *
+   * The order decides, not the session: the administration creates an order for a customer of
+   * another group than its own.
    *
    * @param string $group_ids the selection of the attachment administration
    * @param mixed $customers_status the group of the order, null uses the session
    * @return bool
    */
   function guarantee_labels_terms_visible($group_ids, $customers_status = null) {
-    if (!preg_match_all('/c_([0-9]+)_group/', (string)$group_ids, $matches)) {
+    if (!defined('GROUP_CHECK') || GROUP_CHECK != 'true') {
       return true;
     }
 
@@ -312,7 +316,7 @@
             ? $_SESSION['customers_status']['customers_status_id']
             : $customers_status;
 
-    return in_array((int)$status, array_map('intval', $matches[1]), true);
+    return (strpos((string)$group_ids, 'c_'.(int)$status.'_group') !== false);
   }
 
   function guarantee_labels_terms_snapshot($products_id, $languages_id, $customers_status = null) {

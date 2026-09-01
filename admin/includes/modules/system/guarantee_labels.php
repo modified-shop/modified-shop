@@ -314,6 +314,9 @@
         if ($status['configuration_value'] == 'true') {
           $missing = ($this->renderer_available() === false) ? array('imagettfbbox') : $this->missing_requirements();
 
+          // the schema too: a table may have been changed since the module was installed
+          $missing = array_merge($missing, $this->verify_schema());
+
           if (count($missing) > 0) {
             xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                              SET configuration_value = 'false'
@@ -623,6 +626,14 @@
         // columns or without its uniqueness is left alone: adding it again fails on the
         // duplicate name, and dropping it would touch an index the shop may use for its own
         // reasons. verify_schema() reports it instead.
+        // an index over a column that is not there would end in an sql error, and a broken
+        // module table is reported by verify_schema() instead
+        foreach ($index['columns'] as $index_column) {
+          if ($this->column_type($index['table'], $index_column) === false) {
+            continue 2;
+          }
+        }
+
         if ($this->index_named($index) === false) {
           xtc_db_query("ALTER TABLE ".$index['table']." ADD ".$index['definition']);
         }
@@ -658,16 +669,47 @@
       }
 
       foreach ($this->schema_columns() as $column) {
-        $type = $this->column_type($column['table'], $column['column']);
+        $definition = $this->column_definition($column['table'], $column['column']);
 
-        if ($type === false) {
+        if ($definition === false) {
           $errors[] = sprintf(MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN, $column['column'], $column['table']);
-        } elseif ($type != $column['type']) {
-          $errors[] = sprintf(MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_TYPE, $column['column'], $column['table'], $type, $column['type']);
+          continue;
+        }
+
+        if ($definition['type'] != $column['type']) {
+          $errors[] = sprintf(MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_TYPE, $column['column'], $column['table'], $definition['type'], $column['type']);
+          continue;
+        }
+
+        // the type alone says nothing about whether the table can be written to
+        foreach ($this->column_expectations($column) as $property => $expected) {
+          if ($definition[$property] !== $expected) {
+            $errors[] = sprintf(MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_PROPERTY, $column['column'], $column['table'], $property);
+          }
         }
       }
 
       return $errors;
+    }
+
+    /**
+     * The properties of a column that decide whether the module can write to it, read out of the
+     * definition it is created with. Only what is stated there is checked, so a shop that added
+     * a comment or a collation of its own is left alone.
+     *
+     * @param array $column one entry of schema_columns()
+     * @return array property => expected value
+     */
+    function column_expectations($column) {
+      $definition = strtoupper($column['definition']);
+      $expected = array('null' => (strpos($definition, 'NOT NULL') === false));
+
+      if (strpos($definition, 'AUTO_INCREMENT') !== false) {
+        $expected['auto_increment'] = true;
+        $expected['key'] = 'PRI';
+      }
+
+      return $expected;
     }
 
     function schema_indexes() {
@@ -755,12 +797,37 @@
      * @return mixed the column type in lower case, false when the column does not exist
      */
     function column_type($table, $column) {
+      $column_data = $this->column_definition($table, $column);
+
+      return ($column_data === false) ? false : $column_data['type'];
+    }
+
+    /**
+     * The full definition of one column, not only its type.
+     *
+     * A table can carry a column of the right type and still be unusable: without its primary
+     * key, without the auto increment behind it, or nullable where the module never expects a
+     * null. Those show up as an sql error on the first snapshot, which is far away from the
+     * installation that should have reported them.
+     *
+     * @return mixed array of type, null, key, default and extra, false when the column is gone
+     */
+    function column_definition($table, $column) {
       $column_query = xtc_db_query("SHOW COLUMNS FROM ".$table." LIKE '".str_replace('_', '\\_', xtc_db_input($column))."'");
+
       if (xtc_db_num_rows($column_query) < 1) {
         return false;
       }
+
       $column_data = xtc_db_fetch_array($column_query);
-      return strtolower($column_data['Type']);
+
+      return array(
+        'type' => strtolower($column_data['Type']),
+        'null' => (isset($column_data['Null']) && strtoupper($column_data['Null']) === 'YES'),
+        'key' => isset($column_data['Key']) ? strtoupper($column_data['Key']) : '',
+        'default' => isset($column_data['Default']) ? $column_data['Default'] : null,
+        'auto_increment' => (isset($column_data['Extra']) && strpos(strtolower($column_data['Extra']), 'auto_increment') !== false),
+      );
     }
 
     function add_configuration($key, $value, $set_function = '') {
