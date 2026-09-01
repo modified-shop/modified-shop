@@ -332,7 +332,7 @@ Auch die Cache-URL des vollstaendigen Labels wird gegen den Sidecar geprueft. Fa
 
 Der Anhang mit den Garantiebedingungen wird beim Mailversand zusaetzlich gegen `terms_hash` geprueft. Passt der Inhalt nicht mehr, protokolliert das Modul den Fall und laesst den Anhang weg, statt eine ersetzte Datei zu versenden.
 
-Ein Hashverzeichnis heisst immer wie ein SHA-256. Das Archiv weist jeden anderen Namen ab und bildet daraus keinen Pfad. Die Hashes entstehen zwar ausschliesslich im Modul, sie kommen aber aus Datenbankspalten und landen in einem Dateipfad; eine Spalte, die je etwas anderes fuehrt, darf das Archiv nicht auf ein fremdes Verzeichnis zeigen lassen. Fuer den Dateinamen eines Anhangs gilt beim Lesen dieselbe Regel wie beim Schreiben.
+Ein Hashverzeichnis heisst immer wie ein SHA-256. Das Archiv weist jeden anderen Namen ab und bildet daraus keinen Pfad, beim Lesen wie beim Schreiben: Jeder Pfad der Klasse entsteht ueber dieselbe Pruefung, sonst bliebe ausgerechnet das Anlegen eines Verzeichnisses ungeschuetzt. Die Hashes entstehen zwar ausschliesslich im Modul, sie kommen aber aus Datenbankspalten und landen in einem Dateipfad; eine Spalte, die je etwas anderes fuehrt, darf das Archiv nicht auf ein fremdes Verzeichnis zeigen lassen. Fuer den Dateinamen eines Anhangs gilt beim Lesen dieselbe Regel wie beim Schreiben.
 
 Cachedateien duerfen jederzeit geloescht und aus den versionierten Vorlagen neu erzeugt werden. Archivdateien werden nur einmal geschrieben und nie ueberschrieben. Mehrere Bestellungen duerfen dieselben Hash-Verzeichnisse referenzieren. Beim Loeschen einer Bestellung werden gemeinsam verwendete Archivdateien nicht entfernt. Eine automatische Archivbereinigung gehoert nicht zum ersten Umfang.
 
@@ -1203,7 +1203,8 @@ Voraussichtlich betroffen sind:
 - Den Sidecar unlesbar machen; das gilt als Schaden und nicht als Archiv ohne Sidecar.
 - Einen Eintrag aus dem Sidecar entfernen und die zugehoerige Datei ersetzen; die fehlende Zeile deckt die Ersetzung nicht.
 - Ein Archivverzeichnis ohne Sidecar aus einer aelteren Fassung lesen; es bleibt lesbar.
-- Einen Hash mit Pfadanteilen, falscher Laenge oder Grossbuchstaben und einen Anhangsnamen mit Pfadanteil oder Komma an das Archiv geben; es entsteht kein Pfad und nichts wird gelesen.
+- Einen Hash mit Pfadanteilen, falscher Laenge oder Grossbuchstaben und einen Anhangsnamen mit Pfadanteil oder Komma an das Archiv geben; weder Lesen noch Schreiben erzeugt einen Pfad, es entsteht kein Verzeichnis ausserhalb des Archivs und der Fall steht im Protokoll.
+- Die Werte des Labels tragen den Zeichensatz des Shops, nur die Grafik ist immer UTF-8; ein Latin-1- und ein UTF-8-Shop erzeugen denselben Hash.
 - Einen Schreibvorgang so scheitern lassen, dass das temporaere Verzeichnis unvollstaendig bleibt; es wird nicht umbenannt, kein Zielverzeichnis bleibt zurueck und der Fehler steht im Protokoll.
 - In ein beschaedigtes Hashverzeichnis erneut schreiben; es wird verworfen und aus den Vorlagen neu angelegt.
 - Ein beschaedigtes Hashverzeichnis unentfernbar machen; `remove_dir()` meldet den Fehlschlag, der Schreibvorgang bricht mit einer konkreten Meldung ab und protokolliert sie.

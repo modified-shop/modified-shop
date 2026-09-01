@@ -46,7 +46,7 @@
      * @return mixed array of file name and content, false when the cache is missing or incomplete
      */
     function cache_read($hash, $names) {
-      return $this->read_files($this->cache_dir.$hash.'/', $names);
+      return $this->read_files($this->hash_path($this->cache_dir, $hash), $names);
     }
 
     /**
@@ -62,7 +62,7 @@
     // -------------------------------------------------------------- archive --
 
     function garan_read($hash) {
-      return $this->read_files($this->garan_dir.$hash.'/', array('colour.svg', 'nested.svg'));
+      return $this->read_files($this->hash_path($this->garan_dir, $hash), array('colour.svg', 'nested.svg'));
     }
 
     function garan_write($hash, $files) {
@@ -70,7 +70,7 @@
     }
 
     function notice_read($hash) {
-      return $this->read_files($this->notice_dir.$hash.'/', array('notice.svg', 'notice.json'));
+      return $this->read_files($this->hash_path($this->notice_dir, $hash), array('notice.svg', 'notice.json'));
     }
 
     function notice_write($hash, $files) {
@@ -92,28 +92,41 @@
       return preg_match('/^[0-9a-f]{64}$/', (string)$hash) ? (string)$hash : '';
     }
 
-    function garan_path($hash) {
+    /**
+     * The directory one hash names below a base, or an empty string when it names none.
+     *
+     * Every path this class builds goes through here, reading and writing alike. A guard that
+     * only covers the path builders would leave the directory of a write untouched, which is
+     * exactly where a bad value would do its damage.
+     *
+     * @param string $base_dir
+     * @param string $hash
+     * @return string
+     */
+    function hash_path($base_dir, $hash) {
       $hash = $this->hash_dir($hash);
 
-      return ($hash === '') ? '' : $this->garan_dir.$hash.'/';
+      return ($hash === '') ? '' : $base_dir.$hash.'/';
+    }
+
+    function garan_path($hash) {
+      return $this->hash_path($this->garan_dir, $hash);
     }
 
     function notice_path($hash) {
-      $hash = $this->hash_dir($hash);
-
-      return ($hash === '') ? '' : $this->notice_dir.$hash.'/';
+      return $this->hash_path($this->notice_dir, $hash);
     }
 
     function terms_path($hash, $filename) {
-      $hash = $this->hash_dir($hash);
+      $directory = $this->hash_path($this->terms_dir, $hash);
       $filename = (string)$filename;
 
       // the same rule the name was stored under, asked again on the way out
-      if ($hash === '' || $filename !== basename($filename) || strpbrk($filename, ",/\\\0") !== false) {
+      if ($directory === '' || $filename !== basename($filename) || strpbrk($filename, ",/\\\0") !== false) {
         return '';
       }
 
-      return $this->terms_dir.$hash.'/'.$filename;
+      return $directory.$filename;
     }
 
     /**
@@ -127,6 +140,13 @@
      */
     function terms_write($hash, $filename, $source) {
       $target = $this->terms_path($hash, $filename);
+
+      // terms_path() refuses a name that is not a hash or not a plain file name, and the
+      // directory below is built from the same value
+      if ($target === '') {
+        $this->fail('terms', $hash.'/'.$filename, 'not a usable archive path');
+        return false;
+      }
 
       if (is_file($target)) {
         if (hash_file('sha256', $target) === $hash) {
@@ -142,12 +162,14 @@
         return false;
       }
 
-      if ($this->create_dir($this->terms_dir.$hash.'/') === false) {
-        $this->fail('terms', $this->terms_dir.$hash.'/', 'directory cannot be created');
+      $directory = $this->hash_path($this->terms_dir, $hash);
+
+      if ($this->create_dir($directory) === false) {
+        $this->fail('terms', $directory, 'directory cannot be created');
         return false;
       }
 
-      $temp = $this->terms_dir.$hash.'/'.$this->temp_name();
+      $temp = $directory.$this->temp_name();
 
       if (@copy($source, $temp) === false) {
         $this->fail('terms', $temp, 'file cannot be written');
@@ -250,7 +272,12 @@
      * @return bool
      */
     function write_files($base_dir, $hash, $files, $type) {
-      $target = $base_dir.$hash.'/';
+      $target = $this->hash_path($base_dir, $hash);
+
+      if ($target === '') {
+        $this->fail($type, $hash, 'not a usable archive directory');
+        return false;
+      }
 
       if (is_dir($target)) {
         if ($this->read_files($target, array_keys($files)) !== false) {

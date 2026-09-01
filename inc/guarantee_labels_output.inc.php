@@ -318,7 +318,10 @@
       return false;
     }
 
-    // the text alternative of the graphic is built from the same values
+    // The text alternative of the graphic is built from the same values, but in the encoding of
+    // the shop and not the one of the svg. Page, database and mail of a latin1 shop are latin1;
+    // only the graphic is always utf-8, which the renderer converts for internally. The hash is
+    // built from the converted value, so both kinds of shop produce the same label.
     $label['manufacturer'] = $names[$manufacturers_id];
     $label['model'] = $product['products_manufacturers_model'];
     $label['duration'] = $renderer->duration_text($renderer->normalize_duration($product['products_garan_duration']));
