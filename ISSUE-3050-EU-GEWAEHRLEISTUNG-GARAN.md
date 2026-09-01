@@ -708,7 +708,10 @@ Dafuer gelten folgende Regeln:
 - Nur bei leerem `orders.content_type`, also bei einer manuell angelegten Bestellung, entscheiden die Positionen. Je Position werden ihre Attribute und ihre Downloadzeilen gezaehlt, nicht verknuepft: Eine Position ohne Downloadzeile ist koerperliche Ware; hat sie Downloadzeilen, aber mehr Attribute als Downloads, ist sie gemischt und zaehlt ebenfalls als koerperlich. Bei `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` macht schon eine Downloadzeile die ganze Position digital. Die Regel folgt damit `shopping_cart::get_content_type()`.
 - Ein `LEFT JOIN` auf `orders_products_download` reicht dafuer nicht: Eine Position mit einem Download- und einem koerperlichen Attribut traegt eine Downloadzeile und saehe darin rein digital aus.
 - Gezaehlt wird ausschliesslich in den Bestelldaten: die Attribute der Position und ihre Zeilen in `orders_products_download`. Der Katalog wird nicht gefragt. Er wuerde fuer heute antworten und einen geloeschten Artikel oder ein geloeschtes Attribut nachtraeglich in die Einstufung einer alten Bestellung tragen; genau das soll ein Snapshot ausschliessen.
-- Dass die Bestelldaten dafuer stimmen, setzt voraus, dass `orders_products_download` beim Bearbeiten einer Position gepflegt wird. Der Bestand tat das nicht: `orders_product_option_insert()` legt eine Zeile an, `orders_product_option_edit()` und `orders_product_option_delete()` liessen sie stehen. `orders_product_downloads_update()` gleicht die Zeilen einer Position mit ihren Attributen ab und wird nach beiden Aktionen aufgerufen. Der Abgleich zaehlt Zeilen je Dateiname, damit zwei Attribute auf dieselbe Datei zeigen duerfen, und entfernt verwaiste Zeilen auch bei abgeschalteten Downloads. Das ist ein allgemeiner Kernfehler und liegt zusaetzlich als eigener Branch mit eigenem Pull Request vor.
+- Dass die Bestelldaten dafuer stimmen, setzt voraus, dass `orders_products_download` beim Bearbeiten einer Position gepflegt wird. Der Bestand tat das nicht: `orders_product_option_insert()` legt eine Zeile an, `orders_product_option_delete()` liess sie stehen. `orders_product_download_remove()` entfernt sie und wird nach dem Loeschen eines Attributs aufgerufen; beim Loeschen einer ganzen Position verschwinden ihre Zeilen ebenfalls. Das ist ein allgemeiner Kernfehler und liegt zusaetzlich als eigener Branch mit eigenem Pull Request vor.
+- Dieses Aufraeumen loescht ausschliesslich und baut nie neu. Der Katalog darf nicht bestimmen, welche Downloads eine bestehende Bestellung enthaelt: Zeigt er inzwischen auf eine andere Datei, ist ein frueher koerperliches Attribut zum Download geworden oder ist der Artikel geloescht, wuerde ein Abgleich den Anspruch des Kunden veraendern. Er wird deshalb nur gefragt, um den Dateinamen des gerade geloeschten Attributs zu ermitteln, und zwar bevor das Attribut verschwindet.
+- Kann der Katalog diesen Namen nicht mehr liefern, bleibt die Zeile stehen. Eine verwaiste Zeile ist der harmlose Fehler, ein entzogenes Downloadrecht nicht. Die Folge fuer GARAN ist begrenzt: Eine solche Position gilt weiterhin als digital, der Gewaehrleistungshinweis kann in diesem Randfall also entfallen, wo er haette erscheinen duerfen.
+- `orders_product_option_edit()` ruft das Aufraeumen ausdruecklich nicht auf. Die Maske aendert Bezeichnung, Preis und Gewicht der Bestellposition, nie das zugrunde liegende Attribut; ein Abgleich waere dort reines Risiko ohne Anlass.
 - Sobald mindestens eine koerperliche Position existiert, gilt die Bestellung als koerperlich. Eine Bestellung ohne Positionen gilt als nicht koerperlich.
 - Das Modul schreibt die Spalte nie. Eine spaetere Positionsaenderung wirkt sofort, weil nichts zwischengespeichert wird, das nachgezogen werden muesste.
 - Der Gewaehrleistungshinweis wird nur ausgegeben, wenn diese Pruefung koerperliche Ware findet.
@@ -1201,7 +1204,14 @@ Voraussichtlich betroffen sind:
 - Storefront-Bestellung mit `orders.content_type = 'mixed'` pruefen; der Hinweis wird ausgegeben.
 - Manuelle Bestellung mit leerem `orders.content_type` und genau einer Position anlegen, die ein Download- und ein koerperliches Attribut traegt; die Position hat dann zwei Attribute und eine Downloadzeile, gilt als gemischt und damit als koerperlich, und der Hinweis erscheint. Denselben Fall mit `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` pruefen; dort macht schon die eine Downloadzeile die Position digital.
 - Aus derselben Position das Downloadattribut entfernen; die zugehoerige Zeile in `orders_products_download` verschwindet mit und die Bestellung gilt als koerperlich.
+- Zwei Attribute derselben Position auf dieselbe Downloaddatei zeigen lassen und eines davon entfernen; genau eine Zeile verschwindet.
+- Ein koerperliches Attribut entfernen; keine Downloadzeile wird angetastet.
+- Bezeichnung, Preis oder Gewicht eines Bestellattributs aendern; die Downloadzeilen der Position bleiben unveraendert, auch wenn der Katalog inzwischen etwas anderes sagt.
+- Die ganze Bestellposition loeschen; ihre Downloadzeilen verschwinden mit.
 - Die Einstufung fragt ausschliesslich Bestelldaten. Einen Artikel oder ein Attribut aus dem Katalog loeschen; die Einstufung bestehender Bestellungen aendert sich dadurch nicht.
+- Den Katalogeintrag eines Downloadattributs auf eine andere Datei umstellen und danach ein anderes Attribut derselben Bestellposition loeschen; das bestehende Downloadrecht bleibt unveraendert erhalten.
+- Ein frueher koerperliches Attribut im Katalog zu einem Download machen und die alte Bestellung bearbeiten; es entsteht kein neues Downloadrecht.
+- Den Katalogartikel loeschen und danach ein Attribut der alten Bestellposition entfernen; die vorhandenen Downloadrechte bleiben bestehen und die Zeile der geloeschten Datei bleibt als bekannter Randfall zurueck.
 - Dieselbe Bestellung mit `physical`, `virtual` und `virtual_weight` pruefen; nur die ersten beiden Faelle unterscheiden sich in der Ausgabe wie erwartet.
 - Reine Download-Bestellung behaelt den Hinweis-Snapshot, gibt ihn in der Auftragsbestaetigung aber nicht aus.
 - Physische oder gemischte Bestellung gibt den beim Anlegen gespeicherten Hinweis in der manuellen Auftragsbestaetigung aus.
@@ -1331,4 +1341,12 @@ Die Erweiterung ist fachlich fertig, wenn:
 
 ## Offene Entscheidungen vor der Umsetzung
 
-Keine.
+### Stabile Zuordnung von Bestellattribut und Downloadzeile
+
+`orders_products_download` kennt keine Referenz auf `orders_products_attributes`. Die einzige Verbindung ist der Dateiname, und der steht nur im Katalog, der sich unabhaengig von der Bestellung aendert.
+
+Solange das so ist, kann das Aufraeumen einer geloeschten Downloadzeile nicht in allen Faellen greifen: Hat der Katalog den Artikel, das Attribut oder dessen Datei inzwischen geaendert, bleibt die Zeile stehen. Der Umsetzungsstand waehlt bewusst diesen Fehler, weil die Alternative Downloadrechte von Kunden entziehen oder erfinden wuerde.
+
+Eine exakte Loesung braucht eine Spalte `orders_products_attributes_id` in `orders_products_download`, gefuellt beim Anlegen der Zeile und nachtraeglich fuer bestehende Bestellungen soweit ermittelbar. Das ist eine Schemaaenderung an einer Core-Tabelle mit eigenem Datenbankupdate und gehoert nicht in dieses Modul. Sie ist Voraussetzung dafuer, die Einstufung einer manuell bearbeiteten Bestellung in jedem Fall richtig zu treffen.
+
+Fuer GARAN ist die Entscheidung nicht blockierend. Ohne sie bleibt ein Randfall, in dem eine koerperliche Position als digital gilt und der Gewaehrleistungshinweis entfaellt.
