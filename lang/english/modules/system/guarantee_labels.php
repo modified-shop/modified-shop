@@ -22,6 +22,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_INSTALL_SUCCESS', 'The database structure for the EU labels has been created and verified.');
   define('MODULE_GUARANTEE_LABELS_TEXT_UPDATE_SUCCESS', 'The database structure for the EU labels is complete.');
   define('MODULE_GUARANTEE_LABELS_TEXT_GD_ERROR', 'GD with FreeType and the function imagettfbbox() are not available on this server. Without them the text width of the GARAN label cannot be measured. The module has not been installed.');
+  define('MODULE_GUARANTEE_LABELS_TEXT_INCOMPLETE', 'The module cannot be switched on because parts of it are missing: %s');
   define('MODULE_GUARANTEE_LABELS_TEXT_SCHEMA_ERROR', 'The database structure for the EU labels could not be created completely. The module has not been enabled.');
 
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_TABLE', 'The table %s is missing.');
@@ -42,6 +43,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS', 'articles with duration, active manufacturer and model identifier');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_DURATION', 'durations within the allowed range and in half year steps');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AMBIGUOUS', 'guarantee conditions unique per article and language');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_GROUPS', 'guarantee conditions reachable for every customer group that sees the label');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED', 'the same file marked as guarantee conditions in several languages');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE', 'archived files of existing orders in place');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE', 'incomplete:');

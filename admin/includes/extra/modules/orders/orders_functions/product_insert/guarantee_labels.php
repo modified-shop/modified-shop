@@ -32,5 +32,10 @@
       );
     }
 
+    // a broken language, renderer or archive must not end in the log alone
+    foreach (guarantee_labels_snapshot_failures() as $guarantee_labels_error) {
+      $messageStack->add_session(sprintf(ERROR_GUARANTEE_LABELS_SNAPSHOT_FAILED, encode_htmlspecialchars($guarantee_labels_error)), 'error');
+    }
+
     unset($guarantee_labels_product);
   }

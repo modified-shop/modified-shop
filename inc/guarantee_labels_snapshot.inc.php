@@ -456,6 +456,36 @@
       'reference' => $reference,
       'errors' => implode(' | ', $errors),
     ));
+
+    // kept for the administration as well: an admin action must not fail into the log alone
+    guarantee_labels_snapshot_failures($errors);
+  }
+
+  /**
+   * Collects the failures of the current request so an admin action can report them.
+   *
+   * A snapshot that does not apply is no error: an article without GARAN data, a b2b group or a
+   * language the shop does not keep simply produce no row. Only a broken language, renderer or
+   * archive gets here, and only those belong in front of the merchant.
+   *
+   * @param mixed $errors messages to remember, null returns and clears what was collected
+   * @return array
+   */
+  function guarantee_labels_snapshot_failures($errors = null) {
+    static $failures = array();
+
+    if ($errors === null) {
+      $collected = $failures;
+      $failures = array();
+
+      return $collected;
+    }
+
+    foreach ((array)$errors as $error) {
+      $failures[] = $error;
+    }
+
+    return $failures;
   }
 
   /**

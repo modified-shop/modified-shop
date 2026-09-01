@@ -67,6 +67,7 @@
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_NO_PRODUCT', 'EU durability guarantee: the catalogue article carries no complete GARAN data.');
 
   define('ERROR_GUARANTEE_LABELS_TERMS_LINK', 'GARAN guarantee conditions: a link alone is no durable medium. Store a file instead. The attachment was saved as an ordinary one.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_FAILED', 'GARAN: the order data could not be stored completely: %s');
   define('ERROR_GUARANTEE_LABELS_TERMS_NAME', 'GARAN guarantee conditions: the file name &quot;%s&quot; cannot be used as a mail attachment. The attachment was saved as an ordinary one.');
   define('ERROR_GUARANTEE_LABELS_TERMS_FILE', 'GARAN guarantee conditions: the file &quot;%s&quot; is not stored under media/products/. The attachment was saved as an ordinary one.');
   define('ERROR_GUARANTEE_LABELS_TERMS_DUPLICATE', 'GARAN guarantee conditions: this article and language already carry such an attachment. The attachment was saved as an ordinary one.');

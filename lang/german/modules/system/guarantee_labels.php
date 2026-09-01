@@ -22,6 +22,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_INSTALL_SUCCESS', 'Die Datenbankstruktur f&uuml;r die EU-Kennzeichnungen wurde angelegt und gepr&uuml;ft.');
   define('MODULE_GUARANTEE_LABELS_TEXT_UPDATE_SUCCESS', 'Die Datenbankstruktur f&uuml;r die EU-Kennzeichnungen ist vollst&auml;ndig.');
   define('MODULE_GUARANTEE_LABELS_TEXT_GD_ERROR', 'GD mit FreeType und die Funktion imagettfbbox() sind auf diesem Server nicht verf&uuml;gbar. Ohne sie l&auml;sst sich die Textbreite im GARAN-Label nicht messen. Das Modul wurde nicht installiert.');
+  define('MODULE_GUARANTEE_LABELS_TEXT_INCOMPLETE', 'Das Modul kann nicht aktiviert werden, weil Bestandteile fehlen: %s');
   define('MODULE_GUARANTEE_LABELS_TEXT_SCHEMA_ERROR', 'Die Datenbankstruktur f&uuml;r die EU-Kennzeichnungen konnte nicht vollst&auml;ndig angelegt werden. Das Modul wurde nicht aktiviert.');
 
   define('MODULE_GUARANTEE_LABELS_TEXT_ERROR_TABLE', 'Die Tabelle %s fehlt.');
@@ -42,6 +43,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS', 'Artikel mit Garantiedauer, aktivem Hersteller und Modellkennung');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_DURATION', 'Garantiedauern im zul&auml;ssigen Bereich und in halben Jahresschritten');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AMBIGUOUS', 'Garantiebedingungen je Artikel und Sprache eindeutig');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_GROUPS', 'Garantiebedingungen f&uuml;r alle Kundengruppen erreichbar, die das Label sehen');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED', 'Dieselbe Datei in mehreren Sprachen als Garantiebedingung markiert');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE', 'Archivierte Dateien zu bestehenden Bestellungen vorhanden');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE', 'unvollst&auml;ndig:');

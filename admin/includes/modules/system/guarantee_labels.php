@@ -160,6 +160,25 @@
       $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED, $shared['total'] < 1,
                       $shared['total'], MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED);
 
+      // A marking survives a module that was switched off, and a group leaving the b2b list turns
+      // b2c without anyone asking again. Both leave an attachment the label points at but the
+      // customer cannot reach.
+      $groups_query = xtc_db_query("SELECT pc.content_id, pc.group_ids
+                                      FROM ".TABLE_PRODUCTS_CONTENT." pc
+                                     WHERE pc.content_type = 'garan_terms'");
+      $unreachable = 0;
+
+      require_once(DIR_FS_CATALOG.'inc/guarantee_labels_terms.inc.php');
+
+      while ($content = xtc_db_fetch_array($groups_query)) {
+        if (count(guarantee_labels_terms_missing_groups($content['group_ids'])) > 0) {
+          $unreachable++;
+        }
+      }
+
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_GROUPS, $unreachable < 1,
+                      $unreachable, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED);
+
       $damaged = $this->damaged_archives();
       $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE, $damaged < 1,
                       $damaged, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED);
@@ -292,12 +311,16 @@
       if (xtc_db_num_rows($status_query) > 0) {
         $status = xtc_db_fetch_array($status_query);
 
-        if ($status['configuration_value'] == 'true' && $this->renderer_available() === false) {
-          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                           SET configuration_value = 'false'
-                         WHERE configuration_key = 'MODULE_GUARANTEE_LABELS_STATUS'");
+        if ($status['configuration_value'] == 'true') {
+          $missing = ($this->renderer_available() === false) ? array('imagettfbbox') : $this->missing_requirements();
 
-          $messageStack->add_session(MODULE_GUARANTEE_LABELS_TEXT_GD_ERROR, 'error');
+          if (count($missing) > 0) {
+            xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                             SET configuration_value = 'false'
+                           WHERE configuration_key = 'MODULE_GUARANTEE_LABELS_STATUS'");
+
+            $messageStack->add_session(sprintf(MODULE_GUARANTEE_LABELS_TEXT_INCOMPLETE, encode_htmlspecialchars(implode(', ', $missing))), 'error');
+          }
         }
       }
 
@@ -357,6 +380,14 @@
       // the label may neither be scaled down nor cut off, so a real text measurement is required
       if ($this->renderer_available() === false) {
         $messageStack->add_session(MODULE_GUARANTEE_LABELS_TEXT_GD_ERROR, 'error');
+        return;
+      }
+
+      // templates, fonts and the extension files, otherwise the module runs without ever drawing
+      $missing = $this->missing_requirements();
+
+      if (count($missing) > 0) {
+        $messageStack->add_session(sprintf(MODULE_GUARANTEE_LABELS_TEXT_INCOMPLETE, encode_htmlspecialchars(implode(', ', $missing))), 'error');
         return;
       }
 
@@ -518,6 +549,28 @@
     }
 
     /**
+     * Everything the module needs before it may run: the renderer with its templates and fonts,
+     * and the files of the three class extensions. GD alone is not enough, a module without its
+     * templates reports success and then quietly never draws a label.
+     *
+     * @return array the missing parts, empty when the module can be switched on
+     */
+    function missing_requirements() {
+      require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
+
+      $renderer = new guarantee_labels_renderer();
+      $missing = $renderer->missing_requirements();
+
+      foreach (array_keys(self::EXTENSIONS) as $type) {
+        if ($this->class_extension($type) === false) {
+          $missing[] = self::EXTENSIONS[$type]['file'];
+        }
+      }
+
+      return $missing;
+    }
+
+    /**
      * Creates and verifies the complete module schema.
      * Used by install() and update() alike, so a later schema change only has to be added here.
      *
@@ -551,7 +604,7 @@
 
       // CREATE TABLE IF NOT EXISTS does not add a new index to an existing table
       foreach ($this->schema_indexes() as $index) {
-        if ($this->index_exists($index['table'], $index['name']) === false) {
+        if ($this->index_exists($index) === false) {
           xtc_db_query("ALTER TABLE ".$index['table']." ADD ".$index['definition']);
         }
       }
@@ -587,7 +640,7 @@
       }
 
       foreach ($this->schema_indexes() as $index) {
-        if ($this->index_exists($index['table'], $index['name']) === false) {
+        if ($this->index_exists($index) === false) {
           $errors[] = sprintf(MODULE_GUARANTEE_LABELS_TEXT_ERROR_INDEX, $index['name'], $index['table']);
         }
       }
@@ -607,9 +660,12 @@
 
     function schema_indexes() {
       return array(
-        array('table' => TABLE_ORDERS_GUARANTEE, 'name' => 'idx_orders_id', 'definition' => 'UNIQUE KEY `idx_orders_id` (`orders_id`)'),
-        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'name' => 'idx_orders_products_id', 'definition' => 'UNIQUE KEY `idx_orders_products_id` (`orders_products_id`)'),
-        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'name' => 'idx_orders_id', 'definition' => 'KEY `idx_orders_id` (`orders_id`)'),
+        array('table' => TABLE_ORDERS_GUARANTEE, 'name' => 'idx_orders_id', 'columns' => array('orders_id'), 'unique' => true,
+              'definition' => 'UNIQUE KEY `idx_orders_id` (`orders_id`)'),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'name' => 'idx_orders_products_id', 'columns' => array('orders_products_id'), 'unique' => true,
+              'definition' => 'UNIQUE KEY `idx_orders_products_id` (`orders_products_id`)'),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'name' => 'idx_orders_id', 'columns' => array('orders_id'), 'unique' => false,
+              'definition' => 'KEY `idx_orders_id` (`orders_id`)'),
       );
     }
 
@@ -621,12 +677,53 @@
       return array(
         array('table' => TABLE_PRODUCTS, 'column' => 'products_garan_duration', 'definition' => 'DECIMAL(4,1) NULL', 'type' => 'decimal(4,1)', 'after' => 'products_manufacturers_model'),
         array('table' => TABLE_PRODUCTS_CONTENT, 'column' => 'content_type', 'definition' => "VARCHAR(32) NOT NULL DEFAULT ''", 'type' => 'varchar(32)', 'after' => 'content_link'),
+
+        // CREATE TABLE IF NOT EXISTS leaves an existing table alone, so a partly built or older
+        // module table would pass unnoticed and fail on the first snapshot instead
+        array('table' => TABLE_ORDERS_GUARANTEE, 'column' => 'orders_guarantee_id', 'definition' => 'INT(11) NOT NULL AUTO_INCREMENT', 'type' => 'int(11)', 'after' => ''),
+        array('table' => TABLE_ORDERS_GUARANTEE, 'column' => 'orders_id', 'definition' => 'INT(11) NOT NULL', 'type' => 'int(11)', 'after' => ''),
+        array('table' => TABLE_ORDERS_GUARANTEE, 'column' => 'notice_hash', 'definition' => 'VARCHAR(64) NOT NULL', 'type' => 'varchar(64)', 'after' => ''),
+        array('table' => TABLE_ORDERS_GUARANTEE, 'column' => 'date_added', 'definition' => 'DATETIME NOT NULL', 'type' => 'datetime', 'after' => ''),
+
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'orders_products_guarantee_id', 'definition' => 'INT(11) NOT NULL AUTO_INCREMENT', 'type' => 'int(11)', 'after' => ''),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'orders_id', 'definition' => 'INT(11) NOT NULL', 'type' => 'int(11)', 'after' => ''),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'orders_products_id', 'definition' => 'INT(11) NOT NULL', 'type' => 'int(11)', 'after' => ''),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'manufacturers_name', 'definition' => 'VARCHAR(255) NOT NULL', 'type' => 'varchar(255)', 'after' => ''),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'manufacturers_model', 'definition' => 'VARCHAR(64) NOT NULL', 'type' => 'varchar(64)', 'after' => ''),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'garan_duration', 'definition' => 'DECIMAL(4,1) NOT NULL', 'type' => 'decimal(4,1)', 'after' => ''),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'garan_hash', 'definition' => 'VARCHAR(64) NOT NULL', 'type' => 'varchar(64)', 'after' => ''),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'terms_hash', 'definition' => 'VARCHAR(64) DEFAULT NULL', 'type' => 'varchar(64)', 'after' => ''),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'terms_filename', 'definition' => 'VARCHAR(255) DEFAULT NULL', 'type' => 'varchar(255)', 'after' => ''),
+        array('table' => TABLE_ORDERS_PRODUCTS_GUARANTEE, 'column' => 'date_added', 'definition' => 'DATETIME NOT NULL', 'type' => 'datetime', 'after' => ''),
       );
     }
 
-    function index_exists($table, $name) {
-      $index_query = xtc_db_query("SHOW KEYS FROM ".$table." WHERE Key_name = '".xtc_db_input($name)."'");
-      return (xtc_db_num_rows($index_query) > 0);
+    /**
+     * Whether an index really is the one the module needs. A name alone says nothing: an older
+     * table may carry the same name over other columns or without its uniqueness, and the first
+     * snapshot would then run into a duplicate instead of an update.
+     *
+     * @param array $index one entry of schema_indexes()
+     * @return bool
+     */
+    function index_exists($index) {
+      $index_query = xtc_db_query("SHOW KEYS FROM ".$index['table']."
+                                    WHERE Key_name = '".xtc_db_input($index['name'])."'
+                                 ORDER BY Seq_in_index");
+
+      if (xtc_db_num_rows($index_query) < 1) {
+        return false;
+      }
+
+      $columns = array();
+      $unique = true;
+
+      while ($key = xtc_db_fetch_array($index_query)) {
+        $columns[] = $key['Column_name'];
+        $unique = ($unique && $key['Non_unique'] == '0');
+      }
+
+      return ($columns === $index['columns'] && $unique === $index['unique']);
     }
 
     /**

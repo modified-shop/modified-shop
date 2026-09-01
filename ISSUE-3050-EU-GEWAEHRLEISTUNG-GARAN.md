@@ -77,7 +77,7 @@ Der EU-Praxisleitfaden zeigt fuer den Gewaehrleistungshinweis eine Anzeige nach 
 
 Deshalb gilt fuer die Planung die konservative Variante:
 
-- Gewaehrleistungshinweis im Checkout vollstaendig und direkt anzeigen.
+- Gewaehrleistungshinweis im Checkout mit Text, Link und der Zuordnung bei gemischten Warenkoerben unmittelbar anzeigen. Der rechtlich massgebliche Wortlaut steht damit ohne jede Interaktion auf der Seite. Die offizielle Grafik des Hinweises oeffnet sich auf Wunsch; der Praxisleitfaden zeigt fuer den Hinweis ausdruecklich eine Anzeige nach Klick oder Mouseover, die Grafik nachzuladen bleibt also innerhalb des Leitfadens und haelt die Seite schlank.
 - GARAN-Label auf der Produktseite als offizielle kompakte Anzeige mit vollstaendiger Ansicht nach der ersten Interaktion anzeigen.
 
 ## Geplanter Funktionsumfang
@@ -102,7 +102,7 @@ Deshalb gilt fuer die Planung die konservative Variante:
 - Auf der Produktdetailseite produktspezifisch anzeigen.
 - An weiteren direkten Bestellmoeglichkeiten wie Produktlisten, Suche, Sonderangeboten oder Cross-Selling produktspezifisch anzeigen oder dort den direkten Kauf fuer den Artikel unterbinden.
 - Offizielle kompakte GARAN-Anzeige verwenden.
-- Vollstaendiges Label beim ersten Klick, Touch oder Mouseover anzeigen.
+- Vollstaendiges Label beim ersten Klick oder Touch anzeigen. Mouseover ist nicht vorgesehen: Ein Geraet ohne Zeiger kennt ihn nicht, und eine Anzeige, die schon beim Darueberfahren aufgeht, laesst sich mit der Tastatur nicht bedienen.
 - Direkten Link zum Ziel des QR-Codes anbieten.
 - Im Checkout bei jedem betroffenen Artikel anzeigen.
 - Hinterlegte Garantiebedingungen am Produkt zugaenglich machen und ueber den bestehenden Mailablauf auf einem dauerhaften Datentraeger bereitstellen.
@@ -365,7 +365,7 @@ Fehler beim erstmaligen Erzeugen oder Archivieren eines Snapshots blockieren wed
 - Ist beim erstmaligen Erzeugen eines Snapshots ein optionaler Garantie-Anhang vorhanden, kann aber nicht archiviert werden, wird der GARAN-Kerndatensatz ohne Dateiverweis gespeichert. `terms_hash` und `terms_filename` bleiben beide `NULL`. Der Fehler darf nicht wie ein regulaer fehlender Anhang behandelt werden, sondern wird ausdruecklich protokolliert. Besteht die Ursache weiterhin, zeigt sie auch die Moduldiagnose.
 - Fehlerprotokolle enthalten mindestens Bestell-ID, gegebenenfalls Bestellpositions-ID, Hash, Zielpfad, Fehlerart und Zeitpunkt. Sie enthalten keine vollstaendigen Kunden- oder Zahlungsdaten.
 - Ein fehlendes oder beschaedigtes `notice.json` oder ein fehlender Garantie-Anhang wird beim Mailversand nicht durch aktuelle Katalog- oder Sprachdaten ersetzt. Der betroffene Mailinhalt wird uebersprungen, der Versand laeuft weiter und der Fehler wird protokolliert. Fehlende GARAN-Archivgrafiken betreffen nur die historische Anzeige im Admin und haben keinen Einfluss auf den Mailversand.
-- Der Admin erhaelt fuer Fehler bei jeder manuell ausgeloesten Aktion eine Fehlermeldung ueber den bestehenden `messageStack`. Bei Aktionen mit anschliessendem Redirect verwendet GARAN `$messageStack->add_session()`, damit die Meldung den naechsten Request erreicht. Das gilt insbesondere fuer `install()`, fehlgeschlagene `update()`-Aufrufe und Herstelleraktionen. Aktionen ohne Redirect wie Artikelspeichern, Bestellbearbeitung und Import verwenden `$messageStack->add()`. Eine zusaetzliche Admin-Fehlerverwaltung ist nicht erforderlich. GARAN verwendet den vorhandenen `LoggingManager` mit dem Dateimuster `DIR_FS_LOG . 'mod_guarantee_labels_%s_%s.log'`. Daraus entstehen Dateien wie `mod_guarantee_labels_error_2026-08-27.log`, die von der bestehenden Logverwaltung angezeigt und von der vorhandenen Logpflege erfasst werden. Die Moduldiagnose zeigt aktuell feststellbare Fehler wie fehlende Schreibrechte, unvollstaendige Sprachen oder fehlende Archivdateien. Ein zusaetzlicher persistenter Fehlerspeicher und ein Status `geprueft` gehoeren nicht zum Umfang.
+- Der Admin erhaelt fuer Fehler bei jeder manuell ausgeloesten Aktion eine Fehlermeldung ueber den bestehenden `messageStack`. Das gilt auch fuer die Snapshoterzeugung beim manuellen Anlegen einer Bestellung und beim Einfuegen einer Position: `guarantee_labels_snapshot_failures()` sammelt die Fehler des Requests, die Aufrufstelle gibt sie aus. Ein nicht anwendbarer Snapshot ist dabei kein Fehler; ein Artikel ohne GARAN-Daten, eine B2B-Gruppe oder eine nicht gepflegte Sprache erzeugen einfach keine Zeile. Nur eine defekte Sprache, ein defekter Renderer oder ein fehlgeschlagenes Archiv erreichen den Shopbetreiber. Bei Aktionen mit anschliessendem Redirect verwendet GARAN `$messageStack->add_session()`, damit die Meldung den naechsten Request erreicht. Das gilt insbesondere fuer `install()`, fehlgeschlagene `update()`-Aufrufe und Herstelleraktionen. Aktionen ohne Redirect wie Artikelspeichern, Bestellbearbeitung und Import verwenden `$messageStack->add()`. Eine zusaetzliche Admin-Fehlerverwaltung ist nicht erforderlich. GARAN verwendet den vorhandenen `LoggingManager` mit dem Dateimuster `DIR_FS_LOG . 'mod_guarantee_labels_%s_%s.log'`. Daraus entstehen Dateien wie `mod_guarantee_labels_error_2026-08-27.log`, die von der bestehenden Logverwaltung angezeigt und von der vorhandenen Logpflege erfasst werden. Die Moduldiagnose zeigt aktuell feststellbare Fehler wie fehlende Schreibrechte, unvollstaendige Sprachen oder fehlende Archivdateien. Ein zusaetzlicher persistenter Fehlerspeicher und ein Status `geprueft` gehoeren nicht zum Umfang.
 
 Durch diese Reihenfolge verweist keine Datenbankzeile auf ein nur teilweise geschriebenes Archiv. Es gibt keine automatische nachtraegliche Neuerzeugung eines fehlgeschlagenen Bestellsnapshots.
 
@@ -378,7 +378,7 @@ Die beiden Core-Felder `products.products_garan_duration` und `products_content.
 1. Modultabellen mit `CREATE TABLE IF NOT EXISTS` anlegen und ihre Indizes pruefen.
 2. Core-Spalte mit `SHOW COLUMNS FROM <Tabelle> LIKE <Spalte>` pruefen.
 3. Nur eine fehlende Core-Spalte mit `ALTER TABLE` anlegen.
-4. Danach erneut pruefen, dass Modultabellen, Indizes und beide Core-Spalten mit dem vorgesehenen Schema vorhanden sind.
+4. Danach erneut pruefen, dass Modultabellen, ihre Spalten, die Indizes samt Spaltenfolge und Eindeutigkeit sowie beide Core-Spalten mit dem vorgesehenen Schema vorhanden sind. `CREATE TABLE IF NOT EXISTS` laesst eine vorhandene Tabelle unberuehrt, eine teilweise oder aeltere Tabelle gaebe sonst einen SQL-Fehler beim ersten Snapshot statt einer Meldung bei der Installation. Spalten der Modultabellen werden nur geprueft und nicht per `ALTER TABLE` ergaenzt: Fehlt dort eine, ist die Tabelle nicht die des Moduls.
 5. Erst dann die Konfiguration einschliesslich des aktiven Modulstatus eintragen.
 
 Die Spaltendefinitionen lauten in allen drei Anlagewegen identisch:
@@ -551,11 +551,13 @@ Die Schriftdateien liegen unter `images/guarantee_labels/fonts/`:
 
 Die TTF-Dateien dienen der serverseitigen Messung. Der Renderer verwendet `imagettfbbox()` mit genau dem Schriftschnitt und der Schriftgroesse des jeweiligen editierbaren Vorlagenbereichs. Er rechnet die gemessene Breite in SVG-Einheiten um und zieht eine kleine feste Sicherheitstoleranz vom verfuegbaren Bereich ab. Passt Herstellername oder Modellkennung nicht, lehnt die Artikelverwaltung das Speichern der GARAN-Daten mit einer konkreten Fehlermeldung ab. Die Schriftgroesse wird nicht verkleinert und der Text wird nicht abgeschnitten.
 
-Das Modul prueft bei der Aktivierung, ob GD mit FreeType und `imagettfbbox()` verfuegbar ist. Fehlt diese Voraussetzung, kann das Modul nicht aktiviert werden und nennt die fehlende Funktion ueber den `messageStack`. Die Moduldiagnose zeigt den Zustand zusaetzlich an. ImageMagick und eine zusaetzliche PHP-Bibliothek werden nicht benoetigt.
+Das Modul prueft bei der Aktivierung den vollstaendigen Zustand: GD mit FreeType und `imagettfbbox()`, beide SVG-Vorlagen, die benoetigten Schriften und die Dateien der drei Klassenerweiterungen. Fehlt davon etwas, kann das Modul nicht aktiviert werden und nennt die fehlenden Bestandteile ueber den `messageStack`. Dieselbe Pruefung laeuft in `process()`, damit eine spaetere Aktivierung ueber die Modulverwaltung nicht daran vorbeikommt. Ein Modul, das ohne Vorlagen als aktiv gilt, meldet sonst Erfolg und zeichnet nie ein Label. Die Moduldiagnose zeigt den Zustand zusaetzlich an. ImageMagick und eine zusaetzliche PHP-Bibliothek werden nicht benoetigt.
 
 Die WOFF2-Dateien dienen der Browserausgabe. Eine zentrale Modul-CSS-Datei bindet sie per `@font-face` ein. Die gecachten SVGs werden inline in das HTML eingefuegt, damit sie dieselben zentral geladenen Schriften verwenden und die Interaktion zwischen kompakter und vollstaendiger Darstellung ohne eingebettete Fontkopien funktioniert. `images/.htaccess` wird um die Dateiendung `.woff2` erweitert. Dadurch bleibt `.ttf` fuer direkte HTTP-Aufrufe gesperrt und steht PHP weiterhin lokal fuer die Messung zur Verfuegung.
 
 Der Renderer muss Eingaben XML-sicher maskieren. Produktdaten duerfen keinen eigenen SVG- oder HTML-Code einschleusen.
+
+Vorlagen und Messung arbeiten in UTF-8. Ein Shop darf laut `includes/configure.php` aber auch auf `latin1` laufen, dann liefert der Katalog ISO-8859-15. Der Renderer wandelt Herstellername und Modellkennung deshalb mit `encode_utf8()` um, bevor er misst, hasht und einsetzt. Ohne diese Umwandlung verwirft die XML-Maskierung den ganzen Wert, das Feld bliebe leer und Snapshot wie Hash wuerden trotzdem geschrieben.
 
 Die Breitenpruefung findet zweimal statt. Die Artikelverwaltung prueft frueh, um eine brauchbare Fehlermeldung zu geben. Der Renderer prueft noch einmal und ist die verbindliche Schranke: Er ist nicht der einzige Weg in die Spalten. Ein in `admin/manufacturers.php` umbenannter Hersteller loest keine erneute Pruefung der betroffenen Artikel aus, und ein Import oder ein Fremdsystem prueft gar nicht. Passt ein Wert nicht, entsteht kein Label und der Grund wird protokolliert. Abschneiden oder Verkleinern ist an keiner Stelle vorgesehen.
 
@@ -646,6 +648,8 @@ Der Checkout zeigt:
 2. Den vollstaendigen Gewaehrleistungshinweis vor Abgabe der Bestellung.
 
 Der Hinweis steht in jedem mitgelieferten Template als eigener Block neben Versandart, Zahlungsweise und Bemerkungen, im jeweiligen Aufbau des Templates. Das Modul liefert ihn dafuer in Bestandteilen: `GUARANTEE_NOTICE_TITLE` und `GUARANTEE_NOTICE_BODY`. `GUARANTEE_NOTICE` enthaelt denselben Inhalt mit eigenem Rahmen und eigener Ueberschrift, fuer ein Template, das den Hinweis als fertiges Stueck setzen will.
+
+Ob eine Warenkorbposition koerperliche Ware ist, entscheidet die gewaehlte Attributkombination und nicht der Katalogartikel. Ein Artikel mit einer Download- und einer koerperlichen Variante gilt als Ganzes als gemischt; waehlt der Kunde nur den Download, hat er digitale Inhalte gekauft und erhaelt weder Label noch Zusage noch Anhang. `guarantee_labels_position_physical()` liest die gewaehlten Werte aus der Warenkorbkennung `<products_id>{option}value` und wendet die Regel aus `shopping_cart::get_content_type()` an. Warenkorb, Checkout und Positionssnapshot verwenden dieselbe Entscheidung; eine Artikelliste kennt noch keine Auswahl und fragt weiter den Artikel.
 
 Der Gewaehrleistungshinweis wird nicht angezeigt, wenn der Warenkorb ausschliesslich digitale Inhalte oder Dienstleistungen enthaelt.
 
@@ -937,6 +941,7 @@ isset($_GET['module'])
 - Vollstaendigkeit der aktiven Sprachen mit Angabe der jeweils fehlenden Bestandteile aus `notice.svg`, Mailtext, Linktext und Your-Europe-URL; abgeschaltete Sprachen werden nicht geprueft,
 - unvollstaendige GARAN-Produktdaten,
 - dieselbe `content_file`, die in mehreren Sprachen als `garan_terms` markiert ist,
+- als `garan_terms` markierte Anhaenge, die eine Kundengruppe nicht erreichen, obwohl ihr das Label gezeigt wird. Die Markierung wird beim Speichern geprueft, kann aber nachtraeglich ungueltig werden: bei abgeschaltetem Modul eingeschraenkt oder durch eine Gruppe, die aus der B2B-Auswahl entfernt wurde und damit B2C ist,
 - fehlende oder beschaedigte historische Archivdateien.
 
 `ausgewaehlt` bedeutet damit ausdruecklich, dass `$_GET['module']` vorhanden ist und exakt dem Modulcode entspricht. Ist kein Modulparameter gesetzt, kann das Framework zwar das erste Modul als `$mInfo` anzeigen, GARAN erzeugt in diesem Fall aber weder Diagnoseinhalt noch Diagnoseabfragen. Dasselbe gilt, wenn ein anderes Modul ausgewaehlt ist oder GARAN noch nicht installiert wurde.
@@ -1044,6 +1049,8 @@ Voraussichtlich betroffen sind:
 - Gastzugriff ohne ausdruecklich ausgewaehlte Gast-Kundengruppe bleibt B2C; nach ausdruecklicher Auswahl folgt er der B2B-Ausschlussregel.
 - Installiertes GARAN-Modul in `admin/module_export.php?set=system&module=guarantee_labels` ausdruecklich auswaehlen; die Bedingung aus `$_GET['module']`, `$this->code` und `check()` ist erfuellt und `properties['add_content']` zeigt die Diagnose direkt unter der Modul-Infobox.
 - Diagnose bei fehlender Modultabelle oder Core-Spalte aufrufen; sie meldet das fehlende Schema, ohne eine Abfrage gegen das fehlende Element auszufuehren.
+- Einer vorhandenen Modultabelle eine Spalte entfernen und einen Index durch einen gleichnamigen ueber andere Spalten oder ohne Eindeutigkeit ersetzen; die Schemapruefung meldet beides.
+- Einen als `garan_terms` markierten Anhang bei abgeschaltetem Modul auf eine Kundengruppe einschraenken, die das Label sieht, und das Modul wieder aktivieren; die Diagnose meldet den nicht erreichbaren Anhang. Dasselbe pruefen, nachdem eine Gruppe aus der B2B-Auswahl entfernt wurde.
 - Diagnose mit fehlendem GD-FreeType, nicht beschreibbarem Cache oder Archiv, unvollstaendiger Sprache, unvollstaendigem Produkt, mehrfach markierter `content_file` und fehlender Archivdatei pruefen.
 - Archivverzeichnis mit fehlender `nested.svg` oder `notice.json` sowie mit abweichender Pruefsumme anlegen; beide Faelle zaehlen als beschaedigt.
 - Artikel mit einer Garantiedauer zwischen `0.5` und `2.0` ohne Hersteller und Modellkennung anlegen; die Diagnose meldet ihn nicht, weil daraus kein Label entsteht.
@@ -1064,12 +1071,14 @@ Voraussichtlich betroffen sind:
 - Sehr lange Werte erkennen und mit verstaendlicher Meldung ablehnen.
 - Modulaktivierung ohne GD-FreeType beziehungsweise ohne `imagettfbbox()` ablehnen und die konkrete Fehlermeldung ueber den `messageStack` ausgeben.
 - Textbreite mit Regular und ExtraBold jeweils gegen den vorgesehenen Vorlagenbereich pruefen.
+- Herstellername und Modellkennung mit Umlauten und Sonderzeichen in einem Shop mit `DB_SERVER_CHARSET = 'latin1'` und in einem auf `utf8` speichern und ausgeben; beide Shops erzeugen dasselbe Label mit demselben Hash und keiner der Werte faellt aus der Grafik.
 - Einen Herstellernamen ueber `admin/manufacturers.php` so verlaengern, dass er nicht mehr in den Vorlagenbereich passt; die Artikel werden dabei nicht neu geprueft, der Renderer erzeugt aber trotzdem kein Label und protokolliert den Grund. Dasselbe mit einer direkt in die Datenbank geschriebenen Modellkennung pruefen.
 - Eingaben mit `2,5` und `2.5` identisch normalisieren.
 - Ganzjahreswert groesser als `99` ablehnen.
 - Halbjahreswert groesser als `99.5` ablehnen.
 - Halbe Jahre im Label mit Komma darstellen, zum Beispiel `2,5` statt `2.5`.
 - GARAN-Daten ohne Garantie-Anhang speichern und das sprachneutrale Label trotzdem ausgeben.
+- Artikel mit einer Download- und einer koerperlichen Variante anlegen; die Artikelliste zeigt das Label, die reine Downloadvariante im Warenkorb nicht. Bestellung abschliessen und pruefen, dass fuer diese Position weder Snapshot noch Zusage noch Anhang entsteht. Denselben Fall mit `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` pruefen.
 - Vorhandenen Artikel-Anhang je Sprache als `garan_terms` markieren.
 - Reinen externen Link als Garantieerklaerung ablehnen.
 - Anhang eines anderen Artikels oder einer anderen Sprache ablehnen.
@@ -1230,6 +1239,8 @@ Voraussichtlich betroffen sind:
 - GARAN-Snapshot im Admin korrigieren und Validierung pruefen.
 - Optionale archivierte Garantieerklaerung in der Bestellposition hinzufuegen, ersetzen und entfernen; dabei `terms_hash` sowie `terms_filename` pruefen.
 - Fehler beim Erzeugen oder Archivieren einer Snapshotaenderung ausloesen; die Aenderung wird abgelehnt, der bisherige Snapshot bleibt vollstaendig erhalten und der Admin erhaelt die Fehlermeldung ueber den `messageStack`.
+- Bestellung bei nicht beschreibbarem Archiv manuell anlegen und eine Position einfuegen; beide Aktionen melden den Fehler ueber den `messageStack` und nicht nur im Protokoll.
+- Position eines Artikels ohne GARAN-Daten einfuegen; es entsteht keine Zeile und keine Meldung.
 - Herstellername, Hersteller-Modellkennung und Garantiedauer nur als vollstaendigen Datensatz speichern.
 - Aenderung des Bestellsnapshots darf den Katalogartikel nicht veraendern.
 - Aktion `Aus Artikeldaten uebernehmen` pruefen; Herstellername, Modellkennung, Dauer und der `garan_terms`-Anhang der Bestellsprache werden gemeinsam uebernommen. Hat der Artikel keinen Anhang, werden `terms_hash` und `terms_filename` auf `NULL` gesetzt statt den bisherigen Anhang zu behalten.
@@ -1253,6 +1264,7 @@ Voraussichtlich betroffen sind:
 - Dieselbe `content_file` in mehreren Sprachen als `garan_terms` markieren und die Pruefwarnung in der Moduldiagnose kontrollieren.
 - QR-Code und direkter Link zeigen auf die passende Sprachseite.
 - Fehlende Sprachgrafik, fehlenden Mailtext, fehlenden Linktext und fehlende Your-Europe-URL jeweils einzeln testen.
+- Modul bei fehlender SVG-Vorlage, fehlender Schrift oder fehlender Klassenerweiterungsdatei aktivieren; die Aktivierung wird abgelehnt und nennt die fehlenden Bestandteile.
 - Jeder fehlende Sprachbestandteil erzeugt eine Warnung in der Moduldiagnose und wird darin namentlich genannt. Der Checkout laeuft ohne Gewaehrleistungshinweis und ohne sprachlichen Fallback weiter.
 - Eine dritte Shopsprache ohne `lang/<Sprachverzeichnis>/extra/guarantee_labels.php` aufrufen; das sprachneutrale GARAN-Label erscheint weiterhin. Die Beschriftungen fallen auf `GARAN` zurueck und der Link zur Your-Europe-Seite entfaellt.
 - In derselben Sprache nur `TEXT_GUARANTEE_LABEL_URL` pflegen und den Linktext weglassen; der Link erscheint nicht und es entsteht kein PHP-Fehler.
@@ -1347,7 +1359,7 @@ Die Erweiterung ist fachlich fertig, wenn:
 - Alle Fehler aus Admin-Aktionen werden ueber den bestehenden `messageStack` ausgegeben. Es gibt keinen eigenen Admin-Fehlermechanismus. Beim Aendern eines vorhandenen Bestellsnapshots bleibt der bisherige vollstaendige Stand erhalten; Teilaktualisierungen finden nicht statt.
 - Admin-Aktionen mit Redirect verwenden fuer eigene Meldungen `messageStack->add_session()`, Aktionen ohne Redirect `messageStack->add()`. Insbesondere meldet `install()` Erfolg und Fehler selbst per Session. `update()` ueberlaesst die Erfolgsmeldung seinem Framework-Aufrufer; bei Fehlern setzt es eine Session-Meldung und gibt `false` zurueck.
 
-## Offene Entscheidungen vor der Umsetzung
+## Bekannte Einschraenkung und Folgeprojekt
 
 ### Stabile Zuordnung von Bestellattribut und Downloadzeile
 
