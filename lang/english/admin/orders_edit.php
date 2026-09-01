@@ -120,4 +120,4 @@ define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date available:');
 
 define('ERROR_STATUS_CHANGE', 'ATTENTION: After changing the customer group, shipping costs, surcharges and discounts may need to be adjusted manually.');
 define('TEXT_SUCCESS_ORDER_RECALCULATE', 'The order has been recalculated.');
-  define('WARNING_ORDERS_DOWNLOAD_LEFTOVER', 'The position has more downloads than attributes. At least one download belongs to no attribute any more, but not which one. Please check the downloads of this position; none of them was removed.');
+  define('WARNING_ORDERS_DOWNLOAD_LEFTOVER', 'The position still carries downloads. Which download belongs to which attribute cannot be verified, so none was removed. If you deleted a download attribute, please check the downloads of this position by hand.');

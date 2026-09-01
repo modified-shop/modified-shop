@@ -867,11 +867,12 @@
    *
    * So the cleanup acts only where nothing can be mistaken, and it never writes:
    *
-   * - no attribute left on the position: every row is orphaned and all of them go.
-   * - more rows than remaining attributes: at least one row is orphaned, but not which one. The
-   *   rows stay and the merchant is told, because the redirect afterwards would swallow a plain
-   *   message.
-   * - otherwise: every row may still belong to a remaining attribute and nothing happens.
+   * - no download row on the position: nothing to do and nothing to say.
+   * - no attribute left either: every row is orphaned and all of them go.
+   * - attributes and rows both remain: which row belongs to which attribute cannot be told, so
+   *   nothing is deleted and the merchant is told. Counting is no help here: deleting the only
+   *   download attribute of a position that also carries a physical one leaves one attribute and
+   *   one row, which looks unremarkable and is exactly the common case this is about.
    *
    * A column orders_products_attributes_id in orders_products_download would settle this. It is
    * a schema change to a core table and is recorded as an open decision in the roadmap.
@@ -883,11 +884,6 @@
 
     $orders_products_id = (int)$orders_products_id;
 
-    $attributes_query = xtc_db_query("SELECT COUNT(*) AS total
-                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
-                                       WHERE orders_products_id = '".$orders_products_id."'");
-    $attributes = xtc_db_fetch_array($attributes_query);
-
     $downloads_query = xtc_db_query("SELECT COUNT(*) AS total
                                        FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
                                       WHERE orders_products_id = '".$orders_products_id."'");
@@ -897,15 +893,18 @@
       return;
     }
 
+    $attributes_query = xtc_db_query("SELECT COUNT(*) AS total
+                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                       WHERE orders_products_id = '".$orders_products_id."'");
+    $attributes = xtc_db_fetch_array($attributes_query);
+
     if ($attributes['total'] < 1) {
       xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
                           WHERE orders_products_id = '".$orders_products_id."'");
       return;
     }
 
-    if ($downloads['total'] > $attributes['total']) {
-      $messageStack->add_session(WARNING_ORDERS_DOWNLOAD_LEFTOVER, 'warning');
-    }
+    $messageStack->add_session(WARNING_ORDERS_DOWNLOAD_LEFTOVER, 'warning');
   }
 
   function orders_product_option_edit($oID, $data_array) {
