@@ -77,15 +77,42 @@
       return $this->write_files($this->notice_dir, $hash, $files, 'notice');
     }
 
+    /**
+     * A hash directory name, refused when it is not one.
+     *
+     * Every hash this class handles is a sha256 written by the module itself, so this never
+     * triggers in normal operation. It is here because the value comes out of a database column
+     * and is put into a file path: a column that ever carries something else must not be able to
+     * point the archive at another directory.
+     *
+     * @param string $hash
+     * @return string empty when the value is not a hash
+     */
+    function hash_dir($hash) {
+      return preg_match('/^[0-9a-f]{64}$/', (string)$hash) ? (string)$hash : '';
+    }
+
     function garan_path($hash) {
-      return $this->garan_dir.$hash.'/';
+      $hash = $this->hash_dir($hash);
+
+      return ($hash === '') ? '' : $this->garan_dir.$hash.'/';
     }
 
     function notice_path($hash) {
-      return $this->notice_dir.$hash.'/';
+      $hash = $this->hash_dir($hash);
+
+      return ($hash === '') ? '' : $this->notice_dir.$hash.'/';
     }
 
     function terms_path($hash, $filename) {
+      $hash = $this->hash_dir($hash);
+      $filename = (string)$filename;
+
+      // the same rule the name was stored under, asked again on the way out
+      if ($hash === '' || $filename !== basename($filename) || strpbrk($filename, ",/\\\0") !== false) {
+        return '';
+      }
+
       return $this->terms_dir.$hash.'/'.$filename;
     }
 
@@ -158,6 +185,10 @@
      * @return mixed array of file name and content, false when one file is missing or empty
      */
     function read_files($dir, $names) {
+      if ($dir === '' || substr($dir, -1) !== '/') {
+        return false;
+      }
+
       $files = array();
       $checksums = $this->read_checksums($dir);
 

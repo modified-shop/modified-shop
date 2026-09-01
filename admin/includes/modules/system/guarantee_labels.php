@@ -736,19 +736,20 @@
      * @return array property => expected value
      */
     function column_expectations($column) {
-      $definition = strtoupper($column['definition']);
-      $expected = array('null' => (strpos($definition, 'NOT NULL') === false));
+      $keywords = strtoupper($column['definition']);
+      $expected = array('null' => (strpos($keywords, 'NOT NULL') === false));
 
-      if (strpos($definition, 'AUTO_INCREMENT') !== false) {
+      if (strpos($keywords, 'AUTO_INCREMENT') !== false) {
         $expected['auto_increment'] = true;
         $expected['key'] = 'PRI';
       }
 
       // A default of its own is part of the definition. Without it a row written without that
-      // column ends up with a null the module never expects, or with the wrong value.
-      if (preg_match("/DEFAULT\s+'([^']*)'/", $definition, $match)) {
+      // column ends up with a null the module never expects, or with the wrong value. The value
+      // is read from the original definition, not from the upper case copy the keywords use.
+      if (preg_match("/DEFAULT\s+'([^']*)'/i", $column['definition'], $match)) {
         $expected['default'] = $match[1];
-      } elseif (preg_match('/DEFAULT\s+NULL/', $definition)) {
+      } elseif (preg_match('/DEFAULT\s+NULL/i', $column['definition'])) {
         $expected['default'] = null;
       }
 

@@ -332,6 +332,8 @@ Auch die Cache-URL des vollstaendigen Labels wird gegen den Sidecar geprueft. Fa
 
 Der Anhang mit den Garantiebedingungen wird beim Mailversand zusaetzlich gegen `terms_hash` geprueft. Passt der Inhalt nicht mehr, protokolliert das Modul den Fall und laesst den Anhang weg, statt eine ersetzte Datei zu versenden.
 
+Ein Hashverzeichnis heisst immer wie ein SHA-256. Das Archiv weist jeden anderen Namen ab und bildet daraus keinen Pfad. Die Hashes entstehen zwar ausschliesslich im Modul, sie kommen aber aus Datenbankspalten und landen in einem Dateipfad; eine Spalte, die je etwas anderes fuehrt, darf das Archiv nicht auf ein fremdes Verzeichnis zeigen lassen. Fuer den Dateinamen eines Anhangs gilt beim Lesen dieselbe Regel wie beim Schreiben.
+
 Cachedateien duerfen jederzeit geloescht und aus den versionierten Vorlagen neu erzeugt werden. Archivdateien werden nur einmal geschrieben und nie ueberschrieben. Mehrere Bestellungen duerfen dieselben Hash-Verzeichnisse referenzieren. Beim Loeschen einer Bestellung werden gemeinsam verwendete Archivdateien nicht entfernt. Eine automatische Archivbereinigung gehoert nicht zum ersten Umfang.
 
 Der GARAN-Grafikcache ist vom Smarty-Blockcache zu unterscheiden. `includes/modules/cross_selling.php`, `includes/modules/new_products.php` und `includes/modules/products_media.php` koennen ihre gerenderte Ausgabe ueber `CacheCheck()` bis zu `CACHE_LIFETIME` zwischenspeichern. Ihre Cache-IDs enthalten keinen Stand der GARAN-Daten. Ohne ausdrueckliche Leerung koennten deshalb ein entferntes Label, ein geaenderter Hersteller oder eine geaenderte Garantiebedingung bis zum Ablauf des Blockcache sichtbar bleiben.
@@ -1201,6 +1203,7 @@ Voraussichtlich betroffen sind:
 - Den Sidecar unlesbar machen; das gilt als Schaden und nicht als Archiv ohne Sidecar.
 - Einen Eintrag aus dem Sidecar entfernen und die zugehoerige Datei ersetzen; die fehlende Zeile deckt die Ersetzung nicht.
 - Ein Archivverzeichnis ohne Sidecar aus einer aelteren Fassung lesen; es bleibt lesbar.
+- Einen Hash mit Pfadanteilen, falscher Laenge oder Grossbuchstaben und einen Anhangsnamen mit Pfadanteil oder Komma an das Archiv geben; es entsteht kein Pfad und nichts wird gelesen.
 - Einen Schreibvorgang so scheitern lassen, dass das temporaere Verzeichnis unvollstaendig bleibt; es wird nicht umbenannt, kein Zielverzeichnis bleibt zurueck und der Fehler steht im Protokoll.
 - In ein beschaedigtes Hashverzeichnis erneut schreiben; es wird verworfen und aus den Vorlagen neu angelegt.
 - Ein beschaedigtes Hashverzeichnis unentfernbar machen; `remove_dir()` meldet den Fehlschlag, der Schreibvorgang bricht mit einer konkreten Meldung ab und protokolliert sie.
