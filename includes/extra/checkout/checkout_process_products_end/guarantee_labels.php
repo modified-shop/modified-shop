@@ -23,5 +23,8 @@
       'products_manufacturers_model' => isset($order->products[$i]['manufacturers_model']) ? $order->products[$i]['manufacturers_model'] : '',
       'manufacturers_id' => isset($order->products[$i]['manufacturers_id']) ? $order->products[$i]['manufacturers_id'] : 0,
     ),
-    $_SESSION['languages_id']
+    $_SESSION['languages_id'],
+    null,
+    // the same decision the cart made: the chosen combination, not the whole article
+    $order->products[$i]['id']
   );

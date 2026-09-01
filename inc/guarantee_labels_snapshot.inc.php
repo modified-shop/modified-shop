@@ -379,9 +379,10 @@
    * @param array $product the article data with duration, model identifier and manufacturer
    * @param int $languages_id the language of the order, it selects the guarantee conditions
    * @param mixed $customers_status the group of the customer, null uses the session
+   * @param string $uprid the cart id of the position, it decides for a chosen combination
    * @return bool false when the article carries no complete GARAN data
    */
-  function guarantee_labels_product_snapshot($orders_id, $orders_products_id, $product, $languages_id, $customers_status = null) {
+  function guarantee_labels_product_snapshot($orders_id, $orders_products_id, $product, $languages_id, $customers_status = null, $uprid = '') {
     require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
     $orders_id = (int)$orders_id;
@@ -391,7 +392,7 @@
       return false;
     }
 
-    if (!guarantee_labels_candidate($product)) {
+    if (!guarantee_labels_candidate($product, $uprid)) {
       return false;
     }
 

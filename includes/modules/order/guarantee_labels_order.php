@@ -62,7 +62,8 @@
         'manufacturers_id' => isset($products_data['manufacturers_id']) ? $products_data['manufacturers_id'] : 0,
       );
 
-      if (!guarantee_labels_candidate($product)) {
+      // the cart id carries the chosen attributes, so the position decides and not the article
+      if (!guarantee_labels_candidate($product, $products_id)) {
         return $products_data;
       }
 

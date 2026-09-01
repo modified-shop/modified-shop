@@ -281,7 +281,13 @@
         return false;
       }
 
-      if (trim((string)$manufacturer) === '' || trim((string)$model) === '') {
+      // The svg is utf-8 and so is imagettfbbox(). A shop on latin1 would otherwise hand in a
+      // byte sequence that the xml escaping rejects, which drops the value from the label
+      // without any error. Converted once here, so measuring, hashing and rendering agree.
+      $manufacturer = encode_utf8((string)$manufacturer, '', true);
+      $model = encode_utf8((string)$model, '', true);
+
+      if (trim($manufacturer) === '' || trim($model) === '') {
         return false;
       }
 

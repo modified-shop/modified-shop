@@ -49,7 +49,7 @@
    * @param array $product one product row of a storefront query
    * @return bool
    */
-  function guarantee_labels_candidate($product) {
+  function guarantee_labels_candidate($product, $uprid = '') {
     if (!isset($product['products_garan_duration']) || $product['products_garan_duration'] === null) {
       return false;
     }
@@ -58,7 +58,13 @@
       return false;
     }
 
-    if (!guarantee_labels_product_physical(isset($product['products_id']) ? $product['products_id'] : 0)) {
+    // Where a selection exists it decides, otherwise the article does. A listing shows the
+    // article before anything is chosen, a cart position shows exactly one combination.
+    $physical = ($uprid === '')
+              ? guarantee_labels_product_physical(isset($product['products_id']) ? $product['products_id'] : 0)
+              : guarantee_labels_position_physical($uprid);
+
+    if (!$physical) {
       return false;
     }
 
@@ -67,6 +73,70 @@
     $renderer = new guarantee_labels_renderer();
 
     return $renderer->qualifies($product['products_garan_duration']);
+  }
+
+  /**
+   * guarantee_labels_position_physical()
+   *
+   * Whether one chosen combination is physical goods. An article with a download variant and a
+   * physical one counts as mixed as a whole, but a customer who picks only the download bought
+   * digital content and gets neither label nor snapshot.
+   *
+   * The cart identifies a position as "<products_id>{option}value...", so the chosen attributes
+   * are in the id. The rule is the one of shopping_cart::get_content_type().
+   *
+   * @param string $uprid the cart id of the position
+   * @return bool
+   */
+  function guarantee_labels_position_physical($uprid) {
+    static $known = array();
+
+    $uprid = (string)$uprid;
+
+    if (isset($known[$uprid])) {
+      return $known[$uprid];
+    }
+
+    require_once(DIR_FS_INC.'xtc_get_prid.inc.php');
+
+    $products_id = (int)xtc_get_prid($uprid);
+
+    // no attribute chosen, so the article answers for the position
+    if (!preg_match_all('/\{[0-9]+\}([0-9]+)/', $uprid, $matches)) {
+      $known[$uprid] = guarantee_labels_product_physical($products_id);
+      return $known[$uprid];
+    }
+
+    if ($products_id < 1 || !defined('DOWNLOAD_ENABLED') || DOWNLOAD_ENABLED != 'true') {
+      $known[$uprid] = true;
+      return true;
+    }
+
+    $values = array_unique(array_map('intval', $matches[1]));
+
+    $download_query = xtc_db_query("SELECT COUNT(*) AS total
+                                      FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                      JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                           ON pa.products_attributes_id = pad.products_attributes_id
+                                     WHERE pa.products_id = '".$products_id."'
+                                       AND pa.options_values_id IN ('".implode("', '", $values)."')");
+    $download = xtc_db_fetch_array($download_query);
+    $downloads = (int)$download['total'];
+
+    if ($downloads < 1) {
+      $known[$uprid] = true;
+      return true;
+    }
+
+    // with multiple downloads allowed one chosen download makes the whole position virtual
+    if (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true') {
+      $known[$uprid] = false;
+      return false;
+    }
+
+    $known[$uprid] = (count($values) > $downloads);
+
+    return $known[$uprid];
   }
 
   /**
