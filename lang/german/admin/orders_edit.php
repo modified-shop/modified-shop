@@ -120,3 +120,4 @@ define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Erscheinungsdatum:');
 
 define('ERROR_STATUS_CHANGE', 'ACHTUNG: Nach &Auml;nderung der Kundengruppe m&uuml;ssen eventuell Versandkosten, Zuschl&auml;ge und Rabatte manuell angepasst werden.');
 define('TEXT_SUCCESS_ORDER_RECALCULATE', 'Die Bestellung wurde neu berechnet.');
+  define('WARNING_ORDERS_DOWNLOAD_LEFTOVER', 'Die Position hat mehr Downloads als Attribute. Mindestens ein Download geh&ouml;rt zu keinem Attribut mehr, welcher es ist l&auml;sst sich nicht feststellen. Pr&uuml;fen Sie die Downloads dieser Position; es wurde keiner entfernt.');
