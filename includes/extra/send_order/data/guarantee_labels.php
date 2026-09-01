@@ -37,10 +37,10 @@
                                             decode_htmlentities($guarantee_labels_notice['link']).': '.$guarantee_labels_notice['url']);
 
     // The heading comes from the snapshot like text and link, otherwise a repeated mail would
-    // carry the historical wording under a current heading. Only archives written before the
-    // heading was stored fall back to the language file of the order; the administration never
-    // loads the storefront files by itself. The mail templates hold no umlauts of their own, so
-    // it arrives as a variable in both encodings.
+    // carry the historical wording under a current heading. An archive whose notice.json holds
+    // no title falls back to the language file of the order, which the administration never
+    // loads by itself. The mail templates hold no umlauts of their own, so it arrives as a
+    // variable in both encodings.
     $guarantee_labels_title = $guarantee_labels_notice['title'];
 
     if ($guarantee_labels_title === '') {
