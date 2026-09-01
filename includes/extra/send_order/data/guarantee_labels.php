@@ -23,6 +23,10 @@
   // An inactive module sends nothing, not even from a snapshot that is still there. A manually
   // created order carries its notice from the moment it is created, so whether it holds goods
   // at all is decided here and not when the snapshot was written.
+  //
+  // Only the wording and the link travel with the mail. The official notice is an svg, and mail
+  // programs do not render svg reliably: an attachment the recipient cannot open informs worse
+  // than the text does. See the roadmap for the full reasoning.
   $guarantee_labels_notice = (guarantee_labels_active() && guarantee_labels_order_physical($order->info['order_id']))
                            ? guarantee_labels_order_notice($order->info['order_id'])
                            : false;

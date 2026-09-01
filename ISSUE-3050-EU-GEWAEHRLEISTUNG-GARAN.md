@@ -813,7 +813,7 @@ Beides gilt gleichermassen fuer die erste Bestellbestaetigung, den erneuten Vers
 - Historischen sprachabhaengigen Gewaehrleistungstext aus `media/guarantee_labels/archive/notice/<notice_hash>/notice.json` aufnehmen.
 - Historischen Gewaehrleistungsstatus aus `orders_guarantee` verwenden.
 - Historischen Linktext, die historische Your-Europe-URL und die historische Ueberschrift aus demselben Snapshot bereitstellen. Fuehrt die `notice.json` kein Feld `title`, greift nur die Ueberschrift auf die Sprachdatei der Bestellsprache zurueck; Text und Link bleiben historisch.
-- Weder `notice.svg` noch eine daraus erzeugte Rastergrafik einbetten oder anhaengen.
+- Weder `notice.svg` noch eine daraus erzeugte Rastergrafik einbetten oder anhaengen. Der Grund ist praktisch: SVG ist in Mailprogrammen kein verlaesslich darstellbares Format. Ein Anhang, den der Empfaenger nicht oeffnen kann, erfuellt den Zweck des Hinweises nicht besser als der Text, sondern schlechter. Der rechtlich massgebliche Wortlaut und der Link zur Your-Europe-Seite gehen als Text mit und liegen damit auf einem dauerhaften Datentraeger.
 - Kein GARAN-Label einbetten oder als Grafik anhaengen.
 - Vorhandene, fuer die Bestellung archivierte Garantiebedingungen ueber denselben Anhangsmechanismus beifuegen. Fehlen sie, wird kein Ersatzdokument erzeugt und kein GARAN-Anhang versendet.
 
@@ -1309,13 +1309,15 @@ Die Erweiterung ist fachlich fertig, wenn:
 - beim Loeschen einer Bestellung oder einer Bestellposition keine verwaisten Modulzeilen zurueckbleiben,
 - manuelle Auftragsbestaetigungen ausschliesslich ueber den bestehenden, vom Admin ausgeloesten Versandweg versendet werden,
 - Bestellbestaetigungen die erforderlichen Hinweise enthalten,
-- Auftragsbestaetigungen vorhandene archivierte Garantiebedingungen ueber den bestehenden Anhangsweg bereitstellen, bei fehlenden Bedingungen keinen GARAN-Anhang erzeugen und keine GARAN-Grafik versenden,
+- Auftragsbestaetigungen vorhandene archivierte Garantiebedingungen ueber den bestehenden Anhangsweg bereitstellen, bei fehlenden Bedingungen keinen GARAN-Anhang erzeugen und weder GARAN-Grafik noch Hinweisgrafik versenden; der Gewaehrleistungshinweis geht als Wortlaut mit Link mit,
 - die Standardsprachen korrekt unterstuetzt werden und
 - die Ausgabe auf Desktop und Mobilgeraet funktioniert.
 
 ## Geklaerte technische Punkte
 
 - Der bestehende Mailweg unterstuetzt regulaere Anhaenge. Die Garantiebedingungen werden ueber `$email_attachments` in `includes/extra/send_order/data/` ergaenzt. HTML- und Text-Mail geben den sprachabhaengigen Gewaehrleistungstext mit direktem Link aus. `notice.svg`, daraus erzeugte Rastergrafiken und GARAN-Grafiken werden weder eingebettet noch angehaengt. Es gibt keine neue Mailroutine und keine CID-Einbettung.
+- Die Frage, ob zusaetzlich die offizielle Grafik des Gewaehrleistungshinweises in die Bestellbestaetigung gehoert, wurde ausdruecklich geprueft und verneint. Der Praxisleitfaden nennt auf Seite 21 die Aufnahme des Hinweises in die Bestaetigungsmail, und § 312f Abs. 2 BGB verlangt die Vertragsinformationen auf einem dauerhaften Datentraeger. Beides erfuellt der mitgesendete Text mit Link. Die Grafik liegt als SVG vor, und SVG stellen Mailprogramme nicht verlaesslich dar; ein Anhang, den der Empfaenger nicht oeffnen kann, verbessert die Information nicht, sondern verschlechtert sie. Eine Rastergrafik daraus zu erzeugen waere technisch moeglich, waere aber nicht mehr die offizielle Datei und bringt gegenueber dem Wortlaut keinen Mehrwert.
+- Technisch waere ein Anhang billig: `notice.svg` liegt je Bestellung archiviert unter `notice_hash`, und `$email_attachments` traegt bereits die Garantiebedingungen. Die Entscheidung ist also keine Aufwandsfrage, sondern eine bewusste inhaltliche.
 - Garantiebedingungen verwenden die vorhandenen Artikel-Anhaenge. `products_content.content_type = 'garan_terms'` kennzeichnet je Artikel und Sprache die optional zu verwendende Datei; ein separater Upload oder Content-Manager-Datensatz ist nicht erforderlich.
 - Die technische Zuordnung eines Garantie-Anhangs bleibt optional. Das Modul warnt bei fehlender Zuordnung, erzwingt § 479 BGB aber nicht, weil der Shopbetreiber die Garantieerklaerung auch ueber einen anderen dauerhaften Datentraeger bereitstellen kann und fuer diesen Bereitstellungsweg verantwortlich bleibt.
 - Fuer `garan_terms` gelten die bereits vorhandenen erlaubten Dateiformate der Artikel-Anhangsverwaltung. Der Bestellsnapshot speichert mit `terms_filename` den bereinigten Dateinamen samt Erweiterung; eine PDF-Erzeugung oder zusaetzliche Formateinschraenkung gibt es nicht. Kommas im Dateinamen sind wegen der kommaseparierten Anhangsliste unzulaessig.
