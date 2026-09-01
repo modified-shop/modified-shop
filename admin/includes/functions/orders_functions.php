@@ -860,30 +860,30 @@
    * attribute is added to a position of an existing order, but deleting that attribute never
    * removed it again. The position then names a download it no longer carries.
    *
-   * orders_products_download holds no reference to the attribute it belongs to, and the file
-   * name that could connect the two lives in the catalogue, which changes independently of the
-   * order. Deciding by that name is unsafe: an attribute that has meanwhile been given the file
-   * of another one would take away that other download right.
+   * orders_products_download holds no reference to the attribute it belongs to. Neither of the
+   * two things that could connect them is safe to decide by:
    *
-   * What can be asked is the order itself. orders_products_attributes.products_options keeps the
-   * option name as it was when the order was placed, and the attribute administration offers the
-   * download fields only for an option named "Downloads" (new_attributes_include.php). So a
-   * position that has no attribute of that name left cannot own a download row any more.
+   * - the file name lives in the catalogue, which changes independently of the order. An
+   *   attribute that has meanwhile been given the file of another one would take away that
+   *   other download right.
+   * - the option name of the order looks usable, because the attribute administration offers
+   *   the download fields only for an option called "Downloads". But a merchant may rename the
+   *   attribute of an order, and a name that is then not recognised makes the position look as
+   *   if it had no download attribute at all, which would delete every valid row it holds. A
+   *   miss must never be the destructive outcome. The same applies to a shop whose option is
+   *   named differently per admin language.
+   *
+   * So the cleanup acts only where nothing can be mistaken, and it never writes:
    *
    * - no download row on the position: nothing to do and nothing to say.
-   * - no download attribute left: every row is orphaned and all of them go. This covers the
-   *   ordinary case of a position with a physical and a digital attribute whose digital one was
-   *   deleted, where counting alone would see one attribute next to one row and stay silent.
-   * - more rows than download attributes: at least one is orphaned, but not which one. Nothing
-   *   is deleted and the merchant is told.
-   * - otherwise: every row may still belong to a remaining download attribute.
+   * - no attribute left either: every row is orphaned and all of them go.
+   * - attributes and rows both remain: which row belongs to which attribute cannot be told, so
+   *   nothing is deleted and the merchant is told. Counting is no help here: deleting the only
+   *   download attribute of a position that also carries a physical one leaves one attribute and
+   *   one row, which looks unremarkable and is exactly the common case this is about.
    *
-   * Leaning on the option name is a stopgap, and the literal is deliberately kept here instead
-   * of becoming a shared constant: it is meant to disappear, not to be established. It holds as
-   * long as the administration ties the download fields to that name, and a merchant may rename
-   * the attribute of an order by hand, which lands in the branch that only warns. A column
-   * orders_products_attributes_id in orders_products_download settles it properly, see issue
-   * #3280.
+   * Only a column orders_products_attributes_id in orders_products_download can assign a single
+   * row to a single attribute. It is a schema change to a core table, see issue #3280.
    *
    * @param int $orders_products_id the position whose attribute was deleted
    */
@@ -901,13 +901,9 @@
       return;
     }
 
-    // The option name of the order, not of the catalogue. The literal is the one
-    // new_attributes_include.php ties its download fields to; issue #3280 replaces both with a
-    // reference from the download row to its attribute.
     $attributes_query = xtc_db_query("SELECT COUNT(*) AS total
                                         FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
-                                       WHERE orders_products_id = '".$orders_products_id."'
-                                         AND UPPER(TRIM(products_options)) = 'DOWNLOADS'");
+                                       WHERE orders_products_id = '".$orders_products_id."'");
     $attributes = xtc_db_fetch_array($attributes_query);
 
     if ($attributes['total'] < 1) {
@@ -916,9 +912,7 @@
       return;
     }
 
-    if ($downloads['total'] > $attributes['total']) {
-      $messageStack->add_session(WARNING_ORDERS_DOWNLOAD_LEFTOVER, 'warning');
-    }
+    $messageStack->add_session(WARNING_ORDERS_DOWNLOAD_LEFTOVER, 'warning');
   }
 
   function orders_product_option_edit($oID, $data_array) {

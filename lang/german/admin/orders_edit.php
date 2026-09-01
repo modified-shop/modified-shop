@@ -120,4 +120,4 @@ define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Erscheinungsdatum:');
 
 define('ERROR_STATUS_CHANGE', 'ACHTUNG: Nach &Auml;nderung der Kundengruppe m&uuml;ssen eventuell Versandkosten, Zuschl&auml;ge und Rabatte manuell angepasst werden.');
 define('TEXT_SUCCESS_ORDER_RECALCULATE', 'Die Bestellung wurde neu berechnet.');
-  define('WARNING_ORDERS_DOWNLOAD_LEFTOVER', 'Die Position f&uuml;hrt mehr Downloads als Downloadattribute. Mindestens einer geh&ouml;rt zu keinem Attribut mehr, welcher es ist l&auml;sst sich nicht feststellen. Es wurde keiner entfernt; pr&uuml;fen Sie die Downloads dieser Position von Hand.');
+  define('WARNING_ORDERS_DOWNLOAD_LEFTOVER', 'Die Position f&uuml;hrt weiterhin Downloads. Welcher Download zu welchem Attribut geh&ouml;rt, ist nicht &uuml;berpr&uuml;fbar, deshalb wurde keiner entfernt. Haben Sie ein Downloadattribut gel&ouml;scht, pr&uuml;fen Sie die Downloads dieser Position von Hand.');
