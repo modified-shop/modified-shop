@@ -262,6 +262,30 @@
    * @param array $constants
    * @return bool
    */
+  /**
+   * The constants a language needs before the notice may be shown or archived.
+   *
+   * Diagnosis, checkout and snapshot all ask here. Asked separately they drifted apart: the
+   * diagnosis called a language complete that the checkout then refused, and the checkout could
+   * stay silent while the order still got a snapshot.
+   *
+   * The label constants are not part of it. The label is language neutral and falls back to its
+   * own wording, so a missing one must not decide anything.
+   *
+   * @return array
+   */
+  function guarantee_labels_notice_constants() {
+    return array(
+      'TEXT_GUARANTEE_NOTICE_TITLE',
+      'TEXT_GUARANTEE_NOTICE_TEXT',
+      'TEXT_GUARANTEE_NOTICE_MAIL',
+      'TEXT_GUARANTEE_NOTICE_LINK',
+      'TEXT_GUARANTEE_NOTICE_URL',
+      'TEXT_GUARANTEE_NOTICE_OPEN',
+      'TEXT_GUARANTEE_NOTICE_ALT',
+    );
+  }
+
   function guarantee_labels_texts_ready($constants) {
     foreach ($constants as $constant) {
       if (guarantee_labels_text($constant) === '') {
@@ -516,10 +540,7 @@
     // nothing to show; a missing constant would end the request instead of the notice
     if ($language === ''
         || !is_file(DIR_FS_CATALOG.$file)
-        || !guarantee_labels_texts_ready(array('TEXT_GUARANTEE_NOTICE_TITLE', 'TEXT_GUARANTEE_NOTICE_TEXT',
-                                               'TEXT_GUARANTEE_NOTICE_OPEN', 'TEXT_GUARANTEE_NOTICE_ALT',
-                                               'TEXT_GUARANTEE_NOTICE_LINK', 'TEXT_GUARANTEE_NOTICE_URL',
-                                               'TEXT_GUARANTEE_LABEL_CLOSE', 'TEXT_GUARANTEE_LABEL_RELOAD'))
+        || !guarantee_labels_texts_ready(guarantee_labels_notice_constants())
         || ($content_type === 'mixed' && !guarantee_labels_texts_ready(array('TEXT_GUARANTEE_NOTICE_MIXED')))
         )
     {

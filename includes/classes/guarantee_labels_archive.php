@@ -267,6 +267,15 @@
         return false;
       }
 
+      // The whole directory is read back the same way a later request reads it. A short write
+      // can still report a byte count, and no database row may point at an archive that only
+      // turns out to be damaged when it is needed.
+      if ($this->read_files($temp, array_keys($files)) === false) {
+        $this->remove_dir($temp);
+        $this->fail($type, $temp, 'directory does not read back as written');
+        return false;
+      }
+
       if (@rename(rtrim($temp, '/'), rtrim($target, '/')) === false) {
         $this->remove_dir($temp);
         // another request may have created the same hash directory in the meantime

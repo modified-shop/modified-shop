@@ -289,6 +289,17 @@
         return false;
       }
 
+      // The article administration checks this early to give a useful message, but it is not
+      // the only way into the columns: a renamed manufacturer, an import or a foreign system
+      // never revalidates the articles behind it. Text may neither be cut nor set smaller, so
+      // no label is the only remaining answer.
+      foreach (array('manufacturer' => $manufacturer, 'model' => $model) as $area => $text) {
+        if ($this->fits($area, $text) === false) {
+          $this->fail('the '.$area.' does not fit its editable area: '.$text);
+          return false;
+        }
+      }
+
       $hash = $this->garan_hash($manufacturer, $model, $duration);
       $names = array_keys($this->templates());
 

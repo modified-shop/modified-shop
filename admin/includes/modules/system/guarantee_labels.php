@@ -496,9 +496,11 @@
       // reading the file is the only way to see the texts of a language that is not loaded
       $content = (string)@file_get_contents($file);
 
-      foreach (array('TEXT_GUARANTEE_NOTICE_MAIL',
-                     'TEXT_GUARANTEE_NOTICE_LINK',
-                     'TEXT_GUARANTEE_NOTICE_URL') as $constant) {
+      require_once(DIR_FS_CATALOG.'inc/guarantee_labels_output.inc.php');
+
+      // the same list the checkout and the snapshot use, otherwise the diagnosis would call a
+      // language complete that the storefront then refuses
+      foreach (guarantee_labels_notice_constants() as $constant) {
         if (!preg_match("/define\\s*\\(\\s*'".$constant."'\\s*,\\s*'[^']+'/", $content)) {
           $missing[] = $constant;
         }

@@ -20,7 +20,7 @@
    */
 
   // raised when the composition of the notice snapshot changes, it enters notice_hash
-  define('GUARANTEE_LABELS_NOTICE_VERSION', '1.00');
+  define('GUARANTEE_LABELS_NOTICE_VERSION', '1.01');
 
   /**
    * Makes sure the storefront texts of one language are available.
@@ -110,25 +110,19 @@
       return false;
     }
 
-    $constants = array(
-      'text' => 'TEXT_GUARANTEE_NOTICE_MAIL',
-      'link' => 'TEXT_GUARANTEE_NOTICE_LINK',
-      'url' => 'TEXT_GUARANTEE_NOTICE_URL',
-      // only labels the block and stays out of notice_hash, see guarantee_labels_notice_hash()
-      'title' => 'TEXT_GUARANTEE_NOTICE_TITLE',
-    );
+    require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
-    $texts = array();
-
-    foreach ($constants as $key => $constant) {
-      if (!defined($constant) || trim(constant($constant)) === '') {
-        return false;
-      }
-
-      $texts[$key] = trim(constant($constant));
+    // the same completeness the checkout demands, so a snapshot cannot outlive a silent checkout
+    if (!guarantee_labels_texts_ready(guarantee_labels_notice_constants())) {
+      return false;
     }
 
-    return $texts;
+    return array(
+      'text' => trim(TEXT_GUARANTEE_NOTICE_MAIL),
+      'link' => trim(TEXT_GUARANTEE_NOTICE_LINK),
+      'url' => trim(TEXT_GUARANTEE_NOTICE_URL),
+      'title' => trim(TEXT_GUARANTEE_NOTICE_TITLE),
+    );
   }
 
   /**
@@ -178,11 +172,16 @@
       return false;
     }
 
+    // Every field that is archived is hashed. Two languages can share graphic and texts and
+    // still differ in their directory name, and a changed heading produces a new archive
+    // instead of quietly reusing the old one.
     return guarantee_labels_hash_fields(array(
       hash_file('sha256', $file),
+      (string)$language,
       $texts['text'],
       $texts['link'],
       $texts['url'],
+      $texts['title'],
       GUARANTEE_LABELS_NOTICE_VERSION,
     ));
   }
@@ -237,7 +236,7 @@
         'text' => $texts['text'],
         'link' => $texts['link'],
         'url' => $texts['url'],
-        // outside notice_hash, but archived so a later view does not need the language file
+        // archived so a later view does not need the language file of the order
         'title' => $texts['title'],
       )),
     ));

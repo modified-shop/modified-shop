@@ -265,7 +265,7 @@ Vorlagen-, Font- und Rendererversion brauchen keine eigenen Felder. Sie stecken 
 
 ```text
 garan_hash  = sha256( Herstellername + Modellkennung + Garantiedauer + Version beider SVG-Vorlagen + Fontversion + Rendererversion )
-notice_hash = sha256( Inhalt notice.svg + Mailtext + Linktext + Your-Europe-URL + Version )
+notice_hash = sha256( Inhalt notice.svg + Sprachverzeichnis + Mailtext + Linktext + Ueberschrift + Your-Europe-URL + Version )
 ```
 
 Die Schreibweise mit `+` beschreibt nur die fachlichen Bestandteile. Technisch werden die Werte als UTF-8 in einer fest definierten Reihenfolge und mit eindeutigen Feldgrenzen serialisiert. Dezimalwerte werden vorher kanonisch normalisiert. Vorlagen und Schriften gehen mit dem SHA-256-Hash ihres tatsaechlichen Dateiinhalts ein. Dadurch koennen unterschiedliche Feldaufteilungen nicht denselben Eingabestrom erzeugen.
@@ -324,7 +324,7 @@ media/guarantee_labels/archive/
 
 `notice.json` speichert Sprache, Mailtext, Linktext, Your-Europe-URL und Version des bei der Snapshoterzeugung verwendeten Hinweises. Die erste und jede erneute Bestellbestaetigung lesen Text und Link anhand von `orders_guarantee.notice_hash` aus diesem Snapshot. Spaetere Aenderungen an Sprachkonstanten oder URLs veraendern bestehende Bestellungen nicht.
 
-Jedes Hashverzeichnis erhaelt beim Schreiben eine `checksums.json` mit dem SHA-256 jeder abgelegten Datei. Beim Lesen wird jede Datei gegen ihren Eintrag geprueft; ein Verzeichnis mit abweichendem Inhalt gilt als nicht lesbar. Ein unlesbarer Sidecar zaehlt als Schaden und nicht als Archiv ohne Sidecar. Ist ein Sidecar vorhanden, muss er jede gelesene Datei nennen; ein entfernter Eintrag wuerde sonst eine ersetzte Datei decken. Ein beschaedigtes Hashverzeichnis wird beim naechsten Schreibvorgang verworfen und neu angelegt, weil sein Inhalt aus seinem Namen folgt.
+Jedes Hashverzeichnis erhaelt beim Schreiben eine `checksums.json` mit dem SHA-256 jeder abgelegten Datei. Beim Lesen wird jede Datei gegen ihren Eintrag geprueft; ein Verzeichnis mit abweichendem Inhalt gilt als nicht lesbar. Vor dem Umbenennen wird das temporaere Verzeichnis vollstaendig gelesen, genau so wie eine spaetere Anfrage es liest, einschliesslich Sidecar. Ein verkuerzter Schreibvorgang kann eine positive Byteanzahl melden; ohne diese Pruefung koennte eine Datenbankzeile auf ein Archiv verweisen, dessen Schaden erst beim Zugriff auffaellt. Ein unlesbarer Sidecar zaehlt als Schaden und nicht als Archiv ohne Sidecar. Ist ein Sidecar vorhanden, muss er jede gelesene Datei nennen; ein entfernter Eintrag wuerde sonst eine ersetzte Datei decken. Ein beschaedigtes Hashverzeichnis wird beim naechsten Schreibvorgang verworfen und neu angelegt, weil sein Inhalt aus seinem Namen folgt.
 
 Auch die Cache-URL des vollstaendigen Labels wird gegen den Sidecar geprueft. Faellt die Pruefung durch, verweist die Seite nicht auf die Datei, sondern bettet die Grafik der aktuellen Anfrage ein. Der Verzeichnisname deckt die Eingangsdaten des Labels ab und nicht die Bytes der erzeugten Dateien, deshalb ist die Pruefsumme der einzige Weg, ein beschaedigtes Archiv von einem intakten zu unterscheiden. Aeltere Archive ohne Datei bleiben unveraendert lesbar.
 
@@ -557,6 +557,8 @@ Die WOFF2-Dateien dienen der Browserausgabe. Eine zentrale Modul-CSS-Datei binde
 
 Der Renderer muss Eingaben XML-sicher maskieren. Produktdaten duerfen keinen eigenen SVG- oder HTML-Code einschleusen.
 
+Die Breitenpruefung findet zweimal statt. Die Artikelverwaltung prueft frueh, um eine brauchbare Fehlermeldung zu geben. Der Renderer prueft noch einmal und ist die verbindliche Schranke: Er ist nicht der einzige Weg in die Spalten. Ein in `admin/manufacturers.php` umbenannter Hersteller loest keine erneute Pruefung der betroffenen Artikel aus, und ein Import oder ein Fremdsystem prueft gar nicht. Passt ein Wert nicht, entsteht kein Label und der Grund wird protokolliert. Abschneiden oder Verkleinern ist an keiner Stelle vorgesehen.
+
 Das Modul erzeugt SVG fuer Storefront und Checkout auf Basis der offiziellen SVG-Dateien. Ein PNG fuer die Auftragsbestaetigung wird nicht erzeugt.
 
 Die Ausgabe soll anhand folgender Werte gecacht werden:
@@ -705,6 +707,7 @@ Dafuer gelten folgende Regeln:
 - Ob eine Bestellung koerperliche Ware enthaelt, beantwortet `guarantee_labels_order_physical()`. Ist `orders.content_type` gefuellt, entscheidet dieser Wert: Der Checkout hat die Bestellung bereits eingestuft und kennt dabei die gewaehlten Attribute, die eine einzelne Position `mixed` machen koennen.
 - Nur bei leerem `orders.content_type`, also bei einer manuell angelegten Bestellung, entscheiden die Positionen. Je Position werden ihre Attribute und ihre Downloadzeilen gezaehlt, nicht verknuepft: Eine Position ohne Downloadzeile ist koerperliche Ware; hat sie Downloadzeilen, aber mehr Attribute als Downloads, ist sie gemischt und zaehlt ebenfalls als koerperlich. Bei `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` macht schon eine Downloadzeile die ganze Position digital. Die Regel folgt damit `shopping_cart::get_content_type()`.
 - Ein `LEFT JOIN` auf `orders_products_download` reicht dafuer nicht: Eine Position mit einem Download- und einem koerperlichen Attribut traegt eine Downloadzeile und saehe darin rein digital aus.
+- Gezaehlt werden die Downloads ueber die Attribute der Position und den Katalog, nicht ueber `orders_products_download`. `orders_product_insert()` legt dort eine Zeile an, wenn ein Downloadattribut eingefuegt wird; `orders_product_attributes_delete()` entfernt sie beim Loeschen des Attributs nicht wieder. Die Tabelle kann also einen Download nennen, den die Position gar nicht mehr traegt. Der Weg ueber `products_attributes_download` liefert denselben Stand, den auch `shopping_cart::get_content_type()` verwendet, und folgt einer Attributaenderung sofort.
 - Sobald mindestens eine koerperliche Position existiert, gilt die Bestellung als koerperlich. Eine Bestellung ohne Positionen gilt als nicht koerperlich.
 - Das Modul schreibt die Spalte nie. Eine spaetere Positionsaenderung wirkt sofort, weil nichts zwischengespeichert wird, das nachgezogen werden muesste.
 - Der Gewaehrleistungshinweis wird nur ausgegeben, wenn diese Pruefung koerperliche Ware findet.
@@ -826,12 +829,16 @@ Die EU stellt den Gewaehrleistungshinweis in allen 24 Amtssprachen bereit. Die E
 
 Der Gewaehrleistungshinweis liegt unter `lang/<Sprachverzeichnis>/notice.svg`, konkret z. B. unter `lang/german/notice.svg` und `lang/english/notice.svg`. Ein spaeter installiertes Sprachpaket kann seine offizielle Grafik an derselben Stelle mitbringen. Die Artikel muessen dafuer weder geoeffnet noch neu gespeichert werden.
 
-Eine Sprache ist fuer den Gewaehrleistungshinweis nur vollstaendig gepflegt, wenn sie alle folgenden Bestandteile bereitstellt:
+Eine Sprache ist fuer den Gewaehrleistungshinweis nur vollstaendig gepflegt, wenn sie `lang/<Sprachverzeichnis>/notice.svg` und alle Konstanten aus `guarantee_labels_notice_constants()` bereitstellt:
 
-- `lang/<Sprachverzeichnis>/notice.svg` fuer Storefront und Checkout,
-- eine Sprachkonstante fuer den Mailtext,
-- eine getrennte Sprachkonstante fuer den Linktext,
-- eine getrennte Sprachkonstante fuer die sprachabhaengige Your-Europe-URL.
+- `TEXT_GUARANTEE_NOTICE_TITLE` als Ueberschrift des Blocks,
+- `TEXT_GUARANTEE_NOTICE_TEXT` fuer Storefront und Checkout,
+- `TEXT_GUARANTEE_NOTICE_MAIL` fuer die Auftragsbestaetigung,
+- `TEXT_GUARANTEE_NOTICE_LINK` als Linktext,
+- `TEXT_GUARANTEE_NOTICE_URL` als sprachabhaengige Your-Europe-Adresse,
+- `TEXT_GUARANTEE_NOTICE_OPEN` und `TEXT_GUARANTEE_NOTICE_ALT` fuer die vollstaendige Ansicht.
+
+Moduldiagnose, Checkout und Snapshoterzeugung fragen genau diese eine Liste. Getrennt gepflegte Listen sind auseinandergelaufen: Die Diagnose meldete eine Sprache als vollstaendig, die der Checkout dann ablehnte, und der Checkout konnte stumm bleiben, waehrend die Bestellung trotzdem einen Snapshot bekam. Die Labelkonstanten gehoeren ausdruecklich nicht dazu; das Label ist sprachneutral und faellt auf eigene Beschriftungen zurueck.
 
 Die mitgelieferten Storefront- und Mailkonstanten liegen in diesen automatisch geladenen Dateien:
 
@@ -850,7 +857,9 @@ Ein solcher Fehlschlag kostet aber nie historische Daten. Die Bestellansichten l
 - Gewaehrleistungstext, Linktext, Adresse und Ueberschrift des Hinweises stammen aus `notice.json` und sind damit immer der Stand der Bestellung. Nur die Bedienelemente des Blocks kaemen aus der Sprache der Sitzung.
 - Die Zusage an der Position nennt weiter die archivierten Werte; nur der Satz um sie herum folgt der geladenen Sprache.
 
-Die Ueberschrift des Hinweises wird deshalb im Archiv mitgefuehrt. Sie geht nicht in `notice_hash` ein, weil sie aus derselben Sprachdatei stammt wie der Text, der schon im Hash steckt. Aeltere Archive ohne dieses Feld greifen auf die Sprachkonstante zurueck.
+Die Ueberschrift des Hinweises wird deshalb im Archiv mitgefuehrt und geht wie jedes andere archivierte Feld in `notice_hash` ein. Der Hash deckt genau das ab, was in `notice.json` steht: Grafik, Sprachverzeichnis, Mailtext, Linktext, Ueberschrift, Your-Europe-URL und Version. Ein Feld auszulassen waere falsch, auch wenn es aus derselben Sprachdatei stammt: Eine geaenderte Ueberschrift ergaebe denselben Hash, das vorhandene Archiv bliebe stehen und neue Bestellungen bekaemen stillschweigend den alten Stand. Zwei Sprachen mit gleicher Grafik und gleichen Texten wuerden sich dasselbe Verzeichnis teilen und darin die falsche Sprache tragen.
+
+`GUARANTEE_LABELS_NOTICE_VERSION` steht auf `1.01`. Archive der Version `1.00` fuehren keine Ueberschrift und bleiben fuer ihre Bestellungen unveraendert gueltig; neue Bestellungen erzeugen ein neues Verzeichnis. Aeltere Archive ohne dieses Feld greifen bei der Anzeige auf die Sprachkonstante zurueck.
 
 Die Konfigurationssprache des Systemmoduls liegt getrennt unter:
 
@@ -1044,6 +1053,7 @@ Voraussichtlich betroffen sind:
 - Sehr lange Werte erkennen und mit verstaendlicher Meldung ablehnen.
 - Modulaktivierung ohne GD-FreeType beziehungsweise ohne `imagettfbbox()` ablehnen und die konkrete Fehlermeldung ueber den `messageStack` ausgeben.
 - Textbreite mit Regular und ExtraBold jeweils gegen den vorgesehenen Vorlagenbereich pruefen.
+- Einen Herstellernamen ueber `admin/manufacturers.php` so verlaengern, dass er nicht mehr in den Vorlagenbereich passt; die Artikel werden dabei nicht neu geprueft, der Renderer erzeugt aber trotzdem kein Label und protokolliert den Grund. Dasselbe mit einer direkt in die Datenbank geschriebenen Modellkennung pruefen.
 - Eingaben mit `2,5` und `2.5` identisch normalisieren.
 - Ganzjahreswert groesser als `99` ablehnen.
 - Halbjahreswert groesser als `99.5` ablehnen.
@@ -1165,10 +1175,12 @@ Voraussichtlich betroffen sind:
 - Den Sidecar unlesbar machen; das gilt als Schaden und nicht als Archiv ohne Sidecar.
 - Einen Eintrag aus dem Sidecar entfernen und die zugehoerige Datei ersetzen; die fehlende Zeile deckt die Ersetzung nicht.
 - Ein Archivverzeichnis ohne Sidecar aus einer aelteren Fassung lesen; es bleibt lesbar.
+- Einen Schreibvorgang so scheitern lassen, dass das temporaere Verzeichnis unvollstaendig bleibt; es wird nicht umbenannt, kein Zielverzeichnis bleibt zurueck und der Fehler steht im Protokoll.
 - In ein beschaedigtes Hashverzeichnis erneut schreiben; es wird verworfen und aus den Vorlagen neu angelegt.
 - Ein beschaedigtes Hashverzeichnis unentfernbar machen; `remove_dir()` meldet den Fehlschlag, der Schreibvorgang bricht mit einer konkreten Meldung ab und protokolliert sie.
 - Nicht beschreibbares oder unvollstaendig geschriebenes Archiv testen; die Bestellung laeuft weiter und keine Datenbankzeile verweist auf fehlende oder teilweise geschriebene Dateien.
 - Erneuter Mailversand nach dem Leeren des Cache liefert dieselben vorhandenen Garantieerklaerungen und keine GARAN-Grafik. Waren keine Bedingungen archiviert, bleibt der Versand ohne GARAN-Anhang.
+- Nur die Ueberschrift des Hinweises in der Sprachdatei aendern und eine neue Bestellung abschliessen; sie erhaelt ein neues Archivverzeichnis mit der neuen Ueberschrift, bestehende Bestellungen behalten ihres.
 
 ### Manuell angelegte Bestellungen
 
@@ -1184,6 +1196,7 @@ Voraussichtlich betroffen sind:
 - `orders.content_type` bleibt bei allen drei Faellen unveraendert; das Modul schreibt die Spalte nicht.
 - Storefront-Bestellung mit `orders.content_type = 'mixed'` pruefen; der Hinweis wird ausgegeben.
 - Manuelle Bestellung mit leerem `orders.content_type` und genau einer Position anlegen, die ein Download- und ein koerperliches Attribut traegt; die Bestellung gilt als koerperlich und der Hinweis erscheint. Denselben Fall mit `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` pruefen; dort gilt die Position als digital.
+- Aus derselben Position das Downloadattribut entfernen; die Bestellung gilt sofort als koerperlich, obwohl die Zeile in `orders_products_download` stehen bleibt.
 - Dieselbe Bestellung mit `physical`, `virtual` und `virtual_weight` pruefen; nur die ersten beiden Faelle unterscheiden sich in der Ausgabe wie erwartet.
 - Reine Download-Bestellung behaelt den Hinweis-Snapshot, gibt ihn in der Auftragsbestaetigung aber nicht aus.
 - Physische oder gemischte Bestellung gibt den beim Anlegen gespeicherten Hinweis in der manuellen Auftragsbestaetigung aus.
@@ -1221,6 +1234,7 @@ Voraussichtlich betroffen sind:
 - Eine dritte Shopsprache ohne `lang/<Sprachverzeichnis>/extra/guarantee_labels.php` aufrufen; das sprachneutrale GARAN-Label erscheint weiterhin. Die Beschriftungen fallen auf `GARAN` zurueck und der Link zur Your-Europe-Seite entfaellt.
 - In derselben Sprache nur `TEXT_GUARANTEE_LABEL_URL` pflegen und den Linktext weglassen; der Link erscheint nicht und es entsteht kein PHP-Fehler.
 - Eine abgeschaltete Sprache anlegen; die Moduldiagnose prueft sie nicht.
+- Jede Konstante aus `guarantee_labels_notice_constants()` einzeln entfernen; Moduldiagnose, Checkout und Snapshoterzeugung kommen jeweils zum selben Ergebnis. Insbesondere darf der Checkout keinen Hinweis zeigen, ohne dass die Bestellung einen Snapshot bekommt, und umgekehrt.
 - Eine englische Bestellung im Kundenkonto einer deutschen Sitzung oeffnen; das GARAN-Label, der archivierte Gewaehrleistungstext, sein Linktext, seine Adresse und seine Ueberschrift erscheinen unveraendert. Nichts davon darf wegen der abweichenden Sitzungssprache verschwinden.
 - Dieselbe Bestellung in ihrer eigenen Sprache oeffnen; zusaetzlich tragen auch die Bedienelemente des Blocks die Beschriftungen dieser Sprache.
 - Eine Bestellung in einer unvollstaendig gepflegten Sprache erzeugt keine Zeile in `orders_guarantee` und nimmt den Hinweis auch bei einem spaeteren Mailversand nicht nachtraeglich auf.
