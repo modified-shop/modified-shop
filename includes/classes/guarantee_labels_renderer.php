@@ -198,27 +198,35 @@
      * ISO-8859-1 before ISO-8859-15 and would turn a euro sign into a currency sign, which the
      * label would then carry for good.
      *
+     * Called once where catalogue data enters the renderer, never a second time on a value that
+     * has already passed through: some ISO-8859-15 byte sequences are valid utf-8 as well, so a
+     * second pass cannot tell the two apart and would corrupt the text.
+     *
      * @param string $value
      * @return string
      */
     function to_utf8($value) {
-      $value = (string)$value;
+      $charset = (defined('DB_SERVER_CHARSET') && strpos(DB_SERVER_CHARSET, 'utf8') === false)
+               ? 'ISO-8859-15'
+               : 'UTF-8';
 
-      // Already utf-8, so there is nothing to convert. Without this a value that label() has
-      // converted would be read as latin1 a second time in fits(), and the width of a name like
-      // "Ä" would grow with every pass.
-      if (mb_check_encoding($value, 'UTF-8')) {
-        return $value;
-      }
+      return encode_utf8((string)$value, $charset, true);
+    }
 
-      return encode_utf8($value, 'ISO-8859-15', true);
+    /**
+     * One catalogue value prepared for fits(), so a caller outside the renderer converts through
+     * the same boundary label() uses.
+     *
+     * @param string $value
+     * @return string
+     */
+    function measurable($value) {
+      return $this->to_utf8($value);
     }
 
     function fits($area_name, $text) {
-      // The same value the graphic will carry. to_utf8() leaves an already converted string
-      // alone, so calling it here and in label() measures the same bytes either way.
-      $text = $this->to_utf8($text);
-
+      // $text has to be utf-8 already, see to_utf8(). label() converts before it asks, and a
+      // caller from outside converts through measurable() first.
       $areas = $this->areas();
 
       if (!isset($areas[$area_name])) {

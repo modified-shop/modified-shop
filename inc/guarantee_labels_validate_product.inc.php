@@ -82,11 +82,11 @@
     }
 
     // the label may neither be cut off nor set in a smaller font, so the real width decides
-    if ($manufacturers_name !== '' && $renderer->is_ready() && $renderer->fits('manufacturer', $manufacturers_name) === false) {
+    if ($manufacturers_name !== '' && $renderer->is_ready() && $renderer->fits('manufacturer', $renderer->measurable($manufacturers_name)) === false) {
       $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MANUFACTURER_WIDTH, encode_htmlspecialchars($manufacturers_name));
     }
 
-    if ($model !== '' && $renderer->is_ready() && $renderer->fits('model', $model) === false) {
+    if ($model !== '' && $renderer->is_ready() && $renderer->fits('model', $renderer->measurable($model)) === false) {
       $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MODEL_WIDTH, encode_htmlspecialchars($model));
     }
 

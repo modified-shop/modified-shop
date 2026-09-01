@@ -312,17 +312,17 @@
         $status = xtc_db_fetch_array($status_query);
 
         if ($status['configuration_value'] == 'true') {
+          // file and function names are plain values and are escaped, the schema errors are
+          // finished messages built from language constants and must not be escaped again
           $missing = ($this->renderer_available() === false) ? array('imagettfbbox') : $this->missing_requirements();
+          $schema = $this->verify_schema();
 
-          // the schema too: a table may have been changed since the module was installed
-          $missing = array_merge($missing, $this->verify_schema());
-
-          if (count($missing) > 0) {
+          if (count($missing) > 0 || count($schema) > 0) {
             xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                              SET configuration_value = 'false'
                            WHERE configuration_key = 'MODULE_GUARANTEE_LABELS_STATUS'");
 
-            $messageStack->add_session(sprintf(MODULE_GUARANTEE_LABELS_TEXT_INCOMPLETE, encode_htmlspecialchars(implode(', ', $missing))), 'error');
+            $messageStack->add_session($this->incomplete_message($missing, $schema), 'error');
           }
         }
       }
@@ -390,7 +390,7 @@
       $missing = $this->missing_requirements();
 
       if (count($missing) > 0) {
-        $messageStack->add_session(sprintf(MODULE_GUARANTEE_LABELS_TEXT_INCOMPLETE, encode_htmlspecialchars(implode(', ', $missing))), 'error');
+        $messageStack->add_session($this->incomplete_message($missing), 'error');
         return;
       }
 
@@ -558,6 +558,31 @@
      *
      * @return array the missing parts, empty when the module can be switched on
      */
+    /**
+     * The message that names what keeps the module from running.
+     *
+     * File and function names are plain values and are escaped here. The schema errors arrive as
+     * finished messages built from language constants that carry entities of their own; escaping
+     * those again would print the entity instead of the character.
+     *
+     * @param array $missing plain names
+     * @param array $schema ready messages
+     * @return string
+     */
+    function incomplete_message($missing, $schema = array()) {
+      $parts = array();
+
+      if (count($missing) > 0) {
+        $parts[] = encode_htmlspecialchars(implode(', ', $missing));
+      }
+
+      foreach ($schema as $error) {
+        $parts[] = $error;
+      }
+
+      return sprintf(MODULE_GUARANTEE_LABELS_TEXT_INCOMPLETE, implode(' ', $parts));
+    }
+
     function missing_requirements() {
       require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
 
@@ -668,6 +693,16 @@
         }
       }
 
+      // The primary key of a module table is one column wide. A composite one would let a second
+      // row of the same order through, which the whole snapshot logic rules out.
+      foreach ($this->schema_primary_keys() as $table => $column) {
+        $primary = array('table' => $table, 'name' => 'PRIMARY', 'columns' => array($column), 'unique' => true);
+
+        if ($this->index_exists($primary) === false) {
+          $errors[] = sprintf(MODULE_GUARANTEE_LABELS_TEXT_ERROR_INDEX, 'PRIMARY', $table);
+        }
+      }
+
       foreach ($this->schema_columns() as $column) {
         $definition = $this->column_definition($column['table'], $column['column']);
 
@@ -709,7 +744,27 @@
         $expected['key'] = 'PRI';
       }
 
+      // A default of its own is part of the definition. Without it a row written without that
+      // column ends up with a null the module never expects, or with the wrong value.
+      if (preg_match("/DEFAULT\s+'([^']*)'/", $definition, $match)) {
+        $expected['default'] = $match[1];
+      } elseif (preg_match('/DEFAULT\s+NULL/', $definition)) {
+        $expected['default'] = null;
+      }
+
       return $expected;
+    }
+
+    /**
+     * The one column each module table is keyed by.
+     *
+     * @return array table => column
+     */
+    function schema_primary_keys() {
+      return array(
+        TABLE_ORDERS_GUARANTEE => 'orders_guarantee_id',
+        TABLE_ORDERS_PRODUCTS_GUARANTEE => 'orders_products_guarantee_id',
+      );
     }
 
     function schema_indexes() {

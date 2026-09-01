@@ -599,11 +599,11 @@
       $errors[] = ERROR_GUARANTEE_LABELS_MODEL;
     }
 
-    if ($name !== '' && $renderer->is_ready() && $renderer->fits('manufacturer', $name) === false) {
+    if ($name !== '' && $renderer->is_ready() && $renderer->fits('manufacturer', $renderer->measurable($name)) === false) {
       $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MANUFACTURER_WIDTH, encode_htmlspecialchars($name));
     }
 
-    if ($model !== '' && $renderer->is_ready() && $renderer->fits('model', $model) === false) {
+    if ($model !== '' && $renderer->is_ready() && $renderer->fits('model', $renderer->measurable($model)) === false) {
       $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MODEL_WIDTH, encode_htmlspecialchars($model));
     }
 
