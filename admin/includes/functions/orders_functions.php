@@ -854,75 +854,58 @@
 
 
   /**
-   * Removes the download row that belonged to one deleted order attribute.
+   * Cleans up the download rows of one position after an attribute was deleted.
    *
    * orders_product_option_insert() writes a row into orders_products_download when a download
    * attribute is added to a position of an existing order, but deleting that attribute never
    * removed it again. The position then names a download it no longer carries.
    *
-   * This only ever deletes, and only for the attribute the merchant just removed. Rebuilding the
-   * rows of a position from the catalogue is not an option: an order is historical, and the
-   * article behind it may meanwhile point at a different file, have become a download, or be
-   * gone entirely. Any of those would change what the customer is entitled to.
+   * orders_products_download holds no reference to the attribute it belongs to. The only thing
+   * that could connect the two is the file name, and that lives in the catalogue, which changes
+   * independently of the order. Deciding by name is therefore unsafe: an attribute that has
+   * meanwhile been given the file of another one would take away that other download right.
    *
-   * The file name is the only link between an order attribute and its download row, so the name
-   * has to be read before the attribute is deleted. Where the catalogue can no longer answer,
-   * the row stays: leaving one behind is the harmless mistake, removing a valid entitlement is
-   * not. A stable reference in orders_products_download would settle this, see the roadmap.
+   * So the cleanup acts only where nothing can be mistaken, and it never writes:
    *
-   * @param int $orders_products_id the position the attribute belonged to
-   * @param string $filename the download of the deleted attribute, empty when it had none
+   * - no attribute left on the position: every row is orphaned and all of them go.
+   * - more rows than remaining attributes: at least one row is orphaned, but not which one. The
+   *   rows stay and the merchant is told, because the redirect afterwards would swallow a plain
+   *   message.
+   * - otherwise: every row may still belong to a remaining attribute and nothing happens.
+   *
+   * A column orders_products_attributes_id in orders_products_download would settle this. It is
+   * a schema change to a core table and is recorded as an open decision in the roadmap.
+   *
+   * @param int $orders_products_id the position whose attribute was deleted
    */
-  function orders_product_download_remove($orders_products_id, $filename) {
-    if (!xtc_not_null($filename)) {
+  function orders_product_downloads_cleanup($orders_products_id) {
+    global $messageStack;
+
+    $orders_products_id = (int)$orders_products_id;
+
+    $attributes_query = xtc_db_query("SELECT COUNT(*) AS total
+                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                       WHERE orders_products_id = '".$orders_products_id."'");
+    $attributes = xtc_db_fetch_array($attributes_query);
+
+    $downloads_query = xtc_db_query("SELECT COUNT(*) AS total
+                                       FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
+                                      WHERE orders_products_id = '".$orders_products_id."'");
+    $downloads = xtc_db_fetch_array($downloads_query);
+
+    if ($downloads['total'] < 1) {
       return;
     }
 
-    // one row, not every row of that name: a second attribute may use the same file
-    $download_query = xtc_db_query("SELECT orders_products_download_id
-                                      FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
-                                     WHERE orders_products_id = '".(int)$orders_products_id."'
-                                       AND orders_products_filename = '".xtc_db_input($filename)."'
-                                  ORDER BY orders_products_download_id DESC
-                                     LIMIT 1");
-
-    if (xtc_db_num_rows($download_query) < 1) {
+    if ($attributes['total'] < 1) {
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
+                          WHERE orders_products_id = '".$orders_products_id."'");
       return;
     }
 
-    $download = xtc_db_fetch_array($download_query);
-
-    xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
-                        WHERE orders_products_download_id = '".(int)$download['orders_products_download_id']."'");
-  }
-
-  /**
-   * The download file the catalogue holds for one order attribute, read while the attribute is
-   * still there. Used to find its row in orders_products_download afterwards.
-   *
-   * @param int $orders_products_attributes_id
-   * @return string empty when the attribute carries no download any more
-   */
-  function orders_product_attribute_download($orders_products_attributes_id) {
-    $download_query = xtc_db_query("SELECT pad.products_attributes_filename
-                                      FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
-                                      JOIN ".TABLE_ORDERS_PRODUCTS." op
-                                           ON op.orders_products_id = opa.orders_products_id
-                                      JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                           ON pa.products_id = op.products_id
-                                              AND pa.options_id = opa.orders_products_options_id
-                                              AND pa.options_values_id = opa.orders_products_options_values_id
-                                      JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
-                                           ON pad.products_attributes_id = pa.products_attributes_id
-                                     WHERE opa.orders_products_attributes_id = '".(int)$orders_products_attributes_id."'");
-
-    if (xtc_db_num_rows($download_query) < 1) {
-      return '';
+    if ($downloads['total'] > $attributes['total']) {
+      $messageStack->add_session(WARNING_ORDERS_DOWNLOAD_LEFTOVER, 'warning');
     }
-
-    $download = xtc_db_fetch_array($download_query);
-
-    return (string)$download['products_attributes_filename'];
   }
 
   function orders_product_option_edit($oID, $data_array) {
@@ -952,9 +935,8 @@
       'options_values_weight' => xtc_db_prepare_input($data_array['options_values_weight']),
       'weight_prefix' => xtc_db_prepare_input($data_array['weight_prefix']),
     );
-    // no call to orders_product_download_remove() here: this mask changes the name, the price
-    // and the weight of the order attribute, never the attribute it refers to, so its download
-    // is untouched
+    // no cleanup here: this mask changes the name, the price and the weight of the order
+    // attribute, never the attribute it refers to, so its download is untouched
     xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array, 'update', "orders_products_attributes_id = '".xtc_db_input($data_array['opAID'])."'");
 
     $products_id = orders_product_update($oID, $data_array, $status);
@@ -1095,12 +1077,9 @@
                        AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
     }
                
-    // read while the attribute is still there, it is the only link to its download row
-    $download_filename = orders_product_attribute_download($data_array['opAID']);
-
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_products_attributes_id = '".(int)($data_array['opAID'])."'");
 
-    orders_product_download_remove($data_array['opID'], $download_filename);
+    orders_product_downloads_cleanup($data_array['opID']);
 
     $products_id = orders_product_update($oID, $data_array, $status);
 
