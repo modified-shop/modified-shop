@@ -36,15 +36,21 @@
     $smarty->assign('GUARANTEE_NOTICE_TXT', decode_htmlentities($guarantee_labels_notice['text'])."\n".
                                             decode_htmlentities($guarantee_labels_notice['link']).': '.$guarantee_labels_notice['url']);
 
-    // The heading only labels the block and is therefore not part of the snapshot. It is read
-    // for the language of the order: a repeated mail runs in the administration, which never
-    // loads the storefront language files. The mail templates hold no umlauts of their own, so
+    // The heading comes from the snapshot like text and link, otherwise a repeated mail would
+    // carry the historical wording under a current heading. Only archives written before the
+    // heading was stored fall back to the language file of the order; the administration never
+    // loads the storefront files by itself. The mail templates hold no umlauts of their own, so
     // it arrives as a variable in both encodings.
-    $guarantee_labels_texts = guarantee_labels_notice_texts($order->info['language']);
+    $guarantee_labels_title = $guarantee_labels_notice['title'];
 
-    if ($guarantee_labels_texts !== false) {
-      $smarty->assign('GUARANTEE_NOTICE_HEADING_HTML', $guarantee_labels_texts['title']);
-      $smarty->assign('GUARANTEE_NOTICE_HEADING_TXT', decode_htmlentities($guarantee_labels_texts['title']));
+    if ($guarantee_labels_title === '') {
+      $guarantee_labels_texts = guarantee_labels_notice_texts($order->info['language']);
+      $guarantee_labels_title = ($guarantee_labels_texts === false) ? '' : $guarantee_labels_texts['title'];
+    }
+
+    if ($guarantee_labels_title !== '') {
+      $smarty->assign('GUARANTEE_NOTICE_HEADING_HTML', $guarantee_labels_title);
+      $smarty->assign('GUARANTEE_NOTICE_HEADING_TXT', decode_htmlentities($guarantee_labels_title));
     }
   }
 

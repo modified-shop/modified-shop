@@ -102,6 +102,9 @@
    * pulled in here when they are missing. Constants live for the whole request, therefore a
    * second language in the same request gets no snapshot instead of the wrong texts.
    *
+   * Completeness is decided by guarantee_labels_notice_constants(), the same list the checkout
+   * and the module diagnosis use. All four returned values are archived and hashed.
+   *
    * @param string $language the language directory of the order
    * @return mixed array of text, link, url and title, false when the language is not fully kept
    */

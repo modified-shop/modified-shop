@@ -283,6 +283,8 @@
       'TEXT_GUARANTEE_NOTICE_URL',
       'TEXT_GUARANTEE_NOTICE_OPEN',
       'TEXT_GUARANTEE_NOTICE_ALT',
+      // a mixed cart is not a special case of the language, it is one of the shop
+      'TEXT_GUARANTEE_NOTICE_MIXED',
     );
   }
 
@@ -541,7 +543,6 @@
     if ($language === ''
         || !is_file(DIR_FS_CATALOG.$file)
         || !guarantee_labels_texts_ready(guarantee_labels_notice_constants())
-        || ($content_type === 'mixed' && !guarantee_labels_texts_ready(array('TEXT_GUARANTEE_NOTICE_MIXED')))
         )
     {
       return false;

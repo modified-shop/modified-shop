@@ -270,7 +270,7 @@ notice_hash = sha256( Inhalt notice.svg + Sprachverzeichnis + Mailtext + Linktex
 
 Die Schreibweise mit `+` beschreibt nur die fachlichen Bestandteile. Technisch werden die Werte als UTF-8 in einer fest definierten Reihenfolge und mit eindeutigen Feldgrenzen serialisiert. Dezimalwerte werden vorher kanonisch normalisiert. Vorlagen und Schriften gehen mit dem SHA-256-Hash ihres tatsaechlichen Dateiinhalts ein. Dadurch koennen unterschiedliche Feldaufteilungen nicht denselben Eingabestrom erzeugen.
 
-Aendert sich ein Bestandteil, aendert sich der zugehoerige Hash. `garan_hash` ist der gemeinsame Cache- und Archivschluessel fuer die zusammengehoerige farbige und kompakte Variante. `notice_hash` referenziert den vollstaendigen historischen Sprachstand aus Grafik, Mailtext, Linktext und URL.
+Aendert sich ein Bestandteil, aendert sich der zugehoerige Hash. `garan_hash` ist der gemeinsame Cache- und Archivschluessel fuer die zusammengehoerige farbige und kompakte Variante. `notice_hash` referenziert den vollstaendigen historischen Sprachstand aus Grafik, Sprachverzeichnis, Mailtext, Linktext, Ueberschrift und URL. `notice.json` fuehrt genau diese Felder, dazu die Version.
 
 Die Zusage an der Bestellposition entsteht in zwei getrennten Fassungen. Die HTML-Fassung maskiert Garantiedauer, Herstellername, Modellkennung und Dateinamen einzeln, bevor sie in das Textmuster eingesetzt werden; die Textfassung verwendet die Rohwerte und loest nur die Entities des Musters auf. Eine Fassung aus der anderen abzuleiten wuerde entweder Maskierungen aufloesen oder Entities in die Textmail tragen. Der Dateinamenfilter laesst Zeichen wie `<` durch, weil sie einen Dateinamen nicht unbrauchbar machen; maskiert wird deshalb bei der Ausgabe.
 
@@ -707,7 +707,8 @@ Dafuer gelten folgende Regeln:
 - Ob eine Bestellung koerperliche Ware enthaelt, beantwortet `guarantee_labels_order_physical()`. Ist `orders.content_type` gefuellt, entscheidet dieser Wert: Der Checkout hat die Bestellung bereits eingestuft und kennt dabei die gewaehlten Attribute, die eine einzelne Position `mixed` machen koennen.
 - Nur bei leerem `orders.content_type`, also bei einer manuell angelegten Bestellung, entscheiden die Positionen. Je Position werden ihre Attribute und ihre Downloadzeilen gezaehlt, nicht verknuepft: Eine Position ohne Downloadzeile ist koerperliche Ware; hat sie Downloadzeilen, aber mehr Attribute als Downloads, ist sie gemischt und zaehlt ebenfalls als koerperlich. Bei `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` macht schon eine Downloadzeile die ganze Position digital. Die Regel folgt damit `shopping_cart::get_content_type()`.
 - Ein `LEFT JOIN` auf `orders_products_download` reicht dafuer nicht: Eine Position mit einem Download- und einem koerperlichen Attribut traegt eine Downloadzeile und saehe darin rein digital aus.
-- Gezaehlt werden die Downloads ueber die Attribute der Position und den Katalog, nicht ueber `orders_products_download`. `orders_product_insert()` legt dort eine Zeile an, wenn ein Downloadattribut eingefuegt wird; `orders_product_attributes_delete()` entfernt sie beim Loeschen des Attributs nicht wieder. Die Tabelle kann also einen Download nennen, den die Position gar nicht mehr traegt. Der Weg ueber `products_attributes_download` liefert denselben Stand, den auch `shopping_cart::get_content_type()` verwendet, und folgt einer Attributaenderung sofort.
+- Gezaehlt wird ausschliesslich in den Bestelldaten: die Attribute der Position und ihre Zeilen in `orders_products_download`. Der Katalog wird nicht gefragt. Er wuerde fuer heute antworten und einen geloeschten Artikel oder ein geloeschtes Attribut nachtraeglich in die Einstufung einer alten Bestellung tragen; genau das soll ein Snapshot ausschliessen.
+- Dass die Bestelldaten dafuer stimmen, setzt voraus, dass `orders_products_download` beim Bearbeiten einer Position gepflegt wird. Der Bestand tat das nicht: `orders_product_option_insert()` legt eine Zeile an, `orders_product_option_edit()` und `orders_product_option_delete()` liessen sie stehen. Das ist ein eigener Kernfehler und wird getrennt von diesem Modul behoben.
 - Sobald mindestens eine koerperliche Position existiert, gilt die Bestellung als koerperlich. Eine Bestellung ohne Positionen gilt als nicht koerperlich.
 - Das Modul schreibt die Spalte nie. Eine spaetere Positionsaenderung wirkt sofort, weil nichts zwischengespeichert wird, das nachgezogen werden muesste.
 - Der Gewaehrleistungshinweis wird nur ausgegeben, wenn diese Pruefung koerperliche Ware findet.
@@ -798,7 +799,7 @@ Beides gilt gleichermassen fuer die erste Bestellbestaetigung, den erneuten Vers
 
 - Historischen sprachabhaengigen Gewaehrleistungstext aus `media/guarantee_labels/archive/notice/<notice_hash>/notice.json` aufnehmen.
 - Historischen Gewaehrleistungsstatus aus `orders_guarantee` verwenden.
-- Historischen Linktext und die historische Your-Europe-URL aus demselben Snapshot bereitstellen.
+- Historischen Linktext, die historische Your-Europe-URL und die historische Ueberschrift aus demselben Snapshot bereitstellen. Nur ein Archiv der Version `1.00` fuehrt keine Ueberschrift und greift dafuer auf die Sprachdatei der Bestellsprache zurueck.
 - Weder `notice.svg` noch eine daraus erzeugte Rastergrafik einbetten oder anhaengen.
 - Kein GARAN-Label einbetten oder als Grafik anhaengen.
 - Vorhandene, fuer die Bestellung archivierte Garantiebedingungen ueber denselben Anhangsmechanismus beifuegen. Fehlen sie, wird kein Ersatzdokument erzeugt und kein GARAN-Anhang versendet.
@@ -836,7 +837,8 @@ Eine Sprache ist fuer den Gewaehrleistungshinweis nur vollstaendig gepflegt, wen
 - `TEXT_GUARANTEE_NOTICE_MAIL` fuer die Auftragsbestaetigung,
 - `TEXT_GUARANTEE_NOTICE_LINK` als Linktext,
 - `TEXT_GUARANTEE_NOTICE_URL` als sprachabhaengige Your-Europe-Adresse,
-- `TEXT_GUARANTEE_NOTICE_OPEN` und `TEXT_GUARANTEE_NOTICE_ALT` fuer die vollstaendige Ansicht.
+- `TEXT_GUARANTEE_NOTICE_OPEN` und `TEXT_GUARANTEE_NOTICE_ALT` fuer die vollstaendige Ansicht,
+- `TEXT_GUARANTEE_NOTICE_MIXED` fuer die Zuordnung bei gemischten Warenkoerben. Ein gemischter Warenkorb ist keine Eigenschaft der Sprache, sondern des Shops; die Konstante getrennt zu pruefen hiess, dass die Diagnose eine Sprache als vollstaendig meldete, der gemischte Checkout aber stumm blieb und die Bestellung trotzdem einen Snapshot bekam.
 
 Moduldiagnose, Checkout und Snapshoterzeugung fragen genau diese eine Liste. Getrennt gepflegte Listen sind auseinandergelaufen: Die Diagnose meldete eine Sprache als vollstaendig, die der Checkout dann ablehnte, und der Checkout konnte stumm bleiben, waehrend die Bestellung trotzdem einen Snapshot bekam. Die Labelkonstanten gehoeren ausdruecklich nicht dazu; das Label ist sprachneutral und faellt auf eigene Beschriftungen zurueck.
 
@@ -1181,6 +1183,8 @@ Voraussichtlich betroffen sind:
 - Nicht beschreibbares oder unvollstaendig geschriebenes Archiv testen; die Bestellung laeuft weiter und keine Datenbankzeile verweist auf fehlende oder teilweise geschriebene Dateien.
 - Erneuter Mailversand nach dem Leeren des Cache liefert dieselben vorhandenen Garantieerklaerungen und keine GARAN-Grafik. Waren keine Bedingungen archiviert, bleibt der Versand ohne GARAN-Anhang.
 - Nur die Ueberschrift des Hinweises in der Sprachdatei aendern und eine neue Bestellung abschliessen; sie erhaelt ein neues Archivverzeichnis mit der neuen Ueberschrift, bestehende Bestellungen behalten ihres.
+- Danach die Auftragsbestaetigung einer bestehenden Bestellung erneut versenden; Text, Link und Ueberschrift stammen alle aus ihrem Archiv, nicht aus der geaenderten Sprachdatei.
+- Dasselbe mit einer Bestellung pruefen, deren Archiv noch die Version `1.00` und damit keine Ueberschrift traegt; nur sie greift auf die Sprachdatei zurueck, ihr Text bleibt historisch.
 
 ### Manuell angelegte Bestellungen
 
@@ -1195,8 +1199,9 @@ Voraussichtlich betroffen sind:
 - Physische sowie gemischte Positionen einfuegen und entfernen; die Pruefung liefert `true`, solange mindestens eine Position ohne Downloadzeile verbleibt, und nach dem Entfernen der letzten solchen Position wieder `false`.
 - `orders.content_type` bleibt bei allen drei Faellen unveraendert; das Modul schreibt die Spalte nicht.
 - Storefront-Bestellung mit `orders.content_type = 'mixed'` pruefen; der Hinweis wird ausgegeben.
-- Manuelle Bestellung mit leerem `orders.content_type` und genau einer Position anlegen, die ein Download- und ein koerperliches Attribut traegt; die Bestellung gilt als koerperlich und der Hinweis erscheint. Denselben Fall mit `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` pruefen; dort gilt die Position als digital.
-- Aus derselben Position das Downloadattribut entfernen; die Bestellung gilt sofort als koerperlich, obwohl die Zeile in `orders_products_download` stehen bleibt.
+- Manuelle Bestellung mit leerem `orders.content_type` und genau einer Position anlegen, die ein Download- und ein koerperliches Attribut traegt; die Position hat dann zwei Attribute und eine Downloadzeile, gilt als gemischt und damit als koerperlich, und der Hinweis erscheint. Denselben Fall mit `DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED = true` pruefen; dort macht schon die eine Downloadzeile die Position digital.
+- Aus derselben Position das Downloadattribut entfernen; die zugehoerige Zeile in `orders_products_download` verschwindet mit und die Bestellung gilt als koerperlich.
+- Die Einstufung fragt ausschliesslich Bestelldaten. Einen Artikel oder ein Attribut aus dem Katalog loeschen; die Einstufung bestehender Bestellungen aendert sich dadurch nicht.
 - Dieselbe Bestellung mit `physical`, `virtual` und `virtual_weight` pruefen; nur die ersten beiden Faelle unterscheiden sich in der Ausgabe wie erwartet.
 - Reine Download-Bestellung behaelt den Hinweis-Snapshot, gibt ihn in der Auftragsbestaetigung aber nicht aus.
 - Physische oder gemischte Bestellung gibt den beim Anlegen gespeicherten Hinweis in der manuellen Auftragsbestaetigung aus.
@@ -1234,7 +1239,7 @@ Voraussichtlich betroffen sind:
 - Eine dritte Shopsprache ohne `lang/<Sprachverzeichnis>/extra/guarantee_labels.php` aufrufen; das sprachneutrale GARAN-Label erscheint weiterhin. Die Beschriftungen fallen auf `GARAN` zurueck und der Link zur Your-Europe-Seite entfaellt.
 - In derselben Sprache nur `TEXT_GUARANTEE_LABEL_URL` pflegen und den Linktext weglassen; der Link erscheint nicht und es entsteht kein PHP-Fehler.
 - Eine abgeschaltete Sprache anlegen; die Moduldiagnose prueft sie nicht.
-- Jede Konstante aus `guarantee_labels_notice_constants()` einzeln entfernen; Moduldiagnose, Checkout und Snapshoterzeugung kommen jeweils zum selben Ergebnis. Insbesondere darf der Checkout keinen Hinweis zeigen, ohne dass die Bestellung einen Snapshot bekommt, und umgekehrt.
+- Jede Konstante aus `guarantee_labels_notice_constants()` einzeln entfernen; Moduldiagnose, Checkout und Snapshoterzeugung kommen jeweils zum selben Ergebnis. Insbesondere darf der Checkout keinen Hinweis zeigen, ohne dass die Bestellung einen Snapshot bekommt, und umgekehrt. `TEXT_GUARANTEE_NOTICE_MIXED` gehoert ausdruecklich dazu.
 - Eine englische Bestellung im Kundenkonto einer deutschen Sitzung oeffnen; das GARAN-Label, der archivierte Gewaehrleistungstext, sein Linktext, seine Adresse und seine Ueberschrift erscheinen unveraendert. Nichts davon darf wegen der abweichenden Sitzungssprache verschwinden.
 - Dieselbe Bestellung in ihrer eigenen Sprache oeffnen; zusaetzlich tragen auch die Bedienelemente des Blocks die Beschriftungen dieser Sprache.
 - Eine Bestellung in einer unvollstaendig gepflegten Sprache erzeugt keine Zeile in `orders_guarantee` und nimmt den Hinweis auch bei einem spaeteren Mailversand nicht nachtraeglich auf.

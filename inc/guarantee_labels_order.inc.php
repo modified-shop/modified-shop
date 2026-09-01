@@ -382,9 +382,9 @@
       return false;
     }
 
-    // Text, link and address are historical and come from the archive. Only the heading and the
-    // chrome are read from the language file, so a mismatch costs the wording around the notice
-    // and never the notice itself.
+    // Text, link, address and heading are historical and come from the archive. Only the
+    // controls of the block are read from the language file, so a mismatch costs the wording
+    // around the notice and never the notice itself.
     guarantee_labels_language(guarantee_labels_order_language($orders_id));
 
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
@@ -515,10 +515,9 @@
     // would look purely digital to a join, although the shop counts it as mixed. The rule
     // follows shopping_cart::get_content_type().
     //
-    // The downloads are counted through the attributes of the position and the catalogue, not
-    // through orders_products_download. The order editing writes a row there when a download
-    // attribute is added but does not remove it when the attribute is deleted, so that table
-    // can name a download the position no longer carries.
+    // Only order data is asked. The catalogue would answer for today and let a deleted article
+    // or attribute change how an old order is classified, which is exactly what a snapshot has
+    // to rule out.
     $multiple = (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true');
 
     $products_query = xtc_db_query("SELECT op.orders_products_id,
@@ -526,14 +525,8 @@
                                               FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
                                              WHERE opa.orders_products_id = op.orders_products_id) AS attributes,
                                            (SELECT COUNT(*)
-                                              FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
-                                              JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                                   ON pa.products_id = op.products_id
-                                                  AND pa.options_id = opa.orders_products_options_id
-                                                  AND pa.options_values_id = opa.orders_products_options_values_id
-                                              JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
-                                                   ON pad.products_attributes_id = pa.products_attributes_id
-                                             WHERE opa.orders_products_id = op.orders_products_id) AS downloads
+                                              FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd
+                                             WHERE opd.orders_products_id = op.orders_products_id) AS downloads
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
                                      WHERE op.orders_id = '".$orders_id."'");
 
