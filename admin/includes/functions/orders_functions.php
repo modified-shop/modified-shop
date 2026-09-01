@@ -860,13 +860,14 @@
    * orders_products_download.
    *
    * Rows are matched by their file name instead of being rebuilt, so a download the customer has
-   * already used keeps its remaining count and its expiry.
+   * already used keeps its remaining count and its expiry. Two attributes may point at the same
+   * file, therefore the number of rows per file name is compared and not just its presence.
+   *
+   * Rows of a deleted attribute are removed even when downloads are switched off shop wide: they
+   * are orphaned either way. New rows are only added while downloads are enabled, which is the
+   * same condition orders_product_option_insert() writes them under.
    */
   function orders_product_downloads_update($oID, $orders_products_id) {
-    if (DOWNLOAD_ENABLED != 'true') {
-      return;
-    }
-
     $orders_products_id = (int)$orders_products_id;
     $wanted = array();
 
@@ -885,41 +886,53 @@
                                        WHERE opa.orders_products_id = '".$orders_products_id."'");
 
     while ($attribute = xtc_db_fetch_array($attributes_query)) {
-      if (xtc_not_null($attribute['products_attributes_filename'])) {
-        $wanted[$attribute['products_attributes_filename']] = $attribute;
+      if (!xtc_not_null($attribute['products_attributes_filename'])) {
+        continue;
       }
-    }
 
-    $present = array();
+      $filename = $attribute['products_attributes_filename'];
+
+      if (!isset($wanted[$filename])) {
+        $wanted[$filename] = array('needed' => 0, 'attribute' => $attribute);
+      }
+
+      $wanted[$filename]['needed']++;
+    }
 
     $downloads_query = xtc_db_query("SELECT orders_products_download_id,
                                             orders_products_filename
                                        FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
-                                      WHERE orders_products_id = '".$orders_products_id."'");
+                                      WHERE orders_products_id = '".$orders_products_id."'
+                                   ORDER BY orders_products_download_id");
 
     while ($download = xtc_db_fetch_array($downloads_query)) {
-      if (isset($wanted[$download['orders_products_filename']])) {
-        $present[$download['orders_products_filename']] = true;
+      $filename = $download['orders_products_filename'];
+
+      // one row per attribute that wants this file, the oldest ones are kept
+      if (isset($wanted[$filename]) && $wanted[$filename]['needed'] > 0) {
+        $wanted[$filename]['needed']--;
         continue;
       }
 
-      // the attribute behind this download is gone
+      // no attribute behind this download any more, or one row too many for it
       xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
                           WHERE orders_products_download_id = '".(int)$download['orders_products_download_id']."'");
     }
 
-    foreach ($wanted as $filename => $attribute) {
-      if (isset($present[$filename])) {
-        continue;
-      }
+    if (DOWNLOAD_ENABLED != 'true') {
+      return;
+    }
 
-      xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, array(
-        'orders_id' => (int)$oID,
-        'orders_products_id' => $orders_products_id,
-        'orders_products_filename' => $filename,
-        'download_maxdays' => $attribute['products_attributes_maxdays'],
-        'download_count' => $attribute['products_attributes_maxcount'],
-      ));
+    foreach ($wanted as $filename => $entry) {
+      for ($i = 0; $i < $entry['needed']; $i++) {
+        xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, array(
+          'orders_id' => (int)$oID,
+          'orders_products_id' => $orders_products_id,
+          'orders_products_filename' => $filename,
+          'download_maxdays' => $entry['attribute']['products_attributes_maxdays'],
+          'download_count' => $entry['attribute']['products_attributes_maxcount'],
+        ));
+      }
     }
   }
 
