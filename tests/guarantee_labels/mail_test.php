@@ -315,6 +315,25 @@ ok('kein Label fuer die digitale Position', guarantee_labels_order_label(6100, 1
 ok('kein Text fuer die digitale Position', guarantee_labels_order_text(6100, 10) === false);
 ok('kein Anhang fuer die digitale Position', guarantee_labels_order_terms(6100) === array());
 
+echo "\n== Beschaedigtes Archiv meldet sich ==\n";
+// Ein fehlendes oder beschaedigtes Archiv haelt den Versand nicht auf, darf aber nicht nur im
+// Log stehen: der Wiederversand aus dem Admin muss es melden koennen.
+guarantee_labels_snapshot_failures();
+$GLOBALS['product_rows'][6300] = array(
+  array('orders_products_id' => '63', 'manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'X-1',
+        'garan_duration' => '3.0', 'garan_hash' => str_repeat('f', 64),
+        'terms_hash' => null, 'terms_filename' => null),
+);
+$GLOBALS['content_types'][6300] = 'physical';
+ok('ohne Archiv kein Label', guarantee_labels_order_label(6300, 63) === '');
+ok('Fehler gesammelt statt verschluckt', count(guarantee_labels_snapshot_failures()) > 0);
+
+$GLOBALS['notice_rows'][6301] = str_repeat('e', 64);
+$GLOBALS['content_types'][6301] = 'physical';
+guarantee_labels_snapshot_failures();
+ok('fehlendes Hinweisarchiv ohne Hinweis', guarantee_labels_order_notice(6301) === false);
+ok('auch das wird gesammelt', count(guarantee_labels_snapshot_failures()) > 0);
+
 echo "\n== Hinweis nur bei Ware ==\n";
 // 5002 ist rein digital, Mail und Kundenansicht lesen beide durch dieselbe Funktion
 ok('rein digitale Bestellung ohne Hinweis', guarantee_labels_order_notice(5002) === false);

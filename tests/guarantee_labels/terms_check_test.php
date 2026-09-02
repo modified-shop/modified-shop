@@ -40,11 +40,17 @@ $GLOBALS['duplicate'] = false;
 function xtc_db_query($sql) {
   if (strpos($sql, 'customers_status') !== false) {
     if (isset($GLOBALS['gruppenabfragen'])) $GLOBALS['gruppenabfragen']++;
-    return array(
+    $rows = array(
+      array('customers_status_id' => '0', 'customers_status_name' => 'Admin'),
       array('customers_status_id' => '1', 'customers_status_name' => 'Endkunde'),
       array('customers_status_id' => '2', 'customers_status_name' => 'Stammkunde'),
       array('customers_status_id' => '4', 'customers_status_name' => 'Haendler'),
     );
+    // die Abfrage grenzt die Adminguppe selbst aus, die Attrappe bildet das nach
+    if (strpos($sql, 'customers_status_id > 0') !== false) {
+      array_shift($rows);
+    }
+    return $rows;
   }
   return $GLOBALS['duplicate'] ? array(array('content_id' => 9)) : array();
 }
@@ -88,6 +94,11 @@ ok('fehlende B2C-Gruppe faellt auf', count($missing) === 1, implode(' | ', $miss
 ok('die fehlende Gruppe wird benannt', count($missing) === 1 && strpos($missing[0], 'Stammkunde') !== false, implode(' | ', $missing));
 ok('nur B2B ausgewaehlt meldet beide B2C-Gruppen', count($m2 = check('bedingungen.pdf', '', 'c_4_group,')) === 1
    && strpos($m2[0], 'Endkunde') !== false && strpos($m2[0], 'Stammkunde') !== false, implode(' | ', $m2));
+// Die Adminguppe 0 bestellt nicht und sieht kein Label. Ein fehlendes c_0_group darf einen
+// sonst korrekt sichtbaren Anhang nicht abweisen.
+ok('Adminguppe zaehlt nicht als B2C', check('bedingungen.pdf', '', 'c_1_group,c_2_group,') === array());
+$m3 = check('bedingungen.pdf', '', 'c_1_group,');
+ok('Adminguppe wird auch nicht benannt', count($m3) === 1 && strpos($m3[0], 'Admin') === false, implode(' | ', $m3));
 
 echo "\n== Kundengruppen werden einmal geladen ==\n";
 $GLOBALS['gruppenabfragen'] = 0;

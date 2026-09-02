@@ -104,6 +104,26 @@ if ($mode === 'modul_aus') {
 ok('kompaktes Label erzeugt', strpos($module_data[0]['GUARANTEE_LABEL'], 'guarantee-label__compact') !== false);
 ok('Herstellername im Label', strpos($module_data[0]['GUARANTEE_LABEL'], 'ACME GmbH') !== false);
 
+// Der ganze Block liegt vor, also darf nicht je Position eine Herstellerabfrage entstehen.
+$GLOBALS['man'] = array(11 => 'A GmbH', 12 => 'B GmbH', 13 => 'C GmbH');
+$module_data = array();
+foreach (array(11, 12, 13) as $n => $mid) {
+  $module_data[$n] = eintrag((string)($n + 1));
+  $module_data[$n]['PRODUCTS_MANUFACTURERS_ID'] = $mid;
+}
+$GLOBALS['queries'] = 0;
+$guarantee_labels_collected = null; unset($guarantee_labels_collected);
+for ($i = 0; $i < 3; $i++) {
+  require $root.'/includes/extra/modules/wishlist_content/guarantee_labels.php';
+}
+ok('drei Hersteller in einer Abfrage geladen', $GLOBALS['queries'] <= 4, 'Abfragen: '.$GLOBALS['queries']);
+ok('alle drei bekommen ihr Label',
+   strpos($module_data[0]['GUARANTEE_LABEL'], 'A GmbH') !== false
+   && strpos($module_data[1]['GUARANTEE_LABEL'], 'B GmbH') !== false
+   && strpos($module_data[2]['GUARANTEE_LABEL'], 'C GmbH') !== false);
+$i = 0;
+$GLOBALS['man'] = array(1 => 'ACME GmbH');
+
 // ohne GARAN-Daten kein Label
 $module_data = array(0 => eintrag('1', null));
 require $root.'/includes/extra/modules/wishlist_content/guarantee_labels.php';

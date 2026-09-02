@@ -146,6 +146,28 @@ ok('fehlende Quelldatei', $a->terms_write($hash, 'X.pdf', $root.'/gibtsnicht.pdf
 ok('falscher Hash wird abgelehnt', $a->terms_write(hash('sha256', 'ANDERS'), 'Y.pdf', $src) === false);
 ok('keine temporaeren Reste', tempdirs($root.'/media/products/garan_archive/'.$hash) === 0);
 
+echo "\n== Gescheitertes Umbenennen meldet sich ==\n";
+// Ein fehlgeschlagenes rename() darf nicht stumm false liefern: ohne Eintrag in der Fehlerliste
+// greifen weder Log noch messageStack. Eine Datei am Zielpfad laesst rename() scheitern.
+$hash_stolper = hash('sha256', 'STOLPER');
+$ziel = $root.'/media/guarantee_labels/archive/garan/'.$hash_stolper;
+@mkdir(dirname($ziel), 0777, true);
+file_put_contents($ziel, 'BLOCKIERT');
+$st = new guarantee_labels_archive();
+ok('blockiertes Zielverzeichnis wird abgelehnt', $st->garan_write($hash_stolper, $files) === false);
+ok('und dabei protokolliert', $st->has_errors() === true, implode(' | ', $st->get_errors()));
+ok('kein temporaeres Verzeichnis zurueckgeblieben', tempdirs($root.'/media/guarantee_labels/archive/garan') === 0);
+@unlink($ziel);
+
+// dasselbe fuer eine Anhangsdatei: ein Verzeichnis am Zielpfad
+$hash_stolper_t = hash('sha256', 'PDF-INHALT');
+$blockiert = $root.'/media/products/garan_archive/'.$hash_stolper_t.'/Blockiert.pdf';
+@mkdir($blockiert, 0777, true);
+$st2 = new guarantee_labels_archive();
+ok('blockierter Dateiname wird abgelehnt', $st2->terms_write($hash_stolper_t, 'Blockiert.pdf', $src) === false);
+ok('und dabei protokolliert', $st2->has_errors() === true, implode(' | ', $st2->get_errors()));
+@rmdir($blockiert);
+
 echo "\n== label() Ende zu Ende ==\n";
 class test_renderer extends guarantee_labels_renderer {
   function areas() {
