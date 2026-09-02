@@ -39,6 +39,193 @@
     }
 
     $orders[$orders_id] = array();
+    $snapshots = guarantee_labels_order_snapshots($orders_id);
+
+    // no snapshot, nothing to classify
+    if (count($snapshots) < 1) {
+      return $orders[$orders_id];
+    }
+
+    foreach ($snapshots as $orders_products_id => $snapshot) {
+      if (guarantee_labels_order_position_goods($orders_id, $orders_products_id)) {
+        $orders[$orders_id][$orders_products_id] = $snapshot;
+      }
+    }
+
+    return $orders[$orders_id];
+  }
+
+  /**
+   * Whether one position of an order counts as goods and may carry a guarantee.
+   *
+   * The one place that answers this, for the order views as well as for the administration.
+   * Reading and writing must not disagree: a position the views hide would otherwise stay
+   * editable, and a position they show could become unsavable.
+   *
+   * @param int $orders_id
+   * @param int $orders_products_id
+   * @return bool
+   */
+  function guarantee_labels_order_position_goods($orders_id, $orders_products_id) {
+    $orders_products_id = (int)$orders_products_id;
+    $types = guarantee_labels_order_position_types($orders_id);
+
+    // There are no foreign keys, so an outside delete can leave a snapshot whose position is
+    // gone. It is not shown and its document never reaches a mail.
+    if (!isset($types[$orders_products_id])) {
+      return false;
+    }
+
+    // A manually created order is classified by its positions, and it keeps being classified
+    // while it is edited: adding a download attribute makes a position digital and takes its
+    // guarantee away.
+    if (guarantee_labels_order_by_position($orders_id)) {
+      return ($types[$orders_products_id] === true);
+    }
+
+    $content_type = guarantee_labels_order_content_type($orders_id);
+    $snapshots = guarantee_labels_order_snapshots($orders_id);
+
+    // An existing snapshot of a checkout order vouches for itself: it was written when the
+    // order was placed, with the attributes and the settings of that day. Only the order wide
+    // classification may still take it away, otherwise switching
+    // DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED would rewrite old orders.
+    if (isset($snapshots[$orders_products_id])) {
+      return guarantee_labels_physical($content_type);
+    }
+
+    // A snapshot that does not exist yet has no history to protect. Nothing vouches for the
+    // position, so it has to answer itself: orders.content_type says mixed for the whole order
+    // and would otherwise let a purely digital position be given a guarantee by hand.
+    return guarantee_labels_physical($content_type) && ($types[$orders_products_id] === true);
+  }
+
+  /**
+   * Whether the positions of an order decide its content, instead of orders.content_type.
+   *
+   * A checkout order carries its classification in orders.content_type. It was made when the
+   * order was placed, with the attributes the customer chose and the settings of that day, and
+   * it must not be recomputed later: DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED can be switched at
+   * any time and would otherwise rewrite the history of old orders.
+   *
+   * A manually created order has the column empty, because admin/customers.php does not fill
+   * it. Only there the positions answer, and they keep answering while the order is edited.
+   *
+   * @param int $orders_id
+   * @return bool
+   */
+  function guarantee_labels_order_by_position($orders_id) {
+    return (guarantee_labels_order_content_type($orders_id) === '');
+  }
+
+  /**
+   * The stored content type of an order, empty when it was created manually.
+   *
+   * @param int $orders_id
+   * @return string
+   */
+  function guarantee_labels_order_content_type($orders_id) {
+    static $orders = array();
+
+    $orders_id = (int)$orders_id;
+
+    if (isset($orders[$orders_id])) {
+      return $orders[$orders_id];
+    }
+
+    $orders[$orders_id] = '';
+
+    if ($orders_id < 1) {
+      return '';
+    }
+
+    $order_query = xtc_db_query("SELECT content_type
+                                   FROM ".TABLE_ORDERS."
+                                  WHERE orders_id = '".$orders_id."'");
+
+    if (xtc_db_num_rows($order_query) > 0) {
+      $order = xtc_db_fetch_array($order_query);
+      $orders[$orders_id] = isset($order['content_type']) ? trim((string)$order['content_type']) : '';
+    }
+
+    return $orders[$orders_id];
+  }
+
+  /**
+   * Which positions of an order count as goods, keyed by orders_products_id.
+   *
+   * Only order data is asked. The catalogue would answer for today and let a deleted article
+   * or a changed attribute reclassify an old order, which is exactly what a snapshot rules out.
+   * The rule follows shopping_cart::get_content_type().
+   *
+   * @param int $orders_id
+   * @return array orders_products_id => bool
+   */
+  function guarantee_labels_order_position_types($orders_id) {
+    static $orders = array();
+
+    $orders_id = (int)$orders_id;
+
+    if (isset($orders[$orders_id])) {
+      return $orders[$orders_id];
+    }
+
+    $orders[$orders_id] = array();
+
+    if ($orders_id < 1) {
+      return $orders[$orders_id];
+    }
+
+    // shopping_cart::get_content_type() asks nothing when downloads are off, every position is
+    // goods then. A leftover download row of a shop that switched them off must not take the
+    // guarantee away.
+    $downloads_on = (defined('DOWNLOAD_ENABLED') && DOWNLOAD_ENABLED == 'true');
+    $multiple = (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true');
+
+    // Counted per position, not joined: a position with a download attribute next to a physical
+    // one would look purely digital to a join, although the shop counts it as mixed.
+    $products_query = xtc_db_query("SELECT op.orders_products_id,
+                                           (SELECT COUNT(*)
+                                              FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
+                                             WHERE opa.orders_products_id = op.orders_products_id) AS attributes,
+                                           (SELECT COUNT(*)
+                                              FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd
+                                             WHERE opd.orders_products_id = op.orders_products_id) AS downloads
+                                      FROM ".TABLE_ORDERS_PRODUCTS." op
+                                     WHERE op.orders_id = '".$orders_id."'");
+
+    while ($product = xtc_db_fetch_array($products_query)) {
+      $downloads = (int)$product['downloads'];
+
+      // no download at all makes the position goods in either setting, otherwise a chosen
+      // download makes it digital unless a physical attribute stands next to it
+      $orders[$orders_id][(int)$product['orders_products_id']] = !$downloads_on
+                                                              || ($downloads < 1)
+                                                              || (!$multiple && (int)$product['attributes'] > $downloads);
+    }
+
+    return $orders[$orders_id];
+  }
+
+  /**
+   * The stored GARAN rows of an order, keyed by orders_products_id, unfiltered.
+   *
+   * The history baseline of the administration reads here, everything that is shown to a
+   * customer reads through guarantee_labels_order_products().
+   *
+   * @param int $orders_id
+   * @return array empty when the order carries no snapshot
+   */
+  function guarantee_labels_order_snapshots($orders_id) {
+    static $orders = array();
+
+    $orders_id = (int)$orders_id;
+
+    if (isset($orders[$orders_id])) {
+      return $orders[$orders_id];
+    }
+
+    $orders[$orders_id] = array();
 
     if ($orders_id < 1 || !guarantee_labels_snapshot_table(TABLE_ORDERS_PRODUCTS_GUARANTEE)) {
       return $orders[$orders_id];
@@ -64,6 +251,10 @@
   /**
    * The historical notice of one order, taken from the archived language state.
    *
+   * The notice concerns goods, so an order without any is left without it. That is decided
+   * here and not when the snapshot was written, and it holds for the mail and for the order
+   * view of the customer alike.
+   *
    * @param int $orders_id
    * @return mixed array of text, link and url, false without a snapshot
    */
@@ -78,7 +269,11 @@
 
     $orders[$orders_id] = false;
 
-    if ($orders_id < 1 || !guarantee_labels_snapshot_table(TABLE_ORDERS_GUARANTEE)) {
+    if ($orders_id < 1
+        || !guarantee_labels_snapshot_table(TABLE_ORDERS_GUARANTEE)
+        || !guarantee_labels_order_physical($orders_id)
+        )
+    {
       return false;
     }
 
@@ -99,7 +294,8 @@
 
     // a missing archive means the historical wording is gone, a current one must not stand in
     if ($files === false || !isset($files['notice.json'])) {
-      guarantee_labels_snapshot_log('notice read', $orders_id, array('archived language state is missing'));
+      guarantee_labels_snapshot_log('notice read', $orders_id,
+                                    $archive->has_errors() ? $archive->get_errors() : array('archived language state is missing'));
       return false;
     }
 
@@ -313,7 +509,7 @@
   function guarantee_labels_order_label($orders_id, $orders_products_id) {
     require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
-    if (!guarantee_labels_active()) {
+    if (!guarantee_labels_order_active()) {
       return '';
     }
 
@@ -338,12 +534,18 @@
 
     // without the archived graphic nothing is drawn, a current one would show other values
     if ($files === false) {
+      guarantee_labels_snapshot_log('garan read', $orders_id,
+                                    $archive->has_errors() ? $archive->get_errors() : array('archived label is missing: '.$product['garan_hash']));
       return '';
     }
 
-    // the archive is closed to http, the lazy view fetches the full graphic from the cache
-    if (guarantee_labels_cache_url($product['garan_hash']) === '') {
-      $archive->cache_write($product['garan_hash'], $files);
+    // The archive is closed to http, the lazy view fetches the full graphic from the cache. A
+    // failing copy leaves the overlay without its graphic, so it does not stay silent either.
+    if (guarantee_labels_cache_url($product['garan_hash']) === ''
+        && $archive->cache_write($product['garan_hash'], $files) === false
+        )
+    {
+      guarantee_labels_snapshot_log('garan cache', $orders_id, $archive->get_errors());
     }
 
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
@@ -372,7 +574,7 @@
   function guarantee_labels_order_notice_parts($orders_id) {
     require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
-    if (!guarantee_labels_active()) {
+    if (!guarantee_labels_order_active()) {
       return false;
     }
 
@@ -396,10 +598,15 @@
       $files = $archive->notice_read($notice['hash']);
 
       if ($files === false) {
+        guarantee_labels_snapshot_log('notice read', $orders_id,
+                                      $archive->has_errors() ? $archive->get_errors() : array('archived notice is missing: '.$notice['hash']));
         return false;
       }
 
-      $archive->cache_write($notice['hash'], array('notice.svg' => $files['notice.svg']));
+      if ($archive->cache_write($notice['hash'], array('notice.svg' => $files['notice.svg'])) === false) {
+        guarantee_labels_snapshot_log('notice cache', $orders_id, $archive->get_errors());
+      }
+
       $source = guarantee_labels_notice_cache_url($notice['hash']);
 
       if ($source === '') {
@@ -467,6 +674,43 @@
    * @param int $orders_id
    * @return int
    */
+  /**
+   * The language code of an order, for values that carry one variant per language.
+   *
+   * Derived from orders.language the same way xtc_php_mail() does it, so a value resolved here
+   * matches the mail that is about to be sent.
+   *
+   * @param int $orders_id
+   * @return string empty when the language is unknown
+   */
+  function guarantee_labels_order_language_code($orders_id) {
+    static $orders = array();
+
+    $orders_id = (int)$orders_id;
+
+    if (isset($orders[$orders_id])) {
+      return $orders[$orders_id];
+    }
+
+    $orders[$orders_id] = '';
+    $language = guarantee_labels_order_language($orders_id);
+
+    if ($language === '') {
+      return '';
+    }
+
+    $code_query = xtc_db_query("SELECT code
+                                  FROM ".TABLE_LANGUAGES."
+                                 WHERE directory = '".xtc_db_input($language)."'");
+
+    if (xtc_db_num_rows($code_query) > 0) {
+      $row = xtc_db_fetch_array($code_query);
+      $orders[$orders_id] = (string)$row['code'];
+    }
+
+    return $orders[$orders_id];
+  }
+
   function guarantee_labels_order_language_id($orders_id) {
     // Derived from orders.language, which is the language of the order. orders_address_edit()
     // changes only that column when the administration switches the language, so the stored
@@ -506,55 +750,14 @@
       return false;
     }
 
-    $order_query = xtc_db_query("SELECT content_type
-                                   FROM ".TABLE_ORDERS."
-                                  WHERE orders_id = '".$orders_id."'");
+    // the checkout already decided, and it knew about attributes this query cannot see
+    if (!guarantee_labels_order_by_position($orders_id)) {
+      $orders[$orders_id] = guarantee_labels_physical(guarantee_labels_order_content_type($orders_id));
 
-    if (xtc_db_num_rows($order_query) > 0) {
-      $order = xtc_db_fetch_array($order_query);
-      $content_type = trim((string)$order['content_type']);
-
-      // the checkout already decided, and it knows about attributes this query cannot see
-      if ($content_type !== '') {
-        $orders[$orders_id] = guarantee_labels_physical($content_type);
-        return $orders[$orders_id];
-      }
+      return $orders[$orders_id];
     }
 
-    // Counted per position, not joined: a position with a download attribute and a physical one
-    // would look purely digital to a join, although the shop counts it as mixed. The rule
-    // follows shopping_cart::get_content_type().
-    //
-    // Only order data is asked. The catalogue would answer for today and let a deleted article
-    // or attribute change how an old order is classified, which is exactly what a snapshot has
-    // to rule out.
-    $multiple = (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true');
-
-    $products_query = xtc_db_query("SELECT op.orders_products_id,
-                                           (SELECT COUNT(*)
-                                              FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
-                                             WHERE opa.orders_products_id = op.orders_products_id) AS attributes,
-                                           (SELECT COUNT(*)
-                                              FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd
-                                             WHERE opd.orders_products_id = op.orders_products_id) AS downloads
-                                      FROM ".TABLE_ORDERS_PRODUCTS." op
-                                     WHERE op.orders_id = '".$orders_id."'");
-
-    while ($product = xtc_db_fetch_array($products_query)) {
-      $downloads = (int)$product['downloads'];
-
-      // no download at all makes the position physical in either setting
-      if ($downloads < 1) {
-        $orders[$orders_id] = true;
-        break;
-      }
-
-      // with multiple attributes allowed one download makes the whole position digital
-      if (!$multiple && (int)$product['attributes'] > $downloads) {
-        $orders[$orders_id] = true;
-        break;
-      }
-    }
+    $orders[$orders_id] = in_array(true, guarantee_labels_order_position_types($orders_id), true);
 
     return $orders[$orders_id];
   }

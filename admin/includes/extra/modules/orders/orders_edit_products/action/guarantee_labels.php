@@ -25,7 +25,11 @@
     $guarantee_opID = (int)$_POST['opID'];
     $guarantee_errors = array();
 
-    $guarantee_before = guarantee_labels_order_products($guarantee_oID);
+    // A failing cache write does not stop anything, but it must not stay in the log alone.
+    // Collected here and reported at the end, next to the result of the save.
+    $guarantee_warnings = array();
+
+    $guarantee_before = guarantee_labels_order_snapshots($guarantee_oID);
     $guarantee_before = isset($guarantee_before[$guarantee_opID]) ? $guarantee_before[$guarantee_opID] : false;
 
     $guarantee_input = array(
@@ -71,6 +75,17 @@
       $guarantee_errors = $guarantee_checked['errors'];
     }
 
+    // Asked before anything is archived, with the same condition guarantee_labels_write_snapshot()
+    // refuses: a removal stays allowed, a save does not. Checking only there would leave the
+    // uploaded document in the archive without a row pointing at it, once per attempt.
+    if (count($guarantee_errors) < 1
+        && $guarantee_checked['values'] !== false
+        && !guarantee_labels_order_position_goods($guarantee_oID, $guarantee_opID)
+        )
+    {
+      $guarantee_errors[] = ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL;
+    }
+
     // the document is archived first, a failure there must not leave a half written snapshot
     if (count($guarantee_errors) < 1 && $guarantee_checked['values'] !== false) {
       $guarantee_terms = isset($_POST['terms_action']) ? $_POST['terms_action'] : 'keep';
@@ -87,7 +102,9 @@
                                                  WHERE orders_id = '".$guarantee_oID."'");
         $guarantee_status = (xtc_db_num_rows($guarantee_status_query) > 0) ? xtc_db_fetch_array($guarantee_status_query) : array('customers_status' => 0);
 
-        guarantee_labels_snapshot_failures();
+        // whatever the label rendering left behind belongs to the shop owner, not to the
+        // document that is about to be archived
+        $guarantee_warnings = array_merge($guarantee_warnings, guarantee_labels_snapshot_failures());
 
         $guarantee_snapshot_terms = guarantee_labels_terms_snapshot($guarantee_pID,
                                                                    guarantee_labels_order_language_id($guarantee_oID),
@@ -124,6 +141,12 @@
 
     if (count($guarantee_errors) < 1) {
       $guarantee_errors = guarantee_labels_write_snapshot($guarantee_oID, $guarantee_opID, $guarantee_checked['values']);
+    }
+
+    $guarantee_warnings = array_merge($guarantee_warnings, guarantee_labels_snapshot_failures());
+
+    foreach ($guarantee_warnings as $guarantee_warning) {
+      $messageStack->add_session(sprintf(ERROR_GUARANTEE_LABELS_SNAPSHOT_FAILED, encode_htmlspecialchars($guarantee_warning)), 'warning');
     }
 
     if (count($guarantee_errors) > 0) {

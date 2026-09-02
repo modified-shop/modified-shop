@@ -35,6 +35,11 @@
     // a link is no durable medium, the mail has to carry the document itself
     if ($content_file === '') {
       $errors[] = ERROR_GUARANTEE_LABELS_TERMS_LINK;
+    } elseif (trim((string)$content_link) !== '') {
+      // Both filled would be two different documents: products_media.php shows the link and
+      // hides the file, while the mail carries the file. The customer would see one document
+      // on the product page and receive another one.
+      $errors[] = ERROR_GUARANTEE_LABELS_TERMS_BOTH;
     } elseif (guarantee_labels_terms_filename($content_file) === false) {
       $errors[] = sprintf(ERROR_GUARANTEE_LABELS_TERMS_NAME, encode_htmlspecialchars($content_file));
     } elseif (!is_file(DIR_FS_CATALOG.'media/products/'.$content_file)) {
@@ -95,9 +100,13 @@
     if (!isset($groups)) {
       $groups = array();
 
+      // Group 0 is the administration, not a customer group: it never orders and never sees a
+      // label, so a missing c_0_group must not reject an attachment. save_b2b_customers_status()
+      // drops the same id. Group 1, the guest, stays in.
       $groups_query = xtc_db_query("SELECT customers_status_id, customers_status_name
                                       FROM ".TABLE_CUSTOMERS_STATUS."
-                                     WHERE language_id = '".(int)$_SESSION['languages_id']."'");
+                                     WHERE language_id = '".(int)$_SESSION['languages_id']."'
+                                       AND customers_status_id > 0");
 
       while ($group = xtc_db_fetch_array($groups_query)) {
         $groups[] = $group;

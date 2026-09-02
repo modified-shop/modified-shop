@@ -421,7 +421,7 @@
     }
 
     $names = guarantee_labels_manufacturer_names(array($product['manufacturers_id']));
-    $label = guarantee_labels_product_label($product, $names);
+    $label = guarantee_labels_product_label($product, $names, $uprid);
 
 
     // an inactive manufacturer or a failing renderer leaves the position without a snapshot
@@ -697,11 +697,19 @@
       return array(ERROR_GUARANTEE_LABELS_SNAPSHOT_UNKNOWN);
     }
 
+    // a removal stays possible, it is how a snapshot of a position that turned digital is cleared
     if ($values === false) {
       xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE."
                           WHERE orders_id = '".$orders_id."'
                             AND orders_products_id = '".$orders_products_id."'");
       return $errors;
+    }
+
+    require_once(DIR_FS_INC.'guarantee_labels_order.inc.php');
+
+    // the same answer the order views use, so nothing stays visible that cannot be saved
+    if (!guarantee_labels_order_position_goods($orders_id, $orders_products_id)) {
+      return array(ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL);
     }
 
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
@@ -712,6 +720,11 @@
 
     if ($label === false) {
       return array(sprintf(ERROR_GUARANTEE_LABELS_SNAPSHOT_RENDER, implode(', ', $renderer->get_errors())));
+    }
+
+    // a failing cache write does not stop the label, but it must not stay in the log alone
+    if ($renderer->has_errors()) {
+      guarantee_labels_snapshot_log('render edit', $orders_id, $renderer->get_errors());
     }
 
     $archive = new guarantee_labels_archive();
@@ -766,6 +779,53 @@
    * @param string $field the name of the file field
    * @return mixed array of hash and file name, false when it cannot be used
    */
+  /**
+   * Whether an uploaded file may become archived guarantee conditions.
+   *
+   * The shop keeps its accepted types in one list, so an admin who extends it is respected here
+   * as well. The same six lists the content manager merges are used, otherwise a file that can
+   * be attached to an article could not be uploaded as its replacement in the order. Name and
+   * content have to agree, the same rule the upload class applies.
+   *
+   * @param string $filename the checked name of the upload
+   * @param string $file the temporary file
+   * @return bool
+   */
+  function guarantee_labels_terms_accepted($filename, $file) {
+    // without the list nothing is accepted, a missing check would be worse than a refused upload
+    if (!defined('DIR_FS_ADMIN') || !is_file(DIR_FS_ADMIN.'includes/upload_types.php')) {
+      guarantee_labels_snapshot_log('terms upload', $filename, array('upload_types.php not readable'));
+      return false;
+    }
+
+    require(DIR_FS_ADMIN.'includes/upload_types.php');
+
+    // exactly the six lists the content manager merges for an article file, so nothing that can
+    // be attached to an article is refused as a replacement in the order
+    $extensions = array_merge($accepted_image_extensions, $accepted_file_extensions,
+                              $accepted_extfile_extensions, $accepted_audio_extensions,
+                              $accepted_movie_extensions, $accepted_compressed_extensions);
+    $mime_types = array_merge($accepted_image_mime_types, $accepted_file_mime_types,
+                              $accepted_extfile_mime_types, $accepted_audio_mime_types,
+                              $accepted_movie_mime_types, $accepted_compressed_mime_types);
+
+    if (!is_file($file)) {
+      guarantee_labels_snapshot_log('terms upload', $filename, array('file not readable'));
+      return false;
+    }
+
+    $extension = strtolower(substr((string)$filename, strrpos((string)$filename, '.') + 1));
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime_type = strtolower((string)$finfo->file($file));
+
+    if (!in_array($extension, $extensions, true) || !in_array($mime_type, $mime_types, true)) {
+      guarantee_labels_snapshot_log('terms upload', $filename, array('type not accepted: '.$extension.', '.$mime_type));
+      return false;
+    }
+
+    return true;
+  }
+
   function guarantee_labels_archive_upload($field) {
     if (!isset($_FILES[$field])
         || !isset($_FILES[$field]['tmp_name'])
@@ -779,6 +839,10 @@
     $filename = guarantee_labels_terms_filename($_FILES[$field]['name']);
 
     if ($filename === false) {
+      return false;
+    }
+
+    if (guarantee_labels_terms_accepted($filename, $_FILES[$field]['tmp_name']) === false) {
       return false;
     }
 

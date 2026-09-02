@@ -32,8 +32,13 @@
       return;
     }
 
-    $guarantee_snapshot = guarantee_labels_order_products($guarantee_oID);
+    // the stored row unfiltered, otherwise a position that turned digital could not be cleared
+    $guarantee_snapshot = guarantee_labels_order_snapshots($guarantee_oID);
     $guarantee_snapshot = isset($guarantee_snapshot[$guarantee_opID]) ? $guarantee_snapshot[$guarantee_opID] : false;
+
+    if (!guarantee_labels_order_position_goods($guarantee_oID, $guarantee_opID)) {
+      $messageStack->add(ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL, 'warning');
+    }
 
     // a value the admin just entered survives a failed save, so nothing has to be typed twice
     $guarantee_value = array(

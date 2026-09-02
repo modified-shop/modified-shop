@@ -12,7 +12,13 @@
 
   // This extension point runs on every checkout page and on the payment callbacks, the notice
   // belongs on the order confirmation alone. The callbacks bring no smarty object at all.
-  if (isset($smarty) && basename($PHP_SELF) === FILENAME_CHECKOUT_CONFIRMATION) {
+  // the module status as well: these files ship with the module, the configuration does not
+  if (isset($smarty)
+      && basename($PHP_SELF) === FILENAME_CHECKOUT_CONFIRMATION
+      && defined('MODULE_GUARANTEE_LABELS_STATUS')
+      && MODULE_GUARANTEE_LABELS_STATUS == 'true'
+      )
+  {
     require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
     // Always assigned, so a template can place the notice without asking whether the module

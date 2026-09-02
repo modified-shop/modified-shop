@@ -20,8 +20,22 @@
    *
    * @return bool
    */
+  /**
+   * Whether a stored snapshot may be shown, no matter who is looking.
+   *
+   * A snapshot exists because the customer was not in a B2B group when the order was placed.
+   * That question is therefore already answered and must not be asked again: moving a customer
+   * into a B2B group afterwards would otherwise take the guarantee out of their own order view
+   * while the administration, running with group 0, still sends it.
+   *
+   * @return bool
+   */
+  function guarantee_labels_order_active() {
+    return (defined('MODULE_GUARANTEE_LABELS_STATUS') && MODULE_GUARANTEE_LABELS_STATUS == 'true');
+  }
+
   function guarantee_labels_active($customers_status = null) {
-    if (!defined('MODULE_GUARANTEE_LABELS_STATUS') || MODULE_GUARANTEE_LABELS_STATUS != 'true') {
+    if (!guarantee_labels_order_active()) {
       return false;
     }
 
@@ -154,8 +168,6 @@
    * @return bool
    */
   function guarantee_labels_product_physical($products_id) {
-    global $xtPrice;
-
     static $known = array();
 
     $products_id = (int)$products_id;
@@ -164,41 +176,29 @@
       return true;
     }
 
-    // the storefront carries the price object, which answers this out of its own buffer
-    if (is_object($xtPrice) && method_exists($xtPrice, 'get_content_type_product')) {
-      return ($xtPrice->get_content_type_product($products_id) !== 'virtual');
-    }
-
-    // the administration does not, so the same two rules are asked here
     if (isset($known[$products_id])) {
       return $known[$products_id];
     }
 
-    $download_query = xtc_db_query("SELECT COUNT(*) AS total
-                                      FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                      JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
-                                           ON pa.products_attributes_id = pad.products_attributes_id
-                                     WHERE pa.products_id = '".$products_id."'");
-    $download = xtc_db_fetch_array($download_query);
+    // An article is asked before anything is chosen, so the question is whether it can be bought
+    // as goods at all: it is digital only when it has nothing but downloads. One download variant
+    // next to a physical one makes it mixed, and the list has to show the label.
+    //
+    // xtcPrice::get_content_type_product() is deliberately not asked. It answers the question of
+    // the cart and folds DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED into the article, where one download
+    // variant already makes the whole article virtual. For a chosen combination that is right and
+    // guarantee_labels_position_physical() applies it; for an article it would drop the label of
+    // a mixed one.
+    $attributes_query = xtc_db_query("SELECT COUNT(*) AS total,
+                                             COUNT(pad.products_attributes_id) AS downloads
+                                        FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                   LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                             ON pa.products_attributes_id = pad.products_attributes_id
+                                       WHERE pa.products_id = '".$products_id."'");
+    $attributes = xtc_db_fetch_array($attributes_query);
 
-    if ((int)$download['total'] < 1) {
-      $known[$products_id] = true;
-      return true;
-    }
-
-    // with multiple downloads allowed one of them already makes the article virtual
-    if (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true') {
-      $known[$products_id] = false;
-      return false;
-    }
-
-    // otherwise it is virtual only when it has nothing but downloads
-    $total_query = xtc_db_query("SELECT COUNT(*) AS total
-                                   FROM ".TABLE_PRODUCTS_ATTRIBUTES."
-                                  WHERE products_id = '".$products_id."'");
-    $total = xtc_db_fetch_array($total_query);
-
-    $known[$products_id] = ((int)$total['total'] > (int)$download['total']);
+    $known[$products_id] = ((int)$attributes['downloads'] < 1)
+                        || ((int)$attributes['total'] > (int)$attributes['downloads']);
 
     return $known[$products_id];
   }
@@ -289,10 +289,13 @@
    *
    * @param array $product one product row
    * @param array $names the manufacturer names of the block
+   * @param string $uprid the cart id when a combination was chosen
    * @return mixed array with hash, colour.svg and nested.svg, false when no label applies
    */
-  function guarantee_labels_product_label($product, $names) {
-    if (!guarantee_labels_candidate($product)) {
+  function guarantee_labels_product_label($product, $names, $uprid = '') {
+    // the same question the caller asked, with the same answer: without the cart id this would
+    // fall back to the article and undo the decision made for the chosen combination
+    if (!guarantee_labels_candidate($product, $uprid)) {
       return false;
     }
 
@@ -308,13 +311,15 @@
 
     $label = $renderer->label($names[$manufacturers_id], $product['products_manufacturers_model'], $product['products_garan_duration']);
 
-    if ($label === false) {
-      // a name that does not fit, a missing template: an admin action has to be able to say so
-      if ($renderer->has_errors()) {
-        require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
-        guarantee_labels_snapshot_log('render', isset($product['products_id']) ? $product['products_id'] : 0, $renderer->get_errors());
-      }
+    // A name that does not fit, a missing template, a cache directory that cannot be written:
+    // an admin action has to be able to say so. A failing cache write does not stop the label,
+    // the renderer keeps its error and the caller still reports it.
+    if ($renderer->has_errors()) {
+      require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
+      guarantee_labels_snapshot_log('render', isset($product['products_id']) ? $product['products_id'] : 0, $renderer->get_errors());
+    }
 
+    if ($label === false) {
       return false;
     }
 

@@ -85,14 +85,16 @@
       return $this->_check;
     }
 
+    /**
+     * The status key stays out of the mask on purpose. The system module guarantee_labels is
+     * the only switch; a second one here could turn this extension off while the system module
+     * still reports itself as active. The key itself has to exist, the module loader reads it.
+     */
     function keys() {
-      defined($this->name.'_STATUS_TITLE') OR define($this->name.'_STATUS_TITLE', TEXT_DEFAULT_STATUS_TITLE);
-      defined($this->name.'_STATUS_DESC') OR define($this->name.'_STATUS_DESC', TEXT_DEFAULT_STATUS_DESC);
       defined($this->name.'_SORT_ORDER_TITLE') OR define($this->name.'_SORT_ORDER_TITLE', TEXT_DEFAULT_SORT_ORDER_TITLE);
       defined($this->name.'_SORT_ORDER_DESC') OR define($this->name.'_SORT_ORDER_DESC', TEXT_DEFAULT_SORT_ORDER_DESC);
 
       return array(
-        $this->name.'_STATUS',
         $this->name.'_SORT_ORDER'
       );
     }

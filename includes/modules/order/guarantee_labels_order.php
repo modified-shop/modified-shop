@@ -68,7 +68,7 @@
       }
 
       $names = guarantee_labels_manufacturer_names(array($product['manufacturers_id']));
-      $products_data['GUARANTEE_LABEL'] = guarantee_labels_markup(guarantee_labels_product_label($product, $names));
+      $products_data['GUARANTEE_LABEL'] = guarantee_labels_markup(guarantee_labels_product_label($product, $names, $products_id));
 
       return $products_data;
     }
@@ -115,7 +115,7 @@
       $order_data['GUARANTEE_LABEL'] = '';
 
       // an inactive module shows nothing, not even from a snapshot that is still there
-      if (!guarantee_labels_active()) {
+      if (!guarantee_labels_order_active()) {
         return $order_data;
       }
 
@@ -153,14 +153,16 @@
       return $this->_check;
     }
 
+    /**
+     * The status key stays out of the mask on purpose. The system module guarantee_labels is
+     * the only switch; a second one here could turn this extension off while the system module
+     * still reports itself as active. The key itself has to exist, the module loader reads it.
+     */
     function keys() {
-      defined($this->name.'_STATUS_TITLE') OR define($this->name.'_STATUS_TITLE', TEXT_DEFAULT_STATUS_TITLE);
-      defined($this->name.'_STATUS_DESC') OR define($this->name.'_STATUS_DESC', TEXT_DEFAULT_STATUS_DESC);
       defined($this->name.'_SORT_ORDER_TITLE') OR define($this->name.'_SORT_ORDER_TITLE', TEXT_DEFAULT_SORT_ORDER_TITLE);
       defined($this->name.'_SORT_ORDER_DESC') OR define($this->name.'_SORT_ORDER_DESC', TEXT_DEFAULT_SORT_ORDER_DESC);
 
       return array(
-        $this->name.'_STATUS',
         $this->name.'_SORT_ORDER'
       );
     }

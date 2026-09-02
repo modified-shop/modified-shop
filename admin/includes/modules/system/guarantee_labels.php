@@ -44,6 +44,10 @@
       // only for the module being looked at, the list instantiates every module
       if (isset($_GET['module']) && $_GET['module'] === $this->code && $this->check() > 0) {
         $this->properties['add_content'] = $this->diagnosis();
+
+        if (isset($_GET['action']) && $_GET['action'] === 'remove' && $this->catalogue_carries_data()) {
+          $this->properties['remove'] = array(MODULE_GUARANTEE_LABELS_TEXT_REMOVE_KEEPS_GUARD);
+        }
       }
     }
 
@@ -63,11 +67,11 @@
       $renderer = new guarantee_labels_renderer();
       $rows = array();
 
+      // installed is not enough, the module loaders read the status of each extension as well
       foreach (self::EXTENSIONS as $type => $data) {
-        $installed = 'MODULE_'.strtoupper($type).'_INSTALLED';
         $rows[] = array(
           sprintf(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION, encode_htmlspecialchars($data['file'])),
-          defined($installed) && in_array($data['file'], explode(';', constant($installed)), true),
+          $this->class_extension_ready($type),
         );
       }
 
@@ -427,8 +431,44 @@
     }
 
     function remove() {
-      $this->unregister_class_extension();
+      // The article administration keeps its extension while GARAN data is left in the catalogue.
+      // It is the only guard against a duplicate inheriting a guarantee that was never given for
+      // it, and duplicate_product() offers no other place to hook into. Everything else in that
+      // extension follows the module status and is inert without it.
+      //
+      // The article data itself is kept so a reinstall can pick it up again, which means the
+      // maintenance fields are gone with this module and the extension cannot make itself
+      // superfluous. The uninstall screen names the way out: removing it by hand under the
+      // article administration modules.
+      $this->unregister_class_extension($this->catalogue_carries_data() ? array('categories') : array());
       xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_GUARANTEE_LABELS_%'");
+    }
+
+    /**
+     * Whether any article still carries GARAN data.
+     *
+     * @return bool
+     */
+    function catalogue_carries_data() {
+      $columns_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PRODUCTS." LIKE 'products_garan_duration'");
+
+      if (xtc_db_num_rows($columns_query) > 0) {
+        $duration_query = xtc_db_query("SELECT products_id
+                                          FROM ".TABLE_PRODUCTS."
+                                         WHERE products_garan_duration IS NOT NULL
+                                         LIMIT 1");
+
+        if (xtc_db_num_rows($duration_query) > 0) {
+          return true;
+        }
+      }
+
+      $terms_query = xtc_db_query("SELECT content_id
+                                     FROM ".TABLE_PRODUCTS_CONTENT."
+                                    WHERE content_type = 'garan_terms'
+                                    LIMIT 1");
+
+      return (xtc_db_num_rows($terms_query) > 0);
     }
 
     /**
@@ -440,15 +480,85 @@
       foreach (self::EXTENSIONS as $type => $data) {
         $extension = $this->class_extension($type);
 
-        if ($extension !== false && $extension->check() < 1) {
+        if ($extension === false) {
+          continue;
+        }
+
+        if ($extension->check() < 1) {
           $extension->install();
           $this->update_class_extensions($type);
+          continue;
         }
+
+        // Installed but switched off counts as broken. The module loaders read the status of
+        // each extension, so a false there would silently take the labels, the order data or
+        // the duplicate guard away while this module still reports itself as active.
+        $this->enable_class_extension($type);
       }
     }
 
-    function unregister_class_extension() {
+    /**
+     * Puts the status of one class extension back to true.
+     *
+     * @param string $type
+     * @return bool whether something had to be repaired
+     */
+    function enable_class_extension($type) {
+      if (!isset(self::EXTENSIONS[$type])) {
+        return false;
+      }
+
+      $key = 'MODULE_'.strtoupper($type).'_'.strtoupper(str_replace('.php', '', self::EXTENSIONS[$type]['file'])).'_STATUS';
+
+      $status_query = xtc_db_query("SELECT configuration_value
+                                      FROM ".TABLE_CONFIGURATION."
+                                     WHERE configuration_key = '".xtc_db_input($key)."'");
+
+      if (xtc_db_num_rows($status_query) < 1) {
+        return false;
+      }
+
+      $status = xtc_db_fetch_array($status_query);
+
+      if (strtolower(trim((string)$status['configuration_value'])) === 'true') {
+        return false;
+      }
+
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = 'true'
+                     WHERE configuration_key = '".xtc_db_input($key)."'");
+
+      return true;
+    }
+
+    /**
+     * Whether one class extension is installed and switched on.
+     *
+     * @param string $type
+     * @return bool
+     */
+    function class_extension_ready($type) {
+      if (!isset(self::EXTENSIONS[$type])) {
+        return false;
+      }
+
+      $installed = 'MODULE_'.strtoupper($type).'_INSTALLED';
+
+      if (!defined($installed) || !in_array(self::EXTENSIONS[$type]['file'], explode(';', constant($installed)), true)) {
+        return false;
+      }
+
+      $status = 'MODULE_'.strtoupper($type).'_'.strtoupper(str_replace('.php', '', self::EXTENSIONS[$type]['file'])).'_STATUS';
+
+      return (defined($status) && strtolower(trim((string)constant($status))) === 'true');
+    }
+
+    function unregister_class_extension($keep = array()) {
       foreach (self::EXTENSIONS as $type => $data) {
+        if (in_array($type, $keep, true)) {
+          continue;
+        }
+
         $extension = $this->class_extension($type);
 
         if ($extension !== false && $extension->check() > 0) {

@@ -142,10 +142,13 @@
     function usable_filename($filename) {
       $filename = (string)$filename;
 
+      // The mail trims the whole attachment path, so a name with an outer space would be looked
+      // for under a different name and silently dropped.
       return !($filename !== basename($filename)
+               || $filename !== trim($filename)
                || strpbrk($filename, ",/\\\0") !== false
                || preg_match('/[\x00-\x1F\x7F]/', $filename)
-               || trim($filename) === ''
+               || $filename === ''
                || $filename === '.'
                || $filename === '..'
                || strpos($filename, '.') === false);
@@ -225,8 +228,15 @@
 
       if (@rename($temp, $target) === false) {
         @unlink($temp);
+
         // another request may have archived the same file in the meantime
-        return (is_file($target) && hash_file('sha256', $target) === $hash);
+        if (is_file($target) && hash_file('sha256', $target) === $hash) {
+          return true;
+        }
+
+        // otherwise the write really failed and must not return false without saying why
+        $this->fail('terms', $target, 'file cannot be moved into place');
+        return false;
       }
 
       return true;
@@ -377,8 +387,15 @@
 
       if (@rename(rtrim($temp, '/'), rtrim($target, '/')) === false) {
         $this->remove_dir($temp);
+
         // another request may have created the same hash directory in the meantime
-        return (is_dir($target) && $this->read_files($target, array_keys($files)) !== false);
+        if (is_dir($target) && $this->read_files($target, array_keys($files)) !== false) {
+          return true;
+        }
+
+        // otherwise the write really failed and must not return false without saying why
+        $this->fail($type, $target, 'directory cannot be moved into place');
+        return false;
       }
 
       return true;

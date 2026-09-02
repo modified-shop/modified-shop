@@ -354,7 +354,9 @@
           return false;
         }
 
-        // a failing cache write must not stop the current request
+        // A failing cache write must not stop the current request, and the return value is
+        // deliberately not read: the archive keeps its error, get_errors() merges it, and the
+        // caller reports it after a successful label. This is the one unchecked write.
         $this->archive->cache_write($hash, $files);
       }
 

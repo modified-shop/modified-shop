@@ -63,6 +63,7 @@
         <td class="ord_table_left ord_width40">{$order_values.PRODUCTS_QTY}&nbsp;x</td>
         <td class="ord_table_left">
           <strong>{$order_values.PRODUCTS_NAME}</strong>
+          {if $order_values.GUARANTEE_TEXT_HTML}<div class="description">{$order_values.GUARANTEE_TEXT_HTML}</div>{/if}
           {if sizeof($order_values.PRODUCTS_ATTRIBUTES_ARRAY) > 0}
             <ul class="attributes_list">
               {foreach key=a_data item=attrib_data from=$order_values.PRODUCTS_ATTRIBUTES_ARRAY}
