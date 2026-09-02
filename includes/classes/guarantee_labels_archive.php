@@ -104,9 +104,17 @@
      * @return string
      */
     function hash_path($base_dir, $hash) {
-      $hash = $this->hash_dir($hash);
+      $checked = $this->hash_dir($hash);
 
-      return ($hash === '') ? '' : $base_dir.$hash.'/';
+      if ($checked === '') {
+        // reading is refused just as writing is, and both say so: a value that is not a hash
+        // means a database column carries something the module never wrote
+        $this->fail('path', (string)$hash, 'not a hash directory');
+
+        return '';
+      }
+
+      return $base_dir.$checked.'/';
     }
 
     function garan_path($hash) {

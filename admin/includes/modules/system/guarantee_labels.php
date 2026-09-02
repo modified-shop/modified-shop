@@ -744,13 +744,14 @@
         $expected['key'] = 'PRI';
       }
 
-      // A default of its own is part of the definition. Without it a row written without that
-      // column ends up with a null the module never expects, or with the wrong value. The value
-      // is read from the original definition, not from the upper case copy the keywords use.
+      // The default is always compared, not only where the definition names one. A column
+      // declared without a DEFAULT clause has none, and the database reports null for it; a
+      // column that carries one anyway would prefill new rows with a value the module never
+      // meant, for example a duration of 0.0 that its own diagnosis then reports.
+      $expected['default'] = null;
+
       if (preg_match("/DEFAULT\s+'([^']*)'/i", $column['definition'], $match)) {
         $expected['default'] = $match[1];
-      } elseif (preg_match('/DEFAULT\s+NULL/i', $column['definition'])) {
-        $expected['default'] = null;
       }
 
       return $expected;
