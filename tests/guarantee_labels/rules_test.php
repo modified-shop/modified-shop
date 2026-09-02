@@ -175,6 +175,50 @@ foreach ($files as $path) {
 }
 ok('geleert heisst gemeldet', count($treffer) === 0, implode("\n        ", $treffer));
 
+echo "\n== Nachgeladene Grafiken bekommen eigene Namen ==\n";
+// Der Browser holt das volle Label per fetch und setzt es mit innerHTML ein. Die Vorlagen tragen
+// generische Namen wie cls-1 und clippath-6; zwei Label in einem Dokument teilten sie sich sonst,
+// und ein Clip-Pfad des einen wirkte auf das andere.
+$js = $repo.'/images/guarantee_labels/guarantee_labels.js';
+ok('Skript vorhanden', is_file($js));
+
+$quelle = is_file($js) ? file_get_contents($js) : '';
+ok('eine Praefixfunktion existiert', strpos($quelle, 'function prefixSvg') !== false);
+ok('sie wird beim Einsetzen verwendet', preg_match('/innerHTML\s*=\s*prefixSvg\(/', $quelle) === 1);
+ok('kein ungefiltertes innerHTML fuer geholtes svg',
+   preg_match('/innerHTML\s*=\s*svg\b/', $quelle) === 0);
+
+// Wo node vorhanden ist, wird die Funktion tatsaechlich zweimal auf die echte Vorlage angewandt.
+$node = trim((string)shell_exec('command -v node 2>/dev/null'));
+
+if ($node === '') {
+  echo "  --    kein node, die Wirkung wird nicht ausgefuehrt\n";
+} else {
+  $pruefer = <<<'JS'
+const fs = require('fs');
+const src = fs.readFileSync(process.argv[2], 'utf8');
+const body = src.slice(src.indexOf('var prefixCounter'), src.indexOf('function hasColorbox'));
+const prefixSvg = new Function(body + 'return prefixSvg;')();
+const svg = fs.readFileSync(process.argv[3], 'utf8');
+const a = prefixSvg(svg), b = prefixSvg(svg);
+const ids = (s) => [...s.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]);
+const gemeinsam = ids(a).filter(i => ids(b).includes(i));
+const roh = (a.match(/[^-]cls-\d+/g) || []).length;
+console.log(JSON.stringify({ids: ids(a).length, gemeinsam: gemeinsam.length, roh: roh}));
+JS;
+  $datei = sys_get_temp_dir().'/garan_prefix_check_'.getmypid().'.js';
+  file_put_contents($datei, $pruefer);
+  $ausgabe = shell_exec(escapeshellcmd($node).' '.escapeshellarg($datei).' '
+                        .escapeshellarg($js).' '
+                        .escapeshellarg($repo.'/images/guarantee_labels/assets/garan_label_colour.svg').' 2>&1');
+  @unlink($datei);
+  $ergebnis = json_decode(trim((string)$ausgabe), true);
+
+  ok('die Vorlage traegt ueberhaupt IDs', is_array($ergebnis) && $ergebnis['ids'] > 0, trim((string)$ausgabe));
+  ok('zwei Label teilen keine ID', is_array($ergebnis) && $ergebnis['gemeinsam'] === 0, trim((string)$ausgabe));
+  ok('keine Klasse ohne Praefix', is_array($ergebnis) && $ergebnis['roh'] === 0, trim((string)$ausgabe));
+}
+
 echo "\n----------------------------------------\n";
 echo "bestanden: $pass   fehlgeschlagen: $fail\n";
 exit($fail > 0 ? 1 : 0);

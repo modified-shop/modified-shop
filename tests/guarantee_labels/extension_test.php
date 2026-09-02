@@ -62,6 +62,11 @@ function xtc_button($t) { return $t; } function xtc_button_link($t, $l) { return
 function xtc_db_query($sql) {
   $sql = preg_replace('/\s+/', ' ', trim($sql));
   db::$log[] = $sql;
+  // die Abfrage von update_set_function(): liefert eine Zeile, wenn der gespeicherte Ausdruck abweicht
+  if (preg_match("/^SELECT configuration_id FROM configuration WHERE configuration_key = '(.*)' AND set_function != '(.*)'$/i", $sql, $m)) {
+    $vorhanden = isset($GLOBALS['set_functions'][$m[1]]) ? $GLOBALS['set_functions'][$m[1]] : null;
+    return ($vorhanden !== null && $vorhanden !== $m[2]) ? array(array('configuration_id' => 1)) : array();
+  }
   if (preg_match("/^SELECT configuration_(?:id|value) FROM configuration WHERE configuration_key = '(.*)'$/i", $sql, $m)) {
     return isset(db::$config[$m[1]]) ? array(array('configuration_value' => db::$config[$m[1]], 'configuration_id' => 1)) : array();
   }
@@ -142,6 +147,10 @@ function xtc_db_fetch_array(&$r) {
   return is_array($row) ? $row : array();
 }
 function xtc_db_perform($table, $data, $action = 'insert', $where = '') {
+  if ($action == 'update' && isset($data['set_function']) && preg_match("/configuration_key = '(.*)'/", $where, $m)) {
+    $GLOBALS['set_functions'][$m[1]] = $data['set_function'];
+    return;
+  }
   if ($action == 'update' && preg_match("/configuration_key = '(.*)'/", $where, $m)) {
     db::$config[$m[1]] = $data['configuration_value'];
   } else {
@@ -150,6 +159,7 @@ function xtc_db_perform($table, $data, $action = 'insert', $where = '') {
 }
 class stack { public $msgs = array(); function add_session($t, $c = 'info') { $this->msgs[] = $c; } }
 $messageStack = new stack();
+$GLOBALS['set_functions'] = array();
 
 require REPO.'admin/includes/modules/system/guarantee_labels.php';
 require REPO.'admin/includes/modules/categories/guarantee_labels_product.php';
@@ -222,6 +232,36 @@ ok('Registrierung wiederhergestellt', db::$config['MODULE_CATEGORIES_INSTALLED']
 ok('Listing-Registrierung wiederhergestellt', db::$config['MODULE_PRODUCT_INSTALLED'] === 'guarantee_labels_listing.php', db::$config['MODULE_PRODUCT_INSTALLED']);
 ok('Bestell-Registrierung wiederhergestellt', db::$config['MODULE_ORDER_INSTALLED'] === 'guarantee_labels_order.php', db::$config['MODULE_ORDER_INSTALLED']);
 ok('Modulstatus unveraendert', db::$config['MODULE_GUARANTEE_LABELS_STATUS'] === 'true');
+
+echo "\n== Die B2B-Auswahl bietet die Adminguppe nicht an ==\n";
+// Gruppe 0 ist die Verwaltung, keine Kundengruppe. Sie anzubieten hiesse ein Kaestchen zeigen,
+// das save_b2b_customers_status() beim Speichern wieder verwirft.
+$ausdruck = $m->b2b_set_function();
+ok('Auswahlliste filtert Gruppe 0', strpos($ausdruck, 'array_diff_key') !== false, $ausdruck);
+ok('sie endet fuer den eval-Aufruf richtig', substr(trim($ausdruck), -1) === ',', $ausdruck);
+
+// so wertet admin/module_export.php den gespeicherten Ausdruck aus
+function xtc_get_customers_statuses() {
+  return array(0 => array('id' => 0, 'text' => 'Admin'),
+               1 => array('id' => 1, 'text' => 'Endkunde'),
+               2 => array('id' => 2, 'text' => 'Stammkunde'));
+}
+function xtc_cfg_multi_checkbox($format, $separator, $checked, $key = '') {
+  $format_array = (!is_array($format) && function_exists($format)) ? (array)$format() : (array)$format;
+  $ids = array();
+  foreach ($format_array as $k => $v) { $ids[] = isset($v['id']) ? $v['id'] : $k; }
+  return implode(',', $ids);
+}
+eval('$angeboten = '.$ausdruck."'', 'KEY');");
+ok('nur echte Kundengruppen im Kaestchen', $angeboten === '1,2', $angeboten);
+
+echo "\n== update() zieht eine alte Auswahlliste nach ==\n";
+db::$config['MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS'] = '';
+$GLOBALS['set_functions'] = array('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS' => 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses\', \'chr(44)\',');
+$m->update();
+ok('alter Ausdruck ersetzt', isset($GLOBALS['set_functions']['MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS'])
+   && strpos($GLOBALS['set_functions']['MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS'], 'array_diff_key') !== false,
+   $GLOBALS['set_functions']['MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS']);
 
 echo "\n== update() repariert einen abgeschalteten Status ==\n";
 // Die Modullader lesen den Status jeder Erweiterung. Steht er auf false, fehlen Listenlabel,

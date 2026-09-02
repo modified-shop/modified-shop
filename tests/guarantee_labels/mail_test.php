@@ -334,6 +334,23 @@ guarantee_labels_snapshot_failures();
 ok('fehlendes Hinweisarchiv ohne Hinweis', guarantee_labels_order_notice(6301) === false);
 ok('auch das wird gesammelt', count(guarantee_labels_snapshot_failures()) > 0);
 
+echo "\n== Cachefehler nimmt den Hinweis nicht weg ==\n";
+// Das Archiv wird gelesen, nur die Kopie in den Cache scheitert. Text und Link sind historisch
+// und muessen trotzdem hinausgehen; nur Grafik und Schaltflaeche entfallen.
+$cache_notice = $root.'/cache/guarantee_labels';
+@mkdir($cache_notice, 0777, true);
+// eine vorhandene Kopie wuerde den Schreibvorgang ueberspringen und den Test wertlos machen
+foreach (glob($cache_notice.'/'.$hash.'/*') as $datei) { @unlink($datei); }
+@rmdir($cache_notice.'/'.$hash);
+@chmod($cache_notice, 0555);
+$teile = guarantee_labels_order_notice_parts(4711);
+@chmod($cache_notice, 0777);
+ok('die Kopie ist tatsaechlich gescheitert', !is_file($cache_notice.'/'.$hash.'/notice.svg'));
+ok('Hinweis trotz Cachefehler erzeugt', is_array($teile), var_export($teile, true));
+ok('Text bleibt erhalten', is_array($teile) && strpos($teile['body'], 'guarantee-notice__text') !== false);
+ok('Link bleibt erhalten', is_array($teile) && strpos($teile['body'], 'guarantee-notice__link') !== false);
+ok('keine Schaltflaeche ohne Cachedatei', is_array($teile) && strpos($teile['body'], 'guarantee-notice__open') === false);
+
 echo "\n== Hinweis nur bei Ware ==\n";
 // 5002 ist rein digital, Mail und Kundenansicht lesen beide durch dieselbe Funktion
 ok('rein digitale Bestellung ohne Hinweis', guarantee_labels_order_notice(5002) === false);

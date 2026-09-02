@@ -171,6 +171,13 @@ foreach (array('inc', 'includes', 'lang') as $guarantee_labels_part) {
 guarantee_labels_test_link($guarantee_labels_repo.'/images/guarantee_labels/fonts',
                            $guarantee_labels_shop.'/images/guarantee_labels/fonts');
 
+// The renderer checks the browser side as well: without style sheet and script the label stays
+// unstyled and the overlay cannot open, so an incomplete package must not report itself ready.
+foreach (array('guarantee_labels.css', 'guarantee_labels.js') as $guarantee_labels_browser_file) {
+  guarantee_labels_test_link($guarantee_labels_repo.'/images/guarantee_labels/'.$guarantee_labels_browser_file,
+                             $guarantee_labels_shop.'/images/guarantee_labels/'.$guarantee_labels_browser_file);
+}
+
 // the stub templates, copied so a test may replace one to provoke a failure
 if (!is_dir($guarantee_labels_shop.'/images/guarantee_labels/assets')) {
   mkdir($guarantee_labels_shop.'/images/guarantee_labels/assets', 0777, true);

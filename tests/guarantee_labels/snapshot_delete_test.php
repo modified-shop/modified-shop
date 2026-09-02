@@ -52,14 +52,23 @@ function deletes() {
 
 echo "== Geloeschte Bestellposition ==\n";
 $GLOBALS['queries'] = array();
-guarantee_labels_product_snapshot_delete(99);
+guarantee_labels_product_snapshot_delete(4711, 99);
 $d = deletes();
 ok('eine Loeschabfrage', count($d) === 1, print_r($d, true));
-ok('richtige Tabelle und Schluessel', isset($d[0]) && strpos($d[0], "orders_products_guarantee WHERE orders_products_id = '99'") !== false, isset($d[0]) ? $d[0] : '');
+// Bestellung und Position kommen beide aus der Anfrage. Der Kern loescht die Position selbst mit
+// beiden Spalten; dieser Haken laeuft vorher und muss genauso eng sein, sonst nimmt ein falsches
+// Paar den Snapshot einer fremden Bestellung mit, waehrend deren Position stehen bleibt.
+ok('nach Bestellung und Position geloescht',
+   isset($d[0]) && strpos($d[0], "orders_products_guarantee WHERE orders_id = '4711' AND orders_products_id = '99'") !== false,
+   isset($d[0]) ? $d[0] : '');
 
 $GLOBALS['queries'] = array();
-guarantee_labels_product_snapshot_delete(0);
+guarantee_labels_product_snapshot_delete(4711, 0);
 ok('ohne Positionsnummer keine Abfrage', count(deletes()) === 0);
+
+$GLOBALS['queries'] = array();
+guarantee_labels_product_snapshot_delete(0, 99);
+ok('ohne Bestellnummer keine Abfrage', count(deletes()) === 0);
 
 echo "\n== Ohne installiertes Modul ==\n";
 $GLOBALS['tables'] = array();
@@ -86,7 +95,7 @@ exec(escapeshellcmd(PHP_BINARY).' -r '.escapeshellarg('
   function xtc_db_fetch_array(&$r) { return array_shift($r); }
   function xtc_db_num_rows($r) { return count($r); }
   require DIR_FS_INC."guarantee_labels_snapshot.inc.php";
-  guarantee_labels_product_snapshot_delete(99);
+  guarantee_labels_product_snapshot_delete(4711, 99);
   $deletes = array_filter($GLOBALS["q"], function ($s) { return strpos($s, "DELETE") === 0; });
   echo count($deletes);
 ').' 2>&1', $out);

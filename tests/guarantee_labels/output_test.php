@@ -196,9 +196,19 @@ $mixed = guarantee_labels_notice('mixed');
 ok('gemischter Warenkorb zeigt den Hinweis', strpos($mixed, 'guarantee-notice') !== false);
 ok('gemischter Warenkorb ordnet ihn zu', strpos($mixed, 'guarantee-notice__mixed') !== false);
 ok('nur digitale Inhalte ohne Hinweis', guarantee_labels_notice('virtual') === '');
+// Die Grafik illustriert den Hinweis, sie ist nicht der Hinweis. Fehlt sie, gehen Text und Link
+// trotzdem hinaus: ein fehlendes Bild darf keine gesetzlich geforderte Angabe von der Seite
+// nehmen. Nur die Schaltflaeche entfaellt, sie wuerde einen leeren Dialog oeffnen.
 $_SESSION['language'] = 'klingonisch';
-ok('Sprache ohne Grafik ohne Hinweis', guarantee_labels_notice(false) === '');
+$ohne_grafik = guarantee_labels_notice(false);
+ok('Sprache ohne Grafik behaelt den Hinweis', strpos($ohne_grafik, 'guarantee-notice') !== false);
+ok('der Text steht drin', strpos($ohne_grafik, 'guarantee-notice__text') !== false);
+ok('der Link steht drin', strpos($ohne_grafik, 'guarantee-notice__link') !== false);
+ok('keine Schaltflaeche ohne Grafik', strpos($ohne_grafik, 'guarantee-notice__open') === false);
+ok('kein leerer Dialog', strpos($ohne_grafik, '<dialog') === false);
 $_SESSION['language'] = 'german';
+$mit_grafik = guarantee_labels_notice(false);
+ok('mit Grafik erscheint die Schaltflaeche', strpos($mit_grafik, 'guarantee-notice__open') !== false);
 $parts = guarantee_labels_notice_parts(false);
 ok('Bestandteile getrennt abrufbar', is_array($parts) && isset($parts['title'], $parts['body']));
 ok('Titel ohne Markup', strpos($parts['title'], '<') === false);

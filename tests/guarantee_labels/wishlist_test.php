@@ -104,16 +104,22 @@ if ($mode === 'modul_aus') {
 ok('kompaktes Label erzeugt', strpos($module_data[0]['GUARANTEE_LABEL'], 'guarantee-label__compact') !== false);
 ok('Herstellername im Label', strpos($module_data[0]['GUARANTEE_LABEL'], 'ACME GmbH') !== false);
 
-// Der ganze Block liegt vor, also darf nicht je Position eine Herstellerabfrage entstehen.
+// Der Kern ruft den Haken INNERHALB seiner Schleife auf: $module_data traegt beim ersten
+// Aufruf nur die erste Position. $products liegt dagegen vor der Schleife vollstaendig vor.
+// Der Test bildet genau diese Reihenfolge nach, sonst prueft er eine Annahme statt den Kern.
 $GLOBALS['man'] = array(11 => 'A GmbH', 12 => 'B GmbH', 13 => 'C GmbH');
+$products = array(
+  array('id' => '2', 'manufacturers_id' => 11),
+  array('id' => '3', 'manufacturers_id' => 12),
+  array('id' => '4', 'manufacturers_id' => 13),
+);
 $module_data = array();
-foreach (array(11, 12, 13) as $n => $mid) {
-  $module_data[$n] = eintrag((string)($n + 1));
-  $module_data[$n]['PRODUCTS_MANUFACTURERS_ID'] = $mid;
-}
 $GLOBALS['queries'] = 0;
-$guarantee_labels_collected = null; unset($guarantee_labels_collected);
-for ($i = 0; $i < 3; $i++) {
+unset($guarantee_labels_collected);
+for ($i = 0, $n = count($products); $i < $n; $i++) {
+  // erst hier entsteht die Zeile, so wie es der Kern macht
+  $module_data[$i] = eintrag($products[$i]['id']);
+  $module_data[$i]['PRODUCTS_MANUFACTURERS_ID'] = $products[$i]['manufacturers_id'];
   require $root.'/includes/extra/modules/wishlist_content/guarantee_labels.php';
 }
 ok('drei Hersteller in einer Abfrage geladen', $GLOBALS['queries'] <= 4, 'Abfragen: '.$GLOBALS['queries']);
@@ -122,6 +128,7 @@ ok('alle drei bekommen ihr Label',
    && strpos($module_data[1]['GUARANTEE_LABEL'], 'B GmbH') !== false
    && strpos($module_data[2]['GUARANTEE_LABEL'], 'C GmbH') !== false);
 $i = 0;
+unset($products, $guarantee_labels_collected);
 $GLOBALS['man'] = array(1 => 'ACME GmbH');
 
 // ohne GARAN-Daten kein Label
