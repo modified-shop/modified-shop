@@ -125,6 +125,32 @@
       return $this->hash_path($this->notice_dir, $hash);
     }
 
+    /**
+     * Whether a file name may be used for an archived attachment.
+     *
+     * The one place this is decided. Writing asks through guarantee_labels_terms_filename(),
+     * reading asks here directly; a rule kept in two places drifts apart, and a name that was
+     * refused on the way in must not be built into a path on the way out.
+     *
+     * A path part would leave the archive directory. A comma would split the attachment list of
+     * the mail, which check_attachments() explodes on commas. A control character would break
+     * the mail header. Without an extension the recipient cannot open the file.
+     *
+     * @param string $filename
+     * @return bool
+     */
+    function usable_filename($filename) {
+      $filename = (string)$filename;
+
+      return !($filename !== basename($filename)
+               || strpbrk($filename, ",/\\\0") !== false
+               || preg_match('/[\x00-\x1F\x7F]/', $filename)
+               || trim($filename) === ''
+               || $filename === '.'
+               || $filename === '..'
+               || strpos($filename, '.') === false);
+    }
+
     function terms_path($hash, $filename) {
       $directory = $this->hash_path($this->terms_dir, $hash);
       $filename = (string)$filename;
@@ -134,14 +160,8 @@
         return '';
       }
 
-      // The same rule the name was stored under, asked again on the way out: a path part, a comma
-      // that would split the attachment list, or a control character that would break the mail
-      // header. See guarantee_labels_terms_filename().
-      if ($filename === '' || $filename !== basename($filename)
-          || strpbrk($filename, ",/\\\0") !== false
-          || preg_match('/[\x00-\x1F\x7F]/', $filename)
-          )
-      {
+      // the same rule the name was stored under, asked again on the way out
+      if ($this->usable_filename($filename) === false) {
         $this->fail('path', $filename, 'not a usable attachment name');
 
         return '';

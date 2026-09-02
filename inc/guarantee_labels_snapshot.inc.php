@@ -387,22 +387,12 @@
    * @return mixed the plain file name, false when it cannot be used as an attachment
    */
   function guarantee_labels_terms_filename($file) {
-    $file = (string)$file;
+    require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
 
-    // a path part would leave the archive directory, the other characters break the mail path
-    if ($file !== basename($file)
-        || strpbrk($file, ",/\\\0") !== false
-        || preg_match('/[\x00-\x1F\x7F]/', $file)
-        || trim($file) === ''
-        || $file === '.'
-        || $file === '..'
-        || strpos($file, '.') === false
-        )
-    {
-      return false;
-    }
+    // one rule for writing and reading, it lives with the archive that has to honour it
+    $archive = new guarantee_labels_archive();
 
-    return $file;
+    return ($archive->usable_filename($file) === true) ? (string)$file : false;
   }
 
   /**
