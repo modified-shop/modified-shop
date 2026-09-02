@@ -54,7 +54,11 @@
       unset($_SESSION['billto']);
 
       if (isset($request['shipping_contact']) && is_array($request['shipping_contact'])) {
+        // Apple Pay / Google Pay post the wallet contact shape
         $_SESSION['paypal']['contact']['shipping_quote'] = $request['shipping_contact'];
+      } elseif (isset($request['shipping_address']) && is_array($request['shipping_address'])) {
+        // PayPal's server-side SHIPPING_OPTIONS callback posts its own address shape
+        $_SESSION['paypal']['contact']['shipping_quote'] = $paypal->callback_address_to_contact($request['shipping_address']);
       }
 
       $shipping_contact = isset($_SESSION['paypal']['contact']['shipping_quote'])

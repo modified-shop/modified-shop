@@ -1354,6 +1354,26 @@
     }
 
 
+    // maps PayPal's own callback address shape onto the wallet contact shape used by parse_contact()
+    function callback_address_to_contact($address) {
+      $contact = array(
+        'addressLines' => array(),
+        'locality' => (isset($address['admin_area_2']) ? $address['admin_area_2'] : ''),
+        'administrativeArea' => (isset($address['admin_area_1']) ? $address['admin_area_1'] : ''),
+        'postalCode' => (isset($address['postal_code']) ? $address['postal_code'] : ''),
+        'countryCode' => (isset($address['country_code']) ? $address['country_code'] : ''),
+      );
+
+      foreach (array('address_line_1', 'address_line_2') as $line_key) {
+        if (isset($address[$line_key]) && trim($address[$line_key]) != '') {
+          $contact['addressLines'][] = $address[$line_key];
+        }
+      }
+
+      return $contact;
+    }
+
+
     function apply_address_to_delivery($order, $address) {
       $address_keys = array(
         'name',
