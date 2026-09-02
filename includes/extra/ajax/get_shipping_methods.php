@@ -68,10 +68,10 @@
       $country_code = isset($shipping_contact['countryCode']) ? trim($shipping_contact['countryCode']) : '';
       $postcode = isset($shipping_contact['postalCode']) ? trim($shipping_contact['postalCode']) : '';
 
-      if ($country_code == '' || $postcode == '') {
+      // only the country is load bearing here, countries without a postal code system stay quotable
+      if ($country_code == '') {
         $paypal->LoggingManager->log('WARNING', 'Wallet get_shipping_methods aborted', array(
-          'reason' => 'incomplete shipping contact',
-          'country_code' => $country_code,
+          'reason' => 'missing country code',
           'postcode' => $postcode,
         ));
         return;
@@ -82,6 +82,13 @@
       $_SESSION['paypal']['contact']['shipping_quote'] = $shipping_contact;
 
       $shipping_address = $paypal->parse_contact($shipping_contact);
+      if (empty($shipping_address['country_id'])) {
+        $paypal->LoggingManager->log('WARNING', 'Wallet get_shipping_methods aborted', array(
+          'reason' => 'unknown country',
+          'country_code' => $shipping_contact['countryCode'],
+        ));
+        return;
+      }
       $_SESSION['country'] = $shipping_address['country_id'];
 
       if (isset($request['shipping_option'])
