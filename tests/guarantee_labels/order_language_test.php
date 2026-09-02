@@ -86,7 +86,7 @@ function xtc_db_query($sql) {
   if (strpos($sql, 'SELECT language') !== false)     { return array(array('language' => 'german')); }
   if (strpos($sql, 'SELECT content_type') !== false) { return array(array('content_type' => 'physical')); }
   if (strpos($sql, 'notice_hash') !== false)         { return array(array('notice_hash' => $notice_hash)); }
-  if (strpos($sql, 'AS downloads') !== false)        { return array(array('attributes' => '0', 'downloads' => '0')); }
+  if (strpos($sql, 'AS downloads') !== false)        { return array(array('orders_products_id' => '10', 'attributes' => '0', 'downloads' => '0')); }
   return array(array('orders_products_id' => '10', 'manufacturers_name' => 'ACME GmbH',
                      'manufacturers_model' => 'X-1', 'garan_duration' => '3.0',
                      'garan_hash' => $garan_hash, 'terms_hash' => null, 'terms_filename' => null));

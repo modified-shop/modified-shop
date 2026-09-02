@@ -28,6 +28,7 @@ define('DIR_FS_EXTERNAL', $root.'/includes/external/');
 define('TABLE_MANUFACTURERS', 'manufacturers');
 define('TABLE_ORDERS', 'orders');
 define('TABLE_ORDERS_PRODUCTS', 'orders_products');
+define('TABLE_LANGUAGES', 'languages');
 define('TABLE_PRODUCTS_ATTRIBUTES', 'products_attributes');
 define('TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD', 'products_attributes_download');
 define('TABLE_ORDERS_PRODUCTS_ATTRIBUTES', 'orders_products_attributes');
@@ -36,6 +37,10 @@ define('TABLE_ORDERS_GUARANTEE', 'orders_guarantee');
 define('TABLE_ORDERS_PRODUCTS_GUARANTEE', 'orders_products_guarantee');
 define('TABLE_PRODUCTS_CONTENT', 'products_content');
 define('MODULE_GUARANTEE_LABELS_STATUS', 'true');
+define('DOWNLOAD_ENABLED', 'true');
+// der Kunde sitzt heute in einer B2B-Gruppe, seine alte Bestellung darf das nicht spueren
+define('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '3');
+$_SESSION['customers_status'] = array('customers_status_id' => 3);
 $_SESSION['language_charset'] = 'UTF-8';
 // derselbe Pfad, den der Produktivcode nimmt, sonst laedt require_once die Datei zweimal
 require_once $root.'/inc/html_encoding.php';
@@ -109,6 +114,7 @@ function xtc_db_query($sql) {
   $GLOBALS['sql_log'][] = $sql;
   preg_match("/orders_id = '(\d+)'/", $sql, $m);
   $oid = isset($m[1]) ? (int)$m[1] : 0;
+  if (strpos($sql, 'SELECT code') !== false)     return array(array('code' => 'de'));
   if (strpos($sql, 'SELECT language') !== false) {
     return array(array('language' => 'german'));
   }
@@ -117,13 +123,22 @@ function xtc_db_query($sql) {
     return array(array('content_type' => isset($GLOBALS['content_types'][$oid]) ? $GLOBALS['content_types'][$oid] : ''));
   }
   if (strpos($sql, 'AS downloads') !== false) {
-    return isset($GLOBALS['download_rows'][$oid]) ? $GLOBALS['download_rows'][$oid] : array();
+    if (isset($GLOBALS['download_rows'][$oid])) {
+      return $GLOBALS['download_rows'][$oid];
+    }
+    // ohne eigene Angabe traegt jede Snapshotzeile eine koerperliche Position
+    $rows = array();
+    foreach (isset($GLOBALS['product_rows'][$oid]) ? $GLOBALS['product_rows'][$oid] : array() as $row) {
+      $rows[] = array('orders_products_id' => $row['orders_products_id'], 'attributes' => '0', 'downloads' => '0');
+    }
+    return $rows;
   }
   if (strpos($sql, 'notice_hash') !== false) {
     return isset($GLOBALS['notice_rows'][$oid]) ? array(array('notice_hash' => $GLOBALS['notice_rows'][$oid])) : array();
   }
   return isset($GLOBALS['product_rows'][$oid]) ? $GLOBALS['product_rows'][$oid] : array();
 }
+function xtc_db_input($v) { return addslashes($v); }
 function xtc_db_fetch_array(&$r) { return array_shift($r); }
 function xtc_db_num_rows($r) { return count($r); }
 
@@ -135,7 +150,8 @@ function ok($n, $c, $e = '') { global $pass, $fail; if ($c) { $pass++; echo "  o
 echo "== Positionen der Bestellung ==\n";
 $GLOBALS['queries'] = 0;
 $products = guarantee_labels_order_products(4711);
-ok('eine Abfrage fuer die ganze Bestellung', $GLOBALS['queries'] === 1, 'Abfragen: '.$GLOBALS['queries']);
+// drei feste Abfragen fuer die ganze Bestellung: Snapshots, Art der Positionen, content_type
+ok('feste Abfragezahl fuer die ganze Bestellung', $GLOBALS['queries'] === 3, 'Abfragen: '.$GLOBALS['queries']);
 ok('nach Positionsnummer geschluesselt', isset($products[10], $products[11], $products[12]));
 ok('historische Werte', $products[10]['manufacturers_name'] === 'ACME GmbH' && $products[10]['garan_duration'] === '3.0');
 $GLOBALS['queries'] = 0;
@@ -197,6 +213,16 @@ ok('Ueberschrift ohne Entities', strpos($smarty->vars['GUARANTEE_NOTICE_HEADING_
 ok('keine Grafik in der Mail', strpos($smarty->vars['GUARANTEE_NOTICE_HTML'], 'notice.svg') === false && strpos($smarty->vars['GUARANTEE_NOTICE_HTML'], '<img') === false);
 ok('Anhang ergaenzt', strpos($email_attachments, $terms_dir.'garantie.pdf') !== false);
 ok('vorhandener Anhang bleibt', strpos($email_attachments, 'agb.pdf') === 0);
+
+// EMAIL_BILLING_ATTACHMENTS je Sprache: xtc_php_mail() loest erst spaeter auf, ein Anhaengen
+// an den rohen Wert landete nur im letzten Sprachabschnitt
+$smarty = new smarty_stub();
+$email_attachments = 'de::media/de.pdf||en::media/en.pdf';
+require $root.'/includes/extra/send_order/data/guarantee_labels.php';
+ok('Sprachvariante zuerst aufgeloest', strpos($email_attachments, '::') === false, $email_attachments);
+ok('deutsche Datei behalten', strpos($email_attachments, 'media/de.pdf') === 0, $email_attachments);
+ok('englische Datei nicht mitgenommen', strpos($email_attachments, 'media/en.pdf') === false, $email_attachments);
+ok('Bedingungen trotz Sprachwert angehaengt', strpos($email_attachments, $terms_dir.'garantie.pdf') !== false, $email_attachments);
 
 $order->info['order_id'] = 9999;
 $smarty = new smarty_stub();
@@ -268,6 +294,32 @@ ok('leerer content_type, gemischte Einzelposition', guarantee_labels_order_physi
 ok('entferntes Downloadattribut wirkt sofort', guarantee_labels_order_physical(6006) === true);
 ok('Einstufung fragt nur Bestelldaten', strpos(implode(' ', $GLOBALS['sql_log']), 'products_attributes_download') === false,
    'Katalogtabelle in der Abfrage');
+
+echo "\n== Position wird nachtraeglich digital ==\n";
+// Bestellung 6100: Position 10 traegt einen Snapshot, bekam im Admin aber ein Downloadattribut
+$GLOBALS['product_rows'][6100] = array(
+  array('orders_products_id' => '10', 'manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'X-1',
+        'garan_duration' => '3.0', 'garan_hash' => $garan_hash,
+        'terms_hash' => $terms_hash, 'terms_filename' => 'garantie.pdf'),
+  array('orders_products_id' => '11', 'manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'Y-2',
+        'garan_duration' => '2.0', 'garan_hash' => $garan_hash,
+        'terms_hash' => null, 'terms_filename' => null),
+);
+$GLOBALS['download_rows'][6100] = array(array('orders_products_id' => '10', 'attributes' => '1', 'downloads' => '1'),
+                                        array('orders_products_id' => '11', 'attributes' => '0', 'downloads' => '0'));
+
+ok('gespeicherte Zeile bleibt erhalten', count(guarantee_labels_order_snapshots(6100)) === 2);
+$sichtbar = guarantee_labels_order_products(6100);
+ok('digitale Position faellt heraus', !isset($sichtbar[10]) && isset($sichtbar[11]));
+ok('kein Label fuer die digitale Position', guarantee_labels_order_label(6100, 10) === '');
+ok('kein Text fuer die digitale Position', guarantee_labels_order_text(6100, 10) === false);
+ok('kein Anhang fuer die digitale Position', guarantee_labels_order_terms(6100) === array());
+
+echo "\n== Hinweis nur bei Ware ==\n";
+// 5002 ist rein digital, Mail und Kundenansicht lesen beide durch dieselbe Funktion
+ok('rein digitale Bestellung ohne Hinweis', guarantee_labels_order_notice(5002) === false);
+$GLOBALS['notice_rows'][5003] = $hash;
+ok('gemischte Bestellung mit Hinweis', is_array(guarantee_labels_order_notice(5003)));
 
 echo "\n== Bestellsprache gegen Shopsprache ==\n";
 ok('geladene Sprache wird erkannt', guarantee_labels_language('german') === true);

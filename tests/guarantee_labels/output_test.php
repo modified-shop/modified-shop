@@ -76,6 +76,20 @@ $half = guarantee_labels_product_label(p('2.5', 2), $names);
 ok('Sonderzeichen im Herstellernamen maskiert', strpos($half['colour.svg'], 'Miele &amp; Cie. KG') !== false);
 ok('halbes Jahr mit Komma', strpos($half['colour.svg'], '>2,5</tspan>') !== false);
 
+echo "\n== Cachefehler erreicht den Admin ==\n";
+// Ein fehlgeschlagener Cacheschreibvorgang haelt das Label nicht auf, darf aber nicht nur im
+// Log stehen: eine Adminaktion muss ihn ueber den messageStack melden koennen.
+require DIR_FS_INC.'guarantee_labels_snapshot.inc.php';
+guarantee_labels_snapshot_failures();
+$cache_root = $root.'/cache/guarantee_labels';
+@mkdir($cache_root, 0777, true);
+@chmod($cache_root, 0555);
+$gesperrt = guarantee_labels_product_label(p('7.0', 1), $names);
+@chmod($cache_root, 0777);
+$gemeldet = guarantee_labels_snapshot_failures();
+ok('Label trotz Cachefehler erzeugt', is_array($gesperrt) && isset($gesperrt['colour.svg']));
+ok('Cachefehler gesammelt', count($gemeldet) > 0, implode(' | ', $gemeldet));
+
 echo "\n== Markup ==\n";
 define('TEXT_GUARANTEE_LABEL_TITLE', 'EU-Haltbarkeitsgarantie');
 define('TEXT_GUARANTEE_LABEL_OPEN', 'Vollst&auml;ndiges Label anzeigen');

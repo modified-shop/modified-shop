@@ -53,17 +53,16 @@ require $root.'/inc/html_encoding.php';
 // Artikel 1 ist gemischt: Wert 5 ist ein Download, Wert 6 koerperlich.
 $GLOBALS['downloads'] = array(5);
 function xtc_db_query($sql) {
+  // die Artikelfrage: alle Attributwerte und davon die Downloads, in einer Abfrage
+  if (strpos($sql, 'AS downloads') !== false) {
+    return array(array('total' => 2, 'downloads' => count($GLOBALS['downloads'])));
+  }
+  // die Positionsfrage: wie viele der gewaehlten Werte sind Downloads
   if (strpos($sql, 'products_attributes_download') !== false) {
     preg_match_all("/'(\d+)'/", $sql, $m);
     $ids = array_map('intval', $m[1]);
     array_shift($ids); // products_id
-    if (count($ids) < 1) { // Artikelabfrage ohne Werteliste
-      return array(array('total' => count($GLOBALS['downloads'])));
-    }
     return array(array('total' => count(array_intersect($ids, $GLOBALS['downloads']))));
-  }
-  if (strpos($sql, 'FROM products_attributes') !== false) {
-    return array(array('total' => 2)); // der Artikel hat zwei Attributwerte
   }
   preg_match_all("/'(\d+)'/", $sql, $m);
   $rows = array();
@@ -82,10 +81,11 @@ $row = array('products_id' => 1, 'products_garan_duration' => '3.0', 'manufactur
              'products_manufacturers_model' => 'WAU28T20');
 
 echo "\n== $mode ==\n";
-// bei erlaubten Mehrfachdownloads gilt schon der Artikel als virtuell
-$artikel_koerperlich = ($mode !== 'mehrfach');
-ok('Artikel ohne Auswahl richtig eingestuft', guarantee_labels_candidate($row) === $artikel_koerperlich);
-ok('ohne Attribute im Warenkorb entscheidet der Artikel', guarantee_labels_candidate($row, '1') === $artikel_koerperlich);
+// Der Artikel wird ohne Auswahl gefragt: Er hat eine koerperliche Variante, gilt also als
+// gemischt und bekommt in der Liste ein Label. DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED entscheidet
+// erst fuer eine gewaehlte Kombination.
+ok('gemischter Artikel bekommt in der Liste ein Label', guarantee_labels_candidate($row) === true);
+ok('ohne Attribute im Warenkorb entscheidet der Artikel', guarantee_labels_candidate($row, '1') === true);
 ok('gewaehlte koerperliche Variante behaelt das Label', guarantee_labels_candidate($row, '1{1}6') === true);
 
 if ($mode === 'downloads_aus') {
@@ -105,6 +105,27 @@ if ($mode === 'einzeln') {
 ok('Position ohne GARAN-Daten bleibt ohne Label',
    guarantee_labels_candidate(array('products_id' => 1, 'products_garan_duration' => null,
                                     'manufacturers_id' => 1, 'products_manufacturers_model' => 'X'), '1{1}6') === false);
+
+// Der fruehere Fehler entstand nicht in guarantee_labels_candidate(), sondern erst danach:
+// guarantee_labels_product_label() fragte ohne Warenkorbkennung noch einmal und fiel dabei auf
+// den Artikel zurueck. Der Weg bis zur fertigen Grafik muss deshalb mitgeprueft werden.
+echo "\n-- ueber guarantee_labels_product_label() --\n";
+$names = guarantee_labels_manufacturer_names(array(1));
+
+ok('Artikel ohne Auswahl liefert ein Label', is_array(guarantee_labels_product_label($row, $names)));
+ok('gewaehlte koerperliche Variante liefert ein Label', is_array(guarantee_labels_product_label($row, $names, '1{1}6')));
+
+if ($mode === 'downloads_aus') {
+  ok('ohne Downloads liefert jede Variante ein Label', is_array(guarantee_labels_product_label($row, $names, '1{1}5')));
+} else {
+  ok('reine Downloadvariante liefert kein Label', guarantee_labels_product_label($row, $names, '1{1}5') === false);
+}
+
+if ($mode === 'mehrfach') {
+  ok('gemischte Auswahl liefert kein Label', guarantee_labels_product_label($row, $names, '1{1}5{2}6') === false);
+} else {
+  ok('gemischte Auswahl liefert ein Label', is_array(guarantee_labels_product_label($row, $names, '1{1}5{2}6')));
+}
 
 echo "\n----------------------------------------\nbestanden: $pass   fehlgeschlagen: $fail\n";
 exit($fail > 0 ? 1 : 0);

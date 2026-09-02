@@ -27,6 +27,9 @@ define('TABLE_MANUFACTURERS', 'manufacturers');
 define('TABLE_ORDERS', 'orders');
 define('TABLE_ORDERS_GUARANTEE', 'orders_guarantee');
 define('TABLE_ORDERS_PRODUCTS_GUARANTEE', 'orders_products_guarantee');
+define('TABLE_ORDERS_PRODUCTS', 'orders_products');
+define('TABLE_ORDERS_PRODUCTS_ATTRIBUTES', 'orders_products_attributes');
+define('TABLE_ORDERS_PRODUCTS_DOWNLOAD', 'orders_products_download');
 define('TABLE_PRODUCTS_CONTENT', 'products_content');
 define('MODULE_GUARANTEE_LABELS_STATUS', 'true');
 $_SESSION['language_charset'] = 'UTF-8';
@@ -44,6 +47,8 @@ function xtc_db_query($sql) {
     return in_array(str_replace('\\_', '_', $m[1]), $GLOBALS['tables'], true) ? array(array(1)) : array();
   }
   if (strpos($sql, 'SELECT language') !== false) return array(array('language' => 'german'));
+  // Position 10 ist Ware: keine Downloadzeile
+  if (strpos($sql, 'AS downloads') !== false) return array(array('orders_products_id' => '10', 'attributes' => 0, 'downloads' => 0));
   return array(array('orders_products_id' => '10', 'manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'WAU28T20',
                      'garan_duration' => '3.0', 'garan_hash' => str_repeat('c', 64), 'terms_hash' => null, 'terms_filename' => null));
 }

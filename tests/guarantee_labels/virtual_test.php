@@ -52,13 +52,18 @@ $_SESSION['language_charset'] = 'UTF-8';
 // Artikel 1: nur Downloads, Artikel 2: Downloads und normale Attribute, Artikel 3: keine
 $GLOBALS['attributes'] = array(1 => array('download' => 2, 'total' => 2),
                                2 => array('download' => 1, 'total' => 3),
-                               3 => array('download' => 0, 'total' => 0));
+                               3 => array('download' => 0, 'total' => 0),
+                               4 => array('download' => 1, 'total' => 3));
 $GLOBALS['queries'] = 0;
 function xtc_db_query($sql) {
   $GLOBALS['queries']++;
   preg_match("/products_id = '(\d+)'/", $sql, $m);
   $id = isset($m[1]) ? (int)$m[1] : 0;
   $a = isset($GLOBALS['attributes'][$id]) ? $GLOBALS['attributes'][$id] : array('download' => 0, 'total' => 0);
+  // die Artikelfrage liefert beide Zahlen in einer Abfrage
+  if (strpos($sql, 'AS downloads') !== false) {
+    return array(array('total' => $a['total'], 'downloads' => $a['download']));
+  }
   return array(array('total' => (strpos($sql, 'ATTRIBUTES_DOWNLOAD') !== false || strpos($sql, 'products_attributes_download') !== false) ? $a['download'] : $a['total']));
 }
 function xtc_db_fetch_array(&$r) { return array_shift($r); }
@@ -68,6 +73,9 @@ require $repo.'/inc/guarantee_labels_output.inc.php';
 
 $pass = 0; $fail = 0;
 function ok($n, $c, $e = '') { global $pass, $fail; if ($c) { $pass++; echo "  ok    $n\n"; } else { $fail++; echo "  FAIL  $n".($e!==''?"  ($e)":'')."\n"; } }
+class glt_price_stub {
+  function get_content_type_product($products_id) { $GLOBALS['xtPrice_asked'] = true; return 'virtual'; }
+}
 function p($id) {
   return array('products_id' => $id, 'products_garan_duration' => '3.0', 'manufacturers_id' => 1, 'products_manufacturers_model' => 'X-1');
 }
@@ -89,8 +97,15 @@ if ($mode === 'downloads_aus') {
   ok('Ergebnis wird gepuffert', $GLOBALS['queries'] === 0);
   ok('ohne Artikelnummer bleibt Ware', guarantee_labels_product_physical(0) === true);
 } else {
-  ok('ein Download genuegt fuer virtuell', guarantee_labels_product_physical(2) === false);
+  // Mehrfachdownloads aendern nichts an der Artikelfrage, sie entscheiden erst die Auswahl
+  ok('nur Downloads bleibt virtuell', guarantee_labels_product_physical(1) === false);
+  ok('gemischt bleibt Ware', guarantee_labels_product_physical(2) === true);
   ok('ohne Download bleibt Ware', guarantee_labels_product_physical(3) === true);
+
+  // xtcPrice faltet die Einstellung in den Artikel und wuerde 2 als virtuell melden
+  $GLOBALS['xtPrice_asked'] = false;
+  $xtPrice = new glt_price_stub();
+  ok('Preisobjekt wird nicht gefragt', guarantee_labels_product_physical(4) === true && $GLOBALS['xtPrice_asked'] === false);
 }
 
 echo "\nbestanden: $pass   fehlgeschlagen: $fail\n";

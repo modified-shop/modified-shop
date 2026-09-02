@@ -87,6 +87,34 @@ ok('Steuerzeichen abgelehnt',      guarantee_labels_terms_filename("garantie\n.p
 ok('leerer Name abgelehnt',        guarantee_labels_terms_filename('') === false);
 ok('ohne Endung abgelehnt',        guarantee_labels_terms_filename('garantie') === false);
 ok('Umlaut bleibt erlaubt',        guarantee_labels_terms_filename('garantie_äöü.pdf') === 'garantie_äöü.pdf');
+// der Mailversand schneidet den ganzen Anhangspfad, ein Randleerzeichen liesse ihn ins Leere laufen
+ok('Leerzeichen am Ende abgelehnt',  guarantee_labels_terms_filename('garantie.pdf ') === false);
+ok('Leerzeichen am Anfang abgelehnt', guarantee_labels_terms_filename(' garantie.pdf') === false);
+ok('Leerzeichen in der Mitte erlaubt', guarantee_labels_terms_filename('garantie 2026.pdf') === 'garantie 2026.pdf');
+
+echo "\n== Dateityp des Anhangs ==\n";
+$upload_dir = $root.'/upload/';
+@mkdir($upload_dir, 0777, true);
+file_put_contents($upload_dir.'garantie.pdf', "%PDF-1.4\n1 0 obj\n<</Type/Catalog>>\nendobj\ntrailer\n<</Root 1 0 R>>\n%%EOF\n");
+file_put_contents($upload_dir.'garantie.txt', "Garantiebedingungen\n");
+file_put_contents($upload_dir.'schad.php', "<?php echo 'x';\n");
+
+ok('ohne Typliste nichts angenommen', guarantee_labels_terms_accepted('garantie.pdf', $upload_dir.'garantie.pdf') === false);
+
+define('DIR_FS_ADMIN', $repo.'/admin/');
+ok('PDF angenommen',   guarantee_labels_terms_accepted('garantie.pdf', $upload_dir.'garantie.pdf') === true);
+ok('Text angenommen',  guarantee_labels_terms_accepted('garantie.txt', $upload_dir.'garantie.txt') === true);
+ok('Skript abgelehnt', guarantee_labels_terms_accepted('schad.php', $upload_dir.'schad.php') === false);
+// Endung und Inhalt muessen zusammenpassen
+ok('Skript mit PDF-Endung abgelehnt', guarantee_labels_terms_accepted('schad.pdf', $upload_dir.'schad.php') === false);
+ok('PDF mit Skriptendung abgelehnt',  guarantee_labels_terms_accepted('garantie.php', $upload_dir.'garantie.pdf') === false);
+// alles, was am Artikel als Anhang zulaessig ist, muss auch in der Bestellung ersetzbar sein
+$zip = $upload_dir.'garantie.zip';
+$z = new ZipArchive();
+$z->open($zip, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+$z->addFromString('garantie.txt', 'Garantiebedingungen');
+$z->close();
+ok('ZIP angenommen', guarantee_labels_terms_accepted('garantie.zip', $zip) === true);
 
 echo "\n== Hinweis-Hash ==\n";
 $hash = guarantee_labels_notice_hash('german');

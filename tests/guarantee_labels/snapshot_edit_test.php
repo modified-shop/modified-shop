@@ -30,20 +30,44 @@ define('TABLE_ORDERS_GUARANTEE', 'orders_guarantee');
 define('TABLE_ORDERS_PRODUCTS_GUARANTEE', 'orders_products_guarantee');
 define('TABLE_PRODUCTS', 'products');
 define('TABLE_ORDERS_PRODUCTS', 'orders_products');
+define('TABLE_ORDERS_PRODUCTS_ATTRIBUTES', 'orders_products_attributes');
+define('TABLE_ORDERS_PRODUCTS_DOWNLOAD', 'orders_products_download');
 define('TABLE_PRODUCTS_CONTENT', 'products_content');
 define('MODULE_GUARANTEE_LABELS_STATUS', 'true');
+define('DOWNLOAD_ENABLED', 'true');
 $_SESSION['language_charset'] = 'UTF-8';
 require $repo.'/inc/html_encoding.php';
 require $repo.'/lang/german/extra/admin/guarantee_labels.php';
 
 $GLOBALS['rows'] = array();
+$GLOBALS['content_types'] = array();
 $GLOBALS['existing'] = array();
+// die gespeicherten Snapshotzeilen je Bestellung, nach Position
+$GLOBALS['snapshot_rows'] = array();
 function xtc_db_query($sql) {
+  if (strpos($sql, 'SHOW TABLES LIKE') === 0) {
+    return array(array(1));
+  }
+  if (strpos($sql, 'manufacturers_name') !== false && strpos($sql, 'SELECT') === 0) {
+    preg_match("/orders_id = '(\d+)'/", $sql, $m);
+    $oid = isset($m[1]) ? (int)$m[1] : 0;
+    return isset($GLOBALS['snapshot_rows'][$oid]) ? $GLOBALS['snapshot_rows'][$oid] : array();
+  }
   if (strpos($sql, 'orders_products_guarantee_id') !== false) {
     preg_match("/orders_products_id = '(\d+)'/", $sql, $m);
     return isset($GLOBALS['existing'][(int)$m[1]]) ? array(array('orders_products_guarantee_id' => 1)) : array();
   }
   if (strpos($sql, 'orders_status') !== false) return array(array('orders_status' => 2));
+  if (strpos($sql, 'SELECT content_type') !== false) {
+    preg_match("/orders_id = '(\d+)'/", $sql, $m);
+    $oid = isset($m[1]) ? (int)$m[1] : 0;
+    return array(array('content_type' => isset($GLOBALS['content_types'][$oid]) ? $GLOBALS['content_types'][$oid] : ''));
+  }
+  // 10 und 11 sind Ware, 20 ist ein reiner Download, 30 ist gemischt
+  if (strpos($sql, 'AS downloads') !== false) return array(array('orders_products_id' => 10, 'attributes' => 0, 'downloads' => 0),
+                                                           array('orders_products_id' => 11, 'attributes' => 0, 'downloads' => 0),
+                                                           array('orders_products_id' => 20, 'attributes' => 1, 'downloads' => 1),
+                                                           array('orders_products_id' => 30, 'attributes' => 2, 'downloads' => 1));
   // die Zuordnungspruefung: gehoert die Position zur Bestellung?
   if (strpos($sql, 'SELECT orders_products_id') === 0) {
     preg_match("/orders_products_id = '(\d+)'/", $sql, $m);
@@ -99,6 +123,48 @@ ok('Aktualisierung ohne terms-Spalten', !isset($w['data']['terms_hash']));
 $GLOBALS['rows'] = array();
 guarantee_labels_write_snapshot(4711, 11, false);
 ok('leere Kerndaten loeschen die Zeile', isset($GLOBALS['rows']['delete']) && strpos($GLOBALS['rows']['delete'][0], "orders_products_id = '11'") !== false);
+ok('dabei nichts geschrieben', !isset($GLOBALS['rows']['orders_products_guarantee']));
+
+echo "\n== Digitale Position ==\n";
+$werte = array('manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'X-1', 'garan_duration' => '3.0');
+
+// manuell angelegt: die Positionen entscheiden, ein reiner Download bekommt nichts
+$GLOBALS['rows'] = array();
+ok('reiner Download abgelehnt', guarantee_labels_write_snapshot(4711, 20, $werte) === array(ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL));
+ok('dabei nichts geschrieben', !isset($GLOBALS['rows']['orders_products_guarantee']));
+
+$GLOBALS['rows'] = array();
+guarantee_labels_write_snapshot(4711, 20, false);
+ok('entfernen bleibt erlaubt', isset($GLOBALS['rows']['delete']));
+
+// verwaister Snapshot: die Position gibt es nicht mehr
+$GLOBALS['rows'] = array();
+ok('verwaiste Position abgelehnt', guarantee_labels_write_snapshot(4711, 40, $werte) === array(ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL));
+
+// Checkout-Bestellung: die Einstufung von damals gilt, Position 30 bleibt bearbeitbar, auch
+// wenn DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED heute anders steht
+$GLOBALS['content_types'][4712] = 'mixed';
+$GLOBALS['rows'] = array();
+ok('gemischte Checkout-Position bleibt bearbeitbar',
+   count(guarantee_labels_write_snapshot(4712, 30, $werte)) === 0);
+ok('und wird geschrieben', isset($GLOBALS['rows']['orders_products_guarantee']));
+
+// Eine gemischte Bestellung besteht aus Positionen unterschiedlicher Art. orders.content_type
+// sagt fuer die ganze Bestellung "mixed" und darf einer reinen Downloadposition, die noch
+// keinen Snapshot hat, keine Zusage erlauben.
+$GLOBALS['content_types'][4715] = 'mixed';
+$GLOBALS['rows'] = array();
+ok('neue Zusage fuer reine Downloadposition abgelehnt',
+   guarantee_labels_write_snapshot(4715, 20, $werte) === array(ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL));
+ok('dabei nichts geschrieben', !isset($GLOBALS['rows']['orders_products_guarantee']));
+ok('koerperliche Position derselben Bestellung angenommen',
+   count(guarantee_labels_write_snapshot(4715, 10, $werte)) === 0);
+
+// eine rein digitale Bestellung bekommt trotzdem nichts
+$GLOBALS['content_types'][4713] = 'virtual';
+$GLOBALS['rows'] = array();
+ok('virtuelle Checkout-Bestellung abgelehnt',
+   guarantee_labels_write_snapshot(4713, 30, $werte) === array(ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL));
 ok('dabei nichts geschrieben', !isset($GLOBALS['rows']['orders_products_guarantee']));
 
 echo "\n== Fremde Position ==\n";

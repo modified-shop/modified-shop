@@ -49,6 +49,7 @@ require $guarantee_labels_paths['repo'].'/lang/german/extra/admin/guarantee_labe
 class db {
   public static $config = array('MODULE_CATEGORIES_INSTALLED' => '');
   public static $schema_ok = true;
+  public static $catalogue_data = false;
   public static $primary_column;   // fuer den Fall eines abweichenden Primaerschluessels
   public static $content_default = '';
   public static $duration_default;
@@ -80,6 +81,13 @@ function xtc_db_query($sql) {
   if (preg_match("/^INSERT INTO configuration .* VALUES \\('([A-Z_]+)', '([^']*)'/i", $sql, $m)) {
     db::$config[$m[1]] = $m[2];
     return array();
+  }
+  // GARAN-Daten im Katalog: entscheiden, ob der Duplikationsschutz bei der Deinstallation bleibt
+  if (preg_match('/^SELECT products_id FROM products WHERE products_garan_duration IS NOT NULL/i', $sql)) {
+    return db::$catalogue_data ? array(array('products_id' => 1)) : array();
+  }
+  if (preg_match("/^SELECT content_id FROM products_content WHERE content_type = 'garan_terms'/i", $sql)) {
+    return db::$catalogue_data ? array(array('content_id' => 1)) : array();
   }
   if (preg_match('/^SHOW TABLES LIKE/i', $sql)) return db::$schema_ok ? array(1) : array();
   if (preg_match('/^SHOW KEYS FROM (\S+)/i', $sql, $m)) {
@@ -181,6 +189,31 @@ ok('Bestell-Erweiterung entfernt', !isset(db::$config['MODULE_ORDER_GUARANTEE_LA
 ok('MODULE_ORDER_INSTALLED geleert', db::$config['MODULE_ORDER_INSTALLED'] === '', db::$config['MODULE_ORDER_INSTALLED']);
 ok('Modulkonfiguration entfernt', !isset(db::$config['MODULE_GUARANTEE_LABELS_STATUS']));
 
+echo "\n== Deinstallation mit GARAN-Daten im Katalog ==\n";
+// duplicate_product() bietet keine andere Einhaengestelle, deshalb bleibt der Schutz stehen
+db::$catalogue_data = true;
+db::$config = array('MODULE_CATEGORIES_INSTALLED' => '', 'MODULE_PRODUCT_INSTALLED' => '', 'MODULE_ORDER_INSTALLED' => '',
+                    'MODULE_GUARANTEE_LABELS_STATUS' => 'true', 'MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS' => '');
+$m3 = new guarantee_labels();
+$m3->update();
+$m3->remove();
+ok('Duplikationsschutz bleibt eingerichtet', db::$config['MODULE_CATEGORIES_INSTALLED'] === 'guarantee_labels_product.php', db::$config['MODULE_CATEGORIES_INSTALLED']);
+ok('sein Status bleibt aktiv', isset(db::$config['MODULE_CATEGORIES_GUARANTEE_LABELS_PRODUCT_STATUS']));
+ok('Listing-Erweiterung dennoch entfernt', db::$config['MODULE_PRODUCT_INSTALLED'] === '');
+ok('Bestell-Erweiterung dennoch entfernt', db::$config['MODULE_ORDER_INSTALLED'] === '');
+ok('Modulkonfiguration dennoch entfernt', !isset(db::$config['MODULE_GUARANTEE_LABELS_STATUS']));
+
+echo "\n== Deinstallation ohne GARAN-Daten ==\n";
+db::$catalogue_data = false;
+db::$config = array('MODULE_CATEGORIES_INSTALLED' => '', 'MODULE_PRODUCT_INSTALLED' => '', 'MODULE_ORDER_INSTALLED' => '',
+                    'MODULE_GUARANTEE_LABELS_STATUS' => 'true', 'MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS' => '');
+$m4 = new guarantee_labels();
+$m4->update();
+$m4->remove();
+ok('alle drei Erweiterungen entfernt', db::$config['MODULE_CATEGORIES_INSTALLED'] === ''
+   && db::$config['MODULE_PRODUCT_INSTALLED'] === '' && db::$config['MODULE_ORDER_INSTALLED'] === '',
+   db::$config['MODULE_CATEGORIES_INSTALLED']);
+
 echo "\n== update() repariert eine entfernte Registrierung ==\n";
 db::$config = array('MODULE_CATEGORIES_INSTALLED' => '', 'MODULE_PRODUCT_INSTALLED' => '', 'MODULE_ORDER_INSTALLED' => '', 'MODULE_GUARANTEE_LABELS_STATUS' => 'true', 'MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS' => '');
 $r = $m->update();
@@ -189,6 +222,27 @@ ok('Registrierung wiederhergestellt', db::$config['MODULE_CATEGORIES_INSTALLED']
 ok('Listing-Registrierung wiederhergestellt', db::$config['MODULE_PRODUCT_INSTALLED'] === 'guarantee_labels_listing.php', db::$config['MODULE_PRODUCT_INSTALLED']);
 ok('Bestell-Registrierung wiederhergestellt', db::$config['MODULE_ORDER_INSTALLED'] === 'guarantee_labels_order.php', db::$config['MODULE_ORDER_INSTALLED']);
 ok('Modulstatus unveraendert', db::$config['MODULE_GUARANTEE_LABELS_STATUS'] === 'true');
+
+echo "\n== update() repariert einen abgeschalteten Status ==\n";
+// Die Modullader lesen den Status jeder Erweiterung. Steht er auf false, fehlen Listenlabel,
+// Bestelldaten oder der Duplikationsschutz, waehrend das Systemmodul sich aktiv meldet.
+db::$config['MODULE_CATEGORIES_GUARANTEE_LABELS_PRODUCT_STATUS'] = 'false';
+db::$config['MODULE_PRODUCT_GUARANTEE_LABELS_LISTING_STATUS'] = 'false';
+db::$config['MODULE_ORDER_GUARANTEE_LABELS_ORDER_STATUS'] = 'false';
+$m->update();
+ok('Kategorieerweiterung wieder aktiv', db::$config['MODULE_CATEGORIES_GUARANTEE_LABELS_PRODUCT_STATUS'] === 'true');
+ok('Listing-Erweiterung wieder aktiv', db::$config['MODULE_PRODUCT_GUARANTEE_LABELS_LISTING_STATUS'] === 'true');
+ok('Bestell-Erweiterung wieder aktiv', db::$config['MODULE_ORDER_GUARANTEE_LABELS_ORDER_STATUS'] === 'true');
+ok('Registrierung dabei unveraendert', db::$config['MODULE_CATEGORIES_INSTALLED'] === 'guarantee_labels_product.php');
+
+echo "\n== Der Status steht nicht in der Maske ==\n";
+// sonst haette der Shopbetreiber einen zweiten Schalter neben dem Systemmodul
+$ext_keys = new guarantee_labels_product();
+ok('kein Statusfeld in der Kategorieerweiterung',
+   !in_array('MODULE_CATEGORIES_GUARANTEE_LABELS_PRODUCT_STATUS', $ext_keys->keys(), true),
+   implode(' | ', $ext_keys->keys()));
+ok('Sortierung bleibt einstellbar',
+   in_array('MODULE_CATEGORIES_GUARANTEE_LABELS_PRODUCT_SORT_ORDER', $ext_keys->keys(), true));
 
 echo "\n== Hook der Klassenerweiterung ==\n";
 define('MODULE_GUARANTEE_LABELS_STATUS', 'true');

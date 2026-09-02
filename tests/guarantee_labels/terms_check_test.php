@@ -67,6 +67,9 @@ function check($file, $link = '', $groups = null, $id = 0) {
 echo "\n== Datei ==\n";
 ok('gueltige Datei ohne Befund', check('bedingungen.pdf') === array());
 ok('reiner Link abgelehnt', count(check('', 'https://example.org/x.pdf')) === 1);
+// products_media.php zeigt bei gesetztem Link die Datei nicht, die Mail versendet sie trotzdem
+ok('Datei und Link zusammen abgelehnt', check('bedingungen.pdf', 'https://example.org/x.pdf') === array(ERROR_GUARANTEE_LABELS_TERMS_BOTH));
+ok('Leerzeichen als Link zaehlt nicht', check('bedingungen.pdf', '   ') === array());
 ok('fehlende Datei abgelehnt', count(check('gibtsnicht.pdf')) === 1);
 ok('Pfadbestandteil abgelehnt', count(check('../secret.pdf')) === 1);
 ok('Komma im Namen abgelehnt', count(check('a,b.pdf')) === 1);
