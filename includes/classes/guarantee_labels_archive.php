@@ -129,8 +129,21 @@
       $directory = $this->hash_path($this->terms_dir, $hash);
       $filename = (string)$filename;
 
-      // the same rule the name was stored under, asked again on the way out
-      if ($directory === '' || $filename !== basename($filename) || strpbrk($filename, ",/\\\0") !== false) {
+      // hash_path() already said what was wrong with the directory
+      if ($directory === '') {
+        return '';
+      }
+
+      // The same rule the name was stored under, asked again on the way out: a path part, a comma
+      // that would split the attachment list, or a control character that would break the mail
+      // header. See guarantee_labels_terms_filename().
+      if ($filename === '' || $filename !== basename($filename)
+          || strpbrk($filename, ",/\\\0") !== false
+          || preg_match('/[\x00-\x1F\x7F]/', $filename)
+          )
+      {
+        $this->fail('path', $filename, 'not a usable attachment name');
+
         return '';
       }
 

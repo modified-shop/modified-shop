@@ -1203,7 +1203,7 @@ Voraussichtlich betroffen sind:
 - Den Sidecar unlesbar machen; das gilt als Schaden und nicht als Archiv ohne Sidecar.
 - Einen Eintrag aus dem Sidecar entfernen und die zugehoerige Datei ersetzen; die fehlende Zeile deckt die Ersetzung nicht.
 - Ein Archivverzeichnis ohne Sidecar aus einer aelteren Fassung lesen; es bleibt lesbar.
-- Einen Hash mit Pfadanteilen, falscher Laenge oder Grossbuchstaben und einen Anhangsnamen mit Pfadanteil oder Komma an das Archiv geben; weder Lesen noch Schreiben erzeugt einen Pfad, es entsteht kein Verzeichnis ausserhalb des Archivs und jeder einzelne Fehlgriff steht im Protokoll, das Lesen wie das Schreiben.
+- Einen Hash mit Pfadanteilen, falscher Laenge oder Grossbuchstaben und einen Anhangsnamen mit Pfadanteil oder Komma an das Archiv geben; weder Lesen noch Schreiben erzeugt einen Pfad, es entsteht kein Verzeichnis ausserhalb des Archivs und jeder einzelne Fehlgriff steht im Protokoll, das Lesen wie das Schreiben. Der Dateiname wird beim Lesen nach derselben Regel geprueft wie beim Schreiben, einschliesslich der Steuerzeichen, die den Mailkopf zerlegen wuerden.
 - Die Werte des Labels tragen den Zeichensatz des Shops, nur die Grafik ist immer UTF-8; ein Latin-1- und ein UTF-8-Shop erzeugen denselben Hash.
 - Einen Schreibvorgang so scheitern lassen, dass das temporaere Verzeichnis unvollstaendig bleibt; es wird nicht umbenannt, kein Zielverzeichnis bleibt zurueck und der Fehler steht im Protokoll.
 - In ein beschaedigtes Hashverzeichnis erneut schreiben; es wird verworfen und aus den Vorlagen neu angelegt.
