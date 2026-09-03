@@ -497,7 +497,7 @@
         $request->body['payment_source'][$pm_source]['experience_context']['contact_preference'] = 'UPDATE_CONTACT_INFO';
         $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'GET_FROM_FILE';
         $request->body['payment_source'][$pm_source]['experience_context']['order_update_callback_config'] = array(
-          'callback_events' => array('SHIPPING_OPTIONS'),
+          'callback_events' => array('SHIPPING_ADDRESS', 'SHIPPING_OPTIONS'),
           'callback_url' => $this->link_encoding(xtc_href_link('ajax.php', 'ext=get_shipping_methods&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
         );
       }
