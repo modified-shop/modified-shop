@@ -497,7 +497,7 @@
         $request->body['payment_source'][$pm_source]['experience_context']['contact_preference'] = 'UPDATE_CONTACT_INFO';
         $request->body['payment_source'][$pm_source]['experience_context']['shipping_preference'] = 'GET_FROM_FILE';
         $request->body['payment_source'][$pm_source]['experience_context']['order_update_callback_config'] = array(
-          'callback_events' => array('SHIPPING_OPTIONS'),
+          'callback_events' => array('SHIPPING_ADDRESS', 'SHIPPING_OPTIONS'),
           'callback_url' => $this->link_encoding(xtc_href_link('ajax.php', 'ext=get_shipping_methods&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
         );
       }
@@ -1351,6 +1351,26 @@
       $data = $this->get_country_state_from_iso($data);
 
       return $data;
+    }
+
+
+    // maps PayPal's own callback address shape onto the wallet contact shape used by parse_contact()
+    function callback_address_to_contact($address) {
+      $contact = array(
+        'addressLines' => array(),
+        'locality' => (isset($address['admin_area_2']) ? $address['admin_area_2'] : ''),
+        'administrativeArea' => (isset($address['admin_area_1']) ? $address['admin_area_1'] : ''),
+        'postalCode' => (isset($address['postal_code']) ? $address['postal_code'] : ''),
+        'countryCode' => (isset($address['country_code']) ? $address['country_code'] : ''),
+      );
+
+      foreach (array('address_line_1', 'address_line_2') as $line_key) {
+        if (isset($address[$line_key]) && trim($address[$line_key]) != '') {
+          $contact['addressLines'][] = $address[$line_key];
+        }
+      }
+
+      return $contact;
     }
 
 

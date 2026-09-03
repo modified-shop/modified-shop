@@ -54,7 +54,11 @@
       unset($_SESSION['billto']);
 
       if (isset($request['shipping_contact']) && is_array($request['shipping_contact'])) {
+        // Apple Pay / Google Pay post the wallet contact shape
         $_SESSION['paypal']['contact']['shipping_quote'] = $request['shipping_contact'];
+      } elseif (isset($request['shipping_address']) && is_array($request['shipping_address'])) {
+        // PayPal's server-side SHIPPING_OPTIONS callback posts its own address shape
+        $_SESSION['paypal']['contact']['shipping_quote'] = $paypal->callback_address_to_contact($request['shipping_address']);
       }
 
       $shipping_contact = isset($_SESSION['paypal']['contact']['shipping_quote'])
@@ -64,10 +68,10 @@
       $country_code = isset($shipping_contact['countryCode']) ? trim($shipping_contact['countryCode']) : '';
       $postcode = isset($shipping_contact['postalCode']) ? trim($shipping_contact['postalCode']) : '';
 
-      if ($country_code == '' || $postcode == '') {
+      // only the country is load bearing here, countries without a postal code system stay quotable
+      if ($country_code == '') {
         $paypal->LoggingManager->log('WARNING', 'Wallet get_shipping_methods aborted', array(
-          'reason' => 'incomplete shipping contact',
-          'country_code' => $country_code,
+          'reason' => 'missing country code',
           'postcode' => $postcode,
         ));
         return;
@@ -78,6 +82,13 @@
       $_SESSION['paypal']['contact']['shipping_quote'] = $shipping_contact;
 
       $shipping_address = $paypal->parse_contact($shipping_contact);
+      if (empty($shipping_address['country_id'])) {
+        $paypal->LoggingManager->log('WARNING', 'Wallet get_shipping_methods aborted', array(
+          'reason' => 'unknown country',
+          'country_code' => $shipping_contact['countryCode'],
+        ));
+        return;
+      }
       $_SESSION['country'] = $shipping_address['country_id'];
 
       if (isset($request['shipping_option'])
@@ -112,6 +123,7 @@
       $quotes = $paypal->get_shipping_data(true);
 
       $shipping_option = array();
+      $shipping_session = array();
       if (is_array($quotes) && count($quotes) > 0) {
         foreach ($quotes as $quote) {
           if (!isset($quote['error'])) {
@@ -121,15 +133,7 @@
               }
               $methods['price'] = $xtPrice->xtcFormat($xtPrice->xtcAddTax($methods['cost'], $quote['tax'], false), false);
 
-              $selected = false;
               $id = sprintf("%u", crc32($quote['id'].'_'.$methods['id']));
-              if ((isset($shipping_option_id) && $shipping_option_id == $id)
-                  || !isset($shipping_option_id)
-                  )
-              {
-                $selected = true;
-                $shipping_option_id = $id;
-              }
               $shipping_option[] = array(
                 'id' => $id,
                 'amount' => array(
@@ -138,17 +142,14 @@
                 ),
                 'type' => 'SHIPPING',
                 'label' => decode_htmlentities($paypal->encode_utf8($quote['module'].(($methods['title'] != '') ? ' ('.$methods['title'].')' : ''))),
-                'selected' => $selected
+                'selected' => false
               );
 
-              if ($selected === true) {
-                $_SESSION['shipping'] = array (
-                  'id' => $quote['id'].'_'.$methods['id'],
-                  'title' => $quote['module'],
-                  'cost' => $methods['cost']
-                );
-                $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
-              }
+              $shipping_session[$id] = array(
+                'id' => $quote['id'].'_'.$methods['id'],
+                'title' => $quote['module'],
+                'cost' => $methods['cost']
+              );
             }
           }
         }
@@ -158,6 +159,24 @@
         $paypal->LoggingManager->log('INFO', 'Wallet get_shipping_methods no options', array(
           'country' => (isset($_SESSION['country']) ? $_SESSION['country'] : null),
         ));
+      } else {
+        // a previously chosen method can be gone after an address change, fall back to the first one
+        if (!isset($shipping_option_id) || !isset($shipping_session[$shipping_option_id])) {
+          if (isset($shipping_option_id)) {
+            $paypal->LoggingManager->log('INFO', 'Wallet get_shipping_methods option unavailable', array(
+              'requested' => $shipping_option_id,
+              'available' => implode(', ', array_keys($shipping_session)),
+            ));
+          }
+          $shipping_option_id = $shipping_option[0]['id'];
+        }
+
+        foreach ($shipping_option as $key => $option) {
+          $shipping_option[$key]['selected'] = ($option['id'] == $shipping_option_id);
+        }
+
+        $_SESSION['shipping'] = $shipping_session[$shipping_option_id];
+        $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
       }
 
       $total = $order->info['total'];
