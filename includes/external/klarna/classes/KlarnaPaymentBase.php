@@ -35,7 +35,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function init() {    
-    $this->klarna_version = '1.22';
+    $this->klarna_version = '1.23';
     
     $this->title = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '';
     $this->description = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') : '';
@@ -182,7 +182,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
             });
           }
         
-          window.onload = function() {
+          window.addEventListener("load", function() {
             $("#checkout_confirmation").on("submit", function(event) {
               if (klarna_'.$this->klarna_code.'_result == false) {
                 event.preventDefault();
@@ -234,7 +234,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                });
               }
             });
-          }
+          });
         </script>
         <script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>';
       
