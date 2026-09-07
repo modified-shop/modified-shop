@@ -855,7 +855,7 @@
         ));
         return false;
       }
-      $existing_has_shipping = isset($existing_order->purchase_units[0]->shipping);
+      $existing_shipping = ((isset($existing_order->purchase_units[0]->shipping)) ? $existing_order->purchase_units[0]->shipping : null);
 
       $request = new OrdersPatchRequest($orderID);
       $request->body = array(
@@ -869,25 +869,19 @@
         ),
       );
 
+      // PayPal rejects removing the shipping object, so a virtual order just keeps it
       if ($has_shipping) {
-        $shipping_op = $existing_has_shipping ? 'replace' : 'add';
-
         $request->body[] = array(
-          'op' => $shipping_op,
+          'op' => ((isset($existing_shipping->name)) ? 'replace' : 'add'),
           'path' => "/purchase_units/@reference_id=='default'/shipping/name",
           'value' => array(
             'full_name' => $this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname'])
           )
         );
         $request->body[] = array(
-          'op' => $shipping_op,
+          'op' => ((isset($existing_shipping->address)) ? 'replace' : 'add'),
           'path' => "/purchase_units/@reference_id=='default'/shipping/address",
           'value' => $shipping_address
-        );
-      } elseif ($existing_has_shipping) {
-        $request->body[] = array(
-          'op' => 'remove',
-          'path' => "/purchase_units/@reference_id=='default'/shipping",
         );
       }
 
