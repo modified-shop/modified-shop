@@ -33,6 +33,17 @@
   }
 
 
+  // PayPal names no event in the callback, so the quoted address is what tells them apart
+  function paypal_shipping_address_key($contact) {
+    $parts = array();
+    foreach (array('countryCode', 'postalCode', 'administrativeArea', 'locality') as $field) {
+      $parts[] = (isset($contact[$field]) ? strtoupper(trim($contact[$field])) : '');
+    }
+
+    return implode('|', $parts);
+  }
+
+
   function get_shipping_methods() {
     global $order, $xtPrice;
 
@@ -69,6 +80,11 @@
       // only PayPal's own callback understands a decline response, the wallets expect a purchase unit
       $is_paypal_callback = false;
 
+      $previous_quote = isset($_SESSION['paypal']['contact']['shipping_quote'])
+                        && is_array($_SESSION['paypal']['contact']['shipping_quote'])
+                        ? $_SESSION['paypal']['contact']['shipping_quote']
+                        : array();
+
       if (isset($request['shipping_contact']) && is_array($request['shipping_contact'])) {
         // Apple Pay / Google Pay post the wallet contact shape
         $_SESSION['paypal']['contact']['shipping_quote'] = $request['shipping_contact'];
@@ -97,6 +113,9 @@
       $shipping_contact['countryCode'] = strtoupper($country_code);
       $shipping_contact['postalCode'] = $postcode;
       $_SESSION['paypal']['contact']['shipping_quote'] = $shipping_contact;
+
+      // same address as the last quote plus a submitted option means PayPal asked about the option
+      $address_changed = (paypal_shipping_address_key($previous_quote) !== paypal_shipping_address_key($shipping_contact));
 
       $shipping_address = $paypal->parse_contact($shipping_contact);
       if (empty($shipping_address['country_id'])) {
@@ -182,7 +201,9 @@
         $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
 
         if ($is_paypal_callback === true) {
-          return paypal_shipping_decline('ADDRESS_ERROR');
+          $issue = ($address_changed === false && isset($shipping_option_id)) ? 'METHOD_UNAVAILABLE' : 'ADDRESS_ERROR';
+
+          return paypal_shipping_decline($issue);
         }
       } else {
         // a previously chosen method can be gone after an address change, fall back to the first one
