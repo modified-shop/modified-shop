@@ -842,8 +842,6 @@ $_modules = array(
 		'requiredConfigKeys' => array (
 			'check24.access.MPUSERNAME',
 			'check24.access.MPPASSWORD',
-			'check24.access.PORT',
-			'check24.access.FTPSERVER',
 		),
 		'pages' => array (
             'prepare' => array (

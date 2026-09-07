@@ -10,27 +10,14 @@
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
- * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2026 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
-require_once DIR_MAGNALISTER_INCLUDES.'lib/classes/ProductList/Dependency/MLProductListDependency.php';
-class MLProductListDependencyAmazonHistoryAction extends MLProductListDependency {
-	public function getActionTopTemplate() {
-		return 'amazonhistorybutton';
-	}
 
-	public function getPublicDir() {
-		try {
-			$result = MagnaConnector::gi()->submitRequest(array(
-				'ACTION' => 'GetPublicDir',
-				'SUBSYSTEM' => 'Amazon',
-			));
-			return $result['DATA'];
-		} catch (MagnaException $e) { }
-	}
+$queries = array();
+$functions = array();
 
-}
+# Amazon Variant Matching: Change ShopVariation from TEXT (64KB) to MEDIUMTEXT (16MB)
+# to support large brand mapping data
+$queries[] = 'ALTER TABLE `' . TABLE_MAGNA_AMAZON_VARIANTMATCHING . '` MODIFY `ShopVariation` MEDIUMTEXT NOT NULL';

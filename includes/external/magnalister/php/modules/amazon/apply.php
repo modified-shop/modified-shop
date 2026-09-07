@@ -66,9 +66,9 @@ function getMultiPrepareData($genericDataStructure = array()) {
     }
 
     $prepData['category'] = base64_decode($prepData['category']);
-    $prepData['category'] = unserialize($prepData['category']);
+    $prepData['category'] = magnaSafeUnserialize($prepData['category']);
     $dbData = base64_decode($dbData);
-    $dbData = unserialize($dbData);
+    $dbData = magnaSafeUnserialize($dbData);
 
     if(isset($dbData['Keywords']) && is_array($dbData['Keywords'])){
         $dbData['Keywords'] = implode(' ', $dbData['Keywords']);
@@ -232,7 +232,7 @@ function populateGenericData($pID, $edit = false) {
 	# nicht ueberschrieben werden sollen.
 	if (!$edit) {
 		# Attributes matching shouldn't be reset
-		$dataForShopVariation = unserialize(base64_decode($dbData));
+		$dataForShopVariation = magnaSafeUnserialize(base64_decode($dbData));
         $shopVariationData = null;
 
         // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
@@ -260,9 +260,9 @@ function populateGenericData($pID, $edit = false) {
 
 	if ($dbData !== false) {
 		$prepData['category'] = base64_decode($prepData['category']);
-		$prepData['category'] = unserialize($prepData['category']);
+		$prepData['category'] = magnaSafeUnserialize($prepData['category']);
 		$dbData = base64_decode($dbData);
-		$dbData = unserialize($dbData);
+		$dbData = magnaSafeUnserialize($dbData);
 
         if(isset($dbData['Keywords']) && is_array($dbData['Keywords'])){
             $dbData['Keywords'] = implode(' ', $dbData['Keywords']);
@@ -778,8 +778,8 @@ if (!defined('MAGNA_DEV_PRODUCTLIST') || MAGNA_DEV_PRODUCTLIST !== true) { // wi
 				');
 			}
 			foreach ($aProducts as $aRow) {
-				$aRow['category'] = unserialize(base64_decode($aRow['category']));
-				$aRow['data'] = unserialize(base64_decode($aRow['data']));
+				$aRow['category'] = magnaSafeUnserialize(base64_decode($aRow['category']));
+				$aRow['data'] = magnaSafeUnserialize(base64_decode($aRow['data']));
 				if (!is_array($aRow['data']) || empty($aRow['data'])) {
 					continue;
 				}

@@ -69,7 +69,7 @@ function var_dump_pre($obj, $label = "", $text = false) {
 	$dump = ob_get_clean();
 	if (!$text) {
 		if (defined('ENT_SUBSTITUTE')) {
-			$dump = htmlspecialchars($arr, ENT_SUBSTITUTE);
+			$dump = htmlspecialchars($dump, ENT_SUBSTITUTE);
 		} else {
 			$dump = str_replace(
 				array('&',     '>',    '<',    '"',      '\'',   ),
@@ -240,7 +240,7 @@ function found_in_array($keys, $array) {
 function find_in_array_by_key($needle, $haystack, $key) {
 	if (empty($haystack)) return false;
 	foreach ($haystack as $k => $v) {
-		if ($v[$key] == $needle) {
+		if (is_array($v) && array_key_exists($key, $v) && $v[$key] == $needle) {
 			return $k;
 		}
 	}
@@ -250,7 +250,7 @@ function find_in_array_by_key($needle, $haystack, $key) {
 function in_array_key($needle, $haystack, $key) {
 	if (empty($haystack)) return false;
 	foreach ($haystack as $item) {
-		if ($item[$key] == $needle) {
+		if (is_array($item) && array_key_exists($key, $item) && $item[$key] == $needle) {
 			return true;
 		}
 	}
@@ -273,14 +273,13 @@ function array_invert($arr) {
 }
 
 function array_search_by_key($needle, $haystack, $key) {
-	$count = 0;
+	if (empty($haystack) || !is_array($haystack)) return false;
 	foreach ($haystack as $k => $item) {
-		if ($item[$key] == $needle) {
-			break;
+		if (is_array($item) && array_key_exists($key, $item) && $item[$key] == $needle) {
+			return $k;
 		}
-		++$count;
 	}
-	return ($count < count($haystack)) ? $k : false;
+	return false;
 }
 
 function find_in_array($needle, $haystack) {
@@ -292,9 +291,11 @@ function find_in_array($needle, $haystack) {
 	return false;
 }
 
-function array_first($array) {
-	/* da eine kopie uebergeben wird, wird das original array nicht veraendert. */
-	return array_shift($array);
+if (!function_exists('array_first')) {
+	function array_first($array) {
+		/* da eine kopie uebergeben wird, wird das original array nicht veraendert. */
+		return array_shift($array);
+	}
 }
 
 function array_filter_keys($arr, $keys) {
@@ -309,9 +310,9 @@ function array_filter_keys($arr, $keys) {
 	return $ret;
 }
 
-/* For alert and confirm boxes. Works in combination with unescape() */
+/* For alert and confirm boxes. Works in combination with decodeURIComponent() */
 function html2url($str) {
-	return str_replace('+', ' ', urlencode(html_entity_decode($str)));
+	return str_replace('+', ' ', urlencode(html_entity_decode($str, ENT_COMPAT, 'UTF-8')));
 }
 
 function resizeImage($resource_file, $max_width, $max_height, $destination_file, $compression=80) {
@@ -465,10 +466,30 @@ function eecho($str, $print = false) {
 }
 
 function eechoIP($str, $print = false) {
-	if ('176.198.38.42' == $_SERVER['REMOTE_ADDR']) {
+	if (isset($_SERVER['REMOTE_ADDR']) && '176.198.38.42' == $_SERVER['REMOTE_ADDR']) {
 		return eecho($str, $print);
 	}
 	return $str;
+}
+
+/**
+ * utf8_encode() / utf8_decode() replacements.
+ * utf8_encode/decode were deprecated in PHP 8.2 and are scheduled for removal in PHP 9.
+ * mb_convert_encoding has equivalent behavior for ISO-8859-1 <-> UTF-8 and exists on
+ * every supported PHP version when ext-mbstring is loaded (the typical case).
+ */
+function mlUtf8Encode($str) {
+	if (function_exists('mb_convert_encoding')) {
+		return mb_convert_encoding((string)$str, 'UTF-8', 'ISO-8859-1');
+	}
+	return @utf8_encode($str);
+}
+
+function mlUtf8Decode($str) {
+	if (function_exists('mb_convert_encoding')) {
+		return mb_convert_encoding((string)$str, 'ISO-8859-1', 'UTF-8');
+	}
+	return @utf8_decode($str);
 }
 
 function magnalisterIsUTF8($str) {
@@ -498,7 +519,7 @@ function magnalisterIsUTF8($str) {
 }
 
 function isNotIso8859_1($inputstring) {
-	$not_iso_chars = utf8_encode (
+	$not_iso_chars = mlUtf8Encode (
 		"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f".
 		"\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f".
 		"\x7f".
@@ -513,7 +534,7 @@ function arrayEntitiesToUTF8(&$array) {
 	foreach ($array as &$item) {
 		if (is_array($item)) arrayEntitiesToUTF8($item);
 		if (!is_string($item)) continue;
-		$item = (magnalisterIsUTF8($item) ? $item : utf8_encode($item));
+		$item = (magnalisterIsUTF8($item) ? $item : mlUtf8Encode($item));
 	}
 }
 
@@ -522,30 +543,30 @@ function arrayEntitiesToLatin1(&$array) {
 	foreach ($array as &$item) {
 		if (is_array($item)) arrayEntitiesToLatin1($item);
 		if (!is_string($item)) continue;
-		$item = ((magnalisterIsUTF8($item) || isNotIso8859_1($item)) ? utf8_decode($item) : $item);
+		$item = ((magnalisterIsUTF8($item) || isNotIso8859_1($item)) ? mlUtf8Decode($item) : $item);
 	}
 }
 
 function stringToUTF8($string) {
-	return (magnalisterIsUTF8($string) ? $string : utf8_encode($string));
+	return (magnalisterIsUTF8($string) ? $string : mlUtf8Encode($string));
 }
 
 function charset_decode_utf_8($string) {
 	/* Only do the slow convert if there are 8-bit characters */
 	/* avoid using 0xA0 (\240) in ereg ranges. RH73 does not like that */
-	if (!preg_match("/[\200-\237]/e", $string) && !preg_match("/[\241-\377]/e", $string)) {
+	if (!preg_match("/[\200-\237]/", $string) && !preg_match("/[\241-\377]/", $string)) {
 		return $string;
 	}
-	
+
 	// decode three byte unicode characters
 	$string = preg_replace_callback(
-		"/([\300-\337])([\200-\277])/",
+		"/([\340-\357])([\200-\277])([\200-\277])/",
         function($matches) {
             return "&#".((ord($matches[1])-224)*4096 + (ord($matches[2])-128)*64 + (ord($matches[3])-128)).";";
         },
 		$string
 	);
-	
+
 	// decode two byte unicode characters
 	$string = preg_replace_callback(
 		"/([\300-\337])([\200-\277])/",
@@ -554,7 +575,7 @@ function charset_decode_utf_8($string) {
         },
 		$string
 	);
-	
+
 	return $string;
 }
 
@@ -570,7 +591,7 @@ function fixHTMLUTF8Entities($str, $quoteStyle = ENT_NOQUOTES) {
 		"\xc2\xa4" => '&euro;', // --> '&curren;'
 	);
 	
-	$str = magnalisterIsUTF8($str) ? $str : utf8_encode($str);
+	$str = magnalisterIsUTF8($str) ? $str : mlUtf8Encode($str);
 	$str = str_replace(array_keys($savelist), array_values($savelist), $str);
 	#exploreEncoding($str);
 	$str = htmlentities($str, $quoteStyle, 'UTF-8');
@@ -601,7 +622,7 @@ function arrayEntitiesFixHTMLUTF8(&$array) {
  *  we see HTML source on the Item site.
  */
 function htmlEncodeUmlauts($str) {
-	$str =  magnalisterIsUTF8($str) ? $str : utf8_encode($str);
+	$str =  magnalisterIsUTF8($str) ? $str : mlUtf8Encode($str);
 // unicode table can be found here:
 // http://www.utf8-chartable.de/unicode-utf8-table.pl?unicodeinhtml=dec&htmlent=1
 // There is more on the page (see "go to other block")
@@ -891,6 +912,7 @@ function hsv2rgb($hsv) {
     return array((int)$r, (int)$g, (int)$b);
 }
 
+// deprecated (never used)
 function serialize_fix($serialized) {
 	return preg_replace_callback(
 	    '!(?<=^|;)s:(\d+)(?=:"(.*?)";(?:}|a:|s:|b:|i:|o:|N;))!s',
@@ -901,6 +923,7 @@ function serialize_fix($serialized) {
 	);
 }
 
+// deprecated (never used)
 function myUnserialize($serialized) {
 	$data = @unserialize($serialized);
 	if ($data !== false) {
@@ -1090,7 +1113,8 @@ function arrayMap($callback, $arr1) {
 	$results = array();
 	$args = array();
 	if (func_num_args() > 2) {
-		$args = (array) array_shift(array_slice(func_get_args(), 2));
+		$slice = array_slice(func_get_args(), 2);
+		$args = (array) array_shift($slice);
 	}
 	foreach($arr1 as $key => $value) {
 		$temp = $args;
@@ -1188,8 +1212,11 @@ function decodeData(&$array, $fieldName) {
 		return false;
 	}
 	foreach ($array as &$item) {
-		$data = unserialize($item[$fieldName]);
+		$data = magnaSafeUnserialize($item[$fieldName]);
 		unset($item[$fieldName]);
+		if (!is_array($data)) {
+			continue;
+		}
 		if (array_key_exists(0, $data)) {
 			mergeArrays($item, $data);
 		} else {
@@ -1597,7 +1624,12 @@ function mlSetArrayKeysOfEachUrlParameter($aKeys, $aArray, $mValue) {
         $sKey = array_shift($aKeys);// get key in frist level of hirarchy of array, e.g. ml[first][second][third]
         $sKey = str_replace(']', '', $sKey);
         if ($sKey == '') {//dynamic key
-            $sKey = (is_array($aArray) && is_int(max(array_keys($aArray)))) ? (max(array_keys($aArray)) + 1) : 0;
+            if (is_array($aArray) && !empty($aArray)) {
+                $iMaxKey = max(array_keys($aArray));
+                $sKey = is_int($iMaxKey) ? ($iMaxKey + 1) : 0;
+            } else {
+                $sKey = 0;
+            }
         }
         if (!isset($aArray[$sKey])) {//if it is new key
             $aArray[$sKey] = null;

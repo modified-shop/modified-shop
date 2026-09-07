@@ -352,13 +352,13 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 */
 	protected function decodeData() {
 		try {
-			$this->oOrder['data'] = @unserialize($this->oOrder['data']);
+			$this->oOrder['data'] = magnaSafeUnserialize($this->oOrder['data']);
 		} catch (Exception $ex) {}
 		if (!is_array($this->oOrder['data'])) {
 			$this->oOrder['data'] = array();
 		}
 		try {
-			$this->oOrder['internaldata'] = @unserialize($this->oOrder['internaldata']);
+			$this->oOrder['internaldata'] = magnaSafeUnserialize($this->oOrder['internaldata']);
 		} catch (Exception $ex) {}
 		if (!is_array($this->oOrder['internaldata'])) {
 			$this->oOrder['internaldata'] = array();

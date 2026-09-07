@@ -1669,6 +1669,7 @@ define('ML_TITLE_ETSY_WARNING_ZERO_STOCK_COST', 'Automatic Synchronization incl.
 define('ML_ETSY_MAX_PICTURES', 'Maximum 10 images');
 define('ML_ETSY_WHO_MADE', 'Who did it?');
 define('ML_ETSY_SHIPPING_TEMPLATE', 'Shipping template');
+define('ML_ETSY_RETURN_POLICY', 'Etsy Return Policy');
 define('ML_ETSY_PRICE_SHOP_ETSY', 'Price Shop / Etsy');
 define('ML_ETSY_STOCK_FOR_ETSY', 'Quantity for Etsy');
 define('ML_ETSY_LISTING_ID', 'Etsy Listing Id');
@@ -1707,6 +1708,8 @@ define('ML_ETSY_WHEN_MADE_1990_1998', '1990-1998');
 define('ML_ETSY_WHEN_MADE_BEFORE_1999', 'Before 1999');
 define('ML_ETSY_WHEN_MADE_BEFORE_2000', 'Before 2000');
 define('ML_TEXT_ETSY_WARNING_ZERO_STOCK_COST', 'This option causes you offers to reactivate as soon as the Quantity in your Shop is > 0. If the quantity goes to 0, offers are deactivated. Please note that reactivation of offers is subject to fee on Etsy ');
+define('ML_TITLE_ETSY_WARNING_USE_DUMMY_DATA', 'Use Dummy Addresses');
+define('ML_TEXT_ETSY_WARNING_USE_DUMMY_DATA', 'Etsy doesn\'t provide buyer addresses to new merchants (after February 2024) via API. If you activate this checkbox, we will use placeholder data, so that the order can be imported to your shop.<br /><br /><strong>WARNING:</strong> If you use this function, set the status of imported Etsy orders so that no automatic processing happens until you correct the address manually.');
 define('ML_ETSY_PROCESSING_PROFILE', 'Etsy Processing Profiles');
 define('ML_ETSY_PROCESSING_PROFILE_HELP', '
 A Processing Profile defines how and when your order and its product will be prepared and shipped to the customer. In Etsy this includes options like:
@@ -2091,43 +2094,56 @@ define('ML_HOOD_LABEL_USE_GALLERY_YES_NO', 'ML_HOOD_LABEL_USE_GALLERY_YES_NO');
 
 define('ML_IDEALO_SAME_PRODUCT_THERE', 'This item in idealo.de');
 define('ML_MODULE_IDEALO', 'idealo.de');
-define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_CONTENT', 'ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_CONTENT');
-define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_CONTENT', 'ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_CONTENT');
-define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_TITLE', 'ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_TITLE');
-define('ML_IDEALO_CHECKOUT_ERROR', 'ML_IDEALO_CHECKOUT_ERROR');
-define('ML_IDEALO_METHODS_NOT_AVAILABLE', 'ML_IDEALO_METHODS_NOT_AVAILABLE');
-define('ML_IDEALO_DESCRIPTION', 'ML_IDEALO_DESCRIPTION');
-define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE', 'ML_IDEALO_LABEL_CHECKOUT_ACTIVE');
-define('ML_IDEALO_INFO_CHECKOUT_ACTIVE', 'ML_IDEALO_INFO_CHECKOUT_ACTIVE');
-define('ML_IDEALO_INFO_TWOMANHANDLINGFEE', 'ML_IDEALO_INFO_TWOMANHANDLINGFEE');
-define('ML_IDEALO_INFO_DISPOSALFEE', 'ML_IDEALO_INFO_DISPOSALFEE');
-define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE_2', 'ML_IDEALO_LABEL_CHECKOUT_ACTIVE_2');
-define('ML_IDEALO_INFO_SHIPPING_METHOD', 'ML_IDEALO_INFO_SHIPPING_METHOD');
-define('ML_IDEALO_LABEL_SHIPPING_COUNTRY', 'ML_IDEALO_LABEL_SHIPPING_COUNTRY');
-define('ML_IDEALO_LABEL_DELIVERY_TIME', 'ML_IDEALO_LABEL_DELIVERY_TIME');
-define('ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP', 'ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP');
-define('ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL', 'ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL');
-define('ML_IDEALO_INFO_DELIVERY_TIME', 'ML_IDEALO_INFO_DELIVERY_TIME');
-define('ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE', 'ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE');
-define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_SPEDITION', 'ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_SPEDITION');
-define('ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE', 'ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE');
-define('ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE', 'ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE');
-define('ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO', 'ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO');
-define('ML_IDEALO_LABEL_DIRECT_CHECKOUT', 'ML_IDEALO_LABEL_DIRECT_CHECKOUT');
-define('ML_IDEALO_LABEL_PAYMENT_METHOD', 'ML_IDEALO_LABEL_PAYMENT_METHOD');
-define('ML_IDEALO_INFO_PAYMENT_METHOD', 'ML_IDEALO_INFO_PAYMENT_METHOD');
-define('ML_IDEALO_LABEL_SHIPPING_COST', 'ML_IDEALO_LABEL_SHIPPING_COST');
-define('ML_IDEALO_INFO_SHIPPING_COST', 'ML_IDEALO_INFO_SHIPPING_COST');
-define('ML_IDEALO_LABEL_SHIPPING_CURRENCY', 'ML_IDEALO_LABEL_SHIPPING_CURRENCY');
-define('ML_IDEALO_LABEL_SPEDITION_INFO', 'ML_IDEALO_LABEL_SPEDITION_INFO');
-define('ML_IDEALO_LABEL_SHIPPING_METHOD', 'ML_IDEALO_LABEL_SHIPPING_METHOD');
-define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_PACKETDIENST', 'ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_PACKETDIENST');
-define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_DOWNLOAD', 'ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_DOWNLOAD');
-define('ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS', 'ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS');
-define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE', 'ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE');
-define('ML_IDEALO_PRODUCT_DETAILS', 'ML_IDEALO_PRODUCT_DETAILS');
-define('ML_IDEALO_ITEM_NAME_TITLE', 'ML_IDEALO_ITEM_NAME_TITLE');
-define('ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES', 'ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES');
+define('ML_IDEALO_CHECKOUT_ERROR', 'Under &bdquo;Item Preparation&ldquo; you want to enable &bdquo;idealo Direktkauf&ldquo; for the item preparation. This is only possible if you have been activated for Direktkauf by idealo and have entered the corresponding credentials under &bdquo;idealo Direktkauf&ldquo;.');
+define('ML_IDEALO_METHODS_NOT_AVAILABLE', 'Please first enter and save the Direktkauf token under &bdquo;Order Import Credentials&ldquo;');
+define('ML_IDEALO_PRODUCT_DETAILS', 'Product details');
+define('ML_IDEALO_ITEM_NAME_TITLE', 'Title');
+define('ML_IDEALO_DESCRIPTION', 'Description');
+define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE', 'Idealo Direktkauf');
+define('ML_IDEALO_INFO_CHECKOUT_ACTIVE', 'Activate Idealo Checkout in order to receive orders from Idealo and synchronize order status in your shop.');
+define('ML_IDEALO_INFO_TWOMANHANDLINGFEE', 'For items with the shipping type &#8222;Spedition&ldquo;, the user can order the additional service &#8222;Delivery to the placement location&ldquo; in idealo Direktkauf. Unlike the usual forwarding service, the goods are not delivered to the curbside but to the desired placement location. The specified costs are charged with the total price. Please enter the costs incl. VAT.<br /><br />If this field is left empty, this option will not be offered in idealo Direktkauf.');
+define('ML_IDEALO_INFO_DISPOSALFEE', 'For items with the shipping type &#8222;Spedition&ldquo; and the option &#8222;Delivery to the placement location&ldquo; selected, the user can order the additional service &#8222;Old appliance pickup&ldquo; in idealo Direktkauf. The old appliance is taken away by the carrier and disposed of. The specified costs are charged with the total price. Please enter the costs incl. VAT. <br /><br />If this field is left empty, this option will not be offered in idealo Direktkauf.');
+define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE_2', 'Apply idealo Direktkauf to the selected products');
+define('ML_IDEALO_LABEL_PAYMENT_METHOD', 'Payment method');
+define('ML_IDEALO_INFO_PAYMENT_METHOD', 'Payment method is only applied if you activate Idealo Checkout. You will be able to specify which payment method you want to be used for specific product.');
+define('ML_IDEALO_LABEL_SHIPPING_METHOD', 'Shipping method');
+define('ML_IDEALO_INFO_SHIPPING_METHOD', 'Shipping method is only applied if you activate Idealo Checkout. You will be able to specify which shipping method you are using for specific product.');
+define('ML_IDEALO_LABEL_SHIPPING_COUNTRY', 'Shipping to');
+define('ML_IDEALO_LABEL_SHIPPING_COST', 'Shipping costs');
+define('ML_IDEALO_INFO_SHIPPING_COST', 'The shipping costs are first calculated from the shipping method. If this returns no result, the value entered here is used.
+With the shipping cost module "Flat rate", the value entered here is also used.');
+define('ML_IDEALO_LABEL_DELIVERY_TIME', 'Delivery time');
+define('ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP', 'Always take from web shop');
+define('ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO', 'Applies only to the shipping type "Spedition"');
+define('ML_IDEALO_LABEL_DIRECT_CHECKOUT', 'Direktkauf');
+define('ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE', 'Shipping method');
+define('ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE', 'Direktkauf Spedition - Delivery cost to placement location');
+define('ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE', 'Direktkauf Spedition - Cost of old appliance pickup');
+define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_SPEDITION', 'Spedition');
+define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_PACKETDIENST', 'Parcel service');
+define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_DOWNLOAD', 'Download');
+define('ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL', 'Flat rate (from right field)');
+define('ML_IDEALO_INFO_DELIVERY_TIME', 'Please specify delivery times as precisely as possible. Online retailers are legally obliged to inform the consumer, based on the delivery time information, when the goods will arrive. As a result, the still widespread information such as &bdquo;ready to ship&ldquo; or &bdquo;available&ldquo; is no longer permitted. Likewise, no relativizing additions such as &bdquo;probably&ldquo; or &bdquo;usually&ldquo; may be used. Please therefore specify delivery times in working days where possible, e.g. &bdquo;Delivery in 1-3 working days&ldquo;.');
+define('ML_IDEALO_LABEL_SHIPPING_CURRENCY', 'EUR');
+define('ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES', 'Maximum 3 product images');
+define('ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS', '
+    {
+        "PAYPAL": "PayPal",
+        "CREDITCARD": "Credit card",
+        "SOFORT": "Sofort&uuml;berweisung",
+        "PRE": "payment in advance",
+        "COD": "cash on delivery",
+        "BANKENTER": "bank enter",
+        "BILL": "bill",
+        "GIROPAY": "Giropay",
+        "CLICKBUY": "Click&Buy",
+        "SKRILL": "Skrill"
+    }
+');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE', 'idealo Direktkauf');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_CONTENT', 'To use this feature, please activate idealo Direktkauf under "idealo Direktkauf".');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_TITLE', 'Switch to idealo Direktkauf Merchant Order API v2');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_CONTENT', 'Since 01/01/2021, magnalister supports the idealo Direktkauf Merchant Order API v2. The Merchant Order API v1 will be shut down soon.<br><br>Please generate a &ldquo;Client ID&rdquo; and a &ldquo;Client Password&rdquo; in your idealo Business Account and enter the data in the magnalister idealo configuration under &ldquo;Credentials&rdquo; -> &ldquo;idealo Direktkauf&rdquo;.<br><br>You can find instructions for the changeover in the info icon next to &ldquo;Use idealo Direktkauf&rdquo;.');
 
 // ==================== Kelkoo ====================
 

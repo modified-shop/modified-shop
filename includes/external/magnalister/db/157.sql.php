@@ -10,17 +10,19 @@
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
- * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2026 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
-/* @var $this MLProductList */
-/* @var $oObject MLProductListDependencyAction */
-class_exists('MLProductList') or die();
 
-echo '
-	<a class="mlbtn" target="_blank" title="'.ML_LABEL_HISTORY.'" href="'.$oObject->getPublicDir().'">'.ML_LABEL_HISTORY.'</a>
-';
+$queries = array();
+$functions = array();
+
+# eBay-Modul: Remove eBayPlus column (reverses 063.sql.php)
+function remove_ebayplus_from_properties_table_157() {
+	if (MagnaDB::gi()->columnExistsInTable('eBayPlus', TABLE_MAGNA_EBAY_PROPERTIES))
+		MagnaDB::gi()->query('ALTER TABLE `'.TABLE_MAGNA_EBAY_PROPERTIES.'` DROP COLUMN `eBayPlus`');
+	return;
+}
+
+$functions[] = 'remove_ebayplus_from_properties_table_157';

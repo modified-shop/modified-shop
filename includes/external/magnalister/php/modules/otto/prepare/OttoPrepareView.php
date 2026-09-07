@@ -710,7 +710,7 @@ class OttoPrepareView extends MagnaCompatibleBase {
                 $aMetaDescription = array_slice(explode(',', $dbSelection[0]['products_meta_description']), 0, 5);
                 $dbSelection[0]['Feature'] = array_map('trim', $aMetaDescription);
             } else {
-                $dbSelection[0]['Feature'] = unserialize($dbSelection[0]['Feature']);
+                $dbSelection[0]['Feature'] = magnaSafeUnserialize($dbSelection[0]['Feature']);
             }
 
         }

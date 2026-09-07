@@ -28,6 +28,18 @@
                     }
                 }
             },
+            "usedummydata": {
+                "label": "Use Dummy Addresses",
+                "desc": "Etsy doesn't provide buyer addresses to new merchants (after February 2024) via API. If you activate this checkbox, we will use placeholder data, so that the order can be imported to your shop.<br /><br /><strong>WARNING:</strong> If you use this function, set the status of imported Etsy orders so that no automatic processing happens until you correct the address manually.",
+                "key": "_#_platform_#_.orderimport.usedummydata",
+                "type": "checkbox",
+                "values": {
+                    "val": "If Etsy doesn't provide a customer address, import a placeholder address."
+                },
+                "default": {
+                    "val": false
+                }
+            },
             "onlycomplete": false,
             "customersgroup": {
                 "label": "Customer Group",

@@ -67,7 +67,7 @@ class HitmeisterSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
      */
     protected function isProcessable() {
         $data = is_string($this->oOrder['data'])
-            ? @unserialize($this->oOrder['data'])
+            ? magnaSafeUnserialize($this->oOrder['data'])
             : $this->oOrder['data'];
 
         $fulfillment_check = true;

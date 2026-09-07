@@ -13,6 +13,60 @@ $(document).ready(function() {
      * $(ml_vm_config.formName).tradoria_variation_matching({...});
      */
     $.widget("ui.etsy_variation_matching", $.ui.ml_variation_matching, {
+        // Override: After base rendering, add a "CustomPropertyName" text input
+        // to FreeText optional attributes ("Selbstgewählte Eigenschaft") so users
+        // can define what the property is called on Etsy (property_id 513/514).
+        _buildShopVariationSelectors: function(data, resetNotice, savePrepare) {
+            this._super(data, resetNotice, savePrepare);
+
+            var self = this,
+                attributes = data.Attributes,
+                nameInputs = {};
+
+            for (var i in attributes) {
+                if (!attributes.hasOwnProperty(i)) continue;
+                // Only for optional, non-custom, text-type attributes (= Selbstgewählte Eigenschaft)
+                if (attributes[i].Required || attributes[i].Custom) continue;
+                if (attributes[i].DataType !== 'text') continue;
+
+                var attrCode = attributes[i].AttributeCode,
+                    baseName = 'ml[match]' + self.attributesNamePrefix + '[' + attrCode + ']',
+                    safeId = self.generateAttributeCodeId(attrCode),
+                    currentValue = '';
+
+                if (attributes[i].CurrentValues && attributes[i].CurrentValues.CustomPropertyName) {
+                    currentValue = attributes[i].CurrentValues.CustomPropertyName;
+                }
+
+                var nameInput = $('<div id="customPropertyName_' + safeId + '">')
+                    .css({'margin-top': '5px', 'font-weight': 'normal'})
+                    .append($('<input>').attr({
+                        type: 'text',
+                        name: baseName + '[CustomPropertyName]',
+                        value: currentValue,
+                        placeholder: 'Eigenschaftsname auf Etsy',
+                        maxlength: 45,
+                        style: 'width: 100%; padding: 2px 4px; box-sizing: border-box;'
+                    }));
+
+                nameInputs[safeId] = nameInput;
+                $('#selRow_' + safeId).children('th').append(nameInput);
+            }
+
+            // Re-attach when optional attribute selector changes
+            // (changeCurrentAttribute clears <th> content)
+            var optionalSelector = self.elements.matchingOptionalInput.find('select[name="optional_selector"]');
+            if (optionalSelector.length) {
+                optionalSelector.on('change.customPropertyName', function() {
+                    var selectedId = $(this).val();
+                    setTimeout(function() {
+                        if (nameInputs[selectedId]) {
+                            $('#selRow_' + selectedId).children('th').append(nameInputs[selectedId]);
+                        }
+                    }, 0);
+                });
+            }
+        },
         _loadMPVariation: function(val, initial) {
             var self = this,
                 requestParams = {

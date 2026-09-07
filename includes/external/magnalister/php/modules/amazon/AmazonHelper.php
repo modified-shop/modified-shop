@@ -117,7 +117,7 @@ class AmazonHelper extends AttributesMatchingHelper {
 		        return false;
 	        }
 
-	        $dataDB = unserialize(base64_decode($dataFromDB['data']));
+	        $dataDB = magnaSafeUnserialize(base64_decode($dataFromDB['data']));
 
             // fix for prepare because it was set as an attribute (but we have separate column in db)
             if (isset($dataDB['Attributes']) && (count($dataDB['Attributes']) == 1) && isset($dataDB['Attributes']['MerchantShippingGroupName'])) {
@@ -190,7 +190,7 @@ class AmazonHelper extends AttributesMatchingHelper {
         if ($dataFromDB) {
             $result = array();
             foreach ($dataFromDB as $preparedData) {
-                $data = unserialize(base64_decode($preparedData['data']));
+                $data = magnaSafeUnserialize(base64_decode($preparedData['data']));
                 $shopVariationData = null;
 
                 // V3 approach: PRIMARY load from DataId (new format), FALLBACK to data column (old format)
@@ -442,19 +442,24 @@ class AmazonHelper extends AttributesMatchingHelper {
             $attributesPart = $matches[1];
             // Split by comma and process each attribute key
             $keys = array_map('trim', explode(',', $attributesPart));
+            $keys = array_values(array_filter($keys, function ($k) {
+                return !empty($k);
+            }));
             $linkedKeys = array();
+
+            // JSON-encode all sibling keys for batch add (htmlspecialchars for safe embedding in onclick attribute)
+            $allKeysJson = htmlspecialchars(json_encode($keys), ENT_QUOTES, 'UTF-8');
 
             foreach ($keys as $key) {
                 if (!empty($key)) {
                     $escapedKey = htmlspecialchars($key);
 
                     // Build onclick handler:
-                    // 1. If element exists -> scroll to it
-                    // 2. If not exists -> add as optional attribute via React, then scroll
-                    $onclick = "(function(e){" . "e.preventDefault();" // Helper function to scroll and highlight
-                        . "function scrollHL(el){" . "el.scrollIntoView({behavior:'smooth',block:'center'});" . "el.style.animation='ml-attr-highlight 0.4s ease-in-out 6';" . "setTimeout(function(){el.style.animation='';},2500);" . "}" // Check if element exists
-                        . "var el=document.getElementById('attr-row-" . $escapedKey . "');" . "if(el){" . "scrollHL(el);" . "}else if(typeof window.magnalisterAddOptionalAttribute==='function'){" // Add optional attribute, then scroll in callback
-                        . "window.magnalisterAddOptionalAttribute('" . $escapedKey . "',function(){" . "setTimeout(function(){" . "var newEl=document.getElementById('attr-row-" . $escapedKey . "');" . "if(newEl){scrollHL(newEl);}" . "},150);" . "});" . "}" . "})(event);return false;";
+                    // When clicked, add ALL sibling attributes from this error group, then scroll to the clicked one.
+                    // This ensures that related sub-attributes (e.g., all stones_* fields) are added together.
+                    $onclick = "(function(e){" . "e.preventDefault();" . "function scrollHL(el){" . "el.scrollIntoView({behavior:'smooth',block:'center'});" . "el.style.animation='ml-attr-highlight 0.4s ease-in-out 6';" . "setTimeout(function(){el.style.animation='';},2500);" . "}" // Batch add: add ALL sibling attributes, then scroll to clicked one
+                        . "var siblings=" . $allKeysJson . ";" . "if(typeof window.magnalisterAddOptionalAttributes==='function'){" . "window.magnalisterAddOptionalAttributes(siblings,function(){" . "setTimeout(function(){" . "var el=document.getElementById('attr-row-" . $escapedKey . "');" . "if(el){scrollHL(el);}" . "},150);" . "});" . "}else{" // Fallback: old behavior - try to find element or add single attribute
+                        . "var el=document.getElementById('attr-row-" . $escapedKey . "');" . "if(el){scrollHL(el);}" . "else if(typeof window.magnalisterAddOptionalAttribute==='function'){" . "window.magnalisterAddOptionalAttribute('" . $escapedKey . "',function(){" . "setTimeout(function(){" . "var newEl=document.getElementById('attr-row-" . $escapedKey . "');" . "if(newEl){scrollHL(newEl);}" . "},150);" . "});" . "}" . "}" . "})(event);return false;";
 
                     $linkedKeys[] = '<a href="#attr-row-' . $escapedKey . '" ' . 'class="ml-js-noBlockUi ml-attribute-scroll-link" ' . 'data-attribute-key="' . $escapedKey . '" ' . 'onclick="' . $onclick . '"' . 'style="text-decoration:underline;">' . $escapedKey . '</a>';
                 }

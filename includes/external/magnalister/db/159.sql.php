@@ -11,31 +11,20 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
  *
- * (c) 2011 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2026 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
 
-defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/errorlog.php');
-require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/errorlog/MagnaCompatibleErrorView.php');
+$queries = array();
+$functions = array();
 
-class EtsyErrorLog extends MagnaCompatibleErrorLog {
-	public function process() {
-		$el = new EtsyErrorView();
-		echo $el->renderView();
-	}
+function etsy_add_return_policy() {
+    $oDB = MagnaDB::gi();
+    if ($oDB->tableExists(TABLE_MAGNA_ETSY_PREPARE) && !$oDB->columnExistsInTable('ReturnPolicy', TABLE_MAGNA_ETSY_PREPARE)) {
+        $oDB->query("ALTER TABLE `".TABLE_MAGNA_ETSY_PREPARE."` ADD `ReturnPolicy` varchar(127) NOT NULL DEFAULT '' COMMENT 'New column for Etsy return policy id' AFTER `ProcessingProfile`;");
+    }
 }
-class EtsyErrorView extends MagnaCompatibleErrorView {
-	protected $blRecommendationColumn = true;
-	public function __construct($settings = array()) {
-		$settings = array_merge(array(
-			'hasImport' => true,
-			'hasOrigin' => true,
-		), $settings);
-		
-		parent::__construct($settings);
-	}
-}
+
+$functions[] = 'etsy_add_return_policy';

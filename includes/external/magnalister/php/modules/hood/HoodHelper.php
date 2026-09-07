@@ -25,6 +25,7 @@ class HoodHelper extends AttributesMatchingHelper {
 
     private static $instance;
     protected $marketplaceTitle = 'Hood';
+    protected $numberOfMaxAdditionalAttributes = self::UNLIMITED_ADDITIONAL_ATTRIBUTES;
     public static function gi() {
         if (self::$instance === null) {
             self::$instance = new HoodHelper();

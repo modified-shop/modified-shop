@@ -139,8 +139,8 @@ define('ML_LABEL_CARRIER', 'Spediteur');
 define('ML_LABEL_CARRIER_NONE', 'kein Spediteur angeben');
 define('ML_SELECT_AMAZON_SUGGESTED_CARRIER', 'Von Amazon vorgeschlagene Transportunternehmen');
 define('ML_MATCH_CARRIER_TO_DB', 'Transportunternehmen aus einem Datenbankfeld matchen');
-define('ML_MATCH_AMAZON_CARRIER_TO_SHIPPING_MODULE', 'Von Amazon vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop  Versandkosten-Modul matchen');
-define('ML_MATCH_TEXT_TO_SHIPPING_MODULE', 'Lieferservice mit Eintr&auml;gen aus Webshop  Versandkosten-Modul matchen');
+define('ML_MATCH_AMAZON_CARRIER_TO_SHIPPING_MODULE', 'Von Amazon vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop  Versand-Modul matchen');
+define('ML_MATCH_TEXT_TO_SHIPPING_MODULE', 'Lieferservice mit Eintr&auml;gen aus Webshop  Versand-Modul matchen');
 define('ML_ADDITIONAL_OPTIONS', 'Zus&auml;tzliche Optionen');
 define('ML_SELECT_MARKETPLACE_SUGGESTED_CARRIER', 'Vom Marktplatz unterst&uuml;tzte Versanddienstleister:');
 define('ML_CARRIER_TEXTFIELD', 'Manuelle Eingabe eines Transportunternehmens in rechtes Textfeld');
@@ -1087,20 +1087,16 @@ define('ML_IDEALO_LABEL_SHIPPING_CURRENCY', 'EUR');
 define('ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES', 'Maximal 3 Produktbilder');
 define('ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS', '
     {
-        "Direktkauf & Suchmaschine:": {
-            "PAYPAL": "PayPal",
-            "CREDITCARD": "Kreditkarte",
-            "SOFORT": "Sofort&uuml;berweisung"
-        },
-        "Nur Suchmaschine:": {
-            "PRE": "Vorkasse",
-            "COD": "Nachnahme",
-            "BANKENTER": "Bankeinzug",
-            "BILL": "Rechnung",
-            "GIROPAY": "Giropay",
-            "CLICKBUY": "Click&Buy",
-            "SKRILL": "Skrill"
-        }
+        "PAYPAL": "PayPal",
+        "CREDITCARD": "Kreditkarte",
+        "SOFORT": "Sofort&uuml;berweisung",
+        "PRE": "Vorkasse",
+        "COD": "Nachnahme",
+        "BANKENTER": "Bankeinzug",
+        "BILL": "Rechnung",
+        "GIROPAY": "Giropay",
+        "CLICKBUY": "Click&Buy",
+        "SKRILL": "Skrill"
     }
 ');
 define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE', 'idealo Direktkauf');
@@ -1888,7 +1884,7 @@ define('ML_CDISCOUNT_DESCRIPTION_HELP', 'The product description must describe t
 define('ML_CDISCOUNT_MARKETING_DESCRIPTION_HELP', 'The marketing description must describe the product. It appears in the tab "Pr&#233;sentation produit". It must not content offers data (guarantee, price, shipping, packaging ...). HTML code is allowed.');
 define('ML_CDISCOUNT_VARMATCH_MP_ATTRIBUTE', '%marketplace% Pflichtattribut');
 define('ML_CDISCOUNT_CATEGORY_INFO', 'Info: F&uuml;r die hellgrau-markierten Kategorien sind Sie von Cdiscount nicht freigeschaltet. Bitte wenden Sie sich zur Freischaltung direkt an Cdiscount.');
-define('ML_MATCH_CDISCOUNT_CARRIER_TO_SHIPPING_MODULE', 'Von Cdiscount vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop Versandkosten-Modul matchen');
+define('ML_MATCH_CDISCOUNT_CARRIER_TO_SHIPPING_MODULE', 'Von Cdiscount vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop Versand-Modul matchen');
 
 /* MagnaCompat */
 define('ML_MAGNACOMPAT_CATEGORYMATCHING_ASSIGN_MP_CAT', 'Marktplatz Kategorie zuweisen');
@@ -2343,6 +2339,7 @@ define('ML_ETSY_ISSUPLY', 'Was ist es?');
 define('ML_ETSY_ISSUPLY_NO', 'Ein fertiges Produkt');
 define('ML_ETSY_ISSUPLY_YES', 'Zubeh&ouml;r oder Werkzeug, um etwas herzustellen');
 define('ML_ETSY_SHIPPING_TEMPLATE', 'Versandgruppe');
+define('ML_ETSY_RETURN_POLICY', 'Etsy Rückgaberichtlinie');
 
 define('ML_ETSY_PRICE_SHOP_ETSY', 'Preis Shop (brutto) / Etsy');
 define('ML_ETSY_STOCK_SHOP_ETSY', 'Bestand Shop / Etsy');
@@ -2353,6 +2350,8 @@ define('ML_ETSY_LABEL_TITLE', 'Etsy Titel');
 define('ML_ETSY_VARIATION_ATTRIBUTE_LABEL', '(Attribute für Produktvarianten)');
 define('ML_TITLE_ETSY_WARNING_ZERO_STOCK_COST', 'Automatische Synchronisierung mit Null-Bestand (empfohlen)');
 define('ML_TEXT_ETSY_WARNING_ZERO_STOCK_COST', 'Die Option bewirkt, dass Ihre Angebote reaktiviert werden, wenn der Lagerbestand im Webshop > 0 ist. Bei einer Lagerbestands&auml;nderung auf < 1 werden Ihre Angebote deaktiviert. F&uuml;r die Reaktivierung von Angeboten werden Ihnen seitens Etsy Geb&uuml;hren berechnet.');
+define('ML_TITLE_ETSY_WARNING_USE_DUMMY_DATA', 'Dummy-Adressen verwenden');
+define('ML_TEXT_ETSY_WARNING_USE_DUMMY_DATA', 'Etsy stellt neuen H&auml;ndlern (nach Februar 2024) keine K&auml;uferadressen &uuml;ber die API bereit. Wenn Sie dieses H&auml;kchen aktivieren, verwenden wir Platzhalterdaten, damit die Bestellung in Ihren Shop importiert werden kann.<br /><br /><strong>ACHTUNG:</strong> Wenn Sie diese Funktion nutzen, setzen Sie den Status der importierten Etsy-Bestellungen so, dass keine automatische Verarbeitung erfolgt, bis Sie die Adresse manuell korrigiert haben.');
 
 define('ML_ETSY_PROCESSING_PROFILE', 'Etsy Verarbeitungsprofile');
 define('ML_ETSY_PROCESSING_PROFILE_HELP', '
@@ -2534,7 +2533,7 @@ define('ML_OTTO_STATUS_PRODUCT_IS_CREATING', 'Produkt wartet darauf, erstellt zu
 define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_DELETE', 'Angebot wird gel&ouml;scht');
 define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_CREATION', 'Warten auf &Uuml;bertragung an OTTO');
 define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_UPDATE', 'Produkt wird auf OTTO aktualisiert');
-define('ML_MATCH_OTTO_CARRIER_TO_SHIPPING_MODULE', 'Von Otto vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop  Versandkosten-Modul matchen');
+define('ML_MATCH_OTTO_CARRIER_TO_SHIPPING_MODULE', 'Von Otto vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop  Versand-Modul matchen');
 define('ML_OTTO_ERROR_CODE', 'OTTO Fehlercode');
 
 define('ML_DUPLCIATE_HOVERTEXTS', 'Bitte speichern Sie die Konfiguration / Vorbereitung bevor Sie Zeilen hinzuf&uuml;gen oder entfernen');

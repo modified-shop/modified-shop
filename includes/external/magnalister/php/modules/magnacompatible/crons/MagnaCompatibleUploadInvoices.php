@@ -305,7 +305,7 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
     protected function setOrderAsProcessed($CONFIRMATIONS) {
         foreach ($CONFIRMATIONS as $sMarketplaceOrderId) {
             $aOrder = $this->getMagnalisterOrderData($sMarketplaceOrderId);
-            $aOrderData = unserialize($aOrder['data']);
+            $aOrderData = magnaSafeUnserialize($aOrder['data']);
             $aOrderData['Invoice'] = 'sent';
             $sOrderData = serialize($aOrderData);
             MagnaDB::gi()->update(TABLE_MAGNA_ORDERS,

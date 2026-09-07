@@ -646,8 +646,6 @@ function renderMultiPrepareView($data) {
 	}
 	if('True' == $eBayStoreData['DATA']['Answer']) {
 		$hasStore = true;
-		$html .= '
-					<option '.('StoresFixedPrice' == $ListingType ? 'selected="selected"':'').' value="StoresFixedPrice">'.ML_EBAY_LISTINGTYPE_STORESFIXEDPRICE.'</option>';
 	} else {
 		$hasStore = false;
 	}
@@ -901,43 +899,9 @@ function renderMultiPrepareView($data) {
     } else {
     	$StartTime = '';
     }
-	$eBayPlusSettings = geteBayPlusSettings();
 	$html .= '/>'.ML_EBAY_BESTPRICE_YES_NO.'
 				</td>
 				<td class="info">'.ML_EBAY_BESTPRICE.'</td>
-			</tr>
-			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
-				<th>'.ML_EBAY_PLUS_SHORT.'</th>
-				<td class="input">
-                    <input type="checkbox" name="plus" id="plus" ';
-    $products_id_list = '';
-    foreach ($data as $item) {
-    	$products_id_list .= ', '.$item['products_id'];
-    }
-    $products_id_list = trim($products_id_list, ', ');
-    $plusSet = MagnaDB::gi()->fetchArray('
-    	SELECT SQL_CALC_FOUND_ROWS DISTINCT eBayPlus
-          FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
-         WHERE products_id IN ('.$products_id_list.')
-		   AND mpID = '.$_MagnaSession['mpID'].'
-    ');
-	if (    ('false' == $eBayPlusSettings['eBayPlus'])
-	     || ( false  == $eBayPlusSettings['eBayPlus'])) {
-		$html .= ' disabled="disabled"  style="background-color:#dfdfdf" ';
-	} else {
-    	if (1 == (int)MagnaDB::gi()->foundRows()) {
-	        if ('1' == $plusSet[0]['eBayPlus']) {
-	            $html .= ' checked="checked" ';
-	        }
-	    } else {
-	        if (getDBConfigValue(array('ebay.plus', 'val'), $_MagnaSession['mpID'])) {
-	            $html .= ' checked="checked" ';
-	        }
-	    }
-    }
-	$html .= '/>'.ML_EBAY_PLUS_YES_NO.'
-				</td>
-				<td class="info">'.ML_EBAY_PLUS.'</td>
 			</tr>';
 	$html .= '<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 						<th>'.ML_EBAY_START_TIME_SHORT.'</th>

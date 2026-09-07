@@ -28,6 +28,18 @@
                     }
                 }
             },
+            "usedummydata": {
+                "label": "Dummy-Adressen verwenden",
+                "desc": "Etsy stellt neuen H&auml;ndlern (nach Februar 2024) keine K&auml;uferadressen &uuml;ber die API bereit. Wenn Sie dieses H&auml;kchen aktivieren, verwenden wir Platzhalterdaten, damit die Bestellung in Ihren Shop importiert werden kann.<br /><br /><strong>ACHTUNG:</strong> Wenn Sie diese Funktion nutzen, setzen Sie den Status der importierten Etsy-Bestellungen so, dass keine automatische Verarbeitung erfolgt, bis Sie die Adresse manuell korrigiert haben.",
+                "key": "_#_platform_#_.orderimport.usedummydata",
+                "type": "checkbox",
+                "values": {
+                    "val": "Wenn Etsy keine Kundenadresse bereitstellt, eine Platzhalter-Adresse importieren."
+                },
+                "default": {
+                    "val": false
+                }
+            },
             "onlycomplete": false,
             "customersgroup": {
                 "label": "Kundengruppe",

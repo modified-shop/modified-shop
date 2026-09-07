@@ -233,7 +233,7 @@ $(document).ready(function() {
 			val = jQuery.trim($(this).val());
 			tfID = $(this).attr('id');
 			if ((val == '') || !/^[0-9]*$/.test(val) || (val <= 0) || (val > 1000)) {
-				alert(unescape(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
+				alert(decodeURIComponent(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
 				val = $('#old_'+tfID).val();
 				$(this).val(val);
 			}
@@ -264,7 +264,7 @@ $(document).ready(function() {
 			price = convertPriceToFloat(val, formatOptions);
 			myConsole.log(price);
 			if (price < 0) {
-				alert(unescape(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
+				alert(decodeURIComponent(<?php echo "'".html2url(ML_ERROR_INVALID_NUMBER)."'"; ?>));
 				$(e).val(formatPriceWoCur($('#backup_'+tfID).val(), formatOptions));
 			} else {
 				jQuery.ajax({

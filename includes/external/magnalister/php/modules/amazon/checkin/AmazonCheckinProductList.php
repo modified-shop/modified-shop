@@ -39,9 +39,8 @@ class AmazonCheckinProductList extends MLProductListAmazonAbstract {
 		);
 		parent::__construct();
 		$this
-			->addDependency('MLProductListDependencyCheckinToSummaryAction', array('selectionname' => $this->getSelectionName()))                        
+			->addDependency('MLProductListDependencyCheckinToSummaryAction', array('selectionname' => $this->getSelectionName()))
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
-			->addDependency('MLProductListDependencyAmazonHistoryAction')
 			->addDependency('MLProductListDependencyAmazonLastPreparedFilter')//no config, amazon is very special
 //			->addDependency('MLProductListDependencyManufacturersFilter')// its now in MLProductList as global filter
 		;

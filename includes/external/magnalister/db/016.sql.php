@@ -47,7 +47,7 @@ function magna_fix_tradoria_orders() {
 		$langFix = 'Marketplace Order ID';
 	}
 	foreach ($orders as $o) {
-		$data = @unserialize($o['data']);
+		$data = magnaSafeUnserialize($o['data']);
 		if (!is_array($data)) {
 			$data = array();
 		}

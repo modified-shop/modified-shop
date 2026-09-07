@@ -293,6 +293,31 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
     }
 
     /**
+     * Formats a weight value with unit for attribute matching output.
+     * Removes trailing zeros, uses "," as decimal separator for non-English languages,
+     * and adds a space between value and unit.
+     *
+     * @param string|float $value The numeric weight value
+     * @param string $unit The weight unit (e.g. "kg", "g")
+     * @return string Formatted weight string, e.g. "1,5 kg"
+     */
+    protected function formatWeightWithUnit($value, $unit) {
+        $value = (float) $value;
+        $formatted = rtrim(rtrim(number_format($value, 10, '.', ''), '0'), '.');
+
+        $languageId = getDBConfigValue($this->marketplace . '.lang', $this->mpId, $this->defaultLanguage);
+        $langCode = MagnaDB::gi()->fetchOne(
+            'SELECT code FROM ' . TABLE_LANGUAGES . ' WHERE languages_id = "' . (int) $languageId . '"'
+        );
+
+        if (!empty($langCode) && strtolower(substr($langCode, 0, 2)) !== 'en') {
+            $formatted = str_replace('.', ',', $formatted);
+        }
+
+        return $formatted . ' ' . $unit;
+    }
+
+    /**
      * Gets attributes from marketplace for supplied category.
      *
      * @param string $category
@@ -1565,7 +1590,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                         break;
                     case 'weight':
                         if (!empty($productData['Weight'])) {
-                            $attributeValue = $productData['Weight']['Value'] . $productData['Weight']['Unit'];
+                            $attributeValue = $this->formatWeightWithUnit($productData['Weight']['Value'], $productData['Weight']['Unit']);
                         }
                         break;
                     case 'weight_value':

@@ -233,6 +233,7 @@ function mlGetUpdateErrorTexts() {
 
 function mlPrintLastUpdateError() {
 	if (file_exists(DIR_MAGNALISTER_FS.'UpdaterError')) {
+		require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/functionLib.php');
 		$magnaUpdateErrorText = mlGetUpdateErrorTexts();
 		$magnaUpdateErrorText['other']['headline'] = 'Error during last automatic update process';
 		$magnaUpdateErrorText['other']['introduction'] = 'Some errors occured during the last automatic update procces of your mgnalister plugins:';
@@ -244,7 +245,7 @@ function mlPrintLastUpdateError() {
 		$magnaUpdateErrorText['german']['suggestions'] = 'Klicken sie <a href="'.FILENAME_MAGNALISTER.'?update=true" title="Update-Vorang erneut starten">hier</a> '.
 														'um den Update-Vorgang erneut zu starten.';
 	
-		$updaterErrors = unserialize(file_get_contents(DIR_MAGNALISTER_FS.'UpdaterError'));
+		$updaterErrors = magnaSafeUnserialize(file_get_contents(DIR_MAGNALISTER_FS.'UpdaterError'));
 		updateErrorDiePage($magnaUpdateErrorText, $updaterErrors);
 	}
 }
@@ -965,7 +966,7 @@ MagnaDB::gi()->query('
 ');
 if (($allRequests = MagnaDB::gi()->fetchArray('SELECT * FROM '.TABLE_MAGNA_API_REQUESTS)) !== false) {
 	foreach ($allRequests as $request) {
-		$request['data'] = unserialize($request['data']);
+		$request['data'] = magnaSafeUnserialize($request['data']);
 		try {
 			MagnaConnector::gi()->submitRequest($request['data']);
 		} catch (MagnaException $e) {

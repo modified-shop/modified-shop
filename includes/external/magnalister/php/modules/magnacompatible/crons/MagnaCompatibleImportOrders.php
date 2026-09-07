@@ -32,9 +32,9 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	 */
 	protected $db = null;
 	protected $dbCharSet = '';
-	
+
 	protected $simplePrice = null;
-	
+
 	/* specific to one order only */
 	protected $cur = array();
 	protected $o = array(); /* the current order */
@@ -44,13 +44,13 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	protected $taxValues = array(); /* tax values for the current order */
 	protected $mailOrderSummary = array();
 	protected $comment = '';
-	
+
 	/* specific to all orders */
 	protected $syncBatch = array(); /* sync batch for other marketplaces */
 	protected $allCurrencies = array(); /* list of different currencies */
 	protected $blDeleteCustomerAfterwards = false; /* if true, delete account after order completed (guest accounts) */
-	
-	/* For acknowledging */
+
+    /* For acknowledging */
 	protected $processedOrders = array ();
 	protected $lastOrderDate = false;
 
@@ -63,8 +63,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 
 	/* set to true if we find the needed classes and libraries for gambio order confirmation */
 	protected $blGambioOrderConfirmation = false;
-	
-	protected $verbose = false;
+
+    protected $verbose = false;
 
     /** @var bool Checking if more orders are ready to import - if set to false it does only one iteration */
     protected $continueMode = true;
@@ -86,11 +86,11 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		echo $str;
 		flush();
 	}
-	
-	protected function initImport() {
+
+    protected function initImport() {
 		#$_GET['MLDEBUG'] = 'true'; #hack
-		
-		if (isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] == 'true')) {
+
+        if (isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] == 'true')) {
 			require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MagnaTestDB.php');
 			$this->db = MagnaTestDB::gi();
 		} else {
@@ -106,11 +106,11 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				(MAGNA_CALLBACK_MODE == 'STANDALONE') 
 				|| (defined('MAGNALISTER_PLUGIN') && (MAGNALISTER_PLUGIN == true))
 			) && (get_class($this->db) == 'MagnaTestDB');
-		
-		require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
+
+        require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 		$this->simplePrice = new SimplePrice();
-		
-		if (   ( file_exists(DIR_WS_FUNCTIONS.'password_funcs.php'))
+
+        if (   ( file_exists(DIR_WS_FUNCTIONS.'password_funcs.php'))
 			&& (!function_exists('tep_encrypt_password'))
 		) {
 			require_once(DIR_WS_FUNCTIONS.'password_funcs.php');
@@ -173,8 +173,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			echo '$this->blGambioOrderConfirmation = true'."\n";
 		}
 	}
-	
-	protected function getConfigKeys() {
+
+    protected function getConfigKeys() {
 		return array (
 			'KeyType' => array (
 				'key' => 'general.keytype',
@@ -240,8 +240,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
             ),
 		);
 	}
-	
-	protected function initConfig() {
+
+    protected function initConfig() {
 		$this->config['CIDAssignment'] = getDBConfigValue('customers_cid.assignment', '0', 'none'); // none is default in global config
 
 		parent::initConfig();
@@ -272,8 +272,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			'orders.orders_hash' => MagnaDB::gi()->columnExistsInTable('orders_hash', TABLE_ORDERS),
 		);
 		$this->setCustomerGroupProperties($this->config['CustomerGroup']);
-		
-		foreach (array(
+
+        foreach (array(
 			'products_options_id', 'products_attributes_id', 'products_attributes_model',
 			'options_id', 'options_values_id', // gambio
 			'attributes_model', 'attributes_ean'// modified 2.0.0
@@ -281,15 +281,15 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$this->config['DBColumnExists']['orders_products_attributes.'.$col] = defined('TABLE_ORDERS_PRODUCTS_ATTRIBUTES')
 				&& MagnaDB::gi()->tableExists(TABLE_ORDERS_PRODUCTS_ATTRIBUTES)
 				&& MagnaDB::gi()->columnExistsInTable($col, TABLE_ORDERS_PRODUCTS_ATTRIBUTES);
-			
-		}
+
+        }
 		$this->config['DBColumnExists'][TABLE_PRODUCTS_ATTRIBUTES.'.attributes_stock'] = 
 			MagnaDB::gi()->columnExistsInTable('attributes_stock', TABLE_PRODUCTS_ATTRIBUTES);
-		
-		/*//{search: 1427198983}
-		//Bugfix for floats as array keys
-		$this->config['MwStShipping'] = (string)round($this->config['MwStShipping'], 2);
-		//*/
+
+        /*//{search: 1427198983}
+        //Bugfix for floats as array keys
+        $this->config['MwStShipping'] = (string)round($this->config['MwStShipping'], 2);
+        //*/
 
 		// store country
 		if (defined('STORE_COUNTRY') && (int)STORE_COUNTRY > 0) {
@@ -366,27 +366,27 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			if ($this->verbose) echo "Date in the future --> no import\n";
 			return false;
 		}
-		
-		$dateRegexp = '/^([1-2][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])'.
+
+        $dateRegexp = '/^([1-2][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])'.
 			'(\s([0-1][0-9]|2[0-4]):([0-5][0-9]):([0-5][0-9]))?$/';
-		
-		$lastImport = $this->config['LastImport'];
+
+        $lastImport = $this->config['LastImport'];
 		if (preg_match($dateRegexp, $lastImport)) {
 			# Since we only request non acknowledged orders, we go back in time by 7 days.
 			$lastImport = strtotime($lastImport.' +0000') - $this->getPastTimeOffset();
 		} else {
 			$lastImport = 0;
 		}
-	
-		if ( ($lastImport > 0) && ($begin < $lastImport) ) {
+
+        if ( ($lastImport > 0) && ($begin < $lastImport) ) {
 			$begin = $lastImport;
 		}
-		
-		if (isset($_GET['ForceBeginImportDate']) && preg_match($dateRegexp, $_GET['ForceBeginImportDate'])) {
+
+        if (isset($_GET['ForceBeginImportDate']) && preg_match($dateRegexp, $_GET['ForceBeginImportDate'])) {
 			$begin = strtotime($_GET['ForceBeginImportDate']);
 		}
-		
-		return $this->beginImportDate = gmdate('Y-m-d H:i:s', $begin);
+
+        return $this->beginImportDate = gmdate('Y-m-d H:i:s', $begin);
 	}
 
 	protected function buildRequest() {
@@ -422,6 +422,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		if ($this->hasNext != true) {
 			return false;
 		}
+        /* For testing uncomment it */
+        //require(DIR_MAGNALISTER_FS.'../tools/MagnaCompatibleImportOrders_TestData_1.php'); $this->hasNext = false;return $orders;// TEST: reverse-charge scenarios
 		$request = $this->buildRequest();
 		if ($this->verbose) {
 			echo print_m($request, '$request');
@@ -488,8 +490,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$this->allCurrencies[$currency] = $currencyValue;
 		return true;
 	}
-	
-	protected function getCountryByISOCode($code, $fallbackName = '') {
+
+    protected function getCountryByISOCode($code, $fallbackName = '') {
 		$c = MagnaDB::gi()->fetchRow('
 			SELECT countries_id as ID, countries_name AS Name
 			  FROM '.TABLE_COUNTRIES.'
@@ -578,8 +580,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$customer = array();
 		$customer['Password'] = randomString(10);
 		$this->o['customer']['customers_password'] = md5($customer['Password']);
-		
-		if (SHOPSYSTEM != 'oscommerce') {
+
+        if (SHOPSYSTEM != 'oscommerce') {
 			$this->o['customer']['customers_status'] = $this->config['CustomerGroup'];
 			if (defined('DEFAULT_CUSTOMERS_STATUS_ID_GUEST') && $this->config['CustomerGroup'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
 				$this->o['customer']['account_type'] = '1';//guest_account
@@ -642,8 +644,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				$cupdate['customers_cid'] = $customer['CID'];
 			}
 		}
-		
-		# Infodatensatz erzeugen
+
+        # Infodatensatz erzeugen
 		$this->insert(TABLE_CUSTOMERS_INFO, array(
 			'customers_info_id' => $customer['ID'],
 			'customers_info_number_of_logons' => 0,
@@ -696,8 +698,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$this->db->update(TABLE_CUSTOMERS, $customer, array (
 			'customers_id' => $this->cur['customer']['ID'],
 		));
-		
-		# Adressbuchdatensatz aktualisieren.
+
+        # Adressbuchdatensatz aktualisieren.
 		if (isset($this->o['adress']['address_date_added'])) {
 			unset($this->o['adress']['address_date_added']);
 		}
@@ -739,8 +741,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			MagnaDB::gi()->update(TABLE_ORDERS, array('customers_id' => 0), array ('orders_id' => $this->cur['OrderID']));
 		}
 	}
-	
-	/**
+
+    /**
 	 * Load some basic info, e.g. country etc from DB
 	 */
 	protected function prepareOrderInfo() {
@@ -757,8 +759,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				: false
 		);
 	}
-	
-	/**
+
+    /**
 	 * Returns the marketplace specific order ID from $this->o.
 	 *
 	 * @return string
@@ -790,21 +792,21 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		}
 		echo 'orderExists(MOrderID: '.$mOID.', OrderID: '.$oID.')'."\n";
 		$this->cur['OrderID'] = $oID;
-		
-		/* Ack again */
+
+        /* Ack again */
 		$this->addCurrentOrderToProcessed();
 		return true;
 	}
-	
-	/**
+
+    /**
 	 * Returns the status that the order should have as string.
 	 * Use $this->o['order'].
 	 *
 	 * @return String	The order status for the currently processed order.
 	 */
 	protected abstract function getOrdersStatus();
-	
-	/**
+
+    /**
 	 * Returns the comment for orders.comment (Database). 
 	 * E.g. the comment from the customer or magnalister related information.
 	 * Use $this->o['order'].
@@ -822,8 +824,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$this->comment
 		);
 	}
-	
-	/**
+
+    /**
 	 * Returns the comment for orders_status.comment (Database). 
 	 * E.g. the comment from the customer or magnalister related information.
 	 * May differ from self::generateOrderComment()
@@ -835,8 +837,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	protected function generateOrdersStatusComment() {
 		return $this->generateOrderComment(true);
 	}
-	
-	/**
+
+    /**
 	 * In child classes this method can be used to extend the data for the DB-table
 	 * orders before it is inserted.
 	 * Use $this->o['order'].
@@ -854,15 +856,15 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$this->o['bank']['orders_id'] = $this->cur['OrderID'];
 			$this->insert('banktransfer', $this->o['bank']);
 			//echo 'DELETE FROM '.'banktransfer'.' WHERE orders_id="'.$ordersId.'";'."\n\n";
-			
-		} else {
+
+        } else {
 			$this->o['magnaOrders']['ML_LABEL_ACCOUNTING_OWNER']  = $this->o['bank']['banktransfer_owner'];
 			$this->o['magnaOrders']['ML_LABEL_ACCOUNTING_NUMBER'] = $this->o['bank']['banktransfer_number'];
 			$this->o['magnaOrders']['ML_LABEL_ACCOUNTING_BLZ']    = $this->o['bank']['banktransfer_blz'];
 			$this->o['magnaOrders']['ML_LABEL_ACCOUNTING_NAME']   = $this->o['bank']['banktransfer_bankname'];
 		}
-		
-	}
+
+    }
 
 	/**
 	 * In child classes this method can be used to extend the data for the DB-table
@@ -885,24 +887,24 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	protected function doBeforeInsertOrderHistory() {
 		/* Do nothing here. */
 	}
-	
-	/**
+
+    /**
 	 * Returns the payment method for the current order.
 	 * @return string
 	 */
 	protected function getPaymentMethod() {
 		return $this->config['PaymentMethod'];
 	}
-	
-	/**
+
+    /**
 	 * Returns the shipping method for the current order.
 	 * @return string
 	 */
 	protected function getShippingMethod() {
 		return $this->config['ShippingMethod'];
 	}
-	
-	protected function insertOrder() {
+
+    protected function insertOrder() {
 		$this->comment = isset($this->o['order']['comments']) ? $this->o['order']['comments'] : '';
 		$this->o['order']['customers_id'] = $this->cur['customer']['ID'];
 
@@ -926,8 +928,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$this->o['order']['language'] = $this->language;
 			$this->o['order']['comments'] = $this->generateOrderComment();
 		}
-		
-		if ($this->config['DBColumnExists']['orders.customers_status_name']) {
+
+        if ($this->config['DBColumnExists']['orders.customers_status_name']) {
 			$this->o['order']['customers_status_name'] = $this->config['CustomerGroupProperties']['customers_status_name'];
 		}
 		if ($this->config['DBColumnExists']['orders.customers_status_image']) {
@@ -942,8 +944,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		if ($this->config['DBColumnExists']['orders.orders_hash']) {
 			$this->o['order']['orders_hash'] = md5(strtotime($this->o['order']['date_purchased']) + mt_rand());
 		}
-		
-		/* Change Shipping and Payment Methods */
+
+        /* Change Shipping and Payment Methods */
 		$this->o['order']['payment_method'] = $this->getPaymentMethod();
 		if (SHOPSYSTEM != 'oscommerce') {
 			$this->o['order']['payment_class'] = $this->o['order']['payment_method'];
@@ -957,8 +959,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		# Statuseintrag fuer Historie vornehmen.
 		$this->o['orderStatus']['orders_id'] = $this->cur['OrderID'];
 		$this->o['orderStatus']['orders_status_id'] = $this->o['order']['orders_status'];
-		
-		$this->o['orderStatus']['comments'] = $this->generateOrdersStatusComment();
+
+        $this->o['orderStatus']['comments'] = $this->generateOrdersStatusComment();
 
 		$this->doBeforeInsertOrderHistory();
 		$this->insert(TABLE_ORDERS_STATUS_HISTORY, $this->o['orderStatus']);
@@ -1046,8 +1048,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	protected function additionalProductsIdentification() {
 
 	}
-	
-	/**
+
+    /**
 	 * Converts whatever the API has submitted in $this->p['products_tax'] to a
 	 * real tax value.
 	 * Here it just returns the parameter. Child Clases however may override this
@@ -1061,10 +1063,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	protected function getTaxValue($tax) {
 		return $tax;
 	}
-	
-	protected function doBeforeInsertOrdersProducts() {}
-	
-	/**
+
+    protected function doBeforeInsertOrdersProducts() {}
+
+    /**
 	 * Returns true if the stock of the imported and identified item has to be reduced.
 	 * @return bool
 	 */
@@ -1116,10 +1118,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				),
 			);
 		}
-		
-		$reduceStock = $this->hasReduceStock();
-		
-		// Product Main
+
+        $reduceStock = $this->hasReduceStock();
+
+        // Product Main
 		if (!MagnaDB::gi()->recordExists(TABLE_PRODUCTS, array('products_id' => (int)$this->p['products_id']))) {
 			$this->p['products_id'] = 0;
 		} else {
@@ -1149,6 +1151,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$this->o['_processingData']['ProductsCount'] += (int)$this->p['products_quantity'];
 
 		// insert product
+		MagnaDB::gi()->validateDataLength($this->p, TABLE_ORDERS_PRODUCTS);
 		MagnaDB::gi()->addNonNullableEntries($this->p, TABLE_ORDERS_PRODUCTS);
 		$this->insert(TABLE_ORDERS_PRODUCTS, $this->p);
 		$iOrdersProductsId = $this->db->getLastInsertID();
@@ -1185,7 +1188,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
                                && (STOCK_ALLOW_CHECKOUT == false)
 		             ) // xtc 3
 		        )) {
-			$this->db->update(TABLE_PRODUCTS,	
+            $this->db->update(TABLE_PRODUCTS,
 				array(
 					'products_status' => '0'
 				),
@@ -1233,6 +1236,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	 */
 	protected function setAdditionalOrdersProductsColumnsForModified() {
 		$aOrdersProductsColumns = MagnaDB::gi()->getTableColumns(TABLE_ORDERS_PRODUCTS);
+		$aProductsColumns = MagnaDB::gi()->getTableColumns(TABLE_PRODUCTS);
 		/*
 		products_price_origin is price without tax
 		products_weight is taken from products table
@@ -1248,6 +1252,24 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 					WHERE products_id = '.(int)$this->p['products_id']);
 			} else {
 				$this->p['products_weight'] = 0.00;
+			}
+		}
+		$aColumnsForDHLExport = array(
+			'products_tariff',
+			'products_tariff_title',
+			'products_origin',
+		);
+		foreach ($aColumnsForDHLExport as $sColumn) {
+			if (    in_array($sColumn, $aOrdersProductsColumns)
+			     && in_array($sColumn, $aProductsColumns)) {
+				if ((int)$this->p['products_id'] != 0) {
+					$this->p[$sColumn] = MagnaDB::gi()->fetchOne('
+						SELECT '.$sColumn.'
+						  FROM '.TABLE_PRODUCTS.'
+						WHERE products_id = '.(int)$this->p['products_id']);
+				} else {
+					$this->p[$sColumn] = '';
+				}
 			}
 		}
 	}
@@ -1452,8 +1474,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			}
 		}
 	}
-	
-	/**
+
+    /**
 	 * get attribute data in modified 2.0.0
 	 * 
 	 * @param int $iProductId
@@ -1471,8 +1493,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			       AND options_values_id = '".$iOptionValueId."'
 		");
         }
-	
-        protected function insertProductAttribute($iProductsId, $aOption, $sSKU) {
+
+    protected function insertProductAttribute($iProductsId, $aOption, $sSKU) {
 		if (empty($aOption['options_name'])) {
 			return;
 		}
@@ -1496,8 +1518,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				$sSKU : 
 				$this->getProductAttributeData((int)$this->p['products_id'],(int)$aOption['options_id'], (int)$aOption['options_values_id'], 'attributes_model');
 		}
-		
-		if ($this->config['DBColumnExists']['orders_products_attributes.options_id']) {//gambio
+
+        if ($this->config['DBColumnExists']['orders_products_attributes.options_id']) {//gambio
 			$aOrderProductsAttribute['options_id'] = $aOption['options_id'];
 		}
 		if ($this->config['DBColumnExists']['orders_products_attributes.options_values_id']) {//gambio
@@ -1509,8 +1531,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				$sSKU : 
 				$this->getProductAttributeData((int)$this->p['products_id'],(int)$aOption['options_id'], (int)$aOption['options_values_id'], 'attributes_model');
 		}
-		
-		if ($this->config['DBColumnExists']['orders_products_attributes.attributes_ean']) {//modified 2.0.0
+
+        if ($this->config['DBColumnExists']['orders_products_attributes.attributes_ean']) {//modified 2.0.0
 			$aOrderProductsAttribute['attributes_ean'] = $this->getProductAttributeData((int)$this->p['products_id'],(int)$aOption['options_id'], (int)$aOption['options_values_id'], 'attributes_ean');
 		}
 
@@ -1518,6 +1540,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$aOrderProductsAttribute['products_attributes_id'] = ($aOption['id'] == false) ? 0 : $aOption['id'];
 		}
 
+		MagnaDB::gi()->validateDataLength($aOrderProductsAttribute, TABLE_ORDERS_PRODUCTS_ATTRIBUTES);
 		MagnaDB::gi()->addNonNullableEntries($aOrderProductsAttribute, TABLE_ORDERS_PRODUCTS_ATTRIBUTES);
 		$this->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $aOrderProductsAttribute);
 	}
@@ -1544,15 +1567,15 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			)
 		", false));
 	}
-	
-	/**
+
+    /**
 	 *
 	 */
 	protected function insertProductOld() {
 		$this->p['orders_id'] = $this->cur['OrderID'];
-		
-		/* Attribute Values ermitteln aus der SKU, nicht aus dem Hauptprodukt.
-		   Daher bevor products_id ermittelt wird. */
+
+        /* Attribute Values ermitteln aus der SKU, nicht aus dem Hauptprodukt.
+           Daher bevor products_id ermittelt wird. */
 		/* sku needed later */
 		if (isset($this->p['products_model'])) {
 			$sku = $this->p['products_model']; 
@@ -1566,10 +1589,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$attrValues = array($attrValues);
 		}
 		#if ($this->verbose) echo print_m($attrValues, '$attrValues');
-		
-		$this->p['products_id'] = magnaSKU2pID($sku);
-		
-		$this->additionalProductsIdentification();
+
+        $this->p['products_id'] = magnaSKU2pID($sku);
+
+        $this->additionalProductsIdentification();
 
 		$this->mailOrderSummary[] = array(
 			'quantity' => $this->p['products_quantity'],
@@ -1721,6 +1744,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 					if ($this->config['DBColumnExists']['orders_products_attributes.products_attributes_id']) {
 						$prodOrderAttrData['products_attributes_id'] = $attributeId == false ? 0 : $attributeId;
 					}
+					MagnaDB::gi()->validateDataLength($prodOrderAttrData, TABLE_ORDERS_PRODUCTS_ATTRIBUTES);
 					MagnaDB::gi()->addNonNullableEntries($prodOrderAttrData, TABLE_ORDERS_PRODUCTS_ATTRIBUTES);
 					$this->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $prodOrderAttrData);
 				}
@@ -1774,18 +1798,18 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		)->removeTax($this->config['MwStShipping'])->getPrice();
 		//*/
 	}
-	
-	protected function addTaxValuesToOrdersTotal() {
+
+    protected function addTaxValuesToOrdersTotal() {
 		if (empty($this->taxValues)) return;
 		if (!defined('MODULE_ORDER_TOTAL_TAX_STATUS') || (MODULE_ORDER_TOTAL_TAX_STATUS != 'true')) {
 			return;
 		}
 		ksort($this->taxValues);
-		
-		/* fuer summe netto erst brutto-wert nehmen */
+
+        /* fuer summe netto erst brutto-wert nehmen */
 		$netto = $this->o['orderTotal']['Total']['value'];
-		
-		$otc = defined('MODULE_ORDER_TOTAL_TAX_SORT_ORDER') ? MODULE_ORDER_TOTAL_TAX_SORT_ORDER : 60;
+
+        $otc = defined('MODULE_ORDER_TOTAL_TAX_SORT_ORDER') ? MODULE_ORDER_TOTAL_TAX_SORT_ORDER : 60;
 		foreach ($this->taxValues as $tax => $value) {
 			$this->o['orderTotal']['Tax'.$tax] = array (
 				'title' => ML_LABEL_INCL.' '.round($tax, 2).'% '.MAGNA_LABEL_ORDERS_TAX,
@@ -1806,8 +1830,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			);
 		}
 	}
-	
-	/**
+
+    /**
 	 * This method prepares and inserts data for orders_total.
 	 * Child-Classes may extend this method. However this method should be called
 	 * at the end to do the actual inertion of data in the database.
@@ -1850,13 +1874,13 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				'sort_order' => MODULE_ORDER_TOTAL_GM_TAX_FREE_SORT_ORDER
 			));
 		}
-		// echo 'DELETE FROM '.TABLE_ORDERS_TOTAL.' WHERE orders_id="'.$this->cur['OrderID'].'";'."\n\n";	
+        // echo 'DELETE FROM '.TABLE_ORDERS_TOTAL.' WHERE orders_id="'.$this->cur['OrderID'].'";'."\n\n";
 		if (($hp = magnaContribVerify('MagnaCompatibleImportOrders_PostInsertOrdersTotal', 1)) !== false) {
 			require($hp);
 		}
 	}
-	
-	/**
+
+    /**
 	 * Returns an array with the replacement keys and the content for the promotion mail.
 	 * @return array
 	 */
@@ -1874,8 +1898,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			'#SHOPORDERID#' => $this->cur['OrderID'],
 		);
 	}
-	
-	protected function sendPromoMail() {
+
+    protected function sendPromoMail() {
 		if (($this->config['MailSend'] != 'true') || (get_class($this->db) == 'MagnaTestDB')) {
 			// echo print_m($this->generatePromoMailContent());
 			return;
@@ -2001,8 +2025,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			}
 		}
 	}
-	
-	protected function processSingleOrder() {
+
+    protected function processSingleOrder() {
 		if ($this->verbose) echo print_m($this->o, 'order');
 		if (SHOPSYSTEM == 'gambio') {
 			/**
@@ -2080,33 +2104,44 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$this->cur = array();
 		$this->taxValues = array();
 		$this->mailOrderSummary = array();
-		
-		/* Prepare order specific informations */
+
+        /* Prepare order specific informations */
 		$this->prepareOrderInfo();
 
 		// adjust timezone
 		$this->o['order']['date_purchased'] = magnaTimeToLocalTime($this->o['order']['date_purchased']);
-		
-		$this->processCustomer();
+
+        $this->processCustomer();
 		#echo print_m($this->cur['customer'], '$customer');
-		
-		if ($this->orderExists()) {
+
+        if ($this->orderExists()) {
 			return;
 		}
 		$this->insertOrder();
-	
-		$this->o['_processingData']['ProductsCount'] = 0;
+
+        /* {Hook} MagnaCompatibleImportOrders_PreInsertProduct
+            Log or modify the products of the order
+            Variables that can be used:
+            <ul><li>$this->mpID: The ID of the marketplace.</li>
+                <li>$this->marketplace: The name of the marketplace.</li>
+                <li>$this->o: Order data.</li>
+            </ul>
+        */
+		if (function_exists('magnaContribVerify') && (($hp = magnaContribVerify('MagnaCompatibleImportOrders_PreInsertProduct', 1)) !== false)) {
+            require($hp);
+        }
+        $this->o['_processingData']['ProductsCount'] = 0;
 		foreach ($this->o['products'] as $p) {
 			$this->p = $p;
 			$this->insertProduct();
 		}
 		//echo 'DELETE FROM '.TABLE_ORDERS_PRODUCTS.' WHERE orders_id="'.$this->cur['OrderID'].'";'."\n\n";
-		
-		$this->processShippingTax();
-		
-		$this->addTaxValuesToOrdersTotal();
-		
-		$this->insertOrdersTotal();
+
+        $this->processShippingTax();
+
+        $this->addTaxValuesToOrdersTotal();
+
+        $this->insertOrdersTotal();
 
 		/* Gambio: create order confirmation PDF */
 		if (SHOPSYSTEM == 'gambio') {
@@ -2114,17 +2149,17 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$this->setOrderWeight();
 			$this->setTransportConditionsAccepted();
 		}
-		
-		$this->sendPromoMail();
-		
-		$this->addCurrentOrderToProcessed();
-		
-		$this->lastOrderDate = $this->o['order']['date_purchased'];
+
+        $this->sendPromoMail();
+
+        $this->addCurrentOrderToProcessed();
+
+        $this->lastOrderDate = $this->o['order']['date_purchased'];
 
 		$this->deleteGuestCustomer();
 	}
-	
-	protected function acknowledgeImportedOrders() {
+
+    protected function acknowledgeImportedOrders() {
 		if (empty($this->processedOrders)) return;
 		/* Acknowledge imported orders */
 		$request = array(
@@ -2162,22 +2197,22 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$mfot->execute($this->marketplace, 100);
 		ob_end_clean();
 	}
-	
-	protected function submitSyncBatch() {
+
+    protected function submitSyncBatch() {
 		if (get_class($this->db) != 'MagnaTestDB') {
 			require_once(DIR_MAGNALISTER_CALLBACK.'inventoryUpdate.php');
 			magnaInventoryUpdateByOrderImport(array_values($this->syncBatch), $this->mpID);
 		}
 	}
-	
-	final public function process() {
+
+    final public function process() {
 		while (($orders = $this->getOrders()) !== false) {
 			#if ($this->verbose) echo print_m($orders, 'orders');
 			while ($order = array_shift($orders)) {
 				$this->cur = array();
 				$this->o = $order;
-				
-				$continue = false;
+
+                $continue = false;
 				/* {Hook} "MagnaCompatibleImportOrders_PreOrderImport": Is called before the order in <code>$this->o</code> is imported.
 					Variables that can be used:
 					<ul><li>$this->o: The order that is going to be imported. The order is an 
@@ -2195,22 +2230,22 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				if ($continue) {
 					continue;
 				}
-				
-				$this->processSingleOrder();
-				
-				/* {Hook} "MagnaCompatibleImportOrders_PostOrderImport": Is called after the order in <code>$this->o</code> is imported.
-					Usefull to manipulate some of the data in the database
-					Variables that can be used:
-					<ul><li>$this->o: The order that has just been imported. The order is an associative array representing the
-					        structures of the order and customer related shop tables.</li>
-					    <li>$this->mpID: The ID of the marketplace.</li>
-					    <li>$this->marketplace: The name of the marketplace.</li>
-					    <li>$this->cur['OrderID']: The Order ID of the shop (<code>orders_id</code>).</li>
-					    <li>$this->cur['customer']['ID']: The Customers ID of the shop (<code>customers_id</code>).</li>
-					    <li>$this->db: Instance of the magnalister database class. USE THIS for writing or changing data in the database during the
-					        order import. DO NOT USE the shop functions or MagnaDB::gi() for this purpose!</li>
-					</ul>
-				*/
+
+                $this->processSingleOrder();
+
+                /* {Hook} "MagnaCompatibleImportOrders_PostOrderImport": Is called after the order in <code>$this->o</code> is imported.
+                    Usefull to manipulate some of the data in the database
+                    Variables that can be used:
+                    <ul><li>$this->o: The order that has just been imported. The order is an associative array representing the
+                            structures of the order and customer related shop tables.</li>
+                        <li>$this->mpID: The ID of the marketplace.</li>
+                        <li>$this->marketplace: The name of the marketplace.</li>
+                        <li>$this->cur['OrderID']: The Order ID of the shop (<code>orders_id</code>).</li>
+                        <li>$this->cur['customer']['ID']: The Customers ID of the shop (<code>customers_id</code>).</li>
+                        <li>$this->db: Instance of the magnalister database class. USE THIS for writing or changing data in the database during the
+                            order import. DO NOT USE the shop functions or MagnaDB::gi() for this purpose!</li>
+                    </ul>
+                */
 				if (($hp = magnaContribVerify('MagnaCompatibleImportOrders_PostOrderImport', 1)) !== false) {
 					require($hp);
 				}
@@ -2220,17 +2255,17 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			}
 			$this->acknowledgeImportedOrders();
 		}
-		
-		$this->submitSyncBatch();
-		
-		if (get_class($this->db) != 'MagnaTestDB') {
+
+        $this->submitSyncBatch();
+
+        if (get_class($this->db) != 'MagnaTestDB') {
 			if (!empty($this->lastOrderDate)) {
 				setDBConfigValue($this->marketplace.'.orderimport.lastrun', $this->mpID, $this->lastOrderDate, true);
 			}
 			$this->fixOrdersTotal();
 		}
-		
-	}
+
+    }
 
 
     /**

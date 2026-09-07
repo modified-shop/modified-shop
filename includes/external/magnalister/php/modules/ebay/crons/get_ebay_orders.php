@@ -659,7 +659,7 @@ function magnaImportEbayOrders($mpID) {
             #$existingOrdersTotal = false;
             if (false != $existingOpenOrder) {
                 $ordersId = (int)$existingOpenOrder['orders_id'];
-                $magnaOrdersDataArr = unserialize($existingOpenOrder['data']);
+                $magnaOrdersDataArr = magnaSafeUnserialize($existingOpenOrder['data']);
                 if (!is_array($magnaOrdersDataArr['eBayOrderID'])) {
                     $magnaOrdersDataArr['eBayOrderID'] = array($magnaOrdersDataArr['eBayOrderID'],
                                                             $order['magnaOrders']['eBayOrderID']);
