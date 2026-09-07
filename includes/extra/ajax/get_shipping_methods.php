@@ -197,9 +197,9 @@
           'country' => (isset($_SESSION['country']) ? $_SESSION['country'] : null),
         ));
 
-        // the address cannot be served, do not keep quoting the method picked for the previous one
+        // the address cannot be served, do not keep quoting the method picked for the previous one.
+        // the last successfully quoted address stays as it is, a retry has to stay the same event
         $_SESSION['shipping'] = false;
-        unset($_SESSION['paypal']['contact']['shipping_quoted_address']);
         $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
 
         if ($is_paypal_callback === true) {
