@@ -134,11 +134,17 @@
                           || $current_key !== paypal_shipping_address_key($previous_address)
                           || $current_key === paypal_shipping_address_key($declined_address));
 
+      // parse_contact() resolves the iso code without looking at the country status, so check it here.
+      // without this a disabled destination silently quotes for STORE_COUNTRY further down
       $shipping_address = $paypal->parse_contact($shipping_contact);
-      if (empty($shipping_address['country_id'])) {
+      if (empty($shipping_address['country_id'])
+          || xtc_get_countriesList($shipping_address['country_id']) === false
+          )
+      {
         $paypal->LoggingManager->log('WARNING', 'Wallet get_shipping_methods aborted', array(
-          'reason' => 'unknown country',
+          'reason' => 'unknown or disabled country',
           'country_code' => $shipping_contact['countryCode'],
+          'country_id' => (isset($shipping_address['country_id']) ? $shipping_address['country_id'] : null),
         ));
         return ($is_paypal_callback === true) ? paypal_shipping_decline('COUNTRY_ERROR') : null;
       }
@@ -161,6 +167,7 @@
         }
       }
 
+      // the destination is known active by now, so this resolves rather than substitutes it
       if (isset($_SESSION['country'])) {
         $countries = xtc_get_countriesList($_SESSION['country']);
         $countries_id = (($countries !== false) ? $countries['countries_id'] : $countries_id);
