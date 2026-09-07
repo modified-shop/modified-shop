@@ -92,6 +92,12 @@
                           ? $_SESSION['paypal']['contact']['shipping_quote']
                           : array();
 
+      // the address whose own address event was declined, so that its retry keeps that event
+      $declined_address = isset($_SESSION['paypal']['contact']['shipping_declined_address'])
+                          && is_array($_SESSION['paypal']['contact']['shipping_declined_address'])
+                          ? $_SESSION['paypal']['contact']['shipping_declined_address']
+                          : array();
+
       if (isset($request['shipping_contact']) && is_array($request['shipping_contact'])) {
         // Apple Pay / Google Pay post the wallet contact shape
         $_SESSION['paypal']['contact']['shipping_quote'] = $request['shipping_contact'];
@@ -121,10 +127,12 @@
       $shipping_contact['postalCode'] = $postcode;
       $_SESSION['paypal']['contact']['shipping_quote'] = $shipping_contact;
 
-      // an option event has to match both the last successful quote and the call before it
+      // an option event has to match both the last successful quote and the call before it,
+      // and must never be an address whose own address event was already declined
       $current_key = paypal_shipping_address_key($shipping_contact);
       $address_changed = ($current_key !== paypal_shipping_address_key($quoted_address)
-                          || $current_key !== paypal_shipping_address_key($previous_address));
+                          || $current_key !== paypal_shipping_address_key($previous_address)
+                          || $current_key === paypal_shipping_address_key($declined_address));
 
       $shipping_address = $paypal->parse_contact($shipping_contact);
       if (empty($shipping_address['country_id'])) {
@@ -201,8 +209,12 @@
       }
 
       if (empty($shipping_option)) {
+        // a cart with nothing to ship has no options by design, that is not an unserviceable address
+        $requires_shipping = $paypal->order_requires_shipping($order);
+
         $paypal->LoggingManager->log('INFO', 'Wallet get_shipping_methods no options', array(
           'country' => (isset($_SESSION['country']) ? $_SESSION['country'] : null),
+          'requires_shipping' => $requires_shipping,
         ));
 
         // the address cannot be served, do not keep quoting the method picked for the previous one.
@@ -210,8 +222,11 @@
         $_SESSION['shipping'] = false;
         $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
 
-        if ($is_paypal_callback === true) {
+        if ($is_paypal_callback === true && $requires_shipping === true) {
           $issue = ($address_changed === false && isset($shipping_option_id)) ? 'METHOD_UNAVAILABLE' : 'ADDRESS_ERROR';
+          if ($issue == 'ADDRESS_ERROR') {
+            $_SESSION['paypal']['contact']['shipping_declined_address'] = $shipping_contact;
+          }
 
           return paypal_shipping_decline($issue);
         }
@@ -238,6 +253,7 @@
 
         $_SESSION['shipping'] = $shipping_session[$shipping_option_id];
         $_SESSION['paypal']['contact']['shipping_quoted_address'] = $shipping_contact;
+        unset($_SESSION['paypal']['contact']['shipping_declined_address']);
         $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
       }
 
