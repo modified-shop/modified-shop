@@ -86,6 +86,12 @@
                         ? $_SESSION['paypal']['contact']['shipping_quoted_address']
                         : array();
 
+      // the address of the previous call, so that a return to an earlier one still reads as a change
+      $previous_address = isset($_SESSION['paypal']['contact']['shipping_quote'])
+                          && is_array($_SESSION['paypal']['contact']['shipping_quote'])
+                          ? $_SESSION['paypal']['contact']['shipping_quote']
+                          : array();
+
       if (isset($request['shipping_contact']) && is_array($request['shipping_contact'])) {
         // Apple Pay / Google Pay post the wallet contact shape
         $_SESSION['paypal']['contact']['shipping_quote'] = $request['shipping_contact'];
@@ -115,8 +121,10 @@
       $shipping_contact['postalCode'] = $postcode;
       $_SESSION['paypal']['contact']['shipping_quote'] = $shipping_contact;
 
-      // same address as the last successful quote plus a submitted option means PayPal asked about the option
-      $address_changed = (paypal_shipping_address_key($quoted_address) !== paypal_shipping_address_key($shipping_contact));
+      // an option event has to match both the last successful quote and the call before it
+      $current_key = paypal_shipping_address_key($shipping_contact);
+      $address_changed = ($current_key !== paypal_shipping_address_key($quoted_address)
+                          || $current_key !== paypal_shipping_address_key($previous_address));
 
       $shipping_address = $paypal->parse_contact($shipping_contact);
       if (empty($shipping_address['country_id'])) {
