@@ -987,7 +987,8 @@
 
       if ($OrderID != '') {
         $response = $this->GetOrder($OrderID);
-        if (isset($response->purchase_units[0]->shipping)) {
+        // a shipping object can carry contact data only, without any address
+        if (isset($response->purchase_units[0]->shipping->address)) {
           $response->purchase_units[0]->shipping->address_array = $this->parse_address($response->purchase_units[0]->shipping);
         }
 
@@ -1289,8 +1290,8 @@
         $name = explode(' ', $address->name->full_name, 2);
       } else {
         $name = array(
-          $address->name->given_name,
-          $address->name->surname
+          ((isset($address->name->given_name)) ? $address->name->given_name : ''),
+          ((isset($address->name->surname)) ? $address->name->surname : '')
         );
       }
 
