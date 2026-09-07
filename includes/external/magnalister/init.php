@@ -184,7 +184,7 @@ function mlGetCurrentClientVersion($localVersion = 'unknown') {
 			)
 		);
 	}
-	
+
 	if (function_exists('json_decode')) {
 		$version = json_decode($version, true);
 	} else {
@@ -584,6 +584,9 @@ mlIsCacheDirWritable();
 /**
  * Global includes and initialisation
  */
+/* Stellt u.a. HTTP_CATALOG_SERVER sicher (@see mlGetCatalogServerUrl()), das direkt
+   im Anschluss verwendet wird. Wird weiter unten ohnehin nochmal (require_once) geladen. */
+require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/functionLib.php');
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/classes/MLShop.php');
 if (defined('DIR_FS_CATALOG_ORIGINAL_IMAGES')) {
 	define('SHOP_FS_PRODUCT_IMAGES',  DIR_FS_CATALOG_ORIGINAL_IMAGES);
@@ -862,7 +865,15 @@ if (getDBConfigValue('general.keytype', '0', 'pID') == 'artNr') {
 	$countProductsModels = MagnaDB::gi()->fetchOne('
 		SELECT COUNT(DISTINCT products_model) FROM '.TABLE_PRODUCTS.' WHERE products_model <> \'\' AND products_model IS NOT NULL'
 	);
-	if ($countProductsIDs != $countProductsModels) {
+	/* If either query fails (e.g. MySQL 1104 MAX_JOIN_SIZE / SQL_BIG_SELECTS, timeout,
+	   missing privileges), fetchOne() returns false. A loose comparison against false
+	   would falsely report duplicate product models and lock the user out of every
+	   marketplace. Skip the check in that case (fail open). */
+	if (($countProductsIDs === false) || ($countProductsModels === false)) {
+		$countProductsIDs = 0;
+		$countProductsModels = 0;
+	}
+	if ((int)$countProductsIDs !== (int)$countProductsModels) {
 		$forceConfigView = '<p class="errorBox">'.str_replace(
 			'#LINK#', 
 			toURL(array('module' => 'configuration', 'fixProductsModel' => 'true')),
@@ -889,7 +900,7 @@ if (!allRequiredConfigKeysAvailable($requiredConfigKeys, '0') || ($forceConfigVi
 }
 
 /* Don't try to authenticate if the PassPhrase is going to be set */
-if (!isset($_POST['conf']['general.passphrase']) && !loadMaranonCacheConfig() 
+if (!isset($_POST['conf']['general.passphrase']) && !loadMaranonCacheConfig()
     && (!isset($_GET['module']) || ($_GET['module'] != 'configuration'))
 ) {
 	$_mainTitle = ' - '.ML_ERROR_CANNOT_CONNECT_TO_SERVICE_LAYER_HEADLINE;

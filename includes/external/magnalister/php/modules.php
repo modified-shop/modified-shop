@@ -1027,6 +1027,56 @@ $_modules = array(
         ),
         'type' => 'marketplace',
     ),
+	'temu' => array(
+		'title' => ML_MODULE_TEMU,
+		'logo' => 'temu',
+		'displayAlways' => false,
+		'requiredConfigKeys' => array (
+			'temu.firstactivation',
+			'temu.lang',
+			'temu.quantity.type',
+			'temu.price.addkind',
+			'temu.import',
+			'temu.orderstatus.open',
+			'temu.orderstatus.shipped',
+			'temu.orderstatus.cancelled',
+			'temu.stocksync.tomarketplace',
+			'temu.stocksync.frommarketplace',
+		),
+		'pages' => array (
+			'prepare' => array (
+				'title' => ML_GENERIC_PREPARE,
+				'views' => array (
+					'apply' => ML_AMAZON_NEW_ITMES,
+					'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+				)
+			),
+			'checkin' => ML_GENERIC_CHECKIN,
+			'shippinglabel' => array (
+				'title' => ML_TEMU_SHIPPINGLABEL,
+				'views' => array (
+					'upload' => ML_TEMU_SHIPPINGLABEL_UPLOAD,
+					'overview' => ML_TEMU_SHIPPINGLABEL_OVERVIEW,
+				),
+			),
+			'listings' => array (
+				'title' => ML_GENERIC_LISTINGS,
+				'views' => array (
+					'inventory' => ML_GENERIC_INVENTORY,
+					'deleted' => ML_GENERIC_DELETED,
+				),
+			),
+			'errorlog' => ML_GENERIC_ERRORLOG,
+			'conf' => ML_GENERIC_CONFIGURATION,
+		),
+		'settings' => array (
+			'defaultpage' => 'prepare',
+			'subsystem' => 'Temu',
+			'currency' => '__depends__',
+			'hasOrderImport' => true,
+		),
+		'type' => 'marketplace',
+	),
 	'more' => array (
 		'title' => '&hellip;',
 		'displayAlways' => true,

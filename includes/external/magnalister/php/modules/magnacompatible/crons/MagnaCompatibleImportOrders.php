@@ -45,6 +45,14 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	protected $mailOrderSummary = array();
 	protected $comment = '';
 
+	/* Marks a marketplace from which we actually receive a buyer message (resp. payment
+	   details for METRO). When the "buyer message only" expert setting
+	   (general.order.buyermessageonly) is enabled, these marketplaces suppress the automatic
+	   header and store only the buyer message; all other marketplaces store an empty comment.
+	   Marketplaces that override generateOrderComment()/generateOrdersStatusComment() handle
+	   this on their own. */
+	protected $blSupportsBuyerMessageOnly = false;
+
 	/* specific to all orders */
 	protected $syncBatch = array(); /* sync batch for other marketplaces */
 	protected $allCurrencies = array(); /* list of different currencies */
@@ -816,13 +824,28 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	 */
 	protected function generateOrderComment($blForce = false) {
 		if (!$blForce && !getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
-			return ''; 
+			return '';
+		}
+		if ($this->buyerMessageOnly()) {
+			/* Supported marketplaces keep only the buyer message; all others store nothing. */
+			return $this->blSupportsBuyerMessageOnly ? trim($this->comment) : '';
 		}
 		return trim(
 			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->marketplaceTitle)."\n".
 			ML_LABEL_MARKETPLACE_ORDER_ID.': '.$this->getMarketplaceOrderID()."\n\n".
 			$this->comment
 		);
+	}
+
+	/**
+	 * Whether the "buyer message only" expert setting is enabled. If it is, the automatic
+	 * header (marketplace name and order number) must be suppressed in the order comment and
+	 * the order status history, so that only the buyer message (resp. payment details) is stored.
+	 *
+	 * @return bool
+	 */
+	protected function buyerMessageOnly() {
+		return (bool)getDBConfigValue(array('general.order.buyermessageonly', 'val'), 0, false);
 	}
 
     /**
@@ -1000,6 +1023,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
                 ");
 		$this->o['order']['campaign'] = '';
 		$this->o['order']['ibn_billdate'] = '0000-00-00';
+		// for modified v. >= 3.3.1
+		if (MagnaDB::gi()->columnExistsInTable('orders_source', TABLE_ORDERS)) {
+			$this->o['order']['orders_source'] = 'magnalister';
+		}
         MagnaDB::gi()->validateDataLength($this->o['order'], TABLE_ORDERS);
         MagnaDB::gi()->addNonNullableEntries($this->o['order'], TABLE_ORDERS);
 		$this->insert(TABLE_ORDERS, array_filter_keys($this->o['order'], MagnaDB::gi()->getTableColumns(TABLE_ORDERS)));
@@ -1890,7 +1917,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			'#LASTNAME#' => $this->o['order']['billing_lastname'],
 			'#EMAIL#' => $this->o['customer']['customers_email_address'],
 			'#PASSWORD#'  => $this->cur['customer']['Password'],
-			'#MORDERID#' => $this->o['orderInfo']['MOrderID'],
+			'#MORDERID#' => (isset($this->o['orderInfo']['MOrderID']) ? $this->o['orderInfo']['MOrderID'] : ''),
 			'#ORDERSUMMARY#' => $this->mailOrderSummary,
 			'#MARKETPLACE#' => $this->marketplaceTitle,
 			'#SHOPURL#' => HTTP_SERVER.DIR_WS_CATALOG,

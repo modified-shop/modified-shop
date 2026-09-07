@@ -104,8 +104,31 @@ class OttoIndependentAttributes {
                 if($value['name'] == 'Brand') {
                     $brandCacheFile = DIR_MAGNALISTER_FS_CACHE.'ottoBrandCache.json';
                     file_put_contents($brandCacheFile, json_encode($value['values']));
-                } 
+                }
             }
         }
+    }
+
+    /**
+     * Ticket 611677: Resolve a saved OTTO brand id to its display name from the cached brand list
+     * (ottoBrandCache.json is a BrandId => BrandName map). Used to preselect a saved brand in the
+     * "Otto attribute value" select without re-querying the marketplace.
+     *
+     * @param string $brandId
+     * @return string  the brand name, or the id itself if not found in the cache
+     */
+    public static function getOttoBrandNameFromCache($brandId) {
+        if ($brandId === '' || $brandId === null) {
+            return '';
+        }
+        $brandCacheFile = DIR_MAGNALISTER_FS_CACHE.'ottoBrandCache.json';
+        if (!is_file($brandCacheFile)) {
+            return $brandId;
+        }
+        $brands = json_decode(file_get_contents($brandCacheFile), true);
+        if (is_array($brands) && isset($brands[$brandId])) {
+            return $brands[$brandId];
+        }
+        return $brandId;
     }
 }

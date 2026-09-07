@@ -20,6 +20,8 @@
  */
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+require_once(DIR_MAGNALISTER_MODULES.'hitmeister/HitmeisterHelper.php');
+
 class HitmeisterProductSaver {
 	const DEBUG = false;
 	public $aErrors = array();
@@ -49,6 +51,12 @@ class HitmeisterProductSaver {
 		*/
 		if (($hp = magnaContribVerify('HitmeisterInsertPrepareData', 1)) !== false) {
 			require($hp);
+		}
+		if (isset($aData['Title'])) {
+			$aData['Title'] = HitmeisterHelper::truncateTitle($aData['Title']);
+		}
+		if (isset($aData['Subtitle'])) {
+			$aData['Subtitle'] = HitmeisterHelper::truncateSubtitle($aData['Subtitle']);
 		}
 		if (self::DEBUG) {
 			echo print_m($aData, __METHOD__);
@@ -179,6 +187,7 @@ class HitmeisterProductSaver {
 		$aRow['ShippingTime'] = $aItemDetails['shippingtime'];
 		$aRow['HandlingTime'] = $aItemDetails['handlingtime'];
 		$aRow['ShippingGroup'] = $aItemDetails['shippinggroup'];
+		$aRow['WarehouseId'] = isset($aItemDetails['warehouse']) ? $aItemDetails['warehouse'] : 0;
 		$aRow['Location'] = $aItemDetails['deliverycountry'];
 		$aRow['Comment'] = $aItemDetails['comment'];
 
@@ -217,12 +226,13 @@ class HitmeisterProductSaver {
 				'mpID'				=> $this->mpId,
 				'products_id'		=> $pId,
 				'products_model'	=> $productModel,
-				'Title'				=> $itemDetails['matching'][$pId]['title'],
+				'Title'				=> HitmeisterHelper::truncateTitle($itemDetails['matching'][$pId]['title']),
 				'EAN'				=> $itemDetails['matching'][$pId]['ean'],
 				'ConditionType'		=> $itemDetails['unit']['condition_id'],
 				'ShippingTime'		=> $itemDetails['unit']['shippingtime'],
 				'HandlingTime'		=> $itemDetails['unit']['handlingtime'],
 				'ShippingGroup'		=> $itemDetails['unit']['shippinggroup'],
+				'WarehouseId'		=> isset($itemDetails['unit']['warehouse']) ? $itemDetails['unit']['warehouse'] : 0,
 				'Location'			=> $itemDetails['unit']['deliverycountry'],
 				'Comment'			=> $itemDetails['unit']['comment'],
 				'PrepareType'		=> 'Match',
@@ -230,6 +240,12 @@ class HitmeisterProductSaver {
 				'PreparedTs'		=> date('Y-m-d H:i:s'),
 			);
 
+			/* A match does not carry every column of the table, but REPLACE INTO
+			   rewrites the whole row. `CategoryAttributes` is `text NOT NULL`
+			   without a default -- TEXT columns cannot have one -- so MySQL rejects
+			   the statement in strict mode with error 1364. Fill in the missing
+			   non-nullable columns before writing. */
+			MagnaDB::gi()->addNonNullableEntries($matchedProduct, TABLE_MAGNA_HITMEISTER_PREPARE);
 			MagnaDB::gi()->insert(TABLE_MAGNA_HITMEISTER_PREPARE, $matchedProduct, true);
 		}
 	}

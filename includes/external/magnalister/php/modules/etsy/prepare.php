@@ -55,6 +55,24 @@ class EtsyPrepare extends MagnaCompatibleBase {
 		$productModel = EtsyHelper::gi()->getProductModel('prepare');
 		die(json_encode(EtsyHelper::gi()->getMPVariations($_POST['SelectValue'], $productModel, true)));
 	}
+
+	// ajax / DBMatchingColumns in prepare item form ("Wähle Datenbank-Werte" -> Spalte)
+	// Sibling of the LoadMPVariations handler above: the prepare form's variation-matching JS
+	// sends where=EtsyPrepareView, which is not in the processMatching() gate below, so the
+	// request would otherwise fall through to processSelection() and return an empty body.
+	if (    (isset($_GET['mode']) && $_GET['mode'] == 'prepare')
+	     && (isset($_GET['view']) && ($_GET['view'] == 'apply' || $_GET['view'] == 'prepare'))
+	     && (isset($_GET['kind']) && $_GET['kind'] == 'ajax')
+	     && (isset($_GET['where']) && $_GET['where'] == 'EtsyPrepareView')
+	     && (isset($_POST['Action']) && $_POST['Action'] == 'DBMatchingColumns')
+	     && (isset($_POST['Table']))) {
+		$columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+		$editedColumns = array();
+		foreach ($columns as $column) {
+			$editedColumns[$column] = $column;
+		}
+		die(json_encode($editedColumns, JSON_FORCE_OBJECT));
+	}
         /*if (isset($_POST['request'])
             && ($_POST['request'] === 'ItemSearchByTitle' || $_POST['request'] === 'ItemSearchByEAN')
         ) {

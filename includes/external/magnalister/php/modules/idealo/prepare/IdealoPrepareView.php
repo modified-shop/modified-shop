@@ -271,10 +271,24 @@ class IdealoPrepareView extends MagnaCompatibleBase {
             'DisposalFee' => null,
             'DeliveryTime' => null,
             'DeliveryTimeSource' => null,
+            'ItemConditionType' => null,
+            'ItemCondition' => null,
+            'FreeReturnDays' => null,
+            'EecSpectrum' => null,
+            'EecEfficiencyClass' => null,
+            'EecLabelUrl' => null,
+            'EecDataSheetUrl' => null,
+            'EecVersion' => null,
         );
 
         $defaults = array (
             'PictureUrl' => null,
+            'ItemConditionType' => getDBConfigValue($this->marketplace . '.itemconditiontype', $this->mpID, 'NEW'),
+            'ItemCondition' => getDBConfigValue($this->marketplace . '.itemcondition', $this->mpID, 'EXCELLENT'),
+            // No hard default: if the configuration value is empty, the preparation field stays empty
+            // (and an empty preparation field is not submitted, see IdealoCheckinSubmit).
+            'FreeReturnDays' => getDBConfigValue($this->marketplace . '.freereturndays', $this->mpID, ''),
+            'EecSpectrum' => getDBConfigValue($this->marketplace . '.eecspectrum', $this->mpID, ''),
             'Checkout' => getDBConfigValue($this->marketplace . '.directbuy.active', $this->mpID),
             'PaymentMethod' => getDBConfigValue($this->marketplace . '.payment.methods', $this->mpID),
             'ShippingMethod' => getDBConfigValue($this->marketplace . '.shipping.methods', $this->mpID),
@@ -302,11 +316,17 @@ class IdealoPrepareView extends MagnaCompatibleBase {
 	        }
         }
 
+        // Configuration-backed fields are pre-filled from the configuration; if not set on the
+        // prepared row (e.g. prepared with an older version, so the column is "" after migration)
+        // fall back to the configured default instead of an empty value.
+        $aConfigBackedFields = array('ItemConditionType', 'ItemCondition', 'FreeReturnDays', 'EecSpectrum');
         foreach ($preSelected as $field => $collection) {
             $collection = array_unique($collection);
             if (count($collection) == 1) {
                 $preSelected[$field] = array_shift($collection);
-                if (($preSelected[$field] === null) && isset($defaults[$field])) {
+                $bEmpty = ($preSelected[$field] === null)
+                    || (in_array($field, $aConfigBackedFields) && $preSelected[$field] === '');
+                if ($bEmpty && isset($defaults[$field])) {
                     $preSelected[$field] = $defaults[$field];
                 }
             } else {
@@ -508,6 +528,92 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                         }
                     ?>
                     <input type="text" name="DeliveryTime" id="DeliveryTime" value="<?php echo $deliveryTime; ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_ITEM_CONDITION_TYPE ?></th>
+                <td class="input">
+                    <?php
+                    $aConditionTypes = array(
+                        'NEW'         => ML_IDEALO_CONDITIONTYPE_NEW,
+                        'AS_NEW'      => ML_IDEALO_CONDITIONTYPE_AS_NEW,
+                        'REFURBISHED' => ML_IDEALO_CONDITIONTYPE_REFURBISHED,
+                        'USED'        => ML_IDEALO_CONDITIONTYPE_USED,
+                    );
+                    $itemConditionType = !empty($preSelected['ItemConditionType']) ? $preSelected['ItemConditionType'] : 'NEW';
+                    $itemConditionTypeSelect = '<select id="ItemConditionType" name="ItemConditionType">';
+                    foreach ($aConditionTypes as $key => $label) {
+                        $itemConditionTypeSelect .= '<option value="'.$key.'"'.($itemConditionType == $key ? ' selected="selected"' : '').'>'.$label.'</option>'."\n";
+                    }
+                    echo $itemConditionTypeSelect;
+                    ?>
+                    </select>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_ITEM_CONDITION ?></th>
+                <td class="input">
+                    <?php
+                    $aConditions = array(
+                        'EXCELLENT'  => ML_IDEALO_CONDITION_EXCELLENT,
+                        'VERY_GOOD'  => ML_IDEALO_CONDITION_VERY_GOOD,
+                        'GOOD'       => ML_IDEALO_CONDITION_GOOD,
+                        'ACCEPTABLE' => ML_IDEALO_CONDITION_ACCEPTABLE,
+                    );
+                    $itemCondition = !empty($preSelected['ItemCondition']) ? $preSelected['ItemCondition'] : 'EXCELLENT';
+                    $itemConditionSelect = '<select id="ItemCondition" name="ItemCondition">';
+                    foreach ($aConditions as $key => $label) {
+                        $itemConditionSelect .= '<option value="'.$key.'"'.($itemCondition == $key ? ' selected="selected"' : '').'>'.$label.'</option>'."\n";
+                    }
+                    echo $itemConditionSelect;
+                    ?>
+                    </select>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_FREE_RETURN_DAYS ?></th>
+                <td class="input">
+                    <?php $freeReturnDays = isset($preSelected['FreeReturnDays']) ? $preSelected['FreeReturnDays'] : ''; ?>
+                    <input type="text" name="FreeReturnDays" id="FreeReturnDays" value="<?php echo htmlspecialchars($freeReturnDays, ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_SPECTRUM ?></th>
+                <td class="input">
+                    <?php $eecSpectrum = isset($preSelected['EecSpectrum']) ? $preSelected['EecSpectrum'] : ''; ?>
+                    <input type="text" name="EecSpectrum" id="EecSpectrum" value="<?php echo htmlspecialchars($eecSpectrum, ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_EFFICIENCY_CLASS ?></th>
+                <td class="input">
+                    <input type="text" name="EecEfficiencyClass" id="EecEfficiencyClass" value="<?php echo htmlspecialchars(isset($preSelected['EecEfficiencyClass']) ? $preSelected['EecEfficiencyClass'] : '', ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_LABEL_URL ?></th>
+                <td class="input">
+                    <input type="text" class="fullwidth" name="EecLabelUrl" id="EecLabelUrl" value="<?php echo htmlspecialchars(isset($preSelected['EecLabelUrl']) ? $preSelected['EecLabelUrl'] : '', ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_DATA_SHEET_URL ?></th>
+                <td class="input">
+                    <input type="text" class="fullwidth" name="EecDataSheetUrl" id="EecDataSheetUrl" value="<?php echo htmlspecialchars(isset($preSelected['EecDataSheetUrl']) ? $preSelected['EecDataSheetUrl'] : '', ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_VERSION ?></th>
+                <td class="input">
+                    <input type="text" name="EecVersion" id="EecVersion" value="<?php echo htmlspecialchars(isset($preSelected['EecVersion']) ? $preSelected['EecVersion'] : '', ENT_QUOTES); ?>"/>
                 </td>
                 <td class="info"></td>
             </tr>

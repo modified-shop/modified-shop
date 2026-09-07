@@ -161,25 +161,11 @@ function mlGetPaymentModules(&$form) {
 	if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE);
 }
 
+// Do not use the "carriers" table here: those are Track & Trace parcel services without any shipping cost logic, while this needs the shipping modules installed under MODULE_SHIPPING_INSTALLED.
 function mlGetShippingModules(&$form) {
-	if (   MagnaDB::gi()->tableExists('carriers')
-	    && MagnaDB::gi()->tableExists('orders_tracking')
-	    && MagnaDB::gi()->fetchOne("SELECT COUNT(*) FROM carriers") > 0
-	) {
-		$carriers = MagnaDB::gi()->fetchArray("
-			SELECT carrier_id, carrier_name
-			  FROM carriers
-			 ORDER BY carrier_sort_order, carrier_name
-		");
-		foreach ($carriers as $carrier) {
-			$form['values'][$carrier['carrier_id']] = $carrier['carrier_name'];
-		}
-		return;
-	}
-
 	global $_magnaLanguage;
 	$shippings = explode(';', MODULE_SHIPPING_INSTALLED);
-
+	
 	if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) ^ E_NOTICE);
 	foreach ($shippings as $s) {
 		if (empty($s)) continue;

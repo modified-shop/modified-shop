@@ -77,6 +77,25 @@ class OttoPrepare extends MagnaCompatibleBase {
             die(json_encode(OttoHelper::gi()->getCategoryIndependentAttributes($independentAttributes, $_POST['SelectValue'], $model, true)));
         }
 
+        // ajax / DBMatchingColumns in prepare item form ("Wähle Datenbank-Werte" -> Spalte)
+        // Sibling of the LoadMPVariations handler above: the prepare form's variation-matching JS
+        // sends where=OttoPrepareView, which is not in the processMatching() gate below, so the
+        // request would otherwise fall through to processSelection() and return an empty body
+        // (the DBMatchingColumns routing in processProductList() only runs when MAGNA_DEV_PRODUCTLIST).
+        if (    (isset($_GET['mode']) && $_GET['mode'] == 'prepare')
+             && (isset($_GET['view']) && ($_GET['view'] == 'apply' || $_GET['view'] == 'prepare'))
+             && (isset($_GET['kind']) && $_GET['kind'] == 'ajax')
+             && (isset($_GET['where']) && $_GET['where'] == 'OttoPrepareView')
+             && (isset($_POST['Action']) && $_POST['Action'] == 'DBMatchingColumns')
+             && (isset($_POST['Table']))) {
+            $columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+            $editedColumns = array();
+            foreach ($columns as $column) {
+                $editedColumns[$column] = $column;
+            }
+            die(json_encode($editedColumns, JSON_FORCE_OBJECT));
+        }
+
 #echo "<br />\n".__METHOD__.' '.__LINE__."<br />\n";
 
         $independentShopVariation = false;

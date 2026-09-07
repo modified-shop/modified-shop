@@ -412,10 +412,22 @@ class OttoHelper extends AttributesMatchingHelper {
                 $currentValues = $this->setDefaultFiledsOnIndependentAttributes($utf8Code);
             }
 
+            // Ticket 611677: For the "Brand" attribute the full OTTO brand list (~40.000 entries)
+            // would otherwise be shipped in AllowedValues (~930 kB per page build). The dropdown is
+            // lazy-loaded via the getOttoBrands AJAX endpoint, so the full list is not needed here.
+            // We only keep the already matched brand value(s) so the client-side "deleted on
+            // marketplace" check for the saved match keeps working.
+            $isBrand = ($utf8Code === 'Brand');
+            $allowedValues = isset($value['values']) ? $value['values'] : array();
+            if ($isBrand && !empty($allowedValues)) {
+                $allowedValues = $this->reduceAllowedValuesToMatched($allowedValues, $currentValues);
+            }
+
             $attributes[$utf8Code] = array(
                 'AttributeCode' => $utf8Code,
                 'AttributeName' => html_entity_decode($value['title']),
-                'AllowedValues' => isset($value['values']) ? $value['values'] : array(),
+                'AllowedValues' => $allowedValues,
+                'LazyLoaded' => $isBrand,
                 'AttributeDescription' => isset($value['desc']) ? html_entity_decode($value['desc']) : '',
                 'CurrentValues' => $currentValues,
                 'ChangeDate' => isset($value['changed']) ? $value['changed'] : false,
@@ -435,6 +447,20 @@ class OttoHelper extends AttributesMatchingHelper {
                 }
 
                 $attributes[$utf8Code]['CurrentValues'] = $dbData[$utf8Code];
+            }
+
+            // Ticket 611677: For a Brand saved via "Otto attribute value" only the brand id is stored in
+            // the flat Values. The brand list is lazy-loaded, so resolve the id to its display name here
+            // and expose it as ValuesText so the client can preselect the saved brand in the select2.
+            if ($isBrand
+                && isset($attributes[$utf8Code]['CurrentValues']['Code'])
+                && $attributes[$utf8Code]['CurrentValues']['Code'] === 'attribute_value'
+                && isset($attributes[$utf8Code]['CurrentValues']['Values'])
+                && is_string($attributes[$utf8Code]['CurrentValues']['Values'])
+                && $attributes[$utf8Code]['CurrentValues']['Values'] !== ''
+            ) {
+                $attributes[$utf8Code]['CurrentValues']['ValuesText'] =
+                    OttoIndependentAttributes::getOttoBrandNameFromCache($attributes[$utf8Code]['CurrentValues']['Values']);
             }
         }
 
@@ -847,6 +873,37 @@ class OttoHelper extends AttributesMatchingHelper {
                 }
             }
         }
+    }
+
+    /**
+     * Ticket 611677: Reduce a huge AllowedValues list (e.g. the ~40.000 OTTO brands) down to only
+     * the value(s) that are currently matched. This keeps the payload small while still allowing the
+     * client-side "still available on marketplace?" check for the saved match to work. The full list
+     * is loaded lazily via the getOttoBrands AJAX endpoint when the user opens the dropdown.
+     *
+     * @param array $allowed Full BrandId => BrandName list
+     * @param array $current CurrentValues (may contain ['Values'][n]['Marketplace']['Key'])
+     * @return array Only the matched entries (or an empty array)
+     */
+    private function reduceAllowedValuesToMatched($allowed, $current) {
+        $keep = array();
+        if (isset($current['Values']) && is_array($current['Values'])) {
+            foreach ($current['Values'] as $entry) {
+                if (!isset($entry['Marketplace']['Key'])) {
+                    continue;
+                }
+                $keys = $entry['Marketplace']['Key'];
+                if (!is_array($keys)) {
+                    $keys = array($keys);
+                }
+                foreach ($keys as $k) {
+                    if (isset($allowed[$k])) {
+                        $keep[$k] = $allowed[$k];
+                    }
+                }
+            }
+        }
+        return $keep;
     }
 
     private function setDefaultFiledsOnIndependentAttributes($utf8Code) {

@@ -442,6 +442,99 @@ class MagnaConnector {
 		$this->cacheShortTime[$requestHash] = $response;
 	}
 
+	/**
+	 * Submit a request, reusing an identical response from cache.
+	 *
+	 * Two cache layers:
+	 *   L1 — in-memory, always on, valid for the current request only.
+	 *   L2 — persistent file cache under magnalister/cache/, used only when $ttl > 0,
+	 *        expiring $ttl seconds after it was written (file mtime).
+	 *
+	 * Only successful (array) responses are cached — errors/false are never stored.
+	 * Pass $ttl = 0 for calls whose result must stay fresh across requests (e.g. IsAuthed):
+	 * that keeps the L1 per-request cache but skips persistence.
+	 *
+	 * @param array $requestFields The request fields
+	 * @param int   $ttl Persistent cache lifetime in seconds; 0 disables persistence.
+	 * @return array|bool The response, or false on empty/failed request.
+	 */
+	public function submitRequestCached($requestFields, $ttl = 1800) {
+		$requestHash = md5(serialize($requestFields) . '_cached');
+
+		// L1: in-memory (this request).
+		$cached = $this->getFromShortTimeCache($requestHash);
+		if ($cached !== false) {
+			return $cached;
+		}
+
+		// L2: persistent file cache with TTL.
+		$cached = $this->getFromPersistentCache($requestHash, $ttl);
+		if ($cached !== false) {
+			$this->setShortTimeCache($requestHash, $cached);
+			return $cached;
+		}
+
+		$result = $this->submitRequest($requestFields);
+
+		// Cache only successful array responses; never cache false/error results.
+		if (is_array($result)) {
+			$this->setShortTimeCache($requestHash, $result);
+			$this->setPersistentCache($requestHash, $result, $ttl);
+		}
+		return $result;
+	}
+
+	protected function getPersistentCacheFile($requestHash) {
+		return DIR_MAGNALISTER_FS.'cache/apicache_'.$requestHash.'.json';
+	}
+
+	/**
+	 * Read a persisted response if the file exists and is younger than $ttl.
+	 * @return array|bool The cached array, or false when disabled/missing/expired.
+	 */
+	protected function getFromPersistentCache($requestHash, $ttl) {
+		if ($ttl <= 0) {
+			return false;
+		}
+		$file = $this->getPersistentCacheFile($requestHash);
+		if (!is_file($file)) {
+			return false;
+		}
+		$mtime = @filemtime($file);
+		if ($mtime === false || (time() - $mtime) >= $ttl) {
+			return false; // expired
+		}
+		$raw = @file_get_contents($file);
+		if ($raw === false || $raw === '') {
+			return false;
+		}
+		$data = json_decode($raw, true);
+		return is_array($data) ? $data : false;
+	}
+
+	/**
+	 * Persist a successful response. No-op when $ttl <= 0 or the cache dir is absent.
+	 * Writes atomically (temp file + rename) so concurrent reads never see a partial file.
+	 */
+	protected function setPersistentCache($requestHash, $response, $ttl) {
+		if ($ttl <= 0 || !is_array($response)) {
+			return;
+		}
+		$dir = DIR_MAGNALISTER_FS.'cache/';
+		if (!is_dir($dir) || !is_writable($dir)) {
+			return; // cache is best-effort; never fatal
+		}
+		$json = json_encode($response);
+		if ($json === false) {
+			return;
+		}
+		$file = $this->getPersistentCacheFile($requestHash);
+		$tmp = $file.'.'.getmypid().'.tmp';
+		if (@file_put_contents($tmp, $json, LOCK_EX) !== false) {
+			@rename($tmp, $file);
+		}
+	}
+
 	public function submitRequest($requestFields) {
 		if (!is_array($requestFields) || empty($requestFields)) {
 			return false;

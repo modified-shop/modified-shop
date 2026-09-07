@@ -50,7 +50,13 @@ function verifyUniqueSKUs() {
 		 WHERE products_model <> \'\' AND products_model IS NOT NULL
 	');
 	#echo '$countProductsIDs['.$countProductsIDs.'] != $countProductsModels['.$countProductsModels.']'."\n";
-	if ($countProductsIDs != $countProductsModels) {
+	/* On a database error (e.g. MySQL 1104 MAX_JOIN_SIZE) fetchOne() returns false.
+	   A loose comparison against false would make this test fail incorrectly. */
+	if (($countProductsIDs === false) || ($countProductsModels === false)) {
+		$countProductsIDs = 0;
+		$countProductsModels = 0;
+	}
+	if ((int)$countProductsIDs !== (int)$countProductsModels) {
 		return false;
 	}
 	
@@ -63,7 +69,12 @@ function verifyUniqueSKUs() {
 		 WHERE attributes_model <> \'\' AND attributes_model IS NOT NULL
 	');
 	#echo '$countAttributesIDs['.$countAttributesIDs.'] != $countAttributesModels['.$countAttributesModels.']'."\n";
-	if ($countAttributesIDs != $countAttributesModels) {
+	/* Same as the product check above: do not fail incorrectly on a database error. */
+	if (($countAttributesIDs === false) || ($countAttributesModels === false)) {
+		$countAttributesIDs = 0;
+		$countAttributesModels = 0;
+	}
+	if ((int)$countAttributesIDs !== (int)$countAttributesModels) {
 		return false;
 	}
 	

@@ -30,8 +30,28 @@ function extend_ebay_properties_table() {
 		MagnaDB::gi()->query('ALTER TABLE `'.TABLE_MAGNA_EBAY_PROPERTIES.'` CHANGE COLUMN `StoreCategory` `StoreCategory` bigint(11) default NULL');
 	if (! MagnaDB::gi()->columnExistsInTable('StoreCategory2', TABLE_MAGNA_EBAY_PROPERTIES))
 		MagnaDB::gi()->query('ALTER TABLE `'.TABLE_MAGNA_EBAY_PROPERTIES.'` ADD COLUMN `StoreCategory2` bigint(11) default NULL AFTER `StoreCategory`');
-	if ('varchar(80)' != MagnaDB::gi()->columnType('Title',TABLE_MAGNA_EBAY_PROPERTIES)) {
-		MagnaDB::gi()->query('ALTER TABLE `'.TABLE_MAGNA_EBAY_PROPERTIES.'` CHANGE COLUMN `Title` `Title` varchar(80) NOT NULL DEFAULT \'\'');
+	/* Disabled on purpose.
+	 *
+	 * These statements shrank `Title` to varchar(80) and `Subtitle` to varchar(55).
+	 * Migration 105 later widened `Title` to VARCHAR(96) on purpose ("umlauts need
+	 * more than 1 byte"), so this migration was undoing a deliberate later change.
+	 *
+	 * A forced database update (?dbupdate=true) resets CurrentDBVersion to 0 and
+	 * replays every migration, so the shrink ran again on every forced update and
+	 * failed with MySQL error 1406 whenever a shop had titles longer than the
+	 * limit. Column width is not the place to enforce the marketplace limit -- it
+	 * is enforced when the data is written, see EbayHelper::truncateTitle().
+	 *
+	 * MagnaDB::gi()->query('ALTER TABLE `'.TABLE_MAGNA_EBAY_PROPERTIES.'` CHANGE COLUMN `Title` `Title` varchar(80) NOT NULL DEFAULT \'\'');
+	 */
+
+	/* `Subtitle` is kept, because no later migration widens it -- but it only runs
+	   when the column is actually too narrow, so it can never shrink anything. */
+	$sSubtitleType = MagnaDB::gi()->columnType('Subtitle', TABLE_MAGNA_EBAY_PROPERTIES);
+	if (is_string($sSubtitleType)
+		&& preg_match('/^varchar\\((\\d+)\\)$/i', $sSubtitleType, $aSubtitleMatch)
+		&& ((int)$aSubtitleMatch[1] < 55)
+	) {
 		MagnaDB::gi()->query('ALTER TABLE `'.TABLE_MAGNA_EBAY_PROPERTIES.'` CHANGE COLUMN `Subtitle` `Subtitle` varchar(55) NOT NULL DEFAULT \'\'');
 	}
 	return;

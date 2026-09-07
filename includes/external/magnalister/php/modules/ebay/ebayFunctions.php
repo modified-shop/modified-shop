@@ -1831,15 +1831,21 @@ function eBayInsertPrepareData($data) {
     if (($hp = magnaContribVerify('eBayInsertPrepareData', 1)) !== false) {
         require($hp);
     }
+    if (isset($data['Title'])) {
+        $data['Title'] = EbayHelper::truncateTitle($data['Title']);
+    }
+    if (isset($data['Subtitle'])) {
+        $data['Subtitle'] = EbayHelper::truncateSubtitle($data['Subtitle']);
+    }
     MagnaDB::gi()->insert(TABLE_MAGNA_EBAY_PROPERTIES, $data, true);
 }
 
 function SaveEBaySingleProductProperties($pID, $itemDetails) {
     global $_MagnaSession;
     $row = prepareEBayPropertiesRow($pID, $itemDetails);
-    $row['Title'] = mb_substr(trim(strip_tags(html_entity_decode($itemDetails['Title']))), 0, 80, 'UTF-8');
+    $row['Title'] = EbayHelper::truncateTitle(trim(strip_tags($itemDetails['Title'])));
     if (array_key_exists('enableSubtitle', $itemDetails) && ('on' == $itemDetails['enableSubtitle']) && !empty($itemDetails['Subtitle'])) {
-        $row['Subtitle'] = mb_substr(trim(strip_tags($itemDetails['Subtitle'])), 0, 55, 'UTF-8');
+        $row['Subtitle'] = EbayHelper::truncateSubtitle(trim(strip_tags($itemDetails['Subtitle'])));
     }
     if (!empty($itemDetails['PictureURL'])) {
         if (is_array($itemDetails['PictureURL'])) {
@@ -1969,14 +1975,14 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
         $pID = $dataRow['products_id'];
         #$row['Title'] = (isset($prefilled_data_by_pID[$pID]) && isset($prefilled_data_by_pID[$pID]['Title']))
         #	? $prefilled_data_by_pID[$pID]['Title']
-        $row['Title'] = mb_substr(eBaySubstituteTemplate($_MagnaSession['mpID'], $dataRow['products_id'], $eBayTitleTemplate, array(
+        $row['Title'] = EbayHelper::truncateTitle(eBaySubstituteTemplate($_MagnaSession['mpID'], $dataRow['products_id'], $eBayTitleTemplate, array(
             '#TITLE#' => strip_tags($dataRow['products_name']),
             '#ARTNR#' => $dataRow['products_model']
-        )), 0, 80, 'UTF-8');
+        )));
         if ('on' == $itemDetails['enableSubtitle'] && !empty($dataRow['products_short_description'])) {
             #$row['Subtitle'] = (isset($prefilled_data_by_pID[$pID]) && isset($prefilled_data_by_pID[$pID]['Subtitle']))
             #? $prefilled_data_by_pID[$pID]['Subtitle']
-            $row['Subtitle'] = mb_substr(trim(strip_tags($dataRow['products_short_description'])), 0, 55, 'UTF-8');
+            $row['Subtitle'] = EbayHelper::truncateSubtitle(trim(strip_tags($dataRow['products_short_description'])));
         }
         if ('on' == $itemDetails['privateListing']) {
             $row['PrivateListing'] = '1';

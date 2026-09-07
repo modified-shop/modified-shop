@@ -214,7 +214,7 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 	
 	protected function generateOrderComment($blForce = false) {
 		$comment = str_replace('GiftMessageText', ML_AMAZON_LABEL_GIFT_MESSAGE, $this->o['order']['comments']);
-		if ($blForce || getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
+		if (!$this->buyerMessageOnly() && ($blForce || getDBConfigValue(array('general.order.information', 'val'), 0, true))) {
 			$comment = trim(
 				sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->getMarketplaceTitle())."\n".
 				'AmazonOrderID: '.$this->getMarketplaceOrderID()."\n\n".
@@ -223,14 +223,16 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 		}
 		return $comment;
 	}
-	
+
 	protected function generateOrdersStatusComment() {
 		$comment = str_replace('GiftMessageText', ML_AMAZON_LABEL_GIFT_MESSAGE, $this->o['orderStatus']['comments']);
-		$comment = trim(
-			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP, $this->getMarketplaceTitle())."\n".
-			'AmazonOrderID: '.$this->getMarketplaceOrderID()."\n\n".
-			$comment
-		);
+		if (!$this->buyerMessageOnly()) {
+			$comment = trim(
+				sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP, $this->getMarketplaceTitle())."\n".
+				'AmazonOrderID: '.$this->getMarketplaceOrderID()."\n\n".
+				$comment
+			);
+		}
 		return $comment;
 	}
 	

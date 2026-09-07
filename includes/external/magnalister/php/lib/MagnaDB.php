@@ -658,10 +658,16 @@ class MagnaDB {
 				</span>'
 			);
 		}
-		$vers = $this->driver->getServerInfo();
-		if (substr($vers, 0, 1) > 4) {
-			$this->query("SET SESSION sql_mode=''");
-		}
+		/* No server version check here. This used to be guarded by
+		   substr($this->driver->getServerInfo(), 0, 1) > 4 to skip MySQL 4, which does not
+		   support this statement. That guard silently stopped working on MariaDB: since
+		   PHP 8.0.16/8.1.3 mysqlnd strips MariaDB's "5.5.5-" compatibility prefix, so
+		   getServerInfo() returns "10.6.12-MariaDB" / "11.4.2-MariaDB", whose first
+		   character is "1", making the comparison against 4 false.
+		   MySQL 4 has been end of life since 2008 and cannot run this plugin's other SQL
+		   anyway, so the version gate has no remaining purpose and the statement runs
+		   unconditionally. */
+		$this->query("SET SESSION sql_mode=''");
 		$this->selectDatabase($this->database);
 		
 		return true;

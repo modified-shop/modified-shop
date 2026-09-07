@@ -18,6 +18,8 @@
  * -----------------------------------------------------------------------------
  */
 
+require_once(DIR_MAGNALISTER_MODULES.'ebay/EbayHelper.php');
+
 /**
  * Fetches the options for the top 20 category selectors
  * @param $type	Type of category (PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2)
@@ -74,14 +76,14 @@ function renderSinglePrepareView($data) {
 			<tr class="odd">
 				<th>'.ML_LABEL_PRODUCT_NAME.'</th>
 				<td class="input">
-					<input class="fullwidth" type="text" maxlength="80" value="'.fixHTMLUTF8Entities(mb_substr(html_entity_decode($data[0]['Title'], ENT_COMPAT, 'UTF-8'), 0, 80, 'UTF-8'), ENT_COMPAT).'" name="Title" id="Title"/>
+					<input class="fullwidth" type="text" maxlength="'.EbayHelper::TITLE_MAX_LENGTH.'" value="'.fixHTMLUTF8Entities(EbayHelper::truncateTitle($data[0]['Title']), ENT_COMPAT).'" name="Title" id="Title"/>
 				</td>
 				<td class="info">'.ML_EBAY_MAX_80_CHARS.'</td>
 			</tr>
 			<tr class="even">
 				<th>'.ML_EBAY_SUBTITLE.'</th>
 				<td class="input">
-					<input class="fullwidth" type="text" maxlength="55" value="'.((array_key_exists('Subtitle', $data[0])) ? mb_substr($data[0]['Subtitle'], 0, 55, 'UTF-8') : '').'" name="Subtitle" id="Subtitle" />
+					<input class="fullwidth" type="text" maxlength="'.EbayHelper::SUBTITLE_MAX_LENGTH.'" value="'.((array_key_exists('Subtitle', $data[0])) ? EbayHelper::truncateSubtitle($data[0]['Subtitle']) : '').'" name="Subtitle" id="Subtitle" />
 					<input type="checkbox" name="enableSubtitle" id="enableSubtitle" />'.ML_EBAY_LABEL_USE_SUBTITLE_YES_NO.'
 				</td>
 				<td class="info">'.ML_EBAY_SUBTITLE_MAX_55_CHARS.'<span style="color:red;"> '.ML_EBAY_CAUSES_COSTS.'</span></td>

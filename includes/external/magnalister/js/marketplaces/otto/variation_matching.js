@@ -464,6 +464,18 @@ $(document).ready(function() {
                 return matchDiv.append('<input type="hidden" name="ml[match][CategoryIndependentShopVariation]' + '[' + selector.AttributeCode + '][Values]" value="true">');
             }
 
+            // Ticket 611677: Brand in the "Otto attribute value" / freetext / database_value modes has no
+            // shop-value-to-brand mapping (unlike "manufacturer"). Historically it was a single input field.
+            // Its brand options are lazy-loaded via getOttoBrands (AllowedValues is trimmed/empty), so the
+            // generic _buildIndependentSelectMatching below would render an EMPTY select. Instead render a
+            // single flat-named select2 that lazy-loads the brands and preselects the saved brand.
+            if (elem.val() === 'attribute_value' && selector.AttributeCode === 'Brand') {
+                self._buildIndependentBrandSelectMatching(elem, selector, matchDiv, attributeListDiv, mpId);
+                return self;
+            }
+
+            // Brand + freetext/database_value keeps the historic single input/db-column picker
+            // (no brand list needed there). Only "attribute_value" gets the lazy-loaded brand select above.
             if (elem.val() === 'freetext' || elem.val() === 'attribute_value' || elem.val() === 'database_value') {
                 self._buildIndependentSelectMatching(elem, selector, matchDiv, attributeListDiv);
                 $('select[name="ml[match][CategoryIndependentShopVariation][' + selector.AttributeCode + '][Values]"]').select2({});
@@ -472,7 +484,9 @@ $(document).ready(function() {
 
             matchDiv.css('margin-top', '10px');
 
-            if (selector.AllowedValues.length === 0) {
+            if (selector.AllowedValues.length === 0 && selector.AttributeCode !== 'Brand' && !selector.LazyLoaded) {
+                // Ticket 611677: Brand is lazy-loaded via getOttoBrands, so its AllowedValues is
+                // intentionally trimmed/empty here. It must NOT fall into the freetext fallback below.
                 // if AllowedValues is empty, it indicates there are no required attribute values from marketplace
                 // for this, we use shop's values but do not use keys for attributes because we send to marketplace
                 // keys, which in case of shop should be values because marketplace cannot recognize those keys
@@ -550,6 +564,12 @@ $(document).ready(function() {
                                 disabled: disableFreeTextOption
                             };
 
+                        // Ticket 611677: Brand is lazy-loaded (getOttoBrands), so the full brand list
+                        // is no longer available client-side. Skip the "deleted on marketplace" check
+                        // for it and render the saved match regularly.
+                        if (selector.LazyLoaded || selector.AttributeCode === 'Brand') {
+                            notDeletedOnMarketplace = true;
+                        } else
                         // Different conditions for marketplace multi value and single value.
                         if (isMPMultiValue) {
                             var allowedValues = Object.keys(selector.AllowedValues);
@@ -806,6 +826,74 @@ $(document).ready(function() {
                     selectedOption.text() : '';
                 selectElement.parent().find('#input_' + self.generateIndependentAttributeCodeId(attribute.AttributeCode) + '_custom_name').val(attributeName);
             }
+        },
+
+        /**
+         * Ticket 611677: Brand matched via "Otto attribute value" ("Verwende Otto Attributswert").
+         * Renders a single select2 whose options are lazy-loaded from getOttoBrands, using the flat
+         * field name "...[Brand][Values]" so the save path stores the value directly (like EAN/GPSR),
+         * without the shop-value-to-brand mapping table used for the "manufacturer" mode. A previously
+         * saved brand is preselected by injecting its option (id + name) up front.
+         */
+        _buildIndependentBrandSelectMatching: function(elem, selector, matchDiv, attributeListDiv, mpId) {
+            var self = this,
+                deleteButton = $('#' + self.generateIndependentAttributeCodeId(selector.AttributeCode) + '_deleteMatching'),
+                addAfterWarning = false,
+                spanWarning = $('span#' + self.generateIndependentAttributeCodeId(selector.AttributeCode) + '_warningMatching'),
+                name = 'ml[match][CategoryIndependentShopVariation][' + selector.AttributeCode + '][Values]',
+                style = selector.CurrentValues.Error ? ' style="border-color:red;"' : '',
+                savedIsThisMode = elem.val() === selector.CurrentValues.Code,
+                savedId = savedIsThisMode ? selector.CurrentValues.Values : '',
+                savedText = savedIsThisMode ? (selector.CurrentValues.ValuesText || selector.CurrentValues.Values) : '';
+
+            if (typeof spanWarning.html() !== 'undefined') {
+                addAfterWarning = true;
+            }
+
+            if (savedIsThisMode) {
+                attributeListDiv.attr('style', 'background-color: #e9e9e9');
+                if (!deleteButton.length) {
+                    var deleteSpan = '<span id="' + self.generateIndependentAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
+                        '<button type="button" class="ml-button mlbtn-action ml-delete-independent-matching" value="' + elem.attr('id') + '">-</button>' +
+                        '<span>' + self.i18n.alreadyMatched + '</span>' +
+                        '</span>';
+                    if (addAfterWarning) {
+                        spanWarning.before(deleteSpan);
+                    } else {
+                        $('div#extraFieldsInfo_' + self.generateIndependentAttributeCodeId(selector.AttributeCode)).append(deleteSpan);
+                    }
+                }
+            } else {
+                $('div#extraFieldsInfo_' + self.generateIndependentAttributeCodeId(selector.AttributeCode)).children('*:not(.add-matching)').hide();
+            }
+
+            matchDiv.css('display', 'inline-block').css('width', '40%');
+            matchDiv.append('<select' + style + ' name="' + name + '" style="width:100%"></select>');
+
+            var $select = matchDiv.find('select[name="' + name + '"]');
+            $select.select2({
+                ajax: {
+                    type: 'POST',
+                    delay: 250,
+                    url: 'magnalister.php?mp=' + mpId + '&mode=prepare&view=apply&where=prepareView&kind=ajax&action=getOttoBrands',
+                    data: function(params) {
+                        return {
+                            'action': 'getOttoBrands',
+                            'brandfilterSearch': params.term,
+                            'brandfilterPage': params.page || 1
+                        };
+                    },
+                    dataType: 'json'
+                }
+            });
+
+            // Preselect a previously saved brand. AllowedValues is trimmed for Brand, so the option is
+            // injected explicitly (select2 only shows AJAX results otherwise).
+            if (savedId !== '' && savedId !== null && typeof savedId !== 'undefined') {
+                $select.append(new Option(savedText, savedId, true, true)).trigger('change');
+            }
+
+            return matchDiv;
         },
 
         _buildIndependentSelectMatching: function(elem, selector, matchDiv, attributeListDiv) {

@@ -28,6 +28,11 @@ describe('useAttributeForm', () => {
     }
   };
 
+  // Shared so the object identity is stable across renders. An inline {} would
+  // make every test here loop if the initialValues effect regresses, OOM-ing
+  // the jest worker before the guarded regression test below can report.
+  const emptyInitialValues: SavedValues = {};
+
   it('initializes with provided values', () => {
     const { result } = renderHook(() =>
       useAttributeForm({
@@ -44,7 +49,7 @@ describe('useAttributeForm', () => {
   it('validates required fields', () => {
     const { result } = renderHook(() =>
       useAttributeForm({
-        initialValues: {},
+        initialValues: emptyInitialValues,
         marketplaceAttributes: mockMarketplaceAttributes
       })
     );
@@ -61,7 +66,7 @@ describe('useAttributeForm', () => {
   it('handles attribute changes', () => {
     const { result } = renderHook(() =>
       useAttributeForm({
-        initialValues: {},
+        initialValues: emptyInitialValues,
         marketplaceAttributes: mockMarketplaceAttributes
       })
     );
@@ -82,7 +87,7 @@ describe('useAttributeForm', () => {
   it('validates on change when enabled', () => {
     const { result } = renderHook(() =>
       useAttributeForm({
-        initialValues: {},
+        initialValues: emptyInitialValues,
         marketplaceAttributes: mockMarketplaceAttributes,
         validateOnChange: true
       })
@@ -149,7 +154,7 @@ describe('useAttributeForm', () => {
 
     const { result } = renderHook(() =>
       useAttributeForm({
-        initialValues: {},
+        initialValues: emptyInitialValues,
         marketplaceAttributes: mockMarketplaceAttributes
       })
     );
@@ -166,6 +171,30 @@ describe('useAttributeForm', () => {
 
     expect(mockOnSubmit).not.toHaveBeenCalled();
     expect(result.current.errors).toHaveLength(1);
+  });
+
+  it('does not re-run the initialValues effect on every render', () => {
+    let renders = 0;
+
+    const { rerender } = renderHook(() => {
+      renders++;
+      // Bail out with a readable failure instead of looping until the jest
+      // worker runs out of heap.
+      if (renders > 50) {
+        throw new Error('useAttributeForm re-rendered more than 50 times — initialValues effect loop is back');
+      }
+      // initialValues must stay inline: a fresh object identity per render is
+      // what triggered the infinite effect loop this test guards against.
+      return useAttributeForm({
+        initialValues: {},
+        marketplaceAttributes: mockMarketplaceAttributes
+      });
+    });
+
+    const rendersAfterMount = renders;
+    rerender();
+
+    expect(renders).toBeLessThanOrEqual(rendersAfterMount + 2);
   });
 });
 

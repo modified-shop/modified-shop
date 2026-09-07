@@ -271,6 +271,9 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
         if (!$blForce && !getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
             return '';
         }
+        if ($this->buyerMessageOnly()) {
+            return trim($this->comment);
+        }
         return trim(
             sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->marketplaceTitle)."\n".
             'eBayOrderID: '.$this->getMarketplaceOrderID().
@@ -298,6 +301,9 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
                         $this->o['orderComment'];
                 }
             }
+        }
+        if ($this->buyerMessageOnly()) {
+            return trim($this->comment . (isset($PUIcomment)?$PUIcomment:''));
         }
         return trim(
             sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP, $this->marketplaceTitle)."\n".
@@ -463,6 +469,10 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
         # If magna order is found we add this order to it.
         if (false == $existingOpenOrder) {
             # We didn't find an order to which we can add this order.
+            // for modified v. >= 3.3.1
+            if (MagnaDB::gi()->columnExistsInTable('orders_source', TABLE_ORDERS)) {
+                $this->o['order']['orders_source'] = 'magnalister';
+            }
             MagnaDB::gi()->validateDataLength($this->o['order'], TABLE_ORDERS);
             MagnaDB::gi()->addNonNullableEntries($this->o['order'], TABLE_ORDERS);
             # filter keys (if hooks have changed sth.)

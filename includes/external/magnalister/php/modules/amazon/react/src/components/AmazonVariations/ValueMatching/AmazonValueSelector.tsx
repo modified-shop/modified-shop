@@ -1,12 +1,22 @@
 import React from 'react';
 import Select from 'react-select';
 import {I18nStrings, MarketplaceAttribute} from '@/types';
-import {SELECT_CONFIGS} from '../config/selectConfig';
+import {REACT_SELECT_MULTISELECT_STYLES, SELECT_CONFIGS} from '../config/selectConfig';
+
+/**
+ * Helper to check if attribute dataType is multiselect
+ * Multiselect allows selecting multiple marketplace values
+ */
+const isMultiSelectType = (dataType: string | undefined): boolean => {
+  if (!dataType) return false;
+  const normalizedType = dataType.toLowerCase();
+  return normalizedType === 'multiselect' || normalizedType === 'multiselectandtext';
+};
 
 interface AmazonValueSelectorProps {
   attribute: MarketplaceAttribute;
-  value: string;
-  onChange: (value: string) => void;
+  value: string | string[];
+  onChange: (value: string | string[]) => void;
   disabled?: boolean;
   debugMode?: boolean;
   i18n: I18nStrings;
@@ -169,6 +179,10 @@ const AmazonValueSelector = React.forwardRef<HTMLDivElement, AmazonValueSelector
       timers.forEach(timer => clearTimeout(timer));
     };
   }, [shouldHighlight, actualRef]);
+
+  // Check if this is a multiselect attribute
+  const isMultiSelect = isMultiSelectType(attribute?.dataType);
+
   if (attribute.values && Object.keys(attribute.values).length > 0) {
     const amazonOptions = Object.entries(attribute.values).map(([optionValue, label]) => ({
       value: optionValue,
@@ -176,22 +190,43 @@ const AmazonValueSelector = React.forwardRef<HTMLDivElement, AmazonValueSelector
     }));
 
     const totalOptions = amazonOptions.length;
-    const useSearchableSelect = totalOptions >= SELECT_CONFIGS.AMAZON_VALUE_SELECTOR.threshold;
+    // For multiselect, always use react-select (needed for isMulti functionality)
+    const useSearchableSelect = isMultiSelect || totalOptions >= SELECT_CONFIGS.AMAZON_VALUE_SELECTOR.threshold;
 
-    // Find selected option for react-select
-    const selectedOption = amazonOptions.find(option => option.value === value) || null;
+    // Find selected option(s) for react-select
+    // For multiselect, handle array of values
+    const selectedOption = React.useMemo(() => {
+      if (isMultiSelect) {
+        // For multiselect, value can be string[] or string (comma-separated for backwards compat)
+        const valueArray = Array.isArray(value)
+          ? value
+          : (typeof value === 'string' && value ? value.split(',').map(v => v.trim()) : []);
+        return amazonOptions.filter(option => valueArray.includes(option.value));
+      }
+      // Single select - find by value
+      return amazonOptions.find(option => option.value === value) || null;
+    }, [amazonOptions, value, isMultiSelect]);
 
-    // Handle change for react-select
+    // Handle change for react-select (supports both single and multi)
     const handleSelectChange = (option: any) => {
-      onChange(option?.value || '');
+      if (isMultiSelect) {
+        // For multiselect, option is an array
+        const selectedValues = Array.isArray(option)
+          ? option.map((opt: any) => opt.value)
+          : [];
+        onChange(selectedValues);
+      } else {
+        // Single select
+        onChange(option?.value || '');
+      }
     };
 
     if (useSearchableSelect) {
-      // Render searchable react-select for many options
+      // Render searchable react-select for many options or multiselect
       return (
         <div
           ref={actualRef}
-          className={`amazon-value-selector-container ${className} ${isHighlighted ? 'highlight-conditional-filter' : ''}`}
+          className={`amazon-value-selector-container ${className} ${isHighlighted ? 'highlight-conditional-filter' : ''} ${isMultiSelect ? 'multiselect' : ''}`}
         >
           <Select
             options={amazonOptions}
@@ -200,24 +235,29 @@ const AmazonValueSelector = React.forwardRef<HTMLDivElement, AmazonValueSelector
             isDisabled={disabled}
             isSearchable={true}
             isClearable={true}
+            isMulti={isMultiSelect}
+            closeMenuOnSelect={!isMultiSelect}
             placeholder={i18n.selectAmazonValue || 'Select Amazon value...'}
             noOptionsMessage={() => 'No values found'}
-            styles={SELECT_CONFIGS.AMAZON_VALUE_SELECTOR.styles}
-            className="amazon-value-react-select"
+            styles={isMultiSelect ? REACT_SELECT_MULTISELECT_STYLES : SELECT_CONFIGS.AMAZON_VALUE_SELECTOR.styles}
+            className={`amazon-value-react-select ${isMultiSelect ? 'multiselect' : ''}`}
             classNamePrefix="ml-amazon-value"
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
+            menuPlacement="auto"
           />
         </div>
       );
     }
 
-    // Render native dropdown for fewer options
+    // Render native dropdown for fewer options (only for non-multiselect)
     return (
       <div
         ref={actualRef}
         className={`amazon-value-selector-container ${className} ${isHighlighted ? 'highlight-conditional-filter' : ''}`}
       >
         <select
-          value={value}
+          value={typeof value === 'string' ? value : ''}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
           className="amazon-value-selector"
@@ -236,6 +276,9 @@ const AmazonValueSelector = React.forwardRef<HTMLDivElement, AmazonValueSelector
   }
 
   // Render text input for freetext Amazon values
+  // Convert array to string for text input (shouldn't happen for multiselect with values, but handle defensively)
+  const textValue = Array.isArray(value) ? value.join(', ') : (value || '');
+
   return (
     <div
       ref={actualRef}
@@ -243,7 +286,7 @@ const AmazonValueSelector = React.forwardRef<HTMLDivElement, AmazonValueSelector
     >
       <input
         type="text"
-        value={value}
+        value={textValue}
         onChange={(e) => onChange(e.target.value)}
         placeholder={i18n.enterAmazonValue || 'Enter Amazon value'}
         disabled={disabled}

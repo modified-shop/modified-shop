@@ -90,7 +90,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 	}
 	
 	protected function loadConfigFormFile($file, $replace = array(), $unset = array()) {
-		$fC = file_get_contents($file);
+		$fC = readConfigFormFile($file);
 		$replace['http:\/\/www.IhrShop.de\/'] = trim(json_encode(HTTP_SERVER.DIR_WS_CATALOG), ' "\/').'\/';
 		if (!empty($replace)) {
 			$fC = str_replace(array_keys($replace), array_values($replace), $fC);

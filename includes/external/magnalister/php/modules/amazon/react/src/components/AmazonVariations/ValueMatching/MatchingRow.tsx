@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import {I18nStrings, MarketplaceAttribute, MatchingValue, ShopAttribute} from '@/types';
-import {SELECT_CONFIGS} from '../config/selectConfig';
+import {REACT_SELECT_MULTISELECT_STYLES, SELECT_CONFIGS} from '../config/selectConfig';
 
 interface MatchingRowProps {
   attributeKey: string;
@@ -16,10 +16,20 @@ interface MatchingRowProps {
   debugMode?: boolean;
   isLastRow?: boolean;
   i18n: I18nStrings;
-  onRowChange: (rowIndex: number, field: { type: string; key: string }, value: string) => void;
+  onRowChange: (rowIndex: number, field: { type: string; key: string }, value: string | string[]) => void;
   onRemoveRow: (rowIndex: number) => void;
   onAddRow?: () => void;
 }
+
+/**
+ * Helper to check if attribute dataType is multiselect
+ * Multiselect allows selecting multiple marketplace values for a single shop value
+ */
+const isMultiSelectType = (dataType: string | undefined): boolean => {
+  if (!dataType) return false;
+  const normalizedType = dataType.toLowerCase();
+  return normalizedType === 'multiselect' || normalizedType === 'multiselectandtext';
+};
 
 /**
  * MatchingRow Component
@@ -177,8 +187,14 @@ const MatchingRow: React.FC<MatchingRowProps> = ({
   // Custom entry is when:
   // 1. Key is explicitly '__custom__', OR
   // 2. Key has a value but it's not found in amazonOptions (after they're computed)
+  // NOTE: Multiselect attributes never use custom entry (Key is array)
   const isCustomEntrySelected = React.useMemo(() => {
     const marketplaceKey = rowData?.Marketplace?.Key;
+
+    // Multiselect attributes use array for Key - never show custom entry for multiselect
+    if (Array.isArray(marketplaceKey)) {
+      return false;
+    }
 
     // If explicitly marked as custom
     if (marketplaceKey === '__custom__') {
@@ -200,7 +216,9 @@ const MatchingRow: React.FC<MatchingRowProps> = ({
   React.useEffect(() => {
     if (isCustomEntrySelected) {
       // Only set custom text if it's not "__custom__" (the key itself)
-      const value = rowData?.Marketplace?.Value || '';
+      const rawValue = rowData?.Marketplace?.Value || '';
+      // Handle both string and array values (multiselect won't use custom text, but handle defensively)
+      const value = Array.isArray(rawValue) ? rawValue.join(', ') : rawValue;
       setCustomText(value === '__custom__' ? '' : value);
     } else {
       // Clear custom text when not in custom mode
@@ -209,9 +227,14 @@ const MatchingRow: React.FC<MatchingRowProps> = ({
   }, [isCustomEntrySelected, rowData?.Marketplace?.Value]);
 
   // Find selected options
-  const selectedShopOption = shopOptions.find(opt => opt.value === rowData?.Shop?.Key) || shopOptions[0];
+  // Use String() conversion for comparison since Shop.Key can be number or string from backend
+  const selectedShopOption = shopOptions.find(opt => String(opt.value) === String(rowData?.Shop?.Key)) || shopOptions[0];
+
+  // Check if this is a multiselect attribute
+  const isMultiSelect = isMultiSelectType(amazonAttribute?.dataType);
 
   // For Amazon option, if it's a custom entry, select the '__custom__' option
+  // For multiselect, handle array of selected values
   const selectedAmazonOption = React.useMemo(() => {
     const marketplaceKey = rowData?.Marketplace?.Key;
 
@@ -220,25 +243,44 @@ const MatchingRow: React.FC<MatchingRowProps> = ({
       return amazonOptions.find(opt => opt.value === '__custom__') || amazonOptions[0];
     }
 
-    // Otherwise, find by the actual key
+    // For multiselect, handle array of keys
+    // Filter out empty values to prevent "Please select..." from showing as selected
+    if (isMultiSelect && Array.isArray(marketplaceKey)) {
+      const nonEmptyKeys = marketplaceKey.filter(k => k !== '' && k !== null && k !== undefined);
+      return amazonOptions.filter(opt => opt.value !== '' && nonEmptyKeys.includes(opt.value));
+    }
+
+    // Single select - find by the actual key
     return amazonOptions.find(opt => opt.value === marketplaceKey) || amazonOptions[0];
-  }, [amazonOptions, rowData?.Marketplace?.Key, isCustomEntrySelected]);
+  }, [amazonOptions, rowData?.Marketplace?.Key, isCustomEntrySelected, isMultiSelect]);
 
   // Handle shop value change
   const handleShopChange = (selectedOption: any) => {
     onRowChange(rowIndex, { type: 'Shop', key: 'Key' }, selectedOption?.value || '');
   };
 
-  // Handle Amazon value change
+  // Handle Amazon value change (supports both single and multi-select)
   const handleAmazonChange = (selectedOption: any) => {
-    const selectedValue = selectedOption?.value || '';
+    // For multiselect, selectedOption is an array
+    if (isMultiSelect) {
+      const selectedValues = Array.isArray(selectedOption)
+        ? selectedOption.map((opt: any) => opt.value)
+        : [];
 
-    // Update the marketplace key
-    onRowChange(rowIndex, { type: 'Marketplace', key: 'Key' }, selectedValue);
+      // Update the marketplace key with array of selected values
+      onRowChange(rowIndex, { type: 'Marketplace', key: 'Key' }, selectedValues);
+      onRowChange(rowIndex, { type: 'Marketplace', key: 'Value' }, selectedValues);
+    } else {
+      // Single select
+      const selectedValue = selectedOption?.value || '';
 
-    // If custom entry is selected, also update the value with current custom text
-    if (selectedValue === '__custom__' && customText) {
-      onRowChange(rowIndex, { type: 'Marketplace', key: 'Value' }, customText);
+      // Update the marketplace key
+      onRowChange(rowIndex, { type: 'Marketplace', key: 'Key' }, selectedValue);
+
+      // If custom entry is selected, also update the value with current custom text
+      if (selectedValue === '__custom__' && customText) {
+        onRowChange(rowIndex, { type: 'Marketplace', key: 'Value' }, customText);
+      }
     }
   };
 
@@ -311,27 +353,32 @@ const MatchingRow: React.FC<MatchingRowProps> = ({
           alignItems: 'flex-start'
         }}>
           <div style={{ flex: '1 1 200px', minWidth: '200px' }}>
-            {useSearchableAmazonSelect ? (
+            {/* For multiselect, always use react-select with isMulti */}
+            {(useSearchableAmazonSelect || isMultiSelect) ? (
               <Select
                 name={`ml[field][variationgroups][${variationGroup}][${attributeKey}][Values][${rowIndex}][Marketplace][Key]`}
-                options={amazonOptions}
+                options={isMultiSelect ? amazonOptions.filter(opt => opt.value !== '') : amazonOptions}
                 value={selectedAmazonOption}
                 onChange={handleAmazonChange}
                 isDisabled={disabled}
                 isSearchable={true}
-                isClearable={false}
+                isClearable={isMultiSelect}
+                isMulti={isMultiSelect}
+                closeMenuOnSelect={!isMultiSelect}
                 placeholder={i18n.pleaseSelect || 'Please select...'}
-                styles={SELECT_CONFIGS.AMAZON_VALUE_SELECTOR.styles}
-                className="amazon-matching-select"
+                styles={isMultiSelect ? REACT_SELECT_MULTISELECT_STYLES : SELECT_CONFIGS.AMAZON_VALUE_SELECTOR.styles}
+                className={`amazon-matching-select ${isMultiSelect ? 'multiselect' : ''}`}
                 classNamePrefix="ml-amazon-match-val"
                 menuPortalTarget={document.body}
                 menuPosition="fixed"
                 menuPlacement="auto"
               />
             ) : (
+              // Native select is only used for non-multiselect attributes
+              // Type assertion is safe because isMultiSelect is false here
               <select
                 name={`ml[field][variationgroups][${variationGroup}][${attributeKey}][Values][${rowIndex}][Marketplace][Key]`}
-                value={selectedAmazonOption?.value || ''}
+                value={(selectedAmazonOption as { value: string; label: string } | undefined)?.value || ''}
                 onChange={(e) => handleAmazonChange({ value: e.target.value })}
                 disabled={disabled}
                 className="amazon-matching-select"
