@@ -20,6 +20,19 @@
   require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
 
+  // PayPal's documented merchant decline for a callback it cannot fulfil
+  function paypal_shipping_decline($issue) {
+    http_response_code(422);
+
+    return array(
+      'name' => 'UNPROCESSABLE_ENTITY',
+      'details' => array(
+        array('issue' => $issue),
+      ),
+    );
+  }
+
+
   function get_shipping_methods() {
     global $order, $xtPrice;
 
@@ -53,11 +66,15 @@
       unset($_SESSION['sendto']);
       unset($_SESSION['billto']);
 
+      // only PayPal's own callback understands a decline response, the wallets expect a purchase unit
+      $is_paypal_callback = false;
+
       if (isset($request['shipping_contact']) && is_array($request['shipping_contact'])) {
         // Apple Pay / Google Pay post the wallet contact shape
         $_SESSION['paypal']['contact']['shipping_quote'] = $request['shipping_contact'];
       } elseif (isset($request['shipping_address']) && is_array($request['shipping_address'])) {
-        // PayPal's server-side SHIPPING_OPTIONS callback posts its own address shape
+        // PayPal's server-side shipping callback posts its own address shape
+        $is_paypal_callback = true;
         $_SESSION['paypal']['contact']['shipping_quote'] = $paypal->callback_address_to_contact($request['shipping_address']);
       }
 
@@ -87,7 +104,7 @@
           'reason' => 'unknown country',
           'country_code' => $shipping_contact['countryCode'],
         ));
-        return;
+        return ($is_paypal_callback === true) ? paypal_shipping_decline('COUNTRY_ERROR') : null;
       }
       $_SESSION['country'] = $shipping_address['country_id'];
 
@@ -159,6 +176,14 @@
         $paypal->LoggingManager->log('INFO', 'Wallet get_shipping_methods no options', array(
           'country' => (isset($_SESSION['country']) ? $_SESSION['country'] : null),
         ));
+
+        // the address cannot be served, do not keep quoting the method picked for the previous one
+        $_SESSION['shipping'] = false;
+        $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
+
+        if ($is_paypal_callback === true) {
+          return paypal_shipping_decline('ADDRESS_ERROR');
+        }
       } else {
         // a previously chosen method can be gone after an address change, fall back to the first one
         if (!isset($shipping_option_id) || !isset($shipping_session[$shipping_option_id])) {
