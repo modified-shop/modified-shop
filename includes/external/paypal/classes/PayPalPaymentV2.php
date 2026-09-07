@@ -855,7 +855,7 @@
         ));
         return false;
       }
-      $existing_has_shipping = isset($existing_order->purchase_units[0]->shipping);
+      $existing_shipping = ((isset($existing_order->purchase_units[0]->shipping)) ? $existing_order->purchase_units[0]->shipping : null);
 
       $request = new OrdersPatchRequest($orderID);
       $request->body = array(
@@ -869,25 +869,19 @@
         ),
       );
 
+      // PayPal rejects removing the shipping object, so a virtual order just keeps it
       if ($has_shipping) {
-        $shipping_op = $existing_has_shipping ? 'replace' : 'add';
-
         $request->body[] = array(
-          'op' => $shipping_op,
+          'op' => ((isset($existing_shipping->name)) ? 'replace' : 'add'),
           'path' => "/purchase_units/@reference_id=='default'/shipping/name",
           'value' => array(
             'full_name' => $this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname'])
           )
         );
         $request->body[] = array(
-          'op' => $shipping_op,
+          'op' => ((isset($existing_shipping->address)) ? 'replace' : 'add'),
           'path' => "/purchase_units/@reference_id=='default'/shipping/address",
           'value' => $shipping_address
-        );
-      } elseif ($existing_has_shipping) {
-        $request->body[] = array(
-          'op' => 'remove',
-          'path' => "/purchase_units/@reference_id=='default'/shipping",
         );
       }
 
@@ -993,7 +987,8 @@
 
       if ($OrderID != '') {
         $response = $this->GetOrder($OrderID);
-        if (isset($response->purchase_units[0]->shipping)) {
+        // a shipping object can carry contact data only, without any address
+        if (isset($response->purchase_units[0]->shipping->address)) {
           $response->purchase_units[0]->shipping->address_array = $this->parse_address($response->purchase_units[0]->shipping);
         }
 
@@ -1295,8 +1290,8 @@
         $name = explode(' ', $address->name->full_name, 2);
       } else {
         $name = array(
-          $address->name->given_name,
-          $address->name->surname
+          ((isset($address->name->given_name)) ? $address->name->given_name : ''),
+          ((isset($address->name->surname)) ? $address->name->surname : '')
         );
       }
 
