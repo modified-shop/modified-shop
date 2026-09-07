@@ -49,7 +49,17 @@ class MetroImportOrders extends MagnaCompatibleImportOrders {
      */
     protected function generateOrderComment($blForce = false) {
         if (!$blForce && !getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
-        return ''; 
+        return '';
+        }
+        if ($this->buyerMessageOnly()) {
+            $comment = '';
+            if (!empty($this->comment)) {
+                $comment .= $this->comment;
+            }
+            if (!empty($this->o['orderStatus']['comments'])) {
+                $comment .= ($comment !== '' ? "\n\n" : '').$this->o['orderStatus']['comments'];
+            }
+            return trim($comment);
         }
         $comment = sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->marketplaceTitle)."\n".
             'METRO '.ML_LABEL_ORDER_ID.': '.$this->o['orderInfo']['MetroOrderNumber'];
@@ -59,7 +69,7 @@ class MetroImportOrders extends MagnaCompatibleImportOrders {
         if (!empty($this->o['orderStatus']['comments'])) {
             $comment .= "\n\n".$this->o['orderStatus']['comments'];
         }
-        return trim($comment); 
+        return trim($comment);
     }
 
     protected function getPaymentMethod() {

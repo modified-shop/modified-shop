@@ -104,8 +104,8 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
     }, [shopAttributeCode, attributeKey]);
 
     // Effect to load shop attribute values when needed
-    // IMPORTANT: Only run when shopAttributeCode changes, NOT when loadedShopValues/isLoadingValues change
-    // to prevent infinite re-fetch loops
+    // IMPORTANT: Include loadedShopValues in dependencies so effect re-runs after reset effect clears it
+    // The needsLoading condition prevents infinite loops (once loaded, !loadedShopValues is false)
     React.useEffect(() => {
         const needsLoading = !shopAttribute?.values && !loadedShopValues && !isLoadingValues && onFetchShopAttributeValues && shopAttributeCode;
 
@@ -124,7 +124,7 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
                     setIsLoadingValues(false);
                 });
         }
-    }, [shopAttribute?.values, onFetchShopAttributeValues, shopAttributeCode]);
+    }, [shopAttribute?.values, onFetchShopAttributeValues, shopAttributeCode, loadedShopValues, isLoadingValues]);
 
     // Get all shop values that could be matched
     const shopValues = React.useMemo(() => {
@@ -173,6 +173,7 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
     }, [currentMatchings]);
 
     // Filter rows based on search input (non-destructive filter)
+    // Handles both single string values and array values (for multiselect)
     const filteredRows = React.useMemo(() => {
         if (!searchFilter.trim()) {
             return matchingRows; // No filter, show all rows
@@ -182,8 +183,14 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
         return matchingRows.filter(row => {
             const shopValue = row.Shop?.Value?.toLowerCase() || '';
             const shopKey = row.Shop?.Key?.toLowerCase() || '';
-            const amazonValue = row.Marketplace?.Value?.toLowerCase() || '';
-            const amazonKey = row.Marketplace?.Key?.toLowerCase() || '';
+
+            // Handle marketplace values that might be arrays (multiselect)
+            const amazonValue = Array.isArray(row.Marketplace?.Value)
+                ? row.Marketplace.Value.join(' ').toLowerCase()
+                : (row.Marketplace?.Value?.toLowerCase() || '');
+            const amazonKey = Array.isArray(row.Marketplace?.Key)
+                ? row.Marketplace.Key.join(' ').toLowerCase()
+                : (row.Marketplace?.Key?.toLowerCase() || '');
 
             return shopValue.includes(lowerSearch) ||
                 shopKey.includes(lowerSearch) ||
@@ -192,11 +199,11 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
         });
     }, [matchingRows, searchFilter]);
 
-    // Handle row data change
+    // Handle row data change (supports both single string and array values for multiselect)
     const handleRowChange = React.useCallback((
         rowIndex: number,
         field: { type: string; key: string },
-        value: string
+        value: string | string[]
     ) => {
         const updatedRows = [...matchingRows];
         const row = updatedRows[rowIndex];
@@ -206,7 +213,7 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
             (row.Shop as any)[field.key] = value;
 
             // Auto-set the shop value label from loaded shop values
-            if (field.key === 'Key' && value) {
+            if (field.key === 'Key' && value && typeof value === 'string') {
                 const shopValues = shopAttribute?.values || loadedShopValues || {};
                 row.Shop.Value = shopValues[value] || value;
             }
@@ -215,8 +222,14 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
             (row.Marketplace as any)[field.key] = value;
 
             // Auto-set the marketplace value label from amazonAttribute.values
-            if (field.key === 'Key' && value && amazonAttribute?.values) {
-                row.Marketplace.Value = amazonAttribute.values[value] as string || value;
+            if (field.key === 'Key' && amazonAttribute?.values) {
+                // Handle both single value and array (multiselect)
+                if (Array.isArray(value)) {
+                    // For multiselect, map keys to their labels
+                    row.Marketplace.Value = value.map(v => amazonAttribute.values![v] as string || v);
+                } else if (value) {
+                    row.Marketplace.Value = amazonAttribute.values[value] as string || value;
+                }
             }
         }
 
@@ -265,10 +278,16 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
     }, [onMatchingsChange, generateStableId]);
 
     // Check if there are any completed matchings (at least one row with both shop and amazon values)
+    // Handles multiselect where Marketplace.Key can be an array
     const hasMatchedValues = React.useMemo(() => {
-        return matchingRows.some(row =>
-            row.Shop?.Key && row.Marketplace?.Key
-        );
+        return matchingRows.some(row => {
+            const hasShopKey = Boolean(row.Shop?.Key);
+            const marketplaceKey = row.Marketplace?.Key;
+            const hasMarketplaceKey = Array.isArray(marketplaceKey)
+                ? marketplaceKey.length > 0
+                : Boolean(marketplaceKey);
+            return hasShopKey && hasMarketplaceKey;
+        });
     }, [matchingRows]);
 
     // Auto-match with exact case-insensitive matching only
@@ -514,7 +533,7 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
                                 className="mlbtn action auto-match-button"
                                 onClick={handleAutoMatch}
                                 disabled={disabled || Object.keys(shopAttribute?.values || loadedShopValues || {}).length === 0}
-                                title={i18n.autoMatching || 'Auto-match similar values'}
+                                title={i18n.autoMatchingTooltip || i18n.autoMatching || 'Automatically matches shop values to marketplace values by name (case-insensitive). If the marketplace allows custom values, unmatched shop values are used as-is. Otherwise, unmatched values are skipped.'}
                                 style={{
                                     padding: '6px 10px',
                                     fontSize: '14px',
@@ -631,7 +650,7 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
                                     {i18n.shopValueColumn || 'Shop Value'}
                                 </th>
                                 <th className="amazon-value-header">
-                                    {i18n.amazonValueColumn || 'Amazon Value'}
+                                    {i18n.marketplaceValueColumn || i18n.amazonValueColumn || 'Marketplace Value'}
                                 </th>
                                 <th className="action-header">
                                     {i18n.actionColumn || 'Action'}
@@ -644,7 +663,11 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
                                 const originalIndex = matchingRows.findIndex(r => r.__id === rowData.__id);
 
                                 // Determine if this row can be removed (has Amazon value selected)
-                                const canRemove = Boolean(rowData.Marketplace?.Key);
+                                // For multiselect, Key can be an array
+                                const marketplaceKey = rowData.Marketplace?.Key;
+                                const canRemove = Array.isArray(marketplaceKey)
+                                    ? marketplaceKey.length > 0
+                                    : Boolean(marketplaceKey);
                                 const isLastRow = originalIndex === matchingRows.length - 1;
 
                                 return (

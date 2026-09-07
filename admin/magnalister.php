@@ -336,9 +336,9 @@ function echoDiePage($title, $content, $style = '', $showbacklink = true) {
 		<h1>'.$title.'</h1>
 		<p>'.$content.'</p>
 		'.(($showbacklink && isset($_SERVER['HTTP_REFERER']))
-			? (($_SESSION['language'] == 'german') 
-				? '<a href="'.$_SERVER['HTTP_REFERER'].'" title="Zur&uuml;ck">Zur&uuml;ck</a>'
-				: '<a href="'.$_SERVER['HTTP_REFERER'].'" title="Back">Back</a>'
+			? (($_SESSION['language'] == 'german')
+				? '<a href="'.htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8').'" title="Zur&uuml;ck">Zur&uuml;ck</a>'
+				: '<a href="'.htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8').'" title="Back">Back</a>'
 			)
 			: ''
 		).'

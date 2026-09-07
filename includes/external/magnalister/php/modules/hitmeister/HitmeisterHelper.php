@@ -24,6 +24,32 @@ class HitmeisterHelper extends AttributesMatchingHelper
 {
 	protected $numberOfMaxAdditionalAttributes = self::UNLIMITED_ADDITIONAL_ATTRIBUTES;
 
+	/** Maximum title length Kaufland accepts. */
+	const TITLE_MAX_LENGTH = 120;
+
+	/** Maximum subtitle (keywords) length Kaufland accepts. */
+	const SUBTITLE_MAX_LENGTH = 200;
+
+	/**
+	 * Cuts a title down to the length Kaufland accepts.
+	 *
+	 * @param string $sTitle
+	 * @return string
+	 */
+	public static function truncateTitle($sTitle) {
+		return self::truncateToLength($sTitle, self::TITLE_MAX_LENGTH);
+	}
+
+	/**
+	 * Cuts a subtitle down to the length Kaufland accepts.
+	 *
+	 * @param string $sSubtitle
+	 * @return string
+	 */
+	public static function truncateSubtitle($sSubtitle) {
+		return self::truncateToLength($sSubtitle, self::SUBTITLE_MAX_LENGTH);
+	}
+
 	private static $instance;
 
 	public static function gi()
@@ -34,7 +60,46 @@ class HitmeisterHelper extends AttributesMatchingHelper
 
 		return self::$instance;
 	}
-	
+
+	/**
+	 * The marketplace is internally identified as "hitmeister", but its official name is "Kaufland".
+	 * Override the attribute matching translations so the displayed marketplace name reads "Kaufland".
+	 */
+	public function getVarMatchTranslations()
+	{
+		$translations = parent::getVarMatchTranslations();
+
+		$marketplaceName = ML_HITMEISTER_MARKETPLACE_NAME;
+
+		$translations['mpValue'] = str_replace('%marketplace%', $marketplaceName, ML_GENERAL_VARMATCH_MP_VALUE);
+		$translations['attributeChangedOnMp'] = str_replace('%marketplace%', $marketplaceName, ML_GENERAL_VARMATCH_ATTRIBUTE_CHANGED_ON_MP);
+		$translations['attributeDeletedOnMp'] = str_replace('%marketplace%', $marketplaceName, ML_GENERAL_VARMATCH_ATTRIBUTE_DELETED_ON_MP);
+		$translations['attributeValueDeletedOnMp'] = str_replace('%marketplace%', $marketplaceName, ML_GENERAL_VARMATCH_ATTRIBUTE_VALUE_DELETED_ON_MP);
+		$translations['categoryWithoutAttributesInfo'] = str_replace('%marketplace%', $marketplaceName, ML_GENERAL_VARMATCH_CATEGORY_WITHOUT_ATTRIBUTES_INFO);
+		$translations['requiredAttributesTitle'] = str_replace('%marketplace%', $marketplaceName, ML_GENERAL_VARMATCH_REQUIRED_ATTRIBUTES_TITLE);
+		$translations['optionalAttributesTitle'] = str_replace('%marketplace%', $marketplaceName, ML_GENERAL_VARMATCH_OPTIONAL_ATTRIBUTES_TITLE);
+
+		return $translations;
+	}
+
+	/**
+	 * Patch the "Use %marketplace% attribute value" dropdown option so it shows "Kaufland"
+	 * instead of the internal marketplace name "Hitmeister".
+	 */
+	protected function addAdditionalAttributesShop(&$groups, $languageId)
+	{
+		parent::addAdditionalAttributesShop($groups, $languageId);
+
+		if (isset($groups[ML_GENERAL_VARMATCH_ADDITIONAL_OPTIONS])) {
+			foreach ($groups[ML_GENERAL_VARMATCH_ADDITIONAL_OPTIONS] as &$option) {
+				if (isset($option['Code']) && $option['Code'] === 'attribute_value') {
+					$option['Name'] = str_replace('%marketplace%', ML_HITMEISTER_MARKETPLACE_NAME, ML_GENERAL_VARMATCH_CHOOSE_MP_VALUE);
+				}
+			}
+			unset($option);
+		}
+	}
+
 	public static function loadPriceSettings($mpId) {
 		$mp = magnaGetMarketplaceByID($mpId);
 
@@ -367,6 +432,49 @@ class HitmeisterHelper extends AttributesMatchingHelper
 
 	public static function GetShippingGroupsConfig(&$profiles) {
 		$profiles['values'] = self::GetShippingGroups();
+	}
+
+	public static function GetWarehouses() {
+		global $_MagnaSession;
+
+		$mpID = $_MagnaSession['mpID'];
+
+		if (   isset($_MagnaSession[$mpID]['Warehouses'])
+			&& !empty($_MagnaSession[$mpID]['Warehouses'])
+		) {
+			return $_MagnaSession[$mpID]['Warehouses'];
+		}
+		try {
+			$warehousesData = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'GetListOfWarehouses'
+			));
+		} catch (MagnaException $e) {
+			$warehousesData = array(
+				'DATA' => false
+			);
+		}
+		if (    !is_array($warehousesData)
+		     || !isset($warehousesData['DATA'])
+		     || ($warehousesData['DATA'] == false)
+		   ) {
+			return false;
+		}
+
+		$warehouses = array();
+		foreach ($warehousesData['DATA'] as $aWarehouse) {
+			$warehouses[$aWarehouse['WarehouseId']] = $aWarehouse['Name'];
+		}
+		$_MagnaSession[$mpID]['Warehouses'] = $warehouses;
+		return $warehouses;
+	}
+
+	public static function GetWarehousesConfig(&$profiles) {
+		$warehouses = self::GetWarehouses();
+		if ($warehouses === false) {
+			$profiles['values'] = false;
+			return;
+		}
+		$profiles['values'] = array('0' => ML_HITMEISTER_WAREHOUSE_DEFAULT) + $warehouses;
 	}
 
 	public static function SearchOnHitmeister($search = '', $searchBy = 'EAN') {

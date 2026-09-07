@@ -103,6 +103,7 @@ define('ML_LABEL_ARTICLE_NUMBER', 'Artikelnummer');
 define('ML_LABEL_DETAILS', 'Details');
 define('ML_LABEL_DETAILS_FOR', 'Details f&uuml;r');
 define('ML_LABEL_PRODUCTS_IMAGES', 'Produktbilder');
+define('ML_LABEL_MAIN_IMAGE', 'Hauptbild');
 define('ML_LABEL_PAYMENT_METHOD', 'Zahlungsweise');
 define('ML_LABEL_ACCOUNTING_OWNER', 'Kontoinhaber');
 define('ML_LABEL_ACCOUNTING_NUMBER', 'Kontonummer');
@@ -139,6 +140,7 @@ define('ML_LABEL_CARRIER', 'Spediteur');
 define('ML_LABEL_CARRIER_NONE', 'kein Spediteur angeben');
 define('ML_SELECT_AMAZON_SUGGESTED_CARRIER', 'Von Amazon vorgeschlagene Transportunternehmen');
 define('ML_MATCH_CARRIER_TO_DB', 'Transportunternehmen aus einem Datenbankfeld matchen');
+define('ML_MATCH_TEMU_CARRIER_TO_SHIPPING_MODULE', 'Temu-Versanddienstleister mit der Shop-Versandart matchen');
 define('ML_MATCH_AMAZON_CARRIER_TO_SHIPPING_MODULE', 'Von Amazon vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop  Versand-Modul matchen');
 define('ML_MATCH_TEXT_TO_SHIPPING_MODULE', 'Lieferservice mit Eintr&auml;gen aus Webshop  Versand-Modul matchen');
 define('ML_ADDITIONAL_OPTIONS', 'Zus&auml;tzliche Optionen');
@@ -594,6 +596,7 @@ define('ML_GENERIC_LOWEST_PRICE', 'Preis-Hit');
 define('ML_GENERIC_OLD_PRICE', 'Damaliger Preis');
 define('ML_GENERIC_REASON', 'Grund');
 define('ML_GENERIC_NO_INVENTORY', 'Das Inventar ist derzeit leer.');
+define('ML_GENERIC_NO_INVENTORY_ITEMS', 'Keine Sendungen gefunden');
 define('ML_GENERIC_EAN', 'EAN');
 define('ML_GENERIC_MANUFACTURER', 'Artikelhersteller');
 define('ML_GENERIC_MANUFACTURER_NAME', 'Artikelhersteller');
@@ -1085,6 +1088,22 @@ define('ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL', 'Pauschal aus rechtem Feld');
 define('ML_IDEALO_INFO_DELIVERY_TIME', 'Bitte geben Sie Lieferzeiten so genau wie m&oumlglich an. Onlineh&aumlndler sind gesetzlich dazu verpflichtet, dem Verbraucher anhand der Lieferzeitangabe mitzuteilen, wann die Ware bei ihm eintrifft. Daraus resultiert, dass die immer noch weitverbreiteten Angaben wie „versandfertig“ oder „lieferbar“ nicht mehr zul&aumlssig sind. Ebenso d&uumlrfen keine relativierenden Zus&aumltze wie „voraussichtlich“ oder „in der Regel“ verwendet werden. Bitte geben Sie daher m&oumlglichst Lieferzeiten in Werktagen an, z. B. “Lieferung in 1-3 Werktagen”.');
 define('ML_IDEALO_LABEL_SHIPPING_CURRENCY', 'EUR');
 define('ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES', 'Maximal 3 Produktbilder');
+define('ML_IDEALO_LABEL_ITEM_CONDITION_TYPE', 'Artikelzustand');
+define('ML_IDEALO_LABEL_ITEM_CONDITION', 'Genauer Zustand');
+define('ML_IDEALO_CONDITIONTYPE_NEW', 'Neu');
+define('ML_IDEALO_CONDITIONTYPE_AS_NEW', 'Wie neu');
+define('ML_IDEALO_CONDITIONTYPE_REFURBISHED', 'Generalüberholt');
+define('ML_IDEALO_CONDITIONTYPE_USED', 'Gebraucht');
+define('ML_IDEALO_CONDITION_EXCELLENT', 'Ausgezeichnet');
+define('ML_IDEALO_CONDITION_VERY_GOOD', 'Sehr gut');
+define('ML_IDEALO_CONDITION_GOOD', 'Gut');
+define('ML_IDEALO_CONDITION_ACCEPTABLE', 'Akzeptabel');
+define('ML_IDEALO_LABEL_FREE_RETURN_DAYS', 'Kostenlose Rücksendung (Tage)');
+define('ML_IDEALO_LABEL_EEC_SPECTRUM', 'Energieeffizienz-Spektrum');
+define('ML_IDEALO_LABEL_EEC_EFFICIENCY_CLASS', 'Energieeffizienzklasse');
+define('ML_IDEALO_LABEL_EEC_LABEL_URL', 'Link zum Energielabel');
+define('ML_IDEALO_LABEL_EEC_DATA_SHEET_URL', 'Link zum Datenblatt');
+define('ML_IDEALO_LABEL_EEC_VERSION', 'EEK-Version');
 define('ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS', '
     {
         "PAYPAL": "PayPal",
@@ -1586,6 +1605,7 @@ define('ML_CROWDFOX_NO_GTIN', 'Some of prepared products do not have EAN specifi
 define('ML_SAME_WORKING_DAY', 'Am selben Werktag');
 define('ML_WORKING_DAY', 'Werktag');
 define('ML_WORKING_DAYS', 'Werktage');
+define('ML_HITMEISTER_MARKETPLACE_NAME', 'Kaufland');
 define('ML_HITMEISTER_SAME_PRODUCT_THERE', 'Dieser Artikel bei Kaufland');
 define('ML_HITMEISTER_LABEL_HITMEISTER_PRICE', 'Berechneter Preis <small>(gem. Konfig)</small>');
 define('ML_HITMEISTER_LABEL_HITMEISTER_PRICE_SHORT', 'Kaufland Preis');
@@ -1601,6 +1621,8 @@ define('ML_HITMEISTER_SHIPPINGTIME_HM', 'Lieferzeit Kaufland');
 define('ML_HITMEISTER_HANDLINGTIME_HM', 'Bearbeitungszeit Kaufland');
 define('ML_HITMEISTER_USE_SHIPPINGTIME_MATCHING', 'Lieferzeit Matching verwenden');
 define('ML_HITMEISTER_DELIVERY_COUNTRY', 'Artikel wird versandt aus');
+define('ML_HITMEISTER_WAREHOUSE', 'Warenlager');
+define('ML_HITMEISTER_WAREHOUSE_DEFAULT', 'Standard-Warenlager des Verk&auml;ufers');
 define('ML_HITMEISTER_COMMENT', 'Hinweise zu Ihrem Artikel');
 define('ML_HITMEISTER_UPLOAD_EXPLANATION', '<b>Hinweis</b>:<br /><br />
 Hochgeladene Artikel, deren EAN auf Kaufland bekannt sind, werden in der Regel innerhalb einer Stunde auf Kaufland platziert.
@@ -1714,6 +1736,9 @@ define('ML_GENERAL_VARMATCH_FREE_TEXT', ' - (eigene angaben)');
 define('ML_GENERAL_VARMATCH_SEPARATOR_LINE', '------------------------------------------------------');
 define('ML_GENERAL_VARMATCH_ADDITIONAL_OPTIONS', 'Weitere Optionen');
 define('ML_GENERAL_VARMATCH_SAVE_BUTTON', 'SPEICHERN UND SCHLIESSEN');
+define('ML_GENERAL_VARMATCH_ADD_RULE', 'Regel hinzuf&uuml;gen');
+define('ML_GENERAL_VARMATCH_DELETE_RULE', 'Regel l&ouml;schen');
+define('ML_GENERAL_VARMATCH_CI_TITLE', '%marketplace% Kategorieunabh&auml;ngige Attribute');
 define('ML_GENERAL_VARMATCH_SELECT_CATEGORY', 'Bitte w&auml;hlen sie eine Variantengruppe.');
 define('ML_GENERAL_VARMATCH_CATEGORY_INFO', '<b>Hinweis:</b> Die mit <span class="bull">&bull;</span> markierten Felder sind Pflichtfelder und m&uuml;ssen ausgef&uuml;llt werden.');
 define('ML_GENERAL_VARMATCH_CHOOSE_MP_VALUE', 'Verwende %marketplace% Attributswert');
@@ -1736,6 +1761,7 @@ define('ML_GENERAL_VARMATCH_CHOOSE_DB_VALUE', 'W&auml;hle Datenbank-Werte (f&uum
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_TABLE', 'Tabelle w&auml;hlen: ');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_COLUMN', 'Spalte w&auml;hlen: ');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS', 'Alias f&uuml;r products_id oder manufacturers_id: ');
+define('ML_GENERAL_VARMATCH_DB_MATCHING_INFO', 'Datenbank-Matching (f&uuml;r Experten): \'Tabelle w&auml;hlen\' = die Datenbank-Tabelle Ihres Shops, in der der gew&uuml;nschte Wert steht. \'Spalte w&auml;hlen\' = die Spalte dieser Tabelle, deren Wert an den Marktplatz &uuml;bergeben wird. \'Alias products_id\' = die Spalte, &uuml;ber die die Tabelle mit dem Produkt verkn&uuml;pft wird (Standard: products_id; alternativ z.&nbsp;B. manufacturers_id). Pro Produkt wird der Wert per SELECT [Spalte] FROM [Tabelle] WHERE [Alias] = products_id ermittelt.');
 define('ML_GENERAL_VARMATCH_SELECT_TABLE_PLACEHOLDER', 'Tabelle w&auml;hlen...');
 define('ML_GENERAL_VARMATCH_SELECT_COLUMN_PLACEHOLDER', 'Spalte w&auml;hlen...');
 define('ML_GENERAL_VARMATCH_SELECT_TABLE_FIRST_PLACEHOLDER', 'Bitte erst Tabelle w&auml;hlen');
@@ -2545,3 +2571,234 @@ define('ML_BUTTON_TOKEN_NEW', 'Token beantragen / &auml;ndern');
 define('ML_ERROR_CREATE_TOKEN_LINK_HEADLINE', 'Fehler beim Herstellen der Verbindung zu {#marketplace#}');
 define('ML_ERROR_CREATE_TOKEN_LINK_TEXT', 'Es konnte keine Verbindung zu {#marketplace#} aufgebaut werden. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut.<br><br>Sollte der Fehler wiederholt auftreten, setzen Sie sich mit dem magnalister-Support in Verbindung.');
 
+/* {# Temu #} */
+define('ML_MODULE_TEMU', 'Temu');
+define('ML_TEMU_PRODUCT_PREPARE', 'Produktvorbereitung');
+define('ML_TEMU_NEW_ITEMS', 'Neue Produkte hinzuf&uuml;gen');
+define('ML_TEMU_SHIPPINGLABEL', 'Versandetiketten');
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD', 'Hochladen');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW', '&Uuml;bersicht');
+define('ML_TEMU_LABEL_PRODUCT_DATA', 'Produktdaten');
+define('ML_TEMU_LABEL_TITLE', 'Titel');
+define('ML_TEMU_LABEL_DESCRIPTION', 'Beschreibung');
+define('ML_TEMU_LABEL_BULLETPOINTS', 'Aufz&auml;hlungspunkte');
+define('ML_TEMU_LABEL_SKU', 'SKU');
+define('ML_TEMU_LABEL_EAN', 'EAN / GTIN');
+define('ML_TEMU_LABEL_PRICE', 'Preis');
+define('ML_TEMU_LABEL_MSRP_PRICE', 'UVP');
+define('ML_TEMU_LABEL_MAIN_IMAGE', 'Hauptbild');
+define('ML_TEMU_LABEL_IMAGES', 'Weitere Bilder');
+define('ML_TEMU_LABEL_PROCESSING_TIME', 'Bearbeitungszeit (Tage)');
+define('ML_TEMU_LABEL_SHIPPING_TYPE', 'Versandart');
+define('ML_TEMU_LABEL_COST_TEMPLATE', 'Kostenvorlage');
+define('ML_TEMU_LABEL_SHIPMENT_LIMIT_DAY', 'Versandlimit (Tage)');
+define('ML_TEMU_LABEL_CATEGORY', 'Temu Kategorie');
+define('ML_TEMU_LABEL_VARIATION_THEME', 'Variationsthema');
+define('ML_TEMU_LABEL_VARIATION_TITLE', 'Variation');
+define('ML_TEMU_LABEL_VARIATION_ALL_OPTIONAL_NOTE', 'Alle Variationsattribute f&uuml;r diese Kategorie sind optional. Sie m&uuml;ssen jedoch mindestens ein Variationsattribut ausw&auml;hlen.');
+define('ML_TEMU_LABEL_VARIATION_SPECDETAILS_REQUIRED', 'Bitte w&auml;hlen Sie mindestens ein Variationsattribut aus.');
+define('ML_TEMU_LABEL_FULFILLMENT_MODE', 'Fulfillment-Modus');
+define('ML_TEMU_LABEL_FULFILLMENT_AUTO', 'Auto (Temu kauft Versand)');
+define('ML_TEMU_LABEL_FULFILLMENT_SELF', 'Eigenversand (Verk&auml;ufer versendet)');
+define('ML_TEMU_LABEL_WAREHOUSE', 'Lager');
+define('ML_TEMU_LABEL_CARRIER', 'Versanddienstleister');
+define('ML_TEMU_LABEL_TRACKING_NUMBER', 'Sendungsverfolgungsnummer');
+define('ML_TEMU_LABEL_PACKAGE_WEIGHT', 'Paketgewicht');
+define('ML_TEMU_LABEL_PACKAGE_LENGTH', 'Paketl&auml;nge');
+define('ML_TEMU_LABEL_PACKAGE_WIDTH', 'Paketbreite');
+define('ML_TEMU_LABEL_PACKAGE_HEIGHT', 'Paketh&ouml;he');
+define('ML_TEMU_LABEL_LOGISTICS_TYPE', 'Logistiktyp');
+define('ML_TEMU_LABEL_REGION', 'Region');
+define('ML_TEMU_LABEL_MALL_ID', 'Mall-ID');
+define('ML_TEMU_LABEL_TOKEN_EXPIRES', 'Token l&auml;uft ab');
+define('ML_TEMU_LABEL_IMPORT_PENDING', 'Ausstehende Bestellungen importieren');
+define('ML_TEMU_LABEL_EMAIL_BLACKLISTING', 'Kunden-E-Mails unterdr&uuml;cken');
+define('ML_TEMU_LABEL_BUY_SHIPPING', 'Buy-Shipping Standardwerte');
+define('ML_TEMU_LABEL_USE_BUY_SHIPPING', 'Buy Shipping verwenden');
+define('ML_TEMU_HINT_USE_BUY_SHIPPING', 'Temu Buy Shipping aktivieren. Wenn aktiviert, kauft Temu automatisch Versandetiketten (Auto-Fulfillment). Wenn deaktiviert, versenden Sie die Bestellungen selbst (Eigenversand).');
+define('ML_TEMU_LABEL_BUYSHIPPING_WEIGHT', 'Standardgewicht');
+define('ML_TEMU_HINT_BUYSHIPPING_WEIGHT', 'Standard-Paketgewicht f&uuml;r den Buy-Shipping-Etikettkauf.');
+define('ML_TEMU_LABEL_BUYSHIPPING_WEIGHT_UNIT', 'Gewichtseinheit');
+define('ML_TEMU_LABEL_BUYSHIPPING_LENGTH', 'Standardl&auml;nge');
+define('ML_TEMU_HINT_BUYSHIPPING_DIMENSIONS', 'Standard-Paketma&szlig;e f&uuml;r den Buy-Shipping-Etikettkauf.');
+define('ML_TEMU_LABEL_BUYSHIPPING_WIDTH', 'Standardbreite');
+define('ML_TEMU_LABEL_BUYSHIPPING_HEIGHT', 'Standardh&ouml;he');
+define('ML_TEMU_LABEL_BUYSHIPPING_DIMENSION_UNIT', 'Ma&szlig;einheit');
+define('ML_TEMU_LABEL_BUYSHIPPING_SHIP_LATER', 'Sp&auml;ter versenden');
+define('ML_TEMU_HINT_BUYSHIPPING_SHIP_LATER', 'Wenn aktiviert, wird die Versandbest&auml;tigung nach dem Kauf des Versandetiketts verz&ouml;gert.');
+define('ML_TEMU_LABEL_BUYSHIPPING_LOGISTICS_TYPE', 'Logistiktyp');
+define('ML_TEMU_HINT_BUYSHIPPING_LOGISTICS_TYPE', 'W&auml;hlen Sie den Logistik-Servicetyp f&uuml;r Buy Shipping.');
+define('ML_TEMU_LABEL_VAT', 'MwSt.');
+define('ML_TEMU_LABEL_SHIPPING_PARCEL', 'Paket');
+define('ML_TEMU_LABEL_SHIPPING_FORWARDER', 'Spedition');
+define('ML_TEMU_CONFIG_ACCOUNT', 'Konto');
+define('ML_TEMU_CONFIG_PREPARE', 'Vorbereitung');
+define('ML_TEMU_CONFIG_PRICE_STOCK', 'Preis & Lager');
+define('ML_TEMU_CONFIG_ORDERS', 'Bestellungen');
+define('ML_TEMU_ERROR_TOKEN_EXPIRED', 'Ihr Temu API-Token ist abgelaufen. Bitte verbinden Sie Ihr Konto erneut.');
+define('ML_TEMU_ERROR_TOKEN_EXPIRING', 'Ihr Temu API-Token l&auml;uft in %s Tagen ab. Bitte erneuern Sie es rechtzeitig.');
+define('ML_TEMU_ERROR_NOT_AUTHED', 'Nicht mit Temu verbunden. Bitte verbinden Sie Ihr Konto in der Konfiguration.');
+define('ML_TEMU_ERROR_NO_CATEGORY', 'Bitte w&auml;hlen Sie eine Temu-Kategorie.');
+define('ML_TEMU_ERROR_NO_TITLE', 'Bitte geben Sie einen Produkttitel ein.');
+define('ML_TEMU_VARMATCH_SAVE_FAILED', 'Das Speichern der Attribut-Zuordnung ist fehlgeschlagen &mdash; Ihre &Auml;nderungen wurden NICHT gespeichert. Bitte versuchen Sie es erneut.');
+define('ML_TEMU_CONNECT_BUTTON', 'Mit Temu verbinden');
+define('ML_TEMU_DISCONNECT_BUTTON', 'Von Temu trennen');
+define('ML_TEMU_HINT_IMPORT_PENDING', 'Wenn aktiviert, werden auch Bestellungen mit dem Status &quot;Ausstehend&quot; (Zahlung noch nicht best&auml;tigt) importiert.');
+define('ML_TEMU_HINT_EMAIL_BLACKLISTING', 'Wenn aktiviert, werden Kunden-E-Mail-Adressen mit &quot;blacklisted-&quot; versehen, um zu verhindern, dass Ihr Shop E-Mails an Temu-Kunden sendet.');
+define('ML_TEMU_HINT_FULFILLMENT_MODE', 'Auto: Temu kauft Versandetiketten. Eigenversand: Sie versenden die Bestellungen selbst.');
+define('ML_TEMU_SHIPPING_UPLOAD_TITLE', 'Versand best&auml;tigen');
+define('ML_TEMU_SHIPPING_OVERVIEW_TITLE', 'Versand&uuml;bersicht');
+define('ML_TEMU_SHIPPING_CONFIRM', 'Versand best&auml;tigen');
+define('ML_TEMU_SHIPPING_SERVICE', 'Versandservice');
+
+// Shipping Label - Breadcrumb
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD_ORDERLIST', '1. Bestellungen');
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD_FORM', '2. Paketangaben');
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD_SHIPPINGMETHOD', '3. Versandmethoden');
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD_SUMMARY', '4. Zusammenfassung');
+
+// Shipping Label - Order List columns
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_PURCHASEDATE', 'Importdatum');
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_MORDERID', 'Temu Bestellnr.');
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_SHOPORDERID', 'Shop Bestellnr.');
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_PAYMENTTYPE', 'Zahlungsart');
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_PACKAGESN', 'Paket SN');
+
+// Shipping Label - Form columns
+define('ML_TEMU_SHIPPINGLABEL_FORM_PRODUCTNAME', 'Produkt');
+define('ML_TEMU_SHIPPINGLABEL_FORM_WEIGHT', 'Gewicht (kg)');
+define('ML_TEMU_SHIPPINGLABEL_FORM_LENGTH', 'L&auml;nge (cm)');
+define('ML_TEMU_SHIPPINGLABEL_FORM_WIDTH', 'Breite (cm)');
+define('ML_TEMU_SHIPPINGLABEL_FORM_HEIGHT', 'H&ouml;he (cm)');
+define('ML_TEMU_SHIPPINGLABEL_FORM_SHIPPINGDATE', 'Versanddatum');
+define('ML_TEMU_SHIPPINGLABEL_FORM_QUANTITY', 'Menge');
+define('ML_TEMU_SHIPPINGLABEL_FORM_SENT', 'Versendet');
+define('ML_TEMU_SHIPPINGLABEL_FORM_CARRIERNAME', 'Versanddienstleister');
+
+// Shipping Label - Shipping Method columns
+define('ML_TEMU_SHIPPINGLABEL_SHIPPINGMETHOD_AMOUNT', 'Preis');
+define('ML_TEMU_SHIPPINGLABEL_SHIPPINGMETHOD_ESTIMATE', 'Voraussichtliche Lieferung');
+define('ML_TEMU_SHIPPINGLABEL_SHIPPINGMETHOD_DELIVERYTIME', 'Lieferzeit');
+define('ML_TEMU_SHIPPINGLABEL_SHIPPINGMETHOD_NOSERVICE', 'Für diese Bedingungen ist leider keine passende Versandart verfügbar.');
+
+// Shipping Label - Summary columns
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_RECEIVER', 'Bestellung');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_SHIPPINGDATE', 'Versanddatum');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_WEIGHT', 'Gewicht');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_CARRIERNAME', 'Versanddienstleister');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_TOTALPRICE', 'Gesamtpreis');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_ESTIMATE', 'Voraussichtliche Lieferung');
+
+// Shipping Label - Overview columns
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_CREATEDDATE', 'Erstellt');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_SHIPPINGSTATUS', 'Status');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_SENDERANDTRACKINGID', 'Versender / Sendungsnr.');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_COMMENT', 'Kommentar');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_ERRORNOTE', 'Versandetikettenerstellung fehlgeschlagen. Bitte pr&uuml;fen Sie das Fehlerprotokoll.');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_CANCELSHIPPINGLABEL', 'Sendung(en) erfolgreich storniert.');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_DELETESHIPPINGLABEL', 'Sendung(en) aus der Liste gel&ouml;scht.');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_DOWNLOADSHIPPINGLABEL', 'Herunterladen');
+
+// Shipping Label - Popup
+define('ML_TEMU_SHIPPINGLABEL_POPUP_AFTERCONFIRM', 'Versandetiketten werden erstellt. Bitte pr&uuml;fen Sie den &Uuml;bersicht-Tab f&uuml;r Status und Download-Links.');
+
+// Temu shipping label — isolated aliases of the Amazon label strings
+define('ML_TEMU_SHIPPINGLABEL_CANCEL', ML_AMAZON_SHIPPINGLABEL_CANCEL);
+define('ML_TEMU_SHIPPINGLABEL_CONFIRM', 'Versandetikett erstellen');
+define('ML_TEMU_SHIPPINGLABEL_DELETE', ML_AMAZON_SHIPPINGLABEL_DELETE);
+define('ML_TEMU_SHIPPINGLABEL_DOWNLOAD', ML_AMAZON_SHIPPINGLABEL_DOWNLOAD);
+define('ML_TEMU_SHIPPINGLABEL_DOWNLOAD_TITLE', ML_AMAZON_SHIPPINGLABEL_DOWNLOAD_TITLE);
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_POPUP_AFTERCONFIRM_INFOCONTENT', ML_AMAZON_SHIPPINGLABEL_OVERVIEW_POPUP_AFTERCONFIRM_INFOCONTENT);
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_STATISTIC', ML_AMAZON_SHIPPINGLABEL_SUMMARY_STATISTIC);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_ADD_FILTERED', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_ADD_FILTERED);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_ADD_PAGE', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_ADD_PAGE);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_SUB_ALL', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_SUB_ALL);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_SUB_PAGE', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_SUB_PAGE);
+
+define('ML_STOCK_SHOP_STOCK_TEMU', 'Bestand <br />Shop / Temu');
+define('ML_TEMU_PRODUCT_MATCHED_NO', 'Produkt nicht vorbereitet');
+define('ML_TEMU_PRODUCT_PREPARED_OK', 'Produkt erfolgreich vorbereitet');
+define('ML_TEMU_PRODUCT_PREPARED_FAULTY', 'Produktvorbereitung fehlerhaft');
+define('ML_TEMU_CANCELLATION_REASON', 'Stornierungsgrund');
+
+/* Temu Inventory */
+define('ML_TEMU_PRICE_SHOP_TEMU', 'Shop-Preis / Temu Preis<br>Shop-Preis (Netto) / Temu Netto-Preis');
+define('ML_TEMU_STOCK_FOR_TEMU', 'Temu Bestand');
+define('ML_TEMU_PRICE_FOR_TEMU', 'Temu Preis');
+define('ML_TEMU_NOTE_LABEL', 'Hinweis');
+define('ML_TEMU_STATUS_ACTIVE', 'Aktiv');
+define('ML_TEMU_STATUS_INACTIVE', 'Inaktiv');
+define('ML_TEMU_STATUS_INCOMPLETE', 'Unvollst&auml;ndig');
+define('ML_TEMU_STATUS_DRAFT', 'Entwurf');
+define('ML_TEMU_STATUS_DELETED', 'Gel&ouml;scht');
+
+// FEAT-015: Inventory Status column — API DisplayStatus ids (localize the [inv_status_*] bracket keys)
+define('ML_TEMU_INV_STATUS_LIVE_IMPORTED',        'Aktiv');
+define('ML_TEMU_INV_STATUS_LIVE',                 'Aktiv');
+define('ML_TEMU_INV_STATUS_CREATING',             'Wird hochgeladen&hellip;');
+define('ML_TEMU_INV_STATUS_CREATING_AUDIT',       'Temu pr&uuml;ft');
+define('ML_TEMU_INV_STATUS_CREATING_PRICING',     'Temu pr&uuml;ft Preis');
+define('ML_TEMU_INV_STATUS_AUDITING',             'Wird gepr&uuml;ft');
+define('ML_TEMU_INV_STATUS_AUDIT_FAILED_DATA',    'Pr&uuml;fung fehlgeschlagen: Daten');
+define('ML_TEMU_INV_STATUS_AUDIT_FAILED_PRICING', 'Pr&uuml;fung fehlgeschlagen: Preis');
+define('ML_TEMU_INV_STATUS_DELETED',              'Gel&ouml;scht');
+define('ML_TEMU_INV_STATUS_DELETED_BY_MERCHANT',  'Auf Temu gel&ouml;scht');
+define('ML_TEMU_INV_STATUS_DELETED_BY_PRICING',   'Von Temu gel&ouml;scht (Preis)');
+define('ML_TEMU_INV_STATUS_DELISTED',             'Ausgelistet');
+define('ML_TEMU_INV_STATUS_DRAFT',                'Entwurf (Seller Center)');
+define('ML_TEMU_INV_STATUS_ERROR',                'Fehler: Importierte Zeile ohne Marktplatzstatus');
+define('ML_TEMU_INV_STATUS_FAILED',               'Hochladen fehlgeschlagen');
+define('ML_TEMU_INV_STATUS_HARD_DELETED',         'Endg&uuml;ltig gel&ouml;scht');
+define('ML_TEMU_INV_STATUS_INACTIVE',             'Inaktiv auf Temu');
+define('ML_TEMU_INV_STATUS_INCOMPLETE',           'Unvollst&auml;ndig');
+define('ML_TEMU_INV_STATUS_MAYBE_DELETED',        'M&ouml;glicherweise gel&ouml;scht');
+define('ML_TEMU_INV_STATUS_NOT_FOUND',            'Nicht auf Marktplatz gefunden');
+define('ML_TEMU_INV_STATUS_PENDING_CREATION',     'Warten auf Hochladen zu Temu');
+define('ML_TEMU_INV_STATUS_PENDING_UPDATE',       'Warten auf Aktualisierung');
+define('ML_TEMU_INV_STATUS_SYNCING',              'Synchronisiere Marktplatzstatus&hellip;');
+define('ML_TEMU_INV_STATUS_UNKNOWN',              'Unbekannt');
+define('ML_TEMU_INV_STATUS_UPDATING',             'Wird aktualisiert&hellip;');
+define('ML_TEMU_INV_STATUS_WAITING',              'In Warteschlange');
+
+// FEAT-015: Price badge under the Price column (parallel to the product status)
+define('ML_TEMU_INV_PRICE_STATUS_PRICE_PENDING',  'Preis&auml;nderung in Pr&uuml;fung');
+define('ML_TEMU_INV_PRICE_STATUS_PRICE_REJECTED', 'Preis&auml;nderung abgelehnt');
+
+define('ML_TEMU_NOTE_ACTIVE_AT_RISK', 'Aktiv, aber gef&auml;hrdet');
+define('ML_TEMU_NOTE_CLOSE', 'Geschlossen');
+define('ML_TEMU_NOTE_BLOCK', 'Gesperrt');
+define('ML_TEMU_NOTE_OUT_OF_STOCK', 'Nicht auf Lager');
+define('ML_TEMU_NOTE_PRICING_UNDER_ASSESSMENT', 'Preis&uuml;berpr&uuml;fung');
+define('ML_TEMU_NOTE_AUDIT_IN_PROCESS', 'Pr&uuml;fung l&auml;uft');
+define('ML_TEMU_NOTE_PRICING_FAILURE', 'Preisfehler');
+define('ML_TEMU_NOTE_PRODUCT_TO_BE_COMPLETE', 'Produkt muss vervollst&auml;ndigt werden');
+define('ML_TEMU_NOTE_DELETE_PRICE_TERMINATION', 'Gel&ouml;scht (Preisbeendigung)');
+define('ML_TEMU_INVENTORY_IMPORT_PENDING', 'Der Bestandsimport l&auml;uft gerade. Bitte versuchen Sie es in einigen Minuten erneut.');
+
+/* Temu OAuth Authentication */
+define('ML_TEMU_LABEL_SELECT_REGION', 'Region ausw&auml;hlen');
+define('ML_TEMU_HINT_SELECT_REGION', 'W&auml;hlen Sie die Region, in der Ihr Temu-Shop registriert ist. Der Token-Link wird basierend auf dieser Region erstellt.');
+define('ML_TEMU_BUTTON_TOKEN_NEW', 'Token anfordern');
+define('ML_TEMU_BUTTON_TOKEN_RENEW', 'Token erneuern');
+define('ML_TEMU_BUTTON_TOKEN_CONNECTED', 'Verbunden');
+define('ML_TEMU_STATUS_CONNECTED', 'Erfolgreich mit Temu verbunden');
+define('ML_TEMU_ERROR_CREATE_TOKEN_LINK_HEADLINE', 'Fehler beim Erstellen des Token-Links');
+define('ML_TEMU_ERROR_CREATE_TOKEN_LINK_TEXT', 'Der Token-Link konnte nicht erstellt werden. Bitte versuchen Sie es sp&auml;ter erneut.');
+
+// Order-status cancel config (Temu unterst&uuml;tzt nur "Kein Bestand"-Stornierungen — analog v3)
+define('ML_TEMU_ORDERSTATUS_CANCELLED_LABEL', 'Bestellung storniert wegen fehlendem Bestand mit');
+define('ML_TEMU_ORDERSTATUS_CANCELLED_DESC', '<h3>Wichtige Hinweise zu Temu-Stornierungen: </h3>
+<p><strong>Unterst&uuml;tzte Gr&uuml;nde:</strong> Magnalister unterst&uuml;tzt derzeit nur Stornierungen wegen &bdquo;Kein Bestand&ldquo;. Um eine Bestellung wegen Betrug oder falscher Adresse zu stornieren, bearbeiten Sie diese bitte direkt in Ihrem Temu Seller Center, da Temu hierf&uuml;r Nachweise ben&ouml;tigt.</p>
+<p><strong>Voraussetzung f&uuml;r &bdquo;Kein Bestand&ldquo;:</strong> Bevor Sie hier eine &bdquo;Kein Bestand&ldquo;-Stornierung durchf&uuml;hren, verlangt Temu, dass der Artikel aus Ihrer aktiven Verkaufsliste entfernt wird. Wir planen, dies in einem zuk&uuml;nftigen Update zu automatisieren, aber bitte entfernen Sie vorerst das Produkt manuell aus Ihrer Temu-Verkaufsliste, bevor Sie stornieren.</p>');
+
+
+// Order status sync: mandatory fulfillment configuration (parity with v3)
+define('ML_TEMU_CONFIG_ORDERSTATUS_INCOMPLETE_HEADING', 'Die Bestellstatus-Synchronisation ist aktiv, aber die Versandkonfiguration ist unvollst&auml;ndig. Versandbest&auml;tigungen werden NICHT an Temu &uuml;bermittelt, bis die folgenden Einstellungen konfiguriert sind:');
+define('ML_TEMU_CONFIG_ORDERSTATUS_CARRIER_REQUIRED', 'Versanddienstleister (&bdquo;Carrier&ldquo; im Bereich Selbstversand) &mdash; in jedem Versandmodus erforderlich.');
+define('ML_TEMU_CONFIG_ORDERSTATUS_WAREHOUSE_REQUIRED', 'Lager (&bdquo;Warehouse ID&ldquo; in den allgemeinen Versandeinstellungen).');
+define('ML_TEMU_CONFIG_ORDERSTATUS_LOGISTICSTYPE_REQUIRED', 'Buy-Shipping-Versandtyp (&bdquo;Preferred Logistics Type&ldquo;) &mdash; erforderlich, solange Buy Shipping aktiviert ist.');
+
+// Amazon: confirmation shown before the FBA VID report VAT option is switched on
+define('ML_AMAZON_FBA_VIDR_CONFIRM', '<p><b>USt-Daten f&uuml;r FBA-Bestellungen (VID-Report)</b></p><p>Voraussetzung: Das Amazon VCS-Programm muss in Ihrem Seller Central aktiviert sein.</p><p>Bei FBA-Bestellungen liefert Amazon die Bestelldaten in der Regel ohne Angaben zur Umsatzsteuer. Die tats&auml;chlichen Steuers&auml;tze, die USt-IdNr. des K&auml;ufers und der Firmenname stehen erst im VAT Invoice Data Report (VIDR), den Amazon zeitversetzt bereitstellt.</p><p>Mit dieser Option ruft magnalister den VID-Report automatisch ab. Eine FBA-Bestellung wird erst dann zum Import freigegeben, wenn die passenden Report-Daten vorliegen; die Steuerdaten daraus werden in die Bestellung &uuml;bernommen.</p><p><b>Wichtig:</b></p><ul><li>Ist VCS in Ihrem Seller Central nicht aktiviert, erstellt Amazon keinen VID-Report.</li><li>Der Import einer FBA-Bestellung verz&ouml;gert sich, bis Amazon die Report-Daten liefert.</li><li>Liegen nach 48 Stunden keine VID-Daten vor, wird die Bestellung trotzdem importiert &ndash; dann ohne die Steuerdaten aus dem Report.</li><li>Die Option wirkt nur auf FBA-Bestellungen (AFN), nicht auf selbst versandte Bestellungen (MFN).</li></ul><p>M&ouml;chten Sie das automatische Abrufen der VID-Report-Daten aktivieren?</p>');
+define('ML_AMAZON_FBA_VIDR_ACTIVATE_BUTTON', 'Aktivieren');

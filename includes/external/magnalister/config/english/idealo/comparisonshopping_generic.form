@@ -67,6 +67,46 @@
                 "default": {
                     "val": false
                 }
+            },
+            "itemconditiontype": {
+                "label": "Item condition",
+                "desc": "Select the condition of your items. This value is transmitted to idealo as \"conditionType\" (default: New). You can adjust it individually for the selected items during item preparation.",
+                "key": "idealo.itemconditiontype",
+                "type": "selection",
+                "values": {
+                    "NEW": "New",
+                    "AS_NEW": "As good as new",
+                    "REFURBISHED": "Refurbished",
+                    "USED": "Used"
+                },
+                "default": "NEW"
+            },
+            "itemcondition": {
+                "label": "Specific condition",
+                "desc": "Specify a more detailed condition grade. This value is transmitted to idealo as \"condition\" (default: Excellent) and is typically relevant for used or refurbished items.",
+                "key": "idealo.itemcondition",
+                "type": "selection",
+                "values": {
+                    "EXCELLENT": "Excellent",
+                    "VERY_GOOD": "Very good",
+                    "GOOD": "Good",
+                    "ACCEPTABLE": "Acceptable"
+                },
+                "default": "EXCELLENT"
+            },
+            "freereturndays": {
+                "label": "Free returns (days)",
+                "desc": "Number of days within which returns are free of charge. This value is transmitted to idealo as \"freeReturnDays\" (e.g. 14). It is pre-filled here and can be adjusted for the selected items during item preparation.",
+                "key": "idealo.freereturndays",
+                "type": "text",
+                "default": "14"
+            },
+            "eecspectrum": {
+                "label": "Energy efficiency spectrum",
+                "desc": "The energy label scale. This value is transmitted to idealo as \"eec_spectrum\" (e.g. A-G). It is pre-filled here and can be adjusted for the selected items during item preparation.",
+                "key": "idealo.eecspectrum",
+                "type": "text",
+                "default": "A-G"
             }
         }
     },

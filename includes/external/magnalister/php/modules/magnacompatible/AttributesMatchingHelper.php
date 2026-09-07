@@ -1480,6 +1480,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             'dbtable' => ML_GENERAL_VARMATCH_CHOOSE_DB_TABLE,
             'dbcolumn' => ML_GENERAL_VARMATCH_CHOOSE_DB_COLUMN,
             'dbalias' => ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS,
+            'dbMatchingInfo' => ML_GENERAL_VARMATCH_DB_MATCHING_INFO,
             'attributeChangedOnMp' => str_replace('%marketplace%', $this->marketplace, ML_GENERAL_VARMATCH_ATTRIBUTE_CHANGED_ON_MP),
             'attributeDifferentOnProduct' => ML_GENERAL_VARMATCH_ATTRIBUTE_DIFFERENT_ON_PRODUCT,
             'attributeDeletedOnMp' => str_replace('%marketplace%', $this->marketplace, ML_GENERAL_VARMATCH_ATTRIBUTE_DELETED_ON_MP),

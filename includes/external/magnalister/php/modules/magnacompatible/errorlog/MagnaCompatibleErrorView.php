@@ -46,7 +46,6 @@ class MagnaCompatibleErrorView {
 		), $settings);
 
 		$this->url = $_url;
-
 		$this->mpID = $_MagnaSession['mpID'];
 		$this->marketplace = $_MagnaSession['currentPlatform'];
 
@@ -86,10 +85,12 @@ class MagnaCompatibleErrorView {
 				$this->sort['order'] = 'errormessage';
 				$this->sort['type']  = 'DESC';
 				break;
+			case 'commissiondate':
 			case 'dateadded':
 				$this->sort['order'] = 'dateadded';
 				$this->sort['type']  = 'ASC';
 				break;
+			case 'commissiondate-desc':
 			case 'dateadded-desc':
 			default:
 				$this->sort['order'] = 'dateadded';

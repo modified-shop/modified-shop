@@ -30,12 +30,20 @@ export const useAttributeForm = ({
   const [isDirty, setIsDirty] = useState(false);
   const initialValuesRef = useRef(initialValues);
 
-  // Update initial values ref when it changes
+  // Update initial values ref when it changes.
+  //
+  // Keyed on the serialised content, not on the object identity: callers
+  // usually build initialValues inline (and the default `{}` above creates a
+  // fresh object on every render), so an [initialValues] dependency would
+  // re-run this effect on every render. setValues would then trigger the next
+  // render, looping until the heap is exhausted.
+  const initialValuesKey = JSON.stringify(initialValues);
   useEffect(() => {
     initialValuesRef.current = initialValues;
     setValues(initialValues);
     setIsDirty(false);
-  }, [initialValues]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValuesKey]);
 
   // Validate a single attribute
   const validateAttribute = useCallback((

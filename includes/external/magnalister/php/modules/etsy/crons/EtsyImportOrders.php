@@ -27,6 +27,8 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleImpor
  */
 class EtsyImportOrders extends MagnaCompatibleImportOrders {
 
+	protected $blSupportsBuyerMessageOnly = true;
+
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);
 	}

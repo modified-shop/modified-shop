@@ -126,10 +126,7 @@ body:not(.ml-dummy-class-1) .amazon-variations-container:not(.ml-dummy-class-2) 
 
 /* Flex layout for attribute input areas */
 .amazon-variations-container .attribute-input-column {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-    border-bottom: none;
+    gap: 12px;
     border-top: none;
 }
 .js-field.attribute-row.required-attribute,
@@ -327,6 +324,41 @@ body:not(.ml-dummy-class-1) .amazon-variations-container:not(.ml-dummy-class-2) 
 
 .optional-attribute-react-select {
     margin-top: 10px;
+}
+
+/* ================================================
+   REACT-SELECT INDICATOR SEPARATOR - HIDE VERTICAL LINE
+   ================================================ */
+
+/* Hide the vertical separator line between value and dropdown arrow in react-select */
+.ml-custom-attr-name__indicator-separator,
+.ml-custom-attr-value__indicator-separator,
+.ml-amazon-attr-selector__indicator-separator,
+.ml-amazon-optional-attr__indicator-separator,
+.ml-amazon-shop-val__indicator-separator,
+.ml-amazon-match-val__indicator-separator,
+.ml-amazon-value__indicator-separator {
+  display: none !important;
+}
+
+/* Style custom attribute select boxes to match mandatory/optional attributes */
+.ml-custom-attr-name__control,
+.ml-custom-attr-value__control {
+  border-radius: 0 !important;
+  min-height: 43px !important;
+}
+
+/* Vertically center the content inside custom attribute select boxes */
+.ml-custom-attr-name__value-container,
+.ml-custom-attr-value__value-container {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.ml-custom-attr-name__input-container,
+.ml-custom-attr-value__input-container {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* ================================================

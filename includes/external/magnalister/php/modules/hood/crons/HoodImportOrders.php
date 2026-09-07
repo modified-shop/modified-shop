@@ -66,7 +66,10 @@ class HoodImportOrders extends MagnaCompatibleImportOrders {
 	
 	protected function generateOrderComment($blForce = false) {
 		if (!$blForce && !getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
-			return ''; 
+			return '';
+		}
+		if ($this->buyerMessageOnly()) {
+			return trim($this->comment);
 		}
 		return trim(
 			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->marketplaceTitle)."\n".

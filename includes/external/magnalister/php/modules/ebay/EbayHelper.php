@@ -26,6 +26,32 @@ class EbayHelper extends AttributesMatchingHelper
 
 	protected $numberOfMaxAdditionalAttributes = self::UNLIMITED_ADDITIONAL_ATTRIBUTES;
 
+	/** Maximum title length eBay accepts. */
+	const TITLE_MAX_LENGTH = 80;
+
+	/** Maximum subtitle length eBay accepts. */
+	const SUBTITLE_MAX_LENGTH = 55;
+
+	/**
+	 * Cuts a title down to the length eBay accepts.
+	 *
+	 * @param string $sTitle
+	 * @return string
+	 */
+	public static function truncateTitle($sTitle) {
+		return self::truncateToLength($sTitle, self::TITLE_MAX_LENGTH);
+	}
+
+	/**
+	 * Cuts a subtitle down to the length eBay accepts.
+	 *
+	 * @param string $sSubtitle
+	 * @return string
+	 */
+	public static function truncateSubtitle($sSubtitle) {
+		return self::truncateToLength($sSubtitle, self::SUBTITLE_MAX_LENGTH);
+	}
+
 	private static $instance;
 /**
  * 

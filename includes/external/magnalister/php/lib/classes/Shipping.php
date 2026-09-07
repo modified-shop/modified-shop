@@ -61,29 +61,9 @@ class Shipping {
 	private $settings = array();
 	
 	// class constructor
+	// Do not use the "carriers" table here: those are Track & Trace parcel services without any shipping cost logic, while this needs the shipping modules installed under MODULE_SHIPPING_INSTALLED.
 	public function __construct($module = '') {
-
-		if (   MagnaDB::gi()->tableExists('carriers')
-		    && MagnaDB::gi()->tableExists('orders_tracking')
-		    && MagnaDB::gi()->fetchOne("SELECT COUNT(*) FROM carriers") > 0
-		) {
-			$carriers = MagnaDB::gi()->fetchArray("
-				SELECT carrier_id, carrier_name
-				  FROM carriers
-				 ORDER BY carrier_sort_order, carrier_name
-			");
-			foreach ($carriers as $carrier) {
-				$this->modules_info[] = array(
-					'code' => $carrier['carrier_id'],
-					'title' => $carrier['carrier_name'],
-					'description' => '',
-					'status' => true,
-					'signature' => null
-				);
-			}
-			return;
-		}
-
+		
 		if (SHOPSYSTEM == 'oscommerce') {
 			global $language;
 			if (defined('DIR_FS_CATALOG_LANGUAGES'))
@@ -110,7 +90,7 @@ class Shipping {
 			$modulePath = DIR_FS_CATALOG_MODULES . 'shipping/';
 		else
 			$modulePath = DIR_MAGNA_MODULES . 'shipping/';
-
+		
 		//echo var_dump_pre($order);
 		if (defined('MODULE_SHIPPING_INSTALLED') && (MODULE_SHIPPING_INSTALLED != '')) {
 			$this->modules = explode(';', MODULE_SHIPPING_INSTALLED);

@@ -40,7 +40,7 @@ class CdiscountSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
     protected function getConfigKeys() {
         $parent = parent::getConfigKeys();
         $parent['cancellationReason'] = array(
-            'key' => array('orderstatus.cancelreason'),
+            'key' => 'orderstatus.cancelreason',
             'default' => 'seller-refusal',
         );
         return $parent;

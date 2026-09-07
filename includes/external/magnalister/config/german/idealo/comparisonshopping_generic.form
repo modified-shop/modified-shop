@@ -67,6 +67,46 @@
                 "default": {
                     "val": false
                 }
+            },
+            "itemconditiontype": {
+                "label": "Artikelzustand",
+                "desc": "W&auml;hlen Sie den Zustand Ihrer Artikel. Dieser Wert wird als \"conditionType\" an idealo &uuml;bermittelt (Standard: Neu). In der Artikelvorbereitung k&ouml;nnen Sie ihn f&uuml;r die ausgew&auml;hlten Artikel individuell anpassen.",
+                "key": "idealo.itemconditiontype",
+                "type": "selection",
+                "values": {
+                    "NEW": "Neu",
+                    "AS_NEW": "Wie neu",
+                    "REFURBISHED": "Generalüberholt",
+                    "USED": "Gebraucht"
+                },
+                "default": "NEW"
+            },
+            "itemcondition": {
+                "label": "Genauer Zustand",
+                "desc": "Geben Sie einen genaueren Zustand an. Dieser Wert wird als \"condition\" an idealo &uuml;bermittelt (Standard: Ausgezeichnet) und ist in der Regel f&uuml;r gebrauchte oder generalüberholte Artikel relevant.",
+                "key": "idealo.itemcondition",
+                "type": "selection",
+                "values": {
+                    "EXCELLENT": "Ausgezeichnet",
+                    "VERY_GOOD": "Sehr gut",
+                    "GOOD": "Gut",
+                    "ACCEPTABLE": "Akzeptabel"
+                },
+                "default": "EXCELLENT"
+            },
+            "freereturndays": {
+                "label": "Kostenlose R&uuml;cksendung (Tage)",
+                "desc": "Anzahl der Tage, innerhalb derer die R&uuml;cksendung kostenfrei ist. Dieser Wert wird als \"freeReturnDays\" an idealo &uuml;bermittelt (z. B. 14). Er ist hier vorbelegt und kann in der Artikelvorbereitung f&uuml;r die ausgew&auml;hlten Artikel angepasst werden.",
+                "key": "idealo.freereturndays",
+                "type": "text",
+                "default": "14"
+            },
+            "eecspectrum": {
+                "label": "Energieeffizienz-Spektrum",
+                "desc": "Die Skala des Energielabels. Dieser Wert wird als \"eec_spectrum\" an idealo &uuml;bermittelt (z. B. A-G). Er ist hier vorbelegt und kann in der Artikelvorbereitung f&uuml;r die ausgew&auml;hlten Artikel angepasst werden.",
+                "key": "idealo.eecspectrum",
+                "type": "text",
+                "default": "A-G"
             }
         }
     },

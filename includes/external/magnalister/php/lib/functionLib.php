@@ -20,6 +20,44 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+/**
+ * Liefert die Basis-URL des Shops (Schema + Host, ohne DIR_WS_CATALOG).
+ *
+ * HTTP_CATALOG_SERVER wird von osCommerce/Gambio ausschliesslich im Adminbereich
+ * (admin/includes/configure.php) definiert. Alles was ausserhalb des Adminbereichs
+ * laeuft - z.B. der Cron ueber magnaCallback.php - kennt nur HTTP_SERVER aus der
+ * includes/configure.php des Shops. Ab PHP 8 ist der Zugriff auf eine undefinierte
+ * Konstante ein Fatal Error (vorher nur eine Notice), deshalb wird hier ein
+ * Ersatzwert ermittelt.
+ *
+ * @return string z.B. 'https://www.shop.de' oder '' wenn nicht ermittelbar
+ */
+function mlGetCatalogServerUrl() {
+	if (defined('HTTP_CATALOG_SERVER') && (HTTP_CATALOG_SERVER != '')) {
+		return HTTP_CATALOG_SERVER;
+	}
+	if (defined('HTTP_SERVER') && (HTTP_SERVER != '')) {
+		return HTTP_SERVER;
+	}
+	if (defined('HTTPS_SERVER') && (HTTPS_SERVER != '')) {
+		return HTTPS_SERVER;
+	}
+	/* Letzter Ausweg: aus dem Request ableiten (HTTP_HOST kommt vom Client). */
+	if (!isset($_SERVER['HTTP_HOST']) || ($_SERVER['HTTP_HOST'] == '')) {
+		return '';
+	}
+	$blHttps = (   (   isset($_SERVER['HTTPS'])
+	                && ($_SERVER['HTTPS'] != '')
+	                && (strtolower($_SERVER['HTTPS']) != 'off'))
+	            || (   isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+	                && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'))
+	           );
+	return ($blHttps ? 'https://' : 'http://').$_SERVER['HTTP_HOST'];
+}
+
+/* Sicherstellen, dass HTTP_CATALOG_SERVER auch ausserhalb des Adminbereichs existiert. */
+defined('HTTP_CATALOG_SERVER') OR define('HTTP_CATALOG_SERVER', mlGetCatalogServerUrl());
+
 function _is_plain_text() {
 	$headers = headers_list();
 	if (empty($headers)) {
@@ -1639,4 +1677,64 @@ function mlSetArrayKeysOfEachUrlParameter($aKeys, $aArray, $mValue) {
     } else {
         return $mValue;
     }
+}
+
+/**
+ * Liest die Paketnummer aus der modified-Tabelle "orders_tracking" (Order Track & Trace).
+ *
+ * Die Tabelle gehoert zur Bestellansicht des Shops und hat nichts mit den unter
+ * MODULE_SHIPPING_INSTALLED installierten Versandmodulen zu tun.
+ *
+ * @param string|int $mOrderId
+ * @return string|bool Die Paketnummer, oder false wenn es die Tabelle bzw. den Eintrag nicht gibt.
+ */
+function mlGetOrdersTrackingCode($mOrderId) {
+	if (!MagnaDB::gi()->tableExists('orders_tracking')) {
+		return false;
+	}
+
+	return MagnaDB::gi()->fetchOne("
+		SELECT parcel_id
+		  FROM orders_tracking
+		 WHERE orders_id = '".MagnaDB::gi()->escape($mOrderId)."'
+		 LIMIT 1
+	");
+}
+
+/**
+ * Liest den Paketdienst zur Bestellung aus "orders_tracking" und loest die dort
+ * gespeicherte carrier_id ueber die Tabelle "carriers" in den Klarnamen auf.
+ *
+ * Die Eintraege in "carriers" sind Paketdienste bzw. Tracking-Anbieter, keine
+ * Versandmodule - sie enthalten keine Logik zur Berechnung von Versandkosten.
+ *
+ * @param string|int $mOrderId
+ * @return string|bool|null
+ *   null, wenn nichts nachzuschlagen ist (Tabellen fehlen oder die Bestellung hat
+ *   keine carrier_id) - der Aufrufer laesst seinen bisherigen Wert dann unveraendert.
+ *   Sonst der carrier_name, bzw. false wenn die carrier_id ins Leere zeigt.
+ */
+function mlGetOrdersTrackingCarrierName($mOrderId) {
+	if (   !MagnaDB::gi()->tableExists('orders_tracking')
+	    || !MagnaDB::gi()->tableExists('carriers')
+	) {
+		return null;
+	}
+
+	$sCarrierId = MagnaDB::gi()->fetchOne("
+		SELECT carrier_id
+		  FROM orders_tracking
+		 WHERE orders_id = '".MagnaDB::gi()->escape($mOrderId)."'
+		 LIMIT 1
+	");
+	if (empty($sCarrierId)) {
+		return null;
+	}
+
+	return MagnaDB::gi()->fetchOne("
+		SELECT carrier_name
+		  FROM carriers
+		 WHERE carrier_id = '".MagnaDB::gi()->escape($sCarrierId)."'
+		 LIMIT 1
+	");
 }

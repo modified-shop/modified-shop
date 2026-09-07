@@ -684,13 +684,8 @@ function magnaAmazonFetchTrackingCode3rdParty($oID, $mpID) {
     }
 
     // for modified 2.0 > if table "orders_tracking" exists
-    if (false == $mTrackingCode && MagnaDB::gi()->tableExists('orders_tracking')) {
-        $mTrackingCode = MagnaDB::gi()->fetchOne("
-            SELECT parcel_id
-              FROM orders_tracking
-             WHERE orders_id = '".MagnaDB::gi()->escape($oID)."'
-             LIMIT 1
-        ");
+    if (false == $mTrackingCode) {
+        $mTrackingCode = mlGetOrdersTrackingCode($oID);
     }
 
     return $mTrackingCode;
@@ -727,20 +722,10 @@ function magnaAmazonFetchCarrier3rdParty($oID, $mpID) {
     }
 
     // for modified 2.0+ > if table "orders_tracking" exists
-    if (false == $mCarrier && MagnaDB::gi()->tableExists('orders_tracking')) {
-        $sCarrierId = MagnaDB::gi()->fetchOne("
-            SELECT carrier_id
-              FROM orders_tracking
-             WHERE orders_id = '".MagnaDB::gi()->escape($oID)."'
-             LIMIT 1
-        ");
-        if (!empty($sCarrierId)) {
-            $mCarrier = MagnaDB::gi()->fetchOne("
-                SELECT carrier_name
-                  FROM carriers
-                 WHERE carrier_id = '".MagnaDB::gi()->escape($sCarrierId)."'
-                 LIMIT 1
-            ");
+    if (false == $mCarrier) {
+        $mCarrierName = mlGetOrdersTrackingCarrierName($oID);
+        if (null !== $mCarrierName) {
+            $mCarrier = $mCarrierName;
         }
     }
 

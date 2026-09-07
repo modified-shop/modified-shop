@@ -250,6 +250,13 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 			progressbarImage.src = "<?php echo DIR_MAGNALISTER_WS; ?>images/progressbar.png";
 		/*]]>*/</script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery-1.8.3.js"></script>
+<?php /* The jQuery include above re-creates the global jQuery instance, clobbering the
+         one the modified/xt shop admin loaded together with its SumoSelect plugin. Re-
+         attach SumoSelect to magnalister's jQuery so the admin's document-ready init
+         ($('.SlectBox')...SumoSelect(...)) does not throw "SumoSelect is not a function". */
+      if (file_exists('includes/javascript/jquery.sumoselect_mod.js')) { ?>
+		<script type="text/javascript" src="includes/javascript/jquery.sumoselect_mod.js"></script>
+<?php } ?>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery.timers-1.2.js"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery.blockUI.js"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery-ui-1.9.1.custom.js"></script>

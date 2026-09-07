@@ -74,6 +74,34 @@ class MagnaCompatibleHelper {
 	}
 
 	/**
+	 * Cuts a value down to the given number of characters.
+	 *
+	 * The value is decoded before its length is measured, because prepared
+	 * marketplace data may contain HTML entities. Without decoding, a single
+	 * umlaut written as "&uuml;" would count as six characters and the value
+	 * would be cut off far too early -- and the cut could even happen in the
+	 * middle of an entity.
+	 *
+	 * Unlike sanitizeTitle() this does not append an ellipsis, so it keeps the
+	 * behaviour the marketplace modules had before.
+	 *
+	 * @param string $sValue
+	 * @param int $iMaxLength
+	 * @return string
+	 */
+	public static function truncateToLength($sValue, $iMaxLength)
+	{
+		if (!is_string($sValue) || ($sValue === '')) {
+			return $sValue;
+		}
+		$sValue = html_entity_decode($sValue, ENT_COMPAT, 'UTF-8');
+		if (mb_strlen($sValue, 'UTF-8') > $iMaxLength) {
+			$sValue = mb_substr($sValue, 0, $iMaxLength, 'UTF-8');
+		}
+		return $sValue;
+	}
+
+	/**
 	 * Check length of the title slice it and adds dots if is needed.
 	 *
 	 * @param $text

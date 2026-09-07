@@ -53,8 +53,15 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
     {
         $aMatchedValues = EtsyHelper::gi()->convertMatchingToNameValue($aProperties, $product);
         foreach ($aProperties as $sPropertyName => &$aProperty) {
+            // For freetext / attribute_value the saved Values is the boolean placeholder "true";
+            // for database_value ("Wähle Datenbank-Werte") the saved Values is the
+            // {Table, Column, Alias} config array. In both cases convertMatchingToNameValue()
+            // above has already resolved the real value into $aMatchedValues, so substitute it —
+            // otherwise the raw config array is sent to the Etsy API and the upload fails (500).
+            $sMatchCode = isset($aProperty['Code']) ? $aProperty['Code'] : '';
             if (array_key_exists($sPropertyName, $aMatchedValues)
-                && ($aProperty['Values'] === true || $aProperty['Values'] === 'true')) {
+                && ($aProperty['Values'] === true || $aProperty['Values'] === 'true'
+                    || $sMatchCode === 'database_value')) {
                 $aProperty['Values'] = $aMatchedValues[$sPropertyName];
             }
         }
@@ -667,8 +674,11 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 $property['values'][0] = $attribute['values'][$propertyId . '-' . $propertyValueId];
                 #break;
             } else if (    empty($propertyId)
-                        && $property['property_name'] == $attribute['title']) {
+                && $this->getCorrectAttributeName(html_entity_decode($property['property_name'], ENT_QUOTES, 'UTF-8'))
+                === $this->getCorrectAttributeName(html_entity_decode($attribute['title'], ENT_QUOTES, 'UTF-8'))) {
                 $property['property_id'] = $attribute['id'];
+                $property['value_ids'] = array();
+                break;
             }
         }
         return $property;
