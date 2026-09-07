@@ -80,9 +80,10 @@
       // only PayPal's own callback understands a decline response, the wallets expect a purchase unit
       $is_paypal_callback = false;
 
-      $previous_quote = isset($_SESSION['paypal']['contact']['shipping_quote'])
-                        && is_array($_SESSION['paypal']['contact']['shipping_quote'])
-                        ? $_SESSION['paypal']['contact']['shipping_quote']
+      // a failed address must not count as quoted, otherwise its retry looks like an option event
+      $quoted_address = isset($_SESSION['paypal']['contact']['shipping_quoted_address'])
+                        && is_array($_SESSION['paypal']['contact']['shipping_quoted_address'])
+                        ? $_SESSION['paypal']['contact']['shipping_quoted_address']
                         : array();
 
       if (isset($request['shipping_contact']) && is_array($request['shipping_contact'])) {
@@ -114,8 +115,8 @@
       $shipping_contact['postalCode'] = $postcode;
       $_SESSION['paypal']['contact']['shipping_quote'] = $shipping_contact;
 
-      // same address as the last quote plus a submitted option means PayPal asked about the option
-      $address_changed = (paypal_shipping_address_key($previous_quote) !== paypal_shipping_address_key($shipping_contact));
+      // same address as the last successful quote plus a submitted option means PayPal asked about the option
+      $address_changed = (paypal_shipping_address_key($quoted_address) !== paypal_shipping_address_key($shipping_contact));
 
       $shipping_address = $paypal->parse_contact($shipping_contact);
       if (empty($shipping_address['country_id'])) {
@@ -198,6 +199,7 @@
 
         // the address cannot be served, do not keep quoting the method picked for the previous one
         $_SESSION['shipping'] = false;
+        unset($_SESSION['paypal']['contact']['shipping_quoted_address']);
         $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
 
         if ($is_paypal_callback === true) {
@@ -213,6 +215,11 @@
               'requested' => $shipping_option_id,
               'available' => implode(', ', array_keys($shipping_session)),
             ));
+
+            // the buyer picked this method for this very address, do not quietly swap it for another
+            if ($is_paypal_callback === true && $address_changed === false) {
+              return paypal_shipping_decline('METHOD_UNAVAILABLE');
+            }
           }
           $shipping_option_id = $shipping_option[0]['id'];
         }
@@ -222,6 +229,7 @@
         }
 
         $_SESSION['shipping'] = $shipping_session[$shipping_option_id];
+        $_SESSION['paypal']['contact']['shipping_quoted_address'] = $shipping_contact;
         $order = $paypal->apply_address_to_delivery($paypal->set_order_object(), $shipping_address);
       }
 
