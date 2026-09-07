@@ -19,6 +19,45 @@
     return (node && node.closest) ? node.closest(selector) : null;
   }
 
+  var prefixCounter = 0;
+
+  // The templates carry generic names, cls-1 and clippath-6. Two labels in one document would
+  // otherwise share them, and a clip path or a gradient of one label would apply to the other.
+  // The server does the same to every svg it embeds, see guarantee_labels_inline_svg().
+  function prefixSvg(svg) {
+    var prefix = 'gljs' + (++prefixCounter) + '-';
+    var ids = [];
+    var pattern = /\sid="([^"]+)"/g;
+    var match;
+
+    while ((match = pattern.exec(svg)) !== null) {
+      if (ids.indexOf(match[1]) === -1) {
+        ids.push(match[1]);
+      }
+    }
+
+    ids.forEach(function (id) {
+      var quoted = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+      // only the ids the file defines itself, so a foreign reference is never rewritten
+      svg = svg.replace(new RegExp('(\\sid=")' + quoted + '(")', 'g'), '$1' + prefix + id + '$2');
+      svg = svg.replace(new RegExp('url\\(#' + quoted + '\\)', 'g'), 'url(#' + prefix + id + ')');
+      svg = svg.replace(new RegExp('((?:xlink:)?href=")#' + quoted + '(")', 'g'), '$1#' + prefix + id + '$2');
+    });
+
+    // class names inside the style block and on the elements
+    svg = svg.replace(/\.(cls-[0-9]+)/g, '.' + prefix + '$1');
+    svg = svg.replace(/\sclass="([^"]+)"/g, function (whole, value) {
+      var classes = value.trim().split(/\s+/).map(function (name) {
+        return (name.indexOf('cls-') === 0) ? prefix + name : name;
+      });
+
+      return ' class="' + classes.join(' ') + '"';
+    });
+
+    return svg;
+  }
+
   function hasColorbox() {
     return (typeof window.jQuery === 'function' && typeof window.jQuery.colorbox === 'function');
   }
@@ -141,8 +180,9 @@
       }
       return response.text();
     }).then(function (svg) {
-      // inserted into the dom instead of an img, so the label uses the fonts of the page
-      graphic.innerHTML = svg;
+      // Inserted into the dom instead of an img, so the label uses the fonts of the page. Its
+      // own ids and classes are made unique first, the document may already hold another label.
+      graphic.innerHTML = prefixSvg(svg);
       done();
     }).catch(function () {
       // the cache was cleared between page load and click, a reload rebuilds it

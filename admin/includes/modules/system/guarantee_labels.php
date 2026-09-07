@@ -407,7 +407,8 @@
       }
 
       $this->add_configuration('MODULE_GUARANTEE_LABELS_STATUS', 'true', 'xtc_cfg_select_option(array(\'true\', \'false\'), ');
-      $this->add_configuration('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '', 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses\', \'chr(44)\',');
+      $this->add_configuration('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '', $this->b2b_set_function());
+      $this->update_set_function('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', $this->b2b_set_function());
       $this->register_class_extension();
 
       $messageStack->add_session(MODULE_GUARANTEE_LABELS_TEXT_INSTALL_SUCCESS, 'success');
@@ -424,7 +425,11 @@
       }
 
       // only add keys introduced by a later version, never touch existing values
-      $this->add_configuration('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '', 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses\', \'chr(44)\',');
+      $this->add_configuration('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '', $this->b2b_set_function());
+
+      // the option list is not a value: a shop that installed an earlier version keeps the old
+      // expression until this runs, and would go on offering the administration group
+      $this->update_set_function('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', $this->b2b_set_function());
       $this->register_class_extension();
 
       return MODULE_GUARANTEE_LABELS_TEXT_UPDATE_SUCCESS;
@@ -995,6 +1000,40 @@
         'default' => isset($column_data['Default']) ? $column_data['Default'] : null,
         'auto_increment' => (isset($column_data['Extra']) && strpos(strtolower($column_data['Extra']), 'auto_increment') !== false),
       );
+    }
+
+    /**
+     * The option list of the b2b selection.
+     *
+     * Group 0 is the administration, not a customer group: it never orders and never sees a
+     * label. Offering it would show a checkbox that save_b2b_customers_status() drops again.
+     * The expression is stored in set_function and evaluated by admin/module_export.php, so it
+     * uses core functions only and needs nothing loaded.
+     *
+     * @return string
+     */
+    function b2b_set_function() {
+      return 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(), array(0 => 0)), \'chr(44)\',';
+    }
+
+    /**
+     * Brings the option list of an existing key up to date.
+     *
+     * add_configuration() only writes a key that is missing, so a shop that installed an earlier
+     * version keeps the stored expression until this runs.
+     */
+    function update_set_function($key, $set_function) {
+      $check_query = xtc_db_query("SELECT configuration_id
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key = '".xtc_db_input($key)."'
+                                      AND set_function != '".xtc_db_input($set_function)."'");
+
+      if (xtc_db_num_rows($check_query) < 1) {
+        return;
+      }
+
+      xtc_db_perform(TABLE_CONFIGURATION, array('set_function' => $set_function), 'update',
+                     "configuration_key = '".xtc_db_input($key)."'");
     }
 
     function add_configuration($key, $value, $set_function = '') {

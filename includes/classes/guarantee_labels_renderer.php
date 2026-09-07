@@ -39,14 +39,16 @@
     // width has to be scaled before it can be compared with the template layout
     const UNIT_SCALE = 0.75;
 
+    var $base_dir;
     var $asset_dir;
     var $font_dir;
     var $archive;
     var $errors;
 
     function __construct() {
-      $this->asset_dir = DIR_FS_CATALOG.'images/guarantee_labels/assets/';
-      $this->font_dir = DIR_FS_CATALOG.'images/guarantee_labels/fonts/';
+      $this->base_dir = DIR_FS_CATALOG.'images/guarantee_labels/';
+      $this->asset_dir = $this->base_dir.'assets/';
+      $this->font_dir = $this->base_dir.'fonts/';
       $this->archive = new guarantee_labels_archive();
       $this->errors = array();
     }
@@ -85,6 +87,24 @@
       );
     }
 
+    /**
+     * The files the browser needs for the same label the renderer measured with the ttf fonts.
+     *
+     * A missing woff2 lets the browser substitute a font, and the drawing drifts away from the
+     * width this class checked. The style sheet and the script belong here as well: without them
+     * the label stays unstyled and the overlay cannot open.
+     *
+     * @return array name => path
+     */
+    function browser_assets() {
+      return array(
+        'Inter-Regular.woff2' => $this->font_dir.'Inter-Regular.woff2',
+        'Inter-ExtraBold.woff2' => $this->font_dir.'Inter-ExtraBold.woff2',
+        'guarantee_labels.css' => $this->base_dir.'guarantee_labels.css',
+        'guarantee_labels.js' => $this->base_dir.'guarantee_labels.js',
+      );
+    }
+
     // ---------------------------------------------------------- environment --
 
     /**
@@ -114,6 +134,13 @@
       foreach ($this->fonts() as $name => $file) {
         if (!is_file($file)) {
           $missing[] = 'font:'.$name;
+        }
+      }
+
+      // the browser draws the same label, an incomplete package lets it drift from the measurement
+      foreach ($this->browser_assets() as $name => $file) {
+        if (!is_file($file)) {
+          $missing[] = 'asset:'.$name;
         }
       }
 
@@ -288,7 +315,9 @@
 
       $stream = '';
 
-      $files = $this->fonts();
+      // everything a label is built from, in the browser as well: a changed woff2 or style sheet
+      // has to produce a new hash, otherwise a stale cache copy keeps being served
+      $files = array_merge($this->fonts(), $this->browser_assets());
       foreach ($this->templates() as $template) {
         $files[] = $template['file'];
       }

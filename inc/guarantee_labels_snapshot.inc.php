@@ -522,15 +522,20 @@
    * @param int $orders_products_id
    * @return void
    */
-  function guarantee_labels_product_snapshot_delete($orders_products_id) {
+  function guarantee_labels_product_snapshot_delete($orders_id, $orders_products_id) {
+    $orders_id = (int)$orders_id;
     $orders_products_id = (int)$orders_products_id;
 
-    if ($orders_products_id < 1 || !guarantee_labels_snapshot_table(TABLE_ORDERS_PRODUCTS_GUARANTEE)) {
+    if ($orders_id < 1 || $orders_products_id < 1 || !guarantee_labels_snapshot_table(TABLE_ORDERS_PRODUCTS_GUARANTEE)) {
       return;
     }
 
+    // Both come from the request. orders_product_delete() removes the position itself with both
+    // columns, this hook runs before it and has to be just as narrow: a mismatched pair would
+    // otherwise take the snapshot of a different order while its position stays.
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE."
-                        WHERE orders_products_id = '".$orders_products_id."'");
+                        WHERE orders_id = '".$orders_id."'
+                          AND orders_products_id = '".$orders_products_id."'");
   }
 
   /**

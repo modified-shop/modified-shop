@@ -21,15 +21,15 @@
   }
 
   if (function_exists('guarantee_labels_active') && guarantee_labels_active()) {
-    // The whole block is in scope here, so the manufacturers of every position are read
-    // once. Without this the buffer still holds each name, but a page full of different
-    // manufacturers would ask once per position.
-    if (!isset($guarantee_labels_collected)) {
+    // The core calls this hook inside its loop, so the result array holds only the positions up
+    // to here. $products does hold them all, it is read before the loop starts, and the buffer
+    // of guarantee_labels_manufacturer_names() serves every later position from one query.
+    if (!isset($guarantee_labels_collected) && isset($products)) {
       $guarantee_labels_collected = array();
 
-      foreach ((array)$module_data as $guarantee_labels_row) {
-        if (isset($guarantee_labels_row['PRODUCTS_MANUFACTURERS_ID'])) {
-          $guarantee_labels_collected[] = (int)$guarantee_labels_row['PRODUCTS_MANUFACTURERS_ID'];
+      foreach ((array)$products as $guarantee_labels_row) {
+        if (isset($guarantee_labels_row['manufacturers_id'])) {
+          $guarantee_labels_collected[] = (int)$guarantee_labels_row['manufacturers_id'];
         }
       }
 

@@ -624,15 +624,14 @@
 
     // a language package brings its own graphic and its own texts, without either there is
     // nothing to show; a missing constant would end the request instead of the notice
-    if ($language === ''
-        || !is_file(DIR_FS_CATALOG.$file)
-        || !guarantee_labels_texts_ready(guarantee_labels_notice_constants())
-        )
-    {
+    if ($language === '' || !guarantee_labels_texts_ready(guarantee_labels_notice_constants())) {
       return false;
     }
 
-    $source = encode_htmlspecialchars((defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').$file);
+    // a missing graphic costs the illustration, never the notice itself
+    $source = is_file(DIR_FS_CATALOG.$file)
+            ? encode_htmlspecialchars((defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').$file)
+            : '';
     $alt = guarantee_labels_attribute(TEXT_GUARANTEE_NOTICE_ALT);
 
     $link = '';
@@ -669,21 +668,28 @@
     $close = guarantee_labels_text('TEXT_GUARANTEE_LABEL_CLOSE', '&times;');
     $reload = guarantee_labels_text('TEXT_GUARANTEE_LABEL_RELOAD', '');
 
+    // The notice is the statement, the graphic only illustrates it. Without a usable source the
+    // text and the link still go out; an unwritable cache directory must not take a legally
+    // required notice off the page. The button would open an empty dialogue, so it stays away.
+    $graphic = ($source === '')
+             ? ''
+             : '<button type="button" class="guarantee-label__compact guarantee-notice__open" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute($title).'">'.
+                 $open.
+               '</button>'.
+               '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute($title).'">'.
+                 '<div class="guarantee-label__content" id="'.$id.'">'.
+                   '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'"'.(($reload !== '') ? ' data-guarantee-label-error="'.guarantee_labels_attribute($reload).'"' : '').'>'.
+                     '<div class="guarantee-label__graphic"></div>'.
+                   '</div>'.
+                 '</div>'.
+                 '<button type="button" class="guarantee-label__close">'.$close.'</button>'.
+               '</dialog>';
+
     return array(
       'title' => $title,
       'body' => '<p class="guarantee-notice__text">'.$text.'</p>'.
                 $mixed.
-                '<button type="button" class="guarantee-label__compact guarantee-notice__open" data-guarantee-label-content="'.$id.'" data-guarantee-label-title="'.guarantee_labels_attribute($title).'">'.
-                  $open.
-                '</button>'.
-                '<dialog class="guarantee-label__dialog" aria-label="'.guarantee_labels_attribute($title).'">'.
-                  '<div class="guarantee-label__content" id="'.$id.'">'.
-                    '<div class="guarantee-label__full guarantee-notice__full" data-guarantee-label-img="'.$source.'" data-guarantee-label-alt="'.$alt.'"'.(($reload !== '') ? ' data-guarantee-label-error="'.guarantee_labels_attribute($reload).'"' : '').'>'.
-                      '<div class="guarantee-label__graphic"></div>'.
-                    '</div>'.
-                  '</div>'.
-                  '<button type="button" class="guarantee-label__close">'.$close.'</button>'.
-                '</dialog>'.
+                $graphic.
                 $link,
     );
   }

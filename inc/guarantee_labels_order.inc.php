@@ -607,11 +607,9 @@
         guarantee_labels_snapshot_log('notice cache', $orders_id, $archive->get_errors());
       }
 
+      // The archived text and link are read, only the copy into the cache failed. They go out
+      // either way; guarantee_labels_notice_block() leaves out the graphic and its button.
       $source = guarantee_labels_notice_cache_url($notice['hash']);
-
-      if ($source === '') {
-        return false;
-      }
     }
 
     $link = '<a class="guarantee-notice__link" href="'.guarantee_labels_attribute($notice['url']).'" target="_blank" rel="noopener">'.$notice['link'].'</a>';
