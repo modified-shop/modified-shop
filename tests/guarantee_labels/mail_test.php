@@ -78,13 +78,13 @@ file_put_contents($garan_dir.'colour.svg', '<svg id="colour"></svg>');
 file_put_contents($garan_dir.'nested.svg', '<svg id="nested"></svg>');
 // der Anhang wird beim Versand gegen terms_hash geprueft, also echter Inhaltshash
 $terms_hash = hash('sha256', 'PDF');
-$terms_dir = $root.'/media/products/garan_archive/'.$terms_hash.'/';
+$terms_dir = $root.'/media/guarantee_labels/archive/terms/'.$terms_hash.'/';
 @mkdir($terms_dir, 0777, true);
 file_put_contents($terms_dir.'garantie.pdf', 'PDF');
 
 // zweiter Anhang, dessen Inhalt spaeter nicht mehr zum Hash passt
 $broken_hash = hash('sha256', 'ORIGINAL');
-$broken_dir = $root.'/media/products/garan_archive/'.$broken_hash.'/';
+$broken_dir = $root.'/media/guarantee_labels/archive/terms/'.$broken_hash.'/';
 @mkdir($broken_dir, 0777, true);
 file_put_contents($broken_dir.'ersetzt.pdf', 'MANIPULIERT');
 
@@ -378,7 +378,7 @@ ok('alter Text bleibt historisch', strpos($smarty->vars['GUARANTEE_NOTICE_HTML']
 
 echo "\n== Maskierung der Bestellwerte ==\n";
 $evil_hash = hash('sha256', 'EVIL');
-$evil_dir = $root.'/media/products/garan_archive/'.$evil_hash.'/';
+$evil_dir = $root.'/media/guarantee_labels/archive/terms/'.$evil_hash.'/';
 @mkdir($evil_dir, 0777, true);
 // ein schliessendes Tag traegt einen Slash und scheitert schon am Dateinamenfilter,
 // dieser Name kommt dagegen durch und muss bei der Ausgabe maskiert werden

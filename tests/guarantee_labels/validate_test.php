@@ -29,16 +29,19 @@ $GLOBALS['manufacturers'] = array(
   3 => array('name' => str_repeat('Sehr langer Herstellername ', 4), 'status' => 1),
 );
 function xtc_db_query($sql) {
-  preg_match("/manufacturers_id = '(\d+)'/", $sql, $m);
-  $id = isset($m[1]) ? (int)$m[1] : 0;
   $man = $GLOBALS['manufacturers'];
-  if (isset($man[$id]) && $man[$id]['status'] == 1) {
-    return array(array('manufacturers_name' => $man[$id]['name']));
+  $rows = array();
+  // die Sammelabfrage hat kein IN (): sie holt alle aktiven Hersteller auf einmal
+  if (strpos($sql, 'manufacturers_status') !== false && strpos($sql, 'IN (') === false) {
+    foreach ($man as $id => $data) if ($data['status'] == 1) $rows[] = array('manufacturers_id' => $id, 'manufacturers_name' => $data['name']);
+    return $rows;
   }
-  return array();
+  preg_match_all("/\d+/", substr($sql, (int)strpos($sql, 'IN (')), $m);
+  foreach ($m[0] as $id) if (isset($man[(int)$id]) && $man[(int)$id]['status'] == 1) $rows[] = array('manufacturers_id' => (int)$id, 'manufacturers_name' => $man[(int)$id]['name']);
+  return $rows;
 }
 function xtc_db_num_rows($r) { return count($r); }
-function xtc_db_fetch_array($r) { return $r[0]; }
+function xtc_db_fetch_array(&$r) { return array_shift($r); }
 
 require DIR_FS_INC.'guarantee_labels_validate_product.inc.php';
 

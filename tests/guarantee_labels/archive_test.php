@@ -32,7 +32,7 @@ function tempdirs($d) { $n = 0; foreach ((array)@scandir($d) as $e) if (strpos($
 rrm($root.'/cache/guarantee_labels');
 rrm($root.'/media/guarantee_labels/archive/garan');
 rrm($root.'/media/guarantee_labels/archive/notice');
-rrm($root.'/media/products/garan_archive');
+rrm($root.'/media/guarantee_labels/archive/terms');
 
 // Hashverzeichnisse heissen wie ein sha256, sonst lehnt das Archiv sie ab
 $hash_bbb = '3e744b9dc39389baf0c5a0660589b8402f3dbb49b89b3e75f2c9355852a3c677';
@@ -141,10 +141,10 @@ ok('Datei traegt ihren Namen', is_file($a->terms_path($hash, 'Garantie.pdf')));
 ok('Inhalt unveraendert', file_get_contents($a->terms_path($hash, 'Garantie.pdf')) === 'PDF-INHALT');
 ok('erneuter Aufruf ist idempotent', $a->terms_write($hash, 'Garantie.pdf', $src));
 ok('gleicher Inhalt, anderer Name', $a->terms_write($hash, 'Warranty.pdf', $src) && is_file($a->terms_path($hash, 'Warranty.pdf')));
-ok('beide Dateien im selben Hashverzeichnis', count(glob($root.'/media/products/garan_archive/'.$hash.'/*.pdf')) === 2);
+ok('beide Dateien im selben Hashverzeichnis', count(glob($root.'/media/guarantee_labels/archive/terms/'.$hash.'/*.pdf')) === 2);
 ok('fehlende Quelldatei', $a->terms_write($hash, 'X.pdf', $root.'/gibtsnicht.pdf') === false);
 ok('falscher Hash wird abgelehnt', $a->terms_write(hash('sha256', 'ANDERS'), 'Y.pdf', $src) === false);
-ok('keine temporaeren Reste', tempdirs($root.'/media/products/garan_archive/'.$hash) === 0);
+ok('keine temporaeren Reste', tempdirs($root.'/media/guarantee_labels/archive/terms/'.$hash) === 0);
 
 echo "\n== Ein beschaedigtes Verzeichnis wird nicht vorschnell geloescht ==\n";
 // Frueher loeschte write_files() erst und baute dann neu. Scheiterte das Loeschen bei der
@@ -199,7 +199,7 @@ ok('kein temporaeres Verzeichnis zurueckgeblieben', tempdirs($root.'/media/guara
 
 // dasselbe fuer eine Anhangsdatei: ein Verzeichnis am Zielpfad
 $hash_stolper_t = hash('sha256', 'PDF-INHALT');
-$blockiert = $root.'/media/products/garan_archive/'.$hash_stolper_t.'/Blockiert.pdf';
+$blockiert = $root.'/media/guarantee_labels/archive/terms/'.$hash_stolper_t.'/Blockiert.pdf';
 @mkdir($blockiert, 0777, true);
 $st2 = new guarantee_labels_archive();
 ok('blockierter Dateiname wird abgelehnt', $st2->terms_write($hash_stolper_t, 'Blockiert.pdf', $src) === false);

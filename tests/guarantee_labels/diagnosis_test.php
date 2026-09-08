@@ -50,7 +50,8 @@ define('TABLE_PRODUCTS', 'products');
 define('TABLE_PRODUCTS_CONTENT', 'products_content');
 define('TABLE_MANUFACTURERS', 'manufacturers');
 define('TABLE_CUSTOMERS_STATUS', 'customers_status');
-define('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '4');
+// im Luecken-Modus steht eine geloeschte Kundengruppe in der Einstellung
+define('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', ($mode === 'luecken') ? '4,9' : '4');
 $_SESSION['languages_id'] = 2;
 define('FILENAME_MODULE_EXPORT', 'module_export.php');
 define('BUTTON_UPDATE', 'U'); define('BUTTON_SAVE', 'S'); define('BUTTON_CANCEL', 'C');
@@ -208,6 +209,8 @@ if ($mode === 'schema') {
   ok('ungueltige Dauer gezaehlt', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED.' 4') !== false);
   ok('beschaedigtes Archiv gezaehlt', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED.' 1') !== false);
   ok('Schema trotz Datenfehlern in Ordnung', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE) === false);
+  // Gruppe 9 gibt es nicht mehr, ihre Id steht aber weiter in der Einstellung
+  ok('geloeschte B2B-Gruppe gemeldet', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN.' 9') !== false, $out);
 } else {
   // vollstaendig: die Daten sind heil, nur die Registrierung fehlt in dieser Attrappe
   foreach (array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS,
@@ -217,6 +220,7 @@ if ($mode === 'schema') {
     ok('bestandene Pruefung fehlt: '.substr($zeile, 0, 24), strpos($out, $zeile) === false, $zeile);
   }
   ok('keine betroffenen Datensaetze', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED) === false);
+  ok('vorhandene B2B-Gruppe faellt aus der Box', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_B2B) === false);
 }
 
 if ($mode === 'luecken') {

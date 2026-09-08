@@ -32,7 +32,11 @@ function xtc_db_input($s) { return $s; }
 function xtc_db_prepare_input($s) { return $s; }
 function xtc_db_query($sql) {
   if (stripos($sql, 'FROM manufacturers') !== false) {
-    return preg_match("/manufacturers_id = '1'/", $sql) ? array(array('manufacturers_name' => 'ACME GmbH')) : array();
+    // die Sammelabfrage hat kein IN (): sie holt alle aktiven Hersteller auf einmal
+    if (strpos($sql, 'IN (') === false) {
+      return array(array('manufacturers_id' => 1, 'manufacturers_name' => 'ACME GmbH'));
+    }
+    return preg_match("/IN \(\s*1\s*\)/", $sql) ? array(array('manufacturers_id' => 1, 'manufacturers_name' => 'ACME GmbH')) : array();
   }
   if (stripos($sql, 'FROM products') !== false) {
     return preg_match("/products_model = 'ABC'/", $sql)
@@ -42,7 +46,7 @@ function xtc_db_query($sql) {
   return array();
 }
 function xtc_db_num_rows($r) { return count($r); }
-function xtc_db_fetch_array($r) { return $r[0]; }
+function xtc_db_fetch_array(&$r) { return array_shift($r); }
 class stack { public $msgs = array(); function add($t, $c = 'info') { $this->msgs[] = html_entity_decode(strip_tags($t)); } }
 $messageStack = new stack();
 

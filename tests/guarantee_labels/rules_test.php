@@ -219,6 +219,51 @@ JS;
   ok('keine Klasse ohne Praefix', is_array($ergebnis) && $ergebnis['roh'] === 0, trim((string)$ausgabe));
 }
 
+echo "\n== Eine Regel, eine Stelle ==\n";
+// Jede dieser drei Regeln stand einmal an zwei Stellen im Modul, und jedes Mal wich die zweite
+// spaeter ab. Kommentare zaehlen nicht mit, sonst schlaegt eine Erklaerung im Text an.
+function garan_code($path) {
+  $code = '';
+
+  foreach (token_get_all(file_get_contents($path)) as $token) {
+    if (is_array($token) && in_array($token[0], array(T_COMMENT, T_DOC_COMMENT), true)) {
+      continue;
+    }
+
+    $code .= is_array($token) ? $token[1] : $token;
+  }
+
+  return $code;
+}
+
+// die Diagnose zaehlt alle Artikel des Shops in einer Abfrage, sie ruft keinen Hersteller ab
+$erlaubt = array('inc/guarantee_labels_output.inc.php', 'admin/includes/modules/system/guarantee_labels.php');
+$treffer = array();
+foreach ($files as $path) {
+  if (!in_array(kurz($repo, $path), $erlaubt, true) && strpos(garan_code($path), 'manufacturers_status') !== false) {
+    $treffer[] = kurz($repo, $path);
+  }
+}
+ok('nur guarantee_labels_manufacturer_names() fragt nach einem aktiven Hersteller', count($treffer) === 0, implode(', ', $treffer));
+
+$treffer = array();
+foreach ($files as $path) {
+  if (kurz($repo, $path) !== 'inc/guarantee_labels_snapshot.inc.php' && preg_match('/c_[^\s]{0,20}_group/', garan_code($path))) {
+    $treffer[] = kurz($repo, $path);
+  }
+}
+ok('nur guarantee_labels_terms_groups() zerlegt c_<id>_group', count($treffer) === 0, implode(', ', $treffer));
+
+// der Renderer selbst darf messen, er stellt fits() bereit
+$erlaubt = array('inc/guarantee_labels_validate_product.inc.php', 'includes/classes/guarantee_labels_renderer.php');
+$treffer = array();
+foreach ($files as $path) {
+  if (!in_array(kurz($repo, $path), $erlaubt, true) && strpos(garan_code($path), '->fits(') !== false) {
+    $treffer[] = kurz($repo, $path);
+  }
+}
+ok('nur guarantee_labels_validate_texts() misst die Labeltexte', count($treffer) === 0, implode(', ', $treffer));
+
 echo "\n----------------------------------------\n";
 echo "bestanden: $pass   fehlgeschlagen: $fail\n";
 exit($fail > 0 ? 1 : 0);

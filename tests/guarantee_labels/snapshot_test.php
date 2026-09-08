@@ -205,7 +205,7 @@ ok('Snapshot mit Anhang', guarantee_labels_product_snapshot(4711, 103, $product,
 $row = $GLOBALS['rows']['orders_products_guarantee'][0];
 ok('Hash des Anhangs', $row['terms_hash'] === hash('sha256', 'PDF-Inhalt'));
 ok('Dateiname des Anhangs', $row['terms_filename'] === 'garantie.pdf');
-ok('Anhang archiviert', is_file($root.'/media/products/garan_archive/'.$row['terms_hash'].'/garantie.pdf'));
+ok('Anhang archiviert', is_file($root.'/media/guarantee_labels/archive/terms/'.$row['terms_hash'].'/garantie.pdf'));
 
 $GLOBALS['terms'][1] = 'sub/garantie.pdf';
 $GLOBALS['rows'] = array();

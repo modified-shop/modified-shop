@@ -64,7 +64,7 @@ file_put_contents($garan_dir.'colour.svg', '<svg id="colour"></svg>');
 file_put_contents($garan_dir.'nested.svg', '<svg id="nested"></svg>');
 
 $terms_hash = hash('sha256', 'BEDINGUNGEN');
-$terms_dir = $root.'/media/products/garan_archive/'.$terms_hash.'/';
+$terms_dir = $root.'/media/guarantee_labels/archive/terms/'.$terms_hash.'/';
 @mkdir($terms_dir, 0777, true);
 file_put_contents($terms_dir.'garantie.pdf', 'BEDINGUNGEN');
 
