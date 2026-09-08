@@ -946,20 +946,31 @@
     }
 
     function index_exists($index) {
+      // MariaDB rejects ORDER BY on SHOW KEYS, MySQL accepts it. The order of a multi column
+      // index still matters, so Seq_in_index is read from the result and sorted here.
       $index_query = xtc_db_query("SHOW KEYS FROM ".$index['table']."
-                                    WHERE Key_name = '".xtc_db_input($index['name'])."'
-                                 ORDER BY Seq_in_index");
+                                    WHERE Key_name = '".xtc_db_input($index['name'])."'");
 
       if (xtc_db_num_rows($index_query) < 1) {
         return false;
       }
 
-      $columns = array();
+      $parts = array();
       $unique = true;
 
       while ($key = xtc_db_fetch_array($index_query)) {
-        $columns[] = $key['Column_name'];
+        // every server returns the column, a missing one falls back to the order of the result
+        $parts[] = array('seq' => isset($key['Seq_in_index']) ? (int)$key['Seq_in_index'] : count($parts) + 1,
+                         'column' => $key['Column_name']);
         $unique = ($unique && $key['Non_unique'] == '0');
+      }
+
+      usort($parts, function ($a, $b) { return $a['seq'] - $b['seq']; });
+
+      $columns = array();
+
+      foreach ($parts as $part) {
+        $columns[] = $part['column'];
       }
 
       return ($columns === $index['columns'] && $unique === $index['unique']);

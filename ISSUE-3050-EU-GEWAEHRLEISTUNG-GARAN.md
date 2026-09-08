@@ -1082,6 +1082,7 @@ und begruenden jeweils eine Stelle im Code.
 | Import in `admin/includes/modules/import.php` | leitet nicht weiter | Der Importhaken meldet mit `add()`. |
 | `categoriesModules`, `productModules`, `orderModules` | laden eine Erweiterung nur bei eigenem `_STATUS = true` | Der Status steht nicht in der Modulmaske, `Modul aktualisieren` setzt ihn zurueck, die Diagnose prueft ihn mit. |
 | `admin/includes/classes/categories.php::duplicate_product()` | kopiert alle Produktspalten mit `SELECT *` und bei `cnt_copy` alle Anhaenge | Nur `duplicate_product_before()` und `duplicate_product_end()` koennen das verhindern; deshalb bleibt die Kategorieerweiterung bei vorhandenen Katalogdaten auch nach einer Deinstallation eingerichtet. |
+| `SHOW KEYS` / `SHOW COLUMNS` | MariaDB weist `ORDER BY` bei `SHOW` als Syntaxfehler zurueck, MySQL nimmt es an | `index_exists()` fragt ohne `ORDER BY` und sortiert in PHP nach `Seq_in_index`. Der Shop laeuft ueberwiegend auf MariaDB; die Abfrage scheiterte dort still und meldete alle Indizes als fehlend. |
 | `xtc_cfg_multi_checkbox()` | nimmt einen Funktionsnamen oder ein fertiges Array; `admin/module_export.php` wertet `set_function` per `eval` aus | Der gespeicherte Ausdruck filtert Gruppe `0` mit `array_diff_key()` heraus, also ohne neue Funktion und ohne Kerneingriff. `update()` zieht den Ausdruck bei aelteren Installationen nach. |
 
 Diese Tabelle ist Teil der Abnahme: Eine neue Uebergabe an eine Kernfunktion gehoert hier hinein,
@@ -1101,6 +1102,7 @@ nicht mehr nur in diesem Dokument, sondern als Test in `tests/guarantee_labels/r
 - Ein Erweiterungshaken prueft `MODULE_GUARANTEE_LABELS_STATUS`, bevor er Modulcode laedt. Die
   benannten Ausnahmen raeumen nur auf und geben nichts aus.
 - Wer `guarantee_labels_snapshot_failures()` leert, gibt die Fehler auch aus.
+- Keine `SHOW`-Abfrage mit `ORDER BY`. Die Datenbankattrappen der Tests bilden MariaDB nach und nicht MySQL, sonst faellt so etwas erst im installierten Shop auf.
 
 ## Testfaelle
 
