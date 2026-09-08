@@ -50,19 +50,24 @@ if ($mode === 'mehrfach') define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED', 'true')
 require $root.'/lang/german/extra/guarantee_labels.php';
 require $root.'/inc/html_encoding.php';
 
-// Artikel 1 ist gemischt: Wert 5 ist ein Download, Wert 6 koerperlich.
-$GLOBALS['downloads'] = array(5);
+// Artikel 1 ist gemischt. Download ist genau die Kombination Option 1 mit Wert 5; derselbe
+// Wert 5 unter Option 2 ist koerperlich, weil options_values_id eine gemeinsame Liste ist.
+$GLOBALS['downloads'] = array('1:5');
 function xtc_db_query($sql) {
   // die Artikelfrage: alle Attributwerte und davon die Downloads, in einer Abfrage
   if (strpos($sql, 'AS downloads') !== false) {
     return array(array('total' => 2, 'downloads' => count($GLOBALS['downloads'])));
   }
-  // die Positionsfrage: wie viele der gewaehlten Werte sind Downloads
+  // die Positionsfrage: wie viele der gewaehlten Kombinationen sind Downloads
   if (strpos($sql, 'products_attributes_download') !== false) {
-    preg_match_all("/'(\d+)'/", $sql, $m);
-    $ids = array_map('intval', $m[1]);
-    array_shift($ids); // products_id
-    return array(array('total' => count(array_intersect($ids, $GLOBALS['downloads']))));
+    preg_match_all("/options_id = '(\d+)'\s*AND pa\.options_values_id = '(\d+)'/", $sql, $m);
+    $total = 0;
+
+    foreach ($m[1] as $index => $option) {
+      if (in_array($option.':'.$m[2][$index], $GLOBALS['downloads'], true)) $total++;
+    }
+
+    return array(array('total' => $total));
   }
   preg_match_all("/'(\d+)'/", $sql, $m);
   $rows = array();
@@ -110,6 +115,10 @@ if ($mode !== 'downloads_aus') {
      guarantee_labels_candidate($row, '1{1}5{2}5') === ($mode !== 'mehrfach'),
      $mode);
 }
+
+// Dieselbe Frage an die Abfrage: Sie muss Option und Wert zusammen pruefen. Wer nur den Wert
+// vergleicht, zaehlt hier den Download der Option 1 mit und nimmt der Position ihr Label.
+ok('Download einer anderen Option zaehlt nicht mit', guarantee_labels_candidate($row, '1{2}5') === true, $mode);
 
 ok('Position ohne GARAN-Daten bleibt ohne Label',
    guarantee_labels_candidate(array('products_id' => 1, 'products_garan_duration' => null,

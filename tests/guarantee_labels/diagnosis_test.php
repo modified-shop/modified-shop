@@ -53,6 +53,8 @@ define('TABLE_CUSTOMERS_STATUS', 'customers_status');
 // im Luecken-Modus steht eine geloeschte Kundengruppe in der Einstellung
 define('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', ($mode === 'luecken') ? '4,9' : '4');
 $_SESSION['languages_id'] = 2;
+// im Luecken-Modus laeuft der Shop auf einem Server, der keine .htaccess liest
+$_SERVER['SERVER_SOFTWARE'] = ($mode === 'luecken') ? 'nginx/1.24.0' : 'Apache/2.4.62 (Debian)';
 define('FILENAME_MODULE_EXPORT', 'module_export.php');
 define('BUTTON_UPDATE', 'U'); define('BUTTON_SAVE', 'S'); define('BUTTON_CANCEL', 'C');
 define('MODULE_GUARANTEE_LABELS_STATUS', 'true');
@@ -210,6 +212,9 @@ if ($mode === 'schema') {
   ok('Schema trotz Datenfehlern in Ordnung', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE) === false);
   // Gruppe 9 gibt es nicht mehr, ihre Id steht aber weiter in der Einstellung
   ok('geloeschte B2B-Gruppe gemeldet', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN.' 9') !== false, $out);
+  // die .htaccess des Archivs wirkt unter nginx nicht, das muss der Shopbetreiber erfahren
+  ok('Server ohne .htaccess gemeldet', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS) !== false, $out);
+  ok('mit dem Pfad, der zu sperren ist', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER.' media/guarantee_labels/archive/') !== false);
 } else {
   // vollstaendig: die Daten sind heil, nur die Registrierung fehlt in dieser Attrappe
   foreach (array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS,
@@ -220,6 +225,7 @@ if ($mode === 'schema') {
   }
   ok('keine betroffenen Datensaetze', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED) === false);
   ok('vorhandene B2B-Gruppe faellt aus der Box', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_B2B) === false);
+  ok('Apache faellt aus der Box', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS) === false);
 }
 
 if ($mode === 'luecken') {

@@ -258,6 +258,13 @@ ok('historische Werte im Alternativtext', strpos($markup, 'ACME GmbH') !== false
 ok('Cachekopie angelegt', is_file($root.'/cache/guarantee_labels/'.$garan_hash.'/colour.svg'));
 ok('Position ohne Snapshot ohne Grafik', guarantee_labels_order_label(4711, 99) === '');
 
+// Die billige Frage prueft nur colour.svg. Fehlt die zweite Datei, darf die halbe Kopie das
+// intakte Archiv nicht verdecken: sonst bleibt die Bestellansicht ohne ihr historisches Label.
+unlink($root.'/cache/guarantee_labels/'.$garan_hash.'/nested.svg');
+$halb = guarantee_labels_order_label(4711, 10);
+ok('halbe Cachekopie faellt auf das Archiv zurueck', $halb !== '' && preg_match('/id="gl\d+-nested"/', $halb) === 1, $halb);
+ok('Cachekopie danach wieder vollstaendig', is_file($root.'/cache/guarantee_labels/'.$garan_hash.'/nested.svg'));
+
 
 echo "\n== Historischer Hinweis fuer eine Bestellansicht ==\n";
 $parts = guarantee_labels_order_notice_parts(4711);
