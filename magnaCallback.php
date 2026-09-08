@@ -122,6 +122,15 @@ function magnaExecute($functionName, $arguments = array(), $includes = array(), 
 	) {
 		return false;
 	}
+	/* Only permit an explicit allow-list of callback function names. Checked
+	 * before the includes are loaded: some callback files run code at file
+	 * scope, so an unknown function name must not cause a require at all. */
+	if (   !is_string($functionName)
+	    || !in_array($functionName, magnaAllowedCallbackFunctions(), true)
+	) {
+		return false;
+	}
+
 	if (!empty($includes)) {
 		foreach ($includes as $incl) {
 			/* Only permit known callback files. Reject anything containing path
@@ -136,11 +145,8 @@ function magnaExecute($functionName, $arguments = array(), $includes = array(), 
 		}
 	}
 
-	/* Only permit an explicit allow-list of callback function names. */
-	if (   is_string($functionName)
-	    && in_array($functionName, magnaAllowedCallbackFunctions(), true)
-	    && function_exists($functionName)
-	) {
+	/* The function is only available once its include has been loaded. */
+	if (function_exists($functionName)) {
 		return $functionName($arguments);
 	}
 	return false;
@@ -160,11 +166,13 @@ function magnaAllowedCallbackIncludes() {
 		'autosyncInventory.php',
 		'autosyncOrderStatus.php',
 		'autosyncEbayListingDetails.php',
-		'updateVariationsTable.php',
 		'uploadInvoices.php',
 		'importCategories.php',
-		'update_amazon_orders.php',
-		'update_ebay_orders.php',
+		/* Deliberately NOT listed: updateVariationsTable.php runs
+		 * buildVariationsTable() at file scope, and update_amazon_orders.php /
+		 * update_ebay_orders.php only hold functions that are called in-process.
+		 * All three are required directly by callbackProcessor.php and
+		 * orders_update.php, never through magnaExecute(). */
 	);
 }
 
@@ -175,18 +183,42 @@ function magnaAllowedCallbackIncludes() {
  */
 function magnaAllowedCallbackFunctions() {
 	return array(
+		/* magnaCallback.php / callbackFunctions.php */
 		'magnaCompartCheck',
 		'magnaGetClientVersion',
 		'magnaCollectStats',
 		'magnaGetInvolvedMarketplaces',
 		'magnaGetInvolvedMPIDs',
 		/* Order overview / order details rendering (shop backend) */
+		'magnaHasOrderDetails',
 		'magnaRenderOrderDetails',
 		'magnaRenderOrderStatusSync',
 		'magnaRenderOrderPlatformIcon',
 		'magnaSubmitOrderStatus',
+		/* Checkout hook: writes the marketplace order row (order_details.php) */
+		'magnaInsertOrderDetails',
+		/* Inventory / stock synchronisation (inventoryUpdate.php) */
 		'magnaInventoryUpdate',
+		'magnaInventoryUpdateByOrder',
+		'magnaInventoryUpdateByEdit',
 		'magnaGetCartContents', // called internally by magnaRenderOrderDetails
+		/* Order import / update (orders_import.php, orders_update.php) */
+		'magnaInitOrderImport',
+		'magnaImportAllOrders',
+		'magnaInitOrderUpdate',
+		'magnaUpdateAllOrders',
+		/* Autosync cronjobs */
+		'magnaAutosyncInventories',
+		'magnaAutosyncOrderStatus',
+		'magnaAutoEbaySyncListingDetails',
+		/* Misc. maintenance callbacks */
+		'magnaUploadInvoices',
+		'magnaImportCategories',
+		/* Deliberately NOT listed, they are called in-process with scalar
+		 * arguments and would fatal on the array magnaExecute() passes:
+		 * magnaUpdateAmazonOrders / magnaUpdateEbayOrders (orders_update.php),
+		 * magnaInventoryUpdateByOrderImport (2 required parameters) and
+		 * buildVariationsTable (callbackProcessor.php). */
 	);
 }
 

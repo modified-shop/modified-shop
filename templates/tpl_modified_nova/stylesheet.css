@@ -3822,7 +3822,7 @@ a.view_box.active {
   margin: -12px 0 0 0;
 }
 /* Widerrufsformular */
-ul.content_box_list li.withdraw_link a span {
+.footer_item ul.content_box_list li.withdraw_link a span {
   color: var(--footer_box_header, #555);
   font-size: 14px;
   line-height: 40px;

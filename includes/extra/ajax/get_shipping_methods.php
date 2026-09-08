@@ -44,6 +44,39 @@
   }
 
 
+  // exclude_payment names the payment modules a shipping module rules out, this reads the pairs backwards
+  function paypal_shipping_excluded_modules($payment_code) {
+    $excluded = array();
+
+    if (!defined('MODULE_EXCLUDE_PAYMENT_STATUS')
+        || MODULE_EXCLUDE_PAYMENT_STATUS != 'True'
+        || !defined('MODULE_EXCLUDE_PAYMENT_NUMBER')
+        )
+    {
+      return $excluded;
+    }
+
+    for ($i = 1; $i <= MODULE_EXCLUDE_PAYMENT_NUMBER; $i++) {
+      if (!defined('MODULE_EXCLUDE_PAYMENT_PAYMENT_'.$i)
+          || !defined('MODULE_EXCLUDE_PAYMENT_SHIPPING_'.$i)
+          )
+      {
+        continue;
+      }
+
+      $payment_modules = explode(',', preg_replace("'[\r\n\s]+'", '', constant('MODULE_EXCLUDE_PAYMENT_PAYMENT_'.$i)));
+      if (!in_array($payment_code, $payment_modules, true)) {
+        continue;
+      }
+
+      $shipping_modules = explode(',', preg_replace("'[\r\n\s]+'", '', constant('MODULE_EXCLUDE_PAYMENT_SHIPPING_'.$i)));
+      $excluded = array_merge($excluded, array_filter($shipping_modules));
+    }
+
+    return array_unique($excluded);
+  }
+
+
   function get_shipping_methods() {
     global $order, $xtPrice;
 
@@ -182,11 +215,18 @@
 
       $quotes = $paypal->get_shipping_data(true);
 
+      // the payment method is fixed before the buyer picks a shipping option, so offer no excluded one
+      $payment_code = ((isset($_SESSION['paypal']['payment_method'])) ? $_SESSION['paypal']['payment_method'] : $paypal->code);
+      $excluded_shipping = paypal_shipping_excluded_modules($payment_code);
+
       $shipping_option = array();
       $shipping_session = array();
       if (is_array($quotes) && count($quotes) > 0) {
         foreach ($quotes as $quote) {
-          if (!isset($quote['error'])) {
+          if (!isset($quote['error'])
+              && !in_array($quote['id'], $excluded_shipping, true)
+              )
+          {
             foreach ($quote['methods'] as $methods) {
               if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) {
                 $quote['tax'] = 0;
