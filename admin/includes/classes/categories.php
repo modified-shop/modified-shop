@@ -863,6 +863,7 @@ class categories {
     
     //new module support 
     $this->catModules->insert_product_end($products_id);
+    $error = $this->catModules->insert_product_error($error, $products_data, $products_id);
 
     return array(
       'error' => $error,

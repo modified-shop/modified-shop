@@ -164,6 +164,10 @@ if (xtc_not_null($action)) {
       break;
     case 'insert_product' :
       $result = $catfunc->insert_product($_POST, $current_category_id);
+      //redirect by rejected data, the same way an update does
+      if ($result['error'] === true) {
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID')).'action=new_product&pID='.$result['products_id']));
+      }
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID', 'page')).xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
       break;
     case 'edit_crossselling' :
