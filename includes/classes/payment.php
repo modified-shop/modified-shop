@@ -48,12 +48,14 @@
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
 
         ## Paypal
+        $paypal_modules = false;
         if (isset($_SESSION['paypal'])
             && isset($_SESSION['paypal']['payment_modules'])
             && $_SESSION['paypal']['payment_modules'] != ''
            )
         {
           $modules = explode(';', $_SESSION['paypal']['payment_modules']);
+          $paypal_modules = true;
         } else {
           $modules = explode(';', MODULE_PAYMENT_INSTALLED);
           
@@ -182,7 +184,15 @@
             }
           }
         }
-        
+
+        // the PayPal session may name a module that no filter lets through, never leave the page without any
+        if ($paypal_modules === true && xtc_count_payment_modules() == 0) {
+          unset($_SESSION['paypal']['payment_modules']);
+          $this->__construct($module);
+
+          return;
+        }
+
         // if there is only one payment method, select it as default because in
         // checkout_confirmation.php the $payment variable is being assigned the
         // $HTTP_POST_VARS['payment'] value which will be empty (no radio button selection possible)
