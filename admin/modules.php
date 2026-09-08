@@ -126,39 +126,34 @@
         include_once($module_directory . $class . '.php');
         $module = instantiate_class($class);
 
-        if (isset($_POST['configuration']) 
-            && is_array($_POST['configuration'])
-            )
-        {
-          // a multi checkbox posts nothing when nothing is selected, so the key would never
-          // reach this loop and the previous value would survive; the configuration
-          // administration applies the same default
-          if (method_exists($module, 'keys')) {
-            foreach ((array)$module->keys() as $module_key) {
-              if (!isset($_POST['configuration'][$module_key])) {
-                $_POST['configuration'][$module_key] = '';
-              }
-            }
-          }
+        $configuration = (isset($_POST['configuration']) && is_array($_POST['configuration'])) ? $_POST['configuration'] : array();
 
-          foreach ($_POST['configuration'] as $key => $value) {
-            if (is_array($_POST['configuration'][$key])) {
-              // multi language config
-              $keys = array_keys($_POST['configuration'][$key]);
-              if (gettype(array_shift($keys)) == 'string') {
-                $config_value = array();
-                foreach ($_POST['configuration'][$key] as $k => $v) {
-                  if (xtc_not_null($v)) {
-                    $config_value[] =  $k . '::' . $v;
-                  }
-                }
-                $value = implode('||', $config_value);
-              } else {
-                $value = implode(',', $_POST['configuration'][$key]);
-              }
-            }
-            xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($value) . "' where configuration_key = '" . $key . "'");
+        // a multi checkbox posts nothing when nothing is selected, so its key would never
+        // reach the save loop and the previous value would survive
+        $module_keys = method_exists($module, 'keys') ? (array)$module->keys() : array();
+        foreach (xtc_cfg_get_multi_checkbox_keys($module_keys) as $checkbox_key) {
+          if (!isset($configuration[$checkbox_key])) {
+            $configuration[$checkbox_key] = '';
           }
+        }
+
+        foreach ($configuration as $key => $value) {
+          if (is_array($configuration[$key])) {
+            // multi language config
+            $keys = array_keys($configuration[$key]);
+            if (gettype(array_shift($keys)) == 'string') {
+              $config_value = array();
+              foreach ($configuration[$key] as $k => $v) {
+                if (xtc_not_null($v)) {
+                  $config_value[] =  $k . '::' . $v;
+                }
+              }
+              $value = implode('||', $config_value);
+            } else {
+              $value = implode(',', $configuration[$key]);
+            }
+          }
+          xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($value) . "' where configuration_key = '" . $key . "'");
         }
         xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class));
         break;

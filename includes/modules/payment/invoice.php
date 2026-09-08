@@ -55,13 +55,20 @@ class invoice {
     
     $customer_id = (isset($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : (isset($_SESSION['customer_gid']) ? (int)$_SESSION['customer_gid'] : 0));
     
-    $check_order_query = xtc_db_query("SELECT COUNT(*) as count 
-                                         FROM ".TABLE_ORDERS." 
-                                        WHERE customers_id = '".$customer_id."' 
-                                          AND orders_status IN (".MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID.")");
-    $order_check = xtc_db_fetch_array($check_order_query);
+    // an empty status selection matches no order at all, an IN () list would be invalid SQL
+    $order_status_ids = array_filter(array_map('intval', explode(',', MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID)));
+    $order_count = 0;
 
-    if ($order_check['count'] < MODULE_PAYMENT_INVOICE_MIN_ORDER) {
+    if (count($order_status_ids) > 0) {
+      $check_order_query = xtc_db_query("SELECT COUNT(*) as count
+                                           FROM ".TABLE_ORDERS."
+                                          WHERE customers_id = '".$customer_id."'
+                                            AND orders_status IN (".implode(',', $order_status_ids).")");
+      $order_check = xtc_db_fetch_array($check_order_query);
+      $order_count = (int)$order_check['count'];
+    }
+
+    if ($order_count < MODULE_PAYMENT_INVOICE_MIN_ORDER) {
       $check_flag = false;
       $this->enabled = false;
     } elseif (MODULE_PAYMENT_INVOICE_MAX_AMOUNT > 0 
