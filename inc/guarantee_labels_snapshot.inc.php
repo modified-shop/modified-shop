@@ -903,6 +903,30 @@
   }
 
   /**
+   * The document of one snapshot as it appears in the history.
+   *
+   * A document is named by its content and not by its file name. Replacing it under the same
+   * name changes terms_hash alone, and comparing the name would let that correction pass without
+   * a trace. Eight characters of the hash tell two versions of one document apart.
+   *
+   * @param mixed $snapshot a snapshot, false when there is none
+   * @return string empty when the snapshot carries no document
+   */
+  function guarantee_labels_terms_version($snapshot) {
+    if ($snapshot === false
+        || !isset($snapshot['terms_filename'])
+        || (string)$snapshot['terms_filename'] === ''
+        )
+    {
+      return '';
+    }
+
+    $hash = isset($snapshot['terms_hash']) ? (string)$snapshot['terms_hash'] : '';
+
+    return (string)$snapshot['terms_filename'].(($hash !== '') ? ' ('.substr($hash, 0, 8).')' : '');
+  }
+
+  /**
    * Writes what changed into the history of the order.
    *
    * The entry names the old and the new value of every field, so a correction stays traceable
@@ -933,6 +957,12 @@
       // a kept document is not part of the posted values and therefore not a change
       if ($after !== false && $field === 'terms_filename' && !array_key_exists('terms_filename', $after)) {
         continue;
+      }
+
+      // the document goes in with its content, see guarantee_labels_terms_version()
+      if ($field === 'terms_filename') {
+        $old = guarantee_labels_terms_version($before);
+        $new = guarantee_labels_terms_version($after);
       }
 
       if ($old !== $new) {

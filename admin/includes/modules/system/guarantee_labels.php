@@ -364,16 +364,24 @@
       // 300 kB per label hash and 640 kB per notice hash on every open of this page; a shop with
       // 500 orders would hash 150 MB to draw one line. A file that is there but no longer matches
       // its hash is caught where it is used: the readers verify the checksums and log it.
+      // Every file a reader needs, not just the first one: the notice takes its wording from
+      // notice.json, and the overlay of a historical label takes nested.svg. An archive missing
+      // one of them is unreadable and has to be counted here, or the diagnosis stays green while
+      // the order confirmation quietly loses its notice.
       $notice_query = xtc_db_query("SELECT DISTINCT notice_hash FROM ".TABLE_ORDERS_GUARANTEE);
       while ($notice = xtc_db_fetch_array($notice_query)) {
-        if (!is_file($archive->notice_path($notice['notice_hash']).'notice.svg')) {
+        $directory = $archive->notice_path($notice['notice_hash']);
+
+        if (!is_file($directory.'notice.svg') || !is_file($directory.'notice.json')) {
           $damaged++;
         }
       }
 
       $garan_query = xtc_db_query("SELECT DISTINCT garan_hash FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE);
       while ($garan = xtc_db_fetch_array($garan_query)) {
-        if (!is_file($archive->garan_path($garan['garan_hash']).'colour.svg')) {
+        $directory = $archive->garan_path($garan['garan_hash']);
+
+        if (!is_file($directory.'colour.svg') || !is_file($directory.'nested.svg')) {
           $damaged++;
         }
       }
