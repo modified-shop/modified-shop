@@ -312,11 +312,6 @@
   }
 
   /**
-   * The guarantee conditions of one article in the language of the order.
-   *
-   * @return mixed array of hash and file name, false when there is no usable attachment
-   */
-  /**
    * Whether one attachment is visible to the customer group of the order.
    *
    * The same rule the storefront applies, see includes/define_conditions.php: with GROUP_CHECK
@@ -349,6 +344,11 @@
     return (strpos((string)$group_ids, 'c_'.(int)$status.'_group') !== false);
   }
 
+  /**
+   * The guarantee conditions of one article in the language of the order.
+   *
+   * @return mixed array of hash and file name, false when there is no usable attachment
+   */
   function guarantee_labels_terms_snapshot($products_id, $languages_id, $customers_status = null) {
     $terms_query = xtc_db_query("SELECT content_file, group_ids
                                    FROM ".TABLE_PRODUCTS_CONTENT."
@@ -816,12 +816,6 @@
   }
 
   /**
-   * Archives an uploaded guarantee document.
-   *
-   * @param string $field the name of the file field
-   * @return mixed array of hash and file name, false when it cannot be used
-   */
-  /**
    * Whether an uploaded file may become archived guarantee conditions.
    *
    * The shop keeps its accepted types in one list, so an admin who extends it is respected here
@@ -868,6 +862,12 @@
     return true;
   }
 
+  /**
+   * Archives an uploaded guarantee document.
+   *
+   * @param string $field the name of the file field
+   * @return mixed array of hash and file name, false when it cannot be used
+   */
   function guarantee_labels_archive_upload($field) {
     if (!isset($_FILES[$field])
         || !isset($_FILES[$field]['tmp_name'])

@@ -18,14 +18,6 @@
   defined('GUARANTEE_LABELS_MANUFACTURER_LIMIT') or define('GUARANTEE_LABELS_MANUFACTURER_LIMIT', 500);
 
   /**
-   * guarantee_labels_active()
-   *
-   * Whether the shop outputs EU labels for the current visitor. Guests count as B2C until
-   * their customer group is listed as B2B.
-   *
-   * @return bool
-   */
-  /**
    * Whether a stored snapshot may be shown, no matter who is looking.
    *
    * A snapshot exists because the customer was not in a B2B group when the order was placed.
@@ -39,6 +31,14 @@
     return (defined('MODULE_GUARANTEE_LABELS_STATUS') && MODULE_GUARANTEE_LABELS_STATUS == 'true');
   }
 
+  /**
+   * guarantee_labels_active()
+   *
+   * Whether the shop outputs EU labels for the current visitor. Guests count as B2C until
+   * their customer group is listed as B2B.
+   *
+   * @return bool
+   */
   function guarantee_labels_active($customers_status = null) {
     if (!guarantee_labels_order_active()) {
       return false;
@@ -353,6 +353,38 @@
   }
 
   /**
+   * The label of one cart or wishlist row.
+   *
+   * Both run on shoppingCart and both are called by the core inside its own loop, so they carry
+   * the same PRODUCTS_ prefixed fields and neither ever sees the whole block. The mapping lives
+   * here so the two hook files cannot drift apart.
+   *
+   * @param array $row one entry of the module data, keys prefixed with PRODUCTS_
+   * @return string the markup, empty when the row carries no label
+   */
+  function guarantee_labels_cart_row_label($row) {
+    if (!guarantee_labels_active()) {
+      return '';
+    }
+
+    $product = array(
+      'products_id' => isset($row['PRODUCTS_ID']) ? $row['PRODUCTS_ID'] : 0,
+      'products_garan_duration' => isset($row['PRODUCTS_GARAN_DURATION']) ? $row['PRODUCTS_GARAN_DURATION'] : null,
+      'products_manufacturers_model' => isset($row['PRODUCTS_MANUFACTURERS_MODEL']) ? $row['PRODUCTS_MANUFACTURERS_MODEL'] : '',
+      'manufacturers_id' => isset($row['PRODUCTS_MANUFACTURERS_ID']) ? $row['PRODUCTS_MANUFACTURERS_ID'] : 0,
+    );
+
+    // the cart id carries the chosen attributes, so the position decides and not the article
+    if (!guarantee_labels_candidate($product, $product['products_id'])) {
+      return '';
+    }
+
+    $names = guarantee_labels_manufacturer_names(array($product['manufacturers_id']));
+
+    return guarantee_labels_markup(guarantee_labels_product_label($product, $names, $product['products_id']));
+  }
+
+  /**
    * guarantee_labels_product_label()
    *
    * Builds both label variants for one article of a result block.
@@ -405,18 +437,6 @@
   }
 
   /**
-   * guarantee_labels_texts_ready()
-   *
-   * Whether every text an output needs is really defined.
-   *
-   * A language package can be installed without the file of this module, or with an older one.
-   * Reading an undefined constant is a fatal error in PHP 8, so a shop would answer with a
-   * broken page instead of a page without the notice. Every output asks here first.
-   *
-   * @param array $constants
-   * @return bool
-   */
-  /**
    * The constants a language needs before the notice may be shown or archived.
    *
    * Diagnosis, checkout and snapshot all ask here. Asked separately they drifted apart: the
@@ -442,6 +462,18 @@
     );
   }
 
+  /**
+   * guarantee_labels_texts_ready()
+   *
+   * Whether every text an output needs is really defined.
+   *
+   * A language package can be installed without the file of this module, or with an older one.
+   * Reading an undefined constant is a fatal error in PHP 8, so a shop would answer with a
+   * broken page instead of a page without the notice. Every output asks here first.
+   *
+   * @param array $constants
+   * @return bool
+   */
   function guarantee_labels_texts_ready($constants) {
     foreach ($constants as $constant) {
       if (guarantee_labels_text($constant) === '') {

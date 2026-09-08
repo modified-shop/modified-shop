@@ -319,15 +319,6 @@
   }
 
   /**
-   * The archived guarantee conditions of an order as absolute file paths.
-   *
-   * check_attachments() prefixes DIR_FS_DOCUMENT_ROOT only when the path does not carry it
-   * already, so absolute paths pass through untouched.
-   *
-   * @param int $orders_id
-   * @return array
-   */
-  /**
    * The archived guarantee conditions of one position, verified against their hash.
    *
    * Mail text and attachment list both ask here. Asked separately, the text could name a
@@ -372,6 +363,15 @@
     return $file;
   }
 
+  /**
+   * The archived guarantee conditions of an order as absolute file paths.
+   *
+   * check_attachments() prefixes DIR_FS_DOCUMENT_ROOT only when the path does not carry it
+   * already, so absolute paths pass through untouched.
+   *
+   * @param int $orders_id
+   * @return array
+   */
   function guarantee_labels_order_terms($orders_id) {
     $attachments = array();
     $products = guarantee_labels_order_products($orders_id);
@@ -634,21 +634,6 @@
   }
 
   /**
-   * Whether an order contains goods at all.
-   *
-   * Asked of the order itself, not of the catalogue: a position counts as digital when the
-   * order carries a download for it. An order without positions has no goods either, which is
-   * the state a manually created order starts in.
-   *
-   * orders.content_type decides whenever the shop filled it, because the checkout classifies a
-   * position by its selected attributes and can call a single position mixed. The module never
-   * writes that column; a manually created order leaves it empty and is asked position by
-   * position instead.
-   *
-   * @param int $orders_id
-   * @return bool
-   */
-  /**
    * The article behind one position of one order. The order editing must not trust a products id
    * from the request: it decides which article the values are taken from and which guarantee
    * conditions are archived into the order.
@@ -672,13 +657,6 @@
     return (int)$product['products_id'];
   }
 
-  /**
-   * The language of the order as an id. It selects the guarantee conditions and may differ from
-   * the language of the backend session.
-   *
-   * @param int $orders_id
-   * @return int
-   */
   /**
    * The language code of an order, for values that carry one variant per language.
    *
@@ -716,6 +694,13 @@
     return $orders[$orders_id];
   }
 
+  /**
+   * The language of the order as an id. It selects the guarantee conditions and may differ from
+   * the language of the backend session.
+   *
+   * @param int $orders_id
+   * @return int
+   */
   function guarantee_labels_order_language_id($orders_id) {
     // Derived from orders.language, which is the language of the order. orders_address_edit()
     // changes only that column when the administration switches the language, so the stored
@@ -740,6 +725,21 @@
     return (int)$row['languages_id'];
   }
 
+  /**
+   * Whether an order contains goods at all.
+   *
+   * Asked of the order itself, not of the catalogue: a position counts as digital when the
+   * order carries a download for it. An order without positions has no goods either, which is
+   * the state a manually created order starts in.
+   *
+   * orders.content_type decides whenever the shop filled it, because the checkout classifies a
+   * position by its selected attributes and can call a single position mixed. The module never
+   * writes that column; a manually created order leaves it empty and is asked position by
+   * position instead.
+   *
+   * @param int $orders_id
+   * @return bool
+   */
   function guarantee_labels_order_physical($orders_id) {
     static $orders = array();
 

@@ -214,11 +214,6 @@
     // ----------------------------------------------------------------- fits --
 
     /**
-     * Measures the real text width with the prescribed font instead of counting characters.
-     *
-     * @return bool false when the value does not fit into its editable area
-     */
-    /**
      * One product value in the encoding the svg and the measurement expect.
      *
      * The charset of the shop is named instead of detected. mb_detect_encoding() tries
@@ -251,6 +246,11 @@
       return $this->to_utf8($value);
     }
 
+    /**
+     * Measures the real text width with the prescribed font instead of counting characters.
+     *
+     * @return bool false when the value does not fit into its editable area
+     */
     function fits($area_name, $text) {
       // $text has to be utf-8 already, see to_utf8(). label() converts before it asks, and a
       // caller from outside converts through measurable() first.
@@ -446,21 +446,16 @@
     }
 
     /**
-     * Replaces one editable field.
+     * Fills every editable area of one template in a single pass.
      *
      * The official templates split a field over several tspans to carry the kerning of the
-     * placeholder, so the token cannot be matched as plain text. The whole content of the text
-     * element whose text equals the token is replaced instead, which keeps the element itself
-     * with its position, class and font untouched. The kerning went with the placeholder and
-     * does not apply to the new value.
+     * placeholder, so a token cannot be matched as plain text. The whole content of the text
+     * element whose text equals the token is replaced instead, which keeps the element with its
+     * position, class and font. The kerning went with the placeholder and does not apply to the
+     * new value.
      *
-     * The element has to appear exactly once, otherwise the template is not the expected
-     * official file and nothing is rendered.
-     *
-     * @return mixed the changed svg, false when the field does not appear exactly once
-     */
-    /**
-     * Fills every editable area of one template in a single pass.
+     * Each token has to appear exactly once, otherwise the template is not the expected official
+     * file and nothing is rendered.
      *
      * @param string $svg the untouched template
      * @param array $tokens token => value

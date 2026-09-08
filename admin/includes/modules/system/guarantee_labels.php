@@ -191,14 +191,6 @@
     }
 
     /**
-     * Renders the collected diagnosis rows. Labels arrive ready to print: their language
-     * constants carry entities of their own, so escaping happens where a dynamic value enters
-     * the sprintf and not once more here. Notes are plain values and are escaped below.
-     *
-     * @param array $rows label, state, note, own failure label
-     * @return string
-     */
-    /**
      * Only what needs attention. A list of seventeen green lines hides the one red one, and the
      * shop owner reads this to find a problem, not to confirm the ones they do not have.
      *
@@ -244,12 +236,6 @@
              '</table>';
     }
 
-    /**
-     * The module administration calls this after saving. It is the run of an export module,
-     * not a save hook, so nothing beyond the own configuration belongs here. After a status
-     * or group change the shop owner empties the cache through the action the shop brings for
-     * it, delcache in admin/configuration.php.
-     */
     /**
      * The directories the module writes into. The cache subdirectory is not listed on purpose:
      * "delcache" removes it and the renderer creates it again, so only its parent has to be writable.
@@ -306,14 +292,14 @@
       // its hash is caught where it is used: the readers verify the checksums and log it.
       $notice_query = xtc_db_query("SELECT DISTINCT notice_hash FROM ".TABLE_ORDERS_GUARANTEE);
       while ($notice = xtc_db_fetch_array($notice_query)) {
-        if (!is_file($archive->hash_path($archive->notice_dir, $notice['notice_hash']).'notice.svg')) {
+        if (!is_file($archive->notice_path($notice['notice_hash']).'notice.svg')) {
           $damaged++;
         }
       }
 
       $garan_query = xtc_db_query("SELECT DISTINCT garan_hash FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE);
       while ($garan = xtc_db_fetch_array($garan_query)) {
-        if (!is_file($archive->hash_path($archive->garan_dir, $garan['garan_hash']).'colour.svg')) {
+        if (!is_file($archive->garan_path($garan['garan_hash']).'colour.svg')) {
           $damaged++;
         }
       }
@@ -333,6 +319,12 @@
       return $damaged;
     }
 
+    /**
+     * The module administration calls this after saving. It is the run of an export module,
+     * not a save hook, so nothing beyond the own configuration belongs here. After a status
+     * or group change the shop owner empties the cache through the action the shop brings for
+     * it, delcache in admin/configuration.php.
+     */
     function process($file) {
       global $messageStack;
 
@@ -697,13 +689,6 @@
     }
 
     /**
-     * Everything the module needs before it may run: the renderer with its templates and fonts,
-     * and the files of the three class extensions. GD alone is not enough, a module without its
-     * templates reports success and then quietly never draws a label.
-     *
-     * @return array the missing parts, empty when the module can be switched on
-     */
-    /**
      * The message that names what keeps the module from running.
      *
      * File and function names are plain values and are escaped here. The schema errors arrive as
@@ -728,6 +713,13 @@
       return sprintf(MODULE_GUARANTEE_LABELS_TEXT_INCOMPLETE, implode(' ', $parts));
     }
 
+    /**
+     * Everything the module needs before it may run: the renderer with its templates and fonts,
+     * and the files of the three class extensions. GD alone is not enough, a module without its
+     * templates reports success and then quietly never draws a label.
+     *
+     * @return array the missing parts, empty when the module can be switched on
+     */
     function missing_requirements() {
       require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
 
@@ -955,14 +947,6 @@
     }
 
     /**
-     * Whether an index really is the one the module needs. A name alone says nothing: an older
-     * table may carry the same name over other columns or without its uniqueness, and the first
-     * snapshot would then run into a duplicate instead of an update.
-     *
-     * @param array $index one entry of schema_indexes()
-     * @return bool
-     */
-    /**
      * Whether an index of that name exists at all, whatever it is over.
      *
      * @param array $index one entry of schema_indexes()
@@ -975,6 +959,14 @@
       return (xtc_db_num_rows($index_query) > 0);
     }
 
+    /**
+     * Whether an index really is the one the module needs. A name alone says nothing: an older
+     * table may carry the same name over other columns or without its uniqueness, and the first
+     * snapshot would then run into a duplicate instead of an update.
+     *
+     * @param array $index one entry of schema_indexes()
+     * @return bool
+     */
     function index_exists($index) {
       // MariaDB rejects ORDER BY on SHOW KEYS, MySQL accepts it. The order of a multi column
       // index still matters, so Seq_in_index is read from the result and sorted here.
@@ -1016,16 +1008,6 @@
     }
 
     /**
-     * The full definition of one column, not only its type.
-     *
-     * A table can carry a column of the right type and still be unusable: without its primary
-     * key, without the auto increment behind it, or nullable where the module never expects a
-     * null. Those show up as an sql error on the first snapshot, which is far away from the
-     * installation that should have reported them.
-     *
-     * @return mixed array of type, null, key, default and extra, false when the column is gone
-     */
-    /**
      * Whether the reported column type matches the expected one.
      *
      * MySQL 8.0.19 dropped the display width from SHOW COLUMNS, so it answers `int` where MariaDB
@@ -1051,6 +1033,16 @@
       return (preg_replace($width, '$1', $reported) === preg_replace($width, '$1', $expected));
     }
 
+    /**
+     * The full definition of one column, not only its type.
+     *
+     * A table can carry a column of the right type and still be unusable: without its primary
+     * key, without the auto increment behind it, or nullable where the module never expects a
+     * null. Those show up as an sql error on the first snapshot, which is far away from the
+     * installation that should have reported them.
+     *
+     * @return mixed array of type, null, key, default and extra, false when the column is gone
+     */
     function column_definition($table, $column) {
       $column_query = xtc_db_query("SHOW COLUMNS FROM ".$table." LIKE '".str_replace('_', '\\_', xtc_db_input($column))."'");
 
