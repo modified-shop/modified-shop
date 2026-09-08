@@ -351,6 +351,7 @@ CREATE TABLE content_manager (
   last_modified DATETIME NULL,
   PRIMARY KEY (content_id),
   KEY idx_content_group (content_group, languages_id),
+  KEY idx_content_menu (languages_id, file_flag, content_status, content_active, parent_id, sort_order),
   KEY idx_content_status (content_status),
   KEY idx_content_active (content_active),
   KEY idx_sort_order (sort_order)

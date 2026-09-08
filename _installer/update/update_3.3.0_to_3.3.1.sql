@@ -56,4 +56,8 @@ ALTER TABLE `specials`
 ALTER TABLE `products_tags`
   ADD INDEX `idx_options_values_products` (`options_id`, `values_id`, `products_id`);
 
+#GTB - 2026-09-08 - speed up content and information box menus
+ALTER TABLE `content_manager`
+  ADD INDEX `idx_content_menu` (`languages_id`, `file_flag`, `content_status`, `content_active`, `parent_id`, `sort_order`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
