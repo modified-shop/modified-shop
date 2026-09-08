@@ -168,19 +168,29 @@ function ok($n, $c, $e = '') { global $pass, $fail; if ($c) { $pass++; echo "  o
 
 echo "\n== $mode ==\n";
 ok('Diagnose erzeugt', $out !== '');
-ok('drei Klassenerweiterungen gelistet', substr_count($out, 'Klassenerweiterung') === 3, substr_count($out, 'Klassenerweiterung').' gefunden');
-ok('vier SELECT-Listen geprueft', substr_count($out, 'Garantiedauer in ADD_SELECT') === 4);
-ok('Renderer geprueft', strpos($out, 'Vorlagen, Schriften') !== false);
 ok('nur aktive Sprachen abgefragt', !isset($GLOBALS['alle_sprachen_geladen']));
-ok('Sprachname maskiert', strpos($out, '&lt;b&gt;Klingonisch&lt;/b&gt;') !== false && strpos($out, '<b>Klingonisch</b>') === false);
-ok('fehlende Bestandteile benannt', strpos($out, 'notice.svg') !== false && strpos($out, 'extra/guarantee_labels.php') !== false);
-ok('vollstaendige Sprache ohne Befund', preg_match('/Deutsch[^<]*<\/span><\/td><td><span class="main">'.preg_quote(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK, '/').'/', $out) === 1);
 ok('Cachehinweis immer vorhanden', strpos($out, 'leert von sich aus keinen Cache') !== false);
 
-ok('Schemazeile vorhanden', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SCHEMA) !== false);
-ok('vier Schreibrechtzeilen', substr_count($out, 'Schreibrecht auf') === 4, substr_count($out, 'Schreibrecht auf').' gefunden');
+// Die Box zeigt nur, was Aufmerksamkeit braucht. Siebzehn gruene Zeilen verstecken die eine
+// rote, und der Shopbetreiber liest hier, um ein Problem zu finden.
+ok('kein "in Ordnung" in der Box', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK) === false, $out);
+ok('div_box nicht verwendet', strpos($out, 'div_box') === false);
+
+ok('mit Befund eine rote Box', strpos($out, 'error_message') !== false);
+ok('dabei keine Erfolgsmeldung', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_COMPLETE) === false);
+
+// Bestandene Pruefungen tauchen nicht auf. Das ist die eigentliche Regel, und sie laesst sich
+// je Betriebsart an dem festmachen, was die Attrappe bewusst heil laesst.
+foreach (array('Schreibrecht auf', MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SCHEMA) as $heil) {
+  if ($mode !== 'schema') {
+    ok('bestandene Pruefung fehlt: '.substr($heil, 0, 24), strpos($out, $heil) === false, $heil);
+  }
+}
+
+ok('Sprachname maskiert', strpos($out, '<b>Klingonisch</b>') === false);
 
 if ($mode === 'schema') {
+  ok('Schemazeile vorhanden', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SCHEMA) !== false);
   ok('fehlende Tabelle gemeldet', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE) !== false);
   ok('keine Datenabfrage bei kaputtem Schema', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS) === false);
   ok('keine Archivzeile bei kaputtem Schema', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE) === false);
@@ -188,7 +198,10 @@ if ($mode === 'schema') {
 } elseif ($mode === 'luecken') {
   ok('Artikelzeile vorhanden', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS) !== false);
   ok('Archivzeile vorhanden', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE) !== false);
-  ok('unerreichbarer Anhang gemeldet', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_GROUPS) !== false);
+  // Diese Attrappe fuehrt keinen unerreichbaren Anhang, die Pruefung besteht also und faellt
+  // aus der Box. Vorher prueften wir nur, dass die Zeile ueberhaupt existiert; das war
+  // richtig, solange alles gelistet wurde, sagte aber nichts ueber das Ergebnis aus.
+  ok('erreichbare Anhaenge fallen aus der Box', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_GROUPS) === false);
   ok('unvollstaendige Artikel gezaehlt', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED.' 3') !== false);
   ok('doppelte Bedingungen gezaehlt', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED.' 2') !== false);
   ok('mehrsprachige Datei gemeldet', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED) !== false);
@@ -196,22 +209,36 @@ if ($mode === 'schema') {
   ok('beschaedigtes Archiv gezaehlt', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED.' 1') !== false);
   ok('Schema trotz Datenfehlern in Ordnung', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE) === false);
 } else {
-  ok('Artikelzeile vorhanden', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS) !== false);
-  ok('Dauerzeile vorhanden', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_DURATION) !== false);
-  ok('Archivzeile vorhanden', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE) !== false);
-  ok('Schema als in Ordnung', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE) === false);
+  // vollstaendig: die Daten sind heil, nur die Registrierung fehlt in dieser Attrappe
+  foreach (array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_PRODUCTS,
+                 MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE,
+                 MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_DURATION,
+                 'Garantiedauer in ADD_SELECT') as $zeile) {
+    ok('bestandene Pruefung fehlt: '.substr($zeile, 0, 24), strpos($out, $zeile) === false, $zeile);
+  }
   ok('keine betroffenen Datensaetze', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED) === false);
-  ok('Schreibrechte in Ordnung', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED) === false);
 }
-ok('je Sprache eine Zeile', substr_count($out, 'Gew&auml;hrleistungshinweis und Texte') === 2);
-ok('Sprache ohne Grafik faellt auf', strpos($out, 'Klingonisch') !== false && substr_count($out, 'fehlt') >= 1);
 
 if ($mode === 'luecken') {
   ok('fehlende Listing-Erweiterung erkannt', preg_match('/guarantee_labels_listing\.php.*?fehlt/s', $out) === 1);
   ok('fehlende Warenkorbspalte erkannt', preg_match('/ADD_SELECT_CART.*?fehlt/s', $out) === 1);
-} else {
-  ok('vorhandene Erweiterungen als in Ordnung', preg_match('/guarantee_labels_listing\.php.*?in Ordnung/s', $out) === 1);
-  ok('vorhandene Warenkorbspalte als in Ordnung', preg_match('/ADD_SELECT_CART.*?in Ordnung/s', $out) === 1);
+  ok('bestandene SELECT-Listen fehlen', strpos($out, 'ADD_SELECT_DEFAULT') === false);
+  ok('Sprache ohne Grafik faellt auf', strpos($out, 'Klingonisch') !== false);
+  ok('vollstaendige Sprache faellt nicht auf', strpos($out, 'Deutsch') === false);
+}
+
+// Der Erfolgsfall laesst sich an der Attrappe nicht herstellen, deshalb direkt gepruefte Zeilen
+if ($mode === 'vollstaendig') {
+  $modul = new guarantee_labels();
+  $gruen = $modul->diagnosis_table(array(array('Alles heil', true), array('Auch das', true)));
+  ok('ohne Befund eine gruene Meldung', strpos($gruen, 'info_message') !== false
+     && strpos($gruen, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_COMPLETE) !== false, $gruen);
+  ok('dabei keine Fehlerbox', strpos($gruen, 'error_message') === false);
+  ok('Cachehinweis auch dort', strpos($gruen, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE) !== false);
+
+  $rot = $modul->diagnosis_table(array(array('Alles heil', true), array('Das nicht', false)));
+  ok('eine einzige Abweichung ergibt die rote Box', strpos($rot, 'error_message') !== false
+     && strpos($rot, 'Das nicht') !== false && strpos($rot, 'Alles heil') === false, $rot);
 }
 
 echo "\nbestanden: $pass   fehlgeschlagen: $fail\n";
