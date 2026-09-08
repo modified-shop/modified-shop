@@ -478,7 +478,7 @@ Validierung beim Speichern:
 - Bis einschliesslich `2.0` wird der Wert gespeichert, ohne Hersteller, Modellkennung oder Textbreite zu verlangen. Aus dieser Dauer entsteht kein Label, also braucht es die Labeldaten nicht. Erst ab `2.5` gelten die folgenden Anforderungen.
 - Ein Hersteller muss ausgewaehlt sein.
 - `products_manufacturers_model` muss gefuellt sein.
-- Ein optional markierter Anhang muss lokal gespeichert und fuer die betroffenen B2C-Kundengruppen erreichbar sein. Die Anhangsverwaltung prueft die ausgewaehlten `group_ids` gegen die Kundengruppen, denen das Label gezeigt wird, und lehnt die Markierung ab, wenn eine davon das Dokument nicht sehen kann.
+- Ein optional markierter Anhang muss lokal gespeichert und fuer die betroffenen B2C-Kundengruppen erreichbar sein. Die Anhangsverwaltung prueft die ausgewaehlten `group_ids` gegen die Kundengruppen, denen das Label gezeigt wird, und lehnt die Markierung ab, wenn eine davon das Dokument nicht sehen kann. Geschrieben wird die Markierung von `admin/includes/extra/modules/content_manager/action/`, nachdem der Content Manager die Zeile gespeichert hat; der Core kennt das Modul dabei nicht. Ein abgelehnter Anhang bleibt ein normaler Anhang, die Markierung wird geleert und der Grund ueber den `messageStack` genannt. Ohne das Auswahlfeld, also bei abgeschaltetem Modul, ruehrt der Haken die gespeicherte Markierung nicht an.
 - Herstellername und Modellkennung muessen in die offiziellen editierbaren Bereiche der Vorlage passen.
 - Werte duerfen weder abgeschnitten noch durch eine kleinere als die vorgegebene Schrift passend gemacht werden.
 - Bei Artikeln mit Varianten muss dieselbe Garantie fuer alle bestellbaren Auspraegungen gelten. Andernfalls darf im ersten Umfang kein GARAN-Label aktiviert werden.
@@ -959,7 +959,7 @@ MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS
 Die Konfiguration verwendet den vorhandenen Mehrfachauswahl-Helper und die vorhandene Datenquelle fuer Kundengruppen:
 
 ```php
-'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses\', \'chr(44)\','
+'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), \'chr(44)\','
 ```
 
 `xtc_get_customers_statuses()` liefert die erwarteten Eintraege mit `id` und `text`; eine neue Auswahlfunktion oder ein eigenes Formular ist nicht erforderlich. Der leere Standardwert schliesst keine Kundengruppe aus. Mehrere IDs werden mit Komma gespeichert, beim Lesen in eindeutige positive Integerwerte normalisiert und fuer die B2B-Pruefung verwendet. Gastzugriffe gelten als B2C, solange ihre Kundengruppe nicht ausdruecklich in dieser Konfiguration als B2B ausgewaehlt wurde.
@@ -986,6 +986,7 @@ isset($_GET['module'])
 - unvollstaendige GARAN-Produktdaten,
 - dieselbe `content_file`, die in mehreren Sprachen als `garan_terms` markiert ist,
 - als `garan_terms` markierte Anhaenge, die eine Kundengruppe nicht erreichen, obwohl ihr das Label gezeigt wird. Die Markierung wird beim Speichern geprueft, kann aber nachtraeglich ungueltig werden: bei abgeschaltetem Modul eingeschraenkt oder durch eine Gruppe, die aus der B2B-Auswahl entfernt wurde und damit B2C ist,
+- eine B2B-Kundengruppe der Einstellung, die es nicht mehr gibt. Die Mehrfachauswahl bietet nur vorhandene Gruppen an, eine geloeschte laesst sich durch Speichern also nicht mehr entfernen,
 - fehlende oder beschaedigte historische Archivdateien.
 
 `ausgewaehlt` bedeutet damit ausdruecklich, dass `$_GET['module']` vorhanden ist und exakt dem Modulcode entspricht. Ist kein Modulparameter gesetzt, kann das Framework zwar das erste Modul als `$mInfo` anzeigen, GARAN erzeugt in diesem Fall aber weder Diagnoseinhalt noch Diagnoseabfragen. Dasselbe gilt, wenn ein anderes Modul ausgewaehlt ist oder GARAN noch nicht installiert wurde.
@@ -1088,7 +1089,7 @@ und begruenden jeweils eine Stelle im Code.
 | `orders_product_delete()` | loescht die Position selbst mit `orders_id` UND `orders_products_id`, der Haken laeuft davor | `guarantee_labels_product_snapshot_delete()` bekommt beide Werte und loescht ebenso eng; ein falsches Paar naehme sonst den Snapshot einer fremden Bestellung mit. |
 | `admin/categories.php` | leitet nach `insert_product` und `update_product` weiter | Die Klassenerweiterung meldet mit `add_session()`. |
 | `admin/orders_edit.php` | leitet nach jeder Positionsaktion weiter | Die Bestellbearbeitung meldet mit `add_session()`. |
-| Import in `admin/includes/modules/import.php` | leitet nicht weiter | Der Importhaken meldet mit `add()`. |
+| Import in `admin/includes/classes/import.php` | leitet nicht weiter | Der Importhaken meldet mit `add()`. |
 | `categoriesModules`, `productModules`, `orderModules` | laden eine Erweiterung nur bei eigenem `_STATUS = true` | Der Status steht nicht in der Modulmaske, `Modul aktualisieren` setzt ihn zurueck, die Diagnose prueft ihn mit. |
 | `admin/includes/classes/categories.php::duplicate_product()` | kopiert alle Produktspalten mit `SELECT *` und bei `cnt_copy` alle Anhaenge | Nur `duplicate_product_before()` und `duplicate_product_end()` koennen das verhindern; deshalb bleibt die Kategorieerweiterung bei vorhandenen Katalogdaten auch nach einer Deinstallation eingerichtet. |
 | `SHOW KEYS` / `SHOW COLUMNS` | MariaDB weist `ORDER BY` bei `SHOW` als Syntaxfehler zurueck, MySQL nimmt es an | `index_exists()` fragt ohne `ORDER BY` und sortiert in PHP nach `Seq_in_index`. Der Shop laeuft ueberwiegend auf MariaDB; die Abfrage scheiterte dort still und meldete alle Indizes als fehlend. |
@@ -1139,12 +1140,13 @@ nicht mehr nur in diesem Dokument, sondern als Test in `tests/guarantee_labels/r
 - Modulstatus und B2B-Auswahl ueber `admin/module_export.php?set=system` speichern; `process()` wird nach dem Speichern aufgerufen, liest den neuen Status aus `TABLE_CONFIGURATION` statt aus der in diesem Request veralteten Konstante und leert keinen Cache.
 - Modul bei fehlendem GD mit FreeType nachtraeglich aktivieren; `process()` setzt den Status wieder auf `false` und nennt die fehlende Voraussetzung ueber den `messageStack`. Bei vorhandenem Renderer bleibt der Status stehen, ein abgeschaltetes Modul wird gar nicht erst geprueft.
 - GARAN-Systemmodul ueber den regulaeren Adminweg aufrufen; Installation, Bearbeitung, Aktualisierung und Diagnose laufen ausschliesslich ueber `admin/module_export.php?set=system`. `admin/modules.php` benoetigt fuer GARAN weder einen Speicherpfad noch eine Cache-Erweiterung.
-- B2B-Mehrfachauswahl in deutscher und englischer Adminsprache anzeigen; `xtc_cfg_multi_checkbox('xtc_get_customers_statuses', 'chr(44)', ...)` verwendet die lokalisierten Kundengruppen aus `xtc_get_customers_statuses()`.
+- B2B-Mehrfachauswahl in deutscher und englischer Adminsprache anzeigen; der gespeicherte Ausdruck reicht `xtc_get_customers_statuses(true)` ohne Gruppe `0` an `xtc_cfg_multi_checkbox()` und zeigt damit die lokalisierten Kundengruppen ohne die Administration.
 - Keine, eine und mehrere B2B-Kundengruppen speichern; `MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS` enthaelt entsprechend `''`, eine ID oder kommaseparierte IDs und wird beim Lesen in eindeutige positive Integerwerte normalisiert.
 - Gastzugriff ohne ausdruecklich ausgewaehlte Gast-Kundengruppe bleibt B2C; nach ausdruecklicher Auswahl folgt er der B2B-Ausschlussregel.
 - Installiertes GARAN-Modul in `admin/module_export.php?set=system&module=guarantee_labels` ausdruecklich auswaehlen; die Bedingung aus `$_GET['module']`, `$this->code` und `check()` ist erfuellt und `properties['add_content']` zeigt die Diagnose direkt unter der Modul-Infobox.
 - Diagnose bei fehlender Modultabelle oder Core-Spalte aufrufen; sie meldet das fehlende Schema, ohne eine Abfrage gegen das fehlende Element auszufuehren.
 - Einer vorhandenen Modultabelle eine Spalte entfernen und einen Index durch einen gleichnamigen ueber andere Spalten oder ohne Eindeutigkeit ersetzen; die Schemapruefung meldet beides.
+- Eine Kundengruppe loeschen, die in der B2B-Auswahl steht; die Diagnose meldet die Id, die keine Gruppe mehr benennt.
 - Einen als `garan_terms` markierten Anhang bei abgeschaltetem Modul auf eine Kundengruppe einschraenken, die das Label sieht, und das Modul wieder aktivieren; die Diagnose meldet den nicht erreichbaren Anhang. Dasselbe pruefen, nachdem eine Gruppe aus der B2B-Auswahl entfernt wurde.
 - Diagnose mit fehlendem GD-FreeType, nicht beschreibbarem Cache oder Archiv, unvollstaendiger Sprache, unvollstaendigem Produkt, mehrfach markierter `content_file` und fehlender Archivdatei pruefen.
 - Archivverzeichnis mit fehlender `nested.svg` oder `notice.json` sowie mit abweichender Pruefsumme anlegen; beide Faelle zaehlen als beschaedigt.
@@ -1181,6 +1183,9 @@ nicht mehr nur in diesem Dokument, sondern als Test in `tests/guarantee_labels/r
 - Anhang eines anderen Artikels oder einer anderen Sprache ablehnen.
 - Herstellername, Modellkennung und Anhangsnamen mit `<`, `>`, `"` und `&` in Bestellansicht, Beleg und Mail pruefen; die HTML-Fassung maskiert sie, die Textfassung nicht. Ein Dateiname wie `<img src=x onerror=alert(1)>.pdf` besteht den Dateinamenfilter und darf trotzdem kein HTML einschleusen.
 - Anhang als `garan_terms` markieren, dessen `group_ids` eine Kundengruppe ausschliessen, die das Label sieht; die Markierung wird abgelehnt und die betroffene Gruppe benannt. Eine ausgeschlossene B2B-Gruppe fuehrt zu keinem Befund, eine leere Auswahl ebenfalls nicht.
+- Einen Anhang als Garantiebedingung markieren, die Markierung an einem bestehenden Anhang setzen und wieder zuruecknehmen; die Zeile traegt danach `garan_terms` beziehungsweise wieder den leeren Typ.
+- Einen Anhang markieren, der die Pruefung nicht besteht, etwa mit gesetztem Link oder einer Kundengruppe ohne Zugriff; er wird als normaler Anhang gespeichert und der Grund erscheint als Meldung.
+- Denselben Anhang bei abgeschaltetem Modul speichern; die gespeicherte Markierung bleibt unveraendert, weil das Auswahlfeld nicht erscheint.
 - Unterschiedliche von der vorhandenen Artikel-Anhangsverwaltung erlaubte Dateiformate als `garan_terms` verwenden und unveraendert archivieren.
 - Dateiname und Erweiterung sicher in `terms_filename` uebernehmen; Pfadbestandteile, Steuerzeichen und Kommas ablehnen.
 - Archivdatei unter `DIR_FS_DOCUMENT_ROOT . 'media/guarantee_labels/archive/terms/<terms_hash>/<terms_filename>'` anlegen und mit ihrem gespeicherten Dateinamen versenden.
@@ -1460,7 +1465,7 @@ Die Erweiterung ist fachlich fertig, wenn:
 - Der historische Gewaehrleistungshinweis liegt unter `media/guarantee_labels/archive/notice/<notice_hash>/`. `notice.svg` bewahrt die angezeigte Grafik; `notice.json` bewahrt Sprache, Mailtext, Linktext, Ueberschrift, Your-Europe-URL und Version. Ein erneuter Mailversand liest Text, Link und Ueberschrift aus diesem Snapshot statt aus aktuellen Sprachkonstanten. Fuer den aktuellen Hinweis im Storefront ist kein zusaetzlicher Cache erforderlich.
 - Die zulaessige Laenge von Herstellername und Modellkennung wird nicht ueber eine feste Zeichenzahl entschieden. Der Renderer misst die tatsaechliche Textbreite serverseitig mit `imagettfbbox()`, der jeweiligen Inter-TTF-Datei, der vorgegebenen Schriftgroesse und einer festen Sicherheitstoleranz. Nicht passende Werte werden abgelehnt. GD mit FreeType ist Voraussetzung; ImageMagick und eine neue PHP-Bibliothek werden nicht benoetigt.
 - Storefront und Checkout fuegen die gecachten SVGs inline ein. Eine zentrale Modul-CSS-Datei bindet die passenden Inter-WOFF2-Dateien per `@font-face` ein. Die Fonts werden nicht in jedes SVG kopiert; `images/.htaccess` erlaubt nur den HTTP-Zugriff auf WOFF2 und nicht auf TTF.
-- B2B-Kundengruppen werden unter `MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS` kommasepariert gespeichert. Die Modulkonfiguration verwendet dafuer `xtc_cfg_multi_checkbox('xtc_get_customers_statuses', 'chr(44)', ...)`; eine neue Auswahlfunktion ist nicht erforderlich. Standardmaessig ist keine Kundengruppe ausgeschlossen. Gastzugriffe bleiben B2C, solange ihre Kundengruppe nicht ausdruecklich ausgewaehlt wird.
+- B2B-Kundengruppen werden unter `MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS` kommasepariert gespeichert. Die Modulkonfiguration verwendet dafuer `xtc_cfg_multi_checkbox()` mit `xtc_get_customers_statuses(true)` ohne Gruppe `0`; eine neue Auswahlfunktion ist nicht erforderlich. Standardmaessig ist keine Kundengruppe ausgeschlossen. Gastzugriffe bleiben B2C, solange ihre Kundengruppe nicht ausdruecklich ausgewaehlt wird.
 - Die Moduldiagnose ist keine Konfigurationsoption und wird nur erzeugt, wenn `isset($_GET['module']) && $_GET['module'] == $this->code && $this->check() > 0` gilt. Dann wird sie ueber `$this->properties['add_content']` direkt unter der Modul-Infobox in `admin/module_export.php?set=system` ausgegeben. Sie besitzt keine eigene Adminseite und prueft das Schema, bevor sie weitere Diagnoseabfragen ausfuehrt.
 - Die benoetigten Storefront-Process-Hooks `checkout_process_products_end/` und `checkout_process_order/` existieren bereits.
 - Manuell eingefuegte Bestellpositionen werden ueber die neue Erweiterungsstelle `orders_functions/product_insert/` in `admin/includes/functions/orders_functions.php` verarbeitet. Sie liegt am Ende von `orders_product_insert()`, wo die `orders_products_id` bereits ermittelt ist, und folgt dem Muster der vorhandenen Stellen `product_edit/` und `product_delete/`.
