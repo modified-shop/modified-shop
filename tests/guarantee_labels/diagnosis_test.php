@@ -226,6 +226,32 @@ if ($mode === 'schema') {
   ok('keine betroffenen Datensaetze', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED) === false);
   ok('vorhandene B2B-Gruppe faellt aus der Box', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_B2B) === false);
   ok('Apache faellt aus der Box', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS) === false);
+
+  // Beide LiteSpeed-Ausgaben nennen sich LiteSpeed. OpenLiteSpeed liest die .htaccess nur fuer
+  // Rewrite-Regeln, Require und Deny ignoriert es; die Sperre des Archivs haelt dort nicht.
+  $server_vorher = $_SERVER['SERVER_SOFTWARE'];
+  $_SERVER['SERVER_SOFTWARE'] = 'LiteSpeed';
+
+  unset($_SERVER['LSWS_EDITION']);
+  ok('LiteSpeed ohne Edition gilt als ungesperrt', $m->htaccess_server() === false);
+
+  $_SERVER['LSWS_EDITION'] = 'Openlitespeed 1.7.19';
+  ok('OpenLiteSpeed gilt als ungesperrt', $m->htaccess_server() === false);
+
+  $_SERVER['LSWS_EDITION'] = 'LiteSpeed/6.1.1 Enterprise';
+  ok('LiteSpeed Enterprise liest die Sperre', $m->htaccess_server() === true);
+
+  unset($_SERVER['LSWS_EDITION']);
+  $_SERVER['SERVER_SOFTWARE'] = 'nginx/1.24.0';
+  ok('nginx gilt als ungesperrt', $m->htaccess_server() === false);
+
+  $_SERVER['SERVER_SOFTWARE'] = 'Apache/2.4.62 (Debian)';
+  ok('Apache liest die Sperre', $m->htaccess_server() === true);
+
+  $_SERVER['SERVER_SOFTWARE'] = '';
+  ok('unbekannter Server bleibt unerwaehnt', $m->htaccess_server() === true);
+
+  $_SERVER['SERVER_SOFTWARE'] = $server_vorher;
 }
 
 if ($mode === 'luecken') {
