@@ -112,6 +112,10 @@
                         $this->dir_writable($dir), $dir, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED);
       }
 
+      $b2b_gone = $this->b2b_missing_groups();
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_B2B, count($b2b_gone) < 1,
+                      implode(', ', $b2b_gone), MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN);
+
       // a query against a missing table or column would only produce a database error
       if (count($schema_errors) > 0) {
         return $this->diagnosis_table($rows);
@@ -237,6 +241,40 @@
     }
 
     /**
+     * Group ids of the b2b setting that no longer name a customer group.
+     *
+     * The check box list only offers existing groups, so saving the setting cannot take a
+     * deleted one out of it. The id stays behind and would exclude a group again as soon as the
+     * shop hands out the same number.
+     *
+     * @return array the ids that name nothing
+     */
+    function b2b_missing_groups() {
+      if (!defined('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS')
+          || trim(MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS) === '')
+      {
+        return array();
+      }
+
+      $selected = array_unique(array_map('intval', array_filter(array_map('trim', explode(',', MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS)), 'strlen')));
+
+      if (count($selected) < 1) {
+        return array();
+      }
+
+      $known = array();
+      $groups_query = xtc_db_query("SELECT DISTINCT customers_status_id
+                                      FROM ".TABLE_CUSTOMERS_STATUS."
+                                     WHERE customers_status_id IN (".implode(', ', $selected).")");
+
+      while ($group = xtc_db_fetch_array($groups_query)) {
+        $known[] = (int)$group['customers_status_id'];
+      }
+
+      return array_values(array_diff($selected, $known));
+    }
+
+    /**
      * The directories the module writes into. The cache subdirectory is not listed on purpose:
      * "delcache" removes it and the renderer creates it again, so only its parent has to be writable.
      *
@@ -247,7 +285,7 @@
         'cache/' => DIR_FS_CATALOG.'cache/',
         'media/guarantee_labels/archive/garan/' => DIR_FS_CATALOG.'media/guarantee_labels/archive/garan/',
         'media/guarantee_labels/archive/notice/' => DIR_FS_CATALOG.'media/guarantee_labels/archive/notice/',
-        'media/products/garan_archive/' => DIR_FS_CATALOG.'media/products/garan_archive/',
+        'media/guarantee_labels/archive/terms/' => DIR_FS_CATALOG.'media/guarantee_labels/archive/terms/',
       );
     }
 

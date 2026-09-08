@@ -341,7 +341,24 @@
       return false;
     }
 
-    return (strpos((string)$group_ids, 'c_'.(int)$status.'_group') !== false);
+    return in_array((int)$status, guarantee_labels_terms_groups($group_ids), true);
+  }
+
+  /**
+   * The customer groups a selection of the attachment administration names.
+   *
+   * One place knows the stored shape "c_<id>_group,": the visibility check of the archive and
+   * the module diagnosis both read it through here.
+   *
+   * @param mixed $group_ids the stored selection
+   * @return array group ids
+   */
+  function guarantee_labels_terms_groups($group_ids) {
+    if (!preg_match_all('/c_([0-9]+)_group/', (string)$group_ids, $matches)) {
+      return array();
+    }
+
+    return array_map('intval', $matches[1]);
   }
 
   /**
@@ -604,6 +621,7 @@
    */
   function guarantee_labels_validate_snapshot($values) {
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
+    require_once(DIR_FS_INC.'guarantee_labels_validate_product.inc.php');
 
     $renderer = new guarantee_labels_renderer();
     $errors = array();
@@ -623,25 +641,7 @@
       $errors[] = sprintf(ERROR_GUARANTEE_LABELS_SNAPSHOT_DURATION, encode_htmlspecialchars($duration));
     }
 
-    if ($name === '') {
-      $errors[] = ERROR_GUARANTEE_LABELS_SNAPSHOT_MANUFACTURER;
-    }
-
-    if ($model === '') {
-      $errors[] = ERROR_GUARANTEE_LABELS_MODEL;
-    }
-
-    if ($name !== '' && $renderer->is_ready() && $renderer->fits('manufacturer', $renderer->measurable($name)) === false) {
-      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MANUFACTURER_WIDTH, encode_htmlspecialchars($name));
-    }
-
-    if ($model !== '' && $renderer->is_ready() && $renderer->fits('model', $renderer->measurable($model)) === false) {
-      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MODEL_WIDTH, encode_htmlspecialchars($model));
-    }
-
-    if (!$renderer->is_ready()) {
-      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_NOT_READY, implode(', ', $renderer->missing_requirements()));
-    }
+    $errors = array_merge($errors, guarantee_labels_validate_texts($renderer, $name, $model, ERROR_GUARANTEE_LABELS_SNAPSHOT_MANUFACTURER));
 
     if (count($errors) > 0) {
       return array('values' => false, 'errors' => $errors);

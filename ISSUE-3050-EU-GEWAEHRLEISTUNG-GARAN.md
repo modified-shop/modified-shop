@@ -253,7 +253,7 @@ Die Tabellenkonstanten `TABLE_ORDERS_GUARANTEE` und `TABLE_ORDERS_PRODUCTS_GUARA
 | `manufacturers.manufacturers_name` | `orders_products_guarantee.manufacturers_name` |
 | `products.products_manufacturers_model` | `orders_products_guarantee.manufacturers_model` |
 | `products.products_garan_duration` | `orders_products_guarantee.garan_duration` |
-| Optional vorhandene Datei des sprachabhaengigen Artikel-Anhangs | Archivdatei unter `media/products/garan_archive/<terms_hash>/<terms_filename>` |
+| Optional vorhandene Datei des sprachabhaengigen Artikel-Anhangs | Archivdatei unter `media/guarantee_labels/archive/terms/<terms_hash>/<terms_filename>` |
 | Optional vorhandenes `products_content.content_file` | `orders_products_guarantee.terms_filename` |
 
 Die Bestellbestaetigung und ein spaeterer erneuter Mailversand verwenden nur diese gespeicherten Werte. Aenderungen am Produkt oder am Hersteller duerfen historische Bestellungen nicht veraendern.
@@ -327,10 +327,13 @@ media/guarantee_labels/archive/
 │   └── <garan_hash>/
 │       ├── colour.svg
 │       └── nested.svg
-└── notice/
-    └── <notice_hash>/
-        ├── notice.svg
-        └── notice.json
+├── notice/
+│   └── <notice_hash>/
+│       ├── notice.svg
+│       └── notice.json
+└── terms/
+    └── <terms_hash>/
+        └── <terms_filename>
 ```
 
 `notice.json` speichert Sprache, Mailtext, Linktext, Ueberschrift, Your-Europe-URL und Version des bei der Snapshoterzeugung verwendeten Hinweises. Die erste und jede erneute Bestellbestaetigung lesen Text, Link und Ueberschrift anhand von `orders_guarantee.notice_hash` aus diesem Snapshot. Spaetere Aenderungen an Sprachkonstanten oder URLs veraendern bestehende Bestellungen nicht.
@@ -365,7 +368,7 @@ In Unterverzeichnissen von `cache/` schuetzt `clear_dir()` weder `.htaccess` noc
 
 Das Grafik- und Hinweisarchiv erhaelt eine eigene `.htaccess`, die direkte HTTP-Aufrufe vollstaendig sperrt. PHP kann die Dateien weiterhin lokal lesen. Ein Cache fuer `notice.svg` ist nicht erforderlich; die aktuelle Storefront-Ausgabe verwendet die Datei direkt aus dem Sprachverzeichnis.
 
-Das getrennte Archiv fuer Garantie-Anhaenge liegt unterhalb von `DIR_FS_DOCUMENT_ROOT`, damit `check_attachments()` die Datei ueber den bestehenden Mailweg findet. Garantie-Anhaenge werden weiterhin unter `media/products/garan_archive/<terms_hash>/<terms_filename>` archiviert. Der Inhalts-Hash bildet das Verzeichnis; die Datei selbst traegt den in `terms_filename` gespeicherten Namen. Der Dateipicker in `admin/includes/modules/content_manager_products.php` liest nur Dateien direkt unter `media/products/` und ueberspringt Verzeichnisse. Das Unterverzeichnis `garan_archive/` und seine archivierten Dateien erscheinen deshalb nicht als unbenutzte Artikeldateien im Picker.
+Garantie-Anhaenge werden unter `media/guarantee_labels/archive/terms/<terms_hash>/<terms_filename>` archiviert, im selben Archiv wie Label und Hinweis. Das Archiv liegt unterhalb von `DIR_FS_DOCUMENT_ROOT`, damit `check_attachments()` die Datei ueber den bestehenden Mailweg findet. Der Inhalts-Hash bildet das Verzeichnis; die Datei selbst traegt den in `terms_filename` gespeicherten Namen. Der Dateipicker in `admin/includes/modules/content_manager_products.php` liest nur Dateien direkt unter `media/products/`; das Archiv liegt ausserhalb davon und erscheint dort nicht als unbenutzte Artikeldatei.
 
 ### Fehlerverhalten bei Cache und Archiv
 
@@ -927,9 +930,11 @@ Der Text kommt nicht aus dem Content Manager. HTML- und Text-Mail verwenden dies
 
 Das GARAN-Label enthaelt bereits alle erforderlichen Sprachfassungen und ist sprachneutral. Seine offiziellen Vorlagen liegen zentral unter `images/guarantee_labels/assets/` und nicht in den Sprachordnern. Die benoetigten Inter-Schriften liegen unter `images/guarantee_labels/fonts/`. Weitere Shopsprachen gehoeren nicht zum mitgelieferten Umfang der Erweiterung. Ein stiller Fallback auf Deutsch oder Englisch ist nicht vorgesehen.
 
-Beim Anlegen einer neuen Sprache kopiert `admin/languages.php` auf Wunsch vorhandene Artikel-Anhaenge. Zeilen mit `content_type = 'garan_terms'` werden dabei nicht in die neue Sprache kopiert. Der Shopbetreiber muss die Garantieerklaerung fuer die neue Sprache ausdruecklich zuordnen. Andere Artikel-Anhaenge folgen weiterhin dem bestehenden Kopierverhalten.
+Beim Anlegen einer neuen Sprache kopiert `admin/languages.php` auf Wunsch vorhandene Artikel-Anhaenge. Zeilen mit einem gesetzten `content_type` werden dabei nicht in die neue Sprache kopiert. Der Shopbetreiber muss die Garantieerklaerung fuer die neue Sprache ausdruecklich zuordnen. Anhaenge ohne Typ folgen weiterhin dem bestehenden Kopierverhalten.
 
-Diese Stelle besitzt keine Erweiterungsstelle und wird deshalb als gezielter Eingriff in `admin/languages.php` umgesetzt. Sie prueft ausnahmsweise nicht den Modulstatus: `products_content.content_type` ist ein Core-Feld, und eine Zeile sagt ausdruecklich, dass diese Datei die Garantieerklaerung einer bestimmten Sprache ist. Sie in eine andere Sprache zu kopieren waere unabhaengig vom Modulstatus eine falsche Zuordnung. Bei inaktivem Modul liest ohnehin niemand das Feld, ein Schaden entsteht durch die Ausnahme also nicht.
+Diese Stelle besitzt keine Erweiterungsstelle und wird deshalb als gezielter Eingriff in `admin/languages.php` umgesetzt. Der Eingriff nennt das Modul nicht: `products_content.content_type` ist ein Core-Feld, und ein gesetzter Typ sagt, dass diese Datei fuer genau eine Sprache bestimmt ist. Sie in eine andere Sprache zu kopieren waere unabhaengig vom Modulstatus und unabhaengig vom Typ eine falsche Zuordnung. Bei inaktivem Modul liest ohnehin niemand das Feld, ein Schaden entsteht durch die Ausnahme also nicht.
+
+Die Moduldiagnose meldet ausserdem eine B2B-Kundengruppe der Einstellung, die es nicht mehr gibt. Die Mehrfachauswahl bietet nur vorhandene Gruppen an, eine geloeschte Gruppe laesst sich also durch Speichern nicht mehr aus der Einstellung entfernen. Ihre Id bliebe stehen und wuerde wieder ausschliessen, sobald der Shop dieselbe Nummer erneut vergibt.
 
 Die Moduldiagnose warnt ausserdem, wenn dieselbe `content_file` in mehreren Sprachen als `garan_terms` markiert ist. Das kann bei einer bewusst mehrsprachigen Datei korrekt sein, muss vom Shopbetreiber aber geprueft werden. Die Warnung blockiert weder die Artikelpflege noch den Checkout.
 
@@ -1020,7 +1025,7 @@ Voraussichtlich betroffen sind:
 - `admin/includes/extra/modules/add_db_fields/`
 - `admin/includes/extra/modules/new_product/`
 - `admin/customers.php` fuer den Hinweis-Snapshot beim manuellen Anlegen einer Bestellung.
-- `admin/content_manager.php` und `admin/includes/modules/content_manager_products.php` fuer den Typ des Artikel-Anhangs.
+- `admin/includes/modules/content_manager_products.php` fuer die Auswahl des Anhangstyps und `admin/includes/extra/modules/content_manager/action/` fuer das Schreiben der Markierung; an `admin/content_manager.php` ist keine Aenderung erforderlich.
 - `admin/includes/modules/categories/guarantee_labels_product.php` als Klassenerweiterung fuer Artikelpruefung und sicheres Duplizieren, dazu ihre Sprachdateien unter `lang/<Sprache>/modules/categories/`.
 - `admin/includes/classes/categoriesModules.class.php` und `admin/includes/classes/categories.php` fuer den allgemeinen Hook `insert_product_error()`; er wird getrennt von diesem Modul bereitgestellt.
 - `inc/update_module_configuration.inc.php` als vorhandene Funktion fuer das Ein- und Austragen der Klassenerweiterung; an dieser Datei ist keine Aenderung erforderlich.
@@ -1058,8 +1063,7 @@ Voraussichtlich betroffen sind:
 - Offizielle EU-Grafikdateien und Inter-Schriftdateien.
 - `images/.htaccess` fuer den HTTP-Zugriff auf die WOFF2-Schriften.
 - `cache/guarantee_labels/` fuer die gemeinsam gecachten GARAN-Varianten.
-- `media/guarantee_labels/archive/` einschliesslich eigener `.htaccess` fuer historische GARAN-Dateien und Gewaehrleistungshinweise.
-- `media/products/garan_archive/` mit eigener `.htaccess` fuer atomar archivierte Garantie-Anhaenge. Die uebergeordnete `media/.htaccess` sperrt nur Skriptendungen; das historische Archiv braucht eine eigene Sperre, waehrend die Katalogdatei unter `media/products/` erreichbar bleibt.
+- `media/guarantee_labels/archive/` einschliesslich eigener `.htaccess` fuer historische GARAN-Dateien, Gewaehrleistungshinweise und Garantie-Anhaenge. Die uebergeordnete `media/.htaccess` sperrt nur Skriptendungen; das historische Archiv braucht eine eigene Sperre. Die Katalogfassung eines Anhangs unter `media/products/` bleibt erreichbar.
 - `includes/classes/class.logger.php`, `admin/logs.php` und die vorhandene Logpflege fuer `mod_guarantee_labels_<level>_<datum>.log`.
 - `admin/configuration.php` als vorhandener Weg, den Shopcache zu leeren. Das Modul leert selbst keinen Cache.
 
@@ -1094,7 +1098,7 @@ bevor sie im Code steht.
 
 ## Mechanisch gepruefte Regeln
 
-Vier Regeln wurden im Verlauf mehrfach an einer zweiten Stelle vergessen. Sie stehen deshalb
+Diese Regeln wurden im Verlauf mehrfach an einer zweiten Stelle vergessen. Sie stehen deshalb
 nicht mehr nur in diesem Dokument, sondern als Test in `tests/guarantee_labels/rules_test.php`:
 
 - Keine rohen HTML-Funktionen im Modul, nur die Helfer aus `inc/html_encoding.php`.
@@ -1107,6 +1111,9 @@ nicht mehr nur in diesem Dokument, sondern als Test in `tests/guarantee_labels/r
   benannten Ausnahmen raeumen nur auf und geben nichts aus.
 - Wer `guarantee_labels_snapshot_failures()` leert, gibt die Fehler auch aus.
 - Keine `SHOW`-Abfrage mit `ORDER BY`. Die Datenbankattrappen der Tests bilden MariaDB nach und nicht MySQL, sonst faellt so etwas erst im installierten Shop auf.
+- Ob ein Hersteller aktiv ist, beantwortet nur `guarantee_labels_manufacturer_names()`. Ausgenommen ist die Moduldiagnose: Sie zaehlt alle Artikel des Shops in einer Abfrage und ruft keinen einzelnen Hersteller ab.
+- Die Form `c_<id>_group` zerlegt nur `guarantee_labels_terms_groups()`. Sichtbarkeitspruefung des Archivs und Moduldiagnose lesen die Auswahl durch dieselbe Funktion.
+- Die Breite der Labeltexte misst nur `guarantee_labels_validate_texts()`. Artikelpflege, Import und die Maske der Bestellposition fragen dort, damit keine Stelle einen Text annimmt, den eine andere ablehnt.
 
 ## Testfaelle
 
@@ -1175,7 +1182,7 @@ nicht mehr nur in diesem Dokument, sondern als Test in `tests/guarantee_labels/r
 - Anhang als `garan_terms` markieren, dessen `group_ids` eine Kundengruppe ausschliessen, die das Label sieht; die Markierung wird abgelehnt und die betroffene Gruppe benannt. Eine ausgeschlossene B2B-Gruppe fuehrt zu keinem Befund, eine leere Auswahl ebenfalls nicht.
 - Unterschiedliche von der vorhandenen Artikel-Anhangsverwaltung erlaubte Dateiformate als `garan_terms` verwenden und unveraendert archivieren.
 - Dateiname und Erweiterung sicher in `terms_filename` uebernehmen; Pfadbestandteile, Steuerzeichen und Kommas ablehnen.
-- Archivdatei unter `DIR_FS_DOCUMENT_ROOT . 'media/products/garan_archive/<terms_hash>/<terms_filename>'` anlegen und mit ihrem gespeicherten Dateinamen versenden.
+- Archivdatei unter `DIR_FS_DOCUMENT_ROOT . 'media/guarantee_labels/archive/terms/<terms_hash>/<terms_filename>'` anlegen und mit ihrem gespeicherten Dateinamen versenden.
 - Zwei inhaltlich identische Garantie-Anhaenge mit unterschiedlichen Dateinamen atomar als zwei Dateien im selben `terms_hash`-Verzeichnis archivieren.
 - Dateinamen mit Komma ablehnen und pruefen, dass sie die kommaseparierte Anhangsliste nicht erreichen.
 - Loeschen eines zugeordneten Anhangs setzt beim naechsten Bestellsnapshot `terms_hash` und `terms_filename` auf `NULL`, ohne die GARAN-Ausgabe zu deaktivieren.
@@ -1274,8 +1281,7 @@ nicht mehr nur in diesem Dokument, sondern als Test in `tests/guarantee_labels/r
 - Modul deinstallieren; Konfiguration verschwindet, beide Tabellen und ihre Daten bleiben erhalten.
 - Modul erneut installieren; vorhandene Tabellen bleiben unveraendert und behalten ihre Indizes.
 - Cache leeren; `colour.svg` und `nested.svg` werden unter demselben `garan_hash` neu erzeugt und archivierte SVG-Grafiken zu bestehenden Bestellungen bleiben verfuegbar.
-- Direkten HTTP-Aufruf einer Datei unter `media/guarantee_labels/archive/` durch die eigene `.htaccess` blockieren.
-- Direkten HTTP-Aufruf einer archivierten Garantiebedingung unter `media/products/garan_archive/` blockieren. Die uebergeordnete `media/.htaccess` sperrt nur Skriptendungen, deshalb braucht dieses Verzeichnis eine eigene Sperre. Die Katalogfassung derselben Datei unter `media/products/` bleibt erreichbar.
+- Direkten HTTP-Aufruf einer Datei unter `media/guarantee_labels/archive/` durch die eigene `.htaccess` blockieren, einschliesslich einer archivierten Garantiebedingung unter `terms/`. Die Katalogfassung derselben Datei unter `media/products/` bleibt erreichbar.
 - Zwei Bestellungen mit demselben `garan_hash` und `notice_hash` verwenden dieselben Archivverzeichnisse, ohne vorhandene Dateien zu ueberschreiben.
 - Zwei parallele Schreibvorgaenge fuer denselben Hash erzeugen durch temporaere Nachbarverzeichnisse und atomare Umbenennung keine unvollstaendigen Archivverzeichnisse.
 - Nicht beschreibbaren GARAN-Cache testen; die aktuelle Ausgabe verwendet die direkt erzeugten SVGs, der Fehler erscheint im Protokoll und in der Moduldiagnose.
@@ -1434,7 +1440,7 @@ Die Erweiterung ist fachlich fertig, wenn:
 - Garantiebedingungen verwenden die vorhandenen Artikel-Anhaenge. `products_content.content_type = 'garan_terms'` kennzeichnet je Artikel und Sprache die optional zu verwendende Datei; ein separater Upload oder Content-Manager-Datensatz ist nicht erforderlich.
 - Die technische Zuordnung eines Garantie-Anhangs bleibt optional. Das Modul warnt bei fehlender Zuordnung, erzwingt § 479 BGB aber nicht, weil der Shopbetreiber die Garantieerklaerung auch ueber einen anderen dauerhaften Datentraeger bereitstellen kann und fuer diesen Bereitstellungsweg verantwortlich bleibt.
 - Fuer `garan_terms` gelten die bereits vorhandenen erlaubten Dateiformate der Artikel-Anhangsverwaltung. Der Bestellsnapshot speichert mit `terms_filename` den bereinigten Dateinamen samt Erweiterung; eine PDF-Erzeugung oder zusaetzliche Formateinschraenkung gibt es nicht. Kommas im Dateinamen sind wegen der kommaseparierten Anhangsliste unzulaessig.
-- Vorhandene Garantiebedingungen werden unter `DIR_FS_DOCUMENT_ROOT . 'media/products/garan_archive/<terms_hash>/<terms_filename>'` atomar auf Dateiebene archiviert. Dadurch koennen Dateien mit identischem Inhalt und unterschiedlichen Namen dasselbe Hashverzeichnis verwenden. Der Mailweg verwendet den Pfad und damit den tatsaechlichen Namen der Archivdatei; er vergibt keinen abweichenden Anhangsnamen.
+- Vorhandene Garantiebedingungen werden unter `DIR_FS_DOCUMENT_ROOT . 'media/guarantee_labels/archive/terms/<terms_hash>/<terms_filename>'` atomar auf Dateiebene archiviert. Dadurch koennen Dateien mit identischem Inhalt und unterschiedlichen Namen dasselbe Hashverzeichnis verwenden. Der Mailweg verwendet den Pfad und damit den tatsaechlichen Namen der Archivdatei; er vergibt keinen abweichenden Anhangsnamen.
 - `products.products_garan_duration` und `products_content.content_type` werden ueber Installationsschema, Datenbankupdate und idempotent in `install()` angelegt. Die Modulinstallation prueft Modultabellen, Indizes und beide Core-Spalten, legt nur fehlende Bestandteile an und traegt den aktiven Status erst nach erfolgreicher Pruefung des gesamten Modulschemas ein. `add_db_fields` registriert nur `products_garan_duration` fuer den Speicherweg der Artikelverwaltung und ersetzt keine Schemaaenderung.
 - Die Modulklasse verwendet `$this->code = 'guarantee_labels'` und anfangs `$this->version = '1.00'`; funktionale und schemarelevante Modulupdates erhoehen die Version. Das Systemmodul implementiert `update()` und verwendet dort dieselbe zentrale, idempotente Schemaroutine wie in `install()`. Der Konstruktor stellt dafuer ueber `$this->properties['button_update']` die vorhandene Admin-Aktion `Modul aktualisieren` in `admin/module_export.php?set=system` bereit. Bereits installierte Shops erhalten so spaetere Tabellen-, Spalten- und Indexaenderungen; eine Deinstallation ist nicht erforderlich.
 - Beim Duplizieren eines GARAN-Artikels wird `products_garan_duration` auf `NULL` gesetzt, `products_manufacturers_model` geleert und `garan_terms` nicht mitkopiert. Das gilt unabhaengig vom Modulstatus, weil beide Felder dem Ursprungsartikel gehoeren. Bei Artikeln ohne GARAN-Daten bleibt das allgemeine Kopierverhalten unveraendert. Beim Anlegen einer Sprache werden Markierungen vom Typ `garan_terms` ebenfalls nicht aus einer anderen Sprache uebernommen.

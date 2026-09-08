@@ -29,17 +29,13 @@
 
     $guarantee_model = trim((string)$pInfo->products_manufacturers_model);
 
-    // the pull down above lists every manufacturer, the label only takes an active one
+    // The pull down above lists every manufacturer, the label only takes an active one. Asked
+    // where the renderer asks, so the mask cannot call a manufacturer fine that the label refuses.
     $guarantee_manufacturer_active = true;
     if ((int)$pInfo->manufacturers_id > 0) {
-      $guarantee_status_query = xtc_db_query("SELECT manufacturers_status
-                                                FROM ".TABLE_MANUFACTURERS."
-                                               WHERE manufacturers_id = '".(int)$pInfo->manufacturers_id."'");
+      require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
 
-      if (xtc_db_num_rows($guarantee_status_query) > 0) {
-        $guarantee_status = xtc_db_fetch_array($guarantee_status_query);
-        $guarantee_manufacturer_active = ((int)$guarantee_status['manufacturers_status'] === 1);
-      }
+      $guarantee_manufacturer_active = (count(guarantee_labels_manufacturer_names(array((int)$pInfo->manufacturers_id))) > 0);
     }
 
     // the guarantee conditions are kept as a regular article attachment, so only their state is shown

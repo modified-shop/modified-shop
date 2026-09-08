@@ -60,21 +60,44 @@
     $manufacturers_id = isset($products_data['manufacturers_id']) ? (int)$products_data['manufacturers_id'] : 0;
     $manufacturers_name = '';
 
+    // The one place that knows what an active manufacturer is, and it buffers: an import of five
+    // thousand rows asked five thousand times before.
     if ($manufacturers_id > 0) {
-      $manufacturers_query = xtc_db_query("SELECT manufacturers_name
-                                             FROM ".TABLE_MANUFACTURERS."
-                                            WHERE manufacturers_id = '".$manufacturers_id."'
-                                              AND manufacturers_status = '1'");
-      if (xtc_db_num_rows($manufacturers_query) > 0) {
-        $manufacturers = xtc_db_fetch_array($manufacturers_query);
-        $manufacturers_name = $manufacturers['manufacturers_name'];
-      }
+      require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
+
+      $manufacturers = guarantee_labels_manufacturer_names(array($manufacturers_id));
+      $manufacturers_name = isset($manufacturers[$manufacturers_id]) ? $manufacturers[$manufacturers_id] : '';
     }
 
     $model = isset($sql_data_array['products_manufacturers_model']) ? trim((string)$sql_data_array['products_manufacturers_model']) : '';
 
+    $errors = array_merge($errors, guarantee_labels_validate_texts($renderer, $manufacturers_name, $model, ERROR_GUARANTEE_LABELS_MANUFACTURER));
+
+    if (count($errors) > 0) {
+      $sql_data_array = guarantee_labels_keep_stored($sql_data_array, $products_data);
+    }
+
+    return array('data' => $sql_data_array, 'errors' => $errors);
+  }
+
+  /**
+   * The errors the two texts of a label produce.
+   *
+   * Article administration, import and the order position mask ask here, so no path accepts a
+   * text another one refuses. Only the message for a missing manufacturer differs: the position
+   * mask carries the name itself, the article takes it from the manufacturer of the catalogue.
+   *
+   * @param object $renderer
+   * @param string $manufacturers_name already trimmed
+   * @param string $model already trimmed
+   * @param string $manufacturer_missing the message for an empty manufacturer
+   * @return array ready to use messages
+   */
+  function guarantee_labels_validate_texts($renderer, $manufacturers_name, $model, $manufacturer_missing) {
+    $errors = array();
+
     if ($manufacturers_name === '') {
-      $errors[] = ERROR_GUARANTEE_LABELS_MANUFACTURER;
+      $errors[] = $manufacturer_missing;
     }
 
     if ($model === '') {
@@ -94,11 +117,7 @@
       $errors[] = sprintf(ERROR_GUARANTEE_LABELS_NOT_READY, implode(', ', $renderer->missing_requirements()));
     }
 
-    if (count($errors) > 0) {
-      $sql_data_array = guarantee_labels_keep_stored($sql_data_array, $products_data);
-    }
-
-    return array('data' => $sql_data_array, 'errors' => $errors);
+    return $errors;
   }
 
   /**

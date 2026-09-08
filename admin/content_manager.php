@@ -345,33 +345,6 @@
         'sort_order' => $sort_order,
       );
 
-      // only touched when the field was rendered, so an existing marking survives an inactive module
-      if ($type == 'products' && isset($_POST['content_type'])) {
-        $sql_data_array['content_type'] = ($_POST['content_type'] == 'garan_terms') ? 'garan_terms' : '';
-
-        if ($sql_data_array['content_type'] == 'garan_terms') {
-          require_once(DIR_FS_INC.'guarantee_labels_terms.inc.php');
-
-          $guarantee_labels_errors = guarantee_labels_check_terms($product,
-                                                                 $content_language_id,
-                                                                 $content_file_name,
-                                                                 $content_link,
-                                                                 ($subaction == 'update') ? (int)$_POST['coID'] : 0,
-                                                                 $group_ids);
-
-          // an attachment that cannot serve as guarantee conditions is kept as a normal one
-          if (count($guarantee_labels_errors) > 0) {
-            $sql_data_array['content_type'] = '';
-
-            foreach ($guarantee_labels_errors as $guarantee_labels_error) {
-              $messageStack->add_session($guarantee_labels_error, 'error');
-            }
-          }
-
-          unset($guarantee_labels_errors);
-        }
-      }
-
       if ($subaction == 'update') {
         $coID = xtc_db_prepare_input($_POST['coID']);
         xtc_db_perform($table, $sql_data_array, 'update', "content_id = '" . $coID . "'");

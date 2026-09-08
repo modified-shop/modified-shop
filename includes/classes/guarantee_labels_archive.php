@@ -36,7 +36,7 @@
       $this->garan_dir = DIR_FS_CATALOG.'media/guarantee_labels/archive/garan/';
       $this->notice_dir = DIR_FS_CATALOG.'media/guarantee_labels/archive/notice/';
       // has to stay below the document root, check_attachments() prefixes it otherwise
-      $this->terms_dir = DIR_FS_CATALOG.'media/products/garan_archive/';
+      $this->terms_dir = DIR_FS_CATALOG.'media/guarantee_labels/archive/terms/';
       $this->errors = array();
     }
 

@@ -48,7 +48,9 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AMBIGUOUS', 'guarantee conditions unique per article and language');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_GROUPS', 'guarantee conditions reachable for every customer group that sees the label');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED', 'the same file marked as guarantee conditions in several languages');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_B2B', 'B2B customer groups of the setting exist');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE', 'archived files of existing orders in place');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE', 'incomplete:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED', 'not writable:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN', 'no longer present:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED', 'affected:');

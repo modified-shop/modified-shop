@@ -11,7 +11,7 @@
 #  -----------------------------------------------------------------------------------------
 #
 # This is used with Apache WebServers
-# The archive holds the historical label and notice files of existing orders.
+# The archive holds the historical label, notice and guarantee condition files of existing orders.
 # PHP reads them locally for the order confirmation, direct HTTP requests are blocked.
 
 <FilesMatch ".*">

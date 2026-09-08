@@ -81,18 +81,14 @@
    */
   function guarantee_labels_terms_missing_groups($group_ids) {
     require_once(DIR_FS_INC.'guarantee_labels_output.inc.php');
+    require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
 
     // without the group check the storefront never reads group_ids, so nothing is unreachable
     if (!defined('GROUP_CHECK') || GROUP_CHECK != 'true') {
       return array();
     }
 
-    // the attachment administration stores the selection as "c_<id>_group,"
-    $selected = array();
-
-    if (preg_match_all('/c_([0-9]+)_group/', (string)$group_ids, $matches)) {
-      $selected = array_map('intval', $matches[1]);
-    }
+    $selected = guarantee_labels_terms_groups($group_ids);
 
     static $groups;
 

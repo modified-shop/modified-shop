@@ -48,7 +48,9 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AMBIGUOUS', 'Garantiebedingungen je Artikel und Sprache eindeutig');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_GROUPS', 'Garantiebedingungen f&uuml;r alle Kundengruppen erreichbar, die das Label sehen');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED', 'Dieselbe Datei in mehreren Sprachen als Garantiebedingung markiert');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_B2B', 'B2B-Kundengruppen der Einstellung vorhanden');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE', 'Archivierte Dateien zu bestehenden Bestellungen vorhanden');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE', 'unvollst&auml;ndig:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED', 'kein Schreibrecht:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN', 'nicht mehr vorhanden:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED', 'betroffen:');
