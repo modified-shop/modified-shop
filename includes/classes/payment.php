@@ -185,9 +185,15 @@
           }
         }
 
-        // the PayPal session may name a module that no filter lets through, never leave the page without any
-        if ($paypal_modules === true && xtc_count_payment_modules() == 0) {
+        // only the payment page may drop a PayPal restriction that lets no module through
+        if ($paypal_modules === true
+            && basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT
+            && xtc_count_payment_modules() == 0
+            )
+        {
           unset($_SESSION['paypal']['payment_modules']);
+          unset($_SESSION['payment']);
+          $this->selected_module = '';
           $this->__construct($module);
 
           return;
