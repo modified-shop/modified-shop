@@ -48,9 +48,11 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 		$shippingTimes = HitmeisterHelper::GetShippingTimes();
 		$handlingTimes = HitmeisterHelper::GetHandlingTimes();
 		$shippingGroups = HitmeisterHelper::GetShippingGroups();
+		$warehouses = HitmeisterHelper::GetWarehouses();
 		$defaultShippingTime = $preSelected['ShippingTime'];
 		$defaultHandlingTime = $preSelected['HandlingTime'];
 		$defaultShippingGroup = $preSelected['ShippingGroup'];
+		$defaultWarehouse = $preSelected['WarehouseId'];
 		// if not prepared + configuration prefers matching
 		if (    empty($preSelected['MarketplaceCategories'])
 		     && (getDBConfigValue(array('hitmeister.shippingtimematching.prefer', 'val'), $this->mpID, false))) {
@@ -83,14 +85,14 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			}
 		}
 
-		$mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
-		$mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
-		$mpCustomAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
+		$mpAttributeTitle = str_replace('%marketplace%', ML_HITMEISTER_MARKETPLACE_NAME, ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
+		$mpOptionalAttributeTitle = str_replace('%marketplace%', ML_HITMEISTER_MARKETPLACE_NAME, ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
+		$mpCustomAttributeTitle = str_replace('%marketplace%', ML_HITMEISTER_MARKETPLACE_NAME, ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
 
 		$attributeMatchingTableHtml = '
 			<tbody id="variationMatcher" class="attributesTable">
 				<tr class="headline">
-					<td colspan="3"><h4>' . str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERIC_MP_CATEGORY) . '</h4></td>
+					<td colspan="3"><h4>' . str_replace('%marketplace%', ML_HITMEISTER_MARKETPLACE_NAME, ML_GENERIC_MP_CATEGORY) . '</h4></td>
 				</tr>
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 					<th>'.ML_GENERIC_CATEGORIES_MARKETPLACE_CATEGORIE.'</th>
@@ -252,6 +254,32 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			$html .= '
 			<input type="hidden" name="shippinggroup" id="shippinggroup" value="0">';
 		}
+		if ($warehouses !== false) {
+			$html .= '
+				<tr class="even">
+					<th>'.ML_HITMEISTER_WAREHOUSE.'</th>
+					<td class="input">
+					<select name="warehouse" id="warehouse">
+					<option '.($defaultWarehouse == 0 ? 'selected ' : '').'value="0">'.ML_HITMEISTER_WAREHOUSE_DEFAULT.'</option>';
+		foreach ($warehouses as $warehouseID => $warehouseName) {
+			if ($warehouseID == $defaultWarehouse) {
+				$html .= '
+					<option selected value="'.$warehouseID.'">'.fixHTMLUTF8Entities($warehouseName, ENT_COMPAT).'</option>';
+			} else {
+				$html .= '
+					<option value="'.$warehouseID.'">'.fixHTMLUTF8Entities($warehouseName, ENT_COMPAT).'</option>';
+			}
+		}
+
+			$html .= '
+					</select>
+					</td>
+					<td class="info">&nbsp;</td>
+				</tr>';
+		} else {
+			$html .= '
+			<input type="hidden" name="warehouse" id="warehouse" value="0">';
+		}
 		$html .= '
 				<tr class="odd">
 					<th>'.ML_HITMEISTER_DELIVERY_COUNTRY.'</th>
@@ -412,6 +440,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			'ShippingTime' => array(),
 			'HandlingTime' => array(),
 			'ShippingGroup' => array(),
+			'WarehouseId' => array(),
 			'Location' => array(),
 			'Comment' => array(),
 			'PictureUrl' => array(),
@@ -423,6 +452,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			'ShippingTime' => getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID),
 			'HandlingTime' => getDBConfigValue($this->marketplace.'.handlingtime', $this->mpID),
 			'ShippingGroup' => getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0),
+			'WarehouseId' => getDBConfigValue($this->marketplace.'.warehouse', $this->mpID, 0),
 			'Location' => getDBConfigValue($this->marketplace.'.itemcountry', $this->mpID),
 			'Comment' => null,
 			'PictureUrl' => null,
@@ -454,6 +484,11 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 		if (    $preSelected['ShippingGroup'] == '0'
 		     && isset($defaults['ShippingGroup'])) {
 			$preSelected['ShippingGroup'] = $defaults['ShippingGroup'];
+		}
+		# case WarehouseId: If 0 in prepare table, use config default
+		if (    $preSelected['WarehouseId'] == '0'
+		     && isset($defaults['WarehouseId'])) {
+			$preSelected['WarehouseId'] = $defaults['WarehouseId'];
 		}
 
 		return $preSelected;
@@ -538,7 +573,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 		<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
 			<th><?php echo ML_HITMEISTER_ITEM_NAME_TITLE ?></th>
 			<td class="input">
-				<input type="text" class="fullwidth" name="Title" id="Title"
+				<input type="text" class="fullwidth" name="Title" id="Title" maxlength="<?php echo HitmeisterHelper::TITLE_MAX_LENGTH ?>"
 					   value="<?php echo fixHTMLUTF8Entities($data['Title'], ENT_COMPAT) ?>">
 			</td>
 			<td class="info"></td>
@@ -546,7 +581,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 		<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
 			<th><?php echo ML_HITMEISTER_KEYWORDS ?></th>
 			<td class="input">
-				<input type="text" class="fullwidth" name="Subtitle" id="Subtitle"
+				<input type="text" class="fullwidth" name="Subtitle" id="Subtitle" maxlength="<?php echo HitmeisterHelper::SUBTITLE_MAX_LENGTH ?>"
 					   value="<?php echo fixHTMLUTF8Entities(HitmeisterHelper::sanitizeDescription($data['Subtitle']), ENT_COMPAT) ?>">
 			</td>
 			<td class="info"><?php echo ML_HITMEISTER_KEYWORDS_INFO ?></td>

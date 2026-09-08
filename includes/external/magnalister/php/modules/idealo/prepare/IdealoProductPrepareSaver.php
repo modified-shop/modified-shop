@@ -57,6 +57,10 @@ class IdealoProductPrepareSaver {
 			'FulFillmentType' => getDBConfigValue($this->marketplace . '.shipping.methods', $this->mpId),
 			'TwoManHandlingFee' => getDBConfigValue($this->marketplace . '.shipping.methods.twomanhandlingfee', $this->mpId),
 			'DisposalFee' => getDBConfigValue($this->marketplace . '.shipping.methods.disposalfee', $this->mpId),
+			'ItemConditionType' => getDBConfigValue($this->marketplace . '.itemconditiontype', $this->mpId, 'NEW'),
+			'ItemCondition' => getDBConfigValue($this->marketplace . '.itemcondition', $this->mpId, 'EXCELLENT'),
+			'FreeReturnDays' => getDBConfigValue($this->marketplace . '.freereturndays', $this->mpId, ''),
+			'EecSpectrum' => getDBConfigValue($this->marketplace . '.eecspectrum', $this->mpId, ''),
 		);
 	}
 	

@@ -90,7 +90,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			');
 			$this->selection = array();
 			while ($row = MagnaDB::gi()->fetchNext($verifySelectionResult)) {
-				$this->selection[$row['pID']] = unserialize($row['data']);
+				$this->selection[$row['pID']] = magnaSafeUnserialize($row['data']);
 			}
 			if (!empty($this->selection)) {
 				return;
@@ -731,15 +731,6 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			if ('1' == $propertiesRow['BestOfferEnabled']) {
 				$data['submit']['BestOfferEnabled'] = 'true';
 			}
-			if ('1' == $propertiesRow['eBayPlus']) {
-				$data['submit']['eBayPlus'] = 'true';
-			} else {
-				// eBayPlus checkbox off: check if booked, if yes, submit 'false'
-				$eBayPlusSettings = geteBayPlusSettings();
-				if ('true' === $eBayPlusSettings['eBayPlus']) {
-					$data['submit']['eBayPlus'] = 'false';
-				}
-			}
 		}
 
 		# EAN, wenn aktiviert (default false)
@@ -1094,9 +1085,6 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		}
 		if (('1' == $propertiesRow['BestOfferEnabled']) && ('Chinese' != $propertiesRow['ListingType'])){
 			$data['submit']['BestOfferEnabled'] = 'true';
-		}
-		if (('1' == $propertiesRow['eBayPlus']) && ('Chinese' != $propertiesRow['ListingType'])){
-			$data['submit']['eBayPlus'] = 'true';
 		}
 		if (!empty($propertiesRow['StartTime'])) {
 			$data['submit']['StartTime'] = $propertiesRow['StartTime'];

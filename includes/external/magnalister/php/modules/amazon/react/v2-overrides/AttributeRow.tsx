@@ -361,7 +361,7 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
     };
 
     // Handle Amazon attribute value change
-    const handleAmazonValueChange = (value: string) => {
+    const handleAmazonValueChange = (value: string | string[]) => {
         onAttributeChange(attributeKey, {
             ...currentValue,
             Values: {AttributeValue: value}
@@ -410,8 +410,18 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
     // Only show matching table when:
     // 1. Selected shop attribute is type "select" (has values to match)
     // 2. Amazon attribute has predefined values OR is type "text" (allows shop values)
+    // 3. The selected Code is a REAL shop attribute. The pseudo entries
+    //    (attribute_value / freetext / database_value) have their own dedicated
+    //    editors and no shop values to map — but the v2 PHP transform declares
+    //    them with type 'select' (ReactHelper defaults missing Type to 'select'),
+    //    which used to render a bogus matching table under the marketplace-value
+    //    selector: a multiselect vid array was then misread as matching rows and
+    //    displayed as empty "Bitte wählen..." chips. (v3 declares the pseudo
+    //    entries without a type, so this never triggers there.)
     const amazonDataType = filteredAttribute.dataType?.toLowerCase() || '';
-    const shouldShowMatchingTable = selectedShopAttribute?.type === 'select' &&
+    const isPseudoCode = selectedCode === 'attribute_value' || selectedCode === 'freetext'
+        || selectedCode === 'database_value';
+    const shouldShowMatchingTable = !isPseudoCode && selectedShopAttribute?.type === 'select' &&
         (amazonDataType === 'text' ||
             (filteredAttribute.values && Object.keys(filteredAttribute.values).length > 0));
 
@@ -588,9 +598,16 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
                     <AmazonValueSelector
                         attribute={filteredAttribute}
                         value={
+                            // Handle string, array, or object value formats (v3 parity). The
+                            // array branch is essential for multiselect attributes: after
+                            // save+reload PHP delivers Values as a plain vid array
+                            // (["74","78"]) — without it the value fell through to
+                            // .AttributeValue → '' and the selected chips disappeared.
                             typeof normalizedCurrentValue?.Values === 'string'
                                 ? normalizedCurrentValue.Values
-                                : (normalizedCurrentValue?.Values as any)?.AttributeValue || ''
+                                : Array.isArray(normalizedCurrentValue?.Values)
+                                    ? normalizedCurrentValue.Values
+                                    : (normalizedCurrentValue?.Values as any)?.AttributeValue || ''
                         }
                         onChange={handleAmazonValueChange}
                         disabled={disabled}

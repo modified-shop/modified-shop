@@ -119,8 +119,14 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			$data['submit']['MarketplaceCategory'] = isset($prepare['MarketplaceCategories']) ? $prepare['MarketplaceCategories'] : '';
 			$data['submit']['MarketplaceCategoryName'] = isset($prepare['MarketplaceCategoriesName']) ? $prepare['MarketplaceCategoriesName'] : '';
 			$data['submit']['CategoryAttributes'] = $categoryAttributes;
-			$data['submit']['Title'] = isset($prepare['Title']) ? $prepare['Title'] : $defaultTitle;
-			$data['submit']['Subtitle'] = isset($prepare['Subtitle']) ? $prepare['Subtitle'] : HitmeisterHelper::sanitizeDescription($defaultSubtitle);
+			/* Prepared values are already cut to the marketplace limit when they are
+			   stored, the shop fallbacks are not -- so only those are cut here. */
+			$data['submit']['Title'] = isset($prepare['Title'])
+				? $prepare['Title']
+				: HitmeisterHelper::truncateTitle($defaultTitle);
+			$data['submit']['Subtitle'] = isset($prepare['Subtitle'])
+				? $prepare['Subtitle']
+				: HitmeisterHelper::sanitizeDescription($defaultSubtitle, HitmeisterHelper::SUBTITLE_MAX_LENGTH);
 			$data['submit']['Description'] = isset($prepare['Description']) ? $prepare['Description'] : $defaultDescription;
 
             $imagePath = getDBConfigValue($this->marketplace.'.imagepath', $this->_magnasession['mpID'], '');
@@ -166,6 +172,12 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				$data['submit']['ShippingGroup'] = $prepare['ShippingGroup'];
 			} else if (getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0) != 0) {
 				$data['submit']['ShippingGroup'] = getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0);
+			// if nothing set, don't submit
+			}
+			if (isset($prepare['WarehouseId']) && $prepare['WarehouseId'] != 0) {
+				$data['submit']['WarehouseId'] = $prepare['WarehouseId'];
+			} else if (getDBConfigValue($this->marketplace.'.warehouse', $this->mpID, 0) != 0) {
+				$data['submit']['WarehouseId'] = getDBConfigValue($this->marketplace.'.warehouse', $this->mpID, 0);
 			// if nothing set, don't submit
 			}
 			$data['submit']['Location'] = isset($prepare['Location']) ? $prepare['Location'] : $defaultLocation;

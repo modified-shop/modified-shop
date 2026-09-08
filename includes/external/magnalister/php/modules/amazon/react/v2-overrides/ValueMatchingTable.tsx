@@ -182,8 +182,8 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
         return matchingRows.filter(row => {
             const shopValue = row.Shop?.Value?.toLowerCase() || '';
             const shopKey = row.Shop?.Key?.toLowerCase() || '';
-            const amazonValue = row.Marketplace?.Value?.toLowerCase() || '';
-            const amazonKey = row.Marketplace?.Key?.toLowerCase() || '';
+            const amazonValue = (typeof row.Marketplace?.Value === 'string' ? row.Marketplace.Value.toLowerCase() : '') || '';
+            const amazonKey = (typeof row.Marketplace?.Key === 'string' ? row.Marketplace.Key.toLowerCase() : '') || '';
 
             return shopValue.includes(lowerSearch) ||
                 shopKey.includes(lowerSearch) ||
@@ -196,7 +196,7 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
     const handleRowChange = React.useCallback((
         rowIndex: number,
         field: { type: string; key: string },
-        value: string
+        value: string | string[]
     ) => {
         const updatedRows = [...matchingRows];
         const row = updatedRows[rowIndex];
@@ -206,7 +206,7 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
             (row.Shop as any)[field.key] = value;
 
             // Auto-set the shop value label from loaded shop values
-            if (field.key === 'Key' && value) {
+            if (field.key === 'Key' && value && typeof value === 'string') {
                 const shopValues = shopAttribute?.values || loadedShopValues || {};
                 row.Shop.Value = shopValues[value] || value;
             }
@@ -215,7 +215,7 @@ const ValueMatchingTable: React.FC<ValueMatchingTableProps> = ({
             (row.Marketplace as any)[field.key] = value;
 
             // Auto-set the marketplace value label from amazonAttribute.values
-            if (field.key === 'Key' && value && amazonAttribute?.values) {
+            if (field.key === 'Key' && value && typeof value === 'string' && amazonAttribute?.values) {
                 row.Marketplace.Value = amazonAttribute.values[value] as string || value;
             }
         }

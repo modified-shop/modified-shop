@@ -707,26 +707,6 @@ function geteBaySingleReturnPolicyDetail($detailName) {
     return $returnPolicyDetails[$detailName];
 }
 
-function geteBayPlusSettings() {
-    global $_MagnaSession;
-    $mpID = $_MagnaSession['mpID'];
-    $site = getDBConfigValue('ebay.site', $mpID);
-    initArrayIfNecessary($_MagnaSession, array($mpID, $site, 'eBayPlusSettings'));
-
-    if (!empty($_MagnaSession[$mpID][$site]['eBayPlusSettings'])) {
-        return $_MagnaSession[$mpID][$site]['eBayPlusSettings'];
-    }
-    try {
-        $eBayPlusSettings = MagnaConnector::gi()->submitRequest(array(
-            'ACTION' => 'GeteBayAccountSettings'
-        ));
-    } catch (MagnaException $e) {
-        $eBayPlusSettings = array('DATA' => array('eBayPlus' => 'false', 'eBayPlusListingDefault' => 'false'));
-    }
-    $_MagnaSession[$mpID][$site]['eBayPlusSettings'] = $eBayPlusSettings['DATA'];
-    return $_MagnaSession[$mpID][$site]['eBayPlusSettings'];
-}
-
 function getEBayAttributes($cID, $mode, $preselectedValues = array()) {
     global $_MagnaSession;
     # erst schauen obs ItemSpecifics gibt (sind neuer & das andere ist uU deprecated)
@@ -1123,7 +1103,7 @@ function makePrice($pID, $priceType, $takePrepared = false, $variationPrice = 0.
                 break;
             }
         default:
-            { # 'FixedPriceItem' oder 'StoresFixedPrice'
+            { # 'FixedPriceItem'
                 $which = 'fixed';
                 break;
             }
@@ -1245,7 +1225,7 @@ function makePriceByStrikePriceSettings($pID, $StrikePriceKind, $StrikePriceGrou
 }
 
 # Hilfsfunktion: Anzahl bestimmen
-function makeQuantity($pID, $ListingType = 'StoresFixedPrice') {
+function makeQuantity($pID, $ListingType = 'FixedPriceItem') {
     global $_MagnaSession;
     switch ($ListingType) {
         case 'Chinese':
@@ -1255,7 +1235,7 @@ function makeQuantity($pID, $ListingType = 'StoresFixedPrice') {
                 break;
             }
         default:
-            { # 'FixedPriceItem' oder 'StoresFixedPrice'
+            { # 'FixedPriceItem'
                 $calc_method = getDBConfigValue('ebay.fixed.quantity.type', $_MagnaSession['mpID']);
                 $qValue = (int)getDBConfigValue('ebay.fixed.quantity.value', $_MagnaSession['mpID']);
                 $maxQuantity = (int)getDBConfigValue('ebay.maxquantity', $_MagnaSession['mpID'], 0);
@@ -1851,15 +1831,21 @@ function eBayInsertPrepareData($data) {
     if (($hp = magnaContribVerify('eBayInsertPrepareData', 1)) !== false) {
         require($hp);
     }
+    if (isset($data['Title'])) {
+        $data['Title'] = EbayHelper::truncateTitle($data['Title']);
+    }
+    if (isset($data['Subtitle'])) {
+        $data['Subtitle'] = EbayHelper::truncateSubtitle($data['Subtitle']);
+    }
     MagnaDB::gi()->insert(TABLE_MAGNA_EBAY_PROPERTIES, $data, true);
 }
 
 function SaveEBaySingleProductProperties($pID, $itemDetails) {
     global $_MagnaSession;
     $row = prepareEBayPropertiesRow($pID, $itemDetails);
-    $row['Title'] = mb_substr(trim(strip_tags(html_entity_decode($itemDetails['Title']))), 0, 80, 'UTF-8');
+    $row['Title'] = EbayHelper::truncateTitle(trim(strip_tags($itemDetails['Title'])));
     if (array_key_exists('enableSubtitle', $itemDetails) && ('on' == $itemDetails['enableSubtitle']) && !empty($itemDetails['Subtitle'])) {
-        $row['Subtitle'] = mb_substr(trim(strip_tags($itemDetails['Subtitle'])), 0, 55, 'UTF-8');
+        $row['Subtitle'] = EbayHelper::truncateSubtitle(trim(strip_tags($itemDetails['Subtitle'])));
     }
     if (!empty($itemDetails['PictureURL'])) {
         if (is_array($itemDetails['PictureURL'])) {
@@ -1876,9 +1862,6 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
     }
     if (array_key_exists('bestOfferEnabled', $itemDetails) && ('on' == $itemDetails['bestOfferEnabled']) && ('Chinese' != $itemDetails['ListingType'])) {
         $row['BestOfferEnabled'] = '1';
-    }
-    if (array_key_exists('plus', $itemDetails) && ('on' == $itemDetails['plus']) && ('Chinese' != $itemDetails['ListingType'])) {
-        $row['eBayPlus'] = '1';
     }
     if (!empty($itemDetails['startTime'])) {
         $row['StartTime'] = $itemDetails['startTime'];
@@ -1992,14 +1975,14 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
         $pID = $dataRow['products_id'];
         #$row['Title'] = (isset($prefilled_data_by_pID[$pID]) && isset($prefilled_data_by_pID[$pID]['Title']))
         #	? $prefilled_data_by_pID[$pID]['Title']
-        $row['Title'] = mb_substr(eBaySubstituteTemplate($_MagnaSession['mpID'], $dataRow['products_id'], $eBayTitleTemplate, array(
+        $row['Title'] = EbayHelper::truncateTitle(eBaySubstituteTemplate($_MagnaSession['mpID'], $dataRow['products_id'], $eBayTitleTemplate, array(
             '#TITLE#' => strip_tags($dataRow['products_name']),
             '#ARTNR#' => $dataRow['products_model']
-        )), 0, 80, 'UTF-8');
+        )));
         if ('on' == $itemDetails['enableSubtitle'] && !empty($dataRow['products_short_description'])) {
             #$row['Subtitle'] = (isset($prefilled_data_by_pID[$pID]) && isset($prefilled_data_by_pID[$pID]['Subtitle']))
             #? $prefilled_data_by_pID[$pID]['Subtitle']
-            $row['Subtitle'] = mb_substr(trim(strip_tags($dataRow['products_short_description'])), 0, 55, 'UTF-8');
+            $row['Subtitle'] = EbayHelper::truncateSubtitle(trim(strip_tags($dataRow['products_short_description'])));
         }
         if ('on' == $itemDetails['privateListing']) {
             $row['PrivateListing'] = '1';
@@ -2009,9 +1992,6 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
         }
         if (('on' == $itemDetails['bestOfferEnabled']) && ('Chinese' != $itemDetails['ListingType'])) {
             $row['BestOfferEnabled'] = '1';
-        }
-        if (('on' == $itemDetails['plus']) && ('Chinese' != $itemDetails['ListingType'])) {
-            $row['eBayPlus'] = '1';
         }
         if (!empty($itemDetails['startTime'])) {
             $row['StartTime'] = $itemDetails['startTime'];

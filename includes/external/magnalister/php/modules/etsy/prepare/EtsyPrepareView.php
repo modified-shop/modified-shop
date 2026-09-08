@@ -37,6 +37,8 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 
 	protected $defaultProcessingProfile = '';
 
+	protected $defaultReturnPolicy = '';
+
 	protected function initCatMatching() {
 		$params = array();
 		foreach (array('mpID', 'marketplace', 'marketplaceName') as $attr) {
@@ -50,6 +52,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		parent::__construct($params);
 		$this->defaultShippingProfile = getDBConfigValue('etsy.ShippingProfile', $this->mpID);
 		$this->defaultProcessingProfile = getDBConfigValue('etsy.ProcessingProfile', $this->mpID);
+		$this->defaultReturnPolicy = getDBConfigValue('etsy.ReturnPolicy', $this->mpID);
 	}
 	
 	protected function getSelection() {
@@ -62,7 +65,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		    SELECT ep.products_id, ep.products_model,
 		           ep.Title, ep.Description, 
 		           ep.PrimaryCategory, ep.ShopVariation,
-		           ep.ShippingProfile, ep.ProcessingProfile, ep.Whomade, ep.Whenmade, ep.IsSupply, ep.Image,
+		           ep.ShippingProfile, ep.ProcessingProfile, ep.ReturnPolicy, ep.Whomade, ep.Whenmade, ep.IsSupply, ep.Image,
 		           pd.products_name, pd.products_description
 		      FROM ' . TABLE_MAGNA_ETSY_PREPARE . ' ep
 		';
@@ -291,6 +294,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 			'PrimaryCategory' => array(),
 			'ShippingProfile' => array(),
 			'ProcessingProfile' => array(),
+			'ReturnPolicy' => array(),
 			'Whomade' => array(),
 			'Whenmade' => array(),
 			'IsSupply' => array(),
@@ -320,6 +324,9 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		}
         if ($preSelected['ProcessingProfile'] === null) {
 			$preSelected['ProcessingProfile'] = $this->defaultProcessingProfile;
+		}
+		if ($preSelected['ReturnPolicy'] === null) {
+			$preSelected['ReturnPolicy'] = $this->defaultReturnPolicy;
 		}
 		if ($preSelected['Whomade'] === null) {
 			$preSelected['Whomade'] = getDBConfigValue('etsy.whomade', $this->mpID);
@@ -420,6 +427,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		);
 		$aShippingProfileValues = EtsyHelper::showShippingProfiles();
         $aProcessingProfileValues = EtsyHelper::showProcessingProfiles();
+        $aReturnPolicyValues = EtsyHelper::showReturnPolicies();
 		$html .= '
 			<tbody>
 				<tr class="headline">
@@ -478,7 +486,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 					if ($preSelected['ShippingProfile'] == $k) $s = 'selected="selected"';
 					else $s = '';
 					$html .= '
-							<option '.$s.' value='.$k.'>'.$v.'</option>';
+							<option '.$s.' value="'.htmlspecialchars($k, ENT_QUOTES, 'UTF-8').'">'.htmlspecialchars($v, ENT_QUOTES, 'UTF-8').'</option>';
 				}
 				$html .= '
 						</select>
@@ -502,21 +510,36 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 						<select name="processingprofile">';
                         foreach ($aProcessingProfileValues as $processingStateLabel => $processingProfiles) {
                             if (is_array($processingProfiles) && !empty($processingProfiles)) {
-                                $html .= '<optgroup label="' . $processingStateLabel . '">';
+                                $html .= '<optgroup label="'.htmlspecialchars($processingStateLabel, ENT_QUOTES, 'UTF-8').'">';
                                 foreach ($processingProfiles as $k => $v) {
                                     if ($preSelected['ProcessingProfile'] == $k) $s = 'selected="selected"';
                                     else $s = '';
-                                    $html .= '<option ' . $s . ' value=' . $k . '>' . $v . '</option>';
+                                    $html .= '<option '.$s.' value="'.htmlspecialchars($k, ENT_QUOTES, 'UTF-8').'">'.htmlspecialchars($v, ENT_QUOTES, 'UTF-8').'</option>';
                                 }
                                 $html .= '</optgroup>';
                             } else {
-                                $html .= '<option  value=' . $processingStateLabel . '>' . $processingProfiles . '</option>';
+                                $html .= '<option  value="'.htmlspecialchars($processingStateLabel, ENT_QUOTES, 'UTF-8').'">'.htmlspecialchars($processingProfiles, ENT_QUOTES, 'UTF-8').'</option>';
                             }
                         }
                         $html .= '
 						</select>
 					</td>
 					<td class="info">&nbsp;</td>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_ETSY_RETURN_POLICY . '</th>
+					<td class="input">
+						<select name="returnpolicy">';
+				foreach ($aReturnPolicyValues as $k =>$v) {
+					if ($preSelected['ReturnPolicy'] == $k) $s = 'selected="selected"';
+					else $s = '';
+					$html .= '
+							<option '.$s.' value="'.htmlspecialchars($k, ENT_QUOTES, 'UTF-8').'">'.htmlspecialchars($v, ENT_QUOTES, 'UTF-8').'</option>';
+				}
+				$html .= '
+						</select>
+					</td>
+					<td class="info"></td>
 				</tr>
 			</tbody>';
 		ob_start();

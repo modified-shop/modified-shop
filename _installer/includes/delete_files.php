@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  // set all files to be deleted                     
+  // set all files to be deleted
   $unlink_file = array(
     '_installer/images/icons/error.gif',
     '_installer/banktransfer_blz.sql',
@@ -299,7 +299,7 @@
     'images/billpay_logo_paylater_RechnungPlus_2.png',
     'images/billpay_logo_paylater.png',
     'images/billpay_ok.png',
-    'images/billpay_waiting.gif',    
+    'images/billpay_waiting.gif',
     'images/categories/noimage.gif',
     'images/icons/kl_epaypal_de.gif',
     'images/icons/kl_epaypal_en.gif',
@@ -429,13 +429,21 @@
     'includes/external/magnalister/images/logos/modules.php',
     'includes/external/magnalister/js/marketplaces/meinpaket/variationmatching.js',
     'includes/external/magnalister/lang/ababab',
+    'includes/external/magnalister/php/modules/amazon/classes/ProductList/Dependency/MLProductListDependencyAmazonHistoryAction.php',
+    'includes/external/magnalister/php/modules/amazon/classes/ProductList/templates/dependency/action/amazonhistorybutton.php',
     'includes/external/magnalister/php/modules/ayn24.php',
+    'includes/external/magnalister/php/modules/cdiscount/classes/ProductList/templates/dependency/action/cdiscounthistorybutton.php',
+    'includes/external/magnalister/php/modules/crowdfox/classes/ProductList/templates/dependency/action/crowdfoxhistorybutton.php',
+    'includes/external/magnalister/php/modules/ebay/crons/get_ebay_orders.php',
+    'includes/external/magnalister/php/modules/hitmeister/classes/ProductList/templates/dependency/action/hitmeisterhistorybutton.php',
     'includes/external/magnalister/php/modules/idealo/classes/IdealoCheckinSubmit.php',
     'includes/external/magnalister/php/modules/idealo/crons/IdealoImportOrders.php',
     'includes/external/magnalister/php/modules/idealo/crons/IdealoSyncOrderStatus.php',
     'includes/external/magnalister/php/modules/laary.php',
     'includes/external/magnalister/php/modules/meinpaket.php',
     'includes/external/magnalister/php/modules/metro/classes/MetroShippingDetailsProcessor.php',
+    'includes/external/magnalister/php/modules/priceminister/classes/ProductList/templates/dependency/action/priceministerhistorybutton.php',
+    'includes/external/magnalister/php/modules/tradoria/classes/ProductList/templates/dependency/action/tradoriahistorybutton.php',
     'includes/external/micropayment/send_order.php',
     'includes/external/payone/modules/send_order.php',
     'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php',
@@ -1269,8 +1277,8 @@
     'wsdl_iclear_order.php',
     'xtbcallback.php',
   );
-  
-  
+
+
   if (!isset($unlinked_files)) {
     $unlinked_files = array(
       'error' => array(
@@ -1284,7 +1292,7 @@
     );
   }
   foreach ($unlink_file as $unlink) {
-    if (trim($unlink) != '' && is_file(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
+    if (trim($unlink) != '' && is_file(DIR_FS_DOCUMENT_ROOT.$unlink)) {
       if (unlink(DIR_FS_DOCUMENT_ROOT.$unlink) === true) {
         $unlinked_files['success']['files'][] = $unlink;
       } else {

@@ -2,6 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import {I18nStrings, ShopAttribute, ShopAttributes} from '../../../types';
 import {SELECT_CONFIGS} from '../config/selectConfig';
+import {isValueListType} from '../../../constants/attributeTypes';
 
 interface AttributeSelectorProps {
   attributeKey: string;
@@ -48,10 +49,13 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
    * No animation needed - just a clear visual indicator.
    */
 
+  // Option type extended with group label for display in selected value
+  type SelectOption = { value: string; label: string; isDisabled?: boolean; groupLabel?: string };
+
   // Prepare options for react-select
   const selectOptions = React.useMemo(() => {
-    const simpleOptions: Array<{ value: string; label: string; isDisabled?: boolean }> = [];
-    const groupedOptions: Array<{ label: string; options: Array<{ value: string; label: string; isDisabled?: boolean }> }> = [];
+    const simpleOptions: Array<SelectOption> = [];
+    const groupedOptions: Array<{ label?: string; options: Array<SelectOption> }> = [];
 
     // Determine if freetext should be disabled
     // Freetext is disabled when Amazon attribute is type "select"
@@ -68,7 +72,7 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
       if (typeof group === 'object') {
         // Check if this is a grouped option (has optGroupClass)
         if (group.optGroupClass) {
-          const groupOptions: Array<{ value: string; label: string; isDisabled?: boolean }> = [];
+          const groupOptions: Array<SelectOption> = [];
 
           Object.entries(group).forEach(([key, attr]) => {
             if (key !== 'optGroupClass' && typeof attr === 'object') {
@@ -85,15 +89,24 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
               else if (key === 'attribute_value') {
                 isDisabled = isAttributeValueDisabled;
               }
-              // When Amazon type is "select", only allow shop attributes with type "select"
-              else if (dataType === 'select' && attribute.type && attribute.type !== 'select') {
+              // When the marketplace attribute is "select" (selection-only), allow any shop
+              // attribute that exposes a value list to match against — not only pure "select"
+              // but also "selectAndText" / "multiSelect" (e.g. PrestaShop product features
+              // (selectAndText) and PrestaShop tags / Shopware properties (multiSelect),
+              // which are never typed pure "select"). See OTRS #607858.
+              else if (
+                dataType === 'select' &&
+                attribute.type &&
+                !isValueListType(attribute.type)
+              ) {
                 isDisabled = true;
               }
 
               groupOptions.push({
                 value: key,
                 label: debugMode ? `${attribute.name} [${key}]` : attribute.name,
-                isDisabled: isDisabled
+                isDisabled: isDisabled,
+                groupLabel: groupName
               });
             }
           });
@@ -146,6 +159,27 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
   };
 
 
+  // Format option label: show group prefix only in the selected value display
+  const formatOptionLabel = (option: SelectOption, meta: { context: string }) => {
+    if (meta.context === 'value' && option.groupLabel) {
+      return (
+        <span>
+          <span style={{ color: '#6c757d', fontSize: '12px' }}>{option.groupLabel}</span>
+          <span style={{ color: '#adb5bd', margin: '0 4px' }}>&rsaquo;</span>
+          <span>{option.label}</span>
+        </span>
+      );
+    }
+    return option.label;
+  };
+
+  // Format group label: bold header with bottom border
+  const formatGroupLabel = (group: { label?: string }) => (
+    <span style={{ fontWeight: 600, fontSize: '13px', color: '#343a40', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+      {group.label || ''}
+    </span>
+  );
+
   if (useSearchableSelect) {
     // Combine simple options with grouped options for React-Select
     const reactSelectOptions = [
@@ -169,6 +203,8 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
             isClearable={false}
             placeholder={i18n.pleaseSelect || 'Please select...'}
             noOptionsMessage={() => 'No options found'}
+            formatOptionLabel={formatOptionLabel}
+            formatGroupLabel={formatGroupLabel}
             styles={{
               ...SELECT_CONFIGS.ATTRIBUTE_SELECTOR.styles,
               container: (provided: any) => ({
@@ -181,6 +217,22 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
                 minWidth: '200px',
                 width: 'auto',
                 borderColor: hasError ? '#e31a1c' : (provided.borderColor || '#ccc')
+              }),
+              groupHeading: (provided: any) => ({
+                ...provided,
+                padding: '6px 12px',
+                margin: 0,
+                backgroundColor: '#f1f3f5',
+                borderBottom: '1px solid #dee2e6',
+                borderTop: '1px solid #dee2e6'
+              }),
+              group: (provided: any) => ({
+                ...provided,
+                padding: 0
+              }),
+              option: (provided: any, state: any) => ({
+                ...SELECT_CONFIGS.ATTRIBUTE_SELECTOR.styles.option(provided, state),
+                paddingLeft: state.data?.groupLabel ? '24px' : '12px'
               })
             }}
             className={`attribute-selector-react-select ${hasError ? 'has-error' : ''}`}

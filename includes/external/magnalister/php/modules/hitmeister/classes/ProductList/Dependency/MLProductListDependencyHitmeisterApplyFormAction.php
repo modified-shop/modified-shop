@@ -18,6 +18,7 @@
  * -----------------------------------------------------------------------------
  */
 require_once DIR_MAGNALISTER_INCLUDES.'lib/classes/ProductList/Dependency/MLProductListDependency.php';
+require_once(DIR_MAGNALISTER_MODULES.'hitmeister/HitmeisterHelper.php');
 class MLProductListDependencyHitmeisterApplyFormAction extends MLProductListDependency {
 	public function getActionBottomLeftTemplate(){
 		return 'hitmeisterapplyformleft';
@@ -116,8 +117,8 @@ class MLProductListDependencyHitmeisterApplyFormAction extends MLProductListDepe
 				MagnaDB::gi()->update(TABLE_MAGNA_HITMEISTER_PREPARE, array (
 					'products_id' => $aRow['PID'],
 					'products_model' => $aRow['PModel'],
-					'Title' => $aNewRow['Title'],
-					'Subtitle' => $aNewRow['Subtitle'],
+					'Title' => HitmeisterHelper::truncateTitle($aNewRow['Title']),
+					'Subtitle' => HitmeisterHelper::truncateSubtitle($aNewRow['Subtitle']),
 					'Description' => $aNewRow['Description'],
 					'PictureURL' => $aNewRow['PictureURL'],
 				), $where);

@@ -22,7 +22,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require(DIR_MAGNALISTER_MODULES.'magnacompatible/config.php');
 
-$mpconfig['auth']['authkeys'] = array('access.MPUSERNAME', 'access.MPPASSWORD', 'access.PORT', 'access.FTPSERVER');
+$mpconfig['auth']['authkeys'] = array('access.MPUSERNAME', 'access.MPPASSWORD');
 
 $mpconfig['pages']['conf']['class'] = 'Check24Configure';
 $mpconfig['pages']['prepare']['class'] = 'Check24Prepare';

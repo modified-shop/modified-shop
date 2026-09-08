@@ -169,6 +169,7 @@ define('ML_GENERIC_ERROR_RECOMMENDATIONS', 'magnalister error handling hints');
 define('ML_GENERIC_NO_IMAGE', 'No picture');
 define('ML_GENERIC_TAKE_ALL_IMAGES', 'Use all images');
 define('ML_GENERIC_NO_INVENTORY', 'The inventory is empty at this moment');
+define('ML_GENERIC_NO_INVENTORY_ITEMS', 'No shipments found');
 define('ML_GENERIC_EAN', 'EAN');
 define('ML_GENERIC_NO_TESTMAIL_SENT', 'The test mail hasn\'t been sent because the email template hasn\'t been configured properly. Please correct all fields');
 define('ML_GENERIC_TESTMAIL_SENT_FAIL', 'The test mail couldn\'t be sent because an error occured.');
@@ -346,6 +347,7 @@ define('ML_GENERAL_VARMATCH_SELECT_TABLE_PLACEHOLDER', 'Select table...');
 define('ML_GENERAL_VARMATCH_SELECT_COLUMN_PLACEHOLDER', 'Select column...');
 define('ML_GENERAL_VARMATCH_SELECT_TABLE_FIRST_PLACEHOLDER', 'Select table first...');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_COLUMN', 'Choose column: ');
+define('ML_GENERAL_VARMATCH_DB_MATCHING_INFO', 'Database matching (for experts): \'Choose table\' = the table in your shop database that contains the desired value. \'Choose column\' = the column of that table whose value is sent to the marketplace. \'Alias products_id\' = the column that links the table to the product (default: products_id; alternatively e.g. manufacturers_id). For each product the value is resolved via SELECT [column] FROM [table] WHERE [alias] = products_id.');
 define('ML_GENERAL_VARMATCH_DELETE_CUSTOM_BTN_TITLE', 'Delete the variation matching group');
 define('ML_GENERAL_VARMATCH_DELETE_CUSTOM_BTN_CONTENT', 'Do you really want to remove the custom group?<br />All variation matchings included will be also deleted.');
 define('ML_GENERAL_VARMATCH_ERROR_CUSTOM_ATTRIBUTE_NAME_INVALID', 'Custom attribute %attributeName% can not be the same as any predefined %marketplace% attribute or other custom attribute. Please choose different name.');
@@ -372,6 +374,9 @@ define('ML_GENERAL_VARMATCH_MANUAL_MATCHING', 'Specify your own values');
 define('ML_GENERAL_VARMATCH_SAVED_SUCCESSFULLY', 'All selected values have been matched successfully. You can now prepare products using the matched attributes, or continue with the attribute matching.');
 define('ML_GENERAL_VARMATCH_NOTICE_NOT_ALL_AUTO_MATCHED', 'Some of the selected values could not be matched. Not matched values are displayed as drop down fields. Matched values can be already used in the product preparation.');
 define('ML_GENERAL_VARMATCH_SAVE_BUTTON', 'SAVE AND CLOSE');
+define('ML_GENERAL_VARMATCH_ADD_RULE', 'Add Rule');
+define('ML_GENERAL_VARMATCH_DELETE_RULE', 'Delete Rule');
+define('ML_GENERAL_VARMATCH_CI_TITLE', '%marketplace% Category-Independent Attributes');
 define('ML_GENERAL_VARMATCH_SELECT_CATEGORY', 'Please select a variation group');
 define('ML_GENERAL_VARMATCH_SEPARATOR_LINE', '------------------------------------------------------');
 define('ML_GENERAL_VARMATCH_ADDITIONAL_OPTIONS', 'More Options');
@@ -435,6 +440,7 @@ define('ML_LABEL_DESELECT_ALL_PRODUCTS', 'Remove all items');
 define('ML_LABEL_DESELECT_ALL_PRODUCTS_OF_CATEGORY', 'Remove all items of this category');
 define('ML_LABEL_DETAILS_FOR', 'Details for');
 define('ML_LABEL_PRODUCTS_IMAGES', 'Product images');
+define('ML_LABEL_MAIN_IMAGE', 'Main image');
 define('ML_LABEL_DO_NOT_CHANGE', 'Do not change');
 define('ML_LABEL_SHIPPING_TIME_SHOP', 'Shipping time shop');
 define('ML_LABEL_EDIT', 'Edit');
@@ -640,7 +646,7 @@ define('ML_RATE_XTCM_BASIC6', 'xt:MultiConnect Basic');
 define('ML_RATE_ROOKIE', 'Rookie');
 define('ML_RATE_BUSINESS2', 'Business 2');
 define('ML_RATE_SWITCH', '%s &ndash; valid until %s. Then switch to applied %s service plan.');
-define('ML_RATE_SWITCH_TRIAL', 'ML_RATE_SWITCH_TRIAL');
+define('ML_RATE_SWITCH_TRIAL', 'Trial period until %s. Service plan after trial period: %s');
 define('ML_RATE_ULTIMATE12', 'Ultimate 12');
 define('ML_RATE_FLAT2', 'Flat 2');
 define('ML_RATE_XTCM_LIGHT6', 'xt:MultiConnect Light');
@@ -747,6 +753,7 @@ define('ML_LABEL_STATS_PERCENT_OF_ORDERS', '% of Orders');
 define('ML_LABEL_STATS_ORDERS_PER_MARKETPLACE', 'Orders per Marketplace');
 define('ML_MATCH_TEXT_TO_SHIPPING_MODULE', 'Match shipping method with entries from webshop shipping module');
 define('ML_MATCH_CARRIER_TO_DB', 'Match shipping carrier from a database field');
+define('ML_MATCH_TEMU_CARRIER_TO_SHIPPING_MODULE', 'Match a Temu carrier to the shop shipping method');
 define('ML_GENERAL_VARMATCH_MULTI_SELECT', 'Multiselect');
 
 // React Component Translations (added for new attribute matching UI)
@@ -1669,6 +1676,7 @@ define('ML_TITLE_ETSY_WARNING_ZERO_STOCK_COST', 'Automatic Synchronization incl.
 define('ML_ETSY_MAX_PICTURES', 'Maximum 10 images');
 define('ML_ETSY_WHO_MADE', 'Who did it?');
 define('ML_ETSY_SHIPPING_TEMPLATE', 'Shipping template');
+define('ML_ETSY_RETURN_POLICY', 'Etsy Return Policy');
 define('ML_ETSY_PRICE_SHOP_ETSY', 'Price Shop / Etsy');
 define('ML_ETSY_STOCK_FOR_ETSY', 'Quantity for Etsy');
 define('ML_ETSY_LISTING_ID', 'Etsy Listing Id');
@@ -1707,6 +1715,8 @@ define('ML_ETSY_WHEN_MADE_1990_1998', '1990-1998');
 define('ML_ETSY_WHEN_MADE_BEFORE_1999', 'Before 1999');
 define('ML_ETSY_WHEN_MADE_BEFORE_2000', 'Before 2000');
 define('ML_TEXT_ETSY_WARNING_ZERO_STOCK_COST', 'This option causes you offers to reactivate as soon as the Quantity in your Shop is > 0. If the quantity goes to 0, offers are deactivated. Please note that reactivation of offers is subject to fee on Etsy ');
+define('ML_TITLE_ETSY_WARNING_USE_DUMMY_DATA', 'Use Dummy Addresses');
+define('ML_TEXT_ETSY_WARNING_USE_DUMMY_DATA', 'Etsy doesn\'t provide buyer addresses to new merchants (after February 2024) via API. If you activate this checkbox, we will use placeholder data, so that the order can be imported to your shop.<br /><br /><strong>WARNING:</strong> If you use this function, set the status of imported Etsy orders so that no automatic processing happens until you correct the address manually.');
 define('ML_ETSY_PROCESSING_PROFILE', 'Etsy Processing Profiles');
 define('ML_ETSY_PROCESSING_PROFILE_HELP', '
 A Processing Profile defines how and when your order and its product will be prepared and shipped to the customer. In Etsy this includes options like:
@@ -1829,52 +1839,65 @@ define('ML_MODULE_GUENSTIGER', 'guenstiger.de');
 
 // ==================== Hitmeister ====================
 
-define('ML_HITMEISTER_ERROR_DESCRITPION', 'ML_HITMEISTER_ERROR_DESCRITPION');
-define('ML_HITMEISTER_VARMATCH_ADDITIONAL_CATEGORY_LABEL', 'ML_HITMEISTER_VARMATCH_ADDITIONAL_CATEGORY_LABEL');
-define('ML_HITMEISTER_VARMATCH_FREE_TEXT_LABEL', 'ML_HITMEISTER_VARMATCH_FREE_TEXT_LABEL');
-define('ML_HITMEISTER_VARMATCH_ADDITIONAL_ATTRIBUTE_LABEL', 'ML_HITMEISTER_VARMATCH_ADDITIONAL_ATTRIBUTE_LABEL');
-define('ML_HITMEISTER_VARMATCH_DEFINE_NAME', 'ML_HITMEISTER_VARMATCH_DEFINE_NAME');
-define('ML_HITMEISTER_VARMATCH_SELECT_VARIANT_GROUP', 'ML_HITMEISTER_VARMATCH_SELECT_VARIANT_GROUP');
-define('ML_HITMEISTER_VARMATCH_AJAX_ERROR', 'ML_HITMEISTER_VARMATCH_AJAX_ERROR');
-define('ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_OK', 'ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_OK');
-define('ML_HITMEISTER_SUBTITLE', 'ML_HITMEISTER_SUBTITLE');
+define('ML_HITMEISTER_MARKETPLACE_NAME', 'Kaufland');
+define('ML_HITMEISTER_ERROR_DESCRITPION', 'ML_HITMEISTER_ERROR_DESCRITPION'); //never used
+define('ML_HITMEISTER_VARMATCH_ADDITIONAL_CATEGORY_LABEL', 'ML_HITMEISTER_VARMATCH_ADDITIONAL_CATEGORY_LABEL'); //never used
+define('ML_HITMEISTER_VARMATCH_FREE_TEXT_LABEL', 'ML_HITMEISTER_VARMATCH_FREE_TEXT_LABEL'); //never used
+define('ML_HITMEISTER_VARMATCH_ADDITIONAL_ATTRIBUTE_LABEL', 'ML_HITMEISTER_VARMATCH_ADDITIONAL_ATTRIBUTE_LABEL'); //never used
+define('ML_HITMEISTER_VARMATCH_DEFINE_NAME', 'ML_HITMEISTER_VARMATCH_DEFINE_NAME'); //never used
+define('ML_HITMEISTER_VARMATCH_SELECT_VARIANT_GROUP', 'ML_HITMEISTER_VARMATCH_SELECT_VARIANT_GROUP'); //never used
+define('ML_HITMEISTER_VARMATCH_AJAX_ERROR', 'ML_HITMEISTER_VARMATCH_AJAX_ERROR'); //never used
+define('ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_OK', 'ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_OK'); //never used
+define('ML_HITMEISTER_SUBTITLE', 'ML_HITMEISTER_SUBTITLE'); //never used
 define('ML_HITMEISTER_NOT_CONFIGURED_IN_KAUFLAND_DE_ACCOUNT', 'not configured in your Kaufland account');
 define('ML_HITMEISTER_AGE_RATING', 'Age constraint');
 define('ML_HITMEISTER_CONDITION', 'Item Condition');
-define('ML_HITMEISTER_CATEGORY', 'real.de category');
-define('ML_HITMEISTER_LABEL_TITLE', 'real.de title');
-define('ML_HITMEISTER_CATEGORY_INFO', 'ML_HITMEISTER_CATEGORY_INFO');
-define('ML_HITMEISTER_LABEL_ITEM_ID', 'ML_HITMEISTER_LABEL_ITEM_ID');
+define('ML_HITMEISTER_CATEGORY', 'Kaufland category');
+define('ML_HITMEISTER_LABEL_TITLE', 'Kaufland title');
+define('ML_HITMEISTER_CATEGORY_INFO', 'ML_HITMEISTER_CATEGORY_INFO'); //never used
+define('ML_HITMEISTER_LABEL_ITEM_ID', 'Item ID');
 define('ML_HITMEISTER_CATEGORY_NO_ATTRIBUTES', 'No attributes for this category');
 define('ML_HITMEISTER_EAN', 'EAN');
 define('ML_HITMEISTER_COMMENT', 'Further notes about the item');
-define('ML_HITMEISTER_UPLOAD_EXPLANATION', 'ML_HITMEISTER_UPLOAD_EXPLANATION');
+define('ML_HITMEISTER_UPLOAD_EXPLANATION', '<b>Note</b>:<br /><br />
+Uploaded items whose EAN is already known on Kaufland are usually placed on Kaufland within one hour.
+<br /><br />
+EAN items that are not yet listed on Kaufland are transmitted by magnalister every night from 00:00.
+<br /><br />
+For quality assurance, the data is reviewed and processed manually by Kaufland. Processing there can take 2-4 working days. You can check the status at any time in your Kaufland administration.');
 define('ML_HITMEISTER_CURRENCY', 'EUR');
 define('ML_HITMEISTER_CATEGORY_ATTRIBUTES', 'Category-specific attributes');
 define('ML_HITMEISTER_DESCRIPTION', 'Description');
-define('ML_HITMEISTER_PRICE', 'real.de price');
-define('ML_HITMEISTER_ERROR_CATEGORY_ATTRIBUTE', 'ML_HITMEISTER_ERROR_CATEGORY_ATTRIBUTE');
-define('ML_HITMEISTER_INVENTORY_STATUS', 'ML_HITMEISTER_INVENTORY_STATUS');
-define('ML_HITMEISTER_ERROR_PRODUCTS_WITHDOUBLE_EAN_EXIST', 'ML_HITMEISTER_ERROR_PRODUCTS_WITHDOUBLE_EAN_EXIST');
+define('ML_HITMEISTER_PRICE', 'Kaufland price');
+define('ML_HITMEISTER_ERROR_CATEGORY_ATTRIBUTE', 'ML_HITMEISTER_ERROR_CATEGORY_ATTRIBUTE'); //never used
+define('ML_HITMEISTER_INVENTORY_STATUS', 'Status');
+define('ML_HITMEISTER_ERROR_PRODUCTS_WITHDOUBLE_EAN_EXIST', 'There are products with a duplicate EAN.<br />
+Kaufland assigns products by their EAN, so using the same EAN multiple times can result in stock quantities and prices not being assigned correctly.<br /><br />
+Please change the EANs so that none of them is used more than once.');
 define('ML_HITMEISTER_UNIT_ATTRIBUTES', 'General Settings');
-define('ML_HITMEISTER_ERROR_TITLE', 'ML_HITMEISTER_ERROR_TITLE');
-define('ML_HITMEISTER_ERROR_DESCRIPTION', 'ML_HITMEISTER_ERROR_DESCRIPTION');
-define('ML_HITMEISTER_INVENTORY_STATUS_ACTIVE', 'ML_HITMEISTER_INVENTORY_STATUS_ACTIVE');
-define('ML_HITMEISTER_INVENTORY_STATUS_PENDING_NEW', 'ML_HITMEISTER_INVENTORY_STATUS_PENDING_NEW');
-define('ML_HITMEISTER_INVENTORY_STATUS_PENDING_UPDATE', 'ML_HITMEISTER_INVENTORY_STATUS_PENDING_UPDATE');
-define('ML_HITMEISTER_TEXT_MANUALLY_MATCHING_DESC', 'ML_HITMEISTER_TEXT_MANUALLY_MATCHING_DESC');
+define('ML_HITMEISTER_ERROR_TITLE', 'Products without a title were skipped.');
+define('ML_HITMEISTER_ERROR_DESCRIPTION', 'Products without an item description were skipped.');
+define('ML_HITMEISTER_INVENTORY_STATUS_ACTIVE', 'Active');
+define('ML_HITMEISTER_INVENTORY_STATUS_PENDING_NEW', 'Item is being created');
+define('ML_HITMEISTER_INVENTORY_STATUS_PENDING_UPDATE', 'Item is being updated');
+define('ML_HITMEISTER_TEXT_MANUALLY_MATCHING_DESC', 'An attempt is made to match the shop items selected by checkbox with items on Kaufland via EAN and title.<br/ ><br/ >
+	You receive a detailed result about successful or unsuccessful search hits and can individually select which hit should be matched.<br/ ><br/ >
+	The processing is very precise, but also time-consuming.');
 define('ML_HITMEISTER_KEYWORDS', 'Keywords');
 define('ML_HITMEISTER_KEYWORDS_INFO', 'Keywords for price search engines (not shown, meta data only), plain text, up to 1024 characters.');
-define('ML_HITMEISTER_LABEL_LAST_REPORT', 'Last Hitmeister report');
-define('ML_HITMEISTER_TEXT_CHECKIN_DELAY', 'ML_HITMEISTER_TEXT_CHECKIN_DELAY');
+define('ML_HITMEISTER_LABEL_LAST_REPORT', 'Last Kaufland report');
+define('ML_HITMEISTER_TEXT_CHECKIN_DELAY', 'Please note that it can take up to two hours until listing and deletion operations are fully processed by Kaufland.');
 define('ML_HITMEISTER_LABEL_ORDER_ID', 'Kaufland.de Order No.');
 define('ML_HITMEISTER_IS_PORN', 'Porn');
-define('ML_HITMEISTER_LABEL_PRODUCT_AT_HITMEISTER', 'ML_HITMEISTER_LABEL_PRODUCT_AT_HITMEISTER');
+define('ML_HITMEISTER_LABEL_PRODUCT_AT_HITMEISTER', 'Item on Kaufland');
 define('ML_HITMEISTER_LABEL_NOT_MATCHED', 'Don&apos;t match');
 define('ML_HITMEISTER_PRODUCT_DETAILS', 'Item details');
 define('ML_HITMEISTER_ITEM_NAME_TITLE', 'Title');
 define('ML_HITMEISTER_SAME_PRODUCT_THERE', 'This item on Kaufland.de');
 define('ML_HITMEISTER_LABEL_HITMEISTER_PRICE', 'My Kaufland.de Price');
+define('ML_HITMEISTER_LABEL_HITMEISTER_PRICE_SHORT', 'Kaufland price');
+define('ML_HITMEISTER_LABEL_CHANGE_SITE', 'Change Kaufland site');
+define('ML_HITMEISTER_TEXT_CHANGE_SITE', 'You have selected a different Kaufland site. This affects further options, as the Kaufland country sites may offer different currencies as well as payment and shipping methods. Items are then listed on the new country site and only synchronized there, and orders are also only imported from there. Do you want to apply the new setting?');
 define('ML_HITMEISTER_SEARCH_BY_TITLE', 'Title search');
 define('ML_HITMEISTER_SEARCH_BY_EAN', 'EAN search');
 define('ML_HITMEISTER_SHIPPINGTIME', 'Shipping Time');
@@ -1884,37 +1907,45 @@ define('ML_HITMEISTER_SHIPPINGTIME_HM', 'Shipping Time at Kaufland.de');
 define('ML_HITMEISTER_HANDLINGTIME_HM', 'Handling Time at Kaufland.de');
 define('ML_HITMEISTER_SINGLE_MATCHING', 'Single matching');
 define('ML_HITMEISTER_MULTI_MATCHING', 'Multi matching');
-define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_DESC', 'ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_DESC');
-define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_CONFIRM', 'ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_CONFIRM');
-define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_SUMMARY', 'ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_SUMMARY');
-define('ML_HITMEISTER_ERROR_EAN', 'ML_HITMEISTER_ERROR_EAN');
-define('ML_HITMEISTER_TITLE_WARNING_ALLOW_MULTIPLE_EAN', 'ML_HITMEISTER_TITLE_WARNING_ALLOW_MULTIPLE_EAN');
-define('ML_HITMEISTER_TEXT_WARNING_ALLOW_MULTIPLE_EAN', 'ML_HITMEISTER_TEXT_WARNING_ALLOW_MULTIPLE_EAN');
+define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_DESC', 'The shop items selected by checkbox are processed automatically in the background:
+	The item is automatically matched via its stored EAN with the EAN of an existing Kaufland item.<br/ ><br/ >
+	This requires the EAN numbers to be maintained for each item.');
+define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_CONFIRM', 'Please note that automatic matching is performed exclusively by comparing the EAN number.
+	It is possible that items from Kaufland are matched whose descriptions or product images are of inferior quality. Therefore, matching can lead to a worse result than manual matching.<br/ ><br/ >
+	RedGecko GmbH therefore accepts no liability for the correctness of the matched products.');
+define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_SUMMARY', '%d items were matched successfully. <br/ ><br/ >
+	%d items could not be matched successfully.<br />
+	Of these, %d with multiple results.');
+define('ML_HITMEISTER_ERROR_EAN', 'Products without an EAN were skipped.');
+define('ML_HITMEISTER_TITLE_WARNING_ALLOW_MULTIPLE_EAN', 'Warning');
+define('ML_HITMEISTER_TEXT_WARNING_ALLOW_MULTIPLE_EAN', 'Kaufland identifies products by their EAN. All offers with the same EAN are assigned to the same product.<br/><br/>Please allow duplicate EANs <b>only</b> if you actually carry <b>the same item multiple times</b> (with different item numbers) in your shop, e.g. if it is a used item in different conditions.<br/><br/>Allow duplicate EANs?');
 define('ML_HITMEISTER_USE_SHIPPINGTIME_MATCHING', 'Use shipping time matching');
 define('ML_HITMEISTER_DELIVERY_COUNTRY', 'Item is sent from');
-define('ML_HITMEISTER_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED', 'ML_HITMEISTER_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED');
-define('ML_HITMEISTER_VARMATCH_ALL_SELECT', 'ML_HITMEISTER_VARMATCH_ALL_SELECT');
-define('ML_HITMEISTER_VARMATCH_AUTO_MATCHED', 'ML_HITMEISTER_VARMATCH_AUTO_MATCHED');
-define('ML_HITMEISTER_VARMATCH_AUTO_MATCHING', 'ML_HITMEISTER_VARMATCH_AUTO_MATCHING');
-define('ML_HITMEISTER_VARMATCH_CHANGE_ATTRIBUTE_INFO', 'ML_HITMEISTER_VARMATCH_CHANGE_ATTRIBUTE_INFO');
-define('ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_CANCEL', 'ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_CANCEL');
-define('ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_TITLE', 'ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_TITLE');
-define('ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_CONTENT', 'ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_CONTENT');
-define('ML_HITMEISTER_VARMATCH_DONT_TRANSMIT', 'ML_HITMEISTER_VARMATCH_DONT_TRANSMIT');
-define('ML_HITMEISTER_VARMATCH_ERROR_MESSAGE_FREE_TEXT', 'ML_HITMEISTER_VARMATCH_ERROR_MESSAGE_FREE_TEXT');
-define('ML_HITMEISTER_VARMATCH_ERROR_MESSAGE_REQUIRED', 'ML_HITMEISTER_VARMATCH_ERROR_MESSAGE_REQUIRED');
-define('ML_HITMEISTER_VARMATCH_FREE_TEXT', 'ML_HITMEISTER_VARMATCH_FREE_TEXT');
-define('ML_HITMEISTER_VARMATCH_MANUALY_MATCHED', 'ML_HITMEISTER_VARMATCH_MANUALY_MATCHED');
-define('ML_HITMEISTER_VARMATCH_MANUAL_MATCHING', 'ML_HITMEISTER_VARMATCH_MANUAL_MATCHING');
-define('ML_HITMEISTER_VARMATCH_MATCHNIG_TABLE', 'ML_HITMEISTER_VARMATCH_MATCHNIG_TABLE');
-define('ML_HITMEISTER_VARMATCH_PLEASE_SELECT', 'ML_HITMEISTER_VARMATCH_PLEASE_SELECT');
-define('ML_HITMEISTER_VARMATCH_RESET_INFO', 'ML_HITMEISTER_VARMATCH_RESET_INFO');
-define('ML_HITMEISTER_VARMATCH_MP_VALUE', 'ML_HITMEISTER_VARMATCH_MP_VALUE');
-define('ML_HITMEISTER_VARMATCH_RESET_MATCHING', 'ML_HITMEISTER_VARMATCH_RESET_MATCHING');
-define('ML_HITMEISTER_VARMATCH_SHOP_VALUE', 'ML_HITMEISTER_VARMATCH_SHOP_VALUE');
-define('ML_HITMEISTER_VARMATCH_WEBSHOP_ATTRIB', 'ML_HITMEISTER_VARMATCH_WEBSHOP_ATTRIB');
+define('ML_HITMEISTER_WAREHOUSE', 'Warehouse');
+define('ML_HITMEISTER_WAREHOUSE_DEFAULT', 'Seller\'s default warehouse');
+define('ML_HITMEISTER_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED', 'ML_HITMEISTER_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED'); //never used
+define('ML_HITMEISTER_VARMATCH_ALL_SELECT', 'ML_HITMEISTER_VARMATCH_ALL_SELECT'); //never used
+define('ML_HITMEISTER_VARMATCH_AUTO_MATCHED', 'ML_HITMEISTER_VARMATCH_AUTO_MATCHED'); //never used
+define('ML_HITMEISTER_VARMATCH_AUTO_MATCHING', 'ML_HITMEISTER_VARMATCH_AUTO_MATCHING'); //never used
+define('ML_HITMEISTER_VARMATCH_CHANGE_ATTRIBUTE_INFO', 'ML_HITMEISTER_VARMATCH_CHANGE_ATTRIBUTE_INFO'); //never used
+define('ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_CANCEL', 'ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_CANCEL'); //never used
+define('ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_TITLE', 'ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_TITLE'); //never used
+define('ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_CONTENT', 'ML_HITMEISTER_VARMATCH_DELETE_CUSTOM_BTN_CONTENT'); //never used
+define('ML_HITMEISTER_VARMATCH_DONT_TRANSMIT', 'ML_HITMEISTER_VARMATCH_DONT_TRANSMIT'); //never used
+define('ML_HITMEISTER_VARMATCH_ERROR_MESSAGE_FREE_TEXT', 'ML_HITMEISTER_VARMATCH_ERROR_MESSAGE_FREE_TEXT'); //never used
+define('ML_HITMEISTER_VARMATCH_ERROR_MESSAGE_REQUIRED', 'ML_HITMEISTER_VARMATCH_ERROR_MESSAGE_REQUIRED'); //never used
+define('ML_HITMEISTER_VARMATCH_FREE_TEXT', 'ML_HITMEISTER_VARMATCH_FREE_TEXT'); //never used
+define('ML_HITMEISTER_VARMATCH_MANUALY_MATCHED', 'ML_HITMEISTER_VARMATCH_MANUALY_MATCHED'); //never used
+define('ML_HITMEISTER_VARMATCH_MANUAL_MATCHING', 'ML_HITMEISTER_VARMATCH_MANUAL_MATCHING'); //never used
+define('ML_HITMEISTER_VARMATCH_MATCHNIG_TABLE', 'ML_HITMEISTER_VARMATCH_MATCHNIG_TABLE'); //never used
+define('ML_HITMEISTER_VARMATCH_PLEASE_SELECT', 'ML_HITMEISTER_VARMATCH_PLEASE_SELECT'); //never used
+define('ML_HITMEISTER_VARMATCH_RESET_INFO', 'ML_HITMEISTER_VARMATCH_RESET_INFO'); //never used
+define('ML_HITMEISTER_VARMATCH_MP_VALUE', 'ML_HITMEISTER_VARMATCH_MP_VALUE'); //never used
+define('ML_HITMEISTER_VARMATCH_RESET_MATCHING', 'ML_HITMEISTER_VARMATCH_RESET_MATCHING'); //never used
+define('ML_HITMEISTER_VARMATCH_SHOP_VALUE', 'ML_HITMEISTER_VARMATCH_SHOP_VALUE'); //never used
+define('ML_HITMEISTER_VARMATCH_WEBSHOP_ATTRIB', 'ML_HITMEISTER_VARMATCH_WEBSHOP_ATTRIB'); //never used
 define('ML_HITMEISTER_WEIGHT', 'Weight');
-define('ML_HITMEISTER_VPE', 'ML_HITMEISTER_VPE');
+define('ML_HITMEISTER_VPE', 'ML_HITMEISTER_VPE'); //never used
 define('ML_MODULE_HITMEISTER', 'Kaufland.de');
 define('ML_STOCK_SHOP_STOCK_HITMEISTER', 'Stock <br />Shop / Kaufland.de');
 
@@ -2091,43 +2122,72 @@ define('ML_HOOD_LABEL_USE_GALLERY_YES_NO', 'ML_HOOD_LABEL_USE_GALLERY_YES_NO');
 
 define('ML_IDEALO_SAME_PRODUCT_THERE', 'This item in idealo.de');
 define('ML_MODULE_IDEALO', 'idealo.de');
-define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_CONTENT', 'ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_CONTENT');
-define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_CONTENT', 'ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_CONTENT');
-define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_TITLE', 'ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_TITLE');
-define('ML_IDEALO_CHECKOUT_ERROR', 'ML_IDEALO_CHECKOUT_ERROR');
-define('ML_IDEALO_METHODS_NOT_AVAILABLE', 'ML_IDEALO_METHODS_NOT_AVAILABLE');
-define('ML_IDEALO_DESCRIPTION', 'ML_IDEALO_DESCRIPTION');
-define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE', 'ML_IDEALO_LABEL_CHECKOUT_ACTIVE');
-define('ML_IDEALO_INFO_CHECKOUT_ACTIVE', 'ML_IDEALO_INFO_CHECKOUT_ACTIVE');
-define('ML_IDEALO_INFO_TWOMANHANDLINGFEE', 'ML_IDEALO_INFO_TWOMANHANDLINGFEE');
-define('ML_IDEALO_INFO_DISPOSALFEE', 'ML_IDEALO_INFO_DISPOSALFEE');
-define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE_2', 'ML_IDEALO_LABEL_CHECKOUT_ACTIVE_2');
-define('ML_IDEALO_INFO_SHIPPING_METHOD', 'ML_IDEALO_INFO_SHIPPING_METHOD');
-define('ML_IDEALO_LABEL_SHIPPING_COUNTRY', 'ML_IDEALO_LABEL_SHIPPING_COUNTRY');
-define('ML_IDEALO_LABEL_DELIVERY_TIME', 'ML_IDEALO_LABEL_DELIVERY_TIME');
-define('ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP', 'ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP');
-define('ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL', 'ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL');
-define('ML_IDEALO_INFO_DELIVERY_TIME', 'ML_IDEALO_INFO_DELIVERY_TIME');
-define('ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE', 'ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE');
-define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_SPEDITION', 'ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_SPEDITION');
-define('ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE', 'ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE');
-define('ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE', 'ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE');
-define('ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO', 'ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO');
-define('ML_IDEALO_LABEL_DIRECT_CHECKOUT', 'ML_IDEALO_LABEL_DIRECT_CHECKOUT');
-define('ML_IDEALO_LABEL_PAYMENT_METHOD', 'ML_IDEALO_LABEL_PAYMENT_METHOD');
-define('ML_IDEALO_INFO_PAYMENT_METHOD', 'ML_IDEALO_INFO_PAYMENT_METHOD');
-define('ML_IDEALO_LABEL_SHIPPING_COST', 'ML_IDEALO_LABEL_SHIPPING_COST');
-define('ML_IDEALO_INFO_SHIPPING_COST', 'ML_IDEALO_INFO_SHIPPING_COST');
-define('ML_IDEALO_LABEL_SHIPPING_CURRENCY', 'ML_IDEALO_LABEL_SHIPPING_CURRENCY');
-define('ML_IDEALO_LABEL_SPEDITION_INFO', 'ML_IDEALO_LABEL_SPEDITION_INFO');
-define('ML_IDEALO_LABEL_SHIPPING_METHOD', 'ML_IDEALO_LABEL_SHIPPING_METHOD');
-define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_PACKETDIENST', 'ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_PACKETDIENST');
-define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_DOWNLOAD', 'ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_DOWNLOAD');
-define('ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS', 'ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS');
-define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE', 'ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE');
-define('ML_IDEALO_PRODUCT_DETAILS', 'ML_IDEALO_PRODUCT_DETAILS');
-define('ML_IDEALO_ITEM_NAME_TITLE', 'ML_IDEALO_ITEM_NAME_TITLE');
-define('ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES', 'ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES');
+define('ML_IDEALO_CHECKOUT_ERROR', 'Under &bdquo;Item Preparation&ldquo; you want to enable &bdquo;idealo Direktkauf&ldquo; for the item preparation. This is only possible if you have been activated for Direktkauf by idealo and have entered the corresponding credentials under &bdquo;idealo Direktkauf&ldquo;.');
+define('ML_IDEALO_METHODS_NOT_AVAILABLE', 'Please first enter and save the Direktkauf token under &bdquo;Order Import Credentials&ldquo;');
+define('ML_IDEALO_PRODUCT_DETAILS', 'Product details');
+define('ML_IDEALO_ITEM_NAME_TITLE', 'Title');
+define('ML_IDEALO_DESCRIPTION', 'Description');
+define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE', 'Idealo Direktkauf');
+define('ML_IDEALO_INFO_CHECKOUT_ACTIVE', 'Activate Idealo Checkout in order to receive orders from Idealo and synchronize order status in your shop.');
+define('ML_IDEALO_INFO_TWOMANHANDLINGFEE', 'For items with the shipping type &#8222;Spedition&ldquo;, the user can order the additional service &#8222;Delivery to the placement location&ldquo; in idealo Direktkauf. Unlike the usual forwarding service, the goods are not delivered to the curbside but to the desired placement location. The specified costs are charged with the total price. Please enter the costs incl. VAT.<br /><br />If this field is left empty, this option will not be offered in idealo Direktkauf.');
+define('ML_IDEALO_INFO_DISPOSALFEE', 'For items with the shipping type &#8222;Spedition&ldquo; and the option &#8222;Delivery to the placement location&ldquo; selected, the user can order the additional service &#8222;Old appliance pickup&ldquo; in idealo Direktkauf. The old appliance is taken away by the carrier and disposed of. The specified costs are charged with the total price. Please enter the costs incl. VAT. <br /><br />If this field is left empty, this option will not be offered in idealo Direktkauf.');
+define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE_2', 'Apply idealo Direktkauf to the selected products');
+define('ML_IDEALO_LABEL_PAYMENT_METHOD', 'Payment method');
+define('ML_IDEALO_INFO_PAYMENT_METHOD', 'Payment method is only applied if you activate Idealo Checkout. You will be able to specify which payment method you want to be used for specific product.');
+define('ML_IDEALO_LABEL_SHIPPING_METHOD', 'Shipping method');
+define('ML_IDEALO_INFO_SHIPPING_METHOD', 'Shipping method is only applied if you activate Idealo Checkout. You will be able to specify which shipping method you are using for specific product.');
+define('ML_IDEALO_LABEL_SHIPPING_COUNTRY', 'Shipping to');
+define('ML_IDEALO_LABEL_SHIPPING_COST', 'Shipping costs');
+define('ML_IDEALO_INFO_SHIPPING_COST', 'The shipping costs are first calculated from the shipping method. If this returns no result, the value entered here is used.
+With the shipping cost module "Flat rate", the value entered here is also used.');
+define('ML_IDEALO_LABEL_DELIVERY_TIME', 'Delivery time');
+define('ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP', 'Always take from web shop');
+define('ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO', 'Applies only to the shipping type "Spedition"');
+define('ML_IDEALO_LABEL_DIRECT_CHECKOUT', 'Direktkauf');
+define('ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE', 'Shipping method');
+define('ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE', 'Direktkauf Spedition - Delivery cost to placement location');
+define('ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE', 'Direktkauf Spedition - Cost of old appliance pickup');
+define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_SPEDITION', 'Spedition');
+define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_PACKETDIENST', 'Parcel service');
+define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_DOWNLOAD', 'Download');
+define('ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL', 'Flat rate (from right field)');
+define('ML_IDEALO_INFO_DELIVERY_TIME', 'Please specify delivery times as precisely as possible. Online retailers are legally obliged to inform the consumer, based on the delivery time information, when the goods will arrive. As a result, the still widespread information such as &bdquo;ready to ship&ldquo; or &bdquo;available&ldquo; is no longer permitted. Likewise, no relativizing additions such as &bdquo;probably&ldquo; or &bdquo;usually&ldquo; may be used. Please therefore specify delivery times in working days where possible, e.g. &bdquo;Delivery in 1-3 working days&ldquo;.');
+define('ML_IDEALO_LABEL_SHIPPING_CURRENCY', 'EUR');
+define('ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES', 'Maximum 3 product images');
+define('ML_IDEALO_LABEL_ITEM_CONDITION_TYPE', 'Item condition');
+define('ML_IDEALO_LABEL_ITEM_CONDITION', 'Specific condition');
+define('ML_IDEALO_CONDITIONTYPE_NEW', 'New');
+define('ML_IDEALO_CONDITIONTYPE_AS_NEW', 'As good as new');
+define('ML_IDEALO_CONDITIONTYPE_REFURBISHED', 'Refurbished');
+define('ML_IDEALO_CONDITIONTYPE_USED', 'Used');
+define('ML_IDEALO_CONDITION_EXCELLENT', 'Excellent');
+define('ML_IDEALO_CONDITION_VERY_GOOD', 'Very good');
+define('ML_IDEALO_CONDITION_GOOD', 'Good');
+define('ML_IDEALO_CONDITION_ACCEPTABLE', 'Acceptable');
+define('ML_IDEALO_LABEL_FREE_RETURN_DAYS', 'Free returns (days)');
+define('ML_IDEALO_LABEL_EEC_SPECTRUM', 'Energy efficiency spectrum');
+define('ML_IDEALO_LABEL_EEC_EFFICIENCY_CLASS', 'Energy efficiency class');
+define('ML_IDEALO_LABEL_EEC_LABEL_URL', 'Energy label URL');
+define('ML_IDEALO_LABEL_EEC_DATA_SHEET_URL', 'Product data sheet URL');
+define('ML_IDEALO_LABEL_EEC_VERSION', 'EEC version');
+define('ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS', '
+    {
+        "PAYPAL": "PayPal",
+        "CREDITCARD": "Credit card",
+        "SOFORT": "Sofort&uuml;berweisung",
+        "PRE": "payment in advance",
+        "COD": "cash on delivery",
+        "BANKENTER": "bank enter",
+        "BILL": "bill",
+        "GIROPAY": "Giropay",
+        "CLICKBUY": "Click&Buy",
+        "SKRILL": "Skrill"
+    }
+');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE', 'idealo Direktkauf');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_CONTENT', 'To use this feature, please activate idealo Direktkauf under "idealo Direktkauf".');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_TITLE', 'Switch to idealo Direktkauf Merchant Order API v2');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_CONTENT', 'Since 01/01/2021, magnalister supports the idealo Direktkauf Merchant Order API v2. The Merchant Order API v1 will be shut down soon.<br><br>Please generate a &ldquo;Client ID&rdquo; and a &ldquo;Client Password&rdquo; in your idealo Business Account and enter the data in the magnalister idealo configuration under &ldquo;Credentials&rdquo; -> &ldquo;idealo Direktkauf&rdquo;.<br><br>You can find instructions for the changeover in the info icon next to &ldquo;Use idealo Direktkauf&rdquo;.');
 
 // ==================== Kelkoo ====================
 
@@ -2427,3 +2487,235 @@ define('ML_YATEGO_MESSAGE_SAVE_SELECT_SHOP_CAT_FIRST', 'Saving process can not b
 define('ML_YATEGO_MESSAGE_MATCHING_SAVED', 'Matching saved successfully.');
 define('ML_YATEGO_TEXT_DELETED_INVALID_CATEGORY_MATCHINGS', 'Yatego changed (some) categories. The affected categories have been deleted. Please match the following cateories again:');
 
+
+/* {# Temu #} */
+define('ML_MODULE_TEMU', 'Temu');
+define('ML_TEMU_PRODUCT_PREPARE', 'Product Preparation');
+define('ML_TEMU_NEW_ITEMS', 'Add New Products');
+define('ML_TEMU_SHIPPINGLABEL', 'Shipping Labels');
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD', 'Upload');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW', 'Overview');
+define('ML_TEMU_LABEL_PRODUCT_DATA', 'Product data');
+define('ML_TEMU_LABEL_TITLE', 'Title');
+define('ML_TEMU_LABEL_DESCRIPTION', 'Description');
+define('ML_TEMU_LABEL_BULLETPOINTS', 'Bullet Points');
+define('ML_TEMU_LABEL_SKU', 'SKU');
+define('ML_TEMU_LABEL_EAN', 'EAN / GTIN');
+define('ML_TEMU_LABEL_PRICE', 'Price');
+define('ML_TEMU_LABEL_MSRP_PRICE', 'MSRP Price');
+define('ML_TEMU_LABEL_MAIN_IMAGE', 'Main Image');
+define('ML_TEMU_LABEL_IMAGES', 'Additional Images');
+define('ML_TEMU_LABEL_PROCESSING_TIME', 'Processing Time (Days)');
+define('ML_TEMU_LABEL_SHIPPING_TYPE', 'Shipping Type');
+define('ML_TEMU_LABEL_COST_TEMPLATE', 'Cost Template');
+define('ML_TEMU_LABEL_SHIPMENT_LIMIT_DAY', 'Shipment Limit (Days)');
+define('ML_TEMU_LABEL_CATEGORY', 'Temu Category');
+define('ML_TEMU_LABEL_VARIATION_THEME', 'Variation Theme');
+define('ML_TEMU_LABEL_VARIATION_TITLE', 'Variation');
+define('ML_TEMU_LABEL_VARIATION_ALL_OPTIONAL_NOTE', 'All variation attributes for this category are optional. However, you still need to select at least one variation attribute.');
+define('ML_TEMU_LABEL_VARIATION_SPECDETAILS_REQUIRED', 'Please select at least one variation attribute.');
+define('ML_TEMU_LABEL_FULFILLMENT_MODE', 'Fulfillment Mode');
+define('ML_TEMU_LABEL_FULFILLMENT_AUTO', 'Auto (Temu buys shipping)');
+define('ML_TEMU_LABEL_FULFILLMENT_SELF', 'Self-fulfilled (Seller ships)');
+define('ML_TEMU_LABEL_WAREHOUSE', 'Warehouse');
+define('ML_TEMU_LABEL_CARRIER', 'Carrier');
+define('ML_TEMU_LABEL_TRACKING_NUMBER', 'Tracking Number');
+define('ML_TEMU_LABEL_PACKAGE_WEIGHT', 'Package Weight');
+define('ML_TEMU_LABEL_PACKAGE_LENGTH', 'Package Length');
+define('ML_TEMU_LABEL_PACKAGE_WIDTH', 'Package Width');
+define('ML_TEMU_LABEL_PACKAGE_HEIGHT', 'Package Height');
+define('ML_TEMU_LABEL_LOGISTICS_TYPE', 'Logistics Type');
+define('ML_TEMU_LABEL_REGION', 'Region');
+define('ML_TEMU_LABEL_MALL_ID', 'Mall ID');
+define('ML_TEMU_LABEL_TOKEN_EXPIRES', 'Token Expires');
+define('ML_TEMU_LABEL_IMPORT_PENDING', 'Import Pending Orders');
+define('ML_TEMU_LABEL_EMAIL_BLACKLISTING', 'Suppress Customer Emails');
+define('ML_TEMU_LABEL_BUY_SHIPPING', 'Buy-Shipping Defaults');
+define('ML_TEMU_LABEL_USE_BUY_SHIPPING', 'Use Buy Shipping');
+define('ML_TEMU_HINT_USE_BUY_SHIPPING', 'Enable Temu Buy Shipping. When enabled, Temu purchases shipping labels automatically (Auto fulfillment). When disabled, you ship orders yourself (Self fulfillment).');
+define('ML_TEMU_LABEL_BUYSHIPPING_WEIGHT', 'Default Weight');
+define('ML_TEMU_HINT_BUYSHIPPING_WEIGHT', 'Default package weight for Buy Shipping label purchase.');
+define('ML_TEMU_LABEL_BUYSHIPPING_WEIGHT_UNIT', 'Weight Unit');
+define('ML_TEMU_LABEL_BUYSHIPPING_LENGTH', 'Default Length');
+define('ML_TEMU_HINT_BUYSHIPPING_DIMENSIONS', 'Default package dimensions for Buy Shipping label purchase.');
+define('ML_TEMU_LABEL_BUYSHIPPING_WIDTH', 'Default Width');
+define('ML_TEMU_LABEL_BUYSHIPPING_HEIGHT', 'Default Height');
+define('ML_TEMU_LABEL_BUYSHIPPING_DIMENSION_UNIT', 'Dimension Unit');
+define('ML_TEMU_LABEL_BUYSHIPPING_SHIP_LATER', 'Ship Later');
+define('ML_TEMU_HINT_BUYSHIPPING_SHIP_LATER', 'If enabled, shipment confirmation is delayed after the shipping label is purchased.');
+define('ML_TEMU_LABEL_BUYSHIPPING_LOGISTICS_TYPE', 'Logistics Type');
+define('ML_TEMU_HINT_BUYSHIPPING_LOGISTICS_TYPE', 'Select the logistics service type for Buy Shipping.');
+define('ML_TEMU_LABEL_VAT', 'VAT');
+define('ML_TEMU_LABEL_SHIPPING_PARCEL', 'Parcel');
+define('ML_TEMU_LABEL_SHIPPING_FORWARDER', 'Forwarder');
+define('ML_TEMU_CONFIG_ACCOUNT', 'Account');
+define('ML_TEMU_CONFIG_PREPARE', 'Prepare');
+define('ML_TEMU_CONFIG_PRICE_STOCK', 'Price & Stock');
+define('ML_TEMU_CONFIG_ORDERS', 'Orders');
+define('ML_TEMU_ERROR_TOKEN_EXPIRED', 'Your Temu API token has expired. Please reconnect your account.');
+define('ML_TEMU_ERROR_TOKEN_EXPIRING', 'Your Temu API token will expire in %s days. Please renew it soon.');
+define('ML_TEMU_ERROR_NOT_AUTHED', 'Not connected to Temu. Please connect your account in the configuration.');
+define('ML_TEMU_ERROR_NO_CATEGORY', 'Please select a Temu category.');
+define('ML_TEMU_ERROR_NO_TITLE', 'Please enter a product title.');
+define('ML_TEMU_VARMATCH_SAVE_FAILED', 'Saving the attribute matching failed &mdash; your changes have NOT been saved. Please try again.');
+define('ML_TEMU_CONNECT_BUTTON', 'Connect to Temu');
+define('ML_TEMU_DISCONNECT_BUTTON', 'Disconnect from Temu');
+define('ML_TEMU_HINT_IMPORT_PENDING', 'If enabled, orders with status "Pending" (payment not yet confirmed) will also be imported.');
+define('ML_TEMU_HINT_EMAIL_BLACKLISTING', 'If enabled, customer email addresses will be prefixed with "blacklisted-" to prevent your shop from sending emails to Temu customers.');
+define('ML_TEMU_HINT_FULFILLMENT_MODE', 'Auto: Temu purchases shipping labels. Self: You ship the orders yourself.');
+define('ML_TEMU_SHIPPING_UPLOAD_TITLE', 'Confirm Shipments');
+define('ML_TEMU_SHIPPING_OVERVIEW_TITLE', 'Shipment Overview');
+define('ML_TEMU_SHIPPING_CONFIRM', 'Confirm Shipment');
+define('ML_TEMU_SHIPPING_SERVICE', 'Shipping Service');
+
+// Shipping Label - Breadcrumb
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD_ORDERLIST', '1. Orders');
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD_FORM', '2. Package Details');
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD_SHIPPINGMETHOD', '3. Shipping Methods');
+define('ML_TEMU_SHIPPINGLABEL_UPLOAD_SUMMARY', '4. Summary');
+
+// Shipping Label - Order List columns
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_PURCHASEDATE', 'Import Date');
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_MORDERID', 'Temu Order ID');
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_SHOPORDERID', 'Shop Order ID');
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_PAYMENTTYPE', 'Payment Type');
+define('ML_TEMU_SHIPPINGLABEL_ORDERLIST_PACKAGESN', 'Package SN');
+
+// Shipping Label - Form columns
+define('ML_TEMU_SHIPPINGLABEL_FORM_PRODUCTNAME', 'Product');
+define('ML_TEMU_SHIPPINGLABEL_FORM_WEIGHT', 'Weight (kg)');
+define('ML_TEMU_SHIPPINGLABEL_FORM_LENGTH', 'Length (cm)');
+define('ML_TEMU_SHIPPINGLABEL_FORM_WIDTH', 'Width (cm)');
+define('ML_TEMU_SHIPPINGLABEL_FORM_HEIGHT', 'Height (cm)');
+define('ML_TEMU_SHIPPINGLABEL_FORM_SHIPPINGDATE', 'Shipping Date');
+define('ML_TEMU_SHIPPINGLABEL_FORM_QUANTITY', 'Quantity');
+define('ML_TEMU_SHIPPINGLABEL_FORM_SENT', 'Sent');
+define('ML_TEMU_SHIPPINGLABEL_FORM_CARRIERNAME', 'Carrier');
+
+// Shipping Label - Shipping Method columns
+define('ML_TEMU_SHIPPINGLABEL_SHIPPINGMETHOD_AMOUNT', 'Price');
+define('ML_TEMU_SHIPPINGLABEL_SHIPPINGMETHOD_ESTIMATE', 'Estimated Delivery');
+define('ML_TEMU_SHIPPINGLABEL_SHIPPINGMETHOD_DELIVERYTIME', 'Delivery Time');
+
+// Shipping Label - Summary columns
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_RECEIVER', 'Order');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_SHIPPINGDATE', 'Shipping Date');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_WEIGHT', 'Weight');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_CARRIERNAME', 'Carrier');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_TOTALPRICE', 'Total Price');
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_ESTIMATE', 'Estimated Delivery');
+
+// Shipping Label - Overview columns
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_CREATEDDATE', 'Created');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_SHIPPINGSTATUS', 'Status');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_SENDERANDTRACKINGID', 'Carrier / Tracking');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_COMMENT', 'Comment');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_ERRORNOTE', 'Shipping label creation failed. Please check the error log.');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_CANCELSHIPPINGLABEL', 'Shipment(s) cancelled successfully.');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_DELETESHIPPINGLABEL', 'Shipment(s) deleted from list.');
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_DOWNLOADSHIPPINGLABEL', 'Download');
+
+// Shipping Label - Popup
+define('ML_TEMU_SHIPPINGLABEL_POPUP_AFTERCONFIRM', 'Shipping labels are being generated. Please check the Overview tab for status and download links.');
+define('ML_TEMU_SHIPPINGLABEL_SHIPPINGMETHOD_NOSERVICE', 'Unfortunately, no suitable shipping method is available for these conditions.');
+
+// Temu shipping label — isolated aliases of the Amazon label strings
+define('ML_TEMU_SHIPPINGLABEL_CANCEL', ML_AMAZON_SHIPPINGLABEL_CANCEL);
+define('ML_TEMU_SHIPPINGLABEL_CONFIRM', 'Create shipping label');
+define('ML_TEMU_SHIPPINGLABEL_DELETE', ML_AMAZON_SHIPPINGLABEL_DELETE);
+define('ML_TEMU_SHIPPINGLABEL_DOWNLOAD', ML_AMAZON_SHIPPINGLABEL_DOWNLOAD);
+define('ML_TEMU_SHIPPINGLABEL_DOWNLOAD_TITLE', ML_AMAZON_SHIPPINGLABEL_DOWNLOAD_TITLE);
+define('ML_TEMU_SHIPPINGLABEL_OVERVIEW_POPUP_AFTERCONFIRM_INFOCONTENT', ML_AMAZON_SHIPPINGLABEL_OVERVIEW_POPUP_AFTERCONFIRM_INFOCONTENT);
+define('ML_TEMU_SHIPPINGLABEL_SUMMARY_STATISTIC', ML_AMAZON_SHIPPINGLABEL_SUMMARY_STATISTIC);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_ADD_FILTERED', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_ADD_FILTERED);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_ADD_PAGE', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_ADD_PAGE);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_SUB_ALL', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_SUB_ALL);
+define('ML_TEMU_SHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_SUB_PAGE', ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_SUB_PAGE);
+
+define('ML_STOCK_SHOP_STOCK_TEMU', 'Stock <br />Shop / Temu');
+define('ML_TEMU_PRODUCT_MATCHED_NO', 'Product not prepared');
+define('ML_TEMU_PRODUCT_PREPARED_OK', 'Product prepared successfully');
+define('ML_TEMU_PRODUCT_PREPARED_FAULTY', 'Product preparation has errors');
+define('ML_TEMU_CANCELLATION_REASON', 'Cancellation Reason');
+
+/* Temu Inventory */
+define('ML_TEMU_PRICE_SHOP_TEMU', 'Shop Price / Temu Price<br>Shop Price (net) / Temu net price');
+define('ML_TEMU_STOCK_FOR_TEMU', 'Temu Stock');
+define('ML_TEMU_PRICE_FOR_TEMU', 'Temu Price');
+define('ML_TEMU_NOTE_LABEL', 'Note');
+define('ML_TEMU_STATUS_ACTIVE', 'Active');
+define('ML_TEMU_STATUS_INACTIVE', 'Inactive');
+define('ML_TEMU_STATUS_INCOMPLETE', 'Incomplete');
+define('ML_TEMU_STATUS_DRAFT', 'Draft');
+define('ML_TEMU_STATUS_DELETED', 'Deleted');
+
+// FEAT-015: Inventory Status column — API DisplayStatus ids (localize the [inv_status_*] bracket keys)
+define('ML_TEMU_INV_STATUS_LIVE_IMPORTED',        'Active');
+define('ML_TEMU_INV_STATUS_LIVE',                 'Active');
+define('ML_TEMU_INV_STATUS_CREATING',             'Uploading&hellip;');
+define('ML_TEMU_INV_STATUS_CREATING_AUDIT',       'Temu auditing');
+define('ML_TEMU_INV_STATUS_CREATING_PRICING',     'Temu reviewing pricing');
+define('ML_TEMU_INV_STATUS_AUDITING',             'Auditing');
+define('ML_TEMU_INV_STATUS_AUDIT_FAILED_DATA',    'Audit failed: data');
+define('ML_TEMU_INV_STATUS_AUDIT_FAILED_PRICING', 'Audit failed: pricing');
+define('ML_TEMU_INV_STATUS_DELETED',              'Deleted');
+define('ML_TEMU_INV_STATUS_DELETED_BY_MERCHANT',  'Deleted on Temu');
+define('ML_TEMU_INV_STATUS_DELETED_BY_PRICING',   'Deleted by Temu (pricing)');
+define('ML_TEMU_INV_STATUS_DELISTED',             'Off-shelf');
+define('ML_TEMU_INV_STATUS_DRAFT',                'Draft (Seller Center)');
+define('ML_TEMU_INV_STATUS_ERROR',                'Error: imported row missing marketplace status');
+define('ML_TEMU_INV_STATUS_FAILED',               'Upload failed');
+define('ML_TEMU_INV_STATUS_HARD_DELETED',         'Permanently deleted');
+define('ML_TEMU_INV_STATUS_INACTIVE',             'Inactive on Temu');
+define('ML_TEMU_INV_STATUS_INCOMPLETE',           'Incomplete');
+define('ML_TEMU_INV_STATUS_MAYBE_DELETED',        'Possibly deleted');
+define('ML_TEMU_INV_STATUS_NOT_FOUND',            'Not found on marketplace');
+define('ML_TEMU_INV_STATUS_PENDING_CREATION',     'Waiting for upload to Temu');
+define('ML_TEMU_INV_STATUS_PENDING_UPDATE',       'Waiting for update');
+define('ML_TEMU_INV_STATUS_SYNCING',              'Syncing marketplace status&hellip;');
+define('ML_TEMU_INV_STATUS_UNKNOWN',              'Unknown');
+define('ML_TEMU_INV_STATUS_UPDATING',             'Updating&hellip;');
+define('ML_TEMU_INV_STATUS_WAITING',              'In queue');
+
+// FEAT-015: Price badge under the Price column (parallel to the product status)
+define('ML_TEMU_INV_PRICE_STATUS_PRICE_PENDING',  'Price update under review');
+define('ML_TEMU_INV_PRICE_STATUS_PRICE_REJECTED', 'Price update rejected');
+
+define('ML_TEMU_NOTE_ACTIVE_AT_RISK', 'Active but at risk');
+define('ML_TEMU_NOTE_CLOSE', 'Closed');
+define('ML_TEMU_NOTE_BLOCK', 'Blocked');
+define('ML_TEMU_NOTE_OUT_OF_STOCK', 'Out of Stock');
+define('ML_TEMU_NOTE_PRICING_UNDER_ASSESSMENT', 'Pricing under assessment');
+define('ML_TEMU_NOTE_AUDIT_IN_PROCESS', 'Audit in process');
+define('ML_TEMU_NOTE_PRICING_FAILURE', 'Pricing failure');
+define('ML_TEMU_NOTE_PRODUCT_TO_BE_COMPLETE', 'Product to be completed');
+define('ML_TEMU_NOTE_DELETE_PRICE_TERMINATION', 'Deleted (price termination)');
+define('ML_TEMU_INVENTORY_IMPORT_PENDING', 'The inventory import is currently in progress. Please try again in a few minutes.');
+
+/* Temu OAuth Authentication */
+define('ML_TEMU_LABEL_SELECT_REGION', 'Select Region');
+define('ML_TEMU_HINT_SELECT_REGION', 'Select the region where your Temu shop is registered. The token link will be generated based on this region.');
+define('ML_TEMU_BUTTON_TOKEN_NEW', 'Request Token');
+define('ML_TEMU_BUTTON_TOKEN_RENEW', 'Renew Token');
+define('ML_TEMU_BUTTON_TOKEN_CONNECTED', 'Connected');
+define('ML_TEMU_STATUS_CONNECTED', 'Successfully connected to Temu');
+define('ML_TEMU_ERROR_CREATE_TOKEN_LINK_HEADLINE', 'Error creating token link');
+define('ML_TEMU_ERROR_CREATE_TOKEN_LINK_TEXT', 'The token link could not be created. Please try again later.');
+
+// Order-status cancel config (Temu supports only "Out of Stock" cancellations — mirrors v3)
+define('ML_TEMU_ORDERSTATUS_CANCELLED_LABEL', 'Order cancelled due to out of stock with');
+define('ML_TEMU_ORDERSTATUS_CANCELLED_DESC', '<h3>&#9888;&#65039; Important Notes on Temu Cancellations: </h3>
+<p><strong>Supported Reasons:</strong> Magnalister currently only supports "Out of Stock" cancellations. To cancel an order due to Fraud or Wrong Address, please process it directly in your Temu Seller Center, as Temu requires you to upload evidence.</p>
+<p><strong>"Out of Stock" Prerequisite:</strong> Before canceling an "Out of Stock" order here, Temu requires that the item be removed from your active sales list. We plan to automate this in a future update, but for now, please manually remove the product from your Temu sales list first before clicking cancel.</p>');
+
+
+// Order status sync: mandatory fulfillment configuration (parity with v3)
+define('ML_TEMU_CONFIG_ORDERSTATUS_INCOMPLETE_HEADING', 'Order status synchronization is active but the fulfillment configuration is incomplete. Shipping confirmations will NOT be transmitted to Temu until the following settings are configured:');
+define('ML_TEMU_CONFIG_ORDERSTATUS_CARRIER_REQUIRED', 'Shipping carrier ("Carrier" in the self-fulfillment section) &mdash; required in every fulfillment mode.');
+define('ML_TEMU_CONFIG_ORDERSTATUS_WAREHOUSE_REQUIRED', 'Warehouse ("Warehouse ID" in the general shipment settings).');
+define('ML_TEMU_CONFIG_ORDERSTATUS_LOGISTICSTYPE_REQUIRED', 'Buy-Shipping logistics type ("Preferred Logistics Type") &mdash; required while Buy Shipping is enabled.');
+
+// Amazon: confirmation shown before the FBA VID report VAT option is switched on
+define('ML_AMAZON_FBA_VIDR_CONFIRM', '<p><b>VAT data for FBA orders (VID report)</b></p><p>Prerequisite: the Amazon VCS program must be activated in your Seller Central.</p><p>For FBA orders, Amazon usually delivers the order data without any VAT information. The actual tax rates, the buyer&rsquo;s VAT ID and the company name are only contained in the VAT Invoice Data Report (VIDR), which Amazon provides with a delay.</p><p>With this option, magnalister retrieves the VID report automatically. An FBA order is only released for import once the matching report data has arrived; the tax data from it is then applied to the order.</p><p><b>Important:</b></p><ul><li>If VCS is not activated in your Seller Central, Amazon produces no VID report.</li><li>The import of an FBA order is delayed until Amazon delivers the report data.</li><li>If no VID data is available after 48 hours, the order is imported anyway &ndash; then without the tax data from the report.</li><li>The option affects FBA orders (AFN) only, not self-fulfilled orders (MFN).</li></ul><p>Do you want to activate the automatic retrieval of the VID report data?</p>');
+define('ML_AMAZON_FBA_VIDR_ACTIVATE_BUTTON', 'Activate');

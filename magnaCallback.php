@@ -124,14 +124,70 @@ function magnaExecute($functionName, $arguments = array(), $includes = array(), 
 	}
 	if (!empty($includes)) {
 		foreach ($includes as $incl) {
+			/* Only permit known callback files. Reject anything containing path
+			 * separators or traversal sequences (basename() check) to prevent LFI. */
+			if (   !is_string($incl)
+			    || ($incl !== basename($incl))
+			    || !in_array($incl, magnaAllowedCallbackIncludes(), true)
+			) {
+				return false;
+			}
 			require_once(DIR_MAGNALISTER_FS_INCLUDES.'callback/'.$incl);
 		}
 	}
 
-	if (function_exists($functionName) && is_string($functionName)) {
+	/* Only permit an explicit allow-list of callback function names. */
+	if (   is_string($functionName)
+	    && in_array($functionName, magnaAllowedCallbackFunctions(), true)
+	    && function_exists($functionName)
+	) {
 		return $functionName($arguments);
 	}
 	return false;
+}
+
+/**
+ * Fixed allow-list of callback include files that may be loaded through
+ * magnaExecute(). Keep in sync with the files in php/callback/.
+ */
+function magnaAllowedCallbackIncludes() {
+	return array(
+		'callbackFunctions.php',
+		'orders_import.php',
+		'orders_update.php',
+		'order_details.php',
+		'inventoryUpdate.php',
+		'autosyncInventory.php',
+		'autosyncOrderStatus.php',
+		'autosyncEbayListingDetails.php',
+		'updateVariationsTable.php',
+		'uploadInvoices.php',
+		'importCategories.php',
+		'update_amazon_orders.php',
+		'update_ebay_orders.php',
+	);
+}
+
+/**
+ * Fixed allow-list of function names that may be dispatched through
+ * magnaExecute(). Add entries here only after confirming the magnalister
+ * API server legitimately invokes them.
+ */
+function magnaAllowedCallbackFunctions() {
+	return array(
+		'magnaCompartCheck',
+		'magnaGetClientVersion',
+		'magnaCollectStats',
+		'magnaGetInvolvedMarketplaces',
+		'magnaGetInvolvedMPIDs',
+		/* Order overview / order details rendering (shop backend) */
+		'magnaRenderOrderDetails',
+		'magnaRenderOrderStatusSync',
+		'magnaRenderOrderPlatformIcon',
+		'magnaSubmitOrderStatus',
+		'magnaInventoryUpdate',
+		'magnaGetCartContents', // called internally by magnaRenderOrderDetails
+	);
 }
 
 function magnaEchoDiePage($title, $content, $style = '') {
@@ -148,7 +204,7 @@ body { font: 12px sans-serif; }
 	</head>
 	<body>
 		' . $content . '
-		<a href="' . $_SERVER['HTTP_REFERER'] . '" title="Back / Zur&uuml;ck">Back / Zur&uuml;ck</a>
+		<a href="' . (isset($_SERVER['HTTP_REFERER']) ? htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8') : '') . '" title="Back / Zur&uuml;ck">Back / Zur&uuml;ck</a>
 	</body>
 </html>';
 	exit();
@@ -612,7 +668,7 @@ function refreshCurrentClientVersion() {
 function magnaDetermineCurrentClientVersion() {
 	#$_t = microtime(true);
 	$cCVDB = MagnaDB::gi()->fetchOne('SELECT value FROM '.TABLE_MAGNA_CONFIG.' WHERE mpID=0 AND mkey=\'CurrentClientVersion\'');
-	$cCVDB = @unserialize($cCVDB);
+	$cCVDB = magnaSafeUnserialize($cCVDB);
 	$cCV = array();
 	do {
 		if (    !is_array($cCVDB)
@@ -740,16 +796,28 @@ function magnaCallbackRun() {
 	define('DIR_MAGNALISTER_WS_IMAGECACHE', DIR_MAGNALISTER_WS_CACHE.'images/');
 	define('DIR_MAGNALISTER_WS_IMAGES',     DIR_MAGNALISTER_WS.'images/');
 
-    // HTTP_CATALOG_SERVER defined only in admin area, used by some magnaCallback called functions
-    if (!defined('HTTP_SERVER')) {
-        $sServer = '';
-        if (isset($_SERVER) && array_key_exists('HTTP_HOST', $_SERVER)) {
-            $sServer = $_SERVER['HTTP_HOST'];
+    /* HTTP_CATALOG_SERVER defined only in admin area, used by some magnaCallback called functions.
+       Same logic as mlGetCatalogServerUrl() in php/lib/functionLib.php, but this file has to be
+       self-contained (it is located in the shop root and might not be up to date). */
+    if (!defined('HTTP_CATALOG_SERVER')) {
+        if (defined('HTTP_SERVER') && (HTTP_SERVER != '')) {
+            $sServer = HTTP_SERVER;
+        } else if (defined('HTTPS_SERVER') && (HTTPS_SERVER != '')) {
+            $sServer = HTTPS_SERVER;
+        } else if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] != '')) {
+            /* Last resort: derive it from the request (HTTP_HOST is client provided). */
+            $blHttps = (   (   isset($_SERVER['HTTPS'])
+                            && ($_SERVER['HTTPS'] != '')
+                            && (strtolower($_SERVER['HTTPS']) != 'off'))
+                        || (   isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+                            && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'))
+                       );
+            $sServer = ($blHttps ? 'https://' : 'http://').$_SERVER['HTTP_HOST'];
+        } else {
+            $sServer = '';
         }
-    } else {
-        $sServer = HTTP_SERVER;
+        define('HTTP_CATALOG_SERVER', $sServer);
     }
-    defined('HTTP_CATALOG_SERVER') OR define('HTTP_CATALOG_SERVER', $sServer);
 
 	/* Issued a compart check (eiter get or post)? */
 	if ((MAGNA_CALLBACK_MODE == 'STANDALONE') && array_key_exists('function', $_REQUEST) && ($_REQUEST['function'] == 'magnaCompartCheck')) {
@@ -931,7 +999,8 @@ function magnaCallbackRun() {
 	/* API-Artige Funktionalitaet */
 	if ((MAGNA_CALLBACK_MODE == 'STANDALONE') &&
 		array_key_exists('passphrase', $_POST) &&
-		($_POST['passphrase'] == getDBConfigValue('general.passphrase', 0)) &&
+		is_string($_POST['passphrase']) &&
+		hash_equals((string)getDBConfigValue('general.passphrase', 0), $_POST['passphrase']) &&
 		array_key_exists('function', $_POST)
 	) {
 		$arguments = array_key_exists('arguments', $_POST) ? magnaSafeUnserialize($_POST['arguments']) : array();

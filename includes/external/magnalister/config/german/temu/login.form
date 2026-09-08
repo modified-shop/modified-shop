@@ -1,0 +1,15 @@
+{
+    "login": {
+        "headline": "Temu Zugangsdaten",
+        "fields": [
+            {
+                "label": "Temu Token",
+                "key": "_#_platform_#_.oauth.token",
+                "desc": "",
+                "type": "extern",
+                "procFunc": "TemuConfigure::TemuGetToken",
+                "params": []
+            }
+        ]
+    }
+}

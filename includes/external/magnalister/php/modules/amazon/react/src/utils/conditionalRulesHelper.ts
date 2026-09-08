@@ -3,6 +3,45 @@ import {CONDITIONAL_RULES_BOX_STYLES} from '../components/AmazonVariations/style
 import InfoIcon from '../assets/info_tooltip.png';
 
 /**
+ * Escape a data-derived value for interpolation into the generated HTML.
+ * The help text is rendered via dangerouslySetInnerHTML, so attribute names,
+ * keys and example values must not be able to carry markup.
+ */
+function escapeHtml(value: string): string {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
+ * Render one related attribute as a clickable list item with up to three
+ * example values. Used for both directions of the help text (attributes that
+ * affect this one and attributes affected by it).
+ */
+function renderAttributeListItem(
+  key: string,
+  allAttributes: Record<string, MarketplaceAttribute>
+): string {
+  const attr = allAttributes[key];
+  const displayName = attr?.value || key;
+
+  // Get example values from the attribute (first 3 values as examples)
+  let exampleText = '';
+  if (attr?.values) {
+    const valueExamples = Object.values(attr.values).slice(0, 3);
+    if (valueExamples.length > 0) {
+      exampleText = ` <span style="color: rgba(73, 80, 87, 0.7) !important; font-style: italic !important; font-size: 12px !important;">(e.g. "${valueExamples.map(escapeHtml).join('", "')}"${valueExamples.length === 3 ? ', ...' : ''})</span>`;
+    }
+  }
+
+  // Create clickable link with example
+  return `<li style="margin-bottom: 6px !important;"><a href="#" class="ml-js-noBlockUi conditional-rule-link" data-target-attribute="${escapeHtml(key)}" style="color: #667eea !important; text-decoration: none !important; font-weight: 500 !important; cursor: pointer !important;">${escapeHtml(displayName)}</a>${exampleText}</li>`;
+}
+
+/**
  * Generate a help text explaining which attributes affect or are affected by this attribute
  * based on conditional rules.
  *
@@ -57,22 +96,7 @@ export function generateConditionalRulesHelpText(
     });
 
     const sourceAttributeNames = Array.from(sourceAttributeKeys)
-      .map(key => {
-        const attr = allAttributes[key];
-        const displayName = attr?.value || key;
-
-        // Get example values from the attribute (first 3 values as examples)
-        let exampleText = '';
-        if (attr?.values) {
-          const valueExamples = Object.values(attr.values).slice(0, 3);
-          if (valueExamples.length > 0) {
-            exampleText = ` <span style="color: rgba(73, 80, 87, 0.7) !important; font-style: italic !important; font-size: 12px !important;">(e.g. "${valueExamples.join('", "')}"${valueExamples.length === 3 ? ', ...' : ''})</span>`;
-          }
-        }
-
-        // Create clickable link with example
-        return `<li style="margin-bottom: 6px !important;"><a href="#" class="ml-js-noBlockUi conditional-rule-link" data-target-attribute="${key}" style="color: #667eea !important; text-decoration: none !important; font-weight: 500 !important; cursor: pointer !important;">${displayName}</a>${exampleText}</li>`;
-      });
+      .map(key => renderAttributeListItem(key, allAttributes));
 
     if (sourceAttributeNames.length > 0) {
       const affectedByText = i18n?.conditionalRulesAffectedBy || 'This field options are filtered based on';
@@ -88,22 +112,7 @@ export function generateConditionalRulesHelpText(
     });
 
     const targetAttributeNames = Array.from(targetAttributeKeys)
-      .map(key => {
-        const attr = allAttributes[key];
-        const displayName = attr?.value || key;
-
-        // Get example values from the attribute (first 3 values as examples)
-        let exampleText = '';
-        if (attr?.values) {
-          const valueExamples = Object.values(attr.values).slice(0, 3);
-          if (valueExamples.length > 0) {
-            exampleText = ` <span style="color: rgba(73, 80, 87, 0.7) !important; font-style: italic !important; font-size: 12px !important;">(e.g. "${valueExamples.join('", "')}"${valueExamples.length === 3 ? ', ...' : ''})</span>`;
-          }
-        }
-
-        // Create clickable link with example
-        return `<li style="margin-bottom: 6px !important;"><a href="#" class="ml-js-noBlockUi conditional-rule-link" data-target-attribute="${key}" style="color: #667eea !important; text-decoration: none !important; font-weight: 500 !important; cursor: pointer !important;">${displayName}</a>${exampleText}</li>`;
-      });
+      .map(key => renderAttributeListItem(key, allAttributes));
 
     if (targetAttributeNames.length > 0) {
       const affectsText = i18n?.conditionalRulesAffects || 'Changing this field will filter options in';

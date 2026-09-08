@@ -619,12 +619,7 @@ if (!$auth['state']) {
 
 	# Voreinstellung Dauer Festpreis-Listings
 	try {
-		$eBayStoreData = MagnaConnector::gi()->submitRequest(array('ACTION' => 'HasStore'));
-		if('True' == $eBayStoreData['DATA']['Answer']) {
-			$fixedListingType = 'StoresFixedPrice';
-		} else {
-			$fixedListingType = 'FixedPriceItem';
-		}
+		$fixedListingType = 'FixedPriceItem';
 		$fixedDurationData = MagnaConnector::gi()->submitRequest(array(
 			'ACTION' => 'GetListingDurations',
 			'DATA' => array (
@@ -632,7 +627,7 @@ if (!$auth['state']) {
 			)
 		));
 	} catch (MagnaException $e) {
-		$fixedDurationData = array('DATA' => array('ListingDurations' => array('Days_30')));
+		$fixedDurationData = array('DATA' => array('ListingDurations' => array('GTC')));
 	}
 	$fixedDurations = array();
 	foreach ($fixedDurationData['DATA']['ListingDurations'] as $duration) {
@@ -645,8 +640,6 @@ if (!$auth['state']) {
 		setDBConfigValue('ebay.fixed.duration', $_MagnaSession['mpID'], $lastFixedDuration);
 	}
 	$form['fixedsettings']['fields']['fixedduration']['default'] = getDBConfigValue('ebay.fixed.duration', $_MagnaSession['mpID'], $lastFixedDuration);
-
-	# eBay Plus ist unten (nur wenn nicht ajax)
 
 	# Voreinstellung Dauer Steigerungsauktionen
 	try {
@@ -797,32 +790,6 @@ if (!$auth['state']) {
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 	echo $cG->processAjaxRequest();
 } else {
-
-	# eBay Plus (nur wenn nicht ajax)
-	try {
-		$eBayPlusSettings = MagnaConnector::gi()->submitRequest(array(
-			'ACTION' => 'GeteBayAccountSettings',
-		));
-	} catch (MagnaException $e) {
-		$eBayPlusSettings = array('DATA' => array('eBayPlus' => 'false', 'eBayPlusListingDefault' => 'false'));
-	}
-	if (    ('false' == $eBayPlusSettings['DATA']['eBayPlus'])
-	     || ( false  == $eBayPlusSettings['DATA']['eBayPlus'])) {
-?><script>/*<!CDATA[*/
-	$(document).ready(function() {
-		$('input[id="conf_ebay.plus_val"]').prop('checked', false);
-		$('input[id="conf_ebay.plus_val"]').prop('disabled', true);
-	});
-/*]]>*/</script><?php
-	} else if ('true' == getDBConfigValue('ebay.plus', $_MagnaSession['mpID'], $eBayPlusSettings['DATA']['eBayPlusListingDefault'])) {
-	# aktiviere Checkbox, wenn Voreinstellung auf eBay aktiv und noch keine Voreistellung im Plugin getroffen
-?><script>/*<!CDATA[*/
-	$(document).ready(function() {
-		$('input[id="conf_ebay.plus_val"]').prop('checked', true);
-	});
-/*]]>*/</script><?php
-	}
-	
 
 	$cG->setRenderTabIdent(true);
 	// if Business Policies (Seller Profiles) submitted, adjust resp. fields to display

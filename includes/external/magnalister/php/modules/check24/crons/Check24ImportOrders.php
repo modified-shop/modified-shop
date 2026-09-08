@@ -23,6 +23,8 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleImportOrders.php');
 
 class Check24ImportOrders extends MagnaCompatibleImportOrders {
+	protected $blSupportsBuyerMessageOnly = true;
+
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);
 	}

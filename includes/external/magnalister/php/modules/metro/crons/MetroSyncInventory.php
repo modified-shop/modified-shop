@@ -153,7 +153,7 @@ class MetroSyncInventory extends MagnaCompatibleSyncInventory {
      * @return mixed|string
      */
     protected function getProductTitle() {
-        $productData = unserialize($this->cItem['ProductData']);
+        $productData = magnaSafeUnserialize($this->cItem['ProductData']);
         return $productData['Title'];
     }
 

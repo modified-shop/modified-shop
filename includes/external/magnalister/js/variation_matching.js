@@ -37,6 +37,7 @@
             dbtable: 'dbtable',
             dbcolumn: 'dbcolumn',
             dbalias: 'dbalias',
+            dbMatchingInfo: '',
             alreadyMatched: 'alreadyMatched',
             multiSelect: '',
             multiselectHint: ''
@@ -572,6 +573,7 @@
                     + self.i18n.dbalias
                     +   '<input type="text" name="ml[match]' + self.attributesNamePrefix + '[' + selector.AttributeCode + '][Values][Alias]" value="' + selectedAlias + '">'
                     + '</div>'
+                    + '<span class="ml-warning ml-dbmatching-info" title="' + self.i18n.dbMatchingInfo + '">&nbsp;<span></span></span>'
                 );
 
                 $('select[name="ml[match]' + self.attributesNamePrefix + '[' + selector.AttributeCode + '][Values][Table]"]').change(function() {
@@ -632,7 +634,9 @@
 
             $('option', 'select[name="ml[match]' + self.attributesNamePrefix + '[' + code + '][Values][Column]"]').not(':eq(0)').remove();
 
-            $.each(data, function(key, value) {
+            // Guard against a null/empty DBMatchingColumns response: jQuery.each(null) throws
+            // "Cannot read properties of null (reading 'length')". Degrade gracefully instead.
+            $.each(data || {}, function(key, value) {
                 var selected = '';
                 if (selectedColumn === value) {
                     selected = 'selected="selected"';

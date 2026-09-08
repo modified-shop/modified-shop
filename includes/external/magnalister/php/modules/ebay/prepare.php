@@ -405,6 +405,23 @@ if (array_key_exists('savePrepareData', $_POST) || (!empty($_POST['action']) && 
 		$msgSuccess = ML_EBAY_LABEL_PREPARED_SUCCESS_MULTI;
 	}
        	echo '<div class="successBox">'.$msgSuccess.'</div>'."\n";
+	# Auch bei STATUS=SUCCESS kann eBay Warnungen liefern (z.B. "Easy and Free Returns",
+	# Rücknahmebedingungen-Warnung 21920444). Das Angebot wurde akzeptiert, die Warnung
+	# wird aber angezeigt, damit der Verkäufer reagieren kann. Die ERRORMESSAGE enthält
+	# bereits Titel, SKU, ErrorCode und den vollständigen eBay-Text.
+	if (!empty($verified['ERRORS']) && is_array($verified['ERRORS'])) {
+		$supportsUTF8 = (stripos($_SESSION['language_charset'], 'utf') !== false);
+		foreach ($verified['ERRORS'] as $ebayWarning) {
+			if (   !is_array($ebayWarning)
+			    || !isset($ebayWarning['ERRORLEVEL'])
+			    || ('Warning' != $ebayWarning['ERRORLEVEL'])
+			) {
+				continue;
+			}
+			if (!$supportsUTF8) arrayEntitiesToLatin1($ebayWarning);
+			echo '<div class="ebay noticeBox">'.$ebayWarning['ERRORMESSAGE'].'</div>'."\n";
+		}
+	}
     } else if('ERROR' == $verified['STATUS']) {
         # noch mal in der Maske bleiben
         $_POST['prepare'] = 'prepare';

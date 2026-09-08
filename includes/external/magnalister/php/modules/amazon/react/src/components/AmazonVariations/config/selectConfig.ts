@@ -100,6 +100,55 @@ export const REACT_SELECT_STYLES_WITH_MARGIN = {
   })
 };
 
+// Styles for multiselect - allows control to grow with selected values
+export const REACT_SELECT_MULTISELECT_STYLES = {
+  ...REACT_SELECT_STYLES,
+  control: (provided: any, state: any) => ({
+    ...provided,
+    minHeight: '43px',
+    // Remove maxHeight to allow control to grow
+    borderRadius: '0',
+    border: '1px solid #ced4da',
+    fontSize: '14px',
+    display: 'flex',
+    alignItems: 'flex-start', // Align to top for multiline
+    '&:hover': {
+      borderColor: '#adb5bd'
+    },
+    boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(0, 123, 255, 0.25)' : 'none',
+    borderColor: state.isFocused ? '#80bdff' : '#ced4da'
+  }),
+  valueContainer: (provided: any) => ({
+    ...provided,
+    padding: '4px 8px',
+    minHeight: '41px',
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap', // Allow wrapping of selected values
+    gap: '4px'
+  }),
+  multiValue: (provided: any) => ({
+    ...provided,
+    backgroundColor: '#e9ecef',
+    borderRadius: '2px',
+    margin: '2px'
+  }),
+  multiValueLabel: (provided: any) => ({
+    ...provided,
+    fontSize: '13px',
+    color: '#495057',
+    padding: '2px 4px'
+  }),
+  multiValueRemove: (provided: any) => ({
+    ...provided,
+    color: '#6c757d',
+    '&:hover': {
+      backgroundColor: '#dc3545',
+      color: 'white'
+    }
+  })
+};
+
 // Default react-select props
 export const DEFAULT_REACT_SELECT_PROPS = {
   isSearchable: true,
