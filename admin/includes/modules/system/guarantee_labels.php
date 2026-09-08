@@ -253,7 +253,7 @@
      * requested for this: an outgoing call from the administration would hang on a firewall or
      * report a red line for a shop behind basic authentication.
      *
-     * @return bool false only when the server is known and known not to read it
+     * @return bool false only when the server is known and known not to read the lock
      */
     function htaccess_server() {
       $server = isset($_SERVER['SERVER_SOFTWARE']) ? strtolower((string)$_SERVER['SERVER_SOFTWARE']) : '';
@@ -263,7 +263,17 @@
         return true;
       }
 
-      return (strpos($server, 'apache') !== false || strpos($server, 'litespeed') !== false);
+      // Both LiteSpeed editions call themselves LiteSpeed, and OpenLiteSpeed reads an .htaccess
+      // for rewrite rules only: Require and Deny are ignored there, so the lock does not hold.
+      // Only LSWS_EDITION tells the two apart. Without it the reported answer is the safer one,
+      // a missed lock costs more than a line the shop owner reads once.
+      if (strpos($server, 'litespeed') !== false) {
+        $edition = isset($_SERVER['LSWS_EDITION']) ? strtolower((string)$_SERVER['LSWS_EDITION']) : '';
+
+        return ($edition !== '' && strpos($edition, 'open') === false);
+      }
+
+      return (strpos($server, 'apache') !== false);
     }
 
     /**

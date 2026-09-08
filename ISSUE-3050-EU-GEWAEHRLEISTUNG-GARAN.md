@@ -336,9 +336,11 @@ media/guarantee_labels/archive/
         └── <terms_filename>
 ```
 
-Die Sperre des Archivs ist eine `.htaccess` und wirkt damit nur unter Apache und LiteSpeed. Das ist keine Entscheidung des Moduls, sondern der einzige Weg, den der Shop dafuer kennt: `inc/`, `includes/`, `lang/`, `log/`, `cache/`, `templates_c/` und `admin/includes/` haengen an derselben Datei. Ausserhalb des Dokumentenstamms kann das Archiv nicht liegen: `check_attachments()` stellt jedem Anhangspfad `DIR_FS_DOCUMENT_ROOT` voran, der ihn nicht schon enthaelt, und der Mailweg faende die Datei dort nicht mehr.
+Die Sperre des Archivs ist eine `.htaccess` und wirkt damit nur unter Apache und LiteSpeed Enterprise. Das ist keine Entscheidung des Moduls, sondern der einzige Weg, den der Shop dafuer kennt: `inc/`, `includes/`, `lang/`, `log/`, `cache/`, `templates_c/` und `admin/includes/` haengen an derselben Datei. Ausserhalb des Dokumentenstamms kann das Archiv nicht liegen: `check_attachments()` stellt jedem Anhangspfad `DIR_FS_DOCUMENT_ROOT` voran, der ihn nicht schon enthaelt, und der Mailweg faende die Datei dort nicht mehr.
 
-Deshalb sagt es die Moduldiagnose. Sie liest `$_SERVER['SERVER_SOFTWARE']` und meldet einen Server, der keine `.htaccess` auswertet, mit dem Pfad, der in seiner Konfiguration zu sperren ist. Gefragt wird nur der eigene Prozess: Ein ausgehender HTTP-Aufruf aus der Administration wuerde an einer Firewall haengen oder bei einem Shop hinter Basic Authentication eine rote Zeile melden, die nichts bedeutet. Ist der Servername unbekannt, meldet die Diagnose nichts; eine falsche Vermutung waere schlechter als keine. Fuer nginx lautet die Regel:
+OpenLiteSpeed liest eine `.htaccess` nur fuer Rewrite-Regeln und ignoriert `Require` und `Deny`. Beide LiteSpeed-Ausgaben nennen sich in `SERVER_SOFTWARE` gleich, unterscheidbar sind sie nur an `LSWS_EDITION`. Die Archivsperre traegt deshalb zusaetzlich eine Rewrite-Regel, die dieselbe Wirkung mit der einen Direktive erzielt, die OpenLiteSpeed liest. Verlassen kann sich das Modul darauf nicht: OpenLiteSpeed wertet `.htaccess` nur aus, wenn es dafuer eingerichtet ist.
+
+Deshalb sagt es die Moduldiagnose. Sie liest `$_SERVER['SERVER_SOFTWARE']` und meldet einen Server, der die Sperre nicht auswertet, mit dem Pfad, der in seiner Konfiguration zu sperren ist. Bei LiteSpeed entscheidet `LSWS_EDITION`; fehlt der Wert, meldet die Diagnose den Server, weil eine uebersehene Sperre mehr kostet als eine Zeile, die der Shopbetreiber einmal liest. Gefragt wird nur der eigene Prozess: Ein ausgehender HTTP-Aufruf aus der Administration wuerde an einer Firewall haengen oder bei einem Shop hinter Basic Authentication eine rote Zeile melden, die nichts bedeutet. Ist der Servername unbekannt, meldet die Diagnose nichts; eine falsche Vermutung waere schlechter als keine. Fuer nginx lautet die Regel:
 
 ```text
 location ^~ /media/guarantee_labels/archive/ { deny all; }
@@ -1298,6 +1300,7 @@ nicht mehr nur in diesem Dokument, sondern als Test in `tests/guarantee_labels/r
 - Cache leeren; `colour.svg` und `nested.svg` werden unter demselben `garan_hash` neu erzeugt und archivierte SVG-Grafiken zu bestehenden Bestellungen bleiben verfuegbar.
 - Direkten HTTP-Aufruf einer Datei unter `media/guarantee_labels/archive/` durch die eigene `.htaccess` blockieren, einschliesslich einer archivierten Garantiebedingung unter `terms/`. Die Katalogfassung derselben Datei unter `media/products/` bleibt erreichbar.
 - Denselben Aufruf unter nginx wiederholen; die Sperre greift dort nicht und die Moduldiagnose meldet den Server samt zu sperrendem Pfad. Nach dem Eintragen der `location`-Regel ist die Datei nicht mehr erreichbar.
+- Die Diagnose mit `SERVER_SOFTWARE = LiteSpeed` und den Werten von `LSWS_EDITION` fuer OpenLiteSpeed, fuer die Enterprise-Ausgabe und ohne den Wert pruefen; nur die Enterprise-Ausgabe gilt als gesperrt.
 - Zwei Bestellungen mit demselben `garan_hash` und `notice_hash` verwenden dieselben Archivverzeichnisse, ohne vorhandene Dateien zu ueberschreiben.
 - Zwei parallele Schreibvorgaenge fuer denselben Hash erzeugen durch temporaere Nachbarverzeichnisse und atomare Umbenennung keine unvollstaendigen Archivverzeichnisse.
 - Nicht beschreibbaren GARAN-Cache testen; die aktuelle Ausgabe verwendet die direkt erzeugten SVGs, der Fehler erscheint im Protokoll und in der Moduldiagnose.
