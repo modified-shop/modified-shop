@@ -12,6 +12,11 @@
 
   require_once(DIR_FS_CATALOG.'inc/html_encoding.php');
 
+  // Above this many active manufacturers the buffer keeps asking one id at a time, below it
+  // one query answers the whole request. A shop past this number is a marketplace, and there
+  // a listing page still shows only a handful of them.
+  defined('GUARANTEE_LABELS_MANUFACTURER_LIMIT') or define('GUARANTEE_LABELS_MANUFACTURER_LIMIT', 500);
+
   /**
    * guarantee_labels_active()
    *
@@ -227,6 +232,8 @@
    */
   function guarantee_labels_manufacturer_names($manufacturers_ids) {
     static $known = array();
+    static $rounds = 0;
+    static $bulk = null;
 
     $names = array();
     $missing = array();
@@ -246,6 +253,57 @@
       }
 
       $missing[$manufacturers_id] = $manufacturers_id;
+    }
+
+    if (count($missing) > 0) {
+      $rounds++;
+
+      // An article listing calls buildDataArray() per row, so the block is never in scope and
+      // each new manufacturer would cost its own query. The second round says the caller is
+      // walking a list: from there the active manufacturers are read once. The limit keeps a
+      // shop with a very large manufacturer table on the one-by-one path.
+      if ($rounds > 1 && $bulk === null) {
+        $bulk = false;
+        $all_query = xtc_db_query("SELECT manufacturers_id,
+                                          manufacturers_name
+                                     FROM ".TABLE_MANUFACTURERS."
+                                    WHERE manufacturers_status = '1'
+                                    LIMIT ".(GUARANTEE_LABELS_MANUFACTURER_LIMIT + 1));
+        $loaded = array();
+
+        while ($all_query !== false && $manufacturers = xtc_db_fetch_array($all_query)) {
+          $loaded[(int)$manufacturers['manufacturers_id']] = $manufacturers['manufacturers_name'];
+        }
+
+        // A failed query looks like an empty shop, and marking every id as unknown would keep the
+        // labels off for the rest of the request. Only a list that really came back counts.
+        if ($all_query !== false
+            && count($loaded) > 0
+            && count($loaded) <= GUARANTEE_LABELS_MANUFACTURER_LIMIT
+            )
+        {
+          $bulk = true;
+
+          foreach ($loaded as $manufacturers_id => $manufacturers_name) {
+            $known[$manufacturers_id] = $manufacturers_name;
+          }
+        }
+
+        // an id the complete list does not name is inactive or gone, no query can add it
+        foreach ($missing as $manufacturers_id) {
+          if ($bulk === true && !array_key_exists($manufacturers_id, $known)) {
+            $known[$manufacturers_id] = false;
+          }
+
+          if (array_key_exists($manufacturers_id, $known)) {
+            if ($known[$manufacturers_id] !== false) {
+              $names[$manufacturers_id] = $known[$manufacturers_id];
+            }
+
+            unset($missing[$manufacturers_id]);
+          }
+        }
+      }
     }
 
     if (count($missing) > 0) {
