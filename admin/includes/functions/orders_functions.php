@@ -593,6 +593,8 @@
     if (round($data_array['products_weight_origin'], 4) != round($data_array['old_weight'], 4)) {
       orders_product_update($oID, $data_array, $status);
     }
+
+    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_functions/product_edit/','php') as $file) require ($file);
   }
 
 
@@ -687,6 +689,7 @@
     }
     
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
+    $orders_products_id = xtc_db_insert_id();
 
     if ($data_array['products_quantity'] != 0) {
       xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
@@ -701,10 +704,14 @@
     }
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
+
+    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_functions/product_insert/','php') as $file) require ($file);
   }
 
 
   function orders_product_delete($oID, $data_array) {
+
+    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_functions/product_delete/','php') as $file) require ($file);
 
     // Update Attributes Stock
     if (STOCK_LIMITED == 'true') {
