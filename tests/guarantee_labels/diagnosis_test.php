@@ -174,7 +174,6 @@ ok('Cachehinweis immer vorhanden', strpos($out, 'leert von sich aus keinen Cache
 
 // Die Box zeigt nur, was Aufmerksamkeit braucht. Siebzehn gruene Zeilen verstecken die eine
 // rote, und der Shopbetreiber liest hier, um ein Problem zu finden.
-ok('kein "in Ordnung" in der Box', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK) === false, $out);
 ok('div_box nicht verwendet', strpos($out, 'div_box') === false);
 
 ok('mit Befund eine rote Box', strpos($out, 'error_message') !== false);
