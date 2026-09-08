@@ -723,6 +723,8 @@
     }
 
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_products_id = '".(int)($data_array['opID'])."'");
+    // the position is gone, so its downloads belong to nothing any more
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." WHERE orders_products_id = '".(int)($data_array['opID'])."'");
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id = '".(int)($oID)."' AND orders_products_id = '".(int)($data_array['opID'])."'");
 
     xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
@@ -851,6 +853,68 @@
   }
 
 
+  /**
+   * Cleans up the download rows of one position after an attribute was deleted.
+   *
+   * orders_product_option_insert() writes a row into orders_products_download when a download
+   * attribute is added to a position of an existing order, but deleting that attribute never
+   * removed it again. The position then names a download it no longer carries.
+   *
+   * orders_products_download holds no reference to the attribute it belongs to. Neither of the
+   * two things that could connect them is safe to decide by:
+   *
+   * - the file name lives in the catalogue, which changes independently of the order. An
+   *   attribute that has meanwhile been given the file of another one would take away that
+   *   other download right.
+   * - the option name of the order looks usable, because the attribute administration offers
+   *   the download fields only for an option called "Downloads". But a merchant may rename the
+   *   attribute of an order, and a name that is then not recognised makes the position look as
+   *   if it had no download attribute at all, which would delete every valid row it holds. A
+   *   miss must never be the destructive outcome. The same applies to a shop whose option is
+   *   named differently per admin language.
+   *
+   * So the cleanup acts only where nothing can be mistaken, and it never writes:
+   *
+   * - no download row on the position: nothing to do and nothing to say.
+   * - no attribute left either: every row is orphaned and all of them go.
+   * - attributes and rows both remain: which row belongs to which attribute cannot be told, so
+   *   nothing is deleted and the merchant is told. Counting is no help here: deleting the only
+   *   download attribute of a position that also carries a physical one leaves one attribute and
+   *   one row, which looks unremarkable and is exactly the common case this is about.
+   *
+   * Only a column orders_products_attributes_id in orders_products_download can assign a single
+   * row to a single attribute. It is a schema change to a core table, see issue #3280.
+   *
+   * @param int $orders_products_id the position whose attribute was deleted
+   */
+  function orders_product_downloads_cleanup($orders_products_id) {
+    global $messageStack;
+
+    $orders_products_id = (int)$orders_products_id;
+
+    $downloads_query = xtc_db_query("SELECT COUNT(*) AS total
+                                       FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
+                                      WHERE orders_products_id = '".$orders_products_id."'");
+    $downloads = xtc_db_fetch_array($downloads_query);
+
+    if ($downloads['total'] < 1) {
+      return;
+    }
+
+    $attributes_query = xtc_db_query("SELECT COUNT(*) AS total
+                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                       WHERE orders_products_id = '".$orders_products_id."'");
+    $attributes = xtc_db_fetch_array($attributes_query);
+
+    if ($attributes['total'] < 1) {
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
+                          WHERE orders_products_id = '".$orders_products_id."'");
+      return;
+    }
+
+    $messageStack->add_session(WARNING_ORDERS_DOWNLOAD_LEFTOVER, 'warning');
+  }
+
   function orders_product_option_edit($oID, $data_array) {
     global $order, $xtPrice, $lang;
   
@@ -878,6 +942,8 @@
       'options_values_weight' => xtc_db_prepare_input($data_array['options_values_weight']),
       'weight_prefix' => xtc_db_prepare_input($data_array['weight_prefix']),
     );
+    // no cleanup here: this mask changes the name, the price and the weight of the order
+    // attribute, never the attribute it refers to, so its download is untouched
     xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array, 'update', "orders_products_attributes_id = '".xtc_db_input($data_array['opAID'])."'");
 
     $products_id = orders_product_update($oID, $data_array, $status);
@@ -1019,7 +1085,9 @@
     }
                
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_products_attributes_id = '".(int)($data_array['opAID'])."'");
-  
+
+    orders_product_downloads_cleanup($data_array['opID']);
+
     $products_id = orders_product_update($oID, $data_array, $status);
 
     return $products_id;
