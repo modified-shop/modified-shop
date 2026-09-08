@@ -412,6 +412,12 @@ if (!$action || in_array($action, array('delete', 'list'))) {
             <td class="dataTableConfig col-left"><?php echo TEXT_TITLE_FILE; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_title',$content['content_name'],'size="60"'); ?></td>
           </tr>
+          <?php if (defined('MODULE_GUARANTEE_LABELS_STATUS') && MODULE_GUARANTEE_LABELS_STATUS == 'true') { ?>
+          <tr>
+            <td class="dataTableConfig col-left"><?php echo TEXT_GUARANTEE_LABELS_CONTENT_TYPE; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('content_type', array(array('id' => '', 'text' => TEXT_GUARANTEE_LABELS_CONTENT_TYPE_DEFAULT), array('id' => 'garan_terms', 'text' => TEXT_GUARANTEE_LABELS_CONTENT_TYPE_TERMS)), ((isset($content['content_type'])) ? $content['content_type'] : '')); ?></td>
+          </tr>
+          <?php } ?>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_LINK; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_link',$content['content_link'],'size="60"'); ?></td>

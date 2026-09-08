@@ -53,6 +53,7 @@
               {/foreach}
             </ul>
           {/if}
+          {if $module_data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$module_data.GUARANTEE_LABEL}</div>{/if}
         
           <div class="of_action">                                                
             {if $module_data.BUTTON_WISHLIST != ''}<span class="of_wishlist">{$module_data.BUTTON_WISHLIST|replace:"\">":" \"><i class=\"fa-regular fa-heart\"></i>"}</span>{/if}

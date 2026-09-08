@@ -20,6 +20,7 @@
         <h2><a href="{$products_data.PRODUCTS_LINK}">{$products_data.PRODUCTS_NAME}</a></h2>
         <p>{$products_data.PRODUCTS_SHORT_DESCRIPTION}</p>
         <span class="price">{$products_data.PRODUCTS_PRICE}</span>&nbsp;<span class="taxandshippinginfo">({$products_data.PRODUCTS_TAX_INFO}{$products_data.PRODUCTS_SHIPPING_LINK})</span>
+        {if $products_data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$products_data.GUARANTEE_LABEL}</div>{/if}
         {if $products_data.PRODUCTS_VPE}<p class="vpe">{$products_data.PRODUCTS_VPE}</p>{/if}
         </td>
       </tr>

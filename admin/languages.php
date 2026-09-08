@@ -330,6 +330,12 @@
                                                       FROM " . TABLE_PRODUCTS_CONTENT . " 
                                                      WHERE languages_id = '" . $lngID_from . "'");
             while ($products_content = xtc_db_fetch_array($products_content_query)) {
+              // a typed attachment belongs to the language of its file, so the new language has
+              // to be assigned deliberately instead of inheriting the wrong document
+              if (isset($products_content['content_type']) && trim((string)$products_content['content_type']) !== '') {
+                continue;
+              }
+
               $sql_data_array = $products_content;
               $sql_data_array['languages_id'] = $lngID_to;
               unset($sql_data_array['content_id']);

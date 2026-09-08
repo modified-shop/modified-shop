@@ -112,6 +112,14 @@
   </div>
 </div>
 {/if}
+{if $GUARANTEE_NOTICE_BODY != ''}
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4 class="checkout">{$GUARANTEE_NOTICE_TITLE}</h4>
+    {$GUARANTEE_NOTICE_BODY}
+  </div>
+</div>
+{/if}
 
 {if $MODULE_gift_cart}
   <br class="clearfix" /> 
@@ -166,6 +174,7 @@
             {/foreach}
           </ul>
           {/if}
+          {if $data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$data.GUARANTEE_LABEL}</div>{/if}
         </span>
         <span class="ol_price_row ol_width4 cf">
           <span class="ol_singleprice ol_width6"><span class="ol_distance">{$data.final_price_formated}{if $ORDER_TAX_GROUPS > 1}<br /><span class="mini">{$data.tax_info}</span>{/if}</span></span>

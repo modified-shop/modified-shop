@@ -175,6 +175,8 @@
             {if $PAYPAL_INSTALLMENT && !$PAYPALPLAN}{$PAYPAL_INSTALLMENT}{/if}
           </div>
 
+          {if $GUARANTEE_LABEL}<div class="guarantee-label-row">{$GUARANTEE_LABEL}</div>{/if}
+
           {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
           {if isset($MODULE_product_options) && $MODULE_product_options != ''}{$MODULE_product_options}{/if}
         </div>

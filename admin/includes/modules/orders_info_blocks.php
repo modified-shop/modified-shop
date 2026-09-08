@@ -217,6 +217,13 @@
         if (ACTIVATE_SHIPPING_STATUS == 'true') {
           echo '<br /><nobr><i>&nbsp; - '.SHIPPING_TIME.$order->products[$i]['shipping_time'].'</i></nobr> ';
         }
+        if (defined('MODULE_GUARANTEE_LABELS_STATUS') && MODULE_GUARANTEE_LABELS_STATUS == 'true') {
+          require_once(DIR_FS_INC.'guarantee_labels_order.inc.php');
+          $guarantee_labels_text = guarantee_labels_order_text($order->info['order_id'], $order->products[$i]['orders_products_id']);
+          if ($guarantee_labels_text !== false) {
+            echo '<br /><nobr><i>&nbsp; - '.$guarantee_labels_text['label']['html'].'</i></nobr> ';
+          }
+        }
         echo '            </td>'.PHP_EOL;
         echo '            <td class="dataTableContent" valign="top">';
         echo ($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : '<br />';

@@ -81,6 +81,7 @@
       <p style="clear:both;">{$PAYMENT_METHOD}</p>
     </div>
   {/if}
+
   <div style="clear:both"></div>
 
   {if $ORDER_COMMENTS != ''}
@@ -102,6 +103,11 @@
         </tr>
       {/foreach}
     </table>
+  {/if}
+  {if $GUARANTEE_NOTICE_BODY != ''}
+    <br />
+    <h2>{$GUARANTEE_NOTICE_TITLE}</h2>
+    <div style="clear:both;padding: 0 5px;">{$GUARANTEE_NOTICE_BODY}</div>
   {/if}
 
   {if $MODULE_gift_cart}
@@ -156,6 +162,7 @@
               {if $attrib_data.value != ''}<br /><span class="nobr small">&nbsp;<i> - {$attrib_data.option} : {$attrib_data.value}</i></span>{/if}
             {/foreach}
           {/if}
+          {if $data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$data.GUARANTEE_LABEL}</div>{/if}
         </div>
       </td>
       <td class="main_row" align="right" valign="top">{$data.model}</td>

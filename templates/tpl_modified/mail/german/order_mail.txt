@@ -42,6 +42,8 @@ Art.-Nr. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}
 {/if}
 {if $order_values.PRODUCTS_SHIPPING_TIME != ''}Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}
 {/if}
+{if $order_values.GUARANTEE_TXT != ''}{$order_values.GUARANTEE_TXT}
+{/if}
 {if $order_values.PRODUCTS_ATTRIBUTES != ''}{$order_values.PRODUCTS_ATTRIBUTES}
 {/if}
 
@@ -76,6 +78,13 @@ Art.-Nr. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}
 {/if}
 
 [SIGNATUR]
+
+{if $GUARANTEE_NOTICE_TXT != ''}
+----------------------------------------------------------------------
+{$GUARANTEE_NOTICE_HEADING_TXT}
+----------------------------------------------------------------------
+{$GUARANTEE_NOTICE_TXT}
+{/if}
 
 {$REVOCATION_TXT}
 

@@ -66,6 +66,12 @@
               {/foreach}
             </div>
           {/if} 
+          {if $GUARANTEE_NOTICE_BODY != ''}
+            <div class="account_history_box">
+              <p class="my_5"><strong>{$GUARANTEE_NOTICE_TITLE}</strong></p>
+              {$GUARANTEE_NOTICE_BODY}
+            </div>
+          {/if}
         </div>      
       
         <div class="account_history_box_row">
@@ -116,6 +122,7 @@
                     {if $order_values.PRODUCTS_SHIPPING_TIME != ''}<div class="of_infoline">{$smarty.const.SHIPPING_TIME} {$order_values.PRODUCTS_SHIPPING_TIME}</div>{/if}
                   </div>
                 {/if}
+                {if $order_values.GUARANTEE_LABEL}<div class="guarantee-label-row">{$order_values.GUARANTEE_LABEL}</div>{/if}
                 
                 {if sizeof($order_values.PRODUCTS_ATTRIBUTES_ARRAY) > 0}
                   <ul class="of_attributes">

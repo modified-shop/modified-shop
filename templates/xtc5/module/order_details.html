@@ -26,6 +26,7 @@
     {if $module_data.PRODUCTS_VPE}<span class="nobr small">{$module_data.PRODUCTS_VPE}</span><br />{/if}
     {if $module_data.PRODUCTS_MODEL}<span class="nobr small"><strong>{$smarty.const.HEADER_MODEL}:</strong> {$module_data.PRODUCTS_MODEL}</span><br />{/if}
     {if $module_data.PRODUCTS_SHIPPING_TIME}<span class="nobr small"><strong>{$smarty.const.SHIPPING_TIME}</strong> {$module_data.PRODUCTS_SHIPPING_TIME}</span><br />{/if}
+    {if $module_data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$module_data.GUARANTEE_LABEL}</div>{/if}
     {if $module_data.BUTTON_WISHLIST != ''}&laquo; {$module_data.BUTTON_WISHLIST}{/if}
     </td>
     <td class="singleprice">{$module_data.PRODUCTS_SINGLE_PRICE}</td>
