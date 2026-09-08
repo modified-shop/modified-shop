@@ -95,18 +95,25 @@ function xtc_db_query($sql) {
     return db::$catalogue_data ? array(array('content_id' => 1)) : array();
   }
   if (preg_match('/^SHOW TABLES LIKE/i', $sql)) return db::$schema_ok ? array(1) : array();
+  // MariaDB weist ORDER BY bei SHOW zurueck, MySQL nimmt es an. Die Attrappe verhaelt sich wie
+  // MariaDB, sonst faellt so eine Abfrage erst im installierten Shop auf.
+  if (preg_match('/^SHOW .*ORDER BY/i', $sql)) {
+    echo "  FAIL  ORDER BY bei SHOW ist auf MariaDB ein Syntaxfehler\n        ".$sql."\n";
+    $GLOBALS['show_order_by'] = true;
+    return array();
+  }
   if (preg_match('/^SHOW KEYS FROM (\S+)/i', $sql, $m)) {
     if (!db::$schema_ok) return array();
     preg_match("/Key_name = '([^']+)'/", $sql, $k);
     if ($k[1] === 'PRIMARY') {
       $spalte = (strpos($m[1], 'products') !== false) ? 'orders_products_guarantee_id' : 'orders_guarantee_id';
-      return array(array('Column_name' => isset(db::$primary_column) ? db::$primary_column : $spalte, 'Non_unique' => '0'));
+      return array(array('Column_name' => isset(db::$primary_column) ? db::$primary_column : $spalte, 'Non_unique' => '0', 'Seq_in_index' => '1'));
     }
     $unique = in_array($k[1], array('idx_orders_id', 'idx_orders_products_id'), true) ? '0' : '1';
     // idx_orders_id ist auf orders_products_guarantee bewusst nicht eindeutig
     if ($k[1] === 'idx_orders_id' && strpos($m[1], 'products') !== false) $unique = '1';
     $column = ($k[1] === 'idx_orders_products_id') ? 'orders_products_id' : 'orders_id';
-    return array(array('Column_name' => $column, 'Non_unique' => $unique));
+    return array(array('Column_name' => $column, 'Non_unique' => $unique, 'Seq_in_index' => '1'));
   }
   if (preg_match('/^SHOW COLUMNS FROM (\S+) LIKE .(.*).$/i', $sql, $m)) {
     if (!db::$schema_ok) return array();

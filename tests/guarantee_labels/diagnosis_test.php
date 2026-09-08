@@ -81,13 +81,13 @@ function xtc_db_query($sql) {
     preg_match("/Key_name = '([^']+)'/", $sql, $k);
     if ($k[1] === 'PRIMARY') {
       $spalte = (strpos($sql, 'orders_products_guarantee') !== false) ? 'orders_products_guarantee_id' : 'orders_guarantee_id';
-      return array(array('Column_name' => $spalte, 'Non_unique' => '0'));
+      return array(array('Column_name' => $spalte, 'Non_unique' => '0', 'Seq_in_index' => '1'));
     }
     // idx_orders_id ist nur auf orders_guarantee eindeutig
     $unique = ($k[1] === 'idx_orders_products_id'
                || ($k[1] === 'idx_orders_id' && strpos($sql, 'orders_products_guarantee') === false)) ? '0' : '1';
     $column = ($k[1] === 'idx_orders_products_id') ? 'orders_products_id' : 'orders_id';
-    return array(array('Column_name' => $column, 'Non_unique' => $unique));
+    return array(array('Column_name' => $column, 'Non_unique' => $unique, 'Seq_in_index' => '1'));
   }
   if (strpos($sql, 'SHOW COLUMNS') !== false) {
     preg_match("/LIKE '([^']+)'/", $sql, $c);
