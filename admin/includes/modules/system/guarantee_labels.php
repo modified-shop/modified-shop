@@ -198,23 +198,50 @@
      * @param array $rows label, state, note, own failure label
      * @return string
      */
+    /**
+     * Only what needs attention. A list of seventeen green lines hides the one red one, and the
+     * shop owner reads this to find a problem, not to confirm the ones they do not have.
+     *
+     * div_box is not used on purpose: its min-width of 850 pixels pushes the module page wider
+     * than the column it sits in.
+     */
     function diagnosis_table($rows) {
-      $content = '<div class="clear div_box mrg5"><table class="tableInput border0">';
+      $failures = '';
 
       foreach ($rows as $row) {
+        if ($row[1] === true) {
+          continue;
+        }
+
         $note = (isset($row[2]) && $row[2] !== '') ? ' '.encode_htmlspecialchars($row[2]) : '';
         $failed = (isset($row[3]) && $row[3] !== '') ? $row[3] : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED;
 
-        $content .= '<tr><td style="width:420px;"><span class="main">'.$row[0].'</span></td>'.
-                    '<td><span class="main'.(($row[1] === true) ? '' : ' error').'">'.
-                    (($row[1] === true) ? MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK : $failed.$note).
-                    '</span></td></tr>';
+        $failures .= '<tr><td class="main" style="padding-right:15px;">'.$row[0].'</td>'.
+                     '<td class="main"><b>'.$failed.$note.'</b></td></tr>';
       }
 
-      // the module never empties a cache, that belongs to the shop owner
-      $content .= '</table><div class="main mrg5">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE.'</div>';
+      $content = ($failures === '')
+               ? '<div class="info_message">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_COMPLETE.'</div>'
+               : '<div class="error_message"><table class="border0">'.$failures.'</table></div>';
 
-      return '<br /><div class="main div_header"><b>'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS.'</b></div>'.$content.'</div>';
+      // The same block the framework builds for the module box, so the diagnosis sits on the
+      // same surface instead of hanging below it. module_export.php prints this inside the
+      // modulbox, and contentTable carries its background, its divider and its spacing.
+      //
+      // The module never empties a cache, that belongs to the shop owner, so the note stays.
+      return '<table class="contentTable">'.
+               '<tr class="infoBoxHeading">'.
+                 '<td class="infoBoxHeading">'.
+                   '<div class="infoBoxHeadingTitle">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS.'</div>'.
+                 '</td>'.
+               '</tr>'.
+               '<tr class="infoBoxContent">'.
+                 '<td class="infoBoxContent">'.
+                   $content.
+                   '<div class="main mrg5">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE.'</div>'.
+                 '</td>'.
+               '</tr>'.
+             '</table>';
     }
 
     /**

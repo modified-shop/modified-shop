@@ -35,6 +35,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS', 'Pr&uuml;fung der Voraussetzungen');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE', 'Das Modul leert von sich aus keinen Cache. Erzeugte Labelgrafiken liegen unter ihrem Inhaltshash und sind nie falsch, nach einer &Auml;nderung aber verwaist. Bei aktivem Shopcache k&ouml;nnen Cross-Selling, neue Artikel und &auml;hnliche Bl&ouml;cke zudem bis zum Ablauf der Cache-Lebensdauer ein altes Label zeigen. Leeren Sie den Shopcache nach Hersteller- und Artikel&auml;nderungen &uuml;ber Konfiguration &raquo; Cache.');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK', 'in Ordnung');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_COMPLETE', 'Alle Voraussetzungen sind erf&uuml;llt.');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED', 'fehlt');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION', 'Klassenerweiterung %s eingerichtet und aktiv');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SELECT', 'Garantiedauer in %s enthalten');
