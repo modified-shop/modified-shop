@@ -38,6 +38,10 @@ $_SESSION['language_charset'] = 'UTF-8';
 $GLOBALS['rows'] = array();
 $GLOBALS['orders_guarantee'] = array();
 function xtc_db_query($sql) {
+  // die Schreibwege fragen jetzt wie die Lesewege zuerst nach der Tabelle
+  if (strpos($sql, 'SHOW TABLES LIKE') === 0) {
+    return isset($GLOBALS['tabellen_fehlen']) ? array() : array(array(1));
+  }
   if (strpos($sql, 'orders_guarantee_id') !== false) {
     preg_match("/orders_id = '(\d+)'/", $sql, $m);
     return isset($GLOBALS['orders_guarantee'][(int)$m[1]]) ? array(array('orders_guarantee_id' => 1)) : array();

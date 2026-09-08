@@ -248,10 +248,14 @@ ok('Auswahlliste filtert Gruppe 0', strpos($ausdruck, 'array_diff_key') !== fals
 ok('sie endet fuer den eval-Aufruf richtig', substr(trim($ausdruck), -1) === ',', $ausdruck);
 
 // so wertet admin/module_export.php den gespeicherten Ausdruck aus
-function xtc_get_customers_statuses() {
-  return array(0 => array('id' => 0, 'text' => 'Admin'),
-               1 => array('id' => 1, 'text' => 'Endkunde'),
-               2 => array('id' => 2, 'text' => 'Stammkunde'));
+// Wie der Shop: ohne Argument array_values(), mit true nach customers_status_id. Die Attrappe
+// laesst Gruppe 0 fuer diese Sprache fehlen, sonst faellt der Unterschied nicht auf.
+function xtc_get_customers_statuses($use_customers_status_id = false) {
+  $gruppen = array(1 => array('id' => 1, 'text' => 'Gast'),
+                   2 => array('id' => 2, 'text' => 'Endkunde'),
+                   3 => array('id' => 3, 'text' => 'Stammkunde'));
+
+  return ($use_customers_status_id == false) ? array_values($gruppen) : $gruppen;
 }
 function xtc_cfg_multi_checkbox($format, $separator, $checked, $key = '') {
   $format_array = (!is_array($format) && function_exists($format)) ? (array)$format() : (array)$format;
@@ -260,7 +264,8 @@ function xtc_cfg_multi_checkbox($format, $separator, $checked, $key = '') {
   return implode(',', $ids);
 }
 eval('$angeboten = '.$ausdruck."'', 'KEY');");
-ok('nur echte Kundengruppen im Kaestchen', $angeboten === '1,2', $angeboten);
+// Gruppe 0 fehlt hier ganz: ein Filter ueber die Position wuerde die Gastgruppe verwerfen
+ok('keine echte Kundengruppe geht verloren', $angeboten === '1,2,3', $angeboten);
 
 echo "\n== update() zieht eine alte Auswahlliste nach ==\n";
 db::$config['MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS'] = '';

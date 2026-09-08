@@ -107,6 +107,18 @@ ok('fehlendes Token -> false', $r2->render('ACME', 'X-1', '3.0') === false);
 ok('Fehler protokolliert', $r2->has_errors());
 file_put_contents($broken, $orig);
 
+echo "\n== Ein Wert darf nicht wie ein Platzhalter wirken ==\n";
+// Frueher lief je Feld ein eigener Durchlauf ueber das schon geaenderte SVG. Hiess ein
+// Hersteller wie der Platzhalter des naechsten Feldes, fand der zwei Treffer und das Label
+// verschwand mit einer irrefuehrenden Meldung.
+$r3 = new guarantee_labels_renderer();
+$token_modell = 'Model identifier';
+$mit_token = $r3->render('Model identifier', 'X-1', '3.0');
+ok('Hersteller mit dem Namen eines Platzhalters', is_array($mit_token), implode(' | ', $r3->get_errors()));
+ok('beide Werte stehen im Label', is_array($mit_token)
+   && strpos($mit_token['colour.svg'], '>Model identifier</tspan>') !== false
+   && strpos($mit_token['colour.svg'], '>X-1</tspan>') !== false);
+
 echo "\n== Fehlende Vorlagen melden einen Grund ==\n";
 class leerer_renderer extends guarantee_labels_renderer {
   function __construct() { parent::__construct(); $this->asset_dir = '/tmp/no_assets_here/'; }

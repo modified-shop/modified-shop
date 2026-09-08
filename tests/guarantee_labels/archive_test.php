@@ -146,6 +146,44 @@ ok('fehlende Quelldatei', $a->terms_write($hash, 'X.pdf', $root.'/gibtsnicht.pdf
 ok('falscher Hash wird abgelehnt', $a->terms_write(hash('sha256', 'ANDERS'), 'Y.pdf', $src) === false);
 ok('keine temporaeren Reste', tempdirs($root.'/media/products/garan_archive/'.$hash) === 0);
 
+echo "\n== Ein beschaedigtes Verzeichnis wird nicht vorschnell geloescht ==\n";
+// Frueher loeschte write_files() erst und baute dann neu. Scheiterte das Loeschen bei der
+// dritten Datei, waren die ersten beiden weg und nichts stellte sie wieder her.
+$hash_rep = hash('sha256', 'REPARATUR');
+$dir_rep = $root.'/media/guarantee_labels/archive/garan/'.$hash_rep.'/';
+@mkdir($dir_rep, 0777, true);
+file_put_contents($dir_rep.'colour.svg', $files['colour.svg']);
+file_put_contents($dir_rep.'nested.svg', $files['nested.svg']);
+file_put_contents($dir_rep.'checksums.json', 'KAPUTT');
+
+$rep = new guarantee_labels_archive();
+ok('beschaedigtes Verzeichnis wird neu gebaut', $rep->garan_write($hash_rep, $files) === true,
+   implode(' | ', $rep->get_errors()));
+ok('Inhalt stimmt danach', $rep->garan_read($hash_rep) !== false);
+ok('kein beiseitegelegtes Verzeichnis zurueckgeblieben',
+   count(glob($root.'/media/guarantee_labels/archive/garan/'.$hash_rep.'.*')) === 0,
+   implode(' ', glob($root.'/media/guarantee_labels/archive/garan/'.$hash_rep.'.*')));
+
+// Scheitert der Neubau, muss der alte Stand zurueckkommen statt zu verschwinden
+class scheiternder_neubau extends guarantee_labels_archive {
+  function read_files($dir, $names) {
+    if (strpos($dir, '/tmp_') !== false) { return false; }
+    return parent::read_files($dir, $names);
+  }
+}
+$hash_zurueck = hash('sha256', 'ZURUECK');
+$dir_zurueck = $root.'/media/guarantee_labels/archive/garan/'.$hash_zurueck.'/';
+@mkdir($dir_zurueck, 0777, true);
+file_put_contents($dir_zurueck.'colour.svg', $files['colour.svg']);
+file_put_contents($dir_zurueck.'nested.svg', $files['nested.svg']);
+file_put_contents($dir_zurueck.'checksums.json', 'KAPUTT');
+
+$zurueck = new scheiternder_neubau();
+ok('gescheiterter Neubau meldet sich', $zurueck->garan_write($hash_zurueck, $files) === false);
+ok('die alten Dateien sind noch da',
+   is_file($dir_zurueck.'colour.svg') && is_file($dir_zurueck.'nested.svg'),
+   'Verzeichnis: '.(is_dir($dir_zurueck) ? 'ja' : 'nein'));
+
 echo "\n== Gescheitertes Umbenennen meldet sich ==\n";
 // Ein fehlgeschlagenes rename() darf nicht stumm false liefern: ohne Eintrag in der Fehlerliste
 // greifen weder Log noch messageStack. Eine Datei am Zielpfad laesst rename() scheitern.

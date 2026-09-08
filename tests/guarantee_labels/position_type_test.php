@@ -102,6 +102,15 @@ if ($mode === 'einzeln') {
   ok('gemischte Auswahl bleibt koerperlich', guarantee_labels_candidate($row, '1{1}5{2}6') === true);
 }
 
+// options_values_id ist eine gemeinsame Liste: derselbe Wert kann unter zwei Optionen stehen.
+// Frueher fasste array_unique() beide zu einer Wahl zusammen, und eine gemischte Position galt
+// als digital.
+if ($mode !== 'downloads_aus') {
+  ok('zwei Optionen mit demselben Wert zaehlen doppelt',
+     guarantee_labels_candidate($row, '1{1}5{2}5') === ($mode !== 'mehrfach'),
+     $mode);
+}
+
 ok('Position ohne GARAN-Daten bleibt ohne Label',
    guarantee_labels_candidate(array('products_id' => 1, 'products_garan_duration' => null,
                                     'manufacturers_id' => 1, 'products_manufacturers_model' => 'X'), '1{1}6') === false);

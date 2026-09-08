@@ -45,6 +45,10 @@ $GLOBALS['terms_groups'] = 'c_1_group,';  // Kundengruppen, die den Anhang sehen
 $GLOBALS['orders_guarantee'] = array();
 
 function xtc_db_query($sql) {
+  // die Schreibwege fragen jetzt wie die Lesewege zuerst nach der Tabelle
+  if (strpos($sql, 'SHOW TABLES LIKE') === 0) {
+    return isset($GLOBALS['tabellen_fehlen']) ? array() : array(array(1));
+  }
   if (strpos($sql, 'manufacturers_name') !== false && strpos($sql, 'IN (') !== false) {
     preg_match_all("/\d+/", substr($sql, strpos($sql, 'IN (')), $m);
     $rows = array();
@@ -187,6 +191,7 @@ ok('kompaktes Label archiviert', is_file($root.'/media/guarantee_labels/archive/
 $GLOBALS['rows'] = array();
 ok('zwei Jahre ohne Snapshot', guarantee_labels_product_snapshot(4711, 100, array('products_id' => 1, 'products_garan_duration' => '2.0', 'products_manufacturers_model' => 'X', 'manufacturers_id' => 1), 2) === false);
 ok('ohne Modellkennung kein Snapshot', guarantee_labels_product_snapshot(4711, 101, array('products_id' => 1, 'products_garan_duration' => '3.0', 'products_manufacturers_model' => '', 'manufacturers_id' => 1), 2) === false);
+
 ok('inaktiver Hersteller kein Snapshot', guarantee_labels_product_snapshot(4711, 102, array('products_id' => 1, 'products_garan_duration' => '3.0', 'products_manufacturers_model' => 'X', 'manufacturers_id' => 9), 2) === false);
 ok('ohne Positionsnummer kein Snapshot', guarantee_labels_product_snapshot(4711, 0, $product, 2) === false);
 ok('nichts geschrieben', !isset($GLOBALS['rows']['orders_products_guarantee']));

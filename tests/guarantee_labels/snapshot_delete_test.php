@@ -101,6 +101,49 @@ exec(escapeshellcmd(PHP_BINARY).' -r '.escapeshellarg('
 ').' 2>&1', $out);
 ok('fehlende Tabelle wird nicht geloescht', trim(implode('', $out)) === '0', implode('', $out));
 
+// Auch die Schreibwege fragen nach der Tabelle. Ohne sie liefert xtc_db_query() false,
+// xtc_db_num_rows() liest das als "noch keine Zeile", und das Archiv wuerde bei jeder Bestellung
+// neu geschrieben, waehrend das INSERT stillschweigend scheitert.
+$out = array();
+exec(escapeshellcmd(PHP_BINARY).' -r '.escapeshellarg('
+  error_reporting(E_ALL & ~E_DEPRECATED);
+  $root = getenv("GARAN_TEST_SHOP");
+  define("DIR_FS_CATALOG", $root."/");
+  define("DIR_FS_INC", $root."/inc/");
+  define("DIR_WS_INCLUDES", "includes/");
+  define("DIR_WS_CLASSES", "includes/classes/");
+  define("DIR_FS_LOG", $root."/log/");
+  define("DIR_FS_EXTERNAL", $root."/includes/external/");
+  define("TABLE_MANUFACTURERS", "manufacturers");
+  define("TABLE_ORDERS_GUARANTEE", "orders_guarantee");
+  define("TABLE_ORDERS_PRODUCTS_GUARANTEE", "orders_products_guarantee");
+  define("TABLE_PRODUCTS_CONTENT", "products_content");
+  define("MODULE_GUARANTEE_LABELS_STATUS", "true");
+  $_SESSION["language_charset"] = "UTF-8";
+  $GLOBALS["q"] = array();
+  function xtc_db_query($sql) {
+    $GLOBALS["q"][] = $sql;
+    // der Hersteller muss antworten, sonst kommt der Ablauf gar nicht bis zum Archiv
+    if (strpos($sql, "manufacturers_name") !== false) {
+      return array(array("manufacturers_id" => "1", "manufacturers_name" => "ACME GmbH"));
+    }
+    return array();
+  }
+  function xtc_db_fetch_array(&$r) { return array_shift($r); }
+  function xtc_db_num_rows($r) { return count($r); }
+  function xtc_db_perform($t, $d, $a = "insert", $w = "") { $GLOBALS["q"][] = "PERFORM ".$t; }
+  require DIR_FS_INC."guarantee_labels_snapshot.inc.php";
+  $vorher = count(glob($root."/media/guarantee_labels/archive/garan/*"));
+  $r = guarantee_labels_product_snapshot(4711, 10, array(
+        "products_id" => 1, "products_garan_duration" => "3.0",
+        "products_manufacturers_model" => "WAU28T20", "manufacturers_id" => 1), 1, 1);
+  $nachher = count(glob($root."/media/guarantee_labels/archive/garan/*"));
+  $schreibt = count(array_filter($GLOBALS["q"], function ($s) { return strpos($s, "PERFORM") === 0; }));
+  echo ($r === false ? "1" : "0").($nachher === $vorher ? "1" : "0").($schreibt === 0 ? "1" : "0");
+').' 2>&1', $out);
+ok('ohne Tabelle kein Positionssnapshot, kein Archiv, kein INSERT',
+   trim(implode('', $out)) === '111', implode('', $out));
+
 echo "\n== Geloeschte Bestellung ==\n";
 $source = file_get_contents($guarantee_labels_paths['repo'].'/inc/xtc_remove_order.inc.php');
 ok('GARAN-Block vorhanden', strpos($source, 'TABLE_ORDERS_GUARANTEE') !== false);
