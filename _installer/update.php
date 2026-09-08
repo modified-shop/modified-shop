@@ -39,11 +39,7 @@
   if (!isset($_SESSION['visited'])) $_SESSION['visited'] = array();
   
   // smarty
-  $smarty = new Smarty();
-  $smarty->setTemplateDir(__DIR__.'/templates')
-         ->registerResource('file', new EvaledFileResource())
-         ->setConfigDir(__DIR__.'/lang')
-         ->SetCaching(0);
+  $smarty = create_installer_smarty();
 
   if (isset($_GET['action'])
       && $_GET['action'] == 'request'

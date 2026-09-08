@@ -35,7 +35,6 @@
   define('PRODUCT_INFO_BOX', 'false'); // 'true' zeigt Cross-Selling-, Reverse-Cross-Selling- & Also-Purchased-Artikel auf Artikel-Detailseite als Box-Ansicht / 'false' zeigt als Listen-Ansicht
   
   // template output
-  define('TEMPLATE_ENGINE', 'smarty_4'); // 'smarty_4' oder 'smarty_3' oder 'smarty_2' -> Nicht ändern! (Nur "smarty_4" oder "smarty_3" unterstützt die custom Sprachdateien (lang_english.custom & lang_german.custom) aus dem Ordner "../lang/" des Templates!)
   define('TEMPLATE_HTML_ENGINE', 'html5'); // 'html5' oder 'xhtml' -> Nicht ändern!
   define('TEMPLATE_RESPONSIVE', 'true'); // 'true' oder 'false' -> Nicht ändern!
   define('TEMPLATE_PAGINATION', 'true'); // 'true' oder 'false' -> Nicht ändern!

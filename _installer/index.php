@@ -52,11 +52,7 @@
   require_once(DIR_FS_INSTALLER.'lang/'.$_SESSION['language'].'.php');
 
   // smarty
-  $smarty = new Smarty();
-  $smarty->setTemplateDir(__DIR__.'/templates')
-         ->registerResource('file', new EvaledFileResource())
-         ->setConfigDir(__DIR__.'/lang')
-         ->SetCaching(0);
+  $smarty = create_installer_smarty();
 
   if ($upgrade === true) {
     $javascriptcheck = '

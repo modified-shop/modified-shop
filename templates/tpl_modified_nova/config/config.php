@@ -31,7 +31,6 @@
   define('PRODUCT_INFO_BOX', 'true');
   
   // template output
-  define('TEMPLATE_ENGINE', 'smarty_4'); 
   define('TEMPLATE_HTML_ENGINE', 'html5');
   define('TEMPLATE_RESPONSIVE', 'true');
   define('TEMPLATE_PAGINATION', 'true');

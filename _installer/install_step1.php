@@ -47,11 +47,7 @@
   require_once(DIR_FS_INSTALLER.'lang/'.$_SESSION['language'].'.php');
 
   // smarty
-  $smarty = new Smarty();
-  $smarty->setTemplateDir(__DIR__.'/templates')
-         ->registerResource('file', new EvaledFileResource())
-         ->setConfigDir(__DIR__.'/lang')
-         ->SetCaching(0);
+  $smarty = create_installer_smarty();
   
   // default
   $db_server = ((defined('DB_SERVER')) ? DB_SERVER : '');

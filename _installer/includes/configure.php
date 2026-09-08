@@ -14,6 +14,7 @@
   require_once('includes/functions.php');
 
   // global defines
+  defined('TEMPLATE_ENGINE') OR define('TEMPLATE_ENGINE', 'smarty_5');
   defined('DIR_MODIFIED_INSTALLER') OR define('DIR_MODIFIED_INSTALLER', '_installer');
   define('DIR_FS_DOCUMENT_ROOT', get_document_root());
   define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT);

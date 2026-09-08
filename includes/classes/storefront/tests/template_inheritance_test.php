@@ -12,12 +12,26 @@ use Modified\Storefront\Template\TemplateManifestRepository;
 use Modified\Storefront\Template\TemplateRuntime;
 use Modified\Storefront\Template\TemplateUrlGenerator;
 
-require_once dirname(__DIR__) . '/bootstrap.php';
-
 $assertions = 0;
 $temporaryDirectory = sys_get_temp_dir() . '/modified-template-pr1-' . bin2hex(random_bytes(8));
 $templatesDirectory = $temporaryDirectory . '/templates';
 $readOnlyTemplateDirectory = null;
+$shopDirectory = dirname(__DIR__, 4);
+
+define('TEMPLATE_ENGINE', 'smarty_5');
+define('DIR_FS_CATALOG', $temporaryDirectory . '/');
+define('DIR_FS_EXTERNAL', $shopDirectory . '/includes/external/');
+define('DIR_FS_INC', $shopDirectory . '/inc/');
+define('DIR_WS_BASE', '/base/');
+define('DIR_WS_IMAGES', 'images/');
+define('DIR_WS_THUMBNAIL_IMAGES', 'images/product_images/thumbnail_images/');
+define('CURRENT_TEMPLATE', 'current');
+define('COMPRESS_STYLESHEET', 'true');
+define('TITLE', 'Test shop');
+define('RUN_MODE_INSTALLER', true);
+$request_type = 'NONSSL';
+
+require_once dirname(__DIR__) . '/bootstrap.php';
 
 function assertSameValue($expected, $actual, string $message): void
 {
@@ -438,17 +452,6 @@ try {
         'Die Fassade muss die wirksame Template-Kette bereitstellen.'
     );
 
-    define('DIR_FS_CATALOG', $temporaryDirectory . '/');
-    define('DIR_FS_EXTERNAL', dirname(__DIR__, 4) . '/includes/external/');
-    define('DIR_FS_INC', dirname(__DIR__, 4) . '/inc/');
-    define('DIR_WS_BASE', '/base/');
-    define('DIR_WS_IMAGES', 'images/');
-    define('DIR_WS_THUMBNAIL_IMAGES', 'images/product_images/thumbnail_images/');
-    define('CURRENT_TEMPLATE', 'current');
-    define('COMPRESS_STYLESHEET', 'true');
-    define('TITLE', 'Test shop');
-    define('RUN_MODE_INSTALLER', true);
-    $request_type = 'NONSSL';
     ob_start();
     require dirname(__DIR__, 4) . '/includes/modules/favicons.php';
     $faviconMarkup = ob_get_clean();
@@ -649,10 +652,9 @@ try {
         'Ein Child mit eigenem Web-App-Icon darf bei fehlgeschlagener Generierung nicht auf das Parent-Manifest zurückfallen.'
     );
 
-    require dirname(__DIR__, 4) . '/inc/xtc_image.inc.php';
-    require dirname(__DIR__, 4) . '/inc/xtc_image_button.inc.php';
-    require dirname(__DIR__, 4) . '/inc/xtc_image_submit.inc.php';
-    require dirname(__DIR__, 4) . '/includes/external/smarty/smarty_4/Smarty.class.php';
+    require $shopDirectory . '/inc/xtc_image.inc.php';
+    require $shopDirectory . '/inc/xtc_image_button.inc.php';
+    require $shopDirectory . '/inc/xtc_image_submit.inc.php';
 
     $_SESSION['language'] = 'german';
     assertSameValue(

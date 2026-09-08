@@ -37,11 +37,7 @@
   require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 
   // smarty
-  $smarty = new Smarty();
-  $smarty->setTemplateDir(__DIR__.'/templates')
-         ->registerResource('file', new EvaledFileResource())
-         ->setConfigDir(__DIR__.'/lang')
-         ->SetCaching(0);
+  $smarty = create_installer_smarty();
   
   $country = 81;
   if (isset($_POST['action']) && $_POST['action'] == 'process') {
@@ -365,6 +361,7 @@
   $smarty->assign('INPUT_EMAIL', xtc_draw_input_fieldNote(array ('name' => 'email_address')));
   $smarty->assign('INPUT_CONFIRM_EMAIL', xtc_draw_input_fieldNote(array ('name' => 'confirm_email_address')));
   $smarty->assign('INPUT_COUNTRY', xtc_get_country_list(array ('name' => 'country'), (int)$country));
+  $smarty->assign('PASSWORD_POLICY_TEXT', sprintf(TEXT_ACCOUNT_PASSWORD_POLICY, ENTRY_PASSWORD_MIN_LENGTH));
   
   // form
   $smarty->assign('FORM_ACTION', xtc_draw_form('install_step2', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type), 'post').xtc_draw_hidden_field('action', 'process'));

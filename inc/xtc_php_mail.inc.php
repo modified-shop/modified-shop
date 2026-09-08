@@ -35,7 +35,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
   
   if (!class_exists('Smarty')) {
-    require (DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php');
+    require_once(DIR_FS_CATALOG . 'includes/classes/storefront/bootstrap.php');
   }
   $mailsmarty= new Smarty();
   $mailsmarty->caching = 0;
