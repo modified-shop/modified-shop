@@ -11,7 +11,7 @@ class TemuPrepareProductList extends MLProductListTemuAbstract {
 			'field' => array('preparestatusindicator'),
 		);
 		parent::__construct();
-		$this->addDependency('MLProductListDependencyTemuPrepareFormAction');
+		$this->addDependency('MLProductListDependencyTemuPrepareFormAction', array('selectionname' => $this->getSelectionName()));
 		$this->addDependency('MLProductListDependencyTemuPrepareStatusFilter');
 	}
 

@@ -5,7 +5,7 @@ class TemuApplyProductList extends MLProductListTemuAbstract {
 
 	public function __construct() {
 		parent::__construct();
-		$this->addDependency('MLProductListDependencyTemuApplyFormAction');
+		$this->addDependency('MLProductListDependencyTemuApplyFormAction', array('selectionname' => $this->getSelectionName()));
 		$this->addDependency('MLProductListDependencyTemuPrepareStatusFilter');
 	}
 
@@ -14,13 +14,17 @@ class TemuApplyProductList extends MLProductListTemuAbstract {
 	}
 
 	protected function buildQuery() {
-		$q = parent::buildQuery();
-		$q .= " AND p.products_id NOT IN (
-			SELECT products_id FROM ".TABLE_MAGNA_TEMU_PREPARE."
-			WHERE mpID = '".$this->aMagnaSession['mpID']."'
-				AND PrepareType = 'Apply'
-				AND Verified = 'OK'
-		)";
-		return $q;
+		/* buildQuery() returns $this, not an SQL string: concatenating onto it
+		 * would stringify the product list (__toString -> init()) and silently
+		 * drop the filter. Add the condition to the query object instead. */
+		parent::buildQuery()->oQuery->where("
+			p.products_id NOT IN (
+				SELECT products_id FROM ".TABLE_MAGNA_TEMU_PREPARE."
+				WHERE mpID = '".(int)$this->aMagnaSession['mpID']."'
+					AND PrepareType = 'Apply'
+					AND Verified = 'OK'
+			)
+		");
+		return $this;
 	}
 }

@@ -459,7 +459,15 @@ class MagnaConnector {
 	 * @return array|bool The response, or false on empty/failed request.
 	 */
 	public function submitRequestCached($requestFields, $ttl = 1800) {
-		$requestHash = md5(serialize($requestFields) . '_cached');
+		if (!is_array($requestFields) || empty($requestFields)) {
+			return false;
+		}
+		
+		/* Key on the payload that is really sent, not on the caller's raw fields:
+		 * finalizeRequest() still adds passphrase, language, subsystem, client
+		 * versions and shopsystem. Keying on the raw fields would serve a cached
+		 * response after an account, passphrase or admin language change. */
+		$requestHash = md5($this->encodeRequest($this->finalizeRequestFields($requestFields)).'_cached');
 
 		// L1: in-memory (this request).
 		$cached = $this->getFromShortTimeCache($requestHash);
@@ -535,11 +543,15 @@ class MagnaConnector {
 		}
 	}
 
-	public function submitRequest($requestFields) {
-		if (!is_array($requestFields) || empty($requestFields)) {
-			return false;
-		}
-			
+	/**
+	 * Merge addRequestProps and apply finalizeRequest(): produces the field set
+	 * that submitRequest() actually sends, including passphrase, language,
+	 * subsystem, client versions and shopsystem.
+	 *
+	 * @param array $requestFields
+	 * @return array The finalized fields.
+	 */
+	protected function finalizeRequestFields($requestFields) {
 		if (!empty($this->addRequestProps)) {
 			$requestFields = array_merge(
 				$this->addRequestProps,
@@ -548,12 +560,19 @@ class MagnaConnector {
 		}
 		
 		$this->finalizeRequest($requestFields);
-
-		/* Requests is complete, save it. */
-		$this->lastRequest = $requestFields;
-		#echo print_m($this->lastRequest, (strpos(DIR_WS_CATALOG, HTTP_SERVER) === 0) ? DIR_WS_CATALOG : HTTP_SERVER.DIR_WS_CATALOG);
-		if (ML_LOG_API_REQUESTS) file_put_contents(DIR_MAGNALISTER_FS.'debug.log', print_m($this->lastRequest, 'API Request ('.date('Y-m-d H:i:s').')', true)."\n", FILE_APPEND);
-
+		
+		return $requestFields;
+	}
+	
+	/**
+	 * Encode finalized fields into the exact payload that is POSTed to the API.
+	 * md5() of the return value is the canonical identity of a request and is
+	 * therefore the only correct cache key.
+	 *
+	 * @param array $requestFields Fields as returned by finalizeRequestFields().
+	 * @return string The base64 encoded request.
+	 */
+	protected function encodeRequest($requestFields) {
 		/* Some black magic... Better don't touch it. It could bite! */
 		${(chr(109)."\x61".chr(103)."\x69".chr(99)."\x46"."\x75"."\x6e"."\x63".chr(116)."\x69"."\x6f".chr(110
 		).chr(115))}=array(("\x62"."\x61"."\x73".chr(101).chr(54).chr(52)."\x5f"."\x65".chr(110)."\x63"."\x6f"
@@ -582,7 +601,22 @@ class MagnaConnector {
 		/* End of black magic :( */
 		arrayEntitiesToUTF8($requestFields);
 		
-		$requestString = base64_encode(json_encode($requestFields));
+		return base64_encode(json_encode($requestFields));
+	}
+	
+	public function submitRequest($requestFields) {
+		if (!is_array($requestFields) || empty($requestFields)) {
+			return false;
+		}
+		
+		$requestFields = $this->finalizeRequestFields($requestFields);
+		
+		/* Requests is complete, save it. */
+		$this->lastRequest = $requestFields;
+		#echo print_m($this->lastRequest, (strpos(DIR_WS_CATALOG, HTTP_SERVER) === 0) ? DIR_WS_CATALOG : HTTP_SERVER.DIR_WS_CATALOG);
+		if (ML_LOG_API_REQUESTS) file_put_contents(DIR_MAGNALISTER_FS.'debug.log', print_m($this->lastRequest, 'API Request ('.date('Y-m-d H:i:s').')', true)."\n", FILE_APPEND);
+		
+		$requestString = $this->encodeRequest($requestFields);
 		$requestHash = md5($requestString);
 		
 		#echo print_m($requestFields['ACTION'].' '.$requestHash);
