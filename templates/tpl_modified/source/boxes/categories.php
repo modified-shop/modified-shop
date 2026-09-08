@@ -22,16 +22,16 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // set cache id
 $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|cP:'.$cPath.(((defined('SPECIALS_CATEGORIES') && SPECIALS_CATEGORIES === true) || (defined('WHATSNEW_CATEGORIES') && WHATSNEW_CATEGORIES === true)) ? '|self:'.basename($PHP_SELF) : ''));
 
-if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cache_id) || !$cache) {
+if (!$box_smarty->is_cached(Template::resolve('boxes/box_categories.html'), $cache_id) || !$cache) {
 
   // include needed functions
-  require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/xtc_show_category.inc.php');
-  require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/close_ul_tags.inc.php');
+  require_once Template::path('source/inc/xtc_show_category.inc.php');
+  require_once Template::path('source/inc/close_ul_tags.inc.php');
   require_once (DIR_FS_INC.'xtc_has_category_subcategories.inc.php');
   require_once (DIR_FS_INC.'xtc_count_products_in_category.inc.php');
   
@@ -132,9 +132,9 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cach
 }
 
 if (!$cache) {
-  $box_categories = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_categories.html');
+  $box_categories = $box_smarty->fetch(Template::resolve('boxes/box_categories.html'));
 } else {
-  $box_categories = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cache_id);
+  $box_categories = $box_smarty->fetch(Template::resolve('boxes/box_categories.html'), $cache_id);
 }
 
 $smarty->assign('box_CATEGORIES', $box_categories);

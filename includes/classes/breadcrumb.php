@@ -61,7 +61,7 @@
       $smarty = new Smarty();
       $smarty->assign('TRAIL', $this->_trail);
       $smarty->assign('SEPARATOR', $separator);
-      $trail_string = $smarty->fetch(CURRENT_TEMPLATE.'/module/breadcrumb.html');
+      $trail_string = $smarty->fetch(Template::resolve('module/breadcrumb.html'));
       
       return $trail_string;
     }

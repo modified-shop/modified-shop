@@ -13,8 +13,8 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
   if (basename($PHP_SELF) == 'banner_manager.php'
-      && file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/banners.php')
+      && Template::findPath('config/banners.php') !== null
       )
   {
-    require_once(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/banners.php');
+    require_once Template::path('config/banners.php');
   }

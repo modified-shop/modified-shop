@@ -12,7 +12,7 @@
 ?>
 <?php if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) { ?>
 <script>  
-  $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/jquery.easyTabs.css", function(css) {
+  $.get("<?php echo Template::url('css/jquery.easyTabs.css'); ?>", function(css) {
     $("head").append("<style type='text/css'>"+css+"<\/style>");
   });
   $(document).ready(function () {
@@ -27,7 +27,7 @@
 <?php } ?>
 <?php if (strpos($PHP_SELF, 'checkout')) { ?>
 <script>  
-  $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/jquery.easyTabs.css", function(css) {
+  $.get("<?php echo Template::url('css/jquery.easyTabs.css'); ?>", function(css) {
     $("head").append("<style type='text/css'>"+css+"<\/style>");
   });
   $(document).ready(function () {

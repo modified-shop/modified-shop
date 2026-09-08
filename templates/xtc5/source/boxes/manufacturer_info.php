@@ -17,12 +17,12 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // set cache id
 $cache_id = md5('lID:'.$_SESSION['language'].'|mID:'.((isset($product->data['manufacturers_id']) && $product->data['manufacturers_id'] != '') ? $product->data['manufacturers_id'] : '0'));
 
-if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html', $cache_id) || !$cache) {
+if (!$box_smarty->is_cached(Template::resolve('boxes/box_manufacturers_info.html'), $cache_id) || !$cache) {
   $manufacturers_array = xtc_get_manufacturers();
   if (isset($manufacturers_array[$product->data['manufacturers_id']])) {
     $manufacturer = $manufacturers_array[$product->data['manufacturers_id']];
@@ -38,9 +38,9 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html
 }
 
 if (!$cache) {
-  $box_manufacturers_info = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html');
+  $box_manufacturers_info = $box_smarty->fetch(Template::resolve('boxes/box_manufacturers_info.html'));
 } else {
-  $box_manufacturers_info = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html', $cache_id);
+  $box_manufacturers_info = $box_smarty->fetch(Template::resolve('boxes/box_manufacturers_info.html'), $cache_id);
 }
 
 $smarty->assign('box_MANUFACTURERS_INFO',$box_manufacturers_info);

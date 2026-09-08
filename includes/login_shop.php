@@ -29,7 +29,7 @@ if (!isset($_SESSION['customers_login_tries'])) {
   $_SESSION['customers_login_tries'] = 0;
 }
 
-if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/offline/login_shop.html')) {
+if (Template::findPath('module/offline/login_shop.html') !== null) {
 
   // create smarty elements
   $smarty = new Smarty();
@@ -54,7 +54,7 @@ if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/offline/login_
   $smarty->assign('language', $_SESSION['language']);
   $smarty->caching = 0;
 
-  $smarty->display(CURRENT_TEMPLATE.'/module/offline/login_shop.html');
+  $smarty->display(Template::resolve('module/offline/login_shop.html'));
   exit();
 }
 

@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 $selected = isset($_SESSION['customer_country_id']) ? $_SESSION['customer_country_id'] : STORE_COUNTRY;
 if (isset($_SESSION['country'])) {
@@ -27,7 +27,7 @@ if (isset($_SESSION['country'])) {
 // set cache id
 $cache_id = md5('lID:'.$_SESSION['language'].'|sel:'.$selected.'|site:'.basename($PHP_SELF).'|params:'.xtc_get_all_get_params(array('currency', 'language')));
 
-if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_shipping_country.html', $cache_id) || !$cache) {  
+if (!$box_smarty->is_cached(Template::resolve('boxes/box_shipping_country.html'), $cache_id) || !$cache) {
   require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
   $countries_array = xtc_get_countriesList();
 
@@ -57,9 +57,9 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_shipping_country.html',
 }
 
 if (!$cache) {
-  $box_shipping_country = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_shipping_country.html');
+  $box_shipping_country = $box_smarty->fetch(Template::resolve('boxes/box_shipping_country.html'));
 } else {
-  $box_shipping_country = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_shipping_country.html', $cache_id);
+  $box_shipping_country = $box_smarty->fetch(Template::resolve('boxes/box_shipping_country.html'), $cache_id);
 }
 
 $smarty->assign('box_SHIPPING_COUNTRY', $box_shipping_country);

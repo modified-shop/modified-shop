@@ -108,6 +108,8 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
+require_once (DIR_WS_CLASSES.'storefront/bootstrap.php');
+
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_export/application_top_export_begin/','php') as $file) require ($file);
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_export/application_top_export_end/','php') as $file) require ($file);

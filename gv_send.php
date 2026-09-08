@@ -124,8 +124,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $gv_email_subject = sprintf(EMAIL_GV_TEXT_SUBJECT, $send_name);
 
     $smarty->assign('language', $_SESSION['language']);
-    $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
-    $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+    // Legacy compatibility for custom templates.
+    // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+    $smarty->assign('tpl_path', Template::absoluteUrl(''));
+    $smarty->assign('logo_path', Template::absoluteUrl('img/'));
+
     $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$gv_code, 'NONSSL', false));
     $smarty->assign('AMMOUNT', $xtPrice->xtcFormat($gv_amount, true));
     $smarty->assign('AMOUNT', $xtPrice->xtcFormat($gv_amount, true));
@@ -137,8 +141,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     // dont allow cache
     $smarty->caching = 0;
 
-    $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/send_gift_to_friend.html');
-    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/send_gift_to_friend.txt');
+    $html_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/send_gift_to_friend.html'));
+    $txt_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/send_gift_to_friend.txt'));
 
     // send mail
     xtc_php_mail(EMAIL_BILLING_ADDRESS, 
@@ -165,7 +169,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'gv';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $smarty->assign('action', 'process');
@@ -206,10 +210,10 @@ $smarty->assign('GV_FAQ_LINK', $main->getContentLink(6, MORE_INFO,'NONSSL'));
 $smarty->assign('FORM_END', '</form>');
 $smarty->assign('language', $_SESSION['language']);
 
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/gv_send.html');
+$main_content = $smarty->fetch(Template::resolve('module/gv_send.html'));
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

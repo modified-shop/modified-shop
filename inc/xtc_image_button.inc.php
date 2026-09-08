@@ -19,11 +19,15 @@
   function xtc_image_button($image, $alt = '', $parameters = '', $useCssButton = true) {
 
     if (basename($image) == $image) {
-      $image = 'templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image;
+      $image = Template::url('buttons/' . $_SESSION['language'] . '/' . $image);
     }
     
     if (function_exists('css_button') && $useCssButton) {
       return css_button($image, $alt, $parameters, false); //function parameters: imagename, alttext, parameters, isSubmitBtn
+    }
+
+    if (defined('DIR_WS_BASE') && DIR_WS_BASE !== '' && str_starts_with($image, DIR_WS_BASE)) {
+      $image = substr($image, strlen(DIR_WS_BASE));
     }
     
     return xtc_image($image, $alt, '', '', $parameters);

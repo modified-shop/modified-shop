@@ -69,14 +69,14 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'logoff';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 $smarty->assign('language', $_SESSION['language']);
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/logoff.html');
+$main_content = $smarty->fetch(Template::resolve('module/logoff.html'));
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

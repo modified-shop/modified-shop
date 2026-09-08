@@ -71,11 +71,11 @@ if ($errorno) {
 
   // include boxes
   $display_mode = 'search';
-  require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+  require Template::path('source/boxes.php');
 }
 
 $smarty->assign('language', $_SESSION['language']);
 if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

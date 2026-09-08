@@ -420,11 +420,11 @@ if (USE_WYSIWYG == 'true') {
               </tr>
               <tr>
                 <td><span class="main"><?php echo TEXT_CHOOSE_INFO_TEMPLATE_LISTING; ?>:</span></td>
-                <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('listing_template', '/module/product_listing/', $manufact['listing_template'], 'style="width: 250px"');?></span></td>
+                <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('listing_template', 'module/product_listing/', $manufact['listing_template'], 'style="width: 250px"');?></span></td>
               </tr>
               <tr>
                 <td><span class="main"><?php echo TEXT_CHOOSE_INFO_TEMPLATE_CATEGORIE; ?>:</span></td>
-                <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('categories_template', '/module/categorie_listing/', $manufact['categories_template'], 'style="width: 250px"');?></span></td>
+                <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('categories_template', 'module/categorie_listing/', $manufact['categories_template'], 'style="width: 250px"');?></span></td>
               </tr>
               <tr>
                 <td class="main" style="width:260px">&nbsp;</td>

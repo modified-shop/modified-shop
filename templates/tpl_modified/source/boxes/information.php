@@ -17,16 +17,16 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // set cache id
 $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'coP:'.$coPath);
 
-if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cache_id) || !$cache) {
+if (!$box_smarty->is_cached(Template::resolve('boxes/box_information.html'), $cache_id) || !$cache) {
 
   // include needed functions
-  require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/xtc_show_content.inc.php');
-  require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/close_ul_tags.inc.php');
+  require_once Template::path('source/inc/xtc_show_content.inc.php');
+  require_once Template::path('source/inc/close_ul_tags.inc.php');
   
   $content_array = array();
   $content_string = '';
@@ -129,9 +129,9 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
 }
 
 if (!$cache) {
-  $box_information = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_information.html');
+  $box_information = $box_smarty->fetch(Template::resolve('boxes/box_information.html'));
 } else {
-  $box_information = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_information.html', $cache_id);
+  $box_information = $box_smarty->fetch(Template::resolve('boxes/box_information.html'), $cache_id);
 }
 
 $smarty->assign('box_INFORMATION', $box_information);

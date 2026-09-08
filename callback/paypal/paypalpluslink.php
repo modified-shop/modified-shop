@@ -68,7 +68,7 @@ if (isset($_GET['oID'])
 
       // include boxes
       $display_mode = 'paypal';
-      require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+      require Template::path('source/boxes.php');
     
       $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);
 
@@ -112,8 +112,8 @@ if (isset($_GET['oID'])
       $smarty->assign('BUTTON_BACK', '<a href="'.$cancel_link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
     
       $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/ppp.html';
-      if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/ppp.html')) {
-        $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/ppp.html';
+      if (Template::findPath('module/paypal/ppp.html') !== null) {
+        $tpl_file = Template::path('module/paypal/ppp.html');
       }
       $main_content = $smarty->fetch($tpl_file);
     
@@ -123,7 +123,7 @@ if (isset($_GET['oID'])
       $smarty->caching = 0;
       if (!defined('RM'))
         //$smarty->load_filter('output', 'note');
-      $smarty->display(CURRENT_TEMPLATE.'/index.html');
+      $smarty->display(Template::resolve('index.html'));
     }
   } else {
     die('Direct Access to this location is not allowed.');

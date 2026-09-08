@@ -1,7 +1,7 @@
 <?php
 /***********************************************************************************************
 *                                                                                              *
-*  CAO-Faktura für Windows Version 1.4 (http://www.cao-faktura.de)                             *
+*  CAO-Faktura fÃ¼r Windows Version 1.4 (http://www.cao-faktura.de)                             *
 *  Copyright (C) 2009 Jan Pokrandt / Jan@JP-SOFT.de                                            *
 *                                                                                              *
 *  This program is free software; you can redistribute it and/or                               *
@@ -37,7 +37,7 @@
 *  based on:                                                                                   *
 * (c) 2000 - 2001 The Exchange Project                                                         *
 * (c) 2001 - 2003 osCommerce, Open Source E-Commerce Solutions                                 *
-* (c) 2001 - 2003 TheMedia, Dipl.-Ing Thomas Plänkers                                          *
+* (c) 2001 - 2003 TheMedia, Dipl.-Ing Thomas PlÃ¤nkers                                          *
 * (c) 2003 JP-Soft, Jan Pokrandt                                                               *
 * (c) 2003 IN-Solution, Henri Schmidhuber                                                      *
 * (c) 2003 www.websl.de, Karl Langmann                                                         *
@@ -1051,45 +1051,36 @@ function SendShopConfig ()
 
   //Ausgabe ProductListingTemplates
   $schema = '<PRODUCT_LISTING_TEMPLATES>' . "\n";
-  if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'))
+  foreach (Template::files("module/product_listing/", "html") as $file)
   {
-      while (($file = readdir($dir)) != false)
-      {
-          if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-             $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
-         } //if
-     } // while
-     closedir($dir);
+      $file = basename($file);
+      if ($file != "index.html") {
+         $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
+      }
   }
   $schema .= '</PRODUCT_LISTING_TEMPLATES>' . "\n";
   echo $schema;
 
   //Ausgabe ProductInfoTemplates
   $schema = '<PRODUCT_DETAILS_TEMPLATES>' . "\n";
-  if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'))
+  foreach (Template::files("module/product_info/", "html") as $file)
   {
-      while (($file = readdir($dir)) != false)
-      {
-          if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-             $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
-         } //if
-     } // while
-     closedir($dir);
+      $file = basename($file);
+      if ($file != "index.html") {
+         $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
+      }
   }
   $schema .= '</PRODUCT_DETAILS_TEMPLATES>' . "\n";
   echo $schema;
 
   //Ausgabe ProductOptionsTemplates
   $schema = '<PRODUCT_OPTIONS_TEMPLATES>' . "\n";
-  if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'))
+  foreach (Template::files("module/product_options/", "html") as $file)
   {
-      while (($file = readdir($dir)) != false)
-      {
-           if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-             $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
-         } //if
-     } // while
-     closedir($dir);
+      $file = basename($file);
+      if ($file != "index.html") {
+         $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
+      }
   }
   $schema .= '</PRODUCT_OPTIONS_TEMPLATES>' . "\n";
   echo $schema;
@@ -1103,7 +1094,7 @@ function SendShopConfig ()
 
 function SendXMLHeader ()
 {
-  header ("Last-Modified: ". gmdate ("D, d M Y H:i:s"). " GMT");  // immer geändert
+  header ("Last-Modified: ". gmdate ("D, d M Y H:i:s"). " GMT");  // immer geÃ¤ndert
   header ("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
   header ("Pragma: no-cache"); // HTTP/1.0
   header ("Content-type: text/xml");
@@ -1113,7 +1104,7 @@ function SendXMLHeader ()
 
 function SendHTMLHeader ()
 {
-  header ("Last-Modified: ". gmdate ("D, d M Y H:i:s"). " GMT");  // immer geändert
+  header ("Last-Modified: ". gmdate ("D, d M Y H:i:s"). " GMT");  // immer geÃ¤ndert
   header ("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
   header ("Pragma: no-cache"); // HTTP/1.0
   header ("Content-type: text/html");
@@ -1701,7 +1692,7 @@ function ProductsUpdate ()
 
 //VPE Frank
   if (isset($_POST['products_basis_factor'])) $products_vpe_value = xtc_db_prepare_input($_POST['products_basis_factor']);
-// Wird von CAO noch fehlerhaft übergeben  if (isset($_POST['products_basis_me'])) $products_vpe = xtc_db_prepare_input($_POST['products_basis_me']);
+// Wird von CAO noch fehlerhaft Ã¼bergeben  if (isset($_POST['products_basis_me'])) $products_vpe = xtc_db_prepare_input($_POST['products_basis_me']);
 
   if ($_POST['products_basis_factor'] == 1) {
 	$products_vpe_status = 0;
@@ -2297,12 +2288,12 @@ function OrderUpdate ()
 
   if ((isset($_POST['order_id'])) && (isset($_POST['status'])))
   {
-    // Per Post übergebene Variablen
+    // Per Post Ã¼bergebene Variablen
     $oID = (int)$_POST['order_id'];
     $status = (int)$_POST['status'];
     $comments = xtc_db_prepare_input($_POST['comments']);
 
-    //Status überprüfen
+    //Status Ã¼berprÃ¼fen
     $check_status_query = xtc_db_query("select * from " . TABLE_ORDERS . " where orders_id = '" . xtc_db_input($oID) . "'");
     if ($check_status = xtc_db_fetch_array($check_status_query))
     {
@@ -2347,7 +2338,7 @@ function OrderUpdate ()
         $customer_notified = '0';
         if ($_POST['notify'] == 'on')
         {
-          // Falls eine Sprach ID zur Order existiert die Emailbestätigung in dieser Sprache ausführen
+          // Falls eine Sprach ID zur Order existiert die EmailbestÃ¤tigung in dieser Sprache ausfÃ¼hren
           if (isset($check_status['orders_language_id']) && $check_status['orders_language_id'] > 0 )
           {
             $orders_status_query = xtc_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . $check_status['orders_language_id'] . "'");
@@ -2389,8 +2380,12 @@ function OrderUpdate ()
           $smarty->config_dir = DIR_FS_CATALOG.'lang';
           
           $smarty->assign('language', $check_status['language']);
-          $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-          $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+          // Legacy compatibility for custom templates.
+          // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+          $smarty->assign('tpl_path', Template::absoluteUrl(''));
+          $smarty->assign('logo_path', Template::absoluteUrl('') . 'img/');
+
           $smarty->assign('NAME',$check_status['customers_name']);
           $smarty->assign('ORDER_NR',$oID);
           $smarty->assign('ORDER_LINK',xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL'));
@@ -2404,8 +2399,8 @@ function OrderUpdate ()
             $smarty->assign('PARCEL_ARRAY', $tracking_array);
           }
           
-          $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.html');
-          $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.txt');
+          $html_mail = $smarty->fetch(Template::resolve('admin/mail/' . $check_status['language'] . '/change_order_mail.html'));
+          $txt_mail = $smarty->fetch(Template::resolve('admin/mail/' . $check_status['language'] . '/change_order_mail.txt'));
 
           $order_subject_search = array('{$nr}', '{$date}', '{$lastname}', '{$firstname}');
           $order_subject_replace = array($oID, xtc_date_long($check_status['date_purchased']), $check_status['customers_lastname'], $check_status['customers_lfirstname']);
@@ -2603,16 +2598,20 @@ function CustomersUpdate ()
     $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
     $smarty->config_dir = DIR_FS_CATALOG.'lang';
 
-    $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-    $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+    // Legacy compatibility for custom templates.
+    // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+    $smarty->assign('tpl_path', Template::absoluteUrl(''));
+    $smarty->assign('logo_path', Template::absoluteUrl('') . 'img/');
+
     $smarty->assign('NAME',$sql_customers_data_array['customers_lastname'] . ' ' . $sql_customers_data_array['customers_firstname']);
     $smarty->assign('EMAIL',$sql_customers_data_array['customers_email_address']);
     $smarty->assign('PASSWORD',$pw);
     //$smarty->assign('language', $Lang_folder);
     $smarty->assign('content', $module_content);
 
-    $html_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$Lang_folder.'/create_account_mail.html');
-    $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$Lang_folder.'/create_account_mail.txt');
+    $html_mail=$smarty->fetch(Template::resolve('admin/mail/' . $Lang_folder . '/create_account_mail.html'));
+    $txt_mail=$smarty->fetch(Template::resolve('admin/mail/' . $Lang_folder . '/create_account_mail.txt'));
 
     // send mail with html/txt template
     xtc_php_mail(EMAIL_SUPPORT_ADDRESS,

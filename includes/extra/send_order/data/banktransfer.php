@@ -22,7 +22,7 @@
       $smarty->assign('PAYMENT_BANKTRANSFER_IBAN', substr($banktransfer_data['banktransfer_iban'], 0, 8) . str_repeat('*', (strlen($banktransfer_data['banktransfer_iban']) - 10)) . substr($banktransfer_data['banktransfer_iban'], -2));
       $smarty->assign('PAYMENT_BANKTRANSFER_BANKNAME', $banktransfer_data['banktransfer_bankname']);
       
-      $sepa_info = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_info.html');
+      $sepa_info = $smarty->fetch(Template::resolve('mail/' . $order->info['language'] . '/sepa_info.html'));
     
       $smarty->assign('PAYMENT_INFO_HTML', $sepa_info);
       $smarty->assign('PAYMENT_INFO_TXT', strip_tags(str_replace(array('<br />', '<br/>', '<br>'), "\n", $sepa_info)));
@@ -32,8 +32,8 @@
         $banktransfer_owner_email = $banktransfer_data['banktransfer_owner_email'];
         $banktransfer_owner = $banktransfer_data['banktransfer_owner'];
         
-        $sepa_html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_mail.html');
-        $sepa_txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_mail.txt');
+        $sepa_html_mail = $smarty->fetch(Template::resolve('mail/' . $order->info['language'] . '/sepa_mail.html'));
+        $sepa_txt_mail = $smarty->fetch(Template::resolve('mail/' . $order->info['language'] . '/sepa_mail.txt'));
       
         // no pre-notification in order mail
         $smarty->clear_assign('PAYMENT_INFO_HTML');

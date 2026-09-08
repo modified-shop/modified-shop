@@ -12,10 +12,10 @@
 
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-  if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/lang/banners_'.$_SESSION['language'].'.php')) {
-    require_once(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/lang/banners_'.$_SESSION['language'].'.php');
+  if (Template::findPath('lang/banners_' . $_SESSION['language'] . '.php') !== null) {
+    require_once Template::path('lang/banners_' . $_SESSION['language'] . '.php');
   } else {
-    require_once(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/lang/banners_english.php');
+    require_once Template::path('lang/banners_english.php');
   }
   
   echo '

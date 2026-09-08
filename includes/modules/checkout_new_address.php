@@ -17,7 +17,10 @@
    ---------------------------------------------------------------------------------------*/
 
 $module_smarty = new Smarty();
-$module_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$module_smarty->assign('tpl_path',Template::url(''));
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
@@ -136,6 +139,6 @@ $module_smarty->assign('language', $_SESSION['language']);
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/checkout_address_smarty_data/','php') as $file) require ($file);
 
 $module_smarty->caching = 0;
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_new_address.html');
+$module = $module_smarty->fetch(Template::resolve('module/checkout_new_address.html'));
 
 $smarty->assign('MODULE_new_address', $module);

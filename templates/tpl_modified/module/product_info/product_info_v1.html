@@ -19,7 +19,7 @@
       {if isset($more_images) && count($more_images) > 0}
         {foreach item=more_images_data from=$more_images} 
         <div class="pd_small_image">
-          <a class="cbimages" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" data-cbox-img-attrs='{ldelim}"alt":"{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}"{rdelim}'><img class="lazyload" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" /></a>
+          <a class="cbimages" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" data-cbox-img-attrs='{ldelim}"alt":"{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}"{rdelim}'><img class="lazyload" src="{template_asset path='css/images/loading.gif'}" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" /></a>
           <noscript><a title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" /></a></noscript>
         </div>                          
         {/foreach}
@@ -38,7 +38,7 @@
           {if $PRODUCTS_RATING_COUNT > 1}
           <div class="pd_inforow" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
             <strong>{#info_reviews#}</strong> 
-            <span class="pd_reviews_image"><img src="{$tpl_path}img/stars_{$PRODUCTS_AVERAGE_RATING}.png" alt="" /></span> 
+            <span class="pd_reviews_image"><img src="{template_asset path="img/stars_`$PRODUCTS_AVERAGE_RATING`.png"}" alt="" /></span> 
             ({$PRODUCTS_RATING_COUNT})
             <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
             <meta itemprop="bestRating" content="5" />
@@ -47,7 +47,7 @@
           {elseif $PRODUCTS_RATING_COUNT > 0 }
           <div class="pd_inforow" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
             <strong>{#info_review#}</strong> 
-            <span class="pd_reviews_image"><img src="{$tpl_path}img/stars_{$PRODUCTS_AVERAGE_RATING}.png" alt="" /></span> 
+            <span class="pd_reviews_image"><img src="{template_asset path="img/stars_`$PRODUCTS_AVERAGE_RATING`.png"}" alt="" /></span> 
             ({$PRODUCTS_RATING_COUNT})
             <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
             <meta itemprop="bestRating" content="5" />
@@ -56,7 +56,7 @@
           {else}
           <div class="pd_inforow">
             <strong>{#info_reviews#}</strong> 
-            <span class="pd_reviews_image"><img src="{$tpl_path}img/stars_{$PRODUCTS_AVERAGE_RATING}.png" alt="" /></span> 
+            <span class="pd_reviews_image"><img src="{template_asset path="img/stars_`$PRODUCTS_AVERAGE_RATING`.png"}" alt="" /></span> 
             ({$PRODUCTS_RATING_COUNT})
           </div>
           {/if}

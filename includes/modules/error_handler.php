@@ -20,7 +20,10 @@ $error = array(
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // caching disabled: cache ID leaked referrer link / session ID across visitors
 $module_smarty->caching = 0;
@@ -43,7 +46,7 @@ $module_smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_search.gif', IM
 $module_smarty->assign('LINK_ADVANCED', xtc_href_link(FILENAME_ADVANCED_SEARCH));
 $module_smarty->assign('FORM_END', '</form>');
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/error_message.html');
+$module = $module_smarty->fetch(Template::resolve('module/error_message.html'));
 
 $smarty->assign('main_content', $module);
 $display_mode = 'error';

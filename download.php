@@ -192,10 +192,13 @@ if ($messageStack->size('download') > 0)
 
 $smarty->assign('dl', (isset($dl) ? $dl : array()));
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$smarty->assign('tpl_path', Template::url(''));
 
 $smarty->caching = 0;
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/downloads.html');
+$main_content = $smarty->fetch(Template::resolve('module/downloads.html'));
 
 // build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_DOWNLOAD, xtc_href_link(FILENAME_DOWNLOAD, '', 'SSL'));
@@ -205,12 +208,12 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 $display_mode = 'download';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

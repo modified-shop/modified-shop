@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include smarty
-  include (DIR_FS_BOXES_INC . 'smarty_default.php');
+  include (Template::path('source/inc/smarty_default.php'));
 
   // include needed functions
   require_once (DIR_FS_INC . 'xtc_break_string.inc.php');
@@ -67,8 +67,8 @@
       $content_array = array_slice($content_array, 0, MAX_PRODUCTS_BOX);
 
       foreach ($content_array as $reviews) {
-        $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
-        $review_image_microtag = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');
+        $review_image = xtc_image(Template::url('img/stars_' . $reviews['reviews_rating'] . '.png') , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
+        $review_image_microtag = xtc_image(Template::url('img/stars_' . $reviews['reviews_rating'] . '.png') , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');
 
         $box_content[$reviews['reviews_id']] = $product->buildDataArray($reviews);
         $box_content[$reviews['reviews_id']]['REVIEWS_VOTE'] = $reviews['reviews_rating'];
@@ -92,6 +92,6 @@
     $box_smarty->assign('BOX_CONTENT', $box_content);
   }
 
-  $box_reviews = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id);
+  $box_reviews = $box_smarty->fetch(Template::resolve('boxes/box_reviews.html'), $cache_id);
 
   $smarty->assign('box_REVIEWS', $box_reviews);

@@ -112,13 +112,17 @@
       if (isset($phone))    $additional_fields .= EMAIL_PHONE . $phone . "\n" ;
       if (isset($fax))      $additional_fields .= EMAIL_FAX . $fax . "\n" ;
 
-      if (file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html') 
-          && file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt')
+      if (Template::findPath('mail/' . $_SESSION['language'] . '/contact_us.html') !== null
+          && Template::findPath('mail/' . $_SESSION['language'] . '/contact_us.txt') !== null
           ) 
       {
         $smarty->assign('language', $_SESSION['language']);
-        $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
-        $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+        // Legacy compatibility for custom templates.
+        // New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+        $smarty->assign('tpl_path', Template::absoluteUrl(''));
+        $smarty->assign('logo_path', Template::absoluteUrl('') . 'img/');
+
         $smarty->assign('NAME', $name);
         $smarty->assign('EMAIL', $email);
         $smarty->assign('DATE', $datum);
@@ -129,8 +133,8 @@
         // dont allow cache
         $smarty->caching = 0;
      
-        $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html');
-        $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt');
+        $html_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/contact_us.html'));
+        $txt_mail = $smarty->fetch(Template::resolve('mail/' . $_SESSION['language'] . '/contact_us.txt'));
         $txt_mail = str_replace(array('<br />', '<br/>', '<br>'), '', $txt_mail);
       } else {
         $txt_mail = sprintf(EMAIL_SENT_BY, parse_multi_language_value(CONTACT_US_NAME, $_SESSION['language_code']), parse_multi_language_value(CONTACT_US_EMAIL_ADDRESS, $_SESSION['language_code']), $datum , $uhrzeit) . "\n" .
@@ -239,7 +243,7 @@
 
   $smarty->assign('language', $_SESSION['language']);
   $smarty->caching = 0;
-  $smarty->display(CURRENT_TEMPLATE.'/module/contact_us.html');
+  $smarty->display(Template::resolve('module/contact_us.html'));
   $display_mode = 'contactus';
   
   // clear variables

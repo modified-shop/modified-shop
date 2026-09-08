@@ -19,7 +19,10 @@ require_once (DIR_FS_INC.'xtc_filesize.inc.php');
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -34,7 +37,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|coID:'.(int)$_GET['coID']);
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/products_media.html'), $cache_id) || !$cache) {
   //get downloads
   $content_query = xtDBquery("SELECT *
                                 FROM ".TABLE_CONTENT_MANAGER_CONTENT."
@@ -96,7 +99,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_media.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/products_media.html'), $cache_id);
 
 $smarty->assign('MODULE_conent_manager_media', !empty($module) ? trim($module) : $module);
 $smarty->assign('MODULE_content_manager_media', !empty($module) ? trim($module) : $module); // Additional Smarty for fix typo

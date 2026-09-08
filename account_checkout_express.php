@@ -289,7 +289,7 @@ require (DIR_WS_INCLUDES.'header.php');
 
 // include boxes
 $display_mode = 'account';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, xtc_get_all_get_params(), 'SSL')).xtc_draw_hidden_field('action', 'process'));
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
@@ -308,12 +308,12 @@ if (isset($_GET['products_id']) && (int)$_GET['products_id'] > '0') {
 $smarty->assign('language', $_SESSION['language']);
 
 $smarty->caching = 0;
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_checkout_express.html');
+$main_content = $smarty->fetch(Template::resolve('module/account_checkout_express.html'));
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

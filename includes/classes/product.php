@@ -260,10 +260,11 @@ class product {
       if (xtc_db_num_rows($reviews_query)) {
         $i = 0;
         while ($reviews = xtc_db_fetch_array($reviews_query)) {
-          $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif';
-          if (!is_file(DIR_FS_CATALOG.$img)) {
-            $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.png';        
+          $rating_image = 'img/stars_' . $reviews['reviews_rating'] . '.gif';
+          if (Template::findPath($rating_image) === null) {
+            $rating_image = 'img/stars_' . $reviews['reviews_rating'] . '.png';
           }
+          $img = Template::url($rating_image);
           $reviews_array[$pID][$i] = array (
             'AUTHOR' => $reviews['customers_name'],
             'DATE' => xtc_date_short($reviews['date_added']),

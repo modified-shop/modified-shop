@@ -119,7 +119,7 @@ require (DIR_WS_INCLUDES.'header.php');
 
 // include boxes
 $display_mode = 'checkout';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $addresses_count = xtc_count_customer_address_book_entries();
 
@@ -185,10 +185,10 @@ if (isset($_SESSION['NO_SHIPPING']) && $_SESSION['NO_SHIPPING'] === true) {
   $smarty->assign('NO_SHIPPING', $_SESSION['NO_SHIPPING']);
 }
 $smarty->assign('language', $_SESSION['language']);
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_payment_address.html');
+$main_content = $smarty->fetch(Template::resolve('module/checkout_payment_address.html'));
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

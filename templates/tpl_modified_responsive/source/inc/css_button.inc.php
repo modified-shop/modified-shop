@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-require_once(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/lang/buttons_'.$_SESSION['language'].'.php');
+require_once Template::path('lang/buttons_' . $_SESSION['language'] . '.php');
 
 function css_button($image, $alt, $parameters = '', $submit = false) {
   

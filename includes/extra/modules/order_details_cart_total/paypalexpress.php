@@ -54,8 +54,8 @@
       $paypal_smarty->caching = 0;
 
       $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/apms.html';
-      if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/apms.html')) {
-        $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/apms.html';
+      if (Template::findPath('module/paypal/apms.html') !== null) {
+        $tpl_file = Template::path('module/paypal/apms.html');
       }
       $smarty->assign('BUTTON_PAYPAL', $paypal_smarty->fetch($tpl_file));
 

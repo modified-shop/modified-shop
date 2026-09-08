@@ -213,7 +213,7 @@ require (DIR_WS_INCLUDES.'header.php');
 
 // include boxes
 $display_mode = 'account';
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+require Template::path('source/boxes.php');
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL')).xtc_draw_hidden_field('action', 'process').secure_form('account_edit'));
 
@@ -269,12 +269,12 @@ $smarty->assign('language', $_SESSION['language']);
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_edit_smarty_data/','php') as $file) require ($file);
 
 $smarty->caching = 0;
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_edit.html');
+$main_content = $smarty->fetch(Template::resolve('module/account_edit.html'));
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-$smarty->display(CURRENT_TEMPLATE.'/index.html');
+$smarty->display(Template::resolve('index.html'));
 include ('includes/application_bottom.php');

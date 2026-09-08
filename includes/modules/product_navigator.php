@@ -15,7 +15,10 @@
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -30,7 +33,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|cID:'.$current_category_id);
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_navigator.html', $cache_id) || !$cache) {  
+if (!$module_smarty->is_cached(Template::resolve('module/product_navigator.html'), $cache_id) || !$cache) {
   if (isset($current_category_id) && (int)$current_category_id > 0) {
     $actual_key = 0;
     $sorting_data = array(
@@ -127,5 +130,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_navigator.html'
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_navigator.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/product_navigator.html'), $cache_id);
 $info_smarty->assign('PRODUCT_NAVIGATOR', !empty($module) ? trim($module) : $module);

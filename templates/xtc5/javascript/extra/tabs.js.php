@@ -11,10 +11,10 @@
    --------------------------------------------------------------*/
 ?>
 <?php if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) { ?>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-ui.js" type="text/javascript"></script>
+<script src="<?php echo Template::url('javascript/jquery-ui.js'); ?>" type="text/javascript"></script>
 <script type="text/javascript">
 /* <![CDATA[ */
-  $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/javascript.css", function(css) {
+  $.get("<?php echo Template::url('css/javascript.css'); ?>", function(css) {
     $("head").append("<style type='text/css'>"+css+"<\/style>");
   });
   $(function() {

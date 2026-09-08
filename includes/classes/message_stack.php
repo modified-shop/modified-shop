@@ -85,7 +85,7 @@
         }
 
         if (defined('CURRENT_TEMPLATE')
-            && is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/message_stack.html')
+            && Template::findPath('module/message_stack.html') !== null
             )
         {
           $smarty = new Smarty();
@@ -93,7 +93,7 @@
           $smarty->assign('type', $type);
           $smarty->assign('language', $_SESSION['language']);
           $smarty->assign('messages', $_SESSION['messageToStack'][$class][$type]);
-          $output = $smarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/message_stack.html');
+          $output = $smarty->fetch(Template::path('module/message_stack.html'));
         } else {
           foreach ($_SESSION['messageToStack'][$class][$type] as $message) {
             $output .= '<p>'.$message.'</p>';

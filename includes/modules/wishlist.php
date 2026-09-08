@@ -16,7 +16,9 @@ require_once(DIR_FS_INC.'get_wishlist_content.inc.php');
 // create smarty
 $module_smarty = new Smarty();
 
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$module_smarty->assign('tpl_path', Template::url(''));
 
 $module_data = array ();
 if ($_SESSION['wishlist']->count_contents() > 0) {
@@ -29,6 +31,6 @@ $module_smarty->assign('wishlist_cart', true);
 $module_smarty->assign('language', $_SESSION['language']);
 
 $module_smarty->caching = 0;
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/wishlist.html');
+$module = $module_smarty->fetch(Template::resolve('module/wishlist.html'));
 
 $smarty->assign('MODULE_wishlist', !empty($module) ? trim($module) : $module);

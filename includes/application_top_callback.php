@@ -161,6 +161,8 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
+require_once (DIR_WS_CLASSES.'storefront/bootstrap.php');
+
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback/application_top_callback_begin/','php') as $file) require ($file);
 
 // set the top level domains

@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <meta name="robots" content="noindex, nofollow, noodp" />
     {if $base_href}<base href="{$base_href}" />{/if}
-    <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet{if $smarty.const.COMPRESS_STYLESHEET == 'true'}.min{/if}.css" />
+    <link rel="stylesheet" type="text/css" href="{if $smarty.const.COMPRESS_STYLESHEET == 'true'}{template_asset path='stylesheet.min.css'}{else}{template_asset path='stylesheet.css'}{/if}" />
   </head>
   <body class="popupprintorder" onload="window.print()">
     <table width="100%" border="0" cellspacing="0" cellpadding="2">
@@ -19,7 +19,7 @@
           <strong>{#order#}</strong> {$oID}<br />
           <strong>{#date#}</strong> {$DATE}
         </td>
-        <td style="vertical-align:top; text-align:right;"><img src="{$tpl_path}img/{'logo.gif'|versioning}" alt="{$smarty.const.STORE_NAME}" /></td>
+        <td style="vertical-align:top; text-align:right;"><img src="{template_asset path='img/logo.gif' versioned=true}" alt="{$smarty.const.STORE_NAME}" /></td>
       </tr>
       <tr>
         <td colspan="2"><div class="hr"></div></td>

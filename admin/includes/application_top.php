@@ -147,6 +147,8 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   }
 }
 
+require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'storefront/bootstrap.php');
+
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_top/application_top_begin/','php') as $file) require ($file);
 
 define('FILENAME_IMAGEMANIPULATOR', IMAGE_MANIPULATOR);

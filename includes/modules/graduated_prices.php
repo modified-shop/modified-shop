@@ -17,7 +17,10 @@
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$module_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {
@@ -32,7 +35,7 @@ if (!CacheCheck()) {
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 }
 
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/graduated_price.html', $cache_id) || !$cache) {
+if (!$module_smarty->is_cached(Template::resolve('module/graduated_price.html'), $cache_id) || !$cache) {
   $staffel_data = $product->getGraduated();
 
   if (count($staffel_data) > 1) {
@@ -40,5 +43,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/graduated_price.html', 
   }
 }
 
-$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/graduated_price.html', $cache_id);
+$module = $module_smarty->fetch(Template::resolve('module/graduated_price.html'), $cache_id);
 $info_smarty->assign('MODULE_graduated_price', !empty($module) ? trim($module) : $module);

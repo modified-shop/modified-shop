@@ -12,7 +12,10 @@
 
 $box_smarty = new Smarty();
 $box_smarty->assign('language', $_SESSION['language']);
-$box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$box_smarty->assign('tpl_path', Template::url(''));
 
 // set cache ID
 if (!CacheCheck()) {

@@ -19,7 +19,7 @@
 defined('SPECIALS_CONDITIONS_S') or define('SPECIALS_CONDITIONS_S', 'AND s.status = \'1\' AND (now() >= s.start_date OR s.start_date IS NULL)');
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // reset cache id
 $cache_id = '';
@@ -58,7 +58,7 @@ if (xtc_db_num_rows($specials_query) > 0) {
   // set cache id
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$specials['products_id'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 
-  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_specials.html', $cache_id) || !$cache) {
+  if (!$box_smarty->is_cached(Template::resolve('boxes/box_specials.html'), $cache_id) || !$cache) {
     $box_content = $product->buildDataArray($specials);
     $box_content['EXPIRES_DATE'] = $box_content['PRODUCTS_EXPIRES'] = ($specials['expires_date'] != '0000-00-00 00:00:00') ? xtc_date_short($specials['expires_date']) : '0';    
     $box_smarty->assign('box_content', $box_content);
@@ -67,9 +67,9 @@ if (xtc_db_num_rows($specials_query) > 0) {
 }
 
 if (!$cache) {
-  $box_specials = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_specials.html');
+  $box_specials = $box_smarty->fetch(Template::resolve('boxes/box_specials.html'));
 } else {
-  $box_specials = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_specials.html', $cache_id);
+  $box_specials = $box_smarty->fetch(Template::resolve('boxes/box_specials.html'), $cache_id);
 }
 
 $smarty->assign('box_SPECIALS', $box_specials);

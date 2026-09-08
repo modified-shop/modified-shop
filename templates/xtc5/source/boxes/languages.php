@@ -17,12 +17,12 @@
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
-include(DIR_FS_BOXES_INC . 'smarty_default.php');
+include(Template::path('source/inc/smarty_default.php'));
 
 // set cache id
 $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status'].'|site:'.basename($PHP_SELF).'|params:'.xtc_get_all_get_params());
 
-if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_languages.html', $cache_id) || !$cache) {
+if (!$box_smarty->is_cached(Template::resolve('boxes/box_languages.html'), $cache_id) || !$cache) {
 
   if (!isset($lng) || (isset($lng) && !is_object($lng))) {
     require_once(DIR_WS_CLASSES . 'language.php');
@@ -45,9 +45,9 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_languages.html', $cache
 }
 
 if (!$cache) {
-  $box_languages = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_languages.html');
+  $box_languages = $box_smarty->fetch(Template::resolve('boxes/box_languages.html'));
 } else {
-  $box_languages = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_languages.html', $cache_id);
+  $box_languages = $box_smarty->fetch(Template::resolve('boxes/box_languages.html'), $cache_id);
 }
 
 $smarty->assign('box_LANGUAGES', $box_languages);

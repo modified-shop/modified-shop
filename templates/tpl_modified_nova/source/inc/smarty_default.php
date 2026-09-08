@@ -16,7 +16,10 @@ require_once (DIR_FS_INC.'get_pictureset_data.inc.php');
 
 $box_smarty = new Smarty();
 $box_smarty->assign('language', $_SESSION['language']);
-$box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
+// Legacy compatibility for custom templates.
+// New Smarty templates must use {template_asset ...} for concrete template assets. Not tpl_path or logo_path.
+$box_smarty->assign('tpl_path', Template::url(''));
 
 if (defined('PICTURESET_BOX')) {
   $box_smarty->assign('pictureset_box', get_pictureset_data(PICTURESET_BOX));
