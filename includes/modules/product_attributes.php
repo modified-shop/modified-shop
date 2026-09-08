@@ -81,6 +81,22 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
                                             ORDER BY popt.products_options_sortorder, popt.products_options_id"
                                             );
 
+    // read the values of all option groups with one query
+    $products_options_array_all = array();
+    $products_options_all_query = xtDBquery("SELECT pov.products_options_values_id,
+                                                    pov.products_options_values_name,
+                                                    pa.*
+                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                               JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
+                                                    ON pa.options_values_id = pov.products_options_values_id
+                                                       AND pov.language_id = '".(int) $_SESSION['languages_id']."'
+                                                       AND trim(pov.products_options_values_name) != ''
+                                              WHERE pa.products_id = '".$product->data['products_id']."'
+                                           ORDER BY pa.options_id, pa.sortorder, pov.products_options_values_sortorder, pa.options_values_id");
+    while ($products_options_all = xtc_db_fetch_array($products_options_all_query, true)) {
+      $products_options_array_all[(int)$products_options_all['options_id']][] = $products_options_all;
+    }
+
     $row = 0;
     $products_options_data = array ();
 
@@ -98,20 +114,9 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
         'DATA' => array()
       );
 
-      $products_options_query = xtDBquery("SELECT pov.products_options_values_id,
-                                                  pov.products_options_values_name,
-                                                  pa.*
-                                             FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                             JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
-                                                  ON pa.options_values_id = pov.products_options_values_id
-                                                     AND pov.language_id = '".(int) $_SESSION['languages_id']."'
-                                                     AND trim(pov.products_options_values_name) != ''
-                                            WHERE pa.products_id = '".$product->data['products_id']."'
-                                              AND pa.options_id = '".$products_options_name['products_options_id']."'                                            
-                                         ORDER BY pa.sortorder, pov.products_options_values_sortorder, pa.options_values_id
-                                          ");
+      $options_id = (int)$products_options_name['products_options_id'];
       $col = 0;
-      while ($products_options = xtc_db_fetch_array($products_options_query,true)) {
+      foreach ((isset($products_options_array_all[$options_id]) ? $products_options_array_all[$options_id] : array()) as $products_options) {
         $price = 0;
       
         $checked = '0';
