@@ -122,24 +122,37 @@
     }
     switch ($action) {
       case 'save':
-        if (isset($_POST['configuration']) 
-            && is_array($_POST['configuration'])
-            )
-        {
-          foreach ($_POST['configuration'] as $key => $value) {
-            if (is_array($_POST['configuration'][$key])) {
+        $class = basename($module_class);
+        include_once($module_directory . $class . '.php');
+        $module = instantiate_class($class);
+
+        // only a submitted form may write, this is also the condition the CSRF check runs on
+        if (isset($_POST) && is_array($_POST) && count($_POST) > 0) {
+          $configuration = (isset($_POST['configuration']) && is_array($_POST['configuration'])) ? $_POST['configuration'] : array();
+
+          // a multi checkbox posts nothing when nothing is selected, so its key would never
+          // reach the save loop and the previous value would survive
+          $module_keys = method_exists($module, 'keys') ? (array)$module->keys() : array();
+          foreach (xtc_cfg_get_multi_checkbox_keys($module_keys) as $checkbox_key) {
+            if (!isset($configuration[$checkbox_key])) {
+              $configuration[$checkbox_key] = '';
+            }
+          }
+
+          foreach ($configuration as $key => $value) {
+            if (is_array($configuration[$key])) {
               // multi language config
-              $keys = array_keys($_POST['configuration'][$key]);
+              $keys = array_keys($configuration[$key]);
               if (gettype(array_shift($keys)) == 'string') {
                 $config_value = array();
-                foreach ($_POST['configuration'][$key] as $k => $v) {
+                foreach ($configuration[$key] as $k => $v) {
                   if (xtc_not_null($v)) {
                     $config_value[] =  $k . '::' . $v;
                   }
                 }
                 $value = implode('||', $config_value);
               } else {
-                $value = implode(',', $_POST['configuration'][$key]);
+                $value = implode(',', $configuration[$key]);
               }
             }
             xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($value) . "' where configuration_key = '" . $key . "'");
@@ -587,7 +600,7 @@ if (xtc_not_null($action) && !$box) {
                 }
                 $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                 $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                $contents = array('form' => (isset($mInfo->properties['form_edit']) ? $mInfo->properties['form_edit'] : xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=save')));
+                $contents = array('form' => (isset($mInfo->properties['form_edit']) ? $mInfo->properties['form_edit'] : xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=save') ) . xtc_draw_hidden_field('module_save', '1'));
                 $contents[] = array('text' => $keys);
                 $contents[] = method_exists($module,'display') ? $module->display() : array();
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class) . '">' . BUTTON_CANCEL . '</a>');

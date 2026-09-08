@@ -97,36 +97,50 @@
         break;
       //EOF NEW MODULE PROCESSING
       case 'save':
-        if (isset($_POST['configuration']) 
-            && is_array($_POST['configuration'])
-            )
-        {
-          foreach ($_POST['configuration'] as $key => $value) {
-            if (is_array($_POST['configuration'][$key])) {
+        $class = basename($module_class);
+        include_once($module_directory . $class . $file_extension);
+        $module = instantiate_class($class);
+
+        // only a submitted form may write, this is also the condition the CSRF check runs on
+        if (isset($_POST) && is_array($_POST) && count($_POST) > 0) {
+          $configuration = (isset($_POST['configuration']) && is_array($_POST['configuration'])) ? $_POST['configuration'] : array();
+
+          // a multi checkbox posts nothing when nothing is selected, so its key would never
+          // reach the save loop and the previous value would survive; keys hidden through
+          // keys_dispnone are never rendered, so they must keep their stored value
+          $module_keys = method_exists($module, 'keys') ? (array)$module->keys() : array();
+          if (isset($module->keys_dispnone)) {
+            $module_keys = array_diff($module_keys, (array)$module->keys_dispnone);
+          }
+          foreach (xtc_cfg_get_multi_checkbox_keys($module_keys) as $checkbox_key) {
+            if (!isset($configuration[$checkbox_key])) {
+              $configuration[$checkbox_key] = '';
+            }
+          }
+
+          foreach ($configuration as $key => $value) {
+            if (is_array($configuration[$key])) {
               // multi language config
-              $keys = array_keys($_POST['configuration'][$key]);
+              $keys = array_keys($configuration[$key]);
               if (gettype(array_shift($keys)) == 'string') {
                 $config_value = array();
-                foreach ($_POST['configuration'][$key] as $k => $v) {
+                foreach ($configuration[$key] as $k => $v) {
                   if (xtc_not_null($v)) {
                     $config_value[] =  $k . '::' . $v;
                   }
                 }
                 $value = implode('||', $config_value);
               } else {
-                $value = implode(',', $_POST['configuration'][$key]);
+                $value = implode(',', $configuration[$key]);
               }
             }
-            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                              SET configuration_value = '" . xtc_db_input($value) . "',
                                  last_modified = NOW()
                            WHERE configuration_key = '" . $key . "'");
             if (@strpos($key,'FILE') !== false) $file = $value;
           }
         }
-        $class = basename($module_class);
-        include($module_directory . $class . $file_extension);
-        $module = instantiate_class($class);
         //BOF NEW MODULE PROCESSING
         if (isset($_POST['process']) && $_POST['process'] == 'module_processing_do') {
           $get_params = isset($module->get_params) ? $module->get_params : array();
@@ -537,7 +551,7 @@ if (xtc_not_null($action) && !$box) {
                     }
                     $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array('form' => (isset($mInfo->properties['form_edit']) ? $mInfo->properties['form_edit'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=save','post')));
+                    $contents = array('form' => (isset($mInfo->properties['form_edit']) ? $mInfo->properties['form_edit'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=save','post') ) . xtc_draw_hidden_field('module_save', '1'));
                     $contents[] = array('text' => $keys);
                     // display module fields
                     $contents[] = $module->display();                          
