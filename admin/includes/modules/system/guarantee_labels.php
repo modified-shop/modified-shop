@@ -112,6 +112,10 @@
                         $this->dir_writable($dir), $dir, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED);
       }
 
+      // the archive is locked with an .htaccess, so a server that ignores it needs the same rule
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS, $this->htaccess_server(),
+                      'media/guarantee_labels/archive/', MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER);
+
       $b2b_gone = $this->b2b_missing_groups();
       $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_B2B, count($b2b_gone) < 1,
                       implode(', ', $b2b_gone), MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN);
@@ -238,6 +242,28 @@
                  '</td>'.
                '</tr>'.
              '</table>';
+    }
+
+    /**
+     * Whether the web server reads an .htaccess at all.
+     *
+     * The archive of the orders is locked with one, which is the only way this shop knows: inc/,
+     * includes/, lang/, log/ and admin/includes/ hang on the same file. Under nginx none of them
+     * is locked, and the shop owner has to hear that once instead of finding it later. Nothing is
+     * requested for this: an outgoing call from the administration would hang on a firewall or
+     * report a red line for a shop behind basic authentication.
+     *
+     * @return bool false only when the server is known and known not to read it
+     */
+    function htaccess_server() {
+      $server = isset($_SERVER['SERVER_SOFTWARE']) ? strtolower((string)$_SERVER['SERVER_SOFTWARE']) : '';
+
+      // an unknown name stays unreported, a wrong guess would put a red line into a sound shop
+      if ($server === '') {
+        return true;
+      }
+
+      return (strpos($server, 'apache') !== false || strpos($server, 'litespeed') !== false);
     }
 
     /**

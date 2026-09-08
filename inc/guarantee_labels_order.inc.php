@@ -537,6 +537,13 @@
     $files = $cached ? $archive->cache_read($product['garan_hash'], array('colour.svg', 'nested.svg'))
                      : $archive->garan_read($product['garan_hash']);
 
+    // The cheap question only asks for colour.svg. A cache copy whose second file is gone must
+    // not hide an intact archive behind it; the write below then puts the copy back in order.
+    if ($files === false && $cached) {
+      $cached = false;
+      $files = $archive->garan_read($product['garan_hash']);
+    }
+
     // without the archived graphic nothing is drawn, a current one would show other values
     if ($files === false) {
       guarantee_labels_snapshot_log('garan read', $orders_id,

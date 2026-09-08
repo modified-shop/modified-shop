@@ -336,6 +336,14 @@ media/guarantee_labels/archive/
         └── <terms_filename>
 ```
 
+Die Sperre des Archivs ist eine `.htaccess` und wirkt damit nur unter Apache und LiteSpeed. Das ist keine Entscheidung des Moduls, sondern der einzige Weg, den der Shop dafuer kennt: `inc/`, `includes/`, `lang/`, `log/`, `cache/`, `templates_c/` und `admin/includes/` haengen an derselben Datei. Ausserhalb des Dokumentenstamms kann das Archiv nicht liegen: `check_attachments()` stellt jedem Anhangspfad `DIR_FS_DOCUMENT_ROOT` voran, der ihn nicht schon enthaelt, und der Mailweg faende die Datei dort nicht mehr.
+
+Deshalb sagt es die Moduldiagnose. Sie liest `$_SERVER['SERVER_SOFTWARE']` und meldet einen Server, der keine `.htaccess` auswertet, mit dem Pfad, der in seiner Konfiguration zu sperren ist. Gefragt wird nur der eigene Prozess: Ein ausgehender HTTP-Aufruf aus der Administration wuerde an einer Firewall haengen oder bei einem Shop hinter Basic Authentication eine rote Zeile melden, die nichts bedeutet. Ist der Servername unbekannt, meldet die Diagnose nichts; eine falsche Vermutung waere schlechter als keine. Fuer nginx lautet die Regel:
+
+```text
+location ^~ /media/guarantee_labels/archive/ { deny all; }
+```
+
 `notice.json` speichert Sprache, Mailtext, Linktext, Ueberschrift, Your-Europe-URL und Version des bei der Snapshoterzeugung verwendeten Hinweises. Die erste und jede erneute Bestellbestaetigung lesen Text, Link und Ueberschrift anhand von `orders_guarantee.notice_hash` aus diesem Snapshot. Spaetere Aenderungen an Sprachkonstanten oder URLs veraendern bestehende Bestellungen nicht.
 
 Jedes Hashverzeichnis erhaelt beim Schreiben eine `checksums.json` mit dem SHA-256 jeder abgelegten Datei. Beim Lesen wird jede Datei gegen ihren Eintrag geprueft; ein Verzeichnis mit abweichendem Inhalt gilt als nicht lesbar. Vor dem Umbenennen wird das temporaere Verzeichnis vollstaendig gelesen, genau so wie eine spaetere Anfrage es liest, einschliesslich Sidecar. Ein verkuerzter Schreibvorgang kann eine positive Byteanzahl melden; ohne diese Pruefung koennte eine Datenbankzeile auf ein Archiv verweisen, dessen Schaden erst beim Zugriff auffaellt. Ein unlesbarer Sidecar zaehlt als Schaden und nicht als Archiv ohne Sidecar. Ist ein Sidecar vorhanden, muss er jede gelesene Datei nennen; ein entfernter Eintrag wuerde sonst eine ersetzte Datei decken. Ein beschaedigtes Hashverzeichnis wird beim naechsten Schreibvorgang verworfen und neu angelegt, weil sein Inhalt aus seinem Namen folgt.
@@ -986,6 +994,7 @@ isset($_GET['module'])
 - unvollstaendige GARAN-Produktdaten,
 - dieselbe `content_file`, die in mehreren Sprachen als `garan_terms` markiert ist,
 - als `garan_terms` markierte Anhaenge, die eine Kundengruppe nicht erreichen, obwohl ihr das Label gezeigt wird. Die Markierung wird beim Speichern geprueft, kann aber nachtraeglich ungueltig werden: bei abgeschaltetem Modul eingeschraenkt oder durch eine Gruppe, die aus der B2B-Auswahl entfernt wurde und damit B2C ist,
+- einen Webserver, der die `.htaccess` des Archivs nicht auswertet,
 - eine B2B-Kundengruppe der Einstellung, die es nicht mehr gibt. Die Mehrfachauswahl bietet nur vorhandene Gruppen an, eine geloeschte laesst sich durch Speichern also nicht mehr entfernen,
 - fehlende oder beschaedigte historische Archivdateien.
 
@@ -1288,6 +1297,7 @@ nicht mehr nur in diesem Dokument, sondern als Test in `tests/guarantee_labels/r
 - Modul erneut installieren; vorhandene Tabellen bleiben unveraendert und behalten ihre Indizes.
 - Cache leeren; `colour.svg` und `nested.svg` werden unter demselben `garan_hash` neu erzeugt und archivierte SVG-Grafiken zu bestehenden Bestellungen bleiben verfuegbar.
 - Direkten HTTP-Aufruf einer Datei unter `media/guarantee_labels/archive/` durch die eigene `.htaccess` blockieren, einschliesslich einer archivierten Garantiebedingung unter `terms/`. Die Katalogfassung derselben Datei unter `media/products/` bleibt erreichbar.
+- Denselben Aufruf unter nginx wiederholen; die Sperre greift dort nicht und die Moduldiagnose meldet den Server samt zu sperrendem Pfad. Nach dem Eintragen der `location`-Regel ist die Datei nicht mehr erreichbar.
 - Zwei Bestellungen mit demselben `garan_hash` und `notice_hash` verwenden dieselben Archivverzeichnisse, ohne vorhandene Dateien zu ueberschreiben.
 - Zwei parallele Schreibvorgaenge fuer denselben Hash erzeugen durch temporaere Nachbarverzeichnisse und atomare Umbenennung keine unvollstaendigen Archivverzeichnisse.
 - Nicht beschreibbaren GARAN-Cache testen; die aktuelle Ausgabe verwendet die direkt erzeugten SVGs, der Fehler erscheint im Protokoll und in der Moduldiagnose.

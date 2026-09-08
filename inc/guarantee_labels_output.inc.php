@@ -137,19 +137,21 @@
     preg_match_all('/\{([0-9]+)\}([0-9]+)/', $uprid, $pairs);
 
     $chosen = array();
-    $values = array();
 
     foreach ($pairs[1] as $index => $option) {
-      $chosen[(int)$option.':'.(int)$pairs[2][$index]] = true;
-      $values[(int)$pairs[2][$index]] = (int)$pairs[2][$index];
+      $chosen[(int)$option.':'.(int)$pairs[2][$index]] = "(pa.options_id = '".(int)$option."'
+                                             AND pa.options_values_id = '".(int)$pairs[2][$index]."')";
     }
 
+    // asked as pairs as well: the same value id may sit under a second option, and counting its
+    // download would call a position digital that the customer never chose a download for
     $download_query = xtc_db_query("SELECT COUNT(*) AS total
                                       FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
                                       JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
                                            ON pa.products_attributes_id = pad.products_attributes_id
                                      WHERE pa.products_id = '".$products_id."'
-                                       AND pa.options_values_id IN ('".implode("', '", $values)."')");
+                                       AND (".implode("
+                                          OR ", $chosen).")");
     $download = xtc_db_fetch_array($download_query);
     $downloads = (int)$download['total'];
 

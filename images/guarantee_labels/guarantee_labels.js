@@ -21,6 +21,9 @@
 
   var prefixCounter = 0;
 
+  // names a block that shares its id with a twin of the same article elsewhere in the page
+  var contentCounter = 0;
+
   // The templates carry generic names, cls-1 and clippath-6. Two labels in one document would
   // otherwise share them, and a clip path or a gradient of one label would apply to the other.
   // The server does the same to every svg it embeds, see guarantee_labels_inline_svg().
@@ -170,16 +173,17 @@
     var image = full.getAttribute('data-guarantee-label-img');
     var graphic = full.querySelector('.guarantee-label__graphic');
 
-    if (!graphic || full.getAttribute('data-guarantee-label-loaded')) {
-      done();
-      return;
-    }
-
-    // a load is already running for this label, so this click waits for the same one
+    // A load already running for this label is asked first: the flag below is set when the
+    // request goes out, not when the graphic is there, so a second click would open an empty box.
     var running = waitersFor(full);
 
     if (running) {
       running.callbacks.push(done);
+      return;
+    }
+
+    if (!graphic || full.getAttribute('data-guarantee-label-loaded')) {
+      done();
       return;
     }
 
@@ -244,12 +248,26 @@
       // product::buildDataArray() serves the cached markup for both - so the id is not unique.
       // The button and its dialogue sit in the same .guarantee-label, which is: the id only
       // answers for the notice block, which has no such wrapper and is never duplicated.
+      // colorbox and thickbox address the content by its id, so it is read either way
+      var id = compact.getAttribute('data-guarantee-label-content');
       var block = closest(compact, '.guarantee-label');
       var content = block ? block.querySelector('.guarantee-label__content') : null;
 
       if (!content) {
-        var id = compact.getAttribute('data-guarantee-label-content');
         content = id ? document.getElementById(id) : null;
+      }
+
+      // A lightbox looks the content up in the document and takes the first element with that
+      // id. product::buildDataArray() serves the cached markup of one article for every place
+      // it appears, so the same id can sit in the page twice: the clicked block would load its
+      // graphic while the first, still empty one opens. A block whose id answers with another
+      // element gets one of its own.
+      if (content) {
+        if (!content.id || document.getElementById(content.id) !== content) {
+          content.id = 'guarantee-label-content-js' + (++contentCounter);
+        }
+
+        id = content.id;
       }
       var full = content ? content.querySelector('.guarantee-label__full') : null;
       var title = compact.getAttribute('data-guarantee-label-title') || '';
