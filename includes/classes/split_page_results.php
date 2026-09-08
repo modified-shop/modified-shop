@@ -50,7 +50,14 @@
         $count_string = xtc_db_input($count_key);
       }
 
-      $count_query = xtDBquery("SELECT count(" . $count_string . ") as total " . substr($query, $pos_from, ($pos_to - $pos_from)));
+      $count_source = substr($query, $pos_from, ($pos_to - $pos_from));
+
+      // a LEFT JOIN nothing references cannot change count(DISTINCT ...)
+      if (strpos($count_string, 'DISTINCT ') === 0) {
+        $count_source = $this->strip_unused_left_joins($count_source);
+      }
+
+      $count_query = xtDBquery("SELECT count(" . $count_string . ") as total " . $count_source);
       $count = xtc_db_fetch_array($count_query, true);
       $this->number_of_rows = $count['total'];
 
@@ -69,6 +76,30 @@
       if ($offset < 1) $offset = 0;
 
       $this->sql_query .= " LIMIT " . max((int)$offset, 0) . ", " . $this->number_of_rows_per_page;
+    }
+
+    // remove joins the count does not need
+    function strip_unused_left_joins($sql) {
+      $pattern = '/\bLEFT\s+(?:OUTER\s+)?JOIN\s+.*?(?=\bLEFT\s+(?:OUTER\s+)?JOIN\b|\bINNER\s+JOIN\b|\bSTRAIGHT_JOIN\b|\bJOIN\b|\bWHERE\b|$)/is';
+      if (!preg_match_all($pattern, $sql, $matches)) {
+        return $sql;
+      }
+
+      foreach ($matches[0] as $join) {
+        if (!preg_match('/\bLEFT\s+(?:OUTER\s+)?JOIN\s+`?([a-z0-9_]+)`?\s+(?:AS\s+)?`?([a-z0-9_]*)`?\s*(?:ON\b|\()/is', $join, $parts)) {
+          continue;
+        }
+
+        $alias = ((isset($parts[2]) && $parts[2] != '' && strtoupper($parts[2]) != 'ON') ? $parts[2] : $parts[1]);
+        $rest = str_replace($join, ' ', $sql);
+        if (preg_match('/\b'.preg_quote($alias, '/').'\s*\./i', $rest)) {
+          continue;
+        }
+
+        $sql = $rest;
+      }
+
+      return $sql;
     }
 
     // display split-page-number-links
