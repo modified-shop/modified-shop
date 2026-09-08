@@ -191,10 +191,11 @@
             && xtc_count_payment_modules() == 0
             )
         {
-          unset($_SESSION['paypal']['payment_modules']);
+          unset($_SESSION['paypal']);
           unset($_SESSION['payment']);
+          unset($_SESSION['payment_nonce']);
           $this->selected_module = '';
-          $this->__construct($module);
+          $this->__construct();
 
           return;
         }
