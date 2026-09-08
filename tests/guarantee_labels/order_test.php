@@ -49,6 +49,12 @@ $GLOBALS['man'] = array(1 => 'ACME GmbH');
 $GLOBALS['queries'] = 0;
 function xtc_db_query($sql) {
   $GLOBALS['queries']++;
+  // die Sammelabfrage hat kein IN (): sie holt alle aktiven Hersteller auf einmal
+  if (strpos($sql, 'manufacturers_status') !== false && strpos($sql, 'IN (') === false) {
+    $rows = array();
+    foreach ($GLOBALS['man'] as $id => $name) $rows[] = array('manufacturers_id' => $id, 'manufacturers_name' => $name);
+    return $rows;
+  }
   preg_match_all("/\d+/", substr($sql, strpos($sql, 'IN (')), $m);
   $rows = array();
   foreach ($m[0] as $id) if (isset($GLOBALS['man'][(int)$id])) $rows[] = array('manufacturers_id' => $id, 'manufacturers_name' => $GLOBALS['man'][(int)$id]);

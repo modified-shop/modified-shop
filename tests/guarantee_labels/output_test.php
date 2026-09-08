@@ -30,6 +30,12 @@ $GLOBALS['man'] = array(1 => 'ACME GmbH', 2 => 'Miele & Cie. KG');
 $GLOBALS['queries'] = 0;
 function xtc_db_query($sql) {
   $GLOBALS['queries']++;
+  // die Sammelabfrage hat kein IN (): sie holt alle aktiven Hersteller auf einmal
+  if (strpos($sql, 'manufacturers_status') !== false && strpos($sql, 'IN (') === false) {
+    $rows = array();
+    foreach ($GLOBALS['man'] as $id => $name) $rows[] = array('manufacturers_id' => $id, 'manufacturers_name' => $name);
+    return $rows;
+  }
   preg_match_all("/\d+/", substr($sql, strpos($sql, 'IN (')), $m);
   $rows = array();
   foreach ($m[0] as $id) if (isset($GLOBALS['man'][(int)$id])) $rows[] = array('manufacturers_id' => $id, 'manufacturers_name' => $GLOBALS['man'][(int)$id]);
@@ -64,6 +70,22 @@ guarantee_labels_collect_manufacturers($block);
 ok('zweiter Block ohne weitere Abfrage', $GLOBALS['queries'] === 0);
 $GLOBALS['queries'] = 0;
 ok('Block ohne Kandidaten fragt nicht', guarantee_labels_collect_manufacturers(array(p('2.0'), p(null))) === array() && $GLOBALS['queries'] === 0);
+
+echo "\n== Hersteller einer Artikelliste ==\n";
+// buildDataArray() laeuft je Zeile, der Block liegt dort nie vor. Frueher kostete jeder neue
+// Hersteller eine eigene Abfrage. Ab der zweiten Runde holt der Puffer die aktiven Hersteller
+// einmal und beantwortet alles weitere ohne Abfrage.
+$GLOBALS['man'] = array();
+for ($i = 1; $i <= 40; $i++) { $GLOBALS['man'][$i] = 'Hersteller '.$i; }
+$GLOBALS['queries'] = 0;
+for ($i = 1; $i <= 40; $i++) {
+  guarantee_labels_manufacturer_names(array($i));
+}
+ok('40 Hersteller mit hoechstens zwei Abfragen', $GLOBALS['queries'] <= 2, 'Abfragen: '.$GLOBALS['queries']);
+ok('alle Namen da', guarantee_labels_manufacturer_names(array(40)) === array(40 => 'Hersteller 40'));
+$GLOBALS['queries'] = 0;
+guarantee_labels_manufacturer_names(array(7, 19, 33));
+ok('danach ohne weitere Abfrage', $GLOBALS['queries'] === 0);
 
 echo "\n== Label je Artikel ==\n";
 $label = guarantee_labels_product_label(p('3.0', 1), $names);

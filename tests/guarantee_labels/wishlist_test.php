@@ -64,6 +64,12 @@ function xtc_db_query($sql) {
     array_shift($ids); // products_id
     return array(array('total' => count(array_intersect($ids, $GLOBALS['downloads']))));
   }
+  // die Sammelabfrage hat kein IN (): sie holt alle aktiven Hersteller auf einmal
+  if (strpos($sql, 'manufacturers_status') !== false && strpos($sql, 'IN (') === false) {
+    $rows = array();
+    foreach ($GLOBALS['man'] as $id => $name) $rows[] = array('manufacturers_id' => $id, 'manufacturers_name' => $name);
+    return $rows;
+  }
   preg_match_all("/\d+/", substr($sql, strpos($sql, 'IN (')), $m);
   $rows = array();
   foreach ($m[0] as $id) if (isset($GLOBALS['man'][(int)$id])) $rows[] = array('manufacturers_id' => $id, 'manufacturers_name' => $GLOBALS['man'][(int)$id]);
