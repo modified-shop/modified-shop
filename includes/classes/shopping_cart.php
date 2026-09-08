@@ -110,16 +110,21 @@ class shoppingCart {
     if ($this->save_to_db === true) {
       $products_list = array();
 
+      // read the saved basket once instead of one query per position
+      $basket_array = array();
+      $basket_query = xtc_db_query("SELECT products_id,
+                                           customers_basket_quantity
+                                      FROM ".$this->table_basket."
+                                     WHERE customers_id = '".xtc_db_input($customer_id)."'");
+      while ($basket = xtc_db_fetch_array($basket_query)) {
+        $basket_array[$basket['products_id']] = $basket;
+      }
+
       if (is_array($this->contents)) {
         foreach ($this->contents as $products_id => $data) {
           if ($this->check_products_status_permission($products_id) === true) {
             $qty = $this->contents[$products_id]['qty'];
-            $product_query = xtc_db_query("SELECT products_id,
-                                                  customers_basket_quantity
-                                             FROM ".$this->table_basket."
-                                            WHERE customers_id = '".xtc_db_input($customer_id)."'
-                                              AND products_id = '".xtc_db_input($products_id)."'");
-            if (xtc_db_num_rows($product_query) < 1) {
+            if (!isset($basket_array[$products_id])) {
               $sql_data_array = array(
                 'customers_id' => $customer_id,
                 'products_id' => $products_id,
@@ -147,9 +152,7 @@ class shoppingCart {
               }
             } else {
               if ($this->add_up_saved_qty === true) {
-                $product = xtc_db_fetch_array($product_query);
-    
-                $qty += $product['customers_basket_quantity'];
+                $qty += $basket_array[$products_id]['customers_basket_quantity'];
                 $this->contents[$products_id] = array ('qty' => $qty);
               }
               
@@ -169,6 +172,19 @@ class shoppingCart {
 
       // restore saved content
       $_SESSION['old_customers_basket_'.$this->type] = false;
+
+      // read the saved attributes once instead of one query per position
+      $basket_attributes_array = array();
+      $basket_attributes_query = xtc_db_query("SELECT products_id,
+                                                      products_options_id,
+                                                      products_options_value_id
+                                                 FROM ".$this->table_basket_attributes."
+                                                WHERE customers_id = '".xtc_db_input($customer_id)."'
+                                             ORDER BY customers_basket_attributes_id");
+      while ($basket_attributes = xtc_db_fetch_array($basket_attributes_query)) {
+        $basket_attributes_array[$basket_attributes['products_id']][] = $basket_attributes;
+      }
+
       $products_query = xtc_db_query("SELECT products_id,
                                              customers_basket_quantity
                                         FROM ".$this->table_basket."
@@ -186,14 +202,8 @@ class shoppingCart {
             $this->shoppingCartModules->restore_contents_products_session($products, $this->table_basket, $this->type);
               
             // attributes
-            $attributes_query = xtc_db_query("SELECT products_options_id,
-                                                     products_options_value_id
-                                                FROM ".$this->table_basket_attributes."
-                                               WHERE customers_id = '".xtc_db_input($customer_id)."'
-                                                 AND products_id = '".xtc_db_input($products['products_id'])."'
-                                            ORDER BY customers_basket_attributes_id");
-            if (xtc_db_num_rows($attributes_query) > 0) {
-              while ($attributes = xtc_db_fetch_array($attributes_query)) {
+            if (isset($basket_attributes_array[$products['products_id']])) {
+              foreach ($basket_attributes_array[$products['products_id']] as $attributes) {
                 $this->contents[$products['products_id']]['attributes'][$attributes['products_options_id']] = $attributes['products_options_value_id'];
               }
               
@@ -1067,18 +1077,33 @@ class shoppingCart {
    * @return boolean
    */
   function check_products_status_permission($products_id) {
-    require(DIR_FS_CATALOG.'includes/define_conditions.php');
-    $conditions = str_replace('p.', '', $products_conditions_p);
+    static $conditions_array, $check_array;
 
-    $status = false;
-    $check_query = xtDBquery("SELECT products_id 
-                                FROM ".TABLE_PRODUCTS."
-                               WHERE products_id = '".(int)$products_id."'
-                                 AND products_status = '1'
-                                     ".$conditions);
-    if (xtc_db_num_rows($check_query, true) > 0) {
-      $status = true;
+    if (!isset($conditions_array)) {
+      $conditions_array = array();
+      $check_array = array();
     }
+
+    // the conditions depend on the customers status, which can change within a request
+    $customers_status_id = (int)$_SESSION['customers_status']['customers_status_id'];
+    if (!isset($conditions_array[$customers_status_id])) {
+      require(DIR_FS_CATALOG.'includes/define_conditions.php');
+      $conditions_array[$customers_status_id] = str_replace('p.', '', $products_conditions_p);
+    }
+
+    if (!isset($check_array[$customers_status_id][(int)$products_id])) {
+      $check_array[$customers_status_id][(int)$products_id] = false;
+      $check_query = xtDBquery("SELECT products_id 
+                                  FROM ".TABLE_PRODUCTS."
+                                 WHERE products_id = '".(int)$products_id."'
+                                   AND products_status = '1'
+                                       ".$conditions_array[$customers_status_id]);
+      if (xtc_db_num_rows($check_query, true) > 0) {
+        $check_array[$customers_status_id][(int)$products_id] = true;
+      }
+    }
+
+    $status = $check_array[$customers_status_id][(int)$products_id];
     
     //new module support 
     $status = $this->shoppingCartModules->check_products_status_permission($status, $products_id);
