@@ -123,7 +123,7 @@
     switch ($action) {
       case 'save':
         $class = basename($module_class);
-        include_once($module_directory . $class . $file_extension);
+        include_once($module_directory . $class . '.php');
         $module = instantiate_class($class);
 
         if (isset($_POST['configuration']) 
