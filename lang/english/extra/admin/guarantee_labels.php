@@ -65,6 +65,7 @@
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_CONFIRM', 'EU durability guarantee: the change was not confirmed and therefore not saved.');
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_TERMS', 'EU durability guarantee: the guarantee conditions could not be archived (%s). The previous state is kept.');
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_NO_PRODUCT', 'EU durability guarantee: the catalogue article carries no complete GARAN data.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_INCOMPLETE', 'EU durability guarantee: the request was incomplete. Nothing was saved and nothing was removed.');
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL', 'EU durability guarantee: the order position is not goods and therefore carries no guarantee data.');
 
   define('ERROR_GUARANTEE_LABELS_TERMS_LINK', 'GARAN guarantee conditions: a link alone is no durable medium. Store a file instead. The attachment was saved as an ordinary one.');

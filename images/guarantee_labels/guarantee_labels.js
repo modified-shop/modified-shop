@@ -133,6 +133,35 @@
     }
   }
 
+  // A click while a load is still running must not open an empty box. The element keeps the
+  // callbacks of everyone waiting for the same graphic; the flag says "content is there", not
+  // "a request went out".
+  var waiting = [];
+
+  function waitersFor(full) {
+    for (var i = 0; i < waiting.length; i++) {
+      if (waiting[i].full === full) {
+        return waiting[i];
+      }
+    }
+
+    return null;
+  }
+
+  function settle(full) {
+    var entry = waitersFor(full);
+
+    if (!entry) {
+      return;
+    }
+
+    waiting.splice(waiting.indexOf(entry), 1);
+
+    for (var i = 0; i < entry.callbacks.length; i++) {
+      entry.callbacks[i]();
+    }
+  }
+
   function load(full, done) {
     var source = full.getAttribute('data-guarantee-label-src');
 
@@ -146,6 +175,16 @@
       return;
     }
 
+    // a load is already running for this label, so this click waits for the same one
+    var running = waitersFor(full);
+
+    if (running) {
+      running.callbacks.push(done);
+      return;
+    }
+
+    waiting.push({full: full, callbacks: [done]});
+
     if (image) {
       full.setAttribute('data-guarantee-label-loaded', '1');
 
@@ -153,11 +192,13 @@
 
       // the overlay measures its content when it opens, so it may only open once the graphic
       // knows its size
-      element.onload = done;
+      element.onload = function () {
+        settle(full);
+      };
       element.onerror = function () {
         full.removeAttribute('data-guarantee-label-loaded');
         graphic.textContent = full.getAttribute('data-guarantee-label-error') || '';
-        done();
+        settle(full);
       };
 
       element.setAttribute('alt', full.getAttribute('data-guarantee-label-alt') || '');
@@ -168,7 +209,7 @@
     }
 
     if (!source) {
-      done();
+      settle(full);
       return;
     }
 
@@ -183,12 +224,12 @@
       // Inserted into the dom instead of an img, so the label uses the fonts of the page. Its
       // own ids and classes are made unique first, the document may already hold another label.
       graphic.innerHTML = prefixSvg(svg);
-      done();
+      settle(full);
     }).catch(function () {
       // the cache was cleared between page load and click, a reload rebuilds it
       full.removeAttribute('data-guarantee-label-loaded');
       graphic.textContent = full.getAttribute('data-guarantee-label-error') || '';
-      done();
+      settle(full);
     });
   }
 

@@ -415,12 +415,19 @@
           return false;
         }
 
-        foreach ($template['areas'] as $area_name) {
-          $svg = $this->replace_area($svg, $areas[$area_name]['token'], $values[$area_name], $name);
+        // All areas in one pass over the untouched template. Replacing them one after another
+        // would let a value written earlier look like the token of a later field, and a
+        // manufacturer named after one of them would drop the label with a confusing reason.
+        $tokens = array();
 
-          if ($svg === false) {
-            return false;
-          }
+        foreach ($template['areas'] as $area_name) {
+          $tokens[$areas[$area_name]['token']] = $values[$area_name];
+        }
+
+        $svg = $this->replace_areas($svg, $tokens, $name);
+
+        if ($svg === false) {
+          return false;
         }
 
         $files[$name] = $svg;
@@ -443,24 +450,37 @@
      *
      * @return mixed the changed svg, false when the field does not appear exactly once
      */
-    function replace_area($svg, $token, $value, $template) {
-      // product data must never be able to inject own svg or html
-      $replacement = '<tspan x="0" y="0">'.encode_htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8').'</tspan>';
+    /**
+     * Fills every editable area of one template in a single pass.
+     *
+     * @param string $svg the untouched template
+     * @param array $tokens token => value
+     * @param string $template the template name, for the error message
+     * @return mixed the filled svg, false when a token is missing or appears more than once
+     */
+    function replace_areas($svg, $tokens, $template) {
+      $counts = array_fill_keys(array_keys($tokens), 0);
 
-      $count = 0;
-      $result = preg_replace_callback('/(<text\b[^>]*>)(.*?)(<\/text>)/s', function ($match) use ($token, $replacement, &$count) {
-        if (trim(decode_htmlentities(strip_tags($match[2]), ENT_QUOTES | ENT_XML1)) !== $token) {
+      $result = preg_replace_callback('/(<text\b[^>]*>)(.*?)(<\/text>)/s', function ($match) use ($tokens, &$counts) {
+        $content = trim(decode_htmlentities(strip_tags($match[2]), ENT_QUOTES | ENT_XML1));
+
+        if (!array_key_exists($content, $tokens)) {
           return $match[0];
         }
 
-        $count++;
+        $counts[$content]++;
 
-        return $match[1].$replacement.$match[3];
+        // product data must never be able to inject own svg or html
+        return $match[1].
+               '<tspan x="0" y="0">'.encode_htmlspecialchars($tokens[$content], ENT_QUOTES | ENT_XML1, 'UTF-8').'</tspan>'.
+               $match[3];
       }, $svg);
 
-      if ($count !== 1) {
-        $this->fail('field "'.$token.'" appears '.(int)$count.' times in '.$template.', expected exactly once');
-        return false;
+      foreach ($counts as $token => $count) {
+        if ($count !== 1) {
+          $this->fail('field "'.$token.'" appears '.(int)$count.' times in '.$template.', expected exactly once');
+          return false;
+        }
       }
 
       return $result;

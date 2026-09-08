@@ -10,6 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+
   require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
 
   // The position leaves the order, its snapshot would stay behind as an orphan. Both values come

@@ -65,6 +65,7 @@
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_CONFIRM', 'EU-Haltbarkeitsgarantie: Die &Auml;nderung wurde nicht best&auml;tigt und deshalb nicht gespeichert.');
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_TERMS', 'EU-Haltbarkeitsgarantie: Die Garantiebedingungen konnten nicht archiviert werden (%s). Der bisherige Stand bleibt erhalten.');
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_NO_PRODUCT', 'EU-Haltbarkeitsgarantie: Der Katalogartikel liefert keine vollst&auml;ndigen GARAN-Daten.');
+  define('ERROR_GUARANTEE_LABELS_SNAPSHOT_INCOMPLETE', 'EU-Haltbarkeitsgarantie: Die Anfrage war unvollst&auml;ndig. Es wurde nichts gespeichert und nichts entfernt.');
   define('ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL', 'EU-Haltbarkeitsgarantie: Die Bestellposition ist keine Ware und bekommt deshalb keine Garantieangabe.');
 
   define('ERROR_GUARANTEE_LABELS_TERMS_LINK', 'GARAN-Garantiebedingungen: Ein reiner Link ist kein dauerhafter Datentr&auml;ger. Hinterlegen Sie eine Datei. Der Anhang wurde als normaler Anhang gespeichert.');

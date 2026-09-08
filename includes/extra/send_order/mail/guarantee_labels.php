@@ -12,12 +12,16 @@
 
   // A damaged archive does not stop the confirmation, but the shop owner has to learn about it.
   // The storefront checkout has nobody to tell, so only a resend from the administration reports.
+  // A payment callback boots the storefront and sets $send_by_admin as well, and there the
+  // administration language file is never loaded. Without its constant this hook would fatal in
+  // exactly the case it exists to report, after the mail has already gone out.
   if (defined('MODULE_GUARANTEE_LABELS_STATUS')
       && MODULE_GUARANTEE_LABELS_STATUS == 'true'
       && isset($send_by_admin)
       && $send_by_admin == true
       && isset($messageStack)
       && is_object($messageStack)
+      && defined('ERROR_GUARANTEE_LABELS_ORDER_ARCHIVE')
       )
   {
     require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');

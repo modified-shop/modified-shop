@@ -49,15 +49,27 @@
     if (defined('TEXT_GUARANTEE_NOTICE_MAIL')) {
       if (!isset($loaded)) {
         // whoever loaded them did it for the language of this request
-        $loaded = isset($_SESSION['language']) ? trim((string)$_SESSION['language']) : '';
+        $session = isset($_SESSION['language']) ? trim((string)$_SESSION['language']) : '';
 
-        // without a session language the file itself says whether it is the same wording
-        if ($loaded === '') {
-          $loaded = guarantee_labels_language_of($language) ? $language : '';
+        if ($session !== '') {
+          $loaded = $session;
         }
       }
 
-      return ($loaded !== '' && $loaded === $language);
+      if (isset($loaded)) {
+        return ($loaded === $language);
+      }
+
+      // Without a session language the file itself says whether it is the same wording. A miss is
+      // answered but not remembered: the next call may ask for the language that really is loaded,
+      // and an empty $loaded would still be isset() and lock the answer to false for the request.
+      $answered = guarantee_labels_language_of($language);
+
+      if ($answered) {
+        $loaded = $language;
+      }
+
+      return $answered;
     }
 
     $file = DIR_FS_CATALOG.'lang/'.$language.'/extra/guarantee_labels.php';
@@ -211,11 +223,22 @@
 
     $hash = guarantee_labels_notice_hash($language);
 
+    // The only failure in this file that used to be silent. A language without notice.svg still
+    // shows the notice in the checkout, so the order would go out without one and nothing said so.
     if ($hash === false) {
+      guarantee_labels_snapshot_log('notice', $orders_id, array('no archivable notice for '.$language));
       return false;
     }
 
     // one snapshot per order, a repeated call must not create a second row
+    // Every read path asks first. Without the table xtc_db_query() returns false, xtc_db_num_rows()
+    // reads that as "no row yet", and the archive would be rewritten on every order while the
+    // insert fails silently.
+    if (!guarantee_labels_snapshot_table(TABLE_ORDERS_GUARANTEE)) {
+      guarantee_labels_snapshot_log('notice', $orders_id, array('table '.TABLE_ORDERS_GUARANTEE.' is missing'));
+      return false;
+    }
+
     $existing_query = xtc_db_query("SELECT orders_guarantee_id
                                       FROM ".TABLE_ORDERS_GUARANTEE."
                                      WHERE orders_id = '".$orders_id."'");
@@ -316,6 +339,13 @@
             ? $_SESSION['customers_status']['customers_status_id']
             : $customers_status;
 
+    // Without a group there is nothing to check against. (int)null would ask for c_0_group, the
+    // administration, which a correctly maintained attachment never carries: the document would
+    // be judged invisible and never archived.
+    if ($status === null || $status === '') {
+      return false;
+    }
+
     return (strpos((string)$group_ids, 'c_'.(int)$status.'_group') !== false);
   }
 
@@ -413,6 +443,13 @@
     $orders_products_id = (int)$orders_products_id;
 
     if ($orders_id < 1 || $orders_products_id < 1 || !guarantee_labels_active($customers_status)) {
+      return false;
+    }
+
+    // the same question every read path asks, so a missing table does not end in archived files
+    // that no row will ever point at
+    if (!guarantee_labels_snapshot_table(TABLE_ORDERS_PRODUCTS_GUARANTEE)) {
+      guarantee_labels_snapshot_log('garan', $orders_id, array('table '.TABLE_ORDERS_PRODUCTS_GUARANTEE.' is missing'));
       return false;
     }
 

@@ -216,6 +216,8 @@
       $temp = $directory.$this->temp_name();
 
       if (@copy($source, $temp) === false) {
+        // a partial copy would stay next to the real files, invisible and never cleaned up
+        @unlink($temp);
         $this->fail('terms', $temp, 'file cannot be written');
         return false;
       }
@@ -330,29 +332,35 @@
         return false;
       }
 
+      $damaged = '';
+
       if (is_dir($target)) {
         if ($this->read_files($target, array_keys($files)) !== false) {
           return true;
         }
 
         // The content of a hash directory follows from its name, so a damaged one can always be
-        // rebuilt. Keeping it would serve the damaged files for good.
-        if ($this->remove_dir($target) === false) {
-          $this->fail($type, $target, 'damaged directory cannot be removed');
+        // rebuilt, and keeping it would serve the damaged files for good. It is moved aside
+        // rather than deleted: a delete that fails halfway would take the intact files with it
+        // and leave nothing to rebuild from. The copy goes once the new one stands.
+        $damaged = rtrim($target, '/').'.'.$this->temp_name();
+
+        if (@rename(rtrim($target, '/'), $damaged) === false) {
+          $this->fail($type, $target, 'damaged directory cannot be moved aside');
           return false;
         }
       }
 
       if ($this->create_dir($base_dir) === false) {
         $this->fail($type, $base_dir, 'directory cannot be created');
-        return false;
+        return $this->restore_damaged($damaged, $target);
       }
 
       $temp = $base_dir.$this->temp_name().'/';
 
       if ($this->create_dir($temp) === false) {
         $this->fail($type, $temp, 'temporary directory cannot be created');
-        return false;
+        return $this->restore_damaged($damaged, $target);
       }
 
       $checksums = array();
@@ -364,7 +372,7 @@
         {
           $this->remove_dir($temp);
           $this->fail($type, $temp.$name, 'file cannot be written completely');
-          return false;
+          return $this->restore_damaged($damaged, $target);
         }
 
         $checksums[$name] = hash('sha256', $content);
@@ -373,7 +381,7 @@
       if (@file_put_contents($temp.self::CHECKSUM_FILE, json_encode($checksums), LOCK_EX) === false) {
         $this->remove_dir($temp);
         $this->fail($type, $temp.self::CHECKSUM_FILE, 'checksums cannot be written');
-        return false;
+        return $this->restore_damaged($damaged, $target);
       }
 
       // The whole directory is read back the same way a later request reads it. A short write
@@ -382,7 +390,7 @@
       if ($this->read_files($temp, array_keys($files)) === false) {
         $this->remove_dir($temp);
         $this->fail($type, $temp, 'directory does not read back as written');
-        return false;
+        return $this->restore_damaged($damaged, $target);
       }
 
       if (@rename(rtrim($temp, '/'), rtrim($target, '/')) === false) {
@@ -390,15 +398,46 @@
 
         // another request may have created the same hash directory in the meantime
         if (is_dir($target) && $this->read_files($target, array_keys($files)) !== false) {
+          $this->drop_damaged($damaged);
           return true;
         }
 
-        // otherwise the write really failed and must not return false without saying why
         $this->fail($type, $target, 'directory cannot be moved into place');
-        return false;
+        return $this->restore_damaged($damaged, $target);
       }
 
+      $this->drop_damaged($damaged);
+
       return true;
+    }
+
+    /**
+     * Removes a directory that was moved aside, once the new one is in place.
+     *
+     * A leftover here is harmless: hash_dir() refuses the name, so nothing ever reads it.
+     */
+    function drop_damaged($path) {
+      if ($path !== '' && is_dir($path)) {
+        $this->remove_dir(rtrim($path, '/').'/');
+      }
+    }
+
+    /**
+     * Puts a directory that was moved aside back, after the rebuild failed.
+     *
+     * The old content may be damaged, but it is what the order rows point at. Leaving the hash
+     * without any directory would turn a repairable state into a missing one.
+     *
+     * @return bool always false, it is the return value of the failing caller
+     */
+    function restore_damaged($damaged, $target) {
+      if ($damaged !== '' && is_dir($damaged) && !is_dir($target)) {
+        @rename($damaged, rtrim($target, '/'));
+      }
+
+      $this->drop_damaged($damaged);
+
+      return false;
     }
 
     function create_dir($path) {
@@ -406,7 +445,13 @@
         return true;
       }
 
-      return @mkdir($path, 0777, true);
+      // A concurrent request may have created it between the check and the call; mkdir reports
+      // that as a failure. Two orders carrying the same document hit this at the same moment.
+      if (@mkdir($path, 0777, true) === true) {
+        return true;
+      }
+
+      return is_dir($path);
     }
 
     /**

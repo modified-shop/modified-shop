@@ -126,7 +126,18 @@
       return true;
     }
 
-    $values = array_unique(array_map('intval', $matches[1]));
+    // Option and value together identify a choice. options_values_id is a shared list, so the
+    // same value id can sit under two options; collapsing on the value alone would count one
+    // choice where the customer made two and call a mixed position digital.
+    preg_match_all('/\{([0-9]+)\}([0-9]+)/', $uprid, $pairs);
+
+    $chosen = array();
+    $values = array();
+
+    foreach ($pairs[1] as $index => $option) {
+      $chosen[(int)$option.':'.(int)$pairs[2][$index]] = true;
+      $values[(int)$pairs[2][$index]] = (int)$pairs[2][$index];
+    }
 
     $download_query = xtc_db_query("SELECT COUNT(*) AS total
                                       FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
@@ -148,7 +159,8 @@
       return false;
     }
 
-    $known[$uprid] = (count($values) > $downloads);
+    // counted over the chosen combinations, not over the distinct value ids
+    $known[$uprid] = (count($chosen) > $downloads);
 
     return $known[$uprid];
   }

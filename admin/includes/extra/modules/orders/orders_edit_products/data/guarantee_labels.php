@@ -23,12 +23,16 @@
 
     require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
 
-    $guarantee_oID = (int)$_GET['oID'];
+    $guarantee_oID = isset($_GET['oID']) ? (int)$_GET['oID'] : 0;
     $guarantee_opID = (int)$_GET['opID'];
 
-    // both come from the request, so the position has to belong to the order that is edited
+    // Both come from the request, so the position has to belong to the order that is edited.
+    //
+    // The message is printed here and not put on the messageStack: admin/orders_edit.php prints
+    // the stack in header.php long before this hook runs, so add() would be swallowed, a session
+    // message would surface on the next page, and a redirect would fail on the sent headers.
     if (!guarantee_labels_order_position($guarantee_oID, $guarantee_opID)) {
-      $messageStack->add(ERROR_GUARANTEE_LABELS_SNAPSHOT_UNKNOWN, 'error');
+      echo '<div class="error_message mrg5">'.ERROR_GUARANTEE_LABELS_SNAPSHOT_UNKNOWN.'</div>';
       return;
     }
 
@@ -36,9 +40,10 @@
     $guarantee_snapshot = guarantee_labels_order_snapshots($guarantee_oID);
     $guarantee_snapshot = isset($guarantee_snapshot[$guarantee_opID]) ? $guarantee_snapshot[$guarantee_opID] : false;
 
-    if (!guarantee_labels_order_position_goods($guarantee_oID, $guarantee_opID)) {
-      $messageStack->add(ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL, 'warning');
-    }
+    // the same reason: it belongs above the mask it is about, not on the stack
+    $guarantee_notice = guarantee_labels_order_position_goods($guarantee_oID, $guarantee_opID)
+                      ? ''
+                      : '<div class="warning_message mrg5">'.ERROR_GUARANTEE_LABELS_SNAPSHOT_VIRTUAL.'</div>';
 
     // a value the admin just entered survives a failed save, so nothing has to be typed twice
     $guarantee_value = array(
@@ -64,14 +69,14 @@
         <td class="dataTableHeadingContent" colspan="2"><b><?php echo TEXT_GUARANTEE_LABELS_SNAPSHOT_HEADING; ?></b></td>
       </tr>
       <tr class="dataTableRow">
-        <td class="dataTableContent" colspan="2"><?php echo TEXT_GUARANTEE_LABELS_SNAPSHOT_INFO; ?></td>
+        <td class="dataTableContent" colspan="2"><?php echo $guarantee_notice.TEXT_GUARANTEE_LABELS_SNAPSHOT_INFO; ?></td>
       </tr>
       <?php
         echo xtc_draw_form('guarantee_labels', FILENAME_ORDERS_EDIT, 'action=custom', 'post', 'enctype="multipart/form-data"');
         echo xtc_draw_hidden_field('subaction', 'guarantee');
         echo xtc_draw_hidden_field('oID', $guarantee_oID);
         echo xtc_draw_hidden_field('opID', $guarantee_opID);
-        echo xtc_draw_hidden_field('pID', (int)$_GET['pID']);
+        echo xtc_draw_hidden_field('pID', isset($_GET['pID']) ? (int)$_GET['pID'] : 0);
       ?>
       <tr class="dataTableRow">
         <td class="dataTableContent" style="width:280px;"><?php echo TEXT_GUARANTEE_LABELS_SNAPSHOT_MANUFACTURER; ?></td>

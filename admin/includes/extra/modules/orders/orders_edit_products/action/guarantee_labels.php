@@ -32,6 +32,14 @@
     $guarantee_before = guarantee_labels_order_snapshots($guarantee_oID);
     $guarantee_before = isset($guarantee_before[$guarantee_opID]) ? $guarantee_before[$guarantee_opID] : false;
 
+    // All three missing is how the mask says "remove this guarantee", so a request that never
+    // carried the fields would delete an archived snapshot. A truncated post body or a browser
+    // that drops disabled inputs must not do that: the form has to send them.
+    if (!isset($_POST['manufacturers_name'], $_POST['manufacturers_model'], $_POST['garan_duration'])) {
+      $messageStack->add_session(ERROR_GUARANTEE_LABELS_SNAPSHOT_INCOMPLETE, 'error');
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=products&oID='.$guarantee_oID));
+    }
+
     $guarantee_input = array(
       'manufacturers_name' => xtc_db_prepare_input($_POST['manufacturers_name']),
       'manufacturers_model' => xtc_db_prepare_input($_POST['manufacturers_model']),

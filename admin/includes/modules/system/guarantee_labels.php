@@ -853,7 +853,7 @@
           continue;
         }
 
-        if ($definition['type'] != $column['type']) {
+        if ($this->same_column_type($definition['type'], $column['type']) === false) {
           $errors[] = sprintf(MODULE_GUARANTEE_LABELS_TEXT_ERROR_COLUMN_TYPE, $column['column'], $column['table'], $definition['type'], $column['type']);
           continue;
         }
@@ -1022,6 +1022,32 @@
      *
      * @return mixed array of type, null, key, default and extra, false when the column is gone
      */
+    /**
+     * Whether the reported column type matches the expected one.
+     *
+     * MySQL 8.0.19 dropped the display width from SHOW COLUMNS, so it answers `int` where MariaDB
+     * and older MySQL answer `int(11)`. Comparing the strings would report every integer column of
+     * the module as wrong and refuse the activation on a shop that just created them correctly.
+     * The width carries no meaning for an integer, so it is taken off both sides.
+     *
+     * @param string $reported the type the server reports
+     * @param string $expected the type the module asks for
+     * @return bool
+     */
+    function same_column_type($reported, $expected) {
+      $reported = strtolower(trim((string)$reported));
+      $expected = strtolower(trim((string)$expected));
+
+      if ($reported === $expected) {
+        return true;
+      }
+
+      // only integer types, a varchar or decimal width is part of the definition
+      $width = '/^(tinyint|smallint|mediumint|int|integer|bigint)\([0-9]+\)/';
+
+      return (preg_replace($width, '$1', $reported) === preg_replace($width, '$1', $expected));
+    }
+
     function column_definition($table, $column) {
       $column_query = xtc_db_query("SHOW COLUMNS FROM ".$table." LIKE '".str_replace('_', '\\_', xtc_db_input($column))."'");
 
@@ -1051,7 +1077,10 @@
      * @return string
      */
     function b2b_set_function() {
-      return 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(), array(0 => 0)), \'chr(44)\',';
+      // The argument matters: without it the helper returns array_values(), so the keys are
+      // positions and array_diff_key would drop whichever group sorts first. With it the array is
+      // keyed by customers_status_id and key 0 really is the administration.
+      return 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), \'chr(44)\',';
     }
 
     /**
