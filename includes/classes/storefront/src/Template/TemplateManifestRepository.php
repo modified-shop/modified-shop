@@ -24,15 +24,15 @@ final class TemplateManifestRepository
      */
     public function __construct(string $templatesDirectory)
     {
-        $realDirectory = realpath($templatesDirectory);
-        if ($realDirectory === false || !is_dir($realDirectory)) {
+        $realDirectory = FilesystemPath::canonicalize($templatesDirectory);
+        if ($realDirectory === null || !is_dir($realDirectory)) {
             throw new TemplateNotFoundException(sprintf(
                 'Das Template-Verzeichnis "%s" ist nicht vorhanden.',
                 $templatesDirectory
             ));
         }
 
-        $this->templatesDirectory = rtrim(str_replace('\\', '/', $realDirectory), '/');
+        $this->templatesDirectory = $realDirectory;
     }
 
     /**
@@ -46,18 +46,15 @@ final class TemplateManifestRepository
         }
 
         $templateDirectory = $this->templateDirectory($templateId);
-        $manifestPath = TemplatePath::joinFilesystem($templateDirectory, 'template.json');
+        $manifestPath = FilesystemPath::join($templateDirectory, 'template.json');
         if (!is_file($manifestPath)) {
             return $this->cache[$key] = TemplateManifest::empty($templateId);
         }
 
-        $realManifestPath = realpath($manifestPath);
+        $realManifestPath = FilesystemPath::canonicalize($manifestPath);
         if (
-            $realManifestPath === false
-            || !str_starts_with(
-                str_replace('\\', '/', $realManifestPath),
-                $templateDirectory . '/'
-            )
+            $realManifestPath === null
+            || !FilesystemPath::isWithin($realManifestPath, $templateDirectory)
         ) {
             throw new TemplateManifestInvalidException(sprintf(
                 'Das Template-Manifest für "%s" liegt außerhalb seines Template-Verzeichnisses.',
@@ -110,17 +107,16 @@ final class TemplateManifestRepository
     public function templateDirectory(TemplateId $templateId): string
     {
         $directory = $this->unresolvedTemplateDirectory($templateId);
-        $realDirectory = realpath($directory);
+        $realDirectory = FilesystemPath::canonicalize($directory);
 
-        if ($realDirectory === false || !is_dir($realDirectory)) {
+        if ($realDirectory === null || !is_dir($realDirectory)) {
             throw new TemplateNotFoundException(sprintf(
                 'Das Template "%s" ist nicht vorhanden.',
                 $templateId->value()
             ));
         }
 
-        $realDirectory = rtrim(str_replace('\\', '/', $realDirectory), '/');
-        if (!str_starts_with($realDirectory . '/', $this->templatesDirectory . '/')) {
+        if (!FilesystemPath::isWithin($realDirectory, $this->templatesDirectory)) {
             throw new TemplateNotFoundException(sprintf(
                 'Das Template "%s" liegt außerhalb des Template-Verzeichnisses.',
                 $templateId->value()
@@ -148,7 +144,7 @@ final class TemplateManifestRepository
 
     private function unresolvedTemplateDirectory(TemplateId $templateId): string
     {
-        return TemplatePath::joinFilesystem($this->templatesDirectory, $templateId->value());
+        return FilesystemPath::join($this->templatesDirectory, $templateId->value());
     }
 
     private function readParent(TemplateId $templateId, array $rawData): ?TemplateId

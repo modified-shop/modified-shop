@@ -135,16 +135,15 @@ final class TemplateFileResolver
     public function resolveAfter(string $logicalName, string $currentAbsolutePath): ResolvedTemplateFile
     {
         $logicalName = TemplatePath::normalizeLogicalName($logicalName);
-        $currentRealPath = realpath($currentAbsolutePath);
+        $currentRealPath = FilesystemPath::canonicalize($currentAbsolutePath);
 
-        if ($currentRealPath === false) {
+        if ($currentRealPath === null) {
             throw new CurrentTemplateFileException(sprintf(
                 'Die aktuelle Template-Datei "%s" ist nicht vorhanden.',
                 $currentAbsolutePath
             ));
         }
 
-        $currentRealPath = str_replace('\\', '/', $currentRealPath);
         foreach ($this->chain as $index => $templateId) {
             $candidateRealPath = $this->realCandidatePath($templateId, $logicalName);
 
@@ -202,18 +201,14 @@ final class TemplateFileResolver
     private function realCandidatePath(TemplateId $templateId, string $logicalName): ?string
     {
         $templateDirectory = $this->manifestRepository->templateDirectory($templateId);
-        $candidate = TemplatePath::joinFilesystem($templateDirectory, $logicalName);
-        $realCandidate = realpath($candidate);
+        $candidate = FilesystemPath::join($templateDirectory, $logicalName);
+        $realCandidate = FilesystemPath::canonicalize($candidate);
 
-        if ($realCandidate === false) {
+        if ($realCandidate === null) {
             return null;
         }
 
-        $realCandidate = str_replace('\\', '/', $realCandidate);
-        if (
-            $realCandidate !== $templateDirectory
-            && !str_starts_with($realCandidate, $templateDirectory . '/')
-        ) {
+        if (!FilesystemPath::isWithin($realCandidate, $templateDirectory)) {
             throw new InvalidTemplatePathException(sprintf(
                 'Die Template-Datei "%s" verlässt das Verzeichnis des Templates "%s".',
                 $logicalName,

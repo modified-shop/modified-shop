@@ -5,8 +5,10 @@
 */
 
 use Modified\Storefront\Template\Smarty\Legacy\LegacyApiDeprecationReporter;
+use Modified\Storefront\Template\Smarty\Resource\SmartyResourceContext;
 use Modified\Storefront\Template\Smarty\ResourceNameTransformerInterface;
 use Modified\Storefront\Template\Smarty\SmartyConfigurator;
+use Modified\Storefront\Ui\Integration\Smarty\UiSmartyConfigurator;
 use Smarty\Resource\BasePlugin;
 use Smarty\Smarty as BaseSmarty;
 use Smarty\Template as SmartyTemplate;
@@ -30,7 +32,9 @@ class Smarty extends BaseSmarty
     {
         parent::__construct();
         $this->legacyApiDeprecations = new LegacyApiDeprecationReporter();
-        (new SmartyConfigurator())->configure($this);
+        $resourceContext = new SmartyResourceContext();
+        (new SmartyConfigurator())->configure($this, $resourceContext);
+        (new UiSmartyConfigurator())->configure($this, $resourceContext);
     }
 
     /**

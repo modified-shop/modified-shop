@@ -67,7 +67,7 @@ final class TemplateRuntime
         $catalogDirectory = self::requiredConstantString('DIR_FS_CATALOG');
         $activeTemplate = self::requiredConstantString('CURRENT_TEMPLATE');
         $repository = new TemplateManifestRepository(
-            TemplatePath::joinFilesystem($catalogDirectory, 'templates')
+            FilesystemPath::join($catalogDirectory, 'templates')
         );
         $chain = (new TemplateChainResolver($repository))->resolve(new TemplateId($activeTemplate));
 
