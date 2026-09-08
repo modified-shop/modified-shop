@@ -17,8 +17,9 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_count_products_in_category($category_id, $include_inactive = false) {
-    static $products_count_array, $products_in_category_array;
+    static $products_count_array, $products_in_category_array, $child_categories_array;
     
+    $category_id = (int)$category_id;
     $active = (($include_inactive === false) ? 0 : 1);
 
     if (!isset($products_count_array)) {
@@ -49,22 +50,31 @@
       }
     }
     
-    if (!isset($products_count_array[$active][$category_id])) {
-      $products_count_array[$active][$category_id] = 0;
-      $products_count_array[$active][$category_id] += ((isset($products_in_category_array[$active][$category_id])) ? $products_in_category_array[$active][$category_id] : 0);
-      
-      // check sub categories		
-      $child_categories_query = xtDBquery("SELECT c.categories_id
+    // read the whole visible category tree once instead of one query per category
+    if (!isset($child_categories_array)) {
+      $child_categories_array = array();
+      $child_categories_query = xtDBquery("SELECT c.categories_id,
+                                                  c.parent_id
                                              FROM ".TABLE_CATEGORIES." c
                                              JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
                                                   ON c.categories_id = cd.categories_id
                                                      AND cd.language_id = '".(int)$_SESSION['languages_id']."' 
                                                      AND trim(cd.categories_name) != ''
-                                            WHERE c.parent_id = '".(int)$category_id."'
+                                            WHERE 1 = 1
                                                   ".CATEGORIES_CONDITIONS_C);
-      if (xtc_db_num_rows($child_categories_query, true)) {
-        while ($child_categories = xtc_db_fetch_array($child_categories_query, true)) {
-          $products_count_array[$active][$category_id] += xtc_count_products_in_category($child_categories['categories_id'], $include_inactive);
+      while ($child_categories = xtc_db_fetch_array($child_categories_query, true)) {
+        $child_categories_array[(int)$child_categories['parent_id']][] = (int)$child_categories['categories_id'];
+      }
+    }
+    
+    if (!isset($products_count_array[$active][$category_id])) {
+      $products_count_array[$active][$category_id] = 0;
+      $products_count_array[$active][$category_id] += ((isset($products_in_category_array[$active][$category_id])) ? $products_in_category_array[$active][$category_id] : 0);
+      
+      // check sub categories
+      if (isset($child_categories_array[$category_id])) {
+        foreach ($child_categories_array[$category_id] as $child_categories_id) {
+          $products_count_array[$active][$category_id] += xtc_count_products_in_category($child_categories_id, $include_inactive);
         }
       }
     }
