@@ -463,7 +463,16 @@
     // The full label carries the GARAN title in every EU language as outlined paths and weighs
     // around 290 kB. Only the compact one goes into the page; the full one is fetched from the
     // cache on the first open. It is inserted into the dom, so it uses the fonts loaded once.
-    $source = guarantee_labels_cache_url($label['hash']);
+    // The renderer just read or wrote the cache and says whether the full label is in it. Asking
+    // guarantee_labels_cache_url() here would read and hash the same 294 kB a second time; an
+    // older caller without the flag still gets the check.
+    $cached = array_key_exists('cached', $label)
+            ? ($label['cached'] === true)
+            : (guarantee_labels_cache_url($label['hash']) !== '');
+
+    $source = $cached
+            ? (defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').'cache/guarantee_labels/'.$label['hash'].'/colour.svg'
+            : '';
     $full = ($source === '') ? guarantee_labels_inline_svg($label['colour.svg']) : '';
 
     // the content is opened in the lightbox of the template when there is one, so the label
@@ -508,12 +517,12 @@
    * @param string $hash
    * @return string
    */
-  function guarantee_labels_cache_url($hash) {
-    if (guarantee_labels_cache_intact($hash, 'colour.svg') === false) {
+  function guarantee_labels_cache_url($hash, $name = 'colour.svg') {
+    if (guarantee_labels_cache_intact($hash, $name) === false) {
       return '';
     }
 
-    return (defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').'cache/guarantee_labels/'.$hash.'/colour.svg';
+    return (defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').'cache/guarantee_labels/'.$hash.'/'.$name;
   }
 
   /**
@@ -539,11 +548,7 @@
    * @return string empty when the cached copy is missing
    */
   function guarantee_labels_notice_cache_url($hash) {
-    if (guarantee_labels_cache_intact($hash, 'notice.svg') === false) {
-      return '';
-    }
-
-    return (defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '').'cache/guarantee_labels/'.$hash.'/notice.svg';
+    return guarantee_labels_cache_url($hash, 'notice.svg');
   }
 
   /**

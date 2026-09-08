@@ -530,7 +530,12 @@
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_archive.php');
 
     $archive = new guarantee_labels_archive();
-    $files = $archive->garan_read($product['garan_hash']);
+
+    // The archive is closed to http, the lazy view fetches the full graphic from the cache. The
+    // cheap question comes first: with the copy in place the 294 kB archive file is never read.
+    $cached = (guarantee_labels_cache_url($product['garan_hash']) !== '');
+    $files = $cached ? $archive->cache_read($product['garan_hash'], array('colour.svg', 'nested.svg'))
+                     : $archive->garan_read($product['garan_hash']);
 
     // without the archived graphic nothing is drawn, a current one would show other values
     if ($files === false) {
@@ -539,13 +544,13 @@
       return '';
     }
 
-    // The archive is closed to http, the lazy view fetches the full graphic from the cache. A
-    // failing copy leaves the overlay without its graphic, so it does not stay silent either.
-    if (guarantee_labels_cache_url($product['garan_hash']) === ''
-        && $archive->cache_write($product['garan_hash'], $files) === false
-        )
-    {
-      guarantee_labels_snapshot_log('garan cache', $orders_id, $archive->get_errors());
+    // a failing copy leaves the overlay without its graphic, so it does not stay silent either
+    if (!$cached) {
+      $cached = ($archive->cache_write($product['garan_hash'], $files) !== false);
+
+      if (!$cached) {
+        guarantee_labels_snapshot_log('garan cache', $orders_id, $archive->get_errors());
+      }
     }
 
     require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
@@ -554,6 +559,8 @@
 
     return guarantee_labels_markup(array_merge($files, array(
       'hash' => $product['garan_hash'],
+      // already answered, markup must not read and hash the same file a third time
+      'cached' => $cached,
       'manufacturer' => $product['manufacturers_name'],
       'model' => $product['manufacturers_model'],
       'duration' => $renderer->duration_text($product['garan_duration']),

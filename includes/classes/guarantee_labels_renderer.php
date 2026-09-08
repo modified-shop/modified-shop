@@ -322,11 +322,16 @@
         $files[] = $template['file'];
       }
 
+      // Size and modification time, not the content: hashing them costs a stat where hashing the
+      // files costs 1.4 MB of reads on every page that shows a single label. Replacing a font or
+      // a template changes both, and a change that keeps size and second is not one a shop makes
+      // by accident. RENDERER_VERSION covers a deliberate change of the drawing itself.
       foreach ($files as $file) {
-        $stream .= is_file($file) ? hash_file('sha256', $file) : '-';
+        $stream .= is_file($file) ? filesize($file).':'.filemtime($file) : '-';
+        $stream .= '|';
       }
 
-      $hash = hash('sha256', $stream);
+      $hash = hash('sha256', self::RENDERER_VERSION.'|'.$stream);
 
       return $hash;
     }
@@ -376,6 +381,10 @@
 
       $files = $this->archive->cache_read($hash, $names);
 
+      // The caller has to know whether the cache holds the full label: asking again means reading
+      // and hashing the 294 kB colour.svg a second time for an answer this call already has.
+      $cached = ($files !== false);
+
       if ($files === false) {
         $files = $this->render($manufacturer, $model, $duration);
 
@@ -386,10 +395,10 @@
         // A failing cache write must not stop the current request, and the return value is
         // deliberately not read: the archive keeps its error, get_errors() merges it, and the
         // caller reports it after a successful label. This is the one unchecked write.
-        $this->archive->cache_write($hash, $files);
+        $cached = ($this->archive->cache_write($hash, $files) !== false);
       }
 
-      return array_merge(array('hash' => $hash), $files);
+      return array_merge(array('hash' => $hash, 'cached' => $cached), $files);
     }
 
     /**

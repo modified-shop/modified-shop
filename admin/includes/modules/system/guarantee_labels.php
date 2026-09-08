@@ -300,18 +300,20 @@
       $archive = new guarantee_labels_archive();
       $damaged = 0;
 
-      // read_files() checks every file of the directory against its checksum, so a replaced
-      // graphic counts here just like a missing one
+      // Presence, not content. Reading every archived file back and hashing it means roughly
+      // 300 kB per label hash and 640 kB per notice hash on every open of this page; a shop with
+      // 500 orders would hash 150 MB to draw one line. A file that is there but no longer matches
+      // its hash is caught where it is used: the readers verify the checksums and log it.
       $notice_query = xtc_db_query("SELECT DISTINCT notice_hash FROM ".TABLE_ORDERS_GUARANTEE);
       while ($notice = xtc_db_fetch_array($notice_query)) {
-        if ($archive->notice_read($notice['notice_hash']) === false) {
+        if (!is_file($archive->hash_path($archive->notice_dir, $notice['notice_hash']).'notice.svg')) {
           $damaged++;
         }
       }
 
       $garan_query = xtc_db_query("SELECT DISTINCT garan_hash FROM ".TABLE_ORDERS_PRODUCTS_GUARANTEE);
       while ($garan = xtc_db_fetch_array($garan_query)) {
-        if ($archive->garan_read($garan['garan_hash']) === false) {
+        if (!is_file($archive->hash_path($archive->garan_dir, $garan['garan_hash']).'colour.svg')) {
           $damaged++;
         }
       }
@@ -322,7 +324,8 @@
       while ($terms = xtc_db_fetch_array($terms_query)) {
         $file = $archive->terms_path($terms['terms_hash'], $terms['terms_filename']);
 
-        if (!is_file($file) || hash_file('sha256', $file) !== $terms['terms_hash']) {
+        // the same for the documents: a hash_file over every archived pdf belongs to the reader
+        if (!is_file($file)) {
           $damaged++;
         }
       }

@@ -240,8 +240,17 @@
       event.preventDefault();
 
       // the content is found by its id, the label and the notice bring different wrappers
-      var id = compact.getAttribute('data-guarantee-label-content');
-      var content = id ? document.getElementById(id) : null;
+      // The same article can appear twice on a page, in the listing and in a box, and
+      // product::buildDataArray() serves the cached markup for both - so the id is not unique.
+      // The button and its dialogue sit in the same .guarantee-label, which is: the id only
+      // answers for the notice block, which has no such wrapper and is never duplicated.
+      var block = closest(compact, '.guarantee-label');
+      var content = block ? block.querySelector('.guarantee-label__content') : null;
+
+      if (!content) {
+        var id = compact.getAttribute('data-guarantee-label-content');
+        content = id ? document.getElementById(id) : null;
+      }
       var full = content ? content.querySelector('.guarantee-label__full') : null;
       var title = compact.getAttribute('data-guarantee-label-title') || '';
 

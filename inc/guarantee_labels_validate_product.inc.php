@@ -46,7 +46,7 @@
 
     if ($normalized === false) {
       $errors[] = sprintf(ERROR_GUARANTEE_LABELS_DURATION, encode_htmlspecialchars($duration));
-      return array('data' => guarantee_labels_keep_stored($sql_data_array), 'errors' => $errors);
+      return array('data' => guarantee_labels_keep_stored($sql_data_array, $products_data), 'errors' => $errors);
     }
 
     $sql_data_array['products_garan_duration'] = $normalized;
@@ -95,7 +95,7 @@
     }
 
     if (count($errors) > 0) {
-      $sql_data_array = guarantee_labels_keep_stored($sql_data_array);
+      $sql_data_array = guarantee_labels_keep_stored($sql_data_array, $products_data);
     }
 
     return array('data' => $sql_data_array, 'errors' => $errors);
@@ -111,10 +111,17 @@
    * @param array $sql_data_array
    * @return array
    */
-  function guarantee_labels_keep_stored($sql_data_array) {
-    unset($sql_data_array['products_garan_duration'],
-          $sql_data_array['products_manufacturers_model'],
-          $sql_data_array['manufacturers_id']);
+  function guarantee_labels_keep_stored($sql_data_array, $products_data = array()) {
+    // A new article has no stored values to protect. Dropping all three would create it without
+    // a manufacturer and without a model identifier, and the admin would have to type them again
+    // although only the duration was refused.
+    $stored = (isset($products_data['products_id']) && (int)$products_data['products_id'] > 0);
+
+    if ($stored) {
+      unset($sql_data_array['products_manufacturers_model'], $sql_data_array['manufacturers_id']);
+    }
+
+    unset($sql_data_array['products_garan_duration']);
 
     return $sql_data_array;
   }
