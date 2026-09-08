@@ -157,7 +157,8 @@
             'shipping_class' => xtc_db_prepare_input($_POST['shipping']).'_'.xtc_db_prepare_input($_POST['shipping']),
             'customers_ip' => ip_clearing($_SESSION['tracking']['ip']),
             'language' => $_SESSION['language'],
-            'languages_id' => $_SESSION['languages_id']
+            'languages_id' => $_SESSION['languages_id'],
+            'orders_source' => 'admin'
           );
 
         xtc_db_perform(TABLE_ORDERS, $sql_data_array);
