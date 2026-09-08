@@ -14,7 +14,7 @@
 
   if (defined('MODULE_GUARANTEE_LABELS_STATUS')
       && MODULE_GUARANTEE_LABELS_STATUS == 'true'
-      && isset($_POST['subaction'])
+      && isset($_POST['subaction'], $_POST['oID'], $_POST['opID'])
       && $_POST['subaction'] == 'guarantee'
       )
   {

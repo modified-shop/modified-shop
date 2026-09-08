@@ -34,7 +34,6 @@
 
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS', 'Check of the requirements');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE', 'The module empties no cache by itself. Rendered labels are stored under the hash of their content and are never wrong, only orphaned after a change. With the shop cache switched on, cross selling, new articles and similar blocks can also show an old label until the cache lifetime runs out. Empty the shop cache through configuration &raquo; cache after changes to manufacturers or articles.');
-  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_OK', 'in place');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_COMPLETE', 'Every requirement is met.');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED', 'missing');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_EXTENSION', 'class extension %s installed and active');

@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // always assigned, so a template can place {$module_data.GUARANTEE_LABEL} without asking
+  // always assigned, so a template can place {$module_content.GUARANTEE_LABEL} without asking
   // whether the module is installed
   $module_content[$i]['GUARANTEE_LABEL'] = '';
 
