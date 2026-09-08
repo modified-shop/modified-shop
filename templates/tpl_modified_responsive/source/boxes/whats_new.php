@@ -35,22 +35,25 @@ if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
 $current_prd =  (isset($_GET['products_id']) && (int)$_GET['products_id'] > 0) ? 'AND p.products_id != ' . (int)$_GET['products_id'] : '';
 
 // get random product data
-$whats_new_query = xtc_db_query("SELECT DISTINCT ".$product->default_select."
+$whats_new_query = xtc_db_query("SELECT ".$product->default_select."
                                             FROM ".TABLE_PRODUCTS." p
                                             JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                                  ON p.products_id = pd.products_id 
                                                     AND pd.language_id = ".(int)$_SESSION['languages_id']."
                                                     AND trim(pd.products_name) != ''
-                                            JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                                 ON p.products_id = p2c.products_id
-                                            JOIN ".TABLE_CATEGORIES." c
-                                                 ON c.categories_id = p2c.categories_id 
-                                                    AND c.categories_status = 1 
-                                                        ".CATEGORIES_CONDITIONS_C."
                                            WHERE p.products_status = 1
                                                  " . PRODUCTS_CONDITIONS_P . "
                                                  " . $current_prd . "
-                                                 " . $days . "                                           
+                                                 " . $days . "
+                                             AND EXISTS (
+                                                   SELECT 1
+                                                     FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                                     JOIN ".TABLE_CATEGORIES." c
+                                                       ON c.categories_id = p2c.categories_id
+                                                      AND c.categories_status = 1
+                                                          ".CATEGORIES_CONDITIONS_C."
+                                                    WHERE p2c.products_id = p.products_id
+                                                 )
                                         ORDER BY p.products_date_added DESC, p.products_id
                                            LIMIT ".MAX_RANDOM_SELECT_NEW);
 
