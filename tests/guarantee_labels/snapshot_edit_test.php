@@ -194,6 +194,40 @@ guarantee_labels_snapshot_history(4711, 10,
   array('manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'X-1', 'garan_duration' => '3.0'));
 ok('ohne Aenderung kein Eintrag', !isset($GLOBALS['rows']['orders_status_history']));
 
+// Ein Dokument heisst nach seinem Inhalt. Wird es unter demselben Dateinamen ersetzt, aendert
+// sich nur terms_hash; ein Vergleich der Namen liesse die Korrektur spurlos durchgehen.
+$alt = array('manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'X-1', 'garan_duration' => '3.0',
+             'terms_filename' => 'garantie.pdf', 'terms_hash' => str_repeat('a', 64));
+$neu = array('manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'X-1', 'garan_duration' => '3.0',
+             'terms_filename' => 'garantie.pdf', 'terms_hash' => str_repeat('b', 64));
+
+$GLOBALS['rows'] = array();
+guarantee_labels_snapshot_history(4711, 10, $alt, $neu);
+ok('ersetztes Dokument mit gleichem Namen protokolliert', isset($GLOBALS['rows']['orders_status_history']),
+   var_export($GLOBALS['rows'], true));
+$ersetzt = isset($GLOBALS['rows']['orders_status_history'][0]['data']['comments'])
+         ? $GLOBALS['rows']['orders_status_history'][0]['data']['comments'] : '';
+ok('beide Fassungen benannt', strpos($ersetzt, 'garantie.pdf (aaaaaaaa)') !== false
+                              && strpos($ersetzt, 'garantie.pdf (bbbbbbbb)') !== false, $ersetzt);
+
+$GLOBALS['rows'] = array();
+guarantee_labels_snapshot_history(4711, 10, $alt, $alt);
+ok('dasselbe Dokument bleibt unerwaehnt', !isset($GLOBALS['rows']['orders_status_history']));
+
+// ein behaltenes Dokument steht nicht in den geposteten Werten und ist deshalb keine Aenderung
+$GLOBALS['rows'] = array();
+guarantee_labels_snapshot_history(4711, 10, $alt,
+  array('manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'X-1', 'garan_duration' => '3.0'));
+ok('behaltenes Dokument bleibt unerwaehnt', !isset($GLOBALS['rows']['orders_status_history']));
+
+$GLOBALS['rows'] = array();
+guarantee_labels_snapshot_history(4711, 10, $alt,
+  array('manufacturers_name' => 'ACME GmbH', 'manufacturers_model' => 'X-1', 'garan_duration' => '3.0',
+        'terms_filename' => null, 'terms_hash' => null));
+$entfernt = isset($GLOBALS['rows']['orders_status_history'][0]['data']['comments'])
+          ? $GLOBALS['rows']['orders_status_history'][0]['data']['comments'] : '';
+ok('entferntes Dokument protokolliert', strpos($entfernt, 'garantie.pdf (aaaaaaaa)') !== false, $entfernt);
+
 echo "\n----------------------------------------\n";
 echo "bestanden: $pass   fehlgeschlagen: $fail\n";
 exit($fail > 0 ? 1 : 0);

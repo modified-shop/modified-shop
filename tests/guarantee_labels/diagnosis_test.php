@@ -72,8 +72,20 @@ define('ADD_SELECT_PRODUCT', 'p.products_garan_duration, ');
 require $repo.'/lang/german/modules/system/guarantee_labels.php';
 require $repo.'/inc/html_encoding.php';
 
+// Ein halbes Archiv: die erste Datei liegt da, die zweite fehlt. Der Leseweg braucht beide,
+// die Diagnose muss das also zaehlen.
+$halb = str_repeat('c', 64);
+
+if ($mode === 'luecken') {
+  foreach (array('notice/'.$halb.'/notice.svg', 'garan/'.$halb.'/colour.svg') as $teil) {
+    $ziel = $root.'/media/guarantee_labels/archive/'.$teil;
+    if (!is_dir(dirname($ziel))) mkdir(dirname($ziel), 0777, true);
+    file_put_contents($ziel, 'x');
+  }
+}
+
 function xtc_db_query($sql) {
-  global $mode;
+  global $mode, $halb;
 
   if (strpos($sql, 'SHOW TABLES') !== false) {
     // im Luecken-Modus fehlt orders_products_guarantee
@@ -125,9 +137,11 @@ function xtc_db_query($sql) {
     return array(array('total' => ($mode === 'luecken') ? 1 : 0));
   }
   if (strpos($sql, 'notice_hash FROM') !== false) {
-    return ($mode === 'luecken') ? array(array('notice_hash' => 'fehlt')) : array();
+    return ($mode === 'luecken') ? array(array('notice_hash' => 'fehlt'), array('notice_hash' => $halb)) : array();
   }
-  if (strpos($sql, 'garan_hash FROM') !== false) { return array(); }
+  if (strpos($sql, 'garan_hash FROM') !== false) {
+    return ($mode === 'luecken') ? array(array('garan_hash' => $halb)) : array();
+  }
   if (strpos($sql, 'terms_hash') !== false)      { return array(); }
   return array();
 }
@@ -208,7 +222,10 @@ if ($mode === 'schema') {
   ok('doppelte Bedingungen gezaehlt', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED.' 2') !== false);
   ok('mehrsprachige Datei gemeldet', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED) !== false);
   ok('ungueltige Dauer gezaehlt', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED.' 4') !== false);
-  ok('beschaedigtes Archiv gezaehlt', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED.' 1') !== false);
+  // ein ganz fehlendes Archiv, ein Hinweis ohne notice.json und ein Label ohne nested.svg
+  ok('beschaedigte Archive gezaehlt',
+     preg_match('/'.preg_quote(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE, '/').'.*?'.preg_quote(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED, '/').' (\d+)/s', $out, $treffer) === 1
+     && $treffer[1] === '3', isset($treffer[1]) ? $treffer[1] : $out);
   ok('Schema trotz Datenfehlern in Ordnung', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE) === false);
   // Gruppe 9 gibt es nicht mehr, ihre Id steht aber weiter in der Einstellung
   ok('geloeschte B2B-Gruppe gemeldet', strpos($out, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN.' 9') !== false, $out);
