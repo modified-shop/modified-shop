@@ -48,13 +48,20 @@ function ok($name, $cond, $extra = '') {
   if ($cond) { $pass++; echo "  ok    $name\n"; }
   else { $fail++; echo "  FAIL  $name".($extra !== '' ? "  ($extra)" : '')."\n"; }
 }
-function check($duration, $manufacturers_id = 1, $model = 'X-1') {
+function check($duration, $manufacturers_id = 1, $model = 'X-1', $products_id = 42) {
+  $posted = array('manufacturers_id' => $manufacturers_id);
+
+  // ein bestehender Artikel bringt seine Nummer mit, ein neuer nicht
+  if ($products_id > 0) {
+    $posted['products_id'] = $products_id;
+  }
+
   return guarantee_labels_validate_product(
     array('products_garan_duration' => $duration,
           'products_manufacturers_model' => $model,
           'manufacturers_id' => $manufacturers_id,
           'products_price' => '9.99'),
-    array('manufacturers_id' => $manufacturers_id)
+    $posted
   );
 }
 
@@ -87,9 +94,18 @@ ok('2,5 verlangt weiterhin die Kerndaten', !isset($r['data']['products_garan_dur
 echo "\n== Abgelehnte Eingabe laesst die Spalte unangetastet ==\n";
 $r = check('abc');
 ok('Schluessel entfernt statt auf null gesetzt', !array_key_exists('products_garan_duration', $r['data']));
-ok('alle drei Kerndaten zurueckgehalten', !array_key_exists('products_garan_duration', $r['data'])
+ok('beim bestehenden Artikel alle drei zurueckgehalten', !array_key_exists('products_garan_duration', $r['data'])
    && !array_key_exists('products_manufacturers_model', $r['data'])
    && !array_key_exists('manufacturers_id', $r['data']));
+
+// Ein neuer Artikel hat keinen gespeicherten Stand zu schuetzen. Wuerden Hersteller und
+// Modellkennung mitverworfen, entstuende er ohne beides und der Admin muesste gueltige
+// Eingaben neu tippen, obwohl nur die Dauer abgelehnt wurde.
+$neu = check('abc', 1, 'X-1', 0);
+ok('beim neuen Artikel nur die Dauer zurueckgehalten', !array_key_exists('products_garan_duration', $neu['data'])
+   && $neu['data']['products_manufacturers_model'] === 'X-1'
+   && $neu['data']['manufacturers_id'] === 1);
+ok('und die Meldung kommt trotzdem', count($neu['errors']) === 1);
 ok('uebrige Artikeldaten bleiben im Array', isset($r['data']['products_price']));
 $r = check('');
 ok('bewusst geleertes Feld setzt weiterhin null', $r['data']['products_garan_duration'] === 'null' && count($r['errors']) === 0);

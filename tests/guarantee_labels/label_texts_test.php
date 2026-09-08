@@ -106,9 +106,16 @@ if ($mode === 'vollstaendig') {
   file_put_contents($cache.'colour.svg', 'ERSETZT');
   ok('URL verweigert die beschaedigte Datei', guarantee_labels_cache_url($label['hash']) === '');
 
-  $repaired = guarantee_labels_markup($label);
-  ok('Markup bettet stattdessen ein', strpos($repaired, 'data-guarantee-label-src') === false
-     && strpos($repaired, '<svg') !== false);
+  // Der naechste Aufruf merkt es selbst: cache_read() prueft die Pruefsummen, faellt auf das
+  // Rendern zurueck und schreibt die Kopie neu. Das Label sagt danach wieder, dass sie steht.
+  $r_neu = new guarantee_labels_renderer();
+  $label_neu = $r_neu->label('ACME GmbH', 'WAU28T20', '3.0');
+  ok('beschaedigte Kopie wird neu geschrieben', is_array($label_neu) && $label_neu['cached'] === true,
+     is_array($label_neu) ? var_export($label_neu['cached'], true) : 'kein Label');
+  ok('und die Datei stimmt wieder', guarantee_labels_cache_url($label['hash']) !== '');
+
+  $repaired = guarantee_labels_markup($label_neu);
+  ok('Markup verlinkt danach wieder', strpos($repaired, 'data-guarantee-label-src') !== false);
 }
 
 echo "\n----------------------------------------\n";

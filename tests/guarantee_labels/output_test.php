@@ -131,13 +131,24 @@ ok('Referenz zeigt auf die eigene ID', preg_match('/id="(gl\\d+-clippath)"/', $o
 ok('zweite Grafik referenziert ihre eigene', preg_match('/id="(gl\\d+-clippath)"/', $two, $b) && strpos($two, 'url(#'.$b[1].')') !== false && $a[1] !== $b[1]);
 ok('fremde Klassen unangetastet', strpos(guarantee_labels_inline_svg('<svg class="foo cls-2"/>'), 'class="foo gl') !== false);
 
-// ohne Cachedatei muss das volle Label wieder inline stehen
+// Ohne beschreibbaren Cache muss das volle Label wieder inline stehen. Das Label traegt seit dem
+// Umbau selbst, ob die Cachekopie steht: der Renderer hat sie gerade gelesen oder geschrieben,
+// und ein zweites Nachsehen wuerde dieselben 294 kB erneut lesen und hashen.
 $dir = $root.'/cache/guarantee_labels/'.$label['hash'];
 $keep = array('colour.svg' => file_get_contents($dir.'/colour.svg'));
-unlink($dir.'/colour.svg');
-$m2 = guarantee_labels_markup($label);
+$cache_root = $root.'/cache/guarantee_labels';
+foreach (glob($dir.'/*') as $datei) { @unlink($datei); }
+@rmdir($dir);
+@chmod($cache_root, 0555);
+$r_ohne = new guarantee_labels_renderer();
+$label_ohne = $r_ohne->label('ACME GmbH', 'WAU28T20', '3.0');
+@chmod($cache_root, 0777);
+ok('ohne Cache meldet das Label das auch', is_array($label_ohne) && $label_ohne['cached'] === false,
+   is_array($label_ohne) ? var_export($label_ohne['cached'], true) : 'kein Label');
+$m2 = guarantee_labels_markup($label_ohne);
 ok('ohne Cachedatei beide Varianten inline', substr_count($m2, '<svg') === 2);
 ok('dann keine Quelle hinterlegt', strpos($m2, 'data-guarantee-label-src') === false);
+@mkdir($dir, 0777, true);
 file_put_contents($dir.'/colour.svg', $keep['colour.svg']);
 ok('Link auf das QR-Ziel gesetzt', strpos($m, 'href="https://europa.eu/youreurope/commercial-guarantee-durability"') !== false);
 
