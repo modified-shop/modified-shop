@@ -121,7 +121,11 @@
         'Content-Type' => 'application/json'
       );
 
+      // a serialize_precision of 17 turns 0.100 into 0.10000000000000001 and breaks the CN23 check
+      $serialize_precision = ini_get('serialize_precision');
+      ini_set('serialize_precision', '-1');
       $body = json_encode($this->buildLabelData());
+      ini_set('serialize_precision', $serialize_precision);
 
       $result = array(
         'label' => array(),
@@ -411,7 +415,7 @@
       $Details = new stdClass();
       $Details->weight = array(
         'uom' => 'kg',
-        'value' => (double)sprintf("%01.2f", $this->data['weight']),
+        'value' => (float)sprintf("%01.2f", $this->data['weight']),
       );
 
       // Shipment
@@ -439,8 +443,15 @@
       }
 
       if ($tax_rate == 0) {
-        $Shipment->customs = $this->buildExportDocument();
+        $cn23_total_weight = 0;
+        $Shipment->customs = $this->buildExportDocument($cn23_total_weight);
         $Shipment->services->endorsement = $this->endorsement;
+
+        // DHL rejects a shipment weight below the transmitted CN23 total, so round the minimum up
+        $minimum_weight = ceil(round($cn23_total_weight, 3) * 100) / 100;
+        if ($Details->weight['value'] < $minimum_weight) {
+          $Details->weight['value'] = $minimum_weight;
+        }
       }
 
       // request
@@ -623,7 +634,9 @@
     }
 
 
-    private function buildExportDocument() {
+    private function buildExportDocument(&$cn23_total_weight = 0) {
+      $cn23_total_weight = 0;
+
       $ExportDocument = new stdClass();
       $ExportDocument->exportType = 'COMMERCIAL_GOODS';
 //       $ExportDocument->shipperCustomsRef = '';
@@ -633,7 +646,7 @@
 //       $ExportDocument->attestationNo = '';
       $ExportDocument->postalCharges = array(
         'currency' => $this->data['currency'],
-        'value' => (double)sprintf("%01.2f", $this->order->info['pp_shipping'] + $this->order->info['pp_fee']),
+        'value' => (float)sprintf("%01.2f", $this->order->info['pp_shipping'] + $this->order->info['pp_fee']),
       );
 //       if ($this->mrn != '') {
 //         $ExportDocument->MRN = $this->mrn;
@@ -649,14 +662,18 @@
         $ExportDocument->items[$i]->itemDescription = ((isset($this->order->products[$i]['tariff_title']) && $this->order->products[$i]['tariff_title'] != '') ? $this->order->products[$i]['tariff_title'] : $this->order->products[$i]['name']);
         $ExportDocument->items[$i]->countryOfOrigin = ((isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') ? $this->order->products[$i]['origin'] : $this->info['country_iso_3']);
         $ExportDocument->items[$i]->hsCode = ((isset($this->order->products[$i]['tariff']) && $this->order->products[$i]['tariff'] != '') ? $this->order->products[$i]['tariff'] : '');
-        $ExportDocument->items[$i]->packagedQuantity = (double)$this->order->products[$i]['quantity'];
+        $item_quantity = (float)$this->order->products[$i]['quantity'];
+        $item_weight = (float)sprintf("%01.3f", $this->order->products[$i]['weight'] + (($this->order->products[$i]['weight'] == 0) ? (float)MODULE_DHL_BUSINESS_WEIGHT_CN23 : 0));
+        $cn23_total_weight += $item_weight * $item_quantity;
+
+        $ExportDocument->items[$i]->packagedQuantity = $item_quantity;
         $ExportDocument->items[$i]->itemWeight = array(
           'uom' => 'kg',
-          'value' => (double)sprintf("%01.3f", $this->order->products[$i]['weight'] + (($this->order->products[$i]['weight'] == 0) ? (double)MODULE_DHL_BUSINESS_WEIGHT_CN23 : 0)),
+          'value' => $item_weight,
         );
         $ExportDocument->items[$i]->itemValue = array(
           'currency' => $this->data['currency'],
-          'value' => (double)sprintf("%01.2f", $this->order->products[$i]['price']),
+          'value' => (float)sprintf("%01.2f", $this->order->products[$i]['price']),
         );
       }
 
@@ -675,13 +692,13 @@
       }
 
       if ($weight > 0) {
-        if ((double)SHIPPING_BOX_WEIGHT >= ($weight * (double)SHIPPING_BOX_PADDING / 100)) {
-          $weight = $weight + (double)SHIPPING_BOX_WEIGHT;
+        if ((float)SHIPPING_BOX_WEIGHT >= ($weight * (float)SHIPPING_BOX_PADDING / 100)) {
+          $weight = $weight + (float)SHIPPING_BOX_WEIGHT;
         } else {
-          $weight = $weight + ($weight * (double)SHIPPING_BOX_PADDING / 100);
+          $weight = $weight + ($weight * (float)SHIPPING_BOX_PADDING / 100);
         }
       } else {
-        $weight = (double)SHIPPING_BOX_WEIGHT;
+        $weight = (float)SHIPPING_BOX_WEIGHT;
       }
 
       if ($weight == 0) {
