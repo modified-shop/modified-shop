@@ -21,6 +21,8 @@ require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
 // include needed functions
 require_once(DIR_FS_INC.'get_customers_status_by_id.inc.php');
 require_once(DIR_FS_INC.'get_tracking_link.inc.php');
+// tpl_modified_nova registers xtc_date_short as a Smarty modifier
+require_once(DIR_FS_INC.'xtc_date_short.inc.php');
 
 // orders_update.php is an admin module, the admin paths are not set up here
 defined('DIR_FS_ADMIN') OR define('DIR_FS_ADMIN', DIR_FS_CATALOG.DIR_ADMIN);
