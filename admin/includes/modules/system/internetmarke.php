@@ -223,7 +223,7 @@
             {
               $formats_json = json_encode(array_values($result['formats']));
               if (is_string($formats_json)) {
-                $formats_saved = $this->savePageFormats($formats_json);
+                $formats_saved = $this->savePageFormats(base64_encode($formats_json));
               }
             }
 

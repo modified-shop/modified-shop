@@ -741,7 +741,9 @@
           && trim(MODULE_INTERNETMARKE_PAGEFORMATS_DATA) != ''
           )
       {
-        $stored_array = json_decode(MODULE_INTERNETMARKE_PAGEFORMATS_DATA, true);
+        // base64 keeps the JSON escapes intact, the configuration is loaded through stripslashes
+        $stored_json = base64_decode(trim(MODULE_INTERNETMARKE_PAGEFORMATS_DATA), true);
+        $stored_array = ($stored_json !== false) ? json_decode($stored_json, true) : null;
 
         if (is_array($stored_array)) {
           foreach ($stored_array as $stored_format) {
