@@ -54,7 +54,7 @@
 
       // a LEFT JOIN nothing references cannot change count(DISTINCT ...)
       if (strpos($count_string, 'DISTINCT ') === 0) {
-        $count_source = $this->strip_unused_left_joins($count_source);
+        $count_source = $this->strip_unused_left_joins($count_source, $count_string);
       }
 
       $count_query = xtDBquery("SELECT count(" . $count_string . ") as total " . $count_source);
@@ -79,24 +79,43 @@
     }
 
     // remove joins the count does not need
-    function strip_unused_left_joins($sql) {
-      $pattern = '/\bLEFT\s+(?:OUTER\s+)?JOIN\s+.*?(?=\bLEFT\s+(?:OUTER\s+)?JOIN\b|\bINNER\s+JOIN\b|\bSTRAIGHT_JOIN\b|\bJOIN\b|\bWHERE\b|$)/is';
-      if (!preg_match_all($pattern, $sql, $matches)) {
+    function strip_unused_left_joins($sql, $count_string = '') {
+      // blank out sql literals, search terms must never look like a join
+      $masked = preg_replace_callback(
+        '/\'(?:\\\\.|\'\'|[^\'\\\\])*\'|"(?:\\\\.|""|[^"\\\\])*"/s',
+        function ($match) {
+          return str_repeat(' ', strlen($match[0]));
+        },
+        $sql
+      );
+
+      if ($masked === null) {
         return $sql;
       }
 
-      foreach ($matches[0] as $join) {
+      $pattern = '/\bLEFT\s+(?:OUTER\s+)?JOIN\s+.*?(?=\bLEFT\s+(?:OUTER\s+)?JOIN\b|\bINNER\s+JOIN\b|\bSTRAIGHT_JOIN\b|\bJOIN\b|\bWHERE\b|$)/is';
+      if (!preg_match_all($pattern, $masked, $matches, PREG_OFFSET_CAPTURE)) {
+        return $sql;
+      }
+
+      foreach ($matches[0] as $match) {
+        $join = $match[0];
+        $offset = $match[1];
+
         if (!preg_match('/\bLEFT\s+(?:OUTER\s+)?JOIN\s+`?([a-z0-9_]+)`?\s+(?:AS\s+)?`?([a-z0-9_]*)`?\s*(?:ON\b|\()/is', $join, $parts)) {
           continue;
         }
 
         $alias = ((isset($parts[2]) && $parts[2] != '' && strtoupper($parts[2]) != 'ON') ? $parts[2] : $parts[1]);
-        $rest = str_replace($join, ' ', $sql);
-        if (preg_match('/\b'.preg_quote($alias, '/').'\s*\./i', $rest)) {
+
+        // blanking keeps the offsets of the remaining joins valid
+        $rest = substr_replace($masked, str_repeat(' ', strlen($join)), $offset, strlen($join));
+        if (preg_match('/\b'.preg_quote($alias, '/').'\s*\./i', $rest.' '.$count_string)) {
           continue;
         }
 
-        $sql = $rest;
+        $masked = $rest;
+        $sql = substr_replace($sql, str_repeat(' ', strlen($join)), $offset, strlen($join));
       }
 
       return $sql;
