@@ -1118,18 +1118,27 @@ class shoppingCart {
    * @return array
    */
   function create_products_attributes_array($products_id) {
-    $dataArray = array();
-        
-    $db_query = xtDBquery("SELECT options_id,
-                                  options_values_id
-                             FROM ".TABLE_PRODUCTS_ATTRIBUTES." 
-                            WHERE products_id = '".(int)$products_id."'");
-    while($data = xtc_db_fetch_array($db_query, true)) {
-      $dataArray[$data['options_id']][] = $data['options_values_id'];
+    static $attributes_array;
+
+    if (!isset($attributes_array)) {
+      $attributes_array = array();
     }
 
-    //new module support 
-    $dataArray = $this->shoppingCartModules->create_products_attributes_array($dataArray, $products_id, $this->type);
+    $pID = (int)$products_id;
+    if (!isset($attributes_array[$pID])) {
+      $attributes_array[$pID] = array();
+
+      $db_query = xtDBquery("SELECT options_id,
+                                    options_values_id
+                               FROM ".TABLE_PRODUCTS_ATTRIBUTES." 
+                              WHERE products_id = '".$pID."'");
+      while($data = xtc_db_fetch_array($db_query, true)) {
+        $attributes_array[$pID][$data['options_id']][] = $data['options_values_id'];
+      }
+    }
+
+    //new module support, the hook keeps running on every call
+    $dataArray = $this->shoppingCartModules->create_products_attributes_array($attributes_array[$pID], $products_id, $this->type);
 
     return $dataArray;
   }
@@ -1141,22 +1150,16 @@ class shoppingCart {
    * @return boolean
    */
   function validate_attributes($products_id, $attributes, $flag = '') {
-    if (!isset($products_attributes_array)) {
-      $products_attributes_array = array();
-    }
-
     $check = true;
     if (is_array($attributes) && count($attributes)) {
-      $pID = (int)$products_id;
-      if (!isset($products_attributes_array[$pID])) {
-        $products_attributes_array[$pID] = $this->create_products_attributes_array($pID);
-      }
+      $products_attributes_array = $this->create_products_attributes_array((int)$products_id);
+
       foreach($attributes as $option => $value) {
-        if (!array_key_exists((int)$option, $products_attributes_array[$pID])) {
+        if (!array_key_exists((int)$option, $products_attributes_array)) {
           $check = false;
           break;
         }
-        if (!in_array($value,$products_attributes_array[$pID][(int)$option])) {
+        if (!in_array($value,$products_attributes_array[(int)$option])) {
           $check = false;
           break;
         }

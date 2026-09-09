@@ -31,6 +31,8 @@
     }
 
     if (!isset($products_in_category_array[$active])) {
+      // an empty result has to be stored too, otherwise the query repeats
+      $products_in_category_array[$active] = array();
       $categories_query = xtDBquery("SELECT count(*) as total,
                                             p2c.categories_id
                                        FROM ".TABLE_PRODUCTS." p
