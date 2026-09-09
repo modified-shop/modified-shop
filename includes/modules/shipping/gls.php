@@ -90,7 +90,7 @@
       require_once(DIR_FS_INC .'xtc_format_price.inc.php');
 
       $dest_country = $order->delivery['shipping']['iso_code_2'];
-      $dest_plz = $order->delivery['postcode'];
+      $dest_plz = (isset($order->delivery['shipping']['postcode']) ? $order->delivery['shipping']['postcode'] : $order->delivery['postcode']);
       $dest_zone = 0;
 
       for ($i=1; $i<=$this->num_gls; $i++) {

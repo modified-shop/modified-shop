@@ -549,11 +549,12 @@
       }
 
       // set tax country id for using order total in shopping cart
+      $cart_country = (isset($_SESSION['country']) && strpos(basename($PHP_SELF), 'checkout') === false);
       if (!isset($tax_address['country_id']) 
-          || (isset($_SESSION['country']) && strpos(basename($PHP_SELF), 'checkout') === false)
+          || $cart_country
           )
       {
-        $tax_address['country_id'] = isset($_SESSION['country']) ?  $_SESSION['country'] : STORE_COUNTRY;
+        $tax_address['country_id'] = (($cart_country) ? $_SESSION['country'] : STORE_COUNTRY);
         $tax_address['zone_id'] = -1;
       } elseif (isset($tax_address['country_id'])) {
         $_SESSION['country'] = $tax_address['country_id'];
@@ -616,6 +617,7 @@
       // set shipping
       $this->delivery['shipping'] = $this->delivery['country'];
       $this->delivery['shipping']['zone_id'] = $this->delivery['zone_id'];
+      $this->delivery['shipping']['postcode'] = $this->delivery['postcode'];
       
       // set shipping address
       if (isset($_SESSION['shipping']) 
