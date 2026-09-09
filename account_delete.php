@@ -22,7 +22,14 @@ require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 
-if (!isset($_SESSION['customer_id'])) { 
+// the deletion redirects to this page, so the sql conditions are built with the guest group
+$success = false;
+if (isset($_SESSION['account_deleted'])) {
+  unset($_SESSION['account_deleted']);
+  $success = true;
+}
+
+if (!isset($_SESSION['customer_id']) && $success === false) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 } elseif (isset($_SESSION['customer_id']) 
           && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
@@ -35,14 +42,13 @@ if (!isset($_SESSION['customer_id'])) {
 // clear session
 clear_checkout_session();
 
-if ($_SESSION['customer_id'] == 1) {
+if (isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == 1) {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');
 }
 
 // create smarty elements
 $smarty = new Smarty();
 
-$success = false;
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   $password = xtc_db_prepare_input($_POST['password']);
   $check_customer_query = xtc_db_query("SELECT customers_password
@@ -68,11 +74,11 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     
-    xtc_session_destroy();
+    // no destroy, the redirect needs the session and its id for the flag below
     xtc_session_reset();
     
-    $success = true;
-    require (DIR_WS_INCLUDES.'write_customers_status.php');
+    $_SESSION['account_deleted'] = true;
+    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'));
   }
 }
 

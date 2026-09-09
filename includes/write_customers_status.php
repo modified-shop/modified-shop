@@ -20,11 +20,15 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  // the file is also included inside functions, so the global has to be imported
+  global $PHP_SELF;
+
   // include needed function
   require_once(DIR_FS_INC.'get_customers_status_by_id.inc.php');
   
   // write customers status in session
-  if (isset($_SESSION['customer_id'])) {
+  // on logoff the guest status is needed before define_conditions.php freezes the sql conditions
+  if (isset($_SESSION['customer_id']) && basename($PHP_SELF) != FILENAME_LOGOFF) {
     $customer_status_query = xtc_db_query("SELECT *
                                              FROM " . TABLE_CUSTOMERS . "
                                             WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
