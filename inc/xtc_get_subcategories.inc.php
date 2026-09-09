@@ -59,10 +59,15 @@
   function xtc_get_subcategories_data(&$subcategories_cache_array, $parent_id = 0) {
     static $child_categories_array;
 
-    // read the whole tree once instead of one query per node
     if (!isset($child_categories_array)) {
       $child_categories_array = array();
+    }
 
+    $parent_id = (int)$parent_id;
+
+    // read the requested subtree level by level, one query per level
+    // instead of one query per node
+    if (!isset($child_categories_array[$parent_id])) {
       $join = '';
       $conditions = '';
       if (!defined('RUN_MODE_ADMIN')) {
@@ -70,29 +75,40 @@
         $conditions .= " AND c.categories_status = 1 ";
         $conditions .= CATEGORIES_CONDITIONS_C;
       }
-      $subcategories_query = xtDBquery("SELECT c.categories_id,
-                                               c.parent_id
-                                          FROM " . TABLE_CATEGORIES . " c
-                                          JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                               ON c.categories_id = cd.categories_id
-                                                  AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                                  " . $join . "
-                                         WHERE 1 = 1
-                                               " . $conditions);
 
-      while ($subcategories = xtc_db_fetch_array($subcategories_query, true)) {
-        $child_categories_array[(int)$subcategories['parent_id']][] = (int)$subcategories['categories_id'];
+      $pending_categories = array($parent_id => $parent_id);
+      while (count($pending_categories) > 0) {
+        foreach ($pending_categories as $pending_id) {
+          $child_categories_array[$pending_id] = array();
+        }
+
+        $subcategories_query = xtDBquery("SELECT c.categories_id,
+                                                 c.parent_id
+                                            FROM " . TABLE_CATEGORIES . " c
+                                            JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                                                 ON c.categories_id = cd.categories_id
+                                                    AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                                    " . $join . "
+                                           WHERE c.parent_id IN ('" . implode("', '", $pending_categories) . "')
+                                                 " . $conditions);
+
+        $pending_categories = array();
+        while ($subcategories = xtc_db_fetch_array($subcategories_query, true)) {
+          $categories_id = (int)$subcategories['categories_id'];
+          $child_categories_array[(int)$subcategories['parent_id']][] = $categories_id;
+
+          if (!isset($child_categories_array[$categories_id])) {
+            $pending_categories[$categories_id] = $categories_id;
+          }
+        }
       }
     }
 
-    $parent_id = (int)$parent_id;
-    if (isset($child_categories_array[$parent_id])) {
-      foreach ($child_categories_array[$parent_id] as $categories_id) {
-        $subcategories_cache_array[count($subcategories_cache_array)] = $categories_id;
+    foreach ($child_categories_array[$parent_id] as $categories_id) {
+      $subcategories_cache_array[count($subcategories_cache_array)] = $categories_id;
 
-        if ($categories_id != $parent_id) {
-          xtc_get_subcategories_data($subcategories_cache_array, $categories_id);
-        }
+      if ($categories_id != $parent_id) {
+        xtc_get_subcategories_data($subcategories_cache_array, $categories_id);
       }
     }
   }
