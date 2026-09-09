@@ -305,12 +305,18 @@ class shipcloud {
 
   
   private function customs_data() {
+    if (isset($this->customs_declaration)) {
+      return $this->customs_declaration;
+    }
+
+    $this->customs_declaration = false;
     if ($this->customs_required() === false) {
-      return false;
+      return $this->customs_declaration;
     }
 
     $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
     $default_weight = ((defined('MODULE_SHIPCLOUD_WEIGHT_CN23')) ? (float)MODULE_SHIPCLOUD_WEIGHT_CN23 : 0.1);
+    $currency = $this->customs_currency();
 
     $items = array();
     $contents = array();
@@ -322,7 +328,7 @@ class shipcloud {
       }
 
       $description = ((isset($this->order->products[$i]['tariff_title']) && $this->order->products[$i]['tariff_title'] != '') ? $this->order->products[$i]['tariff_title'] : $this->order->products[$i]['name']);
-      $value_amount = (float)sprintf("%01.2f", $this->order->products[$i]['price']);
+      $value_amount = (float)sprintf("%01.2f", $this->order->products[$i]['price'] * $currency['rate']);
       $net_weight = (float)sprintf("%01.3f", (($this->order->products[$i]['weight'] > 0) ? $this->order->products[$i]['weight'] : $default_weight));
 
       $item = array(
@@ -343,19 +349,52 @@ class shipcloud {
     }
 
     if (count($items) < 1) {
-      return false;
+      return $this->customs_declaration;
     }
 
-    $customs_data = array(
-      'contents_type'        => 'commercial_goods',
+    $this->customs_declaration = array(
+      // a return carries the goods back, DHL rejects commercial_goods on returns from Great Britain
+      'contents_type'        => (($this->service == 'returns') ? 'returned_goods' : 'commercial_goods'),
       'contents_explanation' => mb_substr(implode(', ', $contents), 0, 256),
-      'currency'             => $this->order->info['currency'],
+      'currency'             => $currency['code'],
+      // mandatory for DHL, the shop itself charges no customs fees
+      'additional_fees'      => 0,
       'total_value_amount'   => (float)sprintf("%01.2f", $total_value_amount),
       'posting_date'         => date('Y-m-d'),
       'items'                => $items,
     );
 
-    return $customs_data;
+    return $this->customs_declaration;
+  }
+
+
+  private function customs_currency() {
+    $currency = array('code' => $this->order->info['currency'], 'rate' => 1);
+
+    // DHL accepts the export declaration in EUR only
+    if (strpos($this->carrier, 'dhl') === false || $currency['code'] == 'EUR') {
+      return $currency;
+    }
+
+    $rate = 0;
+    $currency_query = xtc_db_query("SELECT value
+                                      FROM ".TABLE_CURRENCIES."
+                                     WHERE code = 'EUR'");
+    if (xtc_db_num_rows($currency_query) == 1) {
+      $currency_data = xtc_db_fetch_array($currency_query);
+      $rate = (float)$currency_data['value'];
+    }
+
+    $currency_value = (float)$this->order->info['currency_value'];
+    if ($rate <= 0 || $currency_value <= 0) {
+      $this->LoggingManager->log('WARNING', 'customs_currency', array('exception' => 'no EUR rate to convert '.$currency['code']));
+      return $currency;
+    }
+
+    $currency['code'] = 'EUR';
+    $currency['rate'] = $rate / $currency_value;
+
+    return $currency;
   }
 
 
@@ -401,6 +440,18 @@ class shipcloud {
         'amount'   => $this->order->info['pp_total'],
         'currency' => $this->order->info['currency'],
       );
+    }
+    
+    // a parcel cannot weigh less than the goods declared to customs
+    $customs_data = $this->customs_data();
+    if ($customs_data !== false) {
+      $customs_weight = 0;
+      for ($i = 0, $n = count($customs_data['items']); $i < $n; $i++) {
+        $customs_weight += $customs_data['items'][$i]['net_weight'] * $customs_data['items'][$i]['quantity'];
+      }
+      if ($customs_weight > $package_data['weight']) {
+        $package_data['weight'] = (float)sprintf("%01.3f", $customs_weight);
+      }
     }
     
     return $package_data;
