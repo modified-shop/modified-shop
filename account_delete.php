@@ -74,10 +74,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     
-    // no destroy, the redirect needs a working session for the flag below
-    if (SESSION_RECREATE == 'True') {
-      xtc_session_recreate();
-    }
+    // no destroy, the redirect needs the session and its id for the flag below
     xtc_session_reset();
     
     $_SESSION['account_deleted'] = true;

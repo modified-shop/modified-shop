@@ -20,6 +20,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  // the file is also included inside functions, so the global has to be imported
+  global $PHP_SELF;
+
   // include needed function
   require_once(DIR_FS_INC.'get_customers_status_by_id.inc.php');
   
