@@ -131,10 +131,26 @@
       }
     }
 
-    // Product counts include all visible descendants. Walking the cached
-    // adjacency list preserves the existing behavior that traversal stops at
-    // hidden, unnamed, or customer-group-inaccessible nodes.
-    $visible_category_ids = array();
+    // the counts add up all descendants that carry a name and are allowed for
+    // the customer group, deactivated ones included, the same way
+    // xtc_count_products_in_category() walks the tree
+    $child_categories_array = array();
+    $child_categories_query = xtDBquery(
+      "SELECT c.categories_id,
+              c.parent_id
+         FROM ".TABLE_CATEGORIES." c
+         JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
+              ON cd.categories_id = c.categories_id
+                 AND cd.language_id = '".(int)$_SESSION['languages_id']."'
+                 AND trim(cd.categories_name) != ''
+        WHERE 1 = 1
+              ".CATEGORIES_CONDITIONS_C
+    );
+    while ($child_categories = xtc_db_fetch_array($child_categories_query, true)) {
+      $child_categories_array[(int)$child_categories['parent_id']][] = (int)$child_categories['categories_id'];
+    }
+
+    $counted_category_ids = array();
     $category_parent_ids = array();
     $category_depths = array();
     $pending_categories = array(
@@ -146,17 +162,18 @@
 
     while (!empty($pending_categories)) {
       $pending = array_pop($pending_categories);
-      $categories = xtc_get_categories_tree_data($pending['parent_id'], 1);
 
-      foreach ($categories as $category) {
-        $category_id = (int)$category['id'];
+      if (!isset($child_categories_array[$pending['parent_id']])) {
+        continue;
+      }
 
-        if (isset($visible_category_ids[$category_id])) {
+      foreach ($child_categories_array[$pending['parent_id']] as $category_id) {
+        if (isset($counted_category_ids[$category_id])) {
           continue;
         }
 
-        $visible_category_ids[$category_id] = true;
-        $category_parent_ids[$category_id] = (int)$category['parent'];
+        $counted_category_ids[$category_id] = true;
+        $category_parent_ids[$category_id] = $pending['parent_id'];
         $category_depths[$category_id] = $pending['depth'] + 1;
         $pending_categories[] = array(
           'parent_id' => $category_id,
@@ -208,7 +225,7 @@
     }
 
     $all_product_counts = array();
-    foreach ($visible_category_ids as $category_id => $unused) {
+    foreach ($counted_category_ids as $category_id => $unused) {
       $all_product_counts[$category_id] = isset($direct_product_counts[$category_id])
         ? $direct_product_counts[$category_id]
         : 0;
