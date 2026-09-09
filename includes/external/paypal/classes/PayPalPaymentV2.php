@@ -825,20 +825,30 @@
         }
       }
 
-      if (isset($order->info['pp_total'])) {
-        $total = $order->info['pp_total'];
-      } else {
-        $total = $order->info['total'];
-        if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
-             && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-             ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
-                   && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
-                   && $order->delivery['country_id'] == STORE_COUNTRY
-                   )
-            )
-        {
-          $total += $order->info['tax'];
-        }
+      $total = ((isset($order->info['pp_total'])) ? $order->info['pp_total'] : $order->info['total']);
+
+      // an order whose totals are gone leaves an empty string behind, patching it would send a wrong amount
+      if (!is_numeric($total)) {
+        $this->LoggingManager->log('WARNING', 'PatchOrder aborted', array(
+          'reason' => 'order total not numeric',
+          'order_id' => $orderID,
+          'total' => $total,
+        ));
+        return false;
+      }
+      $total = (float)$total;
+
+      if (!isset($order->info['pp_total'])
+          && (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
+               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+               ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
+                     && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                     && $order->delivery['country_id'] == STORE_COUNTRY
+                     )
+              )
+          )
+      {
+        $total += $order->info['tax'];
       }
 
       $this->set_number_format($order->info['currency']);
