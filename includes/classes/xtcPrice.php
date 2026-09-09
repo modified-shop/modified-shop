@@ -521,11 +521,11 @@ class xtcPrice {
           if ($special['specials_old_products_price'] > 0) {
             $products_price = $special['specials_old_products_price'];
         
-            if ($add_tax === true) {          
-              $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
-              if ($this->cStatus['customers_status_show_price_tax'] == '1') {
-                $products_price = $this->xtcAddTax($products_price, $products_tax);
-              }
+            if ($add_tax === true) {
+              // xtcAddTax also converts the currency, so net groups have to pass through it as well
+              $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '1'
+                               && isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
+              $products_price = $this->xtcAddTax($products_price, $products_tax);
             }
           }
         }
