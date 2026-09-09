@@ -152,7 +152,7 @@ class xtcPrice {
 
     // check if group is allowed to see prices
     if ($this->cStatus['customers_status_show_price'] == '0') {
-      return $this->xtcShowNote($vpeStatus);
+      return $format ? $this->xtcShowNote($vpeStatus) : 0.0;
     }
     
     $this->show_price_tax = ($this->tax_class == '') ? 0 : $this->cStatus['customers_status_show_price_tax'];
