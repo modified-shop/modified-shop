@@ -31,7 +31,7 @@ if (isset ($cPath_array)) {
   }
 } elseif (isset($_GET['manufacturers_id']) && xtc_not_null($_GET['manufacturers_id'])) { 
   $_GET['manufacturers_id'] = (int) $_GET['manufacturers_id'];
-  $manufacturers_array = xtc_get_manufacturers();
+  $manufacturers_array = xtc_get_manufacturers('', $_GET['manufacturers_id']);
   if (isset($manufacturers_array[(int)$_GET['manufacturers_id']])) {
     $manufacturers = $manufacturers_array[(int)$_GET['manufacturers_id']];
     $breadcrumb->add($manufacturers['manufacturers_name'], xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link((int) $_GET['manufacturers_id'], $manufacturers['manufacturers_name'])));
