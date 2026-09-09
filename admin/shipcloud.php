@@ -69,14 +69,14 @@ require (DIR_WS_INCLUDES.'head.php');
               <br />
               <font color="#91c24f">
               <ul>
-                <li style="list-style-type: circle !important;"><strong>Weitere Informationen zu shipcloud finden Sie hier: <a href="https://www.shipcloud.io/de/lp/modified/?pc=modified" target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>Klick mich!</strong></u></font></a></strong></li>
+                <li style="list-style-type: circle !important;"><strong>Weitere Informationen zu shipcloud finden Sie hier: <a href="https://shipcloud.com/de/modified/?pc=modified" target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>Klick mich!</strong></u></font></a></strong></li>
               </ul>
               </font>
               <br />
               <font color="#d52d53"><strong>Voraussetzungen / Anforderungen</strong></font>
               <font color="#91c24f">
               <ul>
-                <li style="list-style-type: circle !important;"><a href="https://www.shipcloud.io/de/lp/modified/?pc=modified" target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>shipcloud Account</strong></u></font></a></li>
+                <li style="list-style-type: circle !important;"><a href="https://shipcloud.com/de/modified/?pc=modified" target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>shipcloud Account</strong></u></font></a></li>
               </ul>
               </font>
               <br />
