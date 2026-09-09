@@ -41,19 +41,30 @@ if (MIN_DISPLAY_BESTSELLERS > 0
       'Y-m-d',
       mktime(1, 1, 1, date('m'), date('d') - (int)MAX_DISPLAY_BESTSELLERS_DAYS, date('Y'))
     );
-    $select = "sales.ordered, ";
-    $join = "JOIN (
-                     SELECT op.products_id,
-                            SUM(op.products_quantity) AS ordered
-                       FROM ".TABLE_ORDERS." o
-                       JOIN ".TABLE_ORDERS_PRODUCTS." op
-                         ON op.orders_id = o.orders_id
-                      WHERE o.date_purchased > '".$date_bestsellers."'
-                   GROUP BY op.products_id
-                   ) sales
-                ON sales.products_id = p.products_id";
-    $order_by = "sales.ordered";
-    $where = '';
+
+    // without a sale in the period the box keeps the total count,
+    // otherwise the bestsellers of the current category are skipped
+    $sales_check_query = xtc_db_query("SELECT op.products_id
+                                         FROM ".TABLE_ORDERS." o
+                                         JOIN ".TABLE_ORDERS_PRODUCTS." op
+                                           ON op.orders_id = o.orders_id
+                                        WHERE o.date_purchased > '".$date_bestsellers."'
+                                        LIMIT 1");
+    if (xtc_db_num_rows($sales_check_query) > 0) {
+      $select = "sales.ordered, ";
+      $join = "JOIN (
+                       SELECT op.products_id,
+                              SUM(op.products_quantity) AS ordered
+                         FROM ".TABLE_ORDERS." o
+                         JOIN ".TABLE_ORDERS_PRODUCTS." op
+                           ON op.orders_id = o.orders_id
+                        WHERE o.date_purchased > '".$date_bestsellers."'
+                     GROUP BY op.products_id
+                     ) sales
+                  ON sales.products_id = p.products_id";
+      $order_by = "sales.ordered";
+      $where = '';
+    }
   }
 
   $best_sellers_result = false;
@@ -111,34 +122,6 @@ if (MIN_DISPLAY_BESTSELLERS > 0
                                      WHERE p2c.products_id = p.products_id
                                   )
                          ORDER BY ".$order_by." DESC
-                            LIMIT ".MAX_DISPLAY_BESTSELLERS;
-
-    $best_sellers_result = xtDBquery($best_sellers_query);
-  }
-
-  if (MAX_DISPLAY_BESTSELLERS_DAYS != '0'
-      && xtc_db_num_rows($best_sellers_result, true) < 1
-      )
-  {
-    $best_sellers_query = "SELECT ".$product->default_select."
-                             FROM ".TABLE_PRODUCTS." p
-                             JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                               ON p.products_id = pd.products_id
-                              AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                              AND trim(pd.products_name) != ''
-                            WHERE p.products_status = 1
-                              AND p.products_ordered > 0
-                                ".PRODUCTS_CONDITIONS_P."
-                              AND EXISTS (
-                                    SELECT 1
-                                      FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                      JOIN ".TABLE_CATEGORIES." c
-                                        ON c.categories_id = p2c.categories_id
-                                       AND c.categories_status = 1
-                                           ".CATEGORIES_CONDITIONS_C."
-                                     WHERE p2c.products_id = p.products_id
-                                  )
-                         ORDER BY p.products_ordered DESC
                             LIMIT ".MAX_DISPLAY_BESTSELLERS;
 
     $best_sellers_result = xtDBquery($best_sellers_query);
