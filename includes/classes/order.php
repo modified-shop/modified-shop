@@ -294,7 +294,10 @@
                                        FROM ".TABLE_ORDERS."
                                       WHERE orders_id = '".(int)$oID."'");
       $order_lang_array = xtc_db_fetch_array($order_lang_query, true);
-      $order_lang_id = $order_lang_array['languages_id'];
+      $order_lang_id = (isset($order_lang_array['languages_id'])) ? (int)$order_lang_array['languages_id'] : 0;
+
+      // a deleted language leaves a 0 behind, the current language then keeps the order readable
+      if ($order_lang_id < 1) $order_lang_id = (int)$_SESSION['languages_id'];
 
       $order_query = "SELECT op.*,
                              pd.products_description,

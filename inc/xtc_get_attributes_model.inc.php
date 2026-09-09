@@ -14,7 +14,8 @@
    ---------------------------------------------------------------------------------------*/
    
 	function xtc_get_attributes_model($products_id, $options_values_name, $options_name, $language_id = '') {
-	  if ($language_id == '') $language_id = $_SESSION['languages_id'];
+	  // a loose comparison no longer catches a 0 coming from an order without a language
+	  if (empty($language_id)) $language_id = $_SESSION['languages_id'];
 
   	$attributes_query = xtc_db_query("SELECT pa.attributes_model
                                         FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
