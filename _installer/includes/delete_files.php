@@ -1301,3 +1301,34 @@
       }
     }
   }
+
+  // uninstall the payment modules deleted above, otherwise their leftovers keep
+  // the shop from resolving the title constants in the admin (#3153)
+  $removed_modules = array();
+  foreach ($unlink_file as $unlink) {
+    if (strpos($unlink, 'includes/modules/payment/') === 0 && substr($unlink, -4) == '.php') {
+      $removed_modules[] = substr(basename($unlink), 0, -4);
+    }
+  }
+
+  foreach ($removed_modules as $removed_module) {
+    $configuration_prefix = 'MODULE_PAYMENT_'.strtoupper($removed_module).'_';
+    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
+                   WHERE LEFT(configuration_key, ".strlen($configuration_prefix).") = '".xtc_db_input($configuration_prefix)."'");
+  }
+
+  if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
+    $installed_modules = array();
+    foreach (explode(';', MODULE_PAYMENT_INSTALLED) as $installed_module) {
+      if (trim($installed_module) != '' && !in_array(substr(trim($installed_module), 0, -4), $removed_modules)) {
+        $installed_modules[] = trim($installed_module);
+      }
+    }
+
+    if (implode(';', $installed_modules) != MODULE_PAYMENT_INSTALLED) {
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".xtc_db_input(implode(';', $installed_modules))."',
+                           last_modified = now()
+                     WHERE configuration_key = 'MODULE_PAYMENT_INSTALLED'");
+    }
+  }

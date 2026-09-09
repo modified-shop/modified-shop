@@ -631,7 +631,10 @@ require (DIR_WS_INCLUDES.'head.php');
                             if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p])) {
                               include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p]);
                             }
-                            echo xtc_draw_checkbox_field('payment_unallowed[]', substr($payment_status[$p], 0,-4), (in_array(substr($payment_status[$p], 0,-4), $customers_payment_unallowed) ? true : false)).constant('MODULE_PAYMENT_'.strtoupper(substr($payment_status[$p], 0,-4)).'_TEXT_TITLE').' ('.$payment_status[$p].')<br/>';
+                            $payment_name = substr($payment_status[$p], 0,-4);
+                            // deleted modules can linger in MODULE_PAYMENT_INSTALLED, so never trust the title constant
+                            $payment_title = 'MODULE_PAYMENT_'.strtoupper($payment_name).'_TEXT_TITLE';
+                            echo xtc_draw_checkbox_field('payment_unallowed[]', $payment_name, (in_array($payment_name, $customers_payment_unallowed) ? true : false)).(defined($payment_title) ? constant($payment_title) : $payment_name).' ('.$payment_status[$p].')<br/>';
                           }
                         } else {
                           echo TEXT_PAYMENT_ERROR;
@@ -655,7 +658,10 @@ require (DIR_WS_INCLUDES.'head.php');
                             if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s])) {
                               include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s]);
                             }
-                            echo xtc_draw_checkbox_field('shipping_unallowed[]', substr($shipping_status[$s], 0,-4), (in_array(substr($shipping_status[$s], 0,-4), $customers_shipping_unallowed) ? true : false)).constant('MODULE_SHIPPING_'.strtoupper(substr($shipping_status[$s], 0,-4)).'_TEXT_TITLE').' ('.$shipping_status[$s].')<br/>';
+                            $shipping_name = substr($shipping_status[$s], 0,-4);
+                            // deleted modules can linger in MODULE_SHIPPING_INSTALLED, so never trust the title constant
+                            $shipping_title = 'MODULE_SHIPPING_'.strtoupper($shipping_name).'_TEXT_TITLE';
+                            echo xtc_draw_checkbox_field('shipping_unallowed[]', $shipping_name, (in_array($shipping_name, $customers_shipping_unallowed) ? true : false)).(defined($shipping_title) ? constant($shipping_title) : $shipping_name).' ('.$shipping_status[$s].')<br/>';
                           }
                         } else {
                           echo TEXT_SHIPPING_ERROR;
