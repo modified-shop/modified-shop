@@ -87,7 +87,7 @@ class shipcloud {
       if ($customs_data !== false) {
         $request_array['customs_declaration'] = $customs_data;
       }
-      
+
       if (strpos($this->carrier, 'dhl') !== false
           || $this->carrier == 'dpd'
           )
@@ -315,8 +315,18 @@ class shipcloud {
     }
 
     $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
-    $default_weight = ((defined('MODULE_SHIPCLOUD_WEIGHT_CN23')) ? (float)MODULE_SHIPCLOUD_WEIGHT_CN23 : 0.1);
+    // the request carries three decimals, so a lighter fallback would be declared as no weight at all
+    $default_weight = (float)sprintf("%01.3f", ((defined('MODULE_SHIPCLOUD_WEIGHT_CN23')) ? (float)MODULE_SHIPCLOUD_WEIGHT_CN23 : 0.1));
+    if ($default_weight <= 0) {
+      $default_weight = 0.001;
+    }
     $currency = $this->customs_currency();
+
+    // shipcloud declares this as the carriage charge, DHL demands it as soon as the customer pays it
+    $additional_fees = 0;
+    if ($this->service != 'returns') {
+      $additional_fees = (float)sprintf("%01.2f", ((float)$this->order->info['pp_shipping'] + (float)$this->order->info['pp_fee']) * $currency['rate']);
+    }
 
     $items = array();
     $contents = array();
@@ -329,7 +339,10 @@ class shipcloud {
 
       $description = ((isset($this->order->products[$i]['tariff_title']) && $this->order->products[$i]['tariff_title'] != '') ? $this->order->products[$i]['tariff_title'] : $this->order->products[$i]['name']);
       $value_amount = (float)sprintf("%01.2f", $this->order->products[$i]['price'] * $currency['rate']);
-      $net_weight = (float)sprintf("%01.3f", (($this->order->products[$i]['weight'] > 0) ? $this->order->products[$i]['weight'] : $default_weight));
+      $net_weight = (float)sprintf("%01.3f", $this->order->products[$i]['weight']);
+      if ($net_weight <= 0) {
+        $net_weight = $default_weight;
+      }
 
       $item = array(
         'origin_country' => ((isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') ? $this->order->products[$i]['origin'] : $country['countries_iso_code_2']),
@@ -357,8 +370,7 @@ class shipcloud {
       'contents_type'        => (($this->service == 'returns') ? 'returned_goods' : 'commercial_goods'),
       'contents_explanation' => mb_substr(implode(', ', $contents), 0, 256),
       'currency'             => $currency['code'],
-      // mandatory for DHL, the shop itself charges no customs fees
-      'additional_fees'      => 0,
+      'additional_fees'      => $additional_fees,
       'total_value_amount'   => (float)sprintf("%01.2f", $total_value_amount),
       'posting_date'         => date('Y-m-d'),
       'items'                => $items,
@@ -441,7 +453,7 @@ class shipcloud {
         'currency' => $this->order->info['currency'],
       );
     }
-    
+
     // a parcel cannot weigh less than the goods declared to customs
     $customs_data = $this->customs_data();
     if ($customs_data !== false) {
