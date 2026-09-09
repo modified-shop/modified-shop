@@ -109,27 +109,9 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();
 
-if ($order->delivery['country']['iso_code_2'] != '') {
-	$_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
-}
-
-if (isset($order->delivery['delivery_zone']) && $order->delivery['delivery_zone'] != '') {
-	$_SESSION['delivery_zone'] = $order->delivery['delivery_zone'];
-}
-
-if (isset($_SESSION['shipping']) 
-    && is_array($_SESSION['shipping']) 
-    )
-{
-  $class = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-  if (isset($GLOBALS[$class])
-      && is_object($GLOBALS[$class]) 
-      && method_exists($GLOBALS[$class], 'address')
-      && $order->billing['country']['iso_code_2'] != ''
-      ) 
-  {
-    $_SESSION['delivery_zone'] = $order->billing['country']['iso_code_2'];
-  }
+// the shipping method is still selectable, keep the customers country
+if ($order->delivery['shipping']['iso_code_2'] != '') {
+	$_SESSION['delivery_zone'] = $order->delivery['shipping']['iso_code_2'];
 }
 
 // load all enabled shipping modules

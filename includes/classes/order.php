@@ -616,6 +616,7 @@
       // set shipping
       $this->delivery['shipping'] = $this->delivery['country'];
       $this->delivery['shipping']['zone_id'] = $this->delivery['zone_id'];
+      $this->delivery['shipping']['postcode'] = $this->delivery['postcode'];
       
       // set shipping address
       if (isset($_SESSION['shipping']) 

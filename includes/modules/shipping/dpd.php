@@ -89,7 +89,7 @@
       
       $error = false;
       $dest_country = $order->delivery['shipping']['iso_code_2'];
-      $dest_postal_code = $order->delivery['postcode'];
+      $dest_postal_code = (isset($order->delivery['shipping']['postcode']) ? $order->delivery['shipping']['postcode'] : $order->delivery['postcode']);
       // get rid of spaces in the postal code (e.g Great Britain or Canada)
       $dest_postal_code = strtoupper(str_replace(' ', '', $dest_postal_code));
       //Don't know exactly how to deal with GB. For now, we check for GB and then only use the 2 leftmost characters.
