@@ -83,10 +83,13 @@
           && !isset($_GET['subaction'])
           )
       {
-        $pageformats = $this->normalizeIntegerArray(isset($_POST['pageformats']) ? $_POST['pageformats'] : array());
-        xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                         SET configuration_value = '".xtc_db_input(implode(',', $pageformats))."'
-                       WHERE configuration_key = 'MODULE_INTERNETMARKE_PAGEFORMATS'");
+        // without stored formats the checkboxes are missing, the selection has to survive that
+        if (isset($_POST['pageformats_rendered'])) {
+          $pageformats = $this->normalizeIntegerArray(isset($_POST['pageformats']) ? $_POST['pageformats'] : array());
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = '".xtc_db_input(implode(',', $pageformats))."'
+                         WHERE configuration_key = 'MODULE_INTERNETMARKE_PAGEFORMATS'");
+        }
 
         xtc_db_query("UPDATE `internetmarke` SET SEL = 0");
         $prices = $this->normalizeIntegerArray(isset($_POST['price']) ? $_POST['price'] : array());
@@ -279,6 +282,7 @@
       $stored_formats = DHLInternetmarke::getStoredPageFormats();
 
       if (count($stored_formats) > 0) {
+        $formats_string .= xtc_draw_hidden_field('pageformats_rendered', '1');
         foreach ($stored_formats as $data) {
           $formats_string .= xtc_draw_checkbox_field('pageformats[]', $data['id'], in_array($data['id'], $selected_array)).' '.encode_htmlspecialchars($data['text']).'<br>';
         }
