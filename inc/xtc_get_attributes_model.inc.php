@@ -13,8 +13,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
    
-	function xtc_get_attributes_model($products_id, $options_values_name, $options_name, $language_id = '') {
-	  if ($language_id == '') $language_id = $_SESSION['languages_id'];
+	function xtc_get_attributes_model($products_id, $options_values_name, $options_name, $language_id = '', $options_id = 0, $options_values_id = 0) {
+	  // a loose comparison no longer catches a 0 coming from an order without a language
+	  if (empty($language_id)) $language_id = $_SESSION['languages_id'];
 
   	$attributes_query = xtc_db_query("SELECT pa.attributes_model
                                         FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
@@ -32,5 +33,19 @@
       $attributes = xtc_db_fetch_array($attributes_query);
     
       return $attributes['attributes_model'];
+    }
+
+    // an id is reused after a delete, so a caller only passes one where the order language is gone
+    if ($options_id > 0 && $options_values_id > 0) {
+      $id_query = xtc_db_query("SELECT attributes_model
+                                  FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                 WHERE products_id = '".(int)$products_id."'
+                                   AND options_id = '".(int)$options_id."'
+                                   AND options_values_id = '".(int)$options_values_id."'");
+      if (xtc_db_num_rows($id_query) > 0) {
+        $id_attributes = xtc_db_fetch_array($id_query);
+
+        return $id_attributes['attributes_model'];
+      }
     }
   }

@@ -154,7 +154,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   ?>
                     <td class="dataTableContent"><?php echo $reviews['products_name']; ?></td>
                     <td class="dataTableContent"><?php echo $reviews['customers_name']; ?></td>
-                    <td class="dataTableContent"><?php echo $lang[$reviews['languages_id']]; ?></td>
+                    <td class="dataTableContent"><?php echo (isset($lang[$reviews['languages_id']])) ? $lang[$reviews['languages_id']] : ''; ?></td>
                     <td class="dataTableContent txta-c" align="right"><?php echo xtc_image(DIR_WS_IMAGES.'stars_' . $reviews['reviews_rating'] . '.png'); ?></td>
                     <td class="dataTableContent txta-c">
                       <?php

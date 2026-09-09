@@ -115,11 +115,24 @@
         break;
       case 'deleteconfirm':
         $lID = (int)$_GET['lID'];
+
+        // the confirm step is reachable on its own, so the default language needs its own guard here
+        $lng_query = xtc_db_query("SELECT code 
+                                     FROM " . TABLE_LANGUAGES . " 
+                                    WHERE languages_id = '" . $lID . "'");
+        $lng = xtc_db_fetch_array($lng_query);
+        if (!is_array($lng) || $lng['code'] == DEFAULT_LANGUAGE) {
+          $messageStack->add_session(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
+          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page));
+        }
+        unset($lng);
+
         xtc_db_query("DELETE FROM " . TABLE_CATEGORIES_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_CUSTOMERS_STATUS . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_IMAGES_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_VPE . " WHERE language_id = '" . $lID . "'");
@@ -135,6 +148,13 @@
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_CONTENT . " WHERE languages_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_OPTIONS . " WHERE languages_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_VALUES . " WHERE languages_id = '" . $lID . "'");
+
+        // an order keeps its history, only the reference to the gone language is cleared
+        xtc_db_query("UPDATE " . TABLE_ORDERS . " SET languages_id = '0' WHERE languages_id = '" . $lID . "'");
+
+        // cached queries still hold rows of the gone language
+        require_once(DIR_FS_CATALOG.'includes/modified_cache.php');
+        $modified_cache->clear();
 
         unset($_SESSION['language_charset']);
 
