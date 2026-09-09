@@ -70,6 +70,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error ===
     'author',
   );
 
+  // only inside this block, the prefill below relies on $author being unset
+  $author = '';
+
   // prepare variables
   foreach ($_POST as $key => $value) {
     if ((!isset(${$key}) || !is_object(${$key})) && in_array($key , $valid_params)) {
