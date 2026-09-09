@@ -14,8 +14,10 @@
   define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION', 'Labelerstellung f&uuml;r die Deutsche Post Internetmarke');
   define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION_UPLOAD', 'Preisaktualisierung');
   define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION_CARRIER', 'Deutsche Post als Paketdienstleister installieren.');
+  define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION_FORMATS', 'Seitenformate aktualisieren');
   define('BUTTON_IM_INSTALL', 'Paketdienstleister installieren');
   define('BUTTON_IM_UPDATE', 'Preisdaten aktualisieren');
+  define('BUTTON_IM_FORMATS_UPDATE', 'Seitenformate aktualisieren');
   
   define('MODULE_INTERNETMARKE_STATUS_TITLE','Status');
   define('MODULE_INTERNETMARKE_STATUS_DESC','Modulstatus');
@@ -61,3 +63,7 @@
 
   define('MODULE_INTERNETMARKE_TEXT_UPDATE_SUCCESS', 'Preisdaten erfolgreich aktualisiert.');
   define('MODULE_INTERNETMARKE_TEXT_UPDATE_ERROR', 'Die Preisdaten konnten nicht aktualisiert werden.');
+
+  define('MODULE_INTERNETMARKE_TEXT_FORMATS_SUCCESS', 'Seitenformate erfolgreich aktualisiert.');
+  define('MODULE_INTERNETMARKE_TEXT_FORMATS_ERROR', 'Die Seitenformate konnten nicht aktualisiert werden. Die zuletzt gespeicherten Seitenformate bleiben erhalten.');
+  define('MODULE_INTERNETMARKE_TEXT_FORMATS_MISSING', 'Es sind noch keine Seitenformate gespeichert. Bitte aktualisieren Sie die Seitenformate.');

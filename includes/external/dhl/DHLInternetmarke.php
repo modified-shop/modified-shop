@@ -696,9 +696,9 @@
                 || !is_scalar($PageFormat['name'])
                 || !is_scalar($PageFormat['pageLayout']['labelCount']['labelX'])
                 || !is_scalar($PageFormat['pageLayout']['labelCount']['labelY'])
-                || !$this->isPositiveIntegerValue($PageFormat['id'])
-                || !$this->isPositiveIntegerValue($PageFormat['pageLayout']['labelCount']['labelX'])
-                || !$this->isPositiveIntegerValue($PageFormat['pageLayout']['labelCount']['labelY'])
+                || !self::isPositiveIntegerValue($PageFormat['id'])
+                || !self::isPositiveIntegerValue($PageFormat['pageLayout']['labelCount']['labelX'])
+                || !self::isPositiveIntegerValue($PageFormat['pageLayout']['labelCount']['labelY'])
                 )
             {
               continue;
@@ -727,24 +727,78 @@
       }
 
       $result['message'] = $this->message;
+      $result['formats'] = self::selectPageFormats($formats_array, $id, $single);
 
-      if ($id != '') {
-        $id_array = explode(',', $id);
+      return $result;
+    }
 
-        if ($single === false) {
-          $selected_formats_array = array();
-          foreach ($id_array as $id) {
-            if (isset($formats_array[$id])) {
-              $selected_formats_array[$id] = $formats_array[$id];
+
+    // the order page must not depend on the Internetmarke API, it only reads the stored formats
+    public static function getStoredPageFormats($id = '', $single = false) {
+      $formats_array = array();
+
+      if (defined('MODULE_INTERNETMARKE_PAGEFORMATS_DATA')
+          && trim(MODULE_INTERNETMARKE_PAGEFORMATS_DATA) != ''
+          )
+      {
+        // base64 keeps the JSON escapes intact, the configuration is loaded through stripslashes
+        $stored_json = base64_decode(trim(MODULE_INTERNETMARKE_PAGEFORMATS_DATA), true);
+        $stored_array = ($stored_json !== false) ? json_decode($stored_json, true) : null;
+
+        if (is_array($stored_array)) {
+          foreach ($stored_array as $stored_format) {
+            if (!is_array($stored_format)
+                || !isset($stored_format['id'], $stored_format['text'], $stored_format['labelX'], $stored_format['labelY'])
+                || !is_scalar($stored_format['id'])
+                || !is_scalar($stored_format['text'])
+                || !is_scalar($stored_format['labelX'])
+                || !is_scalar($stored_format['labelY'])
+                || !self::isPositiveIntegerValue($stored_format['id'])
+                || !self::isPositiveIntegerValue($stored_format['labelX'])
+                || !self::isPositiveIntegerValue($stored_format['labelY'])
+                )
+            {
+              continue;
             }
+
+            $format_id = (int)$stored_format['id'];
+            $formats_array[$format_id] = array(
+              'id' => $format_id,
+              'text' => (string)$stored_format['text'],
+              'labelX' => (int)$stored_format['labelX'],
+              'labelY' => (int)$stored_format['labelY'],
+            );
           }
-          $result['formats'] = $selected_formats_array;
-        } else {
-          $result['formats'] = isset($formats_array[$id_array[0]]) ? $formats_array[$id_array[0]] : array();
+
+          ksort($formats_array);
         }
       }
 
-      return $result;
+      return self::selectPageFormats($formats_array, $id, $single);
+    }
+
+
+    private static function selectPageFormats($formats_array, $id, $single) {
+      $id = (string)$id;
+
+      if ($id == '') {
+        return $formats_array;
+      }
+
+      $id_array = explode(',', $id);
+
+      if ($single !== false) {
+        return isset($formats_array[$id_array[0]]) ? $formats_array[$id_array[0]] : array();
+      }
+
+      $selected_formats_array = array();
+      foreach ($id_array as $format_id) {
+        if (isset($formats_array[$format_id])) {
+          $selected_formats_array[$format_id] = $formats_array[$format_id];
+        }
+      }
+
+      return $selected_formats_array;
     }
 
 
@@ -1004,7 +1058,7 @@
       }
       $this->price = (float)$price['PROPR'];
 
-      $result = $this->getPageFormats((string)$this->format, true);
+      $result = $this->getPageFormats($this->format, true);
       if (!isset($result['formats']['labelX'])
           || !isset($result['formats']['labelY'])
           || $this->column > (int)$result['formats']['labelX']
@@ -1021,7 +1075,7 @@
     }
 
 
-    private function isPositiveIntegerValue($value) {
+    private static function isPositiveIntegerValue($value) {
       return (is_int($value) && $value > 0)
              || (is_string($value) && ctype_digit($value) && (int)$value > 0);
     }
