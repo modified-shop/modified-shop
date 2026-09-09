@@ -447,8 +447,8 @@
         $Shipment->customs = $this->buildExportDocument($cn23_total_weight);
         $Shipment->services->endorsement = $this->endorsement;
 
-        // DHL rejects a shipment weight below the transmitted CN23 total, so round the minimum up
-        $minimum_weight = ceil(round($cn23_total_weight, 3) * 100) / 100;
+        // DHL rejects a shipment weight below the transmitted CN23 total, so round whole grams up to the next 10 g
+        $minimum_weight = ceil(round($cn23_total_weight * 1000) / 10) / 100;
         if ($Details->weight['value'] < $minimum_weight) {
           $Details->weight['value'] = $minimum_weight;
         }
