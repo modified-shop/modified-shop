@@ -20,6 +20,10 @@ require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
 
 // include needed functions
 require_once(DIR_FS_INC.'get_customers_status_by_id.inc.php');
+require_once(DIR_FS_INC.'get_tracking_link.inc.php');
+
+// orders_update.php is an admin module, the admin paths are not set up here
+defined('DIR_FS_ADMIN') OR define('DIR_FS_ADMIN', DIR_FS_CATALOG.DIR_ADMIN);
 
 // parse callback
 $request = json_decode(file_get_contents("php://input"), true);
@@ -80,8 +84,11 @@ if (is_array($request) && count($request) > 0) {
       $comments = decode_htmlentities(constant(strtoupper($request['type']['value'])));
     }
     $order_updated = false;
+    $email_preview = false;
     $_POST['notify'] = ((MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'Shop') ? 'on' : 'off');
     $_POST['notify_comments'] = 'off';
+    // only the parcel this callback belongs to
+    $_POST['tracking_id'] = array($orders['tracking_id']);
     
     define('_VALID_XTC', true);
     include (DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/orders_update.php');
