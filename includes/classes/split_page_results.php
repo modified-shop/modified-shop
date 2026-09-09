@@ -186,12 +186,14 @@
 
     // a column without a table cannot be assigned to a join
     function has_unqualified_columns($sql, $table_offsets) {
+      // only words mysql reserves, everything else can be a column name;
+      // function names need no entry, they are recognised by the bracket
       $keywords = array(
         'select', 'from', 'join', 'left', 'right', 'inner', 'cross', 'outer', 'natural', 'straight_join',
         'on', 'using', 'as', 'and', 'or', 'not', 'xor', 'where', 'in', 'is', 'null', 'like', 'rlike',
-        'regexp', 'between', 'exists', 'distinct', 'case', 'when', 'then', 'else', 'end', 'asc', 'desc',
-        'interval', 'div', 'mod', 'true', 'false', 'unknown', 'binary', 'collate', 'all', 'any', 'some',
-        'count', 'ignore', 'force', 'use', 'index', 'key', 'partition', 'soundex', 'escape',
+        'regexp', 'between', 'exists', 'distinct', 'case', 'when', 'then', 'else', 'asc', 'desc',
+        'interval', 'div', 'mod', 'true', 'false', 'binary', 'collate', 'all',
+        'ignore', 'force', 'use', 'index', 'key', 'partition',
       );
 
       if (!preg_match_all('/`?\b[a-z_][a-z0-9_]*\b`?/i', $sql, $matches, PREG_OFFSET_CAPTURE)) {
