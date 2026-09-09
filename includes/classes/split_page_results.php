@@ -80,16 +80,21 @@
 
     // remove joins the count does not need
     function strip_unused_left_joins($sql, $count_string = '') {
-      // blank out sql literals, search terms must never look like a join
-      $masked = preg_replace_callback(
-        '/\'(?:\\\\.|\'\'|[^\'\\\\])*\'|"(?:\\\\.|""|[^"\\\\])*"/s',
-        function ($match) {
-          return str_repeat(' ', strlen($match[0]));
-        },
-        $sql
-      );
-
+      $masked = $this->mask_sql_noise($sql);
       if ($masked === null) {
+        return $sql;
+      }
+
+      // shapes this analysis cannot judge are left alone
+      if (preg_match('/\bNATURAL\b/i', $masked) || $this->has_top_level_comma($masked)) {
+        return $sql;
+      }
+
+      $names = $this->get_table_names($masked);
+      if ($this->has_unqualified_columns($masked, $names)
+          || $this->has_unqualified_columns($count_string, $names)
+          )
+      {
         return $sql;
       }
 
@@ -117,6 +122,91 @@
       }
 
       return $sql;
+    }
+
+    // blank out literals and comments, they must never look like query structure
+    function mask_sql_noise($sql) {
+      return preg_replace_callback(
+        '/\'(?:\\\\.|\'\'|[^\'\\\\])*\'|"(?:\\\\.|""|[^"\\\\])*"|\/\*.*?\*\/|(?:--[ \t]|#)[^\n]*/s',
+        function ($match) {
+          return str_repeat(' ', strlen($match[0]));
+        },
+        $sql
+      );
+    }
+
+    // a comma outside of brackets means an old style table list
+    function has_top_level_comma($sql) {
+      $depth = 0;
+      for ($i = 0, $n = strlen($sql); $i < $n; $i++) {
+        if ($sql[$i] === '(') {
+          $depth++;
+        } elseif ($sql[$i] === ')') {
+          $depth--;
+        } elseif ($sql[$i] === ',' && $depth === 0) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // the tables and aliases the query brings in, subqueries included
+    function get_table_names($sql) {
+      $names = array();
+      if (preg_match_all('/\b(?:FROM|JOIN)\s+`?([a-z0-9_]+)`?(?:\s+(?:AS\s+)?`?([a-z0-9_]+)`?)?/i', $sql, $matches, PREG_SET_ORDER)) {
+        foreach ($matches as $match) {
+          $names[] = strtolower($match[1]);
+          if (isset($match[2]) && $match[2] != '') {
+            $names[] = strtolower($match[2]);
+          }
+        }
+      }
+
+      return $names;
+    }
+
+    // a column without a table cannot be assigned to a join
+    function has_unqualified_columns($sql, $names) {
+      $keywords = array(
+        'select', 'from', 'join', 'left', 'right', 'inner', 'cross', 'outer', 'natural', 'straight_join',
+        'on', 'using', 'as', 'and', 'or', 'not', 'xor', 'where', 'in', 'is', 'null', 'like', 'rlike',
+        'regexp', 'between', 'exists', 'distinct', 'case', 'when', 'then', 'else', 'end', 'asc', 'desc',
+        'interval', 'div', 'mod', 'true', 'false', 'unknown', 'binary', 'collate', 'all', 'any', 'some',
+        'count', 'ignore', 'force', 'use', 'index', 'key', 'partition', 'soundex', 'escape',
+      );
+
+      if (!preg_match_all('/`?\b[a-z_][a-z0-9_]*\b`?/i', $sql, $matches, PREG_OFFSET_CAPTURE)) {
+        return false;
+      }
+
+      foreach ($matches[0] as $match) {
+        $token = $match[0];
+        $at = $match[1];
+
+        // the column part of a qualified reference
+        $back = $at - 1;
+        while ($back >= 0 && ($sql[$back] === ' ' || $sql[$back] === "\t" || $sql[$back] === "\n" || $sql[$back] === "\r")) {
+          $back--;
+        }
+        if ($back >= 0 && $sql[$back] === '.') {
+          continue;
+        }
+
+        // a table qualifier or a function name
+        if (preg_match('/^\s*[.(]/', substr($sql, $at + strlen($token)))) {
+          continue;
+        }
+
+        $name = strtolower(trim($token, '`'));
+        if (in_array($name, $keywords) || in_array($name, $names)) {
+          continue;
+        }
+
+        return true;
+      }
+
+      return false;
     }
 
     // the join clauses of the outer query, subqueries stay untouched
