@@ -20,6 +20,7 @@
   define('TEXT_IM_FORMAT', 'Paper');
   define('TEXT_IM_LABEL', 'Create label');
   define('TEXT_INTERNETMARKE_PORTO', 'Please update the price data and select the desired shipment formats in the module.');
+  define('TEXT_INTERNETMARKE_FORMATS', 'Please update the page formats and select the desired paper formats in the module.');
 
   define('TEXT_IM_LABEL_CREATED', 'Internetmarke Label was created');
   define('TEXT_IM_LABEL_DELETED', 'Internetmarke Label was deleted');

@@ -20,6 +20,7 @@
   define('TEXT_IM_FORMAT', 'Papier');
   define('TEXT_IM_LABEL', 'Label erstellen');
   define('TEXT_INTERNETMARKE_PORTO', 'Bitte aktualisieren Sie die Preisdaten und w&auml;hlen im Modul die gew&uuml;nschten Sendungsformate.');
+  define('TEXT_INTERNETMARKE_FORMATS', 'Bitte aktualisieren Sie die Seitenformate und w&auml;hlen im Modul die gew&uuml;nschten Papierformate.');
 
   define('TEXT_IM_LABEL_CREATED', 'Internetmarke Label wurde erstellt');
   define('TEXT_IM_LABEL_DELETED', 'Internetmarke Label wurde gel&ouml;scht');

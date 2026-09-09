@@ -14,8 +14,10 @@
   define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION', 'Label creation for Deutsche Post Internetmarke');
   define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION_UPLOAD', 'Price update');
   define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION_CARRIER', 'Install Deutsche Post as carrier.');
+  define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION_FORMATS', 'Update page formats');
   define('BUTTON_IM_INSTALL', 'Install carrier');
   define('BUTTON_IM_UPDATE', 'Update price data');
+  define('BUTTON_IM_FORMATS_UPDATE', 'Update page formats');
   
   define('MODULE_INTERNETMARKE_STATUS_TITLE','Status');
   define('MODULE_INTERNETMARKE_STATUS_DESC','Module status');
@@ -61,3 +63,7 @@
 
   define('MODULE_INTERNETMARKE_TEXT_UPDATE_SUCCESS', 'Price data successfully updated.');
   define('MODULE_INTERNETMARKE_TEXT_UPDATE_ERROR', 'The price data could not be updated.');
+
+  define('MODULE_INTERNETMARKE_TEXT_FORMATS_SUCCESS', 'Page formats successfully updated.');
+  define('MODULE_INTERNETMARKE_TEXT_FORMATS_ERROR', 'The page formats could not be updated. The page formats stored last remain unchanged.');
+  define('MODULE_INTERNETMARKE_TEXT_FORMATS_MISSING', 'No page formats are stored yet. Please update the page formats.');

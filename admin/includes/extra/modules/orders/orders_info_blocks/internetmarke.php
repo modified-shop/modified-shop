@@ -14,7 +14,6 @@
 
   if (defined('MODULE_INTERNETMARKE_STATUS') && MODULE_INTERNETMARKE_STATUS == 'true') {
     require_once(DIR_FS_EXTERNAL.'dhl/DHLInternetmarke.php');
-    $DHLInternetmarke = new DHLInternetmarke(array());
     ?>
     <div class="heading"><?php echo TABLE_HEADING_INTERNETMARKE; ?></div>
     <?php echo xtc_draw_form('internetmarke', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=custom&subaction=im_insert'); ?>
@@ -66,18 +65,15 @@
         ?>
         <tr>
           <?php
-            $result = $DHLInternetmarke->getPageFormats(MODULE_INTERNETMARKE_PAGEFORMATS);
+            // the stored formats keep this page independent of the Internetmarke API
+            $format_array = DHLInternetmarke::getStoredPageFormats(MODULE_INTERNETMARKE_PAGEFORMATS);
             $row_array = array();
             $column_array = array();
             $format_service_array = array();
 
-            if (isset($result['formats'])
-                && is_array($result['formats'])
-                && count($result['formats']) > 0
-                )
-            {
-              foreach ($result['formats'] as $format_id => $format) {
-                $result['formats'][$format_id]['text'] = encode_htmlspecialchars($format['text']);
+            if (count($format_array) > 0) {
+              foreach ($format_array as $format_id => $format) {
+                $format_array[$format_id]['text'] = encode_htmlspecialchars($format['text']);
                 $format_service_array[$format_id] = array(
                   'row' => array(),
                   'column' => array(),
@@ -93,7 +89,7 @@
                 }
               }
 
-              $id = key($result['formats']);
+              $id = key($format_array);
               $row_array = $format_service_array[$id]['row'];
               $column_array = $format_service_array[$id]['column'];
             }
@@ -110,16 +106,20 @@
                 );
               }
             }
-            if (count($price_array) > 0
-                && count($row_array) > 0
-                && count($column_array) > 0
-                )
-            {
+            $missing_array = array();
+            if (count($price_array) < 1) {
+              $missing_array[] = TEXT_INTERNETMARKE_PORTO;
+            }
+            if (count($row_array) < 1 || count($column_array) < 1) {
+              $missing_array[] = TEXT_INTERNETMARKE_FORMATS;
+            }
+
+            if (count($missing_array) < 1) {
             ?>
               <td class="smallText" align="center" style="padding:0;" colspan="3">
                 <table cellpadding="5">
                   <tr>
-                    <td class="smallText" style="border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_FORMAT.'</div>'.xtc_draw_pull_down_menu('format', $result['formats'], $id, 'id="im_format" style="width:270px;"'); ?></td>
+                    <td class="smallText" style="border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_FORMAT.'</div>'.xtc_draw_pull_down_menu('format', $format_array, $id, 'id="im_format" style="width:270px;"'); ?></td>
                     <td class="smallText" style="white-space:nowrap; border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_ROW.'</div>'.xtc_draw_pull_down_menu('row', $row_array, '', 'id="im_row"'); ?></td>
                     <td class="smallText" style="white-space:nowrap; border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_COLUMN.'</div>'.xtc_draw_pull_down_menu('column', $column_array, '', 'id="im_column"'); ?></td>
                     <td class="smallText" style="border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_PORTO.'</div>'.xtc_draw_pull_down_menu('product', $price_array, '', 'style="width:320px;"'); ?></td>
@@ -132,7 +132,7 @@
               </td>
             <?php
             } else {
-              echo '<td colspan="4" class="txta-c warning_message">'.TEXT_INTERNETMARKE_PORTO.'</td>';
+              echo '<td colspan="4" class="txta-c warning_message">'.implode('<br>', $missing_array).'</td>';
             }
             ?>
         </tr>

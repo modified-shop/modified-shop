@@ -29,7 +29,7 @@
     var $carrier_tracking_link = 'https://www.deutschepost.de/sendung/simpleQueryResult.html?form.sendungsnummer=$1&form.einlieferungsdatum_tag=$3&form.einlieferungsdatum_monat=$4&form.einlieferungsdatum_jahr=$5';
 
     function __construct() {
-      $this->version = '1.24';
+      $this->version = '1.25';
       $this->code = 'internetmarke';
       $this->title = MODULE_INTERNETMARKE_TEXT_TITLE;
       $this->description = MODULE_INTERNETMARKE_TEXT_DESCRIPTION;
@@ -54,6 +54,13 @@
             xtc_get_all_get_params(array('action', 'subaction', 'module')).'action=save&subaction=im_update&module='.$this->code,
             'post'
           ).xtc_button(BUTTON_IM_UPDATE).'</form><br><hr>';
+          $this->description .= '<br>'.MODULE_INTERNETMARKE_TEXT_DESCRIPTION_FORMATS;
+          $this->description .= '<br>'.xtc_draw_form(
+            'internetmarke_formats_update',
+            FILENAME_MODULE_EXPORT,
+            xtc_get_all_get_params(array('action', 'subaction', 'module')).'action=save&subaction=im_formats&module='.$this->code,
+            'post'
+          ).xtc_button(BUTTON_IM_FORMATS_UPDATE).'</form><br><hr>';
           if (MODULE_INTERNETMARKE_CARRIER_STATUS != 'true') {
             $this->description .= '<br>'.MODULE_INTERNETMARKE_TEXT_DESCRIPTION_CARRIER;
             $this->description .= '<br>'.xtc_draw_form(
@@ -203,6 +210,43 @@
             }
             break;
 
+          case 'im_formats':
+            require_once(DIR_FS_EXTERNAL.'dhl/DHLInternetmarke.php');
+            $DHLInternetmarke = new DHLInternetmarke(array());
+            $result = $DHLInternetmarke->getPageFormats();
+
+            $formats_saved = false;
+            if (isset($result['formats'])
+                && is_array($result['formats'])
+                && count($result['formats']) > 0
+                )
+            {
+              $formats_json = json_encode(array_values($result['formats']));
+              if (is_string($formats_json)) {
+                $formats_saved = $this->savePageFormats($formats_json);
+              }
+            }
+
+            // a failed request keeps the stored formats untouched
+            if ($formats_saved === true) {
+              $messageStack->add_session(MODULE_INTERNETMARKE_TEXT_FORMATS_SUCCESS, 'success');
+            } else {
+              if (isset($result['message']) && is_array($result['message'])) {
+                foreach ($result['message'] as $message_array) {
+                  if (!is_array($message_array)) {
+                    continue;
+                  }
+                  foreach ($message_array as $message) {
+                    if (is_scalar($message)) {
+                      $messageStack->add_session(encode_htmlspecialchars((string)$message), 'warning');
+                    }
+                  }
+                }
+              }
+              $messageStack->add_session(MODULE_INTERNETMARKE_TEXT_FORMATS_ERROR, 'error');
+            }
+            break;
+
           case 'im_install':
             if (MODULE_INTERNETMARKE_CARRIER_STATUS != 'true') {
               $carrier_id = $this->getCarrierId();
@@ -229,42 +273,17 @@
     function display() {
       global $messageStack;
 
+      require_once(DIR_FS_EXTERNAL.'dhl/DHLInternetmarke.php');
       $formats_string = '';
-      if (MODULE_INTERNETMARKE_PORTO_USER != ''
-          && MODULE_INTERNETMARKE_PORTO_PASS != ''
-          )
-      {
-        require_once(DIR_FS_EXTERNAL.'dhl/DHLInternetmarke.php');
-        $DHLInternetmarke = new DHLInternetmarke(array());
-        $formats_array = explode(',', MODULE_INTERNETMARKE_PAGEFORMATS);
-        $result = $DHLInternetmarke->getPageFormats();
+      $selected_array = explode(',', MODULE_INTERNETMARKE_PAGEFORMATS);
+      $stored_formats = DHLInternetmarke::getStoredPageFormats();
 
-        if (isset($result['formats'])
-            && is_array($result['formats'])
-            && count($result['formats']) > 0
-            )
-        {
-          foreach ($result['formats'] as $data) {
-            $formats_string .= xtc_draw_checkbox_field('pageformats[]', $data['id'], in_array($data['id'], $formats_array)).' '.encode_htmlspecialchars($data['text']).'<br>';
-          }
-        } elseif (isset($result['message'])
-                  && is_array($result['message'])
-                  && count($result['message']) > 0
-                  )
-        {
-          $formats_string .= '<div class="error_message">';
-          foreach ($result['message'] as $error_array) {
-            if (!is_array($error_array)) {
-              continue;
-            }
-            foreach ($error_array as $error) {
-              if (is_scalar($error)) {
-                $formats_string .= encode_htmlspecialchars((string)$error).'<br>';
-              }
-            }
-          }
-          $formats_string .= '</div>';
+      if (count($stored_formats) > 0) {
+        foreach ($stored_formats as $data) {
+          $formats_string .= xtc_draw_checkbox_field('pageformats[]', $data['id'], in_array($data['id'], $selected_array)).' '.encode_htmlspecialchars($data['text']).'<br>';
         }
+      } else {
+        $formats_string = '<div class="warning_message">'.MODULE_INTERNETMARKE_TEXT_FORMATS_MISSING.'</div>';
       }
 
       $price_string = '';
@@ -309,6 +328,7 @@
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_INTERNETMARKE_CARRIER_STATUS', 'false',  '6', '1', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_INTERNETMARKE_CARRIER', '',  '6', '1', 'xtc_cfg_select_carrier(', 'xtc_cfg_display_carrier', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_INTERNETMARKE_PAGEFORMATS', '',  '6', '1', now())");
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_INTERNETMARKE_PAGEFORMATS_DATA', '',  '6', '1', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_INTERNETMARKE_LOGLEVEL', 'NONE',  '6', '1', 'xtc_cfg_select_option(array(\'NONE\', \'INFO\', \'ERROR\'), ', now())");
 
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_INTERNETMARKE_COMPANY', '',  '6', '1', now())");
@@ -340,6 +360,13 @@
         xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_INTERNETMARKE_LOGLEVEL', 'NONE', '6', '1', 'xtc_cfg_select_option(array(\'NONE\', \'INFO\', \'ERROR\'), ', now())");
       }
 
+      $formats_query = xtc_db_query("SELECT configuration_key
+                                       FROM ".TABLE_CONFIGURATION."
+                                      WHERE configuration_key = 'MODULE_INTERNETMARKE_PAGEFORMATS_DATA'");
+      if (xtc_db_num_rows($formats_query) < 1) {
+        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_INTERNETMARKE_PAGEFORMATS_DATA', '', '6', '1', now())");
+      }
+
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                        SET set_function = 'xtc_cfg_password_field_module(',
                            use_function = 'xtc_cfg_display_password'
@@ -354,6 +381,20 @@
         $carrier_id = $this->getCarrierId();
       }
       $this->configureCarrier($carrier_id);
+    }
+
+    function savePageFormats($formats_json) {
+      $check_query = xtc_db_query("SELECT configuration_key
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key = 'MODULE_INTERNETMARKE_PAGEFORMATS_DATA'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        return xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added)
+                             VALUES ('MODULE_INTERNETMARKE_PAGEFORMATS_DATA', '".xtc_db_input($formats_json)."', '6', '1', now())") !== false;
+      }
+
+      return xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                              SET configuration_value = '".xtc_db_input($formats_json)."'
+                            WHERE configuration_key = 'MODULE_INTERNETMARKE_PAGEFORMATS_DATA'") !== false;
     }
 
     function installDatabase() {
