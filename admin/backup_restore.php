@@ -33,6 +33,9 @@
 
   // include functions
   require_once(DIR_FS_INC.'auto_include.inc.php');
+  require_once(DIR_FS_ADMIN.DIR_WS_INCLUDES.'filenames.php');
+  require_once(DIR_FS_INC.'set_php_self.inc.php');
+  $PHP_SELF = set_php_self();
   require_once(DIR_FS_INC.'html_encoding.php');
   require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'database_tables.php');
   require_once(DIR_FS_ADMIN.DIR_WS_FUNCTIONS.'general.php');
