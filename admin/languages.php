@@ -152,6 +152,10 @@
         // an order keeps its history, only the reference to the gone language is cleared
         xtc_db_query("UPDATE " . TABLE_ORDERS . " SET languages_id = '0' WHERE languages_id = '" . $lID . "'");
 
+        // cached queries still hold rows of the gone language
+        require_once(DIR_FS_CATALOG.'includes/modified_cache.php');
+        $modified_cache->clear();
+
         unset($_SESSION['language_charset']);
 
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page));

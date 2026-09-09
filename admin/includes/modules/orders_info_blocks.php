@@ -233,7 +233,7 @@
           for ($j = 0; $j < $attr_count; $j ++) {
             $model = $order->products[$i]['attributes'][$j]['attributes_model'];
             if ($model == '') {
-              $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
+              $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang, $order->products[$i]['attributes'][$j]['orders_products_options_id'], $order->products[$i]['attributes'][$j]['orders_products_options_values_id']);
             }
             echo (($model != '') ? $attr_model_delimiter . $model : '<br />');
           }

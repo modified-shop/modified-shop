@@ -13,7 +13,21 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
    
-	function xtc_get_attributes_model($products_id, $options_values_name, $options_name, $language_id = '') {
+	function xtc_get_attributes_model($products_id, $options_values_name, $options_name, $language_id = '', $options_id = 0, $options_values_id = 0) {
+	  // the stored ids survive a deleted language, the names only match the language they were written in
+	  if ($options_id > 0 && $options_values_id > 0) {
+	    $id_query = xtc_db_query("SELECT attributes_model
+	                                FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+	                               WHERE products_id = '".(int)$products_id."'
+	                                 AND options_id = '".(int)$options_id."'
+	                                 AND options_values_id = '".(int)$options_values_id."'");
+	    if (xtc_db_num_rows($id_query) > 0) {
+	      $id_attributes = xtc_db_fetch_array($id_query);
+
+	      return $id_attributes['attributes_model'];
+	    }
+	  }
+
 	  // a loose comparison no longer catches a 0 coming from an order without a language
 	  if (empty($language_id)) $language_id = $_SESSION['languages_id'];
 
