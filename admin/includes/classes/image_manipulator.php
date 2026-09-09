@@ -495,6 +495,9 @@
     
     function sharpen() {
       $sharpen = false;
+      $sharpen_arr = array();
+      $divisor = 1;
+      $offset = 0;
       
       /*
        * example - put a file named 10_image_sharpen.php in /admin/includes/extra/modules/image_sharpen with following code to sharpen images smaller than 400px
@@ -510,7 +513,7 @@
       // calculate the sharpen divisor
       $divisor = array_sum(array_map('array_sum', $sharpen_arr));
       
-      $offest = 0;
+      $offset = 0;
       
       if ($this->q < 400) $sharpen = true;
       ?>
@@ -522,8 +525,12 @@
      
       if ($sharpen === true && is_array($sharpen_arr) && count($sharpen_arr) == 3) {
       
+        // a zero divisor would make imageconvolution() fail since PHP 8.4
+        if (!is_numeric($divisor) || $divisor == 0) $divisor = 1;
+        if (!is_numeric($offset)) $offset = 0;
+      
         // sharpen the image
-        imageconvolution($this->t, $sharpen_arr, $divisor, $offset);
+        imageconvolution($this->t, $sharpen_arr, (float)$divisor, (float)$offset);
       }
     }
 
