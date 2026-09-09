@@ -50,7 +50,7 @@
         if (defined('RUN_MODE_ADMIN')) {
           $order_link = xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL');
         } else {
-          $order_link = xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL');
+          $order_link = xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL', false);
         }
         $smarty->assign('ORDER_LINK', $order_link);
       }

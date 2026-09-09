@@ -76,12 +76,10 @@ if (is_array($request) && count($request) > 0) {
     $oID = $order->info['orders_id'];
     $status = $order->info['orders_status_id'];
     $comments = '';
-    if (isset($request['type'])
-        && isset($request['type']['value'])
-        && defined(strtoupper($request['type']['value']))
-        )
-    {
-      $comments = decode_htmlentities(constant(strtoupper($request['type']['value'])));
+    // shipcloud sends the event type as a plain string
+    $type = ((isset($request['type']) && is_string($request['type'])) ? strtoupper($request['type']) : '');
+    if (strpos($type, 'SHIPMENT.') === 0 && defined($type)) {
+      $comments = decode_htmlentities(constant($type));
     }
     $order_updated = false;
     $email_preview = false;

@@ -61,5 +61,7 @@ define('SHIPMENT.TRACKING.DELAYED', 'Delivery will be delayed');
 define('SHIPMENT.TRACKING.EXCEPTION', 'There is a problem with the shipment');
 define('SHIPMENT.TRACKING.NOT_DELIVERED', 'Not delivered');
 define('SHIPMENT.TRACKING.NOTIFICATION', 'Carrier internal notification: Tracking events within the shipment will carry more elaborate information.');
+define('SHIPMENT.TRACKING.DESTROYED', 'Destroyed by customs or other higher authorities');
 define('SHIPMENT.TRACKING.UNKNOWN', 'Status unknown');
+define('SHIPMENT.STATUS.DELETED', 'A label has been deleted');
 ?>
