@@ -80,6 +80,11 @@
 
     // remove joins the count does not need
     function strip_unused_left_joins($sql, $count_string = '') {
+      // an executable comment carries sql the masking would hide
+      if (preg_match('~/\*[!M]~', $sql)) {
+        return $sql;
+      }
+
       $masked = $this->mask_sql_noise($sql);
       if ($masked === null) {
         return $sql;
@@ -90,9 +95,9 @@
         return $sql;
       }
 
-      $names = $this->get_table_names($masked);
-      if ($this->has_unqualified_columns($masked, $names)
-          || $this->has_unqualified_columns($count_string, $names)
+      $table_offsets = $this->get_table_name_offsets($masked);
+      if ($this->has_unqualified_columns($masked, $table_offsets)
+          || $this->has_unqualified_columns($count_string, array())
           )
       {
         return $sql;
@@ -151,23 +156,23 @@
       return false;
     }
 
-    // the tables and aliases the query brings in, subqueries included
-    function get_table_names($sql) {
-      $names = array();
-      if (preg_match_all('/\b(?:FROM|JOIN)\s+`?([a-z0-9_]+)`?(?:\s+(?:AS\s+)?`?([a-z0-9_]+)`?)?/i', $sql, $matches, PREG_SET_ORDER)) {
+    // where the query introduces a table or an alias, subqueries included
+    function get_table_name_offsets($sql) {
+      $offsets = array();
+      if (preg_match_all('/\b(?:FROM|JOIN)\s+`?([a-z0-9_]+)`?(?:\s+(?:AS\s+)?`?([a-z0-9_]+)`?)?/i', $sql, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
         foreach ($matches as $match) {
-          $names[] = strtolower($match[1]);
-          if (isset($match[2]) && $match[2] != '') {
-            $names[] = strtolower($match[2]);
+          $offsets[$match[1][1]] = true;
+          if (isset($match[2]) && $match[2][1] >= 0) {
+            $offsets[$match[2][1]] = true;
           }
         }
       }
 
-      return $names;
+      return $offsets;
     }
 
     // a column without a table cannot be assigned to a join
-    function has_unqualified_columns($sql, $names) {
+    function has_unqualified_columns($sql, $table_offsets) {
       $keywords = array(
         'select', 'from', 'join', 'left', 'right', 'inner', 'cross', 'outer', 'natural', 'straight_join',
         'on', 'using', 'as', 'and', 'or', 'not', 'xor', 'where', 'in', 'is', 'null', 'like', 'rlike',
@@ -198,8 +203,12 @@
           continue;
         }
 
-        $name = strtolower(trim($token, '`'));
-        if (in_array($name, $keywords) || in_array($name, $names)) {
+        // a table or an alias counts only where the query introduces it
+        if (isset($table_offsets[(($token[0] === '`') ? $at + 1 : $at)])) {
+          continue;
+        }
+
+        if (in_array(strtolower(trim($token, '`')), $keywords)) {
           continue;
         }
 
