@@ -19,7 +19,7 @@
   $search_ord = '';
   $search_oid = '';
   $search_cat = '';
-  $search_id = '';
+  $search_pid = '';
   if (strpos($page_filename, 'customers.php') !== false) {
     $search_cus = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
   }
@@ -29,7 +29,7 @@
   }
   if (strpos($page_filename, 'categories.php') !== false){
     $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
-    $search_id = htmlentities(isset($_GET['search_id']) ? $_GET['search_id'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
+    $search_pid = htmlentities(isset($_GET['search_id']) ? $_GET['search_id'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
   }
   $placeholder_order = ASB_QUICK_SEARCH_ORDER_ID;
   if (defined('MODULE_INVOICE_NUMBER_STATUS') 
@@ -68,7 +68,7 @@
     </div>
     <div class="col25">
       <?php echo xtc_draw_form('search_categorie_id', FILENAME_CATEGORIES, '', 'get'); ?>
-        <input name="search_id" type="text" value="<?php echo $search_id;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_ARTICLE_ID; ?>" />
+        <input name="search_id" type="text" value="<?php echo $search_pid;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_ARTICLE_ID; ?>" />
       </form>
     </div>
   </div>
