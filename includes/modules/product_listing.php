@@ -83,7 +83,7 @@ if ($listing_split->number_of_rows > 0) {
   }
   
   if (isset($manufacturers_id) && basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
-    $manufacturers_array = xtc_get_manufacturers();
+    $manufacturers_array = xtc_get_manufacturers('', $manufacturers_id);
     if (isset($manufacturers_array[$manufacturers_id])) {
       $manufacturer = $manufacturers_array[$manufacturers_id];
       $manufacturer_image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
@@ -233,7 +233,7 @@ if ($listing_split->number_of_rows > 0) {
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   }
 } elseif (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
-  $manufacturers_array = xtc_get_manufacturers();
+  $manufacturers_array = xtc_get_manufacturers('', (int)$_GET['manufacturers_id']);
   if (isset($manufacturers_array[(int)$_GET['manufacturers_id']])
       && $manufacturers_array[(int)$_GET['manufacturers_id']]['manufacturers_name'] != ''
       && ($manufacturers_array[(int)$_GET['manufacturers_id']]['manufacturers_description'] != ''

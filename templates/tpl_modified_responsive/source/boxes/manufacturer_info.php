@@ -23,7 +23,7 @@ include(DIR_FS_BOXES_INC . 'smarty_default.php');
 $cache_id = md5('lID:'.$_SESSION['language'].'|mID:'.((isset($product->data['manufacturers_id']) && $product->data['manufacturers_id'] != '') ? $product->data['manufacturers_id'] : '0'));
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html', $cache_id) || !$cache) {
-  $manufacturers_array = xtc_get_manufacturers();
+  $manufacturers_array = xtc_get_manufacturers('', (int)$product->data['manufacturers_id']);
   if (isset($manufacturers_array[$product->data['manufacturers_id']])) {
     $manufacturer = $manufacturers_array[$product->data['manufacturers_id']];
     $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);

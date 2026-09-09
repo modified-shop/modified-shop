@@ -58,7 +58,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     xtc_update_products_viewed_count($product->data['products_id'], $_SESSION['languages_id']);
   }
 
-  $manufacturers_array = xtc_get_manufacturers();
+  $manufacturers_array = xtc_get_manufacturers('', (int)$product->data['manufacturers_id']);
   if (isset($manufacturers_array[$product->data['manufacturers_id']])) {
     $manufacturer = $manufacturers_array[$product->data['manufacturers_id']];
     $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);

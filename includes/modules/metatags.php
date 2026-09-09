@@ -301,7 +301,7 @@
       {
         $manu_id = (int)((isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0) ? $_GET['manufacturers_id'] : $_GET['filter_id']);
       
-        $manufacturers_array = xtc_get_manufacturers();
+        $manufacturers_array = xtc_get_manufacturers('', $manu_id);
         if (isset($manufacturers_array[$manu_id])) {
           $manufacturer = $manufacturers_array[$manu_id];
         
@@ -381,7 +381,7 @@
       );
 
       if (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0) {
-        $manufacturers_array = xtc_get_manufacturers();
+        $manufacturers_array = xtc_get_manufacturers('', (int)$_GET['manufacturers_id']);
         if (isset($manufacturers_array[(int)$_GET['manufacturers_id']])) {
           $manufacturers = $manufacturers_array[(int)$_GET['manufacturers_id']];
         
