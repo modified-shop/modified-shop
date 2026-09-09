@@ -69,7 +69,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   include ('includes/application_bottom.php');
 } else {
   
-  $manufacturers_array = xtc_get_manufacturers('', $product->data['manufacturers_id']);
+  $manufacturers_array = xtc_get_manufacturers('', (int)$product->data['manufacturers_id']);
   if (isset($manufacturers_array[$product->data['manufacturers_id']])) {
     $manufacturer = $manufacturers_array[$product->data['manufacturers_id']];
     $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
