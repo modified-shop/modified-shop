@@ -35,7 +35,7 @@
       return $attributes['attributes_model'];
     }
 
-    // only once the names find nothing, an attribute id can be reused after a delete
+    // an id is reused after a delete, so a caller only passes one where the order language is gone
     if ($options_id > 0 && $options_values_id > 0) {
       $id_query = xtc_db_query("SELECT attributes_model
                                   FROM ".TABLE_PRODUCTS_ATTRIBUTES."

@@ -298,7 +298,8 @@
       $order_lang_id = (isset($order_lang_array['languages_id'])) ? (int)$order_lang_array['languages_id'] : 0;
 
       // a deleted language leaves a 0 behind, the current language then keeps the order readable
-      if ($order_lang_id < 1) $order_lang_id = (int)$_SESSION['languages_id'];
+      $order_lang_gone = ($order_lang_id < 1);
+      if ($order_lang_gone) $order_lang_id = (int)$_SESSION['languages_id'];
 
       $order_query = "SELECT op.*,
                              pd.products_description,
@@ -326,7 +327,10 @@
         while ($attributes_data_values = xtc_db_fetch_array($attributes_query)) {
           $attrib_model = $attributes_data_values['attributes_model'];
           if ($attrib_model == '') {
-            $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id,$attributes_data_values['orders_products_options_id'],$attributes_data_values['orders_products_options_values_id']);
+            // an id can be reused, so it may only stand in where the gone language makes the names unmatchable
+            $attrib_options_id = ($order_lang_gone) ? $attributes_data_values['orders_products_options_id'] : 0;
+            $attrib_values_id = ($order_lang_gone) ? $attributes_data_values['orders_products_options_values_id'] : 0;
+            $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id,$attrib_options_id,$attrib_values_id);
           }
           $attributes_array[$subindex] = array(
             'option' => $attributes_data_values['products_options'],
