@@ -11,9 +11,14 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  function mod_count_products_in_category($categories_id, $product_counts = array()) {
+  function mod_count_products_in_category($categories_id, $product_counts = null) {
     if (!defined('CATEGORIES_HIDE_EMPTY') || CATEGORIES_HIDE_EMPTY === false) {
       return 1;
+    }
+    
+    // callers without prefetched counts still need a working count
+    if (!is_array($product_counts)) {
+      return xtc_count_products_in_category($categories_id);
     }
     
     return isset($product_counts[$categories_id]) ? $product_counts[$categories_id] : 0;
