@@ -52,12 +52,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if ($_POST['cmd'] == 'save_config') {
 			$new_config = $_POST['config'];
 			$old_config = $payone->getConfig();
-			$config = $payone->mergeConfigs($old_config, $new_config);
-			if (empty($new_config['credit_risk']['checkforgenre'])) {
-				$config['credit_risk']['checkforgenre'] = array();
-			} else {
-				$config['credit_risk']['checkforgenre'] = $new_config['credit_risk']['checkforgenre'];
+			$payment_types = $payone->getPaymentTypes();
+
+			foreach ($payone->getPaymentGenreIdentifiers() as $identifier) {
+				if (!isset($old_config[$identifier]) || !isset($new_config[$identifier])) {
+					continue;
+				}
+
+				$new_config[$identifier]['countries'] = ((isset($new_config[$identifier]['countries'])) ? $new_config[$identifier]['countries'] : array());
+				foreach (array('allow_red', 'allow_yellow', 'allow_green') as $checkbox) {
+					if (!isset($new_config[$identifier][$checkbox])) {
+						$new_config[$identifier][$checkbox] = 'false';
+					}
+				}
+
+				$genre = $old_config[$identifier]['genre'];
+				if (isset($payment_types[$genre])) {
+					foreach ($payment_types[$genre] as $type) {
+						if (!isset($new_config[$identifier]['types'][$type]['active'])) {
+							$new_config[$identifier]['types'][$type]['active'] = 'false';
+						}
+					}
+				}
+
+				if ($genre === 'accountbased') {
+					$new_config[$identifier]['genre_specific']['sepa_account_countries'] = ((isset($new_config[$identifier]['genre_specific']['sepa_account_countries'])) ? $new_config[$identifier]['genre_specific']['sepa_account_countries'] : array());
+				}
+				if ($genre === 'installment') {
+					$new_config[$identifier]['genre_specific']['klarna']['countries'] = ((isset($new_config[$identifier]['genre_specific']['klarna']['countries'])) ? $new_config[$identifier]['genre_specific']['klarna']['countries'] : array());
+				}
 			}
+
+			if (!isset($new_config['credit_risk']['abtest']['active'])) {
+				$new_config['credit_risk']['abtest']['active'] = 'false';
+			}
+			if (empty($new_config['credit_risk']['checkforgenre'])) {
+				$new_config['credit_risk']['checkforgenre'] = array();
+			}
+
+			$config = $payone->mergeConfigs($old_config, $new_config);
 
       foreach ($config['orders_status_redirect']['timeout'] as $key => $value) {
         if ($value != '') {
@@ -621,7 +654,7 @@ require (DIR_WS_INCLUDES.'head.php');
 										<?php foreach($payone->getStatusNames() as $p1_status) { ?>
                     <div class="dlrow cf">
 											<dt>
-												<label for="orders_status_<?php echo $p1_status ?>"><?php echo constant('ORDERS_STATUS_'.strtoupper($p1_status)); ?></label>
+												<label for="orders_status_<?php echo $p1_status ?>"><?php echo (($p1_status === 'failed') ? ORDERS_STATUS_DENIED : constant('ORDERS_STATUS_'.strtoupper($p1_status))); ?></label>
 											</dt>
 											<dd>
 												<select class="SlectBox" name="config[orders_status][<?php echo $p1_status ?>]">
@@ -952,10 +985,10 @@ require (DIR_WS_INCLUDES.'head.php');
 											<label for="cr_notice"><?php echo CR_NOTICE; ?></label>
 										</dt>
 										<dd>
-											<input type="radio" name="config[credit_risk][notice][active]" value="true" id="cr_notice_active" <?php echo $config[credit_risk][notice][active] == 'true' ? 'checked="checked"' : '' ?>>
+											<input type="radio" name="config[credit_risk][notice][active]" value="true" id="cr_notice_active" <?php echo $config['credit_risk']['notice']['active'] == 'true' ? 'checked="checked"' : '' ?>>
 											<label for="cr_notice_active"><?php echo TEXT_YES; ?></label><br>
 											
-											<input type="radio" name="config[credit_risk][notice][active]" value="false" id="cr_notice_inactive" <?php echo $config[credit_risk][notice][active] == 'false' ? 'checked="checked"' : '' ?>>
+											<input type="radio" name="config[credit_risk][notice][active]" value="false" id="cr_notice_inactive" <?php echo $config['credit_risk']['notice']['active'] == 'false' ? 'checked="checked"' : '' ?>>
 											<label for="cr_notice_inactive"><?php echo TEXT_NO; ?></label><br>
 										</dd>
                     </div>

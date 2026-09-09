@@ -187,6 +187,38 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
             $data['submit']['ShippingTime'] = getDBConfigValue($this->marketplace.'.deliverytime', $this->_magnasession['mpID'], '');
         }
 
+        // idealo item condition / specific condition (always submitted as a pair).
+        // Prefer the per-item prepared value, then the configuration default, then the hard default.
+        $data['submit']['conditionType'] = !empty($aPropertiesRow['ItemConditionType'])
+            ? $aPropertiesRow['ItemConditionType']
+            : getDBConfigValue($this->marketplace.'.itemconditiontype', $this->_magnasession['mpID'], 'NEW');
+        $data['submit']['condition'] = !empty($aPropertiesRow['ItemCondition'])
+            ? $aPropertiesRow['ItemCondition']
+            : getDBConfigValue($this->marketplace.'.itemcondition', $this->_magnasession['mpID'], 'EXCELLENT');
+
+        // idealo standard-feed fields, submitted on top level with the exact (case-sensitive) API names.
+        // All are per-item and only submitted when set: freeReturnDays / eec_spectrum are pre-filled from
+        // the configuration in the preparation form, so an empty value here means the configuration was
+        // empty or the user cleared it -> don't submit.
+        if (!empty($aPropertiesRow['FreeReturnDays'])) {
+            $data['submit']['freeReturnDays'] = $aPropertiesRow['FreeReturnDays'];
+        }
+        if (!empty($aPropertiesRow['EecSpectrum'])) {
+            $data['submit']['eec_spectrum'] = $aPropertiesRow['EecSpectrum'];
+        }
+        if (!empty($aPropertiesRow['EecEfficiencyClass'])) {
+            $data['submit']['eec_efficiencyClass'] = $aPropertiesRow['EecEfficiencyClass'];
+        }
+        if (!empty($aPropertiesRow['EecLabelUrl'])) {
+            $data['submit']['eec_labelUrl'] = $aPropertiesRow['EecLabelUrl'];
+        }
+        if (!empty($aPropertiesRow['EecDataSheetUrl'])) {
+            $data['submit']['eec_dataSheetUrl'] = $aPropertiesRow['EecDataSheetUrl'];
+        }
+        if (!empty($aPropertiesRow['EecVersion'])) {
+            $data['submit']['eec_version'] = $aPropertiesRow['EecVersion'];
+        }
+
 		$data['submit']['Quantity'] = $product['Quantity'];
 		$catname = $this->getcategoriesname($product['ProductId']);
 		if (!empty($catname)) {

@@ -271,10 +271,24 @@ class IdealoPrepareView extends MagnaCompatibleBase {
             'DisposalFee' => null,
             'DeliveryTime' => null,
             'DeliveryTimeSource' => null,
+            'ItemConditionType' => null,
+            'ItemCondition' => null,
+            'FreeReturnDays' => null,
+            'EecSpectrum' => null,
+            'EecEfficiencyClass' => null,
+            'EecLabelUrl' => null,
+            'EecDataSheetUrl' => null,
+            'EecVersion' => null,
         );
 
         $defaults = array (
             'PictureUrl' => null,
+            'ItemConditionType' => getDBConfigValue($this->marketplace . '.itemconditiontype', $this->mpID, 'NEW'),
+            'ItemCondition' => getDBConfigValue($this->marketplace . '.itemcondition', $this->mpID, 'EXCELLENT'),
+            // No hard default: if the configuration value is empty, the preparation field stays empty
+            // (and an empty preparation field is not submitted, see IdealoCheckinSubmit).
+            'FreeReturnDays' => getDBConfigValue($this->marketplace . '.freereturndays', $this->mpID, ''),
+            'EecSpectrum' => getDBConfigValue($this->marketplace . '.eecspectrum', $this->mpID, ''),
             'Checkout' => getDBConfigValue($this->marketplace . '.directbuy.active', $this->mpID),
             'PaymentMethod' => getDBConfigValue($this->marketplace . '.payment.methods', $this->mpID),
             'ShippingMethod' => getDBConfigValue($this->marketplace . '.shipping.methods', $this->mpID),
@@ -302,11 +316,17 @@ class IdealoPrepareView extends MagnaCompatibleBase {
 	        }
         }
 
+        // Configuration-backed fields are pre-filled from the configuration; if not set on the
+        // prepared row (e.g. prepared with an older version, so the column is "" after migration)
+        // fall back to the configured default instead of an empty value.
+        $aConfigBackedFields = array('ItemConditionType', 'ItemCondition', 'FreeReturnDays', 'EecSpectrum');
         foreach ($preSelected as $field => $collection) {
             $collection = array_unique($collection);
             if (count($collection) == 1) {
                 $preSelected[$field] = array_shift($collection);
-                if (($preSelected[$field] === null) && isset($defaults[$field])) {
+                $bEmpty = ($preSelected[$field] === null)
+                    || (in_array($field, $aConfigBackedFields) && $preSelected[$field] === '');
+                if ($bEmpty && isset($defaults[$field])) {
                     $preSelected[$field] = $defaults[$field];
                 }
             } else {
@@ -389,20 +409,16 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                 <td class="input">
                     <?php
                     $paymentMethodsSelect = '<select id="PaymentMethod" name="PaymentMethod[]" multiple="multiple" size="12">';
-                    foreach ($paymentMethods as $label => $paymentMethodGroup) {
-                        $paymentMethodsSelect .= '<optgroup label="'.$label.'">';
-                        foreach ($paymentMethodGroup as $key => $paymentMethod) {
-                            $paymentMethodsSelect .= '<option value="'.$key.'"'.(
-                            (
-                                    (is_array($preSelected['PaymentMethod']) && in_array($key, $preSelected['PaymentMethod']))
-                                    ||
-                                    ($preSelected['PaymentMethod'] == $key)
-                            )
-                            ? ' selected="selected"'
-                            : ''
-                            ).'>'.$paymentMethod.'</option>'."\n";
-                        }
-                        $paymentMethodsSelect .= '</optgroup>';
+                    foreach ($paymentMethods as $key => $paymentMethod) {
+                        $paymentMethodsSelect .= '<option value="'.$key.'"'.(
+                        (
+                                (is_array($preSelected['PaymentMethod']) && in_array($key, $preSelected['PaymentMethod']))
+                                ||
+                                ($preSelected['PaymentMethod'] == $key)
+                        )
+                        ? ' selected="selected"'
+                        : ''
+                        ).'>'.$paymentMethod.'</option>'."\n";
                     }
 
                     echo $paymentMethodsSelect;
@@ -515,102 +531,102 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                 </td>
                 <td class="info"></td>
             </tr>
-            <tr class="spacer">
-                <td colspan="3">&nbsp;</td>
-            </tr>
-            <?php if (isset($isAuthedResult) && $isAuthedResult['STATUS'] === 'SUCCESS') { ?>
-            <tr class="headline">
-                <td colspan="3"><h4><?php echo ML_IDEALO_LABEL_DIRECT_CHECKOUT ?></h4></td>
-            </tr>
-            <tr class="<?php (($oddEven = !$oddEven) ? 'odd' : 'even') ?>">
-                <th>
-                    <div style="float: left;"><?php echo ML_IDEALO_LABEL_CHECKOUT_ACTIVE?></div>
-                    <div style="float: right; width: 16px; height: 16px; background: transparent url('<?php echo DIR_MAGNALISTER_WS?>images/information.png') no-repeat 0 0;
-                            cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_1" title="Infos">
-                        <span style="display: none"><?php echo ML_IDEALO_INFO_CHECKOUT_ACTIVE ?></span>
-                    </div>
-                </th>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_ITEM_CONDITION_TYPE ?></th>
                 <td class="input">
-                    <input type="checkbox" id="Checkout" name="Checkout" <?php echo $checkoutChecked ?>/>
-                    <label for="Checkout"><?php echo ML_IDEALO_LABEL_CHECKOUT_ACTIVE_2 ?></label>
-                </td>
-                <td class="info"></td>
-            </tr>
-            <tr class="<?php (($oddEven = !$oddEven) ? 'odd' : 'even') ?>">
-                <th>
-                    <div style="float: left; width:auto;"><?php echo ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE ?></div>
-                    <div style="float: right; width: 16px; height: 16px; background: transparent url('images/information.png') no-repeat 0 0;
-							cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_5" title="Infos">
-                        <span style="display: none"><?php echo ML_IDEALO_INFO_SHIPPING_METHOD  ?></span>
-                    </div>
-                </th>
-                <?php $data[0]['FulFillmentType'] = isset($data[0]['FulFillmentType']) && !empty($data[0]['FulFillmentType']) ? $data[0]['FulFillmentType'] : $preSelected['FulFillmentType']; ?>
-                <td class="input">
-                    <select id="FulFillmentType" name="FulFillmentType">
-                        <option value="Spedition" <?php echo $data[0]['FulFillmentType'] === 'Spedition' ? 'selected' : ''?>><?php echo ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_SPEDITION ?></option>
-                        <option value="Paketdienst" <?php echo $data[0]['FulFillmentType'] === 'Paketdienst' ? 'selected' : ''?>><?php echo ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_PACKETDIENST ?></option>
-                        <option value="Download" <?php echo $data[0]['FulFillmentType'] === 'Download' ? 'selected' : ''?>><?php echo ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_DOWNLOAD ?></option>
+                    <?php
+                    $aConditionTypes = array(
+                        'NEW'         => ML_IDEALO_CONDITIONTYPE_NEW,
+                        'AS_NEW'      => ML_IDEALO_CONDITIONTYPE_AS_NEW,
+                        'REFURBISHED' => ML_IDEALO_CONDITIONTYPE_REFURBISHED,
+                        'USED'        => ML_IDEALO_CONDITIONTYPE_USED,
+                    );
+                    $itemConditionType = !empty($preSelected['ItemConditionType']) ? $preSelected['ItemConditionType'] : 'NEW';
+                    $itemConditionTypeSelect = '<select id="ItemConditionType" name="ItemConditionType">';
+                    foreach ($aConditionTypes as $key => $label) {
+                        $itemConditionTypeSelect .= '<option value="'.$key.'"'.($itemConditionType == $key ? ' selected="selected"' : '').'>'.$label.'</option>'."\n";
+                    }
+                    echo $itemConditionTypeSelect;
+                    ?>
                     </select>
                 </td>
                 <td class="info"></td>
             </tr>
-            <tr class="<?php (($oddEven = !$oddEven) ? 'odd' : 'even') ?>">
-                <th>
-                    <div style="float: left;"><?php echo ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE ?></div>
-                    <div style="float: right; width: 16px; height: 16px; background: transparent url('<?php echo DIR_MAGNALISTER_WS?>images/information.png') no-repeat 0 0;
-                            cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_6" title="Infos">
-                        <span style="display: none"><?php echo ML_IDEALO_INFO_TWOMANHANDLINGFEE ?></span>
-                    </div>
-                </th>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_ITEM_CONDITION ?></th>
                 <td class="input">
-                    <div style="display:inline-block; position:relative;">
-                        <input type="text" name="TwoManHandlingFee" id="TwoManHandlingFee" data-fulfillment="Spedition"
-                               value="<?php echo isset($data['TwoManHandlingFee']) ? $data['TwoManHandlingFee'] : $preSelected['TwoManHandlingFee'] ?>"/>
-                        <div class="ml-disable-panel" style="position:absolute; left:0; right:0; top:0; bottom:0; display: none; background: white; opacity:.6;"></div>
-                        <label><?php echo DEFAULT_CURRENCY ?></label>
-                    </div>
+                    <?php
+                    $aConditions = array(
+                        'EXCELLENT'  => ML_IDEALO_CONDITION_EXCELLENT,
+                        'VERY_GOOD'  => ML_IDEALO_CONDITION_VERY_GOOD,
+                        'GOOD'       => ML_IDEALO_CONDITION_GOOD,
+                        'ACCEPTABLE' => ML_IDEALO_CONDITION_ACCEPTABLE,
+                    );
+                    $itemCondition = !empty($preSelected['ItemCondition']) ? $preSelected['ItemCondition'] : 'EXCELLENT';
+                    $itemConditionSelect = '<select id="ItemCondition" name="ItemCondition">';
+                    foreach ($aConditions as $key => $label) {
+                        $itemConditionSelect .= '<option value="'.$key.'"'.($itemCondition == $key ? ' selected="selected"' : '').'>'.$label.'</option>'."\n";
+                    }
+                    echo $itemConditionSelect;
+                    ?>
+                    </select>
                 </td>
-                <td class="info"><?php echo ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO; ?></td>
+                <td class="info"></td>
             </tr>
-            <tr class="<?php (($oddEven = !$oddEven) ? 'odd' : 'even') ?>">
-                <th>
-                    <div style="float: left;"><?php echo ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE ?></div>
-                    <div style="float: right; width: 16px; height: 16px; background: transparent url('<?php echo DIR_MAGNALISTER_WS?>images/information.png') no-repeat 0 0;
-                            cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_7" title="Infos">
-                        <span style="display: none"><?php echo ML_IDEALO_INFO_DISPOSALFEE ?></span>
-                    </div>
-                </th>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_FREE_RETURN_DAYS ?></th>
                 <td class="input">
-                    <div style="display:inline-block; position:relative;">
-                        <input type="text" name="DisposalFee" id="DisposalFee" data-fulfillment="Spedition"
-                               value="<?php echo isset($data['DisposalFee']) ? $data['DisposalFee'] : $preSelected['DisposalFee'] ?>"/>
-                        <div class="ml-disable-panel" style="position:absolute; left:0; right:0; top:0; bottom:0; display: none; background: white; opacity:.6;"></div>
-                        <label><?php echo DEFAULT_CURRENCY ?></label>
-                    </div>
+                    <?php $freeReturnDays = isset($preSelected['FreeReturnDays']) ? $preSelected['FreeReturnDays'] : ''; ?>
+                    <input type="text" name="FreeReturnDays" id="FreeReturnDays" value="<?php echo htmlspecialchars($freeReturnDays, ENT_QUOTES); ?>"/>
                 </td>
-                <td class="info"><?php echo ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO; ?></td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_SPECTRUM ?></th>
+                <td class="input">
+                    <?php $eecSpectrum = isset($preSelected['EecSpectrum']) ? $preSelected['EecSpectrum'] : ''; ?>
+                    <input type="text" name="EecSpectrum" id="EecSpectrum" value="<?php echo htmlspecialchars($eecSpectrum, ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_EFFICIENCY_CLASS ?></th>
+                <td class="input">
+                    <input type="text" name="EecEfficiencyClass" id="EecEfficiencyClass" value="<?php echo htmlspecialchars(isset($preSelected['EecEfficiencyClass']) ? $preSelected['EecEfficiencyClass'] : '', ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_LABEL_URL ?></th>
+                <td class="input">
+                    <input type="text" class="fullwidth" name="EecLabelUrl" id="EecLabelUrl" value="<?php echo htmlspecialchars(isset($preSelected['EecLabelUrl']) ? $preSelected['EecLabelUrl'] : '', ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_DATA_SHEET_URL ?></th>
+                <td class="input">
+                    <input type="text" class="fullwidth" name="EecDataSheetUrl" id="EecDataSheetUrl" value="<?php echo htmlspecialchars(isset($preSelected['EecDataSheetUrl']) ? $preSelected['EecDataSheetUrl'] : '', ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
+            </tr>
+            <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+                <th><?php echo ML_IDEALO_LABEL_EEC_VERSION ?></th>
+                <td class="input">
+                    <input type="text" name="EecVersion" id="EecVersion" value="<?php echo htmlspecialchars(isset($preSelected['EecVersion']) ? $preSelected['EecVersion'] : '', ENT_QUOTES); ?>"/>
+                </td>
+                <td class="info"></td>
             </tr>
             <tr class="spacer">
                 <td colspan="3">&nbsp;</td>
             </tr>
-        <?php } ?>
         </tbody>
         <div id="infodiag" class="dialog2" title="<?php echo ML_LABEL_INFORMATION ?>"></div>
         <script type="text/javascript">
             /*<![CDATA[*/
             $(document).ready(function() {
-                $('#desc_1').click(function () {
-                    var d = $('#desc_1 span').html();
-                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
-                });
-
                 $('#desc_2').click(function () {
                     var d = $('#desc_2 span').html();
-                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
-                });
-
-                $('#desc_3').click(function () {
-                    var d = $('#desc_3 span').html();
                     $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
                 });
 
@@ -623,29 +639,6 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                     var d = $('#desc_5 span').html();
                     $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
                 });
-
-                $('#desc_6').click(function () {
-                    var d = $('#desc_6 span').html();
-                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
-                });
-
-                $('#desc_7').click(function () {
-                    var d = $('#desc_7 span').html();
-                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
-                });
-                var activateFulFillmentSubElements = $('form').find('[data-fulfillment="Spedition"]');
-                var disableElement = function(element, disable) {
-                    element.each(function(index, item){
-                        item.value = disable ? '' : item.value === '' ? '' :  item.value;
-                    });
-                    element.next('.ml-disable-panel').css('display', disable ? "inherit" : "none");
-                };
-
-                $('#FulFillmentType').change(function () {
-                    disableElement(activateFulFillmentSubElements, $(this).val() !== 'Spedition');
-                });
-
-                $('#FulFillmentType').trigger('change');
             });
             /*]]>*/
         </script>

@@ -29,6 +29,9 @@
   define('MODULE_INTERNETMARKE_CARRIER_TITLE', 'Paketdienstleister');
   define('MODULE_INTERNETMARKE_CARRIER_DESC', 'Bitte geben Sie den Paketdienstleister an.');
 
+  define('MODULE_INTERNETMARKE_LOGLEVEL_TITLE', 'Log Level');
+  define('MODULE_INTERNETMARKE_LOGLEVEL_DESC', 'W&auml;hlen Sie das Log Level.');
+
   define('MODULE_INTERNETMARKE_COMPANY_TITLE', '<hr><br>Firma');
   define('MODULE_INTERNETMARKE_COMPANY_DESC', 'Bitte geben Sie die Firma an.');
 
@@ -58,4 +61,3 @@
 
   define('MODULE_INTERNETMARKE_TEXT_UPDATE_SUCCESS', 'Preisdaten erfolgreich aktualisiert.');
   define('MODULE_INTERNETMARKE_TEXT_UPDATE_ERROR', 'Die Preisdaten konnten nicht aktualisiert werden.');
-?>

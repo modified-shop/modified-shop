@@ -24,18 +24,27 @@ class paypalgooglepay extends PayPalPaymentV2 {
   function __construct() {
     global $order;
   
+    $this->paypal_code = 'googlepay';
     PayPalPaymentV2::__construct('paypalgooglepay');
     $this->tmpOrders = false;
   }
 
 
   function confirmation() {
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::confirmation();
+    }
+
     return array ('title' => $this->description);
   }
 
 
   function process_button() {
     global $smarty, $order;
+
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::process_button();
+    }
     
     $smarty->clear_assign('CHECKOUT_BUTTON');
     
@@ -91,7 +100,8 @@ class paypalgooglepay extends PayPalPaymentV2 {
     }
 
     $paypalscript = '
-    if ($("#apms_button4").length) {
+    window.paypalClientErrorToken = "'.$this->get_client_error_token().'";
+    if ($("#apms_button6").length) {
       if (google && paypal.Googlepay) {
         onGooglePayLoaded();
       } else {
@@ -127,7 +137,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
           buttonLocale: "'.$_SESSION['language_code'].'",
           onClick: onGooglePaymentButtonClicked
         });
-        document.getElementById("apms_button4").appendChild(button);
+        document.getElementById("apms_button6").appendChild(button);
         document.getElementsByClassName("apms_form_button_overlay")[0].style.display = "none";
       }
       
@@ -150,8 +160,19 @@ class paypalgooglepay extends PayPalPaymentV2 {
   }
 
 
-  function before_process() {	  
+  function before_process() {
+    if ($this->use_express_checkout_confirmation() === true) {
+      return PayPalPaymentBase::before_process();
+    }
+
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
+
+    if (!is_object($PayPalOrder)
+        || !isset($PayPalOrder->status)
+        )
+    {
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
 
     if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
       $this->redirectOrder($PayPalOrder->links, 'payer-action');
@@ -161,7 +182,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
       $_SESSION['paypal']['PayerID'] = $PayPalOrder->payer->payer_id;
     }
   
-    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)) {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }

@@ -61,6 +61,7 @@ class Shipping {
 	private $settings = array();
 	
 	// class constructor
+	// Do not use the "carriers" table here: those are Track & Trace parcel services without any shipping cost logic, while this needs the shipping modules installed under MODULE_SHIPPING_INSTALLED.
 	public function __construct($module = '') {
 		
 		if (SHOPSYSTEM == 'oscommerce') {

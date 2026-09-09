@@ -61,7 +61,14 @@ class HitmeisterMarketplace extends MagnaCompatMarketplace {
 				FROM '.TABLE_PRODUCTS.' WHERE products_ean <> \'\' AND products_ean IS NOT NULL AND products_ean <> \'0\'');
 		$totalEANCount = MagnaDB::gi()->fetchOne('SELECT COUNT(*)
 				FROM '.TABLE_PRODUCTS.' WHERE products_ean <> \'\' AND products_ean IS NOT NULL AND products_ean <> \'0\'');
-		if ($distinctEANCount != $totalEANCount) {
+		/* On a database error (e.g. MySQL 1104 MAX_JOIN_SIZE) fetchOne() returns false.
+		   A loose comparison against false would falsely report duplicate EANs, so skip
+		   the check in that case (fail open). */
+		if (($distinctEANCount === false) || ($totalEANCount === false)) {
+			$distinctEANCount = 0;
+			$totalEANCount = 0;
+		}
+		if ((int)$distinctEANCount !== (int)$totalEANCount) {
 			$this->resources['query']['mode'] = 'conf';
     		$this->resources['query']['messages'][] = '<p class="errorBox">'.ML_HITMEISTER_ERROR_PRODUCTS_WITHDOUBLE_EAN_EXIST.'</p>';
     		$dblEANQuery = MagnaDB::gi()->query('

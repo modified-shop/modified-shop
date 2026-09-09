@@ -221,13 +221,8 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		}
 
         // for modified 2.0 > if table "orders_tracking" exists
-        if (false == $mTrackingCode && MagnaDB::gi()->tableExists('orders_tracking')) {
-            $mTrackingCode = MagnaDB::gi()->fetchOne("
-                SELECT parcel_id
-                  FROM orders_tracking
-                 WHERE orders_id = '".MagnaDB::gi()->escape($orderId)."'
-                 LIMIT 1
-            ");
+        if (false == $mTrackingCode) {
+            $mTrackingCode = mlGetOrdersTrackingCode($orderId);
         }
 
 		return $mTrackingCode;
@@ -267,21 +262,14 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 
         // for modified 2.0+ > if table "orders_tracking" exists
         // if the merchant configures this table, we got carrier_id, but we need carrier_name
-        if (    (false == $mCarrier && MagnaDB::gi()->tableExists('orders_tracking'))
-             || (is_numeric($mCarrier) && ('orders_tracking' == $this->config['CarrierMatchingTable']))) {
-            $sCarrierId = MagnaDB::gi()->fetchOne("
-                SELECT carrier_id
-                  FROM orders_tracking
-                 WHERE orders_id = '".MagnaDB::gi()->escape($orderId)."'
-                 LIMIT 1
-            ");
-            if (!empty($sCarrierId)) {
-                $mCarrier = MagnaDB::gi()->fetchOne("
-                    SELECT carrier_name
-                      FROM carriers
-                     WHERE carrier_id = '".MagnaDB::gi()->escape($sCarrierId)."'
-                     LIMIT 1
-                ");
+        if (    false == $mCarrier
+             || (   is_numeric($mCarrier)
+                 && is_array($this->config['CarrierMatchingTable'])
+                 && isset($this->config['CarrierMatchingTable']['table'])
+                 && 'orders_tracking' == $this->config['CarrierMatchingTable']['table'])) {
+            $mCarrierName = mlGetOrdersTrackingCarrierName($orderId);
+            if (null !== $mCarrierName) {
+                $mCarrier = $mCarrierName;
             }
         }
 		// carrier should not be empty
@@ -352,13 +340,13 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 */
 	protected function decodeData() {
 		try {
-			$this->oOrder['data'] = @unserialize($this->oOrder['data']);
+			$this->oOrder['data'] = magnaSafeUnserialize($this->oOrder['data']);
 		} catch (Exception $ex) {}
 		if (!is_array($this->oOrder['data'])) {
 			$this->oOrder['data'] = array();
 		}
 		try {
-			$this->oOrder['internaldata'] = @unserialize($this->oOrder['internaldata']);
+			$this->oOrder['internaldata'] = magnaSafeUnserialize($this->oOrder['internaldata']);
 		} catch (Exception $ex) {}
 		if (!is_array($this->oOrder['internaldata'])) {
 			$this->oOrder['internaldata'] = array();

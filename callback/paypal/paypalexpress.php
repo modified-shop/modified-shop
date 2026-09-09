@@ -25,48 +25,57 @@ if (isset($_SESSION['paypal'])
   $paypal = new PayPalPaymentV2('paypalexpress');
   $PayPalOrder = $paypal->GetOrder($_SESSION['paypal']['OrderID']);
   
-  if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+  if (!is_object($PayPalOrder)
+      || !isset($PayPalOrder->status)
+      || !in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)
+      )
+  {
     unset($_SESSION['paypal']);
     xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL'));
   } else {
-    if (isset($PayPalOrder->purchase_units[0]->shipping)) {
-      $PayPalOrder->purchase_units[0]->shipping->address_array = $paypal->parse_address($PayPalOrder->purchase_units[0]->shipping);
+    if (!isset($PayPalOrder->purchase_units[0]->shipping)
+        || !is_object($PayPalOrder->purchase_units[0]->shipping)
+        )
+    {
+      $paypal->LoggingManager->log('WARNING', 'PayPal Express callback aborted', array(
+        'reason' => 'missing shipping address',
+        'order_id' => $_SESSION['paypal']['OrderID'],
+      ));
+      unset($_SESSION['paypal']);
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$paypal->code, 'NONSSL'));
     }
-  
-    if (isset($PayPalOrder->payer)) {
-      $PayPalOrder->payer->address_array = $paypal->parse_address($PayPalOrder->payer);
-    }
-  
+
+    $shipping_address = $paypal->parse_address($PayPalOrder->purchase_units[0]->shipping);
+    $billing_address = (isset($PayPalOrder->payer)) ? $paypal->parse_address($PayPalOrder->payer) : $shipping_address;
+
     $customers_data = array();
-    foreach ($PayPalOrder->purchase_units[0]->shipping->address_array as $key => $value) {
+    foreach ($shipping_address as $key => $value) {
       $customers_data['customers']['customers_'.$key] = $value;
       $customers_data['delivery']['delivery_'.$key] = $value;
       $customers_data['payment']['payment_'.$key] = $value;
       $customers_data['plain'][$key] = $value;
     }
+
+    // the PayPal payer doesn't carry a full postal address (only name/email/
+    // phone/birth_date), so street/city/country for customers+payment stay
+    // on the shipping address above - only the name is taken from the payer
+    if (isset($PayPalOrder->payer->name)) {
+      foreach (array('name', 'firstname', 'lastname') as $key) {
+        $customers_data['customers']['customers_'.$key] = $billing_address[$key];
+        $customers_data['payment']['payment_'.$key] = $billing_address[$key];
+        $customers_data['plain'][$key] = $billing_address[$key];
+      }
+    }
+
     $customers_data['info']['gender'] = '';
-    $customers_data['info']['dob'] = ((isset($PayPalOrder->payer->birth_date)) ? $PayPalOrder->payer->birth_date : '');    
+    $customers_data['info']['dob'] = ((isset($PayPalOrder->payer->birth_date)) ? $PayPalOrder->payer->birth_date : '');
     $customers_data['info']['email_address'] = $PayPalOrder->payer->email_address;
     if (isset($PayPalOrder->purchase_units[0]->shipping->email_address)) {
       $customers_data['info']['email_address'] = $PayPalOrder->purchase_units[0]->shipping->email_address;
     }
-    $customers_data['info']['telephone'] = ((isset($PayPalOrder->payer->phone->phone_number->national_number)) ? $PayPalOrder->payer->phone->phone_number->national_number : '');
+    $customers_data['info']['telephone'] = ((isset($PayPalOrder->payer->phone->phone_number)) ? $paypal->format_phone_number($PayPalOrder->payer->phone->phone_number) : '');
     if (isset($PayPalOrder->purchase_units[0]->shipping->phone_number)) {
-      $customers_data['info']['telephone'] = $PayPalOrder->purchase_units[0]->shipping->phone_number->national_number;
-    }
-    
-    if (isset($PayPalOrder->payer->name)) {
-      $customers_data['customers']['customers_name'] = $PayPalOrder->payer->address_array['name'];
-      $customers_data['customers']['customers_firstname'] = $PayPalOrder->payer->name->given_name;
-      $customers_data['customers']['customers_lastname'] = $PayPalOrder->payer->name->surname;
-  
-      $customers_data['payment']['payment_name'] = $PayPalOrder->payer->address_array['name'];
-      $customers_data['payment']['payment_firstname'] = $PayPalOrder->payer->name->given_name;
-      $customers_data['payment']['payment_lastname'] = $PayPalOrder->payer->name->surname;
-  
-      $customers_data['plain']['name'] = $PayPalOrder->payer->address_array['name'];
-      $customers_data['plain']['firstname'] = $PayPalOrder->payer->name->given_name;
-      $customers_data['plain']['lastname'] = $PayPalOrder->payer->name->surname;
+      $customers_data['info']['telephone'] = $paypal->format_phone_number($PayPalOrder->purchase_units[0]->shipping->phone_number);
     }
     $customers_data = $paypal->decode_utf8($customers_data);
     

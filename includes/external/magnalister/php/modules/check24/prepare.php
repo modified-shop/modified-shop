@@ -197,6 +197,25 @@ class Check24Prepare extends MagnaCompatibleBase {
             die(json_encode(Check24Helper::gi()->getCategoryIndependentAttributes($independentAttributes, $_POST['SelectValue'], $model, true)));
         }
 
+        // ajax / DBMatchingColumns in prepare item form ("Wähle Datenbank-Werte" -> Spalte)
+        // The prepare form's variation-matching JS sends where=Check24PrepareView, which is not in
+        // the processMatching() gate below, so the request would otherwise fall through to
+        // processSelection() and return an empty body (the DBMatchingColumns routing in
+        // processProductList() only runs when MAGNA_DEV_PRODUCTLIST).
+        if (    (isset($_GET['mode']) && $_GET['mode'] == 'prepare')
+             && (isset($_GET['view']) && ($_GET['view'] == 'apply' || $_GET['view'] == 'prepare'))
+             && (isset($_GET['kind']) && $_GET['kind'] == 'ajax')
+             && (isset($_GET['where']) && $_GET['where'] == 'Check24PrepareView')
+             && (isset($_POST['Action']) && $_POST['Action'] == 'DBMatchingColumns')
+             && (isset($_POST['Table']))) {
+            $columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+            $editedColumns = array();
+            foreach ($columns as $column) {
+                $editedColumns[$column] = $column;
+            }
+            die(json_encode($editedColumns, JSON_FORCE_OBJECT));
+        }
+
 
         $independentShopVariation = false;
         if (isset($_POST['VariationKind']) && $_POST['VariationKind'] === 'IndependentShopVariation') {

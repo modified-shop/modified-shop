@@ -149,10 +149,22 @@ class payone_cc extends PayonePayment {
       return false;
     }
 
+    function payoneDispatchCheckoutProcessing() {
+      if (typeof document.createEvent !== "function"
+          || typeof document.dispatchEvent !== "function") {
+        return;
+      }
+
+      var processingEvent = document.createEvent("Event");
+      processingEvent.initEvent("checkout:processing", false, false);
+      document.dispatchEvent(processingEvent);
+    }
+
     function checkCallback(response) { 
       if (response.status === "VALID") {
         document.getElementById("pseudocardpan").value = response.pseudocardpan; 
         document.getElementById("truncatedcardpan").value = response.truncatedcardpan;
+        payoneDispatchCheckoutProcessing();
         document.checkout_confirmation.submit();
       } else {
         if(typeof jQuery != \'undefined\') {
@@ -198,11 +210,16 @@ class payone_cc extends PayonePayment {
 	}	
   
   function before_process() {
-		if (isset($_POST['pseudocardpan'])) {
-			$_SESSION[$this->code]['pseudocardpan'] = $_POST['pseudocardpan'];
-		}
-		if (isset($_POST['truncatedcardpan'])) {
-			$_SESSION[$this->code]['truncatedcardpan'] = $_POST['truncatedcardpan'];
+		parent::before_process();
+
+		foreach(array('pseudocardpan', 'truncatedcardpan') as $field) {
+			if (isset($_POST[$field])) {
+				if (!is_scalar($_POST[$field])) {
+					$_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
+					xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
+				}
+				$_SESSION[$this->code][$field] = (string)$_POST[$field];
+			}
 		}
 		
 		if (isset($_GET['payone_cc']) && $_GET['payone_cc'] == 'true') {
@@ -228,7 +245,7 @@ class payone_cc extends PayonePayment {
       parent::_set_customers_shipping_params();
 
       $this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_CreditCard();
-      $this->payment_method->setSuccessurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id());
+	      $this->payment_method->setSuccessurl($this->getCheckoutSuccessUrl($insert_id));
       $this->payment_method->setBackurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id());
       $this->payment_method->setErrorurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id().'&payment_error='.$this->code);
       $this->payment_method->setPseudocardpan($_SESSION[$this->code]['pseudocardpan']);

@@ -52,6 +52,7 @@ define('TEXT_ORDERS_ADDRESS_EDIT_INFO', 'Please note that the data you provide h
 // Artikelbearbeitung
 
 define('TEXT_SMALL_NETTO', '(net)');
+define('TEXT_SMALL_BRUTTO', '(gross)');
 define('TEXT_PRODUCT_ID', 'pID:');
 define('TEXT_PRODUCTS_MODEL', 'Product #:');
 define('TEXT_QUANTITY', 'Qty:');
@@ -119,3 +120,4 @@ define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date available:');
 
 define('ERROR_STATUS_CHANGE', 'ATTENTION: After changing the customer group, shipping costs, surcharges and discounts may need to be adjusted manually.');
 define('TEXT_SUCCESS_ORDER_RECALCULATE', 'The order has been recalculated.');
+define('WARNING_ORDERS_DOWNLOAD_LEFTOVER', 'The position still carries downloads. Which download belongs to which attribute cannot be verified, so none was removed. If you deleted a download attribute, please check the downloads of this position by hand.');

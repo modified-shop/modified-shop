@@ -60,6 +60,7 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 					pr.ShippingTime,
 					pr.HandlingTime,
 					pr.ShippingGroup,
+					pr.WarehouseId,
 					pr.ConditionType,
 					pr.Comment,
 					pr.Location
@@ -96,7 +97,7 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 			}
 
 			foreach ($p as $sKey => &$sValue) {
-				if (in_array($sKey, array('ShippingTime', 'HandlingTime', 'ConditionType', 'Location', 'ShippingGroup')) && $sValue === null) {
+				if (in_array($sKey, array('ShippingTime', 'HandlingTime', 'ConditionType', 'Location', 'ShippingGroup', 'WarehouseId')) && $sValue === null) {
 					switch ($sKey) {
 						case 'ShippingTime':
 							$sValue = getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 0);
@@ -113,11 +114,16 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 						case 'ShippingGroup':
 							$sValue = getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0);
 							break;
+						case 'WarehouseId':
+							$sValue = getDBConfigValue($this->marketplace.'.warehouse', $this->mpID, 0);
+							break;
 						default:
 							breaK;
 					}
 				} else if ('ShippingGroup' == $sKey && $sValue == '0') {
 					$sValue = getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0);
+				} else if ('WarehouseId' == $sKey && $sValue == '0') {
+					$sValue = getDBConfigValue($this->marketplace.'.warehouse', $this->mpID, 0);
 				}
 			}
 
@@ -134,6 +140,7 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 				'products_shippingtime'	=> $p['products_shippingtime'],
 				'HandlingTime'	=> $p['HandlingTime'],
 				'ShippingGroup'	=> $p['ShippingGroup'],
+				'WarehouseId'	=> $p['WarehouseId'],
 				'Condition'		=> $p['ConditionType'],
 				'Comment'		=> $p['Comment'],
 				'Country'		=> $p['Location'],
@@ -189,12 +196,14 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 		$shippingTimes		= HitmeisterHelper::GetShippingTimes();
 		$handlingTimes		= HitmeisterHelper::GetHandlingTimes();
 		$shippingGroups		= HitmeisterHelper::GetShippingGroups();
+		$warehouses			= HitmeisterHelper::GetWarehouses();
 		$conditions			= HitmeisterHelper::GetConditionTypes();
 		$deliveryCountries	= HitmeisterHelper::GetDeliveryCountries();
 
 		$defaultShippingTime	= getDBConfigValue($this->marketplace . '.shippingtime', $this->mpID);
 		$defaultHandlingTime	= getDBConfigValue($this->marketplace . '.handlingtime', $this->mpID);
 		$defaultShippingGroup	= getDBConfigValue($this->marketplace . '.shippinggroup', $this->mpID, 0);
+		$defaultWarehouse		= getDBConfigValue($this->marketplace . '.warehouse', $this->mpID, 0);
 		$defaultCondition		= getDBConfigValue($this->marketplace . '.itemcondition', $this->mpID);
 		$defaultComment			= '';
 		$defaultDeliveryCountry = getDBConfigValue($this->marketplace . '.itemcountry', $this->mpID);
@@ -212,6 +221,7 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 				}
 			}
 			$defaultShippingGroup		= isset($singleProduct['ShippingGroup']) ? $singleProduct['ShippingGroup'] : getDBConfigValue($this->marketplace . '.shippinggroup', $this->mpID, 0);
+			$defaultWarehouse		= isset($singleProduct['WarehouseId']) ? $singleProduct['WarehouseId'] : $defaultWarehouse;
 			$defaultCondition		= isset($singleProduct['Condition']) ? $singleProduct['Condition'] : $defaultCondition;
 			$defaultComment			= isset($singleProduct['Comment']) ? $singleProduct['Comment'] : $defaultComment;
 			$defaultDeliveryCountry = isset($singleProduct['Country']) ? $singleProduct['Country'] : $defaultDeliveryCountry;
@@ -277,6 +287,22 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 					</tr>
 					<?php else: ?>
 						<input type="hidden" name="unit[shippinggroup]" id="shippinggroup" value="0">
+					<?php endif ?>
+					<?php if ($warehouses !== false): ?>
+					<tr class="odd">
+						<th><?php echo ML_HITMEISTER_WAREHOUSE ?></th>
+						<td class="input">
+						<select name="unit[warehouse]" id="warehouse">
+							<option <?php echo $defaultWarehouse == 0 ? 'selected' : '' ?> value="0"><?php echo ML_HITMEISTER_WAREHOUSE_DEFAULT ?></option>
+						<?php foreach ($warehouses as $whID => $whName) : ?>
+							<option <?php echo $whID == $defaultWarehouse ? 'selected' : '' ?> value="<?php echo $whID ?>"><?php echo fixHTMLUTF8Entities($whName, ENT_COMPAT, 'UTF-8') ?></option>
+						<?php endforeach ?>
+						</select>
+						</td>
+						<td class="info">&nbsp;</td>
+					</tr>
+					<?php else: ?>
+						<input type="hidden" name="unit[warehouse]" id="warehouse" value="0">
 					<?php endif ?>
 					<tr class="odd">
 						<th><?php echo ML_HITMEISTER_DELIVERY_COUNTRY ?></th>

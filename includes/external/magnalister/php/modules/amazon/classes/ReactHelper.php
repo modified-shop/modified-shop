@@ -324,7 +324,7 @@ class ReactHelper {
         if (empty($data) && !empty($row['data'])) {
             // OLD FORMAT: data column contains base64 + serialized full prepare data
             // We need to extract ShopVariation from it
-            $oldData = @unserialize(@base64_decode($row['data']));
+            $oldData = magnaSafeUnserialize(base64_decode($row['data']));
             if (is_array($oldData) && isset($oldData['ShopVariation'])) {
                 // ShopVariation is already JSON encoded
                 $data = $oldData['ShopVariation'];
@@ -525,7 +525,7 @@ class ReactHelper {
 
         $existingCategoryData = null;
         if (!empty($existingRow) && !empty($existingRow['category'])) {
-            $existingCategoryData = @unserialize(@base64_decode($existingRow['category']));
+            $existingCategoryData = magnaSafeUnserialize(base64_decode($existingRow['category']));
         }
 
         $c = array(
@@ -579,7 +579,7 @@ class ReactHelper {
 
             $dataArray = array();
             if (!empty($existingDataRow['data'])) {
-                $dataArray = @unserialize(@base64_decode($existingDataRow['data']));
+                $dataArray = magnaSafeUnserialize(base64_decode($existingDataRow['data']));
                 if (!is_array($dataArray)) {
                     $dataArray = array();
                 }
@@ -933,7 +933,7 @@ class ReactHelper {
         // Decode existing category data (base64 + serialized)
         $categoryData = array();
         if (!empty($existing['category'])) {
-            $categoryData = @unserialize(base64_decode($existing['category']));
+            $categoryData = magnaSafeUnserialize(base64_decode($existing['category']));
             if (!is_array($categoryData)) {
                 $categoryData = array();
             }
@@ -942,7 +942,7 @@ class ReactHelper {
         // Decode existing data column (base64 + serialized)
         $dataColumn = array();
         if (!empty($existing['data'])) {
-            $dataColumn = @unserialize(base64_decode($existing['data']));
+            $dataColumn = magnaSafeUnserialize(base64_decode($existing['data']));
             if (!is_array($dataColumn)) {
                 $dataColumn = array();
             }
@@ -992,10 +992,17 @@ class ReactHelper {
             return array('valid' => true, 'errors' => array());
         }
 
-        $firstValue = $attributeMatching[$firstKey[0]];
+        // OTRS ticket 603373 fix: detect V3 format by the presence of any string key
+        // rather than by the shape of the first value. The previous detection
+        // `is_array($firstValue) && isset($firstValue['Code'])` mis-classified
+        // delete payloads (where value === null) as V2, then crashed on the V2
+        // legacy path's `getMarketplaceAttributes()` call with no arguments.
+        // The React frontend always uses V3 format (string attribute keys);
+        // V2 format used integer indices. Scanning all keys (instead of only the
+        // first) handles mixed-key payloads safely.
+        $isV3Format = (bool) count(array_filter($firstKey, 'is_string'));
 
-        // V3 format: attribute keys => {Code, UseShopValues, Kind, ...}
-        if (is_array($firstValue) && isset($firstValue['Code'])) {
+        if ($isV3Format) {
             // V3 format validation (simplified - just check structure)
             foreach ($attributeMatching as $attrKey => $attrData) {
                 if ($attrData === null) {
@@ -1020,21 +1027,39 @@ class ReactHelper {
         // V2 format validation (legacy)
         // Validate each mapping
         foreach ($attributeMatching as $index => $mapping) {
+            if (!is_array($mapping)) {
+                $errors[] = "Rule #" . ((int)$index + 1) . ": Invalid entry";
+                continue;
+            }
+
             if (!isset($mapping['marketplaceAttribute']) || empty($mapping['marketplaceAttribute'])) {
-                $errors[] = "Rule #" . ($index + 1) . ": Marketplace attribute is required";
+                $errors[] = "Rule #" . ((int)$index + 1) . ": Marketplace attribute is required";
             }
 
             if (!isset($mapping['shopAttribute'])) {
-                $errors[] = "Rule #" . ($index + 1) . ": Shop attribute is required";
+                $errors[] = "Rule #" . ((int)$index + 1) . ": Shop attribute is required";
             }
 
-            // Check for required attributes
-            $marketplaceAttrs = $this->getMarketplaceAttributes();
+            // Check for required attributes — needs the current category to look up the schema.
+            // Fallback to POST for the category ID, matching what saveAttributeMatching() reads.
+            $categoryID = null;
+            if (isset($_POST['ml']['variationGroup'])) {
+                $categoryID = $_POST['ml']['variationGroup'];
+            } elseif (isset($_POST['mainCategory'])) {
+                $categoryID = $_POST['mainCategory'];
+            } elseif (isset($_POST['PrimaryCategory'])) {
+                $categoryID = $_POST['PrimaryCategory'];
+            }
+            if (empty($categoryID)) {
+                // Can't validate required-attrs without a category; skip rather than crash.
+                continue;
+            }
+            $marketplaceAttrs = $this->getMarketplaceAttributes($categoryID);
             foreach ($marketplaceAttrs as $attr) {
-                if ($attr['required'] === 'required') {
+                if (isset($attr['required']) && $attr['required'] === 'required') {
                     $found = false;
                     foreach ($attributeMatching as $attrMapping) {
-                        if (isset($attrMapping['marketplaceAttribute']) && $attrMapping['marketplaceAttribute'] === $attr['name']) {
+                        if (is_array($attrMapping) && isset($attrMapping['marketplaceAttribute']) && $attrMapping['marketplaceAttribute'] === $attr['name']) {
                             $found = true;
                             break;
                         }

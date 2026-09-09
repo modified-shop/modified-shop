@@ -48,12 +48,14 @@
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
 
         ## Paypal
+        $paypal_modules = false;
         if (isset($_SESSION['paypal'])
             && isset($_SESSION['paypal']['payment_modules'])
             && $_SESSION['paypal']['payment_modules'] != ''
            )
         {
           $modules = explode(';', $_SESSION['paypal']['payment_modules']);
+          $paypal_modules = true;
         } else {
           $modules = explode(';', MODULE_PAYMENT_INSTALLED);
           
@@ -182,7 +184,22 @@
             }
           }
         }
-        
+
+        // only the payment page may drop a PayPal restriction that lets no module through
+        if ($paypal_modules === true
+            && basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT
+            && xtc_count_payment_modules() == 0
+            )
+        {
+          unset($_SESSION['paypal']);
+          unset($_SESSION['payment']);
+          unset($_SESSION['payment_nonce']);
+          $this->selected_module = '';
+          $this->__construct();
+
+          return;
+        }
+
         // if there is only one payment method, select it as default because in
         // checkout_confirmation.php the $payment variable is being assigned the
         // $HTTP_POST_VARS['payment'] value which will be empty (no radio button selection possible)
@@ -328,6 +345,9 @@
     }
 
     function selection() {
+      // rotate the payment nonce whenever the payment selection is presented
+      $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
+
       $selection_array = array();
       if (is_array($this->modules)) {
         foreach ($this->modules as $value) {

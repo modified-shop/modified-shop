@@ -14,6 +14,7 @@
    ---------------------------------------------------------------------------------------*/
 
   defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
+  defined('CONTACT_MESSAGE_TEXT') or define('CONTACT_MESSAGE_TEXT', '*');
 
   //use contact_us.php language file
   require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
@@ -96,7 +97,6 @@
     }
 
     if ($messageStack->size('contact_us') > 0) {
-      $messageStack->add('contact_us', ERROR_MAIL);
       $smarty->assign('error_message', $messageStack->output('contact_us'));
     }
 
@@ -229,10 +229,10 @@
     $smarty->assign('INPUT_STREET', xtc_draw_input_field('street', ((isset($street)) ? $street : ''), 'autocomplete="street-address"'));
     $smarty->assign('INPUT_POSTCODE', xtc_draw_input_field('postcode', ((isset($postcode)) ? $postcode : ''), 'autocomplete="postal-code"'));
     $smarty->assign('INPUT_CITY', xtc_draw_input_field('city', ((isset($city)) ? $city : ''), 'autocomplete="address-level2"'));
-    $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($email)) ? $email : ''), 'autocomplete="email"'));
+    $smarty->assign('INPUT_EMAIL', xtc_draw_input_fieldNote(array('name' => 'email', 'text' => (xtc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">'.ENTRY_EMAIL_ADDRESS_TEXT.'</span>' : '')), ((isset($email)) ? $email : ''), 'autocomplete="email"'));
     $smarty->assign('INPUT_PHONE', xtc_draw_input_field('phone', ((isset($phone)) ? $phone : ''), 'autocomplete="tel"'));
     $smarty->assign('INPUT_FAX', xtc_draw_input_field('fax', ((isset($fax)) ? $fax : ''), 'autocomplete="fax"'));
-    $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('message_body', 'soft', 45, 15, ((isset($message_body)) ? $message_body : '')));
+    $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('message_body', 'soft', 45, 15, ((isset($message_body)) ? $message_body : '')).(xtc_not_null(CONTACT_MESSAGE_TEXT) ? '<span class="inputRequirement_textarea">'.CONTACT_MESSAGE_TEXT.'</span>' : ''));
     $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
     $smarty->assign('FORM_END', '</form>');
   }

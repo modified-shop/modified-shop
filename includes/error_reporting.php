@@ -103,7 +103,7 @@ function mod_log_exception($e)
   }
 
   if (is_object($e)) {
-    $backtrace = debug_backtrace();
+    $backtrace = $e->getTrace();
     $error = array();
     $error['number'] = (method_exists($e, 'getseverity') ? $e->getseverity() : 'UNDEFINED_ERROR');
     $error['name'] = (($error['number'] != 'UNDEFINED_ERROR') ? mod_error_level($error['number']) : 'ERROR');
@@ -113,29 +113,63 @@ function mod_log_exception($e)
     $index = md5($error['name'].$error['line'].$error['file'].$error['message']);
 
     if (!isset($error_exceptions[$error['name']][$index])) {
-      $error_exceptions[$error['name']][$index] = '<table style="width: 1000px; display: inline-block;">' . PHP_EOL .
-                                                  '  <tr style="color:#000; background-color:#e6e6e6;"><th style="width:100px;">Type</th><td style="width:900px;">'.$error['name'].'</td></tr>' . PHP_EOL .
-                                                  '  <tr style="color:#000; background-color:#F0F0F0;"><th>Message</th><td>'.$error['message'].'</td></tr>' . PHP_EOL .
-                                                  '  <tr style="color:#000; background-color:#e6e6e6;"><th>File</th><td>'.$error['file'].'</td></tr>' . PHP_EOL .
-                                                  '  <tr style="color:#000; background-color:#F0F0F0;"><th>Line</th><td>'.$error['line'].'</td></tr>' . PHP_EOL;
-                                                  $err = 0;
-                                                  for ($i=0, $n=count($backtrace); $i<$n; $i++) {
-                                                      if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-                                                          $error_exceptions[$error['name']][$index] .= '  <tr style="color:#000; background-color:#e6e6e6;"><th>Backtrace #'.$err.'</th><td>'.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'].'</td></tr>' . PHP_EOL;
-                                                          $err ++;
-                                                      }
-                                                  }
+      // pass the charset explicitly, the ini default_charset may hold a value the html functions reject
+      $log_charset = function_exists('get_default_charset') ? get_default_charset() : 'UTF-8';
+      $message = html_entity_decode($error['message'], ENT_QUOTES | ENT_SUBSTITUTE, $log_charset);
+
+      $error_exceptions[$error['name']][$index] = sprintf(
+        <<<'HTML'
+        <table style="width: 1000px; display: inline-block;">
+          <tr style="color:#000; background-color:#e6e6e6;"><th style="width:100px;">Type</th><td style="width:900px;">%s</td></tr>
+          <tr style="color:#000; background-color:#F0F0F0;"><th>Message</th><td>%s</td></tr>
+          <tr style="color:#000; background-color:#e6e6e6;"><th>File</th><td>%s</td></tr>
+          <tr style="color:#000; background-color:#F0F0F0;"><th>Line</th><td>%s</td></tr>
+        HTML,
+        // an error message can carry request data, so escape everything that goes into the table
+        htmlspecialchars($error['name'], ENT_QUOTES | ENT_SUBSTITUTE, $log_charset),
+        htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, $log_charset),
+        htmlspecialchars($error['file'], ENT_QUOTES | ENT_SUBSTITUTE, $log_charset),
+        (int)$error['line']
+      ) . PHP_EOL;
+      $traceIndex = 0;
+      foreach ($backtrace as $frame) {
+        $file = $frame['file'] ?? null;
+        if (!is_string($file)) {
+          continue;
+        }
+
+        $location = isset($frame['line']) ? sprintf('%s called at Line %d', $file, $frame['line']) : $file;
+
+        $error_exceptions[$error['name']][$index] .= sprintf(
+          '  <tr style="color:#000; background-color:#e6e6e6;"><th>Backtrace #%d</th><td>%s</td></tr>%s',
+          $traceIndex,
+          htmlspecialchars($location, ENT_QUOTES | ENT_SUBSTITUTE, $log_charset),
+          PHP_EOL
+        );
+        $traceIndex++;
+      }
       $error_exceptions[$error['name']][$index] .= '</table>' . PHP_EOL;
 
       // write Logfile
       $LoggingManager->log($error['name'], $error['name'].' found for URL: ' . mod_error_url());
-      $LoggingManager->log($error['name'], html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line']);
-      $err = 0;
-      for ($i=0, $n=count($backtrace); $i<$n; $i++) {
-        if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-          $LoggingManager->log($error['name'], 'Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line']);
-          $err ++;
+      $LoggingManager->log(
+        $error['name'],
+        $message . ' in File: ' . $error['file'] . ' on Line: ' . $error['line']
+      );
+      $traceIndex = 0;
+      foreach ($backtrace as $frame) {
+        $file = $frame['file'] ?? null;
+        if (!is_string($file)) {
+          continue;
         }
+
+        $location = isset($frame['line']) ? sprintf('%s called at Line %d', $file, $frame['line']) : $file;
+
+        $LoggingManager->log(
+          $error['name'],
+          sprintf('Backtrace #%d - %s', $traceIndex, $location)
+        );
+        $traceIndex++;
       }
     }
   }

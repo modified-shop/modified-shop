@@ -159,7 +159,7 @@
         </table>
         <div class="mrg5">
           <div class="flt-l">
-            <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cpath', 'keywords', 'last_action')).'cPath='.$_GET['cpath'].'&pID='.$_GET['current_product_id'].'&action='.$_GET['last_action']); ?>"><?php echo BUTTON_BACK; ?></a>
+            <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cpath', 'keywords', 'last_action')).'cPath='.((isset($_GET['cpath'])) ? $_GET['cpath'] : '').'&pID='.$_GET['current_product_id'].'&action='.$_GET['last_action']); ?>"><?php echo BUTTON_BACK; ?></a>
             <?php if (!isset($_GET['keywords']) || $_GET['keywords'] == '') { ?>
               <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
             <?php } ?>
@@ -175,7 +175,7 @@
             echo xtc_draw_hidden_field('action', 'edit_crossselling').PHP_EOL;
             echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
             echo xtc_draw_hidden_field('last_action', $_GET['last_action']).PHP_EOL;
-            echo xtc_draw_hidden_field('cpath', $_GET['cpath']).PHP_EOL;
+            echo xtc_draw_hidden_field('cpath', ((isset($_GET['cpath'])) ? $_GET['cpath'] : '')).PHP_EOL;
             echo ((isset($_GET['page'])) ? xtc_draw_hidden_field('page', $_GET['page']).PHP_EOL : '');
             echo ((isset($_GET['sorting'])) ? xtc_draw_hidden_field('sorting', $_GET['sorting']).PHP_EOL : '');
             echo CROSS_SELLING_SEARCH.'&nbsp;'.xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'size="30"');

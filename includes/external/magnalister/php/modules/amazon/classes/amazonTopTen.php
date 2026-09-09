@@ -144,7 +144,7 @@ class AmazonTopTen extends TopTen {
 	public function configCopy() {
 		$sSelect = "select products_id, products_model, category from ".TABLE_MAGNA_AMAZON_APPLY." where mpID = '".$this->iMarketPlaceId."'";
 		foreach (MagnaDb::gi()->fetchArray($sSelect) as $aRow) {
-			$aCategory = unserialize(base64_decode($aRow['category']));
+			$aCategory = magnaSafeUnserialize(base64_decode($aRow['category']));
 			$sCopySql = "
 				UPDATE ".TABLE_MAGNA_AMAZON_APPLY."
 				   SET topMainCategory = '".$aCategory['MainCategory']."',

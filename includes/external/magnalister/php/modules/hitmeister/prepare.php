@@ -449,7 +449,7 @@ class HitmeisterPrepare extends MagnaCompatibleBase
 				'mpID'				=> $this->mpID,
 				'products_id'		=> $product['Id'],
 				'products_model'	=> $product['Model'],
-				'Title'				=> $searchResults[$iMatchedArrayKey]['title'],
+				'Title'				=> HitmeisterHelper::truncateTitle($searchResults[$iMatchedArrayKey]['title']),
 				'EAN'				=> reset($searchResults[$iMatchedArrayKey]['eans']),
 				'ConditionType'		=> $product['Condition'],
 				'ShippingTime'		=> $product['ShippingTime'],
@@ -461,6 +461,9 @@ class HitmeisterPrepare extends MagnaCompatibleBase
 				'Verified'			=> 'OK'
 			);
 
+			/* See HitmeisterProductSaver::insertMatchProduct(): a match omits columns
+			   that REPLACE INTO would reset, and `CategoryAttributes` has no default. */
+			MagnaDB::gi()->addNonNullableEntries($matchedProduct, TABLE_MAGNA_HITMEISTER_PREPARE);
 			MagnaDB::gi()->insert(TABLE_MAGNA_HITMEISTER_PREPARE, $matchedProduct, true);
 
 			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(

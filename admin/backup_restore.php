@@ -33,6 +33,7 @@
 
   // include functions
   require_once(DIR_FS_INC.'auto_include.inc.php');
+  require_once(DIR_FS_INC.'html_encoding.php');
   require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'database_tables.php');
   require_once(DIR_FS_ADMIN.DIR_WS_FUNCTIONS.'general.php');
 
@@ -108,6 +109,9 @@
     $_SESSION['language_charset'] = $lng->language['language_charset'];
     $_SESSION['language_code'] = $lng->language['code'];
   }
+
+  // set default charset
+  set_session_charset();
 
   // Global entries for the <html> tag
   define('HTML_PARAMS','dir="ltr" lang="de"');

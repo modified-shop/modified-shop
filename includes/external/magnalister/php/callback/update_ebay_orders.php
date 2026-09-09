@@ -342,7 +342,7 @@ function magnaUpdateEbayOrders($mpID) {
 								 WHERE orders_id = '.$currentOrderID.'
 							');
 							if (false != $internaldata) {
-								$internaldataArray = unserialize($internaldata);
+								$internaldataArray = magnaSafeUnserialize($internaldata);
 								$minAmountForDiscount = (array_key_exists('minAmountForDiscount', $internaldataArray))
 									? $internaldataArray['minAmountForDiscount']
 									: 0;
@@ -394,16 +394,16 @@ function magnaUpdateEbayOrders($mpID) {
 
 				# magnaOrders, Angaben zu eBayPlus dazu mergen
 				if (array_key_exists('magnaOrders', $order)) {
-					$aOldMagnaOrdersData = unserialize(MagnaDB::gi()->fetchOne('SELECT data FROM '.TABLE_MAGNA_ORDERS.' WHERE orders_id = '.$currentOrderID));
+					$aOldMagnaOrdersData = magnaSafeUnserialize(MagnaDB::gi()->fetchOne('SELECT data FROM '.TABLE_MAGNA_ORDERS.' WHERE orders_id = '.$currentOrderID));
 					$sMagnaOrdersData = serialize(array_merge($aOldMagnaOrdersData, $order['magnaOrders']));
 					$MagnaDB->update(TABLE_MAGNA_ORDERS, array ('data' => $sMagnaOrdersData), array('orders_id' => $currentOrderID));
 				}
 				# ExtendedOrderID, wenn neu vorhanden
 				if (array_key_exists('ExtendedOrderID', $order)) {
 					if (isset($sMagnaOrdersData)) {
-						$aOldMagnaOrdersData = unserialize($sMagnaOrdersData);
+						$aOldMagnaOrdersData = magnaSafeUnserialize($sMagnaOrdersData);
 					} else {
-						$aOldMagnaOrdersData = unserialize(MagnaDB::gi()->fetchOne('SELECT data FROM '.TABLE_MAGNA_ORDERS.' WHERE orders_id = '.$currentOrderID));
+						$aOldMagnaOrdersData = magnaSafeUnserialize(MagnaDB::gi()->fetchOne('SELECT data FROM '.TABLE_MAGNA_ORDERS.' WHERE orders_id = '.$currentOrderID));
 						
 					}
 					if (!array_key_exists('ExtendedOrderID', $aOldMagnaOrdersData)) {

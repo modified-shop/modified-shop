@@ -89,7 +89,7 @@
                   {if ACTIVATE_SHIPPING_STATUS == 'true'}
                     {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}
                     {/if}
-                  {/if}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>
+                  {/if}{if $order_values.GUARANTEE_TEXT_HTML}<div class="description">{$order_values.GUARANTEE_TEXT_HTML}</div>{/if}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>
                 </td>
                 <td class="border">{$order_values.PRODUCTS_MODEL}<em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></td>
                 <td width="150" class="border"><div align="right">{$order_values.PRODUCTS_SINGLE_PRICE}</div></td>

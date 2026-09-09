@@ -458,7 +458,7 @@
     $meta_robots = 'noindex, follow, noodp';
   }
 
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/metatags_data/','php') as $file) require ($file); 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/metatags_data/','php') as $file) require ($file);
 
   // metaClean
   $metadata_array = array_map('metaClean', $metadata_array);
@@ -637,4 +637,4 @@
     echo '<link rel="canonical" href="'.$metadata_array['link'].'" />'."\n";
   }
 
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/metatags_end/','php') as $file) require ($file); 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/metatags_end/','php') as $file) require ($file);

@@ -48,7 +48,7 @@ class MagnaCompatibleCheckin extends MagnaCompatibleBase {
 
 	public function process() {
 		require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinManager.php');
-		
+
 		$this->loadCheckinView();
 		$this->loadSummaryView();
 		$this->loadCheckinSubmit();

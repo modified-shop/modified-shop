@@ -1,0 +1,195 @@
+/* -----------------------------------------------------------------------------------------
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2026 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
+/* The official templates set their text in Inter. The svg is placed inline in the page, so the
+   font is loaded once here instead of being embedded into every generated file. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('fonts/Inter-ExtraBold.woff2') format('woff2');
+}
+
+/* the templates address the weights by their full name as well */
+@font-face {
+  font-family: 'Inter-Regular';
+  font-style: normal;
+  font-display: swap;
+  src: url('fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter-ExtraBold';
+  font-style: normal;
+  font-display: swap;
+  src: url('fonts/Inter-ExtraBold.woff2') format('woff2');
+}
+
+/* the block a template places, kept neutral so every theme keeps its own rhythm */
+.guarantee-label-row {
+  margin: 12px 0;
+}
+
+/* the modifier a template sets where its price column is aligned to the right */
+.guarantee-label-row--right {
+  text-align: right;
+}
+
+.guarantee-label {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* the compact label opens the full one, so it has to look and behave like a control */
+.guarantee-label__compact {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  max-width: 100%;
+}
+
+/* Native size of the nested template is 368.5 x 56.69. It is shown smaller, which the
+   guidelines allow for the nested label, and shrinks further with a narrow column. Change the
+   one width below to resize it; the aspect ratio is kept by the svg itself. */
+.guarantee-label__compact svg {
+  display: block;
+  width: 120px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* only used when the template brings no lightbox; margin auto is what centres a modal dialog
+   and a theme reset that sets margin 0 would otherwise pin it to the top left corner */
+.guarantee-label__dialog {
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+/* colorbox moves the content out of the dialog, so the dialog itself stays out of the flow */
+.guarantee-label__dialog:not([open]) {
+  display: none;
+}
+
+.guarantee-label__dialog::backdrop {
+  background: rgba(0, 0, 0, .6);
+}
+
+.guarantee-label__full {
+  display: block;
+  padding: 16px;
+  background: #fff;
+  border-radius: 4px;
+}
+
+/* The manufacturer and the model identifier are set in 9 units on a canvas 269.29 units wide.
+   Below that width their text would fall under 9 pixels, so the full label never goes under its
+   native size; a narrow screen scrolls instead of shrinking it. The guidelines ask for a label
+   that stays legible at default size and is neither distorted nor cropped. */
+.guarantee-label__full svg {
+  display: block;
+  width: 420px;
+  min-width: 270px;
+  max-width: 90vw;
+  height: auto;
+}
+
+.guarantee-label__full {
+  overflow: auto;
+}
+
+.guarantee-label__link {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* thickbox pads and scrolls its own content box, so the label does not do it a second time */
+#TB_ajaxContent .guarantee-label__full {
+  padding: 0;
+  overflow: visible;
+}
+
+/* colorbox brings its own close control */
+.guarantee-label__colorbox .guarantee-label__close {
+  display: none;
+}
+
+.guarantee-label__close {
+  display: block;
+  margin: 8px auto 0;
+  cursor: pointer;
+}
+
+/* The notice about the legal guarantee has to stand out before the order button. It is the
+   official A4 sheet, so it gets the width of its column and is capped where its text would
+   otherwise grow past a comfortable line length. */
+.guarantee-notice {
+  margin: 20px 0;
+  padding: 16px;
+  border: 2px solid #14488f;
+  border-radius: 4px;
+  background: #fff;
+  text-align: left;
+  max-width: 680px;
+}
+
+.guarantee-notice__title {
+  margin: 0 0 6px 0;
+  font-weight: 700;
+}
+
+.guarantee-notice__text,
+.guarantee-notice__mixed {
+  margin: 0 0 10px 0;
+}
+
+/* the control that opens the sheet, it carries the wording of the checkout */
+.guarantee-notice__open {
+  display: inline-block;
+  margin: 4px 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.guarantee-notice__link {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* The sheet keeps the height of the viewport and is never cropped. The width comes from the
+   A4 ratio, so the overlay has something to measure the moment the graphic is loaded. */
+.guarantee-notice__full img {
+  display: block;
+  width: auto;
+  height: 80vh;
+  max-width: 90vw;
+  max-height: 80vh;
+  margin: 0 auto;
+}

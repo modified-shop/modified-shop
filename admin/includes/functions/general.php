@@ -2075,6 +2075,31 @@
   }
 
   /**
+   * xtc_cfg_get_multi_checkbox_keys()
+   *
+   * @param array $keys configuration keys to look at
+   *
+   * @return array the given keys that are rendered by xtc_cfg_multi_checkbox()
+   */
+  function xtc_cfg_get_multi_checkbox_keys($keys) {
+    $keys = array_filter(array_map('trim', (array)$keys), 'strlen');
+    if (count($keys) === 0) {
+      return array();
+    }
+
+    $multi_checkbox_keys = array();
+    $keys_query = xtc_db_query("SELECT configuration_key
+                                  FROM " . TABLE_CONFIGURATION . "
+                                 WHERE configuration_key IN ('" . implode("', '", array_map('xtc_db_input', $keys)) . "')
+                                   AND set_function LIKE 'xtc_cfg_multi_checkbox(%'");
+    while ($key_value = xtc_db_fetch_array($keys_query)) {
+      $multi_checkbox_keys[] = $key_value['configuration_key'];
+    }
+
+    return $multi_checkbox_keys;
+  }
+
+  /**
    * cfg_save_max_display_results()
    *
    * @author rpa-com.de

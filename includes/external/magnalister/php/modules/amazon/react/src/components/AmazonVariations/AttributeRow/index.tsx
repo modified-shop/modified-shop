@@ -1,14 +1,14 @@
 import React from 'react';
 import {
-  ConditionalRule,
-  DatabaseTablesData,
-  I18nStrings,
-  MarketplaceAttribute,
-  MatchingValue,
-  SavedAttributeValue,
-  SavedValues,
-  ShopAttribute,
-  ShopAttributes
+    ConditionalRule,
+    DatabaseTablesData,
+    I18nStrings,
+    MarketplaceAttribute,
+    MatchingValue,
+    SavedAttributeValue,
+    SavedValues,
+    ShopAttribute,
+    ShopAttributes
 } from '../../../types';
 import AttributeSelector from '../AttributeSelector';
 import FreeTextInput from '../ValueMatching/FreeTextInput';
@@ -22,6 +22,7 @@ import {UserChangeContext} from '../../../AmazonVariations';
 import {DESCRIPTION_BOX_STYLES} from '../styles/infoBoxStyles';
 import {applyStyleWithImportant} from '../../../utils/styleUtils';
 import {useHighlightController} from './HighlightController';
+import {isValueListType} from '../../../constants/attributeTypes';
 
 interface AttributeRowProps {
   attributeKey: string;
@@ -357,8 +358,8 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
     });
   };
 
-  // Handle Amazon attribute value change
-  const handleAmazonValueChange = (value: string) => {
+  // Handle Amazon attribute value change (supports both single and multiselect)
+  const handleAmazonValueChange = (value: string | string[]) => {
     onAttributeChange(attributeKey, {
       ...currentValue,
       Values: {AttributeValue: value}
@@ -380,6 +381,14 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
       UseShopValues: useShopValues,
       // When checked, clear matchings array; when unchecked, keep current matchings
       Values: useShopValues ? [] : (currentValue?.Values || [])
+    });
+  };
+
+  // Handle DateFormat change for date-type metafield attributes
+  const handleDateFormatChange = (format: string) => {
+    onAttributeChange(attributeKey, {
+      ...currentValue,
+      DateFormat: format
     });
   };
 
@@ -405,10 +414,11 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
 
   // Check if we should show the matching table
   // Only show matching table when:
-  // 1. Selected shop attribute is type "select" (has values to match)
+  // 1. Selected shop attribute exposes a value list ("select" / "selectAndText" /
+  //    "multiSelect") so its values can be matched (see OTRS #607858)
   // 2. Amazon attribute has predefined values OR is type "text" (allows shop values)
   const amazonDataType = filteredAttribute.dataType?.toLowerCase() || '';
-  const shouldShowMatchingTable = selectedShopAttribute?.type === 'select' &&
+  const shouldShowMatchingTable = isValueListType(selectedShopAttribute?.type) &&
       (amazonDataType === 'text' ||
           (filteredAttribute.values && Object.keys(filteredAttribute.values).length > 0));
 
@@ -585,9 +595,12 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
               <AmazonValueSelector
                   attribute={filteredAttribute}
                   value={
+                    // Handle string, array, or object value formats
                     typeof normalizedCurrentValue?.Values === 'string'
                         ? normalizedCurrentValue.Values
-                        : (normalizedCurrentValue?.Values as any)?.AttributeValue || ''
+                        : Array.isArray(normalizedCurrentValue?.Values)
+                            ? normalizedCurrentValue.Values
+                            : (normalizedCurrentValue?.Values as any)?.AttributeValue || ''
                   }
                   onChange={handleAmazonValueChange}
                   disabled={disabled}
@@ -614,6 +627,26 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
                   onUseShopValuesChange={handleUseShopValuesChange}
                   onFetchShopAttributeValues={onFetchShopAttributeValues}
               />
+          )}
+
+          {/* Date format selector for date-type metafield attributes */}
+          {selectedShopAttribute && selectedCode &&
+              (['date', 'date_time', 'datetime'].includes(selectedShopAttribute.shopMetaFieldType || '')) && (
+              <div className="date-format-selector" style={{ marginTop: '10px' }}>
+                <label style={{ marginRight: '8px' }}>
+                  {i18n.dateFormatLabel || 'Date format'}
+                </label>
+                <select
+                    value={normalizedCurrentValue?.DateFormat || 'Y-m-d'}
+                    onChange={(e) => handleDateFormatChange(e.target.value)}
+                    disabled={disabled}
+                >
+                  <option value="Y-m-d">{i18n.dateFormatIso || 'YYYY-MM-DD (ISO)'}</option>
+                  <option value="d.m.Y">{i18n.dateFormatDe || 'DD.MM.YYYY'}</option>
+                  <option value="m/d/Y">{i18n.dateFormatUs || 'MM/DD/YYYY'}</option>
+                  <option value="d/m/Y">{i18n.dateFormatUk || 'DD/MM/YYYY'}</option>
+                </select>
+              </div>
           )}
         </td>
 

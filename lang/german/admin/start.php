@@ -149,6 +149,9 @@ define('HEADING_CAPTION_STATISTIC', 'Statistik');
 define('ERROR_DB_VERSION_UPDATE', '<strong>WARNUNG:</strong> Ihre DB muss aktualisiert werden, bitte den <a href="'.DIR_WS_CATALOG.'_installer/">Installer</a> ausf&uuml;hren:');
 define('ERROR_DB_VERSION_UPDATE_INFO', 'DB muss von Release %s auf %s aktualisiert werden.');
 
+// tax zone check
+define('WARNING_COUNTRIES_WITHOUT_TAX_ZONE', '<strong>WARNUNG:</strong> Folgende L&auml;nder sind keiner <a href="%s">Steuerzone</a> zugeordnet:');
+
 // EMail check
 define('ERROR_EMAIL_CHECK', '<strong>WARNUNG:</strong> Folgende E-Mail-Adressen sind anscheinend fehlerhaft:');
 define('ERROR_EMAIL_CHECK_INFO', '%s: &lt;%s&gt;');

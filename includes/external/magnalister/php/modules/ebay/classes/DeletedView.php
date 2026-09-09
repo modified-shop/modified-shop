@@ -500,7 +500,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$('#listingDelete').click(function() {
 		if (($('#ebayinventory input[type="checkbox"]:checked').length > 0) &&
-			confirm(unescape(<?php echo "'".html2url(sprintf(ML_GENERIC_DELETE_LISTINGS, $_modules[$this->magnasession['currentPlatform']]['title']))."'"; ?>))
+			confirm(decodeURIComponent(<?php echo "'".html2url(sprintf(ML_GENERIC_DELETE_LISTINGS, $_modules[$this->magnasession['currentPlatform']]['title']))."'"; ?>))
 		) {
 			$('#action').val('delete');
 			$(this).parents('form').submit();

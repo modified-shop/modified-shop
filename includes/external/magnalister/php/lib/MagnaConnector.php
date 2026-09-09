@@ -442,11 +442,116 @@ class MagnaConnector {
 		$this->cacheShortTime[$requestHash] = $response;
 	}
 
-	public function submitRequest($requestFields) {
+	/**
+	 * Submit a request, reusing an identical response from cache.
+	 *
+	 * Two cache layers:
+	 *   L1 — in-memory, always on, valid for the current request only.
+	 *   L2 — persistent file cache under magnalister/cache/, used only when $ttl > 0,
+	 *        expiring $ttl seconds after it was written (file mtime).
+	 *
+	 * Only successful (array) responses are cached — errors/false are never stored.
+	 * Pass $ttl = 0 for calls whose result must stay fresh across requests (e.g. IsAuthed):
+	 * that keeps the L1 per-request cache but skips persistence.
+	 *
+	 * @param array $requestFields The request fields
+	 * @param int   $ttl Persistent cache lifetime in seconds; 0 disables persistence.
+	 * @return array|bool The response, or false on empty/failed request.
+	 */
+	public function submitRequestCached($requestFields, $ttl = 1800) {
 		if (!is_array($requestFields) || empty($requestFields)) {
 			return false;
 		}
-			
+		
+		/* Key on the payload that is really sent, not on the caller's raw fields:
+		 * finalizeRequest() still adds passphrase, language, subsystem, client
+		 * versions and shopsystem. Keying on the raw fields would serve a cached
+		 * response after an account, passphrase or admin language change. */
+		$requestHash = md5($this->encodeRequest($this->finalizeRequestFields($requestFields)).'_cached');
+
+		// L1: in-memory (this request).
+		$cached = $this->getFromShortTimeCache($requestHash);
+		if ($cached !== false) {
+			return $cached;
+		}
+
+		// L2: persistent file cache with TTL.
+		$cached = $this->getFromPersistentCache($requestHash, $ttl);
+		if ($cached !== false) {
+			$this->setShortTimeCache($requestHash, $cached);
+			return $cached;
+		}
+
+		$result = $this->submitRequest($requestFields);
+
+		// Cache only successful array responses; never cache false/error results.
+		if (is_array($result)) {
+			$this->setShortTimeCache($requestHash, $result);
+			$this->setPersistentCache($requestHash, $result, $ttl);
+		}
+		return $result;
+	}
+
+	protected function getPersistentCacheFile($requestHash) {
+		return DIR_MAGNALISTER_FS.'cache/apicache_'.$requestHash.'.json';
+	}
+
+	/**
+	 * Read a persisted response if the file exists and is younger than $ttl.
+	 * @return array|bool The cached array, or false when disabled/missing/expired.
+	 */
+	protected function getFromPersistentCache($requestHash, $ttl) {
+		if ($ttl <= 0) {
+			return false;
+		}
+		$file = $this->getPersistentCacheFile($requestHash);
+		if (!is_file($file)) {
+			return false;
+		}
+		$mtime = @filemtime($file);
+		if ($mtime === false || (time() - $mtime) >= $ttl) {
+			return false; // expired
+		}
+		$raw = @file_get_contents($file);
+		if ($raw === false || $raw === '') {
+			return false;
+		}
+		$data = json_decode($raw, true);
+		return is_array($data) ? $data : false;
+	}
+
+	/**
+	 * Persist a successful response. No-op when $ttl <= 0 or the cache dir is absent.
+	 * Writes atomically (temp file + rename) so concurrent reads never see a partial file.
+	 */
+	protected function setPersistentCache($requestHash, $response, $ttl) {
+		if ($ttl <= 0 || !is_array($response)) {
+			return;
+		}
+		$dir = DIR_MAGNALISTER_FS.'cache/';
+		if (!is_dir($dir) || !is_writable($dir)) {
+			return; // cache is best-effort; never fatal
+		}
+		$json = json_encode($response);
+		if ($json === false) {
+			return;
+		}
+		$file = $this->getPersistentCacheFile($requestHash);
+		$tmp = $file.'.'.getmypid().'.tmp';
+		if (@file_put_contents($tmp, $json, LOCK_EX) !== false) {
+			@rename($tmp, $file);
+		}
+	}
+
+	/**
+	 * Merge addRequestProps and apply finalizeRequest(): produces the field set
+	 * that submitRequest() actually sends, including passphrase, language,
+	 * subsystem, client versions and shopsystem.
+	 *
+	 * @param array $requestFields
+	 * @return array The finalized fields.
+	 */
+	protected function finalizeRequestFields($requestFields) {
 		if (!empty($this->addRequestProps)) {
 			$requestFields = array_merge(
 				$this->addRequestProps,
@@ -455,12 +560,19 @@ class MagnaConnector {
 		}
 		
 		$this->finalizeRequest($requestFields);
-
-		/* Requests is complete, save it. */
-		$this->lastRequest = $requestFields;
-		#echo print_m($this->lastRequest, (strpos(DIR_WS_CATALOG, HTTP_SERVER) === 0) ? DIR_WS_CATALOG : HTTP_SERVER.DIR_WS_CATALOG);
-		if (ML_LOG_API_REQUESTS) file_put_contents(DIR_MAGNALISTER_FS.'debug.log', print_m($this->lastRequest, 'API Request ('.date('Y-m-d H:i:s').')', true)."\n", FILE_APPEND);
-
+		
+		return $requestFields;
+	}
+	
+	/**
+	 * Encode finalized fields into the exact payload that is POSTed to the API.
+	 * md5() of the return value is the canonical identity of a request and is
+	 * therefore the only correct cache key.
+	 *
+	 * @param array $requestFields Fields as returned by finalizeRequestFields().
+	 * @return string The base64 encoded request.
+	 */
+	protected function encodeRequest($requestFields) {
 		/* Some black magic... Better don't touch it. It could bite! */
 		${(chr(109)."\x61".chr(103)."\x69".chr(99)."\x46"."\x75"."\x6e"."\x63".chr(116)."\x69"."\x6f".chr(110
 		).chr(115))}=array(("\x62"."\x61"."\x73".chr(101).chr(54).chr(52)."\x5f"."\x65".chr(110)."\x63"."\x6f"
@@ -489,7 +601,22 @@ class MagnaConnector {
 		/* End of black magic :( */
 		arrayEntitiesToUTF8($requestFields);
 		
-		$requestString = base64_encode(json_encode($requestFields));
+		return base64_encode(json_encode($requestFields));
+	}
+	
+	public function submitRequest($requestFields) {
+		if (!is_array($requestFields) || empty($requestFields)) {
+			return false;
+		}
+		
+		$requestFields = $this->finalizeRequestFields($requestFields);
+		
+		/* Requests is complete, save it. */
+		$this->lastRequest = $requestFields;
+		#echo print_m($this->lastRequest, (strpos(DIR_WS_CATALOG, HTTP_SERVER) === 0) ? DIR_WS_CATALOG : HTTP_SERVER.DIR_WS_CATALOG);
+		if (ML_LOG_API_REQUESTS) file_put_contents(DIR_MAGNALISTER_FS.'debug.log', print_m($this->lastRequest, 'API Request ('.date('Y-m-d H:i:s').')', true)."\n", FILE_APPEND);
+		
+		$requestString = $this->encodeRequest($requestFields);
 		$requestHash = md5($requestString);
 		
 		#echo print_m($requestFields['ACTION'].' '.$requestHash);

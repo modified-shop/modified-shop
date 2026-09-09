@@ -29,9 +29,22 @@ INSERT INTO `countries` (`countries_name`, `countries_iso_code_2`, `countries_is
 INSERT INTO `countries` (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`, `sort_order`) VALUES ('Democratic Republic of the Congo','CD','COD',1,1,0, 100);
 INSERT INTO `countries` (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`, `sort_order`) VALUES ('Bonaire','BQ','BES',1,1,0, 100);
 
-INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES ((SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'SS'), (SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'SS'), 0, 6, NULL, NOW());
-INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES ((SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'CD'), (SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'CD'), 0, 6, NULL, NOW());
-INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES ((SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'BQ'), (SELECT `countries_id` FROM `countries` WHERE `countries_iso_code_2` = 'BQ'), 0, 6, NULL, NOW());
+INSERT INTO `zones_to_geo_zones`
+  (`zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`)
+SELECT
+  c.`countries_id`,
+  0,
+  6,
+  NULL,
+  NOW()
+FROM `countries` AS c
+LEFT JOIN `zones_to_geo_zones` AS z
+  ON z.`zone_country_id` = c.`countries_id`
+ AND z.`zone_id` = 0
+ AND z.`geo_zone_id` = 6
+WHERE c.`countries_iso_code_2` IN ('SS', 'CD', 'BQ')
+  AND z.`association_id` IS NULL
+ORDER BY c.`countries_id`;
 
 DELETE ztgz
   FROM zones_to_geo_zones AS ztgz

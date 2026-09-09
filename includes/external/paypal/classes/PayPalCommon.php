@@ -50,12 +50,7 @@ class PayPalCommon extends PayPalAuth {
     } else {
       if (!is_bool($string)) {
         $string = decode_htmlentities($string);
-        $cur_encoding = detect_encoding($string);
-        if ($cur_encoding == "UTF-8" && mb_check_encoding($string, "UTF-8")) {
-          return $string;
-        } else {
-          return mb_convert_encoding($string, "UTF-8", $_SESSION['language_charset']);
-        }
+        $string = encode_utf8($string, '', true);
       }
     }
     
@@ -514,7 +509,7 @@ class PayPalCommon extends PayPalAuth {
   }
   
   
-  function create_account($customer) {
+  function create_account($customer, $force_guest = false) {
         
     // include needed function
     require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
@@ -537,7 +532,7 @@ class PayPalCommon extends PayPalAuth {
       'account_type' => '1',
     );
 
-    if (ACCOUNT_OPTIONS == 'account') {
+    if (ACCOUNT_OPTIONS == 'account' && $force_guest !== true) {
       $sql_data_array['account_type'] = '0';
       $sql_data_array['customers_cid'] = generate_customers_cid(true);
       $sql_data_array['customers_status'] = DEFAULT_CUSTOMERS_STATUS_ID;

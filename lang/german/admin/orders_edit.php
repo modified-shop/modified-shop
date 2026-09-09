@@ -52,6 +52,7 @@ define('TEXT_ORDERS_ADDRESS_EDIT_INFO', 'Bitte beachten Sie, dass die hier einge
 // Artikelbearbeitung
 
 define('TEXT_SMALL_NETTO', '(Netto)');
+define('TEXT_SMALL_BRUTTO', '(Brutto)');
 define('TEXT_PRODUCT_ID', 'pID:');
 define('TEXT_PRODUCTS_MODEL', 'Art.Nr:');
 define('TEXT_QUANTITY', 'Anzahl:');
@@ -119,3 +120,4 @@ define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Erscheinungsdatum:');
 
 define('ERROR_STATUS_CHANGE', 'ACHTUNG: Nach &Auml;nderung der Kundengruppe m&uuml;ssen eventuell Versandkosten, Zuschl&auml;ge und Rabatte manuell angepasst werden.');
 define('TEXT_SUCCESS_ORDER_RECALCULATE', 'Die Bestellung wurde neu berechnet.');
+define('WARNING_ORDERS_DOWNLOAD_LEFTOVER', 'Die Position f&uuml;hrt weiterhin Downloads. Welcher Download zu welchem Attribut geh&ouml;rt, ist nicht &uuml;berpr&uuml;fbar, deshalb wurde keiner entfernt. Haben Sie ein Downloadattribut gel&ouml;scht, pr&uuml;fen Sie die Downloads dieser Position von Hand.');

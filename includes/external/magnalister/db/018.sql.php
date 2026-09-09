@@ -48,7 +48,7 @@ function updateAmazonApplyTable_18() {
 		 WHERE category=\'\'
 	');
 	foreach ($meh as $r) {
-		$r['data'] = @unserialize(@base64_decode($r['data']));
+		$r['data'] = magnaSafeUnserialize(base64_decode($r['data']));
 		if (empty($r['data']) || !is_array($r['data'])) {
 			unset($r['data']);
 			MagnaDB::gi()->delete(TABLE_MAGNA_AMAZON_APPLY, $r);

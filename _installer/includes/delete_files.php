@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  // set all files to be deleted                     
+  // set all files to be deleted
   $unlink_file = array(
     '_installer/images/icons/error.gif',
     '_installer/banktransfer_blz.sql',
@@ -176,6 +176,7 @@
     DIR_ADMIN.'includes/extra/modules/orders/orders_action/easybill.php',
     DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/dhl.php',
     DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/easybill.php',
+    DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/withdraw.php',
     DIR_ADMIN.'includes/extra/modules/orders/orders_info_payment/moneybookers.php',
     DIR_ADMIN.'includes/functions/compatibility.php',
     DIR_ADMIN.'includes/functions/database.php',
@@ -298,7 +299,7 @@
     'images/billpay_logo_paylater_RechnungPlus_2.png',
     'images/billpay_logo_paylater.png',
     'images/billpay_ok.png',
-    'images/billpay_waiting.gif',    
+    'images/billpay_waiting.gif',
     'images/categories/noimage.gif',
     'images/icons/kl_epaypal_de.gif',
     'images/icons/kl_epaypal_en.gif',
@@ -428,13 +429,21 @@
     'includes/external/magnalister/images/logos/modules.php',
     'includes/external/magnalister/js/marketplaces/meinpaket/variationmatching.js',
     'includes/external/magnalister/lang/ababab',
+    'includes/external/magnalister/php/modules/amazon/classes/ProductList/Dependency/MLProductListDependencyAmazonHistoryAction.php',
+    'includes/external/magnalister/php/modules/amazon/classes/ProductList/templates/dependency/action/amazonhistorybutton.php',
     'includes/external/magnalister/php/modules/ayn24.php',
+    'includes/external/magnalister/php/modules/cdiscount/classes/ProductList/templates/dependency/action/cdiscounthistorybutton.php',
+    'includes/external/magnalister/php/modules/crowdfox/classes/ProductList/templates/dependency/action/crowdfoxhistorybutton.php',
+    'includes/external/magnalister/php/modules/ebay/crons/get_ebay_orders.php',
+    'includes/external/magnalister/php/modules/hitmeister/classes/ProductList/templates/dependency/action/hitmeisterhistorybutton.php',
     'includes/external/magnalister/php/modules/idealo/classes/IdealoCheckinSubmit.php',
     'includes/external/magnalister/php/modules/idealo/crons/IdealoImportOrders.php',
     'includes/external/magnalister/php/modules/idealo/crons/IdealoSyncOrderStatus.php',
     'includes/external/magnalister/php/modules/laary.php',
     'includes/external/magnalister/php/modules/meinpaket.php',
     'includes/external/magnalister/php/modules/metro/classes/MetroShippingDetailsProcessor.php',
+    'includes/external/magnalister/php/modules/priceminister/classes/ProductList/templates/dependency/action/priceministerhistorybutton.php',
+    'includes/external/magnalister/php/modules/tradoria/classes/ProductList/templates/dependency/action/tradoriahistorybutton.php',
     'includes/external/micropayment/send_order.php',
     'includes/external/payone/modules/send_order.php',
     'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php',
@@ -484,6 +493,7 @@
     'includes/external/sofort/classes/sofortLibIdealBanks.inc.php',
     'includes/external/sofort/classes/sofortLibSofortueberweisungGateway.inc.php',
     'includes/extra/ajax/cookie_consent.php',
+    'includes/extra/ajax/get_im_service.php',
     'includes/extra/application_bottom/10_easymarketing.php',
     'includes/extra/application_bottom/10_facebook.php',
     'includes/extra/application_bottom/10_findologic.php',
@@ -496,6 +506,7 @@
     'includes/extra/checkout/checkout_process_end/20_easybill.php',
     'includes/extra/checkout/checkout_process_end/10_xsbooster.php',
     'includes/extra/database_tables/cookie_consent.php',
+    'includes/extra/database_tables/withdraw.php',
     'includes/extra/header/header_begin/shopgate.php',
     'includes/extra/header/header_body/billsafe.php',
     'includes/extra/header/header_head/gtag.php',
@@ -581,6 +592,7 @@
     'includes/modules/payment/sofortueberweisungredirect.php',
     'includes/modules/payment/sofortueberweisungvorkasse.php',
     'includes/modules/payment/worldpay.php',
+    'includes/modules/payment/worldpay_junior.php',
     'includes/modules/set_account_type.php',
     'includes/modules/sofort_vorkasse.php',
     'includes/modules/upcoming_products.php',
@@ -598,6 +610,8 @@
     'lang/english/sofortueberweisung_abort.php',
     'lang/english/easybill.php',
     'lang/english/extra/admin/dhl.php',
+    'lang/english/extra/admin/withdraw.php',
+    'lang/english/extra/withdraw.php',
     'lang/english/masterpayment_callback.php',
     'lang/english/modules/order_total/ot_billpay_fee.php',
     'lang/english/modules/order_total/ot_billpay_paylater.php',
@@ -672,6 +686,7 @@
     'lang/english/modules/payment/sofortueberweisungredirect.php',
     'lang/english/modules/payment/sofortueberweisungvorkasse.php',
     'lang/english/modules/payment/worldpay.php',
+    'lang/english/modules/payment/worldpay_junior.php',
     'lang/english/modules/system/dhl.php',
     'lang/english/modules/system/dsgvo_export.php',
     'lang/english/modules/system/easybill.php',
@@ -692,6 +707,8 @@
     'lang/german/sofortueberweisung_abort.php',
     'lang/german/easybill.php',
     'lang/german/extra/admin/dhl.php',
+    'lang/german/extra/admin/withdraw.php',
+    'lang/german/extra/withdraw.php',
     'lang/german/masterpayment_callback.php',
     'lang/german/modules/order_total/ot_billpay_fee.php',
     'lang/german/modules/order_total/ot_billpay_paylater.php',
@@ -766,6 +783,7 @@
     'lang/german/modules/payment/sofortueberweisungredirect.php',
     'lang/german/modules/payment/sofortueberweisungvorkasse.php',
     'lang/german/modules/payment/worldpay.php',
+    'lang/german/modules/payment/worldpay_junior.php',
     'lang/german/modules/system/dhl.php',
     'lang/german/modules/system/dsgvo_export.php',
     'lang/german/modules/system/easybill.php',
@@ -1259,8 +1277,8 @@
     'wsdl_iclear_order.php',
     'xtbcallback.php',
   );
-  
-  
+
+
   if (!isset($unlinked_files)) {
     $unlinked_files = array(
       'error' => array(
@@ -1274,7 +1292,7 @@
     );
   }
   foreach ($unlink_file as $unlink) {
-    if (trim($unlink) != '' && is_file(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
+    if (trim($unlink) != '' && is_file(DIR_FS_DOCUMENT_ROOT.$unlink)) {
       if (unlink(DIR_FS_DOCUMENT_ROOT.$unlink) === true) {
         $unlinked_files['success']['files'][] = $unlink;
       } else {

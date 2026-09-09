@@ -138,7 +138,7 @@
           $tracking_id = $this->SaveLabel(
             $items['shipmentNo'],
             $items['label']['url'],
-            ((isset($items['customsDoc'])) ? $items['customsDoc']['url'] : ''),
+            ((isset($items['customsDoc'])) ? $items['customsDoc']['url'] : '')
           );
 
           $result['label'][] = array(
@@ -741,7 +741,16 @@
 
 
     private function hasValidPostcode($postcode) {
-      if (empty($postcode)) {
+      if ($postcode === null) {
+        return false;
+      }
+
+      $postcode = trim($postcode);
+      if ($postcode === '') {
+        return false;
+      }
+
+      if (in_array(strtoupper($postcode), array('N/A', 'N.A.', 'NA', 'NONE', 'NULL', 'UNKNOWN', '-'), true)) {
         return false;
       }
 

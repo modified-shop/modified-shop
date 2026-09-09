@@ -79,22 +79,16 @@ try {
 } catch (MagnaException $e) {
 }
 
+// idealo Direktkauf is no longer available — drop all Direktkauf-only sections from the form.
+unset(
+    $form['directbuyactivation'],
+    $form['preparedirect'],
+    $form['shippingdirect'],
+    $form['orders'],
+    $form['orderSyncState']
+);
 $blShowPopUpForOldToken = false;
-$mOldCheckoutStatus = getDBConfigValue('idealo.checkout.status', $_MagnaSession['mpID']);
-$sCheckoutStatus = getDBConfigValue('idealo.directbuy.active', $_MagnaSession['mpID']);
-$mDirectBuyClientId = getDBConfigValue('idealo.directbuy.clientid', $_MagnaSession['mpID']);
-$mDirectBuyClientPassword = getDBConfigValue('idealo.directbuy.password', $_MagnaSession['mpID']);
 
-if(!isset($sCheckoutStatus) && empty($_POST['conf']['idealo.directbuy.active']) &&
-    is_array($mOldCheckoutStatus) && isset($mOldCheckoutStatus['val'])){
-    $blShowPopUpForOldToken =
-        $mOldCheckoutStatus['val'] &&
-        $mDirectBuyClientId === null && empty($_POST['conf']['idealo.directbuy.clientid']) &&
-        $mDirectBuyClientPassword === null && empty($_POST['conf']['idealo.directbuy.password']);
-    if($blShowPopUpForOldToken){
-        $form['directbuyactivation']['fields']['directbuyactive']['default'] = 'true';
-    }
-}
 $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_idealo');
 $cG->setRenderTabIdent(true);
 

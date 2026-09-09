@@ -28,6 +28,7 @@ $_CheckinSubmitClass = DIR_MAGNALISTER_MODULES.'idealo/classes/IdealoCheckinSubm
 
 /* Kein Direct Buy mehr: Bestellimport immer aus (gibt es nicht mehr) */
 setDBConfigValue('idealo.import', $_MagnaSession['mpID'], 'false', true);
+setDBConfigValue('idealo.directbuy.active', $_MagnaSession['mpID'], 'false', true);
 
 MagnaConnector::gi()->setSubsystem($_modules[$_Marketplace]['settings']['subsystem']);
 MagnaConnector::gi()->setAddRequestsProps(array(

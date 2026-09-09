@@ -53,7 +53,7 @@
       $wo_session_id = 'BOT|'.substr(md5($crawler), 4);
     } else {
       $wo_session_id = xtc_session_id();
-      $wo_cart_status = (($_SESSION['cart']->count_contents() > 0) ? 1 : 0);
+      $wo_cart_status = ((isset($_SESSION['cart']) && is_object($_SESSION['cart']) && $_SESSION['cart']->count_contents() > 0) ? 1 : 0);
     }
 
     $wo_ip_address = xtc_db_prepare_input($_SESSION['tracking']['ip']);

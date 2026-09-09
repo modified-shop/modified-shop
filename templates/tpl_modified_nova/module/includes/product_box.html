@@ -66,6 +66,8 @@
         {/if}
       {/if}
 
+      {if $module_data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$module_data.GUARANTEE_LABEL}</div>{/if}
+
       {if isset($module_data.PRODUCTS_DATE) && ($module_data.PRODUCTS_DATE != '')}
         {* only upcoming products *}
         <div class="lb_date">

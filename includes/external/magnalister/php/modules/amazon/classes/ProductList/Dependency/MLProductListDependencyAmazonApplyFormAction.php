@@ -102,8 +102,8 @@ class MLProductListDependencyAmazonApplyFormAction extends MLProductListDependen
 				');
 			}
 			foreach ($aProducts as $aRow) {
-				$aRow['category'] = unserialize(base64_decode($aRow['category']));
-				$aRow['data'] = unserialize(base64_decode($aRow['data']));
+				$aRow['category'] = magnaSafeUnserialize(base64_decode($aRow['category']));
+				$aRow['data'] = magnaSafeUnserialize(base64_decode($aRow['data']));
 				if (!is_array($aRow['data']) || empty($aRow['data'])) {
 					continue;
 				}

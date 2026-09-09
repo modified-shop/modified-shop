@@ -347,10 +347,12 @@ if (isset($order) && is_object($order)) {
             ?>
             <div class="pp_transactions pp_box">
               <div class="pp_boxheading"><?php echo TEXT_PAYPAL_TRANSACTION; ?></div>
+              <?php if (isset($admin_info_data->purchase_units[0]->shipping->address_array)) { ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ADDRESS; ?></dt>
                 <dd><?php echo xtc_address_format($order->customer['format_id'], $paypal->decode_utf8($admin_info_data->purchase_units[0]->shipping->address_array), 1, '', '<br />'); ?></dd>
               </dl>
+              <?php } ?>
               <?php if (isset($admin_info_data->payer)) { ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACCOUNT_OWNER; ?></dt>

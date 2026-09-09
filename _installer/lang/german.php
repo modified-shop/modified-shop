@@ -112,6 +112,7 @@
   define('TEXT_DB_COMPLETE_INSERTS', 'Vollst&auml;ndige \'INSERT\'s');
   define('TEXT_DB_SINGLE_FILES', 'Einzelne Dateien pro Tabelle');
   define('TEXT_DB_UTF8_CONVERT', 'Datenbank auf UTF-8 konvertieren');
+  define('TEXT_DB_UTF8_CONVERT_COLLATION_INFO', 'Bei der Konvertierung wird die erste vom Datenbankserver unterst&uuml;tzte Collation in dieser Reihenfolge verwendet: <code>utf8mb4_german2_ci</code>, <code>utf8mb4_general_ci</code>, <code>utf8_german2_ci</code>. Als R&uuml;ckfallwert wird <code>utf8_general_ci</code> verwendet.');
   define('TEXT_DB_COMPRESS_GZIP', 'Mit GZIP');
   define('TEXT_DB_COMPRESS_RAW', 'Keine Komprimierung (Raw SQL)');
   define('TEXT_DB_SIZE', 'Gr&ouml;&szlig;e');
@@ -151,6 +152,8 @@
   //define('TEXT_DB_UPDATE_AFTER', 'Text danach'); // Not used yet
   
   define('TEXT_BACKUP_DIFF', 'Backup Diff');
+  define('TEXT_BACKUP_DIFF_UNZIP', 'Hinweis: Sollte sich das ZIP-Archiv unter Windows nicht mit dem integrierten Entpacker &ouml;ffnen lassen, verwenden Sie bitte ein Programm wie 7-Zip.');
+  define('ERROR_BACKUP_DIFF', 'Das Backup der ge&auml;nderten Dateien konnte nicht erstellt werden. Das Update wurde abgebrochen. Bitte pr&uuml;fen Sie die Schreibrechte des Backup-Verzeichnisses und versuchen Sie es erneut.');
   define('TEXT_BACKUP_SIZE', 'Gr&ouml;&szlig;e');
   define('TEXT_BACKUP_DATE', 'Datum');
   

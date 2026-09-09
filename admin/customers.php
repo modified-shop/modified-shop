@@ -157,7 +157,8 @@
             'shipping_class' => xtc_db_prepare_input($_POST['shipping']).'_'.xtc_db_prepare_input($_POST['shipping']),
             'customers_ip' => ip_clearing($_SESSION['tracking']['ip']),
             'language' => $_SESSION['language'],
-            'languages_id' => $_SESSION['languages_id']
+            'languages_id' => $_SESSION['languages_id'],
+            'orders_source' => 'admin'
           );
 
         xtc_db_perform(TABLE_ORDERS, $sql_data_array);
@@ -204,6 +205,16 @@
             'sort_order' => MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER
           );
         xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
+
+        // the notice belongs to the order from the start, the admin can send a confirmation
+        // before the first position exists
+        require_once(DIR_FS_INC.'guarantee_labels_snapshot.inc.php');
+        guarantee_labels_notice_snapshot($orders_id, $_SESSION['language'], $customers1['customers_status']);
+
+        // a broken language, renderer or archive must not end in the log alone
+        foreach (guarantee_labels_snapshot_failures() as $guarantee_labels_error) {
+          $messageStack->add_session(sprintf(ERROR_GUARANTEE_LABELS_SNAPSHOT_FAILED, encode_htmlspecialchars($guarantee_labels_error)), 'error');
+        }
 
         xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$orders_id.'&action=edit'));
         break;

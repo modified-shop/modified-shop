@@ -28,6 +28,22 @@ function magnaProcessCallbackRequest() {
 	if (isset($_GET['do']) && !empty($_GET['do'])) {
 		$do = explode(',', $_GET['do']);
 	}
+	/* Only allow known callback jobs. Unknown values are dropped so the dispatch
+	 * cannot be abused with arbitrary operations.
+	 * NOTE: authentication of the caller (requiring the passphrase/token for the
+	 * `do` dispatch) is handled separately and rolled out together with the
+	 * magnalister service side. */
+	$allowedDo = array(
+		'ImportOrders',
+		'UpdateOrders',
+		'SyncInventory',
+		'SyncOrderStatus',
+		'SyncEbayListingDetails',
+		'updateVariationsTable',
+		'UploadInvoices',
+		'ImportCategories',
+	);
+	$do = array_intersect($do, $allowedDo);
 	if (empty($do)) return;
 
         /* check if maintenance mode */

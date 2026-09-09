@@ -82,7 +82,8 @@ class paypal extends PayPalPaymentV2 {
           label: "buynow"
         },
         createOrder: function(data, actions) {
-          var formdata = $("#checkout_confirmation").serializeArray(); 
+          var formdata = $("#checkout_confirmation").serializeArray();
+          formdata.push({name: "paypal_ajax_token", value: "'.$this->get_ajax_token().'"});
           return $.ajax({
             type: "POST",
             url: "'.$order_url.'",
@@ -115,7 +116,8 @@ class paypal extends PayPalPaymentV2 {
             height: '.$this->get_config('PAYPAL_BUTTON_HEIGHT').'
           },
           createOrder: function(data, actions) {
-            var formdata = $("#checkout_confirmation").serializeArray(); 
+            var formdata = $("#checkout_confirmation").serializeArray();
+            formdata.push({name: "paypal_ajax_token", value: "'.$this->get_ajax_token().'"});
             return $.ajax({
               type: "POST",
               url: "'.$order_url.'",
@@ -147,7 +149,11 @@ class paypal extends PayPalPaymentV2 {
   function before_process() {	  
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
         
-    if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
+    if (!is_object($PayPalOrder)
+        || !isset($PayPalOrder->status)
+        || !in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)
+        )
+    {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }

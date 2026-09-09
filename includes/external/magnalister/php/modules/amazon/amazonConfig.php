@@ -1095,4 +1095,37 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 //      });
 //      selectedCarriers = new Array(0); 
 //    });
+
+    <?php // Amazon: the FBA VID report VAT option is confirmed before it is switched on ?>
+    jQuery(document).ready(function ($) {
+        var vidrOn = $('[id="conf_amazon.mwst.fbawaitforvidr_true"]');
+        var vidrOff = $('[id="conf_amazon.mwst.fbawaitforvidr_false"]');
+        if (vidrOn.length === 0) {
+            return;
+        }
+        vidrOn.click(function (event, confirmed) {
+            if (typeof confirmed !== 'undefined' && confirmed) {
+                return true;
+            }
+            var option = $(this);
+            vidrOff.prop('checked', true);
+            $('<div class="ml-modal dialog2" title="<?php echo ML_LABEL_INFORMATION; ?>"></div>')
+                .html('<?php echo addslashes(ML_AMAZON_FBA_VIDR_CONFIRM); ?>')
+                .dialog({
+                    modal: true,
+                    width: '600px',
+                    buttons: {
+                        "<?php echo str_replace('"', '\\"', ML_BUTTON_LABEL_ABORT); ?>": function () {
+                            $(this).dialog('close');
+                        },
+                        "<?php echo str_replace('"', '\\"', ML_AMAZON_FBA_VIDR_ACTIVATE_BUTTON); ?>": function () {
+                            $(this).dialog('close');
+                            option.trigger('click', true);
+                        }
+                    }
+                });
+            return false;
+        });
+    });
+
 </script>

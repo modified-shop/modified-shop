@@ -18,6 +18,8 @@
  * -----------------------------------------------------------------------------
  */
 
+require_once(DIR_MAGNALISTER_MODULES.'ebay/EbayHelper.php');
+
 /**
  * Fetches the options for the top 20 category selectors
  * @param $type	Type of category (PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2)
@@ -74,14 +76,14 @@ function renderSinglePrepareView($data) {
 			<tr class="odd">
 				<th>'.ML_LABEL_PRODUCT_NAME.'</th>
 				<td class="input">
-					<input class="fullwidth" type="text" maxlength="80" value="'.fixHTMLUTF8Entities(mb_substr(html_entity_decode($data[0]['Title'], ENT_COMPAT, 'UTF-8'), 0, 80, 'UTF-8'), ENT_COMPAT).'" name="Title" id="Title"/>
+					<input class="fullwidth" type="text" maxlength="'.EbayHelper::TITLE_MAX_LENGTH.'" value="'.fixHTMLUTF8Entities(EbayHelper::truncateTitle($data[0]['Title']), ENT_COMPAT).'" name="Title" id="Title"/>
 				</td>
 				<td class="info">'.ML_EBAY_MAX_80_CHARS.'</td>
 			</tr>
 			<tr class="even">
 				<th>'.ML_EBAY_SUBTITLE.'</th>
 				<td class="input">
-					<input class="fullwidth" type="text" maxlength="55" value="'.((array_key_exists('Subtitle', $data[0])) ? mb_substr($data[0]['Subtitle'], 0, 55, 'UTF-8') : '').'" name="Subtitle" id="Subtitle" />
+					<input class="fullwidth" type="text" maxlength="'.EbayHelper::SUBTITLE_MAX_LENGTH.'" value="'.((array_key_exists('Subtitle', $data[0])) ? EbayHelper::truncateSubtitle($data[0]['Subtitle']) : '').'" name="Subtitle" id="Subtitle" />
 					<input type="checkbox" name="enableSubtitle" id="enableSubtitle" />'.ML_EBAY_LABEL_USE_SUBTITLE_YES_NO.'
 				</td>
 				<td class="info">'.ML_EBAY_SUBTITLE_MAX_55_CHARS.'<span style="color:red;"> '.ML_EBAY_CAUSES_COSTS.'</span></td>
@@ -646,8 +648,6 @@ function renderMultiPrepareView($data) {
 	}
 	if('True' == $eBayStoreData['DATA']['Answer']) {
 		$hasStore = true;
-		$html .= '
-					<option '.('StoresFixedPrice' == $ListingType ? 'selected="selected"':'').' value="StoresFixedPrice">'.ML_EBAY_LISTINGTYPE_STORESFIXEDPRICE.'</option>';
 	} else {
 		$hasStore = false;
 	}
@@ -901,43 +901,9 @@ function renderMultiPrepareView($data) {
     } else {
     	$StartTime = '';
     }
-	$eBayPlusSettings = geteBayPlusSettings();
 	$html .= '/>'.ML_EBAY_BESTPRICE_YES_NO.'
 				</td>
 				<td class="info">'.ML_EBAY_BESTPRICE.'</td>
-			</tr>
-			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
-				<th>'.ML_EBAY_PLUS_SHORT.'</th>
-				<td class="input">
-                    <input type="checkbox" name="plus" id="plus" ';
-    $products_id_list = '';
-    foreach ($data as $item) {
-    	$products_id_list .= ', '.$item['products_id'];
-    }
-    $products_id_list = trim($products_id_list, ', ');
-    $plusSet = MagnaDB::gi()->fetchArray('
-    	SELECT SQL_CALC_FOUND_ROWS DISTINCT eBayPlus
-          FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
-         WHERE products_id IN ('.$products_id_list.')
-		   AND mpID = '.$_MagnaSession['mpID'].'
-    ');
-	if (    ('false' == $eBayPlusSettings['eBayPlus'])
-	     || ( false  == $eBayPlusSettings['eBayPlus'])) {
-		$html .= ' disabled="disabled"  style="background-color:#dfdfdf" ';
-	} else {
-    	if (1 == (int)MagnaDB::gi()->foundRows()) {
-	        if ('1' == $plusSet[0]['eBayPlus']) {
-	            $html .= ' checked="checked" ';
-	        }
-	    } else {
-	        if (getDBConfigValue(array('ebay.plus', 'val'), $_MagnaSession['mpID'])) {
-	            $html .= ' checked="checked" ';
-	        }
-	    }
-    }
-	$html .= '/>'.ML_EBAY_PLUS_YES_NO.'
-				</td>
-				<td class="info">'.ML_EBAY_PLUS.'</td>
 			</tr>';
 	$html .= '<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 						<th>'.ML_EBAY_START_TIME_SHORT.'</th>

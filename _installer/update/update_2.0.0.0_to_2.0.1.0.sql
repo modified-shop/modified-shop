@@ -202,15 +202,37 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,209,'35','Yasothon');
 
 #GTB - 2016-05-18 - insert kosovo
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id, status, required_zones) VALUES (242,'Kosovo','CS','SCG',1,1,0);
-INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES (242, 242, 0, 6, NULL, NOW());
+INSERT INTO `countries`
+  (`countries_name`, `countries_iso_code_2`, `countries_iso_code_3`, `address_format_id`, `status`, `required_zones`)
+VALUES
+  ('Kosovo', 'CS', 'SCG', 1, 1, 0)
+ON DUPLICATE KEY UPDATE
+  `countries_name` = VALUES(`countries_name`),
+  `countries_iso_code_3` = VALUES(`countries_iso_code_3`),
+  `address_format_id` = VALUES(`address_format_id`),
+  `status` = VALUES(`status`),
+  `required_zones` = VALUES(`required_zones`);
 
 #Tomcraft - 2016-06-06 - Remove obsolete configuration_key COMPRESS_STYLESHEET_TIME (since r7607)
 DELETE FROM configuration WHERE configuration_key = 'COMPRESS_STYLESHEET_TIME';
 
 #Tomcraft - 2016-06-07 - insert missing zones_to_geo_zones from r975 for Serbia (ID 240) and Montenegro (ID 241)
-INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES (240, 240, 0, 6, NULL, NOW());
-INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES (241, 241, 0, 6, NULL, NOW());
+INSERT INTO `zones_to_geo_zones`
+  (`zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`)
+SELECT
+  c.`countries_id`,
+  0,
+  6,
+  NULL,
+  NOW()
+FROM `countries` AS c
+LEFT JOIN `zones_to_geo_zones` AS z
+  ON z.`zone_country_id` = c.`countries_id`
+ AND z.`zone_id` = 0
+ AND z.`geo_zone_id` = 6
+WHERE c.`countries_iso_code_2` IN ('RS', 'ME', 'CS')
+  AND z.`association_id` IS NULL
+ORDER BY c.`countries_id`;
 
 #Tomcraft - 2016-06-07 - Display duty info for geo_zone_id 6
 UPDATE geo_zones SET geo_zone_info = '1' WHERE geo_zone_id = '6';

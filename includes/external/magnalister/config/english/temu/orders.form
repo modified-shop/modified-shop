@@ -1,0 +1,272 @@
+{
+    "orders": {
+        "headline": "Order Import",
+        "fields": {
+            "doimport": {
+                "label": "Activate Import ",
+                "desc": "Should orders from _#_platformName_#_ be imported? <br/><br/>\n\t\t\t\t           Orders are imported automatically every hour as the default setting.<br><br>\n\t\t\t\t           You can adjust the import-time individually, by configuring <br>\n\t\t\t\t           \"magnalister admin\" &rarr; \"Global Configuration\" &rarr; \"Orders Import\".<br><br>\n\t\t\t\t           You can manually import orders, by clicking the assigned button in the magnalister-header, next left to the ant-logo.<br><br>\n\t\t\t\t           Additionally, you can call order imports by setting a own cronjob to your following shop-link:<br>\n\t\t\t\t           <i>http://www.YourShop.com/magnaCallback.php?do=ImportOrders</i><br><br>\n\t\t\t\t           Setting an own cronjob is permitted for customers within the service plan \"Flat\", only.<br><br>\n\t\t\t\t           Own cronjob-calls, exceeding a quarter of an hour, or calls from customers, who are not within the service plan \"Flat\", will be blocked.\t\t\t\t           \n\t\t\t\t           ",
+                "key": "_#_platform_#_.import",
+                "type": "radio",
+                "values": {
+                    "true": "Yes",
+                    "false": "No"
+                },
+                "default": "true",
+                "submit": "Orders.Import",
+                "morefields": {
+                    "preimportsince": {
+                        "label": "First-time order-import",
+                        "desc": "The date, an order import will be processed the first time.",
+                        "key": "_#_platform_#_.preimport.start",
+                        "type": "date",
+                        "default": "now",
+                        "submit": "Orders.Import.Start",
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ]
+                    }
+                }
+            },
+            "onlycomplete": false,
+            "customersgroup": {
+                "label": "Customer Group",
+                "desc": "Allocate customers from _#_platformName_#_ to a customer group of the shop.<br><br>\n                                <b>Note</b>: If you choose the customer group &quot;Guest&quot;, the customer account will be removed directly after the order is created.",
+                "key": "_#_platform_#_.CustomerGroup",
+                "type": "selection",
+                "values": null,
+                "default": "2"
+            },
+            "unpaidsatus": false,
+            "openstatus": {
+                "label": "Order Status",
+                "desc": "Status set for an imported _#_platformName_#_ order.",
+                "key": "_#_platform_#_.orderstatus.open",
+                "type": "selection",
+                "values": null,
+                "default": "2"
+            },
+            "defaultshipping": {
+                "label": "Shipping Method of Orders",
+                "desc": "Versandart, die allen _#_platformName_#_-Bestellungen zugeordnet wird. Standard: \"marketplace\".<br><br>\n\t\t\t\t           Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&amul;gliche\n\t\t\t\t           Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.shippingmethod",
+                "type": "selection",
+                "values": {
+                    "textfield": "From Textfield"
+                },
+                "default": "textfield",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "_#_platform_#_.orderimport.shippingmethod.name",
+                        "type": "text",
+                        "default": "marketplace",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "defaultpayment": {
+                "label": "Payment Method of Orders",
+                "desc": "Zahlart, die allen _#_platformName_#_-Bestellungen zugeordnet wird. Standard: \"marketplace\".<br><br>\n\t\t\t\t           Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&amul;gliche\n\t\t\t\t           Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.paymentmethod",
+                "type": "selection",
+                "values": {
+                    "textfield": "From Textfield"
+                },
+                "default": "textfield",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "_#_platform_#_.orderimport.paymentmethod.name",
+                        "type": "text",
+                        "default": "marketplace",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "temuPromotionsDiscount": {
+                "label": "Temu Promotion",
+                "desc": "<p>In the Temu Seller Center, a promotional discount on an order can be funded either by Temu (the platform) or by you (the seller). If a product is sold on Temu with a corresponding discount, magnalister takes this into account during the order import:</p><p>In the process, the Temu and Seller discount are each stored as separate product items on the order in the online store as part of the order import.</p><p>For this purpose, magnalister creates the order item with a predefined article number (SKU), which you can find in the right input field. By default we have predefined the following SKUs:</p><ul><li>Temu discount: \"__TEMU_DISCOUNT__\"</li><li>Seller discount: \"__SELLER_DISCOUNT__\"</li></ul><p>You can overwrite these SKUs at any time and define your own labels.</p><p><strong>Important note</strong>: When assigning your own SKUs, make sure that they are not identical to SKUs of existing store products, otherwise the stock on these products will be unintentionally reduced when importing orders for a promotion.</p>",
+                "key": "_#_platform_#_.orderimport.temupromotionsdiscount",
+                "type": "none",
+                "values": null,
+                "morefields": {
+                    "temuPromotionsDiscountTemu": {
+                        "key": "_#_platform_#_.orderimport.temupromotionsdiscount.temu_sku",
+                        "label": "Temu Discount Item number",
+                        "rightlabel": "<br>",
+                        "type": "text",
+                        "default": "__TEMU_DISCOUNT__"
+                    },
+                    "temuPromotionsDiscountSeller": {
+                        "key": "_#_platform_#_.orderimport.temupromotionsdiscount.seller_sku",
+                        "label": "Seller Discount Item number",
+                        "type": "text",
+                        "default": "__SELLER_DISCOUNT__"
+                    }
+                }
+            }
+        }
+    },
+    "vat": {
+        "headline": "",
+        "desc": "<b>V.A.T.<b>",
+        "fields": {
+            "vat_unknown": {
+                "label": "V.A.T. for Items, not Listed in the Shop",
+                "desc": "If the item is not listed by magnalister, V.A.T. can not be determined.<br/>\n\t\t\t\t           As a solution, the V.A.T. value added here, will be inserted for all items, that are not listed in the shop.",
+                "hint": "V.A.T. in percentage: Inserted for _#_platformName_#_-items, that are not listed in the shop.",
+                "key": "_#_platform_#_.mwst.fallback",
+                "type": "text",
+                "default": "19",
+                "verify": "float"
+            }
+        }
+    },
+    "buyshipping": {
+        "headline": "",
+        "desc": "<b>Buy Shipping</b>",
+        "fields": {
+            "usebuyshipping": {
+                "label": "Use Buy Shipping",
+                "desc": "Enable Temu Buy Shipping. When enabled, Temu purchases shipping labels automatically (Auto fulfillment). When disabled, you ship orders yourself (Self fulfillment).",
+                "key": "_#_platform_#_.orderstatus.temu.usebuyshipping",
+                "type": "radio",
+                "values": {
+                    "true": "Yes",
+                    "false": "No"
+                },
+                "default": "false"
+            },
+            "buyshipping_weight": {
+                "label": "Default Weight",
+                "desc": "Default package weight for Buy Shipping label purchase.",
+                "key": "_#_platform_#_.orderstatus.temu.buyshipping.weightamount",
+                "type": "text",
+                "default": "1",
+                "cssClasses": ["autoWidth", "temu-buyshipping-field"]
+            },
+            "buyshipping_weightunit": {
+                "label": "Weight Unit",
+                "key": "_#_platform_#_.orderstatus.temu.buyshipping.weightunit",
+                "type": "selection",
+                "values": null,
+                "default": "KILOGRAM",
+                "cssClasses": ["temu-buyshipping-field"]
+            },
+            "buyshipping_length": {
+                "label": "Default Length",
+                "desc": "Default package dimensions for Buy Shipping label purchase.",
+                "key": "_#_platform_#_.orderstatus.temu.buyshipping.length",
+                "type": "text",
+                "default": "30",
+                "cssClasses": ["autoWidth", "temu-buyshipping-field"]
+            },
+            "buyshipping_width": {
+                "label": "Default Width",
+                "key": "_#_platform_#_.orderstatus.temu.buyshipping.width",
+                "type": "text",
+                "default": "20",
+                "cssClasses": ["autoWidth", "temu-buyshipping-field"]
+            },
+            "buyshipping_height": {
+                "label": "Default Height",
+                "key": "_#_platform_#_.orderstatus.temu.buyshipping.height",
+                "type": "text",
+                "default": "15",
+                "cssClasses": ["autoWidth", "temu-buyshipping-field"]
+            },
+            "buyshipping_dimensionunit": {
+                "label": "Dimension Unit",
+                "key": "_#_platform_#_.orderstatus.temu.buyshipping.dimensionunit",
+                "type": "selection",
+                "values": null,
+                "default": "CENTIMETER",
+                "cssClasses": ["temu-buyshipping-field"]
+            },
+            "buyshipping_shiplater": {
+                "label": "Ship Later",
+                "desc": "If enabled, shipment confirmation is delayed after the shipping label is purchased.",
+                "key": "_#_platform_#_.orderstatus.temu.buyshipping.shiplater",
+                "type": "radio",
+                "values": {
+                    "true": "Yes",
+                    "false": "No"
+                },
+                "default": "false",
+                "cssClasses": ["temu-buyshipping-field"]
+            },
+            "buyshipping_logisticstype": {
+                "label": "Logistics Type",
+                "desc": "Select the logistics service type for Buy Shipping.",
+                "key": "_#_platform_#_.orderstatus.temu.buyshipping.logisticstype",
+                "type": "selection",
+                "values": null,
+                "default": "",
+                "cssClasses": ["temu-buyshipping-field"]
+            }
+        }
+    },
+    "generalshipment": {
+        "headline": "",
+        "desc": "<b>General Shipment Settings</b>",
+        "fields": {
+            "orderstatus.temu.warehouseid": {
+                "label": "Warehouse",
+                "desc": "Select the warehouse for shipment confirmation.",
+                "key": "_#_platform_#_.orderstatus.temu.warehouseid",
+                "type": "selection",
+                "values": null,
+                "default": "",
+                "submit": "Orders.WarehouseId"
+            }
+        }
+    },
+    "selffulfillment": {
+        "headline": "",
+        "desc": "<b>Self-Fulfillment Settings</b>",
+        "fields": {
+            "orderstatus.sendcarrier.select": {
+                "label": "Carrier",
+                "desc": "Choose how the carrier is determined for self-fulfilled shipment confirmations: pick a fixed Temu carrier, or select \"Match a Temu carrier to the shop shipping method\" to use the Carrier Shop-Matching rows below (by the order's shop shipping method), or \"Match shipping carrier from a database field\" to read it from the Spediteur Matching field below.",
+                "key": "_#_platform_#_.orderstatus.sendcarrier.select",
+                "type": "selection",
+                "values": null,
+                "default": "",
+                "submit": "Orders.CarrierId"
+            },
+            "orderstatus.sendcarrier.tosShopMatching": {
+                "label": "Carrier Shop-Matching",
+                "desc": "Optional: map a shop shipping method to a Temu carrier, so the carrier is resolved per order. When an order's shop shipping method matches a row here, that Temu carrier is used instead of the default carrier above. Left = Temu carrier, right = shop shipping method.",
+                "key": "_#_platform_#_.orderstatus.sendcarrier.tosShopMatching",
+                "type": "duplicate",
+                "skipRadio": "true",
+                "subtype": "extern",
+                "procFunc": "TemuConfigure::TemuCarrierToShopMatchConfig",
+                "params": {
+                    "subfields": {
+                        "temu.carriers": {
+                            "key": "_#_platform_#_.orderstatus.sendcarrier.tosShopMatching._#_platform_#_",
+                            "type": "extern",
+                            "procFunc": "TemuConfigure::TemuCarriersConfig",
+                            "params": ["CarrierCodes"],
+                            "cssClasses": ["autoWidth"]
+                        },
+                        "shop.carriers": {
+                            "key": "_#_platform_#_.orderstatus.sendcarrier.tosShopMatching.shop",
+                            "type": "extern",
+                            "procFunc": "TemuConfigure::TemuShopCarriersConfig",
+                            "params": ["ShopCarriers"],
+                            "cssClasses": ["autoWidth"]
+                        }
+                    }
+                },
+                "cssClasses": ["orderConfig"]
+            }
+        }
+    }
+}

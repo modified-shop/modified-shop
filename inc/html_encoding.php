@@ -13,6 +13,8 @@
 
 define('ENCODE_DEFINED_CHARSETS','ASCII,UTF-8,ISO-8859-1,ISO-8859-15,cp866,cp1251,cp1252,KOI8-R,GB18030,SJIS,EUC-JP');
 define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-15');
+// the only charsets a language may use, ENCODE_DEFINED_CHARSETS stays the mb_detect_encoding list
+define('ENCODE_LANGUAGE_CHARSETS','UTF-8,ISO-8859-15');
 
 /**
  * encode_htmlentities
@@ -45,9 +47,13 @@ function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
  */
 function encode_utf8($string, $encoding = '', $force_utf8 = false)
 {
-  $language_charset = isset($_SESSION['language_charset']) ? strtolower($_SESSION['language_charset']) : '';
+  if ($string !== null && $string !== '' && (get_default_charset() === 'UTF-8' || $force_utf8 === true)) {
+    // a language charset may be an alias, a technical encoding like ISO-8859-1 stays as it is
+    $charset = normalize_charset($encoding);
+    if ($charset !== '') {
+      $encoding = $charset;
+    }
 
-  if ($string !== null && $string !== '' && ($language_charset == 'utf-8' || $force_utf8 === true)) {
     $cur_encoding = !empty($encoding) && in_array(strtoupper($encoding), get_supported_charset()) ? strtoupper($encoding) : detect_encoding($string);
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
       return $string;
@@ -89,9 +95,7 @@ function decode_htmlspecialchars($string, $flags = ENT_COMPAT)
  */
 function decode_utf8($string, $encoding = '', $force_utf8 = false)
 {
-  $language_charset = isset($_SESSION['language_charset']) ? strtolower($_SESSION['language_charset']) : '';
-
-  if ($string !== null && $string !== '' && ($language_charset != 'utf-8' || $force_utf8 === true)) {
+  if ($string !== null && $string !== '' && (get_default_charset() !== 'UTF-8' || $force_utf8 === true)) {
     $encoding = get_default_encoding($encoding);
 
     $cur_encoding = detect_encoding($string, 'UTF-8');
@@ -120,12 +124,71 @@ function get_supported_charset()
 }
 
 /**
+ * get_language_charsets
+ */
+function get_language_charsets()
+{
+  static $language_charsets;
+
+  if (!isset($language_charsets)) {
+    $language_charsets = explode(',', strtoupper(ENCODE_LANGUAGE_CHARSETS));
+  }
+
+  return $language_charsets;
+}
+
+/**
+ * normalize_charset
+ */
+function normalize_charset($charset)
+{
+  static $charset_aliases;
+
+  $charset = strtoupper(trim((string)$charset));
+
+  if ($charset === '') {
+    return '';
+  }
+
+  if (in_array($charset, get_language_charsets())) {
+    return $charset;
+  }
+
+  if (!isset($charset_aliases)) {
+    $charset_aliases = array('LATIN9' => 'ISO-8859-15');
+    foreach (get_language_charsets() as $supported) {
+      $charset_aliases[preg_replace('/[^A-Z0-9]/', '', $supported)] = $supported;
+    }
+  }
+
+  // "utf8" and other separator-less spellings are rejected by the PHP html functions
+  $alias = preg_replace('/[^A-Z0-9]/', '', $charset);
+
+  return isset($charset_aliases[$alias]) ? $charset_aliases[$alias] : '';
+}
+
+/**
+ * get_language_charset
+ */
+function get_language_charset($charset = '')
+{
+  $charset = normalize_charset($charset);
+
+  if ($charset === '') {
+    $charset = normalize_charset(isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : '');
+  }
+
+  // ENCODE_DEFAULT_CHARSET is part of ENCODE_LANGUAGE_CHARSETS, so the result is always a charset
+  // the PHP html functions accept, which is what ENCODE_DEFINED_CHARSETS never guaranteed
+  return ($charset !== '') ? $charset : ENCODE_DEFAULT_CHARSET;
+}
+
+/**
  * get_default_charset
  */
 function get_default_charset()
 {
-  $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), get_supported_charset()) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
-  return $default_charset;
+  return get_language_charset();
 }
 
 /**
@@ -133,8 +196,18 @@ function get_default_charset()
  */
 function get_default_encoding($encoding)
 {
-  $encoding = !empty($encoding) && in_array(strtoupper($encoding), get_supported_charset()) ? strtoupper($encoding) : get_default_charset();
-  return $encoding;
+  return get_language_charset($encoding);
+}
+
+/**
+ * set_session_charset
+ */
+function set_session_charset()
+{
+  $_SESSION['language_charset'] = get_language_charset();
+
+  // PHP derives the Content-Type header from this, so it has to stay the real response charset
+  @ini_set('default_charset', $_SESSION['language_charset']);
 }
 
 /**

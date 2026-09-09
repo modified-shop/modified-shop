@@ -9,7 +9,7 @@
         <span class="icol_4">{$smarty.const.TEXT_ERROR_REQUIREMENTS_MAX}</span>
       </div>
       {foreach name=aussen item=requirement from=$REQUIREMENT_ARRAY}
-        <div class="info_require_line{if $requirement.status === true} stat_ok{else} stat_fail{/if}">
+        <div class="info_require_line{if $requirement.status === true} stat_ok{elseif $requirement.status === null} stat_unknown{else} stat_fail{/if}">
           <span class="icol_1">{$requirement.name}</span>
           <span class="icol_2">{if $requirement.version != ''}{$requirement.version}{else}&nbsp;{/if}</span>
           <span class="icol_3">{if $requirement.version_min != ''}{$requirement.version_min}{else}&nbsp;{/if}</span>
@@ -107,6 +107,6 @@
       </a>
     </div>
   {/foreach}
+  <p>{$smarty.const.TEXT_BACKUP_DIFF_UNZIP}</p>
 
 {/if}
-

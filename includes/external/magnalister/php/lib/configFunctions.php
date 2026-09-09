@@ -161,6 +161,7 @@ function mlGetPaymentModules(&$form) {
 	if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE);
 }
 
+// Do not use the "carriers" table here: those are Track & Trace parcel services without any shipping cost logic, while this needs the shipping modules installed under MODULE_SHIPPING_INSTALLED.
 function mlGetShippingModules(&$form) {
 	global $_magnaLanguage;
 	$shippings = explode(';', MODULE_SHIPPING_INSTALLED);

@@ -3,14 +3,14 @@
 <script src="https://cdn.klarna.com/public/kitt/toc/v1.1/js/klarna.terms.min.js"></script>
 
 <div class="payone_cc_container">
-  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+  {if $error_message}<div class="errormessage">{$error_message|escape:'html':'':false}</div>{/if}
 
   <table width="100%" class="payone_cc_table">
     {if $required_fields}
       {foreach key=key_data item=item_data from=$required_fields}
         <tr>
           <td class="label">{$key_data|constant}</td>
-          <td style="min-width: 120px;"><input id="{$key_data}" name="{$key_data}" type="text" value="{$item_data}"></td>
+          <td style="min-width: 120px;"><input id="{$key_data|escape:'html'}" name="{$key_data|escape:'html'}" type="text" value="{$item_data|escape:'html'}"></td>
         </tr>
       {/foreach}
     {/if}
@@ -21,7 +21,7 @@
           <div id="horizontalAccordion" class="checkout_accordion">
           {foreach name=inner item=item_data from=$installment_plan}
             <ul class="resp-tabs-list nonjs-fallback">
-              <li><input id="rd-{$item_data.Duration}" type="radio" name="duration" value="{$item_data.Duration}" {if $smarty.foreach.inner.iteration == 1}checked="checked"{/if}> {$item_data.plan.1.Amount|number_format:"2":",":""} {$item_data.Currency} {$smarty.const.TEXT_EACH_MONTH} - {$item_data.Duration} {$smarty.const.TEXT_RATES}</li>
+              <li><input id="rd-{$item_data.Duration|escape:'html'}" type="radio" name="duration" value="{$item_data.Duration|escape:'html'}" {if $smarty.foreach.inner.iteration == 1}checked="checked"{/if}> {$item_data.plan.1.Amount|number_format:"2":",":""} {$item_data.Currency} {$smarty.const.TEXT_EACH_MONTH} - {$item_data.Duration} {$smarty.const.TEXT_RATES}</li>
             </ul>
             <div class="resp-tabs-container">
               <div>
@@ -61,7 +61,7 @@
                 {/foreach}
                 <tr>
                   <td class="label">{$smarty.const.TEXT_CONTRACT}:</td>
-                  <td><a target="_blank" href="{$item_data.StandardCreditInformationUrl}">{$smarty.const.TEXT_DOWNLOAD_CONTRACT}</a></td>
+                  <td><a target="_blank" href="{$item_data.StandardCreditInformationUrl|escape:'html'}">{$smarty.const.TEXT_DOWNLOAD_CONTRACT}</a></td>
                 </tr>
               </table>
               </div>

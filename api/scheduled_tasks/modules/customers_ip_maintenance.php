@@ -13,10 +13,9 @@
   function cron_customers_ip_maintenance() {
     $customers_ip_date = date('Y-m-d 00:00:00', strtotime('-1 year'));
     
-    $customers_query = xtc_db_query("SELECT *, 
-                                            MAX(customers_ip_id) as max_customers_ip_id 
-                                       FROM ".TABLE_CUSTOMERS_IP." 
-                                      WHERE customers_ip_date > '".$customers_ip_date."' 
+    $customers_query = xtc_db_query("SELECT *,
+                                            MAX(customers_ip_id) as max_customers_ip_id
+                                       FROM ".TABLE_CUSTOMERS_IP."
                                    GROUP BY customers_id");
     while ($customers = xtc_db_fetch_array($customers_query)) {
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." 

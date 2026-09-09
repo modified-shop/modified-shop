@@ -20,13 +20,29 @@ require('includes/application_top.php');
 
 // check for SSL Version
 $ssl_version = 'undefined';
-$ch = curl_init('https://www.howsmyssl.com/a/check');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$data = curl_exec($ch);
-curl_close($ch);
-$json = json_decode($data);
-if (is_object($json)) {
-  $ssl_version = $json->tls_version;
+if (function_exists('curl_init')) {
+  $ch = curl_init('https://www.howsmyssl.com/a/check');
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+  $data = curl_exec($ch);
+  $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  curl_close($ch);
+  if ($data !== false
+      && $http_status >= 200
+      && $http_status < 300
+      )
+  {
+    $json = json_decode($data);
+    if (is_object($json)
+        && isset($json->tls_version)
+        && is_string($json->tls_version)
+        )
+    {
+      $ssl_version = $json->tls_version;
+    }
+  }
 }
 
 $system = xtc_get_system_information();

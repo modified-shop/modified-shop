@@ -58,7 +58,7 @@ if (isset($oID) && $oID != '') {
 
             if (is_object($response) && $response->state == 'completed') {
               xtc_db_query("UPDATE ".TABLE_PAYPAL_INSTRUCTIONS."
-                               SET amount = amount - ".(double)$_POST['refund_price']."
+                               SET amount = amount - ".(float)$_POST['refund_price']."
                              WHERE orders_id = '".(int)$oID."'");
             }
           } else {
@@ -111,7 +111,7 @@ if (isset($oID) && $oID != '') {
             if (is_object($response)) {
               if ($response->status == 'COMPLETED') {
                 xtc_db_query("UPDATE ".TABLE_PAYPAL_INSTRUCTIONS."
-                                 SET amount = amount - ".(double)$_POST['refund_price']."
+                                 SET amount = amount - ".(float)$_POST['refund_price']."
                                WHERE orders_id = '".(int)$oID."'");
               }
               

@@ -12,7 +12,7 @@
    
 $language_not_found = false;
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_language_sessions/','php') as $file) require_once ($file); 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_language_sessions/','php') as $file) require_once ($file);
 
 if (isset($_GET['language'])
     || !isset($_SESSION['language'])
@@ -45,4 +45,4 @@ if (isset($_GET['language'])
 }
 
 // set default charset
-@ini_set('default_charset', $_SESSION['language_charset']);
+set_session_charset();

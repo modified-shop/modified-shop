@@ -36,11 +36,16 @@
     $prefix_array[] = array('id' => '=', 'text' => '&nbsp;=&nbsp;');
   }
 
-  $attributes_query = xtc_db_query("SELECT * 
-                                      FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " 
-                                     WHERE orders_id = '" . (int)$_GET['oID'] . "' 
+  $attributes_query = xtc_db_query("SELECT *
+                                      FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                                     WHERE orders_id = '" . (int)$_GET['oID'] . "'
                                        AND orders_products_id = '" . (int)$_GET['opID'] . "'");
   if (xtc_db_num_rows($attributes_query) > 0) {
+    $products_tax_query = xtc_db_query("SELECT products_tax
+                                          FROM " . TABLE_ORDERS_PRODUCTS . "
+                                         WHERE orders_products_id = '" . (int)$_GET['opID'] . "'");
+    $products_tax = xtc_db_fetch_array($products_tax_query);
+    $products_tax_rate = $products_tax['products_tax'];
     ?>
     <!-- Optionsbearbeitung Anfang //-->
     <table class="tableBoxCenter collapse">
@@ -50,11 +55,19 @@
         <td class="dataTableHeadingContent txta-c"><b><?php echo TEXT_WEIGHT_PREFIX;?></b></td>
         <td class="dataTableHeadingContent txta-c"><b><?php echo TEXT_WEIGHT;?></b></td>
         <td class="dataTableHeadingContent txta-c"><b><?php echo TEXT_PRICE_PREFIX;?></b></td>
-        <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE . TEXT_SMALL_NETTO;?></b></td>
+        <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE . (PRICE_IS_BRUTTO == 'true' ? TEXT_SMALL_BRUTTO : TEXT_SMALL_NETTO);?></b></td>
         <td class="dataTableHeadingContent">&nbsp;</td>
       </tr>
       <?php
         while($attributes = xtc_db_fetch_array($attributes_query)) {
+          if (PRICE_IS_BRUTTO == 'true') {
+            $options_values_price_display = xtc_round($attributes['options_values_price'] * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);
+            $options_values_price_netto_hint = '<span style="font-size:11px">&nbsp;'.TEXT_NETTO.'<strong>'. xtc_round($attributes['options_values_price'], PRICE_PRECISION).'</strong></span>';
+          } else {
+            $options_values_price_display = xtc_round($attributes['options_values_price'], PRICE_PRECISION);
+            $options_values_price_netto_hint = '';
+          }
+
           echo xtc_draw_form('product_option_edit', FILENAME_ORDERS_EDIT, 'action=product_option', 'post');
             echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
             echo xtc_draw_hidden_field('opID', (int)$_GET['opID']);
@@ -67,7 +80,7 @@
               <td class="dataTableContent txta-c"><?php echo xtc_draw_pull_down_menu('weight_prefix', $prefix_array, $attributes['weight_prefix']); ?></td>
               <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_weight',$attributes['options_values_weight'], 'size="10"');?></td>
               <td class="dataTableContent txta-c"><?php echo xtc_draw_pull_down_menu('price_prefix', $prefix_array, $attributes['price_prefix']); ?></td>
-              <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_price',$attributes['options_values_price'], 'size="10"');?></td>
+              <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_price', $options_values_price_display, 'size="10"') . $options_values_price_netto_hint;?></td>
               <td class="dataTableContent txta-c">
                 <?php
                   echo '<input type="submit" name="product_option_edit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';

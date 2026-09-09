@@ -1164,14 +1164,20 @@ select:focus {
   background: rgba(231,94,74,0.1); 
   color: #e75e4a;
 }
+.stat_unknown {
+  background: rgba(85,85,85,0.1);
+  color: #555;
+}
 
 .stat_ok .icol_1,
-.stat_fail .icol_1 { 
+.stat_fail .icol_1,
+.stat_unknown .icol_1 {
   position:relative;
   padding-left:30px;
 } 
 .stat_ok .icol_1:before,
-.stat_fail .icol_1:before {
+.stat_fail .icol_1:before,
+.stat_unknown .icol_1:before {
   width:30px;
   text-align:center;
   font-family: 'Font Awesome 5 Free';
@@ -1185,6 +1191,9 @@ select:focus {
 }
 .stat_fail .icol_1:before {
   content: '\f071';
+}
+.stat_unknown .icol_1:before {
+  content: '\f128';
 }
 
 
@@ -1410,5 +1419,3 @@ select:focus {
 .installer_copyright .darkgrey {
   color:#6d6d6d;
 }
-
-

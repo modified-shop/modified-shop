@@ -129,6 +129,7 @@
             {if $order_values.PRODUCTS_ATTRIBUTES neq ''}<div style="padding: 4px 0px 4px 0px;"><em>{$order_values.PRODUCTS_ATTRIBUTES}</em></div>{/if}
             {if $order_values.PRODUCTS_VPE neq ''}<div style="padding: 4px 0px 4px 0px;">{$order_values.PRODUCTS_VPE}</div>{/if}
             {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<div style="padding: 4px 0px 4px 0px;">Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}</div>{/if}
+            {if $order_values.GUARANTEE_HTML neq ''}<div style="padding: 4px 0px 4px 0px;">{$order_values.GUARANTEE_HTML}</div>{/if}
             </font>
           </td>
           <td style="border-bottom:1px dotted #999;" valign="top"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</font></td>
@@ -162,6 +163,16 @@
 </table>
 
 [SIGNATUR]
+
+{if $GUARANTEE_NOTICE_HTML neq ''}
+<br />
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+  <tr>
+    <td style="border-top: 1px dotted #999;"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>{$GUARANTEE_NOTICE_HEADING_HTML}</strong><br />{$GUARANTEE_NOTICE_HTML}</font></td>
+  </tr>
+</table>
+<br />
+{/if}
 
 {if $REVOCATION_HTML neq ''}
 <br />

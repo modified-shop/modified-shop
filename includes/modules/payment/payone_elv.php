@@ -49,9 +49,32 @@ class payone_elv extends PayonePayment {
 		);
 	}
 
+	function _isPayolutionDebitAvailable() {
+		global $order;
+
+		return isset($this->pg_config['types']['payolution_debit']['active'])
+		       && $this->pg_config['types']['payolution_debit']['active'] == 'true'
+		       && is_object($order)
+		       && empty($order->billing['company'])
+		       && empty($order->customer['company']);
+	}
+
+	function _setDebitPaymentBankData($payment_method) {
+		$payment_method->setBankcountry($_SESSION[$this->code]['bankcountry']);
+		if (!empty($_SESSION[$this->code]['iban'])) {
+			$payment_method->setIban($_SESSION[$this->code]['iban']);
+			if (!empty($_SESSION[$this->code]['bic'])) {
+				$payment_method->setBic($_SESSION[$this->code]['bic']);
+			}
+		} else {
+			$payment_method->setBankaccount($_SESSION[$this->code]['bankaccount']);
+			$payment_method->setBankcode($_SESSION[$this->code]['bankcode']);
+		}
+	}
+
 	function selection() {
 		if ($this->pg_config['types']['lastschrift']['active'] == 'true'
-		    || $this->pg_config['types']['payolution_debit']['active'] == 'true'
+		    || $this->_isPayolutionDebitAvailable()
 		    )
 		{
 			$selection = parent::selection();
@@ -85,15 +108,11 @@ class payone_elv extends PayonePayment {
 	  $payment_smarty = new Smarty();
     $payment_smarty->template_dir = DIR_FS_EXTERNAL.'payone/templates/';
     
-    if ($this->pg_config['types']['payolution_debit']['active'] == 'true') {
-      if ($order->billing['company'] != '' || $order->customer['company'] != '') {
-        $required_fields = array(
-          'company_uid' => $_SESSION[$this->code]['invoice_company_uid'],
-          'company_trade_registry_number' => $_SESSION[$this->code]['invoice_company_trade_registry_number'],
-          'company_register_key' => $_SESSION[$this->code]['invoice_company_register_key'],
-        );
-        $payment_smarty->assign('required_fields', $required_fields);                        
-      }
+    if ($this->_isPayolutionDebitAvailable()) {
+	      $required_fields = array(
+	        'customers_dob' => ((isset($_SESSION[$this->code]['customers_dob'])) ? $_SESSION[$this->code]['customers_dob'] : ''),
+	      );
+      $payment_smarty->assign('required_fields', $required_fields);
       $payment_smarty->assign('confirm_text', TEXT_PAYOLUTION_CONFIRM);
       $payment_smarty->assign('sepa_text', sprintf(TEXT_PAYOLUTION_CONFIRM_SEPA, $this->get_sepa_madate()));
     }
@@ -109,8 +128,14 @@ class payone_elv extends PayonePayment {
 		}
     $payment_smarty->assign('sepa_countries', $sepa_countries);
 
-		$sendto_iso2 = $this->_getAddressBookIso2($_SESSION['sendto']);
+    $sendto_iso2 = $this->_getAddressBookIso2($_SESSION['sendto']);
     $payment_smarty->assign('sendto_iso2', ((isset($_SESSION[$this->code]['bankcountry']) && $_SESSION[$this->code]['bankcountry'] != '') ? $_SESSION[$this->code]['bankcountry'] : $sendto_iso2));
+		$payment_smarty->assign('bankdata', array(
+			'iban' => ((isset($_SESSION[$this->code]['iban'])) ? $_SESSION[$this->code]['iban'] : ''),
+			'bic' => ((isset($_SESSION[$this->code]['bic'])) ? $_SESSION[$this->code]['bic'] : ''),
+			'bankaccount' => ((isset($_SESSION[$this->code]['bankaccount'])) ? $_SESSION[$this->code]['bankaccount'] : ''),
+			'bankcode' => ((isset($_SESSION[$this->code]['bankcode'])) ? $_SESSION[$this->code]['bankcode'] : ''),
+		));
 
     $payment_smarty->assign('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
     $payment_smarty->caching = 0;
@@ -145,38 +170,66 @@ class payone_elv extends PayonePayment {
   }
   
 	function pre_confirmation_check() {
+		global $order;
+
 		parent::pre_confirmation_check();
 
-    $valid_request = array(
-      'company_uid', 
-      'company_trade_registry_number', 
-      'company_register_key',
-    );
+		$payment_fields = array('p1_elv_country', 'p1_elv_accountnumber', 'p1_elv_bankcode', 'p1_elv_iban', 'p1_elv_bic', 'p1_elv_conditions', 'p1_elv_sepa', 'customers_dob');
 
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+			foreach($payment_fields as $field) {
+				if (isset($_POST[$field]) && !is_scalar($_POST[$field])) {
+					$_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
+					xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
+				}
+			}
 			$_SESSION[$this->code] = array(
-				'country' => ((isset($_POST['p1_elv_country'])) ? $_POST['p1_elv_country'] : ''),
-				'accountnumber' => ((isset($_POST['p1_elv_accountnumber'])) ? $_POST['p1_elv_accountnumber'] : ''),
-				'bankcode' => ((isset($_POST['p1_elv_bankcode'])) ? $_POST['p1_elv_bankcode'] : ''),
-				'iban' => ((isset($_POST['p1_elv_iban'])) ? $_POST['p1_elv_iban'] : ''),
-				'bic' => ((isset($_POST['p1_elv_bic'])) ? $_POST['p1_elv_bic'] : ''),
-				'conditions' => ((isset($_POST['p1_elv_conditions'])) ? $_POST['p1_elv_conditions'] : false),
-				'sepa' => ((isset($_POST['p1_elv_sepa'])) ? $_POST['p1_elv_sepa'] : false),
+				'bankcountry' => ((isset($_POST['p1_elv_country'])) ? (string)$_POST['p1_elv_country'] : ''),
+				'bankaccount' => ((isset($_POST['p1_elv_accountnumber'])) ? (string)$_POST['p1_elv_accountnumber'] : ''),
+				'bankcode' => ((isset($_POST['p1_elv_bankcode'])) ? (string)$_POST['p1_elv_bankcode'] : ''),
+				'iban' => ((isset($_POST['p1_elv_iban'])) ? (string)$_POST['p1_elv_iban'] : ''),
+				'bic' => ((isset($_POST['p1_elv_bic'])) ? (string)$_POST['p1_elv_bic'] : ''),
+				'conditions' => ((isset($_POST['p1_elv_conditions'])) ? (string)$_POST['p1_elv_conditions'] : false),
+				'sepa' => ((isset($_POST['p1_elv_sepa'])) ? (string)$_POST['p1_elv_sepa'] : false),
 			);
 
-		  foreach ($valid_request as $key) {
-		    if (isset($_POST[$key])) {
-		      $_SESSION[$this->code][$key] = $_POST[$key];
-		    }
-		  }
+			if (isset($_POST['customers_dob'])) {
+				$_SESSION[$this->code]['customers_dob'] = (string)$_POST['customers_dob'];
+			}
 		}
 
     $this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
 
-    $_SESSION[$this->code]['elv_type'] = 'lastschrift';
-    if ($this->pg_config['types']['payolution_debit']['active'] == 'true') {
-      $_SESSION[$this->code]['elv_type'] = 'payolution_debit';
-    }
+		$lastschrift_active = $this->pg_config['types']['lastschrift']['active'] == 'true';
+		$payolution_debit_available = $this->_isPayolutionDebitAvailable();
+		if (!$lastschrift_active && !$payolution_debit_available) {
+			$_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
+			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
+		}
+		$_SESSION[$this->code]['elv_type'] = (($payolution_debit_available) ? 'payolution_debit' : 'lastschrift');
+
+		if ($_SESSION[$this->code]['elv_type'] == 'payolution_debit') {
+			$date = ((isset($_SESSION[$this->code]['customers_dob'])) ? xtc_date_raw($_SESSION[$this->code]['customers_dob']) : '');
+			if (!ctype_digit((string)$date)
+			    || strlen($date) != 8
+			    || !checkdate((int)substr($date, 4, 2), (int)substr($date, 6, 2), (int)substr($date, 0, 4))
+			    )
+			{
+				$_SESSION['payone_error'] = ENTRY_DATE_OF_BIRTH_ERROR;
+				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
+			}
+		}
+
+		$bankcountry = $_SESSION[$this->code]['bankcountry'];
+		$valid_country = in_array($bankcountry, $this->pg_config['genre_specific']['sepa_account_countries']);
+		$valid_iban = $_SESSION[$this->code]['iban'] != '';
+		$valid_account = $bankcountry === 'DE'
+		                 && $_SESSION[$this->code]['bankaccount'] != ''
+		                 && $_SESSION[$this->code]['bankcode'] != '';
+		if (!$valid_country || (!$valid_iban && !$valid_account)) {
+			$_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
+			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
+		}
     
     if ($_SESSION[$this->code]['elv_type'] == 'lastschrift') {
       $this->payone->log("verfication $this->code payment data");
@@ -194,10 +247,10 @@ class payone_elv extends PayonePayment {
       $service = $builder->buildServiceVerificationBankAccountCheck();
   
       $request = new Payone_Api_Request_BankAccountCheck($params);
-      $this->payone->log("elv BankAccountCheck request:\n".print_r($request, true));
+      $this->payone->log("elv BankAccountCheck request");
   
       $response = $service->check($request);
-      $this->payone->log("elv BankAccountCheck response:\n".print_r($response, true));
+      $this->payone->log("elv BankAccountCheck response ".$response->getStatus());
 
       if ($response instanceof Payone_Api_Response_Error
           || $response instanceof Payone_Api_Response_BankAccountCheck_Blocked
@@ -209,14 +262,14 @@ class payone_elv extends PayonePayment {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
       }
     
-      if ($_SESSION[$this->code]['elv_type'] == 'lastschrift') {
-        if ((!isset($_SESSION[$this->code]['conditions']) || $_SESSION[$this->code]['conditions'] == false)) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));		
-        }
-        if ((!isset($_SESSION[$this->code]['sepa']) || $_SESSION[$this->code]['sepa'] == false)) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));		
-        }
-      }
+    }
+
+		if ($_SESSION[$this->code]['elv_type'] == 'payolution_debit'
+		    && (empty($_SESSION[$this->code]['conditions']) || empty($_SESSION[$this->code]['sepa']))
+		    )
+		{
+			$_SESSION['payone_error'] = TEXT_PAYOLUTION_ERROR_CONDITIONS;
+			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
     }
 	}
 
@@ -242,19 +295,7 @@ class payone_elv extends PayonePayment {
       parent::_set_customers_standard_params();
 
 			$this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_DebitPayment();
-		  if (isset($_SESSION[$this->code]['iban']) 
-		      && $_SESSION[$this->code]['iban'] != '' 
-		      && isset($_SESSION[$this->code]['bic']) 
-		      && $_SESSION[$this->code]['bic'] != ''
-		      ) 
-		  {
-        $this->payment_method->setIban($_SESSION[$this->code]['iban']);
-        $this->payment_method->setBic($_SESSION[$this->code]['bic']);
-      } else {
-        $this->payment_method->setBankaccount($_SESSION[$this->code]['bankaccount']);
-        $this->payment_method->setBankcode($_SESSION[$this->code]['bankcode']);
-      }
-			$this->payment_method->setBankcountry($_SESSION[$this->code]['bankcountry']);
+			$this->_setDebitPaymentBankData($this->payment_method);
 
 			$request_parameters = array(
         'aid' => $this->global_config['subaccount_id'],
@@ -272,9 +313,9 @@ class payone_elv extends PayonePayment {
 			$manage_mandate_request->setPersonalData($this->personal_data);
 			$manage_mandate_request->setPayment($this->payment_method);
 
-      $this->payone->log("elv managemandate request:\n".print_r($manage_mandate_request, true));
+			$this->payone->log("elv managemandate request");
 			$manage_mandate_result = $mandate_service->managemandate($manage_mandate_request);
-			$this->payone->log("managemandate result:\n".print_r($manage_mandate_result, true));
+			$this->payone->log("managemandate result ".$manage_mandate_result->getStatus());
 			
 			$error = false;	
 			if ($manage_mandate_result instanceof Payone_Api_Response_Error) {
@@ -329,6 +370,8 @@ class payone_elv extends PayonePayment {
 	}
 
 	function before_process() {
+		parent::before_process();
+
 		if (isset($_SESSION['tmp_oID']) === false) {
 			# we're on the first run of checkout_process
 			if ($_SESSION[$this->code]['elv_type'] == 'lastschrift') {
@@ -358,26 +401,16 @@ class payone_elv extends PayonePayment {
 		
 		$this->personal_data = new Payone_Api_Request_Parameter_Authorization_PersonalData();
 		parent::_set_customers_standard_params();
+		if ($_SESSION[$this->code]['elv_type'] == 'payolution_debit') {
+			$this->personal_data->setBirthday(xtc_date_raw($_SESSION[$this->code]['customers_dob']));
+		}
 
 		$this->delivery_data = new Payone_Api_Request_Parameter_Authorization_DeliveryData();
 		parent::_set_customers_shipping_params();
     
 		$this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_DebitPayment();
-    $this->payment_method->setBankcountry($_SESSION[$this->code]['bankcountry']);
+		$this->_setDebitPaymentBankData($this->payment_method);
 		//$payment_method->setBankaccountholder($_SESSION[$this->code]['accountholder']);
-		
-		if (isset($_SESSION[$this->code]['iban']) 
-		    && $_SESSION[$this->code]['iban'] != '' 
-		    && isset($_SESSION[$this->code]['bic']) 
-		    && $_SESSION[$this->code]['bic'] != ''
-		    ) 
-		{
-      $this->payment_method->setIban($_SESSION[$this->code]['iban']);
-      $this->payment_method->setBic($_SESSION[$this->code]['bic']);
-    } else {
-      $this->payment_method->setBankaccount($_SESSION[$this->code]['bankaccount']);
-  		$this->payment_method->setBankcode($_SESSION[$this->code]['bankcode']);
-		}
 		
 		if (isset($_SESSION[$this->code]['sepa_mandate_id'])) {
 			$this->payment_method->setMandateIdentification($_SESSION[$this->code]['sepa_mandate_id']);
@@ -393,19 +426,16 @@ class payone_elv extends PayonePayment {
       
       $debit = $this->payment_method;
       $this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_Financing();
-      $this->payment_method->setSuccessurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id());
+	      $this->payment_method->setSuccessurl($this->getCheckoutSuccessUrl($insert_id));
       $this->payment_method->setBackurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id());
       $this->payment_method->setErrorurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id().'&payment_error='.$this->code);
     
       // set order_id for deleting canceld order
       $_SESSION['tmp_payone_oID'] = $_SESSION['tmp_oID'];
     
-      $paydata_item = array(
-        array('key' => 'b2b', 'data' => (($order->billing['company'] != '' || $order->customer['company'] != '') ? 'yes' : 'no')),
-        array('key' => 'company_uid', 'data' => $_SESSION[$this->code]['company_uid']),
-        array('key' => 'company_trade_registry_number', 'data' => $_SESSION[$this->code]['company_trade_registry_number']),
-        array('key' => 'company_register_key', 'data' => $_SESSION[$this->code]['company_register_key']),
-      );
+	      $paydata_item = array(
+	        array('key' => 'b2b', 'data' => 'no'),
+	      );
       $paydata = new Payone_Api_Request_Parameter_Paydata_Paydata();
       foreach ($paydata_item as $item) {
         $paydata->addItem(

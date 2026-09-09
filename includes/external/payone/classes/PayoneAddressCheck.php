@@ -119,7 +119,7 @@ class PayoneAddressCheck {
 			$sendto_check = false;
 			$ab_sendto = $this->_payone->getAddressBookEntry($_SESSION['sendto']);
 			$this->set_content_data('sendto_address', $ab_sendto);
-			$sendto_checktype = $checktypes[$config['address_check']['billing_address']];
+			$sendto_checktype = $checktypes[$config['address_check']['delivery_address']];
 			if ($sendto_checktype == 'PE' && $ab_sendto['countries_iso_code_2'] != 'DE') {
 				// fall back to basic check if address is not in Germany
 				$sendto_checktype = 'BA';

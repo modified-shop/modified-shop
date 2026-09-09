@@ -201,8 +201,8 @@ class PayPalPayment extends PayPalPaymentBase {
         $i = count($item);
         $item[$i] = $shipping_cost;
 
-        $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_data['total'] + (double)$shipping_data['tax']);
-        $this->details->setTax($this->details->getTax() + (double)$shipping_data['tax']);
+        $this->amount->setTotal($this->amount->getTotal() + (float)$shipping_data['total'] + (float)$shipping_data['tax']);
+        $this->details->setTax($this->details->getTax() + (float)$shipping_data['tax']);
         $this->details->setSubtotal($this->amount->getTotal() - $this->details->getTax() + $this->details->getDiscount());
       }
       
@@ -269,8 +269,9 @@ class PayPalPayment extends PayPalPaymentBase {
         $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PROCESS, xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
                      ->setCancelUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
       } else {
-        $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'oID='.$order->info['order_id'].'&key='.md5($order->customer['email_address']).'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
-                     ->setCancelUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'payment_error='.$this->code.'&oID='.$order->info['order_id'].'&key='.md5($order->customer['email_address']).'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
+        $link_token = $this->get_paypal_link_token($order->info['order_id'], $order->customer['email_address']);
+        $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'oID='.$order->info['order_id'].'&key='.$link_token.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
+                     ->setCancelUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'payment_error='.$this->code.'&oID='.$order->info['order_id'].'&key='.$link_token.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
       }
     }
     
@@ -293,7 +294,7 @@ class PayPalPayment extends PayPalPaymentBase {
     
       if (isset($shipping_cost) && is_object($shipping_cost)) {
         $item[1] = $shipping_cost;
-        $item[0]->setPrice($this->details->getSubtotal() - (double)$shipping_cost->getPrice());
+        $item[0]->setPrice($this->details->getSubtotal() - (float)$shipping_cost->getPrice());
       }    
     }
     $itemList->setItems($item);

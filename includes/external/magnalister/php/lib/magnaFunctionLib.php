@@ -1081,6 +1081,12 @@ function magnaSKU2GambioProp($sSku) {
 		$mProductPropertiesCombisId = false;
 		foreach ($aData as $sPropSet) {
 			$sPropSet = explode('.', $sPropSet);
+			// A valid variation segment must be in the "propertiesId.valuesId" format.
+			// SKUs that don't follow this scheme (e.g. plain variation models) cannot
+			// be resolved to a Gambio property combi.
+			if (!isset($sPropSet[0], $sPropSet[1])) {
+				return false;
+			}
 
 			$mProductPropertiesCombisId = MagnaDB::gi()->fetchArray(eecho("
 				SELECT DISTINCT products_properties_combis_id
@@ -1463,24 +1469,45 @@ function renderCategoryPath($id, $from = 'category', $appendedText = '&nbsp;<spa
 	return $calculated_category_path_string;
 }
 
+/**
+ * JSON of a .form file, whichever of the two kinds it is.
+ *
+ * A .form file either contains the JSON itself or is a PHP script that echoes it.
+ * The second kind used to be read back over HTTP so that PHP would run it; it is
+ * executed in place instead, which needs neither a reachable shop URL nor a
+ * temporary copy of the file below the document root.
+ *
+ * @param string $file absolute path
+ * @return string empty when the file does not exist
+ */
+function readConfigFormFile($file) {
+    if (!is_file($file)) {
+        return '';
+    }
+    $contents = file_get_contents($file);
+    if (strpos(ltrim(substr($contents, 0, 64)), '<?php') !== 0) {
+        return $contents;
+    }
+    ob_start();
+    // the form scripts set a content type of their own, and the headers are long gone by now
+    @include $file;
+    return ob_get_clean();
+}
+
 function loadConfigForm($lang, $files, $replace = array()) {
     $form = array();
     foreach ($files as $file => $options) {
-        $fC = file_get_contents(DIR_MAGNALISTER_FS.'config/'.$lang.'/'.$file);
-//        if (json_decode($fC, true) === null) {
-//            $pageURL = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
-//            $baseurlpart = explode('magnalister.php', $_SERVER["REQUEST_URI"]);
-//            $sPHPFileName = str_replace('.form', '.php', $file);
-//            file_put_contents(DIR_MAGNALISTER_FS.'config/'.$lang.'/'.$sPHPFileName, $fC);
-//            $pageURL .= $_SERVER["SERVER_NAME"].($_SERVER["SERVER_PORT"] != "80" ? ":".$_SERVER["SERVER_PORT"] : '').$baseurlpart[0];
-//            $pageURL .= DIR_MAGNALISTER_WS.'config/'.$lang.'/'.$sPHPFileName;
-//            $fC = file_get_contents($pageURL);
-//        }
+        $fC = readConfigFormFile(DIR_MAGNALISTER_FS.'config/'.$lang.'/'.$file);
         $replace['http:\/\/www.IhrShop.de\/'] = trim(json_encode(HTTP_SERVER.DIR_WS_CATALOG), ' "\/').'\/';
         if (!empty($replace)) {
             $fC = str_replace(array_keys($replace), array_values($replace), $fC);
         }
         $fC = json_decode($fC, true);
+        if (!is_array($fC)) {
+            // an unreadable form must not take the whole configuration page down
+            trigger_error('magnalister: config form '.$lang.'/'.$file.' could not be read', E_USER_WARNING);
+            continue;
+        }
         if (array_key_exists('unset', $options)) {
             foreach ($options['unset'] as $key) {
                 unset($fC[$key]);

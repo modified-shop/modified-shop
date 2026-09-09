@@ -44,11 +44,26 @@
     $this_content = array_pop($content_path);
     if ($this_content == $counter) $content_active = " active".$level;
 
+    $content_custom = '';
+    if (defined('MODULE_WITHDRAW_CONTENT') && (int)MODULE_WITHDRAW_CONTENT == $content_array[$counter]['coID']) {
+      $content_custom = " withdraw_link";
+    }
+
     if (trim($content_string == '')) $content_string = "\n"; 
     $content_string .= $ul; 
     $content_string .= $tab; 
-    $content_string .= '<li class="level'.$level.$content_active.$content_active_parent.'">';
-    $content_string .= '<a href="'.xtc_href_link(FILENAME_CONTENT, xtc_content_link($content_array[$counter]['coID'], $content_array[$counter]['name'])).'" title="'.encode_htmlentities($content_array[$counter]['name']).'">';
+    $content_string .= '<li class="level'.$level.$content_active.$content_active_parent.$content_custom.'">';
+    // the chosen content page opens the cookie settings instead of its own page
+    if (defined('MODULE_COOKIE_CONSENT_STATUS')
+        && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true'
+        && defined('MODULE_COOKIE_CONSENT_CONTENT')
+        && (int)MODULE_COOKIE_CONSENT_CONTENT == $content_array[$counter]['coID']
+        )
+    {
+      $content_string .= '<a href="javascript:;" data-trigger-cookie-consent-panel="" title="'.encode_htmlentities(strip_tags($content_array[$counter]['name'])).'">';
+    } else {
+      $content_string .= '<a href="'.xtc_href_link(FILENAME_CONTENT, xtc_content_link($content_array[$counter]['coID'], $content_array[$counter]['name'])).'" title="'.encode_htmlentities(strip_tags($content_array[$counter]['name'])).'">';
+    }
     $content_string .= '<span>'.$content_array[$counter]['name'].'</span>';
     $content_string .= '</a></li>';
     $content_string .= "\n";

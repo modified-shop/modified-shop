@@ -112,6 +112,7 @@
   define('TEXT_DB_COMPLETE_INSERTS', 'Complete \'INSERT\'s');
   define('TEXT_DB_SINGLE_FILES', 'Single files per table');
   define('TEXT_DB_UTF8_CONVERT', 'Convert database to UTF-8');
+  define('TEXT_DB_UTF8_CONVERT_COLLATION_INFO', 'The first collation supported by the database server is used for the conversion in this order: <code>utf8mb4_german2_ci</code>, <code>utf8mb4_general_ci</code>, <code>utf8_german2_ci</code>. <code>utf8_general_ci</code> is used as the fallback.');
   define('TEXT_DB_COMPRESS_GZIP', 'Use GZIP');
   define('TEXT_DB_COMPRESS_RAW', 'No Compression (Pure SQL)');
   define('TEXT_DB_SIZE', 'Size');
@@ -150,6 +151,8 @@
   //define('TEXT_DB_UPDATE_AFTER', 'Text after'); // Not used yet
 
   define('TEXT_BACKUP_DIFF', 'Backup Diff');
+  define('TEXT_BACKUP_DIFF_UNZIP', 'Note: If the ZIP archive cannot be opened with the integrated Windows extraction tool, please use a program such as 7-Zip.');
+  define('ERROR_BACKUP_DIFF', 'The backup of modified files could not be created. The update was stopped. Please check the write permissions for the backup directory and try again.');
   define('TEXT_BACKUP_SIZE', 'Size');
   define('TEXT_BACKUP_DATE', 'Date');
 
