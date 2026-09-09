@@ -2356,8 +2356,11 @@ a.color_more:hover {
 
 
 /* 18. START Listing globals */
+/* Optional content such as GARAN labels must not shift the following product row. */
 .listingcontainer, .listingcontainer_full, .listingcontainer_details {
   margin: 0px -5px 0px -5px;
+  display:flex;
+  flex-wrap:wrap;
 }
 .pd_tabs .listingcontainer_details {
   margin: 0px -6px 0px -6px;
@@ -2386,6 +2389,7 @@ a.color_more:hover {
 /* 19. START productlist boxes */
 .listingbox {
   float:left;
+  display:flex;
   width:100%;
   height:auto;
   padding: 0px 5px;
@@ -2436,6 +2440,10 @@ a.color_more:hover {
   border: 1px solid #ccc;
 }
 .lb_inner {
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-width:0;
   border: 1px solid #eee;
   padding: 10px 10px 10px 10px;
   overflow:hidden;
@@ -2668,6 +2676,7 @@ a.color_more:hover {
   display:block;
   text-align:center;
   padding-top:15px;
+  margin-top:auto;
 }
 .lb_buttons img {
   margin: 0px 2px;
@@ -2677,6 +2686,8 @@ a.color_more:hover {
 
 /* 20. START productlist rows */
 .listingrow {
+  flex:1 1 100%;
+  min-width:0;
   height:auto;
   margin: 0px 10px 0px 10px;  
 }

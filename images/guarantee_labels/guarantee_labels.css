@@ -110,12 +110,19 @@
   display: block;
   width: 420px;
   min-width: 270px;
-  max-width: 90vw;
+  max-width: 100%;
   height: auto;
 }
 
 .guarantee-label__full {
   overflow: auto;
+}
+
+/* Leave room for the label's minimum width in narrow popup frames. */
+@media only screen and (max-width: 350px) {
+  .guarantee-label__full {
+    padding: 0;
+  }
 }
 
 .guarantee-label__link {
@@ -183,13 +190,13 @@
   margin-top: 10px;
 }
 
-/* The sheet keeps the height of the viewport and is never cropped. The width comes from the
-   A4 ratio, so the overlay has something to measure the moment the graphic is loaded. */
+/* Fit the sheet to the popup's content width and keep its A4 proportions when either
+   that width or the viewport height limits its size. */
 .guarantee-notice__full img {
   display: block;
   width: auto;
-  height: 80vh;
-  max-width: 90vw;
+  height: auto;
+  max-width: 100%;
   max-height: 80vh;
   margin: 0 auto;
 }
