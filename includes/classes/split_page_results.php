@@ -93,32 +93,73 @@
         return $sql;
       }
 
-      $pattern = '/\bLEFT\s+(?:OUTER\s+)?JOIN\s+.*?(?=\bLEFT\s+(?:OUTER\s+)?JOIN\b|\bINNER\s+JOIN\b|\bSTRAIGHT_JOIN\b|\bJOIN\b|\bWHERE\b|$)/is';
-      if (!preg_match_all($pattern, $masked, $matches, PREG_OFFSET_CAPTURE)) {
-        return $sql;
-      }
+      foreach ($this->get_join_clauses($masked) as $clause) {
+        if ($clause['left'] !== true) {
+          continue;
+        }
 
-      foreach ($matches[0] as $match) {
-        $join = $match[0];
-        $offset = $match[1];
-
+        $join = substr($masked, $clause['offset'], $clause['length']);
         if (!preg_match('/\bLEFT\s+(?:OUTER\s+)?JOIN\s+`?([a-z0-9_]+)`?\s+(?:AS\s+)?`?([a-z0-9_]*)`?\s*(?:ON\b|\()/is', $join, $parts)) {
           continue;
         }
 
         $alias = ((isset($parts[2]) && $parts[2] != '' && strtoupper($parts[2]) != 'ON') ? $parts[2] : $parts[1]);
 
-        // blanking keeps the offsets of the remaining joins valid
-        $rest = substr_replace($masked, str_repeat(' ', strlen($join)), $offset, strlen($join));
-        if (preg_match('/\b'.preg_quote($alias, '/').'\s*\./i', $rest.' '.$count_string)) {
+        // blanking keeps the offsets of the remaining clauses valid
+        $rest = substr_replace($masked, str_repeat(' ', $clause['length']), $clause['offset'], $clause['length']);
+        $reference = '/(?:^|[^a-z0-9_`])`?'.preg_quote($alias, '/').'`?\s*\./i';
+        if (preg_match($reference, $rest.' '.$count_string)) {
           continue;
         }
 
         $masked = $rest;
-        $sql = substr_replace($sql, str_repeat(' ', strlen($join)), $offset, strlen($join));
+        $sql = substr_replace($sql, str_repeat(' ', $clause['length']), $clause['offset'], $clause['length']);
       }
 
       return $sql;
+    }
+
+    // the join clauses of the outer query, subqueries stay untouched
+    function get_join_clauses($sql) {
+      $pattern = '/\b(?:LEFT\s+(?:OUTER\s+)?JOIN|RIGHT\s+(?:OUTER\s+)?JOIN|INNER\s+JOIN|CROSS\s+JOIN|STRAIGHT_JOIN|JOIN|WHERE)\b/i';
+      if (!preg_match_all($pattern, $sql, $matches, PREG_OFFSET_CAPTURE)) {
+        return array();
+      }
+
+      $clauses = array();
+      $depth = 0;
+      $scanned = 0;
+      $offset = false;
+      $left = false;
+
+      foreach ($matches[0] as $match) {
+        for (; $scanned < $match[1]; $scanned++) {
+          if ($sql[$scanned] === '(') $depth++;
+          if ($sql[$scanned] === ')') $depth--;
+        }
+
+        if ($depth != 0) {
+          continue;
+        }
+
+        if ($offset !== false) {
+          $clauses[] = array('offset' => $offset, 'length' => ($match[1] - $offset), 'left' => $left);
+          $offset = false;
+        }
+
+        if (strtoupper($match[0]) === 'WHERE') {
+          break;
+        }
+
+        $offset = $match[1];
+        $left = (stripos($match[0], 'LEFT') === 0);
+      }
+
+      if ($offset !== false) {
+        $clauses[] = array('offset' => $offset, 'length' => (strlen($sql) - $offset), 'left' => $left);
+      }
+
+      return $clauses;
     }
 
     // display split-page-number-links
