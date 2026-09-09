@@ -28,6 +28,10 @@ class product {
   var $default_select;
   var $productModules;
 
+  // shared by every instance, the same way the function statics were
+  static $reviews_count_array = array();
+  static $reviews_avg_array = array();
+
   /**
    *
    * Constructor
@@ -155,12 +159,6 @@ class product {
    * @return integer
    */
   function getReviewsCount($pID = '') {
-    static $reviews_count_array;
-    
-    if (!isset($reviews_count_array)) {
-      $reviews_count_array = array();
-    }
-    
     if ($pID == '') {
       $pID = $this->pID;
     }
@@ -172,17 +170,17 @@ class product {
                        AND rd.languages_id = '".(int)$_SESSION['languages_id']."'";
     }
     
-    if (!isset($reviews_count_array[$pID])) {
+    if (!isset(self::$reviews_count_array[$pID])) {
       $reviews_query = xtc_db_query("SELECT count(*) AS total
                                        FROM ".TABLE_REVIEWS." r
                                             ".$join."
                                       WHERE r.products_id = '".(int)$pID."'
                                         AND r.reviews_status = '1'");
       $reviews = xtc_db_fetch_array($reviews_query);
-      $reviews_count_array[$pID] = $reviews['total'];
+      self::$reviews_count_array[$pID] = $reviews['total'];
     }
     
-    return $reviews_count_array[$pID];
+    return self::$reviews_count_array[$pID];
   }
 
 
@@ -192,27 +190,91 @@ class product {
    * @return string
    */
   function getReviewsAverage($pID = '', $precision = 0) {
-    static $reviews_avg_array;
-    
-    if (!isset($reviews_avg_array)) {
-      $reviews_avg_array = array();
-    }
-
     if ($pID == '') {
       $pID = $this->pID;
     }
     
-    if (!isset($reviews_avg_array[$pID])) {
+    if (!isset(self::$reviews_avg_array[$pID])) {
       $avg_reviews_query = xtc_db_query("SELECT avg(reviews_rating) AS avg_rating 
                                            FROM ".TABLE_REVIEWS."
                                           WHERE products_id='".(int)$pID."'
                                             AND reviews_status = '1'");
       $avg_reviews = xtc_db_fetch_array($avg_reviews_query);
-      $reviews_avg_array[$pID] = (float)$avg_reviews['avg_rating'];
+      self::$reviews_avg_array[$pID] = (float)$avg_reviews['avg_rating'];
     }
     
-    return round($reviews_avg_array[$pID], $precision);
+    return round(self::$reviews_avg_array[$pID], $precision);
   } 
+
+
+  /**
+   * preloadReviews
+   *
+   * reads count and average for a whole result page with two queries
+   *
+   * @param array $products_id_array
+   */
+  function preloadReviews($products_id_array) {
+    // only the product reviews module needs these values in a listing
+    if (!defined('MODULE_PRODUCT_PRODUCT_REVIEWS_STATUS')
+        || MODULE_PRODUCT_PRODUCT_REVIEWS_STATUS != 'true'
+        )
+    {
+      return;
+    }
+
+    $products_ids = array();
+    foreach ((array)$products_id_array as $products_id) {
+      $pID = (int)$products_id;
+      if ($pID > 0
+          && !isset(self::$reviews_count_array[$pID])
+          && !isset(self::$reviews_avg_array[$pID])
+          )
+      {
+        $products_ids[$pID] = $pID;
+      }
+    }
+
+    if (count($products_ids) === 0) {
+      return;
+    }
+
+    // a product without reviews has to be stored too, otherwise it is asked for again
+    foreach ($products_ids as $pID) {
+      self::$reviews_count_array[$pID] = 0;
+      self::$reviews_avg_array[$pID] = 0.0;
+    }
+
+    $products_in = implode("', '", $products_ids);
+
+    $join = '';
+    if ($this->reviews_lang === true) {
+      $join = "JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
+                    ON r.reviews_id = rd.reviews_id
+                       AND rd.languages_id = '".(int)$_SESSION['languages_id']."'";
+    }
+
+    $reviews_query = xtc_db_query("SELECT r.products_id,
+                                          count(*) AS total
+                                     FROM ".TABLE_REVIEWS." r
+                                          ".$join."
+                                    WHERE r.products_id IN ('".$products_in."')
+                                      AND r.reviews_status = '1'
+                                 GROUP BY r.products_id");
+    while ($reviews = xtc_db_fetch_array($reviews_query)) {
+      self::$reviews_count_array[(int)$reviews['products_id']] = $reviews['total'];
+    }
+
+    $avg_reviews_query = xtc_db_query("SELECT products_id,
+                                              avg(reviews_rating) AS avg_rating
+                                         FROM ".TABLE_REVIEWS."
+                                        WHERE products_id IN ('".$products_in."')
+                                          AND reviews_status = '1'
+                                     GROUP BY products_id");
+    while ($avg_reviews = xtc_db_fetch_array($avg_reviews_query)) {
+      self::$reviews_avg_array[(int)$avg_reviews['products_id']] = (float)$avg_reviews['avg_rating'];
+    }
+  }
 
 
   /**
