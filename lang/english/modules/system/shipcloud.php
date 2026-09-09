@@ -19,6 +19,8 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_API_DESC', 'API Key from shipcloud');
   define('MODULE_SHIPCLOUD_PARCEL_TITLE', '<hr noshade>Packagesize');
   define('MODULE_SHIPCLOUD_PARCEL_DESC', 'Please define the Packagesize like this: length,width,height;<br/>You can define more sizes separated by semicolon (;). Exapmple: 20,40,30;15,20,20;');
+  define('MODULE_SHIPCLOUD_WEIGHT_CN23_TITLE', '<hr noshade>Weight CN23');
+  define('MODULE_SHIPCLOUD_WEIGHT_CN23_DESC', 'Enter the product weight in kg for the customs declaration if none is stored with the product.');
   define('MODULE_SHIPCLOUD_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
   define('MODULE_SHIPCLOUD_COMPANY_DESC', 'Company:');
   define('MODULE_SHIPCLOUD_FIRSTNAME_TITLE', '');

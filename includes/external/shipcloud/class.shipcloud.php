@@ -83,6 +83,11 @@ class shipcloud {
         $request_array['from'] = $sender_data;
       }
       
+      $customs_data = $this->customs_data();
+      if ($customs_data !== false) {
+        $request_array['customs_declaration'] = $customs_data;
+      }
+      
       if (strpos($this->carrier, 'dhl') !== false
           || $this->carrier == 'dpd'
           )
@@ -157,6 +162,7 @@ class shipcloud {
 
         unset($request_array['description']);
         unset($request_array['package']['description']);
+        unset($request_array['customs_declaration']);
         
         $request = $this->do_request(json_encode($request_array), self::SC_URL_QUOTES);
         if (is_array($request) && isset($request['shipment_quote'])) {
@@ -298,6 +304,84 @@ class shipcloud {
   }
 
   
+  private function customs_data() {
+    if ($this->customs_required() === false) {
+      return false;
+    }
+
+    $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
+    $default_weight = ((defined('MODULE_SHIPCLOUD_WEIGHT_CN23')) ? (float)MODULE_SHIPCLOUD_WEIGHT_CN23 : 0.1);
+
+    $items = array();
+    $contents = array();
+    $total_value_amount = 0;
+    for ($i = 0, $n = count($this->order->products); $i < $n; $i++) {
+      $quantity = (int)$this->order->products[$i]['qty'];
+      if ($quantity < 1) {
+        continue;
+      }
+
+      $description = ((isset($this->order->products[$i]['tariff_title']) && $this->order->products[$i]['tariff_title'] != '') ? $this->order->products[$i]['tariff_title'] : $this->order->products[$i]['name']);
+      $value_amount = (float)sprintf("%01.2f", $this->order->products[$i]['price']);
+      $net_weight = (float)sprintf("%01.3f", (($this->order->products[$i]['weight'] > 0) ? $this->order->products[$i]['weight'] : $default_weight));
+
+      $item = array(
+        'origin_country' => ((isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') ? $this->order->products[$i]['origin'] : $country['countries_iso_code_2']),
+        'description'    => $description,
+        'quantity'       => $quantity,
+        'value_amount'   => $value_amount,
+        'net_weight'     => $net_weight,
+      );
+
+      if (isset($this->order->products[$i]['tariff']) && $this->order->products[$i]['tariff'] != '') {
+        $item['hs_tariff_number'] = $this->order->products[$i]['tariff'];
+      }
+
+      $items[] = $item;
+      $contents[] = $description;
+      $total_value_amount += $value_amount * $quantity;
+    }
+
+    if (count($items) < 1) {
+      return false;
+    }
+
+    $customs_data = array(
+      'contents_type'        => 'commercial_goods',
+      'contents_explanation' => mb_substr(implode(', ', $contents), 0, 256),
+      'currency'             => $this->order->info['currency'],
+      'total_value_amount'   => (float)sprintf("%01.2f", $total_value_amount),
+      'posting_date'         => date('Y-m-d'),
+      'items'                => $items,
+    );
+
+    return $customs_data;
+  }
+
+
+  private function customs_required() {
+    $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
+    if ($this->order->delivery['country_iso_2'] == $country['countries_iso_code_2']) {
+      return false;
+    }
+
+    // a destination outside every tax zone of the shop is treated as a third country
+    $tax_rate = 0;
+    $tax_rates_query = xtc_db_query("SELECT tr.tax_rate
+                                       FROM ".TABLE_COUNTRIES." c
+                                       JOIN ".TABLE_ZONES_TO_GEO_ZONES." ztgz
+                                            ON c.countries_id = ztgz.zone_country_id
+                                       JOIN ".TABLE_TAX_RATES." tr
+                                            ON tr.tax_zone_id = ztgz.geo_zone_id
+                                      WHERE c.countries_iso_code_2 = '".xtc_db_input($this->order->delivery['country_iso_2'])."'");
+    while ($tax_rates = xtc_db_fetch_array($tax_rates_query)) {
+      $tax_rate += $tax_rates['tax_rate'];
+    }
+
+    return (($tax_rate == 0) ? true : false);
+  }
+
+
   private function package_data() {
     $package_data = array(
       'width'          => (($this->width != '') ? $this->width : '20'),
