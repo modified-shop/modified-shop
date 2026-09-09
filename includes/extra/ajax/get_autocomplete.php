@@ -71,7 +71,37 @@
         
         $sorting = ' ORDER BY '.SEARCH_RESULTS_FIELD.' '.SEARCH_RESULTS_SORT.', p.products_id ASC ';
                                                  
-        $autocomplete_search_query = "SELECT ".ADD_SELECT_SEARCH."
+        $autocomplete_search_source = "  FROM ".TABLE_PRODUCTS." p 
+                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                             ON p.products_id = pd.products_id
+                                                AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                                AND trim(pd.products_name) != ''
+                                             ".$from_str;
+
+        // only the result list needs the specials price, the count does not
+        $autocomplete_search_where = "  WHERE p.products_status = '1'
+                                             ".$where_str."
+                                             ".PRODUCTS_CONDITIONS_P."
+                                         AND EXISTS (
+                                               SELECT 1
+                                                 FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                                 JOIN ".TABLE_CATEGORIES." c
+                                                   ON c.categories_id = p2c.categories_id
+                                                  AND c.categories_status = 1
+                                                      ".CATEGORIES_CONDITIONS_C."
+                                                WHERE p2c.products_id = p.products_id
+                                                      ".$p2c_condition."
+                                             )";
+
+        // the results button only needs the number, the list only needs one page
+        $autocomplete_count_query = xtc_db_query("SELECT COUNT(DISTINCT p.products_id) AS total
+                                                         ".$autocomplete_search_source."
+                                                         ".$autocomplete_search_where);
+        $autocomplete_count = xtc_db_fetch_array($autocomplete_count_query);
+        $autocomplete_search_total = (int)$autocomplete_count['total'];
+
+        if ($autocomplete_search_total > 0) {
+          $autocomplete_search_query = xtc_db_query("SELECT ".ADD_SELECT_SEARCH."
                                              p.products_id,
                                              p.products_ean,
                                              p.products_quantity,
@@ -90,36 +120,18 @@
                                              pd.products_short_description,
                                              pd.products_description,
                                              IFNULL(s.specials_new_products_price, p.products_price) AS price
-                                        FROM ".TABLE_PRODUCTS." p 
-                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
-                                             ON p.products_id = pd.products_id
-                                                AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                                AND trim(pd.products_name) != ''
-                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                                             ON p2c.products_id = pd.products_id
-                                                ".$p2c_condition."
-                                        JOIN ".TABLE_CATEGORIES." c
-                                             ON c.categories_id = p2c.categories_id
-                                                AND c.categories_status = 1
-                                                    ".CATEGORIES_CONDITIONS_C."
-                                             ".$from_str."
+                                             ".$autocomplete_search_source."
                                    LEFT JOIN ".TABLE_SPECIALS." s 
                                              ON p.products_id = s.products_id 
                                                 ".SPECIALS_CONDITIONS_S."
-                                       WHERE p.products_status = '1'
-                                             ".$where_str."
-                                             ".PRODUCTS_CONDITIONS_P."
+                                             ".$autocomplete_search_where."
                                     GROUP BY p.products_id 
-                                             ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
-      
-        $autocomplete_search_query = xtc_db_query($autocomplete_search_query);
-        $autocomplete_search_total = xtc_db_num_rows($autocomplete_search_query);
-        
-        if ($autocomplete_search_total > 0) {
+                                             ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting)."
+                                       LIMIT ".MAX_DISPLAY_SEARCH_AC_RESULTS);
+
           $module_content = array();
           while ($autocomplete_search = xtc_db_fetch_array($autocomplete_search_query)) {
             $module_content[] = $product->buildDataArray($autocomplete_search);
-            if (count($module_content) == MAX_DISPLAY_SEARCH_AC_RESULTS) break;
           }
           $module_smarty->assign('module_content', $module_content);
           $module_smarty->assign('BUTTON_VIEW_RESULTS', '<a href="'.xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords='.$keywords.$params).'">'.xtc_image_button('button_results.gif', sprintf(TEXT_BUTTON_RESULTS, $autocomplete_search_total)).'</a>');

@@ -351,6 +351,7 @@ CREATE TABLE content_manager (
   last_modified DATETIME NULL,
   PRIMARY KEY (content_id),
   KEY idx_content_group (content_group, languages_id),
+  KEY idx_content_menu (languages_id, file_flag, content_status, content_active, parent_id, sort_order),
   KEY idx_content_status (content_status),
   KEY idx_content_active (content_active),
   KEY idx_sort_order (sort_order)
@@ -948,7 +949,8 @@ CREATE TABLE orders_products (
   products_vpe_value DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (orders_products_id),
   KEY idx_orders_id (orders_id),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (products_id),
+  KEY idx_orders_products_bestsellers (orders_id, products_id, products_quantity)
 );
 
 DROP TABLE IF EXISTS orders_products_attributes;
@@ -1087,7 +1089,11 @@ CREATE TABLE products (
   KEY idx_products_date_added (products_date_added),
   KEY idx_products_model (products_model),
   KEY idx_products_status (products_status),
+  KEY idx_products_status_ordered (products_status, products_ordered),
+  KEY idx_products_status_date_available (products_status, products_date_available),
+  KEY idx_products_status_date_added (products_status, products_date_added),
   KEY idx_products_startpage (products_startpage),
+  KEY idx_products_startpage_status_sort (products_startpage, products_status, products_startpage_sort),
   KEY idx_manufacturers_id (manufacturers_id),
   KEY idx_products_sort (products_sort),
   KEY idx_products_startpage_sort (products_startpage_sort),
@@ -1253,6 +1259,7 @@ CREATE TABLE products_tags (
   products_options_values_id INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (products_tags_id),
   KEY idx_products_options_values (products_id,options_id,values_id),
+  KEY idx_options_values_products (options_id,values_id,products_id),
   KEY idx_products_options_id (products_options_id),
   KEY idx_options_id (options_id),
   KEY idx_values_id (values_id),
@@ -1359,7 +1366,8 @@ CREATE TABLE reviews (
   reviews_status INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (reviews_id),
   KEY idx_products_id (products_id),
-  KEY idx_reviews_status (reviews_status)
+  KEY idx_reviews_status (reviews_status),
+  KEY idx_reviews_status_date_added (reviews_status, date_added)
 );
 
 DROP TABLE IF EXISTS reviews_description;
@@ -1444,7 +1452,8 @@ CREATE TABLE specials (
   KEY idx_products_id (products_id),
   KEY idx_status (status),
   KEY idx_start_date (start_date),
-  KEY idx_expires_date (expires_date)
+  KEY idx_expires_date (expires_date),
+  KEY idx_specials_status_expires (status, expires_date)
 );
 
 DROP TABLE IF EXISTS tax_class;

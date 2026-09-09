@@ -185,4 +185,39 @@ UPDATE `configuration`
 ALTER TABLE `orders` ADD `orders_source` VARCHAR(32) NOT NULL DEFAULT '' AFTER `content_type`;
 ALTER TABLE `orders` ADD INDEX `idx_orders_source` (`orders_source`);
 
+#GTB - 2026-07-27 - speed up startpage product selection
+ALTER TABLE `products`
+  ADD INDEX `idx_products_startpage_status_sort` (`products_startpage`, `products_status`, `products_startpage_sort`);
+
+#GTB - 2026-07-27 - speed up bestseller aggregation
+ALTER TABLE `orders_products`
+  ADD INDEX `idx_orders_products_bestsellers` (`orders_id`, `products_id`, `products_quantity`);
+
+ALTER TABLE `products`
+  ADD INDEX `idx_products_status_ordered` (`products_status`, `products_ordered`);
+
+#GTB - 2026-07-27 - speed up upcoming products selection
+ALTER TABLE `products`
+  ADD INDEX `idx_products_status_date_available` (`products_status`, `products_date_available`);
+
+#GTB - 2026-09-08 - speed up new products selection
+ALTER TABLE `products`
+  ADD INDEX `idx_products_status_date_added` (`products_status`, `products_date_added`);
+
+#GTB - 2026-09-08 - speed up reviews box
+ALTER TABLE `reviews`
+  ADD INDEX `idx_reviews_status_date_added` (`reviews_status`, `date_added`);
+
+#GTB - 2026-09-08 - speed up specials box
+ALTER TABLE `specials`
+  ADD INDEX `idx_specials_status_expires` (`status`, `expires_date`);
+
+#GTB - 2026-09-08 - speed up product tag filter lookup
+ALTER TABLE `products_tags`
+  ADD INDEX `idx_options_values_products` (`options_id`, `values_id`, `products_id`);
+
+#GTB - 2026-09-08 - speed up content and information box menus
+ALTER TABLE `content_manager`
+  ADD INDEX `idx_content_menu` (`languages_id`, `file_flag`, `content_status`, `content_active`, `parent_id`, `sort_order`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly

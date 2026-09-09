@@ -39,19 +39,21 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_category.html'
                                        ON p.products_id = pd.products_id
                                           AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                           AND trim(pd.products_name) != ''
-                                  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                       ON p.products_id = p2c.products_id
-                                          AND p2c.categories_id = '".(int)$current_category_id."'
-                                  JOIN ".TABLE_CATEGORIES." c
-                                       ON p2c.categories_id = c.categories_id
-                                          AND c.categories_status = 1
-                                              ".CATEGORIES_CONDITIONS_C."
                              LEFT JOIN ".TABLE_MANUFACTURERS." m
                                        ON p.manufacturers_id = m.manufacturers_id
                                  WHERE p.products_status = '1'
                                    AND p.products_id != '".$product->data['products_id']."'
                                        ".PRODUCTS_CONDITIONS_P."
-                              GROUP BY p.products_id
+                                   AND EXISTS (
+                                         SELECT 1
+                                           FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                           JOIN ".TABLE_CATEGORIES." c
+                                             ON c.categories_id = p2c.categories_id
+                                            AND c.categories_status = 1
+                                                ".CATEGORIES_CONDITIONS_C."
+                                          WHERE p2c.products_id = p.products_id
+                                            AND p2c.categories_id = '".(int)$current_category_id."'
+                                       )
                               ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
                                  LIMIT ".MAX_DISPLAY_PRODUCTS_CATEGORY;
 

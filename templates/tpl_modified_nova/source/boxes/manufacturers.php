@@ -19,22 +19,24 @@
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $cache_id) || !$cache) {  
     $manufacturers_query = xtDBquery("SELECT m.*
                                         FROM ".TABLE_MANUFACTURERS." as m
-                                        JOIN ".TABLE_PRODUCTS." as p 
-                                             ON m.manufacturers_id = p.manufacturers_id
-                                                AND p.products_status = '1'
-                                                    ".PRODUCTS_CONDITIONS_P."
-                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                             ON p.products_id = pd.products_id
-                                                AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                                AND trim(pd.products_name) != ''
-                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                                             ON p2c.products_id = pd.products_id
-                                        JOIN ".TABLE_CATEGORIES." c
-                                             ON c.categories_id = p2c.categories_id
-                                                AND c.categories_status = 1
-                                                    ".CATEGORIES_CONDITIONS_C."
                                        WHERE m.manufacturers_status = 1
-                                    GROUP BY m.manufacturers_id 
+                                         AND EXISTS (
+                                               SELECT 1
+                                                 FROM ".TABLE_PRODUCTS." p
+                                                 JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                                   ON pd.products_id = p.products_id
+                                                  AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                                  AND trim(pd.products_name) != ''
+                                                 JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                                   ON p2c.products_id = p.products_id
+                                                 JOIN ".TABLE_CATEGORIES." c
+                                                   ON c.categories_id = p2c.categories_id
+                                                  AND c.categories_status = 1
+                                                      ".CATEGORIES_CONDITIONS_C."
+                                                WHERE p.manufacturers_id = m.manufacturers_id
+                                                  AND p.products_status = '1'
+                                                      ".PRODUCTS_CONDITIONS_P."
+                                             )
                                     ORDER BY m.sort_order, m.manufacturers_name ASC");
   
     if (xtc_db_num_rows($manufacturers_query, true) > 0) {

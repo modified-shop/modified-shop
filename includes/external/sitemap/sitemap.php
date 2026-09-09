@@ -189,18 +189,21 @@
                                              ON p.products_id = pd.products_id
                                                 AND pd.language_id = '".(int)$this->language['id']."'
                                                 AND trim(pd.products_name) != ''
-                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                             ON p.products_id = p2c.products_id
-                                        JOIN ".TABLE_CATEGORIES." c 
-                                             ON c.categories_id = p2c.categories_id
-                                                AND c.categories_status = '1'
-                                                    ".$c_group_check."
-                                        JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
-                                             ON c.categories_id = cd.categories_id
-                                                AND cd.language_id = '".(int)$this->language['id']."'
-                                                AND trim(cd.categories_name) != ''
                                         WHERE m.manufacturers_status = 1
                                           AND trim(m.manufacturers_name) != ''
+                                          AND EXISTS (
+                                                SELECT 1
+                                                  FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                                  JOIN ".TABLE_CATEGORIES." c
+                                                    ON c.categories_id = p2c.categories_id
+                                                   AND c.categories_status = '1'
+                                                       ".$c_group_check."
+                                                  JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
+                                                    ON cd.categories_id = c.categories_id
+                                                   AND cd.language_id = '".(int)$this->language['id']."'
+                                                   AND trim(cd.categories_name) != ''
+                                                 WHERE p2c.products_id = p.products_id
+                                              )
                                      GROUP BY m.manufacturers_id
                                      ORDER BY m.manufacturers_name";
 
@@ -263,19 +266,21 @@
                                              ON p.products_id = pd.products_id
                                                 AND pd.language_id = '".(int)$this->language['id']."'
                                                 AND trim(pd.products_name) != ''
-                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                             ON p.products_id = p2c.products_id
-                                        JOIN ".TABLE_CATEGORIES." c 
-                                             ON c.categories_id = p2c.categories_id
-                                                AND c.categories_status = '1'
-                                                    ".$c_group_check."
-                                        JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
-                                             ON c.categories_id = cd.categories_id
-                                                AND cd.language_id = '".(int)$this->language['id']."'
-                                                AND trim(cd.categories_name) != ''
                                        WHERE p.products_status = '1'
                                              ".$p_group_check."
-                                    GROUP BY p.products_id
+                                         AND EXISTS (
+                                               SELECT 1
+                                                 FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                                 JOIN ".TABLE_CATEGORIES." c
+                                                   ON c.categories_id = p2c.categories_id
+                                                  AND c.categories_status = '1'
+                                                      ".$c_group_check."
+                                                 JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
+                                                   ON cd.categories_id = c.categories_id
+                                                  AND cd.language_id = '".(int)$this->language['id']."'
+                                                  AND trim(cd.categories_name) != ''
+                                                WHERE p2c.products_id = p.products_id
+                                             )
                                     ORDER BY p.products_id");
 
       while ($products = xtc_db_fetch_array($products_query)) {

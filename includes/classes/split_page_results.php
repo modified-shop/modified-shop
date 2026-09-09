@@ -50,7 +50,14 @@
         $count_string = xtc_db_input($count_key);
       }
 
-      $count_query = xtDBquery("SELECT count(" . $count_string . ") as total " . substr($query, $pos_from, ($pos_to - $pos_from)));
+      $count_source = substr($query, $pos_from, ($pos_to - $pos_from));
+
+      // a LEFT JOIN nothing references cannot change count(DISTINCT ...)
+      if (strpos($count_string, 'DISTINCT ') === 0) {
+        $count_source = $this->strip_unused_left_joins($count_source, $count_string);
+      }
+
+      $count_query = xtDBquery("SELECT count(" . $count_string . ") as total " . $count_source);
       $count = xtc_db_fetch_array($count_query, true);
       $this->number_of_rows = $count['total'];
 
@@ -69,6 +76,205 @@
       if ($offset < 1) $offset = 0;
 
       $this->sql_query .= " LIMIT " . max((int)$offset, 0) . ", " . $this->number_of_rows_per_page;
+    }
+
+    // remove joins the count does not need
+    function strip_unused_left_joins($sql, $count_string = '') {
+      // an executable comment carries sql the masking would hide
+      if (preg_match('~/\*[!M]~', $sql)) {
+        return $sql;
+      }
+
+      $masked = $this->mask_sql_noise($sql);
+      if ($masked === null) {
+        return $sql;
+      }
+
+      // quoted names are identifiers, never query structure
+      $structure = preg_replace_callback(
+        '/`(?:``|[^`])*`/s',
+        function ($match) {
+          return str_repeat(' ', strlen($match[0]));
+        },
+        $masked
+      );
+
+      if ($structure === null) {
+        return $sql;
+      }
+
+      // shapes this analysis cannot judge are left alone
+      if (preg_match('/\bNATURAL\b/i', $structure) || $this->has_top_level_comma($structure)) {
+        return $sql;
+      }
+
+      $table_offsets = $this->get_table_name_offsets($masked);
+      if ($this->has_unqualified_columns($masked, $table_offsets)
+          || $this->has_unqualified_columns($count_string, array())
+          )
+      {
+        return $sql;
+      }
+
+      foreach ($this->get_join_clauses($structure) as $clause) {
+        if ($clause['left'] !== true) {
+          continue;
+        }
+
+        $join = substr($masked, $clause['offset'], $clause['length']);
+        if (!preg_match('/\bLEFT\s+(?:OUTER\s+)?JOIN\s+`?([a-z0-9_]+)`?\s+(?:AS\s+)?`?([a-z0-9_]*)`?\s*(?:ON\b|\()/is', $join, $parts)) {
+          continue;
+        }
+
+        $alias = ((isset($parts[2]) && $parts[2] != '' && strtoupper($parts[2]) != 'ON') ? $parts[2] : $parts[1]);
+
+        // blanking keeps the offsets of the remaining clauses valid
+        $rest = substr_replace($masked, str_repeat(' ', $clause['length']), $clause['offset'], $clause['length']);
+        $reference = '/(?:^|[^a-z0-9_`])`?'.preg_quote($alias, '/').'`?\s*\./i';
+        if (preg_match($reference, $rest.' '.$count_string)) {
+          continue;
+        }
+
+        $masked = $rest;
+        $sql = substr_replace($sql, str_repeat(' ', $clause['length']), $clause['offset'], $clause['length']);
+      }
+
+      return $sql;
+    }
+
+    // blank out literals and comments, they must never look like query structure
+    function mask_sql_noise($sql) {
+      return preg_replace_callback(
+        '/\'(?:\\\\.|\'\'|[^\'\\\\])*\'|"(?:\\\\.|""|[^"\\\\])*"|\/\*.*?\*\/|(?:--[ \t]|#)[^\n]*/s',
+        function ($match) {
+          return str_repeat(' ', strlen($match[0]));
+        },
+        $sql
+      );
+    }
+
+    // a comma outside of brackets means an old style table list
+    function has_top_level_comma($sql) {
+      $depth = 0;
+      for ($i = 0, $n = strlen($sql); $i < $n; $i++) {
+        if ($sql[$i] === '(') {
+          $depth++;
+        } elseif ($sql[$i] === ')') {
+          $depth--;
+        } elseif ($sql[$i] === ',' && $depth === 0) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // where the query introduces a table or an alias, subqueries included
+    function get_table_name_offsets($sql) {
+      $offsets = array();
+      if (preg_match_all('/\b(?:FROM|JOIN)\s+`?([a-z0-9_]+)`?(?:\s+(?:AS\s+)?`?([a-z0-9_]+)`?)?/i', $sql, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+        foreach ($matches as $match) {
+          $offsets[$match[1][1]] = true;
+          if (isset($match[2]) && $match[2][1] >= 0) {
+            $offsets[$match[2][1]] = true;
+          }
+        }
+      }
+
+      return $offsets;
+    }
+
+    // a column without a table cannot be assigned to a join
+    function has_unqualified_columns($sql, $table_offsets) {
+      // only words mysql reserves, everything else can be a column name;
+      // function names need no entry, they are recognised by the bracket
+      $keywords = array(
+        'select', 'from', 'join', 'left', 'right', 'inner', 'cross', 'outer', 'natural', 'straight_join',
+        'on', 'using', 'as', 'and', 'or', 'not', 'xor', 'where', 'in', 'is', 'null', 'like', 'rlike',
+        'regexp', 'between', 'exists', 'distinct', 'case', 'when', 'then', 'else', 'asc', 'desc',
+        'interval', 'div', 'mod', 'true', 'false', 'binary', 'collate', 'all',
+        'ignore', 'force', 'use', 'index', 'key', 'partition',
+      );
+
+      if (!preg_match_all('/`?\b[a-z_][a-z0-9_]*\b`?/i', $sql, $matches, PREG_OFFSET_CAPTURE)) {
+        return false;
+      }
+
+      foreach ($matches[0] as $match) {
+        $token = $match[0];
+        $at = $match[1];
+
+        // the column part of a qualified reference
+        $back = $at - 1;
+        while ($back >= 0 && ($sql[$back] === ' ' || $sql[$back] === "\t" || $sql[$back] === "\n" || $sql[$back] === "\r")) {
+          $back--;
+        }
+        if ($back >= 0 && $sql[$back] === '.') {
+          continue;
+        }
+
+        // a table qualifier or a function name
+        if (preg_match('/^\s*[.(]/', substr($sql, $at + strlen($token)))) {
+          continue;
+        }
+
+        // a table or an alias counts only where the query introduces it
+        if (isset($table_offsets[(($token[0] === '`') ? $at + 1 : $at)])) {
+          continue;
+        }
+
+        // a quoted name is a column even when it reads like a keyword
+        if ($token[0] !== '`' && in_array(strtolower($token), $keywords)) {
+          continue;
+        }
+
+        return true;
+      }
+
+      return false;
+    }
+
+    // the join clauses of the outer query, subqueries stay untouched
+    function get_join_clauses($sql) {
+      $pattern = '/\b(?:LEFT\s+(?:OUTER\s+)?JOIN|RIGHT\s+(?:OUTER\s+)?JOIN|INNER\s+JOIN|CROSS\s+JOIN|STRAIGHT_JOIN|JOIN|WHERE)\b/i';
+      if (!preg_match_all($pattern, $sql, $matches, PREG_OFFSET_CAPTURE)) {
+        return array();
+      }
+
+      $clauses = array();
+      $depth = 0;
+      $scanned = 0;
+      $offset = false;
+      $left = false;
+
+      foreach ($matches[0] as $match) {
+        for (; $scanned < $match[1]; $scanned++) {
+          if ($sql[$scanned] === '(') $depth++;
+          if ($sql[$scanned] === ')') $depth--;
+        }
+
+        if ($depth != 0) {
+          continue;
+        }
+
+        if ($offset !== false) {
+          $clauses[] = array('offset' => $offset, 'length' => ($match[1] - $offset), 'left' => $left);
+          $offset = false;
+        }
+
+        if (strtoupper($match[0]) === 'WHERE') {
+          break;
+        }
+
+        $offset = $match[1];
+        $left = (stripos($match[0], 'LEFT') === 0);
+      }
+
+      if ($offset !== false) {
+        $clauses[] = array('offset' => $offset, 'length' => (strlen($sql) - $offset), 'left' => $left);
+      }
+
+      return $clauses;
     }
 
     // display split-page-number-links

@@ -1134,24 +1134,36 @@ class xtcPrice {
    * @return integer
    */
   function xtc_get_tax_class($pID, $tax_class_id) {
-    static $tax_class_array;
+    static $tax_class_array, $geo_zone_array;
         
     if (!isset($tax_class_array)) {
       $tax_class_array = array();
+    }
+    
+    if (!isset($geo_zone_array)) {
+      $geo_zone_array = array();
     }
     
     if (isset($this->country_id)
         && $this->country_id != STORE_COUNTRY
         )
     {
-      $geo_zone_query = xtDBquery("SELECT gz.geo_zone_id 
-                                     FROM ".TABLE_GEO_ZONES." gz
-                                     JOIN ".TABLE_ZONES_TO_GEO_ZONES." ztgz
-                                          ON gz.geo_zone_id = ztgz.geo_zone_id
-                                             AND ztgz.zone_country_id = '".(int)$this->country_id."'
-                                    WHERE gz.geo_zone_tax = 1");
-      if (xtc_db_num_rows($geo_zone_query, true) > 0) {
-        $geo_zone = xtc_db_fetch_array($geo_zone_query, true);
+      // the zone only depends on the country, not on the product
+      if (!isset($geo_zone_array[(int)$this->country_id])) {
+        $geo_zone_array[(int)$this->country_id] = array();
+        $geo_zone_query = xtDBquery("SELECT gz.geo_zone_id 
+                                       FROM ".TABLE_GEO_ZONES." gz
+                                       JOIN ".TABLE_ZONES_TO_GEO_ZONES." ztgz
+                                            ON gz.geo_zone_id = ztgz.geo_zone_id
+                                               AND ztgz.zone_country_id = '".(int)$this->country_id."'
+                                      WHERE gz.geo_zone_tax = 1");
+        if (xtc_db_num_rows($geo_zone_query, true) > 0) {
+          $geo_zone_array[(int)$this->country_id] = xtc_db_fetch_array($geo_zone_query, true);
+        }
+      }
+      
+      if (count($geo_zone_array[(int)$this->country_id]) > 0) {
+        $geo_zone = $geo_zone_array[(int)$this->country_id];
       
         if (!isset($tax_class_array[$pID][$geo_zone['geo_zone_id']])) {
           $tax_class_array[$pID][$geo_zone['geo_zone_id']] = $tax_class_id;

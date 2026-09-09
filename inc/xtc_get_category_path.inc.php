@@ -28,7 +28,9 @@
     }
   
     if (defined('DB_CACHE') && DB_CACHE == 'true') {
-      include(DIR_FS_CATALOG.'includes/modified_cache.php');
+      if (!is_object($modified_cache)) {
+        include(DIR_FS_CATALOG.'includes/modified_cache.php');
+      }
 
       $modified_cache->setId('cp_'.$cID);
       if ($modified_cache->isHit() !== false) {

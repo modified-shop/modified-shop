@@ -67,27 +67,34 @@
 
       if ($coPath) {
         $new_path = '';
-        $coid = explode('_', $coPath);
+        $coid = array_map('intval', explode('_', $coPath));
+
+        // read the children of every path level with one query
+        $path_content_array = array();
+        $content_query = xtDBquery("SELECT content_id,
+                                           parent_id,
+                                           content_title,
+                                           content_group
+                                      FROM ".TABLE_CONTENT_MANAGER."
+                                     WHERE languages_id='".(int) $_SESSION['languages_id']."'
+                                       AND file_flag='1'
+                                           ".CONTENT_CONDITIONS."
+                                       AND content_status='1'
+                                       AND content_active='1'
+                                       AND trim(content_title) != ''
+                                       AND parent_id IN ('".implode("', '", $coid)."')
+                                  ORDER BY sort_order");
+        while ($path_content = xtc_db_fetch_array($content_query, true)) {
+          $path_content_array[(int)$path_content['parent_id']][] = $path_content;
+        }
+
         foreach ($coid as $key => $value) {
           unset($prev_cid);
           unset($first_cid);
-          $content_query = xtDBquery("SELECT content_id, 
-                                             parent_id, 
-                                             content_title, 
-                                             content_group
-                                        FROM ".TABLE_CONTENT_MANAGER."
-                                       WHERE languages_id='".(int) $_SESSION['languages_id']."'
-                                         AND file_flag='1'
-                                             ".CONTENT_CONDITIONS."
-                                         AND content_status='1'
-                                         AND content_active='1'
-                                         AND trim(content_title) != ''
-                                         AND parent_id='".$value."'
-                                    ORDER BY sort_order");
 
-          if (xtc_db_num_rows($content_query, true) > 0) {
+          if (isset($path_content_array[$value])) {
             $new_path .= $value;
-            while ($content = xtc_db_fetch_array($content_query, true)) {
+            foreach ($path_content_array[$value] as $content) {
               $content_array[$content['content_id']] = array(
                   'name' => $content['content_title'], 
                   'parent' => $content['parent_id'], 

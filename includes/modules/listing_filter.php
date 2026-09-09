@@ -99,9 +99,11 @@ if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
     // manufacturers
     $join = '';
     $where = '';
+    $category_filter = false;
     $select = "m.manufacturers_id as id,
                m.manufacturers_name as name ";
     if (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0 && basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
+      $category_filter = true;
       $select = "c.categories_id as id,
                  cd.categories_name as name ";
       $join = " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
@@ -148,21 +150,43 @@ if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
       }
     }
 
-    $filterlist_sql = "SELECT DISTINCT ".$select."
-                                  FROM ".TABLE_PRODUCTS." p
-                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                       ON p.products_id = pd.products_id
-                                          AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                          AND trim(pd.products_name) != ''
-                                  JOIN ".TABLE_MANUFACTURERS." m 
-                                       ON m.manufacturers_id = p.manufacturers_id
-                                          AND m.manufacturers_status = 1
-                                       ".$join."
-                                 WHERE p.products_status = '1'
-                                       ".$where."
-                                       ".$filter_where."
-                                       ".PRODUCTS_CONDITIONS_P."
-                              ORDER BY name";
+    if ($category_filter === true) {
+      $filterlist_sql = "SELECT DISTINCT ".$select."
+                                    FROM ".TABLE_PRODUCTS." p
+                                    JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                         ON p.products_id = pd.products_id
+                                            AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                            AND trim(pd.products_name) != ''
+                                    JOIN ".TABLE_MANUFACTURERS." m 
+                                         ON m.manufacturers_id = p.manufacturers_id
+                                            AND m.manufacturers_status = 1
+                                         ".$join."
+                                   WHERE p.products_status = '1'
+                                         ".$where."
+                                         ".$filter_where."
+                                         ".PRODUCTS_CONDITIONS_P."
+                                ORDER BY name";
+    } else {
+      // one row per manufacturer instead of a DISTINCT over the whole catalog
+      $filterlist_sql = "SELECT ".$select."
+                            FROM ".TABLE_MANUFACTURERS." m
+                           WHERE m.manufacturers_status = 1
+                             AND EXISTS (
+                                   SELECT 1
+                                     FROM ".TABLE_PRODUCTS." p
+                                     JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                          ON p.products_id = pd.products_id
+                                             AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                             AND trim(pd.products_name) != ''
+                                          ".$join."
+                                    WHERE p.manufacturers_id = m.manufacturers_id
+                                      AND p.products_status = '1'
+                                          ".$where."
+                                          ".$filter_where."
+                                          ".PRODUCTS_CONDITIONS_P."
+                                 )
+                        ORDER BY name";
+    }
     
     $filterlist_query = xtDBquery($filterlist_sql);
     if (xtc_db_num_rows($filterlist_query, true) > 0) {
@@ -276,32 +300,36 @@ if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
       }
     }
   
-    $filterlist_sql = "SELECT DISTINCT pto.options_id,
-                                       pto.options_name,
-                                       ptv.values_id,
-                                       ptv.values_name
-                                  FROM ".TABLE_PRODUCTS." p
+    // one row per option/value instead of a DISTINCT over the whole catalog
+    $filterlist_sql = "SELECT pto.options_id,
+                              pto.options_name,
+                              ptv.values_id,
+                              ptv.values_name
+                         FROM ".TABLE_PRODUCTS_TAGS_OPTIONS." pto
+                         JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv
+                              ON ptv.options_id = pto.options_id
+                                 AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
+                                 AND ptv.filter = '1'
+                        WHERE pto.languages_id = '".(int)$_SESSION['languages_id']."'
+                          AND pto.filter = '1'
+                          AND EXISTS (
+                                SELECT 1
+                                  FROM ".TABLE_PRODUCTS_TAGS." pt
+                                  JOIN ".TABLE_PRODUCTS." p
+                                       ON p.products_id = pt.products_id
+                                          AND p.products_status = '1'
                                   JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                        ON p.products_id = pd.products_id
                                           AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                           AND trim(pd.products_name) != ''
-                                  JOIN ".TABLE_PRODUCTS_TAGS." pt
-                                       ON pt.products_id = p.products_id
-                                  JOIN ".TABLE_PRODUCTS_TAGS_OPTIONS." pto
-                                       ON pt.options_id = pto.options_id
-                                          AND pto.languages_id = '".(int)$_SESSION['languages_id']."'
-                                          AND pto.filter = '1'
-                                  JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv
-                                       ON pto.options_id = ptv.options_id
-                                          AND pt.values_id = ptv.values_id
-                                          AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
-                                          AND ptv.filter = '1'
                                        ".$join."
-                                 WHERE p.products_status = '1'
+                                 WHERE pt.options_id = pto.options_id
+                                   AND pt.values_id = ptv.values_id
                                        ".$where."
                                        ".$filter_where."
                                        ".PRODUCTS_CONDITIONS_P."
-                              ORDER BY pto.sort_order, pto.options_name, ptv.sort_order, ptv.values_name";                           
+                              )
+                     ORDER BY pto.sort_order, pto.options_name, ptv.sort_order, ptv.values_name";
 
     $filterlist_query = xtDBquery($filterlist_sql);
     if (xtc_db_num_rows($filterlist_query, true) > 0) {

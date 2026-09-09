@@ -78,7 +78,9 @@
     global ${$link}, $modified_cache;
 
     if (defined('DB_CACHE') && DB_CACHE == 'true') {
-      include(DIR_FS_CATALOG.'includes/modified_cache.php');
+      if (!is_object($modified_cache)) {
+        include(DIR_FS_CATALOG.'includes/modified_cache.php');
+      }
       $result = xtc_db_queryCached($query, $cache_data, $link);
     } else {
       $result = xtc_db_query($query, $link);

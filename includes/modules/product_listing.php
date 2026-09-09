@@ -138,7 +138,19 @@ if ($listing_split->number_of_rows > 0) {
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_begin/','php') as $file) require ($file);
 
   $listing_query = xtDBquery($listing_split->sql_query);
+  $listing_array = array();
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
+    $listing_array[] = $listing;
+  }
+
+  // read the review data of the whole page before building the single products
+  $products_id_array = array();
+  foreach ($listing_array as $listing) {
+    $products_id_array[] = $listing['products_id'];
+  }
+  $product->preloadReviews($products_id_array);
+
+  foreach ($listing_array as $listing) {
     $module_content[$listing['products_id']] =  $product->buildDataArray($listing);
   }
 

@@ -43,16 +43,18 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
                                         ON p.products_id = pd.products_id
                                            AND pd.language_id = ".(int)$_SESSION['languages_id']."
                                            AND trim(pd.products_name) != ''
-                                   JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                        ON p.products_id = p2c.products_id
-                                   JOIN ".TABLE_CATEGORIES." c
-                                        ON c.categories_id = p2c.categories_id
-                                           AND c.categories_status = 1
-                                               ".CATEGORIES_CONDITIONS_C."
                                   WHERE p.products_status = 1
-                                    AND to_days(products_date_available) >= to_days(now())
+                                    AND p.products_date_available >= CURDATE()
                                         ".PRODUCTS_CONDITIONS_P."
-                               GROUP BY p.products_id
+                                    AND EXISTS (
+                                          SELECT 1
+                                            FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                            JOIN ".TABLE_CATEGORIES." c
+                                              ON c.categories_id = p2c.categories_id
+                                             AND c.categories_status = 1
+                                                 ".CATEGORIES_CONDITIONS_C."
+                                           WHERE p2c.products_id = p.products_id
+                                        )
                                ORDER BY ".EXPECTED_PRODUCTS_FIELD." ".EXPECTED_PRODUCTS_SORT."
                                   LIMIT ".MAX_DISPLAY_UPCOMING_PRODUCTS);
 
