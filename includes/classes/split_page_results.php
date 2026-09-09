@@ -90,8 +90,21 @@
         return $sql;
       }
 
+      // quoted names are identifiers, never query structure
+      $structure = preg_replace_callback(
+        '/`(?:``|[^`])*`/s',
+        function ($match) {
+          return str_repeat(' ', strlen($match[0]));
+        },
+        $masked
+      );
+
+      if ($structure === null) {
+        return $sql;
+      }
+
       // shapes this analysis cannot judge are left alone
-      if (preg_match('/\bNATURAL\b/i', $masked) || $this->has_top_level_comma($masked)) {
+      if (preg_match('/\bNATURAL\b/i', $structure) || $this->has_top_level_comma($structure)) {
         return $sql;
       }
 
@@ -103,7 +116,7 @@
         return $sql;
       }
 
-      foreach ($this->get_join_clauses($masked) as $clause) {
+      foreach ($this->get_join_clauses($structure) as $clause) {
         if ($clause['left'] !== true) {
           continue;
         }
@@ -208,7 +221,8 @@
           continue;
         }
 
-        if (in_array(strtolower(trim($token, '`')), $keywords)) {
+        // a quoted name is a column even when it reads like a keyword
+        if ($token[0] !== '`' && in_array(strtolower($token), $keywords)) {
           continue;
         }
 
