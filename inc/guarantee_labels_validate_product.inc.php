@@ -104,13 +104,11 @@
       $errors[] = ERROR_GUARANTEE_LABELS_MODEL;
     }
 
-    // the label may neither be cut off nor set in a smaller font, so the real width decides
-    if ($manufacturers_name !== '' && $renderer->is_ready() && $renderer->fits('manufacturer', $renderer->measurable($manufacturers_name)) === false) {
-      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MANUFACTURER_WIDTH, encode_htmlspecialchars($manufacturers_name));
-    }
-
-    if ($model !== '' && $renderer->is_ready() && $renderer->fits('model', $renderer->measurable($model)) === false) {
-      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_MODEL_WIDTH, encode_htmlspecialchars($model));
+    // Save, import and order editing must use the same shared 9 pt row as the renderer.
+    // Checking the old separate columns would still reject identifiers that now fit.
+    if ($manufacturers_name !== '' && $model !== '' && $renderer->is_ready()
+        && !$renderer->fits_texts($renderer->measurable($manufacturers_name), $renderer->measurable($model))) {
+      $errors[] = sprintf(ERROR_GUARANTEE_LABELS_TEXT_WIDTH, encode_htmlspecialchars($manufacturers_name), encode_htmlspecialchars($model));
     }
 
     if (!$renderer->is_ready()) {

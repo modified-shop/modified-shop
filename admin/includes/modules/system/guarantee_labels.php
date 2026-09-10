@@ -33,7 +33,7 @@
     var $properties;
 
     function __construct() {
-      $this->version = '1.00';
+      $this->version = '1.01';
       $this->code = 'guarantee_labels';
       $this->title = MODULE_GUARANTEE_LABELS_TEXT_TITLE;
       $this->description = MODULE_GUARANTEE_LABELS_TEXT_DESCRIPTION;
