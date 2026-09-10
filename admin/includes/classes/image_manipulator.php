@@ -233,7 +233,6 @@
           }
         }
       }
-      if ($this->dot) @imagedestroy($this->dot);
     }
     
     function merge($merge_img="", $x_left=0, $y_top=0, $merge_opacity=70, $trans_colour="FF0000") {
@@ -262,7 +261,6 @@
           }
         }
       }
-      if ($this->mm) @imagedestroy($this->mm);
     }
     
     function frame($light_colour="FFFFFF", $dark_colour="000000", $mid_width=4, $frame_colour = "" ) {
@@ -328,8 +326,6 @@
       }
       @imagecopyresampled($this->v, $this->t, 0, 0, 0, 0, $this->rsw, $this->rsh, $this->q, $this->r);
       @imagecopyresampled($this->t, $this->v, 0, 0, 0, 0, $this->q, $this->r, $this->q, $this->r);
-      if ($this->v) @imagedestroy($this->v);
-      if ($this->dot) @imagedestroy($this->dot);
     }
     
     function motion_blur($num_blur_lines, $background_colour="FFFFFF") {
@@ -359,7 +355,6 @@
       }
       @imagecopyresampled($this->w, $this->t, 0, 0, 0, 0, $this->rsw, $this->rsh, $this->q, $this->r);
       @imagecopyresampled($this->t, $this->w, 0, 0, 0, 0, $this->q, $this->r, $this->q, $this->r);
-      if ($this->w) @imagedestroy($this->w);
     }
     
     function manipulate() {
@@ -422,8 +417,6 @@
             ob_end_clean();
           }
         }
-        imagedestroy($this->s);
-        imagedestroy($this->t);
       }
     }
 
@@ -455,8 +448,6 @@
           }
           imagewebp($image, $destination);
           ob_end_clean();
-          
-          imagedestroy($image);
         }
       }
     }
@@ -485,7 +476,6 @@
               $img = imagerotate($img, $deg, 0);        
             }
             imagejpeg($img, $resource_file, 100);
-            imagedestroy($img);
           }
         }
       }

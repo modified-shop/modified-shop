@@ -506,10 +506,6 @@ class PHPlot
         if (!$im)
             return FALSE;  // GetImage already produced an error message.
 
-        // Deallocate any resources previously allocated
-        if (isset($this->img))
-            imagedestroy($this->img);
-
         $this->img = $im;
 
         // Do not overwrite the input file with the background color.
@@ -4836,10 +4832,6 @@ class PHPlot
 
         // Copy the temporary image onto the final one.
         imagecopy($this->img, $tmp, $xorig, $yorig, 0,0, $width, $height);
-
-        // Free resources
-        imagedestroy($tmp);
-        imagedestroy($im);
 
         return TRUE;
     }

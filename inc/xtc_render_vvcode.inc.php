@@ -88,7 +88,6 @@ function vvcode_render_code($code) {
                                                                                        
     ob_start();
     imagejpeg($imgh);
-    imagedestroy($imgh);
     return ob_get_clean(); 
  }
 }
