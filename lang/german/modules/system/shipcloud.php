@@ -61,5 +61,7 @@ define('SHIPMENT.TRACKING.DELAYED', 'Auslieferung verz&ouml;gert sich');
 define('SHIPMENT.TRACKING.EXCEPTION', 'Ein Problem wurde festgestellt');
 define('SHIPMENT.TRACKING.NOT_DELIVERED', 'nicht zugestellt');
 define('SHIPMENT.TRACKING.NOTIFICATION', 'Interne Mitteilung: Tracking- Ereignisse innerhalb der Sendung ben&ouml;tigt aufw&auml;ndigere Informationen.');
+define('SHIPMENT.TRACKING.DESTROYED', 'Paket vom Zoll oder einer anderen Beh&ouml;rde vernichtet');
 define('SHIPMENT.TRACKING.UNKNOWN', 'Status unbekannt');
+define('SHIPMENT.STATUS.DELETED', 'Paketschein wurde gel&ouml;scht');
 ?>

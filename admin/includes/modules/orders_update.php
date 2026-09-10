@@ -12,7 +12,7 @@
    
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
-  if ($order->info['orders_status'] != $status || $comments != '' || $email_preview) {
+  if ($order->info['orders_status_id'] != $status || $comments != '' || $email_preview) {
     if (!$email_preview) {  
       xtc_db_query("UPDATE ".TABLE_ORDERS."
                        SET orders_status = ".$status.",
@@ -47,7 +47,12 @@
       $smarty->assign('ORDER_ID', $oID);
       //send no order link to customers with guest account
       if ($order->customer['status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
-        $smarty->assign('ORDER_LINK', xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL'));
+        if (defined('RUN_MODE_ADMIN')) {
+          $order_link = xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL');
+        } else {
+          $order_link = xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL', false);
+        }
+        $smarty->assign('ORDER_LINK', $order_link);
       }
       // track & trace
       $tracking_array = get_tracking_link($oID, $lang_code, ((isset($_POST['tracking_id']) && is_array($_POST['tracking_id'])) ? $_POST['tracking_id'] : array('0')));
