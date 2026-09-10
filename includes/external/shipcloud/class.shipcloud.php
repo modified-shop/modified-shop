@@ -438,7 +438,7 @@ class shipcloud {
       'width'          => (($this->width != '') ? $this->width : '20'),
       'length'         => (($this->length != '') ? $this->length : '20'),
       'height'         => (($this->height != '') ? $this->height : '20'),
-      'weight'         => (double)(($this->weight != '') ? str_replace(',', '.', $this->weight) : $this->calculate_weight()),
+      'weight'         => (($this->weight != '') ? (float)str_replace(',', '.', $this->weight) : $this->calculate_weight()),
       'description'    => $this->description_1,
       'type'           => $this->type,
     );
@@ -471,7 +471,7 @@ class shipcloud {
   
   
   private function calculate_weight() {    
-    $weight = (double) SHIPPING_BOX_WEIGHT;
+    $weight = (float) SHIPPING_BOX_WEIGHT;
     for ($i = 0, $n = count($this->order->products); $i < $n; $i++) {
       $product_query = xtc_db_query("SELECT products_weight 
                                        FROM ".TABLE_PRODUCTS." 
@@ -503,8 +503,8 @@ class shipcloud {
       }
     }
   
-    if ($weight == '0') {
-      $weight = '1';
+    if ($weight <= 0) {
+      $weight = 1;
     }
   
     return $weight;
