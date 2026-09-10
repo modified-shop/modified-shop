@@ -106,20 +106,27 @@ class PayonePayment {
 
 	// an approved checkout must not leave the order on the invisible tmp status
 	function _liftHiddenOrdersStatus($orders_id) {
+		$orders_id = (int)$orders_id;
+		if ($orders_id < 1 || xtc_db_query('START TRANSACTION') === false) {
+			return;
+		}
+
+		// lock the order, a transaction status can set a real status in parallel
 		$hidden_query = xtc_db_query("SELECT o.orders_status
 		                                FROM ".TABLE_ORDERS." o
-		                               WHERE o.orders_id = '".(int)$orders_id."'
-		                                 AND NOT EXISTS (SELECT 1
-		                                                   FROM ".TABLE_ORDERS_STATUS." s
-		                                                  WHERE s.orders_status_id = o.orders_status)");
+		                               WHERE o.orders_id = '".$orders_id."'
+		                                 AND o.orders_status NOT IN (SELECT s.orders_status_id
+		                                                               FROM ".TABLE_ORDERS_STATUS." s)
+		                                 FOR UPDATE");
 		if (xtc_db_num_rows($hidden_query) < 1) {
+			xtc_db_query('COMMIT');
 			return;
 		}
 
 		$orders_status_id = (int)DEFAULT_ORDERS_STATUS_ID;
 		$transactions_query = xtc_db_query("SELECT status
 		                                      FROM payone_transactions
-		                                     WHERE orders_id = '".(int)$orders_id."'
+		                                     WHERE orders_id = '".$orders_id."'
 		                                  ORDER BY payone_transactions_id DESC");
 		while ($transaction = xtc_db_fetch_array($transactions_query)) {
 			$txaction = strtolower((string)$transaction['status']);
@@ -132,20 +139,25 @@ class PayonePayment {
 			}
 		}
 
-		$this->payone->log("lifting hidden orders status for orders_id ".(int)$orders_id." to ".$orders_status_id);
-
 		$sql_data_orders_array = array('orders_status' => $orders_status_id,
 		                               'last_modified' => 'now()');
-		xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id = '".(int)$orders_id."'");
-
-		$sql_data_array = array('orders_id' => (int)$orders_id,
+		$sql_data_array = array('orders_id' => $orders_id,
 		                        'orders_status_id' => $orders_status_id,
 		                        'date_added' => 'now()',
 		                        'customer_notified' => '0',
 		                        'comments' => xtc_db_input(STATUS_UPDATED_BY_PAYONE),
 		                        'comments_sent' => '0'
 		                        );
-		xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+		if (xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id = '".$orders_id."'") === false
+		    || xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false
+		    || xtc_db_query('COMMIT') === false
+		    )
+		{
+			xtc_db_query('ROLLBACK');
+			return;
+		}
+
+		$this->payone->log("hidden orders status for orders_id ".$orders_id." lifted to ".$orders_status_id);
 	}
 
 	function _checkRequirements() {
@@ -485,9 +497,13 @@ class PayonePayment {
 				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=payone', 'SSL'));
 			}
 		}
-		if ($tmporder_exists) {
-			$this->_liftHiddenOrdersStatus($_SESSION['tmp_oID']);
-		}
+		return false;
+	}
+
+	function before_send_order() {
+		global $insert_id;
+
+		$this->_liftHiddenOrdersStatus($insert_id);
 		return false;
 	}
 
