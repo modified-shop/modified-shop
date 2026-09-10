@@ -147,16 +147,24 @@ class PayonePayment {
 			return;
 		}
 
-		$sql_data_array = array('orders_id' => $orders_id,
-		                        'orders_status_id' => $orders_status_id,
-		                        'date_added' => 'now()',
-		                        'customer_notified' => '0',
-		                        'comments' => xtc_db_input(STATUS_UPDATED_BY_PAYONE),
-		                        'comments_sent' => '0'
-		                        );
-		xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-
 		$this->payone->log("hidden orders status for orders_id ".$orders_id." lifted to ".$orders_status_id);
+
+		// the history entry belongs to the status the order still carries, not to an overtaken one
+		xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY." (orders_id,
+		                                                          orders_status_id,
+		                                                          date_added,
+		                                                          customer_notified,
+		                                                          comments,
+		                                                          comments_sent)
+		                   SELECT o.orders_id,
+		                          o.orders_status,
+		                          now(),
+		                          '0',
+		                          '".xtc_db_input(STATUS_UPDATED_BY_PAYONE)."',
+		                          '0'
+		                     FROM ".TABLE_ORDERS." o
+		                    WHERE o.orders_id = '".$orders_id."'
+		                      AND o.orders_status = '".$orders_status_id."'");
 	}
 
 	function _checkRequirements() {
