@@ -139,8 +139,6 @@
         @ImageCopyMerge($this->t,$this->dark,$this->q-($this->pixel+1),$this->pixel,0,0,1,$this->r-(2*$this->pixel),max(0,$this->opac-10));
         @ImageCopyMerge($this->t,$this->dark,$this->pixel,$this->r-($this->pixel+1),0,0,$this->q-(2*$this->pixel),1,max(0,$this->opac-10));
       }
-      if ($this->dark) @ImageDestroy($this->dark);
-      if ($this->light) @ImageDestroy($this->light);
     }
     function greyscale($rv=38, $gv=36, $bv=26) {
       // Not working properly for PNG & GIF images, so skipping
@@ -205,7 +203,6 @@
         @ImageCopyMerge($this->t,$this->dot,$this->xpos-1,$this->ypos-1,0,0,2,2,30);
         @ImageLine($this->t,$this->xpos,($this->ypos),$this->xto,($this->ypos),$this->zenitha);
       }
-      if ($this->dot) @ImageDestroy($this->dot);
     }
     
     function round_edges($edge_rad=3, $bg_colour="FFFFFF", $anti_alias=1) {
