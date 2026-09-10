@@ -162,7 +162,6 @@ class payone_elv extends PayonePayment {
       curl_setopt($ch, CURLOPT_FILE, $fp);
       curl_setopt($ch, CURLOPT_TIMEOUT, 5);
       curl_exec($ch);
-      curl_close($ch);
       fclose($fp);
     }
     
