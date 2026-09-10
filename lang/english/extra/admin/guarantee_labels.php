@@ -29,6 +29,7 @@
   define('ERROR_GUARANTEE_LABELS_MODEL', 'EU durability guarantee: the manufacturer model identifier is empty. The guarantee duration has not been saved.');
   define('ERROR_GUARANTEE_LABELS_MANUFACTURER_WIDTH', 'EU durability guarantee: the manufacturer name &quot;%s&quot; does not fit into the editable area of the official template. The guarantee duration has not been saved.');
   define('ERROR_GUARANTEE_LABELS_MODEL_WIDTH', 'EU durability guarantee: the model identifier &quot;%s&quot; does not fit into the editable area of the official template. The guarantee duration has not been saved.');
+  define('ERROR_GUARANTEE_LABELS_TEXT_WIDTH', 'EU durability guarantee: manufacturer name &quot;%s&quot; and model identifier &quot;%s&quot; do not fit together in the label text row at 9 pt. The guarantee duration has not been saved.');
   define('ERROR_GUARANTEE_LABELS_NOT_READY', 'EU durability guarantee: the module cannot render a label yet (%s). The guarantee duration has not been saved.');
 
   define('ERROR_GUARANTEE_LABELS_IMPORT', 'Article %s &ndash; %s');

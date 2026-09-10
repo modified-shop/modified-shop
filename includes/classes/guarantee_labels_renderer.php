@@ -25,8 +25,9 @@
    */
   class guarantee_labels_renderer {
 
-    // any change of the rendering itself has to invalidate existing hashes
-    const RENDERER_VERSION = '1.00';
+    // Bump this version when rendering changes so current labels get new cache keys.
+    // Existing order snapshots keep their stored hashes and archived graphics.
+    const RENDERER_VERSION = '1.01';
 
     const TOKEN_DURATION = 'XX';
     const TOKEN_MANUFACTURER = 'Brand/Trademark';
@@ -35,9 +36,22 @@
     // the measured text is rejected this much before the editable area really ends
     const WIDTH_TOLERANCE = 2;
 
+    // At the official 95 x 100 mm size these SVG units correspond to points.
+    // Share the row from x 6.32 to 262.97; never shrink either editable text below 9 pt.
+    const TEXT_FONT_SIZE = 9;
+    const TEXT_ROW_WIDTH = 256.65;
+    const TEXT_COLUMN_GAP = 8;
+
+    // The original model element starts at x 196.75. Anchor its tspan at the right margin.
+    const MODEL_RIGHT_OFFSET = '66.22';
+
     // imagettfbbox() renders at 96 dpi while an svg user unit is one pixel, so a measured
     // width has to be scaled before it can be compared with the template layout
     const UNIT_SCALE = 0.75;
+
+    // GD rounds glyph advances at small sizes. Measure at a larger size, then scale
+    // back to avoid underestimating long identifiers. The rendered font stays at 9 pt.
+    const MEASUREMENT_SCALE = 64;
 
     var $base_dir;
     var $asset_dir;
@@ -58,15 +72,15 @@
      *
      * font, font_size and max_width are read from the shipped templates: the colour label sets
      * the duration in Inter-ExtraBold at 80 and both text fields in Inter-Regular at 9, all in
-     * svg user units. max_width is the column the field may occupy, taken from the positions in
-     * the template: the manufacturer runs from x 6.32 up to the model column at 196.75, and the
-     * model from there to the right margin of the 269.29 wide canvas.
+     * svg user units. Manufacturer and model share the row between x 6.32 and 262.97:
+     * the name starts at the left and the identifier ends at the right. fits_texts() checks
+     * their combined width and spacing, so a short name leaves more room for the identifier.
      */
     function areas() {
       return array(
         'duration' => array('token' => self::TOKEN_DURATION, 'font' => 'Inter-ExtraBold.ttf', 'font_size' => 80, 'max_width' => 190.43),
-        'manufacturer' => array('token' => self::TOKEN_MANUFACTURER, 'font' => 'Inter-Regular.ttf', 'font_size' => 9, 'max_width' => 190.43),
-        'model' => array('token' => self::TOKEN_MODEL, 'font' => 'Inter-Regular.ttf', 'font_size' => 9, 'max_width' => 66.22),
+        'manufacturer' => array('token' => self::TOKEN_MANUFACTURER, 'font' => 'Inter-Regular.ttf', 'font_size' => self::TEXT_FONT_SIZE, 'max_width' => self::TEXT_ROW_WIDTH),
+        'model' => array('token' => self::TOKEN_MODEL, 'font' => 'Inter-Regular.ttf', 'font_size' => self::TEXT_FONT_SIZE, 'max_width' => self::TEXT_ROW_WIDTH),
       );
     }
 
@@ -145,7 +159,8 @@
       }
 
       foreach ($this->areas() as $name => $area) {
-        if ($area['font_size'] <= 0 || $area['max_width'] <= 0) {
+        if ($area['font_size'] <= 0 || $area['max_width'] <= 0
+            || (in_array($name, array('manufacturer', 'model'), true) && $area['font_size'] < 9)) {
           $missing[] = 'metrics:'.$name;
         }
       }
@@ -236,7 +251,7 @@
     }
 
     /**
-     * One catalogue value prepared for fits(), so a caller outside the renderer converts through
+     * One catalogue value prepared for a width check, so a caller outside the renderer converts through
      * the same boundary label() uses.
      *
      * @param string $value
@@ -249,9 +264,9 @@
     /**
      * Measures the real text width with the prescribed font instead of counting characters.
      *
-     * @return bool false when the value does not fit into its editable area
+     * @return mixed width in SVG units, false when the font or metrics cannot be used
      */
-    function fits($area_name, $text) {
+    function text_width($area_name, $text) {
       // $text has to be utf-8 already, see to_utf8(). label() converts before it asks, and a
       // caller from outside converts through measurable() first.
       $areas = $this->areas();
@@ -263,19 +278,50 @@
       $area = $areas[$area_name];
       $font = $this->font_dir.$area['font'];
 
-      if (!$this->is_available() || !is_file($font) || $area['font_size'] <= 0 || $area['max_width'] <= 0) {
+      if (!$this->is_available() || !is_file($font) || $area['font_size'] <= 0 || $area['max_width'] <= 0
+          || (in_array($area_name, array('manufacturer', 'model'), true) && $area['font_size'] < 9)) {
         return false;
       }
 
-      $box = @imagettfbbox($area['font_size'], 0, $font, (string)$text);
+      $box = @imagettfbbox($area['font_size'] * self::MEASUREMENT_SCALE, 0, $font, (string)$text);
 
       if ($box === false) {
         return false;
       }
 
-      $width = abs($box[2] - $box[0]) * self::UNIT_SCALE;
+      return abs($box[2] - $box[0]) * self::UNIT_SCALE / self::MEASUREMENT_SCALE;
+    }
 
-      return ($width <= ($area['max_width'] - self::WIDTH_TOLERANCE));
+    /**
+     * Whether one UTF-8 value fits by itself. Use fits_texts() for the shared header row.
+     */
+    function fits($area_name, $text) {
+      $width = $this->text_width($area_name, $text);
+      if ($width === false) {
+        return false;
+      }
+
+      $areas = $this->areas();
+      return ($width <= ($areas[$area_name]['max_width'] - self::WIDTH_TOLERANCE));
+    }
+
+    /**
+     * Checks both UTF-8 header texts with the same metrics used for their SVG output.
+     * A long identifier can use the space left by a short manufacturer name. If their
+     * combined width is too large, reject it instead of clipping or shrinking either text.
+     */
+    function fits_texts($manufacturer, $model) {
+      $manufacturer_width = $this->text_width('manufacturer', $manufacturer);
+      $model_width = $this->text_width('model', $model);
+
+      if ($manufacturer_width === false || $model_width === false) {
+        return false;
+      }
+
+      $areas = $this->areas();
+      $row_width = min(self::TEXT_ROW_WIDTH, $areas['manufacturer']['max_width'], $areas['model']['max_width']);
+
+      return ($manufacturer_width + $model_width + self::TEXT_COLUMN_GAP <= $row_width - 2 * self::WIDTH_TOLERANCE);
     }
 
     // ----------------------------------------------------------------- hash --
@@ -367,13 +413,11 @@
 
       // The article administration checks this early to give a useful message, but it is not
       // the only way into the columns: a renamed manufacturer, an import or a foreign system
-      // never revalidates the articles behind it. Text may neither be cut nor set smaller, so
-      // no label is the only remaining answer.
-      foreach (array('manufacturer' => $manufacturer, 'model' => $model) as $area => $text) {
-        if ($this->fits($area, $text) === false) {
-          $this->fail('the '.$area.' does not fit its editable area: '.$text);
-          return false;
-        }
+      // never revalidates the articles behind it. The name and identifier must fit together
+      // at 9 pt, even when a cached graphic is already present.
+      if ($this->fits_texts($manufacturer, $model) === false) {
+        $this->fail('the manufacturer and model do not fit their shared row at 9 pt: '.$manufacturer.' / '.$model);
+        return false;
       }
 
       $hash = $this->garan_hash($manufacturer, $model, $duration);
@@ -407,6 +451,12 @@
      * @return mixed array of file name and content, false on a template mismatch
      */
     function render($manufacturer, $model, $duration) {
+      // Direct callers must obey the same layout limit as label() and the save/import checks.
+      if ($this->fits_texts($manufacturer, $model) === false) {
+        $this->fail('the manufacturer and model do not fit their shared row at 9 pt: '.$manufacturer.' / '.$model);
+        return false;
+      }
+
       $values = array(
         'duration' => $this->duration_text($duration),
         'manufacturer' => (string)$manufacturer,
@@ -450,9 +500,9 @@
      *
      * The official templates split a field over several tspans to carry the kerning of the
      * placeholder, so a token cannot be matched as plain text. The whole content of the text
-     * element whose text equals the token is replaced instead, which keeps the element with its
-     * position, class and font. The kerning went with the placeholder and does not apply to the
-     * new value.
+     * element whose text equals the token is replaced instead. Its class and vertical position
+     * remain intact. The model tspan ends at the right margin of the same row; both header
+     * fields retain their 9 pt size. Placeholder kerning does not apply to the new value.
      *
      * Each token has to appear exactly once, otherwise the template is not the expected official
      * file and nothing is rendered.
@@ -474,9 +524,19 @@
 
         $counts[$content]++;
 
+        $attributes = 'x="0" y="0"';
+        if ($content === self::TOKEN_MODEL) {
+          $attributes = 'x="'.self::MODEL_RIGHT_OFFSET.'" y="0" text-anchor="end"';
+        }
+        if ($content === self::TOKEN_MANUFACTURER || $content === self::TOKEN_MODEL) {
+          // FreeType/GD does not apply this font's GPOS kerning, whereas browsers do.
+          // Disable it in the editable row so long sequences keep the measured spacing.
+          $attributes .= ' style="font-size:'.self::TEXT_FONT_SIZE.'px;font-kerning:none"';
+        }
+
         // product data must never be able to inject own svg or html
         return $match[1].
-               '<tspan x="0" y="0">'.encode_htmlspecialchars($tokens[$content], ENT_QUOTES | ENT_XML1, 'UTF-8').'</tspan>'.
+               '<tspan '.$attributes.'>'.encode_htmlspecialchars($tokens[$content], ENT_QUOTES | ENT_XML1, 'UTF-8').'</tspan>'.
                $match[3];
       }, $svg);
 
