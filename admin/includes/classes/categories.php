@@ -1600,7 +1600,7 @@ class categories {
       if (!isset($products_data['products_tax_class_id']) 
           || (int)$products_data['products_tax_class_id'] <= 0
           || !isset($products_data['products_price']) 
-          || (double)$products_data['products_price'] <= 0.00
+          || (float)$products_data['products_price'] <= 0.00
           )
       {
         $price_query = xtc_db_query("SELECT products_tax_class_id,
@@ -1612,7 +1612,7 @@ class categories {
         if (!isset($products_data['products_tax_class_id']) || (int)$products_data['products_tax_class_id'] <= 0) {
           $products_data['products_tax_class_id'] = $price['products_tax_class_id'];
         }
-        if (!isset($products_data['products_price']) || (double)$products_data['products_price'] <= 0.00) {
+        if (!isset($products_data['products_price']) || (float)$products_data['products_price'] <= 0.00) {
           $products_data['products_price'] = $price['products_price'];
         }
       }

@@ -110,7 +110,7 @@
         $upse_table = preg_split("/[:,]/" , $upse_cost);
         for ($i=0, $n=count($upse_table); $i<$n; $i+=2) {
           if ($shipping_weight <= $upse_table[$i]) {
-            $shipping = (double)$upse_table[$i+1];
+            $shipping = (float)$upse_table[$i+1];
             $shipping_method = MODULE_SHIPPING_UPSE_TEXT_WAY . ' ' . $dest_country . ': ';
             break;
           }
@@ -120,7 +120,7 @@
           $shipping_cost = 0;
           $shipping_method = MODULE_SHIPPING_UPSE_UNDEFINED_RATE;
         } else {
-          $shipping_cost = ($shipping + (double)MODULE_SHIPPING_UPSE_HANDLING);
+          $shipping_cost = ($shipping + (float)MODULE_SHIPPING_UPSE_HANDLING);
         }
       }
 

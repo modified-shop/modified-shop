@@ -76,8 +76,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
   $customer_amount = $xtPrice->xtcCalculateCurr($gv_result['amount']);
   $gv_amount = xtc_input_validation($amount, 'amount');
   
-  if ((double)$gv_amount <= 0
-      || (double)$gv_amount > (double)$customer_amount
+  if ((float)$gv_amount <= 0
+      || (float)$gv_amount > (float)$customer_amount
       )
   {
     $error = true;
@@ -92,7 +92,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
                              WHERE customer_id='".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $gv_amount = xtc_input_validation($amount, 'amount');
-  $new_amount = $xtPrice->xtcCalculateCurr($gv_result['amount']) - (double)$gv_amount;
+  $new_amount = $xtPrice->xtcCalculateCurr($gv_result['amount']) - (float)$gv_amount;
   if ($new_amount < 0) {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
@@ -177,7 +177,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
   $send_name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
 
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post'));
-  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), $to_name, $to_email, $to_name, $xtPrice->xtcFormat((double)$gv_amount, true), $send_name));
+  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), $to_name, $to_email, $to_name, $xtPrice->xtcFormat((float)$gv_amount, true), $send_name));
   if ($message != '') {
     $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, $send_name));
     $smarty->assign('POST_MESSAGE', $message);

@@ -112,18 +112,18 @@
 
       if ($dest_zone == 0) {
         $error = true;
-        } elseif (($dest_zone == 1) && ((round($_SESSION['cart']->show_total())) >= (double)MODULE_SHIPPING_UPS_FREEAMOUNT)) {
+        } elseif (($dest_zone == 1) && ((round($_SESSION['cart']->show_total())) >= (float)MODULE_SHIPPING_UPS_FREEAMOUNT)) {
           $freeship = true;
           $shipping = 0;
           $shipping_method = MODULE_SHIPPING_UPS_TEXT_WAY . ' ' . $dest_country . ': ';
-        } elseif (($dest_zone > 1) && ((round($_SESSION['cart']->show_total())) >= (double)MODULE_SHIPPING_UPS_FREEAMOUNT)) {
+        } elseif (($dest_zone > 1) && ((round($_SESSION['cart']->show_total())) >= (float)MODULE_SHIPPING_UPS_FREEAMOUNT)) {
           $lowship = true;
           $shipping = -1;
           $ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $dest_zone);
           $ups_table = preg_split("/[:,]/" , $ups_cost); 
           for ($i=0, $n=count($ups_table); $i<$n; $i+=2) {
             if ($shipping_weight <= $ups_table[$i]) {
-              $shipping = (double)$ups_table[$i+1];
+              $shipping = (float)$ups_table[$i+1];
               $shipping_method = MODULE_SHIPPING_UPS_TEXT_WAY . ' ' . $dest_country . ': ';
               break;
             }
@@ -133,7 +133,7 @@
           $ups_table = preg_split("/[:,]/" , $ups_cost); 
           for ($i=0, $n=count($ups_table); $i<$n; $i+=2) {
             if ($shipping_weight <= $ups_table[$i]) {
-              $diff = (double)$ups_table[$i+1];
+              $diff = (float)$ups_table[$i+1];
               break;
             }
           }
@@ -144,7 +144,7 @@
           $ups_table = preg_split("/[:,]/" , $ups_cost); 
           for ($i=0, $n=count($ups_table); $i<$n; $i+=2) {
             if ($shipping_weight <= $ups_table[$i]) {
-              $shipping = (double)$ups_table[$i+1];
+              $shipping = (float)$ups_table[$i+1];
               $shipping_method = MODULE_SHIPPING_UPS_TEXT_WAY . ' ' . $dest_country . ': ';
               break;
             }
@@ -155,7 +155,7 @@
         $shipping_cost = 0;
         $shipping_method = MODULE_SHIPPING_UPS_UNDEFINED_RATE;
       } else {
-        $shipping_cost = ($shipping + (double)MODULE_SHIPPING_UPS_HANDLING);
+        $shipping_cost = ($shipping + (float)MODULE_SHIPPING_UPS_HANDLING);
       }
 
 

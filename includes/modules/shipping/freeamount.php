@@ -128,7 +128,7 @@
           $this->enabled = false;
         }
       } else {
-        $freeamount_zone = (double)constant('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_' . $dest_zone);
+        $freeamount_zone = (float)constant('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_' . $dest_zone);
 
         if (( $xtPrice->xtcRemoveCurr($order->info['subtotal']) < $freeamount_zone) && MODULE_SHIPPING_FREEAMOUNT_DISPLAY == 'False') {
           $this->enabled = false;

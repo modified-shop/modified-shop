@@ -133,7 +133,7 @@
       $y=2;
       for ($i=0, $n=count($dpd_table); $i<$n; $i++) {
         if ( ($shipping_weight > $dpd_table[$i]) && ($shipping_weight <= $dpd_table[$x]) ) {
-          $shipping = (double)$dpd_table[$y];
+          $shipping = (float)$dpd_table[$y];
           $shipping_dpd_method = MODULE_SHIPPING_DPD_TEXT_WAY . ' ' . $dest_country . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_DPD_TEXT_UNITS . ') :';
           break;
         }
@@ -149,7 +149,7 @@
         //Check if there is free shipping in the database.
         if($dpd_cost['dpd_free_shipping_over'] == -1.0000){
           //do normal processing of shipping
-          $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (double)MODULE_SHIPPING_DPD_HANDLING;
+          $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (float)MODULE_SHIPPING_DPD_HANDLING;
         } else if(($dpd_cost['dpd_free_shipping_over'] != -1.0000) && ($dpd_cost['dpd_shipping_subsidized'] == -1.0000)){
           //free shipping if over amount
           if($order->info['subtotal'] >= $dpd_cost['dpd_free_shipping_over']){
@@ -158,17 +158,17 @@
             $shipping_dpd_method = MODULE_SHIPPING_DPD_FREE_SHIPPING;
           } else {
             //charge for shipping
-            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (double)MODULE_SHIPPING_DPD_HANDLING;
+            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (float)MODULE_SHIPPING_DPD_HANDLING;
           }
         //subsidized shipping over amount
         } else {
           if($order->info['subtotal'] >= $dpd_cost['dpd_free_shipping_over']){
             //shipping is subsidized
-            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (double)MODULE_SHIPPING_DPD_HANDLING - $dpd_cost['dpd_shipping_subsidized'];
+            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (float)MODULE_SHIPPING_DPD_HANDLING - $dpd_cost['dpd_shipping_subsidized'];
             $shipping_dpd_method = MODULE_SHIPPING_DPD_SUBSIDIZED_SHIPPING . ' ' . MODULE_SHIPPING_DPD_TEXT_WAY . ' ' . $dest_country . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_DPD_TEXT_UNITS . ') :';
           } else {
             //charge for shipping
-            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (double)MODULE_SHIPPING_DPD_HANDLING;
+            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (float)MODULE_SHIPPING_DPD_HANDLING;
 
           }
         }

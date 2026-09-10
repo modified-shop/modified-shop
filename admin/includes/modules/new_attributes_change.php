@@ -69,7 +69,7 @@
       }
 
       $cv_id = $_POST['optionValues'][$i];
-      $value_price =  (double)$_POST[$cv_id . '_price'];
+      $value_price =  (float)$_POST[$cv_id . '_price'];
 
       if (PRICE_IS_BRUTTO == 'true'){
         $value_price = ($value_price / ((xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id']))) + 100) * 100);
@@ -86,7 +86,7 @@
         'price_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_prefix']),
         'attributes_model' => xtc_db_prepare_input($_POST[$cv_id . '_model']),
         'attributes_stock' => (int)$_POST[$cv_id . '_stock'],
-        'options_values_weight' => (double)$_POST[$cv_id . '_weight'],
+        'options_values_weight' => (float)$_POST[$cv_id . '_weight'],
         'weight_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_weight_prefix']),
         'sortorder' => (int)$_POST[$cv_id . '_sortorder']
       );

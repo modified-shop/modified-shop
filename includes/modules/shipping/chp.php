@@ -126,7 +126,7 @@
 
           for ($i=0, $n=count($chp_table_eco); $i<$n; $i+=2) {
             if ($shipping_weight <= $chp_table_eco[$i]) {
-              $shipping_eco = (double)$chp_table_eco[$i+1];
+              $shipping_eco = (float)$chp_table_eco[$i+1];
               break;
             }
           }
@@ -135,7 +135,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_CHP_UNDEFINED_RATE;
           } else {
-            $shipping_cost_1 = ($shipping_eco + (double)MODULE_SHIPPING_CHP_HANDLING);
+            $shipping_cost_1 = ($shipping_eco + (float)MODULE_SHIPPING_CHP_HANDLING);
           }
 
           if ($shipping_eco != 0) {
@@ -150,7 +150,7 @@
 
           for ($i=0, $n=count($chp_table_pri); $i<$n; $i+=2) {
             if ($shipping_weight <= $chp_table_pri[$i]) {
-              $shipping_pri = (double)$chp_table_pri[$i+1];
+              $shipping_pri = (float)$chp_table_pri[$i+1];
               break;
             }
           }
@@ -159,7 +159,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_CHP_UNDEFINED_RATE;
           } else {
-            $shipping_cost_2 = ($shipping_pri + (double)MODULE_SHIPPING_CHP_HANDLING);
+            $shipping_cost_2 = ($shipping_pri + (float)MODULE_SHIPPING_CHP_HANDLING);
           }
 
           if ($shipping_pri != 0) {
@@ -174,7 +174,7 @@
 
           for ($i=0, $n=count($chp_table_urg); $i<$n; $i+=2) {
             if ($shipping_weight <= $chp_table_urg[$i]) {
-              $shipping_urg = (double)$chp_table_urg[$i+1];
+              $shipping_urg = (float)$chp_table_urg[$i+1];
               break;
             }
           }
@@ -183,7 +183,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_CHP_UNDEFINED_RATE;
           } else {
-            $shipping_cost_3 = ($shipping_urg + (double)MODULE_SHIPPING_CHP_HANDLING);
+            $shipping_cost_3 = ($shipping_urg + (float)MODULE_SHIPPING_CHP_HANDLING);
           }
 
           if ($shipping_urg != 0) {

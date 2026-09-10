@@ -305,7 +305,7 @@ class ot_payment {
   function get_discount($value, $percent) {
     global $xtPrice;
 
-    return $xtPrice->xtcFormat($value * (double)$percent / 100, false);
+    return $xtPrice->xtcFormat($value * (float)$percent / 100, false);
   }
   
   function get_module_cost($payment_modul) {

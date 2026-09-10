@@ -110,14 +110,14 @@
         $shipping_num_boxes = 1;
         $shipping_weight = $total_weight;
 
-        if ((double)SHIPPING_BOX_WEIGHT >= ($shipping_weight * (double)SHIPPING_BOX_PADDING / 100)) {
-          $shipping_weight = $shipping_weight + (double)SHIPPING_BOX_WEIGHT;
+        if ((float)SHIPPING_BOX_WEIGHT >= ($shipping_weight * (float)SHIPPING_BOX_PADDING / 100)) {
+          $shipping_weight = $shipping_weight + (float)SHIPPING_BOX_WEIGHT;
         } else {
-          $shipping_weight = $shipping_weight + ($shipping_weight * (double)SHIPPING_BOX_PADDING / 100);
+          $shipping_weight = $shipping_weight + ($shipping_weight * (float)SHIPPING_BOX_PADDING / 100);
         }
 
-        if ((double)SHIPPING_MAX_WEIGHT > 0 && $shipping_weight > (double)SHIPPING_MAX_WEIGHT) { // Split into many boxes
-          $shipping_num_boxes = ceil($shipping_weight / (double)SHIPPING_MAX_WEIGHT);
+        if ((float)SHIPPING_MAX_WEIGHT > 0 && $shipping_weight > (float)SHIPPING_MAX_WEIGHT) { // Split into many boxes
+          $shipping_num_boxes = ceil($shipping_weight / (float)SHIPPING_MAX_WEIGHT);
           $shipping_weight = $shipping_weight / $shipping_num_boxes;
         }
 
