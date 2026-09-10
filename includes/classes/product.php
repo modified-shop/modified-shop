@@ -697,7 +697,7 @@ class product {
             'VPE_NAME' => $main->vpe_name,
             'VPE_VALUE' => $products_array[$pID]['products_vpe_value'],
             'PRICE' => $xtPrice->xtcFormat($Pprice, true),
-            'PLAIN_PRICE' => round((double)$Pprice, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']),
+            'PLAIN_PRICE' => round((float)$Pprice, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']),
             'PRICE_NETTO' => $Nprice,
             'PRICE_BRUTTO' => $Bprice,
           );
@@ -883,7 +883,7 @@ class product {
       $productData[$array['products_id']] = array_merge($productData[$array['products_id']], $productDataAdds);
         
       foreach((array)$products_price as $key => $entry) {
-        if (strtoupper($key) == 'PLAIN') $entry = round((double)$entry, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);      
+        if (strtoupper($key) == 'PLAIN') $entry = round((float)$entry, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);      
         $productData[$array['products_id']]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
         $productData[$array['products_id']]['PRODUCTS_PRICE_ARRAY'][0]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
       }

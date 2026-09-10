@@ -127,18 +127,18 @@
         if ($dhl_cost_ecx != '') {
           $dhl_table_ecx = preg_split("/[:,]/" , $dhl_cost_ecx); 
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_ecx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
+            $shipping_ecx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_ecx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
+            $shipping_ecx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_ecx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
+            $shipping_ecx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_50_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_ecx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_50_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
+            $shipping_ecx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_51_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + 40 * (float)constant('MODULE_SHIPPING_DHL_STEP_ECX_50_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
           } else {
 
             for ($i=0; $i<sizeof($dhl_table_ecx); $i+=2) {
               if ($shipping_weight <= $dhl_table_ecx[$i]) {
-                $shipping_ecx = (double)$dhl_table_ecx[$i+1];
+                $shipping_ecx = (float)$dhl_table_ecx[$i+1];
                 break;
               }
             }
@@ -149,7 +149,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_1 = ($shipping_ecx * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_1 = ($shipping_ecx * $shipping_num_boxes) + (float)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'ECX',
@@ -160,18 +160,18 @@
         if ($dhl_cost_dox != '') {
           $dhl_table_dox = preg_split("/[:,]/" , $dhl_cost_dox);  
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_dox = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
+            $shipping_dox = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_dox = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
+            $shipping_dox = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_dox = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
+            $shipping_dox = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_50_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_dox = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_50_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
+            $shipping_dox = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_51_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + 40 * (float)constant('MODULE_SHIPPING_DHL_STEP_DOX_50_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
           } else {
 
             for ($i=0, $n=count($dhl_table_dox); $i<$n; $i+=2) {
               if ($shipping_weight <= $dhl_table_dox[$i]) {
-                $shipping_dox = (double)$dhl_table_dox[$i+1];
+                $shipping_dox = (float)$dhl_table_dox[$i+1];
                 break;
               }
             }
@@ -182,7 +182,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_2 = ($shipping_dox * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_2 = ($shipping_dox * $shipping_num_boxes) + (float)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'DOX',
@@ -193,18 +193,18 @@
         if ($dhl_cost_wpx != '') {
           $dhl_table_wpx = preg_split("/[:,]/" , $dhl_cost_wpx); 
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_wpx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
+            $shipping_wpx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_wpx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
+            $shipping_wpx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_wpx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
+            $shipping_wpx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_50_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_wpx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_50_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
+            $shipping_wpx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_51_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + 40 * (float)constant('MODULE_SHIPPING_DHL_STEP_WPX_50_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
           } else {
 
             for ($i=0, $n=count($dhl_table_wpx); $i<$n; $i+=2) {
               if ($shipping_weight <= $dhl_table_wpx[$i]) {
-                $shipping_wpx = (double)$dhl_table_wpx[$i+1];
+                $shipping_wpx = (float)$dhl_table_wpx[$i+1];
                 break;
               }
             }
@@ -214,7 +214,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_3 = ($shipping_wpx * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_3 = ($shipping_wpx * $shipping_num_boxes) + (float)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'WPX',
@@ -225,18 +225,18 @@
         if ($dhl_cost_mdx != '') {
           $dhl_table_mdx = preg_split("/[:,]/" , $dhl_cost_mdx);  
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_mdx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
+            $shipping_mdx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_mdx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
+            $shipping_mdx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_mdx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
+            $shipping_mdx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_50_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_mdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_50_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
+            $shipping_mdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_51_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + 40 * (float)constant('MODULE_SHIPPING_DHL_STEP_MDX_50_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
           } else {
 
             for ($i=0, $n=count($dhl_table_mdx); $i<$n; $i+=2) {
               if ($shipping_weight <= $dhl_table_mdx[$i]) {
-                $shipping_mdx = (double)$dhl_table_mdx[$i+1];
+                $shipping_mdx = (float)$dhl_table_mdx[$i+1];
                 break;
               }
             }
@@ -246,7 +246,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_4 = ($shipping_mdx * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_4 = ($shipping_mdx * $shipping_num_boxes) + (float)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'MDX',
@@ -257,18 +257,18 @@
         if ($dhl_cost_sdx != '') {
           $dhl_table_sdx = preg_split("/[:,]/" , $dhl_cost_sdx); 
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_sdx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
+            $shipping_sdx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_sdx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
+            $shipping_sdx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_sdx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
+            $shipping_sdx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_50_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_sdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_50_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
+            $shipping_sdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_51_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + 20 * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + 40 * (float)constant('MODULE_SHIPPING_DHL_STEP_SDX_50_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
           } else {
 
             for ($i=0, $n=count($dhl_table_sdx); $i<$n; $i+=2) {
               if ($shipping_weight <= $dhl_table_sdx[$i]) {
-                $shipping_sdx = (double)$dhl_table_sdx[$i+1];
+                $shipping_sdx = (float)$dhl_table_sdx[$i+1];
                 break;
               }
             }
@@ -278,7 +278,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_5 = ($shipping_sdx * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_5 = ($shipping_sdx * $shipping_num_boxes) + (float)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'SDX',

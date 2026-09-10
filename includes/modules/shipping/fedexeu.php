@@ -123,7 +123,7 @@
 
           for ($i=0, $n=count($fedexeu_table_pak); $i<$n; $i+=2) {
             if ($shipping_weight <= $fedexeu_table_pak[$i]) {
-              $shipping_pak = (double)$fedexeu_table_pak[$i+1];
+              $shipping_pak = (float)$fedexeu_table_pak[$i+1];
               break;
             }
           }
@@ -132,7 +132,7 @@
               $shipping_cost = 0;
               $shipping_method = MODULE_SHIPPING_FEDEXEU_UNDEFINED_RATE;
             } else {
-              $shipping_cost_1 = ($shipping_pak + (double)MODULE_SHIPPING_FEDEXEU_HANDLING);
+              $shipping_cost_1 = ($shipping_pak + (float)MODULE_SHIPPING_FEDEXEU_HANDLING);
             }
 
             if ($shipping_pak != 0) {
@@ -148,7 +148,7 @@
 
           for ($i=0, $n=count($fedexeu_table_env); $i<$n; $i+=2) {
             if ($shipping_weight <= $fedexeu_table_env[$i]) {
-              $shipping_env = (double)$fedexeu_table_env[$i+1];
+              $shipping_env = (float)$fedexeu_table_env[$i+1];
               break;
             }
           }
@@ -158,13 +158,13 @@
               $shipping_cost = 0;
               $shipping_method = MODULE_SHIPPING_FEDEXEU_UNDEFINED_RATE;
             } else {
-              $shipping_cost_1 = ($shipping_env + (double)MODULE_SHIPPING_FEDEXEU_HANDLING);
+              $shipping_cost_1 = ($shipping_env + (float)MODULE_SHIPPING_FEDEXEU_HANDLING);
             }
 
             if ($shipping_env != 0) {
               $methods[] = array('id' => 'ENV',
                                  'title' => 'FedEx Envelope',
-                                 'cost' => ((double)MODULE_SHIPPING_FEDEXEU_HANDLING + $shipping_cost_1) * $shipping_num_boxes);
+                                 'cost' => ((float)MODULE_SHIPPING_FEDEXEU_HANDLING + $shipping_cost_1) * $shipping_num_boxes);
             }
           }
         }
@@ -172,16 +172,16 @@
         if ($fedexeu_cost_box != '') {
           $fedexeu_table_box = preg_split("/[:,]/" , $fedexeu_cost_box); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_box = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
+            $shipping_box = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 40) ) {
-            $shipping_box = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_' .$j) + 20 * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
+            $shipping_box = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_' .$j) + 20 * (float)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
           } elseif ( ($shipping_weight > 40) and ($shipping_weight <= 70) ) {
-            $shipping_box = number_format((($shipping_weight - 40)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_' .$j) + 20 * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + 40 * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
+            $shipping_box = number_format((($shipping_weight - 40)* 2 + 0.5), 0) * (float)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_' .$j) + 20 * (float)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + 40 * (float)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
           } else {
 
             for ($i=0, $n=count($fedexeu_table_box); $i<$n; $i+=2) {
               if ($shipping_weight <= $fedexeu_table_box[$i]) {
-                $shipping_box = (double)$fedexeu_table_box[$i+1];
+                $shipping_box = (float)$fedexeu_table_box[$i+1];
                 break;
               }
             }
@@ -192,13 +192,13 @@
               $shipping_cost = 0;
               $shipping_method = MODULE_SHIPPING_FEDEXEU_UNDEFINED_RATE;
             } else {
-              $shipping_cost_2 = ($shipping_box + (double)MODULE_SHIPPING_FEDEXEU_HANDLING);
+              $shipping_cost_2 = ($shipping_box + (float)MODULE_SHIPPING_FEDEXEU_HANDLING);
             }
 
             if ($shipping_box != 0) {
               $methods[] = array('id' => 'BOX',
                                  'title' => 'FedEx Box',
-                                 'cost' => ((double)MODULE_SHIPPING_FEDEXEU_HANDLING + $shipping_cost_2) * $shipping_num_boxes);
+                                 'cost' => ((float)MODULE_SHIPPING_FEDEXEU_HANDLING + $shipping_cost_2) * $shipping_num_boxes);
             }
           }
         }  

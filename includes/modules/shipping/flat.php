@@ -75,7 +75,7 @@
                             'module' => MODULE_SHIPPING_FLAT_TEXT_TITLE,
                             'methods' => array(array('id' => $this->code,
                                                      'title' => MODULE_SHIPPING_FLAT_TEXT_WAY,
-                                                     'cost' => (double)MODULE_SHIPPING_FLAT_COST)));
+                                                     'cost' => (float)MODULE_SHIPPING_FLAT_COST)));
 
       if ($this->tax_class > 0) {
         $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['shipping']['id'], $order->delivery['shipping']['zone_id']);

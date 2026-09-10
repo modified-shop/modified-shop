@@ -1710,7 +1710,7 @@
     $currencies = xtc_db_fetch_array($currencies_query);
 
     if ($allow_tax == '1') {
-      $price_string = (double)$price_string / ((100 + (double)$tax_rate) / 100);
+      $price_string = (float)$price_string / ((100 + (float)$tax_rate) / 100);
     }
 
     if ($price_format == '1') {
@@ -1743,7 +1743,7 @@
    * @return
    */
   function xtc_round($value, $precision) {
-    return round((double)$value, (int)$precision);
+    return round((float)$value, (int)$precision);
   }
 
   /**

@@ -1765,7 +1765,7 @@ class PHPlot
     {
         $this->bgmode = $this->CheckOption($mode, 'tile, centeredtile, scale', __FUNCTION__);
         $this->bgimg  = $input_file;
-        return (boolean)$this->bgmode;
+        return (bool)$this->bgmode;
     }
 
     /*
@@ -1778,7 +1778,7 @@ class PHPlot
     {
         $this->plotbgmode = $this->CheckOption($mode, 'tile, centeredtile, scale', __FUNCTION__);
         $this->plotbgimg  = $input_file;
-        return (boolean)$this->plotbgmode;
+        return (bool)$this->plotbgmode;
     }
 
     /*
@@ -2144,7 +2144,7 @@ class PHPlot
             $type = '';
         }
         $format['type'] = $type;
-        return (boolean)$type;
+        return (bool)$type;
     }
 
     /*
@@ -2462,7 +2462,7 @@ class PHPlot
     function SetImageBorderType($sibt)
     {
         $this->image_border_type = $this->CheckOption($sibt, 'raised, plain, solid, none', __FUNCTION__);
-        return (boolean)$this->image_border_type;
+        return (bool)$this->image_border_type;
     }
 
     /*
@@ -2601,7 +2601,7 @@ class PHPlot
     {
         $avail_plot_types = implode(', ', array_keys(self::$plots)); // List of known plot types
         $this->plot_type = $this->CheckOption($which_pt, $avail_plot_types, __FUNCTION__);
-        return (boolean)$this->plot_type;
+        return (bool)$this->plot_type;
     }
 
     /*
@@ -2652,7 +2652,7 @@ class PHPlot
     function SetXScaleType($which_xst)
     {
         $this->xscale_type = $this->CheckOption($which_xst, 'linear, log', __FUNCTION__);
-        return (boolean)$this->xscale_type;
+        return (bool)$this->xscale_type;
     }
 
     /*
@@ -2661,7 +2661,7 @@ class PHPlot
     function SetYScaleType($which_yst)
     {
         $this->yscale_type = $this->CheckOption($which_yst, 'linear, log',  __FUNCTION__);
-        return (boolean)$this->yscale_type;
+        return (bool)$this->yscale_type;
     }
 
     /*
@@ -2721,7 +2721,7 @@ class PHPlot
     function SetErrorBarShape($which_ebs)
     {
         $this->error_bar_shape = $this->CheckOption($which_ebs, 'tee, line', __FUNCTION__);
-        return (boolean)$this->error_bar_shape;
+        return (bool)$this->error_bar_shape;
     }
 
     /*
@@ -2799,7 +2799,7 @@ class PHPlot
         // Validate the datatype argument against the available data types:
         $valid_data_types = implode(', ', array_keys(self::$datatypes));
         $this->data_type = $this->CheckOption($which_dt, $valid_data_types, __FUNCTION__);
-        return (boolean)$this->data_type;
+        return (bool)$this->data_type;
     }
 
     /*
@@ -3205,7 +3205,7 @@ class PHPlot
             $j = 1; // Skips label at [0]
 
             if (!$this->datatype_implied) {
-                $all_iv[] = (double)$this->data[$i][$j++];
+                $all_iv[] = (float)$this->data[$i][$j++];
             }
 
             if ($sum_vals) {
@@ -3217,8 +3217,8 @@ class PHPlot
                 if (is_numeric($val = $this->data[$i][$j++])) {
 
                     if ($this->datatype_error_bars) {
-                        $all_dv[] = $val + (double)$this->data[$i][$j++];
-                        $all_dv[] = $val - (double)$this->data[$i][$j++];
+                        $all_dv[] = $val + (float)$this->data[$i][$j++];
+                        $all_dv[] = $val - (float)$this->data[$i][$j++];
                     } else {
                         if ($abs_vals) {
                             $val = abs($val); // Use absolute values
@@ -4276,8 +4276,8 @@ class PHPlot
         }
 
         // To avoid losing a final tick mark due to round-off errors, push tick_end out slightly.
-        $tick_start = (double)$plot_min;
-        $tick_end = (double)$plot_max + ($plot_max - $plot_min) / 10000.0;
+        $tick_start = (float)$plot_min;
+        $tick_end = (float)$plot_max + ($plot_max - $plot_min) / 10000.0;
 
         // If a tick anchor was given, adjust the start of the range so the anchor falls
         // at an exact tick mark (or would, if it was within range).
@@ -4570,7 +4570,7 @@ class PHPlot
     protected function TuneAutoTicks($which, $min_ticks, $tick_mode, $tick_inc_integer)
     {
         if (isset($min_ticks) && $min_ticks > 0)
-            $this->tickctl[$which]['min_ticks'] = (integer)$min_ticks;
+            $this->tickctl[$which]['min_ticks'] = (int)$min_ticks;
         if (isset($tick_mode)) {
             $tick_mode = $this->CheckOption($tick_mode, 'decimal, binary, date',
                                             'Tune' . strtoupper($which) . 'AutoTicks');
@@ -4648,7 +4648,7 @@ class PHPlot
     {
         $this->x_tick_pos = $this->CheckOption($which_tp, 'plotdown, plotup, both, xaxis, none',
                                                __FUNCTION__);
-        return (boolean)$this->x_tick_pos;
+        return (bool)$this->x_tick_pos;
     }
 
     /*
@@ -4659,7 +4659,7 @@ class PHPlot
     {
         $this->y_tick_pos = $this->CheckOption($which_tp, 'plotleft, plotright, both, yaxis, none',
                                               __FUNCTION__);
-        return (boolean)$this->y_tick_pos;
+        return (bool)$this->y_tick_pos;
     }
 
     /*
@@ -5551,7 +5551,7 @@ class PHPlot
     {
         $this->legend_colorbox_borders = $this->CheckOption($cbbmode, 'none, textcolor, databordercolor',
                                                             __FUNCTION__);
-        return (boolean)$this->legend_colorbox_borders;
+        return (bool)$this->legend_colorbox_borders;
     }
 
     /*
@@ -7356,7 +7356,7 @@ class PHPlot
 
                 if (is_numeric($y_now = $this->data[$row][$rec])) {      //Allow for missing Y data
                     $y = $this->ytr($y_now);
-                    $z = (double)$this->data[$row][$rec+1]; // Z is required if Y is present.
+                    $z = (float)$this->data[$row][$rec+1]; // Z is required if Y is present.
                     $size = (int)($f_size * $z + $b_size);  // Calculate bubble size
 
                     // Select the color:

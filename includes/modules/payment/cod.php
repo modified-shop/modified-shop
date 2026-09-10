@@ -47,7 +47,7 @@ class cod {
     $this->cost = '';    
     
     if ($this->check() > 0) {
-      $this->limit_subtotal = (double)MODULE_PAYMENT_COD_LIMIT_ALLOWED;
+      $this->limit_subtotal = (float)MODULE_PAYMENT_COD_LIMIT_ALLOWED;
       if ((int) MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
         $this->order_status = (int) MODULE_PAYMENT_COD_ORDER_STATUS_ID;
       }

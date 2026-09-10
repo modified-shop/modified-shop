@@ -459,5 +459,5 @@ function pushgTagEventAction() {";
 
 
   function numberFormatGoogleAnalytics($price) {
-    return number_format((double)$price, 2, '.', '');
+    return number_format((float)$price, 2, '.', '');
   }

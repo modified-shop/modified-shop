@@ -131,7 +131,7 @@
         $ap_table = preg_split("/[:,]/" , $ap_cost);
         for ($i=0, $n=count($ap_table); $i<$n; $i+=2) {
           if ($shipping_weight <= $ap_table[$i]) {
-            $shipping = (double)$ap_table[$i+1];
+            $shipping = (float)$ap_table[$i+1];
             $shipping_method = MODULE_SHIPPING_AP_TEXT_WAY . ' ' . $dest_country . ': ';
             break;
           }
@@ -144,7 +144,7 @@
             $this->enabled = false;
           }
         } else {
-          $shipping_cost = (($shipping * $shipping_num_boxes) + (double)constant('MODULE_SHIPPING_AP_HANDLING_' . $dest_zone));
+          $shipping_cost = (($shipping * $shipping_num_boxes) + (float)constant('MODULE_SHIPPING_AP_HANDLING_' . $dest_zone));
           $this->quotes['methods'] = array(array('id' => $this->code,
                                                  'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_AP_TEXT_UNITS .')',
                                                  'cost'  => $shipping_cost));

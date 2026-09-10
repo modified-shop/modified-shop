@@ -130,7 +130,7 @@
         $gls_table = preg_split("/[:,]/" , $gls_cost); 
         for ($i=0, $n=count($gls_table); $i<$n; $i+=2) {
           if ($shipping_weight <= $gls_table[$i]) {
-            $shipping = (double)$gls_table[$i+1];
+            $shipping = (float)$gls_table[$i+1];
             $shipping_method = MODULE_SHIPPING_GLS_TEXT_WAY . ' ' . $dest_country . ': ';
             break;
           }
@@ -144,13 +144,13 @@
           }
         } else {
           if ($dest_plz_in) {
-            $shipping_cost_normal = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING);
-            $shipping_cost_extra = (double)MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST;
-            $shipping_cost = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING + $shipping_cost_extra);
+            $shipping_cost_normal = ($shipping + (float)MODULE_SHIPPING_GLS_HANDLING);
+            $shipping_cost_extra = (float)MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST;
+            $shipping_cost = ($shipping + (float)MODULE_SHIPPING_GLS_HANDLING + $shipping_cost_extra);
           } else {
-            $shipping_cost_normal = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING);
+            $shipping_cost_normal = ($shipping + (float)MODULE_SHIPPING_GLS_HANDLING);
             $shipping_cost_extra = 0;
-            $shipping_cost = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING);
+            $shipping_cost = ($shipping + (float)MODULE_SHIPPING_GLS_HANDLING);
           }
 
           $tax_text = '';          

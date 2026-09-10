@@ -294,7 +294,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_stock" value="' . (isset($attr_array['attributes_stock'])?$attr_array['attributes_stock']:'') . '" size="10"></td>'. PHP_EOL;
                     
                         //VPE
-                        $output .= '<td class="main nobr" align="left"><input'.$disable.'type="text" name="' . $current_value_id . '_vpe_value" value="' . (isset($attr_array['attributes_vpe_value'])? (double)$attr_array['attributes_vpe_value']:'') . '" size="10"> '. PHP_EOL;
+                        $output .= '<td class="main nobr" align="left"><input'.$disable.'type="text" name="' . $current_value_id . '_vpe_value" value="' . (isset($attr_array['attributes_vpe_value'])? (float)$attr_array['attributes_vpe_value']:'') . '" size="10"> '. PHP_EOL;
                         $output .=  xtc_draw_pull_down_menu($current_value_id . '_vpe_id',$attr_vpe_data,(isset($attr_array['attributes_vpe_id'])?$attr_array['attributes_vpe_id']:''), $noStylingClass . $disable). PHP_EOL;
                         $output .=  '</td>'. PHP_EOL;
           

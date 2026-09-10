@@ -549,7 +549,7 @@
     
     $final_price = $data_array['products_price'] * (int)$data_array['products_quantity'];
     
-    $new_qty = (double)$data_array['old_qty'] - (double)$data_array['products_quantity'];
+    $new_qty = (float)$data_array['old_qty'] - (float)$data_array['products_quantity'];
   
     $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
     $product['products_order_description'] = !empty($product['products_order_description']) ? nl2br($product['products_order_description']) : $product['products_short_description'];
@@ -693,12 +693,12 @@
 
     if ($data_array['products_quantity'] != 0) {
       xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
-                       SET products_quantity = products_quantity - ".sprintf('%d', (double)$data_array['products_quantity']).",
-                           products_ordered = products_ordered + ".sprintf('%d', (double)$data_array['products_quantity'])." 
+                       SET products_quantity = products_quantity - ".sprintf('%d', (float)$data_array['products_quantity']).",
+                           products_ordered = products_ordered + ".sprintf('%d', (float)$data_array['products_quantity'])." 
                      WHERE products_id = ".(int)$data_array['products_id']);
 
       xtc_db_query("UPDATE ".TABLE_SPECIALS." 
-                       SET specials_quantity = specials_quantity - ".sprintf('%d', (double)$data_array['products_quantity'])." 
+                       SET specials_quantity = specials_quantity - ".sprintf('%d', (float)$data_array['products_quantity'])." 
                      WHERE products_id = ".(int)$data_array['products_id']."
                        AND specials_quantity != 0");
     }
@@ -722,7 +722,7 @@
                                                          WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
       while ($delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query)) {
         xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
-                         SET attributes_stock = attributes_stock + ".sprintf('%d', (double)$delete_products_attributes['products_quantity'])."
+                         SET attributes_stock = attributes_stock + ".sprintf('%d', (float)$delete_products_attributes['products_quantity'])."
                        WHERE products_id = '".(int)$delete_products_attributes['products_id']."' 
                          AND options_id = '".(int)$delete_products_attributes['orders_products_options_id']."'
                          AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
@@ -735,12 +735,12 @@
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id = '".(int)($oID)."' AND orders_products_id = '".(int)($data_array['opID'])."'");
 
     xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
-                     SET products_quantity = products_quantity + ".sprintf('%d', (double)$data_array['del_qty']).",
-                         products_ordered = products_ordered - ".sprintf('%d', (double)$data_array['del_qty'])."
+                     SET products_quantity = products_quantity + ".sprintf('%d', (float)$data_array['del_qty']).",
+                         products_ordered = products_ordered - ".sprintf('%d', (float)$data_array['del_qty'])."
                    WHERE products_id = ".(int)$data_array['products_id']);
 
     xtc_db_query("UPDATE ".TABLE_SPECIALS." 
-                     SET specials_quantity = specials_quantity + ".sprintf('%d', (double)$data_array['del_qty'])."
+                     SET specials_quantity = specials_quantity + ".sprintf('%d', (float)$data_array['del_qty'])."
                    WHERE products_id = ".(int)$data_array['products_id']."
                      AND specials_quantity != 0");
 
@@ -1020,7 +1020,7 @@
     // Update Attributes Stock
     if (STOCK_LIMITED == 'true') {
       xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
-                       SET attributes_stock = attributes_stock - '".(double)$products['products_quantity']."' 
+                       SET attributes_stock = attributes_stock - '".(float)$products['products_quantity']."' 
                      WHERE products_id = '".(int)$products['products_id']."' 
                        AND options_id = '".(int)$products_attributes['options_id']."'
                        AND options_values_id = '".(int)$products_attributes['options_values_id']."'");
@@ -1085,7 +1085,7 @@
                                                          WHERE orders_products_attributes_id = '".(int)$data_array['opAID']."'");
       $delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query);
       xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
-                       SET attributes_stock = attributes_stock + ".sprintf('%d', (double)$delete_products_attributes['products_quantity'])."
+                       SET attributes_stock = attributes_stock + ".sprintf('%d', (float)$delete_products_attributes['products_quantity'])."
                      WHERE products_id = '".(int)$delete_products_attributes['products_id']."' 
                        AND options_id = '".(int)$delete_products_attributes['orders_products_options_id']."'
                        AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");

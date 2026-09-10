@@ -418,7 +418,7 @@
                                 <td class="dataTableContent"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
                                 <?php
                                 break;
-                              default;
+                              default:
                                 ?>
                                 <td class="dataTableContent"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
                                <?php
