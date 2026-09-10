@@ -56,7 +56,6 @@
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
       $data = curl_exec($ch);
       $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-      curl_close($ch);
       if ($data !== false
           && $http_status >= 200
           && $http_status < 300

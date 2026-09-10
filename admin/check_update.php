@@ -76,7 +76,6 @@ if (isset($_GET['action'])
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_exec($ch);
-        curl_close($ch);
         fclose($fp);
 
         // extract install

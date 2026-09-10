@@ -153,7 +153,6 @@
 
       $result = curl_exec($ch);
       $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-      curl_close($ch);
 
       if ($httpStatus < 200 || $httpStatus >= 300) {
         trigger_error('Could not reach external host: '.$path.'. Exit with Status: '.$httpStatus, E_USER_WARNING);

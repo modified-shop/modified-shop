@@ -537,8 +537,6 @@ class xtc_afterbuy_functions {
           $mail_content_txt = 'Fehler beim Senden der Bestellung: ' . $this->order_id . "\r\n" . 'Folgende Fehlermeldung wurde von afterbuy.de zurueckgegeben:' . "\r\n\r\n" . $result;
           xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '', STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '', '', 'Afterbuy-Error', $mail_content_html, $mail_content_txt);
         }
-        // close session
-        curl_close($ch);
       }
     }
   }
