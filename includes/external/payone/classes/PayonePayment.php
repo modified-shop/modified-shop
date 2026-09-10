@@ -104,6 +104,50 @@ class PayonePayment {
 		}
 	}
 
+	// an approved checkout must not leave the order on the invisible tmp status
+	function _liftHiddenOrdersStatus($orders_id) {
+		$hidden_query = xtc_db_query("SELECT o.orders_status
+		                                FROM ".TABLE_ORDERS." o
+		                               WHERE o.orders_id = '".(int)$orders_id."'
+		                                 AND NOT EXISTS (SELECT 1
+		                                                   FROM ".TABLE_ORDERS_STATUS." s
+		                                                  WHERE s.orders_status_id = o.orders_status)");
+		if (xtc_db_num_rows($hidden_query) < 1) {
+			return;
+		}
+
+		$orders_status_id = (int)DEFAULT_ORDERS_STATUS_ID;
+		$transactions_query = xtc_db_query("SELECT status
+		                                      FROM payone_transactions
+		                                     WHERE orders_id = '".(int)$orders_id."'
+		                                  ORDER BY payone_transactions_id DESC");
+		while ($transaction = xtc_db_fetch_array($transactions_query)) {
+			$txaction = strtolower((string)$transaction['status']);
+			if (isset($this->config['orders_status'][$txaction])
+			    && (int)$this->config['orders_status'][$txaction] > 0
+			    )
+			{
+				$orders_status_id = (int)$this->config['orders_status'][$txaction];
+				break;
+			}
+		}
+
+		$this->payone->log("lifting hidden orders status for orders_id ".(int)$orders_id." to ".$orders_status_id);
+
+		$sql_data_orders_array = array('orders_status' => $orders_status_id,
+		                               'last_modified' => 'now()');
+		xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id = '".(int)$orders_id."'");
+
+		$sql_data_array = array('orders_id' => (int)$orders_id,
+		                        'orders_status_id' => $orders_status_id,
+		                        'date_added' => 'now()',
+		                        'customer_notified' => '0',
+		                        'comments' => xtc_db_input(STATUS_UPDATED_BY_PAYONE),
+		                        'comments_sent' => '0'
+		                        );
+		xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+	}
+
 	function _checkRequirements() {
 		$out = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SYSTEM_REQUIREMENTS').':<br>';
 		if (defined('DIR_WS_ADMIN') && strpos($_SERVER['REQUEST_URI'], constant('DIR_WS_ADMIN')) !== false) {
@@ -440,6 +484,9 @@ class PayonePayment {
 				$_SESSION['payone_error'] = PAYMENT_ERROR;
 				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=payone', 'SSL'));
 			}
+		}
+		if ($tmporder_exists) {
+			$this->_liftHiddenOrdersStatus($_SESSION['tmp_oID']);
 		}
 		return false;
 	}

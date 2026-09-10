@@ -203,6 +203,7 @@ define('ORDERS_STATUS_VAUTHORIZATION', 'Zahlung vAuth');
 define('ORDERS_STATUS_VSETTLEMENT', 'Zahlung vSettlement');
 define('ORDERS_STATUS_INVOICE', 'Zahlung Rechnung');
 define('ORDERS_STATUS_NONE', 'keine &Auml;nderung');
+define('ORDERS_STATUS_HIDDEN_WARNING', 'Achtung: Der tempor&auml;re Status ist unsichtbar und keiner der Status approved, appointed, capture oder paid &auml;ndert den Bestellstatus. Bestellungen bleiben damit dauerhaft unsichtbar und fehlen im Kundenkonto.');
 define('TEXT_EXTERN_CALLBACK_URL', 'URL Statusweiterleitung');
 define('TEXT_EXTERN_CALLBACK_TIMEOUT', 'Timeout');
 

@@ -203,6 +203,7 @@ define('ORDERS_STATUS_VAUTHORIZATION', 'Payment vAuth');
 define('ORDERS_STATUS_VSETTLEMENT', 'Payment vSettlement');
 define('ORDERS_STATUS_INVOICE', 'Payment sale on account');
 define('ORDERS_STATUS_NONE', 'no change');
+define('ORDERS_STATUS_HIDDEN_WARNING', 'Warning: the temporary status is invisible and none of the states approved, appointed, capture or paid changes the order status. Orders stay invisible for good and are missing in the customer account.');
 define('TEXT_EXTERN_CALLBACK_URL', 'URL status forwarding');
 define('TEXT_EXTERN_CALLBACK_TIMEOUT', 'Timeout');
  
