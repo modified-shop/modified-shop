@@ -107,19 +107,16 @@ class PayonePayment {
 	// an approved checkout must not leave the order on the invisible tmp status
 	function _liftHiddenOrdersStatus($orders_id) {
 		$orders_id = (int)$orders_id;
-		if ($orders_id < 1 || xtc_db_query('START TRANSACTION') === false) {
+		if ($orders_id < 1) {
 			return;
 		}
 
-		// lock the order, a transaction status can set a real status in parallel
 		$hidden_query = xtc_db_query("SELECT o.orders_status
 		                                FROM ".TABLE_ORDERS." o
 		                               WHERE o.orders_id = '".$orders_id."'
 		                                 AND o.orders_status NOT IN (SELECT s.orders_status_id
-		                                                               FROM ".TABLE_ORDERS_STATUS." s)
-		                                 FOR UPDATE");
+		                                                               FROM ".TABLE_ORDERS_STATUS." s)");
 		if (xtc_db_num_rows($hidden_query) < 1) {
-			xtc_db_query('COMMIT');
 			return;
 		}
 
@@ -139,7 +136,7 @@ class PayonePayment {
 			}
 		}
 
-		// MyISAM keeps no lock, so the update has to check the status again
+		// a transaction status can set a real status in parallel, so check the status again
 		$update_query = xtc_db_query("UPDATE ".TABLE_ORDERS."
 		                                 SET orders_status = '".$orders_status_id."',
 		                                     last_modified = now()
@@ -147,7 +144,6 @@ class PayonePayment {
 		                                 AND orders_status NOT IN (SELECT s.orders_status_id
 		                                                             FROM ".TABLE_ORDERS_STATUS." s)");
 		if ($update_query === false || xtc_db_affected_rows() < 1) {
-			xtc_db_query('ROLLBACK');
 			return;
 		}
 
@@ -158,13 +154,7 @@ class PayonePayment {
 		                        'comments' => xtc_db_input(STATUS_UPDATED_BY_PAYONE),
 		                        'comments_sent' => '0'
 		                        );
-		if (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false
-		    || xtc_db_query('COMMIT') === false
-		    )
-		{
-			xtc_db_query('ROLLBACK');
-			return;
-		}
+		xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
 		$this->payone->log("hidden orders status for orders_id ".$orders_id." lifted to ".$orders_status_id);
 	}
