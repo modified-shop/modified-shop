@@ -23,8 +23,7 @@
 /**
  * This Class Initializes the PAYONE SDK
  *
- * It configures the Autoloader for the included Log4php framework
- * And also includes the PAYONE Autoloader
+ * It configures the Autoloader for the PAYONE SDK classes
  *
  * @category        Payone
  * @package         Payone

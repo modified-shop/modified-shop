@@ -20,7 +20,7 @@
  *
  * // Array with classname of logger to use as key, options array as value:
  * $myLoggers = array(
- *      'Payone_Protocol_Logger_Log4php' => array(
+ *      'My_Logger_Class' => array(
  *          'filename' => 'my_path/my_logfile.log',
  *          'max_file_size' => '50MB',
  *          'max_file_count' => 10));
@@ -50,7 +50,7 @@
  * $config = new Payone_Config();
  *
  * // Change the log file only:
- * $config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', 'my_file.log'); *
+ * $config->setValue('api/default/protocol/loggers/My_Logger_Class/filename', 'my_file.log'); *
  * </pre>
  *
  * @category        Payone
