@@ -303,7 +303,7 @@ class shipcloud {
       'width'          => (($this->width != '') ? $this->width : '20'),
       'length'         => (($this->length != '') ? $this->length : '20'),
       'height'         => (($this->height != '') ? $this->height : '20'),
-      'weight'         => (double)(($this->weight != '') ? str_replace(',', '.', $this->weight) : $this->calculate_weight()),
+      'weight'         => (($this->weight != '') ? (double)str_replace(',', '.', $this->weight) : $this->calculate_weight()),
       'description'    => $this->description_1,
       'type'           => $this->type,
     );
@@ -356,8 +356,8 @@ class shipcloud {
       }
     }
   
-    if ($weight == '0') {
-      $weight = '1';
+    if ($weight <= 0) {
+      $weight = 1;
     }
   
     return $weight;
