@@ -139,8 +139,18 @@ class PayonePayment {
 			}
 		}
 
-		$sql_data_orders_array = array('orders_status' => $orders_status_id,
-		                               'last_modified' => 'now()');
+		// MyISAM keeps no lock, so the update has to check the status again
+		$update_query = xtc_db_query("UPDATE ".TABLE_ORDERS."
+		                                 SET orders_status = '".$orders_status_id."',
+		                                     last_modified = now()
+		                               WHERE orders_id = '".$orders_id."'
+		                                 AND orders_status NOT IN (SELECT s.orders_status_id
+		                                                             FROM ".TABLE_ORDERS_STATUS." s)");
+		if ($update_query === false || xtc_db_affected_rows() < 1) {
+			xtc_db_query('ROLLBACK');
+			return;
+		}
+
 		$sql_data_array = array('orders_id' => $orders_id,
 		                        'orders_status_id' => $orders_status_id,
 		                        'date_added' => 'now()',
@@ -148,8 +158,7 @@ class PayonePayment {
 		                        'comments' => xtc_db_input(STATUS_UPDATED_BY_PAYONE),
 		                        'comments_sent' => '0'
 		                        );
-		if (xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id = '".$orders_id."'") === false
-		    || xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false
+		if (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false
 		    || xtc_db_query('COMMIT') === false
 		    )
 		{
