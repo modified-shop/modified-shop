@@ -25,12 +25,16 @@ class shipcloud {
   function __construct() {
     global $order;
 
-    $this->version = '1.27';
+    $this->version = '1.28';
     $this->code = 'shipcloud';
     $this->title = MODULE_SHIPCLOUD_TEXT_TITLE;
     $this->description = MODULE_SHIPCLOUD_TEXT_DESCRIPTION;
     $this->enabled = ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? true : false);
     $this->sort_order = '';
+
+    if (defined('MODULE_SHIPCLOUD_STATUS') && !defined('MODULE_SHIPCLOUD_WEIGHT_CN23')) {
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_WEIGHT_CN23', '0.1',  '6', '1', '', now())");
+    }
   }
 
   function process($file) {
@@ -73,6 +77,7 @@ class shipcloud {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_ACCOUNT_IBAN', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_ACCOUNT_BIC', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPCLOUD_PARCEL', '20,40,30;15,20,20;', '6', '1', 'xtc_cfg_textarea(', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_WEIGHT_CN23', '0.1',  '6', '1', '', now())");
 
     $table_array = array(
       array('column' => 'external', 'default' => 'INT(1) NOT NULL'),
@@ -112,6 +117,7 @@ class shipcloud {
                  'MODULE_SHIPCLOUD_EMAIL',
                  'MODULE_SHIPCLOUD_EMAIL_TYPE',
                  'MODULE_SHIPCLOUD_PARCEL',
+                 'MODULE_SHIPCLOUD_WEIGHT_CN23',
                  'MODULE_SHIPCLOUD_COMPANY',
                  'MODULE_SHIPCLOUD_FIRSTNAME',
                  'MODULE_SHIPCLOUD_LASTNAME',
