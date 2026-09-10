@@ -25,7 +25,6 @@
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
       
       $data = curl_exec($ch);
-      curl_close($ch);
 
       if ($data && !check_valid_xml($data, $rss)) {
         $data = '';

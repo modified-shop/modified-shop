@@ -78,10 +78,8 @@ try {
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_exec($ch);
             if (curl_errno($ch)) {
-                curl_close($ch);
                 throw new Exception('Invalid URL');
             }
-            curl_close($ch);
             fclose($fp);
 
             $_FILES['files'] = array(

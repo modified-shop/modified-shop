@@ -1965,7 +1965,6 @@
       curl_setopt($ch, CURLOPT_USERAGENT, 'geoPlugin PHP Class v1.0');
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, '1');
       $response = curl_exec($ch);
-      curl_close ($ch);
       unset($ch);
     } else if (ini_get('allow_url_fopen') ) {
       //fall back to file_get_contents()
