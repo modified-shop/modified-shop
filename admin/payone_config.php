@@ -623,7 +623,21 @@ require (DIR_WS_INCLUDES.'head.php');
 									<?php
 									$orders_status_hidden = getOrdersStatus(true);
 									$orders_status = getOrdersStatus(false);
+									// a hidden tmp status without any status change keeps completed orders out of the customer account
+									$orders_status_hidden_warning = ((int)$config['orders_status']['tmp'] < 1);
+									foreach(array('approved', 'appointed', 'capture', 'paid') as $p1_check_status) {
+										if (isset($config['orders_status'][$p1_check_status])
+										    && (int)$config['orders_status'][$p1_check_status] > 0
+										    )
+										{
+											$orders_status_hidden_warning = false;
+											break;
+										}
+									}
 									?>
+									<?php if ($orders_status_hidden_warning === true) { ?>
+									<p class="warning_message"><?php echo ORDERS_STATUS_HIDDEN_WARNING; ?></p>
+									<?php } ?>
 									<dl class="adminform subblock">
                     <div class="dlrow cf">
                       <dt>

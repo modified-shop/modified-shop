@@ -104,6 +104,85 @@ class PayonePayment {
 		}
 	}
 
+	// an approved checkout must not leave the order on the invisible tmp status
+	function _liftHiddenOrdersStatus($orders_id) {
+		$orders_id = (int)$orders_id;
+		if ($orders_id < 1) {
+			return;
+		}
+
+		$hidden_query = xtc_db_query("SELECT o.orders_status
+		                                FROM ".TABLE_ORDERS." o
+		                               WHERE o.orders_id = '".$orders_id."'
+		                                 AND o.orders_status NOT IN (SELECT s.orders_status_id
+		                                                               FROM ".TABLE_ORDERS_STATUS." s)");
+		if (xtc_db_num_rows($hidden_query) < 1) {
+			return;
+		}
+
+		// a configured status can point to a row that was deleted in the meantime
+		$valid_orders_status = array();
+		$orders_status_query = xtc_db_query("SELECT DISTINCT orders_status_id
+		                                       FROM ".TABLE_ORDERS_STATUS);
+		while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
+			$valid_orders_status[(int)$orders_status['orders_status_id']] = true;
+		}
+
+		$orders_status_id = 0;
+		$transactions_query = xtc_db_query("SELECT status
+		                                      FROM payone_transactions
+		                                     WHERE orders_id = '".$orders_id."'
+		                                  ORDER BY payone_transactions_id DESC");
+		while ($transaction = xtc_db_fetch_array($transactions_query)) {
+			$txaction = strtolower((string)$transaction['status']);
+			$mapped_status_id = ((isset($this->config['orders_status'][$txaction])) ? (int)$this->config['orders_status'][$txaction] : 0);
+			if ($mapped_status_id > 0 && isset($valid_orders_status[$mapped_status_id])) {
+				$orders_status_id = $mapped_status_id;
+				break;
+			}
+		}
+
+		if ($orders_status_id < 1) {
+			$orders_status_id = (int)DEFAULT_ORDERS_STATUS_ID;
+		}
+
+		// without a valid target the order keeps the tmp status instead of moving to the next invisible one
+		if ($orders_status_id < 1 || !isset($valid_orders_status[$orders_status_id])) {
+			$this->payone->log("no valid orders status to lift orders_id ".$orders_id);
+			return;
+		}
+
+		// a transaction status can set a real status in parallel, so check the status again
+		$update_query = xtc_db_query("UPDATE ".TABLE_ORDERS."
+		                                 SET orders_status = '".$orders_status_id."',
+		                                     last_modified = now()
+		                               WHERE orders_id = '".$orders_id."'
+		                                 AND orders_status NOT IN (SELECT s.orders_status_id
+		                                                             FROM ".TABLE_ORDERS_STATUS." s)");
+		if ($update_query === false || xtc_db_affected_rows() < 1) {
+			return;
+		}
+
+		$this->payone->log("hidden orders status for orders_id ".$orders_id." lifted to ".$orders_status_id);
+
+		// the history entry belongs to the status the order still carries, not to an overtaken one
+		xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY." (orders_id,
+		                                                          orders_status_id,
+		                                                          date_added,
+		                                                          customer_notified,
+		                                                          comments,
+		                                                          comments_sent)
+		                   SELECT o.orders_id,
+		                          o.orders_status,
+		                          now(),
+		                          '0',
+		                          '".xtc_db_input(STATUS_UPDATED_BY_PAYONE)."',
+		                          '0'
+		                     FROM ".TABLE_ORDERS." o
+		                    WHERE o.orders_id = '".$orders_id."'
+		                      AND o.orders_status = '".$orders_status_id."'");
+	}
+
 	function _checkRequirements() {
 		$out = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SYSTEM_REQUIREMENTS').':<br>';
 		if (defined('DIR_WS_ADMIN') && strpos($_SERVER['REQUEST_URI'], constant('DIR_WS_ADMIN')) !== false) {
@@ -441,6 +520,13 @@ class PayonePayment {
 				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=payone', 'SSL'));
 			}
 		}
+		return false;
+	}
+
+	function before_send_order() {
+		global $insert_id;
+
+		$this->_liftHiddenOrdersStatus($insert_id);
 		return false;
 	}
 
