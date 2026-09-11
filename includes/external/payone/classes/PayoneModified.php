@@ -1113,54 +1113,61 @@ class PayoneModified {
 	}
 
 	protected function storeTransactionStatus($txstatus, $credential_hash) {
-		if (xtc_db_query('START TRANSACTION') === false) {
-			return false;
-		}
-
 		$sql_data_status_array = array(
 			'orders_id' => (int)$txstatus['reference'],
 			'received' => 'now()',
 		);
 		if (xtc_db_perform('payone_txstatus', $sql_data_status_array) === false) {
-			xtc_db_query('ROLLBACK');
 			return false;
 		}
-		$txstatus_id = xtc_db_insert_id();
-		if ((int)$txstatus_id <= 0) {
-			xtc_db_query('ROLLBACK');
+		$txstatus_id = (int)xtc_db_insert_id();
+		if ($txstatus_id <= 0) {
 			return false;
 		}
 
+		// the markers go in first, a half written status must never count as applied
+		$txstatus_data = array(
+			'_modified_credential_hash' => $credential_hash,
+			'_modified_event_hash' => $this->getTransactionStatusEventHash($txstatus),
+			'_modified_processed' => '0',
+			'_modified_applied' => '0',
+		);
+		$queue_data = array();
 		foreach($txstatus as $key => $value) {
 			if ($key === 'key' || strpos($key, '_modified_') === 0) {
 				continue;
 			}
 			$value = ((is_array($value)) ? implode('||', $value) : $value);
+			// txid and sequencenumber hand the status to the processing queue, so they go in last
+			if ($key === 'txid' || $key === 'sequencenumber') {
+				$queue_data[$key] = $value;
+				continue;
+			}
+			$txstatus_data[$key] = $value;
+		}
+		foreach($queue_data as $key => $value) {
+			$txstatus_data[$key] = $value;
+		}
+
+		foreach($txstatus_data as $key => $value) {
 			$result = xtc_db_query("INSERT INTO payone_txstatus_data (payone_txstatus_id, `key`, `value`)
-			                        VALUES ('".(int)$txstatus_id."', '".xtc_db_input($key)."', '".xtc_db_input($value)."')");
+			                        VALUES ('".$txstatus_id."', '".xtc_db_input($key)."', '".xtc_db_input($value)."')");
 			if ($result === false) {
-				xtc_db_query('ROLLBACK');
+				$this->deleteTransactionStatus($txstatus_id);
 				return false;
 			}
-		}
-		foreach(array(
-			'_modified_credential_hash' => $credential_hash,
-			'_modified_event_hash' => $this->getTransactionStatusEventHash($txstatus),
-			'_modified_processed' => '0',
-			'_modified_applied' => '0',
-		) as $key => $value) {
-			$result = xtc_db_query("INSERT INTO payone_txstatus_data (payone_txstatus_id, `key`, `value`)
-			                        VALUES ('".(int)$txstatus_id."', '".xtc_db_input($key)."', '".xtc_db_input($value)."')");
-			if ($result === false) {
-				xtc_db_query('ROLLBACK');
-				return false;
-			}
-		}
-		if (xtc_db_query('COMMIT') === false) {
-			xtc_db_query('ROLLBACK');
-			return false;
 		}
 		return $txstatus_id;
+	}
+
+	// there is no rollback, so a status that could not be written completely is removed again
+	protected function deleteTransactionStatus($txstatus_id) {
+		$txstatus_id = (int)$txstatus_id;
+		if ($txstatus_id <= 0) {
+			return;
+		}
+		xtc_db_query("DELETE FROM payone_txstatus_data WHERE payone_txstatus_id = '".$txstatus_id."'");
+		xtc_db_query("DELETE FROM payone_txstatus WHERE payone_txstatus_id = '".$txstatus_id."'");
 	}
 
 	protected function getStoredTransactionStatus($txstatus_id) {
@@ -1178,13 +1185,7 @@ class PayoneModified {
 	}
 
 	protected function markTransactionStatusProcessed($txstatus_id, $applied = false) {
-		$processed = xtc_db_query("UPDATE payone_txstatus_data
-		                            SET `value` = '1'
-		                          WHERE payone_txstatus_id = '".(int)$txstatus_id."'
-		                            AND `key` = '_modified_processed'");
-		if ($processed === false) {
-			return false;
-		}
+		// the applied marker comes first, a status that is only half marked is repeated instead of lost
 		if ($applied === true) {
 			$applied_result = xtc_db_query("UPDATE payone_txstatus_data
 			                                SET `value` = '1'
@@ -1193,6 +1194,13 @@ class PayoneModified {
 			if ($applied_result === false) {
 				return false;
 			}
+		}
+		$processed = xtc_db_query("UPDATE payone_txstatus_data
+		                            SET `value` = '1'
+		                          WHERE payone_txstatus_id = '".(int)$txstatus_id."'
+		                            AND `key` = '_modified_processed'");
+		if ($processed === false) {
+			return false;
 		}
 		return true;
 	}
@@ -1283,41 +1291,39 @@ class PayoneModified {
 				$public_txstatus[$name] = $value;
 			}
 		}
-		if (xtc_db_query('START TRANSACTION') === false) {
-			return false;
-		}
-
 		$sql_data_transactions_array = array(
 			'status' => strtoupper($txaction),
 			'last_modified' => 'now()',
 		);
 		if (xtc_db_perform('payone_transactions', $sql_data_transactions_array, 'update', "orders_id='".$orders_id."' AND txid='".xtc_db_input($txid)."'") === false) {
-			xtc_db_query('ROLLBACK');
 			return false;
 		}
 
 		if (in_array($txaction, $this->getStatusNames(), true)) {
 			if (isset($config['orders_status'][$txaction]) && (int)$config['orders_status'][$txaction] > 0) {
-				$sql_data_orders_array = array(
-					'orders_status' => (int)$config['orders_status'][$txaction],
-					'last_modified' => 'now()',
-				);
-				if (xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id='".$orders_id."'") === false) {
-					xtc_db_query('ROLLBACK');
+				$orders_status_id = (int)$config['orders_status'][$txaction];
+				// without a rollback the history entry may only follow a status that really changed
+				$update_query = xtc_db_query("UPDATE ".TABLE_ORDERS."
+				                                 SET orders_status = '".$orders_status_id."',
+				                                     last_modified = now()
+				                               WHERE orders_id = '".$orders_id."'
+				                                 AND orders_status != '".$orders_status_id."'");
+				if ($update_query === false) {
 					return false;
 				}
 
-				$sql_data_array = array(
-					'orders_id' => $orders_id,
-					'orders_status_id' => (int)$config['orders_status'][$txaction],
-					'date_added' => 'now()',
-					'customer_notified' => '0',
-					'comments' => STATUS_UPDATED_BY_PAYONE,
-					'comments_sent' => '0',
-				);
-				if (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false) {
-					xtc_db_query('ROLLBACK');
-					return false;
+				if (xtc_db_affected_rows() > 0) {
+					$sql_data_array = array(
+						'orders_id' => $orders_id,
+						'orders_status_id' => $orders_status_id,
+						'date_added' => 'now()',
+						'customer_notified' => '0',
+						'comments' => STATUS_UPDATED_BY_PAYONE,
+						'comments_sent' => '0',
+					);
+					if (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false) {
+						return false;
+					}
 				}
 			}
 		}
@@ -1340,11 +1346,6 @@ class PayoneModified {
 		    || !$this->markTransactionStatusProcessed($txstatus_id, true)
 		    )
 		{
-			xtc_db_query('ROLLBACK');
-			return false;
-		}
-		if (xtc_db_query('COMMIT') === false) {
-			xtc_db_query('ROLLBACK');
 			return false;
 		}
 
