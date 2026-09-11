@@ -171,7 +171,6 @@ class payone_installment extends PayonePayment {
     curl_setopt($ch, CURLOPT_USERPWD, $this->config[$active_genre_identifier]['genre_specific']['payolution']['channelid'].':'.$this->config[$active_genre_identifier]['genre_specific']['payolution']['channelpwd']);
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     curl_exec($ch);
-    curl_close($ch);
     fclose($fp);
     
     return xtc_href_link('cache/'.$filename, '', 'SSL', false);
