@@ -428,9 +428,6 @@
             
             // copy background image
             imagecopy($this->oImage, $oBackgroundImage, 0, 0, 0, 0, $this->iWidth, $this->iHeight);
-            
-            // free memory used to create background image
-            imagedestroy($oBackgroundImage);
          } else {
             // create new image
             $this->oImage = imagecreate($this->iWidth, $this->iHeight);
@@ -458,9 +455,6 @@
          
          // write out image to file or browser
          $this->WriteFile($sFilename);
-         
-         // free memory used in creating image
-         imagedestroy($this->oImage);
          
          return $this->captcha;
       }
