@@ -234,26 +234,19 @@
         return array();
       }
 
-      $offer = array(
+      $offer = array_merge(array(
         '@type' => 'Offer',
         '@id' => $url.'#offer',
         'url' => $url,
         'price' => self::price($data['PRODUCTS_PRICE_PLAIN']),
         'priceCurrency' => (isset($_SESSION['currency']) ? $_SESSION['currency'] : ''),
-        'availability' => self::availability($product->data),
+      ), self::availability($product->data), array(
         'itemCondition' => 'https://schema.org/NewCondition',
-      );
+      ));
 
       $seller = $this->organizationRef();
       if (count($seller) > 0) {
         $offer['seller'] = $seller;
-      }
-
-      if (!empty($product->data['products_date_available'])
-          && strtotime($product->data['products_date_available']) > time()
-          )
-      {
-        $offer['availabilityStarts'] = date('c', strtotime($product->data['products_date_available']));
       }
 
       return $offer;
@@ -291,11 +284,13 @@
       $elements = array();
       $position = $offset;
       foreach ($module_content as $entry) {
-        if (empty($entry['PRODUCTS_LINK'])) {
+        if (empty($entry['PRODUCTS_ID'])) {
           continue;
         }
         $position++;
-        $url = self::url($entry['PRODUCTS_LINK']);
+        // not PRODUCTS_LINK: that one is built for the page and carries the session id where
+        // the shop propagates it, which would make an identifier differ between two visitors
+        $url = self::link(FILENAME_PRODUCT_INFO, xtc_product_link($entry['PRODUCTS_ID'], $entry['PRODUCTS_NAME']));
 
         $element = array(
           '@type' => 'ListItem',
@@ -433,17 +428,17 @@
           && isset($entry['PRODUCTS_PRICE_PLAIN'])
           )
       {
-        $node['offers'] = array(
+        $node['offers'] = array_merge(array(
           '@type' => 'Offer',
           'url' => $url,
           'price' => self::price($entry['PRODUCTS_PRICE_PLAIN']),
           'priceCurrency' => (isset($_SESSION['currency']) ? $_SESSION['currency'] : ''),
-          'availability' => self::availability(array(
-            'products_quantity' => (isset($entry['PRODUCTS_QUANTITY']) ? $entry['PRODUCTS_QUANTITY'] : 1),
-            'products_date_available' => (isset($entry['PRODUCTS_DATE_AVAILABLE']) ? $entry['PRODUCTS_DATE_AVAILABLE'] : ''),
-          )),
+        ), self::availability(array(
+          'products_quantity' => (isset($entry['PRODUCTS_QUANTITY']) ? $entry['PRODUCTS_QUANTITY'] : 1),
+          'products_date_available' => (isset($entry['PRODUCTS_DATE_AVAILABLE']) ? $entry['PRODUCTS_DATE_AVAILABLE'] : ''),
+        )), array(
           'itemCondition' => 'https://schema.org/NewCondition',
-        );
+        ));
 
         $seller = $this->organizationRef();
         if (count($seller) > 0) {
@@ -511,30 +506,39 @@
     }
 
     /**
-     * The stock state of a product, following the same rules the shop applies in the cart
+     * The stock state of a product as an offer publishes it
+     *
+     * The stock is asked first: where the checkout rejects an empty article, no release date
+     * makes it obtainable, and promising a pre-order the cart refuses would be worse than
+     * saying nothing. Only a state a customer can really order names the date.
      *
      * @param array $data
-     * @return string
+     * @return array
      */
     static function availability($data) {
+      $empty = (defined('STOCK_CHECK') && STOCK_CHECK == 'true'
+                && isset($data['products_quantity']) && $data['products_quantity'] <= 0);
+      $checkout_allowed = (defined('STOCK_ALLOW_CHECKOUT') && STOCK_ALLOW_CHECKOUT == 'true');
+
+      if ($empty && !$checkout_allowed) {
+        return array('availability' => 'https://schema.org/OutOfStock');
+      }
+
       if (!empty($data['products_date_available'])
           && strtotime($data['products_date_available']) > time()
           )
       {
-        return 'https://schema.org/PreOrder';
+        return array(
+          'availability' => 'https://schema.org/PreOrder',
+          'availabilityStarts' => date('c', strtotime($data['products_date_available'])),
+        );
       }
 
-      if (defined('STOCK_CHECK') && STOCK_CHECK == 'true'
-          && isset($data['products_quantity']) && $data['products_quantity'] <= 0
-          )
-      {
-        if (defined('STOCK_ALLOW_CHECKOUT') && STOCK_ALLOW_CHECKOUT == 'true') {
-          return 'https://schema.org/BackOrder';
-        }
-        return 'https://schema.org/OutOfStock';
+      if ($empty) {
+        return array('availability' => 'https://schema.org/BackOrder');
       }
 
-      return 'https://schema.org/InStock';
+      return array('availability' => 'https://schema.org/InStock');
     }
 
     /**
@@ -658,7 +662,7 @@
     static function url($path) {
       global $request_type;
 
-      $path = trim(str_replace('&amp;', '&', (string)$path));
+      $path = self::stripSession(trim(str_replace('&amp;', '&', (string)$path)));
       if ($path === '') {
         return '';
       }
@@ -669,6 +673,37 @@
       }
 
       return self::utf8($path);
+    }
+
+    /**
+     * Drops the session parameter from a link the shop built for the page
+     *
+     * A trail link and everything an own node brings along carries the session id wherever the
+     * shop propagates it in the url. An identifier that changes per visitor is no identifier,
+     * so it goes before the value becomes part of the graph.
+     *
+     * @param string $path
+     * @return string
+     */
+    static function stripSession($path) {
+      $name = xtc_session_name();
+      if ($name === '' || strpos($path, $name.'=') === false) {
+        return $path;
+      }
+
+      $parts = explode('?', $path, 2);
+      if (count($parts) < 2) {
+        return $path;
+      }
+
+      $query = array();
+      foreach (explode('&', $parts[1]) as $pair) {
+        if ($pair !== '' && strpos($pair, $name.'=') !== 0) {
+          $query[] = $pair;
+        }
+      }
+
+      return $parts[0].((count($query) > 0) ? '?'.implode('&', $query) : '');
     }
 
     /**
