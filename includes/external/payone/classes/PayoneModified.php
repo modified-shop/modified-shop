@@ -61,14 +61,8 @@ class PayoneModified {
 		$payone_config = new Payone_Config();
 		
 		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_ModifiedLog/mode', 'api');
-		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', DIR_FS_LOG.'mod_payone_sdk_api_'.date('Y-m-d').'.log');
-		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_count', '10');
-		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_size', '5MB');
 		
 		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_ModifiedLog/mode', 'transactions');
-		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', DIR_FS_LOG.'mod_payone_sdk_transaction_'.date('Y-m-d').'.log');
-		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_count', '10');
-		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_size', '5MB');
 
 		return $payone_config;
 	}
