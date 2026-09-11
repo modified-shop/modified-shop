@@ -120,20 +120,36 @@ class PayonePayment {
 			return;
 		}
 
-		$orders_status_id = (int)DEFAULT_ORDERS_STATUS_ID;
+		// a configured status can point to a row that was deleted in the meantime
+		$valid_orders_status = array();
+		$orders_status_query = xtc_db_query("SELECT DISTINCT orders_status_id
+		                                       FROM ".TABLE_ORDERS_STATUS);
+		while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
+			$valid_orders_status[(int)$orders_status['orders_status_id']] = true;
+		}
+
+		$orders_status_id = 0;
 		$transactions_query = xtc_db_query("SELECT status
 		                                      FROM payone_transactions
 		                                     WHERE orders_id = '".$orders_id."'
 		                                  ORDER BY payone_transactions_id DESC");
 		while ($transaction = xtc_db_fetch_array($transactions_query)) {
 			$txaction = strtolower((string)$transaction['status']);
-			if (isset($this->config['orders_status'][$txaction])
-			    && (int)$this->config['orders_status'][$txaction] > 0
-			    )
-			{
-				$orders_status_id = (int)$this->config['orders_status'][$txaction];
+			$mapped_status_id = ((isset($this->config['orders_status'][$txaction])) ? (int)$this->config['orders_status'][$txaction] : 0);
+			if ($mapped_status_id > 0 && isset($valid_orders_status[$mapped_status_id])) {
+				$orders_status_id = $mapped_status_id;
 				break;
 			}
+		}
+
+		if ($orders_status_id < 1) {
+			$orders_status_id = (int)DEFAULT_ORDERS_STATUS_ID;
+		}
+
+		// without a valid target the order keeps the tmp status instead of moving to the next invisible one
+		if ($orders_status_id < 1 || !isset($valid_orders_status[$orders_status_id])) {
+			$this->payone->log("no valid orders status to lift orders_id ".$orders_id);
+			return;
 		}
 
 		// a transaction status can set a real status in parallel, so check the status again
