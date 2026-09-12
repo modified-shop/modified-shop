@@ -149,6 +149,36 @@
   cursor: pointer;
 }
 
+/* Private inner classes avoid templates that update every .modal-title/.modal-body. */
+.guarantee-label__bootstrap-title {
+  margin: 0 16px 0 0;
+  font-size: 1.125rem;
+  line-height: 1.4;
+}
+
+.guarantee-label__bootstrap-close {
+  flex: 0 0 auto;
+  margin: 0 0 0 auto;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.guarantee-label__bootstrap-body {
+  max-height: calc(100vh - 8rem);
+  overflow: auto;
+}
+
+.guarantee-label__bootstrap .guarantee-label__full svg {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* The notice about the legal guarantee has to stand out before the order button. It is the
    official A4 sheet, so it gets the width of its column and is capped where its text would
    otherwise grow past a comfortable line length. */
