@@ -27,7 +27,7 @@
 
     // Bump this version when rendering changes so current labels get new cache keys.
     // Existing order snapshots keep their stored hashes and archived graphics.
-    const RENDERER_VERSION = '1.01';
+    const RENDERER_VERSION = '1.02';
 
     const TOKEN_DURATION = 'XX';
     const TOKEN_MANUFACTURER = 'Brand/Trademark';
