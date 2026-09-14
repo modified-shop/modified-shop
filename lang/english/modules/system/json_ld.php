@@ -31,6 +31,9 @@
   define('MODULE_JSON_LD_LISTING_TITLE', 'Output product listings?');
   define('MODULE_JSON_LD_LISTING_DESC', 'Outputs category, search, special offer and new product listings as an ItemList. <b>summary</b> names only link and name per article and keeps the page head small. <b>full</b> repeats image, model and price as well, so a service does not have to call every product page on its own. <b>false</b> switches the output off.');
 
+  define('MODULE_JSON_LD_LISTING_CANONICAL_TITLE', 'Canonical product urls in listings?');
+  define('MODULE_JSON_LD_LISTING_CANONICAL_DESC', 'With speaking urls the shop builds a product url from the category the visitor came through. A product sitting in several categories therefore gets a different url in every listing, and none of them matches the canonical its own page declares. Enabled, the listing takes the canonical url and pays one additional database query per product for it. Disabled, that query is saved, but the identifiers in the listing and on the product page differ. Without speaking urls the setting has no effect. The product page itself always publishes the canonical url.');
+
   define('MODULE_JSON_LD_DESCRIPTION_LENGTH_TITLE', 'Length of the product description');
   define('MODULE_JSON_LD_DESCRIPTION_LENGTH_DESC', 'Maximum number of characters taken from the product description into the JSON-LD. 0 passes the complete description.');
 

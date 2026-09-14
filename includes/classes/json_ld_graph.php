@@ -272,6 +272,7 @@
       }
 
       $page = self::listingPage();
+      $canonical = (!defined('MODULE_JSON_LD_LISTING_CANONICAL') || MODULE_JSON_LD_LISTING_CANONICAL == 'true');
 
       // the positions run through the whole listing, so page two starts where page one ended
       $offset = 0;
@@ -288,9 +289,9 @@
           continue;
         }
         $position++;
-        // not PRODUCTS_LINK: that one is built for the page, and an identifier that follows
-        // the trail of the visitor instead of the canonical category is no identifier
-        $url = self::productUrl($entry['PRODUCTS_ID'], $entry['PRODUCTS_NAME']);
+        // not PRODUCTS_LINK: that one is built for the page and carries the session id where
+        // the shop propagates it, which would make an identifier differ between two visitors
+        $url = self::productUrl($entry['PRODUCTS_ID'], $entry['PRODUCTS_NAME'], $canonical);
 
         $element = array(
           '@type' => 'ListItem',
@@ -639,18 +640,27 @@
     }
 
     /**
-     * The canonical link of an article
+     * The link of an article, by default the canonical one
      *
      * With speaking urls xtc_get_product_path() builds the path from the category the visitor
      * came through, unless $canonical_flag asks for the canonical one. An article sitting in
      * two categories would otherwise carry a different url here than the canonical the page
      * declares, and a different one in every listing it appears in.
      *
+     * Raising the flag costs a second path lookup per article, which is why a listing may ask
+     * for the plain link instead. The article page always names the canonical one: it declares
+     * that url on the same page, and one lookup for one article is no listing.
+     *
      * @param integer $products_id
      * @param string $products_name
+     * @param boolean $canonical
      * @return string
      */
-    static function productUrl($products_id, $products_name) {
+    static function productUrl($products_id, $products_name, $canonical = true) {
+      if ($canonical !== true) {
+        return self::link(FILENAME_PRODUCT_INFO, xtc_product_link($products_id, $products_name));
+      }
+
       $was_set = array_key_exists('canonical_flag', $GLOBALS);
       $previous = ($was_set) ? $GLOBALS['canonical_flag'] : null;
 

@@ -86,6 +86,7 @@
         'MODULE_JSON_LD_BREADCRUMB' => array('value' => 'true', 'set_function' => $boolean),
         'MODULE_JSON_LD_PRODUCT' => array('value' => 'true', 'set_function' => $boolean),
         'MODULE_JSON_LD_LISTING' => array('value' => 'summary', 'set_function' => 'xtc_cfg_select_option(array(\'false\', \'summary\', \'full\'), '),
+        'MODULE_JSON_LD_LISTING_CANONICAL' => array('value' => 'true', 'set_function' => $boolean),
         'MODULE_JSON_LD_DESCRIPTION_LENGTH' => array('value' => '5000', 'set_function' => ''),
         'MODULE_JSON_LD_PRETTY' => array('value' => 'false', 'set_function' => $boolean),
       );

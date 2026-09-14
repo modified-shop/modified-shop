@@ -31,6 +31,9 @@
   define('MODULE_JSON_LD_LISTING_TITLE', 'Artikellisten ausgeben?');
   define('MODULE_JSON_LD_LISTING_DESC', 'Gibt Kategorie-, Such-, Sonderangebots- und Neuheitenlisten als ItemList aus. <b>summary</b> nennt nur Link und Name je Artikel und h&auml;lt den Seitenkopf klein. <b>full</b> wiederholt zus&auml;tzlich Bild, Artikelnummer und Preis, damit ein Dienst nicht jede Artikelseite einzeln aufrufen muss. <b>false</b> schaltet die Ausgabe ab.');
 
+  define('MODULE_JSON_LD_LISTING_CANONICAL_TITLE', 'Kanonische Artikeladressen in Listen?');
+  define('MODULE_JSON_LD_LISTING_CANONICAL_DESC', 'Bei eingeschalteten sprechenden URLs baut der Shop die Artikeladresse aus der Kategorie, &uuml;ber die der Besucher gekommen ist. Ein Artikel in mehreren Kategorien bekommt dadurch in jeder Liste eine andere Adresse, und keine davon passt zur Canonical-Angabe seiner eigenen Seite. Aktiviert nimmt die Liste die kanonische Adresse und kostet daf&uuml;r eine zus&auml;tzliche Datenbankabfrage je Artikel. Deaktiviert entf&auml;llt diese Abfrage, daf&uuml;r weichen die Kennungen in Liste und Artikelseite voneinander ab. Ohne sprechende URLs hat die Einstellung keine Wirkung. Die Artikelseite selbst gibt immer die kanonische Adresse aus.');
+
   define('MODULE_JSON_LD_DESCRIPTION_LENGTH_TITLE', 'L&auml;nge der Artikelbeschreibung');
   define('MODULE_JSON_LD_DESCRIPTION_LENGTH_DESC', 'H&ouml;chstzahl der Zeichen, die aus der Artikelbeschreibung in das JSON-LD &uuml;bernommen werden. 0 &uuml;bergibt die vollst&auml;ndige Beschreibung.');
 
