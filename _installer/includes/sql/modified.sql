@@ -1963,12 +1963,6 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ACCOUNT_VAT_BLOCK_ERROR', 'true', 18, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL', '3', 18, 22, NULL, NOW(), 'xtc_get_customers_status_name', 'xtc_cfg_pull_down_customers_status_list(');
 
-#configuration_group_id 19, Google Conversion
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'GOOGLE_CONVERSION_ID', '', '19', '2', NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'GOOGLE_LANG', 'de', '19', '3', NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'GOOGLE_CONVERSION', 'false', '19', '0', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'GOOGLE_CONVERSION_LABEL', 'Purchase', '19', '4', NULL, NOW(), NULL, NULL);
-
 #configuration_group_id 20, Import/export
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CSV_TEXTSIGN', '"', '20', '1', NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CSV_SEPERATOR', ';', '20', '2', NULL, NOW(), NULL, NULL);
@@ -2068,7 +2062,6 @@ INSERT INTO configuration_group VALUES (15,'Sessions','Session options',15,1);
 INSERT INTO configuration_group VALUES (16,'Meta-Tags/Search engines','Meta-tags/Search engines',16,1);
 INSERT INTO configuration_group VALUES (17,'Additional Modules','Additional Modules',17,1);
 INSERT INTO configuration_group VALUES (18,'Vat ID','Vat ID',18,1);
-INSERT INTO configuration_group VALUES (19,'Google Conversion','Google Conversion-Tracking',19,1);
 INSERT INTO configuration_group VALUES (20,'Import/Export','Import/Export',20,1);
 INSERT INTO configuration_group VALUES (21,'Afterbuy','Afterbuy.de',21,1);
 INSERT INTO configuration_group VALUES (22,'Search Options','Additional Options for search function',22,1);

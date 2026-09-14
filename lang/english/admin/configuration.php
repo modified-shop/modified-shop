@@ -593,16 +593,6 @@ define('ACCOUNT_VAT_BLOCK_ERROR_DESC' , 'Set to true, only validated VAT Reg No 
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_TITLE','Customers Group - Approved VAT Reg No (Shop country)');
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_DESC','Customers group for customers whose VAT Reg No has been checked and approved, shop country = customers country');
 
-// Google Conversion
-define('GOOGLE_CONVERSION_TITLE','Google Conversion Tracking');
-define('GOOGLE_CONVERSION_DESC','Track conversion keywords on orders');
-define('GOOGLE_CONVERSION_ID_TITLE','Conversion ID');
-define('GOOGLE_CONVERSION_ID_DESC','Your Google conversion ID');
-define('GOOGLE_LANG_TITLE','Google Language');
-define('GOOGLE_LANG_DESC','ISO code of used language');
-define('GOOGLE_CONVERSION_LABEL_TITLE','Google conversion label');
-define('GOOGLE_CONVERSION_LABEL_DESC','Your Google conversion label');
-
 // Afterbuy
 define('AFTERBUY_ACTIVATED_TITLE','Active');
 define('AFTERBUY_ACTIVATED_DESC','Activate afterbuy module');

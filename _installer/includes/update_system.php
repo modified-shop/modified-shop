@@ -397,6 +397,30 @@
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_FACEBOOK_PIXEL_COUNT_ADMIN', '".TRACKING_COUNT_ADMIN_ACTIVE."',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
   
+  // google conversion tracking, moved to the google analytics module
+  if (defined('GOOGLE_CONVERSION')
+      && GOOGLE_CONVERSION == 'true'
+      && defined('GOOGLE_CONVERSION_ID')
+      && GOOGLE_CONVERSION_ID != ''
+      )
+  {
+    $conversion_id = 'AW-'.GOOGLE_CONVERSION_ID;
+    $conversion_label = $conversion_id;
+    if (defined('GOOGLE_CONVERSION_LABEL') && GOOGLE_CONVERSION_LABEL != '') {
+      $conversion_label .= '/'.GOOGLE_CONVERSION_LABEL;
+    }
+
+    // never overwrite a value the shop owner has already entered
+    xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                     SET configuration_value = '".xtc_db_input($conversion_id)."'
+                   WHERE configuration_key = 'MODULE_GOOGLE_ANALYTICS_ADS_ID'
+                     AND configuration_value = ''");
+    xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                     SET configuration_value = '".xtc_db_input($conversion_label)."'
+                   WHERE configuration_key = 'MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID'
+                     AND configuration_value = ''");
+  }
+
   // rename config key
   foreach ($config_array as $old_config => $new_config) {
     if (!defined($new_config)) {
@@ -420,6 +444,17 @@
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TRACKING_PIWIK_GOAL'");
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TRACKING_FACEBOOK_ACTIVE'");
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TRACKING_FACEBOOK_ID'");
+
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'GOOGLE_CONVERSION'");
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'GOOGLE_CONVERSION_ID'");
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'GOOGLE_CONVERSION_LABEL'");
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'GOOGLE_LANG'");
+
+  // keep the group as long as a third party still uses it
+  $conversion_query = xtc_db_query("SELECT configuration_id FROM " . TABLE_CONFIGURATION . " WHERE configuration_group_id = '19' LIMIT 1");
+  if (xtc_db_num_rows($conversion_query) == 0) {
+    xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_id = '19' AND configuration_group_title = 'Google Conversion'");
+  }
 
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM'");
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM'");

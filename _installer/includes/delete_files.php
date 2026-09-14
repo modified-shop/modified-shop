@@ -509,6 +509,7 @@
     'includes/extra/database_tables/withdraw.php',
     'includes/extra/header/header_begin/shopgate.php',
     'includes/extra/header/header_body/billsafe.php',
+    'includes/extra/header/header_body/google_conversiontracking.js.php',
     'includes/extra/header/header_head/gtag.php',
     'includes/extra/modules/metatags_end/shopgate.php',
     'includes/extra/modules/order_details_cart_total/klarna.php',

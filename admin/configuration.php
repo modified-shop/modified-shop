@@ -211,22 +211,8 @@
           <div class="clear"></div> 
        
           <?php
-            $tabs = false;
-            switch ($_GET['gID']) {
-              case '21': //Afterbuy                 
-              case '19': // Google Conversion-Tracking
-                echo '<div class="configPartner cf">
-                        <a class="configtab'.(($_GET['gID'] == '21') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=21', 'NONSSL').'">Afterbuy</a>
-                        <a class="configtab'.(($_GET['gID'] == '19') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=19', 'NONSSL').'">Google Conversion</a>
-                      </div>';
-
-                $tabs = true;
-                echo '<div class="configPartner content">';
-
-                if ($_GET['gID'] == '21') {
-                  echo '<div class="clear bg_notice pdg2">'.AFTERBUY_URL.'</div>';
-                }
-                break;
+            if ($_GET['gID'] == '21') { //Afterbuy
+              echo '<div class="clear bg_notice pdg2">'.AFTERBUY_URL.'</div>';
             }
             
             echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save');
@@ -348,7 +334,6 @@
               <div class="main pdg2 txta-r mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/></div>
               <?php } ?>
             </form>
-          <?php echo (($tabs === true) ? '</div>' : ''); ?>
         </td>
         <!-- body_text_eof //-->
       </tr>

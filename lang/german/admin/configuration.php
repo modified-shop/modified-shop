@@ -593,16 +593,6 @@ define('ACCOUNT_VAT_BLOCK_ERROR_DESC' , 'Durch Einschalten dieser Option werden 
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_TITLE','Kundenstatus f&uuml;r USt-IdNr. gepr&uuml;fte Kunden (Inland)');
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_DESC','W&auml;hlen Sie den Kundenstatus (Gruppe) f&uuml;r USt-IdNr. gepr&uuml;fte Kunden aus!');
 
-// Google Conversion
-define('GOOGLE_CONVERSION_TITLE','Google Conversion-Tracking');
-define('GOOGLE_CONVERSION_DESC','Die Aufzeichnung von Conversion-Keywords bei Bestellungen');
-define('GOOGLE_CONVERSION_ID_TITLE','Conversion ID');
-define('GOOGLE_CONVERSION_ID_DESC','Ihre Google Conversion ID');
-define('GOOGLE_LANG_TITLE','Google Sprache');
-define('GOOGLE_LANG_DESC','ISO Code der verwendeten Sprache');
-define('GOOGLE_CONVERSION_LABEL_TITLE','Google Conversion Label');
-define('GOOGLE_CONVERSION_LABEL_DESC','Ihr Google Conversion Label');
-
 // Afterbuy
 define('AFTERBUY_ACTIVATED_TITLE','Aktiv');
 define('AFTERBUY_ACTIVATED_DESC','Afterbuyschnittstelle aktivieren');

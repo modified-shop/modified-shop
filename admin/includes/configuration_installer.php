@@ -600,9 +600,6 @@ $values_group_update = array();
                            'configuration_key' => 'DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL'
                            );
 
-//configuration_group_id 19 --- "Google Conversionr"
-  $values[] = "(NULL, 'GOOGLE_CONVERSION_LABEL', 'Purchase', '19', '4', NULL, NOW(), NULL, NULL);";
-
 //configuration_group_id 20 --- "Import/export"
   $values[] = "(NULL, 'CSV_CATEGORY_DEFAULT', '0', '20', '4', NULL, NOW(), NULL, 'xtc_cfg_get_category_tree(');";
   $values[] = "(NULL, 'CSV_CAT_DEPTH', '4', '20', '5', NULL, NOW(), NULL, NULL);";
