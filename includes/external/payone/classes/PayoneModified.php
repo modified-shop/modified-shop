@@ -957,6 +957,7 @@ class PayoneModified {
 	public function isTransactionApprovedForCheckout($orders_id) {
 		$approved_status = array('APPROVED', 'APPOINTED', 'CAPTURE', 'PAID');
 		$latest_transaction_status = $this->getLatestAppliedTransactionStatusByTxid($orders_id);
+		$unfinished_txids = $this->getUnfinishedTransactionStatusTxids($orders_id);
 
 		$query = xtc_db_query("SELECT status, txid
 		                         FROM payone_transactions
@@ -970,6 +971,10 @@ class PayoneModified {
 				return true;
 			}
 			$txid = (string)$transaction['txid'];
+			// a callback that could not be applied completely may have left this status behind
+			if (isset($unfinished_txids[$txid])) {
+				continue;
+			}
 			if (!isset($latest_transaction_status[$txid]['transaction_status'])
 			    || strtolower((string)$latest_transaction_status[$txid]['transaction_status']) !== 'pending'
 			    )
@@ -990,6 +995,32 @@ class PayoneModified {
 			}
 		}
 		return false;
+	}
+
+	// a stored status that never reached the applied marker leaves the transaction unfinished
+	protected function getUnfinishedTransactionStatusTxids($orders_id) {
+		$txids = array();
+		$query = xtc_db_query("SELECT DISTINCT d_txid.`value` AS txid
+		                         FROM payone_txstatus s
+		                         JOIN payone_txstatus_data d_txid
+		                           ON d_txid.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_txid.`key` = 'txid'
+		                    LEFT JOIN payone_txstatus_data d_applied
+		                           ON d_applied.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_applied.`key` = '_modified_applied'
+		                    LEFT JOIN payone_txstatus_data d_processed
+		                           ON d_processed.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_processed.`key` = '_modified_processed'
+		                        WHERE s.orders_id = '".(int)$orders_id."'
+		                          AND ((d_applied.payone_txstatus_data_id IS NOT NULL
+		                                AND d_applied.`value` != '1')
+		                               OR (d_applied.payone_txstatus_data_id IS NULL
+		                                   AND d_processed.payone_txstatus_data_id IS NOT NULL
+		                                   AND d_processed.`value` != '1'))");
+		while ($row = xtc_db_fetch_array($query)) {
+			$txids[(string)$row['txid']] = true;
+		}
+		return $txids;
 	}
 
 	protected function getLatestAppliedTransactionStatusByTxid($orders_id) {
@@ -1205,6 +1236,13 @@ class PayoneModified {
 		return true;
 	}
 
+	// the marker survives later status changes, so a retry can tell a missing entry from a written one
+	protected function markTransactionStatusHistoryWritten($txstatus_id) {
+		$result = xtc_db_query("INSERT INTO payone_txstatus_data (payone_txstatus_id, `key`, `value`)
+		                        VALUES ('".(int)$txstatus_id."', '_modified_history', '1')");
+		return $result !== false;
+	}
+
 	protected function getTransactionStatusLockName($orders_id, $txid) {
 		return 'payone_txstatus_'.substr(hash('sha256', (int)$orders_id.'|'.$txid), 0, 40);
 	}
@@ -1312,7 +1350,8 @@ class PayoneModified {
 					return false;
 				}
 
-				if (xtc_db_affected_rows() > 0) {
+				// the marker tells whether this callback already has its entry, the order status does not
+				if (!isset($txstatus['_modified_history']) || (string)$txstatus['_modified_history'] !== '1') {
 					$sql_data_array = array(
 						'orders_id' => $orders_id,
 						'orders_status_id' => $orders_status_id,
@@ -1321,7 +1360,10 @@ class PayoneModified {
 						'comments' => STATUS_UPDATED_BY_PAYONE,
 						'comments_sent' => '0',
 					);
-					if (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false) {
+					if (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false
+					    || !$this->markTransactionStatusHistoryWritten($txstatus_id)
+					    )
+					{
 						return false;
 					}
 				}
