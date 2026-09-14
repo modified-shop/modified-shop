@@ -954,14 +954,59 @@ class PayoneModified {
 		$this->processDeferredTransactionStatus($orders_id, $txid);
 	}
 
+	// one statement, so the transaction status, its latest applied callback and any unfinished
+	// callback come from the same read and a callback running in parallel cannot mix them up
 	public function isTransactionApprovedForCheckout($orders_id) {
 		$approved_status = array('APPROVED', 'APPOINTED', 'CAPTURE', 'PAID');
-		$latest_transaction_status = $this->getLatestAppliedTransactionStatusByTxid($orders_id);
-		$unfinished_txids = $this->getUnfinishedTransactionStatusTxids($orders_id);
 
-		$query = xtc_db_query("SELECT status, txid
-		                         FROM payone_transactions
-		                        WHERE orders_id = '".(int)$orders_id."'");
+		$query = xtc_db_query("SELECT t.status,
+		                              (SELECT d.`value`
+		                                 FROM payone_txstatus_data d
+		                                WHERE d.`key` = 'transaction_status'
+		                                  AND d.payone_txstatus_id = (SELECT MAX(x.payone_txstatus_id)
+		                                                                FROM payone_txstatus x
+		                                                                JOIN payone_txstatus_data x_txid
+		                                                                  ON x_txid.payone_txstatus_id = x.payone_txstatus_id
+		                                                                 AND x_txid.`key` = 'txid'
+		                                                           LEFT JOIN payone_txstatus_data x_applied
+		                                                                  ON x_applied.payone_txstatus_id = x.payone_txstatus_id
+		                                                                 AND x_applied.`key` = '_modified_applied'
+		                                                           LEFT JOIN payone_txstatus_data x_processed
+		                                                                  ON x_processed.payone_txstatus_id = x.payone_txstatus_id
+		                                                                 AND x_processed.`key` = '_modified_processed'
+		                                                               WHERE x.orders_id = t.orders_id
+		                                                                 AND x_txid.`value` = t.txid
+		                                                                 AND (x_applied.`value` = '1'
+		                                                                      OR (x_applied.payone_txstatus_data_id IS NULL
+		                                                                          AND (x_processed.`value` = '1'
+		                                                                               OR x_processed.payone_txstatus_data_id IS NULL))))
+		                              ) AS transaction_status,
+		                              (SELECT COUNT(*)
+		                                 FROM payone_txstatus u
+		                                 JOIN payone_txstatus_data u_txid
+		                                   ON u_txid.payone_txstatus_id = u.payone_txstatus_id
+		                                  AND u_txid.`key` = 'txid'
+		                                 JOIN payone_txstatus_data u_sequence
+		                                   ON u_sequence.payone_txstatus_id = u.payone_txstatus_id
+		                                  AND u_sequence.`key` = 'sequencenumber'
+		                            LEFT JOIN payone_txstatus_data u_applied
+		                                   ON u_applied.payone_txstatus_id = u.payone_txstatus_id
+		                                  AND u_applied.`key` = '_modified_applied'
+		                            LEFT JOIN payone_txstatus_data u_processed
+		                                   ON u_processed.payone_txstatus_id = u.payone_txstatus_id
+		                                  AND u_processed.`key` = '_modified_processed'
+		                                WHERE u.orders_id = t.orders_id
+		                                  AND u_txid.`value` = t.txid
+		                                  AND ((u_applied.payone_txstatus_data_id IS NOT NULL
+		                                        AND u_applied.`value` != '1')
+		                                       OR (u_applied.payone_txstatus_data_id IS NULL
+		                                           AND u_processed.payone_txstatus_data_id IS NOT NULL
+		                                           AND u_processed.`value` != '1'))
+		                                  AND (u_processed.payone_txstatus_data_id IS NULL
+		                                       OR u_processed.`value` != '1')
+		                              ) AS unfinished
+		                         FROM payone_transactions t
+		                        WHERE t.orders_id = '".(int)$orders_id."'");
 		while ($transaction = xtc_db_fetch_array($query)) {
 			$status = strtoupper((string)$transaction['status']);
 			if (!in_array($status, $approved_status, true)) {
@@ -970,13 +1015,12 @@ class PayoneModified {
 			if ($status === 'APPROVED') {
 				return true;
 			}
-			$txid = (string)$transaction['txid'];
 			// a callback that could not be applied completely may have left this status behind
-			if (isset($unfinished_txids[$txid])) {
+			if ((int)$transaction['unfinished'] > 0) {
 				continue;
 			}
-			if (!isset($latest_transaction_status[$txid]['transaction_status'])
-			    || strtolower((string)$latest_transaction_status[$txid]['transaction_status']) !== 'pending'
+			if ($transaction['transaction_status'] === null
+			    || strtolower((string)$transaction['transaction_status']) !== 'pending'
 			    )
 			{
 				return true;
@@ -995,38 +1039,6 @@ class PayoneModified {
 			}
 		}
 		return false;
-	}
-
-	// a stored status that neither was applied nor made it through processing leaves the transaction unfinished,
-	// a status without sequence number never reaches processing and is left out
-	protected function getUnfinishedTransactionStatusTxids($orders_id) {
-		$txids = array();
-		$query = xtc_db_query("SELECT DISTINCT d_txid.`value` AS txid
-		                         FROM payone_txstatus s
-		                         JOIN payone_txstatus_data d_txid
-		                           ON d_txid.payone_txstatus_id = s.payone_txstatus_id
-		                          AND d_txid.`key` = 'txid'
-		                         JOIN payone_txstatus_data d_sequence
-		                           ON d_sequence.payone_txstatus_id = s.payone_txstatus_id
-		                          AND d_sequence.`key` = 'sequencenumber'
-		                    LEFT JOIN payone_txstatus_data d_applied
-		                           ON d_applied.payone_txstatus_id = s.payone_txstatus_id
-		                          AND d_applied.`key` = '_modified_applied'
-		                    LEFT JOIN payone_txstatus_data d_processed
-		                           ON d_processed.payone_txstatus_id = s.payone_txstatus_id
-		                          AND d_processed.`key` = '_modified_processed'
-		                        WHERE s.orders_id = '".(int)$orders_id."'
-		                          AND ((d_applied.payone_txstatus_data_id IS NOT NULL
-		                                AND d_applied.`value` != '1')
-		                               OR (d_applied.payone_txstatus_data_id IS NULL
-		                                   AND d_processed.payone_txstatus_data_id IS NOT NULL
-		                                   AND d_processed.`value` != '1'))
-		                          AND (d_processed.payone_txstatus_data_id IS NULL
-		                               OR d_processed.`value` != '1')");
-		while ($row = xtc_db_fetch_array($query)) {
-			$txids[(string)$row['txid']] = true;
-		}
-		return $txids;
 	}
 
 	protected function getLatestAppliedTransactionStatusByTxid($orders_id) {
