@@ -1352,7 +1352,8 @@ class PayoneModified {
 					return false;
 				}
 
-				// the arrival time ties the entry to this status, a retry finds it and a later status does not
+				// the comment names the status the entry belongs to, that is what a retry recognises
+				$history_comment = xtc_db_input(STATUS_UPDATED_BY_PAYONE.' (TxStatus '.(int)$txstatus_id.')');
 				$history_query = xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY." (orders_id,
 				                                                                            orders_status_id,
 				                                                                            date_added,
@@ -1361,9 +1362,9 @@ class PayoneModified {
 				                                                                            comments_sent)
 				                                    SELECT s.orders_id,
 				                                           '".$orders_status_id."',
-				                                           s.received,
+				                                           now(),
 				                                           '0',
-				                                           '".xtc_db_input(STATUS_UPDATED_BY_PAYONE)."',
+				                                           '".$history_comment."',
 				                                           '0'
 				                                      FROM payone_txstatus s
 				                                     WHERE s.payone_txstatus_id = '".(int)$txstatus_id."'
@@ -1371,8 +1372,7 @@ class PayoneModified {
 				                                                         FROM ".TABLE_ORDERS_STATUS_HISTORY." h
 				                                                        WHERE h.orders_id = s.orders_id
 				                                                          AND h.orders_status_id = '".$orders_status_id."'
-				                                                          AND h.comments = '".xtc_db_input(STATUS_UPDATED_BY_PAYONE)."'
-				                                                          AND h.date_added = s.received)");
+				                                                          AND h.comments = '".$history_comment."')");
 				if ($history_query === false) {
 					return false;
 				}
