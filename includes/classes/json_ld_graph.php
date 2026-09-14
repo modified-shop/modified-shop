@@ -570,14 +570,15 @@
     /**
      * The gtin properties of an ean
      *
-     * schema.org accepts the plain gtin for every length, the numbered ones only for the four
-     * lengths that really exist, so an ean of any other length gets the plain property alone.
+     * The field is passed on the way sku and mpn are, because the shop never states what may
+     * stand in it. schema.org accepts the plain gtin for every length, the numbered ones only
+     * for the four lengths that really exist, so any other length gets the plain property alone.
      *
      * @param string $ean
      * @return array
      */
     static function gtin($ean) {
-      $ean = preg_replace('/[^0-9]/', '', (string)$ean);
+      $ean = self::text($ean);
       if ($ean === '') {
         return array();
       }
