@@ -69,14 +69,14 @@
         $tax_priority = xtc_db_prepare_input($_POST['tax_priority']);
         $tax_description = xtc_db_prepare_input($_POST['tax_description']);
 
-        $tax_description_array = array();
-        foreach ($tax_description as $key => $value) {
-          if (xtc_not_null($value)) {
-            $tax_description_array[] =  $key . '::' . $value;
-          }
-        }
-        $tax_description = implode('||', $tax_description_array);
-        
+        require_once(DIR_FS_INC.'merge_multi_language_value.inc.php');
+        $stored_query = xtc_db_query("SELECT tax_description
+                                        FROM " . TABLE_TAX_RATES . "
+                                       WHERE tax_rates_id = '" . (int)$tax_rates_id . "'");
+        $stored = xtc_db_fetch_array($stored_query);
+
+        $tax_description = merge_multi_language_value($tax_description, (isset($stored['tax_description']) ? $stored['tax_description'] : ''));
+
         $sql_data_array = array(
           'tax_zone_id' => $tax_zone_id, 
           'tax_class_id' => $tax_class_id, 

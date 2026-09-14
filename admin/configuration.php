@@ -58,13 +58,8 @@
               // multi language config
               $keys = array_keys($_POST[$configuration['configuration_key']]);
               if (gettype(array_shift($keys)) == 'string') {
-                $config_value = array();
-                foreach ($_POST[$configuration['configuration_key']] as $key => $value) {
-                  if (xtc_not_null($value)) {
-                    $config_value[] =  $key . '::' . $value;
-                  }
-                }
-                $_POST[$configuration['configuration_key']] = implode('||', $config_value);
+                require_once(DIR_FS_INC.'merge_multi_language_value.inc.php');
+                $_POST[$configuration['configuration_key']] = merge_multi_language_value($_POST[$configuration['configuration_key']], $configuration['configuration_value']);
               } else {
                 $_POST[$configuration['configuration_key']] = implode(',', $_POST[$configuration['configuration_key']]);
               }

@@ -127,22 +127,16 @@
       $geo_zone_info = ((isset($_POST['geo_zone_info'])) ? '1' : '0');
       $geo_zone_tax = ((isset($_POST['geo_zone_tax'])) ? '1' : '0');
 
-      $geo_zone_name_array = array();
-      foreach ($geo_zone_name as $key => $value) {
-        if (xtc_not_null($value)) {
-          $geo_zone_name_array[] =  $key . '::' . $value;
-        }
-      }
-      $geo_zone_name = implode('||', $geo_zone_name_array);
+      require_once(DIR_FS_INC.'merge_multi_language_value.inc.php');
+      $stored_query = xtc_db_query("SELECT geo_zone_name,
+                                           geo_zone_description
+                                      FROM " . TABLE_GEO_ZONES . "
+                                     WHERE geo_zone_id = '" . (int)$zID . "'");
+      $stored = xtc_db_fetch_array($stored_query);
 
-      $geo_zone_description_array = array();
-      foreach ($geo_zone_description as $key => $value) {
-        if (xtc_not_null($value)) {
-          $geo_zone_description_array[] =  $key . '::' . $value;
-        }
-      }
-      $geo_zone_description = implode('||', $geo_zone_description_array);
-      
+      $geo_zone_name = merge_multi_language_value($geo_zone_name, (isset($stored['geo_zone_name']) ? $stored['geo_zone_name'] : ''));
+      $geo_zone_description = merge_multi_language_value($geo_zone_description, (isset($stored['geo_zone_description']) ? $stored['geo_zone_description'] : ''));
+
       $sql_data_array = array(
         'geo_zone_name' => $geo_zone_name,
         'geo_zone_description' => $geo_zone_description,

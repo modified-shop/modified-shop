@@ -69,21 +69,15 @@
         $tax_class_title = xtc_db_prepare_input($_POST['tax_class_title']);
         $tax_class_description = xtc_db_prepare_input($_POST['tax_class_description']);
 
-        $tax_class_title_array = array();
-        foreach ($tax_class_title as $key => $value) {
-          if (xtc_not_null($value)) {
-            $tax_class_title_array[] =  $key . '::' . $value;
-          }
-        }
-        $tax_class_title = implode('||', $tax_class_title_array);
+        require_once(DIR_FS_INC.'merge_multi_language_value.inc.php');
+        $stored_query = xtc_db_query("SELECT tax_class_title,
+                                             tax_class_description
+                                        FROM " . TABLE_TAX_CLASS . "
+                                       WHERE tax_class_id = '" . (int)$tax_class_id . "'");
+        $stored = xtc_db_fetch_array($stored_query);
 
-        $tax_class_description_array = array();
-        foreach ($tax_class_description as $key => $value) {
-          if (xtc_not_null($value)) {
-            $tax_class_description_array[] =  $key . '::' . $value;
-          }
-        }
-        $tax_class_description = implode('||', $tax_class_description_array);
+        $tax_class_title = merge_multi_language_value($tax_class_title, (isset($stored['tax_class_title']) ? $stored['tax_class_title'] : ''));
+        $tax_class_description = merge_multi_language_value($tax_class_description, (isset($stored['tax_class_description']) ? $stored['tax_class_description'] : ''));
 
         $sql_data_array = array(
           'tax_class_title' => $tax_class_title,

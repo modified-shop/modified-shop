@@ -123,13 +123,12 @@
               // multi language config
               $keys = array_keys($configuration[$key]);
               if (gettype(array_shift($keys)) == 'string') {
-                $config_value = array();
-                foreach ($configuration[$key] as $k => $v) {
-                  if (xtc_not_null($v)) {
-                    $config_value[] =  $k . '::' . $v;
-                  }
-                }
-                $value = implode('||', $config_value);
+                require_once(DIR_FS_INC.'merge_multi_language_value.inc.php');
+                $stored_query = xtc_db_query("SELECT configuration_value
+                                                FROM " . TABLE_CONFIGURATION . "
+                                               WHERE configuration_key = '" . xtc_db_input($key) . "'");
+                $stored = xtc_db_fetch_array($stored_query);
+                $value = merge_multi_language_value($configuration[$key], (isset($stored['configuration_value']) ? $stored['configuration_value'] : ''));
               } else {
                 $value = implode(',', $configuration[$key]);
               }
