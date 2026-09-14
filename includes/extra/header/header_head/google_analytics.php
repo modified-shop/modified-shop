@@ -127,31 +127,33 @@
     $consentAddCode = $consentPushCode = null;
     if (defined('MODULE_COOKIE_CONSENT_STATUS') 
         && MODULE_COOKIE_CONSENT_STATUS == 'true' 
-        && (in_array(3, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))
         )
     {
-      $consentCode = "
+      // the ads consent is its own service, it must not depend on the analytics one
+      if (in_array(3, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING')) {
+        $consentCode = "
   gtag('consent', 'update', {
     analytics_storage: 'granted'
   });";
-      
-      if (isset($_SESSION['tracking']['allow'][3]) && $_SESSION['tracking']['allow'][3] == true) {
-        $consentAddCode .= $consentCode;
-      } else {
-        $consentPushCode .= '<script async data-type="text/javascript" type="as-oil" data-purposes="3" data-managed="as-oil">';
-        $consentPushCode .= "gTagCounter ++;";
-        $consentPushCode .= $consentCode;
-        $consentPushCode .= $endCode;
+
+        if (isset($_SESSION['tracking']['allow'][3]) && $_SESSION['tracking']['allow'][3] == true) {
+          $consentAddCode .= $consentCode;
+        } else {
+          $consentPushCode .= '<script async data-type="text/javascript" type="as-oil" data-purposes="3" data-managed="as-oil">';
+          $consentPushCode .= "gTagCounter ++;";
+          $consentPushCode .= $consentCode;
+          $consentPushCode .= $endCode;
+        }
       }
-      
-      $consentCode = "
+
+      if (in_array(8, $_SESSION['tracking']['allowed'])) {
+        $consentCode = "
   gtag('consent', 'update', {
     ad_storage: 'granted',
     ad_user_data: 'granted',
     ad_personalization: 'granted'
   });";
 
-      if (in_array(8, $_SESSION['tracking']['allowed'])) {
         if (isset($_SESSION['tracking']['allow'][8]) && $_SESSION['tracking']['allow'][8] == true) {
           $consentAddCode .= $consentCode;
         } else {
