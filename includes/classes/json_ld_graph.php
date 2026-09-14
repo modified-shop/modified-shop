@@ -168,7 +168,7 @@
       }
 
       $data = $product->data;
-      $url = self::link(FILENAME_PRODUCT_INFO, xtc_product_link($data['products_id'], $data['products_name']));
+      $url = self::productUrl($data['products_id'], $data['products_name']);
 
       $node = array(
         '@type' => 'Product',
@@ -288,9 +288,9 @@
           continue;
         }
         $position++;
-        // not PRODUCTS_LINK: that one is built for the page and carries the session id where
-        // the shop propagates it, which would make an identifier differ between two visitors
-        $url = self::link(FILENAME_PRODUCT_INFO, xtc_product_link($entry['PRODUCTS_ID'], $entry['PRODUCTS_NAME']));
+        // not PRODUCTS_LINK: that one is built for the page, and an identifier that follows
+        // the trail of the visitor instead of the canonical category is no identifier
+        $url = self::productUrl($entry['PRODUCTS_ID'], $entry['PRODUCTS_NAME']);
 
         $element = array(
           '@type' => 'ListItem',
@@ -636,6 +636,34 @@
       }
 
       return '';
+    }
+
+    /**
+     * The canonical link of an article
+     *
+     * With speaking urls xtc_get_product_path() builds the path from the category the visitor
+     * came through, unless $canonical_flag asks for the canonical one. An article sitting in
+     * two categories would otherwise carry a different url here than the canonical the page
+     * declares, and a different one in every listing it appears in.
+     *
+     * @param integer $products_id
+     * @param string $products_name
+     * @return string
+     */
+    static function productUrl($products_id, $products_name) {
+      $was_set = array_key_exists('canonical_flag', $GLOBALS);
+      $previous = ($was_set) ? $GLOBALS['canonical_flag'] : null;
+
+      $GLOBALS['canonical_flag'] = true;
+      $url = self::link(FILENAME_PRODUCT_INFO, xtc_product_link($products_id, $products_name));
+
+      if ($was_set) {
+        $GLOBALS['canonical_flag'] = $previous;
+      } else {
+        unset($GLOBALS['canonical_flag']);
+      }
+
+      return $url;
     }
 
     /**
