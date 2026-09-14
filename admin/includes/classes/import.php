@@ -274,7 +274,8 @@ class xtcImport {
                 if ($key === '') {
                   continue;
                 }
-                $line_data[$name] = isset($line[$key]) ? $line[$key] : ''; // a short line must not leave mapped fields undefined
+                // a column missing in this line stays NULL, isset() consumers have to keep seeing it as not supplied
+                $line_data[$name] = array_key_exists($key, $line) ? $line[$key] : null;
             }
 
             $model = isset($line_data['p_model']) ? $line_data['p_model'] : '';
@@ -460,7 +461,7 @@ class xtcImport {
         if ($this->FileSheme['p_opttpl'] == 'Y')
             $products_array = array_merge($products_array, array ('options_template' => xtc_db_prepare_input($dataArray['p_opttpl'])));
         if ($this->FileSheme['p_manufacturer'] == 'Y')
-            $products_array = array_merge($products_array, array ('manufacturers_id' => $this->getMAN(xtc_db_prepare_input(trim($dataArray['p_manufacturer'])))));
+            $products_array = array_merge($products_array, array ('manufacturers_id' => $this->getMAN(xtc_db_prepare_input(trim((string)$dataArray['p_manufacturer'])))));
         if ($this->FileSheme['p_fsk18'] == 'Y')
             $products_array = array_merge($products_array, array ('products_fsk18' => (int)$dataArray['p_fsk18']));
         if ($this->FileSheme['p_tpl'] == 'Y')
