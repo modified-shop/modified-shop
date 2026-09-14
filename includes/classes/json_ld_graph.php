@@ -570,24 +570,53 @@
     /**
      * The gtin properties of an ean
      *
-     * schema.org accepts the plain gtin for every length, the numbered ones only for the four
-     * lengths that really exist, so an ean of any other length gets the plain property alone.
+     * schema.org asks for a real gtin, so the field is published only where its content is one.
+     * The shop never checked what was typed or imported into it, and an article number that is
+     * not a gtin still travels as sku and mpn.
      *
      * @param string $ean
      * @return array
      */
     static function gtin($ean) {
       $ean = preg_replace('/[^0-9]/', '', (string)$ean);
-      if ($ean === '') {
+      if (!self::gtinValid($ean)) {
         return array();
       }
 
-      $properties = array('gtin' => $ean);
-      if (in_array(strlen($ean), array(8, 12, 13, 14))) {
-        $properties['gtin'.strlen($ean)] = $ean;
+      return array(
+        'gtin' => $ean,
+        'gtin'.strlen($ean) => $ean,
+      );
+    }
+
+    /**
+     * Whether a number carries the length and the check digit of a gtin
+     *
+     * A gtin exists in four lengths, and each of them is padded to fourteen digits before the
+     * check digit is read: counted from the right, every second digit of the payload counts
+     * triple, and the check digit fills the sum up to the next multiple of ten.
+     *
+     * @param string $gtin
+     * @return boolean
+     */
+    static function gtinValid($gtin) {
+      if (!in_array(strlen($gtin), array(8, 12, 13, 14))) {
+        return false;
       }
 
-      return $properties;
+      // a row of zeros passes the check digit but is what an import leaves behind, not a gtin
+      if ((int)$gtin === 0) {
+        return false;
+      }
+
+      $padded = str_pad($gtin, 14, '0', STR_PAD_LEFT);
+
+      $sum = 0;
+      for ($i = 0; $i < 13; $i++) {
+        $sum += (int)$padded[$i] * (($i % 2 === 0) ? 3 : 1);
+      }
+
+      return ((10 - ($sum % 10)) % 10) === (int)$padded[13];
     }
 
     /**
