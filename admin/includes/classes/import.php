@@ -70,7 +70,14 @@ class xtcImport {
         if (CSV_SEPERATOR == xtc_db_prepare_input('\t')) { //added stripslashes() since this is called in background in gID=20 (/admin/configuration.php)
             $this->seperator = "\t";
         }
-        $this->filename = $filename;
+        // fgetcsv() throws a ValueError since PHP 8 if these are not exactly one character
+        if (strlen($this->seperator) != 1) {
+            $this->seperator = "\t";
+        }
+        if (strlen($this->TextSign) != 1) {
+            $this->TextSign = '^';
+        }
+        $this->filename = basename($filename);
         $this->ImportDir = DIR_FS_CATALOG.'import/';
         $this->catDepth = defined('CSV_CAT_DEPTH') ? CSV_CAT_DEPTH : 4;
         $this->languages = $this->get_lang();
@@ -178,8 +185,11 @@ class xtcImport {
             return 'error';
         } else {
             // file is ok, creating mapping
-            $inhalt = array ();
             $inhalt = file($this->ImportDir.$this->filename);
+            if ($inhalt === false || !isset($inhalt[0])) {
+                // error
+                return 'error';
+            }
             // get first line into array
             $content = explode($this->seperator, $inhalt[0]);
 
@@ -216,7 +226,7 @@ class xtcImport {
                                        ORDER BY sort_order
                                       ");
 
-
+        $languages_array = array ();
         while ($languages = xtc_db_fetch_array($languages_query)) {
             $languages_array[] = array (
                 'id' => $languages['languages_id'],
@@ -238,41 +248,54 @@ class xtcImport {
 
         // open file
         $fp = fopen($this->ImportDir.$this->filename, 'r');
+        if ($fp === false) {
+            $this->errorLog[] = '<b>ERROR:</b> could not read file: '.$this->filename;
+            return array ($this->counter, $this->errorLog, $this->calcElapsedTime($this->time_start));
+        }
 
         // read the header line
-        $header = fgetcsv($fp, 20000, $this->seperator, $this->TextSign);
+        $header = fgetcsv($fp, 20000, $this->seperator, $this->TextSign, "\\");
+        if ($header === false) {
+            fclose($fp);
+            $this->errorLog[] = '<b>ERROR:</b> no header line found in file: '.$this->filename;
+            return array ($this->counter, $this->errorLog, $this->calcElapsedTime($this->time_start));
+        }
         foreach($header as $key=>$name) {
             $mapping[$name] = $key;
         }
 
+        $has_cat = (isset($this->FileSheme['p_cat.0']) && $this->FileSheme['p_cat.0'] == 'Y');
         $row = 1;  //set row to one to be able to count rows in while loop
 
-        while ($line = fgetcsv($fp, 20000, $this->seperator, $this->TextSign)) {
+        while ($line = fgetcsv($fp, 20000, $this->seperator, $this->TextSign, "\\")) {
             $row++; //increment row to get line number
+            $line_data = array ();
             foreach($mapping as $name => $key) {
-                if ($key == '') {
+                if ($key === '') {
                   continue;
                 }
-                $line_data[$name] = $line[$key];
+                $line_data[$name] = isset($line[$key]) ? $line[$key] : ''; // a short line must not leave mapped fields undefined
             }
 
-            if ($line_data['p_model'] != '') {
-                if ($line_data['p_cat.0'] != '' || $this->FileSheme['p_cat.0'] != 'Y') { // if cat data field is empty or not existing
-                    if ($this->FileSheme['p_cat.0'] != 'Y') { // if cat data field is not existing
-                        if ($this->checkModel($line_data['p_model'])) { // if model no. already exists
+            $model = isset($line_data['p_model']) ? $line_data['p_model'] : '';
+
+            if ($model != '') {
+                if (!$has_cat || $line_data['p_cat.0'] != '') { // if cat data field is empty or not existing
+                    if (!$has_cat) { // if cat data field is not existing
+                        if ($this->checkModel($model)) { // if model no. already exists
                             $this->insertProduct($line_data, 'update');
                         } elseif ($this->CatDefault != '0') { // if model no. not existing and cat data field not exsisting and CatDefault is not TOP
                             $this->insertProduct($line_data,'insert');
                         }
                     } else { // if cat data field existing
-                        if ($this->checkModel($line_data['p_model'])) {
+                        if ($this->checkModel($model)) {
                             $this->insertProduct($line_data, 'update',true);
                         } else {
                             $this->insertProduct($line_data,'insert',true);
                         }
                     }
                 } else { // if cat data field existing but empty
-                    if ($this->checkModel($line_data['p_model'])) { // if model no. already exists
+                    if ($this->checkModel($model)) { // if model no. already exists
                         $this->insertProduct($line_data, 'update');
                     } elseif ($this->CatDefault != '0') { // if model no. not existing and cat data field existing but empty and CatDefault is not TOP
                         $this->insertProduct($line_data,'insert');
@@ -284,6 +307,8 @@ class xtcImport {
                 $this->errorLog[] = '<b>ERROR:</b> no Modelnumber, line: '.$row.' dataset: empty field: p_model';
             }
         }
+        fclose($fp);
+
         return array ($this->counter, $this->errorLog, $this->calcElapsedTime($this->time_start));
     }
 
@@ -345,12 +370,11 @@ class xtcImport {
     **
     ****************************************************************************/
     function RemoveTextNotes($data) {
-        if(!empty($this->TextSign)) {
-            if (substr($data, -1) == $this->TextSign) {
-                $data = substr($data, 1, strlen($data) - 2);
-            }
-            return $data;
+        $data = (string)$data;
+        if (!empty($this->TextSign) && substr($data, -1) == $this->TextSign) {
+            $data = substr($data, 1, strlen($data) - 2);
         }
+        return $data;
     }
 
     /*****************************************************************************
@@ -366,7 +390,7 @@ class xtcImport {
 
     function getMAN($manufacturer) {
         if ($manufacturer == '') {
-            return;
+            return 0;
         }
         
         if (isset ($this->mfn[$manufacturer]['id'])) {
@@ -590,46 +614,36 @@ class xtcImport {
             echo '</pre>';
         }
         $cat = array ();
-        $catTree = '';
         for ($i = 0; $i < $this->catDepth; $i ++) {
-            if (trim($dataArray['p_cat.'.$i]) != '') {
-                $cat[$i] = xtc_db_prepare_input(trim($dataArray['p_cat.'.$i]));
-                $catTree .= '[\''.xtc_db_input($cat[$i]).'\']';
+            $cat_name = isset($dataArray['p_cat.'.$i]) ? trim($dataArray['p_cat.'.$i]) : '';
+            if ($cat_name != '') {
+                $cat[] = xtc_db_prepare_input($cat_name);
             }
         }
 
-        $code = '$ID=$this->CatTree'.$catTree.'[\'ID\'];';
-        //debug
-        if ($this->debug) {echo '<pre>FIRST $CODE: ' . $code . '</pre>';}
-        eval ($code);
+        $ID = $this->getCatTreeID($cat);
         //debug
         if ($this->debug) echo '<pre>FIRST $ID: '.$ID.'</pre>';
 
-        if (is_int($ID) || $ID == '0') {
+        if ($ID !== null) {
             $this->insertPtoCconnection($pID, $ID);
         } else {
 
-            $catTree = '';
-            $parTree = '';
-            $curr_ID = 0;
+            $catPath = array ();
+            $cat_id = 0;
             for ($i = 0, $cc = count($cat); $i < $cc; $i ++) {
-                $catTree .= '[\''.xtc_db_input($cat[$i]).'\']';
-                $code = '$ID=$this->CatTree'.$catTree.'[\'ID\'];';
-                //debug
-                if ($this->debug) {echo '<pre>SECOND $CODE: ' . $code . '</pre>';}
-
-                eval ($code);
+                $parPath = $catPath;
+                $catPath[] = $cat[$i];
+                $ID = $this->getCatTreeID($catPath);
                 //debug
                 if ($this->debug) {echo '<pre>SECOND $ID: ' . $ID . '</pre>';}
-                if (is_int($ID) || $ID == '0') {
-                    $curr_ID = $ID;
+                if ($ID !== null) {
+                    $cat_id = $ID;
                 } else {
-                    $code = '$parent=$this->CatTree'.$parTree.'[\'ID\'];';
-                   //debug
-                   if ($this->debug) {echo '<pre>THIRD $CODE: ' . $code . '</pre>';}
-
-
-                    eval ($code);
+                    $parent = $this->getCatTreeID($parPath);
+                    if ($parent === null) {
+                        $parent = 0;
+                    }
                    //debug
                    if ($this->debug) echo '<pre>$PARENT: '.$parent.'</pre>';
 
@@ -654,11 +668,7 @@ class xtcImport {
 
                         $this->counter['cat_new']++;
 
-                        $code = '$this->CatTree'.$parTree.'[\''.xtc_db_input($cat[$i]).'\'][\'ID\']='.$cat_id.';';
-                        //debug
-                        if ($this->debug) {echo '<pre>FOURTH $CODE: ' . $code . '</pre>';}
-
-                        eval ($code);
+                        $this->setCatTreeID($catPath, $cat_id);
                         //debug
                         if ($this->debug) echo '<pre>FIRST $CAT_ID: '.$cat_id.'</pre><hr />';
 
@@ -675,19 +685,59 @@ class xtcImport {
                         $this->counter['cat_touched']++;
                         $cData = xtc_db_fetch_array($cat_query);
                         $cat_id = $cData['categories_id'];
-                        $code = '$this->CatTree'.$parTree.'[\''.xtc_db_input($cat[$i]).'\'][\'ID\']='.$cat_id.';';
-                        //debug
-                        if ($this->debug) {echo '<pre>FIFTH $CODE: ' . $code . '</pre>';}
-
-                        eval ($code);
+                        $this->setCatTreeID($catPath, $cat_id);
                         //debug
                         if ($this->debug) echo '<pre>SECOND $CAT_ID: '.$cat_id.'</pre><hr />';
                     }
                 }
-                $parTree = $catTree;
             }
             $this->insertPtoCconnection($pID, $cat_id);
         }
+    }
+
+    /*****************************************************************************
+    **
+    *F getCatTreeID . . . . . . . . . . . . . . . . . . . . . . . .  getCatTreeID
+    **
+    ** Read the cached categories ID for a path of category names
+    **
+    ** @param array $path category names, top level first
+    ** @return int|null categories ID or null if the path is not cached
+    **
+    *****************************************************************************/
+
+    function getCatTreeID($path) {
+        $node = $this->CatTree;
+        foreach ($path as $name) {
+            if (!isset($node[$name]) || !is_array($node[$name])) {
+                return null;
+            }
+            $node = $node[$name];
+        }
+        return isset($node['ID']) ? (int)$node['ID'] : null;
+    }
+
+    /*****************************************************************************
+    **
+    *F setCatTreeID . . . . . . . . . . . . . . . . . . . . . . . .  setCatTreeID
+    **
+    ** Cache the categories ID for a path of category names
+    **
+    ** @param array $path category names, top level first
+    ** @param int $cID categories ID
+    **
+    *****************************************************************************/
+
+    function setCatTreeID($path, $cID) {
+        $node = & $this->CatTree;
+        foreach ($path as $name) {
+            if (!isset($node[$name]) || !is_array($node[$name])) {
+                $node[$name] = array ();
+            }
+            $node = & $node[$name];
+        }
+        $node['ID'] = (int)$cID;
+        unset($node);
     }
 
     /*****************************************************************************
@@ -733,10 +783,10 @@ class xtcImport {
     function get_line_content($line, $file_content, $max_lines) {
         // get first line
         $line_data = array ();
-        $line_data['data'] = $file_content[$line];
+        $line_data['data'] = isset($file_content[$line]) ? $file_content[$line] : '';
         $lc = 1;
         // check if next line got ; in first 50 chars
-        while (!strpos(substr($file_content[$line + $lc], 0, 6), 'XTSOL') && $line + $lc <= $max_lines) {
+        while ($line + $lc <= $max_lines && isset($file_content[$line + $lc]) && !strpos(substr($file_content[$line + $lc], 0, 6), 'XTSOL')) {
             $line_data['data'] .= $file_content[$line + $lc];
             $lc ++;
         }
@@ -798,6 +848,7 @@ class xtcImport {
         $mfn_query = xtc_db_query("SELECT manufacturers_id,
                                           manufacturers_name
                                      FROM ".TABLE_MANUFACTURERS);
+        $mfn_array = array ();
         while ($mfn = xtc_db_fetch_array($mfn_query)) {
             $mfn_array[$mfn['manufacturers_name']] = array ('id' => $mfn['manufacturers_id']);
         }
@@ -880,7 +931,7 @@ class xtcExport {
                                        ORDER BY sort_order
                                        ');
 
-
+        $languages_array = array ();
         while ($languages = xtc_db_fetch_array($languages_query)) {
             $languages_array[] = array (
                 'id' => $languages['languages_id'],
@@ -897,18 +948,21 @@ class xtcExport {
     **
     ****************************************************************************/
     function encode($data) {
+        $data = (string)$data; // database columns may be NULL
         $result = $data;
         $delim = false;
         if (strpos($data, $this->seperator) !== false) {
             $delim = true;
-        } elseif(substr($data,0,1)==$this->TextSign) {
-            $delim = true;
-        //BOC set TextSign also when TextSign occurs within $data
-        } elseif(strpos($data, $this->TextSign) !== false) {
-            $delim = true;
+        } elseif ($this->TextSign != '') {
+            if(substr($data,0,1)==$this->TextSign) {
+                $delim = true;
+            //BOC set TextSign also when TextSign occurs within $data
+            } elseif(strpos($data, $this->TextSign) !== false) {
+                $delim = true;
+            }
         }
         //EOC set TextSign also when TextSign occurs within $data
-        if($delim) {
+        if($delim && $this->TextSign != '') {
             $result = $this->TextSign.str_replace($this->TextSign, str_repeat($this->TextSign,2), $data).$this->TextSign;
         }
         return $result.$this->seperator;
@@ -922,6 +976,13 @@ class xtcExport {
     function exportProdFile() {
 
         $fp = fopen(DIR_FS_CATALOG.'export/'.$this->filename, "w+");
+        if ($fp === false) {
+            return array (
+                0 => $this->counter,
+                1 => array ('<b>ERROR:</b> could not write file: '.DIR_FS_CATALOG.'export/'.$this->filename),
+                2 => ''
+            );
+        }
         $line = '';
         $headings = array('XTSOL',
                   'p_model',
@@ -1003,7 +1064,7 @@ class xtcExport {
             $line .= $this->encode($export_data['products_sort']);
             $line .= $this->encode($export_data['products_shippingtime']);
             $line .= $this->encode($export_data['product_template']);
-            $line .= $this->encode($this->man[$export_data['manufacturers_id']]);
+            $line .= $this->encode(isset($this->man[$export_data['manufacturers_id']]) ? $this->man[$export_data['manufacturers_id']] : '');
             $line .= $this->encode($export_data['products_fsk18']);
             $line .= $this->encode($export_data['products_price']);
 
@@ -1034,7 +1095,7 @@ class xtcExport {
             // group permissions
             if (GROUP_CHECK == 'true') {
                 for ($i=0; $i < $this->count_groups; $i++) {
-                    $line .= $this->encode($export_data['group_permission_'.$this->Groups[$i]['id']]);
+                    $line .= $this->encode(isset($export_data['group_permission_'.$this->Groups[$i]['id']]) ? $export_data['group_permission_'.$this->Groups[$i]['id']] : '');
                 }
             }
 
@@ -1081,15 +1142,24 @@ class xtcExport {
                                           ");
 
                 $lang_data = xtc_db_fetch_array($lang_query);
-                $lang_data['products_description'] = str_replace("\n", "", $lang_data['products_description']);
-                $lang_data['products_short_description'] = str_replace("\n", "", $lang_data['products_short_description']);
-                $lang_data['products_order_description'] = str_replace("\n", "", $lang_data['products_order_description']); //added order description
-                $lang_data['products_description'] = str_replace("\r", "", $lang_data['products_description']);
-                $lang_data['products_short_description'] = str_replace("\r", "", $lang_data['products_short_description']);
-                $lang_data['products_order_description'] = str_replace("\r", "", $lang_data['products_order_description']); //added order description
-                $lang_data['products_description'] = str_replace(chr(13), "", $lang_data['products_description']);
-                $lang_data['products_short_description'] = str_replace(chr(13), "", $lang_data['products_short_description']);
-                $lang_data['products_order_description'] = str_replace(chr(13), "", $lang_data['products_order_description']); //added order description
+                if (!is_array($lang_data)) {
+                    $lang_data = array ();
+                }
+                // a product may have no description row at all, every exported column has to exist
+                foreach (array ('products_name',
+                                'products_description',
+                                'products_short_description',
+                                'products_order_description', //added order description
+                                'products_meta_title',
+                                'products_meta_description',
+                                'products_meta_keywords',
+                                'products_keywords',
+                                'products_url') as $lang_field) {
+                    $lang_data[$lang_field] = isset($lang_data[$lang_field]) ? (string)$lang_data[$lang_field] : '';
+                }
+                $lang_data['products_description'] = str_replace(array ("\n", "\r"), '', $lang_data['products_description']);
+                $lang_data['products_short_description'] = str_replace(array ("\n", "\r"), '', $lang_data['products_short_description']);
+                $lang_data['products_order_description'] = str_replace(array ("\n", "\r"), '', $lang_data['products_order_description']); //added order description
                 $line .= $this->encode(stripslashes($lang_data['products_name']));
                 $line .= $this->encode(stripslashes($lang_data['products_description']));
                 $line .= $this->encode(stripslashes($lang_data['products_short_description']));
@@ -1109,7 +1179,7 @@ class xtcExport {
 
 
             $cat_data = xtc_db_fetch_array($cat_query);
-            $line .= $this->buildCAT($cat_data['categories_id']);
+            $line .= $this->buildCAT(is_array($cat_data) ? $cat_data['categories_id'] : 0);
 
             foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/export/export_end/','php') as $file) require ($file);
 
@@ -1172,6 +1242,7 @@ class xtcExport {
     *****************************************************************************/
 
     function buildCAT($catID) {
+        $catID = (int)$catID;
         if (!isset($this->CAT[$catID])) {
             $this->CAT[$catID]=array();
             $tmpID = $catID;
@@ -1180,12 +1251,12 @@ class xtcExport {
                 $sql = '-- admin/includes/classes/import export buildCat
                         SELECT categories_name
                           FROM '.TABLE_CATEGORIES_DESCRIPTION.'
-                         WHERE categories_id = '.$tmpID.' and language_id = '.$this->languages[0]['id'];
+                         WHERE categories_id = '.(int)$tmpID.' and language_id = '.$this->languages[0]['id'];
 
                 $query = xtc_db_query($sql);
                 $cat_data = xtc_db_fetch_array($query);
                 $tmpID = $this->getParent($tmpID);
-                array_unshift($this->CAT[$catID], $this->encode($cat_data['categories_name']));
+                array_unshift($this->CAT[$catID], $this->encode(is_array($cat_data) ? $cat_data['categories_name'] : ''));
             }
 
             for ($i=$this->catDepth - count($this->CAT[$catID]); $i>0; $i--) {
@@ -1255,6 +1326,7 @@ class xtcExport {
     *****************************************************************************/
 
     function getParent($catID) {
+        $catID = (int)$catID;
         if (isset ($this->PARENT[$catID])) {
             return $this->PARENT[$catID];
         } else {
@@ -1262,11 +1334,12 @@ class xtcExport {
                                             FROM ".TABLE_CATEGORIES."
                                            WHERE categories_id = '".$catID."'");
 
+            $this->PARENT[$catID] = 0;
             if (xtc_db_num_rows($parent_query) > 0) {
                 $parent_data = xtc_db_fetch_array($parent_query);
-                $this->PARENT[$catID] = $parent_data['parent_id'];
-                return $parent_data['parent_id'];
+                $this->PARENT[$catID] = (int)$parent_data['parent_id'];
             }
+            return $this->PARENT[$catID];
         }
     }
 }

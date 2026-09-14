@@ -25,17 +25,21 @@
     case 'upload':
       require(DIR_WS_INCLUDES.'upload_types.php');
       
-      $upload_file = xtc_db_prepare_input($_POST['file_upload']);
-      if ($upload_file = &xtc_try_upload('file_upload', DIR_FS_CATALOG.'import/', '644', $accepted_file_extensions, $accepted_file_mime_types)) {
-        ${$upload_file_name} = $upload_file->filename;
-      }
+      xtc_try_upload('file_upload', DIR_FS_CATALOG.'import/', '644', $accepted_file_extensions, $accepted_file_mime_types);
       xtc_redirect(xtc_href_link(FILENAME_CSV_BACKEND));
     break;
 
     case 'import':
-      $handler = new xtcImport($_POST['select_file']);
-      $mapping=$handler->map_file($handler->generate_map());
-      $import=$handler->import($mapping);
+      $select_file = (isset($_POST['select_file']) ? xtc_db_prepare_input($_POST['select_file']) : '');
+      if ($select_file != '') {
+        $handler = new xtcImport($select_file);
+        $mapping = $handler->map_file($handler->generate_map());
+        if (is_array($mapping)) {
+          $import = $handler->import($mapping);
+        } else {
+          $import = array(array(), array('<b>ERROR:</b> could not read file: '.htmlspecialchars($select_file)), '');
+        }
+      }
     break;
 
     case 'export':
@@ -47,7 +51,10 @@
       $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '20' order by sort_order");
 
       while ($configuration = xtc_db_fetch_array($configuration_query)) {
-        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value='".$_POST[$configuration['configuration_key']]."' where configuration_key='".$configuration['configuration_key']."'");
+        if (!isset($_POST[$configuration['configuration_key']])) {
+          continue;
+        }
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value='".xtc_db_input($_POST[$configuration['configuration_key']])."' where configuration_key='".xtc_db_input($configuration['configuration_key'])."'");
       }
       xtc_redirect(xtc_href_link(FILENAME_CSV_BACKEND));
       break;
@@ -115,7 +122,7 @@ require (DIR_WS_INCLUDES.'head.php');
           </div>
           <?php
           if (isset($import)) {
-            if ($import[0]) {
+            if (!empty($import[0])) {
               echo '<div class="success_message">';
               if (isset($import[0]['prod_new'])) echo 'new products:'.$import[0]['prod_new'].'<br />';
               if (isset($import[0]['cat_new'])) echo 'new categories:'.$import[0]['cat_new'].'<br />';
@@ -127,9 +134,9 @@ require (DIR_WS_INCLUDES.'head.php');
               echo '</div>';
             }
 
-            if (isset($import[1][0]) && $import[1][0] != ''){
+            if (is_array($import[1]) && isset($import[1][0]) && $import[1][0] != ''){
               echo '<div class="error_message">';
-              for ($i=0;$i<count($import[1]);$i++) {
+              for ($i=0, $ic=count($import[1]); $i<$ic; $i++) {
                 echo $import[1][$i].'<br />';
               }
               echo '</div>';
