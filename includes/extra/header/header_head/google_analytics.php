@@ -12,13 +12,17 @@
 
   if (defined('MODULE_GOOGLE_ANALYTICS_STATUS')
       && MODULE_GOOGLE_ANALYTICS_STATUS == 'true'
-      && defined('MODULE_GOOGLE_ANALYTICS_TAG_ID')
-      && MODULE_GOOGLE_ANALYTICS_TAG_ID != ''
+      && ((defined('MODULE_GOOGLE_ANALYTICS_TAG_ID') && MODULE_GOOGLE_ANALYTICS_TAG_ID != '')
+          || (defined('MODULE_GOOGLE_ANALYTICS_ADS_ID') && MODULE_GOOGLE_ANALYTICS_ADS_ID != '')
+          )
       && ((defined('MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN') && MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
           || $_SESSION['customers_status']['customers_status_id'] != '0'
           )
       )
   {
+    $tagId = (defined('MODULE_GOOGLE_ANALYTICS_TAG_ID')) ? MODULE_GOOGLE_ANALYTICS_TAG_ID : '';
+    $adsId = (defined('MODULE_GOOGLE_ANALYTICS_ADS_ID')) ? MODULE_GOOGLE_ANALYTICS_ADS_ID : '';
+
     $beginCode = "
 <script>
   var gTagCounter = 0;
@@ -27,16 +31,20 @@
   function gtag(){dataLayer.push(arguments);}";
 
     $analyticsCode = "
-  gtag('js', new Date());
-  gtag('config', '".MODULE_GOOGLE_ANALYTICS_TAG_ID."', {
+  gtag('js', new Date());";
+
+    if ($tagId != '') {
+      $analyticsCode .= "
+  gtag('config', '".$tagId."', {
     anonymize_ip: true,
     link_attribution: ".((MODULE_GOOGLE_ANALYTICS_LINKID == 'true') ? 'true' : 'false').",
     allow_google_signals: ".((MODULE_GOOGLE_ANALYTICS_DISPLAY == 'true') ? 'true' : 'false')."
   });";
-  
-    if (MODULE_GOOGLE_ANALYTICS_ADS_ID != '') {
+    }
+
+    if ($adsId != '') {
       $analyticsCode .= "
-  gtag('config', '".MODULE_GOOGLE_ANALYTICS_ADS_ID."', {
+  gtag('config', '".$adsId."', {
     anonymize_ip: true,
     allow_enhanced_conversions: true
   });";
@@ -46,7 +54,7 @@
 </script>
 ";
 
-    $addCode = null;
+    $addCode = $conversionCode = null;
     if (isset($site_error)) {
       $addCode = getErrorGoogleAnalytics($site_error);
     } else {
@@ -68,10 +76,10 @@
 
             // the ads conversion is independent of the analytics ecommerce setting
             if (MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID != '') {
-              $addCode .= getConversionGoogleAnalytics();
+              $conversionCode = getConversionGoogleAnalytics();
             }
 
-            if ($addCode !== null) {
+            if ($addCode !== null || $conversionCode !== null) {
               $_SESSION['tracking']['order'][] = 'GTAG-'.$last_order;
             }
           }
@@ -99,6 +107,12 @@
           break;
       }
     }
+
+    // the ga4 events need a measurement id, the ads conversion does not
+    if ($tagId == '') {
+      $addCode = null;
+    }
+    $addCode .= $conversionCode;
 
     $consent_allowed = (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true') ? 'denied' : 'granted';
 
@@ -185,7 +199,7 @@ function pushgTagEventAction() {";
       $output .= $consentPushCode;
     }
     
-    $output .= '<script async src="https://www.googletagmanager.com/gtag/js?id='.MODULE_GOOGLE_ANALYTICS_TAG_ID.'"></script>';
+    $output .= '<script async src="https://www.googletagmanager.com/gtag/js?id='.(($tagId != '') ? $tagId : $adsId).'"></script>';
 
     if (COMPRESS_JAVASCRIPT == 'true') {
       require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
@@ -402,6 +416,14 @@ function pushgTagEventAction() {";
   }
 
 
+  // json_encode needs utf-8 and escapes everything above ascii, which is safe in any page charset
+  function jsonValueGoogleAnalytics($value) {
+    $json = json_encode((string)encode_utf8($value, get_default_charset(), true));
+
+    return ($json === false) ? '""' : $json;
+  }
+
+
   function getConversionGoogleAnalytics() {
     global $last_order;
 
@@ -414,11 +436,11 @@ function pushgTagEventAction() {";
     address: {
       sha256_first_name: '".hash('sha256', strtolower(trim($order->customer['firstname'])))."',
       sha256_last_name: '".hash('sha256', strtolower(trim($order->customer['lastname'])))."',
-      street: '".$order->customer['street_address']."',
-      city: '".$order->customer['city']."',
-      region: '".$order->customer['state']."',
-      postal_code: '".$order->customer['postcode']."',
-      country: '".$order->customer['country_iso_2']."'
+      street: ".jsonValueGoogleAnalytics($order->customer['street_address']).",
+      city: ".jsonValueGoogleAnalytics($order->customer['city']).",
+      region: ".jsonValueGoogleAnalytics($order->customer['state']).",
+      postal_code: ".jsonValueGoogleAnalytics($order->customer['postcode']).",
+      country: ".jsonValueGoogleAnalytics($order->customer['country_iso_2'])."
     }
   });
   gtag('event', 'conversion', {

@@ -419,6 +419,14 @@
                      SET configuration_value = '".xtc_db_input($conversion_label)."'
                    WHERE configuration_key = 'MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID'
                      AND configuration_value = ''");
+
+    // without a measurement id the module only emits the ads tag, which is what
+    // the legacy tag did, so switching it on collects nothing new
+    if (!defined('MODULE_GOOGLE_ANALYTICS_TAG_ID') || MODULE_GOOGLE_ANALYTICS_TAG_ID == '') {
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = 'true'
+                     WHERE configuration_key = 'MODULE_GOOGLE_ANALYTICS_STATUS'");
+    }
   }
 
   // rename config key
