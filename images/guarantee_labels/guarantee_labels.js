@@ -102,6 +102,12 @@
       return false;
     }
 
+    // A delayed result from a closed quick view must not reopen its content.
+    var ownerModal = closest(trigger, '.modal');
+    if (ownerModal && !ownerModal.classList.contains('show') && !ownerModal.classList.contains('in')) {
+      return true;
+    }
+
     if (bootstrapState) {
       if (bootstrapState.content === content) return true;
       bootstrapState.hide();
@@ -109,10 +115,14 @@
       if (bootstrapState) return true;
     }
 
-    // Bootstrap supports one modal at a time. Keep an unrelated modal intact and use
-    // the existing native-dialog fallback instead of taking over the template's window.
-    if (document.querySelector('.modal.show, .modal.in')) {
-      return false;
+    // Bootstrap sets modal-open before fading in and keeps it until the backdrop
+    // is gone. The show/in classes alone miss both ends of that transition.
+    if (document.body.classList.contains('modal-open') ||
+        document.querySelector('.modal.show, .modal.in, .modal-backdrop')) {
+      // Only a label inside a visible host modal may use the native fallback.
+      // Otherwise another interaction took over while the graphic was loading;
+      // keep the loaded graphic, but consume this open request without a popup.
+      return !ownerModal;
     }
 
     var sourceDialog = closest(content, '.guarantee-label__dialog');
