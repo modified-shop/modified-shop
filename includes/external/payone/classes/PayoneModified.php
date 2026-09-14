@@ -997,7 +997,7 @@ class PayoneModified {
 		return false;
 	}
 
-	// a stored status that never reached the applied marker leaves the transaction unfinished
+	// a stored status that neither was applied nor made it through processing leaves the transaction unfinished
 	protected function getUnfinishedTransactionStatusTxids($orders_id) {
 		$txids = array();
 		$query = xtc_db_query("SELECT DISTINCT d_txid.`value` AS txid
@@ -1016,7 +1016,9 @@ class PayoneModified {
 		                                AND d_applied.`value` != '1')
 		                               OR (d_applied.payone_txstatus_data_id IS NULL
 		                                   AND d_processed.payone_txstatus_data_id IS NOT NULL
-		                                   AND d_processed.`value` != '1'))");
+		                                   AND d_processed.`value` != '1'))
+		                          AND (d_processed.payone_txstatus_data_id IS NULL
+		                               OR d_processed.`value` != '1')");
 		while ($row = xtc_db_fetch_array($query)) {
 			$txids[(string)$row['txid']] = true;
 		}
@@ -1236,13 +1238,6 @@ class PayoneModified {
 		return true;
 	}
 
-	// the marker survives later status changes, so a retry can tell a missing entry from a written one
-	protected function markTransactionStatusHistoryWritten($txstatus_id) {
-		$result = xtc_db_query("INSERT INTO payone_txstatus_data (payone_txstatus_id, `key`, `value`)
-		                        VALUES ('".(int)$txstatus_id."', '_modified_history', '1')");
-		return $result !== false;
-	}
-
 	protected function getTransactionStatusLockName($orders_id, $txid) {
 		return 'payone_txstatus_'.substr(hash('sha256', (int)$orders_id.'|'.$txid), 0, 40);
 	}
@@ -1350,22 +1345,29 @@ class PayoneModified {
 					return false;
 				}
 
-				// the marker tells whether this callback already has its entry, the order status does not
-				if (!isset($txstatus['_modified_history']) || (string)$txstatus['_modified_history'] !== '1') {
-					$sql_data_array = array(
-						'orders_id' => $orders_id,
-						'orders_status_id' => $orders_status_id,
-						'date_added' => 'now()',
-						'customer_notified' => '0',
-						'comments' => STATUS_UPDATED_BY_PAYONE,
-						'comments_sent' => '0',
-					);
-					if (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array) === false
-					    || !$this->markTransactionStatusHistoryWritten($txstatus_id)
-					    )
-					{
-						return false;
-					}
+				// the insert skips an entry this status already wrote, so a retry can repeat it
+				$history_query = xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY." (orders_id,
+				                                                                            orders_status_id,
+				                                                                            date_added,
+				                                                                            customer_notified,
+				                                                                            comments,
+				                                                                            comments_sent)
+				                                    SELECT s.orders_id,
+				                                           '".$orders_status_id."',
+				                                           now(),
+				                                           '0',
+				                                           '".xtc_db_input(STATUS_UPDATED_BY_PAYONE)."',
+				                                           '0'
+				                                      FROM payone_txstatus s
+				                                     WHERE s.payone_txstatus_id = '".(int)$txstatus_id."'
+				                                       AND NOT EXISTS (SELECT 1
+				                                                         FROM ".TABLE_ORDERS_STATUS_HISTORY." h
+				                                                        WHERE h.orders_id = s.orders_id
+				                                                          AND h.orders_status_id = '".$orders_status_id."'
+				                                                          AND h.comments = '".xtc_db_input(STATUS_UPDATED_BY_PAYONE)."'
+				                                                          AND h.date_added >= s.received)");
+				if ($history_query === false) {
+					return false;
 				}
 			}
 		}
