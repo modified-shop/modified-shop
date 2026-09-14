@@ -56,20 +56,37 @@ class sitemaporg extends sitemap {
   }
   
   function process($file) {
-    global $messageStack;
-    
     @xtc_set_time_limit(0);
-    
-    if (isset($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
-        && is_array($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
-        && count(array_unique($_POST['configuration']['MODULE_SITEMAPORG_FILE'])) != count($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
-        )
-    {
-      $messageStack->add_session(MODULE_SITEMAPORG_ERROR_FILENAME);
-      xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=' . $this->code . '&action=edit'));
-    }
-    
+
     $this->export();
+  }
+
+  // the scheduled export reads the stored value, a shared filename would overwrite another sitemap
+  function validate_configuration($config_values) {
+    if (!isset($config_values['MODULE_SITEMAPORG_FILE'])) {
+      return '';
+    }
+
+    require_once(DIR_FS_INC . 'parse_multi_language_value.inc.php');
+
+    // the scheduled export runs over the storefront active languages, so a language switched
+    // off in the admin still needs its filename checked
+    $filenames = array();
+    $languages_query = xtc_db_query("SELECT code
+                                       FROM " . TABLE_LANGUAGES . "
+                                      WHERE status = '1'
+                                         OR status_admin = '1'");
+    while ($language = xtc_db_fetch_array($languages_query)) {
+      $filename = parse_multi_language_value($config_values['MODULE_SITEMAPORG_FILE'], $language['code'], true);
+      if (xtc_not_null($filename)) {
+        if (in_array($filename, $filenames)) {
+          return MODULE_SITEMAPORG_ERROR_FILENAME;
+        }
+        $filenames[] = $filename;
+      }
+    }
+
+    return '';
   }
 
   function display() {

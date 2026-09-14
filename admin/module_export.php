@@ -118,6 +118,8 @@
             }
           }
 
+          // resolve every value first, a module may reject the result before anything is written
+          $config_values = array();
           foreach ($configuration as $key => $value) {
             if (is_array($configuration[$key])) {
               // multi language config
@@ -133,6 +135,18 @@
                 $value = implode(',', $configuration[$key]);
               }
             }
+            $config_values[$key] = $value;
+          }
+
+          if (method_exists($module, 'validate_configuration')) {
+            $configuration_error = $module->validate_configuration($config_values);
+            if (xtc_not_null($configuration_error)) {
+              $messageStack->add_session($configuration_error);
+              xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=edit'));
+            }
+          }
+
+          foreach ($config_values as $key => $value) {
             xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                              SET configuration_value = '" . xtc_db_input($value) . "',
                                  last_modified = NOW()
