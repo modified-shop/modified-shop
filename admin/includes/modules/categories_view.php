@@ -126,11 +126,11 @@
         break;
       case 'startpage':
         $catsort    = 'c.sort_order ASC';
-        $prodsort   = 'p.products_startpage_sort ASC';
+        $prodsort   = 'p.products_startpage ASC, p.products_startpage_sort ASC';
         break;
       case 'startpage-desc':
         $catsort    = 'c.sort_order ASC';
-        $prodsort   = 'p.products_startpage_sort DESC';
+        $prodsort   = 'p.products_startpage DESC, p.products_startpage_sort DESC';
         break;
       default:
         $catsort    = 'cd.categories_name ASC';
