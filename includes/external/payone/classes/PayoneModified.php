@@ -1354,14 +1354,19 @@ class PayoneModified {
 
 				// the comment names the status the entry belongs to, that is what a retry recognises
 				$history_comment = xtc_db_input(STATUS_UPDATED_BY_PAYONE.' (TxStatus '.(int)$txstatus_id.')');
-				// a status this callback moved just now earns its entry, a repeat of the same move does not
+				// a status this callback moved just now earns its entry, a repeat only stays silent
+				// while its own entry is still the last word on the order
 				$duplicate_check = '';
 				if (xtc_db_affected_rows() < 1) {
 					$duplicate_check = " AND NOT EXISTS (SELECT 1
 					                                       FROM ".TABLE_ORDERS_STATUS_HISTORY." h
 					                                      WHERE h.orders_id = s.orders_id
 					                                        AND h.orders_status_id = '".$orders_status_id."'
-					                                        AND h.comments = '".$history_comment."')";
+					                                        AND h.comments = '".$history_comment."'
+					                                        AND NOT EXISTS (SELECT 1
+					                                                          FROM ".TABLE_ORDERS_STATUS_HISTORY." h2
+					                                                         WHERE h2.orders_id = h.orders_id
+					                                                           AND h2.orders_status_history_id > h.orders_status_history_id))";
 				}
 				$history_query = xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY." (orders_id,
 				                                                                            orders_status_id,
