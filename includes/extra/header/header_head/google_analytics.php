@@ -61,15 +61,18 @@
           $addCode = getPaymentGoogleAnalytics();
           break;
         case FILENAME_CHECKOUT_SUCCESS:
-          if (MODULE_GOOGLE_ANALYTICS_ECOMMERCE == 'true'
-              && !in_array('GTAG-'.$last_order, $_SESSION['tracking']['order'])
-              )
-          {
-            $_SESSION['tracking']['order'][] = 'GTAG-'.$last_order;
-            $addCode = getOrderDetailsGoogleAnalytics();
-            
+          if (!in_array('GTAG-'.$last_order, $_SESSION['tracking']['order'])) {
+            if (MODULE_GOOGLE_ANALYTICS_ECOMMERCE == 'true') {
+              $addCode = getOrderDetailsGoogleAnalytics();
+            }
+
+            // the ads conversion is independent of the analytics ecommerce setting
             if (MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID != '') {
               $addCode .= getConversionGoogleAnalytics();
+            }
+
+            if ($addCode !== null) {
+              $_SESSION['tracking']['order'][] = 'GTAG-'.$last_order;
             }
           }
           break;
