@@ -997,7 +997,8 @@ class PayoneModified {
 		return false;
 	}
 
-	// a stored status that neither was applied nor made it through processing leaves the transaction unfinished
+	// a stored status that neither was applied nor made it through processing leaves the transaction unfinished,
+	// a status without sequence number never reaches processing and is left out
 	protected function getUnfinishedTransactionStatusTxids($orders_id) {
 		$txids = array();
 		$query = xtc_db_query("SELECT DISTINCT d_txid.`value` AS txid
@@ -1005,6 +1006,9 @@ class PayoneModified {
 		                         JOIN payone_txstatus_data d_txid
 		                           ON d_txid.payone_txstatus_id = s.payone_txstatus_id
 		                          AND d_txid.`key` = 'txid'
+		                         JOIN payone_txstatus_data d_sequence
+		                           ON d_sequence.payone_txstatus_id = s.payone_txstatus_id
+		                          AND d_sequence.`key` = 'sequencenumber'
 		                    LEFT JOIN payone_txstatus_data d_applied
 		                           ON d_applied.payone_txstatus_id = s.payone_txstatus_id
 		                          AND d_applied.`key` = '_modified_applied'
@@ -1178,8 +1182,11 @@ class PayoneModified {
 			}
 			$txstatus_data[$key] = $value;
 		}
-		foreach($queue_data as $key => $value) {
-			$txstatus_data[$key] = $value;
+		// the request order does not matter here, the queue needs the sequence number before the txid
+		foreach(array('sequencenumber', 'txid') as $key) {
+			if (isset($queue_data[$key])) {
+				$txstatus_data[$key] = $queue_data[$key];
+			}
 		}
 
 		foreach($txstatus_data as $key => $value) {
@@ -1345,7 +1352,7 @@ class PayoneModified {
 					return false;
 				}
 
-				// the insert skips an entry this status already wrote, so a retry can repeat it
+				// the arrival time ties the entry to this status, a retry finds it and a later status does not
 				$history_query = xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY." (orders_id,
 				                                                                            orders_status_id,
 				                                                                            date_added,
@@ -1354,7 +1361,7 @@ class PayoneModified {
 				                                                                            comments_sent)
 				                                    SELECT s.orders_id,
 				                                           '".$orders_status_id."',
-				                                           now(),
+				                                           s.received,
 				                                           '0',
 				                                           '".xtc_db_input(STATUS_UPDATED_BY_PAYONE)."',
 				                                           '0'
@@ -1365,7 +1372,7 @@ class PayoneModified {
 				                                                        WHERE h.orders_id = s.orders_id
 				                                                          AND h.orders_status_id = '".$orders_status_id."'
 				                                                          AND h.comments = '".xtc_db_input(STATUS_UPDATED_BY_PAYONE)."'
-				                                                          AND h.date_added >= s.received)");
+				                                                          AND h.date_added = s.received)");
 				if ($history_query === false) {
 					return false;
 				}
