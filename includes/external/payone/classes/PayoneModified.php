@@ -1342,7 +1342,7 @@ class PayoneModified {
 		if (in_array($txaction, $this->getStatusNames(), true)) {
 			if (isset($config['orders_status'][$txaction]) && (int)$config['orders_status'][$txaction] > 0) {
 				$orders_status_id = (int)$config['orders_status'][$txaction];
-				// without a rollback the history entry may only follow a status that really changed
+				// the condition keeps a repeated callback from moving a status that already matches
 				$update_query = xtc_db_query("UPDATE ".TABLE_ORDERS."
 				                                 SET orders_status = '".$orders_status_id."',
 				                                     last_modified = now()
@@ -1354,6 +1354,15 @@ class PayoneModified {
 
 				// the comment names the status the entry belongs to, that is what a retry recognises
 				$history_comment = xtc_db_input(STATUS_UPDATED_BY_PAYONE.' (TxStatus '.(int)$txstatus_id.')');
+				// a status this callback moved just now earns its entry, a repeat of the same move does not
+				$duplicate_check = '';
+				if (xtc_db_affected_rows() < 1) {
+					$duplicate_check = " AND NOT EXISTS (SELECT 1
+					                                       FROM ".TABLE_ORDERS_STATUS_HISTORY." h
+					                                      WHERE h.orders_id = s.orders_id
+					                                        AND h.orders_status_id = '".$orders_status_id."'
+					                                        AND h.comments = '".$history_comment."')";
+				}
 				$history_query = xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY." (orders_id,
 				                                                                            orders_status_id,
 				                                                                            date_added,
@@ -1367,12 +1376,8 @@ class PayoneModified {
 				                                           '".$history_comment."',
 				                                           '0'
 				                                      FROM payone_txstatus s
-				                                     WHERE s.payone_txstatus_id = '".(int)$txstatus_id."'
-				                                       AND NOT EXISTS (SELECT 1
-				                                                         FROM ".TABLE_ORDERS_STATUS_HISTORY." h
-				                                                        WHERE h.orders_id = s.orders_id
-				                                                          AND h.orders_status_id = '".$orders_status_id."'
-				                                                          AND h.comments = '".$history_comment."')");
+				                                     WHERE s.payone_txstatus_id = '".(int)$txstatus_id."'"
+				                                     .$duplicate_check);
 				if ($history_query === false) {
 					return false;
 				}
