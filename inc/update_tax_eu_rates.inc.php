@@ -152,6 +152,21 @@
       return false;
     }
 
+    // the general EU zone holds the rates a country used before it got its own zone,
+    // leaving both assignments in place would make xtc_get_tax_rate() add them up
+    $general_zone_id = 0;
+    $check_query = xtc_db_query("SELECT geo_zone_id
+                                   FROM ".TABLE_GEO_ZONES."
+                                  WHERE geo_zone_name LIKE ('%Steuerzone EU%')");
+    if ($check_query === false) {
+      return false;
+    }
+
+    if (xtc_db_num_rows($check_query) > 0) {
+      $check = xtc_db_fetch_array($check_query);
+      $general_zone_id = (int)$check['geo_zone_id'];
+    }
+
     foreach ($normalized as $iso_code_2 => $country_data) {
       if (!isset($geo_zones_array[$iso_code_2])) {
         $check_query = xtc_db_query("SELECT geo_zone_id
@@ -194,8 +209,23 @@
           continue;
         }
 
-        // the zone name is unique, so there is never an older zone of this module
-        // to move over, the country is simply linked and keeps its other zones
+        // replace the general EU assignment, zones of other modules stay untouched
+        if ($general_zone_id > 0) {
+          if (xtc_db_query("UPDATE ".TABLE_ZONES_TO_GEO_ZONES."
+                               SET geo_zone_id = ".(int)$geo_zones_array[$iso_code_2].",
+                                   last_modified = now()
+                             WHERE zone_country_id = ".(int)$zone_country_id."
+                               AND geo_zone_id = ".$general_zone_id) === false) {
+            $success = false;
+            continue;
+          }
+
+          if (xtc_db_affected_rows() > 0) {
+            continue;
+          }
+        }
+
+        // the country was in no zone of this module before
         $sql_data_array = array(
           'zone_country_id' => (int)$zone_country_id,
           'zone_id' => '0',
