@@ -68,13 +68,12 @@ class tax_eu
     // include needed functions
     require_once(DIR_FS_INC.'update_tax_eu_rates.inc.php');
 
+    // module_export.php prints a non-empty return value instead of MODULE_UPDATE_CONFIRM
     if (update_tax_eu_rates($this->additional_countries) === false) {
       $messageStack->add_session(MODULE_TAX_EU_ERROR_API);
 
       return false;
     }
-
-    return true;
   }
 
   function install() {

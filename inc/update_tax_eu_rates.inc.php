@@ -53,11 +53,24 @@
 
     // every country is updated on its own, a single failure must not hide the others
     $success = true;
+    $processed = 0;
 
     foreach ($tax_rates_array as $tax_rates_country) {
+      if (!is_array($tax_rates_country)) {
+        $success = false;
+        continue;
+      }
+
       foreach ($tax_rates_country as $iso_code_2 => $tax_rates_info) {
 
-        if (!isset($countries_array[$iso_code_2])) {
+        // the response is not authenticated, so nothing from it reaches SQL unchecked
+        if (!is_string($iso_code_2)
+            || preg_match('/^[A-Z]{2}$/D', $iso_code_2) !== 1
+            || !is_array($tax_rates_info)
+            || count($tax_rates_info) == 0
+            || !isset($countries_array[$iso_code_2])
+            )
+        {
           $success = false;
           continue;
         }
@@ -82,15 +95,15 @@
               continue;
             }
 
-            $geo_zones_array[$iso_code_2] = xtc_db_insert_id();
+            $geo_zones_array[$iso_code_2] = (int)xtc_db_insert_id();
           } else {
             $check = xtc_db_fetch_array($check_query);
-            $geo_zones_array[$iso_code_2] = $check['geo_zone_id'];
+            $geo_zones_array[$iso_code_2] = (int)$check['geo_zone_id'];
           }
         }
 
         if (xtc_db_query("UPDATE ".TABLE_ZONES_TO_GEO_ZONES."
-                             SET geo_zone_id = ".$geo_zones_array[$iso_code_2].",
+                             SET geo_zone_id = ".(int)$geo_zones_array[$iso_code_2].",
                                  last_modified = now()
                            WHERE zone_country_id = ".$countries_array[$iso_code_2]) === false) {
           $success = false;
@@ -104,7 +117,7 @@
             }
 
             if (xtc_db_query("UPDATE ".TABLE_ZONES_TO_GEO_ZONES."
-                                 SET geo_zone_id = ".$geo_zones_array[$iso_code_2].",
+                                 SET geo_zone_id = ".(int)$geo_zones_array[$iso_code_2].",
                                      last_modified = now()
                                WHERE zone_country_id = ".$countries_array[$iso_code_2_additional]) === false) {
               $success = false;
@@ -113,10 +126,24 @@
         }
 
         foreach ($tax_rates_info as $tax_class_id => $tax_rate) {
+          // an empty rate deletes the entry, any other value has to be a plain number
+          if (!ctype_digit((string)$tax_class_id)
+              || (!is_string($tax_rate) && !is_numeric($tax_rate))
+              || ((string)$tax_rate != ''
+                  && preg_match('/^\d{1,3}(\.\d{1,4})?$/D', (string)$tax_rate) !== 1
+                 )
+              )
+          {
+            $success = false;
+            continue;
+          }
+
+          $tax_rate = (string)$tax_rate;
+
           $check_query = xtc_db_query("SELECT *
                                          FROM ".TABLE_TAX_RATES."
                                         WHERE tax_class_id = ".(int)$tax_class_id."
-                                          AND tax_zone_id = ".$geo_zones_array[$iso_code_2]);
+                                          AND tax_zone_id = ".(int)$geo_zones_array[$iso_code_2]);
           if ($check_query === false) {
             $success = false;
             continue;
@@ -140,7 +167,7 @@
             if (isset($check['tax_rates_id'])) {
               if ($tax_rate != '') {
                 if (xtc_db_query("UPDATE ".TABLE_TAX_RATES."
-                                     SET tax_rate = ".$tax_rate.",
+                                     SET tax_rate = '".$tax_rate."',
                                          tax_description = '".xtc_db_input(sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate))."',
                                          last_modified = now()
                                    WHERE tax_rates_id = ".$check['tax_rates_id']) === false) {
@@ -153,8 +180,15 @@
               }
             }
           }
+
+          $processed++;
         }
       }
+    }
+
+    // a structurally valid but unusable response must not count as a successful run
+    if ($processed == 0) {
+      return false;
     }
 
     $configuration = array();
