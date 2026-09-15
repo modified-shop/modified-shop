@@ -27,7 +27,7 @@ A later increase requires a deinstallation/re-installation of the module or a ma
 <p>For customers from <span class="blue">Germany</span>  with an order volume from <span class="green">100&euro;</span> a discount of <span class="red">4%</span> will be granted, from <span class="green">200&euro;</span> a discount of <span class="red">5%</span> will be granted.</p>
 <pre>   <span class="green">100</span>:<span class="red">2</span>,<span class="green">200</span>:<span class="red">3</span></pre>
 <p>Meaning:</p>
-<p>For customers from all countries with an order volume from <span class="green">100&euro;</span> a discount of <span class="red">2%</span>will be granted, from <span class="green">200&euro;</span> a discount of <span class="red">3%</span> will be granted.</p>
+<p>For customers from all countries with an order volume from <span class="green">100&euro;</span> a discount of <span class="red">2%</span> will be granted, from <span class="green">200&euro;</span> a discount of <span class="red">3%</span> will be granted.</p>
 <h4>For surcharges use the following notation:</h4>
 <pre>   <span class="blue">DE</span>|<span class="green">100</span>:<span class="red">-3</span></pre>
 <p>Meaning:</p>
@@ -85,7 +85,7 @@ define('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX_TITLE', '<hr>Calculate tax');
 define('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX_DESC', 'Re-calculate tax on discounted amount');
 
 define('MODULE_ORDER_TOTAL_PAYMENT_ALLOWED_TITLE', '<hr>Allowed zones');
-define('MODULE_ORDER_TOTAL_PAYMENT_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_ORDER_TOTAL_PAYMENT_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 
 define('MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT', 'Discount');
 define('MODULE_ORDER_TOTAL_PAYMENT_FEE', 'Fee');

@@ -19,7 +19,7 @@ define('MODULE_PROTECTEDSHOPS_TOKEN_DESC', 'You find the Auth-Token in Protected
 define('MODULE_PROTECTEDSHOPS_TYPE_TITLE', '<hr noshade>Save as');
 define('MODULE_PROTECTEDSHOPS_TYPE_DESC', 'Save data in a file or in the database?');
 define('MODULE_PROTECTEDSHOPS_FORMAT_TITLE', 'Format Type');
-define('MODULE_PROTECTEDSHOPS_FORMAT_DESC', 'Save as Text, HTML oder HtmlLite (only linebreak, bold, underline and italic)?');
+define('MODULE_PROTECTEDSHOPS_FORMAT_DESC', 'Save as Text, HTML or HtmlLite (only linebreak, bold, underline and italic)?');
 define('MODULE_PROTECTEDSHOPS_AUTOUPDATE_TITLE', '<hr noshade>Auto Updater');
 define('MODULE_PROTECTEDSHOPS_AUTOUPDATE_DESC', 'Update automatically?');
 define('MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL_TITLE', 'Update Interval');

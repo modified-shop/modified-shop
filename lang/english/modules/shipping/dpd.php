@@ -42,7 +42,7 @@ define('MODULE_SHIPPING_DPD_STATUS_DESC', 'Would you like to offer shipping with
 define('MODULE_SHIPPING_DPD_HANDLING_TITLE', 'Handling Fee');
 define('MODULE_SHIPPING_DPD_HANDLING_DESC', 'Handling fee for this shipping method');
 define('MODULE_SHIPPING_DPD_ALLOWED_TITLE' , 'Allowed Zones');
-define('MODULE_SHIPPING_DPD_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones)');
+define('MODULE_SHIPPING_DPD_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones)');
 define('MODULE_SHIPPING_DPD_SORT_ORDER_TITLE', 'Sort order');
 define('MODULE_SHIPPING_DPD_SORT_ORDER_DESC', 'Sort order of display. Lowest is displayed first.');
 define('MODULE_SHIPPING_DPD_TAX_CLASS_TITLE', 'Tax Class');

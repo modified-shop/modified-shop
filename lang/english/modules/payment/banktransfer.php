@@ -54,7 +54,7 @@ define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_14', 'No valid Country for S
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_NOTE', 'Note:');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_NOTE2', 'If you do not want to send your<br />account data over the internet you can download our ');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_NOTE3', 'Fax form');
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_NOTE4', ' and sent it back to us.');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_NOTE4', ' and send it back to us.');
 
 define('JS_BANK_BLZ', '* Please enter your bank code!\n\n');
 define('JS_BANK_NAME', '* Please enter your name and bank!\n\n');
@@ -63,9 +63,9 @@ define('JS_BANK_OWNER', '* Please enter the name of the account owner!\n\n');
 define('JS_BANK_OWNER_EMAIL', '* Please enter E-Mail-Address of the account owner!\n\n');
 
 define('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ_TITLE' , 'Use database lookup for Bank Code?');
-define('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ_DESC', 'Use Database for validate Bank Code. Default: ("true")?<br/>Make sure that the bank codes in the database are up to date!<br/><br/>On "false" (standard) is used the supplied blz.csv file that contains possibly outdated entries!');
+define('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ_DESC', 'Use Database to validate Bank Code. Default: ("true")?<br/>Make sure that the bank codes in the database are up to date!<br/><br/>On "false" (standard) is used the supplied blz.csv file that contains possibly outdated entries!');
 define('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE_TITLE' , 'Fax-URL');
-define('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE_DESC' , 'The fax-confirmation file. It must located in catalog-dir');
+define('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE_DESC' , 'The fax-confirmation file. It must be located in catalog-dir');
 define('MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION_TITLE' , 'Allow Fax Confirmation');
 define('MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION_DESC' , 'Do you want to allow fax confirmation?');
 define('MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER_TITLE' , 'Sort order of display');
@@ -75,7 +75,7 @@ define('MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID_DESC' , 'Set the status of o
 define('MODULE_PAYMENT_BANKTRANSFER_ZONE_TITLE' , 'Payment Zone');
 define('MODULE_PAYMENT_BANKTRANSFER_ZONE_DESC' , 'If a zone is selected, only enable this payment method for that zone.');
 define('MODULE_PAYMENT_BANKTRANSFER_ALLOWED_TITLE' , 'Allowed Zones');
-define('MODULE_PAYMENT_BANKTRANSFER_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_PAYMENT_BANKTRANSFER_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_PAYMENT_BANKTRANSFER_STATUS_TITLE' , 'Allow Banktransfer Payments');
 define('MODULE_PAYMENT_BANKTRANSFER_STATUS_DESC' , 'Do you want to accept banktransfer payments?');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_TITLE' , 'Minimum Orders');
@@ -86,10 +86,10 @@ define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_TITLE', 'IBAN Mode');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_DESC', 'Do you want to accept IBAN banktransfer payments only?');
 
 // SEPA
-define('MODULE_PAYMENT_BANKTRANSFER_CI_TITLE', 'Identifikationnumber (CI)');
+define('MODULE_PAYMENT_BANKTRANSFER_CI_TITLE', 'Identification number (CI)');
 define('MODULE_PAYMENT_BANKTRANSFER_CI_DESC', 'Enter your SEPA-ID');
 define('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX_TITLE', 'Prefix for Reference (optional)');
-define('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX_DESC', 'Enter a Prefix for die Reference');
+define('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX_DESC', 'Enter a Prefix for the Reference');
 define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_TITLE', 'Maturity');
 define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_DESC', 'Enter period (in days) to execute banktransfer');
 

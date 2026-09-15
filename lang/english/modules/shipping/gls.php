@@ -26,7 +26,7 @@
 define('MODULE_SHIPPING_GLS_TEXT_TITLE', 'GLS');
 define('MODULE_SHIPPING_GLS_TEXT_DESCRIPTION', 'GLS - European Shipping Module');
 define('MODULE_SHIPPING_GLS_TEXT_WAY', 'deliver to');
-define('MODULE_SHIPPING_GLS_POSTCODE_INFO_TEXT', 'incl. island surchage');
+define('MODULE_SHIPPING_GLS_POSTCODE_INFO_TEXT', 'incl. island surcharge');
 define('MODULE_SHIPPING_GLS_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_GLS_INVALID_ZONE', 'Unfortunately it is not possible to deliver to this country');
 define('MODULE_SHIPPING_GLS_UNDEFINED_RATE', 'Shipping costs cannot be calculated at the moment');
@@ -40,16 +40,16 @@ define('MODULE_SHIPPING_GLS_TAX_CLASS_DESC' , 'Choose the tax rate for this ship
 define('MODULE_SHIPPING_GLS_ZONE_TITLE' , 'Shipping Zone');
 define('MODULE_SHIPPING_GLS_ZONE_DESC' , 'If you choose a zone, the shipping type will be offered only in this zone.');
 define('MODULE_SHIPPING_GLS_SORT_ORDER_TITLE' , 'Order of display');
-define('MODULE_SHIPPING_GLS_SORT_ORDER_DESC' , 'Lowerst will be shown first.');
+define('MODULE_SHIPPING_GLS_SORT_ORDER_DESC' , 'Lowest will be shown first.');
 define('MODULE_SHIPPING_GLS_ALLOWED_TITLE' , 'Single Shipping Zones');
 define('MODULE_SHIPPING_GLS_ALLOWED_DESC' , 'Enter the zones <b>one by one</b>, in which ones shipping should be possible, e.g.: AT,DE');
 define('MODULE_SHIPPING_GLS_DISPLAY_TITLE' , 'Enable Display');
 define('MODULE_SHIPPING_GLS_DISPLAY_DESC' , 'Do you want to display, if shipping to destination is not possible or if shipping costs cannot be calculated?');
 
-define('MODULE_SHIPPING_GLS_POSTCODE_TITLE' , 'GLS island surchage - zip codes');
+define('MODULE_SHIPPING_GLS_POSTCODE_TITLE' , 'GLS island surcharge - zip codes');
 define('MODULE_SHIPPING_GLS_POSTCODE_DESC' , 'Zip code areas');
-define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_TITLE' , 'GLS island surchage - costs');
-define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_DESC' , 'Island surchage: Enter the amount, how much should be added to the shipping costs, when the shipping address is located on one of the German islands.');
+define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_TITLE' , 'GLS island surcharge - costs');
+define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_DESC' , 'Island surcharge: Enter the amount, how much should be added to the shipping costs, when the shipping address is located on one of the German islands.');
 
 for ($module_shipping_gls_i = 1; $module_shipping_gls_i <= 6; $module_shipping_gls_i ++) {
   define('MODULE_SHIPPING_GLS_COUNTRIES_'.$module_shipping_gls_i.'_TITLE' , '<hr/>Zone '.$module_shipping_gls_i.' Countries');

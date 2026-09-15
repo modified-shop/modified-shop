@@ -35,7 +35,7 @@ $lang_array = array(
   'TEXT_PAYPAL_PROFILE_ADDRESS' => 'Adresse &uuml;berschreiben:',
   'TEXT_PAYPAL_PROFILE_ADDRESS_INFO' => 'Soll die Versandadresse von PayPal &uuml;bernommen werden?',
   
-  'TEXT_PAYPAL_PROFILE_INFO' => 'Es ist kein PayPal Profil vorhanden.<br/><br/>Mit einem PayPal Profil k&ouml;nnen sie:<ul><li>den angezeigten Namen bei PayPal &auml;ndern</li><li>die PayPal Seite mit einem Logo versehen</li><li>die Zielseite bei PayPal festlegen</li></ul>',
+  'TEXT_PAYPAL_PROFILE_INFO' => 'Es ist kein PayPal Profil vorhanden.<br/><br/>Mit einem PayPal Profil k&ouml;nnen Sie:<ul><li>den angezeigten Namen bei PayPal &auml;ndern</li><li>die PayPal Seite mit einem Logo versehen</li><li>die Zielseite bei PayPal festlegen</li></ul>',
   'TEXT_PAYPAL_PROFILE_INFO_DEPRECATED' => 'PayPal Profile sind nur f&uuml;r die veralteten PayPal Module',
 );
 

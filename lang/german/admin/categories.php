@@ -230,7 +230,7 @@ define('TEXT_ATTRIBUTE_COPY_INFO', 'Artikelattribute mitkopieren<br/ >Nur bei Ei
 define('TEXT_PRODUCTS_ORDER_DESCRIPTION','Bestellbeschreibung - Anzeige am Ende der Bestellung, in Bestellemail, Bestellausdruck');
 
 define('TEXT_HOW_TO_LINK', '<b>Seitenaufruf nach dem Kopieren/Verlinken</b>');
-define('TEXT_HOW_TO_LINK_INFO', 'Artikeleingabemaske<br/ >(Bei mehreren Artikel zum Letzten in der Liste)');
+define('TEXT_HOW_TO_LINK_INFO', 'Artikeleingabemaske<br/ >(Bei mehreren Artikeln zum Letzten in der Liste)');
 
 define('TEXT_SET_GROUP_PERMISSIONS', 'Kundengruppen Berechtigungen f&uuml;r alle Unterordner und Artikel &uuml;bernehmen?');
 

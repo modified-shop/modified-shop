@@ -17,7 +17,7 @@
   define('MODULE_SEMKNOX_SYSTEM_DEFAULT_CSS_TITLE', 'Standard CSS');
   define('MODULE_SEMKNOX_SYSTEM_DEFAULT_CSS_DESC', 'Soll das Standard CSS von Site Search 360 geladen werden ?');
   define('MODULE_SEMKNOX_SYSTEM_COLOR_TITLE', 'Akzent Farbe');
-  define('MODULE_SEMKNOX_SYSTEM_COLOR_DESC', 'Geben Sie die Akzentfarbe an f&uuml;r Titel und Buttons (Einstellung greift nur wenn das Standard CSS geladen wird).');
+  define('MODULE_SEMKNOX_SYSTEM_COLOR_DESC', 'Geben Sie die Akzentfarbe an f&uuml;r Titel und Buttons (Einstellung greift nur, wenn das Standard CSS geladen wird).');
   
   $languages = xtc_get_languages();
   foreach ($languages as $language) {

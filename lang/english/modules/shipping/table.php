@@ -28,7 +28,7 @@ define('MODULE_SHIPPING_TABLE_UNDEFINED_RATE', 'The shipping rate cannot be dete
 define('MODULE_SHIPPING_TABLE_STATUS_TITLE' , 'Enable Table Method');
 define('MODULE_SHIPPING_TABLE_STATUS_DESC' , 'Do you want to offer table rate shipping?');
 define('MODULE_SHIPPING_TABLE_ALLOWED_TITLE' , 'Allowed Zones');
-define('MODULE_SHIPPING_TABLE_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_SHIPPING_TABLE_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_TABLE_MODE_TITLE' , 'Table Method');
 define('MODULE_SHIPPING_TABLE_MODE_DESC' , 'The shipping cost is based on the order total or the total weight of the items ordered.');
 define('MODULE_SHIPPING_TABLE_TAX_CLASS_TITLE' , 'Tax Class');

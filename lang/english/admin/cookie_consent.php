@@ -40,9 +40,9 @@
   define('TEXT_INFO_NEW_VALUE_INTRO', 'Please enter the new cookie including all relevant data');
   define('TEXT_INFO_HEADING_EDIT_VALUE', 'edit cookie');
   define('TEXT_INFO_EDIT_VALUE_INTRO', 'Please make any necessary changes.');
-  define('TEXT_INFO_HEADING_DELETE_VALUE', 'delete cookie/gruppe');
+  define('TEXT_INFO_HEADING_DELETE_VALUE', 'delete cookie/group');
   define('TABLE_HEADING_VALUES_PURPOSEID', 'purpose-id');
-  define('TEXT_INFO_HEADING_JSCRIPT_SRC', 'Javascript-Tag for includes scripts');
+  define('TEXT_INFO_HEADING_JSCRIPT_SRC', 'Javascript-Tag for included scripts');
   define('TEXT_INFO_HEADING_JSCRIPT_DIRECT', 'Javascript-Tag for inline scripts');
   define('TEXT_INFO_HEADING_JSCRIPT_OTHER_CODE', 'Code for other Tracking-Elements');
   define('TEXT_INFO_DELETE_VALUE_INTRO', 'Are you sure you want to delete this cookie?');
