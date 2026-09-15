@@ -210,12 +210,6 @@
   define('TEXT_ERROR_REQUIREMENTS_VERSION', 'Version');
   define('TEXT_ERROR_REQUIREMENTS_MIN', 'Min');
   define('TEXT_ERROR_REQUIREMENTS_MAX', 'Max');
-  define('TEXT_ERROR_FTP', 'Rechte per FTP &auml;ndern:');
-  define('TEXT_ERROR_FTP_HOST', 'FTP Host:');
-  define('TEXT_ERROR_FTP_PORT', 'FTP Port:');
-  define('TEXT_ERROR_FTP_PATH', 'FTP Pfad:');
-  define('TEXT_ERROR_FTP_USER', 'FTP Benutzer:');
-  define('TEXT_ERROR_FTP_PASS', 'FTP Passwort:');
   define('TEXT_ERROR_UNLINK_FILES', 'Folgende Dateien m&uuml;ssen gel&ouml;scht werden:');
   define('TEXT_ERROR_UNLINK_FOLDER', 'Folgende Ordner m&uuml;ssen gel&ouml;scht werden:');
   define('ERROR_AUTOUPDATE', 'Ein Autoupdate ist aufgrund der notwendigen Voraussetzungen nicht m&ouml;glich.');
@@ -227,8 +221,6 @@
   define('ERROR_DATABASE_ENGINE_NOT_VALID', 'Die angegebene Datenbank Engine ist nicht mit dem Zeichensatz kompatibel!');
   define('ERROR_MODULES_PAYMENT', 'Leider konnten wir diese Zahlart nicht finden...');
   define('ERROR_SQL_UPDATE_NO_FILE', 'Leider konnten wir keine SQL-Update-Datei finden...');
-  define('ERROR_FTP_LOGIN_NOT_POSSIBLE', 'FTP-Zugangsdaten fehlerhaft, Host nicht erreichbar');
-  define('ERROR_FTP_CHMOD_WAS_NOT_SUCCESSFUL', '&Auml;ndern der Verzeichnisrechte war nicht erfolgreich');
   define('ERROR_FILE_INTEGRITY', 'Es wurden %s Dateien im Vergleich zur originalen Installation ver&auml;ndert (z.B. durch Modulupdates oder Bugfixes). Sie k&ouml;nnen diese Dateien als Backup herunterladen und das Update fortf&uuml;hren.<br><br><b>ACHTUNG:</b> Beim Update werden ALLE ge&auml;nderten Dateien &uuml;berschrieben!');
   define('ERROR_CREATE_TMP_DIR', 'Das tempor&auml;re Verzeichnis f&uuml;r das Update konnte nicht erstellt werden');
   define('ERROR_INVALID_UPDATE_DOWNLOAD', 'Das Update Paket konnte nicht heruntergeladen werden');

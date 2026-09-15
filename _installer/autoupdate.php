@@ -245,31 +245,16 @@
           $smarty->assign('LINK_DB_BACKUP', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type));
           $smarty->assign('LINK_DB_RESTORE', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type));
         
+          // list only failed and unknown requirements
+          foreach ($requirement_array as $k => $requirement) {
+            if ($requirement['status'] === true) {
+              unset($requirement_array[$k]);
+            }
+          }
+
           $smarty->assign('REQUIREMENT_ARRAY', $requirement_array);
           $smarty->assign('PERMISSION_ARRAY', $permission_array);
           $smarty->clear_assign('FORM_ACTION');
-
-          if (count($permission_array['file_permission']) > 0
-              || count($permission_array['folder_permission']) > 0
-              || count($permission_array['rfolder_permission']) > 0
-              )
-          {
-            // ftp
-            $smarty->assign('INPUT_FTP_HOST', xtc_draw_input_fieldNote(array('name' => 'ftp_host')));
-            $smarty->assign('INPUT_FTP_PORT', xtc_draw_input_fieldNote(array('name' => 'ftp_port')));
-            $smarty->assign('INPUT_FTP_PATH', xtc_draw_input_fieldNote(array('name' => 'ftp_path')));
-            $smarty->assign('INPUT_FTP_USER', xtc_draw_input_fieldNote(array('name' => 'ftp_user')));    
-            $smarty->assign('INPUT_FTP_PASS', xtc_draw_input_fieldNote(array('name' => 'ftp_pass')));    
-
-            // form
-            $smarty->assign('FORM_ACTION', xtc_draw_form('ftp', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type), 'post').xtc_draw_hidden_field('action', 'ftp'));
-            $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
-            $smarty->assign('FORM_END', '</form>');
-          }
-
-          if ($messageStack->size('ftp_message') > 0) {
-            $smarty->assign('error_message', $messageStack->output('ftp_message'));
-          }
           
           if ($error === false
               && isset($backup_content)
@@ -616,10 +601,10 @@
             $db_engine = 'InnoDB';
           }
         }
-        $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = 'utf8'");
+        $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET IN (".get_charset_in_list('utf8').")");
         if (xtc_db_num_rows($check_query) > 0) {
           array_unshift($db_charset_array, array('id' => 'utf8', 'text' => 'UTF-8'));
-          if ($default['dbcharset'] == 'utf8') {
+          if (in_array($default['dbcharset'], get_charset_names('utf8'))) {
             $db_charset = 'utf8';
           }
         }

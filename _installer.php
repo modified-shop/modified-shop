@@ -60,7 +60,6 @@
 
   $result = curl_exec($ch);
   $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-  curl_close($ch);
 
   if ($httpStatus < 200 || $httpStatus >= 300) {
     die('Could not reach Install API. Exit with Status: '.$httpStatus);
@@ -81,7 +80,6 @@
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_exec($ch);
-    curl_close($ch);
     fclose($fp);
 
     // extract install

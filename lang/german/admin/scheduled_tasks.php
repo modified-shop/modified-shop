@@ -66,3 +66,6 @@
 
   define('TEXT_HEADING_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'Gast-Konten bereinigen');
   define('TEXT_INFO_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'L&ouml;scht Gast-Konten nach Ablauf der Frist (Bestelldaten bleiben erhalten). Greift nur, wenn "L&ouml;schen von Gast-Konten" aktiviert ist, nach der dort unter "L&ouml;schen von Gast-Konten nach X Tagen" hinterlegten Anzahl an Tagen.');
+
+  define('TEXT_HEADING_TASKS_TAX_EU_MAINTENANCE', 'OSS Steuers&auml;tze aktualisieren');
+  define('TEXT_INFO_TASKS_TAX_EU_MAINTENANCE', 'Gleicht die Steuers&auml;tze mit der modified API ab. Greift nur, wenn das System-Modul <i>tax_eu</i> aktiviert ist.');

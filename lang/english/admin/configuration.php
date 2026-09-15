@@ -593,23 +593,6 @@ define('ACCOUNT_VAT_BLOCK_ERROR_DESC' , 'Set to true, only validated VAT Reg No 
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_TITLE','Customers Group - Approved VAT Reg No (Shop country)');
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_DESC','Customers group for customers whose VAT Reg No has been checked and approved, shop country = customers country');
 
-// Afterbuy
-define('AFTERBUY_ACTIVATED_TITLE','Active');
-define('AFTERBUY_ACTIVATED_DESC','Activate afterbuy module');
-define('AFTERBUY_PARTNERID_TITLE','Partner ID');
-define('AFTERBUY_PARTNERID_DESC','Your Afterbuy Partner ID');
-define('AFTERBUY_PARTNERPASS_TITLE','Partner Password');
-define('AFTERBUY_PARTNERPASS_DESC','Your partner password for Afterbuy XML module');
-define('AFTERBUY_USERID_TITLE','User ID');
-define('AFTERBUY_USERID_DESC','Your Afterbuy user ID');
-define('AFTERBUY_ORDERSTATUS_TITLE','Order Status');
-define('AFTERBUY_ORDERSTATUS_DESC','Order status for exported orders');
-define('AFTERBUY_URL','You will find detailed Afterbuy info here: <a href="http://www.afterbuy.de" target="new">http://www.afterbuy.de</a>');
-define('AFTERBUY_DEALERS_TITLE', 'mark as Dealer');
-define('AFTERBUY_DEALERS_DESC', 'Example: <em>6,5,8</em>');
-define('AFTERBUY_IGNORE_GROUPE_TITLE', 'Customer group ignore');
-define('AFTERBUY_IGNORE_GROUPE_DESC', 'Example: <em>6,5,8</em>.');
-
 // Search-Options
 define('SEARCH_MIN_LENGTH_TITLE', 'Search number of characters');
 define('SEARCH_MIN_LENGTH_DESC', 'Minimum number of characters for the search');
@@ -658,10 +641,10 @@ define('DELETE_CACHE_SUCCESSFUL', 'Cache deleted successfully.');
 define('DELETE_TEMP_CACHE_SUCCESSFUL', 'Templatecache deleted successfully.');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
-// BOF - web28 - 2010-08-17 -  Bildgrößenberechnung kleinerer Bilder
+// BOF - web28 - 2010-08-17 -  BildgrÃ¶ÃŸenberechnung kleinerer Bilder
 define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_TITLE','Upscaling low-res images');
 define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_DESC','If set to <strong>false</strong>, upscaling of low-res images to default settings for image size is disabled. Set to <strong>true</strong> to enable upscaling of low-res images. In this case those images will be shown blurry.');
-// EOF - web28 - 2010-08-17 -  Bildgrößenberechnung kleinerer Bilder
+// EOF - web28 - 2010-08-17 -  BildgrÃ¶ÃŸenberechnung kleinerer Bilder
 
 //BOF - hendrik - 2011-05-14 - independent invoice number and date
 //define('IBN_BILLNR_TITLE', 'Next invoice number');

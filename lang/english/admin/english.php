@@ -107,7 +107,6 @@ define('BOX_CONFIGURATION_15', 'Sessions');
 define('BOX_CONFIGURATION_16', 'Meta-Tags/Searchengines');
 define('BOX_CONFIGURATION_17', 'Additional Modules');
 define('BOX_CONFIGURATION_18', 'VAT Reg No');
-define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Search-Options');
 define('BOX_CONFIGURATION_24', 'Google, Matomo &amp; Facebook');
 define('BOX_CONFIGURATION_25', 'Captcha');

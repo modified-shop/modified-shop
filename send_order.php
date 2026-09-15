@@ -165,7 +165,21 @@ if ((isset($_SESSION['customer_id'])
   $order_subject = str_replace('{$firstname}', $order->customer['firstname'], $order_subject);
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/mail/','php') as $file) require ($file);
-    
+
+  // runs before the mails so the confirmation can be left to afterbuy
+  $afterbuy_sent = false;
+  if (defined('MODULE_AFTERBUY_STATUS') && MODULE_AFTERBUY_STATUS == 'true') {
+    require_once (DIR_WS_CLASSES.'afterbuy.php');
+    $aBUY = new xtc_afterbuy_functions($insert_id);
+    if ($aBUY->order_send()) {
+      $aBUY->process_order();
+      // process_order() sets the flag order_send() reads, so it now reports whether afterbuy took the order
+      $afterbuy_sent = !$aBUY->order_send();
+    } else {
+      $afterbuy_sent = true;
+    }
+  }
+
   // send mail to admin
   if (ORDER_EMAIL_SEND_COPY_TO_ADMIN == 'true') {
     xtc_php_mail(EMAIL_BILLING_ADDRESS,
@@ -186,21 +200,31 @@ if ((isset($_SESSION['customer_id'])
   
   // send mail to customer
   if (SEND_EMAILS == 'true' || (isset($send_by_admin) && $send_by_admin == true)) {
-    xtc_php_mail(EMAIL_BILLING_ADDRESS,
-                 EMAIL_BILLING_NAME,
-                 $order->customer['email_address'],
-                 $order->customer['firstname'].' '.$order->customer['lastname'],
-                 '',
-                 EMAIL_BILLING_REPLY_ADDRESS,
-                 EMAIL_BILLING_REPLY_ADDRESS_NAME,
-                 $email_attachments,
-                 '',
-                 $order_subject,
-                 $html_mail,
-                 $txt_mail,
-                 2
-                 );
-                 
+    // afterbuy sends the confirmation itself, a mail requested in the administration always goes
+    // out. a payment callback sets $send_by_admin as well, so the admin bootstrap decides instead
+    $skip_order_mail = ($afterbuy_sent === true
+                        && defined('MODULE_AFTERBUY_ORDER_MAIL')
+                        && MODULE_AFTERBUY_ORDER_MAIL == 'false'
+                        && !defined('RUN_MODE_ADMIN')
+                        );
+
+    if ($skip_order_mail === false) {
+      xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                   EMAIL_BILLING_NAME,
+                   $order->customer['email_address'],
+                   $order->customer['firstname'].' '.$order->customer['lastname'],
+                   '',
+                   EMAIL_BILLING_REPLY_ADDRESS,
+                   EMAIL_BILLING_REPLY_ADDRESS_NAME,
+                   $email_attachments,
+                   '',
+                   $order_subject,
+                   $html_mail,
+                   $txt_mail,
+                   2
+                   );
+    }
+
     if (isset($sepa_html_mail)) {
       xtc_php_mail(EMAIL_BILLING_ADDRESS,
                    EMAIL_BILLING_NAME,
@@ -217,13 +241,6 @@ if ((isset($_SESSION['customer_id'])
                    2
                  );
     }
-  }
-
-  if (AFTERBUY_ACTIVATED == 'true') {
-    require_once (DIR_WS_CLASSES.'afterbuy.php');
-    $aBUY = new xtc_afterbuy_functions($insert_id);
-    if ($aBUY->order_send())
-      $aBUY->process_order();
   }
 
   if (isset($send_by_admin)) {

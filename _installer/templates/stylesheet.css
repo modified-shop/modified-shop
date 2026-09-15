@@ -1210,24 +1210,6 @@ select:focus {
   margin-bottom:10px;
 }
 
-.info_ftp_box {
-  margin: 30px 0px;
-}
-.info_ftp_box h2 {
-  margin-bottom:10px;
-}
-
-.info_ftp_box .cssButton {
-  width:100%;
-}
-.info_ftp_box .cssButton input[type="submit"], 
-.info_ftp_box .cssButton button, 
-.info_ftp_box .cssButton a {
-  display: block;
-  margin: 0px 0px;
-  width: 100%;
-}
-
 .copyright {
   text-align:center;
   margin: -10px auto 5px auto;

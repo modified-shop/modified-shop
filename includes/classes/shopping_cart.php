@@ -675,6 +675,7 @@ class shoppingCart {
    * get price for a product's attribute
    *
    * @param integer $products_id
+   * @param integer $qty
    * @return float
    */
   function attributes_price($products_id, $qty = 1) {
@@ -684,7 +685,7 @@ class shoppingCart {
     $attributes_weight = 0;
     if (isset($this->contents[$products_id]['attributes'])) {
       foreach ($this->contents[$products_id]['attributes'] as $option => $value) {
-        $values = $xtPrice->xtcGetOptionPrice($products_id, $option, $value);
+        $values = $xtPrice->xtcGetOptionPrice($products_id, $option, $value, $qty);
         //new module support   
         $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
         $attributes_price += $values['price'];

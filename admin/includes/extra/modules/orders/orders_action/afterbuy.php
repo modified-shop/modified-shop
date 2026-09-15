@@ -2,7 +2,12 @@
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
   ## afterbuy
-  if (isset($_GET['subaction']) && $_GET['subaction'] == 'afterbuy_send') {
+  if (isset($_GET['subaction'])
+      && $_GET['subaction'] == 'afterbuy_send'
+      && defined('MODULE_AFTERBUY_STATUS')
+      && MODULE_AFTERBUY_STATUS == 'true'
+      )
+  {
     require_once (DIR_FS_CATALOG.'includes/classes/afterbuy.php');
     $aBUY = new xtc_afterbuy_functions($oID, 'admin');
     if ($aBUY->order_send()) {

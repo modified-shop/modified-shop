@@ -52,24 +52,24 @@ class xtc_afterbuy_functions {
   function process_order() {
     global $xtPrice;
 
-    $dealer_groups = defined('AFTERBUY_DEALERS') && AFTERBUY_DEALERS != '' ? explode(",", AFTERBUY_DEALERS) : '';
-    $ignore_groups = defined('AFTERBUY_IGNORE_GROUPE') && AFTERBUY_IGNORE_GROUPE != '' ? explode(",", AFTERBUY_IGNORE_GROUPE) : '';
+    $dealer_groups = defined('MODULE_AFTERBUY_DEALERS') && MODULE_AFTERBUY_DEALERS != '' ? explode(",", MODULE_AFTERBUY_DEALERS) : array();
+    $ignore_groups = defined('MODULE_AFTERBUY_IGNORE_GROUPS') && MODULE_AFTERBUY_IGNORE_GROUPS != '' ? explode(",", MODULE_AFTERBUY_IGNORE_GROUPS) : array();
 
     $testmode = false; // Auf true setzen, wenn keine Übertragung zu Afterbuy erfolgen soll und die Daten nur per Mail gesendet werden sollen zu Entwicklungszwecken
 
     // ############ SETTINGS ################
 
     // PartnerID
-    $PartnerID = AFTERBUY_PARTNERID;
+    $PartnerID = MODULE_AFTERBUY_PARTNERID;
 
     // your PASSWORD for your PartnerID
-    $PartnerPass = AFTERBUY_PARTNERPASS;
+    $PartnerPass = MODULE_AFTERBUY_PARTNERPASS;
 
     // Your Afterbuy USERNAME
-    $UserID = AFTERBUY_USERID;
+    $UserID = MODULE_AFTERBUY_USERID;
 
     // new Orderstatus ID of processed order
-    $order_status = AFTERBUY_ORDERSTATUS;
+    $order_status = MODULE_AFTERBUY_ORDERSTATUS;
 
     //$Artikelerkennung = '2';
     // 0 = Product ID (products_id XT muss gleich Product ID Afterbuy sein)
@@ -87,7 +87,7 @@ class xtc_afterbuy_functions {
     $o_query = xtc_db_query("SELECT * FROM " . TABLE_ORDERS . " WHERE orders_id = " . $oID);
     $oData = xtc_db_fetch_array($o_query);
 
-    $ignore_order = isset($ignore_groups) && is_array($ignore_groups) && array_key_exists($oData['customers_status'], $ignore_groups) ? true : false;
+    $ignore_order = in_array($oData['customers_status'], $ignore_groups) ? true : false;
 
     if ($ignore_order === false) {
 
@@ -143,6 +143,11 @@ class xtc_afterbuy_functions {
         // Set this option to a non-zero value if you want PHP to do a regular HTTP POST.
         // This POST is a normal application/x-www-form-urlencoded  kind, most commonly used by HTML forms.
         curl_setopt($ch, CURLOPT_POST, 1);
+
+        // the default is no limit at all, an accepted but unanswered request would hold the
+        // checkout until the worker dies and take both order mails with it
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
       }
 
       // get gender
@@ -229,7 +234,7 @@ class xtc_afterbuy_functions {
           $is_merchant = 0;
       }
 
-      $is_merchant = isset($dealer_groups) && !empty($dealer_groups) && array_key_exists($customer_status, $dealer_groups) ? 1 : $is_merchant;
+      $is_merchant = in_array($customer_status, $dealer_groups) ? 1 : $is_merchant;
 
       $DATAstring .= "Haendler=" . $is_merchant . "&";
 
@@ -422,8 +427,8 @@ class xtc_afterbuy_functions {
       $DATAstring .= "Versandart=" . $s_method . "&";
       $DATAstring .= "Versandkosten=" . $vK . "&";
 
-      $this->getPayment($oData['payment_method']);
-      $DATAstring .= "Zahlart=" . $this->payment_name . "&";
+      $this->getPayment($oData['payment_method'], $oID, $oData['language']);
+      $DATAstring .= "Zahlart=" . urlencode($this->payment_name) . "&";
       $DATAstring .= "ZFunktionsID=" . $this->payment_id . "&";
 
       if ($this->payment_id == '5') {
@@ -456,28 +461,33 @@ class xtc_afterbuy_functions {
           'paypalgooglepay',
         );
    
+        // a third party payment can report function id 5 without keeping a record in the paypal
+        // tables, asking there would only produce an empty transaction id
+        $payment_order_info_array = null;
         if (in_array($oData['payment_method'], $orders_v2_array)) {
           require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
           $paypal = new PayPalPaymentV2($oData['payment_method']);
           $payment_order_info_array = $paypal->GetOrderDetails($oID);
-        } else {
+        } elseif (in_array($oData['payment_method'], $orders_v1_array)) {
           require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
           $paypal = new PayPalInfo($oData['payment_method']);
           $payment_order_info_array = $paypal->order_info($oID);
-         }
+        }
 
-        if (isset($payment_order_info_array->status)) {
-          $DATAstring .= "PaymentStatus=".$payment_order_info_array->status."&";
-          $DATAstring .= "PaymentTransactionId=".$payment_order_info_array->id."&";
-          if ($payment_order_info_array->status == 'COMPLETED') $DATAstring .= "SetPay=1&";
-        } else {
-          if ($payment_order_info_array['transactions']['0']['relatedResource']['0']['state'] == 'completed') {
-            $DATAstring .= "PaymentStatus=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['state']."&";
-            $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['id']."&";
-            $DATAstring .= "SetPay=1&";
+        if ($payment_order_info_array !== null) {
+          if (isset($payment_order_info_array->status)) {
+            $DATAstring .= "PaymentStatus=".$payment_order_info_array->status."&";
+            $DATAstring .= "PaymentTransactionId=".$payment_order_info_array->id."&";
+            if ($payment_order_info_array->status == 'COMPLETED') $DATAstring .= "SetPay=1&";
           } else {
-            $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['id']."&";
-            $DATAstring .= "PaymentStatus=0&";
+            if ($payment_order_info_array['transactions']['0']['relatedResource']['0']['state'] == 'completed') {
+              $DATAstring .= "PaymentStatus=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['state']."&";
+              $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['id']."&";
+              $DATAstring .= "SetPay=1&";
+            } else {
+              $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['id']."&";
+              $DATAstring .= "PaymentStatus=0&";
+            }
           }
         }
       }
@@ -532,9 +542,12 @@ class xtc_afterbuy_functions {
           }
 
         } else {
+          // a timeout leaves no response at all, so the curl message is the only clue
+          $error = ($result === false) ? curl_error($ch) : $result;
+
           // mail to shopowner
-          $mail_content_html = 'Fehler beim Senden der Bestellung: ' . $this->order_id . "<br />\r\n" . 'Folgende Fehlermeldung wurde von afterbuy.de zur&uuml;ckgegeben:' . "<br />\r\n" . "<br />\r\n" . $result;
-          $mail_content_txt = 'Fehler beim Senden der Bestellung: ' . $this->order_id . "\r\n" . 'Folgende Fehlermeldung wurde von afterbuy.de zurueckgegeben:' . "\r\n\r\n" . $result;
+          $mail_content_html = 'Fehler beim Senden der Bestellung: ' . $this->order_id . "<br />\r\n" . 'Folgende Fehlermeldung wurde von afterbuy.de zur&uuml;ckgegeben:' . "<br />\r\n" . "<br />\r\n" . $error;
+          $mail_content_txt = 'Fehler beim Senden der Bestellung: ' . $this->order_id . "\r\n" . 'Folgende Fehlermeldung wurde von afterbuy.de zurueckgegeben:' . "\r\n\r\n" . $error;
           xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '', STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '', '', 'Afterbuy-Error', $mail_content_html, $mail_content_txt);
         }
       }
@@ -567,9 +580,13 @@ class xtc_afterbuy_functions {
     return $weight;
   }
 
-  function getPayment($payment) {
+  // the ZFunktionsID values come from the afterbuy shop interface, the label is only shown to the merchant
+  function getPayment($payment, $order_id = '', $language = '') {
     switch ($payment) {
       case 'banktransfer':
+      case 'payone_elv':
+      case 'mcp_debit':
+      case 'klarna_directdebit':
         $this->payment_id = '7';
         $this->payment_name = "Bankeinzug";
         break;
@@ -578,17 +595,38 @@ class xtc_afterbuy_functions {
         $this->payment_name = "Barzahlung";
         break;
       case 'cod':
+      case 'payone_cod':
         $this->payment_id = '4';
         $this->payment_name = "Nachnahme";
         break;
       case 'invoice':
+      case 'easyinvoice':
+      case 'payone_invoice':
+      case 'klarna_paylater':
         $this->payment_id = '6';
         $this->payment_name = "Rechnung";
         break;
       case 'moneyorder':
       case 'eustandardtransfer':
+      case 'payone_prepay':
+      case 'mcp_prepay':
         $this->payment_id = '1';
         $this->payment_name = "Vorkasse";
+        break;
+      // klarna_paynow is deliberately absent, "pay now" is a group that also covers direct debit
+      // and card, so it keeps the collecting id and reaches afterbuy under its own name
+      case 'klarna_directbanktransfer':
+        $this->payment_id = '12';
+        $this->payment_name = "Sofortueberweisung";
+        break;
+      case 'payone_otrans':
+      case 'mcp_ebank2pay':
+        $this->payment_id = '23';
+        $this->payment_name = "Onlineueberweisung";
+        break;
+      case 'mcp_giropay':
+        $this->payment_id = '24';
+        $this->payment_name = "Giropay";
         break;
       case 'paypal':
       case 'paypalplus':
@@ -613,6 +651,7 @@ class xtc_afterbuy_functions {
       case 'paypalbancontact':
       case 'paypalapplepay':
       case 'paypalgooglepay':
+      case 'mcp_paypal':
         $this->payment_id = '5';
         $this->payment_name = "Paypal";
         break;
@@ -621,6 +660,8 @@ class xtc_afterbuy_functions {
         $this->payment_name = "Billsafe";
         break;
       case 'cc':
+      case 'payone_cc':
+      case 'mcp_creditcard':
         $this->payment_id = '19';
         $this->payment_name = "Kreditkarte";
         break;
@@ -633,8 +674,17 @@ class xtc_afterbuy_functions {
         $this->payment_name = "IPayment";
         break;
       default:
+        // afterbuy has no function id for it, so at least send the name the shop knows
         $this->payment_id = '99';
         $this->payment_name = "sonstige Zahlungsweise";
+
+        if ($payment != '') {
+          require_once((defined('RUN_MODE_ADMIN') ? DIR_FS_CATALOG : '').DIR_WS_CLASSES.'payment.php');
+          $payment_title = payment::payment_title($payment, $order_id, $language);
+          if ($payment_title != '') {
+            $this->payment_name = $payment_title;
+          }
+        }
     }
   }
 
