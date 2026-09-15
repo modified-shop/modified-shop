@@ -180,7 +180,7 @@ switch ($current_page) {
 		$basket = array();
 		$last_orders_totalprice = 0;
 		while ($last_orders_products = xtc_db_fetch_array($last_orders_products_query)) {
-			if (ECONDA_PRICE_IS_BRUTTO == 'false') {
+			if (defined('ECONDA_PRICE_IS_BRUTTO') && ECONDA_PRICE_IS_BRUTTO == 'false') {
 				$last_orders_totalprice += $last_orders_products['products_price'] * $last_orders_products['products_quantity'] / (1+$last_orders_products['products_tax']/100);
 			} else {
 				$last_orders_totalprice += $last_orders_products['products_price'] * $last_orders_products['products_quantity'];
