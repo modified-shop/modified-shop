@@ -422,8 +422,8 @@ class xtc_afterbuy_functions {
       $DATAstring .= "Versandart=" . $s_method . "&";
       $DATAstring .= "Versandkosten=" . $vK . "&";
 
-      $this->getPayment($oData['payment_method']);
-      $DATAstring .= "Zahlart=" . $this->payment_name . "&";
+      $this->getPayment($oData['payment_method'], $oID, $oData['language']);
+      $DATAstring .= "Zahlart=" . urlencode($this->payment_name) . "&";
       $DATAstring .= "ZFunktionsID=" . $this->payment_id . "&";
 
       if ($this->payment_id == '5') {
@@ -567,9 +567,13 @@ class xtc_afterbuy_functions {
     return $weight;
   }
 
-  function getPayment($payment) {
+  // the ZFunktionsID values come from the afterbuy shop interface, the label is only shown to the merchant
+  function getPayment($payment, $order_id = '', $language = '') {
     switch ($payment) {
       case 'banktransfer':
+      case 'payone_elv':
+      case 'mcp_debit':
+      case 'klarna_directdebit':
         $this->payment_id = '7';
         $this->payment_name = "Bankeinzug";
         break;
@@ -578,17 +582,37 @@ class xtc_afterbuy_functions {
         $this->payment_name = "Barzahlung";
         break;
       case 'cod':
+      case 'payone_cod':
         $this->payment_id = '4';
         $this->payment_name = "Nachnahme";
         break;
       case 'invoice':
+      case 'easyinvoice':
+      case 'payone_invoice':
+      case 'klarna_paylater':
         $this->payment_id = '6';
         $this->payment_name = "Rechnung";
         break;
       case 'moneyorder':
       case 'eustandardtransfer':
+      case 'payone_prepay':
+      case 'mcp_prepay':
         $this->payment_id = '1';
         $this->payment_name = "Vorkasse";
+        break;
+      case 'klarna_paynow':
+      case 'klarna_directbanktransfer':
+        $this->payment_id = '12';
+        $this->payment_name = "Sofortueberweisung";
+        break;
+      case 'payone_otrans':
+      case 'mcp_ebank2pay':
+        $this->payment_id = '23';
+        $this->payment_name = "Onlineueberweisung";
+        break;
+      case 'mcp_giropay':
+        $this->payment_id = '24';
+        $this->payment_name = "Giropay";
         break;
       case 'paypal':
       case 'paypalplus':
@@ -613,6 +637,7 @@ class xtc_afterbuy_functions {
       case 'paypalbancontact':
       case 'paypalapplepay':
       case 'paypalgooglepay':
+      case 'mcp_paypal':
         $this->payment_id = '5';
         $this->payment_name = "Paypal";
         break;
@@ -621,6 +646,8 @@ class xtc_afterbuy_functions {
         $this->payment_name = "Billsafe";
         break;
       case 'cc':
+      case 'payone_cc':
+      case 'mcp_creditcard':
         $this->payment_id = '19';
         $this->payment_name = "Kreditkarte";
         break;
@@ -633,8 +660,17 @@ class xtc_afterbuy_functions {
         $this->payment_name = "IPayment";
         break;
       default:
+        // afterbuy has no function id for it, so at least send the name the shop knows
         $this->payment_id = '99';
         $this->payment_name = "sonstige Zahlungsweise";
+
+        if ($payment != '') {
+          require_once((defined('RUN_MODE_ADMIN') ? DIR_FS_CATALOG : '').DIR_WS_CLASSES.'payment.php');
+          $payment_title = payment::payment_title($payment, $order_id, $language);
+          if ($payment_title != '') {
+            $this->payment_name = $payment_title;
+          }
+        }
     }
   }
 
