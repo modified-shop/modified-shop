@@ -209,12 +209,6 @@
   define('TEXT_ERROR_REQUIREMENTS_VERSION', 'Version');
   define('TEXT_ERROR_REQUIREMENTS_MIN', 'Min');
   define('TEXT_ERROR_REQUIREMENTS_MAX', 'Max');
-  define('TEXT_ERROR_FTP', 'Change permissions via FTP:');
-  define('TEXT_ERROR_FTP_HOST', 'FTP Host:');
-  define('TEXT_ERROR_FTP_PORT', 'FTP Port:');
-  define('TEXT_ERROR_FTP_PATH', 'FTP Path:');
-  define('TEXT_ERROR_FTP_USER', 'FTP Username:');
-  define('TEXT_ERROR_FTP_PASS', 'FTP Password:');
   define('TEXT_ERROR_UNLINK_FILES', 'The following files have to be deleted:');
   define('TEXT_ERROR_UNLINK_FOLDER', 'The following folders have to be deleted:');
   define('ERROR_AUTOUPDATE', 'An autoupdate is not possible due to the necessary requirements.');
@@ -226,8 +220,6 @@
   define('ERROR_DATABASE_ENGINE_NOT_VALID', 'The specified database engine is not compatible with the character set!');
   define('ERROR_MODULES_PAYMENT', 'Unfortunately we could not find this type of payment...');
   define('ERROR_SQL_UPDATE_NO_FILE', 'Unfortunately we could not find any SQL update file...');
-  define('ERROR_FTP_LOGIN_NOT_POSSIBLE', 'FTP access data incorrect, host not available');
-  define('ERROR_FTP_CHMOD_WAS_NOT_SUCCESSFUL', 'Changing the directory permissions was unsuccessful');
   define('ERROR_FILE_INTEGRITY', '%s Files have been changed compared to the original installation (e.g. module updates or bugfixes). You can download these files as a backup and continue the update.<br><br><b>ATTENTION:</b> During the update ALL changed files will be overwritten!');
   define('ERROR_CREATE_TMP_DIR', 'Could not create tmp directory');
   define('ERROR_INVALID_UPDATE_DOWNLOAD', 'Update package could not be downloaded');

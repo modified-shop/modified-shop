@@ -248,28 +248,6 @@
           $smarty->assign('REQUIREMENT_ARRAY', $requirement_array);
           $smarty->assign('PERMISSION_ARRAY', $permission_array);
           $smarty->clear_assign('FORM_ACTION');
-
-          if (count($permission_array['file_permission']) > 0
-              || count($permission_array['folder_permission']) > 0
-              || count($permission_array['rfolder_permission']) > 0
-              )
-          {
-            // ftp
-            $smarty->assign('INPUT_FTP_HOST', xtc_draw_input_fieldNote(array('name' => 'ftp_host')));
-            $smarty->assign('INPUT_FTP_PORT', xtc_draw_input_fieldNote(array('name' => 'ftp_port')));
-            $smarty->assign('INPUT_FTP_PATH', xtc_draw_input_fieldNote(array('name' => 'ftp_path')));
-            $smarty->assign('INPUT_FTP_USER', xtc_draw_input_fieldNote(array('name' => 'ftp_user')));    
-            $smarty->assign('INPUT_FTP_PASS', xtc_draw_input_fieldNote(array('name' => 'ftp_pass')));    
-
-            // form
-            $smarty->assign('FORM_ACTION', xtc_draw_form('ftp', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type), 'post').xtc_draw_hidden_field('action', 'ftp'));
-            $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
-            $smarty->assign('FORM_END', '</form>');
-          }
-
-          if ($messageStack->size('ftp_message') > 0) {
-            $smarty->assign('error_message', $messageStack->output('ftp_message'));
-          }
           
           if ($error === false
               && isset($backup_content)
