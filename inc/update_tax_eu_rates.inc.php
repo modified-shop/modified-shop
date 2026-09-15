@@ -197,15 +197,23 @@
         // so an assignment that already taxes these classes has to be moved instead
         // of joined by a second one. the zone is found through its rates, because a
         // zone name is free text in the admin. regions count too: a new country wide
-        // row would apply on top of every one of them
+        // row would apply on top of every one of them.
+        // a zone flagged geo_zone_info counts even without rates. it marks a country
+        // as outside the tax area, and get_allow_tax() drops the tax of an order for
+        // it, which contradicts the rates this module is about to write
         $classes_list = implode(', ', array_map('intval', array_keys($country_data['rates'])));
         $check_query = xtc_db_query("SELECT DISTINCT z2gz.geo_zone_id
                                        FROM ".TABLE_ZONES_TO_GEO_ZONES." z2gz
-                                       JOIN ".TABLE_TAX_RATES." tr
+                                       JOIN ".TABLE_GEO_ZONES." gz
+                                            ON gz.geo_zone_id = z2gz.geo_zone_id
+                                  LEFT JOIN ".TABLE_TAX_RATES." tr
                                             ON tr.tax_zone_id = z2gz.geo_zone_id
+                                           AND tr.tax_class_id IN (".$classes_list.")
                                       WHERE z2gz.zone_country_id = ".(int)$zone_country_id."
                                         AND z2gz.geo_zone_id <> ".(int)$geo_zones_array[$iso_code_2]."
-                                        AND tr.tax_class_id IN (".$classes_list.")");
+                                        AND (tr.tax_rates_id IS NOT NULL
+                                             OR gz.geo_zone_info = '1'
+                                            )");
         if ($check_query === false) {
           $success = false;
           continue;
