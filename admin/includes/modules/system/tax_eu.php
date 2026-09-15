@@ -22,8 +22,6 @@ class tax_eu
   var $properties;
   var $_check;
 
-  var $additional_countries;
-
   function __construct() {
     $this->code = 'tax_eu';
     $this->title = MODULE_TAX_EU_TEXT_TITLE;
@@ -32,13 +30,7 @@ class tax_eu
     $this->enabled = ((defined('MODULE_TAX_EU_STATUS') && MODULE_TAX_EU_STATUS == 'true') ? true : false);
 
     $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE. '</a>';
-    
-    $this->additional_countries = array(
-      'FR' => array(
-        'MC', // Monaco
-      ),
-    );
-  }
+      }
 
   function process($file) {
     //do nothing
@@ -69,7 +61,7 @@ class tax_eu
     require_once(DIR_FS_INC.'update_tax_eu_rates.inc.php');
 
     // module_export.php prints a non-empty return value instead of MODULE_UPDATE_CONFIRM
-    if (update_tax_eu_rates($this->additional_countries) === false) {
+    if (update_tax_eu_rates() === false) {
       $messageStack->add_session(MODULE_TAX_EU_ERROR_API);
 
       return false;

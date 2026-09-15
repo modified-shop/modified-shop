@@ -10,14 +10,13 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  function update_tax_eu_rates($additional_countries = null) {
-    if (!is_array($additional_countries)) {
-      $additional_countries = array(
-        'FR' => array(
-          'MC', // Monaco
-        ),
-      );
-    }
+  function update_tax_eu_rates() {
+    // countries that follow the tax rates of another country
+    $additional_countries = array(
+      'FR' => array(
+        'MC', // Monaco
+      ),
+    );
 
     // DIR_WS_CLASSES is absolute in the catalog context and relative in the admin context
     require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
