@@ -555,10 +555,10 @@
             $db_engine = 'InnoDB';
           }
         }
-        $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = 'utf8'");
+        $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET IN (".get_charset_in_list('utf8').")");
         if (xtc_db_num_rows($check_query) > 0) {
           array_unshift($db_charset_array, array('id' => 'utf8', 'text' => 'UTF-8'));
-          if ($default['dbcharset'] == 'utf8') {
+          if (in_array($default['dbcharset'], get_charset_names('utf8'))) {
             $db_charset = 'utf8';
           }
         }

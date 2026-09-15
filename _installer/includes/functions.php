@@ -771,3 +771,23 @@
   function installer_log($messages) {
     error_log($messages."\n", 3, DIR_FS_LOG.'mod_installer_info_'.date('Y-m-d').'.log');
   }
+
+
+  // MariaDB 10.6 and MySQL 8.0.29 report the utf8 alias under its real name utf8mb3
+  function get_charset_names($charset) {
+    if ($charset == 'utf8' || $charset == 'utf8mb3') {
+      return array('utf8', 'utf8mb3');
+    }
+
+    return array($charset);
+  }
+
+
+  function get_charset_in_list($charset) {
+    $names = get_charset_names($charset);
+    foreach ($names as $key => $name) {
+      $names[$key] = "'".xtc_db_input($name)."'";
+    }
+
+    return implode(', ', $names);
+  }

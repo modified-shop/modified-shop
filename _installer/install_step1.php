@@ -85,6 +85,8 @@
     'utf8' => array(
       'utf8_german2_ci',
       'utf8_general_ci',
+      'utf8mb3_german2_ci',
+      'utf8mb3_general_ci',
     ),
     'utf8mb4' => array(
       'utf8mb4_german2_ci',
@@ -156,7 +158,7 @@
       }
 
       $error_charset = false;
-      $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = '".xtc_db_input($db_charset)."'");
+      $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET IN (".get_charset_in_list($db_charset).")");
       if (xtc_db_num_rows($check_query) < 1) {
         $_SESSION['invalid_charset'][] = $db_charset;
         $messageStack->add('install_step1', ERROR_DATABASE_COLLATION_NOT_AVAILABLE);
@@ -171,7 +173,7 @@
       if (($error === false || isset($db_install) || isset($write_configure)) && $error_charset === false) {
         if ($error === false || isset($db_install)) {        
           foreach ($charcol_data_array[$db_charset] as $db_collation) {
-            $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET = '".xtc_db_input($db_charset)."' AND COLLATION = '".xtc_db_input($db_collation)."'");
+            $check_query = xtc_db_query("SHOW COLLATION WHERE CHARSET IN (".get_charset_in_list($db_charset).") AND COLLATION = '".xtc_db_input($db_collation)."'");
             if (xtc_db_num_rows($check_query) > 0) {
               $collation = $db_collation;
               break;
