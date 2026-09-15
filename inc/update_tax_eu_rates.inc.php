@@ -34,32 +34,54 @@
                                             countries_iso_code_2
                                        FROM ".TABLE_COUNTRIES."
                                    ORDER BY countries_name");
+    if ($countries_query === false) {
+      return false;
+    }
+
     while ($countries = xtc_db_fetch_array($countries_query)) {
       $countries_array[$countries['countries_iso_code_2']] = $countries['countries_id'];
     }
 
+    // an empty or truncated configuration value must not produce a bogus entry
     $geo_zones_array = array();
-    if (defined('MODULE_TAX_EU_GEO_ZONES')) {
+    if (defined('MODULE_TAX_EU_GEO_ZONES') && MODULE_TAX_EU_GEO_ZONES != '') {
       $geozones = preg_split("/[:,]/", MODULE_TAX_EU_GEO_ZONES);
-      for ($i=0, $n=count($geozones); $i<$n; $i+=2) {
+      for ($i=0, $n=count($geozones); $i+1<$n; $i+=2) {
         $geo_zones_array[$geozones[$i]] = $geozones[$i+1];
       }
     }
 
+    // every country is updated on its own, a single failure must not hide the others
+    $success = true;
+
     foreach ($tax_rates_array as $tax_rates_country) {
       foreach ($tax_rates_country as $iso_code_2 => $tax_rates_info) {
+
+        if (!isset($countries_array[$iso_code_2])) {
+          $success = false;
+          continue;
+        }
 
         if (!isset($geo_zones_array[$iso_code_2])) {
           $check_query = xtc_db_query("SELECT *
                                          FROM ".TABLE_GEO_ZONES."
-                                        WHERE geo_zone_name LIKE ('%Steuerzone ".$iso_code_2."%')");
+                                        WHERE geo_zone_name LIKE ('%Steuerzone ".xtc_db_input($iso_code_2)."%')");
+          if ($check_query === false) {
+            $success = false;
+            continue;
+          }
+
           if (xtc_db_num_rows($check_query) == 0) {
             $sql_data_array = array(
               'geo_zone_name' => sprintf('DE::Steuerzone %s||EN::Tax zone %s', $iso_code_2, $iso_code_2),
               'geo_zone_description' => sprintf('DE::Steuerzone %s||EN::Tax zone %s', $iso_code_2, $iso_code_2),
               'date_added' => 'now()'
             );
-            xtc_db_perform(TABLE_GEO_ZONES, $sql_data_array);
+            if (xtc_db_perform(TABLE_GEO_ZONES, $sql_data_array) === false) {
+              $success = false;
+              continue;
+            }
+
             $geo_zones_array[$iso_code_2] = xtc_db_insert_id();
           } else {
             $check = xtc_db_fetch_array($check_query);
@@ -67,25 +89,39 @@
           }
         }
 
-        xtc_db_query("UPDATE ".TABLE_ZONES_TO_GEO_ZONES."
-                         SET geo_zone_id = ".$geo_zones_array[$iso_code_2].",
-                             last_modified = now()
-                       WHERE zone_country_id = ".$countries_array[$iso_code_2]);
+        if (xtc_db_query("UPDATE ".TABLE_ZONES_TO_GEO_ZONES."
+                             SET geo_zone_id = ".$geo_zones_array[$iso_code_2].",
+                                 last_modified = now()
+                           WHERE zone_country_id = ".$countries_array[$iso_code_2]) === false) {
+          $success = false;
+        }
 
         if (isset($additional_countries[$iso_code_2])) {
           foreach ($additional_countries[$iso_code_2] as $iso_code_2_additional) {
-            xtc_db_query("UPDATE ".TABLE_ZONES_TO_GEO_ZONES."
-                             SET geo_zone_id = ".$geo_zones_array[$iso_code_2].",
-                                 last_modified = now()
-                           WHERE zone_country_id = ".$countries_array[$iso_code_2_additional]);
+            if (!isset($countries_array[$iso_code_2_additional])) {
+              $success = false;
+              continue;
+            }
+
+            if (xtc_db_query("UPDATE ".TABLE_ZONES_TO_GEO_ZONES."
+                                 SET geo_zone_id = ".$geo_zones_array[$iso_code_2].",
+                                     last_modified = now()
+                               WHERE zone_country_id = ".$countries_array[$iso_code_2_additional]) === false) {
+              $success = false;
+            }
           }
         }
 
         foreach ($tax_rates_info as $tax_class_id => $tax_rate) {
           $check_query = xtc_db_query("SELECT *
                                          FROM ".TABLE_TAX_RATES."
-                                        WHERE tax_class_id = ".$tax_class_id."
+                                        WHERE tax_class_id = ".(int)$tax_class_id."
                                           AND tax_zone_id = ".$geo_zones_array[$iso_code_2]);
+          if ($check_query === false) {
+            $success = false;
+            continue;
+          }
+
           if (xtc_db_num_rows($check_query) == 0 && $tax_rate != '') {
             $sql_data_array = array(
               'tax_zone_id' => $geo_zones_array[$iso_code_2],
@@ -95,19 +131,25 @@
               'tax_description' => sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate),
               'date_added' => 'now()'
             );
-            xtc_db_perform(TABLE_TAX_RATES, $sql_data_array);
+            if (xtc_db_perform(TABLE_TAX_RATES, $sql_data_array) === false) {
+              $success = false;
+            }
           } else {
             $check = xtc_db_fetch_array($check_query);
 
             if (isset($check['tax_rates_id'])) {
               if ($tax_rate != '') {
-                xtc_db_query("UPDATE ".TABLE_TAX_RATES."
-                                 SET tax_rate = ".$tax_rate.",
-                                     tax_description = '".xtc_db_input(sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate))."',
-                                     last_modified = now()
-                               WHERE tax_rates_id = ".$check['tax_rates_id']);
+                if (xtc_db_query("UPDATE ".TABLE_TAX_RATES."
+                                     SET tax_rate = ".$tax_rate.",
+                                         tax_description = '".xtc_db_input(sprintf('DE::MwSt. %s%%||EN::VAT %s%%', $tax_rate, $tax_rate))."',
+                                         last_modified = now()
+                                   WHERE tax_rates_id = ".$check['tax_rates_id']) === false) {
+                  $success = false;
+                }
               } else {
-                xtc_db_query("DELETE FROM ".TABLE_TAX_RATES." WHERE tax_rates_id = ".$check['tax_rates_id']);
+                if (xtc_db_query("DELETE FROM ".TABLE_TAX_RATES." WHERE tax_rates_id = ".$check['tax_rates_id']) === false) {
+                  $success = false;
+                }
               }
             }
           }
@@ -119,9 +161,11 @@
     foreach ($geo_zones_array as $key => $val) {
       $configuration[] = $key.':'.$val;
     }
-    xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                     SET configuration_value = '".implode(',', $configuration)."'
-                   WHERE configuration_key = 'MODULE_TAX_EU_GEO_ZONES'");
+    if (xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                         SET configuration_value = '".xtc_db_input(implode(',', $configuration))."'
+                       WHERE configuration_key = 'MODULE_TAX_EU_GEO_ZONES'") === false) {
+      $success = false;
+    }
 
-    return true;
+    return $success;
   }
