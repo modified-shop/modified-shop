@@ -193,16 +193,17 @@
           continue;
         }
 
-        // xtc_get_tax_rate() adds up every zone of a country, so the assignment that
-        // carries these tax classes today has to be moved, not joined by a second one.
-        // the zone is found through its rates, its name is free text in the admin
+        // xtc_get_tax_rate() adds up the country wide zone and the requested region,
+        // so an assignment that already taxes these classes has to be moved instead
+        // of joined by a second one. the zone is found through its rates, because a
+        // zone name is free text in the admin. regions count too: a new country wide
+        // row would apply on top of every one of them
         $classes_list = implode(', ', array_map('intval', array_keys($country_data['rates'])));
         $check_query = xtc_db_query("SELECT DISTINCT z2gz.geo_zone_id
                                        FROM ".TABLE_ZONES_TO_GEO_ZONES." z2gz
                                        JOIN ".TABLE_TAX_RATES." tr
                                             ON tr.tax_zone_id = z2gz.geo_zone_id
                                       WHERE z2gz.zone_country_id = ".(int)$zone_country_id."
-                                        AND z2gz.zone_id = 0
                                         AND z2gz.geo_zone_id <> ".(int)$geo_zones_array[$iso_code_2]."
                                         AND tr.tax_class_id IN (".$classes_list.")");
         if ($check_query === false) {
@@ -210,7 +211,8 @@
           continue;
         }
 
-        // more than one competing assignment cannot be resolved without guessing
+        // several taxing zones are a hand made setup, moving one of them would be a
+        // guess and adding a country wide row would raise every region
         if (xtc_db_num_rows($check_query) > 1) {
           $success = false;
           continue;
@@ -223,7 +225,6 @@
                                SET geo_zone_id = ".(int)$geo_zones_array[$iso_code_2].",
                                    last_modified = now()
                              WHERE zone_country_id = ".(int)$zone_country_id."
-                               AND zone_id = 0
                                AND geo_zone_id = ".(int)$check['geo_zone_id']) === false) {
             $success = false;
           }
