@@ -181,10 +181,28 @@
       }
 
       foreach ($country_data['countries'] as $zone_country_id) {
-        if (xtc_db_query("UPDATE ".TABLE_ZONES_TO_GEO_ZONES."
-                             SET geo_zone_id = ".(int)$geo_zones_array[$iso_code_2].",
-                                 last_modified = now()
-                           WHERE zone_country_id = ".(int)$zone_country_id) === false) {
+        $check_query = xtc_db_query("SELECT association_id
+                                       FROM ".TABLE_ZONES_TO_GEO_ZONES."
+                                      WHERE zone_country_id = ".(int)$zone_country_id."
+                                        AND geo_zone_id = ".(int)$geo_zones_array[$iso_code_2]);
+        if ($check_query === false) {
+          $success = false;
+          continue;
+        }
+
+        if (xtc_db_num_rows($check_query) > 0) {
+          continue;
+        }
+
+        // the zone name is unique, so there is never an older zone of this module
+        // to move over, the country is simply linked and keeps its other zones
+        $sql_data_array = array(
+          'zone_country_id' => (int)$zone_country_id,
+          'zone_id' => '0',
+          'geo_zone_id' => (int)$geo_zones_array[$iso_code_2],
+          'date_added' => 'now()'
+        );
+        if (xtc_db_perform(TABLE_ZONES_TO_GEO_ZONES, $sql_data_array) === false) {
           $success = false;
         }
       }
