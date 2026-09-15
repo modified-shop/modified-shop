@@ -429,6 +429,57 @@
     }
   }
 
+  // afterbuy, the configuration group became a system module
+  if (defined('AFTERBUY_ACTIVATED')) {
+    $afterbuy_keys = array(
+      'AFTERBUY_ACTIVATED' => 'MODULE_AFTERBUY_STATUS',
+      'AFTERBUY_PARTNERID' => 'MODULE_AFTERBUY_PARTNERID',
+      'AFTERBUY_PARTNERPASS' => 'MODULE_AFTERBUY_PARTNERPASS',
+      'AFTERBUY_USERID' => 'MODULE_AFTERBUY_USERID',
+      'AFTERBUY_ORDERSTATUS' => 'MODULE_AFTERBUY_ORDERSTATUS',
+      'AFTERBUY_DEALERS' => 'MODULE_AFTERBUY_DEALERS',
+      'AFTERBUY_IGNORE_GROUPE' => 'MODULE_AFTERBUY_IGNORE_GROUPS',
+    );
+
+    // a shop that never set the interface up gets no module, only the keys go
+    $afterbuy_in_use = (AFTERBUY_ACTIVATED == 'true'
+                        || (defined('AFTERBUY_PARTNERID') && AFTERBUY_PARTNERID != '')
+                        );
+
+    if ($afterbuy_in_use === true) {
+      $afterbuy_sort_order = 1;
+      foreach ($afterbuy_keys as $afterbuy_old_key => $afterbuy_new_key) {
+        if (!defined($afterbuy_new_key)) {
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_key = '".$afterbuy_new_key."',
+                               configuration_group_id = '6',
+                               sort_order = '".$afterbuy_sort_order."'
+                         WHERE configuration_key = '".$afterbuy_old_key."'");
+        }
+        $afterbuy_sort_order++;
+      }
+
+      // the group ids were typed into a text field, the module offers the groups as checkboxes
+      $afterbuy_set_function = 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), \'chr(44)\',';
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET set_function = '".xtc_db_input($afterbuy_set_function)."'
+                     WHERE configuration_key IN ('MODULE_AFTERBUY_DEALERS', 'MODULE_AFTERBUY_IGNORE_GROUPS')");
+
+      if (!defined('MODULE_AFTERBUY_ORDER_MAIL')) {
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_AFTERBUY_ORDER_MAIL', 'true',  '6', '8', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+      }
+    }
+
+    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
+                   WHERE configuration_key IN ('".implode("', '", array_keys($afterbuy_keys))."')");
+  }
+
+  // keep the group as long as a third party still uses it
+  $afterbuy_group_query = xtc_db_query("SELECT configuration_id FROM " . TABLE_CONFIGURATION . " WHERE configuration_group_id = '21' LIMIT 1");
+  if (xtc_db_num_rows($afterbuy_group_query) == 0) {
+    xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_id = '21' AND configuration_group_title = 'Afterbuy'");
+  }
+
   // rename config key
   foreach ($config_array as $old_config => $new_config) {
     if (!defined($new_config)) {

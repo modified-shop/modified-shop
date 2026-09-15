@@ -206,10 +206,6 @@
           <div class="clear"></div> 
        
           <?php
-            if ($_GET['gID'] == '21') { //Afterbuy
-              echo '<div class="clear bg_notice pdg2">'.AFTERBUY_URL.'</div>';
-            }
-            
             echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save');
             ?>
               <table class="clear tableConfig">

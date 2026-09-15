@@ -110,7 +110,7 @@
             <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_DATE_PURCHASED.xtc_sorting(FILENAME_ORDERS, 'date'); ?></td>
             <td class="dataTableHeadingContent" align="center"><?php echo str_replace(':','',TEXT_INFO_PAYMENT_METHOD).xtc_sorting(FILENAME_ORDERS, 'payment'); ?></td>
             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_ORDERS, 'status'); ?></td>
-            <?php if (AFTERBUY_ACTIVATED=='true') { ?>
+            <?php if (defined('MODULE_AFTERBUY_STATUS') && MODULE_AFTERBUY_STATUS == 'true') { ?>
             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_AFTERBUY; ?></td>
             <?php } ?>
             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
@@ -258,7 +258,7 @@
             <td class="dataTableContent" align="center"><?php echo xtc_datetime_short($orders['date_purchased']); ?></td>
             <td class="dataTableContent" align="center"><?php echo payment::payment_title($orders['payment_method']); ?></td>
             <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo array_key_exists($orders['orders_status'], $orders_status_array) ? $orders_status_array[$orders['orders_status']] : ''; }else{ echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';}?></td>
-            <?php if (AFTERBUY_ACTIVATED=='true') { ?>
+            <?php if (defined('MODULE_AFTERBUY_STATUS') && MODULE_AFTERBUY_STATUS == 'true') { ?>
             <td class="dataTableContent" align="right"><?php  echo ($orders['afterbuy_success'] == 1) ? $orders['afterbuy_id'] : 'TRANSMISSION_ERROR'; ?></td>
             <?php } ?>
             <td class="dataTableContent" align="right"><?php echo '<a href="' . $orders_link . '">' . $orders_image_preview . '</a>&nbsp;&nbsp;'.$orders_action_image; ?>&nbsp;</td>
@@ -298,7 +298,7 @@
                 $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=edit').'">'.BUTTON_EDIT.'</a>
                                                                      <a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=delete').'">'.BUTTON_DELETE.'</a>
                                                                      <a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=storno').'">'.BUTTON_REVERSE.'</a>');
-                if (AFTERBUY_ACTIVATED == 'true') {
+                if (defined('MODULE_AFTERBUY_STATUS') && MODULE_AFTERBUY_STATUS == 'true') {
                   $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=custom&subaction=afterbuy_send').'">'.BUTTON_AFTERBUY_SEND.'</a>');
                 }
                 $contents[] = array ('text' => '<br />'.TEXT_DATE_ORDER_CREATED.' '.xtc_date_short($oInfo->date_purchased));

@@ -52,24 +52,24 @@ class xtc_afterbuy_functions {
   function process_order() {
     global $xtPrice;
 
-    $dealer_groups = defined('AFTERBUY_DEALERS') && AFTERBUY_DEALERS != '' ? explode(",", AFTERBUY_DEALERS) : '';
-    $ignore_groups = defined('AFTERBUY_IGNORE_GROUPE') && AFTERBUY_IGNORE_GROUPE != '' ? explode(",", AFTERBUY_IGNORE_GROUPE) : '';
+    $dealer_groups = defined('MODULE_AFTERBUY_DEALERS') && MODULE_AFTERBUY_DEALERS != '' ? explode(",", MODULE_AFTERBUY_DEALERS) : array();
+    $ignore_groups = defined('MODULE_AFTERBUY_IGNORE_GROUPS') && MODULE_AFTERBUY_IGNORE_GROUPS != '' ? explode(",", MODULE_AFTERBUY_IGNORE_GROUPS) : array();
 
     $testmode = false; // Auf true setzen, wenn keine Übertragung zu Afterbuy erfolgen soll und die Daten nur per Mail gesendet werden sollen zu Entwicklungszwecken
 
     // ############ SETTINGS ################
 
     // PartnerID
-    $PartnerID = AFTERBUY_PARTNERID;
+    $PartnerID = MODULE_AFTERBUY_PARTNERID;
 
     // your PASSWORD for your PartnerID
-    $PartnerPass = AFTERBUY_PARTNERPASS;
+    $PartnerPass = MODULE_AFTERBUY_PARTNERPASS;
 
     // Your Afterbuy USERNAME
-    $UserID = AFTERBUY_USERID;
+    $UserID = MODULE_AFTERBUY_USERID;
 
     // new Orderstatus ID of processed order
-    $order_status = AFTERBUY_ORDERSTATUS;
+    $order_status = MODULE_AFTERBUY_ORDERSTATUS;
 
     //$Artikelerkennung = '2';
     // 0 = Product ID (products_id XT muss gleich Product ID Afterbuy sein)
@@ -87,7 +87,7 @@ class xtc_afterbuy_functions {
     $o_query = xtc_db_query("SELECT * FROM " . TABLE_ORDERS . " WHERE orders_id = " . $oID);
     $oData = xtc_db_fetch_array($o_query);
 
-    $ignore_order = isset($ignore_groups) && is_array($ignore_groups) && array_key_exists($oData['customers_status'], $ignore_groups) ? true : false;
+    $ignore_order = in_array($oData['customers_status'], $ignore_groups) ? true : false;
 
     if ($ignore_order === false) {
 
@@ -229,7 +229,7 @@ class xtc_afterbuy_functions {
           $is_merchant = 0;
       }
 
-      $is_merchant = isset($dealer_groups) && !empty($dealer_groups) && array_key_exists($customer_status, $dealer_groups) ? 1 : $is_merchant;
+      $is_merchant = in_array($customer_status, $dealer_groups) ? 1 : $is_merchant;
 
       $DATAstring .= "Haendler=" . $is_merchant . "&";
 

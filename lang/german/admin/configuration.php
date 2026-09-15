@@ -593,23 +593,6 @@ define('ACCOUNT_VAT_BLOCK_ERROR_DESC' , 'Durch Einschalten dieser Option werden 
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_TITLE','Kundenstatus f&uuml;r USt-IdNr. gepr&uuml;fte Kunden (Inland)');
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_DESC','W&auml;hlen Sie den Kundenstatus (Gruppe) f&uuml;r USt-IdNr. gepr&uuml;fte Kunden aus!');
 
-// Afterbuy
-define('AFTERBUY_ACTIVATED_TITLE','Aktiv');
-define('AFTERBUY_ACTIVATED_DESC','Afterbuyschnittstelle aktivieren');
-define('AFTERBUY_PARTNERID_TITLE','Partner ID');
-define('AFTERBUY_PARTNERID_DESC','Ihre Afterbuy Partner ID');
-define('AFTERBUY_PARTNERPASS_TITLE','Partner Passwort');
-define('AFTERBUY_PARTNERPASS_DESC','Ihr Partner Passwort f&uuml;r die Afterbuy XML Schnittstelle');
-define('AFTERBUY_USERID_TITLE','User ID');
-define('AFTERBUY_USERID_DESC','Ihre Afterbuy User ID');
-define('AFTERBUY_ORDERSTATUS_TITLE','Bestellstatus');
-define('AFTERBUY_ORDERSTATUS_DESC','Bestellstatus nach erfolgreicher &Uuml;bertragung der Bestelldaten');
-define('AFTERBUY_URL','Eine Beschreibung von Afterbuy finden Sie hier: <a href="http://www.afterbuy.de" target="new">http://www.afterbuy.de</a>');
-define('AFTERBUY_DEALERS_TITLE', 'Als H&auml;ndler markieren');
-define('AFTERBUY_DEALERS_DESC', 'geben Sie hier die Gruppen IDs der H&auml;ndler ein, die in Afterbuy als H&auml;ndler eingehen sollen.<br />Beispiel: <em>6,5,8</em>. Es d&uuml;rfen keine Leerzeichen enhalten sein!');
-define('AFTERBUY_IGNORE_GROUPE_TITLE', 'Kundengruppe ignorieren');
-define('AFTERBUY_IGNORE_GROUPE_DESC', 'welche Kundengruppen sollen ignoiert werden?<br />Beispiel: <em>6,5,8</em>. Es d&uuml;rfen keine Leerzeichen enhalten sein!');
-
 // Search-Options
 define('SEARCH_MIN_LENGTH_TITLE', 'Suche Zeichenanzahl');
 define('SEARCH_MIN_LENGTH_DESC', 'Minimum Zeichenanzahl f&uuml;r die Suche');
