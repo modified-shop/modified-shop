@@ -155,39 +155,70 @@ class tax_eel {
     }
 
     foreach ($tax_array as $iso_code_2 => $tax_rate) {
-      $action = 'update';
       if (!isset($geo_zones_array[$iso_code_2])) {
-        $sql_data_array = array(
-          'geo_zone_name' => sprintf('DE::Steuerzone VP - %s||EN::Tax zone VP - %s', $iso_code_2, $iso_code_2),
-          'date_added' => 'now()'
-        );
-        if (xtc_db_perform(TABLE_GEO_ZONES, $sql_data_array) === false) {
+        // geo_zone_name carries a unique index, so an existing zone has to be reused
+        $geo_zone_name = sprintf('DE::Steuerzone VP - %s||EN::Tax zone VP - %s', $iso_code_2, $iso_code_2);
+
+        $check_query = xtc_db_query("SELECT geo_zone_id
+                                       FROM ".TABLE_GEO_ZONES."
+                                      WHERE geo_zone_name = '".xtc_db_input($geo_zone_name)."'");
+        if ($check_query === false) {
           $success = false;
           continue;
         }
 
-        $geo_zones_array[$iso_code_2] = (int)xtc_db_insert_id();
-        $action = 'insert';
+        if (xtc_db_num_rows($check_query) > 0) {
+          $check = xtc_db_fetch_array($check_query);
+          $geo_zones_array[$iso_code_2] = (int)$check['geo_zone_id'];
+        } else {
+          $sql_data_array = array(
+            'geo_zone_name' => $geo_zone_name,
+            'date_added' => 'now()'
+          );
+          if (xtc_db_perform(TABLE_GEO_ZONES, $sql_data_array) === false) {
+            $success = false;
+            continue;
+          }
+
+          $geo_zones_array[$iso_code_2] = (int)xtc_db_insert_id();
+        }
       }
 
-      $sql_data_array = array(
-        'zone_country_id' => $countries_array[$iso_code_2],
-        'zone_id' => '0',
-        'geo_zone_id' => $geo_zones_array[$iso_code_2],
-      );
-
-      if ($action == 'insert') {
-        $sql_data_array['date_added'] = 'now()';
-      } else {
-        $sql_data_array['last_modified'] = 'now()';
-      }
-
-      if (xtc_db_perform(TABLE_ZONES_TO_GEO_ZONES, $sql_data_array, $action, "zone_country_id = '".(int)$sql_data_array['zone_country_id']."' AND geo_zone_id = '".(int)$sql_data_array['geo_zone_id']."'") === false) {
+      // tax_eu may have relinked the country, so the assignment is checked every run
+      $check_query = xtc_db_query("SELECT association_id
+                                     FROM ".TABLE_ZONES_TO_GEO_ZONES."
+                                    WHERE zone_country_id = ".(int)$countries_array[$iso_code_2]."
+                                      AND geo_zone_id = ".(int)$geo_zones_array[$iso_code_2]);
+      if ($check_query === false) {
         $success = false;
+        continue;
       }
 
+      if (xtc_db_num_rows($check_query) == 0) {
+        $sql_data_array = array(
+          'zone_country_id' => (int)$countries_array[$iso_code_2],
+          'zone_id' => '0',
+          'geo_zone_id' => (int)$geo_zones_array[$iso_code_2],
+          'date_added' => 'now()'
+        );
+        if (xtc_db_perform(TABLE_ZONES_TO_GEO_ZONES, $sql_data_array) === false) {
+          $success = false;
+        }
+      }
+
+      $check_query = xtc_db_query("SELECT tax_rates_id
+                                     FROM ".TABLE_TAX_RATES."
+                                    WHERE tax_zone_id = ".(int)$geo_zones_array[$iso_code_2]."
+                                      AND tax_class_id = ".(int)$tax_class_id);
+      if ($check_query === false) {
+        $success = false;
+        continue;
+      }
+
+      $action = (xtc_db_num_rows($check_query) > 0) ? 'update' : 'insert';
+
       $sql_data_array = array(
-        'tax_zone_id' => $geo_zones_array[$iso_code_2],
+        'tax_zone_id' => (int)$geo_zones_array[$iso_code_2],
         'tax_class_id' => $tax_class_id,
         'tax_priority' => '99',
         'tax_rate' => $tax_rate,
