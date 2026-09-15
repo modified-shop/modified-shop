@@ -48,7 +48,7 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail notification');
   define('MODULE_SHIPCLOUD_EMAIL_DESC', 'Notify customer by E-Mail?');
   define('MODULE_SHIPCLOUD_EMAIL_TYPE_TITLE', '<hr noshade>Notification');
-  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Should the customer be notified by the Shop or shipcloud?<br><Note:</b>For a notification from the Shop you must set a Webhook to this URL: '.((defined('RUN_MODE_ADMIN') && function_exists('xtc_catalog_href_link')) ? xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false) : '').' in shipcloud.');
+  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Should the customer be notified by the Shop or shipcloud?<br><b>Note:</b> For a notification from the Shop you must set a Webhook to this URL: '.((defined('RUN_MODE_ADMIN') && function_exists('xtc_catalog_href_link')) ? xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false) : '').' in shipcloud.');
 }
 
 define('SHIPMENT.TRACKING.SHIPCLOUD_LABEL_CREATED', 'Shipment created at shipcloud');

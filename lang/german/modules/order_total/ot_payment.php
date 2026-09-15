@@ -76,11 +76,11 @@ if (defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER')) {
 define('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING_TITLE', '<hr>Inklusive Versandkosten');
 define('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING_DESC', 'Versandkosten werden mit rabattiert');
 
-define('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX_TITLE', '<hr>Inklusive Ust');
-define('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX_DESC', 'Ust wird mit rabattiert');
+define('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX_TITLE', '<hr>Inklusive USt.');
+define('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX_DESC', 'USt. wird mit rabattiert');
 
-define('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX_TITLE', '<hr>Ust Berechnung');
-define('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX_DESC', 'erneutes Berechnen der Ust Summe');
+define('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX_TITLE', '<hr>USt.-Berechnung');
+define('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX_DESC', 'erneutes Berechnen der USt.-Summe');
 
 define('MODULE_ORDER_TOTAL_PAYMENT_ALLOWED_TITLE', '<hr>Erlaubte Zonen');
 define('MODULE_ORDER_TOTAL_PAYMENT_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');

@@ -64,7 +64,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_TITLE',' Bestellstat
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_DESC','Wenn ein Refund ausgel&ouml;st wird, wird dieser Status gesetzt');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_TITLE',' Bestellstatus: Bezahlung pr&uuml;fen');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_DESC','Bei Problemen, wird dieser Status gesetzt, damit Sie dies pr&uuml;fen k&ouml;nnen.');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_DESC','Bei Problemen wird dieser Status gesetzt, damit Sie dies pr&uuml;fen k&ouml;nnen.');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID_TITLE',' Bestellstatus: Konflikt');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID_DESC','Sollte es zu einem abweichenden Event-Workflow kommen, wird dieser Status gesetzt.');
