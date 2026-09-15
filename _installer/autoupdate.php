@@ -245,6 +245,13 @@
           $smarty->assign('LINK_DB_BACKUP', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type));
           $smarty->assign('LINK_DB_RESTORE', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type));
         
+          // list only failed and unknown requirements
+          foreach ($requirement_array as $k => $requirement) {
+            if ($requirement['status'] === true) {
+              unset($requirement_array[$k]);
+            }
+          }
+
           $smarty->assign('REQUIREMENT_ARRAY', $requirement_array);
           $smarty->assign('PERMISSION_ARRAY', $permission_array);
           $smarty->clear_assign('FORM_ACTION');

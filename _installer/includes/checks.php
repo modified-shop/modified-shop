@@ -23,6 +23,13 @@
       && !in_array($_GET['action'], array('db_backup', 'readdb', 'db_restore', 'restoredb'))
       )
   {
+    // list only failed and unknown requirements
+    foreach ($requirement_array as $k => $requirement) {
+      if ($requirement['status'] === true) {
+        unset($requirement_array[$k]);
+      }
+    }
+
     $smarty->assign('PERMISSION_ARRAY', $permission_array);
     $smarty->assign('REQUIREMENT_ARRAY', $requirement_array);
     
