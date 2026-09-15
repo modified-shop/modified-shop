@@ -53,12 +53,30 @@
       $tax_classes_array[] = (int)$tax_classes['tax_class_id'];
     }
 
-    // an empty or truncated configuration value must not produce a bogus entry
+    $geo_zone_ids_array = array();
+    $geo_zones_query = xtc_db_query("SELECT geo_zone_id
+                                       FROM ".TABLE_GEO_ZONES);
+    if ($geo_zones_query === false) {
+      return false;
+    }
+
+    while ($geo_zones = xtc_db_fetch_array($geo_zones_query)) {
+      $geo_zone_ids_array[] = (int)$geo_zones['geo_zone_id'];
+    }
+
+    // a truncated or stale configuration value must not point at a wrong zone,
+    // an entry that does not survive this is treated as missing and looked up again
     $geo_zones_array = array();
     if (defined('MODULE_TAX_EU_GEO_ZONES') && MODULE_TAX_EU_GEO_ZONES != '') {
       $geozones = preg_split("/[:,]/", MODULE_TAX_EU_GEO_ZONES);
       for ($i=0, $n=count($geozones); $i+1<$n; $i+=2) {
-        $geo_zones_array[$geozones[$i]] = (int)$geozones[$i+1];
+        if (preg_match('/^[A-Z]{2}$/D', $geozones[$i]) === 1
+            && ctype_digit($geozones[$i+1])
+            && in_array((int)$geozones[$i+1], $geo_zone_ids_array)
+            )
+        {
+          $geo_zones_array[$geozones[$i]] = (int)$geozones[$i+1];
+        }
       }
     }
 
