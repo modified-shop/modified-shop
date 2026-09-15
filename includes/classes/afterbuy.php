@@ -143,6 +143,11 @@ class xtc_afterbuy_functions {
         // Set this option to a non-zero value if you want PHP to do a regular HTTP POST.
         // This POST is a normal application/x-www-form-urlencoded  kind, most commonly used by HTML forms.
         curl_setopt($ch, CURLOPT_POST, 1);
+
+        // the default is no limit at all, an accepted but unanswered request would hold the
+        // checkout until the worker dies and take both order mails with it
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
       }
 
       // get gender
@@ -537,9 +542,12 @@ class xtc_afterbuy_functions {
           }
 
         } else {
+          // a timeout leaves no response at all, so the curl message is the only clue
+          $error = ($result === false) ? curl_error($ch) : $result;
+
           // mail to shopowner
-          $mail_content_html = 'Fehler beim Senden der Bestellung: ' . $this->order_id . "<br />\r\n" . 'Folgende Fehlermeldung wurde von afterbuy.de zur&uuml;ckgegeben:' . "<br />\r\n" . "<br />\r\n" . $result;
-          $mail_content_txt = 'Fehler beim Senden der Bestellung: ' . $this->order_id . "\r\n" . 'Folgende Fehlermeldung wurde von afterbuy.de zurueckgegeben:' . "\r\n\r\n" . $result;
+          $mail_content_html = 'Fehler beim Senden der Bestellung: ' . $this->order_id . "<br />\r\n" . 'Folgende Fehlermeldung wurde von afterbuy.de zur&uuml;ckgegeben:' . "<br />\r\n" . "<br />\r\n" . $error;
+          $mail_content_txt = 'Fehler beim Senden der Bestellung: ' . $this->order_id . "\r\n" . 'Folgende Fehlermeldung wurde von afterbuy.de zurueckgegeben:' . "\r\n\r\n" . $error;
           xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '', STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '', '', 'Afterbuy-Error', $mail_content_html, $mail_content_txt);
         }
       }

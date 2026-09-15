@@ -465,8 +465,40 @@
                        SET set_function = '".xtc_db_input($afterbuy_set_function)."'
                      WHERE configuration_key IN ('MODULE_AFTERBUY_DEALERS', 'MODULE_AFTERBUY_IGNORE_GROUPS')");
 
-      if (!defined('MODULE_AFTERBUY_ORDER_MAIL')) {
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_AFTERBUY_ORDER_MAIL', 'true',  '6', '8', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+      // MODULE_AFTERBUY_ORDER_MAIL is new, and the update from 1.0.6.4 to 2.0.0.0 deletes
+      // AFTERBUY_DEALERS and AFTERBUY_IGNORE_GROUPE, so for that upgrade path the rename above
+      // finds nothing and the module would end up with part of its settings missing
+      $afterbuy_status_function = 'xtc_cfg_select_option(array(\'true\', \'false\'), ';
+      $afterbuy_defaults = array(
+        'MODULE_AFTERBUY_STATUS' => array('value' => 'false', 'sort_order' => 1, 'set_function' => $afterbuy_status_function, 'use_function' => ''),
+        'MODULE_AFTERBUY_PARTNERID' => array('value' => '', 'sort_order' => 2, 'set_function' => '', 'use_function' => ''),
+        'MODULE_AFTERBUY_PARTNERPASS' => array('value' => '', 'sort_order' => 3, 'set_function' => '', 'use_function' => ''),
+        'MODULE_AFTERBUY_USERID' => array('value' => '', 'sort_order' => 4, 'set_function' => '', 'use_function' => ''),
+        'MODULE_AFTERBUY_ORDERSTATUS' => array('value' => '1', 'sort_order' => 5, 'set_function' => 'xtc_cfg_pull_down_order_statuses(', 'use_function' => 'xtc_get_order_status_name'),
+        'MODULE_AFTERBUY_DEALERS' => array('value' => '', 'sort_order' => 6, 'set_function' => $afterbuy_set_function, 'use_function' => ''),
+        'MODULE_AFTERBUY_IGNORE_GROUPS' => array('value' => '', 'sort_order' => 7, 'set_function' => $afterbuy_set_function, 'use_function' => ''),
+        'MODULE_AFTERBUY_ORDER_MAIL' => array('value' => 'true', 'sort_order' => 8, 'set_function' => $afterbuy_status_function, 'use_function' => ''),
+      );
+
+      // a key renamed above is in the table but not defined as a constant, so ask the table
+      foreach ($afterbuy_defaults as $afterbuy_key => $afterbuy_default) {
+        $afterbuy_key_query = xtc_db_query("SELECT configuration_id
+                                              FROM ".TABLE_CONFIGURATION."
+                                             WHERE configuration_key = '".$afterbuy_key."'");
+        if (xtc_db_num_rows($afterbuy_key_query) > 0) {
+          continue;
+        }
+
+        $sql_data_array = array(
+          'configuration_key' => $afterbuy_key,
+          'configuration_value' => $afterbuy_default['value'],
+          'configuration_group_id' => 6,
+          'sort_order' => $afterbuy_default['sort_order'],
+          'set_function' => $afterbuy_default['set_function'],
+          'use_function' => $afterbuy_default['use_function'],
+          'date_added' => 'now()',
+        );
+        xtc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
       }
     }
 

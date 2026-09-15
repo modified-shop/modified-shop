@@ -55,16 +55,19 @@
     }
 
     function install() {
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_AFTERBUY_STATUS', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_AFTERBUY_PARTNERID', '',  '6', '2', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_AFTERBUY_PARTNERPASS', '',  '6', '3', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_AFTERBUY_USERID', '',  '6', '4', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_AFTERBUY_ORDERSTATUS', '1',  '6', '5', 'xtc_get_order_status_name', 'xtc_cfg_pull_down_order_statuses(', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_AFTERBUY_DEALERS', '',  '6', '6', '" . xtc_db_input($this->customers_status_set_function()) . "', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_AFTERBUY_IGNORE_GROUPS', '',  '6', '7', '" . xtc_db_input($this->customers_status_set_function()) . "', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_AFTERBUY_ORDER_MAIL', 'true',  '6', '8', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-
+      $this->add_configuration_keys();
       $this->migrate_legacy_configuration();
+    }
+
+    /**
+     * Repairs a configuration that is missing single keys.
+     *
+     * Reachable through the update action of the module list.
+     */
+    function update() {
+      $this->add_configuration_keys();
+
+      return '';
     }
 
     function remove() {
@@ -84,6 +87,47 @@
       );
 
       return $key;
+    }
+
+    /**
+     * Writes the module configuration and skips every key that is already there.
+     *
+     * The update from 1.0.6.4 to 2.0.0.0 deletes AFTERBUY_DEALERS and AFTERBUY_IGNORE_GROUPE, so
+     * for that upgrade path the migration finds nothing to rename and the module would sit here
+     * with part of its settings missing.
+     */
+    function add_configuration_keys() {
+      $status = 'xtc_cfg_select_option(array(\'true\', \'false\'), ';
+      $groups = $this->customers_status_set_function();
+
+      $this->add_configuration('MODULE_AFTERBUY_STATUS', 'true', 1, $status);
+      $this->add_configuration('MODULE_AFTERBUY_PARTNERID', '', 2);
+      $this->add_configuration('MODULE_AFTERBUY_PARTNERPASS', '', 3);
+      $this->add_configuration('MODULE_AFTERBUY_USERID', '', 4);
+      $this->add_configuration('MODULE_AFTERBUY_ORDERSTATUS', '1', 5, 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
+      $this->add_configuration('MODULE_AFTERBUY_DEALERS', '', 6, $groups);
+      $this->add_configuration('MODULE_AFTERBUY_IGNORE_GROUPS', '', 7, $groups);
+      $this->add_configuration('MODULE_AFTERBUY_ORDER_MAIL', 'true', 8, $status);
+    }
+
+    function add_configuration($key, $value, $sort_order, $set_function = '', $use_function = '') {
+      $check_query = xtc_db_query("SELECT configuration_id
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key = '".xtc_db_input($key)."'");
+      if (xtc_db_num_rows($check_query) > 0) {
+        return;
+      }
+
+      $sql_data_array = array(
+        'configuration_key' => $key,
+        'configuration_value' => $value,
+        'configuration_group_id' => 6,
+        'sort_order' => $sort_order,
+        'set_function' => $set_function,
+        'use_function' => $use_function,
+        'date_added' => 'now()',
+      );
+      xtc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
     }
 
     /**
