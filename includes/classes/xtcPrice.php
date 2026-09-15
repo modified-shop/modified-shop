@@ -351,6 +351,7 @@ class xtcPrice {
    * @param Integer $pID product id
    * @param Integer $option option id
    * @param Integer $value value id
+   * @param Integer $qty quantity
    * @return Double option price
    */
   function xtcGetOptionPrice($pID, $option, $value, $qty = 1) {

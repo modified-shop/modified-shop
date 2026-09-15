@@ -675,6 +675,7 @@ class shoppingCart {
    * get price for a product's attribute
    *
    * @param integer $products_id
+   * @param integer $qty
    * @return float
    */
   function attributes_price($products_id, $qty = 1) {
