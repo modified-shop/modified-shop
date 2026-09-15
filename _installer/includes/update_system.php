@@ -232,6 +232,13 @@
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('15', 'm',  '".((MODULE_MAGNALISTER_STATUS == 'True') ? 1 : 0)."', 'magnalister')");
   }
 
+  if (defined('MODULE_TAX_EU_STATUS')
+      && !in_array('tax_eu_maintenance', $scheduled_tasks_array)
+      )
+  {
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'd',  '".((MODULE_TAX_EU_STATUS == 'true') ? 1 : 0)."', 'tax_eu_maintenance')");
+  }
+
   if (defined('MODULE_PAYMENT_PAYPAL_SECRET')
       && !in_array('paypal_tracking', $scheduled_tasks_array)
       )

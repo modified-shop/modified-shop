@@ -66,3 +66,6 @@
 
   define('TEXT_HEADING_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'Guest account cleanup');
   define('TEXT_INFO_TASKS_GUEST_ACCOUNT_MAINTENANCE', 'Deletes guest accounts after the retention period (order data is preserved). Only applies when "Delete Guest Accounts" is enabled, after the number of days set in "Delete Guest Accounts After X Days".');
+
+  define('TEXT_HEADING_TASKS_TAX_EU_MAINTENANCE', 'Update OSS tax rates');
+  define('TEXT_INFO_TASKS_TAX_EU_MAINTENANCE', 'Syncs the tax rates with the modified API. Only applies when the system module <i>tax_eu</i> is enabled.');
