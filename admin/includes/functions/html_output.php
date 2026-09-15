@@ -251,11 +251,11 @@
 
   // Output a form hidden field
   function xtc_draw_hidden_field($name, $value = '') {
-    $field = '<input type="hidden" name="' . $name . '" value="';
+    $field = '<input type="hidden" name="' . encode_htmlspecialchars($name) . '" value="';
     if ($value != '') {
-      $field .= trim($value);
+      $field .= encode_htmlspecialchars(trim($value));
     } else {
-      $field .= trim(isset($GLOBALS[$name])?$GLOBALS[$name]:'');
+      $field .= encode_htmlspecialchars(trim(isset($GLOBALS[$name])?$GLOBALS[$name]:''));
     }
     $field .= '">';
     return $field;
