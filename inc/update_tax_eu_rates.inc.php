@@ -18,13 +18,13 @@
       ),
     );
 
-    // DIR_WS_CLASSES is absolute in the catalog context and relative in the admin context
-    require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
+    // include needed functions
+    require_once(DIR_FS_INC.'get_tax_eu_rates.inc.php');
 
-    modified_api::reset();
-    $tax_rates_array = modified_api::request('modified/tax/');
+    // the response is fetched and checked for both tax modules in one place
+    $api_rates_array = get_tax_eu_rates($success);
 
-    if (!is_array($tax_rates_array) || count($tax_rates_array) == 0) {
+    if ($api_rates_array === false) {
       return false;
     }
 
@@ -79,71 +79,45 @@
       }
     }
 
-    // the endpoint is not authenticated, so the whole response is checked
-    // and normalized before the first geo zone or tax rate is written
-    $success = true;
+    // only what this shop actually knows can be written
     $normalized = array();
 
-    foreach ($tax_rates_array as $tax_rates_country) {
-      if (!is_array($tax_rates_country)) {
+    foreach ($api_rates_array as $iso_code_2 => $rates_array) {
+      if (!isset($countries_array[$iso_code_2])) {
         $success = false;
         continue;
       }
 
-      foreach ($tax_rates_country as $iso_code_2 => $tax_rates_info) {
-        if (!is_string($iso_code_2)
-            || preg_match('/^[A-Z]{2}$/D', $iso_code_2) !== 1
-            || isset($normalized[$iso_code_2])
-            || !is_array($tax_rates_info)
-            || count($tax_rates_info) == 0
-            || !isset($countries_array[$iso_code_2])
-            )
-        {
-          $success = false;
-          continue;
+      // an unknown tax class discards the country, the rest of it would be incomplete
+      $classes_known = true;
+      foreach ($rates_array as $tax_class_id => $tax_rate) {
+        if (!in_array($tax_class_id, $tax_classes_array)) {
+          $classes_known = false;
+          break;
         }
-
-        // one unusable rate discards the whole country, a half updated country is worse
-        $rates_array = array();
-        foreach ($tax_rates_info as $tax_class_id => $tax_rate) {
-          if (!ctype_digit((string)$tax_class_id)
-              || !in_array((int)$tax_class_id, $tax_classes_array)
-              || (!is_string($tax_rate) && !is_numeric($tax_rate))
-              || ((string)$tax_rate != ''
-                  && preg_match('/^\d{1,3}(\.\d{1,4})?$/D', (string)$tax_rate) !== 1
-                 )
-              )
-          {
-            $rates_array = array();
-            break;
-          }
-
-          // an empty rate deletes the entry
-          $rates_array[(int)$tax_class_id] = (string)$tax_rate;
-        }
-
-        if (count($rates_array) == 0) {
-          $success = false;
-          continue;
-        }
-
-        $countries_to_update = array($countries_array[$iso_code_2]);
-        if (isset($additional_countries[$iso_code_2])) {
-          foreach ($additional_countries[$iso_code_2] as $iso_code_2_additional) {
-            if (!isset($countries_array[$iso_code_2_additional])) {
-              $success = false;
-              continue;
-            }
-
-            $countries_to_update[] = $countries_array[$iso_code_2_additional];
-          }
-        }
-
-        $normalized[$iso_code_2] = array(
-          'countries' => $countries_to_update,
-          'rates' => $rates_array,
-        );
       }
+
+      if ($classes_known === false) {
+        $success = false;
+        continue;
+      }
+
+      $countries_to_update = array($countries_array[$iso_code_2]);
+      if (isset($additional_countries[$iso_code_2])) {
+        foreach ($additional_countries[$iso_code_2] as $iso_code_2_additional) {
+          if (!isset($countries_array[$iso_code_2_additional])) {
+            $success = false;
+            continue;
+          }
+
+          $countries_to_update[] = $countries_array[$iso_code_2_additional];
+        }
+      }
+
+      $normalized[$iso_code_2] = array(
+        'countries' => $countries_to_update,
+        'rates' => $rates_array,
+      );
     }
 
     // nothing usable came back, so nothing is written at all
