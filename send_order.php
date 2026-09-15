@@ -200,11 +200,12 @@ if ((isset($_SESSION['customer_id'])
   
   // send mail to customer
   if (SEND_EMAILS == 'true' || (isset($send_by_admin) && $send_by_admin == true)) {
-    // afterbuy sends the confirmation itself, a mail requested in the admin always goes out
+    // afterbuy sends the confirmation itself, a mail requested in the administration always goes
+    // out. a payment callback sets $send_by_admin as well, so the admin bootstrap decides instead
     $skip_order_mail = ($afterbuy_sent === true
                         && defined('MODULE_AFTERBUY_ORDER_MAIL')
                         && MODULE_AFTERBUY_ORDER_MAIL == 'false'
-                        && !isset($send_by_admin)
+                        && !defined('RUN_MODE_ADMIN')
                         );
 
     if ($skip_order_mail === false) {

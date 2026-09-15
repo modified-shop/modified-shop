@@ -456,28 +456,33 @@ class xtc_afterbuy_functions {
           'paypalgooglepay',
         );
    
+        // a third party payment can report function id 5 without keeping a record in the paypal
+        // tables, asking there would only produce an empty transaction id
+        $payment_order_info_array = null;
         if (in_array($oData['payment_method'], $orders_v2_array)) {
           require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
           $paypal = new PayPalPaymentV2($oData['payment_method']);
           $payment_order_info_array = $paypal->GetOrderDetails($oID);
-        } else {
+        } elseif (in_array($oData['payment_method'], $orders_v1_array)) {
           require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
           $paypal = new PayPalInfo($oData['payment_method']);
           $payment_order_info_array = $paypal->order_info($oID);
-         }
+        }
 
-        if (isset($payment_order_info_array->status)) {
-          $DATAstring .= "PaymentStatus=".$payment_order_info_array->status."&";
-          $DATAstring .= "PaymentTransactionId=".$payment_order_info_array->id."&";
-          if ($payment_order_info_array->status == 'COMPLETED') $DATAstring .= "SetPay=1&";
-        } else {
-          if ($payment_order_info_array['transactions']['0']['relatedResource']['0']['state'] == 'completed') {
-            $DATAstring .= "PaymentStatus=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['state']."&";
-            $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['id']."&";
-            $DATAstring .= "SetPay=1&";
+        if ($payment_order_info_array !== null) {
+          if (isset($payment_order_info_array->status)) {
+            $DATAstring .= "PaymentStatus=".$payment_order_info_array->status."&";
+            $DATAstring .= "PaymentTransactionId=".$payment_order_info_array->id."&";
+            if ($payment_order_info_array->status == 'COMPLETED') $DATAstring .= "SetPay=1&";
           } else {
-            $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['id']."&";
-            $DATAstring .= "PaymentStatus=0&";
+            if ($payment_order_info_array['transactions']['0']['relatedResource']['0']['state'] == 'completed') {
+              $DATAstring .= "PaymentStatus=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['state']."&";
+              $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['id']."&";
+              $DATAstring .= "SetPay=1&";
+            } else {
+              $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['id']."&";
+              $DATAstring .= "PaymentStatus=0&";
+            }
           }
         }
       }
@@ -600,7 +605,8 @@ class xtc_afterbuy_functions {
         $this->payment_id = '1';
         $this->payment_name = "Vorkasse";
         break;
-      case 'klarna_paynow':
+      // klarna_paynow is deliberately absent, "pay now" is a group that also covers direct debit
+      // and card, so it keeps the collecting id and reaches afterbuy under its own name
       case 'klarna_directbanktransfer':
         $this->payment_id = '12';
         $this->payment_name = "Sofortueberweisung";
