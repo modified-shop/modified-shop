@@ -40,7 +40,7 @@ define('TEXT_BANNERS_IMAGE_MOBILE', 'Image Mobile:');
 define('TEXT_BANNERS_IMAGE_LOCAL', 'Choose the desired image by clicking the "Browse" button or choose an existing banner below.<br /><strong>Allowed extensions:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab');
 define('TEXT_BANNERS_IMAGE_TARGET', 'Image Target (Save To):');
 define('TEXT_BANNERS_HTML_TEXT', 'HTML Text:');
-define('TEXT_BANNERS_HTML_TEXT_NOTE', 'Here you can enter directly an HTML code you received from an affiliate service to display the banner.');
+define('TEXT_BANNERS_HTML_TEXT_NOTE', 'Here you can directly enter the HTML code you received from an affiliate service to display the banner.');
 define('TEXT_BANNERS_EXPIRES_ON', 'Expires On:');
 define('TEXT_BANNERS_OR_AT', ', or at');
 define('TEXT_BANNERS_IMPRESSIONS', 'impressions/views.');
