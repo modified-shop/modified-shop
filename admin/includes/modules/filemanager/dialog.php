@@ -387,7 +387,7 @@ $get_params = http_build_query($get_params);
     <input type="hidden" id="crossdomain" value="<?php echo $crossdomain;?>" />
     <input type="hidden" id="editor" value="<?php echo $editor;?>" />
     <input type="hidden" id="view" value="<?php echo $view;?>" />
-    <input type="hidden" id="subdir" value="<?php echo $subdir;?>" />
+    <input type="hidden" id="subdir" value="<?php echo rfm_esc($subdir);?>" />
     <input type="hidden" id="field_id" value="<?php echo $field_id;?>" />
     <input type="hidden" id="multiple" value="<?php echo $multiple;?>" />
     <input type="hidden" id="type_param" value="<?php echo $type_param;?>" />
@@ -404,8 +404,8 @@ $get_params = http_build_query($get_params);
     <input type="hidden" id="duplicate" value="<?php if($config['duplicate_files']) echo 1; else echo 0;?>" />
     <input type="hidden" id="base_url" value="<?php echo $config['base_url']?>"/>
     <input type="hidden" id="ftp_base_url" value="<?php echo $config['ftp_base_url']?>"/>
-    <input type="hidden" id="fldr_value" value="<?php echo $subdir;?>"/>
-    <input type="hidden" id="sub_folder" value="<?php echo $rfm_subfolder;?>"/>
+    <input type="hidden" id="fldr_value" value="<?php echo rfm_esc($subdir);?>"/>
+    <input type="hidden" id="sub_folder" value="<?php echo rfm_esc($rfm_subfolder);?>"/>
     <input type="hidden" id="return_relative_url" value="<?php echo $return_relative_url == true ? 1 : 0;?>"/>
     <input type="hidden" id="file_number_limit_js" value="<?php echo $config['file_number_limit_js'];?>" />
     <input type="hidden" id="sort_by" value="<?php echo $sort_by;?>" />
@@ -1154,7 +1154,7 @@ $files = $sorted;
                     <?php if($is_icon_thumb){ ?><div class="filetype"><?php echo rfm_esc($file_array['extension']) ?></div><?php } ?>
                     
                     <div class="img-container">
-                        <img class="<?php echo $show_original ? "original" : "" ?><?php echo $is_icon_thumb ? " icon" : "" ?>" data-src="<?php echo $src_thumb;?>">
+                        <img class="<?php echo $show_original ? "original" : "" ?><?php echo $is_icon_thumb ? " icon" : "" ?>" data-src="<?php echo rfm_esc($src_thumb);?>">
                     </div>
                 </div>
                 <div class="img-precontainer-mini <?php if($is_img) echo 'original-thumb' ?>">
@@ -1163,7 +1163,7 @@ $files = $sorted;
                     <div class="filetype <?php echo rfm_esc($file_array['extension']) ?> <?php if(in_array($file_array['extension'], $config['editable_text_file_exts'])) echo 'edit-text-file-allowed' ?> <?php if(!$is_icon_thumb){ echo "hide"; }?>"><?php echo rfm_esc($file_array['extension']) ?></div>
                     <div class="img-container-mini">
                     <?php if($mini_src!=""){ ?>
-                    <img class="<?php echo $show_original_mini ? "original" : "" ?><?php echo $is_icon_thumb_mini ? " icon" : "" ?>" data-src="<?php echo $mini_src;?>">
+                    <img class="<?php echo $show_original_mini ? "original" : "" ?><?php echo $is_icon_thumb_mini ? " icon" : "" ?>" data-src="<?php echo rfm_esc($mini_src);?>">
                     <?php } ?>
                     </div>
                 </div>
@@ -1190,7 +1190,7 @@ $files = $sorted;
                     <a title="<?php echo trans('Download')?>" class="tip-right" href="javascript:void('')" <?php if($config['download_files']) echo "onclick=\"$('#form".$nu."').submit();\"" ?>><i class="icon-download <?php if(!$config['download_files']) echo 'icon-white'; ?>"></i></a>
 
                     <?php if($is_img && $src_thumb!=""){ ?>
-                    <a class="tip-right preview" title="<?php echo trans('Preview')?>" data-featherlight="<?php echo $src;?>"  href="#"><i class=" icon-eye-open"></i></a>
+                    <a class="tip-right preview" title="<?php echo trans('Preview')?>" data-featherlight="<?php echo rfm_esc($src);?>"  href="#"><i class=" icon-eye-open"></i></a>
                     <?php }elseif(($is_video || $is_audio) && in_array($file_array['extension'],$config['jplayer_exts'])){ ?>
                     <a class="tip-right modalAV <?php if($is_audio){ echo "audio"; }else{ echo "video"; } ?>"
                     title="<?php echo trans('Preview')?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo rfm_esc($filename);?>&file=<?php echo rfm_esc($rfm_subfolder.$subdir.$file);?>"
