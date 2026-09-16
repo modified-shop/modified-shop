@@ -79,7 +79,6 @@ try {
             $url_port = (isset($url_parts['port'])) ? (int)$url_parts['port'] : (($url_scheme == 'https') ? 443 : 80);
             $url_ip = ($url_host != '') ? gethostbyname($url_host) : '';
 
-            // GLOBAL_RANGE also covers the carrier grade, benchmarking and documentation blocks
             $url_ip_flags = FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
             if (defined('FILTER_FLAG_GLOBAL_RANGE')) {
                 $url_ip_flags |= FILTER_FLAG_GLOBAL_RANGE;
@@ -87,6 +86,27 @@ try {
 
             if (filter_var($url_ip, FILTER_VALIDATE_IP, $url_ip_flags) === false) {
                 throw new Exception('Is not a valid URL.');
+            }
+
+            // the blocks above leave these through, and FILTER_FLAG_GLOBAL_RANGE only
+            // arrived in PHP 8.2 while the shop still starts at 8.0, so they are listed
+            $url_ip_long = ip2long($url_ip);
+            $url_ip_reserved = array(
+              '100.64.0.0/10',    // carrier grade NAT
+              '192.0.0.0/24',     // IETF protocol assignments
+              '192.0.2.0/24',     // documentation
+              '192.88.99.0/24',   // 6to4 relay anycast
+              '198.18.0.0/15',    // benchmarking
+              '198.51.100.0/24',  // documentation
+              '203.0.113.0/24',   // documentation
+              '224.0.0.0/4',      // multicast
+            );
+            foreach ($url_ip_reserved as $url_ip_range) {
+              list($url_range_net, $url_range_bits) = explode('/', $url_ip_range);
+              $url_range_mask = (0xFFFFFFFF << (32 - (int)$url_range_bits)) & 0xFFFFFFFF;
+              if (($url_ip_long & $url_range_mask) === (ip2long($url_range_net) & $url_range_mask)) {
+                throw new Exception('Is not a valid URL.');
+              }
             }
 
             $temp = tempnam('/tmp','RF');
