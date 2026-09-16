@@ -16,6 +16,8 @@
   defined('DIR_FS_LOG') OR define('DIR_FS_LOG', DIR_FS_CATALOG.'log/');
   defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
   defined('TEAMBANK_PENDING_TIMEOUT') OR define('TEAMBANK_PENDING_TIMEOUT', 24);
+  // seconds a task run may hold a transaction before another run may take it over
+  defined('TEAMBANK_CLAIM_TIMEOUT') OR define('TEAMBANK_CLAIM_TIMEOUT', 1800);
   
   // needed classes
   require_once(DIR_FS_EXTERNAL.'Teambank/autoload.php');
@@ -518,13 +520,11 @@
         xtc_db_query("ALTER TABLE `easycredit` ADD `mail_sent` TINYINT(1) NOT NULL DEFAULT 0");
         $migrate = true;
       }
+      if ($this->has_column('claimed') !== true) {
+        xtc_db_query("ALTER TABLE `easycredit` ADD `claimed` DATETIME DEFAULT NULL");
+      }
 
       if ($migrate === true) {
-        // Whatever these orders received, they received it before the task existed.
-        // Marking them as mailed keeps it from sending a confirmation months late.
-        xtc_db_query("UPDATE `easycredit`
-                         SET mail_sent = 1");
-
         // An order still parked on the temporary status of its own module is the only
         // kind worth a status lookup. Comparing against both modules at once would
         // hand over orders that simply share the other one's status number.
@@ -537,9 +537,14 @@
           }
         }
 
+        // Everything else is history and keeps its mail flag set: whatever it
+        // received, it received before the task existed. An order that is still open
+        // never had its confirmation at all, since holding that back is exactly what
+        // the pending path does, so both flags stay clear and the task finishes it.
         xtc_db_query("UPDATE `easycredit` e,
                              ".TABLE_ORDERS." o
-                         SET e.authorized = 1
+                         SET e.authorized = 1,
+                             e.mail_sent = 1
                        WHERE o.orders_id = e.orders_id
                          ".((count($pending_status) > 0) ? "AND NOT (".implode("
                               OR ", $pending_status).")" : ""));
@@ -605,7 +610,10 @@
     }
 
     function has_pending_support() {
-      return ($this->has_column('authorized') === true && $this->has_column('mail_sent') === true);
+      return ($this->has_column('authorized') === true
+              && $this->has_column('mail_sent') === true
+              && $this->has_column('claimed') === true
+              );
     }
 
     function process_pending_transactions() {
@@ -683,12 +691,16 @@
     function claim_pending_transaction($orders_id) {
       // Two cron runs can overlap. A single conditional update is atomic on every
       // engine the shop supports, so exactly one of them takes the row and the other
-      // finds nothing to change. A run that dies after this leaves the row on 2,
-      // where it waits for the merchant instead of being processed twice.
+      // comes away empty. The reservation carries a timestamp rather than a state, so
+      // a run that dies halfway through, on a broken mail template or a timeout, does
+      // not lock the order out for good: the next run past the window takes it on.
       xtc_db_query("UPDATE `easycredit`
-                       SET authorized = 2
+                       SET claimed = now()
                      WHERE orders_id = '".(int)$orders_id."'
-                       AND authorized = 0");
+                       AND authorized = 0
+                       AND (claimed IS NULL
+                            OR claimed < '".date('Y-m-d H:i:s', (time() - TEAMBANK_CLAIM_TIMEOUT))."'
+                            )");
 
       return (xtc_db_affected_rows() > 0);
     }
