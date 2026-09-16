@@ -21,11 +21,22 @@
     $noStyling = ' noStyling';
   }
 
+  $option_order_by = 'sort_order,options_id,options_name';
+
+  // the value ends up in ORDER BY, so map it instead of taking it over
   if (isset($_GET['option_order_by']) && $_GET['option_order_by']) {
-    $option_order_by = $_GET['option_order_by'];
+    switch ($_GET['option_order_by']) {
+      case 'sort_order':
+        $option_order_by = 'sort_order';
+        break;
+      case 'options_id':
+        $option_order_by = 'options_id';
+        break;
+      case 'options_name':
+        $option_order_by = 'options_name';
+        break;
+    }
     $_POST['current_product_id'] = (int)$_GET['current_product_id'];
-  } else {
-    $option_order_by = 'sort_order,options_id,options_name';
   }
   $options = array();
   $options[] = (array ('id' => 'sort_order', 'text' => TEXT_SORTORDER));
