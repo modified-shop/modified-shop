@@ -224,12 +224,16 @@
         }
       }
 
+      $authorized = false;
+      // microseconds, the back-off grows by half a second per attempt
+      $wait = 0;
       for ($i = 0; $i <= 10; $i ++) {
-        usleep($i * 500000);
+        $wait += $i * 500000;
+        usleep($wait);
   
         $TransactionInformation = $this->ecCheckout->loadTransaction();
         if ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
-          // returning true here would suppress the order confirmation mail
+          $authorized = true;
           break;
         } elseif (in_array($TransactionInformation->getStatus(), array(\Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_DECLINED, \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_EXPIRED))) {
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
@@ -237,6 +241,13 @@
           
           $this->payment_error_redirect();
         }
+      }
+
+      if ($authorized !== true) {
+        require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+        xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+
+        $this->payment_error_redirect();
       }
     }
     
