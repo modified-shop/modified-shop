@@ -17,6 +17,11 @@ if (USE_ACCESS_KEYS == true){
 
 $_SESSION['RF']["verify"] = "RESPONSIVEfilemanager";
 
+// one token per session, checked by every endpoint this dialog talks to
+if (!isset($_SESSION['RF']['token']) || $_SESSION['RF']['token'] == '') {
+    $_SESSION['RF']['token'] = bin2hex(random_bytes(16));
+}
+
 if (isset($_POST['submit'])) {
     include 'upload.php';
 } else {
@@ -334,6 +339,12 @@ $get_params = http_build_query($get_params);
 
         <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+        <script>
+        // every request out of this dialog carries the session token
+        jQuery(document).ajaxSend(function (event, xhr) {
+            xhr.setRequestHeader('X-RFM-Token', <?php echo json_encode($_SESSION['RF']['token']); ?>);
+        });
+        </script>
         <script src="js/plugins.js?v=<?php echo $version; ?>"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jplayer/2.9.2/jplayer/jquery.jplayer.min.js"></script>
         <link type="text/css" href="https://uicdn.toast.com/tui-color-picker/v2.2.0/tui-color-picker.css" rel="stylesheet">
@@ -466,6 +477,7 @@ $get_params = http_build_query($get_params);
                 <div class="tab-pane active" id="baseUpload">
                     <!-- The file upload form used as target for the file upload widget -->
                     <form id="fileupload" action="" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="rfm_token" value="<?php echo htmlspecialchars($_SESSION['RF']['token'], ENT_QUOTES, 'UTF-8'); ?>"/>
                         <div class="container2">
                             <div class="fileupload-buttonbar">
                                  <!-- The global progress state -->
@@ -1183,7 +1195,7 @@ $files = $sorted;
                 <div class='img-dimension'><?php if($is_img){ echo $img_width."x".$img_height; } ?></div>
                 <div class='file-extension'><?php echo $file_array['extension'];?></div>
                 <figcaption>
-                    <form action="force_download.php" method="post" class="download-form" id="form<?php echo $nu;?>">
+                    <form action="force_download.php" method="post" class="download-form" id="form<?php echo $nu;?>"><input type="hidden" name="rfm_token" value="<?php echo htmlspecialchars($_SESSION['RF']['token'], ENT_QUOTES, 'UTF-8'); ?>"/>
                     <input type="hidden" name="path" value="<?php echo $rfm_subfolder.$subdir?>"/>
                     <input type="hidden" class="name_download" name="name" value="<?php echo $file?>"/>
 
