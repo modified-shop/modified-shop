@@ -28,10 +28,16 @@
     require_once(DIR_WS_CLASSES.'order.php');
     require_once(DIR_WS_CLASSES.'xtcPrice.php');
 
-    // the frontend bootstrap provides these, the callback and task bootstraps do not
+    // the frontend bootstrap provides these, the callback and task bootstraps do not.
+    // order::getOrderData() reads xtPrice from the global scope, so a local one is
+    // invisible to it and formatting the products would fail on null
+    global $xtPrice;
+
     $insert_id = (int)$orders_id;
     $smarty = new Smarty();
-    $xtPrice = new xtcPrice($orders['currency'], $orders['customers_status']);
+    if (!is_object($xtPrice)) {
+      $xtPrice = new xtcPrice($orders['currency'], $orders['customers_status']);
+    }
 
     // send_order.php checks the order against the session customer, so a caller
     // that runs with a logged in customer gets its own values back afterwards
