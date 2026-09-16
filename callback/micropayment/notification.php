@@ -642,6 +642,10 @@ class micropayment_callback
         
         defined('COMMENT_SEND_ORDER_BY_ADMIN') OR define('COMMENT_SEND_ORDER_BY_ADMIN', 'new order email send by notification from micropayment');
         defined('SUCCESS_ORDER_SEND') OR define('SUCCESS_ORDER_SEND', 'Order confirmation sent successfully');
+        // send_order.php takes the mail step branch here, a notification has no action
+        $action = '';
+        defined('COMMENT_SEND_ORDER_MAIL_STEP') OR define('COMMENT_SEND_ORDER_MAIL_STEP', 'new order email send by notification from micropayment');
+        defined('SUCCESS_ORDER_MAIL_STEP_SEND') OR define('SUCCESS_ORDER_MAIL_STEP_SEND', 'Order mail sent successfully');
 
         $insert_id = $this->getParam('orderid',self::REGEX_INTEGER);
 
