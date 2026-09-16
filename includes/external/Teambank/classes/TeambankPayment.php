@@ -298,7 +298,9 @@
           'technicalTbaId' => $_SESSION['easycredit']['storage']['transaction_id'],
         );
         if ($this->has_pending_support() === true) {
+          // an authorized order had its confirmation sent by the checkout
           $sql_data_array['authorized'] = (($this->authorized === true) ? 1 : 0);
+          $sql_data_array['mail_sent'] = (($this->authorized === true) ? 1 : 0);
         }
         xtc_db_perform('easycredit', $sql_data_array);
       }
@@ -507,35 +509,40 @@
     }
     
     function install_task_support() {
-      if ($this->has_pending_support() !== true) {
+      $migrate = false;
+      if ($this->has_column('authorized') !== true) {
         xtc_db_query("ALTER TABLE `easycredit` ADD `authorized` TINYINT(1) NOT NULL DEFAULT 0");
+        $migrate = true;
+      }
+      if ($this->has_column('mail_sent') !== true) {
+        xtc_db_query("ALTER TABLE `easycredit` ADD `mail_sent` TINYINT(1) NOT NULL DEFAULT 0");
+        $migrate = true;
+      }
 
-        // Existing rows must not all count as pending, or the task would work through
-        // the whole order history. A row is settled when the customer was notified,
-        // or when the order left the status that #3351 parks an open one on. Age
-        // proves nothing here: an order can sit open for days.
-        $settled = array("EXISTS (SELECT 1
-                                    FROM ".TABLE_ORDERS_STATUS_HISTORY." h
-                                   WHERE h.orders_id = e.orders_id
-                                     AND h.customer_notified = 1)");
+      if ($migrate === true) {
+        // Whatever these orders received, they received it before the task existed.
+        // Marking them as mailed keeps it from sending a confirmation months late.
+        xtc_db_query("UPDATE `easycredit`
+                         SET mail_sent = 1");
 
+        // An order still parked on the temporary status of its own module is the only
+        // kind worth a status lookup. Comparing against both modules at once would
+        // hand over orders that simply share the other one's status number.
         $pending_status = array();
         foreach (array('easycredit', 'easyinvoice') as $module) {
           $constant = 'MODULE_PAYMENT_'.strtoupper($module).'_ORDER_STATUS_ID';
           if (defined($constant) && (int)constant($constant) > 0) {
-            $pending_status[] = (int)constant($constant);
+            $pending_status[] = "(o.payment_method = '".$module."'
+                                  AND o.orders_status = '".(int)constant($constant)."')";
           }
-        }
-        if (count($pending_status) > 0) {
-          $settled[] = "o.orders_status NOT IN (".implode(', ', $pending_status).")";
         }
 
         xtc_db_query("UPDATE `easycredit` e,
                              ".TABLE_ORDERS." o
                          SET e.authorized = 1
                        WHERE o.orders_id = e.orders_id
-                         AND (".implode("
-                              OR ", $settled).")");
+                         ".((count($pending_status) > 0) ? "AND NOT (".implode("
+                              OR ", $pending_status).")" : ""));
       }
 
       // without the key the cancel status silently stays on the current one, and the
@@ -592,9 +599,13 @@
       return true;
     }
 
-    function has_pending_support() {
-      $check_query = xtc_db_query("SHOW COLUMNS FROM `easycredit` LIKE 'authorized'");
+    function has_column($column) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM `easycredit` LIKE '".$column."'");
       return (xtc_db_num_rows($check_query) > 0);
+    }
+
+    function has_pending_support() {
+      return ($this->has_column('authorized') === true && $this->has_column('mail_sent') === true);
     }
 
     function process_pending_transactions() {
@@ -606,6 +617,7 @@
       // checkout endpoint expects, technicalTbaId holds the merchant transaction id
       $pending_query = xtc_db_query("SELECT e.orders_id,
                                             e.tbaId,
+                                            e.mail_sent,
                                             o.payment_method,
                                             o.orders_status,
                                             o.date_purchased
@@ -652,16 +664,33 @@
         }
 
         if ($status == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
-          $this->confirm_pending_transaction($pending);
+          if ($this->claim_pending_transaction($pending['orders_id']) === true) {
+            $this->confirm_pending_transaction($pending);
+          }
         } elseif ($failed === true
                   || strtotime($pending['date_purchased']) < $deadline
                   )
         {
-          $this->cancel_pending_transaction($pending);
+          if ($this->claim_pending_transaction($pending['orders_id']) === true) {
+            $this->cancel_pending_transaction($pending);
+          }
         }
       }
 
       return true;
+    }
+
+    function claim_pending_transaction($orders_id) {
+      // Two cron runs can overlap. A single conditional update is atomic on every
+      // engine the shop supports, so exactly one of them takes the row and the other
+      // finds nothing to change. A run that dies after this leaves the row on 2,
+      // where it waits for the merchant instead of being processed twice.
+      xtc_db_query("UPDATE `easycredit`
+                       SET authorized = 2
+                     WHERE orders_id = '".(int)$orders_id."'
+                       AND authorized = 0");
+
+      return (xtc_db_affected_rows() > 0);
     }
 
     function confirm_pending_transaction($pending) {
@@ -669,15 +698,10 @@
 
       // send_order.php never ran for a pending order, so this is also where the
       // afterbuy export and the merchant copy happen, neither of which cares about
-      // SEND_EMAILS. Skip it only when a mail already went out, which a row the
-      // migration could not tell apart may well have had.
-      $notified_query = xtc_db_query("SELECT orders_status_history_id
-                                        FROM ".TABLE_ORDERS_STATUS_HISTORY."
-                                       WHERE orders_id = '".(int)$pending['orders_id']."'
-                                         AND customer_notified = 1
-                                       LIMIT 1");
-
-      $sent = ((xtc_db_num_rows($notified_query) < 1) ? send_order_mail($pending['orders_id']) : false);
+      // SEND_EMAILS. Only a confirmation that already went out stops it: the status
+      // history cannot say so, because an ordinary status mail from the
+      // administration sets customer_notified just as well.
+      $sent = (($pending['mail_sent'] != 1) ? send_order_mail($pending['orders_id']) : false);
       $notified = ($sent === true && SEND_EMAILS == 'true');
 
       xtc_db_query("UPDATE ".TABLE_ORDERS."
@@ -694,7 +718,8 @@
       xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
       xtc_db_query("UPDATE `easycredit`
-                       SET authorized = 1
+                       SET authorized = 1,
+                           mail_sent = '".(($sent === true) ? 1 : (int)$pending['mail_sent'])."'
                      WHERE orders_id = '".(int)$pending['orders_id']."'");
     }
 
