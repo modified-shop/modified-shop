@@ -24,20 +24,22 @@ try {
         $thumb_base = $config['thumbs_base_path'];
     }
 
-    if (isset($_POST["fldr"])) {
-        $_POST['fldr'] = str_replace('undefined', '', $_POST['fldr']);
-        $storeFolder = $source_base . $_POST["fldr"];
-        $storeFolderThumb = $thumb_base . $_POST["fldr"];
-    } else {
+    if (!isset($_POST["fldr"])) {
         return;
     }
 
+    $_POST['fldr'] = str_replace('undefined', '', $_POST['fldr']);
+
     $fldr = rawurldecode(trim(strip_tags($_POST['fldr']), "/") . "/");
 
+    // the target paths are only built once the folder passed the check
     if (!checkRelativePath($fldr)) {
         response(trans('wrong path') . AddErrorLocation())->send();
         exit;
     }
+
+    $storeFolder = $source_base . $_POST["fldr"];
+    $storeFolderThumb = $thumb_base . $_POST["fldr"];
 
     $path = $storeFolder;
     $cycle = true;
