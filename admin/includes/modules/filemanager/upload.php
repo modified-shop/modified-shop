@@ -70,12 +70,21 @@ try {
         $urlPattern = '/^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/?=&#]{1}[\da-z\.-]+)*[\/\?]?$/i';
 
         if (preg_match($urlPattern, $url)) {
+            // the server does the fetching, so keep internal addresses out of reach
+            $url_host = parse_url((strpos($url, '://') === false ? 'http://' . $url : $url), PHP_URL_HOST);
+            $url_ip = (is_string($url_host) && $url_host !== '') ? gethostbyname($url_host) : '';
+            if (filter_var($url_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+                throw new Exception('Is not a valid URL.');
+            }
+
             $temp = tempnam('/tmp','RF');
 
             $ch = curl_init($url);
             $fp = fopen($temp, 'wb');
             curl_setopt($ch, CURLOPT_FILE, $fp);
             curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
             curl_exec($ch);
             if (curl_errno($ch)) {
                 throw new Exception('Invalid URL');
