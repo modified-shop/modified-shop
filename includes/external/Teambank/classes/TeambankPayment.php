@@ -667,13 +667,18 @@
     function confirm_pending_transaction($pending) {
       $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_SUCCESS_ID');
 
-      // a row the migration could not tell apart may already have had its mail
+      // send_order.php never ran for a pending order, so this is also where the
+      // afterbuy export and the merchant copy happen, neither of which cares about
+      // SEND_EMAILS. Skip it only when a mail already went out, which a row the
+      // migration could not tell apart may well have had.
       $notified_query = xtc_db_query("SELECT orders_status_history_id
                                         FROM ".TABLE_ORDERS_STATUS_HISTORY."
                                        WHERE orders_id = '".(int)$pending['orders_id']."'
                                          AND customer_notified = 1
                                        LIMIT 1");
-      $notified = ((SEND_EMAILS == 'true' && xtc_db_num_rows($notified_query) < 1) ? send_order_mail($pending['orders_id']) : false);
+
+      $sent = ((xtc_db_num_rows($notified_query) < 1) ? send_order_mail($pending['orders_id']) : false);
+      $notified = ($sent === true && SEND_EMAILS == 'true');
 
       xtc_db_query("UPDATE ".TABLE_ORDERS."
                        SET orders_status = '".$orders_status."'
