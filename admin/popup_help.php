@@ -11,14 +11,22 @@
    ---------------------------------------------------------------------------------------*/
 
 define('RUN_MODE_ADMIN',true);
+@ini_set('display_errors', false);
 require('includes/configure.php');
 
 $valid_signs = '/[^\w\-]/';
-$_GET['lng'] = preg_replace($valid_signs, '', $_GET['lng']);
-$_GET['type'] = preg_replace($valid_signs, '', $_GET['type']);
-$_GET['modul'] = preg_replace($valid_signs, '', $_GET['modul']);
+$_GET['lng'] = preg_replace($valid_signs, '', (isset($_GET['lng'])) ? $_GET['lng'] : '');
+$_GET['type'] = preg_replace($valid_signs, '', (isset($_GET['type'])) ? $_GET['type'] : '');
+$_GET['modul'] = preg_replace($valid_signs, '', (isset($_GET['modul'])) ? $_GET['modul'] : '');
 
-include(DIR_FS_LANGUAGES . $_GET['lng'] . '/modules/' . $_GET['type'] . '/' . $_GET['modul'] . '.php');
+$help_file = DIR_FS_LANGUAGES . $_GET['lng'] . '/modules/' . $_GET['type'] . '/' . $_GET['modul'] . '.php';
+
+// a missing file would otherwise surface as a warning carrying the full path
+if ($_GET['lng'] == '' || $_GET['type'] == '' || $_GET['modul'] == '' || !is_file($help_file)) {
+  die( 'No help file found!' );
+}
+
+include($help_file);
 
 if (defined(strtoupper('MODULE_'.$_GET['type'].'_'.str_ireplace('OT_','',$_GET['modul']).'_HELP_TEXT'))) {
   $const= constant(strtoupper('MODULE_'.$_GET['type'].'_'.str_ireplace('OT_','',$_GET['modul']).'_HELP_TEXT'));
