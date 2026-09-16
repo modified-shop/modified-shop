@@ -71,9 +71,20 @@ try {
 
         if (preg_match($urlPattern, $url)) {
             // the server does the fetching, so keep internal addresses out of reach
-            $url_host = parse_url((strpos($url, '://') === false ? 'http://' . $url : $url), PHP_URL_HOST);
-            $url_ip = (is_string($url_host) && $url_host !== '') ? gethostbyname($url_host) : '';
-            if (filter_var($url_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+            $url_parts = parse_url((strpos($url, '://') === false ? 'http://' . $url : $url));
+            $url_host = (isset($url_parts['host'])) ? $url_parts['host'] : '';
+            $url_port = (isset($url_parts['port']))
+                        ? (int)$url_parts['port']
+                        : (((isset($url_parts['scheme'])) ? $url_parts['scheme'] : 'http') == 'https' ? 443 : 80);
+            $url_ip = ($url_host != '') ? gethostbyname($url_host) : '';
+
+            // GLOBAL_RANGE also covers the carrier grade, benchmarking and documentation blocks
+            $url_ip_flags = FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
+            if (defined('FILTER_FLAG_GLOBAL_RANGE')) {
+                $url_ip_flags |= FILTER_FLAG_GLOBAL_RANGE;
+            }
+
+            if (filter_var($url_ip, FILTER_VALIDATE_IP, $url_ip_flags) === false) {
                 throw new Exception('Is not a valid URL.');
             }
 
@@ -85,6 +96,9 @@ try {
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+            // pin the transfer to the address that was checked, so it is not resolved a second time
+            curl_setopt($ch, CURLOPT_RESOLVE, array($url_host . ':' . $url_port . ':' . $url_ip));
+            curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
             curl_exec($ch);
             if (curl_errno($ch)) {
                 throw new Exception('Invalid URL');
