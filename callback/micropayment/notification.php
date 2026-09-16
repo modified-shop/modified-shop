@@ -633,15 +633,18 @@ class micropayment_callback
 
     function sendNewOrderEmail()
     {
-        if (SEND_EMAILS != 'true') {
-            return;
-        }
-
         require_once(DIR_FS_INC.'send_order_mail.inc.php');
 
         $orders_id = $this->getParam('orderid',self::REGEX_INTEGER);
 
         if (send_order_mail($orders_id) !== true) {
+            return;
+        }
+
+        // send_order.php runs the afterbuy export and the merchant copy regardless of
+        // SEND_EMAILS, so it has to be entered either way. Only the history entry
+        // depends on the setting, or it would claim a mail that never went out.
+        if (SEND_EMAILS != 'true') {
             return;
         }
 
