@@ -320,8 +320,8 @@ $get_params = http_build_query($get_params);
         <!-- CSS adjustments for browsers with JavaScript disabled -->
         <noscript><link rel="stylesheet" href="css/jquery.fileupload-noscript.css"></noscript>
         <noscript><link rel="stylesheet" href="css/jquery.fileupload-ui-noscript.css"></noscript>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jplayer/2.7.1/skin/blue.monday/jplayer.blue.monday.min.css" />
-        <link rel="stylesheet" href="https://uicdn.toast.com/tui-image-editor/latest/tui-image-editor.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jplayer/2.7.1/skin/blue.monday/jplayer.blue.monday.min.css" integrity="sha384-YNt1Mxco+qAfMeCdcmuY5Ka/8VaW4IkH/jf9InZcQ31LV6M+2S2Gy/9dExDNelhV" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tui-image-editor/3.15.3/tui-image-editor.css" integrity="sha384-TUGgIC/JDcKbozqW+vVctmQowPq+BesY0hGGDvbEDLNUYOwb3iHPNPUCVd3tXtGt" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link href="css/style.css?v=<?php echo $version; ?>" rel="stylesheet" type="text/css" />
         <!--[if lt IE 8]>
         <style>
@@ -335,18 +335,18 @@ $get_params = http_build_query($get_params);
         <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
         <script src="js/plugins.js?v=<?php echo $version; ?>"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jplayer/2.9.2/jplayer/jquery.jplayer.min.js"></script>
-        <link type="text/css" href="https://uicdn.toast.com/tui-color-picker/v2.2.0/tui-color-picker.css" rel="stylesheet">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.7/fabric.js"></script>
-        <script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
-        <script type="text/javascript" src="https://uicdn.toast.com/tui-color-picker/v2.2.0/tui-color-picker.js"></script>
-        <script src="https://uicdn.toast.com/tui-image-editor/latest/tui-image-editor.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jplayer/2.9.2/jplayer/jquery.jplayer.min.js" integrity="sha384-JEOfUBC6v6gA96nPS8iS3cEJMI7kDxv2vuUVD3nW2Jpw8i4jKBsg9WYlJC3LyXSv" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tui-color-picker@2.2.0/dist/tui-color-picker.css" integrity="sha384-BuMyqB+9DCAyRi/VpPqmJP9AZVBALeEpxDq3ANDT8GG5/DPLmXDs0WIa7MbQGmaz" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.7/fabric.js" integrity="sha384-zURde+NjLmRqxwATw4ghkja9GJX6dIqMq8eNXklvdRhOiSrvvXl0jsnNwhxKF1ti" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tui-code-snippet/1.5.0/tui-code-snippet.min.js" integrity="sha384-YDWbOJNbmxxM0s0bXQ1Oh9rbcAAP1rdaVUWn264sXtiZRDg/2HbC5MuZA3cosY7M" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js" integrity="sha384-VgWGwiEJnh9P379lbU8DxPcfRuFkfLl0uPuL9tolOHtm2tx8Qy8d/KtvovfM0Udh" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/tui-color-picker@2.2.0/dist/tui-color-picker.js" integrity="sha384-um6S6O6xgGJGnjJ5Bvv9R0osR76HYGBhe5mZEetS8XGRkZAwOllD4PHxqMRceIPS" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tui-image-editor/3.15.3/tui-image-editor.js" integrity="sha384-yHgBeTzKPAgWmOOOq76UxEI1J3uj4kwmrHW+BxQj3hEoLYODPBCdF+XKG+Uh5vph" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="js/modernizr.custom.js"></script>
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js" integrity="sha384-uWRfPSgOrkACGNQ5n5hvUSGRQYeP1hsW7mf+4EsEpFnTpIC01wHJhT06OWkNuIi5" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <![endif]-->
 
         <script type="text/javascript">
@@ -359,11 +359,11 @@ $get_params = http_build_query($get_params);
 </head>
 <body>
     <!-- The Templates plugin is included to render the upload/download listings -->
-    <script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blueimp-tmpl@3.20.0/js/tmpl.min.js" integrity="sha384-SACb9Jh4nVk6IPoBdfAeumEkaxE9r32K1dI/t/GBJgc2NPY3eLI8fzIhXCIVTGqv" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/blueimp-load-image/2.18.0/load-image.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-load-image/2.18.0/load-image.all.min.js" integrity="sha384-erkXDUwSR8FI8BJjE5T1IA7QRLfAeWNDzFZydxSR/6/sBGDYhOipKG71iHxXp45y" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-    <script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blueimp-canvas-to-blob@3.29.0/js/canvas-to-blob.min.js" integrity="sha384-GGleNfSB5OQfmTD04Tm+PGP9Kbnn2QlX6ikcKFusLpyLpR12fs+m+4xxX3LgzzEJ" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
     <script src="js/jquery.iframe-transport.js"></script>
     <!-- The basic File Upload plugin -->

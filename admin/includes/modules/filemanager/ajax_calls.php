@@ -617,7 +617,6 @@ if (isset($_GET['action'])) {
                     $data = htmlspecialchars(htmlspecialchars_decode($data));
                     $ret = '';
 
-                    $ret .= '<script src="https://rawgit.com/google/code-prettify/master/loader/run_prettify.js?autoload=true&skin=sunburst"></script>';
                     $ret .= '<?prettify lang='.$info['extension'].' linenums=true?><pre class="prettyprint"><code class="language-'.$info['extension'].'">'.$data.'</code></pre>';
                 } elseif ($preview_mode == 'google') {
                     if ($ftp) {
@@ -632,7 +631,7 @@ if (isset($_GET['action'])) {
 			}else{
 				$data = stripslashes(htmlspecialchars(file_get_contents($selected_file)));
 				if(in_array($info['extension'],array('html','html'))){
-					$ret = '<script src="https://cdn.ckeditor.com/ckeditor5/12.1.0/classic/ckeditor.js"></script><textarea id="textfile_edit_area" style="width:100%;height:300px;">'.$data.'</textarea><script>setTimeout(function(){ ClassicEditor.create( document.querySelector( "#textfile_edit_area" )).catch( function(error){ console.error( error ); } );  }, 500);</script>';
+					$ret = '<script src="https://cdn.ckeditor.com/ckeditor5/12.1.0/classic/ckeditor.js" integrity="sha384-b0kqTdq6GCzTDNJRanpbwHFRs24M2gMSlBpouK/xkpODVhnIc3hobwVaXqFCgMeC" crossorigin="anonymous" referrerpolicy="no-referrer"></script><textarea id="textfile_edit_area" style="width:100%;height:300px;">'.$data.'</textarea><script>setTimeout(function(){ ClassicEditor.create( document.querySelector( "#textfile_edit_area" )).catch( function(error){ console.error( error ); } );  }, 500);</script>';
 				}else{
 					$ret = '<textarea id="textfile_edit_area" style="width:100%;height:300px;">'.$data.'</textarea>';
 				}
