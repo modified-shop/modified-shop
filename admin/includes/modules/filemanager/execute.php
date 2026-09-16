@@ -8,6 +8,11 @@ if ($_SESSION['RF']["verify"] != "RESPONSIVEfilemanager") {
     exit;
 }
 
+if (!rfm_check_token()) {
+    response(trans('forbidden') . AddErrorLocation(), 403)->send();
+    exit;
+}
+
 if (!checkRelativePath($_POST['path'])) {
     response(trans('wrong path') . AddErrorLocation())->send();
     exit;

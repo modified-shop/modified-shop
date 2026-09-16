@@ -12,6 +12,11 @@ try {
         exit;
     }
 
+    if (!rfm_check_token()) {
+        response(trans('forbidden') . AddErrorLocation(), 403)->send();
+        exit;
+    }
+
     include 'include/mime_type_lib.php';
 
     $ftp = ftp_con($config);

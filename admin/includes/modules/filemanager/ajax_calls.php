@@ -8,6 +8,11 @@ if ($_SESSION['RF']["verify"] != "RESPONSIVEfilemanager") {
     response(trans('forbidden').AddErrorLocation())->send();
     exit;
 }
+
+if (!rfm_check_token()) {
+    response(trans('forbidden').AddErrorLocation(), 403)->send();
+    exit;
+}
 $languages = include 'lang/languages.php';
 
 if (isset($_SESSION['RF']['language']) && file_exists('lang/' . basename($_SESSION['RF']['language']) . '.php')) {
