@@ -224,14 +224,13 @@
         }
       }
 
-      $wait = 0;
       for ($i = 0; $i <= 10; $i ++) {
-        $wait += $i * 0.5;
-        sleep($wait);
+        usleep($i * 500000);
   
         $TransactionInformation = $this->ecCheckout->loadTransaction();
         if ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
-          return true;
+          // returning true here would suppress the order confirmation mail
+          break;
         } elseif (in_array($TransactionInformation->getStatus(), array(\Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_DECLINED, \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_EXPIRED))) {
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
           xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
