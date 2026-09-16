@@ -47,6 +47,7 @@
     var $WebshopDetails;
     var $total_amount;
     var $authorized;
+    protected static $task_support_ready = false;
     
     function __construct() {}
     
@@ -115,6 +116,8 @@
       
       if (!defined('RUN_MODE_ADMIN') && !defined('RUN_MODE_TASKS')) {
         $this->WebshopDetails = $this->ecCheckout->getWebshopDetails();
+      } else {
+        $this->prepare_task_support();
       }
     }
 
@@ -506,6 +509,11 @@
     function install_task_support() {
       if ($this->has_pending_support() !== true) {
         xtc_db_query("ALTER TABLE `easycredit` ADD `authorized` TINYINT(1) NOT NULL DEFAULT 0");
+
+        // every transaction that predates the column has long been settled, leaving
+        // them at the default would hand all of them to the task as pending
+        xtc_db_query("UPDATE `easycredit`
+                         SET authorized = 1");
       }
 
       xtc_db_query("INSERT INTO ".TABLE_SCHEDULED_TASKS."
@@ -530,13 +538,32 @@
       }
     }
 
+    function prepare_task_support() {
+      // an installation updated without reinstalling the module has neither, so the
+      // administration and the task itself bring them up to date
+      if (self::$task_support_ready === true) {
+        return true;
+      }
+
+      if ($this->has_pending_support() !== true) {
+        $this->install_task_support();
+
+        if ($this->has_pending_support() !== true) {
+          return false;
+        }
+      }
+
+      self::$task_support_ready = true;
+      return true;
+    }
+
     function has_pending_support() {
       $check_query = xtc_db_query("SHOW COLUMNS FROM `easycredit` LIKE 'authorized'");
       return (xtc_db_num_rows($check_query) > 0);
     }
 
     function process_pending_transactions() {
-      if ($this->has_pending_support() !== true) {
+      if ($this->prepare_task_support() !== true) {
         return false;
       }
 
