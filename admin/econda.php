@@ -22,12 +22,12 @@
   define('TRACKING_ECONDA_ACTIVE_DESC','Wenn auf true gesetzt, wird der ECONDA Shop Monitor gestartet.');
   define('TRACKING_ECONDA_ID_TITLE','Aktivierungscode');
   define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie von ECONDA erhalten.<br />Einen 14-t&auml;gigen, kostenlosen Testzugang k&ouml;nnen Sie <a href="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_new">[HIER]</a> anfordern!');
-  if ($_GET['action']) {
+  if (isset($_GET['action'])) {
     switch ($_GET['action']) {
       case 'save':
         $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '23' order by sort_order");
         while ($configuration = xtc_db_fetch_array($configuration_query))
-          xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value='".$_POST[$configuration['configuration_key']]."' where configuration_key='".$configuration['configuration_key']."'");
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value='".xtc_db_input((isset($_POST[$configuration['configuration_key']])) ? $_POST[$configuration['configuration_key']] : '')."' where configuration_key='".xtc_db_input($configuration['configuration_key'])."'");
         xtc_redirect(xtc_href_link('econda.php'));
         break;
 
