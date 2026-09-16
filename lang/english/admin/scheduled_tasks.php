@@ -58,6 +58,9 @@
   define('TEXT_HEADING_TASKS_ADMINLOG_MAINTENANCE', 'Admin Log');
   define('TEXT_INFO_TASKS_ADMINLOG_MAINTENANCE', 'Cleanup Admin log');
 
+  define('TEXT_HEADING_TASKS_EASYCREDIT_TXSTATUS', 'Payment status easyCredit');
+  define('TEXT_INFO_TASKS_EASYCREDIT_TXSTATUS', 'Pending easyCredit transactions are reconciled with the payment service');
+
   define('TEXT_HEADING_TASKS_CURRENCIES_UPDATE', 'Currencies update');
   define('TEXT_INFO_TASKS_CURRENCIES_UPDATE', 'Currency exchange rates are updated');
 
