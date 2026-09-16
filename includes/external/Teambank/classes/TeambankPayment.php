@@ -512,18 +512,30 @@
 
         // Existing rows must not all count as pending, or the task would work through
         // the whole order history. A row is settled when the customer was notified,
-        // and anything past the timeout can no longer be resolved either way, so
-        // only recent orders that never sent a mail are left for the task.
+        // or when the order left the status that #3351 parks an open one on. Age
+        // proves nothing here: an order can sit open for days.
+        $settled = array("EXISTS (SELECT 1
+                                    FROM ".TABLE_ORDERS_STATUS_HISTORY." h
+                                   WHERE h.orders_id = e.orders_id
+                                     AND h.customer_notified = 1)");
+
+        $pending_status = array();
+        foreach (array('easycredit', 'easyinvoice') as $module) {
+          $constant = 'MODULE_PAYMENT_'.strtoupper($module).'_ORDER_STATUS_ID';
+          if (defined($constant) && (int)constant($constant) > 0) {
+            $pending_status[] = (int)constant($constant);
+          }
+        }
+        if (count($pending_status) > 0) {
+          $settled[] = "o.orders_status NOT IN (".implode(', ', $pending_status).")";
+        }
+
         xtc_db_query("UPDATE `easycredit` e,
                              ".TABLE_ORDERS." o
                          SET e.authorized = 1
                        WHERE o.orders_id = e.orders_id
-                         AND (o.date_purchased < '".date('Y-m-d H:i:s', (time() - (TEAMBANK_PENDING_TIMEOUT * 3600)))."'
-                              OR EXISTS (SELECT 1
-                                           FROM ".TABLE_ORDERS_STATUS_HISTORY." h
-                                          WHERE h.orders_id = e.orders_id
-                                            AND h.customer_notified = 1)
-                              )");
+                         AND (".implode("
+                              OR ", $settled).")");
       }
 
       // without the key the cancel status silently stays on the current one, and the
@@ -570,12 +582,10 @@
         return true;
       }
 
-      if ($this->has_pending_support() !== true) {
-        $this->install_task_support();
+      $this->install_task_support();
 
-        if ($this->has_pending_support() !== true) {
-          return false;
-        }
+      if ($this->has_pending_support() !== true) {
+        return false;
       }
 
       self::$task_support_ready = true;
@@ -656,7 +666,14 @@
 
     function confirm_pending_transaction($pending) {
       $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_SUCCESS_ID');
-      $notified = ((SEND_EMAILS == 'true') ? send_order_mail($pending['orders_id']) : false);
+
+      // a row the migration could not tell apart may already have had its mail
+      $notified_query = xtc_db_query("SELECT orders_status_history_id
+                                        FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                       WHERE orders_id = '".(int)$pending['orders_id']."'
+                                         AND customer_notified = 1
+                                       LIMIT 1");
+      $notified = ((SEND_EMAILS == 'true' && xtc_db_num_rows($notified_query) < 1) ? send_order_mail($pending['orders_id']) : false);
 
       xtc_db_query("UPDATE ".TABLE_ORDERS."
                        SET orders_status = '".$orders_status."'
