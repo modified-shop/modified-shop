@@ -164,13 +164,14 @@ require (DIR_WS_INCLUDES.'head.php');
               <input type="hidden" name="action" value="change">
               <?php
               echo '<input type="hidden" name="products_options_id" value="' . (isset($products_options_id) ? $products_options_id : '')  . '">';
-              echo '<input type="hidden" name="option_order_by" value="' . $option_order_by . '">';
+              echo xtc_draw_hidden_field('option_order_by', $option_order_by);
               $_POST['cpath'] = isset($_GET['cpath']) ? $_GET['cpath'] : (isset($_POST['cpath']) ? $_POST['cpath']: '') ;
               if ($_POST['cpath'] != '') {
                 $param ='cPath='. $_POST['cpath'] . '&current_product_id='. (int)$_POST['current_product_id'] . $oldaction.$oldpage ;
-                echo '<input type="hidden" name="cpath" value="' . $_POST['cpath'] . '">';
-                echo '<input type="hidden" name="oldaction" value="' . str_replace('&oldaction=','',$oldaction) . '">';
-                echo '<input type="hidden" name="page" value="' . str_replace('&page=','',$oldpage) . '">';
+                echo xtc_draw_hidden_field('cpath', $_POST['cpath']);
+                // an empty value would make xtc_draw_hidden_field() fall back to $GLOBALS and resurrect the stripped prefix
+                echo '<input type="hidden" name="oldaction" value="' . encode_htmlspecialchars(str_replace('&oldaction=','',$oldaction)) . '">';
+                echo '<input type="hidden" name="page" value="' . encode_htmlspecialchars(str_replace('&page=','',$oldpage)) . '">';
               } else {
                 $param = '';
               }
