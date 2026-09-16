@@ -633,28 +633,37 @@ class micropayment_callback
 
     function sendNewOrderEmail()
     {
-
-        //must be set for send_order.php (also $insert_id)
-        global $smarty, $order, $insert_id, $send_by_admin, $redirect_to_admin, $messageStack;
-        
-        $send_by_admin = true;
-        $redirect_to_admin = false;
-        
-        defined('COMMENT_SEND_ORDER_BY_ADMIN') OR define('COMMENT_SEND_ORDER_BY_ADMIN', 'new order email send by notification from micropayment');
-        defined('SUCCESS_ORDER_SEND') OR define('SUCCESS_ORDER_SEND', 'Order confirmation sent successfully');
-
-        $insert_id = $this->getParam('orderid',self::REGEX_INTEGER);
-
-        if (!is_object($order)) { //$order doesnt exist if called by notification!
-            require_once(DIR_FS_CATALOG.'includes/classes/order.php');
-            $order = new order($this->getParam('orderid',self::REGEX_INTEGER));
+        if (SEND_EMAILS != 'true') {
+            return;
         }
 
-        if (!is_object($smarty)) { //$smarty doesnt exist if called by notification!
-            $smarty = new Smarty();
+        require_once(DIR_FS_INC.'send_order_mail.inc.php');
+
+        $orders_id = $this->getParam('orderid',self::REGEX_INTEGER);
+
+        if (send_order_mail($orders_id) !== true) {
+            return;
         }
 
-        include (DIR_FS_CATALOG.'send_order.php');
+        $orders_query = xtc_db_query(
+            sprintf(
+                'SELECT `orders_status` FROM ' . TABLE_ORDERS . ' WHERE `orders_id` = "%s"',
+                xtc_db_prepare_input($orders_id)
+            )
+        );
+        if (xtc_db_num_rows($orders_query) < 1) {
+            return;
+        }
+        $orders = xtc_db_fetch_array($orders_query);
+
+        $sql_data_array = array(
+            'orders_id' => (int)$orders_id,
+            'orders_status_id' => (int)(($orders['orders_status'] < 1) ? DEFAULT_ORDERS_STATUS_ID : $orders['orders_status']),
+            'date_added' => 'now()',
+            'customer_notified' => 1,
+            'comments' => 'new order email send by notification from micropayment',
+        );
+        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     }
 }
 
