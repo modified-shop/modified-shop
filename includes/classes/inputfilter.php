@@ -105,6 +105,7 @@ class Inputfilter {
                       break;
                   //cPath
                   case 'cPath':
+                  case 'cpath':
                       $this->params[$key] = $this->validateCPath($value);
                       break;
                   case 'info':
