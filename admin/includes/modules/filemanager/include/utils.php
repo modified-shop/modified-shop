@@ -687,6 +687,22 @@ function fix_get_params($str)
 
 
 /**
+* Escape a value for output in HTML
+*
+* File names come from the file system and may contain quotes or angle
+* brackets, so they cannot be echoed verbatim.
+*
+* @param  string  $str
+*
+* @return  string
+*/
+function rfm_esc($str)
+{
+	return htmlspecialchars((string)$str, ENT_QUOTES, 'UTF-8');
+}
+
+
+/**
 * Check extension
 *
 * @param  string  $extension
