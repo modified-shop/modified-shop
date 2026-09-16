@@ -28,16 +28,25 @@
     require_once(DIR_WS_CLASSES.'order.php');
     require_once(DIR_WS_CLASSES.'xtcPrice.php');
 
-    // the frontend bootstrap provides these, the callback and task bootstraps do not.
-    // order::getOrderData() reads xtPrice from the global scope, so a local one is
-    // invisible to it and formatting the products would fail on null
-    global $xtPrice;
+    // send_order.php builds $order and $main, xtc_php_mail() reads both out of the
+    // global scope for the mail language and the signature, and order::getOrderData()
+    // reads $xtPrice from there as well. Inside a function they would stay local and
+    // invisible, so they are published with the context of this order and put back
+    // afterwards: the caller may be a frontend request with a different currency.
+    global $order, $main, $xtPrice;
+
+    $context_backup = array(
+      'order' => $order,
+      'main' => $main,
+      'xtPrice' => $xtPrice,
+    );
+
+    $order = null;
+    $main = null;
+    $xtPrice = new xtcPrice($orders['currency'], $orders['customers_status']);
 
     $insert_id = (int)$orders_id;
     $smarty = new Smarty();
-    if (!is_object($xtPrice)) {
-      $xtPrice = new xtcPrice($orders['currency'], $orders['customers_status']);
-    }
 
     // send_order.php checks the order against the session customer, so a caller
     // that runs with a logged in customer gets its own values back afterwards
@@ -63,6 +72,10 @@
     }
 
     include(DIR_FS_CATALOG.'send_order.php');
+
+    $order = $context_backup['order'];
+    $main = $context_backup['main'];
+    $xtPrice = $context_backup['xtPrice'];
 
     foreach (array('customer_id', 'customer_country_id', 'customer_zone_id') as $key) {
       unset($_SESSION[$key]);
