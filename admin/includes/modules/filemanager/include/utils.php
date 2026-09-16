@@ -756,7 +756,7 @@ function fix_filename($str, $config, $is_folder = false)
 	{
 		if (!mb_detect_encoding($str, 'UTF-8', true))
 		{
-			$str = utf8_encode($str);
+			$str = mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1');
 		}
 		if (function_exists('transliterator_transliterate'))
 		{
