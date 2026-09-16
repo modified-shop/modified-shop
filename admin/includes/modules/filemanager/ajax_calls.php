@@ -631,7 +631,22 @@ if (isset($_GET['action'])) {
 			}else{
 				$data = stripslashes(htmlspecialchars(file_get_contents($selected_file)));
 				if(in_array($info['extension'],array('html','html'))){
-					$ret = '<script src="https://cdn.ckeditor.com/ckeditor5/12.1.0/classic/ckeditor.js" integrity="sha384-b0kqTdq6GCzTDNJRanpbwHFRs24M2gMSlBpouK/xkpODVhnIc3hobwVaXqFCgMeC" crossorigin="anonymous" referrerpolicy="no-referrer"></script><textarea id="textfile_edit_area" style="width:100%;height:300px;">'.$data.'</textarea><script>setTimeout(function(){ ClassicEditor.create( document.querySelector( "#textfile_edit_area" )).catch( function(error){ console.error( error ); } );  }, 500);</script>';
+					// jQuery pulls a script tag out of injected html and fetches it through
+					// ajax, which drops integrity and crossorigin - so build the element here
+					$cke_url = 'https://cdn.ckeditor.com/ckeditor5/12.1.0/classic/ckeditor.js';
+					$cke_sri = 'sha384-b0kqTdq6GCzTDNJRanpbwHFRs24M2gMSlBpouK/xkpODVhnIc3hobwVaXqFCgMeC';
+					$ret = '<textarea id="textfile_edit_area" style="width:100%;height:300px;">'.$data.'</textarea>'
+					     . '<script>(function(){'
+					     . 'function rfm_cke(){ClassicEditor.create(document.querySelector("#textfile_edit_area")).catch(function(error){console.error(error);});}'
+					     . 'if(window.ClassicEditor){rfm_cke();return;}'
+					     . 'var s=document.createElement("script");'
+					     . 's.setAttribute("integrity",'.json_encode($cke_sri).');'
+					     . 's.setAttribute("crossorigin","anonymous");'
+					     . 's.setAttribute("referrerpolicy","no-referrer");'
+					     . 's.onload=rfm_cke;'
+					     . 's.src='.json_encode($cke_url).';'
+					     . 'document.head.appendChild(s);'
+					     . '}());</script>';
 				}else{
 					$ret = '<textarea id="textfile_edit_area" style="width:100%;height:300px;">'.$data.'</textarea>';
 				}
