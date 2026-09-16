@@ -698,7 +698,7 @@ function fix_get_params($str)
 */
 function rfm_esc($str)
 {
-	return htmlspecialchars((string)$str, ENT_QUOTES, 'UTF-8');
+	return htmlspecialchars((string)$str, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
 
