@@ -26,6 +26,8 @@
     'MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_ID_DESC' => 'Geben Sie den Bestellstatus f&uuml;r nicht best&auml;tigte Bestellungen an.',
     'MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_SUCCESS_ID_TITLE' => 'Erfolgreicher Bestellstatus',
     'MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_SUCCESS_ID_DESC' => 'Geben Sie den Bestellstatus f&uuml;r erfolgreiche Bestellungen an.',
+    'MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_CANCEL_ID_TITLE' => 'Bestellstatus abgebrochen',
+    'MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_CANCEL_ID_DESC' => 'Geben Sie den Bestellstatus f&uuml;r Bestellungen an, deren Autorisierung ausgeblieben ist.',
     'MODULE_PAYMENT_EASYCREDIT_SHOP_ID_TITLE' => 'Webshop ID',
     'MODULE_PAYMENT_EASYCREDIT_SHOP_ID_DESC' => 'Ihre Webshop ID finden Sie im easyCredit H&auml;ndlerinterface im Unterpunkt Shopadministration.',
     'MODULE_PAYMENT_EASYCREDIT_SHOP_TOKEN_TITLE' => 'API Kennwort',
@@ -42,6 +44,8 @@
   
     'TEXT_EASYCREDIT_TBAID' => 'Vorgangskennung',
     'TEXT_EASYCREDIT_AUTHORIZATION_PENDING' => 'Die Autorisierung stand bei Abschluss der Bestellung noch aus. Bitte den Status des Vorgangs im Zahlungsbereich der Bestellung kontrollieren.',
+    'TEXT_EASYCREDIT_AUTHORIZATION_CONFIRMED' => 'Die Autorisierung liegt vor.',
+    'TEXT_EASYCREDIT_AUTHORIZATION_FAILED' => 'Die Autorisierung ist nicht mehr zu erwarten. Der Vorgang wurde beendet.',
     'TEXT_EASYCREDIT_RATING_PLAN' => 'Finanzierung ab %s in %s Raten mit easyCredit-Ratenkauf',
     'TEXT_EASYCREDIT_RATING_PLAN_SHORT' => 'Finanzierung ab %s im Monat',
     'TEXT_EASYCREDIT_RATING_PLAN_CALC' => 'mehr Infos zum Ratenkauf',

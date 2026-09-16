@@ -15,6 +15,7 @@
   defined('DIR_WS_EXTERNAL') OR define('DIR_WS_EXTERNAL', 'includes/external/');
   defined('DIR_FS_LOG') OR define('DIR_FS_LOG', DIR_FS_CATALOG.'log/');
   defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
+  defined('TEAMBANK_PENDING_TIMEOUT') OR define('TEAMBANK_PENDING_TIMEOUT', 24);
   
   // needed classes
   require_once(DIR_FS_EXTERNAL.'Teambank/autoload.php');
@@ -112,7 +113,7 @@
         $LoggingManager
       );
       
-      if (!defined('RUN_MODE_ADMIN')) {
+      if (!defined('RUN_MODE_ADMIN') && !defined('RUN_MODE_TASKS')) {
         $this->WebshopDetails = $this->ecCheckout->getWebshopDetails();
       }
     }
@@ -293,6 +294,9 @@
           'tbaId' => $_SESSION['easycredit']['storage']['token'],
           'technicalTbaId' => $_SESSION['easycredit']['storage']['transaction_id'],
         );
+        if ($this->has_pending_support() === true) {
+          $sql_data_array['authorized'] = (($this->authorized === true) ? 1 : 0);
+        }
         xtc_db_perform('easycredit', $sql_data_array);
       }
       
@@ -499,6 +503,170 @@
       return $xtPrice->xtcFormat($total, false);
     }
     
+    function install_task_support() {
+      if ($this->has_pending_support() !== true) {
+        xtc_db_query("ALTER TABLE `easycredit` ADD `authorized` TINYINT(1) NOT NULL DEFAULT 0");
+      }
+
+      xtc_db_query("INSERT INTO ".TABLE_SCHEDULED_TASKS."
+                      (time_next, time_offset, time_regularity, time_unit, status, edit, tasks)
+                    VALUES
+                      (0, 0, 5, 'm', 1, 0, 'easycredit_txstatus')
+                    ON DUPLICATE KEY UPDATE
+                      time_regularity = VALUES(time_regularity),
+                      time_unit = VALUES(time_unit),
+                      status = VALUES(status),
+                      edit = VALUES(edit)");
+    }
+
+    function remove_task_support() {
+      // both modules share the task, so it only goes when the last one is removed
+      $check_query = xtc_db_query("SELECT configuration_key
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key IN ('MODULE_PAYMENT_EASYCREDIT_STATUS', 'MODULE_PAYMENT_EASYINVOICE_STATUS')");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("DELETE FROM ".TABLE_SCHEDULED_TASKS."
+                            WHERE tasks = 'easycredit_txstatus'");
+      }
+    }
+
+    function has_pending_support() {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM `easycredit` LIKE 'authorized'");
+      return (xtc_db_num_rows($check_query) > 0);
+    }
+
+    function process_pending_transactions() {
+      if ($this->has_pending_support() !== true) {
+        return false;
+      }
+
+      $pending_query = xtc_db_query("SELECT e.orders_id,
+                                            e.technicalTbaId,
+                                            o.payment_method,
+                                            o.orders_status,
+                                            o.date_purchased
+                                       FROM `easycredit` e
+                                       JOIN ".TABLE_ORDERS." o
+                                            ON o.orders_id = e.orders_id
+                                      WHERE e.authorized = 0
+                                   ORDER BY o.payment_method,
+                                            e.orders_id");
+
+      require_once(DIR_FS_INC.'send_order_mail.inc.php');
+
+      $modules = array('easycredit', 'easyinvoice');
+      $deadline = time() - (TEAMBANK_PENDING_TIMEOUT * 3600);
+      $initialized = '';
+
+      while ($pending = xtc_db_fetch_array($pending_query)) {
+        if (!in_array($pending['payment_method'], $modules)) {
+          continue;
+        }
+
+        if ($initialized != $pending['payment_method']) {
+          if (!defined('MODULE_PAYMENT_'.strtoupper($pending['payment_method']).'_STATUS')) {
+            continue;
+          }
+          $this->load_language($pending['payment_method']);
+          $this->init($pending['payment_method']);
+          $initialized = $pending['payment_method'];
+        }
+
+        // the merchant endpoint reports the billing status, only the checkout
+        // endpoint tells whether the authorization itself went through
+        $status = false;
+        $failed = false;
+        try {
+          $TransactionInformation = $this->ecCheckout->loadTransaction($pending['technicalTbaId']);
+          $status = $TransactionInformation->getStatus();
+        } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
+          // OPEN, DECLINED or EXPIRED, the transaction will not complete any more
+          $failed = true;
+        } catch (Exception $e) {
+          // the service is unreachable, try again on the next run
+          continue;
+        }
+
+        if ($status == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
+          $this->confirm_pending_transaction($pending);
+        } elseif ($failed === true
+                  || strtotime($pending['date_purchased']) < $deadline
+                  )
+        {
+          $this->cancel_pending_transaction($pending);
+        }
+      }
+
+      return true;
+    }
+
+    function confirm_pending_transaction($pending) {
+      $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_SUCCESS_ID');
+      $notified = ((SEND_EMAILS == 'true') ? send_order_mail($pending['orders_id']) : false);
+
+      xtc_db_query("UPDATE ".TABLE_ORDERS."
+                       SET orders_status = '".$orders_status."'
+                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+
+      $sql_data_array = array(
+        'orders_id' => (int)$pending['orders_id'],
+        'orders_status_id' => $orders_status,
+        'date_added' => 'now()',
+        'customer_notified' => (($notified === true) ? 1 : 0),
+        'comments' => $this->get_task_text($pending, 'AUTHORIZATION_CONFIRMED'),
+      );
+      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+      xtc_db_query("UPDATE `easycredit`
+                       SET authorized = 1
+                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+    }
+
+    function cancel_pending_transaction($pending) {
+      // easyCredit offers no endpoint to cancel an open transaction, it expires on
+      // its own, so the order is only marked and never removed
+      $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_CANCEL_ID');
+
+      xtc_db_query("UPDATE ".TABLE_ORDERS."
+                       SET orders_status = '".$orders_status."'
+                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+
+      $sql_data_array = array(
+        'orders_id' => (int)$pending['orders_id'],
+        'orders_status_id' => $orders_status,
+        'date_added' => 'now()',
+        'customer_notified' => 0,
+        'comments' => $this->get_task_text($pending, 'AUTHORIZATION_FAILED'),
+      );
+      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+      xtc_db_query("UPDATE `easycredit`
+                       SET authorized = -1
+                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+    }
+
+    function get_task_status($pending, $key) {
+      // installations updated without reinstalling the module lack the newer keys
+      $constant = 'MODULE_PAYMENT_'.strtoupper($pending['payment_method']).'_'.$key;
+      return ((defined($constant) && (int)constant($constant) > 0) ? (int)constant($constant) : (int)$pending['orders_status']);
+    }
+
+    function get_task_text($pending, $key) {
+      $constant = 'TEXT_'.strtoupper($pending['payment_method']).'_'.$key;
+      return ((defined($constant)) ? constant($constant) : '');
+    }
+
+    function load_language($class) {
+      $language = ((isset($_SESSION['language'])) ? basename((string)$_SESSION['language']) : 'german');
+      $language_file = DIR_FS_CATALOG.'lang/'.$language.'/modules/payment/'.$class.'.php';
+      if (!is_file($language_file)) {
+        $language_file = DIR_FS_CATALOG.'lang/german/modules/payment/'.$class.'.php';
+      }
+      if (is_file($language_file)) {
+        include_once($language_file);
+      }
+    }
+
     function get_order_info($orders_id) {
       $check_query = xtc_db_query("SELECT e.*
                                      FROM `easycredit` e
