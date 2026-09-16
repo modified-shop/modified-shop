@@ -369,7 +369,7 @@ $config = array(
     // you can create these type of files if $config['create_text_files'] is true (only text based files)
     // if you want you can add html,css etc.
     // but for security reasons it's NOT RECOMMENDED!
-    'editable_text_file_exts'                 => array( 'txt', 'log', 'xml' ),
+    'editable_text_file_exts'                 => array( 'txt', 'xml' ),
 
     'jplayer_exts'                            => array("mp4","flv","webmv","webma","webm","m4a","m4v","ogv","oga","mp3","midi","mid","ogg","wav"),
 

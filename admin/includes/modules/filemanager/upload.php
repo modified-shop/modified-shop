@@ -73,9 +73,10 @@ try {
             // the server does the fetching, so keep internal addresses out of reach
             $url_parts = parse_url((strpos($url, '://') === false ? 'http://' . $url : $url));
             $url_host = (isset($url_parts['host'])) ? $url_parts['host'] : '';
-            $url_port = (isset($url_parts['port']))
-                        ? (int)$url_parts['port']
-                        : (((isset($url_parts['scheme'])) ? $url_parts['scheme'] : 'http') == 'https' ? 443 : 80);
+            // the scheme keeps the case it was written in, and CURLOPT_RESOLVE
+            // only binds the host and port pair it is given
+            $url_scheme = strtolower((isset($url_parts['scheme'])) ? $url_parts['scheme'] : 'http');
+            $url_port = (isset($url_parts['port'])) ? (int)$url_parts['port'] : (($url_scheme == 'https') ? 443 : 80);
             $url_ip = ($url_host != '') ? gethostbyname($url_host) : '';
 
             // GLOBAL_RANGE also covers the carrier grade, benchmarking and documentation blocks
