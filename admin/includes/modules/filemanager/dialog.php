@@ -367,6 +367,21 @@ $get_params = http_build_query($get_params);
 
         
         <script src="js/include.js?v=<?php echo $version; ?>"></script>
+        <script>
+        // the upload widget's submit handler replaces formData wholesale, and its
+        // iframe fallback sends no headers, so the token is put back while the
+        // event bubbles - this listener runs after the one bound to the form
+        jQuery(document).on('fileuploadsubmit', '#fileupload', function (event, data) {
+            var rfm_token = <?php echo json_encode($_SESSION['RF']['token']); ?>;
+            if (Array.isArray(data.formData)) {
+                data.formData.push({name: 'rfm_token', value: rfm_token});
+            } else if (data.formData && typeof data.formData === 'object') {
+                data.formData.rfm_token = rfm_token;
+            } else {
+                data.formData = {rfm_token: rfm_token};
+            }
+        });
+        </script>
 </head>
 <body>
     <!-- The Templates plugin is included to render the upload/download listings -->
