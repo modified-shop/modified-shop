@@ -510,10 +510,35 @@
       if ($this->has_pending_support() !== true) {
         xtc_db_query("ALTER TABLE `easycredit` ADD `authorized` TINYINT(1) NOT NULL DEFAULT 0");
 
-        // every transaction that predates the column has long been settled, leaving
-        // them at the default would hand all of them to the task as pending
-        xtc_db_query("UPDATE `easycredit`
-                         SET authorized = 1");
+        // Existing rows must not all count as pending, or the task would work through
+        // the whole order history. A row is settled when the customer was notified,
+        // and anything past the timeout can no longer be resolved either way, so
+        // only recent orders that never sent a mail are left for the task.
+        xtc_db_query("UPDATE `easycredit` e,
+                             ".TABLE_ORDERS." o
+                         SET e.authorized = 1
+                       WHERE o.orders_id = e.orders_id
+                         AND (o.date_purchased < '".date('Y-m-d H:i:s', (time() - (TEAMBANK_PENDING_TIMEOUT * 3600)))."'
+                              OR EXISTS (SELECT 1
+                                           FROM ".TABLE_ORDERS_STATUS_HISTORY." h
+                                          WHERE h.orders_id = e.orders_id
+                                            AND h.customer_notified = 1)
+                              )");
+      }
+
+      // without the key the cancel status silently stays on the current one, and the
+      // administration form has nothing to configure it with
+      foreach (array('easycredit', 'easyinvoice') as $module) {
+        if (!defined('MODULE_PAYMENT_'.strtoupper($module).'_STATUS')) {
+          continue;
+        }
+
+        $check_query = xtc_db_query("SELECT configuration_key
+                                       FROM ".TABLE_CONFIGURATION."
+                                      WHERE configuration_key = 'MODULE_PAYMENT_".strtoupper($module)."_ORDER_STATUS_CANCEL_ID'");
+        if (xtc_db_num_rows($check_query) < 1) {
+          xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($module)."_ORDER_STATUS_CANCEL_ID', '".DEFAULT_ORDERS_STATUS_ID."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+        }
       }
 
       xtc_db_query("INSERT INTO ".TABLE_SCHEDULED_TASKS."
@@ -567,8 +592,10 @@
         return false;
       }
 
+      // the column names are the wrong way round: tbaId holds the technical id the
+      // checkout endpoint expects, technicalTbaId holds the merchant transaction id
       $pending_query = xtc_db_query("SELECT e.orders_id,
-                                            e.technicalTbaId,
+                                            e.tbaId,
                                             o.payment_method,
                                             o.orders_status,
                                             o.date_purchased
@@ -604,7 +631,7 @@
         $status = false;
         $failed = false;
         try {
-          $TransactionInformation = $this->ecCheckout->loadTransaction($pending['technicalTbaId']);
+          $TransactionInformation = $this->ecCheckout->loadTransaction($pending['tbaId']);
           $status = $TransactionInformation->getStatus();
         } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
           // OPEN, DECLINED or EXPIRED, the transaction will not complete any more
