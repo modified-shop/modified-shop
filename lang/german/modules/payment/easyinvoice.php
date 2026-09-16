@@ -41,6 +41,7 @@
     'MODULE_PAYMENT_EASYINVOICE_TEXT_LEGAL' => 'Vorvertragliche Informationen zum Rechnungskauf hier abrufen',
   
     'TEXT_EASYINVOICE_TBAID' => 'Vorgangskennung',
+    'TEXT_EASYINVOICE_AUTHORIZATION_PENDING' => 'Die Autorisierung stand bei Abschluss der Bestellung noch aus. Bitte den Status des Vorgangs im Zahlungsbereich der Bestellung kontrollieren.',
     'TEXT_EASYINVOICE_RATING_PLAN' => 'Finanzierung ab %s in %s Raten mit easyCredit-Rechnungskauf',
     'TEXT_EASYINVOICE_RATING_PLAN_SHORT' => 'Finanzierung ab %s im Monat',
     'TEXT_EASYINVOICE_RATING_PLAN_CALC' => 'mehr Infos zum Rechnungskauf',

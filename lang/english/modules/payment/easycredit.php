@@ -41,6 +41,7 @@
     'MODULE_PAYMENT_EASYCREDIT_TEXT_LEGAL' => 'Get pre-contractual information on installment purchase here',
   
     'TEXT_EASYCREDIT_TBAID' => 'Activity identification',
+    'TEXT_EASYCREDIT_AUTHORIZATION_PENDING' => 'The authorisation was still pending when the order was placed. Please check the status of the transaction in the payment section of the order.',
     'TEXT_EASYCREDIT_RATING_PLAN' => 'Financing from %s in %s installments with easyCredit-Ratenkauf',
     'TEXT_EASYCREDIT_RATING_PLAN_SHORT' => 'Financing from %s per month',
     'TEXT_EASYCREDIT_RATING_PLAN_CALC' => 'more information about installment purchase',
