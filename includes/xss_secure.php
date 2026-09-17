@@ -49,7 +49,21 @@ function xss_secure($params_arr, $ip, $type)
 function xss_contains_active_content($value)
 {
     // Detection supplements, but cannot replace, escaping at the output context.
-    $value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    if (xss_contains_active_html($value)) {
+        return true;
+    }
+    // InputFilter can expose encoded tags after removing their surrounding markup.
+    $decoded = html_entity_decode($value, ENT_NOQUOTES | ENT_HTML401, 'UTF-8');
+    if ($decoded !== $value && xss_contains_active_html($decoded)) {
+        return true;
+    }
+    $decoded = html_entity_decode($value, ENT_QUOTES | ENT_HTML401, 'UTF-8');
+    return $decoded !== $value && xss_contains_active_html($decoded);
+}
+
+
+function xss_contains_active_html($value)
+{
     if (strpos($value, '<') === false) {
         return false;
     }
@@ -57,7 +71,7 @@ function xss_contains_active_content($value)
     $offset = 0;
     $length = strlen($value);
     while ($offset < $length) {
-        $matched = preg_match('~<\s*/?\s*([a-z][a-z0-9:-]*)(?=[\s/>]|$)~i', $value, $tag, PREG_OFFSET_CAPTURE, $offset);
+        $matched = preg_match('~</?([a-z][a-z0-9:-]*)(?=[\x09\x0a\x0c\x0d />]|$)~i', $value, $tag, PREG_OFFSET_CAPTURE, $offset);
         if ($matched === 0) {
             break;
         }
@@ -108,7 +122,7 @@ function xss_contains_active_content($value)
                 $has_attribute = true;
             }
         }
-        $attributes = substr($value, $start, $end - $start);
+        $attributes = html_entity_decode(substr($value, $start, $end - $start), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $offset = $end + 1;
         if (preg_match('~(?:^|[\s/"\'])(?:on[a-z][a-z0-9_:-]*|srcdoc)\s*=~i', $attributes) !== 0) {
             return true;
@@ -234,8 +248,12 @@ function xss_normalize_blacklist_ip($ip)
   if ($address !== '' || !is_string($ip)) {
     return $address;
   }
-  if (preg_match('/\A(?:[0-9]{1,3}\.){3}xxx\z/', $ip)) {
+  if (preg_match('/\A(?:[0-9a-f:]+:)?(?:[0-9]{1,3}\.){3}xxx\z/i', $ip)) {
     $address = xtc_normalize_ip_address(substr($ip, 0, -3).'0');
+    // Avoid widening a dotted wildcard to a full IPv6 hextet.
+    if (strpos($address, '.') === false) {
+      return '';
+    }
   } elseif (preg_match('/\A[0-9a-f:]+:xxxx\z/i', $ip)) {
     $address = xtc_normalize_ip_address(substr($ip, 0, -4).'0');
   }
