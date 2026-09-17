@@ -777,7 +777,7 @@
         if (!in_array($unsent['payment_method'], $modules)) {
           continue;
         }
-        if ($this->claim_unsent_mail($unsent['orders_id']) !== true) {
+        if ($this->claim_unsent_mail($unsent['orders_id'], $unsent['orders_status']) !== true) {
           continue;
         }
 
@@ -805,17 +805,22 @@
       }
     }
 
-    function claim_unsent_mail($orders_id) {
-      // Same idea as the claim above, and mail_sent belongs in the condition: a run
-      // that read this row before the mail went out and only gets here after the
-      // window expired would otherwise take it a second time.
-      xtc_db_query("UPDATE `easycredit`
-                       SET claimed = now()
-                     WHERE orders_id = '".(int)$orders_id."'
-                       AND authorized = 1
-                       AND mail_sent = 0
-                       AND (claimed IS NULL
-                            OR claimed < '".date('Y-m-d H:i:s', (time() - TEAMBANK_CLAIM_TIMEOUT))."'
+    function claim_unsent_mail($orders_id, $orders_status) {
+      // Everything this pass depends on has to hold at the moment the row is taken,
+      // not when the list was read: the mail for the row before this one takes as
+      // long as a mail takes, and a cancellation lands in that gap. So the order
+      // status joins mail_sent in the condition instead of being checked once up
+      // front, and a run that read the row earlier comes away empty.
+      xtc_db_query("UPDATE `easycredit` e,
+                           ".TABLE_ORDERS." o
+                       SET e.claimed = now()
+                     WHERE o.orders_id = e.orders_id
+                       AND e.orders_id = '".(int)$orders_id."'
+                       AND e.authorized = 1
+                       AND e.mail_sent = 0
+                       AND o.orders_status = '".(int)$orders_status."'
+                       AND (e.claimed IS NULL
+                            OR e.claimed < '".date('Y-m-d H:i:s', (time() - TEAMBANK_CLAIM_TIMEOUT))."'
                             )");
 
       return (xtc_db_affected_rows() > 0);
