@@ -636,6 +636,23 @@
 
       // the column names are the wrong way round: tbaId holds the technical id the
       // checkout endpoint expects, technicalTbaId holds the merchant transaction id
+      // An order only waits for an answer while it sits on the temporary status of
+      // its payment method. Anything else means the merchant has already decided:
+      // xtc_reverse_order() cancels an order without touching this table, and
+      // confirming it afterwards would write the success status over the
+      // cancellation while the totals it zeroed stay at zero.
+      $waiting = array();
+      foreach (array('easycredit', 'easyinvoice') as $module) {
+        $constant = 'MODULE_PAYMENT_'.strtoupper($module).'_ORDER_STATUS_ID';
+        if (defined($constant) && (int)constant($constant) > 0) {
+          $waiting[] = "(o.payment_method = '".$module."'
+                         AND o.orders_status = '".(int)constant($constant)."')";
+        }
+      }
+      if (count($waiting) < 1) {
+        return true;
+      }
+
       $pending_query = xtc_db_query("SELECT e.orders_id,
                                             e.tbaId,
                                             e.mail_sent,
@@ -646,6 +663,8 @@
                                        JOIN ".TABLE_ORDERS." o
                                             ON o.orders_id = e.orders_id
                                       WHERE e.authorized = 0
+                                        AND (".implode("
+                                             OR ", $waiting).")
                                    ORDER BY o.payment_method,
                                             e.orders_id");
 
@@ -801,7 +820,9 @@
 
     function cancel_pending_transaction($pending) {
       if ($this->order_status_unchanged($pending) !== true) {
-        $this->flag_pending_transaction($pending, 'AUTHORIZATION_CONFLICT');
+        // its own wording: this path runs on a declined, an expired or a timed out
+        // transaction, and the confirmed one would say the opposite of what happened
+        $this->flag_pending_transaction($pending, 'AUTHORIZATION_CONFLICT_FAILED');
         return;
       }
 
