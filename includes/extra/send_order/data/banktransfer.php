@@ -1,9 +1,14 @@
 <?php   
   // add SEPA info
   if ($order->info['payment_method'] == 'banktransfer') {
-    if (isset($send_by_admin)) {
-      require (DIR_FS_CATALOG_MODULES.'payment/banktransfer.php');
-      include(DIR_FS_LANGUAGES.$order->info['language'].'/modules/payment/banktransfer.php');
+    if (!isset($payment_modules) || !is_object($payment_modules)) {
+      // only the checkout brings its own module along, and the path constants used
+      // here exist in the administration alone
+      $modules_directory = ((defined('DIR_FS_CATALOG_MODULES')) ? DIR_FS_CATALOG_MODULES : DIR_FS_CATALOG.'includes/modules/');
+      $languages_directory = ((defined('DIR_FS_LANGUAGES')) ? DIR_FS_LANGUAGES : DIR_FS_CATALOG.'lang/');
+
+      require_once ($modules_directory.'payment/banktransfer.php');
+      include($languages_directory.$order->info['language'].'/modules/payment/banktransfer.php');
       $payment_modules = new banktransfer();
     }
     
