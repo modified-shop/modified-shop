@@ -650,6 +650,9 @@
         }
       }
       if (count($waiting) < 1) {
+        // nothing to look up, but an owed confirmation does not depend on that
+        $this->process_unsent_mails();
+
         return true;
       }
 
@@ -727,10 +730,65 @@
         }
       }
 
+      $this->process_unsent_mails();
+
       return true;
     }
 
-    function claim_pending_transaction($orders_id) {
+    function process_unsent_mails() {
+      // A run that died between settling the order and sending its confirmation, on a
+      // broken template say, leaves the order finished and its mail missing. Nothing
+      // above looks at those any more, because the order no longer sits on the status
+      // the selection asks for, so they get a pass of their own. It needs no provider:
+      // the transaction is authorized, only the mail is owed.
+      $unsent_query = xtc_db_query("SELECT e.orders_id,
+                                           e.mail_sent,
+                                           o.payment_method,
+                                           o.orders_status
+                                      FROM `easycredit` e
+                                      JOIN ".TABLE_ORDERS." o
+                                           ON o.orders_id = e.orders_id
+                                     WHERE e.authorized = 1
+                                       AND e.mail_sent = 0
+                                  ORDER BY o.payment_method,
+                                           e.orders_id");
+
+      $modules = array('easycredit', 'easyinvoice');
+      $language_loaded = '';
+
+      while ($unsent = xtc_db_fetch_array($unsent_query)) {
+        if (!in_array($unsent['payment_method'], $modules)) {
+          continue;
+        }
+        if ($this->claim_pending_transaction($unsent['orders_id'], 1) !== true) {
+          continue;
+        }
+
+        if ($language_loaded != $unsent['payment_method']) {
+          $this->load_language($unsent['payment_method']);
+          $language_loaded = $unsent['payment_method'];
+        }
+
+        if (send_order_mail($unsent['orders_id']) !== true) {
+          continue;
+        }
+
+        $sql_data_array = array(
+          'orders_id' => (int)$unsent['orders_id'],
+          'orders_status_id' => (int)$unsent['orders_status'],
+          'date_added' => 'now()',
+          'customer_notified' => ((SEND_EMAILS == 'true') ? 1 : 0),
+          'comments' => $this->get_task_text($unsent, 'AUTHORIZATION_CONFIRMED'),
+        );
+        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+        xtc_db_query("UPDATE `easycredit`
+                         SET mail_sent = 1
+                       WHERE orders_id = '".(int)$unsent['orders_id']."'");
+      }
+    }
+
+    function claim_pending_transaction($orders_id, $authorized = 0) {
       // Two cron runs can overlap. A single conditional update is atomic on every
       // engine the shop supports, so exactly one of them takes the row and the other
       // comes away empty. The reservation carries a timestamp rather than a state, so
@@ -739,7 +797,7 @@
       xtc_db_query("UPDATE `easycredit`
                        SET claimed = now()
                      WHERE orders_id = '".(int)$orders_id."'
-                       AND authorized = 0
+                       AND authorized = '".(int)$authorized."'
                        AND (claimed IS NULL
                             OR claimed < '".date('Y-m-d H:i:s', (time() - TEAMBANK_CLAIM_TIMEOUT))."'
                             )");
@@ -760,9 +818,18 @@
                      WHERE orders_id = '".(int)$pending['orders_id']."'
                        AND orders_status = '".(int)$pending['orders_status']."'");
 
-      // Not the affected row count: an update that writes the value already there
-      // reports none, which happens whenever both configured statuses are the same.
-      // What the status reads afterwards answers the question either way.
+      if (xtc_db_affected_rows() > 0) {
+        return true;
+      }
+
+      // Nothing changed, which reads two ways: the condition did not hold, or it held
+      // and the statement wrote what was already there. The latter needs both statuses
+      // to be the same, so where they differ this is a merchant who got there first,
+      // and reading the status back would mistake their success status for our own.
+      if ((int)$orders_status !== (int)$pending['orders_status']) {
+        return false;
+      }
+
       $orders_query = xtc_db_query("SELECT orders_status
                                       FROM ".TABLE_ORDERS."
                                      WHERE orders_id = '".(int)$pending['orders_id']."'");
