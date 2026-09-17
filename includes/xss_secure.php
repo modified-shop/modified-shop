@@ -54,7 +54,9 @@ function xss_contains_active_content($value)
         return false;
     }
 
-    preg_match_all('~<\s*/?\s*([a-z][a-z0-9:-]*)(?=[\s/>]|$)([^<>]*)~i', $value, $tags, PREG_SET_ORDER);
+    // A quoted attribute value may hold < or >, and stopping there would hide
+    // everything behind it: <img alt="< " src=x onerror=alert(1)> is one tag.
+    preg_match_all('~<\s*/?\s*([a-z][a-z0-9:-]*)(?=[\s/>]|$)((?:"[^"]*"|\'[^\']*\'|[^<>])*)~i', $value, $tags, PREG_SET_ORDER);
     foreach ($tags as $tag) {
         if (in_array(strtolower($tag[1]), array('script', 'object', 'iframe', 'embed', 'applet', 'meta', 'base', 'style', 'svg', 'math'), true)) {
             return true;
@@ -148,6 +150,34 @@ function xss_write_log($text)
 }
 
 
+function xss_mask_ip_address($address)
+{
+  if ($address === '') {
+    return '';
+  }
+  if (strpos($address, '.') !== false) {
+    return ip_clearing($address, 'xxx');
+  }
+
+  // ip_clearing() cuts the last group off the text it is given, and IPv6 has more
+  // than one text for the same address: 2001:db8::1 and 2001:db8:0:0:0:0:0:1 would
+  // end up as different masks. Cut the group off the packed address instead, then
+  // write the groups out the way they are stored in the blacklist.
+  $packed = @inet_pton($address);
+  if ($packed === false || strlen($packed) !== 16) {
+    return '';
+  }
+  $groups = str_split(bin2hex($packed), 4);
+  array_pop($groups);
+  foreach ($groups as $index => $group) {
+    $group = ltrim($group, '0');
+    $groups[$index] = ($group === '' ? '0' : $group);
+  }
+
+  return implode(':', $groups).':xxxx';
+}
+
+
 function xss_normalize_blacklist_ip($ip)
 {
   $address = xtc_normalize_ip_address($ip);
@@ -159,7 +189,7 @@ function xss_normalize_blacklist_ip($ip)
   } elseif (preg_match('/\A[0-9a-f:]+:xxxx\z/i', $ip)) {
     $address = xtc_normalize_ip_address(substr($ip, 0, -4).'0');
   }
-  return $address !== '' ? ip_clearing($address, 'xxx') : '';
+  return xss_mask_ip_address($address);
 }
 
 
@@ -294,7 +324,13 @@ define('XSS_BASE', $ssl_proxy.preg_replace('~/+~', '/', str_replace('\\', '/', d
 $ip = xtc_get_ip_address();
 if (XSS_BLACKLIST === true && $ip !== '') {
   $blacklist_arr = xss_read_blacklist();
-  if (isset($blacklist_arr[$ip]) || isset($blacklist_arr[ip_clearing($ip, 'xxx')])) {
+  // the blacklist holds normalized addresses, so the client address has to be
+  // normalized as well before either form is looked up
+  $address = xtc_normalize_ip_address($ip);
+  if ($address === '') {
+    $address = $ip;
+  }
+  if (isset($blacklist_arr[$address]) || isset($blacklist_arr[xss_mask_ip_address($address)])) {
     header('Location: '.XSS_BASE.'error.html');
     exit();
   }
