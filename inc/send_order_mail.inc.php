@@ -10,8 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // sends the order confirmation outside of the checkout, for payment callbacks and tasks
-  function send_order_mail($orders_id) {
+  // sends the order confirmation outside of the checkout, for payment callbacks, tasks
+  // and the administration. $force sends it even when SEND_EMAILS is off, which is what
+  // an explicit request from the administration means.
+  function send_order_mail($orders_id, $force = false) {
     $orders_query = xtc_db_query("SELECT customers_id,
                                          customers_status,
                                          customers_country_iso_code_2,
@@ -36,6 +38,10 @@
     // afterwards: the caller may be a frontend request with a different currency.
     global $order, $main, $xtPrice, $insert_id;
 
+    // only read, never replaced: the guarantee label hook reports a damaged archive
+    // through it, and outside the administration there is none to report to
+    global $messageStack;
+
     $context_backup = array(
       'order' => $order,
       'main' => $main,
@@ -47,6 +53,10 @@
     $main = null;
     $xtPrice = new xtcPrice($orders['currency'], $orders['customers_status']);
     $insert_id = (int)$orders_id;
+
+    if ($force === true) {
+      $send_by_admin = true;
+    }
 
     $smarty = new Smarty();
 

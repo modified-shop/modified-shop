@@ -174,15 +174,55 @@ $orders_status_array = $orders_status_lang_array[$_SESSION['languages_id']];
 switch ($action) {
   case 'send':
   case 'send_order_mail':
-    $smarty->template_dir = DIR_FS_CATALOG.'templates';
-    $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
-    $smarty->config_dir = DIR_FS_CATALOG.'lang';
-    $send_by_admin = true;
-    $send_confirmation = false;
-    $insert_id = $oID;
-    require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
-    require_once(DIR_FS_INC.'xtc_href_link_from_admin.inc.php');
-    include (DIR_FS_CATALOG .'send_order.php');
+    require_once(DIR_FS_INC.'send_order_mail.inc.php');
+    send_order_mail($oID, true);
+
+    $orders_query = xtc_db_query("SELECT orders_status
+                                    FROM ".TABLE_ORDERS."
+                                   WHERE orders_id = '".(int)$oID."'");
+    if (xtc_db_num_rows($orders_query) < 1) {
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS));
+    }
+    $orders = xtc_db_fetch_array($orders_query);
+
+    $orders_status_id = (($orders['orders_status'] < 1) ? DEFAULT_ORDERS_STATUS_ID : $orders['orders_status']);
+    $comments = encode_utf8(decode_htmlentities(COMMENT_SEND_ORDER_BY_ADMIN));
+
+    if (defined('MODULE_ORDER_MAIL_STEP_STATUS')
+        && MODULE_ORDER_MAIL_STEP_STATUS == 'true'
+        )
+    {
+      if ($action == 'send') {
+        $orders_status_id = (($orders['orders_status'] != MODULE_ORDER_MAIL_STEP_ORDERS_STATUS_ID) ? MODULE_ORDER_MAIL_STEP_ORDERS_STATUS_ID : $orders['orders_status']);
+        $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
+      } else {
+        $comments = encode_utf8(decode_htmlentities(COMMENT_SEND_ORDER_MAIL_STEP));
+        $messageStack->add_session(SUCCESS_ORDER_MAIL_STEP_SEND, 'success');
+      }
+    } else {
+      $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
+    }
+
+    $sql_data_array = array(
+      'orders_status' => (int)$orders_status_id,
+      'last_modified' => 'now()'
+    );
+    xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', "orders_id = '".(int)$oID."'");
+
+    $sql_data_array = array(
+      'orders_id' => (int)$oID,
+      'orders_status_id' => (int)$orders_status_id,
+      'date_added' => 'now()',
+      'customer_notified' => '1',
+      'comments' => $comments,
+    );
+    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+    if (isset($_GET['site']) && $_GET['site'] == 1) {
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=edit'));
+    } else {
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$oID));
+    }
     break;
   
   case 'update_order':
