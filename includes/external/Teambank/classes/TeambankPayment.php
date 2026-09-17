@@ -1007,6 +1007,34 @@
       }
     }
 
+    function get_pending_state($orders_id) {
+      if ($this->has_pending_support() !== true) {
+        return false;
+      }
+
+      $check_query = xtc_db_query("SELECT authorized
+                                     FROM `easycredit`
+                                    WHERE orders_id = '".(int)$orders_id."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        return false;
+      }
+      $check = xtc_db_fetch_array($check_query);
+
+      return (int)$check['authorized'];
+    }
+
+    function reset_pending_transaction($orders_id) {
+      // Hands a transaction the task gave up on back to it. Only one that was handed
+      // over qualifies, so this cannot pull a settled or cancelled order back in.
+      xtc_db_query("UPDATE `easycredit`
+                       SET authorized = 0,
+                           claimed = NULL
+                     WHERE orders_id = '".(int)$orders_id."'
+                       AND authorized = 2");
+
+      return (xtc_db_affected_rows() > 0);
+    }
+
     function get_order_info($orders_id) {
       $check_query = xtc_db_query("SELECT e.*
                                      FROM `easycredit` e

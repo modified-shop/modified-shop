@@ -24,7 +24,35 @@
     $TeambankPayment->init($order->info['payment_method']);
       
     $admin_info_data = $TeambankPayment->get_order_info($order->info['order_id']);
-    
+    $pending_state = $TeambankPayment->get_pending_state($order->info['order_id']);
+
+    // A transaction the task handed over may well be one it could not fetch either, so
+    // this stands on its own: inside the block below the panel would stay empty in
+    // exactly the case that needs the merchant.
+    if ($pending_state === 2) {
+      ?>
+      <table border="0" width="100%" cellspacing="0" cellpadding="2" class="dataTableRow teambank_data" style="display:none;">
+        <tr>
+          <td width="100%" valign="top">
+            <div class="ec_box ec_box_full">
+              <div class="ec_boxheading"><?php echo TEXT_TEAMBANK_PENDING_HEADING; ?></div>
+              <p class="message"><?php echo TEXT_TEAMBANK_PENDING_INFO; ?></p>
+              <?php
+                echo xtc_draw_form('recheck', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'subaction', 'ext', 'sec')).'action=custom&subaction=teambankaction', 'NONSSL'), 'post');
+                if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                  echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
+                }
+                echo xtc_draw_hidden_field('cmd', 'recheck');
+              ?>
+              <input type="submit" class="button" name="recheck_submit" value="<?php echo TEXT_TEAMBANK_PENDING_SUBMIT; ?>">
+              </form>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <?php
+    }
+
     if (is_object($admin_info_data)) {
       ?>
       <table border="0" width="100%" cellspacing="0" cellpadding="2" class="dataTableRow teambank_data" style="display:none;">

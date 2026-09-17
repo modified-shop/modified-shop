@@ -13,6 +13,11 @@
 
   $lang_array = array(
     'TEXT_TEAMBANK_ORDERS_HEADING' => 'Teambank Details',
+    'TEXT_TEAMBANK_PENDING_HEADING' => 'Kl&auml;rung erforderlich',
+    'TEXT_TEAMBANK_PENDING_INFO' => 'Der automatische Abgleich hat diesen Vorgang an Sie &uuml;bergeben. Der Grund steht im Bestellstatus-Verlauf. Pr&uuml;fen Sie den Status beim Zahlungsdienst und geben Sie den Vorgang danach wieder an den Abgleich zur&uuml;ck.',
+    'TEXT_TEAMBANK_PENDING_SUBMIT' => 'Erneut abgleichen',
+    'TEXT_TEAMBANK_PENDING_SUCCESS' => 'Der Vorgang wurde an den automatischen Abgleich zur&uuml;ckgegeben.',
+    'TEXT_TEAMBANK_PENDING_ERROR' => 'Der Vorgang konnte nicht zur&uuml;ckgegeben werden.',
     'TEXT_TEAMBANK_NO_INFORMATION' => 'Keine Zahlungsdetails vorhanden',
     
     'TEXT_TEAMBANK_TRANSACTION' => 'Zahlungsdetails',
