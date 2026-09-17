@@ -58,7 +58,22 @@ function xss_contains_active_content($value)
         return true;
     }
     $decoded = html_entity_decode($value, ENT_QUOTES | ENT_HTML401, 'UTF-8');
-    return $decoded !== $value && xss_contains_active_html($decoded);
+    if ($decoded !== $value && xss_contains_active_html($decoded)) {
+        return true;
+    }
+    if (strpbrk($value, '<&') === false) {
+        return false;
+    }
+
+    // Removing a comment or text element can expose previously inert markup.
+    require_once (__DIR__.'/../inc/html_encoding.php');
+    require_once (__DIR__.'/classes/class.inputfilter.php');
+    static $filter;
+    if (!isset($filter)) {
+        $filter = new InputFilter();
+    }
+    $filtered = $filter->safeSQL($filter->process($value));
+    return $filtered !== $value && xss_contains_active_html($filtered);
 }
 
 
@@ -70,15 +85,70 @@ function xss_contains_active_html($value)
 
     $offset = 0;
     $length = strlen($value);
+    $text_element = '';
     while ($offset < $length) {
-        $matched = preg_match('~</?([a-z][a-z0-9:-]*)(?=[\x09\x0a\x0c\x0d />]|$)~i', $value, $tag, PREG_OFFSET_CAPTURE, $offset);
+        if ($text_element !== '') {
+            if ($text_element === 'plaintext') {
+                break;
+            }
+            $matched = preg_match('~</'.preg_quote($text_element, '~').'(?=[\x09\x0a\x0c\x0d />])~i', $value, $closing, PREG_OFFSET_CAPTURE, $offset);
+            if ($matched === false) {
+                return true;
+            }
+            if ($matched === 0) {
+                break;
+            }
+            $offset = $closing[0][1];
+            $text_element = '';
+        } else {
+            $offset = strpos($value, '<', $offset);
+            if ($offset === false) {
+                break;
+            }
+        }
+
+        if (substr($value, $offset, 4) === '<!--') {
+            $matched = preg_match('~\G-?>|--!?>~', $value, $closing, PREG_OFFSET_CAPTURE, $offset + 4);
+            if ($matched === false) {
+                return true;
+            }
+            if ($matched === 0) {
+                break;
+            }
+            $offset = $closing[0][1] + strlen($closing[0][0]);
+            continue;
+        }
+        // Document declarations depend on the surrounding page's parser state.
+        if (strncasecmp(substr($value, $offset, 9), '<!DOCTYPE', 9) === 0) {
+            return true;
+        }
+        if (substr($value, $offset, 2) === '<!' || substr($value, $offset, 2) === '<?') {
+            $end = strpos($value, '>', $offset + 2);
+            if ($end === false) {
+                break;
+            }
+            $offset = $end + 1;
+            continue;
+        }
+
+        $matched = preg_match('~\G<(/?)([a-z][^\x09\x0a\x0c\x0d />]*)~i', $value, $tag, PREG_OFFSET_CAPTURE, $offset);
         if ($matched === 0) {
-            break;
+            if (substr($value, $offset, 2) === '</') {
+                $end = strpos($value, '>', $offset + 2);
+                if ($end === false) {
+                    break;
+                }
+                $offset = $end + 1;
+            } else {
+                $offset++;
+            }
+            continue;
         }
         if ($matched === false) {
             return true;
         }
-        if (in_array(strtolower($tag[1][0]), array('script', 'object', 'iframe', 'embed', 'applet', 'meta', 'base', 'style', 'svg', 'math'), true)) {
+        $name = strtolower($tag[2][0]);
+        if (in_array($name, array('script', 'object', 'iframe', 'embed', 'applet', 'meta', 'base', 'style', 'svg', 'math', 'noscript'), true)) {
             return true;
         }
 
@@ -124,6 +194,9 @@ function xss_contains_active_html($value)
         }
         $attributes = html_entity_decode(substr($value, $start, $end - $start), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $offset = $end + 1;
+        if ($tag[1][0] === '' && in_array($name, array('textarea', 'title', 'xmp', 'noembed', 'noframes', 'plaintext'), true)) {
+            $text_element = $name;
+        }
         if (preg_match('~(?:^|[\s/"\'])(?:on[a-z][a-z0-9_:-]*|srcdoc)\s*=~i', $attributes) !== 0) {
             return true;
         }
@@ -214,21 +287,24 @@ function xss_write_log($text)
 }
 
 
-function xss_mask_ip_address($address)
+function xss_mask_ip_address($address, $mask_type = '')
 {
-  if ($address === '') {
+  $packed = @inet_pton($address);
+  if ($packed === false || !in_array($mask_type, array('', 'xxx', 'xxxx'), true)) {
     return '';
   }
-  if (strpos($address, '.') !== false) {
-    return ip_clearing($address, 'xxx');
+  if ($mask_type === '') {
+    $mask_type = strlen($packed) === 4 || substr($packed, 0, 12) === str_repeat("\0", 10)."\xff\xff" ? 'xxx' : 'xxxx';
   }
-
-  // ip_clearing() cuts the last group off the text it is given, and IPv6 has more
-  // than one text for the same address: 2001:db8::1 and 2001:db8:0:0:0:0:0:1 would
-  // end up as different masks. Cut the group off the packed address instead, then
-  // write the groups out the way they are stored in the blacklist.
-  $packed = @inet_pton($address);
-  if ($packed === false || strlen($packed) !== 16) {
+  if ($mask_type === 'xxx') {
+    if (strlen($packed) === 16 && substr($packed, 0, 12) !== str_repeat("\0", 10)."\xff\xff") {
+      return '';
+    }
+    $octets = unpack('C4', substr($packed, -4));
+    array_pop($octets);
+    return (strlen($packed) === 16 ? '::ffff:' : '').implode('.', $octets).'.xxx';
+  }
+  if (strlen($packed) !== 16) {
     return '';
   }
   $groups = str_split(bin2hex($packed), 4);
@@ -248,16 +324,15 @@ function xss_normalize_blacklist_ip($ip)
   if ($address !== '' || !is_string($ip)) {
     return $address;
   }
+  // The stored suffix determines the width, even if inet_ntop() changes notation.
   if (preg_match('/\A(?:[0-9a-f:]+:)?(?:[0-9]{1,3}\.){3}xxx\z/i', $ip)) {
     $address = xtc_normalize_ip_address(substr($ip, 0, -3).'0');
-    // Avoid widening a dotted wildcard to a full IPv6 hextet.
-    if (strpos($address, '.') === false) {
-      return '';
-    }
+    return xss_mask_ip_address($address, 'xxx');
   } elseif (preg_match('/\A[0-9a-f:]+:xxxx\z/i', $ip)) {
     $address = xtc_normalize_ip_address(substr($ip, 0, -4).'0');
+    return xss_mask_ip_address($address, 'xxxx');
   }
-  return xss_mask_ip_address($address);
+  return '';
 }
 
 
@@ -398,7 +473,9 @@ if (XSS_BLACKLIST === true && $ip !== '') {
   if ($address === '') {
     $address = $ip;
   }
-  if (isset($blacklist_arr[$address]) || isset($blacklist_arr[xss_mask_ip_address($address)])) {
+  if (isset($blacklist_arr[$address])
+      || isset($blacklist_arr[xss_mask_ip_address($address)])
+      || isset($blacklist_arr[xss_mask_ip_address($address, 'xxxx')])) {
     header('Location: '.XSS_BASE.'error.html');
     exit();
   }

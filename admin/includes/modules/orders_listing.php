@@ -343,7 +343,7 @@
                   }
                 }
                 if ($order->info['comments']<>'') {
-                  $contents[] = array ('text' => '<br><strong>'.TABLE_HEADING_COMMENTS.':</strong><br>'.$order->info['comments']);
+                  $contents[] = array ('text' => '<br><strong>'.TABLE_HEADING_COMMENTS.':</strong><br>'.encode_htmlspecialchars($order->info['comments']));
                 }
               }
               break;
