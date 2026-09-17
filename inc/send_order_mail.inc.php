@@ -27,8 +27,8 @@
     $orders = xtc_db_fetch_array($orders_query);
 
     require_once(DIR_FS_INC.'get_country_id.inc.php');
-    require_once(DIR_WS_CLASSES.'order.php');
-    require_once(DIR_WS_CLASSES.'xtcPrice.php');
+    require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'order.php');
+    require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
 
     // send_order.php builds $order and $main, xtc_php_mail() reads both out of the
     // global scope for the mail language and the signature, order::getOrderData()
@@ -38,9 +38,11 @@
     // afterwards: the caller may be a frontend request with a different currency.
     global $order, $main, $xtPrice, $insert_id;
 
-    // only read, never replaced: the guarantee label hook reports a damaged archive
-    // through it, and outside the administration there is none to report to
-    global $messageStack;
+    // Only read, never replaced. The guarantee label hook reports a damaged archive
+    // through the message stack, and outside the administration there is none to
+    // report to. The mail step hook reads $action to tell a resent confirmation from
+    // a mail step, and inside a function it would see neither.
+    global $messageStack, $action;
 
     $context_backup = array(
       'order' => $order,
