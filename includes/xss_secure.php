@@ -54,19 +54,69 @@ function xss_contains_active_content($value)
         return false;
     }
 
-    // A quoted attribute value may hold < or >, and stopping there would hide
-    // everything behind it: <img alt="< " src=x onerror=alert(1)> is one tag.
-    preg_match_all('~<\s*/?\s*([a-z][a-z0-9:-]*)(?=[\s/>]|$)((?:"[^"]*"|\'[^\']*\'|[^<>])*)~i', $value, $tags, PREG_SET_ORDER);
-    foreach ($tags as $tag) {
-        if (in_array(strtolower($tag[1]), array('script', 'object', 'iframe', 'embed', 'applet', 'meta', 'base', 'style', 'svg', 'math'), true)) {
+    $offset = 0;
+    $length = strlen($value);
+    while ($offset < $length) {
+        $matched = preg_match('~<\s*/?\s*([a-z][a-z0-9:-]*)(?=[\s/>]|$)~i', $value, $tag, PREG_OFFSET_CAPTURE, $offset);
+        if ($matched === 0) {
+            break;
+        }
+        if ($matched === false) {
             return true;
         }
-        if (preg_match('~(?:^|[\s/])(?:on[a-z][a-z0-9_:-]*|srcdoc)\s*=~i', $tag[2])) {
+        if (in_array(strtolower($tag[1][0]), array('script', 'object', 'iframe', 'embed', 'applet', 'meta', 'base', 'style', 'svg', 'math'), true)) {
             return true;
         }
-        $attributes = preg_replace('/[\x00-\x20\x7f]/', '', $tag[2]);
-        if (preg_match('~(?:javascript|vbscript):~i', $attributes)
-                || preg_match('~(?:href|src|action|formaction)=["\']?data:~i', $attributes)) {
+
+        // Scan values without recursive regex matching, which can fail on long tags.
+        $start = $tag[0][1] + strlen($tag[0][0]);
+        $quote = '';
+        $has_attribute = false;
+        $before_value = false;
+        $unquoted_value = false;
+        for ($end = $start; $end < $length; $end++) {
+            $character = $value[$end];
+            if ($quote !== '') {
+                if ($character === $quote) {
+                    $quote = '';
+                }
+                continue;
+            }
+            if ($character === '>') {
+                break;
+            }
+            $whitespace = strpos(" \t\n\r\f", $character) !== false;
+            if ($unquoted_value) {
+                if ($whitespace) {
+                    $unquoted_value = false;
+                }
+            } elseif ($before_value) {
+                if (!$whitespace) {
+                    $before_value = false;
+                    if ($character === '"' || $character === "'") {
+                        $quote = $character;
+                    } else {
+                        $unquoted_value = true;
+                    }
+                }
+            } elseif ($character === '=' && $has_attribute) {
+                $has_attribute = false;
+                $before_value = true;
+            } elseif ($character === '/') {
+                $has_attribute = false;
+            } elseif (!$whitespace) {
+                $has_attribute = true;
+            }
+        }
+        $attributes = substr($value, $start, $end - $start);
+        $offset = $end + 1;
+        if (preg_match('~(?:^|[\s/"\'])(?:on[a-z][a-z0-9_:-]*|srcdoc)\s*=~i', $attributes) !== 0) {
+            return true;
+        }
+        $attributes = preg_replace('/[\x00-\x20\x7f]/', '', $attributes);
+        if ($attributes === null
+                || preg_match('~(?:javascript|vbscript):~i', $attributes) !== 0
+                || preg_match('~(?:href|src|action|formaction)=["\']?data:~i', $attributes) !== 0) {
             return true;
         }
     }
