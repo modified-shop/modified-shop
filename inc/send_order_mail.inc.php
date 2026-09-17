@@ -27,8 +27,10 @@
     $orders = xtc_db_fetch_array($orders_query);
 
     require_once(DIR_FS_INC.'get_country_id.inc.php');
-    require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'order.php');
-    require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
+    // not DIR_WS_CLASSES: the frontend builds it from DIR_FS_CATALOG and the
+    // administration does not, so neither spelling of it works in both
+    require_once(DIR_FS_CATALOG.'includes/classes/order.php');
+    require_once(DIR_FS_CATALOG.'includes/classes/xtcPrice.php');
 
     // send_order.php builds $order and $main, xtc_php_mail() reads both out of the
     // global scope for the mail language and the signature, order::getOrderData()
