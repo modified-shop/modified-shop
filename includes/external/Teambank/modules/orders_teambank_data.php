@@ -21,9 +21,11 @@
     require_once(DIR_FS_EXTERNAL.'Teambank/classes/TeambankPayment.php');
 
     $TeambankPayment = new TeambankPayment();
-    $TeambankPayment->init($order->info['payment_method']);
-      
-    $admin_info_data = $TeambankPayment->get_order_info($order->info['order_id']);
+
+    // Read before init(): outside the administration that method fetches the webshop
+    // details, and this panel is built through ajax.php, so a provider that is down
+    // takes init() with it. The state below comes from the database alone, and a
+    // transaction is handed over for that very kind of outage.
     $pending_state = $TeambankPayment->get_pending_state($order->info['order_id']);
 
     // A transaction the task handed over may well be one it could not fetch either, so
@@ -52,6 +54,9 @@
       </table>
       <?php
     }
+
+    $TeambankPayment->init($order->info['payment_method']);
+    $admin_info_data = $TeambankPayment->get_order_info($order->info['order_id']);
 
     if (is_object($admin_info_data)) {
       ?>

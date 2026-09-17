@@ -1024,8 +1024,30 @@
     }
 
     function reset_pending_transaction($orders_id) {
-      // Hands a transaction the task gave up on back to it. Only one that was handed
-      // over qualifies, so this cannot pull a settled or cancelled order back in.
+      // Hands a transaction the task gave up on back to it. Being handed over is not
+      // enough on its own: an order handed over because the merchant cancelled it
+      // still carries the cancellation, and the task would write the success status
+      // over it while the totals the cancellation zeroed stay at zero. Only an order
+      // sitting on the temporary status of its payment method is waiting for an
+      // answer, so a cancelled one has to be put back on that status first.
+      $orders_query = xtc_db_query("SELECT payment_method,
+                                           orders_status
+                                      FROM ".TABLE_ORDERS."
+                                     WHERE orders_id = '".(int)$orders_id."'");
+      if (xtc_db_num_rows($orders_query) < 1) {
+        return false;
+      }
+      $orders = xtc_db_fetch_array($orders_query);
+
+      $constant = 'MODULE_PAYMENT_'.strtoupper($orders['payment_method']).'_ORDER_STATUS_ID';
+      if (!defined($constant)
+          || (int)constant($constant) < 1
+          || (int)$orders['orders_status'] !== (int)constant($constant)
+          )
+      {
+        return false;
+      }
+
       xtc_db_query("UPDATE `easycredit`
                        SET authorized = 0,
                            claimed = NULL
