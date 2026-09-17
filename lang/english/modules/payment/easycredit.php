@@ -46,6 +46,8 @@
     'TEXT_EASYCREDIT_AUTHORIZATION_PENDING' => 'The authorisation was still pending when the order was placed. Please check the status of the transaction in the payment section of the order.',
     'TEXT_EASYCREDIT_AUTHORIZATION_CONFIRMED' => 'The authorisation is confirmed.',
     'TEXT_EASYCREDIT_AUTHORIZATION_FAILED' => 'The authorisation is no longer expected. The transaction was closed.',
+    'TEXT_EASYCREDIT_AUTHORIZATION_CONFLICT' => 'The authorisation is confirmed. The order status was set manually in the meantime and is left untouched.',
+    'TEXT_EASYCREDIT_AUTHORIZATION_UNKNOWN' => 'The transaction can no longer be retrieved from the payment service. Please check its status there.',
     'TEXT_EASYCREDIT_RATING_PLAN' => 'Financing from %s in %s installments with easyCredit-Ratenkauf',
     'TEXT_EASYCREDIT_RATING_PLAN_SHORT' => 'Financing from %s per month',
     'TEXT_EASYCREDIT_RATING_PLAN_CALC' => 'more information about installment purchase',
