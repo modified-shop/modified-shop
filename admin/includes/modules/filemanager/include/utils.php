@@ -703,6 +703,24 @@ function rfm_esc($str)
 
 
 /**
+* Escape a value for use inside a script element
+*
+* The HEX flags keep the literal out of the surrounding HTML, and the substitute flag
+* keeps a file name in a foreign encoding from turning the encoder into false, which
+* would leave the assignment without a right hand side and break the whole block.
+*
+* @param  mixed  $value
+* @return string
+*/
+function rfm_json_value($value)
+{
+	$json = json_encode((string)$value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_INVALID_UTF8_SUBSTITUTE);
+
+	return ($json === false ? '""' : $json);
+}
+
+
+/**
 * Check extension
 *
 * @param  string  $extension
