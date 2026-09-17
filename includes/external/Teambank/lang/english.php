@@ -13,6 +13,11 @@
 
   $lang_array = array(
     'TEXT_TEAMBANK_ORDERS_HEADING' => 'Teambank Details',
+    'TEXT_TEAMBANK_PENDING_HEADING' => 'Needs attention',
+    'TEXT_TEAMBANK_PENDING_INFO' => 'The automatic reconciliation handed this transaction over to you. The reason is in the order status history. Check its status with the payment service, then hand it back to the reconciliation.',
+    'TEXT_TEAMBANK_PENDING_SUBMIT' => 'Reconcile again',
+    'TEXT_TEAMBANK_PENDING_SUCCESS' => 'The transaction was handed back to the automatic reconciliation.',
+    'TEXT_TEAMBANK_PENDING_ERROR' => 'The transaction could not be handed back.',
     'TEXT_TEAMBANK_NO_INFORMATION' => 'Keine Zahlungsdetails vorhanden',
     
     'TEXT_TEAMBANK_TRANSACTION' => 'Zahlungsdetails',
