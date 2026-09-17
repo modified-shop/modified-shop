@@ -537,6 +537,15 @@
           }
         }
 
+        // The temporary and the success status may be configured to the same value,
+        // which is what both modules ship with, and then the status says nothing at
+        // all. checkout_process.php flags the history entry it mailed, and it does
+        // that for a completed checkout only, so it settles those orders instead.
+        $settled = "EXISTS (SELECT 1
+                              FROM ".TABLE_ORDERS_STATUS_HISTORY." h
+                             WHERE h.orders_id = e.orders_id
+                               AND h.customer_notified = 1)";
+
         // Everything else is history and keeps its mail flag set: whatever it
         // received, it received before the task existed. An order that is still open
         // never had its confirmation at all, since holding that back is exactly what
@@ -546,8 +555,9 @@
                          SET e.authorized = 1,
                              e.mail_sent = 1
                        WHERE o.orders_id = e.orders_id
-                         ".((count($pending_status) > 0) ? "AND NOT (".implode("
-                              OR ", $pending_status).")" : ""));
+                         ".((count($pending_status) > 0) ? "AND (".$settled."
+                              OR NOT (".implode("
+                                      OR ", $pending_status)."))" : ""));
       }
 
       // without the key the cancel status silently stays on the current one, and the
