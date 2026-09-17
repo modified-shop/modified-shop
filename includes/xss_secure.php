@@ -64,10 +64,18 @@ function xss_contains_active_content($value)
     if (strpbrk($value, '<&') === false) {
         return false;
     }
+    // Admin uses a different class under the same case-insensitive name.
+    if ((defined('RUN_MODE_ADMIN') && RUN_MODE_ADMIN === true)
+            || (class_exists('InputFilter', false)
+                && (!method_exists('InputFilter', 'process') || !method_exists('InputFilter', 'safeSQL')))) {
+        return false;
+    }
 
     // Removing a comment or text element can expose previously inert markup.
     require_once (__DIR__.'/../inc/html_encoding.php');
-    require_once (__DIR__.'/classes/class.inputfilter.php');
+    if (!class_exists('InputFilter', false)) {
+        require_once (__DIR__.'/classes/class.inputfilter.php');
+    }
     static $filter;
     if (!isset($filter)) {
         $filter = new InputFilter();
