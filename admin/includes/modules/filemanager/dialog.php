@@ -383,17 +383,17 @@ $get_params = http_build_query($get_params);
 
     <input type="hidden" id="ftp" value="<?php echo !!$ftp; ?>" />
     <input type="hidden" id="popup" value="<?php echo $popup;?>" />
-    <input type="hidden" id="callback" value="<?php echo $callback; ?>" />
+    <input type="hidden" id="callback" value="<?php echo rfm_esc($callback); ?>" />
     <input type="hidden" id="crossdomain" value="<?php echo $crossdomain;?>" />
-    <input type="hidden" id="editor" value="<?php echo $editor;?>" />
+    <input type="hidden" id="editor" value="<?php echo rfm_esc($editor);?>" />
     <input type="hidden" id="view" value="<?php echo $view;?>" />
     <input type="hidden" id="subdir" value="<?php echo rfm_esc($subdir);?>" />
     <input type="hidden" id="field_id" value="<?php echo $field_id;?>" />
     <input type="hidden" id="multiple" value="<?php echo $multiple;?>" />
     <input type="hidden" id="type_param" value="<?php echo $type_param;?>" />
     <input type="hidden" id="upload_dir" value="<?php echo $config['upload_dir'];?>" />
-    <input type="hidden" id="cur_dir" value="<?php echo $cur_dir;?>" />
-    <input type="hidden" id="cur_dir_thumb" value="<?php echo $cur_dir_thumb;?>" />
+    <input type="hidden" id="cur_dir" value="<?php echo rfm_esc($cur_dir);?>" />
+    <input type="hidden" id="cur_dir_thumb" value="<?php echo rfm_esc($cur_dir_thumb);?>" />
     <input type="hidden" id="insert_folder_name" value="<?php echo trans('Insert_Folder_Name');?>" />
     <input type="hidden" id="rename_existing_folder" value="<?php echo trans('Rename_existing_folder');?>" />
     <input type="hidden" id="new_folder" value="<?php echo trans('New_Folder');?>" />
@@ -408,7 +408,7 @@ $get_params = http_build_query($get_params);
     <input type="hidden" id="sub_folder" value="<?php echo rfm_esc($rfm_subfolder);?>"/>
     <input type="hidden" id="return_relative_url" value="<?php echo $return_relative_url == true ? 1 : 0;?>"/>
     <input type="hidden" id="file_number_limit_js" value="<?php echo $config['file_number_limit_js'];?>" />
-    <input type="hidden" id="sort_by" value="<?php echo $sort_by;?>" />
+    <input type="hidden" id="sort_by" value="<?php echo rfm_esc($sort_by);?>" />
     <input type="hidden" id="descending" value="<?php echo $descending?1:0;?>" />
     <input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter,'&sort_by='.$sort_by,'&descending='.intval($descending)),array(''),$config['base_url'].htmlspecialchars($_SERVER['REQUEST_URI']));?>" />
     <input type="hidden" id="lang_show_url" value="<?php echo trans('Show_url');?>" />
@@ -852,7 +852,7 @@ $files = $sorted;
     $link = "dialog.php?" . $get_params;
     ?>
     <ul class="breadcrumb">
-    <li class="pull-left"><a href="<?php echo $link?>/"><i class="icon-home"></i></a></li>
+    <li class="pull-left"><a href="<?php echo rfm_esc($link)?>/"><i class="icon-home"></i></a></li>
     <li><span class="divider">/</span></li>
     <?php
     $bc=explode("/",$subdir);
@@ -861,9 +861,9 @@ $files = $sorted;
     foreach($bc as $k=>$b){
         $tmp_path.=$b."/";
         if($k==count($bc)-2){
-    ?> <li class="active"><?php echo $b?></li><?php
+    ?> <li class="active"><?php echo rfm_esc($b)?></li><?php
         }elseif($b!=""){ ?>
-        <li><a href="<?php echo $link.$tmp_path?>"><?php echo $b?></a></li><li><span class="divider"><?php echo "/";?></span></li>
+        <li><a href="<?php echo rfm_esc($link.rawurlencode($tmp_path))?>"><?php echo rfm_esc($b)?></a></li><li><span class="divider"><?php echo "/";?></span></li>
     <?php }
     }
     ?>
@@ -872,7 +872,7 @@ $files = $sorted;
     <?php if($config['show_language_selection']){ ?>
     <li class="pull-right"><a class="btn-small" href="javascript:void('')" id="change_lang_btn"><i class="icon-globe"></i></a></li>
     <?php } ?>
-    <li class="pull-right"><a id="refresh" class="btn-small" href="dialog.php?<?php echo $get_params.$subdir."&".uniqid() ?>"><i class="icon-refresh"></i></a></li>
+    <li class="pull-right"><a id="refresh" class="btn-small" href="dialog.php?<?php echo rfm_esc($get_params.rawurlencode($subdir)."&".uniqid()) ?>"><i class="icon-refresh"></i></a></li>
 
 	<li class="pull-right">
 		<div class="btn-group">
@@ -964,10 +964,10 @@ $files = $sorted;
                 }
                 ?><figure data-name="<?php echo rfm_esc($file) ?>" data-path="<?php echo rfm_esc($rfm_subfolder.$subdir.$file);?>" class="<?php if($file=="..") echo "back-";?>directory" data-type="<?php if($file!=".."){ echo "dir"; } ?>">
                 <?php if($file==".."){ ?>
-                    <input type="hidden" class="path" value="<?php echo str_replace('.','',dirname($rfm_subfolder.$subdir));?>"/>
-                    <input type="hidden" class="path_thumb" value="<?php echo dirname($thumbs_path)."/";?>"/>
+                    <input type="hidden" class="path" value="<?php echo rfm_esc(str_replace('.','',dirname($rfm_subfolder.$subdir)));?>"/>
+                    <input type="hidden" class="path_thumb" value="<?php echo rfm_esc(dirname($thumbs_path)."/");?>"/>
                 <?php } ?>
-                <a class="folder-link" href="dialog.php?<?php echo $get_params.rawurlencode($src)."&".($callback?'callback='.$callback."&":'').uniqid() ?>">
+                <a class="folder-link" href="dialog.php?<?php echo rfm_esc($get_params.rawurlencode($src)."&".($callback?'callback='.rawurlencode($callback)."&":'').uniqid()) ?>">
                     <div class="img-precontainer">
                             <div class="img-container directory"><span></span>
                             <img class="directory-img" data-src="img/<?php echo $config['icon_theme'];?>/folder<?php if($file==".."){ echo "_back"; }?>.png" />
@@ -1184,7 +1184,7 @@ $files = $sorted;
                 <div class='file-extension'><?php echo rfm_esc($file_array['extension']);?></div>
                 <figcaption>
                     <form action="force_download.php" method="post" class="download-form" id="form<?php echo $nu;?>">
-                    <input type="hidden" name="path" value="<?php echo $rfm_subfolder.$subdir?>"/>
+                    <input type="hidden" name="path" value="<?php echo rfm_esc($rfm_subfolder.$subdir)?>"/>
                     <input type="hidden" class="name_download" name="name" value="<?php echo rfm_esc($file)?>"/>
 
                     <a title="<?php echo trans('Download')?>" class="tip-right" href="javascript:void('')" <?php if($config['download_files']) echo "onclick=\"$('#form".$nu."').submit();\"" ?>><i class="icon-download <?php if(!$config['download_files']) echo 'icon-white'; ?>"></i></a>
