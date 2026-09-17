@@ -741,6 +741,21 @@
       // above looks at those any more, because the order no longer sits on the status
       // the selection asks for, so they get a pass of their own. It needs no provider:
       // the transaction is authorized, only the mail is owed.
+      // The order has to still be the one this pass settled. A cancellation between
+      // the failed send and now leaves it on another status with its totals zeroed,
+      // and confirming that to the customer is the one thing worse than a late mail.
+      $settled = array();
+      foreach (array('easycredit', 'easyinvoice') as $module) {
+        $constant = 'MODULE_PAYMENT_'.strtoupper($module).'_ORDER_STATUS_SUCCESS_ID';
+        if (defined($constant) && (int)constant($constant) > 0) {
+          $settled[] = "(o.payment_method = '".$module."'
+                         AND o.orders_status = '".(int)constant($constant)."')";
+        }
+      }
+      if (count($settled) < 1) {
+        return;
+      }
+
       $unsent_query = xtc_db_query("SELECT e.orders_id,
                                            e.mail_sent,
                                            o.payment_method,
@@ -750,6 +765,8 @@
                                            ON o.orders_id = e.orders_id
                                      WHERE e.authorized = 1
                                        AND e.mail_sent = 0
+                                       AND (".implode("
+                                            OR ", $settled).")
                                   ORDER BY o.payment_method,
                                            e.orders_id");
 
@@ -760,7 +777,7 @@
         if (!in_array($unsent['payment_method'], $modules)) {
           continue;
         }
-        if ($this->claim_pending_transaction($unsent['orders_id'], 1) !== true) {
+        if ($this->claim_unsent_mail($unsent['orders_id']) !== true) {
           continue;
         }
 
@@ -788,7 +805,23 @@
       }
     }
 
-    function claim_pending_transaction($orders_id, $authorized = 0) {
+    function claim_unsent_mail($orders_id) {
+      // Same idea as the claim above, and mail_sent belongs in the condition: a run
+      // that read this row before the mail went out and only gets here after the
+      // window expired would otherwise take it a second time.
+      xtc_db_query("UPDATE `easycredit`
+                       SET claimed = now()
+                     WHERE orders_id = '".(int)$orders_id."'
+                       AND authorized = 1
+                       AND mail_sent = 0
+                       AND (claimed IS NULL
+                            OR claimed < '".date('Y-m-d H:i:s', (time() - TEAMBANK_CLAIM_TIMEOUT))."'
+                            )");
+
+      return (xtc_db_affected_rows() > 0);
+    }
+
+    function claim_pending_transaction($orders_id) {
       // Two cron runs can overlap. A single conditional update is atomic on every
       // engine the shop supports, so exactly one of them takes the row and the other
       // comes away empty. The reservation carries a timestamp rather than a state, so
@@ -797,7 +830,7 @@
       xtc_db_query("UPDATE `easycredit`
                        SET claimed = now()
                      WHERE orders_id = '".(int)$orders_id."'
-                       AND authorized = '".(int)$authorized."'
+                       AND authorized = 0
                        AND (claimed IS NULL
                             OR claimed < '".date('Y-m-d H:i:s', (time() - TEAMBANK_CLAIM_TIMEOUT))."'
                             )");
