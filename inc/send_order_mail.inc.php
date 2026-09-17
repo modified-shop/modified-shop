@@ -29,23 +29,25 @@
     require_once(DIR_WS_CLASSES.'xtcPrice.php');
 
     // send_order.php builds $order and $main, xtc_php_mail() reads both out of the
-    // global scope for the mail language and the signature, and order::getOrderData()
-    // reads $xtPrice from there as well. Inside a function they would stay local and
+    // global scope for the mail language and the signature, order::getOrderData()
+    // reads $xtPrice from there as well, and a payment module like banktransfer picks
+    // up $insert_id the same way. Inside a function they would stay local and
     // invisible, so they are published with the context of this order and put back
     // afterwards: the caller may be a frontend request with a different currency.
-    global $order, $main, $xtPrice;
+    global $order, $main, $xtPrice, $insert_id;
 
     $context_backup = array(
       'order' => $order,
       'main' => $main,
       'xtPrice' => $xtPrice,
+      'insert_id' => $insert_id,
     );
 
     $order = null;
     $main = null;
     $xtPrice = new xtcPrice($orders['currency'], $orders['customers_status']);
-
     $insert_id = (int)$orders_id;
+
     $smarty = new Smarty();
 
     // send_order.php checks the order against the session customer, so a caller
@@ -76,6 +78,7 @@
     $order = $context_backup['order'];
     $main = $context_backup['main'];
     $xtPrice = $context_backup['xtPrice'];
+    $insert_id = $context_backup['insert_id'];
 
     foreach (array('customer_id', 'customer_country_id', 'customer_zone_id') as $key) {
       unset($_SESSION[$key]);
