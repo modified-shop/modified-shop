@@ -673,6 +673,7 @@
         // endpoint tells whether the authorization itself went through
         $status = false;
         $failed = false;
+        $unanswered = false;
         try {
           $TransactionInformation = $this->ecCheckout->loadTransaction($pending['tbaId']);
           $status = $TransactionInformation->getStatus();
@@ -680,7 +681,19 @@
           // OPEN, DECLINED or EXPIRED, the transaction will not complete any more
           $failed = true;
         } catch (Exception $e) {
-          // the service is unreachable, try again on the next run
+          // No answer at all, which is not the same as a negative one: the service may
+          // be down, or the transaction may be gone for good and answer 404 forever.
+          $unanswered = true;
+        }
+
+        $expired = (strtotime($pending['date_purchased']) < $deadline);
+
+        if ($unanswered === true) {
+          // keep asking while there is time, then hand it over instead of cancelling
+          // an order the provider may well have authorized
+          if ($expired === true && $this->claim_pending_transaction($pending['orders_id']) === true) {
+            $this->flag_pending_transaction($pending, 'AUTHORIZATION_UNKNOWN');
+          }
           continue;
         }
 
@@ -688,10 +701,7 @@
           if ($this->claim_pending_transaction($pending['orders_id']) === true) {
             $this->confirm_pending_transaction($pending);
           }
-        } elseif ($failed === true
-                  || strtotime($pending['date_purchased']) < $deadline
-                  )
-        {
+        } elseif ($failed === true || $expired === true) {
           if ($this->claim_pending_transaction($pending['orders_id']) === true) {
             $this->cancel_pending_transaction($pending);
           }
@@ -718,7 +728,48 @@
       return (xtc_db_affected_rows() > 0);
     }
 
+    function order_status_unchanged($pending) {
+      // The administration can cancel or otherwise move an order while it waits here,
+      // and xtc_reverse_order() does not touch this table. Writing the success status
+      // over that would reopen the order without undoing anything else it did.
+      $orders_query = xtc_db_query("SELECT orders_status
+                                      FROM ".TABLE_ORDERS."
+                                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+      if (xtc_db_num_rows($orders_query) < 1) {
+        return false;
+      }
+      $orders = xtc_db_fetch_array($orders_query);
+
+      return ((int)$orders['orders_status'] === (int)$pending['orders_status']);
+    }
+
+    function flag_pending_transaction($pending, $key) {
+      // leave the order alone and say so in its history, the merchant decides
+      $orders_query = xtc_db_query("SELECT orders_status
+                                      FROM ".TABLE_ORDERS."
+                                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+      $orders = ((xtc_db_num_rows($orders_query) > 0) ? xtc_db_fetch_array($orders_query) : array('orders_status' => $pending['orders_status']));
+
+      $sql_data_array = array(
+        'orders_id' => (int)$pending['orders_id'],
+        'orders_status_id' => (int)$orders['orders_status'],
+        'date_added' => 'now()',
+        'customer_notified' => 0,
+        'comments' => $this->get_task_text($pending, $key),
+      );
+      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+      xtc_db_query("UPDATE `easycredit`
+                       SET authorized = 2
+                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+    }
+
     function confirm_pending_transaction($pending) {
+      if ($this->order_status_unchanged($pending) !== true) {
+        $this->flag_pending_transaction($pending, 'AUTHORIZATION_CONFLICT');
+        return;
+      }
+
       $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_SUCCESS_ID');
 
       // send_order.php never ran for a pending order, so this is also where the
@@ -749,6 +800,11 @@
     }
 
     function cancel_pending_transaction($pending) {
+      if ($this->order_status_unchanged($pending) !== true) {
+        $this->flag_pending_transaction($pending, 'AUTHORIZATION_CONFLICT');
+        return;
+      }
+
       // easyCredit offers no endpoint to cancel an open transaction, it expires on
       // its own, so the order is only marked and never removed
       $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_CANCEL_ID');

@@ -46,6 +46,8 @@
     'TEXT_EASYCREDIT_AUTHORIZATION_PENDING' => 'Die Autorisierung stand bei Abschluss der Bestellung noch aus. Bitte den Status des Vorgangs im Zahlungsbereich der Bestellung kontrollieren.',
     'TEXT_EASYCREDIT_AUTHORIZATION_CONFIRMED' => 'Die Autorisierung liegt vor.',
     'TEXT_EASYCREDIT_AUTHORIZATION_FAILED' => 'Die Autorisierung ist nicht mehr zu erwarten. Der Vorgang wurde beendet.',
+    'TEXT_EASYCREDIT_AUTHORIZATION_CONFLICT' => 'Die Autorisierung liegt vor. Der Bestellstatus wurde inzwischen manuell gesetzt und bleibt daher unangetastet.',
+    'TEXT_EASYCREDIT_AUTHORIZATION_UNKNOWN' => 'Der Vorgang ist beim Zahlungsdienst nicht mehr abrufbar. Bitte den Status dort kontrollieren.',
     'TEXT_EASYCREDIT_RATING_PLAN' => 'Finanzierung ab %s in %s Raten mit easyCredit-Ratenkauf',
     'TEXT_EASYCREDIT_RATING_PLAN_SHORT' => 'Finanzierung ab %s im Monat',
     'TEXT_EASYCREDIT_RATING_PLAN_CALC' => 'mehr Infos zum Ratenkauf',
