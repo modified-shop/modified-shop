@@ -747,10 +747,22 @@
       return (xtc_db_affected_rows() > 0);
     }
 
-    function order_status_unchanged($pending) {
-      // The administration can cancel or otherwise move an order while it waits here,
-      // and xtc_reverse_order() does not touch this table. Writing the success status
-      // over that would reopen the order without undoing anything else it did.
+    function claim_order_status($pending, $orders_status) {
+      // The order status is the one thing the administration and the task both write,
+      // and xtc_reverse_order() cancels an order without touching this table. Reading
+      // it and writing it in two steps leaves a window in between, and sending the
+      // mail there makes that window seconds wide, so the move happens in one
+      // statement that only takes effect while the status still holds the value this
+      // run started from.
+      xtc_db_query("UPDATE ".TABLE_ORDERS."
+                       SET orders_status = '".(int)$orders_status."',
+                           last_modified = now()
+                     WHERE orders_id = '".(int)$pending['orders_id']."'
+                       AND orders_status = '".(int)$pending['orders_status']."'");
+
+      // Not the affected row count: an update that writes the value already there
+      // reports none, which happens whenever both configured statuses are the same.
+      // What the status reads afterwards answers the question either way.
       $orders_query = xtc_db_query("SELECT orders_status
                                       FROM ".TABLE_ORDERS."
                                      WHERE orders_id = '".(int)$pending['orders_id']."'");
@@ -759,7 +771,7 @@
       }
       $orders = xtc_db_fetch_array($orders_query);
 
-      return ((int)$orders['orders_status'] === (int)$pending['orders_status']);
+      return ((int)$orders['orders_status'] === (int)$orders_status);
     }
 
     function flag_pending_transaction($pending, $key) {
@@ -784,12 +796,19 @@
     }
 
     function confirm_pending_transaction($pending) {
-      if ($this->order_status_unchanged($pending) !== true) {
+      $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_SUCCESS_ID');
+
+      // before the mail, not after: everything below takes the order as settled
+      if ($this->claim_order_status($pending, $orders_status) !== true) {
         $this->flag_pending_transaction($pending, 'AUTHORIZATION_CONFLICT');
         return;
       }
 
-      $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_SUCCESS_ID');
+      // record that before sending, so a mail that fails leaves the row on a state
+      // that matches the order rather than one the task would pick up again
+      xtc_db_query("UPDATE `easycredit`
+                       SET authorized = 1
+                     WHERE orders_id = '".(int)$pending['orders_id']."'");
 
       // send_order.php never ran for a pending order, so this is also where the
       // afterbuy export and the merchant copy happen, neither of which cares about
@@ -798,10 +817,6 @@
       // administration sets customer_notified just as well.
       $sent = (($pending['mail_sent'] != 1) ? send_order_mail($pending['orders_id']) : false);
       $notified = ($sent === true && SEND_EMAILS == 'true');
-
-      xtc_db_query("UPDATE ".TABLE_ORDERS."
-                       SET orders_status = '".$orders_status."'
-                     WHERE orders_id = '".(int)$pending['orders_id']."'");
 
       $sql_data_array = array(
         'orders_id' => (int)$pending['orders_id'],
@@ -812,27 +827,24 @@
       );
       xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      xtc_db_query("UPDATE `easycredit`
-                       SET authorized = 1,
-                           mail_sent = '".(($sent === true) ? 1 : (int)$pending['mail_sent'])."'
-                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+      if ($sent === true) {
+        xtc_db_query("UPDATE `easycredit`
+                         SET mail_sent = 1
+                       WHERE orders_id = '".(int)$pending['orders_id']."'");
+      }
     }
 
     function cancel_pending_transaction($pending) {
-      if ($this->order_status_unchanged($pending) !== true) {
+      // easyCredit offers no endpoint to cancel an open transaction, it expires on
+      // its own, so the order is only marked and never removed
+      $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_CANCEL_ID');
+
+      if ($this->claim_order_status($pending, $orders_status) !== true) {
         // its own wording: this path runs on a declined, an expired or a timed out
         // transaction, and the confirmed one would say the opposite of what happened
         $this->flag_pending_transaction($pending, 'AUTHORIZATION_CONFLICT_FAILED');
         return;
       }
-
-      // easyCredit offers no endpoint to cancel an open transaction, it expires on
-      // its own, so the order is only marked and never removed
-      $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_CANCEL_ID');
-
-      xtc_db_query("UPDATE ".TABLE_ORDERS."
-                       SET orders_status = '".$orders_status."'
-                     WHERE orders_id = '".(int)$pending['orders_id']."'");
 
       $sql_data_array = array(
         'orders_id' => (int)$pending['orders_id'],
