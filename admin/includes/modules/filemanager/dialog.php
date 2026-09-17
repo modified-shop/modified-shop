@@ -1233,7 +1233,7 @@ $files = $sorted;
 <script>
     var files_prevent_duplicate = [];
     <?php foreach ($files_prevent_duplicate as $key => $value): ?>
-    files_prevent_duplicate[<?php echo (int)$key;?>] = <?php echo json_encode((string)$value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);?>;
+    files_prevent_duplicate[<?php echo (int)$key;?>] = <?php echo rfm_json_value($value);?>;
     <?php endforeach;?>
 </script>
 
