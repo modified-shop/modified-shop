@@ -18,6 +18,7 @@
     'TEXT_TEAMBANK_PENDING_SUBMIT' => 'Reconcile again',
     'TEXT_TEAMBANK_PENDING_SUCCESS' => 'The transaction was handed back to the automatic reconciliation.',
     'TEXT_TEAMBANK_PENDING_ERROR' => 'The transaction could not be handed back. Put the order back on the temporary order status of its payment module first.',
+    'TEXT_TEAMBANK_PENDING_REVERSED' => 'The order was cancelled, which set its totals to zero. It cannot go back to the reconciliation because of that. Settle the transaction with the payment service and place a new order if one is needed.',
     'TEXT_TEAMBANK_NO_INFORMATION' => 'Keine Zahlungsdetails vorhanden',
     
     'TEXT_TEAMBANK_TRANSACTION' => 'Zahlungsdetails',

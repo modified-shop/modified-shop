@@ -55,8 +55,14 @@
       <?php
     }
 
-    $TeambankPayment->init($order->info['payment_method']);
-    $admin_info_data = $TeambankPayment->get_order_info($order->info['order_id']);
+    // This file is rendered into an output buffer that the caller reads afterwards.
+    // An exception from here would leave that buffer unread, and the box above would
+    // never reach the browser, in the very case a transaction is handed over for.
+    $admin_info_data = false;
+    try {
+      $TeambankPayment->init($order->info['payment_method']);
+      $admin_info_data = $TeambankPayment->get_order_info($order->info['order_id']);
+    } catch (Exception $e) {}
 
     if (is_object($admin_info_data)) {
       ?>
