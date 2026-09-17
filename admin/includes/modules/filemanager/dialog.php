@@ -256,7 +256,9 @@ if (isset($_GET['extensions'])) {
 }
 
 if (isset($_GET['editor'])) {
-    $editor = strip_tags($_GET['editor']);
+    // an editor name, so the same whitelist the other parameters use: strip_tags()
+    // removes markup but leaves the quotes that break out of an attribute
+    $editor = fix_get_params($_GET['editor']);
 } else {
     $editor = $_GET['type'] == 0 ? null : 'tinymce';
 }
@@ -1231,7 +1233,7 @@ $files = $sorted;
 <script>
     var files_prevent_duplicate = [];
     <?php foreach ($files_prevent_duplicate as $key => $value): ?>
-    files_prevent_duplicate[<?php echo $key;?>] = '<?php echo $value;?>';
+    files_prevent_duplicate[<?php echo (int)$key;?>] = <?php echo json_encode((string)$value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);?>;
     <?php endforeach;?>
 </script>
 
