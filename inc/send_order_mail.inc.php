@@ -10,8 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // sends the order confirmation outside of the checkout, for payment callbacks and tasks
-  function send_order_mail($orders_id) {
+  // sends the order confirmation outside of the checkout, for payment callbacks, tasks
+  // and the administration. $force sends it even when SEND_EMAILS is off, which is what
+  // an explicit request from the administration means.
+  function send_order_mail($orders_id, $force = false) {
     $orders_query = xtc_db_query("SELECT customers_id,
                                          customers_status,
                                          customers_country_iso_code_2,
@@ -25,8 +27,10 @@
     $orders = xtc_db_fetch_array($orders_query);
 
     require_once(DIR_FS_INC.'get_country_id.inc.php');
-    require_once(DIR_WS_CLASSES.'order.php');
-    require_once(DIR_WS_CLASSES.'xtcPrice.php');
+    // not DIR_WS_CLASSES: the frontend builds it from DIR_FS_CATALOG and the
+    // administration does not, so neither spelling of it works in both
+    require_once(DIR_FS_CATALOG.'includes/classes/order.php');
+    require_once(DIR_FS_CATALOG.'includes/classes/xtcPrice.php');
 
     // send_order.php builds $order and $main, xtc_php_mail() reads both out of the
     // global scope for the mail language and the signature, order::getOrderData()
@@ -35,6 +39,12 @@
     // invisible, so they are published with the context of this order and put back
     // afterwards: the caller may be a frontend request with a different currency.
     global $order, $main, $xtPrice, $insert_id;
+
+    // Only read, never replaced. The guarantee label hook reports a damaged archive
+    // through the message stack, and outside the administration there is none to
+    // report to. The mail step hook reads $action to tell a resent confirmation from
+    // a mail step, and inside a function it would see neither.
+    global $messageStack, $action;
 
     $context_backup = array(
       'order' => $order,
@@ -47,6 +57,10 @@
     $main = null;
     $xtPrice = new xtcPrice($orders['currency'], $orders['customers_status']);
     $insert_id = (int)$orders_id;
+
+    if ($force === true) {
+      $send_by_admin = true;
+    }
 
     $smarty = new Smarty();
 

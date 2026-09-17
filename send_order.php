@@ -200,8 +200,8 @@ if ((isset($_SESSION['customer_id'])
   
   // send mail to customer
   if (SEND_EMAILS == 'true' || (isset($send_by_admin) && $send_by_admin == true)) {
-    // afterbuy sends the confirmation itself, a mail requested in the administration always goes
-    // out. a payment callback sets $send_by_admin as well, so the admin bootstrap decides instead
+    // afterbuy sends the confirmation itself, a mail requested in the administration always
+    // goes out, which is what send_order_mail() passes the flag on for
     $skip_order_mail = ($afterbuy_sent === true
                         && defined('MODULE_AFTERBUY_ORDER_MAIL')
                         && MODULE_AFTERBUY_ORDER_MAIL == 'false'
@@ -243,49 +243,6 @@ if ((isset($_SESSION['customer_id'])
     }
   }
 
-  if (isset($send_by_admin)) {
-    $customer_notified = '1';
-    $orders_status_id = ($order->info['orders_status'] < 1) ? DEFAULT_ORDERS_STATUS_ID : $order->info['orders_status'];
-    $comments = encode_utf8(decode_htmlentities(COMMENT_SEND_ORDER_BY_ADMIN));
-    
-    if (defined('MODULE_ORDER_MAIL_STEP_STATUS')
-        && MODULE_ORDER_MAIL_STEP_STATUS == 'true'
-        )
-    {
-      if ($action == 'send') {
-        $orders_status_id = ($order->info['orders_status'] != MODULE_ORDER_MAIL_STEP_ORDERS_STATUS_ID) ? MODULE_ORDER_MAIL_STEP_ORDERS_STATUS_ID : $order->info['orders_status'];
-        $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
-      } else {
-        $comments = encode_utf8(decode_htmlentities(COMMENT_SEND_ORDER_MAIL_STEP));
-        $messageStack->add_session(SUCCESS_ORDER_MAIL_STEP_SEND, 'success');
-      }
-    } else {
-      $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
-    }
-    
-    $sql_data_array = array(
-      'orders_status' => (int)$orders_status_id,
-      'last_modified' => 'now()'
-    );     
-    xtc_db_perform(TABLE_ORDERS,$sql_data_array,'update',"orders_id = '".(int)$insert_id."'");
-    
-    $sql_data_array = array(
-      'orders_id' => (int)$insert_id,
-      'orders_status_id' => (int)$orders_status_id,
-      'date_added' => 'now()',
-      'customer_notified' => $customer_notified,
-      'comments' => $comments,
-    );  
-    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
-    
-    if (!isset($redirect_to_admin)) {
-      if (isset($_GET['site']) && $_GET['site'] == 1) {
-        xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&action=edit'));
-      } else {
-        xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID']));
-      }
-    }
-  }
 } else {
   $smarty->assign('language', $_SESSION['language']);
   $smarty->assign('ERROR', 'You are not allowed to view this order!');
