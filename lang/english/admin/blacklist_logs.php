@@ -1,17 +1,16 @@
 <?php
+  /* --------------------------------------------------------------
+   $Id$
 
-/* --------------------------------------------------------------
- $Id$
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
- modified eCommerce Shopsoftware
- http://www.modified-shop.org
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
 
- Copyright (c) 2009 - 2013 [www.modified-shop.org]
- --------------------------------------------------------------
- Released under the GNU General Public License
- --------------------------------------------------------------*/
-
-define('HEADING_TITLE', 'Blacklist Logs');
+define('HEADING_TITLE', 'Blacklist Logs'); 
 
 define('TABLE_HEADING_IP', 'IP adress');
 define('TABLE_HEADING_BANNED', 'Time banned');
@@ -30,3 +29,4 @@ define('ERROR_LOG_DIRECTORY_DOES_NOT_EXIST', 'Error: Log directory does not exis
 define('ERROR_LOG_DIRECTORY_NOT_WRITEABLE', 'Error: Log directory is not writeable.');
 define('ERROR_BLACKLIST_WRITE', 'Error: The blacklist could not be saved.');
 define('ERROR_BLACKLIST_ENTRY', 'Error: Enter a valid IP address and a future expiration time.');
+?>

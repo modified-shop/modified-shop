@@ -1,17 +1,16 @@
 <?php
+  /* --------------------------------------------------------------
+   $Id$
 
-/* --------------------------------------------------------------
- $Id$
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
- modified eCommerce Shopsoftware
- http://www.modified-shop.org
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
 
- Copyright (c) 2009 - 2013 [www.modified-shop.org]
- --------------------------------------------------------------
- Released under the GNU General Public License
- --------------------------------------------------------------*/
-
-define('HEADING_TITLE', 'Blacklist Logs');
+define('HEADING_TITLE', 'Blacklist Logs'); 
 
 define('TABLE_HEADING_IP', 'IP Adresse');
 define('TABLE_HEADING_BANNED', 'Zeit gesperrt');
@@ -30,3 +29,4 @@ define('ERROR_LOG_DIRECTORY_DOES_NOT_EXIST', 'Fehler: Das Sicherungsverzeichnis 
 define('ERROR_LOG_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Sicherungsverzeichnis ist schreibgesch&uuml;tzt.');
 define('ERROR_BLACKLIST_WRITE', 'Fehler: Die Blacklist konnte nicht gespeichert werden.');
 define('ERROR_BLACKLIST_ENTRY', 'Fehler: Geben Sie eine g&uuml;ltige IP Adresse und einen zuk&uuml;nftigen Zeitpunkt an.');
+?>
