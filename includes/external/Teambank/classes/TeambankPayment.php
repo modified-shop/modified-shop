@@ -1025,11 +1025,9 @@
 
     function reset_pending_transaction($orders_id) {
       // Hands a transaction the task gave up on back to it. Being handed over is not
-      // enough on its own: an order handed over because the merchant cancelled it
-      // still carries the cancellation, and the task would write the success status
-      // over it while the totals the cancellation zeroed stay at zero. Only an order
-      // sitting on the temporary status of its payment method is waiting for an
-      // answer, so a cancelled one has to be put back on that status first.
+      // enough on its own, since the order may have moved on since. Returns true when
+      // the task has it again, 'reversed' for an order that was cancelled, and false
+      // when it sits on any other status than the one that means "waiting".
       $orders_query = xtc_db_query("SELECT payment_method,
                                            orders_status
                                       FROM ".TABLE_ORDERS."
@@ -1038,6 +1036,19 @@
         return false;
       }
       $orders = xtc_db_fetch_array($orders_query);
+
+      // A cancellation zeroes every total of the order and nothing puts them back, so
+      // an order that went through one cannot return to the task: confirming it would
+      // send the customer a confirmation over zero. Neither module accepts an order
+      // below its minimum amount, so nothing legitimate ends up here.
+      $total_query = xtc_db_query("SELECT orders_total_id
+                                     FROM ".TABLE_ORDERS_TOTAL."
+                                    WHERE orders_id = '".(int)$orders_id."'
+                                      AND value != 0
+                                    LIMIT 1");
+      if (xtc_db_num_rows($total_query) < 1) {
+        return 'reversed';
+      }
 
       $constant = 'MODULE_PAYMENT_'.strtoupper($orders['payment_method']).'_ORDER_STATUS_ID';
       if (!defined($constant)

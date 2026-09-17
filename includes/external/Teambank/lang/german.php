@@ -18,6 +18,7 @@
     'TEXT_TEAMBANK_PENDING_SUBMIT' => 'Erneut abgleichen',
     'TEXT_TEAMBANK_PENDING_SUCCESS' => 'Der Vorgang wurde an den automatischen Abgleich zur&uuml;ckgegeben.',
     'TEXT_TEAMBANK_PENDING_ERROR' => 'Der Vorgang konnte nicht zur&uuml;ckgegeben werden. Setzen Sie die Bestellung zuvor auf den tempor&auml;ren Bestellstatus des Zahlungsmoduls.',
+    'TEXT_TEAMBANK_PENDING_REVERSED' => 'Die Bestellung wurde storniert, dabei wurden ihre Summen auf 0 gesetzt. Ein erneuter Abgleich ist deshalb nicht m&ouml;glich. Kl&auml;ren Sie den Vorgang beim Zahlungsdienst und legen Sie bei Bedarf eine neue Bestellung an.',
     'TEXT_TEAMBANK_NO_INFORMATION' => 'Keine Zahlungsdetails vorhanden',
     
     'TEXT_TEAMBANK_TRANSACTION' => 'Zahlungsdetails',
