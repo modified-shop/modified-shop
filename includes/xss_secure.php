@@ -80,7 +80,12 @@ function xss_contains_active_content($value)
     if (!isset($filter)) {
         $filter = new InputFilter();
     }
-    $filtered = $filter->safeSQL($filter->process($value));
+    $filtered = $filter->process($value);
+    // Nested request values pass through process() without safeSQL().
+    if ($filtered !== $value && xss_contains_active_html($filtered)) {
+        return true;
+    }
+    $filtered = $filter->safeSQL($filtered);
     return $filtered !== $value && xss_contains_active_html($filtered);
 }
 
