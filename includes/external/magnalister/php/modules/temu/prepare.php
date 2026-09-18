@@ -6,6 +6,7 @@ require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/MLProductList.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ProductList/Dependency/MLProductListDependency.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ProductList/Dependency/MLProductListDependencyPrepareStatusFilter.php');
 require_once(DIR_MAGNALISTER_MODULES.'temu/classes/TemuProductSaver.php');
+require_once(DIR_MAGNALISTER_MODULES.'temu/classes/TemuLongtextStore.php');
 require_once(DIR_MAGNALISTER_MODULES.'temu/classes/MLProductListTemuAbstract.php');
 require_once(DIR_MAGNALISTER_MODULES.'temu/classes/ProductList/Dependency/MLProductListDependencyTemuApplyFormAction.php');
 require_once(DIR_MAGNALISTER_MODULES.'temu/classes/ProductList/Dependency/MLProductListDependencyTemuPrepareFormAction.php');
@@ -100,10 +101,7 @@ class TemuPrepare extends MagnaCompatibleBase {
 				'mpID' => $this->aMagnaSession['mpID'],
 				'products_id' => $pID,
 			));
-			MagnaDB::gi()->delete(TABLE_MAGNA_TEMU_PREPARE_LONGTEXT, array(
-				'mpID' => $this->aMagnaSession['mpID'],
-				'products_id' => $pID,
-			));
+			TemuLongtextStore::remove($this->aMagnaSession['mpID'], $pID);
 		}
 	}
 

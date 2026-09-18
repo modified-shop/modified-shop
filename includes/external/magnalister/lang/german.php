@@ -1711,6 +1711,7 @@ define('ML_GENERAL_VARMATCH_MANUAL_MATCHING', 'Eigene Angaben machen');
 define('ML_GENERAL_VARMATCH_SHOP_VALUE', 'Shop-Wert');
 define('ML_GENERAL_VARMATCH_RESET_INFO', 'Wollen Sie das Matching wirklich aufheben?');
 define('ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM', 'Alle zugeordneten Attribute für diese Kategorie zurücksetzen?');
+define('ML_GENERAL_VARMATCH_RESET_MATCHING_PRODUCTS_CONFIRM', 'Zugeordnete Attribute für die ausgewählten Produkte zurücksetzen? Die Kategorie-Zuordnung bleibt unverändert.');
 define('ML_GENERAL_VARMATCH_RESET_SUCCESS', 'Attributzuordnung erfolgreich zurückgesetzt');
 define('ML_GENERAL_VARMATCH_RESET_ERROR', 'Fehler');
 define('ML_GENERAL_VARMATCH_FREE_TEXT_LABEL', 'Eigene Angaben machen');
@@ -2760,6 +2761,7 @@ define('ML_TEMU_INV_STATUS_SYNCING',              'Synchronisiere Marktplatzstat
 define('ML_TEMU_INV_STATUS_UNKNOWN',              'Unbekannt');
 define('ML_TEMU_INV_STATUS_UPDATING',             'Wird aktualisiert&hellip;');
 define('ML_TEMU_INV_STATUS_WAITING',              'In Warteschlange');
+define('ML_TEMU_INV_STATUS_PENDING_DELETION',     'L&ouml;schung ausstehend');
 
 // FEAT-015: Price badge under the Price column (parallel to the product status)
 define('ML_TEMU_INV_PRICE_STATUS_PRICE_PENDING',  'Preis&auml;nderung in Pr&uuml;fung');
@@ -2774,6 +2776,7 @@ define('ML_TEMU_NOTE_AUDIT_IN_PROCESS', 'Pr&uuml;fung l&auml;uft');
 define('ML_TEMU_NOTE_PRICING_FAILURE', 'Preisfehler');
 define('ML_TEMU_NOTE_PRODUCT_TO_BE_COMPLETE', 'Produkt muss vervollst&auml;ndigt werden');
 define('ML_TEMU_NOTE_DELETE_PRICE_TERMINATION', 'Gel&ouml;scht (Preisbeendigung)');
+define('ML_TEMU_DELETE_SELECTED_VARIANTS_HINT', 'Temu kann einzelne Varianten nicht l&ouml;schen. Wenn Sie nur einzelne Varianten eines Produkts ausw&auml;hlen, werden diese vom Verkauf genommen und f&uuml;r K&auml;ufer ausgeblendet, die &uuml;brigen Varianten bleiben online. Das Produkt selbst wird nur gel&ouml;scht, wenn Sie alle seine Varianten ausw&auml;hlen.');
 define('ML_TEMU_INVENTORY_IMPORT_PENDING', 'Der Bestandsimport l&auml;uft gerade. Bitte versuchen Sie es in einigen Minuten erneut.');
 
 /* Temu OAuth Authentication */

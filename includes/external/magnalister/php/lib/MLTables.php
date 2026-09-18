@@ -88,5 +88,6 @@ define('TABLE_MAGNA_OTTO_PREPARE', 'magnalister_otto_prepare');
 define('TABLE_MAGNA_OTTO_VARIANTMATCHING', 'magnalister_otto_variantmatching');
 define('TABLE_MAGNA_TEMU_PREPARE', 'magnalister_temu_prepare');
 define('TABLE_MAGNA_TEMU_PREPARE_LONGTEXT', 'magnalister_temu_prepare_longtext');
+define('TABLE_MAGNA_TEMU_LONGTEXT', 'magnalister_temu_longtext');
 define('TABLE_MAGNA_TEMU_VARIANTMATCHING', 'magnalister_temu_variantmatching');
 define('TABLE_MAGNA_TEMU_CATEGORIES', 'magnalister_temu_categories_marketplace');

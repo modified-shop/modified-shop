@@ -383,6 +383,7 @@ define('ML_GENERAL_VARMATCH_ADDITIONAL_OPTIONS', 'More Options');
 define('ML_GENERAL_VARMATCH_SHOP_VALUE', 'Shop value');
 define('ML_GENERAL_VARMATCH_RESET_INFO', 'Are you sure you want to undo the matching?');
 define('ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM', 'Reset all matched attributes for this category?');
+define('ML_GENERAL_VARMATCH_RESET_MATCHING_PRODUCTS_CONFIRM', 'Reset the matched attributes for the selected product(s)? The category matching stays untouched.');
 define('ML_GENERAL_VARMATCH_RESET_SUCCESS', 'Attribute matching reset successfully');
 define('ML_GENERAL_VARMATCH_RESET_ERROR', 'Error');
 define('ML_GENERAL_VARMATCH_TITLE', 'Select a variation group of %marketplace%');
@@ -2677,6 +2678,7 @@ define('ML_TEMU_INV_STATUS_SYNCING',              'Syncing marketplace status&he
 define('ML_TEMU_INV_STATUS_UNKNOWN',              'Unknown');
 define('ML_TEMU_INV_STATUS_UPDATING',             'Updating&hellip;');
 define('ML_TEMU_INV_STATUS_WAITING',              'In queue');
+define('ML_TEMU_INV_STATUS_PENDING_DELETION',     'Deletion pending');
 
 // FEAT-015: Price badge under the Price column (parallel to the product status)
 define('ML_TEMU_INV_PRICE_STATUS_PRICE_PENDING',  'Price update under review');
@@ -2691,6 +2693,7 @@ define('ML_TEMU_NOTE_AUDIT_IN_PROCESS', 'Audit in process');
 define('ML_TEMU_NOTE_PRICING_FAILURE', 'Pricing failure');
 define('ML_TEMU_NOTE_PRODUCT_TO_BE_COMPLETE', 'Product to be completed');
 define('ML_TEMU_NOTE_DELETE_PRICE_TERMINATION', 'Deleted (price termination)');
+define('ML_TEMU_DELETE_SELECTED_VARIANTS_HINT', 'Temu cannot delete individual variants. If you select only some variants of a product, those are taken off sale and hidden from buyers, while the remaining variants stay online. The product itself is deleted only when you select all of its variants.');
 define('ML_TEMU_INVENTORY_IMPORT_PENDING', 'The inventory import is currently in progress. Please try again in a few minutes.');
 
 /* Temu OAuth Authentication */

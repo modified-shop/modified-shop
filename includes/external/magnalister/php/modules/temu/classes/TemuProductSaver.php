@@ -52,6 +52,12 @@ class TemuProductSaver {
 			'PreparedTS' => date('Y-m-d H:i:s'),
 		);
 
+		// The prepare row holds the references into the content store, and replacing it would
+		// otherwise detach the product's stored matching.
+		$aInsert = TemuLongtextStore::carryReferences(
+			$mpID, (int)$aData['products_id'], $aInsert['PrepareType'], $aInsert
+		);
+
 		MagnaDB::gi()->delete(TABLE_MAGNA_TEMU_PREPARE, array(
 			'mpID' => $mpID,
 			'products_id' => (int)$aData['products_id'],
@@ -60,17 +66,19 @@ class TemuProductSaver {
 
 		MagnaDB::gi()->insert(TABLE_MAGNA_TEMU_PREPARE, $aInsert);
 
-		if (isset($aData['ShopVariationId']) || isset($aData['CategoryIndependentShopVariationId'])) {
-			MagnaDB::gi()->delete(TABLE_MAGNA_TEMU_PREPARE_LONGTEXT, array(
-				'mpID' => $mpID,
-				'products_id' => (int)$aData['products_id'],
-			));
-			MagnaDB::gi()->insert(TABLE_MAGNA_TEMU_PREPARE_LONGTEXT, array(
-				'mpID' => $mpID,
-				'products_id' => (int)$aData['products_id'],
-				'ShopVariationId' => isset($aData['ShopVariationId']) ? $aData['ShopVariationId'] : '',
-				'CategoryIndependentShopVariationId' => isset($aData['CategoryIndependentShopVariationId']) ? $aData['CategoryIndependentShopVariationId'] : '',
-			));
+		// One field at a time, and only when the caller actually supplied it. Writing both
+		// unconditionally meant a save carrying just one of them cleared the other.
+		if (isset($aData['ShopVariationId'])) {
+			TemuLongtextStore::write(
+				$mpID, (int)$aData['products_id'], TemuLongtextStore::FIELD_SHOP_VARIATION,
+				$aData['ShopVariationId']
+			);
+		}
+		if (isset($aData['CategoryIndependentShopVariationId'])) {
+			TemuLongtextStore::write(
+				$mpID, (int)$aData['products_id'], TemuLongtextStore::FIELD_CATEGORY_INDEPENDENT,
+				$aData['CategoryIndependentShopVariationId']
+			);
 		}
 
 		return true;
@@ -204,11 +212,8 @@ class TemuProductSaver {
 		// If a per-product longtext row already exists (e.g. saved from the prepare
 		// UI via the React AJAX save), keep it: do NOT overwrite per-product edits
 		// with the category template. Only seed on first prepare / bulk prepare.
-		$iExisting = (int)MagnaDB::gi()->fetchOne("
-			SELECT COUNT(*) FROM ".TABLE_MAGNA_TEMU_PREPARE_LONGTEXT."
-			 WHERE mpID = ".(int)$mpID." AND products_id = ".(int)$pID."
-		");
-		if ($iExisting > 0) {
+		$aExisting = TemuLongtextStore::readRow($mpID, $pID);
+		if ($aExisting['ShopVariationId'] !== '' || $aExisting['CategoryIndependentShopVariationId'] !== '') {
 			return;
 		}
 
@@ -225,12 +230,10 @@ class TemuProductSaver {
 			       AND CustomIdentifier = ''
 		");
 		if ($sShopVariation !== '' || $sCatIndep !== '') {
-			MagnaDB::gi()->insert(TABLE_MAGNA_TEMU_PREPARE_LONGTEXT, array(
-				'mpID'                               => $mpID,
-				'products_id'                        => (int)$pID,
-				'ShopVariationId'                    => $sShopVariation,
-				'CategoryIndependentShopVariationId' => $sCatIndep,
-			));
+			// The template is identical for every product of this category, so both values
+			// resolve to a reference that all of them share instead of one copy each.
+			TemuLongtextStore::write($mpID, $pID, TemuLongtextStore::FIELD_SHOP_VARIATION, $sShopVariation);
+			TemuLongtextStore::write($mpID, $pID, TemuLongtextStore::FIELD_CATEGORY_INDEPENDENT, $sCatIndep);
 		}
 	}
 
@@ -246,6 +249,10 @@ class TemuProductSaver {
 	 */
 	public function preparePID($pID, $sPrimaryCategory, $aOverrides = array()) {
 		$aRow = $this->preparePropertiesRow($pID, $sPrimaryCategory, $aOverrides);
+		// Carry the content-store references across the row replacement; without them
+		// resolveAttributesToLongtext() below reads the product as empty and seeds the
+		// category template over a matching the merchant edited by hand.
+		$aRow = TemuLongtextStore::carryReferences($aRow['mpID'], (int)$pID, 'Apply', $aRow);
 		MagnaDB::gi()->delete(TABLE_MAGNA_TEMU_PREPARE, array(
 			'mpID' => $aRow['mpID'], 'products_id' => (int)$pID, 'PrepareType' => 'Apply',
 		));

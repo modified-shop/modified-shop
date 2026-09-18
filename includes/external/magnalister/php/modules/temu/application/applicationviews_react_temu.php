@@ -77,7 +77,11 @@ function buildTemuReactComponentProps($mpID, $productID, $mainCategory, $shopAtt
         'debugMode'             => $debugMode,
         // V2-specific props: render only tbody elements without wrapper table
         'wrapInTable'           => false,
-        'hideHelpColumn'        => true
+        'hideHelpColumn'        => true,
+        // Per-product screen (productID>0): skip the on-mount auto-save so merely opening a
+        // multi-product preparation does not fan the first product's matching out to the others.
+        // Bulk apply happens only on explicit save. Template mode (productID=0) keeps the initial save.
+        'skipInitialSave'       => ((int)$productID > 0),
     );
 }
 
@@ -225,33 +229,20 @@ function renderTemuReactVariationMatchingHTML_split($mpID, $productID, $mainCate
     <script src="<?php echo DIR_MAGNALISTER_WS; ?>js/react/AmazonVariationsV2.bundle.js?v=<?php echo $sReactBundleVer; ?>"></script>
     <script type="text/javascript">/*<![CDATA[*/
     /**
-     * Capture the variation section's magnalisterAddOptionalAttribute before other
-     * React instances (category, CI) overwrite the global.
-     * Uses Object.defineProperty to intercept the setter on the first write after
-     * the variation section renders.
+     * The React bundle exposes an instance-scoped add-optional-attribute helper per container
+     * (magnalisterAddOptionalAttribute_<containerId>), so the variation instance's helper can be
+     * targeted directly with no shared-global race. Alias the variation container's scoped helper
+     * to the name the checkbox glue calls, and keep temuStartCapturingVariationApi as a no-op for
+     * backward-compat with existing call sites.
      */
     (function() {
-        if (window._temuVariationApiCaptureInstalled) return;
-        window._temuVariationApiCaptureInstalled = true;
+        if (window._temuVariationApiAliasInstalled) return;
+        window._temuVariationApiAliasInstalled = true;
 
-        var _currentFn = window.magnalisterAddOptionalAttribute;
-        var _captureNext = false;
+        window.temuStartCapturingVariationApi = function() {};
 
-        window.temuStartCapturingVariationApi = function() {
-            _captureNext = true;
-            _currentFn = window.magnalisterAddOptionalAttribute;
-        };
-
-        // Watch for changes to the global function
-        Object.defineProperty(window, 'magnalisterAddOptionalAttribute', {
-            get: function() { return _currentFn; },
-            set: function(fn) {
-                _currentFn = fn;
-                if (_captureNext && typeof fn === 'function') {
-                    window.magnalisterAddOptionalAttribute_temuVariation = fn;
-                    _captureNext = false;
-                }
-            },
+        Object.defineProperty(window, 'magnalisterAddOptionalAttribute_temuVariation', {
+            get: function() { return window['magnalisterAddOptionalAttribute_temu-variation-root']; },
             configurable: true
         });
     })();
@@ -506,9 +497,11 @@ function renderTemuReactVariationMatching($productID, $data) {
         echo '<!-- DEBUG Temu: marketplaceAttributes count = ' . count($marketplaceAttributes) . ' -->';
     }
 
-    // Build API endpoint URL
+    // Build API endpoint URL. Force view=apply so the save/reload AJAX enters TemuReactHelper's
+    // product-specific branch (resolves the selected products and writes prepare_longtext) instead
+    // of the shared category template. This renderer is used only by the Product Preparation screen.
     $apiEndpoint = isset($_url) ? toURL($_url, array(
-        'view'        => $_GET['view'],
+        'view'        => 'apply',
         'kind'        => 'ajax',
         'applyAction' => 'react',
         'MLDEBUG'     => $debugMode ? 'true' : 'false'
@@ -519,7 +512,7 @@ function renderTemuReactVariationMatching($productID, $data) {
 
     // Prepare variables for JavaScript
     $ajaxUrl = toURL($_url, array(
-        'view'        => $_GET['view'],
+        'view'        => 'apply',
         'kind'        => 'ajax',
         'applyAction' => 'react'
     ), true);
@@ -1501,12 +1494,18 @@ function renderTemuReactVariationMatchingTemplate($categoryId, $urlResources) {
  * @param array $urlResources URL resources for AJAX endpoint
  * @return string HTML output
  */
-function renderTemuCategoryIndependentAttributes($urlResources) {
+function renderTemuCategoryIndependentAttributes($urlResources, $productID = 0) {
     global $_MagnaSession;
     $mpID = $_MagnaSession['mpID'];
 
-    $helper = new TemuReactHelper($mpID, 0); // view=apply constructor derives the product id
+    // On the Product Preparation screen the caller passes the selected product id so the CI
+    // instance renders per-product (and skips the on-mount auto-save). During page render the
+    // request view is 'prepare' (not 'apply'), so the constructor cannot derive it on its own.
+    $helper = new TemuReactHelper($mpID, (int)$productID);
     $iProductID = $helper->getProductID();
+    if ($iProductID <= 0) {
+        $iProductID = (int)$productID;
+    }
 
     // Fetch CI attributes from API
     $ciAttributes = $helper->getCategoryIndependentAttributes();

@@ -23,6 +23,8 @@ defined('_VALID_XTC_MODULE_CALL') or defined('_VALID_XTC') or defined('MAGNALIST
  * Helper class for preparing React component data structure for Temu attribute matching.
  * Adapts Amazon's ReactHelper pattern for Temu marketplace specifics.
  */
+require_once(DIR_MAGNALISTER_MODULES.'temu/classes/TemuLongtextStore.php');
+
 class TemuReactHelper {
 
     private $mpID;
@@ -355,16 +357,13 @@ class TemuReactHelper {
     public function loadFromApplyTable($productID) {
         $oDB = MagnaDB::gi();
 
-        // Check longtext table for ShopVariation data
-        $row = $oDB->fetchRow("
-            SELECT ShopVariationId
-            FROM " . TABLE_MAGNA_TEMU_PREPARE_LONGTEXT . "
-            WHERE mpID = " . (int)$this->mpID . "
-              AND products_id = " . (int)$productID . "
-        ");
+        // Content store first, legacy inline column while the product has no reference yet.
+        $sStored = TemuLongtextStore::read(
+            $this->mpID, $productID, TemuLongtextStore::FIELD_SHOP_VARIATION
+        );
 
-        if (!empty($row) && !empty($row['ShopVariationId'])) {
-            $decoded = json_decode($row['ShopVariationId'], true);
+        if ($sStored !== '') {
+            $decoded = json_decode($sStored, true);
             if (is_array($decoded)) {
                 return $decoded;
             }
@@ -580,12 +579,89 @@ class TemuReactHelper {
      * @param array $options Optional parameters: variationGroup, variationTheme
      * @return bool Success status
      */
-    public function saveToApplyTable($attributeMatching, $options = array()) {
-        $oDB = MagnaDB::gi();
+    /**
+     * Serialize concurrent read-modify-write saves into the same per-product prepare_longtext row.
+     * The variation, category and category-independent React roots flush concurrently, and both the
+     * ShopVariationId writers (variation + category) and the CategoryIndependentShopVariationId writer
+     * do read + DELETE + INSERT on the same (mpID, products_id) row. Without serialization they can
+     * clobber each other's column or create duplicate rows (the table's (mpID, products_id) key is
+     * non-unique). A MySQL named lock is visible across PHP-FPM processes, so the saves run one after
+     * another. Best-effort: on timeout/error we proceed without the lock rather than block the save.
+     *
+     * @param int $productId
+     * @return string|null lock name if acquired (pass to releaseSaveLock), null otherwise
+     */
+    private function acquireSaveLock($productId) {
+        if ((int)$productId <= 0) {
+            return null;
+        }
+        try {
+            $oDB = MagnaDB::gi();
+            $sLockName = 'mltemusv_' . md5($this->mpID . '_' . (int)$productId); // hashed: named locks cap at 64 chars
+            if ((string)$oDB->fetchOne("SELECT GET_LOCK('" . $oDB->escape($sLockName) . "', 5)") === '1') {
+                return $sLockName;
+            }
+        } catch (Exception $e) {
+            // proceed without the lock rather than blocking the save entirely
+        }
+        return null;
+    }
 
+    /**
+     * Release a named lock acquired via acquireSaveLock().
+     * @param string|null $sLockName
+     */
+    private function releaseSaveLock($sLockName) {
+        if (empty($sLockName)) {
+            return;
+        }
+        try {
+            $oDB = MagnaDB::gi();
+            $oDB->fetchOne("SELECT RELEASE_LOCK('" . $oDB->escape($sLockName) . "')");
+        } catch (Exception $e) {
+            // ignore — the lock auto-releases when the DB connection closes
+        }
+    }
+
+    /**
+     * Serializing wrapper around writeToApplyTable(): the named lock must be released even when a
+     * query in the middle of the write throws, otherwise it stays held for the rest of the DB
+     * connection's life and the next save waits out the full timeout. PHP 5.2 has no `finally`, so
+     * the release is duplicated in the catch and the exception is re-thrown unchanged.
+     *
+     * @param array $attributeMatching
+     * @param array $options Optional parameters: variationGroup, variationTheme
+     * @return bool Success status
+     */
+    public function saveToApplyTable($attributeMatching, $options = array()) {
         if (empty($this->productIDs)) {
             return false;
         }
+
+        // Serialize against the concurrent category-independent / category React-root saves that
+        // write the same per-product row (see acquireSaveLock()).
+        $sSaveLock = $this->acquireSaveLock($this->productID);
+        try {
+            $bResult = $this->writeToApplyTable($attributeMatching, $options);
+        } catch (Exception $e) {
+            $this->releaseSaveLock($sSaveLock);
+            throw $e;
+        }
+        $this->releaseSaveLock($sSaveLock);
+
+        return $bResult;
+    }
+
+    /**
+     * Performs the actual read-modify-write. Always call it through saveToApplyTable(), which holds
+     * the per-product lock for the duration.
+     *
+     * @param array $attributeMatching
+     * @param array $options Optional parameters: variationGroup, variationTheme
+     * @return bool Success status
+     */
+    private function writeToApplyTable($attributeMatching, $options = array()) {
+        $oDB = MagnaDB::gi();
 
         // Load existing data for the first product and merge
         $existingData = $this->loadFromApplyTable($this->productID);
@@ -613,31 +689,11 @@ class TemuReactHelper {
 
         // Save for each product
         foreach ($this->productIDs as $pID) {
-            // Preserve the existing category-independent column for this product;
-            // this save only owns the category-dependent ShopVariationId.
-            $sExistingCI = (string)$oDB->fetchOne("
-                SELECT CategoryIndependentShopVariationId
-                  FROM " . TABLE_MAGNA_TEMU_PREPARE_LONGTEXT . "
-                 WHERE mpID = " . (int)$this->mpID . "
-                   AND products_id = " . (int)$pID . "
-            ");
-
-            $oDB->query("
-                DELETE FROM " . TABLE_MAGNA_TEMU_PREPARE_LONGTEXT . "
-                WHERE mpID = " . (int)$this->mpID . "
-                  AND products_id = " . (int)$pID . "
-            ");
-
-            $oDB->query("
-                INSERT INTO " . TABLE_MAGNA_TEMU_PREPARE_LONGTEXT . "
-                (mpID, products_id, ShopVariationId, CategoryIndependentShopVariationId)
-                VALUES (
-                    " . (int)$this->mpID . ",
-                    " . (int)$pID . ",
-                    '" . $oDB->escape($jsonData) . "',
-                    '" . $oDB->escape($sExistingCI) . "'
-                )
-            ");
+            // Writes only this editor's field; the category-independent one is addressed
+            // separately and no longer has to be read back and re-inserted by hand.
+            TemuLongtextStore::write(
+                $this->mpID, $pID, TemuLongtextStore::FIELD_SHOP_VARIATION, $jsonData
+            );
 
             // Update prepare table if category is provided
             if (!empty($variationGroup)) {
@@ -946,14 +1002,11 @@ class TemuReactHelper {
         // Per-product: prefer this product's saved CI JSON; fall back to the global
         // category-independent template for first-open prefill.
         if ($this->productID > 0) {
-            $row = MagnaDB::gi()->fetchRow("
-                SELECT CategoryIndependentShopVariationId
-                  FROM " . TABLE_MAGNA_TEMU_PREPARE_LONGTEXT . "
-                 WHERE mpID = " . (int)$this->mpID . "
-                   AND products_id = " . (int)$this->productID . "
-            ");
-            if (!empty($row) && !empty($row['CategoryIndependentShopVariationId'])) {
-                $decoded = json_decode($row['CategoryIndependentShopVariationId'], true);
+            $sStored = TemuLongtextStore::read(
+                $this->mpID, $this->productID, TemuLongtextStore::FIELD_CATEGORY_INDEPENDENT
+            );
+            if ($sStored !== '') {
+                $decoded = json_decode($sStored, true);
                 if (is_array($decoded)) {
                     return $decoded;
                 }
@@ -982,6 +1035,11 @@ class TemuReactHelper {
      * @param array $attributeMatching Attribute matching data
      */
     public function saveCategoryIndependentMatching($attributeMatching) {
+        // Serialize the per-product read-modify-write against the concurrent variation/category
+        // React-root saves that write the same row (see acquireSaveLock()). Template mode
+        // (productID = 0) writes a different table and needs no lock.
+        $sSaveLock = ($this->productID > 0) ? $this->acquireSaveLock($this->productID) : null;
+
         $existing = $this->loadCategoryIndependentMatching();
         $merged = array_merge($existing, $attributeMatching);
         foreach ($merged as $key => $val) {
@@ -993,28 +1051,16 @@ class TemuReactHelper {
         $oDB = MagnaDB::gi();
 
         if ($this->productID > 0) {
-            // Per-product: write this product's CI column, preserving ShopVariationId.
-            $sExistingShop = (string)$oDB->fetchOne("
-                SELECT ShopVariationId
-                  FROM " . TABLE_MAGNA_TEMU_PREPARE_LONGTEXT . "
-                 WHERE mpID = " . (int)$this->mpID . "
-                   AND products_id = " . (int)$this->productID . "
-            ");
-            $oDB->query("
-                DELETE FROM " . TABLE_MAGNA_TEMU_PREPARE_LONGTEXT . "
-                WHERE mpID = " . (int)$this->mpID . "
-                  AND products_id = " . (int)$this->productID . "
-            ");
-            $oDB->query("
-                INSERT INTO " . TABLE_MAGNA_TEMU_PREPARE_LONGTEXT . "
-                (mpID, products_id, ShopVariationId, CategoryIndependentShopVariationId)
-                VALUES (
-                    " . (int)$this->mpID . ",
-                    " . (int)$this->productID . ",
-                    '" . $oDB->escape($sExistingShop) . "',
-                    '" . $oDB->escape($json) . "'
-                )
-            ");
+            // Per-product: write the category-independent JSON to every selected product
+            // (bulk apply, consistent with saveToApplyTable), each through the store so this
+            // save only ever touches its own field and cannot clobber ShopVariation.
+            $aPIDs = !empty($this->productIDs) ? $this->productIDs : array($this->productID);
+            foreach ($aPIDs as $pID) {
+                TemuLongtextStore::write(
+                    $this->mpID, $pID, TemuLongtextStore::FIELD_CATEGORY_INDEPENDENT, $json
+                );
+            }
+            $this->releaseSaveLock($sSaveLock);
             return true;
         }
 

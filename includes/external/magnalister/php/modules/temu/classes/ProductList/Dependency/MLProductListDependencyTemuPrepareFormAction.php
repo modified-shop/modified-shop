@@ -1,6 +1,8 @@
 <?php
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+require_once(DIR_MAGNALISTER_MODULES.'temu/classes/TemuLongtextStore.php');
+
 class MLProductListDependencyTemuPrepareFormAction extends MLProductListDependency {
 
 	public function getActionBottomLeftTemplate() {
@@ -54,12 +56,9 @@ class MLProductListDependencyTemuPrepareFormAction extends MLProductListDependen
 					AND ".$sWhere."
 					AND PrepareType = 'Apply'
 			");
-			/* The longtext table is always keyed by products_id, never by products_model. */
-			MagnaDB::gi()->query("
-				DELETE FROM ".TABLE_MAGNA_TEMU_PREPARE_LONGTEXT."
-				WHERE mpID = '".$mpID."'
-					AND products_id = '".$pID."'
-			");
+			/* Always keyed by products_id, never by products_model. The store drops both the
+			 * references and the legacy row, so nothing is left pointing at stored content. */
+			TemuLongtextStore::remove($mpID, $pID);
 			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 				'pID'           => $pID,
 				'mpID'          => $mpID,

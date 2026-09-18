@@ -1,6 +1,8 @@
 <?php
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+require_once(DIR_MAGNALISTER_MODULES.'temu/classes/TemuLongtextStore.php');
+
 class MLProductListDependencyTemuApplyFormAction extends MLProductListDependency {
 
 	public function getActionBottomLeftTemplate() {
@@ -50,11 +52,7 @@ class MLProductListDependencyTemuApplyFormAction extends MLProductListDependency
 						AND ".$sWhere."
 						AND PrepareType = 'Apply'
 				");
-				MagnaDB::gi()->query("
-					DELETE FROM ".TABLE_MAGNA_TEMU_PREPARE_LONGTEXT."
-					WHERE mpID = '".$this->getMagnaSession('mpID')."'
-						AND products_id = '".(int)$pID."'
-				");
+				TemuLongtextStore::remove($this->getMagnaSession('mpID'), (int)$pID);
 			}
 		}
 	}

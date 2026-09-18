@@ -46,11 +46,13 @@ class TemuVariantSpecResolver {
 			$iDimId = (int)substr($sKey, strlen('variation_dim_'));
 			$mSpec  = null;
 
-			if (isset($aAttr['Code']) && $aAttr['Code'] === 'attribute_value'
+			if (isset($aAttr['Code']) && ($aAttr['Code'] === 'attribute_value' || $aAttr['Code'] === 'freetext')
 				&& isset($aAttr['Values']) && !is_array($aAttr['Values']) && $aAttr['Values'] !== ''
 			) {
 				// Literal value — same for all variants (e.g. a fixed single-size). A preset value
-				// id for a select spec, or custom text for a free-text spec (routing decides).
+				// id for a select spec ('attribute_value'), or user-typed custom text for a
+				// free-text spec ('freetext', e.g. a Quantity/size value); routing decides
+				// specId vs specName. Without 'freetext' a free-text variation value was dropped.
 				$mSpec = $aAttr['Values'];
 			} elseif (isset($aAttr['Values']) && is_array($aAttr['Values'])) {
 				$sWant = isset($aVariantValueByDim[$iDimId]) ? (string)$aVariantValueByDim[$iDimId] : null;

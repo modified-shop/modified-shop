@@ -17,7 +17,7 @@
  */
 
 define('MODULE_SHIPPING_YATEGO_TEXT_TITLE', 'Versand festgelegt durch Yatego');
-define('MODULE_SHIPPING_YATEGO_TEXT_DESCRIPTION', 'Versand festgelegt durch Amazon');
+define('MODULE_SHIPPING_YATEGO_TEXT_DESCRIPTION', 'Versand festgelegt durch Yatego');
 define('MODULE_SHIPPING_YATEGO_SORT_ORDER', 'Sortierung');
 define('MODULE_SHIPPING_YATEGO_TEXT_WAY', 'Versand festgelegt durch Yatego.');
 define('MODULE_SHIPPING_YATEGO_ALLOWED_TITLE' , 'Erlaubte Zonen');

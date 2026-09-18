@@ -20,6 +20,8 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_MODULES . 'magnacompatible/prepare/VariationMatching.php');
 
+require_once(DIR_MAGNALISTER_MODULES.'temu/classes/TemuLongtextStore.php');
+
 class TemuVariationMatching extends VariationMatching {
 
 	protected function getAttributesMatchingHelper() {
@@ -233,6 +235,7 @@ class TemuVariationMatching extends VariationMatching {
 			 WHERE mpID = '".(int)$this->mpId."'
 			       AND selectionname = 'prepare'
 			       AND session_id = '".MagnaDB::gi()->escape(session_id())."'
+			 ORDER BY pID
 		", true);
 		if (empty($aPIDs)) {
 			return '';
@@ -240,6 +243,32 @@ class TemuVariationMatching extends VariationMatching {
 		require_once(DIR_MAGNALISTER_MODULES.'temu/prepare/TemuProductDataView.php');
 		$oView = new TemuProductDataView($this->mpId, $aPIDs);
 		return $oView->render();
+	}
+
+	/**
+	 * First product id in the current 'prepare' selection, or 0 when none.
+	 * Used to render the Product Preparation matching UI in per-product mode.
+	 * @return int
+	 */
+	/**
+	 * All product ids in the current 'prepare' selection (the products the preparation screen
+	 * saves/loads/resets), or an empty array when none.
+	 * @return int[]
+	 */
+	protected function getPreparePIDs() {
+		$aPIDs = MagnaDB::gi()->fetchArray("
+			SELECT pID FROM ".TABLE_MAGNA_SELECTION."
+			 WHERE mpID = '".(int)$this->mpId."'
+			       AND selectionname = 'prepare'
+			       AND session_id = '".MagnaDB::gi()->escape(session_id())."'
+			 ORDER BY pID
+		", true);
+		return empty($aPIDs) ? array() : array_map('intval', $aPIDs);
+	}
+
+	protected function getFirstPreparePID() {
+		$aPIDs = $this->getPreparePIDs();
+		return !empty($aPIDs) ? (int)$aPIDs[0] : 0;
 	}
 
 	protected function renderMatchingTable($categoryId = '') {
@@ -255,10 +284,20 @@ class TemuVariationMatching extends VariationMatching {
 		// Load React-based variation matching renderer for Temu
 		require_once(DIR_MAGNALISTER_MODULES . 'temu/application/applicationviews_react_temu.php');
 
-		// Get React component HTML using TEMPLATE version (productID = 0, no product-specific data)
+		// Product Preparation screen: render per-product so variation/attribute edits are saved to
+		// the selected product's prepare_longtext (the same source the screen loads from). The
+		// standalone Attributes Matching tab (triggersPrepare()=false) edits the shared category
+		// template instead.
 		$reactComponentHtml = '';
 		try {
-			$reactComponentHtml = renderTemuReactVariationMatchingTemplate($mainCategory, $this->resources['url']);
+			if ($this->triggersPrepare()) {
+				$reactComponentHtml = renderTemuReactVariationMatching(
+					$this->getFirstPreparePID(),
+					array('PrimaryCategory' => $mainCategory)
+				);
+			} else {
+				$reactComponentHtml = renderTemuReactVariationMatchingTemplate($mainCategory, $this->resources['url']);
+			}
 		} catch (MagnaException $e) {
 			$reactComponentHtml = '<tbody><tr><td colspan="3"><p class="errorBox">' . $e->getMessage() . '</p></td></tr></tbody>';
 			$e->setCriticalStatus(false);
@@ -288,7 +327,10 @@ class TemuVariationMatching extends VariationMatching {
 			<?php
 			$ciHtml = '';
 			try {
-				$ciHtml = renderTemuCategoryIndependentAttributes($this->resources['url']);
+				$ciHtml = renderTemuCategoryIndependentAttributes(
+					$this->resources['url'],
+					$this->triggersPrepare() ? $this->getFirstPreparePID() : 0
+				);
 			} catch (MagnaException $e) {
 				$e->setCriticalStatus(false);
 			} catch (Exception $e) {
@@ -527,13 +569,22 @@ class TemuVariationMatching extends VariationMatching {
 							return;
 						}
 
-						if (!confirm('<?php echo addslashes(defined("ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM") ? ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM : "Reset all matched attributes for this category?"); ?>')) {
+						<?php // On the Product Preparation screen Reset clears the selected products' own
+						      // matching, not the category — use the screen-specific confirmation text. ?>
+						if (!confirm('<?php echo addslashes($this->triggersPrepare()
+							? (defined("ML_GENERAL_VARMATCH_RESET_MATCHING_PRODUCTS_CONFIRM") ? ML_GENERAL_VARMATCH_RESET_MATCHING_PRODUCTS_CONFIRM : "Reset the matched attributes for the selected product(s)? The category matching stays untouched.")
+							: (defined("ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM") ? ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM : "Reset all matched attributes for this category?")); ?>')) {
 							return;
 						}
 
-						// Send AJAX request to delete record from database
+						// Send AJAX request to delete record from database. On the Product Preparation
+						// screen route to the react handler in per-product mode (applyAction=react,
+						// view=apply) so Reset clears the product's own prepare_longtext; the standalone
+						// Attributes Matching tab keeps its existing route (resets the category template).
 						$.ajax({
-							url: '<?php echo toURL($this->resources["url"], array("kind" => "ajax"), true); ?>',
+							url: '<?php echo $this->triggersPrepare()
+								? toURL($this->resources["url"], array("kind" => "ajax", "applyAction" => "react", "view" => "apply"), true)
+								: toURL($this->resources["url"], array("kind" => "ajax"), true); ?>',
 							type: 'POST',
 							dataType: 'json',
 							data: {
@@ -632,6 +683,37 @@ class TemuVariationMatching extends VariationMatching {
 				$variationGroup = isset($_POST['ml']['variationGroup']) ? $_POST['ml']['variationGroup'] : '';
 				$mpID = isset($_POST['mpID']) ? (int)$_POST['mpID'] : $this->mpId;
 
+				// Product Preparation screen: Reset must clear the selected product(s)' OWN per-product
+				// matching (prepare_longtext) — the same rows the screen saves to — NOT the shared
+				// category template, which is used by every other product in the category. The AJAX
+				// handler runs on the base class (triggersPrepare() is false here), so key off the
+				// request view — 'apply' is the per-product context the save uses too.
+				if (isset($_GET['view']) && $_GET['view'] === 'apply') {
+					try {
+						foreach ($this->getPreparePIDs() as $iPID) {
+							// Clear only this screen's own field. The store keeps the
+							// category-independent matching, which the save path deliberately
+							// preserves, and an emptied ShopVariation falls back to the category
+							// template on load exactly like a missing row.
+							// Marketplace from the session, not the request: this branch clears
+							// data, and $_POST['mpID'] would let it reach another marketplace.
+							TemuLongtextStore::clear(
+								(int)$this->mpId, (int)$iPID, TemuLongtextStore::FIELD_SHOP_VARIATION
+							);
+						}
+						die(json_encode(array(
+							'success' => true,
+							'message' => 'Attribute matching reset successfully'
+						)));
+					} catch (Exception $e) {
+						die(json_encode(array(
+							'success' => false,
+							'message' => 'Failed to reset: ' . $e->getMessage()
+						)));
+					}
+				}
+
+				// Standalone Attributes Matching tab: reset the shared category template.
 				// Validate variationGroup is not empty
 				if (empty($variationGroup) || $variationGroup === 'none') {
 					die(json_encode(array(

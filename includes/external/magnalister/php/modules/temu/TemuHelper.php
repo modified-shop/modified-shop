@@ -4,9 +4,15 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/AttributesMatchingHelper.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 require_once(DIR_MAGNALISTER_MODULES.'temu/classes/TemuVariantSpecResolver.php');
+require_once(DIR_MAGNALISTER_MODULES.'temu/classes/TemuLongtextStore.php');
 require_once(DIR_MAGNALISTER_MODULES.'temu/classes/TemuParentChildVisibility.php');
 
 class TemuHelper extends AttributesMatchingHelper {
+
+	/**
+	 * Temu accepts at most 49 images in goodsGallery.detailImage
+	 */
+	const MASTER_DETAIL_IMAGE_MAX = 49;
 
 	protected static $instance = null;
 
@@ -262,10 +268,7 @@ class TemuHelper extends AttributesMatchingHelper {
 	 * VerifyAddItems and AddItems. $aBase provides lowercase price/quantity/currency.
 	 */
 	public static function buildSubmitData($mpID, $pID, $aPrepare, $aBase) {
-		$aLongtext = MagnaDB::gi()->fetchRow("
-			SELECT * FROM ".TABLE_MAGNA_TEMU_PREPARE_LONGTEXT."
-			 WHERE mpID = '".(int)$mpID."' AND products_id = '".(int)$pID."'
-		");
+		$aLongtext = TemuLongtextStore::readRow($mpID, $pID);
 		$fPrice = isset($aBase['price']) ? (float)$aBase['price'] : (float)$aPrepare['Price'];
 		$aSubmit = array(
 			'SKU'            => $aPrepare['SKU'],
@@ -293,6 +296,11 @@ class TemuHelper extends AttributesMatchingHelper {
 			$aImages = json_decode($aPrepare['Images'], true);
 			if (is_array($aImages)) {
 				$aSubmit['Images'] = self::resolveImageUrls($aImages, $mpID);
+				// The selected images are also the product-level detail images on Temu
+				$aMasterDetailImage = self::buildMasterDetailImage($aSubmit['Images']);
+				if (!empty($aMasterDetailImage)) {
+					$aSubmit['MasterDetailImage'] = $aMasterDetailImage;
+				}
 			}
 		}
 		if (!empty($aPrepare['BulletPoints'])) {
@@ -373,6 +381,9 @@ class TemuHelper extends AttributesMatchingHelper {
 					$aSubmit['CategoryAttributes'] = $aCatOut;
 
 					// Variation dimensions → SpecDetails (routed to specId/specName by category type).
+					// Resolve shop-attribute / UseShopValues dims first (same resolver category
+					// attributes use) so they aren't dropped from SpecDetails.
+					$aVariationDims = self::resolveVariationDimsShopValues($aVariationDims, $aProductData, $oAttrMatch);
 					$aVarDetails  = self::getVariationDetails($mpID, $aPrepare['PrimaryCategory']);
 					$aSpecDetails = self::buildSpecDetails($aVariationDims, $aVarDetails);
 					if (!empty($aSpecDetails)) {
@@ -389,8 +400,10 @@ class TemuHelper extends AttributesMatchingHelper {
 	 * item for a simple product). The base item (shared fields: CatId, Currency,
 	 * Description, CategoryAttributes, CategoryIndependentAttributes, Images) comes
 	 * from buildSubmitData(); each variant overrides SKU/ProductName/price/qty/EAN
-	 * and its own per-variant SpecDetails. A simple product returns one item with
-	 * MasterSKU == SKU and the base (representative) SpecDetails — backward compatible.
+	 * and its own per-variant SpecDetails. A variant with own images (Gambio properties
+	 * combi images) sends only those as Images, like OTTO; the others keep the selected
+	 * images. A simple product returns one item with MasterSKU == SKU and the base
+	 * (representative) SpecDetails — backward compatible.
 	 *
 	 * @param int        $mpID
 	 * @param int        $pID
@@ -398,9 +411,10 @@ class TemuHelper extends AttributesMatchingHelper {
 	 * @param array      $aBase     price/quantity/currency overrides from the summary
 	 * @param array|null $aVariants MLProduct variant list (each: MarketplaceSku, Price,
 	 *                              Quantity, EAN, Variation[]); null/empty = simple product
+	 * @param array|null $aVariationPictures MLProduct VariationPictures (each: VariationId, Images[])
 	 * @return array  list of payload items
 	 */
-	public static function buildSubmitItems($mpID, $pID, $aPrepare, $aBase, $aVariants) {
+	public static function buildSubmitItems($mpID, $pID, $aPrepare, $aBase, $aVariants, $aVariationPictures = null) {
 		$aBaseItem = self::buildSubmitData($mpID, $pID, $aPrepare, $aBase);
 		$sMasterSku  = isset($aBaseItem['SKU']) ? $aBaseItem['SKU'] : '';
 		$sMasterName = isset($aBaseItem['ProductName']) ? $aBaseItem['ProductName'] : '';
@@ -417,11 +431,24 @@ class TemuHelper extends AttributesMatchingHelper {
 			return array($aBaseItem);
 		}
 
+		// Resolve shop-attribute / UseShopValues / database_value variation dims once (same resolver
+		// the category attributes and the base item use) so the per-variant resolver below receives
+		// real values instead of dropping the dimension from every child SKU. Temu combos share the
+		// master product, so a product-level resolution is correct here — it mirrors how category
+		// attributes are resolved once for the base item and inherited by every variant.
+		$aVariationDims = self::resolveVariationDimsShopValues(
+			$aVariationDims,
+			self::getProductDataForMatching($mpID, $pID),
+			new AttributesMatchingHelper($mpID)
+		);
+
 		// Category variation_details for specId/specName routing — fetched once (cached) and reused
 		// for every variant. Empty on failure ⇒ routeSpecDetails() keeps legacy specId placement.
 		$aVariationDetails = self::getVariationDetails(
 			$mpID, isset($aPrepare['PrimaryCategory']) ? $aPrepare['PrimaryCategory'] : ''
 		);
+
+		$aVariationImages = self::getVariationImageUrls($aVariationPictures);
 
 		$aItems = array();
 		foreach ($aVariants as $aVariation) {
@@ -444,6 +471,9 @@ class TemuHelper extends AttributesMatchingHelper {
 			}
 			if (!empty($aVariation['EAN'])) {
 				$aItem['EAN'] = $aVariation['EAN'];
+			}
+			if (isset($aVariation['VariationId']) && isset($aVariationImages[$aVariation['VariationId']])) {
+				$aItem['Images'] = $aVariationImages[$aVariation['VariationId']];
 			}
 
 			// Per-variant SpecDetails (replaces the representative one from the base item).
@@ -486,12 +516,11 @@ class TemuHelper extends AttributesMatchingHelper {
 	 */
 	public static function extractVariationDims($mpID, $pID) {
 		$aDims = array();
-		$aLongtext = MagnaDB::gi()->fetchRow("
-			SELECT ShopVariationId FROM ".TABLE_MAGNA_TEMU_PREPARE_LONGTEXT."
-			 WHERE mpID = '".(int)$mpID."' AND products_id = '".(int)$pID."'
-		");
-		if (is_array($aLongtext) && !empty($aLongtext['ShopVariationId'])) {
-			$aCatAttrs = json_decode($aLongtext['ShopVariationId'], true);
+		$sShopVariation = TemuLongtextStore::read(
+			$mpID, $pID, TemuLongtextStore::FIELD_SHOP_VARIATION
+		);
+		if ($sShopVariation !== '') {
+			$aCatAttrs = json_decode($sShopVariation, true);
 			if (is_array($aCatAttrs)) {
 				foreach ($aCatAttrs as $sKey => $mVal) {
 					if (strpos($sKey, 'variation_dim_') === 0) {
@@ -522,6 +551,62 @@ class TemuHelper extends AttributesMatchingHelper {
 			}
 		}
 		return empty($aParts) ? $sMasterName : $sMasterName.' : '.implode(' : ', $aParts);
+	}
+
+	/**
+	 * Resolve variation dimensions matched to a shop attribute (Code=products_id, article_number,
+	 * database_value, title, …) or UseShopValues that carry no directly-usable Values, using the
+	 * same shop-value resolver category attributes use (convertMatchingToNameValue). The resolved
+	 * scalar is injected as a free-text Values so buildSpecDetails() / TemuVariantSpecResolver::
+	 * resolve() place it into SpecDetails instead of dropping the dimension. Dimensions that already
+	 * carry a scalar value or a Shop→Marketplace mapping array are left untouched.
+	 *
+	 * @param array  $aVariationDims variation_dim_<id> => matching entry
+	 * @param array  $aProductData   product data for shop-value resolution
+	 * @param object $oAttrMatch     AttributesMatchingHelper instance
+	 * @return array variation dims with resolved shop values injected
+	 */
+	public static function resolveVariationDimsShopValues($aVariationDims, $aProductData, $oAttrMatch) {
+		if (empty($aVariationDims) || !is_array($aVariationDims) || !is_object($oAttrMatch)) {
+			return $aVariationDims;
+		}
+		$aNeedsResolve = array();
+		foreach ($aVariationDims as $sKey => $aAttr) {
+			if (!is_array($aAttr)) {
+				continue;
+			}
+			$bScalar = isset($aAttr['Values']) && !is_array($aAttr['Values']) && $aAttr['Values'] !== '';
+			// A genuine Shop→Marketplace mapping list is a list of rows each carrying a 'Shop' or
+			// 'Marketplace' key — buildSpecDetails()/resolve() consume it directly. Do NOT confuse it
+			// with a 'database_value' matching, whose Values is the associative {Table, Column, Alias}
+			// config (an array too, but not a mapping list); that must go through the shop-value
+			// resolver, which has a dedicated database_value branch.
+			$bMappingList = false;
+			if (isset($aAttr['Values']) && is_array($aAttr['Values']) && !empty($aAttr['Values'])) {
+				$aFirstRow    = reset($aAttr['Values']);
+				$bMappingList = is_array($aFirstRow) && (isset($aFirstRow['Shop']) || isset($aFirstRow['Marketplace']));
+			}
+			if (!$bScalar && !$bMappingList) {
+				// Shop-attribute code / UseShopValues / database_value without a directly-usable value.
+				$aNeedsResolve[$sKey] = $aAttr;
+			}
+		}
+		if (empty($aNeedsResolve)) {
+			return $aVariationDims;
+		}
+		$aResolved = $oAttrMatch->convertMatchingToNameValue($aNeedsResolve, $aProductData);
+		foreach ($aNeedsResolve as $sKey => $aAttr) {
+			if (!isset($aResolved[$sKey]) || is_array($aResolved[$sKey]) || $aResolved[$sKey] === '') {
+				continue;
+			}
+			$aVariationDims[$sKey]['Values'] = $aResolved[$sKey];
+			// buildSpecDetails()/resolve() only accept a scalar Values for Code freetext/attribute_value.
+			$sCode = isset($aVariationDims[$sKey]['Code']) ? $aVariationDims[$sKey]['Code'] : '';
+			if ($sCode !== 'attribute_value' && $sCode !== 'freetext') {
+				$aVariationDims[$sKey]['Code'] = 'freetext';
+			}
+		}
+		return $aVariationDims;
 	}
 
 	/**
@@ -559,10 +644,12 @@ class TemuHelper extends AttributesMatchingHelper {
 
 			// Resolve a single representative spec value for this dimension.
 			$mSpec = null;
-			if (isset($aAttr['Code']) && $aAttr['Code'] === 'attribute_value'
+			if (isset($aAttr['Code']) && ($aAttr['Code'] === 'attribute_value' || $aAttr['Code'] === 'freetext')
 				&& isset($aAttr['Values']) && !is_array($aAttr['Values']) && $aAttr['Values'] !== ''
 			) {
-				$mSpec = $aAttr['Values']; // literal value (preset id or custom text)
+				// Literal value: preset id ('attribute_value') or user-typed free-text
+				// ('freetext', e.g. Quantity=12). Without 'freetext' the value was dropped.
+				$mSpec = $aAttr['Values'];
 			} elseif (isset($aAttr['Values']) && is_array($aAttr['Values'])) {
 				foreach ($aAttr['Values'] as $aMap) {
 					if (!is_array($aMap)) {
@@ -720,6 +807,52 @@ class TemuHelper extends AttributesMatchingHelper {
 				continue;
 			}
 			$aOut[] = preg_match('#^https?://#i', $sImg) ? $sImg : $sBase.$sImg;
+		}
+		return $aOut;
+	}
+
+	/**
+	 * Product-level detail images (goodsGallery.detailImage) from the selected image URLs:
+	 * selected order, duplicates removed, at most the Temu limit.
+	 *
+	 * @param array $aImageUrls absolute image URLs
+	 * @return array
+	 */
+	public static function buildMasterDetailImage($aImageUrls) {
+		$aImages = array_values(array_unique((array)$aImageUrls));
+		return array_slice($aImages, 0, self::MASTER_DETAIL_IMAGE_MAX);
+	}
+
+	/**
+	 * Own images per variation, keyed by VariationId, as absolute URLs. Only Gambio properties
+	 * combis with an image list (Gambio 4.1+) provide them, the same source OTTO uses.
+	 *
+	 * @param array|null $aVariationPictures MLProduct VariationPictures (each: VariationId, Images[])
+	 * @return array VariationId => list of image URLs
+	 */
+	public static function getVariationImageUrls($aVariationPictures) {
+		$aOut = array();
+		if (empty($aVariationPictures) || !is_array($aVariationPictures)) {
+			return $aOut;
+		}
+		$sBase = rtrim(defined('HTTP_CATALOG_SERVER') ? HTTP_CATALOG_SERVER : '', '/').'/'
+			.ltrim(defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '', '/');
+		$sBase = rtrim($sBase, '/').'/';
+		foreach ($aVariationPictures as $aPicture) {
+			if (!is_array($aPicture) || !isset($aPicture['VariationId'])
+				|| empty($aPicture['Images']) || !is_array($aPicture['Images'])
+			) {
+				continue;
+			}
+			foreach ($aPicture['Images'] as $sImage) {
+				$sImage = trim((string)$sImage);
+				if ($sImage === '') {
+					continue;
+				}
+				$aOut[$aPicture['VariationId']][] = preg_match('#^https?://#i', $sImage)
+					? $sImage
+					: $sBase.ltrim($sImage, '/');
+			}
 		}
 		return $aOut;
 	}

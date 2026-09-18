@@ -1378,13 +1378,27 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			"variant_{$varAttribute['NameId']}" => $varAttribute['ValueId']
 		), true);
 
-		if (!empty($fixCatAttributes)) {
-            $arrayKeys = array_keys($fixCatAttributes);
-			$varAttribute['Name'] = array_pop($arrayKeys);
-			$varAttribute['Value'] = array_pop($fixCatAttributes);
+		if (empty($fixCatAttributes)) {
+			$productVariant['Variation'][] = $varAttribute;
+			return;
 		}
 
-		$productVariant['Variation'][] = $varAttribute;
+		# Ein Shop-Variantenattribut kann auf mehrere eBay-Attribute gematcht sein
+		# (z.B. "Inch - Groesse" -> "Groesse" und "Schrittlaenge"). Jedes gematchte
+		# eBay-Attribut wird zu einer eigenen Variationsdimension. Frueher blieb nur
+		# das letzte uebrig, dadurch waren die Varianten fuer eBay nicht mehr
+		# unterscheidbar.
+		foreach ($fixCatAttributes as $sAttributeName => $mAttributeValue) {
+			# Variationsdimensionen brauchen einen skalaren Wert; Multiselect-Treffer
+			# koennen ein Array liefern und werden uebersprungen (wie bei Temu).
+			if (is_array($mAttributeValue) || $mAttributeValue === '') {
+				continue;
+			}
+			$aMatchedAttribute = $varAttribute;
+			$aMatchedAttribute['Name'] = $sAttributeName;
+			$aMatchedAttribute['Value'] = $mAttributeValue;
+			$productVariant['Variation'][] = $aMatchedAttribute;
+		}
 	}
 
 	protected function preSubmit(&$request) {

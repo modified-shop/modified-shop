@@ -46,11 +46,41 @@ class TemuProductDataView {
             return '';
         }
         $sHtml = '<table class="attributesTable">';
-        foreach ($this->aPIDs as $pID) {
-            $sHtml .= $this->renderProductBlock($pID);
+        if (count($this->aPIDs) > 1) {
+            // Per-product detail is editable for ONE product only. In a multi-product
+            // selection title, description, price, SKU and images are taken from the shop
+            // into the prepare table on their own, and there is nothing here for the
+            // merchant to set. Rendering a block per product also costs an MLProduct load,
+            // a query and a WYSIWYG editor EACH, which makes the screen unusable long
+            // before a realistic selection size is reached.
+            $sHtml .= $this->renderMultiSelectionNotice();
+        } else {
+            foreach ($this->aPIDs as $pID) {
+                $sHtml .= $this->renderProductBlock($pID);
+            }
         }
         $sHtml .= '</table>';
         return $sHtml;
+    }
+
+    /**
+     * Stands in for the per-product blocks when more than one product is selected, so the
+     * section is not silently empty.
+     *
+     * @return string
+     */
+    protected function renderMultiSelectionNotice() {
+        $sText = sprintf(
+            $this->t('ML_TEMU_PREPARE_MULTI_SELECTION_HINT',
+                '%d products selected. Title, description, price, SKU and images are taken '
+                .'from the shop for each product; only the matching below is shared.'),
+            count($this->aPIDs)
+        );
+        return '<tr class="headline"><td colspan="3"><h4>'
+            .htmlspecialchars($this->t('ML_TEMU_PREPARE_PRODUCTDATA', 'Product data'), ENT_QUOTES)
+            .'</h4></td></tr>'
+            .'<tr class="odd"><td colspan="3">'.htmlspecialchars($sText, ENT_QUOTES).'</td></tr>'
+            .'<tr class="spacer"><td colspan="3">&nbsp;</td></tr>';
     }
 
     protected function loadSavedRow($pID) {

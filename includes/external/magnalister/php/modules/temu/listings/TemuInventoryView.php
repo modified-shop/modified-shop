@@ -249,6 +249,70 @@ class TemuInventoryView extends MagnaCompatibleInventoryView {
         return parent::renderInventoryTable();
     }
 
+    /**
+     * Same actions box as MagnaCompatibleInventoryView, but the delete confirmation also says
+     * what Temu does with a variant selection: selected variants of a product are taken off
+     * sale, the product itself is deleted only when all of its variants are selected.
+     */
+    public function renderActionBox() {
+        global $_modules;
+
+        $left = (!empty($this->renderableData) ?
+            '<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_DELETE.'" id="listingDelete" name="listing[delete]"/>' :
+            ''
+        );
+        $right = '<table class="right"><tbody>
+            '.(in_array(getDBConfigValue($this->magnasession['currentPlatform'] . '.stocksync.tomarketplace', $this->mpID), array('abs', 'auto'))
+                ? '<tr><td><input type="submit" class="ml-button fullWidth smallmargin" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/></td></tr>'
+                : ''
+            ).'
+        </tbody></table>';
+
+        // html2url() url-encodes the whole text (quotes and line breaks included), so it is safe
+        // inside the JS string literal and decodeURIComponent() restores the blank line.
+        $sConfirm = html2url(
+            sprintf(ML_GENERIC_DELETE_LISTINGS, $_modules[$this->marketplace]['title'])
+            ."\n\n".ML_TEMU_DELETE_SELECTED_VARIANTS_HINT
+        );
+
+        ob_start();?>
+<script type="text/javascript">/*<![CDATA[*/
+$(document).ready(function() {
+    $('#listingDelete').click(function() {
+        if (($('#csinventory input[type="checkbox"]:checked').length > 0) &&
+            confirm(decodeURIComponent(<?php echo "'".$sConfirm."'"; ?>))
+        ) {
+            $('#action').val('delete');
+            $(this).parents('form').submit();
+        }
+    });
+});
+/*]]>*/</script>
+<?php
+        $js = ob_get_contents();
+        ob_end_clean();
+
+        if (($left == '') && ($right == '')) {
+            return '';
+        }
+        return '
+            <input type="hidden" id="action" name="action" value="">
+            <input type="hidden" name="timestamp" value="'.time().'">
+            <table class="actions">
+                <thead><tr><th>'.ML_LABEL_ACTIONS.'</th></tr></thead>
+                <tbody><tr><td>
+                    <table style="table-layout:fixed"><tbody><tr>
+                        <td class="firstChild">'.$left.'</td>
+                        <td style="text-align:center"><label for="tfSearch">'.ML_LABEL_SEARCH.':</label>
+                            <input id="tfSearch" name="tfSearch" type="text" value="'.fixHTMLUTF8Entities($this->search, ENT_COMPAT).'"/>
+                            <input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" /></td>
+                        <td class="lastChild">'.$right.'</td>
+                    </tr></tbody></table>
+                </td></tr></tbody>
+            </table>
+            '.$js;
+    }
+
     protected function getFields() {
         return array(
             'SKU' => array(
@@ -455,9 +519,20 @@ class TemuInventoryView extends MagnaCompatibleInventoryView {
             'PRODUCT_TO_BE_COMPLETE'   => ML_TEMU_NOTE_PRODUCT_TO_BE_COMPLETE,
             'DELETE_PRICE_TERMINATION' => ML_TEMU_NOTE_DELETE_PRICE_TERMINATION,
         );
+        $aNotes = array();
         if (isset($noteMap[$subStatus])) {
-            return '<td>'.$noteMap[$subStatus].'</td>';
+            $aNotes[] = $noteMap[$subStatus];
         }
-        return '<td></td>';
+
+        // Message stored by the API for this product (upload warnings, Seller Center guidance,
+        // failed price/stock updates). Untrusted text, so it is escaped.
+        $lastError = isset($item['LastError']) && is_string($item['LastError']) ? trim($item['LastError']) : '';
+        if ($lastError !== '') {
+            $aNotes[] = '<div class="ml-temu-last-error" style="font-size:11px;color:#e67e00;">'
+                .nl2br(htmlspecialchars($lastError, ENT_QUOTES, 'UTF-8'))
+                .'</div>';
+        }
+
+        return '<td>'.implode('', $aNotes).'</td>';
     }
 }

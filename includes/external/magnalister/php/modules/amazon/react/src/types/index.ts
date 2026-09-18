@@ -273,6 +273,11 @@ export interface AmazonVariationsProps {
   // orchestrator aborts the submit on 'failed'. Default false — Amazon keeps the previous
   // behavior.
   strictSave?: boolean;
+  // When true, the on-mount initial batch save is skipped. Used by Temu's per-product Product
+  // Preparation screen: the row is already seeded per product, and an auto-save on mount would
+  // fan the first product's matching out to every selected product (bulk apply must happen only on
+  // explicit save). Default false — Amazon/standalone keep the initial save.
+  skipInitialSave?: boolean;
   debugMode?: boolean; // Show keys/values in developer mode when MLSetting::g()->blDebug === true
   wrapInTable?: boolean; // If false, renders only tbody elements (for embedding in existing table). Default: true
   hideHelpColumn?: boolean; // Hide help column. Default: false (v2 compatibility)

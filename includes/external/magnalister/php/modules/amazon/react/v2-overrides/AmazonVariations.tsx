@@ -61,6 +61,7 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
                                                                apiEndpoint,
                                                                apiNamespace,
                                                                strictSave = false,
+                                                               skipInitialSave = false,
                                                                debugMode = false,
                                                                wrapInTable = true,
                                                                hideHelpColumn = false
@@ -925,8 +926,8 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
 
     // Expose function to add optional attributes (for conditional rule links)
     React.useEffect(() => {
-        // Create a globally accessible function to add optional attributes
-        (window as any).magnalisterAddOptionalAttribute = (attributeKey: string, callback?: () => void) => {
+        // Create the add-optional-attribute function for this instance
+        const addFn = (attributeKey: string, callback?: () => void) => {
             try {
                 if (debugMode) {
                     console.log('[AmazonVariations] 🔔 External request to add optional attribute:', attributeKey);
@@ -975,9 +976,9 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
             }
         };
 
-        // Create a globally accessible batch function to add multiple optional attributes at once
+        // Create the batch add function for this instance
         // Used by error message links where clicking one sub-attribute should add all sibling sub-attributes
-        (window as any).magnalisterAddOptionalAttributes = (attributeKeys: string[], callback?: () => void) => {
+        const addFnsBatch = (attributeKeys: string[], callback?: () => void) => {
             try {
                 if (debugMode) {
                     console.log('[AmazonVariations] External request to add optional attributes (batch):', attributeKeys);
@@ -1003,16 +1004,35 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
             }
         };
 
-        // Cleanup on unmount
+        // Always expose the shared globals (backward-compat: Amazon, single-instance callers,
+        // conditional-rule links).
+        (window as any).magnalisterAddOptionalAttribute = addFn;
+        (window as any).magnalisterAddOptionalAttributes = addFnsBatch;
+
+        // When apiNamespace is set, ALSO expose instance-scoped names so that multiple
+        // AmazonVariations instances on one page (e.g. Temu variation + category + category-
+        // independent) can each be targeted without racing over the single shared global.
+        const scopedAddName  = apiNamespace ? 'magnalisterAddOptionalAttribute_'  + apiNamespace : null;
+        const scopedAddsName = apiNamespace ? 'magnalisterAddOptionalAttributes_' + apiNamespace : null;
+        if (scopedAddName)  { (window as any)[scopedAddName]  = addFn; }
+        if (scopedAddsName) { (window as any)[scopedAddsName] = addFnsBatch; }
+
+        // Cleanup on unmount — only delete globals this instance still owns
         return () => {
-            if ((window as any).magnalisterAddOptionalAttribute) {
+            if ((window as any).magnalisterAddOptionalAttribute === addFn) {
                 delete (window as any).magnalisterAddOptionalAttribute;
             }
-            if ((window as any).magnalisterAddOptionalAttributes) {
+            if ((window as any).magnalisterAddOptionalAttributes === addFnsBatch) {
                 delete (window as any).magnalisterAddOptionalAttributes;
             }
+            if (scopedAddName && (window as any)[scopedAddName] === addFn) {
+                delete (window as any)[scopedAddName];
+            }
+            if (scopedAddsName && (window as any)[scopedAddsName] === addFnsBatch) {
+                delete (window as any)[scopedAddsName];
+            }
         };
-    }, [handleAddOptionalAttribute, handleAddOptionalAttributes, activeOptionalAttributes, marketplaceAttributes, debugMode]);
+    }, [handleAddOptionalAttribute, handleAddOptionalAttributes, activeOptionalAttributes, marketplaceAttributes, debugMode, apiNamespace]);
 
     // Initial save: batch save all attributes with Code !== '' on first render
     React.useEffect(() => {
@@ -1023,6 +1043,13 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
 
         // Mark as done immediately to prevent duplicate execution
         initialSaveDoneRef.current = true;
+
+        // skipInitialSave: on the per-product Product Preparation screen the row is already seeded
+        // per product, and an auto-save here would fan the first product's matching out to every
+        // selected product (bulk apply happens only on explicit user save). Skip the mount save.
+        if (skipInitialSave) {
+            return;
+        }
 
         // Collect all attributes that have Code assigned
         const attributesToSave: Record<string, SavedAttributeValue> = {};
@@ -1045,7 +1072,7 @@ const AmazonVariations: React.FC<AmazonVariationsProps> = ({
                 console.log('[AmazonVariations] ⚪ No attributes to save on initial load');
             }
         }
-    }, [apiEndpoint, variationGroup, attributeValues, saveAllAttributesBatch, debugMode]);
+    }, [apiEndpoint, variationGroup, attributeValues, saveAllAttributesBatch, debugMode, skipInitialSave]);
 
     // Split attributes by requirement and availability (parent-child visibility aware)
     const {requiredAttributes, displayedOptionalAttributes, availableOptionalAttributes} = React.useMemo(() => {

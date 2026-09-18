@@ -89,7 +89,7 @@ if (isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] == 'true')) {
 # Falls ctype ausgeschaltet (ja, das kommt vor)
 if (!function_exists('ctype_digit')) {
 	function ctype_digit($string) {
-		return (boolean)preg_match('/^[0-9]*$/', $string);
+		return (bool)preg_match('/^[0-9]*$/', $string);
 	}
 }
 
@@ -302,7 +302,7 @@ function magnaCompartCheck() {
 	if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
 		$magicquotes = false;
 	} else {
-		$magicquotes = (boolean)get_magic_quotes_gpc();
+		$magicquotes = (bool)get_magic_quotes_gpc();
 	}
 
 	return array(

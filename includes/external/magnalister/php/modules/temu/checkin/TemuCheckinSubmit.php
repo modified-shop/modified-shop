@@ -60,7 +60,9 @@ class TemuCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		$aMLProduct = MLProduct::gi()->getProductById((int)$pID);
 		$aVariants  = (is_array($aMLProduct) && !empty($aMLProduct['Variations'])) ? $aMLProduct['Variations'] : null;
 
-		$aItems = TemuHelper::buildSubmitItems($mpID, $pID, $aPrepare, $aBase, $aVariants);
+		$aVariationPictures = (is_array($aMLProduct) && !empty($aMLProduct['VariationPictures'])) ? $aMLProduct['VariationPictures'] : null;
+
+		$aItems = TemuHelper::buildSubmitItems($mpID, $pID, $aPrepare, $aBase, $aVariants, $aVariationPictures);
 
 		// One item → assoc payload (as before). Many → numeric list; preSubmit() flattens the
 		// per-product nesting that CheckinSubmit::sendRequest introduces (DATA[] = $data['submit']).

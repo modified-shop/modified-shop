@@ -90,7 +90,8 @@ class TemuVerifier {
 		// exactly what TemuCheckinSubmit uploads, so Verify validates the real payload.
 		$aItems = TemuHelper::buildSubmitItems(
 			$mpID, $pID, $aPrepare, $aBase,
-			isset($aProduct['Variations']) ? $aProduct['Variations'] : null
+			isset($aProduct['Variations']) ? $aProduct['Variations'] : null,
+			isset($aProduct['VariationPictures']) ? $aProduct['VariationPictures'] : null
 		);
 
 		$aErrorRecords = array();
