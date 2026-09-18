@@ -668,6 +668,7 @@
                                       WHERE e.authorized = 0
                                         AND (".implode("
                                              OR ", $waiting).")
+                                        AND ".$this->order_has_value('e.orders_id')."
                                    ORDER BY o.payment_method,
                                             e.orders_id");
 
@@ -767,6 +768,7 @@
                                        AND e.mail_sent = 0
                                        AND (".implode("
                                             OR ", $settled).")
+                                       AND ".$this->order_has_value('e.orders_id')."
                                   ORDER BY o.payment_method,
                                            e.orders_id");
 
@@ -819,6 +821,7 @@
                        AND e.authorized = 1
                        AND e.mail_sent = 0
                        AND o.orders_status = '".(int)$orders_status."'
+                       AND ".$this->order_has_value('e.orders_id')."
                        AND (e.claimed IS NULL
                             OR e.claimed < '".date('Y-m-d H:i:s', (time() - TEAMBANK_CLAIM_TIMEOUT))."'
                             )");
@@ -843,6 +846,18 @@
       return (xtc_db_affected_rows() > 0);
     }
 
+    function order_has_value($orders_reference) {
+      // The status cannot answer whether an order was cancelled. The cancellation form
+      // preselects the status the order already has, so confirming it unchanged leaves
+      // the status alone, and xtc_reverse_order() zeroes every total either way. What
+      // is left of such an order is worth nothing, and neither module accepts an order
+      // below its minimum amount, so this is the question to ask instead.
+      return "EXISTS (SELECT 1
+                        FROM ".TABLE_ORDERS_TOTAL." t
+                       WHERE t.orders_id = ".$orders_reference."
+                         AND t.value != 0)";
+    }
+
     function claim_order_status($pending, $orders_status) {
       // The order status is the one thing the administration and the task both write,
       // and xtc_reverse_order() cancels an order without touching this table. Reading
@@ -854,7 +869,8 @@
                        SET orders_status = '".(int)$orders_status."',
                            last_modified = now()
                      WHERE orders_id = '".(int)$pending['orders_id']."'
-                       AND orders_status = '".(int)$pending['orders_status']."'");
+                       AND orders_status = '".(int)$pending['orders_status']."'
+                       AND ".$this->order_has_value("'".(int)$pending['orders_id']."'"));
 
       if (xtc_db_affected_rows() > 0) {
         return true;
