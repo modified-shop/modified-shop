@@ -15,6 +15,9 @@
   defined('DIR_WS_EXTERNAL') OR define('DIR_WS_EXTERNAL', 'includes/external/');
   defined('DIR_FS_LOG') OR define('DIR_FS_LOG', DIR_FS_CATALOG.'log/');
   defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
+  defined('TEAMBANK_PENDING_TIMEOUT') OR define('TEAMBANK_PENDING_TIMEOUT', 24);
+  // seconds a task run may hold a transaction before another run may take it over
+  defined('TEAMBANK_CLAIM_TIMEOUT') OR define('TEAMBANK_CLAIM_TIMEOUT', 1800);
   
   // needed classes
   require_once(DIR_FS_EXTERNAL.'Teambank/autoload.php');
@@ -46,6 +49,7 @@
     var $WebshopDetails;
     var $total_amount;
     var $authorized;
+    protected static $task_support_ready = false;
     
     function __construct() {}
     
@@ -112,8 +116,10 @@
         $LoggingManager
       );
       
-      if (!defined('RUN_MODE_ADMIN')) {
+      if (!defined('RUN_MODE_ADMIN') && !defined('RUN_MODE_TASKS')) {
         $this->WebshopDetails = $this->ecCheckout->getWebshopDetails();
+      } else {
+        $this->prepare_task_support();
       }
     }
 
@@ -293,6 +299,11 @@
           'tbaId' => $_SESSION['easycredit']['storage']['token'],
           'technicalTbaId' => $_SESSION['easycredit']['storage']['transaction_id'],
         );
+        if ($this->has_pending_support() === true) {
+          // an authorized order had its confirmation sent by the checkout
+          $sql_data_array['authorized'] = (($this->authorized === true) ? 1 : 0);
+          $sql_data_array['mail_sent'] = (($this->authorized === true) ? 1 : 0);
+        }
         xtc_db_perform('easycredit', $sql_data_array);
       }
       
@@ -499,6 +510,503 @@
       return $xtPrice->xtcFormat($total, false);
     }
     
+    function install_task_support() {
+      $migrate = false;
+      if ($this->has_column('authorized') !== true) {
+        xtc_db_query("ALTER TABLE `easycredit` ADD `authorized` TINYINT(1) NOT NULL DEFAULT 0");
+        $migrate = true;
+      }
+      if ($this->has_column('mail_sent') !== true) {
+        xtc_db_query("ALTER TABLE `easycredit` ADD `mail_sent` TINYINT(1) NOT NULL DEFAULT 0");
+        $migrate = true;
+      }
+      if ($this->has_column('claimed') !== true) {
+        xtc_db_query("ALTER TABLE `easycredit` ADD `claimed` DATETIME DEFAULT NULL");
+      }
+
+      if ($migrate === true) {
+        // An order still parked on the temporary status of its own module is the only
+        // kind worth a status lookup. The status has to be compared per module: a
+        // status number that means "open" for one of them may mean something else
+        // for the other.
+        //
+        // A module whose temporary and success status are the same, which is what
+        // both of them ship with, says nothing through the status at all. There is no
+        // other record of how the checkout ended either: it leaves a mail flag only
+        // when SEND_EMAILS is on. Its orders all count as history, so an open one
+        // waits for the merchant instead of the task mailing a customer, or a
+        // merchant copy, a second time.
+        $pending_status = array();
+        foreach (array('easycredit', 'easyinvoice') as $module) {
+          $constant = 'MODULE_PAYMENT_'.strtoupper($module).'_ORDER_STATUS_ID';
+          $success_constant = 'MODULE_PAYMENT_'.strtoupper($module).'_ORDER_STATUS_SUCCESS_ID';
+          if (!defined($constant) || (int)constant($constant) < 1) {
+            continue;
+          }
+          if (defined($success_constant) && (int)constant($success_constant) === (int)constant($constant)) {
+            continue;
+          }
+          $pending_status[] = "(o.payment_method = '".$module."'
+                                AND o.orders_status = '".(int)constant($constant)."')";
+        }
+
+        // Everything else is history and keeps its mail flag set: whatever it
+        // received, it received before the task existed. An order that is still open
+        // never had its confirmation at all, since holding that back is exactly what
+        // the pending path does, so both flags stay clear and the task finishes it.
+        xtc_db_query("UPDATE `easycredit` e,
+                             ".TABLE_ORDERS." o
+                         SET e.authorized = 1,
+                             e.mail_sent = 1
+                       WHERE o.orders_id = e.orders_id
+                         ".((count($pending_status) > 0) ? "AND NOT (".implode("
+                              OR ", $pending_status).")" : ""));
+      }
+
+      // without the key the cancel status silently stays on the current one, and the
+      // administration form has nothing to configure it with
+      foreach (array('easycredit', 'easyinvoice') as $module) {
+        if (!defined('MODULE_PAYMENT_'.strtoupper($module).'_STATUS')) {
+          continue;
+        }
+
+        $check_query = xtc_db_query("SELECT configuration_key
+                                       FROM ".TABLE_CONFIGURATION."
+                                      WHERE configuration_key = 'MODULE_PAYMENT_".strtoupper($module)."_ORDER_STATUS_CANCEL_ID'");
+        if (xtc_db_num_rows($check_query) < 1) {
+          xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($module)."_ORDER_STATUS_CANCEL_ID', '".DEFAULT_ORDERS_STATUS_ID."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+        }
+      }
+
+      xtc_db_query("INSERT INTO ".TABLE_SCHEDULED_TASKS."
+                      (time_next, time_offset, time_regularity, time_unit, status, edit, tasks)
+                    VALUES
+                      (0, 0, 5, 'm', 1, 0, 'easycredit_txstatus')
+                    ON DUPLICATE KEY UPDATE
+                      time_regularity = VALUES(time_regularity),
+                      time_unit = VALUES(time_unit),
+                      status = VALUES(status),
+                      edit = VALUES(edit)");
+    }
+
+    function remove_task_support() {
+      // both modules share the task, so it only goes when the last one is removed
+      $check_query = xtc_db_query("SELECT configuration_key
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key IN ('MODULE_PAYMENT_EASYCREDIT_STATUS', 'MODULE_PAYMENT_EASYINVOICE_STATUS')");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("DELETE FROM ".TABLE_SCHEDULED_TASKS."
+                            WHERE tasks = 'easycredit_txstatus'");
+      }
+    }
+
+    function prepare_task_support() {
+      // an installation updated without reinstalling the module has neither, so the
+      // administration and the task itself bring them up to date
+      if (self::$task_support_ready === true) {
+        return true;
+      }
+
+      $this->install_task_support();
+
+      if ($this->has_pending_support() !== true) {
+        return false;
+      }
+
+      self::$task_support_ready = true;
+      return true;
+    }
+
+    function has_column($column) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM `easycredit` LIKE '".$column."'");
+      return (xtc_db_num_rows($check_query) > 0);
+    }
+
+    function has_pending_support() {
+      return ($this->has_column('authorized') === true
+              && $this->has_column('mail_sent') === true
+              && $this->has_column('claimed') === true
+              );
+    }
+
+    function process_pending_transactions() {
+      if ($this->prepare_task_support() !== true) {
+        return false;
+      }
+
+      // the column names are the wrong way round: tbaId holds the technical id the
+      // checkout endpoint expects, technicalTbaId holds the merchant transaction id
+      // An order only waits for an answer while it sits on the temporary status of
+      // its payment method. Anything else means the merchant has already decided:
+      // xtc_reverse_order() cancels an order without touching this table, and
+      // confirming it afterwards would write the success status over the
+      // cancellation while the totals it zeroed stay at zero.
+      $waiting = array();
+      foreach (array('easycredit', 'easyinvoice') as $module) {
+        $constant = 'MODULE_PAYMENT_'.strtoupper($module).'_ORDER_STATUS_ID';
+        if (defined($constant) && (int)constant($constant) > 0) {
+          $waiting[] = "(o.payment_method = '".$module."'
+                         AND o.orders_status = '".(int)constant($constant)."')";
+        }
+      }
+      if (count($waiting) < 1) {
+        // nothing to look up, but an owed confirmation does not depend on that
+        $this->process_unsent_mails();
+
+        return true;
+      }
+
+      $pending_query = xtc_db_query("SELECT e.orders_id,
+                                            e.tbaId,
+                                            e.mail_sent,
+                                            o.payment_method,
+                                            o.orders_status,
+                                            o.date_purchased
+                                       FROM `easycredit` e
+                                       JOIN ".TABLE_ORDERS." o
+                                            ON o.orders_id = e.orders_id
+                                      WHERE e.authorized = 0
+                                        AND (".implode("
+                                             OR ", $waiting).")
+                                        AND ".$this->order_has_value('e.orders_id')."
+                                   ORDER BY o.payment_method,
+                                            e.orders_id");
+
+      require_once(DIR_FS_INC.'send_order_mail.inc.php');
+
+      $modules = array('easycredit', 'easyinvoice');
+      $deadline = time() - (TEAMBANK_PENDING_TIMEOUT * 3600);
+      $initialized = '';
+
+      while ($pending = xtc_db_fetch_array($pending_query)) {
+        if (!in_array($pending['payment_method'], $modules)) {
+          continue;
+        }
+
+        if ($initialized != $pending['payment_method']) {
+          if (!defined('MODULE_PAYMENT_'.strtoupper($pending['payment_method']).'_STATUS')) {
+            continue;
+          }
+          $this->load_language($pending['payment_method']);
+          $this->init($pending['payment_method']);
+          $initialized = $pending['payment_method'];
+        }
+
+        // the merchant endpoint reports the billing status, only the checkout
+        // endpoint tells whether the authorization itself went through
+        $status = false;
+        $failed = false;
+        $unanswered = false;
+        try {
+          $TransactionInformation = $this->ecCheckout->loadTransaction($pending['tbaId']);
+          $status = $TransactionInformation->getStatus();
+        } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
+          // OPEN, DECLINED or EXPIRED, the transaction will not complete any more
+          $failed = true;
+        } catch (Exception $e) {
+          // No answer at all, which is not the same as a negative one: the service may
+          // be down, or the transaction may be gone for good and answer 404 forever.
+          $unanswered = true;
+        }
+
+        $expired = (strtotime($pending['date_purchased']) < $deadline);
+
+        if ($unanswered === true) {
+          // keep asking while there is time, then hand it over instead of cancelling
+          // an order the provider may well have authorized
+          if ($expired === true && $this->claim_pending_transaction($pending['orders_id']) === true) {
+            $this->flag_pending_transaction($pending, 'AUTHORIZATION_UNKNOWN');
+          }
+          continue;
+        }
+
+        if ($status == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
+          if ($this->claim_pending_transaction($pending['orders_id']) === true) {
+            $this->confirm_pending_transaction($pending);
+          }
+        } elseif ($failed === true || $expired === true) {
+          if ($this->claim_pending_transaction($pending['orders_id']) === true) {
+            $this->cancel_pending_transaction($pending);
+          }
+        }
+      }
+
+      $this->process_unsent_mails();
+
+      return true;
+    }
+
+    function process_unsent_mails() {
+      // A run that died between settling the order and sending its confirmation, on a
+      // broken template say, leaves the order finished and its mail missing. Nothing
+      // above looks at those any more, because the order no longer sits on the status
+      // the selection asks for, so they get a pass of their own. It needs no provider:
+      // the transaction is authorized, only the mail is owed.
+      // The order has to still be the one this pass settled. A cancellation between
+      // the failed send and now leaves it on another status with its totals zeroed,
+      // and confirming that to the customer is the one thing worse than a late mail.
+      $settled = array();
+      foreach (array('easycredit', 'easyinvoice') as $module) {
+        $constant = 'MODULE_PAYMENT_'.strtoupper($module).'_ORDER_STATUS_SUCCESS_ID';
+        if (defined($constant) && (int)constant($constant) > 0) {
+          $settled[] = "(o.payment_method = '".$module."'
+                         AND o.orders_status = '".(int)constant($constant)."')";
+        }
+      }
+      if (count($settled) < 1) {
+        return;
+      }
+
+      $unsent_query = xtc_db_query("SELECT e.orders_id,
+                                           e.mail_sent,
+                                           o.payment_method,
+                                           o.orders_status
+                                      FROM `easycredit` e
+                                      JOIN ".TABLE_ORDERS." o
+                                           ON o.orders_id = e.orders_id
+                                     WHERE e.authorized = 1
+                                       AND e.mail_sent = 0
+                                       AND (".implode("
+                                            OR ", $settled).")
+                                       AND ".$this->order_has_value('e.orders_id')."
+                                  ORDER BY o.payment_method,
+                                           e.orders_id");
+
+      $modules = array('easycredit', 'easyinvoice');
+      $language_loaded = '';
+
+      while ($unsent = xtc_db_fetch_array($unsent_query)) {
+        if (!in_array($unsent['payment_method'], $modules)) {
+          continue;
+        }
+        if ($this->claim_unsent_mail($unsent['orders_id'], $unsent['orders_status']) !== true) {
+          continue;
+        }
+
+        if ($language_loaded != $unsent['payment_method']) {
+          $this->load_language($unsent['payment_method']);
+          $language_loaded = $unsent['payment_method'];
+        }
+
+        if (send_order_mail($unsent['orders_id']) !== true) {
+          continue;
+        }
+
+        $sql_data_array = array(
+          'orders_id' => (int)$unsent['orders_id'],
+          'orders_status_id' => (int)$unsent['orders_status'],
+          'date_added' => 'now()',
+          'customer_notified' => ((SEND_EMAILS == 'true') ? 1 : 0),
+          'comments' => $this->get_task_text($unsent, 'AUTHORIZATION_CONFIRMED'),
+        );
+        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+        xtc_db_query("UPDATE `easycredit`
+                         SET mail_sent = 1
+                       WHERE orders_id = '".(int)$unsent['orders_id']."'");
+      }
+    }
+
+    function claim_unsent_mail($orders_id, $orders_status) {
+      // Everything this pass depends on has to hold at the moment the row is taken,
+      // not when the list was read: the mail for the row before this one takes as
+      // long as a mail takes, and a cancellation lands in that gap. So the order
+      // status joins mail_sent in the condition instead of being checked once up
+      // front, and a run that read the row earlier comes away empty.
+      xtc_db_query("UPDATE `easycredit` e,
+                           ".TABLE_ORDERS." o
+                       SET e.claimed = now()
+                     WHERE o.orders_id = e.orders_id
+                       AND e.orders_id = '".(int)$orders_id."'
+                       AND e.authorized = 1
+                       AND e.mail_sent = 0
+                       AND o.orders_status = '".(int)$orders_status."'
+                       AND ".$this->order_has_value('e.orders_id')."
+                       AND (e.claimed IS NULL
+                            OR e.claimed < '".date('Y-m-d H:i:s', (time() - TEAMBANK_CLAIM_TIMEOUT))."'
+                            )");
+
+      return (xtc_db_affected_rows() > 0);
+    }
+
+    function claim_pending_transaction($orders_id) {
+      // Two cron runs can overlap. A single conditional update is atomic on every
+      // engine the shop supports, so exactly one of them takes the row and the other
+      // comes away empty. The reservation carries a timestamp rather than a state, so
+      // a run that dies halfway through, on a broken mail template or a timeout, does
+      // not lock the order out for good: the next run past the window takes it on.
+      xtc_db_query("UPDATE `easycredit`
+                       SET claimed = now()
+                     WHERE orders_id = '".(int)$orders_id."'
+                       AND authorized = 0
+                       AND (claimed IS NULL
+                            OR claimed < '".date('Y-m-d H:i:s', (time() - TEAMBANK_CLAIM_TIMEOUT))."'
+                            )");
+
+      return (xtc_db_affected_rows() > 0);
+    }
+
+    function order_has_value($orders_reference) {
+      // The status cannot answer whether an order was cancelled. The cancellation form
+      // preselects the status the order already has, so confirming it unchanged leaves
+      // the status alone, and xtc_reverse_order() zeroes every total either way. What
+      // is left of such an order is worth nothing, and neither module accepts an order
+      // below its minimum amount, so this is the question to ask instead.
+      return "EXISTS (SELECT 1
+                        FROM ".TABLE_ORDERS_TOTAL." t
+                       WHERE t.orders_id = ".$orders_reference."
+                         AND t.value != 0)";
+    }
+
+    function claim_order_status($pending, $orders_status) {
+      // The order status is the one thing the administration and the task both write,
+      // and xtc_reverse_order() cancels an order without touching this table. Reading
+      // it and writing it in two steps leaves a window in between, and sending the
+      // mail there makes that window seconds wide, so the move happens in one
+      // statement that only takes effect while the status still holds the value this
+      // run started from.
+      xtc_db_query("UPDATE ".TABLE_ORDERS."
+                       SET orders_status = '".(int)$orders_status."',
+                           last_modified = now()
+                     WHERE orders_id = '".(int)$pending['orders_id']."'
+                       AND orders_status = '".(int)$pending['orders_status']."'
+                       AND ".$this->order_has_value("'".(int)$pending['orders_id']."'"));
+
+      if (xtc_db_affected_rows() > 0) {
+        return true;
+      }
+
+      // Nothing changed, which reads two ways: the condition did not hold, or it held
+      // and the statement wrote what was already there. The latter needs both statuses
+      // to be the same, so where they differ this is a merchant who got there first,
+      // and reading the status back would mistake their success status for our own.
+      if ((int)$orders_status !== (int)$pending['orders_status']) {
+        return false;
+      }
+
+      // The value carries over as well. Both modules install with these two statuses
+      // alike, so this is the ordinary path, and a cancellation that keeps the status
+      // is exactly what the update above just refused to write.
+      $orders_query = xtc_db_query("SELECT orders_status
+                                      FROM ".TABLE_ORDERS."
+                                     WHERE orders_id = '".(int)$pending['orders_id']."'
+                                       AND ".$this->order_has_value("'".(int)$pending['orders_id']."'"));
+      if (xtc_db_num_rows($orders_query) < 1) {
+        return false;
+      }
+      $orders = xtc_db_fetch_array($orders_query);
+
+      return ((int)$orders['orders_status'] === (int)$orders_status);
+    }
+
+    function flag_pending_transaction($pending, $key) {
+      // leave the order alone and say so in its history, the merchant decides
+      $orders_query = xtc_db_query("SELECT orders_status
+                                      FROM ".TABLE_ORDERS."
+                                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+      $orders = ((xtc_db_num_rows($orders_query) > 0) ? xtc_db_fetch_array($orders_query) : array('orders_status' => $pending['orders_status']));
+
+      $sql_data_array = array(
+        'orders_id' => (int)$pending['orders_id'],
+        'orders_status_id' => (int)$orders['orders_status'],
+        'date_added' => 'now()',
+        'customer_notified' => 0,
+        'comments' => $this->get_task_text($pending, $key),
+      );
+      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+      xtc_db_query("UPDATE `easycredit`
+                       SET authorized = 2
+                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+    }
+
+    function confirm_pending_transaction($pending) {
+      $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_SUCCESS_ID');
+
+      // before the mail, not after: everything below takes the order as settled
+      if ($this->claim_order_status($pending, $orders_status) !== true) {
+        $this->flag_pending_transaction($pending, 'AUTHORIZATION_CONFLICT');
+        return;
+      }
+
+      // record that before sending, so a mail that fails leaves the row on a state
+      // that matches the order rather than one the task would pick up again
+      xtc_db_query("UPDATE `easycredit`
+                       SET authorized = 1
+                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+
+      // send_order.php never ran for a pending order, so this is also where the
+      // afterbuy export and the merchant copy happen, neither of which cares about
+      // SEND_EMAILS. Only a confirmation that already went out stops it: the status
+      // history cannot say so, because an ordinary status mail from the
+      // administration sets customer_notified just as well.
+      $sent = (($pending['mail_sent'] != 1) ? send_order_mail($pending['orders_id']) : false);
+      $notified = ($sent === true && SEND_EMAILS == 'true');
+
+      $sql_data_array = array(
+        'orders_id' => (int)$pending['orders_id'],
+        'orders_status_id' => $orders_status,
+        'date_added' => 'now()',
+        'customer_notified' => (($notified === true) ? 1 : 0),
+        'comments' => $this->get_task_text($pending, 'AUTHORIZATION_CONFIRMED'),
+      );
+      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+      if ($sent === true) {
+        xtc_db_query("UPDATE `easycredit`
+                         SET mail_sent = 1
+                       WHERE orders_id = '".(int)$pending['orders_id']."'");
+      }
+    }
+
+    function cancel_pending_transaction($pending) {
+      // easyCredit offers no endpoint to cancel an open transaction, it expires on
+      // its own, so the order is only marked and never removed
+      $orders_status = $this->get_task_status($pending, 'ORDER_STATUS_CANCEL_ID');
+
+      if ($this->claim_order_status($pending, $orders_status) !== true) {
+        // its own wording: this path runs on a declined, an expired or a timed out
+        // transaction, and the confirmed one would say the opposite of what happened
+        $this->flag_pending_transaction($pending, 'AUTHORIZATION_CONFLICT_FAILED');
+        return;
+      }
+
+      $sql_data_array = array(
+        'orders_id' => (int)$pending['orders_id'],
+        'orders_status_id' => $orders_status,
+        'date_added' => 'now()',
+        'customer_notified' => 0,
+        'comments' => $this->get_task_text($pending, 'AUTHORIZATION_FAILED'),
+      );
+      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+      xtc_db_query("UPDATE `easycredit`
+                       SET authorized = -1
+                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+    }
+
+    function get_task_status($pending, $key) {
+      // installations updated without reinstalling the module lack the newer keys
+      $constant = 'MODULE_PAYMENT_'.strtoupper($pending['payment_method']).'_'.$key;
+      return ((defined($constant) && (int)constant($constant) > 0) ? (int)constant($constant) : (int)$pending['orders_status']);
+    }
+
+    function get_task_text($pending, $key) {
+      $constant = 'TEXT_'.strtoupper($pending['payment_method']).'_'.$key;
+      return ((defined($constant)) ? constant($constant) : '');
+    }
+
+    function load_language($class) {
+      $language = ((isset($_SESSION['language'])) ? basename((string)$_SESSION['language']) : 'german');
+      $language_file = DIR_FS_CATALOG.'lang/'.$language.'/modules/payment/'.$class.'.php';
+      if (!is_file($language_file)) {
+        $language_file = DIR_FS_CATALOG.'lang/german/modules/payment/'.$class.'.php';
+      }
+      if (is_file($language_file)) {
+        include_once($language_file);
+      }
+    }
+
     function get_order_info($orders_id) {
       $check_query = xtc_db_query("SELECT e.*
                                      FROM `easycredit` e

@@ -161,6 +161,7 @@
       
       xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_EASYINVOICE_ORDER_STATUS_SUCCESS_ID', '".DEFAULT_ORDERS_STATUS_ID."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
       xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_EASYINVOICE_ORDER_STATUS_ID', '".DEFAULT_ORDERS_STATUS_ID."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+      xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_EASYINVOICE_ORDER_STATUS_CANCEL_ID', '".DEFAULT_ORDERS_STATUS_ID."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
       
       xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EASYINVOICE_SHOP_ID', '', '6', '0', now())");
       xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EASYINVOICE_SHOP_TOKEN', '', '6', '0', now())");
@@ -181,11 +182,15 @@
                     `tbaId` VARCHAR( 512 ) NOT NULL ,
                     `technicalTbaId` VARCHAR( 512 ) NOT NULL ,
                     PRIMARY KEY ( `orders_id` )
-                    )");                    
+                    )");
+
+      $this->install_task_support();                    
     }
   
     function remove() {
       xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE ('MODULE_PAYMENT_EASYINVOICE_%')");
+
+      $this->remove_task_support();
     }
   
     function keys() {
@@ -196,6 +201,7 @@
         'MODULE_PAYMENT_EASYINVOICE_SHOP_SECRET',
         'MODULE_PAYMENT_EASYINVOICE_ORDER_STATUS_ID', 
         'MODULE_PAYMENT_EASYINVOICE_ORDER_STATUS_SUCCESS_ID', 
+        'MODULE_PAYMENT_EASYINVOICE_ORDER_STATUS_CANCEL_ID',
         'MODULE_PAYMENT_EASYINVOICE_SORT_ORDER',
         'MODULE_PAYMENT_EASYINVOICE_LOG_LEVEL',
       );
