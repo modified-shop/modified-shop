@@ -70,12 +70,56 @@ try {
         $urlPattern = '/^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/?=&#]{1}[\da-z\.-]+)*[\/\?]?$/i';
 
         if (preg_match($urlPattern, $url)) {
+            // the server does the fetching, so keep internal addresses out of reach
+            $url_parts = parse_url((strpos($url, '://') === false ? 'http://' . $url : $url));
+            $url_host = (isset($url_parts['host'])) ? $url_parts['host'] : '';
+            // the scheme keeps the case it was written in, and CURLOPT_RESOLVE
+            // only binds the host and port pair it is given
+            $url_scheme = strtolower((isset($url_parts['scheme'])) ? $url_parts['scheme'] : 'http');
+            $url_port = (isset($url_parts['port'])) ? (int)$url_parts['port'] : (($url_scheme == 'https') ? 443 : 80);
+            $url_ip = ($url_host != '') ? gethostbyname($url_host) : '';
+
+            $url_ip_flags = FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
+            if (defined('FILTER_FLAG_GLOBAL_RANGE')) {
+                $url_ip_flags |= FILTER_FLAG_GLOBAL_RANGE;
+            }
+
+            if (filter_var($url_ip, FILTER_VALIDATE_IP, $url_ip_flags) === false) {
+                throw new Exception('Is not a valid URL.');
+            }
+
+            // the blocks above leave these through, and FILTER_FLAG_GLOBAL_RANGE only
+            // arrived in PHP 8.2 while the shop still starts at 8.0, so they are listed
+            $url_ip_long = ip2long($url_ip);
+            $url_ip_reserved = array(
+              '100.64.0.0/10',    // carrier grade NAT
+              '192.0.0.0/24',     // IETF protocol assignments
+              '192.0.2.0/24',     // documentation
+              '192.88.99.0/24',   // 6to4 relay anycast
+              '198.18.0.0/15',    // benchmarking
+              '198.51.100.0/24',  // documentation
+              '203.0.113.0/24',   // documentation
+              '224.0.0.0/4',      // multicast
+            );
+            foreach ($url_ip_reserved as $url_ip_range) {
+              list($url_range_net, $url_range_bits) = explode('/', $url_ip_range);
+              $url_range_mask = (0xFFFFFFFF << (32 - (int)$url_range_bits)) & 0xFFFFFFFF;
+              if (($url_ip_long & $url_range_mask) === (ip2long($url_range_net) & $url_range_mask)) {
+                throw new Exception('Is not a valid URL.');
+              }
+            }
+
             $temp = tempnam('/tmp','RF');
 
             $ch = curl_init($url);
             $fp = fopen($temp, 'wb');
             curl_setopt($ch, CURLOPT_FILE, $fp);
             curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+            // pin the transfer to the address that was checked, so it is not resolved a second time
+            curl_setopt($ch, CURLOPT_RESOLVE, array($url_host . ':' . $url_port . ':' . $url_ip));
+            curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
             curl_exec($ch);
             if (curl_errno($ch)) {
                 throw new Exception('Invalid URL');

@@ -31,3 +31,11 @@
     Deny from all
   </IfModule>
 </FilesMatch>
+
+# SVG may carry scripts, so it is served sandboxed and without MIME sniffing
+<FilesMatch "\.(svg|SVG)$">
+  <IfModule mod_headers.c>
+    Header set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+    Header set X-Content-Type-Options "nosniff"
+  </IfModule>
+</FilesMatch>
