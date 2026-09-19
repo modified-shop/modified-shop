@@ -125,6 +125,30 @@ function checkRelativePath($path){
     return $path_correct;
 }
 
+
+/**
+* Check the session token sent along with a request
+*
+* dialog.php puts the token into a request header for every ajax call and
+* into a hidden field for the two forms that post without one.
+*
+* @return  bool
+*/
+function rfm_check_token()
+{
+	$sent = '';
+	if (isset($_SERVER['HTTP_X_RFM_TOKEN'])) {
+		$sent = $_SERVER['HTTP_X_RFM_TOKEN'];
+	} elseif (isset($_POST['rfm_token'])) {
+		$sent = $_POST['rfm_token'];
+	}
+
+	return (isset($_SESSION['RF']['token'])
+	        && $_SESSION['RF']['token'] != ''
+	        && is_string($sent)
+	        && hash_equals($_SESSION['RF']['token'], $sent));
+}
+
 /**
 * Check if the given path is an upload dir based on config
 *
