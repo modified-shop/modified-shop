@@ -17,21 +17,23 @@
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'deleteconfirm':
-        $contents_array = xss_read_blacklist();
-        unset($contents_array[$_GET['ip']]);
-        xss_write_blacklist($contents_array);
+        if (!xss_write_blacklist(array(), array($_GET['ip'] ?? ''))) {
+          $messageStack->add_session(ERROR_BLACKLIST_WRITE, 'error');
+        }
         xtc_redirect(xtc_href_link(FILENAME_BLACKLIST_LOGS));
         break;
 
       case 'insert':
-        $blacklist_ip = xtc_db_prepare_input($_POST['blacklist_ip']);
-        $blacklist_time = strtotime($_POST['blacklist_time']) - XSS_BLACKLIST_TIME;
-        if ($blacklist_ip != '' && $blacklist_time > 0) {
-          $contents_array = xss_read_blacklist();
-          $contents_array[$blacklist_ip] = $blacklist_time;
-          xss_write_blacklist($contents_array);
+        $blacklist_ip = xss_normalize_blacklist_ip($_POST['blacklist_ip'] ?? '');
+        $blacklist_expiry = isset($_POST['blacklist_time']) && is_string($_POST['blacklist_time']) ? strtotime($_POST['blacklist_time']) : false;
+        if ($blacklist_ip !== '' && $blacklist_expiry !== false && $blacklist_expiry > time()) {
+          $blacklist_time = $blacklist_expiry - XSS_BLACKLIST_TIME;
+          if (!xss_write_blacklist(array($blacklist_ip => $blacklist_time))) {
+            $messageStack->add_session(ERROR_BLACKLIST_WRITE, 'error');
+          }
           xtc_redirect(xtc_href_link(FILENAME_BLACKLIST_LOGS, 'ip='.$blacklist_ip));
         }
+        $messageStack->add_session(ERROR_BLACKLIST_ENTRY, 'error');
         xtc_redirect(xtc_href_link(FILENAME_BLACKLIST_LOGS));
         break;
     }

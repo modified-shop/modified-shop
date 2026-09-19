@@ -27,4 +27,6 @@ define('TEXT_DELETE_INTRO', 'Are you sure you want to delete this IP address?');
 
 define('ERROR_LOG_DIRECTORY_DOES_NOT_EXIST', 'Error: Log directory does not exist. Please set this in configure.php.');
 define('ERROR_LOG_DIRECTORY_NOT_WRITEABLE', 'Error: Log directory is not writeable.');
+define('ERROR_BLACKLIST_WRITE', 'Error: The blacklist could not be saved.');
+define('ERROR_BLACKLIST_ENTRY', 'Error: Enter a valid IP address and a future expiration time.');
 ?>
