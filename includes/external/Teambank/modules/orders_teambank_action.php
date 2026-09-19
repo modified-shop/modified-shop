@@ -27,6 +27,17 @@
       // action
       if (isset($_POST['cmd'])) {
         switch ($_POST['cmd']) {
+          case 'recheck':
+            $recheck = $TeambankPayment->reset_pending_transaction($oID);
+            if ($recheck === true) {
+              $messageStack->add_session(TEXT_TEAMBANK_PENDING_SUCCESS, 'success');
+            } elseif ($recheck === 'reversed') {
+              $messageStack->add_session(TEXT_TEAMBANK_PENDING_REVERSED);
+            } else {
+              $messageStack->add_session(TEXT_TEAMBANK_PENDING_ERROR);
+            }
+            break;
+
           case 'capture':
             try {
               $TeambankPayment->ecMerchant->confirmShipment($_POST['transactionId'], ((isset($_POST['tracking'])) ? $_POST['tracking'] : null));

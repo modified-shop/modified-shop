@@ -21,10 +21,49 @@
     require_once(DIR_FS_EXTERNAL.'Teambank/classes/TeambankPayment.php');
 
     $TeambankPayment = new TeambankPayment();
-    $TeambankPayment->init($order->info['payment_method']);
-      
-    $admin_info_data = $TeambankPayment->get_order_info($order->info['order_id']);
-    
+
+    // Read before init(): outside the administration that method fetches the webshop
+    // details, and this panel is built through ajax.php, so a provider that is down
+    // takes init() with it. The state below comes from the database alone, and a
+    // transaction is handed over for that very kind of outage.
+    $pending_state = $TeambankPayment->get_pending_state($order->info['order_id']);
+
+    // A transaction the task handed over may well be one it could not fetch either, so
+    // this stands on its own: inside the block below the panel would stay empty in
+    // exactly the case that needs the merchant.
+    if ($pending_state === 2) {
+      ?>
+      <table border="0" width="100%" cellspacing="0" cellpadding="2" class="dataTableRow teambank_data" style="display:none;">
+        <tr>
+          <td width="100%" valign="top">
+            <div class="ec_box ec_box_full">
+              <div class="ec_boxheading"><?php echo TEXT_TEAMBANK_PENDING_HEADING; ?></div>
+              <p class="message"><?php echo TEXT_TEAMBANK_PENDING_INFO; ?></p>
+              <?php
+                echo xtc_draw_form('recheck', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'subaction', 'ext', 'sec')).'action=custom&subaction=teambankaction', 'NONSSL'), 'post');
+                if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                  echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
+                }
+                echo xtc_draw_hidden_field('cmd', 'recheck');
+              ?>
+              <input type="submit" class="button" name="recheck_submit" value="<?php echo TEXT_TEAMBANK_PENDING_SUBMIT; ?>">
+              </form>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <?php
+    }
+
+    // This file is rendered into an output buffer that the caller reads afterwards.
+    // An exception from here would leave that buffer unread, and the box above would
+    // never reach the browser, in the very case a transaction is handed over for.
+    $admin_info_data = false;
+    try {
+      $TeambankPayment->init($order->info['payment_method']);
+      $admin_info_data = $TeambankPayment->get_order_info($order->info['order_id']);
+    } catch (Exception $e) {}
+
     if (is_object($admin_info_data)) {
       ?>
       <table border="0" width="100%" cellspacing="0" cellpadding="2" class="dataTableRow teambank_data" style="display:none;">
