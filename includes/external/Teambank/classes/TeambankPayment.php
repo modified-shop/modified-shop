@@ -884,9 +884,13 @@
         return false;
       }
 
+      // The value carries over as well. Both modules install with these two statuses
+      // alike, so this is the ordinary path, and a cancellation that keeps the status
+      // is exactly what the update above just refused to write.
       $orders_query = xtc_db_query("SELECT orders_status
                                       FROM ".TABLE_ORDERS."
-                                     WHERE orders_id = '".(int)$pending['orders_id']."'");
+                                     WHERE orders_id = '".(int)$pending['orders_id']."'
+                                       AND ".$this->order_has_value("'".(int)$pending['orders_id']."'"));
       if (xtc_db_num_rows($orders_query) < 1) {
         return false;
       }
