@@ -687,6 +687,22 @@ function fix_get_params($str)
 
 
 /**
+* Escape a value for output in HTML
+*
+* File names come from the file system and may contain quotes or angle
+* brackets, so they cannot be echoed verbatim.
+*
+* @param  string  $str
+*
+* @return  string
+*/
+function rfm_esc($str)
+{
+	return htmlspecialchars((string)$str, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+
+/**
 * Check extension
 *
 * @param  string  $extension
@@ -740,7 +756,7 @@ function fix_filename($str, $config, $is_folder = false)
 	{
 		if (!mb_detect_encoding($str, 'UTF-8', true))
 		{
-			$str = utf8_encode($str);
+			$str = mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1');
 		}
 		if (function_exists('transliterator_transliterate'))
 		{
