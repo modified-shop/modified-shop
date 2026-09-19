@@ -238,6 +238,7 @@ function xtc_check_agent($name = false) {
       "phantom",
       "piltdownman",
       "pimptrain",
+      "pinterest.com/bot",
       "pinterestbot",
       "pioneer",
       "pitkow",
@@ -313,10 +314,10 @@ function xtc_check_agent($name = false) {
       "tarantula",
       "tarspider",
       "techbot",
-      "telegramBot",
+      "telegrambot",
       "templeton",
       "teoma_agent1",
-      "titan",
+      //"titan", // GTB - 2026-09-19 - remove problematic bot entries
       "titin",
       "tkwww",
       "tlspider",
@@ -378,7 +379,6 @@ function xtc_check_agent($name = false) {
       "yahoo",
       "yandex",
       "zoominfobot",
-      "google-structured-data-testing-tool",
     );
     
     $user_agent_1 = strtolower($_SERVER['HTTP_USER_AGENT']);
