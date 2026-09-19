@@ -45,6 +45,7 @@
     var $ecMerchant;
     var $WebshopDetails;
     var $total_amount;
+    var $authorized;
     
     function __construct() {}
     
@@ -224,20 +225,29 @@
         }
       }
 
+      $this->authorized = false;
+      // microseconds, the back-off grows by half a second per attempt
       $wait = 0;
       for ($i = 0; $i <= 10; $i ++) {
-        $wait += $i * 0.5;
-        sleep($wait);
+        $wait += $i * 500000;
+        usleep($wait);
   
         $TransactionInformation = $this->ecCheckout->loadTransaction();
         if ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
-          return true;
+          $this->authorized = true;
+          break;
         } elseif (in_array($TransactionInformation->getStatus(), array(\Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_DECLINED, \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_EXPIRED))) {
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
           xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
           
           $this->payment_error_redirect();
         }
+      }
+
+      // the transaction can still be authorized after the polling window, so keep
+      // the order pending and hold the mail back until the status is confirmed
+      if ($this->authorized !== true) {
+        return true;
       }
     }
     
@@ -259,16 +269,22 @@
           xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }
         
+        $status = (($this->authorized === true) ? $this->order_status_success : $this->order_status);
+        $comments = constant('TEXT_'.strtoupper($this->code).'_TBAID').' '.$_SESSION['easycredit']['storage']['transaction_id'];
+        if ($this->authorized !== true) {
+          $comments .= "\n".constant('TEXT_'.strtoupper($this->code).'_AUTHORIZATION_PENDING');
+        }
+        
         xtc_db_query("UPDATE ".TABLE_ORDERS." 
-                         SET orders_status = '".$this->order_status_success."' 
+                         SET orders_status = '".$status."' 
                        WHERE orders_id = '".(int)$insert_id."'");
         
         $sql_data_array = array (
           'orders_id' => $insert_id,
-          'orders_status_id' => $this->order_status_success,
+          'orders_status_id' => $status,
           'date_added' => 'now()',
           'customer_notified' => 0,
-          'comments' => constant('TEXT_'.strtoupper($this->code).'_TBAID').' '.$_SESSION['easycredit']['storage']['transaction_id'],
+          'comments' => $comments,
         );
         xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 

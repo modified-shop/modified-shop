@@ -41,6 +41,7 @@
     'MODULE_PAYMENT_EASYCREDIT_TEXT_LEGAL' => 'Vorvertragliche Informationen zum Ratenkauf hier abrufen',
   
     'TEXT_EASYCREDIT_TBAID' => 'Vorgangskennung',
+    'TEXT_EASYCREDIT_AUTHORIZATION_PENDING' => 'Die Autorisierung stand bei Abschluss der Bestellung noch aus. Bitte den Status des Vorgangs im Zahlungsbereich der Bestellung kontrollieren.',
     'TEXT_EASYCREDIT_RATING_PLAN' => 'Finanzierung ab %s in %s Raten mit easyCredit-Ratenkauf',
     'TEXT_EASYCREDIT_RATING_PLAN_SHORT' => 'Finanzierung ab %s im Monat',
     'TEXT_EASYCREDIT_RATING_PLAN_CALC' => 'mehr Infos zum Ratenkauf',
