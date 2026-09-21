@@ -129,13 +129,14 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       $checkout_lock = '';
       session_abort();
 
-      // only the payment decides whether a handed over order becomes a sale,
-      // so a repeated attempt neither finishes it nor reports it as done
-      if ($check === false
+      // success needs a finished attempt: the lock was free again and the
+      // order has left the hands of its payment
+      if ($checkout_locked !== true
+          || $check === false
           || ($tmp === true && $check['orders_status'] == $orders_status_id)
           )
       {
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&checkout_error=running', 'SSL'));
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'checkout_error=running', 'SSL'));
       }
 
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
@@ -481,12 +482,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_order/','php') as $file) require ($file);
 
-  // the order is written, a repeated attempt finds it from here on
-  if ($checkout_lock != '') {
-    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
-    $checkout_lock = '';
-  }
-
   // redirect to payment service
   if ($tmp) {
     $sql_data_array = array(
@@ -495,6 +490,12 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'date_added' => 'now()',
     );
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+    // the shop is done, the waiting order is known by its temporary status
+    if ($checkout_lock != '') {
+      xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+      $checkout_lock = '';
+    }
 
     $payment_modules->payment_action();
   }
@@ -558,6 +559,12 @@ if (!$tmp) {
   $order_total_modules->clear_posts();
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_end/','php') as $file) require ($file);
+
+  // the checkout is complete, only now may a repeated attempt report it
+  if ($checkout_lock != '') {
+    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+    $checkout_lock = '';
+  }
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
 }
