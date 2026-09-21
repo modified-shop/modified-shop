@@ -91,6 +91,9 @@ require_once(DIR_WS_CLASSES.'order_total.php');
 $order_total_modules = new order_total();
 $order_totals = $order_total_modules->process();
 
+// a persistent connection would carry an open lock into the next request
+$checkout_lock = '';
+
 // check if tmp order id exists
 if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $tmp = false;
@@ -104,32 +107,35 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $tmp = false;
   }
 
-  // one checkout attempt may only ever result in one order, the lock lasts
-  // until the request closes its database connection
+  // one checkout attempt may only ever result in one order
   $checkout_nonce = ((isset($_SESSION['payment_nonce'])) ? $_SESSION['payment_nonce'] : '');
   if ($checkout_nonce != '') {
     $checkout_lock = 'MODchk_'.$checkout_nonce;
     $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($checkout_lock)."', ".(int)CHECKOUT_LOCK_TIMEOUT.") AS checkout_lock");
     $lock = xtc_db_fetch_array($lock_query);
+    $checkout_locked = (is_array($lock) && isset($lock['checkout_lock']) && $lock['checkout_lock'] == '1');
 
-    if (!is_array($lock) || !isset($lock['checkout_lock']) || $lock['checkout_lock'] != '1') {
-      // the attempt is still being processed, its order is the one that counts
-      session_abort();
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
-    }
-
-    $check_query = xtc_db_query("SELECT orders_id
+    $check_query = xtc_db_query("SELECT orders_id,
+                                        orders_status
                                    FROM ".TABLE_ORDERS."
                                   WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                                     AND orders_ident_key = '".xtc_db_input($checkout_nonce)."'");
-    if (xtc_db_num_rows($check_query) > 0) {
-      xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+    $check = ((xtc_db_num_rows($check_query) > 0) ? xtc_db_fetch_array($check_query) : false);
+
+    if ($check !== false || $checkout_locked !== true) {
+      if ($checkout_locked === true) {
+        xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+      }
+      $checkout_lock = '';
       session_abort();
 
-      // a handed over order carries on in its payment module, so the request
-      // starts over and takes the resume path with the module's own checks
-      if ($tmp === true && !isset($_GET['resume'])) {
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, 'resume=1', 'SSL'));
+      // only the payment decides whether a handed over order becomes a sale,
+      // so a repeated attempt neither finishes it nor reports it as done
+      if ($check === false
+          || ($tmp === true && $check['orders_status'] == $orders_status_id)
+          )
+      {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&checkout_error=running', 'SSL'));
       }
 
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
@@ -474,6 +480,12 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   }
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_order/','php') as $file) require ($file);
+
+  // the order is written, a repeated attempt finds it from here on
+  if ($checkout_lock != '') {
+    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+    $checkout_lock = '';
+  }
 
   // redirect to payment service
   if ($tmp) {

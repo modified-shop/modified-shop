@@ -369,6 +369,11 @@ $backlink = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL');
 $smarty->assign('BUTTON_BACK', '<a href="'.$backlink.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_BACK_LINK', $backlink);
 
+// a repeated checkout brings the customer back here instead of a result
+if (isset($_GET['checkout_error']) && $_GET['checkout_error'] == 'running') {
+  $messageStack->add('checkout_confirmation', ERROR_CHECKOUT_ALREADY_RUNNING);
+}
+
 if ($messageStack->size('checkout_confirmation') > 0) {
   $smarty->assign('error_message', $messageStack->output('checkout_confirmation'));
 }
