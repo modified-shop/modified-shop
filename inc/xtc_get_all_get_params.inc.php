@@ -22,6 +22,7 @@
     $exclude_array[] = xtc_session_name();
     $exclude_array[] = 'XTCsid';
     $exclude_array[] = 'error';
+    $exclude_array[] = 'checkout_error';
     $exclude_array[] = 'x';
     $exclude_array[] = 'y';
     $exclude_array[] = '_';

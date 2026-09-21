@@ -96,11 +96,14 @@ if (isset($cc_amount_min_order_info)) {
 
 // a repeated checkout waits here, this page runs no checkout actions
 if (isset($_GET['checkout_error']) && $_GET['checkout_error'] == 'running') {
-  $messageStack->add('shopping_cart', ERROR_CHECKOUT_ALREADY_RUNNING);
+  $messageStack->add('shopping_cart', TEXT_CHECKOUT_ALREADY_RUNNING, 'info');
 }
 
 if ($messageStack->size('shopping_cart') > 0) {
   $smarty->assign('error_message', $messageStack->output('shopping_cart'));
+}
+if ($messageStack->size('shopping_cart', 'info') > 0) {
+  $smarty->assign('info_message', $messageStack->output('shopping_cart', 'info'));
 }
 
 // continue shopping link

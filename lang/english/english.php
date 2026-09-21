@@ -289,7 +289,7 @@ define('ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY', 'This address book entry is not a
 define('ERROR_ADDRESS_BOOK_FULL', 'Your addressbook is full. In order to add new addresses, please erase previous ones first.');
 define('ERROR_CHECKOUT_SHIPPING_NO_METHOD', 'No shipping method selected.');
 define('ERROR_CHECKOUT_SHIPPING_NO_MODULE', 'No shipping method available.');
-define('ERROR_CHECKOUT_ALREADY_RUNNING', 'Your order is being processed already. Please wait a moment and try again.');
+define('TEXT_CHECKOUT_ALREADY_RUNNING', 'Your order is being processed already. Please wait a moment and try again.');
 
 //  conditions check
 

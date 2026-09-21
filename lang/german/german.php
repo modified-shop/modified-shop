@@ -289,7 +289,7 @@ define('ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY', 'Dieser Adressbucheintrag ist nic
 define('ERROR_ADDRESS_BOOK_FULL', 'Ihr Adressbuch kann keine weiteren Adressen aufnehmen. Bitte l&ouml;schen Sie eine nicht mehr ben&ouml;tigte Adresse. Danach k&ouml;nnen Sie einen neuen Eintrag speichern.');
 define('ERROR_CHECKOUT_SHIPPING_NO_METHOD', 'Es wurde keine Versandart ausgew&auml;hlt.');
 define('ERROR_CHECKOUT_SHIPPING_NO_MODULE', 'Es ist keine Versandart vorhanden.');
-define('ERROR_CHECKOUT_ALREADY_RUNNING', 'Ihre Bestellung wird bereits bearbeitet. Bitte warten Sie einen Moment und versuchen Sie es dann erneut.');
+define('TEXT_CHECKOUT_ALREADY_RUNNING', 'Ihre Bestellung wird bereits bearbeitet. Bitte warten Sie einen Moment und versuchen Sie es dann erneut.');
 
 //  conditions check
 
