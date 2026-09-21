@@ -447,7 +447,7 @@ class PayPalPaymentBase extends PayPalCommon {
             if ($GLOBALS[$quotes[$i]['id']]->display_free() === true) {
               $quotes_array = array_merge($quotes_array, $shipping_modules->quote($quotes[$i]['id'], $quotes[$i]['methods'][0]['id']));
             }
-          } elseif ($quotes[$i]['id'] == 'selfpickup') {
+          } elseif (strpos($quotes[$i]['id'], 'selfpickup') !== false) {
             $quotes_array = array_merge($quotes_array, $shipping_modules->quote($quotes[$i]['id'], $quotes[$i]['methods'][0]['id']));
           }
         }
