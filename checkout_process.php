@@ -95,6 +95,7 @@ $order_totals = $order_total_modules->process();
 // only ever completed once, so both paths line up behind the same lock
 $checkout_lock = '';
 $checkout_locked = false;
+$order_created = false;
 $checkout_nonce = ((isset($_SESSION['payment_nonce'])) ? $_SESSION['payment_nonce'] : '');
 if ($checkout_nonce != '') {
   $checkout_lock = 'MODchk_'.$checkout_nonce;
@@ -298,6 +299,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();
   $_SESSION['tmp_oID'] = $insert_id;
+  $order_created = true;
 
   for ($i = 0, $n = sizeof($order_totals); $i < $n; $i ++) {
     $sql_data_array = array(
@@ -528,7 +530,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     );
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-    // the shop is done, the waiting order is known by its temporary status
+    // the order exists and carries its key, a duplicate finds it and waits,
+    // so the lock is dropped before the module hands over to its provider
     if ($checkout_lock != '') {
       xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
       $checkout_lock = '';
@@ -539,6 +542,15 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 }
 
 if (!$tmp) {
+  // a freshly created order is caught by its key and the missing marker,
+  // so a duplicate already waits without this lock: drop it before the
+  // payment module runs, because that module may redirect on its own and
+  // a persistent connection would carry the lock into the next request
+  if ($order_created === true && $checkout_lock != '') {
+    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+    $checkout_lock = '';
+  }
+
   // disable products
   if (count($_SESSION['disable_products']) > 0) {
     xtc_db_query("UPDATE ".TABLE_PRODUCTS."
