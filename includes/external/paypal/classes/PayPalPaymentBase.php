@@ -1179,7 +1179,7 @@ class PayPalPaymentBase extends PayPalCommon {
         // a discarded order must not keep its PayPal order reserved
         xtc_db_query("DELETE FROM ".TABLE_PAYPAL_PAYMENT."
                             WHERE orders_id = '".(int)$orders_id."'
-                              AND transaction_id = ''");
+                              AND reserved = '1'");
 
         if ($this->get_config('PAYPAL_REMOVE_ORDER_TMP') == '1') {
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
@@ -1223,7 +1223,7 @@ class PayPalPaymentBase extends PayPalCommon {
     }
 
     $check_query = xtc_db_query("SELECT orders_id,
-                                        transaction_id
+                                        reserved
                                    FROM ".TABLE_PAYPAL_PAYMENT."
                                   WHERE payment_id = '".xtc_db_input($paypal_order_id)."'");
     if (xtc_db_num_rows($check_query) > 0) {
@@ -1237,7 +1237,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->release_paypal_lock();
 
       // holding the lock means the paying request is gone without a result
-      if ($check['transaction_id'] == '') {
+      if ($check['reserved'] == '1') {
         $this->LoggingManager->log('WARNING', 'PayPal order left unfinished', array(
           'paypal_order_id' => $paypal_order_id,
           'orders_id' => $check['orders_id'],
@@ -1260,6 +1260,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
     $sql_data_array['orders_id'] = (int)$orders_id;
     $sql_data_array['payment_id'] = $paypal_order_id;
+    $sql_data_array['reserved'] = 1;
 
     if (xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array) === false) {
       $this->release_paypal_lock();
@@ -1276,7 +1277,7 @@ class PayPalPaymentBase extends PayPalCommon {
     xtc_db_query("DELETE FROM ".TABLE_PAYPAL_PAYMENT."
                         WHERE orders_id = '".(int)$orders_id."'
                           AND payment_id != '".xtc_db_input($paypal_order_id)."'
-                          AND transaction_id = ''");
+                          AND reserved = '1'");
 
     return true;
   }
@@ -1293,12 +1294,14 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function abort_paypal_order($orders_id, $reason) {
+    $this->release_paypal_lock();
+
     // a reserved order belongs to the request that is paying for it
     $check_query = xtc_db_query("SELECT paypal_id
                                    FROM ".TABLE_PAYPAL_PAYMENT."
                                   WHERE orders_id = '".(int)$orders_id."'");
     if (xtc_db_num_rows($check_query) < 1) {
-      $this->remove_order($orders_id);
+      $this->remove_duplicate_order($orders_id, array('reason' => $reason));
     }
 
     $_SESSION['paypal_payment_error'] = $reason;
@@ -1309,24 +1312,10 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function discard_duplicate_order($orders_id, $existing_orders_id, $paypal_order_id) {
-    $check_query = xtc_db_query("SELECT customers_id
-                                   FROM ".TABLE_ORDERS."
-                                  WHERE orders_id = '".(int)$orders_id."'");
-    if (xtc_db_num_rows($check_query) > 0) {
-      $check = xtc_db_fetch_array($check_query);
-
-      // a duplicate never becomes a real order, so PAYPAL_REMOVE_ORDER_TMP does not apply
-      if ($_SESSION['customer_id'] == $check['customers_id']) {
-        require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-        xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
-
-        $this->LoggingManager->log('INFO', 'Remove duplicate order', array(
-          'orders_id' => $orders_id,
-          'duplicate_of' => $existing_orders_id,
-          'paypal_order_id' => $paypal_order_id,
-        ));
-      }
-    }
+    $this->remove_duplicate_order($orders_id, array(
+      'duplicate_of' => $existing_orders_id,
+      'paypal_order_id' => $paypal_order_id,
+    ));
 
     unset($_SESSION['paypal']);
     unset($_SESSION['tmp_oID']);
@@ -1334,6 +1323,30 @@ class PayPalPaymentBase extends PayPalCommon {
     if (isset($_SESSION['cart']) && is_object($_SESSION['cart'])) {
       $_SESSION['cart']->reset(true);
     }
+  }
+
+
+  function remove_duplicate_order($orders_id, $log_data = array()) {
+    $check_query = xtc_db_query("SELECT customers_id
+                                   FROM ".TABLE_ORDERS."
+                                  WHERE orders_id = '".(int)$orders_id."'");
+    if (xtc_db_num_rows($check_query) < 1) {
+      return;
+    }
+
+    $check = xtc_db_fetch_array($check_query);
+    if ($_SESSION['customer_id'] != $check['customers_id']) {
+      return;
+    }
+
+    // a second order for one PayPal order never becomes a real order, so it
+    // goes for good - a kept one would carry the higher orders_id and
+    // checkout_success.php would show it instead of the paid order
+    require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+    xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+
+    $log_data['orders_id'] = $orders_id;
+    $this->LoggingManager->log('INFO', 'Remove duplicate order', $log_data);
   }
 
 
@@ -1483,6 +1496,7 @@ class PayPalPaymentBase extends PayPalCommon {
                     payer_id varchar(64) NOT NULL default '', 
                     transaction_id varchar(64) NOT NULL default '', 
                     send_order int(1) NOT NULL default '0', 
+                    reserved int(1) NOT NULL default '0', 
                     PRIMARY KEY (paypal_id), 
                     KEY idx_orders_id (orders_id),
                     UNIQUE KEY idx_payment_id (payment_id)
@@ -1844,6 +1858,7 @@ class PayPalPaymentBase extends PayPalCommon {
     $table_array = array(
       array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL DEFAULT ''"),
       array('column' => 'send_order', 'default' => "int(1) NOT NULL default '0'"),
+      array('column' => 'reserved', 'default' => "int(1) NOT NULL default '0'"),
     );
     foreach ($table_array as $table) {
       $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_PAYMENT." LIKE '".xtc_db_input($table['column'])."'");

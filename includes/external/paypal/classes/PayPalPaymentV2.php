@@ -1119,6 +1119,7 @@
       $sql_data_array = array(
         'payer_id' => ((isset($_SESSION['paypal']['PayerID'])) ? $_SESSION['paypal']['PayerID'] : ''),
         'transaction_id' => $result->transaction_id,
+        'reserved' => 0,
       );
       if ($reserved === true) {
         xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array, 'update', "orders_id = '".(int)$order_id."'
