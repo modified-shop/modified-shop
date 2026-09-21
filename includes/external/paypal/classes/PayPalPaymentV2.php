@@ -1128,6 +1128,7 @@
         $sql_data_array['payment_id'] = $_SESSION['paypal']['OrderID'];
         xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
       }
+      $this->release_paypal_lock();
 
       $status_id = $this->order_status_pending;
       if ($result->status == 'COMPLETED') {
