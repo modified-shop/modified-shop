@@ -23,6 +23,10 @@ $checkout_position = array(
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
 if ($_SESSION['cart']->count_contents() < 1) {
+  // a repeated call belongs to an order that has been placed already
+  if ($current_page == FILENAME_CHECKOUT_PROCESS) {
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+  }
 	xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
 }
 
@@ -138,6 +142,24 @@ if ($checkout_position[$current_page] >= 4) {
   if (xtc_not_null(MODULE_PAYMENT_INSTALLED) && !isset($_SESSION['payment'])) {
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
+}
+
+// a given up handover must not let the next attempt find its own order again
+if (isset($checkout_position[$current_page])
+    && ($checkout_position[$current_page] == 1 || $checkout_position[$current_page] == 2)
+    && isset($_SESSION['tmp_oID'])
+    )
+{
+  $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
+}
+
+// a checkout attempt needs its key even when no payment page was involved
+if (isset($checkout_position[$current_page])
+    && $checkout_position[$current_page] >= 3
+    && (!isset($_SESSION['payment_nonce']) || $_SESSION['payment_nonce'] == '')
+    )
+{
+  $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
 }
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_requirements/','php') as $file) require_once ($file);

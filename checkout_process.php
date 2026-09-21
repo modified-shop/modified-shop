@@ -37,6 +37,8 @@ include ('includes/application_top.php');
 // stock decrement for downloads
 defined('STOCK_LIMITED_DOWNLOADS') or define('STOCK_LIMITED_DOWNLOADS', 'false');
 
+defined('CHECKOUT_LOCK_TIMEOUT') or define('CHECKOUT_LOCK_TIMEOUT', 30);
+
 // include needed functions
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'ip_clearing.inc.php');
@@ -100,6 +102,38 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $orders_status_id = ${$_SESSION['payment']}->tmpStatus;
   } else {
     $tmp = false;
+  }
+
+  // one checkout attempt may only ever result in one order, the lock lasts
+  // until the request closes its database connection
+  $checkout_nonce = ((isset($_SESSION['payment_nonce'])) ? $_SESSION['payment_nonce'] : '');
+  if ($checkout_nonce != '') {
+    $checkout_lock = 'MODchk_'.$checkout_nonce;
+    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($checkout_lock)."', ".(int)CHECKOUT_LOCK_TIMEOUT.") AS checkout_lock");
+    $lock = xtc_db_fetch_array($lock_query);
+
+    if (!is_array($lock) || !isset($lock['checkout_lock']) || $lock['checkout_lock'] != '1') {
+      // the attempt is still being processed, its order is the one that counts
+      session_abort();
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+    }
+
+    $check_query = xtc_db_query("SELECT orders_id
+                                   FROM ".TABLE_ORDERS."
+                                  WHERE customers_id = '".(int)$_SESSION['customer_id']."'
+                                    AND orders_ident_key = '".xtc_db_input($checkout_nonce)."'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+      session_abort();
+
+      // a handed over order carries on in its payment module, so the request
+      // starts over and takes the resume path with the module's own checks
+      if ($tmp === true && !isset($_GET['resume'])) {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, 'resume=1', 'SSL'));
+      }
+
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+    }
   }
 
   if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
@@ -201,6 +235,11 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   
   if ($refID != '') {
     $sql_data_array['campaign'] = $refID;
+  }
+
+  // the key lets a repeated attempt find this order instead of adding one
+  if ($checkout_nonce != '') {
+    $sql_data_array['orders_ident_key'] = $checkout_nonce;
   }
   
   // check if late or direct sale
@@ -491,6 +530,7 @@ if (!$tmp) {
   unset($_SESSION['billto']);
   unset($_SESSION['shipping']);
   unset($_SESSION['payment']);
+  unset($_SESSION['payment_nonce']);
   unset($_SESSION['comments']);
   unset($_SESSION['last_order']);
   unset($_SESSION['tmp_oID']);
