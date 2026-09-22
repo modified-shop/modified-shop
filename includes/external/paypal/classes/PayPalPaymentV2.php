@@ -1072,9 +1072,6 @@
 
 
     function FinishOrder($order_id) {
-      // one PayPal order may only ever result in one shop order
-      $reserved = $this->reserve_paypal_order($_SESSION['paypal']['OrderID'], $order_id);
-
       if ($this->PatchOrder($_SESSION['paypal']['OrderID']) !== true) {
         $this->LoggingManager->log('WARNING', 'FinishOrder aborted', array(
           'reason' => 'PatchOrder failed',
@@ -1117,19 +1114,12 @@
       }
 
       $sql_data_array = array(
+        'orders_id' => $order_id,
+        'payment_id' => $_SESSION['paypal']['OrderID'],
         'payer_id' => ((isset($_SESSION['paypal']['PayerID'])) ? $_SESSION['paypal']['PayerID'] : ''),
         'transaction_id' => $result->transaction_id,
-        'reserved' => 0,
       );
-      if ($reserved === true) {
-        xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array, 'update', "orders_id = '".(int)$order_id."'
-                                                                          AND payment_id = '".xtc_db_input($_SESSION['paypal']['OrderID'])."'");
-      } else {
-        $sql_data_array['orders_id'] = $order_id;
-        $sql_data_array['payment_id'] = $_SESSION['paypal']['OrderID'];
-        xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
-      }
-      $this->release_paypal_lock();
+      xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
 
       $status_id = $this->order_status_pending;
       if ($result->status == 'COMPLETED') {

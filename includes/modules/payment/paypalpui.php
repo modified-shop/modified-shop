@@ -379,41 +379,14 @@ class paypalpui extends PayPalPaymentV2 {
       }
     }
     
-    // one PayPal order may only ever result in one shop order, and the mail
-    // release goes in right away because a webhook may arrive in between
-    $reserved = $this->reserve_paypal_order($_SESSION['paypal']['OrderID'], $insert_id, array(
+    $sql_data_array = array(
+      'orders_id' => $insert_id,
+      'payment_id' => $_SESSION['paypal']['OrderID'],
+      'payer_id' => $_SESSION['paypal']['PayerID'],
+      'transaction_id' => $transaction_id,
       'send_order' => $_SESSION['paypal']['send'],
-    ));
-
-    if ($reserved === true) {
-      // the webhook may have handled this order already, so its results stay:
-      // send_order is not written back and a stored capture is not replaced
-      $sql_data_array = array(
-        'payer_id' => $_SESSION['paypal']['PayerID'],
-        'reserved' => 0,
-      );
-      xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array, 'update', "orders_id = '".(int)$insert_id."'
-                                                                        AND payment_id = '".xtc_db_input($_SESSION['paypal']['OrderID'])."'");
-
-      if ($transaction_id != '') {
-        $sql_data_array = array(
-          'transaction_id' => $transaction_id,
-        );
-        xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array, 'update', "orders_id = '".(int)$insert_id."'
-                                                                          AND payment_id = '".xtc_db_input($_SESSION['paypal']['OrderID'])."'
-                                                                          AND transaction_id = ''");
-      }
-    } else {
-      $sql_data_array = array(
-        'orders_id' => $insert_id,
-        'payment_id' => $_SESSION['paypal']['OrderID'],
-        'payer_id' => $_SESSION['paypal']['PayerID'],
-        'transaction_id' => $transaction_id,
-        'send_order' => $_SESSION['paypal']['send'],
-      );
-      xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
-    }
-    $this->release_paypal_lock();
+    );
+    xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
 
     $this->update_order('Order ID: '.$_SESSION['paypal']['OrderID'], $status_id, $insert_id);
     unset($_SESSION['paypal']);

@@ -17,8 +17,6 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalCommon.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
-defined('PAYPAL_ORDER_LOCK_TIMEOUT') or define('PAYPAL_ORDER_LOCK_TIMEOUT', 30);
-
 
 class PayPalPaymentBase extends PayPalCommon {
 
@@ -38,7 +36,6 @@ class PayPalPaymentBase extends PayPalCommon {
   var $tmpStatus;
   var $loglevel;
   var $LoggingManager;
-  var $paypal_order_lock = '';
   
   var $_check;
   var $_check_install;
@@ -1176,11 +1173,6 @@ class PayPalPaymentBase extends PayPalCommon {
     if (xtc_db_num_rows($check_query) > 0) {
       $check = xtc_db_fetch_array($check_query);
       if ($_SESSION['customer_id'] == $check['customers_id']) {
-        // a discarded order must not keep its PayPal order reserved
-        xtc_db_query("DELETE FROM ".TABLE_PAYPAL_PAYMENT."
-                            WHERE orders_id = '".(int)$orders_id."'
-                              AND reserved = '1'");
-
         if ($this->get_config('PAYPAL_REMOVE_ORDER_TMP') == '1') {
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
           xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
@@ -1190,163 +1182,8 @@ class PayPalPaymentBase extends PayPalCommon {
           xtc_restock_order((int)$orders_id, true);
           $this->LoggingManager->log('INFO', 'Restock Order ID: '.$orders_id);
         }
-
-        $this->release_paypal_lock();
       }
     }
-  }
-
-
-  function reserve_paypal_order($paypal_order_id, $orders_id, $sql_data_array = array()) {
-    if (!is_string($paypal_order_id)
-        || $paypal_order_id == ''
-        || (int)$orders_id < 1
-        )
-    {
-      return false;
-    }
-
-    // the lock is held until the payment result is written
-    $this->paypal_order_lock = 'MODppo_'.$paypal_order_id;
-    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($this->paypal_order_lock)."', ".(int)PAYPAL_ORDER_LOCK_TIMEOUT.") AS paypal_lock");
-    $lock = xtc_db_fetch_array($lock_query);
-
-    if (!is_array($lock) || !isset($lock['paypal_lock']) || $lock['paypal_lock'] != '1') {
-      $this->paypal_order_lock = '';
-
-      $this->LoggingManager->log('WARNING', 'PayPal order lock not acquired', array(
-        'paypal_order_id' => $paypal_order_id,
-        'orders_id' => $orders_id,
-      ));
-
-      $this->abort_paypal_order($orders_id, 'ORDER_LOCK_TIMEOUT');
-    }
-
-    $check_query = xtc_db_query("SELECT orders_id,
-                                        reserved
-                                   FROM ".TABLE_PAYPAL_PAYMENT."
-                                  WHERE payment_id = '".xtc_db_input($paypal_order_id)."'");
-    if (xtc_db_num_rows($check_query) > 0) {
-      $check = xtc_db_fetch_array($check_query);
-
-      // our own reservation, this order is being finished right now
-      if ((int)$check['orders_id'] == (int)$orders_id) {
-        return true;
-      }
-
-      $this->release_paypal_lock();
-
-      // holding the lock means the paying request is gone without a result
-      if ($check['reserved'] == '1') {
-        $this->LoggingManager->log('WARNING', 'PayPal order left unfinished', array(
-          'paypal_order_id' => $paypal_order_id,
-          'orders_id' => $check['orders_id'],
-          'blocked_orders_id' => $orders_id,
-        ));
-
-        $this->abort_paypal_order($orders_id, 'ORDER_NOT_FINISHED');
-      }
-
-      $this->LoggingManager->log('WARNING', 'Duplicate PayPal order', array(
-        'paypal_order_id' => $paypal_order_id,
-        'orders_id' => $check['orders_id'],
-        'duplicate_orders_id' => $orders_id,
-      ));
-
-      $this->discard_duplicate_order($orders_id, $check['orders_id'], $paypal_order_id);
-
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
-    }
-
-    $sql_data_array['orders_id'] = (int)$orders_id;
-    $sql_data_array['payment_id'] = $paypal_order_id;
-    $sql_data_array['reserved'] = 1;
-
-    if (xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array) === false) {
-      $this->release_paypal_lock();
-
-      $this->LoggingManager->log('ERROR', 'PayPal order reservation failed', array(
-        'paypal_order_id' => $paypal_order_id,
-        'orders_id' => $orders_id,
-      ));
-
-      $this->abort_paypal_order($orders_id, 'ORDER_RESERVATION_FAILED');
-    }
-
-    // an earlier attempt on this order left its reservation behind
-    xtc_db_query("DELETE FROM ".TABLE_PAYPAL_PAYMENT."
-                        WHERE orders_id = '".(int)$orders_id."'
-                          AND payment_id != '".xtc_db_input($paypal_order_id)."'
-                          AND reserved = '1'");
-
-    return true;
-  }
-
-
-  function release_paypal_lock() {
-    if ($this->paypal_order_lock == '') {
-      return;
-    }
-
-    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($this->paypal_order_lock)."')");
-    $this->paypal_order_lock = '';
-  }
-
-
-  function abort_paypal_order($orders_id, $reason) {
-    $this->release_paypal_lock();
-
-    // a reserved order belongs to the request that is paying for it
-    $check_query = xtc_db_query("SELECT paypal_id
-                                   FROM ".TABLE_PAYPAL_PAYMENT."
-                                  WHERE orders_id = '".(int)$orders_id."'");
-    if (xtc_db_num_rows($check_query) < 1) {
-      $this->remove_duplicate_order($orders_id, array('reason' => $reason));
-    }
-
-    $_SESSION['paypal_payment_error'] = $reason;
-    unset($_SESSION['paypal']);
-
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-  }
-
-
-  function discard_duplicate_order($orders_id, $existing_orders_id, $paypal_order_id) {
-    $this->remove_duplicate_order($orders_id, array(
-      'duplicate_of' => $existing_orders_id,
-      'paypal_order_id' => $paypal_order_id,
-    ));
-
-    unset($_SESSION['paypal']);
-    unset($_SESSION['tmp_oID']);
-
-    if (isset($_SESSION['cart']) && is_object($_SESSION['cart'])) {
-      $_SESSION['cart']->reset(true);
-    }
-  }
-
-
-  function remove_duplicate_order($orders_id, $log_data = array()) {
-    $check_query = xtc_db_query("SELECT customers_id
-                                   FROM ".TABLE_ORDERS."
-                                  WHERE orders_id = '".(int)$orders_id."'");
-    if (xtc_db_num_rows($check_query) < 1) {
-      return;
-    }
-
-    $check = xtc_db_fetch_array($check_query);
-    if ($_SESSION['customer_id'] != $check['customers_id']) {
-      return;
-    }
-
-    // a second order for one PayPal order never becomes a real order, so it
-    // goes for good - a kept one would carry the higher orders_id and
-    // checkout_success.php would show it instead of the paid order
-    require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-    xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
-
-    $log_data['orders_id'] = $orders_id;
-    $this->LoggingManager->log('INFO', 'Remove duplicate order', $log_data);
   }
 
 
@@ -1496,7 +1333,6 @@ class PayPalPaymentBase extends PayPalCommon {
                     payer_id varchar(64) NOT NULL default '', 
                     transaction_id varchar(64) NOT NULL default '', 
                     send_order int(1) NOT NULL default '0', 
-                    reserved int(1) NOT NULL default '0', 
                     PRIMARY KEY (paypal_id), 
                     KEY idx_orders_id (orders_id),
                     UNIQUE KEY idx_payment_id (payment_id)
@@ -1858,7 +1694,6 @@ class PayPalPaymentBase extends PayPalCommon {
     $table_array = array(
       array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL DEFAULT ''"),
       array('column' => 'send_order', 'default' => "int(1) NOT NULL default '0'"),
-      array('column' => 'reserved', 'default' => "int(1) NOT NULL default '0'"),
     );
     foreach ($table_array as $table) {
       $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_PAYMENT." LIKE '".xtc_db_input($table['column'])."'");
