@@ -23,8 +23,9 @@ $checkout_position = array(
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
 if ($_SESSION['cart']->count_contents() < 1) {
-  // a repeated call belongs to an order that has been placed already
-  if ($current_page == FILENAME_CHECKOUT_PROCESS) {
+  // a repeated call after a completed checkout may show its result, while a
+  // return whose cart went empty during the payment still has to complete
+  if ($current_page == FILENAME_CHECKOUT_PROCESS && !isset($_SESSION['tmp_oID'])) {
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
   }
 	xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
