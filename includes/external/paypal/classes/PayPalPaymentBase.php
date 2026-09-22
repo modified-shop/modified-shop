@@ -126,8 +126,8 @@ class PayPalPaymentBase extends PayPalCommon {
     if ($this->check_install()) {
       if (version_compare($this->paypal_version, $this->get_config('PAYPAL_VERSION', false), '>')) {
         $this->paypal_update();
-      } elseif ($this->get_config('PAYPAL_PAYMENT_INDEX_PENDING') != '') {
-        // the index migration waited for a clean table and is tried again
+      } else {
+        // an index migration that waited for a clean table is tried again
         $this->retry_unique_payment_index();
       }
     }
@@ -1686,17 +1686,22 @@ class PayPalPaymentBase extends PayPalCommon {
   // the merchant has just cleaned up, only after PAYPAL_PAYMENT_INDEX_RETRY
   // seconds have passed since the last attempt
   function retry_unique_payment_index() {
+    static $pending_since = null;
     static $tried = false;
 
-    if ($tried === true) {
+    // the time of the last attempt is read once per request straight from
+    // the table, because the sql cache would hand out a stale value long
+    // after an attempt has moved it and so defeat the interval
+    if ($pending_since === null) {
+      $pending_since = (int)$this->get_config('PAYPAL_PAYMENT_INDEX_PENDING', false);
+    }
+
+    if ($pending_since < 1 || $tried === true) {
       return;
     }
     $tried = true;
 
-    if (!defined('RUN_MODE_ADMIN')
-        && time() - (int)$this->get_config('PAYPAL_PAYMENT_INDEX_PENDING') < PAYPAL_PAYMENT_INDEX_RETRY
-        )
-    {
+    if (!defined('RUN_MODE_ADMIN') && time() - $pending_since < PAYPAL_PAYMENT_INDEX_RETRY) {
       return;
     }
 
