@@ -121,8 +121,13 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->update_status();
     }
     
-    if ($this->check_install() && version_compare($this->paypal_version, $this->get_config('PAYPAL_VERSION', false), '>')) {
-      $this->paypal_update();
+    if ($this->check_install()) {
+      if (version_compare($this->paypal_version, $this->get_config('PAYPAL_VERSION', false), '>')) {
+        $this->paypal_update();
+      } elseif ($this->get_config('PAYPAL_PAYMENT_INDEX_PENDING', false) == '1') {
+        // the index migration waited for a clean table and is tried again
+        $this->ensure_unique_payment_index();
+      }
     }
   }
 
@@ -1674,6 +1679,71 @@ class PayPalPaymentBase extends PayPalCommon {
   }
   
   
+  // the unique index needs a table without duplicate payment ids, so it may
+  // have to wait for the merchant to clean up and is tried again until it is
+  // in place, while the old index stays until the new one really exists
+  function ensure_unique_payment_index() {
+    $pending = ($this->get_config('PAYPAL_PAYMENT_INDEX_PENDING', false) == '1');
+
+    $index_exists = false;
+    $index_unique = false;
+    $index_query = xtc_db_query("SHOW INDEX FROM ".TABLE_PAYPAL_PAYMENT);
+    while ($index = xtc_db_fetch_array($index_query)) {
+      if ($index['Key_name'] != 'idx_payment_id') {
+        continue;
+      }
+
+      $index_exists = true;
+      if ($index['Non_unique'] == '0') {
+        $index_unique = true;
+      }
+    }
+
+    if ($index_unique === false) {
+      $duplicate_query = xtc_db_query("SELECT payment_id
+                                         FROM ".TABLE_PAYPAL_PAYMENT."
+                                     GROUP BY payment_id
+                                       HAVING COUNT(*) > 1");
+      if (xtc_db_num_rows($duplicate_query) > 0) {
+        if ($pending === false) {
+          $this->LoggingManager->log('WARNING', 'Duplicate payment ids block the unique index', array(
+            'table' => TABLE_PAYPAL_PAYMENT,
+            'duplicates' => xtc_db_num_rows($duplicate_query),
+          ));
+        }
+      } else {
+        // one statement, so a unique key that fails leaves the old index alone
+        $alter_query = xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_PAYMENT." ".(($index_exists === true) ? "DROP INDEX idx_payment_id, " : "")."ADD UNIQUE KEY idx_payment_id (payment_id)");
+        if ($alter_query !== false) {
+          $index_unique = true;
+        } else {
+          $this->LoggingManager->log('WARNING', 'Unique index on payment_id could not be created', array(
+            'table' => TABLE_PAYPAL_PAYMENT,
+          ));
+        }
+      }
+    }
+
+    if ($index_unique === true) {
+      if ($pending === true) {
+        $this->delete_config('PAYPAL_PAYMENT_INDEX_PENDING');
+        $this->LoggingManager->log('INFO', 'Unique index on payment_id created', array(
+          'table' => TABLE_PAYPAL_PAYMENT,
+        ));
+      }
+    } elseif ($pending === false) {
+      $this->save_config(array(
+        array(
+          'config_key' => 'PAYPAL_PAYMENT_INDEX_PENDING',
+          'config_value' => '1',
+        ),
+      ));
+    }
+
+    return $index_unique;
+  }
+
+
   function paypal_update() {
     $installed_paypal_version = $this->get_config('PAYPAL_VERSION', false);
     if ($installed_paypal_version != ''
@@ -1703,37 +1773,7 @@ class PayPalPaymentBase extends PayPalCommon {
     }
 
     // one PayPal order may only ever result in one shop order
-    $payment_index_exists = false;
-    $payment_index_unique = false;
-    $index_query = xtc_db_query("SHOW INDEX FROM ".TABLE_PAYPAL_PAYMENT);
-    while ($index = xtc_db_fetch_array($index_query)) {
-      if ($index['Key_name'] != 'idx_payment_id') {
-        continue;
-      }
-
-      $payment_index_exists = true;
-      if ($index['Non_unique'] == '0') {
-        $payment_index_unique = true;
-      }
-    }
-
-    if ($payment_index_unique === false) {
-      $duplicate_query = xtc_db_query("SELECT payment_id
-                                         FROM ".TABLE_PAYPAL_PAYMENT."
-                                     GROUP BY payment_id
-                                       HAVING COUNT(*) > 1");
-      if (xtc_db_num_rows($duplicate_query) > 0) {
-        $this->LoggingManager->log('WARNING', 'Duplicate payment ids block the unique index', array(
-          'table' => TABLE_PAYPAL_PAYMENT,
-          'duplicates' => xtc_db_num_rows($duplicate_query),
-        ));
-      } else {
-        if ($payment_index_exists === true) {
-          xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_PAYMENT." DROP INDEX idx_payment_id");
-        }
-        xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_PAYMENT." ADD UNIQUE KEY idx_payment_id (payment_id)");
-      }
-    }
+    $this->ensure_unique_payment_index();
     
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_INSTRUCTIONS." (
                     paypal_instructions_id int(11) NOT NULL auto_increment, 
