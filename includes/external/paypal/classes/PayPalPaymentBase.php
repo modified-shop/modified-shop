@@ -17,6 +17,8 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalCommon.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
+defined('PAYPAL_PAYMENT_INDEX_RETRY') or define('PAYPAL_PAYMENT_INDEX_RETRY', 600);
+
 
 class PayPalPaymentBase extends PayPalCommon {
 
@@ -124,9 +126,9 @@ class PayPalPaymentBase extends PayPalCommon {
     if ($this->check_install()) {
       if (version_compare($this->paypal_version, $this->get_config('PAYPAL_VERSION', false), '>')) {
         $this->paypal_update();
-      } elseif ($this->get_config('PAYPAL_PAYMENT_INDEX_PENDING', false) == '1') {
+      } elseif ($this->get_config('PAYPAL_PAYMENT_INDEX_PENDING') != '') {
         // the index migration waited for a clean table and is tried again
-        $this->ensure_unique_payment_index();
+        $this->retry_unique_payment_index();
       }
     }
   }
@@ -1679,11 +1681,35 @@ class PayPalPaymentBase extends PayPalCommon {
   }
   
   
+  // every PayPal module of a request would repeat the scan of the payment
+  // table, so the retry runs once per request and, outside the admin where
+  // the merchant has just cleaned up, only after PAYPAL_PAYMENT_INDEX_RETRY
+  // seconds have passed since the last attempt
+  function retry_unique_payment_index() {
+    static $tried = false;
+
+    if ($tried === true) {
+      return;
+    }
+    $tried = true;
+
+    if (!defined('RUN_MODE_ADMIN')
+        && time() - (int)$this->get_config('PAYPAL_PAYMENT_INDEX_PENDING') < PAYPAL_PAYMENT_INDEX_RETRY
+        )
+    {
+      return;
+    }
+
+    $this->ensure_unique_payment_index();
+  }
+
+
   // the unique index needs a table without duplicate payment ids, so it may
   // have to wait for the merchant to clean up and is tried again until it is
-  // in place, while the old index stays until the new one really exists
+  // in place, while the old index stays until the new one really exists; the
+  // pending marker holds the time of the last attempt
   function ensure_unique_payment_index() {
-    $pending = ($this->get_config('PAYPAL_PAYMENT_INDEX_PENDING', false) == '1');
+    $pending = ((int)$this->get_config('PAYPAL_PAYMENT_INDEX_PENDING', false) > 0);
 
     $index_exists = false;
     $index_unique = false;
@@ -1731,11 +1757,11 @@ class PayPalPaymentBase extends PayPalCommon {
           'table' => TABLE_PAYPAL_PAYMENT,
         ));
       }
-    } elseif ($pending === false) {
+    } else {
       $this->save_config(array(
         array(
           'config_key' => 'PAYPAL_PAYMENT_INDEX_PENDING',
-          'config_value' => '1',
+          'config_value' => time(),
         ),
       ));
     }
