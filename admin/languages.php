@@ -150,18 +150,20 @@
           TABLE_PRODUCTS_TAGS_VALUES => 'languages_id',
         );
 
+        // xtc_db_query() only warns on an error, so every step is checked before the language itself goes
+        $delete_failed = false;
+
         // these tables come with the cookie consent and trusted shops modules and can be missing
         $module_tables = array(TABLE_COOKIE_CONSENT_CATEGORIES, TABLE_COOKIE_CONSENT_COOKIES, TABLE_TRUSTEDSHOPS);
 
         foreach ($module_tables as $module_table) {
           $table_query = xtc_db_query("SHOW TABLES LIKE '" . str_replace('_', '\\_', $module_table) . "'");
-          if (xtc_db_num_rows($table_query) > 0) {
+          if (!$table_query) {
+            $delete_failed = true;
+          } elseif (xtc_db_num_rows($table_query) > 0) {
             $language_tables[$module_table] = 'languages_id';
           }
         }
-
-        // xtc_db_query() only warns on an error, so every step is checked before the language itself goes
-        $delete_failed = false;
 
         // a review is only found through its texts, so they stay as long as the review is left
         if (xtc_db_query("DELETE FROM " . TABLE_REVIEWS . "
@@ -191,10 +193,12 @@
         foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/languages/delete/','php') as $file) require ($file);
 
         // the language goes last, so an incomplete run can be repeated
+        if (!$delete_failed && !xtc_db_query("DELETE FROM " . TABLE_LANGUAGES . " WHERE languages_id = '" . $lID . "'")) {
+          $delete_failed = true;
+        }
+
         if ($delete_failed) {
           $messageStack->add_session(ERROR_REMOVE_LANGUAGE_INCOMPLETE, 'error');
-        } else {
-          xtc_db_query("DELETE FROM " . TABLE_LANGUAGES . " WHERE languages_id = '" . $lID . "'");
         }
 
         // cached queries still hold rows of the gone language
