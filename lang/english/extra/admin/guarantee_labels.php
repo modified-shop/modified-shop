@@ -31,6 +31,7 @@
   define('ERROR_GUARANTEE_LABELS_MODEL_WIDTH', 'EU durability guarantee: the model identifier &quot;%s&quot; does not fit into the editable area of the official template. The guarantee duration has not been saved.');
   define('ERROR_GUARANTEE_LABELS_TEXT_WIDTH', 'EU durability guarantee: manufacturer name &quot;%s&quot; and model identifier &quot;%s&quot; do not fit together in the label text row at 9 pt. The guarantee duration has not been saved.');
   define('ERROR_GUARANTEE_LABELS_NOT_READY', 'EU durability guarantee: the module cannot render a label yet (%s). The guarantee duration has not been saved.');
+  define('ERROR_GUARANTEE_LABELS_STORED_DURATION', 'EU durability guarantee: the GARAN fields are hidden, but the article has a stored guarantee duration of %s years. Manufacturer and model identifier have therefore not been changed, the guarantee duration stays in place. To edit or remove it, show the GARAN fields again in the module EU legal guarantee and GARAN label.');
 
   define('ERROR_GUARANTEE_LABELS_IMPORT', 'Article %s &ndash; %s');
 

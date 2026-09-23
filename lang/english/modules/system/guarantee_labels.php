@@ -19,6 +19,9 @@
   define('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS_TITLE', 'B2B customer groups');
   define('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS_DESC', 'Customer groups excluded from the output. Without a selection all customer groups including guests count as B2C. The group &quot;Admin&quot; is not a customer group: it never orders and is ignored here, even though the list offers it.');
 
+  define('MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS_TITLE', 'GARAN fields in the product editing');
+  define('MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS_DESC', 'Shows the block with guarantee duration and guarantee conditions in the product editing. A shop that never gives a durability guarantee of more than two years does not need it. Data already saved is kept and still output. Import and export are not affected.');
+
   define('MODULE_GUARANTEE_LABELS_TEXT_INSTALL_SUCCESS', 'The database structure for the EU labels has been created and verified.');
   define('MODULE_GUARANTEE_LABELS_TEXT_UPDATE_SUCCESS', 'The database structure for the EU labels is complete.');
   define('MODULE_GUARANTEE_LABELS_TEXT_REMOVE_KEEPS_GUARD', 'The catalogue still carries GARAN data. The extension guarantee_labels_product.php therefore stays installed: it keeps a duplicate from inheriting the guarantee of the article it was copied from and does nothing else without this module. The article data itself is kept so a later reinstall can pick it up again. To remove the extension anyway, uninstall it under Modules &gt; Article administration; duplicating will then carry model identifier, duration and guarantee conditions over again.');

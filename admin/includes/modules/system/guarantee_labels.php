@@ -33,7 +33,7 @@
     var $properties;
 
     function __construct() {
-      $this->version = '1.02';
+      $this->version = '1.03';
       $this->code = 'guarantee_labels';
       $this->title = MODULE_GUARANTEE_LABELS_TEXT_TITLE;
       $this->description = MODULE_GUARANTEE_LABELS_TEXT_DESCRIPTION;
@@ -512,6 +512,7 @@
 
       $this->add_configuration('MODULE_GUARANTEE_LABELS_STATUS', 'true', 'xtc_cfg_select_option(array(\'true\', \'false\'), ');
       $this->add_configuration('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '', $this->b2b_set_function());
+      $this->add_configuration('MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS', 'true', 'xtc_cfg_select_option(array(\'true\', \'false\'), ');
       $this->update_set_function('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', $this->b2b_set_function());
       $this->register_class_extension();
 
@@ -530,6 +531,7 @@
 
       // only add keys introduced by a later version, never touch existing values
       $this->add_configuration('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS', '', $this->b2b_set_function());
+      $this->add_configuration('MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS', 'true', 'xtc_cfg_select_option(array(\'true\', \'false\'), ');
 
       // the option list is not a value: a shop that installed an earlier version keeps the old
       // expression until this runs, and would go on offering the administration group
@@ -722,6 +724,7 @@
       return array(
         'MODULE_GUARANTEE_LABELS_STATUS',
         'MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS',
+        'MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS',
       );
     }
 

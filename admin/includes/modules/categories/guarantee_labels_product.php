@@ -58,7 +58,7 @@
       }
 
       if (!isset($sql_data_array['products_garan_duration'])) {
-        return $sql_data_array;
+        return $this->check_stored_duration($sql_data_array, $products_data);
       }
 
       require_once(DIR_FS_INC.'guarantee_labels_validate_product.inc.php');
@@ -71,6 +71,62 @@
         $this->has_error = true;
       }
 
+      return $guarantee_labels['data'];
+    }
+
+    /**
+     * With the GARAN fields hidden the duration is not posted, manufacturer and model still are.
+     * A stored duration that carries a label is checked against them, but never written.
+     *
+     * @param array $sql_data_array the prepared product data
+     * @param array $products_data the posted values
+     * @return array the product data, without manufacturer and model when they break the label
+     */
+    function check_stored_duration($sql_data_array, $products_data) {
+      global $messageStack;
+
+      $products_id = isset($products_data['products_id']) ? (int)$products_data['products_id'] : 0;
+
+      if ($products_id < 1) {
+        return $sql_data_array;
+      }
+
+      $stored_query = xtc_db_query("SELECT products_garan_duration
+                                      FROM ".TABLE_PRODUCTS."
+                                     WHERE products_id = '".$products_id."'
+                                       AND products_garan_duration IS NOT NULL");
+
+      if (xtc_db_num_rows($stored_query) < 1) {
+        return $sql_data_array;
+      }
+
+      $stored = xtc_db_fetch_array($stored_query);
+
+      require_once(DIR_FS_CATALOG.'includes/classes/guarantee_labels_renderer.php');
+
+      $renderer = new guarantee_labels_renderer();
+
+      // an invalid stored value is not part of this save, the diagnosis reports it
+      if (!$renderer->qualifies($stored['products_garan_duration'])) {
+        return $sql_data_array;
+      }
+
+      require_once(DIR_FS_INC.'guarantee_labels_validate_product.inc.php');
+
+      $guarantee_labels = guarantee_labels_validate_product(array_merge($sql_data_array, array('products_garan_duration' => $stored['products_garan_duration'])), $products_data);
+
+      if (count($guarantee_labels['errors']) < 1) {
+        return $sql_data_array;
+      }
+
+      foreach ($guarantee_labels['errors'] as $guarantee_labels_error) {
+        $messageStack->add_session($guarantee_labels_error, 'error');
+      }
+
+      $messageStack->add_session(sprintf(ERROR_GUARANTEE_LABELS_STORED_DURATION, $renderer->duration_text($renderer->normalize_duration($stored['products_garan_duration']))), 'error');
+      $this->has_error = true;
+
+      // the validation took manufacturer and model out, the stored duration was never part of the save
       return $guarantee_labels['data'];
     }
 
