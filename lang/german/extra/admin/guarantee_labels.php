@@ -31,6 +31,7 @@
   define('ERROR_GUARANTEE_LABELS_MODEL_WIDTH', 'EU-Haltbarkeitsgarantie: Die Modellkennung &quot;%s&quot; passt nicht in das daf&uuml;r vorgesehene Feld der offiziellen Vorlage. Die Garantiedauer wurde nicht gespeichert.');
   define('ERROR_GUARANTEE_LABELS_TEXT_WIDTH', 'EU-Haltbarkeitsgarantie: Herstellername &quot;%s&quot; und Modellkennung &quot;%s&quot; passen bei 9 pt nicht gemeinsam in die Textzeile des Labels. Die Garantiedauer wurde nicht gespeichert.');
   define('ERROR_GUARANTEE_LABELS_NOT_READY', 'EU-Haltbarkeitsgarantie: Das Modul kann noch kein Label erzeugen (%s). Die Garantiedauer wurde nicht gespeichert.');
+  define('ERROR_GUARANTEE_LABELS_STORED_DURATION', 'EU-Haltbarkeitsgarantie: Die GARAN-Angaben sind ausgeblendet, der Artikel hat aber eine gespeicherte Garantiedauer von %s Jahren. Hersteller und Modellkennung wurden deshalb nicht ge&auml;ndert, die Garantiedauer bleibt bestehen. Um sie zu bearbeiten oder zu entfernen, blenden Sie die GARAN-Angaben im Modul EU-Gew&auml;hrleistung und GARAN-Label wieder ein.');
 
   define('ERROR_GUARANTEE_LABELS_IMPORT', 'Artikel %s &ndash; %s');
 
