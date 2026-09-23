@@ -150,14 +150,15 @@ class order_total {
         if ($GLOBALS[$class]->enabled 
             && isset($GLOBALS[$class]->credit_class) 
             && $GLOBALS[$class]->credit_class
-            && method_exists($GLOBALS[$class], 'collect_posts')
             )
         {
           $post_var = 'c'.$GLOBALS[$class]->code;
           if (isset($_POST[$post_var]) && $_POST[$post_var]) {
             $_SESSION[$post_var] = $_POST[$post_var];
           }
-          $GLOBALS[$class]->collect_posts();
+          if (method_exists($GLOBALS[$class], 'collect_posts')) {
+            $GLOBALS[$class]->collect_posts();
+          }
         }
       }
     }

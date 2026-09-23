@@ -66,6 +66,7 @@ class ot_gv {
       $this->tax_class = MODULE_ORDER_TOTAL_GV_TAX_CLASS;
     }
     
+    $this->deduction = 0;
     $this->credit_class = true;
     $this->checkbox = '<input type="checkbox" onclick="submitFunction()" name="'.'c'.$this->code.'"> '.$this->user_prompt;
     
@@ -80,8 +81,7 @@ class ot_gv {
 
       $od_amount = $this->calculate_credit($order_total);
       if ($this->calculate_tax != "None") {
-        $tod_amount = $this->calculate_tax_deduction($order_total, $od_amount, $this->calculate_tax);
-        $od_amount = $this->calculate_credit($order_total);
+        $this->calculate_tax_deduction($order_total, $od_amount, $this->calculate_tax);
       }
 
       $this->deduction = $od_amount * (-1);
@@ -127,8 +127,7 @@ class ot_gv {
       $od_amount = $this->calculate_credit($order_total);
 
       if ($this->calculate_tax != "None") {
-        $tod_amount = $this->calculate_tax_deduction($order_total, $od_amount, $this->calculate_tax);
-        $od_amount = $this->calculate_credit($order_total) + $tod_amount;
+        $od_amount += $this->calculate_tax_deduction($order_total, $od_amount, $this->calculate_tax);
       }
     }
     
@@ -150,7 +149,6 @@ class ot_gv {
       if ($this->credit_tax == 'true') {
         $gv_order_amount = $gv_order_amount * (100 + $order->products[$i]['tax']) / 100;
       }
-      $gv_order_amount = $gv_order_amount * 100 / 100;
       if (MODULE_ORDER_TOTAL_GV_QUEUE == 'false') {
         // GV_QUEUE is false so release amount to account immediately
         $gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".$_SESSION['customer_id']."'");
@@ -196,56 +194,12 @@ class ot_gv {
     return $gv_amount;
   }
 
-  function collect_posts() {
-    global $xtPrice, $REMOTE_ADDR;
-    if (isset($_POST['gv_redeem_code'])) {
-      $gv_query = xtc_db_query("select coupon_id, coupon_type, coupon_amount from ".TABLE_COUPONS." where coupon_code = '".xtc_db_input($_POST['gv_redeem_code'])."'");
-      $gv_result = xtc_db_fetch_array($gv_query);
-      if (xtc_db_num_rows($gv_query) != 0) {
-        $redeem_query = xtc_db_query("select * from ".TABLE_COUPON_REDEEM_TRACK." where coupon_id = '".$gv_result['coupon_id']."'");
-        if ((xtc_db_num_rows($redeem_query) != 0) && ($gv_result['coupon_type'] == 'G')) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode(ERROR_NO_INVALID_REDEEM_GV), 'SSL'));
-        }
-      }
-      if ($gv_result['coupon_type'] == 'G') {
-        $gv_amount = $gv_result['coupon_amount'];
-        // Things to set
-        // ip address of claimant
-        // customer id of claimant
-        // date
-        // redemption flag
-        // now update customer account with gv_amount
-        $gv_amount_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".$_SESSION['customer_id']."'");
-        $customer_gv = false;
-        $total_gv_amount = $gv_amount;
-        if ($gv_amount_result = xtc_db_fetch_array($gv_amount_query)) {
-          $total_gv_amount = $gv_amount_result['amount'] + $gv_amount;
-          $customer_gv = true;
-        }
-        $gv_update = xtc_db_query("update ".TABLE_COUPONS." set coupon_active = 'N' where coupon_id = '".$gv_result['coupon_id']."'");
-        $gv_redeem = xtc_db_query("INSERT INTO  ".TABLE_COUPON_REDEEM_TRACK." (coupon_id, customer_id, redeem_date, redeem_ip) values ('".$gv_result['coupon_id']."', '".$SESSION['customer_id']."', now(),'".$REMOTE_ADDR."')");
-        if ($customer_gv) {
-          // already has gv_amount so update
-          $gv_update = xtc_db_query("update ".TABLE_COUPON_GV_CUSTOMER." set amount = '".$total_gv_amount."' where customer_id = '".$_SESSION['customer_id']."'");
-        } else {
-          // no gv_amount so insert
-          $gv_insert = xtc_db_query("INSERT INTO ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) values ('".$_SESSION['customer_id']."', '".$total_gv_amount."')");
-        }
-      }
-    }
-    if (isset($_POST['submit_redeem_x']) && $gv_result['coupon_type'] == 'G') {
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));
-    }
-  }
-
   function calculate_credit($amount) {
-    global $order;
-    
     $gv_query = xtc_db_query("SELECT amount 
                                 FROM ".TABLE_COUPON_GV_CUSTOMER." 
                                WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     $gv_result = xtc_db_fetch_array($gv_query);
-    $gv_payment_amount = $gv_result['amount'];
+    $gv_payment_amount = (isset($gv_result['amount']) ? $gv_result['amount'] : 0);
     
     if (($amount - $gv_payment_amount) <= 0) {
       $gv_payment_amount = $amount;
@@ -257,10 +211,15 @@ class ot_gv {
   function calculate_tax_deduction($amount, $od_amount, $method) {
     global $order;
     
+    $tod_amount = 0;
+    
     switch ($method) {
       case 'Standard':
-        $ratio1 = number_format($od_amount / $amount, 2);
-        $tod_amount = $total_net = 0;
+        if ($amount <= 0) {
+          break;
+        }
+        $ratio1 = $od_amount / $amount;
+        $total_net = 0;
         foreach ($order->info['tax_groups'] as $key => $value) {
           $tax_rate = xtc_get_tax_rate_from_desc($key);
           $total_net += $tax_rate * $order->info['tax_groups'][$key];
@@ -282,6 +241,7 @@ class ot_gv {
       case 'Credit Note':
         $tax_rate = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $tax_desc = xtc_get_tax_description($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        // deduction is still 0 here, so this mode stays inert as it always was
         $tod_amount = $this->deduction / (100 + $tax_rate) * $tax_rate;
         $order->info['tax_groups'][$tax_desc] += $tod_amount;
         break;    
