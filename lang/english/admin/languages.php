@@ -37,6 +37,7 @@ define('TEXT_INFO_LANGUAGE_CHARSET','Charset');
 define('TEXT_INFO_LANGUAGE_CHARSET_INFO','meta-content:');
 
 define('ERROR_REMOVE_DEFAULT_LANGUAGE', 'Error: The default language can not be removed. Please set another language as default, and try again.');
+define('ERROR_REMOVE_LANGUAGE_INCOMPLETE', 'Error: Not all data of the language could be removed, so the language has been kept. Please check the error log and try again.');
 
 define('TEXT_INFO_LANGUAGE_STATUS', 'Status:');
 define('TABLE_HEADING_LANGUAGE_STATUS', 'Status');

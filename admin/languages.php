@@ -127,30 +127,54 @@
         }
         unset($lng);
 
-        xtc_db_query("DELETE FROM " . TABLE_CATEGORIES_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_CUSTOMERS_STATUS . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_IMAGES_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_VPE . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_XSELL_GROUPS . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_SHIPPING_STATUS . " WHERE language_id = '" . $lID . "'");
+        $language_tables = array(
+          TABLE_CATEGORIES_DESCRIPTION => 'language_id',
+          TABLE_COUPONS_DESCRIPTION => 'language_id',
+          TABLE_CUSTOMERS_STATUS => 'language_id',
+          TABLE_ORDERS_STATUS => 'language_id',
+          TABLE_PRODUCTS_DESCRIPTION => 'language_id',
+          TABLE_PRODUCTS_IMAGES_DESCRIPTION => 'language_id',
+          TABLE_PRODUCTS_OPTIONS => 'language_id',
+          TABLE_PRODUCTS_OPTIONS_VALUES => 'language_id',
+          TABLE_PRODUCTS_VPE => 'language_id',
+          TABLE_PRODUCTS_XSELL_GROUPS => 'language_id',
+          TABLE_SHIPPING_STATUS => 'language_id',
 
-        xtc_db_query("DELETE FROM " . TABLE_BANNERS . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_CONTENT_MANAGER . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_CONTENT_MANAGER_CONTENT . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_EMAIL_CONTENT . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_LANGUAGES . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_MANUFACTURERS_INFO . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_CONTENT . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_OPTIONS . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_VALUES . " WHERE languages_id = '" . $lID . "'");
+          TABLE_BANNERS => 'languages_id',
+          TABLE_CONTENT_MANAGER => 'languages_id',
+          TABLE_CONTENT_MANAGER_CONTENT => 'languages_id',
+          TABLE_EMAIL_CONTENT => 'languages_id',
+          TABLE_MANUFACTURERS_INFO => 'languages_id',
+          TABLE_PRODUCTS_CONTENT => 'languages_id',
+          TABLE_PRODUCTS_TAGS_OPTIONS => 'languages_id',
+          TABLE_PRODUCTS_TAGS_VALUES => 'languages_id',
+        );
+
+        // xtc_db_query() only warns on an error, so every step is checked before the language itself goes
+        $delete_failed = false;
+
+        foreach ($language_tables as $language_table => $language_column) {
+          if (!xtc_db_query("DELETE FROM " . $language_table . " WHERE " . $language_column . " = '" . $lID . "'")) {
+            $delete_failed = true;
+          }
+        }
 
         // an order keeps its history, only the reference to the gone language is cleared
-        xtc_db_query("UPDATE " . TABLE_ORDERS . " SET languages_id = '0' WHERE languages_id = '" . $lID . "'");
+        if (!xtc_db_query("UPDATE " . TABLE_ORDERS . " SET languages_id = '0' WHERE languages_id = '" . $lID . "'")) {
+          $delete_failed = true;
+        }
+
+        // other modules remove their rows of $lID here and set $delete_failed on an error
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/languages/delete/','php') as $file) require ($file);
+
+        // the language goes last, so an incomplete run can be repeated
+        if (!$delete_failed && !xtc_db_query("DELETE FROM " . TABLE_LANGUAGES . " WHERE languages_id = '" . $lID . "'")) {
+          $delete_failed = true;
+        }
+
+        if ($delete_failed) {
+          $messageStack->add_session(ERROR_REMOVE_LANGUAGE_INCOMPLETE, 'error');
+        }
 
         // cached queries still hold rows of the gone language
         require_once(DIR_FS_CATALOG.'includes/modified_cache.php');
