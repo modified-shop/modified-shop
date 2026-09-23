@@ -47,6 +47,7 @@ class ot_gv {
   var $credit_tax;
   var $tax_class;
   var $checkbox;
+  var $tax_deducted;
 
   function __construct() {    
     $this->code = 'ot_gv';
@@ -127,8 +128,11 @@ class ot_gv {
       $od_amount = $this->calculate_credit($order_total);
 
       if ($this->calculate_tax != "None") {
-        // only probe here, process() is what applies the deduction to $order
-        $od_amount += $this->calculate_tax_deduction($order_total, $od_amount, $this->calculate_tax, false);
+        $tod_amount = $this->calculate_tax_deduction($order_total, $od_amount, $this->calculate_tax);
+        if ($this->calculate_tax == 'Standard') {
+          // only this mode lowers the order total on top of the credit
+          $od_amount += $tod_amount;
+        }
       }
     }
     
@@ -209,9 +213,11 @@ class ot_gv {
     return $gv_payment_amount;
   }
 
-  function calculate_tax_deduction($amount, $od_amount, $method, $adjust_order = true) {
+  function calculate_tax_deduction($amount, $od_amount, $method) {
     global $order;
     
+    // pre_confirmation_check() and process() both run on the confirmation page
+    $adjust_order = ($this->tax_deducted !== true);
     $tod_amount = 0;
     
     switch ($method) {
@@ -241,6 +247,7 @@ class ot_gv {
         if ($adjust_order) {
           $order->info['tax'] -= $tod_amount;
           $order->info['total'] -= $tod_amount;
+          $this->tax_deducted = true;
         }
         break;
       case 'Credit Note':
@@ -249,6 +256,7 @@ class ot_gv {
         $tod_amount = ($od_amount * -1) / (100 + $tax_rate) * $tax_rate;
         if ($adjust_order) {
           $order->info['tax_groups'][$tax_desc] += $tod_amount;
+          $this->tax_deducted = true;
         }
         break;    
     }
