@@ -47,7 +47,6 @@ class ot_gv {
   var $credit_tax;
   var $tax_class;
   var $checkbox;
-  var $tax_deducted;
 
   function __construct() {    
     $this->code = 'ot_gv';
@@ -128,11 +127,7 @@ class ot_gv {
       $od_amount = $this->calculate_credit($order_total);
 
       if ($this->calculate_tax != "None") {
-        $tod_amount = $this->calculate_tax_deduction($order_total, $od_amount, $this->calculate_tax);
-        if ($this->calculate_tax == 'Standard') {
-          // only this mode lowers the order total on top of the credit
-          $od_amount += $tod_amount;
-        }
+        $od_amount += $this->calculate_tax_deduction($order_total, $od_amount, $this->calculate_tax);
       }
     }
     
@@ -216,8 +211,6 @@ class ot_gv {
   function calculate_tax_deduction($amount, $od_amount, $method) {
     global $order;
     
-    // pre_confirmation_check() and process() both run on the confirmation page
-    $adjust_order = ($this->tax_deducted !== true);
     $tod_amount = 0;
     
     switch ($method) {
@@ -239,26 +232,18 @@ class ot_gv {
           if ($net > 0) {
             $god_amount = $order->info['tax_groups'][$key] * $ratio1;
             $tod_amount += $god_amount;
-            if ($adjust_order) {
-              $order->info['tax_groups'][$key] = $order->info['tax_groups'][$key] - $god_amount;
-            }
+            $order->info['tax_groups'][$key] = $order->info['tax_groups'][$key] - $god_amount;
           }
         }
-        if ($adjust_order) {
-          $order->info['tax'] -= $tod_amount;
-          $order->info['total'] -= $tod_amount;
-          $this->tax_deducted = true;
-        }
+        $order->info['tax'] -= $tod_amount;
+        $order->info['total'] -= $tod_amount;
         break;
       case 'Credit Note':
         $tax_rate = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $tax_desc = xtc_get_tax_description($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-        // deduction is still 0 here, so this mode stays inert as it always was;
-        // activating it shifts order totals and needs a decision of its own
+        // deduction is still 0 here, so this mode stays inert as it always was
         $tod_amount = $this->deduction / (100 + $tax_rate) * $tax_rate;
-        if ($adjust_order) {
-          $order->info['tax_groups'][$tax_desc] += $tod_amount;
-        }
+        $order->info['tax_groups'][$tax_desc] += $tod_amount;
         break;    
     }
     
