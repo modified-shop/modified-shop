@@ -20,12 +20,6 @@
     global ${$link};
     
     if (is_object(${$link})) {
-      // a pooled connection must not carry user locks into the next request
-      if (USE_PCONNECT == 'true') {
-        try {
-          mysqli_query(${$link}, "SELECT RELEASE_ALL_LOCKS()");
-        } catch (Exception $ex) {}
-      }
       try {
         return mysqli_close(${$link});
       } catch (Exception $ex) {}
@@ -103,7 +97,7 @@
   }
 
 
-  function xtc_db_connect($server=DB_SERVER, $username=DB_SERVER_USERNAME, $password=DB_SERVER_PASSWORD, $database=DB_DATABASE, $link='db_link') {
+  function xtc_db_connect($server=DB_SERVER, $username=DB_SERVER_USERNAME, $password=DB_SERVER_PASSWORD, $database=DB_DATABASE, $link='db_link', $persistent=null) {
     global ${$link};
 
     if (!function_exists('mysqli_connect')) {
@@ -115,7 +109,7 @@
     
     try {
       $socket = explode(':', $server);
-      if (USE_PCONNECT == 'true') {
+      if (($persistent === null) ? (USE_PCONNECT == 'true') : ($persistent === true)) {
         ${$link} = mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[1]) && $socket[1] != '') ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
       } else {
         ${$link} = mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[1]) && $socket[1] != '') ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
@@ -131,23 +125,6 @@
       } catch (Exception $ex) {
         xtc_db_error('', mysqli_errno(${$link}), mysqli_error(${$link}));
         return false;
-      }
-
-      // a request that dies before it closes its pooled connection would hand
-      // its user locks to the next request, so the connection is cleared at
-      // shutdown as well; the session goes first, it must be written under
-      // its own lock, and a link closed already just throws and is skipped
-      if (USE_PCONNECT == 'true') {
-        register_shutdown_function(function () use ($link) {
-          if (session_status() === PHP_SESSION_ACTIVE) {
-            session_write_close();
-          }
-          try {
-            if (isset($GLOBALS[$link]) && is_object($GLOBALS[$link])) {
-              mysqli_query($GLOBALS[$link], "SELECT RELEASE_ALL_LOCKS()");
-            }
-          } catch (Throwable $ex) {}
-        });
       }
     } else {
       xtc_db_error('', mysqli_connect_errno(), mysqli_connect_error());

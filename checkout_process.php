@@ -92,16 +92,26 @@ $order_total_modules = new order_total();
 $order_totals = $order_total_modules->process();
 
 // one checkout attempt may only ever result in one order, and one order is
-// only ever completed once, so both paths line up behind the same lock
+// only ever completed once, so both paths line up behind a lock; it lives on
+// a plain connection of its own, because a second lock on the session's
+// connection would release the session lock on MySQL before 5.7.5, and a
+// connection that closes with the request lets go of the lock on every exit
 $checkout_lock = '';
 $checkout_locked = false;
 $order_created = false;
 $checkout_nonce = ((isset($_SESSION['payment_nonce'])) ? $_SESSION['payment_nonce'] : '');
-if ($checkout_nonce != '') {
+if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
+  // a return is known by its order, the session may have lost its nonce
+  $checkout_lock = 'MODord_'.(int)$_SESSION['tmp_oID'];
+} elseif ($checkout_nonce != '') {
   $checkout_lock = 'MODchk_'.$checkout_nonce;
-  $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($checkout_lock)."', ".(int)CHECKOUT_LOCK_TIMEOUT.") AS checkout_lock");
-  $lock = xtc_db_fetch_array($lock_query);
-  $checkout_locked = (is_array($lock) && isset($lock['checkout_lock']) && $lock['checkout_lock'] == '1');
+}
+if ($checkout_lock != '') {
+  if (is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'checkout_lock_link', false))) {
+    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($checkout_lock)."', ".(int)CHECKOUT_LOCK_TIMEOUT.") AS checkout_lock", 'checkout_lock_link');
+    $lock = xtc_db_fetch_array($lock_query);
+    $checkout_locked = (is_array($lock) && isset($lock['checkout_lock']) && $lock['checkout_lock'] == '1');
+  }
 
   // never release a lock this request does not own
   if ($checkout_locked !== true) {
@@ -115,30 +125,28 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $insert_id = $_SESSION['tmp_oID'];
 
   // a completed checkout is not completed again, its mail went out already
-  if ($checkout_nonce != '') {
-    $check_query = xtc_db_query("SELECT orders_date_finished
-                                   FROM ".TABLE_ORDERS."
-                                  WHERE orders_id = '".(int)$insert_id."'
-                                    AND customers_id = '".(int)$_SESSION['customer_id']."'");
-    $check = ((xtc_db_num_rows($check_query) > 0) ? xtc_db_fetch_array($check_query) : false);
+  $check_query = xtc_db_query("SELECT orders_date_finished
+                                 FROM ".TABLE_ORDERS."
+                                WHERE orders_id = '".(int)$insert_id."'
+                                  AND customers_id = '".(int)$_SESSION['customer_id']."'");
+  $check = ((xtc_db_num_rows($check_query) > 0) ? xtc_db_fetch_array($check_query) : false);
 
-    if ($checkout_locked !== true
-        || ($check !== false && xtc_not_null($check['orders_date_finished']))
-        )
-    {
-      if ($checkout_locked === true) {
-        xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
-      }
-      $checkout_lock = '';
-      session_abort();
-
-      // without the lock another request is completing this order right now
-      if ($checkout_locked !== true) {
-        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'checkout_error=running', 'SSL'));
-      }
-
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+  if ($checkout_locked !== true
+      || ($check !== false && xtc_not_null($check['orders_date_finished']))
+      )
+  {
+    if ($checkout_locked === true) {
+      xtc_db_close('checkout_lock_link');
     }
+    $checkout_lock = '';
+    session_abort();
+
+    // without the lock another request is completing this order right now
+    if ($checkout_locked !== true) {
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'checkout_error=running', 'SSL'));
+    }
+
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
   }
 } else {
   // check if tmp order need to be created
@@ -162,7 +170,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     // or died, and none of that is a success
     if ($check !== false) {
       if ($checkout_locked === true) {
-        xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+        xtc_db_close('checkout_lock_link');
       }
       $checkout_lock = '';
       session_abort();
@@ -533,7 +541,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     // the order exists and carries its key, a duplicate finds it and waits,
     // so the lock is dropped before the module hands over to its provider
     if ($checkout_lock != '') {
-      xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+      xtc_db_close('checkout_lock_link');
       $checkout_lock = '';
     }
 
@@ -547,7 +555,7 @@ if (!$tmp) {
   // payment module runs, because that module may redirect on its own and
   // a persistent connection would carry the lock into the next request
   if ($order_created === true && $checkout_lock != '') {
-    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+    xtc_db_close('checkout_lock_link');
     $checkout_lock = '';
   }
 
@@ -613,7 +621,7 @@ if (!$tmp) {
   xtc_db_perform(TABLE_ORDERS, array('orders_date_finished' => 'now()'), 'update', "orders_id = '".(int)$insert_id."'");
 
   if ($checkout_lock != '') {
-    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($checkout_lock)."')");
+    xtc_db_close('checkout_lock_link');
     $checkout_lock = '';
   }
 
