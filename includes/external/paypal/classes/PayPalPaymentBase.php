@@ -38,6 +38,10 @@ class PayPalPaymentBase extends PayPalCommon {
   var $tmpStatus;
   var $loglevel;
   var $LoggingManager;
+
+  // request state of the index retry, shared by every PayPal module class
+  static $index_retry_since = null;
+  static $index_retry_tried = false;
   
   var $_check;
   var $_check_install;
@@ -1686,22 +1690,21 @@ class PayPalPaymentBase extends PayPalCommon {
   // the merchant has just cleaned up, only after PAYPAL_PAYMENT_INDEX_RETRY
   // seconds have passed since the last attempt
   function retry_unique_payment_index() {
-    static $pending_since = null;
-    static $tried = false;
-
     // the time of the last attempt is read once per request straight from
     // the table, because the sql cache would hand out a stale value long
-    // after an attempt has moved it and so defeat the interval
-    if ($pending_since === null) {
-      $pending_since = (int)$this->get_config('PAYPAL_PAYMENT_INDEX_PENDING', false);
+    // after an attempt has moved it and so defeat the interval; the state
+    // lives in the base class, a static inside this method would be one per
+    // module class before PHP 8.1 and let every class scan once more
+    if (self::$index_retry_since === null) {
+      self::$index_retry_since = (int)$this->get_config('PAYPAL_PAYMENT_INDEX_PENDING', false);
     }
 
-    if ($pending_since < 1 || $tried === true) {
+    if (self::$index_retry_since < 1 || self::$index_retry_tried === true) {
       return;
     }
-    $tried = true;
+    self::$index_retry_tried = true;
 
-    if (!defined('RUN_MODE_ADMIN') && time() - $pending_since < PAYPAL_PAYMENT_INDEX_RETRY) {
+    if (!defined('RUN_MODE_ADMIN') && time() - self::$index_retry_since < PAYPAL_PAYMENT_INDEX_RETRY) {
       return;
     }
 
