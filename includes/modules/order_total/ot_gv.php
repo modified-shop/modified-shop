@@ -253,10 +253,11 @@ class ot_gv {
       case 'Credit Note':
         $tax_rate = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $tax_desc = xtc_get_tax_description($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-        $tod_amount = ($od_amount * -1) / (100 + $tax_rate) * $tax_rate;
+        // deduction is still 0 here, so this mode stays inert as it always was;
+        // activating it shifts order totals and needs a decision of its own
+        $tod_amount = $this->deduction / (100 + $tax_rate) * $tax_rate;
         if ($adjust_order) {
           $order->info['tax_groups'][$tax_desc] += $tod_amount;
-          $this->tax_deducted = true;
         }
         break;    
     }
