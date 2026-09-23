@@ -153,18 +153,6 @@
         // xtc_db_query() only warns on an error, so every step is checked before the language itself goes
         $delete_failed = false;
 
-        // these tables come with the cookie consent and trusted shops modules and can be missing
-        $module_tables = array(TABLE_COOKIE_CONSENT_CATEGORIES, TABLE_COOKIE_CONSENT_COOKIES, TABLE_TRUSTEDSHOPS);
-
-        foreach ($module_tables as $module_table) {
-          $table_query = xtc_db_query("SHOW TABLES LIKE '" . str_replace('_', '\\_', $module_table) . "'");
-          if (!$table_query) {
-            $delete_failed = true;
-          } elseif (xtc_db_num_rows($table_query) > 0) {
-            $language_tables[$module_table] = 'languages_id';
-          }
-        }
-
         foreach ($language_tables as $language_table => $language_column) {
           if (!xtc_db_query("DELETE FROM " . $language_table . " WHERE " . $language_column . " = '" . $lID . "'")) {
             $delete_failed = true;
