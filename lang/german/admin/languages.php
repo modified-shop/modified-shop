@@ -37,6 +37,7 @@ define('TEXT_INFO_LANGUAGE_CHARSET','Charset');
 define('TEXT_INFO_LANGUAGE_CHARSET_INFO','meta-content:');
 
 define('ERROR_REMOVE_DEFAULT_LANGUAGE', 'Fehler: Die Standardsprache darf nicht gel&ouml;scht werden. Bitte definieren Sie eine neue Standardsprache und wiederholen Sie den Vorgang.');
+define('ERROR_REMOVE_LANGUAGE_INCOMPLETE', 'Fehler: Nicht alle Daten der Sprache konnten gel&ouml;scht werden. Die Sprache bleibt deshalb erhalten. Bitte pr&uuml;fen Sie das Fehlerprotokoll und wiederholen Sie den Vorgang.');
 
 define('TEXT_INFO_LANGUAGE_STATUS', 'Status:');
 define('TABLE_HEADING_LANGUAGE_STATUS', 'Status');
