@@ -153,58 +153,6 @@ class ot_coupon {
   }
 
 
-  function collect_posts() {
-    global $xtPrice;
-
-    if (isset($_POST['gv_redeem_code']) && $_POST['gv_redeem_code']) {
-
-      // INFOS ÜBER KUPON AUSLESEN
-      $coupon_query = xtc_db_query("select *
-                                      from ".TABLE_COUPONS."
-                                     where coupon_code='".xtc_db_input($_POST['gv_redeem_code'])."'
-                                       and coupon_active='Y'");
-      $coupon_array = xtc_db_fetch_array($coupon_query);
-
-      if ($coupon_array['coupon_type'] != 'G') {
-
-        if (xtc_db_num_rows($coupon_query) == 0) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode(ERROR_NO_INVALID_REDEEM_COUPON), 'SSL'));
-        }
-
-        // ERROR : LAUFZEIT HAT NOCH NICHT BEGONNEN
-        if ($coupon_array['coupon_start_date'] > date('Y-m-d H:i:s')) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_INVALID_STARTDATE_COUPON), 'SSL'));
-        }
-
-        // ERROR : LAUFZEIT BEENDET
-        if ($coupon_array['coupon_expire_date'] < date('Y-m-d H:i:s')) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_INVALID_FINISDATE_COUPON), 'SSL'));
-        }
-
-        // ERROR : GESAMTES VERWENDUNGSLIMIT ÜBERSCHRITTEN
-        $coupon_count = xtc_db_query("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $coupon_array['coupon_id'] . "'");
-        if (xtc_db_num_rows($coupon_count) >= $coupon_array['uses_per_coupon'] && $coupon_array['uses_per_coupon'] > 0) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_INVALID_USES_COUPON . $coupon_array['uses_per_coupon'] . TIMES), 'SSL'));
-        }
-
-        // ERROR : VERWENDUNGSLIMIT FÜR EINZELNEN KUNDEN ÜBERSCHRITTEN
-        $coupon_count_customer = xtc_db_query("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $coupon_array['coupon_id'] . "' and customer_id = '" . (int) $_SESSION['customer_id'] . "'");
-        if (xtc_db_num_rows($coupon_count_customer) >= $coupon_array['uses_per_user'] && $coupon_array['uses_per_user'] > 0) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_INVALID_USES_USER_COUPON . $coupon_array['uses_per_user'] . TIMES), 'SSL'));
-        }
-
-        // ERROR : MINDESTBESTELLWERT NICHT ERREICHT //FIX - web28 - 2012-04-24 - calculate currencies
-        if ($xtPrice->xtcCalculateCurr($coupon_array['coupon_minimum_order']) > $_SESSION['cart']->show_total()) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'info_message=' . urlencode(ERROR_MINIMUM_ORDER_COUPON_1 . ' ' . $xtPrice->xtcFormat($coupon_array['coupon_minimum_order'], true, 0, true) . ' ' . ERROR_MINIMUM_ORDER_COUPON_2), 'SSL'));
-        }
-      }
-
-      if ($_POST['submit_redeem_coupon_x'] && !$_POST['gv_redeem_code'])
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));
-      }
-  }
-
-
   function calculate_credit($amount) {
     global $order, $xtPrice, $tax_info_excl;
 
@@ -416,7 +364,7 @@ class ot_coupon {
     //$restriction = isset($order->info['tax_groups']) && count($order->info['tax_groups']) == 1 ? false : true;
 
     // reduction in percent
-    $od_amount_pro = $od_amount/$order_total * 100;
+    $od_amount_pro = $order_total > 0 ? $od_amount / $order_total * 100 : 0;
 
     foreach ($order->info['tax_groups'] as $key => $value) {
       if (isset($this->tax_groups[$key])) {
@@ -623,6 +571,7 @@ class ot_coupon {
       'MODULE_ORDER_TOTAL_COUPON_SORT_ORDER',
       'MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING',
       'MODULE_ORDER_TOTAL_COUPON_CALC_TAX',
+      'MODULE_ORDER_TOTAL_COUPON_TAX_CLASS',
     );
   }
 
@@ -631,7 +580,6 @@ class ot_coupon {
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_SORT_ORDER', '25', '6', '2', now())");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING', 'false', '6', '5', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_INC_TAX', 'true', '6', '6','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_CALC_TAX', 'Standard', '6', '7','xtc_cfg_select_option(array(\'None\', \'Standard\'), ', now())");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
   }
