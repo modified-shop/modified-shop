@@ -165,19 +165,6 @@
           }
         }
 
-        // a review is only found through its texts, so they stay as long as the review is left
-        if (xtc_db_query("DELETE FROM " . TABLE_REVIEWS . "
-                           WHERE reviews_id IN (SELECT reviews_id
-                                                  FROM " . TABLE_REVIEWS_DESCRIPTION . "
-                                                 WHERE languages_id = '" . $lID . "')
-                             AND reviews_id NOT IN (SELECT reviews_id
-                                                      FROM " . TABLE_REVIEWS_DESCRIPTION . "
-                                                     WHERE languages_id != '" . $lID . "')")) {
-          $language_tables[TABLE_REVIEWS_DESCRIPTION] = 'languages_id';
-        } else {
-          $delete_failed = true;
-        }
-
         foreach ($language_tables as $language_table => $language_column) {
           if (!xtc_db_query("DELETE FROM " . $language_table . " WHERE " . $language_column . " = '" . $lID . "'")) {
             $delete_failed = true;
