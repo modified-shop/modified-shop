@@ -101,8 +101,10 @@ $checkout_locked = false;
 $order_created = false;
 $checkout_nonce = ((isset($_SESSION['payment_nonce'])) ? $_SESSION['payment_nonce'] : '');
 if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
-  // a return is known by its order, the session may have lost its nonce
-  $checkout_lock = 'MODord_'.(int)$_SESSION['tmp_oID'];
+  // a return is known by its order, the session may have lost its nonce; the
+  // name carries the database, named locks are server wide and two shops on
+  // one server share their order numbers
+  $checkout_lock = 'MODord_'.md5(DB_DATABASE.'|'.TABLE_ORDERS).'_'.(int)$_SESSION['tmp_oID'];
 } elseif ($checkout_nonce != '') {
   $checkout_lock = 'MODchk_'.$checkout_nonce;
 }
