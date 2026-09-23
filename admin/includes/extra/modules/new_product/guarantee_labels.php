@@ -14,6 +14,7 @@
 
   if (defined('MODULE_GUARANTEE_LABELS_STATUS')
       && MODULE_GUARANTEE_LABELS_STATUS == 'true'
+      && (!defined('MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS') || MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS == 'true')
       )
   {
     // manufacturer and model are edited above, they are repeated here because both end up on the label

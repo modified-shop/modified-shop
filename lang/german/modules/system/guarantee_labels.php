@@ -19,6 +19,9 @@
   define('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS_TITLE', 'B2B-Kundengruppen');
   define('MODULE_GUARANTEE_LABELS_B2B_CUSTOMERS_STATUS_DESC', 'Kundengruppen, die von der Ausgabe ausgeschlossen werden. Ohne Auswahl gelten alle Kundengruppen einschlie&szlig;lich der G&auml;ste als B2C. Die Gruppe &quot;Admin&quot; ist keine Kundengruppe: Sie bestellt nicht und wird hier ignoriert, auch wenn die Liste sie anbietet.');
 
+  define('MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS_TITLE', 'GARAN-Angaben in der Artikelbearbeitung');
+  define('MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS_DESC', 'Zeigt in der Artikelbearbeitung den Block mit Garantiedauer und Garantiebedingungen. Wer keine Haltbarkeitsgarantie &uuml;ber zwei Jahre gibt, braucht ihn nicht. Bereits gespeicherte Angaben bleiben erhalten und werden weiter ausgegeben. Import und Export sind davon nicht betroffen.');
+
   define('MODULE_GUARANTEE_LABELS_TEXT_INSTALL_SUCCESS', 'Die Datenbankstruktur f&uuml;r die EU-Kennzeichnungen wurde angelegt und gepr&uuml;ft.');
   define('MODULE_GUARANTEE_LABELS_TEXT_UPDATE_SUCCESS', 'Die Datenbankstruktur f&uuml;r die EU-Kennzeichnungen ist vollst&auml;ndig.');
   define('MODULE_GUARANTEE_LABELS_TEXT_REMOVE_KEEPS_GUARD', 'Im Katalog stehen noch GARAN-Daten. Die Erweiterung guarantee_labels_product.php bleibt deshalb eingerichtet: Sie verhindert, dass ein Duplikat die Garantiezusage des Ursprungsartikels erbt, und ist ohne dieses Modul sonst wirkungslos. Die Artikeldaten selbst bleiben erhalten, damit eine sp&auml;tere Neuinstallation daran ankn&uuml;pfen kann. Wenn Sie die Erweiterung trotzdem entfernen wollen, deinstallieren Sie sie unter Module &gt; Artikelverwaltung; das Duplizieren &uuml;bernimmt danach Modellkennung, Garantiedauer und Garantiebedingungen wieder mit.');

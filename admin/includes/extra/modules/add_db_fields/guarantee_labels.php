@@ -14,8 +14,10 @@
 
   // the column itself comes with the install schema, the database update and the module
   // installation, this only carries the posted value into the product save
+  // without the fields in the mask nothing is posted, and an empty value would clear the stored one
   if (defined('MODULE_GUARANTEE_LABELS_STATUS')
       && MODULE_GUARANTEE_LABELS_STATUS == 'true'
+      && (!defined('MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS') || MODULE_GUARANTEE_LABELS_PRODUCT_FIELDS == 'true')
       )
   {
     $add_products_fields[] = 'products_garan_duration';
