@@ -23,6 +23,27 @@ $checkout_position = array(
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
 if ($_SESSION['cart']->count_contents() < 1) {
+  // a repeated call may show the result of a completed checkout, so the order
+  // the success page would show has to carry its completion marker; a return
+  // whose cart went empty during the payment still has to complete
+  if ($current_page == FILENAME_CHECKOUT_PROCESS
+      && !isset($_SESSION['tmp_oID'])
+      && isset($_SESSION['customer_id'])
+      )
+  {
+    $finished_query = xtc_db_query("SELECT orders_date_finished
+                                      FROM ".TABLE_ORDERS."
+                                     WHERE customers_id = '".(int)$_SESSION['customer_id']."'
+                                       AND unix_timestamp(date_purchased) > (unix_timestamp(now()) - '".(int)SESSION_LIFE_CUSTOMERS."')
+                                  ORDER BY orders_id DESC
+                                     LIMIT 1");
+    if (xtc_db_num_rows($finished_query) > 0) {
+      $finished = xtc_db_fetch_array($finished_query);
+      if (xtc_not_null($finished['orders_date_finished'])) {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      }
+    }
+  }
 	xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
 }
 
@@ -138,6 +159,24 @@ if ($checkout_position[$current_page] >= 4) {
   if (xtc_not_null(MODULE_PAYMENT_INSTALLED) && !isset($_SESSION['payment'])) {
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
+}
+
+// a given up handover must not let the next attempt find its own order again
+if (isset($checkout_position[$current_page])
+    && ($checkout_position[$current_page] == 1 || $checkout_position[$current_page] == 2)
+    && isset($_SESSION['tmp_oID'])
+    )
+{
+  $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
+}
+
+// a checkout attempt needs its key even when no payment page was involved
+if (isset($checkout_position[$current_page])
+    && $checkout_position[$current_page] >= 3
+    && (!isset($_SESSION['payment_nonce']) || $_SESSION['payment_nonce'] == '')
+    )
+{
+  $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
 }
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_requirements/','php') as $file) require_once ($file);

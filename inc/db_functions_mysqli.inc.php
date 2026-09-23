@@ -97,7 +97,7 @@
   }
 
 
-  function xtc_db_connect($server=DB_SERVER, $username=DB_SERVER_USERNAME, $password=DB_SERVER_PASSWORD, $database=DB_DATABASE, $link='db_link') {
+  function xtc_db_connect($server=DB_SERVER, $username=DB_SERVER_USERNAME, $password=DB_SERVER_PASSWORD, $database=DB_DATABASE, $link='db_link', $persistent=null) {
     global ${$link};
 
     if (!function_exists('mysqli_connect')) {
@@ -109,7 +109,7 @@
     
     try {
       $socket = explode(':', $server);
-      if (USE_PCONNECT == 'true') {
+      if (($persistent === null) ? (USE_PCONNECT == 'true') : ($persistent === true)) {
         ${$link} = mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[1]) && $socket[1] != '') ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
       } else {
         ${$link} = mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[1]) && $socket[1] != '') ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));

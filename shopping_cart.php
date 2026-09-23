@@ -51,7 +51,11 @@ if ($_SESSION['cart']->count_contents() > 0) {
   require (DIR_WS_MODULES.'order_details_cart.php');
   
   $_SESSION['allow_checkout'] = 'true';
-  if (STOCK_CHECK == 'true') {
+  // a pending handover already holds this stock, so a recheck here must
+  // not lock the customer out of returning to complete it
+  if (STOCK_CHECK == 'true'
+      && (!isset($_SESSION['tmp_oID']) || !is_numeric($_SESSION['tmp_oID']))
+      ) {
     if ($_SESSION['any_out_of_stock'] == 1) {
       if (STOCK_ALLOW_CHECKOUT == 'true') {
         $_SESSION['allow_checkout'] = 'true';
@@ -94,8 +98,16 @@ if (isset($cc_amount_min_order_info)) {
   $messageStack->add('shopping_cart', $cc_amount_min_order_info);
 }
 
+// a repeated checkout waits here, this page runs no checkout actions
+if (isset($_GET['checkout_error']) && $_GET['checkout_error'] == 'running') {
+  $messageStack->add('shopping_cart', TEXT_CHECKOUT_ALREADY_RUNNING, 'info');
+}
+
 if ($messageStack->size('shopping_cart') > 0) {
   $smarty->assign('error_message', $messageStack->output('shopping_cart'));
+}
+if ($messageStack->size('shopping_cart', 'info') > 0) {
+  $smarty->assign('info_message', $messageStack->output('shopping_cart', 'info'));
 }
 
 // continue shopping link
