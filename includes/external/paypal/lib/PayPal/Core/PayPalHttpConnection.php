@@ -188,7 +188,6 @@ class PayPalHttpConnection
                 curl_error($ch),
                 curl_errno($ch)
             );
-            curl_close($ch);
             throw $ex;
         }
 
@@ -198,9 +197,6 @@ class PayPalHttpConnection
         $this->logger->debug(($data && $data != '' ? "Request Data\t\t: " . $data : "No Request Payload") . "\n" . str_repeat('-', 128) . "\n");
         $this->logger->info("Response Status \t: " . $httpStatus);
         $this->logger->debug("Response Headers\t: " . $this->implodeArray($this->responseHeaders));
-
-        //Close the curl request
-        curl_close($ch);
 
         //More Exceptions based on HttpStatus Code
         if ($httpStatus < 200 || $httpStatus >= 300) {
