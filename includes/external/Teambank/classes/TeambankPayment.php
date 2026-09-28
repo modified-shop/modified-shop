@@ -38,7 +38,7 @@
   class TeambankPayment {
 
     var $code;
-    var $version = '1.34';
+    var $version = '1.35';
     var $webshopId;
     var $token;
     var $secret;
