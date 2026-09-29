@@ -55,7 +55,6 @@ class haendlerbund_importer
                 curl_setopt($curl, CURLOPT_USERAGENT, "INPUT DATA SCRIPT");
                 curl_setopt($curl, CURLOPT_URL, $url);
                 $result = curl_exec($curl);
-                curl_close($curl);
 
                 $result = str_replace("€", "&euro;", $result);
                 $result = strip_tags($result, "<p><a><br /><br>\n<strong><b>");
