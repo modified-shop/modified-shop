@@ -291,15 +291,26 @@
       $orderModules = new orderModules();
 
       // a cached read would keep serving the language id that the deletion has just reset
-      $order_lang_query = xtc_db_query("SELECT languages_id
+      $order_lang_query = xtc_db_query("SELECT languages_id,
+                                               language
                                           FROM ".TABLE_ORDERS."
                                          WHERE orders_id = '".(int)$oID."'");
       $order_lang_array = xtc_db_fetch_array($order_lang_query);
       $order_lang_id = (isset($order_lang_array['languages_id'])) ? (int)$order_lang_array['languages_id'] : 0;
+      $order_lang_dir = (isset($order_lang_array['language'])) ? $order_lang_array['language'] : '';
+      $session_lang_id = (isset($_SESSION['languages_id'])) ? (int)$_SESSION['languages_id'] : 0;
 
-      // a deleted language leaves a 0 behind, the current language then keeps the order readable
-      $order_lang_gone = ($order_lang_id < 1);
-      if ($order_lang_gone) $order_lang_id = (int)$_SESSION['languages_id'];
+      // order and session may both point to a deleted language, so only an installed one is taken
+      $lang_query = xtc_db_query("SELECT languages_id
+                                    FROM ".TABLE_LANGUAGES."
+                                ORDER BY (languages_id = '".$order_lang_id."') DESC,
+                                         (directory = '".xtc_db_input($order_lang_dir)."') DESC,
+                                         (languages_id = '".$session_lang_id."') DESC,
+                                         (code = '".xtc_db_input(DEFAULT_LANGUAGE)."') DESC,
+                                         sort_order
+                                   LIMIT 1");
+      $lang_array = xtc_db_fetch_array($lang_query);
+      $order_lang_id = (isset($lang_array['languages_id'])) ? (int)$lang_array['languages_id'] : 0;
 
       $order_query = "SELECT op.*,
                              pd.products_description,
@@ -327,10 +338,7 @@
         while ($attributes_data_values = xtc_db_fetch_array($attributes_query)) {
           $attrib_model = $attributes_data_values['attributes_model'];
           if ($attrib_model == '') {
-            // an id can be reused, so it may only stand in where the gone language makes the names unmatchable
-            $attrib_options_id = ($order_lang_gone) ? $attributes_data_values['orders_products_options_id'] : 0;
-            $attrib_values_id = ($order_lang_gone) ? $attributes_data_values['orders_products_options_values_id'] : 0;
-            $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id,$attrib_options_id,$attrib_values_id);
+            $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
           }
           $attributes_array[$subindex] = array(
             'option' => $attributes_data_values['products_options'],
