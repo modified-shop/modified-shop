@@ -67,6 +67,14 @@
 
       if ($this->access_token == '') {
         $response = $this->call(self::URL_AUTH.'/oauth/token', 'POST', $body, $headers);
+        if (!is_array($response)
+            || !isset($response['access_token'])
+            || !is_string($response['access_token'])
+            || $response['access_token'] == ''
+            )
+        {
+          return false;
+        }
         $this->access_token = $response['access_token'];
       }
 
@@ -74,6 +82,10 @@
     }
 
     function getReviews($url = '', $migrate = false) {
+      if ($this->access_token == '') {
+        return false;
+      }
+
       if ($url == '') {
         $url_array = array(
           'type' => 'PRODUCT_REVIEW',
@@ -84,7 +96,7 @@
         );
         
         if (constant('MODULE_TRUSTEDSHOPS_CRONJOB_'.$this->language_id) > 0) {
-           $url_array['submittedAfter'] = date('Y-m-d\TH:i:s.000\Z', constant('MODULE_TRUSTEDSHOPS_CRONJOB_'.$this->language_id));
+           $url_array['submittedAfter'] = gmdate('Y-m-d\TH:i:s.000\Z', constant('MODULE_TRUSTEDSHOPS_CRONJOB_'.$this->language_id));
         }
         
         $url = self::URL_API.'/reviews?'.http_build_query($url_array, '', '&');
@@ -95,10 +107,16 @@
 
       $response = $this->call($url, 'GET', array(), $headers);
 
-      if (isset($response['items'])
-          && count($response['items']) > 0
+      if (!is_array($response)
+          || !isset($response['items'])
+          || !is_array($response['items'])
           )
       {
+        $this->LoggingManager->log('DEBUG', 'getReviews', array('response' => $response));
+        return false;
+      }
+
+      if (count($response['items']) > 0) {
         if (!isset($lng) || (isset($lng) && !is_object($lng))) {
           $lng = new language();
         }
@@ -204,14 +222,22 @@
           }
         }
         
-        if (isset($response['paging'])
-            && isset($response['paging']['links'])
-            && isset($response['paging']['links']['next'])
-            )
-        {
-          $this->getReviews($response['paging']['links']['next'], $migrate);
-        }
       }
+
+      if (isset($response['paging'])
+          && isset($response['paging']['links'])
+          && isset($response['paging']['links']['next'])
+          && $response['paging']['links']['next'] != ''
+          )
+      {
+        $next_url = $response['paging']['links']['next'];
+        if (!is_string($next_url)) {
+          return false;
+        }
+        return $this->getReviews($next_url, $migrate);
+      }
+
+      return true;
     }
 
     function call($url, $method, $body = array(), $headers = array()) {
@@ -224,11 +250,19 @@
         return $response;
       } catch (Exception $ex) {
         $response = array(
-          'headers' => $ex->getResponse()->getHeaders(),
-          'status' => $ex->getResponse()->getStatusCode(),
-          'reason' => $ex->getResponse()->getReasonPhrase(),
-          'error' => json_decode($ex->getResponse()->getBody(), true),
+          'headers' => array(),
+          'status' => 0,
+          'reason' => $ex->getMessage(),
+          'error' => $ex->getMessage(),
         );
+        if ($ex instanceof \GuzzleHttp\Exception\RequestException && $ex->hasResponse()) {
+          $response = array(
+            'headers' => $ex->getResponse()->getHeaders(),
+            'status' => $ex->getResponse()->getStatusCode(),
+            'reason' => $ex->getResponse()->getReasonPhrase(),
+            'error' => json_decode($ex->getResponse()->getBody(), true),
+          );
+        }
         $this->LoggingManager->log('DEBUG', 'call', $response);        
         return $response;
       }          
