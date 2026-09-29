@@ -524,36 +524,42 @@
         require_once (DIR_FS_INC.'get_external_content.inc.php');
 
         $blz_file_content = get_external_content($response['requestURL'], 3, false);
-        file_put_contents($filename, $blz_file_content);
+        if (is_string($blz_file_content) && trim($blz_file_content) != '') {
+          file_put_contents($filename, $blz_file_content);
+        }
       }
 
+      $blz_array = array();
       if (is_file($filename)) {
         if (($handle = fopen($filename, "r")) !== false) {
-          xtc_db_query("TRUNCATE ".TABLE_BANKTRANSFER_BLZ);
-          
-          $cnt = 0;
           while (!feof($handle)) {
             $line = stream_get_line($handle, 65535, "\n");
             $kennzeichen = substr($line, 158, 1);
                                 
             if ($kennzeichen != 'D'
                 && substr($line, 8, 1) == '1'
+                && ctype_digit(substr($line, 0, 8))
                 )
             {
-              $sql_data_array = array(
+              $blz_array[] = array(
                 'blz' => substr($line, 0, 8),
                 'bankname' => encode_utf8(trim(substr($line, 9, 58))),
                 'prz' => substr($line, 150, 2),
               );
-              
-              xtc_db_perform(TABLE_BANKTRANSFER_BLZ, $sql_data_array);
-              $cnt ++;
             }
           }
           fclose($handle);
         }
-        $messageStack->add_session(MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS.$cnt, 'success');
         unlink($filename);
+      }
+
+      // TRUNCATE cannot be undone, so only a file with usable records replaces the table
+      if (count($blz_array) > 0) {
+        xtc_db_query("TRUNCATE ".TABLE_BANKTRANSFER_BLZ);
+        foreach ($blz_array as $sql_data_array) {
+          xtc_db_perform(TABLE_BANKTRANSFER_BLZ, $sql_data_array);
+        }
+        $messageStack->add_session(MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS.count($blz_array), 'success');
       } else {
         $messageStack->add_session(MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_ERROR, 'error');
       }

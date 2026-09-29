@@ -123,8 +123,8 @@
       curl_setopt($ch, CURLOPT_HEADER, false);
       curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
       curl_setopt($ch, CURLOPT_USERAGENT, 'modified.eCommerce.Shopsoftware');
             
       curl_setopt($ch, CURLINFO_HEADER_OUT, true);
@@ -155,7 +155,7 @@
       $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
       if ($httpStatus < 200 || $httpStatus >= 300) {
-        trigger_error('Could not reach external host: '.$path.'. Exit with Status: '.$httpStatus, E_USER_WARNING);
+        trigger_error('Could not reach external host: '.$path.'. Exit with Status: '.$httpStatus.((curl_errno($ch) > 0) ? ' ('.curl_error($ch).')' : ''), E_USER_WARNING);
         $result = array();
       }
       

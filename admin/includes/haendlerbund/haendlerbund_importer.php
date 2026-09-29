@@ -49,12 +49,22 @@ class haendlerbund_importer
                 $url = "https://legaltext-cache.haendlerbund.de/cache/?APIkey=1IqJF0ap6GdDNF7HKzhFyciibdml8t4v&did={$key}&AccessToken={$apikey}&mode=classes";
 
                 $curl = curl_init();
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
                 curl_setopt($curl, CURLOPT_HEADER, 0);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($curl, CURLOPT_USERAGENT, "INPUT DATA SCRIPT");
                 curl_setopt($curl, CURLOPT_URL, $url);
                 $result = curl_exec($curl);
+                $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+                // keep texts and status on failed requests, the API sends its own errors as 400 with a marker
+                if ($result === false
+                    || trim($result) == ''
+                    || ($http_code != 200 && !preg_match("/DOCUMENT_NOT_AVAILABLE|SHOP_NOT_FOUND/i", $result))
+                ) {
+                    continue;
+                }
 
                 $result = str_replace("€", "&euro;", $result);
                 $result = strip_tags($result, "<p><a><br /><br>\n<strong><b>");

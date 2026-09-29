@@ -119,6 +119,12 @@ class janolaw_content {
                $language .'/';
 
         $content = get_external_content($url.$name.$mode.$this->format, '3', false);
+        
+        // keep the stored document when the download fails
+        if (!is_string($content) || trim($content) == '') {
+          trigger_error('Could not load janolaw document: '.$name.' ('.$language.')', E_USER_WARNING);
+          continue;
+        }
  
         if (strpos($content, '404 Not Found') === false) {
           
@@ -137,8 +143,12 @@ class janolaw_content {
               ) 
           {
             $content_pdf = get_external_content($url.$name.'.pdf', '3', false);
-            if (strpos($content_pdf, '404 Not Found') !== false) {
+            if (is_string($content_pdf) && strpos($content_pdf, '404 Not Found') !== false) {
               $content_pdf = '';
+            } elseif (!is_string($content_pdf) || substr($content_pdf, 0, 4) != '%PDF') {
+              // keep text and pdf as they are, the stored text links the stored pdf
+              trigger_error('Could not load janolaw document: '.$name.'.pdf ('.$language.')', E_USER_WARNING);
+              continue;
             } else {
               $filename = 'media/content/'. $this->document_name[strtoupper($language)][$module_name] . '.pdf';
               $fp = @fopen(DIR_FS_CATALOG.$filename, 'w+');
