@@ -1064,8 +1064,8 @@ function get_file_by_url($url)
 	{
 		$arrContextOptions=array(
 		    "ssl"=>array(
-		        "verify_peer"=>false,
-		        "verify_peer_name"=>false,
+		        "verify_peer"=>true,
+		        "verify_peer_name"=>true,
 		    ),
 		);
 		return file_get_contents($url, false, stream_context_create($arrContextOptions));
