@@ -50,11 +50,11 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AMBIGUOUS', 'Garantiebedingungen je Artikel und Sprache eindeutig');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_GROUPS', 'Garantiebedingungen f&uuml;r alle Kundengruppen erreichbar, die das Label sehen');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SHARED', 'Dieselbe Datei in mehreren Sprachen als Garantiebedingung markiert');
-  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS', 'Webserver wertet die .htaccess des Archivs aus');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS', 'Zugriffsschutz des Bestellarchivs');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_B2B', 'B2B-Kundengruppen der Einstellung vorhanden');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE', 'Archivierte Dateien zu bestehenden Bestellungen vorhanden');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE', 'unvollst&auml;ndig:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED', 'kein Schreibrecht:');
-  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER', 'nicht ausgewertet, im Server sperren:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER', 'Auf diesem Webserver nicht automatisch best&auml;tigt. Bitte den direkten Zugriff auf eine vorhandene Archivdatei pr&uuml;fen:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN', 'nicht mehr vorhanden:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED', 'betroffen:');

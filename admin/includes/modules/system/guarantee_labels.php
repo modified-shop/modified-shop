@@ -33,7 +33,7 @@
     var $properties;
 
     function __construct() {
-      $this->version = '1.03';
+      $this->version = '1.04';
       $this->code = 'guarantee_labels';
       $this->title = MODULE_GUARANTEE_LABELS_TEXT_TITLE;
       $this->description = MODULE_GUARANTEE_LABELS_TEXT_DESCRIPTION;
@@ -112,8 +112,9 @@
                         $this->dir_writable($dir), $dir, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED);
       }
 
-      // the archive is locked with an .htaccess, so a server that ignores it needs the same rule
-      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS, $this->htaccess_server(),
+      // The server name cannot prove whether direct archive requests are blocked.
+      // An unconfirmed capability is a manual-check notice, not a failed prerequisite.
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS, $this->htaccess_server() ? true : null,
                       'media/guarantee_labels/archive/', MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER);
 
       $b2b_gone = $this->b2b_missing_groups();
@@ -201,72 +202,89 @@
     /**
      * Only what needs attention. A list of seventeen green lines hides the one red one, and the
      * shop owner reads this to find a problem, not to confirm the ones they do not have.
+     * A null result is shown separately as a neutral manual-check notice.
      *
      * div_box is not used on purpose: its min-width of 850 pixels pushes the module page wider
      * than the column it sits in.
      */
-    function diagnosis_table($rows) {
-      $failures = '';
+    public function diagnosis_table($rows)
+    {
+        $failures = '';
+        $notices = '';
 
-      foreach ($rows as $row) {
-        if ($row[1] === true) {
-          continue;
+        foreach ($rows as $row) {
+            if ($row[1] === true) {
+                continue;
+            }
+
+            $note = (isset($row[2]) && $row[2] !== '') ? ' ' . encode_htmlspecialchars($row[2]) : '';
+            $message = (isset($row[3]) && $row[3] !== '') ? $row[3] : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED;
+
+            $line = '<tr><td class="main" style="padding-right:15px;">' . $row[0] . '</td>' .
+                    '<td class="main"><b>' . $message . $note . '</b></td></tr>';
+
+            // null means that a manual check is needed; false remains an actual failure.
+            if ($row[1] === null) {
+                $notices .= $line;
+            } else {
+                $failures .= $line;
+            }
         }
 
-        $note = (isset($row[2]) && $row[2] !== '') ? ' '.encode_htmlspecialchars($row[2]) : '';
-        $failed = (isset($row[3]) && $row[3] !== '') ? $row[3] : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED;
+        $content = '';
+        if ($failures !== '') {
+            $content = '<div class="error_message"><table class="border0">' . $failures . '</table></div>';
+        } elseif ($notices === '') {
+            $content = '<div class="info_message">' . MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_COMPLETE . '</div>';
+        }
 
-        $failures .= '<tr><td class="main" style="padding-right:15px;">'.$row[0].'</td>'.
-                     '<td class="main"><b>'.$failed.$note.'</b></td></tr>';
-      }
+        if ($notices !== '') {
+            $content .= '<div class="main" role="status" style="padding:10px;border:1px solid #ccc;background:#f5f5f5;color:#333;overflow-wrap:anywhere;">' .
+                        '<table class="border0">' . $notices . '</table></div>';
+        }
 
-      $content = ($failures === '')
-               ? '<div class="info_message">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_COMPLETE.'</div>'
-               : '<div class="error_message"><table class="border0">'.$failures.'</table></div>';
-
-      // The same block the framework builds for the module box, so the diagnosis sits on the
-      // same surface instead of hanging below it. module_export.php prints this inside the
-      // modulbox, and contentTable carries its background, its divider and its spacing.
-      //
-      // The module never empties a cache, that belongs to the shop owner, so the note stays.
-      return '<table class="contentTable">'.
-               '<tr class="infoBoxHeading">'.
-                 '<td class="infoBoxHeading">'.
-                   '<div class="infoBoxHeadingTitle">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS.'</div>'.
-                 '</td>'.
-               '</tr>'.
-               '<tr class="infoBoxContent">'.
-                 '<td class="infoBoxContent">'.
-                   $content.
-                   '<div class="main mrg5">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE.'</div>'.
-                 '</td>'.
-               '</tr>'.
-             '</table>';
+        // The same block the framework builds for the module box, so the diagnosis sits on the
+        // same surface instead of hanging below it. module_export.php prints this inside the
+        // modulbox, and contentTable carries its background, its divider and its spacing.
+        //
+        // The module never empties a cache, that belongs to the shop owner, so the note stays.
+        return '<table class="contentTable">' .
+                 '<tr class="infoBoxHeading">' .
+                   '<td class="infoBoxHeading">' .
+                     '<div class="infoBoxHeadingTitle">' . MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS . '</div>' .
+                   '</td>' .
+                 '</tr>' .
+                 '<tr class="infoBoxContent">' .
+                   '<td class="infoBoxContent">' .
+                     $content .
+                     '<div class="main mrg5">' . MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE . '</div>' .
+                   '</td>' .
+                 '</tr>' .
+               '</table>';
     }
 
     /**
-     * Whether the web server reads an .htaccess at all.
+     * Recognizes servers expected to support the archive's .htaccess access rules.
      *
-     * The archive of the orders is locked with one, which is the only way this shop knows: inc/,
-     * includes/, lang/, log/ and admin/includes/ hang on the same file. Under nginx none of them
-     * is locked, and the shop owner has to hear that once instead of finding it later. Nothing is
-     * requested for this: an outgoing call from the administration would hang on a firewall or
-     * report a red line for a shop behind basic authentication.
+     * This is only a capability hint, not a test of the effective access rules. A server can
+     * protect the archive through rewrite rules or its own configuration. No outgoing request
+     * is made when opening the module page, so firewalls and basic authentication cannot turn
+     * an unavailable self-request into a failed prerequisite.
      *
-     * @return bool false only when the server is known and known not to read the lock
+     * @return bool false when the server identification calls for a manual check
      */
     function htaccess_server() {
       $server = isset($_SERVER['SERVER_SOFTWARE']) ? strtolower((string)$_SERVER['SERVER_SOFTWARE']) : '';
 
-      // an unknown name stays unreported, a wrong guess would put a red line into a sound shop
+      // Keep requests without a server name unreported, including command-line checks.
       if ($server === '') {
         return true;
       }
 
-      // Both LiteSpeed editions call themselves LiteSpeed, and OpenLiteSpeed reads an .htaccess
-      // for rewrite rules only: Require and Deny are ignored there, so the lock does not hold.
-      // Only LSWS_EDITION tells the two apart. Without it the reported answer is the safer one,
-      // a missed lock costs more than a line the shop owner reads once.
+      // Both LiteSpeed editions call themselves LiteSpeed. OpenLiteSpeed can apply the archive's
+      // rewrite lock, but the name does not tell us whether those rules are enabled. An unknown
+      // edition or OpenLiteSpeed therefore keeps the manual-check notice instead of claiming
+      // that the archive is either exposed or protected.
       if (strpos($server, 'litespeed') !== false) {
         $edition = isset($_SERVER['LSWS_EDITION']) ? strtolower((string)$_SERVER['LSWS_EDITION']) : '';
 
