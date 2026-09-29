@@ -241,8 +241,6 @@ class CURLConnector implements ConnectorInterface
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 
-        curl_close($ch);
-
         // Check the TCP transport issues
         if (!empty($errno)) {
             throw new \RuntimeException($error, $errno);
