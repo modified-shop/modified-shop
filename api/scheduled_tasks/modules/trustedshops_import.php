@@ -11,6 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   function cron_trustedshops_import() {
+    $success = true;
 
     if (defined('MODULE_TRUSTEDSHOPS_STATUS') 
         && MODULE_TRUSTEDSHOPS_STATUS == 'true'
@@ -45,16 +46,20 @@
               && !empty($trustedshops['product_sticker_api_secret'])
               )
           {
+            // Keep reviews submitted during this run eligible for the next import.
+            $import_started = time();
             $eTrusted = new eTrusted($trustedshops['languages_id']);
-            $eTrusted->getReviews('', constant('MODULE_TRUSTEDSHOPS_CRONJOB_'.$trustedshops['languages_id']) == 0);
-
-            xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                             SET configuration_value = '".time()."'
-                           WHERE configuration_key = 'MODULE_TRUSTEDSHOPS_CRONJOB_".$trustedshops['languages_id']."'");
+            if ($eTrusted->getReviews('', constant('MODULE_TRUSTEDSHOPS_CRONJOB_'.$trustedshops['languages_id']) == 0)) {
+              xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                               SET configuration_value = '".$import_started."'
+                             WHERE configuration_key = 'MODULE_TRUSTEDSHOPS_CRONJOB_".$trustedshops['languages_id']."'");
+            } else {
+              $success = false;
+            }
           }
         }
       }
     }
     
-    return true;
+    return $success;
   }
