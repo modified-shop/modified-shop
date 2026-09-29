@@ -138,7 +138,8 @@ class xtc_afterbuy_functions {
         curl_setopt($ch, CURLOPT_URL, $afterbuy_URL);
 
         // curl_setopt($ch, CURLOPT_CAFILE, 'D:/curl-ca.crt');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
         // Set this option to a non-zero value if you want PHP to do a regular HTTP POST.
         // This POST is a normal application/x-www-form-urlencoded  kind, most commonly used by HTML forms.
