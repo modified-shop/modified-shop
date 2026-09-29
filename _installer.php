@@ -54,18 +54,28 @@
   curl_setopt($ch, CURLOPT_HEADER, false);
   curl_setopt($ch, CURLOPT_TIMEOUT, 10);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+  curl_setopt($ch, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTPS);
   curl_setopt($ch, CURLOPT_USERAGENT, 'modified.eCommerce.Shopsoftware');
 
   $result = curl_exec($ch);
   $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
   if ($httpStatus < 200 || $httpStatus >= 300) {
-    die('Could not reach Install API. Exit with Status: '.$httpStatus);
+    die('Could not reach Install API. Exit with Status: '.$httpStatus.((curl_errno($ch) > 0) ? ' ('.curl_error($ch).')' : ''));
   }
   
   $response = json_decode($result, true);  
+  
+  if (!is_array($response)
+      || !isset($response['download'])
+      || !isset($response['filename'])
+      || strpos($response['download'], 'https://') !== 0
+      )
+  {
+    die('Invalid response from Install API');
+  }
   
   // download
   if (mkdir(DIR_FS_CATALOG.'tmp', 0755)) {
@@ -77,10 +87,17 @@
     curl_setopt($ch, CURLOPT_HEADER, false);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_exec($ch);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTPS);
+    $result = curl_exec($ch);
+    $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     fclose($fp);
+
+    if ($result === false || $httpStatus < 200 || $httpStatus >= 300) {
+      rrmdir('tmp');
+      die('Could not download install file. Exit with Status: '.$httpStatus.((curl_errno($ch) > 0) ? ' ('.curl_error($ch).')' : ''));
+    }
 
     // extract install
     $zip = new ZipArchive();
@@ -90,9 +107,10 @@
       }
       mkdir(DIR_FS_CATALOG.'tmp/install', 0755, true);
     
-      $zip->extractTo(DIR_FS_CATALOG.'tmp/install');
+      $extracted = $zip->extractTo(DIR_FS_CATALOG.'tmp/install');
       $zip->close();
     } else {
+      rrmdir('tmp');
       die('Corrupted download file');
     }
     
@@ -101,7 +119,7 @@
 
     // process
     $shoproot = DIR_FS_CATALOG.'tmp/install/'.substr($response['filename'], 0, -4).'/shoproot';
-    if (is_dir($shoproot)) {
+    if ($extracted === true && is_dir($shoproot)) {
       foreach ((new RecursiveIteratorIterator(new RecursiveDirectoryIterator($shoproot, RecursiveDirectoryIterator::SKIP_DOTS))) as $file) {
         $install_path = str_replace($shoproot, DIR_FS_CATALOG, $file->getPath());
         $install_path = rtrim($install_path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
@@ -113,6 +131,9 @@
       
         rename($file->getPathname(), $install_path.$file->getFilename());
       }
+    } else {
+      rrmdir('tmp');
+      die('Corrupted download file');
     }
   
     // cleanup

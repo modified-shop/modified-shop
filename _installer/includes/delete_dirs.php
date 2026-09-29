@@ -69,6 +69,7 @@
     'includes/external/magnalister/php/modules/laary',
     'includes/external/magnalister/php/modules/meinpaket',
     'includes/external/masterpayment',
+    'includes/external/nusoap',
     'includes/external/paypal/lib/Psr',
     'includes/external/phpfastcache/3.0.0',
     'includes/external/phpfastcache/_extensions',

@@ -14,6 +14,16 @@ $language_not_found = false;
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_language_sessions/','php') as $file) require_once ($file);
 
+// an open session can still hold a language that has been deleted since
+if (!isset($_GET['language']) && isset($_SESSION['languages_id'])) {
+  $check_language_query = xtDBquery("SELECT languages_id
+                                       FROM ".TABLE_LANGUAGES."
+                                      WHERE languages_id = '".(int)$_SESSION['languages_id']."'");
+  if (xtc_db_num_rows($check_language_query, true) < 1) {
+    unset($_SESSION['languages_id']);
+  }
+}
+
 if (isset($_GET['language'])
     || !isset($_SESSION['language'])
     || !isset($_SESSION['languages_id'])
