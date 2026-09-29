@@ -233,10 +233,7 @@
           for ($j = 0; $j < $attr_count; $j ++) {
             $model = $order->products[$i]['attributes'][$j]['attributes_model'];
             if ($model == '') {
-              // an id can be reused, so it may only stand in where the gone language makes the names unmatchable
-              $model_options_id = (empty($lang)) ? $order->products[$i]['attributes'][$j]['orders_products_options_id'] : 0;
-              $model_values_id = (empty($lang)) ? $order->products[$i]['attributes'][$j]['orders_products_options_values_id'] : 0;
-              $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang, $model_options_id, $model_values_id);
+              $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
             }
             echo (($model != '') ? $attr_model_delimiter . $model : '<br />');
           }
