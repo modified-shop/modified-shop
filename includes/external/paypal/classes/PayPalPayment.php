@@ -511,6 +511,12 @@ class PayPalPayment extends PayPalPaymentBase {
   
   function validate_payment_paypalcart() {
     
+    // a direct call or an expired session carries no payment to validate
+    if (!isset($_SESSION['paypal']['paymentId'])) {
+      unset($_SESSION['paypal']);
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
+    }
+
     $error = false;
     $check_query = xtc_db_query("SELECT * 
                                    FROM ".TABLE_PAYPAL_PAYMENT."
