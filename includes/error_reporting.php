@@ -29,12 +29,12 @@ $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_%s_'.((defined('RUN_MODE_AD
  * check for LogLevel
  */
 function mod_get_log_level($error_reporting_array) {
-  $error_reporting = basename(array_shift($error_reporting_array));
+  $error_reporting = basename((string)array_shift($error_reporting_array));
     
   switch ($error_reporting) {
     case 'err':
       $LogLevel = 'ERROR';
-      error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
+      error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_WARNING);
       break;
     case 'shop':
     case 'admin':
@@ -43,7 +43,7 @@ function mod_get_log_level($error_reporting_array) {
           )
       {
         $LogLevel = 'WARNING';
-        error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+        error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
       } else {
         $LogLevel = mod_get_log_level($error_reporting_array);
       }
