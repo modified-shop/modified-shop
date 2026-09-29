@@ -227,7 +227,7 @@
       if (isset($response['paging'])
           && isset($response['paging']['links'])
           && isset($response['paging']['links']['next'])
-          && $response['paging']['links']['next'] != ''
+          && $response['paging']['links']['next'] !== ''
           )
       {
         $next_url = $response['paging']['links']['next'];
