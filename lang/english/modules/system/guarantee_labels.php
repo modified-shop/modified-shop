@@ -55,6 +55,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE', 'archived files of existing orders in place');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE', 'incomplete:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED', 'not writable:');
-  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER', 'Cannot be confirmed automatically on this web server. Please check direct access to an existing archived file:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER', 'not read, lock it in the server:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER_CHECK', 'Cannot be confirmed automatically on this web server. An existing archived file must not be served by a direct request (for example, 403 Forbidden). If it can be retrieved, block access to the directory in the server configuration:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN', 'no longer present:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED', 'affected:');

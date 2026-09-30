@@ -55,6 +55,7 @@
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_ARCHIVE', 'Archivierte Dateien zu bestehenden Bestellungen vorhanden');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_INCOMPLETE', 'unvollst&auml;ndig:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED', 'kein Schreibrecht:');
-  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER', 'Auf diesem Webserver nicht automatisch best&auml;tigt. Bitte den direkten Zugriff auf eine vorhandene Archivdatei pr&uuml;fen:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER', 'nicht ausgewertet, im Server sperren:');
+  define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER_CHECK', 'Auf diesem Webserver nicht automatisch best&auml;tigt. Eine vorhandene Archivdatei darf beim direkten Aufruf nicht ausgeliefert werden (z. B. 403 Forbidden). Falls sie abrufbar ist, das Verzeichnis in der Serverkonfiguration sperren:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_UNKNOWN', 'nicht mehr vorhanden:');
   define('MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_AFFECTED', 'betroffen:');

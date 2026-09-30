@@ -112,10 +112,13 @@
                         $this->dir_writable($dir), $dir, MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_LOCKED);
       }
 
-      // The server name cannot prove whether direct archive requests are blocked.
-      // An unconfirmed capability is a manual-check notice, not a failed prerequisite.
-      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS, $this->htaccess_server() ? true : null,
-                      'media/guarantee_labels/archive/', MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER);
+      // Keep missing .htaccess support distinct from an uncertain LiteSpeed edition.
+      $server_status = $this->htaccess_server();
+      $server_message = ($server_status === null)
+                      ? MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER_CHECK
+                      : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_SERVER;
+      $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_HTACCESS, $server_status,
+                      'media/guarantee_labels/archive/', $server_message);
 
       $b2b_gone = $this->b2b_missing_groups();
       $rows[] = array(MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_B2B, count($b2b_gone) < 1,
@@ -207,60 +210,59 @@
      * div_box is not used on purpose: its min-width of 850 pixels pushes the module page wider
      * than the column it sits in.
      */
-    public function diagnosis_table($rows)
-    {
-        $failures = '';
-        $notices = '';
+    function diagnosis_table($rows) {
+      $failures = '';
+      $notices = '';
 
-        foreach ($rows as $row) {
-            if ($row[1] === true) {
-                continue;
-            }
-
-            $note = (isset($row[2]) && $row[2] !== '') ? ' ' . encode_htmlspecialchars($row[2]) : '';
-            $message = (isset($row[3]) && $row[3] !== '') ? $row[3] : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED;
-
-            $line = '<tr><td class="main" style="padding-right:15px;">' . $row[0] . '</td>' .
-                    '<td class="main"><b>' . $message . $note . '</b></td></tr>';
-
-            // null means that a manual check is needed; false remains an actual failure.
-            if ($row[1] === null) {
-                $notices .= $line;
-            } else {
-                $failures .= $line;
-            }
+      foreach ($rows as $row) {
+        if ($row[1] === true) {
+          continue;
         }
 
-        $content = '';
-        if ($failures !== '') {
-            $content = '<div class="error_message"><table class="border0">' . $failures . '</table></div>';
-        } elseif ($notices === '') {
-            $content = '<div class="info_message">' . MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_COMPLETE . '</div>';
-        }
+        $note = (isset($row[2]) && $row[2] !== '') ? ' '.encode_htmlspecialchars($row[2]) : '';
+        $message = (isset($row[3]) && $row[3] !== '') ? $row[3] : MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_FAILED;
 
-        if ($notices !== '') {
-            $content .= '<div class="main" role="status" style="padding:10px;border:1px solid #ccc;background:#f5f5f5;color:#333;overflow-wrap:anywhere;">' .
-                        '<table class="border0">' . $notices . '</table></div>';
-        }
+        $line = '<tr><td class="main" style="padding-right:15px;">'.$row[0].'</td>'.
+                '<td class="main"><b>'.$message.$note.'</b></td></tr>';
 
-        // The same block the framework builds for the module box, so the diagnosis sits on the
-        // same surface instead of hanging below it. module_export.php prints this inside the
-        // modulbox, and contentTable carries its background, its divider and its spacing.
-        //
-        // The module never empties a cache, that belongs to the shop owner, so the note stays.
-        return '<table class="contentTable">' .
-                 '<tr class="infoBoxHeading">' .
-                   '<td class="infoBoxHeading">' .
-                     '<div class="infoBoxHeadingTitle">' . MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS . '</div>' .
-                   '</td>' .
-                 '</tr>' .
-                 '<tr class="infoBoxContent">' .
-                   '<td class="infoBoxContent">' .
-                     $content .
-                     '<div class="main mrg5">' . MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE . '</div>' .
-                   '</td>' .
-                 '</tr>' .
-               '</table>';
+        // null means that a manual check is needed; false remains an actual failure.
+        if ($row[1] === null) {
+          $notices .= $line;
+        } else {
+          $failures .= $line;
+        }
+      }
+
+      $content = '';
+      if ($failures !== '') {
+        $content = '<div class="error_message"><table class="border0">'.$failures.'</table></div>';
+      } elseif ($notices === '') {
+        $content = '<div class="info_message">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_COMPLETE.'</div>';
+      }
+
+      if ($notices !== '') {
+        $content .= '<div class="main" role="status" style="padding:10px;border:1px solid #ccc;background:#f5f5f5;color:#333;overflow-wrap:anywhere;">'.
+                    '<table class="border0">'.$notices.'</table></div>';
+      }
+
+      // The same block the framework builds for the module box, so the diagnosis sits on the
+      // same surface instead of hanging below it. module_export.php prints this inside the
+      // modulbox, and contentTable carries its background, its divider and its spacing.
+      //
+      // The module never empties a cache, that belongs to the shop owner, so the note stays.
+      return '<table class="contentTable">'.
+               '<tr class="infoBoxHeading">'.
+                 '<td class="infoBoxHeading">'.
+                   '<div class="infoBoxHeadingTitle">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS.'</div>'.
+                 '</td>'.
+               '</tr>'.
+               '<tr class="infoBoxContent">'.
+                 '<td class="infoBoxContent">'.
+                   $content.
+                   '<div class="main mrg5">'.MODULE_GUARANTEE_LABELS_TEXT_DIAGNOSIS_CACHE.'</div>'.
+                 '</td>'.
+               '</tr>'.
+             '</table>';
     }
 
     /**
@@ -271,7 +273,8 @@
      * is made when opening the module page, so firewalls and basic authentication cannot turn
      * an unavailable self-request into a failed prerequisite.
      *
-     * @return bool false when the server identification calls for a manual check
+     * @return bool|null true for expected support, false when a server rule is required,
+     *                   null when the LiteSpeed edition needs a manual check
      */
     function htaccess_server() {
       $server = isset($_SERVER['SERVER_SOFTWARE']) ? strtolower((string)$_SERVER['SERVER_SOFTWARE']) : '';
@@ -288,7 +291,11 @@
       if (strpos($server, 'litespeed') !== false) {
         $edition = isset($_SERVER['LSWS_EDITION']) ? strtolower((string)$_SERVER['LSWS_EDITION']) : '';
 
-        return ($edition !== '' && strpos($edition, 'open') === false);
+        if ($edition === '' || strpos($edition, 'open') !== false) {
+          return null;
+        }
+
+        return true;
       }
 
       return (strpos($server, 'apache') !== false);
