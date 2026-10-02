@@ -83,78 +83,6 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
-  function getKlarnaCheckout($shipping_content = array()) {
-    global $xtPrice, $main;
-    
-    $order_array = $this->getOrderData();
-    $order_array['merchant_urls'] = $this->getMerchantUrl();
-        
-    if (count($shipping_content) > 0) {
-      $order_array['shipping_options'] = $this->getShippingData($shipping_content);
-    }
-        
-    $options = new stdclass();
-    $options->allow_separate_shipping_address = true;    
-    $order_array['options'] = $options;
-        
-    $valid = false;
-    if (isset($_SESSION['klarna'])
-        && array_key_exists('order_id', $_SESSION['klarna'])
-        && array_key_exists('customer_id', $_SESSION['klarna'])
-        && $_SESSION['klarna']['customer_id'] == $_SESSION['customer_id']
-        && array_key_exists('cart_id', $_SESSION['klarna'])
-        && $_SESSION['klarna']['cart_id'] == $_SESSION['cart']->cartID
-        )
-    {
-      $checkout = $this->fetchKlarnaCheckout($_SESSION['klarna']['order_id']);
-      if (strtolower($checkout['status']) == 'checkout_incomplete') {
-        $valid = true;
-      }
-    }
-    
-    if ($valid === false) {
-      try {
-        $checkout = new Klarna\Rest\Checkout\Order($this->connector);
-        $resonse = $checkout->create($order_array);
-
-        // set session
-        $_SESSION['klarna'] = array(
-          'order_id' => $resonse->getId(),
-          'html_snippet' => $resonse['html_snippet'],
-          'customer_id' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : 0),
-          'cart_id' => $_SESSION['cart']->cartID,
-        );
-      } catch (Exception $e) {
-        $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
-      }
-    }
-  }
-
-
-  function fetchKlarnaCheckout($order_id) {
-    try {
-      $checkout = new Klarna\Rest\Checkout\Order($this->connector, $order_id);
-      $resonse = $checkout->fetch();
-      
-      return $resonse;
-    } catch (Exception $e) {
-      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
-    }
-  }
-
-
-  function updateKlarnaCheckout($order_array) {
-    try {
-      $checkout = new Klarna\Rest\Checkout\Order($this->connector, $_SESSION['klarna']['order_id']);
-      $response = $checkout->update($order_array);
-            
-      return $response;
-    } catch (Exception $e) {
-      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
-    }
-  }
-
-
   function getKlarnaSession() {
     $order_array = $this->getOrderData(true);
         
@@ -229,18 +157,6 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
-  function acknowledgeOrder($order_id) {
-    try {
-      $management = new Klarna\Rest\OrderManagement\Order($this->connector, $order_id);
-      $management->acknowledge();
-    } catch (Exception $e) {
-      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
-      
-      return $e->getMessage();
-    }
-  }
-
-
   function cancelOrder($order_id) {
     try {
       $management = new Klarna\Rest\OrderManagement\Order($this->connector, $order_id);
@@ -290,54 +206,6 @@ class KlarnaPayment extends KlarnaPaymentBase {
     } catch (Exception $e) {
       $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
       $_SESSION['klarna_error'] = $e->getMessage();
-    }
-  }
-
-
-  function getMerchantUrl() {
-    $merchant_url = array(
-      'terms'                  => xtc_href_link(FILENAME_CONTENT, 'coID=3', 'SSL'),
-      'cancellation_terms'     => xtc_href_link(FILENAME_CONTENT, 'coID='.REVOCATION_ID, 'SSL'),
-
-      'checkout'               => xtc_href_link(FILENAME_CHECKOUT_PAYMENT, xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      'confirmation'           => xtc_href_link('callback/klarna/confirmation.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      
-      'address_update'         => xtc_href_link('callback/klarna/callback.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      'shipping_option_update' => xtc_href_link('callback/klarna/callback.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      'country_change'         => xtc_href_link('callback/klarna/callback.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-
-      'validation'             => xtc_href_link('callback/klarna/validation.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      
-      'push'                   => xtc_href_link('callback/klarna/notification.php', '', 'SSL', false).'?type=push&orders_id={checkout.order.id}',
-      'notification'           => xtc_href_link('callback/klarna/notification.php', '', 'SSL', false).'?type=notify&orders_id={checkout.order.id}',
-    );
-    
-    return $merchant_url;
-  }
-
-
-  function getShippingData($shipping_content = array()) {
-    global $xtPrice;
-    
-    if (count($shipping_content) > 0) {
-      $shipping_options = array();
-      foreach ($shipping_content as $shipping) {
-        if (isset($shipping['QUOTE'])) {
-          $price = $xtPrice->xtcAddTax($shipping['QUOTE']['methods'][0]['cost'], $shipping['QUOTE']['tax']);
-        
-          $shipping_options[] = array(
-            'id' => $shipping['QUOTE']['id'].'_'.$shipping['QUOTE']['methods'][0]['id'],
-            'name' => decode_htmlentities(strip_tags($shipping['QUOTE']['module'])),
-            'description' => decode_htmlentities(strip_tags($shipping['QUOTE']['methods'][0]['title'])),
-            'price' => $this->format_amount($price),
-            'tax_amount' => $this->format_amount($price - $xtPrice->xtcCalculateCurr($shipping['QUOTE']['methods'][0]['cost'])),
-            'tax_rate' => $this->format_amount($shipping['QUOTE']['tax']),
-            'preselected' => ((isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) && array_key_exists('id', $_SESSION['shipping']) && $shipping['QUOTE']['id'].'_'.$shipping['QUOTE']['methods'][0]['id'] == $_SESSION['shipping']['id']) ? true : false),
-          );
-        }
-      }
-      
-      return $shipping_options;
     }
   }
 
