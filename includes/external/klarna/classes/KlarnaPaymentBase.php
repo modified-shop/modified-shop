@@ -118,7 +118,14 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         }
       }
       if ($this->enabled === false) {
-        $this->logger->log('klarna', 'not available: '.$this->klarna_code, array('methods' => $_SESSION['klarna']['methods']));
+        // log once per Klarna session, update_status() runs on every checkout page view
+        if (!isset($_SESSION['klarna']['logged']) || !is_array($_SESSION['klarna']['logged'])) {
+          $_SESSION['klarna']['logged'] = array();
+        }
+        if (!isset($_SESSION['klarna']['logged'][$this->klarna_code])) {
+          $_SESSION['klarna']['logged'][$this->klarna_code] = true;
+          $this->logger->log('klarna', 'not available: '.$this->klarna_code, array('methods' => $_SESSION['klarna']['methods']));
+        }
       }
     } else {
       $this->enabled = false;
@@ -540,14 +547,6 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                     PRIMARY KEY (`orders_id`),
                     KEY `idx_klarna_order_id` (`klarna_order_id`)
                   )");
-    
-    $address_book_query = xtc_db_query("SELECT * 
-                                          FROM ".TABLE_ADDRESS_BOOK."
-                                         LIMIT 1");
-    $address_book = xtc_db_fetch_array($address_book_query);
-    if (!isset($address_book['account_type'])) {
-      xtc_db_query("ALTER TABLE ".TABLE_ADDRESS_BOOK." ADD `account_type` INT(1) DEFAULT '0' NOT NULL");
-    }
   }
 
 
