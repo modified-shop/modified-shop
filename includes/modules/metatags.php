@@ -619,9 +619,8 @@
         if ($x_default_flag === false) {
           $meta_alternate['x-default'] = '<link rel="alternate" href="'.$alternate_link.'" hreflang="x-default" />';
           $x_default_flag = true;
-        } else {
-          $meta_alternate[$value['code']] = '<link rel="alternate" href="'. $alternate_link .'" hreflang="'.$value['code'].'" />';
         }
+        $meta_alternate[$value['code']] = '<link rel="alternate" href="'. $alternate_link .'" hreflang="'.$value['code'].'" />';
       }
     }
     $canonical_flag = false;
