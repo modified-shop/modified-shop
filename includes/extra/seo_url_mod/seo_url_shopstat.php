@@ -29,6 +29,9 @@ class seo_url_shopstat extends modified_seo_url {
   var $params_array;
   var $language_id;
   
+  // categories with a name per language, independent of an empty URL mask
+  protected static $categories_named = array();
+  
   
   /**
    * instance
@@ -337,9 +340,12 @@ class seo_url_shopstat extends modified_seo_url {
           if (xtc_db_num_rows($categories_name_query, true) > 0) {
             $categories_name = xtc_db_fetch_array($categories_name_query, true);
             self::$names_array['categories'][$this->language_id][$categories_id] = self::seo_url_href_mask($categories_name['categories_name']);
+            // same as trim() in the storefront category queries
+            self::$categories_named[$this->language_id][$categories_id] = (trim($categories_name['categories_name'], ' ') != '');
           }
         } else {
           self::$names_array['categories'][$this->language_id][$categories_id] = self::seo_url_href_mask(base64_decode($this->params_array['name']));
+          self::$categories_named[$this->language_id][$categories_id] = (trim(base64_decode($this->params_array['name']), ' ') != '');
         }
       }
       
@@ -352,8 +358,12 @@ class seo_url_shopstat extends modified_seo_url {
       return $category_link_array;
     }
 
+    // no link without a name for the category itself, untranslated parents are skipped
     $link = false;
-    if (count($category_link_array) > 0) {    
+    if (count($category_link_array) > 0
+        && !empty(self::$categories_named[$this->language_id][$cat_path_array[$cat_path_cnt - 1]])
+        )
+    {
       $link = implode('/', $category_link_array).CAT_DIVIDER.$this->params_array['cPath'];
     }
     
