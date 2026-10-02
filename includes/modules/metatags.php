@@ -208,7 +208,12 @@
                                    AND languages_id = '".(int)$_SESSION['languages_id']."'");
     $ml_meta = xtc_db_fetch_array($ml_meta_query, true);
     foreach ($ml_meta as $k => $v) {
-      define(strtoupper($k), (($v != '') ? $v : parse_multi_language_value(constant(strtoupper(substr($k, 3))), $_SESSION['language_code'])));
+      $ml_meta_default = constant(strtoupper(substr($k, 3)));
+      // the shop title is no per-language setting, a '::' in it must survive
+      if ($k != 'ml_meta_title') {
+        $ml_meta_default = parse_multi_language_value($ml_meta_default, $_SESSION['language_code']);
+      }
+      define(strtoupper($k), (($v != '') ? $v : $ml_meta_default));
     }
   } else {
     define('ML_META_KEYWORDS', parse_multi_language_value(META_KEYWORDS, $_SESSION['language_code']));
