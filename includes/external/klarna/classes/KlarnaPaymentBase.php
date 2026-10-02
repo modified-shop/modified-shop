@@ -306,13 +306,6 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         $this->update_order('Klarna Order: '.$_SESSION['klarna']['order_id'], $check['orders_status'], $insert_id);
       }
       
-      if ($this->code == 'klarna_checkout') {
-        $result = $this->acknowledgeOrder($_SESSION['klarna']['order_id']);
-        if ($result != '') {
-          $this->update_order($result, $check['orders_status'], $insert_id);
-        }
-      }
-      
       if (constant('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE') == 'True') {
         $this->captureCompleteOrder($insert_id, $_SESSION['klarna']['order_id']);
       }
@@ -355,24 +348,6 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       }
     }
     return $this->_check;
-  }
-
-
-  function checkout_button() {  
-    if ($this->enabled === true
-        && $_SESSION['cart']->show_total() > 0
-        && (!isset($_SESSION['allow_checkout']) || $_SESSION['allow_checkout'] == 'true')
-        ) 
-    {
-      $unallowed_modules = explode(',', $_SESSION['customers_status']['customers_status_payment_unallowed']);
-      if (!in_array($this->code, $unallowed_modules)) {
-        $image = ((is_file(DIR_FS_CATALOG.DIR_WS_ICONS.'klarna_'.strtolower($_SESSION['language_code']).'.gif')) ? 'klarna_'.strtolower($_SESSION['language_code']).'.gif' : 'klarna_de.gif');
-        $image = xtc_image_button(DIR_WS_ICONS.$image, '', 'id="klarnacartbutton"');
-        $checkout_button = '<a href="'.xtc_href_link('checkout_klarna.php', '', 'SSL').'">'.$image.'</a>';
-
-        return $checkout_button;
-      }
-    }
   }
 
 
