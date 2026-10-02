@@ -352,8 +352,9 @@ class seo_url_shopstat extends modified_seo_url {
       return $category_link_array;
     }
 
+    // no link without a name for the category itself, untranslated parents are skipped
     $link = false;
-    if (count($category_link_array) > 0) {    
+    if (isset($category_link_array[$cat_path_array[$cat_path_cnt - 1]])) {
       $link = implode('/', $category_link_array).CAT_DIVIDER.$this->params_array['cPath'];
     }
     

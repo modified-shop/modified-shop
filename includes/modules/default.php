@@ -47,8 +47,11 @@ $main_content = '';
 $category_depth = 'top';
 if (isset ($cPath) && xtc_not_null($cPath)) {
 
-  // check categorie exist
-  if (xtc_check_categories_status($current_category_id) === false) {
+  // check categorie exist and has a name in the current language
+  if (xtc_check_categories_status($current_category_id) === false
+      || count(xtc_get_category_data($current_category_id)) < 1
+      )
+  {
     $site_error = TEXT_CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 
