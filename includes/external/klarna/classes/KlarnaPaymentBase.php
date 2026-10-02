@@ -316,6 +316,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           'orders_id' => $insert_id,
           'klarna_order_id' => $_SESSION['klarna']['order_id'],
           'fraud_status' => (($fraud_accepted === true) ? 'ACCEPTED' : 'PENDING'),
+          'notify_token' => ((isset($_SESSION['klarna_notify_token']) && is_string($_SESSION['klarna_notify_token'])) ? $_SESSION['klarna_notify_token'] : ''),
         );
         xtc_db_perform(TABLE_KLARNA_PAYMENTS, $sql_data_array);
 
@@ -342,6 +343,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     }
         
     unset($_SESSION['klarna']);
+    unset($_SESSION['klarna_notify_token']);
   }
 
 
@@ -569,6 +571,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                     `orders_id` int(11) NOT NULL,
                     `klarna_order_id` varchar(256) NOT NULL,
                     `fraud_status` varchar(16) NOT NULL DEFAULT '',
+                    `notify_token` varchar(64) NOT NULL DEFAULT '',
                     PRIMARY KEY (`orders_id`),
                     KEY `idx_klarna_order_id` (`klarna_order_id`)
                   )");
@@ -586,16 +589,22 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function klarna_update() {
-    // the column comes first, so a failed ALTER is retried while the keys are still missing
+    // the columns come first, so a failed ALTER is retried while the keys are still missing
     $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_KLARNA_PAYMENTS."'");
     if (xtc_db_num_rows($check_query) > 0) {
-      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE 'fraud_status'");
-      if (xtc_db_num_rows($check_query) < 1) {
-        xtc_db_query("ALTER TABLE ".TABLE_KLARNA_PAYMENTS." ADD `fraud_status` varchar(16) NOT NULL DEFAULT ''");
-        
-        $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE 'fraud_status'");
+      $column_array = array(
+        'fraud_status' => "varchar(16) NOT NULL DEFAULT ''",
+        'notify_token' => "varchar(64) NOT NULL DEFAULT ''",
+      );
+      foreach ($column_array as $column_name => $column_definition) {
+        $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE '".$column_name."'");
         if (xtc_db_num_rows($check_query) < 1) {
-          return;
+          xtc_db_query("ALTER TABLE ".TABLE_KLARNA_PAYMENTS." ADD `".$column_name."` ".$column_definition);
+          
+          $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE '".$column_name."'");
+          if (xtc_db_num_rows($check_query) < 1) {
+            return;
+          }
         }
       }
     }

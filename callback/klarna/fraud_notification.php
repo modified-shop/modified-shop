@@ -22,6 +22,7 @@ $klarna_data = json_decode($json, true);
 
 $klarna_order_id = '';
 $klarna_event_type = '';
+$klarna_token = ((isset($_GET['token']) && is_string($_GET['token'])) ? $_GET['token'] : '');
 if (is_array($klarna_data)) {
   if (isset($klarna_data['order_id']) && is_string($klarna_data['order_id'])) {
     $klarna_order_id = $klarna_data['order_id'];
@@ -37,6 +38,7 @@ if ($klarna_order_id === '') {
 }
 
 $check_query = xtc_db_query("SELECT kp.orders_id,
+                                    kp.notify_token,
                                     o.payment_method
                                FROM ".TABLE_KLARNA_PAYMENTS." kp
                                JOIN ".TABLE_ORDERS." o
@@ -48,6 +50,12 @@ if (xtc_db_num_rows($check_query) < 1) {
   exit;
 }
 $check = xtc_db_fetch_array($check_query);
+
+// Klarna does not sign the push, the token in the registered URL identifies the sender
+if ($klarna_token === '' || $check['notify_token'] === '' || !hash_equals($check['notify_token'], $klarna_token)) {
+  http_response_code(403);
+  exit;
+}
 
 $klarna = new KlarnaPayment($check['payment_method']);
 if ($klarna->resolveFraudStatus((int)$check['orders_id'], $klarna_event_type) === false) {

@@ -277,22 +277,12 @@ class KlarnaPayment extends KlarnaPaymentBase {
     
     // accepted before, but the capture failed: only the capture is repeated
     if ($check['fraud_status'] == 'CAPTURE_PENDING') {
-      if ($this->get_orders_status($oID) != $accepted_status) {
-        // a manual status change wins, the capture is skipped for good
-        xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
-                         SET fraud_status = 'ACCEPTED'
-                       WHERE orders_id = '".(int)$oID."'
-                         AND fraud_status = 'CAPTURE_PENDING'");
-        if (xtc_db_affected_rows() < 1) {
-          return true;
-        }
-        
-        $this->update_order('Klarna capture skipped, the order status was changed in the meantime', $this->get_orders_status($oID), $oID);
-        
-        return 'ACCEPTED';
+      if ($accepted_status != $pending_status && $this->get_orders_status($oID) == $pending_status) {
+        // the accept is still in progress or its request died, complete it
+        $this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED');
       }
       
-      return $this->captureAcceptedOrder($oID, $check['klarna_order_id']);
+      return $this->captureIfDue($oID, $check['klarna_order_id'], $accepted_status);
     }
     
     if ($check['fraud_status'] != 'PENDING') {
@@ -322,29 +312,49 @@ class KlarnaPayment extends KlarnaPaymentBase {
                      AND fraud_status = 'PENDING'");
     if (xtc_db_affected_rows() < 1) {
       // only a final result counts as done, anything else is still in progress
-      $final_query = xtc_db_query("SELECT fraud_status
-                                     FROM ".TABLE_KLARNA_PAYMENTS."
-                                    WHERE orders_id = '".(int)$oID."'");
-      $final = xtc_db_fetch_array($final_query);
-      
-      return (is_array($final) && in_array($final['fraud_status'], array('ACCEPTED', 'REJECTED', 'STOPPED')));
+      return $this->is_fraud_status_final($oID);
     }
     
     if ($waiting === false) {
-      $this->update_order('Klarna fraud status: '.$fraud_status.', order status not changed'.(($fraud_status == 'ACCEPTED' && $this->capture_enabled()) ? ', nothing captured' : ''), $current_status, $oID);
+      $this->insert_status_history($oID, $current_status, 'Klarna fraud status: '.$fraud_status.', order status not changed'.(($fraud_status == 'ACCEPTED' && $this->capture_enabled()) ? ', nothing captured' : ''));
       
       return $fraud_status;
     }
     
+    // the status change is conditional, a parallel stop or a manual change must not be overwritten
     if ($fraud_status == 'ACCEPTED') {
-      $orders_status = $accepted_status;
-    } else {
-      $orders_status = ((defined('MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID') && (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID > 0) ? (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID : $current_status);
+      if ($this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED') === false) {
+        if ($capture === false) {
+          $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna fraud status: ACCEPTED, order status not changed');
+          
+          return $fraud_status;
+        }
+        
+        // a parallel call may have completed the accept, then the capture is still due
+        if ($this->get_orders_status($oID) == $accepted_status) {
+          return $this->captureIfDue($oID, $check['klarna_order_id'], $accepted_status, $data, true);
+        }
+        
+        if ($this->skip_capture($oID, 'Klarna fraud status: ACCEPTED, order status not changed, nothing captured') === false) {
+          return $this->is_fraud_status_final($oID);
+        }
+        
+        return true;
+      }
+      
+      if ($capture === true) {
+        return $this->captureIfDue($oID, $check['klarna_order_id'], $accepted_status, $data, true);
+      }
+      
+      return $fraud_status;
     }
-    $this->update_order('Klarna fraud status: '.$fraud_status, $orders_status, $oID);
     
-    if ($capture === true) {
-      return $this->captureAcceptedOrder($oID, $check['klarna_order_id'], $data, true);
+    $rejected_status = ((defined('MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID') && (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID > 0) ? (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID : 0);
+    if ($rejected_status == 0
+        || $this->change_orders_status($oID, $pending_status, $rejected_status, 'Klarna fraud status: REJECTED') === false
+        )
+    {
+      $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna fraud status: REJECTED');
     }
     
     return $fraud_status;
@@ -361,15 +371,26 @@ class KlarnaPayment extends KlarnaPaymentBase {
       return true;
     }
     
-    $orders_status = $this->get_orders_status($oID);
-    if (defined('MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID')
-        && (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID > 0
-        && ($orders_status == $pending_status || $orders_status == $accepted_status)
-        )
-    {
-      $orders_status = (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID;
+    // a stop during the capture request cannot be prevented, the history then shows both entries
+    $comment = 'Klarna fraud status: STOPPED, check the order before shipping';
+    $rejected_status = ((defined('MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID') && (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID > 0) ? (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID : 0);
+    
+    // the second round catches a parallel accept that moved the order meanwhile
+    for ($i = 0; $i < 2; $i ++) {
+      $orders_status = $this->get_orders_status($oID);
+      if ($rejected_status > 0
+          && ($orders_status == $pending_status || $orders_status == $accepted_status)
+          && $this->change_orders_status($oID, $orders_status, $rejected_status, $comment) === true
+          )
+      {
+        return 'STOPPED';
+      }
+      if ($rejected_status == 0 || ($orders_status != $pending_status && $orders_status != $accepted_status)) {
+        break;
+      }
     }
-    $this->update_order('Klarna fraud status: STOPPED, check the order before shipping', $orders_status, $oID);
+    
+    $this->insert_status_history($oID, $this->get_orders_status($oID), $comment);
     
     return 'STOPPED';
   }
@@ -382,6 +403,87 @@ class KlarnaPayment extends KlarnaPaymentBase {
     $status = xtc_db_fetch_array($status_query);
     
     return ((is_array($status)) ? (int)$status['orders_status'] : 0);
+  }
+
+
+  function change_orders_status($oID, $from_status, $to_status, $comment) {
+    // only the expected status is changed, a parallel call or a manual change wins
+    if ((int)$to_status != (int)$from_status) {
+      xtc_db_query("UPDATE ".TABLE_ORDERS."
+                       SET orders_status = '".(int)$to_status."',
+                           last_modified = now()
+                     WHERE orders_id = '".(int)$oID."'
+                       AND orders_status = '".(int)$from_status."'");
+      if (xtc_db_affected_rows() < 1) {
+        return false;
+      }
+    } elseif ($this->get_orders_status($oID) != (int)$from_status) {
+      return false;
+    }
+    
+    $this->insert_status_history($oID, $to_status, $comment);
+    
+    return true;
+  }
+
+
+  function insert_status_history($oID, $orders_status, $comment) {
+    $order_history_data = array(
+      'orders_id' => (int)$oID,
+      'orders_status_id' => (int)$orders_status,
+      'date_added' => 'now()',
+      'customer_notified' => '0',
+      'comments' => $comment,
+    );
+    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $order_history_data);
+  }
+
+
+  function is_fraud_status_final($oID) {
+    $final_query = xtc_db_query("SELECT fraud_status
+                                   FROM ".TABLE_KLARNA_PAYMENTS."
+                                  WHERE orders_id = '".(int)$oID."'");
+    $final = xtc_db_fetch_array($final_query);
+    
+    return (is_array($final) && in_array($final['fraud_status'], array('ACCEPTED', 'REJECTED', 'STOPPED')));
+  }
+
+
+  function skip_capture($oID, $comment) {
+    xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
+                     SET fraud_status = 'ACCEPTED'
+                   WHERE orders_id = '".(int)$oID."'
+                     AND fraud_status = 'CAPTURE_PENDING'");
+    if (xtc_db_affected_rows() < 1) {
+      return false;
+    }
+    
+    $this->insert_status_history($oID, $this->get_orders_status($oID), $comment);
+    
+    return true;
+  }
+
+
+  function captureIfDue($oID, $order_id, $accepted_status, $data = null, $first_attempt = false) {
+    // read again, a parallel stop or a finished capture may have changed the row
+    $check_query = xtc_db_query("SELECT fraud_status
+                                   FROM ".TABLE_KLARNA_PAYMENTS."
+                                  WHERE orders_id = '".(int)$oID."'");
+    $check = xtc_db_fetch_array($check_query);
+    if (!is_array($check) || $check['fraud_status'] != 'CAPTURE_PENDING') {
+      return $this->is_fraud_status_final($oID);
+    }
+    
+    if ($this->get_orders_status($oID) != $accepted_status) {
+      // a manual status change wins, the capture is skipped for good
+      if ($this->skip_capture($oID, 'Klarna capture skipped, the order status was changed in the meantime') === false) {
+        return $this->is_fraud_status_final($oID);
+      }
+      
+      return 'ACCEPTED';
+    }
+    
+    return $this->captureAcceptedOrder($oID, $order_id, $data, $first_attempt);
   }
 
 
@@ -399,7 +501,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       if ($this->captureOrder($data['remaining_authorized_amount'] / 100, $order_id) == '') {
         // one entry for the first failure, not one per retry
         if ($first_attempt === true) {
-          $this->update_order('Klarna capture failed, it is retried automatically', $this->get_orders_status($oID), $oID);
+          $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna capture failed, it is retried automatically');
         }
         
         return false;
@@ -413,7 +515,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
                      AND fraud_status = 'CAPTURE_PENDING'");
     
     if ($captured === true) {
-      $this->update_order('Klarna capture: '.number_format($data['remaining_authorized_amount'] / 100, 2, '.', '').((isset($data['purchase_currency'])) ? ' '.$data['purchase_currency'] : '').' captured', $this->get_orders_status($oID), $oID);
+      $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna capture: '.number_format($data['remaining_authorized_amount'] / 100, 2, '.', '').((isset($data['purchase_currency'])) ? ' '.$data['purchase_currency'] : '').' captured');
     }
     
     return 'ACCEPTED';
@@ -647,6 +749,11 @@ class KlarnaPayment extends KlarnaPaymentBase {
     
     $country = xtc_get_countriesList(STORE_COUNTRY);    
     
+    // outside $_SESSION['klarna'], which is reset, so session and order get the same URL
+    if (!isset($_SESSION['klarna_notify_token']) || !is_string($_SESSION['klarna_notify_token']) || $_SESSION['klarna_notify_token'] === '') {
+      $_SESSION['klarna_notify_token'] = bin2hex(random_bytes(16));
+    }
+    
     $order_array = array(
       'locale' => $_SESSION['language_code'].'-'.$_SESSION['language_code'],
       'purchase_country' => $country['countries_iso_code_2'],
@@ -656,7 +763,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       'merchant_reference1' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : 0),
       'order_lines' => $products_array,
       'merchant_urls' => array(
-        'notification' => xtc_href_link('callback/klarna/fraud_notification.php', '', 'SSL', false),
+        'notification' => xtc_href_link('callback/klarna/fraud_notification.php', 'token='.$_SESSION['klarna_notify_token'], 'SSL', false),
       ),
     );
     
