@@ -15,9 +15,12 @@ function get_payone_pdf() {
 
   $filename = '';
   if ($doc == 'contract') {
-    $id = ((isset($_GET['id'])) ? (int)$_GET['id'] : 0);
-    if (isset($_SESSION['payone_installment']['contracts'][$id])) {
-      $filename = $_SESSION['payone_installment']['contracts'][$id];
+    $key = ((isset($_GET['key']) && is_string($_GET['key'])) ? $_GET['key'] : '');
+    if (preg_match('/^[a-f0-9]{32}$/', $key)
+        && isset($_SESSION['payone_installment']['contracts'][$key])
+        )
+    {
+      $filename = $_SESSION['payone_installment']['contracts'][$key];
     }
   } elseif ($doc == 'sepa_mandate') {
     if (isset($_SESSION['payone_elv_sepa_mandate_pdf'])) {

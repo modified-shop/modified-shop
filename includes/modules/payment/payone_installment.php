@@ -129,7 +129,6 @@ class payone_installment extends PayonePayment {
 
     if ($this->response instanceof Payone_Api_Response_Genericpayment_Ok) {
       $_SESSION[$this->code]['workorderid'] = $this->response->getWorkorderId();
-      $_SESSION[$this->code]['contracts'] = array();
       $payment_plan = $this->response->getPaydata();
       $payment_plan_array = $payment_plan->toAssocArray();
       ksort($payment_plan_array);
@@ -174,10 +173,11 @@ class payone_installment extends PayonePayment {
     curl_exec($ch);
     fclose($fp);
     
-    // cache/ is not public, the contract is only delivered to this session
-    $_SESSION[$this->code]['contracts'][(int)$id] = $filename;
-    
-    return str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=get_payone_pdf&doc=contract&id='.(int)$id, 'SSL'));
+    // cache/ is not public, the key binds the link to this calculation's file
+    $key = md5($filename);
+    $_SESSION[$this->code]['contracts'][$key] = $filename;
+
+    return str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=get_payone_pdf&doc=contract&key='.$key, 'SSL'));
   }
   
 	function _paymentDataFormProcess($active_genre_identifier) {
