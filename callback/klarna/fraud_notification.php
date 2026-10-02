@@ -46,6 +46,10 @@ if (xtc_db_num_rows($check_query) < 1) {
 $check = xtc_db_fetch_array($check_query);
 
 $klarna = new KlarnaPayment($check['payment_method']);
-$klarna->resolveFraudStatus((int)$check['orders_id']);
+if ($klarna->resolveFraudStatus((int)$check['orders_id']) === false) {
+  // status request or capture failed, let Klarna retry later
+  http_response_code(503);
+  exit;
+}
 
 http_response_code(200);

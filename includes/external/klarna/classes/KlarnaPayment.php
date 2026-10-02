@@ -268,6 +268,11 @@ class KlarnaPayment extends KlarnaPaymentBase {
     }
     $check = xtc_db_fetch_array($check_query);
     
+    // accepted before, but the capture failed: only the capture is repeated
+    if ($check['fraud_status'] == 'CAPTURE_PENDING') {
+      return $this->captureAcceptedOrder($oID, $check['klarna_order_id']);
+    }
+    
     if ($check['fraud_status'] != 'PENDING') {
       return true;
     }
@@ -289,12 +294,14 @@ class KlarnaPayment extends KlarnaPaymentBase {
         break;
       
       default:
-        return true;
+        return false;
     }
+    
+    $capture = ($fraud_status == 'ACCEPTED' && $this->capture_enabled());
     
     // a repeated notification or a parallel admin view must not resolve the order twice
     xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
-                     SET fraud_status = '".xtc_db_input($fraud_status)."'
+                     SET fraud_status = '".xtc_db_input((($capture === true) ? 'CAPTURE_PENDING' : $fraud_status))."'
                    WHERE orders_id = '".(int)$oID."'
                      AND fraud_status = 'PENDING'");
     if (xtc_db_affected_rows() < 1) {
@@ -303,15 +310,43 @@ class KlarnaPayment extends KlarnaPaymentBase {
     
     $this->update_order('Klarna fraud status: '.$fraud_status, $orders_status, $oID);
     
-    if ($fraud_status == 'ACCEPTED'
-        && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE')
-        && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE') == 'True'
-        )
-    {
-      $this->captureCompleteOrder($oID, $check['klarna_order_id']);
+    if ($capture === true) {
+      return $this->captureAcceptedOrder($oID, $check['klarna_order_id'], $data);
     }
     
     return $fraud_status;
+  }
+
+
+  function captureAcceptedOrder($oID, $order_id, $data = null) {
+    if (!is_array($data)) {
+      $data = $this->fetchOrder($order_id);
+    }
+    if (!is_array($data) || !isset($data['remaining_authorized_amount'])) {
+      return false;
+    }
+    
+    // capture what Klarna still holds, so a repeat never captures twice
+    if ($data['remaining_authorized_amount'] > 0
+        && $this->capture_enabled()
+        && $this->captureOrder($data['remaining_authorized_amount'] / 100, $order_id) == ''
+        )
+    {
+      return false;
+    }
+    
+    xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
+                     SET fraud_status = 'ACCEPTED'
+                   WHERE orders_id = '".(int)$oID."'
+                     AND fraud_status = 'CAPTURE_PENDING'");
+    
+    return 'ACCEPTED';
+  }
+
+
+  function capture_enabled() {
+    return (defined('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE')
+            && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE') == 'True');
   }
 
 
