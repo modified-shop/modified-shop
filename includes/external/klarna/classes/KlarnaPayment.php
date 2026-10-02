@@ -44,6 +44,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
   var $shared_secret;
   var $api_endpoint;
   var $connector;
+  // set after a failed session request, shared by all Klarna modules in this request
+  public static $session_failed = false;
 
   function __construct($code) {
     $this->code = $code;
@@ -162,6 +164,11 @@ class KlarnaPayment extends KlarnaPaymentBase {
 
 
   function getKlarnaSession() {
+    // every module calls this from its constructor, a Klarna outage would cost one timeout each
+    if (KlarnaPayment::$session_failed === true) {
+      return;
+    }
+    
     $order_array = $this->getOrderData(true);
         
     try {
@@ -181,6 +188,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
         'time_created' => time(),
       );
     } catch (Exception $e) {
+      KlarnaPayment::$session_failed = true;
       $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
     } 
   }
