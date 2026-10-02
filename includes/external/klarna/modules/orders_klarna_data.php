@@ -26,6 +26,9 @@ if (isset($order) && is_object($order)) {
     require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
     $klarna = new KlarnaPayment($order->info['payment_method']);
     
+    // resolve a still pending fraud review when the push never arrived
+    $klarna->resolveFraudStatus((int)$order->info['order_id']);
+    
     $admin_info_array = array();
     
     if ($order_id = $klarna->get_klarna_order($order->info['order_id'])) {

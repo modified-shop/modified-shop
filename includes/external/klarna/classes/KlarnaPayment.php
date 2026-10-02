@@ -29,7 +29,7 @@ require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 
 
 // language
-if (is_file(DIR_FS_EXTERNAL.'klarna/lang/'.$_SESSION['language'].'.php')) {
+if (isset($_SESSION['language']) && is_file(DIR_FS_EXTERNAL.'klarna/lang/'.$_SESSION['language'].'.php')) {
   require_once(DIR_FS_EXTERNAL.'klarna/lang/'.$_SESSION['language'].'.php');
 } else {
   require_once(DIR_FS_EXTERNAL.'klarna/lang/english.php');
@@ -252,6 +252,66 @@ class KlarnaPayment extends KlarnaPaymentBase {
       
       return $e->getMessage();
     }
+  }
+
+
+  function resolveFraudStatus($oID) {
+    $check_query = xtc_db_query("SELECT kp.klarna_order_id,
+                                        kp.fraud_status,
+                                        o.orders_status
+                                   FROM ".TABLE_KLARNA_PAYMENTS." kp
+                                   JOIN ".TABLE_ORDERS." o
+                                        ON o.orders_id = kp.orders_id
+                                  WHERE kp.orders_id = '".(int)$oID."'");
+    if (xtc_db_num_rows($check_query) < 1) {
+      return false;
+    }
+    $check = xtc_db_fetch_array($check_query);
+    
+    if ($check['fraud_status'] != 'PENDING') {
+      return true;
+    }
+    
+    $data = $this->fetchOrder($check['klarna_order_id']);
+    if (!is_array($data) || !isset($data['fraud_status'])) {
+      return false;
+    }
+    
+    $fraud_status = strtoupper($data['fraud_status']);
+    switch ($fraud_status) {
+      case 'ACCEPTED':
+        $orders_status = (((int)$this->order_status > 0) ? (int)$this->order_status : $check['orders_status']);
+        break;
+        
+      case 'REJECTED':
+      case 'STOPPED':
+        $orders_status = ((defined('MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID') && (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID > 0) ? (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID : $check['orders_status']);
+        break;
+      
+      default:
+        return true;
+    }
+    
+    // a repeated notification or a parallel admin view must not resolve the order twice
+    xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
+                     SET fraud_status = '".xtc_db_input($fraud_status)."'
+                   WHERE orders_id = '".(int)$oID."'
+                     AND fraud_status = 'PENDING'");
+    if (xtc_db_affected_rows() < 1) {
+      return true;
+    }
+    
+    $this->update_order('Klarna fraud status: '.$fraud_status, $orders_status, $oID);
+    
+    if ($fraud_status == 'ACCEPTED'
+        && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE')
+        && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE') == 'True'
+        )
+    {
+      $this->captureCompleteOrder($oID, $check['klarna_order_id']);
+    }
+    
+    return $fraud_status;
   }
 
 
@@ -484,6 +544,9 @@ class KlarnaPayment extends KlarnaPaymentBase {
       'order_tax_amount' => $this->format_amount($order_tax_amount),
       'merchant_reference1' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : 0),
       'order_lines' => $products_array,
+      'merchant_urls' => array(
+        'notification' => xtc_href_link('callback/klarna/fraud_notification.php', '', 'SSL', false),
+      ),
     );
     
     if ($order_array['order_tax_amount'] != $tax_total) {
