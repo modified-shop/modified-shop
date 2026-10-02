@@ -189,6 +189,9 @@
     $meta_robots = 'noindex, nofollow, noodp';
   }
 
+  // some meta settings hold one value per language
+  require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+
   // set standard metas
   if (basename($PHP_SELF) == FILENAME_DEFAULT 
       && (!isset($_GET['cat']) || $_GET['cat'] == '')
@@ -205,11 +208,16 @@
                                    AND languages_id = '".(int)$_SESSION['languages_id']."'");
     $ml_meta = xtc_db_fetch_array($ml_meta_query, true);
     foreach ($ml_meta as $k => $v) {
-      define(strtoupper($k), (($v != '') ? $v : constant(strtoupper(substr($k, 3)))));
+      $ml_meta_default = constant(strtoupper(substr($k, 3)));
+      // the shop title is no per-language setting, a '::' in it must survive
+      if ($k != 'ml_meta_title') {
+        $ml_meta_default = parse_multi_language_value($ml_meta_default, $_SESSION['language_code']);
+      }
+      define(strtoupper($k), (($v != '') ? $v : $ml_meta_default));
     }
   } else {
-    define('ML_META_KEYWORDS', META_KEYWORDS);
-    define('ML_META_DESCRIPTION', META_DESCRIPTION);
+    define('ML_META_KEYWORDS', parse_multi_language_value(META_KEYWORDS, $_SESSION['language_code']));
+    define('ML_META_DESCRIPTION', parse_multi_language_value(META_DESCRIPTION, $_SESSION['language_code']));
     define('ML_META_TITLE', TITLE);
   }
   
@@ -493,20 +501,25 @@
   if ($meta_robots != '') {
     echo '<meta name="robots" content="'. $meta_robots .'" />'."\n";
   }
-  if (metaClean(META_AUTHOR) != '') {
-    echo '<meta name="author" content="'.metaClean(META_AUTHOR) .'" />'."\n";
+  $meta_author = metaClean(parse_multi_language_value(META_AUTHOR, $_SESSION['language_code']));
+  $meta_publisher = metaClean(parse_multi_language_value(META_PUBLISHER, $_SESSION['language_code']));
+  $meta_company = metaClean(parse_multi_language_value(META_COMPANY, $_SESSION['language_code']));
+  $meta_topic = metaClean(parse_multi_language_value(META_TOPIC, $_SESSION['language_code']));
+  $meta_reply_to = parse_multi_language_value(META_REPLY_TO, $_SESSION['language_code']);
+  if ($meta_author != '') {
+    echo '<meta name="author" content="'. $meta_author .'" />'."\n";
   }
-  if (metaClean(META_PUBLISHER) != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
-    echo '<meta name="publisher" content="'. metaClean(META_PUBLISHER) .'" />'."\n";
+  if ($meta_publisher != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
+    echo '<meta name="publisher" content="'. $meta_publisher .'" />'."\n";
   }
-  if (metaClean(META_COMPANY) != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
-    echo '<meta name="company" content="'. metaClean(META_COMPANY) .'" />'."\n";
+  if ($meta_company != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
+    echo '<meta name="company" content="'. $meta_company .'" />'."\n";
   }
-  if (metaClean(META_TOPIC) != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
-    echo '<meta name="page-topic" content="'. metaClean(META_TOPIC) .'" />'."\n";
+  if ($meta_topic != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
+    echo '<meta name="page-topic" content="'. $meta_topic .'" />'."\n";
   }
-  if (META_REPLY_TO != 'xx@xx.com' && TEMPLATE_HTML_ENGINE == 'xhtml') {
-    echo '<meta name="reply-to" content="'. META_REPLY_TO .'" />'."\n";
+  if ($meta_reply_to != 'xx@xx.com' && TEMPLATE_HTML_ENGINE == 'xhtml') {
+    echo '<meta name="reply-to" content="'. $meta_reply_to .'" />'."\n";
   }
   if (META_REVISIT_AFTER != '0') {
     echo '<meta name="revisit-after" content="'. META_REVISIT_AFTER .' days" />'."\n";
