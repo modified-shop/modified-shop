@@ -22,7 +22,16 @@ if (isset($_GET['subaction'])
   $order = new order((int)$_GET['oID']);
   $klarna = new KlarnaPayment($order->info['payment_method']);
   $order_id = $klarna->get_klarna_order($order->info['order_id']);
-  $amount = str_replace(',', '.', preg_replace('/[^0-9,.%]/', '', $_POST['amount']));
+  $amount = preg_replace('/[^0-9,.%]/', '', ((isset($_POST['amount'])) ? $_POST['amount'] : ''));
+  // the last separator marks the decimals, anything left non-numeric like % is rejected
+  $amount_comma = strrpos($amount, ',');
+  $amount_dot = strrpos($amount, '.');
+  if ($amount_comma !== false && ($amount_dot === false || $amount_comma > $amount_dot)) {
+    $amount = str_replace(array('.', ','), array('', '.'), $amount);
+  } else {
+    $amount = str_replace(',', '', $amount);
+  }
+  $amount = ((is_numeric($amount)) ? (float)$amount : 0);
   
   if (isset($_POST['cancel_submit'])) {
     $_SESSION['klarna_success'] = $klarna->cancelOrder($order_id);
