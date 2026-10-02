@@ -47,7 +47,7 @@ class klarna_klarna extends KlarnaPayment {
 
     return array(
       'id' => $this->code,
-      'module' => ((MODULE_PAYMENT_KLARNA_TEXT != '') ? MODULE_PAYMENT_KLARNA_TEXT.' ' : '').decode_utf8($data['name']),
+      'module' => ((is_array($data) && !empty($data['name'])) ? decode_utf8($data['name']) : MODULE_PAYMENT_KLARNA_KLARNA_TEXT_TITLE),
       'description' => $info,
     );
   }
