@@ -476,6 +476,10 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       ),
     );
     
+    if (!isset($gender_array[$language_code])) {
+      return;
+    }
+    
     if (isset($gender_array[$language_code][$gender])) {
       return $gender_array[$language_code][$gender];
     }
