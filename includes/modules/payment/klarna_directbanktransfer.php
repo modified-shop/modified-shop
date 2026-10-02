@@ -57,7 +57,9 @@ class klarna_directbanktransfer extends KlarnaPayment {
     if (isset($_POST['klarna'])) {
       $_SESSION['klarna'] = array_merge($_SESSION['klarna'], $_POST['klarna']);  
     }
-    return false;
+    
+    // update the Klarna session with the current order data like the other Klarna modules
+    return KlarnaPayment::pre_confirmation_check();
   }
 
 }
