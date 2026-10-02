@@ -586,6 +586,20 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function klarna_update() {
+    // the column comes first, so a failed ALTER is retried while the keys are still missing
+    $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_KLARNA_PAYMENTS."'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE 'fraud_status'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".TABLE_KLARNA_PAYMENTS." ADD `fraud_status` varchar(16) NOT NULL DEFAULT ''");
+        
+        $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE 'fraud_status'");
+        if (xtc_db_num_rows($check_query) < 1) {
+          return;
+        }
+      }
+    }
+    
     $config_array = array(
       'MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID',
       'MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID',
@@ -598,14 +612,6 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('".$config_key."', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
       }
       defined($config_key) or define($config_key, '0');
-    }
-    
-    $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_KLARNA_PAYMENTS."'");
-    if (xtc_db_num_rows($check_query) > 0) {
-      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE 'fraud_status'");
-      if (xtc_db_num_rows($check_query) < 1) {
-        xtc_db_query("ALTER TABLE ".TABLE_KLARNA_PAYMENTS." ADD `fraud_status` varchar(16) NOT NULL DEFAULT ''");
-      }
     }
   }
 

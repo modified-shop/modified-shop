@@ -21,13 +21,17 @@ $json = file_get_contents('php://input');
 $klarna_data = json_decode($json, true);
 
 $klarna_order_id = '';
-if (is_array($klarna_data) && isset($klarna_data['order_id'])) {
-  $klarna_order_id = $klarna_data['order_id'];
-} elseif (isset($_GET['order_id'])) {
-  $klarna_order_id = $_GET['order_id'];
+$klarna_event_type = '';
+if (is_array($klarna_data)) {
+  if (isset($klarna_data['order_id']) && is_string($klarna_data['order_id'])) {
+    $klarna_order_id = $klarna_data['order_id'];
+  }
+  if (isset($klarna_data['event_type']) && is_string($klarna_data['event_type'])) {
+    $klarna_event_type = $klarna_data['event_type'];
+  }
 }
 
-if ($klarna_order_id == '') {
+if ($klarna_order_id === '') {
   http_response_code(400);
   exit;
 }
@@ -46,7 +50,7 @@ if (xtc_db_num_rows($check_query) < 1) {
 $check = xtc_db_fetch_array($check_query);
 
 $klarna = new KlarnaPayment($check['payment_method']);
-if ($klarna->resolveFraudStatus((int)$check['orders_id']) === false) {
+if ($klarna->resolveFraudStatus((int)$check['orders_id'], $klarna_event_type) === false) {
   // status request or capture failed, let Klarna retry later
   http_response_code(503);
   exit;
