@@ -160,6 +160,8 @@
                          WHERE languages_id = '".(int)$this->language['id']."'
                                ".$group_check." 
                            AND content_status = '1' 
+                           AND content_active = '1'
+                           AND trim(content_title) != ''
                            AND content_meta_robots NOT LIKE '%noindex%' 
                       ORDER BY sort_order";
 
