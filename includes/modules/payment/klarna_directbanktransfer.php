@@ -55,7 +55,8 @@ class klarna_directbanktransfer extends KlarnaPayment {
 
   function pre_confirmation_check() {    
     if (isset($_POST['klarna']) && is_array($_POST['klarna'])) {
-      $_SESSION['klarna'] = array_merge(((isset($_SESSION['klarna']) && is_array($_SESSION['klarna'])) ? $_SESSION['klarna'] : array()), $_POST['klarna']);
+      // Klarna posts klarna[<category>][<key>], take over arrays only
+      $_SESSION['klarna'] = array_merge(((isset($_SESSION['klarna']) && is_array($_SESSION['klarna'])) ? $_SESSION['klarna'] : array()), array_filter($_POST['klarna'], 'is_array'));
     }
     return false;
   }
