@@ -165,7 +165,10 @@ class payone_elv extends PayonePayment {
       fclose($fp);
     }
     
-    return xtc_href_link('cache/'.$filename, '', 'SSL', false);
+    // cache/ is not public, the mandate is only delivered to this session
+    $_SESSION['payone_elv_sepa_mandate_pdf'] = $filename;
+
+    return xtc_href_link('ajax.php', 'ext=get_payone_pdf&doc=sepa_mandate', 'SSL');
   }
   
 	function pre_confirmation_check() {
