@@ -74,10 +74,16 @@ class KlarnaPayment extends KlarnaPaymentBase {
     $user_agent->setField('modified-eCommerce-Shopsoftware', 'v', $db_version['plain']);
     $user_agent->setField('Klarna', 'v', $this->klarna_version);
     
-    $this->connector = Klarna\Rest\Transport\GuzzleConnector::create(
+    // build the client with timeouts, the SDK factory leaves them unlimited
+    $client = new \GuzzleHttp\Client(array(
+      'base_uri' => $this->api_endpoint,
+      'connect_timeout' => 10,
+      'timeout' => 30,
+    ));
+    $this->connector = new Klarna\Rest\Transport\GuzzleConnector(
+      $client,
       $this->merchant_id,
       $this->shared_secret,
-      $this->api_endpoint,
       $user_agent
     );
   }
