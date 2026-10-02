@@ -246,11 +246,12 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   function before_process() {
     global $order;
 
-    if (isset($_POST['klarna'])) {
-      $_SESSION['klarna'] = array_merge($_SESSION['klarna'], $_POST['klarna']);  
+    if (isset($_POST['klarna']) && is_array($_POST['klarna'])) {
+      $_SESSION['klarna'] = array_merge(((isset($_SESSION['klarna']) && is_array($_SESSION['klarna'])) ? $_SESSION['klarna'] : array()), $_POST['klarna']);
     }
     
-    if (!array_key_exists($this->klarna_code, $_SESSION['klarna'])
+    if (!isset($_SESSION['klarna'][$this->klarna_code])
+        || !is_array($_SESSION['klarna'][$this->klarna_code])
         || !array_key_exists('authorization_token', $_SESSION['klarna'][$this->klarna_code])
         )
     {
