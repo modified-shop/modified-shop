@@ -6,6 +6,13 @@
   margin: 10px 0 0 auto;
   box-sizing: border-box;
 }
+/* product page: full width like the PayPal button next to it */
+.klarna_express_product {
+  clear: both;
+  width: 100%;
+  margin: 0 0 5px 0;
+  box-sizing: border-box;
+}
 #klarna-express-button {
   display: block;
   width: 100%;

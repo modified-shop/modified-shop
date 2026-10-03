@@ -200,13 +200,16 @@
               </div>
             {/if}
 
-            {if (isset($ADD_CART_BUTTON_EXPRESS)) || $ADD_CART_BUTTON_PAYPAL}
+            {if (isset($ADD_CART_BUTTON_EXPRESS)) || $ADD_CART_BUTTON_PAYPAL || $ADD_CART_BUTTON_KLARNA}
               <div class="pd_addtobasket_row_additional">
                 {if isset($ADD_CART_BUTTON_EXPRESS) && !$PAYPALPLAN}
                   <div class="pd_addtobasket_express">{$ADD_CART_BUTTON_EXPRESS}</div>
                 {/if}
                 {if $ADD_CART_BUTTON_PAYPAL && !$PAYPALPLAN}
                   <div class="pd_addtobasket_paypal">{$ADD_CART_BUTTON_PAYPAL}</div>
+                {/if}
+                {if $ADD_CART_BUTTON_KLARNA && !$PAYPALPLAN}
+                  <div class="pd_addtobasket_klarna">{$ADD_CART_BUTTON_KLARNA}</div>
                 {/if}
               </div>              
             {/if}
