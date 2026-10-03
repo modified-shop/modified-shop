@@ -722,9 +722,235 @@ class klarna_express extends KlarnaPayment {
       $order_array['shipping_address']->country = $order_array['purchase_country'];
     }
 
-    $order_array['locale'] = strtolower($_SESSION['language_code']).'-'.strtoupper($order_array['purchase_country']);
+    $order_array['locale'] = $this->get_express_locale($order_array['purchase_country']);
 
     return $order_array;
+  }
+
+
+  // the button loads before an order exists, the purchase country is the shop country
+  function get_express_locale($purchase_country = '') {
+    if ($purchase_country == '') {
+      require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
+      $country = xtc_get_countriesList(STORE_COUNTRY);
+      $purchase_country = $country['countries_iso_code_2'];
+    }
+
+    return strtolower($_SESSION['language_code']).'-'.strtoupper($purchase_country);
+  }
+
+
+  // the fields of the order data that authorize() receives
+  function get_express_payload($order_array) {
+    return array(
+      'purchase_country' => $order_array['purchase_country'],
+      'purchase_currency' => $order_array['purchase_currency'],
+      'locale' => $order_array['locale'],
+      'order_amount' => $order_array['order_amount'],
+      'order_tax_amount' => $order_array['order_tax_amount'],
+      'order_lines' => $order_array['order_lines'],
+    );
+  }
+
+
+  // payload and callback token of the current cart, the session keeps token and amount for the callback
+  function prepare_express() {
+    $order_array = $this->get_express_order_data();
+    $token = $this->get_express_token();
+    $this->set_express_amount($order_array['order_amount']);
+
+    return array(
+      'locale' => $order_array['locale'],
+      'payload' => $this->get_express_payload($order_array),
+      'token' => $token,
+    );
+  }
+
+
+  // settings of the button on cart and product page, $express comes from prepare_express()
+  function get_express_config($express = null, $error_url = '') {
+    $config = array('client_id' => MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID);
+    if (is_array($express)) {
+      $config['locale'] = $express['locale'];
+      $config['payload'] = $express['payload'];
+      $config['token'] = $express['token'];
+    } else {
+      $config['locale'] = $this->get_express_locale();
+    }
+    $config['callback'] = str_replace('&amp;', '&', xtc_href_link('callback/klarna/express.php', '', 'SSL'));
+    $config['error_url'] = $error_url;
+
+    return $config;
+  }
+
+
+  // shop side conditions of the button for the current cart
+  function express_available() {
+    return ($_SESSION['cart']->show_total() > 0
+            && self::express_enabled() === true
+            && $this->cart_requires_shipping() === true
+            && $this->payment_allowed() === true
+            );
+  }
+
+
+  // module is installed, active and has a client id
+  public static function express_configured() {
+    return (self::express_enabled() === true
+            && defined('MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID')
+            && MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID != ''
+            );
+  }
+
+
+  // button, loader and result handling of cart and product page, $on_click_js is the body of on_click(authorize)
+  function get_express_button($config, $on_click_js) {
+    $config_json = json_encode($config, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+    if ($config_json === false) {
+      return '';
+    }
+
+    return '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_WS_EXTERNAL.'klarna/css/express.css?v=2" type="text/css" media="screen" />
+          <div id="klarna-express-button"></div>
+          <script>
+            (function () {
+              var cfg = '.$config_json.';
+              var options = {auto_finalize: false, collect_shipping_address: true};
+              var fail = function () {
+                window.location.href = cfg.error_url;
+              };
+              var post = function (result) {
+                var fields = {
+                  token: cfg.token,
+                  client_token: result.client_token,
+                  session_id: result.session_id,
+                  collected_shipping_address: JSON.stringify(result.collected_shipping_address || {}),
+                  payment_method_categories: JSON.stringify(result.payment_method_categories || [])
+                };
+                var form = document.createElement("form");
+                form.method = "post";
+                form.action = cfg.callback;
+                Object.keys(fields).forEach(function (name) {
+                  var input = document.createElement("input");
+                  input.type = "hidden";
+                  input.name = name;
+                  input.value = fields[name];
+                  form.appendChild(input);
+                });
+                document.body.appendChild(form);
+                form.submit();
+              };
+              var done = function (result) {
+                if (result && result.approved === true) {
+                  if (result.finalize_required === true && result.client_token && result.session_id) {
+                    post(result);
+                  } else {
+                    fail();
+                  }
+                } else if (result && result.show_form === false) {
+                  fail();
+                }
+              };
+              window.klarnaAsyncCallback = function () {
+                try {
+                  window.Klarna.Payments.Buttons.init({client_id: cfg.client_id}).load({
+                    container: "#klarna-express-button",
+                    theme: "default",
+                    shape: "default",
+                    locale: cfg.locale,
+                    on_click: function (authorize) {
+                      '.$on_click_js.'
+                    }
+                  });
+                } catch (e) {}
+              };
+            })();
+          </script>
+          <script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>';
+  }
+
+
+  // the ajax token binds the product page request to the session
+  function get_ajax_token() {
+    if (!isset($_SESSION['klarna_express_ajax'])
+        || !is_string($_SESSION['klarna_express_ajax'])
+        || $_SESSION['klarna_express_ajax'] === ''
+        )
+    {
+      $_SESSION['klarna_express_ajax'] = bin2hex(random_bytes(16));
+    }
+
+    return $_SESSION['klarna_express_ajax'];
+  }
+
+
+  function is_valid_ajax_token() {
+    return (isset($_SERVER['REQUEST_METHOD'])
+            && $_SERVER['REQUEST_METHOD'] == 'POST'
+            && isset($_SESSION['klarna_express_ajax'])
+            && is_string($_SESSION['klarna_express_ajax'])
+            && $_SESSION['klarna_express_ajax'] !== ''
+            && isset($_POST['klarna_express_ajax_token'])
+            && is_string($_POST['klarna_express_ajax_token'])
+            && hash_equals($_SESSION['klarna_express_ajax'], $_POST['klarna_express_ajax_token'])
+            );
+  }
+
+
+  // stock and order value limits that the cart page enforces, returns the failure reason or an empty string
+  function check_cart_limits() {
+    global $xtPrice;
+
+    if (STOCK_CHECK == 'true' && STOCK_ALLOW_CHECKOUT != 'true') {
+      require_once(DIR_FS_INC.'xtc_check_stock.inc.php');
+      require_once(DIR_FS_INC.'check_stock_specials.inc.php');
+
+      foreach ((array)$_SESSION['cart']->get_products(false) as $products) {
+        if (xtc_check_stock($products['id'], $products['quantity'], $products['stock']) != '') {
+          return 'stock';
+        }
+        if (STOCK_CHECK_SPECIALS == 'true'
+            && $xtPrice->xtcCheckSpecial($products['id'])
+            && check_stock_specials($products['id'], $products['quantity']) != ''
+            )
+        {
+          return 'stock';
+        }
+      }
+    }
+
+    $total = $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total());
+    if ($total < $_SESSION['customers_status']['customers_status_min_order']
+        || ($_SESSION['customers_status']['customers_status_max_order'] != 0
+            && $total > $_SESSION['customers_status']['customers_status_max_order']
+            )
+        )
+    {
+      return 'order_value';
+    }
+
+    return '';
+  }
+
+
+  // error answer of the product page request, the texts hold HTML entities for the page
+  public static function get_ajax_error($reason) {
+    $texts = array(
+      'add' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ADD,
+      'stock' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_STOCK,
+      'order_value' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ORDER_VALUE,
+      'token' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_TOKEN,
+      'unavailable' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE,
+    );
+    if (!isset($texts[$reason])) {
+      $reason = 'unavailable';
+    }
+
+    return array(
+      'ok' => false,
+      'error' => $reason,
+      'message' => html_entity_decode($texts[$reason], ENT_QUOTES, 'UTF-8'),
+    );
   }
 
 
@@ -1253,6 +1479,7 @@ class klarna_express extends KlarnaPayment {
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_CLIENT_ID', '', '6', '0', now())");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_SHORT_CHECKOUT', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_BUTTON_CART', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_BUTTON_PRODUCT', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
   }
 
 
@@ -1262,6 +1489,7 @@ class klarna_express extends KlarnaPayment {
     $keys[] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_CLIENT_ID';
     $keys[] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_SHORT_CHECKOUT';
     $keys[] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_BUTTON_CART';
+    $keys[] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_BUTTON_PRODUCT';
 
     return $keys;
   }
