@@ -341,8 +341,15 @@ class KlarnaPayment extends KlarnaPaymentBase {
         return $this->completeAccept($oID, $check['klarna_order_id'], $pending_status, $accepted_status, $data, true);
       }
       
-      if ($this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED') === false) {
-        $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna fraud status: ACCEPTED, order status not changed');
+      if ($this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED', 'ACCEPTED') === false) {
+        // after a stop in between, the stop entry stands alone
+        $state_query = xtc_db_query("SELECT fraud_status
+                                       FROM ".TABLE_KLARNA_PAYMENTS."
+                                      WHERE orders_id = '".(int)$oID."'");
+        $state = xtc_db_fetch_array($state_query);
+        if (is_array($state) && $state['fraud_status'] == 'ACCEPTED') {
+          $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna fraud status: ACCEPTED, order status not changed');
+        }
       }
       
       return $fraud_status;
@@ -350,7 +357,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
     
     $rejected_status = ((defined('MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID') && (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID > 0) ? (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID : 0);
     if ($rejected_status == 0
-        || $this->change_orders_status($oID, $pending_status, $rejected_status, 'Klarna fraud status: REJECTED') === false
+        || $this->change_orders_status($oID, $pending_status, $rejected_status, 'Klarna fraud status: REJECTED', 'REJECTED') === false
         )
     {
       $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna fraud status: REJECTED');
@@ -362,7 +369,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
 
   function completeAccept($oID, $order_id, $pending_status, $accepted_status, $data = null, $first_attempt = false) {
     // a parallel call may have completed the accept, then the capture is still due
-    if ($this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED') === false
+    if ($this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED', 'ACCEPTING') === false
         && $this->get_orders_status($oID) != $accepted_status
         )
     {
@@ -411,7 +418,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       $orders_status = $this->get_orders_status($oID);
       if ($rejected_status > 0
           && ($orders_status == $pending_status || $orders_status == $accepted_status)
-          && $this->change_orders_status($oID, $orders_status, $rejected_status, $comment) === true
+          && $this->change_orders_status($oID, $orders_status, $rejected_status, $comment, 'STOPPED') === true
           )
       {
         return 'STOPPED';
@@ -437,19 +444,31 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
-  function change_orders_status($oID, $from_status, $to_status, $comment) {
-    // only the expected status is changed, a parallel call or a manual change wins
+  function change_orders_status($oID, $from_status, $to_status, $comment, $fraud_status) {
+    // order status and row state are checked in one statement, a stop or a manual change in between wins
     if ((int)$to_status != (int)$from_status) {
-      xtc_db_query("UPDATE ".TABLE_ORDERS."
-                       SET orders_status = '".(int)$to_status."',
-                           last_modified = now()
-                     WHERE orders_id = '".(int)$oID."'
-                       AND orders_status = '".(int)$from_status."'");
+      xtc_db_query("UPDATE ".TABLE_ORDERS." o
+                      JOIN ".TABLE_KLARNA_PAYMENTS." kp
+                           ON kp.orders_id = o.orders_id
+                       SET o.orders_status = '".(int)$to_status."',
+                           o.last_modified = now()
+                     WHERE o.orders_id = '".(int)$oID."'
+                       AND o.orders_status = '".(int)$from_status."'
+                       AND kp.fraud_status = '".xtc_db_input($fraud_status)."'");
       if (xtc_db_affected_rows() < 1) {
         return false;
       }
-    } elseif ($this->get_orders_status($oID) != (int)$from_status) {
-      return false;
+    } else {
+      $check_query = xtc_db_query("SELECT o.orders_id
+                                     FROM ".TABLE_ORDERS." o
+                                     JOIN ".TABLE_KLARNA_PAYMENTS." kp
+                                          ON kp.orders_id = o.orders_id
+                                    WHERE o.orders_id = '".(int)$oID."'
+                                      AND o.orders_status = '".(int)$from_status."'
+                                      AND kp.fraud_status = '".xtc_db_input($fraud_status)."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        return false;
+      }
     }
     
     $this->insert_status_history($oID, $to_status, $comment);
