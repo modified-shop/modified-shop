@@ -299,7 +299,6 @@ class PayPalPaymentBase extends PayPalCommon {
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
         list ($module, $method) = explode('_', $_POST['shipping']);
-        global ${$module};
       }
 
       $total_weight = $_SESSION['cart']->show_weight();
@@ -320,6 +319,11 @@ class PayPalPaymentBase extends PayPalCommon {
       // load all enabled shipping modules
       require_once (DIR_WS_CLASSES.'shipping.php');
       $shipping_modules = new shipping;
+
+      // a name like "this" must not become a global
+      if (isset($module) && ($module == 'free' || in_array($module.'.php', $shipping_modules->modules))) {
+        global ${$module};
+      }
             
       $redirect_link = xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')), 'SSL');
       require(DIR_WS_INCLUDES.'shipping_action.php');
