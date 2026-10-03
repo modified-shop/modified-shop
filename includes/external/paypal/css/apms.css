@@ -236,7 +236,7 @@
   
   @media only screen and (min-width: 759px) {
     .apms_form_button.apms_nocheckout {
-      height:140px;
+      max-height:140px;
       margin-bottom: 0;
     }
     .apms_form_button.apms_nocheckout.apms_product {
