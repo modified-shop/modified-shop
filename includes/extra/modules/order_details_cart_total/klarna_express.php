@@ -10,6 +10,14 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  // the cart ends an express checkout, the normal checkout offers all payment methods again
+  if (isset($_SESSION['klarna']['express_flow'])) {
+    unset($_SESSION['klarna']);
+    if (isset($_SESSION['payment']) && $_SESSION['payment'] === 'klarna_express') {
+      unset($_SESSION['payment']);
+    }
+  }
+
   if (defined('MODULE_PAYMENT_KLARNA_EXPRESS_STATUS')
       && MODULE_PAYMENT_KLARNA_EXPRESS_STATUS == 'True'
       && defined('MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_CART')
@@ -25,7 +33,12 @@
 
     $klarna_express = new klarna_express();
 
-    if ($klarna_express::express_enabled() === true && $klarna_express->cart_requires_shipping() === true) {
+    // no button when the shop restricts the module for this customer group or cart
+    if ($klarna_express::express_enabled() === true
+        && $klarna_express->cart_requires_shipping() === true
+        && $klarna_express->payment_allowed() === true
+        )
+    {
       $klarna_express_order = $klarna_express->get_express_order_data();
 
       $klarna_express_config = json_encode(array(
@@ -43,6 +56,8 @@
         'callback' => str_replace('&amp;', '&', xtc_href_link('callback/klarna/express.php', '', 'SSL')),
         'error_url' => str_replace('&amp;', '&', xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=klarna_express', 'NONSSL')),
       ), JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+
+      $klarna_express->set_express_amount($klarna_express_order['order_amount']);
 
       if ($klarna_express_config !== false) {
         $smarty->assign('BUTTON_KLARNA', '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_WS_EXTERNAL.'klarna/css/express.css?v=1" type="text/css" media="screen" />

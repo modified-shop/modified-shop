@@ -174,6 +174,7 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
   
   $error = false;
   if (isset($_GET['payment_error']) 
+      && isset(${$_GET['payment_error']})
       && is_object(${$_GET['payment_error']}) 
       && method_exists(${$_GET['payment_error']}, 'get_error')
       && ($error = ${$_GET['payment_error']}->get_error())

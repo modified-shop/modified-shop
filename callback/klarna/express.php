@@ -43,7 +43,14 @@ if (klarna_express::express_enabled() === true) {
 if ($klarna_error != '') {
   unset($_SESSION['klarna_express']);
 
-  $messageStack->add_session('shopping_cart', ((in_array($klarna_error, array('address', 'country'))) ? MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ADDRESS : MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_CALLBACK));
+  if (in_array($klarna_error, array('address', 'country'))) {
+    $klarna_message = MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ADDRESS;
+  } elseif ($klarna_error == 'unavailable') {
+    $klarna_message = MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE;
+  } else {
+    $klarna_message = MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_CALLBACK;
+  }
+  $messageStack->add_session('shopping_cart', $klarna_message);
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
 }
 

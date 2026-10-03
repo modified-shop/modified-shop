@@ -62,29 +62,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   function update_status() {
     global $order, $PHP_SELF;
     
-    if ($this->enabled == true
-        && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')
-        && (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') > 0
-        ) 
-    {
-      $check_flag = false;
-      $check_query = xtc_db_query("SELECT zone_id 
-                                     FROM ".TABLE_ZONES_TO_GEO_ZONES." 
-                                    WHERE geo_zone_id = '".(int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')."' 
-                                      AND zone_country_id = '".$order->billing['country']['id']."' 
-                                 ORDER BY zone_id");
-      while($check = xtc_db_fetch_array($check_query)) {
-        if ($check['zone_id'] < 1) {
-          $check_flag = true;
-          break;
-        } elseif ($check['zone_id'] == $order->billing['zone_id']) {
-          $check_flag = true;
-          break;
-        }
-      }
-      if ($check_flag == false) {
-        $this->enabled = false;
-      }
+    if ($this->enabled == true && $this->zone_allowed() === false) {
+      $this->enabled = false;
     }
     
     if (isset($_SESSION['klarna'])) {
@@ -97,10 +76,14 @@ class KlarnaPaymentBase extends KlarnaAutoload {
               && $_SESSION['klarna']['express_flow'] === true
               && (!isset($_SESSION['cart']) || $_SESSION['klarna']['cart_id'] !== $_SESSION['cart']->cartID)
               )
+          || (isset($_SESSION['klarna']['express_flow'])
+              && $_SESSION['klarna']['express_flow'] === true
+              && self::express_enabled() !== true
+              )
           )
       {
-        // an express session was authorized for one cart, a changed cart starts the normal flow
-        unset($_SESSION['klarna']);
+        // an express session was authorized for one cart, a changed cart or a disabled express module starts the normal flow
+        self::discard_session();
       }
     }
     
@@ -150,6 +133,59 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     {
       $this->enabled = false;
     }
+  }
+
+
+  // geo zone of the module against the billing address, true without a zone
+  function zone_allowed($country_id = null, $zone_id = null) {
+    global $order;
+
+    if (!defined('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')
+        || (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') < 1
+        )
+    {
+      return true;
+    }
+
+    if ($country_id === null) {
+      if (!is_object($order)) {
+        return true;
+      }
+      $country_id = $order->billing['country']['id'];
+      $zone_id = $order->billing['zone_id'];
+    }
+
+    $check_query = xtc_db_query("SELECT zone_id 
+                                   FROM ".TABLE_ZONES_TO_GEO_ZONES." 
+                                  WHERE geo_zone_id = '".(int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')."' 
+                                    AND zone_country_id = '".(int) $country_id."' 
+                               ORDER BY zone_id");
+    while($check = xtc_db_fetch_array($check_query)) {
+      if ($check['zone_id'] < 1 || $check['zone_id'] == $zone_id) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
+  // the Klarna session goes, and with it the express choice of the payment method
+  public static function discard_session() {
+    unset($_SESSION['klarna']);
+    if (isset($_SESSION['payment']) && $_SESSION['payment'] === 'klarna_express') {
+      unset($_SESSION['payment']);
+    }
+  }
+
+
+  // the express module is on and installed
+  public static function express_enabled() {
+    return (defined('MODULE_PAYMENT_KLARNA_EXPRESS_STATUS')
+            && MODULE_PAYMENT_KLARNA_EXPRESS_STATUS == 'True'
+            && defined('MODULE_PAYMENT_INSTALLED')
+            && in_array('klarna_express.php', explode(';', MODULE_PAYMENT_INSTALLED), true)
+            );
   }
 
 
@@ -330,7 +366,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         'customer_id' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : 0),
       ));
       
-      unset($_SESSION['klarna']);
+      self::discard_session();
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
     

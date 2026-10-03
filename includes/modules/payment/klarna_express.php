@@ -43,6 +43,10 @@ class klarna_express extends KlarnaPayment {
                       && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True'
                       && self::express_session_valid()
                       );
+
+    if ($this->enabled === true && $this->zone_allowed() === false) {
+      $this->enabled = false;
+    }
   }
 
 
@@ -380,6 +384,14 @@ class klarna_express extends KlarnaPayment {
       }
     }
 
+    // the confirm button belongs to a choice between methods, not between modules
+    $methods_count = 0;
+    foreach ($quotes as $quote) {
+      if (!isset($quote['error']) && isset($quote['methods']) && is_array($quote['methods'])) {
+        $methods_count += count($quote['methods']);
+      }
+    }
+
     // build shipping block
     require(DIR_WS_INCLUDES.'shipping_block.php');
 
@@ -412,7 +424,7 @@ class klarna_express extends KlarnaPayment {
     if ($shipping_found === false) {
       $module_smarty->assign('shipping_message', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
       $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
-    } elseif ($quotes_count > 1 && $free_shipping != true) {
+    } elseif ($methods_count > 1 && $free_shipping != true) {
       $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
     }
     $module_smarty->assign('FORM_END', '</form>');
@@ -506,6 +518,12 @@ class klarna_express extends KlarnaPayment {
   }
 
 
+  // a guard message without its trailing line breaks, the guard adds its own
+  function get_guard_text($text) {
+    return xtc_js_lang(preg_replace('/(\\\\n|\\s)+$/', '', $text));
+  }
+
+
   // the shop texts of the payment page, checked before finalize() opens the Klarna popup
   function get_submit_guard_js() {
     if ($this->use_short_checkout() !== true) {
@@ -526,6 +544,7 @@ class klarna_express extends KlarnaPayment {
       $checks[] = array('#revocation', JS_ERROR_REVOCATION_NOT_ACCEPTED);
     }
 
+    // the shop texts end with line breaks in German only
     $js = '
                 var klarna_error = "";
                 var klarna_decode = function(str) {
@@ -534,7 +553,7 @@ class klarna_express extends KlarnaPayment {
     foreach ($checks as $check) {
       $js .= '
                 if (!$("'.$check[0].'").is(":checked")) {
-                  klarna_error += klarna_decode("'.xtc_js_lang($check[1]).'");
+                  klarna_error += klarna_decode("'.$this->get_guard_text($check[1]).'") + "\\n\\n";
                 }';
     }
 
@@ -546,9 +565,9 @@ class klarna_express extends KlarnaPayment {
                   klarna_shipping = $("#checkout_shipping input[name=shipping][type=hidden]").val();
                 }
                 if (klarna_shipping === undefined) {
-                  klarna_error += klarna_decode("'.xtc_js_lang(JS_ERROR_NO_SHIPPING_MODULE_SELECTED).'");
+                  klarna_error += klarna_decode("'.$this->get_guard_text(JS_ERROR_NO_SHIPPING_MODULE_SELECTED).'") + "\\n\\n";
                 } else if (klarna_shipping != '.json_encode($this->selected_shipping, JSON_HEX_TAG | JSON_HEX_AMP).') {
-                  klarna_error += klarna_decode("'.xtc_js_lang(MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_JS_ERROR_SHIPPING).'");
+                  klarna_error += klarna_decode("'.$this->get_guard_text(MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_JS_ERROR_SHIPPING).'") + "\\n\\n";
                 }';
     }
 
@@ -608,6 +627,15 @@ class klarna_express extends KlarnaPayment {
 
 
   function before_process() {
+    global $messageStack;
+
+    // no order without a valid Klarna session
+    if (self::express_session_valid() !== true) {
+      self::discard_session();
+      $messageStack->add_session('checkout_payment', MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_SESSION);
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    }
+
     // the confirmation page of the short checkout holds the agreements, check them first
     if ($this->use_short_checkout() === true) {
       $this->check_short_checkout();
@@ -633,22 +661,36 @@ class klarna_express extends KlarnaPayment {
             && isset($_SESSION['sendto'])
             && isset($_SESSION['klarna']['sendto'])
             && $_SESSION['klarna']['sendto'] == $_SESSION['sendto']
+            && isset($_SESSION['klarna']['sendto_id'])
+            && $_SESSION['klarna']['sendto_id'] == self::address_country_id($_SESSION['sendto'])
             && isset($_SESSION['billto'])
             && isset($_SESSION['klarna']['billto'])
             && $_SESSION['klarna']['billto'] == $_SESSION['billto']
+            && isset($_SESSION['klarna']['billto_id'])
+            && $_SESSION['klarna']['billto_id'] == self::address_country_id($_SESSION['billto'])
             && isset($_SESSION['klarna']['time_created'])
             && ($_SESSION['klarna']['time_created'] + 3600) >= time()
             );
   }
 
 
-  // the button needs the module on, the client id and the module in the installed list
-  public static function express_enabled() {
-    return (defined('MODULE_PAYMENT_KLARNA_EXPRESS_STATUS')
-            && MODULE_PAYMENT_KLARNA_EXPRESS_STATUS == 'True'
-            && defined('MODULE_PAYMENT_INSTALLED')
-            && in_array('klarna_express.php', explode(';', MODULE_PAYMENT_INSTALLED), true)
-            );
+  // the country of an address book entry, read once per request
+  public static function address_country_id($address_id) {
+    static $cache = array();
+
+    $address_id = (int)$address_id;
+    if (!isset($cache[$address_id])) {
+      $address_query = xtc_db_query("SELECT entry_country_id
+                                       FROM ".TABLE_ADDRESS_BOOK."
+                                      WHERE address_book_id = '".$address_id."'");
+      $address = xtc_db_fetch_array($address_query);
+      if (!is_array($address)) {
+        return 0;
+      }
+      $cache[$address_id] = (int)$address['entry_country_id'];
+    }
+
+    return $cache[$address_id];
   }
 
 
@@ -708,6 +750,48 @@ class klarna_express extends KlarnaPayment {
   }
 
 
+  // the amount the button was rendered with, the callback compares it with the Klarna session
+  function set_express_amount($amount) {
+    if (isset($_SESSION['klarna_express']) && is_array($_SESSION['klarna_express'])) {
+      $_SESSION['klarna_express']['order_amount'] = (int)round($amount);
+    }
+  }
+
+
+  // shop restrictions of this module, the country is known in the callback only
+  function payment_allowed($country_iso = '', $country_id = 0, $zone_id = 0) {
+    $unallowed = ((isset($_SESSION['customers_status']['customers_status_payment_unallowed'])) ? $_SESSION['customers_status']['customers_status_payment_unallowed'] : '');
+
+    $content_type = $_SESSION['cart']->get_content_type();
+    if (in_array($content_type, array('virtual', 'virtual_weight', 'mixed')) && defined('DOWNLOAD_UNALLOWED_PAYMENT')) {
+      $unallowed .= ','.DOWNLOAD_UNALLOWED_PAYMENT;
+    }
+    if ($_SESSION['cart']->count_contents_virtual() != $_SESSION['cart']->count_contents()
+        && defined('MODULE_ORDER_TOTAL_GV_UNALLOWED_PAYMENT')
+        )
+    {
+      $unallowed .= ','.MODULE_ORDER_TOTAL_GV_UNALLOWED_PAYMENT;
+    }
+    if (in_array($this->code, explode(',', preg_replace("'[\r\n\s]+'", '', $unallowed)))) {
+      return false;
+    }
+
+    if ($country_iso != '') {
+      if (defined('MODULE_PAYMENT_'.strtoupper($this->code).'_ALLOWED') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ALLOWED') != '') {
+        $allowed_zones = array_filter(explode(',', strtoupper(preg_replace("'[\r\n\s]+'", '', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ALLOWED')))));
+        if (count($allowed_zones) > 0 && !in_array(strtoupper($country_iso), $allowed_zones)) {
+          return false;
+        }
+      }
+      if ($this->zone_allowed((int)$country_id, (int)$zone_id) === false) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
   // returns the failure reason or an array with the checked data
   function check_express_request($post) {
     if (self::express_enabled() !== true) {
@@ -759,6 +843,16 @@ class klarna_express extends KlarnaPayment {
       return 'session';
     }
 
+    // the browser posts the token, a token of another session must not reach the checkout
+    if ((isset($klarna_session['client_token']) && (!is_string($klarna_session['client_token']) || !hash_equals($klarna_session['client_token'], $post['client_token'])))
+        || (isset($klarna_session['session_id']) && (!is_string($klarna_session['session_id']) || !hash_equals($klarna_session['session_id'], $post['session_id'])))
+        )
+    {
+      $this->logger->log('klarna', 'express callback: session mismatch');
+
+      return 'session';
+    }
+
     if (!isset($klarna_session['purchase_currency'])
         || !is_string($klarna_session['purchase_currency'])
         || strtoupper($klarna_session['purchase_currency']) !== strtoupper($_SESSION['currency'])
@@ -772,6 +866,26 @@ class klarna_express extends KlarnaPayment {
       return 'currency';
     }
 
+    // the amount of the button payload as the cart page rendered it
+    if (isset($klarna_session['order_amount'])
+        && is_numeric($klarna_session['order_amount'])
+        && isset($_SESSION['klarna_express']['order_amount'])
+        && (int)$klarna_session['order_amount'] !== (int)$_SESSION['klarna_express']['order_amount']
+        )
+    {
+      $this->logger->log('klarna', 'express callback: amount mismatch', array(
+        'klarna' => (int)$klarna_session['order_amount'],
+        'shop' => (int)$_SESSION['klarna_express']['order_amount'],
+      ));
+
+      return 'amount';
+    }
+
+    // the status is only logged, its values are not documented for the button flow
+    if (isset($klarna_session['status']) && is_string($klarna_session['status']) && $klarna_session['status'] !== 'incomplete') {
+      $this->logger->log('klarna', 'express callback: session status '.substr(preg_replace('/[^A-Za-z_]/', '', $klarna_session['status']), 0, 32));
+    }
+
     $collected = ((isset($post['collected_shipping_address']) && is_string($post['collected_shipping_address']) && strlen($post['collected_shipping_address']) <= 20000) ? json_decode($post['collected_shipping_address'], true) : null);
     $address = $this->map_collected_address($collected);
     if (!is_array($address)) {
@@ -783,6 +897,12 @@ class klarna_express extends KlarnaPayment {
       return 'country';
     }
     $address['country_id'] = $country['countries_id'];
+
+    // the payment page would drop the Klarna choice for this address anyway
+    $zone_address = $this->to_shop_charset(array('state' => $address['state']));
+    if ($this->payment_allowed($address['country'], $address['country_id'], $this->get_zone_id($address['country_id'], $zone_address['state'])) !== true) {
+      return 'unavailable';
+    }
 
     // Klarna may return the categories on read, the posted ones only come from the browser
     $methods = $this->clean_categories((isset($klarna_session['payment_method_categories'])) ? $klarna_session['payment_method_categories'] : null);
@@ -820,14 +940,18 @@ class klarna_express extends KlarnaPayment {
       'city' => 64,
       'region' => 64,
       'country' => 2,
-      'email' => 96,
+      'email' => 255,
       'phone' => 32,
     );
     $data = array();
+    $too_long = array();
     foreach ($fields as $key => $length) {
       $value = ((isset($collected[$key]) && is_string($collected[$key])) ? $collected[$key] : '');
-      $value = trim(preg_replace('/[\x00-\x1F\x7F]+/u', ' ', strip_tags($value)));
-      $data[$key] = mb_substr($value, 0, $length, 'UTF-8');
+      $data[$key] = trim(preg_replace('/[\x00-\x1F\x7F]+/u', ' ', strip_tags($value)));
+      // a cut address or email would reach the wrong place, so the customer enters it in the checkout
+      if (mb_strlen($data[$key], 'UTF-8') > $length) {
+        $too_long[] = $key;
+      }
     }
 
     $missing = array();
@@ -842,9 +966,9 @@ class klarna_express extends KlarnaPayment {
     if ($data['email'] !== '' && filter_var($data['email'], FILTER_VALIDATE_EMAIL) === false) {
       $missing[] = 'email';
     }
-    if (count($missing) > 0) {
+    if (count($missing) > 0 || count($too_long) > 0) {
       // field names only, the values are personal data
-      $this->logger->log('klarna', 'express callback: address incomplete', array('fields' => array_values(array_unique($missing))));
+      $this->logger->log('klarna', 'express callback: address incomplete', array('fields' => array_values(array_unique($missing)), 'too_long' => $too_long));
 
       return false;
     }
@@ -856,13 +980,18 @@ class klarna_express extends KlarnaPayment {
       $street = $street.', '.$suburb;
       $suburb = '';
     }
+    if (mb_strlen($street, 'UTF-8') > 64 || mb_strlen($suburb, 'UTF-8') > 32) {
+      $this->logger->log('klarna', 'express callback: address incomplete', array('fields' => array(), 'too_long' => array('street_address')));
+
+      return false;
+    }
 
     return array(
       'firstname' => $data['given_name'],
       'lastname' => $data['family_name'],
       'company' => $data['organization_name'],
-      'street_address' => mb_substr($street, 0, 64, 'UTF-8'),
-      'suburb' => mb_substr($suburb, 0, 32, 'UTF-8'),
+      'street_address' => $street,
+      'suburb' => $suburb,
       'postcode' => $data['postal_code'],
       'city' => $data['city'],
       'state' => $data['region'],
@@ -1091,6 +1220,9 @@ class klarna_express extends KlarnaPayment {
 
     unset($_SESSION['shipping']);
     $_SESSION['payment'] = $this->code;
+
+    // an aborted PayPal express would keep its payment list and win on the payment page
+    unset($_SESSION['paypal']);
 
     // checks throughout the checkout against changes of the cart
     $_SESSION['cartID'] = $_SESSION['cart']->cartID;

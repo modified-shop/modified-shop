@@ -38,7 +38,7 @@
     var $form_action_url;
 
     function __construct($module = '') {
-      global $PHP_SELF,$order;
+      global $PHP_SELF,$order,$messageStack;
 
       require_once (DIR_FS_CATALOG.'includes/classes/checkoutModules.class.php');
       $this->checkoutModules = new checkoutModules();
@@ -48,10 +48,33 @@
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
 
         ## Klarna express
+        // a failed Klarna order ends the express session
+        if (isset($_GET['payment_error'])
+            && $_GET['payment_error'] === 'klarna_express'
+            && basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT
+            )
+        {
+          include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/klarna_express.php');
+          if (isset($_SESSION['klarna']['express_flow'])) {
+            unset($_SESSION['klarna']);
+          }
+          if (isset($_SESSION['payment']) && $_SESSION['payment'] === 'klarna_express') {
+            unset($_SESSION['payment']);
+          }
+          $messageStack->add_session('checkout_payment', MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_MESSAGE);
+        }
+
         $klarna_express = false;
-        if (isset($_SESSION['klarna']['express_flow'])) {
+        // the chosen method loads even with a dead session, update_status() disables it
+        $klarna_express_chosen = ($module === 'klarna_express'
+                                  && isset($_SESSION['payment'])
+                                  && $_SESSION['payment'] === 'klarna_express'
+                                  );
+        if (isset($_SESSION['klarna']['express_flow']) || $klarna_express_chosen) {
           require_once(DIR_FS_CATALOG.'includes/modules/payment/klarna_express.php');
-          $klarna_express = (klarna_express::express_enabled() && klarna_express::express_session_valid());
+          $klarna_express = (klarna_express::express_enabled()
+                             && ($klarna_express_chosen || klarna_express::express_session_valid())
+                             );
         }
 
         ## Paypal
@@ -195,6 +218,20 @@
               }
             }
           }
+        }
+
+        // a shop restriction leaves no Klarna method, the normal list takes over
+        if ($klarna_express === true
+            && basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT
+            && xtc_count_payment_modules() == 0
+            )
+        {
+          unset($GLOBALS['klarna_express']);
+          klarna_express::discard_session();
+          $this->selected_module = '';
+          $this->__construct();
+
+          return;
         }
 
         // only the payment page may drop a PayPal restriction that lets no module through
@@ -434,6 +471,26 @@
     }
 
     function before_process() {
+      global $messageStack;
+
+      // klarna_express orders only through its own before_process()
+      if (isset($_SESSION['payment'])
+          && $_SESSION['payment'] === 'klarna_express'
+          && ($this->selected_module !== 'klarna_express'
+              || !isset($GLOBALS['klarna_express'])
+              || !is_object($GLOBALS['klarna_express'])
+              || !$GLOBALS['klarna_express']->enabled
+              )
+          )
+      {
+        if (isset($_SESSION['klarna']['express_flow'])) {
+          unset($_SESSION['klarna']);
+        }
+        unset($_SESSION['payment']);
+        $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+      }
+
       if (is_array($this->modules)) {
         if (isset($GLOBALS[$this->selected_module])
             && is_object($GLOBALS[$this->selected_module]) 
