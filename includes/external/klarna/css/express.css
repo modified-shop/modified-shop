@@ -23,9 +23,9 @@
 .cssButtonPos10 .klarna_express_product {
   margin-bottom: 0;
 }
-/* the PayPal block above ends with a negative margin, so the gap has to come from here */
+/* the PayPal float above ends with a negative margin and clearing drops a top margin, so the gap is padding */
 .cssButtonPos10 .klarna_express_product {
-  margin-top: 5px;
+  padding-top: 5px;
 }
 /* xtc5 shrinks the PayPal cell to the button, so the box needs a width */
 td > .klarna_express_product {
