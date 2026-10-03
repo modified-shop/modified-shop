@@ -27,11 +27,16 @@
 .cssButtonPos10 .klarna_express_product {
   margin-top: 5px;
 }
-/* tpl_modified and xtc5 shrink the PayPal cell to the button, so the box needs a width */
-.addtobasket_button .klarna_express_product,
+/* xtc5 shrinks the PayPal cell to the button, so the box needs a width */
 td > .klarna_express_product {
   width: 175px;
   max-width: 100%;
+}
+/* tpl_modified: PayPal renders at its 150px minimum and ends with a negative margin */
+.addtobasket_button .klarna_express_product {
+  width: 150px;
+  max-width: 100%;
+  margin-top: 5px;
 }
 #klarna-express-button {
   display: block;
