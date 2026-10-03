@@ -407,6 +407,23 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
+  function change_new_orders_status($oID, $from_status, $to_status, $comment) {
+    // for an order without a klarna_payments row, no resolver or push can act on it yet
+    xtc_db_query("UPDATE ".TABLE_ORDERS."
+                     SET orders_status = '".(int)$to_status."',
+                         last_modified = now()
+                   WHERE orders_id = '".(int)$oID."'
+                     AND orders_status = '".(int)$from_status."'");
+    if (xtc_db_affected_rows() < 1) {
+      return false;
+    }
+    
+    $this->insert_status_history($oID, $to_status, $comment);
+    
+    return true;
+  }
+
+
   function insert_status_history($oID, $orders_status, $comment) {
     $order_history_data = array(
       'orders_id' => (int)$oID,
