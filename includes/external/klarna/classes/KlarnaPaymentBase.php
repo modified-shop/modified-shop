@@ -93,8 +93,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           || $_SESSION['klarna']['billto'] != $_SESSION['billto']
           || $_SESSION['klarna']['billto_id'] != $this->get_country_id($_SESSION['billto'])
           || ($_SESSION['klarna']['time_created'] + 3600) < time()
-          || (isset($_SESSION['klarna']['express'])
-              && $_SESSION['klarna']['express'] === true
+          || (isset($_SESSION['klarna']['express_flow'])
+              && $_SESSION['klarna']['express_flow'] === true
               && (!isset($_SESSION['cart']) || $_SESSION['klarna']['cart_id'] !== $_SESSION['cart']->cartID)
               )
           )
@@ -153,6 +153,11 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
+  function is_express_payment() {
+    return false;
+  }
+
+
   function javascript_validation() {
     return false;
   }
@@ -189,10 +194,14 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     if (isset($_SESSION['klarna'])) {
       $order_array = $this->getOrderData();
       
-      // an express session is already authorized, the order data only has to be finalized
-      $express = (isset($_SESSION['klarna']['express']) && $_SESSION['klarna']['express'] === true);
+      // the express popup already authorized the session, the order only has to be finalized
+      $express = $this->is_express_payment();
       
-      $data_js = '{
+      if ($express === true) {
+        // same data as the create order request in before_process()
+        $data_js = json_encode($order_array, JSON_HEX_TAG | JSON_HEX_AMP);
+      } else {
+        $data_js = '{
                   billing_address: 
                     '.json_encode($order_array['billing_address']).'
                   ,
@@ -200,6 +209,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                     '.json_encode($order_array['shipping_address']).'
                   
                 }';
+      }
       
       $result_js = '
                         $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
@@ -215,10 +225,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                         }';
       
       if ($express === true) {
+        // no category, the shopper chose the method in the express popup
         $submit_js = '
-                Klarna.Payments.finalize({
-                  payment_method_category: "'.$this->klarna_code.'"
-                }, '.$data_js.',
+                Klarna.Payments.finalize({}, '.$data_js.',
                 function(finalresult) {'.$result_js.'
                 });';
       } else {

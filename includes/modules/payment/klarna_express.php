@@ -34,15 +34,56 @@ class klarna_express extends KlarnaPayment {
 
 
   function update_status() {
-    // no Klarna session and no category check, the module is not a payment choice
+    // payment choice only for the Klarna session the customer authorized in the express popup
     $this->enabled = (defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS')
-                      && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True');
+                      && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True'
+                      && self::express_session_valid()
+                      );
   }
 
 
   function selection() {
-    // hidden in the normal checkout
-    return false;
+    // Klarna shows the chosen method in the container, no category is loaded
+    $_SESSION['klarna']['script'][$this->klarna_code] = '
+          Klarna.Payments.load({
+            container: "#klarna-payments-express"
+          });';
+
+    return array(
+      'id' => $this->code,
+      'module' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_SELECTION,
+      'description' => $this->info.'<div id="klarna-payments-express"></div>',
+    );
+  }
+
+
+  function is_express_payment() {
+    return self::express_session_valid();
+  }
+
+
+  // the Klarna session of an express checkout for this cart and these addresses, not older than an hour
+  public static function express_session_valid() {
+    return (isset($_SESSION['klarna'])
+            && is_array($_SESSION['klarna'])
+            && isset($_SESSION['klarna']['express_flow'])
+            && $_SESSION['klarna']['express_flow'] === true
+            && isset($_SESSION['klarna']['client_token'])
+            && is_string($_SESSION['klarna']['client_token'])
+            && $_SESSION['klarna']['client_token'] !== ''
+            && isset($_SESSION['cart'])
+            && is_object($_SESSION['cart'])
+            && isset($_SESSION['klarna']['cart_id'])
+            && $_SESSION['klarna']['cart_id'] === $_SESSION['cart']->cartID
+            && isset($_SESSION['sendto'])
+            && isset($_SESSION['klarna']['sendto'])
+            && $_SESSION['klarna']['sendto'] == $_SESSION['sendto']
+            && isset($_SESSION['billto'])
+            && isset($_SESSION['klarna']['billto'])
+            && $_SESSION['klarna']['billto'] == $_SESSION['billto']
+            && isset($_SESSION['klarna']['time_created'])
+            && ($_SESSION['klarna']['time_created'] + 3600) >= time()
+            );
   }
 
 
@@ -494,12 +535,12 @@ class klarna_express extends KlarnaPayment {
     $_SESSION['billing_zone'] = $data['address']['country'];
 
     unset($_SESSION['shipping']);
-    unset($_SESSION['payment']);
+    $_SESSION['payment'] = $this->code;
 
     // checks throughout the checkout against changes of the cart
     $_SESSION['cartID'] = $_SESSION['cart']->cartID;
 
-    // same shape as getKlarnaSession(), the category modules offer the methods and update_status() keeps it
+    // same shape as getKlarnaSession(), klarna_express is the payment module of the order
     $_SESSION['klarna'] = array(
       'session_id' => $data['session_id'],
       'client_token' => $data['client_token'],
@@ -510,7 +551,7 @@ class klarna_express extends KlarnaPayment {
       'billto_id' => $this->get_country_id($_SESSION['billto']),
       'cart_id' => $_SESSION['cart']->cartID,
       'time_created' => time(),
-      'express' => true,
+      'express_flow' => true,
     );
 
     unset($_SESSION['klarna_express']);

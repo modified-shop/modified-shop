@@ -17,6 +17,7 @@ if (isset($order) && is_object($order)) {
       || $order->info['payment_method'] == 'klarna_directbanktransfer'
       || $order->info['payment_method'] == 'klarna_paynow'
       || $order->info['payment_method'] == 'klarna_klarna'
+      || $order->info['payment_method'] == 'klarna_express'
       ) 
   {
     require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
