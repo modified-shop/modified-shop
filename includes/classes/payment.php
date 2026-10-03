@@ -228,6 +228,12 @@
         {
           unset($GLOBALS['klarna_express']);
           klarna_express::discard_session();
+
+          // the session is gone now, so this runs once
+          include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/klarna_express.php');
+          if (is_object($messageStack) && defined('MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE')) {
+            $messageStack->add_session('checkout_payment', MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE);
+          }
           $this->selected_module = '';
           $this->__construct();
 

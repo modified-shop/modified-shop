@@ -240,8 +240,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       $express = $this->is_express_payment();
       
       if ($express === true) {
-        // same data as the create order request in before_process()
-        $data_js = json_encode($order_array, JSON_HEX_TAG | JSON_HEX_AMP);
+        // the page gets the order fields only, the notification URL with the fraud token stays on the server
+        $express_keys = array('purchase_country', 'purchase_currency', 'locale', 'order_amount', 'order_tax_amount', 'order_lines', 'billing_address', 'shipping_address');
+        $data_js = json_encode(array_intersect_key($order_array, array_flip($express_keys)), JSON_HEX_TAG | JSON_HEX_AMP);
       } else {
         $data_js = '{
                   billing_address: 

@@ -33,6 +33,14 @@ if (klarna_express::express_enabled() === true) {
     }
   } else {
     $klarna_error = $klarna_data;
+
+    // browser Back and resubmit: the token is used up, the running flow is still valid
+    if ($klarna_error == 'token' && klarna_express::express_session_valid() === true) {
+      if (isset($_SESSION['klarna']['short_checkout']) && $_SESSION['klarna']['short_checkout'] === true) {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'SSL'));
+      }
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+    }
   }
 
   if ($klarna_error != '') {
@@ -47,6 +55,12 @@ if ($klarna_error != '') {
     $klarna_message = MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ADDRESS;
   } elseif ($klarna_error == 'unavailable') {
     $klarna_message = MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE;
+  } elseif ($klarna_error == 'stock') {
+    $klarna_message = MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_STOCK;
+  } elseif ($klarna_error == 'order_value') {
+    $klarna_message = MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ORDER_VALUE;
+  } elseif ($klarna_error == 'gift') {
+    $klarna_message = GUEST_VOUCHER_NOT_ALLOWED;
   } else {
     $klarna_message = MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_CALLBACK;
   }

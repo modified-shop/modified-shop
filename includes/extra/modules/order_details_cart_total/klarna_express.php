@@ -20,8 +20,9 @@
 
   if (defined('MODULE_PAYMENT_KLARNA_EXPRESS_STATUS')
       && MODULE_PAYMENT_KLARNA_EXPRESS_STATUS == 'True'
-      && defined('MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_CART')
-      && MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_CART == 'True'
+      && (!defined('MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_CART')
+          || MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_CART == 'True'
+          )
       && defined('MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID')
       && MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID != ''
       && $_SESSION['cart']->show_total() > 0
@@ -33,8 +34,8 @@
 
     $klarna_express = new klarna_express();
 
-    // no button when the shop restricts the module for this customer group or cart
-    if ($klarna_express->express_available() === true) {
+    // no button when the shop restricts the module for this customer group or cart, or the checkout would reject the cart
+    if ($klarna_express->express_available() === true && $klarna_express->checkout_allowed() === '') {
       $klarna_express_config = $klarna_express->get_express_config(
         $klarna_express->prepare_express(),
         str_replace('&amp;', '&', xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=klarna_express', 'NONSSL'))

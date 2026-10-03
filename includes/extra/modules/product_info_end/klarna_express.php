@@ -33,6 +33,7 @@
 
     if ($klarna_express::express_configured() === true
         && $klarna_express->payment_allowed() === true
+        && $klarna_express->checkout_enabled() === true
         )
     {
       $klarna_express_config = $klarna_express->get_express_config(

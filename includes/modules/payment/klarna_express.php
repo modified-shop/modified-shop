@@ -51,6 +51,9 @@ class klarna_express extends KlarnaPayment {
 
 
   function selection() {
+    // the payment page restarts the flow, the agreements come with the confirmation page only once
+    unset($_SESSION['klarna']['short_checkout']);
+
     // Klarna shows the chosen method in the container, no category is loaded
     $_SESSION['klarna']['script'][$this->klarna_code] = '
           Klarna.Payments.load({
@@ -79,8 +82,8 @@ class klarna_express extends KlarnaPayment {
 
   // the callback marks the session when it skipped the shipping and payment pages
   function use_short_checkout() {
-    return (self::short_checkout_enabled()
-            && self::express_session_valid()
+    // the switch only decides at the start, a running flow keeps its agreements
+    return (self::express_session_valid()
             && isset($_SESSION['klarna']['short_checkout'])
             && $_SESSION['klarna']['short_checkout'] === true
             );
@@ -300,7 +303,10 @@ class klarna_express extends KlarnaPayment {
           )
       {
         list($module, $method) = explode('_', $_POST['shipping']);
-        global ${$module};
+        // a name like "this" must not become a global
+        if ($module == 'free' || in_array($module.'.php', $shipping_modules->modules)) {
+          global ${$module};
+        }
       } else {
         unset($_POST['shipping']);
       }
@@ -668,6 +674,9 @@ class klarna_express extends KlarnaPayment {
             && $_SESSION['klarna']['billto'] == $_SESSION['billto']
             && isset($_SESSION['klarna']['billto_id'])
             && $_SESSION['klarna']['billto_id'] == self::address_country_id($_SESSION['billto'])
+            && isset($_SESSION['klarna']['currency'])
+            && isset($_SESSION['currency'])
+            && $_SESSION['klarna']['currency'] === $_SESSION['currency']
             && isset($_SESSION['klarna']['time_created'])
             && ($_SESSION['klarna']['time_created'] + 3600) >= time()
             );
@@ -790,7 +799,21 @@ class klarna_express extends KlarnaPayment {
             && self::express_enabled() === true
             && $this->cart_requires_shipping() === true
             && $this->payment_allowed() === true
+            && $this->checkout_enabled() === true
             );
+  }
+
+
+  // checkout rules of includes/checkout_requirements.php that do not depend on the cart
+  function checkout_enabled() {
+    if (isset($_SESSION['allow_checkout']) && $_SESSION['allow_checkout'] == 'false') {
+      return false;
+    }
+    if ($_SESSION['customers_status']['customers_status_show_price'] != '1') {
+      return false;
+    }
+
+    return true;
   }
 
 
@@ -897,33 +920,60 @@ class klarna_express extends KlarnaPayment {
   }
 
 
-  // stock and order value limits that the cart page enforces, returns the failure reason or an empty string
-  function check_cart_limits() {
-    global $xtPrice;
+  // cart rules of includes/checkout_requirements.php, returns the failure reason or an empty string
+  function checkout_allowed() {
+    global $xtPrice, $main;
 
-    if (STOCK_CHECK == 'true' && STOCK_ALLOW_CHECKOUT != 'true') {
-      require_once(DIR_FS_INC.'xtc_check_stock.inc.php');
-      require_once(DIR_FS_INC.'check_stock_specials.inc.php');
+    $products = (array)$_SESSION['cart']->get_products(false);
 
-      foreach ((array)$_SESSION['cart']->get_products(false) as $products) {
-        if (xtc_check_stock($products['id'], $products['quantity'], $products['stock']) != '') {
-          return 'stock';
+    // the guest account the callback creates cannot buy vouchers
+    if (!isset($_SESSION['customer_id'])
+        || $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+        )
+    {
+      foreach ($products as $product) {
+        if (preg_match('/^GIFT/', addslashes($product['model']))) {
+          return 'gift';
         }
-        if (STOCK_CHECK_SPECIALS == 'true'
-            && $xtPrice->xtcCheckSpecial($products['id'])
-            && check_stock_specials($products['id'], $products['quantity']) != ''
-            )
-        {
-          return 'stock';
+      }
+    }
+
+    if (STOCK_ALLOW_CHECKOUT != 'true'
+        && (!isset($_SESSION['tmp_oID']) || !is_numeric($_SESSION['tmp_oID']))
+        )
+    {
+      if (STOCK_CHECK == 'true') {
+        require_once(DIR_FS_INC.'xtc_check_stock.inc.php');
+
+        foreach ($products as $product) {
+          if (xtc_check_stock($product['id'], $product['quantity'], $product['stock'])) {
+            return 'stock';
+          }
+          if (ATTRIBUTE_STOCK_CHECK == 'true' && isset($product['attributes']) && is_array($product['attributes'])) {
+            foreach ($product['attributes'] as $option => $value) {
+              $attributes = $main->getAttributes($product['id'], $option, $value);
+              if ($attributes['attributes_stock'] - $product['quantity'] < 0) {
+                return 'stock';
+              }
+            }
+          }
+        }
+      }
+
+      if (STOCK_CHECK_SPECIALS == 'true') {
+        require_once(DIR_FS_INC.'check_stock_specials.inc.php');
+
+        foreach ($products as $product) {
+          if ($xtPrice->xtcCheckSpecial($product['id']) && check_stock_specials($product['id'], $product['quantity'])) {
+            return 'stock';
+          }
         }
       }
     }
 
     $total = $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total());
-    if ($total < $_SESSION['customers_status']['customers_status_min_order']
-        || ($_SESSION['customers_status']['customers_status_max_order'] != 0
-            && $total > $_SESSION['customers_status']['customers_status_max_order']
-            )
+    if (($_SESSION['customers_status']['customers_status_min_order'] != 0 && $total < $_SESSION['customers_status']['customers_status_min_order'])
+        || ($_SESSION['customers_status']['customers_status_max_order'] != 0 && $total > $_SESSION['customers_status']['customers_status_max_order'])
         )
     {
       return 'order_value';
@@ -939,6 +989,7 @@ class klarna_express extends KlarnaPayment {
       'add' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ADD,
       'stock' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_STOCK,
       'order_value' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ORDER_VALUE,
+      'gift' => GUEST_VOUCHER_NOT_ALLOWED,
       'token' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_TOKEN,
       'unavailable' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE,
     );
@@ -987,6 +1038,17 @@ class klarna_express extends KlarnaPayment {
   // shop restrictions of this module, the country is known in the callback only
   function payment_allowed($country_iso = '', $country_id = 0, $zone_id = 0) {
     $unallowed = ((isset($_SESSION['customers_status']['customers_status_payment_unallowed'])) ? $_SESSION['customers_status']['customers_status_payment_unallowed'] : '');
+
+    // the payment class reads the customer restriction from the order, which does not exist yet in short checkout steps
+    if (isset($_SESSION['customer_id'])) {
+      $customer_query = xtc_db_query("SELECT payment_unallowed
+                                        FROM ".TABLE_CUSTOMERS."
+                                       WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+      $customer = xtc_db_fetch_array($customer_query);
+      if (is_array($customer) && trim($customer['payment_unallowed']) != '') {
+        $unallowed .= ','.$customer['payment_unallowed'];
+      }
+    }
 
     $content_type = $_SESSION['cart']->get_content_type();
     if (in_array($content_type, array('virtual', 'virtual_weight', 'mixed')) && defined('DOWNLOAD_UNALLOWED_PAYMENT')) {
@@ -1050,6 +1112,15 @@ class klarna_express extends KlarnaPayment {
         )
     {
       return 'cart';
+    }
+
+    // the same rules the checkout pages enforce, before a guest account exists
+    if ($this->checkout_enabled() !== true) {
+      return 'unavailable';
+    }
+    $limit_error = $this->checkout_allowed();
+    if ($limit_error != '') {
+      return $limit_error;
     }
 
     if (!isset($post['session_id'])
@@ -1363,7 +1434,7 @@ class klarna_express extends KlarnaPayment {
   }
 
 
-  // always a guest account, an existing account is never logged in by Klarna data
+  // always a guest account, also with ACCOUNT_OPTIONS 'account' like paypalwalletexpress; Klarna data never logs in an existing account
   function create_guest_account($address) {
     require_once(DIR_FS_INC.'xtc_create_password.inc.php');
     require_once(DIR_FS_INC.'write_customers_session.inc.php');
@@ -1424,6 +1495,31 @@ class klarna_express extends KlarnaPayment {
   }
 
 
+  // a guest account of an earlier attempt takes the data and address of this one, order and mails follow Klarna
+  function update_guest_account($address, $address_id) {
+    $customer_query = xtc_db_query("SELECT account_type
+                                      FROM ".TABLE_CUSTOMERS."
+                                     WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    $customer = xtc_db_fetch_array($customer_query);
+    if (!is_array($customer) || $customer['account_type'] != '1') {
+      return;
+    }
+
+    $sql_data_array = array(
+      'customers_firstname' => $address['firstname'],
+      'customers_lastname' => $address['lastname'],
+      'customers_email_address' => $address['email_address'],
+      'customers_telephone' => $address['telephone'],
+      'customers_default_address_id' => (int)$address_id,
+      'customers_last_modified' => 'now()',
+    );
+    xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."'");
+
+    require_once(DIR_FS_INC.'write_customers_session.inc.php');
+    write_customers_session((int)$_SESSION['customer_id']);
+  }
+
+
   // account, address and the shop and Klarna sessions for the checkout
   function start_express($data) {
     $address = $this->to_shop_charset($data['address']);
@@ -1432,6 +1528,9 @@ class klarna_express extends KlarnaPayment {
 
     if (isset($_SESSION['customer_id'])) {
       $address_id = $this->get_address_id($_SESSION['customer_id'], $address);
+      if ((int)$address_id > 0) {
+        $this->update_guest_account($address, $address_id);
+      }
     } else {
       $address_id = $this->create_guest_account($address);
     }
@@ -1463,6 +1562,7 @@ class klarna_express extends KlarnaPayment {
       'billto' => $_SESSION['billto'],
       'billto_id' => $this->get_country_id($_SESSION['billto']),
       'cart_id' => $_SESSION['cart']->cartID,
+      'currency' => $_SESSION['currency'],
       'time_created' => time(),
       'express_flow' => true,
     );

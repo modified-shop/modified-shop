@@ -50,7 +50,7 @@
       return $klarna_express->get_ajax_error('unavailable');
     }
 
-    $limit_error = $klarna_express->check_cart_limits();
+    $limit_error = $klarna_express->checkout_allowed();
     if ($limit_error != '') {
       return $klarna_express->get_ajax_error($limit_error);
     }
