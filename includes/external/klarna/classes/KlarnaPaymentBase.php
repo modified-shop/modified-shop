@@ -311,13 +311,26 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       $klarna_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_KLARNA_PAYMENTS."
                                      WHERE orders_id = '".(int)$insert_id."'");
+      $row_created = false;
       if (xtc_db_num_rows($klarna_query) < 1) {
-        // the row starts in the state the checkout owns, a push or the admin resolver may change it from here on
+        $row_created = true;
+        
+        // the row gets its final state, a push or the admin resolver may act on the order from here on
         if ($fraud_accepted === true) {
           $row_status = (($this->capture_enabled()) ? 'CAPTURE_PENDING' : 'ACCEPTED');
         } else {
           $row_status = 'PENDING';
         }
+        
+        // before the insert nobody else can resolve the order, so the status moves first
+        if ($check['orders_status'] != $order_status
+            && $this->change_new_orders_status($insert_id, $check['orders_status'], $order_status, '') === true
+            )
+        {
+          // the history entry and the acknowledge write below use the status the order has now
+          $check['orders_status'] = $order_status;
+        }
+        
         $sql_data_array = array(
           'orders_id' => $insert_id,
           'klarna_order_id' => $_SESSION['klarna']['order_id'],
@@ -346,7 +359,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           && in_array($state['fraud_status'], array('CAPTURE_PENDING', 'ACCEPTED', 'PENDING'))
           )
       {
-        if ($check['orders_status'] != $order_status) {
+        // a new row got its status before the insert, a manual change since then wins
+        if ($row_created === false && $check['orders_status'] != $order_status) {
           $this->change_orders_status($insert_id, $check['orders_status'], $order_status, '', $state['fraud_status']);
         }
         
