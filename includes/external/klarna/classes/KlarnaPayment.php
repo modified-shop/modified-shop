@@ -707,7 +707,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
     }
     
     $order_array = array(
-      'locale' => $_SESSION['language_code'].'-'.$_SESSION['language_code'],
+      // Klarna expects language-COUNTRY, e.g. en-DE; language-language gives en-en
+      'locale' => strtolower($_SESSION['language_code']).'-'.strtoupper($country['countries_iso_code_2']),
       'purchase_country' => $country['countries_iso_code_2'],
       'purchase_currency' => $order->info['currency'],
       'order_amount' => $this->format_amount($order_amount),
