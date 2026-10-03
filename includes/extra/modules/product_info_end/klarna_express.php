@@ -42,26 +42,12 @@
       $klarna_express_config['ajax_url'] = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'action=add_product&ext=klarna_express_payload', $request_type));
       $klarna_express_config['ajax_token'] = $klarna_express->get_ajax_token();
       $klarna_express_config['error_text'] = html_entity_decode(MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ADD, ENT_QUOTES, 'UTF-8');
-      // spike only: ?klarna_spike=sync|async compares the two ways to keep the click for authorize()
-      $klarna_express_config['spike'] = ((isset($_GET['klarna_spike']) && $_GET['klarna_spike'] === 'sync') ? 'sync' : 'async');
 
       // the product is added with the form data first, authorize() needs the real cart amount
       $klarna_express_on_click = <<<'JS'
-var variant = cfg.spike;
 var stop = function (message) {
-  console.log("klarna express " + variant + ": authorize not called, " + message);
   window.alert(message);
 };
-var proceed = function (response) {
-  if (response && response.ok === true && response.payload && response.token) {
-    cfg.token = response.token;
-    console.log("klarna express " + variant + ": calling authorize");
-    authorize(options, response.payload, done);
-  } else {
-    stop((response && response.message) || cfg.error_text);
-  }
-};
-console.log("klarna express " + variant + ": click");
 var form = document.getElementById("cart_quantity");
 if (!form) {
   stop(cfg.error_text);
@@ -69,29 +55,23 @@ if (!form) {
 }
 var params = new URLSearchParams(new FormData(form));
 params.set("klarna_express_ajax_token", cfg.ajax_token);
-var body = params.toString();
-if (variant === "sync") {
-  var response = null;
-  try {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", cfg.ajax_url, false);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send(body);
-    response = JSON.parse(xhr.responseText);
-  } catch (e) {}
-  proceed(response);
-} else {
-  fetch(cfg.ajax_url, {
-    method: "POST",
-    credentials: "same-origin",
-    headers: {"Content-Type": "application/x-www-form-urlencoded"},
-    body: body
-  }).then(function (reply) {
-    return reply.json();
-  }).then(proceed, function () {
-    proceed(null);
-  });
-}
+fetch(cfg.ajax_url, {
+  method: "POST",
+  credentials: "same-origin",
+  headers: {"Content-Type": "application/x-www-form-urlencoded"},
+  body: params.toString()
+}).then(function (reply) {
+  return reply.json();
+}).then(function (response) {
+  if (response && response.ok === true && response.payload && response.token) {
+    cfg.token = response.token;
+    authorize(options, response.payload, done);
+  } else {
+    stop((response && response.message) || cfg.error_text);
+  }
+}, function () {
+  stop(cfg.error_text);
+});
 JS;
 
       $klarna_express_button = $klarna_express->get_express_button($klarna_express_config, $klarna_express_on_click);

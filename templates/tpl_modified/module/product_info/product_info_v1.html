@@ -127,6 +127,10 @@
             <br class="clearfix" />
             <span class="addtobasket_button">{$ADD_CART_BUTTON_PAYPAL}</span>
           {/if}
+          {if $ADD_CART_BUTTON_KLARNA && !$PAYPALPLAN}
+            <br class="clearfix" />
+            <span class="addtobasket_button">{$ADD_CART_BUTTON_KLARNA}</span>
+          {/if}
           {*if $ADD_CART_BUTTON_WISHLIST}
             <br class="clearfix" />
             <span class="addtobasket_button">{$ADD_CART_BUTTON_WISHLIST}</span>
