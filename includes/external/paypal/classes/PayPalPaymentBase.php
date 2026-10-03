@@ -635,6 +635,8 @@ class PayPalPaymentBase extends PayPalCommon {
         $error = false;
         if ($_POST['comments_added'] != '') {
           $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
+          // checkout_process has built $order before this hook
+          $order->info['comments'] = $_SESSION['comments'];
         }
         if (((defined('SIGN_CONDITIONS_ON_CHECKOUT') && SIGN_CONDITIONS_ON_CHECKOUT == 'true')
              || (!defined('SIGN_CONDITIONS_ON_CHECKOUT') && DISPLAY_CONDITIONS_ON_CHECKOUT == 'true')
