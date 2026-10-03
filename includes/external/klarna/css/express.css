@@ -1,0 +1,24 @@
+/* Klarna Express button in the shopping cart: same width as the other payment buttons, Klarna asks for 40px at least */
+.klarna_express_cart {
+  clear: both;
+  width: 100%;
+  max-width: 480px;
+  margin: 10px 0 0 auto;
+  box-sizing: border-box;
+}
+#klarna-express-button {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+#klarna-express-button > *,
+#klarna-express-button klarna-express-button,
+#klarna-express-button iframe {
+  display: block;
+  width: 100%;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}

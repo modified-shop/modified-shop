@@ -93,8 +93,13 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           || $_SESSION['klarna']['billto'] != $_SESSION['billto']
           || $_SESSION['klarna']['billto_id'] != $this->get_country_id($_SESSION['billto'])
           || ($_SESSION['klarna']['time_created'] + 3600) < time()
+          || (isset($_SESSION['klarna']['express'])
+              && $_SESSION['klarna']['express'] === true
+              && (!isset($_SESSION['cart']) || $_SESSION['klarna']['cart_id'] !== $_SESSION['cart']->cartID)
+              )
           )
       {
+        // an express session was authorized for one cart, a changed cart starts the normal flow
         unset($_SESSION['klarna']);
       }
     }
@@ -184,6 +189,69 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     if (isset($_SESSION['klarna'])) {
       $order_array = $this->getOrderData();
       
+      // an express session is already authorized, the order data only has to be finalized
+      $express = (isset($_SESSION['klarna']['express']) && $_SESSION['klarna']['express'] === true);
+      
+      $data_js = '{
+                  billing_address: 
+                    '.json_encode($order_array['billing_address']).'
+                  ,
+                  shipping_address:
+                    '.json_encode($order_array['shipping_address']).'
+                  
+                }';
+      
+      $result_js = '
+                        $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
+                        $.each(finalresult, function (key, val) {
+                          $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][\'+key+\']" value="\'+val+\'">\');
+                        });
+                      
+                        if (finalresult.authorization_token !== undefined) {
+                          klarna_'.$this->klarna_code.'_result = true;
+                          $("#checkout_confirmation").submit();
+                        } else {
+                          $(location).attr("href", "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'");
+                        }';
+      
+      if ($express === true) {
+        $submit_js = '
+                Klarna.Payments.finalize({
+                  payment_method_category: "'.$this->klarna_code.'"
+                }, '.$data_js.',
+                function(finalresult) {'.$result_js.'
+                });';
+      } else {
+        $submit_js = '
+                Klarna.Payments.authorize({ 
+                  payment_method_category: "'.$this->klarna_code.'", 
+                  auto_finalize: false
+                }, '.$data_js.', function(result) {
+                  if (result.approved !== undefined
+                      && result.approved === true
+                      )
+                  {
+                    if (result.finalize_required === true) {
+                      Klarna.Payments.finalize({
+                        payment_method_category: "'.$this->klarna_code.'"
+                      }, {},
+                      function(finalresult) {'.$result_js.'
+                      });
+                    } else {
+                      $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
+                      $.each(result, function (key, val) {
+                        $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][\'+key+\']" value="\'+val+\'">\');
+                      });
+                      
+                      klarna_'.$this->klarna_code.'_result = true;
+                      $("#checkout_confirmation").submit();
+                    }
+                  } else {
+                    $(location).attr("href", "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'");
+                  }
+               });';
+      }
+      
       $js = '
         <script>
           var klarna_'.$this->klarna_code.'_result = false;
@@ -198,52 +266,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
             $("#checkout_confirmation").on("submit", function(event) {
               if (klarna_'.$this->klarna_code.'_result == false) {
                 event.preventDefault();
-                
-                Klarna.Payments.authorize({ 
-                  payment_method_category: "'.$this->klarna_code.'", 
-                  auto_finalize: false
-                }, {
-                  billing_address: 
-                    '.json_encode($order_array['billing_address']).'
-                  ,
-                  shipping_address:
-                    '.json_encode($order_array['shipping_address']).'
-                  
-                }, function(result) {
-                  if (result.approved !== undefined
-                      && result.approved === true
-                      )
-                  {
-                    if (result.finalize_required === true) {
-                      Klarna.Payments.finalize({
-                        payment_method_category: "'.$this->klarna_code.'"
-                      }, {},
-                      function(finalresult) {
-                        $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
-                        $.each(finalresult, function (key, val) {
-                          $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][\'+key+\']" value="\'+val+\'">\');
-                        });
-                      
-                        if (finalresult.authorization_token !== undefined) {
-                          klarna_'.$this->klarna_code.'_result = true;
-                          $("#checkout_confirmation").submit();
-                        } else {
-                          $(location).attr("href", "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'");
-                        }
-                      });
-                    } else {
-                      $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
-                      $.each(result, function (key, val) {
-                        $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][\'+key+\']" value="\'+val+\'">\');
-                      });
-                      
-                      klarna_'.$this->klarna_code.'_result = true;
-                      $("#checkout_confirmation").submit();
-                    }
-                  } else {
-                    $(location).attr("href", "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'");
-                  }
-               });
+                '.$submit_js.'
               }
             });
           });

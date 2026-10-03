@@ -20,83 +20,90 @@
       )
   {
     // include needed classes
+    include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/klarna_express.php');
     require_once(DIR_FS_CATALOG.'includes/modules/payment/klarna_express.php');
 
     $klarna_express = new klarna_express();
 
-    // spike only: ?klarna_spike=session uses a server-side session
-    $klarna_express_variant = ((isset($_GET['klarna_spike']) && $_GET['klarna_spike'] == 'session') ? 'session' : 'client_id');
+    if ($klarna_express::express_enabled() === true && $klarna_express->cart_requires_shipping() === true) {
+      $klarna_express_order = $klarna_express->get_express_order_data();
 
-    $klarna_express_init = array();
-    $klarna_express_payload = null;
-
-    $klarna_express_order = $klarna_express->get_express_order_data();
-    if ($klarna_express_variant == 'session') {
-      $klarna_express_session = $klarna_express->get_express_session();
-      if (is_array($klarna_express_session)) {
-        $klarna_express_init = array('client_token' => $klarna_express_session['client_token']);
-      }
-    } else {
-      $klarna_express_init = array('client_id' => MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID);
-      $klarna_express_payload = array(
-        'purchase_country' => $klarna_express_order['purchase_country'],
-        'purchase_currency' => $klarna_express_order['purchase_currency'],
+      $klarna_express_config = json_encode(array(
+        'client_id' => MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID,
         'locale' => $klarna_express_order['locale'],
-        'order_amount' => $klarna_express_order['order_amount'],
-        'order_tax_amount' => $klarna_express_order['order_tax_amount'],
-        'order_lines' => $klarna_express_order['order_lines'],
-      );
+        'payload' => array(
+          'purchase_country' => $klarna_express_order['purchase_country'],
+          'purchase_currency' => $klarna_express_order['purchase_currency'],
+          'locale' => $klarna_express_order['locale'],
+          'order_amount' => $klarna_express_order['order_amount'],
+          'order_tax_amount' => $klarna_express_order['order_tax_amount'],
+          'order_lines' => $klarna_express_order['order_lines'],
+        ),
+        'token' => $klarna_express->get_express_token(),
+        'callback' => str_replace('&amp;', '&', xtc_href_link('callback/klarna/express.php', '', 'SSL')),
+        'error_url' => str_replace('&amp;', '&', xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=klarna_express', 'NONSSL')),
+      ), JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+
+      if ($klarna_express_config !== false) {
+        $smarty->assign('BUTTON_KLARNA', '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_WS_EXTERNAL.'klarna/css/express.css?v=1" type="text/css" media="screen" />
+          <div id="klarna-express-button"></div>
+          <script>
+            (function () {
+              var cfg = '.$klarna_express_config.';
+              var fail = function () {
+                window.location.href = cfg.error_url;
+              };
+              var post = function (result) {
+                var fields = {
+                  token: cfg.token,
+                  client_token: result.client_token,
+                  session_id: result.session_id,
+                  collected_shipping_address: JSON.stringify(result.collected_shipping_address || {}),
+                  payment_method_categories: JSON.stringify(result.payment_method_categories || [])
+                };
+                var form = document.createElement("form");
+                form.method = "post";
+                form.action = cfg.callback;
+                Object.keys(fields).forEach(function (name) {
+                  var input = document.createElement("input");
+                  input.type = "hidden";
+                  input.name = name;
+                  input.value = fields[name];
+                  form.appendChild(input);
+                });
+                document.body.appendChild(form);
+                form.submit();
+              };
+              window.klarnaAsyncCallback = function () {
+                try {
+                  window.Klarna.Payments.Buttons.init({client_id: cfg.client_id}).load({
+                    container: "#klarna-express-button",
+                    theme: "default",
+                    shape: "default",
+                    locale: cfg.locale,
+                    on_click: function (authorize) {
+                      authorize({auto_finalize: false, collect_shipping_address: true}, cfg.payload, function (result) {
+                        if (result && result.approved === true) {
+                          if (result.finalize_required === true && result.client_token && result.session_id) {
+                            post(result);
+                          } else {
+                            fail();
+                          }
+                        } else if (result && result.show_form === false) {
+                          fail();
+                        }
+                      });
+                    }
+                  });
+                } catch (e) {}
+              };
+            })();
+          </script>
+          <script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>');
+      }
     }
 
-    $klarna_express_config = json_encode(array(
-      'variant' => $klarna_express_variant,
-      'init' => $klarna_express_init,
-      'payload' => $klarna_express_payload,
-      'locale' => $klarna_express_order['locale'],
-      'log_url' => DIR_WS_BASE.'ajax.php?ext=klarna_express_spike',
-    ), JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
-
-    if ($klarna_express_config !== false && count($klarna_express_init) > 0) {
-      $smarty->assign('BUTTON_KLARNA', '<div id="klarna-express-button"></div>
-        <script>
-          (function () {
-            var cfg = '.$klarna_express_config.';
-            var replacer = function (key, val) {
-              return ((val instanceof Error) ? {name: val.name, message: val.message} : val);
-            };
-            var spikeLog = function (kind, data) {
-              console.log("klarna express", cfg.variant, kind, data);
-              try {
-                fetch(cfg.log_url, {
-                  method: "POST",
-                  credentials: "same-origin",
-                  headers: {"Content-Type": "application/json"},
-                  body: JSON.stringify({variant: cfg.variant, kind: kind, result: data}, replacer)
-                });
-              } catch (e) {}
-            };
-            window.klarnaAsyncCallback = function () {
-              try {
-                window.Klarna.Payments.Buttons.init(cfg.init).load({
-                  container: "#klarna-express-button",
-                  theme: "default",
-                  shape: "default",
-                  locale: cfg.locale,
-                  on_click: function (authorize) {
-                    var options = {auto_finalize: false, collect_shipping_address: true};
-                    authorize(options, cfg.payload, function (result) {
-                      spikeLog("authorize", result);
-                    });
-                  }
-                }, function (loadResult) {
-                  spikeLog("load", loadResult);
-                });
-              } catch (e) {
-                spikeLog("exception", e);
-              }
-            };
-          })();
-        </script>
-        <script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>');
+    if (isset($_GET['payment_error']) && $_GET['payment_error'] == 'klarna_express') {
+      $smarty->assign('error_message', MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_MESSAGE);
     }
   }

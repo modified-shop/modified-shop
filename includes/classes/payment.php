@@ -61,7 +61,9 @@
           
           $disable_modules = array(
             'paypalcart.php',
-            'paypalexpress.php'
+            'paypalexpress.php',
+            // button and callback only, never a payment choice
+            'klarna_express.php'
           );
           foreach ($disable_modules as $disable_module) {
             $key = array_search($disable_module, $modules);
