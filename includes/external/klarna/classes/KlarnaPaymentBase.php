@@ -127,6 +127,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     if ($this->enabled == true
         && isset($_SESSION['klarna'])
         && array_key_exists($this->klarna_code, $_SESSION['klarna'])
+        && is_array($_SESSION['klarna'][$this->klarna_code])
         && array_key_exists('show_form', $_SESSION['klarna'][$this->klarna_code])
         && $_SESSION['klarna'][$this->klarna_code]['show_form'] == 'false'
         )
@@ -246,11 +247,13 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   function before_process() {
     global $order;
 
-    if (isset($_POST['klarna'])) {
-      $_SESSION['klarna'] = array_merge($_SESSION['klarna'], $_POST['klarna']);  
+    if (isset($_POST['klarna']) && is_array($_POST['klarna'])) {
+      // Klarna posts klarna[<category>][<key>], take over arrays only
+      $_SESSION['klarna'] = array_merge(((isset($_SESSION['klarna']) && is_array($_SESSION['klarna'])) ? $_SESSION['klarna'] : array()), array_filter($_POST['klarna'], 'is_array'));
     }
     
-    if (!array_key_exists($this->klarna_code, $_SESSION['klarna'])
+    if (!isset($_SESSION['klarna'][$this->klarna_code])
+        || !is_array($_SESSION['klarna'][$this->klarna_code])
         || !array_key_exists('authorization_token', $_SESSION['klarna'][$this->klarna_code])
         )
     {
@@ -475,6 +478,10 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         'Miss' => 'fs',
       ),
     );
+    
+    if (!isset($gender_array[$language_code])) {
+      return;
+    }
     
     if (isset($gender_array[$language_code][$gender])) {
       return $gender_array[$language_code][$gender];
