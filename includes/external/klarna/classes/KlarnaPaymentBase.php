@@ -13,6 +13,7 @@
 
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaAutoload.php');
+require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
 
 
 class KlarnaPaymentBase extends KlarnaAutoload {
@@ -28,6 +29,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   var $_check;
 
   var $klarna_version;
+
+  // one update run per request, the shared key is a constant that cannot change within it
+  static $klarna_updated = false;
 
   function __construct() {
 
@@ -50,7 +54,14 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         $this->order_status = (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
       }
       
-      if (!defined('MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID')) {
+      if (self::$klarna_updated === false
+          && (!defined('MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID')
+              || !defined('MODULE_PAYMENT_KLARNA_DB_VERSION')
+              || MODULE_PAYMENT_KLARNA_DB_VERSION !== $this->klarna_version
+              )
+          )
+      {
+        self::$klarna_updated = true;
         $this->klarna_update();
       }
     }
@@ -356,6 +367,15 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       
       $_SESSION['klarna']['order_id'] = $data['order_id'];
       $_SESSION['klarna']['fraud_status'] = ((isset($data['fraud_status'])) ? strtoupper($data['fraud_status']) : '');
+      $_SESSION['klarna']['payment_method'] = self::parse_payment_method((isset($data['authorized_payment_method'])) ? $data['authorized_payment_method'] : '');
+      
+      // log the types the mapping does not know yet
+      if ($_SESSION['klarna']['payment_method'] != ''
+          && !array_key_exists($_SESSION['klarna']['payment_method'], klarna_payment_code_map())
+          )
+      {
+        $this->logger->log('klarna', 'unmapped payment method: '.$_SESSION['klarna']['payment_method'], array('klarna_order_id' => $data['order_id']));
+      }
       
       if ($_SESSION['klarna']['fraud_status'] != 'ACCEPTED') {
         $order->info['order_status'] = $this->get_pending_status_id();
@@ -372,6 +392,23 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     }
     
     return false;
+  }
+
+
+  // Klarna reports the method as object {type, ...} or as plain string
+  public static function parse_payment_method($method) {
+    if ($method instanceof ArrayObject) {
+      $method = $method->getArrayCopy();
+    }
+    if (is_array($method)) {
+      $method = ((isset($method['type'])) ? $method['type'] : '');
+    }
+    if (!is_string($method)) {
+      return '';
+    }
+    $method = strtolower(trim($method));
+    
+    return ((preg_match('/^[a-z_]{1,32}$/', $method)) ? $method : '');
   }
 
 
@@ -429,6 +466,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           'klarna_order_id' => $_SESSION['klarna']['order_id'],
           'fraud_status' => $row_status,
           'notify_token' => ((isset($_SESSION['klarna_notify_token']) && is_string($_SESSION['klarna_notify_token'])) ? $_SESSION['klarna_notify_token'] : ''),
+          'payment_method' => ((isset($_SESSION['klarna']['payment_method'])) ? $_SESSION['klarna']['payment_method'] : ''),
         );
         xtc_db_perform(TABLE_KLARNA_PAYMENTS, $sql_data_array);
 
@@ -675,6 +713,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                     `klarna_order_id` varchar(256) NOT NULL,
                     `fraud_status` varchar(16) NOT NULL DEFAULT '',
                     `notify_token` varchar(64) NOT NULL DEFAULT '',
+                    `payment_method` varchar(32) NOT NULL DEFAULT '',
                     PRIMARY KEY (`orders_id`),
                     KEY `idx_klarna_order_id` (`klarna_order_id`)
                   )");
@@ -690,6 +729,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       $column_array = array(
         'fraud_status' => "varchar(16) NOT NULL DEFAULT ''",
         'notify_token' => "varchar(64) NOT NULL DEFAULT ''",
+        'payment_method' => "varchar(32) NOT NULL DEFAULT ''",
       );
       foreach ($column_array as $column_name => $column_definition) {
         $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE '".$column_name."'");
@@ -717,6 +757,19 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       }
       defined($config_key) or define($config_key, '0');
     }
+    
+    // last step, a failed update above leaves the key as it is and the next request retries
+    $check_query = xtc_db_query("SELECT configuration_key
+                                   FROM ".TABLE_CONFIGURATION."
+                                  WHERE configuration_key = 'MODULE_PAYMENT_KLARNA_DB_VERSION'");
+    if (xtc_db_num_rows($check_query) < 1) {
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_KLARNA_DB_VERSION', '".xtc_db_input($this->klarna_version)."', '6', '0', now())");
+    } else {
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".xtc_db_input($this->klarna_version)."'
+                     WHERE configuration_key = 'MODULE_PAYMENT_KLARNA_DB_VERSION'");
+    }
+    defined('MODULE_PAYMENT_KLARNA_DB_VERSION') or define('MODULE_PAYMENT_KLARNA_DB_VERSION', $this->klarna_version);
   }
 
 

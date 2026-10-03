@@ -38,6 +38,9 @@
                                      WHERE orders_id = '".(int)$last_order."'");
       $orders = xtc_db_fetch_array($orders_query);
       
+      // klarna_klarna and klarna_express map by the method the shopper chose inside Klarna
+      require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
+      $orders['payment_class'] = klarna_payment_code($orders['payment_class'], $last_order);
       $payment_class = $orders['payment_class'];
       /* ZAHLUNGSART
       Lastschrift/Bankeinzug          DIRECT_DEBIT
@@ -76,6 +79,7 @@
         case 'payone_wlt':
           $paymenttype = 'PAYPAL';
           break;
+        case 'klarna_card':
         case 'mcp_creditcard':
         case 'payone_cc':
           $paymenttype = 'CREDIT_CARD';

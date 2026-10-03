@@ -12,7 +12,7 @@
 
 
 // define some tables
-define('TABLE_KLARNA_PAYMENTS', 'klarna_payments');
+defined('TABLE_KLARNA_PAYMENTS') or define('TABLE_KLARNA_PAYMENTS', 'klarna_payments');
 
 
 //include needed functions
