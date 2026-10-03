@@ -56,6 +56,24 @@
         {
           $modules = explode(';', $_SESSION['paypal']['payment_modules']);
           $paypal_modules = true;
+        } elseif (isset($_SESSION['klarna']['express'])
+                  && $_SESSION['klarna']['express'] === true
+                  && isset($_SESSION['cart'])
+                  && $_SESSION['klarna']['cart_id'] === $_SESSION['cart']->cartID
+                  && isset($_SESSION['sendto'])
+                  && $_SESSION['klarna']['sendto'] == $_SESSION['sendto']
+                  && isset($_SESSION['billto'])
+                  && $_SESSION['klarna']['billto'] == $_SESSION['billto']
+                  && ($_SESSION['klarna']['time_created'] + 3600) >= time()
+                  )
+        {
+          // Klarna express: only the Klarna payment methods, update_status() picks the session categories
+          $modules = array();
+          foreach (explode(';', MODULE_PAYMENT_INSTALLED) as $file) {
+            if (strpos($file, 'klarna_') === 0 && $file != 'klarna_express.php') {
+              $modules[] = $file;
+            }
+          }
         } else {
           $modules = explode(';', MODULE_PAYMENT_INSTALLED);
           
