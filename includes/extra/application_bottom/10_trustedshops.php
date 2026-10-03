@@ -83,13 +83,13 @@
           break;
         case 'banktransfer':
         case 'payone_elv':
+        case 'klarna_directdebit':
           $paymenttype = 'DIRECT_DEBIT';
           break;
         case 'moneyorder':
         case 'eustandardtransfer':
         case 'mcp_prepay':
         case 'payone_prepay':
-        case 'klarna_directdebit':
           $paymenttype = 'PREPAYMENT';
           break;
         case 'cash':
