@@ -312,15 +312,21 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                                       FROM ".TABLE_KLARNA_PAYMENTS."
                                      WHERE orders_id = '".(int)$insert_id."'");
       if (xtc_db_num_rows($klarna_query) < 1) {
+        // the row starts in the state the checkout owns, a push or the admin resolver may change it from here on
+        if ($fraud_accepted === true) {
+          $row_status = (($this->capture_enabled()) ? 'CAPTURE_PENDING' : 'ACCEPTED');
+        } else {
+          $row_status = 'PENDING';
+        }
         $sql_data_array = array(
           'orders_id' => $insert_id,
           'klarna_order_id' => $_SESSION['klarna']['order_id'],
-          'fraud_status' => (($fraud_accepted === true) ? 'ACCEPTED' : 'PENDING'),
+          'fraud_status' => $row_status,
           'notify_token' => ((isset($_SESSION['klarna_notify_token']) && is_string($_SESSION['klarna_notify_token'])) ? $_SESSION['klarna_notify_token'] : ''),
         );
         xtc_db_perform(TABLE_KLARNA_PAYMENTS, $sql_data_array);
 
-        $this->update_order('Klarna Order: '.$_SESSION['klarna']['order_id'].(($fraud_accepted === true) ? '' : ', fraud status: PENDING'), $check['orders_status'], $insert_id);
+        $this->insert_status_history($insert_id, $check['orders_status'], 'Klarna Order: '.$_SESSION['klarna']['order_id'].(($fraud_accepted === true) ? '' : ', fraud status: PENDING'));
       }
       
       if ($this->code == 'klarna_checkout') {
@@ -330,15 +336,26 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         }
       }
       
-      if ($fraud_accepted === true
-          && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE') == 'True'
+      // read again, the status change and the capture depend on the row, not on its state at insert time
+      $state_query = xtc_db_query("SELECT klarna_order_id,
+                                          fraud_status
+                                     FROM ".TABLE_KLARNA_PAYMENTS."
+                                    WHERE orders_id = '".(int)$insert_id."'");
+      $state = xtc_db_fetch_array($state_query);
+      if (is_array($state)
+          && in_array($state['fraud_status'], array('CAPTURE_PENDING', 'ACCEPTED', 'PENDING'))
           )
       {
-        $this->captureCompleteOrder($insert_id, $_SESSION['klarna']['order_id']);
+        if ($check['orders_status'] != $order_status) {
+          $this->change_orders_status($insert_id, $check['orders_status'], $order_status, '', $state['fraud_status']);
+        }
+        
+        // a failed capture stays CAPTURE_PENDING, the admin page retries it
+        if ($state['fraud_status'] == 'CAPTURE_PENDING') {
+          $this->captureIfDue($insert_id, $state['klarna_order_id'], $order_status, null, true);
+        }
       }
-    }
-    
-    if ($check['orders_status'] != $order_status) {
+    } elseif ($check['orders_status'] != $order_status) {
       $this->update_order('', $order_status, $insert_id);
     }
         
