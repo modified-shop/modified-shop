@@ -18,6 +18,10 @@ class klarna_express extends KlarnaPayment {
 
   var $code;
   var $klarna_code;
+  var $shipping_modules;
+  var $shipping_quotes;
+  var $shipping_html;
+  var $selected_shipping = '';
 
   function __construct() {
     global $order;
@@ -59,6 +63,557 @@ class klarna_express extends KlarnaPayment {
 
   function is_express_payment() {
     return self::express_session_valid();
+  }
+
+
+  public static function short_checkout_enabled() {
+    return (defined('MODULE_PAYMENT_KLARNA_EXPRESS_SHORT_CHECKOUT')
+            && MODULE_PAYMENT_KLARNA_EXPRESS_SHORT_CHECKOUT == 'True'
+            );
+  }
+
+
+  // the callback marks the session when it skipped the shipping and payment pages
+  function use_short_checkout() {
+    return (self::short_checkout_enabled()
+            && self::express_session_valid()
+            && isset($_SESSION['klarna']['short_checkout'])
+            && $_SESSION['klarna']['short_checkout'] === true
+            );
+  }
+
+
+  // the agreements of the short checkout, same switches as checkout_payment.php
+  function get_agreements() {
+    $_SESSION['cart']->get_content_type();
+
+    $display_conditions = (defined('DISPLAY_CONDITIONS_ON_CHECKOUT') && DISPLAY_CONDITIONS_ON_CHECKOUT == 'true');
+    $display_privacy = (defined('DISPLAY_PRIVACY_ON_CHECKOUT') && DISPLAY_PRIVACY_ON_CHECKOUT == 'true');
+
+    return array(
+      'display_conditions' => $display_conditions,
+      'conditions' => ($display_conditions && (!defined('SIGN_CONDITIONS_ON_CHECKOUT') || SIGN_CONDITIONS_ON_CHECKOUT == 'true')),
+      'display_privacy' => $display_privacy,
+      'privacy' => ($display_privacy && (!defined('DISPLAY_PRIVACY_CHECK') || DISPLAY_PRIVACY_CHECK == 'true')),
+      'revocation' => (defined('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT')
+                       && DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
+                       && in_array($_SESSION['cart']->content_type, array('virtual', 'mixed'))
+                       ),
+    );
+  }
+
+
+  // the order has no shipping address to select a method for
+  function is_virtual_order() {
+    global $order;
+
+    return ($order->content_type == 'virtual'
+            || $order->content_type == 'virtual_weight'
+            || $_SESSION['cart']->count_contents_virtual() == 0
+            );
+  }
+
+
+  // the cart ships free of charge, decided on an order without a shipping method
+  function calculate_free_shipping() {
+    global $order, $free_shipping, $free_shipping_value_over;
+
+    require_once(DIR_WS_CLASSES.'order.php');
+    require_once(DIR_WS_CLASSES.'order_total.php');
+
+    $order_backup = $order;
+    $has_shipping = array_key_exists('shipping', $_SESSION);
+    $shipping_backup = (($has_shipping) ? $_SESSION['shipping'] : null);
+    unset($_SESSION['shipping']);
+
+    $order = new order();
+
+    $free_shipping = false;
+    $free_shipping_value_over = 0;
+    if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
+      $order_total_modules = new order_total();
+      $order_total_modules->process();
+    }
+    $result = array($free_shipping === true, $free_shipping_value_over);
+
+    $order = $order_backup;
+    if ($has_shipping) {
+      $_SESSION['shipping'] = $shipping_backup;
+    }
+
+    return $result;
+  }
+
+
+  // shipping methods that the shop excludes for this payment module
+  function remove_excluded_shipping($shipping_modules) {
+    if (!defined('MODULE_EXCLUDE_PAYMENT_STATUS') || MODULE_EXCLUDE_PAYMENT_STATUS != 'True') {
+      return;
+    }
+
+    for ($i = 1; $i <= MODULE_EXCLUDE_PAYMENT_NUMBER; $i ++) {
+      $payment_exclude = array_map('trim', explode(',', constant('MODULE_EXCLUDE_PAYMENT_PAYMENT_'.$i)));
+      if (in_array($this->code, $payment_exclude)) {
+        $shipping_exclude = array_map('trim', explode(',', constant('MODULE_EXCLUDE_PAYMENT_SHIPPING_'.$i)));
+        foreach ($shipping_modules->modules as $key => $file) {
+          if (in_array(substr($file, 0, -4), $shipping_exclude)) {
+            unset($shipping_modules->modules[$key]);
+          }
+        }
+      }
+    }
+  }
+
+
+  // loads the shipping modules and their quotes for the order in the global $order
+  function load_shipping() {
+    global $order, $total_weight, $total_count, $free_shipping, $free_shipping_value_over;
+
+    require_once(DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
+    require_once(DIR_WS_CLASSES.'shipping.php');
+
+    if ($order->delivery['country']['iso_code_2'] != '') {
+      $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
+    }
+    if (isset($order->delivery['delivery_zone']) && $order->delivery['delivery_zone'] != '') {
+      $_SESSION['delivery_zone'] = $order->delivery['delivery_zone'];
+    }
+    if ($order->billing['country']['iso_code_2'] != '') {
+      $_SESSION['billing_zone'] = $order->billing['country']['iso_code_2'];
+    }
+
+    // a method with its own address (pickup) is zoned by the billing country
+    if (isset($_SESSION['shipping'])
+        && is_array($_SESSION['shipping'])
+        && isset($_SESSION['shipping']['id'])
+        && strpos($_SESSION['shipping']['id'], '_') !== false
+        )
+    {
+      $class = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
+      if (isset($GLOBALS[$class])
+          && is_object($GLOBALS[$class])
+          && method_exists($GLOBALS[$class], 'address')
+          && $order->billing['country']['iso_code_2'] != ''
+          )
+      {
+        $_SESSION['delivery_zone'] = $order->billing['country']['iso_code_2'];
+      }
+    }
+
+    $total_weight = $_SESSION['cart']->show_weight();
+    $total_count = $_SESSION['cart']->count_contents();
+
+    list($free_shipping, $free_shipping_value_over) = $this->calculate_free_shipping();
+
+    $this->shipping_modules = new shipping;
+    $this->remove_excluded_shipping($this->shipping_modules);
+
+    $this->shipping_quotes = $this->shipping_modules->quote();
+
+    return $this->shipping_quotes;
+  }
+
+
+  // the cheapest shipping method of the cart, false if the shop offers none
+  function get_cheapest_shipping() {
+    global $free_shipping;
+
+    $this->load_shipping();
+
+    if ($free_shipping === true) {
+      return array(
+        'id' => 'free_free',
+        'title' => FREE_SHIPPING_TITLE,
+        'cost' => 0,
+      );
+    }
+
+    $cheapest = $this->shipping_modules->cheapest();
+    if (!is_array($cheapest)) {
+      return false;
+    }
+
+    return array(
+      'id' => $cheapest['id'],
+      'title' => $cheapest['title'],
+      'cost' => $cheapest['cost'],
+    );
+  }
+
+
+  // the callback skips the shipping and payment pages, false sends the customer to the shipping page
+  function start_short_checkout() {
+    global $order;
+
+    if (self::short_checkout_enabled() !== true
+        || self::express_session_valid() !== true
+        || $this->cart_requires_shipping() !== true
+        )
+    {
+      return false;
+    }
+
+    // outside the checkout pages the order takes its delivery country from the cart estimate
+    $_SESSION['country'] = (int)$_SESSION['klarna']['sendto_id'];
+
+    require_once(DIR_WS_CLASSES.'order.php');
+    $order = new order();
+
+    $shipping = $this->get_cheapest_shipping();
+    if (!is_array($shipping)) {
+      unset($_SESSION['shipping']);
+
+      return false;
+    }
+
+    $_SESSION['shipping'] = $shipping;
+    $_SESSION['klarna']['short_checkout'] = true;
+
+    // the shipping and payment pages would end a former payment handover and rotate the key of the attempt
+    unset($_SESSION['tmp_oID']);
+    $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
+
+    return true;
+  }
+
+
+  function pre_confirmation_check() {
+    if ($this->use_short_checkout() !== true) {
+      return parent::pre_confirmation_check();
+    }
+
+    global $smarty, $free_shipping;
+
+    $this->shipping_html = null;
+    $this->load_shipping();
+    $shipping_modules = $this->shipping_modules;
+
+    // process the selected shipping method, it redirects when the method is valid
+    if (isset($_POST['action']) && $_POST['action'] == 'process') {
+      if (isset($_POST['shipping'])
+          && is_string($_POST['shipping'])
+          && preg_match('/^[A-Za-z0-9]+_[^_]+/', $_POST['shipping'])
+          )
+      {
+        list($module, $method) = explode('_', $_POST['shipping']);
+        global ${$module};
+      } else {
+        unset($_POST['shipping']);
+      }
+
+      $redirect_link = xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')), 'SSL');
+      require(DIR_WS_INCLUDES.'shipping_action.php');
+    }
+
+    $this->prepare_shipping_block();
+
+    // the final cart and shipping go to the Klarna session
+    parent::pre_confirmation_check();
+  }
+
+
+  // shipping selection of the confirmation page, built once per request
+  function prepare_shipping_block() {
+    global $order, $xtPrice, $free_shipping, $free_shipping_value_over;
+
+    if ($this->shipping_html !== null) {
+      return;
+    }
+    $this->shipping_html = '';
+    $this->selected_shipping = '';
+
+    $no_shipping = $this->is_virtual_order();
+
+    if (!is_object($this->shipping_modules)) {
+      $this->load_shipping();
+    }
+    $shipping_modules = $this->shipping_modules;
+    $quotes = $this->shipping_quotes;
+    $quotes_count = xtc_count_shipping_modules();
+    $free_shipping_active = ($free_shipping === true);
+
+    // select the cheapest method if none is selected, or if the one method of a former selection is gone
+    if ($no_shipping === false
+        && ((!isset($_SESSION['shipping']) && defined('CHECK_CHEAPEST_SHIPPING_MODUL') && CHECK_CHEAPEST_SHIPPING_MODUL == 'true')
+            || (isset($_SESSION['shipping']) && $_SESSION['shipping'] == false && $quotes_count == 1)
+            )
+        )
+    {
+      if ($free_shipping === true) {
+        $_SESSION['shipping'] = array(
+          'id' => 'free_free',
+          'title' => FREE_SHIPPING_TITLE,
+          'cost' => 0,
+        );
+      } else {
+        $_SESSION['shipping'] = $shipping_modules->cheapest();
+      }
+      $order = new order();
+    }
+
+    if ($no_shipping === true) {
+      $_SESSION['shipping'] = false;
+
+      return;
+    }
+
+    if (defined('SHOW_SELFPICKUP_FREE') && SHOW_SELFPICKUP_FREE == 'true') {
+      if ($free_shipping == true) {
+        $free_shipping = false;
+
+        $ot_shipping = new ot_shipping();
+        $quotes_array = $ot_shipping->quote();
+        for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
+          if (isset($GLOBALS[$quotes[$i]['id']])
+              && is_object($GLOBALS[$quotes[$i]['id']])
+              && method_exists($GLOBALS[$quotes[$i]['id']], 'display_free')
+              )
+          {
+            if ($GLOBALS[$quotes[$i]['id']]->display_free() === true) {
+              $quotes_array = array_merge($quotes_array, $shipping_modules->quote($quotes[$i]['id'], $quotes[$i]['methods'][0]['id']));
+            }
+          } elseif (strpos($quotes[$i]['id'], 'selfpickup') !== false) {
+            $quotes_array = array_merge($quotes_array, $shipping_modules->quote($quotes[$i]['id'], $quotes[$i]['methods'][0]['id']));
+          }
+        }
+        $quotes = $quotes_array;
+      }
+    }
+
+    // build shipping block
+    require(DIR_WS_INCLUDES.'shipping_block.php');
+
+    $shipping_found = false;
+    if (isset($_SESSION['shipping'])
+        && is_array($_SESSION['shipping'])
+        && array_key_exists('id', $_SESSION['shipping'])
+        )
+    {
+      if ($free_shipping_active === true && $_SESSION['shipping']['id'] == 'free_free') {
+        $shipping_found = true;
+      }
+      for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
+        if (isset($quotes[$i]['methods']) && is_array($quotes[$i]['methods'])) {
+          for ($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
+            if ($quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) {
+              $shipping_found = true;
+            }
+          }
+        }
+      }
+    }
+    if ($shipping_found === true) {
+      $this->selected_shipping = $_SESSION['shipping']['id'];
+    }
+
+    $module_smarty->assign('FORM_SHIPPING_ACTION', xtc_draw_form('checkout_shipping', xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(), 'SSL')).xtc_draw_hidden_field('action', 'process'));
+    $module_smarty->assign('shipping_message', '');
+    $module_smarty->assign('BUTTON_CONTINUE', '');
+    if ($shipping_found === false) {
+      $module_smarty->assign('shipping_message', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
+      $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
+    } elseif ($quotes_count > 1 && $free_shipping != true) {
+      $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
+    }
+    $module_smarty->assign('FORM_END', '</form>');
+    $module_smarty->assign('SHIPPING_BLOCK', $shipping_block);
+
+    if ($quotes_count == 0) {
+      $_SESSION['shipping'] = '';
+    }
+
+    $module_smarty->assign('language', $_SESSION['language']);
+    $module_smarty->caching = 0;
+
+    $this->shipping_html = $module_smarty->fetch($this->get_template('shipping_block.html'));
+  }
+
+
+  // a template of the current template set wins over the one of the Klarna module
+  function get_template($file) {
+    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/klarna/'.$file)) {
+      return DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/klarna/'.$file;
+    }
+
+    return DIR_FS_EXTERNAL.'klarna/templates/'.$file;
+  }
+
+
+  function confirmation() {
+    if ($this->use_short_checkout() !== true) {
+      return parent::confirmation();
+    }
+
+    global $smarty;
+
+    $this->prepare_shipping_block();
+
+    if ($this->shipping_html != '') {
+      $smarty->assign('SHIPPING_METHOD', $this->shipping_html);
+    }
+    $smarty->assign('SHIPPING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, xtc_get_all_get_params(), 'SSL'));
+    $smarty->assign('BILLING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, xtc_get_all_get_params(), 'SSL'));
+
+    // the selection is part of the page now, the payment method has no choice
+    $smarty->clear_assign('SHIPPING_EDIT');
+    $smarty->clear_assign('PAYMENT_EDIT');
+
+    return false;
+  }
+
+
+  function process_button() {
+    if ($this->use_short_checkout() !== true) {
+      return parent::process_button();
+    }
+
+    global $main;
+
+    $agreements = $this->get_agreements();
+
+    $module_smarty = new Smarty();
+
+    $checked = ((isset($_GET['step']) && $_GET['step'] == 'step2') ? ' checked="checked"' : '');
+
+    if ($agreements['display_conditions']) {
+      $shop_content_data = $main->getContentData(3);
+      $module_smarty->assign('AGB', '<div class="agbframe">'.$shop_content_data['content_text'].'</div>');
+      $module_smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO, 'SSL'));
+      if ($agreements['conditions']) {
+        $module_smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.$checked.' />');
+      }
+    }
+
+    if ($agreements['revocation']) {
+      $module_smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO, 'SSL'));
+      $module_smarty->assign('REVOCATION_checkbox', '<input type="checkbox" value="revocation" name="revocation" id="revocation"'.$checked.' />');
+    }
+
+    if ($agreements['display_privacy']) {
+      $module_smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, 'SSL'));
+      if ($agreements['privacy']) {
+        $module_smarty->assign('PRIVACY_checkbox', '<input type="checkbox" value="privacy" name="privacy" id="privacy"'.$checked.' />');
+      }
+    }
+
+    $module_smarty->assign('COMMENTS', xtc_draw_textarea_field('comments', 'soft', '60', '5', ((isset($_SESSION['comments'])) ? $_SESSION['comments'] : '')).xtc_draw_hidden_field('comments_added', 'YES'));
+    $module_smarty->assign('ADR_checkbox', '<input type="checkbox" value="address" name="check_address" id="address" />');
+
+    $module_smarty->assign('language', $_SESSION['language']);
+    $module_smarty->caching = 0;
+
+    return $module_smarty->fetch($this->get_template('comments_block.html')).parent::process_button();
+  }
+
+
+  // the shop texts of the payment page, checked before finalize() opens the Klarna popup
+  function get_submit_guard_js() {
+    if ($this->use_short_checkout() !== true) {
+      return '';
+    }
+
+    $agreements = $this->get_agreements();
+
+    $checks = array();
+    $checks[] = array('#address', ERROR_ADDRESS_NOT_ACCEPTED);
+    if ($agreements['conditions']) {
+      $checks[] = array('#conditions', JS_ERROR_CONDITIONS_NOT_ACCEPTED);
+    }
+    if ($agreements['privacy']) {
+      $checks[] = array('#privacy', JS_ERROR_PRIVACY_NOTICE_NOT_ACCEPTED);
+    }
+    if ($agreements['revocation']) {
+      $checks[] = array('#revocation', JS_ERROR_REVOCATION_NOT_ACCEPTED);
+    }
+
+    $js = '
+                var klarna_error = "";
+                var klarna_decode = function(str) {
+                  return str.replace(/%([0-9A-Fa-f]{2})/g, function(m, hex) { return String.fromCharCode(parseInt(hex, 16)); });
+                };';
+    foreach ($checks as $check) {
+      $js .= '
+                if (!$("'.$check[0].'").is(":checked")) {
+                  klarna_error += klarna_decode("'.xtc_js_lang($check[1]).'");
+                }';
+    }
+
+    if ($this->is_virtual_order() === false) {
+      // the radio buttons belong to the shipping form, the selection counts once the form is sent
+      $js .= '
+                var klarna_shipping = $("#checkout_shipping input[name=shipping]:checked").val();
+                if (klarna_shipping === undefined) {
+                  klarna_shipping = $("#checkout_shipping input[name=shipping][type=hidden]").val();
+                }
+                if (klarna_shipping === undefined) {
+                  klarna_error += klarna_decode("'.xtc_js_lang(JS_ERROR_NO_SHIPPING_MODULE_SELECTED).'");
+                } else if (klarna_shipping != '.json_encode($this->selected_shipping, JSON_HEX_TAG | JSON_HEX_AMP).') {
+                  klarna_error += klarna_decode("'.xtc_js_lang(MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_JS_ERROR_SHIPPING).'");
+                }';
+    }
+
+    $js .= '
+                if (klarna_error != "") {
+                  alert(klarna_decode("'.xtc_js_lang(JS_ERROR).'") + klarna_error);
+                  return;
+                }';
+
+    return $js;
+  }
+
+
+  // agreements and shipping are checked before the Klarna order is created, a failed check returns to the page
+  function check_short_checkout() {
+    global $messageStack, $order;
+
+    $error = false;
+    $agreements = $this->get_agreements();
+
+    if (isset($_POST['comments_added']) && $_POST['comments_added'] != '') {
+      $_SESSION['comments'] = xtc_db_prepare_input((isset($_POST['comments'])) ? $_POST['comments'] : '');
+      $order->info['comments'] = $_SESSION['comments'];
+    }
+
+    if ($agreements['conditions'] && (!isset($_POST['conditions']) || $_POST['conditions'] != 'conditions')) {
+      $error = true;
+      $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_CONDITIONS_NOT_ACCEPTED));
+    }
+    if (!isset($_POST['check_address']) || $_POST['check_address'] != 'address') {
+      $error = true;
+      $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_ADDRESS_NOT_ACCEPTED));
+    }
+
+    $no_shipping = $this->is_virtual_order();
+    if (!isset($_SESSION['shipping'])
+        || ($_SESSION['shipping'] !== false && (!is_array($_SESSION['shipping']) || !isset($_SESSION['shipping']['id'])))
+        || ($no_shipping === false && $_SESSION['shipping'] === false)
+        )
+    {
+      $error = true;
+      $messageStack->add_session('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
+    }
+    if ($agreements['revocation'] && (!isset($_POST['revocation']) || $_POST['revocation'] != 'revocation')) {
+      $error = true;
+      $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_REVOCATION_NOT_ACCEPTED));
+    }
+    if ($agreements['privacy'] && (!isset($_POST['privacy']) || $_POST['privacy'] != 'privacy')) {
+      $error = true;
+      $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED));
+    }
+
+    if ($error === true) {
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'SSL'));
+    }
+  }
+
+
+  function before_process() {
+    // the confirmation page of the short checkout holds the agreements, check them first
+    if ($this->use_short_checkout() === true) {
+      $this->check_short_checkout();
+    }
+
+    return parent::before_process();
   }
 
 
@@ -564,7 +1119,6 @@ class klarna_express extends KlarnaPayment {
     parent::install();
 
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_CLIENT_ID', '', '6', '0', now())");
-    // True is not implemented yet and behaves like False
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_SHORT_CHECKOUT', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_BUTTON_CART', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
   }

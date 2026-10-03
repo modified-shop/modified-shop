@@ -1,0 +1,111 @@
+{config_load file="$language/lang_$language.conf" section="checkout_klarna"}
+{config_load file="$language/lang_$language.conf" section="checkout_payment"}
+
+{if $smarty.const.CURRENT_TEMPLATE|strpos:'tpl_modified' !== false}
+<div class="highlightbox">
+  {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+    <div id="horizontalTab">
+      <ul class="resp-tabs-list nonjs-fallback">
+        <li>{#title_comments_short#}</li>
+        <li>{#title_agb#}</li>
+      </ul>
+      <div class="resp-tabs-container">
+        <noscript><h4 class="nonjs-h4">{#title_comments_short#}</h4></noscript>
+        <div class="checkoutcomment">{$COMMENTS}</div>
+        <div>
+          <noscript><h4 class="nonjs-h4">{#title_agb#}</h4></noscript>
+          <div class="checkoutagb">{$AGB}</div>
+        </div>
+      </div>
+    </div>
+    <div class="checkoutconditions" style="padding: 10px 0px;">
+      {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong><br/>{/if}
+      {if isset($AGB_checkbox)}{$AGB_checkbox} {/if}<strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}<br/>
+      {if isset($PRIVACY_LINK)}{if isset($PRIVACY_checkbox)}{$PRIVACY_checkbox} {/if}<strong><label for="privacy">{if isset($PRIVACY_checkbox)}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</label></strong>&nbsp;{$PRIVACY_LINK}<br/>{/if}
+      {if isset($REVOCATION_checkbox)}{$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}<br/>{/if}
+    </div>
+  {else}
+    <h4 class="checkout">{#title_comments_short#}</h4>
+    <div class="checkoutcomment">{$COMMENTS}</div>
+    {if isset($ADR_checkbox)}
+      <div class="checkoutconditions">
+        {$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>
+      </div>
+    {/if}
+    {if isset($PRIVACY_LINK)}
+      <div class="checkoutconditions">
+        {if isset($PRIVACY_checkbox)}{$PRIVACY_checkbox} {/if}<strong><label for="privacy">{if isset($PRIVACY_checkbox)}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</label></strong>&nbsp;{$PRIVACY_LINK}
+      </div>
+    {/if}
+    {if isset($REVOCATION_checkbox)}
+      <div class="checkoutconditions">
+        {$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}
+      </div>
+    {/if}
+
+  {/if}
+</div>
+<br class="clearfix" />
+{else}
+  {literal}
+  <style type="text/css">
+    p.checkoutcomment textarea { max-width: 98%; }
+    div.agbframe { text-align: left; max-width: 98%; }
+    .errormessage { text-align: left; }
+  </style>
+  {/literal}
+
+  <h2 style="text-align:left;">{#title_comments#}</h2>
+  <p class="checkoutcomment">{$COMMENTS}</p>
+  {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+    <h2 style="text-align:left;">{#title_agb#}</h2>
+    <p class="checkoutagb" style="text-align:left;">{$AGB}</p>
+    <table width="100%" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        {if isset($AGB_checkbox)}<td>{$AGB_checkbox}</td>{/if}
+        <td width="100%"{if !isset($AGB_checkbox)} colspan="2"{/if} style="text-align:left;"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
+      </tr>
+      {if isset($PRIVACY_LINK)}
+        <tr>
+          {if isset($PRIVACY_checkbox)}<td>{$PRIVACY_checkbox}</td>{/if}
+          <td width="100%"{if !isset($PRIVACY_checkbox)} colspan="2"{/if} style="text-align:left;"><strong><label for="privacy">{if isset($PRIVACY_checkbox)}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</label></strong>&nbsp;{$PRIVACY_LINK}</td>
+        </tr>
+      {/if}
+      {if isset($REVOCATION_checkbox)}
+        <tr>
+          <td>{$REVOCATION_checkbox}</td>
+          <td width="100%" style="text-align:left;"><strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}</td>
+        </tr>
+      {/if}
+      {if isset($ADR_checkbox)}
+        <tr>
+          <td>{$ADR_checkbox}</td>
+          <td width="100%" style="text-align:left;"><strong><label for="address">{#text_accept_adr#}</label></strong></td>
+        </tr>
+      {/if}
+    </table>
+  {else}
+    {if isset($PRIVACY_LINK) || isset($REVOCATION_checkbox) || isset($ADR_checkbox)}
+      <table width="100%" border="0" cellspacing="0" cellpadding="4">
+        {if isset($PRIVACY_LINK)}
+          <tr>
+            {if isset($PRIVACY_checkbox)}<td>{$PRIVACY_checkbox}</td>{/if}
+            <td width="100%"{if !isset($PRIVACY_checkbox)} colspan="2"{/if} style="text-align:left;"><strong><label for="privacy">{if isset($PRIVACY_checkbox)}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</label></strong>&nbsp;{$PRIVACY_LINK}</td>
+          </tr>
+        {/if}
+        {if isset($REVOCATION_checkbox)}
+          <tr>
+            <td>{$REVOCATION_checkbox}</td>
+            <td width="100%" style="text-align:left;"><strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}</td>
+          </tr>
+        {/if}
+        {if isset($ADR_checkbox)}
+          <tr>
+            <td>{$ADR_checkbox}</td>
+            <td width="100%" style="text-align:left;"><strong><label for="address">{#text_accept_adr#}</label></strong></td>
+          </tr>
+        {/if}
+      </table>
+    {/if}
+  {/if}
+{/if}

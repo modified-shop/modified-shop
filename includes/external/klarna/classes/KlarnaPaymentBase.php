@@ -158,6 +158,12 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
+  // checks of the confirmation page before the Klarna popup opens, a failed check has to return
+  function get_submit_guard_js() {
+    return '';
+  }
+
+
   function javascript_validation() {
     return false;
   }
@@ -274,7 +280,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           window.addEventListener("load", function() {
             $("#checkout_confirmation").on("submit", function(event) {
               if (klarna_'.$this->klarna_code.'_result == false) {
-                event.preventDefault();
+                event.preventDefault();'.$this->get_submit_guard_js().'
                 '.$submit_js.'
               }
             });
