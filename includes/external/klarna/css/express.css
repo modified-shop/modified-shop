@@ -23,6 +23,10 @@
 .cssButtonPos10 .klarna_express_product {
   margin-bottom: 0;
 }
+/* the PayPal block above ends with a negative margin, so the gap has to come from here */
+.cssButtonPos10 .klarna_express_product {
+  margin-top: 5px;
+}
 /* tpl_modified and xtc5 shrink the PayPal cell to the button, so the box needs a width */
 .addtobasket_button .klarna_express_product,
 td > .klarna_express_product {

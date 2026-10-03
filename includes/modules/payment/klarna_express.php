@@ -810,7 +810,7 @@ class klarna_express extends KlarnaPayment {
       return '';
     }
 
-    return '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_WS_EXTERNAL.'klarna/css/express.css?v=3" type="text/css" media="screen" />
+    return '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_WS_EXTERNAL.'klarna/css/express.css?v=4" type="text/css" media="screen" />
           <div id="klarna-express-button"></div>
           <script>
             (function () {
