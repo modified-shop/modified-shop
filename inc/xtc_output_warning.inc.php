@@ -25,6 +25,11 @@
         if (is_dir(DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER)) {
           $messageStack->add('output_warning', sprintf(WARNING_INSTALL_DIRECTORY_EXISTS, DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER));
         }
+
+        // warn if the _installer.php file exists
+        if (is_file(DIR_FS_CATALOG . '_installer.php')) {
+          $messageStack->add('output_warning', sprintf(WARNING_INSTALLER_FILE_EXISTS, DIR_FS_CATALOG . '_installer.php'));
+        }
       }
 
       // check if the configure.php file is writeable
@@ -62,13 +67,10 @@
       }
 
       // warn if a .git directory exists
-      if (is_dir(DIR_FS_CATALOG . '.git')) {
-        $messageStack->add('output_warning', sprintf(WARNING_GIT_DIRECTORY_EXISTS, DIR_FS_CATALOG . '.git'));
-      }
-
-      // warn if the _installer.php file exists
-      if (is_file(DIR_FS_CATALOG . '_installer.php')) {
-        $messageStack->add('output_warning', sprintf(WARNING_INSTALLER_FILE_EXISTS, DIR_FS_CATALOG . '_installer.php'));
+      if (WARN_DEVELOPMENT_EXISTENCE == 'true') {
+        if (is_dir(DIR_FS_CATALOG . '.git')) {
+          $messageStack->add('output_warning', sprintf(WARNING_GIT_DIRECTORY_EXISTS, DIR_FS_CATALOG . '.git'));
+        }
       }
 
       if ($messageStack->size('output_warning') > 0) {
