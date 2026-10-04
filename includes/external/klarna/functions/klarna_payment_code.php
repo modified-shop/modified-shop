@@ -37,8 +37,13 @@ function klarna_payment_modules() {
 
 // texts of klarna_shared.php as array, without defining constants, so one request can serve several languages
 function klarna_language_array($language = '') {
+  static $cache_array = array();
+
   if ($language == '' && isset($_SESSION['language'])) {
     $language = $_SESSION['language'];
+  }
+  if (isset($cache_array[$language])) {
+    return $cache_array[$language];
   }
   $language_file = DIR_FS_CATALOG.'lang/'.basename($language).'/modules/payment/klarna_shared.php';
   if (!is_file($language_file)) {
@@ -48,7 +53,9 @@ function klarna_language_array($language = '') {
   $klarna_code = 'KLARNA';
   include($language_file);
 
-  return ((isset($lang_array) && is_array($lang_array)) ? $lang_array : array());
+  $cache_array[$language] = ((isset($lang_array) && is_array($lang_array)) ? $lang_array : array());
+
+  return $cache_array[$language];
 }
 
 
@@ -91,12 +98,17 @@ function klarna_payment_method_label($payment_method, $language = '') {
     'klarna_directbanktransfer' => 'BANK_TRANSFER',
     'klarna_card' => 'CARD',
   );
-  if (!isset($label_array[$map_array[$payment_method]])) {
+  $label_group = $map_array[$payment_method];
+  // Afterbuy and Trusted Shops book it as invoice, but the customer pays with a card
+  if ($payment_method == 'pay_later_by_card') {
+    $label_group = 'klarna_card';
+  }
+  if (!isset($label_array[$label_group])) {
     return '';
   }
 
   $lang_array = klarna_language_array($language);
-  $key = 'MODULE_PAYMENT_KLARNA_METHOD_'.$label_array[$map_array[$payment_method]];
+  $key = 'MODULE_PAYMENT_KLARNA_METHOD_'.$label_array[$label_group];
 
   return ((isset($lang_array[$key])) ? $lang_array[$key] : '');
 }

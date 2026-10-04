@@ -16,6 +16,7 @@ include(DIR_FS_CATALOG.'lang/german/modules/payment/klarna_shared.php');
 
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_TITLE'] = 'Klarna';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_MESSAGE'] = 'Die Zahlung mit Klarna wurde abgebrochen.';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_INSTALL_NOTE'] = '<br /><br /><b>Hinweis:</b> Nach der Installation ist Klarna inaktiv. Pr&uuml;fen Sie Bestellstatus, Capture und Zonen, dann setzen Sie den Status auf Ja. Solange Klarna aktiv ist, blendet der Checkout die alten Klarna-Module aus.';
 
 foreach ($lang_array as $key => $val) {
   defined($key) or define($key, $val);

@@ -68,9 +68,30 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         self::$klarna_updated = true;
         $this->klarna_update();
       }
+    } elseif ($this->config_code() != $this->code) {
+      // open orders of an uninstalled old module are resolved with the settings of klarna
+      $this->order_status = DEFAULT_ORDERS_STATUS_ID;
+      if ((int)constant('MODULE_PAYMENT_'.strtoupper($this->config_code()).'_ORDER_STATUS_ID') > 0) {
+        $this->order_status = (int)constant('MODULE_PAYMENT_'.strtoupper($this->config_code()).'_ORDER_STATUS_ID');
+      }
     }
     
     KlarnaAutoload::register();
+  }
+
+
+  // an old module that is no longer installed takes the settings of the module klarna for its open orders
+  function config_code() {
+    if (!defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS')
+        && in_array($this->code, klarna_legacy_modules(), true)
+        && defined('MODULE_PAYMENT_KLARNA_STATUS')
+        && defined('MODULE_PAYMENT_KLARNA_ORDER_STATUS_ID')
+        )
+    {
+      return 'klarna';
+    }
+
+    return $this->code;
   }
 
 
@@ -82,6 +103,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         && in_array($this->code, klarna_legacy_modules(), true)
         && defined('MODULE_PAYMENT_KLARNA_STATUS')
         && MODULE_PAYMENT_KLARNA_STATUS == 'True'
+        && defined('MODULE_PAYMENT_INSTALLED')
+        && in_array('klarna.php', explode(';', MODULE_PAYMENT_INSTALLED), true)
         )
     {
       $this->enabled = false;

@@ -629,8 +629,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
 
 
   function capture_enabled() {
-    return (defined('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE')
-            && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE') == 'True');
+    return (defined('MODULE_PAYMENT_'.strtoupper($this->config_code()).'_CAPTURE')
+            && constant('MODULE_PAYMENT_'.strtoupper($this->config_code()).'_CAPTURE') == 'True');
   }
 
 

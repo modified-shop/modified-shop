@@ -27,6 +27,10 @@ class klarna extends KlarnaPayment {
 
     KlarnaPayment::__construct($this->code);
 
+    if (defined('RUN_MODE_ADMIN') && defined('MODULE_PAYMENT_KLARNA_TEXT_INSTALL_NOTE')) {
+      $this->description .= MODULE_PAYMENT_KLARNA_TEXT_INSTALL_NOTE;
+    }
+
     // checkout_process builds the module before $order exists and without update_status()
     if (isset($_SESSION['klarna']['chosen_category']) && is_string($_SESSION['klarna']['chosen_category'])) {
       $this->klarna_code = $_SESSION['klarna']['chosen_category'];
@@ -63,6 +67,8 @@ class klarna extends KlarnaPayment {
     $info = '<div id="klarna-payments-klarna"></div>
              <script>var klarna_'.$this->klarna_code.'_result = false;</script>';
 
+    // the only Klarna entry on the page, scripts of old modules from earlier page views go
+    $_SESSION['klarna']['script'] = array();
     $_SESSION['klarna']['script'][$this->klarna_code] = '
           Klarna.Payments.load({
             container: "#klarna-payments-klarna",
@@ -74,6 +80,16 @@ class klarna extends KlarnaPayment {
       'module' => MODULE_PAYMENT_KLARNA_TEXT_TITLE,
       'description' => $info,
     );
+  }
+
+
+  function install() {
+    parent::install();
+
+    // inactive until the merchant has checked the settings, klarna replaces the old modules in the checkout once it is on
+    xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                     SET configuration_value = 'False'
+                   WHERE configuration_key = 'MODULE_PAYMENT_KLARNA_STATUS'");
   }
 
 

@@ -1320,6 +1320,10 @@
   }
 
   foreach ($removed_modules as $removed_module) {
+    // the prefix of klarna also holds the Klarna credentials and the settings of every Klarna module
+    if ($removed_module == 'klarna') {
+      continue;
+    }
     $configuration_prefix = 'MODULE_PAYMENT_'.strtoupper($removed_module).'_';
     xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
                    WHERE LEFT(configuration_key, ".strlen($configuration_prefix).") = '".xtc_db_input($configuration_prefix)."'");
