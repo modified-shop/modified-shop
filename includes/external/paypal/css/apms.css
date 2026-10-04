@@ -135,7 +135,6 @@
   .apms_nocheckout .apms_form_button_inner {
     position:relative;
     width:100%;
-    max-height:85px;
   }  
   .apms_form_button_inner #apms_button { 
     position:relative;
@@ -236,7 +235,6 @@
   
   @media only screen and (min-width: 759px) {
     .apms_form_button.apms_nocheckout {
-      max-height:170px;
       margin-bottom: 0;
     }
     .apms_form_button.apms_nocheckout.apms_product {
