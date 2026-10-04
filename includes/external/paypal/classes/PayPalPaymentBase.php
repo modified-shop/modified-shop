@@ -297,7 +297,11 @@ class PayPalPaymentBase extends PayPalCommon {
     
     // process the selected shipping method
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
-      if ((isset($_POST['shipping'])) && is_string($_POST['shipping']) && (strpos($_POST['shipping'], '_'))) {
+      // shipping_action.php reads the value as a string too, a crafted array takes the path of a missing selection
+      if (isset($_POST['shipping']) && !is_string($_POST['shipping'])) {
+        unset($_POST['shipping']);
+      }
+      if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
         list ($module, $method) = explode('_', $_POST['shipping']);
       }
 
@@ -633,8 +637,12 @@ class PayPalPaymentBase extends PayPalCommon {
           )
       {
         $error = false;
-        if ($_POST['comments_added'] != '') {
-          $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
+        // only the text of the comment field, an array would break the order insert
+        if (isset($_POST['comments_added']) && $_POST['comments_added'] != ''
+            && (!isset($_POST['comments']) || is_string($_POST['comments']))
+            )
+        {
+          $_SESSION['comments'] = xtc_db_prepare_input((isset($_POST['comments'])) ? $_POST['comments'] : '');
           // checkout_process has built $order before this hook
           $order->info['comments'] = $_SESSION['comments'];
         }
