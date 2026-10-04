@@ -668,10 +668,10 @@
             require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
             if (in_array($payment_method, klarna_payment_modules(), true)) {
               $klarna_label = klarna_payment_method_label(klarna_order_payment_method($order_id), $language);
-              // an old module already names its method, the label only shows when the shopper switched inside Klarna
+              // an old module already names its method, the label only shows when the shopper paid differently inside Klarna
               if ($klarna_label != ''
                   && (!in_array($payment_method, klarna_legacy_modules(), true)
-                      || klarna_payment_code($payment_method, $order_id) !== $payment_method
+                      || $klarna_label !== klarna_group_label($payment_method, $language)
                       )
                   )
               {

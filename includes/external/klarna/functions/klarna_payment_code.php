@@ -90,7 +90,18 @@ function klarna_payment_method_label($payment_method, $language = '') {
     return '';
   }
 
-  // the groups of the map give the labels
+  $label_group = $map_array[$payment_method];
+  // Afterbuy and Trusted Shops book it as invoice, but the customer pays with a card
+  if ($payment_method == 'pay_later_by_card') {
+    $label_group = 'klarna_card';
+  }
+
+  return klarna_group_label($label_group, $language);
+}
+
+
+// label of a group of the map, also the method an old category module stands for ('' for klarna_paynow, a group itself)
+function klarna_group_label($label_group, $language = '') {
   $label_array = array(
     'klarna_paylater' => 'INVOICE',
     'klarna_payovertime' => 'FINANCING',
@@ -98,11 +109,6 @@ function klarna_payment_method_label($payment_method, $language = '') {
     'klarna_directbanktransfer' => 'BANK_TRANSFER',
     'klarna_card' => 'CARD',
   );
-  $label_group = $map_array[$payment_method];
-  // Afterbuy and Trusted Shops book it as invoice, but the customer pays with a card
-  if ($payment_method == 'pay_later_by_card') {
-    $label_group = 'klarna_card';
-  }
   if (!isset($label_array[$label_group])) {
     return '';
   }
