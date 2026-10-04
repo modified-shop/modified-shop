@@ -557,7 +557,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         }
         
         // a failed capture stays CAPTURE_PENDING, the admin page retries it
-        if ($state['fraud_status'] == 'CAPTURE_PENDING') {
+        // an order that was pending at creation belongs to the push, a capture here could skip one it started
+        if ($state['fraud_status'] == 'CAPTURE_PENDING' && $fraud_accepted === true) {
           $this->captureIfDue($insert_id, $state['klarna_order_id'], $order_status, null, true);
         }
       }
