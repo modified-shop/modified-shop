@@ -14,7 +14,7 @@
 require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
 
 
-class klarna_klarna extends KlarnaPayment {
+class klarna extends KlarnaPayment {
 
   var $code;
   var $klarna_code;
@@ -22,7 +22,7 @@ class klarna_klarna extends KlarnaPayment {
   function __construct() {
     global $order;
 
-    $this->code = 'klarna_klarna';
+    $this->code = 'klarna';
     $this->klarna_code = 'klarna';
 
     KlarnaPayment::__construct($this->code);
@@ -71,9 +71,21 @@ class klarna_klarna extends KlarnaPayment {
 
     return array(
       'id' => $this->code,
-      'module' => MODULE_PAYMENT_KLARNA_KLARNA_TEXT_TITLE,
+      'module' => MODULE_PAYMENT_KLARNA_TEXT_TITLE,
       'description' => $info,
     );
+  }
+
+
+  function remove() {
+    // the shared and the express keys have the same prefix, so only the own keys go, by name
+    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
+                        WHERE configuration_key IN ('MODULE_PAYMENT_KLARNA_STATUS',
+                                                    'MODULE_PAYMENT_KLARNA_ALLOWED',
+                                                    'MODULE_PAYMENT_KLARNA_ZONE',
+                                                    'MODULE_PAYMENT_KLARNA_ORDER_STATUS_ID',
+                                                    'MODULE_PAYMENT_KLARNA_SORT_ORDER',
+                                                    'MODULE_PAYMENT_KLARNA_CAPTURE')");
   }
 
 }

@@ -210,8 +210,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
     }
     
     $installed_modules = ((defined('MODULE_PAYMENT_INSTALLED')) ? explode(';', MODULE_PAYMENT_INSTALLED) : array());
-    $installed = in_array('klarna_klarna.php', $installed_modules, true);
-    $active = ($installed && defined('MODULE_PAYMENT_KLARNA_KLARNA_STATUS') && MODULE_PAYMENT_KLARNA_KLARNA_STATUS == 'True');
+    $installed = in_array('klarna.php', $installed_modules, true);
+    $active = ($installed && defined('MODULE_PAYMENT_KLARNA_STATUS') && MODULE_PAYMENT_KLARNA_STATUS == 'True');
     
     $active_old = array();
     foreach (klarna_legacy_modules() as $module) {

@@ -29,23 +29,23 @@ function klarna_legacy_modules() {
 // every payment code a Klarna order can carry
 function klarna_payment_modules() {
   return array_merge(klarna_legacy_modules(), array(
-    'klarna_klarna',
+    'klarna',
     'klarna_express',
   ));
 }
 
 
-// texts of klarna.php as array, without defining constants, so one request can serve several languages
+// texts of klarna_shared.php as array, without defining constants, so one request can serve several languages
 function klarna_language_array($language = '') {
   if ($language == '' && isset($_SESSION['language'])) {
     $language = $_SESSION['language'];
   }
-  $language_file = DIR_FS_CATALOG.'lang/'.basename($language).'/modules/payment/klarna.php';
+  $language_file = DIR_FS_CATALOG.'lang/'.basename($language).'/modules/payment/klarna_shared.php';
   if (!is_file($language_file)) {
-    $language_file = DIR_FS_CATALOG.'lang/german/modules/payment/klarna.php';
+    $language_file = DIR_FS_CATALOG.'lang/german/modules/payment/klarna_shared.php';
   }
 
-  $klarna_code = 'KLARNA_KLARNA';
+  $klarna_code = 'KLARNA';
   include($language_file);
 
   return ((isset($lang_array) && is_array($lang_array)) ? $lang_array : array());

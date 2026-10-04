@@ -157,7 +157,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
-  // a module with a fixed category keeps it, klarna_klarna takes one of the Klarna session
+  // a module with a fixed category keeps it, the module klarna takes one of the Klarna session
   function choose_category() {
   }
 

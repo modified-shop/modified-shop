@@ -18,15 +18,15 @@ if (isset($order) && is_object($order)) {
       || $order->info['payment_method'] == 'klarna_directdebit'
       || $order->info['payment_method'] == 'klarna_directbanktransfer'
       || $order->info['payment_method'] == 'klarna_paynow'
-      || $order->info['payment_method'] == 'klarna_klarna'
+      || $order->info['payment_method'] == 'klarna'
       || $order->info['payment_method'] == 'klarna_express'
       ) 
   {
     require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
-    $klarna = new KlarnaPayment($order->info['payment_method']);
+    $klarna_payment = new KlarnaPayment($order->info['payment_method']);
     
     // resolve a still pending fraud review when the push never arrived
-    $klarna->resolveFraudStatus((int)$order->info['order_id']);
+    $klarna_payment->resolveFraudStatus((int)$order->info['order_id']);
     
     // read in any case, a failed capture may have changed the status already
     $klarna_status_query = xtc_db_query("SELECT orders_status

@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 
-// klarna_klarna serves every category, "klarna" if Klarna returns it, otherwise the first one in Klarna's order
+// the module klarna serves every category, "klarna" if Klarna returns it, otherwise the first one in Klarna's order
 function klarna_choose_category($identifiers) {
   // the code ends up in JavaScript and field names, so only plain identifiers count
   $valid = array();
@@ -28,7 +28,7 @@ function klarna_choose_category($identifiers) {
 }
 
 
-// returned categories against the state of klarna_klarna, no output
+// returned categories against the state of the module klarna, no output
 function klarna_category_check_analyze($categories, $installed, $active, $active_old = array()) {
   $result = array(
     'categories' => array(),

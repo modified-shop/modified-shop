@@ -660,7 +660,7 @@
           }
           
           // the way the customer paid inside Klarna
-          if ((int)$order_id > 0 && strpos($payment_method, 'klarna_') === 0) {
+          if ((int)$order_id > 0 && strpos($payment_method, 'klarna') === 0) {
             require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
             if (in_array($payment_method, klarna_payment_modules(), true)) {
               $klarna_label = klarna_payment_method_label(klarna_order_payment_method($order_id), $language);

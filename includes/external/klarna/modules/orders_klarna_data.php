@@ -16,7 +16,7 @@ if (isset($order) && is_object($order)) {
       || $order->info['payment_method'] == 'klarna_directdebit'
       || $order->info['payment_method'] == 'klarna_directbanktransfer'
       || $order->info['payment_method'] == 'klarna_paynow'
-      || $order->info['payment_method'] == 'klarna_klarna'
+      || $order->info['payment_method'] == 'klarna'
       || $order->info['payment_method'] == 'klarna_express'
       ) 
   {
@@ -25,12 +25,12 @@ if (isset($order) && is_object($order)) {
     require_once (DIR_WS_LANGUAGES.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
 
     require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
-    $klarna = new KlarnaPayment($order->info['payment_method']);
+    $klarna_payment = new KlarnaPayment($order->info['payment_method']);
     
     $admin_info_array = array();
     
-    if ($order_id = $klarna->get_klarna_order($order->info['order_id'])) {
-      $admin_info_array = $klarna->fetchOrder($order_id);
+    if ($order_id = $klarna_payment->get_klarna_order($order->info['order_id'])) {
+      $admin_info_array = $klarna_payment->fetchOrder($order_id);
     }
 
     if (is_array($admin_info_array) && count($admin_info_array) > 0) {
