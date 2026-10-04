@@ -33,8 +33,12 @@ $lang_array['MODULE_PAYMENT_'.$klarna_code.'_SHORT_CHECKOUT_TITLE'] = 'Short che
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_SHORT_CHECKOUT_DESC'] = 'Go straight to the order confirmation after the Express Checkout. The customer chooses the shipping method, agreements and comment there, the payment page is skipped. If disabled, the checkout starts at the shipping method.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_CART_TITLE'] = 'Button in the shopping cart';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_CART_DESC'] = 'Show the Klarna Express button in the shopping cart.';
-$lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_PRODUCT_TITLE'] = 'Button on the product page';
-$lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_PRODUCT_DESC'] = 'Show the Klarna Express button on the product page. The product is added to the shopping cart first with the chosen quantity and options.';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_LOCATION_TITLE'] = 'Button on the product page or in the cart layer';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_LOCATION_DESC'] = 'Where the Klarna Express button appears in addition to the shopping cart. Product page: the product is added to the cart first with the chosen quantity and options. Cart layer: in the cart layer of tpl_modified_nova on every page except the shopping cart and checkout. Klarna allows only one button per page.';
+// option labels of the select above, the admin looks them up as CFG_TXT_<value>
+$lang_array['CFG_TXT_OFF'] = 'Off';
+$lang_array['CFG_TXT_PRODUCT_PAGE'] = 'Product page';
+$lang_array['CFG_TXT_CART_LAYER'] = 'Cart layer';
 
 foreach ($lang_array as $key => $val) {
   defined($key) or define($key, $val);

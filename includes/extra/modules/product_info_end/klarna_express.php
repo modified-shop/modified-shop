@@ -14,8 +14,8 @@
       && MODULE_PAYMENT_KLARNA_EXPRESS_STATUS == 'True'
       && defined('MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID')
       && MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID != ''
-      && (!defined('MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_PRODUCT')
-          || MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_PRODUCT == 'True'
+      && (!defined('MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_LOCATION')
+          || MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_LOCATION == 'product_page'
           )
       && $_SESSION['customers_status']['customers_status_show_price'] != '0'
       && (($_SESSION['customers_status']['customers_fsk18'] == '1' && $product->data['products_fsk18'] == '0')
@@ -45,35 +45,7 @@
       $klarna_express_config['error_text'] = html_entity_decode(MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ADD, ENT_QUOTES, 'UTF-8');
 
       // the product is added with the form data first, authorize() needs the real cart amount
-      $klarna_express_on_click = <<<'JS'
-var stop = function (message) {
-  window.alert(message);
-};
-var form = document.getElementById("cart_quantity");
-if (!form) {
-  stop(cfg.error_text);
-  return;
-}
-var params = new URLSearchParams(new FormData(form));
-params.set("klarna_express_ajax_token", cfg.ajax_token);
-fetch(cfg.ajax_url, {
-  method: "POST",
-  credentials: "same-origin",
-  headers: {"Content-Type": "application/x-www-form-urlencoded"},
-  body: params.toString()
-}).then(function (reply) {
-  return reply.json();
-}).then(function (response) {
-  if (response && response.ok === true && response.payload && response.token) {
-    cfg.token = response.token;
-    authorize(options, response.payload, done);
-  } else {
-    stop((response && response.message) || cfg.error_text);
-  }
-}, function () {
-  stop(cfg.error_text);
-});
-JS;
+      $klarna_express_on_click = $klarna_express->get_express_fetch_js('cart_quantity');
 
       $klarna_express_button = $klarna_express->get_express_button($klarna_express_config, $klarna_express_on_click);
       if ($klarna_express_button != '') {

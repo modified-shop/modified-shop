@@ -101,6 +101,42 @@
         $box_smarty->assign('paypalgooglepay', true);
       }
     }
+
+    // one Klarna button per page, the layer replaces the product page button
+    if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false
+        && strpos(basename($PHP_SELF), 'checkout') === false
+        && defined('MODULE_PAYMENT_KLARNA_EXPRESS_STATUS')
+        && MODULE_PAYMENT_KLARNA_EXPRESS_STATUS == 'True'
+        && defined('MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_LOCATION')
+        && MODULE_PAYMENT_KLARNA_EXPRESS_BUTTON_LOCATION == 'cart_layer'
+        && $any_out_of_stock === false
+        )
+    {
+      // include needed classes
+      include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/klarna_express.php');
+      require_once(DIR_FS_CATALOG.'includes/modules/payment/klarna_express.php');
+
+      $klarna_express = new klarna_express();
+
+      if ($klarna_express::express_configured() === true
+          && $klarna_express->express_available() === true
+          && $klarna_express->checkout_allowed() === ''
+          )
+      {
+        $klarna_express_config = $klarna_express->get_express_config(
+          null,
+          str_replace('&amp;', '&', xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=klarna_express', 'NONSSL'))
+        );
+        $klarna_express_config['ajax_url'] = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=klarna_express_payload&mode=cart', $request_type));
+        $klarna_express_config['ajax_token'] = $klarna_express->get_ajax_token();
+        $klarna_express_config['error_text'] = html_entity_decode(MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_CALLBACK, ENT_QUOTES, 'UTF-8');
+
+        $klarna_express_button = $klarna_express->get_express_button($klarna_express_config, $klarna_express->get_express_fetch_js());
+        if ($klarna_express_button != '') {
+          $box_smarty->assign('BUTTON_KLARNA', '<div class="klarna_express_box">'.$klarna_express_button.'</div>');
+        }
+      }
+    }
   }
 
   if (STOCK_CHECK == 'true' && $any_out_of_stock === true) {

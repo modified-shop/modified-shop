@@ -776,7 +776,7 @@ class klarna_express extends KlarnaPayment {
   }
 
 
-  // settings of the button on cart and product page, $express comes from prepare_express()
+  // settings of the button on cart page, product page and cart layer, $express comes from prepare_express()
   function get_express_config($express = null, $error_url = '') {
     $config = array('client_id' => MODULE_PAYMENT_KLARNA_EXPRESS_CLIENT_ID);
     if (is_array($express)) {
@@ -826,14 +826,14 @@ class klarna_express extends KlarnaPayment {
   }
 
 
-  // button, loader and result handling of cart and product page, $on_click_js is the body of on_click(authorize)
+  // button, loader and result handling of cart page, product page and cart layer, $on_click_js is the body of on_click(authorize)
   function get_express_button($config, $on_click_js) {
     $config_json = json_encode($config, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
     if ($config_json === false) {
       return '';
     }
 
-    return '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_WS_EXTERNAL.'klarna/css/express.css?v=6" type="text/css" media="screen" />
+    return '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_WS_EXTERNAL.'klarna/css/express.css?v=7" type="text/css" media="screen" />
           <div id="klarna-express-button"></div>
           <script>
             (function () {
@@ -893,7 +893,44 @@ class klarna_express extends KlarnaPayment {
   }
 
 
-  // the ajax token binds the product page request to the session
+  // on_click body that fetches the payload by ajax first, authorize() needs the real cart amount, $form_id posts the product form
+  function get_express_fetch_js($form_id = '') {
+    $form_js = 'var params = new URLSearchParams();';
+    if ($form_id != '') {
+      $form_js = 'var form = document.getElementById('.json_encode($form_id).');
+if (!form) {
+  stop(cfg.error_text);
+  return;
+}
+var params = new URLSearchParams(new FormData(form));';
+    }
+
+    return 'var stop = function (message) {
+  window.alert(message);
+};
+'.$form_js.'
+params.set("klarna_express_ajax_token", cfg.ajax_token);
+fetch(cfg.ajax_url, {
+  method: "POST",
+  credentials: "same-origin",
+  headers: {"Content-Type": "application/x-www-form-urlencoded"},
+  body: params.toString()
+}).then(function (reply) {
+  return reply.json();
+}).then(function (response) {
+  if (response && response.ok === true && response.payload && response.token) {
+    cfg.token = response.token;
+    authorize(options, response.payload, done);
+  } else {
+    stop((response && response.message) || cfg.error_text);
+  }
+}, function () {
+  stop(cfg.error_text);
+});';
+  }
+
+
+  // the ajax token binds the product page and cart layer request to the session
   function get_ajax_token() {
     if (!isset($_SESSION['klarna_express_ajax'])
         || !is_string($_SESSION['klarna_express_ajax'])
@@ -983,7 +1020,7 @@ class klarna_express extends KlarnaPayment {
   }
 
 
-  // error answer of the product page request, the texts hold HTML entities for the page
+  // error answer of the product page and cart layer request, the texts hold HTML entities for the page
   public static function get_ajax_error($reason) {
     $texts = array(
       'add' => MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_ADD,
@@ -1579,7 +1616,7 @@ class klarna_express extends KlarnaPayment {
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_CLIENT_ID', '', '6', '0', now())");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_SHORT_CHECKOUT', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_BUTTON_CART', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
-    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_BUTTON_PRODUCT', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_BUTTON_LOCATION', 'product_page', '6', '1', 'xtc_cfg_select_option(array(\'off\', \'product_page\', \'cart_layer\'), ', now());");
   }
 
 
@@ -1589,7 +1626,7 @@ class klarna_express extends KlarnaPayment {
     $keys[] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_CLIENT_ID';
     $keys[] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_SHORT_CHECKOUT';
     $keys[] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_BUTTON_CART';
-    $keys[] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_BUTTON_PRODUCT';
+    $keys[] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_BUTTON_LOCATION';
 
     return $keys;
   }

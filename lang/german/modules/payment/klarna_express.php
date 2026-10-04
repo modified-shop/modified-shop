@@ -33,8 +33,12 @@ $lang_array['MODULE_PAYMENT_'.$klarna_code.'_SHORT_CHECKOUT_TITLE'] = 'Kurz-Chec
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_SHORT_CHECKOUT_DESC'] = 'Nach dem Express Checkout direkt zur Bestellbest&auml;tigung wechseln. Versandart, Zustimmungen und Kommentar w&auml;hlt der Kunde dort, die Zahlungsseite entf&auml;llt. Bei Nein beginnt der Checkout bei der Versandart.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_CART_TITLE'] = 'Button im Warenkorb';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_CART_DESC'] = 'Klarna Express Button im Warenkorb anzeigen.';
-$lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_PRODUCT_TITLE'] = 'Button auf der Produktseite';
-$lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_PRODUCT_DESC'] = 'Klarna Express Button auf der Produktseite anzeigen. Der Artikel wird mit Menge und Auswahl zuerst in den Warenkorb gelegt.';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_LOCATION_TITLE'] = 'Button auf Artikelseite oder im Warenkorb-Layer';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_BUTTON_LOCATION_DESC'] = 'Wo der Klarna Express Button zus&auml;tzlich zum Warenkorb erscheint. Artikelseite: der Artikel wird mit Menge und Auswahl zuerst in den Warenkorb gelegt. Warenkorb-Layer: im Warenkorb-Layer von tpl_modified_nova auf allen Seiten au&szlig;er Warenkorb und Checkout. Klarna erlaubt nur einen Button pro Seite.';
+// option labels of the select above, the admin looks them up as CFG_TXT_<value>
+$lang_array['CFG_TXT_OFF'] = 'Aus';
+$lang_array['CFG_TXT_PRODUCT_PAGE'] = 'Artikelseite';
+$lang_array['CFG_TXT_CART_LAYER'] = 'Warenkorb-Layer';
 
 foreach ($lang_array as $key => $val) {
   defined($key) or define($key, $val);
