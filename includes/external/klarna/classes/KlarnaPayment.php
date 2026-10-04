@@ -367,18 +367,18 @@ class KlarnaPayment extends KlarnaPaymentBase {
       'RO' => array('ro', 'en'),
       'SK' => array('sk', 'en'),
       'ES' => array('es', 'en'),
-      'SE' => array('sv'),
+      'SE' => array('sv', 'en'),
       'CH' => array('de', 'fr', 'it', 'en'),
       'GB' => array('en'),
       'US' => array('en', 'es'),
     );
-    
+
     $country_iso = strtoupper($country_iso);
     $language = strtolower($_SESSION['language_code']);
     if ($language == 'no') {
       $language = 'nb';
     }
-    
+
     // an unsupported language falls back to English, then to the first locale of the country
     if (!isset($locales[$country_iso]) || in_array($language, $locales[$country_iso])) {
       return ((isset($locales[$country_iso])) ? $language : 'en').'-'.$country_iso;
@@ -528,7 +528,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
     } elseif (isset($order->billing['country']) && is_array($order->billing['country']) && !empty($order->billing['country']['iso_code_2'])) {
       $purchase_country = strtoupper($order->billing['country']['iso_code_2']);
     }
-    
+
     $order_array = array(
       'locale' => $this->get_locale($purchase_country),
       'purchase_country' => $purchase_country,
