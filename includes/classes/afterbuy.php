@@ -584,7 +584,7 @@ class xtc_afterbuy_functions {
   // the ZFunktionsID values come from the afterbuy shop interface, the label is only shown to the merchant
   function getPayment($payment, $order_id = '', $language = '') {
     if ($order_id != '') {
-      // klarna_klarna and klarna_express map by the method the shopper chose inside Klarna
+      // Klarna modules map by the method the shopper finally chose inside Klarna, older orders keep the module mapping
       require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
       $payment = klarna_payment_code($payment, $order_id);
     }

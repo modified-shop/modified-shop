@@ -38,9 +38,18 @@ function klarna_payment_code_map() {
 }
 
 
-// klarna_klarna and klarna_express let the shopper pick the method inside Klarna, so the code follows that choice
+// the shopper can switch the method inside Klarna with every Klarna module, so the code follows the final choice
 function klarna_payment_code($payment_code, $orders_id) {
-  if (!in_array($payment_code, array('klarna_klarna', 'klarna_express'), true) || (int)$orders_id < 1) {
+  $klarna_modules = array(
+    'klarna_paylater',
+    'klarna_paynow',
+    'klarna_payovertime',
+    'klarna_directdebit',
+    'klarna_directbanktransfer',
+    'klarna_klarna',
+    'klarna_express',
+  );
+  if (!in_array($payment_code, $klarna_modules, true) || (int)$orders_id < 1) {
     return $payment_code;
   }
 
