@@ -27,6 +27,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   var $enabled;
   var $order_status;
   var $_check;
+  var $properties = array();
 
   var $klarna_version;
 

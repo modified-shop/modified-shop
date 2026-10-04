@@ -25,6 +25,7 @@ require_once(DIR_FS_INC.'xtc_get_products_image.inc.php');
 
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPaymentBase.php');
+require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_category_check.php');
 require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 
 
@@ -65,6 +66,10 @@ class KlarnaPayment extends KlarnaPaymentBase {
     }
     
     $this->setConnector();
+    
+    if (defined('RUN_MODE_ADMIN') && defined('MODULE_PAYMENT_KLARNA_CHECK_BUTTON')) {
+      $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=custom') . '">' . MODULE_PAYMENT_KLARNA_CHECK_BUTTON . '</a>';
+    }
   }
 
 
@@ -119,6 +124,106 @@ class KlarnaPayment extends KlarnaPaymentBase {
       KlarnaPayment::$session_failed = true;
       $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
     } 
+  }
+
+
+  // admin action of the module page, shows the categories Klarna returns for the store country
+  function custom() {
+    global $messageStack;
+    
+    if (!defined('RUN_MODE_ADMIN')) {
+      return;
+    }
+    
+    $check = $this->check_payment_categories();
+    $messageStack->add_session(klarna_category_check_html($check), (($check['error_type'] == '') ? 'info' : 'error'));
+  }
+
+
+  // creates a session with a test amount, no order and no write in the shop
+  function check_payment_categories() {
+    $check = array(
+      'context' => array(
+        'country' => '',
+        'currency' => ((defined('DEFAULT_CURRENCY')) ? DEFAULT_CURRENCY : ''),
+        'amount' => '100.00',
+        'mode' => ((defined('MODULE_PAYMENT_KLARNA_MODE')) ? MODULE_PAYMENT_KLARNA_MODE : ''),
+      ),
+      'error_type' => '',
+      'error_message' => '',
+      'categories' => array(),
+      'not_returned' => array(),
+      'klarna_returned' => false,
+      'multiple' => false,
+    );
+    
+    if ($this->merchant_id == '' || $this->shared_secret == '') {
+      $check['error_type'] = 'credentials';
+      $this->logger->log('klarna', 'category check: no credentials');
+      
+      return $check;
+    }
+    
+    $country_query = xtc_db_query("SELECT countries_iso_code_2
+                                     FROM ".TABLE_COUNTRIES."
+                                    WHERE countries_id = '".(int)STORE_COUNTRY."'");
+    $country = xtc_db_fetch_array($country_query);
+    if (!is_array($country) || $country['countries_iso_code_2'] == '') {
+      $check['error_type'] = 'country';
+      $this->logger->log('klarna', 'category check: store country not found');
+      
+      return $check;
+    }
+    $check['context']['country'] = $country['countries_iso_code_2'];
+    
+    $order_array = array(
+      'locale' => strtolower((isset($_SESSION['language_code'])) ? $_SESSION['language_code'] : 'en').'-'.strtoupper($country['countries_iso_code_2']),
+      'purchase_country' => $country['countries_iso_code_2'],
+      'purchase_currency' => $check['context']['currency'],
+      'order_amount' => 10000,
+      'order_tax_amount' => 0,
+      'order_lines' => array(
+        array(
+          'type' => 'physical',
+          'reference' => 'check',
+          'name' => 'Klarna check',
+          'quantity' => 1,
+          'unit_price' => 10000,
+          'tax_rate' => 0,
+          'total_amount' => 10000,
+          'total_tax_amount' => 0,
+        ),
+      ),
+    );
+    
+    try {
+      $session = new Klarna\Rest\Payments\Sessions($this->connector);
+      $response = $session->create($order_array);
+      $categories = ((isset($response['payment_method_categories'])) ? $response['payment_method_categories'] : array());
+    } catch (Exception $e) {
+      $check['error_type'] = 'api';
+      $check['error_message'] = $e->getMessage();
+      $this->logger->log('klarna', 'category check: '.$e->getMessage());
+      
+      return $check;
+    }
+    
+    $installed = ((defined('MODULE_PAYMENT_INSTALLED')) ? explode(';', MODULE_PAYMENT_INSTALLED) : array());
+    $installed_codes = array();
+    $active_codes = array();
+    foreach (klarna_category_module_map() as $module) {
+      if (in_array($module.'.php', $installed, true)) {
+        $installed_codes[] = $module;
+        if (defined('MODULE_PAYMENT_'.strtoupper($module).'_STATUS')
+            && constant('MODULE_PAYMENT_'.strtoupper($module).'_STATUS') == 'True'
+            )
+        {
+          $active_codes[] = $module;
+        }
+      }
+    }
+    
+    return array_merge($check, klarna_category_check_analyze($categories, $installed_codes, $active_codes));
   }
 
 
