@@ -637,7 +637,12 @@
         if (!isset($static_payment_array[$payment_method][(int)$order_id])) { 
           if (is_file(DIR_FS_CATALOG . 'includes/modules/payment/' . $payment_method . '.php')) {
             if ($language == '') $language = $_SESSION['language'];
-            include_once(DIR_FS_CATALOG . 'lang/' . $language . '/modules/payment/' . $payment_method . '.php');
+            $language_file = DIR_FS_CATALOG . 'lang/' . $language . '/modules/payment/' . $payment_method . '.php';
+            // Klarna ships german and english only, an order in another language falls back to english
+            if (strpos($payment_method, 'klarna') === 0 && !is_file($language_file)) {
+              $language_file = DIR_FS_CATALOG . 'lang/english/modules/payment/' . $payment_method . '.php';
+            }
+            include_once($language_file);
             $payment_name = strip_tags(constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE')));
 
             if ($payment_method == 'paypalplus' && (int)$order_id > 0) {

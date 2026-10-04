@@ -1509,6 +1509,8 @@ fetch(cfg.ajax_url, {
 
   // an address book entry of the customer with the same data, else a new one
   function get_address_id($customer_id, $address) {
+    // the same state value create_address_book() stores, a free text region counts when zone_id is 0
+    $state = ((defined('ACCOUNT_STATE') && ACCOUNT_STATE == 'true') ? $address['state'] : '');
     $check_query = xtc_db_query("SELECT address_book_id
                                    FROM ".TABLE_ADDRESS_BOOK."
                                   WHERE customers_id = '".(int)$customer_id."'
@@ -1521,6 +1523,7 @@ fetch(cfg.ajax_url, {
                                     AND entry_city = '".xtc_db_input($address['city'])."'
                                     AND entry_country_id = '".(int)$address['country_id']."'
                                     AND entry_zone_id = '".(int)$address['zone_id']."'
+                                    AND entry_state = '".xtc_db_input($state)."'
                                   LIMIT 1");
     if (xtc_db_num_rows($check_query) > 0) {
       $check = xtc_db_fetch_array($check_query);
