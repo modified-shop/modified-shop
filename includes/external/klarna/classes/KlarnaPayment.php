@@ -129,6 +129,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
         'billto_id' => $this->get_country_id($_SESSION['billto']),
         'cart_id' => $_SESSION['cart']->cartID,
         'time_created' => time(),
+        'currency' => $_SESSION['currency'],
       );
     } catch (Exception $e) {
       KlarnaPayment::$session_failed = true;

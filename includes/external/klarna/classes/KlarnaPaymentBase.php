@@ -120,6 +120,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           || $_SESSION['klarna']['billto'] != $_SESSION['billto']
           || $_SESSION['klarna']['billto_id'] != $this->get_country_id($_SESSION['billto'])
           || ($_SESSION['klarna']['time_created'] + 3600) < time()
+          || (isset($_SESSION['klarna']['currency']) && $_SESSION['klarna']['currency'] !== $_SESSION['currency'])
           || (isset($_SESSION['klarna']['express_flow'])
               && $_SESSION['klarna']['express_flow'] === true
               && (!isset($_SESSION['cart']) || $_SESSION['klarna']['cart_id'] !== $_SESSION['cart']->cartID)
@@ -429,8 +430,15 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
     
+    // the token goes into the URL path of the API call, so only its documented characters pass
+    $authorization_token = $_SESSION['klarna'][$this->klarna_code]['authorization_token'];
+    if (!is_string($authorization_token) || !preg_match('/^[A-Za-z0-9_-]{8,256}$/D', $authorization_token)) {
+      self::discard_session();
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
+    
     try {
-      $orders = new Klarna\Rest\Payments\Orders($this->connector, $_SESSION['klarna'][$this->klarna_code]['authorization_token']);
+      $orders = new Klarna\Rest\Payments\Orders($this->connector, $authorization_token);
       $data = $orders->create($this->getOrderData());
       
       $_SESSION['klarna']['order_id'] = $data['order_id'];
@@ -510,6 +518,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                                       FROM ".TABLE_KLARNA_PAYMENTS."
                                      WHERE orders_id = '".(int)$insert_id."'");
       $row_created = false;
+      // a failed column update (no ALTER privilege) keeps the version key old
+      $columns_ready = (defined('MODULE_PAYMENT_KLARNA_DB_VERSION') && MODULE_PAYMENT_KLARNA_DB_VERSION === $this->klarna_version);
       if (xtc_db_num_rows($klarna_query) < 1) {
         $row_created = true;
         
@@ -532,21 +542,29 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         $sql_data_array = array(
           'orders_id' => $insert_id,
           'klarna_order_id' => $_SESSION['klarna']['order_id'],
-          'fraud_status' => $row_status,
-          'notify_token' => ((isset($_SESSION['klarna_notify_token']) && is_string($_SESSION['klarna_notify_token'])) ? $_SESSION['klarna_notify_token'] : ''),
-          'payment_method' => ((isset($_SESSION['klarna']['payment_method'])) ? $_SESSION['klarna']['payment_method'] : ''),
         );
+        if ($columns_ready === true) {
+          $sql_data_array['fraud_status'] = $row_status;
+          $sql_data_array['notify_token'] = ((isset($_SESSION['klarna_notify_token']) && is_string($_SESSION['klarna_notify_token'])) ? $_SESSION['klarna_notify_token'] : '');
+          $sql_data_array['payment_method'] = ((isset($_SESSION['klarna']['payment_method'])) ? $_SESSION['klarna']['payment_method'] : '');
+        } else {
+          // without the columns the order still gets its row, the Klarna order id is the minimum
+          $this->logger->log('klarna', __FUNCTION__.': the update of the table klarna_payments did not run, order saved without fraud status', array('orders_id' => $insert_id));
+        }
         xtc_db_perform(TABLE_KLARNA_PAYMENTS, $sql_data_array);
 
         $this->insert_status_history($insert_id, $check['orders_status'], 'Klarna Order: '.$_SESSION['klarna']['order_id'].(($fraud_accepted === true) ? '' : ', fraud status: PENDING'));
       }
       
       // read again, the status change and the capture depend on the row, not on its state at insert time
-      $state_query = xtc_db_query("SELECT klarna_order_id,
-                                          fraud_status
-                                     FROM ".TABLE_KLARNA_PAYMENTS."
-                                    WHERE orders_id = '".(int)$insert_id."'");
-      $state = xtc_db_fetch_array($state_query);
+      $state = false;
+      if ($columns_ready === true) {
+        $state_query = xtc_db_query("SELECT klarna_order_id,
+                                            fraud_status
+                                       FROM ".TABLE_KLARNA_PAYMENTS."
+                                      WHERE orders_id = '".(int)$insert_id."'");
+        $state = xtc_db_fetch_array($state_query);
+      }
       if (is_array($state)
           && in_array($state['fraud_status'], array('CAPTURE_PENDING', 'ACCEPTED', 'PENDING'))
           )
@@ -737,7 +755,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                                     WHERE address_book_id = '".(int)$address_id."'");
     $address = xtc_db_fetch_array($address_query);
     
-    return $address['entry_country_id'];
+    // download-only carts have no shipping address
+    return ((is_array($address)) ? $address['entry_country_id'] : 0);
   }
 
 
