@@ -152,9 +152,10 @@ class KlarnaPayment extends KlarnaPaymentBase {
       'error_type' => '',
       'error_message' => '',
       'categories' => array(),
-      'not_returned' => array(),
-      'klarna_returned' => false,
-      'multiple' => false,
+      'used_category' => '',
+      'installed' => false,
+      'active' => false,
+      'active_old' => array(),
     );
     
     if ($this->merchant_id == '' || $this->shared_secret == '') {
@@ -208,22 +209,22 @@ class KlarnaPayment extends KlarnaPaymentBase {
       return $check;
     }
     
-    $installed = ((defined('MODULE_PAYMENT_INSTALLED')) ? explode(';', MODULE_PAYMENT_INSTALLED) : array());
-    $installed_codes = array();
-    $active_codes = array();
-    foreach (klarna_category_module_map() as $module) {
-      if (in_array($module.'.php', $installed, true)) {
-        $installed_codes[] = $module;
-        if (defined('MODULE_PAYMENT_'.strtoupper($module).'_STATUS')
-            && constant('MODULE_PAYMENT_'.strtoupper($module).'_STATUS') == 'True'
-            )
-        {
-          $active_codes[] = $module;
-        }
+    $installed_modules = ((defined('MODULE_PAYMENT_INSTALLED')) ? explode(';', MODULE_PAYMENT_INSTALLED) : array());
+    $installed = in_array('klarna_klarna.php', $installed_modules, true);
+    $active = ($installed && defined('MODULE_PAYMENT_KLARNA_KLARNA_STATUS') && MODULE_PAYMENT_KLARNA_KLARNA_STATUS == 'True');
+    
+    $active_old = array();
+    foreach (klarna_legacy_modules() as $module) {
+      if (in_array($module.'.php', $installed_modules, true)
+          && defined('MODULE_PAYMENT_'.strtoupper($module).'_STATUS')
+          && constant('MODULE_PAYMENT_'.strtoupper($module).'_STATUS') == 'True'
+          )
+      {
+        $active_old[] = $module;
       }
     }
     
-    return array_merge($check, klarna_category_check_analyze($categories, $installed_codes, $active_codes));
+    return array_merge($check, klarna_category_check_analyze($categories, $installed, $active, $active_old));
   }
 
 

@@ -14,6 +14,44 @@
 defined('TABLE_KLARNA_PAYMENTS') or define('TABLE_KLARNA_PAYMENTS', 'klarna_payments');
 
 
+// the category modules of earlier versions, still available but marked as old
+function klarna_legacy_modules() {
+  return array(
+    'klarna_paylater',
+    'klarna_paynow',
+    'klarna_payovertime',
+    'klarna_directdebit',
+    'klarna_directbanktransfer',
+  );
+}
+
+
+// every payment code a Klarna order can carry
+function klarna_payment_modules() {
+  return array_merge(klarna_legacy_modules(), array(
+    'klarna_klarna',
+    'klarna_express',
+  ));
+}
+
+
+// texts of klarna.php as array, without defining constants, so one request can serve several languages
+function klarna_language_array($language = '') {
+  if ($language == '' && isset($_SESSION['language'])) {
+    $language = $_SESSION['language'];
+  }
+  $language_file = DIR_FS_CATALOG.'lang/'.basename($language).'/modules/payment/klarna.php';
+  if (!is_file($language_file)) {
+    $language_file = DIR_FS_CATALOG.'lang/german/modules/payment/klarna.php';
+  }
+
+  $klarna_code = 'KLARNA_KLARNA';
+  include($language_file);
+
+  return ((isset($lang_array) && is_array($lang_array)) ? $lang_array : array());
+}
+
+
 // Klarna payment method type (lowercase) => code of the dedicated module the existing mappings know
 function klarna_payment_code_map() {
   return array(
@@ -38,21 +76,50 @@ function klarna_payment_code_map() {
 }
 
 
+// label of the way the customer paid inside Klarna, '' for an unknown or empty type
+function klarna_payment_method_label($payment_method, $language = '') {
+  $map_array = klarna_payment_code_map();
+  if (!is_string($payment_method) || !isset($map_array[$payment_method])) {
+    return '';
+  }
+
+  // the groups of the map give the labels
+  $label_array = array(
+    'klarna_paylater' => 'INVOICE',
+    'klarna_payovertime' => 'FINANCING',
+    'klarna_directdebit' => 'DIRECT_DEBIT',
+    'klarna_directbanktransfer' => 'BANK_TRANSFER',
+    'klarna_card' => 'CARD',
+  );
+  if (!isset($label_array[$map_array[$payment_method]])) {
+    return '';
+  }
+
+  $lang_array = klarna_language_array($language);
+  $key = 'MODULE_PAYMENT_KLARNA_METHOD_'.$label_array[$map_array[$payment_method]];
+
+  return ((isset($lang_array[$key])) ? $lang_array[$key] : '');
+}
+
+
 // the shopper can switch the method inside Klarna with every Klarna module, so the code follows the final choice
 function klarna_payment_code($payment_code, $orders_id) {
-  $klarna_modules = array(
-    'klarna_paylater',
-    'klarna_paynow',
-    'klarna_payovertime',
-    'klarna_directdebit',
-    'klarna_directbanktransfer',
-    'klarna_klarna',
-    'klarna_express',
-  );
-  if (!in_array($payment_code, $klarna_modules, true) || (int)$orders_id < 1) {
+  if (!in_array($payment_code, klarna_payment_modules(), true) || (int)$orders_id < 1) {
     return $payment_code;
   }
 
+  $map_array = klarna_payment_code_map();
+  $payment_method = klarna_order_payment_method($orders_id);
+  if (is_string($payment_method) && isset($map_array[$payment_method])) {
+    return $map_array[$payment_method];
+  }
+
+  return $payment_code;
+}
+
+
+// method type Klarna stored for the order
+function klarna_order_payment_method($orders_id) {
   // the key exists once klarna_update() has added the column
   $payment_method = '';
   $row_found = false;
@@ -76,10 +143,5 @@ function klarna_payment_code($payment_code, $orders_id) {
     $payment_method = $_SESSION['klarna']['payment_method'];
   }
 
-  $map_array = klarna_payment_code_map();
-  if (is_string($payment_method) && isset($map_array[$payment_method])) {
-    return $map_array[$payment_method];
-  }
-
-  return $payment_code;
+  return $payment_method;
 }

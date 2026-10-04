@@ -43,6 +43,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     $this->klarna_version = '1.24';
     
     $this->title = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '';
+    if ((defined('DIR_WS_INSTALLER') || defined('RUN_MODE_ADMIN')) && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ADMIN_TITLE')) {
+      $this->title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ADMIN_TITLE');
+    }
     $this->description = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') : '';
     $this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : '');
     $this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
@@ -111,6 +114,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     {
       $this->getKlarnaSession();
     }
+    
+    $this->choose_category();
         
     if ($this->enabled == true
         && isset($_SESSION['klarna'])
@@ -149,6 +154,11 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     {
       $this->enabled = false;
     }
+  }
+
+
+  // a module with a fixed category keeps it, klarna_klarna takes one of the Klarna session
+  function choose_category() {
   }
 
 

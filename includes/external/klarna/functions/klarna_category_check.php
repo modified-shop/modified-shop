@@ -11,30 +11,34 @@
    ---------------------------------------------------------------------------------------*/
 
 
-// Klarna payment method category => shop module, in the order the admin lists them
-function klarna_category_module_map() {
-  return array(
-    'pay_later' => 'klarna_paylater',
-    'pay_now' => 'klarna_paynow',
-    'pay_over_time' => 'klarna_payovertime',
-    'direct_debit' => 'klarna_directdebit',
-    'direct_bank_transfer' => 'klarna_directbanktransfer',
-    'klarna' => 'klarna_klarna',
-  );
+// klarna_klarna serves every category, "klarna" if Klarna returns it, otherwise the first one in Klarna's order
+function klarna_choose_category($identifiers) {
+  // the code ends up in JavaScript and field names, so only plain identifiers count
+  $valid = array();
+  foreach ((array) $identifiers as $identifier) {
+    if (is_string($identifier) && preg_match('/^[a-z_]{1,32}$/', $identifier)) {
+      $valid[] = $identifier;
+    }
+  }
+  if (in_array('klarna', $valid, true)) {
+    return 'klarna';
+  }
+
+  return ((count($valid) > 0) ? $valid[0] : '');
 }
 
 
-// returned categories against the installed and active shop modules, no output
-function klarna_category_check_analyze($categories, $installed_codes, $active_codes) {
-  $map = klarna_category_module_map();
+// returned categories against the state of klarna_klarna, no output
+function klarna_category_check_analyze($categories, $installed, $active, $active_old = array()) {
   $result = array(
     'categories' => array(),
-    'not_returned' => array(),
-    'klarna_returned' => false,
-    'multiple' => false,
+    'used_category' => '',
+    'installed' => (bool) $installed,
+    'active' => (bool) $active,
+    'active_old' => array_values((array) $active_old),
   );
 
-  $returned_modules = array();
+  $identifiers = array();
   foreach ((array) $categories as $category) {
     if ($category instanceof ArrayObject) {
       $category = $category->getArrayCopy();
@@ -42,28 +46,17 @@ function klarna_category_check_analyze($categories, $installed_codes, $active_co
     if (!is_array($category) || !isset($category['identifier']) || !is_string($category['identifier'])) {
       continue;
     }
-    $identifier = $category['identifier'];
-    $module = ((isset($map[$identifier])) ? $map[$identifier] : '');
-    if ($module != '') {
-      $returned_modules[] = $module;
-    }
+    $identifiers[] = $category['identifier'];
     $result['categories'][] = array(
-      'identifier' => $identifier,
+      'identifier' => $category['identifier'],
       'name' => ((isset($category['name']) && is_string($category['name'])) ? $category['name'] : ''),
-      'module' => $module,
-      'installed' => ($module != '' && in_array($module, $installed_codes, true)),
-      'active' => ($module != '' && in_array($module, $active_codes, true)),
+      'used' => false,
     );
-    if ($identifier == 'klarna') {
-      $result['klarna_returned'] = true;
-    }
   }
-  $result['multiple'] = (count($result['categories']) > 1);
 
-  foreach ($map as $module) {
-    if (in_array($module, $installed_codes, true) && !in_array($module, $returned_modules, true)) {
-      $result['not_returned'][] = $module;
-    }
+  $result['used_category'] = klarna_choose_category($identifiers);
+  foreach ($result['categories'] as $key => $category) {
+    $result['categories'][$key]['used'] = ($category['identifier'] === $result['used_category']);
   }
 
   return $result;
@@ -115,35 +108,29 @@ function klarna_category_check_html($check) {
   } else {
     $html .= '<table cellpadding="3" cellspacing="0" border="0">'
            . '<tr><td><b>'.MODULE_PAYMENT_KLARNA_CHECK_COL_CATEGORY.'</b></td>'
-           . '<td><b>'.MODULE_PAYMENT_KLARNA_CHECK_COL_MODULE.'</b></td>'
-           . '<td><b>'.MODULE_PAYMENT_KLARNA_CHECK_COL_STATE.'</b></td></tr>';
+           . '<td><b>'.MODULE_PAYMENT_KLARNA_CHECK_COL_USED.'</b></td></tr>';
     foreach ($check['categories'] as $category) {
-      if ($category['module'] == '') {
-        $state = MODULE_PAYMENT_KLARNA_CHECK_STATE_UNKNOWN;
-      } elseif ($category['active']) {
-        $state = MODULE_PAYMENT_KLARNA_CHECK_STATE_ACTIVE;
-      } elseif ($category['installed']) {
-        $state = MODULE_PAYMENT_KLARNA_CHECK_STATE_INACTIVE;
-      } else {
-        $state = MODULE_PAYMENT_KLARNA_CHECK_STATE_MISSING;
-      }
       $html .= '<tr><td>'.klarna_category_check_escape($category['identifier'])
              . (($category['name'] != '') ? ' ('.klarna_category_check_escape($category['name']).')' : '').'</td>'
-             . '<td>'.klarna_category_check_escape($category['module']).'</td>'
-             . '<td>'.$state.'</td></tr>';
+             . '<td>'.(($category['used']) ? MODULE_PAYMENT_KLARNA_CHECK_USED_YES : MODULE_PAYMENT_KLARNA_CHECK_USED_NO).'</td></tr>';
     }
     $html .= '</table>';
+
+    $html .= '<br />'.sprintf(MODULE_PAYMENT_KLARNA_CHECK_CATEGORY, klarna_category_check_escape($check['used_category'])).'<br />';
   }
 
-  if (count($check['not_returned']) > 0) {
-    $html .= '<br />'.sprintf(MODULE_PAYMENT_KLARNA_CHECK_NOT_RETURNED, klarna_category_check_escape(implode(', ', $check['not_returned']))).'<br />';
+  if ($check['active']) {
+    $state = MODULE_PAYMENT_KLARNA_CHECK_STATE_ACTIVE;
+  } elseif ($check['installed']) {
+    $state = MODULE_PAYMENT_KLARNA_CHECK_STATE_INACTIVE;
+  } else {
+    $state = MODULE_PAYMENT_KLARNA_CHECK_STATE_MISSING;
   }
+  $html .= '<br />'.sprintf(MODULE_PAYMENT_KLARNA_CHECK_MODULE, $state).'<br />';
 
-  if ($check['klarna_returned']) {
-    $html .= '<br />'.MODULE_PAYMENT_KLARNA_CHECK_RECOMMEND_KLARNA.'<br />';
-  }
-  if ($check['multiple']) {
-    $html .= '<br />'.MODULE_PAYMENT_KLARNA_CHECK_RECOMMEND_MULTIPLE.'<br />';
+  // both on the payment page show Klarna twice
+  if ($check['active'] && count($check['active_old']) > 0) {
+    $html .= '<br />'.sprintf(MODULE_PAYMENT_KLARNA_CHECK_WARN_OLD, klarna_category_check_escape(implode(', ', $check['active_old']))).'<br />';
   }
 
   return $html;
