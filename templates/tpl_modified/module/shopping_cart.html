@@ -25,7 +25,7 @@
       {if isset($BUTTON_CHECKOUT_EXPRESS)}{if $BUTTON_PAYPAL != '' && !$PAYPALPLAN}<span class="paypal_button2">{$BUTTON_PAYPAL}</span>{/if}{/if}
     </div>
     <br class="clearfix" />
-    {if $BUTTON_KLARNA != ''}<div class="klarna_express_cart">{$BUTTON_KLARNA}</div><br class="clearfix" />{/if}
+    {if $BUTTON_KLARNA != '' && !$PAYPALPLAN}<div class="klarna_express_cart">{$BUTTON_KLARNA}</div><br class="clearfix" />{/if}
     {if isset($ACTIVATE_EXPRESS_LINK)}
       <span class="express_info_cart">
         {if isset($EXPRESS_LINK)}{$EXPRESS_LINK}<br>{/if}

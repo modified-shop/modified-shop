@@ -22,11 +22,12 @@
           || $_SESSION['customers_status']['customers_fsk18'] != '1'
           )
       && $xtPrice->get_content_type_product($product->data['products_id']) != 'virtual'
-      && !preg_match('/^GIFT/', $product->data['products_model'])
+      && !preg_match('/^GIFT/', (string)$product->data['products_model'])
       )
   {
     // include needed classes
-    include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/klarna_express.php');
+    require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_express_language.php');
+    klarna_express_include_language();
     require_once(DIR_FS_CATALOG.'includes/modules/payment/klarna_express.php');
 
     $klarna_express = new klarna_express();

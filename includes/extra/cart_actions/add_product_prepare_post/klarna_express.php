@@ -17,7 +17,8 @@
       )
   {
     // include needed classes
-    include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/klarna_express.php');
+    require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_express_language.php');
+    klarna_express_include_language();
     require_once(DIR_FS_CATALOG.'includes/modules/payment/klarna_express.php');
 
     $klarna_express_ajax = new klarna_express();

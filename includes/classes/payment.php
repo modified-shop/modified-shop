@@ -54,7 +54,8 @@
             && basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT
             )
         {
-          include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/klarna_express.php');
+          require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_express_language.php');
+          klarna_express_include_language();
           if (isset($_SESSION['klarna']['express_flow'])) {
             unset($_SESSION['klarna']);
           }
@@ -210,7 +211,12 @@
                 )
             {
               if ($include_modules[$i]['file'] != 'no_payment') {
-                include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
+                if ($include_modules[$i]['class'] == 'klarna_express') {
+                  require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_express_language.php');
+                  klarna_express_include_language();
+                } else {
+                  include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
+                }
                 include_once(DIR_WS_MODULES . 'payment/' . $include_modules[$i]['file']);
               }
               if (class_exists($include_modules[$i]['class'])) {
@@ -230,7 +236,8 @@
           klarna_express::discard_session();
 
           // the session is gone now, so this runs once
-          include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/klarna_express.php');
+          require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_express_language.php');
+          klarna_express_include_language();
           if (is_object($messageStack) && defined('MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE')) {
             $messageStack->add_session('checkout_payment', MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE);
           }

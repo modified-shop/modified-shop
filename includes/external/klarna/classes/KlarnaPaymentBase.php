@@ -91,9 +91,13 @@ class KlarnaPaymentBase extends KlarnaAutoload {
               && $_SESSION['klarna']['express_flow'] === true
               && self::express_enabled() !== true
               )
+          || (isset($_SESSION['klarna']['express_flow'])
+              && $_SESSION['klarna']['express_flow'] === true
+              && self::express_session_stale()
+              )
           )
       {
-        // an express session was authorized for one cart, a changed cart or a disabled express module starts the normal flow
+        // an express session was authorized for one cart, a changed cart or currency or a disabled express module starts the normal flow
         self::discard_session();
       }
     }
@@ -190,6 +194,16 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
+  // the express module decides if its session still fits cart, addresses and currency, so no other module reuses it
+  public static function express_session_stale() {
+    if (!class_exists('klarna_express', false)) {
+      require_once(DIR_FS_CATALOG.'includes/modules/payment/klarna_express.php');
+    }
+
+    return (klarna_express::express_session_valid() !== true);
+  }
+
+
   // the express module is on and installed
   public static function express_enabled() {
     return (defined('MODULE_PAYMENT_KLARNA_EXPRESS_STATUS')
@@ -280,9 +294,14 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       
       if ($express === true) {
         // no category, the shopper chose the method in the express popup
+        // the shopper closed the popup or aborted the authentication, Klarna allows another finalize()
         $submit_js = '
                 Klarna.Payments.finalize({}, '.$data_js.',
-                function(finalresult) {'.$result_js.'
+                function(finalresult) {
+                  if (finalresult && finalresult.approved === false && finalresult.show_form === true) {
+                    $("#button_checkout_confirmation, .cssButtonPos12").show();
+                    return;
+                  }'.$result_js.'
                 });';
       } else {
         $submit_js = '

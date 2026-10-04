@@ -580,6 +580,7 @@ class klarna_express extends KlarnaPayment {
     $js .= '
                 if (klarna_error != "") {
                   alert(klarna_decode("'.xtc_js_lang(JS_ERROR).'") + klarna_error);
+                  $("#button_checkout_confirmation, .cssButtonPos12").show();
                   return;
                 }';
 
@@ -806,9 +807,6 @@ class klarna_express extends KlarnaPayment {
 
   // checkout rules of includes/checkout_requirements.php that do not depend on the cart
   function checkout_enabled() {
-    if (isset($_SESSION['allow_checkout']) && $_SESSION['allow_checkout'] == 'false') {
-      return false;
-    }
     if ($_SESSION['customers_status']['customers_status_show_price'] != '1') {
       return false;
     }
@@ -842,13 +840,21 @@ class klarna_express extends KlarnaPayment {
               var fail = function () {
                 window.location.href = cfg.error_url;
               };
+              // base64 of the UTF-8 JSON, the input filter of the shop would strip quotes and backslashes from raw JSON
+              var encode = function (value) {
+                var binary = "";
+                new TextEncoder().encode(JSON.stringify(value)).forEach(function (byte) {
+                  binary += String.fromCharCode(byte);
+                });
+                return window.btoa(binary);
+              };
               var post = function (result) {
                 var fields = {
                   token: cfg.token,
                   client_token: result.client_token,
                   session_id: result.session_id,
-                  collected_shipping_address: JSON.stringify(result.collected_shipping_address || {}),
-                  payment_method_categories: JSON.stringify(result.payment_method_categories || [])
+                  collected_shipping_address: encode(result.collected_shipping_address || {}),
+                  payment_method_categories: encode(result.payment_method_categories || [])
                 };
                 var form = document.createElement("form");
                 form.method = "post";
@@ -1058,6 +1064,9 @@ fetch(cfg.ajax_url, {
         'token' => bin2hex(random_bytes(16)),
         'time' => time(),
       );
+    } else {
+      // a page rendered late in the hour must still pass the callback
+      $_SESSION['klarna_express']['time'] = time();
     }
 
     return $_SESSION['klarna_express']['token'];
@@ -1074,6 +1083,18 @@ fetch(cfg.ajax_url, {
 
   // shop restrictions of this module, the country is known in the callback only
   function payment_allowed($country_iso = '', $country_id = 0, $zone_id = 0) {
+    // the checkout modules narrow the payment list like in the payment class, e.g. PayPal plan products allow the subscription only
+    static $checkout_modules = null;
+    if ($checkout_modules === null) {
+      require_once(DIR_FS_CATALOG.'includes/classes/checkoutModules.class.php');
+      $checkout_modules = new checkoutModules();
+    }
+    if (!in_array($this->code.'.php', $checkout_modules->payment_modules(array($this->code.'.php')))
+        || in_array($this->code, array_filter($checkout_modules->unallowed_payment_modules(array()))))
+    {
+      return false;
+    }
+
     $unallowed = ((isset($_SESSION['customers_status']['customers_status_payment_unallowed'])) ? $_SESSION['customers_status']['customers_status_payment_unallowed'] : '');
 
     // the payment class reads the customer restriction from the order, which does not exist yet in short checkout steps
@@ -1114,6 +1135,23 @@ fetch(cfg.ajax_url, {
     }
 
     return true;
+  }
+
+
+  // at most 5 failed session checks per 10 minutes, kept in the session without a database write
+  function callback_blocked() {
+    $failed = ((isset($_SESSION['klarna_express_failed']) && is_array($_SESSION['klarna_express_failed'])) ? $_SESSION['klarna_express_failed'] : array());
+    $failed = array_values(array_filter($failed, function ($time) {
+      return (is_int($time) && $time > (time() - 600));
+    }));
+    $_SESSION['klarna_express_failed'] = $failed;
+
+    return (count($failed) >= 5);
+  }
+
+
+  function note_callback_failure() {
+    $_SESSION['klarna_express_failed'][] = time();
   }
 
 
@@ -1171,9 +1209,16 @@ fetch(cfg.ajax_url, {
       return 'session';
     }
 
+    // every try with a foreign session id costs a Klarna API read
+    if ($this->callback_blocked() === true) {
+      return 'limit';
+    }
+
     // Klarna knows the session only if it belongs to this merchant account
     $klarna_session = $this->readKlarnaSession($post['session_id']);
     if (!is_array($klarna_session)) {
+      $this->note_callback_failure();
+
       return 'session';
     }
 
@@ -1183,6 +1228,7 @@ fetch(cfg.ajax_url, {
         )
     {
       $this->logger->log('klarna', 'express callback: session mismatch');
+      $this->note_callback_failure();
 
       return 'session';
     }
@@ -1220,7 +1266,7 @@ fetch(cfg.ajax_url, {
       $this->logger->log('klarna', 'express callback: session status '.substr(preg_replace('/[^A-Za-z_]/', '', $klarna_session['status']), 0, 32));
     }
 
-    $collected = ((isset($post['collected_shipping_address']) && is_string($post['collected_shipping_address']) && strlen($post['collected_shipping_address']) <= 20000) ? json_decode($post['collected_shipping_address'], true) : null);
+    $collected = $this->decode_posted_json((isset($post['collected_shipping_address'])) ? $post['collected_shipping_address'] : null);
     $address = $this->map_collected_address($collected);
     if (!is_array($address)) {
       return 'address';
@@ -1241,7 +1287,7 @@ fetch(cfg.ajax_url, {
     // Klarna may return the categories on read, the posted ones only come from the browser
     $methods = $this->clean_categories((isset($klarna_session['payment_method_categories'])) ? $klarna_session['payment_method_categories'] : null);
     if (count($methods) < 1) {
-      $posted = ((isset($post['payment_method_categories']) && is_string($post['payment_method_categories']) && strlen($post['payment_method_categories']) <= 20000) ? json_decode($post['payment_method_categories'], true) : null);
+      $posted = $this->decode_posted_json((isset($post['payment_method_categories'])) ? $post['payment_method_categories'] : null);
       $methods = $this->clean_categories($posted);
     }
     if (count($methods) < 1) {
@@ -1254,6 +1300,21 @@ fetch(cfg.ajax_url, {
       'methods' => $methods,
       'address' => $address,
     );
+  }
+
+
+  // the button posts base64 of the UTF-8 JSON, null if it is anything else
+  function decode_posted_json($value) {
+    if (!is_string($value) || strlen($value) > 28000 || !preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $value)) {
+      return null;
+    }
+
+    $json = base64_decode($value, true);
+    if ($json === false || strlen($json) > 20000) {
+      return null;
+    }
+
+    return json_decode($json, true);
   }
 
 
