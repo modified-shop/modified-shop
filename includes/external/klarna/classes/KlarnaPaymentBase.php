@@ -77,6 +77,20 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   function update_status() {
     global $order, $PHP_SELF;
     
+    // the old category modules step back while the module klarna is on, its popup offers every method
+    if ($this->enabled == true
+        && in_array($this->code, klarna_legacy_modules(), true)
+        && defined('MODULE_PAYMENT_KLARNA_STATUS')
+        && MODULE_PAYMENT_KLARNA_STATUS == 'True'
+        )
+    {
+      $this->enabled = false;
+      // a script from an earlier page view would load into a container that is gone, klarna sets its own in selection()
+      if (isset($_SESSION['klarna']['script'][$this->klarna_code])) {
+        unset($_SESSION['klarna']['script'][$this->klarna_code]);
+      }
+    }
+    
     if ($this->enabled == true && $this->zone_allowed() === false) {
       $this->enabled = false;
     }

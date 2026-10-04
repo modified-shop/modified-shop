@@ -128,7 +128,7 @@ function klarna_category_check_html($check) {
   }
   $html .= '<br />'.sprintf(MODULE_PAYMENT_KLARNA_CHECK_MODULE, $state).'<br />';
 
-  // both on the payment page show Klarna twice
+  // the checkout hides them while klarna is on, they only clutter the module list
   if ($check['active'] && count($check['active_old']) > 0) {
     $html .= '<br />'.sprintf(MODULE_PAYMENT_KLARNA_CHECK_WARN_OLD, klarna_category_check_escape(implode(', ', $check['active_old']))).'<br />';
   }
