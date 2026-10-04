@@ -297,7 +297,7 @@ class PayPalPaymentBase extends PayPalCommon {
     
     // process the selected shipping method
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
-      if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
+      if ((isset($_POST['shipping'])) && is_string($_POST['shipping']) && (strpos($_POST['shipping'], '_'))) {
         list ($module, $method) = explode('_', $_POST['shipping']);
       }
 
