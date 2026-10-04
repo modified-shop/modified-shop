@@ -27,6 +27,7 @@ $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_ORDER_VALUE'] = 'Der War
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_TOKEN'] = 'Die Seite ist abgelaufen. Bitte laden Sie die Seite neu.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_SESSION'] = 'Die Klarna Sitzung ist abgelaufen oder die Bestellung wurde ge&auml;ndert. Bitte w&auml;hlen Sie die Zahlungsart erneut.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_JS_ERROR_SHIPPING'] = '* Bitte best&auml;tigen Sie die gew&auml;hlte Versandart mit dem Button unter der Versandauswahl.\n\n';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ACCEPT_ADDRESS'] = 'Ich habe meine Rechnungs- und Versandadresse &uuml;berpr&uuml;ft. Die Angaben sind korrekt.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_CLIENT_ID_TITLE'] = 'Client-ID';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_CLIENT_ID_DESC'] = 'Client-ID aus dem Klarna Partner Portal (Payment settings &gt; Client Identifiers). Die Shop-Domain muss dort unter Allowed Origins eingetragen sein.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_SHORT_CHECKOUT_TITLE'] = 'Kurz-Checkout';

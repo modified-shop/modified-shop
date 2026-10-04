@@ -27,6 +27,7 @@ $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_ORDER_VALUE'] = 'The ord
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_TOKEN'] = 'The page has expired. Please reload the page.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_SESSION'] = 'The Klarna session has expired or the order was changed. Please choose the payment method again.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_JS_ERROR_SHIPPING'] = '* Please confirm the selected shipping method with the button below the shipping selection.\n\n';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ACCEPT_ADDRESS'] = 'I accept my address.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_CLIENT_ID_TITLE'] = 'Client ID';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_CLIENT_ID_DESC'] = 'Client ID from the Klarna Partner Portal (Payment settings &gt; Client Identifiers). The shop domain must be listed there under Allowed Origins.';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_SHORT_CHECKOUT_TITLE'] = 'Short checkout';

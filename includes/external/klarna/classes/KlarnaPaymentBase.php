@@ -427,7 +427,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     }
     $method = strtolower(trim($method));
     
-    return ((preg_match('/^[a-z_]{1,32}$/', $method)) ? $method : '');
+    return ((preg_match('/^[a-z0-9_]{1,32}$/', $method)) ? $method : '');
   }
 
 

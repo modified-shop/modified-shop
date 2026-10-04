@@ -296,7 +296,7 @@ class klarna_express extends KlarnaPayment {
     $shipping_modules = $this->shipping_modules;
 
     // process the selected shipping method, it redirects when the method is valid
-    if (isset($_POST['action']) && $_POST['action'] == 'process') {
+    if (isset($_POST['action']) && $_POST['action'] === 'process') {
       if (isset($_POST['shipping'])
           && is_string($_POST['shipping'])
           && preg_match('/^[A-Za-z0-9]+_[^_]+/', $_POST['shipping'])
@@ -491,7 +491,7 @@ class klarna_express extends KlarnaPayment {
 
     $module_smarty = new Smarty();
 
-    $checked = ((isset($_GET['step']) && $_GET['step'] == 'step2') ? ' checked="checked"' : '');
+    $checked = ((isset($_GET['step']) && $_GET['step'] === 'step2') ? ' checked="checked"' : '');
 
     if ($agreements['display_conditions']) {
       $shop_content_data = $main->getContentData(3);
@@ -517,6 +517,8 @@ class klarna_express extends KlarnaPayment {
     $module_smarty->assign('COMMENTS', xtc_draw_textarea_field('comments', 'soft', '60', '5', ((isset($_SESSION['comments'])) ? $_SESSION['comments'] : '')).xtc_draw_hidden_field('comments_added', 'YES'));
     $module_smarty->assign('ADR_checkbox', '<input type="checkbox" value="address" name="check_address" id="address" />');
 
+    // a language pack without the [checkout_klarna] section falls back to this text
+    $module_smarty->assign('text_accept_adr_default', MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ACCEPT_ADDRESS);
     $module_smarty->assign('language', $_SESSION['language']);
     $module_smarty->caching = 0;
 
@@ -595,16 +597,20 @@ class klarna_express extends KlarnaPayment {
     $error = false;
     $agreements = $this->get_agreements();
 
-    if (isset($_POST['comments_added']) && $_POST['comments_added'] != '') {
-      $_SESSION['comments'] = xtc_db_prepare_input((isset($_POST['comments'])) ? $_POST['comments'] : '');
-      $order->info['comments'] = $_SESSION['comments'];
+    // only a string is a comment, an array from a crafted request would break the order insert
+    if (isset($_POST['comments_added']) && is_string($_POST['comments_added']) && $_POST['comments_added'] !== '') {
+      $comments = ((isset($_POST['comments'])) ? $_POST['comments'] : '');
+      if (is_string($comments)) {
+        $_SESSION['comments'] = xtc_db_prepare_input($comments);
+        $order->info['comments'] = $_SESSION['comments'];
+      }
     }
 
-    if ($agreements['conditions'] && (!isset($_POST['conditions']) || $_POST['conditions'] != 'conditions')) {
+    if ($agreements['conditions'] && (!isset($_POST['conditions']) || $_POST['conditions'] !== 'conditions')) {
       $error = true;
       $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_CONDITIONS_NOT_ACCEPTED));
     }
-    if (!isset($_POST['check_address']) || $_POST['check_address'] != 'address') {
+    if (!isset($_POST['check_address']) || $_POST['check_address'] !== 'address') {
       $error = true;
       $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_ADDRESS_NOT_ACCEPTED));
     }
@@ -618,11 +624,11 @@ class klarna_express extends KlarnaPayment {
       $error = true;
       $messageStack->add_session('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
     }
-    if ($agreements['revocation'] && (!isset($_POST['revocation']) || $_POST['revocation'] != 'revocation')) {
+    if ($agreements['revocation'] && (!isset($_POST['revocation']) || $_POST['revocation'] !== 'revocation')) {
       $error = true;
       $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_REVOCATION_NOT_ACCEPTED));
     }
-    if ($agreements['privacy'] && (!isset($_POST['privacy']) || $_POST['privacy'] != 'privacy')) {
+    if ($agreements['privacy'] && (!isset($_POST['privacy']) || $_POST['privacy'] !== 'privacy')) {
       $error = true;
       $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED));
     }

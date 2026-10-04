@@ -1,5 +1,7 @@
 {config_load file="$language/lang_$language.conf" section="checkout_klarna"}
 {config_load file="$language/lang_$language.conf" section="checkout_payment"}
+{* a language pack without [checkout_klarna] gets the text assigned by the module *}
+{if #text_accept_adr# != ''}{assign var="text_accept_adr" value=#text_accept_adr#}{else}{assign var="text_accept_adr" value=$text_accept_adr_default}{/if}
 
 {if $smarty.const.CURRENT_TEMPLATE|strpos:'tpl_modified' !== false}
 <div class="highlightbox">
@@ -19,7 +21,7 @@
       </div>
     </div>
     <div class="checkoutconditions" style="padding: 10px 0px;">
-      {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong><br/>{/if}
+      {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{$text_accept_adr}</label></strong><br/>{/if}
       {if isset($AGB_checkbox)}{$AGB_checkbox} {/if}<strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}<br/>
       {if isset($PRIVACY_LINK)}{if isset($PRIVACY_checkbox)}{$PRIVACY_checkbox} {/if}<strong><label for="privacy">{if isset($PRIVACY_checkbox)}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</label></strong>&nbsp;{$PRIVACY_LINK}<br/>{/if}
       {if isset($REVOCATION_checkbox)}{$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}<br/>{/if}
@@ -29,7 +31,7 @@
     <div class="checkoutcomment">{$COMMENTS}</div>
     {if isset($ADR_checkbox)}
       <div class="checkoutconditions">
-        {$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>
+        {$ADR_checkbox} <strong><label for="address">{$text_accept_adr}</label></strong>
       </div>
     {/if}
     {if isset($PRIVACY_LINK)}
@@ -80,7 +82,7 @@
       {if isset($ADR_checkbox)}
         <tr>
           <td>{$ADR_checkbox}</td>
-          <td width="100%" style="text-align:left;"><strong><label for="address">{#text_accept_adr#}</label></strong></td>
+          <td width="100%" style="text-align:left;"><strong><label for="address">{$text_accept_adr}</label></strong></td>
         </tr>
       {/if}
     </table>
@@ -102,7 +104,7 @@
         {if isset($ADR_checkbox)}
           <tr>
             <td>{$ADR_checkbox}</td>
-            <td width="100%" style="text-align:left;"><strong><label for="address">{#text_accept_adr#}</label></strong></td>
+            <td width="100%" style="text-align:left;"><strong><label for="address">{$text_accept_adr}</label></strong></td>
           </tr>
         {/if}
       </table>
