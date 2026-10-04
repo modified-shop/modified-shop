@@ -108,10 +108,6 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         )
     {
       $this->enabled = false;
-      // a script from an earlier page view would load into a container that is gone, klarna sets its own in selection()
-      if (isset($_SESSION['klarna']['script'][$this->klarna_code])) {
-        unset($_SESSION['klarna']['script'][$this->klarna_code]);
-      }
     }
     
     if ($this->enabled == true && $this->zone_allowed() === false) {
@@ -190,6 +186,11 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         )
     {
       $this->enabled = false;
+    }
+    
+    // a script from an earlier page view would load into a container that is gone
+    if ($this->enabled == false && isset($_SESSION['klarna']['script'][$this->klarna_code])) {
+      unset($_SESSION['klarna']['script'][$this->klarna_code]);
     }
   }
 
@@ -577,8 +578,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 	function get_error() {
 		$error = false;
 		if (isset($_GET['payment_error']) && $_GET['payment_error'] != '') {
-			$error = array('title' => constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_HEADING'),
-			               'error' => decode_utf8(decode_htmlentities(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE')))
+			// a language pack without the texts of this module must not fatal
+			$error = array('title' => ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_HEADING')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_HEADING') : 'Klarna'),
+			               'error' => ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE')) ? decode_utf8(decode_htmlentities(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE'))) : 'The payment was cancelled.')
 			               );
 		}
 		
@@ -847,19 +849,31 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
-  function keys() {
-    return array (
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS', 
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_ALLOWED', 
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE',
+  // the settings every Klarna module shows and none of them owns
+  public static function shared_keys() {
+    return array(
       'MODULE_PAYMENT_KLARNA_MERCHANT_ID',
       'MODULE_PAYMENT_KLARNA_SHARED_SECRET',
       'MODULE_PAYMENT_KLARNA_MODE',
       'MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID',
       'MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID',
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID', 
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER', 
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE',
+    );
+  }
+
+
+  function keys() {
+    return array_merge(
+      array(
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS', 
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_ALLOWED', 
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE',
+      ),
+      self::shared_keys(),
+      array(
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID', 
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER', 
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE',
+      )
     );
   }
 

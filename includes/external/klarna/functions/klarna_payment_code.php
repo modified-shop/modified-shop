@@ -47,7 +47,7 @@ function klarna_language_array($language = '') {
   }
   $language_file = DIR_FS_CATALOG.'lang/'.basename($language).'/modules/payment/klarna_shared.php';
   if (!is_file($language_file)) {
-    $language_file = DIR_FS_CATALOG.'lang/german/modules/payment/klarna_shared.php';
+    $language_file = DIR_FS_CATALOG.'lang/english/modules/payment/klarna_shared.php';
   }
 
   $klarna_code = 'KLARNA';

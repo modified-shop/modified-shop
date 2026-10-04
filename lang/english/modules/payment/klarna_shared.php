@@ -70,4 +70,19 @@ $lang_array = array(
   'MODULE_PAYMENT_KLARNA_CHECK_ERROR_CREDENTIALS' => 'The user name or the password of the Klarna API is missing. Enter both in the module settings.',
   'MODULE_PAYMENT_KLARNA_CHECK_ERROR_COUNTRY' => 'The store country is not in the country list.',
   'MODULE_PAYMENT_KLARNA_CHECK_ERROR_API' => 'The check failed. Klarna reports: %s',
+
+  'MODULE_PAYMENT_KLARNA_CHECK_WARN_PENDING' => '<b>Note:</b> The order status for the fraud review is 0. Orders Klarna still reviews then look like normal new orders. Set a status of its own.',
+  'MODULE_PAYMENT_KLARNA_CHECK_WARN_REJECTED' => '<b>Note:</b> The order status for rejected orders is 0. A rejected order then keeps its status and only gets an entry in its history.',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULES_HEADING' => '<b>Note:</b> These rules name old Klarna modules, but not klarna. They do not apply to klarna. Add klarna as well:',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_GROUP' => 'Customer groups, not allowed payment methods: %1$s (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_CUSTOMERS' => 'Customers, unallowed payment modules: %1$s customers (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_DOWNLOAD' => 'Disallowed Download Payment Modules (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_GV' => 'Coupon, disallowed payment modules (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_SHIPPING' => 'Payment methods depending on shipping method, payment methods no. %1$s (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_FEE' => 'Payment type discount &amp; surcharge, payment type no. %1$s (%2$s)',
+
+  // shown in the backup, restore and uninstall dialog of the module list
+  'MODULE_PAYMENT_KLARNA_BACKUP_NOTE' => '<b>Note:</b> The backup also contains the credentials and the shared settings of all Klarna modules.',
+  'MODULE_PAYMENT_KLARNA_RESTORE_NOTE' => '<b>Note:</b> The restore also resets the credentials and the shared settings of all Klarna modules to the state of the backup.',
+  'MODULE_PAYMENT_KLARNA_REMOVE_NOTE' => '<b>Note:</b> Open Klarna orders need the order status and the capture setting of klarna, including the orders of old Klarna modules that are already uninstalled. Uninstall klarna only when no Klarna order is open any more.',
 );

@@ -70,4 +70,19 @@ $lang_array = array(
   'MODULE_PAYMENT_KLARNA_CHECK_ERROR_CREDENTIALS' => 'Benutzername oder Passwort der Klarna API fehlen. Tragen Sie beide in den Moduleinstellungen ein.',
   'MODULE_PAYMENT_KLARNA_CHECK_ERROR_COUNTRY' => 'Das Shop-Land ist nicht in der Landesliste zu finden.',
   'MODULE_PAYMENT_KLARNA_CHECK_ERROR_API' => 'Die Pr&uuml;fung ist fehlgeschlagen. Klarna meldet: %s',
+
+  'MODULE_PAYMENT_KLARNA_CHECK_WARN_PENDING' => '<b>Hinweis:</b> Der Bestellstatus Betrugspr&uuml;fung steht auf 0. Bestellungen, die Klarna noch pr&uuml;ft, sehen dann aus wie normale neue Bestellungen. Legen Sie einen eigenen Status fest.',
+  'MODULE_PAYMENT_KLARNA_CHECK_WARN_REJECTED' => '<b>Hinweis:</b> Der Bestellstatus Ablehnung steht auf 0. Eine abgelehnte Bestellung beh&auml;lt dann ihren Status und erh&auml;lt nur einen Eintrag im Verlauf.',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULES_HEADING' => '<b>Hinweis:</b> Diese Regeln nennen alte Klarna-Module, aber nicht klarna. F&uuml;r klarna gelten sie nicht. Tragen Sie klarna zus&auml;tzlich ein:',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_GROUP' => 'Kundengruppen, Nicht erlaubte Zahlungsweisen: %1$s (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_CUSTOMERS' => 'Kunden, Nicht erlaubte Zahlungsmodule: %1$s Kunden (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_DOWNLOAD' => 'Unerlaubte Download-Zahlungsmodule (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_GV' => 'Gutschein, Unerlaubte Zahlungsmodule (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_SHIPPING' => 'Zahlarten abh&auml;ngig von der Versandart, Zahlungsarten Nr. %1$s (%2$s)',
+  'MODULE_PAYMENT_KLARNA_CHECK_RULE_FEE' => 'Rabatt &amp; Zuschlag auf Zahlungsarten, Zahlungsart Nr. %1$s (%2$s)',
+
+  // shown in the backup, restore and uninstall dialog of the module list
+  'MODULE_PAYMENT_KLARNA_BACKUP_NOTE' => '<b>Hinweis:</b> Die Sicherung enth&auml;lt auch die Zugangsdaten und die gemeinsamen Einstellungen aller Klarna-Module.',
+  'MODULE_PAYMENT_KLARNA_RESTORE_NOTE' => '<b>Hinweis:</b> Die Wiederherstellung setzt auch die Zugangsdaten und die gemeinsamen Einstellungen aller Klarna-Module auf den Stand der Sicherung zur&uuml;ck.',
+  'MODULE_PAYMENT_KLARNA_REMOVE_NOTE' => '<b>Hinweis:</b> Offene Klarna-Bestellungen brauchen den Bestellstatus und die Capture-Einstellung von klarna, auch die Bestellungen alter, bereits deinstallierter Klarna-Module. Deinstallieren Sie klarna erst, wenn keine Klarna-Bestellung mehr offen ist.',
 );

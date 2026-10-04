@@ -30,6 +30,9 @@ class klarna extends KlarnaPayment {
     if (defined('RUN_MODE_ADMIN') && defined('MODULE_PAYMENT_KLARNA_TEXT_INSTALL_NOTE')) {
       $this->description .= MODULE_PAYMENT_KLARNA_TEXT_INSTALL_NOTE;
     }
+    if (defined('RUN_MODE_ADMIN') && defined('MODULE_PAYMENT_KLARNA_REMOVE_NOTE')) {
+      $this->properties['remove'] = array(MODULE_PAYMENT_KLARNA_REMOVE_NOTE);
+    }
 
     // checkout_process builds the module before $order exists and without update_status()
     if (isset($_SESSION['klarna']['chosen_category']) && is_string($_SESSION['klarna']['chosen_category'])) {
@@ -77,7 +80,7 @@ class klarna extends KlarnaPayment {
 
     return array(
       'id' => $this->code,
-      'module' => MODULE_PAYMENT_KLARNA_TEXT_TITLE,
+      'module' => ((defined('MODULE_PAYMENT_KLARNA_TEXT_TITLE') && MODULE_PAYMENT_KLARNA_TEXT_TITLE != '') ? MODULE_PAYMENT_KLARNA_TEXT_TITLE : 'Klarna'),
       'description' => $info,
     );
   }
@@ -95,13 +98,14 @@ class klarna extends KlarnaPayment {
 
   function remove() {
     // the shared and the express keys have the same prefix, so only the own keys go, by name
+    $own_keys = array_diff($this->keys(), KlarnaPaymentBase::shared_keys());
+    if (count($own_keys) < 1) {
+      return;
+    }
+    
+    $own_keys = array_map('xtc_db_input', array_values($own_keys));
     xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
-                        WHERE configuration_key IN ('MODULE_PAYMENT_KLARNA_STATUS',
-                                                    'MODULE_PAYMENT_KLARNA_ALLOWED',
-                                                    'MODULE_PAYMENT_KLARNA_ZONE',
-                                                    'MODULE_PAYMENT_KLARNA_ORDER_STATUS_ID',
-                                                    'MODULE_PAYMENT_KLARNA_SORT_ORDER',
-                                                    'MODULE_PAYMENT_KLARNA_CAPTURE')");
+                        WHERE configuration_key IN ('".implode("', '", $own_keys)."')");
   }
 
 }

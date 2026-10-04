@@ -643,7 +643,11 @@
               $language_file = DIR_FS_CATALOG . 'lang/english/modules/payment/' . $payment_method . '.php';
             }
             include_once($language_file);
-            $payment_name = strip_tags(constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE')));
+            // a language pack without the module texts must not fatal
+            $payment_name = ((defined(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE')))
+              ? strip_tags(constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE')))
+              : ((strpos($payment_method, 'klarna') === 0) ? 'Klarna' : $payment_method)
+            );
 
             if ($payment_method == 'paypalplus' && (int)$order_id > 0) {
               require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
@@ -664,7 +668,13 @@
             require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
             if (in_array($payment_method, klarna_payment_modules(), true)) {
               $klarna_label = klarna_payment_method_label(klarna_order_payment_method($order_id), $language);
-              if ($klarna_label != '') {
+              // an old module already names its method, the label only shows when the shopper switched inside Klarna
+              if ($klarna_label != ''
+                  && (!in_array($payment_method, klarna_legacy_modules(), true)
+                      || klarna_payment_code($payment_method, $order_id) !== $payment_method
+                      )
+                  )
+              {
                 $payment_name .= ' ('.$klarna_label.')';
               }
             }

@@ -70,6 +70,16 @@ class KlarnaPayment extends KlarnaPaymentBase {
     if (defined('RUN_MODE_ADMIN') && defined('MODULE_PAYMENT_KLARNA_CHECK_BUTTON')) {
       $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=custom') . '">' . MODULE_PAYMENT_KLARNA_CHECK_BUTTON . '</a>';
     }
+    
+    // the keys of every Klarna module include the credentials and the shared settings
+    if (defined('RUN_MODE_ADMIN')) {
+      if (defined('MODULE_PAYMENT_KLARNA_BACKUP_NOTE')) {
+        $this->properties['backup'] = array(MODULE_PAYMENT_KLARNA_BACKUP_NOTE);
+      }
+      if (defined('MODULE_PAYMENT_KLARNA_RESTORE_NOTE')) {
+        $this->properties['restore'] = array(MODULE_PAYMENT_KLARNA_RESTORE_NOTE);
+      }
+    }
   }
 
 
@@ -156,6 +166,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
       'installed' => false,
       'active' => false,
       'active_old' => array(),
+      'rules' => klarna_payment_rules_read(),
+      'zero_status' => klarna_status_settings_zero(),
     );
     
     if ($this->merchant_id == '' || $this->shared_secret == '') {

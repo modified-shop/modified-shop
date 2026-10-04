@@ -10,19 +10,18 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
+
 if (isset($order) && is_object($order)) {
-  if ($order->info['payment_method'] == 'klarna_paylater'
-      || $order->info['payment_method'] == 'klarna_payovertime'
-      || $order->info['payment_method'] == 'klarna_directdebit'
-      || $order->info['payment_method'] == 'klarna_directbanktransfer'
-      || $order->info['payment_method'] == 'klarna_paynow'
-      || $order->info['payment_method'] == 'klarna'
-      || $order->info['payment_method'] == 'klarna_express'
-      ) 
-  {
+  if (in_array($order->info['payment_method'], klarna_payment_modules(), true)) {
     require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 
-    require_once (DIR_WS_LANGUAGES.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
+    // a language without Klarna texts falls back to english
+    $klarna_language = $order->info['language'];
+    if (!is_file(DIR_FS_CATALOG.'lang/'.basename($klarna_language).'/modules/payment/'.$order->info['payment_method'].'.php')) {
+      $klarna_language = 'english';
+    }
+    require_once (DIR_FS_CATALOG.'lang/'.basename($klarna_language).'/modules/payment/'.$order->info['payment_method'].'.php');
 
     require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
     $klarna_payment = new KlarnaPayment($order->info['payment_method']);

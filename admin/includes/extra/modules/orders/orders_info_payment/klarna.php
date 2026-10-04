@@ -12,18 +12,18 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
+
 if (isset($order) && is_object($order)) {
-  if ($order->info['payment_method'] == 'klarna_paylater'
-      || $order->info['payment_method'] == 'klarna_payovertime'
-      || $order->info['payment_method'] == 'klarna_directdebit'
-      || $order->info['payment_method'] == 'klarna_directbanktransfer'
-      || $order->info['payment_method'] == 'klarna_paynow'
-      || $order->info['payment_method'] == 'klarna'
-      || $order->info['payment_method'] == 'klarna_express'
-      ) 
-  {
+  if (in_array($order->info['payment_method'], klarna_payment_modules(), true)) {
     require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
     $klarna_payment = new KlarnaPayment($order->info['payment_method']);
+    
+    // no box without a Klarna row, the table is gone after an old remove()
+    $klarna_table_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_KLARNA_PAYMENTS."'");
+    if (xtc_db_num_rows($klarna_table_query) < 1 || !$klarna_payment->get_klarna_order((int)$order->info['order_id'])) {
+      return;
+    }
     
     // resolve a still pending fraud review when the push never arrived
     $klarna_payment->resolveFraudStatus((int)$order->info['order_id']);
