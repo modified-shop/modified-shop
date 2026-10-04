@@ -37,6 +37,10 @@
                                       FROM ".TABLE_ORDERS."
                                      WHERE orders_id = '".(int)$last_order."'");
       $orders = xtc_db_fetch_array($orders_query);
+      if (!is_array($orders)) {
+        // no order row, the writes and reads below must not run on false
+        $orders = array('customers_email_address' => '', 'payment_class' => '', 'currency' => '');
+      }
       
       // Klarna modules map by the method the shopper finally chose inside Klarna, older orders keep the module mapping
       require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
