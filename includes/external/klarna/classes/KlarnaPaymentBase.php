@@ -34,6 +34,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   // one update run per request, the shared key is a constant that cannot change within it
   static $klarna_updated = false;
 
+  // klarna_update() finished in this request, the version constant still holds the old value
+  static $klarna_columns_ready = false;
+
   function __construct() {
 
   }
@@ -519,7 +522,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                                      WHERE orders_id = '".(int)$insert_id."'");
       $row_created = false;
       // a failed column update (no ALTER privilege) keeps the version key old
-      $columns_ready = (defined('MODULE_PAYMENT_KLARNA_DB_VERSION') && MODULE_PAYMENT_KLARNA_DB_VERSION === $this->klarna_version);
+      $columns_ready = $this->columns_ready();
       if (xtc_db_num_rows($klarna_query) < 1) {
         $row_created = true;
         
@@ -811,6 +814,14 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
+  // the columns of klarna_payments exist, from an earlier update or from klarna_update() in this request
+  function columns_ready() {
+    return (self::$klarna_columns_ready === true
+            || (defined('MODULE_PAYMENT_KLARNA_DB_VERSION') && MODULE_PAYMENT_KLARNA_DB_VERSION === $this->klarna_version)
+            );
+  }
+
+
   function klarna_update() {
     // the columns come first, so a failed ALTER is retried while the keys are still missing
     $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_KLARNA_PAYMENTS."'");
@@ -859,6 +870,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                      WHERE configuration_key = 'MODULE_PAYMENT_KLARNA_DB_VERSION'");
     }
     defined('MODULE_PAYMENT_KLARNA_DB_VERSION') or define('MODULE_PAYMENT_KLARNA_DB_VERSION', $this->klarna_version);
+    self::$klarna_columns_ready = true;
   }
 
 
