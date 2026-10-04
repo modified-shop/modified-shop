@@ -752,7 +752,8 @@ class klarna_express extends KlarnaPayment {
       $purchase_country = $country['countries_iso_code_2'];
     }
 
-    return strtolower($_SESSION['language_code']).'-'.strtoupper($purchase_country);
+    // the same supported language-country choice as the order data of the other Klarna modules
+    return $this->get_locale($purchase_country);
   }
 
 
