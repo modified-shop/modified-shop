@@ -275,7 +275,11 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         $order->info['order_status'] = $this->get_pending_status_id();
       }
     } catch (Exception $e) {
-      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
+      // session and customer id let the merchant find an order Klarna created despite the timeout
+      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage(), array(
+        'session_id' => ((isset($_SESSION['klarna']['session_id'])) ? $_SESSION['klarna']['session_id'] : ''),
+        'customer_id' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : 0),
+      ));
       
       unset($_SESSION['klarna']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));

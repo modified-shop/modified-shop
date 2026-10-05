@@ -44,6 +44,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
   var $shared_secret;
   var $api_endpoint;
   var $connector;
+  // set after a failed session request, shared by all Klarna modules in this request
+  public static $session_failed = false;
 
   function __construct($code) {
     $this->code = $code;
@@ -74,16 +76,27 @@ class KlarnaPayment extends KlarnaPaymentBase {
     $user_agent->setField('modified-eCommerce-Shopsoftware', 'v', $db_version['plain']);
     $user_agent->setField('Klarna', 'v', $this->klarna_version);
     
-    $this->connector = Klarna\Rest\Transport\GuzzleConnector::create(
+    // build the client with timeouts, the SDK factory leaves them unlimited
+    $client = new \GuzzleHttp\Client(array(
+      'base_uri' => $this->api_endpoint,
+      'connect_timeout' => 10,
+      'timeout' => 30,
+    ));
+    $this->connector = new Klarna\Rest\Transport\GuzzleConnector(
+      $client,
       $this->merchant_id,
       $this->shared_secret,
-      $this->api_endpoint,
       $user_agent
     );
   }
 
 
   function getKlarnaSession() {
+    // every module calls this from its constructor, a Klarna outage would cost one timeout each
+    if (KlarnaPayment::$session_failed === true) {
+      return;
+    }
+    
     $order_array = $this->getOrderData(true);
         
     try {
@@ -103,6 +116,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
         'time_created' => time(),
       );
     } catch (Exception $e) {
+      KlarnaPayment::$session_failed = true;
       $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
     } 
   }
