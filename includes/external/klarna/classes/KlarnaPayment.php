@@ -567,6 +567,51 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
+  function get_locale($country_iso) {
+    // locales per purchase country as documented by Klarna
+    $locales = array(
+      'AU' => array('en'),
+      'AT' => array('de', 'en'),
+      'BE' => array('nl', 'fr', 'en'),
+      'CA' => array('en', 'fr'),
+      'CZ' => array('cs', 'en'),
+      'DK' => array('da', 'en'),
+      'FI' => array('fi', 'sv', 'en'),
+      'FR' => array('fr', 'en'),
+      'DE' => array('de', 'en'),
+      'GR' => array('el', 'en'),
+      'HU' => array('hu', 'en'),
+      'IE' => array('en'),
+      'IT' => array('it', 'en'),
+      'MX' => array('en', 'es'),
+      'NL' => array('nl', 'en'),
+      'NZ' => array('en'),
+      'NO' => array('nb', 'en'),
+      'PL' => array('pl', 'en'),
+      'PT' => array('pt', 'en'),
+      'RO' => array('ro', 'en'),
+      'SK' => array('sk', 'en'),
+      'ES' => array('es', 'en'),
+      'SE' => array('sv', 'en'),
+      'CH' => array('de', 'fr', 'it', 'en'),
+      'GB' => array('en'),
+      'US' => array('en', 'es'),
+    );
+
+    $country_iso = strtoupper($country_iso);
+    $language = strtolower($_SESSION['language_code']);
+    if ($language == 'no') {
+      $language = 'nb';
+    }
+
+    // an unsupported language falls back to English, then to the first locale of the country
+    if (!isset($locales[$country_iso]) || in_array($language, $locales[$country_iso])) {
+      return ((isset($locales[$country_iso])) ? $language : 'en').'-'.$country_iso;
+    }
+    return ((in_array('en', $locales[$country_iso])) ? 'en' : $locales[$country_iso][0]).'-'.$country_iso;
+  }
+
+
   function getOrderData($minimal = false) {
     global $xtPrice, $product;
     
@@ -706,9 +751,17 @@ class KlarnaPayment extends KlarnaPaymentBase {
       $_SESSION['klarna_notify_token'] = bin2hex(random_bytes(16));
     }
     
+    // the billing country decides the market at Klarna, the store country is the fallback
+    $purchase_country = strtoupper($country['countries_iso_code_2']);
+    if (isset($order->billing['country_iso_2']) && $order->billing['country_iso_2'] != '') {
+      $purchase_country = strtoupper($order->billing['country_iso_2']);
+    } elseif (isset($order->billing['country']) && is_array($order->billing['country']) && !empty($order->billing['country']['iso_code_2'])) {
+      $purchase_country = strtoupper($order->billing['country']['iso_code_2']);
+    }
+
     $order_array = array(
-      'locale' => $_SESSION['language_code'].'-'.$_SESSION['language_code'],
-      'purchase_country' => $country['countries_iso_code_2'],
+      'locale' => $this->get_locale($purchase_country),
+      'purchase_country' => $purchase_country,
       'purchase_currency' => $order->info['currency'],
       'order_amount' => $this->format_amount($order_amount),
       'order_tax_amount' => $this->format_amount($order_tax_amount),
