@@ -112,6 +112,10 @@
               <div class="br_btn_alternate"><span>{#text_cart_or#}</span></div>
               <div class="br_btn_0">{$BUTTON_PAYPAL}</div>
             {/if}
+            {if $BUTTON_KLARNA != '' && !$PAYPALPLAN}
+              <div class="br_btn_alternate"><span>{#text_cart_or#}</span></div>
+              <div class="br_btn_0">{$BUTTON_KLARNA}</div>
+            {/if}
           </div>
 
         </div>

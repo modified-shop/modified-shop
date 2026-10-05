@@ -1,0 +1,12 @@
+{if $SHIPPING_BLOCK}
+  {if $shipping_message}<div class="errormessage">{$shipping_message}</div>{/if}
+  {$FORM_SHIPPING_ACTION}
+  {$SHIPPING_BLOCK}
+
+  {if $BUTTON_CONTINUE}
+    <div class="button_row">
+      <div class="br_btn_0">{$BUTTON_CONTINUE|replace:"cssButtonColor1":"cssButtonColor2"}</div>
+    </div>    
+  {/if}
+  {$FORM_END}
+{/if}

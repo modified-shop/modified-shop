@@ -304,6 +304,7 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
     'paypalplus',
     'payone_installment',
     'payone_otrans',
+    'klarna_express',
   );
   if ($no_payment === false && !in_array($_SESSION['payment'], $disallowed_payment)) {
     $smarty->assign('FORM_ACTION', xtc_draw_form('customers_express', xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=on', 'SSL'), 'post', 'name="customers_express"').xtc_draw_hidden_field('express', 'on'));

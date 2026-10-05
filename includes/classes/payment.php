@@ -38,7 +38,7 @@
     var $form_action_url;
 
     function __construct($module = '') {
-      global $PHP_SELF,$order;
+      global $PHP_SELF,$order,$messageStack;
 
       require_once (DIR_FS_CATALOG.'includes/classes/checkoutModules.class.php');
       $this->checkoutModules = new checkoutModules();
@@ -46,6 +46,37 @@
       $this->modules = array();
       
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
+
+        ## Klarna express
+        // a failed Klarna order ends the express session
+        if (isset($_GET['payment_error'])
+            && $_GET['payment_error'] === 'klarna_express'
+            && basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT
+            )
+        {
+          require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_express_language.php');
+          klarna_express_include_language();
+          if (isset($_SESSION['klarna']['express_flow'])) {
+            unset($_SESSION['klarna']);
+          }
+          if (isset($_SESSION['payment']) && $_SESSION['payment'] === 'klarna_express') {
+            unset($_SESSION['payment']);
+          }
+          $messageStack->add_session('checkout_payment', MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_MESSAGE);
+        }
+
+        $klarna_express = false;
+        // the chosen method loads even with a dead session, update_status() disables it
+        $klarna_express_chosen = ($module === 'klarna_express'
+                                  && isset($_SESSION['payment'])
+                                  && $_SESSION['payment'] === 'klarna_express'
+                                  );
+        if (isset($_SESSION['klarna']['express_flow']) || $klarna_express_chosen) {
+          require_once(DIR_FS_CATALOG.'includes/modules/payment/klarna_express.php');
+          $klarna_express = (klarna_express::express_enabled()
+                             && ($klarna_express_chosen || klarna_express::express_session_valid())
+                             );
+        }
 
         ## Paypal
         $paypal_modules = false;
@@ -56,12 +87,17 @@
         {
           $modules = explode(';', $_SESSION['paypal']['payment_modules']);
           $paypal_modules = true;
+        } elseif ($klarna_express === true) {
+          // the customer chose the Klarna method in the express popup
+          $modules = array('klarna_express.php');
         } else {
           $modules = explode(';', MODULE_PAYMENT_INSTALLED);
           
           $disable_modules = array(
             'paypalcart.php',
-            'paypalexpress.php'
+            'paypalexpress.php',
+            // button and callback only, never a payment choice
+            'klarna_express.php'
           );
           foreach ($disable_modules as $disable_module) {
             $key = array_search($disable_module, $modules);
@@ -175,7 +211,12 @@
                 )
             {
               if ($include_modules[$i]['file'] != 'no_payment') {
-                include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
+                if ($include_modules[$i]['class'] == 'klarna_express') {
+                  require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_express_language.php');
+                  klarna_express_include_language();
+                } else {
+                  include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
+                }
                 include_once(DIR_WS_MODULES . 'payment/' . $include_modules[$i]['file']);
               }
               if (class_exists($include_modules[$i]['class'])) {
@@ -183,6 +224,27 @@
               }
             }
           }
+        }
+
+        // a shop restriction leaves no Klarna method, the normal list takes over
+        if ($klarna_express === true
+            && basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT
+            && xtc_count_payment_modules() == 0
+            )
+        {
+          unset($GLOBALS['klarna_express']);
+          klarna_express::discard_session();
+
+          // the session is gone now, so this runs once
+          require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_express_language.php');
+          klarna_express_include_language();
+          if (is_object($messageStack) && defined('MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE')) {
+            $messageStack->add_session('checkout_payment', MODULE_PAYMENT_KLARNA_EXPRESS_TEXT_ERROR_UNAVAILABLE);
+          }
+          $this->selected_module = '';
+          $this->__construct();
+
+          return;
         }
 
         // only the payment page may drop a PayPal restriction that lets no module through
@@ -422,6 +484,26 @@
     }
 
     function before_process() {
+      global $messageStack;
+
+      // klarna_express orders only through its own before_process()
+      if (isset($_SESSION['payment'])
+          && $_SESSION['payment'] === 'klarna_express'
+          && ($this->selected_module !== 'klarna_express'
+              || !isset($GLOBALS['klarna_express'])
+              || !is_object($GLOBALS['klarna_express'])
+              || !$GLOBALS['klarna_express']->enabled
+              )
+          )
+      {
+        if (isset($_SESSION['klarna']['express_flow'])) {
+          unset($_SESSION['klarna']);
+        }
+        unset($_SESSION['payment']);
+        $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+      }
+
       if (is_array($this->modules)) {
         if (isset($GLOBALS[$this->selected_module])
             && is_object($GLOBALS[$this->selected_module]) 
@@ -555,7 +637,12 @@
         if (!isset($static_payment_array[$payment_method][(int)$order_id])) { 
           if (is_file(DIR_FS_CATALOG . 'includes/modules/payment/' . $payment_method . '.php')) {
             if ($language == '') $language = $_SESSION['language'];
-            include_once(DIR_FS_CATALOG . 'lang/' . $language . '/modules/payment/' . $payment_method . '.php');
+            $language_file = DIR_FS_CATALOG . 'lang/' . $language . '/modules/payment/' . $payment_method . '.php';
+            // Klarna ships german and english only, an order in another language falls back to english
+            if (strpos($payment_method, 'klarna') === 0 && !is_file($language_file)) {
+              $language_file = DIR_FS_CATALOG . 'lang/english/modules/payment/' . $payment_method . '.php';
+            }
+            include_once($language_file);
             $payment_name = strip_tags(constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE')));
 
             if ($payment_method == 'paypalplus' && (int)$order_id > 0) {

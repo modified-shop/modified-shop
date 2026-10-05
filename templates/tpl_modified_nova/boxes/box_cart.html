@@ -115,6 +115,11 @@
       </div>
       {/if}
 
+      {if isset($BUTTON_KLARNA)}
+      <div class="br_btn_alternate mb_10"><span>{#text_cart_or#}</span></div>
+      <div class="toggle_action_7">{$BUTTON_KLARNA}</div>
+      {/if}
+
     {else}
   
       <div class="infomessage">{#text_empty_cart#}</div>

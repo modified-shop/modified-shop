@@ -74,6 +74,9 @@
               {if $ADD_CART_BUTTON_PAYPAL && !$PAYPALPLAN}
                 <span class="cssButtonPos10">{$ADD_CART_BUTTON_PAYPAL}</span>
               {/if}
+              {if $ADD_CART_BUTTON_KLARNA && !$PAYPALPLAN}
+                <span class="cssButtonPos10">{$ADD_CART_BUTTON_KLARNA}</span>
+              {/if}
               {*
               {if $ADD_CART_BUTTON_WISHLIST}
               <br class="clearfix" />

@@ -1,0 +1,66 @@
+/* Klarna Express button: Klarna asks for 40px at least, the width follows the other payment buttons */
+.klarna_express_cart {
+  clear: both;
+  width: 100%;
+  max-width: 480px;
+  margin: 10px 0 0 auto;
+  box-sizing: border-box;
+}
+/* product page: full width like the PayPal button next to it */
+.klarna_express_product {
+  clear: both;
+  width: 100%;
+  margin: 0 0 5px 0;
+  box-sizing: border-box;
+}
+/* nova cart layer: the full column width like the PayPal buttons above */
+.klarna_express_box {
+  clear: both;
+  width: 100%;
+  margin: 0 0 5px 0;
+  box-sizing: border-box;
+}
+/* same box as .pd_addtobasket_paypal in nova, PayPal sits 5px inside the column */
+.pd_addtobasket_klarna {
+  width: 100%;
+  padding: 5px 5px;
+  box-sizing: border-box;
+}
+.pd_addtobasket_klarna .klarna_express_product,
+.cssButtonPos10 .klarna_express_product {
+  margin-bottom: 0;
+}
+/* the PayPal float above ends with a negative margin and clearing drops a top margin, so the gap is padding */
+.cssButtonPos10 .klarna_express_product {
+  padding-top: 5px;
+}
+/* xtc5 shrinks the PayPal cell to the button, so the box needs a width */
+td > .klarna_express_product {
+  width: 175px;
+  max-width: 100%;
+}
+/* tpl_modified: PayPal renders at its 150px minimum and ends with a negative margin */
+.addtobasket_button .klarna_express_product {
+  width: 150px;
+  max-width: 100%;
+  margin-top: 5px;
+}
+#klarna-express-button {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  /* shape rect has square corners, the clip gives the 4px radius of the PayPal buttons */
+  border-radius: 4px;
+  overflow: hidden;
+}
+#klarna-express-button > *,
+#klarna-express-button klarna-express-button,
+#klarna-express-button iframe {
+  display: block;
+  width: 100%;
+  max-width: 100% !important;
+  height: 100% !important;
+  box-sizing: border-box;
+}

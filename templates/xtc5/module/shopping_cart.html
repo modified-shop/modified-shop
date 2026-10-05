@@ -17,6 +17,7 @@
   {if $info_message_1}<div class="errormessage">{$info_message_1}{$min_order}{$info_message_2}{$order_amount}</div>{/if}
   <p align="right" style="padding-right:70px;">{if $CONTINUE_LINK}<a href="{$CONTINUE_LINK}">{$BUTTON_CONTINUE_SHOPPING}</a>&nbsp;{/if}{$BUTTON_RELOAD}&nbsp;{if $BUTTON_PAYPAL != '' && !$PAYPALPLAN}{$BUTTON_CHECKOUT}<br />{$BUTTON_PAYPAL}{else}{$BUTTON_CHECKOUT}{/if}</p>
   {if isset($BUTTON_CHECKOUT_EXPRESS) && !$PAYPALPLAN}<p align="right" style="padding-right:70px;">{$BUTTON_CHECKOUT_EXPRESS}</p>{/if}
+  {if $BUTTON_KLARNA != '' && !$PAYPALPLAN}<div class="klarna_express_cart" style="margin-right:70px;">{$BUTTON_KLARNA}</div>{/if}
   {if isset($ACTIVATE_EXPRESS_LINK)}
     <p align="right" style="padding-right:70px;">
       {if isset($EXPRESS_LINK)}{$EXPRESS_LINK}<br>{/if}

@@ -13,6 +13,7 @@
 
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaAutoload.php');
+require_once(DIR_FS_EXTERNAL.'klarna/functions/klarna_payment_code.php');
 
 
 class KlarnaPaymentBase extends KlarnaAutoload {
@@ -29,13 +30,16 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
   var $klarna_version;
 
+  // one update run per request, the shared key is a constant that cannot change within it
+  static $klarna_updated = false;
+
   function __construct() {
 
   }
 
 
   function init() {    
-    $this->klarna_version = '1.23';
+    $this->klarna_version = '1.24';
     
     $this->title = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '';
     $this->description = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') : '';
@@ -50,7 +54,14 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         $this->order_status = (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
       }
       
-      if (!defined('MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID')) {
+      if (self::$klarna_updated === false
+          && (!defined('MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID')
+              || !defined('MODULE_PAYMENT_KLARNA_DB_VERSION')
+              || MODULE_PAYMENT_KLARNA_DB_VERSION !== $this->klarna_version
+              )
+          )
+      {
+        self::$klarna_updated = true;
         $this->klarna_update();
       }
     }
@@ -62,29 +73,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   function update_status() {
     global $order, $PHP_SELF;
     
-    if ($this->enabled == true
-        && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')
-        && (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') > 0
-        ) 
-    {
-      $check_flag = false;
-      $check_query = xtc_db_query("SELECT zone_id 
-                                     FROM ".TABLE_ZONES_TO_GEO_ZONES." 
-                                    WHERE geo_zone_id = '".(int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')."' 
-                                      AND zone_country_id = '".$order->billing['country']['id']."' 
-                                 ORDER BY zone_id");
-      while($check = xtc_db_fetch_array($check_query)) {
-        if ($check['zone_id'] < 1) {
-          $check_flag = true;
-          break;
-        } elseif ($check['zone_id'] == $order->billing['zone_id']) {
-          $check_flag = true;
-          break;
-        }
-      }
-      if ($check_flag == false) {
-        $this->enabled = false;
-      }
+    if ($this->enabled == true && $this->zone_allowed() === false) {
+      $this->enabled = false;
     }
     
     if (isset($_SESSION['klarna'])) {
@@ -93,9 +83,22 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           || $_SESSION['klarna']['billto'] != $_SESSION['billto']
           || $_SESSION['klarna']['billto_id'] != $this->get_country_id($_SESSION['billto'])
           || ($_SESSION['klarna']['time_created'] + 3600) < time()
+          || (isset($_SESSION['klarna']['express_flow'])
+              && $_SESSION['klarna']['express_flow'] === true
+              && (!isset($_SESSION['cart']) || $_SESSION['klarna']['cart_id'] !== $_SESSION['cart']->cartID)
+              )
+          || (isset($_SESSION['klarna']['express_flow'])
+              && $_SESSION['klarna']['express_flow'] === true
+              && self::express_enabled() !== true
+              )
+          || (isset($_SESSION['klarna']['express_flow'])
+              && $_SESSION['klarna']['express_flow'] === true
+              && self::express_session_stale()
+              )
           )
       {
-        unset($_SESSION['klarna']);
+        // an express session was authorized for one cart, a changed cart or currency or a disabled express module starts the normal flow
+        self::discard_session();
       }
     }
     
@@ -148,6 +151,80 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
+  // geo zone of the module against the billing address, true without a zone
+  function zone_allowed($country_id = null, $zone_id = null) {
+    global $order;
+
+    if (!defined('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')
+        || (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') < 1
+        )
+    {
+      return true;
+    }
+
+    if ($country_id === null) {
+      if (!is_object($order)) {
+        return true;
+      }
+      $country_id = $order->billing['country']['id'];
+      $zone_id = $order->billing['zone_id'];
+    }
+
+    $check_query = xtc_db_query("SELECT zone_id 
+                                   FROM ".TABLE_ZONES_TO_GEO_ZONES." 
+                                  WHERE geo_zone_id = '".(int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')."' 
+                                    AND zone_country_id = '".(int) $country_id."' 
+                               ORDER BY zone_id");
+    while($check = xtc_db_fetch_array($check_query)) {
+      if ($check['zone_id'] < 1 || $check['zone_id'] == $zone_id) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
+  // the Klarna session goes, and with it the express choice of the payment method
+  public static function discard_session() {
+    unset($_SESSION['klarna']);
+    if (isset($_SESSION['payment']) && $_SESSION['payment'] === 'klarna_express') {
+      unset($_SESSION['payment']);
+    }
+  }
+
+
+  // the express module decides if its session still fits cart, addresses and currency, so no other module reuses it
+  public static function express_session_stale() {
+    if (!class_exists('klarna_express', false)) {
+      require_once(DIR_FS_CATALOG.'includes/modules/payment/klarna_express.php');
+    }
+
+    return (klarna_express::express_session_valid() !== true);
+  }
+
+
+  // the express module is on and installed
+  public static function express_enabled() {
+    return (defined('MODULE_PAYMENT_KLARNA_EXPRESS_STATUS')
+            && MODULE_PAYMENT_KLARNA_EXPRESS_STATUS == 'True'
+            && defined('MODULE_PAYMENT_INSTALLED')
+            && in_array('klarna_express.php', explode(';', MODULE_PAYMENT_INSTALLED), true)
+            );
+  }
+
+
+  function is_express_payment() {
+    return false;
+  }
+
+
+  // checks of the confirmation page before the Klarna popup opens, a failed check has to return
+  function get_submit_guard_js() {
+    return '';
+  }
+
+
   function javascript_validation() {
     return false;
   }
@@ -184,41 +261,25 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     if (isset($_SESSION['klarna'])) {
       $order_array = $this->getOrderData();
       
-      $js = '
-        <script>
-          var klarna_'.$this->klarna_code.'_result = false;
-          
-          window.klarnaAsyncCallback = function () {
-            Klarna.Payments.init({
-              client_token: "'.$_SESSION['klarna']['client_token'].'"
-            });
-          }
-        
-          window.addEventListener("load", function() {
-            $("#checkout_confirmation").on("submit", function(event) {
-              if (klarna_'.$this->klarna_code.'_result == false) {
-                event.preventDefault();
-                
-                Klarna.Payments.authorize({ 
-                  payment_method_category: "'.$this->klarna_code.'", 
-                  auto_finalize: false
-                }, {
+      // the express popup already authorized the session, the order only has to be finalized
+      $express = $this->is_express_payment();
+      
+      if ($express === true) {
+        // the page gets the order fields only, the notification URL with the fraud token stays on the server
+        $express_keys = array('purchase_country', 'purchase_currency', 'locale', 'order_amount', 'order_tax_amount', 'order_lines', 'billing_address', 'shipping_address');
+        $data_js = json_encode(array_intersect_key($order_array, array_flip($express_keys)), JSON_HEX_TAG | JSON_HEX_AMP);
+      } else {
+        $data_js = '{
                   billing_address: 
                     '.json_encode($order_array['billing_address']).'
                   ,
                   shipping_address:
                     '.json_encode($order_array['shipping_address']).'
                   
-                }, function(result) {
-                  if (result.approved !== undefined
-                      && result.approved === true
-                      )
-                  {
-                    if (result.finalize_required === true) {
-                      Klarna.Payments.finalize({
-                        payment_method_category: "'.$this->klarna_code.'"
-                      }, {},
-                      function(finalresult) {
+                }';
+      }
+      
+      $result_js = '
                         $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
                         $.each(finalresult, function (key, val) {
                           $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][\'+key+\']" value="\'+val+\'">\');
@@ -229,7 +290,34 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                           $("#checkout_confirmation").submit();
                         } else {
                           $(location).attr("href", "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'");
-                        }
+                        }';
+      
+      if ($express === true) {
+        // no category, the shopper chose the method in the express popup
+        // the shopper closed the popup or aborted the authentication, Klarna allows another finalize()
+        $submit_js = '
+                Klarna.Payments.finalize({}, '.$data_js.',
+                function(finalresult) {
+                  if (finalresult && finalresult.approved === false && finalresult.show_form === true) {
+                    $("#button_checkout_confirmation, .cssButtonPos12").show();
+                    return;
+                  }'.$result_js.'
+                });';
+      } else {
+        $submit_js = '
+                Klarna.Payments.authorize({ 
+                  payment_method_category: "'.$this->klarna_code.'", 
+                  auto_finalize: false
+                }, '.$data_js.', function(result) {
+                  if (result.approved !== undefined
+                      && result.approved === true
+                      )
+                  {
+                    if (result.finalize_required === true) {
+                      Klarna.Payments.finalize({
+                        payment_method_category: "'.$this->klarna_code.'"
+                      }, {},
+                      function(finalresult) {'.$result_js.'
                       });
                     } else {
                       $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
@@ -243,7 +331,24 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                   } else {
                     $(location).attr("href", "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'");
                   }
-               });
+               });';
+      }
+      
+      $js = '
+        <script>
+          var klarna_'.$this->klarna_code.'_result = false;
+          
+          window.klarnaAsyncCallback = function () {
+            Klarna.Payments.init({
+              client_token: "'.$_SESSION['klarna']['client_token'].'"
+            });
+          }
+        
+          window.addEventListener("load", function() {
+            $("#checkout_confirmation").on("submit", function(event) {
+              if (klarna_'.$this->klarna_code.'_result == false) {
+                event.preventDefault();'.$this->get_submit_guard_js().'
+                '.$submit_js.'
               }
             });
           });
@@ -281,6 +386,15 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       
       $_SESSION['klarna']['order_id'] = $data['order_id'];
       $_SESSION['klarna']['fraud_status'] = ((isset($data['fraud_status'])) ? strtoupper($data['fraud_status']) : '');
+      $_SESSION['klarna']['payment_method'] = self::parse_payment_method((isset($data['authorized_payment_method'])) ? $data['authorized_payment_method'] : '');
+      
+      // log the types the mapping does not know yet
+      if ($_SESSION['klarna']['payment_method'] != ''
+          && !array_key_exists($_SESSION['klarna']['payment_method'], klarna_payment_code_map())
+          )
+      {
+        $this->logger->log('klarna', 'unmapped payment method: '.$_SESSION['klarna']['payment_method'], array('klarna_order_id' => $data['order_id']));
+      }
       
       if ($_SESSION['klarna']['fraud_status'] != 'ACCEPTED') {
         $order->info['order_status'] = $this->get_pending_status_id();
@@ -292,11 +406,28 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         'customer_id' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : 0),
       ));
       
-      unset($_SESSION['klarna']);
+      self::discard_session();
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
     
     return false;
+  }
+
+
+  // Klarna reports the method as object {type, ...} or as plain string
+  public static function parse_payment_method($method) {
+    if ($method instanceof ArrayObject) {
+      $method = $method->getArrayCopy();
+    }
+    if (is_array($method)) {
+      $method = ((isset($method['type'])) ? $method['type'] : '');
+    }
+    if (!is_string($method)) {
+      return '';
+    }
+    $method = strtolower(trim($method));
+    
+    return ((preg_match('/^[a-z0-9_]{1,32}$/', $method)) ? $method : '');
   }
 
 
@@ -354,6 +485,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           'klarna_order_id' => $_SESSION['klarna']['order_id'],
           'fraud_status' => $row_status,
           'notify_token' => ((isset($_SESSION['klarna_notify_token']) && is_string($_SESSION['klarna_notify_token'])) ? $_SESSION['klarna_notify_token'] : ''),
+          'payment_method' => ((isset($_SESSION['klarna']['payment_method'])) ? $_SESSION['klarna']['payment_method'] : ''),
         );
         xtc_db_perform(TABLE_KLARNA_PAYMENTS, $sql_data_array);
 
@@ -600,6 +732,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                     `klarna_order_id` varchar(256) NOT NULL,
                     `fraud_status` varchar(16) NOT NULL DEFAULT '',
                     `notify_token` varchar(64) NOT NULL DEFAULT '',
+                    `payment_method` varchar(32) NOT NULL DEFAULT '',
                     PRIMARY KEY (`orders_id`),
                     KEY `idx_klarna_order_id` (`klarna_order_id`)
                   )");
@@ -615,6 +748,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       $column_array = array(
         'fraud_status' => "varchar(16) NOT NULL DEFAULT ''",
         'notify_token' => "varchar(64) NOT NULL DEFAULT ''",
+        'payment_method' => "varchar(32) NOT NULL DEFAULT ''",
       );
       foreach ($column_array as $column_name => $column_definition) {
         $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE '".$column_name."'");
@@ -642,6 +776,19 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       }
       defined($config_key) or define($config_key, '0');
     }
+    
+    // last step, a failed update above leaves the key as it is and the next request retries
+    $check_query = xtc_db_query("SELECT configuration_key
+                                   FROM ".TABLE_CONFIGURATION."
+                                  WHERE configuration_key = 'MODULE_PAYMENT_KLARNA_DB_VERSION'");
+    if (xtc_db_num_rows($check_query) < 1) {
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_PAYMENT_KLARNA_DB_VERSION', '".xtc_db_input($this->klarna_version)."', '6', '0', now())");
+    } else {
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".xtc_db_input($this->klarna_version)."'
+                     WHERE configuration_key = 'MODULE_PAYMENT_KLARNA_DB_VERSION'");
+    }
+    defined('MODULE_PAYMENT_KLARNA_DB_VERSION') or define('MODULE_PAYMENT_KLARNA_DB_VERSION', $this->klarna_version);
   }
 
 
