@@ -22,7 +22,35 @@ if (isset($_GET['subaction'])
   $order = new order((int)$_GET['oID']);
   $klarna = new KlarnaPayment($order->info['payment_method']);
   $order_id = $klarna->get_klarna_order($order->info['order_id']);
-  $amount = str_replace(',', '.', preg_replace('/[^0-9,.%]/', '', $_POST['amount']));
+  $amount = preg_replace('/[^0-9,.%]/', '', ((isset($_POST['amount']) && is_string($_POST['amount'])) ? $_POST['amount'] : ''));
+  // the last separator marks the decimals, anything left non-numeric like % is rejected
+  $amount_comma = strrpos($amount, ',');
+  $amount_dot = strrpos($amount, '.');
+  $amount_thousands = (preg_match('/^[1-9][0-9]{0,2}([.,][0-9]{3})+$/', $amount) && ($amount_comma === false || $amount_dot === false));
+  $separator = (($amount_comma !== false) ? ',' : '.');
+  if ($amount_thousands && substr_count($amount, $separator) == 1) {
+    // a single separator before three digits is ambiguous with a currency of three or more decimals
+    $currency_query = xtc_db_query("SELECT decimal_point,
+                                           thousands_point,
+                                           decimal_places
+                                      FROM ".TABLE_CURRENCIES."
+                                     WHERE code = '".xtc_db_input((isset($order->info['currency']) && is_string($order->info['currency'])) ? $order->info['currency'] : '')."'");
+    if (xtc_db_num_rows($currency_query) > 0) {
+      $currency = xtc_db_fetch_array($currency_query);
+      if ((int)$currency['decimal_places'] >= 3) {
+        $amount_thousands = ($separator == $currency['thousands_point'] && $separator != $currency['decimal_point']);
+      }
+    }
+  }
+  if ($amount_thousands) {
+    // only thousand separators like 1.234 or 1,234,567
+    $amount = str_replace(array('.', ','), '', $amount);
+  } elseif ($amount_comma !== false && ($amount_dot === false || $amount_comma > $amount_dot)) {
+    $amount = str_replace(array('.', ','), array('', '.'), $amount);
+  } else {
+    $amount = str_replace(',', '', $amount);
+  }
+  $amount = ((is_numeric($amount)) ? (float)$amount : 0);
   
   if (isset($_POST['cancel_submit'])) {
     $_SESSION['klarna_success'] = $klarna->cancelOrder($order_id);
