@@ -129,6 +129,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
         'billto_id' => $this->get_country_id($_SESSION['billto']),
         'cart_id' => $_SESSION['cart']->cartID,
         'time_created' => time(),
+        'currency' => $_SESSION['currency'],
       );
     } catch (Exception $e) {
       KlarnaPayment::$session_failed = true;
@@ -608,6 +609,18 @@ class KlarnaPayment extends KlarnaPaymentBase {
       return false;
     }
     
+    // a capture or closure made at Klarna (portal, other tool) must not be captured again
+    if ((isset($data['captured_amount']) && $data['captured_amount'] > 0)
+        || (isset($data['status']) && strtoupper($data['status']) != 'AUTHORIZED')
+        )
+    {
+      if ($this->skip_capture($oID, 'Klarna capture skipped, the order was captured or closed at Klarna') === false) {
+        return $this->is_fraud_status_final($oID);
+      }
+      
+      return 'ACCEPTED';
+    }
+    
     return $this->captureAcceptedOrder($oID, $order_id, $data, $first_attempt);
   }
 
@@ -619,7 +632,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       if ($this->captureOrder($data['remaining_authorized_amount'] / 100, $order_id) == '') {
         // one entry for the first failure, not one per retry
         if ($first_attempt === true) {
-          $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna capture failed, it is retried automatically');
+          $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna capture failed, it is retried with the next Klarna notification or when the order is opened in the admin');
         }
         
         return false;
