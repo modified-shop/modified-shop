@@ -49,6 +49,10 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       if ((int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID') > 0) {
         $this->order_status = (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
       }
+      
+      if (!defined('MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID')) {
+        $this->klarna_update();
+      }
     }
     
     KlarnaAutoload::register();
@@ -118,7 +122,14 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         }
       }
       if ($this->enabled === false) {
-        $this->logger->log('klarna', 'not available: '.$this->klarna_code, array('methods' => $_SESSION['klarna']['methods']));
+        // log once per Klarna session, update_status() runs on every checkout page view
+        if (!isset($_SESSION['klarna']['logged']) || !is_array($_SESSION['klarna']['logged'])) {
+          $_SESSION['klarna']['logged'] = array();
+        }
+        if (!isset($_SESSION['klarna']['logged'][$this->klarna_code])) {
+          $_SESSION['klarna']['logged'][$this->klarna_code] = true;
+          $this->logger->log('klarna', 'not available: '.$this->klarna_code, array('methods' => $_SESSION['klarna']['methods']));
+        }
       }
     } else {
       $this->enabled = false;
@@ -127,6 +138,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     if ($this->enabled == true
         && isset($_SESSION['klarna'])
         && array_key_exists($this->klarna_code, $_SESSION['klarna'])
+        && is_array($_SESSION['klarna'][$this->klarna_code])
         && array_key_exists('show_form', $_SESSION['klarna'][$this->klarna_code])
         && $_SESSION['klarna'][$this->klarna_code]['show_form'] == 'false'
         )
@@ -205,7 +217,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                     if (result.finalize_required === true) {
                       Klarna.Payments.finalize({
                         payment_method_category: "'.$this->klarna_code.'"
-                      },
+                      }, {},
                       function(finalresult) {
                         $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
                         $.each(finalresult, function (key, val) {
@@ -246,11 +258,13 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   function before_process() {
     global $order;
 
-    if (isset($_POST['klarna'])) {
-      $_SESSION['klarna'] = array_merge($_SESSION['klarna'], $_POST['klarna']);  
+    if (isset($_POST['klarna']) && is_array($_POST['klarna'])) {
+      // Klarna posts klarna[<category>][<key>], take over arrays only
+      $_SESSION['klarna'] = array_merge(((isset($_SESSION['klarna']) && is_array($_SESSION['klarna'])) ? $_SESSION['klarna'] : array()), array_filter($_POST['klarna'], 'is_array'));
     }
     
-    if (!array_key_exists($this->klarna_code, $_SESSION['klarna'])
+    if (!isset($_SESSION['klarna'][$this->klarna_code])
+        || !is_array($_SESSION['klarna'][$this->klarna_code])
         || !array_key_exists('authorization_token', $_SESSION['klarna'][$this->klarna_code])
         )
     {
@@ -262,9 +276,17 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       $data = $orders->create($this->getOrderData());
       
       $_SESSION['klarna']['order_id'] = $data['order_id'];
-      $_SESSION['klarna']['fraud_status'] = $data['fraud_status'];
+      $_SESSION['klarna']['fraud_status'] = ((isset($data['fraud_status'])) ? strtoupper($data['fraud_status']) : '');
+      
+      if ($_SESSION['klarna']['fraud_status'] != 'ACCEPTED') {
+        $order->info['order_status'] = $this->get_pending_status_id();
+      }
     } catch (Exception $e) {
-      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
+      // session and customer id let the merchant find an order Klarna created despite the timeout
+      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage(), array(
+        'session_id' => ((isset($_SESSION['klarna']['session_id'])) ? $_SESSION['klarna']['session_id'] : ''),
+        'customer_id' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : 0),
+      ));
       
       unset($_SESSION['klarna']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
@@ -287,42 +309,79 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                                   WHERE orders_id = '".(int)$insert_id."'");
     $check = xtc_db_fetch_array($check_query);
 
+    $order_status = $this->order_status;
     if (isset($_SESSION['klarna'])
         && array_key_exists('order_id', $_SESSION['klarna'])
         )
     {
+      // an order under fraud review is captured only once Klarna accepts it
+      $fraud_accepted = (isset($_SESSION['klarna']['fraud_status']) && $_SESSION['klarna']['fraud_status'] == 'ACCEPTED');
+      if ($fraud_accepted === false) {
+        $order_status = $this->get_pending_status_id();
+      }
+      
       $this->updateMerchantReference($_SESSION['klarna']['order_id'], $insert_id, '');
       
       $klarna_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_KLARNA_PAYMENTS."
                                      WHERE orders_id = '".(int)$insert_id."'");
+      $row_created = false;
       if (xtc_db_num_rows($klarna_query) < 1) {
+        $row_created = true;
+        
+        // the row gets its final state, a push or the admin resolver may act on the order from here on
+        if ($fraud_accepted === true) {
+          $row_status = (($this->capture_enabled()) ? 'CAPTURE_PENDING' : 'ACCEPTED');
+        } else {
+          $row_status = 'PENDING';
+        }
+        
+        // before the insert nobody else can resolve the order, so the status moves first
+        if ($check['orders_status'] != $order_status
+            && $this->change_new_orders_status($insert_id, $check['orders_status'], $order_status, '') === true
+            )
+        {
+          // the history entry and the acknowledge write below use the status the order has now
+          $check['orders_status'] = $order_status;
+        }
+        
         $sql_data_array = array(
           'orders_id' => $insert_id,
           'klarna_order_id' => $_SESSION['klarna']['order_id'],
+          'fraud_status' => $row_status,
+          'notify_token' => ((isset($_SESSION['klarna_notify_token']) && is_string($_SESSION['klarna_notify_token'])) ? $_SESSION['klarna_notify_token'] : ''),
         );
         xtc_db_perform(TABLE_KLARNA_PAYMENTS, $sql_data_array);
 
-        $this->update_order('Klarna Order: '.$_SESSION['klarna']['order_id'], $check['orders_status'], $insert_id);
+        $this->insert_status_history($insert_id, $check['orders_status'], 'Klarna Order: '.$_SESSION['klarna']['order_id'].(($fraud_accepted === true) ? '' : ', fraud status: PENDING'));
       }
       
-      if ($this->code == 'klarna_checkout') {
-        $result = $this->acknowledgeOrder($_SESSION['klarna']['order_id']);
-        if ($result != '') {
-          $this->update_order($result, $check['orders_status'], $insert_id);
+      // read again, the status change and the capture depend on the row, not on its state at insert time
+      $state_query = xtc_db_query("SELECT klarna_order_id,
+                                          fraud_status
+                                     FROM ".TABLE_KLARNA_PAYMENTS."
+                                    WHERE orders_id = '".(int)$insert_id."'");
+      $state = xtc_db_fetch_array($state_query);
+      if (is_array($state)
+          && in_array($state['fraud_status'], array('CAPTURE_PENDING', 'ACCEPTED', 'PENDING'))
+          )
+      {
+        // a new row got its status before the insert, a manual change since then wins
+        if ($row_created === false && $check['orders_status'] != $order_status) {
+          $this->change_orders_status($insert_id, $check['orders_status'], $order_status, '', $state['fraud_status']);
+        }
+        
+        // a failed capture stays CAPTURE_PENDING, the admin page retries it
+        if ($state['fraud_status'] == 'CAPTURE_PENDING') {
+          $this->captureIfDue($insert_id, $state['klarna_order_id'], $order_status, null, true);
         }
       }
-      
-      if (constant('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE') == 'True') {
-        $this->captureCompleteOrder($insert_id, $_SESSION['klarna']['order_id']);
-      }
-    }
-    
-    if ($check['orders_status'] != $this->order_status) {
-      $this->update_order('', $this->order_status, $insert_id);
+    } elseif ($check['orders_status'] != $order_status) {
+      $this->update_order('', $order_status, $insert_id);
     }
         
     unset($_SESSION['klarna']);
+    unset($_SESSION['klarna_notify_token']);
   }
 
 
@@ -355,24 +414,6 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       }
     }
     return $this->_check;
-  }
-
-
-  function checkout_button() {  
-    if ($this->enabled === true
-        && $_SESSION['cart']->show_total() > 0
-        && (!isset($_SESSION['allow_checkout']) || $_SESSION['allow_checkout'] == 'true')
-        ) 
-    {
-      $unallowed_modules = explode(',', $_SESSION['customers_status']['customers_status_payment_unallowed']);
-      if (!in_array($this->code, $unallowed_modules)) {
-        $image = ((is_file(DIR_FS_CATALOG.DIR_WS_ICONS.'klarna_'.strtolower($_SESSION['language_code']).'.gif')) ? 'klarna_'.strtolower($_SESSION['language_code']).'.gif' : 'klarna_de.gif');
-        $image = xtc_image_button(DIR_WS_ICONS.$image, '', 'id="klarnacartbutton"');
-        $checkout_button = '<a href="'.xtc_href_link('checkout_klarna.php', '', 'SSL').'">'.$image.'</a>';
-
-        return $checkout_button;
-      }
-    }
   }
 
 
@@ -462,6 +503,18 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
+  function get_pending_status_id() {
+    if (defined('MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID')
+        && (int)MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID > 0
+        )
+    {
+      return (int)MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID;
+    }
+    
+    return (int)DEFAULT_ORDERS_STATUS_ID;
+  }
+
+
   function parse_gender($language_code, $gender) {
     $gender_array = array(
       'de' => array(
@@ -475,6 +528,10 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         'Miss' => 'fs',
       ),
     );
+    
+    if (!isset($gender_array[$language_code])) {
+      return;
+    }
     
     if (isset($gender_array[$language_code][$gender])) {
       return $gender_array[$language_code][$gender];
@@ -537,28 +594,55 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     xtc_db_query("CREATE TABLE IF NOT EXISTS `".TABLE_KLARNA_PAYMENTS."` (
                     `orders_id` int(11) NOT NULL,
                     `klarna_order_id` varchar(256) NOT NULL,
+                    `fraud_status` varchar(16) NOT NULL DEFAULT '',
+                    `notify_token` varchar(64) NOT NULL DEFAULT '',
                     PRIMARY KEY (`orders_id`),
                     KEY `idx_klarna_order_id` (`klarna_order_id`)
                   )");
     
-    $address_book_query = xtc_db_query("SELECT * 
-                                          FROM ".TABLE_ADDRESS_BOOK."
-                                         LIMIT 1");
-    $address_book = xtc_db_fetch_array($address_book_query);
-    if (!isset($address_book['account_type'])) {
-      xtc_db_query("ALTER TABLE ".TABLE_ADDRESS_BOOK." ADD `account_type` INT(1) DEFAULT '0' NOT NULL");
+    $this->klarna_update();
+  }
+
+
+  function klarna_update() {
+    // the columns come first, so a failed ALTER is retried while the keys are still missing
+    $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_KLARNA_PAYMENTS."'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      $column_array = array(
+        'fraud_status' => "varchar(16) NOT NULL DEFAULT ''",
+        'notify_token' => "varchar(64) NOT NULL DEFAULT ''",
+      );
+      foreach ($column_array as $column_name => $column_definition) {
+        $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE '".$column_name."'");
+        if (xtc_db_num_rows($check_query) < 1) {
+          xtc_db_query("ALTER TABLE ".TABLE_KLARNA_PAYMENTS." ADD `".$column_name."` ".$column_definition);
+          
+          $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_KLARNA_PAYMENTS." LIKE '".$column_name."'");
+          if (xtc_db_num_rows($check_query) < 1) {
+            return;
+          }
+        }
+      }
+    }
+    
+    $config_array = array(
+      'MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID',
+      'MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID',
+    );
+    foreach ($config_array as $config_key) {
+      $check_query = xtc_db_query("SELECT configuration_key
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key = '".$config_key."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('".$config_key."', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+      }
+      defined($config_key) or define($config_key, '0');
     }
   }
 
 
   function remove() {
-    $check_query = xtc_db_query("SELECT configuration_key 
-                                   FROM ".TABLE_CONFIGURATION." 
-                                  WHERE configuration_key LIKE 'MODULE_PAYMENT_KLARNA%_STATUS'");
-    if (xtc_db_num_rows($check_query) == 1) {			
-      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_KLARNA_PAYMENTS);
-    }
-
+    // keep TABLE_KLARNA_PAYMENTS, it holds the Klarna order id of past orders
     xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." 
                         WHERE configuration_key LIKE 'MODULE_PAYMENT_".strtoupper($this->code)."\_%'");
   }
@@ -572,6 +656,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       'MODULE_PAYMENT_KLARNA_MERCHANT_ID',
       'MODULE_PAYMENT_KLARNA_SHARED_SECRET',
       'MODULE_PAYMENT_KLARNA_MODE',
+      'MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID',
+      'MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID',
       'MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID', 
       'MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER', 
       'MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE',

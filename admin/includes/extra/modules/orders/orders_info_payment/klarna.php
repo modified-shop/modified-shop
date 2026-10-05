@@ -13,16 +13,29 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 if (isset($order) && is_object($order)) {
-  if ($order->info['payment_method'] == 'klarna_checkout' 
-      || $order->info['payment_method'] == 'klarna_paylater'
+  if ($order->info['payment_method'] == 'klarna_paylater'
       || $order->info['payment_method'] == 'klarna_payovertime'
       || $order->info['payment_method'] == 'klarna_directdebit'
       || $order->info['payment_method'] == 'klarna_directbanktransfer'
       || $order->info['payment_method'] == 'klarna_paynow'
+      || $order->info['payment_method'] == 'klarna_klarna'
       ) 
   {
     require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
     $klarna = new KlarnaPayment($order->info['payment_method']);
+    
+    // resolve a still pending fraud review when the push never arrived
+    $klarna->resolveFraudStatus((int)$order->info['order_id']);
+    
+    // read in any case, a failed capture may have changed the status already
+    $klarna_status_query = xtc_db_query("SELECT orders_status
+                                           FROM ".TABLE_ORDERS."
+                                          WHERE orders_id = '".(int)$order->info['order_id']."'");
+    if (xtc_db_num_rows($klarna_status_query) > 0) {
+      $klarna_status = xtc_db_fetch_array($klarna_status_query);
+      $order->info['orders_status'] = $klarna_status['orders_status'];
+      $order->info['orders_status_id'] = $klarna_status['orders_status'];
+    }
     ?>
     <tr>
       <td colspan="2" style="width:990px;">

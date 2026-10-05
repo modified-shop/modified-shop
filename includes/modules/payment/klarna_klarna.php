@@ -14,7 +14,7 @@
 require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
 
 
-class klarna_directbanktransfer extends KlarnaPayment {
+class klarna_klarna extends KlarnaPayment {
 
   var $code;
   var $klarna_code;
@@ -22,8 +22,8 @@ class klarna_directbanktransfer extends KlarnaPayment {
   function __construct() {
     global $order;
 
-    $this->code = 'klarna_directbanktransfer';
-    $this->klarna_code = 'direct_bank_transfer';
+    $this->code = 'klarna_klarna';
+    $this->klarna_code = 'klarna';
 
     KlarnaPayment::__construct($this->code);
 
@@ -35,32 +35,21 @@ class klarna_directbanktransfer extends KlarnaPayment {
 
   function selection() {
     $data = $this->get_method();
-        
-    $info = '<div id="klarna-payments-direct-bank-transfer"></div>
+
+    $info = '<div id="klarna-payments-klarna"></div>
              <script>var klarna_'.$this->klarna_code.'_result = false;</script>';
-    
-    $_SESSION['klarna']['script'][$this->klarna_code] = '          
+
+    $_SESSION['klarna']['script'][$this->klarna_code] = '
           Klarna.Payments.load({
-            container: "#klarna-payments-direct-bank-transfer",
+            container: "#klarna-payments-klarna",
             payment_method_category: "'.$this->klarna_code.'"
           });';
-    
+
     return array(
-      'id' => $this->code, 
-      'module' => ((MODULE_PAYMENT_KLARNA_TEXT != '') ? MODULE_PAYMENT_KLARNA_TEXT.' ' : '').decode_utf8($data['name']), 
+      'id' => $this->code,
+      'module' => ((is_array($data) && !empty($data['name'])) ? decode_utf8($data['name']) : MODULE_PAYMENT_KLARNA_KLARNA_TEXT_TITLE),
       'description' => $info,
     );
-  }
-
-
-  function pre_confirmation_check() {    
-    if (isset($_POST['klarna']) && is_array($_POST['klarna'])) {
-      // Klarna posts klarna[<category>][<key>], take over arrays only
-      $_SESSION['klarna'] = array_merge(((isset($_SESSION['klarna']) && is_array($_SESSION['klarna'])) ? $_SESSION['klarna'] : array()), array_filter($_POST['klarna'], 'is_array'));
-    }
-    
-    // update the Klarna session with the current order data like the other Klarna modules
-    return KlarnaPayment::pre_confirmation_check();
   }
 
 }

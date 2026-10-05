@@ -29,7 +29,7 @@ require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 
 
 // language
-if (is_file(DIR_FS_EXTERNAL.'klarna/lang/'.$_SESSION['language'].'.php')) {
+if (isset($_SESSION['language']) && is_file(DIR_FS_EXTERNAL.'klarna/lang/'.$_SESSION['language'].'.php')) {
   require_once(DIR_FS_EXTERNAL.'klarna/lang/'.$_SESSION['language'].'.php');
 } else {
   require_once(DIR_FS_EXTERNAL.'klarna/lang/english.php');
@@ -44,6 +44,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
   var $shared_secret;
   var $api_endpoint;
   var $connector;
+  // set after a failed session request, shared by all Klarna modules in this request
+  public static $session_failed = false;
 
   function __construct($code) {
     $this->code = $code;
@@ -74,88 +76,27 @@ class KlarnaPayment extends KlarnaPaymentBase {
     $user_agent->setField('modified-eCommerce-Shopsoftware', 'v', $db_version['plain']);
     $user_agent->setField('Klarna', 'v', $this->klarna_version);
     
-    $this->connector = Klarna\Rest\Transport\GuzzleConnector::create(
+    // build the client with timeouts, the SDK factory leaves them unlimited
+    $client = new \GuzzleHttp\Client(array(
+      'base_uri' => $this->api_endpoint,
+      'connect_timeout' => 10,
+      'timeout' => 30,
+    ));
+    $this->connector = new Klarna\Rest\Transport\GuzzleConnector(
+      $client,
       $this->merchant_id,
       $this->shared_secret,
-      $this->api_endpoint,
       $user_agent
     );
   }
 
 
-  function getKlarnaCheckout($shipping_content = array()) {
-    global $xtPrice, $main;
-    
-    $order_array = $this->getOrderData();
-    $order_array['merchant_urls'] = $this->getMerchantUrl();
-        
-    if (count($shipping_content) > 0) {
-      $order_array['shipping_options'] = $this->getShippingData($shipping_content);
-    }
-        
-    $options = new stdclass();
-    $options->allow_separate_shipping_address = true;    
-    $order_array['options'] = $options;
-        
-    $valid = false;
-    if (isset($_SESSION['klarna'])
-        && array_key_exists('order_id', $_SESSION['klarna'])
-        && array_key_exists('customer_id', $_SESSION['klarna'])
-        && $_SESSION['klarna']['customer_id'] == $_SESSION['customer_id']
-        && array_key_exists('cart_id', $_SESSION['klarna'])
-        && $_SESSION['klarna']['cart_id'] == $_SESSION['cart']->cartID
-        )
-    {
-      $checkout = $this->fetchKlarnaCheckout($_SESSION['klarna']['order_id']);
-      if (strtolower($checkout['status']) == 'checkout_incomplete') {
-        $valid = true;
-      }
-    }
-    
-    if ($valid === false) {
-      try {
-        $checkout = new Klarna\Rest\Checkout\Order($this->connector);
-        $resonse = $checkout->create($order_array);
-
-        // set session
-        $_SESSION['klarna'] = array(
-          'order_id' => $resonse->getId(),
-          'html_snippet' => $resonse['html_snippet'],
-          'customer_id' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : 0),
-          'cart_id' => $_SESSION['cart']->cartID,
-        );
-      } catch (Exception $e) {
-        $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
-      }
-    }
-  }
-
-
-  function fetchKlarnaCheckout($order_id) {
-    try {
-      $checkout = new Klarna\Rest\Checkout\Order($this->connector, $order_id);
-      $resonse = $checkout->fetch();
-      
-      return $resonse;
-    } catch (Exception $e) {
-      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
-    }
-  }
-
-
-  function updateKlarnaCheckout($order_array) {
-    try {
-      $checkout = new Klarna\Rest\Checkout\Order($this->connector, $_SESSION['klarna']['order_id']);
-      $response = $checkout->update($order_array);
-            
-      return $response;
-    } catch (Exception $e) {
-      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
-    }
-  }
-
-
   function getKlarnaSession() {
+    // every module calls this from its constructor, a Klarna outage would cost one timeout each
+    if (KlarnaPayment::$session_failed === true) {
+      return;
+    }
+    
     $order_array = $this->getOrderData(true);
         
     try {
@@ -175,6 +116,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
         'time_created' => time(),
       );
     } catch (Exception $e) {
+      KlarnaPayment::$session_failed = true;
       $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
     } 
   }
@@ -229,18 +171,6 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
-  function acknowledgeOrder($order_id) {
-    try {
-      $management = new Klarna\Rest\OrderManagement\Order($this->connector, $order_id);
-      $management->acknowledge();
-    } catch (Exception $e) {
-      $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
-      
-      return $e->getMessage();
-    }
-  }
-
-
   function cancelOrder($order_id) {
     try {
       $management = new Klarna\Rest\OrderManagement\Order($this->connector, $order_id);
@@ -252,6 +182,349 @@ class KlarnaPayment extends KlarnaPaymentBase {
       
       return $e->getMessage();
     }
+  }
+
+
+  function resolveFraudStatus($oID, $event_type = '') {
+    $check_query = xtc_db_query("SELECT kp.klarna_order_id,
+                                        kp.fraud_status
+                                   FROM ".TABLE_KLARNA_PAYMENTS." kp
+                                   JOIN ".TABLE_ORDERS." o
+                                        ON o.orders_id = kp.orders_id
+                                  WHERE kp.orders_id = '".(int)$oID."'");
+    if (xtc_db_num_rows($check_query) < 1) {
+      return false;
+    }
+    $check = xtc_db_fetch_array($check_query);
+    
+    $pending_status = $this->get_pending_status_id();
+    $accepted_status = (((int)$this->order_status > 0) ? (int)$this->order_status : $pending_status);
+    
+    // the stop cannot be read back from the order, so the push decides
+    if ($event_type == 'FRAUD_RISK_STOPPED') {
+      return $this->stopFraudReview($oID, $pending_status, $accepted_status);
+    }
+    
+    // the accept is still running or its request died, the row shows it
+    if ($check['fraud_status'] == 'ACCEPTING') {
+      $orders_status = $this->get_orders_status($oID);
+      if ($accepted_status != $pending_status && $orders_status == $pending_status) {
+        return $this->completeAccept($oID, $check['klarna_order_id'], $pending_status, $accepted_status);
+      }
+      
+      if ($orders_status == $accepted_status) {
+        return $this->startCapture($oID, $check['klarna_order_id'], $accepted_status);
+      }
+      
+      // a manual status change wins
+      if ($this->skip_capture($oID, 'Klarna fraud status: ACCEPTED, order status not changed, nothing captured') === false) {
+        return $this->is_fraud_status_final($oID);
+      }
+      
+      return 'ACCEPTED';
+    }
+    
+    // accepted before, but the capture failed: only the capture is repeated
+    if ($check['fraud_status'] == 'CAPTURE_PENDING') {
+      return $this->captureIfDue($oID, $check['klarna_order_id'], $accepted_status);
+    }
+    
+    if ($check['fraud_status'] != 'PENDING') {
+      return true;
+    }
+    
+    $data = $this->fetchOrder($check['klarna_order_id']);
+    if (!is_array($data) || !isset($data['fraud_status'])) {
+      return false;
+    }
+    
+    $fraud_status = strtoupper($data['fraud_status']);
+    if ($fraud_status != 'ACCEPTED' && $fraud_status != 'REJECTED') {
+      return false;
+    }
+    
+    // read after the API call, the merchant may have changed the status meanwhile
+    $current_status = $this->get_orders_status($oID);
+    $waiting = ($current_status == $pending_status);
+    
+    $capture = ($fraud_status == 'ACCEPTED' && $waiting === true && $this->capture_enabled());
+    
+    // a repeated notification or a parallel admin view must not resolve the order twice
+    xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
+                     SET fraud_status = '".xtc_db_input((($capture === true) ? 'ACCEPTING' : $fraud_status))."'
+                   WHERE orders_id = '".(int)$oID."'
+                     AND fraud_status = 'PENDING'");
+    if (xtc_db_affected_rows() < 1) {
+      // only a final result counts as done, anything else is still in progress
+      return $this->is_fraud_status_final($oID);
+    }
+    
+    if ($waiting === false) {
+      $this->insert_status_history($oID, $current_status, 'Klarna fraud status: '.$fraud_status.', order status not changed'.(($fraud_status == 'ACCEPTED' && $this->capture_enabled()) ? ', nothing captured' : ''));
+      
+      return $fraud_status;
+    }
+    
+    // the status change is conditional, a parallel stop or a manual change must not be overwritten
+    if ($fraud_status == 'ACCEPTED') {
+      if ($capture === true) {
+        return $this->completeAccept($oID, $check['klarna_order_id'], $pending_status, $accepted_status, $data, true);
+      }
+      
+      if ($this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED', 'ACCEPTED') === false) {
+        // after a stop in between, the stop entry stands alone
+        $state_query = xtc_db_query("SELECT fraud_status
+                                       FROM ".TABLE_KLARNA_PAYMENTS."
+                                      WHERE orders_id = '".(int)$oID."'");
+        $state = xtc_db_fetch_array($state_query);
+        if (is_array($state) && $state['fraud_status'] == 'ACCEPTED') {
+          $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna fraud status: ACCEPTED, order status not changed');
+        }
+      }
+      
+      return $fraud_status;
+    }
+    
+    $rejected_status = ((defined('MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID') && (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID > 0) ? (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID : 0);
+    if ($rejected_status == 0
+        || $this->change_orders_status($oID, $pending_status, $rejected_status, 'Klarna fraud status: REJECTED', 'REJECTED') === false
+        )
+    {
+      $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna fraud status: REJECTED');
+    }
+    
+    return $fraud_status;
+  }
+
+
+  function completeAccept($oID, $order_id, $pending_status, $accepted_status, $data = null, $first_attempt = false) {
+    // a parallel call may have completed the accept, then the capture is still due
+    if ($this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED', 'ACCEPTING') === false
+        && $this->get_orders_status($oID) != $accepted_status
+        )
+    {
+      if ($this->skip_capture($oID, 'Klarna fraud status: ACCEPTED, order status not changed, nothing captured') === false) {
+        return $this->is_fraud_status_final($oID);
+      }
+      
+      return true;
+    }
+    
+    return $this->startCapture($oID, $order_id, $accepted_status, $data, $first_attempt);
+  }
+
+
+  function startCapture($oID, $order_id, $accepted_status, $data = null, $first_attempt = false) {
+    // the status change is done, from here on only the capture is open
+    xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
+                     SET fraud_status = 'CAPTURE_PENDING'
+                   WHERE orders_id = '".(int)$oID."'
+                     AND fraud_status = 'ACCEPTING'");
+    if (xtc_db_affected_rows() < 1) {
+      // a stop or a parallel call took over
+      return $this->is_fraud_status_final($oID);
+    }
+    
+    return $this->captureIfDue($oID, $order_id, $accepted_status, $data, $first_attempt);
+  }
+
+
+  function stopFraudReview($oID, $pending_status, $accepted_status) {
+    // moving the row first makes sure no capture follows
+    xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
+                     SET fraud_status = 'STOPPED'
+                   WHERE orders_id = '".(int)$oID."'
+                     AND fraud_status NOT IN ('STOPPED', 'REJECTED')");
+    if (xtc_db_affected_rows() < 1) {
+      return true;
+    }
+    
+    // a stop during the capture request cannot be prevented, the history then shows both entries
+    $comment = 'Klarna fraud status: STOPPED, check the order before shipping';
+    $rejected_status = ((defined('MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID') && (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID > 0) ? (int)MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID : 0);
+    
+    // the second round catches a parallel accept that moved the order meanwhile
+    for ($i = 0; $i < 2; $i ++) {
+      $orders_status = $this->get_orders_status($oID);
+      if ($rejected_status > 0
+          && ($orders_status == $pending_status || $orders_status == $accepted_status)
+          && $this->change_orders_status($oID, $orders_status, $rejected_status, $comment, 'STOPPED') === true
+          )
+      {
+        return 'STOPPED';
+      }
+      if ($rejected_status == 0 || ($orders_status != $pending_status && $orders_status != $accepted_status)) {
+        break;
+      }
+    }
+    
+    $this->insert_status_history($oID, $this->get_orders_status($oID), $comment);
+    
+    return 'STOPPED';
+  }
+
+
+  function get_orders_status($oID) {
+    $status_query = xtc_db_query("SELECT orders_status
+                                    FROM ".TABLE_ORDERS."
+                                   WHERE orders_id = '".(int)$oID."'");
+    $status = xtc_db_fetch_array($status_query);
+    
+    return ((is_array($status)) ? (int)$status['orders_status'] : 0);
+  }
+
+
+  function change_orders_status($oID, $from_status, $to_status, $comment, $fraud_status) {
+    // order status and row state are checked in one statement, a stop or a manual change in between wins
+    if ((int)$to_status != (int)$from_status) {
+      xtc_db_query("UPDATE ".TABLE_ORDERS." o
+                      JOIN ".TABLE_KLARNA_PAYMENTS." kp
+                           ON kp.orders_id = o.orders_id
+                       SET o.orders_status = '".(int)$to_status."',
+                           o.last_modified = now()
+                     WHERE o.orders_id = '".(int)$oID."'
+                       AND o.orders_status = '".(int)$from_status."'
+                       AND kp.fraud_status = '".xtc_db_input($fraud_status)."'");
+      if (xtc_db_affected_rows() < 1) {
+        return false;
+      }
+    } else {
+      $check_query = xtc_db_query("SELECT o.orders_id
+                                     FROM ".TABLE_ORDERS." o
+                                     JOIN ".TABLE_KLARNA_PAYMENTS." kp
+                                          ON kp.orders_id = o.orders_id
+                                    WHERE o.orders_id = '".(int)$oID."'
+                                      AND o.orders_status = '".(int)$from_status."'
+                                      AND kp.fraud_status = '".xtc_db_input($fraud_status)."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        return false;
+      }
+    }
+    
+    $this->insert_status_history($oID, $to_status, $comment);
+    
+    return true;
+  }
+
+
+  function change_new_orders_status($oID, $from_status, $to_status, $comment) {
+    // for an order without a klarna_payments row, no resolver or push can act on it yet
+    xtc_db_query("UPDATE ".TABLE_ORDERS."
+                     SET orders_status = '".(int)$to_status."',
+                         last_modified = now()
+                   WHERE orders_id = '".(int)$oID."'
+                     AND orders_status = '".(int)$from_status."'");
+    if (xtc_db_affected_rows() < 1) {
+      return false;
+    }
+    
+    $this->insert_status_history($oID, $to_status, $comment);
+    
+    return true;
+  }
+
+
+  function insert_status_history($oID, $orders_status, $comment) {
+    $order_history_data = array(
+      'orders_id' => (int)$oID,
+      'orders_status_id' => (int)$orders_status,
+      'date_added' => 'now()',
+      'customer_notified' => '0',
+      'comments' => $comment,
+    );
+    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $order_history_data);
+  }
+
+
+  function is_fraud_status_final($oID) {
+    $final_query = xtc_db_query("SELECT fraud_status
+                                   FROM ".TABLE_KLARNA_PAYMENTS."
+                                  WHERE orders_id = '".(int)$oID."'");
+    $final = xtc_db_fetch_array($final_query);
+    
+    return (is_array($final) && in_array($final['fraud_status'], array('ACCEPTED', 'REJECTED', 'STOPPED')));
+  }
+
+
+  function skip_capture($oID, $comment) {
+    xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
+                     SET fraud_status = 'ACCEPTED'
+                   WHERE orders_id = '".(int)$oID."'
+                     AND fraud_status IN ('ACCEPTING', 'CAPTURE_PENDING')");
+    if (xtc_db_affected_rows() < 1) {
+      return false;
+    }
+    
+    $this->insert_status_history($oID, $this->get_orders_status($oID), $comment);
+    
+    return true;
+  }
+
+
+  function captureIfDue($oID, $order_id, $accepted_status, $data = null, $first_attempt = false) {
+    // fetched first, the API call takes seconds and a stop may arrive meanwhile
+    if (!is_array($data)) {
+      $data = $this->fetchOrder($order_id);
+    }
+    
+    // read again right before the capture, a parallel stop or a finished capture may have changed the row
+    $check_query = xtc_db_query("SELECT fraud_status
+                                   FROM ".TABLE_KLARNA_PAYMENTS."
+                                  WHERE orders_id = '".(int)$oID."'");
+    $check = xtc_db_fetch_array($check_query);
+    if (!is_array($check) || $check['fraud_status'] != 'CAPTURE_PENDING') {
+      return $this->is_fraud_status_final($oID);
+    }
+    
+    // without a module status the accepted status is the waiting status, a reset to it cannot be told apart
+    if ($this->get_orders_status($oID) != $accepted_status) {
+      // a manual status change wins, the capture is skipped for good
+      if ($this->skip_capture($oID, 'Klarna capture skipped, the order status was changed in the meantime') === false) {
+        return $this->is_fraud_status_final($oID);
+      }
+      
+      return 'ACCEPTED';
+    }
+    
+    if (!is_array($data) || !isset($data['remaining_authorized_amount'])) {
+      return false;
+    }
+    
+    return $this->captureAcceptedOrder($oID, $order_id, $data, $first_attempt);
+  }
+
+
+  function captureAcceptedOrder($oID, $order_id, $data, $first_attempt = false) {
+    // capture what Klarna still holds, so a repeat never captures twice
+    $captured = false;
+    if ($data['remaining_authorized_amount'] > 0 && $this->capture_enabled()) {
+      if ($this->captureOrder($data['remaining_authorized_amount'] / 100, $order_id) == '') {
+        // one entry for the first failure, not one per retry
+        if ($first_attempt === true) {
+          $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna capture failed, it is retried automatically');
+        }
+        
+        return false;
+      }
+      $captured = true;
+    }
+    
+    xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
+                     SET fraud_status = 'ACCEPTED'
+                   WHERE orders_id = '".(int)$oID."'
+                     AND fraud_status = 'CAPTURE_PENDING'");
+    
+    if ($captured === true) {
+      $this->insert_status_history($oID, $this->get_orders_status($oID), 'Klarna capture: '.number_format($data['remaining_authorized_amount'] / 100, 2, '.', '').((isset($data['purchase_currency'])) ? ' '.$data['purchase_currency'] : '').' captured');
+    }
+    
+    return 'ACCEPTED';
+  }
+
+
+  function capture_enabled() {
+    return (defined('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE')
+            && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE') == 'True');
   }
 
 
@@ -290,54 +563,6 @@ class KlarnaPayment extends KlarnaPaymentBase {
     } catch (Exception $e) {
       $this->logger->log('klarna', __FUNCTION__.': '.$e->getMessage());
       $_SESSION['klarna_error'] = $e->getMessage();
-    }
-  }
-
-
-  function getMerchantUrl() {
-    $merchant_url = array(
-      'terms'                  => xtc_href_link(FILENAME_CONTENT, 'coID=3', 'SSL'),
-      'cancellation_terms'     => xtc_href_link(FILENAME_CONTENT, 'coID='.REVOCATION_ID, 'SSL'),
-
-      'checkout'               => xtc_href_link(FILENAME_CHECKOUT_PAYMENT, xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      'confirmation'           => xtc_href_link('callback/klarna/confirmation.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      
-      'address_update'         => xtc_href_link('callback/klarna/callback.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      'shipping_option_update' => xtc_href_link('callback/klarna/callback.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      'country_change'         => xtc_href_link('callback/klarna/callback.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-
-      'validation'             => xtc_href_link('callback/klarna/validation.php', xtc_session_name().'='.xtc_session_id(), 'SSL', false),
-      
-      'push'                   => xtc_href_link('callback/klarna/notification.php', '', 'SSL', false).'?type=push&orders_id={checkout.order.id}',
-      'notification'           => xtc_href_link('callback/klarna/notification.php', '', 'SSL', false).'?type=notify&orders_id={checkout.order.id}',
-    );
-    
-    return $merchant_url;
-  }
-
-
-  function getShippingData($shipping_content = array()) {
-    global $xtPrice;
-    
-    if (count($shipping_content) > 0) {
-      $shipping_options = array();
-      foreach ($shipping_content as $shipping) {
-        if (isset($shipping['QUOTE'])) {
-          $price = $xtPrice->xtcAddTax($shipping['QUOTE']['methods'][0]['cost'], $shipping['QUOTE']['tax']);
-        
-          $shipping_options[] = array(
-            'id' => $shipping['QUOTE']['id'].'_'.$shipping['QUOTE']['methods'][0]['id'],
-            'name' => decode_htmlentities(strip_tags($shipping['QUOTE']['module'])),
-            'description' => decode_htmlentities(strip_tags($shipping['QUOTE']['methods'][0]['title'])),
-            'price' => $this->format_amount($price),
-            'tax_amount' => $this->format_amount($price - $xtPrice->xtcCalculateCurr($shipping['QUOTE']['methods'][0]['cost'])),
-            'tax_rate' => $this->format_amount($shipping['QUOTE']['tax']),
-            'preselected' => ((isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) && array_key_exists('id', $_SESSION['shipping']) && $shipping['QUOTE']['id'].'_'.$shipping['QUOTE']['methods'][0]['id'] == $_SESSION['shipping']['id']) ? true : false),
-          );
-        }
-      }
-      
-      return $shipping_options;
     }
   }
 
@@ -521,6 +746,11 @@ class KlarnaPayment extends KlarnaPaymentBase {
     
     $country = xtc_get_countriesList(STORE_COUNTRY);    
     
+    // outside $_SESSION['klarna'], which is reset, so session and order get the same URL
+    if (!isset($_SESSION['klarna_notify_token']) || !is_string($_SESSION['klarna_notify_token']) || $_SESSION['klarna_notify_token'] === '') {
+      $_SESSION['klarna_notify_token'] = bin2hex(random_bytes(16));
+    }
+    
     // the billing country decides the market at Klarna, the store country is the fallback
     $purchase_country = strtoupper($country['countries_iso_code_2']);
     if (isset($order->billing['country_iso_2']) && $order->billing['country_iso_2'] != '') {
@@ -537,6 +767,9 @@ class KlarnaPayment extends KlarnaPaymentBase {
       'order_tax_amount' => $this->format_amount($order_tax_amount),
       'merchant_reference1' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : 0),
       'order_lines' => $products_array,
+      'merchant_urls' => array(
+        'notification' => xtc_href_link('callback/klarna/fraud_notification.php', 'token='.$_SESSION['klarna_notify_token'], 'SSL', false),
+      ),
     );
     
     if ($order_array['order_tax_amount'] != $tax_total) {

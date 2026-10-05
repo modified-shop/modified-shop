@@ -173,7 +173,11 @@ class payone_installment extends PayonePayment {
     curl_exec($ch);
     fclose($fp);
     
-    return xtc_href_link('cache/'.$filename, '', 'SSL', false);
+    // cache/ is not public, the key binds the link to this calculation's file
+    $key = md5($filename);
+    $_SESSION[$this->code]['contracts'][$key] = $filename;
+
+    return str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=get_payone_pdf&doc=contract&key='.$key, 'SSL'));
   }
   
 	function _paymentDataFormProcess($active_genre_identifier) {
