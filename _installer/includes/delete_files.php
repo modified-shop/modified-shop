@@ -420,6 +420,7 @@
     'includes/external/klarna/class.xtcDBResult.php',
     'includes/external/klarna/class.xtcFormatter.php',
     'includes/external/klarna/class.xtcKlarnaDB.php',
+    'includes/external/klarna/css/stylesheet.css',
     'includes/external/klarna/interface.KlarnaDB.php',
     'includes/external/klarna/interface.KlarnaDBResult.php',
     'includes/external/klarna/modules/address_update.php',
