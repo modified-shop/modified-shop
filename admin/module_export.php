@@ -415,7 +415,20 @@ if (xtc_not_null($action) && !$box) {
                         <?php
                         $directories_array = create_directory_array($module_directory,$file_extension);
                         $installed_modules = array();
-                        foreach ($directories_array as $directory_array) {
+                        $spacer = false;
+                        foreach ($directories_array as $key => $directory_array) {
+                          if ($spacer) echo '<tr><td colspan="4" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
+                          ?>
+                          <tr class="dataTableHeadingRow sub">
+                            <td colspan="4" class="dataTableHeadingContent txta-c" ><?php echo (($key == 0) ? TABLE_HEADING_MODULES_INSTALLED : TABLE_HEADING_MODULES_NOT_INSTALLED); ?></td>
+                          </tr>
+                          <tr class="dataTableHeadingRow">
+                            <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                            <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
+                            <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                            <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
+                          </tr>
+                          <?php
                           for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
                             $file = $directory_array[$i];
                             if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
@@ -432,34 +445,6 @@ if (xtc_not_null($action) && !$box) {
                               if (($module_class == '' || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
                                 $module_info = get_module_info($module);
                                 $mInfo = new objectInfo($module_info);
-                              }
-                              if ($module->check() > 0 && !isset($installed)) {
-                                $installed = true;
-                                ?>
-                                <tr class="dataTableHeadingRow sub">
-                                  <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
-                                </tr>
-                                <tr class="dataTableHeadingRow">
-                                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
-                                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
-                                  <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
-                                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
-                                </tr>
-                                <?php
-                              } elseif ($module->check() < 1 && !isset($deinstalled) && isset($installed)) {
-                                $deinstalled = true;
-                                ?>
-                                <tr><td colspan="3" style="height:35px;">&nbsp;</td></tr>
-                                <tr class="dataTableHeadingRow sub">
-                                  <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
-                                </tr>
-                                <tr class="dataTableHeadingRow">
-                                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
-                                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
-                                  <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
-                                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
-                                </tr>
-                                <?php
                               }
 
                               if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
@@ -492,7 +477,9 @@ if (xtc_not_null($action) && !$box) {
                               <?php
                             }
                           }
+                          $spacer = true;
                         }
+                        if ($spacer) echo '<tr><td colspan="4">&nbsp;</td></tr>'.PHP_EOL;
                         
                         ksort($installed_modules);
                         $installed_modules = array_reduce($installed_modules, 'array_merge', array());
