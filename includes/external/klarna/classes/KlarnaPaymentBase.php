@@ -217,7 +217,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
                     if (result.finalize_required === true) {
                       Klarna.Payments.finalize({
                         payment_method_category: "'.$this->klarna_code.'"
-                      },
+                      }, {},
                       function(finalresult) {
                         $("#checkout_confirmation").append(\'<input type="hidden" name="klarna['.$this->klarna_code.'][payment_method]" value="'.$this->klarna_code.'">\');
                         $.each(finalresult, function (key, val) {
