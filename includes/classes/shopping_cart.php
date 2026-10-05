@@ -707,7 +707,7 @@ class shoppingCart {
    * get_product
    *
    * @param $products_id
-   * @return array
+   * @return array|false
    */
   function get_product($products_id) {
     global $xtPrice;
@@ -718,11 +718,14 @@ class shoppingCart {
     }
     
     if (!isset($products_array[(int)$products_id])) {
+      $products_array[(int)$products_id] = false;
       $product_query = xtc_db_query("SELECT *
                                        FROM ".TABLE_PRODUCTS."
                                       WHERE products_id = '".(int)$products_id."'");
-      $products_array[(int)$products_id] = xtc_db_fetch_array($product_query);
-      $products_array[(int)$products_id]['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($products_id, $products_array[(int)$products_id]['products_tax_class_id']);
+      if (xtc_db_num_rows($product_query) > 0) {
+        $products_array[(int)$products_id] = xtc_db_fetch_array($product_query);
+        $products_array[(int)$products_id]['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($products_id, $products_array[(int)$products_id]['products_tax_class_id']);
+      }
     }
     
     return $products_array[(int)$products_id];
@@ -841,6 +844,8 @@ class shoppingCart {
 
               $products_array[$this->type][$index++] = $products_data;
             }
+          } elseif ($this->check_products_status_permission($products_id) === false) {
+            $this->remove($products_id);
           }
         }
       }
@@ -1056,7 +1061,7 @@ class shoppingCart {
       foreach ($this->contents as $products_id => $data) {
         $no_count = false;
         $gv_result = $this->get_product($products_id);
-        if (preg_match('/^GIFT/', $gv_result['products_model'])) {
+        if ($gv_result !== false && preg_match('/^GIFT/', $gv_result['products_model'])) {
           $no_count = true;
         }
 
