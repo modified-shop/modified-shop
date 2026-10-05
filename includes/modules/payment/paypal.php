@@ -140,7 +140,13 @@ class paypal extends PayPalPaymentV2 {
       ';
     }
     
-    $process_button .= sprintf($this->get_js_sdk('true', false, $this->GenerateUserToken()->tokenId), $paypalscript, "$('#checkout_confirmation').replaceWith('".$info."');");
+    $user_token = false;
+    $access_token = $this->GenerateUserToken();
+    if (is_object($access_token) && !empty($access_token->tokenId)) {
+      $user_token = $access_token->tokenId;
+    }
+
+    $process_button .= sprintf($this->get_js_sdk('true', false, $user_token), $paypalscript, "$('#checkout_confirmation').replaceWith('".$info."');");
     
     return $process_button;
   }

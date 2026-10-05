@@ -76,7 +76,10 @@
             
       if ($paypal->is_enabled()) {
         if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SAVE_PAYMENT') == '1') {
-          $paypal_user_token = $paypal->GenerateUserToken()->tokenId;
+          $paypal_access_token = $paypal->GenerateUserToken();
+          if (is_object($paypal_access_token) && !empty($paypal_access_token->tokenId)) {
+            $paypal_user_token = $paypal_access_token->tokenId;
+          }
         }
         
         $action = '';
