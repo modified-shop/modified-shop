@@ -262,6 +262,7 @@ class seo_url_shopstat extends modified_seo_url {
         $content_name_query = xtDBquery("SELECT content_title
                                            FROM ".TABLE_CONTENT_MANAGER."
                                           WHERE content_group = '".(int)$this->params_array['coID']."'
+                                            AND content_active = '1'
                                             AND languages_id = '".(int)$this->language_id."'");
         if (xtc_db_num_rows($content_name_query, true) > 0) {
           $content_name = xtc_db_fetch_array($content_name_query, true);
