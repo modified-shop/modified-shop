@@ -10,20 +10,12 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  require_once(DIR_FS_INC.'split_multi_language_value.inc.php');
+
   function parse_multi_language_value($text, $lang_code, $admin=false) {    
     
     if (xtc_not_null($text)) {
-      $text_array = explode("||",$text);
-      $lang_array = array();
-      foreach ($text_array as $val) {
-        $val_array = explode ("::", $val);
-        if (count($val_array) == 2) {
-          if (!empty($val_array[1])) {
-            $lang_array[trim(strtolower($val_array[0]))] = trim($val_array[1]);
-          }
-        }
-        unset ($val_array);
-      }
+      $lang_array = split_multi_language_value($text);
       
       if (count($lang_array) == 0) {
         if ($admin === true && $lang_code == DEFAULT_LANGUAGE) {
