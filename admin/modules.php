@@ -36,7 +36,6 @@
     'paypalcard',
     'paypalexpress',
     'paypalsepa',
-    'paypalsubscription',
 
     'paypalapplepay',
     'paypalgooglepay',
@@ -49,6 +48,20 @@
     'paypalbancontact',
   );
   
+  $deprecated_modules = array(
+    'klarna_directbanktransfer',
+    'klarna_directdebit',
+    'klarna_paylater',
+    'klarna_paynow',
+    'klarna_payovertime',
+    'paypalcart',
+    'paypalclassic',
+    'paypallink',
+    'paypalplus',
+    'paypalpluslink',
+    'paypalsubscription',
+  );
+
   //Eingefügt um Fehler in CC Modul zu unterdrücken.
   require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'xtcPrice.php');
   $xtPrice = new xtcPrice($_SESSION['currency'],'');
@@ -397,6 +410,7 @@ if (xtc_not_null($action) && !$box) {
                 'installed' => array(),
                 'preferred' => array(),
                 'uninstalled' => array(),
+                'deprecated' => array(),
               );
 
               foreach(auto_include($module_directory,$file_extension) as $file) {
@@ -421,6 +435,8 @@ if (xtc_not_null($action) && !$box) {
                       $directory_array['installed'][get_module_configuration_sorting($directory_array['installed'], $module->sort_order)] = $filename;
                     } elseif (in_array($class, $preferred_modules)) {
                       $directory_array['preferred'][] = $filename;
+                    } elseif (in_array($class, $deprecated_modules)) {
+                      $directory_array['deprecated'][] = $filename;
                     } else {
                       $directory_array['uninstalled'][] = $filename;
                     }
@@ -447,6 +463,7 @@ if (xtc_not_null($action) && !$box) {
                 <table class="tableBoxCenter collapse">
                   <?php
                   $installed_modules = array();
+                  $spacer = false;
                 
                   if (count($directory_array['installed']) > 0) {
                     ?>
@@ -462,10 +479,11 @@ if (xtc_not_null($action) && !$box) {
                     </tr>
                     <?php
                     output_modules($directory_array['installed']);
-                    echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
+                    $spacer = true;
                   }
 
                   if (count($directory_array['preferred']) > 0) {
+                    if ($spacer) echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
                     ?>
                     <tr class="dataTableHeadingRow sub">
                       <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_PREFERRED; ?></td>
@@ -479,10 +497,11 @@ if (xtc_not_null($action) && !$box) {
                     </tr>
                     <?php
                     output_modules($directory_array['preferred']);
-                    echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
+                    $spacer = true;
                   }
 
                   if (count($directory_array['uninstalled']) > 0) {
+                    if ($spacer) echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
                     ?>
                     <tr class="dataTableHeadingRow sub">
                       <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
@@ -496,8 +515,26 @@ if (xtc_not_null($action) && !$box) {
                     </tr>
                     <?php
                     output_modules($directory_array['uninstalled']);
+                    $spacer = true;
                   }
                   
+                  if (count($directory_array['deprecated']) > 0) {
+                    if ($spacer) echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
+                    ?>
+                    <tr class="dataTableHeadingRow sub">
+                      <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_DEPRECATED; ?></td>
+                    </tr>
+                    <tr class="dataTableHeadingRow">
+                      <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                      <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                    </tr>
+                    <?php
+                    output_modules($directory_array['deprecated']);
+                  }
+
                   ksort($installed_modules);
                   $installed_modules = array_reduce($installed_modules, 'array_merge', array());
                   if ($module_key) {
