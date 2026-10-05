@@ -11,8 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 if (isset($order) && is_object($order)) {
-  if ($order->info['payment_method'] == 'klarna_checkout' 
-      || $order->info['payment_method'] == 'klarna_paylater'
+  if ($order->info['payment_method'] == 'klarna_paylater'
       || $order->info['payment_method'] == 'klarna_payovertime'
       || $order->info['payment_method'] == 'klarna_directdebit'
       || $order->info['payment_method'] == 'klarna_directbanktransfer'
