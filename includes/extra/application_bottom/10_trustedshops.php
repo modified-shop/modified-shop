@@ -77,19 +77,19 @@
           $paymenttype = 'PAYPAL';
           break;
         case 'mcp_creditcard':
-        case 'mcp_debit':
         case 'payone_cc':
           $paymenttype = 'CREDIT_CARD';
           break;
         case 'banktransfer':
         case 'payone_elv':
+        case 'mcp_debit':
+        case 'klarna_directdebit':
           $paymenttype = 'DIRECT_DEBIT';
           break;
         case 'moneyorder':
         case 'eustandardtransfer':
         case 'mcp_prepay':
         case 'payone_prepay':
-        case 'klarna_directdebit':
           $paymenttype = 'PREPAYMENT';
           break;
         case 'cash':
