@@ -46,7 +46,6 @@ $lang_array = array(
   'TEXT_KLARNA_REFUND_SUBMIT' => 'R&uuml;ckerstatten',
   'TEXT_KLARNA_CANCEL_SUBMIT' => 'Bestellung Stornieren',
 
-  'TEXT_KLARNA_CHECKOUT_ERROR' => 'Es ist ein Fehler bei der Verarbeitung der Zahlung aufgetreten.',
   'TEXT_KLARNA_NO_INFORMATION' => 'Keine Zahlungsdetails vorhanden',
 );
 

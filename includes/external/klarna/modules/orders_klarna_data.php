@@ -11,12 +11,12 @@
    ---------------------------------------------------------------------------------------*/
 
 if (isset($order) && is_object($order)) {
-  if ($order->info['payment_method'] == 'klarna_checkout' 
-      || $order->info['payment_method'] == 'klarna_paylater'
+  if ($order->info['payment_method'] == 'klarna_paylater'
       || $order->info['payment_method'] == 'klarna_payovertime'
       || $order->info['payment_method'] == 'klarna_directdebit'
       || $order->info['payment_method'] == 'klarna_directbanktransfer'
       || $order->info['payment_method'] == 'klarna_paynow'
+      || $order->info['payment_method'] == 'klarna_klarna'
       ) 
   {
     require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
