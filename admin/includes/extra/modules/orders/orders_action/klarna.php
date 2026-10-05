@@ -20,8 +20,8 @@ if (isset($_GET['subaction'])
   require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
 
   $order = new order((int)$_GET['oID']);
-  $klarna = new KlarnaPayment($order->info['payment_method']);
-  $order_id = $klarna->get_klarna_order($order->info['order_id']);
+  $klarna_payment = new KlarnaPayment($order->info['payment_method']);
+  $order_id = $klarna_payment->get_klarna_order($order->info['order_id']);
   $amount = preg_replace('/[^0-9,.%]/', '', ((isset($_POST['amount']) && is_string($_POST['amount'])) ? $_POST['amount'] : ''));
   // the last separator marks the decimals, anything left non-numeric like % is rejected
   $amount_comma = strrpos($amount, ',');
@@ -53,16 +53,16 @@ if (isset($_GET['subaction'])
   $amount = ((is_numeric($amount)) ? (float)$amount : 0);
   
   if (isset($_POST['cancel_submit'])) {
-    $_SESSION['klarna_success'] = $klarna->cancelOrder($order_id);
+    $_SESSION['klarna_success'] = $klarna_payment->cancelOrder($order_id);
   } else {
     if ($amount > 0) {
       switch ($_POST['cmd']) {
         case 'refund':
-          $_SESSION['klarna_success'] = $klarna->refundOrder($amount, $order_id, xtc_db_prepare_input($_POST['description']));
+          $_SESSION['klarna_success'] = $klarna_payment->refundOrder($amount, $order_id, xtc_db_prepare_input($_POST['description']));
           break;
 
         case 'capture':
-          $_SESSION['klarna_success'] = $klarna->captureOrder($amount, $order_id);
+          $_SESSION['klarna_success'] = $klarna_payment->captureOrder($amount, $order_id);
           break;
       }
     } else {

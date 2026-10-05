@@ -57,8 +57,8 @@ if ($klarna_token === '' || $check['notify_token'] === '' || !hash_equals($check
   exit;
 }
 
-$klarna = new KlarnaPayment($check['payment_method']);
-if ($klarna->resolveFraudStatus((int)$check['orders_id'], $klarna_event_type) === false) {
+$klarna_payment = new KlarnaPayment($check['payment_method']);
+if ($klarna_payment->resolveFraudStatus((int)$check['orders_id'], $klarna_event_type) === false) {
   // status request or capture failed, let Klarna retry later
   http_response_code(503);
   exit;

@@ -10,40 +10,14 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-$lang_array = array(
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_TITLE' => '',
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_DESCRIPTION' => 'Before you can set up Klarna Payments payment methods, it is necessary to open a merchant account with Klarna. You will then receive information and login details needed to set up the account. If you already have a Klarna customer number but it is not in the Kxxxxxx scheme, please send an e-mail to <a href="mailto:vertrieb@klarna.com">vertrieb@klarna.com</a>.<br /><br />
-    <img src="../lang/english/admin/images/icon.gif" border="0" />
-    <a href="https://www.klarna.com/uk/business/" target="_blank" style="text-decoration: underline; font-weight: bold;">Create Klarna account now.</a>
-    <img src="images/icon_popup.gif" border="0" />',
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_INFO' => '',
-  'MODULE_PAYMENT_'.$klarna_code.'_ALLOWED_TITLE' => 'Allowed zones',
-  'MODULE_PAYMENT_'.$klarna_code.'_ALLOWED_DESC' => 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))',
-  'MODULE_PAYMENT_'.$klarna_code.'_STATUS_TITLE' => 'Enable Module',
-  'MODULE_PAYMENT_'.$klarna_code.'_STATUS_DESC' => 'Do you want to accept payments through this module?',
-  'MODULE_PAYMENT_'.$klarna_code.'_SORT_ORDER_TITLE' => 'Sort order',
-  'MODULE_PAYMENT_'.$klarna_code.'_SORT_ORDER_DESC' => 'Sort order of display. Lowest is displayed first.',
-  'MODULE_PAYMENT_'.$klarna_code.'_ZONE_TITLE' => 'Payment zone',
-  'MODULE_PAYMENT_'.$klarna_code.'_ZONE_DESC' => 'If a zone is chosen, the payment method will be valid for this zone only.',
-  'MODULE_PAYMENT_'.$klarna_code.'_ORDER_STATUS_ID_TITLE' => 'Set Order Status',
-  'MODULE_PAYMENT_'.$klarna_code.'_ORDER_STATUS_ID_DESC' => 'Set the status of orders made with this payment module to this value',
-  'MODULE_PAYMENT_'.$klarna_code.'_CAPTURE_TITLE' => 'Activate',
-  'MODULE_PAYMENT_'.$klarna_code.'_CAPTURE_DESC' => 'Shall the order be activated automatically?',
+// texts of the module klarna, the texts shared by all Klarna modules are in klarna_shared.php
+$klarna_code = 'KLARNA';
+include(DIR_FS_CATALOG.'lang/english/modules/payment/klarna_shared.php');
 
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_HEADING' => 'Klarna',
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_MESSAGE' => 'The payment was cancelled.',
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_TITLE'] = 'Klarna';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_MESSAGE'] = 'The payment with Klarna was cancelled.';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_INSTALL_NOTE'] = '<br /><br /><b>Note:</b> Klarna is inactive after the installation. Check the order status, capture and zones, then set the status to Yes. While Klarna is active, the checkout hides the old Klarna modules.<br /><br />Rules that name only the codes of the old modules do not apply to klarna. Add <b>klarna</b> as well to: the not allowed payment methods of the customer groups and the customers, Disallowed Download Payment Modules, the disallowed payment modules of the coupon, Payment methods depending on shipping method, and Payment type discount &amp; surcharge. The check &quot;Check Klarna&quot; shows where an old code is still left.';
 
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_VERSION' => '<b>Module version</b><br/>',
-
-  'MODULE_PAYMENT_KLARNA_MERCHANT_ID_TITLE' => 'Username',
-  'MODULE_PAYMENT_KLARNA_MERCHANT_ID_DESC' => 'Klarna API Username',
-  'MODULE_PAYMENT_KLARNA_SHARED_SECRET_TITLE' => 'Password',
-  'MODULE_PAYMENT_KLARNA_SHARED_SECRET_DESC' => 'Klarna API Password',
-  'MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID_TITLE' => 'Order status fraud review',
-  'MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID_DESC' => 'Set orders that Klarna is still reviewing for fraud to this status. The order is captured only after Klarna accepts it.',
-  'MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID_TITLE' => 'Order status rejection',
-  'MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID_DESC' => 'Set orders that Klarna rejects after the review to this status.',
-  'MODULE_PAYMENT_KLARNA_MODE_TITLE' => 'Mode',
-  'MODULE_PAYMENT_KLARNA_MODE_DESC' => 'Klarna Mode',
-  'MODULE_PAYMENT_KLARNA_TEXT' => 'Klarna',
-);
+foreach ($lang_array as $key => $val) {
+  defined($key) or define($key, $val);
+}

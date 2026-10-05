@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 $klarna_code = 'KLARNA_EXPRESS';
-include(DIR_FS_CATALOG.'lang/german/modules/payment/klarna.php');
+include(DIR_FS_CATALOG.'lang/german/modules/payment/klarna_shared.php');
 
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_TITLE'] = 'Klarna Express Checkout';
 $lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_SELECTION'] = 'Klarna';

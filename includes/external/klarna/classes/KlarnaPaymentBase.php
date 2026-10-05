@@ -27,6 +27,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   var $enabled;
   var $order_status;
   var $_check;
+  var $properties = array();
 
   var $klarna_version;
 
@@ -42,6 +43,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     $this->klarna_version = '1.24';
     
     $this->title = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '';
+    if ((defined('DIR_WS_INSTALLER') || defined('RUN_MODE_ADMIN')) && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ADMIN_TITLE')) {
+      $this->title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ADMIN_TITLE');
+    }
     $this->description = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') : '';
     $this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : '');
     $this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
@@ -64,14 +68,47 @@ class KlarnaPaymentBase extends KlarnaAutoload {
         self::$klarna_updated = true;
         $this->klarna_update();
       }
+    } elseif ($this->config_code() != $this->code) {
+      // open orders of an uninstalled old module are resolved with the settings of klarna
+      $this->order_status = DEFAULT_ORDERS_STATUS_ID;
+      if ((int)constant('MODULE_PAYMENT_'.strtoupper($this->config_code()).'_ORDER_STATUS_ID') > 0) {
+        $this->order_status = (int)constant('MODULE_PAYMENT_'.strtoupper($this->config_code()).'_ORDER_STATUS_ID');
+      }
     }
     
     KlarnaAutoload::register();
   }
 
 
+  // an old module that is no longer installed takes the settings of the module klarna for its open orders
+  function config_code() {
+    if (!defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS')
+        && in_array($this->code, klarna_legacy_modules(), true)
+        && defined('MODULE_PAYMENT_KLARNA_STATUS')
+        && defined('MODULE_PAYMENT_KLARNA_ORDER_STATUS_ID')
+        )
+    {
+      return 'klarna';
+    }
+
+    return $this->code;
+  }
+
+
   function update_status() {
     global $order, $PHP_SELF;
+    
+    // the old category modules step back while the module klarna is on, its popup offers every method
+    if ($this->enabled == true
+        && in_array($this->code, klarna_legacy_modules(), true)
+        && defined('MODULE_PAYMENT_KLARNA_STATUS')
+        && MODULE_PAYMENT_KLARNA_STATUS == 'True'
+        && defined('MODULE_PAYMENT_INSTALLED')
+        && in_array('klarna.php', explode(';', MODULE_PAYMENT_INSTALLED), true)
+        )
+    {
+      $this->enabled = false;
+    }
     
     if ($this->enabled == true && $this->zone_allowed() === false) {
       $this->enabled = false;
@@ -110,6 +147,8 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     {
       $this->getKlarnaSession();
     }
+    
+    $this->choose_category();
         
     if ($this->enabled == true
         && isset($_SESSION['klarna'])
@@ -148,6 +187,16 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     {
       $this->enabled = false;
     }
+    
+    // a script from an earlier page view would load into a container that is gone
+    if ($this->enabled == false && isset($_SESSION['klarna']['script'][$this->klarna_code])) {
+      unset($_SESSION['klarna']['script'][$this->klarna_code]);
+    }
+  }
+
+
+  // a module with a fixed category keeps it, the module klarna takes one of the Klarna session
+  function choose_category() {
   }
 
 
@@ -529,8 +578,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 	function get_error() {
 		$error = false;
 		if (isset($_GET['payment_error']) && $_GET['payment_error'] != '') {
-			$error = array('title' => constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_HEADING'),
-			               'error' => decode_utf8(decode_htmlentities(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE')))
+			// a language pack without the texts of this module must not fatal
+			$error = array('title' => ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_HEADING')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_HEADING') : 'Klarna'),
+			               'error' => ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE')) ? decode_utf8(decode_htmlentities(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE'))) : 'The payment was cancelled.')
 			               );
 		}
 		
@@ -799,19 +849,31 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   }
 
 
-  function keys() {
-    return array (
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS', 
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_ALLOWED', 
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE',
+  // the settings every Klarna module shows and none of them owns
+  public static function shared_keys() {
+    return array(
       'MODULE_PAYMENT_KLARNA_MERCHANT_ID',
       'MODULE_PAYMENT_KLARNA_SHARED_SECRET',
       'MODULE_PAYMENT_KLARNA_MODE',
       'MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID',
       'MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID',
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID', 
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER', 
-      'MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE',
+    );
+  }
+
+
+  function keys() {
+    return array_merge(
+      array(
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS', 
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_ALLOWED', 
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE',
+      ),
+      self::shared_keys(),
+      array(
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID', 
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER', 
+        'MODULE_PAYMENT_'.strtoupper($this->code).'_CAPTURE',
+      )
     );
   }
 

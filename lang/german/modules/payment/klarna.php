@@ -10,40 +10,14 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-$lang_array = array(
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_TITLE' => '',
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_DESCRIPTION' => 'Bevor Sie die Klarna Payments Zahlungsarten einrichten k&ouml;nnen, ist die Er&ouml;ffnung eines Kontos f&uuml;r H&auml;ndler bei Klarna erforderlich. Sie erhalten im Anschluss Informationen sowie Zugangsdaten, die Sie f&uuml;r das Einrichten ben&ouml;tigen. Sollten Sie bereits eine Kundennummer bei Klarna haben, diese aber nicht nach Schema Kxxxxxx ist, senden Sie bitte eine E-Mail an <a href="mailto:vertrieb@klarna.com">vertrieb@klarna.com</a>.<br /><br />
-    <img src="../lang/german/admin/images/icon.gif" border="0" />
-    <a href="https://www.klarna.com/de/verkaeufer/" target="_blank" style="text-decoration: underline; font-weight: bold;">Jetzt Klarna Konto hier erstellen.</a>
-    <img src="images/icon_popup.gif" border="0" />',
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_INFO' => '',
-  'MODULE_PAYMENT_'.$klarna_code.'_ALLOWED_TITLE' => 'Erlaubte Zonen',
-  'MODULE_PAYMENT_'.$klarna_code.'_ALLOWED_DESC' => 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))',
-  'MODULE_PAYMENT_'.$klarna_code.'_STATUS_TITLE' => 'Modul aktivieren',
-  'MODULE_PAYMENT_'.$klarna_code.'_STATUS_DESC' => 'M&ouml;chten Sie Zahlungen mit diesem Modul akzeptieren?',
-  'MODULE_PAYMENT_'.$klarna_code.'_SORT_ORDER_TITLE' => 'Anzeigereihenfolge',
-  'MODULE_PAYMENT_'.$klarna_code.'_SORT_ORDER_DESC' => 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt',
-  'MODULE_PAYMENT_'.$klarna_code.'_ZONE_TITLE' => 'Zahlungszone',
-  'MODULE_PAYMENT_'.$klarna_code.'_ZONE_DESC' => 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.',
-  'MODULE_PAYMENT_'.$klarna_code.'_ORDER_STATUS_ID_TITLE' => 'Bestellstatus festlegen',
-  'MODULE_PAYMENT_'.$klarna_code.'_ORDER_STATUS_ID_DESC' => 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen',
-  'MODULE_PAYMENT_'.$klarna_code.'_CAPTURE_TITLE' => 'Aktivieren',
-  'MODULE_PAYMENT_'.$klarna_code.'_CAPTURE_DESC' => 'Soll die Bestellung automatisch aktiviert werden?',
+// texts of the module klarna, the texts shared by all Klarna modules are in klarna_shared.php
+$klarna_code = 'KLARNA';
+include(DIR_FS_CATALOG.'lang/german/modules/payment/klarna_shared.php');
 
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_HEADING' => 'Klarna',
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_MESSAGE' => 'Die Zahlung wurde abgebrochen.',
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_TITLE'] = 'Klarna';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_MESSAGE'] = 'Die Zahlung mit Klarna wurde abgebrochen.';
+$lang_array['MODULE_PAYMENT_'.$klarna_code.'_TEXT_INSTALL_NOTE'] = '<br /><br /><b>Hinweis:</b> Nach der Installation ist Klarna inaktiv. Pr&uuml;fen Sie Bestellstatus, Capture und Zonen, dann setzen Sie den Status auf Ja. Solange Klarna aktiv ist, blendet der Checkout die alten Klarna-Module aus.<br /><br />Regeln, die nur die Codes der alten Module nennen, gelten nicht f&uuml;r klarna. Tragen Sie <b>klarna</b> zus&auml;tzlich ein bei: Nicht erlaubte Zahlungsweisen der Kundengruppen und der Kunden, Unerlaubte Download-Zahlungsmodule, Unerlaubte Zahlungsmodule des Gutscheins, Zahlarten abh&auml;ngig von der Versandart und Rabatt &amp; Zuschlag auf Zahlungsarten. Die Pr&uuml;fung &quot;Klarna pr&uuml;fen&quot; zeigt, wo noch ein alter Code steht.';
 
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_VERSION' => '<b>Modul Version</b><br/>',
-
-  'MODULE_PAYMENT_KLARNA_MERCHANT_ID_TITLE' => 'Benutzername',
-  'MODULE_PAYMENT_KLARNA_MERCHANT_ID_DESC' => 'Klarna API Benutzername',
-  'MODULE_PAYMENT_KLARNA_SHARED_SECRET_TITLE' => 'Passwort',
-  'MODULE_PAYMENT_KLARNA_SHARED_SECRET_DESC' => 'Klarna API Passwort',
-  'MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID_TITLE' => 'Bestellstatus Betrugspr&uuml;fung',
-  'MODULE_PAYMENT_KLARNA_PENDING_STATUS_ID_DESC' => 'Bestellungen, die Klarna noch auf Betrug pr&uuml;ft, auf diesen Status setzen. Erst nach der Freigabe durch Klarna wird die Zahlung aktiviert.',
-  'MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID_TITLE' => 'Bestellstatus Ablehnung',
-  'MODULE_PAYMENT_KLARNA_REJECTED_STATUS_ID_DESC' => 'Bestellungen, die Klarna nach der Pr&uuml;fung ablehnt, auf diesen Status setzen.',
-  'MODULE_PAYMENT_KLARNA_MODE_TITLE' => 'Mode',
-  'MODULE_PAYMENT_KLARNA_MODE_DESC' => 'Klarna Mode',
-  'MODULE_PAYMENT_KLARNA_TEXT' => 'Klarna',
-);
+foreach ($lang_array as $key => $val) {
+  defined($key) or define($key, $val);
+}
