@@ -443,6 +443,35 @@ $values_group_update = array();
   $values[] = "(NULL, 'META_BING_VERIFICATION_KEY', '', '16', '26', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'SEO_URL_MOD_CLASS', 'seo_url_shopstat', '16', '13', NULL, NOW(), NULL, 'xtc_cfg_select_mod_seo_url(');";
 
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '16', set_function = 'xtc_cfg_input_email_language;META_AUTHOR'",
+                           'configuration_key' => 'META_AUTHOR'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '16', set_function = 'xtc_cfg_input_email_language;META_PUBLISHER'",
+                           'configuration_key' => 'META_PUBLISHER'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '16', set_function = 'xtc_cfg_input_email_language;META_COMPANY'",
+                           'configuration_key' => 'META_COMPANY'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '16', set_function = 'xtc_cfg_input_email_language;META_TOPIC'",
+                           'configuration_key' => 'META_TOPIC'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '16', set_function = 'xtc_cfg_input_email_language;META_REPLY_TO'",
+                           'configuration_key' => 'META_REPLY_TO'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '16', set_function = 'xtc_cfg_input_email_language;META_DESCRIPTION'",
+                           'configuration_key' => 'META_DESCRIPTION'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '16', set_function = 'xtc_cfg_input_email_language;META_KEYWORDS'",
+                           'configuration_key' => 'META_KEYWORDS'
+                           );
+
 //configuration_group_id 17 --- "Zusatzmodule"
   $values_group[] = "(17,'Additional Modules','Additional Modules',17,1);";
   $values[] = "(NULL, 'SAVE_IP_LOG', 'false', 17, 11, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\', \'xxx\'),');";
