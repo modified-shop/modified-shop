@@ -34,7 +34,7 @@ class paypalexpress extends PayPalPaymentV2 {
 			$this->update_status();
 		}
 
-    if (isset($_POST['comments'])) {
+    if (isset($_POST['comments']) && is_string($_POST['comments'])) {
       $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
     }
   }

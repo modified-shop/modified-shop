@@ -297,9 +297,12 @@ class PayPalPaymentBase extends PayPalCommon {
     
     // process the selected shipping method
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
+      // shipping_action.php reads the value as a string too, a crafted array takes the path of a missing selection
+      if (isset($_POST['shipping']) && !is_string($_POST['shipping'])) {
+        unset($_POST['shipping']);
+      }
       if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
         list ($module, $method) = explode('_', $_POST['shipping']);
-        global ${$module};
       }
 
       $total_weight = $_SESSION['cart']->show_weight();
@@ -320,6 +323,11 @@ class PayPalPaymentBase extends PayPalCommon {
       // load all enabled shipping modules
       require_once (DIR_WS_CLASSES.'shipping.php');
       $shipping_modules = new shipping;
+
+      // a name like "this" must not become a global
+      if (isset($module) && ($module == 'free' || in_array($module.'.php', $shipping_modules->modules))) {
+        global ${$module};
+      }
             
       $redirect_link = xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')), 'SSL');
       require(DIR_WS_INCLUDES.'shipping_action.php');
@@ -629,8 +637,14 @@ class PayPalPaymentBase extends PayPalCommon {
           )
       {
         $error = false;
-        if ($_POST['comments_added'] != '') {
-          $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
+        // only the text of the comment field, an array would break the order insert
+        if (isset($_POST['comments_added']) && $_POST['comments_added'] != ''
+            && (!isset($_POST['comments']) || is_string($_POST['comments']))
+            )
+        {
+          $_SESSION['comments'] = xtc_db_prepare_input((isset($_POST['comments'])) ? $_POST['comments'] : '');
+          // checkout_process has built $order before this hook
+          $order->info['comments'] = $_SESSION['comments'];
         }
         if (((defined('SIGN_CONDITIONS_ON_CHECKOUT') && SIGN_CONDITIONS_ON_CHECKOUT == 'true')
              || (!defined('SIGN_CONDITIONS_ON_CHECKOUT') && DISPLAY_CONDITIONS_ON_CHECKOUT == 'true')
