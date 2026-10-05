@@ -479,6 +479,7 @@ if (xtc_not_null($action) && !$box) {
                           }
                           $spacer = true;
                         }
+                        if ($spacer) echo '<tr><td colspan="4" style="height:20px;">&nbsp;</td></tr>'.PHP_EOL;
                         
                         ksort($installed_modules);
                         $installed_modules = array_reduce($installed_modules, 'array_merge', array());
