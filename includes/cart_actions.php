@@ -256,6 +256,9 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                                                  products_fsk18
                                            from " . TABLE_PRODUCTS . "
                                           where products_id='" . $_GET['BUYproducts_id'] . "'");
+        if (xtc_db_num_rows($permission_query) < 1) {
+          xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
+        }
         $permission = xtc_db_fetch_array($permission_query);
 
         // check for FSK18
