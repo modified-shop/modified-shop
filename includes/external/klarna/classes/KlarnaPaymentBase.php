@@ -639,13 +639,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function remove() {
-    $check_query = xtc_db_query("SELECT configuration_key 
-                                   FROM ".TABLE_CONFIGURATION." 
-                                  WHERE configuration_key LIKE 'MODULE_PAYMENT_KLARNA%_STATUS'");
-    if (xtc_db_num_rows($check_query) == 1) {			
-      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_KLARNA_PAYMENTS);
-    }
-
+    // keep TABLE_KLARNA_PAYMENTS, it holds the Klarna order id of past orders
     xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." 
                         WHERE configuration_key LIKE 'MODULE_PAYMENT_".strtoupper($this->code)."\_%'");
   }

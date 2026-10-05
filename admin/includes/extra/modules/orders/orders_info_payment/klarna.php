@@ -18,6 +18,7 @@ if (isset($order) && is_object($order)) {
       || $order->info['payment_method'] == 'klarna_directdebit'
       || $order->info['payment_method'] == 'klarna_directbanktransfer'
       || $order->info['payment_method'] == 'klarna_paynow'
+      || $order->info['payment_method'] == 'klarna_klarna'
       ) 
   {
     require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
