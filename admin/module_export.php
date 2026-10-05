@@ -507,7 +507,7 @@ if (xtc_not_null($action) && !$box) {
                         }
                         ?>
                       </table>
-                      <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . $module_directory_include; ?></div>
+                      <div class="smallText pdg2" style="margin-top:20px;"><?php echo TEXT_MODULE_DIRECTORY . $module_directory_include; ?></div>
                     </td>
                     <?php
                 }
