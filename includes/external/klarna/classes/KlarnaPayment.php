@@ -191,7 +191,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
     $check['context']['country'] = $country['countries_iso_code_2'];
     
     $order_array = array(
-      'locale' => strtolower((isset($_SESSION['language_code'])) ? $_SESSION['language_code'] : 'en').'-'.strtoupper($country['countries_iso_code_2']),
+      // the same supported language-country choice as the checkout, e.g. en-GB for a German admin
+      'locale' => $this->get_locale($country['countries_iso_code_2']),
       'purchase_country' => $country['countries_iso_code_2'],
       'purchase_currency' => $check['context']['currency'],
       'order_amount' => 10000,
@@ -730,7 +731,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
     );
 
     $country_iso = strtoupper($country_iso);
-    $language = strtolower($_SESSION['language_code']);
+    $language = strtolower((isset($_SESSION['language_code'])) ? $_SESSION['language_code'] : '');
     if ($language == 'no') {
       $language = 'nb';
     }
