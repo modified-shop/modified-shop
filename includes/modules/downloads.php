@@ -23,7 +23,7 @@ if (!function_exists('xtc_date_long')) {
 
 $module_smarty = new Smarty();
 
-$customer_id = (int)$_SESSION['customer_id'];
+$customer_id = (int)(isset($send_order_customer_id) ? $send_order_customer_id : $_SESSION['customer_id']);
 $language = $_SESSION['language'];
 
 if (isset($send_order)) {

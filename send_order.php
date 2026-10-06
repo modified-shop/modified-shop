@@ -26,8 +26,9 @@ $order_query_check = xtc_db_query("SELECT customers_id
                                     WHERE orders_id='".(int)$insert_id."'");
 $order_check = xtc_db_fetch_array($order_query_check);
 
-if ((isset($_SESSION['customer_id']) 
-     && $_SESSION['customer_id'] == $order_check['customers_id']
+if ((isset($send_order_customer_id)
+     ? $send_order_customer_id == $order_check['customers_id']
+     : (isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check['customers_id'])
      ) || (isset($send_by_admin) && $send_by_admin == true)
     )
 {
