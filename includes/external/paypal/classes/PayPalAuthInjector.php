@@ -86,6 +86,10 @@ class PayPalAuthInjector extends AuthorizationInjector {
         }
         fclose($cache_handle);
       }
+      // a file that cannot be decrypted, e.g. plaintext from an older version, goes at once
+      if ($cached === false) {
+        @unlink($this->cache_file);
+      }
       if (is_array($cached)
           && isset($cached['cache_key'])
           && hash_equals($this->cache_key, $cached['cache_key'])
