@@ -102,7 +102,7 @@ require (DIR_WS_INCLUDES.'head.php');
 
             while ($configuration = xtc_db_fetch_array($configuration_query)) {
               if ($configuration['set_function']) {
-                eval('$value_field = ' . $configuration['set_function'] . '"' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
+                eval('$value_field = ' . $configuration['set_function'] . var_export(encode_htmlspecialchars($configuration['configuration_value']), true) . ');');
               } else {
                 $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'size=40');
               }

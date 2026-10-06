@@ -287,7 +287,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             echo implode(', ', $module->allowed_zones);
                           } else {
                             if ($value['set_function']) {
-                              eval('echo ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                              eval('echo ' . $value['set_function'] . var_export((string)$value['value'], true) . ', ' . var_export($key, true) . ');');
                             } else {
                               echo xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'style="width: 300px;"');
                             }
