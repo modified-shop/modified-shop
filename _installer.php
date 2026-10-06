@@ -22,12 +22,69 @@
     die('needed class ZipArchive not exists');
   }
 
+  // reads the database settings of a configure file without running it, the file loads half the shop
+  function installer_is_configured($file) {
+    if (!is_file($file)) {
+      return false;
+    }
+    $content = (string)file_get_contents($file);
+
+    if (!function_exists('token_get_all')) {
+      return (strpos($content, 'DB_SERVER_USERNAME') !== false || strpos($content, 'DB_DATABASE') !== false);
+    }
+
+    $tokens = array();
+    foreach (token_get_all($content) as $token) {
+      if (!is_array($token) || !in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT))) {
+        $tokens[] = $token;
+      }
+    }
+
+    $names = array('DB_SERVER_USERNAME', 'DB_DATABASE');
+    for ($i = 0, $n = count($tokens); $i < $n; $i++) {
+      $value = false;
+      if (is_array($tokens[$i])
+          && strtolower(ltrim($tokens[$i][1], '\\')) == 'define'
+          && isset($tokens[$i + 3])
+          && $tokens[$i + 1] === '('
+          && is_array($tokens[$i + 2])
+          && $tokens[$i + 2][0] == T_CONSTANT_ENCAPSED_STRING
+          && in_array(substr($tokens[$i + 2][1], 1, -1), $names)
+          && $tokens[$i + 3] === ','
+          )
+      {
+        $value = $i + 4;
+      } elseif (is_array($tokens[$i])
+                && $tokens[$i][0] == T_CONST
+                && isset($tokens[$i + 2])
+                && is_array($tokens[$i + 1])
+                && in_array($tokens[$i + 1][1], $names)
+                && $tokens[$i + 2] === '='
+                )
+      {
+        $value = $i + 3;
+      }
+
+      // anything but an empty string literal, e.g. getenv(), counts as configured
+      if ($value !== false
+          && !(isset($tokens[$value + 1])
+               && is_array($tokens[$value])
+               && $tokens[$value][0] == T_CONSTANT_ENCAPSED_STRING
+               && strlen($tokens[$value][1]) == 2
+               && in_array($tokens[$value + 1], array(')', ';'), true)
+               )
+          )
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   // the web installer is only meant for an empty webspace and must not overwrite an installed shop
   foreach (array('includes/local/configure.php', 'includes/configure.php') as $configure) {
-    if (is_file(DIR_FS_CATALOG.$configure)
-        && preg_match("/define\(\s*'DB_SERVER_USERNAME'\s*,\s*'[^']+'/", (string)file_get_contents(DIR_FS_CATALOG.$configure))
-        )
-    {
+    if (installer_is_configured(DIR_FS_CATALOG.$configure)) {
       @unlink(__FILE__);
       die('Shop is already installed, the web installer has been removed');
     }
