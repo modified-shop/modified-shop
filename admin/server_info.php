@@ -222,7 +222,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <tr>
               <td class="smallText" style="vertical-align:top"><strong><?php echo TITLE_ACCESS_CHECK; ?></strong></td>
               <td colspan="3" class="smallText">
-                <div id="webserver_check_result"><?php echo TEXT_ACCESS_CHECK_RUNNING; ?></div>
+                <div id="webserver_check_result" style="margin-bottom:10px;"><?php echo TEXT_ACCESS_CHECK_RUNNING; ?></div>
                 <a class="button" href="#" id="webserver_check_repeat" style="display:none"><?php echo BUTTON_ACCESS_CHECK_REPEAT; ?></a>
               </td>
             </tr>
