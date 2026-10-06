@@ -17,38 +17,41 @@
  * so files behind basic authentication do not count as public.
  *
  * @param urls     array of urls
- * @param callback called with the readable urls (or null if no request got an answer)
- *                 and whether every request got an answer
+ * @param callback called with the readable urls; an empty array only if every file gave a
+ *                 clear answer, null if nothing readable was found but the result is open
  */
 function webserver_check(urls, callback) {
   var pending = urls.length;
-  var answered = 0;
+  var determined = 0;
   var exposed = [];
 
   if (pending === 0 || typeof fetch !== 'function') {
-    callback(null, false);
+    callback(null);
     return;
   }
 
   urls.forEach(function (url) {
     fetch(url, {cache: 'no-store', credentials: 'omit'})
       .then(function (response) {
-        answered++;
-        if (response.status !== 200) {
-          return;
+        if (response.status === 200) {
+          // an error page delivered with status 200 is not empty
+          return response.text().then(function (body) {
+            if (body.trim() === '') {
+              exposed.push(url);
+            }
+            determined++;
+          });
         }
-        // an error page delivered with status 200 is not empty
-        return response.text().then(function (body) {
-          if (body.trim() === '') {
-            exposed.push(url);
-          }
-        });
+        // refused or hidden; server errors, timeouts and rate limits tell nothing
+        if (response.status >= 400 && response.status < 500 && response.status !== 408 && response.status !== 429) {
+          determined++;
+        }
       })
       .catch(function () {})
       .then(function () {
         pending--;
         if (pending === 0) {
-          callback((answered > 0 ? exposed : null), (answered === urls.length));
+          callback((exposed.length > 0 || determined === urls.length) ? exposed : null);
         }
       });
   });
@@ -76,10 +79,10 @@ function webserver_check_cached(urls, callback, force) {
     return;
   }
 
-  webserver_check(urls, function (exposed, complete) {
+  webserver_check(urls, function (exposed) {
     var time = Date.now();
     try {
-      if (exposed !== null && exposed.length === 0 && complete) {
+      if (exposed !== null && exposed.length === 0) {
         localStorage.setItem(key, JSON.stringify({time: time}));
       } else {
         localStorage.removeItem(key);

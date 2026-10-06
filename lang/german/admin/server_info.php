@@ -43,7 +43,7 @@ define('TITLE_ACCESS_CHECK', 'Zugriffsschutz:');
 define('TEXT_ACCESS_CHECK_RUNNING', 'Wird gepr&uuml;ft ...');
 define('TEXT_ACCESS_CHECK_OK', 'Dateien aus gesch&uuml;tzten Verzeichnissen sind nicht &ouml;ffentlich abrufbar.');
 define('TEXT_ACCESS_CHECK_EXPOSED', '<strong>WARNUNG:</strong> Diese Dateien aus gesch&uuml;tzten Verzeichnissen sind &ouml;ffentlich abrufbar. Die Zugriffsregeln des Webservers greifen nicht:');
-define('TEXT_ACCESS_CHECK_FAILED', 'Die Pr&uuml;fung war nicht m&ouml;glich.');
+define('TEXT_ACCESS_CHECK_FAILED', 'Die Pr&uuml;fung war nicht oder nicht vollst&auml;ndig m&ouml;glich. Pr&uuml;fen Sie sp&auml;ter erneut.');
 define('TEXT_ACCESS_CHECK_HINT_APACHE', 'Pr&uuml;fen Sie, ob der Webserver die .htaccess-Dateien auswertet (AllowOverride All). OpenLiteSpeed wertet Zugriffsregeln aus .htaccess-Dateien nicht aus. Liefert ein vorgeschalteter nginx statische Dateien direkt aus, wie es Plesk optional anbietet, umgeht er die .htaccess-Dateien.');
 define('TEXT_ACCESS_CHECK_HINT_NGINX', 'Die Regeln aus _nginx.conf sind nicht aktiv. &Uuml;bernehmen Sie sie in die nginx-Konfiguration und laden Sie nginx neu.');
 define('TEXT_ACCESS_CHECK_TIME', 'Gepr&uuml;ft:');

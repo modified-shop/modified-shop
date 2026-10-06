@@ -43,7 +43,7 @@ define('TITLE_ACCESS_CHECK', 'Access protection:');
 define('TEXT_ACCESS_CHECK_RUNNING', 'Checking ...');
 define('TEXT_ACCESS_CHECK_OK', 'Files from protected directories are not publicly accessible.');
 define('TEXT_ACCESS_CHECK_EXPOSED', '<strong>WARNING:</strong> These files from protected directories are publicly accessible. The access rules of the web server do not apply:');
-define('TEXT_ACCESS_CHECK_FAILED', 'The check was not possible.');
+define('TEXT_ACCESS_CHECK_FAILED', 'The check was not possible or not complete. Check again later.');
 define('TEXT_ACCESS_CHECK_HINT_APACHE', 'Check whether the web server evaluates the .htaccess files (AllowOverride All). OpenLiteSpeed does not evaluate access rules from .htaccess files. If an nginx in front of Apache serves static files directly, as Plesk offers as an option, it bypasses the .htaccess files.');
 define('TEXT_ACCESS_CHECK_HINT_NGINX', 'The rules from _nginx.conf are not active. Take them over into the nginx configuration and reload nginx.');
 define('TEXT_ACCESS_CHECK_TIME', 'Checked:');
