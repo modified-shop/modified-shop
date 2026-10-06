@@ -162,7 +162,9 @@ class paypalgooglepay extends PayPalPaymentV2 {
 
   function before_process() {
     if ($this->use_express_checkout_confirmation() === true) {
-      return PayPalPaymentBase::before_process();
+      $result = PayPalPaymentBase::before_process();
+      $this->check_liability_shift();
+      return $result;
     }
 
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
@@ -183,6 +185,20 @@ class paypalgooglepay extends PayPalPaymentV2 {
     }
   
     if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'), true)) {
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
+
+    $this->check_liability_shift();
+  }
+
+
+  // runs before the order is created and captured, so there is no order to remove
+  function check_liability_shift() {
+    if (!isset($_SESSION['paypal']['OrderID'])
+        || $this->CheckGooglePayOrder($_SESSION['paypal']['OrderID']) !== true
+        )
+    {
+      unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }

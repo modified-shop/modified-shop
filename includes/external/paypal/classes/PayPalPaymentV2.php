@@ -1071,6 +1071,35 @@
     }
 
 
+    // server-side counterpart of the browser check, so a direct call of the success URL cannot skip it
+    function CheckGooglePayOrder($OrderID) {
+      $order = $this->GetOrder($OrderID, 'fields=payment_source');
+
+      // fail closed when PayPal cannot be reached or returns no payment source
+      if (!is_object($order) || !isset($order->payment_source)) {
+        $this->LoggingManager->log('WARNING', 'Google Pay order check failed', array(
+          'reason' => 'no payment source',
+          'order_id' => $OrderID,
+        ));
+        return false;
+      }
+
+      // no 3D Secure was performed (e.g. device token), nothing to verify
+      if (!isset($order->payment_source->google_pay->card->authentication_result)) {
+        return true;
+      }
+
+      if ($this->CheckGooglePayLiabilityShift($OrderID) !== true) {
+        $this->LoggingManager->log('WARNING', 'Google Pay liability shift check failed', array(
+          'order_id' => $OrderID,
+        ));
+        return false;
+      }
+
+      return true;
+    }
+
+
     function FinishOrder($order_id) {
       if ($this->PatchOrder($_SESSION['paypal']['OrderID']) !== true) {
         $this->LoggingManager->log('WARNING', 'FinishOrder aborted', array(
