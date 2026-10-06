@@ -83,8 +83,14 @@
   }
 
   // the web installer is only meant for an empty webspace and must not overwrite an installed shop
-  foreach (array('includes/local/configure.php', 'includes/configure.php') as $configure) {
-    if (installer_is_configured(DIR_FS_CATALOG.$configure)) {
+  $configure_files = array(DIR_FS_CATALOG.'includes/local/configure.php', DIR_FS_CATALOG.'includes/configure.php');
+  // configure.php also loads these files, a shop may keep its database settings there
+  $extra_configure_files = glob(DIR_FS_CATALOG.'includes/extra/configure/*.php');
+  if (is_array($extra_configure_files)) {
+    $configure_files = array_merge($configure_files, $extra_configure_files);
+  }
+  foreach ($configure_files as $configure) {
+    if (installer_is_configured($configure)) {
       @unlink(__FILE__);
       die('Shop is already installed, the web installer has been removed');
     }
