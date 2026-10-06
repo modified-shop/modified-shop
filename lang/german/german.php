@@ -709,8 +709,14 @@ define('TEXT_WITHDRAW_PRODUCTS_SELECT', 'Bitte geben Sie die Menge der Artikel a
 define('TEXT_WITHDRAW_NO_PRODUCTS', 'Es gibt keine Artikel die widerrufen werden k&ouml;nnten.');
 define('TEXT_WITHDRAW_SUCCESS', 'Vielen Dank f&uuml;r Ihre Anfrage.<br/>Wir haben Ihren Widerruf erfolgreich erhalten und werden diesen schnellst m&ouml;glich bearbeiten.<br/><br/>Unser Team pr&uuml;ft Ihre Angaben und k&uuml;mmert sich um die n&auml;chsten Schritte. Sie erhalten in K&uuml;rze eine Best&auml;tigung sowie weitere Informationen zum Ablauf der R&uuml;ckabwicklung.<br/><br/>Bitte haben Sie Verst&auml;ndnis, dass die Bearbeitung etwas Zeit in Anspruch nehmen kann. Wir bem&uuml;hen uns, Ihr Anliegen so schnell wie m&ouml;glich abzuschlie&szlig;en.');
 define('TEXT_WITHDRAW_PRODUCTS_SUCCESS', 'Die widerrufenen Artikel nochmals zur &Uuml;bersicht:');
-define('TEXT_WITHDRAW_PARTLY', 'Sie k&ouml;nnen auch nur Teile Ihrer Bestellung widerrufen. Dazu ben&ouml;tigen wir eine Best&auml;tigung Ihrer E-Mail-Adresse im Rahmen eines Double-Opt-in-Verfahrens. Verwenden Sie dazu diesen <a href="%s">LINK</a> um eine Mail mit einem Best&auml;tigungslink zu senden. Sie k&ouml;nnen aber auch die gesamte Bestellung widerrufen indem sie den Button "'.TEXT_WITHDRAW_HEADING.'" verwenden.');
+define('IMAGE_BUTTON_WITHDRAW_VERIFY', 'E-Mail zur Best&auml;tigung senden');
+define('TEXT_WITHDRAW_PARTLY', 'Sie k&ouml;nnen auch nur Teile Ihrer Bestellung widerrufen. Dazu ben&ouml;tigen wir eine Best&auml;tigung Ihrer E-Mail-Adresse im Rahmen eines Double-Opt-in-Verfahrens. Verwenden Sie dazu den Button "'.IMAGE_BUTTON_WITHDRAW_VERIFY.'", um eine Mail mit einem Best&auml;tigungslink zu erhalten. Sie k&ouml;nnen aber auch die gesamte Bestellung widerrufen, indem Sie den Button "'.TEXT_WITHDRAW_HEADING.'" verwenden.');
 define('TEXT_WITHDRAW_VERIFY_INFO', 'Wir haben Ihnen soeben eine E-Mail zur Best&auml;tigung Ihrer E-Mail-Adresse im Rahmen des Double-Opt-in-Verfahrens gesendet. Bitte &ouml;ffnen Sie die E-Mail und klicken Sie auf den enthaltenen Best&auml;tigungslink, um den Vorgang abzuschlie&szlig;en und Zugriff auf Ihre Bestelldaten zu erhalten.');
+define('TEXT_WITHDRAW_INFO_SHORT', 'Ihre Bestellung %s');
+define('TEXT_WITHDRAW_VERIFY_WAIT', 'Wir haben Ihnen k&uuml;rzlich bereits eine E-Mail mit einem Best&auml;tigungslink gesendet. Bitte pr&uuml;fen Sie Ihr Postfach, auch den Spam-Ordner, und warten Sie einige Minuten, bevor Sie eine weitere E-Mail anfordern.');
+define('TEXT_WITHDRAW_LOCKED', 'Es gab zu viele erfolglose Versuche. Bitte versuchen Sie es sp&auml;ter erneut.');
+define('TEXT_WITHDRAW_CAPTCHA_REQUIRED', 'Bitte geben Sie zus&auml;tzlich den Sicherheitscode ein.');
+define('ENTRY_WITHDRAW_PARTLY_ERROR', 'Ein Teilwiderruf ist erst nach der Best&auml;tigung Ihrer E-Mail-Adresse m&ouml;glich.');
 define('TEXT_WITHDRAW_HISTORY_HEADING', 'Widerrufene Artikel');
 define('TEXT_WITHDRAW_HISTORY_INFO', 'F&uuml;r die hier aufgef&uuml;hrten Artikel haben wir Ihren Widerruf erhalten. Sobald wir Ihre Angaben gepr&uuml;ft haben, erhalten Sie von uns eine R&uuml;ckmeldung zur weiteren Abwicklung.');
 define('TEXT_WITHDRAW_HISTORY_DATE', 'Widerrufen am');

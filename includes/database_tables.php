@@ -130,6 +130,7 @@ $database_table_array = array(
   'TABLE_ORDERS_WITHDRAW' => 'orders_withdraw',
   'TABLE_ORDERS_WITHDRAW_PRODUCTS' => 'orders_withdraw_products',
   'TABLE_ORDERS_WITHDRAW_TOKEN' => 'orders_withdraw_token',
+  'TABLE_ORDERS_WITHDRAW_ATTEMPTS' => 'orders_withdraw_attempts',
 
   // EU guarantee labels
   'TABLE_ORDERS_GUARANTEE' => 'orders_guarantee',

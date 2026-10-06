@@ -70,7 +70,7 @@
 {$FORM_ACTION}
 <h2>{$WITHDRAW_INFO}</h2>
 
-{if isset($PRODUCTS) && is_array($PRODUCTS) && count($PRODUCTS) > 0}
+{if $WITHDRAW_OPEN > 0}
   {if $VERIFIED === true}
     <p>{$smarty.const.TEXT_WITHDRAW_PRODUCTS_SELECT}</p>
 
@@ -103,10 +103,6 @@
     </div>
   {else}
     <p>{$TEXT_WITHDRAW_PARTLY}</p>
-
-    {foreach name=aussen item=data from=$HIDDEN_DATA}
-      {$data}
-    {/foreach}
   {/if}
 {else}
   <div class="infomessage">{$smarty.const.TEXT_WITHDRAW_NO_PRODUCTS}</div>
@@ -119,6 +115,16 @@
   </tr>
 </table>
 {$FORM_END}
+
+{if isset($VERIFY_FORM_ACTION)}
+{$VERIFY_FORM_ACTION}
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td align="right">{$BUTTON_VERIFY}</td>
+  </tr>
+</table>
+{$FORM_END}
+{/if}
 
 {elseif $FORM_TYPE == 'success'}
 
