@@ -171,7 +171,10 @@ if (xtc_not_null($action)) {
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID', 'page')).xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
       break;
     case 'edit_crossselling' :
-      $catfunc->edit_cross_sell($_REQUEST);
+      // only the POST forms carry the CSRF token, a plain link must not change entries
+      if (isset($_POST['special'])) {
+        $catfunc->edit_cross_sell($_REQUEST);
+      }
       break;
     case 'multi_action_confirm' :
       // --- MULTI DELETE ---
