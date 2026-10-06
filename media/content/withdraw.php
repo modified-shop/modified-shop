@@ -134,6 +134,9 @@
                                                 )");
           if (xtc_db_num_rows($orders_query) < 1) {          
             xtc_withdraw_attempts_add($withdraw_ip, $withdraw_email);
+            // this failure may reach the limit, so the form shown next needs the captcha already
+            $withdraw_attempts = xtc_withdraw_attempts_count($withdraw_ip, $withdraw_email);
+            $withdraw_captcha_forced = ($withdraw_attempts['ip'] >= MODULE_WITHDRAW_CAPTCHA_NUM || $withdraw_attempts['email'] >= MODULE_WITHDRAW_CAPTCHA_NUM);
             $messageStack->add('withdraw', ENTRY_TOKEN_ERROR);
           } else {
             $orders = xtc_db_fetch_array($orders_query);
