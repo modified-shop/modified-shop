@@ -16,6 +16,8 @@
   function send_order_mail($orders_id, $force = false) {
     $orders_query = xtc_db_query("SELECT customers_id,
                                          customers_status,
+                                         customers_country_iso_code_2,
+                                         delivery_state,
                                          currency
                                     FROM ".TABLE_ORDERS."
                                    WHERE orders_id = '".(int)$orders_id."'");
@@ -24,6 +26,7 @@
     }
     $orders = xtc_db_fetch_array($orders_query);
 
+    require_once(DIR_FS_INC.'get_country_id.inc.php');
     // not DIR_WS_CLASSES: the frontend builds it from DIR_FS_CATALOG and the
     // administration does not, so neither spelling of it works in both
     require_once(DIR_FS_CATALOG.'includes/classes/order.php');
@@ -63,6 +66,20 @@
 
     // handed over as a variable: a customer written into the session would stay there if the request dies mid-mail
     $send_order_customer_id = $orders['customers_id'];
+
+    // the region of the order for the afterbuy tax rates, same reason as above
+    $send_order_country_id = (int)get_country_id($orders['customers_country_iso_code_2']);
+    $send_order_zone_id = -1;
+    if ($send_order_country_id > 0) {
+      $zones_query = xtc_db_query("SELECT zone_id
+                                     FROM ".TABLE_ZONES."
+                                    WHERE zone_name = '".xtc_db_input($orders['delivery_state'])."'
+                                      AND zone_country_id = '".(int)$send_order_country_id."'");
+      if (xtc_db_num_rows($zones_query) > 0) {
+        $zones = xtc_db_fetch_array($zones_query);
+        $send_order_zone_id = $zones['zone_id'];
+      }
+    }
 
     include(DIR_FS_CATALOG.'send_order.php');
 

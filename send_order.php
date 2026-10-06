@@ -172,6 +172,11 @@ if ((isset($send_order_customer_id)
   if (defined('MODULE_AFTERBUY_STATUS') && MODULE_AFTERBUY_STATUS == 'true') {
     require_once (DIR_WS_CLASSES.'afterbuy.php');
     $aBUY = new xtc_afterbuy_functions($insert_id);
+    // set by send_order_mail(), the tax rates need the region of the order, not of the visitor
+    if (isset($send_order_country_id, $send_order_zone_id)) {
+      $aBUY->customer_country_id = $send_order_country_id;
+      $aBUY->customer_zone_id = $send_order_zone_id;
+    }
     if ($aBUY->order_send()) {
       $aBUY->process_order();
       // process_order() sets the flag order_send() reads, so it now reports whether afterbuy took the order
