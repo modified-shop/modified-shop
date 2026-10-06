@@ -559,7 +559,8 @@ class PayPalPayment extends PayPalPaymentBase {
               && $customer['info']['email_address'] != ''
               ) 
           {
-            $this->login_customer($customer);
+            // PayPal payer data must not log in an existing customer account without password
+            $this->create_account($customer, true);
           } elseif (!isset($_SESSION['customer_id'])) {
             // redirect
             unset($_SESSION['paypal']);

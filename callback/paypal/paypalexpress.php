@@ -84,7 +84,9 @@ if (isset($_SESSION['paypal'])
         && $customers_data['info']['email_address'] != ''
         ) 
     {
-      $paypal->login_customer($customers_data);
+      // PayPal contact data is not verified and must not be used
+      // for a passwordless login to an existing customer account.
+      $paypal->create_account($customers_data, true);
     }
   
     if (!isset($_SESSION['customer_id'])
