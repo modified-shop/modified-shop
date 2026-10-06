@@ -21,6 +21,17 @@
   if (!class_exists('ZipArchive')) {
     die('needed class ZipArchive not exists');
   }
+
+  // the web installer is only meant for an empty webspace and must not overwrite an installed shop
+  foreach (array('includes/local/configure.php', 'includes/configure.php') as $configure) {
+    if (is_file(DIR_FS_CATALOG.$configure)
+        && preg_match("/define\(\s*'DB_SERVER_USERNAME'\s*,\s*'[^']+'/", (string)file_get_contents(DIR_FS_CATALOG.$configure))
+        )
+    {
+      @unlink(__FILE__);
+      die('Shop is already installed, the web installer has been removed');
+    }
+  }
   
   function rrmdir($dir) {    
     $dir = rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
@@ -138,6 +149,9 @@
   
     // cleanup
     rrmdir('tmp');
+
+    // the web installer is only needed once
+    @unlink(__FILE__);
   
     // redirect
     header('Location: _installer');
