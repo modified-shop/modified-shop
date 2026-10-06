@@ -39,6 +39,12 @@
       $this->description = MODULE_GUARANTEE_LABELS_TEXT_DESCRIPTION;
       $this->sort_order = '';
       $this->enabled = ((defined('MODULE_GUARANTEE_LABELS_STATUS') && MODULE_GUARANTEE_LABELS_STATUS == 'true') ? true : false);
+
+      // The storefront version check needs the metadata, not the administration controls.
+      if (!defined('RUN_MODE_ADMIN')) {
+        return;
+      }
+
       $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE . '</a>';
 
       // only for the module being looked at, the list instantiates every module
