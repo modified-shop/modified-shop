@@ -1,8 +1,8 @@
 ##-- $Id$
 
 ##-- Default charset
-#AddDefaultCharset UTF-8
-AddDefaultCharset ISO-8859-15
+AddDefaultCharset UTF-8
+#AddDefaultCharset ISO-8859-15
 
 ##-- Disable the server signature
 ServerSignature Off
@@ -19,13 +19,9 @@ FileETag None
   Header merge Vary Accept-Encoding
 </IfModule>
 
-##-- when using Provider 1&1 set the following lines to activate PHP5
-#AddType x-mapp-php5 .php
-#AddHandler x-mapp-php5 .php
-
 ##-- Add Mime Types
 <IfModule mod_mime.c>
-  AddType application/font-woff2 .woff2
+  AddType font/woff2 .woff2
 </IfModule>
 
 ##-- Disable directory browsing (uncomment if AllowOverride Options is permitted)
@@ -37,15 +33,19 @@ FileETag None
   RedirectMatch 403 /_\.htaccess(?:/|$)
 </IfModule>
 
-##-- Enable the compression for any type of content
+##-- Enable the compression for text based content (JPEG, PNG, GIF, WebP and WOFF are already compressed)
 <IfModule mod_deflate.c>
-  <FilesMatch "(\.js|\.css|\.html|\.htm|\.php|\.xml|\.ico|\.jpg|\.jpeg|\.png|\.gif|\.svg|\.webp|\.woff|\.woff2|\.ttf|\.otf|\.eot|\.JS|\.CSS|\.HTML|\.HTM|\.PHP|\.XML|\.ICO|\.JPG|\.JPEG|\.PNG|\.GIF|\.SVG|\.WEBP|\.WOFF|\.WOFF2|\.TTF|\.OTF|\.EOT)$">
+  <FilesMatch "(\.js|\.css|\.html|\.htm|\.php|\.xml|\.ico|\.svg|\.ttf|\.otf|\.eot|\.JS|\.CSS|\.HTML|\.HTM|\.PHP|\.XML|\.ICO|\.SVG|\.TTF|\.OTF|\.EOT)$">
     SetOutputFilter DEFLATE
   </FilesMatch>
 </IfModule>
 
 ##-- Customization of HTTP request and response headers
 <IfModule mod_headers.c>
+  ##-- Default for all other static files, the rules below override it per type
+  <FilesMatch "^(?!.*\.(?i:php[0-9]?|phtml)$)">
+    Header set Cache-Control "max-age=1, public, must-revalidate"
+  </FilesMatch>
   <FilesMatch "(\.ico|\.jpg|\.jpeg|\.png|\.gif|\.swf|\.flv|\.svg|\.webp|\.ICO|\.JPG|\.JPEG|\.PNG|\.GIF|\.SWF|\.FLV|\.SVG|\.WEBP)$">
     Header set Cache-Control "max-age=2592000, public, must-revalidate"
   </FilesMatch>
@@ -72,23 +72,8 @@ FileETag None
 ##-- BEGIN - use IfModule clause if PHP runs in CGI mode, otherwise just uncomment the lines with php_flag...
 #<IfModule mod_php.c>
 
-  ##-- Warn when arguments are passed by reference at function call time (from PHP5 allow_call_time_pass_reference is deprecated)
-  #php_flag allow_call_time_pass_reference on
-
   ##-- Disable transparent sid support PHP-default is off (XTC Session only on first visit)
   #php_flag session.use_trans_sid off
-
-  ##-- set suhosin flags because of errors with attributes (for webhosters with suhosin hardening patch enabled)
-  #php_value suhosin.post.max_array_depth 0
-  #php_value suhosin.post.max_array_index_length 0
-  #php_value suhosin.post.max_vars 0
-  #php_value suhosin.request.max_array_depth 0
-  #php_value suhosin.request.max_array_index_length 0
-  #php_value suhosin.request.max_vars 0
-
-  ##-- set suhosin flags to have unencrypted session data, affecting "whos_online" & "shopping cart" (for webhosters with suhosin hardening patch enabled)patch enabled
-  #php_value suhosin.session.encrypt Off
-  #php_value suhosin.session.cryptkey ''
 
 ##-- END - use IfModule clause if PHP runs in CGI mode, otherwise just uncomment the lines with php_flag...
 #</IfModule>
@@ -173,7 +158,7 @@ ErrorDocument 500 /error.php?error=500
   RewriteRule ::(.+)\.html$ product_info.php?products_id=$1 [QSA,L]
 
   ##-- Content (:_:)
-  RewriteRule ([\/]?)([a-z]{2})\/(.*):_:([0-9]+)\.html$ shop_content.php?coID=$4&language=$2 [QSA,L]
+  RewriteRule ^([\/]?)([a-z]{2})\/(.*):_:([0-9]+)\.html$ shop_content.php?coID=$4&language=$2 [QSA,L]
   RewriteRule :_:([0-9]+)\.html$ shop_content.php?coID=$1 [QSA,L]
 
   ##-- Manufacturers (:.:)
