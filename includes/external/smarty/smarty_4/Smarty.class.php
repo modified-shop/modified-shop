@@ -135,7 +135,7 @@ class Smarty extends Smarty_Compatibility
     /**
      * smarty version
      */
-    const SMARTY_VERSION = '4.5.5';
+    const SMARTY_VERSION = '4.5.8';
     /**
      * define variable scopes
      */
