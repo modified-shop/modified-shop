@@ -10,9 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // the ip rows only expire, otherwise one known valid order would lift the ip lock again and again
+  // only the e-mail counter is cleared, the rows keep counting for the ip until they expire
   function xtc_withdraw_attempts_reset($email_address) {
-    xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_ATTEMPTS."
-                        WHERE customers_email_address = '".xtc_db_input($email_address)."'");
+    xtc_db_query("UPDATE ".TABLE_ORDERS_WITHDRAW_ATTEMPTS."
+                     SET customers_email_address = ''
+                   WHERE customers_email_address = '".xtc_db_input($email_address)."'");
   }
  ?>

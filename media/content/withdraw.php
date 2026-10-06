@@ -205,8 +205,10 @@
             $token = xtc_db_fetch_array($token_query);
             $orders_id = (int)$token['orders_id'];
 
-            // single use: only the request that actually removes the row has redeemed the token
-            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_TOKEN."
+            // single use: only the request that replaces the token has redeemed it,
+            // the row stays so that its date_added keeps throttling the next mail
+            xtc_db_query("UPDATE ".TABLE_ORDERS_WITHDRAW_TOKEN."
+                             SET token = '".xtc_db_input(xtc_random_charcode(32))."'
                            WHERE token = '".xtc_db_input($_REQUEST['key'])."'");
             if (xtc_db_affected_rows() !== 1) {
               $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
