@@ -172,8 +172,11 @@ if (xtc_not_null($action)) {
       break;
     case 'edit_crossselling' :
       // only the POST forms carry the CSRF token, a plain link must not change entries
-      if (isset($_POST['special'])) {
-        $catfunc->edit_cross_sell($_REQUEST);
+      if (isset($_POST['special']) && isset($_GET['current_product_id']) && (int)$_GET['current_product_id'] > 0) {
+        // the changes come from the posted form only, url parameters must not add ids to them
+        $cross_data = $_POST;
+        $cross_data['current_product_id'] = (int)$_GET['current_product_id'];
+        $catfunc->edit_cross_sell($cross_data);
       }
       break;
     case 'multi_action_confirm' :

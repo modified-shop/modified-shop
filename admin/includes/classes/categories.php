@@ -1301,7 +1301,7 @@ class categories {
       if (isset ($cross_data['ids'])) {
         // delete
         foreach ($cross_data['ids'] AS $pID) {
-          xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE ID='".(int)$pID."'");
+          xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE ID='".(int)$pID."' AND products_id = '".(int)$cross_data['current_product_id']."'");
         }
       }
       if (isset ($cross_data['sort'])) {
@@ -1311,7 +1311,7 @@ class categories {
             'sort_order' => $sort_order,
             'products_xsell_grp_name_id' => $cross_data['group_name'][$ID]
           );
-          xtc_db_perform(TABLE_PRODUCTS_XSELL, $sql_data_array, 'update', "ID = '".(int)$ID."'");                    
+          xtc_db_perform(TABLE_PRODUCTS_XSELL, $sql_data_array, 'update', "ID = '".(int)$ID."' AND products_id = '".(int)$cross_data['current_product_id']."'");                    
         }
       }
     }
