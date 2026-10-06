@@ -30,7 +30,7 @@ class janolaw {
   var $_check;
 
   function __construct() {
-    $this->version = '3.21';
+    $this->version = '3.22';
     $this->code = 'janolaw';
     $this->title = MODULE_JANOLAW_TEXT_TITLE;
     $this->description = MODULE_JANOLAW_TEXT_DESCRIPTION;
