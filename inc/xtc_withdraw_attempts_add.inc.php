@@ -22,5 +22,7 @@
       'date_added' => 'now()',
     );
     xtc_db_perform(TABLE_ORDERS_WITHDRAW_ATTEMPTS, $sql_data_array);
+
+    return xtc_db_insert_id();
   }
  ?>

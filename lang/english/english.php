@@ -713,6 +713,7 @@ define('TEXT_WITHDRAW_PARTLY', 'You can also cancel only part of your order. To 
 define('TEXT_WITHDRAW_VERIFY_INFO', 'We have just sent you an email to confirm your email address as part of the double opt-in process. Please open the email and click on the confirmation link inside to complete the process and gain access to your order details.');
 define('TEXT_WITHDRAW_INFO_SHORT', 'Your order %s');
 define('TEXT_WITHDRAW_VERIFY_WAIT', 'We recently sent you an email with a confirmation link. Please check your inbox, including the spam folder, and wait a few minutes before requesting another email.');
+define('TEXT_WITHDRAW_VERIFY_MAIL_ERROR', 'The email with the confirmation link could not be sent. Please try again.');
 define('TEXT_WITHDRAW_LOCKED', 'There were too many unsuccessful attempts. Please try again later.');
 define('TEXT_WITHDRAW_CAPTCHA_REQUIRED', 'Please also enter the security code.');
 define('ENTRY_WITHDRAW_PARTLY_ERROR', 'A partial withdrawal is only possible after your email address has been verified.');

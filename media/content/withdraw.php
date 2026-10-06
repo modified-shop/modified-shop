@@ -81,6 +81,7 @@
         $withdraw_email = ((isset($email_address) && is_string($email_address)) ? substr(strtolower(trim($email_address)), 0, 255) : '');
         $withdraw_attempts = xtc_withdraw_attempts_count($withdraw_ip, $withdraw_email);
         $withdraw_captcha_forced = ($withdraw_attempts['ip'] >= MODULE_WITHDRAW_CAPTCHA_NUM || $withdraw_attempts['email'] >= MODULE_WITHDRAW_CAPTCHA_NUM);
+        $withdraw_captcha_valid = false;
 
         if ($withdraw_attempts['ip'] >= MODULE_WITHDRAW_LOCK_NUM) {
           $messageStack->add('withdraw', TEXT_WITHDRAW_LOCKED);
@@ -110,6 +111,8 @@
             // the field only shows up after the third failure, so say why it is asked for
             $messageStack->add('withdraw', (($withdraw_captcha_forced === true && empty($_POST['vvcode'])) ? TEXT_WITHDRAW_CAPTCHA_REQUIRED : strip_tags(ERROR_VVCODE, '<b><strong>')));
             $error = true;
+          } else {
+            $withdraw_captcha_valid = true;
           }
         }
 
@@ -124,6 +127,25 @@
         }
         
         if ($error === false) {
+          // booked before the lookup, so parallel requests count each other and cannot all slip under the limits
+          $withdraw_attempt_id = xtc_withdraw_attempts_add($withdraw_ip, $withdraw_email);
+          $withdraw_attempts = xtc_withdraw_attempts_count($withdraw_ip, $withdraw_email);
+          $withdraw_locked = ($withdraw_attempts['ip'] > MODULE_WITHDRAW_LOCK_NUM);
+          if ($withdraw_locked === true
+              || ($withdraw_captcha_valid === false
+                  && ($withdraw_attempts['ip'] > MODULE_WITHDRAW_CAPTCHA_NUM || $withdraw_attempts['email'] > MODULE_WITHDRAW_CAPTCHA_NUM)
+                  )
+              )
+          {
+            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_ATTEMPTS."
+                                WHERE orders_withdraw_attempts_id = '".(int)$withdraw_attempt_id."'");
+            $withdraw_captcha_forced = true;
+            $messageStack->add('withdraw', (($withdraw_locked === true) ? TEXT_WITHDRAW_LOCKED : TEXT_WITHDRAW_CAPTCHA_REQUIRED));
+            $error = true;
+          }
+        }
+
+        if ($error === false) {
           $orders_query = xtc_db_query("SELECT *
                                           FROM ".TABLE_ORDERS."
                                          WHERE orders_id = '".(int)$orders_id."'
@@ -133,7 +155,6 @@
                                                 OR billing_lastname = '".xtc_db_input($name)."'
                                                 )");
           if (xtc_db_num_rows($orders_query) < 1) {          
-            xtc_withdraw_attempts_add($withdraw_ip, $withdraw_email);
             // this failure may reach the limit, so the form shown next needs the captcha already
             $withdraw_attempts = xtc_withdraw_attempts_count($withdraw_ip, $withdraw_email);
             $withdraw_captcha_forced = ($withdraw_attempts['ip'] >= MODULE_WITHDRAW_CAPTCHA_NUM || $withdraw_attempts['email'] >= MODULE_WITHDRAW_CAPTCHA_NUM);
@@ -141,6 +162,8 @@
           } else {
             $orders = xtc_db_fetch_array($orders_query);
 
+            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_ATTEMPTS."
+                                WHERE orders_withdraw_attempts_id = '".(int)$withdraw_attempt_id."'");
             xtc_withdraw_attempts_reset($withdraw_email);
 
             // owning the order while logged in identifies the customer just as well as the double opt-in does
@@ -310,7 +333,7 @@
           $withdraw_subject = str_replace('{$nr}', $orders['orders_id'], EMAIL_WITHDRAW_SUBJECT);
           $withdraw_subject = str_replace('{$date}', xtc_date_long($orders['date_purchased']), $withdraw_subject);
          
-          xtc_php_mail(EMAIL_BILLING_ADDRESS,
+          $withdraw_mail_sent = xtc_php_mail(EMAIL_BILLING_ADDRESS,
                        EMAIL_BILLING_NAME,
                        trim($orders['customers_email_address']),
                        $orders['customers_name'],
@@ -325,6 +348,15 @@
                        1
                        );
           
+          // without a sent mail the resend lock would only make the customer wait
+          if ($withdraw_mail_sent === false) {
+            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_TOKEN."
+                           WHERE orders_id = '".$orders_id."'
+                             AND token = '".xtc_db_input($key)."'");
+            $messageStack->add_session('withdraw', TEXT_WITHDRAW_VERIFY_MAIL_ERROR);
+            xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key')).'action=validate'));
+          }
+
           $messageStack->add_session('withdraw', TEXT_WITHDRAW_VERIFY_INFO, 'success');
           xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key')).'action=validate'));
         } else {
@@ -716,9 +748,9 @@
           if ($withdraw_array['verified'] === false) {   
             $smarty->assign('TEXT_WITHDRAW_PARTLY', TEXT_WITHDRAW_PARTLY);
             $smarty->assign('VERIFY_FORM_ACTION', xtc_draw_form('withdraw_verify', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key')).'action=verify', 'SSL')).secure_form('withdraw'));
-            $smarty->assign('BUTTON_VERIFY', xtc_image_submit('button_send.gif', IMAGE_BUTTON_WITHDRAW_VERIFY));
+            $smarty->assign('BUTTON_VERIFY', xtc_image_submit('button_withdraw_verify.gif', IMAGE_BUTTON_WITHDRAW_VERIFY));
           }
-          $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_send.gif', IMAGE_BUTTON_WITHDRAW));
+          $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_withdraw.gif', IMAGE_BUTTON_WITHDRAW));
         }
         $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(basename($PHP_SELF), 'coID='.(int)$_GET['coID'], 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
         $smarty->assign('FORM_END', '</form>');
