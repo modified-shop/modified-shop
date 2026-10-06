@@ -27,10 +27,10 @@ FileETag None
 ##-- Disable directory browsing (uncomment if AllowOverride Options is permitted)
 #Options -Indexes
 
-##-- Protect hidden files and directories while keeping .well-known reachable
+##-- Protect hidden files, directories and the server templates while keeping .well-known reachable
 <IfModule mod_alias.c>
   RedirectMatch 403 /\.(?!well-known(?:/|$))
-  RedirectMatch 403 /_\.htaccess(?:/|$)
+  RedirectMatch 403 /_(?:\.htaccess|nginx\.conf)(?:/|$)
 </IfModule>
 
 ##-- Enable the compression for text based content (JPEG, PNG, GIF, WebP and WOFF are already compressed)
