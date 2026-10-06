@@ -22,6 +22,16 @@
     die('needed class ZipArchive not exists');
   }
 
+  // true if the token is an empty string literal and the expression ends right behind it
+  function installer_is_empty_value($tokens, $i, $ends) {
+    return (isset($tokens[$i + 1])
+            && is_array($tokens[$i])
+            && $tokens[$i][0] == T_CONSTANT_ENCAPSED_STRING
+            && strlen($tokens[$i][1]) == 2
+            && in_array($tokens[$i + 1], $ends, true)
+            );
+  }
+
   // reads the database settings of a configure file without running it, the file loads half the shop
   function installer_is_configured($file) {
     if (!is_file($file)) {
@@ -54,27 +64,38 @@
           )
       {
         $value = $i + 4;
-      } elseif (is_array($tokens[$i])
-                && $tokens[$i][0] == T_CONST
-                && isset($tokens[$i + 2])
-                && is_array($tokens[$i + 1])
-                && in_array($tokens[$i + 1][1], $names)
-                && $tokens[$i + 2] === '='
+      } elseif (is_array($tokens[$i]) && $tokens[$i][0] == T_CONST) {
+        // one const statement can declare several constants, walk them up to the ';'
+        $depth = 0;
+        for ($j = $i + 1; $j < $n; $j++) {
+          if ($depth == 0) {
+            if ($tokens[$j] === ';') {
+              break;
+            }
+            if (is_array($tokens[$j])
+                && in_array($tokens[$j][1], $names)
+                && isset($tokens[$j + 2])
+                && $tokens[$j + 1] === '='
+                && !installer_is_empty_value($tokens, $j + 2, array(',', ';'))
                 )
-      {
-        $value = $i + 3;
+            {
+              return true;
+            }
+          }
+          // commas inside brackets, e.g. array('a', 'b'), do not separate declarations
+          if (in_array($tokens[$j], array('(', '[', '{'), true)
+              || (is_array($tokens[$j]) && in_array($tokens[$j][0], array(T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES)))
+              )
+          {
+            $depth++;
+          } elseif (in_array($tokens[$j], array(')', ']', '}'), true)) {
+            $depth--;
+          }
+        }
       }
 
       // anything but an empty string literal, e.g. getenv(), counts as configured
-      if ($value !== false
-          && !(isset($tokens[$value + 1])
-               && is_array($tokens[$value])
-               && $tokens[$value][0] == T_CONSTANT_ENCAPSED_STRING
-               && strlen($tokens[$value][1]) == 2
-               && in_array($tokens[$value + 1], array(')', ';'), true)
-               )
-          )
-      {
+      if ($value !== false && !installer_is_empty_value($tokens, $value, array(')', ','))) {
         return true;
       }
     }
