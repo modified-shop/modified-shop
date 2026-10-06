@@ -16,6 +16,9 @@
  * a false result, the browser sees the shop like a visitor does. Credentials are omitted,
  * so files behind basic authentication do not count as public.
  *
+ * Every probe ends after 10 seconds at the latest, so a stalled response cannot hold back
+ * the result or an exposure found by another probe.
+ *
  * @param urls     array of urls
  * @param callback called with the readable urls; an empty array only if every file gave a
  *                 clear answer, null if nothing readable was found but the result is open
@@ -31,28 +34,52 @@ function webserver_check(urls, callback) {
   }
 
   urls.forEach(function (url) {
-    fetch(url, {cache: 'no-store', credentials: 'omit'})
+    var settled = false;
+    var controller = (typeof AbortController === 'function') ? new AbortController() : null;
+    var timer = setTimeout(function () {
+      if (controller) {
+        controller.abort();
+      }
+      settle('open');
+    }, 10000);
+
+    // counts each probe exactly once: exposed, closed or open
+    function settle(state) {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      clearTimeout(timer);
+      if (state === 'exposed') {
+        exposed.push(url);
+      }
+      if (state !== 'open') {
+        determined++;
+      }
+      pending--;
+      if (pending === 0) {
+        callback((exposed.length > 0 || determined === urls.length) ? exposed : null);
+      }
+    }
+
+    fetch(url, {cache: 'no-store', credentials: 'omit', signal: (controller ? controller.signal : undefined)})
       .then(function (response) {
         if (response.status === 200) {
+          // a redirect to another address did not deliver the file itself
+          if (response.url && response.url.split(/[?#]/)[0].slice(-url.length) !== url) {
+            settle('closed');
+            return;
+          }
           // an error page delivered with status 200 is not empty
           return response.text().then(function (body) {
-            if (body.trim() === '') {
-              exposed.push(url);
-            }
-            determined++;
+            settle((body.trim() === '') ? 'exposed' : 'closed');
           });
         }
         // refused or hidden; server errors, timeouts and rate limits tell nothing
-        if (response.status >= 400 && response.status < 500 && response.status !== 408 && response.status !== 429) {
-          determined++;
-        }
+        settle((response.status >= 400 && response.status < 500 && response.status !== 408 && response.status !== 429) ? 'closed' : 'open');
       })
-      .catch(function () {})
-      .then(function () {
-        pending--;
-        if (pending === 0) {
-          callback((exposed.length > 0 || determined === urls.length) ? exposed : null);
-        }
+      .catch(function () {
+        settle('open');
       });
   });
 }
@@ -77,6 +104,13 @@ function webserver_check_cached(urls, callback, force) {
   if (force !== true && stored && typeof stored.time === 'number' && Date.now() - stored.time < 86400000) {
     callback([], stored.time);
     return;
+  }
+
+  // a requested repeat drops the stored pass at once, even if the page is left before the result
+  if (force === true) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {}
   }
 
   webserver_check(urls, function (exposed) {
