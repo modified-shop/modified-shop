@@ -165,4 +165,7 @@ define('WARNING_REGISTER_GLOBALS', '<strong>WARNING:</strong> This feature has b
 // domain check
 define('WARNING_DOMAIN_INVALID', '<strong>WARNING:</strong> Your shop domain could not be validated (Possible reasons: Invalid format or internationalized domain name (IDN))');
 
+// web server rules check
+define('WARNING_WEBSERVER_RULES', '<strong>WARNING:</strong> Files from protected directories such as logs and database backups are publicly accessible. The access rules of the web server do not apply. See %s for details and, on nginx, a matching configuration.');
+
 define('WARNING_REQUIREMENTS', '<b>%s installed</b>:%s <b>Min</b>:%s <b>Max</b>:%s');

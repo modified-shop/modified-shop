@@ -196,6 +196,9 @@
   define('TEXT_ACCOUNT_PASSWORD_POLICY', 'A secure password should be at least %s characters in length and should include uppercase and lowercase letters and numbers and special characters (except Backslash "\").');
   
   define('TEXT_FINISHED', 'Here you can already install the popular PayPal payment methods.');
+  define('TEXT_FINISHED_NGINX', 'Your server runs nginx. nginx ignores the .htaccess files of the shop. Take over the template <code>_nginx.conf</code> from the shop root into your nginx configuration. A version with the values of your shop is shown in the admin under &quot;Tools &gt; Server Info&quot;.');
+  define('TEXT_FINISHED_HTACCESS', 'Rename the file <code>_.htaccess</code> in the shop root to <code>.htaccess</code>. Only then do SEO URLs, the protection of hidden files (e.g. .git) and the cache rules take effect.');
+  define('TEXT_FINISHED_HTACCESS_SUBDIR', 'For the shop in a subdirectory, adapt <code>RewriteBase</code> and the paths of the <code>ErrorDocument</code> lines in the file.');
   define('TEXT_MODULES_INSTALLED', 'Intalled:');
   define('TEXT_MODULES_UNINSTALLED', 'Not installed:');
   define('TEXT_INFO_DO_INSTALL', 'The database is being installed.');

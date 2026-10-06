@@ -4,6 +4,13 @@
 <br />
 <br />
 
+{if isset($server_hint)}
+  <div class="infomessage">
+    <p>{$server_hint}</p>
+  </div>
+  <br />
+{/if}
+
 {if count($payment_methods.installed) > 0}
   <h2>{$smarty.const.TEXT_MODULES_INSTALLED}</h2>
   <ul class="modulelist">

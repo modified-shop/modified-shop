@@ -309,4 +309,34 @@ if (!empty($warnings)) {
 </div>
 <?php
 }
+
+/*******************************************************************************
+ ** web server rules check, runs in the browser:
+ ******************************************************************************/
+require_once(DIR_WS_CLASSES.'webserver_rules.php');
+$webserver_rules = new webserver_rules();
+
+// admins without access to Server Info get the warning without the link
+$webserver_rules_access = get_admin_access($_SESSION['customer_id']);
+$webserver_rules_link = (isset($webserver_rules_access['server_info']) && $webserver_rules_access['server_info'] == '1') ? '<a href="'.xtc_href_link(FILENAME_SERVER_INFO).'">Server Info</a>' : 'Server Info';
 ?>
+<div id="webserver_check_warning" style="display:none; margin:0 5px 6px">
+  <div style="float: left; width: 125px;"><?php echo xtc_image(DIR_WS_ICONS.'big_warning.png', ICON_WARNING, 106, 93); ?></div>
+  <div style="float: left; width: 85%;"><?php echo sprintf(WARNING_WEBSERVER_RULES, $webserver_rules_link); ?><ul id="webserver_check_files"></ul></div>
+  <div style="clear: both"></div>
+</div>
+<script type="text/javascript" src="includes/javascript/webserver_check.js"></script>
+<script type="text/javascript">
+  webserver_check_cached(<?php echo json_encode($webserver_rules->check_files()); ?>, function (exposed) {
+    if (exposed === null || exposed.length === 0) {
+      return;
+    }
+    var list = document.getElementById('webserver_check_files');
+    exposed.forEach(function (url) {
+      var item = document.createElement('li');
+      item.textContent = url;
+      list.appendChild(item);
+    });
+    document.getElementById('webserver_check_warning').style.display = 'block';
+  }, false);
+</script>

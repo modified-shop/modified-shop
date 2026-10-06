@@ -17,6 +17,50 @@
    --------------------------------------------------------------*/
 
 require('includes/application_top.php');
+require_once(DIR_WS_CLASSES.'webserver_rules.php');
+
+$webserver_rules = new webserver_rules();
+
+// download nginx configuration with the values of this shop
+if (isset($_GET['action']) && $_GET['action'] == 'nginx_config') {
+  $nginx_config = $webserver_rules->nginx_config();
+  if ($nginx_config !== false) {
+    header('Content-Type: text/plain; charset=utf-8');
+    header('Content-Disposition: attachment; filename="modified-shop.conf"');
+    echo $nginx_config;
+    exit();
+  }
+  xtc_redirect(xtc_href_link(FILENAME_SERVER_INFO));
+}
+
+// web server rules
+$nginx_config = false;
+$access_check_hint = '';
+switch ($webserver_rules->server()) {
+  case 'nginx':
+    $nginx_config = $webserver_rules->nginx_config();
+    if ($nginx_config !== false) {
+      $webserver_rules_text = TEXT_WEBSERVER_RULES_NGINX;
+    } elseif (DIR_WS_CATALOG != '/') {
+      $webserver_rules_text = TEXT_WEBSERVER_RULES_NGINX_SUBDIR;
+    } else {
+      $webserver_rules_text = TEXT_WEBSERVER_RULES_NGINX_MISSING;
+    }
+    $access_check_hint = TEXT_ACCESS_CHECK_HINT_NGINX;
+    break;
+  case 'apache':
+  case 'litespeed':
+    if (is_file(DIR_FS_CATALOG.'.htaccess')) {
+      $webserver_rules_text = TEXT_WEBSERVER_RULES_HTACCESS;
+    } else {
+      $webserver_rules_text = TEXT_WEBSERVER_RULES_HTACCESS_MISSING.((DIR_WS_CATALOG != '/') ? ' '.TEXT_WEBSERVER_RULES_HTACCESS_SUBDIR : '');
+    }
+    $access_check_hint = TEXT_ACCESS_CHECK_HINT_APACHE;
+    break;
+  default:
+    $webserver_rules_text = TEXT_WEBSERVER_RULES_UNKNOWN;
+    break;
+}
 
 // check for SSL Version
 $ssl_version = 'undefined';
@@ -159,7 +203,68 @@ require (DIR_WS_INCLUDES.'head.php');
               <td class="smallText"><strong><?php echo TITLE_SSL_VERSION; ?></strong></td>
               <td colspan="3" class="smallText"><?php echo $ssl_version; ?></td>
             </tr>
+            <tr>
+              <td colspan="4"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
+            </tr>
+            <tr>
+              <td class="smallText" style="vertical-align:top"><strong><?php echo TITLE_WEBSERVER_RULES; ?></strong></td>
+              <td colspan="3" class="smallText"><?php echo $webserver_rules_text; ?></td>
+            </tr>
+            <?php if ($nginx_config !== false) { ?>
+            <tr>
+              <td class="smallText"></td>
+              <td colspan="3" class="smallText">
+                <textarea readonly="readonly" rows="20" style="width:100%; font-family:monospace; font-size:11px;"><?php echo encode_htmlspecialchars($nginx_config); ?></textarea><br />
+                <a class="button" href="<?php echo xtc_href_link(FILENAME_SERVER_INFO, 'action=nginx_config'); ?>"><?php echo BUTTON_NGINX_CONFIG_DOWNLOAD; ?></a>
+              </td>
+            </tr>
+            <?php } ?>
+            <tr>
+              <td class="smallText" style="vertical-align:top"><strong><?php echo TITLE_ACCESS_CHECK; ?></strong></td>
+              <td colspan="3" class="smallText">
+                <div id="webserver_check_result"><?php echo TEXT_ACCESS_CHECK_RUNNING; ?></div>
+                <a class="button" href="#" id="webserver_check_repeat" style="display:none"><?php echo BUTTON_ACCESS_CHECK_REPEAT; ?></a>
+              </td>
+            </tr>
           </table>
+          <script type="text/javascript" src="includes/javascript/webserver_check.js"></script>
+          <script type="text/javascript">
+            (function () {
+              var urls = <?php echo json_encode($webserver_rules->check_files()); ?>;
+              var result = document.getElementById('webserver_check_result');
+              var repeat = document.getElementById('webserver_check_repeat');
+
+              function show(exposed, time) {
+                if (exposed === null) {
+                  result.innerHTML = <?php echo json_encode(TEXT_ACCESS_CHECK_FAILED); ?>;
+                } else if (exposed.length === 0) {
+                  result.innerHTML = <?php echo json_encode(TEXT_ACCESS_CHECK_OK); ?>;
+                } else {
+                  result.innerHTML = <?php echo json_encode(TEXT_ACCESS_CHECK_EXPOSED); ?>;
+                  var list = document.createElement('ul');
+                  exposed.forEach(function (url) {
+                    var item = document.createElement('li');
+                    item.textContent = url;
+                    list.appendChild(item);
+                  });
+                  result.appendChild(list);
+                  result.insertAdjacentHTML('beforeend', <?php echo json_encode($access_check_hint); ?>);
+                }
+                result.appendChild(document.createElement('br'));
+                result.appendChild(document.createTextNode(<?php echo json_encode(html_entity_decode(TEXT_ACCESS_CHECK_TIME, ENT_QUOTES, 'UTF-8')); ?> + ' ' + new Date(time).toLocaleString()));
+                repeat.style.display = 'inline-block';
+              }
+
+              repeat.onclick = function () {
+                repeat.style.display = 'none';
+                result.innerHTML = <?php echo json_encode(TEXT_ACCESS_CHECK_RUNNING); ?>;
+                webserver_check_cached(urls, show, true);
+                return false;
+              };
+
+              webserver_check_cached(urls, show, false);
+            })();
+          </script>
         </td>
       </tr>
     </table>
