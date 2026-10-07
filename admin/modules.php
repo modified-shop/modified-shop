@@ -622,7 +622,7 @@ if (xtc_not_null($action) && !$box) {
                       }
                       $keys .= call_user_func_array(array(${$class_method[0]}, $class_method[1]), array($value['value'], $key));
                     } elseif (strpos($value['set_function'], '(') !== false) {
-                      eval('$keys .= ' . $value['set_function'] . "'" . encode_htmlspecialchars($value['value'], ENT_QUOTES) . "', '" . $key . "');");
+                      eval('$keys .= ' . $value['set_function'] . var_export(encode_htmlspecialchars($value['value'], ENT_QUOTES), true) . ', ' . var_export($key, true) . ');');
                     } else {
                       $parameters = explode(';', $value['set_function']);
                       $function = trim($parameters[0]);

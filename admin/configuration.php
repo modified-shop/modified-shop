@@ -270,7 +270,7 @@
                     if ($_GET['gID'] != '6') {
                       if ($configuration['set_function']) {
                         if (strpos($configuration['set_function'], '(') !== false) {
-                          eval('$value_field = ' . $configuration['set_function'] . ' "' . encode_htmlspecialchars($configuration['configuration_value'], ENT_QUOTES) . '");');
+                          eval('$value_field = ' . $configuration['set_function'] . ' ' . var_export(encode_htmlspecialchars($configuration['configuration_value'], ENT_QUOTES), true) . ');');
                         } else {
                           $parameters = explode(';', $configuration['set_function']);
                           $function = trim($parameters[0]);
