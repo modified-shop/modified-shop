@@ -64,26 +64,20 @@
 
     $smarty = new Smarty();
 
-    // send_order.php checks the order against the session customer, so a caller
-    // that runs with a logged in customer gets its own values back afterwards
-    $session_backup = array();
-    foreach (array('customer_id', 'customer_country_id', 'customer_zone_id') as $key) {
-      if (isset($_SESSION[$key])) {
-        $session_backup[$key] = $_SESSION[$key];
-      }
-    }
+    // handed over as a variable: a customer written into the session would stay there if the request dies mid-mail
+    $send_order_customer_id = $orders['customers_id'];
 
-    $_SESSION['customer_id'] = $orders['customers_id'];
-    $_SESSION['customer_country_id'] = get_country_id($orders['customers_country_iso_code_2']);
-    $_SESSION['customer_zone_id'] = -1;
-    if ($_SESSION['customer_country_id'] > 0) {
+    // the region of the order for the afterbuy tax rates, same reason as above
+    $send_order_country_id = (int)get_country_id($orders['customers_country_iso_code_2']);
+    $send_order_zone_id = -1;
+    if ($send_order_country_id > 0) {
       $zones_query = xtc_db_query("SELECT zone_id
                                      FROM ".TABLE_ZONES."
                                     WHERE zone_name = '".xtc_db_input($orders['delivery_state'])."'
-                                      AND zone_country_id = '".(int)$_SESSION['customer_country_id']."'");
+                                      AND zone_country_id = '".(int)$send_order_country_id."'");
       if (xtc_db_num_rows($zones_query) > 0) {
         $zones = xtc_db_fetch_array($zones_query);
-        $_SESSION['customer_zone_id'] = $zones['zone_id'];
+        $send_order_zone_id = $zones['zone_id'];
       }
     }
 
@@ -93,13 +87,6 @@
     $main = $context_backup['main'];
     $xtPrice = $context_backup['xtPrice'];
     $insert_id = $context_backup['insert_id'];
-
-    foreach (array('customer_id', 'customer_country_id', 'customer_zone_id') as $key) {
-      unset($_SESSION[$key]);
-      if (isset($session_backup[$key])) {
-        $_SESSION[$key] = $session_backup[$key];
-      }
-    }
 
     return true;
   }
