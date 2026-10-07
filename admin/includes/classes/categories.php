@@ -1281,15 +1281,15 @@ class categories {
       if (isset ($cross_data['ids'])) {
         foreach ($cross_data['ids'] AS $pID) {
           $sql_data_array = array(
-            'products_id' => $cross_data['current_product_id'], 
-            'xsell_id' => $pID,
+            'products_id' => (int)$cross_data['current_product_id'], 
+            'xsell_id' => (int)$pID,
             'products_xsell_grp_name_id' => $cross_data['group_name'][$pID]
           );
           // check if product is already linked
           $check_query = xtc_db_query("SELECT * 
                                          FROM ".TABLE_PRODUCTS_XSELL." 
-                                        WHERE products_id = '".$cross_data['current_product_id']."' 
-                                          AND xsell_id = '".$pID."'");
+                                        WHERE products_id = '".(int)$cross_data['current_product_id']."' 
+                                          AND xsell_id = '".(int)$pID."'");
           if (xtc_db_num_rows($check_query) < 1) {
             xtc_db_perform(TABLE_PRODUCTS_XSELL, $sql_data_array);
           }
@@ -1301,7 +1301,7 @@ class categories {
       if (isset ($cross_data['ids'])) {
         // delete
         foreach ($cross_data['ids'] AS $pID) {
-          xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE ID='".$pID."'");
+          xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE ID='".(int)$pID."' AND products_id = '".(int)$cross_data['current_product_id']."'");
         }
       }
       if (isset ($cross_data['sort'])) {
@@ -1311,7 +1311,7 @@ class categories {
             'sort_order' => $sort_order,
             'products_xsell_grp_name_id' => $cross_data['group_name'][$ID]
           );
-          xtc_db_perform(TABLE_PRODUCTS_XSELL, $sql_data_array, 'update', "ID = '".$ID."'");                    
+          xtc_db_perform(TABLE_PRODUCTS_XSELL, $sql_data_array, 'update', "ID = '".(int)$ID."' AND products_id = '".(int)$cross_data['current_product_id']."'");                    
         }
       }
     }

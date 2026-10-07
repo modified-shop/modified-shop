@@ -97,10 +97,12 @@ class Inputfilter {
                   case 'rID':
                   case 'sID':
                   case 'bID':
+                  case 'current_product_id':
                       $this->params[$key] = $this->validateNumeric($value);
                       break;
                   //0-9a-zA-Z _ -
                   case 'action':
+                  case 'last_action':
                       $this->params[$key] = $this->validateSigns($value);
                       break;
                   //cPath
