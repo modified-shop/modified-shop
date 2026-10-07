@@ -1,8 +1,8 @@
 ##-- $Id$
 
 ##-- Default charset
-#AddDefaultCharset UTF-8
-AddDefaultCharset ISO-8859-15
+AddDefaultCharset UTF-8
+#AddDefaultCharset ISO-8859-15
 
 ##-- Disable the server signature
 ServerSignature Off
@@ -16,30 +16,37 @@ FileETag None
 
 ##-- When caching of gzipped JS and CSS files is used, enable this setting
 <IfModule mod_headers.c>
-  Header set Vary Accept-Encoding
+  Header merge Vary Accept-Encoding
 </IfModule>
-
-##-- when using Provider 1&1 set the following lines to activate PHP5
-#AddType x-mapp-php5 .php
-#AddHandler x-mapp-php5 .php
 
 ##-- Add Mime Types
 <IfModule mod_mime.c>
-  AddType application/font-woff2 .woff2
+  AddType font/woff2 .woff2
 </IfModule>
 
-# Disable directory browsing (disabled by default as this causes problems on some servers because they don't allow AllowOverride Directive for Options)
+##-- Disable directory browsing (uncomment if AllowOverride Options is permitted)
 #Options -Indexes
 
-##-- Enable the compression for any type of content
+##-- Protect hidden files, directories and the server templates while keeping .well-known reachable
+##-- Files of redirected downloads in pub/.<16 to 20 letters>/ stay reachable (DOWNLOAD_BY_REDIRECT)
+<IfModule mod_alias.c>
+  RedirectMatch 403 ^(?!.*/pub/\.[a-z]{16,20}/[^/.][^/]*$).*/\.(?!well-known(?:/|$))
+  RedirectMatch 403 /_(?:\.htaccess|nginx\.conf)(?:/|$)
+</IfModule>
+
+##-- Enable the compression for text based content (JPEG, PNG, GIF, WebP and WOFF are already compressed)
 <IfModule mod_deflate.c>
-  <FilesMatch "(\.js|\.css|\.html|\.htm|\.php|\.xml|\.ico|\.jpg|\.jpeg|\.png|\.gif|\.svg|\.webp|\.woff|\.woff2|\.ttf|\.otf|\.eot|\.JS|\.CSS|\.HTML|\.HTM|\.PHP|\.XML|\.ICO|\.JPG|\.JPEG|\.PNG|\.GIF|\.SVG|\.WEBP|\.WOFF|\.WOFF2|\.TTF|\.OTF|\.EOT)$">
+  <FilesMatch "(\.js|\.css|\.html|\.htm|\.php|\.xml|\.ico|\.svg|\.ttf|\.otf|\.eot|\.JS|\.CSS|\.HTML|\.HTM|\.PHP|\.XML|\.ICO|\.SVG|\.TTF|\.OTF|\.EOT)$">
     SetOutputFilter DEFLATE
   </FilesMatch>
 </IfModule>
 
 ##-- Customization of HTTP request and response headers
 <IfModule mod_headers.c>
+  ##-- Default for all other static files, the rules below override it per type
+  <FilesMatch "^(?!.*\.(?i:php[0-9]?|phtml)$)">
+    Header set Cache-Control "max-age=1, public, must-revalidate"
+  </FilesMatch>
   <FilesMatch "(\.ico|\.jpg|\.jpeg|\.png|\.gif|\.swf|\.flv|\.svg|\.webp|\.ICO|\.JPG|\.JPEG|\.PNG|\.GIF|\.SWF|\.FLV|\.SVG|\.WEBP)$">
     Header set Cache-Control "max-age=2592000, public, must-revalidate"
   </FilesMatch>
@@ -52,61 +59,22 @@ FileETag None
   <FilesMatch "(\.xml|\.txt|\.XML|\.TXT)$">
     Header set Cache-Control "max-age=604800, public, must-revalidate"
   </FilesMatch>
-  <FilesMatch "(\.html|\.htm|\.php|\.HTML|\.HTM|\.PHP)$">
+  <FilesMatch "(\.html|\.htm|\.HTML|\.HTM)$">
     Header set Cache-Control "max-age=1, private, must-revalidate"
   </FilesMatch>
 </IfModule>
 
-##-- Generation of Expires and Cache-Control HTTP headers
+##-- Cache-Control above handles static files; PHP keeps its application headers
 <IfModule mod_expires.c>
-  ExpiresActive On
-  ExpiresDefault "access plus 1 seconds"
-  ExpiresByType image/gif "access plus 2592000 seconds"
-  ExpiresByType image/jpg "access plus 2592000 seconds"
-  ExpiresByType image/jpeg "access plus 2592000 seconds"
-  ExpiresByType image/png "access plus 2592000 seconds"
-  ExpiresByType image/svg+xml "access plus 2592000 seconds"
-  ExpiresByType image/webp "access plus 2592000 seconds"
-  ExpiresByType text/html "access plus 1 seconds"
-  ExpiresByType text/css "access plus 604800 seconds"
-  ExpiresByType text/javascript "access plus 604800 seconds"
-  ExpiresByType application/x-javascript "access plus 604800 seconds"
-  ExpiresByType application/javascript "access plus 604800 seconds"
-  ExpiresByType text/x-component "access plus 604800 seconds"
-  ExpiresByType font/truetype "access plus 604800 seconds"
-  ExpiresByType font/opentype "access plus 604800 seconds"
-  ExpiresByType application/x-font-ttf "access plus 604800 seconds"
-  ExpiresByType application/x-font-woff "access plus 604800 seconds"
-  ExpiresByType application/font-woff "access plus 604800 seconds"
-  ExpiresByType application/vnd.ms-fontobject "access plus 604800 seconds"
-  ExpiresByType image/x-icon "access plus 604800 seconds"
-
-  <IfModule mod_headers.c>
-    Header append Cache-Control "public"
-  </IfModule>
+  ExpiresActive Off
 </IfModule>
 
 ##-- Configure php_flags if necessary
 ##-- BEGIN - use IfModule clause if PHP runs in CGI mode, otherwise just uncomment the lines with php_flag...
 #<IfModule mod_php.c>
 
-  ##-- Warn when arguments are passed by reference at function call time (from PHP5 allow_call_time_pass_reference is deprecated)
-  #php_flag allow_call_time_pass_reference on
-
   ##-- Disable transparent sid support PHP-default is off (XTC Session only on first visit)
   #php_flag session.use_trans_sid off
-
-  ##-- set suhosin flags because of errors with attributes (for webhosters with suhosin hardening patch enabled)
-  #php_value suhosin.post.max_array_depth 0
-  #php_value suhosin.post.max_array_index_length 0
-  #php_value suhosin.post.max_vars 0
-  #php_value suhosin.request.max_array_depth 0
-  #php_value suhosin.request.max_array_index_length 0
-  #php_value suhosin.request.max_vars 0
-
-  ##-- set suhosin flags to have unencrypted session data, affecting "whos_online" & "shopping cart" (for webhosters with suhosin hardening patch enabled)patch enabled
-  #php_value suhosin.session.encrypt Off
-  #php_value suhosin.session.cryptkey ''
 
 ##-- END - use IfModule clause if PHP runs in CGI mode, otherwise just uncomment the lines with php_flag...
 #</IfModule>
@@ -132,9 +100,6 @@ ErrorDocument 500 /error.php?error=500
   ##-- set the following line like e.g.: RewriteBase /shop/
   RewriteBase /
 
-  ##-- disallow access to dotfiles (.htaccess, .svn, .git, etc.)
-  #RedirectMatch 403 /\.
-  
   ##-- Use canonical URLs
   ##-- Use SSL-Proxy
   ##-- HostEurope
@@ -172,7 +137,7 @@ ErrorDocument 500 /error.php?error=500
   RewriteRule ^sitemap(.*)\.html$ shop_content.php?coID=8 [QSA,L]
 
   ##-- Robots
-  RewriteRule robots.txt robots.php [QSA,L]
+  RewriteRule ^robots\.txt$ robots.php [QSA,L]
   
   ##----------------------------------------------------------------------------------
   ##-- When working with SEO-Urls you can decide, whether to use a colon ":" or a dash "-" symbol
@@ -194,7 +159,7 @@ ErrorDocument 500 /error.php?error=500
   RewriteRule ::(.+)\.html$ product_info.php?products_id=$1 [QSA,L]
 
   ##-- Content (:_:)
-  RewriteRule ([\/]?)([a-z]{2})\/(.*):_:([0-9]+)\.html$ shop_content.php?coID=$4&language=$2 [QSA,L]
+  RewriteRule ^([\/]?)([a-z]{2})\/(.*):_:([0-9]+)\.html$ shop_content.php?coID=$4&language=$2 [QSA,L]
   RewriteRule :_:([0-9]+)\.html$ shop_content.php?coID=$1 [QSA,L]
 
   ##-- Manufacturers (:.:)
