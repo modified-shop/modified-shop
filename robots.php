@@ -12,7 +12,7 @@
 
   include ('includes/application_top.php');
   
-  header('content-type: text/plain;');
+  header('Content-Type: text/plain; charset=utf-8');
   
   if (is_file(DIR_FS_CATALOG.'robots.txt')) {
     readfile(DIR_FS_CATALOG.'robots.txt');
