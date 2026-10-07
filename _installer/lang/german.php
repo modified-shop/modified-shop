@@ -197,6 +197,9 @@
   define('TEXT_ACCOUNT_PASSWORD_POLICY', 'Ein sicheres Passwort muss mindestens %s Zeichen lang sein und sollte neben Gro&szlig;- und Kleinbuchstaben auch Zahlen sowie Sonderzeichen (au&szlig;er Backslash "\") enthalten.');
 
   define('TEXT_FINISHED', 'Hier k&ouml;nnen Sie bereits die beliebten Zahlungsweisen von PayPal installieren.');
+  define('TEXT_FINISHED_NGINX', 'Ihr Server l&auml;uft mit nginx. nginx ignoriert die .htaccess-Dateien des Shops. &Uuml;bernehmen Sie die Vorlage <code>_nginx.conf</code> aus dem Shop-Hauptverzeichnis in Ihre nginx-Konfiguration. Eine Version mit den Werten Ihres Shops finden Sie im Admin unter &quot;Hilfsprogramme &gt; Server Info&quot;.');
+  define('TEXT_FINISHED_HTACCESS', 'Benennen Sie im Shop-Hauptverzeichnis die Datei <code>_.htaccess</code> in <code>.htaccess</code> um. Erst dann greifen SEO-URLs, der Schutz versteckter Dateien (z. B. .git) und die Cache-Regeln.');
+  define('TEXT_FINISHED_HTACCESS_SUBDIR', 'Passen Sie f&uuml;r den Shop im Unterverzeichnis in der Datei <code>RewriteBase</code> und die Pfade der <code>ErrorDocument</code>-Zeilen an.');
   define('TEXT_MODULES_INSTALLED', 'Installiert:');
   define('TEXT_MODULES_UNINSTALLED', 'Nicht installiert:');
   define('TEXT_INFO_DO_INSTALL', 'Die Datenbank wird installiert.');

@@ -28,4 +28,24 @@ define('TITLE_DATABASE_HOST', 'Datenbank Host:');
 define('TITLE_DATABASE', 'Datenbank:');
 define('TITLE_DATABASE_DATE', 'Datenbank Datum:');
 define('TITLE_SSL_VERSION', 'SSL Version:');
+
+define('TITLE_WEBSERVER_RULES', 'Webserver-Regeln:');
+define('TEXT_WEBSERVER_RULES_HTACCESS', 'Die Datei .htaccess im Hauptverzeichnis des Shops ist vorhanden.');
+define('TEXT_WEBSERVER_RULES_HTACCESS_MISSING', 'Im Hauptverzeichnis des Shops fehlt die Datei .htaccess. Benennen Sie _.htaccess in .htaccess um. Erst dann greifen SEO-URLs, der Schutz versteckter Dateien wie .git und die Cache-Regeln.');
+define('TEXT_WEBSERVER_RULES_HTACCESS_SUBDIR', 'Passen Sie f&uuml;r den Shop im Unterverzeichnis in der Datei RewriteBase und die Pfade der ErrorDocument-Zeilen an.');
+define('TEXT_WEBSERVER_RULES_NGINX', 'nginx liest keine .htaccess-Dateien. &Uuml;bernehmen Sie die folgende Konfiguration in die nginx-Konfiguration. Pr&uuml;fen Sie den Pfad des PHP-FPM-Sockets und richten Sie HTTPS ein. F&uuml;hren Sie danach nginx -t aus und laden Sie nginx neu.');
+define('TEXT_WEBSERVER_RULES_NGINX_MISSING', 'nginx liest keine .htaccess-Dateien. Die Vorlage _nginx.conf fehlt im Hauptverzeichnis des Shops.');
+define('TEXT_WEBSERVER_RULES_NGINX_SUBDIR', 'nginx liest keine .htaccess-Dateien. Die Vorlage _nginx.conf gilt f&uuml;r einen Shop im Domain-Root und muss f&uuml;r das Unterverzeichnis angepasst werden.');
+define('TEXT_WEBSERVER_RULES_UNKNOWN', 'Der Webserver wurde nicht erkannt. Ob seine Zugriffsregeln greifen, zeigt die Pr&uuml;fung des Zugriffsschutzes.');
+define('BUTTON_NGINX_CONFIG_DOWNLOAD', 'Konfiguration herunterladen');
+
+define('TITLE_ACCESS_CHECK', 'Zugriffsschutz:');
+define('TEXT_ACCESS_CHECK_RUNNING', 'Wird gepr&uuml;ft ...');
+define('TEXT_ACCESS_CHECK_OK', 'Dateien aus gesch&uuml;tzten Verzeichnissen sind nicht &ouml;ffentlich abrufbar.');
+define('TEXT_ACCESS_CHECK_EXPOSED', '<strong>WARNUNG:</strong> Diese Dateien aus gesch&uuml;tzten Verzeichnissen sind &ouml;ffentlich abrufbar. Die Zugriffsregeln des Webservers greifen nicht:');
+define('TEXT_ACCESS_CHECK_FAILED', 'Die Pr&uuml;fung war nicht oder nicht vollst&auml;ndig m&ouml;glich. Pr&uuml;fen Sie sp&auml;ter erneut.');
+define('TEXT_ACCESS_CHECK_HINT_APACHE', 'Pr&uuml;fen Sie, ob der Webserver die .htaccess-Dateien auswertet (AllowOverride All). OpenLiteSpeed wertet Zugriffsregeln aus .htaccess-Dateien nicht aus. Liefert ein vorgeschalteter nginx statische Dateien direkt aus, wie es Plesk optional anbietet, umgeht er die .htaccess-Dateien.');
+define('TEXT_ACCESS_CHECK_HINT_NGINX', 'Die Regeln aus _nginx.conf sind nicht aktiv. &Uuml;bernehmen Sie sie in die nginx-Konfiguration und laden Sie nginx neu.');
+define('TEXT_ACCESS_CHECK_TIME', 'Gepr&uuml;ft:');
+define('BUTTON_ACCESS_CHECK_REPEAT', 'Erneut pr&uuml;fen');
 ?>

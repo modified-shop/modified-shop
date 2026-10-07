@@ -711,7 +711,8 @@ empty-cells:show;
 }
 
 /* Admin security messages */
-#security_info {
+#security_info,
+#webserver_check_warning {
 border: 1px solid; 
 border-color: #DC143C; 
 background-color:#F2DEDE; 
@@ -720,15 +721,18 @@ font-family: Verdana, Arial, sans-serif;
 font-size: 12px;
 clear:both;
 }
-#security_info ul {
+#security_info ul,
+#webserver_check_warning ul {
 list-style-position: inside; 
 margin-top: 0px; 
 padding-left:20px;
 }
-#security_info ul li{
+#security_info ul li,
+#webserver_check_warning ul li{
 font-weight:bold;
 }
-#security_info a{
+#security_info a,
+#webserver_check_warning a{
 font-size: 12px;
 font-weight: bold;
 text-decoration: underline;

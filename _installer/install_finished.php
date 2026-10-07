@@ -105,6 +105,19 @@
     
   $smarty->assign('BUTTON_SHOP', '<a href="'.xtc_href_link(DIR_WS_INSTALLER, 'action=shop', $request_type).'">'.BUTTON_SHOP.'</a>');
   $smarty->assign('payment_methods', $directory_array);  
+
+  // Hint only, never rename .htaccess automatically (AllowOverride can cause a 500)
+  $server_software = (isset($_SERVER['SERVER_SOFTWARE']) ? strtolower($_SERVER['SERVER_SOFTWARE']) : '');
+  if (strpos($server_software, 'nginx') !== false) {
+    $smarty->assign('server_hint', TEXT_FINISHED_NGINX);
+  } elseif ((strpos($server_software, 'apache') !== false || strpos($server_software, 'litespeed') !== false)
+            && !is_file(DIR_FS_CATALOG.'.htaccess')
+            && is_file(DIR_FS_CATALOG.'_.htaccess')
+            )
+  {
+    $smarty->assign('server_hint', TEXT_FINISHED_HTACCESS.((DIR_WS_CATALOG != '/') ? ' '.TEXT_FINISHED_HTACCESS_SUBDIR : ''));
+  }
+
   $smarty->assign('language', $_SESSION['language']);
   $module_content = $smarty->fetch('install_finished.html');
   
