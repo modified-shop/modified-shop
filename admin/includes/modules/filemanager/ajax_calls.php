@@ -85,6 +85,19 @@ if (isset($_GET['action'])) {
 			break;
 		case 'save_img':
 			$info = pathinfo($_POST['name']);
+
+            // the image editor only overwrites an existing image of the current folder
+            if (strpbrk($_POST['name'], '/\\') !== false
+                || !isset($info['extension'])
+                // an inner executable extension can still select a script handler on some servers
+                || preg_match('/\.(php[0-9]*|pht|phtml|phar|pl|py|cgi|asp|aspx|jsp|sh|shtml|htaccess)\./i', $_POST['name'])
+                || !in_array(fix_strtolower($info['extension']), array('jpg', 'jpeg', 'png', 'gif', 'bmp'))
+                || (!$ftp && !is_file($config['current_path'] . $_POST['path'] . $_POST['name']))
+                ) {
+                response(trans('wrong name').AddErrorLocation())->send();
+                exit;
+            }
+
             $image_data = $_POST['url'];
 
             if (preg_match('/^data:image\/(\w+);base64,/', $image_data, $type)) {
