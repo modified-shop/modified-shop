@@ -111,6 +111,11 @@ class PayPalCommon extends PayPalAuth {
 
 
   function get_config($config_key, $cache = true) {
+    // the secret must not reach the file based sql cache, the cache directory may be public
+    if (strpos($config_key, 'PAYPAL_SECRET_') === 0) {
+      $cache = false;
+    }
+
     static $config_array;
     
     if (!is_array($config_array)) {
