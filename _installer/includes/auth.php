@@ -84,6 +84,11 @@
       // make a connection to the database... now
       $check_db = xtc_db_connect();
       
+      // an installed shop without database connection must not skip the login
+      if ($check_db === false) {
+        die('Unable to connect to database server!');
+      }
+
       if ($check_db !== false) {
         $check_db = false;
         
