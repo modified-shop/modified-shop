@@ -16,6 +16,10 @@
   {
     defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
     defined('MODULE_WITHDRAW_TOKEN_HOURS') or define('MODULE_WITHDRAW_TOKEN_HOURS', 24);
+    defined('MODULE_WITHDRAW_CAPTCHA_NUM') or define('MODULE_WITHDRAW_CAPTCHA_NUM', 3);
+    defined('MODULE_WITHDRAW_LOCK_NUM') or define('MODULE_WITHDRAW_LOCK_NUM', 10);
+    defined('MODULE_WITHDRAW_ATTEMPT_MINUTES') or define('MODULE_WITHDRAW_ATTEMPT_MINUTES', 60);
+    defined('MODULE_WITHDRAW_VERIFY_MINUTES') or define('MODULE_WITHDRAW_VERIFY_MINUTES', 15);
   
     // include needed functions
     require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
@@ -24,6 +28,9 @@
     require_once (DIR_FS_INC.'xtc_date_long.inc.php');
     require_once (DIR_FS_INC.'xtc_datetime_short.inc.php');
     require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+    require_once (DIR_FS_INC.'xtc_withdraw_attempts_count.inc.php');
+    require_once (DIR_FS_INC.'xtc_withdraw_attempts_add.inc.php');
+    require_once (DIR_FS_INC.'xtc_withdraw_attempts_reset.inc.php');
   
     // include needed classes
     require_once(DIR_WS_CLASSES.'modified_captcha.php');
@@ -69,6 +76,18 @@
           }
         }
     
+        // failed lookups per ip and per e-mail address, the ip is empty when it cannot be determined reliably
+        $withdraw_ip = xtc_get_ip_address();
+        $withdraw_email = ((isset($email_address) && is_string($email_address)) ? substr(strtolower(trim($email_address)), 0, 255) : '');
+        $withdraw_attempts = xtc_withdraw_attempts_count($withdraw_ip, $withdraw_email);
+        $withdraw_captcha_forced = ($withdraw_attempts['ip'] >= MODULE_WITHDRAW_CAPTCHA_NUM || $withdraw_attempts['email'] >= MODULE_WITHDRAW_CAPTCHA_NUM);
+        $withdraw_captcha_valid = false;
+
+        if ($withdraw_attempts['ip'] >= MODULE_WITHDRAW_LOCK_NUM) {
+          $messageStack->add('withdraw', TEXT_WITHDRAW_LOCKED);
+          $error = true;
+        }
+
         if (!isset($name) || mb_strlen($name, $_SESSION['language_charset']) < ENTRY_LAST_NAME_MIN_LENGTH) {
           $error = true;
           $messageStack->add('withdraw', ENTRY_LAST_NAME_ERROR);
@@ -84,10 +103,16 @@
           $error = true;
         }
         
-        if (in_array('withdrawal', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
+        if ($withdraw_captcha_forced === true
+            || (in_array('withdrawal', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True'))
+            )
+        {
           if ($mod_captcha->validate((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '') !== true) {
-            $messageStack->add('withdraw', strip_tags(ERROR_VVCODE, '<b><strong>'));
+            // the field only shows up after the third failure, so say why it is asked for
+            $messageStack->add('withdraw', (($withdraw_captcha_forced === true && empty($_POST['vvcode'])) ? TEXT_WITHDRAW_CAPTCHA_REQUIRED : strip_tags(ERROR_VVCODE, '<b><strong>')));
             $error = true;
+          } else {
+            $withdraw_captcha_valid = true;
           }
         }
 
@@ -102,6 +127,25 @@
         }
         
         if ($error === false) {
+          // booked before the lookup, so parallel requests count each other and cannot all slip under the limits
+          $withdraw_attempt_id = xtc_withdraw_attempts_add($withdraw_ip, $withdraw_email);
+          $withdraw_attempts = xtc_withdraw_attempts_count($withdraw_ip, $withdraw_email);
+          $withdraw_locked = ($withdraw_attempts['ip'] > MODULE_WITHDRAW_LOCK_NUM);
+          if ($withdraw_locked === true
+              || ($withdraw_captcha_valid === false
+                  && ($withdraw_attempts['ip'] > MODULE_WITHDRAW_CAPTCHA_NUM || $withdraw_attempts['email'] > MODULE_WITHDRAW_CAPTCHA_NUM)
+                  )
+              )
+          {
+            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_ATTEMPTS."
+                                WHERE orders_withdraw_attempts_id = '".(int)$withdraw_attempt_id."'");
+            $withdraw_captcha_forced = true;
+            $messageStack->add('withdraw', (($withdraw_locked === true) ? TEXT_WITHDRAW_LOCKED : TEXT_WITHDRAW_CAPTCHA_REQUIRED));
+            $error = true;
+          }
+        }
+
+        if ($error === false) {
           $orders_query = xtc_db_query("SELECT *
                                           FROM ".TABLE_ORDERS."
                                          WHERE orders_id = '".(int)$orders_id."'
@@ -111,9 +155,16 @@
                                                 OR billing_lastname = '".xtc_db_input($name)."'
                                                 )");
           if (xtc_db_num_rows($orders_query) < 1) {          
+            // this failure may reach the limit, so the form shown next needs the captcha already
+            $withdraw_attempts = xtc_withdraw_attempts_count($withdraw_ip, $withdraw_email);
+            $withdraw_captcha_forced = ($withdraw_attempts['ip'] >= MODULE_WITHDRAW_CAPTCHA_NUM || $withdraw_attempts['email'] >= MODULE_WITHDRAW_CAPTCHA_NUM);
             $messageStack->add('withdraw', ENTRY_TOKEN_ERROR);
           } else {
             $orders = xtc_db_fetch_array($orders_query);
+
+            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_ATTEMPTS."
+                                WHERE orders_withdraw_attempts_id = '".(int)$withdraw_attempt_id."'");
+            xtc_withdraw_attempts_reset($withdraw_email);
 
             // owning the order while logged in identifies the customer just as well as the double opt-in does
             $verified = (isset($_SESSION['customer_id'])
@@ -180,8 +231,10 @@
             $token = xtc_db_fetch_array($token_query);
             $orders_id = (int)$token['orders_id'];
 
-            // single use: only the request that actually removes the row has redeemed the token
-            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_TOKEN."
+            // single use: only the request that replaces the token has redeemed it,
+            // the row stays so that its date_added keeps throttling the next mail
+            xtc_db_query("UPDATE ".TABLE_ORDERS_WITHDRAW_TOKEN."
+                             SET token = '".xtc_db_input(xtc_random_charcode(32))."'
                            WHERE token = '".xtc_db_input($_REQUEST['key'])."'");
             if (xtc_db_affected_rows() !== 1) {
               $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
@@ -234,16 +287,34 @@
           $orders_id = (int)$withdraw_array['orders_id'];
           $orders = $withdraw_array['orders'];
 
+          // a plain link must not trigger a mail, only the form with its token does
+          if ($_SERVER['REQUEST_METHOD'] != 'POST' || check_secure_form($_POST) === false) {
+            $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
+            xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key')).'action=validate'));
+          }
+
           xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_TOKEN."
                          WHERE date_expires < now()");
 
-          // orders_id is unique, so this replaces a pending token instead of adding a second one
+          // orders_id is unique, so the row also throttles: a token younger than the limit stays untouched
+          // (date_added has to be assigned last, the conditions read the old value)
           $key = xtc_random_charcode(32);
+          $token_old = "date_added < now() - interval ".(int)MODULE_WITHDRAW_VERIFY_MINUTES." minute";
           xtc_db_query("INSERT INTO ".TABLE_ORDERS_WITHDRAW_TOKEN." (orders_id, token, date_added, date_expires)
                              VALUES ('".$orders_id."', '".xtc_db_input($key)."', now(), now() + interval ".(int)MODULE_WITHDRAW_TOKEN_HOURS." hour)
-        ON DUPLICATE KEY UPDATE token = VALUES(token),
-                                date_added = VALUES(date_added),
-                                date_expires = VALUES(date_expires)");
+        ON DUPLICATE KEY UPDATE token = IF(".$token_old.", VALUES(token), token),
+                                date_expires = IF(".$token_old.", VALUES(date_expires), date_expires),
+                                date_added = IF(".$token_old.", VALUES(date_added), date_added)");
+
+          // the row holds the new token only if this request won, otherwise a mail went out recently
+          $token_query = xtc_db_query("SELECT token
+                                         FROM ".TABLE_ORDERS_WITHDRAW_TOKEN."
+                                        WHERE orders_id = '".$orders_id."'");
+          $token = xtc_db_fetch_array($token_query);
+          if (!isset($token['token']) || $token['token'] !== $key) {
+            $messageStack->add_session('withdraw', TEXT_WITHDRAW_VERIFY_WAIT, 'success');
+            xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key')).'action=validate'));
+          }
 
           $link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key', 'oID')).'action=validate&key='.$key, 'SSL');
     
@@ -262,7 +333,7 @@
           $withdraw_subject = str_replace('{$nr}', $orders['orders_id'], EMAIL_WITHDRAW_SUBJECT);
           $withdraw_subject = str_replace('{$date}', xtc_date_long($orders['date_purchased']), $withdraw_subject);
          
-          xtc_php_mail(EMAIL_BILLING_ADDRESS,
+          $withdraw_mail_sent = xtc_php_mail(EMAIL_BILLING_ADDRESS,
                        EMAIL_BILLING_NAME,
                        trim($orders['customers_email_address']),
                        $orders['customers_name'],
@@ -277,6 +348,15 @@
                        1
                        );
           
+          // without a sent mail the resend lock would only make the customer wait
+          if ($withdraw_mail_sent === false) {
+            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_TOKEN."
+                           WHERE orders_id = '".$orders_id."'
+                             AND token = '".xtc_db_input($key)."'");
+            $messageStack->add_session('withdraw', TEXT_WITHDRAW_VERIFY_MAIL_ERROR);
+            xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key')).'action=validate'));
+          }
+
           $messageStack->add_session('withdraw', TEXT_WITHDRAW_VERIFY_INFO, 'success');
           xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key')).'action=validate'));
         } else {
@@ -305,8 +385,13 @@
           if ($withdraw_array['verified'] === true) {
             $products_qty = ((isset($_POST['products_qty']) && is_array($_POST['products_qty'])) ? $_POST['products_qty'] : array());
           } else {
-            // without the double opt-in only a full withdrawal is offered, so the positions come from the
-            // database and the post is ignored entirely, otherwise dropping a hidden field would make it partial
+            // a selection needs the double opt-in, so an unverified session only gets the full withdrawal
+            // and the positions come from the database
+            if (isset($_POST['products_qty'])) {
+              $messageStack->add('withdraw', ENTRY_WITHDRAW_PARTLY_ERROR);
+              break;
+            }
+
             $products_qty = array();
             $open_query = xtc_db_query("SELECT op.orders_products_id,
                                                op.products_quantity,
@@ -608,7 +693,6 @@
       } elseif ($withdraw_array['valid'] === true) {
         $smarty->assign('FORM_ACTION', xtc_draw_form('withdraw', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key')).'action=withdraw', 'SSL')).secure_form('withdraw'));
         
-        $hidden_data_array = array();
         $orders_withdraw_products_array = array();
         $orders_withdraw_products_query = xtc_db_query("SELECT op.*,
                                                                o.currency,
@@ -648,21 +732,25 @@
               'PRODUCTS_QTY' => xtc_draw_input_field('products_qty['.$orders_withdraw_products['orders_products_id'].']', ((isset($_POST['products_qty'][$orders_withdraw_products['orders_products_id']])) ? (int)$_POST['products_qty'][$orders_withdraw_products['orders_products_id']] : 0)),
               'PRODUCTS_ATTRIBUTES' => $attributes_array,
             );
-            
-            $hidden_data_array[] = xtc_draw_hidden_field('products_qty['.$orders_withdraw_products['orders_products_id'].']', ((int)$orders_withdraw_products['products_quantity'] - (int)$orders_withdraw_products['withdraw_quantity']));
           }
         }
   
-        $smarty->assign('WITHDRAW_INFO', sprintf(TEXT_WITHDRAW_INFO, $orders_id, xtc_date_long($orders['date_purchased'])));
-        
-        $smarty->assign('PRODUCTS', $orders_withdraw_products_array);
+        // positions and order date stay hidden until the e-mail address is verified
+        $smarty->assign('WITHDRAW_OPEN', count($orders_withdraw_products_array));
+        if ($withdraw_array['verified'] === true) {
+          $smarty->assign('WITHDRAW_INFO', sprintf(TEXT_WITHDRAW_INFO, $orders_id, xtc_date_long($orders['date_purchased'])));
+          $smarty->assign('PRODUCTS', $orders_withdraw_products_array);
+        } else {
+          $smarty->assign('WITHDRAW_INFO', sprintf(TEXT_WITHDRAW_INFO_SHORT, $orders_id));
+        }
   
         if (count($orders_withdraw_products_array) > 0) {
           if ($withdraw_array['verified'] === false) {   
-            $smarty->assign('TEXT_WITHDRAW_PARTLY', sprintf(TEXT_WITHDRAW_PARTLY, xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=verify', 'SSL')));
-            $smarty->assign('HIDDEN_DATA', $hidden_data_array);
+            $smarty->assign('TEXT_WITHDRAW_PARTLY', TEXT_WITHDRAW_PARTLY);
+            $smarty->assign('VERIFY_FORM_ACTION', xtc_draw_form('withdraw_verify', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key')).'action=verify', 'SSL')).secure_form('withdraw'));
+            $smarty->assign('BUTTON_VERIFY', xtc_image_submit('button_withdraw_verify.gif', IMAGE_BUTTON_WITHDRAW_VERIFY));
           }
-          $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_send.gif', IMAGE_BUTTON_WITHDRAW));
+          $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_withdraw.gif', IMAGE_BUTTON_WITHDRAW));
         }
         $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(basename($PHP_SELF), 'coID='.(int)$_GET['coID'], 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
         $smarty->assign('FORM_END', '</form>');
@@ -671,7 +759,15 @@
       }
     } else {    
       $smarty->assign('FORM_ACTION', xtc_draw_form('withdraw', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=auth', 'SSL')).secure_form('withdraw'));
-      if (in_array('withdrawal', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
+      // after repeated failures from this ip the captcha is shown, the e-mail based case is only known after a post
+      if (!isset($withdraw_captcha_forced)) {
+        $withdraw_attempts = xtc_withdraw_attempts_count(xtc_get_ip_address(), '');
+        $withdraw_captcha_forced = ($withdraw_attempts['ip'] >= MODULE_WITHDRAW_CAPTCHA_NUM);
+      }
+      if ($withdraw_captcha_forced === true
+          || (in_array('withdrawal', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True'))
+          )
+      {
         $smarty->assign('VVIMG', $mod_captcha->get_image_code());
         $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
       }

@@ -708,8 +708,15 @@ define('TEXT_WITHDRAW_PRODUCTS_SELECT', 'Please specify the number of items you 
 define('TEXT_WITHDRAW_NO_PRODUCTS', 'There are no items that could be returned.');
 define('TEXT_WITHDRAW_SUCCESS', 'Thank you very much for your enquiry.<br/>We have successfully received your cancellation and will process it as soon as possible.<br/><br/>Our team is reviewing your details and will take care of the next steps. You will shortly receive a confirmation and further information regarding the refund process.<br/><br/>Please bear in mind that processing may take some time. We will endeavour to resolve your matter as quickly as possible.');
 define('TEXT_WITHDRAW_PRODUCTS_SUCCESS', 'Here is a summary of the withdrawn products:');
-define('TEXT_WITHDRAW_PARTLY', 'You can also cancel only part of your order. To do so, we need to verify your email address through a double opt-in process. Please use this <a href="%s">LINK</a> to send an email with a confirmation link. You can also cancel the entire order by clicking the "'.TEXT_WITHDRAW_HEADING.'" button.');
+define('IMAGE_BUTTON_WITHDRAW_VERIFY', 'Send confirmation email');
+define('TEXT_WITHDRAW_PARTLY', 'You can also cancel only part of your order. To do so, we need to verify your email address through a double opt-in process. Please use the "'.IMAGE_BUTTON_WITHDRAW_VERIFY.'" button to receive an email with a confirmation link. You can also cancel the entire order by clicking the "'.TEXT_WITHDRAW_HEADING.'" button.');
 define('TEXT_WITHDRAW_VERIFY_INFO', 'We have just sent you an email to confirm your email address as part of the double opt-in process. Please open the email and click on the confirmation link inside to complete the process and gain access to your order details.');
+define('TEXT_WITHDRAW_INFO_SHORT', 'Your order %s');
+define('TEXT_WITHDRAW_VERIFY_WAIT', 'We recently sent you an email with a confirmation link. Please check your inbox, including the spam folder, and wait a few minutes before requesting another email.');
+define('TEXT_WITHDRAW_VERIFY_MAIL_ERROR', 'The email with the confirmation link could not be sent. Please try again.');
+define('TEXT_WITHDRAW_LOCKED', 'There were too many unsuccessful attempts. Please try again later.');
+define('TEXT_WITHDRAW_CAPTCHA_REQUIRED', 'Please also enter the security code.');
+define('ENTRY_WITHDRAW_PARTLY_ERROR', 'A partial withdrawal is only possible after your email address has been verified.');
 define('TEXT_WITHDRAW_HISTORY_HEADING', 'Withdrawn items');
 define('TEXT_WITHDRAW_HISTORY_INFO', 'We have received your withdrawal for the items listed here. As soon as we have reviewed your details, we will get back to you regarding the next steps.');
 define('TEXT_WITHDRAW_HISTORY_DATE', 'Withdrawn on');

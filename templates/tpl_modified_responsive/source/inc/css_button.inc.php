@@ -43,6 +43,7 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
     'button_product_more' => array(),
     'button_in_wishlist' => array(),
     'button_confirm' => array(),
+    'button_withdraw_verify' => array(),
     'button_continue_account' => array(),
     'button_continue_guest' => array(),
     'button_box_warenkorb' => array(),
@@ -61,6 +62,9 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
       'class' => 'cssButtonColor2',
     ),
     'button_send' => array(
+      'class' => 'cssButtonColor2',
+    ),
+    'button_withdraw' => array(
       'class' => 'cssButtonColor2',
     ),
     'button_add_address' => array(

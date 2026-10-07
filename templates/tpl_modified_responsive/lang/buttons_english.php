@@ -65,6 +65,18 @@ define('CSS_IMAGE_BUTTON_SEND_ICON_RIGHT', '');
 define('CSS_IMAGE_BUTTON_SEND_ICON_LEFT', '<i class="far fa-check-square"></i>');
 
 
+//define('CSS_IMAGE_BUTTON_WITHDRAW_TEXT', '');
+//define('CSS_IMAGE_BUTTON_WITHDRAW_TITLE', '');
+define('CSS_IMAGE_BUTTON_WITHDRAW_ICON_RIGHT', '');
+define('CSS_IMAGE_BUTTON_WITHDRAW_ICON_LEFT', '<i class="far fa-check-square"></i>');
+
+
+//define('CSS_IMAGE_BUTTON_WITHDRAW_VERIFY_TEXT', '');
+//define('CSS_IMAGE_BUTTON_WITHDRAW_VERIFY_TITLE', '');
+define('CSS_IMAGE_BUTTON_WITHDRAW_VERIFY_ICON_RIGHT', '');
+define('CSS_IMAGE_BUTTON_WITHDRAW_VERIFY_ICON_LEFT', '<i class="far fa-envelope"></i>');
+
+
 //define('CSS_IMAGE_BUTTON_ADD_ADDRESS_TEXT', '');
 //define('CSS_IMAGE_BUTTON_ADD_ADDRESS_TITLE', '');
 define('CSS_IMAGE_BUTTON_ADD_ADDRESS_ICON_RIGHT', '');

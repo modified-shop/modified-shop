@@ -607,6 +607,18 @@
                    UNIQUE KEY `idx_orders_id` (`orders_id`)
                    )");
 
+    // failed order lookups of the form, counted per ip and per e-mail address
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_ORDERS_WITHDRAW_ATTEMPTS." (
+                   `orders_withdraw_attempts_id` int(11) NOT NULL AUTO_INCREMENT,
+                   `customers_ip` varchar(50) NOT NULL DEFAULT '',
+                   `customers_email_address` varchar(255) NOT NULL DEFAULT '',
+                   `date_added` datetime NOT NULL,
+                   PRIMARY KEY (`orders_withdraw_attempts_id`),
+                   KEY `idx_customers_ip` (`customers_ip`),
+                   KEY `idx_customers_email_address` (`customers_email_address`(64)),
+                   KEY `idx_date_added` (`date_added`)
+                   )");
+
     $check_query = xtc_db_query("SHOW KEYS
                                   FROM ".TABLE_ORDERS_WITHDRAW_PRODUCTS."
                                  WHERE Key_name = 'idx_orders_products_id'");
