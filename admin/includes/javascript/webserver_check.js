@@ -65,9 +65,19 @@ function webserver_check(urls, callback) {
     fetch(url, {cache: 'no-store', credentials: 'omit', signal: (controller ? controller.signal : undefined)})
       .then(function (response) {
         if (response.status === 200) {
-          // a redirect to another address did not deliver the file itself
-          if (response.url && response.url.split(/[?#]/)[0].slice(-url.length) !== url) {
-            settle('closed');
+          // compare parsed urls, so percent encoding of spaces or umlauts is no redirect;
+          // another address or a missing url tells nothing about the probe
+          try {
+            var requested = new URL(url, document.baseURI);
+            var received = new URL(response.url);
+            requested.hash = '';
+            received.hash = '';
+            if (requested.href !== received.href) {
+              settle('open');
+              return;
+            }
+          } catch (e) {
+            settle('open');
             return;
           }
           // an error page delivered with status 200 is not empty
