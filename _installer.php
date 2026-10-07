@@ -21,6 +21,101 @@
   if (!class_exists('ZipArchive')) {
     die('needed class ZipArchive not exists');
   }
+
+  // true if the token is an empty string literal and the expression ends right behind it
+  function installer_is_empty_value($tokens, $i, $ends) {
+    return (isset($tokens[$i + 1])
+            && is_array($tokens[$i])
+            && $tokens[$i][0] == T_CONSTANT_ENCAPSED_STRING
+            && strlen($tokens[$i][1]) == 2
+            && in_array($tokens[$i + 1], $ends, true)
+            );
+  }
+
+  // reads the database settings of a configure file without running it, the file loads half the shop
+  function installer_is_configured($file) {
+    if (!is_file($file)) {
+      return false;
+    }
+    $content = (string)file_get_contents($file);
+
+    if (!function_exists('token_get_all')) {
+      return (strpos($content, 'DB_SERVER_USERNAME') !== false || strpos($content, 'DB_DATABASE') !== false);
+    }
+
+    $tokens = array();
+    foreach (token_get_all($content) as $token) {
+      if (!is_array($token) || !in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT))) {
+        $tokens[] = $token;
+      }
+    }
+
+    $names = array('DB_SERVER_USERNAME', 'DB_DATABASE');
+    for ($i = 0, $n = count($tokens); $i < $n; $i++) {
+      $value = false;
+      if (is_array($tokens[$i])
+          && strtolower(ltrim($tokens[$i][1], '\\')) == 'define'
+          && isset($tokens[$i + 3])
+          && $tokens[$i + 1] === '('
+          && is_array($tokens[$i + 2])
+          && $tokens[$i + 2][0] == T_CONSTANT_ENCAPSED_STRING
+          && in_array(substr($tokens[$i + 2][1], 1, -1), $names)
+          && $tokens[$i + 3] === ','
+          )
+      {
+        $value = $i + 4;
+      } elseif (is_array($tokens[$i]) && $tokens[$i][0] == T_CONST) {
+        // one const statement can declare several constants, walk them up to the ';'
+        $depth = 0;
+        for ($j = $i + 1; $j < $n; $j++) {
+          if ($depth == 0) {
+            if ($tokens[$j] === ';') {
+              break;
+            }
+            if (is_array($tokens[$j])
+                && in_array($tokens[$j][1], $names)
+                && isset($tokens[$j + 2])
+                && $tokens[$j + 1] === '='
+                && !installer_is_empty_value($tokens, $j + 2, array(',', ';'))
+                )
+            {
+              return true;
+            }
+          }
+          // commas inside brackets, e.g. array('a', 'b'), do not separate declarations
+          if (in_array($tokens[$j], array('(', '[', '{'), true)
+              || (is_array($tokens[$j]) && in_array($tokens[$j][0], array(T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES)))
+              )
+          {
+            $depth++;
+          } elseif (in_array($tokens[$j], array(')', ']', '}'), true)) {
+            $depth--;
+          }
+        }
+      }
+
+      // anything but an empty string literal, e.g. getenv(), counts as configured
+      if ($value !== false && !installer_is_empty_value($tokens, $value, array(')', ','))) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  // the web installer is only meant for an empty webspace and must not overwrite an installed shop
+  $configure_files = array(DIR_FS_CATALOG.'includes/local/configure.php', DIR_FS_CATALOG.'includes/configure.php');
+  // configure.php also loads these files, a shop may keep its database settings there
+  $extra_configure_files = glob(DIR_FS_CATALOG.'includes/extra/configure/*.php');
+  if (is_array($extra_configure_files)) {
+    $configure_files = array_merge($configure_files, $extra_configure_files);
+  }
+  foreach ($configure_files as $configure) {
+    if (installer_is_configured($configure)) {
+      @unlink(__FILE__);
+      die('Shop is already installed, the web installer has been removed');
+    }
+  }
   
   function rrmdir($dir) {    
     $dir = rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
@@ -138,6 +233,9 @@
   
     // cleanup
     rrmdir('tmp');
+
+    // the web installer is only needed once
+    @unlink(__FILE__);
   
     // redirect
     header('Location: _installer');
