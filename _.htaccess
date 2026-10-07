@@ -28,9 +28,9 @@ FileETag None
 #Options -Indexes
 
 ##-- Protect hidden files, directories and the server templates while keeping .well-known reachable
-##-- Files of redirected downloads in pub/.<16 to 20 letters>/ stay reachable (DOWNLOAD_BY_REDIRECT)
+##-- Files of redirected downloads in pub/.<16 to 20 letters>/ stay reachable (DOWNLOAD_BY_REDIRECT), only that segment is exempt
 <IfModule mod_alias.c>
-  RedirectMatch 403 ^(?!.*/pub/\.[a-z]{16,20}/[^/.][^/]*$).*/\.(?!well-known(?:/|$))
+  RedirectMatch 403 (?:(?<!/pub)/\.(?!well-known(?:/|$))|/pub/\.(?!well-known(?:/|$))(?![a-z]{16,20}/[^/.][^/]*$))
   RedirectMatch 403 /_(?:\.htaccess|nginx\.conf)(?:/|$)
 </IfModule>
 
