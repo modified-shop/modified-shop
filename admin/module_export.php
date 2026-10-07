@@ -150,7 +150,7 @@
             xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                              SET configuration_value = '" . xtc_db_input($value) . "',
                                  last_modified = NOW()
-                           WHERE configuration_key = '" . $key . "'");
+                           WHERE configuration_key = '" . xtc_db_input($key) . "'");
             if (@strpos($key,'FILE') !== false) $file = $value;
           }
         }
