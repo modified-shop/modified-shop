@@ -140,6 +140,21 @@ if (isset($_GET['action'])
       if (isset($_POST['login']) && $_POST['login'] == 'admin') {
         xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
       }
+		} elseif ($captcha_error === false
+		          && defined('ACCOUNT_EMAIL_VERIFY')
+		          && ACCOUNT_EMAIL_VERIFY == 'required'
+		          && SEND_EMAILS == 'true'
+		          && empty($check_customer['customers_email_verified'])
+		          && !empty($check_customer['customers_email_verify_key'])
+		          )
+		{
+			// the password is right, the login waits for the confirmation of the email address
+			require_once (DIR_FS_INC.'secure_form.inc.php');
+
+			$_SESSION['email_verify_pending'] = (int)$check_customer['customers_id'];
+
+			$verify_form = xtc_draw_form('email_verify_resend', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'verify_resend').secure_form('email_verify').'<input type="submit" value="'.TEXT_EMAIL_VERIFY_RESEND.'" /></form>';
+			$messageStack->add('login', ERROR_EMAIL_VERIFY_PENDING.$verify_form);
 		} elseif ($captcha_error === false) {		
 			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_before_session/','php') as $file) require ($file);
 

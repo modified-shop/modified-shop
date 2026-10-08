@@ -1,0 +1,13 @@
+
+Confirm your new e-mail address!
+
+Dear Customer,
+
+thank you for registering with the e-mail address {$EMAIL}.
+Please confirm this address with your personal confirmation link.
+Please note that this link is only valid for {$VALID_REQUEST_TIME} hours.
+If you did not register, please ignore this e-mail.
+
+Your confirmation link: {$LINK}
+
+[SIGNATUR]
