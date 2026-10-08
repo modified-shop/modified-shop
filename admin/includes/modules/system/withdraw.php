@@ -23,7 +23,7 @@
     var $version;
   
     function __construct() {
-      $this->version = '1.03';
+      $this->version = '1.04';
       $this->code = 'withdraw';
       $this->title = MODULE_WITHDRAW_TEXT_TITLE;
       $this->description = MODULE_WITHDRAW_TEXT_DESCRIPTION;
