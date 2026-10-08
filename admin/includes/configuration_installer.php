@@ -166,6 +166,8 @@ $values_group_update = array();
   $values[] = "(NULL, 'ACCOUNT_FAX', 'true', '5', '80', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'DELETE_GUEST_ACCOUNT_DAYS', '1', '5', '115', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'GUEST_ACCOUNT_EDIT', 'false', '5', '120', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'ACCOUNT_EMAIL_CHANGE_PASSWORD', 'false', '5', '130', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'ACCOUNT_EMAIL_CHANGE_VERIFY', 'false', '5', '140', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
 
 //configuration_group_id 6 --- "Modul Optionen"
   //$values[] = "(NULL, 'COMPRESS_STYLESHEET_TIME', '', '6', '100', NULL, NOW(), NULL, NULL);"; // Tomcraft - 2016-06-06 - Obsolete since r7607
