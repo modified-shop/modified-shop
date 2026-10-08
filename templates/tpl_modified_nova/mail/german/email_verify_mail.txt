@@ -1,0 +1,13 @@
+
+E-Mail-Adresse bestätigen!
+
+Sehr geehrter Kunde,
+
+vielen Dank für Ihre Registrierung mit der E-Mail-Adresse {$EMAIL}.
+Bitte bestätigen Sie diese Adresse über Ihren persönlichen Bestätigungslink.
+Bitte beachten Sie, dass dieser Link nur {$VALID_REQUEST_TIME} Stunden gültig ist.
+Wenn Sie sich nicht registriert haben, ignorieren Sie diese E-Mail.
+
+Ihr Bestätigungslink: {$LINK}
+
+[SIGNATUR]

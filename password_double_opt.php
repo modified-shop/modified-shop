@@ -218,6 +218,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
           'customers_email_address_new' => '',
           'customers_email_request_key' => '',
           'customers_email_request_time' => 'null',
+          // the finished reset proves access to the mailbox
+          'customers_email_verified' => 'now()',
+          'customers_email_verify_key' => '',
+          'customers_email_verify_time' => 'null',
+          'customers_email_verify_count' => 0,
           'customers_last_modified' => 'now()',
         );
         // a parallel change of the token or the address makes this link invalid

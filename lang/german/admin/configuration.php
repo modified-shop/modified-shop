@@ -855,6 +855,9 @@ define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Soll das L&auml;nderdropdown im Ware
 define('GUEST_ACCOUNT_EDIT_TITLE', 'Gastkonten bearbeiten');
 define('GUEST_ACCOUNT_EDIT_DESC', 'D&uuml;rfen G&auml;ste ihre Accountdetails sehen und bearbeiten?');
 
+define('ACCOUNT_EMAIL_VERIFY_TITLE', 'E-Mail-Adresse bei der Registrierung best&auml;tigen');
+define('ACCOUNT_EMAIL_VERIFY_DESC', 'false: keine Best&auml;tigung. optional: Neukunden erhalten einen Best&auml;tigungslink und k&ouml;nnen das Konto sofort nutzen. required: Neukunden k&ouml;nnen sich erst nach dem Klick auf den Link anmelden (Gastbestellungen bleiben m&ouml;glich). Bestandskonten werden nie gesperrt. Setzt voraus, dass der Shop E-Mails zuverl&auml;ssig zustellt.');
+
 define('ACCOUNT_EMAIL_CHANGE_PASSWORD_TITLE', 'E-Mail-&Auml;nderung mit Passwort best&auml;tigen');
 define('ACCOUNT_EMAIL_CHANGE_PASSWORD_DESC', 'Kunden mit regul&auml;rem Konto m&uuml;ssen bei einer neuen E-Mail-Adresse ihr aktuelles Passwort eingeben.');
 

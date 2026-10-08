@@ -855,6 +855,9 @@ define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Show countries dropdown in cart if o
 define('GUEST_ACCOUNT_EDIT_TITLE', 'Edit guest accounts');
 define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit account details?');
 
+define('ACCOUNT_EMAIL_VERIFY_TITLE', 'Confirm email address at registration');
+define('ACCOUNT_EMAIL_VERIFY_DESC', 'false: no confirmation. optional: new customers get a confirmation link and can use the account right away. required: new customers can log in only after they confirm the link (guest orders stay possible). Existing accounts are never locked. Requires reliable email delivery.');
+
 define('ACCOUNT_EMAIL_CHANGE_PASSWORD_TITLE', 'Confirm email change with password');
 define('ACCOUNT_EMAIL_CHANGE_PASSWORD_DESC', 'Customers with a regular account must enter their current password to change the email address.');
 

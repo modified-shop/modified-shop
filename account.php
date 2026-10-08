@@ -45,6 +45,26 @@ $smarty = new Smarty();
 // clear session
 clear_checkout_session();
 
+// unconfirmed email address: offer the link again, no template change needed
+if (defined('ACCOUNT_EMAIL_VERIFY')
+    && in_array(ACCOUNT_EMAIL_VERIFY, array('optional', 'required'))
+    && SEND_EMAILS == 'true'
+    )
+{
+  $verify_query = xtc_db_query("SELECT customers_id
+                                  FROM ".TABLE_CUSTOMERS."
+                                 WHERE customers_id = '".(int)$_SESSION['customer_id']."'
+                                   AND account_type = '0'
+                                   AND customers_email_verified IS NULL
+                                   AND customers_email_verify_key != ''");
+  if (xtc_db_num_rows($verify_query) > 0) {
+    require_once (DIR_FS_INC.'secure_form.inc.php');
+
+    $verify_form = xtc_draw_form('email_verify_resend', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'verify_resend').secure_form('email_verify').'<input type="submit" value="'.TEXT_EMAIL_VERIFY_RESEND.'" /></form>';
+    $messageStack->add('account', TEXT_EMAIL_VERIFY_PENDING.$verify_form, 'success');
+  }
+}
+
 if ($messageStack->size('account') > 0) {
   $smarty->assign('error_message', $messageStack->output('account'));
 }
