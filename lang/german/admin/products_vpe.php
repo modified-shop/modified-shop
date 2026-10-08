@@ -24,7 +24,7 @@ define('TEXT_INFO_EDIT_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nde
 define('TEXT_INFO_PRODUCTS_VPE_NAME', 'Verpackungseinheit:');
 define('TEXT_INFO_INSERT_INTRO', 'Bitte geben Sie die neue VPE mit allen relevanten Daten ein');
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese VPE l&ouml;schen m&ouml;chten?');
-define('TEXT_INFO_HEADING_NEW_PRODUCTS_VPE', 'Neuer Bestellstatus');
+define('TEXT_INFO_HEADING_NEW_PRODUCTS_VPE', 'Neue Verpackungseinheit');
 define('TEXT_INFO_HEADING_EDIT_PRODUCTS_VPE', 'Verpackungseinheit bearbeiten');
 define('TEXT_INFO_HEADING_DELETE_PRODUCTS_VPE', 'Verpackungseinheit l&ouml;schen');
 
