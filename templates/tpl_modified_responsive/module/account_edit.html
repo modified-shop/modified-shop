@@ -41,6 +41,11 @@
       <tr>
         <td><span class="fieldtext">{#text_confirm_email#}</span><span class="stern">{$INPUT_CONFIRM_EMAIL|replace:"type=\"text\"":"type=\"email\""}</span></td>
       </tr>
+      {if isset($INPUT_PASSWORD_CURRENT)}
+      <tr>
+        <td><span class="fieldtext">{#text_password_current#}</span><span class="stern">{$INPUT_PASSWORD_CURRENT}</span><span class="inputNote">{#text_password_current_note#}</span></td>
+      </tr>
+      {/if}
       <tr>
         <td><span class="fieldtext">{#text_tel#}</span><span class="stern">{$INPUT_TEL|replace:"type=\"text\"":"type=\"tel\""}</span></td>
       </tr>
