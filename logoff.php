@@ -39,6 +39,8 @@ if ($messageStack->size('logoff', 'success') > 0) {
   $smarty->assign('success_message', $messageStack->output('logoff', 'success'));
 }    
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/logoff/','php') as $file) require ($file);
+
 if (isset($_SESSION['account_type'])
     && $_SESSION['account_type'] == '1' 
     && DELETE_GUEST_ACCOUNT == 'true'

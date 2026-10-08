@@ -106,6 +106,8 @@ if (isset($_GET['action'])
   // increment login tries
   $_SESSION['customers_login_tries'] ++;
 
+	$check_customer = null;
+
 	// check if email exists
 	$check_customer_query = xtc_db_query("SELECT *
 	                                        FROM ".TABLE_CUSTOMERS." 
@@ -114,19 +116,33 @@ if (isset($_GET['action'])
 
 	if (xtc_db_num_rows($check_customer_query) < 1) {
 		$messageStack->add('login', TEXT_LOGIN_ERROR);
+		foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_failed/','php') as $file) require ($file);
 		if (isset($_POST['login']) && $_POST['login'] == 'admin') {
 		  xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
 		}
 	} else {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
     		
+		$error = false;
+		$login_messages = $messageStack->size('login');
+		foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_check_data/','php') as $file) require ($file);
+
 		// Check that password is good
-		if (xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id']) !== true) {
-			$messageStack->add('login', TEXT_LOGIN_ERROR);      
+		if (!$error && xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id']) !== true) {
+			$error = true;
+		}
+		if ($error) {
+			// keep a message a hook has set
+			if ($messageStack->size('login') == $login_messages) {
+				$messageStack->add('login', TEXT_LOGIN_ERROR);
+			}
+			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_failed/','php') as $file) require ($file);
       if (isset($_POST['login']) && $_POST['login'] == 'admin') {
         xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
       }
 		} elseif ($captcha_error === false) {		
+			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_before_session/','php') as $file) require ($file);
+
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
 			}

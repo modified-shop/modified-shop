@@ -86,7 +86,14 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 		                                       WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
 		$check_customer = xtc_db_fetch_array($check_customer_query);
 
-		if (xtc_validate_password($password_current, $check_customer['customers_password'], $_SESSION['customer_id'])) {
+		if (!xtc_validate_password($password_current, $check_customer['customers_password'], $_SESSION['customer_id'])) {
+			$error = true;
+			$messageStack->add('account_password', ERROR_CURRENT_PASSWORD_NOT_MATCHING);
+		} else {
+			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_password_check_data/','php') as $file) require ($file);
+		}
+
+		if ($error === false) {
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
 			}
@@ -104,9 +111,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 			               
 			$messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
 			
+			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_password_before_redirect/','php') as $file) require ($file);
+			
 			xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-		} else {
-			$messageStack->add('account_password', ERROR_CURRENT_PASSWORD_NOT_MATCHING);
 		}
 	}
 }

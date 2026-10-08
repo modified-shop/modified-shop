@@ -162,6 +162,8 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_smarty_data/','php') as $file) require ($file);
+
 $smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account.html');
 
