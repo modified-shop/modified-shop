@@ -283,7 +283,7 @@ define('SUCCESS_PASSWORD_UPDATED', 'Ihr Passwort wurde erfolgreich ge&auml;ndert
 define('ERROR_CURRENT_PASSWORD_NOT_MATCHING', 'Das eingegebene Passwort stimmt nicht mit dem gespeicherten Passwort &uuml;berein. Bitte versuchen Sie es noch einmal.');
 define('SUCCESS_EMAIL_CHANGE_REQUESTED', 'Wir haben einen Best&auml;tigungslink an die neue E-Mail-Adresse geschickt. Der Link ist %s Minuten g&uuml;ltig. Bis zur Best&auml;tigung gilt Ihre bisherige E-Mail-Adresse.');
 define('SUCCESS_EMAIL_CHANGE_VERIFIED', 'Ihre neue E-Mail-Adresse ist best&auml;tigt. Bitte melden Sie sich mit der neuen Adresse an.');
-define('ERROR_EMAIL_CHANGE_LINK_INVALID', 'Der Best&auml;tigungslink ist ung&uuml;ltig oder abgelaufen.');
+define('ERROR_EMAIL_CHANGE_LINK_INVALID', 'Der Best&auml;tigungslink ist ung&uuml;ltig, abgelaufen oder wurde bereits verwendet.');
 define('TEXT_EMAIL_CHANGE_VERIFY_SUBJECT', 'Neue E-Mail-Adresse best&auml;tigen');
 define('TEXT_EMAIL_CHANGE_NOTIFY_SUBJECT', 'Die E-Mail-Adresse Ihres Kontos wurde ge&auml;ndert');
 define('TEXT_MAXIMUM_ENTRIES', '<strong>Hinweis:</strong> Ihnen stehen %s Adressbucheintr&auml;ge zur Verf&uuml;gung!');
