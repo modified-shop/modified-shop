@@ -91,7 +91,7 @@ if (isset($_SESSION['paypal_express_new_customer'])
   $vlcode = xtc_random_charcode(32);
   $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$order->customer['ID'].'&key='.$vlcode, 'SSL', false);
 
-  $sql_data_array = array('password_request_key' => $vlcode);
+  $sql_data_array = array('password_request_key' => hash('sha256', $vlcode));
   xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . $order->customer['ID'] . "'");
   
   $smarty->assign('NEW_PASSWORD', $link);

@@ -223,5 +223,12 @@ ALTER TABLE `content_manager`
 #Tomcraft - 2026-10-10 - add explicit opt-in for coupons without an expiry date
 ALTER TABLE `coupons` ADD `coupon_no_expiry` INT(1) NOT NULL DEFAULT 0 AFTER `coupon_expire_date`;
 
+#GTB - 2026-10-08 - hash password reset keys and count reset requests per account
+ALTER TABLE `customers`
+  MODIFY `password_request_key` VARCHAR(64) NOT NULL;
+
+ALTER TABLE `customers`
+  ADD `password_request_count` INT(11) NOT NULL DEFAULT 0 AFTER `password_request_time`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
 
