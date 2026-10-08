@@ -46,6 +46,13 @@ $email_verify = (defined('ACCOUNT_EMAIL_VERIFY') && in_array(ACCOUNT_EMAIL_VERIF
 
 // confirm the email address, the link must work without a login and in any browser
 if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
+  // the redirect after the next login must not open the used link again
+  if (isset($_SESSION['tracking']['pageview_history'])) {
+    $_SESSION['tracking']['pageview_history'] = array_values(array_filter($_SESSION['tracking']['pageview_history'], function ($url) {
+      return strpos($url, 'action=verify_email') === false;
+    }));
+  }
+
   $verify_customers_id = isset($_GET['customers_id']) ? (int)$_GET['customers_id'] : 0;
   $verify_key = (isset($_GET['key']) && is_string($_GET['key'])) ? $_GET['key'] : '';
   $verify_ok = false;
