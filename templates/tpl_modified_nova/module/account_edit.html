@@ -38,6 +38,18 @@
           <div class="subline">{#title_contact#} <span class="fields_required">({#text_must#})</span></div>
           <div class="field_item_1"><label><span class="field_text">{#text_email#}</span>{$INPUT_EMAIL|asterisk|replace:"type=\"text\"":"type=\"email\""}</label></div>
           <div class="field_item_1"><label><span class="field_text">{#text_confirm_email#}</span>{$INPUT_CONFIRM_EMAIL|asterisk|replace:"type=\"text\"":"type=\"email\""}</label></div>
+          {if isset($INPUT_PASSWORD_CURRENT)}
+            <div class="field_item_1">
+              <label>
+                <span class="field_text">{#text_password_current#}</span>
+                <span class="field_password">
+                  <span class="field_input">{$INPUT_PASSWORD_CURRENT}</span>
+                  <span class="field_eye"><i class="fa-solid fa-eye" data-name="password_current"></i></span>
+                </span>
+                <span class="inputNote">{#text_password_current_note#}</span>
+              </label>
+            </div>
+          {/if}
           <div class="field_item_1"><label><span class="field_text">{#text_tel#}</span>{$INPUT_TEL|asterisk|replace:"type=\"text\"":"type=\"tel\""}</label></div>
           {if $fax == '1'}
             <div class="field_item_1"><label><span class="field_text">{#text_fax#}</span>{$INPUT_FAX|replace:"type=\"text\"":"type=\"tel\""}</label></div>

@@ -1,0 +1,10 @@
+
+Ihre E-Mail-Adresse wurde geändert!
+
+Sehr geehrter Kunde,
+
+Die E-Mail-Adresse Ihres Kundenkontos wurde am {$CHANGE_TIME} von {$EMAIL_OLD} auf {$EMAIL_NEW} geändert.
+Sie erhalten diese Nachricht an Ihre bisherige Adresse. Alle bestehenden Anmeldungen wurden beendet. Melden Sie sich künftig mit der neuen Adresse an.
+Wenn Sie diese Änderung nicht veranlasst haben, kontaktieren Sie uns bitte umgehend.
+
+[SIGNATUR]

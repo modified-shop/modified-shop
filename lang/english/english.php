@@ -281,6 +281,11 @@ define('WARNING_INSTALLER_FILE_EXISTS', 'Warning: The file %s is still available
 define('SUCCESS_ACCOUNT_UPDATED', 'Your account has been updated successfully.');
 define('SUCCESS_PASSWORD_UPDATED', 'Your password has been changed successfully!');
 define('ERROR_CURRENT_PASSWORD_NOT_MATCHING', 'The entered password does not match with the stored password. Please try again.');
+define('SUCCESS_EMAIL_CHANGE_REQUESTED', 'We have sent a confirmation link to the new e-mail address. The link is valid for %s minutes. Until you confirm it, your current e-mail address stays active.');
+define('SUCCESS_EMAIL_CHANGE_VERIFIED', 'Your new e-mail address is confirmed. Please log in with the new address.');
+define('ERROR_EMAIL_CHANGE_LINK_INVALID', 'The confirmation link is invalid or has expired.');
+define('TEXT_EMAIL_CHANGE_VERIFY_SUBJECT', 'Confirm your new e-mail address');
+define('TEXT_EMAIL_CHANGE_NOTIFY_SUBJECT', 'The e-mail address of your account was changed');
 define('TEXT_MAXIMUM_ENTRIES', '<strong>Reference:</strong> You are able to choose out of %s entries in your address book!');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_DELETED', 'The selected entry has been deleted successfully.');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED', 'Your address book has been updated successfully!');

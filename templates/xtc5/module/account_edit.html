@@ -39,6 +39,12 @@
     <td>{#text_confirm_email#}</td>
     <td>{$INPUT_CONFIRM_EMAIL}</td>
   </tr>
+  {if isset($INPUT_PASSWORD_CURRENT)}
+  <tr>
+    <td>{#text_password_current#}</td>
+    <td>{$INPUT_PASSWORD_CURRENT}<span class="inputNote">{#text_password_current_note#}</span></td>
+  </tr>
+  {/if}
   <tr>
     <td>{#text_tel#}</td>
     <td>{$INPUT_TEL}</td>
