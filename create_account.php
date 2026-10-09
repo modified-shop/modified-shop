@@ -167,6 +167,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER[
   require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
   require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
   require_once (DIR_FS_INC.'send_email_verify_mail.inc.php');
+  require_once (DIR_FS_INC.'xtc_email_address_lock.inc.php');
 
   $correct_customers_id = isset($_SESSION['email_verify_pending']) ? (int)$_SESSION['email_verify_pending'] : 0;
   $correct_time = isset($_SESSION['email_verify_pending_time']) ? (int)$_SESSION['email_verify_pending_time'] : -1;
@@ -200,10 +201,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER[
     $correct_error = ENTRY_EMAIL_ERROR_NOT_MATCHING;
   } else {
     // no other request may take the same address between the check and the change
-    $email_lock = 'customers_email_'.md5(mb_strtolower(trim($email_address)));
-    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($email_lock)."', 10) AS email_lock");
-    $lock = xtc_db_fetch_array($lock_query);
-    if (!isset($lock['email_lock']) || $lock['email_lock'] != '1') {
+    $email_locked = xtc_email_address_lock($email_address);
+    if ($email_locked !== true) {
       $correct_error = ERROR_EMAIL_VERIFY_CORRECT_WAIT;
     } else {
       $check_email_query = xtc_db_query("SELECT count(*) as total
@@ -250,8 +249,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER[
     }
   }
 
-  if (isset($email_lock)) {
-    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
+  if (isset($email_locked) && $email_locked === true) {
+    xtc_email_address_lock('', true);
   }
 
   if ($correct_error != '') {
