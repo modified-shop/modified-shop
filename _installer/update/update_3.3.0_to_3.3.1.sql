@@ -220,4 +220,8 @@ ALTER TABLE `products_tags`
 ALTER TABLE `content_manager`
   ADD INDEX `idx_content_menu` (`languages_id`, `file_flag`, `content_status`, `content_active`, `parent_id`, `sort_order`);
 
+#Tomcraft - 2026-10-10 - add explicit opt-in for coupons without an expiry date
+ALTER TABLE `coupons` ADD `coupon_no_expiry` INT(1) NOT NULL DEFAULT 0 AFTER `coupon_expire_date`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
+

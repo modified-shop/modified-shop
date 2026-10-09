@@ -119,7 +119,8 @@
         }
         
         // expired
-        if (strtotime($gv_result['coupon_expire_date']) < time()) {
+        if ((!isset($gv_result['coupon_no_expiry']) || $gv_result['coupon_no_expiry'] != 1)
+            && strtotime($gv_result['coupon_expire_date']) < time()) {
           $messageStack->add_session('coupon_message', ERROR_INVALID_FINISDATE_COUPON);
           xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
         }

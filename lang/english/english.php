@@ -484,6 +484,8 @@ define('TEXT_COUPON_HELP_MINORDER', 'You need to spend at least %s to be able to
 define('TEXT_COUPON_HELP_FREESHIP', 'This voucher gives you free shipping on your order');
 define('TEXT_COUPON_HELP_DESC', 'Voucher description : %s');
 define('TEXT_COUPON_HELP_DATE', 'This voucher is valid from: %s to %s');
+define('TEXT_COUPON_HELP_NO_EXPIRY', 'No expiry date');
+define('TEXT_COUPON_HELP_DATE_NO_EXPIRY', 'This voucher is valid from %s with no expiry date');
 define('TEXT_COUPON_HELP_RESTRICT', 'Product / Category Restrictions');
 define('TEXT_COUPON_HELP_CATEGORIES', 'Category Restrictions');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Product Restrictions');

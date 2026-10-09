@@ -485,6 +485,8 @@ define('TEXT_COUPON_HELP_MINORDER', 'Der Mindestbestellwert betr&auml;gt %s ');
 define('TEXT_COUPON_HELP_FREESHIP', 'Gutschein f&uuml;r kostenlosen Versand');
 define('TEXT_COUPON_HELP_DESC', 'Couponbeschreibung: %s');
 define('TEXT_COUPON_HELP_DATE', 'Dieser Coupon ist g&uuml;ltig vom %s bis %s');
+define('TEXT_COUPON_HELP_NO_EXPIRY', 'Ohne Ablaufdatum');
+define('TEXT_COUPON_HELP_DATE_NO_EXPIRY', 'Dieser Coupon ist g&uuml;ltig ab %s ohne Ablaufdatum');
 define('TEXT_COUPON_HELP_RESTRICT', 'Artikel / Kategorie / Hersteller Einschr&auml;nkungen');
 define('TEXT_COUPON_HELP_CATEGORIES', 'Kategorie Einschr&auml;nkung');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Artikel Einschr&auml;nkung');

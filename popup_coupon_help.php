@@ -69,7 +69,12 @@ if (xtc_db_num_rows($coupon_query) > 0) {
   if ($coupon['coupon_minimum_order'] > 0) {
     $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_MINORDER, $xtPrice->xtcFormat($coupon['coupon_minimum_order'], true));
   }
-  $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_DATE, xtc_date_short($coupon['coupon_start_date']), xtc_date_short($coupon['coupon_expire_date']));
+  if (isset($coupon['coupon_no_expiry']) && $coupon['coupon_no_expiry'] == 1) {
+    $coupon_start_date = (!empty($coupon['coupon_start_date']) && substr($coupon['coupon_start_date'], 0, 10) != '0000-00-00') ? xtc_date_short($coupon['coupon_start_date']) : false;
+    $text_coupon_help .= '<br />'.($coupon_start_date ? sprintf(TEXT_COUPON_HELP_DATE_NO_EXPIRY, $coupon_start_date) : TEXT_COUPON_HELP_NO_EXPIRY);
+  } else {
+    $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_DATE, xtc_date_short($coupon['coupon_start_date']), xtc_date_short($coupon['coupon_expire_date']));
+  }
 
   $coupon['restrict_to_products'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_products']);
   $coupon['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_categories']);
