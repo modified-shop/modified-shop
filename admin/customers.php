@@ -599,6 +599,20 @@
                 $_SESSION['customer_time'] = $sql_data_array['customers_password_time'];
               }
             }
+
+            // a new password or address set here makes pending changes and reset links void
+            $stored_customer_query = xtc_db_query("SELECT customers_email_address
+                                                     FROM ".TABLE_CUSTOMERS."
+                                                    WHERE customers_id = '".(int)$customers_id."'");
+            $stored_customer = xtc_db_fetch_array($stored_customer_query);
+            $customers_email_changed = (is_array($stored_customer) && mb_strtolower(trim($stored_customer['customers_email_address'])) != mb_strtolower(trim($customers_email_address)));
+            if ($password != '' || $customers_email_changed === true) {
+              $sql_data_array['customers_email_address_new'] = '';
+              $sql_data_array['customers_email_request_key'] = '';
+              $sql_data_array['customers_email_request_time'] = 'null';
+              $sql_data_array['password_request_key'] = '';
+              $sql_data_array['password_request_time'] = 'null';
+            }
             if (ACCOUNT_GENDER == 'true') {
               $sql_data_array['customers_gender'] = $customers_gender;
             }

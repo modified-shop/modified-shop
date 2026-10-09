@@ -1,0 +1,10 @@
+
+Your e-mail address was changed!
+
+Dear Customer,
+
+The e-mail address of your customer account was changed on {$CHANGE_TIME} from {$EMAIL_OLD} to {$EMAIL_NEW}.
+You receive this message at your previous address. All existing logins were ended. Please log in with the new address from now on.
+If you did not make this change, please contact us immediately.
+
+[SIGNATUR]

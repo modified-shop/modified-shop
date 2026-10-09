@@ -227,4 +227,10 @@ ALTER TABLE `customers`
 ALTER TABLE `customers`
   ADD `password_request_count` INT(11) NOT NULL DEFAULT 0 AFTER `password_request_time`;
 
+#GTB - 2026-10-08 - confirm a changed email address before it replaces the old one
+ALTER TABLE `customers`
+  ADD `customers_email_address_new` VARCHAR(255) NOT NULL DEFAULT '' AFTER `customers_email_address`,
+  ADD `customers_email_request_key` VARCHAR(64) NOT NULL DEFAULT '' AFTER `customers_email_address_new`,
+  ADD `customers_email_request_time` DATETIME NULL AFTER `customers_email_request_key`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

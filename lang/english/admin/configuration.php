@@ -855,6 +855,12 @@ define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Show countries dropdown in cart if o
 define('GUEST_ACCOUNT_EDIT_TITLE', 'Edit guest accounts');
 define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit account details?');
 
+define('ACCOUNT_EMAIL_CHANGE_PASSWORD_TITLE', 'Confirm email change with password');
+define('ACCOUNT_EMAIL_CHANGE_PASSWORD_DESC', 'Customers with a regular account must enter their current password to change the email address.');
+
+define('ACCOUNT_EMAIL_CHANGE_VERIFY_TITLE', 'Confirm new email address by link');
+define('ACCOUNT_EMAIL_CHANGE_VERIFY_DESC', 'The new address only becomes active after the link in the confirmation mail is opened. The old address gets a notification, all sessions end and the customer logs in again. Requires reliable email delivery.');
+
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail signature');
 define('EMAIL_SIGNATURE_ID_DESC', 'Select the content to be used for the signature in shop E-Mails.');
 

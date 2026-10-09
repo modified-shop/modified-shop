@@ -67,6 +67,7 @@ require_once (DIR_FS_INC.'generate_customers_cid.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_FS_INC.'write_customers_session.inc.php');
+require_once (DIR_FS_INC.'xtc_email_address_lock.inc.php');
 
 // include needed classes
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
@@ -319,16 +320,20 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_customer_data/','php') as $file) require ($file);
     
-    // check email again
-    $check_email_query = xtc_db_query("SELECT count(*) as total
-                                         FROM ".TABLE_CUSTOMERS."
-                                        WHERE customers_email_address = '".xtc_db_input($email_address)."'
-                                          AND account_type = '0'");
-    $check_email = xtc_db_fetch_array($check_email_query);
+    // check email again, a parallel registration or address change must not take the same address
+    $check_email = array('total' => 1);
+    if (xtc_email_address_lock($email_address) === true) {
+      $check_email_query = xtc_db_query("SELECT count(*) as total
+                                           FROM ".TABLE_CUSTOMERS."
+                                          WHERE customers_email_address = '".xtc_db_input($email_address)."'
+                                            AND account_type = '0'");
+      $check_email = xtc_db_fetch_array($check_email_query);
+    }
     if ($check_email['total'] == 0) {
       xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
       $_SESSION['customer_id'] = xtc_db_insert_id();
+      xtc_email_address_lock('', true);
       $_SESSION['customer_time'] = $customers_password_time;
       
       $sql_data_array = array(
@@ -544,6 +549,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       }
       xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     } else {
+      xtc_email_address_lock('', true);
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     }
   }
