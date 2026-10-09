@@ -134,8 +134,8 @@
           'restrict_to_categories' => xtc_db_prepare_input($_POST['coupon_categories']),
           'restrict_to_manufacturers' => xtc_db_prepare_input($_POST['coupon_manufacturers']),
           'restrict_to_customers' => xtc_db_prepare_input((isset($_POST['coupon_groups']) && $_POST['coupon_groups'][0] != 'all') ? implode(',', $_POST['coupon_groups']) : ''),
-          'coupon_start_date' => xtc_db_prepare_input(date('Y-m-d H:i:00', strtotime($_POST['coupon_startdate']))),
-          'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d H:i:59', strtotime($_POST['coupon_finishdate']))),
+          'coupon_start_date' => xtc_db_prepare_input(($_POST['coupon_startdate'] == '') ? '0000-00-00 00:00:00' : date('Y-m-d H:i:00', strtotime($_POST['coupon_startdate']))),
+          'coupon_expire_date' => xtc_db_prepare_input(($_POST['coupon_finishdate'] == '') ? '0000-00-00 00:00:00' : date('Y-m-d H:i:59', strtotime($_POST['coupon_finishdate']))),
         );
         
         if ($action == 'update') {
