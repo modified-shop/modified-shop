@@ -349,7 +349,33 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_edit_customer_data/','php') as $file) require ($file);
     
+    // an immediate change must not take an address that a parallel request takes
+    $email_lock = '';
+    if ($_SESSION['account_type'] == '0' && $email_changed === true && $email_change_verify !== true) {
+      $email_lock = 'customers_email_'.md5(mb_strtolower(trim($email_address)));
+      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($email_lock)."', 10) AS email_lock");
+      $lock = xtc_db_fetch_array($lock_query);
+      $check_email = array('total' => 1);
+      if (isset($lock['email_lock']) && $lock['email_lock'] == '1') {
+        $check_email_query = xtc_db_query("SELECT count(*) as total
+                                             FROM ".TABLE_CUSTOMERS."
+                                            WHERE customers_email_address = '".xtc_db_input($email_address)."'
+                                              AND account_type = '0'
+                                              AND customers_id != '".(int)$_SESSION['customer_id']."'");
+        $check_email = xtc_db_fetch_array($check_email_query);
+      }
+      if ($check_email['total'] > 0) {
+        xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
+        $messageStack->add_session('account_edit', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
+        xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'));
+      }
+    }
+
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."'");
+
+    if ($email_lock != '') {
+      xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
+    }
 
     if ($email_changed === true && $email_change_verify === true) {
       $email_token = xtc_random_charcode(32);
@@ -364,7 +390,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
       $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
       $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
       $smarty->assign('EMAIL', $email_address);
-      $smarty->assign('LINK', xtc_href_link(FILENAME_ACCOUNT_EDIT, 'action=verify_email&customers_id='.(int)$_SESSION['customer_id'].'&key='.$email_token, 'SSL'));
+      $smarty->assign('LINK', xtc_href_link(FILENAME_ACCOUNT_EDIT, 'action=verify_email&customers_id='.(int)$_SESSION['customer_id'].'&key='.$email_token, 'SSL', false));
       $smarty->assign('VALID_REQUEST_TIME', (EMAIL_CHANGE_VALID_TIME / 60));
       $smarty->caching = 0;
 
