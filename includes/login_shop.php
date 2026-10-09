@@ -50,6 +50,8 @@ if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/offline/login_
     $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
   }
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_shop_smarty_data/','php') as $file) require ($file);
+
   $smarty->assign('charset', $_SESSION['language_charset']);
   $smarty->assign('language', $_SESSION['language']);
   $smarty->caching = 0;

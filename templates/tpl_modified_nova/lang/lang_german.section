@@ -28,6 +28,7 @@ title_nav_password = 'Passwort &auml;ndern'
 title_nav_orders = 'Bestellungen'
 title_nav_account_delete = 'Konto l&ouml;schen'
 title_nav_checkout_express = 'Mein Schnellkauf'
+title_nav_account_security = 'Anmeldung und Sicherheit'
 title_nav_newsletter = 'Newsletter'
 title_nav_logoff = 'Abmelden'
 

@@ -30,6 +30,14 @@
       </a>
     </div>
 
+    {if isset($LINK_ACCOUNT_SECURITY)}
+      <div class="navigation_item{if 'FILENAME_ACCOUNT_SECURITY'|defined && strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_SECURITY) !== false} selected{/if}">
+        <a href="{$LINK_ACCOUNT_SECURITY}" title="{#title_nav_account_security#}">
+          <span class="icon"><i class="fa-solid fa-shield-halved"></i></span><span class="title">{#title_nav_account_security#}</span>
+        </a>
+      </div>
+    {/if}
+
     <div class="navigation_item{if (strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_HISTORY) !== false) || (strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_HISTORY_INFO) !== false)} selected{/if}">
       <a href="{$smarty.const.FILENAME_ACCOUNT_HISTORY|xtc_href_link}" title="{#title_nav_orders#}">
         <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span><span class="title">{#title_nav_orders#}</span>
