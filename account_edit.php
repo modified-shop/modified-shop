@@ -371,7 +371,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
       }
     }
 
-    xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."'");
+    // a reset or password change in the meantime ended this session, then nothing is stored
+    xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."' AND customers_password_time = '".(int)$_SESSION['customer_time']."'");
 
     if ($email_lock != '') {
       xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
@@ -384,35 +385,39 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
                        SET customers_email_address_new = '".xtc_db_input($email_address)."',
                            customers_email_request_key = '".xtc_db_input(hash('sha256', $email_token))."',
                            customers_email_request_time = '".date('Y-m-d H:i:s')."'
-                     WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+                     WHERE customers_id = '".(int)$_SESSION['customer_id']."'
+                       AND customers_password_time = '".(int)$_SESSION['customer_time']."'");
 
-      $smarty->assign('language', $_SESSION['language']);
-      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-      $smarty->assign('EMAIL', $email_address);
-      $smarty->assign('LINK', xtc_href_link(FILENAME_ACCOUNT_EDIT, 'action=verify_email&customers_id='.(int)$_SESSION['customer_id'].'&key='.$email_token, 'SSL', false));
-      $smarty->assign('VALID_REQUEST_TIME', (EMAIL_CHANGE_VALID_TIME / 60));
-      $smarty->caching = 0;
+      // only a still valid session may store the request and send the link
+      if (xtc_db_affected_rows() == 1) {
+        $smarty->assign('language', $_SESSION['language']);
+        $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+        $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+        $smarty->assign('EMAIL', $email_address);
+        $smarty->assign('LINK', xtc_href_link(FILENAME_ACCOUNT_EDIT, 'action=verify_email&customers_id='.(int)$_SESSION['customer_id'].'&key='.$email_token, 'SSL', false));
+        $smarty->assign('VALID_REQUEST_TIME', (EMAIL_CHANGE_VALID_TIME / 60));
+        $smarty->caching = 0;
 
-      $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/email_change_verify_mail.html');
-      $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/email_change_verify_mail.txt');
+        $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/email_change_verify_mail.html');
+        $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/email_change_verify_mail.txt');
 
-      xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
-                   EMAIL_SUPPORT_NAME,
-                   $email_address,
-                   '',
-                   '',
-                   EMAIL_SUPPORT_REPLY_ADDRESS,
-                   EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
-                   '',
-                   '',
-                   TEXT_EMAIL_CHANGE_VERIFY_SUBJECT,
-                   $html_mail,
-                   $txt_mail,
-                   1
-                   );
+        xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
+                     EMAIL_SUPPORT_NAME,
+                     $email_address,
+                     '',
+                     '',
+                     EMAIL_SUPPORT_REPLY_ADDRESS,
+                     EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
+                     '',
+                     '',
+                     TEXT_EMAIL_CHANGE_VERIFY_SUBJECT,
+                     $html_mail,
+                     $txt_mail,
+                     1
+                     );
 
-      $messageStack->add_session('account', sprintf(SUCCESS_EMAIL_CHANGE_REQUESTED, (EMAIL_CHANGE_VALID_TIME / 60)), 'success');
+        $messageStack->add_session('account', sprintf(SUCCESS_EMAIL_CHANGE_REQUESTED, (EMAIL_CHANGE_VALID_TIME / 60)), 'success');
+      }
     }
 
     xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
