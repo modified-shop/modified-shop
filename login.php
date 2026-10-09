@@ -152,6 +152,10 @@ if (isset($_GET['action'])
 			// a later password change withdraws this permission
 			$_SESSION['email_verify_pending'] = (int)$check_customer['customers_id'];
 			$_SESSION['email_verify_pending_time'] = (int)$check_customer['customers_password_time'];
+			if (isset($_POST['login']) && $_POST['login'] == 'admin') {
+			  $messageStack->add('login', ERROR_EMAIL_VERIFY_PENDING);
+			  xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
+			}
 		} elseif ($captcha_error === false) {		
 			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_before_session/','php') as $file) require ($file);
 
@@ -159,6 +163,10 @@ if (isset($_GET['action'])
 		} else {
 			// right password, but the captcha failed
 			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_failed/','php') as $file) require ($file);
+			if (isset($_POST['login']) && $_POST['login'] == 'admin') {
+			  $messageStack->add('login', TEXT_WRONG_CODE);
+			  xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
+			}
 		}
 	}
 }
