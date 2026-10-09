@@ -856,7 +856,7 @@ define('GUEST_ACCOUNT_EDIT_TITLE', 'Gastkonten bearbeiten');
 define('GUEST_ACCOUNT_EDIT_DESC', 'D&uuml;rfen G&auml;ste ihre Accountdetails sehen und bearbeiten?');
 
 define('ACCOUNT_EMAIL_CHANGE_PASSWORD_TITLE', 'E-Mail-&Auml;nderung mit Passwort best&auml;tigen');
-define('ACCOUNT_EMAIL_CHANGE_PASSWORD_DESC', 'Kunden mit regul&auml;rem Konto m&uuml;ssen bei einer neuen E-Mail-Adresse ihr aktuelles Passwort eingeben. Das Template braucht daf&uuml;r das Feld INPUT_PASSWORD_CURRENT.');
+define('ACCOUNT_EMAIL_CHANGE_PASSWORD_DESC', 'Kunden mit regul&auml;rem Konto m&uuml;ssen bei einer neuen E-Mail-Adresse ihr aktuelles Passwort eingeben.');
 
 define('ACCOUNT_EMAIL_CHANGE_VERIFY_TITLE', 'Neue E-Mail-Adresse per Link best&auml;tigen');
 define('ACCOUNT_EMAIL_CHANGE_VERIFY_DESC', 'Die neue Adresse gilt erst nach dem Klick auf den Link in der Best&auml;tigungsmail. Die alte Adresse erh&auml;lt eine Benachrichtigung, alle Sitzungen enden und der Kunde meldet sich neu an. Setzt voraus, dass der Shop E-Mails zuverl&auml;ssig zustellt.');
