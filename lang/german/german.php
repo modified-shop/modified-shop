@@ -291,11 +291,6 @@ define('ERROR_EMAIL_VERIFY_LINK_INVALID', 'Der Best&auml;tigungslink ist ung&uum
 define('SUCCESS_EMAIL_VERIFY_REQUIRED', 'Bitte best&auml;tigen Sie Ihre E-Mail-Adresse. Wir haben Ihnen einen Link geschickt, er ist %s Stunden g&uuml;ltig. Danach k&ouml;nnen Sie sich anmelden.');
 define('ERROR_EMAIL_VERIFY_PENDING', 'Ihre E-Mail-Adresse ist noch nicht best&auml;tigt. Bitte klicken Sie auf den Link in der Best&auml;tigungsmail, danach k&ouml;nnen Sie sich anmelden.');
 define('TEXT_EMAIL_VERIFY_PENDING', 'Ihre E-Mail-Adresse ist noch nicht best&auml;tigt. Bitte klicken Sie auf den Link in der Best&auml;tigungsmail.');
-define('TEXT_EMAIL_VERIFY_RESEND', 'Link erneut senden');
-define('TEXT_EMAIL_VERIFY_CORRECT', 'Ist die E-Mail-Adresse falsch? Geben Sie die richtige Adresse ein, wir schicken den Link dorthin.');
-define('TEXT_EMAIL_VERIFY_NEW_ADDRESS', 'Richtige E-Mail-Adresse');
-define('TEXT_EMAIL_VERIFY_CONFIRM_ADDRESS', 'E-Mail-Adresse wiederholen');
-define('TEXT_EMAIL_VERIFY_CORRECT_BUTTON', 'Adresse korrigieren');
 define('SUCCESS_EMAIL_VERIFY_CORRECTED', 'Die E-Mail-Adresse ist korrigiert. Wir haben einen neuen Best&auml;tigungslink an die richtige Adresse geschickt, er ist %s Stunden g&uuml;ltig.');
 define('ERROR_EMAIL_VERIFY_CORRECT_WAIT', 'Die Adresse konnte gerade nicht ge&auml;ndert werden. Bitte warten Sie eine Minute und versuchen Sie es erneut.');
 define('SUCCESS_EMAIL_VERIFY_RESENT', 'Falls ein Best&auml;tigungslink aussteht, haben wir ihn an Ihre E-Mail-Adresse geschickt. Er ist %s Stunden g&uuml;ltig. Bitte warten Sie einige Minuten, bevor Sie einen weiteren Link anfordern.');

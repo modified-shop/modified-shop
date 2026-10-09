@@ -45,7 +45,7 @@ $smarty = new Smarty();
 // clear session
 clear_checkout_session();
 
-// unconfirmed email address: offer the link again, no template change needed
+// unconfirmed email address: offer the link again
 if (defined('ACCOUNT_EMAIL_VERIFY')
     && in_array(ACCOUNT_EMAIL_VERIFY, array('optional', 'required'))
     && SEND_EMAILS == 'true'
@@ -60,8 +60,10 @@ if (defined('ACCOUNT_EMAIL_VERIFY')
   if (xtc_db_num_rows($verify_query) > 0) {
     require_once (DIR_FS_INC.'secure_form.inc.php');
 
-    $verify_form = xtc_draw_form('email_verify_resend', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'verify_resend').secure_form('email_verify').'<input type="submit" value="'.TEXT_EMAIL_VERIFY_RESEND.'" /></form>';
-    $messageStack->add('account', TEXT_EMAIL_VERIFY_PENDING.$verify_form, 'success');
+    $smarty->assign('FORM_EMAIL_VERIFY_RESEND', xtc_draw_form('email_verify_resend', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'verify_resend').secure_form('email_verify'));
+    $smarty->assign('BUTTON_EMAIL_VERIFY_RESEND', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
+    $smarty->assign('FORM_END', '</form>');
+    $messageStack->add('account', TEXT_EMAIL_VERIFY_PENDING, 'success');
   }
 }
 
