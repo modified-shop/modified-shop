@@ -153,7 +153,7 @@
             $products = array();
             if ($downloaded === true && is_file($filename)) {
               if (($handle = fopen($filename, "r")) !== false) {
-                while (($data = fgetcsv($handle, 4096, ";")) !== false) {
+                while (($data = fgetcsv($handle, 4096, ";", '"', "\\")) !== false) {
                   if (!isset($data[2], $data[4], $data[5])) {
                     continue;
                   }
