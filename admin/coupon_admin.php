@@ -355,8 +355,8 @@ require (DIR_WS_INCLUDES.'head.php');
         $coupon_categories = $coupon['restrict_to_categories'];
         $coupon_manufacturers = $coupon['restrict_to_manufacturers'];
         $coupon_groups = explode(',', $coupon['restrict_to_customers']);
-        $coupon_startdate = date('Y-m-d H:i', strtotime($coupon['coupon_start_date']));
-        $coupon_finishdate = date('Y-m-d H:i', strtotime($coupon['coupon_expire_date']));
+        $coupon_startdate = ((substr($coupon['coupon_start_date'], 0, 10) == '0000-00-00') ? '' : date('Y-m-d H:i', strtotime($coupon['coupon_start_date'])));
+        $coupon_finishdate = ((substr($coupon['coupon_expire_date'], 0, 10) == '0000-00-00') ? '' : date('Y-m-d H:i', strtotime($coupon['coupon_expire_date'])));
 
       case 'new':
       case 'insert':
@@ -413,6 +413,12 @@ require (DIR_WS_INCLUDES.'head.php');
         }
         if (!isset($coupon_finishdate)) {
           $coupon_finishdate = date('Y-m-d', strtotime('+1 year'));
+        }
+        if (substr($coupon_startdate, 0, 10) == '0000-00-00') {
+          $coupon_startdate = '';
+        }
+        if (substr($coupon_finishdate, 0, 10) == '0000-00-00') {
+          $coupon_finishdate = '';
         }
 
         $input_name = '';
