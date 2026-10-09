@@ -199,6 +199,7 @@ a.lost_password {
 
       {* <a class="lost_password" href="{$LINK_LOST_PASSWORD}">{#text_lost_password#}</a> *}
       <input type="submit" class="login" name="Submit" value="{$smarty.const.IMAGE_BUTTON_LOGIN}" />
+      {if $MODULE_login_options}<div style="clear:both;">{$MODULE_login_options}</div>{/if}
     {$FORM_END}
   </div>
 

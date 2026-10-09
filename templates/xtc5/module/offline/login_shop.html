@@ -183,6 +183,7 @@ table td {
             </table>
             {*<div class="button_left"><a class="black" href="{$LINK_LOST_PASSWORD}">{#text_lost_password#}</a></div>*}
             <input type="submit" class="login" name="Submit" value="{$smarty.const.IMAGE_BUTTON_LOGIN}" />
+            {if $MODULE_login_options}<div style="clear:both;">{$MODULE_login_options}</div>{/if}
             {$FORM_END}
         </div>
     </div>
