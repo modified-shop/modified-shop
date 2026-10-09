@@ -81,6 +81,8 @@
       }
       $_POST['coupon_amount'] = trim($_POST['coupon_amount']);
       $_POST['coupon_amount'] = preg_replace('/[^0-9.%]/', '', $_POST['coupon_amount']);
+      $_POST['coupon_startdate'] = trim($_POST['coupon_startdate']);
+      $_POST['coupon_finishdate'] = trim($_POST['coupon_finishdate']);
       
       if (!$_POST['coupon_name']) {
         $error = true;
@@ -92,9 +94,12 @@
         $messageStack->add(ERROR_NO_COUPON_AMOUNT, 'error');
       }
       
-      if (strtotime($_POST['coupon_startdate']) > strtotime($_POST['coupon_finishdate'])) {
+      if ($_POST['coupon_finishdate'] == '') {
         $error = true;
-        $messageStack->add((trim($_POST['coupon_finishdate']) == '') ? ERROR_NO_COUPON_FINISHDATE : ERROR_COUPON_DATE, 'error');
+        $messageStack->add(ERROR_NO_COUPON_FINISHDATE, 'error');
+      } elseif (strtotime($_POST['coupon_startdate']) > strtotime($_POST['coupon_finishdate'])) {
+        $error = true;
+        $messageStack->add(ERROR_COUPON_DATE, 'error');
       }
       
       if (empty($_POST['coupon_code'])) {
