@@ -319,16 +319,23 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_customer_data/','php') as $file) require ($file);
     
-    // check email again
-    $check_email_query = xtc_db_query("SELECT count(*) as total
-                                         FROM ".TABLE_CUSTOMERS."
-                                        WHERE customers_email_address = '".xtc_db_input($email_address)."'
-                                          AND account_type = '0'");
-    $check_email = xtc_db_fetch_array($check_email_query);
+    // check email again, a parallel registration or address change must not take the same address
+    $email_lock = 'customers_email_'.md5(mb_strtolower(trim($email_address)));
+    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($email_lock)."', 10) AS email_lock");
+    $lock = xtc_db_fetch_array($lock_query);
+    $check_email = array('total' => 1);
+    if (isset($lock['email_lock']) && $lock['email_lock'] == '1') {
+      $check_email_query = xtc_db_query("SELECT count(*) as total
+                                           FROM ".TABLE_CUSTOMERS."
+                                          WHERE customers_email_address = '".xtc_db_input($email_address)."'
+                                            AND account_type = '0'");
+      $check_email = xtc_db_fetch_array($check_email_query);
+    }
     if ($check_email['total'] == 0) {
       xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
       $_SESSION['customer_id'] = xtc_db_insert_id();
+      xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
       $_SESSION['customer_time'] = $customers_password_time;
       
       $sql_data_array = array(
@@ -544,6 +551,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       }
       xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     } else {
+      xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     }
   }
