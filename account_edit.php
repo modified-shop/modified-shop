@@ -67,13 +67,36 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
         && time() <= (int)strtotime((string)$check_customer['customers_email_request_time']) + EMAIL_CHANGE_VALID_TIME
         )
     {
-      $check_email_query = xtc_db_query("SELECT count(*) as total
-                                           FROM ".TABLE_CUSTOMERS."
-                                          WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address_new'])."'
-                                            AND account_type = '0'
-                                            AND customers_id != '".$verify_customers_id."'");
-      $check_email = xtc_db_fetch_array($check_email_query);
-      $verify_ok = ($check_email['total'] == 0);
+      // no other request may take the same address between the check and the change
+      $email_lock = 'customers_email_'.md5(mb_strtolower(trim($check_customer['customers_email_address_new'])));
+      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($email_lock)."', 10) AS email_lock");
+      $lock = xtc_db_fetch_array($lock_query);
+      if (isset($lock['email_lock']) && $lock['email_lock'] == '1') {
+        $check_email_query = xtc_db_query("SELECT count(*) as total
+                                             FROM ".TABLE_CUSTOMERS."
+                                            WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address_new'])."'
+                                              AND account_type = '0'
+                                              AND customers_id != '".$verify_customers_id."'");
+        $check_email = xtc_db_fetch_array($check_email_query);
+        if ($check_email['total'] == 0) {
+          // reset links sent to the old address must not work any longer
+          xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                           SET customers_email_address = '".xtc_db_input($check_customer['customers_email_address_new'])."',
+                               customers_email_address_new = '',
+                               customers_email_request_key = '',
+                               customers_email_request_time = NULL,
+                               password_request_key = '',
+                               password_request_time = NULL,
+                               customers_password_time = '".time()."',
+                               customers_last_modified = now()
+                         WHERE customers_id = '".$verify_customers_id."'
+                           AND customers_email_request_key = '".xtc_db_input($check_customer['customers_email_request_key'])."'");
+
+          // only one of parallel requests with the same link changes the address
+          $verify_ok = (xtc_db_affected_rows() == 1);
+        }
+        xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
+      }
     }
   }
 
@@ -81,21 +104,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
     $email_old = $check_customer['customers_email_address'];
     $email_new = $check_customer['customers_email_address_new'];
 
-    xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
-                     SET customers_email_address = '".xtc_db_input($email_new)."',
-                         customers_email_address_new = '',
-                         customers_email_request_key = '',
-                         customers_email_request_time = NULL,
-                         customers_password_time = '".time()."',
-                         customers_last_modified = now()
-                   WHERE customers_id = '".$verify_customers_id."'
-                     AND customers_email_request_key = '".xtc_db_input($check_customer['customers_email_request_key'])."'");
-
-    // only one of parallel requests with the same link changes the address
-    $verify_ok = (xtc_db_affected_rows() == 1);
-  }
-
-  if ($verify_ok === true) {
     xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO."
                      SET customers_info_date_account_last_modified = now()
                    WHERE customers_info_id = '".$verify_customers_id."'");
@@ -330,10 +338,12 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
         // regular accounts get the new address only after the confirmation link
         unset($sql_data_array['customers_email_address']);
       } elseif ($email_changed === true) {
-        // an older link must not overwrite the immediate change
+        // an older link must not overwrite the immediate change, reset links to the old address must not work
         $sql_data_array['customers_email_address_new'] = '';
         $sql_data_array['customers_email_request_key'] = '';
         $sql_data_array['customers_email_request_time'] = 'null';
+        $sql_data_array['password_request_key'] = '';
+        $sql_data_array['password_request_time'] = 'null';
       }
     }
 

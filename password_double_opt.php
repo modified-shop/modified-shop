@@ -214,6 +214,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
           'customers_password_time' => time(),
           'password_request_key' => '',
           'password_request_time' => '',
+          // a pending email change may come from someone who had the session
+          'customers_email_address_new' => '',
+          'customers_email_request_key' => '',
+          'customers_email_request_time' => 'null',
           'customers_last_modified' => 'now()',
         );
         // a parallel change of the token or the address makes this link invalid

@@ -102,6 +102,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
 			                 SET customers_password = '".xtc_encrypt_password($password_new)."', 
 			                     customers_password_time = '".(int)$_SESSION['customer_time']."', 
+			                     customers_email_address_new = '',
+			                     customers_email_request_key = '',
+			                     customers_email_request_time = NULL,
 			                     customers_last_modified = now() 
 			               WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
 			               
