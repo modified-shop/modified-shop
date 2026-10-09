@@ -57,7 +57,11 @@ if (xtc_db_num_rows($coupon_query) > 0) {
       $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_FIXED, $xtPrice->xtcFormat($coupon['coupon_amount'], true));
       break;
     case 'P' :
+    case 'T' :
       $text_coupon_help .= '<br />'.sprintf(TEXT_COUPON_HELP_FIXED, number_format($coupon['coupon_amount'], 2).'%');
+      if ($coupon['coupon_type'] == 'T') {
+        $text_coupon_help .= '<br />'.TEXT_COUPON_HELP_FREESHIP;
+      }
       break;
     case 'S' :
       $text_coupon_help .= '<br />'.TEXT_COUPON_HELP_FREESHIP;
