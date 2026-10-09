@@ -215,7 +215,7 @@ if (isset ($_SESSION['cc_id'])) {
                                         )");
   if (xtc_db_num_rows($coupon_query) != 0) {
     $coupon_array = xtc_db_fetch_array($coupon_query);
-    if ($coupon_array['coupon_type'] == 'S') {
+    if ($coupon_array['coupon_type'] == 'S' || $coupon_array['coupon_type'] == 'T') {
       $messageStack->add('checkout_shipping', TEXT_INFO_FREE_SHIPPING_COUPON, 'success');
     }
   }
