@@ -30,6 +30,20 @@
           {/if}
         </div>
       {/if}
+
+      {if $FORM_EMAIL_VERIFY_RESEND}
+        <div class="contentbox">
+          <div class="subline">{#title_email_verify#}</div>
+          {$FORM_EMAIL_VERIFY_RESEND}
+            <p class="mb_20">{#text_email_verify_resend#}</p>
+            <div class="button_row">
+              <div class="br_left">
+                <div class="br_btn_1">{$BUTTON_EMAIL_VERIFY_RESEND}</div>
+              </div>
+            </div>
+          {$FORM_END}
+        </div>
+      {/if}
                       
 
 

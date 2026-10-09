@@ -260,13 +260,14 @@ if (isset($_SESSION['email_verify_pending'])
   if (xtc_db_num_rows($pending_query) == 1) {
     require_once (DIR_FS_INC.'secure_form.inc.php');
 
-    $verify_form = xtc_draw_form('email_verify_resend', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'verify_resend').secure_form('email_verify').'<input type="submit" value="'.TEXT_EMAIL_VERIFY_RESEND.'" /></form>';
-    $verify_form .= xtc_draw_form('email_verify_correct', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'verify_correct').secure_form('email_verify')
-                   .TEXT_EMAIL_VERIFY_CORRECT.'<br />'
-                   .xtc_draw_input_field('email_address', '', 'autocomplete="email" placeholder="'.TEXT_EMAIL_VERIFY_NEW_ADDRESS.'"', 'email', false).' '
-                   .xtc_draw_input_field('confirm_email_address', '', 'autocomplete="email" placeholder="'.TEXT_EMAIL_VERIFY_CONFIRM_ADDRESS.'"', 'email', false).' '
-                   .'<input type="submit" value="'.TEXT_EMAIL_VERIFY_CORRECT_BUTTON.'" /></form>';
-    $messageStack->add('login', ERROR_EMAIL_VERIFY_PENDING.$verify_form);
+    $verify_action = xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL');
+    $smarty->assign('FORM_EMAIL_VERIFY_RESEND', xtc_draw_form('email_verify_resend', $verify_action, 'post').xtc_draw_hidden_field('action', 'verify_resend').secure_form('email_verify'));
+    $smarty->assign('BUTTON_EMAIL_VERIFY_RESEND', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
+    $smarty->assign('FORM_EMAIL_VERIFY_CORRECT', xtc_draw_form('email_verify_correct', $verify_action, 'post').xtc_draw_hidden_field('action', 'verify_correct').secure_form('email_verify'));
+    $smarty->assign('INPUT_EMAIL_VERIFY_NEW', xtc_draw_input_field('email_address', '', 'autocomplete="email"', 'email', false));
+    $smarty->assign('INPUT_EMAIL_VERIFY_CONFIRM', xtc_draw_input_field('confirm_email_address', '', 'autocomplete="email"', 'email', false));
+    $smarty->assign('BUTTON_EMAIL_VERIFY_CORRECT', xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));
+    $messageStack->add('login', ERROR_EMAIL_VERIFY_PENDING);
   } else {
     unset($_SESSION['email_verify_pending']);
   }

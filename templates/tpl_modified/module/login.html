@@ -6,6 +6,37 @@
 
 {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+{if $FORM_EMAIL_VERIFY_RESEND}
+<div class="cf">
+  <div class="twoColums">
+    <div class="highlightbox cf">
+      <h4>{#title_email_verify#}</h4>
+      {$FORM_EMAIL_VERIFY_RESEND}
+      <p>{#text_email_verify_resend#}</p>
+      <div class="button_right">{$BUTTON_EMAIL_VERIFY_RESEND}</div>
+      {$FORM_END}
+    </div>
+  </div>
+
+  <div class="twoColums last">
+    <div class="highlightbox cf">
+      <h4>{#title_email_verify_correct#}</h4>
+      {$FORM_EMAIL_VERIFY_CORRECT}
+      <p>{#text_email_verify_correct#}</p>
+      <table>
+        <tr>
+          <td><span class="fieldtext">{#text_email_verify_new#}</span>{$INPUT_EMAIL_VERIFY_NEW}</td>
+        </tr>
+        <tr>
+          <td><span class="fieldtext">{#text_email_verify_confirm#}</span>{$INPUT_EMAIL_VERIFY_CONFIRM}</td>
+        </tr>
+      </table>
+      <div class="button_right">{$BUTTON_EMAIL_VERIFY_CORRECT}</div>
+      {$FORM_END}
+    </div>
+  </div>
+</div>
+{/if}
 
 <div class="twoColums">
   <div class="highlightbox cf">

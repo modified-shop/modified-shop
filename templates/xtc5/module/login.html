@@ -3,6 +3,34 @@
 <h1>{#heading_login#}</h1>
 {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+{if $FORM_EMAIL_VERIFY_RESEND}
+<div class="highlightbox">
+  <h1>{#title_email_verify#}</h1>
+  {$FORM_EMAIL_VERIFY_RESEND}
+  <p>{#text_email_verify_resend#}</p>
+  <p>{$BUTTON_EMAIL_VERIFY_RESEND}</p>
+  {$FORM_END}
+  <br />
+  {$FORM_EMAIL_VERIFY_CORRECT}
+  <p>{#text_email_verify_correct#}</p>
+  <table width="100%" border="0" cellspacing="4" cellpadding="0">
+    <tr>
+      <td style="white-space:nowrap;"><strong>{#text_email_verify_new#}</strong></td>
+      <td>{$INPUT_EMAIL_VERIFY_NEW}</td>
+    </tr>
+    <tr>
+      <td style="white-space:nowrap;"><strong>{#text_email_verify_confirm#}</strong></td>
+      <td>{$INPUT_EMAIL_VERIFY_CONFIRM}</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>{$BUTTON_EMAIL_VERIFY_CORRECT}</td>
+    </tr>
+  </table>
+  {$FORM_END}
+</div>
+<br />
+{/if}
 <div class="highlightbox">
   <h1>{#title_returning#}</h1>
   {$FORM_ACTION}
