@@ -176,14 +176,22 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER[
   } elseif ($email_address != $confirm_email_address) {
     $correct_error = ENTRY_EMAIL_ERROR_NOT_MATCHING;
   } else {
-    $check_email_query = xtc_db_query("SELECT count(*) as total
-                                         FROM ".TABLE_CUSTOMERS."
-                                        WHERE customers_email_address = '".xtc_db_input($email_address)."'
-                                          AND account_type = '0'
-                                          AND customers_id != '".$correct_customers_id."'");
-    $check_email = xtc_db_fetch_array($check_email_query);
-    if ($check_email['total'] > 0) {
-      $correct_error = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+    // no other request may take the same address between the check and the change
+    $email_lock = 'customers_email_'.md5(mb_strtolower(trim($email_address)));
+    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($email_lock)."', 10) AS email_lock");
+    $lock = xtc_db_fetch_array($lock_query);
+    if (!isset($lock['email_lock']) || $lock['email_lock'] != '1') {
+      $correct_error = ERROR_EMAIL_VERIFY_CORRECT_WAIT;
+    } else {
+      $check_email_query = xtc_db_query("SELECT count(*) as total
+                                           FROM ".TABLE_CUSTOMERS."
+                                          WHERE customers_email_address = '".xtc_db_input($email_address)."'
+                                            AND account_type = '0'
+                                            AND customers_id != '".$correct_customers_id."'");
+      $check_email = xtc_db_fetch_array($check_email_query);
+      if ($check_email['total'] > 0) {
+        $correct_error = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+      }
     }
   }
 
@@ -195,11 +203,14 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER[
     $reset_expr = "(customers_email_verify_time IS NULL OR customers_email_verify_time <= '".$count_reset."')";
 
     // customers_email_verify_count comes first, MySQL evaluates the assignments left to right
+    // reset links sent to the old address must not confirm the new one
     xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
                      SET customers_email_verify_count = IF(".$reset_expr.", 1, customers_email_verify_count + 1),
                          customers_email_address = '".xtc_db_input($email_address)."',
                          customers_email_verify_key = '".xtc_db_input(hash('sha256', $email_token))."',
                          customers_email_verify_time = '".date('Y-m-d H:i:s')."',
+                         password_request_key = '',
+                         password_request_time = NULL,
                          customers_last_modified = now()
                    WHERE customers_id = '".$correct_customers_id."'
                      AND account_type = '0'
@@ -213,6 +224,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER[
     } else {
       $correct_error = ERROR_EMAIL_VERIFY_CORRECT_WAIT;
     }
+  }
+
+  if (isset($email_lock)) {
+    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
   }
 
   if ($correct_error != '') {
