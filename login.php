@@ -219,6 +219,9 @@ if (isset($_GET['action'])
       } else {          
         xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');           
       }
+		} else {
+			// right password, but the captcha failed
+			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_failed/','php') as $file) require ($file);
 		}
 	}
 }
