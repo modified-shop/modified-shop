@@ -164,11 +164,12 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
                                           FROM ".TABLE_CUSTOMERS." 
                                          WHERE customers_id = '".(int)$customers_id."'");
   $check_customer = xtc_db_fetch_array($check_customer_query);
+  // a token stored before the update to hashed tokens is plain text until it expires
   if (!xtc_db_num_rows($check_customer_query)
       || !is_string($key)
       || $key == ''
       || (string)$check_customer['password_request_key'] == ''
-      || !hash_equals((string)$check_customer['password_request_key'], hash('sha256', $key))
+      || !hash_equals((string)$check_customer['password_request_key'], ((strlen((string)$check_customer['password_request_key']) == 64) ? hash('sha256', $key) : $key))
       )
   {
     $case = 'no_account';
