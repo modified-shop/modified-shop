@@ -16,7 +16,8 @@
     $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
     $smarty->assign('EMAIL', $email_address);
-    $smarty->assign('LINK', xtc_href_link(FILENAME_CREATE_ACCOUNT, 'action=verify_email&customers_id='.(int)$customers_id.'&key='.$token, 'SSL'));
+    // the link must not carry the session of the browser that requested it
+    $smarty->assign('LINK', xtc_href_link(FILENAME_CREATE_ACCOUNT, 'action=verify_email&customers_id='.(int)$customers_id.'&key='.$token, 'SSL', false));
     $smarty->assign('VALID_REQUEST_TIME', ($valid_time / 3600));
     $smarty->caching = 0;
 
