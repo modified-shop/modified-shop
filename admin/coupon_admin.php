@@ -94,7 +94,7 @@
       
       if (strtotime($_POST['coupon_startdate']) > strtotime($_POST['coupon_finishdate'])) {
         $error = true;
-        $messageStack->add(ERROR_COUPON_DATE, 'error');
+        $messageStack->add((trim($_POST['coupon_finishdate']) == '') ? ERROR_NO_COUPON_FINISHDATE : ERROR_COUPON_DATE, 'error');
       }
       
       if (empty($_POST['coupon_code'])) {
