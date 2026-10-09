@@ -163,7 +163,7 @@
         
         if ($gv_result['coupon_type'] == 'S') {
           $messageStack->add_session('coupon_message', TEXT_COUPON_HELP_FREESHIP, 'success');
-        } elseif ($gv_result['coupon_type'] == 'P') {
+        } elseif ($gv_result['coupon_type'] == 'P' || $gv_result['coupon_type'] == 'T') {
           $messageStack->add_session('coupon_message', sprintf(TEXT_COUPON_HELP_FIXED, round($gv_result['coupon_amount'], 0)) . '%', 'success');
         } else {
           $messageStack->add_session('coupon_message', sprintf(TEXT_COUPON_HELP_FIXED, $xtPrice->xtcFormat($gv_result['coupon_amount'], true, 0, true)), 'success');
