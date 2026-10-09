@@ -501,6 +501,10 @@ CREATE TABLE customers (
   customers_email_address_new VARCHAR(255) NOT NULL DEFAULT '',
   customers_email_request_key VARCHAR(64) NOT NULL DEFAULT '',
   customers_email_request_time DATETIME NULL,
+  customers_email_verified DATETIME NULL,
+  customers_email_verify_key VARCHAR(64) NOT NULL DEFAULT '',
+  customers_email_verify_time DATETIME NULL,
+  customers_email_verify_count INT(11) NOT NULL DEFAULT 0,
   customers_default_address_id INT(11) NOT NULL,
   customers_telephone VARCHAR(32) NOT NULL,
   customers_fax VARCHAR(32) NOT NULL,
@@ -1700,6 +1704,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'DELETE_GUEST_ACCOUNT', 'true', 5, 110, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'DELETE_GUEST_ACCOUNT_DAYS', '1', 5, 115, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'GUEST_ACCOUNT_EDIT', 'false', 5, 120, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ACCOUNT_EMAIL_VERIFY', 'false', 5, 125, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'false\', \'optional\', \'required\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ACCOUNT_EMAIL_CHANGE_PASSWORD', 'false', 5, 130, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ACCOUNT_EMAIL_CHANGE_VERIFY', 'false', 5, 140, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 

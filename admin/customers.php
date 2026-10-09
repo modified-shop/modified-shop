@@ -613,6 +613,13 @@
               $sql_data_array['password_request_key'] = '';
               $sql_data_array['password_request_time'] = 'null';
             }
+            // the new address is not confirmed, the account is not blocked either
+            if ($customers_email_changed === true) {
+              $sql_data_array['customers_email_verified'] = 'null';
+              $sql_data_array['customers_email_verify_key'] = '';
+              $sql_data_array['customers_email_verify_time'] = 'null';
+              $sql_data_array['customers_email_verify_count'] = 0;
+            }
             if (ACCOUNT_GENDER == 'true') {
               $sql_data_array['customers_gender'] = $customers_gender;
             }

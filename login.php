@@ -140,6 +140,18 @@ if (isset($_GET['action'])
       if (isset($_POST['login']) && $_POST['login'] == 'admin') {
         xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
       }
+		} elseif ($captcha_error === false
+		          && defined('ACCOUNT_EMAIL_VERIFY')
+		          && ACCOUNT_EMAIL_VERIFY == 'required'
+		          && SEND_EMAILS == 'true'
+		          && empty($check_customer['customers_email_verified'])
+		          && !empty($check_customer['customers_email_verify_key'])
+		          )
+		{
+			// the password is right, the login waits for the confirmation of the email address
+			// a later password change withdraws this permission
+			$_SESSION['email_verify_pending'] = (int)$check_customer['customers_id'];
+			$_SESSION['email_verify_pending_time'] = (int)$check_customer['customers_password_time'];
 		} elseif ($captcha_error === false) {		
 			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_before_session/','php') as $file) require ($file);
 
@@ -230,8 +242,38 @@ if (isset($captcha_error) && $captcha_error === true) {
   $messageStack->add('login', TEXT_WRONG_CODE);
 }
 
-if (isset($_GET['action']) && $_GET['action'] === 'relogin') {	
+if (isset($_GET['action']) && $_GET['action'] === 'relogin') {
   $messageStack->add('login', TEXT_RELOGIN_NEEDED);
+}
+
+// a blocked login waits for the confirmation, offer a new link or a corrected address
+if (isset($_SESSION['email_verify_pending'])
+    && defined('ACCOUNT_EMAIL_VERIFY')
+    && ACCOUNT_EMAIL_VERIFY == 'required'
+    && SEND_EMAILS == 'true'
+    )
+{
+  $pending_query = xtc_db_query("SELECT customers_id
+                                   FROM ".TABLE_CUSTOMERS."
+                                  WHERE customers_id = '".(int)$_SESSION['email_verify_pending']."'
+                                    AND account_type = '0'
+                                    AND customers_email_verified IS NULL
+                                    AND customers_email_verify_key != ''
+                                    AND customers_password_time = '".(isset($_SESSION['email_verify_pending_time']) ? (int)$_SESSION['email_verify_pending_time'] : -1)."'");
+  if (xtc_db_num_rows($pending_query) == 1) {
+    require_once (DIR_FS_INC.'secure_form.inc.php');
+
+    $verify_action = xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL');
+    $smarty->assign('FORM_EMAIL_VERIFY_RESEND', xtc_draw_form('email_verify_resend', $verify_action, 'post').xtc_draw_hidden_field('action', 'verify_resend').secure_form('email_verify'));
+    $smarty->assign('BUTTON_EMAIL_VERIFY_RESEND', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
+    $smarty->assign('FORM_EMAIL_VERIFY_CORRECT', xtc_draw_form('email_verify_correct', $verify_action, 'post').xtc_draw_hidden_field('action', 'verify_correct').secure_form('email_verify'));
+    $smarty->assign('INPUT_EMAIL_VERIFY_NEW', xtc_draw_input_field('email_address', '', 'autocomplete="email"', 'email', false));
+    $smarty->assign('INPUT_EMAIL_VERIFY_CONFIRM', xtc_draw_input_field('confirm_email_address', '', 'autocomplete="email"', 'email', false));
+    $smarty->assign('BUTTON_EMAIL_VERIFY_CORRECT', xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));
+    $messageStack->add('login', ERROR_EMAIL_VERIFY_PENDING);
+  } else {
+    unset($_SESSION['email_verify_pending'], $_SESSION['email_verify_pending_time']);
+  }
 }
 
 // build breadcrumb

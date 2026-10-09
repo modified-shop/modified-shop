@@ -8,6 +8,50 @@
 
   {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
   {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+  {if $FORM_EMAIL_VERIFY_RESEND}
+    <div class="flex_column_row">
+
+      <div class="flex_2column_item">
+        {$FORM_EMAIL_VERIFY_RESEND}
+          <div class="contentbox cf">
+            <div class="subline">{#title_email_verify#}</div>
+            <p class="mb_20">{#text_email_verify_resend#}</p>
+
+            <div class="button_row">
+              <div class="br_left">
+                <div class="br_btn_1">{$BUTTON_EMAIL_VERIFY_RESEND}</div>
+              </div>
+            </div>
+          </div>
+        {$FORM_END}
+      </div>
+
+      <div class="flex_2column_item">
+        {$FORM_EMAIL_VERIFY_CORRECT}
+          <div class="contentbox cf">
+            <div class="subline">{#title_email_verify_correct#}</div>
+            <p class="mb_20">{#text_email_verify_correct#}</p>
+
+            <div class="field_item_1">
+              <label><span class="field_text">{#text_email_verify_new#}</span>{$INPUT_EMAIL_VERIFY_NEW}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span></label>
+            </div>
+
+            <div class="field_item_1">
+              <label><span class="field_text">{#text_email_verify_confirm#}</span>{$INPUT_EMAIL_VERIFY_CONFIRM}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span></label>
+            </div>
+
+            <div class="button_row">
+              <div class="br_left">
+                <div class="br_btn_1">{$BUTTON_EMAIL_VERIFY_CORRECT}</div>
+              </div>
+            </div>
+          </div>
+        {$FORM_END}
+      </div>
+
+    </div>
+    <br />
+  {/if}
 
   <div class="flex_column_row reverse">
   

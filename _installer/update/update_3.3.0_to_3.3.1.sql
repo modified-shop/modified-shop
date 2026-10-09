@@ -233,4 +233,11 @@ ALTER TABLE `customers`
   ADD `customers_email_request_key` VARCHAR(64) NOT NULL DEFAULT '' AFTER `customers_email_address_new`,
   ADD `customers_email_request_time` DATETIME NULL AFTER `customers_email_request_key`;
 
+#GTB - 2026-10-08 - store the registration confirmation of the email address
+ALTER TABLE `customers`
+  ADD `customers_email_verified` DATETIME NULL AFTER `customers_email_request_time`,
+  ADD `customers_email_verify_key` VARCHAR(64) NOT NULL DEFAULT '' AFTER `customers_email_verified`,
+  ADD `customers_email_verify_time` DATETIME NULL AFTER `customers_email_verify_key`,
+  ADD `customers_email_verify_count` INT(11) NOT NULL DEFAULT 0 AFTER `customers_email_verify_time`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

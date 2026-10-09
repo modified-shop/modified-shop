@@ -39,6 +39,226 @@ if (defined('MODULE_CAPTCHA_ACTIVE')) {
 defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
 defined('MODULE_CAPTCHA_LOGGED_IN') or define('MODULE_CAPTCHA_LOGGED_IN', 'True');
 
+define('EMAIL_VERIFY_VALID_TIME', 24*60*60);
+
+// without outgoing mails nobody could confirm
+$email_verify = (defined('ACCOUNT_EMAIL_VERIFY') && in_array(ACCOUNT_EMAIL_VERIFY, array('optional', 'required')) && SEND_EMAILS == 'true') ? ACCOUNT_EMAIL_VERIFY : 'false';
+
+// confirm the email address, the link must work without a login and in any browser
+if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
+  // the redirect after the next login must not open the used link again
+  if (isset($_SESSION['tracking']['pageview_history'])) {
+    $_SESSION['tracking']['pageview_history'] = array_values(array_filter($_SESSION['tracking']['pageview_history'], function ($url) {
+      return strpos($url, 'action=verify_email') === false;
+    }));
+  }
+
+  $verify_customers_id = isset($_GET['customers_id']) ? (int)$_GET['customers_id'] : 0;
+  $verify_key = (isset($_GET['key']) && is_string($_GET['key'])) ? $_GET['key'] : '';
+  $verify_ok = false;
+
+  if ($verify_customers_id > 0 && $verify_key != '') {
+    $check_customer_query = xtc_db_query("SELECT customers_email_verify_key,
+                                                 customers_email_verify_time
+                                            FROM ".TABLE_CUSTOMERS."
+                                           WHERE customers_id = '".$verify_customers_id."'
+                                             AND account_type = '0'
+                                             AND customers_email_verified IS NULL
+                                             AND customers_email_verify_key != ''");
+    $check_customer = xtc_db_fetch_array($check_customer_query);
+
+    if (is_array($check_customer)
+        && hash_equals($check_customer['customers_email_verify_key'], hash('sha256', $verify_key))
+        && time() <= (int)strtotime((string)$check_customer['customers_email_verify_time']) + EMAIL_VERIFY_VALID_TIME
+        )
+    {
+      // only one of parallel requests with the same link confirms
+      xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                       SET customers_email_verified = now(),
+                           customers_email_verify_key = '',
+                           customers_email_verify_time = NULL,
+                           customers_email_verify_count = 0
+                     WHERE customers_id = '".$verify_customers_id."'
+                       AND customers_email_verify_key = '".xtc_db_input($check_customer['customers_email_verify_key'])."'");
+      $verify_ok = (xtc_db_affected_rows() == 1);
+    }
+  }
+
+  if ($verify_ok === true) {
+    if (isset($_SESSION['email_verify_pending']) && (int)$_SESSION['email_verify_pending'] == $verify_customers_id) {
+      unset($_SESSION['email_verify_pending'], $_SESSION['email_verify_pending_time']);
+    }
+    if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] == $verify_customers_id) {
+      $messageStack->add_session('account', SUCCESS_EMAIL_VERIFIED, 'success');
+      xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    }
+    $messageStack->add_session('login', SUCCESS_EMAIL_VERIFIED, 'success');
+    xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+  }
+
+  if (isset($_SESSION['customer_id'])) {
+    $messageStack->add_session('account', ERROR_EMAIL_VERIFY_LINK_INVALID);
+    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  }
+  $messageStack->add_session('login', ERROR_EMAIL_VERIFY_LINK_INVALID);
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+
+// send the confirmation link again, the answer is always the same
+if (isset($_POST['action']) && $_POST['action'] == 'verify_resend' && $_SERVER['REQUEST_METHOD'] == 'POST') {
+  require_once (DIR_FS_INC.'secure_form.inc.php');
+  require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+  require_once (DIR_FS_INC.'send_email_verify_mail.inc.php');
+
+  // the password version of the session or the blocked login must still be current
+  $resend_customers_id = 0;
+  $resend_time = -1;
+  if (isset($_SESSION['customer_id'])) {
+    $resend_customers_id = (int)$_SESSION['customer_id'];
+    $resend_time = (int)$_SESSION['customer_time'];
+  } elseif (isset($_SESSION['email_verify_pending'])) {
+    $resend_customers_id = (int)$_SESSION['email_verify_pending'];
+    $resend_time = isset($_SESSION['email_verify_pending_time']) ? (int)$_SESSION['email_verify_pending_time'] : -1;
+  }
+
+  if (check_secure_form($_POST) === true && $resend_customers_id > 0 && $email_verify != 'false') {
+    $check_customer_query = xtc_db_query("SELECT customers_email_address
+                                            FROM ".TABLE_CUSTOMERS."
+                                           WHERE customers_id = '".$resend_customers_id."'
+                                             AND account_type = '0'
+                                             AND customers_email_verified IS NULL
+                                             AND customers_email_verify_key != ''
+                                             AND customers_password_time = '".$resend_time."'");
+    $check_customer = xtc_db_fetch_array($check_customer_query);
+
+    if (is_array($check_customer)) {
+      $email_token = xtc_random_charcode(32);
+
+      // limits per account: 60 seconds between requests, 5 requests until 15 minutes pass without one
+      $min_gap = date('Y-m-d H:i:s', time() - 60);
+      $count_reset = date('Y-m-d H:i:s', time() - 15 * 60);
+      $reset_expr = "(customers_email_verify_time IS NULL OR customers_email_verify_time <= '".$count_reset."')";
+
+      // customers_email_verify_count comes first, MySQL evaluates the assignments left to right
+      xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                       SET customers_email_verify_count = IF(".$reset_expr.", 1, customers_email_verify_count + 1),
+                           customers_email_verify_key = '".xtc_db_input(hash('sha256', $email_token))."',
+                           customers_email_verify_time = '".date('Y-m-d H:i:s')."'
+                     WHERE customers_id = '".$resend_customers_id."'
+                       AND customers_email_verified IS NULL
+                       AND customers_email_verify_key != ''
+                       AND customers_password_time = '".$resend_time."'
+                       AND (customers_email_verify_time IS NULL OR customers_email_verify_time <= '".$min_gap."')
+                       AND (".$reset_expr." OR customers_email_verify_count < 5)");
+
+      if (xtc_db_affected_rows() === 1) {
+        send_email_verify_mail($resend_customers_id, $check_customer['customers_email_address'], $email_token, EMAIL_VERIFY_VALID_TIME);
+      }
+    }
+  }
+
+  $messageStack->add_session((isset($_SESSION['customer_id']) ? 'account' : 'login'), sprintf(SUCCESS_EMAIL_VERIFY_RESENT, (EMAIL_VERIFY_VALID_TIME / 3600)), 'success');
+  xtc_redirect(xtc_href_link((isset($_SESSION['customer_id']) ? FILENAME_ACCOUNT : FILENAME_LOGIN), '', 'SSL'));
+}
+
+// correct an unconfirmed address, the password was checked at the blocked login
+if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER['REQUEST_METHOD'] == 'POST') {
+  require_once (DIR_FS_INC.'secure_form.inc.php');
+  require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+  require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+  require_once (DIR_FS_INC.'send_email_verify_mail.inc.php');
+  require_once (DIR_FS_INC.'xtc_email_address_lock.inc.php');
+
+  $correct_customers_id = isset($_SESSION['email_verify_pending']) ? (int)$_SESSION['email_verify_pending'] : 0;
+  $correct_time = isset($_SESSION['email_verify_pending_time']) ? (int)$_SESSION['email_verify_pending_time'] : -1;
+
+  // a password change after the blocked login withdraws the permission
+  $pending_valid = false;
+  if ($correct_customers_id > 0) {
+    $pending_query = xtc_db_query("SELECT customers_id
+                                     FROM ".TABLE_CUSTOMERS."
+                                    WHERE customers_id = '".$correct_customers_id."'
+                                      AND account_type = '0'
+                                      AND customers_email_verified IS NULL
+                                      AND customers_email_verify_key != ''
+                                      AND customers_password_time = '".$correct_time."'");
+    $pending_valid = (xtc_db_num_rows($pending_query) == 1);
+  }
+  $email_address = isset($_POST['email_address']) ? trim(xtc_db_prepare_input($_POST['email_address'])) : '';
+  $confirm_email_address = isset($_POST['confirm_email_address']) ? trim(xtc_db_prepare_input($_POST['confirm_email_address'])) : '';
+
+  $correct_error = '';
+  if (check_secure_form($_POST) === false || $correct_customers_id < 1 || $email_verify == 'false') {
+    $correct_error = ENTRY_TOKEN_ERROR;
+  } elseif ($pending_valid === false) {
+    unset($_SESSION['email_verify_pending'], $_SESSION['email_verify_pending_time']);
+    $correct_error = TEXT_RELOGIN_NEEDED;
+  } elseif (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+    $correct_error = ENTRY_EMAIL_ADDRESS_ERROR;
+  } elseif (xtc_validate_email($email_address) == false) {
+    $correct_error = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+  } elseif ($email_address != $confirm_email_address) {
+    $correct_error = ENTRY_EMAIL_ERROR_NOT_MATCHING;
+  } else {
+    // no other request may take the same address between the check and the change
+    $email_locked = xtc_email_address_lock($email_address);
+    if ($email_locked !== true) {
+      $correct_error = ERROR_EMAIL_VERIFY_CORRECT_WAIT;
+    } else {
+      $check_email_query = xtc_db_query("SELECT count(*) as total
+                                           FROM ".TABLE_CUSTOMERS."
+                                          WHERE customers_email_address = '".xtc_db_input($email_address)."'
+                                            AND account_type = '0'
+                                            AND customers_id != '".$correct_customers_id."'");
+      $check_email = xtc_db_fetch_array($check_email_query);
+      if ($check_email['total'] > 0) {
+        $correct_error = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+      }
+    }
+  }
+
+  if ($correct_error == '') {
+    $email_token = xtc_random_charcode(32);
+
+    // no 60 second gap, a typo is often noticed right after the registration; the count limit stays
+    $count_reset = date('Y-m-d H:i:s', time() - 15 * 60);
+    $reset_expr = "(customers_email_verify_time IS NULL OR customers_email_verify_time <= '".$count_reset."')";
+
+    // customers_email_verify_count comes first, MySQL evaluates the assignments left to right
+    // reset links sent to the old address must not confirm the new one
+    xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                     SET customers_email_verify_count = IF(".$reset_expr.", 1, customers_email_verify_count + 1),
+                         customers_email_address = '".xtc_db_input($email_address)."',
+                         customers_email_verify_key = '".xtc_db_input(hash('sha256', $email_token))."',
+                         customers_email_verify_time = '".date('Y-m-d H:i:s')."',
+                         password_request_key = '',
+                         password_request_time = NULL,
+                         customers_last_modified = now()
+                   WHERE customers_id = '".$correct_customers_id."'
+                     AND account_type = '0'
+                     AND customers_email_verified IS NULL
+                     AND customers_email_verify_key != ''
+                     AND customers_password_time = '".$correct_time."'
+                     AND (".$reset_expr." OR customers_email_verify_count < 5)");
+
+    if (xtc_db_affected_rows() === 1) {
+      send_email_verify_mail($correct_customers_id, $email_address, $email_token, EMAIL_VERIFY_VALID_TIME);
+      $messageStack->add_session('login', sprintf(SUCCESS_EMAIL_VERIFY_CORRECTED, (EMAIL_VERIFY_VALID_TIME / 3600)), 'success');
+    } else {
+      $correct_error = ERROR_EMAIL_VERIFY_CORRECT_WAIT;
+    }
+  }
+
+  if (isset($email_locked) && $email_locked === true) {
+    xtc_email_address_lock('', true);
+  }
+
+  if ($correct_error != '') {
+    $messageStack->add_session('login', $correct_error);
+  }
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+
 if (isset($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
@@ -68,6 +288,8 @@ require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_FS_INC.'write_customers_session.inc.php');
 require_once (DIR_FS_INC.'xtc_email_address_lock.inc.php');
+require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+require_once (DIR_FS_INC.'send_email_verify_mail.inc.php');
 
 // include needed classes
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
@@ -319,6 +541,15 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     }
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_customer_data/','php') as $file) require ($file);
+
+    // only the hash is stored, the token goes into the link
+    $email_verify_token = '';
+    if ($email_verify != 'false') {
+      $email_verify_token = xtc_random_charcode(32);
+      $sql_data_array['customers_email_verify_key'] = hash('sha256', $email_verify_token);
+      $sql_data_array['customers_email_verify_time'] = date('Y-m-d H:i:s');
+      $sql_data_array['customers_email_verify_count'] = 1;
+    }
     
     // check email again, a parallel registration or address change must not take the same address
     $check_email = array('total' => 1);
@@ -332,12 +563,18 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if ($check_email['total'] == 0) {
       xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-      $_SESSION['customer_id'] = xtc_db_insert_id();
+      $new_customer_id = xtc_db_insert_id();
       xtc_email_address_lock('', true);
-      $_SESSION['customer_time'] = $customers_password_time;
+
+      // required: the login follows after the confirmation
+      $auto_login = ($email_verify != 'required');
+      if ($auto_login === true) {
+        $_SESSION['customer_id'] = $new_customer_id;
+        $_SESSION['customer_time'] = $customers_password_time;
+      }
       
       $sql_data_array = array(
-        'customers_id' => $_SESSION['customer_id'],
+        'customers_id' => $new_customer_id,
         'entry_firstname' => $firstname,
         'entry_lastname' => $lastname,
         'entry_street_address' => $street_address,
@@ -370,28 +607,34 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
                        SET customers_default_address_id = '".(int)$address_id."' 
-                     WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+                     WHERE customers_id = '".(int)$new_customer_id."'");
     
       $sql_data_array = array(
-        'customers_info_id' => (int)$_SESSION['customer_id'],
-        'customers_info_number_of_logons' => '1',
+        'customers_info_id' => (int)$new_customer_id,
+        'customers_info_number_of_logons' => (($auto_login === true) ? '1' : '0'),
         'customers_info_date_account_created' => 'now()',
-        'customers_info_date_of_last_logon' => 'now()'
       );
+      if ($auto_login === true) {
+        $sql_data_array['customers_info_date_of_last_logon'] = 'now()';
+      }
       xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
 
-      if (SESSION_RECREATE == 'True') {
-        xtc_session_recreate();
+      if ($auto_login === true) {
+        if (SESSION_RECREATE == 'True') {
+          xtc_session_recreate();
+        }
+
+        // write customers session
+        write_customers_session((int)$new_customer_id);
       }
 
-      // write customers session
-      write_customers_session((int)$_SESSION['customer_id']);
-    
       // user info
-			xtc_write_user_info((int)$_SESSION['customer_id']);
+			xtc_write_user_info((int)$new_customer_id);
 
       // restore cart contents
-      $_SESSION['cart']->restore_contents();
+      if ($auto_login === true) {
+        $_SESSION['cart']->restore_contents();
+      }
 
       // build the message content
       $name = $firstname.' '.$lastname;
@@ -423,7 +666,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         
           xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
                            SET refferers_id = '".(int)$campaign['campaigns_id']."'
-                         WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+                         WHERE customers_id = '".(int)$new_customer_id."'");
         
           xtc_db_query("UPDATE ".TABLE_CAMPAIGNS."
                            SET campaigns_leads = campaigns_leads + 1
@@ -542,8 +785,17 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         $newsletter->AddUserAuto($email_address);
       }
 
+      if ($email_verify_token != '') {
+        send_email_verify_mail($new_customer_id, $email_address, $email_verify_token, EMAIL_VERIFY_VALID_TIME);
+      }
+
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_before_redirect/','php') as $file) require ($file);
       
+      if ($auto_login === false) {
+        $messageStack->add_session('login', sprintf(SUCCESS_EMAIL_VERIFY_REQUIRED, (EMAIL_VERIFY_VALID_TIME / 3600)), 'success');
+        xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+      }
+
       if ($_SESSION['cart']->count_contents() > 0) {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       }

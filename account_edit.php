@@ -85,6 +85,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
                                customers_email_request_time = NULL,
                                password_request_key = '',
                                password_request_time = NULL,
+                               customers_email_verified = now(),
+                               customers_email_verify_key = '',
+                               customers_email_verify_time = NULL,
+                               customers_email_verify_count = 0,
                                customers_password_time = '".time()."',
                                customers_last_modified = now()
                          WHERE customers_id = '".$verify_customers_id."'
@@ -342,6 +346,11 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
         $sql_data_array['customers_email_request_time'] = 'null';
         $sql_data_array['password_request_key'] = '';
         $sql_data_array['password_request_time'] = 'null';
+        // the new address is not proven yet, but the account stays usable
+        $sql_data_array['customers_email_verified'] = 'null';
+        $sql_data_array['customers_email_verify_key'] = '';
+        $sql_data_array['customers_email_verify_time'] = 'null';
+        $sql_data_array['customers_email_verify_count'] = 0;
       }
     }
 

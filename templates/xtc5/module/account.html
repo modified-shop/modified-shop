@@ -12,6 +12,15 @@
     <p><a href="{$LINK_LOGIN}" style="font-size:13px;"><strong>{#text_login#}</strong></a></p>
   {/if}
 {/if}
+{if $FORM_EMAIL_VERIFY_RESEND}
+  <h2>{#title_email_verify#}</h2>
+  <div class="highlightbox">
+    {$FORM_EMAIL_VERIFY_RESEND}
+    <p>{#text_email_verify_resend#}</p>
+    <p>{$BUTTON_EMAIL_VERIFY_RESEND}</p>
+    {$FORM_END}
+  </div>
+{/if}
 {if isset($smarty.session.customer_id)}
   <h2>{#title_account#}</h2>
   <div class="highlightbox">

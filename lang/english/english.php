@@ -286,6 +286,15 @@ define('SUCCESS_EMAIL_CHANGE_VERIFIED', 'Your new e-mail address is confirmed. P
 define('ERROR_EMAIL_CHANGE_LINK_INVALID', 'The confirmation link is invalid, has expired or has already been used.');
 define('TEXT_EMAIL_CHANGE_VERIFY_SUBJECT', 'Confirm your new e-mail address');
 define('TEXT_EMAIL_CHANGE_NOTIFY_SUBJECT', 'The e-mail address of your account was changed');
+define('SUCCESS_EMAIL_VERIFIED', 'Your e-mail address is confirmed.');
+define('ERROR_EMAIL_VERIFY_LINK_INVALID', 'The confirmation link is invalid, has expired or has already been used. Please log in. If your address is not confirmed yet, you can request a new link there.');
+define('SUCCESS_EMAIL_VERIFY_REQUIRED', 'Please confirm your e-mail address. We have sent you a link, it is valid for %s hours. After that you can log in.');
+define('ERROR_EMAIL_VERIFY_PENDING', 'Your e-mail address is not confirmed yet. Please click the link in the confirmation e-mail, then you can log in.');
+define('TEXT_EMAIL_VERIFY_PENDING', 'Your e-mail address is not confirmed yet. Please click the link in the confirmation e-mail.');
+define('SUCCESS_EMAIL_VERIFY_CORRECTED', 'The e-mail address is corrected. We have sent a new confirmation link to the correct address, it is valid for %s hours.');
+define('ERROR_EMAIL_VERIFY_CORRECT_WAIT', 'The address could not be changed right now. Please wait a minute and try again.');
+define('SUCCESS_EMAIL_VERIFY_RESENT', 'If a confirmation link is pending, we have sent it to your e-mail address. It is valid for %s hours. Please wait a few minutes before you request another link.');
+define('TEXT_EMAIL_VERIFY_SUBJECT', 'Confirm your e-mail address');
 define('TEXT_MAXIMUM_ENTRIES', '<strong>Reference:</strong> You are able to choose out of %s entries in your address book!');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_DELETED', 'The selected entry has been deleted successfully.');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED', 'Your address book has been updated successfully!');

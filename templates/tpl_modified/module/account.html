@@ -63,6 +63,17 @@
 </div>
 
 <div class="twoColums last">
+  {if $FORM_EMAIL_VERIFY_RESEND}
+  <div class="highlightbox plainright cf">
+    <h4>{#title_email_verify#}</h4>
+    {$FORM_EMAIL_VERIFY_RESEND}
+    <p>{#text_email_verify_resend#}</p>
+    <div class="button_right">{$BUTTON_EMAIL_VERIFY_RESEND}</div>
+    {$FORM_END}
+  </div>
+  <br />
+  {/if}
+
   {if $LINK_NEWSLETTER}
   <div class="highlightbox plainright">
     <h4>{#title_notification#}</h4>
