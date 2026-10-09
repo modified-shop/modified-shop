@@ -224,12 +224,6 @@ ALTER TABLE `content_manager`
 ALTER TABLE `customers`
   MODIFY `password_request_key` VARCHAR(64) NOT NULL;
 
-# open reset links keep working, the check compares the hash of the link token
-UPDATE `customers`
-   SET `password_request_key` = SHA2(`password_request_key`, 256)
- WHERE `password_request_key` != ''
-   AND LENGTH(`password_request_key`) < 64;
-
 ALTER TABLE `customers`
   ADD `password_request_count` INT(11) NOT NULL DEFAULT 0 AFTER `password_request_time`;
 
