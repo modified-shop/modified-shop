@@ -149,7 +149,9 @@ if (isset($_GET['action'])
 		          )
 		{
 			// the password is right, the login waits for the confirmation of the email address
+			// a later password change withdraws this permission
 			$_SESSION['email_verify_pending'] = (int)$check_customer['customers_id'];
+			$_SESSION['email_verify_pending_time'] = (int)$check_customer['customers_password_time'];
 		} elseif ($captcha_error === false) {		
 			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_before_session/','php') as $file) require ($file);
 
@@ -256,7 +258,8 @@ if (isset($_SESSION['email_verify_pending'])
                                   WHERE customers_id = '".(int)$_SESSION['email_verify_pending']."'
                                     AND account_type = '0'
                                     AND customers_email_verified IS NULL
-                                    AND customers_email_verify_key != ''");
+                                    AND customers_email_verify_key != ''
+                                    AND customers_password_time = '".(isset($_SESSION['email_verify_pending_time']) ? (int)$_SESSION['email_verify_pending_time'] : -1)."'");
   if (xtc_db_num_rows($pending_query) == 1) {
     require_once (DIR_FS_INC.'secure_form.inc.php');
 
@@ -269,7 +272,7 @@ if (isset($_SESSION['email_verify_pending'])
     $smarty->assign('BUTTON_EMAIL_VERIFY_CORRECT', xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));
     $messageStack->add('login', ERROR_EMAIL_VERIFY_PENDING);
   } else {
-    unset($_SESSION['email_verify_pending']);
+    unset($_SESSION['email_verify_pending'], $_SESSION['email_verify_pending_time']);
   }
 }
 

@@ -86,7 +86,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
 
   if ($verify_ok === true) {
     if (isset($_SESSION['email_verify_pending']) && (int)$_SESSION['email_verify_pending'] == $verify_customers_id) {
-      unset($_SESSION['email_verify_pending']);
+      unset($_SESSION['email_verify_pending'], $_SESSION['email_verify_pending_time']);
     }
     if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] == $verify_customers_id) {
       $messageStack->add_session('account', SUCCESS_EMAIL_VERIFIED, 'success');
@@ -110,11 +110,15 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_resend' && $_SERVER['
   require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
   require_once (DIR_FS_INC.'send_email_verify_mail.inc.php');
 
+  // the password version of the session or the blocked login must still be current
   $resend_customers_id = 0;
+  $resend_time = -1;
   if (isset($_SESSION['customer_id'])) {
     $resend_customers_id = (int)$_SESSION['customer_id'];
+    $resend_time = (int)$_SESSION['customer_time'];
   } elseif (isset($_SESSION['email_verify_pending'])) {
     $resend_customers_id = (int)$_SESSION['email_verify_pending'];
+    $resend_time = isset($_SESSION['email_verify_pending_time']) ? (int)$_SESSION['email_verify_pending_time'] : -1;
   }
 
   if (check_secure_form($_POST) === true && $resend_customers_id > 0 && $email_verify != 'false') {
@@ -123,7 +127,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_resend' && $_SERVER['
                                            WHERE customers_id = '".$resend_customers_id."'
                                              AND account_type = '0'
                                              AND customers_email_verified IS NULL
-                                             AND customers_email_verify_key != ''");
+                                             AND customers_email_verify_key != ''
+                                             AND customers_password_time = '".$resend_time."'");
     $check_customer = xtc_db_fetch_array($check_customer_query);
 
     if (is_array($check_customer)) {
@@ -142,6 +147,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_resend' && $_SERVER['
                      WHERE customers_id = '".$resend_customers_id."'
                        AND customers_email_verified IS NULL
                        AND customers_email_verify_key != ''
+                       AND customers_password_time = '".$resend_time."'
                        AND (customers_email_verify_time IS NULL OR customers_email_verify_time <= '".$min_gap."')
                        AND (".$reset_expr." OR customers_email_verify_count < 5)");
 
@@ -163,12 +169,29 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER[
   require_once (DIR_FS_INC.'send_email_verify_mail.inc.php');
 
   $correct_customers_id = isset($_SESSION['email_verify_pending']) ? (int)$_SESSION['email_verify_pending'] : 0;
+  $correct_time = isset($_SESSION['email_verify_pending_time']) ? (int)$_SESSION['email_verify_pending_time'] : -1;
+
+  // a password change after the blocked login withdraws the permission
+  $pending_valid = false;
+  if ($correct_customers_id > 0) {
+    $pending_query = xtc_db_query("SELECT customers_id
+                                     FROM ".TABLE_CUSTOMERS."
+                                    WHERE customers_id = '".$correct_customers_id."'
+                                      AND account_type = '0'
+                                      AND customers_email_verified IS NULL
+                                      AND customers_email_verify_key != ''
+                                      AND customers_password_time = '".$correct_time."'");
+    $pending_valid = (xtc_db_num_rows($pending_query) == 1);
+  }
   $email_address = isset($_POST['email_address']) ? trim(xtc_db_prepare_input($_POST['email_address'])) : '';
   $confirm_email_address = isset($_POST['confirm_email_address']) ? trim(xtc_db_prepare_input($_POST['confirm_email_address'])) : '';
 
   $correct_error = '';
   if (check_secure_form($_POST) === false || $correct_customers_id < 1 || $email_verify == 'false') {
     $correct_error = ENTRY_TOKEN_ERROR;
+  } elseif ($pending_valid === false) {
+    unset($_SESSION['email_verify_pending'], $_SESSION['email_verify_pending_time']);
+    $correct_error = TEXT_RELOGIN_NEEDED;
   } elseif (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
     $correct_error = ENTRY_EMAIL_ADDRESS_ERROR;
   } elseif (xtc_validate_email($email_address) == false) {
@@ -216,6 +239,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER[
                      AND account_type = '0'
                      AND customers_email_verified IS NULL
                      AND customers_email_verify_key != ''
+                     AND customers_password_time = '".$correct_time."'
                      AND (".$reset_expr." OR customers_email_verify_count < 5)");
 
     if (xtc_db_affected_rows() === 1) {
