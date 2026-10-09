@@ -414,12 +414,6 @@ require (DIR_WS_INCLUDES.'head.php');
         if (!isset($coupon_finishdate)) {
           $coupon_finishdate = date('Y-m-d', strtotime('+1 year'));
         }
-        if (substr($coupon_startdate, 0, 10) == '0000-00-00') {
-          $coupon_startdate = '';
-        }
-        if (substr($coupon_finishdate, 0, 10) == '0000-00-00') {
-          $coupon_finishdate = '';
-        }
 
         $input_name = '';
         $input_desc = '';
