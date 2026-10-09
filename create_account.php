@@ -155,6 +155,72 @@ if (isset($_POST['action']) && $_POST['action'] == 'verify_resend' && $_SERVER['
   xtc_redirect(xtc_href_link((isset($_SESSION['customer_id']) ? FILENAME_ACCOUNT : FILENAME_LOGIN), '', 'SSL'));
 }
 
+// correct an unconfirmed address, the password was checked at the blocked login
+if (isset($_POST['action']) && $_POST['action'] == 'verify_correct' && $_SERVER['REQUEST_METHOD'] == 'POST') {
+  require_once (DIR_FS_INC.'secure_form.inc.php');
+  require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+  require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+  require_once (DIR_FS_INC.'send_email_verify_mail.inc.php');
+
+  $correct_customers_id = isset($_SESSION['email_verify_pending']) ? (int)$_SESSION['email_verify_pending'] : 0;
+  $email_address = isset($_POST['email_address']) ? trim(xtc_db_prepare_input($_POST['email_address'])) : '';
+  $confirm_email_address = isset($_POST['confirm_email_address']) ? trim(xtc_db_prepare_input($_POST['confirm_email_address'])) : '';
+
+  $correct_error = '';
+  if (check_secure_form($_POST) === false || $correct_customers_id < 1 || $email_verify == 'false') {
+    $correct_error = ENTRY_TOKEN_ERROR;
+  } elseif (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+    $correct_error = ENTRY_EMAIL_ADDRESS_ERROR;
+  } elseif (xtc_validate_email($email_address) == false) {
+    $correct_error = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+  } elseif ($email_address != $confirm_email_address) {
+    $correct_error = ENTRY_EMAIL_ERROR_NOT_MATCHING;
+  } else {
+    $check_email_query = xtc_db_query("SELECT count(*) as total
+                                         FROM ".TABLE_CUSTOMERS."
+                                        WHERE customers_email_address = '".xtc_db_input($email_address)."'
+                                          AND account_type = '0'
+                                          AND customers_id != '".$correct_customers_id."'");
+    $check_email = xtc_db_fetch_array($check_email_query);
+    if ($check_email['total'] > 0) {
+      $correct_error = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+    }
+  }
+
+  if ($correct_error == '') {
+    $email_token = xtc_random_charcode(32);
+
+    // no 60 second gap, a typo is often noticed right after the registration; the count limit stays
+    $count_reset = date('Y-m-d H:i:s', time() - 15 * 60);
+    $reset_expr = "(customers_email_verify_time IS NULL OR customers_email_verify_time <= '".$count_reset."')";
+
+    // customers_email_verify_count comes first, MySQL evaluates the assignments left to right
+    xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                     SET customers_email_verify_count = IF(".$reset_expr.", 1, customers_email_verify_count + 1),
+                         customers_email_address = '".xtc_db_input($email_address)."',
+                         customers_email_verify_key = '".xtc_db_input(hash('sha256', $email_token))."',
+                         customers_email_verify_time = '".date('Y-m-d H:i:s')."',
+                         customers_last_modified = now()
+                   WHERE customers_id = '".$correct_customers_id."'
+                     AND account_type = '0'
+                     AND customers_email_verified IS NULL
+                     AND customers_email_verify_key != ''
+                     AND (".$reset_expr." OR customers_email_verify_count < 5)");
+
+    if (xtc_db_affected_rows() === 1) {
+      send_email_verify_mail($correct_customers_id, $email_address, $email_token, EMAIL_VERIFY_VALID_TIME);
+      $messageStack->add_session('login', sprintf(SUCCESS_EMAIL_VERIFY_CORRECTED, (EMAIL_VERIFY_VALID_TIME / 3600)), 'success');
+    } else {
+      $correct_error = ERROR_EMAIL_VERIFY_CORRECT_WAIT;
+    }
+  }
+
+  if ($correct_error != '') {
+    $messageStack->add_session('login', $correct_error);
+  }
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+
 if (isset($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }

@@ -149,12 +149,7 @@ if (isset($_GET['action'])
 		          )
 		{
 			// the password is right, the login waits for the confirmation of the email address
-			require_once (DIR_FS_INC.'secure_form.inc.php');
-
 			$_SESSION['email_verify_pending'] = (int)$check_customer['customers_id'];
-
-			$verify_form = xtc_draw_form('email_verify_resend', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'verify_resend').secure_form('email_verify').'<input type="submit" value="'.TEXT_EMAIL_VERIFY_RESEND.'" /></form>';
-			$messageStack->add('login', ERROR_EMAIL_VERIFY_PENDING.$verify_form);
 		} elseif ($captcha_error === false) {		
 			foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_before_session/','php') as $file) require ($file);
 
@@ -245,8 +240,36 @@ if (isset($captcha_error) && $captcha_error === true) {
   $messageStack->add('login', TEXT_WRONG_CODE);
 }
 
-if (isset($_GET['action']) && $_GET['action'] === 'relogin') {	
+if (isset($_GET['action']) && $_GET['action'] === 'relogin') {
   $messageStack->add('login', TEXT_RELOGIN_NEEDED);
+}
+
+// a blocked login waits for the confirmation, offer a new link or a corrected address
+if (isset($_SESSION['email_verify_pending'])
+    && defined('ACCOUNT_EMAIL_VERIFY')
+    && ACCOUNT_EMAIL_VERIFY == 'required'
+    && SEND_EMAILS == 'true'
+    )
+{
+  $pending_query = xtc_db_query("SELECT customers_id
+                                   FROM ".TABLE_CUSTOMERS."
+                                  WHERE customers_id = '".(int)$_SESSION['email_verify_pending']."'
+                                    AND account_type = '0'
+                                    AND customers_email_verified IS NULL
+                                    AND customers_email_verify_key != ''");
+  if (xtc_db_num_rows($pending_query) == 1) {
+    require_once (DIR_FS_INC.'secure_form.inc.php');
+
+    $verify_form = xtc_draw_form('email_verify_resend', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'verify_resend').secure_form('email_verify').'<input type="submit" value="'.TEXT_EMAIL_VERIFY_RESEND.'" /></form>';
+    $verify_form .= xtc_draw_form('email_verify_correct', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'verify_correct').secure_form('email_verify')
+                   .TEXT_EMAIL_VERIFY_CORRECT.'<br />'
+                   .xtc_draw_input_field('email_address', '', 'autocomplete="email" placeholder="'.TEXT_EMAIL_VERIFY_NEW_ADDRESS.'"', 'email', false).' '
+                   .xtc_draw_input_field('confirm_email_address', '', 'autocomplete="email" placeholder="'.TEXT_EMAIL_VERIFY_CONFIRM_ADDRESS.'"', 'email', false).' '
+                   .'<input type="submit" value="'.TEXT_EMAIL_VERIFY_CORRECT_BUTTON.'" /></form>';
+    $messageStack->add('login', ERROR_EMAIL_VERIFY_PENDING.$verify_form);
+  } else {
+    unset($_SESSION['email_verify_pending']);
+  }
 }
 
 // build breadcrumb
