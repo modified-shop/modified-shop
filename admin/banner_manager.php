@@ -388,6 +388,13 @@
               $bInfo = new objectInfo($banner_array);
             }
 
+            if (isset($bInfo->date_scheduled) && substr($bInfo->date_scheduled, 0, 10) == '0000-00-00') {
+              $bInfo->date_scheduled = '';
+            }
+            if (isset($bInfo->expires_date) && substr($bInfo->expires_date, 0, 10) == '0000-00-00') {
+              $bInfo->expires_date = '';
+            }
+
             $groups_array = array(
               array('id' => 'banner', 'text' => 'BANNER'),
               array('id' => 'slider', 'text' => 'SLIDER'),
