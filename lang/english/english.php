@@ -292,6 +292,12 @@ define('SUCCESS_EMAIL_VERIFY_REQUIRED', 'Please confirm your e-mail address. We 
 define('ERROR_EMAIL_VERIFY_PENDING', 'Your e-mail address is not confirmed yet. Please click the link in the confirmation e-mail, then you can log in.');
 define('TEXT_EMAIL_VERIFY_PENDING', 'Your e-mail address is not confirmed yet. Please click the link in the confirmation e-mail.');
 define('TEXT_EMAIL_VERIFY_RESEND', 'Send link again');
+define('TEXT_EMAIL_VERIFY_CORRECT', 'Is the e-mail address wrong? Enter the correct address and we will send the link there.');
+define('TEXT_EMAIL_VERIFY_NEW_ADDRESS', 'Correct e-mail address');
+define('TEXT_EMAIL_VERIFY_CONFIRM_ADDRESS', 'Repeat e-mail address');
+define('TEXT_EMAIL_VERIFY_CORRECT_BUTTON', 'Correct address');
+define('SUCCESS_EMAIL_VERIFY_CORRECTED', 'The e-mail address is corrected. We have sent a new confirmation link to the correct address, it is valid for %s hours.');
+define('ERROR_EMAIL_VERIFY_CORRECT_WAIT', 'The address could not be changed right now. Please wait a minute and try again.');
 define('SUCCESS_EMAIL_VERIFY_RESENT', 'If a confirmation link is pending, we have sent it to your e-mail address. It is valid for %s hours. Please wait a few minutes before you request another link.');
 define('TEXT_EMAIL_VERIFY_SUBJECT', 'Confirm your e-mail address');
 define('TEXT_MAXIMUM_ENTRIES', '<strong>Reference:</strong> You are able to choose out of %s entries in your address book!');
