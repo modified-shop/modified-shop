@@ -33,6 +33,13 @@
           <span class="icon"><i class="fa-solid fa-key"></i></span><span class="title">{#title_nav_password#}</span>
         </a>
       </li>
+      {if isset($LINK_ACCOUNT_SECURITY)}
+        <li>
+          <a href="{$LINK_ACCOUNT_SECURITY}" title="{#title_nav_account_security#}">
+            <span class="icon"><i class="fa-solid fa-shield-halved"></i></span><span class="title">{#title_nav_account_security#}</span>
+          </a>
+        </li>
+      {/if}
       <li>
         <a href="{$LINK_ORDERS}" title="{#title_nav_orders#}">
           <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span><span class="title">{#title_nav_orders#}</span>

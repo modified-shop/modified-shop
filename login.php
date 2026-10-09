@@ -234,6 +234,8 @@ if ($_SESSION['customers_login_tries'] >= MODULE_CAPTCHA_LOGIN_NUM) {
   $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
 }
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/login_smarty_data/','php') as $file) require ($file);
+
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/login.html');
