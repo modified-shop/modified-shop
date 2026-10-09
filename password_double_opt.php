@@ -73,48 +73,66 @@ if (isset($_GET['action'])
       $case = 'first_opt_in';
       $messageStack->add('password_double_opt_in', sprintf(TEXT_LINK_MAIL_SENDED, (VALID_REQUEST_TIME / 60)), 'success');
       $check_customer = xtc_db_fetch_array($check_customer_query);
-    
-      $vlcode = xtc_random_charcode(32);
-      $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL');
 
-      // assign language to template for caching
-      $smarty->assign('language', $_SESSION['language']);
-      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+      $send_mail = true;
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/password_double_opt/password_double_opt_request/','php') as $file) require ($file);
 
-      // assign vars
-      $smarty->assign('EMAIL', $check_customer['customers_email_address']);
-      $smarty->assign('LINK', $link);
-      $smarty->assign('VALID_REQUEST_TIME', (VALID_REQUEST_TIME / 60));
-  
-      // dont allow cache
-      $smarty->caching = 0;
-      $smarty->assign('language', $_SESSION['language']);
+      if ($send_mail === true) {
+        $vlcode = xtc_random_charcode(32);
 
-      // create mails
-      $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.html');
-      $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.txt');
-      
-      xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
-                       SET password_request_key = '".xtc_db_input($vlcode)."',
-                           password_request_time = '".date('Y-m-d H:i:00')."'
-                     WHERE customers_id = '".$check_customer['customers_id']."'");
-      
-      // send email
-      xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
-                   EMAIL_SUPPORT_NAME, 
-                   $check_customer['customers_email_address'], 
-                   '', 
-                   '', 
-                   EMAIL_SUPPORT_REPLY_ADDRESS, 
-                   EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
-                   '', 
-                   '', 
-                   TEXT_EMAIL_PASSWORD_FORGOTTEN, 
-                   $html_mail, 
-                   $txt_mail,
-                   1
-                   );
+        // limits per account: 60 seconds between requests, 5 requests until 15 minutes pass without one
+        $min_gap = date('Y-m-d H:i:s', time() - 60);
+        $count_reset = date('Y-m-d H:i:s', time() - 15 * 60);
+        $reset_expr = "(password_request_time IS NULL OR password_request_time <= '".$count_reset."')";
+
+        // password_request_count comes first, MySQL evaluates the assignments left to right
+        xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                         SET password_request_count = IF(".$reset_expr.", 1, password_request_count + 1),
+                             password_request_key = '".xtc_db_input(hash('sha256', $vlcode))."',
+                             password_request_time = '".date('Y-m-d H:i:s')."'
+                       WHERE customers_id = '".(int)$check_customer['customers_id']."'
+                         AND customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'
+                         AND (password_request_time IS NULL OR password_request_time <= '".$min_gap."')
+                         AND (".$reset_expr." OR password_request_count < 5)");
+
+        if (xtc_db_affected_rows() === 1) {
+          $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL', false);
+
+          // assign language to template for caching
+          $smarty->assign('language', $_SESSION['language']);
+          $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+          $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+          // assign vars
+          $smarty->assign('EMAIL', $check_customer['customers_email_address']);
+          $smarty->assign('LINK', $link);
+          $smarty->assign('VALID_REQUEST_TIME', (VALID_REQUEST_TIME / 60));
+
+          // dont allow cache
+          $smarty->caching = 0;
+          $smarty->assign('language', $_SESSION['language']);
+
+          // create mails
+          $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.html');
+          $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.txt');
+
+          // send email
+          xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
+                       EMAIL_SUPPORT_NAME,
+                       $check_customer['customers_email_address'],
+                       '',
+                       '',
+                       EMAIL_SUPPORT_REPLY_ADDRESS,
+                       EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
+                       '',
+                       '',
+                       TEXT_EMAIL_PASSWORD_FORGOTTEN,
+                       $html_mail,
+                       $txt_mail,
+                       1
+                       );
+        }
+      }
     }
   } else {
     $case = 'code_error';
@@ -144,10 +162,16 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
   
   $check_customer_query = xtc_db_query("SELECT *
                                           FROM ".TABLE_CUSTOMERS." 
-                                         WHERE customers_id = '".(int)$customers_id."' 
-                                           AND password_request_key = '".xtc_db_input($key)."'");
+                                         WHERE customers_id = '".(int)$customers_id."'");
   $check_customer = xtc_db_fetch_array($check_customer_query);
-  if (!xtc_db_num_rows($check_customer_query) || $key == '') {
+  // a token stored before the update to hashed tokens is plain text until it expires
+  if (!xtc_db_num_rows($check_customer_query)
+      || !is_string($key)
+      || $key == ''
+      || (string)$check_customer['password_request_key'] == ''
+      || !hash_equals((string)$check_customer['password_request_key'], ((strlen((string)$check_customer['password_request_key']) == 64) ? hash('sha256', $key) : $key))
+      )
+  {
     $case = 'no_account';
     $messageStack->add('password_double_opt_in', TEXT_NO_ACCOUNT);
   } elseif (time() > (strtotime($check_customer['password_request_time']) + VALID_REQUEST_TIME)) {
@@ -182,18 +206,28 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
         $messageStack->add('password_double_opt_in', ENTRY_PASSWORD_ERROR_NOT_MATCHING);
       }
 
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/password_double_opt/password_double_opt_check_data/','php') as $file) require ($file);
+
       if ($error === false) {
         $sql_data_array = array(
           'customers_password' => xtc_encrypt_password($password_new),
+          'customers_password_time' => time(),
           'password_request_key' => '',
           'password_request_time' => '',
           'customers_last_modified' => 'now()',
         );
-        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $check_customer['customers_id']."'");
-        
-        // redirect to login
-        $messageStack->add_session('login', SUCCESS_PASSWORD_UPDATED, 'success');
-        xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+        // a parallel change of the token or the address makes this link invalid
+        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $check_customer['customers_id']."' AND password_request_key = '".xtc_db_input($check_customer['password_request_key'])."' AND customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'");
+
+        if (xtc_db_affected_rows() == 1) {
+          foreach(auto_include(DIR_FS_CATALOG.'includes/extra/password_double_opt/password_double_opt_before_redirect/','php') as $file) require ($file);
+
+          // redirect to login
+          $messageStack->add_session('login', SUCCESS_PASSWORD_UPDATED, 'success');
+          xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+        }
+        $case = 'no_account';
+        $messageStack->add('password_double_opt_in', TEXT_NO_ACCOUNT);
       }
     }
   }

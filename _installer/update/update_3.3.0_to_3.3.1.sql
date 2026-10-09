@@ -220,4 +220,11 @@ ALTER TABLE `products_tags`
 ALTER TABLE `content_manager`
   ADD INDEX `idx_content_menu` (`languages_id`, `file_flag`, `content_status`, `content_active`, `parent_id`, `sort_order`);
 
+#GTB - 2026-10-08 - hash password reset keys and count reset requests per account
+ALTER TABLE `customers`
+  MODIFY `password_request_key` VARCHAR(64) NOT NULL;
+
+ALTER TABLE `customers`
+  ADD `password_request_count` INT(11) NOT NULL DEFAULT 0 AFTER `password_request_time`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
