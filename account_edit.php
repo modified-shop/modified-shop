@@ -30,6 +30,7 @@ require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
 require_once (DIR_FS_INC.'xtc_datetime_short.inc.php');
+require_once (DIR_FS_INC.'xtc_email_address_lock.inc.php');
 
 define('EMAIL_CHANGE_VALID_TIME', 60*60);
 
@@ -68,10 +69,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
         )
     {
       // no other request may take the same address between the check and the change
-      $email_lock = 'customers_email_'.md5(mb_strtolower(trim($check_customer['customers_email_address_new'])));
-      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($email_lock)."', 10) AS email_lock");
-      $lock = xtc_db_fetch_array($lock_query);
-      if (isset($lock['email_lock']) && $lock['email_lock'] == '1') {
+      if (xtc_email_address_lock($check_customer['customers_email_address_new']) === true) {
         $check_email_query = xtc_db_query("SELECT count(*) as total
                                              FROM ".TABLE_CUSTOMERS."
                                             WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address_new'])."'
@@ -95,7 +93,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
           // only one of parallel requests with the same link changes the address
           $verify_ok = (xtc_db_affected_rows() == 1);
         }
-        xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
+        xtc_email_address_lock('', true);
       }
     }
   }
@@ -350,13 +348,11 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_edit_customer_data/','php') as $file) require ($file);
     
     // an immediate change must not take an address that a parallel request takes
-    $email_lock = '';
+    $email_locked = false;
     if ($_SESSION['account_type'] == '0' && $email_changed === true && $email_change_verify !== true) {
-      $email_lock = 'customers_email_'.md5(mb_strtolower(trim($email_address)));
-      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($email_lock)."', 10) AS email_lock");
-      $lock = xtc_db_fetch_array($lock_query);
       $check_email = array('total' => 1);
-      if (isset($lock['email_lock']) && $lock['email_lock'] == '1') {
+      if (xtc_email_address_lock($email_address) === true) {
+        $email_locked = true;
         $check_email_query = xtc_db_query("SELECT count(*) as total
                                              FROM ".TABLE_CUSTOMERS."
                                             WHERE customers_email_address = '".xtc_db_input($email_address)."'
@@ -365,7 +361,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
         $check_email = xtc_db_fetch_array($check_email_query);
       }
       if ($check_email['total'] > 0) {
-        xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
+        xtc_email_address_lock('', true);
         $messageStack->add_session('account_edit', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
         xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'));
       }
@@ -374,8 +370,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     // a reset or password change in the meantime ended this session, then nothing is stored
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."' AND customers_password_time = '".(int)$_SESSION['customer_time']."'");
 
-    if ($email_lock != '') {
-      xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($email_lock)."')");
+    if ($email_locked === true) {
+      xtc_email_address_lock('', true);
     }
 
     if ($email_changed === true && $email_change_verify === true) {
