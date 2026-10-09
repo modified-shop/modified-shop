@@ -91,11 +91,12 @@ if (isset($_GET['action'])
                              password_request_key = '".xtc_db_input(hash('sha256', $vlcode))."',
                              password_request_time = '".date('Y-m-d H:i:s')."'
                        WHERE customers_id = '".(int)$check_customer['customers_id']."'
+                         AND customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'
                          AND (password_request_time IS NULL OR password_request_time <= '".$min_gap."')
                          AND (".$reset_expr." OR password_request_count < 5)");
 
         if (xtc_db_affected_rows() === 1) {
-          $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL');
+          $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL', false);
 
           // assign language to template for caching
           $smarty->assign('language', $_SESSION['language']);
@@ -214,13 +215,18 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
           'password_request_time' => '',
           'customers_last_modified' => 'now()',
         );
-        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $check_customer['customers_id']."'");
-        
-        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/password_double_opt/password_double_opt_before_redirect/','php') as $file) require ($file);
+        // a parallel change of the token or the address makes this link invalid
+        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $check_customer['customers_id']."' AND password_request_key = '".xtc_db_input($check_customer['password_request_key'])."' AND customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'");
 
-        // redirect to login
-        $messageStack->add_session('login', SUCCESS_PASSWORD_UPDATED, 'success');
-        xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+        if (xtc_db_affected_rows() == 1) {
+          foreach(auto_include(DIR_FS_CATALOG.'includes/extra/password_double_opt/password_double_opt_before_redirect/','php') as $file) require ($file);
+
+          // redirect to login
+          $messageStack->add_session('login', SUCCESS_PASSWORD_UPDATED, 'success');
+          xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+        }
+        $case = 'no_account';
+        $messageStack->add('password_double_opt_in', TEXT_NO_ACCOUNT);
       }
     }
   }
