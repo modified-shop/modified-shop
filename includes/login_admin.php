@@ -44,6 +44,7 @@ require_once(DIR_FS_INC . 'xtc_draw_password_field.inc.php');
 require_once(DIR_FS_INC . 'xtc_draw_input_field.inc.php');
 require_once(DIR_FS_INC . 'xtc_parse_input_field_data.inc.php');
 require_once(DIR_FS_INC . 'xtc_redirect.inc.php');
+require_once(DIR_FS_INC . 'auto_include.inc.php');
 
 
 $error = false;
@@ -135,6 +136,8 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   if (!xtc_validate_password(xtc_db_input($_POST['password']), $check_customer['customers_password'], $check_customer['customers_id'])) {
     die('Zugriff verweigert. E-Mail und/oder Passwort falsch!');
   } else {
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login_admin/login_admin_check_data/','php') as $file) require ($file);
+
     if (isset($_POST['repair']) && xtc_not_null($_POST['repair'])) {
       // reset login
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
@@ -384,6 +387,7 @@ table td {
           <td><span class="fieldtext">Passwort</span><?php echo xtc_draw_password_field('password'); ?></td>
         </tr>  
       </table>  
+      <?php foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login_admin/login_admin_form/','php') as $file) require ($file); ?>
       <input type="submit" class="login" name="Submit" value="Anmelden" />
       <?php
       if (isset($_GET['repair']) && $_GET['repair']!='') {
