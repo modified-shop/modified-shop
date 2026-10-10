@@ -444,6 +444,7 @@ CREATE TABLE coupons (
   coupon_minimum_order DECIMAL(15,4) NOT NULL,
   coupon_start_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   coupon_expire_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  coupon_no_expiry INT(1) NOT NULL DEFAULT 0,
   uses_per_coupon INT(5) NOT NULL DEFAULT 1,
   uses_per_user INT(5) NOT NULL DEFAULT 0,
   restrict_to_products TEXT DEFAULT NULL,

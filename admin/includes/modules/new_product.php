@@ -60,6 +60,10 @@
     $text_new_or_edit = TEXT_NEW_PRODUCT;
   }
 
+  if (isset($pInfo->products_date_available) && substr($pInfo->products_date_available, 0, 10) == '0000-00-00') {
+    $pInfo->products_date_available = '';
+  }
+
   $prod_quantity_query = xtc_db_query("SELECT products_quantity 
                                          FROM ".TABLE_PRODUCTS." 
                                         WHERE products_id = '".$pInfo->products_id."'");

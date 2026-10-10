@@ -37,6 +37,15 @@ Documentation and installation guides can be found here:
 [Documentation](https://www.modified-shop.org)
 
 
+### Coupons without an expiry date
+
+Deploy the updated PHP and language files together, then run the installer database update before using the option.
+Enable the checkbox explicitly for each coupon that should have no expiry date.
+Existing coupons remain unchanged, including coupons with a zero expiry date; coupons without this option require an end date.
+Non-expiring coupons must still be active and satisfy their start date, restrictions and usage limits.
+The update does not reactivate any coupons.
+
+
 ## Contributing
 
 Contributions are welcome!

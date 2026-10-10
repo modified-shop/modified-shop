@@ -81,6 +81,9 @@
       }
       $_POST['coupon_amount'] = trim($_POST['coupon_amount']);
       $_POST['coupon_amount'] = preg_replace('/[^0-9.%]/', '', $_POST['coupon_amount']);
+      $_POST['coupon_startdate'] = trim($_POST['coupon_startdate']);
+      $_POST['coupon_finishdate'] = trim(isset($_POST['coupon_finishdate']) ? $_POST['coupon_finishdate'] : '');
+      $coupon_no_expiry = isset($_POST['coupon_no_expiry']) && $_POST['coupon_no_expiry'] === '1';
       
       if (!$_POST['coupon_name']) {
         $error = true;
@@ -92,7 +95,10 @@
         $messageStack->add(ERROR_NO_COUPON_AMOUNT, 'error');
       }
       
-      if (strtotime($_POST['coupon_startdate']) > strtotime($_POST['coupon_finishdate'])) {
+      if (!$coupon_no_expiry && $_POST['coupon_finishdate'] == '') {
+        $error = true;
+        $messageStack->add(ERROR_NO_COUPON_FINISHDATE, 'error');
+      } elseif (!$coupon_no_expiry && strtotime($_POST['coupon_startdate']) > strtotime($_POST['coupon_finishdate'])) {
         $error = true;
         $messageStack->add(ERROR_COUPON_DATE, 'error');
       }
@@ -126,6 +132,7 @@
           'coupon_code' => xtc_db_prepare_input($_POST['coupon_code']),
           'coupon_amount' => xtc_db_prepare_input($_POST['coupon_amount']),
           'coupon_type' => xtc_db_prepare_input($coupon_type),
+          'coupon_no_expiry' => $coupon_no_expiry ? 1 : 0,
           'uses_per_coupon' => xtc_db_prepare_input((int)$_POST['coupon_uses_coupon']),
           'uses_per_user' => xtc_db_prepare_input((int)$_POST['coupon_uses_user']),
           'coupon_minimum_order' => xtc_db_prepare_input($_POST['coupon_min_order']),
@@ -134,8 +141,8 @@
           'restrict_to_categories' => xtc_db_prepare_input($_POST['coupon_categories']),
           'restrict_to_manufacturers' => xtc_db_prepare_input($_POST['coupon_manufacturers']),
           'restrict_to_customers' => xtc_db_prepare_input((isset($_POST['coupon_groups']) && $_POST['coupon_groups'][0] != 'all') ? implode(',', $_POST['coupon_groups']) : ''),
-          'coupon_start_date' => xtc_db_prepare_input(date('Y-m-d H:i:00', strtotime($_POST['coupon_startdate']))),
-          'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d H:i:59', strtotime($_POST['coupon_finishdate']))),
+          'coupon_start_date' => xtc_db_prepare_input(($_POST['coupon_startdate'] == '') ? '0000-00-00 00:00:00' : date('Y-m-d H:i:00', strtotime($_POST['coupon_startdate']))),
+          'coupon_expire_date' => xtc_db_prepare_input(($coupon_no_expiry || $_POST['coupon_finishdate'] == '') ? '0000-00-00 00:00:00' : date('Y-m-d H:i:59', strtotime($_POST['coupon_finishdate']))),
         );
         
         if ($action == 'update') {
@@ -183,6 +190,16 @@ require (DIR_WS_INCLUDES.'head.php');
 	//jQueryDatepicker
 	require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
 	?>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('#coupon_no_expiry').on('change', function(){
+        $('#Datetimepicker2').prop('disabled', this.checked);
+        if (this.checked) {
+          $('#Datetimepicker2').datetimepicker('hide');
+        }
+      }).trigger('change');
+    });
+  </script>
 </head>
 <body>
 <!-- header //-->
@@ -355,8 +372,9 @@ require (DIR_WS_INCLUDES.'head.php');
         $coupon_categories = $coupon['restrict_to_categories'];
         $coupon_manufacturers = $coupon['restrict_to_manufacturers'];
         $coupon_groups = explode(',', $coupon['restrict_to_customers']);
-        $coupon_startdate = date('Y-m-d H:i', strtotime($coupon['coupon_start_date']));
-        $coupon_finishdate = date('Y-m-d H:i', strtotime($coupon['coupon_expire_date']));
+        $coupon_startdate = ((substr($coupon['coupon_start_date'], 0, 10) == '0000-00-00') ? '' : date('Y-m-d H:i', strtotime($coupon['coupon_start_date'])));
+        $coupon_finishdate = ((substr($coupon['coupon_expire_date'], 0, 10) == '0000-00-00') ? '' : date('Y-m-d H:i', strtotime($coupon['coupon_expire_date'])));
+        $coupon_no_expiry = isset($coupon['coupon_no_expiry']) && $coupon['coupon_no_expiry'] == 1;
 
       case 'new':
       case 'insert':
@@ -373,6 +391,7 @@ require (DIR_WS_INCLUDES.'head.php');
         if (isset($_POST['coupon_manufacturers'])) $coupon_manufacturers = xtc_db_prepare_input($_POST['coupon_manufacturers']);
         if (isset($_POST['coupon_startdate'])) $coupon_startdate = xtc_db_prepare_input($_POST['coupon_startdate']);
         if (isset($_POST['coupon_finishdate'])) $coupon_finishdate = xtc_db_prepare_input($_POST['coupon_finishdate']);
+        if ($_POST) $coupon_no_expiry = isset($_POST['coupon_no_expiry']) && $_POST['coupon_no_expiry'] === '1';
         if (isset($_POST['coupon_groups'])) $coupon_groups = ((is_array($_POST['coupon_groups'])) ? $_POST['coupon_groups'] : explode(',', xtc_db_prepare_input($_POST['coupon_groups'])));
     
         if (!isset($coupon_amount)) {
@@ -413,6 +432,9 @@ require (DIR_WS_INCLUDES.'head.php');
         }
         if (!isset($coupon_finishdate)) {
           $coupon_finishdate = date('Y-m-d', strtotime('+1 year'));
+        }
+        if (!isset($coupon_no_expiry)) {
+          $coupon_no_expiry = false;
         }
 
         $input_name = '';
@@ -519,7 +541,10 @@ require (DIR_WS_INCLUDES.'head.php');
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo COUPON_FINISHDATE; ?></td>
-                <td class="dataTableConfig col-middle nobr"><?php echo xtc_draw_input_field('coupon_finishdate', $coupon_finishdate ,'id="Datetimepicker2"'); ?></td>
+                <td class="dataTableConfig col-middle nobr">
+                  <label><?php echo xtc_draw_checkbox_field('coupon_no_expiry', '1', $coupon_no_expiry, '', 'id="coupon_no_expiry"') . ' ' . COUPON_NO_EXPIRY; ?></label><br />
+                  <?php echo xtc_draw_input_field('coupon_finishdate', $coupon_finishdate, 'id="Datetimepicker2"' . ($coupon_no_expiry ? ' disabled="disabled"' : '')); ?>
+                </td>
                 <td class="dataTableConfig col-right"><?php echo COUPON_FINISHDATE_HELP.COUPON_DATE_END_TT; ?></td>
               </tr>
             </table>
@@ -737,7 +762,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $contents[] = array('text' => '<br />' . COUPON_NAME . ':&nbsp;' . $coupon_name['coupon_name'] . '<br />' .
                       COUPON_AMOUNT . ':&nbsp;<strong><span class="col-red">' . $amount . '</span></strong><br /><br />' .
                       COUPON_STARTDATE . ':&nbsp;' . xtc_datetime_short($cInfo->coupon_start_date) . '<br />' .
-                      COUPON_FINISHDATE . ':&nbsp;' . xtc_datetime_short($cInfo->coupon_expire_date) . '<br /><br />' .
+                      COUPON_FINISHDATE . ':&nbsp;' . ((isset($cInfo->coupon_no_expiry) && $cInfo->coupon_no_expiry == 1) ? COUPON_NO_EXPIRY : xtc_datetime_short($cInfo->coupon_expire_date)) . '<br /><br />' .
                       COUPON_USES_COUPON . ':&nbsp;<strong>' . $cInfo->uses_per_coupon . '</strong><br />' .
                       COUPON_USES_USER . ':&nbsp;<strong>' . $cInfo->uses_per_user . '</strong><br /><br />' .
                       COUPON_PRODUCTS . ':&nbsp;' . $prod_details . '<br />' .
