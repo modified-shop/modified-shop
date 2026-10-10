@@ -2554,6 +2554,25 @@ function CustomersUpdate ()
     $mode = 'UPDATE';
     $address_book_result = xtc_db_query("SELECT customers_default_address_id FROM ".TABLE_CUSTOMERS." WHERE customers_id = '". (int)$customers_id ."' LIMIT 1");
     $customer = xtc_db_fetch_array($address_book_result);
+    // a new password or address set here makes pending changes and reset links void, like in the admin
+    $stored_customer_query = xtc_db_query("SELECT customers_email_address FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers_id."'");
+    $stored_customer = xtc_db_fetch_array($stored_customer_query);
+    $customers_email_changed = (isset($sql_customers_data_array['customers_email_address'])
+                                && is_array($stored_customer)
+                                && mb_strtolower(trim($stored_customer['customers_email_address'])) != mb_strtolower(trim($sql_customers_data_array['customers_email_address']))
+                                );
+    if (isset($sql_customers_data_array['customers_password']))
+    {
+      $sql_customers_data_array['customers_password_time'] = time();
+    }
+    if (isset($sql_customers_data_array['customers_password']) || $customers_email_changed === true)
+    {
+      $sql_customers_data_array['customers_email_address_new'] = '';
+      $sql_customers_data_array['customers_email_request_key'] = '';
+      $sql_customers_data_array['customers_email_request_time'] = 'null';
+      $sql_customers_data_array['password_request_key'] = '';
+      $sql_customers_data_array['password_request_time'] = 'null';
+    }
     xtc_db_perform(TABLE_CUSTOMERS, $sql_customers_data_array, 'update', "customers_id = '" . xtc_db_input($customers_id) . "' LIMIT 1");
     xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_address_data_array, 'update', "customers_id = '" . xtc_db_input($customers_id) . "' AND address_book_id = '".$customer['customers_default_address_id']."' LIMIT 1");
     xtc_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customers_id . "'  LIMIT 1");
