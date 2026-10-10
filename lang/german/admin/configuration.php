@@ -393,7 +393,7 @@ define('SMTP_AUTO_TLS_TITLE' , 'SMTP Automatische TLS Verbindung');
 define('SMTP_AUTO_TLS_DESC' , 'Verbindung automatisch mit STARTTLS wenn SMTP SECURE deaktiviert ist?<br>Bei Sendeproblemen die automatische TLS-Verbindung deaktivieren!');
 define('SMTP_DEBUG_TITLE' , 'SMTP Debug Log-Level');
 define('SMTP_DEBUG_DESC' , '<b>0</b>: keine Ausgabe; <b>1</b>: nur Befehle; <b>2</b>: Daten und Befehle; <b>3</b>: wie 2 plus Verbindungsstatus; <b>4</b>: wie 3 plus weitere Angaben<br>Bei Sendeproblemen auf 2 stellen, es wird dann ein Protokoll im log-Verzeichnis erstellt.');
-define('CFG_TXT_DEFAULT', 'Default');
+define('CFG_TXT_DEFAULT', 'Standard');
 
 //DokuMan - 2011-09-20 - E-Mail SQL errors
 define('EMAIL_SQL_ERRORS_TITLE','SQL-Fehlermeldungen als E-Mail versenden');
