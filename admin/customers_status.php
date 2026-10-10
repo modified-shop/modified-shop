@@ -186,15 +186,17 @@
         break;
 
       case 'deleteconfirm':
-        $cID = xtc_db_prepare_input($_GET['cID']);
+        $cID = (int)$_GET['cID'];
 
-        $customers_status_query = xtc_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'DEFAULT_CUSTOMERS_STATUS_ID'");
-        $customers_status = xtc_db_fetch_array($customers_status_query);
-        if ($customers_status['configuration_value'] == $cID) {
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key = 'DEFAULT_CUSTOMERS_STATUS_ID'");
+        $status_query = xtc_db_query("SELECT COUNT(*) AS count FROM " . TABLE_CUSTOMERS . " WHERE customers_status = '" . $cID . "'");
+        $status = xtc_db_fetch_array($status_query);
+        if ($cID == DEFAULT_CUSTOMERS_STATUS_ID || $cID == DEFAULT_CUSTOMERS_STATUS_ID_GUEST || $status['count'] > 0) {
+          // the delete view shows the reason
+          xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $cID . '&action=delete'));
         }
 
-        xtc_db_query("DELETE FROM " . TABLE_CUSTOMERS_STATUS . " WHERE customers_status_id = '" . (int)$cID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_CUSTOMERS_STATUS . " WHERE customers_status_id = '" . $cID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_CUSTOMERS_STATUS_HISTORY . " WHERE new_value = '" . $cID . "' OR old_value = '" . $cID . "'");
 
         // We want to drop the existing corresponding personal_offers table
         xtc_db_query("DROP TABLE IF EXISTS " . TABLE_PERSONAL_OFFERS_BY.(int)$cID);
@@ -219,16 +221,6 @@
         } elseif ($status['count'] > 0) {
           $remove_status = false;
           $messageStack->add(ERROR_STATUS_USED_IN_CUSTOMERS, 'error');
-        } else {
-          $history_query = xtc_db_query("SELECT COUNT(*) AS count FROM " . TABLE_CUSTOMERS_STATUS_HISTORY . " WHERE '" . xtc_db_input($cID) . "' in (new_value, old_value)");
-          $history = xtc_db_fetch_array($history_query);
-          if ($history['count'] > 0) {
-            // delete from history
-            xtc_db_query("DELETE FROM " . TABLE_CUSTOMERS_STATUS_HISTORY . "
-                          WHERE '" . xtc_db_input($cID) . "' in (new_value, old_value)");
-            $remove_status = true;
-            // $messageStack->add(ERROR_STATUS_USED_IN_HISTORY, 'error');
-          }
         }
         break;
     }
