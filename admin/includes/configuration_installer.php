@@ -379,6 +379,10 @@ $values_group_update = array();
                            'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_password_field;SMTP_PASSWORD'",
                            'configuration_key' => 'SMTP_PASSWORD'
                            );
+  $values_update[] = array (
+                           'values' => "set_function = 'xtc_cfg_select_option(array(\'default\', \'PLAIN\', \'LOGIN\', \'CRAM-MD5\', \'XOAUTH2\'),'",
+                           'configuration_key' => 'SMTP_AUTH_TYPE'
+                           );
 
 //configuration_group_id 13 --- "Download Optionen"
   $values_update[] = array (
