@@ -176,7 +176,8 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $mail->IsSMTP();
     $mail->SMTPKeepAlive = true;
     $mail->SMTPAuth = (SMTP_AUTH == 'true') ? true : false;
-    $mail->AuthType = (defined('SMTP_AUTH_TYPE') && SMTP_AUTH_TYPE != 'default') ? SMTP_AUTH_TYPE : '';
+    // 'none' is still stored in shops installed with the old option list
+    $mail->AuthType = (defined('SMTP_AUTH_TYPE') && !in_array(SMTP_AUTH_TYPE, array('default', 'none'))) ? SMTP_AUTH_TYPE : '';
     $mail->SMTPSecure = (defined('SMTP_SECURE') && SMTP_SECURE != 'none') ? SMTP_SECURE : '';
     $mail->Port = SMTP_PORT;
     $mail->Username = SMTP_USERNAME;
