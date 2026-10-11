@@ -859,7 +859,7 @@ define('ACCOUNT_EMAIL_CHANGE_PASSWORD_TITLE', 'Confirm email change with passwor
 define('ACCOUNT_EMAIL_CHANGE_PASSWORD_DESC', 'Customers with a regular account must enter their current password to change the email address.');
 
 define('ACCOUNT_EMAIL_CHANGE_VERIFY_TITLE', 'Confirm new email address by link');
-define('ACCOUNT_EMAIL_CHANGE_VERIFY_DESC', 'The new address only becomes active after the link in the confirmation mail is opened. The old address gets a notification, all sessions end and the customer logs in again. Requires reliable email delivery.');
+define('ACCOUNT_EMAIL_CHANGE_VERIFY_DESC', 'The new address only becomes active after the customer confirms it through the link in the confirmation mail. All sessions end and the customer logs in again. Requires reliable email delivery.');
 
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail signature');
 define('EMAIL_SIGNATURE_ID_DESC', 'Select the content to be used for the signature in shop E-Mails.');

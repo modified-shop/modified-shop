@@ -284,6 +284,12 @@ define('ERROR_CURRENT_PASSWORD_NOT_MATCHING', 'The entered password does not mat
 define('SUCCESS_EMAIL_CHANGE_REQUESTED', 'We have sent a confirmation link to the new e-mail address. The link is valid for %s minutes. Until you confirm it, your current e-mail address stays active.');
 define('SUCCESS_EMAIL_CHANGE_VERIFIED', 'Your new e-mail address is confirmed. Please log in with the new address.');
 define('ERROR_EMAIL_CHANGE_LINK_INVALID', 'The confirmation link is invalid, has expired or has already been used.');
+define('ERROR_EMAIL_CHANGE_WAIT', 'We have just sent you a confirmation link. Please wait a minute before you request a new one.');
+define('ERROR_EMAIL_CHANGE_UNAVAILABLE', 'Your e-mail address cannot be changed at the moment. Please contact us.');
+define('SUCCESS_EMAIL_CHANGE_WITHDRAWN', 'The pending change of your e-mail address was discarded. The confirmation link no longer works.');
+define('TEXT_EMAIL_CHANGE_CONFIRM_HEADING', 'Confirm your new e-mail address');
+define('TEXT_EMAIL_CHANGE_CONFIRM_SUBLINE', 'Your new e-mail address');
+define('TEXT_EMAIL_CHANGE_CONFIRM_TEXT', 'Please confirm that your customer account uses the e-mail address %s from now on. After that you log in with the new address.');
 define('TEXT_EMAIL_CHANGE_VERIFY_SUBJECT', 'Confirm your new e-mail address');
 define('TEXT_EMAIL_CHANGE_NOTIFY_SUBJECT', 'The e-mail address of your account was changed');
 define('TEXT_MAXIMUM_ENTRIES', '<strong>Reference:</strong> You are able to choose out of %s entries in your address book!');

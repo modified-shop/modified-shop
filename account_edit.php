@@ -33,9 +33,51 @@ require_once (DIR_FS_INC.'xtc_datetime_short.inc.php');
 require_once (DIR_FS_INC.'xtc_email_address_lock.inc.php');
 
 define('EMAIL_CHANGE_VALID_TIME', 60*60);
+define('EMAIL_CHANGE_REQUEST_GAP', 60);
 
 $email_change_password = (defined('ACCOUNT_EMAIL_CHANGE_PASSWORD') && ACCOUNT_EMAIL_CHANGE_PASSWORD == 'true');
 $email_change_verify = (defined('ACCOUNT_EMAIL_CHANGE_VERIFY') && ACCOUNT_EMAIL_CHANGE_VERIFY == 'true');
+
+// a template or language without the mail must not break the change after it is stored
+function account_edit_mail_exists($name) {
+  $mail_path = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/'.$name;
+  return (is_file($mail_path.'.html') && is_file($mail_path.'.txt'));
+}
+
+// the previous address learns of the change, without links or codes
+function account_edit_email_notify($email_old, $email_new) {
+  if (!account_edit_mail_exists('email_change_notify_mail')) {
+    return false;
+  }
+
+  $mail_smarty = new Smarty();
+  $mail_smarty->assign('language', $_SESSION['language']);
+  $mail_smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+  $mail_smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+  $mail_smarty->assign('EMAIL_OLD', $email_old);
+  $mail_smarty->assign('EMAIL_NEW', $email_new);
+  $mail_smarty->assign('CHANGE_TIME', xtc_datetime_short(date('Y-m-d H:i:s')));
+  $mail_smarty->caching = 0;
+
+  $html_mail = $mail_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/email_change_notify_mail.html');
+  $txt_mail = $mail_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/email_change_notify_mail.txt');
+
+  xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
+               EMAIL_SUPPORT_NAME,
+               $email_old,
+               '',
+               '',
+               EMAIL_SUPPORT_REPLY_ADDRESS,
+               EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
+               '',
+               '',
+               TEXT_EMAIL_CHANGE_NOTIFY_SUBJECT,
+               $html_mail,
+               $txt_mail,
+               1
+               );
+  return true;
+}
 
 // confirm the new email address, the link must work without a login
 if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
@@ -46,8 +88,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
     }));
   }
 
-  $verify_customers_id = isset($_GET['customers_id']) ? (int)$_GET['customers_id'] : 0;
-  $verify_key = (isset($_GET['key']) && is_string($_GET['key'])) ? $_GET['key'] : '';
+  // the link only shows the question, the button changes the address: mail scanners open links on their own
+  $verify_post = ($_SERVER['REQUEST_METHOD'] == 'POST');
+  $verify_source = ($verify_post === true) ? $_POST : $_GET;
+  $verify_customers_id = isset($verify_source['customers_id']) ? (int)$verify_source['customers_id'] : 0;
+  $verify_key = (isset($verify_source['key']) && is_string($verify_source['key'])) ? $verify_source['key'] : '';
+  $verify_valid = false;
+  $verify_token_error = false;
   $verify_ok = false;
 
   if ($verify_customers_id > 0 && $verify_key != '') {
@@ -68,8 +115,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
         && time() <= (int)strtotime((string)$check_customer['customers_email_request_time']) + EMAIL_CHANGE_VALID_TIME
         )
     {
-      // no other request may take the same address between the check and the change
-      if (xtc_email_address_lock($check_customer['customers_email_address_new']) === true) {
+      $verify_valid = true;
+      if ($verify_post === true && check_secure_form($_POST) === false) {
+        $verify_token_error = true;
+      } elseif ($verify_post === true && xtc_email_address_lock($check_customer['customers_email_address_new']) === true) {
+        // no other request may take the same address between the check and the change
         $check_email_query = xtc_db_query("SELECT count(*) as total
                                              FROM ".TABLE_CUSTOMERS."
                                             WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address_new'])."'
@@ -106,33 +156,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
                      SET customers_info_date_account_last_modified = now()
                    WHERE customers_info_id = '".$verify_customers_id."'");
 
-    // notify the previous address, without links or codes
-    $smarty = new Smarty();
-    $smarty->assign('language', $_SESSION['language']);
-    $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-    $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-    $smarty->assign('EMAIL_OLD', $email_old);
-    $smarty->assign('EMAIL_NEW', $email_new);
-    $smarty->assign('CHANGE_TIME', xtc_datetime_short(date('Y-m-d H:i:s')));
-    $smarty->caching = 0;
-
-    $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/email_change_notify_mail.html');
-    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/email_change_notify_mail.txt');
-
-    xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
-                 EMAIL_SUPPORT_NAME,
-                 $email_old,
-                 '',
-                 '',
-                 EMAIL_SUPPORT_REPLY_ADDRESS,
-                 EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
-                 '',
-                 '',
-                 TEXT_EMAIL_CHANGE_NOTIFY_SUBJECT,
-                 $html_mail,
-                 $txt_mail,
-                 1
-                 );
+    account_edit_email_notify($email_old, $email_new);
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/account_edit_email_before_redirect/','php') as $file) require ($file);
 
@@ -147,6 +171,46 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
 
     $messageStack->add_session('login', SUCCESS_EMAIL_CHANGE_VERIFIED, 'success');
     xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+  }
+
+  // a valid link shows the question with the button, a failed form token shows it again
+  if ($verify_valid === true && ($verify_post === false || $verify_token_error === true)) {
+    // the address of the page carries the key
+    header('Referrer-Policy: no-referrer');
+
+    $smarty = new Smarty();
+
+    $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_EDIT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    $breadcrumb->add(TEXT_EMAIL_CHANGE_CONFIRM_HEADING);
+
+    require (DIR_WS_INCLUDES.'header.php');
+
+    $display_mode = 'account';
+    require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
+    if ($verify_token_error === true) {
+      $messageStack->add('email_verify', ENTRY_TOKEN_ERROR);
+      $smarty->assign('error_message', $messageStack->output('email_verify'));
+    }
+
+    $smarty->assign('HEADING', TEXT_EMAIL_CHANGE_CONFIRM_HEADING);
+    $smarty->assign('SUBLINE', TEXT_EMAIL_CHANGE_CONFIRM_SUBLINE);
+    $smarty->assign('TEXT', sprintf(TEXT_EMAIL_CHANGE_CONFIRM_TEXT, encode_htmlspecialchars($check_customer['customers_email_address_new'])));
+    $smarty->assign('FORM_ACTION', xtc_draw_form('email_verify', xtc_href_link(FILENAME_ACCOUNT_EDIT, 'action=verify_email', 'SSL')).xtc_draw_hidden_field('customers_id', (string)$verify_customers_id).xtc_draw_hidden_field('key', $verify_key).secure_form('email_verify'));
+    $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
+    $smarty->assign('FORM_END', '</form>');
+    $smarty->assign('language', $_SESSION['language']);
+    $smarty->caching = 0;
+    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_edit_email_verify.html');
+
+    $smarty->assign('language', $_SESSION['language']);
+    $smarty->assign('main_content', $main_content);
+    $smarty->caching = 0;
+    if (!defined('RM'))
+      $smarty->load_filter('output', 'note');
+    $smarty->display(CURRENT_TEMPLATE.'/index.html');
+    include ('includes/application_bottom.php');
+    exit;
   }
 
   if (isset($_SESSION['customer_id'])) {
@@ -279,7 +343,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   $email_changed = false;
   if ($_SESSION['account_type'] == '0') {
     $stored_customer_query = xtc_db_query("SELECT customers_email_address,
-                                                  customers_password
+                                                  customers_password,
+                                                  customers_email_request_key
                                              FROM ".TABLE_CUSTOMERS."
                                             WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     $stored_customer = xtc_db_fetch_array($stored_customer_query);
@@ -331,17 +396,29 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
       $sql_data_array['customers_dob'] = xtc_date_raw($dob);
     }
 
+    $email_change_withdrawn = false;
+    $email_change_time = 0;
     if ($_SESSION['account_type'] == '0') {
-      if ($email_change_verify === true) {
+      if ($email_change_verify === true && $email_changed === true) {
         // regular accounts get the new address only after the confirmation link
         unset($sql_data_array['customers_email_address']);
+      } elseif ($email_change_verify === true) {
+        // the current address saved again withdraws a pending change, e.g. one to a mistyped address;
+        // a change of upper and lower case only is stored, the request time stays for the pause between two requests
+        if ($stored_customer['customers_email_request_key'] != '') {
+          $sql_data_array['customers_email_address_new'] = '';
+          $sql_data_array['customers_email_request_key'] = '';
+          $email_change_withdrawn = true;
+        }
       } elseif ($email_changed === true) {
-        // an older link must not overwrite the immediate change, reset links to the old address must not work
+        // an older link must not overwrite the immediate change, reset links to the old address and other sessions must not work
+        $email_change_time = time();
         $sql_data_array['customers_email_address_new'] = '';
         $sql_data_array['customers_email_request_key'] = '';
         $sql_data_array['customers_email_request_time'] = 'null';
         $sql_data_array['password_request_key'] = '';
         $sql_data_array['password_request_time'] = 'null';
+        $sql_data_array['customers_password_time'] = $email_change_time;
       }
     }
 
@@ -369,23 +446,57 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 
     // a reset or password change in the meantime ended this session, then nothing is stored
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."' AND customers_password_time = '".(int)$_SESSION['customer_time']."'");
+    $customers_updated = (xtc_db_affected_rows() == 1);
 
     if ($email_locked === true) {
       xtc_email_address_lock('', true);
     }
 
-    if ($email_changed === true && $email_change_verify === true) {
+    if ($email_change_time > 0 && $customers_updated === true) {
+      // the own session goes on with the new generation, other sessions end
+      if (SESSION_RECREATE == 'True') {
+        xtc_session_recreate();
+      }
+      $_SESSION['customer_time'] = $email_change_time;
+      account_edit_email_notify($stored_customer['customers_email_address'], $email_address);
+    }
+
+    if ($email_change_withdrawn === true && $customers_updated === true) {
+      $messageStack->add_session('account', SUCCESS_EMAIL_CHANGE_WITHDRAWN, 'success');
+    }
+
+    if ($email_changed === true && $email_change_verify === true && account_edit_mail_exists('email_change_verify_mail') === false) {
+      // without the mail the link would never arrive, so nothing is requested
+      $messageStack->add_session('account', ERROR_EMAIL_CHANGE_UNAVAILABLE);
+    } elseif ($email_changed === true && $email_change_verify === true) {
       $email_token = xtc_random_charcode(32);
 
+      // one request per pause, the link goes to any address the customer types
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
                        SET customers_email_address_new = '".xtc_db_input($email_address)."',
                            customers_email_request_key = '".xtc_db_input(hash('sha256', $email_token))."',
                            customers_email_request_time = '".date('Y-m-d H:i:s')."'
                      WHERE customers_id = '".(int)$_SESSION['customer_id']."'
-                       AND customers_password_time = '".(int)$_SESSION['customer_time']."'");
+                       AND customers_password_time = '".(int)$_SESSION['customer_time']."'
+                       AND (customers_email_request_time IS NULL OR customers_email_request_time <= '".date('Y-m-d H:i:s', time() - EMAIL_CHANGE_REQUEST_GAP)."')");
 
-      // only a still valid session may store the request and send the link
-      if (xtc_db_affected_rows() == 1) {
+      // a request within the pause sends nothing, a session that ended in the meantime stores nothing
+      if (xtc_db_affected_rows() != 1) {
+        $request_check_query = xtc_db_query("SELECT customers_id
+                                               FROM ".TABLE_CUSTOMERS."
+                                              WHERE customers_id = '".(int)$_SESSION['customer_id']."'
+                                                AND customers_password_time = '".(int)$_SESSION['customer_time']."'");
+        if (xtc_db_num_rows($request_check_query) == 1) {
+          // another address within the pause still voids the pending link, e.g. one to a mistyped address
+          xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                           SET customers_email_address_new = '',
+                               customers_email_request_key = ''
+                         WHERE customers_id = '".(int)$_SESSION['customer_id']."'
+                           AND customers_password_time = '".(int)$_SESSION['customer_time']."'
+                           AND customers_email_address_new != '".xtc_db_input($email_address)."'");
+          $messageStack->add_session('account', ERROR_EMAIL_CHANGE_WAIT);
+        }
+      } else {
         $smarty->assign('language', $_SESSION['language']);
         $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
         $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
