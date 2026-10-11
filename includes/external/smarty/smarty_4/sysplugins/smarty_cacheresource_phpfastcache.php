@@ -22,7 +22,8 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
         include(DIR_FS_CATALOG.'includes/modified_cache.php');
 
         $this->cache = $modified_cache;
-        $this->prefix = 'tpl_';
+        // Do not reuse cached template code from another Smarty version.
+        $this->prefix = 'tpl_' . Smarty::SMARTY_VERSION . '_';
     }
 
     /**
