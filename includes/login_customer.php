@@ -33,9 +33,15 @@
 
   if ($_SESSION['customer_time'] == 0) {
     $_SESSION['customer_time'] = time();
+    // only while the version is still unset: a password change since the check of the login wins
     xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
                      SET customers_password_time = '".(int)$_SESSION['customer_time']."'
-                   WHERE customers_id = '".(int)$_SESSION['customer_id']."' ");
+                   WHERE customers_id = '".(int)$_SESSION['customer_id']."'
+                     AND customers_password_time = 0");
+    if (xtc_db_affected_rows() != 1) {
+      xtc_session_destroy();
+      xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'action=relogin', 'SSL'));
+    }
   }
 
   xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO."
