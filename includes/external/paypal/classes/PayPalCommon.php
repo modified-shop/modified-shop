@@ -441,6 +441,7 @@ class PayPalCommon extends PayPalAuth {
     // include needed function
     require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
     require_once (DIR_FS_INC.'write_customers_session.inc.php');
+    require_once (DIR_FS_INC.'xtc_password_time_update.inc.php');
     
     $where = " WHERE customers_email_address = '".xtc_db_input($customer['info']['email_address'])."' AND account_type = '0' ";
     if ($customer_id != '') {
@@ -464,10 +465,12 @@ class PayPalCommon extends PayPalAuth {
       if (isset($check_customer['customers_password_time'])) {
         $_SESSION['customer_time'] = $check_customer['customers_password_time'];
         if ($_SESSION['customer_time'] == 0) {
-          $_SESSION['customer_time'] = time();
-          xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
-                           SET customers_password_time = '".(int)$_SESSION['customer_time']."'
-                         WHERE customers_id = '".(int)$_SESSION['customer_id']."' ");
+          // only while the version is still unset, like includes/login_customer.php
+          $_SESSION['customer_time'] = xtc_password_time_update($_SESSION['customer_id'], array(), "customers_password_time = 0");
+          if ($_SESSION['customer_time'] === false) {
+            xtc_session_destroy();
+            xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'action=relogin', 'SSL'));
+          }
         }
       }
       

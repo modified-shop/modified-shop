@@ -31,6 +31,7 @@ require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
 require_once (DIR_FS_INC.'xtc_datetime_short.inc.php');
 require_once (DIR_FS_INC.'xtc_email_address_lock.inc.php');
+require_once (DIR_FS_INC.'xtc_password_time_update.inc.php');
 
 define('EMAIL_CHANGE_VALID_TIME', 60*60);
 define('EMAIL_CHANGE_REQUEST_GAP', 60);
@@ -139,25 +140,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
                                               AND customers_id != '".$verify_customers_id."'");
         $check_email = xtc_db_fetch_array($check_email_query);
         if ($check_email['total'] == 0) {
-          // reset links sent to the old address must not work any longer
-          xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
-                           SET customers_email_address = '".xtc_db_input($check_customer['customers_email_address_new'])."',
-                               customers_email_address_new = '',
-                               customers_email_request_key = '',
-                               customers_email_request_time = NULL,
-                               password_request_key = '',
-                               password_request_time = NULL,
-                               customers_email_verified = now(),
-                               customers_email_verify_key = '',
-                               customers_email_verify_time = NULL,
-                               customers_email_verify_count = 0,
-                               customers_password_time = '".time()."',
-                               customers_last_modified = now()
-                         WHERE customers_id = '".$verify_customers_id."'
-                           AND customers_email_request_key = '".xtc_db_input($check_customer['customers_email_request_key'])."'");
-
+          // reset links sent to the old address must not work any longer, the new password version ends other sessions;
           // only one of parallel requests with the same link changes the address
-          $verify_ok = (xtc_db_affected_rows() == 1);
+          $verify_ok = (xtc_password_time_update($verify_customers_id, array(
+            'customers_email_address' => $check_customer['customers_email_address_new'],
+            'customers_email_address_new' => '',
+            'customers_email_request_key' => '',
+            'customers_email_request_time' => 'null',
+            'password_request_key' => '',
+            'password_request_time' => 'null',
+            'customers_email_verified' => 'now()',
+            'customers_email_verify_key' => '',
+            'customers_email_verify_time' => 'null',
+            'customers_email_verify_count' => 0,
+            'customers_last_modified' => 'now()',
+          ), "customers_email_request_key = '".xtc_db_input($check_customer['customers_email_request_key'])."'") !== false);
         }
         xtc_email_address_lock('', true);
       }
@@ -414,6 +411,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     }
 
     $email_change_withdrawn = false;
+    $email_change_now = false;
     $email_change_time = 0;
     $email_change_notify = false;
     if ($_SESSION['account_type'] == '0') {
@@ -430,7 +428,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
         }
       } elseif ($email_changed === true) {
         // an older link must not overwrite the immediate change, reset links to the old address and other sessions must not work
-        $email_change_time = time();
+        $email_change_now = true;
         $sql_data_array['customers_email_address_new'] = '';
         $sql_data_array['customers_email_request_key'] = '';
         // one notice per pause like the link, otherwise each change mails the address typed before
@@ -441,7 +439,6 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
         }
         $sql_data_array['password_request_key'] = '';
         $sql_data_array['password_request_time'] = 'null';
-        $sql_data_array['customers_password_time'] = $email_change_time;
         // the new address is not proven yet, but the account stays usable
         $sql_data_array['customers_email_verified'] = 'null';
         $sql_data_array['customers_email_verify_key'] = '';
@@ -473,8 +470,13 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     }
 
     // a reset or password change in the meantime ended this session, then nothing is stored
-    xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."' AND customers_password_time = '".(int)$_SESSION['customer_time']."'");
-    $customers_updated = (xtc_db_affected_rows() == 1);
+    if ($email_change_now === true) {
+      $email_change_time = xtc_password_time_update($_SESSION['customer_id'], $sql_data_array, "customers_password_time = '".(int)$_SESSION['customer_time']."'");
+      $customers_updated = ($email_change_time !== false);
+    } else {
+      xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."' AND customers_password_time = '".(int)$_SESSION['customer_time']."'");
+      $customers_updated = (xtc_db_affected_rows() == 1);
+    }
 
     if ($email_locked === true) {
       xtc_email_address_lock('', true);

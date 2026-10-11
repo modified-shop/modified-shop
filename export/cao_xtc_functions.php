@@ -1173,6 +1173,7 @@ function clear_string($value)
 //--------------------------------------------------------------
 
 require_once(DIR_FS_INC .'xtc_random_charcode.inc.php');
+require_once(DIR_FS_INC .'xtc_password_time_update.inc.php');
 
 function xtc_RandomString($length)
 {
@@ -2561,10 +2562,6 @@ function CustomersUpdate ()
                                 && is_array($stored_customer)
                                 && mb_strtolower(trim($stored_customer['customers_email_address'])) != mb_strtolower(trim($sql_customers_data_array['customers_email_address']))
                                 );
-    if (isset($sql_customers_data_array['customers_password']))
-    {
-      $sql_customers_data_array['customers_password_time'] = time();
-    }
     if (isset($sql_customers_data_array['customers_password']) || $customers_email_changed === true)
     {
       $sql_customers_data_array['customers_email_address_new'] = '';
@@ -2573,7 +2570,15 @@ function CustomersUpdate ()
       $sql_customers_data_array['password_request_key'] = '';
       $sql_customers_data_array['password_request_time'] = 'null';
     }
-    xtc_db_perform(TABLE_CUSTOMERS, $sql_customers_data_array, 'update', "customers_id = '" . xtc_db_input($customers_id) . "' LIMIT 1");
+    if (isset($sql_customers_data_array['customers_password']))
+    {
+      // a new password version ends the sessions of the account
+      xtc_password_time_update($customers_id, $sql_customers_data_array);
+    }
+    else
+    {
+      xtc_db_perform(TABLE_CUSTOMERS, $sql_customers_data_array, 'update', "customers_id = '" . xtc_db_input($customers_id) . "' LIMIT 1");
+    }
     xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_address_data_array, 'update', "customers_id = '" . xtc_db_input($customers_id) . "' AND address_book_id = '".$customer['customers_default_address_id']."' LIMIT 1");
     xtc_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customers_id . "'  LIMIT 1");
   }

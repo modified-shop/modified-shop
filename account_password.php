@@ -23,6 +23,7 @@ require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
+require_once (DIR_FS_INC.'xtc_password_time_update.inc.php');
 
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 
@@ -97,16 +98,17 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
 			}
-		  $_SESSION['customer_time'] = time();
-		  
-			xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
-			                 SET customers_password = '".xtc_encrypt_password($password_new)."', 
-			                     customers_password_time = '".(int)$_SESSION['customer_time']."', 
-			                     customers_email_address_new = '',
-			                     customers_email_request_key = '',
-			                     customers_email_request_time = NULL,
-			                     customers_last_modified = now() 
-			               WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
+			// the own session goes on with the new password version, other sessions end
+			$customer_time = xtc_password_time_update($_SESSION['customer_id'], array(
+			  'customers_password' => xtc_encrypt_password($password_new),
+			  'customers_email_address_new' => '',
+			  'customers_email_request_key' => '',
+			  'customers_email_request_time' => 'null',
+			  'customers_last_modified' => 'now()',
+			));
+			if ($customer_time !== false) {
+			  $_SESSION['customer_time'] = $customer_time;
+			}
 			               
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
 			                 SET customers_info_date_account_last_modified = now() 

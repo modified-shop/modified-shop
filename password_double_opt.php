@@ -33,6 +33,7 @@ defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6)
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
+require_once (DIR_FS_INC.'xtc_password_time_update.inc.php');
 require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
 
@@ -211,7 +212,6 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
       if ($error === false) {
         $sql_data_array = array(
           'customers_password' => xtc_encrypt_password($password_new),
-          'customers_password_time' => time(),
           'password_request_key' => '',
           'password_request_time' => '',
           // a pending email change may come from someone who had the session
@@ -225,10 +225,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
           'customers_email_verify_count' => 0,
           'customers_last_modified' => 'now()',
         );
-        // a parallel change of the token or the address makes this link invalid
-        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $check_customer['customers_id']."' AND password_request_key = '".xtc_db_input($check_customer['password_request_key'])."' AND customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'");
-
-        if (xtc_db_affected_rows() == 1) {
+        // a parallel change of the token or the address makes this link invalid; the new password version ends all sessions
+        if (xtc_password_time_update($check_customer['customers_id'], $sql_data_array, "password_request_key = '".xtc_db_input($check_customer['password_request_key'])."' AND customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'") !== false) {
           foreach(auto_include(DIR_FS_CATALOG.'includes/extra/password_double_opt/password_double_opt_before_redirect/','php') as $file) require ($file);
 
           // redirect to login

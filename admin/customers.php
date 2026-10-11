@@ -28,6 +28,7 @@
   require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
   require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
   require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
+  require_once (DIR_FS_INC.'xtc_password_time_update.inc.php');
   require_once (DIR_FS_INC.'xtc_js_lang.php');
   require_once (DIR_FS_INC.'ip_clearing.inc.php');
   require_once (DIR_FS_INC.'get_customers_gender.inc.php');
@@ -594,10 +595,6 @@
 
             if ($password != '') {
               $sql_data_array['customers_password'] = xtc_encrypt_password($password);
-              $sql_data_array['customers_password_time'] = time();
-              if ($_SESSION['customer_id'] == $customers_id) {
-                $_SESSION['customer_time'] = $sql_data_array['customers_password_time'];
-              }
             }
 
             // a new password or address set here makes pending changes and reset links void
@@ -627,7 +624,15 @@
               $sql_data_array['customers_dob'] = xtc_date_raw($customers_dob);
             }
 
-            xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND customers_default_address_id = '".$address_book_id."'");
+            if ($password != '') {
+              // a new password version ends the sessions of the account, an admin who changes the own password goes on
+              $customer_time = xtc_password_time_update($customers_id, $sql_data_array, "customers_default_address_id = '".$address_book_id."'");
+              if ($customer_time !== false && $_SESSION['customer_id'] == $customers_id) {
+                $_SESSION['customer_time'] = $customer_time;
+              }
+            } else {
+              xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND customers_default_address_id = '".$address_book_id."'");
+            }
 
             xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO."
                              SET customers_info_date_account_last_modified = now()
