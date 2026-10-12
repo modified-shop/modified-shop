@@ -175,15 +175,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
 
   // a valid link shows the question with the button, a failed form token shows it again
   if ($verify_valid === true && ($verify_post === false || $verify_token_error === true)) {
-    // the address of the page carries the key
-    header('Referrer-Policy: no-referrer');
-
     $smarty = new Smarty();
 
     $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_EDIT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     $breadcrumb->add(TEXT_EMAIL_CHANGE_CONFIRM_HEADING);
 
     require (DIR_WS_INCLUDES.'header.php');
+
+    // the address of the page carries the key; after header.php, whose hooks send the general policy
+    header('Referrer-Policy: no-referrer');
 
     $display_mode = 'account';
     require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
