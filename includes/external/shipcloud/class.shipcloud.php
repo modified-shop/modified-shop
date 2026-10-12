@@ -165,8 +165,14 @@ class shipcloud {
         unset($request_array['customs_declaration']);
         
         $request = $this->do_request(json_encode($request_array), self::SC_URL_QUOTES);
-        if (is_array($request) && isset($request['shipment_quote'])) {
-          $messageStack->add_session(CFG_TXT_PRICE.': &euro; '.number_format($request['shipment_quote']['price'], 2, ',', '.'), 'success');
+        if (is_array($request)) {
+          // a missing price is no price of zero
+          if (isset($request['shipment_quote']['price']) && is_numeric($request['shipment_quote']['price'])) {
+            $messageStack->add_session(CFG_TXT_PRICE.': &euro; '.number_format($request['shipment_quote']['price'], 2, ',', '.'), 'success');
+          } else {
+            $messageStack->add_session(TEXT_QUOTE_ERROR, 'warning');
+            $this->LoggingManager->log('WARNING', 'quote', array('exception' => $request));
+          }
         }
       }
     } else {

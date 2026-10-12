@@ -160,6 +160,7 @@ define('TEXT_LABEL_CREATED', 'Paketschein erfolgreich erstellt.');
 define('TEXT_CARRIER_ERROR', 'Paketdienstleister nicht in Ihrem shipcloud Account freigeschaltet oder ung&uuml;ltiger API-Key.');
 define('TEXT_CARRIER_PLACEHOLDER_1', 'Paketbeschreibung');
 define('TEXT_CARRIER_PLACEHOLDER_2', 'Sendungsbeschreibung');
+define('TEXT_QUOTE_ERROR', 'shipcloud hat keinen g&uuml;ltigen Preis geliefert.');
 
 define('TEXT_DOWNLOADS', 'Downloads');
 define('TABLE_HEADING_FILENAME', 'Dateiname');
