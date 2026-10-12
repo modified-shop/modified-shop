@@ -21,4 +21,6 @@ define('TEXT_SC_EARLIEST', 'fr&uuml;hestens');
 define('TEXT_SC_LATEST', 'sp&auml;testens');
 
 define('BUTTON_PICKUP', 'Abholung buchen');
+
+define('TEXT_PICKUP_ERROR', 'shipcloud hat keine g&uuml;ltige Antwort zur Abholung geliefert. Bitte pr&uuml;fen Sie die Abholung in Ihrem shipcloud Account.');
 ?>
