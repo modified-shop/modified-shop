@@ -35,15 +35,14 @@ try {
 
     $_POST['fldr'] = str_replace('undefined', '', $_POST['fldr']);
 
-    $fldr = rawurldecode(trim(strip_tags($_POST['fldr']), "/") . "/");
-
-    // the root folder trims to "/"; keep it empty so current_path stays the
-    // boundary of the config lookup below
-    if ($fldr === '/') {
-        $fldr = '';
+    // keep the exact folder name for the paths; only strip the surrounding
+    // slashes so the root collapses to an empty, current_path-relative value.
+    // decoding stays inside checkRelativePath so literal names are not altered
+    $fldr = trim($_POST['fldr'], "/");
+    if ($fldr !== '') {
+        $fldr .= '/';
     }
 
-    // build the target paths from the checked value, not the raw POST input
     if (!checkRelativePath($fldr)) {
         response(trans('wrong path') . AddErrorLocation())->send();
         exit;
@@ -197,7 +196,7 @@ try {
         'storeFolderThumb' => $storeFolderThumb,
         'ftp' => $ftp,
         'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $storeFolder,
-        'upload_url' => $config['base_url'] . $config['upload_dir'] . $fldr,
+        'upload_url' => $config['base_url'] . $config['upload_dir'] . implode('/', array_map('rawurlencode', explode('/', $fldr))),
         'mkdir_mode' => $config['folderPermission'],
         'max_file_size' => $config['MaxSizeUpload'] * 1024 * 1024,
         'correct_image_extensions' => true,
