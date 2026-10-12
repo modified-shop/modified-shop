@@ -37,14 +37,14 @@ try {
 
     $fldr = rawurldecode(trim(strip_tags($_POST['fldr']), "/") . "/");
 
-    // the target paths are only built once the folder passed the check
+    // build the target paths from the checked value, not the raw POST input
     if (!checkRelativePath($fldr)) {
         response(trans('wrong path') . AddErrorLocation())->send();
         exit;
     }
 
-    $storeFolder = $source_base . $_POST["fldr"];
-    $storeFolderThumb = $thumb_base . $_POST["fldr"];
+    $storeFolder = $source_base . $fldr;
+    $storeFolderThumb = $thumb_base . $fldr;
 
     $path = $storeFolder;
     $cycle = true;
@@ -191,7 +191,7 @@ try {
         'storeFolderThumb' => $storeFolderThumb,
         'ftp' => $ftp,
         'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $storeFolder,
-        'upload_url' => $config['base_url'] . $config['upload_dir'] . $_POST['fldr'],
+        'upload_url' => $config['base_url'] . $config['upload_dir'] . $fldr,
         'mkdir_mode' => $config['folderPermission'],
         'max_file_size' => $config['MaxSizeUpload'] * 1024 * 1024,
         'correct_image_extensions' => true,
