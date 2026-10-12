@@ -378,10 +378,8 @@
             $res = xtc_db_query($sql_command);
 
             if ($res === false) {
-              $meldung = ((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link})) : xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link})));
-              if ($meldung != '') {
-                die($sql_command.' -> '.$meldung);
-              }
+              // xtc_db_query() has already logged the error
+              die($sql_command.' -> '.mysqli_errno($db_link).' - '.mysqli_error($db_link));
             }
           } else {
             protokoll($sql_command);
