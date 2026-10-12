@@ -98,17 +98,22 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
 			}
-			// the own session goes on with the new password version, other sessions end
+			// only with the password version of this session: a reset or change in the meantime wins and ends it;
+			// otherwise the own session goes on with the new version, other sessions and open reset links end
 			$customer_time = xtc_password_time_update($_SESSION['customer_id'], array(
 			  'customers_password' => xtc_encrypt_password($password_new),
 			  'customers_email_address_new' => '',
 			  'customers_email_request_key' => '',
 			  'customers_email_request_time' => 'null',
+			  'password_request_key' => '',
+			  'password_request_time' => 'null',
 			  'customers_last_modified' => 'now()',
-			));
-			if ($customer_time !== false) {
-			  $_SESSION['customer_time'] = $customer_time;
+			), "customers_password_time = '".(int)$_SESSION['customer_time']."'");
+			if ($customer_time === false) {
+			  xtc_session_destroy();
+			  xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'action=relogin', 'SSL'));
 			}
+			$_SESSION['customer_time'] = $customer_time;
 			               
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
 			                 SET customers_info_date_account_last_modified = now() 
