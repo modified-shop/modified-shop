@@ -100,6 +100,7 @@
         $class = basename($module_class);
         include_once($module_directory . $class . $file_extension);
         $module = instantiate_class($class);
+        $file = '';
 
         // only a submitted form may write, this is also the condition the CSRF check runs on
         if (isset($_POST) && is_array($_POST) && count($_POST) > 0) {
