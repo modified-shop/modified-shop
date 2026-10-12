@@ -86,7 +86,7 @@ class haendlerbund_importer
                     }
                 }
 
-                if ($_POST['agb_import'] == 1 && !preg_match("/DOCUMENT_NOT_AVAILABLE/i", $result) && !preg_match(
+                if (isset($_POST['agb_import']) && $_POST['agb_import'] == 1 && !preg_match("/DOCUMENT_NOT_AVAILABLE/i", $result) && !preg_match(
                         "/SHOP_NOT_FOUND/i",
                         $result
                     )) {
@@ -403,9 +403,8 @@ class haendlerbund_importer
     {
         $return = "<div style='padding-left: 15px;padding-right: 15px;margin-bottom: 15px;'>";
         $return .= $this->getLabel($label, $id, $required) . "<select name='" . $name . "' id='" . $id . "'>";
-        if ($this->getConfigurationValue($name) and !$value) {
-            $value = $this->getConfigurationValue($name);
-        } elseif ($_POST[$name]) {
+        $value = $this->getConfigurationValue($name);
+        if (!$value && !empty($_POST[$name])) {
             $data = $this->getFormData(array($name));
             $value = $data[$name];
         }
