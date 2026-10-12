@@ -71,7 +71,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
     protected function delete(array $keys)
     {
         foreach ($keys as $k) {
-            $this->cache->delete($this->prefix.$k);
+            $this->cache->delete($this->prefix.sha1($k));
         }
         return true;
     }
