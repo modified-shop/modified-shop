@@ -29,7 +29,7 @@ $language = $_SESSION['language'];
 if (isset($send_order)) {
   $last_order = $insert_id;
   $language = $order->info['language'];
-  $order_status = $order->info['orders_status'];
+  $order_status = $order->info['orders_status_id'];
 
   if (isset($send_by_admin)) {
     $orders_query = xtc_db_query("SELECT orders_status,
