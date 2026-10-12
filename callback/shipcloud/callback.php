@@ -30,11 +30,11 @@ defined('DIR_FS_ADMIN') OR define('DIR_FS_ADMIN', DIR_FS_CATALOG.DIR_ADMIN);
 // parse callback
 $request = json_decode(file_get_contents("php://input"), true);
 
-// an empty shipment id would match the tracking entries of other carriers
+// a blank shipment id would match the tracking entries of other carriers, MySQL ignores trailing spaces
 if (is_array($request)
     && isset($request['data']['id'])
     && is_string($request['data']['id'])
-    && $request['data']['id'] != ''
+    && trim($request['data']['id']) != ''
     )
 {
   $shipcloud = new shipcloud();
