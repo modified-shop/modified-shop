@@ -87,7 +87,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
     $check_address = xtc_db_fetch_array($check_address_query);
 
     if ($check_address['total'] == '1') {
-      if ($reset_shipping == true) {
+      $country_disabled = (xtc_check_address_country($_SESSION['sendto'], $_SESSION['customer_id']) === false);
+      // a rejected address falls back to the default one, so the quote of the previous destination must go as well
+      if ($reset_shipping == true || $country_disabled === true) {
         unset($_SESSION['shipping']);
         if (isset($_SESSION['paypal']['PayerID'])
             && $_SESSION['paypal']['PayerID'] != ''
@@ -96,7 +98,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
           $_SESSION['shipping'] = '';
         }
       }
-      if (xtc_check_address_country($_SESSION['sendto'], $_SESSION['customer_id']) === false) {
+      if ($country_disabled === true) {
         unset($_SESSION['sendto']);
         $messageStack->add('checkout_address', ERROR_CHECKOUT_SHIPPING_COUNTRY_DISABLED);
       } else {
