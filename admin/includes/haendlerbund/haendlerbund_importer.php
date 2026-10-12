@@ -8,6 +8,7 @@ class haendlerbund_importer
     var $api = false;
     var $api_config = false;
     var $data = array();
+    var $import_error = '';
 
     #Konstruktor
     function __construct()
@@ -37,6 +38,7 @@ class haendlerbund_importer
             }
 
             $check_array = array();
+            $imported = array();
             $return = "";
             $error = "";
             $_SESSION["import_message"] = "";
@@ -100,8 +102,27 @@ class haendlerbund_importer
                                 )
                             )
                         ) == "1") {
-                        $_SESSION["import_message"] = "Import erfolgreich abgeschlossen!";
+                        $imported[] = $agb;
                     }
+                }
+            }
+
+            if (isset($_POST['agb_import']) && $_POST['agb_import'] == 1) {
+                $failed = array();
+                foreach ($agb_service as $agb_array => $key) {
+                    $agb_array = explode("|", $agb_array);
+                    // only documents found by the last API check count, unconfigured optional ones are no failure
+                    if ($this->getConfigurationValue($agb_array[0] . '_hbon') == '1' && !in_array($agb_array[0], $imported)) {
+                        $failed[] = $agb_array[1];
+                    }
+                }
+
+                if (count($failed) > 0) {
+                    $this->import_error = (count($imported) > 0 ? "Import nur teilweise abgeschlossen!" : "Import fehlgeschlagen!")
+                        . "<br />Folgende Rechtstexte konnten nicht aktualisiert werden: " . implode(", ", $failed)
+                        . "<br />Bitte f&uuml;hren Sie den Import erneut aus oder &uuml;berpr&uuml;fen Sie die Konfiguration.";
+                } elseif (count($imported) > 0) {
+                    $_SESSION["import_message"] = "Import erfolgreich abgeschlossen!";
                 }
             }
 
@@ -195,6 +216,13 @@ class haendlerbund_importer
     #updateContent Methode: Eigentliche Import-Methode fuer die Texte in die DB
     function updateContent($content_id, $content_text)
     {
+        // the assigned content may be missing or deleted, the UPDATE alone would still succeed
+        $check_query = xtc_db_query(
+            "SELECT content_id FROM " . TABLE_CONTENT_MANAGER . " WHERE content_id=" . (int)$content_id . " LIMIT 1"
+        );
+        if (xtc_db_num_rows($check_query) < 1) {
+            return false;
+        }
         $return = xtc_db_query(
             "UPDATE content_manager SET content_text='" . xtc_db_input($content_text) . "' WHERE content_id=" . (int)$content_id . " LIMIT 1"
         );
@@ -289,6 +317,7 @@ class haendlerbund_importer
                     <h5 class="title_hb">Rechtstexte importieren</h5>
                 </div>
                 <br />
+                ' . ($this->import_error != '' ? '<p style="color:red;">' . $this->import_error . '</p><br />' : '') . '
                 ' . xtc_draw_form('AGBimport', 'haendlerbund.php', '', 'post') . '
                     <input type="hidden" name="agb_import" value="1" />
                     <div style="width:731px; height:300px; background-image:url(includes/haendlerbund/images/import_picture.jpg); background-position:top;">
