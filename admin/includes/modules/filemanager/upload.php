@@ -37,6 +37,12 @@ try {
 
     $fldr = rawurldecode(trim(strip_tags($_POST['fldr']), "/") . "/");
 
+    // the root folder trims to "/"; keep it empty so current_path stays the
+    // boundary of the config lookup below
+    if ($fldr === '/') {
+        $fldr = '';
+    }
+
     // build the target paths from the checked value, not the raw POST input
     if (!checkRelativePath($fldr)) {
         response(trans('wrong path') . AddErrorLocation())->send();
