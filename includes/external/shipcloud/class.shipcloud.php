@@ -543,16 +543,25 @@ class shipcloud {
 
   
   public function get_carriers($database = false) {
-    if (!is_file(SQL_CACHEDIR.'shipcloud.txt') 
-        || time() - filemtime(SQL_CACHEDIR.'shipcloud.txt') > 86400
+    $request = false;
+    if (is_file(SQL_CACHEDIR.'shipcloud.txt')
+        && time() - filemtime(SQL_CACHEDIR.'shipcloud.txt') <= 86400
         )
     {
-      $request = get_external_content('https://'.MODULE_SHIPCLOUD_API.'@'.self::SC_URL_CARRIERS, 3, false);
-      file_put_contents(SQL_CACHEDIR.'shipcloud.txt', $request, LOCK_EX);
-    } else {
-      $request = file_get_contents(SQL_CACHEDIR.'shipcloud.txt');
+      $request = json_decode(file_get_contents(SQL_CACHEDIR.'shipcloud.txt'), true);
     }
-    $request = json_decode($request, true);
+    
+    // a failed download is not cached, the next call tries again
+    if ($this->valid_carriers($request) === false) {
+      $response = get_external_content('https://'.MODULE_SHIPCLOUD_API.'@'.self::SC_URL_CARRIERS, 3, false);
+      $request = json_decode($response, true);
+      if ($this->valid_carriers($request) === true) {
+        file_put_contents(SQL_CACHEDIR.'shipcloud.txt', $response, LOCK_EX);
+      } else {
+        $this->LoggingManager->log('WARNING', 'get_carriers', array('exception' => $response));
+        $request = array();
+      }
+    }
     
     if ($database === true) {
       foreach ($request as $data) {
@@ -570,6 +579,24 @@ class shipcloud {
       }
     }
     return $request;
+  }
+  
+  
+  private function valid_carriers($carriers) {
+    if (!is_array($carriers) || count($carriers) < 1) {
+      return false;
+    }
+    
+    foreach ($carriers as $carrier) {
+      if (!isset($carrier['name']) || !is_string($carrier['name'])
+          || !isset($carrier['display_name']) || !is_string($carrier['display_name'])
+          )
+      {
+        return false;
+      }
+    }
+    
+    return true;
   }
   
   
