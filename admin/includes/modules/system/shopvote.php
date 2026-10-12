@@ -43,7 +43,8 @@ class shopvote
                          WHERE tasks = 'shopvote_import'");
         }
 
-        if (is_array($_POST['configuration'])
+        if (isset($_POST['configuration'])
+            && is_array($_POST['configuration'])
             && count($_POST['configuration']) > 0
             )
         {
@@ -51,7 +52,7 @@ class shopvote
             $value = is_array($_POST['configuration'][$key]) ? implode(',', $_POST['configuration'][$key]) : $value;
             $value = str_replace("'", '"', $value);
             
-            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input(encode_htmlentities($value)) . "' WHERE configuration_key = '" . $key . "'");
+            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input(encode_htmlentities($value)) . "' WHERE configuration_key = '" . xtc_db_input($key) . "'");
           }
         }
     }
