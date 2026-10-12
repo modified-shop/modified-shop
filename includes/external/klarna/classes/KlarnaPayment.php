@@ -388,7 +388,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
     // the status change is conditional, a parallel stop or a manual change must not be overwritten
     if ($fraud_status == 'ACCEPTED') {
       if ($capture === true) {
-        return $this->completeAccept($oID, $check['klarna_order_id'], $pending_status, $accepted_status, $data, true);
+        return $this->completeAccept($oID, $check['klarna_order_id'], $pending_status, $accepted_status, true);
       }
       
       if ($this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED', 'ACCEPTED') === false) {
@@ -417,7 +417,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
-  function completeAccept($oID, $order_id, $pending_status, $accepted_status, $data = null, $first_attempt = false) {
+  function completeAccept($oID, $order_id, $pending_status, $accepted_status, $first_attempt = false) {
     // a parallel call may have completed the accept, then the capture is still due
     if ($this->change_orders_status($oID, $pending_status, $accepted_status, 'Klarna fraud status: ACCEPTED', 'ACCEPTING') === false
         && $this->get_orders_status($oID) != $accepted_status
@@ -430,11 +430,11 @@ class KlarnaPayment extends KlarnaPaymentBase {
       return true;
     }
     
-    return $this->startCapture($oID, $order_id, $accepted_status, $data, $first_attempt);
+    return $this->startCapture($oID, $order_id, $accepted_status, $first_attempt);
   }
 
 
-  function startCapture($oID, $order_id, $accepted_status, $data = null, $first_attempt = false) {
+  function startCapture($oID, $order_id, $accepted_status, $first_attempt = false) {
     // the status change is done, from here on only the capture is open
     xtc_db_query("UPDATE ".TABLE_KLARNA_PAYMENTS."
                      SET fraud_status = 'CAPTURE_PENDING'
@@ -445,7 +445,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       return $this->is_fraud_status_final($oID);
     }
     
-    return $this->captureIfDue($oID, $order_id, $accepted_status, $data, $first_attempt);
+    return $this->captureIfDue($oID, $order_id, $accepted_status, $first_attempt);
   }
 
 
@@ -581,11 +581,47 @@ class KlarnaPayment extends KlarnaPaymentBase {
   }
 
 
-  function captureIfDue($oID, $order_id, $accepted_status, $data = null, $first_attempt = false) {
-    // fetched first, the API call takes seconds and a stop may arrive meanwhile
-    if (!is_array($data)) {
-      $data = $this->fetchOrder($order_id);
+  function lock_capture($oID) {
+    // own connection: before MySQL 5.7.5 a second lock frees the session lock, and the lock ends with the connection
+    if (!is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'klarna_lock_link', false))) {
+      return false;
     }
+    
+    // named locks are server wide, the name carries the database
+    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input('MODkcp_'.md5(DB_DATABASE.'|'.TABLE_KLARNA_PAYMENTS).'_'.(int)$oID)."', 0) AS capture_lock", 'klarna_lock_link');
+    $lock = xtc_db_fetch_array($lock_query);
+    if (!is_array($lock) || $lock['capture_lock'] != '1') {
+      xtc_db_close('klarna_lock_link');
+      
+      return false;
+    }
+    
+    return true;
+  }
+
+
+  function unlock_capture() {
+    xtc_db_close('klarna_lock_link');
+  }
+
+
+  function captureIfDue($oID, $order_id, $accepted_status, $first_attempt = false) {
+    // one capture run per order, a parallel call gives up and is retried later
+    if ($this->lock_capture($oID) === false) {
+      return false;
+    }
+    
+    $result = $this->captureIfDueLocked($oID, $order_id, $accepted_status, $first_attempt);
+    
+    $this->unlock_capture();
+    
+    return $result;
+  }
+
+
+  function captureIfDueLocked($oID, $order_id, $accepted_status, $first_attempt = false) {
+    // under the lock a capture with a lost response shows here; before the row check, a stop may arrive during the call
+    $data = $this->fetchOrder($order_id);
     
     // read again right before the capture, a parallel stop or a finished capture may have changed the row
     $check_query = xtc_db_query("SELECT fraud_status
