@@ -38,6 +38,7 @@ defined('SHOW_SELFPICKUP_FREE') or define('SHOW_SELFPICKUP_FREE', 'false'); // d
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
 require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
+require_once (DIR_FS_INC.'xtc_check_address_country.inc.php');
 
 // create smarty elements
 $smarty = new Smarty();
@@ -104,6 +105,17 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 	$_SESSION['shipping'] = false;
 	$_SESSION['sendto'] = false;
 	xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, xtc_get_all_get_params(), 'SSL'));
+}
+
+// sendto is only resolved here, after checkout_requirements ran
+if (xtc_check_address_country($_SESSION['sendto'], $_SESSION['customer_id']) === false) {
+  unset($_SESSION['sendto']);
+  unset($_SESSION['shipping']);
+  if (isset($_SESSION['paypal']['PayerID']) && $_SESSION['paypal']['PayerID'] != '') {
+    $_SESSION['shipping'] = '';
+  }
+  $messageStack->add_session('checkout_address', ERROR_CHECKOUT_SHIPPING_COUNTRY_DISABLED);
+  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
 }
 
 $total_weight = $_SESSION['cart']->show_weight();

@@ -135,6 +135,26 @@ if ($_SESSION['customers_status']['customers_status_max_order'] != 0 && $xtPrice
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
 }
 
+// a saved shipping address in a disabled country must not reach the order
+require_once (DIR_FS_INC.'xtc_check_address_country.inc.php');
+if (isset($_SESSION['sendto'])
+    && $_SESSION['sendto'] !== false
+    && (!isset($_SESSION['tmp_oID']) || !is_numeric($_SESSION['tmp_oID']))
+    && xtc_check_address_country($_SESSION['sendto'], $_SESSION['customer_id']) === false
+    && !in_array($_SESSION['cart']->get_content_type(), array('virtual', 'virtual_weight'))
+    && $_SESSION['cart']->count_contents_virtual() > 0
+    )
+{
+  unset($_SESSION['sendto']);
+  unset($_SESSION['shipping']);
+  // the PayPal short checkout needs an empty shipping for the position checks below
+  if (isset($_SESSION['paypal']['PayerID']) && $_SESSION['paypal']['PayerID'] != '') {
+    $_SESSION['shipping'] = '';
+  }
+  $messageStack->add_session('checkout_address', ERROR_CHECKOUT_SHIPPING_COUNTRY_DISABLED);
+  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+}
+
 // from checkout_payment
 if ($checkout_position[$current_page] >= 2) {
   // avoid hack attempts during the checkout procedure by checking the internal cartID
