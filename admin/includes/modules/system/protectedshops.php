@@ -55,6 +55,14 @@ class protectedshops {
                      WHERE tasks = 'protectedshops_update'");
     }
 
+    // the token constant still holds the value from before this save
+    if (isset($_POST['configuration'])
+        && isset($_POST['configuration']['MODULE_PROTECTEDSHOPS_TOKEN'])
+        )
+    {
+      $this->auto_install($_POST['configuration']['MODULE_PROTECTEDSHOPS_TOKEN']);
+    }
+
     if ($this->enabled === true && $_POST['export'] == 'yes') {
       $this->init_ps();
       $this->update->check_update();
@@ -106,33 +114,20 @@ class protectedshops {
         xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'protectedshops_update')");
       }
     }
-
-    // dynamic
-    $this->auto_install();
   }
   
   // autoinstall
-  function auto_install() {
-    $this->init_ps();
-    
-    // Documents
-    if (isset($this->content['DocumentDate']) && is_array($this->content['DocumentDate'])) {
-      foreach ($this->content['DocumentDate'] as $type => $date) {
-        $check_type_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PROTECTEDSHOPS_TYPE_".strtoupper($type)."'");
-        if (xtc_db_num_rows($check_type_query) < 1) {
-          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_TYPE_".strtoupper($type)."', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
-        }
-        $check_pdf_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PROTECTEDSHOPS_PDF_".strtoupper($type)."'");
-        if (xtc_db_num_rows($check_pdf_query) < 1) {
-          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_PDF_".strtoupper($type)."', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        }
-        $check_pdf_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PROTECTEDSHOPS_ERROR_COUNT_".strtoupper($type)."'");
-        if (xtc_db_num_rows($check_pdf_query) < 1) {
-          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_ERROR_COUNT_".strtoupper($type)."', '0',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_ERROR_COUNT_PDF_".strtoupper($type)."', '0',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        }
-      }
+  function auto_install($token) {
+    if ($token == '') {
+      return;
     }
+
+    $this->update = new protectedshops_update();
+    $params = array('Request' => 'GetDocumentInfo',
+                    'ShopId' => $token,
+                    );
+    $this->content = $this->update->request_document($params);
+    $this->update->install_documents($this->content);
   }
   
   // remove
@@ -150,11 +145,6 @@ class protectedshops {
 
   // keys
   function keys() {
-    // dynamic
-    if ($this->check() > 0) {
-      $this->auto_install();
-    }
-    
     $keys = array(
       'MODULE_PROTECTEDSHOPS_STATUS', 
       'MODULE_PROTECTEDSHOPS_TOKEN', 
@@ -162,9 +152,15 @@ class protectedshops {
       'MODULE_PROTECTEDSHOPS_FORMAT',                 
     );
     
-    if (isset($this->content['DocumentDate']) && is_array($this->content['DocumentDate'])) {
+    // dynamic, the provider is only asked on save and on update
+    if ($this->check() > 0) {
+      $type_query = xtc_db_query("SELECT configuration_key
+                                    FROM " . TABLE_CONFIGURATION . "
+                                   WHERE configuration_key LIKE 'MODULE\_PROTECTEDSHOPS\_TYPE\_%'
+                                ORDER BY configuration_id");
       $i=0;
-      foreach ($this->content['DocumentDate'] as $type => $date) {
+      while ($type_array = xtc_db_fetch_array($type_query)) {
+        $type = substr($type_array['configuration_key'], strlen('MODULE_PROTECTEDSHOPS_TYPE_'));
         // keys() runs several times per request
         if (!defined('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type).'_TITLE')) {
           define('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type).'_TITLE', '<hr noshade>' . (($i==0) ? 'Hinweis: </b>Die PDF Dateien k&ouml;nnen auch als Anhang zur Bestellbest&auml;tigung mitgesendet werden. Dazu einfach den Speicherort in den eMail Optionen bei "E-Mail Anh&auml;nge f&uuml;r Bestellungen" verwenden.<br/><br/><b>' : '') . 'Rechtstext '.$type);

@@ -38,6 +38,7 @@ class protectedshops_update {
                         'ShopId' => $this->token,
                         );
         $content = $this->request_document($params);
+        $this->install_documents($content);
                 
         // Documents
         if (isset($content['DocumentDate']) && is_array($content['DocumentDate'])) {
@@ -46,6 +47,27 @@ class protectedshops_update {
             ((defined('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type)) && constant('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type)) == 'true') ? $this->get_page_pdf($type) : '');
           }
         }        
+      }
+    }
+  }
+
+
+  function install_documents($content) {
+    if (isset($content['DocumentDate']) && is_array($content['DocumentDate'])) {
+      foreach ($content['DocumentDate'] as $type => $date) {
+        $check_type_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PROTECTEDSHOPS_TYPE_".strtoupper($type)."'");
+        if (xtc_db_num_rows($check_type_query) < 1) {
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_TYPE_".strtoupper($type)."', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
+        }
+        $check_pdf_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PROTECTEDSHOPS_PDF_".strtoupper($type)."'");
+        if (xtc_db_num_rows($check_pdf_query) < 1) {
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_PDF_".strtoupper($type)."', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+        }
+        $check_pdf_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PROTECTEDSHOPS_ERROR_COUNT_".strtoupper($type)."'");
+        if (xtc_db_num_rows($check_pdf_query) < 1) {
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_ERROR_COUNT_".strtoupper($type)."', '0',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_ERROR_COUNT_PDF_".strtoupper($type)."', '0',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+        }
       }
     }
   }
