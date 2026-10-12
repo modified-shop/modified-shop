@@ -70,7 +70,8 @@
           break;
         case FILENAME_CHECKOUT_SUCCESS:
           if (!in_array('GTAG-'.$last_order, $_SESSION['tracking']['order'])) {
-            if (MODULE_GOOGLE_ANALYTICS_ECOMMERCE == 'true') {
+            // without a measurement id the purchase event is dropped below and must not mark the order
+            if ($tagId != '' && MODULE_GOOGLE_ANALYTICS_ECOMMERCE == 'true') {
               $addCode = getOrderDetailsGoogleAnalytics();
             }
 
