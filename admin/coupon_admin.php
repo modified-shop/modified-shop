@@ -756,7 +756,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     );
                     $contents[] = array('align' => 'center', 'text' => 
                       '<a class="button" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucherreport&cID='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_REPORT.'</a>' . 
-                      '<a class="button" href="'.xtc_href_link(FILENAME_GV_MAIL, 'cid='.$cInfo->coupon_id, 'NONSSL').'">'.BUTTON_EMAIL.'</a>&nbsp;'
+                      '<a class="button" href="'.xtc_href_link(FILENAME_GV_MAIL, xtc_get_all_get_params(array('cID', 'action')).'cid='.$cInfo->coupon_id, 'NONSSL').'">'.BUTTON_EMAIL.'</a>&nbsp;'
                     );
 
                     $contents[] = array('text' => '<br />' . COUPON_NAME . ':&nbsp;' . $coupon_name['coupon_name'] . '<br />' .
