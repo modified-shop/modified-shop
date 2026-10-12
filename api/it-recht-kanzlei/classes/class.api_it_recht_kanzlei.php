@@ -358,6 +358,9 @@ class api_it_recht_kanzlei {
       return $string;
     }
 
+    // keep existing entities, the final decode must only resolve the ones created below
+    $string = str_replace('&', '&amp;', $string);
+
     // decode three byte unicode characters
     $string = preg_replace_callback(
       "/([\340-\357])([\200-\277])([\200-\277])/",
