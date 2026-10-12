@@ -149,7 +149,10 @@ if (isset($_GET['action'])
 		          )
 		{
 			// the password is right, the login waits for the confirmation of the email address
-			// a later password change withdraws this permission
+			// a later password change withdraws this permission; like a login, the permission gets a new session ID
+			if (SESSION_RECREATE == 'True') {
+				xtc_session_recreate();
+			}
 			$_SESSION['email_verify_pending'] = (int)$check_customer['customers_id'];
 			$_SESSION['email_verify_pending_time'] = (int)$check_customer['customers_password_time'];
 		} elseif ($captcha_error === false) {		
