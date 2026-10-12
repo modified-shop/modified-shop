@@ -22,5 +22,5 @@ define('TEXT_SC_LATEST', 'latest');
 
 define('BUTTON_PICKUP', 'Pickup request');
 
-define('TEXT_PICKUP_ERROR', 'shipcloud did not return a valid response for the pickup. Please check the pickup in your shipcloud account.');
+define('TEXT_PICKUP_ERROR', 'The shipcloud pickup was not confirmed. Please check the pickup in your shipcloud account.');
 ?>
