@@ -156,6 +156,7 @@ define('TEXT_SHIPCLOUD_DPAG_WARENPOST_SIGNATURE', 'Warenpost (signature)');
 define('DOWNLOAD_LABEL', 'Download Label');
 define('CREATE_LABEL', 'Create Label');
 define('TEXT_DELETE_SHIPMENT_SUCCESS', 'shipcloud Label deleted.');
+define('TEXT_DELETE_SHIPMENT_ERROR', 'shipcloud Label could not be deleted, the shipment has been kept. After the carrier\'s cutoff time a label can no longer be deleted.');
 define('TEXT_LABEL_CREATED', 'Label created.');
 define('TEXT_CARRIER_ERROR', 'Carrier not activated in your shipcloud account or invalid API key.');
 define('TEXT_CARRIER_PLACEHOLDER_1', 'Package description');

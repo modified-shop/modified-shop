@@ -41,8 +41,13 @@ class shipcloud {
                                   WHERE tracking_id = '".(int)$tracking_id."'");
     if (xtc_db_num_rows($sc_id_query) == 1) {
       $sc_id = xtc_db_fetch_array($sc_id_query);      
-      $this->do_request('', self::SC_URL_LABEL.$sc_id['sc_id'], 'DELETE');
+      // tracking entries of other carriers have no shipment at shipcloud
+      if ($sc_id['sc_id'] != '') {
+        return ($this->do_request('', self::SC_URL_LABEL.$sc_id['sc_id'], 'DELETE') === true);
+      }
     }  
+    
+    return true;
   }
   
   
@@ -620,6 +625,7 @@ class shipcloud {
       $this->LoggingManager->log('INFO', curl_errno($ch), array('exception' => curl_error($ch)));
     } elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '204' && $request == 'DELETE') {
       $messageStack->add_session(TEXT_DELETE_SHIPMENT_SUCCESS, 'success');
+      return true;
     } elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) != '200') {
       $response = json_decode($response, true);
       if (isset($response['errors']) && is_array($response['errors'])) {
@@ -628,6 +634,11 @@ class shipcloud {
         }
       }
       $this->LoggingManager->log('INFO', 'do_request', array('exception' => $response));
+      
+      // the shipment is already gone at shipcloud
+      if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '404' && $request == 'DELETE') {
+        return true;
+      }
     } else {
       return json_decode($response, true);
     }

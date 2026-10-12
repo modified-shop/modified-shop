@@ -30,7 +30,13 @@ defined('DIR_FS_ADMIN') OR define('DIR_FS_ADMIN', DIR_FS_CATALOG.DIR_ADMIN);
 // parse callback
 $request = json_decode(file_get_contents("php://input"), true);
 
-if (is_array($request) && count($request) > 0) {
+// an empty shipment id would match the tracking entries of other carriers
+if (is_array($request)
+    && isset($request['data']['id'])
+    && is_string($request['data']['id'])
+    && $request['data']['id'] != ''
+    )
+{
   $shipcloud = new shipcloud();
   $shipcloud->LoggingManager->log('INFO', 'callback', array('exception' => $request));
 

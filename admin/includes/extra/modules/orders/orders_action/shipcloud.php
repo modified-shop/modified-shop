@@ -16,8 +16,12 @@
           $tracking_id = (int)$_GET['tID'];
           require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
           $shipcloud = new shipcloud($oID);
-          $shipcloud->delete_label($tracking_id);
-          xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".$tracking_id."'");
+          // keep the entry as long as the shipment may still exist at shipcloud
+          if ($shipcloud->delete_label($tracking_id) === true) {
+            xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".$tracking_id."'");
+          } else {
+            $messageStack->add_session(TEXT_DELETE_SHIPMENT_ERROR, 'warning');
+          }
           xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction')).'action=edit'));
           break;
       }
