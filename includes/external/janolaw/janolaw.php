@@ -21,6 +21,9 @@ class janolaw_content {
   var $user_id;
   var $shop_id;
   var $format;
+  var $document_name = array();
+  var $withdrawal_content = array();
+  var $withdrawal_link = array();
   
   
   function __construct() {
