@@ -66,6 +66,7 @@ define('TEXT_BANNERS_BANNER_VIEWS', 'Banner Views');
 define('TEXT_BANNERS_BANNER_CLICKS', 'Banner Clicks');
 define('TEXT_BANNERS_SORT', 'Sorting:');
 define('TEXT_BANNERS_SORT_NOTE', 'The order only affects dynamic sliders and not static banners.');
+define('TEXT_BANNERS_STATUS', 'Banner active:');
 
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this banner?');
 define('TEXT_INFO_DELETE_IMAGE', 'Delete banner image');

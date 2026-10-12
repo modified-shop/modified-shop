@@ -71,7 +71,7 @@
         } else {
           $messageStack->add_session(ERROR_UNKNOWN_STATUS_FLAG, 'error');
         }
-        xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . (int)$_GET['bID']));
+        xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, xtc_get_all_get_params_include(array('sorting')) . 'page=' . $page . '&bID=' . (int)$_GET['bID']));
         break;
       
       case 'insert':
@@ -80,6 +80,11 @@
         $banners_group = ((empty($new_banners_group)) ? xtc_db_prepare_input($_POST['banners_group']) : $new_banners_group);
         $banners_sort = (int)$_POST['banners_sort'];
         $banners_group_id = (int)$_POST['banners_group_id'];
+        $banners_status = ((isset($_POST['status']) && $_POST['status'] == '1') ? 1 : 0);
+        // a scheduled banner stays inactive until its start date
+        if ($_POST['date_scheduled'] != '' && $_POST['date_scheduled'] != '0000-00-00 00:00:00') {
+          $banners_status = 0;
+        }
       
         $banner_error = false;
         if (empty($banners_group)) {
@@ -174,6 +179,7 @@
               'banners_html_text' => $html_text,
               'banners_sort' => $banners_sort,
               'banners_group_id' => $banners_group_id,
+              'status' => $banners_status,
               'expires_date' => 'null',
               'expires_impressions' => 'null',
               'date_scheduled' => 'null',
@@ -181,25 +187,21 @@
                                   
             if ($action == 'insert') {
               $sql_data_array['date_added'] = 'now()';
-              $sql_data_array['status'] = '0';
               xtc_db_perform(TABLE_BANNERS, $sql_data_array);
               $banners_id = xtc_db_insert_id();
             } elseif ($action == 'update') {              
-              $check_query = xtc_db_query("SELECT banners_id 
+              $check_query = xtc_db_query("SELECT banners_id,
+                                                  status
                                              FROM ".TABLE_BANNERS." 
                                             WHERE banners_group_id = '".$banners_group_id."' 
                                               AND languages_id = '".$languages[$i]['id']."'");
               if (xtc_db_num_rows($check_query) > 0) {
-                $sql_data_array['date_status_change'] = 'now()';
+                $check = xtc_db_fetch_array($check_query);
+                if ($check['status'] != $banners_status) {
+                  $sql_data_array['date_status_change'] = 'now()';
+                }
                 xtc_db_perform(TABLE_BANNERS, $sql_data_array, 'update', "banners_id = '" . (int)$banners_id . "'");
               } else {                
-                $status_query = xtc_db_query("SELECT status 
-                                                FROM ".TABLE_BANNERS." 
-                                               WHERE banners_group_id = '".$banners_group_id."'
-                                               LIMIT 1");
-                $status = xtc_db_fetch_array($status_query);
-
-                $sql_data_array['status'] = $status['status'];
                 $sql_data_array['date_added'] = 'now()';
                 
                 xtc_db_perform(TABLE_BANNERS, $sql_data_array);
@@ -238,7 +240,7 @@
         }
 
         if ($action != 'new') {
-          xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners_group_id));
+          xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, xtc_get_all_get_params_include(array('sorting')) . 'page=' . $page . '&bID=' . $banners_group_id));
         }
         break;
       
@@ -295,7 +297,7 @@
         xtc_db_query("DELETE FROM " . TABLE_BANNERS . " WHERE banners_group_id = '" . (int)$banners_group_id . "'");
         
         $messageStack->add_session(SUCCESS_BANNER_REMOVED, 'success');
-        xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page));
+        xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, xtc_get_all_get_params_include(array('sorting')) . 'page=' . $page));
         break;
     }
   }
@@ -385,6 +387,8 @@
               $bInfo = new objectInfo($banner);
             } else {
               $banner_array = xtc_get_default_table_data(TABLE_BANNERS);
+              // new banners start inactive, the column default is active
+              $banner_array['status'] = '0';
               $bInfo = new objectInfo($banner_array);
             }
 
@@ -431,7 +435,7 @@
               $group_id = xtc_db_fetch_array($group_id_query);
               $bInfo->banners_group_id = $group_id['banners_group_id'] + 1;
             }
-            echo xtc_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] . '&' : '') . (isset($page) ? 'page=' . $page . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data"'); 
+            echo xtc_draw_form('new_banner', FILENAME_BANNER_MANAGER, xtc_get_all_get_params_include(array('sorting')) . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] . '&' : '') . (isset($page) ? 'page=' . $page . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data"'); 
             echo xtc_draw_hidden_field('banners_group_id', $bInfo->banners_group_id);
               ?>
               <div style="padding:5px 10px 20px 5px;clear:both;">
@@ -443,6 +447,11 @@
                   </tr> 
                   <tr>
                     <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('new_banners_group'); ?></td>
+                  </tr>
+                  <tr>
+                    <td class="dataTableConfig col-left" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_STATUS; ?></td>
+                    <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('status', 'checkbox', ($bInfo->status == '1' ? true : false), 'style="width: 155px"'); ?></td>
+                    <td class="dataTableConfig col-right" style="border-right: 1px solid #ccc;">&nbsp;</td>
                   </tr> 
                   <tr>
                     <td class="dataTableConfig col-left" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
@@ -606,10 +615,10 @@
                           $bsort = 'banners_sort DESC';
                           break;
                         case 'group':
-                          $bsort = 'banners_group ASC';
+                          $bsort = 'banners_group ASC, banners_sort ASC';
                           break;
                         case 'group-desc':
-                          $bsort = 'banners_group DESC';
+                          $bsort = 'banners_group DESC, banners_sort ASC';
                           break;
                         case 'status':
                           $bsort = 'status ASC';
@@ -618,14 +627,15 @@
                           $bsort = 'status DESC';
                           break;
                         default:
-                          $bsort = 'banners_sort ASC';
+                          $bsort = 'banners_group ASC, banners_sort ASC';
                           break;
                       }
 
+                      // unique order, the page lookup for bID and the LIMIT query must agree
                       $banners_query_raw = "SELECT * 
                                               FROM " . TABLE_BANNERS . " 
                                              WHERE languages_id = '".(int)$_SESSION['languages_id']."'
-                                          ORDER BY ".$bsort;
+                                          ORDER BY ".$bsort.", banners_group_id ASC";
                       $banners_split = new splitPageResults($page, $page_max_display_results, $banners_query_raw, $banners_query_numrows, 'banners_group_id', 'bID');
                       $banners_query = xtc_db_query($banners_query_raw);
                       while ($banners = xtc_db_fetch_array($banners_query)) {
@@ -677,7 +687,7 @@
                   <div class="smallText pdg2 flt-r"><?php echo $banners_split->display_links($banners_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page', 'action', 'bID'))); ?></div>
                   <?php echo draw_input_per_page($PHP_SELF, $cfg_max_display_results_key, $page_max_display_results); ?>
                   <div class="clear"></div>
-                  <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'action=new') . '">' . BUTTON_NEW_BANNER . '</a>'; ?></div>
+                  <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, xtc_get_all_get_params_include(array('sorting')) . 'action=new') . '">' . BUTTON_NEW_BANNER . '</a>'; ?></div>
               
                 </td>
                 <?php
