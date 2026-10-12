@@ -208,10 +208,12 @@ class api_it_recht_kanzlei {
             @unlink($file_pdf_target_temp);
             $this->return_error('8');
           } else {
-            @unlink($file_pdf_target);
-            @copy($file_pdf_target_temp, $file_pdf_target);
-            @unlink($file_pdf_target_temp);
-            if (!is_file($file_pdf_target)) {
+            // rename replaces the old PDF in one step and keeps it if that fails
+            if (!@rename($file_pdf_target_temp, $file_pdf_target)
+                || md5_file($file_pdf_target) != $xml->rechtstext_pdf_md5hash
+                )
+            {
+              @unlink($file_pdf_target_temp);
               $this->return_error('7');
             }
           }
@@ -268,6 +270,12 @@ class api_it_recht_kanzlei {
             } else {
               xtc_db_perform(TABLE_CONTENT_MANAGER_CONTENT, $sql_data_array);
             }
+          } else {
+            // PDF output is disabled and the file was deleted above, drop the module download as well
+            xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER_CONTENT."
+                                WHERE content_manager_id = '".$content_group."'
+                                  AND languages_id = '".$languages_id."'
+                                  AND external = 1");
           }
           
           $content_text = $this->charset_decode_utf_8($xml->rechtstext_html.'<style>.itkanzlei_first_headline{display:none;}</style>');
