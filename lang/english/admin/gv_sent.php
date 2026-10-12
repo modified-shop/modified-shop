@@ -43,4 +43,5 @@ define('TEXT_INFO_IP_ADDRESS', 'IP Address:');
 define('TEXT_INFO_CUSTOMERS_ID', 'Customer Id:');
 define('TEXT_INFO_NOT_REDEEMED', 'Not Redeemed');
 define('TEXT_INFO_DELETE_INTRO', 'Delete this Gift Voucher?');
+define('TEXT_SEARCH_VOUCHER', 'Search (code, e-mail, sender):');
 ?>

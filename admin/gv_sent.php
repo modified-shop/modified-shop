@@ -38,6 +38,8 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+  $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
+  $search = (isset($_GET['search']) ? trim(xtc_db_prepare_input($_GET['search'])) : '');
   
   switch ($action) {
     case 'deleteconfirm':
@@ -76,24 +78,68 @@
         <div class="flt-l">
           <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
         </div>
+        <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
+          <?php echo xtc_draw_form('search', FILENAME_GV_SENT, '', 'get'); ?>
+          <?php echo TEXT_SEARCH_VOUCHER . ' ' . xtc_draw_input_field('search', $search, 'size="24"'); ?>
+          <?php echo (($sorting != '') ? xtc_draw_hidden_field('sorting', $sorting) : ''); ?>
+          </form>
+        </div>
+        <div class="clear"></div>
 
         <table class="tableCenter">
           <tr>
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_SENDERS_NAME; ?></td>
-                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_VOUCHER_VALUE; ?></td>
-                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_VOUCHER_CODE; ?></td>
-                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE_SENT; ?></td>		
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_SENDERS_NAME.xtc_sorting(FILENAME_GV_SENT, 'sender'); ?></td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_VOUCHER_VALUE.xtc_sorting(FILENAME_GV_SENT, 'value'); ?></td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_VOUCHER_CODE.xtc_sorting(FILENAME_GV_SENT, 'code'); ?></td>
+                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE_SENT.xtc_sorting(FILENAME_GV_SENT, 'date'); ?></td>		
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
+              switch ($sorting) {
+                case 'sender':
+                  $gv_sort = 'et.sent_firstname ASC, et.sent_lastname ASC';
+                  break;
+                case 'sender-desc':
+                  $gv_sort = 'et.sent_firstname DESC, et.sent_lastname DESC';
+                  break;
+                // percentages after fixed amounts, both directions
+                case 'value':
+                  $gv_sort = "c.coupon_type IN ('P', 'T') ASC, c.coupon_amount ASC";
+                  break;
+                case 'value-desc':
+                  $gv_sort = "c.coupon_type IN ('P', 'T') ASC, c.coupon_amount DESC";
+                  break;
+                case 'code':
+                  $gv_sort = 'c.coupon_code ASC';
+                  break;
+                case 'code-desc':
+                  $gv_sort = 'c.coupon_code DESC';
+                  break;
+                case 'date':
+                  $gv_sort = 'et.date_sent ASC';
+                  break;
+                default:
+                  $gv_sort = 'et.date_sent DESC';
+                  break;
+              }
+
+              $gv_where = '';
+              if ($search != '') {
+                $gv_search = xtc_db_input($search);
+                $gv_where = " WHERE c.coupon_code LIKE '%".$gv_search."%'
+                                 OR et.emailed_to LIKE '%".$gv_search."%'
+                                 OR CONCAT_WS(' ', et.sent_firstname, et.sent_lastname) LIKE '%".$gv_search."%'";
+              }
+
               $gv_query_raw = "SELECT *
                                  FROM " . TABLE_COUPONS . " c
                                  JOIN " . TABLE_COUPON_EMAIL_TRACK . " et 
                                       ON c.coupon_id = et.coupon_id
-                             ORDER BY et.date_sent DESC";
+                                      ".$gv_where."
+                             ORDER BY ".$gv_sort.", et.unique_id DESC";
                              
               $gv_split = new splitPageResults($page, $page_max_display_results, $gv_query_raw, $gv_query_numrows);
               $gv_query = xtc_db_query($gv_query_raw);
@@ -112,7 +158,7 @@
                 <td class="dataTableContent txta-c"><?php echo (($gv_list['coupon_type'] == 'P' || $gv_list['coupon_type'] == 'T') ? number_format($gv_list['coupon_amount'], 2).'%' : $currencies->format($gv_list['coupon_amount'])); ?></td>
                 <td class="dataTableContent txta-c"><?php echo $gv_list['coupon_code']; ?></td>
                 <td class="dataTableContent txta-r"><?php echo xtc_date_short($gv_list['date_sent']); ?></td>
-                <td class="dataTableContent txta-r"><?php if (isset($gInfo) && is_object($gInfo) && $gv_list['coupon_id'] == $gInfo->coupon_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_SENT, 'page=' . $page . '&gid=' . $gv_list['unique_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent txta-r"><?php if (isset($gInfo) && is_object($gInfo) && $gv_list['unique_id'] == $gInfo->unique_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list['unique_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
             <?php
               }
@@ -120,7 +166,7 @@
             </table>
               
             <div class="smallText pdg2 flt-l"><?php echo $gv_split->display_count($gv_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page', 'action', 'gid'))); ?></div>
             <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
           
           </td>
@@ -132,7 +178,7 @@
                 case 'delete':
                   $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . (($gInfo->coupon_type == 'P' || $gInfo->coupon_type == 'T') ? number_format($gInfo->coupon_amount, 2).'%' : $currencies->format($gInfo->coupon_amount)).'</b>');
                   $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button col-red" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,'action=deleteconfirm&gid='.$gInfo->coupon_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,'action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button col-red" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=deleteconfirm&gid='.$gInfo->coupon_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 
                 default:
@@ -153,7 +199,7 @@
                     $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem['customer_id']);
                   } else {
                     $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
-                    $contents[] = array('align' => 'center','text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,'action=delete&gid=' . $gInfo->unique_id,'NONSSL'). '">' . BUTTON_DELETE . '</a>');
+                    $contents[] = array('align' => 'center','text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=delete&gid=' . $gInfo->unique_id,'NONSSL'). '">' . BUTTON_DELETE . '</a>');
                   }
                   break;
               }

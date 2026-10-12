@@ -43,4 +43,5 @@ define('TEXT_INFO_IP_ADDRESS', 'IP-Adresse:');
 define('TEXT_INFO_CUSTOMERS_ID', 'Kunden-Nr.:');
 define('TEXT_INFO_NOT_REDEEMED', 'Nicht eingel&ouml;st');
 define('TEXT_INFO_DELETE_INTRO', 'Soll der Gutschein gel&ouml;scht werden?');
+define('TEXT_SEARCH_VOUCHER', 'Suche (Code, E-Mail, Absender):');
 ?>
