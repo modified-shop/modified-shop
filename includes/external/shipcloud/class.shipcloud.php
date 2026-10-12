@@ -303,9 +303,11 @@ class shipcloud {
     }
     $addr = end($matches);
 
-    // cut out only this match, the street name may contain the same digits
-    return array('street_name' => trim(substr_replace($street_address, '', $addr[0][1], strlen($addr[0][0])), ', '),
-                 'street_number' => trim($addr[0][0]),
+    $street_number = trim($addr[0][0]);
+
+    // cut out only the number at this match, the street name may contain the same digits
+    return array('street_name' => trim(substr_replace($street_address, '', $addr[0][1] + strpos($addr[0][0], $street_number), strlen($street_number)), ', '),
+                 'street_number' => $street_number,
                  );
   }
 
