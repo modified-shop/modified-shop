@@ -44,7 +44,8 @@ define('EMAIL_VERIFY_VALID_TIME', 24*60*60);
 // without outgoing mails nobody could confirm
 $email_verify = (defined('ACCOUNT_EMAIL_VERIFY') && in_array(ACCOUNT_EMAIL_VERIFY, array('optional', 'required')) && SEND_EMAILS == 'true') ? ACCOUNT_EMAIL_VERIFY : 'false';
 
-// confirm the email address, the link must work without a login and in any browser
+// confirm the email address, the link must work without a login and in any browser;
+// the link only shows the question, the button confirms: mail scanners open links on their own
 if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
   // the redirect after the next login must not open the used link again
   if (isset($_SESSION['tracking']['pageview_history'])) {
@@ -53,12 +54,19 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
     }));
   }
 
-  $verify_customers_id = isset($_GET['customers_id']) ? (int)$_GET['customers_id'] : 0;
-  $verify_key = (isset($_GET['key']) && is_string($_GET['key'])) ? $_GET['key'] : '';
+  require_once (DIR_FS_INC.'secure_form.inc.php');
+
+  $verify_post = ($_SERVER['REQUEST_METHOD'] == 'POST');
+  $verify_source = ($verify_post === true) ? $_POST : $_GET;
+  $verify_customers_id = isset($verify_source['customers_id']) ? (int)$verify_source['customers_id'] : 0;
+  $verify_key = (isset($verify_source['key']) && is_string($verify_source['key'])) ? $verify_source['key'] : '';
+  $verify_valid = false;
+  $verify_token_error = false;
   $verify_ok = false;
 
   if ($verify_customers_id > 0 && $verify_key != '') {
-    $check_customer_query = xtc_db_query("SELECT customers_email_verify_key,
+    $check_customer_query = xtc_db_query("SELECT customers_email_address,
+                                                 customers_email_verify_key,
                                                  customers_email_verify_time
                                             FROM ".TABLE_CUSTOMERS."
                                            WHERE customers_id = '".$verify_customers_id."'
@@ -72,15 +80,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
         && time() <= (int)strtotime((string)$check_customer['customers_email_verify_time']) + EMAIL_VERIFY_VALID_TIME
         )
     {
-      // only one of parallel requests with the same link confirms
-      xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
-                       SET customers_email_verified = now(),
-                           customers_email_verify_key = '',
-                           customers_email_verify_time = NULL,
-                           customers_email_verify_count = 0
-                     WHERE customers_id = '".$verify_customers_id."'
-                       AND customers_email_verify_key = '".xtc_db_input($check_customer['customers_email_verify_key'])."'");
-      $verify_ok = (xtc_db_affected_rows() == 1);
+      $verify_valid = true;
+      if ($verify_post === true && check_secure_form($_POST) === false) {
+        $verify_token_error = true;
+      } elseif ($verify_post === true) {
+        // only one of parallel requests with the same link confirms
+        xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                         SET customers_email_verified = now(),
+                             customers_email_verify_key = '',
+                             customers_email_verify_time = NULL,
+                             customers_email_verify_count = 0
+                       WHERE customers_id = '".$verify_customers_id."'
+                         AND customers_email_verify_key = '".xtc_db_input($check_customer['customers_email_verify_key'])."'");
+        $verify_ok = (xtc_db_affected_rows() == 1);
+      }
     }
   }
 
@@ -94,6 +107,47 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify_email') {
     }
     $messageStack->add_session('login', SUCCESS_EMAIL_VERIFIED, 'success');
     xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+  }
+
+  // a valid link shows the question with the button, a failed form token shows it again
+  if ($verify_valid === true && ($verify_post === false || $verify_token_error === true)) {
+    // the address of the page carries the key; before header.php, which sends the first output
+    header('Referrer-Policy: no-referrer');
+
+    $smarty = new Smarty();
+
+    $breadcrumb->add(NAVBAR_TITLE_CREATE_ACCOUNT, xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
+    $breadcrumb->add(TEXT_EMAIL_VERIFY_CONFIRM_HEADING);
+
+    require (DIR_WS_INCLUDES.'header.php');
+
+    $display_mode = 'account';
+    require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
+    if ($verify_token_error === true) {
+      $messageStack->add('email_verify', ENTRY_TOKEN_ERROR);
+      $smarty->assign('error_message', $messageStack->output('email_verify'));
+    }
+
+    // the page of the address change asks the same question
+    $smarty->assign('HEADING', TEXT_EMAIL_VERIFY_CONFIRM_HEADING);
+    $smarty->assign('SUBLINE', TEXT_EMAIL_VERIFY_CONFIRM_SUBLINE);
+    $smarty->assign('TEXT', sprintf(TEXT_EMAIL_VERIFY_CONFIRM_TEXT, encode_htmlspecialchars($check_customer['customers_email_address'])));
+    $smarty->assign('FORM_ACTION', xtc_draw_form('email_verify', xtc_href_link(FILENAME_CREATE_ACCOUNT, 'action=verify_email', 'SSL')).xtc_draw_hidden_field('customers_id', (string)$verify_customers_id).xtc_draw_hidden_field('key', $verify_key).secure_form('email_verify'));
+    $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
+    $smarty->assign('FORM_END', '</form>');
+    $smarty->assign('language', $_SESSION['language']);
+    $smarty->caching = 0;
+    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_edit_email_verify.html');
+
+    $smarty->assign('language', $_SESSION['language']);
+    $smarty->assign('main_content', $main_content);
+    $smarty->caching = 0;
+    if (!defined('RM'))
+      $smarty->load_filter('output', 'note');
+    $smarty->display(CURRENT_TEMPLATE.'/index.html');
+    include ('includes/application_bottom.php');
+    exit;
   }
 
   if (isset($_SESSION['customer_id'])) {
