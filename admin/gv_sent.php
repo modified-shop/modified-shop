@@ -128,7 +128,8 @@
 
               $gv_where = '';
               if ($search != '') {
-                $gv_search = xtc_db_input($search);
+                // splitPageResults finds ORDER BY, DISTINCT etc. inside literals; _ matches the space, _ci ignores case
+                $gv_search = xtc_db_input(str_replace(' ', '_', strtolower($search)));
                 $gv_where = " WHERE c.coupon_code LIKE '%".$gv_search."%'
                                  OR et.emailed_to LIKE '%".$gv_search."%'
                                  OR CONCAT_WS(' ', et.sent_firstname, et.sent_lastname) LIKE '%".$gv_search."%'";
