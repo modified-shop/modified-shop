@@ -117,8 +117,11 @@ class shipcloud {
       
       if ($request_array['service'] == 'returns') {
         $from = $request_array['to'];
-        $to = $request_array['from'];
-        $request_array['to'] = $to;
+        // without a shop sender shipcloud uses the default returns address of the account
+        unset($request_array['to']);
+        if (isset($request_array['from'])) {
+          $request_array['to'] = $request_array['from'];
+        }
         $request_array['from'] = $from;
         
         if (MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'shipcloud') {
