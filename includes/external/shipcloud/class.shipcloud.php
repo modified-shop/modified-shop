@@ -289,17 +289,23 @@ class shipcloud {
   
   
   private function parse_street_address($street_address) {
-    preg_match_all("! [0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER);
+    preg_match_all("! [0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
     if (count($matches) < 1) {
-      preg_match_all("/^([\d][a-z-\/\d]*)|[\s]+([\d][a-z-\/][\d]*)/i", $street_address, $matches, PREG_SET_ORDER);
+      preg_match_all("/^([\d][a-z-\/\d]*)|[\s]+([\d][a-z-\/][\d]*)/i", $street_address, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
     }
     if (count($matches) < 1) {
-      preg_match_all("![0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER);
+      preg_match_all("![0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+    }
+    if (count($matches) < 1) {
+      return array('street_name' => trim($street_address, ', '),
+                   'street_number' => '',
+                   );
     }
     $addr = end($matches);
 
-    return array('street_name' => trim(str_replace(trim($addr[0]), '', $street_address), ', '),
-                 'street_number' => trim($addr[0]),
+    // cut out only this match, the street name may contain the same digits
+    return array('street_name' => trim(substr_replace($street_address, '', $addr[0][1], strlen($addr[0][0])), ', '),
+                 'street_number' => trim($addr[0][0]),
                  );
   }
 
