@@ -237,7 +237,9 @@ class api_it_recht_kanzlei {
       
       $url = ((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CONTENT.'?coID='.$content_group.'&language='.$languages_code;
       if ($content_group != '') {
-        $check_query = xtc_db_query("SELECT content_text,
+        $check_query = xtc_db_query("SELECT content_title,
+                                            content_heading,
+                                            content_text,
                                             group_ids
                                        FROM ".TABLE_CONTENT_MANAGER." 
                                       WHERE content_group = '".$content_group."' 
@@ -271,22 +273,33 @@ class api_it_recht_kanzlei {
           }
           
           $content_text = $this->charset_decode_utf_8($xml->rechtstext_html.'<style>.itkanzlei_first_headline{display:none;}</style>');
-          if ($check['content_text'] == $content_text) {
+          $content_title = $this->charset_decode_utf_8($xml->rechtstext_title);
+          if ($check['content_text'] == $content_text
+              && $check['content_title'] == $content_title
+              && $check['content_heading'] == $content_title
+              )
+          {
             $this->return_success($url);
           } else {
             $sql_data_array = array(
               'content_text' => $content_text,
-              'content_title' => $this->charset_decode_utf_8($xml->rechtstext_title),
-              'content_heading' => $this->charset_decode_utf_8($xml->rechtstext_title),
+              'content_title' => $content_title,
+              'content_heading' => $content_title,
             );
             xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
             if (xtc_db_affected_rows() < 1) {
-              $check_content_query = xtc_db_query("SELECT content_text 
+              $check_content_query = xtc_db_query("SELECT content_title,
+                                                          content_heading,
+                                                          content_text
                                                      FROM ".TABLE_CONTENT_MANAGER." 
                                                     WHERE content_group = '".$content_group."' 
                                                       AND languages_id = '".$languages_id."'");
               $check_content = xtc_db_fetch_array($check_content_query);
-              if ($check_content['content_text'] != $sql_data_array['content_text']) {
+              if ($check_content['content_text'] != $sql_data_array['content_text']
+                  || $check_content['content_title'] != $sql_data_array['content_title']
+                  || $check_content['content_heading'] != $sql_data_array['content_heading']
+                  )
+              {
                 $this->return_error('99');
               }
             }
