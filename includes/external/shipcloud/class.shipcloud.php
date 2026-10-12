@@ -140,9 +140,15 @@ class shipcloud {
             
       if (!isset($params['quote'])) {
         $request = $this->do_request(json_encode($request_array));
-        if (is_array($request) && count($request) > 0) {
-          $messageStack->add_session(TEXT_LABEL_CREATED, 'success');
-          $this->save_label($request);
+        if (is_array($request)) {
+          // without the id the shipment can neither be tracked nor deleted
+          if (isset($request['id']) && is_string($request['id']) && $request['id'] != '') {
+            $messageStack->add_session(TEXT_LABEL_CREATED, 'success');
+            $this->save_label($request);
+          } else {
+            $messageStack->add_session(TEXT_LABEL_ERROR, 'warning');
+            $this->LoggingManager->log('WARNING', 'create_label', array('exception' => $request));
+          }
         }
       } else {
         unset($request_array['reference_number']);
@@ -176,6 +182,14 @@ class shipcloud {
 
 
   private function save_label($request) {    
+		// the shipment exists at shipcloud, keep it even without tracking number or label
+		foreach (array('carrier_tracking_no', 'label_url') as $key) {
+			if (!isset($request[$key]) || !is_scalar($request[$key])) {
+				$this->LoggingManager->log('WARNING', 'save_label', array('exception' => 'missing '.$key.' for shipment '.$request['id']));
+				$request[$key] = '';
+			}
+		}
+		
 		$sql_data_array = array('orders_id' => $this->order->info['order_id'],
 		                        'carrier_id' => $this->carrier_id,
 		                        'parcel_id' => $request['carrier_tracking_no'],
