@@ -44,6 +44,18 @@ function account_edit_mail_exists($name) {
   return (is_file($mail_path.'.html') && is_file($mail_path.'.txt'));
 }
 
+// the new address in a notice only as a hint, the mailbox of the old one is not confirmed
+function account_edit_email_mask($email_address) {
+  $parts = explode('@', (string)$email_address, 2);
+  if (count($parts) != 2) {
+    return '***';
+  }
+  $dot = strrpos($parts[1], '.');
+  $host = (($dot !== false) ? substr($parts[1], 0, $dot) : $parts[1]);
+  $tld = (($dot !== false) ? substr($parts[1], $dot) : '');
+  return mb_substr($parts[0], 0, 2).'***@'.mb_substr($host, 0, 2).'***'.$tld;
+}
+
 // the previous address learns of the change, without links or codes
 function account_edit_email_notify($email_old, $email_new) {
   if (!account_edit_mail_exists('email_change_notify_mail')) {
@@ -55,7 +67,7 @@ function account_edit_email_notify($email_old, $email_new) {
   $mail_smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
   $mail_smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
   $mail_smarty->assign('EMAIL_OLD', $email_old);
-  $mail_smarty->assign('EMAIL_NEW', $email_new);
+  $mail_smarty->assign('EMAIL_NEW', account_edit_email_mask($email_new));
   $mail_smarty->assign('CHANGE_TIME', xtc_datetime_short(date('Y-m-d H:i:s')));
   $mail_smarty->caching = 0;
 
@@ -344,7 +356,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   if ($_SESSION['account_type'] == '0') {
     $stored_customer_query = xtc_db_query("SELECT customers_email_address,
                                                   customers_password,
-                                                  customers_email_request_key
+                                                  customers_email_request_key,
+                                                  customers_email_request_time
                                              FROM ".TABLE_CUSTOMERS."
                                             WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     $stored_customer = xtc_db_fetch_array($stored_customer_query);
@@ -398,6 +411,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 
     $email_change_withdrawn = false;
     $email_change_time = 0;
+    $email_change_notify = false;
     if ($_SESSION['account_type'] == '0') {
       if ($email_change_verify === true && $email_changed === true) {
         // regular accounts get the new address only after the confirmation link
@@ -415,7 +429,12 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
         $email_change_time = time();
         $sql_data_array['customers_email_address_new'] = '';
         $sql_data_array['customers_email_request_key'] = '';
-        $sql_data_array['customers_email_request_time'] = 'null';
+        // one notice per pause like the link, otherwise each change mails the address typed before
+        $email_change_notify = ($stored_customer['customers_email_request_time'] == ''
+                                || (int)strtotime((string)$stored_customer['customers_email_request_time']) <= time() - EMAIL_CHANGE_REQUEST_GAP);
+        if ($email_change_notify === true) {
+          $sql_data_array['customers_email_request_time'] = 'now()';
+        }
         $sql_data_array['password_request_key'] = '';
         $sql_data_array['password_request_time'] = 'null';
         $sql_data_array['customers_password_time'] = $email_change_time;
@@ -458,7 +477,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
         xtc_session_recreate();
       }
       $_SESSION['customer_time'] = $email_change_time;
-      account_edit_email_notify($stored_customer['customers_email_address'], $email_address);
+      if ($email_change_notify === true) {
+        account_edit_email_notify($stored_customer['customers_email_address'], $email_address);
+      }
     }
 
     if ($email_change_withdrawn === true && $customers_updated === true) {
