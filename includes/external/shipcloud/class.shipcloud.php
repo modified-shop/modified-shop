@@ -26,6 +26,22 @@ class shipcloud {
   const SC_URL_PICKUP = 'https://api.shipcloud.io/v1/pickup_requests/';
   const SC_URL_CARRIERS = 'api.shipcloud.io/v1/carriers/';
   
+  public $order;
+  public $LoggingManager;
+  public $carrier_name;
+  public $length;
+  public $width;
+  public $height;
+  public $description_1;
+  public $description_2;
+  public $weight;
+  public $service;
+  public $type;
+  public $insurance;
+  public $carrier;
+  public $carrier_id;
+  public $customs_declaration;
+  
   
   function __construct($oID = '') {
     if ($oID != '') {
