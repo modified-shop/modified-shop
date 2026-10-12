@@ -815,6 +815,14 @@ function GetTableData($table) {
     $dump['nr']++;
     $dump['table_offset'] = 0;
   }
+
+  // an import into an open session must not leave the checks disabled
+  if ($dump['table_offset'] == 0
+      && ((isset($dump['single_files']) && $dump['single_files'] == 'yes') || $dump['nr'] >= $dump['num_tables'])
+      )
+  {
+    WriteToDumpFile('SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;' . "\n");
+  }
 }
 
 function getBackupData($file, $dir = '') {

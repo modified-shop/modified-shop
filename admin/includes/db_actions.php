@@ -89,7 +89,7 @@
       $schema .= '-- Charset: ' . ((isset($dump['utf8-convert'])) ? 'utf8' : $charset) . "\n";
 
       // tables are dumped alphabetically, foreign keys of module tables would block the import
-      $foreign_key_checks = "\n" . 'SET FOREIGN_KEY_CHECKS=0;' . "\n\n";
+      $foreign_key_checks = "\n" . 'SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;' . "\n\n";
       $dump['schema'] = $schema . $foreign_key_checks;
       
       $file = 'dbd_' . DB_DATABASE . '_' . date('Y-m-d-H-i-s');
@@ -190,7 +190,7 @@
 
       $_SESSION['dump'] = $dump;
 
-      WriteToDumpFile($schema.$table_info.$foreign_key_checks);
+      WriteToDumpFile($schema.$table_info.((isset($dump['single_files'])) ? '' : $foreign_key_checks));
       break;
   
     case 'readdb':
@@ -356,8 +356,8 @@
       $restore['EOB'] = false;
       $restore['fileEOF'] = false;
 
-      // each step runs on a new connection, so the setting from the dump header is gone
-      xtc_db_query('SET FOREIGN_KEY_CHECKS=0');
+      // each step runs on a new connection without the settings from the dump header
+      xtc_db_query('SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0');
             
       // Disable Keys of actual table to speed up restoring
       if (isset($restore['tables_to_restore']) && is_array($restore['tables_to_restore']) && sizeof($restore['tables_to_restore']) == 0 && ($restore['actual_table'] > '' && $restore['actual_table'] != 'unbekannt')) {
