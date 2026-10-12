@@ -10,7 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  header('Referrer-Policy: same-origin');
+  // a page with a key in its address sends a stricter policy before header.php, it stays
+  if (count(preg_grep('/^Referrer-Policy:/i', headers_list())) == 0) {
+    header('Referrer-Policy: same-origin');
+  }
   header('X-Frame-Options: SAMEORIGIN');
   header('X-XSS-Protection: 1');
   header('X-Content-Type-Options: nosniff');
