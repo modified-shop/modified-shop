@@ -5,11 +5,10 @@
  * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
  * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
-// BOF - Tomcraft - 2026-10-12 - Preserve service constants already loaded by the callback
+// Preserve service constants already loaded by the callback
 if (!defined('MODULE_PAYMENT_MCP_SERVICE_TEXT_TITLE')) {
   include_once(dirname(__FILE__).'/mcp_service.php');
 }
-// EOF - Tomcraft - 2026-10-12 - Preserve service constants already loaded by the callback
 define('MODULE_PAYMENT_MCP_PAYSAFECARD_TEXT_DESCRIPTION', 'micropayment&trade; paysafecard Module
 <br /><br />
 Links<br />
