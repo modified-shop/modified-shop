@@ -59,10 +59,12 @@
                   <td>{$item_plan.Amount|number_format:"2":",":""} {$item_data.Currency}</td>
                 </tr>
                 {/foreach}
+                {if isset($item_data.StandardCreditInformationUrl) && $item_data.StandardCreditInformationUrl != ''}
                 <tr>
                   <td class="label">{$smarty.const.TEXT_CONTRACT}:</td>
                   <td><a target="_blank" href="{$item_data.StandardCreditInformationUrl|escape:'html'}">{$smarty.const.TEXT_DOWNLOAD_CONTRACT}</a></td>
                 </tr>
+                {/if}
               </table>
               </div>
             </div>

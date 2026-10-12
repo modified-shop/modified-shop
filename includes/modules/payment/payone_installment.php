@@ -18,6 +18,7 @@
    ---------------------------------------------------------------------------------------*/
 
 require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePayment.php');
+require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePdf.php');
 
 class payone_installment extends PayonePayment {
 
@@ -162,19 +163,18 @@ class payone_installment extends PayonePayment {
   function save_contract($active_genre_identifier, $url, $id) {
     $filename = 'contract_'.strtolower($_SESSION[$this->code]['workorderid']).'_'.$id.'.pdf';
     
-    $fp = fopen(SQL_CACHEDIR.$filename, 'w+');
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FILE, $fp);
-    curl_setopt($ch, CURLOPT_USERPWD, $this->config[$active_genre_identifier]['genre_specific']['payolution']['channelid'].':'.$this->config[$active_genre_identifier]['genre_specific']['payolution']['channelpwd']);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-    curl_exec($ch);
-    fclose($fp);
-    
-    // cache/ is not public, the key binds the link to this calculation's file
     $key = md5($filename);
+    $userpwd = $this->config[$active_genre_identifier]['genre_specific']['payolution']['channelid'].':'.$this->config[$active_genre_identifier]['genre_specific']['payolution']['channelpwd'];
+
+    if (!PayonePdf::download($url, SQL_CACHEDIR.$filename, $userpwd)
+        && !PayonePdf::isValid(SQL_CACHEDIR.$filename)
+        )
+    {
+      unset($_SESSION[$this->code]['contracts'][$key]);
+      return '';
+    }
+
+    // cache/ is not public, the key binds the link to this calculation's file
     $_SESSION[$this->code]['contracts'][$key] = $filename;
 
     return str_replace('&amp;', '&', xtc_href_link('ajax.php', 'ext=get_payone_pdf&doc=contract&key='.$key, 'SSL'));

@@ -18,6 +18,7 @@
    ---------------------------------------------------------------------------------------*/
 
 require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePayment.php');
+require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePdf.php');
 
 class payone_elv extends PayonePayment {
 
@@ -150,21 +151,24 @@ class payone_elv extends PayonePayment {
   function get_sepa_madate() {
     $filename = 'sepa_mandate.pdf';
     
-    if (!is_file(SQL_CACHEDIR.$filename)
+    if (!PayonePdf::isValid(SQL_CACHEDIR.$filename)
         || filemtime(SQL_CACHEDIR.$filename) < (time() - 86400)
         )
     {
-      $fp = fopen(SQL_CACHEDIR.$filename, 'w+');
-
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $this->payolution_mandate_url);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_FILE, $fp);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-      curl_exec($ch);
-      fclose($fp);
+      if (!PayonePdf::download($this->payolution_mandate_url, SQL_CACHEDIR.$filename)
+          && PayonePdf::isValid(SQL_CACHEDIR.$filename)
+          )
+      {
+        // keep the last valid mandate, next refresh in a day instead of on every page view
+        touch(SQL_CACHEDIR.$filename);
+      }
     }
     
+    if (!PayonePdf::isValid(SQL_CACHEDIR.$filename)) {
+      unset($_SESSION['payone_elv_sepa_mandate_pdf']);
+      return $this->payolution_mandate_url;
+    }
+
     // cache/ is not public, the mandate is only delivered to this session
     $_SESSION['payone_elv_sepa_mandate_pdf'] = $filename;
 

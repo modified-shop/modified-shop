@@ -10,6 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+require_once(DIR_FS_EXTERNAL.'payone/classes/PayonePdf.php');
+
 function get_payone_pdf() {
   $doc = ((isset($_GET['doc'])) ? $_GET['doc'] : '');
 
@@ -29,7 +31,7 @@ function get_payone_pdf() {
   }
 
   $filename = basename($filename);
-  if ($filename == '' || !is_file(SQL_CACHEDIR.$filename)) {
+  if ($filename == '' || !PayonePdf::isValid(SQL_CACHEDIR.$filename)) {
     header('HTTP/1.1 404 Not Found');
     exit();
   }
