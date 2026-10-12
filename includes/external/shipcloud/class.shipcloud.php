@@ -140,15 +140,14 @@ class shipcloud {
             
       if (!isset($params['quote'])) {
         $request = $this->do_request(json_encode($request_array));
-        if (is_array($request)) {
-          // without the id the shipment can neither be tracked nor deleted
-          if (isset($request['id']) && is_string($request['id']) && $request['id'] != '') {
-            $messageStack->add_session(TEXT_LABEL_CREATED, 'success');
-            $this->save_label($request);
-          } else {
-            $messageStack->add_session(TEXT_LABEL_ERROR, 'warning');
-            $this->LoggingManager->log('WARNING', 'create_label', array('exception' => $request));
-          }
+        // without the id the shipment can neither be tracked nor deleted
+        if (is_array($request) && isset($request['id']) && is_string($request['id']) && trim($request['id']) != '') {
+          $messageStack->add_session(TEXT_LABEL_CREATED, 'success');
+          $this->save_label($request);
+        } else {
+          // a lost or broken response may still stand for a created and charged label
+          $messageStack->add_session(TEXT_LABEL_ERROR, 'warning');
+          $this->LoggingManager->log('WARNING', 'create_label', array('exception' => $request));
         }
       } else {
         unset($request_array['reference_number']);
