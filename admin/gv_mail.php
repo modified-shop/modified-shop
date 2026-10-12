@@ -155,7 +155,7 @@
 
         $subject = xtc_db_prepare_input($_POST['subject']);
         $message = xtc_db_prepare_input($_POST['message']);
-        $coupon_amount = xtc_db_prepare_input($_POST['coupon_amount']);
+        $coupon_amount = xtc_db_prepare_input(((isset($_POST['coupon_amount'])) ? $_POST['coupon_amount'] : ''));
         $coupon_code = '';
         
         if (isset($_GET['cid']) && $_GET['cid'] != '') {
@@ -166,21 +166,21 @@
           $coupon_code = $coupon['coupon_code'];
 
           $coupon_amount = '';
-          if ($coupon_result['coupon_type'] == 'S') {
+          if ($coupon['coupon_type'] == 'S') {
             $coupon_amount = COUPON_INFO . COUPON_FREE_SHIPPING;
           } else {
             $coupon_amount = COUPON_INFO . $currencies->format($coupon['coupon_amount']) . ' ';
           }
-          if ($coupon_result['coupon_type'] == 'P') {
+          if ($coupon['coupon_type'] == 'P') {
             $coupon_amount = COUPON_INFO . number_format($coupon['coupon_amount'], 2) . '% ';
           }
-          if ($coupon_result['coupon_type'] == 'T') {
+          if ($coupon['coupon_type'] == 'T') {
             $coupon_amount = COUPON_INFO . COUPON_FREE_SHIPPING . ' | '. number_format($coupon['coupon_amount'], 2) . '% ';
           }
-          if ($coupon_result['coupon_minimum_order'] > 0) {
+          if ($coupon['coupon_minimum_order'] > 0) {
             $coupon_amount .= COUPON_MINORDER_INFO . $currencies->format($coupon['coupon_minimum_order']) . ' ';
           }
-          if (trim($coupon_result['restrict_to_products']) != '' || trim($coupon['restrict_to_categories']) != '' || trim($coupon['restrict_to_manufacturers']) != '') {
+          if (trim($coupon['restrict_to_products']) != '' || trim($coupon['restrict_to_categories']) != '' || trim($coupon['restrict_to_manufacturers']) != '') {
             $coupon_amount .= COUPON_RESTRICT_INFO;
           }
           
@@ -222,7 +222,7 @@
           xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'cID')).'action=edit'));
         }
         if (isset($_GET['cid']) && $_GET['cid'] != '') {
-          xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cid')).'cid='.(int)$_GET['cid']));
+          xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cid')).'cID='.(int)$_GET['cid']));
         }
         xtc_redirect(xtc_href_link(FILENAME_GV_MAIL, xtc_get_all_get_params(array('action', 'cID'))));
       }
@@ -387,7 +387,7 @@
               <?php } ?>
 
               <?php if (isset($_GET['cid']) && $_GET['cid'] != '') { ?>
-              <div class="smallText flt-l mrg5"><?php echo '<a class="button" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cid')).'cid='.(int)$_GET['cid']) . '"/>' . BUTTON_BACK . '</a>'; ?></div>
+              <div class="smallText flt-l mrg5"><?php echo '<a class="button" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cid')).'cID='.(int)$_GET['cid']) . '"/>' . BUTTON_BACK . '</a>'; ?></div>
               <?php } ?>
               
               <div class="smallText mrg5 txta-r"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
