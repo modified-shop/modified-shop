@@ -48,10 +48,12 @@
 
   // set application wide parameters
   define('DB_CACHE', 'false');
+  // the restore shows SQL errors itself, the error mail would query tables that are being restored
+  define('EMAIL_SQL_ERRORS', 'false');
   $duplicate_configuration = array();
   $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION . '');
   while ($configuration = xtc_db_fetch_array($configuration_query)) {
-    if ($configuration['cfgKey'] != 'DB_CACHE' && $configuration['cfgKey'] != 'STORE_DB_TRANSACTIONS') {
+    if ($configuration['cfgKey'] != 'DB_CACHE' && $configuration['cfgKey'] != 'STORE_DB_TRANSACTIONS' && $configuration['cfgKey'] != 'EMAIL_SQL_ERRORS') {
       if (!defined($configuration['cfgKey'])) {
         define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
       } else {
