@@ -165,10 +165,13 @@ class protectedshops {
     if (isset($this->content['DocumentDate']) && is_array($this->content['DocumentDate'])) {
       $i=0;
       foreach ($this->content['DocumentDate'] as $type => $date) {
-        define('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type).'_TITLE', '<hr noshade>' . (($i==0) ? 'Hinweis: </b>Die PDF Dateien k&ouml;nnen auch als Anhang zur Bestellbest&auml;tigung mitgesendet werden. Dazu einfach den Speicherort in den eMail Optionen bei "E-Mail Anh&auml;nge f&uuml;r Bestellungen" verwenden.<br/><br/><b>' : '') . 'Rechtstext '.$type);
-        define('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type).'_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.');
-        define('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type).'_TITLE',  $type.' als PDF');
-        define('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type).'_DESC', 'Angabe ob der '.$type.' als PDF verf&uuml;gbar sein soll.<br/>Speicherort: /media/content/ps_'.strtolower($type).'.pdf');
+        // keys() runs several times per request
+        if (!defined('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type).'_TITLE')) {
+          define('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type).'_TITLE', '<hr noshade>' . (($i==0) ? 'Hinweis: </b>Die PDF Dateien k&ouml;nnen auch als Anhang zur Bestellbest&auml;tigung mitgesendet werden. Dazu einfach den Speicherort in den eMail Optionen bei "E-Mail Anh&auml;nge f&uuml;r Bestellungen" verwenden.<br/><br/><b>' : '') . 'Rechtstext '.$type);
+          define('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type).'_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.');
+          define('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type).'_TITLE',  $type.' als PDF');
+          define('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type).'_DESC', 'Angabe ob der '.$type.' als PDF verf&uuml;gbar sein soll.<br/>Speicherort: /media/content/ps_'.strtolower($type).'.pdf');
+        }
         $keys[] = 'MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type);
         $keys[] = 'MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type);
         $i++;
