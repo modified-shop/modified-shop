@@ -133,9 +133,14 @@ class janolaw_content {
           $module_name = str_replace('model-withdrawal-form', 'withdrawal', $name);
 
           if ($module_name == 'withdrawal' && self::get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
-            $this->withdrawal_content[$key] = $content;
+            $content_withdrawal = $content;
           }
           if ($module_name == 'revocation' && self::get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
+            if (!isset($this->withdrawal_content[$key])) {
+              // keep the combined content until the withdrawal form is loaded too
+              trigger_error('Could not combine janolaw document: '.$name.' ('.$language.')', E_USER_WARNING);
+              continue;
+            }
             $content .= '<br /><br />'.$this->withdrawal_content[$key];
           }  
           if (self::get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True'
@@ -179,6 +184,11 @@ class janolaw_content {
             }
           }
                     
+          // combine only a withdrawal form whose pdf download did not fail
+          if ($module_name == 'withdrawal' && self::get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
+            $this->withdrawal_content[$key] = $content_withdrawal;
+          }
+
           // save data
           if ($coID != '') {
             if (strtolower(self::get_configuration('MODULE_JANOLAW_TYPE')) == 'database') {
