@@ -140,8 +140,10 @@ class api_it_recht_kanzlei {
       {
         $this->return_error('18');
       }
+      // the name becomes a file name in the PDF storage directory, no paths or hidden files
       if (!isset($xml->rechtstext_pdf_filenamebase_suggestion) 
           || $xml->rechtstext_pdf_filenamebase_suggestion == ''
+          || preg_match('/[\/\\\\\x00-\x1F\x7F]|^\./', (string)$xml->rechtstext_pdf_filenamebase_suggestion)
           )
       {
         $this->return_error('19');
