@@ -282,11 +282,11 @@ class LoggingManager implements \Psr\Log\LoggerInterface
             } catch (\Throwable $e) {
                 throw new \RuntimeException("Could not open log file {$logfile} for writing to SimpleLog channel {$this->channel}!", 0, $e);
             }
-        }
 
-        // Log to stdout if option set to do so.
-        if ($this->stdout) {
-            print($log_line);
+            // Log to stdout if option set to do so.
+            if ($this->stdout) {
+                print($logline);
+            }
         }
     }
 
