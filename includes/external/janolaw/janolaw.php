@@ -202,7 +202,7 @@ class janolaw_content {
               xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='".(int)$coID."' and languages_id='".$value['id']."'");
             } else {
               // write content to file
-              $filename = $this->document_name[strtoupper($language)][$name] . '.' . $this->format;
+              $filename = $this->document_name[strtoupper($language)][$module_name] . '.' . $this->format;
               $file = DIR_FS_CATALOG . 'media/content/'. $filename;
               $fp = @fopen($file, 'w+');
               if (is_resource($fp)) {
