@@ -31,6 +31,7 @@
     require_once (DIR_FS_INC.'xtc_withdraw_attempts_count.inc.php');
     require_once (DIR_FS_INC.'xtc_withdraw_attempts_add.inc.php');
     require_once (DIR_FS_INC.'xtc_withdraw_attempts_reset.inc.php');
+    require_once (DIR_FS_INC.'xtc_withdraw_allowed.inc.php');
   
     // include needed classes
     require_once(DIR_WS_CLASSES.'modified_captcha.php');
@@ -60,6 +61,25 @@
     }
     
     $error = false;
+
+    // Recheck stored sessions before rendering, sending a mail or recording a withdrawal.
+    if (isset($_REQUEST['oID'])
+        && isset($_SESSION['withdraw'][(int)$_REQUEST['oID']])
+        && $_SESSION['withdraw'][(int)$_REQUEST['oID']]['valid'] === true
+        && defined('MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS')
+        && trim(MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS) !== ''
+        )
+    {
+      $group_query = xtc_db_query("SELECT customers_status
+                                     FROM ".TABLE_ORDERS."
+                                    WHERE orders_id = '".(int)$_REQUEST['oID']."'");
+      $group_order = xtc_db_fetch_array($group_query);
+      if (!$group_order || !xtc_withdraw_allowed($group_order['customers_status'])) {
+        unset($_SESSION['withdraw'][(int)$_REQUEST['oID']]);
+        $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
+        xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key', 'oID'))));
+      }
+    }
     
     switch ($action) {
       case 'auth':
@@ -162,6 +182,11 @@
           } else {
             $orders = xtc_db_fetch_array($orders_query);
 
+            if (!xtc_withdraw_allowed($orders['customers_status'])) {
+              $messageStack->add('withdraw', ENTRY_TOKEN_ERROR);
+              break;
+            }
+
             xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_ATTEMPTS."
                                 WHERE orders_withdraw_attempts_id = '".(int)$withdraw_attempt_id."'");
             xtc_withdraw_attempts_reset($withdraw_email);
@@ -198,6 +223,11 @@
                                            AND customers_id = '".(int)$_SESSION['customer_id']."'");
           if (xtc_db_num_rows($orders_query) > 0) {
             $orders = xtc_db_fetch_array($orders_query);
+
+            if (!xtc_withdraw_allowed($orders['customers_status'])) {
+              $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
+              xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'oID'))));
+            }
 
             $_SESSION['withdraw'][(int)$_REQUEST['oID']] = array(
               'valid' => true,
@@ -246,6 +276,11 @@
                                            WHERE orders_id = '".$orders_id."'");
             if (xtc_db_num_rows($orders_query) > 0) {
               $orders = xtc_db_fetch_array($orders_query);
+
+              if (!xtc_withdraw_allowed($orders['customers_status'])) {
+                $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
+                xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key', 'oID'))));
+              }
 
               $_SESSION['withdraw'][$orders_id] = array(
                 'valid' => true,

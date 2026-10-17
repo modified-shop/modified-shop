@@ -16,6 +16,9 @@
   define('MODULE_WITHDRAW_STATUS_TITLE', 'Activate Module?');
   define('MODULE_WITHDRAW_STATUS_DESC', 'Activate Withdrawal form');
 
+  define('MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS_TITLE', 'B2B customer groups');
+  define('MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS_DESC', 'Exclude orders placed by these customer groups from the withdrawal form. The customer group stored with the order applies, even after a later group change. Without a selection no customer groups are excluded.');
+
   define('MODULE_WITHDRAW_CAPTCHA_TITLE', 'Captcha');
   define('MODULE_WITHDRAW_CAPTCHA_DESC', 'Use a Captcha for the withdrawal form?');
 

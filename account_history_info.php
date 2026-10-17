@@ -150,6 +150,8 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
 
 // withdrawn positions, same overview as in the admin order view
 if (defined('MODULE_WITHDRAW_STATUS') && MODULE_WITHDRAW_STATUS == 'true') {
+  require_once(DIR_FS_INC.'xtc_withdraw_allowed.inc.php');
+
   $withdraw_products_array = array();
   $withdraw_query = xtc_db_query("SELECT op.products_name,
                                          op.products_model,
@@ -192,7 +194,11 @@ if (defined('MODULE_WITHDRAW_STATUS') && MODULE_WITHDRAW_STATUS == 'true') {
   }
 
   // straight into the verified form, the login already identifies the customer
-  if (defined('MODULE_WITHDRAW_CONTENT') && (int)MODULE_WITHDRAW_CONTENT > 0) {
+  if (defined('MODULE_WITHDRAW_CONTENT')
+      && (int)MODULE_WITHDRAW_CONTENT > 0
+      && xtc_withdraw_allowed($order->info['status'])
+      )
+  {
     // products_quantity has to be selected, HAVING cannot reach a column that is neither selected nor grouped
     $open_query = xtc_db_query("SELECT op.orders_products_id,
                                        op.products_quantity,

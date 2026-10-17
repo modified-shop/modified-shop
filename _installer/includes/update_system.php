@@ -596,6 +596,20 @@
 
   // withdrawal form
   if (defined('MODULE_WITHDRAW_STATUS')) {
+    $check_query = xtc_db_query("SELECT configuration_id
+                                  FROM ".TABLE_CONFIGURATION."
+                                 WHERE configuration_key = 'MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS'");
+    if (xtc_db_num_rows($check_query) < 1) {
+      xtc_db_perform(TABLE_CONFIGURATION, array(
+        'configuration_key' => 'MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS',
+        'configuration_value' => '',
+        'configuration_group_id' => '6',
+        'sort_order' => '2',
+        'set_function' => 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), \'chr(44)\',',
+        'date_added' => 'now()',
+      ));
+    }
+
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_ORDERS_WITHDRAW_TOKEN." (
                    `orders_withdraw_token_id` int(11) NOT NULL AUTO_INCREMENT,
                    `orders_id` int(11) NOT NULL,
