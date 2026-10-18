@@ -740,6 +740,7 @@ define('TEXT_WITHDRAW_VERIFY_INFO', 'We have just sent you an email to confirm y
 define('TEXT_WITHDRAW_INFO_SHORT', 'Your order %s');
 define('TEXT_WITHDRAW_VERIFY_WAIT', 'We recently sent you an email with a confirmation link. Please check your inbox, including the spam folder, and wait a few minutes before requesting another email.');
 define('TEXT_WITHDRAW_VERIFY_MAIL_ERROR', 'The email with the confirmation link could not be sent. Please try again.');
+define('TEXT_WITHDRAW_B2B_EXCLUDED', 'The withdrawal form is not available for this business customer order (B2B). If you have any questions, please contact our customer service team.');
 define('TEXT_WITHDRAW_LOCKED', 'There were too many unsuccessful attempts. Please try again later.');
 define('TEXT_WITHDRAW_CAPTCHA_REQUIRED', 'Please also enter the security code.');
 define('ENTRY_WITHDRAW_PARTLY_ERROR', 'A partial withdrawal is only possible after your email address has been verified.');

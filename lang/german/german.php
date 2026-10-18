@@ -741,6 +741,7 @@ define('TEXT_WITHDRAW_VERIFY_INFO', 'Wir haben Ihnen soeben eine E-Mail zur Best
 define('TEXT_WITHDRAW_INFO_SHORT', 'Ihre Bestellung %s');
 define('TEXT_WITHDRAW_VERIFY_WAIT', 'Wir haben Ihnen k&uuml;rzlich bereits eine E-Mail mit einem Best&auml;tigungslink gesendet. Bitte pr&uuml;fen Sie Ihr Postfach, auch den Spam-Ordner, und warten Sie einige Minuten, bevor Sie eine weitere E-Mail anfordern.');
 define('TEXT_WITHDRAW_VERIFY_MAIL_ERROR', 'Die E-Mail mit dem Best&auml;tigungslink konnte nicht versendet werden. Bitte versuchen Sie es erneut.');
+define('TEXT_WITHDRAW_B2B_EXCLUDED', 'F&uuml;r diese Gesch&auml;ftskundenbestellung (B2B) steht das Widerrufsformular nicht zur Verf&uuml;gung. Bitte wenden Sie sich bei Fragen an unseren Kundenservice.');
 define('TEXT_WITHDRAW_LOCKED', 'Es gab zu viele erfolglose Versuche. Bitte versuchen Sie es sp&auml;ter erneut.');
 define('TEXT_WITHDRAW_CAPTCHA_REQUIRED', 'Bitte geben Sie zus&auml;tzlich den Sicherheitscode ein.');
 define('ENTRY_WITHDRAW_PARTLY_ERROR', 'Ein Teilwiderruf ist erst nach der Best&auml;tigung Ihrer E-Mail-Adresse m&ouml;glich.');

@@ -76,7 +76,7 @@
       $group_order = xtc_db_fetch_array($group_query);
       if (!$group_order || !xtc_withdraw_allowed($group_order['customers_status'])) {
         unset($_SESSION['withdraw'][(int)$_REQUEST['oID']]);
-        $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
+        $messageStack->add_session('withdraw', ($group_order ? TEXT_WITHDRAW_B2B_EXCLUDED : ENTRY_TOKEN_ERROR));
         xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key', 'oID'))));
       }
     }
@@ -183,7 +183,7 @@
             $orders = xtc_db_fetch_array($orders_query);
 
             if (!xtc_withdraw_allowed($orders['customers_status'])) {
-              $messageStack->add('withdraw', ENTRY_TOKEN_ERROR);
+              $messageStack->add('withdraw', TEXT_WITHDRAW_B2B_EXCLUDED);
               break;
             }
 
@@ -225,7 +225,7 @@
             $orders = xtc_db_fetch_array($orders_query);
 
             if (!xtc_withdraw_allowed($orders['customers_status'])) {
-              $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
+              $messageStack->add_session('withdraw', TEXT_WITHDRAW_B2B_EXCLUDED);
               xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'oID'))));
             }
 
@@ -278,7 +278,7 @@
               $orders = xtc_db_fetch_array($orders_query);
 
               if (!xtc_withdraw_allowed($orders['customers_status'])) {
-                $messageStack->add_session('withdraw', ENTRY_TOKEN_ERROR);
+                $messageStack->add_session('withdraw', TEXT_WITHDRAW_B2B_EXCLUDED);
                 xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'key', 'oID'))));
               }
 
