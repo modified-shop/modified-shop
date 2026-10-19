@@ -37,28 +37,6 @@
     }
     
     function process($file) {
-      if (isset($_POST['configuration']) && is_array($_POST['configuration'])) {
-        $groups = array();
-        if (isset($_POST['configuration']['MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS'])
-            && is_array($_POST['configuration']['MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS'])
-            )
-        {
-          foreach ($_POST['configuration']['MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS'] as $group) {
-            if (is_scalar($group) && ctype_digit(trim((string)$group)) && (int)$group > 0) {
-              $groups[] = (int)$group;
-            }
-          }
-        }
-        $groups = array_unique($groups);
-        sort($groups, SORT_NUMERIC);
-
-        // An empty checkbox selection must clear the previous B2B groups as well.
-        xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                         SET configuration_value = '".xtc_db_input(implode(',', $groups))."',
-                             last_modified = now()
-                       WHERE configuration_key = 'MODULE_WITHDRAW_B2B_CUSTOMERS_STATUS'");
-      }
-
       // the status is already saved when this runs, so read it from the database instead of the stale constant
       $status_query = xtc_db_query("SELECT configuration_value
                                       FROM ".TABLE_CONFIGURATION."

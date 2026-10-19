@@ -182,13 +182,15 @@
           } else {
             $orders = xtc_db_fetch_array($orders_query);
 
+            // A matched order is not a failed lookup, even when its group is excluded.
+            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_ATTEMPTS."
+                                WHERE orders_withdraw_attempts_id = '".(int)$withdraw_attempt_id."'");
+
             if (!xtc_withdraw_allowed($orders['customers_status'])) {
               $messageStack->add('withdraw', TEXT_WITHDRAW_B2B_EXCLUDED);
               break;
             }
 
-            xtc_db_query("DELETE FROM ".TABLE_ORDERS_WITHDRAW_ATTEMPTS."
-                                WHERE orders_withdraw_attempts_id = '".(int)$withdraw_attempt_id."'");
             xtc_withdraw_attempts_reset($withdraw_email);
 
             // owning the order while logged in identifies the customer just as well as the double opt-in does
