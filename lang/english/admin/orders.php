@@ -115,6 +115,7 @@ define('TEXT_PRODUCTS', 'Products');
 define('COMMENT_SEND_ORDER_BY_ADMIN' , 'Order confirmation is sent');
 define('BUTTON_ORDER_CONFIRMATION', 'Send order confirmation');
 define('SUCCESS_ORDER_SEND', 'Order confirmation sent successfully');
+define('ERROR_ORDER_SEND', 'The e-mail to the customer could not be sent');
 //EOF - web28 - 2010-03-20 - Send Order by Admin
 
 // web28 2010-12-07 add new defines

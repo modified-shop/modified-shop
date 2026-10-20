@@ -583,12 +583,15 @@ if (!$tmp) {
                                                  ORDER BY orders_status_history_id DESC 
                                                     LIMIT 1");
       $orders_status_history = xtc_db_fetch_array($orders_status_history_query);
-      
+    }
+    include(DIR_FS_CATALOG.'send_order.php');
+
+    // a failed confirmation did not notify the customer, one left to afterbuy did
+    if (SEND_EMAILS == 'true' && $send_order_customer_mail !== false) {
       xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY."
                        SET customer_notified = 1
                      WHERE orders_status_history_id = '".$orders_status_history['orders_status_history_id']."'");
     }
-    include(DIR_FS_CATALOG.'send_order.php');
   }
   
   // load the after_process function from the payment modules

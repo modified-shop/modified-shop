@@ -20,6 +20,9 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) {
   die('Direct Access to this location is not allowed.');
 }
 
+// for the caller: true sent, null left out on purpose, false failed or never tried
+$send_order_customer_mail = false;
+
 // check if customer is allowed to send this order!
 $order_query_check = xtc_db_query("SELECT customers_id
                                      FROM ".TABLE_ORDERS."
@@ -186,8 +189,11 @@ if ((isset($send_order_customer_id)
     }
   }
 
-  // send mail to admin
-  if (ORDER_EMAIL_SEND_COPY_TO_ADMIN == 'true') {
+  // send mail to admin, a retry of a failed confirmation sent it the first time already
+  if (ORDER_EMAIL_SEND_COPY_TO_ADMIN == 'true'
+      && !(isset($send_order_customer_only) && $send_order_customer_only === true)
+      )
+  {
     xtc_php_mail(EMAIL_BILLING_ADDRESS,
                  EMAIL_BILLING_NAME,
                  EMAIL_BILLING_ADDRESS,
@@ -205,6 +211,7 @@ if ((isset($send_order_customer_id)
   }
   
   // send mail to customer
+  $send_order_customer_mail = null;
   if (SEND_EMAILS == 'true' || (isset($send_by_admin) && $send_by_admin == true)) {
     // afterbuy sends the confirmation itself, a mail requested in the administration always
     // goes out, which is what send_order_mail() passes the flag on for
@@ -215,7 +222,7 @@ if ((isset($send_order_customer_id)
                         );
 
     if ($skip_order_mail === false) {
-      xtc_php_mail(EMAIL_BILLING_ADDRESS,
+      $send_order_customer_mail = xtc_php_mail(EMAIL_BILLING_ADDRESS,
                    EMAIL_BILLING_NAME,
                    $order->customer['email_address'],
                    $order->customer['firstname'].' '.$order->customer['lastname'],

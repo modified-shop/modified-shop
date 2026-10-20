@@ -12,8 +12,10 @@
 
   // sends the order confirmation outside of the checkout, for payment callbacks, tasks
   // and the administration. $force sends it even when SEND_EMAILS is off, which is what
-  // an explicit request from the administration means.
-  function send_order_mail($orders_id, $force = false) {
+  // an explicit request from the administration means. $customer_only leaves out the
+  // merchant copy, for a retry once the confirmation itself failed. False means the
+  // confirmation did not go out, true that it did or was left out on purpose.
+  function send_order_mail($orders_id, $force = false, $customer_only = false) {
     $orders_query = xtc_db_query("SELECT customers_id,
                                          customers_status,
                                          customers_country_iso_code_2,
@@ -62,6 +64,10 @@
       $send_by_admin = true;
     }
 
+    if ($customer_only === true) {
+      $send_order_customer_only = true;
+    }
+
     $smarty = new Smarty();
 
     // handed over as a variable: a customer written into the session would stay there if the request dies mid-mail
@@ -88,5 +94,5 @@
     $xtPrice = $context_backup['xtPrice'];
     $insert_id = $context_backup['insert_id'];
 
-    return true;
+    return ($send_order_customer_mail !== false);
   }

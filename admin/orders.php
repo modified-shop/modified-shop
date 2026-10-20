@@ -175,7 +175,7 @@ switch ($action) {
   case 'send':
   case 'send_order_mail':
     require_once(DIR_FS_INC.'send_order_mail.inc.php');
-    send_order_mail($oID, true);
+    $order_mail_sent = send_order_mail($oID, true);
 
     $orders_query = xtc_db_query("SELECT orders_status
                                     FROM ".TABLE_ORDERS."
@@ -184,6 +184,16 @@ switch ($action) {
       xtc_redirect(xtc_href_link(FILENAME_ORDERS));
     }
     $orders = xtc_db_fetch_array($orders_query);
+
+    // neither status nor history may claim a mail the customer never got
+    if ($order_mail_sent !== true) {
+      $messageStack->add_session(ERROR_ORDER_SEND, 'error');
+      if (isset($_GET['site']) && $_GET['site'] == 1) {
+        xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=edit'));
+      } else {
+        xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$oID));
+      }
+    }
 
     $orders_status_id = (($orders['orders_status'] < 1) ? DEFAULT_ORDERS_STATUS_ID : $orders['orders_status']);
     $comments = encode_utf8(decode_htmlentities(COMMENT_SEND_ORDER_BY_ADMIN));

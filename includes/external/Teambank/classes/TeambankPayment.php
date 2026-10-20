@@ -258,7 +258,7 @@
     }
     
     function after_process() {
-      global $insert_id;
+      global $insert_id, $send_order_customer_mail;
       
       if (isset($this->order_status) && $this->order_status) {
         $orders_query = xtc_db_query("SELECT *
@@ -300,9 +300,10 @@
           'technicalTbaId' => $_SESSION['easycredit']['storage']['transaction_id'],
         );
         if ($this->has_pending_support() === true) {
-          // an authorized order had its confirmation sent by the checkout
+          // an authorized order had its confirmation sent by the checkout, 2 hands one
+          // that failed there to the task, without the merchant copy that went out
           $sql_data_array['authorized'] = (($this->authorized === true) ? 1 : 0);
-          $sql_data_array['mail_sent'] = (($this->authorized === true) ? 1 : 0);
+          $sql_data_array['mail_sent'] = (($this->authorized === true) ? (($send_order_customer_mail === false) ? 2 : 1) : 0);
         }
         xtc_db_perform('easycredit', $sql_data_array);
       }
@@ -742,6 +743,8 @@
       // above looks at those any more, because the order no longer sits on the status
       // the selection asks for, so they get a pass of their own. It needs no provider:
       // the transaction is authorized, only the mail is owed.
+      // A confirmation the transport refused comes back here as well, on 2, since its
+      // merchant copy already went out, and the retry sends the confirmation alone.
       // The order has to still be the one this pass settled. A cancellation between
       // the failed send and now leaves it on another status with its totals zeroed,
       // and confirming that to the customer is the one thing worse than a late mail.
@@ -765,7 +768,7 @@
                                       JOIN ".TABLE_ORDERS." o
                                            ON o.orders_id = e.orders_id
                                      WHERE e.authorized = 1
-                                       AND e.mail_sent = 0
+                                       AND e.mail_sent IN (0, 2)
                                        AND (".implode("
                                             OR ", $settled).")
                                        AND ".$this->order_has_value('e.orders_id')."
@@ -779,7 +782,7 @@
         if (!in_array($unsent['payment_method'], $modules)) {
           continue;
         }
-        if ($this->claim_unsent_mail($unsent['orders_id'], $unsent['orders_status']) !== true) {
+        if ($this->claim_unsent_mail($unsent['orders_id'], $unsent['orders_status'], $unsent['mail_sent']) !== true) {
           continue;
         }
 
@@ -788,7 +791,10 @@
           $language_loaded = $unsent['payment_method'];
         }
 
-        if (send_order_mail($unsent['orders_id']) !== true) {
+        if (send_order_mail($unsent['orders_id'], false, ($unsent['mail_sent'] == 2)) !== true) {
+          xtc_db_query("UPDATE `easycredit`
+                           SET mail_sent = 2
+                         WHERE orders_id = '".(int)$unsent['orders_id']."'");
           continue;
         }
 
@@ -807,19 +813,20 @@
       }
     }
 
-    function claim_unsent_mail($orders_id, $orders_status) {
+    function claim_unsent_mail($orders_id, $orders_status, $mail_sent) {
       // Everything this pass depends on has to hold at the moment the row is taken,
       // not when the list was read: the mail for the row before this one takes as
       // long as a mail takes, and a cancellation lands in that gap. So the order
       // status joins mail_sent in the condition instead of being checked once up
-      // front, and a run that read the row earlier comes away empty.
+      // front, and a run that read the row earlier comes away empty. mail_sent has to
+      // be the value read, it decides whether the merchant copy goes out.
       xtc_db_query("UPDATE `easycredit` e,
                            ".TABLE_ORDERS." o
                        SET e.claimed = now()
                      WHERE o.orders_id = e.orders_id
                        AND e.orders_id = '".(int)$orders_id."'
                        AND e.authorized = 1
-                       AND e.mail_sent = 0
+                       AND e.mail_sent = '".(int)$mail_sent."'
                        AND o.orders_status = '".(int)$orders_status."'
                        AND ".$this->order_has_value('e.orders_id')."
                        AND (e.claimed IS NULL
@@ -955,6 +962,11 @@
       if ($sent === true) {
         xtc_db_query("UPDATE `easycredit`
                          SET mail_sent = 1
+                       WHERE orders_id = '".(int)$pending['orders_id']."'");
+      } elseif ($pending['mail_sent'] != 1) {
+        // the merchant copy is out, the unsent pass retries the confirmation alone
+        xtc_db_query("UPDATE `easycredit`
+                         SET mail_sent = 2
                        WHERE orders_id = '".(int)$pending['orders_id']."'");
       }
     }
