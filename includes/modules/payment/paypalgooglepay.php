@@ -20,6 +20,7 @@ class paypalgooglepay extends PayPalPaymentV2 {
   var $code;
   var $description;
   var $tmpOrders;
+  var $paypal_code;
 
   function __construct() {
     global $order;
