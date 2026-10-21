@@ -484,8 +484,8 @@ class imageLib {
 
 		// *** Get cropping co-ordinates
 		$cropArray = $this->getCropPlacing($optimalWidth, $optimalHeight, $newWidth, $newHeight, $cropPos);
-		$cropStartX = $cropArray['x'];
-		$cropStartY = $cropArray['y'];
+		$cropStartX = (int)$cropArray['x'];
+		$cropStartY = (int)$cropArray['y'];
 
 		// *** Crop this bad boy
 		$crop = imagecreatetruecolor($newWidth, $newHeight);
