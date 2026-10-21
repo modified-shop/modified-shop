@@ -330,13 +330,44 @@
 
     if ($session_data != '') {
       $variables = array();
-      $a = preg_split("/(\w+)\|/", $session_data, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-      for($i = 0, $n = count($a); $i < $n; $i = $i+2) {
-        $variables[$a[$i]] = unserialize($a[$i+1]);
+      $offset = 0;
+      $length = strlen($session_data);
+      // keys never contain "|", values may, so the value end comes from the serialize format
+      while ($offset < $length
+             && ($pos = strpos($session_data, '|', $offset)) !== false
+             && ($end = session_data_value_end($session_data, $pos + 1)) !== false
+             )
+      {
+        $variables[substr($session_data, $offset, $pos - $offset)] = unserialize(substr($session_data, $pos + 1, $end - $pos - 1));
+        $offset = $end;
       }
       return($variables);
     }
     return '';
+  }
+
+  function session_data_value_end($data, $offset) {
+    if (!preg_match('/\G(?:[NbidrR][^;]*;|[sE]:(\d+):"|(?:a|O:\d+:"[^"]*"):(\d+):\{|C:\d+:"[^"]*":(\d+):\{)/', $data, $match, PREG_UNMATCHED_AS_NULL, $offset)) {
+      return false;
+    }
+    $offset += strlen($match[0]);
+
+    if (isset($match[1])) {
+      $offset += (int)$match[1];
+      return ((substr($data, $offset, 2) == '";') ? $offset + 2 : false);
+    }
+    if (isset($match[2])) {
+      for ($i = 0, $n = 2 * (int)$match[2]; $i < $n; $i++) {
+        if (($offset = session_data_value_end($data, $offset)) === false) {
+          return false;
+        }
+      }
+    } elseif (isset($match[3])) {
+      $offset += (int)$match[3];
+    } else {
+      return $offset;
+    }
+    return ((substr($data, $offset, 1) == '}') ? $offset + 1 : false);
   }
 
   function suhosin_check() {
