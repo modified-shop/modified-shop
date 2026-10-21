@@ -111,35 +111,21 @@ class PayPalCommon extends PayPalAuth {
 
 
   function get_config($config_key, $cache = true) {
-    // the secret must not reach the file based sql cache, the cache directory may be public
-    if (strpos($config_key, 'PAYPAL_SECRET_') === 0) {
-      $cache = false;
-    }
-
     static $config_array;
     
     if (!is_array($config_array)) {
       $config_array = array();
     }
     
+    // no sql cache: a saved value applies at once and the secret stays out of the cache directory
     if (!isset($config_array[$config_key]) || $cache === false) {
       $config_array[$config_key] = '';
-      if ($cache === false) {
-        $config_query = xtc_db_query("SELECT config_value 
-                                        FROM ".TABLE_PAYPAL_CONFIG." 
-                                       WHERE config_key = '".xtc_db_input($config_key)."'");
-        if (xtc_db_num_rows($config_query) > 0) {
-          $config = xtc_db_fetch_array($config_query);
-          $config_array[$config_key] = $config['config_value'];
-        }
-      } else {
-        $config_query = xtDBquery("SELECT config_value 
-                                     FROM ".TABLE_PAYPAL_CONFIG." 
-                                    WHERE config_key = '".xtc_db_input($config_key)."'");
-        if (xtc_db_num_rows($config_query, true) > 0) {
-          $config = xtc_db_fetch_array($config_query, true);
-          $config_array[$config_key] = $config['config_value'];
-        }
+      $config_query = xtc_db_query("SELECT config_value 
+                                      FROM ".TABLE_PAYPAL_CONFIG." 
+                                     WHERE config_key = '".xtc_db_input($config_key)."'");
+      if (xtc_db_num_rows($config_query) > 0) {
+        $config = xtc_db_fetch_array($config_query);
+        $config_array[$config_key] = $config['config_value'];
       }
     }
     
