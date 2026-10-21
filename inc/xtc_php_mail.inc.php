@@ -288,7 +288,15 @@ function xtc_php_mail($from_email_address, $from_email_name,
       }
     };
 
-    if (!$mail->Send()) {
+    // the callback holds the mailer, left in place it would keep the mailer and its SMTP
+    // connection alive past this call
+    try {
+      $mail_sent = $mail->Send();
+    } finally {
+      $mail->action_function = $hook_action_function;
+    }
+
+    if (!$mail_sent) {
       trigger_error('Mailer Error - '.$mail->ErrorInfo, E_USER_WARNING);
       return $recipient_sent;
     }
