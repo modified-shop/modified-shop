@@ -273,9 +273,24 @@ function xtc_php_mail($from_email_address, $from_email_name,
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/php_mail/','php') as $file) require ($file);
   
   if ($sendmail === true) {
+    // SMTP fails Send() for a rejected bcc address too, while the addressee still gets the
+    // mail, so only the result for the addressee decides. A callback set by a hook still runs.
+    $recipient_sent = false;
+    $hook_action_function = $mail->action_function;
+    $mail->action_function = function ($is_sent, $to, ...$more) use ($mail, $hook_action_function, &$recipient_sent) {
+      foreach ($to as $address) {
+        if ($is_sent && in_array($address[0], array_column($mail->getToAddresses(), 0))) {
+          $recipient_sent = true;
+        }
+      }
+      if (!empty($hook_action_function) && is_callable($hook_action_function)) {
+        call_user_func($hook_action_function, $is_sent, $to, ...$more);
+      }
+    };
+
     if (!$mail->Send()) {
       trigger_error('Mailer Error - '.$mail->ErrorInfo, E_USER_WARNING);
-      return false;
+      return $recipient_sent;
     }
   }
   return true;
