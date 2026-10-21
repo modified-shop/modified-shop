@@ -94,12 +94,6 @@ require (DIR_WS_INCLUDES.'head.php');
                                     $cfgValue = $configuration['configuration_value'];
                                   }
 
-                                  if (((!$_GET['cID']) || (@$_GET['cID'] == $configuration['configuration_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
-                                    $cfg_extra_query = xtc_db_query("select configuration_key,configuration_value, date_added, last_modified, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_id = '" . $configuration['configuration_id'] . "'");
-                                    $cfg_extra = xtc_db_fetch_array($cfg_extra_query);
-                                    $cInfo_array = array_merge($configuration, $cfg_extra);
-                                    $cInfo = new objectInfo($cInfo_array);
-                                  }
                                   if ($configuration['set_function']) {
                                     eval('$value_field = ' . $configuration['set_function'] . var_export(encode_htmlspecialchars($configuration['configuration_value']), true) . ');');
                                   } else {
