@@ -16,6 +16,7 @@
 
   use Phpfastcache\CacheManager;
   use Phpfastcache\Config\ConfigurationOption;
+  use Phpfastcache\Drivers\Files\Config as FilesConfig;
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cache/','php') as $file) require_once ($file);
 
@@ -66,7 +67,10 @@
           ]));
 
           // Get instance of files cache
-          self::$objCache = CacheManager::getInstance('files');
+          self::$objCache = CacheManager::getInstance('files', new FilesConfig([
+            'path' => self::get_cache_dir(),
+            'securityKey' => static::get_security_key(),
+          ]));
         }
         self::$_instance = new self($config);
       }
@@ -93,6 +97,17 @@
     }
     
     
+    /**
+     * get_security_key
+     *
+     * @return string
+     */
+    protected static function get_security_key() {
+      // fixed subdir instead of HTTP_HOST, cron jobs may run as another user
+      return ((PHP_SAPI == 'cli') ? 'cli' : 'modified');
+    }
+
+
     /**
      * clone
      */
