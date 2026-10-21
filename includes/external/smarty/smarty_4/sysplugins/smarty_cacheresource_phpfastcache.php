@@ -53,9 +53,12 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
      */
     protected function write(array $keys, $expire = null)
     {
-        // invalidation markers come without lifetime and must outlive the cached content
-        if ($expire === null) {
+        // markers come without lifetime and must outlive the content, -1 means no expiry
+        if ($expire === null || (int)$expire < 0) {
             $expire = 365 * 24 * 3600;
+        } elseif ((int)$expire == 0) {
+            // Smarty reads the content back at once and regenerates it on the next request
+            $expire = 1;
         }
        foreach ($keys as $k => $v) {
             $_k = $this->prefix.sha1($k);
