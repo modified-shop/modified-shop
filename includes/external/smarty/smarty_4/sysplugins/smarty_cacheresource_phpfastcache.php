@@ -51,8 +51,15 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
      * @param int $expire expiration time
      * @return boolean true on success, false on failure
      */
-    protected function write(array $keys, $expire = DB_CACHE_EXPIRE)
+    protected function write(array $keys, $expire = null)
     {
+        // markers come without lifetime and must outlive the content, -1 means no expiry
+        if ($expire === null || (int)$expire < 0) {
+            $expire = 365 * 24 * 3600;
+        } elseif ((int)$expire == 0) {
+            // Smarty reads the content back at once and regenerates it on the next request
+            $expire = 1;
+        }
        foreach ($keys as $k => $v) {
             $_k = $this->prefix.sha1($k);
             $this->cache->setID($_k);
