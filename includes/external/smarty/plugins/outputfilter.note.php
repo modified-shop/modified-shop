@@ -26,9 +26,11 @@
 function smarty_outputfilter_note($tpl_output, $smarty) {
   global $PHP_SELF;
   
+  $query_string = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+
   $cop  = '<div class="copyright">';
   $cop .= ((MODULE_SMALL_BUSINESS == 'true') ? '<span class="small_bussiness">'.TAX_INFO_SMALL_BUSINESS_FOOTER.'</span><br/>' : '');
-  $cop .= sprintf(((basename($PHP_SELF)=='index.php' && ($_SERVER['QUERY_STRING'] == '' || $_SERVER['QUERY_STRING'] == 'language='.$_SESSION['language_code'])) ? '<a rel="nofollow noopener" href="https://www.modified-shop.org" target="_blank">%s</a>' : '%s'), '<span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware &copy; 2009-' . date('Y') . '</span>');
+  $cop .= sprintf(((basename($PHP_SELF)=='index.php' && ($query_string == '' || $query_string == 'language='.$_SESSION['language_code'])) ? '<a rel="nofollow noopener" href="https://www.modified-shop.org" target="_blank">%s</a>' : '%s'), '<span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware &copy; 2009-' . date('Y') . '</span>');
   $cop .= '</div>';
 
   //making output W3C-Conform: replace ampersands, rest is covered by the modified shopstat_functions.php - preg_replace by cYbercOsmOnauT: don't replace &&
