@@ -794,7 +794,8 @@
         if (send_order_mail($unsent['orders_id'], false, ($unsent['mail_sent'] == 2)) !== true) {
           xtc_db_query("UPDATE `easycredit`
                            SET mail_sent = 2
-                         WHERE orders_id = '".(int)$unsent['orders_id']."'");
+                         WHERE orders_id = '".(int)$unsent['orders_id']."'
+                           AND mail_sent = '".(int)$unsent['mail_sent']."'");
           continue;
         }
 
@@ -967,7 +968,8 @@
         // the merchant copy is out, the unsent pass retries the confirmation alone
         xtc_db_query("UPDATE `easycredit`
                          SET mail_sent = 2
-                       WHERE orders_id = '".(int)$pending['orders_id']."'");
+                       WHERE orders_id = '".(int)$pending['orders_id']."'
+                         AND mail_sent = '".(int)$pending['mail_sent']."'");
       }
     }
 
