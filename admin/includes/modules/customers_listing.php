@@ -23,6 +23,9 @@
       $form_action = 'action=statusconfirm';
     }
   }
+
+  // individual actions render their own form instead of the bulk form
+  $multi_form = ($action == '' || strpos($action, 'multi') !== false);
  ?>
 
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_customers.png'); ?></div>
@@ -45,7 +48,7 @@
         <table class="tableCenter">
           <tr>
           <?php 
-            if ($action == '' || strpos($action, 'multi') !== false) {
+            if ($multi_form) {
               echo xtc_draw_form('multi_action_form', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . $form_action, 'post', 'onsubmit="javascript:return CheckMultiForm()"');
             }
             ?>
@@ -55,7 +58,7 @@
                   <td class="dataTableHeadingContent txta-c" style="width:4%">
                     <?php 
                       echo TABLE_HEADING_EDIT . '<br />'; 
-                      echo xtc_draw_checkbox_field('select_all', '1', false, '', 'onclick="javascript:CheckAll(this.checked);"');   
+                      if ($multi_form) echo xtc_draw_checkbox_field('select_all', '1', false, '', 'onclick="javascript:CheckAll(this.checked);"');   
                     ?>
                   </td>
                   <td class="dataTableHeadingContent" style="width:40px;"><?php echo TABLE_HEADING_ACCOUNT_TYPE; ?></td>
@@ -237,7 +240,7 @@
                   }
                   ?>
                   <td class="dataTableContent txta-c">
-                   <?php if ($customers['customers_id'] != '1') echo xtc_draw_checkbox_field('multi_customers[]', $customers['customers_id'], $is_checked); ?>
+                   <?php if ($multi_form && $customers['customers_id'] != '1') echo xtc_draw_checkbox_field('multi_customers[]', $customers['customers_id'], $is_checked); ?>
                   </td>
                   <td class="dataTableContent"><?php echo $account_type; ?></td>
                   <td class="dataTableContent"><?php echo $customers['customers_cid']; ?>&nbsp;</td>
@@ -515,8 +518,10 @@
                     if (isset($cInfo) && is_object($cInfo)) {
                       $heading[] = array ('text' => '<b>'.$cInfo->customers_firstname.' '.$cInfo->customers_lastname.'</b>');
                       //Multi Element Actions
-                      $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
-                      $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_status" value="' . BUTTON_STATUS . '"> <input type="submit" class="button" name="multi_delete" value="' . BUTTON_DELETE . '">');
+                      if ($multi_form) {
+                        $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
+                        $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_status" value="' . BUTTON_STATUS . '"> <input type="submit" class="button" name="multi_delete" value="' . BUTTON_DELETE . '">');
+                      }
 
                       $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                       if ($cInfo->customers_id != 1 || ($cInfo->customers_id == 1 && $_SESSION['customer_id'] == 1)) {
@@ -593,7 +598,7 @@
                   echo '          </td>'."\n";
                 }
                 
-                if ($action == '' || strpos($action, 'multi') !== false) {
+                if ($multi_form) {
                   echo '</form>';
                 }
               ?>
