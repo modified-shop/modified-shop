@@ -120,8 +120,8 @@ class PayPalCommon extends PayPalAuth {
     // no sql cache: a saved value applies at once and the secret stays out of the cache directory
     if (!isset($config_array[$config_key]) || $cache === false) {
       $config_array[$config_key] = '';
-      $config_query = xtc_db_query("SELECT config_value 
-                                      FROM ".TABLE_PAYPAL_CONFIG." 
+      $config_query = xtc_db_query("SELECT config_value
+                                      FROM ".TABLE_PAYPAL_CONFIG."
                                      WHERE config_key = '".xtc_db_input($config_key)."'");
       if (xtc_db_num_rows($config_query) > 0) {
         $config = xtc_db_fetch_array($config_query);
