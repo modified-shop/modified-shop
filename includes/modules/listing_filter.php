@@ -96,6 +96,20 @@ if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
       $filter_where .= "AND p.products_id IN (".implode(', ', $tags_array).")";
     }
   
+    // the listing shows only products in a visible category, category pages and the search check this already
+    $category_check = '';
+    if (!(isset($current_category_id) && $current_category_id > 0) && basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
+      $category_check = " AND EXISTS (
+                                SELECT 1
+                                  FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                  JOIN ".TABLE_CATEGORIES." c
+                                       ON c.categories_id = p2c.categories_id
+                                          AND c.categories_status = 1
+                                              ".CATEGORIES_CONDITIONS_C."
+                                 WHERE p2c.products_id = p.products_id
+                              ) ";
+    }
+
     // manufacturers
     $join = '';
     $where = '';
@@ -184,6 +198,7 @@ if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
                                           ".$where."
                                           ".$filter_where."
                                           ".PRODUCTS_CONDITIONS_P."
+                                          ".$category_check."
                                  )
                         ORDER BY name";
     }
@@ -328,6 +343,7 @@ if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
                                        ".$where."
                                        ".$filter_where."
                                        ".PRODUCTS_CONDITIONS_P."
+                                       ".$category_check."
                               )
                      ORDER BY pto.sort_order, pto.options_name, ptv.sort_order, ptv.values_name";
 
