@@ -141,11 +141,16 @@
       // No status check on purpose: the model identifier belongs to the source article whether
       // the module runs or not. Carrying it over would make the duplicate claim a guarantee for
       // an article it was never given for, and switching the module on later would show it.
-      if (!isset($sql_data_array['products_garan_duration'])
-          || $sql_data_array['products_garan_duration'] === null
+      if (!array_key_exists('products_garan_duration', $sql_data_array)) {
+        return $sql_data_array;
+      }
+
+      if ($sql_data_array['products_garan_duration'] === null
           || trim((string)$sql_data_array['products_garan_duration']) === ''
           )
       {
+        // xtc_db_perform() quotes PHP null as an empty string; use its SQL NULL marker.
+        $sql_data_array['products_garan_duration'] = 'null';
         return $sql_data_array;
       }
 
