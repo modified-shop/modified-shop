@@ -792,6 +792,7 @@
         }
 
         if (send_order_mail($unsent['orders_id'], false, ($unsent['mail_sent'] == 2)) !== true) {
+          // a run that took over after the claim expired may have sent it by now
           xtc_db_query("UPDATE `easycredit`
                            SET mail_sent = 2
                          WHERE orders_id = '".(int)$unsent['orders_id']."'
@@ -966,6 +967,7 @@
                        WHERE orders_id = '".(int)$pending['orders_id']."'");
       } elseif ($pending['mail_sent'] != 1) {
         // the merchant copy is out, the unsent pass retries the confirmation alone
+        // a run that took over after the claim expired may have sent it by now
         xtc_db_query("UPDATE `easycredit`
                          SET mail_sent = 2
                        WHERE orders_id = '".(int)$pending['orders_id']."'
