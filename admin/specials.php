@@ -41,6 +41,7 @@
     switch ($action) {
       case 'setflag':
         xtc_set_specials_status($_GET['id'], $_GET['flag']);
+        $catfunc->specials_changed($_GET['id'], 'status');
         xtc_redirect(xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'flag', 'id'))));
         break;
 
@@ -55,7 +56,9 @@
         break;
 
       case 'deleteconfirm':
+        $specials_products_id = $catfunc->get_specials_products_id($sID);
         xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " WHERE specials_id = '" . xtc_db_prepare_input($sID) . "'");
+        $catfunc->specials_changed($sID, 'delete', $specials_products_id);
         xtc_redirect(xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID'))));
         break;
     
@@ -64,6 +67,7 @@
           if (is_array($_POST['multi_products'])) {
             foreach ($_POST['multi_products'] as $product_id) {
               xtc_set_specials_status($product_id, isset($_POST['multi_status_off']) ? 0 : 1);
+              $catfunc->specials_changed($product_id, 'status');
             }
           }          
           xtc_redirect(xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID'))));
@@ -73,7 +77,9 @@
       case 'multi_action_confirm':
         if (is_array($_POST['multi_products_confirm'])) {
           foreach ($_POST['multi_products_confirm'] as $product_id) {
+            $specials_products_id = $catfunc->get_specials_products_id($product_id);
             xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " WHERE specials_id = '" . (int)$product_id . "'");
+            $catfunc->specials_changed($product_id, 'delete', $specials_products_id);
           }
         }        
         xtc_redirect(xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID'))));
