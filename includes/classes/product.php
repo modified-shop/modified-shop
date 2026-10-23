@@ -29,6 +29,7 @@ class product {
   var $productModules;
 
   // shared by every instance, the same way the function statics were
+  static $attributes_count_array = array();
   static $reviews_count_array = array();
   static $reviews_avg_array = array();
 
@@ -131,26 +132,46 @@ class product {
    * @return integer
    */
   function getAttributesCount($pID = '', $price_check = false) {
-    static $attributes_count_array;
-
-    if (!isset($attributes_count_array)) {
-      $attributes_count_array = array();
-    }
-
     if ($pID == '') {
       $pID = $this->pID;
     }
     
-    if (!isset($attributes_count_array[$pID])) {
+    if (!isset(self::$attributes_count_array[$pID])) {
       $products_attributes_query = xtDBquery("SELECT count(*) AS total_a,
                                                      count(IF(options_values_price > 0, 1, null)) as total_p 
                                                 FROM ".TABLE_PRODUCTS_ATTRIBUTES."
                                                WHERE products_id = '".(int)$pID."'");
       $products_attributes = xtc_db_fetch_array($products_attributes_query, true);
-      $attributes_count_array[$pID] = $products_attributes;
+      self::$attributes_count_array[$pID] = $products_attributes;
     }
     
-    return $attributes_count_array[$pID][($price_check !== false) ? 'total_p' : 'total_a'];
+    return self::$attributes_count_array[$pID][($price_check !== false) ? 'total_p' : 'total_a'];
+  }
+
+  /**
+   * Loads attribute counts for a complete candidate listing, including empty products.
+   */
+  function preloadAttributesCount($products_id_array) {
+    $products_ids = array();
+    foreach ((array)$products_id_array as $products_id) {
+      $pID = (int)$products_id;
+      if ($pID > 0 && !isset(self::$attributes_count_array[$pID])) {
+        $products_ids[$pID] = $pID;
+        self::$attributes_count_array[$pID] = array('total_a' => 0, 'total_p' => 0);
+      }
+    }
+    if (count($products_ids) == 0) {
+      return;
+    }
+    $attributes_query = xtDBquery("SELECT products_id,
+                                         count(*) AS total_a,
+                                         count(IF(options_values_price > 0, 1, null)) AS total_p
+                                    FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                   WHERE products_id IN (".implode(', ', $products_ids).")
+                                GROUP BY products_id");
+    while ($attributes = xtc_db_fetch_array($attributes_query, true)) {
+      self::$attributes_count_array[(int)$attributes['products_id']] = $attributes;
+    }
   }
 
   /**
@@ -746,18 +767,20 @@ class product {
    *
    * @param array $array
    * @param boolean $includeAttributeMinimum Include the cheapest visible attribute combination?
+   * @param array|null $displayPrice Prepared overview quote; forces a rebuild when attribute minimum is enabled
    * @return array
    */
-  function buildDataArray(&$array, $image = 'thumbnail', $cache = true, $includeAttributeMinimum = true) {
+  function buildDataArray(&$array, $image = 'thumbnail', $cache = true, $includeAttributeMinimum = true, $displayPrice = null) {
     global $xtPrice, $main;        
     static $productData;
+    $has_display_price = ($includeAttributeMinimum && is_array($displayPrice));
     
     if (!isset($productData)) {
       $productData = array();
     }
 
     $cache_key = $array['products_id'].':'.$image.':'.(int)$includeAttributeMinimum;
-    if (!isset($productData[$cache_key]) || $cache === false) {
+    if (!isset($productData[$cache_key]) || $cache === false || $has_display_price) {
       $productData[$cache_key] = array();
 
       $array['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($array['products_id'], $array['products_tax_class_id']);
@@ -773,7 +796,7 @@ class product {
       $tax_rate = isset($xtPrice->TAX[$array['products_tax_class_id']]) ? $xtPrice->TAX[$array['products_tax_class_id']] : 0;
   
       //get products price , returns array
-      $products_price = $xtPrice->xtcGetPrice($array['products_id'], $format = true, 1, $array['products_tax_class_id'], $array['products_price'], 1, 0, $includeAttributeMinimum);
+      $products_price = $has_display_price ? $displayPrice : $xtPrice->xtcGetPrice($array['products_id'], $format = true, 1, $array['products_tax_class_id'], $array['products_price'], 1, 0, $includeAttributeMinimum);
   
       // The unit price must use the quantity of the displayed attribute combination.
       $vpe_data = $array;

@@ -24,42 +24,46 @@
     var $number_of_rows_per_page;
 
     // class constructor
-    function __construct($query, $page, $max_rows, $count_key = '*') {
+    function __construct($query, $page, $max_rows, $count_key = '*', $number_of_rows = null) {
       $this->sql_query = $query;
 
       if (empty($page) || !is_numeric($page) || $page < 0) $page = 1;
-      
+
       $this->current_page_number = $page;
       $this->number_of_rows_per_page = $max_rows;
 
-      $pos_to = strlen($this->sql_query);
-      $pos_from = strpos(strtoupper($this->sql_query), ' FROM', 0);
-
-      $pos_group_by = strpos(strtoupper($this->sql_query), ' GROUP BY', $pos_from);
-      if (($pos_group_by < $pos_to) && ($pos_group_by !== false)) $pos_to = $pos_group_by;
-
-      $pos_having = strpos(strtoupper($this->sql_query), ' HAVING', $pos_from);
-      if (($pos_having < $pos_to) && ($pos_having !== false)) $pos_to = $pos_having;
-
-      $pos_order_by = strpos(strtoupper($this->sql_query), ' ORDER BY', $pos_from);
-      if (($pos_order_by < $pos_to) && ($pos_order_by !== false)) $pos_to = $pos_order_by;
-
-      if (strpos(strtoupper($this->sql_query), 'DISTINCT') !== false || strpos(strtoupper($this->sql_query), 'GROUP BY') !== false) {
-        $count_string = 'DISTINCT ' . xtc_db_input($count_key);
+      if ($number_of_rows !== null) {
+        $this->number_of_rows = max(0, (int)$number_of_rows);
       } else {
-        $count_string = xtc_db_input($count_key);
+        $pos_to = strlen($this->sql_query);
+        $pos_from = strpos(strtoupper($this->sql_query), ' FROM', 0);
+
+        $pos_group_by = strpos(strtoupper($this->sql_query), ' GROUP BY', $pos_from);
+        if (($pos_group_by < $pos_to) && ($pos_group_by !== false)) $pos_to = $pos_group_by;
+
+        $pos_having = strpos(strtoupper($this->sql_query), ' HAVING', $pos_from);
+        if (($pos_having < $pos_to) && ($pos_having !== false)) $pos_to = $pos_having;
+
+        $pos_order_by = strpos(strtoupper($this->sql_query), ' ORDER BY', $pos_from);
+        if (($pos_order_by < $pos_to) && ($pos_order_by !== false)) $pos_to = $pos_order_by;
+
+        if (strpos(strtoupper($this->sql_query), 'DISTINCT') !== false || strpos(strtoupper($this->sql_query), 'GROUP BY') !== false) {
+          $count_string = 'DISTINCT ' . xtc_db_input($count_key);
+        } else {
+          $count_string = xtc_db_input($count_key);
+        }
+
+        $count_source = substr($query, $pos_from, ($pos_to - $pos_from));
+
+        // a LEFT JOIN nothing references cannot change count(DISTINCT ...)
+        if (strpos($count_string, 'DISTINCT ') === 0) {
+          $count_source = $this->strip_unused_left_joins($count_source, $count_string);
+        }
+
+        $count_query = xtDBquery("SELECT count(" . $count_string . ") as total " . $count_source);
+        $count = xtc_db_fetch_array($count_query, true);
+        $this->number_of_rows = $count['total'];
       }
-
-      $count_source = substr($query, $pos_from, ($pos_to - $pos_from));
-
-      // a LEFT JOIN nothing references cannot change count(DISTINCT ...)
-      if (strpos($count_string, 'DISTINCT ') === 0) {
-        $count_source = $this->strip_unused_left_joins($count_source, $count_string);
-      }
-
-      $count_query = xtDBquery("SELECT count(" . $count_string . ") as total " . $count_source);
-      $count = xtc_db_fetch_array($count_query, true);
-      $this->number_of_rows = $count['total'];
 
       if ($this->number_of_rows_per_page > 0) {
         $this->number_of_pages = ceil($this->number_of_rows / $this->number_of_rows_per_page);

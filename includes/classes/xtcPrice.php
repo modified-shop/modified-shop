@@ -41,6 +41,7 @@ class xtcPrice {
   var $zone_id;
   var $content_type;
   var $priceModules;
+  var $attributeMinimumData = array();
   
   /**
    * Constructor initialises all required values like currencies, tax classes, tax zones etc.
@@ -441,6 +442,58 @@ class xtcPrice {
   }
 
   /**
+   * Loads visible option rows for matched listing candidates in one query.
+   */
+  function preloadAttributeMinimum($products_id_array) {
+    global $product;
+
+    $language_id = (int)$_SESSION['languages_id'];
+    $products_ids = array();
+    foreach ((array)$products_id_array as $products_id) {
+      $pID = (int)$products_id;
+      if ($pID > 0 && !isset($this->attributeMinimumData[$language_id][$pID])) {
+        $products_ids[$pID] = $pID;
+        $this->attributeMinimumData[$language_id][$pID] = array();
+      }
+    }
+    if (count($products_ids) == 0) {
+      return;
+    }
+    if (is_object($product) && is_callable(array($product, 'preloadAttributesCount'))) {
+      $product->preloadAttributesCount($products_ids);
+      foreach ($products_ids as $pID) {
+        if ($product->getAttributesCount($pID) == 0) {
+          unset($products_ids[$pID]);
+        }
+      }
+      if (count($products_ids) == 0) {
+        return;
+      }
+    }
+    $attribute_query = xtDBquery("SELECT p.products_discount_allowed,
+                                         p.products_tax_class_id,
+                                         p.products_price,
+                                         p.products_weight,
+                                         pa.*
+                                    FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                    JOIN ".TABLE_PRODUCTS." p
+                                         ON p.products_id = pa.products_id
+                                    JOIN ".TABLE_PRODUCTS_OPTIONS." po
+                                         ON po.products_options_id = pa.options_id
+                                            AND po.language_id = '".(int)$_SESSION['languages_id']."'
+                                            AND trim(po.products_options_name) != ''
+                                    JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
+                                         ON pov.products_options_values_id = pa.options_values_id
+                                            AND pov.language_id = '".(int)$_SESSION['languages_id']."'
+                                            AND trim(pov.products_options_values_name) != ''
+                                   WHERE pa.products_id IN (".implode(', ', $products_ids).")
+                                ORDER BY pa.products_id, po.products_options_sortorder, po.products_options_id, pa.sortorder, pov.products_options_values_sortorder, pa.options_values_id");
+    while ($attribute = xtc_db_fetch_array($attribute_query, true)) {
+      $this->attributeMinimumData[$language_id][(int)$attribute['products_id']][$attribute['options_id']][$attribute['options_values_id']] = $attribute;
+    }
+  }
+
+  /**
    * Returns the cheapest displayed attribute combination and its regular price.
    * Values with blank names or without a name in the current language are hidden.
    * Strict stock checks select available values, or mark the complete offered price unavailable.
@@ -469,29 +522,11 @@ class xtcPrice {
                     && defined('ATTRIBUTE_STOCK_CHECK') && ATTRIBUTE_STOCK_CHECK == 'true'
                     && defined('STOCK_ALLOW_CHECKOUT') && STOCK_ALLOW_CHECKOUT != 'true');
     $available = true;
-    $attribute_query = xtDBquery("SELECT p.products_discount_allowed,
-                                         p.products_tax_class_id,
-                                         p.products_price,
-                                         p.products_weight,
-                                         pa.*
-                                    FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                    JOIN ".TABLE_PRODUCTS." p
-                                         ON p.products_id = pa.products_id
-                                    JOIN ".TABLE_PRODUCTS_OPTIONS." po
-                                         ON po.products_options_id = pa.options_id
-                                            AND po.language_id = '".(int)$_SESSION['languages_id']."'
-                                            AND trim(po.products_options_name) != ''
-                                    JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
-                                         ON pov.products_options_values_id = pa.options_values_id
-                                            AND pov.language_id = '".(int)$_SESSION['languages_id']."'
-                                            AND trim(pov.products_options_values_name) != ''
-                                   WHERE pa.products_id = '".(int)$pID."'
-                                ORDER BY po.products_options_sortorder, po.products_options_id, pa.sortorder, pov.products_options_values_sortorder, pa.options_values_id");
-    while ($attribute = xtc_db_fetch_array($attribute_query, true)) {
-      $option = $attribute['options_id'];
-      $value = $attribute['options_values_id'];
-      $attribute_data[$option][$value] = $attribute;
+    $language_id = (int)$_SESSION['languages_id'];
+    if (!isset($this->attributeMinimumData[$language_id][(int)$pID])) {
+      $this->preloadAttributeMinimum(array($pID));
     }
+    $attribute_data = $this->attributeMinimumData[$language_id][(int)$pID];
     if (count($attribute_data) == 0) {
       return null;
     }

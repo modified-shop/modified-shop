@@ -12,10 +12,15 @@
 
 
   if (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT) {    
+    require_once (DIR_FS_CATALOG.'includes/classes/listingDisplayPrices.php');
+    $listing_display_price_bounds = listingDisplayPrices::getBounds((isset($_GET['pfrom']) ? $_GET['pfrom'] : null), (isset($_GET['pto']) ? $_GET['pto'] : null));
+    $use_display_price_filter = ($_SESSION['customers_status']['customers_status_show_price'] != '0'
+                                 && (isset($listing_display_price_bounds['from']) || isset($listing_display_price_bounds['to'])));
+
     //set $_GET variables for function xtc_get_all_get_params()
     $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim($_GET['keywords'])) : false;
-    $pfrom = $_GET['pfrom'] = !empty($_GET['pfrom']) ? str_replace(',', '.', stripslashes(trim($_GET['pfrom']))) : false;
-    $pto = $_GET['pto'] = !empty($_GET['pto']) ? str_replace(',', '.', stripslashes(trim($_GET['pto']))) : false;
+    $pfrom = $_GET['pfrom'] = (isset($_GET['pfrom']) && trim($_GET['pfrom']) !== '') ? str_replace(',', '.', stripslashes(trim($_GET['pfrom']))) : false;
+    $pto = $_GET['pto'] = (isset($_GET['pto']) && trim($_GET['pto']) !== '') ? str_replace(',', '.', stripslashes(trim($_GET['pto']))) : false;
     $manufacturers_id  = $_GET['filter_id'] = !empty($_GET['filter_id']) ? (int)$_GET['filter_id'] : false;
     $categories_id = $_GET['categories_id'] = !empty($_GET['categories_id']) ? (int)$_GET['categories_id'] : false;
     $_GET['inc_subcat'] = !empty($_GET['inc_subcat']) ? (int)$_GET['inc_subcat'] : null;
@@ -45,7 +50,7 @@
 
     // price by currency
     $NeedTax = false;
-    if ($pfrom || $pto) {
+    if (!$use_display_price_filter && ($pfrom || $pto)) {
       $rate = xtc_get_currencies_values($_SESSION['currency']);
       $rate = $rate['value'];
       if ($rate && $pfrom) {
@@ -61,7 +66,7 @@
   
     //price filters
     $pfrom_check = '';
-    if (($pfrom != '') && (is_numeric($pfrom))) {
+    if (!$use_display_price_filter && ($pfrom != '') && (is_numeric($pfrom))) {
       if ($NeedTax) {
         $pfrom_check = " AND (IF(s.status = '1' AND p.products_id = s.products_id, s.specials_new_products_price, p.products_price) >= round((".$pfrom."/(1+tax_rate/100)),".PRICE_PRECISION.") ) ";
       } else {
@@ -70,7 +75,7 @@
     }
 
     $pto_check = '';
-    if (($pto != '') && (is_numeric($pto))) {
+    if (!$use_display_price_filter && ($pto != '') && (is_numeric($pto))) {
       if ($NeedTax) {
         $pto_check = " AND (IF(s.status = '1' AND p.products_id = s.products_id, s.specials_new_products_price, p.products_price) <= round((".$pto."/(1+tax_rate/100)),".PRICE_PRECISION.") ) ";
       } else {
@@ -160,6 +165,15 @@
         $where_str .= " GROUP BY p.products_id ";
         $where_str .= ((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
       }
+    }
+
+    if (PRODUCT_LIST_FILTER != 'true' && !($keywords && $keywordcheck)
+        && ($use_display_price_filter
+            || ($_SESSION['customers_status']['customers_status_show_price'] != '0'
+                && listingDisplayPrices::getPriceDirection((isset($_SESSION['filter_sorting']) ? $_SESSION['filter_sorting'] : $sorting)) !== null)))
+    {
+      $where_str .= " GROUP BY p.products_id ";
+      $where_str .= (isset($_SESSION['filter_sorting']) ? $_SESSION['filter_sorting'] : $sorting);
     }
 
     // glue together

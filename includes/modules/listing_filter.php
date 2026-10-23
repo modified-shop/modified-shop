@@ -96,6 +96,10 @@ if (!$filter_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
       $filter_where .= "AND p.products_id IN (".implode(', ', $tags_array).")";
     }
   
+    if (isset($listing_display_prices) && $listing_display_prices !== null && $listing_display_prices->price_filtered) {
+      $filter_where .= " AND p.products_id IN (".(count($listing_display_prices->product_ids) > 0 ? implode(', ', $listing_display_prices->product_ids) : '0').") ";
+    }
+
     // the listing shows only products in a visible category, category pages and the search check this already
     $category_check = '';
     if (!(isset($current_category_id) && $current_category_id > 0) && basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
