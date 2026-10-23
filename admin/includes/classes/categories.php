@@ -574,9 +574,9 @@ class categories {
     $product_categories_query = xtc_db_query("SELECT COUNT(*) AS total
                                                 FROM ".TABLE_PRODUCTS_TO_CATEGORIES."
                                                WHERE products_id = '".(int)$product_id."'");
-    $product_categories = xtc_db_fetch_array($product_categories_query);
+    $product_categories_count = xtc_db_fetch_array($product_categories_query);
 
-    if ($product_categories['total'] == '0') {
+    if ($product_categories_count['total'] == '0') {
       $this->remove_product($product_id);
     }
     
