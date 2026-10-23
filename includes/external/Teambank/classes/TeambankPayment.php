@@ -117,7 +117,13 @@
       );
       
       if (!defined('RUN_MODE_ADMIN') && !defined('RUN_MODE_TASKS')) {
-        $this->WebshopDetails = $this->ecCheckout->getWebshopDetails();
+        // an error of the API must not stop the checkout, the client has logged it already
+        try {
+          $this->WebshopDetails = $this->ecCheckout->getWebshopDetails();
+        } catch (\Exception $e) {
+          $this->WebshopDetails = null;
+          $this->enabled = false;
+        }
       } else {
         $this->prepare_task_support();
       }
