@@ -10,7 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  function update_module_configuration($module_type) {
+  // $removed_modules: files removed in this request, their check() may still answer from a defined constant
+  function update_module_configuration($module_type, $removed_modules = array()) {
     $installed_modules = array();
     
     $language_dir = defined('DIR_FS_LANGUAGES') ? DIR_FS_LANGUAGES : DIR_WS_LANGUAGES;
@@ -29,6 +30,9 @@
     
     foreach(auto_include($module_dir.$module_type.'/','php') as $file) {
       $filename = basename($file);
+      if (in_array($filename, $removed_modules, true)) {
+        continue;
+      }
       
       if (is_file($language_dir . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename)) {
         include_once($language_dir . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename);
