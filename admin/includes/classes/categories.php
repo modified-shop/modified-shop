@@ -889,6 +889,14 @@ class categories {
     
     //new module support
     $sql_data_array = $this->catModules->duplicate_product_before($sql_data_array,$src_products_id,$dest_categories_id);
+
+    // Preserve SQL NULL even when the GARAN category extension is not installed.
+    if (array_key_exists('products_garan_duration', $sql_data_array)
+        && $sql_data_array['products_garan_duration'] === null
+        )
+    {
+      $sql_data_array['products_garan_duration'] = 'null';
+    }
     
     //set new data (overrides)
     unset($sql_data_array['products_id']);

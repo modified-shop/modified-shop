@@ -145,18 +145,15 @@
         return $sql_data_array;
       }
 
-      if ($sql_data_array['products_garan_duration'] === null
-          || trim((string)$sql_data_array['products_garan_duration']) === ''
-          )
-      {
-        // xtc_db_perform() quotes PHP null as an empty string; use its SQL NULL marker.
-        $sql_data_array['products_garan_duration'] = 'null';
-        return $sql_data_array;
-      }
+      $has_duration = ($sql_data_array['products_garan_duration'] !== null
+                       && trim((string)$sql_data_array['products_garan_duration']) !== '');
 
-      // xtc_db_perform() turns the string null into a real NULL
+      // xtc_db_perform() turns the string null into SQL NULL, but quotes PHP null as ''.
       $sql_data_array['products_garan_duration'] = 'null';
-      $sql_data_array['products_manufacturers_model'] = '';
+
+      if ($has_duration) {
+        $sql_data_array['products_manufacturers_model'] = '';
+      }
 
       return $sql_data_array;
     }
