@@ -1596,10 +1596,38 @@ class categories {
   }
 
 
+  function get_specials_products_id($specials_id) {
+    $specials_query = xtc_db_query("SELECT products_id
+                                      FROM ".TABLE_SPECIALS."
+                                     WHERE specials_id = '".(int)$specials_id."'");
+    if (xtc_db_num_rows($specials_query) > 0) {
+      $specials = xtc_db_fetch_array($specials_query);
+      return (int)$specials['products_id'];
+    }
+    return 0;
+  }
+
+
+  // notifies modules about a written special, $action: insert, update, status, delete
+  function specials_changed($specials_id, $action, $products_id = 0) {
+    $specials_id = (int)$specials_id;
+    $products_id = (int)$products_id;
+    if ($products_id < 1) {
+      $products_id = $this->get_specials_products_id($specials_id);
+    }
+    if ($specials_id > 0 && $products_id > 0) {
+      //new module support
+      $this->catModules->specials_changed($specials_id, $products_id, $action);
+    }
+  }
+
+
   function saveSpecialsData($products_data) {
     if(isset($products_data['specials_delete'])) {
+      $specials_products_id = $this->get_specials_products_id($products_data['specials_id']);
       xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " 
                           WHERE specials_id = '" . xtc_db_input($products_data['specials_id']) . "'");
+      $this->specials_changed($products_data['specials_id'], 'delete', $specials_products_id);
     } elseif (isset($products_data['specials_price']) && !empty($products_data['specials_price'])) {
       if (!isset($products_data['specials_quantity']) || empty($products_data['specials_quantity'])) {
         $products_data['specials_quantity'] = 0;
@@ -1657,9 +1685,11 @@ class categories {
         unset($sql_data_array['specials_last_modified']);
         xtc_db_perform(TABLE_SPECIALS, $sql_data_array);
         $products_data['specials_id'] = xtc_db_insert_id();
+        $this->specials_changed($products_data['specials_id'], 'insert', $sql_data_array['products_id']);
       } else {
         unset($sql_data_array['specials_date_added']);
         xtc_db_perform(TABLE_SPECIALS, $sql_data_array, 'update', "specials_id = '" . (int)$products_data['specials_id']  . "'" );    
+        $this->specials_changed($products_data['specials_id'], 'update');
       }
 
       return $products_data['specials_id'];
