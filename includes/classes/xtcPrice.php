@@ -443,6 +443,7 @@ class xtcPrice {
   /**
    * Returns the cheapest displayed attribute combination and its regular price.
    * Values with blank names or without a name in the current language are hidden.
+   * Strict stock checks select available values, or mark the complete offered price unavailable.
    *
    * @param Integer $pID product id without selected attributes
    * @param Double $qty quantity
@@ -464,6 +465,10 @@ class xtcPrice {
     $attributes = array();
     $attribute_data = array();
     $selected_attributes = array();
+    $check_stock = (defined('STOCK_CHECK') && STOCK_CHECK == 'true'
+                    && defined('ATTRIBUTE_STOCK_CHECK') && ATTRIBUTE_STOCK_CHECK == 'true'
+                    && defined('STOCK_ALLOW_CHECKOUT') && STOCK_ALLOW_CHECKOUT != 'true');
+    $available = true;
     $attribute_query = xtDBquery("SELECT p.products_discount_allowed,
                                          p.products_tax_class_id,
                                          p.products_price,
@@ -486,10 +491,32 @@ class xtcPrice {
       $option = $attribute['options_id'];
       $value = $attribute['options_values_id'];
       $attribute_data[$option][$value] = $attribute;
-      $attributes[$option][$value] = $this->xtcCalculateOptionPrice($attribute, $pID, $option, $value, $qty);
     }
-    if (count($attributes) == 0) {
+    if (count($attribute_data) == 0) {
       return null;
+    }
+    if ($check_stock) {
+      $available_attributes = array();
+      foreach ($attribute_data as $option => $values) {
+        $available_attributes[$option] = array();
+        foreach ($values as $value => $attribute) {
+          if ($attribute['attributes_stock'] >= $qty) {
+            $available_attributes[$option][$value] = $attribute;
+          }
+        }
+        if (count($available_attributes[$option]) == 0) {
+          $available = false;
+        }
+      }
+      // Without a complete available combination, retain the complete offered price.
+      if ($available) {
+        $attribute_data = $available_attributes;
+      }
+    }
+    foreach ($attribute_data as $option => $values) {
+      foreach ($values as $value => $attribute) {
+        $attributes[$option][$value] = $this->xtcCalculateOptionPrice($attribute, $pID, $option, $value, $qty);
+      }
     }
     foreach ($attributes as $option => $values) {
       $selected = null;
@@ -512,6 +539,12 @@ class xtcPrice {
     if ($module_minimum !== null && !array_key_exists('attributes', $module_minimum)) {
       $module_minimum['attributes'] = ($module_minimum['price'] == $minimum['price']
                                       && $module_minimum['old_price'] == $minimum['old_price']) ? $selected_attributes : null;
+    }
+    if ($check_stock && $module_minimum !== null) {
+      $module_minimum['available'] = $available;
+      if (!$available) {
+        $module_minimum['attributes'] = null;
+      }
     }
     return $module_minimum;
   }
