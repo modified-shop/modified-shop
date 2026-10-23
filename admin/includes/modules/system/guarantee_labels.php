@@ -705,7 +705,7 @@
 
         if ($extension !== false && $extension->check() > 0) {
           $extension->remove();
-          $this->update_class_extensions($type);
+          $this->update_class_extensions($type, array($data['file']));
         }
       }
     }
@@ -713,11 +713,13 @@
     /**
      * Rebuilds MODULE_<TYPE>_INSTALLED from the modules that are really installed, so other
      * class extensions and their sort order stay untouched.
+     *
+     * @param array $removed files of class extensions removed in this request
      */
-    function update_class_extensions($type) {
+    function update_class_extensions($type, $removed = array()) {
       require_once(DIR_FS_INC.'update_module_configuration.inc.php');
 
-      update_module_configuration($type);
+      update_module_configuration($type, $removed);
     }
 
     /**
