@@ -1689,7 +1689,7 @@ class categories {
       } else {
         unset($sql_data_array['specials_date_added']);
         xtc_db_perform(TABLE_SPECIALS, $sql_data_array, 'update', "specials_id = '" . (int)$products_data['specials_id']  . "'" );    
-        $this->specials_changed($products_data['specials_id'], 'update', $sql_data_array['products_id']);
+        $this->specials_changed($products_data['specials_id'], 'update');
       }
 
       return $products_data['specials_id'];
