@@ -72,6 +72,17 @@ if ($wallet_express_checkout) {
   }
 }
 
+// a payment module that switched itself off after the confirmation skips before_process(), no order without it
+if (isset($payment_modules->selected_module)
+    && isset($GLOBALS[$payment_modules->selected_module])
+    && is_object($GLOBALS[$payment_modules->selected_module])
+    && $GLOBALS[$payment_modules->selected_module]->enabled == false
+    )
+{
+  $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
+  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+}
+
 // if no shipping method has been selected, redirect the customer to the shipping page
 if (!isset($_SESSION['shipping'])) {
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
