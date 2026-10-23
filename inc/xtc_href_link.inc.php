@@ -20,12 +20,18 @@
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false, $admin = false) {
     global $request_type, $session_started, $http_domain, $https_domain, $truncate_session_id, $cookie, $products_link_cat_id, $canonical_flag;
     static $session_id, $href_link_array;
+    static $href_link_hooks;
     
     if (!isset($href_link_array)) {
       $href_link_array = array();
     }
         
     $parameters = str_replace('&amp;', '&', $parameters); // undo W3C-Conform link
+
+    if (!isset($href_link_hooks)) {
+      $href_link_hooks = function_exists('auto_include') ? auto_include(DIR_FS_CATALOG.'includes/extra/modules/href_link_begin/','php') : array();
+    }
+    foreach ($href_link_hooks as $file) require ($file);
 
     $link = $connection == 'SSL' && (ENABLE_SSL || $request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER;
 
