@@ -1173,6 +1173,9 @@ class categories {
       if ($dest_categories_id == 0) {
         $this->set_product_startpage($src_products_id, 1);
       }
+
+      //new module support
+      $this->catModules->link_product_end($src_products_id, $dest_categories_id);
     } elseif ($dest_categories_id != 0) {
       $messageStack->add_session(ERROR_CANNOT_LINK_TO_SAME_CATEGORY, 'error');
     }
@@ -1201,6 +1204,9 @@ class categories {
       if ($dest_category_id == 0) {
         $this->set_product_startpage($src_products_id, 1);
       }
+
+      //new module support
+      $this->catModules->move_product_end($src_products_id, $src_category_id, $dest_category_id);
     }
   }
 
@@ -1212,6 +1218,9 @@ class categories {
       'products_last_modified' => 'now()'
     );
     xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '".$products_id."'");                       
+
+    //new module support
+    $this->catModules->set_product_status_end((int)$products_id, (int)$status);
   }
 
 

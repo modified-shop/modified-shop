@@ -183,6 +183,24 @@ class categoriesModules {
         $this->secure_call_module_method($product_id, $product_categories);
     }
 
+    function set_product_status_end($products_id, $status)
+    {
+        $this->function_call = 'set_product_status_end';
+        $this->secure_call_module_method($products_id, $status);
+    }
+
+    function link_product_end($src_products_id, $dest_categories_id)
+    {
+        $this->function_call = 'link_product_end';
+        $this->secure_call_module_method($src_products_id, $dest_categories_id);
+    }
+
+    function move_product_end($src_products_id, $src_category_id, $dest_category_id)
+    {
+        $this->function_call = 'move_product_end';
+        $this->secure_call_module_method($src_products_id, $src_category_id, $dest_category_id);
+    }
+
     function duplicate_product_before($sql_data_array, $src_products_id, $dest_categories_id)
     {
         $this->function_call = 'duplicate_product_before';
