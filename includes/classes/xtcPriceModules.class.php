@@ -102,6 +102,12 @@ class priceModules {
         return $this->call_module_method($dataArr,$attribute_data,$pID, $option, $value, $qty);
     }
     
+    function GetAttributeMinimum($minimum, $pID, $qty, $attributes)
+    {
+        $this->function_call = 'GetAttributeMinimum';
+        return $this->call_module_method($minimum, $pID, $qty, $attributes);
+    }
+
     function FormatSpecial($return, $pID, $sPrice, $pPrice, $format, $vpeStatus)
     {
         $this->function_call = 'FormatSpecial';
