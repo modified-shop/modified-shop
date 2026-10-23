@@ -49,6 +49,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   // defaults
   $hide_qty = 0;
 
+  $navigator_products_id = $product->data['products_id'];
+  $last_viewed_products_id = $product->data['products_id'];
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_info_begin/','php') as $file) require ($file);
+
   if (ACTIVATE_NAVIGATOR == 'true') {
     include (DIR_WS_MODULES.'product_navigator.php');
   }
@@ -262,11 +266,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
   // session products history
   if (!isset($_SESSION['tracking']['products_history'])) $_SESSION['tracking']['products_history'] = array();
-  if (in_array($product->data['products_id'], $_SESSION['tracking']['products_history'])) {
-    unset($_SESSION['tracking']['products_history'][array_search($product->data['products_id'], $_SESSION['tracking']['products_history'])]);
+  if (in_array($last_viewed_products_id, $_SESSION['tracking']['products_history'])) {
+    unset($_SESSION['tracking']['products_history'][array_search($last_viewed_products_id, $_SESSION['tracking']['products_history'])]);
     $_SESSION['tracking']['products_history'] = array_values($_SESSION['tracking']['products_history']);
   }
-  array_push($_SESSION['tracking']['products_history'], $product->data['products_id']);
+  array_push($_SESSION['tracking']['products_history'], $last_viewed_products_id);
   if (count($_SESSION['tracking']['products_history']) > (int)MAX_DISPLAY_PRODUCTS_HISTORY) {
     array_shift($_SESSION['tracking']['products_history']); 
   }

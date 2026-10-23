@@ -13,6 +13,8 @@
    Released under the GNU General Public License
    --------------------------------------------------------------------------------------------*/
 
+if (!isset($navigator_products_id)) $navigator_products_id = $product->data['products_id'];
+
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
@@ -27,7 +29,7 @@ if (!CacheCheck()) {
   $module_smarty->caching = 1;
   $module_smarty->cache_lifetime = CACHE_LIFETIME;
   $module_smarty->cache_modified_check = CACHE_CHECK == 'true';
-  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|cID:'.$current_category_id);
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$navigator_products_id.'|cID:'.$current_category_id);
 }
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_navigator.html', $cache_id) || !$cache) {  
@@ -81,7 +83,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_navigator.html'
         'IMAGE' => $products_data['products_image'],
         'LINK' => '',
       );
-      if ($products_data['products_id'] == $product->data['products_id']) {
+      if ($products_data['products_id'] == $navigator_products_id) {
         $actual_key = $i;
       }
       $i ++;
