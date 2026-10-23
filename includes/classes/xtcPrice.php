@@ -41,6 +41,11 @@ class xtcPrice {
   var $zone_id;
   var $content_type;
   var $priceModules;
+
+  // Currency and customer-group dependent prices must not leak between instances.
+  var $discount_array = array();
+  var $special_price_array = array();
+  var $special_products_price_array = array();
   var $attributeMinimumData = array();
   
   /**
@@ -253,14 +258,8 @@ class xtcPrice {
    * @return Mixed boolean false if not found or 0.00, double if found and > 0.00
    */
   function xtcCheckDiscount($pID) {
-    static $discount_array;
-    
-    if (!isset($discount_array)) {
-      $discount_array = array();
-    }
-    
-    if (!isset($discount_array[$pID])) {
-      $discount_array[$pID] = 0;
+    if (!isset($this->discount_array[$pID])) {
+      $this->discount_array[$pID] = 0;
       
       if ($this->cStatus['customers_status_discount'] != '0.00') {
         $discount_query = xtDBquery("SELECT products_discount_allowed 
@@ -274,12 +273,12 @@ class xtcPrice {
         }
       
         if ($discount_value != '0.00') {
-          $discount_array[$pID] = $discount_value;
+          $this->discount_array[$pID] = $discount_value;
         }
       }
     }
     
-    return $discount_array[$pID];
+    return $this->discount_array[$pID];
   }
   
   /**
@@ -670,14 +669,8 @@ class xtcPrice {
    * @return Double special offer
    */
   function xtcCheckSpecial($pID) {
-    static $special_price_array;
-    
-    if (!isset($special_price_array)) {
-      $special_price_array = array();
-    }
-    
     if ($this->cStatus['customers_status_specials'] == '1') {
-      if (!isset($special_price_array[$pID])) {
+      if (!isset($this->special_price_array[$pID])) {
         $special_price = 0;
         
         $special = $this->xtcGetSpecialData($pID);
@@ -686,10 +679,10 @@ class xtcPrice {
           $special_price = $special['specials_new_products_price'];
         }
       
-        $special_price_array[$pID] = $this->priceModules->CheckSpecialPrice($special_price, $pID);
+        $this->special_price_array[$pID] = $this->priceModules->CheckSpecialPrice($special_price, $pID);
       }
       
-      return (float)$special_price_array[$pID];
+      return (float)$this->special_price_array[$pID];
     }
   }
 
@@ -702,14 +695,8 @@ class xtcPrice {
    * @return Double products price
    */
   function xtcSpecialProductPrice($pID, $pPrice, $add_tax = false) {
-    static $special_products_price_array;
-    
-    if (!isset($special_products_price_array)) {
-      $special_products_price_array = array();
-    }
-    
     if ($this->cStatus['customers_status_specials'] == '1') {
-      if (!isset($special_products_price_array[$pID][(int)$add_tax])) {
+      if (!isset($this->special_products_price_array[$pID][(int)$add_tax])) {
         $products_price = $pPrice;
 
         $special = $this->xtcGetSpecialData($pID);
@@ -728,10 +715,10 @@ class xtcPrice {
           }
         }
         
-        $special_products_price_array[$pID][(int)$add_tax] = $this->priceModules->CheckSpecialProductPrice($products_price, $pID, $add_tax);
+        $this->special_products_price_array[$pID][(int)$add_tax] = $this->priceModules->CheckSpecialProductPrice($products_price, $pID, $add_tax);
       }
       
-      return (float)$special_products_price_array[$pID][(int)$add_tax];
+      return (float)$this->special_products_price_array[$pID][(int)$add_tax];
     }
   }
 
