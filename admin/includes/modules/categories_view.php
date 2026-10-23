@@ -507,6 +507,10 @@
                  $where_str .= " AND p.products_status = '".(int)$_GET['status']."'";
                }
                
+               $products_search_where = '';
+               foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/categories_view/products_search_where/','php') as $file) require ($file);
+               $where_str .= $products_search_where;
+
                //go for keywords... this is the main search process
                if (xtc_not_null($search)) {
                  if (xtc_parse_search_string(stripslashes($search), $search_keywords)) {
@@ -636,12 +640,15 @@
              // WHILE loop to display products STARTS
              // ----------------------------------------------------------------------------------------------------- //
 
+             $products_row_hooks = auto_include(DIR_FS_ADMIN.'includes/extra/modules/categories_view/products_row/','php');
              while ($products = xtc_db_fetch_array($products_query)) {
                if (xtc_not_null($search)) {
                  $cPath = xtc_get_category_path($products['categories_id']);
                }
                $products_count++;
                $rows++;
+               $products_name_suffix = '';
+               foreach ($products_row_hooks as $file) require ($file);
                // Get categories_id for product if search
                if (((!isset($_GET['pID']) || $_GET['pID'] == '') && !isset($_GET['cID']) || (isset($_GET['pID']) && $_GET['pID'] == $products['products_id'])) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 4) != 'new_') ) {
                  // find out the rating average from customer reviews
@@ -712,7 +719,7 @@
                    } else {
                      echo '<a href="'. xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cpath=' . $cPath . '&current_product_id=' . $products['products_id'] ) . '&action=edit' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit_tags.gif', TEXT_PRODUCTS_TAGS,'', '', $icon_padding). '</a>';
                    }
-                   echo '<span style="vertical-align: 3px;">'.$products['products_name'].'</span>';
+                   echo '<span style="vertical-align: 3px;">'.$products['products_name'].$products_name_suffix.'</span>';
                    ?>
                  </td>
                  <?php
@@ -868,6 +875,7 @@
                     if ($cInfo->products_count > 0) {
                       $contents[] = array('text' => '<div class="messageStackError">'.sprintf(TEXT_DELETE_WARNING_PRODUCTS, $cInfo->products_count).'</div>');
                     }
+                    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/categories_view/multi_delete_category/','php') as $file) require ($file);
                   }
                   $params = ((isset($cInfo) && is_object($cInfo)) ? '&cID=' . $cInfo->categories_id : '');
                 }
@@ -887,6 +895,7 @@
                     }
                     $product_categories_string = substr($product_categories_string, 0, -4);
                     $contents[] = array('text' => $product_categories_string);
+                    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/categories_view/multi_delete_product/','php') as $file) require ($file);
                     $contents[] = array('text' => '<hr noshade>');
                   }
                   $params = ((isset($pInfo) && is_object($pInfo)) ? '&pID=' . $pInfo->products_id : '');
