@@ -51,6 +51,8 @@
 
       $group_check = (GROUP_CHECK == 'true') ? " AND p.group_permission_".(int)$_POST['status']." = 1 " : '';
       $fsk_lock = ($xtPrice->cStatus['customers_fsk18_display'] == '0') ? " AND p.products_fsk18 != 1 " : '';
+      $export_where = '';
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/export/products_export_where/','php') as $hook_file) require ($hook_file);
       
       $export_query = xtc_db_query("SELECT p.*,
                                            pd.products_name,
@@ -76,10 +78,12 @@
                                      WHERE p.products_status = 1
                                            ".$group_check."
                                            ".$fsk_lock."
+                                           ".$export_where."
                                   GROUP BY p.products_id");
       
       $i = 0;
       $fp = fopen(DIR_FS_DOCUMENT_ROOT.'export/'.$file, 'w');
+      $row_hooks = auto_include(DIR_FS_ADMIN.'includes/extra/modules/export/products_export_data/','php');
       while ($export = xtc_db_fetch_array($export_query)) {
         $products_price = (($xtPrice->cStatus['customers_status_show_price'] != 0) ? $xtPrice->xtcGetPrice($export['products_id'], false, 1, $export['products_tax_class_id']) : 0);
 
@@ -98,6 +102,11 @@
           'tax' => isset($xtPrice->TAX[$export['products_tax_class_id']]) ? $xtPrice->TAX[$export['products_tax_class_id']] : 0,
           'currency' => $_POST['currencies'],
         );
+
+        $skip_row = false;
+        foreach ($row_hooks as $hook_file) require ($hook_file);
+        if ($skip_row) continue;
+
         $export_data_array = $this->encode_request($export_data_array, $lng->language['language_charset']);
         
         if ($i == 0) {
