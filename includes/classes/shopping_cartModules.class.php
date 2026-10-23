@@ -204,8 +204,18 @@ class shoppingCartModules {
 
     public static function add_cart_permission($allowed, $products_id, $qty, $attributes, $type)
     {
-        self::$function_call = 'add_cart_permission';
-        return self::call_module_method($allowed, $products_id, $qty, $attributes, $type);
+        // the first refusal is final, a later module must not lift it by returning something else
+        if (is_array(self::$modules)) {
+            foreach(self::$modules as $class) {
+                if (is_callable(array($GLOBALS[$class], 'add_cart_permission'))
+                    && $GLOBALS[$class]->add_cart_permission($allowed, $products_id, $qty, $attributes, $type) === false
+                    )
+                {
+                    return false;
+                }
+            }
+        }
+        return $allowed;
     }
 
     public static function create_products_attributes_array($dataArray, $products_id, $type)
