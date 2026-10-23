@@ -46,10 +46,17 @@
 
   $countOptions = $countValues = 0;
   $module_content = array();
+
+  // hooks may append AND conditions to hide options; hidden options keep their values on save
+  $options_where = '';
+  require_once(DIR_FS_INC.'auto_include.inc.php');
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/products_tags/options_query/','php') as $file) require ($file);
+
   $options_query = xtc_db_query("SELECT *
                                    FROM " . TABLE_PRODUCTS_TAGS_OPTIONS . "
                                   WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                                     AND (filter = '1' OR status = '1')
+                                    ".$options_where."
                                ORDER BY ". $option_order_by);
 
   $optFlag = false;
