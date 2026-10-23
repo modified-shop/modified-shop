@@ -359,17 +359,6 @@ class xtcPrice {
    * @return Double option price
    */
   function xtcGetOptionPrice($pID, $option, $value, $qty = 1, $applyDiscount = true) {
-    $price = $discount = $attributes_weight = 0;
-    
-    $dataArr = array(
-      'weight' => 0,
-      'price' => 0,
-      'discount' => 0,
-      'qty' => $qty,
-      'weight_prefix' => '',
-      'price_prefix' => ''
-    );
-    
     $attribute_query = xtDBquery("SELECT p.products_discount_allowed,
                                          p.products_tax_class_id,
                                          p.products_price,
@@ -382,79 +371,122 @@ class xtcPrice {
                                      AND pa.options_id = '" . (int)$option . "'
                                      AND pa.options_values_id = '" . (int)$value . "'");
     
+    $attribute_data = false;
     if (xtc_db_num_rows($attribute_query, true) > 0) {
-      $attribute_data  = xtc_db_fetch_array($attribute_query, true);
-      $attribute_data['products_tax_class_id'] = $this->xtc_get_tax_class($pID, $attribute_data['products_tax_class_id']);
-      
-      // calculate weight
-      $attributes_weight = $attribute_data['options_values_weight'];
-      if ($attribute_data['weight_prefix'] != '+') {
-        $attributes_weight *= -1;
-      }
-      
-      // calculate discount
-      if ($applyDiscount && $this->cStatus['customers_status_discount_attributes'] == '1') {
-        $discount = $this->xtcCheckDiscount($pID);
-      }
-      
-      // calculate price and several currencies on product attributes
-      $CalculateCurr = (($attribute_data['products_tax_class_id'] == 0) ? true : false);
-      $price = $this->xtcFormat($attribute_data['options_values_price'], false, $attribute_data['products_tax_class_id'], $CalculateCurr);
-      if ($discount <> 0) {
-        $price = $price - ($price / 100 * $discount);
-      }
-      if ($attribute_data['price_prefix'] == '-') {
-        $price *= -1;
-      }
-    
-      $dataArr = array(
-        'weight' => $attributes_weight,
-        'price' => $price,
-        'discount' => $discount,
-        'qty' => $qty,
-        'weight_prefix' => $attribute_data['weight_prefix'],
-        'price_prefix' => $attribute_data['price_prefix']
-      );
-      
-      $dataArr = $this->priceModules->GetOptionPrice($dataArr, $attribute_data, $pID, $option, $value, $qty);
+      $attribute_data = xtc_db_fetch_array($attribute_query, true);
     }
+    return $this->xtcCalculateOptionPrice($attribute_data, $pID, $option, $value, $qty, $applyDiscount);
+  }
+
+  /**
+   * Calculates an option from a loaded attribute row, including price module hooks.
+   *
+   * @param Array/false $attribute_data attribute and product data
+   * @param Integer $pID product id
+   * @param Integer $option option id
+   * @param Integer $value value id
+   * @param Double $qty quantity
+   * @param Boolean $applyDiscount apply the customer group attribute discount
+   * @return Array option price, weight and discount data
+   */
+  function xtcCalculateOptionPrice($attribute_data, $pID, $option, $value, $qty = 1, $applyDiscount = true) {
+    $price = $discount = $attributes_weight = 0;
+
+    $dataArr = array(
+      'weight' => 0,
+      'price' => 0,
+      'discount' => 0,
+      'qty' => $qty,
+      'weight_prefix' => '',
+      'price_prefix' => ''
+    );
+
+    if (!$attribute_data) {
+      return $dataArr;
+    }
+    $attribute_data['products_tax_class_id'] = $this->xtc_get_tax_class($pID, $attribute_data['products_tax_class_id']);
+
+    // calculate weight
+    $attributes_weight = $attribute_data['options_values_weight'];
+    if ($attribute_data['weight_prefix'] != '+') {
+      $attributes_weight *= -1;
+    }
+
+    // calculate discount
+    if ($applyDiscount && $this->cStatus['customers_status_discount_attributes'] == '1') {
+      $discount = $this->xtcCheckDiscount($pID);
+    }
+
+    // calculate price and several currencies on product attributes
+    $CalculateCurr = (($attribute_data['products_tax_class_id'] == 0) ? true : false);
+    $price = $this->xtcFormat($attribute_data['options_values_price'], false, $attribute_data['products_tax_class_id'], $CalculateCurr);
+    if ($discount <> 0) {
+      $price = $price - ($price / 100 * $discount);
+    }
+    if ($attribute_data['price_prefix'] == '-') {
+      $price *= -1;
+    }
+
+    $dataArr = array(
+      'weight' => $attributes_weight,
+      'price' => $price,
+      'discount' => $discount,
+      'qty' => $qty,
+      'weight_prefix' => $attribute_data['weight_prefix'],
+      'price_prefix' => $attribute_data['price_prefix']
+    );
+
+    $dataArr = $this->priceModules->GetOptionPrice($dataArr, $attribute_data, $pID, $option, $value, $qty);
     return $dataArr;
   }
-  
+
   /**
    * Returns the cheapest displayed attribute combination and its regular price.
    * Values with blank names or without a name in the current language are hidden.
    *
    * @param Integer $pID product id without selected attributes
    * @param Double $qty quantity
-   * @return Array/null current and regular attribute surcharges, null without visible attributes
+   * @return Array/null current and regular surcharges with selected attribute rows, null without visible attributes
    */
   function xtcGetAttributeMinimum($pID, $qty = 1) {
+    global $product;
+
     $minimum = array('price' => 0, 'old_price' => 0);
     if ((int)$pID <= 0 || strpos((string)$pID, '{') !== false) {
       return $minimum;
     }
+    if (is_object($product) && is_callable(array($product, 'getAttributesCount'))
+        && $product->getAttributesCount($pID) == 0)
+    {
+      return null;
+    }
 
     $attributes = array();
-    $attribute_query = xtDBquery("SELECT DISTINCT pa.options_id,
-                                                pa.options_values_id,
-                                                pa.sortorder,
-                                                pov.products_options_values_sortorder
-                                           FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                           JOIN ".TABLE_PRODUCTS_OPTIONS." po
-                                                ON po.products_options_id = pa.options_id
-                                                   AND po.language_id = '".(int)$_SESSION['languages_id']."'
-                                                   AND trim(po.products_options_name) != ''
-                                           JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
-                                                ON pov.products_options_values_id = pa.options_values_id
-                                                   AND pov.language_id = '".(int)$_SESSION['languages_id']."'
-                                                   AND trim(pov.products_options_values_name) != ''
-                                          WHERE pa.products_id = '".(int)$pID."'
-                                       ORDER BY pa.options_id, pa.sortorder, pov.products_options_values_sortorder, pa.options_values_id");
+    $attribute_data = array();
+    $selected_attributes = array();
+    $attribute_query = xtDBquery("SELECT p.products_discount_allowed,
+                                         p.products_tax_class_id,
+                                         p.products_price,
+                                         p.products_weight,
+                                         pa.*
+                                    FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                    JOIN ".TABLE_PRODUCTS." p
+                                         ON p.products_id = pa.products_id
+                                    JOIN ".TABLE_PRODUCTS_OPTIONS." po
+                                         ON po.products_options_id = pa.options_id
+                                            AND po.language_id = '".(int)$_SESSION['languages_id']."'
+                                            AND trim(po.products_options_name) != ''
+                                    JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
+                                         ON pov.products_options_values_id = pa.options_values_id
+                                            AND pov.language_id = '".(int)$_SESSION['languages_id']."'
+                                            AND trim(pov.products_options_values_name) != ''
+                                   WHERE pa.products_id = '".(int)$pID."'
+                                ORDER BY po.products_options_sortorder, po.products_options_id, pa.sortorder, pov.products_options_values_sortorder, pa.options_values_id");
     while ($attribute = xtc_db_fetch_array($attribute_query, true)) {
       $option = $attribute['options_id'];
       $value = $attribute['options_values_id'];
-      $attributes[$option][$value] = $this->xtcGetOptionPrice($pID, $option, $value, $qty);
+      $attribute_data[$option][$value] = $attribute;
+      $attributes[$option][$value] = $this->xtcCalculateOptionPrice($attribute, $pID, $option, $value, $qty);
     }
     if (count($attributes) == 0) {
       return null;
@@ -469,13 +501,19 @@ class xtcPrice {
       $minimum['price'] += $values[$selected]['price'];
       $regular = $values[$selected];
       if ($regular['discount'] != 0) {
-        $regular = $this->xtcGetOptionPrice($pID, $option, $selected, $qty, false);
+        $regular = $this->xtcCalculateOptionPrice($attribute_data[$option][$selected], $pID, $option, $selected, $qty, false);
       }
       $minimum['old_price'] += $regular['price'];
+      $selected_attributes[$option] = $attribute_data[$option][$selected];
     }
 
-    // Modules with non-additive attributes can replace the calculated surcharges.
-    return $this->priceModules->GetAttributeMinimum($minimum, $pID, $qty, $attributes);
+    // Changed module totals need explicit selected rows before a VPE can be shown.
+    $module_minimum = $this->priceModules->GetAttributeMinimum($minimum, $pID, $qty, $attributes);
+    if ($module_minimum !== null && !array_key_exists('attributes', $module_minimum)) {
+      $module_minimum['attributes'] = ($module_minimum['price'] == $minimum['price']
+                                      && $module_minimum['old_price'] == $minimum['old_price']) ? $selected_attributes : null;
+    }
+    return $module_minimum;
   }
 
   /**
@@ -495,6 +533,17 @@ class xtcPrice {
       $price = round($price, PRICE_PRECISION);
     }
     return $price + $minimum;
+  }
+
+  /**
+   * Adds the selected minimum configuration to a formatted price array.
+   * The rows follow displayed option order; null rows mean an unknown module selection.
+   */
+  function xtcAddAttributeMinimumData($price, $minimum) {
+    if ($minimum !== null && is_array($price)) {
+      $price['attribute_minimum'] = $minimum;
+    }
+    return $price;
   }
 
   /**
@@ -865,7 +914,7 @@ class xtcPrice {
       if ($vpeStatus == 0) {
         return $from.$Pprice;
       } else {
-        return array(
+        return $this->xtcAddAttributeMinimumData(array(
           'formated' => $from.$Pprice,
           'standard_price' => $Pprice,
           'plain' => $price,
@@ -873,7 +922,7 @@ class xtcPrice {
           'flag' => 'standard',
           'netto' => $Nprice,
           'brutto' => $Bprice
-        );
+        ), $attributeMinimum);
       }
     } else {
       return $this->show_price_tax ? round((float)$price, PRICE_PRECISION) : (float)$price;
@@ -930,7 +979,7 @@ class xtcPrice {
       if ($vpeStatus == 0) {
         return $price;
       } else {
-        return array(
+        return $this->xtcAddAttributeMinimumData(array(
           'formated' => $price,
           'plain' => $sPrice,
           'special_price' =>  $special_price,
@@ -943,7 +992,7 @@ class xtcPrice {
           'flag' => 'SpecialDiscount',         
           'netto' => $Nprice,
           'brutto' => $Bprice
-        );
+        ), $attributeMinimum);
       }
     } else {
       return $this->show_price_tax ? round((float)$sPrice, PRICE_PRECISION) : (float)$sPrice;
@@ -1023,6 +1072,7 @@ class xtcPrice {
       $return = $this->show_price_tax ? round((float)$sPrice, PRICE_PRECISION) : (float)$sPrice;
     }
     
+    $return = $this->xtcAddAttributeMinimumData($return, $attributeMinimum);
     $return = $this->priceModules->FormatSpecial($return, $pID, $sPrice, $pPrice, $format, $vpeStatus);
     
     return $return;
@@ -1062,6 +1112,7 @@ class xtcPrice {
       $from = '';
       $uvp = '';
       $displayPrice = $sPrice;
+      $displayAttributeMinimum = $attributeMinimum;
       if ($this->showCheapestGraduated === true 
           && $this->cStatus['customers_status_graduated_prices'] == '1'
           && $sQuery['qty'] > 1
@@ -1074,6 +1125,7 @@ class xtcPrice {
         $old_price_plain = $this->xtcFormat($bestPrice, false, $tax_class, ($attributeMinimum !== null && $tax_class == 0));
         if ($attributeMinimum !== null) {
           $bestAttributeMinimum = $this->xtcGetAttributeMinimum($pID, $sQuery['qty']);
+          $displayAttributeMinimum = $bestAttributeMinimum;
           if ($bestAttributeMinimum !== null) {
             $old_price_plain = $this->xtcAddAttributeMinimum($old_price_plain, $bestAttributeMinimum['price']);
           }
@@ -1123,7 +1175,7 @@ class xtcPrice {
       if ($vpeStatus == 0) {
         return $price;
       } else {
-        return array(
+        return $this->xtcAddAttributeMinimumData(array(
           'formated' => $price,
           'plain' => $displayPrice,
           'special_price' =>  $special_price,
@@ -1135,7 +1187,7 @@ class xtcPrice {
           'flag' => 'SpecialGraduated',
           'netto' => $Nprice,
           'brutto' => $Bprice
-        );
+        ), $displayAttributeMinimum);
       }
     } else {
       return $this->show_price_tax ? round((float)$sPrice, PRICE_PRECISION) : (float)$sPrice;
@@ -1187,6 +1239,7 @@ class xtcPrice {
       $return = $this->show_price_tax ? round((float)$ePrice, PRICE_PRECISION) : (float)$ePrice;
     }
     
+    $return = $this->xtcAddAttributeMinimumData($return, $attributeMinimum);
     $return = $this->priceModules->FormatExtension($return, $pID, $ePrice, $pPrice, $format, $vpeStatus);
     
     return $return;

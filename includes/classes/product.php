@@ -745,9 +745,10 @@ class product {
    * buildDataArray
    *
    * @param array $array
+   * @param boolean $includeAttributeMinimum Include the cheapest visible attribute combination?
    * @return array
    */
-  function buildDataArray(&$array, $image = 'thumbnail', $cache = true) {
+  function buildDataArray(&$array, $image = 'thumbnail', $cache = true, $includeAttributeMinimum = true) {
     global $xtPrice, $main;        
     static $productData;
     
@@ -755,8 +756,9 @@ class product {
       $productData = array();
     }
 
-    if (!isset($productData[$array['products_id']]) || $cache === false) {
-      $productData[$array['products_id']] = array();
+    $cache_key = $array['products_id'].':'.$image.':'.(int)$includeAttributeMinimum;
+    if (!isset($productData[$cache_key]) || $cache === false) {
+      $productData[$cache_key] = array();
 
       $array['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($array['products_id'], $array['products_tax_class_id']);
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
@@ -771,8 +773,35 @@ class product {
       $tax_rate = isset($xtPrice->TAX[$array['products_tax_class_id']]) ? $xtPrice->TAX[$array['products_tax_class_id']] : 0;
   
       //get products price , returns array
-      $products_price = $xtPrice->xtcGetPrice($array['products_id'], $format = true, 1, $array['products_tax_class_id'], $array['products_price'], 1, 0, true);
+      $products_price = $xtPrice->xtcGetPrice($array['products_id'], $format = true, 1, $array['products_tax_class_id'], $array['products_price'], 1, 0, $includeAttributeMinimum);
   
+      // The unit price must use the quantity of the displayed attribute combination.
+      $vpe_data = $array;
+      if (isset($products_price['attribute_minimum'])) {
+        $attribute_minimum = $products_price['attribute_minimum'];
+        if (!isset($attribute_minimum['attributes']) || !is_array($attribute_minimum['attributes'])) {
+          // A custom price without a known combination has no reliable unit quantity.
+          $vpe_data['products_vpe_status'] = 0;
+          $vpe_data['products_vpe_value'] = 0;
+        } else {
+          foreach ($attribute_minimum['attributes'] as $attribute) {
+            $attribute_value = isset($attribute['attributes_vpe_value']) ? (float)$attribute['attributes_vpe_value'] : 0;
+            switch ($attribute['weight_prefix']) {
+              case '-':
+                $vpe_data['products_vpe_value'] -= $attribute_value;
+                break;
+              case '=':
+                $vpe_data['products_vpe_value'] = $attribute_value;
+                break;
+              default:
+                $vpe_data['products_vpe_value'] += $attribute_value;
+            }
+            $vpe_data['products_vpe'] = (isset($attribute['attributes_vpe_id']) && $attribute['attributes_vpe_id'] > 0 ? $attribute['attributes_vpe_id'] : $array['products_vpe']);
+          }
+        }
+        unset($products_price['attribute_minimum']);
+      }
+
       //create buy now button
       $buy_now = '';
       $wishlist_now = '';
@@ -836,21 +865,21 @@ class product {
             
       //products data array
       foreach((array)$array as $key => $entry) {                  
-        $productData[$array['products_id']][strtoupper($key)] = $entry;
+        $productData[$cache_key][strtoupper($key)] = $entry;
       }
   
       // stripslashes description
       if (isset($array['products_short_description'])) {
-        $productData[$array['products_id']]['PRODUCTS_SHORT_DESCRIPTION'] = stripslashes($array['products_short_description']);
+        $productData[$cache_key]['PRODUCTS_SHORT_DESCRIPTION'] = stripslashes($array['products_short_description']);
       }
       if (isset($array['products_description'])) {
-        $productData[$array['products_id']]['PRODUCTS_DESCRIPTION'] = stripslashes($array['products_description']);
+        $productData[$cache_key]['PRODUCTS_DESCRIPTION'] = stripslashes($array['products_description']);
       }
 
       if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && isset($array['products_date_added'])) {    
         $date_new_products = mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y"));
         if (strtotime($array['products_date_added']) >= $date_new_products) {
-          $productData[$array['products_id']]['PRODUCTS_FLAG_NEW'] = true;
+          $productData[$cache_key]['PRODUCTS_FLAG_NEW'] = true;
         }
       }
       
@@ -858,9 +887,9 @@ class product {
         'PRODUCTS_PRICE' => $products_price['formated'],
         'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
         'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
-        'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
+        'PRODUCTS_VPE' => $main->getVPEtext($vpe_data, $products_price['plain']),
         'PRODUCTS_VPE_NAME' => $main->vpe_name,
-        'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
+        'PRODUCTS_VPE_VALUE' => $vpe_data['products_vpe_value'],
         'PRODUCTS_IMAGE' => $products_image,
         'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
         'PRODUCTS_IMAGE_ALT' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
@@ -880,19 +909,19 @@ class product {
         'SHIPPING_IMAGE' => $shipping_status_image,
         'SHIPPING_NAME_LINK' => $shipping_status_link,
       );
-      $productData[$array['products_id']] = array_merge($productData[$array['products_id']], $productDataAdds);
+      $productData[$cache_key] = array_merge($productData[$cache_key], $productDataAdds);
         
       foreach((array)$products_price as $key => $entry) {
         if (strtoupper($key) == 'PLAIN') $entry = round((float)$entry, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);      
-        $productData[$array['products_id']]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
-        $productData[$array['products_id']]['PRODUCTS_PRICE_ARRAY'][0]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
+        $productData[$cache_key]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
+        $productData[$cache_key]['PRODUCTS_PRICE_ARRAY'][0]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
       }
-      $productData[$array['products_id']]['PRODUCTS_PRICE_ARRAY'][0]['PRICE_ALLOWED'] = $productData[$array['products_id']]['PRICE_ALLOWED'];
+      $productData[$cache_key]['PRODUCTS_PRICE_ARRAY'][0]['PRICE_ALLOWED'] = $productData[$cache_key]['PRICE_ALLOWED'];
   
-      $productData[$array['products_id']] = $this->productModules->buildDataArray($productData[$array['products_id']], $array, $image, $cache);
+      $productData[$cache_key] = $this->productModules->buildDataArray($productData[$cache_key], $array, $image, $cache);
     }
     
-    return $productData[$array['products_id']];
+    return $productData[$cache_key];
   }
 
   /**
