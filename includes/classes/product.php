@@ -138,7 +138,7 @@ class product {
     
     if (!isset(self::$attributes_count_array[$pID])) {
       $products_attributes_query = xtDBquery("SELECT count(*) AS total_a,
-                                                     count(IF(options_values_price > 0, 1, null)) as total_p 
+                                                     count(IF(options_values_price != 0, 1, null)) as total_p
                                                 FROM ".TABLE_PRODUCTS_ATTRIBUTES."
                                                WHERE products_id = '".(int)$pID."'");
       $products_attributes = xtc_db_fetch_array($products_attributes_query, true);
@@ -165,7 +165,7 @@ class product {
     }
     $attributes_query = xtDBquery("SELECT products_id,
                                          count(*) AS total_a,
-                                         count(IF(options_values_price > 0, 1, null)) AS total_p
+                                         count(IF(options_values_price != 0, 1, null)) AS total_p
                                     FROM ".TABLE_PRODUCTS_ATTRIBUTES."
                                    WHERE products_id IN (".implode(', ', $products_ids).")
                                 GROUP BY products_id");
@@ -800,8 +800,12 @@ class product {
   
       // The unit price must use the quantity of the displayed attribute combination.
       $vpe_data = $array;
+      $attributes_available = null;
       if (isset($products_price['attribute_minimum'])) {
         $attribute_minimum = $products_price['attribute_minimum'];
+        if (isset($attribute_minimum['available'])) {
+          $attributes_available = (bool)$attribute_minimum['available'];
+        }
         if (!isset($attribute_minimum['attributes']) || !is_array($attribute_minimum['attributes'])) {
           // A custom price without a known combination has no reliable unit quantity.
           $vpe_data['products_vpe_status'] = 0;
@@ -933,6 +937,9 @@ class product {
         'SHIPPING_NAME_LINK' => $shipping_status_link,
       );
       $productData[$cache_key] = array_merge($productData[$cache_key], $productDataAdds);
+      if ($attributes_available !== null) {
+        $productData[$cache_key]['PRODUCTS_ATTRIBUTES_AVAILABLE'] = $attributes_available;
+      }
         
       foreach((array)$products_price as $key => $entry) {
         if (strtoupper($key) == 'PLAIN') $entry = round((float)$entry, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);      

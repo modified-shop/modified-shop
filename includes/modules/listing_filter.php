@@ -33,6 +33,19 @@ if (!CacheCheck()) {
   $get_params .= isset($_SESSION['filter_sorting']) ? '|fsort:'.$_SESSION['filter_sorting'] : '';
   $get_params .= isset($_SESSION['filter_set']) ? '|fset:'.$_SESSION['filter_set'] : '';
 
+  if (isset($listing_display_prices) && $listing_display_prices !== null && $listing_display_prices->price_filtered) {
+    $price_filter_ids = array_unique(array_map('intval', $listing_display_prices->product_ids));
+    sort($price_filter_ids, SORT_NUMERIC);
+    $price_filter_context = array(
+      'currency' => (isset($xtPrice->actualCurr) ? $xtPrice->actualCurr : $_SESSION['currency']),
+      'country' => (isset($xtPrice->country_id) ? (int)$xtPrice->country_id : (isset($_SESSION['country']) ? (int)$_SESSION['country'] : (isset($_SESSION['customer_country_id']) ? (int)$_SESSION['customer_country_id'] : (defined('STORE_COUNTRY') ? (int)STORE_COUNTRY : 0)))),
+      'zone' => (isset($xtPrice->zone_id) ? (int)$xtPrice->zone_id : (isset($_SESSION['customer_zone_id']) ? (int)$_SESSION['customer_zone_id'] : (defined('STORE_ZONE') ? (int)STORE_ZONE : 0))),
+      'tax' => (isset($xtPrice->cStatus['customers_status_show_price_tax']) ? $xtPrice->cStatus['customers_status_show_price_tax'] : $_SESSION['customers_status']['customers_status_show_price_tax']),
+      'products' => $price_filter_ids,
+    );
+    $get_params .= '|price:'.md5(serialize($price_filter_context));
+  }
+
   $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|self:'.basename($PHP_SELF).((isset($current_category_id)) ? '|cID:'.$current_category_id : '').$get_params);
 }
 
