@@ -391,6 +391,11 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                   }
                 }
               }
+              // rows without IDs on an article without attributes are details of other modules, no configuration
+              $check_where = '';
+              if (!xtc_has_product_attributes($order_data['PRODUCTS_ID'])) {
+                $check_where = " AND (opa.orders_products_options_id > 0 OR opa.orders_products_options_values_id > 0)";
+              }
               $check_query = xtc_db_query("SELECT COUNT(*) AS cnt, 
                                                   SUM(IF(ISNULL(pov.products_options_values_id), 0, 1)) AS checksum 
                                              FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa 
@@ -398,7 +403,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                                                   ON opa.orders_products_options_values_id = pov.products_options_values_id 
                                                      AND pov.language_id = ".(int)$_SESSION['languages_id']." 
                                                      AND pov.products_options_values_id > 0 
-                                            WHERE opa.orders_products_id = ".(int)$order_data['ORDERS_PRODUCTS_ID']);
+                                            WHERE opa.orders_products_id = ".(int)$order_data['ORDERS_PRODUCTS_ID'].$check_where);
               $check_result = xtc_db_fetch_array($check_query);
               if ($check_result['cnt'] != (int)$check_result['checksum']) {
                 $count_products_missing_attributes++;
@@ -475,6 +480,10 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
           }      
 
           if (isset($products_id)) {
+            $check_where = '';
+            if (!xtc_has_product_attributes($products_id)) {
+              $check_where = " AND (opa.orders_products_options_id > 0 OR opa.orders_products_options_values_id > 0)";
+            }
             $check_query = xtc_db_query("SELECT COUNT(*) AS cnt, 
                                                 SUM(IF(ISNULL(pov.products_options_values_id), 0, 1)) AS checksum 
                                            FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa 
@@ -482,7 +491,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                                                 ON opa.orders_products_options_values_id = pov.products_options_values_id 
                                                    AND pov.language_id = ".(int)$_SESSION['languages_id']." 
                                                    AND pov.products_options_values_id > 0 
-                                          WHERE opa.orders_products_id = ".(int)$_GET['id']);
+                                          WHERE opa.orders_products_id = ".(int)$_GET['id'].$check_where);
             $check_result = xtc_db_fetch_array($check_query);
             if ($check_result['cnt'] != (int)$check_result['checksum']) {
               xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products_id, 'SSL'));
