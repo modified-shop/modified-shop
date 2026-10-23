@@ -532,6 +532,7 @@ class categories {
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_DESCRIPTION." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_SPECIALS." WHERE products_id = '".(int)$product_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS." WHERE products_id = '".(int)$product_id."'");
     
     xtc_db_query("DELETE pad 
                     FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
@@ -1065,6 +1066,20 @@ class categories {
       }
     }
         
+    //dublicate tax classes per geo zone
+    $copy_query = xtc_db_query("SELECT geo_zone_id,
+                                       tax_class_id
+                                  FROM ".TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS."
+                                 WHERE products_id = '".$src_products_id."'");
+    while ($copy_data = xtc_db_fetch_array($copy_query)) {
+      $sql_data_array = array(
+        'products_id' => $this->dup_products_id,
+        'geo_zone_id' => $copy_data['geo_zone_id'],
+        'tax_class_id' => $copy_data['tax_class_id']
+      );
+      xtc_db_perform(TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS, $sql_data_array);
+    }
+
     //dublicate products attributes
     if (isset($_POST['attr_copy']) && $_POST['attr_copy'] == 'attr_copy') {
       $attribute_copy_query = xtc_db_query("SELECT *
