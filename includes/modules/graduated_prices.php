@@ -15,6 +15,11 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+if (isset($_SESSION['customers_status']['customers_status_show_price']) && $_SESSION['customers_status']['customers_status_show_price'] == '0') {
+  $info_smarty->assign('MODULE_graduated_price', '');
+  return;
+}
+
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');

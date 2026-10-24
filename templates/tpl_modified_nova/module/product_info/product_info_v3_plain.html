@@ -150,13 +150,13 @@
           {/if}
         {/if}      
 
-        <div class="pd_offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-          <meta itemprop="url" content="{$PRODUCTS_LINK}" />
+        <div class="pd_offer"{if !isset($PRODUCTS_OFFER_ALLOWED) || $PRODUCTS_OFFER_ALLOWED} itemprop="offers" itemscope itemtype="http://schema.org/Offer"{/if}>
+          {if !isset($PRODUCTS_OFFER_ALLOWED) || $PRODUCTS_OFFER_ALLOWED}<meta itemprop="url" content="{$PRODUCTS_LINK}" />
           <meta itemprop="priceCurrency" content="{$smarty.session.currency}" />
           {if $PRODUCTS_EXPIRES_C}<meta itemprop="priceValidUntil" content="{$PRODUCTS_EXPIRES_C}" />{/if}
-          {if isset($PRODUCTS_OFFER_AVAILABILITY)}<meta itemprop="availability" content="{$PRODUCTS_OFFER_AVAILABILITY}" />{if isset($PRODUCTS_OFFER_AVAILABILITY_STARTS) && $PRODUCTS_OFFER_AVAILABILITY_STARTS != ''}<meta itemprop="availabilityStarts" content="{$PRODUCTS_OFFER_AVAILABILITY_STARTS}" />{/if}{else}{if $PRODUCTS_QUANTITY <= 0 && $smarty.const.STOCK_CHECK == 'true'}<meta itemprop="availability" content="http://schema.org/OutOfStock" />{else}<meta itemprop="availability" content="http://schema.org/InStock" />{/if}{/if}
+          {if isset($PRODUCTS_OFFER_AVAILABILITY)}<meta itemprop="availability" content="{$PRODUCTS_OFFER_AVAILABILITY}" />{if isset($PRODUCTS_OFFER_AVAILABILITY_STARTS) && $PRODUCTS_OFFER_AVAILABILITY_STARTS != ''}<meta itemprop="availabilityStarts" content="{$PRODUCTS_OFFER_AVAILABILITY_STARTS}" />{/if}{else}{if $PRODUCTS_QUANTITY <= 0 && $smarty.const.STOCK_CHECK == 'true'}<meta itemprop="availability" content="http://schema.org/OutOfStock" />{else}<meta itemprop="availability" content="http://schema.org/InStock" />{/if}{/if}{/if}
           {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<meta itemprop="mpn" content="{$PRODUCTS_MANUFACTURERS_MODEL}" />{/if}
-          <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
+          {if !isset($PRODUCTS_OFFER_ALLOWED) || $PRODUCTS_OFFER_ALLOWED}<meta itemprop="itemCondition" content="http://schema.org/NewCondition" />{/if}
       
           <div class="pd_price">
             {if isset($PRODUCTS_DISCOUNT) && $PRODUCTS_DISCOUNT != ''}<div class="pd_price_discount"><strong>{#text_discount#}</strong> {$PRODUCTS_DISCOUNT}</div>{/if}  
