@@ -19,14 +19,14 @@
                   {$smarty.const.BOX_LOGINBOX_DISCOUNT}: {$price_data.PRODUCTS_PRICE_GROUP_DISCOUNT}%
                 </span>
               {/if}
-              <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
+              <meta itemprop="price" content="{if isset($PRODUCTS_OFFER_PRICE)}{$PRODUCTS_OFFER_PRICE}{else}{$price_data.PRODUCTS_PRICE_PLAIN}{/if}" />
               {* ENDE Produkt Sonderpreis Langform mit Ausgabe Alter Preis, Neuer Preis, Sie sparen *}
             {elseif $price_data.PRODUCTS_PRICE_FLAG == 'SpecialGraduated'}
               {if $price_data.PRODUCTS_PRICE_UVP != ''} 
                 {* START Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
                 <span class="specialgraduated_price">  
                   <span class="uvp_price">  
-                    <span class="small_price">{$smarty.const.YOUR_PRICE}</span> 
+                    <span class="small_price">{$smarty.const.YOUR_PRICE}{$price_data.PRODUCTS_PRICE_FROM}</span>
                     {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
                   </span>
                   <span class="item_price">
@@ -34,7 +34,7 @@
                     <del>{$price_data.PRODUCTS_PRICE_OLD_PRICE}</del>
                   </span>
                 </span>
-                <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
+                <meta itemprop="price" content="{if isset($PRODUCTS_OFFER_PRICE)}{$PRODUCTS_OFFER_PRICE}{else}{$price_data.PRODUCTS_PRICE_PLAIN}{/if}" />
                 {* ENDE Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
               {else}
                 {* START Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
@@ -42,7 +42,7 @@
                   {if isset($price_data.PRODUCTS_PRICE_FROM)}<span class="small_price">{$smarty.const.FROM}</span> {/if}{$price_data.PRODUCTS_PRICE_OLD_PRICE}
                 </span>
                 <span class="item_price"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
-                <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
+                <meta itemprop="price" content="{if isset($PRODUCTS_OFFER_PRICE)}{$PRODUCTS_OFFER_PRICE}{else}{$price_data.PRODUCTS_PRICE_PLAIN}{/if}" />
                 {* ENDE Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
               {/if}
             {elseif $price_data.PRODUCTS_PRICE_FLAG == 'NotAllowed'}
@@ -53,6 +53,6 @@
                 {if $price_data.PRODUCTS_PRICE_FROM != ''}<span class="small_price">{$price_data.PRODUCTS_PRICE_FROM}</span>{/if}
                 {$price_data.PRODUCTS_PRICE_STANDARD_PRICE}
               </span>
-              <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
+              <meta itemprop="price" content="{if isset($PRODUCTS_OFFER_PRICE)}{$PRODUCTS_OFFER_PRICE}{else}{$price_data.PRODUCTS_PRICE_PLAIN}{/if}" />
               {* ENDE Produkt Standardpreis mit Ausgabe ab Preis *}
             {/if}

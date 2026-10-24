@@ -8,7 +8,7 @@
               {if $price_data.PRODUCTS_PRICE_UVP != ''} 
                 {* START Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
                 <span class="uvp_price">
-                  <span class="small_price">{$smarty.const.YOUR_PRICE}</span> <span class="value_price">{$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
+                  <span class="small_price">{$smarty.const.YOUR_PRICE}{$price_data.PRODUCTS_PRICE_FROM}</span> <span class="value_price">{$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
                 </span>
                 {* ENDE Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
               {else}
