@@ -469,7 +469,8 @@ class xtcPrice {
         return;
       }
     }
-    $attribute_query = xtDBquery("SELECT p.products_discount_allowed,
+    // Read current attribute stock after checkout updates.
+    $attribute_query = xtc_db_query("SELECT p.products_discount_allowed,
                                          p.products_tax_class_id,
                                          p.products_price,
                                          p.products_weight,
@@ -487,7 +488,7 @@ class xtcPrice {
                                             AND trim(pov.products_options_values_name) != ''
                                    WHERE pa.products_id IN (".implode(', ', $products_ids).")
                                 ORDER BY pa.products_id, po.products_options_sortorder, po.products_options_id, pa.sortorder, pov.products_options_values_sortorder, pa.options_values_id");
-    while ($attribute = xtc_db_fetch_array($attribute_query, true)) {
+    while ($attribute = xtc_db_fetch_array($attribute_query)) {
       $this->attributeMinimumData[$language_id][(int)$attribute['products_id']][$attribute['options_id']][$attribute['options_values_id']] = $attribute;
     }
   }
