@@ -147,9 +147,15 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $info_smarty->assign('FORM_END', '</form>');
   
   // load all definitions from product class
-  $productDataArray = $product->buildDataArray($product->data, 'info', false);
+  $productDataArray = $product->buildDataArray($product->data, 'info', false, false);
   foreach ($productDataArray as $key => $value) {
     $info_smarty->assign($key, $value);
+  }
+
+  // Structured prices use the canonical offer; visible option prices keep their base reference.
+  $offerDataArray = $product->buildDataArray($product->data, 'info');
+  if (isset($offerDataArray['PRODUCTS_PRICE_PLAIN'])) {
+    $info_smarty->assign('PRODUCTS_OFFER_PRICE', $offerDataArray['PRODUCTS_PRICE_PLAIN']);
   }
   
   /*

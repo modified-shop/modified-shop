@@ -26,8 +26,8 @@ $smarty = new Smarty();
 
 // security fix
 $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim($_GET['keywords'])) : false;
-$pfrom = $_GET['pfrom'] = !empty($_GET['pfrom']) ? str_replace(',', '.', stripslashes(trim($_GET['pfrom']))) : false;
-$pto = $_GET['pto'] = !empty($_GET['pto']) ? str_replace(',', '.', stripslashes(trim($_GET['pto']))) : false;
+$pfrom = $_GET['pfrom'] = (isset($_GET['pfrom']) && trim($_GET['pfrom']) !== '') ? str_replace(',', '.', stripslashes(trim($_GET['pfrom']))) : false;
+$pto = $_GET['pto'] = (isset($_GET['pto']) && trim($_GET['pto']) !== '') ? str_replace(',', '.', stripslashes(trim($_GET['pto']))) : false;
 
 // reset error
 $errorno = 0;
@@ -36,19 +36,19 @@ $errorno = 0;
 $keywordcheck = xtc_parse_search_string($keywords, $search_keywords);
 
 // error check
-if (!$keywords && !$pfrom && !$pto) {
+if (!$keywords && $pfrom === false && $pto === false) {
   $errorno += 1;
 }
 if ($keywords && strlen($keywords) > 0 && mb_strlen($keywords, $_SESSION['language_charset']) < (int)SEARCH_MIN_LENGTH) {
   $errorno += 2;
 }
-if ($pfrom && (!is_numeric($pfrom) || !settype($pfrom, "float")) ) {
+if ($pfrom !== false && (!is_numeric($pfrom) || !settype($pfrom, "float")) ) {
   $errorno += 10000;
 }
-if ($pto && (!is_numeric($pto) || !settype($pto, "float")) ) {
+if ($pto !== false && (!is_numeric($pto) || !settype($pto, "float")) ) {
   $errorno += 100000;
 }
-if ($pfrom && !(($errorno & 10000) == 10000) && $pto && !(($errorno & 100000) == 100000) && $pfrom > $pto) {
+if ($pfrom !== false && !(($errorno & 10000) == 10000) && $pto !== false && !(($errorno & 100000) == 100000) && $pfrom > $pto) {
   $errorno += 1000000;
 }
 if ($keywords && !$keywordcheck) {

@@ -34,9 +34,12 @@
   
     protected $project_id;
     protected $api_key;
+    protected $language_directory;
     public $version = '1.0';
   
     function __construct($language_id, $timeout = 3) {
+      $context = $this->capturePriceContext();
+      try {
       // logger
       $this->logger = new LoggingManager(DIR_FS_LOG.'mod_%s_%s.log', 'info', 'error');
       
@@ -46,6 +49,9 @@
       $languages = xtc_db_fetch_array($languages_query);
       $this->language_id = $languages['languages_id'];
       $this->language_charset = $languages['language_charset'];
+      $this->language_directory = $languages['directory'];
+      $_SESSION['languages_id'] = $this->language_id;
+      $_SESSION['language'] = $this->language_directory;
 
       $this->api_key = defined('MODULE_SEMKNOX_SYSTEM_API_'.$this->language_id) ? constant('MODULE_SEMKNOX_SYSTEM_API_'.$this->language_id) : '';
       $this->project_id = defined('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$this->language_id) ? constant('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$this->language_id) : '';
@@ -58,6 +64,7 @@
                                                 FROM ".TABLE_CUSTOMERS_STATUS."
                                                WHERE language_id = ".$this->language_id);
       while ($customers_status = xtc_db_fetch_array($customers_status_query)) {
+        $_SESSION['customers_status'] = $customers_status;
         $this->customers_status_all_array[] = $customers_status['customers_status_id'];
         
         $this->customers_status_array[$customers_status['customers_status_id']] = array(
@@ -90,6 +97,9 @@
           )
         )
       );
+      } finally {
+        $this->restorePriceContext($context);
+      }
     }
 
     
@@ -217,7 +227,47 @@
     }
     
     
+    private function capturePriceContext() {
+      $context = array('session' => array(), 'globals' => array());
+      foreach (array('languages_id', 'language', 'customers_status') as $key) {
+        $context['session'][$key] = array(array_key_exists($key, $_SESSION), isset($_SESSION[$key]) ? $_SESSION[$key] : null);
+      }
+      foreach (array('product', 'xtPrice') as $key) {
+        $context['globals'][$key] = array(array_key_exists($key, $GLOBALS), isset($GLOBALS[$key]) ? $GLOBALS[$key] : null);
+      }
+      return $context;
+    }
+
+    private function restorePriceContext($context) {
+      foreach ($context['session'] as $key => $value) {
+        if ($value[0]) {
+          $_SESSION[$key] = $value[1];
+        } else {
+          unset($_SESSION[$key]);
+        }
+      }
+      foreach ($context['globals'] as $key => $value) {
+        if ($value[0]) {
+          $GLOBALS[$key] = $value[1];
+        } else {
+          unset($GLOBALS[$key]);
+        }
+      }
+    }
+
     private function getProduct($products_id) {
+      $context = $this->capturePriceContext();
+      try {
+        $_SESSION['languages_id'] = $this->language_id;
+        $_SESSION['language'] = $this->language_directory;
+        $_SESSION['customers_status'] = get_customers_status_by_id(DEFAULT_CUSTOMERS_STATUS_ID_GUEST);
+        return $this->buildProduct($products_id);
+      } finally {
+        $this->restorePriceContext($context);
+      }
+    }
+
+    private function buildProduct($products_id) {
       global $product, $xtPrice;
       
       $product = new product();
@@ -277,12 +327,6 @@
         $products_array['attributes'][] = array(
           'key' => 'ordered',
           'value' => $products['products_ordered'],
-          'userGroups' => $this->customers_status_all_array,
-        );
-
-        $products_array['attributes'][] = array(
-          'key' => 'quantity',
-          'value' => $products['products_quantity'],
           'userGroups' => $this->customers_status_all_array,
         );
 
@@ -404,128 +448,63 @@
           }
         }
       
-        $vpe_array = $this->getVpeData($products, 1);
-        if (is_array($vpe_array)) {
-          $products_array['attributes'][] = array(
-            'key' => 'vpe_name',
-            'value' => $vpe_array['vpe_name'],
-            'userGroups' => $this->customers_status_all_array,
-          );          
-          $products_array['attributes'][] = array(
-            'key' => 'vpe_value',
-            'value' => $vpe_array['vpe_value'],
-            'userGroups' => $this->customers_status_all_array,
-          );          
-        }
-      
-        $price_array = array();
-        $price_formatted_array = array();
-        $vpe_price_array = array();
-        $tax_info_array = array();
-
-        $old_price_array = array();
-        $old_price_save_array = array();
-        $old_price_formatted_array = array();
-        
+        $price_attributes = array();
         foreach ($this->customers_status_array as $customers_status) {
-          $products_price = $customers_status['xtPrice']->xtcGetPrice($products['products_id'], true, 1, $products['products_tax_class_id'], $products['products_price'], 1);
+          $xtPrice = $customers_status['xtPrice'];
+          $_SESSION['customers_status'] = $xtPrice->cStatus;
+          $products_price = $xtPrice->xtcGetPrice($products['products_id'], true, 1, $products['products_tax_class_id'], $products['products_price'], 1, 0, true);
+          $group = $customers_status['id'];
+          $decimals = $xtPrice->get_decimal_places();
+          $this->addPriceAttribute($price_attributes, 'price', number_format($products_price['plain'], 4, ',', ''), $group);
+          $this->addPriceAttribute($price_attributes, 'price_formatted', $xtPrice->xtcFormatCurrency($products_price['plain']), $group);
+
+          $tax_class = $xtPrice->tax_class;
           $tax_rate = 0;
-          if (isset($customers_status['xtPrice']->TAX[$products['products_tax_class_id']])
-              && $customers_status['xtPrice']->cStatus['customers_status_show_price'] != 0
-              && $customers_status['xtPrice']->cStatus['customers_status_show_price_tax'] != 0
-              )
+          if (isset($xtPrice->TAX[$tax_class])
+              && $xtPrice->cStatus['customers_status_show_price'] != 0
+              && $xtPrice->cStatus['customers_status_show_price_tax'] != 0)
           {
-            $tax_rate = $customers_status['xtPrice']->TAX[$products['products_tax_class_id']];
+            $tax_rate = $xtPrice->TAX[$tax_class];
           }
-          $_SESSION['customers_status'] = $customers_status['xtPrice']->cStatus;
-          
-          $products_price['hash'] = md5($products_price['plain']);
-          
-          if (!isset($price_array[$products_price['hash']])) {
-            $price_array[$products_price['hash']] = array(
-              'key' => 'price',
-              'value' => number_format($products_price['plain'], 4, ',', ''),
-              'userGroups' => array(),
-            );
+          $this->addPriceAttribute($price_attributes, 'tax_rate_'.$tax_rate, $tax_rate, $group);
 
-            $price_formatted_array[$products_price['hash']] = array(
-              'key' => 'price_formatted',
-              'value' => $customers_status['xtPrice']->xtcFormatCurrency($products_price['plain']),
-              'userGroups' => array(),
-            );
-          
-            $vpe_array = $this->getVpeData($products, $products_price['plain']);
-            if (is_array($vpe_array)) {
-              $vpe_price_array[$products_price['hash']] = array(
-                'key' => 'vpe_price',
-                'value' => $customers_status['xtPrice']->xtcFormatCurrency($vpe_array['vpe_price']),
-                'userGroups' => array(),
-              );
-            }
-            
-            $old_price = $customers_status['xtPrice']->xtcAddTax($products['products_price'], $tax_rate, false);            
-            if (round($products_price['plain'], 2) != 0 
-                && round($products_price['plain'], 2) < round($old_price, 2)
-                )
-            {              
-              $old_price_array[$products_price['hash']] = array(
-                'key' => 'price_old',
-                'value' => $old_price,
-                'userGroups' => array(),
-              );
-              $old_price_save_array[$products_price['hash']] = array(
-                'key' => 'price_old_save',
-                'value' => round(($old_price - $products_price['plain']) / $old_price * 100),
-                'userGroups' => array(),
-              );
-              $old_price_formatted_array[$products_price['hash']] = array(
-                'key' => 'price_old_formatted',
-                'value' => $customers_status['xtPrice']->xtcFormatCurrency($old_price),
-                'userGroups' => array(),
-              );
-            }
+          $minimum = isset($products_price['attribute_minimum']) ? $products_price['attribute_minimum'] : null;
+          $quantity = ($minimum !== null && isset($minimum['available']) && !$minimum['available']) ? 0 : $products['products_quantity'];
+          $this->addPriceAttribute($price_attributes, 'quantity', $quantity, $group);
+          $vpe_products = $this->minimumVpeProducts($products, $minimum);
+          $vpe_array = $products_price['plain'] > 0 ? $this->getVpeData($vpe_products, $products_price['plain'], $decimals) : false;
+          if (is_array($vpe_array)) {
+            $this->addPriceAttribute($price_attributes, 'vpe_name', $vpe_array['vpe_name'], $group);
+            $this->addPriceAttribute($price_attributes, 'vpe_value', $vpe_array['vpe_value'], $group);
+            $this->addPriceAttribute($price_attributes, 'vpe_price', $xtPrice->xtcFormatCurrency($vpe_array['vpe_price']), $group);
           }
 
-          $price_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
-          $price_formatted_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
-          if (isset($vpe_price_array[$products_price['hash']]['userGroups'])) {
-            $vpe_price_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
+          // Use the same complete configuration for the regular comparison price.
+          if (isset($products_price['old_price_plain'])) {
+            $old_price = $products_price['old_price_plain'];
+          } else {
+            $old_price = $xtPrice->xtcAddTax($products['products_price'], $tax_rate);
+            if ($minimum !== null) {
+              $old_price = $xtPrice->xtcAddAttributeMinimum($old_price, $minimum['old_price']);
+            }
           }
-          if (isset($old_price_array[$products_price['hash']])) {
-            $old_price_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
+          if ($xtPrice->cStatus['customers_status_show_price'] != 0 && $old_price > 0
+              && round($products_price['plain'], $decimals) < round($old_price, $decimals))
+          {
+            $this->addPriceAttribute($price_attributes, 'price_old', $old_price, $group);
+            $this->addPriceAttribute($price_attributes, 'price_old_save', round(($old_price - $products_price['plain']) / $old_price * 100), $group);
+            $this->addPriceAttribute($price_attributes, 'price_old_formatted', $xtPrice->xtcFormatCurrency($old_price), $group);
           }
-          if (isset($old_price_save_array[$products_price['hash']])) {
-            $old_price_save_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
-          }
-          if (isset($old_price_formatted_array[$products_price['hash']])) {
-            $old_price_formatted_array[$products_price['hash']]['userGroups'][] = $customers_status['id'];
-          }
-        
-          if (!isset($tax_info_array[$tax_rate])) {
-            $tax_info_array[$tax_rate] = array(
-              'key' => 'tax_rate_'.$tax_rate,
-              'value' => $tax_rate,
-              'userGroups' => array(),
-            );
-          }
-          $tax_info_array[$tax_rate]['userGroups'][] = $customers_status['id'];
 
           if (GROUP_CHECK == 'true') {
-            if ($products['group_permission_'.$customers_status['id']] == 1) {
-              $products_array['settings']['includeUserGroups'][] = $customers_status['id'];
+            if ($products['group_permission_'.$group] == 1) {
+              $products_array['settings']['includeUserGroups'][] = $group;
             } else {
-              $products_array['settings']['excludeUserGroups'][] = $customers_status['id'];
+              $products_array['settings']['excludeUserGroups'][] = $group;
             }
           }
         }
-
-        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_array));
-        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_formatted_array));
-        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($vpe_price_array));
-        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($tax_info_array));
-        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($old_price_array));
-        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($old_price_save_array));
-        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($old_price_formatted_array));
+        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_attributes));
         $products_array['attributes'] = array_values($products_array['attributes']);
                    
         if (count($products_array['categories']) > 0) {
@@ -629,7 +608,42 @@
     }
 
 
-    private function getVpeData($products, $price) {
+    private function addPriceAttribute(&$attributes, $key, $value, $group) {
+      // Each field has its own grouping: equal prices need not imply equal VPE or savings.
+      $hash = $key.':'.hash('sha256', serialize($value));
+      if (!isset($attributes[$hash])) {
+        $attributes[$hash] = array('key' => $key, 'value' => $value, 'userGroups' => array());
+      }
+      $attributes[$hash]['userGroups'][] = $group;
+    }
+
+    private function minimumVpeProducts($products, $minimum) {
+      $vpe_products = $products;
+      if ($minimum !== null) {
+        if (!isset($minimum['attributes']) || !is_array($minimum['attributes'])) {
+          $vpe_products['products_vpe_status'] = 0;
+          $vpe_products['products_vpe_value'] = 0;
+        } else {
+          foreach ($minimum['attributes'] as $attribute) {
+            $value = isset($attribute['attributes_vpe_value']) ? (float)$attribute['attributes_vpe_value'] : 0;
+            switch ($attribute['weight_prefix']) {
+              case '-':
+                $vpe_products['products_vpe_value'] -= $value;
+                break;
+              case '=':
+                $vpe_products['products_vpe_value'] = $value;
+                break;
+              default:
+                $vpe_products['products_vpe_value'] += $value;
+            }
+            $vpe_products['products_vpe'] = (isset($attribute['attributes_vpe_id']) && $attribute['attributes_vpe_id'] > 0 ? $attribute['attributes_vpe_id'] : $products['products_vpe']);
+          }
+        }
+      }
+      return $vpe_products;
+    }
+
+    private function getVpeData($products, $price, $decimal_places = 2) {
       static $vpe_name_array;
       
       if (!isset($vpe_name_array)) {
@@ -653,7 +667,7 @@
         return array(
           'vpe_value' => $products['products_vpe_value'],
           'vpe_name' => $vpe_name_array[$this->language_id][$products['products_vpe']],
-          'vpe_price' => $price * (1 / $products['products_vpe_value']),
+          'vpe_price' => round($price, $decimal_places) * (1 / $products['products_vpe_value']),
         );
       }
       

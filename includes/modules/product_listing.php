@@ -46,7 +46,16 @@ $list_count_key = 'p.products_id';
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_split/','php') as $file) require ($file);
 
-$listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, $list_count_key);
+require_once (DIR_FS_CATALOG.'includes/classes/listingDisplayPrices.php');
+$listing_display_prices = null;
+$display_price_bounds = (isset($listing_display_price_bounds) ? $listing_display_price_bounds : listingDisplayPrices::getBounds((isset($_GET['pfrom']) ? $_GET['pfrom'] : null), (isset($_GET['pto']) ? $_GET['pto'] : null)));
+if (listingDisplayPrices::isRequired($listing_sql, $xtPrice, $display_price_bounds)) {
+  $listing_display_prices = new listingDisplayPrices($listing_sql, $xtPrice, $product, $display_price_bounds);
+  if ($listing_display_prices->price_filtered && isset($products_search_array)) {
+    $products_search_array = array_combine($listing_display_prices->product_ids, $listing_display_prices->product_ids);
+  }
+}
+$listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, $list_count_key, ($listing_display_prices !== null ? count($listing_display_prices->rows) : null));
 
 $module_content = $category = array();
 $image = '';
@@ -137,10 +146,15 @@ if ($listing_split->number_of_rows > 0) {
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_begin/','php') as $file) require ($file);
 
-  $listing_query = xtDBquery($listing_split->sql_query);
-  $listing_array = array();
-  while ($listing = xtc_db_fetch_array($listing_query, true)) {
-    $listing_array[] = $listing;
+  if ($listing_display_prices !== null) {
+    $listing_offset = max(0, ($listing_split->current_page_number - 1) * $max_display_results);
+    $listing_array = array_slice($listing_display_prices->rows, $listing_offset, $max_display_results);
+  } else {
+    $listing_query = xtDBquery($listing_split->sql_query);
+    $listing_array = array();
+    while ($listing = xtc_db_fetch_array($listing_query, true)) {
+      $listing_array[] = $listing;
+    }
   }
 
   // read the review data of the whole page before building the single products
@@ -151,7 +165,7 @@ if ($listing_split->number_of_rows > 0) {
   $product->preloadReviews($products_id_array);
 
   foreach ($listing_array as $listing) {
-    $module_content[$listing['products_id']] =  $product->buildDataArray($listing);
+    $module_content[$listing['products_id']] =  $product->buildDataArray($listing, 'thumbnail', true, true, ($listing_display_prices !== null ? $listing_display_prices->prices[$listing['products_id']] : null));
   }
 
   // get default template
