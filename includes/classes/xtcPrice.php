@@ -359,7 +359,7 @@ class xtcPrice {
    * @return Double option price
    */
   function xtcGetOptionPrice($pID, $option, $value, $qty = 1, $applyDiscount = true) {
-    $attribute_query = xtDBquery("SELECT p.products_discount_allowed,
+    $attribute_query = xtc_db_query("SELECT p.products_discount_allowed,
                                          p.products_tax_class_id,
                                          p.products_price,
                                          p.products_weight,
@@ -372,8 +372,8 @@ class xtcPrice {
                                      AND pa.options_values_id = '" . (int)$value . "'");
     
     $attribute_data = false;
-    if (xtc_db_num_rows($attribute_query, true) > 0) {
-      $attribute_data = xtc_db_fetch_array($attribute_query, true);
+    if (xtc_db_num_rows($attribute_query) > 0) {
+      $attribute_data = xtc_db_fetch_array($attribute_query);
     }
     return $this->xtcCalculateOptionPrice($attribute_data, $pID, $option, $value, $qty, $applyDiscount);
   }
