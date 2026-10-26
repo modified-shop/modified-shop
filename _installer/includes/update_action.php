@@ -102,20 +102,23 @@
             if (count($result_table) < 1) {
               installer_log('Table '.$table.' OK');
             } else {
+              // DESCRIBE does not tell literal defaults from expressions
+              $table_definition = get_sql_column_definitions('_mod_'.$table, $table_check);
+
               $cnt = 0;
               foreach ($result_table as $key => $value) {
                 if (isset($table_exists[$key])) {
                   if (isset($result_table[$key]['Type'])) {
                     $cnt ++;
-                    xtc_db_query("ALTER TABLE `".$table."` MODIFY `".$key."` ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT '".$table_check[$key]['Default']."'" : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : ""));
+                    xtc_db_query("ALTER TABLE `".$table."` MODIFY `".$key."` ".$table_definition[$key]);
                   }
                 } else {
                   if (isset($data['rename']) && isset($data['rename'][$key])) {
                     $cnt ++;
-                    xtc_db_query("ALTER TABLE `".$table."` CHANGE `".$data['rename'][$key]."` ".$key." ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT '".$table_check[$key]['Default']."'" : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : ""));
+                    xtc_db_query("ALTER TABLE `".$table."` CHANGE `".$data['rename'][$key]."` ".$key." ".$table_definition[$key]);
                   } else {
                     $cnt ++;
-                    xtc_db_query("ALTER TABLE `".$table."` ADD `".$key."` ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT '".$table_check[$key]['Default']."'" : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".(($table_check[$key]['Extra'] == 'auto_increment') ? 'PRIMARY KEY '.$table_check[$key]['Extra'] : $table_check[$key]['Extra']) : "").(($table_check_pos[$key] > 0) ? " AFTER `".$table_check_pos[($table_check_pos[$key] - 1)]."`" : " FIRST"));
+                    xtc_db_query("ALTER TABLE `".$table."` ADD `".$key."` ".$table_definition[$key].(($table_check[$key]['Extra'] == 'auto_increment') ? " PRIMARY KEY" : "").(($table_check_pos[$key] > 0) ? " AFTER `".$table_check_pos[($table_check_pos[$key] - 1)]."`" : " FIRST"));
                   }
                 }
               }
