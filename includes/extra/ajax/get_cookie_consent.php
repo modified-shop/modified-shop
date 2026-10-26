@@ -32,7 +32,8 @@
 
     $response = array();
     if (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true') {
-      $response['vendorListVersion'] = MODULE_COOKIE_CONSENT_VERSION;
+      // oil.js writes the version into the consent string only as a number and rejects 0, get_cookie_consent_version() takes the 1 off again
+      $response['vendorListVersion'] = (int)MODULE_COOKIE_CONSENT_VERSION + 1;
       $response['lastUpdated'] = date('c',strtotime(MODULE_COOKIE_CONSENT_LAST_UPDATE));
       $response['categories'] = array();
       $response['purposes'] = array();

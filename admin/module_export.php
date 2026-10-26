@@ -206,6 +206,10 @@
           } elseif ($action == 'restoreconfirm') {
             // reset backup values 
             xtc_restore_configuration($module->keys());
+            // a module may keep state outside its keys in line with the restored values
+            if (method_exists($module, 'restore')) {
+              $module->restore();
+            }
             $messageStack->add_session(MODULE_RESTORE_CONFIRM, 'success');
           } elseif ($action == 'custom') {
             // call custom method

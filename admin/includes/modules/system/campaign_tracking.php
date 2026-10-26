@@ -46,6 +46,11 @@ class campaign_tracking {
     $this->sync_consent();
   }
 
+  // called by admin/module_export.php after the backup values are restored
+  function restore() {
+    $this->sync_consent();
+  }
+
   function display() {
     return array('text' => '<br>' . xtc_button(BUTTON_SAVE) . '&nbsp;' .
                            xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module='.$this->code))
@@ -72,7 +77,7 @@ class campaign_tracking {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAMPAIGN_TRACKING_COOKIE', 'false',  '6', '3', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAMPAIGN_TRACKING_COOKIE_DAYS', '30',  '6', '4', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAMPAIGN_TRACKING_CONSENT_ID', '0',  '6', '5', '', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE', '0',  '6', '6', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION', '0',  '6', '6', '', now())");
   }
 
   function remove() {
@@ -81,7 +86,7 @@ class campaign_tracking {
   }
 
   function keys() {
-    // MODULE_CAMPAIGN_TRACKING_CONSENT_ID and _CONSENT_SINCE are deliberately absent, the module sets them itself
+    // MODULE_CAMPAIGN_TRACKING_CONSENT_ID and _CONSENT_VERSION are deliberately absent, the module sets them itself
     return array(
       'MODULE_CAMPAIGN_TRACKING_STATUS',
       'MODULE_CAMPAIGN_TRACKING_ACCOUNT_DAYS',
@@ -218,14 +223,6 @@ class campaign_tracking {
       $changed = true;
     }
 
-    // decisions from before count for nothing, they may belong to a deleted entry with the same ID
-    if ($wanted === true && ($registered === true || $switched === true)) {
-      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                       SET configuration_value = '".time()."',
-                           last_modified = now()
-                     WHERE configuration_key = 'MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE'");
-    }
-
     // the readable cookie MODOilTrack is the only way for the server to see the decision
     if ($wanted === true) {
       if (isset($config['MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE'])
@@ -252,7 +249,15 @@ class campaign_tracking {
     if ($changed === true) {
       // like admin/cookie_consent.php, a change raises the version of the consent
       if ($wanted === true) {
-        $this->update_consent_version();
+        $version = $this->update_consent_version();
+
+        // decisions on an older version count for nothing, they may belong to a deleted entry with the same ID
+        if ($registered === true || $switched === true) {
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = '".(int)$version."',
+                               last_modified = now()
+                         WHERE configuration_key = 'MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION'");
+        }
       }
       $this->clear_query_cache();
     }
@@ -281,19 +286,26 @@ class campaign_tracking {
                                      FROM ".TABLE_CONFIGURATION."
                                     WHERE configuration_key = 'MODULE_COOKIE_CONSENT_VERSION'");
     if (xtc_db_num_rows($version_query) < 1) {
-      return;
+      return 0;
     }
     $version = xtc_db_fetch_array($version_query);
+    $version = (int)$version['configuration_value'] + 1;
 
-    xtc_db_perform(TABLE_CONFIGURATION, array('configuration_value' => (int)$version['configuration_value'] + 1, 'last_modified' => 'now()'), 'update', "configuration_key = 'MODULE_COOKIE_CONSENT_VERSION'");
+    xtc_db_perform(TABLE_CONFIGURATION, array('configuration_value' => $version, 'last_modified' => 'now()'), 'update', "configuration_key = 'MODULE_COOKIE_CONSENT_VERSION'");
     xtc_db_perform(TABLE_CONFIGURATION, array('configuration_value' => 'now()', 'last_modified' => 'now()'), 'update', "configuration_key = 'MODULE_COOKIE_CONSENT_LAST_UPDATE'");
+
+    return $version;
   }
 
   function clear_query_cache() {
     global $modified_cache;
 
-    // the shop reads the active entries through the query cache
-    if (defined('DB_CACHE') && DB_CACHE == 'true') {
+    // the shop reads the active entries through the query cache, the admin always defines DB_CACHE as false
+    $cache_query = xtc_db_query("SELECT configuration_value
+                                   FROM ".TABLE_CONFIGURATION."
+                                  WHERE configuration_key = 'DB_CACHE'");
+    $cache = xtc_db_fetch_array($cache_query);
+    if (isset($cache['configuration_value']) && $cache['configuration_value'] == 'true') {
       require_once(DIR_FS_CATALOG.'includes/modified_cache.php');
       if (is_object($modified_cache)) {
         $modified_cache->clear();

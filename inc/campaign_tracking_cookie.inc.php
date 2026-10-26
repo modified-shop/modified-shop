@@ -15,8 +15,8 @@
     $has_cookie = (isset($_COOKIE[$cookie_name]) && is_string($_COOKIE[$cookie_name]));
     $consent_id = ((defined('MODULE_CAMPAIGN_TRACKING_CONSENT_ID')) ? (int)MODULE_CAMPAIGN_TRACKING_CONSENT_ID : 0);
 
-    // the ID of a deleted entry can be taken again, so only a decision made since the entry exists counts
-    require_once(DIR_FS_INC.'get_cookie_consent_time.inc.php');
+    // the ID of a deleted entry can be taken again, so only a decision on the consent version of the entry or a later one counts
+    require_once(DIR_FS_INC.'get_cookie_consent_version.inc.php');
     $allowed = (defined('MODULE_CAMPAIGN_TRACKING_STATUS')
                 && MODULE_CAMPAIGN_TRACKING_STATUS == 'true'
                 && defined('MODULE_CAMPAIGN_TRACKING_COOKIE')
@@ -28,9 +28,9 @@
                 && in_array($consent_id, $_SESSION['tracking']['allowed'])
                 && isset($_SESSION['tracking']['allow'][$consent_id])
                 && $_SESSION['tracking']['allow'][$consent_id] === true
-                && defined('MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE')
-                && (int)MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE > 0
-                && get_cookie_consent_time() >= (int)MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE
+                && defined('MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION')
+                && (int)MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION > 0
+                && get_cookie_consent_version() >= (int)MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION
                 );
 
     if ($allowed !== true) {
