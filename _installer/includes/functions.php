@@ -361,6 +361,30 @@
   }
   
   
+  function get_sql_column_definitions($table, $columns) {
+    $create_query = xtc_db_query("SHOW CREATE TABLE `".$table."`");
+    $create = xtc_db_fetch_array($create_query);
+
+    $definitions = array();
+    foreach (explode("\n", $create['Create Table']) as $line) {
+      if (preg_match('/^\s+`([^`]+)` (.*?),?$/', $line, $match)) {
+        $definition = $match[2];
+        // without column charset the column keeps the charset of the existing table
+        if (isset($columns[$match[1]])
+            && strpos($definition, $columns[$match[1]]['Type']) === 0
+            )
+        {
+          $type = $columns[$match[1]]['Type'];
+          $definition = $type.preg_replace('/^(\s+(CHARACTER SET|COLLATE)\s+\w+)+/i', '', substr($definition, strlen($type)));
+        }
+        $definitions[$match[1]] = $definition;
+      }
+    }
+
+    return $definitions;
+  }
+  
+  
   function array_diff_assoc_recursive($array1, $array2) {
     $difference=array();
 
