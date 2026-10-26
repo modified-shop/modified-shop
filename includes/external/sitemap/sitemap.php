@@ -257,6 +257,8 @@
     function process_products() {      
       $p_group_check = GROUP_CHECK == 'true' ? ' AND p.group_permission_'.$this->group_id.' = 1 ' : '';
       $c_group_check = GROUP_CHECK == 'true' ? ' AND c.group_permission_'.$this->group_id.' = 1 ' : '';
+      $products_where = '';
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/sitemap/products_where/','php') as $file) require ($file);
     
       $products_query = xtc_db_query("SELECT p.products_id,
                                              p.products_last_modified,
@@ -270,6 +272,7 @@
                                                 AND trim(pd.products_name) != ''
                                        WHERE p.products_status = '1'
                                              ".$p_group_check."
+                                             ".$products_where."
                                          AND EXISTS (
                                                SELECT 1
                                                  FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
@@ -284,6 +287,8 @@
                                                 WHERE p2c.products_id = p.products_id
                                              )
                                     ORDER BY p.products_id");
+
+      $entry_hooks = auto_include(DIR_FS_CATALOG.'includes/extra/modules/sitemap/products_entry/','php');
 
       while ($products = xtc_db_fetch_array($products_query)) {
         $link = encode_htmlspecialchars(($this->url_function)('product_info.php', $this->url_param . xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false));
@@ -301,6 +306,10 @@
             }
           }
         }
+
+        $skip_entry = false;
+        foreach ($entry_hooks as $file) require ($file);
+        if ($skip_entry) continue;
 
         $this->xml_sitemap_entry($link, $date, $images);     
       }
