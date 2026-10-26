@@ -28,6 +28,7 @@
           }
         }
       }
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/get_filter_tags_end/','php') as $file) require ($file);
       $filter_tags[$index] = $tags_array;
     }
     
