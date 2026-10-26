@@ -21,7 +21,7 @@
   define('MODULE_CAMPAIGN_TRACKING_ACCOUNT_DAYS_ERROR', 'Kampagne am Kundenkonto: Bitte geben Sie eine ganze Zahl ab 0 ein.');
 
   define('MODULE_CAMPAIGN_TRACKING_COOKIE_TITLE', 'Kampagnen-Cookie setzen');
-  define('MODULE_CAMPAIGN_TRACKING_COOKIE_DESC', 'Speichert die Kampagne mit Einwilligung des Besuchers im Cookie &quot;MODcampaign&quot;. So wird auch ein sp&auml;terer Besuch ohne Kampagnen-Link der Kampagne zugeordnet.<br />Ben&ouml;tigt das Modul Cookie Consent. Beim Speichern legt das Modul dort einen Eintrag in der Kategorie Marketing an und schaltet die lesbare Cookie-Entscheidung ein. Erg&auml;nzen Sie Ihre Datenschutzerkl&auml;rung.');
+  define('MODULE_CAMPAIGN_TRACKING_COOKIE_DESC', 'Speichert die Kampagne mit Einwilligung des Besuchers im Cookie &quot;MODref&quot;. So wird auch ein sp&auml;terer Besuch ohne Kampagnen-Link der Kampagne zugeordnet.<br />Ben&ouml;tigt das Modul Cookie Consent. Beim Speichern legt das Modul dort einen Eintrag in der Kategorie Marketing an und schaltet die lesbare Cookie-Entscheidung ein. Erg&auml;nzen Sie Ihre Datenschutzerkl&auml;rung.');
 
   define('MODULE_CAMPAIGN_TRACKING_COOKIE_DAYS_TITLE', 'G&uuml;ltigkeit des Cookies (Tage)');
   define('MODULE_CAMPAIGN_TRACKING_COOKIE_DAYS_DESC', 'Wie viele Tage nach dem Klick auf den Kampagnen-Link das Cookie gilt. H&ouml;chstens 400 Tage, l&auml;nger speichern Browser kein Cookie.');

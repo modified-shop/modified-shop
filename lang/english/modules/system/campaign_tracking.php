@@ -21,7 +21,7 @@
   define('MODULE_CAMPAIGN_TRACKING_ACCOUNT_DAYS_ERROR', 'Campaign of the customer account: Please enter a whole number from 0.');
 
   define('MODULE_CAMPAIGN_TRACKING_COOKIE_TITLE', 'Set campaign cookie');
-  define('MODULE_CAMPAIGN_TRACKING_COOKIE_DESC', 'Stores the campaign in the cookie &quot;MODcampaign&quot; with the consent of the visitor. A later visit without the campaign link is then attributed to the campaign as well.<br />Requires the module Cookie Consent. On saving, the module adds an entry in the category Marketing there and switches on the readable cookie decision. Update your privacy policy.');
+  define('MODULE_CAMPAIGN_TRACKING_COOKIE_DESC', 'Stores the campaign in the cookie &quot;MODref&quot; with the consent of the visitor. A later visit without the campaign link is then attributed to the campaign as well.<br />Requires the module Cookie Consent. On saving, the module adds an entry in the category Marketing there and switches on the readable cookie decision. Update your privacy policy.');
 
   define('MODULE_CAMPAIGN_TRACKING_COOKIE_DAYS_TITLE', 'Validity of the cookie (days)');
   define('MODULE_CAMPAIGN_TRACKING_COOKIE_DAYS_DESC', 'For how many days after the click on the campaign link the cookie is valid. 400 days at most, browsers do not keep a cookie any longer.');

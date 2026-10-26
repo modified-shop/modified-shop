@@ -21,7 +21,7 @@ class campaign_tracking {
   var $enabled;
   var $_check;
 
-  var $cookie_name = 'MODcampaign';
+  var $cookie_name = 'MODref';
 
   var $consent_texts = array(
     'english' => array(

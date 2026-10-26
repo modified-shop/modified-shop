@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   function campaign_tracking_cookie($path, $domain, $secure) {
-    $cookie_name = 'MODcampaign';
+    $cookie_name = 'MODref';
     $has_cookie = (isset($_COOKIE[$cookie_name]) && is_string($_COOKIE[$cookie_name]));
     $consent_id = ((defined('MODULE_CAMPAIGN_TRACKING_CONSENT_ID')) ? (int)MODULE_CAMPAIGN_TRACKING_CONSENT_ID : 0);
 
