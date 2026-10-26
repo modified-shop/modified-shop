@@ -1194,19 +1194,24 @@ class categories {
                                               AND categories_id = '".$dest_category_id."'");
     $duplicate_check = xtc_db_fetch_array($duplicate_check_query);
     if ($duplicate_check['total'] < 1) {
+      $moved = true;
       if ($dest_category_id != 0) {
         $sql_data_array = array(
           'products_id' => $src_products_id,
           'categories_id' => $dest_category_id
         );
         xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array, 'update', "products_id = '".$src_products_id."' AND categories_id = '".$src_category_id."'");                   
+        // a stale source category moves nothing
+        $moved = (xtc_db_affected_rows() > 0);
       }
       if ($dest_category_id == 0) {
         $this->set_product_startpage($src_products_id, 1);
       }
 
-      //new module support
-      $this->catModules->move_product_end($src_products_id, $src_category_id, $dest_category_id);
+      if ($moved) {
+        //new module support
+        $this->catModules->move_product_end($src_products_id, $src_category_id, $dest_category_id);
+      }
     }
   }
 
