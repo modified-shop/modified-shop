@@ -51,7 +51,15 @@ $listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int
 $module_content = $category = array();
 $image = '';
 
-if ($listing_split->number_of_rows > 0) {
+// a page beyond the last one does not exist, a page size chosen by the customer keeps the last page
+if (isset($_GET['page'])
+    && (int)$_GET['page'] > max(1, $listing_split->number_of_pages)
+    && !isset($_SESSION['filter_set'])
+    )
+{
+  $site_error = TEXT_SITE_NOT_FOUND;
+  include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
+} elseif ($listing_split->number_of_rows > 0) {
   if (!defined('TEMPLATE_PAGINATION') || TEMPLATE_PAGINATION != 'true') {
     $pagination = '<div class="smallText" style="clear:both;">
                      <div style="float:left;">'.$listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS).'</div> 
