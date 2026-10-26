@@ -326,10 +326,11 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
             $cart_quantity = MAX_PRODUCTS_QTY;
             $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($products_id)));
           }
-          $_SESSION['cart']->add_cart($products_id, $cart_quantity, $attributes_array);
-
-          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id');
-          $_SESSION['wishlist']->remove($prd_id);
+          // a refused article stays where it came from
+          if ($_SESSION['cart']->add_cart($products_id, $cart_quantity, $attributes_array) !== false) {
+            $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id');
+            $_SESSION['wishlist']->remove($prd_id);
+          }
         }
         xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       }
@@ -346,10 +347,11 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
             $cart_quantity = MAX_PRODUCTS_QTY;
             $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($products_id)));
           }
-          $_SESSION['wishlist']->add_cart($products_id, $cart_quantity, $attributes_array);
-
-          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id');
-          $_SESSION['cart']->remove($prd_id);
+          // a refused article stays where it came from
+          if ($_SESSION['wishlist']->add_cart($products_id, $cart_quantity, $attributes_array) !== false) {
+            $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id');
+            $_SESSION['cart']->remove($prd_id);
+          }
         }
         xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       }
