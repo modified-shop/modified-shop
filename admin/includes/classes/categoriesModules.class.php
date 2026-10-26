@@ -236,6 +236,12 @@ class categoriesModules {
         $this->function_call = 'saveSpecialsData';
         return $this->call_module_method($sql_data_array, $products_data); 
     }
+
+    function specials_changed($specials_id, $products_id, $action)
+    {
+        $this->function_call = 'specials_changed';
+        $this->secure_call_module_method($specials_id, $products_id, $action);
+    }
     
     function insert_mo_images_after($products_data, $iImg, $products_id)
     {
