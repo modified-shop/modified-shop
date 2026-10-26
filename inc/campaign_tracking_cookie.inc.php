@@ -15,23 +15,25 @@
     $has_cookie = (isset($_COOKIE[$cookie_name]) && is_string($_COOKIE[$cookie_name]));
     $consent_id = ((defined('MODULE_CAMPAIGN_TRACKING_CONSENT_ID')) ? (int)MODULE_CAMPAIGN_TRACKING_CONSENT_ID : 0);
 
-    $active = (defined('MODULE_CAMPAIGN_TRACKING_STATUS')
-               && MODULE_CAMPAIGN_TRACKING_STATUS == 'true'
-               && defined('MODULE_CAMPAIGN_TRACKING_COOKIE')
-               && MODULE_CAMPAIGN_TRACKING_COOKIE == 'true'
-               && defined('MODULE_COOKIE_CONSENT_STATUS')
-               && MODULE_COOKIE_CONSENT_STATUS == 'true'
-               && $consent_id > 0
-               && isset($_SESSION['tracking']['allowed'])
-               && in_array($consent_id, $_SESSION['tracking']['allowed'])
-               );
+    // the ID of a deleted entry can be taken again, so only a decision made since the entry exists counts
+    require_once(DIR_FS_INC.'get_cookie_consent_time.inc.php');
+    $allowed = (defined('MODULE_CAMPAIGN_TRACKING_STATUS')
+                && MODULE_CAMPAIGN_TRACKING_STATUS == 'true'
+                && defined('MODULE_CAMPAIGN_TRACKING_COOKIE')
+                && MODULE_CAMPAIGN_TRACKING_COOKIE == 'true'
+                && defined('MODULE_COOKIE_CONSENT_STATUS')
+                && MODULE_COOKIE_CONSENT_STATUS == 'true'
+                && $consent_id > 0
+                && isset($_SESSION['tracking']['allowed'])
+                && in_array($consent_id, $_SESSION['tracking']['allowed'])
+                && isset($_SESSION['tracking']['allow'][$consent_id])
+                && $_SESSION['tracking']['allow'][$consent_id] === true
+                && defined('MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE')
+                && (int)MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE > 0
+                && get_cookie_consent_time() >= (int)MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE
+                );
 
-    // without a decision for the entry the cookie is neither read, set nor removed
-    if ($active === true && !isset($_SESSION['tracking']['allow'][$consent_id])) {
-      return;
-    }
-
-    if ($active !== true || $_SESSION['tracking']['allow'][$consent_id] !== true) {
+    if ($allowed !== true) {
       if ($has_cookie === true) {
         xtc_setcookie($cookie_name, '', time() - 3600, $path, $domain, $secure, true);
       }

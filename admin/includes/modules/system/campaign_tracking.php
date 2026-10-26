@@ -72,6 +72,7 @@ class campaign_tracking {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAMPAIGN_TRACKING_COOKIE', 'false',  '6', '3', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAMPAIGN_TRACKING_COOKIE_DAYS', '30',  '6', '4', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAMPAIGN_TRACKING_CONSENT_ID', '0',  '6', '5', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE', '0',  '6', '6', '', now())");
   }
 
   function remove() {
@@ -80,7 +81,7 @@ class campaign_tracking {
   }
 
   function keys() {
-    // MODULE_CAMPAIGN_TRACKING_CONSENT_ID is deliberately absent, the module sets it itself
+    // MODULE_CAMPAIGN_TRACKING_CONSENT_ID and _CONSENT_SINCE are deliberately absent, the module sets them itself
     return array(
       'MODULE_CAMPAIGN_TRACKING_STATUS',
       'MODULE_CAMPAIGN_TRACKING_ACCOUNT_DAYS',
@@ -178,6 +179,7 @@ class campaign_tracking {
 
     $changed = false;
     $status = (($wanted === true) ? 1 : 0);
+    $registered = !isset($rows[$consent_id]);
 
     // one row per language, a language added later gets its row on the next save
     $languages_query = xtc_db_query("SELECT languages_id,
@@ -211,8 +213,17 @@ class campaign_tracking {
                          last_modified = now()
                    WHERE cookies_id = '".(int)$consent_id."'
                      AND status != '".$status."'");
-    if (xtc_db_affected_rows() > 0) {
+    $switched = (xtc_db_affected_rows() > 0);
+    if ($switched === true) {
       $changed = true;
+    }
+
+    // decisions from before count for nothing, they may belong to a deleted entry with the same ID
+    if ($wanted === true && ($registered === true || $switched === true)) {
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".time()."',
+                           last_modified = now()
+                     WHERE configuration_key = 'MODULE_CAMPAIGN_TRACKING_CONSENT_SINCE'");
     }
 
     // the readable cookie MODOilTrack is the only way for the server to see the decision
@@ -239,7 +250,7 @@ class campaign_tracking {
     }
 
     if ($changed === true) {
-      // a new version asks the visitors again
+      // like admin/cookie_consent.php, a change raises the version of the consent
       if ($wanted === true) {
         $this->update_consent_version();
       }
