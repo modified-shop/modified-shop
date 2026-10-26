@@ -57,6 +57,14 @@ if (isset($_GET['refID'])
     $_SESSION['tracking']['refID'] = $campaign['campaigns_refID'];
     $_SESSION['tracking']['refID_time'] = time();
   }
+} elseif (isset($_GET['refID'])
+          && is_string($_GET['refID'])
+          && defined('MODULE_CAMPAIGN_TRACKING_STATUS')
+          && MODULE_CAMPAIGN_TRACKING_STATUS == 'true'
+          )
+{
+  // the same campaign again is no new hit, but its period starts again
+  $_SESSION['tracking']['refID_time'] = time();
 }
 
 // request 
