@@ -125,7 +125,7 @@ class campaign_tracking {
     $config_query = xtc_db_query("SELECT configuration_key,
                                          configuration_value
                                     FROM ".TABLE_CONFIGURATION."
-                                   WHERE configuration_key IN ('MODULE_CAMPAIGN_TRACKING_STATUS', 'MODULE_CAMPAIGN_TRACKING_COOKIE', 'MODULE_CAMPAIGN_TRACKING_CONSENT_ID', 'MODULE_COOKIE_CONSENT_STATUS', 'MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE')");
+                                   WHERE configuration_key IN ('MODULE_CAMPAIGN_TRACKING_STATUS', 'MODULE_CAMPAIGN_TRACKING_COOKIE', 'MODULE_CAMPAIGN_TRACKING_CONSENT_ID', 'MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION', 'MODULE_COOKIE_CONSENT_STATUS', 'MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE', 'MODULE_COOKIE_CONSENT_VERSION')");
     while ($configuration = xtc_db_fetch_array($config_query)) {
       $config[$configuration['configuration_key']] = $configuration['configuration_value'];
     }
@@ -246,10 +246,20 @@ class campaign_tracking {
       }
     }
 
+    // a reinstalled cookie consent starts again at version 0, so new decisions would never reach the stored version
+    $floor = ((isset($config['MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION'])) ? (int)$config['MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION'] : 0);
+    if ($wanted === true
+        && isset($config['MODULE_COOKIE_CONSENT_VERSION'])
+        && (int)$config['MODULE_COOKIE_CONSENT_VERSION'] < $floor
+        )
+    {
+      $changed = true;
+    }
+
     if ($changed === true) {
       // like admin/cookie_consent.php, a change raises the version of the consent
       if ($wanted === true) {
-        $version = $this->update_consent_version();
+        $version = $this->update_consent_version($floor);
 
         // decisions on an older version count for nothing, they may belong to a deleted entry with the same ID
         if ($registered === true || $switched === true) {
@@ -281,7 +291,7 @@ class campaign_tracking {
     }
   }
 
-  function update_consent_version() {
+  function update_consent_version($floor = 0) {
     $version_query = xtc_db_query("SELECT configuration_value
                                      FROM ".TABLE_CONFIGURATION."
                                     WHERE configuration_key = 'MODULE_COOKIE_CONSENT_VERSION'");
@@ -289,7 +299,8 @@ class campaign_tracking {
       return 0;
     }
     $version = xtc_db_fetch_array($version_query);
-    $version = (int)$version['configuration_value'] + 1;
+    // not below the version the campaign entry counts from
+    $version = max((int)$version['configuration_value'], (int)$floor) + 1;
 
     xtc_db_perform(TABLE_CONFIGURATION, array('configuration_value' => $version, 'last_modified' => 'now()'), 'update', "configuration_key = 'MODULE_COOKIE_CONSENT_VERSION'");
     xtc_db_perform(TABLE_CONFIGURATION, array('configuration_value' => 'now()', 'last_modified' => 'now()'), 'update', "configuration_key = 'MODULE_COOKIE_CONSENT_LAST_UPDATE'");
