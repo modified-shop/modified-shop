@@ -288,10 +288,23 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   if (isset($_SESSION['tracking']['refID'])) {
     $refID = $_SESSION['tracking']['refID'];
   } else {
+    // with the module the account keeps its campaign only for the set number of days
+    $campaign_join = '';
+    if (defined('MODULE_CAMPAIGN_TRACKING_STATUS')
+        && MODULE_CAMPAIGN_TRACKING_STATUS == 'true'
+        && defined('MODULE_CAMPAIGN_TRACKING_ACCOUNT_DAYS')
+        && (int)MODULE_CAMPAIGN_TRACKING_ACCOUNT_DAYS > 0
+        )
+    {
+      $campaign_join = "JOIN ".TABLE_CUSTOMERS_INFO." ci
+                             ON ci.customers_info_id = c.customers_id
+                                AND ci.customers_info_date_account_created > DATE_SUB(NOW(), INTERVAL ".(int)MODULE_CAMPAIGN_TRACKING_ACCOUNT_DAYS." DAY)";
+    }
     $campaign_query = xtc_db_query("SELECT cp.campaigns_refID
                                       FROM ".TABLE_CUSTOMERS." c
                                       JOIN ".TABLE_CAMPAIGNS." cp
                                            ON cp.campaigns_id = c.refferers_id
+                                      ".$campaign_join."
                                      WHERE c.customers_id = '".(int)$_SESSION['customer_id']."'");
     if (xtc_db_num_rows($campaign_query) > 0) {
       $campaign = xtc_db_fetch_array($campaign_query);

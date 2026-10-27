@@ -27,7 +27,17 @@ if (!isset($_SESSION['tracking']['ip'])) {
 }
 
 // campaigns
-if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
+// with the module the last campaign link counts, without it the first one of the session
+if (isset($_GET['refID'])
+    && is_string($_GET['refID'])
+    && (!isset($_SESSION['tracking']['refID'])
+        || (defined('MODULE_CAMPAIGN_TRACKING_STATUS')
+            && MODULE_CAMPAIGN_TRACKING_STATUS == 'true'
+            && strcasecmp($_SESSION['tracking']['refID'], $_GET['refID']) != 0
+            )
+        )
+    )
+{
   $campaign_query = xtDBquery("SELECT * 
                                  FROM ".TABLE_CAMPAIGNS." 
                                 WHERE campaigns_refID = '".xtc_db_input($_GET['refID'])."'");
@@ -45,7 +55,16 @@ if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
     xtc_db_perform(TABLE_CAMPAIGNS_IP, $sql_data_array);
 
     $_SESSION['tracking']['refID'] = $campaign['campaigns_refID'];
+    $_SESSION['tracking']['refID_time'] = time();
   }
+} elseif (isset($_GET['refID'])
+          && is_string($_GET['refID'])
+          && defined('MODULE_CAMPAIGN_TRACKING_STATUS')
+          && MODULE_CAMPAIGN_TRACKING_STATUS == 'true'
+          )
+{
+  // the same campaign again is no new hit, but its period starts again
+  $_SESSION['tracking']['refID_time'] = time();
 }
 
 // request 
@@ -143,4 +162,10 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS')
   while ($consent = xtc_db_fetch_array($consent_query, true)) {
     $_SESSION['tracking']['allowed'][] = $consent['cookies_id'];
   }
+}
+
+// campaign cookie, it needs the consent read above
+if (defined('MODULE_CAMPAIGN_TRACKING_STATUS')) {
+  require_once (DIR_FS_INC.'campaign_tracking_cookie.inc.php');
+  campaign_tracking_cookie($session_cookie_path, $session_cookie_domain, $session_cookie_secure);
 }
