@@ -246,11 +246,11 @@ class campaign_tracking {
       }
     }
 
-    // a reinstalled cookie consent starts again at version 0, so new decisions would never reach the stored version
+    // without the cookie consent installed no version was stored, a reinstalled one starts again at 0
     $floor = ((isset($config['MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION'])) ? (int)$config['MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION'] : 0);
     if ($wanted === true
         && isset($config['MODULE_COOKIE_CONSENT_VERSION'])
-        && (int)$config['MODULE_COOKIE_CONSENT_VERSION'] < $floor
+        && ($floor < 1 || (int)$config['MODULE_COOKIE_CONSENT_VERSION'] < $floor)
         )
     {
       $changed = true;
@@ -262,7 +262,7 @@ class campaign_tracking {
         $version = $this->update_consent_version($floor);
 
         // decisions on an older version count for nothing, they may belong to a deleted entry with the same ID
-        if ($registered === true || $switched === true) {
+        if ($registered === true || $switched === true || $floor < 1) {
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                            SET configuration_value = '".(int)$version."',
                                last_modified = now()
