@@ -15,22 +15,42 @@
   let lastBreakpoint = window.innerWidth;
   
   $(document).ready(function(){
-    $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>', next: '<i class="fa-solid fa-angle-right"></i>', previous: '<i class="fa-solid fa-angle-left"></i>'});
-    setColorBox(lastBreakpoint, true);    
+    setColorBoxImages(document);
+    setColorBox(lastBreakpoint, true);
+  });
+
+  // content that a script has inserted into the page
+  document.addEventListener('modified:content-updated', function(event) {
+    setColorBoxImages(event.detail.root);
+    setColorBoxLinks(event.detail.root);
   });
 
   $(window).resize(function() {
     setColorBox(window.innerWidth);
   });
-  
+
+  function setColorBoxImages(root) {
+    $(root).find(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>', next: '<i class="fa-solid fa-angle-right"></i>', previous: '<i class="fa-solid fa-angle-left"></i>'});
+  }
+
+  // iframe and inline links with the options of the current breakpoint
+  function setColorBoxLinks(root) {
+    if (lastBreakpoint <= colorBoxBreakpoint) {
+      $(root).find(".iframe").colorbox({iframe:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+      $(root).find(".inline").colorbox({inline:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+    } else {
+      $(root).find(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+      $(root).find(".inline").colorbox({inline:true, width:"780", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+    }
+  }
+
   function setColorBox(globalWidth, initialise = false) {
     if (globalWidth <= colorBoxBreakpoint) {
       $(".iframe").colorbox.resize({width:"100%", height:"100%"});
-      
+
       if (initialise === true || lastBreakpoint >= colorBoxBreakpoint) {
         lastBreakpoint = globalWidth;
-        $(".iframe").colorbox({iframe:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
-        $(".inline").colorbox({inline:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+        setColorBoxLinks(document);
         $("#print_order_layer").on('submit', function(event) {
           $.colorbox({iframe:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", close: '<i class="fa-solid fa-xmark"></i>', href:$(this).attr("action") + '&' + $(this).serialize()});
           return false;
@@ -41,8 +61,7 @@
       
       if (initialise === true || lastBreakpoint <= colorBoxBreakpoint) {
         lastBreakpoint = globalWidth;
-        $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
-        $(".inline").colorbox({inline:true, width:"780", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+        setColorBoxLinks(document);
         $("#print_order_layer").on('submit', function(event) {
           $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "100%", maxHeight: "100%", close: '<i class="fa-solid fa-xmark"></i>', href:$(this).attr("action") + '&' + $(this).serialize()});
           return false;

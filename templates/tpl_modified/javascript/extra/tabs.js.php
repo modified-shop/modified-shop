@@ -15,13 +15,21 @@
   $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/jquery.easyTabs.css?v=<?php echo filemtime(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/jquery.easyTabs.css'); ?>", function(css) {
     $("head").append("<style type='text/css'>"+css+"<\/style>");
   });
-  $(document).ready(function () {
-    $('#horizontalTab').easyResponsiveTabs({
+  // started tabs have the .resp-accordion elements of the plugin
+  function initTabs(root) {
+    $(root).find('#horizontalTab:not(:has(.resp-accordion))').easyResponsiveTabs({
       type: 'default' //Types: default, vertical, accordion           
     });
-    $('#horizontalAccordion').easyResponsiveTabs({
+    $(root).find('#horizontalAccordion:not(:has(.resp-accordion))').easyResponsiveTabs({
       type: 'accordion' //Types: default, vertical, accordion           
     });
+  }
+  $(document).ready(function () {
+    initTabs(document);
+  });
+  // content that a script has inserted into the page
+  document.addEventListener('modified:content-updated', function (event) {
+    initTabs(event.detail.root);
   });
 </script>
 <?php } ?>

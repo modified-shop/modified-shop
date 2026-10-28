@@ -11,8 +11,8 @@
    --------------------------------------------------------------*/
 ?>
 <script>
-  $(document).ready(function() {
-    $('.bxcarousel_bestseller').bxSlider({
+  function initBxSlider(root) {
+    $(root).find('.bxcarousel_bestseller').bxSlider({
       minSlides: 6,
       maxSlides: 8,
       pager: ($(this).children('li').length > 1), //FIX for only one entry
@@ -20,12 +20,30 @@
       slideMargin: 18
     });
   
-    $('.bxcarousel_slider').bxSlider({
+    $(root).find('.bxcarousel_slider').bxSlider({
       adaptiveHeight: false,
       mode: 'fade',
       auto: true,
       speed: 2000,
       pause: 6000
+    });
+  }
+
+  $(document).ready(function() {
+    initBxSlider(document);
+  });
+
+  // content that a script has inserted into the page
+  document.addEventListener('modified:content-updated', function(event) {
+    initBxSlider(event.detail.root);
+  });
+
+  // content that a script is about to replace or remove
+  document.addEventListener('modified:before-content-update', function(event) {
+    $(event.detail.root).find('.bxcarousel_bestseller, .bxcarousel_slider').addBack('.bxcarousel_bestseller, .bxcarousel_slider').each(function() {
+      if ($(this).data('bxSlider')) {
+        $(this).data('bxSlider').destroySlider();
+      }
     });
   });
 </script>

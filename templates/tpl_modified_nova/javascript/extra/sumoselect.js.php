@@ -11,22 +11,31 @@
    --------------------------------------------------------------*/
 ?>
 <script>
+  function initSumoSelect(root) {
+    <?php if (defined('ADVANCED_SUMOSELECT_SEARCHFIELD') && ADVANCED_SUMOSELECT_SEARCHFIELD == true) { ?>
+      $(root).find('select:not([name=filter_sort]):not([name=filter_set]):not([name=currency]):not([name=categories_id]):not([name=gender]):not([name=language]):not([id^=sel_]):not([id=ec_term])').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
+      $(root).find('select[name=filter_sort]').SumoSelect();
+      $(root).find('select[name=filter_set]').SumoSelect();
+      $(root).find('select[name=currency]').SumoSelect();
+      $(root).find('select[name=categories_id]').SumoSelect();
+      $(root).find('select[name=gender]').SumoSelect();
+      $(root).find('select[name=language]').SumoSelect();
+      $(root).find('select[id^=sel_]').SumoSelect();
+      $(root).find('select[id=ec_term]').SumoSelect();
+    <?php } else { ?>
+      $(root).find('select:not([name=country])').SumoSelect();
+      $(root).find('select[name=country]').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
+    <?php } ?>
+  }
+
+  // content that a script has inserted into the page
+  document.addEventListener('modified:content-updated', function(event) {
+    initSumoSelect(event.detail.root);
+  });
+
   $(document).ready(function() {
 
-    <?php if (defined('ADVANCED_SUMOSELECT_SEARCHFIELD') && ADVANCED_SUMOSELECT_SEARCHFIELD == true) { ?>
-      $('select:not([name=filter_sort]):not([name=filter_set]):not([name=currency]):not([name=categories_id]):not([name=gender]):not([name=language]):not([id^=sel_]):not([id=ec_term])').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
-      $('select[name=filter_sort]').SumoSelect();
-      $('select[name=filter_set]').SumoSelect();
-      $('select[name=currency]').SumoSelect();
-      $('select[name=categories_id]').SumoSelect();
-      $('select[name=gender]').SumoSelect();
-      $('select[name=language]').SumoSelect();
-      $('select[id^=sel_]').SumoSelect();
-      $('select[id=ec_term]').SumoSelect();
-    <?php } else { ?>
-      $('select:not([name=country])').SumoSelect();
-      $('select[name=country]').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
-    <?php } ?>
+    initSumoSelect(document);
 
     var selectWord = '';
     var selectTimer = null;

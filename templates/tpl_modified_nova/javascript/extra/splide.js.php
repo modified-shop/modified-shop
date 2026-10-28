@@ -11,13 +11,22 @@
    --------------------------------------------------------------*/
 ?>
 <script>
-  document.addEventListener( 'DOMContentLoaded', function() {
+  /* instances of the page, destroyed with their content */
+  var splideInstances = [];
 
-    const elemts = document.getElementsByClassName('splide_big_image');
+  function newSplide(elem, options) {
+    var splide = new Splide(elem, options);
+    splideInstances.push(splide);
+    return splide;
+  }
+
+  function initSplide(root) {
+
+    const elemts = root.querySelectorAll('.splide_big_image:not(.is-initialized)');
     if(elemts.length) {
 
       /* product info big image */
-      var big = new Splide( '.splide_big_image', {
+      var big = newSplide( elemts[0], {
         type: 'fade',
         role: 'group',
         heightRatio: 1.0,
@@ -28,7 +37,7 @@
       } );
 
       /* product info small image thumbnail navigation */
-      var small = new Splide( '.splide_small_image', {
+      var small = newSplide( root.querySelector('.splide_small_image'), {
         type: 'slide',
         role: 'group',
         rewind: true,
@@ -44,12 +53,15 @@
       big.sync( small );
       big.mount();
       small.mount();
+
+      /* prevent accessibility warning for vertical orientation */
+      $(small.root).find('.splide__list').removeAttr('aria-orientation');
     }
 
     /* start slider */
-    var elms = document.getElementsByClassName("splide_slider");
+    var elms = root.querySelectorAll(".splide_slider:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
-      new Splide(elms[i], {
+      newSplide(elms[i], {
         type: 'fade',
         role: 'group',
         autoplay: true,
@@ -61,9 +73,9 @@
     }
 
     /* carousel products */
-    var elms = document.getElementsByClassName("splide_size1");
+    var elms = root.querySelectorAll(".splide_size1:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
-      new Splide(elms[i], {
+      newSplide(elms[i], {
         type: 'slide',
         role: 'group',
         speed: 1000,
@@ -79,9 +91,9 @@
     }
 
     /* carousel reviews */
-    var elms = document.getElementsByClassName("splide_size2");
+    var elms = root.querySelectorAll(".splide_size2:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
-      new Splide(elms[i], {
+      newSplide(elms[i], {
         type: 'slide',
         role: 'group',
         speed: 1000,
@@ -94,22 +106,38 @@
     }
 
     /* carousel products row */
-    var elms = document.getElementsByClassName("splide_size3");
+    var elms = root.querySelectorAll(".splide_size3:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
-      new Splide(elms[i], {
+      newSplide(elms[i], {
         type: 'slide',
         role: 'group',
         speed: 1000,
         perPage: 1,
-        mediaQuery: 'min', 
+        mediaQuery: 'min',
       }).mount();
     }
 
-  }); 
+  }
 
-  /* prevent accessibility warning for vertical orientation */
-  $(document).ready(function(){
-    $("#splide02-list").removeAttr('aria-orientation');
+  document.addEventListener( 'DOMContentLoaded', function() {
+    initSplide(document);
+  });
+
+  // content that a script has inserted into the page
+  document.addEventListener('modified:content-updated', function(event) {
+    initSplide(event.detail.root);
+  });
+
+  // content that a script is about to replace or remove
+  document.addEventListener('modified:before-content-update', function(event) {
+    splideInstances = splideInstances.filter(function(splide) {
+      if (event.detail.root.contains(splide.root)) {
+        splide.destroy();
+        splide.root.classList.remove('is-initialized');
+        return false;
+      }
+      return true;
+    });
   });
 
 </script>

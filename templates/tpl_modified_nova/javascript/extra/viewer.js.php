@@ -13,8 +13,12 @@
 if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
   ?>
   <script>
-    window.addEventListener('DOMContentLoaded', function () {
-      var pd_image_zoomer = document.getElementById('pd_image_zoomer');
+    function initViewer(root) {
+      var pd_image_zoomer = root.querySelector('#pd_image_zoomer');
+      // the product page only has the zoomer when the article has an image
+      if (!pd_image_zoomer) {
+        return;
+      }
       var viewer = new Viewer(pd_image_zoomer, {
         url: 'data-original',
         title: [0, (image, imageData) => `${image.alt}`],
@@ -29,7 +33,25 @@ if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
           next: 1,
         },
       });
-    });    
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+      initViewer(document);
+    });
+
+    // content that a script has inserted into the page
+    document.addEventListener('modified:content-updated', function (event) {
+      initViewer(event.detail.root);
+    });
+
+    // content that a script is about to replace or remove
+    document.addEventListener('modified:before-content-update', function (event) {
+      var root = event.detail.root;
+      var pd_image_zoomer = (root.id == 'pd_image_zoomer') ? root : root.querySelector('#pd_image_zoomer');
+      if (pd_image_zoomer && pd_image_zoomer.viewer) {
+        pd_image_zoomer.viewer.destroy();
+      }
+    });
   </script>
   <?php
 }
