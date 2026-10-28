@@ -30,17 +30,17 @@
   });
 
   function setColorBoxImages(root) {
-    $(root).find(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>', next: '<i class="fa-solid fa-angle-right"></i>', previous: '<i class="fa-solid fa-angle-left"></i>'});
+    $(root).find(".cbimages").addBack(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>', next: '<i class="fa-solid fa-angle-right"></i>', previous: '<i class="fa-solid fa-angle-left"></i>'});
   }
 
   // iframe and inline links with the options of the current breakpoint
   function setColorBoxLinks(root) {
     if (lastBreakpoint <= colorBoxBreakpoint) {
-      $(root).find(".iframe").colorbox({iframe:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
-      $(root).find(".inline").colorbox({inline:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+      $(root).find(".iframe").addBack(".iframe").colorbox({iframe:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+      $(root).find(".inline").addBack(".inline").colorbox({inline:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
     } else {
-      $(root).find(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
-      $(root).find(".inline").colorbox({inline:true, width:"780", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+      $(root).find(".iframe").addBack(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+      $(root).find(".inline").addBack(".inline").colorbox({inline:true, width:"780", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
     }
   }
 

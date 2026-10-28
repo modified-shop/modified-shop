@@ -20,13 +20,27 @@
     return splide;
   }
 
+  /* matching elements of the root, the root itself included */
+  function splideElements(root, selector) {
+    var elems = Array.prototype.slice.call(root.querySelectorAll(selector));
+    if (root.matches && root.matches(selector)) {
+      elems.unshift(root);
+    }
+    return elems;
+  }
+
+  /* the big image and its synced thumbnail navigation start and stop together */
+  function splideGallery() {
+    return [document.querySelector('.splide_big_image'), document.querySelector('.splide_small_image')];
+  }
+
   function initSplide(root) {
 
-    const elemts = root.querySelectorAll('.splide_big_image:not(.is-initialized)');
-    if(elemts.length) {
+    var gallery = splideGallery();
+    if (gallery[0] && gallery[1] && !gallery[0].classList.contains('is-initialized') && (root.contains(gallery[0]) || root.contains(gallery[1]))) {
 
       /* product info big image */
-      var big = newSplide( elemts[0], {
+      var big = newSplide( gallery[0], {
         type: 'fade',
         role: 'group',
         heightRatio: 1.0,
@@ -37,7 +51,7 @@
       } );
 
       /* product info small image thumbnail navigation */
-      var small = newSplide( root.querySelector('.splide_small_image'), {
+      var small = newSplide( gallery[1], {
         type: 'slide',
         role: 'group',
         rewind: true,
@@ -59,7 +73,7 @@
     }
 
     /* start slider */
-    var elms = root.querySelectorAll(".splide_slider:not(.is-initialized)");
+    var elms = splideElements(root, ".splide_slider:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
       newSplide(elms[i], {
         type: 'fade',
@@ -73,7 +87,7 @@
     }
 
     /* carousel products */
-    var elms = root.querySelectorAll(".splide_size1:not(.is-initialized)");
+    var elms = splideElements(root, ".splide_size1:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
       newSplide(elms[i], {
         type: 'slide',
@@ -91,7 +105,7 @@
     }
 
     /* carousel reviews */
-    var elms = root.querySelectorAll(".splide_size2:not(.is-initialized)");
+    var elms = splideElements(root, ".splide_size2:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
       newSplide(elms[i], {
         type: 'slide',
@@ -106,7 +120,7 @@
     }
 
     /* carousel products row */
-    var elms = root.querySelectorAll(".splide_size3:not(.is-initialized)");
+    var elms = splideElements(root, ".splide_size3:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
       newSplide(elms[i], {
         type: 'slide',
@@ -130,8 +144,13 @@
 
   // content that a script is about to replace or remove
   document.addEventListener('modified:before-content-update', function(event) {
+    var root = event.detail.root;
+    var gallery = splideGallery();
+    var withGallery = gallery.some(function(elem) {
+      return elem && root.contains(elem);
+    });
     splideInstances = splideInstances.filter(function(splide) {
-      if (event.detail.root.contains(splide.root)) {
+      if (root.contains(splide.root) || (withGallery && gallery.indexOf(splide.root) >= 0)) {
         splide.destroy();
         splide.root.classList.remove('is-initialized');
         return false;

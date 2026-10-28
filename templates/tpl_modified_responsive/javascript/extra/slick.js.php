@@ -13,7 +13,7 @@
 <script>
   function initSlick(root) {
 
-     $(root).find('.slider_home:not(.slick-initialized)').slick({
+     $(root).find('.slider_home').addBack('.slider_home').not('.slick-initialized').slick({
       slidesToShow: 1,
       slidesToScroll: 1,
       autoplay: true,
@@ -24,10 +24,10 @@
       dots: false,
       fade: true
     });
-    $(root).find('.slider_home').show();
+    $(root).find('.slider_home').addBack('.slider_home').show();
 
 
-    $(root).find('.slider_bestseller:not(.slick-initialized)').slick({
+    $(root).find('.slider_bestseller').addBack('.slider_bestseller').not('.slick-initialized').slick({
       dots: true,
       arrows: true,
       infinite: true,

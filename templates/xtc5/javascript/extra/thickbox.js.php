@@ -18,7 +18,8 @@
 
   // content that a script has inserted into the page
   document.addEventListener('modified:content-updated', function(event) {
-    var links = $(event.detail.root).find('a.thickbox, area.thickbox, input.thickbox').not('[data-thickbox]');
+    var selector = 'a.thickbox, area.thickbox, input.thickbox';
+    var links = $(event.detail.root).find(selector).addBack(selector).not('[data-thickbox]');
     tb_init(links.attr('data-thickbox', 'true'));
   });
 </script>

@@ -12,25 +12,51 @@
 ?>
 <script>
   function initSumoSelect(root) {
+    // the root itself counts too, e.g. a select with new options
+    var elements = function(selector) {
+      return $(root).find(selector).addBack(selector);
+    };
     <?php if (defined('ADVANCED_SUMOSELECT_SEARCHFIELD') && ADVANCED_SUMOSELECT_SEARCHFIELD == true) { ?>
-      $(root).find('select:not([name=filter_sort]):not([name=filter_set]):not([name=currency]):not([name=categories_id]):not([name=gender]):not([name=language]):not([id^=sel_]):not([id=ec_term])').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
-      $(root).find('select[name=filter_sort]').SumoSelect();
-      $(root).find('select[name=filter_set]').SumoSelect();
-      $(root).find('select[name=currency]').SumoSelect();
-      $(root).find('select[name=categories_id]').SumoSelect();
-      $(root).find('select[name=gender]').SumoSelect();
-      $(root).find('select[name=language]').SumoSelect();
-      $(root).find('select[id^=sel_]').SumoSelect();
-      $(root).find('select[id=ec_term]').SumoSelect();
+      elements('select:not([name=filter_sort]):not([name=filter_set]):not([name=currency]):not([name=categories_id]):not([name=gender]):not([name=language]):not([id^=sel_]):not([id=ec_term])').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
+      elements('select[name=filter_sort]').SumoSelect();
+      elements('select[name=filter_set]').SumoSelect();
+      elements('select[name=currency]').SumoSelect();
+      elements('select[name=categories_id]').SumoSelect();
+      elements('select[name=gender]').SumoSelect();
+      elements('select[name=language]').SumoSelect();
+      elements('select[id^=sel_]').SumoSelect();
+      elements('select[id=ec_term]').SumoSelect();
     <?php } else { ?>
-      $(root).find('select:not([name=country])').SumoSelect();
-      $(root).find('select[name=country]').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
+      elements('select:not([name=country])').SumoSelect();
+      elements('select[name=country]').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
     <?php } ?>
   }
 
   // content that a script has inserted into the page
   document.addEventListener('modified:content-updated', function(event) {
     initSumoSelect(event.detail.root);
+  });
+
+  // content that a script is about to replace or remove
+  document.addEventListener('modified:before-content-update', function(event) {
+    var selects = $(event.detail.root).find('select').addBack('select').filter(function() {
+      return this.sumo;
+    });
+    if (selects.length) {
+      selects.each(function() {
+        this.sumo.unload();
+      });
+      // unload() keeps the resize handler of each instance, so the remaining ones bind it again
+      $(window).off('resize.sumo');
+      $('select').each(function() {
+        var sumo = this.sumo;
+        if (sumo) {
+          $(window).on('resize.sumo', function() {
+            sumo.floatingList();
+          });
+        }
+      });
+    }
   });
 
   $(document).ready(function() {

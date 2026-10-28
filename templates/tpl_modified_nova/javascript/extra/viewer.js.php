@@ -14,7 +14,7 @@ if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
   ?>
   <script>
     function initViewer(root) {
-      var pd_image_zoomer = root.querySelector('#pd_image_zoomer');
+      var pd_image_zoomer = (root.id == 'pd_image_zoomer') ? root : root.querySelector('#pd_image_zoomer');
       // the product page only has the zoomer when the article has an image
       if (!pd_image_zoomer) {
         return;

@@ -12,8 +12,8 @@
 ?>
 <script>
   function initColorBox(root) {
-    $(root).find(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>', next: '<i class="fas fa-chevron-right"></i>', previous: '<i class="fas fa-chevron-left"></i>'});
-    $(root).find(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>'});
+    $(root).find(".cbimages").addBack(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>', next: '<i class="fas fa-chevron-right"></i>', previous: '<i class="fas fa-chevron-left"></i>'});
+    $(root).find(".iframe").addBack(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>'});
   }
 
   // content that a script has inserted into the page

@@ -12,7 +12,7 @@
 ?>
 <script>
   function initBxSlider(root) {
-    $(root).find('.bxcarousel_bestseller').bxSlider({
+    $(root).find('.bxcarousel_bestseller').addBack('.bxcarousel_bestseller').bxSlider({
       minSlides: 6,
       maxSlides: 8,
       pager: ($(this).children('li').length > 1), //FIX for only one entry
@@ -20,7 +20,7 @@
       slideMargin: 18
     });
   
-    $(root).find('.bxcarousel_slider').bxSlider({
+    $(root).find('.bxcarousel_slider').addBack('.bxcarousel_slider').bxSlider({
       adaptiveHeight: false,
       mode: 'fade',
       auto: true,
