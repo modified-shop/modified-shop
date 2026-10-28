@@ -44,13 +44,16 @@
     });
     if (selects.length) {
       selects.each(function() {
+        // an open list keeps the scroll lock of the body and its document click handler
+        this.sumo.hideOpts();
         this.sumo.unload();
       });
       // unload() keeps the resize handler of each instance, so the remaining ones bind it again
       $(window).off('resize.sumo');
       $('select').each(function() {
         var sumo = this.sumo;
-        if (sumo) {
+        // native selects on mobile devices have no list and no resize handler
+        if (sumo && !sumo.mob) {
           $(window).on('resize.sumo', function() {
             sumo.floatingList();
           });

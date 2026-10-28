@@ -13,8 +13,13 @@
 if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
   ?>
   <script>
+    // the zoomer in root, root itself or the zoomer around root, e.g. around the big image
+    function imageZoomer(root) {
+      return root.querySelector('#pd_image_zoomer') || (root.closest ? root.closest('#pd_image_zoomer') : null);
+    }
+
     function initViewer(root) {
-      var pd_image_zoomer = (root.id == 'pd_image_zoomer') ? root : root.querySelector('#pd_image_zoomer');
+      var pd_image_zoomer = imageZoomer(root);
       // the product page only has the zoomer when the article has an image
       if (!pd_image_zoomer) {
         return;
@@ -46,8 +51,7 @@ if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
 
     // content that a script is about to replace or remove
     document.addEventListener('modified:before-content-update', function (event) {
-      var root = event.detail.root;
-      var pd_image_zoomer = (root.id == 'pd_image_zoomer') ? root : root.querySelector('#pd_image_zoomer');
+      var pd_image_zoomer = imageZoomer(event.detail.root);
       if (pd_image_zoomer && pd_image_zoomer.viewer) {
         pd_image_zoomer.viewer.destroy();
       }
