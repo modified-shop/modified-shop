@@ -11,11 +11,25 @@
    --------------------------------------------------------------*/
 ?>
 <script>
+  // handlers on the select itself, e.g. the change handler of native selects on mobile devices
+  function sumoHandlers(select) {
+    var handlers = [];
+    $.each($._data(select, 'events') || {}, function(type, list) {
+      handlers = handlers.concat(list);
+    });
+    return handlers;
+  }
+
   function initSumoSelect(root) {
     // the root itself counts too, e.g. a select with new options
     var elements = function(selector) {
       return $(root).find(selector).addBack(selector);
     };
+    // unload() keeps the handlers that a start binds to the select, each start remembers its own
+    var selects = elements('select').filter(function() {
+      return !this.sumo;
+    }).get();
+    var before = selects.map(sumoHandlers);
     <?php if (defined('ADVANCED_SUMOSELECT_SEARCHFIELD') && ADVANCED_SUMOSELECT_SEARCHFIELD == true) { ?>
       elements('select:not([name=filter_sort]):not([name=filter_set]):not([name=currency]):not([name=categories_id]):not([name=gender]):not([id^=sel_]):not([id=ec_term])').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
       elements('select[name=filter_sort]').SumoSelect();
@@ -29,6 +43,13 @@
       elements('select:not([name=country])').SumoSelect();
       elements('select[name=country]').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
     <?php } ?>
+    selects.forEach(function(select, i) {
+      if (select.sumo) {
+        $(select).data('sumoHandlers', sumoHandlers(select).filter(function(handler) {
+          return before[i].indexOf(handler) < 0;
+        }));
+      }
+    });
   }
 
   // content that a script has inserted into the page
@@ -38,14 +59,28 @@
 
   // content that a script is about to replace or remove
   document.addEventListener('modified:before-content-update', function(event) {
-    var selects = $(event.detail.root).find('select').addBack('select').filter(function() {
+    var root = event.detail.root;
+    var selects = $(root).find('select').addBack('select').filter(function() {
       return this.sumo;
     });
     if (selects.length) {
       selects.each(function() {
+        var select = this;
+        var wrapper = select.sumo.select[0];
         // an open list keeps the scroll lock of the body and its document click handler
-        this.sumo.hideOpts();
-        this.sumo.unload();
+        select.sumo.hideOpts();
+        select.sumo.unload();
+        $.each($(select).data('sumoHandlers') || [], function(i, handler) {
+          $(select).off(handler.origType, handler.handler);
+        });
+        $(select).removeData('sumoHandlers');
+        // unload() removes the wrapper, as root it stays in the page as a plain container of the select
+        if (wrapper === root) {
+          while (root.attributes.length) {
+            root.removeAttribute(root.attributes[0].name);
+          }
+          $(root).empty().insertBefore(select).append(select);
+        }
       });
       // unload() keeps the resize handler of each instance, so the remaining ones bind it again
       $(window).off('resize.sumo');
