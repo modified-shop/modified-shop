@@ -24,14 +24,52 @@
     sliders.filter(function() {
       return !$(this).data('bxSlider');
     }).each(function() {
+      var slider = $(this);
       var media = $(this).find('img, iframe').get();
       var before = media.map(bxHandlers);
-      $(this).bxSlider(options);
-      // the slider starts when each of its images has called its load handler
+      var viewport = null;
+      var bound = null;
+      // the handlers of the slider on its viewport are those that appear between lead() and follow(), only its own code runs there
+      var lead = function() {
+        bound = bxHandlers(viewport);
+      };
+      var follow = function() {
+        if (bound) {
+          var own = slider.data('bxSliderHandlers');
+          if (!own) {
+            // the slider has just started, its touch handler binds more handlers on each touch
+            $(viewport).on('touchstart MSPointerDown pointerdown', follow);
+          }
+          own = own || [];
+          $.each(bxHandlers(viewport), function(i, handler) {
+            if (bound.indexOf(handler) < 0 && own.indexOf(handler.handler) < 0) {
+              own.push(handler.handler);
+            }
+          });
+          slider.data('bxSliderHandlers', own);
+          bound = null;
+        }
+      };
+      $(this).bxSlider($.extend({}, options, {
+        // runs right before the slider binds its handlers to the viewport
+        onSliderLoad: function() {
+          viewport = slider.parent()[0];
+          lead();
+          $(viewport).on('touchstart MSPointerDown pointerdown', lead);
+        }
+      }));
+      follow();
+      // the slider starts when each of its images has called its load handler, follow() is bound right behind it
       $(this).data('bxSliderLoad', media.map(function(element, i) {
-        return {element: element, handlers: bxHandlers(element).filter(function(handler) {
-          return handler.type == 'load' && before[i].indexOf(handler) < 0;
-        })};
+        var handlers = function() {
+          return bxHandlers(element).filter(function(handler) {
+            return handler.type == 'load' && before[i].indexOf(handler) < 0;
+          });
+        };
+        if (handlers().length) {
+          $(element).one('load error', follow);
+        }
+        return {element: element, handlers: handlers()};
       }));
     });
   }
@@ -80,14 +118,14 @@
             });
           });
         }
-        $(this).removeData('bxSliderLoad');
+        var own = $(this).data('bxSliderHandlers') || [];
+        $(this).removeData('bxSliderLoad bxSliderHandlers');
         var wrapped = $(this).parents('.bx-wrapper, .bx-viewport').is(root);
         // destroySlider() removes the jQuery data and handlers of the wrappers, those of the caller come back on root
         var data = wrapped ? $.extend({}, $(root).data()) : {};
         var handlers = wrapped ? bxHandlers(root).filter(function(handler) {
-          // without the touch handlers and the link click handler that the slider binds to its viewport
-          var touch = !handler.selector && /^(touch|pointer|MSPointer)/.test(handler.origType);
-          return !touch && !(handler.origType == 'click' && handler.selector == '.bxslider a');
+          // jQuery binds its own handler for focus and blur, it comes back with the handler of the caller
+          return own.indexOf(handler.handler) < 0 && handler.namespace !== false;
         }) : [];
         slider.destroySlider();
         // destroySlider() removes the wrappers, as root they stay in the page as a plain container of the slider

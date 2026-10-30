@@ -70,7 +70,8 @@
         // unload() removes the jQuery data and handlers of the wrapper, those of the caller come back on root
         var data = wrapper === root ? $.extend({}, $(root).data()) : {};
         var handlers = wrapper === root ? sumoHandlers(root).filter(function(handler) {
-          return handler.namespace.split('.').indexOf('sumo') < 0;
+          // jQuery binds its own handler for focus and blur, it comes back with the handler of the caller
+          return handler.namespace !== false && (handler.namespace || '').split('.').indexOf('sumo') < 0;
         }) : [];
         // an open list keeps the scroll lock of the body and its document click handler
         select.sumo.hideOpts();
