@@ -11,10 +11,10 @@
    --------------------------------------------------------------*/
 ?>
 <script>
-  // handlers on the select itself, e.g. the change handler of native selects on mobile devices
-  function sumoHandlers(select) {
+  // handlers on an element, e.g. the change handler of native selects on mobile devices
+  function sumoHandlers(element) {
     var handlers = [];
-    $.each($._data(select, 'events') || {}, function(type, list) {
+    $.each($._data(element, 'events') || {}, function(type, list) {
       handlers = handlers.concat(list);
     });
     return handlers;
@@ -67,6 +67,11 @@
       selects.each(function() {
         var select = this;
         var wrapper = select.sumo.select[0];
+        // unload() removes the jQuery data and handlers of the wrapper, those of the caller come back on root
+        var data = wrapper === root ? $.extend({}, $(root).data()) : {};
+        var handlers = wrapper === root ? sumoHandlers(root).filter(function(handler) {
+          return handler.namespace.split('.').indexOf('sumo') < 0;
+        }) : [];
         // an open list keeps the scroll lock of the body and its document click handler
         select.sumo.hideOpts();
         select.sumo.unload();
@@ -76,10 +81,11 @@
         $(select).removeData('sumoHandlers');
         // unload() removes the wrapper, as root it stays in the page as a plain container of the select
         if (wrapper === root) {
-          while (root.attributes.length) {
-            root.removeAttribute(root.attributes[0].name);
-          }
-          $(root).empty().insertBefore(select).append(select);
+          $(root).removeClass('SumoSelect open disabled sumo_' + select.name.replace(/\[\]/, '')).removeAttr('tabindex role aria-expanded selected-count is-selected');
+          $(root).empty().insertBefore(select).append(select).data(data);
+          $.each(handlers, function(i, handler) {
+            $(root).on(handler.origType + (handler.namespace ? '.' + handler.namespace : ''), handler.selector, handler.data, handler.handler);
+          });
         }
       });
       // unload() keeps the resize handler of each instance, so the remaining ones bind it again
