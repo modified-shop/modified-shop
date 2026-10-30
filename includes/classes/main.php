@@ -492,4 +492,20 @@ class main {
     
     return $image;
   }
+
+  /**
+   * get image link
+   *
+   * @param string $image path from getImage()
+   *
+   * @return string
+   */
+  function getImageLink($image) {
+    // a class extension may return an absolute url from getImage()
+    if ($image == '' || preg_match('#^(https?:)?//#i', $image)) {
+      return $image;
+    }
+
+    return DIR_WS_BASE . $image;
+  }
 }
