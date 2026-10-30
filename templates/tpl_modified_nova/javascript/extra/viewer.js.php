@@ -15,6 +15,10 @@ if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
   <script>
     window.addEventListener('DOMContentLoaded', function () {
       var pd_image_zoomer = document.getElementById('pd_image_zoomer');
+      // the product page only has the zoomer when the article has an image
+      if (!pd_image_zoomer) {
+        return;
+      }
       var viewer = new Viewer(pd_image_zoomer, {
         url: 'data-original',
         title: [0, (image, imageData) => `${image.alt}`],
