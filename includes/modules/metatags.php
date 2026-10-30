@@ -254,6 +254,7 @@
         }
 
         if (MO_PICS != '0') {
+          require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
           $mo_images = xtc_get_products_mo_images($product->data['products_id']);
           if ($mo_images != false) {
             $more_images_data = array();
@@ -471,6 +472,11 @@
   // metaClean
   $metadata_array = array_map('metaClean', $metadata_array);
   $metadata_array['description'] =  ((isset($metadata_array['description'])) ? metaClean($metadata_array['description'], $metaDesLength) : '');
+
+  // ajax requests only read $metadata_array, e.g. for the page title
+  if (defined('RUN_MODE_AJAX')) {
+    return;
+  }
 
   // output metas
   if (TEMPLATE_HTML_ENGINE == 'xhtml') {
