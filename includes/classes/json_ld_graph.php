@@ -240,7 +240,7 @@
         'url' => $url,
         'price' => self::price($data['PRODUCTS_PRICE_PLAIN']),
         'priceCurrency' => (isset($_SESSION['currency']) ? $_SESSION['currency'] : ''),
-      ), self::availability($product->data), array(
+      ), self::availability($product->data, (isset($data['PRODUCTS_ATTRIBUTES_AVAILABLE']) ? $data['PRODUCTS_ATTRIBUTES_AVAILABLE'] : true)), array(
         'itemCondition' => 'https://schema.org/NewCondition',
       ));
 
@@ -437,7 +437,7 @@
         ), self::availability(array(
           'products_quantity' => (isset($entry['PRODUCTS_QUANTITY']) ? $entry['PRODUCTS_QUANTITY'] : 1),
           'products_date_available' => (isset($entry['PRODUCTS_DATE_AVAILABLE']) ? $entry['PRODUCTS_DATE_AVAILABLE'] : ''),
-        )), array(
+        ), (isset($entry['PRODUCTS_ATTRIBUTES_AVAILABLE']) ? $entry['PRODUCTS_ATTRIBUTES_AVAILABLE'] : true)), array(
           'itemCondition' => 'https://schema.org/NewCondition',
         ));
 
@@ -514,14 +514,20 @@
      * saying nothing. Only a state a customer can really order names the date.
      *
      * @param array $data
+     * @param boolean $attributes_available availability of the quoted attribute combination
      * @return array
      */
-    static function availability($data) {
+    static function availability($data, $attributes_available = true) {
       $empty = (defined('STOCK_CHECK') && STOCK_CHECK == 'true'
                 && isset($data['products_quantity']) && $data['products_quantity'] <= 0);
       $checkout_allowed = (defined('STOCK_ALLOW_CHECKOUT') && STOCK_ALLOW_CHECKOUT == 'true');
 
-      if ($empty && !$checkout_allowed) {
+      $attributes_empty = ($attributes_available === false
+                           && defined('STOCK_CHECK') && STOCK_CHECK == 'true'
+                           && defined('ATTRIBUTE_STOCK_CHECK') && ATTRIBUTE_STOCK_CHECK == 'true'
+                           && defined('STOCK_ALLOW_CHECKOUT') && STOCK_ALLOW_CHECKOUT != 'true');
+
+      if (($empty || $attributes_empty) && !$checkout_allowed) {
         return array('availability' => 'https://schema.org/OutOfStock');
       }
 

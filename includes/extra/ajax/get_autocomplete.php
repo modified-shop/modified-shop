@@ -93,7 +93,7 @@
                                                       ".$p2c_condition."
                                              )";
 
-        // the results button only needs the number, the list only needs one page
+        // the results button needs the total, independently of the displayed suggestions
         $autocomplete_count_query = xtc_db_query("SELECT COUNT(DISTINCT p.products_id) AS total
                                                          ".$autocomplete_search_source."
                                                          ".$autocomplete_search_where);
@@ -101,7 +101,7 @@
         $autocomplete_search_total = (int)$autocomplete_count['total'];
 
         if ($autocomplete_search_total > 0) {
-          $autocomplete_search_query = xtc_db_query("SELECT ".ADD_SELECT_SEARCH."
+          $autocomplete_search_sql = "SELECT ".ADD_SELECT_SEARCH."
                                              p.products_id,
                                              p.products_ean,
                                              p.products_quantity,
@@ -126,12 +126,20 @@
                                                 ".SPECIALS_CONDITIONS_S."
                                              ".$autocomplete_search_where."
                                     GROUP BY p.products_id 
-                                             ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting)."
-                                       LIMIT ".MAX_DISPLAY_SEARCH_AC_RESULTS);
+                                             ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
 
           $module_content = array();
-          while ($autocomplete_search = xtc_db_fetch_array($autocomplete_search_query)) {
-            $module_content[] = $product->buildDataArray($autocomplete_search);
+          require_once (DIR_FS_CATALOG.'includes/classes/listingDisplayPrices.php');
+          if (listingDisplayPrices::isRequired($autocomplete_search_sql, $xtPrice)) {
+            $autocomplete_prices = new listingDisplayPrices($autocomplete_search_sql, $xtPrice, $product);
+            foreach (array_slice($autocomplete_prices->rows, 0, (int)MAX_DISPLAY_SEARCH_AC_RESULTS) as $autocomplete_search) {
+              $module_content[] = $product->buildDataArray($autocomplete_search, 'thumbnail', true, true, $autocomplete_prices->prices[$autocomplete_search['products_id']]);
+            }
+          } else {
+            $autocomplete_search_query = xtc_db_query($autocomplete_search_sql." LIMIT ".MAX_DISPLAY_SEARCH_AC_RESULTS);
+            while ($autocomplete_search = xtc_db_fetch_array($autocomplete_search_query)) {
+              $module_content[] = $product->buildDataArray($autocomplete_search);
+            }
           }
           $module_smarty->assign('module_content', $module_content);
           $module_smarty->assign('BUTTON_VIEW_RESULTS', '<a href="'.xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords='.$keywords.$params).'">'.xtc_image_button('button_results.gif', sprintf(TEXT_BUTTON_RESULTS, $autocomplete_search_total)).'</a>');

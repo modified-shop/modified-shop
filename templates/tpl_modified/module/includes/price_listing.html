@@ -15,7 +15,7 @@
               {if $price_data.PRODUCTS_PRICE_UVP != ''} 
                 {* START Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
                 <span class="uvp_price">  
-                  <span class="small_price">{$smarty.const.YOUR_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
+                  <span class="small_price">{$smarty.const.YOUR_PRICE}{$price_data.PRODUCTS_PRICE_FROM}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
                 </span>
                 <span class="item_price"><span class="small_price">{$smarty.const.MSRP}</span> {$price_data.PRODUCTS_PRICE_OLD_PRICE}</span>                
                 {* ENDE Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}

@@ -151,9 +151,21 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $info_smarty->assign('FORM_END', '</form>');
   
   // load all definitions from product class
-  $productDataArray = $product->buildDataArray($product->data, 'info', false);
+  $productDataArray = $product->buildDataArray($product->data, 'info', false, false);
   foreach ($productDataArray as $key => $value) {
     $info_smarty->assign($key, $value);
+  }
+
+  // Structured prices use the canonical offer; visible option prices keep their base reference.
+  $offerDataArray = $product->buildDataArray($product->data, 'info');
+  $offer_allowed = (isset($offerDataArray['PRICE_ALLOWED']) && $offerDataArray['PRICE_ALLOWED'] === 'true' && isset($offerDataArray['PRODUCTS_PRICE_PLAIN']));
+  $info_smarty->assign('PRODUCTS_OFFER_ALLOWED', $offer_allowed);
+  if ($offer_allowed) {
+    $info_smarty->assign('PRODUCTS_OFFER_PRICE', $offerDataArray['PRODUCTS_PRICE_PLAIN']);
+    require_once (DIR_FS_CATALOG.'includes/classes/json_ld_graph.php');
+    $offerAvailability = json_ld_graph::availability($product->data, (isset($offerDataArray['PRODUCTS_ATTRIBUTES_AVAILABLE']) ? $offerDataArray['PRODUCTS_ATTRIBUTES_AVAILABLE'] : true));
+    $info_smarty->assign('PRODUCTS_OFFER_AVAILABILITY', $offerAvailability['availability']);
+    $info_smarty->assign('PRODUCTS_OFFER_AVAILABILITY_STARTS', (isset($offerAvailability['availabilityStarts']) ? $offerAvailability['availabilityStarts'] : ''));
   }
   
   /*
