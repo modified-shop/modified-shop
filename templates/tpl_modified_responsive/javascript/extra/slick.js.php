@@ -11,9 +11,9 @@
    --------------------------------------------------------------*/
 ?>
 <script>
-  $(document).ready(function() {
+  function initSlick(root) {
 
-     $('.slider_home').slick({
+     $(root).find('.slider_home').addBack('.slider_home').not('.slick-initialized').slick({
       slidesToShow: 1,
       slidesToScroll: 1,
       autoplay: true,
@@ -24,10 +24,10 @@
       dots: false,
       fade: true
     });
-    $('.slider_home').show();
+    $(root).find('.slider_home').addBack('.slider_home').show();
 
 
-    $('.slider_bestseller').slick({
+    $(root).find('.slider_bestseller').addBack('.slider_bestseller').not('.slick-initialized').slick({
       dots: true,
       arrows: true,
       infinite: true,
@@ -43,5 +43,19 @@
     });
 
 
+  }
+
+  $(document).ready(function() {
+    initSlick(document);
+  });
+
+  // content that a script has inserted into the page
+  document.addEventListener('modified:content-updated', function(event) {
+    initSlick(event.detail.root);
+  });
+
+  // content that a script is about to replace or remove
+  document.addEventListener('modified:before-content-update', function(event) {
+    $(event.detail.root).find('.slick-initialized').addBack('.slick-initialized').slick('unslick');
   });
 </script>

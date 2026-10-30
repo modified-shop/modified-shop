@@ -11,13 +11,36 @@
    --------------------------------------------------------------*/
 ?>
 <script>
-  document.addEventListener( 'DOMContentLoaded', function() {
+  /* instances of the page, destroyed with their content */
+  var splideInstances = [];
 
-    const elemts = document.getElementsByClassName('splide_big_image');
-    if(elemts.length) {
+  function newSplide(elem, options) {
+    var splide = new Splide(elem, options);
+    splideInstances.push(splide);
+    return splide;
+  }
+
+  /* matching elements of the root, the root itself included */
+  function splideElements(root, selector) {
+    var elems = Array.prototype.slice.call(root.querySelectorAll(selector));
+    if (root.matches && root.matches(selector)) {
+      elems.unshift(root);
+    }
+    return elems;
+  }
+
+  /* the big image and its synced thumbnail navigation start and stop together */
+  function splideGallery() {
+    return [document.querySelector('.splide_big_image'), document.querySelector('.splide_small_image')];
+  }
+
+  function initSplide(root) {
+
+    var gallery = splideGallery();
+    if (gallery[0] && gallery[1] && !gallery[0].classList.contains('is-initialized') && (root.contains(gallery[0]) || root.contains(gallery[1]))) {
 
       /* product info big image */
-      var big = new Splide( '.splide_big_image', {
+      var big = newSplide( gallery[0], {
         type: 'fade',
         role: 'group',
         heightRatio: 1.0,
@@ -28,7 +51,7 @@
       } );
 
       /* product info small image thumbnail navigation */
-      var small = new Splide( '.splide_small_image', {
+      var small = newSplide( gallery[1], {
         type: 'slide',
         role: 'group',
         rewind: true,
@@ -44,12 +67,15 @@
       big.sync( small );
       big.mount();
       small.mount();
+
+      /* prevent accessibility warning for vertical orientation */
+      $(small.root).find('.splide__list').removeAttr('aria-orientation');
     }
 
     /* start slider */
-    var elms = document.getElementsByClassName("splide_slider");
+    var elms = splideElements(root, ".splide_slider:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
-      new Splide(elms[i], {
+      newSplide(elms[i], {
         type: 'fade',
         role: 'group',
         autoplay: true,
@@ -61,9 +87,9 @@
     }
 
     /* carousel products */
-    var elms = document.getElementsByClassName("splide_size1");
+    var elms = splideElements(root, ".splide_size1:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
-      new Splide(elms[i], {
+      newSplide(elms[i], {
         type: 'slide',
         role: 'group',
         speed: 1000,
@@ -79,9 +105,9 @@
     }
 
     /* carousel reviews */
-    var elms = document.getElementsByClassName("splide_size2");
+    var elms = splideElements(root, ".splide_size2:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
-      new Splide(elms[i], {
+      newSplide(elms[i], {
         type: 'slide',
         role: 'group',
         speed: 1000,
@@ -94,22 +120,43 @@
     }
 
     /* carousel products row */
-    var elms = document.getElementsByClassName("splide_size3");
+    var elms = splideElements(root, ".splide_size3:not(.is-initialized)");
     for (var i = 0; i < elms.length; i++) {
-      new Splide(elms[i], {
+      newSplide(elms[i], {
         type: 'slide',
         role: 'group',
         speed: 1000,
         perPage: 1,
-        mediaQuery: 'min', 
+        mediaQuery: 'min',
       }).mount();
     }
 
-  }); 
+  }
 
-  /* prevent accessibility warning for vertical orientation */
-  $(document).ready(function(){
-    $("#splide02-list").removeAttr('aria-orientation');
+  document.addEventListener( 'DOMContentLoaded', function() {
+    initSplide(document);
+  });
+
+  // content that a script has inserted into the page
+  document.addEventListener('modified:content-updated', function(event) {
+    initSplide(event.detail.root);
+  });
+
+  // content that a script is about to replace or remove
+  document.addEventListener('modified:before-content-update', function(event) {
+    var root = event.detail.root;
+    var gallery = splideGallery();
+    var withGallery = gallery.some(function(elem) {
+      return elem && root.contains(elem);
+    });
+    splideInstances = splideInstances.filter(function(splide) {
+      if (root.contains(splide.root) || (withGallery && gallery.indexOf(splide.root) >= 0)) {
+        splide.destroy();
+        splide.root.classList.remove('is-initialized');
+        return false;
+      }
+      return true;
+    });
   });
 
 </script>
