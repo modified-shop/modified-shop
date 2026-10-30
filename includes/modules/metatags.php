@@ -294,7 +294,7 @@
           $image = $main->getImage($category['categories_image']);
           if ($image != '') {
             $metadata_image_array[] = array(
-              'link' => DIR_WS_BASE.$image,
+              'link' => $main->getImageLink($image),
             );
           }
 
@@ -324,7 +324,7 @@
           $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
           if ($image != '') {
             $metadata_image_array[] = array(
-              'link' => DIR_WS_BASE.$image,
+              'link' => $main->getImageLink($image),
             );
           }
 
