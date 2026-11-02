@@ -17,7 +17,7 @@
     $pfrom = $_GET['pfrom'] = !empty($_GET['pfrom']) ? str_replace(',', '.', stripslashes(trim($_GET['pfrom']))) : false;
     $pto = $_GET['pto'] = !empty($_GET['pto']) ? str_replace(',', '.', stripslashes(trim($_GET['pto']))) : false;
     $manufacturers_id  = $_GET['filter_id'] = (!empty($_GET['filter_id']) && !is_array($_GET['filter_id'])) ? (int)$_GET['filter_id'] : false;
-    $categories_id = $_GET['categories_id'] = !empty($_GET['categories_id']) ? (int)$_GET['categories_id'] : false;
+    $categories_id = $_GET['categories_id'] = (!empty($_GET['categories_id']) && !is_array($_GET['categories_id'])) ? (int)$_GET['categories_id'] : false;
     $_GET['inc_subcat'] = !empty($_GET['inc_subcat']) ? (int)$_GET['inc_subcat'] : null;
 
     // manufacturers
