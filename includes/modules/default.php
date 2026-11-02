@@ -179,7 +179,7 @@ switch ($category_depth) {
     $display_mode = 'listing';
     
     // sorting query
-    if (isset($_GET['manufacturers_id']) && isset($_GET['filter_id'])) {
+    if (isset($_GET['manufacturers_id']) && isset($_GET['filter_id']) && !is_array($_GET['filter_id'])) {
       $category_id = (int)$_GET['filter_id'];
     } else {
       $category_id = (int)$current_category_id;
@@ -263,7 +263,7 @@ switch ($category_depth) {
       }
       
       // We are asked to show only a specific category
-      if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
+      if (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
         $p2c_condition = " WHERE p2c.categories_id = '".(int)$_GET['filter_id']."'  ";
       }
     } else {
@@ -278,7 +278,7 @@ switch ($category_depth) {
       }
       
       // We are asked to show only specific manufacturer                    
-      if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
+      if (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
         $select .= "m.manufacturers_name, ";
         $from .= "JOIN ".TABLE_MANUFACTURERS." m 
                        ON p.manufacturers_id = m.manufacturers_id
