@@ -28,7 +28,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html
     $manufacturer = $manufacturers_array[$product->data['manufacturers_id']];
     $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
 
-    $box_smarty->assign('IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
+    $box_smarty->assign('IMAGE', (($image != '') ? $main->getImageLink($image) : ''));
     $box_smarty->assign('NAME', $manufacturer['manufacturers_name']);
     if ($manufacturer['manufacturers_url'] != '') {
       $box_smarty->assign('URL','<a href="' . xtc_href_link(FILENAME_REDIRECT, 'action=manufacturer&'.xtc_manufacturer_link($manufacturer['manufacturers_id'],$manufacturer['manufacturers_name'])) . '" onclick="window.open(this.href); return false;">' . sprintf(BOX_MANUFACTURER_INFO_HOMEPAGE, $manufacturer['manufacturers_name']) . '</a>');

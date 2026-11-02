@@ -61,9 +61,9 @@
           
           $banner_array[] = array(
             'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
-            'IMAGE_SRC' => (($banner_image_plain != '') ? DIR_WS_BASE.$banner_image_plain : ''),
+            'IMAGE_SRC' => (($banner_image_plain != '') ? $main->getImageLink($banner_image_plain) : ''),
             'IMAGE_IMG' => $banner_image,
-            'IMAGE_SRC_MOBILE' => (($banner_image_mobile_plain != '') ? DIR_WS_BASE.$banner_image_mobile_plain : ''),
+            'IMAGE_SRC_MOBILE' => (($banner_image_mobile_plain != '') ? $main->getImageLink($banner_image_mobile_plain) : ''),
             'IMAGE_IMG_MOBILE' => $banner_image_mobile,
             'IMAGE_TITLE' => $banner_image_title,
             'IMAGE_ALT' => $banner_image_alt,
@@ -103,9 +103,9 @@
 
     $banner_array = array(
       'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
-      'IMAGE_SRC' => (($banner_image_plain != '') ? DIR_WS_BASE.$banner_image_plain : ''),
+      'IMAGE_SRC' => (($banner_image_plain != '') ? $main->getImageLink($banner_image_plain) : ''),
       'IMAGE_IMG' => $banner_image,
-      'IMAGE_SRC_MOBILE' => (($banner_image_mobile_plain != '') ? DIR_WS_BASE.$banner_image_mobile_plain : ''),
+      'IMAGE_SRC_MOBILE' => (($banner_image_mobile_plain != '') ? $main->getImageLink($banner_image_mobile_plain) : ''),
       'IMAGE_IMG_MOBILE' => $banner_image_mobile,
       'IMAGE_TITLE' => $banner_image_title,
       'IMAGE_ALT' => $banner_image_alt,

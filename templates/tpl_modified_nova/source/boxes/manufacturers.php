@@ -49,7 +49,7 @@
         $box_content[] = array(
           'NAME' => $manufacturers['manufacturers_name'],
           'LINK' => xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturers['manufacturers_id'],$manufacturers['manufacturers_name'])),
-          'IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
+          'IMAGE' => (($image != '') ? $main->getImageLink($image) : ''),
           'SELECTED' => ((isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] == $manufacturers['manufacturers_id']) ? 1 : 0),
         );
       }

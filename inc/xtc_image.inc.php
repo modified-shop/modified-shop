@@ -25,9 +25,12 @@
       return false;
     }
 
+    // an absolute url, e.g. from a class extension of main::getImage(), keeps its own host
+    $base = ((defined('DIR_WS_BASE') && !preg_match('#^(https?:)?//#i', $src)) ? DIR_WS_BASE : '');
+
     // alt is added to the img tag even if it is null to prevent browsers from outputting
     // the image filename as default
-    $image = '<img src="' . xtc_parse_input_field_data(((defined('DIR_WS_BASE')) ? DIR_WS_BASE : '').$src, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
+    $image = '<img src="' . xtc_parse_input_field_data($base.$src, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
 
     if (xtc_not_null($width) && xtc_not_null($height)) {
       $image .= ' width="' . xtc_parse_input_field_data($width, array('"' => '&quot;')) . '" height="' . xtc_parse_input_field_data($height, array('"' => '&quot;')) . '"';

@@ -151,9 +151,9 @@ switch ($category_depth) {
 
     $default_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
     $default_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
-    $default_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
-    $default_smarty->assign('CATEGORIES_IMAGE_LIST', (($image_list != '') ? DIR_WS_BASE . $image_list : ''));
-    $default_smarty->assign('CATEGORIES_IMAGE_MOBILE', (($image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''));
+    $default_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? $main->getImageLink($image) : ''));
+    $default_smarty->assign('CATEGORIES_IMAGE_LIST', (($image_list != '') ? $main->getImageLink($image_list) : ''));
+    $default_smarty->assign('CATEGORIES_IMAGE_MOBILE', (($image_mobile != '') ? $main->getImageLink($image_mobile) : ''));
     $default_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
     $default_smarty->assign('CATEGORIES_SHORT_DESCRIPTION', $category['categories_short_description']);
 
