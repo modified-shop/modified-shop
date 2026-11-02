@@ -11,9 +11,18 @@
    --------------------------------------------------------------*/
 ?>
 <script>
+  function initColorBox(root) {
+    $(root).find(".cbimages").addBack(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>', next: '<i class="fas fa-chevron-right"></i>', previous: '<i class="fas fa-chevron-left"></i>'});
+    $(root).find(".iframe").addBack(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>'});
+  }
+
+  // content that a script has inserted into the page
+  document.addEventListener('modified:content-updated', function(event) {
+    initColorBox(event.detail.root);
+  });
+
   $(document).ready(function(){
-    $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>', next: '<i class="fas fa-chevron-right"></i>', previous: '<i class="fas fa-chevron-left"></i>'});
-    $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>'});
+    initColorBox(document);
     $("#print_order_layer").on('submit', function(event) {
       $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", close: '<i class="fas fa-times"></i>', href:$(this).attr("action") + '&' + $(this).serialize()});
       return false;

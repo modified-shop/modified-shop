@@ -17,9 +17,21 @@
   $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/javascript.css", function(css) {
     $("head").append("<style type='text/css'>"+css+"<\/style>");
   });
+  function initTabs(root) {
+    $(root).find("#tabbed_product_info").addBack("#tabbed_product_info").not(".ui-tabs").tabs();
+    $(root).find("#accordion_product_info").addBack("#accordion_product_info").not(".ui-accordion").accordion({ autoHeight: false });
+  }
   $(function() {
-    $("#tabbed_product_info").tabs();
-    $("#accordion_product_info").accordion({ autoHeight: false });
+    initTabs(document);
+  });
+  // content that a script has inserted into the page
+  document.addEventListener('modified:content-updated', function(event) {
+    initTabs(event.detail.root);
+  });
+  // content that a script is about to replace or remove
+  document.addEventListener('modified:before-content-update', function(event) {
+    $(event.detail.root).find("#tabbed_product_info").addBack("#tabbed_product_info").filter(".ui-tabs").tabs("destroy");
+    $(event.detail.root).find("#accordion_product_info").addBack("#accordion_product_info").filter(".ui-accordion").accordion("destroy");
   });
 /*]]>*/
 </script>
