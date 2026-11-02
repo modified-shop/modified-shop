@@ -90,7 +90,10 @@ if (isset ($_GET['coID']) && function_exists('xtc_get_content_path')) {
 }
 
 //set $current_category_id, $_SESSION['CatPath'], verify $cPath
-unset($_SESSION['CatPath']);
+// ajax requests keep the category path of the page that sends them
+if (!defined('RUN_MODE_AJAX')) {
+  unset($_SESSION['CatPath']);
+}
 if (xtc_not_null($cPath)) {
   require_once (DIR_FS_INC.'category_redirect.inc.php');
   $cPath_array = xtc_parse_category_path($cPath);
