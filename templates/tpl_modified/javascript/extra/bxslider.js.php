@@ -127,6 +127,12 @@
           // jQuery binds its own handler for focus and blur, it comes back with the handler of the caller
           return own.indexOf(handler.handler) < 0 && handler.namespace !== false;
         }) : [];
+        // a dispatch already running on the viewport, e.g. the one whose handler started this update, still calls the old handlers of the slider
+        $.each(bxHandlers($(this).parent()[0]), function(i, handler) {
+          if (own.indexOf(handler.handler) >= 0) {
+            handler.handler = $.noop;
+          }
+        });
         slider.destroySlider();
         // destroySlider() removes the wrappers, as root they stay in the page as a plain container of the slider
         if (wrapped) {
