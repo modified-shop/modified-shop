@@ -21,7 +21,7 @@ define('TEXT_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese Logdatei l&ouml;sch
 
 define('SUCCESS_LOG_DELETED', 'Erfolg: Die Logdatei wurde gel&ouml;scht.');
 
-define('ERROR_LOG_DIRECTORY_DOES_NOT_EXIST', 'Fehler: Das Sicherungsverzeichnis ist nicht vorhanden.');
-define('ERROR_LOG_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Sicherungsverzeichnis ist schreibgesch&uuml;tzt.');
+define('ERROR_LOG_DIRECTORY_DOES_NOT_EXIST', 'Fehler: Das Logverzeichnis ist nicht vorhanden.');
+define('ERROR_LOG_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Logverzeichnis ist schreibgesch&uuml;tzt.');
 define('ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE', 'Fehler: Download Link nicht akzeptabel.');
 ?>

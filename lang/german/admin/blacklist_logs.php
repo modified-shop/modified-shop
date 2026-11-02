@@ -25,8 +25,8 @@ define('TEXT_ENTRY_TIME_INFO', 'Geben Sie das Datum und die Uhrzeit an, bis wann
 
 define('TEXT_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese IP Adresse l&ouml;schen m&ouml;chten?');
 
-define('ERROR_LOG_DIRECTORY_DOES_NOT_EXIST', 'Fehler: Das Sicherungsverzeichnis ist nicht vorhanden.');
-define('ERROR_LOG_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Sicherungsverzeichnis ist schreibgesch&uuml;tzt.');
+define('ERROR_LOG_DIRECTORY_DOES_NOT_EXIST', 'Fehler: Das Logverzeichnis ist nicht vorhanden.');
+define('ERROR_LOG_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Logverzeichnis ist schreibgesch&uuml;tzt.');
 define('ERROR_BLACKLIST_WRITE', 'Fehler: Die Blacklist konnte nicht gespeichert werden.');
 define('ERROR_BLACKLIST_ENTRY', 'Fehler: Geben Sie eine g&uuml;ltige IP Adresse und einen zuk&uuml;nftigen Zeitpunkt an.');
 ?>
