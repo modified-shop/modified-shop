@@ -221,7 +221,7 @@
         $this->setInventoryProducts($uuid);
         $inventory = $this->getInventoryLocations($this->locations['STORE'], $uuid);
       }
-
+    
       // a failed read must not count as balance zero, 404 means no balance exists yet
       if (isset($inventory['error']) && $inventory['status'] != '404') {
         return $inventory;
@@ -234,7 +234,7 @@
         if (isset($product['error'])) {
           return $product;
         }
-
+      
         $quantity = $products['products_quantity'];
         $inventory['variants'][0]['productUuid'] = $product['uuid'];
         $inventory['variants'][0]['variantUuid'] = $product['variants'][0]['uuid'];
