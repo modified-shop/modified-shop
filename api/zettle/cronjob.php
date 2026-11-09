@@ -43,7 +43,7 @@
     $specials_now = $specials_now['specials_now'];
     if (defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SPECIALS_CHECK')) {
       $specials_check = xtc_db_input(MODULE_CATEGORIES_ZETTLE_CATEGORIES_SPECIALS_CHECK);
-      // bulk -1 waits for its import, a special still counts as valid in its expires_date second
+      // a negative bulk waits for its import, a special still counts as valid in its expires_date second
       xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
                       JOIN ".TABLE_SPECIALS." s
                            ON s.products_id = pz2p.products_id
