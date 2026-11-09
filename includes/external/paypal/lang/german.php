@@ -82,6 +82,8 @@ $lang_array = array(
   'TEXT_PAYPAL_TRACKING_TRACE' => 'Track &amp; Trace',
   'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Sendungsnummer &uuml;bertragen',
   'TEXT_PAYPAL_TRACKING_CANCEL' => 'l&ouml;schen',
+  'TEXT_PAYPAL_TRACKING_NOT_SENT' => 'Die Sendungsnummer konnte nicht an PayPal &uuml;bertragen werden.',
+  'TEXT_PAYPAL_TRACKING_NO_CAPTURE' => 'F&uuml;r diese Zahlung gibt es noch keinen abgeschlossenen Einzug. Die Sendungsnummer kann erst danach an PayPal &uuml;bertragen werden.',
   
 
   // products
