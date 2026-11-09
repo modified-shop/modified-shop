@@ -552,7 +552,8 @@ class shoppingCart {
       return 0;
     }
 
-    $cache_id = md5(serialize($this->contents));
+    // the prices depend on the list and on the PayPal plans selected in it
+    $cache_id = md5(serialize(array($this->type, $this->contents, (isset($this->plans) ? $this->plans : array()))));
     
     if (!isset($calculate_cache_array[$cache_id])) {
       foreach ($this->contents as $products_id => $data) {
