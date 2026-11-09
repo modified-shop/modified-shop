@@ -1193,27 +1193,19 @@ class PayPalPaymentBase extends PayPalCommon {
 
   // PayPal accepts only its own carrier codes, every other name goes as OTHER
   function get_tracking_carrier($carrier_name) {
-    $carrier_codes = array(
-      'DHL' => 'DHL',
+    // default carriers of the shop whose name is no PayPal code
+    $carrier_aliases = array(
       'DEUTSCHE POST' => 'DEUTSCHE_DE',
       'POST' => 'DEUTSCHE_DE',
-      'DPD' => 'DPD',
-      'GLS' => 'GLS',
-      'UPS' => 'UPS',
-      'HERMES' => 'HERMES_DE',
-      'FEDEX' => 'FEDEX',
-      'TNT' => 'TNT',
       'KUEHNE-NAGEL' => 'KUEHNE',
-      'LOGOIX' => 'LOGOIX',
     );
 
     $carrier = strtoupper(trim($carrier_name));
-    if (isset($carrier_codes[$carrier])) {
-      return array('carrier' => $carrier_codes[$carrier]);
+    if (isset($carrier_aliases[$carrier])) {
+      return array('carrier' => $carrier_aliases[$carrier]);
     }
 
-    // a shop may already have entered a PayPal code as the name of its carrier
-    if (preg_match('/^[A-Z0-9]+(_[A-Z0-9]+)+$/', trim($carrier_name))) {
+    if (in_array($carrier, include(DIR_FS_EXTERNAL.'paypal/functions/PayPalTrackingCarriers.php'), true)) {
       return array('carrier' => $carrier);
     }
 
