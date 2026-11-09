@@ -84,16 +84,43 @@ if (is_array($request)
         if (is_object($PayPalOrder)
             && isset($PayPalOrder->status)
             && $PayPalOrder->status == 'COMPLETED'
-            && $check['send_order'] == 1
+            && $check['send_order'] >= 1
             )
         {
-          if (send_order_mail($check['orders_id']) === true) {
+          // send_order 2: the merchant copy went out already, retry the customer mail only
+          $customer_mail_sent = false;
+          $mail_output_level = ob_get_level();
+          ob_start();
+          try {
+            $mail_processed = send_order_mail($check['orders_id'], false, ($check['send_order'] == 2), $customer_mail_sent);
+          } finally {
+            // buffered so a mail warning cannot send the headers before the 503
+            $mail_output = '';
+            while (ob_get_level() > $mail_output_level) {
+              $mail_output = ob_get_clean().$mail_output;
+            }
+          }
+
+          if ($customer_mail_sent === true) {
             $notified = 1;
           }
-          
-          xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
-                           SET send_order = 0
-                         WHERE paypal_id = '".(int)$check['paypal_id']."'");
+
+          if ($mail_processed === true) {
+            xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
+                             SET send_order = 0
+                           WHERE paypal_id = '".(int)$check['paypal_id']."'");
+          } else {
+            xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
+                             SET send_order = 2
+                           WHERE paypal_id = '".(int)$check['paypal_id']."'");
+
+            // no status update here, the retry that delivers the mail writes it once
+            header("HTTP/1.0 503 Service Unavailable");
+            header("Status: 503 Service Unavailable");
+            echo $mail_output;
+            exit();
+          }
+          echo $mail_output;
         }
       }
       
