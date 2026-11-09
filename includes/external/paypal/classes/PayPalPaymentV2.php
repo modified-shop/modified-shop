@@ -19,6 +19,7 @@
   defined('TABLE_PAYPAL_CONFIG') OR define('TABLE_PAYPAL_CONFIG', 'paypal_config');
   defined('TABLE_PAYPAL_INSTRUCTIONS') OR define('TABLE_PAYPAL_INSTRUCTIONS', 'paypal_instructions');
   defined('TABLE_PAYPAL_TRACKING') OR define('TABLE_PAYPAL_TRACKING', 'paypal_tracking');
+  defined('TABLE_PAYPAL_TRACKING_STATE') OR define('TABLE_PAYPAL_TRACKING_STATE', 'paypal_tracking_state');
   defined('TABLE_PAYPAL_VAULT') OR define('TABLE_PAYPAL_VAULT', 'paypal_vault');
 
   // include needed functions
@@ -1209,6 +1210,32 @@
 
 
     function AddOrderTracking($orders_id, $tracking_id) {
+      $result = $this->send_order_tracking($orders_id, $tracking_id);
+
+      return (($result['state'] == 'sent') ? $result['response'] : array($result['message']));
+    }
+
+
+    // for the scheduled task, which must not send an entry again before it is due
+    function ProcessOrderTracking($orders_id, $tracking_id) {
+      try {
+        $result = $this->send_order_tracking($orders_id, $tracking_id);
+      } catch (Throwable $ex) {
+        // one broken entry must not end the run for all the others
+        $this->LoggingManager->log('WARNING', 'ProcessOrderTracking', array('exception' => $ex));
+        $result = $this->tracking_result('retry', TEXT_PAYPAL_TRACKING_NOT_SENT);
+      }
+
+      $this->remember_tracking_state($tracking_id, $result);
+    }
+
+
+    private function tracking_result($state, $message, $response = null) {
+      return array('state' => $state, 'message' => $message, 'response' => $response);
+    }
+
+
+    private function send_order_tracking($orders_id, $tracking_id) {
       $tracking_query = xtc_db_query("SELECT pp.*,
                                              ot.*,
                                              c.carrier_name
@@ -1219,50 +1246,185 @@
                                         JOIN ".TABLE_CARRIERS." c
                                              ON c.carrier_id = ot.carrier_id
                                        WHERE pp.orders_id = '".(int)$orders_id."'");
-      if (xtc_db_num_rows($tracking_query) > 0) {
-        $tracking = xtc_db_fetch_array($tracking_query);
+      if (xtc_db_num_rows($tracking_query) < 1) {
+        return $this->tracking_result('failed', TEXT_PAYPAL_TRACKING_NOT_SENT);
+      }
+      $tracking = xtc_db_fetch_array($tracking_query);
 
-        // auth
-        $client = $this->GetClient();
+      if (trim($tracking['parcel_id']) == '') {
+        return $this->tracking_result('failed', TEXT_PAYPAL_TRACKING_NOT_SENT);
+      }
 
-        $OrderID = $this->getOrderID($orders_id);
+      // only ids of the old REST API contain a hyphen, Orders v2 answers them with a 404
+      if (strpos($tracking['payment_id'], '-') !== false) {
+        return $this->send_legacy_order_tracking($orders_id, $tracking_id);
+      }
 
-        $request = new OrdersTrackRequest($OrderID);
+      $PayPalOrder = $this->GetOrder($tracking['payment_id']);
+      if (!isset($PayPalOrder->status)) {
+        return $this->tracking_result('retry', TEXT_PAYPAL_TRACKING_NOT_SENT);
+      }
 
-        $request->body = array(
-          'capture_id' => $tracking['transaction_id'],
-          'tracking_number' => $tracking['parcel_id'],
-          'carrier' => strtoupper($tracking['carrier_name']),
-          'notify_payer' => false
-        );
+      $capture = $this->get_tracking_capture($PayPalOrder, $tracking['transaction_id']);
 
-        try {
-          $response = $client->execute($request);
+      // PayPal's documentation disagrees on PENDING, waiting for the final state is safe either way
+      if ($capture === false || $capture->status == 'PENDING') {
+        return $this->tracking_result('deferred', TEXT_PAYPAL_TRACKING_NO_CAPTURE);
+      }
 
-          end($response->result->purchase_units[0]->shipping->trackers);
-          $key = key($response->result->purchase_units[0]->shipping->trackers);
+      if (!in_array($capture->status, array('COMPLETED', 'PARTIALLY_REFUNDED'), true)) {
+        return $this->tracking_result('failed', TEXT_PAYPAL_TRACKING_NOT_SENT.' ('.$capture->status.')');
+      }
 
-          $sql_data_array = array(
-            'tracking_id' => $tracking['tracking_id'],
-            'orders_id' => $tracking['orders_id'],
-            'transaction_id' => $tracking['transaction_id'],
-            'tracking_number' => $tracking['parcel_id'],
-            'carrier' => strtoupper($tracking['carrier_name']),
-            'trackers_id' => $response->result->purchase_units[0]->shipping->trackers[$key]->id,
-            'date_added' => 'now()',
-          );
-          xtc_db_perform(TABLE_PAYPAL_TRACKING, $sql_data_array);
+      $carrier = $this->get_tracking_carrier($tracking['carrier_name']);
 
-          return $response->result;
+      // auth
+      $client = $this->GetClient();
 
-        } catch (PayPalHttp\HttpException $ex) {
-          $this->logHttpException('AddOrderTracking', $ex);
-        } catch (PayPalHttp\IOException $ex) {
-          $this->logIOException('AddOrderTracking', $ex);
-        } catch (Exception $ex) {
-          $this->LoggingManager->log('DEBUG', 'AddOrderTracking', array('exception' => $ex));
+      $request = new OrdersTrackRequest($tracking['payment_id']);
+
+      $request->body = array_merge($carrier, array(
+        'capture_id' => $capture->id,
+        'tracking_number' => $tracking['parcel_id'],
+        'notify_payer' => false
+      ));
+
+      try {
+        $response = $client->execute($request);
+
+        // not xtc_db_perform: a manual and a scheduled run can finish the same entry at once
+        xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_TRACKING."
+                                  (tracking_id, orders_id, transaction_id, tracking_number, carrier, trackers_id, date_added)
+                           VALUES ('".(int)$tracking['tracking_id']."',
+                                   '".(int)$tracking['orders_id']."',
+                                   '".xtc_db_input($capture->id)."',
+                                   '".xtc_db_input($tracking['parcel_id'])."',
+                                   '".xtc_db_input($carrier['carrier'])."',
+                                   '".xtc_db_input($this->get_tracker_id($response->result, $capture->id, $tracking['parcel_id']))."',
+                                   now())");
+
+        return $this->tracking_result('sent', '', $response->result);
+
+      } catch (PayPalHttp\HttpException $ex) {
+        $this->logHttpException('AddOrderTracking', $ex);
+
+        // these answers do not change when the same request is sent again
+        $state = ((in_array((int)$ex->statusCode, array(400, 404, 409, 422), true)) ? 'failed' : 'retry');
+
+        $details = json_decode($ex->getMessage());
+        return $this->tracking_result($state, ((isset($details->details[0]->description)) ? $details->details[0]->description : TEXT_PAYPAL_TRACKING_NOT_SENT));
+
+      } catch (PayPalHttp\IOException $ex) {
+        $this->logIOException('AddOrderTracking', $ex);
+      } catch (Exception $ex) {
+        $this->LoggingManager->log('DEBUG', 'AddOrderTracking', array('exception' => $ex));
+      }
+
+      return $this->tracking_result('retry', TEXT_PAYPAL_TRACKING_NOT_SENT);
+    }
+
+
+    private function send_legacy_order_tracking($orders_id, $tracking_id) {
+      require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+
+      $paypal = new PayPalInfo($this->code);
+      $response = $paypal->addTracking($orders_id, $tracking_id);
+
+      if (is_array($response) && count($response) > 0) {
+        return $this->tracking_result('failed', implode(' ', $response));
+      }
+
+      $check_query = xtc_db_query("SELECT tracking_id
+                                     FROM ".TABLE_PAYPAL_TRACKING."
+                                    WHERE tracking_id = '".(int)$tracking_id."'");
+
+      return ((xtc_db_num_rows($check_query) > 0) ? $this->tracking_result('sent', '') : $this->tracking_result('retry', TEXT_PAYPAL_TRACKING_NOT_SENT));
+    }
+
+
+    private function get_tracking_capture($PayPalOrder, $transaction_id) {
+      if (!isset($PayPalOrder->purchase_units[0]->payments->captures)
+          || !is_array($PayPalOrder->purchase_units[0]->payments->captures)
+          || count($PayPalOrder->purchase_units[0]->payments->captures) < 1
+          )
+      {
+        return false;
+      }
+
+      $captures = $PayPalOrder->purchase_units[0]->payments->captures;
+      foreach ($captures as $capture) {
+        if ($capture->id == $transaction_id) {
+          return $capture;
         }
       }
+
+      // an authorized payment stores the id of the authorization, the capture came later
+      foreach (array('COMPLETED', 'PARTIALLY_REFUNDED', 'PENDING') as $status) {
+        foreach ($captures as $capture) {
+          if ($capture->status == $status) {
+            return $capture;
+          }
+        }
+      }
+
+      return $captures[0];
+    }
+
+
+    // a repeated number is answered with all trackers, the last one need not be this shipment
+    private function get_tracker_id($PayPalOrder, $capture_id, $tracking_number) {
+      $trackers_id = $capture_id.'-'.$tracking_number;
+
+      if (isset($PayPalOrder->purchase_units[0]->shipping->trackers)
+          && is_array($PayPalOrder->purchase_units[0]->shipping->trackers)
+          )
+      {
+        foreach ($PayPalOrder->purchase_units[0]->shipping->trackers as $tracker) {
+          if (strcasecmp($tracker->id, $trackers_id) == 0) {
+            return $tracker->id;
+          }
+        }
+      }
+
+      return $trackers_id;
+    }
+
+
+    private function remember_tracking_state($tracking_id, $result) {
+      if ($result['state'] == 'sent') {
+        xtc_db_query("DELETE FROM ".TABLE_PAYPAL_TRACKING_STATE."
+                            WHERE tracking_id = '".(int)$tracking_id."'");
+        return;
+      }
+
+      $attempts = 1;
+      $state_query = xtc_db_query("SELECT attempts
+                                     FROM ".TABLE_PAYPAL_TRACKING_STATE."
+                                    WHERE tracking_id = '".(int)$tracking_id."'");
+      if (xtc_db_num_rows($state_query) > 0) {
+        $tracking_state = xtc_db_fetch_array($state_query);
+        $attempts += (int)$tracking_state['attempts'];
+      }
+
+      // only a refusal by PayPal is final, an outage or a late capture must not end an entry
+      $state = $result['state'];
+      $hours = (($state == 'deferred') ? 24 : min(24, pow(2, $attempts - 1)));
+
+      if ($state == 'failed') {
+        $this->LoggingManager->log('WARNING', 'Tracking not sent again', array(
+          'tracking_id' => (int)$tracking_id,
+          'message' => $result['message'],
+        ));
+      }
+
+      xtc_db_query("REPLACE INTO ".TABLE_PAYPAL_TRACKING_STATE."
+                                 (tracking_id, state, attempts, next_attempt, last_error, last_modified)
+                          VALUES ('".(int)$tracking_id."',
+                                  '".xtc_db_input($state)."',
+                                  '".(int)$attempts."',
+                                  DATE_ADD(now(), INTERVAL ".(int)$hours." HOUR),
+                                  '".xtc_db_input(mb_substr($result['message'], 0, 255))."',
+                                  now())");
     }
 
 
@@ -1293,6 +1455,7 @@
 
           xtc_db_query("DELETE FROM ".TABLE_PAYPAL_TRACKING."
                               WHERE tracking_id = '".(int)$tracking_id."'");
+          $this->set_tracking_cancelled($tracking_id);
         } catch (PayPalHttp\HttpException $ex) {
           $this->logHttpException('PatchOrderTracking', $ex);
         } catch (PayPalHttp\IOException $ex) {

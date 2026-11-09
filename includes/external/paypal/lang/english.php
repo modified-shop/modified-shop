@@ -82,6 +82,8 @@ $lang_array = array(
   'TEXT_PAYPAL_TRACKING_TRACE' => 'Track &amp; Trace',
   'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Transfer Tracking number',
   'TEXT_PAYPAL_TRACKING_CANCEL' => 'delete',
+  'TEXT_PAYPAL_TRACKING_NOT_SENT' => 'The tracking number could not be sent to PayPal.',
+  'TEXT_PAYPAL_TRACKING_NO_CAPTURE' => 'This payment has no completed capture yet. The tracking number can only be sent to PayPal afterwards.',
 
 
   // products
