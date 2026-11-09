@@ -24,6 +24,16 @@ if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
       if (!pd_image_zoomer) {
         return;
       }
+      // viewer.js takes the navbar image from image.src, which holds the large image for crawlers
+      pd_image_zoomer.querySelectorAll('img[data-navbar]').forEach(function (image) {
+        Object.defineProperty(image, 'src', {
+          configurable: true,
+          get: function () {
+            return image.getAttribute('data-navbar');
+          },
+        });
+      });
+
       var viewer = new Viewer(pd_image_zoomer, {
         url: 'data-original',
         title: [0, (image, imageData) => `${image.alt}`],
