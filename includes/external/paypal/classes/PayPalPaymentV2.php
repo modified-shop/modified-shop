@@ -1063,10 +1063,19 @@
 
         $this->update_order('Order ID: '.$OrderID.' - payment not confirmed, please check this order in PayPal', $this->order_status_pending, $insert_id);
 
-        // a module that pays before the completion block has not booked credit and coupons yet
-        if (!empty($tmp) && is_object($order_total_modules)) {
-          $order_total_modules->apply_credit();
-          $order_total_modules->clear_posts();
+        // a module that pays before the completion block has not done its steps yet
+        if (!empty($tmp)) {
+          if (isset($_SESSION['disable_products']) && count($_SESSION['disable_products']) > 0) {
+            xtc_db_query("UPDATE ".TABLE_PRODUCTS."
+                             SET products_status = '0'
+                           WHERE products_id IN (".implode(', ', array_map('intval', $_SESSION['disable_products'])).")");
+          }
+          unset($_SESSION['disable_products']);
+
+          if (is_object($order_total_modules)) {
+            $order_total_modules->apply_credit();
+            $order_total_modules->clear_posts();
+          }
         }
       }
 
