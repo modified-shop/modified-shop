@@ -147,14 +147,22 @@
         $products['products_price'] = $xtPrice->xtcGetPrice($products['products_id'], false, 1, $products['products_tax_class_id'], $products['products_price']);
         $products['products_price'] *= 100;
         
-        $PayPalZettle->updateProduct($products_uuid, $products);
+        $product_response = $PayPalZettle->updateProduct($products_uuid, $products);
         
         if ($products['stock'] == 1) {
-          $PayPalZettle->updateInventory($products_uuid, $products);
+          $inventory_response = $PayPalZettle->updateInventory($products_uuid, $products);
         } else {
-          $PayPalZettle->deleteInventory($products_uuid);
+          $inventory_response = $PayPalZettle->deleteInventory($products_uuid);
         }
   
+        // retried on the next run, each operation works from the current state at Zettle
+        if ($PayPalZettle->isTemporaryError($product_response)
+            || $PayPalZettle->isTemporaryError($inventory_response)
+            )
+        {
+          continue;
+        }
+
         xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
                          SET bulk = 0
                        WHERE zettle_id = '".(int)$products['zettle_id']."'");
