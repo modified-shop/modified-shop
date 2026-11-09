@@ -14,6 +14,7 @@
   // database tables
   defined('TABLE_PAYPAL_ZETTLE_TO_PRODUCTS') OR define('TABLE_PAYPAL_ZETTLE_TO_PRODUCTS', 'paypal_zettle_to_products');
   defined('TABLE_PAYPAL_ZETTLE_IMPORT') OR define('TABLE_PAYPAL_ZETTLE_IMPORT', 'paypal_zettle_import');
+  defined('TABLE_PAYPAL_ZETTLE_EVENTS') OR define('TABLE_PAYPAL_ZETTLE_EVENTS', 'paypal_zettle_events');
 
 
   // include needed classes
@@ -37,6 +38,7 @@
     const URL_IMAGE = 'https://image.izettle.com';
     const URL_INVENTORY = 'https://inventory.izettle.com';
     const URL_SUBSCRIPTIONS = 'https://pusher.izettle.com';
+    const CLIENT_ID = '91e9a115-8c82-49de-9ce6-8c04605e8c62';
   
     private $access_token;
     private $organizationUuid;
@@ -55,7 +57,7 @@
 
       $this->client = new \GuzzleHttp\Client();
 
-      $this->client_id = '91e9a115-8c82-49de-9ce6-8c04605e8c62';
+      $this->client_id = self::CLIENT_ID;
       $this->api_key = defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY : '';
       $this->organizationUuid = defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_ORGANIZATION') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_ORGANIZATION : '';
     
@@ -494,6 +496,26 @@
       );
     }
   
+
+    // the API key is a JWT, its client_id can differ from the client id of the module
+    static function isOwnClient($client_uuid) {
+      if ($client_uuid == '') {
+        return false;
+      }
+
+      if ($client_uuid == self::CLIENT_ID) {
+        return true;
+      }
+
+      $api_key = explode('.', defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY : '');
+      if (count($api_key) != 3) {
+        return false;
+      }
+      $claims = json_decode(base64_decode(strtr($api_key[1], '-_', '+/')), true);
+
+      return (is_array($claims) && isset($claims['client_id']) && $claims['client_id'] == $client_uuid);
+    }
+
 
     function call($url, $method, $body = array(), $headers = array()) {
       $headers['X-iZettle-Application-Id'] = $this->client_id;

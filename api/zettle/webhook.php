@@ -31,6 +31,24 @@
       
       switch ($request['eventName']) {
         case 'InventoryBalanceChanged':
+          // changes made by this shop come back as events and are already booked
+          if (isset($data['updated']['clientUuid']) && PayPalZettle::isOwnClient($data['updated']['clientUuid'])) {
+            break;
+          }
+
+          // an event can be delivered more than once, retries end after about 73 hours
+          xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_ZETTLE_EVENTS." (
+                          `event_hash` char(40) NOT NULL,
+                          `date_added` datetime NOT NULL,
+                          PRIMARY KEY (`event_hash`),
+                          KEY `idx_date_added` (`date_added`)
+                        )");
+          xtc_db_query("DELETE FROM ".TABLE_PAYPAL_ZETTLE_EVENTS." WHERE date_added < (NOW() - INTERVAL 7 DAY)");
+          xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_ZETTLE_EVENTS." (event_hash, date_added) VALUES ('".sha1($request['payload'])."', NOW())");
+          if (xtc_db_affected_rows() < 1) {
+            break;
+          }
+
           if (isset($data['balanceBefore'])
               && is_array($data['balanceBefore'])
               && isset($data['balanceAfter'])
