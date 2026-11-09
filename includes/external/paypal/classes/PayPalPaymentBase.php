@@ -1211,7 +1211,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
     return array(
       'carrier' => 'OTHER',
-      'carrier_name_other' => $this->encode_utf8(mb_substr(trim($carrier_name), 0, 64)),
+      'carrier_name_other' => mb_substr($this->encode_utf8(trim($carrier_name)), 0, 64, 'UTF-8'),
     );
   }
 
