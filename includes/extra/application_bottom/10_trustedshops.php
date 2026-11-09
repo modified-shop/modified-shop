@@ -76,6 +76,7 @@
         case 'paypal_ipn':
         case 'paypalcart':
         case 'paypalclassic':
+        case 'paypalexpress':
         case 'paypallink':
         case 'paypalplus':
         case 'paypalpluslink':
@@ -86,12 +87,17 @@
         case 'klarna_card':
         case 'mcp_creditcard':
         case 'payone_cc':
+        case 'paypalacdc':
+        case 'paypalapplepay':
+        case 'paypalcard':
+        case 'paypalgooglepay':
           $paymenttype = 'CREDIT_CARD';
           break;
         case 'banktransfer':
         case 'payone_elv':
         case 'mcp_debit':
         case 'klarna_directdebit':
+        case 'paypalsepa':
           $paymenttype = 'DIRECT_DEBIT';
           break;
         case 'moneyorder':
@@ -110,15 +116,27 @@
         case 'invoice':
         case 'klarna_paylater':
         case 'payone_invoice':
+        case 'easyinvoice':
+        case 'paypalpui':
           $paymenttype = 'INVOICE';
           break;
         case 'klarna_directbanktransfer':
         case 'klarna_paynow':
         case 'mcp_ebank2pay':
+        case 'paypalbancontact':
+        case 'paypalblik':
+        case 'paypaleps':
+        case 'paypalideal':
+        case 'paypalmybank':
+        case 'paypaltrustly':
           $paymenttype = 'DIRECT_E_BANKING';
+          break;
+        case 'paypalprzelewy':
+          $paymenttype = 'PRZELEWY24';
           break;
         case 'klarna_payovertime':
         case 'payone_installment':
+        case 'easycredit':
           $paymenttype = 'FINANCING';
           break;
         default:
