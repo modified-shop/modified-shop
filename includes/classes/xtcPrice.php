@@ -144,9 +144,10 @@ class xtcPrice {
    * @param Double $pPrice product price
    * @param Integer $vpeStatus vpe status
    * @param Integer $cedit_id customer specify tax conditions
+   * @param String $uprid cart position id with attributes, passed to the price extension only
    * @return String/Array Price (if format = true both plain and formatted)
    */
-  function xtcGetPrice($pID, $format = true, $qty = 1, $tax_class = '', $pPrice = 0, $vpeStatus = 0, $cedit_id = 0) {
+  function xtcGetPrice($pID, $format = true, $qty = 1, $tax_class = '', $pPrice = 0, $vpeStatus = 0, $cedit_id = 0, $uprid = '') {
     
     $this->tax_class = $this->xtc_get_tax_class($pID, $tax_class);
 
@@ -198,7 +199,7 @@ class xtcPrice {
     $pPrice = $this->xtcAddTax($pPrice, $products_tax);
     
     // check extension
-    if ($ePrice = $this->xtcCheckExtension($pID)) {
+    if ($ePrice = $this->xtcCheckExtension($pID, $uprid)) {
       return $this->xtcFormatExtension($pID, $this->xtcAddTax($ePrice, $products_tax), $pPrice, $format, $vpeStatus);
     }
 
@@ -542,10 +543,11 @@ class xtcPrice {
    * Returns the extension price of a product
    *
    * @param Integer $pID product id
+   * @param String $uprid cart position id with attributes
    * @return Double extension price
    */
-  function xtcCheckExtension($pID) {     
-    $price = $this->priceModules->CheckExtension(0, $pID);
+  function xtcCheckExtension($pID, $uprid = '') {
+    $price = $this->priceModules->CheckExtension(0, $pID, $uprid);
     return (float)$price;
   }
   
