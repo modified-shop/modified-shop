@@ -126,10 +126,10 @@ class priceModules {
         return $this->call_module_method($price_array, $pID, $qty, $graduated);
     }
     
-    function CheckExtension($price, $pID, $uprid = '')
+    function CheckExtension($price, $pID, $uprid = '', $cart_type = 'cart')
     {
         $this->function_call = 'CheckExtension';
-        return $this->call_module_method($price, $pID, $uprid);
+        return $this->call_module_method($price, $pID, $uprid, $cart_type);
     }
 
     function FormatExtension($return, $pID, $ePrice, $pPrice, $format, $vpeStatus)

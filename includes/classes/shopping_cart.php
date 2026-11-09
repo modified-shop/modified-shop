@@ -568,7 +568,7 @@ class shoppingCart {
             $product['products_tax_class_id'] = xtc_get_tax_class($product['products_tax_class_id']);
           }
 
-          $products_price = $xtPrice->xtcGetPrice($product['products_id'], false, $qty, $product['products_tax_class_id'], $product['products_price'], 0, 0, $products_id);
+          $products_price = $xtPrice->xtcGetPrice($product['products_id'], false, $qty, $product['products_tax_class_id'], $product['products_price'], 0, 0, $products_id, $this->type);
 
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
             $products_price = round($products_price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
@@ -811,7 +811,7 @@ class shoppingCart {
                 $products['products_price_origin'] = $products_price_origin;
               }
             
-              $products_price = $xtPrice->xtcGetPrice($products['products_id'], false, $this->contents[$products_id]['qty'], $products['products_tax_class_id'], $products['products_price'], 0, 0, $products_id);
+              $products_price = $xtPrice->xtcGetPrice($products['products_id'], false, $this->contents[$products_id]['qty'], $products['products_tax_class_id'], $products['products_price'], 0, 0, $products_id, $this->type);
             
               if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
                 $products_price = round($products_price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
