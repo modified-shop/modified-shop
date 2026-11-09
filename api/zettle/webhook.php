@@ -57,7 +57,7 @@
               $event_hash = sha1($request['payload'].'-'.$k);
               $quantity = (float)($data['balanceAfter'][$k]['balance'] - $inventory['balance']);
 
-              // one statement books the line and marks it, so a retry can neither repeat nor lose it
+              // one statement books the line and marks it, only MyISAM can split them on a write error
               if (xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_ZETTLE_EVENTS." (event_hash, date_added) VALUES ('".$event_hash."', NOW())") === false
                   || xtc_db_query("UPDATE ".TABLE_PRODUCTS." p
                                      JOIN ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
