@@ -35,6 +35,28 @@
     $language_id = $lng->language['languages_id'];
     
     $PayPalZettle = new PayPalZettle();
+
+
+    // specials start and end by date without any write, the price still has to follow
+    $specials_now_query = xtc_db_query("SELECT NOW() AS specials_now");
+    $specials_now = xtc_db_fetch_array($specials_now_query);
+    $specials_now = $specials_now['specials_now'];
+    if (defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SPECIALS_CHECK')) {
+      $specials_check = xtc_db_input(MODULE_CATEGORIES_ZETTLE_CATEGORIES_SPECIALS_CHECK);
+      xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
+                      JOIN ".TABLE_SPECIALS." s
+                           ON s.products_id = pz2p.products_id
+                       SET pz2p.bulk = 1
+                     WHERE pz2p.status = 1
+                       AND pz2p.products_uuid != ''
+                       AND ((s.start_date > '".$specials_check."' AND s.start_date <= '".$specials_now."')
+                            OR (s.expires_date > '".$specials_check."' AND s.expires_date <= '".$specials_now."'))");
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".$specials_now."'
+                     WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SPECIALS_CHECK'");
+    } else {
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SPECIALS_CHECK', '".$specials_now."', '6', '3', NOW())");
+    }
     
     
     // import
