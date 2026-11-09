@@ -307,6 +307,101 @@
     }
   
 
+    // the subscription list returns the key Zettle signs its webhooks with
+    function saveSigningKey() {
+      $subscriptions = $this->getSubscriptions();
+      $scheme = $this->get_subscription_scheme();
+
+      $signing_key = '';
+      if (is_array($subscriptions)) {
+        // the answer also carries headers, status and reason
+        foreach ($subscriptions as $subscription) {
+          if (!is_array($subscription)
+              || !isset($subscription['signingKey'])
+              || !is_string($subscription['signingKey'])
+              || $subscription['signingKey'] == ''
+              )
+          {
+            continue;
+          }
+          // the subscription of this shop, without one the first as in the module
+          if (isset($subscription['destination']) && $subscription['destination'] == $scheme['destination']) {
+            $signing_key = $subscription['signingKey'];
+            break;
+          }
+          if ($signing_key == '') {
+            $signing_key = $subscription['signingKey'];
+          }
+        }
+      }
+      if ($signing_key == '') {
+        return '';
+      }
+
+      $check_query = xtc_db_query("SELECT configuration_key
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
+      if (xtc_db_num_rows($check_query) > 0) {
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                         SET configuration_value = '".xtc_db_input($signing_key)."'
+                       WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
+      } else {
+        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '2', NOW())");
+      }
+
+      return $signing_key;
+    }
+
+
+    // the lookup is a request to Zettle, calls to the webhook start it once in 15 minutes
+    static function signingKeyLookupAllowed() {
+      $now = time();
+      $check_query = xtc_db_query("SELECT configuration_value
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK', '".$now."', '6', '2', NOW())");
+        return true;
+      }
+
+      $check = xtc_db_fetch_array($check_query);
+      if ((int)$check['configuration_value'] > ($now - 900)) {
+        return false;
+      }
+
+      // of several calls at the same time only one changes the value
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".$now."'
+                     WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK'
+                       AND configuration_value = '".xtc_db_input($check['configuration_value'])."'");
+
+      return (xtc_db_affected_rows() > 0);
+    }
+
+
+    static function isValidSignature($request, $signature, $signing_key) {
+      if (!isset($request['timestamp'])
+          || !is_string($request['timestamp'])
+          || !isset($request['payload'])
+          || !is_string($request['payload'])
+          || !is_string($signature)
+          )
+      {
+        return false;
+      }
+      $signed = $request['timestamp'].'.'.$request['payload'];
+
+      // the PHP example of Zettle strips slashes, its other examples do not
+      foreach (array($signed, stripslashes($signed)) as $candidate) {
+        if (hash_equals(hash_hmac('sha256', $candidate, $signing_key), (string)$signature)) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+
     function deleteSubscriptions($uuid) {
       $headers = array(
         'Authorization' => 'Bearer '.$this->access_token

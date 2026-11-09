@@ -27,6 +27,49 @@
     $request = json_decode($request_json, true);
   
     if (isset($request['payload'])) {
+      // a new subscription sends a test message, it changes nothing
+      if (isset($request['eventName']) && $request['eventName'] == 'TestMessage') {
+        die();
+      }
+
+      // an incomplete request never reaches the key lookup
+      $signature = (isset($_SERVER['HTTP_X_IZETTLE_SIGNATURE']) ? $_SERVER['HTTP_X_IZETTLE_SIGNATURE'] : '');
+      if (!is_string($signature)
+          || !preg_match('/^[0-9a-f]{64}$/', $signature)
+          || !is_string($request['payload'])
+          || !isset($request['timestamp'])
+          || !is_string($request['timestamp'])
+          )
+      {
+        header('HTTP/1.1 401 Unauthorized');
+        die();
+      }
+
+      $signing_key = defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY : '';
+      $signed = ($signing_key != '' && PayPalZettle::isValidSignature($request, $signature, $signing_key));
+
+      // no key yet, or the subscription was created again and signs with a new one
+      if ($signed !== true && PayPalZettle::signingKeyLookupAllowed()) {
+        $PayPalZettle = new PayPalZettle();
+        $lookup_key = $PayPalZettle->saveSigningKey();
+        if ($lookup_key != '') {
+          $signing_key = $lookup_key;
+          $signed = PayPalZettle::isValidSignature($request, $signature, $signing_key);
+        }
+      }
+
+      // Zettle repeats the event, so a missing key does not lose it
+      if ($signed !== true) {
+        header(($signing_key == '') ? 'HTTP/1.1 503 Service Unavailable' : 'HTTP/1.1 401 Unauthorized');
+        die();
+      }
+
+      // deliveries end after about 73 hours, the booked events are kept for 7 days
+      $event_time = strtotime($request['timestamp']);
+      if ($event_time !== false && $event_time < (time() - 4 * 86400)) {
+        die();
+      }
+
       $data = json_decode($request['payload'], true);
       
       switch ($request['eventName']) {
