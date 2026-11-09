@@ -53,7 +53,7 @@
     function __construct() {    
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_zettle_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'zettle', 'debug');
 
-      $this->client = new \GuzzleHttp\Client();
+      $this->client = new \GuzzleHttp\Client(array('connect_timeout' => 5, 'timeout' => 20));
 
       $this->client_id = '91e9a115-8c82-49de-9ce6-8c04605e8c62';
       $this->api_key = defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY : '';
