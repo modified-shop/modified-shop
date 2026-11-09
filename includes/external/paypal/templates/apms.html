@@ -16,7 +16,7 @@
   </div>
   {/if}
 
-  {if isset($checkout) || isset($paypalexpress) || isset($paypalapplepay) || isset($paypalgooglepay)}
+  {if isset($checkout) || isset($paypalexpress)}
   <div id="apms_buttons" class="apms_form_button_inner">
     {if isset($checkout)}
     <div id="apms_button"></div>
@@ -54,9 +54,6 @@
     {/if}
     {if isset($paypalgooglepay)}
     <div id="apms_button6"></div>
-    {/if}
-    {if !isset($paypalexpress)}
-    <div class="apms_form_button_overlay"></div>
     {/if}
   </div>
   {/if}
