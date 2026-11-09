@@ -72,8 +72,6 @@ if (is_array($request)
       $check = xtc_db_fetch_array($check_query);
       
       $notified = 0;
-      $mail_retry = false;
-      $mail_failed = false;
       $event_id = ((isset($request['id'])) ? (string)$request['id'] : '');
 
       if ($version == 1) {
@@ -93,7 +91,6 @@ if (is_array($request)
             )
         {
           // send_order 2: the merchant copy went out already, retry the customer mail only
-          $mail_retry = ($check['send_order'] == 2);
           $customer_mail_sent = false;
           $mail_output_level = ob_get_level();
           ob_start();
@@ -122,10 +119,12 @@ if (is_array($request)
 
             header("HTTP/1.0 503 Service Unavailable");
             header("Status: 503 Service Unavailable");
-            $mail_retry = true;
-            $mail_failed = true;
           }
           echo $mail_output;
+        } elseif ($check['send_order'] >= 1 && !isset($PayPalOrder->status)) {
+          // without the order the pending mail stays undecided, PayPal has to deliver the event again
+          header("HTTP/1.0 503 Service Unavailable");
+          header("Status: 503 Service Unavailable");
         }
       }
 
@@ -134,17 +133,17 @@ if (is_array($request)
         $orders_status_id = $check['orders_status'];
       }
 
-      // PayPal repeats an event until the mail went out, its status is written only once
+      // PayPal repeats an event for up to three days, its status is written only once
       $recorded_event = 0;
-      if ($mail_retry === true && $event_id != '') {
-        // only used while a mail is pending, created here so it does not wait for a module update
+      if ($event_id != '') {
+        // created here so the check does not wait for a module update
         xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_WEBHOOK_EVENT." (
                         event_id varchar(128) NOT NULL,
                         orders_id int(11) NOT NULL,
                         orders_status_history_id int(11) NOT NULL,
                         date_added datetime NOT NULL,
                         PRIMARY KEY (event_id),
-                        KEY idx_orders_id (orders_id)
+                        KEY idx_date_added (date_added)
                       );");
 
         $event_query = xtc_db_query("SELECT orders_status_history_id
@@ -159,23 +158,21 @@ if (is_array($request)
       if ($recorded_event == 0) {
         $paypal->update_order($request['summary'], $orders_status_id, $check['orders_id'], $notified);
 
-        if ($mail_failed === true && $event_id != '') {
+        if ($event_id != '') {
           xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_WEBHOOK_EVENT."
                                     (event_id, orders_id, orders_status_history_id, date_added)
                              SELECT '".xtc_db_input($event_id)."', '".(int)$check['orders_id']."', MAX(orders_status_history_id), now()
                                FROM ".TABLE_ORDERS_STATUS_HISTORY."
                               WHERE orders_id = '".(int)$check['orders_id']."'");
+
+          xtc_db_query("DELETE FROM ".TABLE_PAYPAL_WEBHOOK_EVENT."
+                              WHERE date_added < DATE_SUB(now(), INTERVAL 30 DAY)");
         }
       } elseif ($notified == 1) {
         // the order may have moved on since the event, only the notification is new
         xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY."
                          SET customer_notified = 1
                        WHERE orders_status_history_id = '".$recorded_event."'");
-      }
-
-      if ($mail_retry === true && $mail_failed === false && $event_id != '') {
-        xtc_db_query("DELETE FROM ".TABLE_PAYPAL_WEBHOOK_EVENT."
-                            WHERE orders_id = '".(int)$check['orders_id']."'");
       }
     } else {
       // order is missing
