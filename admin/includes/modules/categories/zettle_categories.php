@@ -382,6 +382,7 @@
                        SET bulk = 1
                      WHERE products_id = '".(int)$products_id."'
                        AND status = 1
-                       AND products_uuid != ''");
+                       AND products_uuid != ''
+                       AND bulk >= 0");
     }
   }

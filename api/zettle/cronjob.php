@@ -43,14 +43,16 @@
     $specials_now = $specials_now['specials_now'];
     if (defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SPECIALS_CHECK')) {
       $specials_check = xtc_db_input(MODULE_CATEGORIES_ZETTLE_CATEGORIES_SPECIALS_CHECK);
+      // bulk -1 waits for its import, a special still counts as valid in its expires_date second
       xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
                       JOIN ".TABLE_SPECIALS." s
                            ON s.products_id = pz2p.products_id
                        SET pz2p.bulk = 1
                      WHERE pz2p.status = 1
                        AND pz2p.products_uuid != ''
+                       AND pz2p.bulk >= 0
                        AND ((s.start_date > '".$specials_check."' AND s.start_date <= '".$specials_now."')
-                            OR (s.expires_date > '".$specials_check."' AND s.expires_date <= '".$specials_now."'))");
+                            OR (s.expires_date >= '".$specials_check."' AND s.expires_date < '".$specials_now."'))");
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                        SET configuration_value = '".$specials_now."'
                      WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SPECIALS_CHECK'");
