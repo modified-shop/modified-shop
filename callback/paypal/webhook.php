@@ -89,6 +89,7 @@ if (is_array($request)
             )
         {
           // send_order 2: the merchant copy went out already, retry the customer mail only
+          $mail_retry = ($check['send_order'] == 2);
           $customer_mail_sent = false;
           $mail_output_level = ob_get_level();
           ob_start();
@@ -128,20 +129,28 @@ if (is_array($request)
         $orders_status_id = $check['orders_status'];
       }
 
-      // PayPal repeats the event while the mail fails, the payment status is recorded once per event
-      $event_recorded = false;
+      // PayPal repeats the event until the mail went out, its status is written only once
+      $recorded_event = 0;
       if ($mail_retry === true) {
         $history_query = xtc_db_query("SELECT orders_status_history_id
                                          FROM ".TABLE_ORDERS_STATUS_HISTORY."
                                         WHERE orders_id = '".(int)$check['orders_id']."'
-                                          AND orders_status_id = '".(int)$orders_status_id."'
                                           AND comments = '".xtc_db_input($request['summary'])."'
+                                     ORDER BY orders_status_history_id DESC
                                         LIMIT 1");
-        $event_recorded = (xtc_db_num_rows($history_query) > 0);
+        if (xtc_db_num_rows($history_query) > 0) {
+          $history = xtc_db_fetch_array($history_query);
+          $recorded_event = (int)$history['orders_status_history_id'];
+        }
       }
 
-      if ($event_recorded === false) {
+      if ($recorded_event == 0) {
         $paypal->update_order($request['summary'], $orders_status_id, $check['orders_id'], $notified);
+      } elseif ($notified == 1) {
+        // the order may have moved on since the event, only the notification is new
+        xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY."
+                         SET customer_notified = 1
+                       WHERE orders_status_history_id = '".$recorded_event."'");
       }
     } else {
       // order is missing
