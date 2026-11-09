@@ -44,10 +44,6 @@
                           KEY `idx_date_added` (`date_added`)
                         )");
           xtc_db_query("DELETE FROM ".TABLE_PAYPAL_ZETTLE_EVENTS." WHERE date_added < (NOW() - INTERVAL 7 DAY)");
-          xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_ZETTLE_EVENTS." (event_hash, date_added) VALUES ('".sha1($request['payload'])."', NOW())");
-          if (xtc_db_affected_rows() < 1) {
-            break;
-          }
 
           if (isset($data['balanceBefore'])
               && is_array($data['balanceBefore'])
@@ -55,7 +51,18 @@
               && is_array($data['balanceAfter'])
               )
           {
+            $event_failed = false;
             foreach ($data['balanceBefore'] as $k => $inventory) {
+              // claimed per line, so a retry only books what is still missing
+              $event_hash = sha1($request['payload'].'-'.$k);
+              if (xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_ZETTLE_EVENTS." (event_hash, date_added) VALUES ('".$event_hash."', NOW())") === false) {
+                $event_failed = true;
+                continue;
+              }
+              if (xtc_db_affected_rows() < 1) {
+                continue;
+              }
+
               $check_query = xtc_db_query("SELECT *
                                              FROM ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
                                              JOIN ".TABLE_PRODUCTS." p
@@ -63,15 +70,26 @@
                                             WHERE pz2p.stock = 1
                                               AND pz2p.products_uuid = '".xtc_db_input($inventory['productUuid'])."'
                                               AND p.products_quantity != '".(float)$data['balanceAfter'][$k]['balance']."'");
+              $line_booked = ($check_query !== false);
               if (xtc_db_num_rows($check_query) > 0) {
                 $check = xtc_db_fetch_array($check_query);
             
                 $quantity = (float)($data['balanceAfter'][$k]['balance'] - $inventory['balance']);
             
-                xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                                 SET products_quantity = products_quantity ".(($quantity > 0) ? '+ ' : '- ').abs($quantity)."
-                               WHERE products_id = '".(int)$check['products_id']."'");
+                $line_booked = (xtc_db_query("UPDATE ".TABLE_PRODUCTS."
+                                                 SET products_quantity = products_quantity ".(($quantity > 0) ? '+ ' : '- ').abs($quantity)."
+                                               WHERE products_id = '".(int)$check['products_id']."'") !== false);
               }
+
+              if ($line_booked === false) {
+                xtc_db_query("DELETE FROM ".TABLE_PAYPAL_ZETTLE_EVENTS." WHERE event_hash = '".$event_hash."'");
+                $event_failed = true;
+              }
+            }
+
+            // Zettle delivers the event again after an error status
+            if ($event_failed === true) {
+              header('HTTP/1.1 500 Internal Server Error');
             }
           }
           break;
