@@ -15,7 +15,10 @@
   // an explicit request from the administration means. $customer_only leaves out the
   // merchant copy, for a retry once the confirmation itself failed. False means the
   // confirmation did not go out, true that it did or was left out on purpose.
-  function send_order_mail($orders_id, $force = false, $customer_only = false) {
+  // $customer_mail_sent reports the delivery to the customer alone: true delivered, false
+  // failed or not processed, null left out on purpose.
+  function send_order_mail($orders_id, $force = false, $customer_only = false, &$customer_mail_sent = null) {
+    $customer_mail_sent = false;
     $orders_query = xtc_db_query("SELECT customers_id,
                                          customers_status,
                                          customers_country_iso_code_2,
@@ -55,44 +58,48 @@
       'insert_id' => $insert_id,
     );
 
-    $order = null;
-    $main = null;
-    $xtPrice = new xtcPrice($orders['currency'], $orders['customers_status']);
-    $insert_id = (int)$orders_id;
+    // restores the caller's globals even when the setup or the mail code throws
+    try {
+      $order = null;
+      $main = null;
+      $xtPrice = new xtcPrice($orders['currency'], $orders['customers_status']);
+      $insert_id = (int)$orders_id;
 
-    if ($force === true) {
-      $send_by_admin = true;
-    }
-
-    if ($customer_only === true) {
-      $send_order_customer_only = true;
-    }
-
-    $smarty = new Smarty();
-
-    // handed over as a variable: a customer written into the session would stay there if the request dies mid-mail
-    $send_order_customer_id = $orders['customers_id'];
-
-    // the region of the order for the afterbuy tax rates, same reason as above
-    $send_order_country_id = (int)get_country_id($orders['customers_country_iso_code_2']);
-    $send_order_zone_id = -1;
-    if ($send_order_country_id > 0) {
-      $zones_query = xtc_db_query("SELECT zone_id
-                                     FROM ".TABLE_ZONES."
-                                    WHERE zone_name = '".xtc_db_input($orders['delivery_state'])."'
-                                      AND zone_country_id = '".(int)$send_order_country_id."'");
-      if (xtc_db_num_rows($zones_query) > 0) {
-        $zones = xtc_db_fetch_array($zones_query);
-        $send_order_zone_id = $zones['zone_id'];
+      if ($force === true) {
+        $send_by_admin = true;
       }
+
+      if ($customer_only === true) {
+        $send_order_customer_only = true;
+      }
+
+      $smarty = new Smarty();
+
+      // handed over as a variable: a customer written into the session would stay there if the request dies mid-mail
+      $send_order_customer_id = $orders['customers_id'];
+
+      // the region of the order for the afterbuy tax rates, same reason as above
+      $send_order_country_id = (int)get_country_id($orders['customers_country_iso_code_2']);
+      $send_order_zone_id = -1;
+      if ($send_order_country_id > 0) {
+        $zones_query = xtc_db_query("SELECT zone_id
+                                       FROM ".TABLE_ZONES."
+                                      WHERE zone_name = '".xtc_db_input($orders['delivery_state'])."'
+                                        AND zone_country_id = '".(int)$send_order_country_id."'");
+        if (xtc_db_num_rows($zones_query) > 0) {
+          $zones = xtc_db_fetch_array($zones_query);
+          $send_order_zone_id = $zones['zone_id'];
+        }
+      }
+
+      include(DIR_FS_CATALOG.'send_order.php');
+      $customer_mail_sent = ($send_order_customer_mail === null) ? null : ($send_order_customer_mail === true);
+    } finally {
+      $order = $context_backup['order'];
+      $main = $context_backup['main'];
+      $xtPrice = $context_backup['xtPrice'];
+      $insert_id = $context_backup['insert_id'];
     }
 
-    include(DIR_FS_CATALOG.'send_order.php');
-
-    $order = $context_backup['order'];
-    $main = $context_backup['main'];
-    $xtPrice = $context_backup['xtPrice'];
-    $insert_id = $context_backup['insert_id'];
-
-    return ($send_order_customer_mail !== false);
+    return ($customer_mail_sent !== false);
   }
