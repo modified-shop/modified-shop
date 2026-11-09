@@ -49,11 +49,9 @@
                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                            ON p.products_id = pd.products_id
                                               AND pd.language_id = '".(int)$language_id."'
-                                     WHERE (pz2p.bulk < 0
-                                            OR (pz2p.bulk > 0
-                                                AND pz2p.products_uuid = ''
-                                                AND NOT EXISTS (SELECT 1 FROM ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." r WHERE r.bulk < 0)))
-                                       AND NOT EXISTS (SELECT 1 FROM ".TABLE_PAYPAL_ZETTLE_IMPORT.")");
+                                     WHERE (pz2p.bulk < 0 OR (pz2p.bulk > 0 AND pz2p.products_uuid = ''))
+                                       AND NOT EXISTS (SELECT 1 FROM ".TABLE_PAYPAL_ZETTLE_IMPORT.")
+                                  ORDER BY pz2p.bulk");
     if (xtc_db_num_rows($products_query) > 0) {
       $xtPrice = new xtcPrice(DEFAULT_CURRENCY, MODULE_CATEGORIES_ZETTLE_CATEGORIES_CUSTOMERS_STATUS);
       
@@ -64,6 +62,11 @@
       $existing_uuids = null;
       
       while ($products = xtc_db_fetch_array($products_query)) {
+        // reserved rows sort first and run alone, so a rejection cannot affect new products
+        if ($products['products_uuid'] == '' && $existing_uuids !== null) {
+          break;
+        }
+
         // an earlier attempt got no answer, an import must not contain uuids Zettle already knows
         if ($products['products_uuid'] != '') {
           if ($existing_uuids === null) {
