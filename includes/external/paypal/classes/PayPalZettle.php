@@ -82,7 +82,7 @@
         if (isset($response['error']) && defined('RUN_MODE_ADMIN')) {
           
         }
-        $this->access_token = $response['access_token'];
+        $this->access_token = (isset($response['access_token'])) ? $response['access_token'] : '';
       }
     
       return $this->access_token;
@@ -95,6 +95,9 @@
       );
     
       $response = $this->call(self::URL_SECURE.'/api/resources/organizations/self', 'GET', array(), $headers);
+      if (isset($response['error'])) {
+        return $response;
+      }
       
       $this->account = array(
         'name' => $response['name'],
@@ -513,11 +516,14 @@
         }
         return $response;
       } catch (Exception $ex) {
+        // connection failures come without a response
+        $ex_response = (method_exists($ex, 'getResponse')) ? $ex->getResponse() : null;
+
         $response = array(
-          'headers' => $ex->getResponse()->getHeaders(),
-          'status' => $ex->getResponse()->getStatusCode(),
-          'reason' => $ex->getResponse()->getReasonPhrase(),
-          'error' => json_decode($ex->getResponse()->getBody(), true),
+          'headers' => (is_object($ex_response)) ? $ex_response->getHeaders() : array(),
+          'status' => (is_object($ex_response)) ? $ex_response->getStatusCode() : 0,
+          'reason' => (is_object($ex_response)) ? $ex_response->getReasonPhrase() : $ex->getMessage(),
+          'error' => (is_object($ex_response)) ? json_decode($ex_response->getBody(), true) : null,
         );
         if (!is_array($response['error']) || isset($response['error']['developerMessage'])) {
           $response['error'] = array(
