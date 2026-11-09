@@ -37,7 +37,8 @@
     $PayPalZettle = new PayPalZettle();
     
     
-    // import
+    // import, bulk -1 is a reserved uuid whose import result is still open
+    // only one import at a time, its result decides about all reserved rows
     $products_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
                                       JOIN ".TABLE_PRODUCTS." p
@@ -45,43 +46,65 @@
                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                            ON p.products_id = pd.products_id
                                               AND pd.language_id = '".(int)$language_id."'
-                                     WHERE pz2p.bulk > 0
-                                       AND pz2p.products_uuid = ''");
+                                     WHERE ((pz2p.bulk > 0 AND pz2p.products_uuid = '') OR pz2p.bulk = -1)
+                                       AND NOT EXISTS (SELECT 1 FROM ".TABLE_PAYPAL_ZETTLE_IMPORT.")");
     if (xtc_db_num_rows($products_query) > 0) {
       $xtPrice = new xtcPrice(DEFAULT_CURRENCY, MODULE_CATEGORIES_ZETTLE_CATEGORIES_CUSTOMERS_STATUS);
       
       $products_array = array(
         'products' => array()
       );
+      $import_products = array();
+      $existing_uuids = null;
       
       while ($products = xtc_db_fetch_array($products_query)) {
+        // an earlier attempt got no answer, an import must not contain uuids Zettle already knows
+        if ($products['products_uuid'] != '') {
+          if ($existing_uuids === null) {
+            $existing_products = $PayPalZettle->getAllProducts();
+            if ($PayPalZettle->isTemporaryError($existing_products)) {
+              die();
+            }
+            $existing_uuids = array_column($existing_products, 'uuid');
+          }
+          if (in_array($products['products_uuid'], $existing_uuids)) {
+            xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
+                             SET bulk = ".(($products['stock'] == 1) ? 1 : 0)."
+                           WHERE zettle_id = '".(int)$products['zettle_id']."'");
+            continue;
+          }
+        }
+
         $products['products_currency'] = DEFAULT_CURRENCY;
         $products['products_tax'] = xtc_get_tax_rate($products['products_tax_class_id']);
         $products['products_price'] = $xtPrice->xtcGetPrice($products['products_id'], false, 1, $products['products_tax_class_id'], $products['products_price']);
         $products['products_price'] *= 100;
         
         $data = $PayPalZettle->get_product_scheme($products, true);
+        if ($products['products_uuid'] != '') {
+          $data['uuid'] = $products['products_uuid'];
+        }
         
-        $import_products[$products['zettle_id']] = array('uuid' => $data['uuid'], 'stock' => $products['stock']);
+        $import_products[$products['zettle_id']] = $data['uuid'];
   
         $products_array['products'][] = $data;
       }
       
+      if (count($import_products) < 1) {
+        die();
+      }
+
+      // reserved before the request, a lost answer must not create the products twice
+      foreach ($import_products as $zettle_id => $products_uuid) {
+        xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
+                         SET products_uuid = '".xtc_db_input($products_uuid)."',
+                             bulk = -1
+                       WHERE zettle_id = '".(int)$zettle_id."'");
+      }
+
       $response = $PayPalZettle->setImport($products_array);
       
-      // the uuids are generated per attempt, stored early a retry would create new products
       if (isset($response['uuid'])) {
-        foreach ($import_products as $zettle_id => $import_product) {
-          $where = '';
-          if ($import_product['stock'] != 1) {
-            $where = ",bulk = 0";
-          }
-          xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
-                           SET products_uuid = '".xtc_db_input($import_product['uuid'])."'
-                               ".$where ."
-                         WHERE zettle_id = '".(int)$zettle_id."'");
-        }
-
         $sql_data_array = array(
           'import_uuid' => $response['uuid']
         );
@@ -89,7 +112,8 @@
       } elseif (!$PayPalZettle->isTemporaryError($response)) {
         // Zettle rejected the batch, a retry would block all later steps
         xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
-                         SET bulk = 0
+                         SET products_uuid = '',
+                             bulk = 0
                        WHERE zettle_id IN ('".implode("', '", array_map('intval', array_keys($import_products)))."')");
       }
       die();
@@ -110,6 +134,25 @@
         {
           die();
         } else {
+          // an unknown import has no state, its rows stay reserved for the retry
+          if (isset($response['state'])) {
+            $where = '';
+            if ($response['state'] != 'FINISHED_SUCCESS') {
+              // a failed import can still have created some of the products
+              $existing_products = $PayPalZettle->getAllProducts();
+              if ($PayPalZettle->isTemporaryError($existing_products)) {
+                die();
+              }
+              $where = " AND products_uuid IN ('".implode("', '", array_map('xtc_db_input', array_column($existing_products, 'uuid')))."')";
+            }
+            xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
+                             SET bulk = IF(stock = 1, 1, 0)
+                           WHERE bulk = -1".$where);
+            xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
+                             SET products_uuid = '',
+                                 bulk = 0
+                           WHERE bulk = -1");
+          }
           xtc_db_query("DELETE FROM ".TABLE_PAYPAL_ZETTLE_IMPORT." WHERE zettle_id = '".(int)$import['zettle_id']."'");
         }
       }
