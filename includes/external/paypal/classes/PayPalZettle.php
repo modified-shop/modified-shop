@@ -200,6 +200,15 @@
 
     function updateInventory($uuid, $products) {
       $this->getLocations();
+      if (!isset($this->locations['STORE'])) {
+        return array(
+          'status' => 0,
+          'error' => array(
+            'error' => 'locations',
+            'error_description' => 'Zettle inventory locations could not be read',
+          ),
+        );
+      }
       
       $headers = array(
         'Authorization' => 'Bearer '.$this->access_token,
@@ -212,12 +221,20 @@
         $this->setInventoryProducts($uuid);
         $inventory = $this->getInventoryLocations($this->locations['STORE'], $uuid);
       }
-    
+
+      // a failed read must not count as balance zero, 404 means no balance exists yet
+      if (isset($inventory['error']) && $inventory['status'] != '404') {
+        return $inventory;
+      }
+
       if (isset($inventory['variants']) && count($inventory['variants']) > 0) {
         $quantity = $products['products_quantity'] - $inventory['variants'][0]['balance'];
       } else {
         $product = $this->getProduct($uuid);
-      
+        if (isset($product['error'])) {
+          return $product;
+        }
+
         $quantity = $products['products_quantity'];
         $inventory['variants'][0]['productUuid'] = $product['uuid'];
         $inventory['variants'][0]['variantUuid'] = $product['variants'][0]['uuid'];
