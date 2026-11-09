@@ -1023,14 +1023,23 @@
     }
 
 
-    // only a 4xx answer proves that PayPal refused the request
+    // a 4xx answer proves that PayPal refused the request, unless it refused the repeat of a processed one
     private function is_payment_unknown($PayPalOrder, $exception) {
       if ($exception instanceof PayPalHttp\HttpException
           && $exception->statusCode >= 400
           && $exception->statusCode < 500
           )
       {
-        return false;
+        $details = json_decode($exception->getMessage());
+        $issue = ((isset($details->details[0]->issue)) ? $details->details[0]->issue : '');
+
+        if (!in_array($issue, array('ORDER_ALREADY_CAPTURED', 'ORDER_ALREADY_AUTHORIZED'), true)) {
+          return false;
+        }
+
+        // only the payment itself can disprove the earlier request
+        return (!isset($PayPalOrder->purchase_units[0]->payments->captures[0]->status)
+                && !isset($PayPalOrder->purchase_units[0]->payments->authorizations[0]->status));
       }
 
       return !isset($PayPalOrder->status);
@@ -1070,7 +1079,7 @@
                              SET products_status = '0'
                            WHERE products_id IN (".implode(', ', array_map('intval', $_SESSION['disable_products'])).")");
           }
-          unset($_SESSION['disable_products']);
+          $_SESSION['disable_products'] = array();
 
           if (is_object($order_total_modules)) {
             $order_total_modules->apply_credit();
