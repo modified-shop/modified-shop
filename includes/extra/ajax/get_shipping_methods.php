@@ -99,7 +99,7 @@
     }
 
     $session_backup = array();
-    foreach (array('customer_id', 'sendto', 'billto') as $session_key) {
+    foreach (array('customer_id', 'sendto', 'billto', 'country_zone') as $session_key) {
       if (array_key_exists($session_key, $_SESSION)) {
         $session_backup[$session_key] = $_SESSION[$session_key];
       }
@@ -109,6 +109,7 @@
       unset($_SESSION['customer_id']);
       unset($_SESSION['sendto']);
       unset($_SESSION['billto']);
+      unset($_SESSION['country_zone']);
 
       // only PayPal's own callback understands a decline response, the wallets expect a purchase unit
       $is_paypal_callback = false;
@@ -205,6 +206,14 @@
         $countries = xtc_get_countriesList($_SESSION['country']);
         $countries_id = (($countries !== false) ? $countries['countries_id'] : $countries_id);
         $_SESSION['country'] = $countries_id;
+      }
+
+      // the region has to be known before prices, taxes and totals are calculated; the finally block removes it
+      if (!empty($shipping_address['zone_id'])) {
+        $_SESSION['country_zone'] = array(
+          'country_id' => $_SESSION['country'],
+          'zone_id' => (int)$shipping_address['zone_id'],
+        );
       }
 
       // reinitialize the price class to get the correct prices
@@ -330,7 +339,7 @@
         )
       );
     } finally {
-      foreach (array('customer_id', 'sendto', 'billto') as $session_key) {
+      foreach (array('customer_id', 'sendto', 'billto', 'country_zone') as $session_key) {
         unset($_SESSION[$session_key]);
         if (array_key_exists($session_key, $session_backup)) {
           $_SESSION[$session_key] = $session_backup[$session_key];

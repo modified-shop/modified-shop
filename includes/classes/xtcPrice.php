@@ -122,12 +122,20 @@ class xtcPrice {
         }
       } else {
         $country_id = -1;
+        $zone_id = -1;
         if (isset($_SESSION['country'])) {
           $country_id = $_SESSION['country'];
           $this->country_id = $country_id;
-          $this->zone_id = -1;
+          // region of a quoted address, only valid for the country it was set with
+          if (isset($_SESSION['country_zone']['country_id'], $_SESSION['country_zone']['zone_id'])
+              && $_SESSION['country_zone']['country_id'] == $country_id
+              )
+          {
+            $zone_id = (int)$_SESSION['country_zone']['zone_id'];
+          }
+          $this->zone_id = $zone_id;
         }
-        $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $country_id);        
+        $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $country_id, $zone_id);        
       }
     }
         
