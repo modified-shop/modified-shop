@@ -70,7 +70,8 @@ if (is_array($request)
       $check = xtc_db_fetch_array($check_query);
       
       $notified = 0;
-      
+      $mail_retry = false;
+
       if ($version == 1) {
         $paypal = new PayPalPayment($check['payment_class']);
       } else {
@@ -114,22 +115,34 @@ if (is_array($request)
                              SET send_order = 2
                            WHERE paypal_id = '".(int)$check['paypal_id']."'");
 
-            // no status update here, the retry that delivers the mail writes it once
             header("HTTP/1.0 503 Service Unavailable");
             header("Status: 503 Service Unavailable");
-            echo $mail_output;
-            exit();
+            $mail_retry = true;
           }
           echo $mail_output;
         }
       }
-      
+
       $orders_status_id = $paypal->get_config($request['event_type']);
       if ($orders_status_id < 0) {
         $orders_status_id = $check['orders_status'];
       }
-      
-      $paypal->update_order($request['summary'], $orders_status_id, $check['orders_id'], $notified);
+
+      // PayPal repeats the event while the mail fails, the payment status is recorded once per event
+      $event_recorded = false;
+      if ($mail_retry === true) {
+        $history_query = xtc_db_query("SELECT orders_status_history_id
+                                         FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                        WHERE orders_id = '".(int)$check['orders_id']."'
+                                          AND orders_status_id = '".(int)$orders_status_id."'
+                                          AND comments = '".xtc_db_input($request['summary'])."'
+                                        LIMIT 1");
+        $event_recorded = (xtc_db_num_rows($history_query) > 0);
+      }
+
+      if ($event_recorded === false) {
+        $paypal->update_order($request['summary'], $orders_status_id, $check['orders_id'], $notified);
+      }
     } else {
       // order is missing
       header("HTTP/1.0 404 Not Found");
