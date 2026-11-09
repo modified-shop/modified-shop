@@ -460,6 +460,26 @@
     }
 
 
+    // the API key is a JWT, its client_id can differ from the client id of the module
+    static function isOwnClient($client_uuid) {
+      if ($client_uuid == '') {
+        return false;
+      }
+
+      if ($client_uuid == self::CLIENT_ID) {
+        return true;
+      }
+
+      $api_key = explode('.', defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY : '');
+      if (count($api_key) != 3) {
+        return false;
+      }
+      $claims = json_decode(base64_decode(strtr($api_key[1], '-_', '+/')), true);
+
+      return (is_array($claims) && isset($claims['client_id']) && $claims['client_id'] == $client_uuid);
+    }
+
+
     function get_subscription_scheme() {
       $scheme = array(
         'transportName' => 'WEBHOOK',
@@ -496,26 +516,6 @@
       );
     }
   
-
-    // the API key is a JWT, its client_id can differ from the client id of the module
-    static function isOwnClient($client_uuid) {
-      if ($client_uuid == '') {
-        return false;
-      }
-
-      if ($client_uuid == self::CLIENT_ID) {
-        return true;
-      }
-
-      $api_key = explode('.', defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY : '');
-      if (count($api_key) != 3) {
-        return false;
-      }
-      $claims = json_decode(base64_decode(strtr($api_key[1], '-_', '+/')), true);
-
-      return (is_array($claims) && isset($claims['client_id']) && $claims['client_id'] == $client_uuid);
-    }
-
 
     function call($url, $method, $body = array(), $headers = array()) {
       $headers['X-iZettle-Application-Id'] = $this->client_id;
