@@ -1039,7 +1039,7 @@
 
     // the money may have moved, so the order stays for the webhook or the merchant
     private function keep_unconfirmed_order($OrderID) {
-      global $insert_id;
+      global $insert_id, $tmp, $order_total_modules;
 
       $this->LoggingManager->log('WARNING', 'Payment not confirmed, order kept', array(
         'order_id' => $OrderID,
@@ -1062,6 +1062,12 @@
         }
 
         $this->update_order('Order ID: '.$OrderID.' - payment not confirmed, please check this order in PayPal', $this->order_status_pending, $insert_id);
+
+        // a module that pays before the completion block has not booked credit and coupons yet
+        if (!empty($tmp) && is_object($order_total_modules)) {
+          $order_total_modules->apply_credit();
+          $order_total_modules->clear_posts();
+        }
       }
 
       $_SESSION['paypal_payment_error'] = 'PAYMENT_UNCONFIRMED';
