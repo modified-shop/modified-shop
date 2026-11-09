@@ -1031,7 +1031,7 @@
           )
       {
         $details = json_decode($exception->getMessage());
-        $issue = ((isset($details->details[0]->issue)) ? $details->details[0]->issue : '');
+        $issue = ((isset($details->details) && is_array($details->details) && isset($details->details[0]->issue)) ? $details->details[0]->issue : '');
 
         if (!in_array($issue, array('ORDER_ALREADY_CAPTURED', 'ORDER_ALREADY_AUTHORIZED'), true)) {
           return false;
