@@ -39,6 +39,7 @@
           // an event can be delivered more than once, retries end after about 73 hours
           xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_ZETTLE_EVENTS." (
                           `event_hash` char(40) NOT NULL,
+                          `booked` int(1) NOT NULL DEFAULT 0,
                           `date_added` datetime NOT NULL,
                           PRIMARY KEY (`event_hash`),
                           KEY `idx_date_added` (`date_added`)
@@ -53,36 +54,25 @@
           {
             $event_failed = false;
             foreach ($data['balanceBefore'] as $k => $inventory) {
-              // claimed per line, so a retry only books what is still missing
               $event_hash = sha1($request['payload'].'-'.$k);
-              if (xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_ZETTLE_EVENTS." (event_hash, date_added) VALUES ('".$event_hash."', NOW())") === false) {
-                $event_failed = true;
-                continue;
-              }
-              if (xtc_db_affected_rows() < 1) {
-                continue;
-              }
+              $quantity = (float)($data['balanceAfter'][$k]['balance'] - $inventory['balance']);
 
-              $check_query = xtc_db_query("SELECT *
-                                             FROM ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
-                                             JOIN ".TABLE_PRODUCTS." p
-                                                  ON p.products_id = pz2p.products_id
-                                            WHERE pz2p.stock = 1
-                                              AND pz2p.products_uuid = '".xtc_db_input($inventory['productUuid'])."'
-                                              AND p.products_quantity != '".(float)$data['balanceAfter'][$k]['balance']."'");
-              $line_booked = ($check_query !== false);
-              if (xtc_db_num_rows($check_query) > 0) {
-                $check = xtc_db_fetch_array($check_query);
-            
-                $quantity = (float)($data['balanceAfter'][$k]['balance'] - $inventory['balance']);
-            
-                $line_booked = (xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                                                 SET products_quantity = products_quantity ".(($quantity > 0) ? '+ ' : '- ').abs($quantity)."
-                                               WHERE products_id = '".(int)$check['products_id']."'") !== false);
-              }
-
-              if ($line_booked === false) {
-                xtc_db_query("DELETE FROM ".TABLE_PAYPAL_ZETTLE_EVENTS." WHERE event_hash = '".$event_hash."'");
+              // one statement books the line and marks it, so a retry can neither repeat nor lose it
+              if (xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_ZETTLE_EVENTS." (event_hash, date_added) VALUES ('".$event_hash."', NOW())") === false
+                  || xtc_db_query("UPDATE ".TABLE_PRODUCTS." p
+                                     JOIN ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
+                                          ON pz2p.products_id = p.products_id
+                                     JOIN ".TABLE_PAYPAL_ZETTLE_EVENTS." pze
+                                          ON pze.event_hash = '".$event_hash."'
+                                      SET p.products_quantity = p.products_quantity ".(($quantity > 0) ? '+ ' : '- ').abs($quantity).",
+                                          pze.booked = 1
+                                    WHERE pze.booked = 0
+                                      AND pz2p.stock = 1
+                                      AND pz2p.products_uuid = '".xtc_db_input($inventory['productUuid'])."'
+                                      AND p.products_quantity != '".(float)$data['balanceAfter'][$k]['balance']."'") === false
+                  || xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_EVENTS." SET booked = 1 WHERE event_hash = '".$event_hash."'") === false
+                  )
+              {
                 $event_failed = true;
               }
             }
