@@ -79,6 +79,16 @@ if (is_array($request)
         
         if ($check['payment_class'] == 'paypalpui') {
           $paypal->FinishOrderPui($check['orders_id'], $PayPalOrder);
+        } elseif ($check['transaction_id'] == '' && isset($PayPalOrder->purchase_units[0]->payments)) {
+          // a payment left unconfirmed during checkout learns its id here
+          foreach (array('captures', 'authorizations') as $payment_type) {
+            if (isset($PayPalOrder->purchase_units[0]->payments->{$payment_type}[0]->id)) {
+              xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
+                               SET transaction_id = '".xtc_db_input($PayPalOrder->purchase_units[0]->payments->{$payment_type}[0]->id)."'
+                             WHERE paypal_id = '".(int)$check['paypal_id']."'");
+              break;
+            }
+          }
         }
 
         if (is_object($PayPalOrder)

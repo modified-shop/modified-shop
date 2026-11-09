@@ -170,6 +170,7 @@ $lang_array = array(
   'TEXT_PAYPALINSTALLMENT_INFO_LINK' => 'Information on possible rates',
 
   'TEXT_PAYPAL_INSTRUMENT_DECLINED_ERROR' => 'The instrument presented  was either declined by the processor or bank, or it can\'t be used for this payment.',
+  'TEXT_PAYPAL_PAYMENT_UNCONFIRMED_ERROR' => 'We could not confirm your PayPal payment. Your order has been kept. Please check your PayPal account to see whether the amount was charged before you pay again.',
   'IMAGE_ICON_STATUS_YELLOW' => 'temporarily not available',
 );
 

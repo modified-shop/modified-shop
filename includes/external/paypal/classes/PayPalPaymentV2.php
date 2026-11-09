@@ -671,6 +671,15 @@
         $this->redirectOrder($PayPalOrder->links, 'payer-action');
       }
 
+      if ($this->is_payment_confirmed($PayPalOrder)) {
+        $this->LoggingManager->log('WARNING', 'CaptureOrder recovered', array('order_id' => $OrderID));
+        return $PayPalOrder;
+      }
+
+      if ($this->is_payment_unknown($PayPalOrder, $ex)) {
+        $this->keep_unconfirmed_order($OrderID);
+      }
+
       if (isset($insert_id) && (int)$insert_id > 0) {
         $this->remove_order($insert_id);
       }
@@ -705,10 +714,7 @@
         $response = $client->execute($request);
 
         if ($this->get_config('PAYPAL_CAPTURE_MANUELL') == '0' && $error === false) {
-          $order = new order($insert_id);
-          $this->CaptureAuthorizedOrder($response->result->purchase_units[0]->payments->authorizations[0]->id, $order->info['pp_total'], $order->info['currency'], true);
-          $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
-          return ((is_object($PayPalOrder)) ? $PayPalOrder : $response->result);
+          return $this->capture_authorization($response->result);
         }
         return $response->result;
 
@@ -734,6 +740,23 @@
           )
       {
         $this->redirectOrder($PayPalOrder->links, 'payer-action');
+      }
+
+      if ($this->is_payment_confirmed($PayPalOrder)) {
+        $this->LoggingManager->log('WARNING', 'AuthorizeOrder recovered', array('order_id' => $OrderID));
+
+        if ($this->get_config('PAYPAL_CAPTURE_MANUELL') == '0'
+            && $error === false
+            && !isset($PayPalOrder->purchase_units[0]->payments->captures)
+            )
+        {
+          return $this->capture_authorization($PayPalOrder);
+        }
+        return $PayPalOrder;
+      }
+
+      if ($this->is_payment_unknown($PayPalOrder, $ex)) {
+        $this->keep_unconfirmed_order($OrderID);
       }
 
       if (isset($insert_id) && (int)$insert_id > 0) {
@@ -968,6 +991,83 @@
         'message' => $exception->getMessage(),
         'exception' => $exception,
       ));
+    }
+
+
+    private function capture_authorization($PayPalOrder) {
+      global $insert_id;
+
+      $order = new order($insert_id);
+      $this->CaptureAuthorizedOrder($PayPalOrder->purchase_units[0]->payments->authorizations[0]->id, $order->info['pp_total'], $order->info['currency'], true);
+      $CapturedOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
+
+      return ((is_object($CapturedOrder)) ? $CapturedOrder : $PayPalOrder);
+    }
+
+
+    // PayPal holds the money although the answer to the request got lost
+    private function is_payment_confirmed($PayPalOrder) {
+      if (!isset($PayPalOrder->status) || $PayPalOrder->status != 'COMPLETED') {
+        return false;
+      }
+
+      if (isset($PayPalOrder->purchase_units[0]->payments->captures[0]->status)) {
+        return in_array($PayPalOrder->purchase_units[0]->payments->captures[0]->status, array('COMPLETED', 'PENDING'), true);
+      }
+
+      if (isset($PayPalOrder->purchase_units[0]->payments->authorizations[0]->status)) {
+        return in_array($PayPalOrder->purchase_units[0]->payments->authorizations[0]->status, array('CREATED', 'PENDING'), true);
+      }
+
+      return false;
+    }
+
+
+    // only a 4xx answer proves that PayPal refused the request
+    private function is_payment_unknown($PayPalOrder, $exception) {
+      if ($exception instanceof PayPalHttp\HttpException
+          && $exception->statusCode >= 400
+          && $exception->statusCode < 500
+          )
+      {
+        return false;
+      }
+
+      return !isset($PayPalOrder->status);
+    }
+
+
+    // the money may have moved, so the order stays for the webhook or the merchant
+    private function keep_unconfirmed_order($OrderID) {
+      global $insert_id;
+
+      $this->LoggingManager->log('WARNING', 'Payment not confirmed, order kept', array(
+        'order_id' => $OrderID,
+        'orders_id' => ((isset($insert_id)) ? (int)$insert_id : 0),
+      ));
+
+      if (isset($insert_id) && (int)$insert_id > 0) {
+        $check_query = xtc_db_query("SELECT paypal_id
+                                       FROM ".TABLE_PAYPAL_PAYMENT."
+                                      WHERE payment_id = '".xtc_db_input($OrderID)."'");
+        if (xtc_db_num_rows($check_query) < 1) {
+          $sql_data_array = array(
+            'orders_id' => (int)$insert_id,
+            'payment_id' => $OrderID,
+            'payer_id' => '',
+            'transaction_id' => '',
+            'send_order' => 1,
+          );
+          xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
+        }
+
+        $this->update_order('Order ID: '.$OrderID.' - payment not confirmed, please check this order in PayPal', $this->order_status_pending, $insert_id);
+      }
+
+      $_SESSION['paypal_payment_error'] = 'PAYMENT_UNCONFIRMED';
+      unset($_SESSION['paypal']);
+
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
 
 
