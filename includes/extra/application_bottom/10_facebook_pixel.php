@@ -29,6 +29,9 @@
                            && $_SESSION['tracking']['allow'][6] === true
                            );
     }
+
+    // localStorage is shared by all shops on the origin, so the keys carry the shop path and the Pixel ID
+    $fb_storage = '|'.DIR_WS_CATALOG.'|'.MODULE_FACEBOOK_PIXEL_ID;
         
     $beginCode .= "
     !function (f, b, e, v, n, t, s) {
@@ -102,7 +105,10 @@
       // include needed functions
       require_once (DIR_FS_INC.'get_order_total.inc.php');
 
-      $_SESSION['tracking']['order'][] = 'FB-'.$last_order;
+      // OIL may still run a blocked script on this page, so only a known consent marks the order as sent
+      if ($fb_consent_given === true) {
+        $_SESSION['tracking']['order'][] = 'FB-'.$last_order;
+      }
 
       $orders_query = xtc_db_query("SELECT currency
                                FROM " . TABLE_ORDERS . "
@@ -121,13 +127,26 @@
         $items_array[] = '{id: "'.$item['products_model'].'", quantity: '.$item['products_quantity'].'}';
       }
 
+      // the browser remembers the last sent orders, Meta does not deduplicate a second Purchase
       $trackingCode .= '
-      fbq(\'track\', \'Purchase\', {
-        contents: ['.implode(',', $items_array).'],
-        content_type: "product",
-        currency: "'.$orders['currency'].'", 
-        value: '.$total.'
-      });
+      (function () {
+        var key = '.json_encode('MODfbPurchase'.$fb_storage, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE).', order = "'.(int)$last_order.'", sent = [];
+        try {
+          sent = JSON.parse(localStorage.getItem(key)) || [];
+        } catch (e) {}
+        if (!Array.isArray(sent)) sent = [];
+        if (sent.indexOf(order) != -1) return;
+        sent.push(order);
+        try {
+          localStorage.setItem(key, JSON.stringify(sent.slice(-20)));
+        } catch (e) {}
+        fbq(\'track\', \'Purchase\', {
+          contents: ['.implode(',', $items_array).'],
+          content_type: "product",
+          currency: "'.$orders['currency'].'",
+          value: '.$total.'
+        });
+      })();
     ';
 
       $noscriptCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=Purchase&amp;cd[value]='.number_format($total, 2, '.', '').'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
