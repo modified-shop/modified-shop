@@ -12,6 +12,7 @@ require_once($method_class_file);
 
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST','INVALID_REQUEST');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_PARAMETER','INVALID_REQUEST %s');
+define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_LOCKED','ORDER_LOCKED');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_STATUS_OK_URL','STATUS=%s' . PHP_EOL . 'FORWARD=%s' . PHP_EOL .' URL=%s' . PHP_EOL . 'TARGET=_top');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_STATUS_OK','STATUS=%s');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_STATUS_ERROR','STATUS=%s' . PHP_EOL . 'MESSAGE=%s');
@@ -300,14 +301,29 @@ class micropayment_callback
 
     function processFunction()
     {
-
+        // one notification per order at a time, a redelivery waits for the first one
+        if (!micropayment_helper::lockOrder($this->getParam('orderid',self::REGEX_INTEGER), 10)) {
+            $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_LOCKED);
+        }
 
         $aOrder    = $this->fetchOrder();
         $order     = $aOrder['order'];
         $lastEvent = $this->getLastEventFromMicropaymentLog();
         $function  = $this->getParam('function',$this->allowedFunctions);
 
-        $this->addToMicropaymentLog();
+        // a parallel expire may have removed the order while this one waited
+        if (!is_array($order)) {
+            $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
+        }
+
+        // a redelivery gets the same answer, its effects are not repeated
+        if ($this->isProcessedEvent($function)) {
+            $this->returnStatus = self::STATUS_OK;
+            if (in_array($function, array(self::FUNCTION_BILLING, self::FUNCTION_INIT), true)) {
+                $this->returnUrl = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL',true);
+            }
+            return true;
+        }
 
         if(!$this->checkEventState($lastEvent,$function)) {
             $this->setOrderInConflict($lastEvent);
@@ -503,6 +519,11 @@ class micropayment_callback
                 $this->returnStatus = self::STATUS_ERROR;
             break;
         }
+
+        // logged once handled, so the retry of a failed attempt runs again; expire removed the log
+        if ($this->returnStatus == self::STATUS_OK && $function != self::FUNCTION_EXPIRE) {
+            $this->addToMicropaymentLog();
+        }
         return true;
     }
 
@@ -530,6 +551,33 @@ class micropayment_callback
         }
 
         return null;
+    }
+
+    // the event workflow allows these once per transaction, an identical one is a redelivery
+    function isProcessedEvent($function)
+    {
+        if (!in_array($function, array(self::FUNCTION_INIT, self::FUNCTION_BILLING, self::FUNCTION_REFUND, self::FUNCTION_STORNO), true)) {
+            return false;
+        }
+
+        $auth   = $this->getParam('auth',self::REGEX_SIMPLE_TEXT);
+        $amount = (int)$this->getParam('amount',self::REGEX_INTEGER);
+
+        $event_query = xtc_db_query(
+            sprintf(
+                'SELECT `auth`, `amount` FROM `micropayment_log` WHERE `order_id` = "%s" AND `function` = "%s"',
+                (int)$this->getParam('orderid',self::REGEX_INTEGER),
+                xtc_db_input($function)
+            )
+        );
+        while ($event = xtc_db_fetch_array($event_query)) {
+            // compared here, the column collation ignores case and trailing spaces
+            if ($event['auth'] === $auth && (int)$event['amount'] === $amount) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     function checkEventState($actualEvent,$newEvent)

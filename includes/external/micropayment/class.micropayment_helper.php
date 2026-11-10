@@ -237,6 +237,30 @@ class micropayment_helper
         xtc_db_query($query);
     }
 
+    // one holder per order, for notifications and the removal of an aborted payment; own connection:
+    // a second lock frees the session lock before MySQL 5.7.5, and the lock ends with the request
+    static function lockOrder($orderId, $timeout)
+    {
+        if (!is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'micropayment_lock_link', false))) {
+            return false;
+        }
+
+        // named locks are server wide, the name carries the database
+        $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input('MODmcp_'.md5(DB_DATABASE.'|micropayment_orders').'_'.(int)$orderId)."', ".(int)$timeout.") AS order_lock", 'micropayment_lock_link');
+        $lock = xtc_db_fetch_array($lock_query);
+        if (!is_array($lock) || $lock['order_lock'] != '1') {
+            xtc_db_close('micropayment_lock_link');
+            return false;
+        }
+
+        return true;
+    }
+
+    static function unlockOrder()
+    {
+        xtc_db_close('micropayment_lock_link');
+    }
+
     function getLastEventFromMicropaymentLog($orderId)
     {
         $event = xtc_db_query(sprintf('SELECT `function` FROM `micropayment_log` WHERE `order_id` = "%s" ORDER BY `created` DESC, `id` DESC LIMIT 1',xtc_db_prepare_input($orderId)));
