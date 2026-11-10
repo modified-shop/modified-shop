@@ -39,6 +39,22 @@ if (!class_exists('cookie_consent')) {
 
     function process($file) {
       $this->update_content_status();
+      $this->readable_cookie();
+    }
+
+    // called by admin/module_export.php after the backup values are restored
+    function restore() {
+      $this->readable_cookie();
+    }
+
+    // a tracking module that reads the decision on the server keeps the readable cookie switched on
+    function readable_cookie() {
+      global $messageStack;
+
+      require_once(DIR_FS_INC.'cookie_consent_readable_cookie.inc.php');
+      if (cookie_consent_readable_cookie() === true) {
+        $messageStack->add_session(MODULE_COOKIE_CONSENT_INFO_READABLE_COOKIE, 'warning');
+      }
     }
 
     function display() {
@@ -418,6 +434,8 @@ if (!class_exists('cookie_consent')) {
         xtc_db_query("UPDATE `" . TABLE_ADMIN_ACCESS . "` SET `cookie_consent` = 8 WHERE `customers_id`='groups'");
       }
 
+      // module_export.php calls no process() after the install, so an active tracking module needs the call here
+      $this->readable_cookie();
     }
 
     function update_content_status() {

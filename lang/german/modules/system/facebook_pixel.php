@@ -21,3 +21,5 @@
 
   define('MODULE_FACEBOOK_PIXEL_COUNT_ADMIN_TITLE' , 'Seitenaufrufe des Shopbetreibers mitz&auml;hlen');
   define('MODULE_FACEBOOK_PIXEL_COUNT_ADMIN_DESC' , 'Wird diese Option aktiviert, so werden auch alle Zugriffe des Administrators mitgez&auml;hlt, die (durch die h&auml;ufigeren Zugriffe auf den Shop) die Besucherstatistik verf&auml;lschen k&ouml;nnen.');
+
+  define('MODULE_FACEBOOK_PIXEL_INFO_READABLE_COOKIE', 'Facebook Pixel: Die lesbare Cookie-Entscheidung (MODOilTrack) im Cookie Consent ist jetzt eingeschaltet. Facebook Pixel, Google Analytics und das Kampagnen-Cookie lesen damit die Entscheidung des Besuchers.');
