@@ -124,12 +124,18 @@
         $items_array[] = '{id: "'.$item['products_model'].'", quantity: '.$item['products_quantity'].'}';
       }
 
-      // the browser remembers the sent order, Meta does not deduplicate a second Purchase
+      // the browser remembers the last sent orders, Meta does not deduplicate a second Purchase
       $trackingCode .= '
       (function () {
+        var order = "'.(int)$last_order.'", sent = [];
         try {
-          if (localStorage.getItem("MODfbPurchase") == "'.(int)$last_order.'") return;
-          localStorage.setItem("MODfbPurchase", "'.(int)$last_order.'");
+          sent = JSON.parse(localStorage.getItem("MODfbPurchase")) || [];
+        } catch (e) {}
+        if (!Array.isArray(sent)) sent = [];
+        if (sent.indexOf(order) != -1) return;
+        sent.push(order);
+        try {
+          localStorage.setItem("MODfbPurchase", JSON.stringify(sent.slice(-20)));
         } catch (e) {}
         fbq(\'track\', \'Purchase\', {
           contents: ['.implode(',', $items_array).'],
