@@ -351,6 +351,9 @@
 
     function updateProduct($uuid, $products) {
       $product = $this->getProduct($uuid);
+      if (isset($product['error'])) {
+        return $product;
+      }
  
       $data = $this->get_product_scheme($products);
       $data['uuid'] = $product['uuid'];
@@ -533,6 +536,16 @@
       );
     }
   
+
+    // no answer, no valid token, changed etag, rate limit or server error
+    function isTemporaryError($response) {
+      if (!is_array($response) || !isset($response['error'])) {
+        return false;
+      }
+
+      return (in_array((int)$response['status'], array(0, 401, 403, 408, 412, 429)) || $response['status'] >= 500);
+    }
+
 
     function call($url, $method, $body = array(), $headers = array()) {
       $headers['X-iZettle-Application-Id'] = $this->client_id;
