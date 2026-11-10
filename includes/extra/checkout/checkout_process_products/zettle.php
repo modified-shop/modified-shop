@@ -17,9 +17,6 @@
     // include needed classes
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalZettle.php');
     
-    // include needed functions
-    require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
-
     if (!isset($PayPalZettle)) {
       $PayPalZettle = new PayPalZettle();
     }
@@ -31,10 +28,14 @@
       $zettle = xtc_db_fetch_array($zettle_query);
       
       if ($zettle['stock'] == 1) {
-        $products_data = array(
-          'products_quantity' => xtc_get_products_stock(xtc_get_prid($order->products[$i]['id']))
-        );
-        $PayPalZettle->updateInventory($zettle['products_uuid'], $products_data);
+        // xtc_get_products_stock() caches per request and misses later lines of the same product
+        $stock_query = xtc_db_query("SELECT products_quantity
+                                       FROM ".TABLE_PRODUCTS."
+                                      WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
+        if (xtc_db_num_rows($stock_query) > 0) {
+          $products_data = xtc_db_fetch_array($stock_query);
+          $PayPalZettle->updateInventory($zettle['products_uuid'], $products_data);
+        }
       }
     }
   }
