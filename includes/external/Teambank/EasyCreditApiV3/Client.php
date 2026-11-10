@@ -29,10 +29,22 @@ class Client implements ClientInterface
     protected function parseHeaders ($headers)
     {
         $_headers = array();
+        $names = array();
         foreach ($headers as $key => $value)  {
+            // a followed redirect lists every response, only the last one counts
+            if (preg_match("#^HTTP/#", $value)) {
+                $_headers = array();
+                $names = array();
+                continue;
+            }
             $t = explode( ':', $value, 2 );
             if (isset($t[1])) {
-                $_headers[trim($t[0])] = trim($t[1]);
+                // repeated fields keep every value in order, under the first spelling of the name
+                $name = strtolower(trim($t[0]));
+                if (!isset($names[$name])) {
+                    $names[$name] = trim($t[0]);
+                }
+                $_headers[$names[$name]][] = trim($t[1]);
                 continue;
             }
         }
