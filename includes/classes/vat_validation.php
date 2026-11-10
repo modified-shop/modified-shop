@@ -142,7 +142,6 @@ class vat_validation {
 
 
   function validate_vatid($vat_id, $country_id, $live_check = false) {
-    static $country_check;
     
     // remove special chars
     $remove = array (' ', '-', '/', '\\', '.', ':', ',');
@@ -178,8 +177,10 @@ class vat_validation {
     );
     
     // check country 
-    if (!isset($country_check)) {
-      $country_check = xtc_get_countriesList($country_id, true);
+    $country_check = xtc_get_countriesList($country_id, true);
+    if (!isset($country_check['countries_iso_code_2'])) {
+      // unknown or inactive country, the vat id cannot match
+      return $results[0];
     }
     
     // fix for Greece
