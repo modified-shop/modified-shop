@@ -53,6 +53,8 @@
               )
           {
             $event_failed = false;
+            // marks this request's own bookings, the error reset must not reopen an earlier or parallel one
+            $attempt = mt_rand(2, 2147483647);
             foreach ($data['balanceBefore'] as $k => $inventory) {
               $event_hash = sha1($request['payload'].'-'.$k);
               $quantity = (float)($data['balanceAfter'][$k]['balance'] - $inventory['balance']);
@@ -66,15 +68,15 @@
                                      JOIN ".TABLE_PAYPAL_ZETTLE_EVENTS." pze
                                           ON pze.event_hash = '".$event_hash."'
                                       SET p.products_quantity = p.products_quantity ".(($quantity > 0) ? '+ ' : '- ').abs($quantity).",
-                                          pze.booked = 1
+                                          pze.booked = ".$attempt."
                                     WHERE pze.booked = 0
                                       AND pz2p.stock = 1
                                       AND pz2p.products_uuid = '".xtc_db_input($inventory['productUuid'])."'
                                       AND p.products_quantity != '".(float)$data['balanceAfter'][$k]['balance']."'") === false) {
                 // MyISAM can keep the mark of a failed stock write, the retry has to find the line open
-                xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_EVENTS." SET booked = 0 WHERE event_hash = '".$event_hash."'");
+                xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_EVENTS." SET booked = 0 WHERE event_hash = '".$event_hash."' AND booked = ".$attempt);
                 $event_failed = true;
-              } elseif (xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_EVENTS." SET booked = 1 WHERE event_hash = '".$event_hash."'") === false) {
+              } elseif (xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_EVENTS." SET booked = 1 WHERE event_hash = '".$event_hash."' AND booked IN (0, ".$attempt.")") === false) {
                 $event_failed = true;
               }
             }
