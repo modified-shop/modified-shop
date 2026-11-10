@@ -375,4 +375,14 @@
         }
       }
     }
+
+    function specials_changed($specials_id, $products_id, $action) {
+      // queued for the cron, the specials pages do not send the product to Zettle
+      xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
+                       SET bulk = 1
+                     WHERE products_id = '".(int)$products_id."'
+                       AND status = 1
+                       AND products_uuid != ''
+                       AND bulk >= 0");
+    }
   }
