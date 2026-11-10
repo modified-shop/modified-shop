@@ -244,15 +244,21 @@
         $wait += $i * 500000;
         usleep($wait);
   
-        $TransactionInformation = $this->ecCheckout->loadTransaction();
-        if ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
-          $this->authorized = true;
-          break;
-        } elseif (in_array($TransactionInformation->getStatus(), array(\Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_DECLINED, \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_EXPIRED))) {
+        try {
+          $TransactionInformation = $this->ecCheckout->loadTransaction();
+        } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
+          // the SDK throws for DECLINED and EXPIRED instead of returning the status
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
           xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
           
           $this->payment_error_redirect();
+        } catch (Exception $e) {
+          // no answer is not a negative one, a still pending order goes to the task
+          continue;
+        }
+        if ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
+          $this->authorized = true;
+          break;
         }
       }
 
