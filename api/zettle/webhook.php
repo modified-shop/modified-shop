@@ -58,8 +58,9 @@
               $quantity = (float)($data['balanceAfter'][$k]['balance'] - $inventory['balance']);
 
               // one statement books the line and marks it, only MyISAM can split them on a write error
-              if (xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_ZETTLE_EVENTS." (event_hash, date_added) VALUES ('".$event_hash."', NOW())") === false
-                  || xtc_db_query("UPDATE ".TABLE_PRODUCTS." p
+              if (xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_ZETTLE_EVENTS." (event_hash, date_added) VALUES ('".$event_hash."', NOW())") === false) {
+                $event_failed = true;
+              } elseif (xtc_db_query("UPDATE ".TABLE_PRODUCTS." p
                                      JOIN ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
                                           ON pz2p.products_id = p.products_id
                                      JOIN ".TABLE_PAYPAL_ZETTLE_EVENTS." pze
@@ -69,10 +70,11 @@
                                     WHERE pze.booked = 0
                                       AND pz2p.stock = 1
                                       AND pz2p.products_uuid = '".xtc_db_input($inventory['productUuid'])."'
-                                      AND p.products_quantity != '".(float)$data['balanceAfter'][$k]['balance']."'") === false
-                  || xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_EVENTS." SET booked = 1 WHERE event_hash = '".$event_hash."'") === false
-                  )
-              {
+                                      AND p.products_quantity != '".(float)$data['balanceAfter'][$k]['balance']."'") === false) {
+                // MyISAM can keep the mark of a failed stock write, the retry has to find the line open
+                xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_EVENTS." SET booked = 0 WHERE event_hash = '".$event_hash."'");
+                $event_failed = true;
+              } elseif (xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_EVENTS." SET booked = 1 WHERE event_hash = '".$event_hash."'") === false) {
                 $event_failed = true;
               }
             }
