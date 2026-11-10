@@ -177,6 +177,10 @@
     }
     if (ini_get('session.save_handler') == 'files') {
       $save_path = session_save_path();
+      // skip the optional "N;" and "N;MODE;" prefixes, PHP uses the last part as directory
+      if (strpos($save_path, ';') !== false) {
+        $save_path = substr($save_path, strrpos($save_path, ';') + 1);
+      }
       // the files handler cannot clean up a directory it may not list (Debian: 1733)
       if ($save_path != '' && !is_readable($save_path)) {
         @ini_set('session.gc_probability', 0);
