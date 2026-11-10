@@ -39,3 +39,5 @@
 
   define('MODULE_GOOGLE_ANALYTICS_ITEM_ID_TITLE' , 'Item ID');
   define('MODULE_GOOGLE_ANALYTICS_ITEM_ID_DESC' , 'Should the products model or the products ID be used for tracking?');
+
+  define('MODULE_GOOGLE_ANALYTICS_INFO_READABLE_COOKIE', 'Google Analytics: The readable cookie decision (MODOilTrack) of the cookie consent is switched on now. Facebook Pixel, Google Analytics and the campaign cookie use it to read the decision of the visitor.');

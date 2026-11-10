@@ -21,9 +21,17 @@
       )
   {  
     $beginCode = '<script>';
+    $fb_consent_given = true;
     if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true' && (in_array(6, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))) {
       $beginCode = '<script async data-type="text/javascript" type="as-oil" data-purposes="6" data-managed="as-oil">';
+      $fb_consent_given = (!defined('COOKIE_CONSENT_NO_TRACKING')
+                           && isset($_SESSION['tracking']['allow'][6])
+                           && $_SESSION['tracking']['allow'][6] === true
+                           );
     }
+
+    // localStorage is shared by all shops on the origin, so the keys carry the shop path and the Pixel ID
+    $fb_storage = '|'.DIR_WS_CATALOG.'|'.MODULE_FACEBOOK_PIXEL_ID;
         
     $beginCode .= "
     !function (f, b, e, v, n, t, s) {
@@ -43,6 +51,9 @@
 
     $endCode = '
   </script>
+  ';
+
+    $noscriptCode = '
   <noscript>
     <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=PageView&amp;noscript=1"/>
     ';
@@ -87,6 +98,64 @@
     }
 
 
+    // express payments skip shipping and payment, so the first checkout page of a cart counts
+    if (in_array(basename($PHP_SELF), array(FILENAME_CHECKOUT_SHIPPING, FILENAME_CHECKOUT_PAYMENT, FILENAME_CHECKOUT_CONFIRMATION))
+        && isset($_SESSION['cart'])
+        && is_object($_SESSION['cart'])
+        && $_SESSION['cart']->count_contents() > 0
+        )
+    {
+      $fb_contents = $fb_cart = array();
+      foreach ($_SESSION['cart']->get_products() as $fb_product) {
+        $fb_contents[] = array('id' => (string)$fb_product['model'], 'quantity' => (int)$fb_product['quantity']);
+        $fb_cart[$fb_product['id']] = (int)$fb_product['quantity'];
+      }
+      ksort($fb_cart, SORT_STRING);
+      $fb_cart = md5(serialize($fb_cart));
+
+      // every submit of the cart form creates a new cart ID, so products, variants and quantities identify the checkout
+      if (!isset($_SESSION['tracking']['fb_checkout']['cart'])
+          || $_SESSION['tracking']['fb_checkout']['cart'] != $fb_cart
+          )
+      {
+        $_SESSION['tracking']['fb_checkout'] = array(
+          'cart' => $fb_cart,
+          'token' => bin2hex(random_bytes(8)),
+          'sent' => false,
+        );
+      }
+
+      if ($_SESSION['tracking']['fb_checkout']['sent'] !== true) {
+        if ($fb_consent_given === true) {
+          $_SESSION['tracking']['fb_checkout']['sent'] = true;
+        }
+
+        $trackingCode .= '
+      (function () {
+        var key = '.json_encode('MODfbCheckout'.$fb_storage, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE).';
+        try {
+          if (localStorage.getItem(key) == "'.$_SESSION['tracking']['fb_checkout']['token'].'") return;
+          localStorage.setItem(key, "'.$_SESSION['tracking']['fb_checkout']['token'].'");
+        } catch (e) {}
+        fbq(\'track\', \'InitiateCheckout\', {
+          contents: '.json_encode($fb_contents, JSON_HEX_TAG | JSON_HEX_AMP | JSON_INVALID_UTF8_SUBSTITUTE).',
+          content_type: "product",
+          currency: "'.$_SESSION['currency'].'",
+          num_items: '.(int)$_SESSION['cart']->count_contents().',
+          value: '.round($_SESSION['cart']->show_total(), 2).'
+        });
+      })();
+    ';
+      }
+    }
+
+
+    // a checkout after the order gets a new token, even with the same products
+    if (strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false) {
+      unset($_SESSION['tracking']['fb_checkout']);
+    }
+
+
     if (strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false
         && !in_array('FB-'.$last_order, $_SESSION['tracking']['order'])
         )
@@ -94,7 +163,10 @@
       // include needed functions
       require_once (DIR_FS_INC.'get_order_total.inc.php');
 
-      $_SESSION['tracking']['order'][] = 'FB-'.$last_order;
+      // OIL may still run a blocked script on this page, so only a known consent marks the order as sent
+      if ($fb_consent_given === true) {
+        $_SESSION['tracking']['order'][] = 'FB-'.$last_order;
+      }
 
       $orders_query = xtc_db_query("SELECT currency
                                FROM " . TABLE_ORDERS . "
@@ -113,22 +185,38 @@
         $items_array[] = '{id: "'.$item['products_model'].'", quantity: '.$item['products_quantity'].'}';
       }
 
+      // the browser remembers the last sent orders, Meta does not deduplicate a second Purchase
       $trackingCode .= '
-      fbq(\'track\', \'Purchase\', {
-        content: ['.implode(',', $items_array).'], 
-        content_type: "product",
-        currency: "'.$orders['currency'].'", 
-        value: '.$total.'
-      });
+      (function () {
+        var key = '.json_encode('MODfbPurchase'.$fb_storage, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE).', order = "'.(int)$last_order.'", sent = [];
+        try {
+          sent = JSON.parse(localStorage.getItem(key)) || [];
+        } catch (e) {}
+        if (!Array.isArray(sent)) sent = [];
+        if (sent.indexOf(order) != -1) return;
+        sent.push(order);
+        try {
+          localStorage.setItem(key, JSON.stringify(sent.slice(-20)));
+        } catch (e) {}
+        fbq(\'track\', \'Purchase\', {
+          contents: ['.implode(',', $items_array).'],
+          content_type: "product",
+          currency: "'.$orders['currency'].'",
+          value: '.$total.'
+        });
+      })();
     ';
 
-      $endCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=Purchase&amp;cd[value]='.number_format($total, 2, '.', '').'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
+      $noscriptCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=Purchase&amp;cd[value]='.number_format($total, 2, '.', '').'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
     ';
     }
-    
-    $endCode .= '
+
+    // the consent tool only manages the script, not the noscript images
+    if ($fb_consent_given === true) {
+      $endCode .= $noscriptCode.'
   </noscript>
   ';
+    }
     
     $output = $beginCode . $trackingCode . $endCode;  
     

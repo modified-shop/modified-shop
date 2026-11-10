@@ -19,6 +19,9 @@ require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
 defined('PAYPAL_PAYMENT_INDEX_RETRY') or define('PAYPAL_PAYMENT_INDEX_RETRY', 600);
 
+// paypal_update() needs it even while an update has not replaced the payment classes yet
+defined('TABLE_PAYPAL_TRACKING_STATE') OR define('TABLE_PAYPAL_TRACKING_STATE', 'paypal_tracking_state');
+
 
 class PayPalPaymentBase extends PayPalCommon {
 
@@ -63,7 +66,7 @@ class PayPalPaymentBase extends PayPalCommon {
     global $order;
 
     $this->code = $class;
-    $this->paypal_version = '1.116';
+    $this->paypal_version = '1.117';
 
     $this->admin_access_array = array(
       'paypal_info',
@@ -1187,7 +1190,40 @@ class PayPalPaymentBase extends PayPalCommon {
     xtc_db_query("UPDATE ".TABLE_ORDERS."
                      SET orders_status = '".(int)$orders_status."', 
                          last_modified = now() 
-                   WHERE orders_id = '".(int)$orders_id."'");   
+                   WHERE orders_id = '".(int)$orders_id."'");
+  }
+
+
+  // PayPal accepts only its own carrier codes, every other name goes as OTHER
+  function get_tracking_carrier($carrier_name) {
+    // default carriers of the shop whose name is no PayPal code
+    $carrier_aliases = array(
+      'DEUTSCHE POST' => 'DEUTSCHE_DE',
+      'POST' => 'DEUTSCHE_DE',
+      'KUEHNE-NAGEL' => 'KUEHNE',
+    );
+
+    $carrier = strtoupper(trim($carrier_name));
+    if (isset($carrier_aliases[$carrier])) {
+      return array('carrier' => $carrier_aliases[$carrier]);
+    }
+
+    if (in_array($carrier, include(DIR_FS_EXTERNAL.'paypal/functions/PayPalTrackingCarriers.php'), true)) {
+      return array('carrier' => $carrier);
+    }
+
+    return array(
+      'carrier' => 'OTHER',
+      'carrier_name_other' => mb_substr($this->encode_utf8(trim($carrier_name)), 0, 64, 'UTF-8'),
+    );
+  }
+
+
+  // the shop entry stays after a cancellation, the scheduled task must not send it again
+  function set_tracking_cancelled($tracking_id) {
+    xtc_db_query("REPLACE INTO ".TABLE_PAYPAL_TRACKING_STATE."
+                               (tracking_id, state, attempts, next_attempt, last_error, last_modified)
+                        VALUES ('".(int)$tracking_id."', 'cancelled', '0', now(), '', now())");
   }
 
 
@@ -1397,6 +1433,16 @@ class PayPalPaymentBase extends PayPalCommon {
                    date_added datetime NOT NULL,
                    PRIMARY KEY (tracking_id),
                    KEY idx_orders_id (orders_id)
+                 );");
+
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_TRACKING_STATE." (
+                   tracking_id int(11) NOT NULL,
+                   state varchar(16) NOT NULL,
+                   attempts int(11) NOT NULL DEFAULT '0',
+                   next_attempt datetime NOT NULL,
+                   last_error varchar(255) NOT NULL DEFAULT '',
+                   last_modified datetime NOT NULL,
+                   PRIMARY KEY (tracking_id)
                  );");
   
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_VAULT." (
@@ -1849,6 +1895,16 @@ class PayPalPaymentBase extends PayPalCommon {
                    date_added datetime NOT NULL,
                    PRIMARY KEY (tracking_id),
                    KEY idx_orders_id (orders_id)
+                 );");
+
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_TRACKING_STATE." (
+                   tracking_id int(11) NOT NULL,
+                   state varchar(16) NOT NULL,
+                   attempts int(11) NOT NULL DEFAULT '0',
+                   next_attempt datetime NOT NULL,
+                   last_error varchar(255) NOT NULL DEFAULT '',
+                   last_modified datetime NOT NULL,
+                   PRIMARY KEY (tracking_id)
                  );");
 
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_VAULT." (

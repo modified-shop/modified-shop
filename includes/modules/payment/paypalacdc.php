@@ -309,7 +309,8 @@ class paypalacdc extends PayPalPaymentV2 {
     }
 
     $result = $this->FinishOrder($insert_id);
-    if ($result->status == 'COMPLETED' && $result->transaction_status == 'COMPLETED') {
+    // a pending capture or an authorization is money PayPal holds, the webhook reports the outcome
+    if ($result->status == 'COMPLETED' && in_array($result->transaction_status, array('COMPLETED', 'PENDING', 'CREATED'), true)) {
       $tmp = false;
       return;
     }

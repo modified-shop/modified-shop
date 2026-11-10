@@ -125,7 +125,7 @@ class campaign_tracking {
     $config_query = xtc_db_query("SELECT configuration_key,
                                          configuration_value
                                     FROM ".TABLE_CONFIGURATION."
-                                   WHERE configuration_key IN ('MODULE_CAMPAIGN_TRACKING_STATUS', 'MODULE_CAMPAIGN_TRACKING_COOKIE', 'MODULE_CAMPAIGN_TRACKING_CONSENT_ID', 'MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION', 'MODULE_COOKIE_CONSENT_STATUS', 'MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE', 'MODULE_COOKIE_CONSENT_VERSION')");
+                                   WHERE configuration_key IN ('MODULE_CAMPAIGN_TRACKING_STATUS', 'MODULE_CAMPAIGN_TRACKING_COOKIE', 'MODULE_CAMPAIGN_TRACKING_CONSENT_ID', 'MODULE_CAMPAIGN_TRACKING_CONSENT_VERSION', 'MODULE_COOKIE_CONSENT_STATUS', 'MODULE_COOKIE_CONSENT_VERSION')");
     while ($configuration = xtc_db_fetch_array($config_query)) {
       $config[$configuration['configuration_key']] = $configuration['configuration_value'];
     }
@@ -223,26 +223,10 @@ class campaign_tracking {
       $changed = true;
     }
 
-    // the readable cookie MODOilTrack is the only way for the server to see the decision
     if ($wanted === true) {
-      if (isset($config['MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE'])
-          && strtolower($config['MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE']) != 'true'
-          )
-      {
-        xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                         SET configuration_value = 'true',
-                             last_modified = now()
-                       WHERE configuration_key = 'MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE'");
+      require_once(DIR_FS_INC.'cookie_consent_readable_cookie.inc.php');
+      if (cookie_consent_readable_cookie() === true) {
         $messageStack->add_session(MODULE_CAMPAIGN_TRACKING_INFO_READABLE_COOKIE, 'warning');
-      }
-
-      xtc_db_query("UPDATE ".TABLE_COOKIE_CONSENT_COOKIES."
-                       SET status = '1',
-                           last_modified = now()
-                     WHERE cookies_list = 'MODOilTrack'
-                       AND status != '1'");
-      if (xtc_db_affected_rows() > 0) {
-        $changed = true;
       }
     }
 

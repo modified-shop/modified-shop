@@ -23,6 +23,8 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 require_once(DIR_WS_CLASSES.'order.php');
 
+defined('TABLE_PAYPAL_WEBHOOK_EVENT') OR define('TABLE_PAYPAL_WEBHOOK_EVENT', 'paypal_webhook_event');
+
 $request_json = get_external_content('php://input', 3, false);
 
 $webhook_headers = array(
@@ -70,7 +72,8 @@ if (is_array($request)
       $check = xtc_db_fetch_array($check_query);
       
       $notified = 0;
-      
+      $event_id = ((isset($request['id'])) ? (string)$request['id'] : '');
+
       if ($version == 1) {
         $paypal = new PayPalPayment($check['payment_class']);
       } else {
@@ -79,30 +82,108 @@ if (is_array($request)
         
         if ($check['payment_class'] == 'paypalpui') {
           $paypal->FinishOrderPui($check['orders_id'], $PayPalOrder);
+        } elseif ($check['transaction_id'] == '' && isset($PayPalOrder->purchase_units[0]->payments)) {
+          // a payment left unconfirmed during checkout learns its id here
+          foreach (array('captures', 'authorizations') as $payment_type) {
+            if (isset($PayPalOrder->purchase_units[0]->payments->{$payment_type}[0]->id)) {
+              xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
+                               SET transaction_id = '".xtc_db_input($PayPalOrder->purchase_units[0]->payments->{$payment_type}[0]->id)."'
+                             WHERE paypal_id = '".(int)$check['paypal_id']."'");
+              break;
+            }
+          }
         }
 
         if (is_object($PayPalOrder)
             && isset($PayPalOrder->status)
             && $PayPalOrder->status == 'COMPLETED'
-            && $check['send_order'] == 1
+            && $check['send_order'] >= 1
             )
         {
-          if (send_order_mail($check['orders_id']) === true) {
+          // send_order 2: the merchant copy went out already, retry the customer mail only
+          $customer_mail_sent = false;
+          $mail_output_level = ob_get_level();
+          ob_start();
+          try {
+            $mail_processed = send_order_mail($check['orders_id'], false, ($check['send_order'] == 2), $customer_mail_sent);
+          } finally {
+            // buffered so a mail warning cannot send the headers before the 503
+            $mail_output = '';
+            while (ob_get_level() > $mail_output_level) {
+              $mail_output = ob_get_clean().$mail_output;
+            }
+          }
+
+          if ($customer_mail_sent === true) {
             $notified = 1;
           }
-          
-          xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
-                           SET send_order = 0
-                         WHERE paypal_id = '".(int)$check['paypal_id']."'");
+
+          if ($mail_processed === true) {
+            xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
+                             SET send_order = 0
+                           WHERE paypal_id = '".(int)$check['paypal_id']."'");
+          } else {
+            xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
+                             SET send_order = 2
+                           WHERE paypal_id = '".(int)$check['paypal_id']."'");
+
+            header("HTTP/1.0 503 Service Unavailable");
+            header("Status: 503 Service Unavailable");
+          }
+          echo $mail_output;
+        } elseif ($check['send_order'] >= 1 && !isset($PayPalOrder->status)) {
+          // without the order the pending mail stays undecided, PayPal has to deliver the event again
+          header("HTTP/1.0 503 Service Unavailable");
+          header("Status: 503 Service Unavailable");
         }
       }
-      
+
       $orders_status_id = $paypal->get_config($request['event_type']);
       if ($orders_status_id < 0) {
         $orders_status_id = $check['orders_status'];
       }
-      
-      $paypal->update_order($request['summary'], $orders_status_id, $check['orders_id'], $notified);
+
+      // PayPal repeats an event for up to three days, its status is written only once
+      $recorded_event = 0;
+      if ($event_id != '') {
+        // created here so the check does not wait for a module update
+        xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_WEBHOOK_EVENT." (
+                        event_id varchar(128) NOT NULL,
+                        orders_id int(11) NOT NULL,
+                        orders_status_history_id int(11) NOT NULL,
+                        date_added datetime NOT NULL,
+                        PRIMARY KEY (event_id),
+                        KEY idx_date_added (date_added)
+                      );");
+
+        $event_query = xtc_db_query("SELECT orders_status_history_id
+                                       FROM ".TABLE_PAYPAL_WEBHOOK_EVENT."
+                                      WHERE event_id = '".xtc_db_input($event_id)."'");
+        if (xtc_db_num_rows($event_query) > 0) {
+          $event = xtc_db_fetch_array($event_query);
+          $recorded_event = (int)$event['orders_status_history_id'];
+        }
+      }
+
+      if ($recorded_event == 0) {
+        $paypal->update_order($request['summary'], $orders_status_id, $check['orders_id'], $notified);
+
+        if ($event_id != '') {
+          xtc_db_query("INSERT IGNORE INTO ".TABLE_PAYPAL_WEBHOOK_EVENT."
+                                    (event_id, orders_id, orders_status_history_id, date_added)
+                             SELECT '".xtc_db_input($event_id)."', '".(int)$check['orders_id']."', MAX(orders_status_history_id), now()
+                               FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                              WHERE orders_id = '".(int)$check['orders_id']."'");
+
+          xtc_db_query("DELETE FROM ".TABLE_PAYPAL_WEBHOOK_EVENT."
+                              WHERE date_added < DATE_SUB(now(), INTERVAL 30 DAY)");
+        }
+      } elseif ($notified == 1) {
+        // the order may have moved on since the event, only the notification is new
+        xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY."
+                         SET customer_notified = 1
+                       WHERE orders_status_history_id = '".$recorded_event."'");
+      }
     } else {
       // order is missing
       header("HTTP/1.0 404 Not Found");

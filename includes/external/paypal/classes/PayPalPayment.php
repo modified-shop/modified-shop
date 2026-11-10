@@ -20,6 +20,7 @@ defined('TABLE_PAYPAL_PAYMENT') OR define('TABLE_PAYPAL_PAYMENT', 'paypal_paymen
 defined('TABLE_PAYPAL_CONFIG') OR define('TABLE_PAYPAL_CONFIG', 'paypal_config');
 defined('TABLE_PAYPAL_INSTRUCTIONS') OR define('TABLE_PAYPAL_INSTRUCTIONS', 'paypal_instructions');
 defined('TABLE_PAYPAL_TRACKING') OR define('TABLE_PAYPAL_TRACKING', 'paypal_tracking');
+defined('TABLE_PAYPAL_TRACKING_STATE') OR define('TABLE_PAYPAL_TRACKING_STATE', 'paypal_tracking_state');
 defined('TABLE_PAYPAL_VAULT') OR define('TABLE_PAYPAL_VAULT', 'paypal_vault');
 
 

@@ -126,12 +126,15 @@ class paypal_plan_price {
     
     
     //--- BEGIN CUSTOM  CLASS METHODS ---//
-    function CheckExtension($price, $pID) {
+    function CheckExtension($price, $pID, $uprid = '', $cart_type = 'cart') {
       global $xtPrice;
-      
+
+      // plans are stored per list and position, a position id replaces the product id
+      $plan_key = ($uprid !== '') ? $uprid : $pID;
+
       $where = '';
-      if (isset($_SESSION['cart']->plans[$pID])) {
-        $where = "AND plan_id = '".xtc_db_input($_SESSION['cart']->plans[$pID])."'";
+      if (isset($_SESSION[$cart_type]->plans[$plan_key])) {
+        $where = "AND plan_id = '".xtc_db_input($_SESSION[$cart_type]->plans[$plan_key])."'";
       }
       $check_query = xtDBquery("SELECT *
                                   FROM `paypal_plan`

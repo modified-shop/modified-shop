@@ -315,6 +315,10 @@ class PayPalInfo extends PayPalPayment {
     if (xtc_db_num_rows($tracking_query) > 0) {
       $tracking = xtc_db_fetch_array($tracking_query);
 
+      if (trim($tracking['parcel_id']) == '') {
+        return array(TEXT_PAYPAL_TRACKING_NOT_SENT);
+      }
+
       // auth
       $apiContext = $this->apiContext();
 
@@ -325,19 +329,24 @@ class PayPalInfo extends PayPalPayment {
       $tracker = new Tracker();
       $tracker->setTransactionId($tracking['transaction_id'])
               ->setTrackingNumber($tracking['parcel_id'])
-              ->setStatus('SHIPPED')
-              ->setCarrier(strtoupper($tracking['carrier_name']));
+              ->setStatus('SHIPPED');
+
+      $carrier = $this->get_tracking_carrier($tracking['carrier_name']);
+      $tracker->setCarrier($carrier['carrier']);
+      if (isset($carrier['carrier_name_other'])) {
+        $tracker->setCarrierNameOther($carrier['carrier_name_other']);
+      }
 
       $shipping->addTracker($tracker);
 
       try {
         $shipping->create($apiContext);
         
-        if (count($shipping->getErrors()) > 0) {
+        if (is_array($shipping->getErrors()) && count($shipping->getErrors()) > 0) {
           $message = array();
           foreach ($shipping->getErrors() as $error) {
             $message[] = $error->getMessage();
-            if (count($error->getDetails()) > 0) {
+            if (is_array($error->getDetails()) && count($error->getDetails()) > 0) {
               foreach ($error->getDetails() as $detail) {
                 $message[] = $detail->getDescription();
               }
@@ -351,11 +360,18 @@ class PayPalInfo extends PayPalPayment {
           'orders_id' => $tracking['orders_id'],
           'transaction_id' => $tracking['transaction_id'],
           'tracking_number' => $tracking['parcel_id'],
-          'carrier' => strtoupper($tracking['carrier_name']),
+          'carrier' => $carrier['carrier'],
           'date_added' => 'now()',
         );
         xtc_db_perform(TABLE_PAYPAL_TRACKING, $sql_data_array);
 
+      } catch (PayPal\Exception\PayPalConnectionException $ex) {
+        $this->LoggingManager->log('DEBUG', 'addTracking', array('exception' => $ex));
+
+        // these answers do not change when the same request is sent again
+        if (in_array((int)$ex->getCode(), array(400, 404, 409, 422), true)) {
+          return array($ex->getMessage());
+        }
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'addTracking', array('exception' => $ex));
       }
@@ -385,6 +401,7 @@ class PayPalInfo extends PayPalPayment {
 
         xtc_db_query("DELETE FROM ".TABLE_PAYPAL_TRACKING."
                             WHERE tracking_id = '".(int)$tracking_id."'");
+        $this->set_tracking_cancelled($tracking_id);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'cancelTracking', array('exception' => $ex));
       }

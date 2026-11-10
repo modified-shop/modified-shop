@@ -82,6 +82,8 @@ $lang_array = array(
   'TEXT_PAYPAL_TRACKING_TRACE' => 'Track &amp; Trace',
   'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Sendungsnummer &uuml;bertragen',
   'TEXT_PAYPAL_TRACKING_CANCEL' => 'l&ouml;schen',
+  'TEXT_PAYPAL_TRACKING_NOT_SENT' => 'Die Sendungsnummer konnte nicht an PayPal &uuml;bertragen werden.',
+  'TEXT_PAYPAL_TRACKING_NO_CAPTURE' => 'F&uuml;r diese Zahlung gibt es noch keinen abgeschlossenen Einzug. Die Sendungsnummer kann erst danach an PayPal &uuml;bertragen werden.',
   
 
   // products
@@ -170,6 +172,7 @@ $lang_array = array(
   'TEXT_PAYPALINSTALLMENT_INFO_LINK' => 'Informationen zu m&ouml;glichen Raten',
 
   'TEXT_PAYPAL_INSTRUMENT_DECLINED_ERROR' => 'Das gew&auml;hlte Zahlungsmittel wurde entweder von PayPal oder von der Bank abgelehnt, oder es kann f&uuml;r diese Zahlung nicht verwendet werden.',
+  'TEXT_PAYPAL_PAYMENT_UNCONFIRMED_ERROR' => 'Wir konnten Ihre PayPal-Zahlung nicht best&auml;tigen. Ihre Bestellung bleibt vorgemerkt. Bitte pr&uuml;fen Sie in Ihrem PayPal-Konto, ob der Betrag abgebucht wurde, bevor Sie erneut bezahlen.',
   'IMAGE_ICON_STATUS_YELLOW' => 'vor&uuml;bergehend nicht verf&uuml;gbar',
 );
 

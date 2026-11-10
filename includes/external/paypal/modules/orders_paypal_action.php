@@ -78,6 +78,7 @@ if (isset($oID) && $oID != '') {
             $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_CANCEL;
           }
           break;
+        case 'addtrack':
         case 'addtracking':
           $response = $paypal->addTracking($order->info['order_id'], $_POST['tracking']);
           if (is_array($response) && count($response) > 0) {

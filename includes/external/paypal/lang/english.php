@@ -82,6 +82,8 @@ $lang_array = array(
   'TEXT_PAYPAL_TRACKING_TRACE' => 'Track &amp; Trace',
   'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Transfer Tracking number',
   'TEXT_PAYPAL_TRACKING_CANCEL' => 'delete',
+  'TEXT_PAYPAL_TRACKING_NOT_SENT' => 'The tracking number could not be sent to PayPal.',
+  'TEXT_PAYPAL_TRACKING_NO_CAPTURE' => 'This payment has no completed capture yet. The tracking number can only be sent to PayPal afterwards.',
 
 
   // products
@@ -170,6 +172,7 @@ $lang_array = array(
   'TEXT_PAYPALINSTALLMENT_INFO_LINK' => 'Information on possible rates',
 
   'TEXT_PAYPAL_INSTRUMENT_DECLINED_ERROR' => 'The instrument presented  was either declined by the processor or bank, or it can\'t be used for this payment.',
+  'TEXT_PAYPAL_PAYMENT_UNCONFIRMED_ERROR' => 'We could not confirm your PayPal payment. Your order has been kept. Please check your PayPal account to see whether the amount was charged before you pay again.',
   'IMAGE_ICON_STATUS_YELLOW' => 'temporarily not available',
 );
 
