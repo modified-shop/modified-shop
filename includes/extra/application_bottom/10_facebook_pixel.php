@@ -102,7 +102,10 @@
       // include needed functions
       require_once (DIR_FS_INC.'get_order_total.inc.php');
 
-      $_SESSION['tracking']['order'][] = 'FB-'.$last_order;
+      // OIL may still run a blocked script on this page, so only a known consent marks the order as sent
+      if ($fb_consent_given === true) {
+        $_SESSION['tracking']['order'][] = 'FB-'.$last_order;
+      }
 
       $orders_query = xtc_db_query("SELECT currency
                                FROM " . TABLE_ORDERS . "
@@ -121,13 +124,20 @@
         $items_array[] = '{id: "'.$item['products_model'].'", quantity: '.$item['products_quantity'].'}';
       }
 
+      // the browser remembers the sent order, Meta does not deduplicate a second Purchase
       $trackingCode .= '
-      fbq(\'track\', \'Purchase\', {
-        contents: ['.implode(',', $items_array).'],
-        content_type: "product",
-        currency: "'.$orders['currency'].'", 
-        value: '.$total.'
-      });
+      (function () {
+        try {
+          if (localStorage.getItem("MODfbPurchase") == "'.(int)$last_order.'") return;
+          localStorage.setItem("MODfbPurchase", "'.(int)$last_order.'");
+        } catch (e) {}
+        fbq(\'track\', \'Purchase\', {
+          contents: ['.implode(',', $items_array).'],
+          content_type: "product",
+          currency: "'.$orders['currency'].'",
+          value: '.$total.'
+        });
+      })();
     ';
 
       $noscriptCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=Purchase&amp;cd[value]='.number_format($total, 2, '.', '').'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
