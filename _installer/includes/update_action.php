@@ -121,9 +121,11 @@
                     {
                       $cnt_error ++;
                       installer_log('Table '.$table.' Column '.$key.' NOT NULL NOT POSSIBLE', E_USER_WARNING);
+                    } elseif (xtc_db_query("ALTER TABLE `".$table."` MODIFY `".$key."` ".$table_definition[$key]) === false) {
+                      $cnt_error ++;
+                      installer_log('Table '.$table.' Column '.$key.' NOT POSSIBLE', E_USER_WARNING);
                     } else {
                       $cnt ++;
-                      xtc_db_query("ALTER TABLE `".$table."` MODIFY `".$key."` ".$table_definition[$key]);
                     }
                   }
                 } else {

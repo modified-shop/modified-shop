@@ -393,6 +393,14 @@
       return true;
     }
 
+    // one fill value for all NULL rows would break a unique index, MyISAM keeps a failed UPDATE half done
+    foreach (array($table, '_mod_'.$table) as $index_table) {
+      $index_query = xtc_db_query("SHOW INDEX FROM `".$index_table."` WHERE Non_unique = 0 AND Column_name = '".xtc_db_input($column)."'");
+      if (xtc_db_num_rows($index_query) > 0) {
+        return false;
+      }
+    }
+
     if (preg_match("/^[^']*\sDEFAULT\s+('(?:[^']|'')*'|[^\s']+)/i", $definition, $match)) {
       $value = $match[1];
     } elseif (preg_match('/^(char|varchar|tinytext|text|mediumtext|longtext)\b/i', $type)) {
@@ -403,7 +411,9 @@
       return false;
     }
 
-    xtc_db_query("UPDATE `".$table."` SET `".$column."` = ".$value." WHERE `".$column."` IS NULL");
+    if (xtc_db_query("UPDATE `".$table."` SET `".$column."` = ".$value." WHERE `".$column."` IS NULL") === false) {
+      return false;
+    }
     installer_log('Table '.$table.' Column '.$column.' '.$check['total'].' NULL values SET TO '.$value);
 
     return true;
