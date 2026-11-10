@@ -451,7 +451,7 @@
             'sku' => $products['products_model'],
             'barcode' => $products['products_ean'],
             'price' => array(
-              'amount' => $products['products_price'],
+              'amount' => (int)round($products['products_price']),
               'currencyId' => $products['products_currency'],
             ),
           ),
