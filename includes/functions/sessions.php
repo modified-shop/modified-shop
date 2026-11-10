@@ -175,6 +175,21 @@
     if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '') {
       xtc_session_id(xtc_generate_session_id());
     }
+    if (ini_get('session.save_handler') == 'files') {
+      $save_path = session_save_path();
+      if ($save_path == '') {
+        // PHP falls back to its temporary directory
+        $save_path = sys_get_temp_dir();
+      } else {
+        // PHP splits off at most "N;" and "MODE;", the rest is the directory
+        $save_path_parts = explode(';', $save_path, 3);
+        $save_path = end($save_path_parts);
+      }
+      // the files handler cannot clean up a directory it may not list (Debian: 1733)
+      if ($save_path != '' && !is_readable($save_path)) {
+        @ini_set('session.gc_probability', 0);
+      }
+    }
     $temp = session_start();
 
     return $temp;
