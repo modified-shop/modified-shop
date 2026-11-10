@@ -106,11 +106,25 @@
               $table_definition = get_sql_column_definitions('_mod_'.$table, $table_check);
 
               $cnt = 0;
+              $cnt_error = 0;
               foreach ($result_table as $key => $value) {
                 if (isset($table_exists[$key])) {
-                  if (isset($result_table[$key]['Type'])) {
-                    $cnt ++;
-                    xtc_db_query("ALTER TABLE `".$table."` MODIFY `".$key."` ".$table_definition[$key]);
+                  if (isset($result_table[$key]['Type'])
+                      || isset($result_table[$key]['Null'])
+                      || array_key_exists('Default', $result_table[$key])
+                      )
+                  {
+                    if ($table_check[$key]['Null'] == 'NO'
+                        && $table_exists[$key]['Null'] == 'YES'
+                        && set_sql_column_null_values($table, $key, $table_check[$key]['Type'], $table_definition[$key]) === false
+                        )
+                    {
+                      $cnt_error ++;
+                      installer_log('Table '.$table.' Column '.$key.' NOT NULL NOT POSSIBLE', E_USER_WARNING);
+                    } else {
+                      $cnt ++;
+                      xtc_db_query("ALTER TABLE `".$table."` MODIFY `".$key."` ".$table_definition[$key]);
+                    }
                   }
                 } else {
                   if (isset($data['rename']) && isset($data['rename'][$key])) {
@@ -124,7 +138,7 @@
               }
               if ($cnt > 0) {
                 installer_log('Table '.$table.' UPDATED');
-              } else {
+              } elseif ($cnt_error < 1) {
                 installer_log('Table '.$table.' OK');
               }
             }
