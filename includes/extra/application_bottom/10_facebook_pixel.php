@@ -32,6 +32,12 @@
 
     // localStorage is shared by all shops on the origin, so the keys carry the shop path and the Pixel ID
     $fb_storage = '|'.DIR_WS_CATALOG.'|'.MODULE_FACEBOOK_PIXEL_ID;
+
+    // shop data goes through json_encode, which needs UTF-8 also in ISO-8859-15 shops
+    $fb_json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE;
+    $fb_utf8 = function ($value) {
+      return encode_utf8((string)$value, get_language_charset(), true);
+    };
         
     $beginCode .= "
     !function (f, b, e, v, n, t, s) {
@@ -71,8 +77,8 @@
       $products = xtc_db_fetch_array($products_query);
       $trackingCode .= '
       fbq(\'track\', \'AddToCart\', {
-        content_name: "'.$products['products_name'].'", 
-        content_ids: ["'.$products['products_model'].'"], 
+        content_name: '.json_encode($fb_utf8($products['products_name']), $fb_json_flags).',
+        content_ids: '.json_encode(array($fb_utf8($products['products_model'])), $fb_json_flags).',
         content_type: "product",
         currency: "'.$_SESSION['currency'].'", 
         value: '.$xtPrice->xtcGetPrice($products['products_id'], false, 1, $products['products_tax_class_id']).'
@@ -88,8 +94,8 @@
     {
       $trackingCode .= '
       fbq(\'track\', \'ViewContent\', {
-        content_name: "'.$product->data['products_name'].'", 
-        content_ids: ["'.$product->data['products_model'].'"], 
+        content_name: '.json_encode($fb_utf8($product->data['products_name']), $fb_json_flags).',
+        content_ids: '.json_encode(array($fb_utf8($product->data['products_model'])), $fb_json_flags).',
         content_type: "product",
         currency: "'.$_SESSION['currency'].'", 
         value: '.$xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id']).'
@@ -107,7 +113,7 @@
     {
       $fb_contents = $fb_cart = array();
       foreach ($_SESSION['cart']->get_products() as $fb_product) {
-        $fb_contents[] = array('id' => (string)$fb_product['model'], 'quantity' => (int)$fb_product['quantity']);
+        $fb_contents[] = array('id' => $fb_utf8($fb_product['model']), 'quantity' => (int)$fb_product['quantity']);
         $fb_cart[$fb_product['id']] = (int)$fb_product['quantity'];
       }
       ksort($fb_cart, SORT_STRING);
@@ -138,7 +144,7 @@
           localStorage.setItem(key, "'.$_SESSION['tracking']['fb_checkout']['token'].'");
         } catch (e) {}
         fbq(\'track\', \'InitiateCheckout\', {
-          contents: '.json_encode($fb_contents, JSON_HEX_TAG | JSON_HEX_AMP | JSON_INVALID_UTF8_SUBSTITUTE).',
+          contents: '.json_encode($fb_contents, $fb_json_flags).',
           content_type: "product",
           currency: "'.$_SESSION['currency'].'",
           num_items: '.(int)$_SESSION['cart']->count_contents().',
@@ -182,7 +188,7 @@
                                    WHERE orders_id = '" . (int)$last_order . "'
                                 GROUP BY products_id");
       while ($item = xtc_db_fetch_array($item_query)) {
-        $items_array[] = '{id: "'.$item['products_model'].'", quantity: '.$item['products_quantity'].'}';
+        $items_array[] = array('id' => $fb_utf8($item['products_model']), 'quantity' => (int)$item['products_quantity']);
       }
 
       // the browser remembers the last sent orders, Meta does not deduplicate a second Purchase
@@ -199,7 +205,7 @@
           localStorage.setItem(key, JSON.stringify(sent.slice(-20)));
         } catch (e) {}
         fbq(\'track\', \'Purchase\', {
-          contents: ['.implode(',', $items_array).'],
+          contents: '.json_encode($items_array, $fb_json_flags).',
           content_type: "product",
           currency: "'.$orders['currency'].'",
           value: '.$total.'
