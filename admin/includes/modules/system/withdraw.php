@@ -37,6 +37,15 @@
     }
     
     function process($file) {
+      $this->update_content_status();
+    }
+
+    // called by admin/module_export.php after the backup values are restored
+    function restore() {
+      $this->update_content_status();
+    }
+
+    function update_content_status() {
       // the status is already saved when this runs, so read it from the database instead of the stale constant
       $status_query = xtc_db_query("SELECT configuration_value
                                       FROM ".TABLE_CONFIGURATION."
