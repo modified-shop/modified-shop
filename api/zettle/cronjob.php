@@ -90,10 +90,10 @@
         $products['products_price'] *= 100;
         
         $data = $PayPalZettle->get_product_scheme($products, true);
+        
         if ($products['products_uuid'] != '') {
           $data['uuid'] = $products['products_uuid'];
         }
-        
         $import_products[$products['zettle_id']] = $data['uuid'];
   
         $products_array['products'][] = $data;
