@@ -41,13 +41,17 @@
       modified_api::reset();
       $response = modified_api::request('modified/version');
       
-      $contents['version'] = $response['stable'];
+      $contents['version'] = isset($response['stable']) ? $response['stable'] : '';
       $contents['update'] = version_compare($contents['version'], $contents['version_installed'], '>');
 
       $installer = modified_api::request('modified/version/install/installer');
 
       $dbversion = get_database_version();
       $response = modified_api::request('modified/version/install/');
+      if (!isset($response['version'])) {
+        // api not reachable, request() returns an empty array
+        $response = array('version' => '');
+      }
 
       $details = array(
         'Shop' => array(
