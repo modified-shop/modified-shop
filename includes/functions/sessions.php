@@ -175,6 +175,13 @@
     if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '') {
       xtc_session_id(xtc_generate_session_id());
     }
+    if (ini_get('session.save_handler') == 'files') {
+      $save_path = session_save_path();
+      // the files handler cannot clean up a directory it may not list (Debian: 1733)
+      if ($save_path != '' && !is_readable($save_path)) {
+        @ini_set('session.gc_probability', 0);
+      }
+    }
     $temp = session_start();
 
     return $temp;
