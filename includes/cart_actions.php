@@ -197,7 +197,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
 
     case 'add_a_quickie' :
         foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/add_a_quickie_prepare_post/','php') as $file) require ($file);
-       if (isset($_POST['quickie']) && $_POST['quickie'] != '') {
+       if (isset($_POST['quickie']) && is_string($_POST['quickie']) && $_POST['quickie'] != '') {
         $quicky = addslashes($_POST['quickie']);
         $quickie_query = xtc_db_query("SELECT products_fsk18,
                                               products_id

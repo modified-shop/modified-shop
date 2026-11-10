@@ -65,7 +65,7 @@
     // prepare variables
     foreach ($_POST as $key => $value) {
       if ((!isset(${$key}) || !is_object(${$key})) && in_array($key , $valid_params)) {
-        ${$key} = xtc_db_prepare_input($value);
+        ${$key} = (is_array($value) ? '' : xtc_db_prepare_input($value));
       }
     }
 

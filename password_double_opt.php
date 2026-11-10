@@ -49,6 +49,11 @@ $mod_captcha = $_mod_captcha_class::getInstance();
 // default case
 $case = 'double_opt';
 
+// manipulated requests send the field as array
+if (isset($_POST['email']) && !is_string($_POST['email'])) {
+  $_POST['email'] = '';
+}
+
 if (isset($_GET['action']) 
     && $_GET['action'] == 'first_opt_in'
     && $_SERVER['REQUEST_METHOD'] == 'POST'
@@ -190,7 +195,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
       // prepare variables
       foreach ($_POST as $key => $value) {
         if ((!isset(${$key}) || !is_object(${$key})) && in_array($key , $valid_params)) {
-          ${$key} = xtc_db_prepare_input($value);
+          ${$key} = (is_array($value) ? '' : xtc_db_prepare_input($value));
         }
       }
 
