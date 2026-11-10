@@ -21,8 +21,13 @@
       )
   {  
     $beginCode = '<script>';
+    $fb_consent_given = true;
     if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true' && (in_array(6, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))) {
       $beginCode = '<script async data-type="text/javascript" type="as-oil" data-purposes="6" data-managed="as-oil">';
+      $fb_consent_given = (!defined('COOKIE_CONSENT_NO_TRACKING')
+                           && isset($_SESSION['tracking']['allow'][6])
+                           && $_SESSION['tracking']['allow'][6] === true
+                           );
     }
         
     $beginCode .= "
@@ -43,6 +48,9 @@
 
     $endCode = '
   </script>
+  ';
+
+    $noscriptCode = '
   <noscript>
     <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=PageView&amp;noscript=1"/>
     ';
@@ -122,13 +130,16 @@
       });
     ';
 
-      $endCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=Purchase&amp;cd[value]='.number_format($total, 2, '.', '').'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
+      $noscriptCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=Purchase&amp;cd[value]='.number_format($total, 2, '.', '').'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
     ';
     }
-    
-    $endCode .= '
+
+    // the consent tool only manages the script, not the noscript images
+    if ($fb_consent_given === true) {
+      $endCode .= $noscriptCode.'
   </noscript>
   ';
+    }
     
     $output = $beginCode . $trackingCode . $endCode;  
     
