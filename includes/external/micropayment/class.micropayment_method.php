@@ -97,7 +97,7 @@ class micropayment_method extends micropayment_helper
             $check_query = xtc_db_query("SELECT orders_status FROM " . TABLE_ORDERS . " WHERE orders_id = '" . (int)$_GET['orderid'] . "' LIMIT 1");
             if ($result = xtc_db_fetch_array($check_query)) {
                 if ($result['orders_status'] == MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID) {
-                    // a running notification logs its event only once handled
+                    // a running notification holds the order, its event is read under the lock
                     if (self::lockOrder((int) $_GET['orderid'], 0)) {
                         if(isset($_GET['orderid']) && in_array($this->getLastEventFromMicropaymentLog((int) $_GET['orderid']),array('new','error'))) {
                             require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
@@ -296,6 +296,7 @@ class micropayment_method extends micropayment_helper
                   `amount`   INT(11)     NOT NULL ,
                   `function` VARCHAR(10) NOT NULL ,
                   `created`  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+                  `processed` TINYINT(1) NOT NULL DEFAULT 0 ,
                   INDEX (`order_id`)
               )"
         );

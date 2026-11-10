@@ -237,7 +237,7 @@ class micropayment_helper
         xtc_db_query($query);
     }
 
-    // one holder per order, for notifications and the removal of an aborted payment; own connection:
+    // one holder per order, for notifications and the removal of unpaid orders; own connection:
     // a second lock frees the session lock before MySQL 5.7.5, and the lock ends with the request
     static function lockOrder($orderId, $timeout)
     {

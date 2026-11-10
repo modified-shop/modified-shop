@@ -13,6 +13,7 @@ require_once($method_class_file);
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST','INVALID_REQUEST');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_PARAMETER','INVALID_REQUEST %s');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_LOCKED','ORDER_LOCKED');
+define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_DATABASE_ERROR','DATABASE_ERROR');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_STATUS_OK_URL','STATUS=%s' . PHP_EOL . 'FORWARD=%s' . PHP_EOL .' URL=%s' . PHP_EOL . 'TARGET=_top');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_STATUS_OK','STATUS=%s');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_STATUS_ERROR','STATUS=%s' . PHP_EOL . 'MESSAGE=%s');
@@ -101,6 +102,7 @@ class micropayment_callback
     var $returnUrl     = null;
     var $returnMessage = null;
     var $returnStatus  = null;
+    var $writeFailed   = false;
 
     static function processRequest()
     {
@@ -317,12 +319,19 @@ class micropayment_callback
         }
 
         // a redelivery gets the same answer, its effects are not repeated
-        if ($this->isProcessedEvent($function)) {
+        $processed_column = $this->checkProcessedColumn();
+        if ($processed_column && $this->isProcessedEvent($function)) {
             $this->returnStatus = self::STATUS_OK;
             if (in_array($function, array(self::FUNCTION_BILLING, self::FUNCTION_INIT), true)) {
                 $this->returnUrl = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL',true);
             }
             return true;
+        }
+
+        // logged before it is handled, cleanup and payment selection keep an order with a running event
+        $log_id = $this->addToMicropaymentLog();
+        if ($log_id === false) {
+            $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_DATABASE_ERROR);
         }
 
         if(!$this->checkEventState($lastEvent,$function)) {
@@ -331,11 +340,6 @@ class micropayment_callback
 
         switch($function) {
             case self::FUNCTION_BILLING:
-                try {
-                    $this->sendNewOrderEmail();
-                } catch(Exception $e) {
-                    
-                }
                 $customer_notification = 0;
                 $order_status          = MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID;
                 $comment = sprintf(
@@ -351,8 +355,17 @@ class micropayment_callback
                     'customer_notified' => $customer_notification ,
                     'comments'          => $comment
                 );
-                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-                $this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status);
+                $this->checkWrite(xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array));
+                $this->checkWrite($this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status));
+
+                // sent once the payment is recorded, a failed write is answered before the mail went out
+                if (!$this->writeFailed) {
+                    try {
+                        $this->sendNewOrderEmail();
+                    } catch(Exception $e) {
+                        
+                    }
+                }
 
                 $this->returnStatus = self::STATUS_OK;
                 $this->returnUrl    = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL',true);
@@ -371,8 +384,8 @@ class micropayment_callback
                     'customer_notified' => 0,
                     'comments'          => $comment
                 );
-                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-                $this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status);
+                $this->checkWrite(xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array));
+                $this->checkWrite($this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status));
 
                 $this->returnStatus = self::STATUS_OK;
                 $this->returnUrl    = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL',true);
@@ -390,8 +403,8 @@ class micropayment_callback
                     'customer_notified' => 0,
                     'comments'          => $comment
                 );
-                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-                $this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status);
+                $this->checkWrite(xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array));
+                $this->checkWrite($this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status));
                 $this->returnStatus = self::STATUS_OK;
             break;
             case self::FUNCTION_REFUND:
@@ -409,8 +422,8 @@ class micropayment_callback
                     'customer_notified' => 0,
                     'comments'          => $comment
                 );
-                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-                $this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status);
+                $this->checkWrite(xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array));
+                $this->checkWrite($this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status));
                 $this->returnStatus = self::STATUS_OK;
             break;
             case self::FUNCTION_EXPIRE:
@@ -451,8 +464,8 @@ class micropayment_callback
                     'customer_notified' => 0,
                     'comments'          => $comment
                 );
-                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-                $this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status);
+                $this->checkWrite(xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array));
+                $this->checkWrite($this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status));
                 $this->returnStatus = self::STATUS_OK;
             break;
             case self::FUNCTION_PAYIN:
@@ -471,8 +484,8 @@ class micropayment_callback
                     'customer_notified' => 0,
                     'comments'          => $comment
                 );
-                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-                $this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status);
+                $this->checkWrite(xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array));
+                $this->checkWrite($this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status));
                 $this->returnStatus = self::STATUS_OK;
             break;
             case self::FUNCTION_CHANGE:
@@ -492,8 +505,8 @@ class micropayment_callback
                     'customer_notified' => 0,
                     'comments'          => $comment
                 );
-                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-                $this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status);
+                $this->checkWrite(xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array));
+                $this->checkWrite($this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status));
                 $this->returnStatus = self::STATUS_OK;
             break;
             case self::FUNCTION_ERROR:
@@ -511,8 +524,8 @@ class micropayment_callback
                     'customer_notified' => 0,
                     'comments'          => $comment
                 );
-                xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-                $this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status);
+                $this->checkWrite(xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array));
+                $this->checkWrite($this->setOrderStatus($this->getParam('orderid',self::REGEX_INTEGER),$order_status));
                 $this->returnStatus = self::STATUS_OK;
                 break;
             default:
@@ -520,16 +533,20 @@ class micropayment_callback
             break;
         }
 
-        // logged once handled, so the retry of a failed attempt runs again; expire removed the log
-        if ($this->returnStatus == self::STATUS_OK && $function != self::FUNCTION_EXPIRE) {
-            $this->addToMicropaymentLog();
+        // a failed write leaves the event unmarked, the next delivery applies it again
+        if ($this->writeFailed) {
+            $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_DATABASE_ERROR);
+        }
+        // expire removed the log
+        if ($processed_column && $this->returnStatus == self::STATUS_OK && $function != self::FUNCTION_EXPIRE) {
+            xtc_db_query(sprintf('UPDATE `micropayment_log` SET `processed` = 1 WHERE `id` = "%s"', (int)$log_id));
         }
         return true;
     }
 
     function addToMicropaymentLog()
     {
-        xtc_db_query(
+        $log_query = xtc_db_query(
             sprintf(
                 'INSERT INTO micropayment_log (`order_id`,`auth`,`amount`,`function`) VALUES ("%s","%s","%s","%s")',
                 xtc_db_prepare_input($this->getParam('orderid',self::REGEX_INTEGER)),
@@ -538,6 +555,7 @@ class micropayment_callback
                 xtc_db_prepare_input($this->getParam('function',$this->allowedFunctions))
             )
         );
+        return ($log_query !== false) ? xtc_db_insert_id() : false;
     }
 
     function getLastEventFromMicropaymentLog()
@@ -553,6 +571,17 @@ class micropayment_callback
         return null;
     }
 
+    // older rows record attempts, the column marks the handled events
+    function checkProcessedColumn()
+    {
+        $check_query = xtc_db_query("SHOW COLUMNS FROM `micropayment_log` LIKE 'processed'");
+        if (xtc_db_num_rows($check_query) < 1) {
+            xtc_db_query("ALTER TABLE `micropayment_log` ADD `processed` TINYINT(1) NOT NULL DEFAULT 0");
+            $check_query = xtc_db_query("SHOW COLUMNS FROM `micropayment_log` LIKE 'processed'");
+        }
+        return (xtc_db_num_rows($check_query) > 0);
+    }
+
     // the event workflow allows these once per transaction, an identical one is a redelivery
     function isProcessedEvent($function)
     {
@@ -565,7 +594,7 @@ class micropayment_callback
 
         $event_query = xtc_db_query(
             sprintf(
-                'SELECT `auth`, `amount` FROM `micropayment_log` WHERE `order_id` = "%s" AND `function` = "%s"',
+                'SELECT `auth`, `amount` FROM `micropayment_log` WHERE `order_id` = "%s" AND `function` = "%s" AND `processed` = 1',
                 (int)$this->getParam('orderid',self::REGEX_INTEGER),
                 xtc_db_input($function)
             )
@@ -666,9 +695,17 @@ class micropayment_callback
         exit();
     }
 
+    // xtc_db_query() reports a failed statement only by its result
+    function checkWrite($result)
+    {
+        if ($result === false) {
+            $this->writeFailed = true;
+        }
+    }
+
     function setOrderStatus($orderId,$status)
     {
-        xtc_db_query(
+        return xtc_db_query(
             sprintf(
                 'UPDATE ' . TABLE_ORDERS . '
                 SET `orders_status` = "%s",
