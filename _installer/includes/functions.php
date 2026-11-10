@@ -385,6 +385,41 @@
   }
   
   
+  // MODIFY to NOT NULL would turn NULL into the implicit default of the type, not the column default
+  function set_sql_column_null_values($table, $column, $type, $definition) {
+    $check_query = xtc_db_query("SELECT COUNT(*) AS total FROM `".$table."` WHERE `".$column."` IS NULL");
+    $check = xtc_db_fetch_array($check_query);
+    if ($check['total'] < 1) {
+      return true;
+    }
+
+    // one fill value for all NULL rows would break a unique index, MyISAM keeps a failed UPDATE half done
+    foreach (array($table, '_mod_'.$table) as $index_table) {
+      $index_query = xtc_db_query("SHOW INDEX FROM `".$index_table."` WHERE Non_unique = 0 AND Column_name = '".xtc_db_input($column)."'");
+      if (xtc_db_num_rows($index_query) > 0) {
+        return false;
+      }
+    }
+
+    if (preg_match("/^[^']*\sDEFAULT\s+('(?:[^']|'')*'|[^\s']+)/i", $definition, $match)) {
+      $value = $match[1];
+    } elseif (preg_match('/^(char|varchar|tinytext|text|mediumtext|longtext)\b/i', $type)) {
+      $value = "''";
+    } elseif (preg_match('/^(tinyint|smallint|mediumint|int|bigint|decimal|float|double)\b/i', $type)) {
+      $value = '0';
+    } else {
+      return false;
+    }
+
+    if (xtc_db_query("UPDATE `".$table."` SET `".$column."` = ".$value." WHERE `".$column."` IS NULL") === false) {
+      return false;
+    }
+    installer_log('Table '.$table.' Column '.$column.' '.$check['total'].' NULL values SET TO '.$value);
+
+    return true;
+  }
+  
+  
   function array_diff_assoc_recursive($array1, $array2) {
     $difference=array();
 
