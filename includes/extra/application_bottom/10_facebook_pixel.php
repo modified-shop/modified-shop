@@ -100,25 +100,38 @@
         && isset($_SESSION['cart'])
         && is_object($_SESSION['cart'])
         && $_SESSION['cart']->count_contents() > 0
-        && (!isset($_SESSION['tracking']['fb_checkout'])
-            || $_SESSION['tracking']['fb_checkout'] != $_SESSION['cart']->cartID
-            )
         )
     {
-      if ($fb_consent_given === true) {
-        $_SESSION['tracking']['fb_checkout'] = $_SESSION['cart']->cartID;
-      }
-
-      $fb_contents = array();
+      $fb_contents = $fb_cart = array();
       foreach ($_SESSION['cart']->get_products() as $fb_product) {
         $fb_contents[] = array('id' => (string)$fb_product['model'], 'quantity' => (int)$fb_product['quantity']);
+        $fb_cart[$fb_product['id']] = (int)$fb_product['quantity'];
+      }
+      ksort($fb_cart, SORT_STRING);
+      $fb_cart = md5(serialize($fb_cart));
+
+      // every submit of the cart form creates a new cart ID, so products, variants and quantities identify the checkout
+      if (!isset($_SESSION['tracking']['fb_checkout']['cart'])
+          || $_SESSION['tracking']['fb_checkout']['cart'] != $fb_cart
+          )
+      {
+        $_SESSION['tracking']['fb_checkout'] = array(
+          'cart' => $fb_cart,
+          'token' => bin2hex(random_bytes(8)),
+          'sent' => false,
+        );
       }
 
-      $trackingCode .= '
+      if ($_SESSION['tracking']['fb_checkout']['sent'] !== true) {
+        if ($fb_consent_given === true) {
+          $_SESSION['tracking']['fb_checkout']['sent'] = true;
+        }
+
+        $trackingCode .= '
       (function () {
         try {
-          if (localStorage.getItem("MODfbCheckout") == "'.(int)$_SESSION['cart']->cartID.'") return;
-          localStorage.setItem("MODfbCheckout", "'.(int)$_SESSION['cart']->cartID.'");
+          if (localStorage.getItem("MODfbCheckout") == "'.$_SESSION['tracking']['fb_checkout']['token'].'") return;
+          localStorage.setItem("MODfbCheckout", "'.$_SESSION['tracking']['fb_checkout']['token'].'");
         } catch (e) {}
         fbq(\'track\', \'InitiateCheckout\', {
           contents: '.json_encode($fb_contents, JSON_HEX_TAG | JSON_HEX_AMP | JSON_INVALID_UTF8_SUBSTITUTE).',
@@ -129,6 +142,13 @@
         });
       })();
     ';
+      }
+    }
+
+
+    // a checkout after the order gets a new token, even with the same products
+    if (strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false) {
+      unset($_SESSION['tracking']['fb_checkout']);
     }
 
 
