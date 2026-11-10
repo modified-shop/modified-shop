@@ -177,9 +177,13 @@
     }
     if (ini_get('session.save_handler') == 'files') {
       $save_path = session_save_path();
-      // skip the optional "N;" and "N;MODE;" prefixes, PHP uses the last part as directory
-      if (strpos($save_path, ';') !== false) {
-        $save_path = substr($save_path, strrpos($save_path, ';') + 1);
+      if ($save_path == '') {
+        // PHP falls back to its temporary directory
+        $save_path = sys_get_temp_dir();
+      } else {
+        // PHP splits off at most "N;" and "MODE;", the rest is the directory
+        $save_path_parts = explode(';', $save_path, 3);
+        $save_path = end($save_path_parts);
       }
       // the files handler cannot clean up a directory it may not list (Debian: 1733)
       if ($save_path != '' && !is_readable($save_path)) {
