@@ -39,3 +39,5 @@
 
   define('MODULE_GOOGLE_ANALYTICS_ITEM_ID_TITLE' , 'Item ID');
   define('MODULE_GOOGLE_ANALYTICS_ITEM_ID_DESC' , 'Soll f&uuml;r das Tracking die Artikelnummer oder die Artikel ID verwendet werden?');
+
+  define('MODULE_GOOGLE_ANALYTICS_INFO_READABLE_COOKIE', 'Google Analytics: Die lesbare Cookie-Entscheidung (MODOilTrack) im Cookie Consent ist jetzt eingeschaltet. Facebook Pixel, Google Analytics und das Kampagnen-Cookie lesen damit die Entscheidung des Besuchers.');

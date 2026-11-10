@@ -30,7 +30,21 @@ class google_analytics {
   }
 
   function process($file) {
-      //do nothing
+    $this->readable_cookie();
+  }
+
+  // called by admin/module_export.php after the backup values are restored
+  function restore() {
+    $this->readable_cookie();
+  }
+
+  function readable_cookie() {
+    global $messageStack;
+
+    require_once(DIR_FS_INC.'cookie_consent_readable_cookie.inc.php');
+    if (cookie_consent_readable_cookie() === true) {
+      $messageStack->add_session(MODULE_GOOGLE_ANALYTICS_INFO_READABLE_COOKIE, 'warning');
+    }
   }
 
   function display() {

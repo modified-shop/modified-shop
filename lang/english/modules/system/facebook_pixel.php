@@ -21,3 +21,5 @@
 
   define('MODULE_FACEBOOK_PIXEL_COUNT_ADMIN_TITLE' , 'Count page views of the shop owner');
   define('MODULE_FACEBOOK_PIXEL_COUNT_ADMIN_DESC' , 'By activating this option, all page views of the administration users of the shop owner will be counted as well. This will falsify the visitor stats.');
+
+  define('MODULE_FACEBOOK_PIXEL_INFO_READABLE_COOKIE', 'Facebook Pixel: The readable cookie decision (MODOilTrack) of the cookie consent is switched on now. Facebook Pixel, Google Analytics and the campaign cookie use it to read the decision of the visitor.');

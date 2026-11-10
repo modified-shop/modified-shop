@@ -13,7 +13,8 @@
   define('MODULE_COOKIE_CONSENT_STATUS_TITLE', 'Modul Status');
   define('MODULE_COOKIE_CONSENT_STATUS_DESC', 'Modul aktivieren?');
   define('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE_TITLE', 'Lesbares Cookie setzen');
-  define('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE_DESC', 'Notwendig f&uuml;r Google Consent Mode');
+  define('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE_DESC', 'Notwendig f&uuml;r Google Consent Mode, Facebook Pixel und das Kampagnen-Cookie. Solange eines davon aktiv ist, schaltet der Shop die Option beim Speichern ein.');
+  define('MODULE_COOKIE_CONSENT_INFO_READABLE_COOKIE', 'Cookie Consent: Die lesbare Cookie-Entscheidung (MODOilTrack) ist jetzt eingeschaltet. Facebook Pixel, Google Analytics und das Kampagnen-Cookie lesen damit die Entscheidung des Besuchers. Solange eines davon aktiv ist, bleibt sie eingeschaltet.');
   define('MODULE_COOKIE_CONSENT_CONTENT_TITLE', 'Content');
   define('MODULE_COOKIE_CONSENT_CONTENT_DESC', 'Geben Sie die Contentseite an, die in den Boxen die Cookie-Einstellungen &ouml;ffnen soll');
 

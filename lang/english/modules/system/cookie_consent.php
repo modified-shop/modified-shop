@@ -13,7 +13,8 @@
   define('MODULE_COOKIE_CONSENT_STATUS_TITLE', 'Module status');
   define('MODULE_COOKIE_CONSENT_STATUS_DESC', 'Enable Module?');
   define('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE_TITLE', 'Use a readable cookie');
-  define('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE_DESC', 'Necessary for Google Consent Mode');
+  define('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE_DESC', 'Necessary for Google Consent Mode, Facebook Pixel and the campaign cookie. While one of them is active, the shop switches the option on when saving.');
+  define('MODULE_COOKIE_CONSENT_INFO_READABLE_COOKIE', 'Cookie Consent: The readable cookie decision (MODOilTrack) is switched on now. Facebook Pixel, Google Analytics and the campaign cookie use it to read the decision of the visitor. It stays switched on while one of them is active.');
   define('MODULE_COOKIE_CONSENT_CONTENT_TITLE', 'Content');
   define('MODULE_COOKIE_CONSENT_CONTENT_DESC', 'Please specify the content page that opens the cookie settings from the boxes');
 
