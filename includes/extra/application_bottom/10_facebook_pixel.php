@@ -132,9 +132,10 @@
 
         $trackingCode .= '
       (function () {
+        var key = '.json_encode('MODfbCheckout'.$fb_storage, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE).';
         try {
-          if (localStorage.getItem("MODfbCheckout") == "'.$_SESSION['tracking']['fb_checkout']['token'].'") return;
-          localStorage.setItem("MODfbCheckout", "'.$_SESSION['tracking']['fb_checkout']['token'].'");
+          if (localStorage.getItem(key) == "'.$_SESSION['tracking']['fb_checkout']['token'].'") return;
+          localStorage.setItem(key, "'.$_SESSION['tracking']['fb_checkout']['token'].'");
         } catch (e) {}
         fbq(\'track\', \'InitiateCheckout\', {
           contents: '.json_encode($fb_contents, JSON_HEX_TAG | JSON_HEX_AMP | JSON_INVALID_UTF8_SUBSTITUTE).',
