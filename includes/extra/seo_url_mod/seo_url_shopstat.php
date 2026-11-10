@@ -72,6 +72,13 @@ class seo_url_shopstat extends modified_seo_url {
     
     $this->params_array = xtc_get_params_array($parameters);
 
+    // manipulated requests send arrays for these single value params
+    foreach (array('language', 'cPath', 'manufacturers_id', 'products_id', 'coID', 'page', 'content', 'product', 'name') as $key) {
+      if (isset($this->params_array[$key]) && is_array($this->params_array[$key])) {
+        unset($this->params_array[$key]);
+      }
+    }
+
     if (isset($this->params_array['language']) 
         && strlen($this->params_array['language']) > 0
         && array_key_exists($this->params_array['language'], parent::$language)

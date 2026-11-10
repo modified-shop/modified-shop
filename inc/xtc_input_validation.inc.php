@@ -19,6 +19,11 @@
 
   function xtc_input_validation($var, $type, $replace_char = '') {
 
+    // manipulated requests send arrays instead of single values
+    if (!is_scalar($var)) {
+      return '';
+    }
+
     switch($type) {
       case 'cPath':
         $replace_param = '/[^0-9_]/';
