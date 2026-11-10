@@ -19,6 +19,9 @@ require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
 defined('PAYPAL_PAYMENT_INDEX_RETRY') or define('PAYPAL_PAYMENT_INDEX_RETRY', 600);
 
+// paypal_update() needs it even while an update has not replaced the payment classes yet
+defined('TABLE_PAYPAL_TRACKING_STATE') OR define('TABLE_PAYPAL_TRACKING_STATE', 'paypal_tracking_state');
+
 
 class PayPalPaymentBase extends PayPalCommon {
 
