@@ -115,7 +115,7 @@
 
       $trackingCode .= '
       fbq(\'track\', \'Purchase\', {
-        content: ['.implode(',', $items_array).'], 
+        contents: ['.implode(',', $items_array).'],
         content_type: "product",
         currency: "'.$orders['currency'].'", 
         value: '.$total.'
