@@ -434,6 +434,8 @@ if (!class_exists('cookie_consent')) {
         xtc_db_query("UPDATE `" . TABLE_ADMIN_ACCESS . "` SET `cookie_consent` = 8 WHERE `customers_id`='groups'");
       }
 
+      // module_export.php calls no process() after the install, so an active tracking module needs the call here
+      $this->readable_cookie();
     }
 
     function update_content_status() {
