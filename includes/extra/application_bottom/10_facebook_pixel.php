@@ -29,6 +29,9 @@
                            && $_SESSION['tracking']['allow'][6] === true
                            );
     }
+
+    // localStorage is shared by all shops on the origin, so the keys carry the shop path and the Pixel ID
+    $fb_storage = '|'.DIR_WS_CATALOG.'|'.MODULE_FACEBOOK_PIXEL_ID;
         
     $beginCode .= "
     !function (f, b, e, v, n, t, s) {
@@ -184,15 +187,15 @@
       // the browser remembers the last sent orders, Meta does not deduplicate a second Purchase
       $trackingCode .= '
       (function () {
-        var order = "'.(int)$last_order.'", sent = [];
+        var key = '.json_encode('MODfbPurchase'.$fb_storage, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE).', order = "'.(int)$last_order.'", sent = [];
         try {
-          sent = JSON.parse(localStorage.getItem("MODfbPurchase")) || [];
+          sent = JSON.parse(localStorage.getItem(key)) || [];
         } catch (e) {}
         if (!Array.isArray(sent)) sent = [];
         if (sent.indexOf(order) != -1) return;
         sent.push(order);
         try {
-          localStorage.setItem("MODfbPurchase", JSON.stringify(sent.slice(-20)));
+          localStorage.setItem(key, JSON.stringify(sent.slice(-20)));
         } catch (e) {}
         fbq(\'track\', \'Purchase\', {
           contents: ['.implode(',', $items_array).'],
