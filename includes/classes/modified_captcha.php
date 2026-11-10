@@ -98,7 +98,7 @@ class modified_captcha {
     $vvcode = $this->get();
     unset($_SESSION['vvcode']);          
 
-    if (!empty($vvcode) && strtoupper($input) == $vvcode) {
+    if (!empty($vvcode) && is_string($input) && strtoupper($input) == $vvcode) {
         return true;
     }
     return false;
