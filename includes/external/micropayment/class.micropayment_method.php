@@ -27,9 +27,6 @@ class micropayment_method extends micropayment_helper
     var $rslcode = 'r120';
     var $get_url_called = false;
 
-    static $versionInfoShow = false;
-    static $registerInfoShow = false;
-
 
     function __construct()
     {
@@ -41,6 +38,7 @@ class micropayment_method extends micropayment_helper
         if (isset($this->code) && $this->code != '') {
           $this->check_enabled();
           $this->check();
+          $this->add_setup_notices();
         }
 
         if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
@@ -48,24 +46,23 @@ class micropayment_method extends micropayment_helper
         }
     }
 
-    function check()
+    // into the module box: output while the module is built breaks the redirect of the module actions
+    function add_setup_notices()
     {
-
-        if(isset($_SESSION['customers_status']) &&
-            isset($_SESSION['customers_status']['customers_status_id']) &&
-            $_SESSION['customers_status']['customers_status_id'] == 0) {
-            if($this->check_is_service_installed() && MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID == '' && !self::$registerInfoShow) {
-                echo sprintf(MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT, MODULE_PAYMENT_MCP_SERVICE_CSS, $this->rslcode);
-                self::$registerInfoShow = true;
-            }
-            if(defined(self::CONFIG_NAME_CURRENT_VERSION)) {
-                if(version_compare($this->version,constant(self::CONFIG_NAME_CURRENT_VERSION),'<') && !self::$versionInfoShow) {
-                    echo sprintf(MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION,MODULE_PAYMENT_MCP_SERVICE_CSS,constant(self::CONFIG_NAME_CURRENT_VERSION));
-                    self::$versionInfoShow = true;
-                }
-            }
+        if (!defined('RUN_MODE_ADMIN') || !$this->check_is_service_installed()) {
+            return;
         }
 
+        if (!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
+            $this->description .= sprintf(MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT, MODULE_PAYMENT_MCP_SERVICE_CSS, $this->rslcode);
+        }
+        if (defined(self::CONFIG_NAME_CURRENT_VERSION) && version_compare($this->version, constant(self::CONFIG_NAME_CURRENT_VERSION), '<')) {
+            $this->description .= sprintf(MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION, MODULE_PAYMENT_MCP_SERVICE_CSS, constant(self::CONFIG_NAME_CURRENT_VERSION));
+        }
+    }
+
+    function check()
+    {
         if ($this->check_is_service_installed()) {
             $check_query = xtc_db_query("SELECT `configuration_value` FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` = 'MODULE_PAYMENT_" . strtoupper($this->code) . "_STATUS'");
             $this->_check = xtc_db_num_rows($check_query);
