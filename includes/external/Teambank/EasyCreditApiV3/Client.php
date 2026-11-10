@@ -42,12 +42,11 @@ class Client implements ClientInterface
     protected function parseStatusHeader ($headers) {
         $_headers = array();
         foreach ($headers as $key => $value)  {
-            $match = preg_match("#HTTP/([0-9\.]+)\s+([0-9]+)\s(.+)*#", $value, $matches);
-            list($all, $version, $status) = $matches;
-            if ($match) {
-                return array(
-                    'version' => $version,
-                    'status' => $status,
+            // a followed redirect lists every response, the body belongs to the last one
+            if (preg_match("#^HTTP/([0-9\.]+)\s+([0-9]+)\s(.+)*#", $value, $matches)) {
+                $_headers = array(
+                    'version' => $matches[1],
+                    'status' => $matches[2],
                     'reason' => isset($matches[3]) ? $matches[3] : null
                 );
             }
