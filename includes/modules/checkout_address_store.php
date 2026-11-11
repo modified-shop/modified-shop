@@ -151,9 +151,20 @@
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/checkout_address_data/','php') as $file) require ($file);
     
+    // only the customer's own entries can be updated, any other id is stored as a new address
     if (isset($address_book_id) || isset($edit_address_book_id)) {
-      xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "address_book_id = '".((isset($edit_address_book_id)) ? (int)$edit_address_book_id : (int)$address_book_id)."'");
-      $new_address_book_id = isset($edit_address_book_id) ? $edit_address_book_id : $address_book_id;
+      $check_address_query = xtc_db_query("SELECT address_book_id
+                                             FROM ".TABLE_ADDRESS_BOOK."
+                                            WHERE address_book_id = '".((isset($edit_address_book_id)) ? (int)$edit_address_book_id : (int)$address_book_id)."'
+                                              AND customers_id = '".(int)$_SESSION['customer_id']."'");
+      if (xtc_db_num_rows($check_address_query) < 1) {
+        unset($address_book_id, $edit_address_book_id);
+      }
+    }
+
+    if (isset($address_book_id) || isset($edit_address_book_id)) {
+      xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "address_book_id = '".((isset($edit_address_book_id)) ? (int)$edit_address_book_id : (int)$address_book_id)."' AND customers_id = '".(int)$_SESSION['customer_id']."'");
+      $new_address_book_id = (int)(isset($edit_address_book_id) ? $edit_address_book_id : $address_book_id);
     } else {
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);      
       $new_address_book_id = xtc_db_insert_id();

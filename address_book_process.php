@@ -196,6 +196,18 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/address_book_address_data/','php') as $file) require ($file);
 
     if ($_POST['action'] == 'update') {
+      $check_query = xtc_db_query("SELECT count(*) as total
+                                     FROM ".TABLE_ADDRESS_BOOK."
+                                    WHERE address_book_id = '".(int) $_GET['edit']."'
+                                      AND customers_id = '".(int) $_SESSION['customer_id']."'");
+      $check = xtc_db_fetch_array($check_query);
+
+      if ($check['total'] < 1) {
+        $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
+
+        xtc_redirect(xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+      }
+
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "address_book_id = '".(int) $_GET['edit']."' and customers_id ='".(int) $_SESSION['customer_id']."'");
 
       // reregister session variables

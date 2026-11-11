@@ -140,7 +140,14 @@
 
         case 'orders_edit.php':
           if (isset($_GET['oID'])) {
-            $where = " type = '".((isset($_GET['edit_action'])) ? $_GET['edit_action'] : 'edit')."' AND orders_id = '".(int)$_GET['oID']."' ";
+            $admin_log_type = 'edit';
+            if (isset($_GET['edit_action'])
+                && in_array($_GET['edit_action'], array('address', 'products', 'options', 'other', 'custom'), true)
+                )
+            {
+              $admin_log_type = $_GET['edit_action'];
+            }
+            $where = " type = '".$admin_log_type."' AND orders_id = '".(int)$_GET['oID']."' ";
           }
           break;
       }
