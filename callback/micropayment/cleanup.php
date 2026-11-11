@@ -42,10 +42,29 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
             // moved to another payment method in the admin
             continue;
         } else {
+            // a running notification holds the order and logs its event first, so it is read again under the lock
+            if (!micropayment_helper::lockOrder($data['order_id'], 0)) {
+                continue;
+            }
+            $check_query = xtc_db_query(
+                sprintf(
+                    'SELECT `o`.`orders_status`,
+                        (SELECT `function` FROM `micropayment_log` WHERE `order_id` = `o`.`orders_id` ORDER BY `created` DESC, `id` DESC LIMIT 1) `mcp_status` FROM %s `o`
+                     WHERE `o`.`orders_id` = "%s"',
+                    TABLE_ORDERS,
+                    (int)$data['order_id']
+                )
+            );
+            $check = xtc_db_fetch_array($check_query);
+            if (!is_array($check) || $check['mcp_status'] != 'new' || ($check['orders_status'] != 1 && $check['orders_status'] != MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID)) {
+                micropayment_helper::unlockOrder();
+                continue;
+            }
             require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
             xtc_remove_order((int)$data['order_id'], ((STOCK_LIMITED == 'true') ? 'on' : false));
             xtc_db_query(sprintf('DELETE FROM micropayment_orders WHERE order_id = "%s"',$data['order_id']));
             xtc_db_query(sprintf('DELETE FROM micropayment_log WHERE order_id = "%s"',$data['order_id']));
+            micropayment_helper::unlockOrder();
         }
     }
     echo 'Incomplete orders which are ' . $age . ' days old have been removed.<a href="javascript:void(0);" onclick="self.close();return false;">Click here to return to your shop backend.</a>';
