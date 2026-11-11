@@ -12,6 +12,7 @@
 
 require_once (DIR_FS_INC.'get_external_content.inc.php');
 require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+require_once (DIR_FS_INC.'write_file_atomic.inc.php');
 
 class protectedshops_update {
 
@@ -109,10 +110,10 @@ class protectedshops_update {
       // write content to file
       $format = ((MODULE_PROTECTEDSHOPS_FORMAT == 'Text') ? 'txt' : 'html');
       $file = DIR_FS_CATALOG . 'media/content/ps_'. strtolower($name) .'.'. $format;
-      $fp = @fopen($file, 'w+');
-      if (is_resource($fp)) {
-        fwrite($fp, $content['Document']);
-        fclose($fp);
+      if (write_file_atomic($file, $content['Document']) === false) {
+        // the content keeps its text or file until a later update writes the new one
+        trigger_error('Could not write Protected Shops document: '.$file, E_USER_WARNING);
+        return false;
       }
       
       // update data in table

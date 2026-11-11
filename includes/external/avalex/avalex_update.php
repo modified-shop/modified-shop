@@ -12,6 +12,7 @@
 
 // include needed classes
 require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
+require_once(DIR_FS_INC.'write_file_atomic.inc.php');
 
 class avalex_update {
 
@@ -57,6 +58,7 @@ class avalex_update {
     
     modified_api::setEndpoint($this->url);
     
+    $success = true;
     $lang_query = xtc_db_query("SELECT *
                                   FROM ".TABLE_LANGUAGES."
                                  WHERE status = 1");
@@ -83,10 +85,11 @@ class avalex_update {
 
           if (MODULE_AVALEX_TYPE == 'File') {
             $file = DIR_FS_CATALOG . 'media/content/avalex_'.strtolower($endpoint).'_'.$lang['code'].'.html';
-            $fp = @fopen($file, 'w+');
-            if (is_resource($fp)) {
-              fwrite($fp, $result);
-              fclose($fp);
+            if (write_file_atomic($file, $result) === false) {
+              // the content keeps its text or file until a later update writes the new one
+              trigger_error('Could not write avalex document: '.$file, E_USER_WARNING);
+              $success = false;
+              continue;
             }
             $sql_data_array = array(
               'content_text' => '',
@@ -98,7 +101,7 @@ class avalex_update {
       }
     }
     
-    return true;
+    return $success;
   }
       
 }
