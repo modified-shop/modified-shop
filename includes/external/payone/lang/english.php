@@ -23,6 +23,8 @@ define('ADDRESSES_MUST_BE_EQUAL','With the payment method choosen billing and de
 define('INSTALLMENT_TYPE_NOT_SELECTED', 'No type selected.');
 define('PAYDATA_INCOMPLETE', 'The indications for the payment method are incomplete.');
 define('PAYMENT_ERROR', 'An error occurred while processing.');
+define('PAYONE_NO_ANSWER', 'The payment provider did not answer. We are checking whether your payment went through. Please wait a few minutes before you try again, so that you do not pay twice.');
+define('PAYONE_NO_ANSWER_ACCEPTED', 'The payment provider has accepted your order %s after all. We will contact you about this order.');
 define('ERROR_MUST_CONFIRM_MANDATE', 'Please confirm that you want to grant the SEPA direct debit mandate.');
  
 // credit risk check
@@ -95,6 +97,7 @@ define('COMMENT_ERROR', 'comment_error');
 define('COMMENT_REDIRECTION_INITIATED', 'comment_redirection_initiated');
 define('COMMENT_AUTH_APPROVED', 'Payment approved');
 define('COMMENT_PREAUTH_APPROVED', 'Payment approved');
+define('COMMENT_NO_ANSWER', 'PAYONE did not answer the payment request. Check the payment in the PAYONE Merchant Interface (reference = order number) before you ship or delete this order.');
 define('VOUCHER_OR_DISCOUNT', 'voucher_or_discount');
 define('MISC_HANDLING', 'misc_handling');
 define('SHIPPING_COST', 'shipping_cost');

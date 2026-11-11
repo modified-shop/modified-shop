@@ -23,6 +23,8 @@ define('ADDRESSES_MUST_BE_EQUAL','Bei der gew&auml;hlten Zahlungsart m&uuml;ssen
 define('INSTALLMENT_TYPE_NOT_SELECTED', 'Keinen Typ gew&auml;hlt.');
 define('PAYDATA_INCOMPLETE', 'Die Angaben zur Zahlungsweise sind unvollst&auml;ndig.');
 define('PAYMENT_ERROR', 'Es ist ein Fehler bei der Verarbeitung aufgetreten.');
+define('PAYONE_NO_ANSWER', 'Der Zahlungsanbieter hat nicht geantwortet. Wir pr&uuml;fen, ob Ihre Zahlung angekommen ist. Bitte versuchen Sie es erst in einigen Minuten erneut, damit Sie nicht doppelt bezahlen.');
+define('PAYONE_NO_ANSWER_ACCEPTED', 'Der Zahlungsanbieter hat Ihre Bestellung %s doch angenommen. Wir melden uns bei Ihnen zu dieser Bestellung.');
 define('ERROR_MUST_CONFIRM_MANDATE', 'Bitte best&auml;tigen Sie, dass Sie das SEPA-Lastschriftmandat erteilen m&ouml;chten.');
 
 // credit risk check
@@ -95,6 +97,7 @@ define('COMMENT_ERROR', 'comment_error');
 define('COMMENT_REDIRECTION_INITIATED', 'comment_redirection_initiated');
 define('COMMENT_AUTH_APPROVED', 'Zahlung bewilligt');
 define('COMMENT_PREAUTH_APPROVED', 'Zahlung bewilligt');
+define('COMMENT_NO_ANSWER', 'PAYONE hat nicht auf die Zahlungsanfrage geantwortet. Pr&uuml;fen Sie die Zahlung im PAYONE Merchant Interface (Referenz = Bestellnummer), bevor Sie die Bestellung versenden oder l&ouml;schen.');
 define('VOUCHER_OR_DISCOUNT', 'voucher_or_discount');
 define('MISC_HANDLING', 'misc_handling');
 define('SHIPPING_COST', 'shipping_cost');

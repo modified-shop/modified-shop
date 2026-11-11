@@ -412,6 +412,13 @@ class PayonePayment {
 	  unset($_SESSION['tmp_payone_oID']);
 	  unset($_SESSION['tmp_oID']);
 
+		// a new attempt could charge twice while PAYONE has not settled an unanswered one
+		$unanswered = $this->payone->getUnansweredCheckout($_SESSION['customer_id']);
+		if ($unanswered !== false) {
+			$_SESSION['payone_error'] = (($unanswered['accepted'] === true) ? sprintf(PAYONE_NO_ANSWER_ACCEPTED, $unanswered['orders_id']) : PAYONE_NO_ANSWER);
+			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+		}
+
 		if ($this->config['address_check']['active'] == 'true' && !$this->_addressesAreValidated()) {
 			$_SESSION['payone_error'] = 'address_changed';
 			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -626,6 +633,11 @@ class PayonePayment {
 				unset($_SESSION['payone_checkout_return_tokens']);
 			}
 		}
+		// PAYONE may have accepted an unanswered request, only the merchant drops that order
+		if ($this->payone->hasUnansweredTransaction($order_id)) {
+			$this->payone->log("kept order ".(int)$order_id." of an unanswered request");
+			return;
+		}
 		$check_query = xtc_db_query("SELECT * FROM ".TABLE_ORDERS." WHERE orders_id = '".(int)$order_id."'");
     if (xtc_db_num_rows($check_query) > 0) {
       $check = xtc_db_fetch_array($check_query);
@@ -762,6 +774,16 @@ class PayonePayment {
   }
   
 	function _build_service_authentification($type) {
+		try {
+			$this->_send_service_authentification($type);
+		} catch (Exception $e) {
+			// the request may have reached PAYONE, so a missing answer is no failure
+			$this->response = null;
+			$this->payone->log("$type request without answer: ".get_class($e).' '.$e->getMessage());
+		}
+	}
+
+	function _send_service_authentification($type) {
 		if ($this->params['request'] == 'authorization') {
 			$this->service = $this->builder->buildServicePaymentAuthorize();
 			$this->params['request'] = 'authorization';
@@ -836,8 +858,35 @@ class PayonePayment {
 			}
 		}
 		else {
-			die('unhandled response type');
+			$this->_keep_order_without_answer($insert_id);
 		}
   }	
+
+	// the order waits for the TxStatus, which names the txid PAYONE gave the request
+	function _keep_order_without_answer($orders_id) {
+		$this->payone->log("no answer for order ".(int)$orders_id.", waiting for its TxStatus");
+
+		$orders_query = xtc_db_query("SELECT orders_status
+		                                FROM ".TABLE_ORDERS."
+		                               WHERE orders_id = '".(int)$orders_id."'");
+		if (xtc_db_num_rows($orders_query) > 0) {
+			$orders = xtc_db_fetch_array($orders_query);
+			$sql_data_array = array(
+				'orders_id' => (int)$orders_id,
+				'orders_status_id' => (int)$orders['orders_status'],
+				'date_added' => 'now()',
+				'customer_notified' => '0',
+				'comments' => COMMENT_NO_ANSWER,
+				'comments_sent' => '0',
+			);
+			xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+		}
+		$this->payone->saveUnansweredTransaction($orders_id, $this->global_config);
+
+		unset($_SESSION['tmp_payone_oID']);
+		unset($_SESSION['tmp_oID']);
+		$_SESSION['payone_error'] = PAYONE_NO_ANSWER;
+		xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+	}
 	
 }

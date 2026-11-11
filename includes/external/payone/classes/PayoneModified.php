@@ -23,6 +23,8 @@ class PayoneModified {
 	const EMPTY_ARRAY_VALUE = '__PAYONE_EMPTY_ARRAY__';
 	const TRANSACTION_STATUS_ERROR_NONE = '';
 	const TRANSACTION_STATUS_ERROR_PERSISTENCE = 'persistence';
+	// a new attempt waits this long for the TxStatus of an unanswered request
+	const UNANSWERED_CHECKOUT_MINUTES = 10;
 
 	protected static $transaction_status_support_ready = false;
 	protected $transaction_status_error = self::TRANSACTION_STATUS_ERROR_NONE;
@@ -1023,6 +1025,132 @@ class PayoneModified {
 		return false;
 	}
 
+	// an unanswered (pre)authorization keeps a row without txid, its TxStatus names the txid later
+	public function saveUnansweredTransaction($orders_id, $credential) {
+		if (!$this->hasUnansweredTransaction($orders_id)) {
+			$this->saveTransaction($orders_id, 'UNKNOWN', '', '', $credential);
+		}
+		// the TxStatus can arrive while the request still waits for its answer
+		$txid = $this->adoptUnansweredTransaction($orders_id);
+		if ($txid !== false) {
+			$this->processTransactionStatus($orders_id, $txid);
+		}
+	}
+
+	public function hasUnansweredTransaction($orders_id) {
+		$query = xtc_db_query("SELECT payone_transactions_id
+		                         FROM payone_transactions
+		                        WHERE orders_id = '".(int)$orders_id."'
+		                          AND txid = ''
+		                          AND status = 'UNKNOWN'
+		                        LIMIT 1");
+		return ($query !== false && xtc_db_num_rows($query) > 0);
+	}
+
+	// a recent unfinished checkout of the customer that PAYONE has not answered or has accepted after all
+	public function getUnansweredCheckout($customers_id) {
+		$query = xtc_db_query("SELECT o.orders_id,
+		                              (SELECT COUNT(*)
+		                                 FROM payone_transactions a
+		                                WHERE a.orders_id = o.orders_id
+		                                  AND a.txid != ''
+		                                  AND a.status != 'UNKNOWN') AS answered
+		                         FROM ".TABLE_ORDERS." o
+		                         JOIN payone_transactions t
+		                           ON t.orders_id = o.orders_id
+		                          AND t.txid = ''
+		                          AND t.status = 'UNKNOWN'
+		                        WHERE o.customers_id = '".(int)$customers_id."'
+		                          AND o.orders_date_finished IS NULL
+		                          AND t.created > DATE_SUB(now(), INTERVAL ".(int)self::UNANSWERED_CHECKOUT_MINUTES." MINUTE)
+		                     ORDER BY o.orders_id DESC");
+		while ($row = xtc_db_fetch_array($query)) {
+			if ((int)$row['answered'] < 1) {
+				return array('orders_id' => (int)$row['orders_id'], 'accepted' => false);
+			}
+			if ($this->isTransactionApprovedForCheckout($row['orders_id'])) {
+				return array('orders_id' => (int)$row['orders_id'], 'accepted' => true);
+			}
+		}
+		return false;
+	}
+
+	// only a TxStatus sent with the credentials of the unanswered request may name its txid
+	protected function adoptUnansweredTransaction($orders_id) {
+		$orders_id = (int)$orders_id;
+		$request_credential = $this->getTransactionCredential($orders_id, '');
+		if ($request_credential === false
+		    || !$this->acquireTransactionStatusLock($orders_id, '')
+		    )
+		{
+			return false;
+		}
+
+		try {
+			$marker_query = xtc_db_query("SELECT t.*
+			                                FROM payone_transactions t
+			                               WHERE t.orders_id = '".$orders_id."'
+			                                 AND t.txid = ''
+			                                 AND t.status = 'UNKNOWN'
+			                                 AND NOT EXISTS (SELECT 1
+			                                                   FROM payone_transactions x
+			                                                  WHERE x.orders_id = t.orders_id
+			                                                    AND x.txid != '')
+			                               LIMIT 1");
+			if ($marker_query === false || xtc_db_num_rows($marker_query) < 1) {
+				return false;
+			}
+			$marker = xtc_db_fetch_array($marker_query);
+
+			$status_query = xtc_db_query("SELECT payone_txstatus_id
+			                                FROM payone_txstatus
+			                               WHERE orders_id = '".$orders_id."'
+			                            ORDER BY payone_txstatus_id");
+			while ($row = xtc_db_fetch_array($status_query)) {
+				$txstatus = $this->getStoredTransactionStatus($row['payone_txstatus_id']);
+				if ($txstatus === false
+				    || empty($txstatus['txid'])
+				    || !isset($txstatus['portalid'], $txstatus['aid'], $txstatus['_modified_credential_hash'])
+				    )
+				{
+					continue;
+				}
+				$status_credential = array(
+					'portalid' => $txstatus['portalid'],
+					'aid' => $txstatus['aid'],
+					'credential_hash' => $txstatus['_modified_credential_hash'],
+				);
+				if (!$this->transactionStatusCredentialMatches($request_credential, $status_credential)) {
+					continue;
+				}
+
+				$txid = (string)$txstatus['txid'];
+				$sql_data_transactions_array = array(
+					'orders_id' => $orders_id,
+					'status' => 'UNKNOWN',
+					'txid' => $txid,
+					'userid' => ((isset($txstatus['userid'])) ? $txstatus['userid'] : ''),
+					'created' => 'now()',
+					'last_modified' => 'now()',
+				);
+				if (isset($marker['type'])) {
+					$sql_data_transactions_array['type'] = $marker['type'];
+				}
+				if (xtc_db_perform('payone_transactions', $sql_data_transactions_array) === false) {
+					return false;
+				}
+				if (!$this->saveTransactionCredentialIdentity($orders_id, $txid, $request_credential)) {
+					$this->log("could not bind credentials to transaction $txid / order $orders_id");
+				}
+				$this->log("TxStatus named txid $txid for the unanswered request of order $orders_id");
+				return $txid;
+			}
+			return false;
+		} finally {
+			$this->releaseTransactionStatusLock($orders_id, '');
+		}
+	}
+
 	public function hasPendingTransactionForCheckout($orders_id) {
 		foreach($this->getLatestAppliedTransactionStatusByTxid($orders_id) as $txstatus) {
 			if (isset($txstatus['transaction_status'])
@@ -1057,7 +1185,8 @@ class PayoneModified {
 	public function getOrdersData($orders_id) {
 		$data = array();
 		// transaction data
-		$tx_query = xtc_db_query("SELECT * FROM `payone_transactions` WHERE `orders_id` = '".(int)$orders_id."'");
+		// the row of an unanswered request comes last, the admin shows the first one
+		$tx_query = xtc_db_query("SELECT * FROM `payone_transactions` WHERE `orders_id` = '".(int)$orders_id."' ORDER BY (`txid` = ''), `payone_transactions_id`");
 		$data['transactions'] = array();
 		while($tx_row = xtc_db_fetch_array($tx_query)) {
 			$data['transactions'][] = $tx_row;
@@ -1673,7 +1802,8 @@ class PayoneModified {
 			$this->log("could not persist TxStatus for transaction $txid / order $orders_id");
 			return false;
 		}
-		if (!$transaction_exists) {
+		// an unanswered request learns its txid from this TxStatus
+		if (!$transaction_exists && $this->adoptUnansweredTransaction($orders_id) !== $txid) {
 			$this->log("deferred TxStatus for transaction $txid / order $orders_id until the transaction is stored");
 			return true;
 		}
