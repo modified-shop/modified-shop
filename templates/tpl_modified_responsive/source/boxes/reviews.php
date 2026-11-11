@@ -39,7 +39,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
     $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
     $box_smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']));
   }
-} elseif ($_SESSION['customers_status']['customers_status_read_reviews'] == 1) {
+} elseif ($_SESSION['customers_status']['customers_status_read_reviews'] == 1 && MAX_RANDOM_SELECT_REVIEWS > 0) {
 
   $product_select = '';
   if ($product->isProduct() === true) {

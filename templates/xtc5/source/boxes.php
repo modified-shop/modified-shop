@@ -73,7 +73,7 @@
   } else {
     //Aktuelle Seite ist keine  Produkt-Detailseite
     require_once(DIR_FS_BOXES . 'best_sellers.php');
-    if ($_SESSION['customers_status']['customers_status_specials'] == '1') {
+    if ($_SESSION['customers_status']['customers_status_specials'] == '1' && MAX_RANDOM_SELECT_SPECIALS > 0) {
       require_once(DIR_FS_BOXES . 'specials.php');
     }
   }
