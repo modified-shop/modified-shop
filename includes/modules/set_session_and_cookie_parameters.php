@@ -89,7 +89,11 @@ if (SESSION_FORCE_COOKIE_USE != 'True') {
 $session_started = false;
 $truncate_session_id = false;
 // payment providers call ajax.php with the customer's session id, their HTTP clients are on the bot list
-$ajax_session_in_url = (defined('RUN_MODE_AJAX') && isset($_GET[xtc_session_name()]));
+$ajax_session_in_url = (defined('RUN_MODE_AJAX')
+                        && isset($_GET[xtc_session_name()])
+                        && is_string($_GET[xtc_session_name()])
+                        && $_GET[xtc_session_name()] != ''
+                        );
 if (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1 && $ajax_session_in_url === false) {
   $truncate_session_id = true;
   $session_started = false;
