@@ -21,10 +21,10 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_TITLE', 'Banktransfer');
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_DESCRIPTION', 'Banktransfer Payments');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_TITLE', 'Direct debit');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_DESCRIPTION', 'Direct debit payments');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_INFO','');
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK', 'Banktransfer');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK', 'Direct debit');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EMAIL_FOOTER', ((defined('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE')) ? 'Note: You can download our Fax Confirmation form from here: ' . HTTP_SERVER . DIR_WS_CATALOG . MODULE_PAYMENT_BANKTRANSFER_URL_NOTE : ''));
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_INFO', ((defined('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY') && MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY != 'True') ? 'Please note that direct debit without IBAN/BIC is <b>only available</b> from a <b>german bank account</b>. By specifying IBAN/BIC, you can use the direct debit system <b>across the EU</b>.<br/>' : '') . 'Fields marked with (*) are mandatory. For a german IBAN specifying a BIC is optional.<br/><br/>');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER', 'Account Owner:*');
@@ -34,7 +34,7 @@ define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN', 'IBAN:*');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ', 'Bank Code / BIC:*');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC', 'BIC:*');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME', 'Bank Name:');
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_FAX', 'Banktransfer Payment will be confirmed by fax');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_FAX', 'Direct debit payment will be confirmed by fax');
 
 // Note these MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_X texts appear also in the URL, so no html-entities are allowed here
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR', 'ERROR:');
@@ -76,14 +76,14 @@ define('MODULE_PAYMENT_BANKTRANSFER_ZONE_TITLE' , 'Payment Zone');
 define('MODULE_PAYMENT_BANKTRANSFER_ZONE_DESC' , 'If a zone is selected, only enable this payment method for that zone.');
 define('MODULE_PAYMENT_BANKTRANSFER_ALLOWED_TITLE' , 'Allowed Zones');
 define('MODULE_PAYMENT_BANKTRANSFER_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e. g. AT,DE (leave empty if you want to allow all zones))');
-define('MODULE_PAYMENT_BANKTRANSFER_STATUS_TITLE' , 'Allow Banktransfer Payments');
-define('MODULE_PAYMENT_BANKTRANSFER_STATUS_DESC' , 'Do you want to accept banktransfer payments?');
+define('MODULE_PAYMENT_BANKTRANSFER_STATUS_TITLE' , 'Allow direct debit payments');
+define('MODULE_PAYMENT_BANKTRANSFER_STATUS_DESC' , 'Do you want to accept direct debit payments?');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_TITLE' , 'Minimum Orders');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_DESC' , 'Minimum orders for a Customer to view this Option.');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID_TITLE' , 'Order status for calculation');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_STATUS_ID_DESC' , 'Select the status of the purchase orders here, which should be considered for the number entered under "Minimum Orders".');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_TITLE', 'IBAN Mode');
-define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_DESC', 'Do you want to accept IBAN banktransfer payments only?');
+define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_DESC', 'Do you want to accept IBAN direct debit payments only?');
 
 // SEPA
 define('MODULE_PAYMENT_BANKTRANSFER_CI_TITLE', 'Identification number (CI)');
@@ -91,7 +91,7 @@ define('MODULE_PAYMENT_BANKTRANSFER_CI_DESC', 'Enter your SEPA-ID');
 define('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX_TITLE', 'Prefix for Reference (optional)');
 define('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX_DESC', 'Enter a Prefix for the Reference');
 define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_TITLE', 'Maturity');
-define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_DESC', 'Enter period (in days) to execute banktransfer');
+define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_DESC', 'Enter period (in days) to execute the direct debit');
 
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ATTENTION:</font></strong> Please update the german bank code numbers!');
 
