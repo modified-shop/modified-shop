@@ -27,6 +27,7 @@ define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_PAYIN','Receipt of payment from 
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_CHANGE','Payment has been reducted by  %s %s, paid: %s %s, still open is %s %s. Auth %s');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_EVENT_CONFLICT','EVENT-WORKFLOW-FAILURE: The logical cycle has been interrupted . %s cannot follow %s. Auth Code: %s');
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INFO','ERR: %s - %s');
+define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_PAYMENT_CHANGED','Notification %s not applied, it does not match the payment method %s of the order. Amount %s. Auth %s');
 
 
 if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS') 
@@ -114,7 +115,11 @@ class micropayment_callback
         if(!$this->verifyRequest()) {
             $this->exitWithError(MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INVALID_REQUEST);
         }
-        $this->processFunction();
+        if ($this->isMicropaymentPayment()) {
+            $this->processFunction();
+        } else {
+            $this->recordPaymentChanged();
+        }
         $this->sendStatus();
 
         // Sending new order Emails
@@ -239,6 +244,52 @@ class micropayment_callback
             'order' => $order,
             'total' => $total
         );
+    }
+
+    // the admin changes the payment method of an order, the mapping of the started payment stays
+    function isMicropaymentPayment()
+    {
+        $aOrder = $this->fetchOrder();
+
+        $mapping_query = xtc_db_query(
+            sprintf(
+                'SELECT `payment_method` FROM `micropayment_orders` WHERE `order_id` = "%s"',
+                (int)$this->getParam('orderid',self::REGEX_INTEGER)
+            )
+        );
+        $mapping = xtc_db_fetch_array($mapping_query);
+
+        return (is_array($aOrder['order'])
+                && is_array($mapping)
+                && $mapping['payment_method'] === $aOrder['order']['payment_class']
+                );
+    }
+
+    // only noted for the reconciliation, the order keeps its status
+    function recordPaymentChanged()
+    {
+        $aOrder   = $this->fetchOrder();
+        $currency = '';
+        if (isset($_REQUEST['currency']) && is_string($_REQUEST['currency']) && preg_match(self::REGEX_SIMPLE_TEXT, $_REQUEST['currency'])) {
+            $currency = $_REQUEST['currency'];
+        }
+
+        $comment = sprintf(
+            MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_PAYMENT_CHANGED,
+            $this->getParam('function',$this->allowedFunctions),
+            $aOrder['order']['payment_class'],
+            trim(($this->getParam('amount',self::REGEX_INTEGER)/100).' '.$currency),
+            $this->getParam('auth',self::REGEX_SIMPLE_TEXT)
+        );
+        $sql_data_array = array(
+            'orders_id'         => $this->getParam('orderid',self::REGEX_INTEGER),
+            'orders_status_id'  => $aOrder['order']['orders_status'],
+            'date_added'        => 'now()' ,
+            'customer_notified' => 0,
+            'comments'          => $comment
+        );
+        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        $this->returnStatus = self::STATUS_OK;
     }
 
     function verifyRequest()

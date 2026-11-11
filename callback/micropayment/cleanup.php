@@ -25,7 +25,7 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
     }
     $query = xtc_db_query(
         sprintf(
-            'SELECT *,
+            'SELECT *, `micropayment_orders`.`payment_method` `mcp_payment_method`,
                 (SELECT `function` FROM `micropayment_log` WHERE `order_id` = `micropayment_orders`.`order_id` ORDER BY `created` DESC, `id` DESC LIMIT 1) `mcp_status` FROM micropayment_orders
              LEFT JOIN `orders` ON `orders`.`orders_id` = `micropayment_orders`.`order_id`
              WHERE `micropayment_orders`.`createdon` <= DATE_SUB(NOW(),INTERVAL %s DAY)
@@ -37,6 +37,9 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
         if($data['mcp_status'] != 'new') {
             continue;
         } elseif($data['orders_status'] != 1 && $data['orders_status'] != MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID) {
+            continue;
+        } elseif($data['payment_class'] !== $data['mcp_payment_method']) {
+            // moved to another payment method in the admin
             continue;
         } else {
             require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
