@@ -73,7 +73,9 @@
     require_once(DIR_FS_BOXES . 'last_viewed.php');
     require_once(DIR_FS_BOXES . 'whats_new.php');
     require_once(DIR_FS_BOXES . 'best_sellers.php');
-    require_once(DIR_FS_BOXES . 'specials.php');
+    if (MAX_RANDOM_SELECT_SPECIALS > 0) {
+      require_once(DIR_FS_BOXES . 'specials.php');
+    }
     require_once(DIR_FS_BOXES . 'xsell.php');
   }
 
@@ -103,6 +105,7 @@
       // specials
       if ($_SESSION['customers_status']['customers_status_specials'] == '1' 
           && SPECIALS_CATEGORIES === false
+          && MAX_RANDOM_SELECT_SPECIALS > 0
           )
       {
         require_once(DIR_FS_BOXES . 'specials.php');
@@ -115,7 +118,10 @@
         require_once(DIR_FS_BOXES . 'whats_new.php'); 
       }
       // reviews
-      if ($_SESSION['customers_status']['customers_status_read_reviews'] == '1') {
+      if ($_SESSION['customers_status']['customers_status_read_reviews'] == '1'
+          && MAX_RANDOM_SELECT_REVIEWS > 0
+          )
+      {
         require_once(DIR_FS_BOXES . 'reviews.php');
       }
       // trustedshops
