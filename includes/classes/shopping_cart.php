@@ -705,7 +705,7 @@ class shoppingCart {
       $this->attr_price = round($this->attr_price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
     }
 
-    return $attributes_price;
+    return $this->attr_price;
   }
 
   /**
