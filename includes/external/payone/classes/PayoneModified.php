@@ -1049,12 +1049,7 @@ class PayoneModified {
 
 	// a recent unfinished checkout of the customer that PAYONE has not answered, still processes or has accepted after all
 	public function getUnansweredCheckout($customers_id) {
-		$query = xtc_db_query("SELECT o.orders_id,
-		                              (SELECT COUNT(*)
-		                                 FROM payone_transactions a
-		                                WHERE a.orders_id = o.orders_id
-		                                  AND a.txid != ''
-		                                  AND a.status != 'UNKNOWN') AS answered
+		$query = xtc_db_query("SELECT o.orders_id
 		                         FROM ".TABLE_ORDERS." o
 		                         JOIN payone_transactions t
 		                           ON t.orders_id = o.orders_id
@@ -1065,7 +1060,10 @@ class PayoneModified {
 		                          AND t.created > DATE_SUB(now(), INTERVAL ".(int)self::UNANSWERED_CHECKOUT_MINUTES." MINUTE)
 		                     ORDER BY o.orders_id DESC");
 		while ($row = xtc_db_fetch_array($query)) {
-			if ((int)$row['answered'] < 1
+			$state = $this->getUnansweredCheckoutState($row['orders_id']);
+			if ($state === false
+			    || (int)$state['answered'] < 1
+			    || (int)$state['unprocessed'] > 0
 			    || $this->hasPendingTransactionForCheckout($row['orders_id'])
 			    )
 			{
@@ -1074,8 +1072,36 @@ class PayoneModified {
 			if ($this->isTransactionApprovedForCheckout($row['orders_id'])) {
 				return array('orders_id' => (int)$row['orders_id'], 'accepted' => true);
 			}
+			// a callback that ran during the checks above may have shown them a half applied status
+			if ($this->getUnansweredCheckoutState($row['orders_id']) !== $state) {
+				return array('orders_id' => (int)$row['orders_id'], 'accepted' => false);
+			}
 		}
 		return false;
+	}
+
+	// a TxStatus still being written has no processed marker yet, so it counts as unprocessed
+	protected function getUnansweredCheckoutState($orders_id) {
+		$query = xtc_db_query("SELECT (SELECT COUNT(*)
+		                                 FROM payone_transactions a
+		                                WHERE a.orders_id = '".(int)$orders_id."'
+		                                  AND a.txid != ''
+		                                  AND a.status != 'UNKNOWN') AS answered,
+		                              (SELECT COUNT(*)
+		                                 FROM payone_txstatus s
+		                            LEFT JOIN payone_txstatus_data p
+		                                   ON p.payone_txstatus_id = s.payone_txstatus_id
+		                                  AND p.`key` = '_modified_processed'
+		                                WHERE s.orders_id = '".(int)$orders_id."'
+		                                  AND (p.payone_txstatus_data_id IS NULL
+		                                       OR p.`value` != '1')) AS unprocessed,
+		                              (SELECT MAX(payone_txstatus_id)
+		                                 FROM payone_txstatus
+		                                WHERE orders_id = '".(int)$orders_id."') AS last_txstatus_id");
+		if ($query === false) {
+			return false;
+		}
+		return xtc_db_fetch_array($query);
 	}
 
 	// only a TxStatus sent with the credentials of the unanswered request may name its txid
