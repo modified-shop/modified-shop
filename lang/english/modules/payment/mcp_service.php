@@ -91,7 +91,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_CSS','
   background-color: #ffdede;
   background-repeat: no-repeat;
   background-size: 100px;
-  height: 40px;
+  min-height: 40px;
 	padding-left:130px;
 	padding-top: 24px;
 	border: 1px #cdcdcd solid;
