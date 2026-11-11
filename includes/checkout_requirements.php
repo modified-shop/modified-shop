@@ -119,7 +119,7 @@ if (STOCK_CHECK_SPECIALS == 'true'
   require_once (DIR_FS_INC.'check_stock_specials.inc.php');
   $products = $_SESSION['cart']->get_products();
   for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-    if ($xtPrice->xtcCheckSpecial($products[$i]['id']) && check_stock_specials($products[$i]['id'], $_SESSION['cart']->get_stock_quantity($products[$i]['id']))) {
+    if ($xtPrice->xtcCheckSpecial($products[$i]['id']) && check_stock_specials($products[$i]['id'], $_SESSION['cart']->get_products_quantity($products[$i]['id']))) {
       $_SESSION['any_out_of_stock'] = 1;
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
     }

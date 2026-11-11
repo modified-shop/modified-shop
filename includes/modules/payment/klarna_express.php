@@ -1014,7 +1014,7 @@ fetch(cfg.ajax_url, {
         require_once(DIR_FS_INC.'check_stock_specials.inc.php');
 
         foreach ($products as $product) {
-          if ($xtPrice->xtcCheckSpecial($product['id']) && check_stock_specials($product['id'], $_SESSION['cart']->get_stock_quantity($product['id']))) {
+          if ($xtPrice->xtcCheckSpecial($product['id']) && check_stock_specials($product['id'], $_SESSION['cart']->get_products_quantity($product['id']))) {
             return 'stock';
           }
         }
