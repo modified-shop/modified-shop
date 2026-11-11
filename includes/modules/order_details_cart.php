@@ -52,14 +52,15 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
 
   $mark_stock = '';
   if (STOCK_CHECK == 'true') {
-    $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity'], $products[$i]['stock']);
+    // cart positions of the same product or attribute draw on one stock
+    $mark_stock = xtc_check_stock($products[$i]['id'], $_SESSION['cart']->get_stock_quantity($products[$i]['id']), $products[$i]['stock']);
     if ($mark_stock) {
       $_SESSION['any_out_of_stock'] = 1;
     }
   }
   
   if (empty($mark_stock) && STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
-    $mark_stock = check_stock_specials($products[$i]['id'], $products[$i]['quantity']);
+    $mark_stock = check_stock_specials($products[$i]['id'], $_SESSION['cart']->get_stock_quantity($products[$i]['id']));
     if ($mark_stock) {
       $_SESSION['any_out_of_stock'] = 1;
     }  
@@ -110,7 +111,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
 
       $attribute_stock_check = '';
       if (ATTRIBUTE_STOCK_CHECK == 'true' && STOCK_CHECK == 'true') {
-        if ($attributes['attributes_stock'] - $products[$i]['quantity'] < 0) {
+        if ($attributes['attributes_stock'] - $_SESSION['cart']->get_attribute_stock_quantity($products[$i]['id'], $option, $value) < 0) {
           $attribute_stock_check  = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
           $_SESSION['any_out_of_stock'] = 1;
         }

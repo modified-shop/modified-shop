@@ -485,6 +485,49 @@ class shoppingCart {
   }
 
   /**
+   * get the quantity of all cart positions sharing the stock of a product
+   *
+   * @param string $products_id
+   * @return integer quantity
+   */
+  function get_stock_quantity($products_id) {
+    $quantity = 0;
+    if (is_array($this->contents)) {
+      foreach ($this->contents as $id => $data) {
+        if ((int)$id == (int)$products_id && !empty($data['qty'])) {
+          $quantity += $data['qty'];
+        }
+      }
+    }
+    return $quantity;
+  }
+
+  /**
+   * get the quantity of all cart positions sharing the stock of a product attribute
+   *
+   * @param string $products_id
+   * @param integer $option_id
+   * @param integer $value_id
+   * @return integer quantity
+   */
+  function get_attribute_stock_quantity($products_id, $option_id, $value_id) {
+    $quantity = 0;
+    if (is_array($this->contents)) {
+      foreach ($this->contents as $id => $data) {
+        if ((int)$id == (int)$products_id
+            && !empty($data['qty'])
+            && isset($data['attributes'][$option_id])
+            && (int)$data['attributes'][$option_id] == (int)$value_id
+            )
+        {
+          $quantity += $data['qty'];
+        }
+      }
+    }
+    return $quantity;
+  }
+
+  /**
    * check if product is in cart
    *
    * @param integer $products_id

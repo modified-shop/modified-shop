@@ -996,13 +996,13 @@ fetch(cfg.ajax_url, {
         require_once(DIR_FS_INC.'xtc_check_stock.inc.php');
 
         foreach ($products as $product) {
-          if (xtc_check_stock($product['id'], $product['quantity'], $product['stock'])) {
+          if (xtc_check_stock($product['id'], $_SESSION['cart']->get_stock_quantity($product['id']), $product['stock'])) {
             return 'stock';
           }
           if (ATTRIBUTE_STOCK_CHECK == 'true' && isset($product['attributes']) && is_array($product['attributes'])) {
             foreach ($product['attributes'] as $option => $value) {
               $attributes = $main->getAttributes($product['id'], $option, $value);
-              if ($attributes['attributes_stock'] - $product['quantity'] < 0) {
+              if ($attributes['attributes_stock'] - $_SESSION['cart']->get_attribute_stock_quantity($product['id'], $option, $value) < 0) {
                 return 'stock';
               }
             }
@@ -1014,7 +1014,7 @@ fetch(cfg.ajax_url, {
         require_once(DIR_FS_INC.'check_stock_specials.inc.php');
 
         foreach ($products as $product) {
-          if ($xtPrice->xtcCheckSpecial($product['id']) && check_stock_specials($product['id'], $product['quantity'])) {
+          if ($xtPrice->xtcCheckSpecial($product['id']) && check_stock_specials($product['id'], $_SESSION['cart']->get_stock_quantity($product['id']))) {
             return 'stock';
           }
         }
