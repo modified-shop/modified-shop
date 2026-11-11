@@ -57,6 +57,23 @@ class shopvote
         }
     }
 
+    // called by admin/module_export.php after the backup values are restored
+    function restore()
+    {
+        if (defined('TABLE_SCHEDULED_TASKS')) {
+          // the constant still holds the value from before the restore
+          $check_query = xtc_db_query("SELECT configuration_value
+                                         FROM ".TABLE_CONFIGURATION."
+                                        WHERE configuration_key = 'MODULE_SHOPVOTE_SCHEDULED_TASKS'");
+          if (xtc_db_num_rows($check_query) > 0) {
+            $check = xtc_db_fetch_array($check_query);
+            xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
+                             SET status = '".(($check['configuration_value'] == 'true') ? 1 : 0)."'
+                           WHERE tasks = 'shopvote_import'");
+          }
+        }
+    }
+
     function display() 
     {
         return array('text' => '<br>' . xtc_button(BUTTON_SAVE) . '&nbsp;' .

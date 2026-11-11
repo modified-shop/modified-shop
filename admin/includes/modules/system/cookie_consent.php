@@ -44,6 +44,7 @@ if (!class_exists('cookie_consent')) {
 
     // called by admin/module_export.php after the backup values are restored
     function restore() {
+      $this->update_content_status();
       $this->readable_cookie();
     }
 

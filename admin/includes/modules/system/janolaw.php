@@ -76,6 +76,22 @@ class janolaw {
     }
   }
 
+  // called by admin/module_export.php after the backup values are restored
+  function restore() {
+    if (defined('TABLE_SCHEDULED_TASKS')) {
+      // the constant still holds the value from before the restore
+      $status_query = xtc_db_query("SELECT configuration_value
+                                      FROM ".TABLE_CONFIGURATION."
+                                     WHERE configuration_key = 'MODULE_JANOLAW_STATUS'");
+      if (xtc_db_num_rows($status_query) > 0) {
+        $status = xtc_db_fetch_array($status_query);
+        xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
+                         SET status = '".(($status['configuration_value'] == 'True') ? 1 : 0)."'
+                       WHERE tasks = 'janolaw_update'");
+      }
+    }
+  }
+
   function display() {    
     return array('text' => '<br /><div align="center">' . xtc_button('OK') .
                             xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=janolaw')) . "</div>");

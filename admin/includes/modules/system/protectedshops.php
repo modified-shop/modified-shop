@@ -69,6 +69,22 @@ class protectedshops {
     }
   }
 
+  // called by admin/module_export.php after the backup values are restored
+  function restore() {
+    if (defined('TABLE_SCHEDULED_TASKS')) {
+      // the constant still holds the value from before the restore
+      $status_query = xtc_db_query("SELECT configuration_value
+                                      FROM ".TABLE_CONFIGURATION."
+                                     WHERE configuration_key = 'MODULE_PROTECTEDSHOPS_STATUS'");
+      if (xtc_db_num_rows($status_query) > 0) {
+        $status = xtc_db_fetch_array($status_query);
+        xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
+                         SET status = '".(($status['configuration_value'] == 'true') ? 1 : 0)."'
+                       WHERE tasks = 'protectedshops_update'");
+      }
+    }
+  }
+
   // display
   function display() {    
     return array('text' =>  '<br/><b>'.MODULE_PROTECTEDSHOPS_ACTION_TITLE.'</b><br/>'.
