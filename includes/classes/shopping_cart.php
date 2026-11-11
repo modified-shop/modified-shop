@@ -485,6 +485,133 @@ class shoppingCart {
   }
 
   /**
+   * get the quantity of all cart positions sharing the stock of a product
+   *
+   * @param string $products_id
+   * @return integer quantity
+   */
+  function get_stock_quantity($products_id) {
+    // a download that keeps the stock only counts for itself
+    if (!$this->reduces_stock($products_id)) {
+      return $this->get_quantity($products_id);
+    }
+    $quantity = 0;
+    if (is_array($this->contents)) {
+      foreach ($this->contents as $id => $data) {
+        if ((int)$id == (int)$products_id
+            && !empty($data['qty'])
+            && $this->reduces_stock($id)
+            )
+        {
+          $quantity += $data['qty'];
+        }
+      }
+    }
+    return $quantity;
+  }
+
+  /**
+   * get the quantity of all cart positions of a product
+   *
+   * @param string $products_id
+   * @return integer quantity
+   */
+  function get_products_quantity($products_id) {
+    $quantity = 0;
+    if (is_array($this->contents)) {
+      foreach ($this->contents as $id => $data) {
+        if ((int)$id == (int)$products_id && !empty($data['qty'])) {
+          $quantity += $data['qty'];
+        }
+      }
+    }
+    return $quantity;
+  }
+
+  /**
+   * get the quantity of all cart positions sharing the stock of a product attribute
+   *
+   * @param string $products_id
+   * @param integer $option_id
+   * @param integer $value_id
+   * @return integer quantity
+   */
+  function get_attribute_stock_quantity($products_id, $option_id, $value_id) {
+    // a download attribute keeps its stock and only counts for its own position
+    if ($this->get_stock_free_download($products_id, $option_id, $value_id) !== false) {
+      return $this->get_quantity($products_id);
+    }
+    $quantity = 0;
+    if (is_array($this->contents)) {
+      foreach ($this->contents as $id => $data) {
+        if ((int)$id == (int)$products_id
+            && !empty($data['qty'])
+            && isset($data['attributes'][$option_id])
+            && (int)$data['attributes'][$option_id] == (int)$value_id
+            )
+        {
+          $quantity += $data['qty'];
+        }
+      }
+    }
+    return $quantity;
+  }
+
+  /**
+   * check if checkout_process.php reduces the product stock for a cart position
+   *
+   * @param string $products_id
+   * @return boolean
+   */
+  function reduces_stock($products_id) {
+    if (isset($this->contents[$products_id]['attributes']) && is_array($this->contents[$products_id]['attributes'])) {
+      // checkout_process.php only looks at the first attribute
+      foreach ($this->contents[$products_id]['attributes'] as $option_id => $value_id) {
+        $download = $this->get_stock_free_download($products_id, $option_id, $value_id);
+        return empty($download);
+      }
+    }
+    return true;
+  }
+
+  /**
+   * get the file of a download attribute that checkout_process.php keeps out of the stock
+   *
+   * @param string $products_id
+   * @param integer $option_id
+   * @param integer $value_id
+   * @return string|false
+   */
+  function get_stock_free_download($products_id, $option_id, $value_id) {
+    static $download_array;
+
+    if (DOWNLOAD_ENABLED != 'true'
+        || (defined('STOCK_LIMITED_DOWNLOADS') && STOCK_LIMITED_DOWNLOADS != 'false')
+        )
+    {
+      return false;
+    }
+
+    $key = (int)$products_id.'_'.(int)$option_id.'_'.(int)$value_id;
+    if (!isset($download_array[$key])) {
+      $download_array[$key] = false;
+      $download_query = xtc_db_query("SELECT pad.products_attributes_filename
+                                        FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                        JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                             ON pad.products_attributes_id = pa.products_attributes_id
+                                       WHERE pa.products_id = '".(int)$products_id."'
+                                         AND pa.options_id = '".(int)$option_id."'
+                                         AND pa.options_values_id = '".(int)$value_id."'");
+      if (xtc_db_num_rows($download_query) > 0) {
+        $download = xtc_db_fetch_array($download_query);
+        $download_array[$key] = (string)$download['products_attributes_filename'];
+      }
+    }
+
+    return $download_array[$key];
+  }
+
+  /**
    * check if product is in cart
    *
    * @param integer $products_id

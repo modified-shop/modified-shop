@@ -88,7 +88,8 @@ if (STOCK_CHECK == 'true'
 {
   $products = $_SESSION['cart']->get_products();
   for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-    if (xtc_check_stock($products[$i]['id'], $products[$i]['quantity'], $products[$i]['stock'])) {
+    // cart positions of the same product or attribute draw on one stock
+    if (xtc_check_stock($products[$i]['id'], $_SESSION['cart']->get_stock_quantity($products[$i]['id']), $products[$i]['stock'])) {
       $_SESSION['any_out_of_stock'] = 1;
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
     }
@@ -96,7 +97,7 @@ if (STOCK_CHECK == 'true'
     if (ATTRIBUTE_STOCK_CHECK == 'true' && isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
       foreach ($products[$i]['attributes'] as $option => $value) {
         $attributes = $main->getAttributes($products[$i]['id'],$option,$value);
-        if ($attributes['attributes_stock'] - $products[$i]['quantity'] < 0) {
+        if ($attributes['attributes_stock'] - $_SESSION['cart']->get_attribute_stock_quantity($products[$i]['id'], $option, $value) < 0) {
           $_SESSION['any_out_of_stock'] = 1;
           xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
         }
@@ -118,7 +119,7 @@ if (STOCK_CHECK_SPECIALS == 'true'
   require_once (DIR_FS_INC.'check_stock_specials.inc.php');
   $products = $_SESSION['cart']->get_products();
   for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-    if ($xtPrice->xtcCheckSpecial($products[$i]['id']) && check_stock_specials($products[$i]['id'], $products[$i]['quantity'])) {
+    if ($xtPrice->xtcCheckSpecial($products[$i]['id']) && check_stock_specials($products[$i]['id'], $_SESSION['cart']->get_products_quantity($products[$i]['id']))) {
       $_SESSION['any_out_of_stock'] = 1;
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
     }

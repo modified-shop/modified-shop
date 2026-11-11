@@ -25,14 +25,14 @@
     for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
       $mark_stock = '';
       if (STOCK_CHECK == 'true') {
-        $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity'], $products[$i]['stock']);
+        $mark_stock = xtc_check_stock($products[$i]['id'], $_SESSION['cart']->get_stock_quantity($products[$i]['id']), $products[$i]['stock']);
         if ($mark_stock) {
           $_SESSION['any_out_of_stock'] = 1;
         }
       }
       
       if (empty($mark_stock) && STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
-        $mark_stock = check_stock_specials($products[$i]['id'], $products[$i]['quantity']);
+        $mark_stock = check_stock_specials($products[$i]['id'], $_SESSION['cart']->get_products_quantity($products[$i]['id']));
         if ($mark_stock) {
           $_SESSION['any_out_of_stock'] = 1;
         }  
