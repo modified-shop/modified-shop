@@ -38,6 +38,12 @@ if (SESSION_CHECK_USER_AGENT == 'True') {
   if (!isset ($_SESSION['SESSION_USER_AGENT'])) {
     $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
   } elseif ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
+    // a session id handed over in an ajax url, e.g. by PayPal, must not end the customer's session
+    if (!empty($ajax_session_in_url)) {
+      session_abort();
+      http_response_code(403);
+      exit();
+    }
     xtc_session_recreate();
     xtc_session_destroy();
     if (defined('RUN_MODE_ADMIN')) {
@@ -54,6 +60,11 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   if (!isset($_SESSION['SESSION_IP_ADDRESS'])) {
     $_SESSION['SESSION_IP_ADDRESS'] = $ip_address;
   } elseif ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
+    if (!empty($ajax_session_in_url)) {
+      session_abort();
+      http_response_code(403);
+      exit();
+    }
     xtc_session_recreate();
     xtc_session_destroy();
     if (defined('RUN_MODE_ADMIN')) {
