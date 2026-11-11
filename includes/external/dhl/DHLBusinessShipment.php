@@ -204,31 +204,40 @@
 
 
     public function DeleteLabel($shipmentNumber) {
+      $result = array(
+        'deleted' => false,
+        'message' => array(),
+      );
+
+      if (!isset($this->data['access_token'])) {
+        $result['message'] = $this->message;
+
+        return $result;
+      }
+
       $headers = [
         'Authorization' => 'Bearer '.$this->data['access_token'],
       ];
-
-      $result = array(
-        'message' => array(),
-      );
 
       $request = new \GuzzleHttp\Psr7\Request('DELETE', $this->getUrl(self::DHL_API_URL, '/orders?shipment='.$shipmentNumber), $headers);
 
       try {
         $response = $this->client->send($request);
         $response = json_decode($response->getBody()->getContents(), true);
+
+        $result['deleted'] = $this->checkDeleteResponse($response);
+        if ($result['deleted'] !== true) {
+          $this->LoggingManager->log('ERROR', 'DeleteLabel', array('response' => $response));
+        }
       } catch (Exception $ex) {
         if (is_object($ex)
             && method_exists($ex, 'getResponse')
+            && $ex->getResponse() !== null
             )
         {
           $error = json_decode($ex->getResponse()->getBody(), true);
 
-          foreach ($error['items'] as $items) {
-            if (isset($items['sstatus'])) {
-              $this->message['error'][] = sprintf('Status %s: %s', $items['sstatus']['status'], $items['sstatus']['detail']);
-            }
-          }
+          $this->checkDeleteResponse($error);
 
           $this->LoggingManager->log('ERROR', 'DeleteLabel', array('exception' => $error));
         } else {
@@ -239,6 +248,54 @@
       $result['message'] = $this->message;
 
       return $result;
+    }
+
+
+    private function checkDeleteResponse($response) {
+      if (!is_array($response)) {
+        return false;
+      }
+
+      if (!isset($response['items']) || !is_array($response['items']) || count($response['items']) < 1) {
+        if (isset($response['detail']) || isset($response['title'])) {
+          $this->message['error'][] = $this->getStatusText($response);
+        }
+
+        return false;
+      }
+
+      // only 200 confirms, 204 UNKNOWN_SHIPMENT_NUMBER also comes for labels after the end-of-day closing
+      $deleted = true;
+      foreach ($response['items'] as $items) {
+        $sstatus = ((isset($items['sstatus']) && is_array($items['sstatus'])) ? $items['sstatus'] : array());
+
+        if ($this->getStatusCode($sstatus) != 200) {
+          $deleted = false;
+          if (count($sstatus) > 0) {
+            $this->message['error'][] = $this->getStatusText($sstatus);
+          }
+        }
+      }
+
+      return $deleted;
+    }
+
+
+    private function getStatusText($status) {
+      return sprintf('Status %s: %s', $this->getStatusCode($status), ((isset($status['detail'])) ? $status['detail'] : ((isset($status['title'])) ? $status['title'] : '')));
+    }
+
+
+    private function getStatusCode($status) {
+      if (isset($status['status'])) {
+        return (int)$status['status'];
+      }
+      // deprecated name of the same value
+      if (isset($status['statusCode'])) {
+        return (int)$status['statusCode'];
+      }
+
+      return 0;
     }
 
 
