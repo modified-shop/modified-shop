@@ -1047,7 +1047,7 @@ class PayoneModified {
 		return ($query !== false && xtc_db_num_rows($query) > 0);
 	}
 
-	// a recent unfinished checkout of the customer that PAYONE has not answered or has accepted after all
+	// a recent unfinished checkout of the customer that PAYONE has not answered, still processes or has accepted after all
 	public function getUnansweredCheckout($customers_id) {
 		$query = xtc_db_query("SELECT o.orders_id,
 		                              (SELECT COUNT(*)
@@ -1065,7 +1065,10 @@ class PayoneModified {
 		                          AND t.created > DATE_SUB(now(), INTERVAL ".(int)self::UNANSWERED_CHECKOUT_MINUTES." MINUTE)
 		                     ORDER BY o.orders_id DESC");
 		while ($row = xtc_db_fetch_array($query)) {
-			if ((int)$row['answered'] < 1) {
+			if ((int)$row['answered'] < 1
+			    || $this->hasPendingTransactionForCheckout($row['orders_id'])
+			    )
+			{
 				return array('orders_id' => (int)$row['orders_id'], 'accepted' => false);
 			}
 			if ($this->isTransactionApprovedForCheckout($row['orders_id'])) {

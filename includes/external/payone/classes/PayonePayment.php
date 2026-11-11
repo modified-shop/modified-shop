@@ -44,6 +44,7 @@ class PayonePayment {
   var $service;
   var $request;
   var $response;
+  var $request_sent;
 	
 	function __construct() {
 		global $order, $PHP_SELF;
@@ -774,12 +775,25 @@ class PayonePayment {
   }
   
 	function _build_service_authentification($type) {
+		$this->request_sent = false;
 		try {
 			$this->_send_service_authentification($type);
 		} catch (Exception $e) {
-			// the request may have reached PAYONE, so a missing answer is no failure
 			$this->response = null;
-			$this->payone->log("$type request without answer: ".get_class($e).' '.$e->getMessage());
+			// validation and request mapping throw these before the request leaves the shop
+			if ($e instanceof Payone_Api_Exception_Request_InvalidMid
+			    || $e instanceof Payone_Api_Exception_Request_InvalidPortalid
+			    || $e instanceof Payone_Api_Exception_Request_InvalidKey
+			    || $e instanceof Payone_Api_Exception_Request_InvalidMode
+			    || $e instanceof Payone_Api_Exception_MappingNotFound
+			    || $e instanceof Payone_Api_Exception_InvalidUrl
+			    || $e instanceof Payone_Api_Exception_InvalidParameters
+			    )
+			{
+				$this->request_sent = false;
+			}
+			// any other exception may follow a request PAYONE got, so a missing answer is no failure
+			$this->payone->log("$type request ".(($this->request_sent === true) ? 'without answer' : 'not sent').": ".get_class($e).' '.$e->getMessage());
 		}
 	}
 
@@ -789,6 +803,7 @@ class PayonePayment {
 			$this->params['request'] = 'authorization';
 			$this->request = new Payone_Api_Request_Authorization($this->params);
 			$this->payone->log("$type authorize request");
+			$this->request_sent = true;
 			$this->response = $this->service->authorize($this->request);
 			$this->payone->log("$type authorize response ".$this->response->getStatus());
 		}
@@ -797,6 +812,7 @@ class PayonePayment {
 			$this->params['request'] = 'preauthorization';
 			$this->request = new Payone_Api_Request_Preauthorization($this->params);
 			$this->payone->log("$type preauthorize request");
+			$this->request_sent = true;
 			$this->response = $this->service->preauthorize($this->request);
 			$this->payone->log("$type preauthorize response ".$this->response->getStatus());
 		}	
@@ -805,6 +821,14 @@ class PayonePayment {
 	function _parse_response_payone_api($redirect=true) {
 	  global $insert_id;
 	  
+		// a request that never left the shop failed for sure, its order goes like a declined one
+		if ($this->response === null && $this->request_sent === false) {
+			$this->payone->log("authorization for order ".(int)$insert_id." not sent");
+			$_SESSION['payone_error'] = PAYMENT_ERROR;
+			$this->_remove_order($insert_id);
+			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+		}
+
 		if ($this->response instanceof Payone_Api_Response_Preauthorization_Approved || $this->response instanceof Payone_Api_Response_Authorization_Approved) {
 			$sql_data_array = array(
 				'bankaccountholder' => $this->response->getClearingBankaccountholder(),
