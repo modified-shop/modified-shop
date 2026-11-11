@@ -84,7 +84,13 @@
             $messageStack->add_session($message, 'warning');
           }
         }
+      }
+
+      // keep the entry as long as DHL has not confirmed the cancellation
+      if ($response['deleted'] !== true) {
+        $messageStack->add_session(sprintf(TEXT_DHL_BUSINESS_DELETE_ERROR, xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$oID.'&tID='.(int)$tracking_id.'&action=deletetracking')), 'warning');
       } else {
+        xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
         $messageStack->add_session(TEXT_DHL_BUSINESS_DELETE_SUCCESS, 'success');
       
         $check_query = xtc_db_query("SELECT *
@@ -129,8 +135,7 @@
           }
         }
       }
-      xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
-    
+
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'tID', 'subaction')).'action=edit'));
     }
   }

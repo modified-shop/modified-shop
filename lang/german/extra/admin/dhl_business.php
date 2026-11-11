@@ -46,6 +46,7 @@
   define('TEXT_DHL_BUSINESS_BUTTON_CREATE_KP', 'DHL Kleinpaket');
   define('TEXT_DHL_BUSINESS_CREATE_SUCCESS', 'DHL Paketschein wurde erstellt');
   define('TEXT_DHL_BUSINESS_DELETE_SUCCESS', 'DHL Paketschein wurde gel&ouml;scht');
+  define('TEXT_DHL_BUSINESS_DELETE_ERROR', 'DHL hat die Stornierung des Paketscheins nicht best&auml;tigt, der Eintrag bleibt gespeichert. Nach dem Tagesabschluss ist keine Stornierung mehr m&ouml;glich. Ist der Paketschein im DHL Gesch&auml;ftskundenportal bereits storniert, k&ouml;nnen Sie den Eintrag <a href="%s">nur im Shop entfernen</a>.');
 
   define('CFG_TXT_IMMEDIATE', 'R&uuml;cksendung');
   define('CFG_TXT_ABANDONMENT', 'Entsorgung');

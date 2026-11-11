@@ -46,6 +46,7 @@
   define('TEXT_DHL_BUSINESS_BUTTON_CREATE_KP', 'DHL Kleinpaket');
   define('TEXT_DHL_BUSINESS_CREATE_SUCCESS', 'DHL Label was created');
   define('TEXT_DHL_BUSINESS_DELETE_SUCCESS', 'DHL Label was deleted');
+  define('TEXT_DHL_BUSINESS_DELETE_ERROR', 'DHL did not confirm the cancellation of the label, the entry has been kept. After the end-of-day closing a label can no longer be cancelled. If the label is already cancelled in the DHL business customer portal, you can <a href="%s">remove the entry from the shop only</a>.');
 
   define('CFG_TXT_IMMEDIATE', 'Return');
   define('CFG_TXT_ABANDONMENT', 'Disposal');
