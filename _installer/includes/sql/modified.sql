@@ -1418,7 +1418,6 @@ CREATE TABLE sessions (
   sesskey VARCHAR(32) NOT NULL,
   expiry INT(11) unsigned NOT NULL,
   value longtext NOT NULL,
-  flag VARCHAR( 5 ) NULL DEFAULT NULL,
   PRIMARY KEY (sesskey),
   KEY idx_expiry (expiry)
 );
