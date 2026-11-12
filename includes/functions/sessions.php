@@ -46,7 +46,7 @@
       function close(): bool
       {
         if ($this->lock_acquired && $this->session_id !== null) {
-          xtc_db_query("SELECT RELEASE_LOCK('" . xtc_db_input('MODsid_' . $this->session_id) . "')");
+          xtc_db_query("SELECT RELEASE_LOCK('" . xtc_db_input('MODsid_' . xtc_session_hash($this->session_id)) . "')");
           $this->lock_acquired = false;
         }
 
@@ -59,12 +59,13 @@
 
         $this->session_id = $session_id;
 
-        $lock_query = xtc_db_query("SELECT GET_LOCK('" . xtc_db_input('MODsid_' . $session_id) . "', " . (int)SESSION_LOCK_TIMEOUT . ") AS session_lock");
+        // lock names are visible to other database connections, so they carry the hash as well
+        $lock_query = xtc_db_query("SELECT GET_LOCK('" . xtc_db_input('MODsid_' . xtc_session_hash($session_id)) . "', " . (int)SESSION_LOCK_TIMEOUT . ") AS session_lock");
         $lock_result = xtc_db_fetch_array($lock_query);
         $this->lock_acquired = (isset($lock_result['session_lock']) && $lock_result['session_lock'] == '1');
 
         if (!$this->lock_acquired && isset($LoggingManager)) {
-          $LoggingManager->warning('Session lock for "' . $session_id . '" could not be acquired within ' . SESSION_LOCK_TIMEOUT . 's, session changes will not be saved');
+          $LoggingManager->warning('Session lock for "' . xtc_session_hash($session_id) . '" could not be acquired within ' . SESSION_LOCK_TIMEOUT . 's, session changes will not be saved');
         }
 
         return $this->readWithoutLock($session_id);
@@ -74,7 +75,7 @@
       {
         $value_query = xtc_db_query("SELECT value
                                        FROM " . TABLE_SESSIONS . "
-                                      WHERE sesskey = '" . xtc_db_input($session_id) . "'
+                                      WHERE sesskey = '" . xtc_db_input(xtc_session_hash($session_id)) . "'
                                         AND expiry > '" . time() . "'");
         if (xtc_db_num_rows($value_query) == 1) {
           $value = xtc_db_fetch_array($value_query);
@@ -104,7 +105,7 @@
           return true;
         }
 
-        xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($session_id) . "'");
+        xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input(xtc_session_hash($session_id)) . "'");
 
         return true;
       }
@@ -118,9 +119,9 @@
           return false;
         }
 
-        $result = xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($old_session_id) . "'");
+        $result = xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input(xtc_session_hash($old_session_id)) . "'");
         if ($result === false) {
-          xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($new_session_id) . "'");
+          xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input(xtc_session_hash($new_session_id)) . "'");
 
           return false;
         }
@@ -144,21 +145,20 @@
       {
         global $SESS_LIFE;
 
-        $flag = '';
+        // admins keep the longer lifetime, but no marker in the table that points to their sessions
         if (isset($_SESSION['customers_status']['customers_status'])
             && $_SESSION['customers_status']['customers_status'] == '0'
             )
         {
           $SESS_LIFE = defined('SESSION_LIFE_ADMIN') ? (int)SESSION_LIFE_ADMIN : (int)SESSION_LIFE_ADMIN_DEFAULT;
-          $flag = 'admin';
         }
         $expiry = time() + (int)$SESS_LIFE;
         $value = base64_encode($val);
 
-        $query = "INSERT INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
-                  VALUES ('". xtc_db_input($session_id) ."', '".(int)$expiry."', '".xtc_db_input($value)."', '".xtc_db_input($flag)."')";
+        $query = "INSERT INTO " . TABLE_SESSIONS . " (sesskey, expiry, value)
+                  VALUES ('". xtc_db_input(xtc_session_hash($session_id)) ."', '".(int)$expiry."', '".xtc_db_input($value)."')";
         if ($update) {
-          $query .= " ON DUPLICATE KEY UPDATE expiry = '".(int)$expiry."', value = '".xtc_db_input($value)."', flag = '".xtc_db_input($flag)."'";
+          $query .= " ON DUPLICATE KEY UPDATE expiry = '".(int)$expiry."', value = '".xtc_db_input($value)."'";
         }
 
         $result = xtc_db_query($query);
@@ -290,6 +290,12 @@
     return false;
   }
 
+  // the database keeps only this hash, a session id read from it cannot be used
+  // 128 bit, as much as the md5 session id itself, and it fits the existing columns
+  function xtc_session_hash($session_id) {
+    return substr(hash('sha256', $session_id), 0, 32);
+  }
+
   function xtc_generate_session_id() {
     require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
 
@@ -297,7 +303,7 @@
     if (STORE_SESSIONS == 'mysql') {
       $check_query = xtc_db_query("SELECT sesskey
                                      FROM " . TABLE_SESSIONS . "
-                                    WHERE sesskey = '" . xtc_db_input($session_id) . "'");
+                                    WHERE sesskey = '" . xtc_db_input(xtc_session_hash($session_id)) . "'");
       if (xtc_db_num_rows($check_query) > 0) {
         xtc_generate_session_id();
       }

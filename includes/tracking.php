@@ -69,6 +69,10 @@ if (isset($_GET['refID'])
 
 // request 
 $req_url = strip_tags($_SERVER['REQUEST_URI']);
+// the history is stored in the session and in whos_online, a session id in the url must not reach it
+if (strpos($req_url, xtc_session_name().'=') !== false) {
+  $req_url = rtrim(preg_replace('/(?<=[?&])'.preg_quote(xtc_session_name(), '/').'=[^&]*&?/', '', $req_url), '?&');
+}
 if (in_array(basename($PHP_SELF), array(FILENAME_LOGIN, FILENAME_LOGOFF))) {
   $req_url = basename($PHP_SELF);
 }
