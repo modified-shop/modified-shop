@@ -231,6 +231,9 @@
                   }
                 }
                 closedir($session_dir);
+              } else {
+                // e.g. mode 1733, files can be read by name but not listed
+                $session_dir_unreadable = true;
               }
             }
             $user_session = unserialize_session_data($session_data);
@@ -255,6 +258,9 @@
             }
             if ($user_session == 'ENCRYPTED') {
               $contents[] = array('text' => TEXT_SESSION_IS_ENCRYPTED);
+            }
+            if (isset($session_dir_unreadable)) {
+              $contents[] = array('text' => TEXT_SESSION_DIR_NOT_READABLE);
             }
             $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS, 'action=new&ip='.$info['ip']) . '">'.BUTTON_BLACKLIST.'</a><br/><br/>');
           }
