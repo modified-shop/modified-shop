@@ -33,6 +33,7 @@ define('TEXT_SHOPPING_CART_SUBTOTAL', 'Insgesamt');
 define('TEXT_NUMBER_OF_CUSTOMERS', 'Es sind zurzeit %s Kunden online');
 define('TEXT_EMPTY_CART', 'Warenkorb des Kunden ist leer');
 define('TEXT_SESSION_IS_ENCRYPTED', '<hr><b>HINWEIS</b>:<br />Der Warenkorbinhalt kann nicht angezeigt werden.<br />Die Session ist mit Suhosin verschl&uuml;sselt<br />(suhosin.session.encrypt = On)<br />Zum Deaktivieren der Verschl&uuml;sselung wenden Sie sich an Ihren Provider.');
+define('TEXT_SESSION_DIR_NOT_READABLE', '<hr><b>HINWEIS</b>:<br />Der Warenkorbinhalt kann nicht angezeigt werden.<br />Das Session-Verzeichnis l&auml;sst sich nicht auflisten (z.B. Rechte 1733).<br />Die Session-Datei wird &uuml;ber den Hash der Session-ID gesucht und dazu muss das Verzeichnis lesbar sein.');
 define('TEXT_ACTIVATE_WHOS_ONLINE', 'Wer ist Online aktivieren:');
 define('TEXT_HEADING_STATUS', 'Status:');
 define('TEXT_WHOS_ONLINE_STATUS_ALL', 'Alle anzeigen');

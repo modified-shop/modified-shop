@@ -53,7 +53,8 @@
     if ($crawler !== 0) {
       $wo_session_id = 'BOT|'.substr(md5($crawler), 4);
     } else {
-      $wo_session_id = xtc_session_id();
+      // only the hash, the admin finds the session through it, a missing id stays empty
+      $wo_session_id = ((xtc_session_id() != '') ? xtc_session_hash(xtc_session_id()) : '');
       $wo_cart_status = ((isset($_SESSION['cart']) && is_object($_SESSION['cart']) && $_SESSION['cart']->count_contents() > 0) ? 1 : 0);
     }
 

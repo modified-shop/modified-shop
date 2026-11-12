@@ -286,8 +286,8 @@
       // update whos_online
       if (!defined('MODULE_WHOS_ONLINE_STATUS') || MODULE_WHOS_ONLINE_STATUS == 'true') {
         xtc_db_query("UPDATE " . TABLE_WHOS_ONLINE . "
-                         SET session_id = '".xtc_db_input($new_session_id)."'
-                       WHERE session_id = '".xtc_db_input($old_session_id)."'");
+                         SET session_id = '".xtc_db_input(xtc_session_hash($new_session_id))."'
+                       WHERE session_id = '".xtc_db_input(xtc_session_hash($old_session_id))."'");
       }
 
       return true;
