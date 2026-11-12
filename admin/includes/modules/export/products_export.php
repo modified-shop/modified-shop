@@ -12,6 +12,9 @@
 
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
+  require_once(DIR_FS_INC.'check_export_filename.inc.php');
+  require_once(DIR_FS_INC.'check_export_target.inc.php');
+
   class products_export {
   
     var $code;
@@ -34,6 +37,17 @@
 
 
     function process($file) {
+      global $messageStack;
+
+      // the name also arrives from the request and from stored values, so check it where the file is written
+      if (!check_export_filename($file, array('csv'))) {
+        $messageStack->add_session(MODULE_PRODUCTS_EXPORT_ERROR_FILENAME, 'error');
+        return;
+      }
+      if (!check_export_target(DIR_FS_DOCUMENT_ROOT.'export/'.$file)) {
+        $messageStack->add_session(MODULE_PRODUCTS_EXPORT_ERROR_FILE_TYPE, 'error');
+        return;
+      }
 
       xtc_set_time_limit(0);
       
@@ -194,6 +208,17 @@
       }
     
       return $array;
+    }
+
+
+    function validate_configuration($config_values) {
+      if (isset($config_values['MODULE_PRODUCTS_EXPORT_FILE'])
+          && !check_export_filename($config_values['MODULE_PRODUCTS_EXPORT_FILE'], array('csv'))
+          ) {
+        return MODULE_PRODUCTS_EXPORT_ERROR_FILENAME;
+      }
+
+      return '';
     }
 
 
