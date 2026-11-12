@@ -211,8 +211,12 @@
             
             if (STORE_SESSIONS == 'mysql') {
               $session_data = $modified_session_handler->readHashWithoutLock($info['session_id']);
-            } elseif (STORE_SESSIONS == 'files') {
-              // whos_online keeps only the hash, the file is found by hashing the file names
+            } elseif (STORE_SESSIONS == 'files'
+                      && $info['session_id'] != ''
+                      && strpos($info['session_id'], 'BOT|') !== 0
+                      )
+            {
+              // whos_online keeps only the hash, the file is found by hashing the file names, bots have no session
               $session_save_path = xtc_session_save_path();
               if (($session_dir = @opendir($session_save_path)) !== false) {
                 while (($session_file = readdir($session_dir)) !== false) {
