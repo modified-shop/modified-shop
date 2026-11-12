@@ -27,6 +27,7 @@
   define('MODULE_SITEMAPORG_TEXT_TITLE', 'XML Sitemap.org');
   define('MODULE_SITEMAPORG_EXPORTED', 'XML Sitemap.org erfolgreich erstellt.');
   define('MODULE_SITEMAPORG_ERROR_FILENAME', 'Der Dateiname muss f&uuml;r jede Sprache unterschiedlich sein.');
+  define('MODULE_SITEMAPORG_ERROR_FILENAME_FORMAT', 'Der Dateiname darf nur Buchstaben, Ziffern, Punkte, Binde- und Unterstriche enthalten und muss auf .xml enden.');
   define('MODULE_SITEMAPORG_FILE_TITLE' , '<hr />Dateiname');
   define('MODULE_SITEMAPORG_FILE_DESC' , 'Geben Sie einen Dateinamen ein, falls die Exportdatei am Server gespeichert werden soll.<br />(Verzeichnis "export/")');
   define('MODULE_SITEMAPORG_STATUS_DESC','Modulstatus');

@@ -16,6 +16,7 @@
   require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
   require_once(DIR_FS_INC . 'xtc_get_products_mo_images.inc.php');
   require_once(DIR_FS_INC . 'parse_multi_language_value.inc.php');
+  require_once(DIR_FS_INC . 'check_export_filename.inc.php');
 
 
   class sitemap {
@@ -61,7 +62,8 @@
             $file = parse_multi_language_value(MODULE_SITEMAPORG_FILE, $lang['code'], true);
           }
           
-          if (xtc_not_null($file)) {
+          // the scheduled task writes stored names without the admin check
+          if (xtc_not_null($file) && check_export_filename($file, array('xml'))) {
             $this->language = $lang;
             
             $this->url_param = '';

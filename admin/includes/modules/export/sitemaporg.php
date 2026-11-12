@@ -79,6 +79,9 @@ class sitemaporg extends sitemap {
     while ($language = xtc_db_fetch_array($languages_query)) {
       $filename = parse_multi_language_value($config_values['MODULE_SITEMAPORG_FILE'], $language['code'], true);
       if (xtc_not_null($filename)) {
+        if (!check_export_filename($filename, array('xml'))) {
+          return MODULE_SITEMAPORG_ERROR_FILENAME_FORMAT;
+        }
         if (in_array($filename, $filenames)) {
           return MODULE_SITEMAPORG_ERROR_FILENAME;
         }
