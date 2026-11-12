@@ -95,8 +95,14 @@
     if (xtc_not_null($state)) $statecomma = $state . ', ';
     
     if (defined('CAPITALIZE_ADDRESS_FORMAT') && CAPITALIZE_ADDRESS_FORMAT == 'true') {
-      $city = strtoupper($city);
-      $country = strtoupper($country);
+      if ($html) {
+        // uppercase the text, not the entities of the escaped values
+        $city = encode_htmlspecialchars(strtoupper(decode_htmlspecialchars($city, ENT_NOQUOTES)), ENT_NOQUOTES);
+        $country = encode_htmlspecialchars(strtoupper(decode_htmlspecialchars($country, ENT_NOQUOTES)), ENT_NOQUOTES);
+      } else {
+        $city = strtoupper($city);
+        $country = strtoupper($country);
+      }
     }
   
     $address = $address_format['format'];
