@@ -243,5 +243,8 @@ ALTER TABLE `customers`
   ADD `customers_email_verify_time` DATETIME NULL AFTER `customers_email_verify_key`,
   ADD `customers_email_verify_count` INT(11) NOT NULL DEFAULT 0 AFTER `customers_email_verify_time`;
 
+#GTB - 2026-11-12 - remove the SSL session ID check, the TLS session ID is no stable client identifier
+DELETE FROM `configuration` WHERE `configuration_key` = 'SESSION_CHECK_SSL_SESSION_ID';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
 

@@ -11,25 +11,6 @@
    ---------------------------------------------------------------------------------------*/
 
 
-// verify the ssl_session_id if the feature is enabled
-if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started == true)) {
-  $ssl_session_id  = $_SERVER['SSL_SESSION_ID'];
-  $ssl_session_id2 = getenv('SSL_SESSION_ID');
-  $ssl_session_id  = ($ssl_session_id == $ssl_session_id2) ? $ssl_session_id : $ssl_session_id.';'.$ssl_session_id2;
-  if (!isset($_SESSION['SSL_SESSION_ID'])) {
-    $_SESSION['SESSION_SSL_ID'] = $ssl_session_id;
-  }
-  if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
-    xtc_session_recreate();
-    xtc_session_destroy();
-    if (defined('RUN_MODE_ADMIN')) {
-      xtc_redirect(xtc_catalog_href_link('ssl_check.php'));
-    } else {
-      xtc_redirect(xtc_href_link(FILENAME_SSL_CHECK));
-    }
-  }
-}
-
 // verify the browser user agent if the feature is enabled
 if (SESSION_CHECK_USER_AGENT == 'True') {
   $http_user_agent  = strtolower($_SERVER['HTTP_USER_AGENT']);

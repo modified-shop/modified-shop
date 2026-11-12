@@ -62,7 +62,6 @@ $filename_array = array(
   'FILENAME_SHOPPING_CART' => 'shopping_cart.php',
   'FILENAME_START' => DIR_ADMIN.'start.php',
   'FILENAME_SPECIALS' => 'specials.php',
-  'FILENAME_SSL_CHECK' => 'ssl_check.php',
   'FILENAME_ORDERS' => DIR_ADMIN.'orders.php',
   'FILENAME_METATAGS' => 'metatags.php',
   'FILENAME_MINIMUM_ORDER' => 'reviews.php',

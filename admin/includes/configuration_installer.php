@@ -415,10 +415,6 @@ $values_group_update = array();
                            );
   $values_update[] = array (
                            'values' => "configuration_group_id = '6', configuration_value = 'False'",
-                           'configuration_key' => 'SESSION_CHECK_SSL_SESSION_ID'
-                           );
-  $values_update[] = array (
-                           'values' => "configuration_group_id = '6', configuration_value = 'False'",
                            'configuration_key' => 'SESSION_CHECK_USER_AGENT'
                            );
   $values_update[] = array (

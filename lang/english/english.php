@@ -428,7 +428,6 @@ define('NAVBAR_TITLE_COOKIE_USAGE', 'Cookie usage');
 define('NAVBAR_TITLE_PRODUCT_REVIEWS', 'Reviews');
 define('NAVBAR_TITLE_REVIEWS_WRITE', 'Opinions');
 define('NAVBAR_TITLE_REVIEWS','Reviews');
-define('NAVBAR_TITLE_SSL_CHECK', 'Note on safety');
 define('NAVBAR_TITLE_CREATE_GUEST_ACCOUNT','Your customer address');
 define('NAVBAR_TITLE_PASSWORD_DOUBLE_OPT','Password forgotten?');
 define('NAVBAR_TITLE_NEWSLETTER','Newsletter');
