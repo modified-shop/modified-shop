@@ -28,11 +28,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// xss secure
-if (is_file('includes/xss_secure.php')) {
-  include_once ('includes/xss_secure.php');
-}
-
 // start the timer for the page parse time log
 defined('PAGE_PARSE_START_TIME') OR define('PAGE_PARSE_START_TIME', microtime(true));
 
@@ -45,6 +40,11 @@ if (file_exists('includes/local/configure.php')) {
   include_once ('includes/local/configure.php');
 } else {
   include_once ('includes/configure.php');
+}
+
+// xss secure, after the configuration so TRUSTED_PROXIES and the XSS options defined there apply
+if (is_file('includes/xss_secure.php')) {
+  include_once ('includes/xss_secure.php');
 }
 
 // call Installer
