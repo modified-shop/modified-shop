@@ -546,6 +546,7 @@ define('ML_CONFIG_NOT_EMPTY', 'Darf nicht leer bleiben');
 define('ML_CONFIG_MUST_CONTAIN', 'Muss %s enthalten');
 define('ML_CONFIG_INVALID_CHARS', 'Enth&auml;lt ung&uuml;ltige Zeichen');
 define('ML_CONFIG_INVALID_RANGE', 'Number not in range');
+define('ML_CONFIG_DIR_NOT_WRITABLE', 'Verzeichnis existiert nicht oder ist nicht les- und beschreibbar');
 
 
 /* Platform independent stuff */
@@ -2495,6 +2496,7 @@ define('ML_UPLOADINVOICE_ERROR_MULTIPLERECEIPTSFORONEORDER', 'Achtung f&uuml;r d
 define('ML_UPLOADINVOICE_ERROR_NORECEIPTSFORONEORDER', 'Achtung in dem/den &quot;{#ConfigFieldLabel#}&quot; existiert keine Rechnung bzw. Gutschrift zu Shop-Bestell-Id: {#ShopOrderId#}. magnalister kann der Shop-Bestellung daher keine Rechnung / Gutschrift zuordnen und an {#marketplace#} &uuml;bermitteln.');
 define('ML_UPLOADINVOICE_ERROR_MOVETODESTINATIONDIRECTORY_FAILED', 'Die Rechnung / Gutschrift &quot;{#ReceiptFileName#}&quot; konnte nicht in den Ziel-Ordner auf dem Server ({#ConfigDestinationPath#}) verschoben werden. Bitte pr&uuml;fen Sie die Schreib- und Leserechte f&uuml;r entsprechende Ordner und Dateien auf Ihrem Server!');
 define('ML_UPLOADINVOICE_FILEBROWSER_HEADLINE', 'Datei-Manager');
+define('ML_UPLOADINVOICE_ERP_NOT_AVAILABLE_GAMBIOCLOUD', 'Die Rechnungs&uuml;bermittlung aus Drittanbieter-Systemen (z. B. ERP) steht f&uuml;r Gambio Cloud Shops nicht zur Verf&uuml;gung. Es werden derzeit keine Rechnungen &uuml;bermittelt. Bitte w&auml;hlen Sie eine andere Option zur Rechnungs&uuml;bermittlung und speichern Sie die Konfiguration.');
 define('ML_UPLOADINVOICE_FILEBROWSER_INFORMATION', 'Bitte beachten Sie, dass hier nur Ordner angezeigt werden, f&uuml;r die die Lese- und Schreibrechte korrekt gesetzt sind.');
 
 /**
@@ -2612,6 +2614,19 @@ define('ML_TEMU_LABEL_LOGISTICS_TYPE', 'Logistiktyp');
 define('ML_TEMU_LABEL_REGION', 'Region');
 define('ML_TEMU_LABEL_MALL_ID', 'Mall-ID');
 define('ML_TEMU_LABEL_TOKEN_EXPIRES', 'Token l&auml;uft ab');
+define('ML_TEMU_LABEL_PRICE_SCOPE', 'Base Price Management');
+define('ML_TEMU_STATUS_SCOPE_GRANTED', 'Erteilt');
+define('ML_TEMU_STATUS_SCOPE_MISSING', 'Nicht erteilt');
+define('ML_TEMU_HINT_SCOPE_CONSEQUENCE', 'Ohne sie lehnt Temu jeden von magnalister &uuml;bermittelten Preis ab. Produktpreise k&ouml;nnen daher nicht abgeglichen werden und die Preiseinstellungen bleiben wirkungslos. Der Bestandsabgleich ist nicht betroffen.');
+define('ML_TEMU_HINT_SCOPE_MISSING', 'Erteilen Sie magnalister die Berechtigung "Base Price Management" in den Autorisierungseinstellungen Ihres Temu Seller Center, trennen Sie die Verbindung hier und verbinden Sie das Konto erneut.');
+define('ML_TEMU_BUTTON_TOKEN_REVOKE', 'Konto trennen');
+define('ML_TEMU_REVOKE_CONFIRM_HEADLINE', 'Temu-Konto trennen?');
+define('ML_TEMU_REVOKE_CONFIRM_TEXT', 'Die gespeicherten Zugangsdaten dieses Temu-Kontos werden gel&ouml;scht. magnalister kann keine Bestellungen mehr importieren und keine Produkte, Preise oder Best&auml;nde mehr &uuml;bermitteln, bis Sie wieder ein Konto verbinden.');
+define('ML_TEMU_REVOKE_CONFIRM_IRREVERSIBLE', 'Dieser Schritt kann nicht widerrufen werden. Um weiter &uuml;ber Temu zu verkaufen, m&uuml;ssen Sie sich erneut verbinden - mit demselben oder einem anderen Konto.');
+define('ML_TEMU_ERROR_REVOKE_TOKEN_HEADLINE', 'Trennen fehlgeschlagen');
+define('ML_TEMU_ERROR_REVOKE_TOKEN_TEXT', 'Das Temu-Konto konnte nicht getrennt werden. Bitte versuchen Sie es in einem Moment erneut.');
+define('ML_TEMU_ERROR_MISSING_SCOPE_HEADLINE', 'Autorisierung abgelehnt: Eine Berechtigung fehlt');
+define('ML_TEMU_ERROR_MISSING_SCOPE_TEXT', 'Die letzte Autorisierung enthielt nicht alle Berechtigungen, die magnalister ben&ouml;tigt, und wurde daher nicht &uuml;bernommen. Erteilen Sie magnalister die fehlende Berechtigung im Temu Seller Center und verbinden Sie das Konto erneut.');
 define('ML_TEMU_LABEL_IMPORT_PENDING', 'Ausstehende Bestellungen importieren');
 define('ML_TEMU_LABEL_EMAIL_BLACKLISTING', 'Kunden-E-Mails unterdr&uuml;cken');
 define('ML_TEMU_LABEL_BUY_SHIPPING', 'Buy-Shipping Standardwerte');

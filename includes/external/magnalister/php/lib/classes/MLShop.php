@@ -37,8 +37,32 @@ class MLShop {
 			return ML_DEBUG_HOST;
 		}
 		
-		return (strpos(DIR_WS_CATALOG, HTTP_SERVER) === 0)
-			? DIR_WS_CATALOG
-			: HTTP_SERVER.DIR_WS_CATALOG;
+		/* Do not use HTTP_SERVER: inside the admin area that is the admin domain
+		   from admin/includes/configure.php. With a separate admin URL (e.g.
+		   admin.shop.de instead of www.shop.de) it does not match the licensed
+		   shop URL, so the service layer rejects every request coming from the
+		   admin area (IsAccessAllowed = no) while the cron via magnaCallback.php
+		   keeps working. mlGetCatalogServerUrl() returns the shop domain and
+		   degrades gracefully if HTTP_CATALOG_SERVER is empty or missing. */
+		if (function_exists('mlGetCatalogServerUrl')) {
+			$sServer = mlGetCatalogServerUrl();
+		} else if (defined('HTTP_CATALOG_SERVER') && (HTTP_CATALOG_SERVER != '')) {
+			$sServer = HTTP_CATALOG_SERVER;
+		} else {
+			$sServer = HTTP_SERVER;
+		}
+		
+		/* A hand-edited configure.php may leave a trailing slash on the server
+		   URL. DIR_WS_CATALOG always starts with one, and the service layer
+		   compares the result against the licensed shop URL verbatim, so a
+		   double slash would break the match. */
+		$sServer = rtrim($sServer, '/');
+		
+		/* In some shops DIR_WS_CATALOG already is an absolute URL. */
+		if (($sServer != '') && (strpos(DIR_WS_CATALOG, $sServer) === 0)) {
+			return DIR_WS_CATALOG;
+		}
+		
+		return $sServer.DIR_WS_CATALOG;
 	}
 }

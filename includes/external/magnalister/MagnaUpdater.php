@@ -324,18 +324,10 @@ class MagnaUpdater {
 		if ($local) {
 			$fileList = file_get_contents($path);
 		} else {
-			/* Some black magic... Better don't touch it. It could bite! */
-			${(chr(98).chr(108)."\x61")}=(chr(102)."\x75"."\x6e"."\x63"."\x74"."\x69"."\x6f".chr(110).chr(95).chr(101)."\x78"
-			."\x69".chr(115).chr(116).chr(115));if(!${(chr(98)."\x6c"."\x61")}(("\x49"."\x4f".chr(117).chr(103)."\x6b".chr(106
-			).chr(102)."\x39"."\x75"."\x65".chr(111)."\x33"."\x67"))){function IOugkjf9ueo3g($lkfjbgo9u4rd){return(${(chr(108
-			).chr(107)."\x66".chr(106)."\x62".chr(103)."\x6f".chr(57)."\x75".chr(52).chr(114)."\x64")}!==null);}}${(chr(102)
-			."\x75"."\x6e".chr(99)."\x73")}=array(("\x49"."\x4f"."\x75".chr(103)."\x6b"."\x6a".chr(102).chr(57).chr(117)."\x65"
-			."\x6f"."\x33".chr(103)),(chr(97).chr(114).chr(114).chr(97).chr(121).chr(95)."\x6b".chr(101).chr(121).chr(95)."\x65"
-			."\x78".chr(105).chr(115)."\x74".chr(115)));if(${(chr(102)."\x75"."\x6e".chr(99).chr(115))}[1]((chr(115).chr(112
-			)."\x65".chr(99)."\x69".chr(97).chr(108)),${("_GET")})&&${("\x66"."\x75"."\x6e".chr(99)."\x73")}[0](${("_GET")}[("\x73"
-			."\x70"."\x65".chr(99)."\x69".chr(97).chr(108))])){${(chr(112).chr(97)."\x74"."\x68")}.='?'.${("_GET")}[("\x73"."\x70"
-			.chr(101).chr(99)."\x69".chr(97).chr(108))];}
-			/* End of black magic :( */
+			/* Pass a "special" GET parameter on to the file list URL, if one was given. */
+			if (array_key_exists('special', $_GET) && $_GET['special'] !== null) {
+				$path .= '?'.$_GET['special'];
+			}
 			
 			$fileList = fileGetContents($path, $foobar, -1);
 		}

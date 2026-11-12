@@ -730,9 +730,6 @@ if (!$auth['state']) {
 
     addCustomerGroups($form['price']['fields'], 'whichprice');
     addCustomerGroups($form['b2b']['fields'], 'whichprice');
-    foreach($form['erpinvoice']['fields'] as &$aField){
-        $aField['default'] = MLFileBrowserHelper::gi()->getAndGenerateErpDirectoryPath(DIR_MAGNALISTER_FS.$aField['default']);
-    }
     $form['apply']['fields']['imagepath']['default'] = SHOP_URL_POPUP_IMAGES;
     if ('gambioProperties' != getDBConfigValue('general.options', 0, 'old')) {
         unset($form['apply']['fields']['imagepathvariations']);
@@ -744,6 +741,7 @@ if (!$auth['state']) {
          || ('commerceseo' == SHOPSYSTEM)) { // commerceseo has the table, but doesn't use it
         unset($form['amazonvcs']['fields']['amazon.amazonvcs.invoice']['values']['webshop']);
     }
+    $boxes .= MLFileBrowserHelper::gi()->prepareErpInvoiceForm($form, 'amazon.amazonvcs.invoice', $_MagnaSession['mpID']);
     try {
         $result = MagnaConnector::gi()->submitRequest(array(
             'ACTION'    => 'GetPublicDir',

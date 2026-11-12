@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$ osC
- *
- * (c) 2010 - 2011 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2026 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -76,6 +74,12 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 
     /** @var bool Checking if more orders are ready to import - if set to false it does only one iteration */
     protected $continueMode = true;
+
+    /** @var bool Set by GET parameter "maxorders" */
+    protected $maxOrdersMode = false;
+
+    /** @var bool HASNEXT of the last API response, independent of continueMode */
+    protected $lastResponseHasNext = false;
 
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);
@@ -398,8 +402,21 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	}
 
 	protected function buildRequest() {
+		/* GET parameter "maxorders" (e.g. magnaCallback.php?do=ImportOrders&mpid=123&maxorders=50): Only one request
+		   with this many orders (max. 100) per marketplace and run, the remaining orders follow with the next runs. */
+		if (    empty($this->offset) && isset($_GET['maxorders']) && is_string($_GET['maxorders'])
+			 && ctype_digit($_GET['maxorders']) && ((int)$_GET['maxorders'] > 0)
+		) {
+			$this->offset = array (
+				'COUNT' => min((int)$_GET['maxorders'], 100),
+				'START' => 0,
+			);
+			$this->continueMode = false;
+			$this->maxOrdersMode = true;
+			$this->out($this->marketplace.' ('.$this->mpID.') order import: limited to '.$this->offset['COUNT']." orders (maxorders).\n");
+		}
 		/* {Hook} "MagnaCompatibleImportOrders_buildRequest": Modify or replace the GetOrdersForDateRange request to magnalister API.
-				Here, you can modify or the request for orders to magnalister API. Useful e.g. if your shop server can't process 200 orders at once (you can reduce the count).
+				Here, you can modify or the request for orders to magnalister API. Useful e.g. if your shop server can't process 100 orders at once (you can reduce the count).
 				You can also change the begin date (not recommended, but can be useful e.g. if your shop was offline for more than a week), and then return your changed request.
 				Variables that can be used:
 				<ul>
@@ -413,7 +430,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		}
 		if (empty($this->offset)) {
 			$this->offset = array (
-				'COUNT' => 200,
+				'COUNT' => 100,
 				'START' => 0,
 			);
 		}
@@ -455,6 +472,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$this->out($this->marketplace.' ('.$this->mpID.") order import: No data.\n");
 			return false;
 		}
+		$this->lastResponseHasNext = !empty($res['HASNEXT']);
 		$this->hasNext = ($this->continueMode) ? $res['HASNEXT'] : false;
 		$this->offset['START'] += $this->offset['COUNT'];
 		
@@ -2286,7 +2304,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
         $this->submitSyncBatch();
 
         if (get_class($this->db) != 'MagnaTestDB') {
-			if (!empty($this->lastOrderDate)) {
+			/* With "maxorders": keep the begin date while the API reports more orders, even if the response is short. */
+			if (!empty($this->lastOrderDate) && (!$this->maxOrdersMode || !$this->lastResponseHasNext)) {
 				setDBConfigValue($this->marketplace.'.orderimport.lastrun', $this->mpID, $this->lastOrderDate, true);
 			}
 			$this->fixOrdersTotal();

@@ -289,9 +289,8 @@ class TemuHelper extends AttributesMatchingHelper {
 		);
 		// NOTE: MainImage is intentionally NOT sent — the image set is provided via Images[]
 		// (Temu derives the main image from the first entry).
-		// NOTE: CostTemplateId is intentionally NOT sent at the root — it is submitted inside
-		// CategoryIndependentAttributes (from the "Shipping Template" CI matching, which carries
-		// the real LFT-… value). A root CostTemplateId here duplicated it as an empty string.
+		// NOTE: CostTemplateId comes from the "Shipping Template" CI matching (the real LFT-… value)
+		// and is set at the root below, only when one is matched — never as an empty string.
 		if (!empty($aPrepare['Images'])) {
 			$aImages = json_decode($aPrepare['Images'], true);
 			if (is_array($aImages)) {
@@ -326,6 +325,11 @@ class TemuHelper extends AttributesMatchingHelper {
 						$aCIOut[$sName] = self::normalizeAttributeValue($mVal);
 					}
 					$aSubmit['CategoryIndependentAttributes'] = $aCIOut;
+					// Also at the root, like v3: the API merges the variant items into one master
+					// item and reads the root value first.
+					if (!empty($aCIOut['CostTemplateId'])) {
+						$aSubmit['CostTemplateId'] = $aCIOut['CostTemplateId'];
+					}
 				}
 			}
 

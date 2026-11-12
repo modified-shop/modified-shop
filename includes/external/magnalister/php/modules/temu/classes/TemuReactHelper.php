@@ -984,6 +984,13 @@ class TemuReactHelper {
                         'desc'     => isset($attr['desc']) ? $attr['desc'] : '',
                         'values'   => $attrValues,
                     );
+                    // Parent-child fields (e.g. "Province of origin – China" under "Country of Origin"),
+                    // as getMarketplaceAttributes() passes them for category attributes.
+                    foreach (array('refPid', 'childAttributes', 'parentRefPid', 'triggerVid', 'groupId') as $sField) {
+                        if (isset($attr[$sField])) {
+                            $attributes[$key][$sField] = $attr[$sField];
+                        }
+                    }
                 }
             }
         } catch (MagnaException $e) {

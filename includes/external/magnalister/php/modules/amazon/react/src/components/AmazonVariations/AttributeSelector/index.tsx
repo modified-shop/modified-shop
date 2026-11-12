@@ -189,7 +189,7 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
 
     return (
       <div className="attribute-selector-container">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
           <label className="attribute-selector-label" style={{ margin: 0, whiteSpace: 'nowrap' }}>
             {i18n.webShopAttribute || 'Web-Shop Attribute'}
           </label>
@@ -209,12 +209,17 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
               ...SELECT_CONFIGS.ATTRIBUTE_SELECTOR.styles,
               container: (provided: any) => ({
                 ...provided,
-                minWidth: 'fit-content',
+                // Lange Werte nicht in die Spaltenbreite einrechnen (sonst horizontales Scrollen),
+                // stattdessen mit "…" kürzen. Untergrenze, damit der Wert lesbar bleibt
+                minWidth: '120px',
+                maxWidth: '100%',
+                flex: '1 1 200px',
+                contain: 'inline-size',
                 width: 'auto'
               }),
               control: (provided: any, state: any) => ({
                 ...SELECT_CONFIGS.ATTRIBUTE_SELECTOR.styles.control(provided, state),
-                minWidth: '200px',
+                minWidth: 0,
                 width: 'auto',
                 borderColor: hasError ? '#e31a1c' : (provided.borderColor || '#ccc')
               }),
@@ -246,7 +251,7 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
   // Fallback to native select for smaller option lists
   return (
     <div className="attribute-selector-container">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
         <label htmlFor={fieldId} style={{ margin: 0, whiteSpace: 'nowrap' }}>
           {i18n.webShopAttribute || 'Web-Shop Attribute'}
         </label>
@@ -257,7 +262,11 @@ const AttributeSelector: React.FC<AttributeSelectorProps> = ({
           disabled={disabled}
           className={`attribute-selector ${hasError ? 'has-error' : ''}`}
           style={{
-            minWidth: '200px',
+            // wie beim React-Select: längste Option nicht in die Spaltenbreite einrechnen
+            minWidth: '120px',
+            maxWidth: '300px',
+            flex: '1 1 200px',
+            contain: 'inline-size',
             width: 'auto',
             borderColor: hasError ? '#e31a1c' : undefined
           }}

@@ -28,6 +28,17 @@ require_once(DIR_MAGNALISTER_MODULES.'ebay/EbayHelper.php');
 function renderAuthError($authError) {
 	global $_MagnaSession;
 	global $magnaConfig;
+	/* MagnaException::getErrorArray() hands back the raw response when it could not
+	   be decoded, so this is not always an array. Without a confirmed auth error the
+	   token must stay - dropping it over a transient API glitch would sign the shop
+	   out of eBay. Still return a notice: the caller strips the form down to the
+	   account section either way, and an unexplained half page is worse than a
+	   generic message. */
+	if (!is_array($authError)) {
+		return '<p class="errorBox">
+     	<span class="error bold larger">'.ML_ERROR_LABEL.':</span>
+     	'.ML_ERROR_UNKNOWN.'</p>';
+	}
 	$errors = array();
 	if (array_key_exists('ERRORS', $authError) && !empty($authError['ERRORS'])) {
 		foreach ($authError['ERRORS'] as $err) {

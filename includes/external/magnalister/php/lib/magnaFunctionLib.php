@@ -1494,14 +1494,57 @@ function readConfigFormFile($file) {
     return ob_get_clean();
 }
 
+/**
+ * Auth hash for the magnaCallback.php do dispatch: md5(ShopID . PassPhrase).
+ * Same value as the magnalister service sends (API/Maranon/CallbackInvoker::getAuthHash()).
+ * magnaCallback.php::magnaCallbackAuthValid() computes it on its own (shop root file,
+ * updated separately). Keep both in sync.
+ *
+ * @return string empty if ShopID or passphrase are not available
+ */
+function magnaGetCallbackAuthHash() {
+    global $magnaConfig;
+    if (empty($magnaConfig['maranon']['ShopID'])) {
+        return '';
+    }
+    $passPhrase = (string)getDBConfigValue('general.passphrase', 0, '');
+    if ($passPhrase === '') {
+        return '';
+    }
+    return md5($magnaConfig['maranon']['ShopID'].$passPhrase);
+}
+
+/**
+ * Applies the replacements to the raw content of a config form: the given ones,
+ * the real shop url and, if available, the auth parameter required by
+ * magnaCallback.php, appended to the cronjob links after the do value
+ * (magnaCallback.php?do=SyncInventory&auth=...).
+ *
+ * @param string $fC raw form content (JSON)
+ * @param array $replace
+ * @return string
+ */
+function magnaReplaceConfigFormContent($fC, $replace = array()) {
+    /* Placeholder shop urls used in the forms, with JSON-escaped and plain slashes. */
+    $shopUrlEscaped = trim(json_encode(HTTP_SERVER.DIR_WS_CATALOG), ' "\/').'\/';
+    $shopUrlPlain = rtrim(HTTP_SERVER.DIR_WS_CATALOG, '/').'/';
+    foreach (array('www.IhrShop.de', 'www.YourShop.com', 'www.YourShop.de') as $placeholder) {
+        $replace['http:\/\/'.$placeholder.'\/'] = $shopUrlEscaped;
+        $replace['http://'.$placeholder.'/'] = $shopUrlPlain;
+    }
+    $fC = str_replace(array_keys($replace), array_values($replace), $fC);
+    $authHash = magnaGetCallbackAuthHash();
+    if ($authHash !== '') {
+        $fC = preg_replace('/(magnaCallback\.php\?do=[A-Za-z0-9_,]+)/', '$1&auth='.$authHash, $fC);
+    }
+    return $fC;
+}
+
 function loadConfigForm($lang, $files, $replace = array()) {
     $form = array();
     foreach ($files as $file => $options) {
         $fC = readConfigFormFile(DIR_MAGNALISTER_FS.'config/'.$lang.'/'.$file);
-        $replace['http:\/\/www.IhrShop.de\/'] = trim(json_encode(HTTP_SERVER.DIR_WS_CATALOG), ' "\/').'\/';
-        if (!empty($replace)) {
-            $fC = str_replace(array_keys($replace), array_values($replace), $fC);
-        }
+        $fC = magnaReplaceConfigFormContent($fC, $replace);
         $fC = json_decode($fC, true);
         if (!is_array($fC)) {
             // an unreadable form must not take the whole configuration page down

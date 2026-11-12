@@ -19,7 +19,7 @@ $(document).ready(function() {
     };
     // Single select options
     var singleSelectOptions = {
-        width: 'resolve',
+        width: '100%',
         placeholder: config.i18n.pleaseSelect,
     };
     $(config.elements.mainSelectElement).select2(singleSelectOptions);
@@ -36,7 +36,7 @@ $(document).ready(function() {
                 var self = this,
                 // Single select options
                 singleSelectOptions = {
-                    width: 'resolve',
+                    width: '100%',
                     placeholder: self.i18n.pleaseSelect,
                 };
                 self.elements.mainSelectElement.select2(singleSelectOptions);
@@ -336,7 +336,7 @@ $(document).ready(function() {
                     // be inserted.
                     $('#variation-themes').val(JSON.stringify(variationDetails));
                     var singleSelectOptions = {
-                        width: 'resolve',
+                        width: '100%',
                     };
                     $('#variation-theme').select2(singleSelectOptions);
                     $('#variation-theme').change(function () {

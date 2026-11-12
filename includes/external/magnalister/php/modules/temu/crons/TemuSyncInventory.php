@@ -73,11 +73,16 @@ class TemuSyncInventory extends MagnaCompatibleSyncInventory {
 	}
 
 	/**
-	 * The base sync writes the price into $data['Price']; Temu's UpdateInventory API expects it
-	 * under `BasePrice` (net), consistent with the AddItems payload. Rename it here (Temu-only,
-	 * no change to the shared base class).
+	 * The base sync writes the stock into $data['NewQuantity'] = array('Mode' => 'SET', 'Value' => n)
+	 * and the price into $data['Price']; the Temu API reads the stock from `Quantity` (like OTTO, Metro
+	 * and Etsy) and the price from `BasePrice` (net), consistent with the AddItems payload. Convert
+	 * both here (Temu-only, no change to the shared base class).
 	 */
 	protected function updateCustomFields(&$data) {
+		if (array_key_exists('NewQuantity', $data)) {
+			$data['Quantity'] = $data['NewQuantity']['Value'];
+			unset($data['NewQuantity']);
+		}
 		if (array_key_exists('Price', $data)) {
 			$data['BasePrice'] = $data['Price'];
 			unset($data['Price']);

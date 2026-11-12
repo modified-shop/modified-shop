@@ -394,14 +394,24 @@ class HitmeisterHelper extends AttributesMatchingHelper
 		$times['values'] = self::GetDeliveryCountries();
 	}
 
-	public static function GetShippingGroups() {
+	/**
+	 * Returns the shipping groups the marketplace currently offers, keyed by id.
+	 * The result is cached in the session, which is fine for rendering option
+	 * lists but not for validating a value that is about to be submitted -- pass
+	 * $forceRefresh for that.
+	 *
+	 * @param bool $forceRefresh
+	 * @return array|bool false if the list could not be retrieved
+	 */
+	public static function GetShippingGroups($forceRefresh = false) {
 		global $_MagnaSession;
 	
 		$mpID = $_MagnaSession['mpID'];
 	
 		$types['values'] = array();
 	
-		if (   isset($_MagnaSession[$mpID]['ShippingGroups'])
+		if (   !$forceRefresh
+			&& isset($_MagnaSession[$mpID]['ShippingGroups'])
 			&& !empty($_MagnaSession[$mpID]['ShippingGroups'])
 		) {
 			return $_MagnaSession[$mpID]['ShippingGroups'];
@@ -475,6 +485,28 @@ class HitmeisterHelper extends AttributesMatchingHelper
 			return;
 		}
 		$profiles['values'] = array('0' => ML_HITMEISTER_WAREHOUSE_DEFAULT) + $warehouses;
+	}
+
+	/**
+	 * Fills the manufacturer guarantee select with the variations and product fields of the attribute
+	 * matching list, plus free text. attribute_value and database_value need a mapping this field has not.
+	 */
+	public static function GetManufacturerGuaranteeYearsConfig(&$field) {
+		$shopAttributes = self::gi()->getShopVariations();
+		$field['values'] = array('' => ML_GENERAL_VARMATCH_DONT_TRANSMIT);
+		foreach (array(ML_VARIATION, ML_PRODUCT_DEFAULT_FIELDS) as $group) {
+			if (empty($shopAttributes[$group])) {
+				continue;
+			}
+			foreach ($shopAttributes[$group] as $code => $attribute) {
+				// product fields of type select (manufacturer, fsk_18, delivery_time) only resolve through a value mapping
+				$needsMapping = $group === ML_PRODUCT_DEFAULT_FIELDS && isset($attribute['Type']) && $attribute['Type'] === 'select';
+				if (empty($attribute['Disabled']) && !$needsMapping) {
+					$field['values'][$group][$code] = fixHTMLUTF8Entities($attribute['Name']);
+				}
+			}
+		}
+		$field['values'][ML_GENERAL_VARMATCH_ADDITIONAL_OPTIONS] = array('freetext' => ML_GENERAL_VARMATCH_FREE_TEXT_LABEL);
 	}
 
 	public static function SearchOnHitmeister($search = '', $searchBy = 'EAN') {

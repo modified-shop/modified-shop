@@ -665,6 +665,32 @@ function magnaAuthed() {
 	return $_magnaIsAuthed;
 }
 
+/**
+ * Checks the auth GET parameter of a standalone callback request.
+ * Expected value: md5(ShopID . PassPhrase), as built by the magnalister service.
+ *
+ * @return bool
+ */
+function magnaCallbackAuthValid() {
+	if (!isset($_GET['auth']) || !is_string($_GET['auth']) || ($_GET['auth'] === '')) {
+		return false;
+	}
+	/* Computed here on purpose, not via magnaGetCallbackAuthHash() from
+	 * lib/magnaFunctionLib.php: this file lives in the shop root, is updated
+	 * separately and must not depend on functions a different plugin version
+	 * might not have. Keep both in sync. */
+	global $magnaConfig;
+	if (empty($magnaConfig['maranon']['ShopID'])) {
+		return false;
+	}
+	$passPhrase = (string)getDBConfigValue('general.passphrase', 0, '');
+	if ($passPhrase === '') {
+		return false;
+	}
+	$expected = md5($magnaConfig['maranon']['ShopID'].$passPhrase);
+	return hash_equals($expected, strtolower($_GET['auth']));
+}
+
 function refreshCurrentClientVersion() {
 	if (($currentClientVersion = fileGetContents(
 			MAGNA_UPDATE_FILEURL.'ClientVersion/'.LOCAL_CLIENT_VERSION.'/',
@@ -1056,6 +1082,18 @@ function magnaCallbackRun() {
 	/* Nur im Standalone-Modus zeitintensive Prozesse verarbeiten. */
 	if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
 		if (!defined('MAGNA_EXECUTE_INSTEAD')) {
+			/* The do dispatch (ImportOrders, SyncInventory, ...) is triggered by the
+			 * magnalister service via GET. It always appends auth=md5(ShopID.PassPhrase),
+			 * see API/Maranon/CallbackInvoker::getAuthHash(). Without a valid auth
+			 * anyone knowing the shop url could start the jobs. */
+			/* Only requests that actually ask for a job; a plain call keeps its empty 200. */
+			if (!empty($_GET['do']) && !magnaCallbackAuthValid()) {
+				if (function_exists('http_response_code')) {
+					http_response_code(403);
+				}
+				echo 'Access denied';
+				return;
+			}
 			require_once(DIR_MAGNALISTER_FS_CALLBACK.'callbackProcessor.php');
 			magnaProcessCallbackRequest();
 		} else {

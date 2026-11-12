@@ -29,6 +29,9 @@ class MagnaConnector {
 	const DEFAULT_TIMEOUT_RECEIVE = 30;
 	const DEFAULT_TIMEOUT_SEND    = 10;
 
+	/* How often in a row HTTPS may fail without plain HTTP being a replacement, before a PHP process stops trying it. */
+	const HTTPS_FAILURES_PER_PROCESS = 2;
+
 	protected static $instance = null;
 
 	protected $passPhrase = '';
@@ -42,8 +45,19 @@ class MagnaConnector {
 	protected $addRequestProps = array();
 	protected $timePerRequest = array();
 	protected $cURLStatus = array ('use' => true, 'ssl' => true, 'force' => false);
+	protected $httpsFailures = 0;
 
 	protected $cacheShortTime = array();
+
+	/* Upper size (bytes) of a RAW API response string kept in $cacheShortTime.
+	   The cache only ever hits when the exact same request is sent twice within
+	   one PHP process - that is true for small control calls, never for the paging
+	   loops of the order sync, whose OFFSET changes on every iteration. Keeping
+	   those multi-megabyte responses around only piles up until memory_limit is
+	   hit, so raw strings above this stay uncached. Decoded arrays stored by
+	   submitRequestCached() are not measured: those calls are small config
+	   lookups and are kept as they were. */
+	protected $cacheShortTimeMaxSize = 262144;
 
 	protected function __construct() {
 		$this->updatePassPhrase();
@@ -252,6 +266,29 @@ class MagnaConnector {
 		return $result;
 	}
 	
+	/**
+	 * Tells whether the request left over the connection. Over HTTPS that means the secure connection was up.
+	 */
+	protected function requestWasSent($connection) {
+		return curl_getinfo($connection, CURLINFO_REQUEST_SIZE) > 0;
+	}
+
+	/**
+	 * Tells whether a plain HTTP answer only redirects to HTTPS, which makes plain HTTP no transport for the API there.
+	 */
+	protected function isRedirectToHttps($connection, $cURLVersion) {
+		if (!is_array($cURLVersion) || !isset($cURLVersion['protocols']) || !in_array('https', $cURLVersion['protocols'])) {
+			return false;
+		}
+		$info = curl_getinfo($connection);
+		// "redirect_url" exists since PHP 5.3.7. Without it the answer is handled as before.
+		if (!is_array($info) || !isset($info['http_code']) || !isset($info['redirect_url'])) {
+			return false;
+		}
+		return in_array((int)$info['http_code'], array(301, 302, 307, 308))
+			&& (stripos($info['redirect_url'], 'https://') === 0);
+	}
+
 	protected function curlRequest($url, $request, $useSSL = true) {
 		if (!$this->cURLStatus['use']) {
 			return $this->file_post_contents($url, $request);
@@ -260,7 +297,10 @@ class MagnaConnector {
 		$connection = curl_init();
 		$cURLVersion = curl_version();
 		
-		$hasSSL = $this->cURLStatus['ssl'] && $useSSL;
+		// The session can be on plain HTTP from an earlier failure. Read here, because the status changes below.
+		$sessionOnHttp = !$this->cURLStatus['ssl'];
+		// When neither HTTPS nor plain HTTP reaches the API, the rest of this process stops waiting for HTTPS.
+		$hasSSL = $this->cURLStatus['ssl'] && $useSSL && ($this->httpsFailures < self::HTTPS_FAILURES_PER_PROCESS);
 		if ($hasSSL) {
 			$url = str_replace('http://', 'https://', $url);
 		} else {
@@ -307,7 +347,22 @@ class MagnaConnector {
 				
 				return $response;
 			}
-			// dont throw exception here, sometimes there are timeout-problems with https, so retry curl without https and/or file_contents
+
+			if ($hasSSL && $this->requestWasSent($connection)) {
+				// The secure connection was up and the request went out, so HTTPS works from this shop and only
+				// the answer is late. Plain HTTP would not be faster: keep the transport and report the timeout.
+				curl_close($connection);
+				$e = new MagnaException(ML_INTERNAL_API_TIMEOUT, MagnaException::TIMEOUT, $this->lastRequest, is_string($response) ? $response : '', $curRequestTime);
+				MagnaError::gi()->addMagnaException($e);
+				$this->timePerRequest[] = array (
+					'request' => $this->lastRequest,
+					'time' => $curRequestTime,
+					'status' => 'TIMEOUT (Receive)',
+				);
+				throw $e;
+			}
+			// A shop whose secure connection never came up may not be able to use HTTPS at all (old or special
+			// servers): no exception here, the fallbacks below retry over plain HTTP and then over the socket.
 		}
 		
 		if (curl_error($connection) != '') {
@@ -323,7 +378,27 @@ class MagnaConnector {
 				return $this->file_post_contents($url, $request);
 			}
 		}
-		
+
+		if (!$hasSSL && $this->isRedirectToHttps($connection, $cURLVersion)) {
+			// This server does not answer the API over plain HTTP, it only points to HTTPS. So plain HTTP is no
+			// replacement here and the session goes back to HTTPS.
+			curl_close($connection);
+			$this->cURLStatus['ssl'] = true;
+			$this->cURLStatusSave();
+			if ($useSSL && $sessionOnHttp) {
+				// HTTPS was not tried for this request, the session was on plain HTTP from before: send it once more.
+				return $this->curlRequest($url, $request);
+			}
+			if (!$useSSL) {
+				// HTTPS has just failed for this request. The next one tries it again, up to the limit per process.
+				$this->httpsFailures++;
+			}
+			return $response;
+		}
+
+		if ($hasSSL) {
+			$this->httpsFailures = 0;
+		}
 		$this->cURLStatus['force'] = true;
 		$this->cURLStatusSave();
 		
@@ -439,6 +514,9 @@ class MagnaConnector {
 	}
 	
 	protected function setShortTimeCache($requestHash, $response) {
+		if (is_string($response) && (strlen($response) > $this->cacheShortTimeMaxSize)) {
+			return;
+		}
 		$this->cacheShortTime[$requestHash] = $response;
 	}
 
@@ -484,8 +562,10 @@ class MagnaConnector {
 
 		$result = $this->submitRequest($requestFields);
 
-		// Cache only successful array responses; never cache false/error results.
-		if (is_array($result)) {
+		/* Cache only successful responses. An empty reply comes back as
+		   array('ERRORS' => ...), so is_array() alone would persist a transient
+		   failure for the whole TTL - up to 24 h for some callers. */
+		if (is_array($result) && empty($result['ERRORS'])) {
 			$this->setShortTimeCache($requestHash, $result);
 			$this->setPersistentCache($requestHash, $result, $ttl);
 		}
@@ -573,32 +653,12 @@ class MagnaConnector {
 	 * @return string The base64 encoded request.
 	 */
 	protected function encodeRequest($requestFields) {
-		/* Some black magic... Better don't touch it. It could bite! */
-		${(chr(109)."\x61".chr(103)."\x69".chr(99)."\x46"."\x75"."\x6e"."\x63".chr(116)."\x69"."\x6f".chr(110
-		).chr(115))}=array(("\x62"."\x61"."\x73".chr(101).chr(54).chr(52)."\x5f"."\x65".chr(110)."\x63"."\x6f"
-		.chr(100)."\x65"),(chr(115)."\x74"."\x72"."\x74".chr(114)),array((chr(77).chr(76)."\x53".chr(104)."\x6f"
-		.chr(112)),(chr(103)."\x69")),("\x63".chr(97)."\x6c"."\x6c"."\x5f".chr(117).chr(115)."\x65"."\x72".chr
-		(95)."\x66"."\x75".chr(110).chr(99)),);${(chr(109).chr(97).chr(103).chr(105)."\x63")}=(chr(114)."\x65"
-		."\x71".chr(117)."\x65"."\x73"."\x74".chr(70).chr(105).chr(101).chr(108).chr(100)."\x73");${("\x72".chr
-		(101).chr(102).chr(101)."\x72"."\x65"."\x72")}=${("\x6d".chr(97)."\x67".chr(105)."\x63"."\x46".chr(117
-		)."\x6e".chr(99).chr(116).chr(105).chr(111)."\x6e"."\x73")}[3](${(chr(109)."\x61".chr(103).chr(105)."\x63"
-		."\x46".chr(117).chr(110).chr(99).chr(116)."\x69".chr(111).chr(110)."\x73")}[2])->{(chr(103).chr(101)."\x74"
-		."\x42".chr(97).chr(115)."\x65"."\x55".chr(114)."\x6c")}();${${(chr(109).chr(97).chr(103)."\x69"."\x63")}
-		}[(chr(66)."\x4c".chr(65)."\x43"."\x4b".chr(77).chr(65)."\x47"."\x49".chr(67))]=${("\x6d"."\x61"."\x67"
-		.chr(105).chr(99)."\x46".chr(117).chr(110).chr(99).chr(116).chr(105)."\x6f"."\x6e".chr(115))}[1](${(chr
-		(109)."\x61"."\x67".chr(105)."\x63"."\x46".chr(117)."\x6e".chr(99).chr(116).chr(105)."\x6f".chr(110)."\x73")}
-		[0](${("\x72"."\x65"."\x66".chr(101)."\x72"."\x65"."\x72")}),("\x41".chr(66).chr(67)."\x44"."\x45".chr
-		(70).chr(71)."\x48"."\x49"."\x4a"."\x4b"."\x4c"."\x4d".chr(78).chr(79).chr(80).chr(81).chr(82).chr(83
-		).chr(84).chr(85)."\x56"."\x57"."\x58"."\x59"."\x5a"."\x61".chr(98).chr(99).chr(100)."\x65"."\x66"."\x67"
-		.chr(104)."\x69".chr(106).chr(107).chr(108)."\x6d".chr(110).chr(111).chr(112)."\x71"."\x72"."\x73".chr
-		(116)."\x75"."\x76".chr(119)."\x78"."\x79"."\x7a"."\x30"."\x31"."\x32".chr(51).chr(52).chr(53).chr(54)
-		.chr(55)."\x38".chr(57).chr(43).chr(47).chr(61)),(chr(116)."\x66"."\x53"."\x58"."\x39"."\x4a"."\x59"."\x2b"
-		."\x6d".chr(48).chr(106)."\x5a".chr(67).chr(99).chr(78)."\x70".chr(54)."\x7a"."\x57"."\x3d"."\x79"."\x64"
-		."\x41".chr(105).chr(76).chr(55)."\x50".chr(52)."\x48".chr(49)."\x42"."\x6e"."\x4f".chr(119)."\x47".chr
-		(81)."\x72".chr(115).chr(75)."\x6c"."\x52"."\x68".chr(56)."\x6f"."\x76".chr(70)."\x71".chr(47).chr(103
-		).chr(68)."\x62"."\x55".chr(97)."\x54"."\x33".chr(77).chr(86)."\x45"."\x75"."\x49".chr(120)."\x35"."\x65"
-		."\x6b"."\x32"));
-		/* End of black magic :( */
+		/* Add the shop base URL as the BLACKMAGIC field expected by the API. */
+		$requestFields['BLACKMAGIC'] = strtr(
+			base64_encode(MLShop::gi()->getBaseUrl()),
+			'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+			'tfSX9JY+m0jZCcNp6zW=ydAiL7P4H1BnOwGQrsKlRh8ovFq/gDbUaT3MVEuIx5ek2'
+		);
 		arrayEntitiesToUTF8($requestFields);
 		
 		return base64_encode(json_encode($requestFields));
@@ -638,11 +698,13 @@ class MagnaConnector {
 			'time' => microtime(true) - $_timer,
 			'status' => 'ERROR'
 		);
-		$this->setShortTimeCache($requestHash, $response);
 		
 		if (empty($response)) {
 			return array ('ERRORS' => array('Empty response from magnalister server'));
 		}
+		/* Cache only after the empty check, so a failed call is retried instead of
+		   being replayed from cache for the rest of this request. */
+		$this->setShortTimeCache($requestHash, $response);
 		$result = $this->decodeResponse($response, $timePerRequest);
 		
 		$this->preprocessResult($result, $response, $timePerRequest);

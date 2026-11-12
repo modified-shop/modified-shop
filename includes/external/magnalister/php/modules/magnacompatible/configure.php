@@ -91,10 +91,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 	
 	protected function loadConfigFormFile($file, $replace = array(), $unset = array()) {
 		$fC = readConfigFormFile($file);
-		$replace['http:\/\/www.IhrShop.de\/'] = trim(json_encode(HTTP_SERVER.DIR_WS_CATALOG), ' "\/').'\/';
-		if (!empty($replace)) {
-			$fC = str_replace(array_keys($replace), array_values($replace), $fC);
-		}
+		$fC = magnaReplaceConfigFormContent($fC, $replace);
 		$fC = json_decode($fC, true);
 		if (!empty($unset)) {
 			foreach ($unset as $key) {
@@ -338,12 +335,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 			$this->boxes .= '<p class="errorBox">'.ML_GENERIC_ERROR_TRACKING_CODE_MATCHING.'</p>';
 		}
 
-        if (isset($this->form['erpinvoice']['fields'])) {
-            foreach ($this->form['erpinvoice']['fields'] as &$aField) {
-                $aField['default'] = MLFileBrowserHelper::gi()->getAndGenerateErpDirectoryPath(DIR_MAGNALISTER_FS.$aField['default']);
-
-            }
-        }
+        $this->boxes .= MLFileBrowserHelper::gi()->prepareErpInvoiceForm($this->form, $this->marketplace.'.invoice.option', $this->mpID);
 	}
 
 	protected function loadChoiseValuesAfterProcessPOST() { }

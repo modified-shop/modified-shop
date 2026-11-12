@@ -148,20 +148,38 @@ function amazonGetMarketplaces() {
 		empty($_MagnaSession[$_MagnaSession['mpID']]['Marketplaces']['Currencies'])
 	) {
 		try {
-			$_MagnaSession[$_MagnaSession['mpID']]['Marketplaces'] = array();
-			
 			$result = MagnaConnector::gi()->submitRequest(array(
 				'ACTION' => 'GetMarketplaces',
 				'SUBSYSTEM' => 'Amazon',
 			));
-			foreach ($result['DATA'] as $item) {
-				$_MagnaSession[$_MagnaSession['mpID']]['Marketplaces']['Sites'][$item['Key']] = fixHTMLUTF8Entities($item['Label']);
-				$_MagnaSession[$_MagnaSession['mpID']]['Marketplaces']['Currencies'][$item['Key']] = $item['Currency'];
+			/* Collect first, assign afterwards: wiping the session copy up front left
+			   it without its 'Sites' and 'Currencies' keys whenever the call failed,
+			   which broke every caller that reads them. */
+			$aSites = array();
+			$aCurrencies = array();
+			if (is_array($result) && isset($result['DATA']) && is_array($result['DATA'])) {
+				foreach ($result['DATA'] as $item) {
+					$aSites[$item['Key']] = fixHTMLUTF8Entities($item['Label']);
+					$aCurrencies[$item['Key']] = $item['Currency'];
+				}
+			}
+			if (!empty($aSites)) {
+				$_MagnaSession[$_MagnaSession['mpID']]['Marketplaces']['Sites'] = $aSites;
+				$_MagnaSession[$_MagnaSession['mpID']]['Marketplaces']['Currencies'] = $aCurrencies;
 			}
 		} catch (MagnaException $e) { }
 	}
 
-	return $_MagnaSession[$_MagnaSession['mpID']]['Marketplaces'];
+	/* Always hand back both keys, even if the API never answered. */
+	$aMarketplaces = $_MagnaSession[$_MagnaSession['mpID']]['Marketplaces'];
+	if (!isset($aMarketplaces['Sites']) || !is_array($aMarketplaces['Sites'])) {
+		$aMarketplaces['Sites'] = array();
+	}
+	if (!isset($aMarketplaces['Currencies']) || !is_array($aMarketplaces['Currencies'])) {
+		$aMarketplaces['Currencies'] = array();
+	}
+
+	return $aMarketplaces;
 }
 
 function amazonGetLeadtimeToShip($mpID, $pID) {
