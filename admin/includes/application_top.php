@@ -179,11 +179,6 @@ require(DIR_WS_FUNCTIONS . 'sessions.php');
 // check the Agent
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
 
-// verify the ssl_session_id if the feature is enabled
-// verify the browser user agent if the feature is enabled
-// verify the IP address if the feature is enabled
-include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
-
 // set the language
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_language_sessions.php');
 
@@ -192,6 +187,12 @@ require(DIR_WS_FUNCTIONS . 'general.php');
 
 // define our general functions used application-wide
 require(DIR_WS_FUNCTIONS . 'html_output.php');
+
+// verify the ssl_session_id if the feature is enabled
+// verify the browser user agent if the feature is enabled
+// verify the IP address if the feature is enabled
+// after the functions above, a failed check redirects with xtc_redirect() and xtc_catalog_href_link()
+include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 
 // include the language translations
 require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
