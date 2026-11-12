@@ -216,7 +216,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         ?>
                     <tr class="content_row">
                       <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo gmdate('H:i:s', $time_online); ?></a></td>
-                      <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo $whos_online['full_name']; ?></a></td>
+                      <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo encode_htmlspecialchars($whos_online['full_name']); ?></a></td>
                       <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></a></td>
                       <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></a></td>
                     </tr>

@@ -25,7 +25,7 @@
       $smarty->assign('PAYMENT_BANKTRANSFER_TOTAL', $xtPrice->xtcFormat($order_total['total'], true));
       $smarty->assign('PAYMENT_BANKTRANSFER_MANDATE_REFERENCE', MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX . $insert_id);
       $smarty->assign('PAYMENT_BANKTRANSFER_IBAN', substr($banktransfer_data['banktransfer_iban'], 0, 8) . str_repeat('*', (strlen($banktransfer_data['banktransfer_iban']) - 10)) . substr($banktransfer_data['banktransfer_iban'], -2));
-      $smarty->assign('PAYMENT_BANKTRANSFER_BANKNAME', $banktransfer_data['banktransfer_bankname']);
+      $smarty->assign('PAYMENT_BANKTRANSFER_BANKNAME', encode_htmlspecialchars($banktransfer_data['banktransfer_bankname'], ENT_NOQUOTES));
       
       $sepa_info = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_info.html');
     

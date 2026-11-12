@@ -327,12 +327,12 @@ class product {
             $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.png';        
           }
           $reviews_array[$pID][$i] = array (
-            'AUTHOR' => $reviews['customers_name'],
+            'AUTHOR' => encode_htmlspecialchars($reviews['customers_name']),
             'DATE' => xtc_date_short($reviews['date_added']),
             'RATING' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])),
             'RATING_MICROTAG' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
             'RATING_VOTE' => $reviews['reviews_rating'],
-            'TEXT' => nl2br($reviews['reviews_text']),
+            'TEXT' => nl2br(encode_htmlspecialchars($reviews['reviews_text'])),
             'PRODUCTS_NAME' => $reviews['products_name'],
           );
           foreach ($reviews as $k => $v) {
