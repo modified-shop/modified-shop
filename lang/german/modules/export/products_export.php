@@ -17,7 +17,8 @@
   define('MODULE_PRODUCTS_EXPORT_STATUS_TITLE','Status');
   define('MODULE_PRODUCTS_EXPORT_FILE_TITLE' , 'Dateiname');
   define('MODULE_PRODUCTS_EXPORT_FILE_DESC' , 'Geben Sie einen Dateinamen ein.<br />(Verzeichnis export/)');
-  define('MODULE_PRODUCTS_EXPORT_ERROR_FILENAME', 'Der Dateiname darf nur Buchstaben, Ziffern, Punkte, Binde- und Unterstriche enthalten und muss auf .csv oder .txt enden.');
+  define('MODULE_PRODUCTS_EXPORT_ERROR_FILENAME', 'Der Dateiname darf nur Buchstaben, Ziffern, Punkte, Binde- und Unterstriche enthalten und muss auf .csv enden.');
+  define('MODULE_PRODUCTS_EXPORT_ERROR_FILE_TYPE', 'Im Verzeichnis export/ liegt unter diesem Namen ein Link oder Ordner. Er wird nicht &uuml;berschrieben.');
   define('MODULE_PRODUCTS_EXPORT_SEPARATOR_TITLE', 'Trennzeichen');
   define('MODULE_PRODUCTS_EXPORT_SEPARATOR_DESC', 'Geben Sie das Zeichen an, das die Spalten trennen soll.');
   define('MODULE_PRODUCTS_EXPORT_ENCLOSURE_TITLE', 'Texterkennungszeichen');

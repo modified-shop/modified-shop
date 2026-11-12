@@ -17,6 +17,7 @@
   require_once(DIR_FS_INC . 'xtc_get_products_mo_images.inc.php');
   require_once(DIR_FS_INC . 'parse_multi_language_value.inc.php');
   require_once(DIR_FS_INC . 'check_export_filename.inc.php');
+  require_once(DIR_FS_INC . 'check_export_target.inc.php');
 
 
   class sitemap {
@@ -99,6 +100,10 @@
               if (MODULE_SITEMAPORG_GZIP == 'yes') {
                 $use_gzip = true;
               }
+            }
+
+            if (!check_export_target($filename.(($use_gzip === true) ? '.gz' : ''))) {
+              continue;
             }
               
             if ($use_gzip === true) {
