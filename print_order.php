@@ -59,7 +59,7 @@ if ($customer_id > 0
   $smarty->assign('language', $order->info['language']);  
 
   $smarty->assign('oID', $oID);
-  $smarty->assign('COMMENT', $order->info['comments']);
+  $smarty->assign('COMMENT', encode_htmlspecialchars($order->info['comments']));
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
   $smarty->assign('SHIPPING_CLASS', $order->info['shipping_class']);
 

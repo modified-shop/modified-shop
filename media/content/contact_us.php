@@ -105,12 +105,12 @@
       $uhrzeit = date("H:i");
 
       $additional_fields = '';
-      if (isset($company))  $additional_fields =  EMAIL_COMPANY. $company . "\n" ;
-      if (isset($street))   $additional_fields .= EMAIL_STREET . $street . "\n" ;
-      if (isset($postcode)) $additional_fields .= EMAIL_POSTCODE . $postcode . "\n" ;
-      if (isset($city))     $additional_fields .= EMAIL_CITY . $city . "\n" ;
-      if (isset($phone))    $additional_fields .= EMAIL_PHONE . $phone . "\n" ;
-      if (isset($fax))      $additional_fields .= EMAIL_FAX . $fax . "\n" ;
+      if (isset($company))  $additional_fields =  EMAIL_COMPANY. encode_htmlspecialchars($company, ENT_NOQUOTES) . "\n" ;
+      if (isset($street))   $additional_fields .= EMAIL_STREET . encode_htmlspecialchars($street, ENT_NOQUOTES) . "\n" ;
+      if (isset($postcode)) $additional_fields .= EMAIL_POSTCODE . encode_htmlspecialchars($postcode, ENT_NOQUOTES) . "\n" ;
+      if (isset($city))     $additional_fields .= EMAIL_CITY . encode_htmlspecialchars($city, ENT_NOQUOTES) . "\n" ;
+      if (isset($phone))    $additional_fields .= EMAIL_PHONE . encode_htmlspecialchars($phone, ENT_NOQUOTES) . "\n" ;
+      if (isset($fax))      $additional_fields .= EMAIL_FAX . encode_htmlspecialchars($fax, ENT_NOQUOTES) . "\n" ;
 
       if (file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html') 
           && file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt')
@@ -119,12 +119,12 @@
         $smarty->assign('language', $_SESSION['language']);
         $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
         $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-        $smarty->assign('NAME', $name);
-        $smarty->assign('EMAIL', $email);
+        $smarty->assign('NAME', encode_htmlspecialchars($name, ENT_NOQUOTES));
+        $smarty->assign('EMAIL', encode_htmlspecialchars($email, ENT_NOQUOTES));
         $smarty->assign('DATE', $datum);
         $smarty->assign('TIME', $uhrzeit);
         $smarty->assign('ADDITIONAL_FIELDS', nl2br($additional_fields));
-        $smarty->assign('MESSAGE', nl2br($message_body));
+        $smarty->assign('MESSAGE', nl2br(encode_htmlspecialchars($message_body, ENT_NOQUOTES)));
      
         // dont allow cache
         $smarty->caching = 0;
@@ -135,10 +135,10 @@
       } else {
         $txt_mail = sprintf(EMAIL_SENT_BY, parse_multi_language_value(CONTACT_US_NAME, $_SESSION['language_code']), parse_multi_language_value(CONTACT_US_EMAIL_ADDRESS, $_SESSION['language_code']), $datum , $uhrzeit) . "\n" .
                 "--------------------------------------------------------------" . "\n" .
-                EMAIL_NAME. $name . "\n" .
-                EMAIL_EMAIL. trim($email) . "\n" .
+                EMAIL_NAME. encode_htmlspecialchars($name, ENT_NOQUOTES) . "\n" .
+                EMAIL_EMAIL. encode_htmlspecialchars(trim($email), ENT_NOQUOTES) . "\n" .
                 $additional_fields .
-                "\n".EMAIL_MESSAGE."\n ". $message_body . "\n";
+                "\n".EMAIL_MESSAGE."\n ". encode_htmlspecialchars($message_body, ENT_NOQUOTES) . "\n";
         $html_mail = nl2br($txt_mail);
       }
       

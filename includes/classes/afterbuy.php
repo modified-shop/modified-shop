@@ -511,7 +511,7 @@ class xtc_afterbuy_functions {
       $DATAstring .= "NoVersandCalc=1";
 
       if ($testmode !== false) {
-        $mail_content_html = str_replace("&", "&<br />", urldecode($DATAstring));
+        $mail_content_html = str_replace('&amp;', '&amp;<br />', encode_htmlspecialchars(urldecode($DATAstring), ENT_NOQUOTES));
         $mail_content_txt = str_replace("&", "&\n", urldecode($DATAstring));
         xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME . ' - Afterbuy', STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '', STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '', '', 'Afterbuy-Info', $mail_content_html, $mail_content_txt);
       } else {

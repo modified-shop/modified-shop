@@ -142,8 +142,9 @@
     // Send an email to the shop owner if a sql error occurs
     if (defined('EMAIL_SQL_ERRORS') && EMAIL_SQL_ERRORS == 'true') {
       require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+      require_once (DIR_FS_INC.'html_encoding.php');
       $subject = 'DATA BASE ERROR AT - ' . STORE_NAME;
-      $message = '<b style="color:#ff0000;">' . $errno . ' - ' . $error . '<br><br>' . $query . '<br><br>Request URL: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'<br><br><small style="color:#ff0000">[XT SQL Error]</small></b>';
+      $message = '<b style="color:#ff0000;">' . $errno . ' - ' . encode_htmlspecialchars($error, ENT_NOQUOTES) . '<br><br>' . encode_htmlspecialchars($query, ENT_NOQUOTES) . '<br><br>Request URL: ' . encode_htmlspecialchars($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], ENT_NOQUOTES).'<br><br><small style="color:#ff0000">[XT SQL Error]</small></b>';
       xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, 
                    STORE_OWNER, 
                    STORE_OWNER_EMAIL_ADDRESS, 

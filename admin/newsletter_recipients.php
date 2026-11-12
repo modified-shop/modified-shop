@@ -240,8 +240,8 @@
                   }
                   ?>
                   <td class="dataTableContent"><?php echo $newsletter['customers_email_address']; ?></td>
-                  <td class="dataTableContent"><?php echo $newsletter['customers_firstname']; ?></td>
-                  <td class="dataTableContent"><?php echo $newsletter['customers_lastname']; ?></td>
+                  <td class="dataTableContent"><?php echo encode_htmlspecialchars($newsletter['customers_firstname']); ?></td>
+                  <td class="dataTableContent"><?php echo encode_htmlspecialchars($newsletter['customers_lastname']); ?></td>
                   <td class="dataTableContent"><?php echo $newsletter['customers_status_name']; ?></td>
                   <td class="dataTableContent txta-c"><?php echo xtc_image(DIR_WS_ICONS.(($newsletter['mail_status'] == '1') ? 'tick.gif' : (($newsletter['mail_status'] == '2') ? 'cross.gif' : 'time_delete.png'))); ?></td>
                   <td class="dataTableContent txta-c"><?php echo xtc_date_short($newsletter['date_added']); ?></td>

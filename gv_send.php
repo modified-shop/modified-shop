@@ -130,9 +130,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $smarty->assign('AMMOUNT', $xtPrice->xtcFormat($gv_amount, true));
     $smarty->assign('AMOUNT', $xtPrice->xtcFormat($gv_amount, true));
     $smarty->assign('GIFT_CODE', $gv_code);
-    $smarty->assign('MESSAGE', $message);
-    $smarty->assign('NAME', $to_name);
-    $smarty->assign('FROM_NAME', $send_name);
+    $smarty->assign('MESSAGE', encode_htmlspecialchars($message, ENT_NOQUOTES));
+    $smarty->assign('NAME', encode_htmlspecialchars($to_name, ENT_NOQUOTES));
+    $smarty->assign('FROM_NAME', encode_htmlspecialchars($send_name, ENT_NOQUOTES));
 
     // dont allow cache
     $smarty->caching = 0;

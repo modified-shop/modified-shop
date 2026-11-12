@@ -67,7 +67,7 @@
       ?>
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_customers.png'); ?></div>
       <div class="flt-l">
-        <div class="pageHeading"><?php echo $cInfo->customers_lastname.' '.$cInfo->customers_firstname; ?></div>
+        <div class="pageHeading"><?php echo encode_htmlspecialchars($cInfo->customers_lastname.' '.$cInfo->customers_firstname); ?></div>
         <div class="main pdg2"><?php echo BOX_HEADING_CUSTOMERS; ?></div>
       </div>
       <div class="clear"></div>

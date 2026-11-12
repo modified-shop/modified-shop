@@ -359,8 +359,8 @@
           $smarty->assign('language', $_SESSION['language']);
           $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
-          $smarty->assign('NAME', $orders['customers_name']);
-          $smarty->assign('EMAIL', $orders['customers_email_address']);
+          $smarty->assign('NAME', encode_htmlspecialchars($orders['customers_name'], ENT_NOQUOTES));
+          $smarty->assign('EMAIL', encode_htmlspecialchars($orders['customers_email_address'], ENT_NOQUOTES));
           $smarty->assign('ORDERS_ID', $orders['orders_id']);
           $smarty->assign('LINK', $link);
 
@@ -556,8 +556,8 @@
             $smarty->assign('language', $_SESSION['language']);
             $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
-            $smarty->assign('NAME', $orders['customers_name']);
-            $smarty->assign('EMAIL', $orders['customers_email_address']);
+            $smarty->assign('NAME', encode_htmlspecialchars($orders['customers_name'], ENT_NOQUOTES));
+            $smarty->assign('EMAIL', encode_htmlspecialchars($orders['customers_email_address'], ENT_NOQUOTES));
             $smarty->assign('ORDERS_ID', $orders['orders_id']);
             $smarty->assign('RECEIVED', xtc_datetime_short($received['date_added']));
 

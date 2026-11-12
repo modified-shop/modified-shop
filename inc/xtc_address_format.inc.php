@@ -36,7 +36,18 @@
         unset($address['name']);
       }
     }
-    
+
+    // customer data must not add markup, text mails decode the label with ENT_NOQUOTES
+    if ($html && is_array($address)) {
+      foreach ($address as $k => $v) {
+        if (is_string($v)) {
+          $address[$k] = encode_htmlspecialchars($v, ENT_NOQUOTES);
+        } elseif (is_array($v) && isset($v['title']) && is_string($v['title'])) {
+          $address[$k]['title'] = encode_htmlspecialchars($v['title'], ENT_NOQUOTES);
+        }
+      }
+    }
+
     $company = isset($address['company']) ? addslashes($address['company']) : '';
     $firstname = isset($address['firstname']) ? addslashes($address['firstname']) : '';
     $cid = isset($address['csID']) ? addslashes($address['csID']) : '';

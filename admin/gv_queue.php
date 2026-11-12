@@ -192,7 +192,7 @@
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list['unique_id']) . '\'">' . "\n";
                   }
                   ?>
-                <td class="dataTableContent"><?php echo $gv_list['customers_firstname'] . ' ' . $gv_list['customers_lastname']; ?></td>
+                <td class="dataTableContent"><?php echo encode_htmlspecialchars($gv_list['customers_firstname'] . ' ' . $gv_list['customers_lastname']); ?></td>
                 <td class="dataTableContent txta-c"><?php echo $gv_list['order_id']; ?></td>
                 <td class="dataTableContent txta-r"><?php echo $currencies->format($gv_list['amount']); ?></td>
                 <td class="dataTableContent txta-r"><?php echo xtc_datetime_short($gv_list['date_created']); ?></td>

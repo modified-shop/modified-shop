@@ -79,7 +79,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     ?>
                     <tr <?php echo $tr_attributes;?>>
                       <td class="dataTableContent"><?php echo $gv_list['customers_id']; ?></td>
-                      <td class="dataTableContent"><?php echo $gv_list['customers_firstname'] . ' ' . $gv_list['customers_lastname']; ?></td>
+                      <td class="dataTableContent"><?php echo encode_htmlspecialchars($gv_list['customers_firstname'] . ' ' . $gv_list['customers_lastname']); ?></td>
                       <td class="dataTableContent txta-c"><?php echo $currencies->format($gv_list['amount']); ?></td>
                     </tr>
                   <?php

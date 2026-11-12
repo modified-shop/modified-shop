@@ -247,7 +247,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <tr class="content_row">
                         <td><?php echo $last_orders['orders_id']; ?></td>
                         <td><?php echo $last_orders['date_purchased']; ?></td>
-                        <td><?php echo $last_orders['customers_name']; ?></td>
+                        <td><?php echo encode_htmlspecialchars($last_orders['customers_name']); ?></td>
                         <td><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page=1&oID='.$last_orders['orders_id'].'&action=edit'); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></a></td>
                         <td><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page=1&oID='.$last_orders['orders_id'].'&action=delete'); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_DELETE; ?></strong></a></td>
                       </tr>
@@ -279,8 +279,8 @@ require (DIR_WS_INCLUDES.'head.php');
                     while($last_customers = xtc_db_fetch_array($last_customers_query)) {
                       ?>
                       <tr class="content_row">
-                        <td><?php echo $last_customers['customers_lastname']; ?></td>
-                        <td><?php echo $last_customers['customers_firstname']; ?></td>
+                        <td><?php echo encode_htmlspecialchars($last_customers['customers_lastname']); ?></td>
+                        <td><?php echo encode_htmlspecialchars($last_customers['customers_firstname']); ?></td>
                         <td><?php echo $last_customers['customers_date_added']; ?></td>
                         <td><a href="<?php echo xtc_href_link(FILENAME_CUSTOMERS, 'page=1&cID='.$last_customers['customers_id'].'&action=edit'); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></a></td>
                         <td><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'cID='.$last_customers['customers_id']); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_ORDERS; ?></strong></a></td>

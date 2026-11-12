@@ -182,7 +182,7 @@
                 ?>
                 <td class="dataTableContent txta-c"><?php echo gmdate('H:i:s', $time_online); ?></td>
                 <td class="dataTableContent txta-c"><?php echo $whos_online['customer_id']; ?></td>
-                <td class="dataTableContent txta-c"><?php echo $whos_online['full_name']; ?></td>
+                <td class="dataTableContent txta-c"><?php echo encode_htmlspecialchars($whos_online['full_name']); ?></td>
                 <td class="dataTableContent txta-c"><?php echo '<a href="'.WHOS_ONLINE_IP_WHOIS_SERVICE.$whos_online['ip_address'].'" style="font-weight:bold; text-decoration:underline;" target="_blank">'.$whos_online['ip_address'].'</a>'; ?></td>
                 <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                 <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>

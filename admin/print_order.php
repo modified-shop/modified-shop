@@ -33,7 +33,7 @@
   $smarty->assign('address_label_shipping',xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
   $smarty->assign('address_label_payment',xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
   $smarty->assign('csID',$order->customer['csID']);
-  $smarty->assign('vatID',$order->customer['vat_id']);
+  $smarty->assign('vatID',encode_htmlspecialchars($order->customer['vat_id']));
 
   // get products data
   include_once(DIR_FS_CATALOG.DIR_WS_CLASSES .'xtcPrice.php');
@@ -103,7 +103,7 @@
       $smarty->assign('PAYMENT_INFO', $paypal->get_payment_instructions($order->info['order_id']));
     }
   }
-  $smarty->assign('COMMENTS', nl2br($order->info['comments']));
+  $smarty->assign('COMMENTS', nl2br(encode_htmlspecialchars($order->info['comments'])));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
   $smarty->assign('INVOICE_NUMBER', isset($order->info['ibn_billnr']) && $order->info['ibn_billnr'] != '' ? $order->info['ibn_billnr'] :  $order->info['order_id']);
   $smarty->assign('INVOICE_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));

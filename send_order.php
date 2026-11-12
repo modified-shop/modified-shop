@@ -84,21 +84,22 @@ if ((isset($send_order_customer_id)
   $smarty->assign('PAYMENT_CLASS', $payment_class);
   
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
-  $smarty->assign('NAME', $order->customer['name']);
+  // customer data must not add markup, text mails decode with ENT_NOQUOTES
+  $smarty->assign('NAME', encode_htmlspecialchars($order->customer['name'], ENT_NOQUOTES));
   $smarty->assign('GENDER', $order->customer['gender']);
-  $smarty->assign('CITY', $order->customer['city']);
-  $smarty->assign('POSTCODE', $order->customer['postcode']);
-  $smarty->assign('STATE', $order->customer['state']);
+  $smarty->assign('CITY', encode_htmlspecialchars($order->customer['city'], ENT_NOQUOTES));
+  $smarty->assign('POSTCODE', encode_htmlspecialchars($order->customer['postcode'], ENT_NOQUOTES));
+  $smarty->assign('STATE', encode_htmlspecialchars($order->customer['state'], ENT_NOQUOTES));
   $smarty->assign('COUNTRY', $order->customer['country']);
-  $smarty->assign('COMPANY', $order->customer['company']);
-  $smarty->assign('STREET', $order->customer['street_address']);
-  $smarty->assign('FIRSTNAME', $order->customer['firstname']);
-  $smarty->assign('LASTNAME', $order->customer['lastname']);
+  $smarty->assign('COMPANY', encode_htmlspecialchars($order->customer['company'], ENT_NOQUOTES));
+  $smarty->assign('STREET', encode_htmlspecialchars($order->customer['street_address'], ENT_NOQUOTES));
+  $smarty->assign('FIRSTNAME', encode_htmlspecialchars($order->customer['firstname'], ENT_NOQUOTES));
+  $smarty->assign('LASTNAME', encode_htmlspecialchars($order->customer['lastname'], ENT_NOQUOTES));
 
-  $smarty->assign('COMMENTS', $order->info['comments']);
-  $smarty->assign('EMAIL', $order->customer['email_address']);
-  $smarty->assign('PHONE',$order->customer['telephone']);
-  $smarty->assign('vatID', $order->customer['vat_id']);
+  $smarty->assign('COMMENTS', encode_htmlspecialchars($order->info['comments'], ENT_NOQUOTES));
+  $smarty->assign('EMAIL', encode_htmlspecialchars($order->customer['email_address'], ENT_NOQUOTES));
+  $smarty->assign('PHONE', encode_htmlspecialchars($order->customer['telephone'], ENT_NOQUOTES));
+  $smarty->assign('vatID', encode_htmlspecialchars($order->customer['vat_id'], ENT_NOQUOTES));
 
   // PAYMENT MODUL TEXTS
   $payment_method_array = array('eustandardtransfer','moneyorder');
