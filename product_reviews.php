@@ -94,7 +94,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
         'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id='.$reviews['products_id'].'&reviews_id='.$reviews['reviews_id']),
         'PRODUCTS_NAME' => $reviews['products_name'],
         'PRODUCTS_HEADING_TITLE' => $reviews['products_heading_title'],
-        'AUTHOR' => $reviews['customers_name'],
+        'AUTHOR' => encode_htmlspecialchars($reviews['customers_name']),
         'DATE' => xtc_date_short($reviews['date_added']),
         'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).') <br />'.nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
         'TEXT_PLAIN' => nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',

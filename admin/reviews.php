@@ -153,7 +153,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
                   ?>
                     <td class="dataTableContent"><?php echo $reviews['products_name']; ?></td>
-                    <td class="dataTableContent"><?php echo $reviews['customers_name']; ?></td>
+                    <td class="dataTableContent"><?php echo encode_htmlspecialchars($reviews['customers_name']); ?></td>
                     <td class="dataTableContent"><?php echo (isset($lang[$reviews['languages_id']])) ? $lang[$reviews['languages_id']] : ''; ?></td>
                     <td class="dataTableContent txta-c" align="right"><?php echo xtc_image(DIR_WS_IMAGES.'stars_' . $reviews['reviews_rating'] . '.png'); ?></td>
                     <td class="dataTableContent txta-c">
@@ -195,7 +195,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 $contents = array('form' => xtc_draw_form('reviews', FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . 'action=update&rID=' . $rInfo->reviews_id));
                 $contents[] = array('text' => TEXT_INFO_EDIT_REVIEW_INTRO);
                 $contents[] = array('text' => '<br />' . ENTRY_PRODUCT . '<br /><b>' . $rInfo->products_name . '</b>');
-                $contents[] = array('text' => '<br />' . ENTRY_FROM . '<br /><b>' . $rInfo->customers_name . '</b>');
+                $contents[] = array('text' => '<br />' . ENTRY_FROM . '<br /><b>' . encode_htmlspecialchars($rInfo->customers_name) . '</b>');
                 $contents[] = array('text' => '<br />' . ENTRY_DATE . '<br /><b>' . xtc_date_short($rInfo->date_added) . '</b>');
                                     
                 $reviews_rating = TEXT_BAD.'&nbsp;';
@@ -216,7 +216,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($rInfo->date_added));
                   if (xtc_not_null($rInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($rInfo->last_modified));
                   $contents[] = array('text' => '<br />' . xtc_product_thumb_image($rInfo->products_image, $rInfo->products_name));
-                  $contents[] = array('text' => '<br />' . TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_REVIEW_AUTHOR . ' ' . encode_htmlspecialchars($rInfo->customers_name));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . xtc_image(DIR_WS_IMAGES.'stars_'  . $rInfo->reviews_rating . '.png'));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
                   $contents[] = array('text' => '<br />' . TEXT_INFO_REVIEW_SIZE . ' ' . $rInfo->reviews_text_size . ' bytes');

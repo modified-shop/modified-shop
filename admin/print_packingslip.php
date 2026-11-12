@@ -30,7 +30,7 @@
   $smarty->assign('address_label_shipping',xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
   $smarty->assign('address_label_payment',xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
   $smarty->assign('csID',$order->customer['csID']);
-  $smarty->assign('vatID',$order->customer['vat_id']);
+  $smarty->assign('vatID',encode_htmlspecialchars($order->customer['vat_id']));
 
   // get products data
   include_once(DIR_FS_CATALOG.DIR_WS_CLASSES .'xtcPrice.php');
@@ -61,7 +61,7 @@
     require_once (DIR_FS_CATALOG.DIR_WS_CLASSES . 'payment.php');
     $smarty->assign('PAYMENT_METHOD', payment::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']));
   }
-  $smarty->assign('COMMENTS', nl2br($order->info['comments']));
+  $smarty->assign('COMMENTS', nl2br(encode_htmlspecialchars($order->info['comments'])));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
   $smarty->assign('SHIPPING_CLASS', $order->info['shipping_class']);
 

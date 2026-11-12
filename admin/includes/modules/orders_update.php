@@ -34,15 +34,15 @@
         }
       } 
       $smarty->assign('GENDER', $order->customer['gender']);
-      $smarty->assign('FIRSTNAME',$order->customer['firstname'] != '' ? $order->customer['firstname'] : $order->customer['name']);
-      $smarty->assign('LASTNAME',$order->customer['lastname'] != '' ? $order->customer['lastname'] : $order->customer['name']);
+      $smarty->assign('FIRSTNAME',encode_htmlspecialchars($order->customer['firstname'] != '' ? $order->customer['firstname'] : $order->customer['name'], ENT_NOQUOTES));
+      $smarty->assign('LASTNAME',encode_htmlspecialchars($order->customer['lastname'] != '' ? $order->customer['lastname'] : $order->customer['name'], ENT_NOQUOTES));
     
       $smarty->assign('order', $order);
       $smarty->assign('order_data', $order->getOrderData($oID));
 
       $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
       $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-      $smarty->assign('NAME', $order->customer['name']);
+      $smarty->assign('NAME', encode_htmlspecialchars($order->customer['name'], ENT_NOQUOTES));
       $smarty->assign('ORDER_NR', $order->info['order_id']);
       $smarty->assign('ORDER_ID', $oID);
       //send no order link to customers with guest account

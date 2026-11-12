@@ -296,7 +296,7 @@ require (DIR_WS_INCLUDES.'head.php');
 											<tr <?php echo (($log['event_id'] == $event_id) ? 'class="dataTableRowSelected"' : 'class="dataTableRow"'); ?> onmouseover="this.style.cursor='pointer'" onclick="document.location.href='<?php echo xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('event_id')).'event_id='.$log['event_id']); ?>'">
 												<td class="dataTableContent"><?php echo $log['event_id']; ?></td>
 												<td class="dataTableContent"><?php echo $log['date_created']; ?></td>
-												<td class="dataTableContent"><?php echo $log['customers_name']; ?>&nbsp;</td>
+												<td class="dataTableContent"><?php echo encode_htmlspecialchars($log['customers_name']); ?>&nbsp;</td>
 											</tr>
                       <?php if (isset($_GET['event_id']) && !empty($event_data) && $log['event_id'] == $event_id) { ?>
                       <tr>

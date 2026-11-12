@@ -204,7 +204,7 @@
                 while($customers_values = xtc_db_fetch_array($mail_query)) {
                   $customers[] = array(
                     'id' => $customers_values['customers_email_address'],
-                    'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')'
+                    'text' => encode_htmlspecialchars($customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')')
                   );
                 }
               }

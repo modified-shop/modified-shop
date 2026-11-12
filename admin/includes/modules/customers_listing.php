@@ -244,8 +244,8 @@
                   </td>
                   <td class="dataTableContent"><?php echo $account_type; ?></td>
                   <td class="dataTableContent"><?php echo $customers['customers_cid']; ?>&nbsp;</td>
-                  <td class="dataTableContent"><?php echo $customers['customers_lastname']; ?></td>
-                  <td class="dataTableContent"><?php echo $customers['customers_firstname']; ?></td>
+                  <td class="dataTableContent"><?php echo encode_htmlspecialchars($customers['customers_lastname']); ?></td>
+                  <td class="dataTableContent"><?php echo encode_htmlspecialchars($customers['customers_firstname']); ?></td>
                   <td class="dataTableContent"><?php echo $customers['customers_email_address']; ?></td>
                   <td class="dataTableContent"><?php echo xtc_get_country_name($customers['entry_country_id']); ?></td>
                   <?php
@@ -267,7 +267,7 @@
                         $vatid_title = strip_tags(xtc_validate_vatid_status($customers['customers_id']));
                         $vatid_color = ($customers['customers_vat_id_status'] == 1 ? 'green' : 'red');
                         echo '<span title="'.$vatid_title.'" style="color:'.$vatid_color.';cursor:help;">' .
-                             $customers['customers_vat_id'] .
+                             encode_htmlspecialchars($customers['customers_vat_id']) .
                              '</span>';
                       }
                       echo '</td>';
@@ -321,7 +321,7 @@
                                                             FROM ".TABLE_CUSTOMERS."
                                                            WHERE customers_id = '".(int)$customers_id."'");
                           $customer = xtc_db_fetch_array($customer_query);
-                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . $customer['customers_firstname'].' '.$customer['customers_lastname']);
+                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . encode_htmlspecialchars($customer['customers_firstname'].' '.$customer['customers_lastname']));
                         }
                       }
                       $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('delete_reviews', 'on', true).' '.TEXT_DELETE_REVIEWS_ELEMENTS);
@@ -337,7 +337,7 @@
                                                             FROM ".TABLE_CUSTOMERS."
                                                            WHERE customers_id = '".(int)$customers_id."'");
                           $customer = xtc_db_fetch_array($customer_query);
-                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . $customer['customers_firstname'].' '.$customer['customers_lastname']);
+                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . encode_htmlspecialchars($customer['customers_firstname'].' '.$customer['customers_lastname']));
                         }
                       }
                       $contents[] = array ('text' => '<br />'.xtc_draw_pull_down_menu('customers_status', $customers_statuses_array));
@@ -349,7 +349,7 @@
                     $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_DELETE_CUSTOMER.'</b>');
 
                     $contents = array ('form' => xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=deleteconfirm'));
-                    $contents[] = array ('text' => TEXT_DELETE_INTRO.'<br /><br /><b>'.$cInfo->customers_firstname.' '.$cInfo->customers_lastname.'</b>');
+                    $contents[] = array ('text' => TEXT_DELETE_INTRO.'<br /><br /><b>'.encode_htmlspecialchars($cInfo->customers_firstname.' '.$cInfo->customers_lastname).'</b>');
                     if ($cInfo->number_of_reviews > 0) {
                       $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('delete_reviews', 'on', true).' '.sprintf(TEXT_DELETE_REVIEWS, $cInfo->number_of_reviews));
                     }
@@ -516,7 +516,7 @@
 
                   default :
                     if (isset($cInfo) && is_object($cInfo)) {
-                      $heading[] = array ('text' => '<b>'.$cInfo->customers_firstname.' '.$cInfo->customers_lastname.'</b>');
+                      $heading[] = array ('text' => '<b>'.encode_htmlspecialchars($cInfo->customers_firstname.' '.$cInfo->customers_lastname).'</b>');
                       //Multi Element Actions
                       if ($multi_form) {
                         $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');

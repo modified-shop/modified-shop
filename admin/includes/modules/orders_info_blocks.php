@@ -79,7 +79,7 @@
             </tr>
             <tr>
               <td class="main"><b><?php echo ENTRY_TELEPHONE; ?></b></td>
-              <td class="main"><?php echo $order->customer['telephone']; ?></td>
+              <td class="main"><?php echo encode_htmlspecialchars($order->customer['telephone']); ?></td>
             </tr>
             <tr>
               <td class="main"><b><?php echo ENTRY_EMAIL_ADDRESS; ?></b></td>
@@ -91,7 +91,7 @@
             </tr>
             <tr>
               <td class="main"><b><?php echo ENTRY_CUSTOMERS_VAT_ID; ?></b></td>
-              <td class="main"><?php echo $order->customer['vat_id']; ?></td>
+              <td class="main"><?php echo encode_htmlspecialchars($order->customer['vat_id']); ?></td>
             </tr>
             <?php if (SAVE_IP_LOG != 'false') { ?>
             <tr>

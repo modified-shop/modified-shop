@@ -29,31 +29,31 @@
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_BANK_OWNER; ?></td>
-          <td class="main"><?php echo $banktransfer['banktransfer_owner']; ?></td>
+          <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_owner']); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_BANK_NUMBER; ?></td>
-          <td class="main"><?php echo $banktransfer['banktransfer_number']; ?></td>
+          <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_number']); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_BANK_BLZ; ?></td>
-          <td class="main"><?php echo $banktransfer['banktransfer_blz']; ?></td>
+          <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_blz']); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_BANK_IBAN; ?></td>
-          <td class="main"><?php echo $banktransfer['banktransfer_iban']; ?></td>
+          <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_iban']); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_BANK_BIC; ?></td>
-          <td class="main"><?php echo $banktransfer['banktransfer_bic']; ?></td>
+          <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_bic']); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_BANK_NAME; ?></td>
-          <td class="main"><?php echo $banktransfer['banktransfer_bankname']; ?></td>
+          <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_bankname']); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_BANK_OWNER_EMAIL; ?></td>
-          <td class="main"><?php echo $banktransfer['banktransfer_owner_email']; ?></td>
+          <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_owner_email']); ?></td>
         </tr>
         <?php  if ($banktransfer['banktransfer_status'] == 0) { ?>
           <tr>
@@ -63,7 +63,7 @@
         <?php } else { ?>
           <tr>
             <td class="main"><?php echo TEXT_BANK_STATUS; ?></td>
-            <td class="main"><?php echo $banktransfer['banktransfer_status']; ?></td>
+            <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_status']); ?></td>
           </tr>
           <?php
           $bt_status = (int) $banktransfer['banktransfer_status'];
@@ -75,7 +75,7 @@
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_BANK_PRZ; ?></td>
-            <td class="main"><?php echo $banktransfer['banktransfer_prz']; ?></td>
+            <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_prz']); ?></td>
           </tr>
         <?php } ?>
         <tr>
@@ -87,7 +87,7 @@
       ?>
         <tr>
           <td class="main"><?php echo TEXT_BANK_FAX; ?></td>
-          <td class="main"><?php echo $banktransfer['banktransfer_fax']; ?></td>
+          <td class="main"><?php echo encode_htmlspecialchars($banktransfer['banktransfer_fax']); ?></td>
         </tr>
       <?php
       }

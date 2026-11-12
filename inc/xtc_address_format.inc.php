@@ -36,7 +36,18 @@
         unset($address['name']);
       }
     }
-    
+
+    // customer data must not add markup, text mails decode the label with ENT_NOQUOTES
+    if ($html && is_array($address)) {
+      foreach ($address as $k => $v) {
+        if (is_string($v)) {
+          $address[$k] = encode_htmlspecialchars($v, ENT_NOQUOTES);
+        } elseif (is_array($v) && isset($v['title']) && is_string($v['title'])) {
+          $address[$k]['title'] = encode_htmlspecialchars($v['title'], ENT_NOQUOTES);
+        }
+      }
+    }
+
     $company = isset($address['company']) ? addslashes($address['company']) : '';
     $firstname = isset($address['firstname']) ? addslashes($address['firstname']) : '';
     $cid = isset($address['csID']) ? addslashes($address['csID']) : '';
@@ -84,8 +95,14 @@
     if (xtc_not_null($state)) $statecomma = $state . ', ';
     
     if (defined('CAPITALIZE_ADDRESS_FORMAT') && CAPITALIZE_ADDRESS_FORMAT == 'true') {
-      $city = strtoupper($city);
-      $country = strtoupper($country);
+      if ($html) {
+        // uppercase the text, not the entities of the escaped values
+        $city = encode_htmlspecialchars(strtoupper(decode_htmlspecialchars($city, ENT_NOQUOTES)), ENT_NOQUOTES);
+        $country = encode_htmlspecialchars(strtoupper(decode_htmlspecialchars($country, ENT_NOQUOTES)), ENT_NOQUOTES);
+      } else {
+        $city = strtoupper($city);
+        $country = strtoupper($country);
+      }
     }
   
     $address = $address_format['format'];

@@ -82,7 +82,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
     $product_reviews = xtc_db_fetch_array($product_reviews_query, true);
 
-    $smarty->assign('AUTHOR', $product_reviews['customers_name']);
+    $smarty->assign('AUTHOR', encode_htmlspecialchars($product_reviews['customers_name']));
     $smarty->assign('DATE', xtc_date_long($product_reviews['date_added']));
     $smarty->assign('REVIEWS_TEXT', nl2br(xtc_break_string(encode_htmlspecialchars($product_reviews['reviews_text']), 60, '-<br />')));
     $smarty->assign('RATING', xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$product_reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $product_reviews['reviews_rating'])));

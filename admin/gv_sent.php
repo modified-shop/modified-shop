@@ -155,7 +155,7 @@
                 }
               ?>
               <tr <?php echo $tr_attributes;?>>
-                <td class="dataTableContent"><?php echo $gv_list['sent_firstname'] . ' ' . $gv_list['sent_lastname']; ?></td>
+                <td class="dataTableContent"><?php echo encode_htmlspecialchars($gv_list['sent_firstname'] . ' ' . $gv_list['sent_lastname']); ?></td>
                 <td class="dataTableContent txta-c"><?php echo (($gv_list['coupon_type'] == 'P' || $gv_list['coupon_type'] == 'T') ? number_format($gv_list['coupon_amount'], 2).'%' : $currencies->format($gv_list['coupon_amount'])); ?></td>
                 <td class="dataTableContent txta-c"><?php echo $gv_list['coupon_code']; ?></td>
                 <td class="dataTableContent txta-r"><?php echo xtc_date_short($gv_list['date_sent']); ?></td>
