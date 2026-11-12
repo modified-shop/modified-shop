@@ -228,7 +228,10 @@
                 }
                 closedir($session_dir);
               }
-            } elseif (ini_get('session.save_handler') == 'redis') {
+            }
+
+            // Redis sessions come from php.ini, STORE_SESSIONS is then neither mysql nor files
+            if (ini_get('session.save_handler') == 'redis') {
               require_once(DIR_FS_INC.'get_redis_session_by_hash.inc.php');
               $session_data = get_redis_session_by_hash($info['session_id']);
             }
