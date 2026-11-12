@@ -31,18 +31,22 @@ $session_cookie_samesite = 'Lax';
 if (STORE_SESSIONS == 'mysql') {
   // check valid session_id
   if (isset($_GET[xtc_session_name()]) && $_GET[xtc_session_name()] != '') {
+    // MODsid[]= arrives as an array, which is no session id
+    if (!is_string($_GET[xtc_session_name()])) {
+      redirect_invalid_session();
+    }
     $check_query = xtc_db_query("SELECT sesskey
                                    FROM ".TABLE_SESSIONS."
-                                  WHERE sesskey = '".xtc_db_input(preg_replace('/[^0-9a-zA-Z]/', '', $_GET[xtc_session_name()]))."'");
+                                  WHERE sesskey = '".xtc_db_input(xtc_session_hash(preg_replace('/[^0-9a-zA-Z]/', '', $_GET[xtc_session_name()])))."'");
     if (xtc_db_num_rows($check_query) < 1) {
       redirect_invalid_session();
     }
   }
   // delete expired cookie
-  if (isset($_COOKIE[xtc_session_name()])) {
+  if (isset($_COOKIE[xtc_session_name()]) && is_string($_COOKIE[xtc_session_name()])) {
     $check_query = xtc_db_query("SELECT expiry
                                    FROM ".TABLE_SESSIONS."
-                                  WHERE sesskey = '".xtc_db_input(preg_replace('/[^0-9a-zA-Z]/', '', $_COOKIE[xtc_session_name()]))."'");
+                                  WHERE sesskey = '".xtc_db_input(xtc_session_hash(preg_replace('/[^0-9a-zA-Z]/', '', $_COOKIE[xtc_session_name()])))."'");
     if (xtc_db_num_rows($check_query) > 0) {
       $check = xtc_db_fetch_array($check_query);
       if (($check['expiry'] + (int)$SESS_LIFE) < time()) {
