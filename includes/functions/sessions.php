@@ -76,7 +76,7 @@
         return $this->readHashWithoutLock(xtc_session_hash($session_id));
       }
 
-      // whos_online only knows the hash of the session id
+      // for callers that only know the stored hash, such as whos_online
       function readHashWithoutLock(string $session_hash): string|false
       {
         $value_query = xtc_db_query("SELECT value
