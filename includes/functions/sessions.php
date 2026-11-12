@@ -73,9 +73,15 @@
 
       function readWithoutLock(string $session_id): string|false
       {
+        return $this->readHashWithoutLock(xtc_session_hash($session_id));
+      }
+
+      // whos_online only knows the hash of the session id
+      function readHashWithoutLock(string $session_hash): string|false
+      {
         $value_query = xtc_db_query("SELECT value
                                        FROM " . TABLE_SESSIONS . "
-                                      WHERE sesskey = '" . xtc_db_input(xtc_session_hash($session_id)) . "'
+                                      WHERE sesskey = '" . xtc_db_input($session_hash) . "'
                                         AND expiry > '" . time() . "'");
         if (xtc_db_num_rows($value_query) == 1) {
           $value = xtc_db_fetch_array($value_query);
@@ -280,8 +286,8 @@
       // update whos_online
       if (!defined('MODULE_WHOS_ONLINE_STATUS') || MODULE_WHOS_ONLINE_STATUS == 'true') {
         xtc_db_query("UPDATE " . TABLE_WHOS_ONLINE . "
-                         SET session_id = '".xtc_db_input($new_session_id)."'
-                       WHERE session_id = '".xtc_db_input($old_session_id)."'");
+                         SET session_id = '".xtc_db_input(xtc_session_hash($new_session_id))."'
+                       WHERE session_id = '".xtc_db_input(xtc_session_hash($old_session_id))."'");
       }
 
       return true;

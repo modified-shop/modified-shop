@@ -210,11 +210,23 @@
             foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/whos_online/','php') as $file) require ($file);
             
             if (STORE_SESSIONS == 'mysql') {
-              $session_data = $modified_session_handler->readWithoutLock($info['session_id']);
+              $session_data = $modified_session_handler->readHashWithoutLock($info['session_id']);
             } elseif (STORE_SESSIONS == 'files') {
-              if ( (file_exists(xtc_session_save_path() . '/sess_' . $info['session_id'])) && (filesize(xtc_session_save_path() . '/sess_' . $info['session_id']) > 0) ) {
-                $session_data = file(xtc_session_save_path() . '/sess_' . $info['session_id']);
-                $session_data = trim(implode('', $session_data));
+              // whos_online keeps only the hash, the file is found by hashing the file names
+              $session_save_path = xtc_session_save_path();
+              if (($session_dir = @opendir($session_save_path)) !== false) {
+                while (($session_file = readdir($session_dir)) !== false) {
+                  if (strpos($session_file, 'sess_') === 0
+                      && xtc_session_hash(substr($session_file, 5)) === $info['session_id']
+                      )
+                  {
+                    if (filesize($session_save_path . '/' . $session_file) > 0) {
+                      $session_data = trim(file_get_contents($session_save_path . '/' . $session_file));
+                    }
+                    break;
+                  }
+                }
+                closedir($session_dir);
               }
             }
             $user_session = unserialize_session_data($session_data);
