@@ -17,6 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
   require_once(DIR_FS_INC.'ip_clearing.inc.php');
+  require_once(DIR_FS_INC.'strip_session_id_from_url.inc.php');
   
   function xtc_write_user_info($customer_id) {
     $sql_data_array = array(
@@ -25,7 +26,8 @@
       'customers_ip_date' => 'now()',
       'customers_host' => $_SESSION['tracking']['http_referer']['host'],
       'customers_advertiser' => ((isset($_SESSION['tracking']['refID'])) ? $_SESSION['tracking']['refID'] : ''),
-      'customers_referer_url' => $_SESSION['tracking']['http_referer']['url'],
+      // sessions from before the update may still hold a session id in the referer
+      'customers_referer_url' => strip_session_id_from_url((string)$_SESSION['tracking']['http_referer']['url']),
     );
 
     xtc_db_perform(TABLE_CUSTOMERS_IP, $sql_data_array);

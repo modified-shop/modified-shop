@@ -18,6 +18,7 @@
 
   // include needed functions
   require_once (DIR_FS_INC.'ip_clearing.inc.php');
+  require_once (DIR_FS_INC.'strip_session_id_from_url.inc.php');
 
   function xtc_update_whos_online() {
     global $PHP_SELF;
@@ -57,8 +58,9 @@
     }
 
     $wo_ip_address = xtc_db_prepare_input($_SESSION['tracking']['ip']);
-    $wo_last_page_url = xtc_db_prepare_input(end($_SESSION['tracking']['pageview_history']));
-    $wo_referer = xtc_db_prepare_input($_SESSION['tracking']['http_referer']['url']);
+    // file and Redis sessions from before the update may still hold a session id in these urls
+    $wo_last_page_url = xtc_db_prepare_input(strip_session_id_from_url((string)end($_SESSION['tracking']['pageview_history'])));
+    $wo_referer = xtc_db_prepare_input(strip_session_id_from_url((string)$_SESSION['tracking']['http_referer']['url']));
 
     $current_time = time();
     $time_last_click = 900;
