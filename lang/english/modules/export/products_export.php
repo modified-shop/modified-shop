@@ -17,6 +17,7 @@
   define('MODULE_PRODUCTS_EXPORT_STATUS_TITLE','Status');
   define('MODULE_PRODUCTS_EXPORT_FILE_TITLE' , 'Filename');
   define('MODULE_PRODUCTS_EXPORT_FILE_DESC' , 'Enter a filename.<br />(Directory export/)');
+  define('MODULE_PRODUCTS_EXPORT_ERROR_FILENAME', 'The filename may only contain letters, digits, dots, hyphens and underscores and must end with .csv or .txt.');
   define('MODULE_PRODUCTS_EXPORT_SEPARATOR_TITLE', 'Delimiter');
   define('MODULE_PRODUCTS_EXPORT_SEPARATOR_DESC', 'Enter a sign to separate the columns.');
   define('MODULE_PRODUCTS_EXPORT_ENCLOSURE_TITLE', 'Text qualifier');

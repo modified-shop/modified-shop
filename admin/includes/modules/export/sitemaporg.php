@@ -68,6 +68,18 @@ class sitemaporg extends sitemap {
       $messageStack->add_session(MODULE_SITEMAPORG_ERROR_FILENAME);
       xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=' . $this->code . '&action=edit'));
     }
+
+    if (isset($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
+        && is_array($_POST['configuration']['MODULE_SITEMAPORG_FILE'])
+        )
+    {
+      foreach ($_POST['configuration']['MODULE_SITEMAPORG_FILE'] as $filename) {
+        if (xtc_not_null($filename) && !check_export_filename($filename, array('xml'))) {
+          $messageStack->add_session(MODULE_SITEMAPORG_ERROR_FILENAME_FORMAT);
+          xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=' . $this->code . '&action=edit'));
+        }
+      }
+    }
     
     $this->export();
   }

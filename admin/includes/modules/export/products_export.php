@@ -12,6 +12,8 @@
 
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
+  require_once(DIR_FS_INC.'check_export_filename.inc.php');
+
   class products_export {
   
     var $code;
@@ -34,6 +36,13 @@
 
 
     function process($file) {
+      global $messageStack;
+
+      // the name also arrives from the request and from stored values, so check it where the file is written
+      if (!check_export_filename($file, array('csv', 'txt'))) {
+        $messageStack->add_session(MODULE_PRODUCTS_EXPORT_ERROR_FILENAME, 'error');
+        return;
+      }
 
       xtc_set_time_limit(0);
       
