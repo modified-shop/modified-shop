@@ -268,7 +268,8 @@
         }
         session_abort();
       } else {
-        session_write_close();
+        // the old id must not stay valid, the database handler deletes it as well
+        session_destroy();
         $new_session_id = xtc_generate_session_id();
       }
 
