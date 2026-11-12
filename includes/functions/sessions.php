@@ -151,7 +151,6 @@
       {
         global $SESS_LIFE;
 
-        // admins keep the longer lifetime, but no marker in the table that points to their sessions
         if (isset($_SESSION['customers_status']['customers_status'])
             && $_SESSION['customers_status']['customers_status'] == '0'
             )
