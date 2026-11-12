@@ -429,7 +429,6 @@ define('NAVBAR_TITLE_COOKIE_USAGE', 'Cookie-Nutzung');
 define('NAVBAR_TITLE_PRODUCT_REVIEWS', 'Rezensionen');
 define('NAVBAR_TITLE_REVIEWS_WRITE', 'Rezensionen');
 define('NAVBAR_TITLE_REVIEWS','Rezensionen');
-define('NAVBAR_TITLE_SSL_CHECK', 'Sicherheitshinweis');
 define('NAVBAR_TITLE_CREATE_GUEST_ACCOUNT','Ihre Kundenadresse');
 define('NAVBAR_TITLE_PASSWORD_DOUBLE_OPT','Passwort vergessen?');
 define('NAVBAR_TITLE_NEWSLETTER','Newsletter');

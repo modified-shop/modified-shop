@@ -172,9 +172,6 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
                          WHERE configuration_key = 'SESSION_FORCE_COOKIE_USE'");
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                            SET configuration_value = 'False'
-                         WHERE configuration_key = 'SESSION_CHECK_SSL_SESSION_ID'");
-          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                           SET configuration_value = 'False'
                          WHERE configuration_key = 'SESSION_CHECK_USER_AGENT'");
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                            SET configuration_value = 'False'
