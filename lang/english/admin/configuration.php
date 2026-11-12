@@ -669,6 +669,8 @@ define ('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Timing of online users in the "Who\
 //Sessions
 define ('SESSION_LIFE_ADMIN_TITLE', 'Session Lifetime Admin');
 define ('SESSION_LIFE_ADMIN_DESC', 'Time in seconds before the session time for Admins expires (logging out) - Default 7200<br />The entered value is only applied if the session handling is db based (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />Maximum value: 14400');
+define ('SESSION_CHECK_ADMIN_IP_ADDRESS_TITLE', 'Bind admin sessions to the IP address');
+define ('SESSION_CHECK_ADMIN_IP_ADDRESS_DESC', 'Ends an admin session as soon as it is used from a different IP address. For IPv6 the /64 network counts. A stolen session ID is useless from outside. Customer sessions are not affected. Admins with a frequently changing IP address, e.g. on mobile networks, have to log in again more often. Do not enable it behind a CDN such as Cloudflare, the proxy IP address changes there. (Default &quot;False&quot;)');
 define ('SESSION_LIFE_CUSTOMERS_TITLE', 'Session lifetime customer');
 define ('SESSION_LIFE_CUSTOMERS_DESC', 'Time in seconds before the session time for customers expires (logging out) - Default 1440<br />The entered value is only applied if the session handling is db based (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />Maximum value: 14400');
 

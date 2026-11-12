@@ -1896,6 +1896,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_DELETE_OLD_COOKIES', 'False', 15, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_LIFE_CUSTOMERS', '1440', 15, 20, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_LIFE_ADMIN', '7200', 15, 21, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_CHECK_ADMIN_IP_ADDRESS', 'False', 15, 22, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
 
 # configuration_group_id 16, Meta-Tags/Search engines
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'META_MAX_KEYWORD_LENGTH', '18', 16, 1, NULL, NOW(), NULL, NULL);

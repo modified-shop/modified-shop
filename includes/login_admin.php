@@ -179,6 +179,10 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                            SET configuration_value = 'False'
                          WHERE configuration_key = 'SESSION_CHECK_IP_ADDRESS'");
+          // an admin whose network changes on every request could not log in at all
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'False'
+                         WHERE configuration_key = 'SESSION_CHECK_ADMIN_IP_ADDRESS'");
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                            SET configuration_value = 'False'
                          WHERE configuration_key = 'SESSION_RECREATE'");

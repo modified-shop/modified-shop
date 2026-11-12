@@ -73,4 +73,21 @@
     // An unidentified client must not cause the shared proxy to be blacklisted.
     return '';
   }
+
+  function xtc_get_ip_network($ip) {
+    $ip = xtc_normalize_ip_address($ip);
+    if ($ip === '') {
+      return '';
+    }
+    $packed = inet_pton($ip);
+    if (strlen($packed) == 16) {
+      // dual stack servers report IPv4 clients as ::ffff:a.b.c.d
+      if (substr($packed, 0, 12) === str_repeat("\0", 10)."\xff\xff") {
+        return inet_ntop(substr($packed, 12));
+      }
+      // privacy extensions rotate the interface identifier, the /64 network stays
+      return inet_ntop(substr($packed, 0, 8).str_repeat("\0", 8)).'/64';
+    }
+    return $ip;
+  }
 ?>
