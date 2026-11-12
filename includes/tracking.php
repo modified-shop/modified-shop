@@ -68,10 +68,11 @@ if (isset($_GET['refID'])
 }
 
 // request 
+// history and referer are stored in the session and in the database, a session id in the url must not reach them
+$tracking_sid_pattern = '/(?<=[?&])'.preg_quote(xtc_session_name(), '/').'=[^&]*&?/';
 $req_url = strip_tags($_SERVER['REQUEST_URI']);
-// the history is stored in the session and in whos_online, a session id in the url must not reach it
 if (strpos($req_url, xtc_session_name().'=') !== false) {
-  $req_url = rtrim(preg_replace('/(?<=[?&])'.preg_quote(xtc_session_name(), '/').'=[^&]*&?/', '', $req_url), '?&');
+  $req_url = rtrim(preg_replace($tracking_sid_pattern, '', $req_url), '?&');
 }
 if (in_array(basename($PHP_SELF), array(FILENAME_LOGIN, FILENAME_LOGOFF))) {
   $req_url = basename($PHP_SELF);
@@ -84,8 +85,12 @@ if (!isset($_SESSION['tracking']['http_referer'])) {
     'url' => '---',
   );
   if (isset($_SERVER['HTTP_REFERER'])) {
-    $_SESSION['tracking']['http_referer'] = parse_url(strip_tags($_SERVER['HTTP_REFERER']));
-    $_SESSION['tracking']['http_referer']['url'] = strip_tags($_SERVER['HTTP_REFERER']);
+    $tracking_referer = strip_tags($_SERVER['HTTP_REFERER']);
+    if (strpos($tracking_referer, xtc_session_name().'=') !== false) {
+      $tracking_referer = rtrim(preg_replace($tracking_sid_pattern, '', $tracking_referer), '?&');
+    }
+    $_SESSION['tracking']['http_referer'] = parse_url($tracking_referer);
+    $_SESSION['tracking']['http_referer']['url'] = $tracking_referer;
   }
 }
 
