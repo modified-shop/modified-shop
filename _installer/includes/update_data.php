@@ -280,7 +280,13 @@
         ),
       ),
     ),
-    'sessions' => array(),
+    'sessions' => array(
+      'drop' => array(
+        'col' => array(
+          'flag',
+        ),
+      ),
+    ),
     'shipping_status' => array(),
     'shop_configuration' => array(
       'drop' => array(
