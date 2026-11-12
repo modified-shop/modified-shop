@@ -16,7 +16,8 @@
       return '';
     }
 
-    foreach (explode(',', (string)ini_get('session.save_path')) as $server) {
+    // phpredis separates the servers by commas and whitespace
+    foreach (preg_split('/[\s,]+/', (string)ini_get('session.save_path')) as $server) {
       $server = trim($server);
       if ($server == '') {
         continue;
@@ -29,8 +30,8 @@
       }
 
       $port = 0;
-      if (strpos($server, 'unix://') === 0) {
-        $host = substr($server, 7);
+      if (strpos($server, 'unix:') === 0) {
+        $host = '/'.ltrim(substr($server, 5), '/');
       } elseif (substr($server, 0, 1) == '/') {
         $host = $server;
       } else {
@@ -55,6 +56,12 @@
         }
         if (isset($params['database']) && (int)$params['database'] > 0) {
           $redis->select((int)$params['database']);
+        }
+
+        // with redis.session.compression the stored data is compressed
+        $compression = strtoupper((string)ini_get('redis.session.compression'));
+        if ($compression != '' && $compression != 'NONE' && defined('Redis::COMPRESSION_'.$compression)) {
+          $redis->setOption(Redis::OPT_COMPRESSION, constant('Redis::COMPRESSION_'.$compression));
         }
 
         $redis->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);

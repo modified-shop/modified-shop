@@ -235,7 +235,12 @@
             }
 
             // Redis sessions come from php.ini, STORE_SESSIONS is then neither mysql nor files
-            if (ini_get('session.save_handler') == 'redis') {
+            if (ini_get('session.save_handler') == 'redis'
+                && $session_data == ''
+                && $info['session_id'] != ''
+                && strpos($info['session_id'], 'BOT|') !== 0
+                )
+            {
               require_once(DIR_FS_INC.'get_redis_session_by_hash.inc.php');
               $session_data = get_redis_session_by_hash($info['session_id']);
             }
