@@ -408,6 +408,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'SESSION_DELETE_OLD_COOKIES', 'False', 15, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');";
   $values[] = "(NULL, 'SESSION_LIFE_CUSTOMERS', '1440', '15', '20', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'SESSION_LIFE_ADMIN', '7200', '15', '21', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'SESSION_CHECK_ADMIN_IP_ADDRESS', 'False', '15', '22', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');";
 
   $values_update[] = array (
                            'values' => "configuration_group_id = '15'",

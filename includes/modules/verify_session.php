@@ -75,6 +75,33 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   }
 }
 
+// bind admin sessions to the client network, a taken over admin session id is useless elsewhere
+// payment providers call ajax.php with the session id from their own servers, ajax.php grants no admin rights
+if (defined('SESSION_CHECK_ADMIN_IP_ADDRESS')
+    && SESSION_CHECK_ADMIN_IP_ADDRESS == 'True'
+    && empty($ajax_session_in_url)
+    // the real status, in the storefront customers_status_id holds the admin's DEFAULT_CUSTOMERS_STATUS_ID_ADMIN group
+    && isset($_SESSION['customers_status']['customers_status'])
+    && $_SESSION['customers_status']['customers_status'] == '0'
+    )
+{
+  $admin_ip_network = xtc_get_ip_network(xtc_get_ip_address());
+  if (!isset($_SESSION['SESSION_ADMIN_IP_NETWORK'])) {
+    $_SESSION['SESSION_ADMIN_IP_NETWORK'] = $admin_ip_network;
+  } elseif ($_SESSION['SESSION_ADMIN_IP_NETWORK'] !== $admin_ip_network) {
+    if (isset($LoggingManager)) {
+      $LoggingManager->warning('Admin session of customer ' . (isset($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . ' ended, the client network changed from "' . $_SESSION['SESSION_ADMIN_IP_NETWORK'] . '" to "' . $admin_ip_network . '"');
+    }
+    // destroy the taken over session directly, the client starts a new one at the login
+    xtc_session_destroy();
+    $_SESSION = array();
+    // in the admin the access check redirects the emptied session to the login
+    if (!defined('RUN_MODE_ADMIN')) {
+      xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+    }
+  }
+}
+
 // check session_id for valid signs and length
 if ($session_started === true
     && !preg_match('/^[a-z0-9]{26}$/i', xtc_session_id()) 

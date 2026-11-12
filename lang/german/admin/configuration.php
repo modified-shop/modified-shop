@@ -669,6 +669,8 @@ define('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Anzeigedauer der Online-Benutzer in 
 //sessions
 define('SESSION_LIFE_ADMIN_TITLE', 'Session Lebenszeit Admin');
 define('SESSION_LIFE_ADMIN_DESC', 'Zeitdauer in Sekunden, nach der die Sessionzeit f&uuml;r Admins abl&auml;uft (wird ausgeloggt) - Standard 7200<br />Der hier gesetzte Wert greift nur, wenn das Session-Handling db-basiert ist. (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />H&ouml;chstwert: 14400');
+define('SESSION_CHECK_ADMIN_IP_ADDRESS_TITLE', 'Admin-Session an IP-Adresse binden');
+define('SESSION_CHECK_ADMIN_IP_ADDRESS_DESC', 'Beendet eine Admin-Session, sobald sie von einer anderen IP-Adresse aus genutzt wird. Bei IPv6 z&auml;hlt das /64-Netz. Eine gestohlene Session-ID ist damit von au&szlig;en nutzlos. Kunden-Sessions sind nicht betroffen. Admins mit h&auml;ufig wechselnder IP-Adresse, z. B. im Mobilfunk, m&uuml;ssen sich dann &ouml;fter neu einloggen. Hinter einem CDN wie Cloudflare nicht einschalten, dort wechselt die IP-Adresse des Proxys. (Standard &quot;False&quot;)');
 define('SESSION_LIFE_CUSTOMERS_TITLE', 'Session Lebenszeit Kunden');
 define('SESSION_LIFE_CUSTOMERS_DESC', 'Zeitdauer in Sekunden, nach der die Sessionzeit f&uuml;r Kunden abl&auml;uft (wird ausgeloggt) - Standard 1440<br />Der hier gesetzte Wert greift nur, wenn das Session-Handling db-basiert ist. (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />H&ouml;chstwert: 14400');
 
