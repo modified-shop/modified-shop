@@ -80,8 +80,9 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
 if (defined('SESSION_CHECK_ADMIN_IP_ADDRESS')
     && SESSION_CHECK_ADMIN_IP_ADDRESS == 'True'
     && empty($ajax_session_in_url)
-    && isset($_SESSION['customers_status']['customers_status_id'])
-    && $_SESSION['customers_status']['customers_status_id'] == '0'
+    // the real status, in the storefront customers_status_id holds the admin's DEFAULT_CUSTOMERS_STATUS_ID_ADMIN group
+    && isset($_SESSION['customers_status']['customers_status'])
+    && $_SESSION['customers_status']['customers_status'] == '0'
     )
 {
   $admin_ip_network = xtc_get_ip_network(xtc_get_ip_address());
