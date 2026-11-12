@@ -73,9 +73,15 @@
 
       function readWithoutLock(string $session_id): string|false
       {
+        return $this->readHashWithoutLock(xtc_session_hash($session_id));
+      }
+
+      // for callers that only know the stored hash, such as whos_online
+      function readHashWithoutLock(string $session_hash): string|false
+      {
         $value_query = xtc_db_query("SELECT value
                                        FROM " . TABLE_SESSIONS . "
-                                      WHERE sesskey = '" . xtc_db_input(xtc_session_hash($session_id)) . "'
+                                      WHERE sesskey = '" . xtc_db_input($session_hash) . "'
                                         AND expiry > '" . time() . "'");
         if (xtc_db_num_rows($value_query) == 1) {
           $value = xtc_db_fetch_array($value_query);
