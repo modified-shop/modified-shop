@@ -25,6 +25,7 @@ class PayoneModified {
 	const TRANSACTION_STATUS_ERROR_PERSISTENCE = 'persistence';
 	// a new attempt waits this long for the TxStatus of an unanswered request
 	const UNANSWERED_CHECKOUT_MINUTES = 10;
+	const CHECKOUT_APPROVED_STATUS = array('APPROVED', 'APPOINTED', 'CAPTURE', 'PAID');
 
 	protected static $transaction_status_support_ready = false;
 	protected $transaction_status_error = self::TRANSACTION_STATUS_ERROR_NONE;
@@ -837,11 +838,20 @@ class PayoneModified {
 	}
 
 	protected function getTransactionCredential($orders_id, $txid) {
+		$credential = $this->readTransactionCredential($orders_id, $txid);
+		return (($credential === null) ? false : $credential);
+	}
+
+	// false: there are no credentials, null: they could not be read
+	protected function readTransactionCredential($orders_id, $txid) {
 		$query = xtc_db_query("SELECT portalid, aid, credential_hash
 		                         FROM payone_transaction_credentials
 		                        WHERE orders_id = '".(int)$orders_id."'
 		                          AND txid = '".xtc_db_input($txid)."'
 		                        LIMIT 1");
+		if ($query === false) {
+			return null;
+		}
 		return ((xtc_db_num_rows($query) === 1) ? xtc_db_fetch_array($query) : false);
 	}
 
@@ -963,7 +973,7 @@ class PayoneModified {
 	// one statement, so the transaction status, its latest applied callback and any unfinished
 	// callback come from the same read and a callback running in parallel cannot mix them up
 	public function isTransactionApprovedForCheckout($orders_id) {
-		$approved_status = array('APPROVED', 'APPOINTED', 'CAPTURE', 'PAID');
+		$approved_status = self::CHECKOUT_APPROVED_STATUS;
 
 		$query = xtc_db_query("SELECT t.status,
 		                              (SELECT d.`value`
@@ -1039,16 +1049,22 @@ class PayoneModified {
 	// false while that row, its credentials or the adoption of a waiting TxStatus could not be written
 	public function saveUnansweredTransaction($orders_id, $credential_identity) {
 		// the credentials go in first, a row without them could never adopt its TxStatus
-		if ($this->getTransactionCredential($orders_id, '') === false
-		    && (!is_array($credential_identity)
-		        || !$this->saveTransactionCredentialIdentity($orders_id, '', $credential_identity))
+		$request_credential = $this->readTransactionCredential($orders_id, '');
+		if ($request_credential === null
+		    || ($request_credential === false
+		        && (!is_array($credential_identity)
+		            || !$this->saveTransactionCredentialIdentity($orders_id, '', $credential_identity)))
 		    )
 		{
 			return false;
 		}
-		if (!$this->hasUnansweredTransaction($orders_id)) {
+		$unanswered = $this->hasUnansweredTransaction($orders_id);
+		if ($unanswered === null) {
+			return false;
+		}
+		if ($unanswered === false) {
 			$this->saveTransaction($orders_id, 'UNKNOWN', '', '', false);
-			if (!$this->hasUnansweredTransaction($orders_id)) {
+			if ($this->hasUnansweredTransaction($orders_id) !== true) {
 				return false;
 			}
 		}
@@ -1063,6 +1079,7 @@ class PayoneModified {
 		return true;
 	}
 
+	// null: the row could not be read
 	public function hasUnansweredTransaction($orders_id) {
 		$query = xtc_db_query("SELECT payone_transactions_id
 		                         FROM payone_transactions
@@ -1070,7 +1087,10 @@ class PayoneModified {
 		                          AND txid = ''
 		                          AND status = 'UNKNOWN'
 		                        LIMIT 1");
-		return ($query !== false && xtc_db_num_rows($query) > 0);
+		if ($query === false) {
+			return null;
+		}
+		return (xtc_db_num_rows($query) > 0);
 	}
 
 	// a recent unfinished checkout of the customer that PAYONE has not answered, still processes or has accepted after all
@@ -1085,6 +1105,10 @@ class PayoneModified {
 		                          AND o.orders_date_finished IS NULL
 		                          AND t.created > DATE_SUB(now(), INTERVAL ".(int)self::UNANSWERED_CHECKOUT_MINUTES." MINUTE)
 		                     ORDER BY o.orders_id DESC");
+		// without this read the shop cannot tell whether the customer has a request in doubt
+		if ($query === false) {
+			return array('orders_id' => 0, 'accepted' => false);
+		}
 		while ($row = xtc_db_fetch_array($query)) {
 			$state = $this->getUnansweredCheckoutState($row['orders_id']);
 			if ($state === false
@@ -1098,8 +1122,12 @@ class PayoneModified {
 			if ($this->isTransactionApprovedForCheckout($row['orders_id'])) {
 				return array('orders_id' => (int)$row['orders_id'], 'accepted' => true);
 			}
-			// a callback that ran during the checks above may have shown them a half applied status
-			if ($this->getUnansweredCheckoutState($row['orders_id']) !== $state) {
+			// an approved status the checks above did not confirm is pending or could not be read;
+			// a callback that ran during the checks may have shown them a half applied status
+			if ((int)$state['approved'] > 0
+			    || $this->getUnansweredCheckoutState($row['orders_id']) !== $state
+			    )
+			{
 				return array('orders_id' => (int)$row['orders_id'], 'accepted' => false);
 			}
 		}
@@ -1113,6 +1141,11 @@ class PayoneModified {
 		                                WHERE a.orders_id = '".(int)$orders_id."'
 		                                  AND a.txid != ''
 		                                  AND a.status != 'UNKNOWN') AS answered,
+		                              (SELECT COUNT(*)
+		                                 FROM payone_transactions b
+		                                WHERE b.orders_id = '".(int)$orders_id."'
+		                                  AND b.txid != ''
+		                                  AND b.status IN ('".implode("', '", self::CHECKOUT_APPROVED_STATUS)."')) AS approved,
 		                              (SELECT COUNT(*)
 		                                 FROM payone_txstatus s
 		                            LEFT JOIN payone_txstatus_data p
@@ -1134,7 +1167,10 @@ class PayoneModified {
 	// false: nothing to adopt, null: the check or the write failed and has to be repeated
 	protected function adoptUnansweredTransaction($orders_id) {
 		$orders_id = (int)$orders_id;
-		$request_credential = $this->getTransactionCredential($orders_id, '');
+		$request_credential = $this->readTransactionCredential($orders_id, '');
+		if ($request_credential === null) {
+			return null;
+		}
 		if ($request_credential === false) {
 			return false;
 		}
@@ -1856,7 +1892,12 @@ class PayoneModified {
 			}
 		} else {
 			// an unanswered request keeps its credentials, a key rotated since then stays valid for it
-			$request_credential = $this->getTransactionCredential($orders_id, '');
+			$request_credential = $this->readTransactionCredential($orders_id, '');
+			if ($request_credential === null) {
+				$this->transaction_status_error = self::TRANSACTION_STATUS_ERROR_PERSISTENCE;
+				$this->log("could not read the request credentials of order $orders_id for TxStatus $txid");
+				return false;
+			}
 			$status_credential = $this->getTransactionStatusCredentialIdentity($txstatus);
 			if ($request_credential === false
 			    || !$this->transactionStatusCredentialMatches($request_credential, $status_credential)

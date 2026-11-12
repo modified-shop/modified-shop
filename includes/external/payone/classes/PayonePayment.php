@@ -647,8 +647,9 @@ class PayonePayment {
 				unset($_SESSION['payone_checkout_return_tokens']);
 			}
 		}
-		// PAYONE may have accepted an unanswered request, only the merchant drops that order
-		if ($this->payone->hasUnansweredTransaction($order_id)) {
+		// PAYONE may have accepted an unanswered request, only the merchant drops that order;
+		// a failed check keeps the order as well
+		if ($this->payone->hasUnansweredTransaction($order_id) !== false) {
 			$this->payone->log("kept order ".(int)$order_id." of an unanswered request");
 			return;
 		}
