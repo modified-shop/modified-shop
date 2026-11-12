@@ -406,6 +406,19 @@ class PayonePayment {
 	}
 
 	function pre_confirmation_check() {
+		// an unanswered request that could not be stored blocks a new attempt until it is stored
+		if (isset($_SESSION['payone_unanswered']['orders_id'])) {
+			if ($this->payone->saveUnansweredTransaction($_SESSION['payone_unanswered']['orders_id'], $_SESSION['payone_unanswered']['credential'])) {
+				unset($_SESSION['payone_unanswered']);
+			} elseif ((time() - (int)$_SESSION['payone_unanswered']['time']) < PayoneModified::UNANSWERED_CHECKOUT_MINUTES * 60) {
+				$_SESSION['payone_error'] = PAYONE_NO_ANSWER;
+				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+			} else {
+				$this->payone->log("gave up storing the unanswered request of order ".(int)$_SESSION['payone_unanswered']['orders_id']);
+				unset($_SESSION['payone_unanswered']);
+			}
+		}
+
     // delete tmp order
     if (isset($_SESSION['tmp_payone_oID']) && is_numeric($_SESSION['tmp_payone_oID'])) {
       $this->_remove_order($_SESSION['tmp_payone_oID']);
@@ -905,7 +918,16 @@ class PayonePayment {
 			);
 			xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 		}
-		$this->payone->saveUnansweredTransaction($orders_id, $this->global_config);
+		$credential_identity = $this->payone->getCredentialIdentity($this->global_config);
+		if (!$this->payone->saveUnansweredTransaction($orders_id, $credential_identity)) {
+			// the session keeps the order until its row is written, the next PAYONE step tries again
+			$this->payone->log("could not store the unanswered request of order ".(int)$orders_id.", kept in the session");
+			$_SESSION['payone_unanswered'] = array(
+				'orders_id' => (int)$orders_id,
+				'credential' => $credential_identity,
+				'time' => time(),
+			);
+		}
 
 		unset($_SESSION['tmp_payone_oID']);
 		unset($_SESSION['tmp_oID']);

@@ -797,6 +797,16 @@ class PayoneModified {
 	}
 
 	protected function saveTransactionCredential($orders_id, $txid, $credential) {
+		$credential_identity = $this->getCredentialIdentity($credential);
+		if ($credential_identity === false) {
+			$this->log("cannot bind credentials to transaction $txid / order $orders_id");
+			return false;
+		}
+		return $this->saveTransactionCredentialIdentity($orders_id, $txid, $credential_identity);
+	}
+
+	// the identity holds no key, so it may wait in the session
+	public function getCredentialIdentity($credential) {
 		if (!is_array($credential)
 		    || empty($credential['portal_id'])
 		    || empty($credential['subaccount_id'])
@@ -804,14 +814,13 @@ class PayoneModified {
 		    || $credential['key'] === 'no_key'
 		    )
 		{
-			$this->log("cannot bind credentials to transaction $txid / order $orders_id");
 			return false;
 		}
-		return $this->saveTransactionCredentialIdentity($orders_id, $txid, array(
+		return array(
 			'portalid' => (string)$credential['portal_id'],
 			'aid' => (string)$credential['subaccount_id'],
 			'credential_hash' => hash('sha256', md5((string)$credential['key'])),
-		));
+		);
 	}
 
 	protected function saveTransactionCredentialIdentity($orders_id, $txid, $credential) {
@@ -944,7 +953,8 @@ class PayoneModified {
 	  }
 	  xtc_db_perform('payone_transactions', $sql_data_transactions_array);  
 		$this->log("transaction saved: orders_id $orders_id, status $status, txid $txid, userid $userid");
-		if (!$this->saveTransactionCredential($orders_id, $txid, $credential)) {
+		// false: the caller has bound the credentials already
+		if ($credential !== false && !$this->saveTransactionCredential($orders_id, $txid, $credential)) {
 			$this->log("could not bind credentials to transaction $txid / order $orders_id");
 		}
 		$this->processDeferredTransactionStatus($orders_id, $txid);
@@ -1025,16 +1035,32 @@ class PayoneModified {
 		return false;
 	}
 
-	// an unanswered (pre)authorization keeps a row without txid, its TxStatus names the txid later
-	public function saveUnansweredTransaction($orders_id, $credential) {
+	// an unanswered (pre)authorization keeps a row without txid, its TxStatus names the txid later;
+	// false while that row, its credentials or the adoption of a waiting TxStatus could not be written
+	public function saveUnansweredTransaction($orders_id, $credential_identity) {
+		// the credentials go in first, a row without them could never adopt its TxStatus
+		if ($this->getTransactionCredential($orders_id, '') === false
+		    && (!is_array($credential_identity)
+		        || !$this->saveTransactionCredentialIdentity($orders_id, '', $credential_identity))
+		    )
+		{
+			return false;
+		}
 		if (!$this->hasUnansweredTransaction($orders_id)) {
-			$this->saveTransaction($orders_id, 'UNKNOWN', '', '', $credential);
+			$this->saveTransaction($orders_id, 'UNKNOWN', '', '', false);
+			if (!$this->hasUnansweredTransaction($orders_id)) {
+				return false;
+			}
 		}
 		// the TxStatus can arrive while the request still waits for its answer
 		$txid = $this->adoptUnansweredTransaction($orders_id);
+		if ($txid === null) {
+			return false;
+		}
 		if ($txid !== false) {
 			$this->processTransactionStatus($orders_id, $txid);
 		}
+		return true;
 	}
 
 	public function hasUnansweredTransaction($orders_id) {
@@ -1104,15 +1130,16 @@ class PayoneModified {
 		return xtc_db_fetch_array($query);
 	}
 
-	// only a TxStatus sent with the credentials of the unanswered request may name its txid
+	// only a TxStatus sent with the credentials of the unanswered request may name its txid;
+	// false: nothing to adopt, null: the check or the write failed and has to be repeated
 	protected function adoptUnansweredTransaction($orders_id) {
 		$orders_id = (int)$orders_id;
 		$request_credential = $this->getTransactionCredential($orders_id, '');
-		if ($request_credential === false
-		    || !$this->acquireTransactionStatusLock($orders_id, '')
-		    )
-		{
+		if ($request_credential === false) {
 			return false;
+		}
+		if (!$this->acquireTransactionStatusLock($orders_id, '')) {
+			return null;
 		}
 
 		try {
@@ -1126,7 +1153,10 @@ class PayoneModified {
 			                                                  WHERE x.orders_id = t.orders_id
 			                                                    AND x.txid != '')
 			                               LIMIT 1");
-			if ($marker_query === false || xtc_db_num_rows($marker_query) < 1) {
+			if ($marker_query === false) {
+				return null;
+			}
+			if (xtc_db_num_rows($marker_query) < 1) {
 				return false;
 			}
 			$marker = xtc_db_fetch_array($marker_query);
@@ -1135,10 +1165,17 @@ class PayoneModified {
 			                                FROM payone_txstatus
 			                               WHERE orders_id = '".$orders_id."'
 			                            ORDER BY payone_txstatus_id");
+			if ($status_query === false) {
+				return null;
+			}
+			$read_failed = false;
 			while ($row = xtc_db_fetch_array($status_query)) {
 				$txstatus = $this->getStoredTransactionStatus($row['payone_txstatus_id']);
-				if ($txstatus === false
-				    || empty($txstatus['txid'])
+				if ($txstatus === false) {
+					$read_failed = true;
+					continue;
+				}
+				if (empty($txstatus['txid'])
 				    || !isset($txstatus['portalid'], $txstatus['aid'], $txstatus['_modified_credential_hash'])
 				    )
 				{
@@ -1166,7 +1203,7 @@ class PayoneModified {
 					$sql_data_transactions_array['type'] = $marker['type'];
 				}
 				if (xtc_db_perform('payone_transactions', $sql_data_transactions_array) === false) {
-					return false;
+					return null;
 				}
 				if (!$this->saveTransactionCredentialIdentity($orders_id, $txid, $request_credential)) {
 					$this->log("could not bind credentials to transaction $txid / order $orders_id");
@@ -1174,7 +1211,7 @@ class PayoneModified {
 				$this->log("TxStatus named txid $txid for the unanswered request of order $orders_id");
 				return $txid;
 			}
-			return false;
+			return (($read_failed === true) ? null : false);
 		} finally {
 			$this->releaseTransactionStatusLock($orders_id, '');
 		}
@@ -1818,7 +1855,15 @@ class PayoneModified {
 				$this->log("bound authenticated TxStatus credentials to legacy transaction $txid / order $orders_id");
 			}
 		} else {
-			$status_credential = $this->getTransactionStatusCredential($txstatus, $config);
+			// an unanswered request keeps its credentials, a key rotated since then stays valid for it
+			$request_credential = $this->getTransactionCredential($orders_id, '');
+			$status_credential = $this->getTransactionStatusCredentialIdentity($txstatus);
+			if ($request_credential === false
+			    || !$this->transactionStatusCredentialMatches($request_credential, $status_credential)
+			    )
+			{
+				$status_credential = $this->getTransactionStatusCredential($txstatus, $config);
+			}
 			if ($status_credential === false) {
 				$this->log("received TxStatus with invalid credentials! TxStatus will not be processed.");
 				return false;
@@ -1832,9 +1877,18 @@ class PayoneModified {
 			return false;
 		}
 		// an unanswered request learns its txid from this TxStatus
-		if (!$transaction_exists && $this->adoptUnansweredTransaction($orders_id) !== $txid) {
-			$this->log("deferred TxStatus for transaction $txid / order $orders_id until the transaction is stored");
-			return true;
+		if (!$transaction_exists) {
+			$adopted_txid = $this->adoptUnansweredTransaction($orders_id);
+			if ($adopted_txid === null) {
+				// without TSOK PAYONE sends the TxStatus again, nothing else would retry the adoption
+				$this->transaction_status_error = self::TRANSACTION_STATUS_ERROR_PERSISTENCE;
+				$this->log("could not adopt TxStatus for transaction $txid / order $orders_id");
+				return false;
+			}
+			if ($adopted_txid !== $txid) {
+				$this->log("deferred TxStatus for transaction $txid / order $orders_id until the transaction is stored");
+				return true;
+			}
 		}
 
 		if ($process === true) {
