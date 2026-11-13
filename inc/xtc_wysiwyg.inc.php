@@ -56,7 +56,7 @@
     $customConfig['entities'] = "entities: false,";
 
     //CKEditor 4.1: Advanced Content Filter (ACF) - keine benutzerdefinierten Tags herausfiltern - Filter aktivieren -> false
-    if (defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true'), true)) {
+    if (defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true)) {
       $customConfig['allowedContent'] = "allowedContent: true,";
     } else {
       // everything except active content, the admin inputfilter removes it on the server as well

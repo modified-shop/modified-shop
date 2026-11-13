@@ -13,6 +13,7 @@
 class Inputfilter {
     private $params = false;
     private $active_content_removed = false;
+    private $active_content_unfiltered = false;
 
     // admin fields that the storefront prints as HTML
     private $content_keys = array('products_name',
@@ -45,6 +46,12 @@ class Inputfilter {
                                   'values_description',
                                   'products_options_name',
                                   'products_options_values_name',
+                                  'products_model',
+                                  'products_manufacturers_model',
+                                  'products_vpe_name',
+                                  'shipping_status_name',
+                                  'orders_status_name',
+                                  'cross_sell_group_name',
                                   );
 
     public function __construct()
@@ -55,6 +62,12 @@ class Inputfilter {
     public function removeActiveContent($value)
     {
         require_once(DIR_FS_CATALOG.'inc/xtc_remove_active_content.inc.php');
+
+        if (!xtc_remove_active_content_available()) {
+            // the value stays as it is, the admin gets an error
+            $this->active_content_unfiltered = true;
+            return $value;
+        }
 
         $removed = false;
         $value = xtc_remove_active_content($value, $removed);
@@ -68,6 +81,11 @@ class Inputfilter {
     public function activeContentRemoved()
     {
         return $this->active_content_removed;
+    }
+
+    public function activeContentUnfiltered()
+    {
+        return $this->active_content_unfiltered;
     }
 
     public function validate($source)
@@ -193,7 +211,7 @@ class Inputfilter {
                       }
 
                       //active content
-                      if ((!defined('ADMIN_ALLOW_SCRIPT_CONTENT') || !in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true'), true))
+                      if ((!defined('ADMIN_ALLOW_SCRIPT_CONTENT') || !in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true))
                           && in_array($key, $this->content_keys)
                           )
                       {

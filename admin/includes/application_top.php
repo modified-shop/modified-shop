@@ -231,6 +231,9 @@ $messageStack = new messageStack();
 if ($inputfilter->activeContentRemoved()) {
   $messageStack->add_session((defined('WARNING_ACTIVE_CONTENT_REMOVED') ? WARNING_ACTIVE_CONTENT_REMOVED : 'Warning: Active content was removed from the saved texts.'), 'warning');
 }
+if ($inputfilter->activeContentUnfiltered()) {
+  $messageStack->add_session((defined('ERROR_ACTIVE_CONTENT_LIBRARY_MISSING') ? ERROR_ACTIVE_CONTENT_LIBRARY_MISSING : 'Error: includes/external/htmlpurifier/ is missing, the texts were saved unfiltered.'), 'error');
+}
 
 // verfiy CSRF Token
 if (CSRF_TOKEN_SYSTEM == 'true') {

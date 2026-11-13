@@ -436,6 +436,16 @@ class xtcImport {
     **
     *****************************************************************************/
 
+    // the import writes without the admin inputfilter, so the texts get the same cleaning here
+    function cleanContent($value) {
+        if (defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true)) {
+            return $value;
+        }
+        require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
+
+        return xtc_remove_active_content($value);
+    }
+
     function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false) {
 
         //BOC strip potential slashes and type cast inputs
@@ -563,13 +573,13 @@ class xtcImport {
 
             //BOC strip potential slashes
             if ($this->FileSheme['p_name.'.$this->languages[$i_insert]['code']] == 'Y')
-                $prod_desc_array = array_merge($prod_desc_array, array ('products_name' => xtc_db_prepare_input($dataArray['p_name.'.$this->languages[$i_insert]['code']])));
+                $prod_desc_array = array_merge($prod_desc_array, array ('products_name' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_name.'.$this->languages[$i_insert]['code']]))));
             if ($this->FileSheme['p_desc.'.$this->languages[$i_insert]['code']] == 'Y')
-                $prod_desc_array = array_merge($prod_desc_array, array ('products_description' => xtc_db_prepare_input($dataArray['p_desc.'.$this->languages[$i_insert]['code']])));
+                $prod_desc_array = array_merge($prod_desc_array, array ('products_description' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_desc.'.$this->languages[$i_insert]['code']]))));
             if ($this->FileSheme['p_shortdesc.'.$this->languages[$i_insert]['code']] == 'Y')
-                $prod_desc_array = array_merge($prod_desc_array, array ('products_short_description' => xtc_db_prepare_input($dataArray['p_shortdesc.'.$this->languages[$i_insert]['code']])));
+                $prod_desc_array = array_merge($prod_desc_array, array ('products_short_description' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_shortdesc.'.$this->languages[$i_insert]['code']]))));
             if ($this->FileSheme['p_orderdesc.'.$this->languages[$i_insert]['code']] == 'Y')
-                $prod_desc_array = array_merge($prod_desc_array, array ('products_order_description' => xtc_db_prepare_input($dataArray['p_orderdesc.'.$this->languages[$i_insert]['code']])));
+                $prod_desc_array = array_merge($prod_desc_array, array ('products_order_description' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_orderdesc.'.$this->languages[$i_insert]['code']]))));
             if ($this->FileSheme['p_meta_title.'.$this->languages[$i_insert]['code']] == 'Y')
                 $prod_desc_array = array_merge($prod_desc_array, array ('products_meta_title' => xtc_db_prepare_input($dataArray['p_meta_title.'.$this->languages[$i_insert]['code']])));
             if ($this->FileSheme['p_meta_desc.'.$this->languages[$i_insert]['code']] == 'Y')
@@ -678,7 +688,7 @@ class xtcImport {
                             $categorie_data = array (
                                 'language_id' => $this->languages[$i_insert]['id'],
                                 'categories_id' => $cat_id,
-                                'categories_name' => $cat[$i]
+                                'categories_name' => $this->cleanContent($cat[$i])
                             );
                             xtc_db_perform(TABLE_CATEGORIES_DESCRIPTION, $categorie_data);
                         }
