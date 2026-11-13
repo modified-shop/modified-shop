@@ -38,7 +38,8 @@
   }
 
   if (class_exists('HTMLPurifier_AttrDef_Text') && !class_exists('xtc_data_attribute_value')) {
-    // data attributes do nothing by themselves, but shop scripts may put them into a link
+    // data attributes do nothing by themselves, but scripts like slick or colorbox read them
+    // as options and turn them into html or into attributes of an element they build
     class xtc_data_attribute_value extends HTMLPurifier_AttrDef_Text {
       public function validate($string, $config, $context) {
         $string = parent::validate($string, $config, $context);
@@ -46,13 +47,27 @@
         if ($string === false) {
           return false;
         }
+        // no markup, a script would insert it as html
+        if (strpos($string, '<') !== false || strpos($string, '>') !== false) {
+          return false;
+        }
         // browsers ignore control characters and whitespace in the scheme
-        $url = strtolower(preg_replace('/[\x00-\x20]+/', '', $string));
-        if (strpos($url, 'javascript:') === 0
-            || strpos($url, 'vbscript:') === 0
-            || strpos($url, 'data:text/html') === 0
+        $flat = strtolower(preg_replace('/[\x00-\x20]+/', '', $string));
+        if (strpos($flat, 'javascript:') !== false
+            || strpos($flat, 'vbscript:') !== false
+            || strpos($flat, 'data:text/html') !== false
             )
         {
+          return false;
+        }
+        // an event name as an option key or as an assignment, e.g. {"onerror": "..."}
+        if (preg_match('/on(abort|animation[a-z]+|auxclick|before[a-z]+|blur|cancel|canplay[a-z]*|change|click|close|'
+                       .'contextmenu|copy|cuechange|cut|dblclick|drag[a-z]*|drop|durationchange|emptied|ended|error|'
+                       .'focus[a-z]*|formdata|fullscreen[a-z]+|gotpointercapture|hashchange|input|invalid|key[a-z]+|'
+                       .'load[a-z]*|lostpointercapture|message[a-z]*|mouse[a-z]+|offline|online|page[a-z]+|paste|pause|'
+                       .'play[a-z]*|pointer[a-z]+|popstate|progress|ratechange|reset|resize|scroll[a-z]*|seek[a-z]+|'
+                       .'select[a-z]*|slotchange|stalled|storage|submit|suspend|timeupdate|toggle|touch[a-z]+|'
+                       .'transition[a-z]+|unload|volumechange|waiting|webkit[a-z]+|wheel)\s*(["\']\s*:|=)/i', $string)) {
           return false;
         }
 
@@ -74,48 +89,56 @@
       return $value;
     }
 
-    // the value is stored after stripslashes and printed after another one
-    for ($i = 0; $i < 5; $i++) {
-      $plain = stripslashes($value);
-      if ($plain === $value) {
-        break;
-      }
-      $value = $plain;
-    }
+    // a text without special characters says nothing about the charset of the shop, so the
+    // library writes every character an entity expansion adds as an entity: correct in both
+    $ascii = !preg_match('/[\x80-\xFF]/', $value);
+    $charset = (($ascii || !function_exists('mb_check_encoding') || mb_check_encoding($value, 'UTF-8')) ? 'UTF-8' : 'ISO-8859-15');
+    $html = (($charset != 'UTF-8') ? xtc_remove_active_content_convert($value, 'UTF-8', $charset) : $value);
 
-    // the session and its charset do not exist yet, so decide per value
-    $charset = ((!function_exists('mb_check_encoding') || mb_check_encoding($value, 'UTF-8')) ? 'UTF-8' : 'ISO-8859-15');
-    $html = (($charset != 'UTF-8') ? mb_convert_encoding($value, 'UTF-8', $charset) : $value);
-
-    // data attributes carry no behaviour of their own, so keep the ones in this text
+    // the data attributes of this text, they carry no behaviour of their own
     $data_attributes = array();
     if (preg_match_all('/\sdata-[a-z0-9_-]+/i', $html, $matches)) {
       $data_attributes = array_slice(array_unique(array_map('strtolower', array_map('trim', $matches[0]))), 0, 100);
       sort($data_attributes);
     }
 
-    $purifier = xtc_remove_active_content_purifier($data_attributes);
+    $purifier = xtc_remove_active_content_purifier($data_attributes, $ascii);
     if ($purifier === false) {
       $removed = true;
       return htmlspecialchars($value, ENT_QUOTES, $charset);
     }
 
     $clean = $purifier->purify($html);
-    // without a backslash every later stripslashes keeps the value as it is
-    $clean = str_replace('\\', '&#92;', $clean);
 
     if ($clean !== $html) {
       $removed = true;
     }
 
-    return (($charset != 'UTF-8') ? mb_convert_encoding($clean, $charset, 'UTF-8') : $clean);
+    // xtc_db_prepare_input() and the product output drop backslashes, the entity survives both
+    $clean = str_replace('\\', '&#92;', $clean);
+
+    return (($charset != 'UTF-8') ? xtc_remove_active_content_convert($clean, $charset, 'UTF-8') : $clean);
   }
 
 
-  function xtc_remove_active_content_purifier($data_attributes = array()) {
+  function xtc_remove_active_content_convert($value, $to, $from) {
+    if (!function_exists('mb_convert_encoding')) {
+      return $value;
+    }
+    // a character the target charset has no place for stays readable as an entity
+    $substitute = mb_substitute_character();
+    mb_substitute_character('entity');
+    $value = mb_convert_encoding($value, $to, $from);
+    mb_substitute_character($substitute);
+
+    return $value;
+  }
+
+
+  function xtc_remove_active_content_purifier($data_attributes = array(), $escape_non_ascii = false) {
     static $purifiers = array();
 
-    $key = md5(implode(' ', $data_attributes));
+    $key = md5(implode(' ', $data_attributes).(($escape_non_ascii) ? ' escape' : ''));
     if (isset($purifiers[$key])) {
       return $purifiers[$key];
     }
@@ -129,6 +152,7 @@
     // no file cache in the admin, the definition costs about 30 ms per request
     $config->set('Cache.DefinitionImpl', null);
     $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+    $config->set('Core.EscapeNonASCIICharacters', $escape_non_ascii);
     $config->set('Attr.EnableID', true);
     $config->set('Attr.AllowedFrameTargets', array('_blank'));
     $config->set('HTML.TargetNoreferrer', false);
