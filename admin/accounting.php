@@ -36,7 +36,7 @@
           if ($field['Field'] != 'customers_id') {
             $access_fields[] = $field['Field'];
             xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS."
-                             SET ".$field['Field']." = '0'
+                             SET `".$field['Field']."` = '0'
                            WHERE customers_id = '".(int)$_GET['cID']."'");
           }
         }
