@@ -29,6 +29,19 @@ class MetroApiConfigValues extends MagnaCompatibleApiConfigValues {
         return self::$instance;
     }
 
+    /**
+     * Delivery carriers accepted by the marketplace, as carrierId => carrierName.
+     * Backed by the marketplace's delivery carrier dictionary.
+     *
+     * @return array
+     *   Empty array if the list could not be retrieved.
+     */
+    public function getCarriers() {
+        $aData = $this->fetchDataFromApi('GetCarriers');
+
+        return is_array($aData) ? $aData : array();
+    }
+
     public function getVariantConfigurationDefinition($category) {
         $requestParams = array(
             'DATA' => array(

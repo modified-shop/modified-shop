@@ -30,9 +30,9 @@ function magnaProcessCallbackRequest() {
 	}
 	/* Only allow known callback jobs. Unknown values are dropped so the dispatch
 	 * cannot be abused with arbitrary operations.
-	 * NOTE: authentication of the caller (requiring the passphrase/token for the
-	 * `do` dispatch) is handled separately and rolled out together with the
-	 * magnalister service side. */
+	 * NOTE: the caller is authenticated before this point: magnaCallback.php checks
+	 * the auth parameter (magnaCallbackAuthValid()), the admin path requires a
+	 * logged-in admin. */
 	$allowedDo = array(
 		'ImportOrders',
 		'UpdateOrders',

@@ -984,7 +984,7 @@ function magnaSafeUnserialize($data) {
 	}
 	// PHP 7.0+: use allowed_classes parameter
 	if (PHP_VERSION_ID >= 70000) {
-		return @unserialize($data, ['allowed_classes' => false]);
+		return @unserialize($data, array('allowed_classes' => false));
 	}
 	// PHP 5.6: Block serialized objects via regex (O:123:"ClassName" or C:123:"ClassName")
 	if (preg_match('/[oOcC]:\d+:"/', $data)) {

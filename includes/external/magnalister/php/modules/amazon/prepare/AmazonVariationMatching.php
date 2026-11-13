@@ -251,12 +251,12 @@ class AmazonVariationMatching extends VariationMatching
                         var selectedCategory = $('#PrimaryCategory').val();
                         if (!selectedCategory || selectedCategory === 'null' || selectedCategory === '') {
                             console.log('[Variation Matching] No category selected, nothing to reset');
-                            alert('<?php echo addslashes(ML_GENERAL_VARMATCH_SELECT_CATEGORY ?? 'Please select a category first'); ?>');
+                            alert('<?php echo addslashes(defined('ML_GENERAL_VARMATCH_SELECT_CATEGORY') && ML_GENERAL_VARMATCH_SELECT_CATEGORY !== null ? ML_GENERAL_VARMATCH_SELECT_CATEGORY : 'Please select a category first'); ?>');
                             return;
                         }
 
                         // Confirm with user
-                        if (!confirm('<?php echo addslashes(ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM ?? 'Reset all matched attributes for this category?'); ?>')) {
+                        if (!confirm('<?php echo addslashes(defined('ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM') && ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM !== null ? ML_GENERAL_VARMATCH_RESET_MATCHING_CONFIRM : 'Reset all matched attributes for this category?'); ?>')) {
                             console.log('[Variation Matching] Reset cancelled by user');
                             return;
                         }

@@ -99,19 +99,29 @@ class TemuConfigure extends MagnaCompatibleConfigure {
 				'SUBSYSTEM' => 'Temu',
 				'MARKETPLACEID' => $mpID,
 			), 0); // ttl=0: auth state must stay fresh across requests (no persistent cache)
-			if (isset($result['DATA'])) {
-				$authData = $result['DATA'];
-				$isAuthed = true;
-			}
 		} catch (MagnaException $e) {
-			$isAuthed = false;
+			// A shop that is not connected gets STATUS=ERROR, which the
+			// connector turns into an exception - but its payload is the reply
+			// we want: it says why the last attempt failed, and that reason is
+			// available nowhere else.
+			$aResponse = $e->getResponse();
+			$result = is_array($aResponse) ? $aResponse : array();
+		}
+
+		// The IsAuthed reply always carries a DATA payload that includes an
+		// 'Authorized' flag — DATA['Authorized'] === false when NOT connected.
+		// Gate on that flag, not merely on the presence of DATA (always set),
+		// otherwise a disconnected profile falsely renders as "connected".
+		if (isset($result['DATA']) && is_array($result['DATA'])) {
+			$authData = $result['DATA'];
+			$isAuthed = !empty($authData['Authorized']);
 		}
 
 		// Check token expiration
 		$blExpiringSoon = false;
 		$blExpired = false;
-		if ($isAuthed && !empty($authData['expiresAt'])) {
-			$iExpiresTimestamp = strtotime($authData['expiresAt']);
+		if ($isAuthed && !empty($authData['ExpiresAt'])) {
+			$iExpiresTimestamp = strtotime($authData['ExpiresAt']);
 			$iSecondsRemaining = $iExpiresTimestamp - time();
 			if ($iSecondsRemaining <= 0) {
 				$blExpired = true;
@@ -168,23 +178,36 @@ class TemuConfigure extends MagnaCompatibleConfigure {
 			$sAuthStatus .= '<div style="margin-top:15px;padding:10px;background-color:#f8f9fa;border-radius:4px;">';
 			$sAuthStatus .= '<div style="color:green;margin-bottom:8px;"><strong>'.ML_TEMU_STATUS_CONNECTED.'</strong></div>';
 			$sAuthStatus .= '<table style="font-size:12px;">';
-			if (!empty($authData['mallId'])) {
+			if (!empty($authData['MallId'])) {
 				$sAuthStatus .= '<tr><td style="padding-right:15px;color:#666;">'.ML_TEMU_LABEL_MALL_ID.':</td>';
-				$sAuthStatus .= '<td><strong>'.htmlspecialchars($authData['mallId']).'</strong></td></tr>';
+				$sAuthStatus .= '<td><strong>'.htmlspecialchars($authData['MallId']).'</strong></td></tr>';
 			}
-			if (!empty($authData['region'])) {
-				$sRegionName = $authData['region'];
-				if (isset(self::$aTemuRegions[$authData['region']])) {
-					$r = self::$aTemuRegions[$authData['region']];
+			if (!empty($authData['Region'])) {
+				$sRegionName = $authData['Region'];
+				if (isset(self::$aTemuRegions[$authData['Region']])) {
+					$r = self::$aTemuRegions[$authData['Region']];
 					$sRegionName = $r['name'].' ('.$r['currency'].')';
 				}
 				$sAuthStatus .= '<tr><td style="padding-right:15px;color:#666;">'.ML_TEMU_LABEL_REGION.':</td>';
 				$sAuthStatus .= '<td>'.htmlspecialchars($sRegionName).'</td></tr>';
 			}
-			if (!empty($authData['expiresAt'])) {
+			// Null means the API does not know the granted scopes for this shop
+			// (authorized before they were recorded), so the row stays hidden
+			// rather than claiming the permission is missing.
+			if (isset($authData['PriceChangeScopeGranted'])) {
+				$sAuthStatus .= '<tr><td style="padding-right:15px;color:#666;">'.ML_TEMU_LABEL_PRICE_SCOPE.':</td>';
+				if ($authData['PriceChangeScopeGranted']) {
+					$sAuthStatus .= '<td style="color:green;">'.ML_TEMU_STATUS_SCOPE_GRANTED.'</td></tr>';
+				} else {
+					$sAuthStatus .= '<td style="color:#c00;"><strong>'.ML_TEMU_STATUS_SCOPE_MISSING.'</strong>'
+						.'<br /><small>'.ML_TEMU_HINT_SCOPE_CONSEQUENCE.'</small>'
+						.'<br /><small>'.ML_TEMU_HINT_SCOPE_MISSING.'</small></td></tr>';
+				}
+			}
+			if (!empty($authData['ExpiresAt'])) {
 				$sStyle = $blExpiringSoon ? ' style="color:#856404;"' : '';
 				$sAuthStatus .= '<tr><td style="padding-right:15px;color:#666;">'.ML_TEMU_LABEL_TOKEN_EXPIRES.':</td>';
-				$sAuthStatus .= '<td'.$sStyle.'>'.date('Y-m-d H:i', strtotime($authData['expiresAt'])).'</td></tr>';
+				$sAuthStatus .= '<td'.$sStyle.'>'.date('Y-m-d H:i', strtotime($authData['ExpiresAt'])).'</td></tr>';
 			}
 			$sAuthStatus .= '</table></div>';
 		}
@@ -200,14 +223,68 @@ class TemuConfigure extends MagnaCompatibleConfigure {
 				.'<strong style="color:#856404;">'.sprintf(ML_TEMU_ERROR_TOKEN_EXPIRING, $iDays).'</strong></div>';
 		}
 
+		// The API refuses an authorization that lacks a permission magnalister
+		// needs and drops the token, so the shop lands here disconnected with
+		// the reason recorded. Without showing it the seller only sees the
+		// connect button again and no hint at what went wrong.
+		$sScopeError = '';
+		$sLastErrorCode = isset($authData['LastError']['error_code']) ? $authData['LastError']['error_code'] : '';
+		if ($sLastErrorCode === 'MISSING_API_SCOPE') {
+			$sScopeError = '<div style="background-color:#f8d7da;border:1px solid #f5c6cb;padding:10px;margin-bottom:10px;border-radius:4px;">'
+				.'<strong style="color:#721c24;">'.ML_TEMU_ERROR_MISSING_SCOPE_HEADLINE.'</strong><br />'
+				.'<span style="color:#721c24;">'.ML_TEMU_ERROR_MISSING_SCOPE_TEXT.'</span>';
+			if (!empty($authData['LastError']['error_message'])) {
+				$sScopeError .= '<br /><small style="color:#721c24;">'
+					.htmlspecialchars($authData['LastError']['error_message']).'</small>';
+			}
+			$sScopeError .= '</div>';
+		}
+
+		// Shown only while connected: this is the way out of a connected state,
+		// and the only way to authorize again or switch to another Temu account.
+		$sRevokeButton = '';
+		if ($isAuthed) {
+			$sRevokeButton = '<input class="ml-button" type="button" value="'.ML_TEMU_BUTTON_TOKEN_REVOKE.'" id="revokeTemuToken" />'
+				.'<div id="revokeTemuTokenConfirm" style="display:none;" title="'
+				.htmlspecialchars(ML_TEMU_REVOKE_CONFIRM_HEADLINE, ENT_QUOTES).'">'
+				.'<p>'.ML_TEMU_REVOKE_CONFIRM_TEXT.'</p>'
+				.'<p><strong>'.ML_TEMU_REVOKE_CONFIRM_IRREVERSIBLE.'</strong></p>'
+				.'</div>';
+		}
+
 		$sDisabled = $blDisabled ? ' disabled="disabled"' : '';
 		$ajaxUrl = toURL($_url, array('what' => 'GetTokenCreationLink', 'kind' => 'ajax'), true);
+		$revokeUrl = toURL($_url, array('what' => 'RevokeToken', 'kind' => 'ajax'), true);
 
-		return $sWarning
+		return $sScopeError
+			.$sWarning
 			.$sRegionSelect
 			.'<input class="'.$sButtonClass.'" type="button" value="'.$sButtonLabel.'" id="requestTemuToken"'.$sDisabled.' />'
+			.$sRevokeButton
 			.$sAuthStatus
 			.'
+<script type="text/javascript">/*<![CDATA[*/
+/**
+ * Reloads this page once the authorization window is gone.
+ *
+ * The popup cannot refresh us itself: it is served from the API host while this
+ * page belongs to the shop, so it is cross-origin to us and reading our
+ * location from there throws. Watching its `closed` flag is allowed across
+ * origins, so the waiting happens on this side - which also covers a seller
+ * who closes the window with its own close control.
+ */
+function watchTemuAuthWindow(hwin) {
+	if (!hwin) {
+		return;
+	}
+	var interval = setInterval(function () {
+		if (hwin.closed) {
+			clearInterval(interval);
+			window.location.reload();
+		}
+	}, 500);
+}
+/*]]>*/</script>
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {
 	$(\'#requestTemuToken\').click(function() {
@@ -233,6 +310,7 @@ $(document).ready(function() {
 					} else if (jsonData.iframeUrl) {
 						var hwin = window.open(jsonData.iframeUrl, "popup", "resizable=yes,scrollbars=yes,width=800,height=700");
 						if (hwin && hwin.focus) hwin.focus();
+						watchTemuAuthWindow(hwin);
 					}
 				} catch(e) {
 					if (data === \'error\' || data === \'\') {
@@ -243,11 +321,64 @@ $(document).ready(function() {
 					} else {
 						var hwin = window.open(data, "popup", "resizable=yes,scrollbars=yes,width=800,height=700");
 						if (hwin && hwin.focus) hwin.focus();
+						watchTemuAuthWindow(hwin);
 					}
 				}
 			}
 		});
 	});
+
+	$(\'#revokeTemuToken\').click(function() {
+		// Deleting the token cannot be undone, so it is confirmed first.
+		$(\'#revokeTemuTokenConfirm\').jDialog({
+			buttons: {
+				'.json_encode(ML_BUTTON_LABEL_ABORT).': function() {
+					jQuery(this).dialog(\'close\');
+				},
+				'.json_encode(ML_TEMU_BUTTON_TOKEN_REVOKE).': function() {
+					jQuery(this).dialog(\'close\');
+					revokeTemuToken();
+				}
+			}
+		});
+	});
+
+	function revokeTemuToken() {
+		jQuery.blockUI(blockUILoading);
+		jQuery.ajax({
+			\'method\': \'post\',
+			\'url\': '.json_encode($revokeUrl).',
+			\'success\': function (data) {
+				if (data.indexOf(\'<style\') > 0) {
+					data = data.substring(0, data.indexOf(\'<style\'));
+				}
+				var error = \'\';
+				try {
+					error = jQuery.parseJSON(data).error + \'\';
+				} catch(e) {
+					error = '.json_encode(ML_TEMU_ERROR_REVOKE_TOKEN_TEXT).';
+				}
+				if (error !== \'\') {
+					jQuery.unblockUI();
+					$(\'<div></div>\')
+						.attr(\'title\', '.json_encode(ML_TEMU_ERROR_REVOKE_TOKEN_HEADLINE).')
+						.html(error)
+						.jDialog();
+				} else {
+					// Reload so the page comes back disconnected, with the
+					// region dropdown and the connect button enabled.
+					window.location.reload();
+				}
+			},
+			\'error\': function () {
+				jQuery.unblockUI();
+				$(\'<div></div>\')
+					.attr(\'title\', '.json_encode(ML_TEMU_ERROR_REVOKE_TOKEN_HEADLINE).')
+					.html('.json_encode(ML_TEMU_ERROR_REVOKE_TOKEN_TEXT).')
+					.jDialog();
+			}
+		});
+	}
 });
 /*]]>*/</script>';
 	}
@@ -401,33 +532,6 @@ $(document).ready(function() {
 			}
 		}
 
-		if ($this->isAuthed) {
-			$mpID = $this->mpID;
-			try {
-				$result = MagnaConnector::gi()->submitRequestCached(array(
-					'ACTION' => 'IsAuthed',
-					'SUBSYSTEM' => 'Temu',
-					'MARKETPLACEID' => $mpID,
-				), 0); // ttl=0: auth state must stay fresh across requests (no persistent cache)
-				if (isset($result['DATA'])) {
-					$authData = $result['DATA'];
-					if (isset($authData['mallId'])) {
-						$this->boxes .= '<div class="infoBox">'
-							.ML_TEMU_LABEL_MALL_ID.': <strong>'.$authData['mallId'].'</strong>';
-						if (isset($authData['region'])) {
-							$this->boxes .= ' | '.ML_TEMU_LABEL_REGION.': <strong>'.$authData['region'].'</strong>';
-						}
-						if (isset($authData['expiresAt'])) {
-							$this->boxes .= ' | '.ML_TEMU_LABEL_TOKEN_EXPIRES.': <strong>'.$authData['expiresAt'].'</strong>';
-						}
-						$this->boxes .= '</div>';
-					}
-				}
-			} catch (MagnaException $e) {
-				// silently ignore
-			}
-		}
-
 		// Buy Shipping toggle: show/hide buyshipping fields based on radio state
 		$this->boxes .= '
 <script type="text/javascript">/*<![CDATA[*/
@@ -573,6 +677,24 @@ if (isset($_GET['what']) && $_GET['what'] == 'GetTokenCreationLink') {
 		if (empty($aResponse['iframeUrl'])) {
 			$aResponse['error'] = 'No token link returned from API.';
 		}
+	} catch (MagnaException $e) {
+		$aResponse['error'] = $e->getMessage();
+	}
+	echo json_encode($aResponse);
+	exit();
+}
+
+// AJAX handler for RevokeToken. Deleting the stored token is what allows a new
+// authorization at all: while one is stored the connect button stays disabled,
+// so there was no way to re-authorize or move to a different Temu account. Only
+// the magnalister side is cleared - the app stays authorized in Temu Seller
+// Center, so connecting again needs no approval there.
+if (isset($_GET['what']) && $_GET['what'] == 'RevokeToken') {
+	$aResponse = array('error' => '');
+	try {
+		MagnaConnector::gi()->submitRequest(array(
+			'ACTION' => 'RevokeToken',
+		));
 	} catch (MagnaException $e) {
 		$aResponse['error'] = $e->getMessage();
 	}

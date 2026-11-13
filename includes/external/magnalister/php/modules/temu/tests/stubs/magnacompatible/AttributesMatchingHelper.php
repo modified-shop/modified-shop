@@ -11,4 +11,13 @@ class AttributesMatchingHelper {
 	protected $mpID = 0;
 	public function __construct($mpID = 0) { $this->mpID = (int)$mpID; }
 	public static function gi() { return new static(); }
+
+	/** Fixture: the stored matching resolved to its plain values, keyed by attribute title. */
+	public function convertMatchingToNameValue($aMatching, $aProductData) {
+		$aOut = array();
+		foreach ($aMatching as $sTitle => $aEntry) {
+			$aOut[$sTitle] = isset($aEntry['Values']) ? $aEntry['Values'] : null;
+		}
+		return $aOut;
+	}
 }

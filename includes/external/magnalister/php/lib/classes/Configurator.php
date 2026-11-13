@@ -33,6 +33,8 @@ class MLConfigurator {
 	private $missingConfigKeys = array();
 	private $testingMethods = array();
 	private $notCorrect = array();
+	/* Posted values that failed the verification, so they are shown again instead of the saved value */
+	private $rejectedValues = array();
 
 	private $renderResetJS = false;
 	private $renderTabIdent = false;
@@ -85,6 +87,7 @@ class MLConfigurator {
 			'contains' => ML_CONFIG_MUST_CONTAIN,
 			'regex' => ML_CONFIG_INVALID_CHARS,
 			'range' => ML_CONFIG_INVALID_RANGE,
+			'dir' => ML_CONFIG_DIR_NOT_WRITABLE,
 		);
 		
 		$this->itemSettings = array (
@@ -198,6 +201,11 @@ class MLConfigurator {
 						$correct = !empty($value);
 						break;
 					}
+					case 'dir': {
+						// files are read from and moved between these directories
+						$correct = !empty($value) && @is_dir($value) && is_readable($value) && is_writable($value);
+						break;
+					}
 				}
 			}
 			if (!$correct) {
@@ -300,6 +308,14 @@ class MLConfigurator {
 				if (array_key_exists('verify', $foundItem)) {
 					$verify = $foundItem['verify'];
 				}
+				// verify only if other fields have the given values (e.g. the field is hidden otherwise)
+				if (array_key_exists('verifyIf', $foundItem)) {
+					foreach ($foundItem['verifyIf'] as $sIfKey => $sIfValue) {
+						if (!isset($_POST['conf'][$sIfKey]) || ($_POST['conf'][$sIfKey] !== $sIfValue)) {
+							$verify = false;
+						}
+					}
+				}
 				if (array_key_exists('verifyFrom', $foundItem) && array_key_exists('verifyTo', $foundItem)) {
 					$verifyFrom = $foundItem['verifyFrom'];
 					$verifyTo = $foundItem['verifyTo'];
@@ -312,6 +328,7 @@ class MLConfigurator {
 				}
 			}
 
+			$blScalarValue = !is_array($value);
 			if (is_array($value)) {
 				foreach ($value as $k => &$v) {
 					if (($v == 'true') || ($v == 'false')) {
@@ -346,6 +363,9 @@ class MLConfigurator {
 			}
 			if (!$correct) {
 				$noError = false;
+				if ($blScalarValue && ($value !== '__saved__')) {
+					$this->rejectedValues[$key] = $value;
+				}
 			}
 
 			if (!empty($key) && $correct) {
@@ -548,6 +568,9 @@ class MLConfigurator {
 		
 		if (!isset($item['key'])) {
 			$item['key'] = '';
+		}
+		if (($value === null) && array_key_exists($item['key'], $this->rejectedValues)) {
+			$value = $this->rejectedValues[$item['key']];
 		}
 		if($value === null){
 			$value = '';

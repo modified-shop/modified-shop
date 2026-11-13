@@ -288,7 +288,7 @@ function renderMultiApplication($data) {
         $(document).ready(function () {
             // Single select options
             var singleSelectOptions = {
-                width: 'resolve',
+                width: '100%',
                 placeholder: '<?php echo addslashes(html_entity_decode((ML_AMAZON_LABEL_APPLY_PLEASE_SELECT))); ?>',
             };
 
@@ -825,12 +825,23 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 	}
 	if (isset($_POST['type']) && ($_POST['type'] == 'browsenodes') && isset($_POST['category'])) {
         $mNewResponse = 'ALL';
-		if (isset($_POST['selected']) && !empty($_POST['selected']) && $_POST['selected'] != 'null') {
-            preg_match("/([0-9]*)__([0-9]*)__([0-9]*)/", $_POST['selected'], $aOutput);
+        /* The field is <select multiple name="BrowseNodes[]">, so jQuery posts
+           'selected' as an array - that is the normal payload, not an edge case.
+           Normalise it and run the regex on the first entry only; handing the array
+           itself to preg_match() throws a TypeError under PHP 8. Same shape as the
+           non-AJAX branch further up. */
+        $aSelected = isset($_POST['selected']) ? $_POST['selected'] : array();
+        if (!is_array($aSelected)) {
+            $aSelected = array($aSelected);
+        }
+        $sCategory = is_string($_POST['category']) ? $_POST['category'] : '';
+        $sFirstNode = (isset($aSelected[0]) && is_string($aSelected[0])) ? $aSelected[0] : '';
+		if (($sFirstNode !== '') && ($sFirstNode != 'null')) {
+            preg_match("/([0-9]*)__([0-9]*)__([0-9]*)/", $sFirstNode, $aOutput);
             if (!empty($aOutput)) {
                 $mNewResponse = 'ALL';
             } else {
-                preg_match("/([0-9]*)__([0-9]*)/", $_POST['selected'], $aOutput);
+                preg_match("/([0-9]*)__([0-9]*)/", $sFirstNode, $aOutput);
                 if (!empty($aOutput)) {
                     $mNewResponse = true;
                 } else {
@@ -838,7 +849,7 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
                 }
             }
 		}
-		die(getBrowseNodes($_POST['category'], $_POST['selected'], $mNewResponse));
+		die(getBrowseNodes($sCategory, $aSelected, $mNewResponse));
 	}
     if (isset($_POST['type']) && ($_POST['type'] == 'variationthemes') && isset($_POST['category'])) {
         global $_MagnaSession;
@@ -977,6 +988,8 @@ try {
 </form>
 ';
 
+} catch (\Exception $ex) {
+    echo $ex->getMessage() . "\n" . $ex->getFile() . ':' . $ex->getLine();
 } catch (\Throwable $ex) {
     echo $ex->getMessage() . "\n" . $ex->getFile() . ':' . $ex->getLine();
 }

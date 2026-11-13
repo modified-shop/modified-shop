@@ -21,6 +21,13 @@
                 "type": "selection",
                 "values": null
             },
+            "carrier": {
+                "label": "Carrier",
+                "desc": "Select the carrier that is submitted to _#_platformName_#_ when confirming the shipment. Only carriers accepted by _#_platformName_#_ are available.<br\/><br\/>\n\t\t\t\t           From 01.11.2026, _#_platformName_#_ only accepts carriers from its own list. If the carrier comes from your shop (e.g. via <b>Spediteur Matching<\/b>), the value therefore has to match the name or id of a carrier from this list exactly (e.g. \"DHL\"; case does not matter).<br\/><br\/>\n\t\t\t\t           If it does not match, the carrier selected here is submitted instead. If none is selected here, the value is transmitted as a custom carrier and is no longer accepted by _#_platformName_#_.",
+                "key": "_#_platform_#_.orderstatus.carrier.default",
+                "type": "selection",
+                "values": null
+            },
             "carrierMatch": {
                 "label": "Spediteur Matching",
                 "key": "_#_platform_#_.orderstatus.carrier.dbmatching.table",

@@ -29,6 +29,9 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	protected $handlingtimeMatching = array();
 	protected $ignoreErrors = true;
 	protected $shippingTimes = array();
+	/* Marketplace shipping groups, lazily fetched once per run. false = list
+	   unavailable (offline/error), in that case no validation takes place. */
+	protected $validShippingGroups = null;
 
 	public function __construct($settings = array()) {
 		global $_MagnaSession;
@@ -95,13 +98,20 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		$defaultSubtitle = isset($product['ShortDescription']) ? $product['ShortDescription'] : '';
 		$defaultDescription = isset($product['Description']) ? $product['Description'] : '';
 		
+		/* The primary key is (mpID, products_id, products_model), but only one of the
+		   two product identifiers is used for the lookup. If the shop's article number
+		   changed after a previous prepare, REPLACE INTO left a second row behind and
+		   fetchRow() would return whichever the storage engine yields first -- usually
+		   the stale one. Always take the most recently prepared row. */
 		$prepare = MagnaDB::gi()->fetchRow('
 			SELECT * FROM '.TABLE_MAGNA_HITMEISTER_PREPARE.'
 			 WHERE '.((getDBConfigValue('general.keytype', '0') == 'artNr')
 					     ? 'products_model=\''.MagnaDB::gi()->escape($product['ProductsModel']).'\''
 					     : 'products_id=\''.$pID.'\''
-					).' 
+					).'
 				   AND mpID = '.$this->_magnasession['mpID'].'
+			 ORDER BY PreparedTS DESC
+			 LIMIT 1
 		');
 		
 		if (is_array($prepare)) {// how? $prepare cannot be array - for what is else ?
@@ -168,11 +178,21 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			$data['submit']['ShippingTime'] = $shippingTime;
 			$data['submit']['HandlingTime'] = $handlingTime;
 			$data['submit']['ConditionType'] = $prepare['ConditionType'];
+			$shippingGroup = 0;
 			if (isset($prepare['ShippingGroup']) && $prepare['ShippingGroup'] != 0) {
-				$data['submit']['ShippingGroup'] = $prepare['ShippingGroup'];
-			} else if (getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0) != 0) {
-				$data['submit']['ShippingGroup'] = getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0);
-			// if nothing set, don't submit
+				$shippingGroup = $prepare['ShippingGroup'];
+			}
+			/* A prepared group may have been deleted on the marketplace meanwhile.
+			   Submitting it makes the marketplace reject the whole unit, so fall
+			   back to the configured default instead. The default is stored
+			   verbatim and is never reset when a group disappears, so it has to
+			   be checked as well. */
+			if (!$this->isKnownShippingGroup($shippingGroup)) {
+				$shippingGroup = getDBConfigValue($this->marketplace.'.shippinggroup', $this->mpID, 0);
+			}
+			if ($this->isKnownShippingGroup($shippingGroup)) {
+				$data['submit']['ShippingGroup'] = $shippingGroup;
+			// if nothing set or nothing valid, don't submit
 			}
 			if (isset($prepare['WarehouseId']) && $prepare['WarehouseId'] != 0) {
 				$data['submit']['WarehouseId'] = $prepare['WarehouseId'];
@@ -227,12 +247,37 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				 LIMIT 1
 			');
 		}
+		$guaranteeYears = $this->getManufacturerGuaranteeYears($product);
+		if ($guaranteeYears !== '') {
+			$data['submit']['ManufacturerGuaranteeYears'] = $guaranteeYears;
+		}
 		
 		$data['submit']['ItemTax'] = $product['TaxPercent'];
 		
 		if (!$this->getHitmeisterVariations($product, $data, $imagePath, json_decode($prepare['CategoryAttributes'], true))) {
 			return;
 		}
+	}
+
+	/**
+	 * Checks a shipping group against the list the marketplace currently offers.
+	 * The live list is fetched at most once per run; if it cannot be retrieved every
+	 * group is accepted, so a marketplace hiccup never blocks an upload.
+	 *
+	 * @param int|string $shippingGroup
+	 * @return bool
+	 */
+	protected function isKnownShippingGroup($shippingGroup) {
+		if (empty($shippingGroup)) {
+			return false;
+		}
+		if ($this->validShippingGroups === null) {
+			$this->validShippingGroups = HitmeisterHelper::GetShippingGroups(true);
+		}
+		if (!is_array($this->validShippingGroups)) {
+			return true;
+		}
+		return array_key_exists((string)$shippingGroup, $this->validShippingGroups);
 	}
 
 	protected function preSubmit(&$request) {
@@ -358,6 +403,11 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				$vi['Mpn'] = $product['ManufacturerPartNumber'];
 			}
 
+			$guaranteeYears = $this->getManufacturerGuaranteeYears($product, $v['Variation']);
+			if ($guaranteeYears !== '') {
+				$vi['ManufacturerGuaranteeYears'] = $guaranteeYears;
+			}
+
 			if (empty($v['Images'])) {
 				$vi['Images'] = $data['submit']['Images'];
 			} else {
@@ -381,6 +431,41 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 		$data['submit']['Variations'] = $variations;
 		return true;
+	}
+
+	/**
+	 * Configured manufacturer guarantee in years, only trimmed: the API validates it.
+	 * Without $variantAttributes it resolves free text or a product field, with them a variation
+	 * (option / property) value; variants without one inherit the product value in preSubmit().
+	 *
+	 * @param array $product
+	 * @param array|null $variantAttributes the variant's 'Variation' list
+	 * @return string '' if nothing is to be sent
+	 */
+	protected function getManufacturerGuaranteeYears($product, $variantAttributes = null) {
+		$code = (string)getDBConfigValue($this->marketplace.'.manufacturerguaranteeyears', $this->mpID, '');
+		if ($code === '') {
+			return '';
+		}
+		$value = '';
+		if (is_array($variantAttributes)) {
+			foreach ($variantAttributes as $variantAttribute) {
+				if ((string)$variantAttribute['NameId'] === $code) {
+					$value = $variantAttribute['Value'];
+					break;
+				}
+			}
+		} else if ($code === 'freetext') {
+			$value = getDBConfigValue($this->marketplace.'.manufacturerguaranteeyears.value', $this->mpID, '');
+		} else {
+			$matched = HitmeisterHelper::gi()->convertMatchingToNameValue(array(
+				'ManufacturerGuaranteeYears' => array('Code' => $code, 'Values' => array()),
+			), $product);
+			if (isset($matched['ManufacturerGuaranteeYears'])) {
+				$value = $matched['ManufacturerGuaranteeYears'];
+			}
+		}
+		return is_scalar($value) ? trim($value) : '';
 	}
 
 	private function fixVariationCategoryAttributes($aCatAttributes, $product, $variationDB)

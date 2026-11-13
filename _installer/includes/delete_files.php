@@ -430,6 +430,7 @@
     'includes/external/magnalister/config/english/hood.form',
     'includes/external/magnalister/config/english/meinpaket.form',
     'includes/external/magnalister/config/french/ayn24.form',
+    'includes/external/magnalister/config/french/hood.form',
     'includes/external/magnalister/config/french/meinpaket.form',
     'includes/external/magnalister/config/german/ayn24.form',
     'includes/external/magnalister/config/german/hood.form',

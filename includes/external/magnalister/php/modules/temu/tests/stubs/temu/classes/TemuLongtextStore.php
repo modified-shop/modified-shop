@@ -19,15 +19,18 @@ class TemuLongtextStore {
 	/** @var array field => stored value, set by a test that needs one (empty = nothing stored) */
 	public static $aStored = array();
 
+	/** @var array longtext row returned by readRow(), set by a test that needs one (empty = nothing stored) */
+	public static $aRow = array();
+
 	public static function read($mpID, $pID, $sField) {
 		return isset(self::$aStored[$sField]) ? self::$aStored[$sField] : '';
 	}
 
 	public static function readRow($mpID, $pID) {
-		return array(
+		return array_merge(array(
 			'ShopVariationId'                    => '',
 			'CategoryIndependentShopVariationId' => '',
-		);
+		), self::$aRow);
 	}
 
 	public static function write($mpID, $pID, $sField, $sValue) {

@@ -294,6 +294,7 @@ class MetroConfigure extends MagnaCompatibleConfigure {
         parent::loadChoiseValues();
         if ($this->isAuthed) {
             $this->getCancellationReason();
+            $this->loadCarriers();
             $combinations = $this->fetchOriginDestinationCombinations();
 
             if (!array_key_exists('parameters', $this->form['country']['fields']['shippingdestination'])) {
@@ -383,6 +384,36 @@ class MetroConfigure extends MagnaCompatibleConfigure {
         }
 
         $this->form['orderSyncState']['fields']['cancelreason']['values'] = $orderStatusConditions['DATA'];
+    }
+
+    /**
+     * Offer only the carriers accepted by the marketplace in the carrier field.
+     * Values are delivered as carrierId => carrierName. If the list cannot be
+     * retrieved, the field falls back to free text so the shipment confirmation
+     * stays configurable while the API is unavailable.
+     *
+     * @return void
+     */
+    private function loadCarriers() {
+        if (!isset($this->form['orderSyncState']['fields']['carrier'])) {
+            return;
+        }
+
+        require_once(DIR_MAGNALISTER_MODULES.'metro/classes/MetroApiConfigValues.php');
+        $aCarriers = MetroApiConfigValues::gi()->getCarriers();
+
+        if (empty($aCarriers)) {
+            $this->form['orderSyncState']['fields']['carrier']['type'] = 'text';
+            $this->form['orderSyncState']['fields']['carrier']['values'] = null;
+
+            return;
+        }
+
+        $this->form['orderSyncState']['fields']['carrier']['type'] = 'selection';
+        // Union instead of array_merge: array_merge would renumber integer-like
+        // carrier ids and break the carrierId => carrierName mapping.
+        $this->form['orderSyncState']['fields']['carrier']['values'] =
+            array('' => ML_LABEL_CHOOSE) + $aCarriers;
     }
 
     private function renderProcessingTimeValues() {

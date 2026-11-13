@@ -457,13 +457,19 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 			unset($tnav);
 		}
 		
+		/* BOX_WIDTH is defined by the shop (includes/configure.php or
+		   admin/includes/configure.php) and is missing in some installations.
+		   As of PHP 8 accessing an undefined constant is a fatal error (before
+		   it was only a warning), hence the fallback value. */
+		$boxWidth = defined('BOX_WIDTH') ? BOX_WIDTH : 125;
+		
 		?>
 		<!-- header_eof //-->
 		<!-- body //-->
 		<table border="0" width="100%" cellspacing="2" cellpadding="2"><tbody>
 			<tr><?php if (!empty($nav)) { ?>
-				<td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-					<table class="<?php echo $tclass; ?>" border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="0" cellpadding="0"><tbody><tr><td>
+				<td class="columnLeft2" width="<?php echo $boxWidth; ?>" valign="top">
+					<table class="<?php echo $tclass; ?>" border="0" width="<?php echo $boxWidth; ?>" cellspacing="0" cellpadding="0"><tbody><tr><td>
 						<!-- left_navigation //-->
 						<?php echo $nav; unset($nav); ?>
 						<!-- left_navigation_eof //-->

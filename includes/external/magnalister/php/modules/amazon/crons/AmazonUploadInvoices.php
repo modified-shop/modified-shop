@@ -25,7 +25,8 @@ class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
     protected $sInvoiceOptionConfigKey = 'VCSInvoice';
     protected function getConfigKeys() {
         global $magnaConfig;
-        if ($magnaConfig['db'][$this->mpID]['amazon.amazonvcs.invoice'] == 'erp') { 
+        $sInvoiceOption = $magnaConfig['db'][$this->mpID]['amazon.amazonvcs.invoice'];
+        if (($sInvoiceOption == 'erp') && $this->isErpInvoiceUploadAvailable()) {
             try {
                 MLReceiptUpload::gi()->setConfig(array(
                      'SHIPMENT'             => getDBConfigValue($this->marketplace.'.invoice.erpinvoicesource', $this->mpID),
@@ -44,8 +45,9 @@ class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
             } catch (Exception $e) {
                 $this->out($e->getMessage());
             }
-        } else if (    $magnaConfig['db'][$this->mpID]['amazon.amazonvcs.invoice'] == 'off'
-                    || empty($magnaConfig['db'][$this->mpID]['amazon.amazonvcs.invoice'])) {
+        } else if (    $sInvoiceOption == 'off'
+                    || empty($sInvoiceOption)
+                    || ($sInvoiceOption == 'erp')) { // ERP not available (Gambio Cloud)
                 $this->out(str_replace(array('{#marketplace#}','{#mpID#}'), array($this->marketplace, $this->mpID), ML_NO_INVOICE_UPLOAD_FROM_SHOP));
         }
         $keys['VCSOption'] = array(
@@ -62,7 +64,7 @@ class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
 
     public function process() {
         if (in_array($this->config['VCSOption'], array('vcs-lite', 'off'), true)
-            && in_array($this->config[$this->sInvoiceOptionConfigKey], array('webshop', 'erp', 'magna'), true)
+            && in_array($this->config[$this->sInvoiceOptionConfigKey], $this->getActiveInvoiceOptions(), true)
         ) {
             $requestCount = 10;
             $offset = 0;

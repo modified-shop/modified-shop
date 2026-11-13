@@ -5,7 +5,7 @@
         "fields": {
             "invoice.option": {
                 "label": "Invoice Transmission Options",
-                "desc": "<p>Here you can choose whether and how you want to transmit your invoices to _#_platformName_#_.\n    The following options are available:<\/p>\n\n<ul>\n    <li><p>Do not transmit invoices to _#_platformName_#_<\/p>\n        <p>If you select this option, your invoices will not be transmitted to _#_platformName_#_. This means:\n            You organize the provision of invoices yourself.<\/p>\n    <\/li>\n    <li>\n        <p> Invoices created in the webshop will be transmitted to _#_platformName_#_ <\/p>\n        <p> If your shop system has the ability to create invoices, these will be\n            automatically uploaded to _#_platformName_#_ every 60 minutes. <\/p>\n    <\/li>\n    <li><p>Invoices created by third-party systems (e.g. ERP system) will be transmitted to _#_platformName_#_<\/p>\n        <p>Invoices that you create with your third-party system (e.g. ERP) can be uploaded to your\n            webshop server, retrieved by magnalister and uploaded to _#_platformName_#_. More\n            information appears after selecting this option in the info icon under &ldquo;Settings for the transmission\n            of invoices created from a third-party system [...]&rdquo;.<\/p>\n    <\/li>\n    <li>\n        <p>magnalister should take over invoice creation and transmit to _#_platformName_#_<\/p>\n        <p>Select this option if magnalister should take over the creation and transmission of invoices for you.\n            To do this, fill in the fields under &ldquo;Data for invoice generation\n            by\n            magnalister&rdquo;. The transfer takes place every #xx# minutes.<\/p>\n    <\/li>\n<\/ul>",
+                "desc": "<p>Here you can choose whether and how you want to transmit your invoices to _#_platformName_#_.\n    The following options are available:<\/p>\n\n<ul>\n    <li><p>Do not transmit invoices to _#_platformName_#_<\/p>\n        <p>If you select this option, your invoices will not be transmitted to _#_platformName_#_. This means:\n            You organize the provision of invoices yourself.<\/p>\n    <\/li>\n    <li>\n        <p> Invoices created in the webshop will be transmitted to _#_platformName_#_ <\/p>\n        <p> If your shop system has the ability to create invoices, these will be\n            automatically uploaded to _#_platformName_#_ every 60 minutes. <\/p>\n    <\/li>\n    <li><p>Invoices created by third-party systems (e.g. ERP system) will be transmitted to _#_platformName_#_<\/p>\n        <p>Invoices that you create with your third-party system (e.g. ERP) can be uploaded to your\n            webshop server, retrieved by magnalister and uploaded to _#_platformName_#_. More\n            information appears after selecting this option in the info icon under &ldquo;Settings for the transmission\n            of invoices created from a third-party system [...]&rdquo;.<\/p>\n        <p><b>Note:<\/b> This option is not available for Gambio Cloud shops.<\/p>\n    <\/li>\n    <li>\n        <p>magnalister should take over invoice creation and transmit to _#_platformName_#_<\/p>\n        <p>Select this option if magnalister should take over the creation and transmission of invoices for you.\n            To do this, fill in the fields under &ldquo;Data for invoice generation\n            by\n            magnalister&rdquo;. The transfer takes place every #xx# minutes.<\/p>\n    <\/li>\n<\/ul>",
                 "key": "_#_platform_#_.invoice.option",
                 "type": "selection",
                 "values": {
@@ -176,7 +176,6 @@
             "invoice.erpInvoiceSource": {
                 "label": "Source folder for invoices (server path)",
                 "desc": "<p>Select the server path to the folder where you upload the invoices from your third-party system (e.g. ERP) as PDF.  <\/p><p> <b>Important note<\/b>: In order for magnalister to assign a PDF invoice to a shop order, the PDF files must be named according to one of the following two patterns:<\/p><ol><li>Naming according to the shop order<\/p><p>Pattern: #shop-order-number#.pdf<\/p><p>Example:<br\/>Shop order number: 12345678<br\/>Invoice PDF should be: 12345678.pdf<\/p><\/li><li>Naming according to the shop order + invoice number from ERP system<\/p><p>Pattern:  #shop-order-number#_#invoice-number#.pdf<\/p><p>Example:<br>Shop order number: 12345678<br>Invoice number from ERP: 9876543<br>Invoice PDF should be: 12345678_9876543.pdf <\/p> <\/li> <\/ol>",
-                "hint": "",
                 "key": "_#_platform_#_.invoice.erpinvoicesource",
                 "rowCssClasses": [
                     "ml-erpInvoice"
@@ -187,7 +186,6 @@
             "invoice.erpInvoiceDestination": {
                 "label": "Destination folder for invoices transmitted to _#_platformName_#_ (server path)",
                 "desc": "<p>After magnalister has uploaded an invoice from the source folder to _#_platformName_#_, it is moved to the destination folder. This way you can track which invoices have already been transmitted to _#_platformName_#_.<\/p><p>Select the server path to the destination folder where the invoices uploaded to _#_platformName_#_ should be moved.<\/p><p><b>Important note:<\/b> If you do not select a different destination folder for invoices uploaded to _#_platformName_#_, you cannot see which invoices have already been uploaded to _#_platformName_#_<\/p>",
-                "hint": "",
                 "key": "_#_platform_#_.invoice.erpinvoicedestination",
                 "rowCssClasses": [
                     "ml-erpInvoice"
@@ -198,7 +196,6 @@
             "invoice.erpReversalInvoiceSource": {
                 "label": "Source folder for credit notes (server path)",
                 "desc": "<p>Select the server path to the folder where you upload the credit notes from your third-party system (e.g. ERP) as PDF.  <\/p><p> <b>Important note<\/b>: In order for magnalister to assign a PDF credit note to a shop order, the PDF files must be named according to one of the following two patterns:<\/p><ol><li>Naming according to the shop order<\/p><p>Pattern: #shop-order-number#.pdf<\/p><p>Example:<br\/>Shop order number: 12345678<br\/>Credit note PDF should be: 12345678.pdf<\/p><\/li><li>Naming according to the shop order + credit note number from ERP system<\/p><p>Pattern:  #shop-order-number#_#credit-note-number#.pdf<\/p><p>Example:<br>Shop order number: 12345678<br>Credit note number from ERP: 9876543<br>Credit note PDF should be: 12345678_9876543.pdf  <\/li> <\/ol>",
-                "hint": "",
                 "key": "_#_platform_#_.invoice.erpreversalinvoicesource",
                 "rowCssClasses": [
                     "ml-erpInvoice"
@@ -209,7 +206,6 @@
             "invoice.erpReversalInvoiceDestination": {
                 "label": "Destination folder for credit notes transmitted to _#_platformName_#_ (server path)",
                 "desc": "<p>After magnalister has uploaded a credit note from the source folder to _#_platformName_#_, it is moved to the destination folder. This way you can track which credit notes have already been transmitted to _#_platformName_#_.<\/p><p>Select the server path to the destination folder where the credit notes uploaded to _#_platformName_#_ should be moved.<\/p><p><b>Important note:<\/b> If you do not select a different destination folder for credit notes uploaded to _#_platformName_#_, you cannot see which credit notes have already been uploaded to _#_platformName_#_<\/p>",
-                "hint": "",
                 "key": "_#_platform_#_.invoice.erpreversalinvoicedestination",
                 "rowCssClasses": [
                     "ml-erpInvoice"

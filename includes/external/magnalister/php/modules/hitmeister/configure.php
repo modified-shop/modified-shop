@@ -130,6 +130,7 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 			if ($this->form['prepare']['fields']['warehouse']['values'] === false) {
 				unset($this->form['prepare']['fields']['warehouse']);
 			}
+			HitmeisterHelper::GetManufacturerGuaranteeYearsConfig($this->form['prepare']['fields']['manufacturerguaranteeyears']);
 
 			$this->form['prepare']['fields']['shippingtimeMatching']['procFunc'] = array($this, 'confShippingtimeMatching');
 			mlGetOrderStatus($this->form['orders']['fields']['fbkstatus']);
@@ -195,6 +196,10 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 		$(document).ready(function() {
 			$('#config_hitmeister_currency_key').val($('#config_hitmeister_site').val());
 			$('#config_hitmeister_currency_key').prop('disabled', true);
+			// the own value input and its label only apply to "freetext"
+			$('#config_hitmeister_manufacturerguaranteeyears').change(function() {
+				$(this).nextAll().toggle($(this).val() == 'freetext');
+			}).change();
 		});
 		jQuery(function ($) {
 			$('form').bind('submit', function () {

@@ -43,6 +43,9 @@ class MLFileBrowserHelper {
         // if configuration is not preset -> set default directory
         if (empty($dir)) {
             $dir = $_SERVER['DOCUMENT_ROOT'];
+        } elseif (!@is_dir($dir)) { // @: no open_basedir warning in the ajax output
+            // configured directory doesn't exist (e.g. shop copied to another directory) -> use shop root
+            $dir = (defined('DIR_FS_CATALOG') && @is_dir(DIR_FS_CATALOG)) ? DIR_FS_CATALOG : $_SERVER['DOCUMENT_ROOT'];
         }
 
         $dir = ltrim($dir, DIRECTORY_SEPARATOR);
@@ -63,7 +66,7 @@ class MLFileBrowserHelper {
             if (rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR) == rtrim($fullPathCheck, DIRECTORY_SEPARATOR)) {
                 $item = rtrim($fullPathCheck, DIRECTORY_SEPARATOR);
             }
-            if (!is_dir($fullPathCheck)) {
+            if (!@is_dir($fullPathCheck)) {
                 break;
             }
             $countDirectories++;
@@ -357,6 +360,78 @@ class MLFileBrowserHelper {
         }
 
         return $path;
+    }
+
+    /**
+     * ERP invoice upload needs access to the server's file system, which Gambio Cloud doesn't provide
+     *
+     * @return bool
+     */
+    public function isErpInvoiceUploadAvailable() {
+        return !(defined('SHOPSYSTEM_GAMBIO_CLOUD') && (SHOPSYSTEM_GAMBIO_CLOUD === true));
+    }
+
+    /**
+     * Invoice option that is relevant after this request: on a config save the posted value is the one
+     * that counts, while the database still holds the value from before the save.
+     *
+     * @param string $optionKey config key of the invoice option, e.g. "amazon.amazonvcs.invoice"
+     * @param int $mpID
+     * @return string
+     */
+    protected function getCurrentInvoiceOption($optionKey, $mpID) {
+        if (   isset($_POST['configtool']) && ($_POST['configtool'] == 'MagnaConfigurator')
+            && isset($_POST['conf'][$optionKey]) && is_scalar($_POST['conf'][$optionKey])
+        ) {
+            return trim($_POST['conf'][$optionKey]);
+        }
+        return getDBConfigValue($optionKey, $mpID, '');
+    }
+
+    /**
+     * Prepares the ERP invoice fields of a config form.
+     * Gambio Cloud: disables the "erp" invoice option and removes the ERP fields (no access to the file system).
+     * Otherwise: sets the default directories and validates them on save, if "erp" is selected.
+     *
+     * @param array $form config form
+     * @param string $optionKey config key of the invoice option, e.g. "amazon.amazonvcs.invoice"
+     * @param int $mpID
+     * @return string notice box HTML, if "erp" is still configured on Gambio Cloud
+     */
+    public function prepareErpInvoiceForm(&$form, $optionKey, $mpID) {
+        if (!$this->isErpInvoiceUploadAvailable()) {
+            foreach ($form as $sSection => $aSection) {
+                if (!isset($aSection['fields']) || !is_array($aSection['fields'])) {
+                    continue;
+                }
+                foreach ($aSection['fields'] as $sField => $aField) {
+                    if (!isset($aField['key']) || ($aField['key'] != $optionKey)) {
+                        continue;
+                    }
+                    // the option stays in the list but can't be selected: if it was removed, the browser would
+                    // preselect another one and any unrelated save would silently overwrite the configured value
+                    if (!isset($form[$sSection]['fields'][$sField]['disableditems'])) {
+                        $form[$sSection]['fields'][$sField]['disableditems'] = array();
+                    }
+                    $form[$sSection]['fields'][$sField]['disableditems'][] = 'erp';
+                }
+            }
+            unset($form['erpinvoice']);
+            if ($this->getCurrentInvoiceOption($optionKey, $mpID) == 'erp') {
+                return '<p class="noticeBox">'.ML_UPLOADINVOICE_ERP_NOT_AVAILABLE_GAMBIOCLOUD.'</p>';
+            }
+            return '';
+        }
+
+        if (isset($form['erpinvoice']['fields'])) {
+            foreach ($form['erpinvoice']['fields'] as $sField => $aField) {
+                $form['erpinvoice']['fields'][$sField]['default'] = $this->getAndGenerateErpDirectoryPath(DIR_MAGNALISTER_FS.$aField['default']);
+                $form['erpinvoice']['fields'][$sField]['verify'] = 'dir';
+                // fields are hidden, if "erp" is not selected
+                $form['erpinvoice']['fields'][$sField]['verifyIf'] = array($optionKey => 'erp');
+            }
+        }
+        return '';
     }
 
 }

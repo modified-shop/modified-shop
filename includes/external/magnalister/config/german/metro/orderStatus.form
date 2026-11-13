@@ -21,6 +21,13 @@
                 "type": "selection",
                 "values": null
             },
+            "carrier": {
+                "label": "Spediteur",
+                "desc": "W&auml;hlen Sie den Versanddienstleister, der beim Best&auml;tigen des Versandes an _#_platformName_#_ &uuml;bermittelt wird. Es stehen ausschlie&szlig;lich die von _#_platformName_#_ zugelassenen Versanddienstleister zur Auswahl.<br\/><br\/>\n\t\t\t\t           _#_platformName_#_ akzeptiert ab dem 01.11.2026 nur noch Spediteure aus der eigenen Liste. Kommt der Spediteur aus Ihrem Shop (z. B. &uuml;ber <b>Spediteur Matching<\/b>), muss der Wert daher exakt dem Namen oder der ID eines Spediteurs aus dieser Liste entsprechen (z. B. &bdquo;DHL&ldquo;; Gro&szlig;-\/Kleinschreibung egal).<br\/><br\/>\n\t\t\t\t           Passt der Wert nicht, wird stattdessen der hier gew&auml;hlte Spediteur &uuml;bermittelt. Ist hier keiner gew&auml;hlt, wird der Wert als eigener Spediteur &uuml;bertragen und von _#_platformName_#_ nicht mehr akzeptiert.",
+                "key": "_#_platform_#_.orderstatus.carrier.default",
+                "type": "selection",
+                "values": null
+            },
             "carrierMatch": {
                 "label": "Spediteur Matching",
                 "key": "_#_platform_#_.orderstatus.carrier.dbmatching.table",

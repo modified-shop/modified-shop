@@ -129,6 +129,10 @@ body:not(.ml-dummy-class-1) .amazon-variations-container:not(.ml-dummy-class-2) 
     gap: 12px;
     border-top: none;
 }
+/* Lange technische Keys (z. B. target_audience_keyword__value) umbrechen statt die Tabelle zu verbreitern */
+.amazon-variations-container .attribute-name-column {
+    overflow-wrap: anywhere;
+}
 .js-field.attribute-row.required-attribute,
 .js-field.attribute-row.optional-attribute{
     border-bottom: solid 0.5px #dadada;

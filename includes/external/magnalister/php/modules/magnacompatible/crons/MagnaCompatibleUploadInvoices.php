@@ -33,9 +33,26 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
      */
     protected $sInvoiceOptionConfigKey = 'Invoice.Option';
 
+    /**
+     * ERP invoice upload needs access to the server's file system, which Gambio Cloud doesn't provide
+     * @return bool
+     */
+    protected function isErpInvoiceUploadAvailable() {
+        return !(defined('SHOPSYSTEM_GAMBIO_CLOUD') && SHOPSYSTEM_GAMBIO_CLOUD === true);
+    }
+
+    /**
+     * Invoice options for which invoices are uploaded
+     * @return array
+     */
+    protected function getActiveInvoiceOptions() {
+        return $this->isErpInvoiceUploadAvailable() ? array('webshop', 'erp', 'magna') : array('webshop', 'magna');
+    }
+
     protected function getConfigKeys() {
         global $magnaConfig;
-        if ($magnaConfig['db'][$this->mpID][$this->marketplace.'.invoice.option'] == 'erp') {
+        $sInvoiceOption = $magnaConfig['db'][$this->mpID][$this->marketplace.'.invoice.option'];
+        if (($sInvoiceOption == 'erp') && $this->isErpInvoiceUploadAvailable()) {
             try {
                 $config = array(
                     'Invoice' => getDBConfigValue($this->marketplace.'.invoice.erpinvoicesource', $this->mpID),
@@ -64,8 +81,9 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
                 $this->out($e->getMessage());
             }
 
-        } elseif (    $magnaConfig['db'][$this->mpID][$this->marketplace.'.invoice.option'] == 'off'
-                    || empty($magnaConfig['db'][$this->mpID][$this->marketplace.'.invoice.option'])
+        } elseif (    $sInvoiceOption == 'off'
+                    || empty($sInvoiceOption)
+                    || ($sInvoiceOption == 'erp') // ERP not available (Gambio Cloud)
         ) {
             $this->out(str_replace(array('{#marketplace#}','{#mpID#}'), array($this->marketplace, $this->mpID), ML_NO_INVOICE_UPLOAD_FROM_SHOP));
         }
@@ -90,7 +108,7 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
     }
 
     public function process() {
-        if (in_array($this->config[$this->sInvoiceOptionConfigKey], array('webshop', 'erp', 'magna'), true)) {
+        if (in_array($this->config[$this->sInvoiceOptionConfigKey], $this->getActiveInvoiceOptions(), true)) {
             $requestCount = 10;
             $offset = 0;
             $exitLoop = false;
