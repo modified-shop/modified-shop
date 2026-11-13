@@ -56,7 +56,12 @@
     $customConfig['entities'] = "entities: false,";
 
     //CKEditor 4.1: Advanced Content Filter (ACF) - keine benutzerdefinierten Tags herausfiltern - Filter aktivieren -> false
-    $customConfig['allowedContent'] = "allowedContent: true,";
+    if (defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true'), true)) {
+      $customConfig['allowedContent'] = "allowedContent: true,";
+    } else {
+      // everything except active content, the admin inputfilter removes it on the server as well
+      $customConfig['allowedContent'] = "allowedContent: {\$1: {elements: CKEDITOR.dtd, attributes: true, styles: true, classes: true}}, extraAllowedContent: 'picture[*]{*}(*)', disallowedContent: 'script; noscript; template; object; embed; applet; base; meta; link; frame; frameset; svg; math; *[on*]; iframe[srcdoc]',";
+    }
     
     //Buttons entfernen
     $customConfig['removeButtons'] = "removeButtons: 'PageBreak,Save',";

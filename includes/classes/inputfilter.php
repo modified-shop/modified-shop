@@ -12,10 +12,62 @@
 
 class Inputfilter {
     private $params = false;
-    
+    private $active_content_removed = false;
+
+    // admin fields that the storefront prints as HTML
+    private $content_keys = array('products_name',
+                                  'products_heading_title',
+                                  'products_description',
+                                  'products_short_description',
+                                  'products_order_description',
+                                  'categories_name',
+                                  'categories_heading_title',
+                                  'categories_description',
+                                  'categories_short_description',
+                                  'manufacturers_name',
+                                  'manufacturers_title',
+                                  'manufacturers_description',
+                                  'manufacturers_short_description',
+                                  'manufacturers_add_description',
+                                  'content_title',
+                                  'content_heading',
+                                  'content_text',
+                                  'cont_title',
+                                  'file_comment',
+                                  'html_text',
+                                  'offline_msg',
+                                  'cookies_name',
+                                  'cookies_description',
+                                  'coupon_desc',
+                                  'options_name',
+                                  'options_description',
+                                  'values_name',
+                                  'values_description',
+                                  'products_options_name',
+                                  'products_options_values_name',
+                                  );
+
     public function __construct()
     {
         $this->params = array();
+    }
+
+    public function removeActiveContent($value)
+    {
+        require_once(DIR_FS_CATALOG.'inc/xtc_remove_active_content.inc.php');
+
+        $removed = false;
+        $value = xtc_remove_active_content($value, $removed);
+        if ($removed === true) {
+            $this->active_content_removed = true;
+        }
+
+        return $value;
+    }
+
+    public function activeContentRemoved()
+    {
+        return $this->active_content_removed;
     }
 
     public function validate($source)
@@ -138,6 +190,14 @@ class Inputfilter {
                           ) 
                       {
                         $this->params[$key] = $this->validatePrice($value);
+                      }
+
+                      //active content
+                      if ((!defined('ADMIN_ALLOW_SCRIPT_CONTENT') || !in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true'), true))
+                          && in_array($key, $this->content_keys)
+                          )
+                      {
+                        $this->params[$key] = $this->removeActiveContent($value);
                       }
                     }
                   break;
