@@ -375,7 +375,7 @@ define('ERROR_FILE_NOT_SAVED', 'Fehler: Datei wurde nicht gespeichert.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Fehler: Dateityp ist nicht erlaubt.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Erfolg: Hochgeladene Datei wurde erfolgreich gespeichert.');
 define('WARNING_NO_FILE_UPLOADED', 'Warnung: Es wurde keine Datei hochgeladen.');
-define('WARNING_ACTIVE_CONTENT_REMOVED', 'Warnung: Aus den gespeicherten Texten wurden aktive Inhalte wie Scripte, Event-Attribute oder Inline-SVG entfernt.');
+define('WARNING_ACTIVE_CONTENT_REMOVED', 'Hinweis: Die gespeicherten Texte wurden bereinigt. Aktive Inhalte wie Scripte, Event-Attribute oder Inline-SVG wurden entfernt, unzulässiges HTML wurde korrigiert.');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Fehler: Datei konnte nicht entfernt werden.');
 
 define('DELETE_ENTRY','Eintrag l&ouml;schen?');

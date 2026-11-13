@@ -60,7 +60,7 @@
       $customConfig['allowedContent'] = "allowedContent: true,";
     } else {
       // everything except active content, the admin inputfilter removes it on the server as well
-      $customConfig['allowedContent'] = "allowedContent: {\$1: {elements: CKEDITOR.dtd, attributes: true, styles: true, classes: true}}, extraAllowedContent: 'picture[*]{*}(*)', disallowedContent: 'script; noscript; template; object; embed; applet; base; meta; link; frame; frameset; svg; math; *[on*]; iframe[srcdoc]',";
+      $customConfig['allowedContent'] = "allowedContent: {\$1: {elements: CKEDITOR.dtd, attributes: true, styles: true, classes: true}}, extraAllowedContent: 'picture[*]{*}(*)', disallowedContent: 'script; noscript; template; object; embed; applet; base; meta; link; style; frame; frameset; svg; math; *[on*]; iframe[srcdoc]',";
     }
     
     //Buttons entfernen

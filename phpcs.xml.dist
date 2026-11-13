@@ -25,6 +25,7 @@
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/.vscode/*</exclude-pattern>
     <exclude-pattern>*/includes/external/GuzzleHttp/*</exclude-pattern>
+    <exclude-pattern>*/includes/external/htmlpurifier/*</exclude-pattern>
     <exclude-pattern>*/includes/external/magnalister/*</exclude-pattern>
     <exclude-pattern>*/includes/external/nusoap/*</exclude-pattern>
     <exclude-pattern>*/includes/external/Phpfastcache/*</exclude-pattern>
