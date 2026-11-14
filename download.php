@@ -33,13 +33,21 @@ if (isset($_SESSION['customer_id'])) {
 }
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
-	$email_address = xtc_db_prepare_input($_POST['email_address']);
-  $check_email_query = xtc_db_query("SELECT customers_email_address,
-                                            customers_id
-                                       FROM ".TABLE_ORDERS." 
-                                      WHERE orders_id = '".(int)$_GET['order']."'");
-	$check_email = xtc_db_fetch_array($check_email_query);
-	if ($email_address == $check_email['customers_email_address']) {
+	$email_address = xtc_db_prepare_input(isset($_POST['email_address']) ? $_POST['email_address'] : '');
+  $check_email = false;
+  // check the email address only for an existing download link
+  if (isset($_GET['order']) && isset($_GET['id']) && isset($_GET['key']) && is_string($_GET['key']) && strlen($_GET['key']) == 32) {
+    $check_email_query = xtc_db_query("SELECT o.customers_email_address,
+                                              o.customers_id
+                                         FROM ".TABLE_ORDERS." o
+                                         JOIN ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd
+                                              ON opd.orders_id = o.orders_id
+                                        WHERE o.orders_id = '".(int)$_GET['order']."'
+                                          AND opd.orders_products_download_id = '".(int)$_GET['id']."'
+                                          AND opd.download_key = '".xtc_db_input($_GET['key'])."'");
+    $check_email = xtc_db_fetch_array($check_email_query);
+  }
+	if (is_array($check_email) && is_string($email_address) && $email_address != '' && $email_address == $check_email['customers_email_address']) {
     $_SESSION['customer_id_download'] = $check_email['customers_id'];
   } else {
 		$messageStack->add_session('download', ENTRY_EMAIL_ADDRESS_CHECK_ERROR, 'error');
