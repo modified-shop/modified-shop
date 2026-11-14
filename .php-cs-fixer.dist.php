@@ -52,6 +52,7 @@ $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
     ->exclude([
         'includes/external/GuzzleHttp',
+        'includes/external/htmlpurifier',
         'includes/external/magnalister',
         'includes/external/nusoap',
         'includes/external/Phpfastcache',

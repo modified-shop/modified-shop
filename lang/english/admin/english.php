@@ -375,6 +375,8 @@ define('ERROR_FILE_NOT_SAVED', 'Error: File upload not saved.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully.');
 define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
+define('WARNING_ACTIVE_CONTENT_REMOVED', 'Note: Elements or attributes were removed from the saved texts, e.g. scripts, event attributes, inline SVG or invalid HTML.');
+define('ERROR_ACTIVE_CONTENT_LIBRARY_MISSING', 'Error: The directory includes/external/htmlpurifier/ is missing. The texts were saved unfiltered.');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Error: File not removed.');
 
 define('DELETE_ENTRY','Delete entry?');
