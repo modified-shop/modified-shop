@@ -79,23 +79,17 @@ require (DIR_WS_INCLUDES.'head.php');
 
                                 while ($configuration = xtc_db_fetch_array($configuration_query)) {
                                   if (xtc_not_null($configuration['use_function'])) {
-                                    $use_function = $configuration['use_function'];
-                                    if (preg_match('/->/', $use_function)) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
-                                      $class_method = explode('->', $use_function);
-                                      if (!is_object(${$class_method[0]})) {
-                                        include(DIR_WS_CLASSES . $class_method[0] . '.php');
-                                        ${$class_method[0]} = new $class_method[0]();
-                                      }
-                                      $cfgValue = xtc_call_function($class_method[1], $configuration['configuration_value'], ${$class_method[0]});
-                                    } else {
-                                      $cfgValue = xtc_call_function($use_function, $configuration['configuration_value']);
-                                    }
+                                    $cfgValue = xtc_call_use_function($configuration['use_function'], $configuration['configuration_value']);
                                   } else {
                                     $cfgValue = $configuration['configuration_value'];
                                   }
 
                                   if ($configuration['set_function']) {
-                                    eval('$value_field = ' . $configuration['set_function'] . var_export(encode_htmlspecialchars($configuration['configuration_value']), true) . ');');
+                                    $value_field = xtc_call_set_function($configuration['set_function'], $configuration['configuration_value'], null, ENT_COMPAT);
+                                    if ($value_field === false) {
+                                      // not a field function, the value stays editable as text
+                                      $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'size=40').xtc_get_cfg_function_notice($configuration['set_function']);
+                                    }
                                   } else {
                                     $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'size=40');
                                   }

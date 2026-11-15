@@ -533,22 +533,12 @@ if (xtc_not_null($action) && !$box) {
                     foreach ($mInfo->keys as $key => $value) {
                       $keys .= '<b>' . $value['title'] . '</b>' . (($value['description'] != '') ? '<br />' . $value['description'] : '').'<br />';
                       if ($value['set_function']) {
-                        if (strpos($value['set_function'], '->') !== false) {
-                          $class_method = explode('->', $value['set_function']);
-                          if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
-                            include(DIR_WS_CLASSES . $class_method[0] . '.php');
-                            ${$class_method[0]} = new $class_method[0]();
-                          }
-                          $keys .= call_user_func_array(array(${$class_method[0]}, $class_method[1]), array($value['value'], $key));
-                        } elseif (strpos($value['set_function'], '(') !== false) {
-                          eval('$keys .= ' . $value['set_function'] . var_export(encode_htmlspecialchars($value['value'], ENT_QUOTES), true) . ', ' . var_export($key, true) . ');');
-                        } else {
-                          $parameters = explode(';', $value['set_function']);
-                          $function = trim($parameters[0]);
-                          $parameters[0] = $value['value'];
-                          $parameters[] = 'configuration[%s]';
-                          $keys .= xtc_call_function($function, $parameters);
+                        $set_field = xtc_call_set_function($value['set_function'], $value['value'], $key);
+                        if ($set_field === false) {
+                          // not a field function, the value stays editable as text
+                          $set_field = xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'class="inputModule"').xtc_get_cfg_function_notice($value['set_function']);
                         }
+                        $keys .= $set_field;
                       } else {
                         $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'class="inputModule"');
                       }
@@ -607,17 +597,7 @@ if (xtc_not_null($action) && !$box) {
                         foreach ($mInfo->keys as $value) {
                           $keys .= '<b>' . $value['title'] . '</b><br />';
                           if ($value['use_function']) {
-                            $use_function = $value['use_function'];
-                            if (strpos($use_function, '->') !== false) {
-                              $class_method = explode('->', $use_function);
-                              if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
-                                include(DIR_WS_CLASSES . $class_method[0] . '.php');
-                                ${$class_method[0]} = new $class_method[0]();
-                              }
-                              $keys .= xtc_call_function($class_method[1], $value['value'], ${$class_method[0]});
-                            } else {
-                              $keys .= xtc_call_function($use_function, $value['value']);
-                            }
+                            $keys .= xtc_call_use_function($value['use_function'], $value['value']);
                           } else {
                             $keys .=  (strlen($value['value']) > 30) ? substr(strip_tags($value['value']),0,30) . ' ...' : $value['value'];
                           }

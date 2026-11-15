@@ -102,7 +102,11 @@ require (DIR_WS_INCLUDES.'head.php');
 
             while ($configuration = xtc_db_fetch_array($configuration_query)) {
               if ($configuration['set_function']) {
-                eval('$value_field = ' . $configuration['set_function'] . var_export(encode_htmlspecialchars($configuration['configuration_value']), true) . ');');
+                $value_field = xtc_call_set_function($configuration['set_function'], $configuration['configuration_value'], null, ENT_COMPAT);
+                if ($value_field === false) {
+                  // not a field function, the value stays editable as text
+                  $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'size=40').xtc_get_cfg_function_notice($configuration['set_function']);
+                }
               } else {
                 $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'size=40');
               }

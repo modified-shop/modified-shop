@@ -196,7 +196,7 @@
           'configuration_value' => '',
           'configuration_group_id' => '6',
           'sort_order' => '2',
-          'set_function' => 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), \'chr(44)\',',
+          'set_function' => 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses_no_admin\', \'chr(44)\',',
           'date_added' => 'now()',
         ));
       }

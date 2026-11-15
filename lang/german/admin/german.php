@@ -512,6 +512,7 @@ define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Art.-Nr.');
 define('TEXT_INFO_MODULE_RESTORE', 'Wollen Sie die gesicherten Einstellungen wiederherstellen?<br /><br /><b>ACHTUNG</b>: Es werden alle aktuellen Einstellungen &uuml;berschrieben!');
 define('TEXT_INFO_MODULE_REMOVE', 'Wollen Sie das Modul deinstallieren?<br /><br /><b>ACHTUNG</b>: Alle Moduleinstellungen werden ebenfalls gel&ouml;scht!');
 define('TEXT_INFO_MODULE_BACKUP', 'Wollen Sie die Moduleinstellungen sichern?');
+define('TEXT_CFG_FUNCTION_UNKNOWN', 'Unbekannte Eingabefunktion, nicht ausgef&uuml;hrt:');
 define('MODULE_BACKUP_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich gesichert!');
 define('MODULE_RESTORE_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich wiederhergestellt!');
 define('MODULE_UPDATE_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich aktualisiert!');

@@ -133,12 +133,11 @@
     /**
      * Option list of the customer groups, without the administration.
      *
-     * The expression lands in set_function and is evaluated by admin/module_export.php, so it may
-     * only use core functions. The argument to xtc_get_customers_statuses() keys the array by
-     * customers_status_id, otherwise array_diff_key would drop whichever group sorts first.
+     * The call lands in set_function and admin/module_export.php reads its arguments as data,
+     * so the list comes from a core function that is named here.
      */
     function customers_status_set_function() {
-      return 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), \'chr(44)\',';
+      return 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses_no_admin\', \'chr(44)\',';
     }
 
     /**

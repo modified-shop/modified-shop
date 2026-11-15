@@ -1190,10 +1190,8 @@
      * @return string
      */
     function b2b_set_function() {
-      // The argument matters: without it the helper returns array_values(), so the keys are
-      // positions and array_diff_key would drop whichever group sorts first. With it the array is
-      // keyed by customers_status_id and key 0 really is the administration.
-      return 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), \'chr(44)\',';
+      // the arguments are read as data, so the list comes from a named core function
+      return 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses_no_admin\', \'chr(44)\',';
     }
 
     /**

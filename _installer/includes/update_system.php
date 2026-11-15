@@ -467,7 +467,7 @@
       }
 
       // the group ids were typed into a text field, the module offers the groups as checkboxes
-      $afterbuy_set_function = 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), \'chr(44)\',';
+      $afterbuy_set_function = 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses_no_admin\', \'chr(44)\',';
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                        SET set_function = '".xtc_db_input($afterbuy_set_function)."'
                      WHERE configuration_key IN ('MODULE_AFTERBUY_DEALERS', 'MODULE_AFTERBUY_IGNORE_GROUPS')");
@@ -605,7 +605,7 @@
         'configuration_value' => '',
         'configuration_group_id' => '6',
         'sort_order' => '2',
-        'set_function' => 'xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), \'chr(44)\',',
+        'set_function' => 'xtc_cfg_multi_checkbox(\'xtc_get_customers_statuses_no_admin\', \'chr(44)\',',
         'date_added' => 'now()',
       ));
     }
