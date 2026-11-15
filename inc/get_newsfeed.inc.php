@@ -11,6 +11,7 @@
    ---------------------------------------------------------------------------------------*/
   
   require_once(DIR_FS_INC.'get_database_version.inc.php');
+  require_once(DIR_FS_INC.'filter_external_html.inc.php');
   require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
   
   function get_newsfeed() {
@@ -32,25 +33,48 @@
       modified_api::reset();
       $response = modified_api::request('modified/news/'.$db_version['plain']);
 
-      if ($response != null && is_array($response) && isset($response['channel'])) {
+      if ($response != null && is_array($response) && isset($response['channel']) && is_array($response['channel'])) {
         $feed = $response['channel'];
         
         if (isset($feed['item'])
+            && is_array($feed['item'])
             && count($feed['item']) > 0
             )
         {
+          // a feed with one entry delivers the entry itself instead of a list
+          if (isset($feed['item']['title'])) {
+            $feed['item'] = array($feed['item']);
+          }
+
           foreach ($feed['item'] as $item) {
+            if (!is_array($item)
+                || !isset($item['title'], $item['description'], $item['link'], $item['pubDate'])
+                || !is_string($item['title'])
+                || !is_string($item['description'])
+                || !is_string($item['link'])
+                || !is_string($item['pubDate'])
+                )
+            {
+              continue;
+            }
+
+            $news_link = filter_external_url($item['link'], array('http', 'https'), true);
+            $news_date = strtotime($item['pubDate']);
+            if ($news_link == '' || $news_date === false || $news_date <= 0) {
+              continue;
+            }
+
             xtc_db_query("INSERT INTO newsfeed (news_title, 
                                                 news_text, 
                                                 news_link, 
                                                 news_date)
                                         VALUES ('".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['title']))))."', 
                                                 '".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['description']))))."', 
-                                                '".xtc_db_input(decode_utf8($item['link']))."', 
-                                                '".xtc_db_input(strtotime($item['pubDate']))."')
+                                                '".xtc_db_input(decode_utf8($news_link))."',
+                                                '".(int)$news_date."')
                         ON DUPLICATE KEY UPDATE news_title = '".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['title']))))."', 
                                                 news_text = '".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['description']))))."', 
-                                                news_date = '".xtc_db_input(strtotime($item['pubDate']))."'");
+                                                news_date = '".(int)$news_date."'");
           }
 
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");

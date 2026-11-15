@@ -15,12 +15,85 @@ require('includes/application_top.php');
 // include needed functions
 require_once(DIR_FS_INC.'xtc_php_mail.inc.php');
 require_once(DIR_FS_INC.'check_version_update.inc.php');
+require_once(DIR_FS_INC.'filter_external_html.inc.php');
 
 // include needed classes
 require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
 
+/**
+ * check_support_response()
+ *
+ * @param mixed $response answer of the support endpoint
+ * @return array the answer with filtered texts, empty if the structure does not fit
+ */
+function check_support_response($response) {
+  if (!is_array($response)
+      || !isset($response['form'], $response['privacy'], $response['mail'], $response['stack'])
+      || !is_array($response['form'])
+      || !is_array($response['privacy'])
+      || !is_array($response['mail'])
+      || !is_array($response['stack'])
+      || !isset($response['mail']['address'], $response['privacy']['name'])
+      || !is_string($response['mail']['address'])
+      || !is_string($response['privacy']['name'])
+      || !preg_match('/^[A-Za-z0-9._%+-]+@modified-shop\.org$/D', $response['mail']['address'])
+      || !preg_match('/^[A-Za-z0-9_]{1,40}$/D', $response['privacy']['name'])
+      )
+  {
+    return array();
+  }
+
+  $support = array(
+    'description' => filter_external_html(isset($response['description']) ? $response['description'] : ''),
+    'warning' => filter_external_html(isset($response['warning']) ? $response['warning'] : ''),
+    'stack' => array(
+      'success' => filter_external_html(isset($response['stack']['success']) ? $response['stack']['success'] : ''),
+      'error' => filter_external_html(isset($response['stack']['error']) ? $response['stack']['error'] : ''),
+    ),
+    'mail' => array('address' => $response['mail']['address']),
+    'privacy' => array(
+      'name' => $response['privacy']['name'],
+      'text' => filter_external_html(isset($response['privacy']['text']) ? $response['privacy']['text'] : ''),
+      'required' => !empty($response['privacy']['required']),
+    ),
+    'form' => array(),
+  );
+
+  foreach (array('name', 'subject') as $key) {
+    $value = (isset($response['mail'][$key]) && is_string($response['mail'][$key])) ? $response['mail'][$key] : '';
+    $support['mail'][$key] = preg_replace('/[\x00-\x1F\x7F]+/', ' ', strip_tags($value));
+  }
+
+  foreach ($response['form'] as $data) {
+    if (!is_array($data)
+        || !isset($data['name'], $data['field'])
+        || !is_string($data['name'])
+        || !is_string($data['field'])
+        || !preg_match('/^[A-Za-z0-9_]{1,40}$/D', $data['name'])
+        )
+    {
+      continue;
+    }
+
+    // the field is a format with the placeholders for name and value, nothing else
+    $placeholders = str_replace('%%', '', $data['field']);
+    if (preg_match('/%(?!s)/', $placeholders) || substr_count($placeholders, '%s') > 2) {
+      continue;
+    }
+
+    $support['form'][] = array(
+      'name' => $data['name'],
+      'field' => $data['field'],
+      'text' => filter_external_html(isset($data['text']) ? $data['text'] : ''),
+      'required' => !empty($data['required']),
+    );
+  }
+
+  return ((count($support['form']) > 0) ? $support : array());
+}
+
 modified_api::reset();
-$response = modified_api::request('modified/support/'.$_SESSION['language_code']);
+$response = check_support_response(modified_api::request('modified/support/'.$_SESSION['language_code']));
 
 $error = false;
 $error_field = array();
@@ -32,7 +105,11 @@ if (isset($_GET['module']) && $_GET['module'] != '') {
 if (isset($_GET['action'])) {
   switch ($_GET['action']) {
     case 'send':
-      if (isset($response['form']) 
+      if (count($response) < 1) {
+        break;
+      }
+
+      if (isset($response['form'])
           && is_array($response['form'])
           )
       {
@@ -207,7 +284,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       ?>
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo $data['text']; ?></td>
-                        <td class="dataTableConfig col-single-right<?php echo ((isset($error_field[$data['name']])) ? ' error' : ''); ?>"><?php echo sprintf($data['field'], $data['name'], ((isset($_POST[$data['name']])) ? xtc_db_input($_POST[$data['name']]) : '')); ?></td>
+                        <td class="dataTableConfig col-single-right<?php echo ((isset($error_field[$data['name']])) ? ' error' : ''); ?>"><?php echo filter_external_html(sprintf($data['field'], $data['name'], filter_external_text(((isset($_POST[$data['name']]) && is_string($_POST[$data['name']])) ? $_POST[$data['name']] : ''), $_SESSION['language_charset'])), 'UTF-8', true); ?></td>
                       </tr>
                       <?php
                     }
@@ -217,7 +294,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   <div class="privacy<?php echo ((isset($error_field[$response['privacy']['name']])) ? ' error' : ''); ?>">
                     <table class="privacy_table">
                       <tr>
-                        <td><?php echo sprintf($response['privacy']['checkbox'], ((isset($_POST[$response['privacy']['name']])) ? 'id="accept_privacy" checked="checked"' : 'id="accept_privacy"')); ?></td>
+                        <td><?php echo '<input type="checkbox" name="'.$response['privacy']['name'].'" value="true" '.((isset($_POST[$response['privacy']['name']])) ? 'id="accept_privacy" checked="checked"' : 'id="accept_privacy"').'>'; ?></td>
                         <td><label for="accept_privacy"><?php echo $response['privacy']['text']; ?></label></td>
                       </tr>
                     </table>

@@ -21,6 +21,7 @@ require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
+require_once (DIR_FS_INC.'filter_external_html.inc.php');
 
 // include needed classes
 require_once (DIR_WS_CLASSES . 'currencies.php');
@@ -28,6 +29,11 @@ require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
 
 modified_api::reset();
 $response = modified_api::request('modified/start/'.$_SESSION['language_code']);
+
+$start_content = '';
+if (is_array($response) && isset($response['content'])) {
+  $start_content = filter_external_html($response['content'], 'UTF-8', false, '.admincol_right');
+}
 
 $currencies = new currencies();
 
@@ -186,7 +192,7 @@ require (DIR_WS_INCLUDES.'head.php');
       <td class="boxCenter" style="border:0;background:#fff;">
         <div class="admin_container cf">
  
-          <div class="<?php echo ((is_array($response) && isset($response['content'])) ? 'admincol_left' : 'admincol_full'); ?>">
+          <div class="<?php echo (($start_content != '') ? 'admincol_left' : 'admincol_full'); ?>">
             <div class="csstabs">
 
               <?php
@@ -406,16 +412,22 @@ require (DIR_WS_INCLUDES.'head.php');
                   if (xtc_db_num_rows($news_query) > 0) {
                     $i = 0;
                     while ($news = xtc_db_fetch_array($news_query)) {
+                      $news['news_text'] = (string)$news['news_text'];
                       $pagebreak = strpos($news['news_text'], '<tt class="bbc_tt"></tt>');
-                      $news['news_text'] = str_replace('src="http://', 'src="https://', $news['news_text']);
+                      if ($pagebreak !== false) {
+                        $news['news_text'] = substr($news['news_text'], 0, $pagebreak);
+                      }
+                      $news_link = filter_external_url((string)$news['news_link'], array('http', 'https'), true);
                       ?>
                       <div class="blog_title">
-                        <div class="blog_header"><?php echo $news['news_title']; ?></div>
-                        <div class="blog_date"><?php echo date('d.m.Y', $news['news_date']); ?></div>                                      
+                        <div class="blog_header"><?php echo filter_external_text($news['news_title'], $_SESSION['language_charset'], false); ?></div>
+                        <div class="blog_date"><?php echo date('d.m.Y', (int)$news['news_date']); ?></div>
                       </div>                          
                       <div class="blogentry" style="display:none;">
-                        <div class="blog_desc"><?php echo (($pagebreak !== false) ? substr($news['news_text'], 0, $pagebreak) : $news['news_text']); ?></div>
-                        <div class="blog_read_more"><a target="_blank" href="<?php echo $news['news_link']; ?>">weiterlesen &raquo;</a></div>
+                        <div class="blog_desc" style="overflow:hidden;"><?php echo filter_external_html($news['news_text'], $_SESSION['language_charset']); ?></div>
+                        <?php if ($news_link != '') { ?>
+                        <div class="blog_read_more"><a target="_blank" rel="noopener noreferrer" href="<?php echo encode_htmlspecialchars($news_link); ?>">weiterlesen &raquo;</a></div>
+                        <?php } ?>
                       </div>
                       <?php
                       $i ++;
@@ -436,8 +448,9 @@ require (DIR_WS_INCLUDES.'head.php');
           </div>
           
           <?php 
-            if (is_array($response) && isset($response['content'])) {
-              echo '<div class="admincol_right">'.$response['content'].'</div>';
+            if ($start_content != '') {
+              // the delivered style rules only apply inside this box, positioned content must stay in it as well
+              echo '<div class="admincol_right" style="position:relative;overflow:hidden;">'.$start_content.'</div>';
             }
           ?>
                     
