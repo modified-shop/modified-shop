@@ -137,6 +137,7 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
                                                 opd.orders_products_download_id, 
                                                 opd.orders_products_filename, 
                                                 opd.download_count,
+                                                opd.download_key,
                                                 opd.orders_products_id,
                                                 if(opd.download_maxdays = 0, current_date, date(o.date_purchased)) + interval opd.download_maxdays + 1 day - interval 1 second download_expiry 
                                            FROM ".TABLE_ORDERS." o
@@ -164,8 +165,8 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
             {
               $dl[$jj]['allowed'] = true;
             }
-            $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$check_status['orders_id'].'&id='.$downloads['orders_products_download_id'].'&key='.md5($check_status['orders_id'].$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']));
-            $dl[$jj]['download_link'] = '<a href="'.xtc_href_link(FILENAME_DOWNLOAD, 'order='.$check_status['orders_id'].'&id='.$downloads['orders_products_download_id'].'&key='.md5($check_status['orders_id'].$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename'])).'">'.$downloads['products_name'].'</a>';
+            $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$check_status['orders_id'].'&id='.$downloads['orders_products_download_id'].'&key='.$downloads['download_key']);
+            $dl[$jj]['download_link'] = '<a href="'.xtc_href_link(FILENAME_DOWNLOAD, 'order='.$check_status['orders_id'].'&id='.$downloads['orders_products_download_id'].'&key='.$downloads['download_key']).'">'.$downloads['products_name'].'</a>';
             $dl[$jj]['date'] = xtc_date_long($downloads['download_expiry']);
             $dl[$jj]['count'] = $downloads['download_count'];
             $jj ++;

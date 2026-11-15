@@ -72,6 +72,7 @@ $downloads_query = xtc_db_query("SELECT o.customers_id,
                                         opd.orders_products_download_id, 
                                         opd.orders_products_filename, 
                                         opd.download_count,
+                                        opd.download_key,
                                         opd.orders_products_id,
                                         if(opd.download_maxdays = 0, current_date, date(o.date_purchased)) + interval opd.download_maxdays + 1 day - interval 1 second download_expiry 
                                    FROM ".TABLE_ORDERS." o
@@ -100,9 +101,9 @@ if (xtc_db_num_rows($downloads_query) > 0) {
     }
     if (isset($send_by_admin)) {
       require_once(DIR_FS_INC.'xtc_href_link_from_admin.inc.php');
-      $dl[$jj]['pic_link'] = xtc_href_link_from_admin(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']), 'NONSSL', false);    
+      $dl[$jj]['pic_link'] = xtc_href_link_from_admin(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.$downloads['download_key'], 'NONSSL', false);    
     } else {
-      $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']));
+      $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.$downloads['download_key']);
     }
     $dl[$jj]['download_link'] = '<a href="'.$dl[$jj]['pic_link'].'">'.$downloads['products_name'].'</a>';
     $dl[$jj]['download_link_plain'] = $downloads['products_name'].': '.$dl[$jj]['pic_link'];

@@ -23,7 +23,7 @@
                                     WHERE download_key = ''");
   if (xtc_db_num_rows($downloads_query) > 0) {
     while ($downloads = xtc_db_fetch_array($downloads_query)) {
-      $download_key = md5($downloads['orders_id'].$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']);
+      $download_key = bin2hex(random_bytes(16));
       xtc_db_query("UPDATE ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
                        SET download_key = '".xtc_db_input($download_key)."'
                      WHERE orders_products_download_id = '".(int)$downloads['orders_products_download_id']."'");
