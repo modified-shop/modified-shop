@@ -136,12 +136,38 @@ require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 require_once (DIR_FS_INC.'xtc_try_upload.inc.php');
 require_once (DIR_FS_INC.'xtc_get_all_get_params.inc.php');
 
+// the shop default takes over when the configured language no longer exists
+$cao_lang_id = $LangID;
+$cao_lang_query = xtc_db_query("SELECT languages_id,
+                                       directory
+                                  FROM ".TABLE_LANGUAGES."
+                              ORDER BY (languages_id = '".(int)$LangID."') DESC,
+                                       (code = '".xtc_db_input(DEFAULT_LANGUAGE)."') DESC,
+                                       sort_order
+                                 LIMIT 1");
+$cao_lang = xtc_db_fetch_array($cao_lang_query);
+if (is_array($cao_lang) && $cao_lang['languages_id'] != $LangID) {
+  $LangID = (int)$cao_lang['languages_id'];
+  if (is_file(DIR_FS_LANGUAGES . $cao_lang['directory'] . '/admin/' . $cao_lang['directory'] . '.php')) {
+    $Lang_folder = $cao_lang['directory'];
+  }
+}
+
 require_once(DIR_FS_LANGUAGES . $Lang_folder . '/admin/' . $Lang_folder . '.php');
 
 // file uploading class
 require(DIR_WS_CLASSES . 'upload.php');
 
 $_POST = $post;
+
+// CAO keeps sending the texts under the configured language id
+if ($cao_lang_id != $LangID) {
+  foreach ($_POST as $key => $value) {
+    if (is_array($value) && isset($value[$cao_lang_id]) && !isset($value[$LangID])) {
+      $_POST[$key][$LangID] = $value[$cao_lang_id];
+    }
+  }
+}
 
 // Die Ausgabe von Fehlern bezüglich des Logins unterdruecken
 $debug_login = (defined('CAO_DEBUG_LOGIN') && CAO_DEBUG_LOGIN == 'true' ? true : false);
@@ -161,15 +187,16 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
    $password = $_GET['password'];
 }
 
-if ($user == '' || $password == '') {
+if (!is_string($user) || !is_string($password) || $user == '' || $password == '') {
 ?>
 <html><head><title></title></head><body>
 <h3><a href="http://www.cao-faktura.de">CAO-Faktura - modified eCommerce Shopsoftware Anbindung</a></h3>
 <h4>Mehr dazu im <a href="http://www.cao-faktura.de/index.php?option=com_forum&Itemid=44">Forum</a></h4>
 <h4>Version <?php echo $version_nr; ?> Stand : <?php echo $version_datum; ?></h4>
 <br><br>
-Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">ADMIN-EMAIL</font>&password=<font color="red">ADMIN-PASSWORD-ALS-MD5</font>
+Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">CAO-EMAIL</font>&password=<font color="red">CAO-PASSWORT-ALS-MD5</font>
 </b>
+<br>E-Mail Adresse und Passwort stammen aus dem Systemmodul CAO Faktura.
 </body></html>
 <?php
   exit;
@@ -178,32 +205,37 @@ Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">A
 
   require ('cao_xtc_functions.php');
   
-  // security  1.check if admin user with this mailadress exits, and got access to xml-export
-  //           2.check if pasword = true
-  if (column_exists ('admin_access','xml_export')==false) {
-     xtc_db_query('ALTER TABLE admin_access ADD xml_export INT(1)  DEFAULT "0";');
-     xtc_db_query('UPDATE admin_access SET xml_export= 1 WHERE customers_id=\'1\';');
-  }
- 
-  if (!defined('MODULE_CAO_FAKTURA_STATUS') || MODULE_CAO_FAKTURA_STATUS == 'false') {
+  $cao_request = ($_SERVER['REQUEST_METHOD'] == 'POST') ? $_POST : $_GET;
+  $cao_action = (isset($cao_request['action']) && is_string($cao_request['action'])) ? $cao_request['action'] : '';
+
+  // security  1.check if the module is active and has its own credentials
+  //           2.check user and password as strings, without type juggling
+  if (!defined('MODULE_CAO_FAKTURA_STATUS') || MODULE_CAO_FAKTURA_STATUS != 'true'
+      || !defined('MODULE_CAO_FAKTURA_EMAIL') || MODULE_CAO_FAKTURA_EMAIL == ''
+      || !defined('MODULE_CAO_FAKTURA_PASSWORD') || MODULE_CAO_FAKTURA_PASSWORD == ''
+      )
+  {
     if (!$debug_login) exit;
     SendXMLHeader ();
-    print_xml_status (105, $_POST['action'], 'WRONG LOGIN', '', '', '');	 
-    exit; 
+    print_xml_status (105, $cao_action, 'WRONG LOGIN', '', '', '');
+    exit;
   } else {
-    if ($user != MODULE_CAO_FAKTURA_EMAIL) {
+    if (!hash_equals(MODULE_CAO_FAKTURA_EMAIL, $user)) {
       if (!$debug_login) exit;
       SendXMLHeader ();
-      print_xml_status (105, $_POST['action'], 'WRONG LOGIN', '', '', '');	  	
+      print_xml_status (105, $cao_action, 'WRONG LOGIN', '', '', '');
       exit;
     }
-    if ($password != MODULE_CAO_FAKTURA_PASSWORD) {
+    if (!hash_equals(MODULE_CAO_FAKTURA_PASSWORD, $password)) {
       if (!$debug_login) exit;
       SendXMLHeader ();
-      print_xml_status (108, $_POST['action'], 'WRONG PASSWORD', '', '', '');	  	
+      print_xml_status (108, $cao_action, 'WRONG PASSWORD', '', '', '');
       exit;
     }
   }
+
+  // only accepted requests reach the transfer log
+  LogRequest ();
 }
 
 

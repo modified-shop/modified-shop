@@ -103,7 +103,7 @@ function print_xml_status ($code, $action, $msg, $mode, $item, $value)
             '<STATUS>' . "\n" .
             '<STATUS_DATA>' . "\n" .
             '<CODE>' . $code . '</CODE>' . "\n" .
-            '<ACTION>' . $action . '</ACTION>' . "\n" .
+            '<ACTION>' . encode_htmlspecialchars($action) . '</ACTION>' . "\n" .
             '<MESSAGE>' . $msg . '</MESSAGE>' . "\n";
 
   if (strlen($mode)>0) {
@@ -138,10 +138,31 @@ function table_exists($table_name)
 
 function column_exists($table, $column)
 {
-  $result = xtc_db_query("SELECT * FROM ".$table." LIMIT 1");
-  $result_array = xtc_db_fetch_array($result);
-  if (isset($result_array[$column])) {
+  // the structure decides, an empty table has its columns too
+  $result = xtc_db_query("SHOW COLUMNS FROM ".$table." WHERE Field = '".xtc_db_input($column)."'");
+  if (xtc_db_num_rows($result) > 0) {
     return true;
+  }
+  return false;
+}
+
+//--------------------------------------------------------------
+
+// id from the request as int, false when it is no plain number
+function cao_post_id($key, $default = false)
+{
+  if (!isset($_POST[$key])) {
+    return $default;
+  }
+  if (!is_string($_POST[$key])) {
+    return false;
+  }
+  $value = trim($_POST[$key]);
+  if ($value == '') {
+    return $default;
+  }
+  if (preg_match('/^-?[0-9]+$/', $value)) {
+    return (int)$value;
   }
   return false;
 }
@@ -184,7 +205,7 @@ function SendCategories ()
     {
       $details = encode_request($details);
       
-      $schema .= "<CATEGORIES_DESCRIPTION ID='" . $details["language_id"] ."' CODE='" . $details["lang_code"] . "' NAME='" . $details["lang_name"] . "'>\n";
+      $schema .= "<CATEGORIES_DESCRIPTION ID='" . $details["language_id"] ."' CODE='" . encode_htmlspecialchars($details["lang_code"], ENT_QUOTES) . "' NAME='" . encode_htmlspecialchars($details["lang_name"], ENT_QUOTES) . "'>\n";
       $schema .= "<NAME>" . encode_htmlspecialchars($details["categories_name"]) . "</NAME>" . "\n";
       $schema .= "<HEADING_TITLE>" . encode_htmlspecialchars($details["categories_heading_title"]) . "</HEADING_TITLE>" . "\n";
       $schema .= "<DESCRIPTION>" . encode_htmlspecialchars($details["categories_description"]) . "</DESCRIPTION>" . "\n";
@@ -254,7 +275,7 @@ function  SendManufacturers ()
     {
       $details = encode_request($details);
       
-      $schema .= "<MANUFACTURERS_DESCRIPTION ID='" . $details["languages_id"] ."' CODE='" . $details["lang_code"] . "' NAME='" . $details["lang_name"] . "'>\n";
+      $schema .= "<MANUFACTURERS_DESCRIPTION ID='" . $details["languages_id"] ."' CODE='" . encode_htmlspecialchars($details["lang_code"], ENT_QUOTES) . "' NAME='" . encode_htmlspecialchars($details["lang_name"], ENT_QUOTES) . "'>\n";
       $schema .= "<URL>" . encode_htmlspecialchars($details["manufacturers_url"]) . "</URL>" . "\n" ;
       $schema .= "<URL_CLICK>" . $details["url_clicked"] . "</URL_CLICK>" . "\n" ;
       $schema .= "<DATE_LAST_CLICK>" . $details["date_last_click"] . "</DATE_LAST_CLICK>" . "\n" ;
@@ -283,10 +304,10 @@ function SendOrders ()
             '<ORDER>' . "\n";
   echo $schema;
 
-  $sql ="select c.countries_id, o.* from " . TABLE_ORDERS . " o JOIN ".TABLE_COUNTRIES." c on o.delivery_country_iso_code_2 = c.countries_iso_code_2 where o.orders_id >= '" . xtc_db_input($order_from) . "'";
+  $sql ="select c.countries_id, o.* from " . TABLE_ORDERS . " o JOIN ".TABLE_COUNTRIES." c on o.delivery_country_iso_code_2 = c.countries_iso_code_2 where o.orders_id >= '" . (int)$order_from . "'";
   
   if ($order_to) {
-    $sql .= " and orders_id <= " . $order_to;
+    $sql .= " and orders_id <= " . (int)$order_to;
   }
 
   if (!$order_status && !$order_from) {
@@ -296,7 +317,7 @@ function SendOrders ()
     }
     $sql .= " and orders_status IN (". $o_status .")";
   } elseif ($order_status) {
-    $sql .= " and orders_status = " . $order_status;
+    $sql .= " and orders_status = " . (int)$order_status;
   }
   
   $countries_array = array();
@@ -482,9 +503,10 @@ function SendOrders ()
       
       if (defined('MODULE_ORDER_TOTAL_'.strtoupper(str_replace('ot_', '', $totals['class'])).'_TAX_CLASS')) {
         $total_prefix = '+';
-        if ($totals['value'] < 0) $total_prefix = '-';
         $total_tax = xtc_get_tax_rate(constant('MODULE_ORDER_TOTAL_'.strtoupper(str_replace('ot_', '', $totals['class'])).'_TAX_CLASS'), $orders['countries_id']);
       }    
+      // the value is exported without its sign, also for totals without a tax class
+      if ($totals['value'] < 0) $total_prefix = '-';
 
       $schema .= '<TOTAL>' . "\n" .
                  '<TOTAL_TITLE>' . encode_htmlspecialchars(strip_tags($totals['title'])) . '</TOTAL_TITLE>' . "\n" .
@@ -564,7 +586,7 @@ function SendProducts ()
   if (isset($from))
   {
     if (!isset($anz)) $anz=1000;
-    $sql .= " limit " . $from . "," . $anz;
+    $sql .= " limit " . max(0, (int)$from) . "," . max(0, (int)$anz);
   }
 
   $orders_query = xtc_db_query($sql);
@@ -798,7 +820,7 @@ function SendProducts ()
     {
       $details = encode_request($details);
       
-      $schema .= "<PRODUCT_DESCRIPTION ID='" . $details["language_id"] ."' CODE='" . $details["language_code"] . "' NAME='" . $details["language_name"] . "'>\n";
+      $schema .= "<PRODUCT_DESCRIPTION ID='" . $details["language_id"] ."' CODE='" . encode_htmlspecialchars($details["language_code"], ENT_QUOTES) . "' NAME='" . encode_htmlspecialchars($details["language_name"], ENT_QUOTES) . "'>\n";
 
       if ($details["products_name"] !='Array')
       {
@@ -894,7 +916,7 @@ function SendCustomers ()
   if (isset($from))
   {
     if (!isset($anz)) $anz = 1000;
-    $address_query.= " limit " . $from . "," . $anz;
+    $address_query.= " limit " . max(0, (int)$from) . "," . max(0, (int)$anz);
   }
   $address_result = xtc_db_query($address_query);
 
@@ -940,19 +962,28 @@ function SendCustomersNewsletter ()
   if (defined('SET_TIME_LIMIT')) { @set_time_limit(0);}
 
   $schema = '<?xml version="1.0" encoding="' . CHARSET . '"?>' . "\n" .
-            '<CUSTOMERS>' . "\n".
+            '<CUSTOMERS>' . "\n";
 
   $from = xtc_db_prepare_input($_GET['customers_from']);
   $anz  = xtc_db_prepare_input($_GET['customers_count']);
 
-  $address_query = "select *
-                    from " . TABLE_CUSTOMERS. "
-                    where customers_newsletter = 1";
+  // confirmed recipients only, matched by address like in the customer list of the admin
+  $address_query = "select c.customers_id,
+                           c.customers_cid,
+                           c.customers_gender,
+                           c.customers_firstname,
+                           c.customers_lastname,
+                           c.customers_email_address
+                    from " . TABLE_CUSTOMERS. " c
+                    join " . TABLE_NEWSLETTER_RECIPIENTS . " nr
+                         on nr.customers_email_address = c.customers_email_address
+                            and nr.mail_status = 1
+                    order by c.customers_id";
 
   if (isset($from))
   {
     if (!isset($anz)) $anz = 1000;
-    $address_query.= " limit " . $from . "," . $anz;
+    $address_query.= " limit " . max(0, (int)$from) . "," . max(0, (int)$anz);
   }
   $address_result = xtc_db_query($address_query);
   while ($address = xtc_db_fetch_array($address_result))
@@ -961,11 +992,11 @@ function SendCustomersNewsletter ()
     
     $schema .= '<CUSTOMERS_DATA>' . "\n";
     $schema .= '<CUSTOMERS_ID>' . $address['customers_id'] . '</CUSTOMERS_ID>' . "\n";
-    $schema .= '<CUSTOMERS_CID>' . $address['customers_cid'] . '</CUSTOMERS_CID>' . "\n";
-    $schema .= '<CUSTOMERS_GENDER>' . $address['customers_gender'] . '</CUSTOMERS_GENDER>' . "\n";
-    $schema .= '<CUSTOMERS_FIRSTNAME>' . $address['customers_firstname'] . '</CUSTOMERS_FIRSTNAME>' . "\n";
-    $schema .= '<CUSTOMERS_LASTNAME>' . $address['customers_lastname'] . '</CUSTOMERS_LASTNAME>' . "\n";
-    $schema .= '<CUSTOMERS_EMAIL_ADDRESS>' . $address['customers_email_address'] . '</CUSTOMERS_EMAIL_ADDRESS>' . "\n";
+    $schema .= '<CUSTOMERS_CID>' . encode_htmlspecialchars($address['customers_cid']) . '</CUSTOMERS_CID>' . "\n";
+    $schema .= '<CUSTOMERS_GENDER>' . encode_htmlspecialchars($address['customers_gender']) . '</CUSTOMERS_GENDER>' . "\n";
+    $schema .= '<CUSTOMERS_FIRSTNAME>' . encode_htmlspecialchars($address['customers_firstname']) . '</CUSTOMERS_FIRSTNAME>' . "\n";
+    $schema .= '<CUSTOMERS_LASTNAME>' . encode_htmlspecialchars($address['customers_lastname']) . '</CUSTOMERS_LASTNAME>' . "\n";
+    $schema .= '<CUSTOMERS_EMAIL_ADDRESS>' . encode_htmlspecialchars($address['customers_email_address']) . '</CUSTOMERS_EMAIL_ADDRESS>' . "\n";
     $schema .= '</CUSTOMERS_DATA>' . "\n";
   }
   $schema .= '</CUSTOMERS>' . "\n\n";
@@ -986,6 +1017,9 @@ function SendShopConfig ()
 
   while ($config = xtc_db_fetch_array($config_res))
   {
+    // the table has no title and description columns, the tags stay for CAO
+    $config['configuration_title'] = '';
+    $config['configuration_description'] = '';
     $config = encode_request($config);
     
     $schema = '<ENTRY ID="' . $config['configuration_id'] . '">' .  "\n" .
@@ -993,7 +1027,7 @@ function SendShopConfig ()
              '<VALUE>' . encode_htmlspecialchars($config['configuration_value']) . '</VALUE>' . "\n" .
              '<TITLE>' . encode_htmlspecialchars($config['configuration_title']) . '</TITLE>' . "\n" .
              '<DESCRIPTION>' . encode_htmlspecialchars($config['configuration_description']) . '</DESCRIPTION>' . "\n" .
-             '<GROUP_ID>' . encode_htmlspecialchars($config['config_group_id']) . '</GROUP_ID>' . "\n" .
+             '<GROUP_ID>' . encode_htmlspecialchars($config['configuration_group_id']) . '</GROUP_ID>' . "\n" .
              '<SORT_ORDER>' . encode_htmlspecialchars($config['sort_order']) . '</SORT_ORDER>' . "\n" .
              '<USE_FUNCTION>' . encode_htmlspecialchars($config['use_function']) . '</USE_FUNCTION>' . "\n" .
              '<SET_FUNCTION>' . encode_htmlspecialchars($config['set_function']) . '</SET_FUNCTION>' . "\n" .
@@ -1116,7 +1150,7 @@ function SendHTMLHeader ()
   header ("Last-Modified: ". gmdate ("D, d M Y H:i:s"). " GMT");  // immer geändert
   header ("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
   header ("Pragma: no-cache"); // HTTP/1.0
-  header ("Content-type: text/html");
+  header ("Content-type: text/html; charset=" . CHARSET);
 }
 
 //--------------------------------------------------------------
@@ -1127,7 +1161,7 @@ function ShowHTMLMenu ()
 
   SendHTMLHeader();
 
-  $Url = $PHP_SELF . "?user=" . $user . "&password=" . $password;
+  $Url = encode_htmlspecialchars($PHP_SELF . "?user=" . rawurlencode($user) . "&password=" . rawurlencode($password));
 
 
 ?>
@@ -1148,8 +1182,6 @@ function ShowHTMLMenu ()
 <a href="<?php echo $Url; ?>&action=orders_export">Ausgabe XML Orders</a><br>
 <br>
 <a href="<?php echo $Url; ?>&action=config_export">Ausgabe XML Shop-Config</a><br>
-<br>
-<a href="<?php echo $Url; ?>&action=update_tables">MySQL-Tabellen f&uuml;r die verwendung mit CAO-Faktura aktualisieren</a><br>
 <br>
 <a href="<?php echo $Url; ?>&action=send_log">aktuelles Transfer-Log ansehen (die le. 100 Eintr&auml;ge)</a><br>
 </body>
@@ -1174,6 +1206,7 @@ function clear_string($value)
 
 require_once(DIR_FS_INC .'xtc_random_charcode.inc.php');
 require_once(DIR_FS_INC .'xtc_password_time_update.inc.php');
+require_once(DIR_FS_INC .'xtc_encrypt_password.inc.php');
 
 function xtc_RandomString($length)
 {
@@ -1184,7 +1217,7 @@ function xtc_RandomString($length)
 
 function xtc_create_password($pass)
 {
-  return md5($pass);
+  return xtc_encrypt_password($pass);
 }
 
 //--------------------------------------------------------------
@@ -1201,6 +1234,24 @@ function xtc_remove_product($product_id)
         define('DIR_FS_CATALOG_THUMBNAIL_IMAGES',DIR_FS_CATALOG.DIR_WS_THUMBNAIL_IMAGES);
         define('DIR_FS_CATALOG_MINI_IMAGES',DIR_FS_CATALOG.DIR_WS_MINI_IMAGES);
         define('DIR_FS_CATALOG_IMAGES',DIR_FS_CATALOG.DIR_WS_IMAGES);
+
+        // content of the product, the file only when no other product uses it
+        $product_content_query = xtc_db_query("SELECT content_file
+                                                 FROM ".TABLE_PRODUCTS_CONTENT."
+                                                WHERE products_id = '".(int)$product_id."'");
+        while ($product_content = xtc_db_fetch_array($product_content_query)) {
+          $duplicate_content_query = xtc_db_query("SELECT count(*) AS total
+                                                     FROM ".TABLE_PRODUCTS_CONTENT."
+                                                    WHERE content_file = '".xtc_db_input($product_content['content_file'])."'
+                                                      AND products_id != '".(int)$product_id."'");
+          $duplicate_content = xtc_db_fetch_array($duplicate_content_query);
+          if ($duplicate_content['total'] == 0) {
+            if (is_file(DIR_FS_DOCUMENT_ROOT.'media/products/'.$product_content['content_file'])) {
+              @ unlink(DIR_FS_DOCUMENT_ROOT.'media/products/'.$product_content['content_file']);
+            }
+          }
+        }
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT." WHERE products_id = '".(int)$product_id."'");
 
         $product_image_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . xtc_db_input($product_id) . "'");
         $product_image = xtc_db_fetch_array($product_image_query);
@@ -1230,7 +1281,7 @@ function xtc_remove_product($product_id)
         }
 
         //delete more images
-        $mo_images_query = xtc_db_query("SELECT image_name 
+        $mo_images_query = xtc_db_query("SELECT image_id, image_name 
                                            FROM ".TABLE_PRODUCTS_IMAGES." 
                                           WHERE products_id = '".(int)$product_id."'");
         while ($mo_images_values = xtc_db_fetch_array($mo_images_query)) {
@@ -1258,6 +1309,7 @@ function xtc_remove_product($product_id)
               @ unlink(DIR_FS_CATALOG_INFO_IMAGES.$mo_images_values['image_name']);
             }
           }
+          xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES_DESCRIPTION." WHERE image_id = '".(int)$mo_images_values['image_id']."'");
         }
 
         xtc_db_query("DELETE FROM ".TABLE_SPECIALS." WHERE products_id = '".(int)$product_id."'");
@@ -1267,6 +1319,12 @@ function xtc_remove_product($product_id)
         xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES." WHERE products_id = '".(int)$product_id."'");
         xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id = '".(int)$product_id."'");
         xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_DESCRIPTION." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE pad
+                        FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                        JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                             ON pa.products_attributes_id = pad.products_attributes_id
+                                AND pa.products_id = '".(int)$product_id."'");
         xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES." WHERE products_id = '".(int)$product_id."'");
         xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
         xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
@@ -1289,7 +1347,7 @@ function xtc_remove_product($product_id)
           }
 
           for ($i=0,$n=sizeof($customers_statuses_array);$i<$n;$i++) {
-              xtc_db_query("delete from personal_offers_by_customers_status_" . $i . " where products_id = '" . xtc_db_input($product_id) . "'");
+              xtc_db_query("delete from " . TABLE_PERSONAL_OFFERS_BY . (int)$customers_statuses_array[$i]['id'] . " where products_id = '" . (int)$product_id . "'");
           }
 
           $product_reviews_query = xtc_db_query("select reviews_id from " . TABLE_REVIEWS . " where products_id = '" . xtc_db_input($product_id) . "'");
@@ -1455,9 +1513,9 @@ function ManufacturersUpdate ()
 {
   global $_POST;
 
-  $manufacturers_id = xtc_db_prepare_input($_POST['mID']);
+  $manufacturers_id = cao_post_id('mID', 0);
 
-  if (isset($manufacturers_id))
+  if (isset($_POST['mID']) && $manufacturers_id !== false)
   {
     // Hersteller laden
     $count_query = xtc_db_query("select
@@ -1549,7 +1607,7 @@ function ManufacturersUpdate ()
       xtc_db_perform(TABLE_MANUFACTURERS_INFO, $sql_data_array, 'update', 'manufacturers_id = \'' . xtc_db_input($manufacturers_id) . '\' and languages_id = \'' . $language_id . '\'');
     }
     }
-    print_xml_status (0, $_POST['action'], 'OK', $mode ,'MANUFACTURERS_ID', $mID);
+    print_xml_status (0, $_POST['action'], 'OK', $mode ,'MANUFACTURERS_ID', (($exists==0) ? $products_id : $manufacturers_id));
   }
     else
   {
@@ -1596,7 +1654,12 @@ function ProductsUpdate ()
                                'image' => $languages['image'],
                                'directory' => $languages['directory']);
   }
-  $products_id = xtc_db_prepare_input($_POST['pID']);
+  $products_id = cao_post_id('pID', 0);
+  if ($products_id === false)
+  {
+    print_xml_status (99, $_POST['action'], 'PARAMETER ERROR', '', '', '');
+    return;
+  }
 
 
   //VPE JP20060130
@@ -1607,7 +1670,7 @@ function ProductsUpdate ()
       $vpe_name = xtc_db_prepare_input($_POST['products_me']);
 
       $vpe_query = xtc_db_query("select products_vpe_id from " . TABLE_PRODUCTS_VPE .
-                                " where products_vpe_name='" . $vpe_name . "' and " .
+                                " where products_vpe_name='" . xtc_db_input($vpe_name) . "' and " .
                                 "language_id='" . $LangID ."'");
       if ($vpe_res = xtc_db_fetch_array($vpe_query))
       {
@@ -1733,6 +1796,9 @@ function ProductsUpdate ()
 
   if (isset($_POST['manufacturers_id'])) $manufacturers_id = xtc_db_prepare_input($_POST['manufacturers_id']);
 
+  // the default applies only when CAO sends no shipping time for a new product
+  if ($exists==0 && !isset($_POST['products_shippingtime'])) $products_shippingtime = 1;
+
   $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 
   $sql_data_array = array('products_id' => $products_id,
@@ -1752,7 +1818,16 @@ function ProductsUpdate ()
              
   if ((defined('TABLE_PRODUCTS_VPE')) and (USE_VPE==true))
   {
-    $sql_data_array = array_merge($sql_data_array, array ('products_vpe_value' => $products_vpe_value, 'products_vpe_status' => $products_vpe_status, 'products_vpe' => $products_vpe_id));
+    // a partial update keeps the stored values, only what CAO sends is written
+    if (isset($_POST['products_basis_factor']))
+    {
+      $sql_data_array['products_vpe_value'] = $products_vpe_value;
+      $sql_data_array['products_vpe_status'] = $products_vpe_status;
+    }
+    if (isset($products_vpe_id))
+    {
+      $sql_data_array['products_vpe'] = $products_vpe_id;
+    }
   }
 
   if ($exists==0) // Neuanlage (ID wird an CAO zurueckgegeben !!!)
@@ -1771,8 +1846,7 @@ function ProductsUpdate ()
         $permission_array = array_merge($permission_array, array ($permissions['Field'] => '1'));
       }
 
-      $insert_sql_data = array('products_date_added' => 'now()',
-                              'products_shippingtime'=>1);
+      $insert_sql_data = array('products_date_added' => 'now()');
 
       $insert_sql_data = array_merge($insert_sql_data, $permission_array);
     }
@@ -1800,7 +1874,6 @@ function ProductsUpdate ()
       }
 
       $insert_sql_data = array('products_date_added' => 'now()',
-                              'products_shippingtime'=>1,
                               'group_ids'=>$group_ids);
    }
 
@@ -1936,13 +2009,14 @@ function ProductsUpdate ()
                                                WHERE language_id = '".$LangID."' 
                                             ORDER BY customers_status_id");
     while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
-      xtc_db_query("DELETE FROM personal_offers_by_customers_status_" . $customers_statuses['customers_status_id'] . " WHERE products_id='" . $products_id . "'");
-      
       if (isset($prices_array[$customers_statuses['customers_status_id']])
           && $prices_array[$customers_statuses['customers_status_id']] != ''
           && isset($_POST['products_vk'.$prices_array[$customers_statuses['customers_status_id']]])
           )
       {
+        // only the base price CAO sends is replaced, graduated prices stay
+        xtc_db_query("DELETE FROM " . TABLE_PERSONAL_OFFERS_BY . (int)$customers_statuses['customers_status_id'] . " WHERE products_id='" . (int)$products_id . "' AND quantity = '1'");
+
         $sql_data_array = array(
           'products_id' => $products_id,
           'quantity' => '1',
@@ -1964,8 +2038,9 @@ function ProductsErase ()
 {
   global $_POST;
 
-  $ProdID  = xtc_db_prepare_input($_POST['prodid']);
-  if (isset($ProdID))
+  $ProdID  = cao_post_id('prodid');
+  $res1 = '';
+  if ($ProdID > 0)
   {
     // ProductsToCategieries loeschen bei denen die products_id = ... ist
     $res1 = xtc_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id='" . $ProdID . "'");
@@ -1980,7 +2055,7 @@ function ProductsErase ()
     $code = 99;
     $message = 'FAILED';
   }
-  print_xml_status (0, $_POST['action'], 'OK', '', 'SQL_RES1', $res1);
+  print_xml_status ($code, $_POST['action'], $message, '', 'SQL_RES1', $res1);
 }
 
 //--------------------------------------------------------------
@@ -1989,13 +2064,13 @@ function ProductsSpecialPriceUpdate ()
 {
   global $_POST;
 
-  $ProdID  = xtc_db_prepare_input($_POST['prodid']);
+  $ProdID  = cao_post_id('prodid');
 
   $Price  = xtc_db_prepare_input($_POST['price']);
   $Status = xtc_db_prepare_input($_POST['status']);
   $Expire = xtc_db_prepare_input($_POST['expired']);
 
-  if (isset($ProdID))
+  if ($ProdID > 0)
   {
     /*
     1. Ermitteln ob Produkt bereits einen Spezialpreis hat
@@ -2003,7 +2078,7 @@ function ProductsSpecialPriceUpdate ()
     */
     $sp_sql = "select specials_id from " . TABLE_SPECIALS . " " .
               "where products_id='" . (int)$ProdID . "'";
-    $sp_query = xtc_db_query($sql);
+    $sp_query = xtc_db_query($sp_sql);
 
     if ($sp = xtc_db_fetch_array($sp_query))
     {
@@ -2012,10 +2087,11 @@ function ProductsSpecialPriceUpdate ()
 
       xtc_db_query(
               "update " . TABLE_SPECIALS .
-              " set specials_new_products_price = '" . $Price . "'," .
-              " specials_last_modified = now()," .
-              " expires_date = '" . $Expire .
-              "' where specials_id = '" . (int)$SpecialID. "'");
+              " set specials_last_modified = now()" .
+              ((isset($_POST['price'])) ? ", specials_new_products_price = '" . xtc_db_input($Price) . "'" : "") .
+              ((isset($_POST['expired'])) ? ", expires_date = '" . xtc_db_input($Expire) . "'" : "") .
+              (($Status === '0' || $Status === '1') ? ", status = '" . $Status . "'" : "") .
+              " where specials_id = '" . (int)$SpecialID. "'");
 
       print_xml_status (0, $_POST['action'], 'OK', 'UPDATE', '', '');
     }
@@ -2025,7 +2101,7 @@ function ProductsSpecialPriceUpdate ()
       xtc_db_query(
               "insert into " . TABLE_SPECIALS .
               " (products_id, specials_new_products_price, specials_date_added, expires_date, status) " .
-              " values ('" . (int)$ProdID . "', '" . $Price . "', now(), '" . $Expire . "', '1')");
+              " values ('" . (int)$ProdID . "', '" . xtc_db_input($Price) . "', now(), '" . xtc_db_input($Expire) . "', '" . (($Status === '0') ? '0' : '1') . "')");
 
       print_xml_status (0, $_POST['action'], 'OK', 'APPEND', '', '');
     }
@@ -2060,10 +2136,10 @@ function CategoriesUpdate ()
 {
   global $_POST, $LangID;
 
-  $CatID    = xtc_db_prepare_input($_POST['catid']);
-  $ParentID = xtc_db_prepare_input($_POST['parentid']);
+  $CatID    = cao_post_id('catid', 0);
+  $ParentID = cao_post_id('parentid', 0);
 
-  if (isset($ParentID) && isset($CatID))
+  if (isset($_POST['catid']) && isset($_POST['parentid']) && $CatID !== false && $ParentID !== false)
   {
     // product laden
     $SQL = "select categories_id, parent_id, date_added, sort_order, categories_image " .
@@ -2082,7 +2158,7 @@ function CategoriesUpdate ()
     else $exists = 0;
 
     // Variablen nur ueberschreiben wenn als Parameter vorhanden !!!
-    if (isset($_POST['parentid'])) $ParentID = xtc_db_prepare_input($_POST['parentid']);
+    if (isset($_POST['parentid'])) $ParentID = cao_post_id('parentid', 0);
     if (isset($_POST['sort']))     $Sort     = xtc_db_prepare_input($_POST['sort']);
     if (isset($_POST['image']))    $Image    = xtc_db_prepare_input($_POST['image']);
 
@@ -2229,9 +2305,9 @@ function CategoriesErase ()
 {
   global $_POST;
 
-  $CatID  = xtc_db_prepare_input($_POST['catid']);
+  $CatID  = cao_post_id('catid');
 
-  if (isset($CatID))
+  if ($CatID > 0)
   {
     // Categorie loeschen
     $res1 = xtc_db_query("delete from " . TABLE_CATEGORIES . " where categories_id='" . $CatID . "'");
@@ -2254,10 +2330,10 @@ function Prod2CatUpdate ()
 {
   global $_POST;
 
-  $ProdID = xtc_db_prepare_input($_POST['prodid']);
-  $CatID  = xtc_db_prepare_input($_POST['catid']);
+  $ProdID = cao_post_id('prodid');
+  $CatID  = isset($_POST['catid']) ? cao_post_id('catid', 0) : false;
 
-  if (isset($ProdID) && isset($CatID))
+  if ($ProdID > 0 && $CatID !== false && $CatID >= 0)
   {
     $res = xtc_db_query("replace into " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id) Values ('" . $ProdID ."', '" . $CatID . "')");
     print_xml_status (0, $_POST['action'], 'OK', '', 'SQL_RES', $res);
@@ -2274,10 +2350,10 @@ function Prod2CatErase ()
 {
   global $_POST;
 
-  $ProdID = xtc_db_prepare_input($_POST['prodid']);
-  $CatID  = xtc_db_prepare_input($_POST['catid']);
+  $ProdID = cao_post_id('prodid');
+  $CatID  = isset($_POST['catid']) ? cao_post_id('catid', 0) : false;
 
-  if (isset($ProdID) && isset($CatID))
+  if ($ProdID > 0 && $CatID !== false && $CatID >= 0)
   {
     $res = xtc_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id='" . $ProdID ."' and categories_id='" . $CatID . "'");
     print_xml_status (0, $_POST['action'], 'OK', '', 'SQL_RES', $res);
@@ -2348,31 +2424,27 @@ function OrderUpdate ()
         $customer_notified = '0';
         if ($_POST['notify'] == 'on')
         {
-          // Falls eine Sprach ID zur Order existiert die Emailbestätigung in dieser Sprache ausführen
-          if (isset($check_status['orders_language_id']) && $check_status['orders_language_id'] > 0 )
-          {
-            $orders_status_query = xtc_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . $check_status['orders_language_id'] . "'");
-            if (xtc_db_num_rows($orders_status_query) == 0)
-            {
-              $orders_status_query = xtc_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . $languages_id . "'");
-            }
-          }
-            else
-          {
-            $orders_status_query = xtc_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . $languages_id . "'");
-          }
-          $orders_statuses = array();
-          $orders_status_array = array();
-          while ($orders_status = xtc_db_fetch_array($orders_status_query))
-          {
-            $orders_statuses[] = array('id' => $orders_status['orders_status_id'],
-                                       'text' => $orders_status['orders_status_name']);
-            $orders_status_array[$orders_status['orders_status_id']] = $orders_status['orders_status_name'];
-          }
+          // status name and mail in the language of the order, only an installed language is taken
+          $order_lang_query = xtc_db_query("select languages_id, code, directory
+                                              from " . TABLE_LANGUAGES . "
+                                          order by (languages_id = '" . (int)$check_status['languages_id'] . "') desc,
+                                                   (directory = '" . xtc_db_input($check_status['language']) . "') desc,
+                                                   (languages_id = '" . (int)$LangID . "') desc,
+                                                   sort_order
+                                             limit 1");
+          $order_lang = xtc_db_fetch_array($order_lang_query);
+
           // status query
-          $orders_status_query = xtc_db_query("select orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . $LangID . "' and orders_status_id='".$status."'");
+          $orders_status_query = xtc_db_query("select orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$order_lang['languages_id'] . "' and orders_status_id='".$status."'");
+          if (xtc_db_num_rows($orders_status_query) < 1)
+          {
+            $orders_status_query = xtc_db_query("select orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$LangID . "' and orders_status_id='".$status."'");
+          }
           $o_status=xtc_db_fetch_array($orders_status_query);
           $o_status=$o_status['orders_status_name'];
+
+          // the comment reaches the customer only when it is released
+          $notify_comments = (isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on') ? $comments : '';
 
           // require functionblock for mails
           require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
@@ -2389,27 +2461,27 @@ function OrderUpdate ()
           $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
           $smarty->config_dir = DIR_FS_CATALOG.'lang';
           
-          $smarty->assign('language', $check_status['language']);
+          $smarty->assign('language', $order_lang['directory']);
           $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
           $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
           $smarty->assign('NAME',$check_status['customers_name']);
           $smarty->assign('ORDER_NR',$oID);
           $smarty->assign('ORDER_LINK',xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL'));
           $smarty->assign('ORDER_DATE',xtc_date_long($check_status['date_purchased']));
-          $smarty->assign('NOTIFY_COMMENTS',$comments);
+          $smarty->assign('NOTIFY_COMMENTS',$notify_comments);
           $smarty->assign('ORDER_STATUS',$o_status);
 
           if (isset($tracking_id)) {
-            $tracking_array = get_tracking_link($oID, 'de', array($tracking_id));
+            $tracking_array = get_tracking_link($oID, $order_lang['code'], array($tracking_id));
             $smarty->assign('PARCEL_COUNT', count($tracking_array));
             $smarty->assign('PARCEL_ARRAY', $tracking_array);
           }
           
-          $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.html');
-          $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.txt');
+          $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$order_lang['directory'].'/change_order_mail.html');
+          $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$order_lang['directory'].'/change_order_mail.txt');
 
           $order_subject_search = array('{$nr}', '{$date}', '{$lastname}', '{$firstname}');
-          $order_subject_replace = array($oID, xtc_date_long($check_status['date_purchased']), $check_status['customers_lastname'], $check_status['customers_lfirstname']);
+          $order_subject_replace = array($oID, xtc_date_long($check_status['date_purchased']), $check_status['customers_lastname'], $check_status['customers_firstname']);
           $order_subject = str_replace($order_subject_search, $order_subject_replace, EMAIL_BILLING_SUBJECT);
 
           // send mail with html/txt template
@@ -2500,13 +2572,24 @@ function CustomersUpdate ()
   // include PW function
   require_once(DIR_FS_INC . 'xtc_encrypt_password.inc.php');
 
-  if (isset($_POST['cID'])) $customers_id = xtc_db_prepare_input($_POST['cID']);
+  if (isset($_POST['cID'])) $customers_id = cao_post_id('cID', -1);
+  if ($customers_id === false)
+  {
+    print_xml_status (99, $_POST['action'], 'PARAMETER ERROR', '', '', '');
+    return;
+  }
 
   // security check, if user = admin, dont allow to perform changes
   if ($customers_id!=-1)
   {
     $sec_query=xtc_db_query("SELECT customers_status FROM ".TABLE_CUSTOMERS." where customers_id='".$customers_id."'");
     $sec_data=xtc_db_fetch_array($sec_query);
+    // an id the shop does not know is no admin, but there is nothing to update either
+    if (!is_array($sec_data))
+    {
+      print_xml_status (99, $_POST['action'], 'PARAMETER ERROR', '', '', '');
+      return;
+    }
     if ($sec_data['customers_status']==0)
     {
       print_xml_status (120, $_POST['action'], 'CAN NOT CHANGE ADMIN USER!', '', '', '');
@@ -2526,7 +2609,7 @@ function CustomersUpdate ()
   
   if (file_exists('cao_custupd_1.php')) { include('cao_custupd_1.php'); }
 
-  if (isset($_POST['customers_password']))
+  if (isset($_POST['customers_password']) && $_POST['customers_password'] != '')
   {
     $sql_customers_data_array['customers_password'] = xtc_encrypt_password($_POST['customers_password']);
   }
@@ -2538,12 +2621,16 @@ function CustomersUpdate ()
   if (isset($_POST['customers_city'])) $sql_address_data_array['entry_city'] = $_POST['customers_city'];
   if (isset($_POST['customers_postcode'])) $sql_address_data_array['entry_postcode'] = $_POST['customers_postcode'];
   if (isset($_POST['customers_gender'])) $sql_address_data_array['entry_gender'] = $_POST['customers_gender'];
-  if (isset($_POST['customers_country_id'])) $country_code = $_POST['customers_country_id'];
-
-  $country_query = "SELECT countries_id FROM ".TABLE_COUNTRIES." WHERE countries_iso_code_2 = '".$country_code ."' LIMIT 1";
-  $country_result = xtc_db_query($country_query);
-  $row = xtc_db_fetch_array($country_result);
-  $sql_address_data_array['entry_country_id'] = $row['countries_id'];
+  // without a known country the stored one stays
+  if (isset($_POST['customers_country_id']) && is_string($_POST['customers_country_id']))
+  {
+    $country_query = "SELECT countries_id FROM ".TABLE_COUNTRIES." WHERE countries_iso_code_2 = '".xtc_db_input($_POST['customers_country_id'])."' LIMIT 1";
+    $country_result = xtc_db_query($country_query);
+    if ($row = xtc_db_fetch_array($country_result))
+    {
+      $sql_address_data_array['entry_country_id'] = $row['countries_id'];
+    }
+  }
 
   $count_query = xtc_db_query("SELECT count(*) as count FROM " . TABLE_CUSTOMERS . " WHERE customers_id='" . (int)$customers_id . "' LIMIT 1");
   $check = xtc_db_fetch_array($count_query);
@@ -2585,7 +2672,7 @@ function CustomersUpdate ()
     else
   {
     $mode= 'APPEND';
-    if (strlen($_POST['customers_password'])==0)
+    if (!isset($sql_customers_data_array['customers_password']))
     {
       // generate PW if empty
       $pw=xtc_RandomString(8);
@@ -2661,20 +2748,20 @@ function CustomersErase ()
 {
   global $_POST;
 
-  $cID  = xtc_db_prepare_input($_POST['cID']);
+  $cID  = cao_post_id('cID');
 
-  $sec_query=xtc_db_query("SELECT customers_status FROM ".TABLE_CUSTOMERS." where customers_id='".$cID."'");
+  $sec_query=xtc_db_query("SELECT customers_status FROM ".TABLE_CUSTOMERS." where customers_id='".(int)$cID."'");
   $sec_data=xtc_db_fetch_array($sec_query);
-  if ($sec_data['customers_status']==0)
+  if (is_array($sec_data) && $sec_data['customers_status']==0)
   {
     print_xml_status (120, $_POST['action'], 'CAN NOT CHANGE ADMIN USER!', '', '', '');
     return;
   }
-  if (isset($cID))
+  if ($cID > 0)
   {
     xtc_db_query("update " . TABLE_REVIEWS . " set customers_id = null where customers_id = '" .  $cID . "'");
     xtc_db_query("delete from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . $cID . "'");
-    xtc_db_query("delete from " . TABLE_CUSTOMERS . " where customers_id = '" .$cID . "'");
+    $res1 = xtc_db_query("delete from " . TABLE_CUSTOMERS . " where customers_id = '" .$cID . "'");
     xtc_db_query("delete from " . TABLE_CUSTOMERS_INFO . " where customers_info_id = '" . $cID. "'");
     xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . $cID . "'");
     xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . $cID . "'");
@@ -2695,10 +2782,11 @@ function XsellUpdate ()
 {
   global $_POST;
 
-  $ProdID = xtc_db_prepare_input($_POST['prodid']);
-  $XsellID  = xtc_db_prepare_input($_POST['xsellid']);
+  $ProdID = cao_post_id('prodid');
+  $XsellID  = cao_post_id('xsellid');
+  $res = '';
 
-  if (isset($ProdID) && isset($XsellID))
+  if ($ProdID > 0 && $XsellID > 0)
   {
 
       // ueberpruefen ob Daten schon vorhanden sind
@@ -2733,10 +2821,10 @@ function XsellErase ()
 {
   global $_POST;
 
-  $ProdID = xtc_db_prepare_input($_POST['prodid']);
-  $XsellID  = xtc_db_prepare_input($_POST['xsellid']);
+  $ProdID = cao_post_id('prodid');
+  $XsellID  = cao_post_id('xsellid');
 
-  if (isset($ProdID) && isset($XsellID))
+  if ($ProdID > 0 && $XsellID > 0)
   {
     $res = xtc_db_query("delete from " . TABLE_PRODUCTS_XSELL . " where products_id='" . $ProdID ."' and xsell_id='" . $XsellID . "'");
 
@@ -2772,10 +2860,10 @@ function SendLog ()
     while ($log = xtc_db_fetch_array($res))
     {
       echo 'Date:' . $log['date_added'] . '<br>' . "\n";
-      echo 'Method:' . $log['method'] . '<br>' . "\n";
-      echo 'Action:' . $log['action'] . '<br>' . "\n";
-      echo 'Post-Data:<br>' . nl2br($log['post_data']) . '<br>' . "\n";
-      echo 'Get-Data:<br>' . nl2br($log['get_data']) . '<br>' . "\n";
+      echo 'Method:' . cao_log_output($log['method']) . '<br>' . "\n";
+      echo 'Action:' . cao_log_output($log['action']) . '<br>' . "\n";
+      echo 'Post-Data:<br>' . nl2br(cao_log_output($log['post_data'])) . '<br>' . "\n";
+      echo 'Get-Data:<br>' . nl2br(cao_log_output($log['get_data'])) . '<br>' . "\n";
 
       echo "<hr>" . "\n";
     }
@@ -2813,6 +2901,66 @@ function SendLog ()
   }
 
 //--------------------------------------------------------------
+
+// log text for the html view, password fields of older entries are masked as well
+function cao_log_output($data)
+{
+  $data = preg_replace('/^([^\r\n=]*pass[^\r\n=]*) => [^\r\n]*/mi', '$1 => ***', (string)$data);
+
+  return htmlspecialchars($data, ENT_QUOTES | ENT_SUBSTITUTE, CHARSET);
+}
+
+//--------------------------------------------------------------
+
+// one "key => value" line per request value, password fields never reach the log
+function cao_log_lines($data, $prefix = '')
+{
+  $lines = '';
+  foreach ($data as $key => $value)
+  {
+    $name = ($prefix == '') ? (string)$key : $prefix . '[' . $key . ']';
+    if (is_array($value))
+    {
+      $lines .= cao_log_lines($value, $name);
+    }
+    elseif (stripos($name, 'pass') !== false)
+    {
+      $lines .= $name . " => ***\r\n";
+    }
+    else
+    {
+      $lines .= $name . " => " . $value . "\r\n";
+    }
+  }
+
+  return $lines;
+}
+
+//--------------------------------------------------------------
+
+function LogRequest ()
+{
+  global $user;
+
+  if (defined('MODULE_CAO_FAKTURA_LOG')
+      && MODULE_CAO_FAKTURA_LOG == 'true'
+      && (!isset($_GET['action']) || $_GET['action'] != 'send_log')
+      )
+  {
+    $sql_data_array = array(
+      'user' => $user,
+      'pass' => '',
+      'method' => $_SERVER['REQUEST_METHOD'],
+      'action' => ((isset($_REQUEST['action']) && is_string($_REQUEST['action'])) ? $_REQUEST['action'] : ''),
+      'post_data' => cao_log_lines($_POST),
+      'get_data' => cao_log_lines($_GET),
+      'date_added' => 'now()',
+    );
+    xtc_db_perform('cao_log', $sql_data_array);
+  }
+}
+
+//--------------------------------------------------------------
 //                     Ende Funktionen
 //--------------------------------------------------------------
 
@@ -2835,49 +2983,4 @@ function SendLog ()
       define('DREI_PRODUKTBILDER', true);
   } else {
       define('DREI_PRODUKTBILDER', false);
-  }
-
-
-  if (defined('MODULE_CAO_FAKTURA_LOG')
-      && MODULE_CAO_FAKTURA_LOG == 'true'
-      )
-  {
-    // log data into db.
-
-    $pdata = '';
-    foreach ($_POST as $key => $value)
-    {
-       if (is_array($value))
-       {
-         foreach ($value as $key1 => $value1)
-         {
-           $pdata .= xtc_db_input($key)."[" . xtc_db_input($key1)."] => ".xtc_db_input($value1)."\r\n";
-         }
-       }
-         else
-       {
-         $pdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\r\n";
-       }
-    }
-
-    $gdata ='';
-    foreach ($_GET as $key => $value)
-    {
-       $gdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\r\n";
-    }
-
-
-     if ($_GET['action'] != 'send_log')
-     {
-        $sql_data_array = array(
-          'user' => $user,
-          'pass' => $password,
-          'method' => $_SERVER['REQUEST_METHOD'],
-          'action' => $_REQUEST['action'],
-          'post_data' => $pdata,
-          'get_data' => $gdata,
-          'date_added' => 'now()',
-        );
-        xtc_db_perform('cao_log', $sql_data_array);
-     }
   }
