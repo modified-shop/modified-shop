@@ -133,6 +133,9 @@
     show_auth();
   }
   $_SESSION['auth'] = true;
+
+  // on an installed shop a request only does something with the token of this session
+  installer_check_token($upgrade === true);
   
   if (!isset($_SESSION['language']) || isset($_GET['language'])) {
     $_SESSION['language_charset'] = 'utf-8';

@@ -39,7 +39,7 @@
     if (DB_SERVER_USERNAME == '') {
       sleep(1);
       $reload = ((isset($_GET['reload'])) ? (int)$_GET['reload'] : 0) + 1;
-      xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', xtc_get_all_get_params(array('reload')).'reload='.$reload, $request_type));
+      xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', xtc_get_all_get_params(array('reload')).'reload='.$reload.'&installer_token='.installer_token(), $request_type));
     }
   }
   
@@ -227,7 +227,7 @@
       }
     
       if (($error === false || isset($db_install)) && $error_charset === false) {
-        xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', 'action=restorenow&sql=0', $request_type));
+        xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', 'action=restorenow&sql=0&installer_token='.installer_token(), $request_type));
       }
     } else {
       $messageStack->add('install_step1', ERROR_DATABASE_CONNECTION);

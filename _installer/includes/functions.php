@@ -849,3 +849,57 @@
 
     return implode(', ', $names);
   }
+
+
+  /**
+   * installer_token()
+   *
+   * @return string token of this installer session
+   */
+  function installer_token() {
+    if (!isset($_SESSION['installer_token'])
+        || !is_string($_SESSION['installer_token'])
+        || strlen($_SESSION['installer_token']) != 32
+        )
+    {
+      $_SESSION['installer_token'] = bin2hex(random_bytes(16));
+    }
+
+    return $_SESSION['installer_token'];
+  }
+
+
+  /**
+   * installer_check_token()
+   *
+   * a request does something if it carries an action or posted fields
+   *
+   * @param bool $enforce false only removes the token from the request
+   * @return bool false if the request came without the token and lost its action
+   */
+  function installer_check_token($enforce = true) {
+    $token = installer_token();
+
+    $sent = '';
+    if (isset($_POST['installer_token']) && is_string($_POST['installer_token'])) {
+      $sent = $_POST['installer_token'];
+    } elseif (isset($_SERVER['HTTP_X_INSTALLER_TOKEN']) && is_string($_SERVER['HTTP_X_INSTALLER_TOKEN'])) {
+      $sent = $_SERVER['HTTP_X_INSTALLER_TOKEN'];
+    } elseif (isset($_GET['installer_token']) && is_string($_GET['installer_token'])) {
+      $sent = $_GET['installer_token'];
+    }
+    unset($_POST['installer_token'], $_GET['installer_token']);
+
+    if ($enforce !== true
+        || (!isset($_GET['action']) && !isset($_GET['uaction']) && count($_POST) < 1)
+        || hash_equals($token, $sent)
+        )
+    {
+      return true;
+    }
+
+    unset($_GET['action'], $_GET['uaction'], $_GET['step']);
+    $_POST = array();
+
+    return false;
+  }
