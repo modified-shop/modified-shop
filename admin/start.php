@@ -449,8 +449,8 @@ require (DIR_WS_INCLUDES.'head.php');
           
           <?php 
             if ($start_content != '') {
-              // the delivered style rules only apply inside this box, positioned content must stay in it as well
-              echo '<div class="admincol_right" style="position:relative;overflow:hidden;">'.$start_content.'</div>';
+              // the delivered style rules only apply inside this box, the inner box keeps the content from widening or leaving it
+              echo '<div class="admincol_right"><div style="width:0;min-width:100%;position:relative;overflow:hidden;">'.$start_content.'</div></div>';
             }
           ?>
                     

@@ -348,8 +348,8 @@
 
     $classes = array();
     foreach (preg_split('/\s+/', $node->getAttribute('class'), 20, PREG_SPLIT_NO_EMPTY) as $class) {
-      // classes of the forum markup and those a delivered style block defines
-      if (preg_match('/^bbc_[a-z_]{1,30}$/D', $class) || isset($state['classes'][$class])) {
+      // classes of the forum markup, of code samples and those a delivered style block defines
+      if (preg_match('/^(?:bbc_[a-z_]{1,30}|language-[a-z0-9]{1,20})$/D', $class) || isset($state['classes'][$class])) {
         $classes[] = $class;
       }
     }

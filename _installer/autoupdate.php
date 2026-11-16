@@ -434,7 +434,8 @@
         modified_api::reset();
         $notes = modified_api::request('modified/version/notes/'.$_SESSION['dbversion']);
         if (is_array($notes) && count($notes) > 0) {
-          $smarty->assign('NOTES', $notes);
+          require_once(DIR_FS_INC.'filter_external_html.inc.php');
+          $smarty->assign('NOTES', array_filter(array_map('filter_external_html', $notes), 'strlen'));
         }
                 
         if (isset($_SESSION['offline'])
