@@ -98,6 +98,53 @@
         return $string;
       }
     }
+
+    // the lightbox scripts of the templates load the address of an element with one of these
+    // classes into the page, unless they take the address for an image
+    class xtc_lightbox_class_transform extends HTMLPurifier_AttrTransform {
+      // class => image types of its script
+      public static $images = array('cbimages' => 'gif|png|jpe?g|bmp|webp', 'thickbox' => 'gif|png|jpe?g|bmp');
+      protected $link = false;
+
+      public function __construct($link = false) {
+        $this->link = $link;
+      }
+
+      public function transform($attr, $config, $context) {
+        if (!isset($attr['class'])) {
+          return $attr;
+        }
+
+        $href = (($this->link && isset($attr['href'])) ? $attr['href'] : '');
+        // a path below a host or below the shop, no fragment, no quote: script and browser read the same
+        $chars = 'a-z0-9_.~!$&()*+,;=:@\/%-';
+        $path = '/^(?:(?:https?:)?\/\/[a-z0-9.-]+(?::[0-9]+)?\/|\/(?!\/)|(?!\/)(?=[^:]*$))['.$chars.']*\.(?:';
+        $query = ')(?:\?['.$chars.'?]*)?$/Di';
+
+        $classes = array();
+        foreach (preg_split('/\s+/', $attr['class'], -1, PREG_SPLIT_NO_EMPTY) as $class) {
+          $key = strtolower($class);
+          if (isset(self::$images[$key])) {
+            if (!preg_match($path.self::$images[$key].$query, $href)) {
+              continue;
+            }
+            if ($key == 'thickbox') {
+              // thickbox pages on to every link with the same rel
+              unset($attr['rel']);
+            }
+          }
+          $classes[] = $class;
+        }
+
+        if (count($classes) > 0) {
+          $attr['class'] = implode(' ', $classes);
+        } else {
+          unset($attr['class']);
+        }
+
+        return $attr;
+      }
+    }
   }
 
 
@@ -138,7 +185,9 @@
     // the data and aria attributes of this text
     $attribute_names = array();
     if (preg_match_all('/\s(data|aria)-[a-z0-9_-]+/i', $html, $matches)) {
-      $attribute_names = array_slice(array_unique(array_map('strtolower', array_map('trim', $matches[0]))), 0, 100);
+      $attribute_names = array_unique(array_map('strtolower', array_map('trim', $matches[0])));
+      // colorbox reads data-cbox-* as options that win over those of the template
+      $attribute_names = array_slice(preg_grep('/^data-cbox-/', $attribute_names, PREG_GREP_INVERT), 0, 100);
     }
 
     $purifier = xtc_remove_active_content_purifier($attribute_names, $ascii);
@@ -186,6 +235,14 @@
           // markup characters that a text attribute loses count as a removal as well
           if ($attribute != 'style' && preg_match('/[<>"\']/', $value)) {
             $items[] = $name.'@'.$attribute.'#markup';
+          }
+          // a lightbox class that an element loses counts as a removal as well
+          if ($attribute == 'class') {
+            foreach (preg_split('/\s+/', strtolower($value), -1, PREG_SPLIT_NO_EMPTY) as $class) {
+              if (isset(xtc_lightbox_class_transform::$images[$class])) {
+                $items[] = $name.'@class.'.$class;
+              }
+            }
           }
           if ($attribute == 'style') {
             foreach (explode(';', $value) as $declaration) {
@@ -238,6 +295,8 @@
     $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
     $config->set('Core.EscapeNonASCIICharacters', $escape_non_ascii);
     $config->set('Attr.EnableID', true);
+    // jquery ui tabs of xtc5 start on this id and load the address of a tab into the page
+    $config->set('Attr.IDBlacklistRegexp', '/^tabbed_product_info$/i');
     $config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_top', '_parent'));
     $config->set('Attr.AllowedRel', array('alternate', 'author', 'bookmark', 'external', 'help', 'license', 'me', 'next', 'nofollow', 'noopener', 'noreferrer', 'opener', 'prev', 'search', 'sponsored', 'tag', 'ugc'));
     $config->set('HTML.TargetNoreferrer', false);
@@ -252,7 +311,7 @@
     // lazy loading images have no src of their own
     $config->set('Core.RemoveInvalidImg', false);
     $config->set('HTML.DefinitionID', 'modified-shop-content');
-    $config->set('HTML.DefinitionRev', 3);
+    $config->set('HTML.DefinitionRev', 4);
 
     if ($definition = $config->maybeGetRawHTMLDefinition()) {
       // html5 elements the library does not know
@@ -341,6 +400,10 @@
     if (isset($html->info['a']) && isset($html->info['div'])) {
       // html5 lets a link wrap blocks, the library would split it into several links
       $html->info['a']->child = clone $html->info['div']->child;
+    }
+    // a lightbox class stays only on a link to an image, see xtc_lightbox_class_transform
+    foreach ($html->info as $tag => $element) {
+      $html->info[$tag]->attr_transform_post[] = new xtc_lightbox_class_transform($tag == 'a');
     }
     // text attributes lose markup characters, see xtc_plain_attribute_value
     foreach ($html->info as $tag => $element) {
