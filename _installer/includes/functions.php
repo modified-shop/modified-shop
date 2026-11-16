@@ -874,10 +874,9 @@
    *
    * a request does something if it carries an action or posted fields
    *
-   * @param bool $enforce false only removes the token from the request
    * @return bool false if the request came without the token and lost its action
    */
-  function installer_check_token($enforce = true) {
+  function installer_check_token() {
     $token = installer_token();
 
     $sent = '';
@@ -890,8 +889,7 @@
     }
     unset($_POST['installer_token'], $_GET['installer_token']);
 
-    if ($enforce !== true
-        || (!isset($_GET['action']) && !isset($_GET['uaction']) && count($_POST) < 1)
+    if ((!isset($_GET['action']) && !isset($_GET['uaction']) && count($_POST) < 1)
         || hash_equals($token, $sent)
         )
     {

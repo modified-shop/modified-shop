@@ -15,6 +15,9 @@
   @ini_set('display_errors', false);
   error_reporting(0);
 
+  // only in a frame of the same site
+  header('X-Frame-Options: SAMEORIGIN');
+
   // set the type of request (secure or not)
   if (file_exists('../includes/request_type.php')) {
     include_once('../includes/request_type.php');
@@ -134,8 +137,8 @@
   }
   $_SESSION['auth'] = true;
 
-  // on an installed shop a request only does something with the token of this session
-  installer_check_token($upgrade === true);
+  // a request only does something with the token of this session, also before the first account exists
+  installer_check_token();
   
   if (!isset($_SESSION['language']) || isset($_GET['language'])) {
     $_SESSION['language_charset'] = 'utf-8';
