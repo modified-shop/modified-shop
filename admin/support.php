@@ -96,7 +96,7 @@ if (isset($_GET['action'])) {
                      '', 
                      '', 
                      $response['mail']['subject'].STORE_NAME, 
-                     nl2br($message), 
+                     nl2br(encode_htmlspecialchars($message)), 
                      $message);
         
         $messageStack->add_session($response['stack']['success'], 'success');

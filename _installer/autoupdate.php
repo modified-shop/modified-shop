@@ -52,9 +52,9 @@
       )
   {
     modified_api::reset();
-    $response = modified_api::request('modified/support/'.$_SESSION['language_code']);
+    $response = get_update_request(modified_api::request('modified/support/'.$_SESSION['language_code']));
     
-    if (!is_array($response) || count($response) < 1) {
+    if ($response === false) {
       $messageStack->add_session('update', TEXT_AUTOUPDATER_SUPPORT_ALTERNATIVE);
     } else {
       $message_array = array(
@@ -71,18 +71,20 @@
   
       xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
                    EMAIL_SUPPORT_NAME, 
-                   $response['mail']['address'], 
-                   $response['mail']['name'], 
+                   $response['address'], 
+                   $response['name'], 
                    EMAIL_SUPPORT_FORWARDING_STRING, 
                    EMAIL_SUPPORT_REPLY_ADDRESS, 
                    EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
                    '', 
                    '', 
-                   $response['mail']['templatesubject'].STORE_NAME, 
-                   nl2br($message), 
+                   $response['templatesubject'].STORE_NAME, 
+                   nl2br(encode_htmlspecialchars($message)), 
                    $message);
     
-      $messageStack->add_session('update', $response['stack']['success'], 'success');
+      if ($response['success'] != '') {
+        $messageStack->add_session('update', $response['success'], 'success');
+      }
     }
 
     $_SESSION['template_request'] = true;
