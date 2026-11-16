@@ -282,29 +282,38 @@ class xtcImport {
                 $line_data[$name] = array_key_exists($key, $line) ? $line[$key] : null;
             }
 
-            if (isset($line_data['p_model'])) {
-                $line_data['p_model'] = $this->cleanModel($line_data['p_model']);
-            }
             $model = isset($line_data['p_model']) ? $line_data['p_model'] : '';
+            $pIDs = array();
+            if ($model != '') {
+                $product = $this->getModelProducts($model);
+                if ($product === false) {
+                    $this->errorLog[] = '<b>ERROR:</b> Modelnumber not unique after cleaning, line: '.$row.' dataset: field: p_model';
+                    continue;
+                }
+                $model = $line_data['p_model'] = $product['model'];
+                $pIDs = $product['ids'];
+            }
+            // the update goes to the product itself if the model names exactly one
+            $pID = ((count($pIDs) == 1) ? $pIDs[0] : 0);
 
             if ($model != '') {
                 if (!$has_cat || $line_data['p_cat.0'] != '') { // if cat data field is empty or not existing
                     if (!$has_cat) { // if cat data field is not existing
-                        if ($this->checkModel($model)) { // if model no. already exists
-                            $this->insertProduct($line_data, 'update');
+                        if (count($pIDs) > 0) { // if model no. already exists
+                            $this->insertProduct($line_data, 'update', false, $pID);
                         } elseif ($this->CatDefault != '0') { // if model no. not existing and cat data field not exsisting and CatDefault is not TOP
                             $this->insertProduct($line_data,'insert');
                         }
                     } else { // if cat data field existing
-                        if ($this->checkModel($model)) {
-                            $this->insertProduct($line_data, 'update',true);
+                        if (count($pIDs) > 0) {
+                            $this->insertProduct($line_data, 'update', true, $pID);
                         } else {
                             $this->insertProduct($line_data,'insert',true);
                         }
                     }
                 } else { // if cat data field existing but empty
-                    if ($this->checkModel($model)) { // if model no. already exists
-                        $this->insertProduct($line_data, 'update');
+                    if (count($pIDs) > 0) { // if model no. already exists
+                        $this->insertProduct($line_data, 'update', false, $pID);
                     } elseif ($this->CatDefault != '0') { // if model no. not existing and cat data field existing but empty and CatDefault is not TOP
                         $this->insertProduct($line_data,'insert');
                     } else { // cat data field existing but empty and no category choosen (i.e. TOP choosen)
@@ -477,23 +486,37 @@ class xtcImport {
         return $value;
     }
 
-    // the cleaned model is the stored one; a product saved before the cleaning gets it first, so every lookup finds it
-    function cleanModel($model) {
+    // the cleaned model is the stored one; a product saved before the cleaning may still carry the model of the file
+    function getModelProducts($model) {
         $model_raw = xtc_db_prepare_input($model);
         $model_clean = trim($this->cleanContent($model_raw));
         if ($model_clean === $model_raw) {
-            return $model;
+            return array('model' => $model, 'ids' => $this->getModelIDs(array($model)));
         }
-        if ($model_clean != '') {
-            xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                             SET products_model = '".xtc_db_input($model_clean)."'
-                           WHERE products_model = '".xtc_db_input($model_raw)."'");
+        if ($model_clean == '') {
+            return array('model' => '', 'ids' => array());
         }
+        // both spellings together must not name more than one product
+        $ids = $this->getModelIDs(array($model_clean, $model_raw));
 
-        return $model_clean;
+        return ((count($ids) > 1) ? false : array('model' => $model_clean, 'ids' => $ids));
     }
 
-    function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false) {
+    // up to two ids, enough to tell none, one and several apart
+    function getModelIDs($models) {
+        $ids = array();
+        $model_query = xtc_db_query("SELECT products_id
+                                       FROM ".TABLE_PRODUCTS."
+                                      WHERE products_model IN ('".implode("', '", array_map('xtc_db_input', $models))."')
+                                      LIMIT 2");
+        while ($model = xtc_db_fetch_array($model_query)) {
+            $ids[] = (int)$model['products_id'];
+        }
+
+        return $ids;
+    }
+
+    function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false, $pID = 0) {
 
         //BOC strip potential slashes and type cast inputs
         $products_array = array ('products_model' => xtc_db_prepare_input($dataArray['p_model']));
@@ -545,11 +568,13 @@ class xtcImport {
         } else {
             $products_array = array_merge($products_array, array ('products_last_modified' => date("Y-m-d H:i:s")));
             $this->counter['prod_upd']++;
-            xtc_db_perform(TABLE_PRODUCTS, $products_array, 'update', 'products_model = \''.xtc_db_input($dataArray['p_model']).'\'');
+            // one known product is updated by its id, it may still carry the model as written in the file
+            $product_where = (((int)$pID > 0) ? "products_id = '".(int)$pID."'" : "products_model = '".xtc_db_input($dataArray['p_model'])."'");
+            xtc_db_perform(TABLE_PRODUCTS, $products_array, 'update', $product_where);
 
             $prod_query = xtc_db_query("SELECT products_id
                                           FROM ".TABLE_PRODUCTS."
-                                         WHERE products_model = '".xtc_db_input($dataArray['p_model'])."'");
+                                         WHERE ".$product_where);
 
             $prod_data = xtc_db_fetch_array($prod_query);
             $products_id = $prod_data['products_id'];
