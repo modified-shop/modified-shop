@@ -282,6 +282,9 @@ class xtcImport {
                 $line_data[$name] = array_key_exists($key, $line) ? $line[$key] : null;
             }
 
+            if (isset($line_data['p_model'])) {
+                $line_data['p_model'] = $this->cleanModel($line_data['p_model']);
+            }
             $model = isset($line_data['p_model']) ? $line_data['p_model'] : '';
 
             if ($model != '') {
@@ -398,6 +401,9 @@ class xtcImport {
     *****************************************************************************/
 
     function getMAN($manufacturer) {
+        // the cleaned name is the stored one, so cache and lookup use it as well
+        $manufacturer_raw = $manufacturer;
+        $manufacturer = trim($this->cleanContent($manufacturer));
         if ($manufacturer == '') {
             return 0;
         }
@@ -405,10 +411,15 @@ class xtcImport {
         if (isset ($this->mfn[$manufacturer]['id'])) {
             return $this->mfn[$manufacturer]['id'];
         }
+        // a manufacturer saved before the cleaning still has the name as written in the file
+        if (isset ($this->mfn[$manufacturer_raw]['id'])) {
+            return $this->mfn[$manufacturer_raw]['id'];
+        }
 
         $man_query = xtc_db_query("SELECT manufacturers_id
                                      FROM ".TABLE_MANUFACTURERS."
-                                    WHERE manufacturers_name = '". xtc_db_input($manufacturer) ."'
+                                    WHERE manufacturers_name IN ('". xtc_db_input($manufacturer) ."', '". xtc_db_input($manufacturer_raw) ."')
+                                 ORDER BY manufacturers_id
                                 ");
 
         if (!xtc_db_num_rows($man_query)) {
@@ -466,6 +477,22 @@ class xtcImport {
         return $value;
     }
 
+    // the cleaned model is the stored one; a product saved before the cleaning gets it first, so every lookup finds it
+    function cleanModel($model) {
+        $model_raw = xtc_db_prepare_input($model);
+        $model_clean = trim($this->cleanContent($model_raw));
+        if ($model_clean === $model_raw) {
+            return $model;
+        }
+        if ($model_clean != '') {
+            xtc_db_query("UPDATE ".TABLE_PRODUCTS."
+                             SET products_model = '".xtc_db_input($model_clean)."'
+                           WHERE products_model = '".xtc_db_input($model_raw)."'");
+        }
+
+        return $model_clean;
+    }
+
     function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false) {
 
         //BOC strip potential slashes and type cast inputs
@@ -485,7 +512,7 @@ class xtcImport {
         if ($this->FileSheme['p_ean'] == 'Y')
             $products_array = array_merge($products_array, array ('products_ean' => xtc_db_prepare_input($dataArray['p_ean'])));
         if ($this->FileSheme['p_man'] == 'Y')
-            $products_array = array_merge($products_array, array ('products_manufacturers_model' => xtc_db_prepare_input($dataArray['p_man'])));
+            $products_array = array_merge($products_array, array ('products_manufacturers_model' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_man']))));
         if ($this->FileSheme['p_tax'] == 'Y')
             $products_array = array_merge($products_array, array ('products_tax_class_id' => (int)$dataArray['p_tax']));
         if ($this->FileSheme['p_opttpl'] == 'Y')
