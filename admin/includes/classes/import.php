@@ -51,6 +51,8 @@ class xtcImport {
     var $Groups;
     var $count_groups;
     var $sizeof_languages;
+    var $contentRemoved;
+    var $contentUnfiltered;
     
     /*****************************************************************************
     **
@@ -98,6 +100,8 @@ class xtcImport {
         $this->Groups = xtc_get_customers_statuses();
         $this->count_groups = count($this->Groups);
         $this->sizeof_languages = count($this->languages);
+        $this->contentRemoved = false;
+        $this->contentUnfiltered = false;
     }
 
     /*****************************************************************************
@@ -310,6 +314,10 @@ class xtcImport {
         }
         fclose($fp);
 
+        if ($this->contentUnfiltered === true) {
+            $this->errorLog[] = (defined('ERROR_ACTIVE_CONTENT_LIBRARY_MISSING') ? ERROR_ACTIVE_CONTENT_LIBRARY_MISSING : 'Error: includes/external/htmlpurifier/ is missing, the texts were saved unfiltered.');
+        }
+
         return array ($this->counter, $this->errorLog, $this->calcElapsedTime($this->time_start));
     }
 
@@ -443,7 +451,19 @@ class xtcImport {
         }
         require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
 
-        return xtc_remove_active_content($value);
+        if (!xtc_remove_active_content_available()) {
+            // the value stays as it is, the import result gets an error
+            $this->contentUnfiltered = true;
+            return $value;
+        }
+
+        $removed = false;
+        $value = xtc_remove_active_content($value, $removed);
+        if ($removed === true) {
+            $this->contentRemoved = true;
+        }
+
+        return $value;
     }
 
     function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false) {
@@ -625,10 +645,17 @@ class xtcImport {
             echo '</pre>';
         }
         $cat = array ();
+        $cat_raw = array ();
         for ($i = 0; $i < $this->catDepth; $i ++) {
             $cat_name = isset($dataArray['p_cat.'.$i]) ? trim($dataArray['p_cat.'.$i]) : '';
             if ($cat_name != '') {
-                $cat[] = xtc_db_prepare_input($cat_name);
+                $cat_name = xtc_db_prepare_input($cat_name);
+                // the cleaned name is the stored one, so cache and lookup use it as well
+                $cat_clean = trim($this->cleanContent($cat_name));
+                if ($cat_clean != '') {
+                    $cat[] = $cat_clean;
+                    $cat_raw[] = $cat_name;
+                }
             }
         }
 
@@ -659,13 +686,15 @@ class xtcImport {
                    if ($this->debug) echo '<pre>$PARENT: '.$parent.'</pre>';
 
                     // check if categorie exists
+                    // a category saved before the cleaning still has the name as written in the file
                     $cat_query = xtc_db_query("SELECT c.categories_id
                                                  FROM ".TABLE_CATEGORIES." c
                                                  JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
                                                    ON cd.categories_id = c.categories_id
-                                                WHERE cd.categories_name = '".xtc_db_input($cat[$i])."'
+                                                WHERE cd.categories_name IN ('".xtc_db_input($cat[$i])."', '".xtc_db_input($cat_raw[$i])."')
                                                   AND cd.language_id = '".$this->languages[0]['id']."'
-                                                  AND c.parent_id = '".$parent."'");
+                                                  AND c.parent_id = '".$parent."'
+                                             ORDER BY c.categories_id");
                     if (!xtc_db_num_rows($cat_query)) { // insert categorie
                         $categorie_data = array (
                             'parent_id' => $parent,
@@ -688,7 +717,7 @@ class xtcImport {
                             $categorie_data = array (
                                 'language_id' => $this->languages[$i_insert]['id'],
                                 'categories_id' => $cat_id,
-                                'categories_name' => $this->cleanContent($cat[$i])
+                                'categories_name' => $cat[$i]
                             );
                             xtc_db_perform(TABLE_CATEGORIES_DESCRIPTION, $categorie_data);
                         }

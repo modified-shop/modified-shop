@@ -36,6 +36,10 @@
         $mapping = $handler->map_file($handler->generate_map());
         if (is_array($mapping)) {
           $import = $handler->import($mapping);
+          // the bootstrap only checks the request, not the lines of the file
+          if ($handler->contentRemoved === true) {
+            $messageStack->add((defined('WARNING_ACTIVE_CONTENT_REMOVED') ? WARNING_ACTIVE_CONTENT_REMOVED : 'Warning: Active content was removed from the saved texts.'), 'warning');
+          }
         } else {
           $import = array(array(), array('<b>ERROR:</b> could not read file: '.htmlspecialchars($select_file)), '');
         }
