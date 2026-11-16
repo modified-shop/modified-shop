@@ -155,10 +155,11 @@ xtc_db_connect() or die('Unable to connect to database server!');
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require_once ($file);
 
 // load configuration
+require_once (DIR_FS_INC.'check_installed_modules.inc.php');
 $configuration_query = xtc_db_query("SELECT configuration_key, configuration_value FROM ".TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
   $configuration = xtc_db_data($configuration);
-  defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
+  defined($configuration['configuration_key']) OR define($configuration['configuration_key'], check_installed_modules($configuration['configuration_key'], stripslashes($configuration['configuration_value'])));
 }
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback/application_top_callback_begin/','php') as $file) require ($file);
