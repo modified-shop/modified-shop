@@ -287,7 +287,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             echo implode(', ', $module->allowed_zones);
                           } else {
                             if ($value['set_function']) {
-                              $set_field = xtc_call_set_function($value['set_function'], $value['value'], $key, false);
+                              $set_field = xtc_call_set_function($value['set_function'], $value['value'], $key);
                               if ($set_field === false) {
                                 // not a field function, the value stays editable as text
                                 $set_field = xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'style="width: 300px;"').xtc_get_cfg_function_notice($value['set_function']);
