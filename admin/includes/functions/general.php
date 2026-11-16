@@ -1110,7 +1110,7 @@
       $option_array = array();
       for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
         $option_array[] = array(
-          'id' => $select_array[$i],
+          'id' => encode_htmlspecialchars($select_array[$i], ENT_QUOTES),
           'text' => xtc_multi_lang_values($select_array[$i]),
         );
       }
@@ -1121,9 +1121,11 @@
       }
       $name_lower = (($key) ? 'cfg_so_k_'.strtolower($key) : 'cfg_so_k');
       for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
-        $string .= '<input id="'.$name_lower.($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
+        // the option comes from the stored call, in the markup it is plain text
+        $option = encode_htmlspecialchars($select_array[$i], ENT_QUOTES);
+        $string .= '<input id="'.$name_lower.($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$option.'"';
         if ($key_value == $select_array[$i]) $string .= ' checked';
-        $string .= '><label for="'.$name_lower.($i?"_$i":'').'" class="'.($key_value == $select_array[$i]?'cfg_so_before ':'').'cfg_sov_'.strtolower($select_array[$i]).'">';
+        $string .= '><label for="'.$name_lower.($i?"_$i":'').'" class="'.($key_value == $select_array[$i]?'cfg_so_before ':'').'cfg_sov_'.strtolower($option).'">';
         $string .= xtc_multi_lang_values($select_array[$i]) . '</label>';
         if (NEW_SELECT_CHECKBOX != 'true') {
           $string .= '<br/>';
@@ -2412,15 +2414,22 @@
     $checkboxes = '';
     $checkedboxes = (array) explode($separator, $checked);
     // the list may come from a list function of the shop, the name is part of the stored call
-    $format_array =  (is_string($format) && preg_match('/^(?:xtc_(?:get|cfg)_[A-Za-z0-9_]+|order_statuses)$/Di', $format) && function_exists($format) && (new ReflectionFunction($format))->isUserDefined()) ? (array)$format() : (array)$format;
+    $list_function = (is_string($format) && preg_match('/^(?:xtc_(?:get|cfg)_[A-Za-z0-9_]+|order_statuses)$/Di', $format) && function_exists($format) && (new ReflectionFunction($format))->isUserDefined());
+    $format_array =  ($list_function) ? (array)$format() : (array)$format;
         
     foreach ($format_array as $key => $value) {
       if (is_array($value)) {
         $key   = isset($value['id'])   ? $value['id']   : $key;
         $value = isset($value['text']) ? $value['text'] : $value;
       }
+      $checkbox_checked = (bool)in_array($key, $checkedboxes);
+      // a list written into the stored call is plain text
+      if ($list_function !== true) {
+        $key = encode_htmlspecialchars((string)$key, ENT_QUOTES);
+        $value = (is_scalar($value) ? encode_htmlspecialchars((string)$value) : '');
+      }
       $checkboxes .= '<label>';
-      $checkboxes .= xtc_draw_checkbox_field($name, $key, (bool)in_array($key, $checkedboxes));
+      $checkboxes .= xtc_draw_checkbox_field($name, $key, $checkbox_checked);
       $checkboxes .= $value . '</label><br>';
     }
     return $checkboxes;
@@ -2585,7 +2594,7 @@
       case 'True': return CFG_TXT_YES; break;
       case 'false': return CFG_TXT_NO; break;
       case 'False': return CFG_TXT_NO; break;
-      default: return $value;
+      default: return encode_htmlspecialchars($value);
     }
   }
 
