@@ -236,6 +236,10 @@ switch ($action) {
     break;
   
   case 'update_order':
+    // without the form data the order would be set to status 0
+    if (!isset($_POST['status'])) {
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('action')).'action=edit'));
+    }
     $status = (int) $_POST['status'];
     $comments = xtc_db_prepare_input($_POST['comments']);
     $order_updated = false;
