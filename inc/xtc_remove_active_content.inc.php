@@ -102,8 +102,9 @@
     // the lightbox scripts of the templates load the address of an element with one of these
     // classes into the page, unless they take the address for an image
     class xtc_lightbox_class_transform extends HTMLPurifier_AttrTransform {
-      // class => image types of its script
-      public static $images = array('cbimages' => 'gif|png|jpe?g|bmp|webp', 'thickbox' => 'gif|png|jpe?g|bmp');
+      // class => image types of its script; none for cboxElement, which colorbox sets itself
+      // and opens with its default options wherever it finds it
+      public static $images = array('cbimages' => 'gif|png|jpe?g|bmp|webp', 'thickbox' => 'gif|png|jpe?g|bmp', 'cboxelement' => '');
       protected $link = false;
 
       public function __construct($link = false) {
@@ -125,7 +126,7 @@
         foreach (preg_split('/\s+/', $attr['class'], -1, PREG_SPLIT_NO_EMPTY) as $class) {
           $key = strtolower($class);
           if (isset(self::$images[$key])) {
-            if (!preg_match($path.self::$images[$key].$query, $href)) {
+            if (self::$images[$key] == '' || !preg_match($path.self::$images[$key].$query, $href)) {
               continue;
             }
             if ($key == 'thickbox') {
@@ -186,8 +187,9 @@
     $attribute_names = array();
     if (preg_match_all('/\s(data|aria)-[a-z0-9_-]+/i', $html, $matches)) {
       $attribute_names = array_unique(array_map('strtolower', array_map('trim', $matches[0])));
-      // colorbox reads data-cbox-* as options that win over those of the template
-      $attribute_names = array_slice(preg_grep('/^data-cbox-/', $attribute_names, PREG_GREP_INVERT), 0, 100);
+      // colorbox reads data-cbox-* as options that win over those of the template, the guarantee
+      // labels read from data-guarantee-label-* where to fetch the markup of a label
+      $attribute_names = array_slice(preg_grep('/^data-(cbox|guarantee-label)-/', $attribute_names, PREG_GREP_INVERT), 0, 100);
     }
 
     $purifier = xtc_remove_active_content_purifier($attribute_names, $ascii);
@@ -311,7 +313,7 @@
     // lazy loading images have no src of their own
     $config->set('Core.RemoveInvalidImg', false);
     $config->set('HTML.DefinitionID', 'modified-shop-content');
-    $config->set('HTML.DefinitionRev', 4);
+    $config->set('HTML.DefinitionRev', 5);
 
     if ($definition = $config->maybeGetRawHTMLDefinition()) {
       // html5 elements the library does not know
