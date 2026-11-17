@@ -94,7 +94,7 @@
     
     // text part as xtc_php_mail() sends it
     $txt_mail = str_replace(array('<br />', '<br/>', '<br>'), " \n", $txt_mail);
-    $txt_mail = html_entity_decode(strip_tags($txt_mail), ENT_NOQUOTES, $lang_charset);
+    $txt_mail = decode_htmlentities(strip_tags($txt_mail), ENT_NOQUOTES, $lang_charset);
 
     //content
     // a mail client runs no scripts, so the frame must not either
