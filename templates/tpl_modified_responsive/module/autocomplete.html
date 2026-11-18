@@ -11,9 +11,9 @@
           {if $products_data.PRODUCTS_IMAGE}
             <span class="autocomplete_image cf">
               {if $smarty.const.PICTURESET_ACTIVE === true}
-                <img class="lazyload" data-src="{$products_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$products_data.PRODUCTS_NAME|onlytext}" title="{$products_data.PRODUCTS_NAME|onlytext}" />
+                <img class="lazyload" data-src="{$products_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$products_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$products_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
               {else}
-                <img class="lazyload" data-src="{$products_data.PRODUCTS_IMAGE}" alt="{$products_data.PRODUCTS_NAME|onlytext}" title="{$products_data.PRODUCTS_NAME|onlytext}" />
+                <img class="lazyload" data-src="{$products_data.PRODUCTS_IMAGE}" alt="{$products_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$products_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
               {/if}
             </span>
           {else}

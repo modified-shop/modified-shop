@@ -26,7 +26,7 @@
 <body class="popupprint">
 
 <div class="printwrap cf">
-  <div class="printlogo"><img src="{$tpl_path}img/{'logo.gif'|versioning}" alt="{$smarty.const.STORE_NAME}" /></div>
+  <div class="printlogo"><img src="{$tpl_path}img/{'logo.gif'|versioning}" alt="{$smarty.const.STORE_NAME|replace:'"':'&quot;'}" /></div>
   <h1>{$PRODUCTS_NAME}</h1>
 
   <div class="printColumsInfoLeft">
@@ -63,14 +63,14 @@
   </div>
   <div class="printColumsInfoRight">
     {if $PRODUCTS_IMAGE != ''}
-      <img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" border="0" />
+      <img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" border="0" />
     {/if}
   </div>
   <div class="clearer"></div>
   <br />
   {foreach item=more_images_data from=$more_images}
   <div class="moimages cf">
-    <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" border="0" />
+    <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" border="0" />
   </div>
   {/foreach}
 

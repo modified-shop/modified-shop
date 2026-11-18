@@ -8,7 +8,7 @@
       <tr>
         <td style="padding-right:20px;">
           {if $PRODUCTS_IMAGE != ''}
-            <a title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" class="thickbox" rel="{$PRODUCTS_ID}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" class="productimage" /><br /><br /><img src="{$tpl_path}img/magnifier.gif" alt="Zoom" border="0" />&nbsp;{#text_zoom#}</a>
+            <a title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" class="thickbox" rel="{$PRODUCTS_ID}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" class="productimage" /><br /><br /><img src="{$tpl_path}img/magnifier.gif" alt="Zoom" border="0" />&nbsp;{#text_zoom#}</a>
           {/if}
         </td>
         <td style="vertical-align:top">
@@ -20,7 +20,7 @@
             {if $GUARANTEE_LABEL}<div class="guarantee-label-row">{$GUARANTEE_LABEL}</div>{/if}
             {if $SHIPPING_NAME}
               <p class="shippingtime">
-                <strong>{#text_shippingtime#}</strong>{if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME|onlytext}" />{/if} {$SHIPPING_NAME_LINK}
+                <strong>{#text_shippingtime#}</strong>{if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME|onlytext|replace:'"':'&quot;'}" />{/if} {$SHIPPING_NAME_LINK}
               </p>
             {/if}
             {if $PRODUCTS_VPE}
@@ -52,10 +52,10 @@
               <strong>{#manufacturer#}</strong> {$MANUFACTURER}<br />
             {/if}
             {if $MANUFACTURER_IMAGE != ''}
-              <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a><br />
+              <a title="{$MANUFACTURER|onlytext|replace:'"':'&quot;'}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext|replace:'"':'&quot;'}" /></a><br />
             {/if}
             {if $MANUFACTURER_LINK != ''}
-              <strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a><br />
+              <strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER|onlytext|replace:'"':'&quot;'}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a><br />
             {/if}
             {if $PRODUCTS_URL != ''}
               <div class="hrlightgrey"></div>
@@ -156,7 +156,7 @@
       {* More Pictures *}
       <div class="morepics">
         {foreach item=more_images_data from=$more_images}
-          <a class="thickbox" rel="{$PRODUCTS_ID}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" /></a>
+          <a class="thickbox" rel="{$PRODUCTS_ID}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" /></a>
         {/foreach}
       </div>
       <div style="clear:both;"></div>

@@ -20,11 +20,11 @@
       {if $module_data.PRODUCTS_IMAGE != ''}
         <a href="{$module_data.PRODUCTS_LINK}">
           {if $smarty.const.PICTURESET_ACTIVE === true}
-            <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+            <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
           {else}
-            <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+            <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
           {/if}
-          <noscript><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></noscript>
+          <noscript><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
         </a>
       {/if}
     </div>
