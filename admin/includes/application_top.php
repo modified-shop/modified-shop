@@ -153,7 +153,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_top/application_top_begin/','php') as $file) require ($file);
 
-define('FILENAME_IMAGEMANIPULATOR', IMAGE_MANIPULATOR);
+define('FILENAME_IMAGEMANIPULATOR', (defined('IMAGE_MANIPULATOR') ? IMAGE_MANIPULATOR : 'image_manipulator.php'));
 
 // set the top level domains
 $http_domain_arr = xtc_get_top_level_domain(HTTP_SERVER);
