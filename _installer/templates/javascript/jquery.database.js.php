@@ -71,7 +71,7 @@ function JStoPHPResponse(data) {
      if (debug) console.log('$.param:' + dataStrNew); 
      ajaxCall(dataStrNew);
   } else if (typeof continue_url !== 'undefined') {
-    $(location).attr('href', decodeEntities(continue_url));
+    installerGo(decodeEntities(continue_url));
   } else {
     var infoText = '<?php echo constant("TEXT_INFO_DO_".strtoupper($process)."_OK");?>';
     var infoWait = '<?php echo constant("TEXT_INFO_FINISH");?>';
