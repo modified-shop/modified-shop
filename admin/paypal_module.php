@@ -155,9 +155,25 @@ if (isset($_GET['action'])) {
           $paypal->save_config($sql_data_array);
         }
       }
-      if (isset($_POST['configuration']) && count($_POST['configuration']) > 0) {
+      if (isset($_POST['configuration'])
+          && is_array($_POST['configuration'])
+          && count($_POST['configuration']) > 0
+          && isset($_GET['module'])
+          && in_array($_GET['module'], $payment_array)
+          )
+      {
+        require_once(DIR_FS_CATALOG.'includes/modules/payment/'.$_GET['module'].'.php');
+        require_once(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$_GET['module'].'.php');
+        $module = new $_GET['module'];
+
+        // the form only shows the keys of this module, others must not be written through it
+        $module_keys = method_exists($module, 'keys') ? (array)$module->keys() : array();
         foreach ($_POST['configuration'] as $key => $value) {
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input($value) . "', last_modified = NOW() WHERE configuration_key='" . $key . "'");
+          if (!in_array($key, $module_keys, true)) {
+            continue;
+          }
+          $value = is_array($value) ? implode(',', $value) : $value;
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input($value) . "', last_modified = NOW() WHERE configuration_key='" . xtc_db_input($key) . "'");
         }
       }
       xtc_redirect(xtc_href_link(basename($PHP_SELF)));

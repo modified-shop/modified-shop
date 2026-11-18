@@ -49,6 +49,10 @@ class shopvote
             )
         {
           foreach ($_POST['configuration'] as $key => $value) {
+            // the form only shows the keys of this module, others must not be written through it
+            if (!in_array($key, $this->keys(), true)) {
+              continue;
+            }
             $value = is_array($_POST['configuration'][$key]) ? implode(',', $_POST['configuration'][$key]) : $value;
             $value = str_replace("'", '"', $value);
             
