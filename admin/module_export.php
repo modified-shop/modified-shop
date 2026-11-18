@@ -36,11 +36,12 @@
   if (isset($_GET['error'])) {
     $map='error';
     if ($_GET['kind']=='success') $map='success';
-    $messageStack->add($_GET['error'], $map);
+    $messageStack->add(encode_htmlspecialchars($_GET['error']), $map);
   }
 
-  $set = ((isset($_GET['set']) && $_GET['set'] != '') ? strip_tags($_GET['set']) : 'export');
-  $module_class = (isset($_GET['module']) ? strip_tags($_GET['module']) : '');
+  // both end up in links and paths, so only the characters of set and class names
+  $set = ((isset($_GET['set']) && $_GET['set'] != '') ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['set']) : 'export');
+  $module_class = (isset($_GET['module']) ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['module']) : '');
   $box = (isset($_GET['box']) ? true : false);
 
   if (xtc_not_null($set)) {

@@ -72,8 +72,9 @@
 
   $mTypeArr = array();
 
-  $set = (isset($_GET['set']) ? strip_tags($_GET['set']) : 'categories');
-  $module_class = (isset($_GET['module']) ? strip_tags($_GET['module']) : '');
+  // both end up in links and paths, so only the characters of set and class names
+  $set = (isset($_GET['set']) ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['set']) : 'categories');
+  $module_class = (isset($_GET['module']) ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['module']) : '');
   $box = (isset($_GET['box']) ? true : false);
 
   if (xtc_not_null($set)) {
@@ -101,7 +102,7 @@
         $module_key = 'MODULE_PAYMENT_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
         if (isset($_GET['error'])) {
-          $messageStack->add($_GET['error'], 'error');
+          $messageStack->add(encode_htmlspecialchars($_GET['error']), 'error');
         }
         $check_language_file = true;
         break;

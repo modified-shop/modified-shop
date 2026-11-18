@@ -241,7 +241,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                   }
                 }
-                echo isset($_GET['options_id']) ? '<input type="hidden" name="get_options_id" value="'.$_GET['options_id'].'">'. PHP_EOL : '';
+                echo isset($_GET['options_id']) ? '<input type="hidden" name="get_options_id" value="'.encode_htmlspecialchars($_GET['options_id']).'">'. PHP_EOL : '';
                 
                 echo '<div class="pdg2"><small>Options: ' . $countOptions . ' | Values: ' . $countValues . '</small></div>';
               ?>
