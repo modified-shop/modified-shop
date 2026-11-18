@@ -68,6 +68,9 @@ if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
   require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
 }
 
+// active content in shop texts only with a file in includes/extra/configure/
+defined('ADMIN_ALLOW_SCRIPT_CONTENT') OR define('ADMIN_ALLOW_SCRIPT_CONTENT', false);
+
 // security inputfilter for GET/POST/COOKIE
 require (DIR_FS_CATALOG.DIR_WS_CLASSES.'inputfilter.php');
 $inputfilter = new Inputfilter();
@@ -224,6 +227,13 @@ require(DIR_WS_CLASSES . 'box.php');
 // initialize the message stack for output messages
 require(DIR_WS_CLASSES . 'message_stack.php');
 $messageStack = new messageStack();
+
+if ($inputfilter->activeContentRemoved()) {
+  $messageStack->add_session((defined('WARNING_ACTIVE_CONTENT_REMOVED') ? WARNING_ACTIVE_CONTENT_REMOVED : 'Warning: Active content was removed from the saved texts.'), 'warning');
+}
+if ($inputfilter->activeContentUnfiltered()) {
+  $messageStack->add_session((defined('ERROR_ACTIVE_CONTENT_LIBRARY_MISSING') ? ERROR_ACTIVE_CONTENT_LIBRARY_MISSING : 'Error: includes/external/htmlpurifier/ is missing, the texts were saved unfiltered.'), 'error');
+}
 
 // verfiy CSRF Token
 if (CSRF_TOKEN_SYSTEM == 'true') {

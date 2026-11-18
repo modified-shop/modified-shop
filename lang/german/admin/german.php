@@ -375,6 +375,8 @@ define('ERROR_FILE_NOT_SAVED', 'Fehler: Datei wurde nicht gespeichert.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Fehler: Dateityp ist nicht erlaubt.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Erfolg: Hochgeladene Datei wurde erfolgreich gespeichert.');
 define('WARNING_NO_FILE_UPLOADED', 'Warnung: Es wurde keine Datei hochgeladen.');
+define('WARNING_ACTIVE_CONTENT_REMOVED', 'Hinweis: Aus den gespeicherten Texten wurden Elemente oder Attribute entfernt, z. B. Scripte, Event-Attribute, Inline-SVG oder unzul&auml;ssiges HTML.');
+define('ERROR_ACTIVE_CONTENT_LIBRARY_MISSING', 'Fehler: Das Verzeichnis includes/external/htmlpurifier/ fehlt. Die Texte wurden ungefiltert gespeichert.');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Fehler: Datei konnte nicht entfernt werden.');
 
 define('DELETE_ENTRY','Eintrag l&ouml;schen?');

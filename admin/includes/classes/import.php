@@ -51,6 +51,8 @@ class xtcImport {
     var $Groups;
     var $count_groups;
     var $sizeof_languages;
+    var $contentRemoved;
+    var $contentUnfiltered;
     
     /*****************************************************************************
     **
@@ -98,6 +100,8 @@ class xtcImport {
         $this->Groups = xtc_get_customers_statuses();
         $this->count_groups = count($this->Groups);
         $this->sizeof_languages = count($this->languages);
+        $this->contentRemoved = false;
+        $this->contentUnfiltered = false;
     }
 
     /*****************************************************************************
@@ -279,25 +283,37 @@ class xtcImport {
             }
 
             $model = isset($line_data['p_model']) ? $line_data['p_model'] : '';
+            $pIDs = array();
+            if ($model != '') {
+                $product = $this->getModelProducts($model);
+                if ($product === false) {
+                    $this->errorLog[] = '<b>ERROR:</b> Modelnumber not unique after cleaning, line: '.$row.' dataset: field: p_model';
+                    continue;
+                }
+                $model = $line_data['p_model'] = $product['model'];
+                $pIDs = $product['ids'];
+            }
+            // the update goes to the product itself if the model names exactly one
+            $pID = ((count($pIDs) == 1) ? $pIDs[0] : 0);
 
             if ($model != '') {
                 if (!$has_cat || $line_data['p_cat.0'] != '') { // if cat data field is empty or not existing
                     if (!$has_cat) { // if cat data field is not existing
-                        if ($this->checkModel($model)) { // if model no. already exists
-                            $this->insertProduct($line_data, 'update');
+                        if (count($pIDs) > 0) { // if model no. already exists
+                            $this->insertProduct($line_data, 'update', false, $pID);
                         } elseif ($this->CatDefault != '0') { // if model no. not existing and cat data field not exsisting and CatDefault is not TOP
                             $this->insertProduct($line_data,'insert');
                         }
                     } else { // if cat data field existing
-                        if ($this->checkModel($model)) {
-                            $this->insertProduct($line_data, 'update',true);
+                        if (count($pIDs) > 0) {
+                            $this->insertProduct($line_data, 'update', true, $pID);
                         } else {
                             $this->insertProduct($line_data,'insert',true);
                         }
                     }
                 } else { // if cat data field existing but empty
-                    if ($this->checkModel($model)) { // if model no. already exists
-                        $this->insertProduct($line_data, 'update');
+                    if (count($pIDs) > 0) { // if model no. already exists
+                        $this->insertProduct($line_data, 'update', false, $pID);
                     } elseif ($this->CatDefault != '0') { // if model no. not existing and cat data field existing but empty and CatDefault is not TOP
                         $this->insertProduct($line_data,'insert');
                     } else { // cat data field existing but empty and no category choosen (i.e. TOP choosen)
@@ -309,6 +325,10 @@ class xtcImport {
             }
         }
         fclose($fp);
+
+        if ($this->contentUnfiltered === true) {
+            $this->errorLog[] = (defined('ERROR_ACTIVE_CONTENT_LIBRARY_MISSING') ? ERROR_ACTIVE_CONTENT_LIBRARY_MISSING : 'Error: includes/external/htmlpurifier/ is missing, the texts were saved unfiltered.');
+        }
 
         return array ($this->counter, $this->errorLog, $this->calcElapsedTime($this->time_start));
     }
@@ -390,6 +410,9 @@ class xtcImport {
     *****************************************************************************/
 
     function getMAN($manufacturer) {
+        // the cleaned name is the stored one, so cache and lookup use it as well
+        $manufacturer_raw = $manufacturer;
+        $manufacturer = trim($this->cleanContent($manufacturer));
         if ($manufacturer == '') {
             return 0;
         }
@@ -397,10 +420,15 @@ class xtcImport {
         if (isset ($this->mfn[$manufacturer]['id'])) {
             return $this->mfn[$manufacturer]['id'];
         }
+        // a manufacturer saved before the cleaning still has the name as written in the file
+        if (isset ($this->mfn[$manufacturer_raw]['id'])) {
+            return $this->mfn[$manufacturer_raw]['id'];
+        }
 
         $man_query = xtc_db_query("SELECT manufacturers_id
                                      FROM ".TABLE_MANUFACTURERS."
-                                    WHERE manufacturers_name = '". xtc_db_input($manufacturer) ."'
+                                    WHERE manufacturers_name IN ('". xtc_db_input($manufacturer) ."', '". xtc_db_input($manufacturer_raw) ."')
+                                 ORDER BY manufacturers_id
                                 ");
 
         if (!xtc_db_num_rows($man_query)) {
@@ -436,7 +464,59 @@ class xtcImport {
     **
     *****************************************************************************/
 
-    function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false) {
+    // the import writes without the admin inputfilter, so the texts get the same cleaning here
+    function cleanContent($value) {
+        if (defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true)) {
+            return $value;
+        }
+        require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
+
+        if (!xtc_remove_active_content_available()) {
+            // the value stays as it is, the import result gets an error
+            $this->contentUnfiltered = true;
+            return $value;
+        }
+
+        $removed = false;
+        $value = xtc_remove_active_content($value, $removed);
+        if ($removed === true) {
+            $this->contentRemoved = true;
+        }
+
+        return $value;
+    }
+
+    // the cleaned model is the stored one; a product saved before the cleaning may still carry the model of the file
+    function getModelProducts($model) {
+        $model_raw = xtc_db_prepare_input($model);
+        $model_clean = trim($this->cleanContent($model_raw));
+        if ($model_clean === $model_raw) {
+            return array('model' => $model, 'ids' => $this->getModelIDs(array($model)));
+        }
+        if ($model_clean == '') {
+            return array('model' => '', 'ids' => array());
+        }
+        // both spellings together must not name more than one product
+        $ids = $this->getModelIDs(array($model_clean, $model_raw));
+
+        return ((count($ids) > 1) ? false : array('model' => $model_clean, 'ids' => $ids));
+    }
+
+    // up to two ids, enough to tell none, one and several apart
+    function getModelIDs($models) {
+        $ids = array();
+        $model_query = xtc_db_query("SELECT products_id
+                                       FROM ".TABLE_PRODUCTS."
+                                      WHERE products_model IN ('".implode("', '", array_map('xtc_db_input', $models))."')
+                                      LIMIT 2");
+        while ($model = xtc_db_fetch_array($model_query)) {
+            $ids[] = (int)$model['products_id'];
+        }
+
+        return $ids;
+    }
+
+    function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false, $pID = 0) {
 
         //BOC strip potential slashes and type cast inputs
         $products_array = array ('products_model' => xtc_db_prepare_input($dataArray['p_model']));
@@ -455,7 +535,7 @@ class xtcImport {
         if ($this->FileSheme['p_ean'] == 'Y')
             $products_array = array_merge($products_array, array ('products_ean' => xtc_db_prepare_input($dataArray['p_ean'])));
         if ($this->FileSheme['p_man'] == 'Y')
-            $products_array = array_merge($products_array, array ('products_manufacturers_model' => xtc_db_prepare_input($dataArray['p_man'])));
+            $products_array = array_merge($products_array, array ('products_manufacturers_model' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_man']))));
         if ($this->FileSheme['p_tax'] == 'Y')
             $products_array = array_merge($products_array, array ('products_tax_class_id' => (int)$dataArray['p_tax']));
         if ($this->FileSheme['p_opttpl'] == 'Y')
@@ -488,11 +568,13 @@ class xtcImport {
         } else {
             $products_array = array_merge($products_array, array ('products_last_modified' => date("Y-m-d H:i:s")));
             $this->counter['prod_upd']++;
-            xtc_db_perform(TABLE_PRODUCTS, $products_array, 'update', 'products_model = \''.xtc_db_input($dataArray['p_model']).'\'');
+            // one known product is updated by its id, it may still carry the model as written in the file
+            $product_where = (((int)$pID > 0) ? "products_id = '".(int)$pID."'" : "products_model = '".xtc_db_input($dataArray['p_model'])."'");
+            xtc_db_perform(TABLE_PRODUCTS, $products_array, 'update', $product_where);
 
             $prod_query = xtc_db_query("SELECT products_id
                                           FROM ".TABLE_PRODUCTS."
-                                         WHERE products_model = '".xtc_db_input($dataArray['p_model'])."'");
+                                         WHERE ".$product_where);
 
             $prod_data = xtc_db_fetch_array($prod_query);
             $products_id = $prod_data['products_id'];
@@ -563,13 +645,13 @@ class xtcImport {
 
             //BOC strip potential slashes
             if ($this->FileSheme['p_name.'.$this->languages[$i_insert]['code']] == 'Y')
-                $prod_desc_array = array_merge($prod_desc_array, array ('products_name' => xtc_db_prepare_input($dataArray['p_name.'.$this->languages[$i_insert]['code']])));
+                $prod_desc_array = array_merge($prod_desc_array, array ('products_name' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_name.'.$this->languages[$i_insert]['code']]))));
             if ($this->FileSheme['p_desc.'.$this->languages[$i_insert]['code']] == 'Y')
-                $prod_desc_array = array_merge($prod_desc_array, array ('products_description' => xtc_db_prepare_input($dataArray['p_desc.'.$this->languages[$i_insert]['code']])));
+                $prod_desc_array = array_merge($prod_desc_array, array ('products_description' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_desc.'.$this->languages[$i_insert]['code']]))));
             if ($this->FileSheme['p_shortdesc.'.$this->languages[$i_insert]['code']] == 'Y')
-                $prod_desc_array = array_merge($prod_desc_array, array ('products_short_description' => xtc_db_prepare_input($dataArray['p_shortdesc.'.$this->languages[$i_insert]['code']])));
+                $prod_desc_array = array_merge($prod_desc_array, array ('products_short_description' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_shortdesc.'.$this->languages[$i_insert]['code']]))));
             if ($this->FileSheme['p_orderdesc.'.$this->languages[$i_insert]['code']] == 'Y')
-                $prod_desc_array = array_merge($prod_desc_array, array ('products_order_description' => xtc_db_prepare_input($dataArray['p_orderdesc.'.$this->languages[$i_insert]['code']])));
+                $prod_desc_array = array_merge($prod_desc_array, array ('products_order_description' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_orderdesc.'.$this->languages[$i_insert]['code']]))));
             if ($this->FileSheme['p_meta_title.'.$this->languages[$i_insert]['code']] == 'Y')
                 $prod_desc_array = array_merge($prod_desc_array, array ('products_meta_title' => xtc_db_prepare_input($dataArray['p_meta_title.'.$this->languages[$i_insert]['code']])));
             if ($this->FileSheme['p_meta_desc.'.$this->languages[$i_insert]['code']] == 'Y')
@@ -615,10 +697,17 @@ class xtcImport {
             echo '</pre>';
         }
         $cat = array ();
+        $cat_raw = array ();
         for ($i = 0; $i < $this->catDepth; $i ++) {
             $cat_name = isset($dataArray['p_cat.'.$i]) ? trim($dataArray['p_cat.'.$i]) : '';
             if ($cat_name != '') {
-                $cat[] = xtc_db_prepare_input($cat_name);
+                $cat_name = xtc_db_prepare_input($cat_name);
+                // the cleaned name is the stored one, so cache and lookup use it as well
+                $cat_clean = trim($this->cleanContent($cat_name));
+                if ($cat_clean != '') {
+                    $cat[] = $cat_clean;
+                    $cat_raw[] = $cat_name;
+                }
             }
         }
 
@@ -649,13 +738,15 @@ class xtcImport {
                    if ($this->debug) echo '<pre>$PARENT: '.$parent.'</pre>';
 
                     // check if categorie exists
+                    // a category saved before the cleaning still has the name as written in the file
                     $cat_query = xtc_db_query("SELECT c.categories_id
                                                  FROM ".TABLE_CATEGORIES." c
                                                  JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
                                                    ON cd.categories_id = c.categories_id
-                                                WHERE cd.categories_name = '".xtc_db_input($cat[$i])."'
+                                                WHERE cd.categories_name IN ('".xtc_db_input($cat[$i])."', '".xtc_db_input($cat_raw[$i])."')
                                                   AND cd.language_id = '".$this->languages[0]['id']."'
-                                                  AND c.parent_id = '".$parent."'");
+                                                  AND c.parent_id = '".$parent."'
+                                             ORDER BY c.categories_id");
                     if (!xtc_db_num_rows($cat_query)) { // insert categorie
                         $categorie_data = array (
                             'parent_id' => $parent,
