@@ -42,7 +42,7 @@
 
     //header
     $email_div = '<head>'.PHP_EOL ;
-    $email_div .= '<meta http-equiv="Content-Type" content="text/html; charset='.$lang_charset.'" /> '.PHP_EOL ;
+    $email_div .= '<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'" /> '.PHP_EOL ;
   
     //css
     $email_div .=
@@ -59,6 +59,12 @@
       }
       .active {
         background: #FF6165;
+      }
+      #email_preview_html {
+        display: block;
+        width: 100%;
+        height: calc(100vh - 60px);
+        border: 0;
       }
     </style>'. PHP_EOL;
   
@@ -86,9 +92,14 @@
     $email_div .= '<div id="tab_txt" class="tab" onclick="change_class(\'email_preview_txt\',\'email_preview_html\')">TEXT</div>'.PHP_EOL;
     $email_div .= '<div style="clear:both;"></div>'.PHP_EOL;
     
+    // text part as xtc_php_mail() sends it; the mail bytes and this page are in the session charset
+    $txt_mail = str_replace(array('<br />', '<br/>', '<br>'), " \n", $txt_mail);
+    $txt_mail = decode_htmlentities(strip_tags($txt_mail), ENT_NOQUOTES);
+
     //content
-    $email_div .= '<div id="email_preview_html">'.$html_mail.'</div>'.PHP_EOL;
-    $email_div .= '<div id="email_preview_txt" style="display:none">'.nl2br($txt_mail).'</div>'.PHP_EOL;
+    // a mail client runs no scripts, so the frame must not either
+    $email_div .= '<iframe id="email_preview_html" sandbox="allow-popups allow-popups-to-escape-sandbox" srcdoc="'.encode_htmlspecialchars('<base target="_blank">'.$html_mail, ENT_QUOTES | ENT_SUBSTITUTE).'"></iframe>'.PHP_EOL;
+    $email_div .= '<div id="email_preview_txt" style="display:none">'.nl2br(encode_htmlspecialchars($txt_mail, ENT_QUOTES | ENT_SUBSTITUTE)).'</div>'.PHP_EOL;
 
     echo $email_div;
     exit;
