@@ -359,7 +359,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <a class="button button_save" style="display:none;"><?php echo ATTR_SAVE_ACTIVE;?></a>
                 <?php
                   echo xtc_button(BUTTON_SAVE,'submit','name="button_submit"');
-                  echo isset($_GET['options_id']) ? '<input type="hidden" name="get_options_id" value="'.encode_htmlspecialchars($_GET['options_id']).'">'. PHP_EOL : '';
+                  echo (isset($_GET['options_id']) && is_string($_GET['options_id'])) ? '<input type="hidden" name="get_options_id" value="'.encode_htmlspecialchars($_GET['options_id']).'">'. PHP_EOL : '';
                   if (!isset($_GET['iframe'])) {
                     echo '&emsp;'. xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_CATEGORIES, $param));
                   }

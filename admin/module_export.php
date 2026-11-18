@@ -40,8 +40,11 @@
   }
 
   // both end up in links and paths, so only the characters of set and class names
-  $set = ((isset($_GET['set']) && $_GET['set'] != '') ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['set']) : 'export');
-  $module_class = (isset($_GET['module']) ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['module']) : '');
+  $set = ((isset($_GET['set']) && is_string($_GET['set'])) ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['set']) : '');
+  if ($set == '') {
+    $set = 'export';
+  }
+  $module_class = ((isset($_GET['module']) && is_string($_GET['module'])) ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['module']) : '');
   $box = (isset($_GET['box']) ? true : false);
 
   if (xtc_not_null($set)) {

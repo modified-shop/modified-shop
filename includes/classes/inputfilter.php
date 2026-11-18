@@ -174,6 +174,8 @@ class Inputfilter {
                   case 'action':
                   case 'last_action':
                   case 'oldaction':
+                  case 'set':
+                  case 'module':
                       $this->params[$key] = $this->validateSigns($value);
                       break;
                   //cPath
