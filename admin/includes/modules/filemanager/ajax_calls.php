@@ -205,7 +205,9 @@ if (isset($_GET['action'])) {
                                 if (! (substr($FullFileName['name'], -1, 1) == "/")) {
                                     $fileinfo = pathinfo($FullFileName['name']);
                                     if (in_array(strtolower($fileinfo['extension']), $config['ext'])) {
-                                        copy('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $FullFileName['name']);
+                                        // inner dots of the file name are replaced like on upload
+                                        $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
+                                        copy('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name);
                                     }
                                 }
                             }

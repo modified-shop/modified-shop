@@ -278,6 +278,7 @@ function deleteDir($dir,$ftp = null, $config = null)
 */
 function duplicate_file( $old_path, $name, $ftp = null, $config = null )
 {
+	$name = rfm_replace_inner_dots($name, false);
 	$info = pathinfo($old_path);
 	$new_path = $info['dirname'] . "/" . $name . "." . $info['extension'];
 	if($ftp){
@@ -316,7 +317,7 @@ function duplicate_file( $old_path, $name, $ftp = null, $config = null )
 */
 function rename_file($old_path, $name, $ftp = null, $config = null)
 {
-	$name = fix_filename($name, $config);
+	$name = rfm_replace_inner_dots(fix_filename($name, $config), false);
 	$info = pathinfo($old_path);
 	$new_path = $info['dirname'] . "/" . $name . "." . $info['extension'];
 	if($ftp){
@@ -681,7 +682,8 @@ function check_files_extensions_on_phar($phar, &$files, $basepath, $config)
 	{
 		if ($file->isFile())
 		{
-			if (check_file_extension($file->getExtension()))
+			// a name with more than one dot is left out, extractTo() cannot rename it
+			if (check_file_extension($file->getExtension()) && substr_count($file->getFileName(), '.') < 2)
 			{
 				$files[] = $basepath . $file->getFileName();
 			}
@@ -786,6 +788,30 @@ function sanitize($str)
 *
 * @return string
 */
+/**
+* Replace the inner dots of a file name like the upload does
+*
+* Servers that map every extension of a name, e.g. Apache AddHandler, would run
+* "example.php.gif" as a script.
+*
+* @param  string  $name
+* @param  bool    $has_extension  false for a name the extension is appended to later
+*
+* @return string
+*/
+function rfm_replace_inner_dots($name, $has_extension = true)
+{
+	$parts = explode('.', (string)$name);
+	if (!$has_extension) {
+		return implode('-', $parts);
+	}
+	if (count($parts) > 2) {
+		$ext = array_pop($parts);
+		return implode('-', $parts) . '.' . $ext;
+	}
+	return (string)$name;
+}
+
 function fix_filename($str, $config, $is_folder = false)
 {
 	$str = sanitize($str);

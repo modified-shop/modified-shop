@@ -211,7 +211,7 @@ if (isset($_GET['action'])) {
 
             // correct name
             $old_name = $name;
-            $name = fix_filename($name, $config);
+            $name = rfm_replace_inner_dots(fix_filename($name, $config));
             if (empty($name)) {
                 response(trans('Empty_name') . AddErrorLocation())->send();
                 exit;
