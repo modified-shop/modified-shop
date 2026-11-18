@@ -99,7 +99,8 @@
   
   if ($id == 'update' || $id == 'insert') {    
     foreach ($_POST as $key => $value) {
-      if (!isset(${$key}) || !is_object(${$key})) {
+      // take over new form fields only, keep the variables of this page
+      if (!isset(${$key})) {
         if (is_array($value)) {
           ${$key} = array_map('xtc_db_prepare_input', $value);
         } else {
@@ -204,8 +205,8 @@
         
           // check content_group_index 
           $add_and = '';          
-          if ($id == 'update' && $content_id[$i][$languages[$l]['id']] > 0) {
-            $add_and = " AND content_id != '" . $content_id[$i][$languages[$l]['id']] ."'";
+          if ($id == 'update' && (int)$content_id[$i][$languages[$l]['id']] > 0) {
+            $add_and = " AND content_id != '" . (int)$content_id[$i][$languages[$l]['id']] ."'";
           }          
           $dbQuery = xtc_db_query("SELECT MAX(content_group_index)
                                      FROM ".TABLE_CONTENT_MANAGER."
@@ -230,9 +231,9 @@
             $sql_data_array['content_group_index'] = (int)$content_new_group_index[$i][$languages[$l]['id']];
           }
           
-          if ($id == 'update' && $content_id[$i][$languages[$l]['id']] > 0) {
+          if ($id == 'update' && (int)$content_id[$i][$languages[$l]['id']] > 0) {
             $sql_data_array['last_modified'] = 'now()';
-            xtc_db_perform(TABLE_CONTENT_MANAGER, array_merge($sql_data_array, $sql_data_lang_array), 'update', "content_id = '".$content_id[$i][$languages[$l]['id']]."'");
+            xtc_db_perform(TABLE_CONTENT_MANAGER, array_merge($sql_data_array, $sql_data_lang_array), 'update', "content_id = '".(int)$content_id[$i][$languages[$l]['id']]."'");
           } else {
             $sql_data_array['date_added'] = 'now()';
             xtc_db_perform(TABLE_CONTENT_MANAGER, array_merge($sql_data_array, $sql_data_lang_array));
