@@ -8,7 +8,8 @@ function email_popup () {
     //if (checkbox_notify.is(':checked')) {
         form.attr('target', 'emailPreview');
         email_preview.val('1');
-        var w = window.open(form.attr('action'), 'emailPreview', 'width=700,height=800,resizable=yes,scrollbars=yes,left=100,top=50');
+        // open it empty, the form fills it; the form address alone would update the order
+        var w = window.open('', 'emailPreview', 'width=700,height=800,resizable=yes,scrollbars=yes,left=100,top=50');
 
         form.submit(function() {
             return w;
