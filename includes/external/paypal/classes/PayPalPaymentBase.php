@@ -640,6 +640,8 @@ class PayPalPaymentBase extends PayPalCommon {
           )
       {
         $error = false;
+        // Apple Pay orders straight from its payment sheet, no confirmation form is posted
+        $sheet_order = ($this->code == 'paypalapplepay');
         // only the text of the comment field, an array would break the order insert
         if (isset($_POST['comments_added']) && $_POST['comments_added'] != ''
             && (!isset($_POST['comments']) || is_string($_POST['comments']))
@@ -649,15 +651,19 @@ class PayPalPaymentBase extends PayPalCommon {
           // checkout_process has built $order before this hook
           $order->info['comments'] = $_SESSION['comments'];
         }
-        if (((defined('SIGN_CONDITIONS_ON_CHECKOUT') && SIGN_CONDITIONS_ON_CHECKOUT == 'true')
-             || (!defined('SIGN_CONDITIONS_ON_CHECKOUT') && DISPLAY_CONDITIONS_ON_CHECKOUT == 'true')
-             ) && (!isset($_POST['conditions']) || $_POST['conditions'] != 'conditions')
+        if ($sheet_order === false
+            && ((defined('SIGN_CONDITIONS_ON_CHECKOUT') && SIGN_CONDITIONS_ON_CHECKOUT == 'true')
+                || (!defined('SIGN_CONDITIONS_ON_CHECKOUT') && DISPLAY_CONDITIONS_ON_CHECKOUT == 'true')
+                ) && (!isset($_POST['conditions']) || $_POST['conditions'] != 'conditions')
             )
         {
           $error = true;
           $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_CONDITIONS_NOT_ACCEPTED));
         }
-        if (!isset($_POST['check_address']) || $_POST['check_address'] != 'address') {
+        if ($sheet_order === false
+            && (!isset($_POST['check_address']) || $_POST['check_address'] != 'address')
+            )
+        {
           $error = true;
           $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_ADDRESS_NOT_ACCEPTED));
         }
@@ -671,10 +677,16 @@ class PayPalPaymentBase extends PayPalCommon {
             || ($no_shipping === false && $_SESSION['shipping'] === false)
             ) 
         {
+          // there is no page to choose the shipping on, the customer starts over in the cart
+          if ($sheet_order === true) {
+            self::clear_wallet_checkout_state();
+            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
+          }
           $error = true;
           $messageStack->add_session('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
         }
-        if (defined('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT')
+        if ($sheet_order === false
+            && defined('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT')
             && DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
             && ($_SESSION['cart']->content_type == 'virtual'
                 || $_SESSION['cart']->content_type == 'mixed'
@@ -685,7 +697,8 @@ class PayPalPaymentBase extends PayPalCommon {
           $error = true;
           $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_REVOCATION_NOT_ACCEPTED));
         }
-        if (defined('DISPLAY_PRIVACY_ON_CHECKOUT') 
+        if ($sheet_order === false
+            && defined('DISPLAY_PRIVACY_ON_CHECKOUT')
             && DISPLAY_PRIVACY_ON_CHECKOUT == 'true' 
             && (!defined('DISPLAY_PRIVACY_CHECK') || DISPLAY_PRIVACY_CHECK == 'true')
             && (!isset($_POST['privacy']) || $_POST['privacy'] != 'privacy')

@@ -206,10 +206,39 @@ if ($payment_method != ''
       $_SESSION['paypal']['PayerID'] = $PayPalOrder->payer->payer_id;
     }
 
-    // The wallet has approved the PayPal order, but the shop's mandatory
-    // confirmations (address, terms, privacy and revocation) still have to be
-    // collected before the order is created and captured.
     $_SESSION['paypal']['wallet_express'] = true;
+
+    // Apple Pay requires the order to complete straight from its payment sheet
+    if ($paypal->code == 'paypalapplepay') {
+      // without the confirmation page its payment module checks run here,
+      // on an order that already knows the billing address
+      $order = new order();
+      if ($order->billing['country']['iso_code_2'] != '') {
+        $_SESSION['billing_zone'] = $order->billing['country']['iso_code_2'];
+      }
+
+      require_once(DIR_WS_CLASSES . 'payment.php');
+      $payment_modules = new payment($paypal->code);
+      $payment_modules->update_status();
+
+      if (!isset($GLOBALS[$paypal->code])
+          || !is_object($GLOBALS[$paypal->code])
+          || $GLOBALS[$paypal->code]->enabled !== true
+          )
+      {
+        $paypal->LoggingManager->log('WARNING', 'Wallet callback aborted', array(
+          'reason' => 'payment module not available for this customer',
+          'order_id' => $_SESSION['paypal']['OrderID'],
+        ));
+        PayPalPaymentBase::clear_wallet_checkout_state();
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error=' . $paypal->code, 'NONSSL'));
+      }
+
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
+    }
+
+    // Google Pay continues to the confirmation page, which collects the
+    // shop's mandatory confirmations before the order is created and captured
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'SSL'));
 } else {
     $paypal = new PayPalPaymentV2(($payment_method != '') ? $payment_method : 'paypalgooglepay');
