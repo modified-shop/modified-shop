@@ -17,6 +17,7 @@
    --------------------------------------------------------------*/
 
 require ('includes/application_top.php');
+require_once (DIR_FS_INC.'filter_external_html.inc.php');
 
 //display per page
 $cfg_max_display_results_key = 'MAX_DISPLAY_NEWS_RESULTS';
@@ -81,15 +82,17 @@ require (DIR_WS_INCLUDES.'head.php');
             if (xtc_db_num_rows($news_query) > 0) {
               $i = 0;
               while ($news = xtc_db_fetch_array($news_query)) {
-                $news['news_text'] = str_replace('src="http://', 'src="https://', $news['news_text']);
+                $news_link = filter_external_url((string)$news['news_link'], array('http', 'https'), true);
                 ?>
                 <div class="blog_title<?php echo (($i == 0) ? ' active' : ''); ?>">
-                  <div class="blog_header"><?php echo $news['news_title']; ?></div>
-                  <div class="blog_date"><?php echo date('d.m.Y', $news['news_date']); ?></div>                                      
+                  <div class="blog_header"><?php echo filter_external_text($news['news_title'], $_SESSION['language_charset'], false); ?></div>
+                  <div class="blog_date"><?php echo date('d.m.Y', (int)$news['news_date']); ?></div>
                 </div>                          
                 <div class="blogentry" <?php echo (($i != 0) ? ' style="display:none;"' : ''); ?>>
-                  <div class="blog_desc"><?php echo $news['news_text']; ?></div>
-                  <div class="blog_read_more"><a target="_blank" href="<?php echo $news['news_link']; ?>">weiterlesen &raquo;</a></div>
+                  <div class="blog_desc" style="overflow:hidden;"><?php echo filter_external_html((string)$news['news_text'], $_SESSION['language_charset']); ?></div>
+                  <?php if ($news_link != '') { ?>
+                  <div class="blog_read_more"><a target="_blank" rel="noopener noreferrer" href="<?php echo encode_htmlspecialchars($news_link); ?>">weiterlesen &raquo;</a></div>
+                  <?php } ?>
                 </div>
                 <?php
                 $i ++;

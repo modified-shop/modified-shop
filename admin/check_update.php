@@ -20,6 +20,7 @@ require ('includes/application_top.php');
 
 // include needed functions
 require_once(DIR_FS_INC.'check_version_update.inc.php');
+require_once(DIR_FS_INC.'filter_external_html.inc.php');
 
 // include needed classes
 require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
@@ -54,9 +55,16 @@ if (isset($_GET['action'])
     modified_api::reset();
     $response = modified_api::request('modified/version/install/installer');
     
+    // the package comes from modified-shop.org and is stored under its plain file name
+    if (is_array($response) && isset($response['download'])) {
+      $response['download'] = filter_external_url($response['download'], array('https'), true);
+    }
+
     if (is_array($response)
         && isset($response['download'])
         && isset($response['filename'])
+        && is_string($response['filename'])
+        && preg_match('/^[A-Za-z0-9_][A-Za-z0-9._-]*\.zip$/D', $response['filename'])
         && strpos($response['download'], 'https://') === 0
         )
     {        
@@ -181,7 +189,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   foreach ($content['details'] as $heading => $modules) {
                     ?>
                     <tr class="dataTableHeadingRow">
-                      <td class="dataTableHeadingContent"><?php echo $heading; ?></td>
+                      <td class="dataTableHeadingContent"><?php echo encode_htmlspecialchars((string)$heading); ?></td>
                       <td class="dataTableHeadingContent txta-c" style="width:10%;"><?php echo TEXT_HEADING_INSTALLED; ?></td>
                       <td class="dataTableHeadingContent txta-c" style="width:10%;"><?php echo TEXT_HEADING_STATUS; ?></td>
                       <td class="dataTableHeadingContent txta-r" style="width:15%;"><?php echo TEXT_HEADING_VERSION_INTEGRATED; ?></td>
@@ -190,6 +198,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     </tr>
                     <?php
                     foreach ($modules as $module => $data) {
+                      if (!is_array($data) || !preg_match('/^[A-Za-z0-9_]+$/D', (string)$module)) {
+                        continue;
+                      }
                       if (!isset($data['path']) || is_file(DIR_FS_CATALOG.$data['path'])) {
                         $data['module'] = $module;
                 
@@ -203,7 +214,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'module=' . $data['module']) . '\'">' . "\n";
                         }
                         ?>
-                          <td class="dataTableContent"><?php echo $data['title']; ?></td>
+                          <td class="dataTableContent"><?php echo encode_htmlspecialchars((string)$data['title']); ?></td>
                           <td class="dataTableContent txta-c">
                             <?php 
                             if ($data['installed'] == '1') {
@@ -226,8 +237,8 @@ require (DIR_WS_INCLUDES.'head.php');
                             }
                             ?>
                           </td>
-                          <td class="dataTableContent txta-r"><?php echo $data['shop']; ?></td>
-                          <td class="dataTableContent txta-r"><?php echo $data['version']; ?></td> 
+                          <td class="dataTableContent txta-r"><?php echo encode_htmlspecialchars((string)$data['shop']); ?></td>
+                          <td class="dataTableContent txta-r"><?php echo encode_htmlspecialchars((string)$data['version']); ?></td> 
                           <td class="dataTableContent txta-r"><?php if (isset($mInfo) && is_object($mInfo) && ($data['module'] == $mInfo->module) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'module=' . $data['module']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                         </tr>
                         <?php
@@ -244,7 +255,13 @@ require (DIR_WS_INCLUDES.'head.php');
                 switch ($action) {
                   default:
                     if (isset($mInfo) && is_object($mInfo)) {
-                      $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                      $heading[] = array('text' => '<b>' . encode_htmlspecialchars((string)$mInfo->title) . '</b>');
+                      // the update link of the shop is built here, a module link has to lead to modified-shop.org
+                      if ($mInfo->module == 'shop') {
+                        $mInfo->link = (($mInfo->link != '') ? xtc_href_link(basename($PHP_SELF), 'action=autoupdate') : '');
+                      } else {
+                        $mInfo->link = encode_htmlspecialchars(filter_external_url((string)$mInfo->link, array('https'), true));
+                      }
                       if ($mInfo->update) {
                         $contents[] = array('align' => 'center', 'text' => TEXT_INFO_UPDATE_NEEDED);
                         if ($mInfo->link != '') {

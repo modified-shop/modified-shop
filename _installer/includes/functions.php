@@ -730,6 +730,19 @@
     modified_api::reset();
     $response = modified_api::request('modified/version/install/');
 
+    // the package comes from modified-shop.org and is stored under its plain file name
+    if (!is_array($response)
+        || !isset($response['download'], $response['filename'])
+        || !is_string($response['download'])
+        || !is_string($response['filename'])
+        || !preg_match('/^https:\/\/(?:[A-Za-z0-9-]+\.)*modified-shop\.org(?:[\/?#][\x21-\x7E]*)?$/D', $response['download'])
+        || !preg_match('/^[A-Za-z0-9_][A-Za-z0-9._-]*\.zip$/D', $response['filename'])
+        )
+    {
+      $messageStack->add('update', ERROR_INVALID_UPDATE_DOWNLOAD);
+      return false;
+    }
+
     if (is_dir(DIR_FS_INSTALLER.'tmp')) {
       rrmdir(DIR_WS_INSTALLER.'tmp');
     }

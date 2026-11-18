@@ -12,9 +12,95 @@
 
   // include needed functions
   require_once(DIR_FS_INC.'get_database_version.inc.php');
+  require_once(DIR_FS_INC.'filter_external_html.inc.php');
   
   // include needed classes
   require_once (DIR_FS_CATALOG.'includes/classes/modified_api.php');
+
+  /**
+   * check_version_update_module()
+   *
+   * @param mixed $data module entry of the version endpoint
+   * @return array|false the entry, false if it does not have the expected form
+   */
+  function check_version_update_module($data) {
+    if (!is_array($data)) {
+      return false;
+    }
+
+    foreach (array('title', 'version', 'class', 'path', 'variable', 'module', 'lang', 'regex', 'key', 'link') as $key) {
+      if (!isset($data[$key]) || !is_string($data[$key])) {
+        return false;
+      }
+    }
+
+    foreach (array('path2', 'class2') as $key) {
+      if (isset($data[$key]) && !is_string($data[$key])) {
+        return false;
+      }
+    }
+
+    // the second pair replaces the first one
+    if (isset($data['path2'])) {
+      $data['path'] = $data['path2'];
+      if (isset($data['class2'])) {
+        $data['class'] = $data['class2'];
+      }
+    }
+    unset($data['path2'], $data['class2']);
+
+    // module directories hold one class per file, named after the class
+    $path_pattern = '/^(?:DIR_ADMIN\/includes\/(?:modules\/(?:system|export|categories)|haendlerbund)|includes\/modules\/(?:payment|shipping|order_total)|api\/[A-Za-z0-9_-]+\/classes)\/(?:class\.)?([A-Za-z_][A-Za-z0-9_]*)\.php$/D';
+    $name_pattern = '/^[A-Za-z_][A-Za-z0-9_]*$/D';
+
+    // a file of an external package may do more than define its class, so only these
+    $external_files = array(
+      'includes/external/klarna/classes/KlarnaPayment.php' => 'KlarnaPayment',
+      'includes/external/micropayment/class.micropayment_method.php' => 'micropayment_method',
+      'includes/external/paypal/classes/PayPalPaymentV2.php' => 'PayPalPaymentV2',
+      'includes/external/paypal/classes/PayPalZettle.php' => 'PayPalZettle',
+      'includes/external/payone/classes/PayoneModified.php' => 'PayoneModified',
+    );
+
+    if (isset($external_files[$data['path']])) {
+      if ($external_files[$data['path']] !== $data['class']) {
+        return false;
+      }
+    } elseif (!preg_match($path_pattern, $data['path'], $match) || strcasecmp($match[1], $data['class']) != 0) {
+      return false;
+    }
+
+    foreach (array('class', 'variable') as $key) {
+      if (!preg_match($name_pattern, $data[$key])) {
+        return false;
+      }
+    }
+
+    if (!preg_match('/^[A-Za-z0-9_]*$/D', $data['module'])
+        || !preg_match('/^[A-Za-z0-9_%]+$/D', $data['key'])
+        || !preg_match('/^[0-9A-Za-z._ -]*$/D', $data['version'])
+        || ($data['lang'] != ''
+            && (!preg_match('/^lang\/DIR_LANG\/modules\/[a-z_]+\/[A-Za-z0-9_.-]+\.php$/D', $data['lang']) || strpos($data['lang'], '..') !== false)
+            )
+        || ($data['regex'] != ''
+            && !preg_match('/^\/[^\/\x00-\x1F]{1,100}\/[imsux]*$/D', $data['regex'])
+            )
+        )
+    {
+      return false;
+    }
+
+    $data['title'] = strip_tags($data['title']);
+    $data['link'] = filter_external_url($data['link'], array('https'), true);
+
+    // set by the shop below
+    $data['shop'] = 'undefined';
+    $data['update'] = false;
+    $data['installed'] = '0';
+
+    return $data;
+  }
+
 
   function check_version_update($cache = true) {
     global $PHP_SELF;
@@ -41,14 +127,19 @@
       modified_api::reset();
       $response = modified_api::request('modified/version');
       
-      $contents['version'] = isset($response['stable']) ? $response['stable'] : '';
+      $contents['version'] = (is_array($response) && isset($response['stable']) && is_string($response['stable'])) ? strip_tags($response['stable']) : '';
       $contents['update'] = version_compare($contents['version'], $contents['version_installed'], '>');
 
       $installer = modified_api::request('modified/version/install/installer');
 
       $dbversion = get_database_version();
       $response = modified_api::request('modified/version/install/');
-      if (!isset($response['version'])) {
+      if (!is_array($response)
+          || !isset($response['version'])
+          || !is_string($response['version'])
+          || !preg_match('/^[0-9A-Za-z._ -]*$/D', $response['version'])
+          )
+      {
         // api not reachable, request() returns an empty array
         $response = array('version' => '');
       }
@@ -80,15 +171,27 @@
       modified_api::reset();
       $modules_data = modified_api::request('modified/version/modules/');
       
+      if (!is_array($modules_data)) {
+        $modules_data = array();
+      }
+
       foreach ($modules_data as $heading => $modules) {
+        $heading = strip_tags((string)$heading);
+        if (!is_array($modules) || $heading == '' || $heading == 'Shop') {
+          continue;
+        }
+
         foreach ($modules as $module => $data) {
-          $data['path'] = str_replace('DIR_ADMIN/', DIR_ADMIN, $data['path']);
-          if (isset($data['path2'])) {
-            $data['path'] = str_replace('DIR_ADMIN/', DIR_ADMIN, $data['path2']);
-            if (isset($data['class2'])) {
-              $data['class'] = $data['class2'];
-            }
+          $data = check_version_update_module($data);
+          if ($data === false
+              || !preg_match('/^[A-Za-z0-9_]+$/D', (string)$module)
+              || in_array((string)$module, array('shop', 'db'), true)
+              )
+          {
+            continue;
           }
+
+          $data['path'] = str_replace('DIR_ADMIN/', DIR_ADMIN, $data['path']);
           $data['lang'] = str_replace('DIR_LANG', $_SESSION['language'], $data['lang']);
           
           $details[$heading][$module] = $data;
@@ -100,14 +203,22 @@
   
             require_once(DIR_FS_CATALOG.$data['path']);
             if (class_exists($data['class'])) {
-              ${$module} = new $data['class']($data['module']);
+              try {
+                $module_object = new $data['class']($data['module']);
+              } catch (Throwable $e) {
+                // not a module class, the entry stays undefined
+                continue;
+              }
   
-              if (array_key_exists($data['variable'], get_object_vars(${$module}))) {
-                $details[$heading][$module]['shop'] = ${$module}->{$data['variable']};
+              if (array_key_exists($data['variable'], get_object_vars($module_object))
+                  && is_scalar($module_object->{$data['variable']})
+                  )
+              {
+                $details[$heading][$module]['shop'] = (string)$module_object->{$data['variable']};
               }
   
               if ($data['regex'] != '') {
-                $details[$heading][$module]['shop'] = preg_replace($data['regex'], '', $details[$heading][$module]['shop']);
+                $details[$heading][$module]['shop'] = (string)@preg_replace($data['regex'], '', $details[$heading][$module]['shop']);
               }
             
               $check_query = xtc_db_query("SELECT *
