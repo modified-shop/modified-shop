@@ -231,7 +231,8 @@ function mod_error_level($type)
 function mod_error_url() {
   $uri = $_SERVER['REQUEST_URI'];
   if (strpos($uri, '?') !== false) {
-    $params = explode('?', $uri);
+    // the whole query is rebuilt and so encoded, a second ? must not keep raw input in the log
+    $params = explode('?', $uri, 2);
     parse_str($params[1], $params_array);
     
     if (isset($params_array['MODsid'])) unset($params_array['MODsid']);
@@ -240,6 +241,10 @@ function mod_error_url() {
     $params[1] = http_build_query($params_array, '', '&');
     $uri = implode('?', $params);
   }
+  // the path reaches the log as sent, so everything outside the URL characters is encoded
+  $uri = preg_replace_callback('/[^A-Za-z0-9\/\-._~%!$&\'()*+,;=:@?#\[\]]/', function ($match) {
+    return rawurlencode($match[0]);
+  }, $uri);
   return $uri;
 }
 
