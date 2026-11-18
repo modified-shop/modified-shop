@@ -52,8 +52,16 @@ function rrmdir($dir) {
 if (isset($_GET['action'])
     && $_GET['action'] == 'autoupdate'
     && isset($_POST['autoupdate'])
-    && isset($_POST['admin_action_token'])
-    && admin_action_token($_POST['admin_action_token'])
+    && (!isset($_POST['admin_action_token']) || !admin_action_token($_POST['admin_action_token']))
+    )
+{
+  $messageStack->add_session((isset($_POST['admin_action_token']) ? CSRF_TOKEN_MANIPULATION : CSRF_TOKEN_NOT_DEFINED), 'warning');
+  xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+}
+
+if (isset($_GET['action'])
+    && $_GET['action'] == 'autoupdate'
+    && isset($_POST['autoupdate'])
     )
 {
   if (class_exists('ZipArchive')) {
