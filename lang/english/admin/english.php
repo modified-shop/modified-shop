@@ -515,6 +515,7 @@ define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Products Model');
 define ('TEXT_INFO_MODULE_RESTORE', 'Do you want to restore the saved settings?<br /><br /><b>WARNING</b>: This will overwrite any current settings!');
 define ('TEXT_INFO_MODULE_REMOVE', 'Do you want to uninstall the module?<br /><br /><b>WARNING</b>: All module settings are also deleted!');
 define ('TEXT_INFO_MODULE_BACKUP', 'Do you want to backup the module settings?');
+define ('TEXT_CFG_FUNCTION_UNKNOWN', 'Unknown field function, not called:');
 define ('MODULE_BACKUP_CONFIRM', 'The module settings were backed up successfully!');
 define ('MODULE_RESTORE_CONFIRM', 'The module settings were restored successfully!');
 define ('MODULE_UPDATE_CONFIRM', 'The module settings were updated successfully!');

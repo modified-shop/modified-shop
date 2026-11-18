@@ -287,7 +287,12 @@ require (DIR_WS_INCLUDES.'head.php');
                             echo implode(', ', $module->allowed_zones);
                           } else {
                             if ($value['set_function']) {
-                              eval('echo ' . $value['set_function'] . var_export((string)$value['value'], true) . ', ' . var_export($key, true) . ');');
+                              $set_field = xtc_call_set_function($value['set_function'], $value['value'], $key);
+                              if ($set_field === false) {
+                                // not a field function, the value stays editable as text
+                                $set_field = xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'style="width: 300px;"').xtc_get_cfg_function_notice($value['set_function']);
+                              }
+                              echo $set_field;
                             } else {
                               echo xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'style="width: 300px;"');
                             }

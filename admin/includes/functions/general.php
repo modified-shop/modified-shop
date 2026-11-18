@@ -1110,7 +1110,7 @@
       $option_array = array();
       for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
         $option_array[] = array(
-          'id' => $select_array[$i],
+          'id' => encode_htmlspecialchars($select_array[$i], ENT_QUOTES),
           'text' => xtc_multi_lang_values($select_array[$i]),
         );
       }
@@ -1121,9 +1121,11 @@
       }
       $name_lower = (($key) ? 'cfg_so_k_'.strtolower($key) : 'cfg_so_k');
       for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
-        $string .= '<input id="'.$name_lower.($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
+        // the option comes from the stored call, in the markup it is plain text
+        $option = encode_htmlspecialchars($select_array[$i], ENT_QUOTES);
+        $string .= '<input id="'.$name_lower.($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$option.'"';
         if ($key_value == $select_array[$i]) $string .= ' checked';
-        $string .= '><label for="'.$name_lower.($i?"_$i":'').'" class="'.($key_value == $select_array[$i]?'cfg_so_before ':'').'cfg_sov_'.strtolower($select_array[$i]).'">';
+        $string .= '><label for="'.$name_lower.($i?"_$i":'').'" class="'.($key_value == $select_array[$i]?'cfg_so_before ':'').'cfg_sov_'.strtolower($option).'">';
         $string .= xtc_multi_lang_values($select_array[$i]) . '</label>';
         if (NEW_SELECT_CHECKBOX != 'true') {
           $string .= '<br/>';
@@ -1484,6 +1486,444 @@
     } else {
       return call_user_func(array ($object, $function), $parameter);
     }
+  }
+
+  /**
+   * xtc_parse_set_function()
+   *
+   * reads a stored field function call like "xtc_cfg_select_option(array('true', 'false'),"
+   * as data, nothing of it runs as code
+   *
+   * @param string $set_function
+   * @return array|false function name and stored arguments
+   */
+  function xtc_parse_set_function($set_function) {
+    if (!is_string($set_function)
+        || strlen($set_function) > 4000
+        || !preg_match('/^\s*([A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)?)\s*\(/', $set_function, $match)
+        )
+    {
+      return false;
+    }
+
+    $arguments = array();
+    $length = strlen($set_function);
+    $pos = strlen($match[0]);
+
+    // the call stays open, the configuration value follows as last argument
+    while (true) {
+      $pos += strspn($set_function, " \t\r\n", $pos);
+      if ($pos >= $length) {
+        break;
+      }
+
+      $valid = false;
+      $argument = xtc_parse_set_function_value($set_function, $pos, 0, $valid);
+      if ($valid !== true) {
+        return false;
+      }
+      $arguments[] = $argument;
+
+      $pos += strspn($set_function, " \t\r\n", $pos);
+      if ($pos >= $length) {
+        break;
+      }
+      if ($set_function[$pos] != ',') {
+        return false;
+      }
+      $pos ++;
+    }
+
+    return array('function' => $match[1], 'arguments' => $arguments);
+  }
+
+  /**
+   * xtc_parse_set_function_value()
+   *
+   * @param string $string
+   * @param int $pos
+   * @param int $depth
+   * @param bool $valid
+   * @return mixed a quoted string, a number, true, false, null or an array of these
+   */
+  function xtc_parse_set_function_value($string, &$pos, $depth, &$valid) {
+    $valid = false;
+    $length = strlen($string);
+
+    if ($pos >= $length || $depth > 5) {
+      return null;
+    }
+
+    $char = $string[$pos];
+
+    if ($char == "'" || $char == '"') {
+      $value = '';
+      $pos ++;
+      while ($pos < $length) {
+        $current = $string[$pos];
+        if ($current == '\\' && $pos + 1 < $length && ($string[$pos + 1] == '\\' || $string[$pos + 1] == $char)) {
+          $value .= $string[$pos + 1];
+          $pos += 2;
+          continue;
+        }
+        // other escapes and variables would need the interpreter
+        if ($char == '"' && ($current == '\\' || $current == '$')) {
+          return null;
+        }
+        if ($current == $char) {
+          $pos ++;
+          $valid = true;
+          return $value;
+        }
+        $value .= $current;
+        $pos ++;
+      }
+      return null;
+    }
+
+    if ($char == '[' || preg_match('/\Garray\s*\(/i', $string, $match, 0, $pos)) {
+      $close = (($char == '[') ? ']' : ')');
+      $pos += (($char == '[') ? 1 : strlen($match[0]));
+      $array = array();
+
+      while (true) {
+        $pos += strspn($string, " \t\r\n", $pos);
+        if ($pos >= $length) {
+          return null;
+        }
+        if ($string[$pos] == $close) {
+          $pos ++;
+          $valid = true;
+          return $array;
+        }
+
+        $item_valid = false;
+        $item = xtc_parse_set_function_value($string, $pos, $depth + 1, $item_valid);
+        if ($item_valid !== true) {
+          return null;
+        }
+
+        $pos += strspn($string, " \t\r\n", $pos);
+        if (substr($string, $pos, 2) == '=>') {
+          if (!is_string($item) && !is_int($item)) {
+            return null;
+          }
+          $pos += 2;
+          $pos += strspn($string, " \t\r\n", $pos);
+          $array[$item] = xtc_parse_set_function_value($string, $pos, $depth + 1, $item_valid);
+          if ($item_valid !== true) {
+            return null;
+          }
+          $pos += strspn($string, " \t\r\n", $pos);
+        } else {
+          $array[] = $item;
+        }
+
+        if ($pos < $length && $string[$pos] == ',') {
+          $pos ++;
+        } elseif ($pos >= $length || $string[$pos] != $close) {
+          return null;
+        }
+      }
+    }
+
+    if (preg_match('/\G-?(?:0|[1-9][0-9]*)(\.[0-9]+)?(?![A-Za-z0-9_.])/', $string, $match, 0, $pos)) {
+      $pos += strlen($match[0]);
+      $valid = true;
+      return (isset($match[1]) ? (float)$match[0] : (int)$match[0]);
+    }
+
+    if (preg_match('/\G(true|false|null)(?![A-Za-z0-9_\\\\(:])/i', $string, $match, 0, $pos)) {
+      $pos += strlen($match[0]);
+      $valid = true;
+      $keyword = strtolower($match[1]);
+      return (($keyword == 'null') ? null : ($keyword == 'true'));
+    }
+
+    return null;
+  }
+
+  /**
+   * xtc_get_cfg_callback()
+   *
+   * @param string $function name stored as set_function or use_function
+   * @param bool $display true for a use_function
+   * @return callable|false false if the name is not a field function
+   */
+  function xtc_get_cfg_callback($function, $display = false) {
+    static $objects = array();
+
+    // functions for the display of a value that do not carry the prefix xtc_cfg_
+    $display_functions = array(
+      'xtc_get_country_name',
+      'xtc_get_customers_status_name',
+      'xtc_get_default_tax_class_method_name',
+      'xtc_get_email_language_names',
+      'xtc_get_order_status_name',
+      'xtc_get_orders_status_name',
+      'xtc_get_tax_class_title',
+      'xtc_get_zone_class_title',
+      'xtc_set_log_level',
+    );
+
+    $function = trim((string)$function);
+
+    // method of an admin class, e.g. currencies->format
+    if (preg_match('/^([A-Za-z_][A-Za-z0-9_]*)->([A-Za-z_][A-Za-z0-9_]*)$/D', $function, $match)) {
+      $class = $match[1];
+      $method = $match[2];
+
+      if (!preg_match('/^(?:xtc_)?cfg_/i', $method)
+          && ($display !== true || strtolower($class) != 'currencies' || strtolower($method) != 'format')
+          )
+      {
+        return false;
+      }
+
+      if (!isset($objects[$class])) {
+        if (!class_exists($class, false) && is_file(DIR_WS_CLASSES . $class . '.php')) {
+          include_once(DIR_WS_CLASSES . $class . '.php');
+        }
+        // the class has to bring the method before an object of it is created
+        if (!class_exists($class, false) || !method_exists($class, $method)) {
+          return false;
+        }
+        $reflection = new ReflectionClass($class);
+        if (!$reflection->isUserDefined()) {
+          return false;
+        }
+        if (isset($GLOBALS[$class]) && $GLOBALS[$class] instanceof $class) {
+          $objects[$class] = $GLOBALS[$class];
+        } else {
+          try {
+            $objects[$class] = new $class();
+          } catch (Throwable $e) {
+            return false;
+          }
+        }
+      }
+
+      return (is_callable(array($objects[$class], $method)) ? array($objects[$class], $method) : false);
+    }
+
+    // static method of a loaded module class
+    if (preg_match('/^([A-Za-z_][A-Za-z0-9_]*)::([A-Za-z_][A-Za-z0-9_]*)$/D', $function, $match)) {
+      if (!preg_match('/^(?:xtc_)?cfg_/i', $match[2])
+          || !class_exists($match[1], false)
+          || !method_exists($match[1], $match[2])
+          )
+      {
+        return false;
+      }
+
+      $reflection = new ReflectionMethod($match[1], $match[2]);
+
+      return (($reflection->isStatic() && $reflection->isPublic() && $reflection->isUserDefined()) ? array($match[1], $match[2]) : false);
+    }
+
+    if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/D', $function) || !function_exists($function)) {
+      return false;
+    }
+
+    $name = strtolower($function);
+    if ($name == 'xtc_cfg_save_max_display_results'
+        || (strpos($name, 'xtc_cfg_') !== 0
+            && ($display !== true || !in_array($name, $display_functions, true))
+            )
+        )
+    {
+      return false;
+    }
+
+    $reflection = new ReflectionFunction($function);
+
+    return ($reflection->isUserDefined() ? $function : false);
+  }
+
+  /**
+   * xtc_check_cfg_arguments()
+   *
+   * the stored arguments end up in the markup of the field, so each function only gets what it expects
+   *
+   * @param string $function name of the field function
+   * @param array $arguments what the stored call passes in front of the value
+   * @param bool $parameters true for the form "function;PARAMETER"
+   * @return bool
+   */
+  function xtc_check_cfg_arguments($function, $arguments, $parameters = false) {
+    // field functions of this file that take something in front of the value
+    $stored_arguments = array(
+      'xtc_cfg_checkbox_unallowed_module' => array('name', 'name'),
+      'xtc_cfg_multi_checkbox' => array('list', 'text'),
+      'xtc_cfg_pull_down_cache_type' => array('name'),
+      'xtc_cfg_select_content' => array('name'),
+      'xtc_cfg_select_option' => array('array'),
+    );
+
+    $types = null;
+    $function = strtolower((string)$function);
+    if (preg_match('/^[a-z_][a-z0-9_]*$/D', $function) && function_exists($function)) {
+      $reflection = new ReflectionFunction($function);
+      if ($reflection->getFileName() == __FILE__) {
+        if ($parameters === true) {
+          // the configuration key
+          $types = array('name');
+        } else {
+          // every other field function of this file takes the value first
+          $types = (isset($stored_arguments[$function]) ? $stored_arguments[$function] : array());
+        }
+      }
+    }
+
+    if ($types !== null && count($arguments) != count($types)) {
+      return false;
+    }
+
+    foreach (array_values($arguments) as $i => $argument) {
+      switch (($types !== null) ? $types[$i] : 'plain') {
+        case 'name':
+          $valid = (is_string($argument) && preg_match('/^[A-Za-z0-9_\[\]]{1,128}$/D', $argument));
+          break;
+        case 'text':
+          $valid = (is_string($argument) && xtc_is_plain_cfg_argument($argument));
+          break;
+        case 'array':
+          $valid = (is_array($argument) && xtc_is_plain_cfg_argument($argument));
+          break;
+        case 'list':
+          // the list itself or the name of a list function
+          $valid = (is_array($argument) ? xtc_is_plain_cfg_argument($argument) : (is_string($argument) && preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/D', $argument)));
+          break;
+        default:
+          $valid = xtc_is_plain_cfg_argument($argument);
+          break;
+      }
+      if (!$valid) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * xtc_is_plain_cfg_argument()
+   *
+   * @param mixed $argument
+   * @param int $depth
+   * @return bool false for text with markup, quotes, backslashes or control characters
+   */
+  function xtc_is_plain_cfg_argument($argument, $depth = 0) {
+    if (is_array($argument)) {
+      if ($depth > 5) {
+        return false;
+      }
+      foreach ($argument as $key => $value) {
+        if (!xtc_is_plain_cfg_argument($key, $depth + 1) || !xtc_is_plain_cfg_argument($value, $depth + 1)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    return (!is_string($argument) || !preg_match('/[<>"\'`\\\\\x00-\x1F\x7F]/', $argument));
+  }
+
+  /**
+   * xtc_call_set_function()
+   *
+   * @param string $set_function "function(arguments,", "function;parameter" or "class->method"
+   * @param string $value configuration value
+   * @param string $key configuration key of a module field, null for a configuration page
+   * @param int $flags htmlspecialchars flags for the value of a "function(" call
+   * @return string|false the field, false if the entry is not a call of a field function
+   */
+  function xtc_call_set_function($set_function, $value, $key = null, $flags = ENT_QUOTES) {
+    $set_function = (string)$set_function;
+    $callback = false;
+    $arguments = array();
+
+    // some modules stored this list as an expression, the named function returns the same
+    if (trim($set_function) == "xtc_cfg_multi_checkbox(array_diff_key(xtc_get_customers_statuses(true), array(0 => 0)), 'chr(44)',") {
+      $set_function = "xtc_cfg_multi_checkbox('xtc_get_customers_statuses_no_admin', 'chr(44)',";
+    }
+
+    if (strpos($set_function, '(') !== false) {
+      $call = xtc_parse_set_function($set_function);
+      if ($call !== false && xtc_check_cfg_arguments($call['function'], $call['arguments'])) {
+        $callback = xtc_get_cfg_callback($call['function']);
+        $arguments = $call['arguments'];
+        $arguments[] = (string)encode_htmlspecialchars((string)$value, $flags);
+        if ($key !== null) {
+          $arguments[] = $key;
+        }
+      }
+    } elseif (strpos($set_function, '->') !== false) {
+      $callback = xtc_get_cfg_callback($set_function);
+      $arguments = array($value, $key);
+    } else {
+      $parameters = explode(';', $set_function);
+      if (xtc_check_cfg_arguments(trim($parameters[0]), array_slice($parameters, 1), true)) {
+        $callback = xtc_get_cfg_callback($parameters[0]);
+      }
+      $parameters[0] = $value;
+      if ($key !== null) {
+        $parameters[] = 'configuration[%s]';
+      }
+      $arguments = array($parameters);
+    }
+
+    if ($callback === false) {
+      return false;
+    }
+
+    try {
+      return (string)call_user_func_array($callback, $arguments);
+    } catch (Throwable $e) {
+      trigger_error('Could not call configuration field function: '.$e->getMessage(), E_USER_WARNING);
+      return false;
+    }
+  }
+
+  /**
+   * xtc_call_use_function()
+   *
+   * @param string $use_function
+   * @param string $value configuration value
+   * @return string the value as the function displays it, the encoded value for an unknown function
+   */
+  function xtc_call_use_function($use_function, $value) {
+    $callback = xtc_get_cfg_callback($use_function, true);
+
+    if ($callback !== false) {
+      try {
+        // a display function may return the value itself, so it gets it encoded like a field function does
+        return (string)call_user_func($callback, (string)encode_htmlspecialchars((string)$value));
+      } catch (Throwable $e) {
+        trigger_error('Could not call configuration display function: '.$e->getMessage(), E_USER_WARNING);
+      }
+    }
+
+    return (string)encode_htmlspecialchars((string)$value);
+  }
+
+  /**
+   * xtc_get_customers_statuses_no_admin()
+   *
+   * @return array customer groups by customers_status_id, without the administration
+   */
+  function xtc_get_customers_statuses_no_admin() {
+    return array_diff_key(xtc_get_customers_statuses(true), array(0 => 0));
+  }
+
+  /**
+   * xtc_get_cfg_function_notice()
+   *
+   * @param string $function stored set_function that was not called
+   * @return string
+   */
+  function xtc_get_cfg_function_notice($function) {
+    return '<div class="smallText" style="color:#b42318;">'.(defined('TEXT_CFG_FUNCTION_UNKNOWN') ? TEXT_CFG_FUNCTION_UNKNOWN : 'Unknown field function, not called:').' '.encode_htmlspecialchars(substr((string)$function, 0, 100)).'</div>';
   }
 
   /**
@@ -1989,6 +2429,10 @@
    */
   function xtc_cfg_checkbox_unallowed_module($module_type,$checkbox_name,$data,$name='')
   {
+    // the type is part of an include path
+    if (!is_string($module_type) || !preg_match('/^[a-z_]+$/D', $module_type)) {
+      throw new InvalidArgumentException('Invalid module type');
+    }
     $module_unallowed = array();
     $unallowed_module = '';
     $customers_status_module_unallowed = explode(',', $data);
@@ -2006,7 +2450,7 @@
         // deleted modules can linger in MODULE_*_INSTALLED, so never trust the title constant
         $module_title = 'MODULE_'.strtoupper($module_type).'_'.strtoupper($module_name).'_TEXT_TITLE';
         $unallowed_module .= '<label>';
-        $unallowed_module .= xtc_draw_checkbox_field($checkbox_name.'[]', $module_name, (in_array($module_name, $module_unallowed) ? true : false)).(defined($module_title) ? constant($module_title) : $module_name).' ('.$module_array[$p].')';
+        $unallowed_module .= xtc_draw_checkbox_field(encode_htmlspecialchars($checkbox_name, ENT_QUOTES).'[]', $module_name, (in_array($module_name, $module_unallowed) ? true : false)).(defined($module_title) ? constant($module_title) : $module_name).' ('.$module_array[$p].')';
         $unallowed_module .= '</label><br>';
       }
     } else {
@@ -2061,15 +2505,23 @@
     }
     $checkboxes = '';
     $checkedboxes = (array) explode($separator, $checked);
-    $format_array =  (!is_array($format) && function_exists($format)) ? (array)$format() : (array)$format;
+    // the list may come from a list function of the shop, the name is part of the stored call
+    $list_function = (is_string($format) && preg_match('/^(?:xtc_(?:get|cfg)_[A-Za-z0-9_]+|order_statuses)$/Di', $format) && function_exists($format) && (new ReflectionFunction($format))->isUserDefined());
+    $format_array =  ($list_function) ? (array)$format() : (array)$format;
         
     foreach ($format_array as $key => $value) {
       if (is_array($value)) {
         $key   = isset($value['id'])   ? $value['id']   : $key;
         $value = isset($value['text']) ? $value['text'] : $value;
       }
+      $checkbox_checked = (bool)in_array($key, $checkedboxes);
+      // a list written into the stored call is plain text
+      if ($list_function !== true) {
+        $key = encode_htmlspecialchars((string)$key, ENT_QUOTES);
+        $value = (is_scalar($value) ? htmlspecialchars((string)$value, ENT_QUOTES, get_default_encoding(''), false) : '');
+      }
       $checkboxes .= '<label>';
-      $checkboxes .= xtc_draw_checkbox_field($name, $key, (bool)in_array($key, $checkedboxes));
+      $checkboxes .= xtc_draw_checkbox_field($name, $key, $checkbox_checked);
       $checkboxes .= $value . '</label><br>';
     }
     return $checkboxes;
@@ -2167,9 +2619,9 @@
       $email_fields .= '<div>'.PHP_EOL;
       $email_fields .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
       if (trim($parameters[1]) == 'SMTP_PASSWORD') {
-        $email_fields .= xtc_draw_password_field(sprintf($name, trim($parameters[1])).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), false , 'style="margin-left:2px; width:200px"');
+        $email_fields .= xtc_draw_password_field(sprintf($name, encode_htmlspecialchars(trim($parameters[1]), ENT_QUOTES)).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), false , 'style="margin-left:2px; width:200px"');
       } else {
-        $email_fields .= xtc_draw_input_field(sprintf($name, trim($parameters[1])).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), 'style="margin-left:2px; width:360px"');
+        $email_fields .= xtc_draw_input_field(sprintf($name, encode_htmlspecialchars(trim($parameters[1]), ENT_QUOTES)).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), 'style="margin-left:2px; width:360px"');
       }
       $email_fields .= '</div>'.PHP_EOL;
     }
@@ -2190,7 +2642,8 @@
 
     $val_array = array();
     for ($i=0, $n=count($languages); $i<$n; $i++) {
-      $val_array[] = '<b>'.strtoupper($languages[$i]['code']).'</b>: '.parse_multi_language_value($key, $languages[$i]['code'], true);
+      // the helper decodes the entities of its part again
+      $val_array[] = '<b>'.strtoupper($languages[$i]['code']).'</b>: '.encode_htmlspecialchars(parse_multi_language_value($key, $languages[$i]['code'], true));
     }
     
     return implode('<br/>', $val_array);
@@ -2234,7 +2687,7 @@
       case 'True': return CFG_TXT_YES; break;
       case 'false': return CFG_TXT_NO; break;
       case 'False': return CFG_TXT_NO; break;
-      default: return $value;
+      default: return htmlspecialchars((string)$value, ENT_QUOTES, get_default_encoding(''), false);
     }
   }
 
@@ -2256,7 +2709,7 @@
     while ($content = xtc_db_fetch_array($content_query)) {
       $content_array[] = array('id' => $content['content_group'], 'text' => $content['content_title'] . ' (coID: '.$content['content_group'].')');
     }
-    return xtc_draw_pull_down_menu(sprintf($name, $cfg_key), $content_array, $cfg_value);
+    return xtc_draw_pull_down_menu(sprintf($name, encode_htmlspecialchars($cfg_key, ENT_QUOTES)), $content_array, $cfg_value);
   }
 
   /**
@@ -2280,7 +2733,7 @@
     $content_query = xtc_db_query("SELECT content_title 
                                      FROM ".TABLE_CONTENT_MANAGER." 
                                     WHERE languages_id = '".(int)$_SESSION['languages_id']."' 
-                                      AND content_group = '".$content_group."'
+                                      AND content_group = '".xtc_db_input($content_group)."'
                                     LIMIT 1");
     if (xtc_db_num_rows($content_query) > 0) {
       $content = xtc_db_fetch_array($content_query);
@@ -2307,7 +2760,7 @@
       $cache_array[] = array('id' => $name, 'text' => ucwords(str_replace(array('.', '_'), ' ', $name)));
     }
 
-    return xtc_draw_pull_down_menu($cfg_key, $cache_array, $cfg_value);
+    return xtc_draw_pull_down_menu(encode_htmlspecialchars($cfg_key, ENT_QUOTES), $cache_array, $cfg_value);
   }
 
   /**
@@ -2345,7 +2798,7 @@
    * @return password input
    */
   function xtc_cfg_password_field($parameters, $name = '%s') {
-    return xtc_draw_password_field(sprintf($name, $parameters[1]), $parameters[0]);
+    return xtc_draw_password_field(sprintf($name, encode_htmlspecialchars($parameters[1], ENT_QUOTES)), $parameters[0]);
   }
 
   /**
