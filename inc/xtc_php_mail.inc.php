@@ -243,7 +243,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
         if (strpos($files, $email['email_id'].'.html') !== false) {
           // a stored path must not attach another file of the server
           require_once (DIR_FS_INC.'get_content_file_path.inc.php');
-          if (($attachment = get_content_file_path($email['content_file'], 'content')) !== false) {
+          if (($attachment = get_content_file_path($email['content_file'], 'content', 'file')) !== false) {
             $attachments[] = $attachment;
           }
         }

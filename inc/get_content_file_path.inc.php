@@ -18,9 +18,10 @@
    *
    * @param string $file stored file name
    * @param string $folder content or products
+   * @param string $types content (pages), products (product content) or file (attachments, deleting)
    * @return string|false absolute path of the file
    */
-  function get_content_file_path($file, $folder = 'content') {
+  function get_content_file_path($file, $folder = 'content', $types = '') {
     if (!is_string($file)
         || $file == ''
         || $file != basename($file)
@@ -31,8 +32,33 @@
       return false;
     }
 
+    $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $types = (($types != '') ? $types : $folder);
+
+    if ($types == 'file') {
+      // a file that is only attached or deleted does not run, but script sources stay on the server
+      if (preg_match('/^(php[0-9]*|phtml|phar|inc|pl|cgi|py|sh)$/', $extension)) {
+        return false;
+      }
+    } else {
+      // pages include PHP files and output these types as they are, other files could show source code
+      $allowed = array('php', 'htm', 'html', 'txt');
+      if ($types == 'products') {
+        $allowed = array_merge($allowed, array(
+          'jpg', 'jpeg', 'jpe', 'gif', 'png', 'tiff', 'tif', 'bmp', 'svg',
+          'csv', 'tsv',
+          'xls', 'xla', 'hlp', 'chm', 'ppt', 'ppz', 'pps', 'pot', 'doc', 'dot', 'pdf', 'rtf',
+          'au', 'snd', 'mp2', 'rpm', 'stream', 'wav',
+          'mpeg', 'mpg', 'mpe', 'qt', 'mov', 'avi', 'movie',
+          'tar', 'zip', 'rar', '7z', 'cab',
+        ));
+      }
+      if (!in_array($extension, $allowed, true)) {
+        return false;
+      }
+    }
+
     $path = DIR_FS_CATALOG.'media/'.$folder.'/'.$file;
 
     return (is_file($path) ? $path : false);
   }
-

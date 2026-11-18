@@ -54,7 +54,7 @@ if ($_GET['pID']=='media') {
 	if (preg_match('/.gif/i',$content_data['content_file']) or preg_match('/.jpg/i',$content_data['content_file']) or  preg_match('/.png/i',$content_data['content_file']) or  preg_match('/.tif/i',$content_data['content_file']) or  preg_match('/.bmp/i',$content_data['content_file'])) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3	
 	echo xtc_image(DIR_WS_CATALOG.'media/products/'.$content_data['content_file']);
 	} else {
-	$content_file_path = get_content_file_path($content_data['content_file'], 'products');
+	$content_file_path = get_content_file_path($content_data['content_file'], 'products', 'products');
 	}
 } else {
 $content_file_path = get_content_file_path($content_data['content_file'], 'content');

@@ -340,8 +340,12 @@
         $content_file_name = $select_file;
       }
 
-      // the shop includes the file, so only a file directly in media/content/ or media/products/ can be stored
-      if (get_content_file_path($content_file_name, $path) === false) {
+      // the shop includes the file, so only a file directly in the media folder can be stored;
+      // a product content may also come from media/content/, as media_content.php looks there too
+      if (get_content_file_path($content_file_name, $path, (($path == 'products') ? 'products' : 'content')) === false
+          && ($path != 'products' || get_content_file_path($content_file_name, 'content', 'products') === false)
+          )
+      {
         $content_file_name = '';
       }
 

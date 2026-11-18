@@ -44,10 +44,10 @@ if (isset($_GET['coID']) && (int)$_GET['coID'] > 0) {
 
     require_once (DIR_FS_INC.'get_content_file_path.inc.php');
     $path = 'products';
-    $content_file_path = get_content_file_path($content_data['content_file'], $path);
+    $content_file_path = get_content_file_path($content_data['content_file'], $path, 'products');
     if ($content_file_path === false) {
       $path = 'content';
-      $content_file_path = get_content_file_path($content_data['content_file'], $path);
+      $content_file_path = get_content_file_path($content_data['content_file'], $path, 'products');
     }
     if ($content_file_path !== false) {
       $mime_type = mime_content_type($content_file_path);

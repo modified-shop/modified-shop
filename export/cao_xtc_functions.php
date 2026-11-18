@@ -1246,8 +1246,10 @@ function xtc_remove_product($product_id)
                                                       AND products_id != '".(int)$product_id."'");
           $duplicate_content = xtc_db_fetch_array($duplicate_content_query);
           if ($duplicate_content['total'] == 0) {
-            if (is_file(DIR_FS_DOCUMENT_ROOT.'media/products/'.$product_content['content_file'])) {
-              @ unlink(DIR_FS_DOCUMENT_ROOT.'media/products/'.$product_content['content_file']);
+            // a stored path must not delete another file of the server
+            require_once (DIR_FS_INC.'get_content_file_path.inc.php');
+            if (($product_content_file = get_content_file_path($product_content['content_file'], 'products', 'file')) !== false) {
+              @ unlink($product_content_file);
             }
           }
         }

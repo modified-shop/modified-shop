@@ -353,12 +353,11 @@
       if (xtc_db_num_rows($contents_meta_query, true) > 0) {
         $contents_meta = xtc_db_fetch_array($contents_meta_query,true);
 
-        if ($contents_meta['content_file'] != '' 
-            && is_file(DIR_FS_CATALOG.'media/content/'.$contents_meta['content_file'])
-            )
-        {
-          if (preg_match("/\.(txt|htm|html)$/i", $contents_meta['content_file'])) {
-            $contents_meta['content_text'] .= ' '.file_get_contents(DIR_FS_CATALOG.'media/content/'.$contents_meta['content_file']);
+        require_once (DIR_FS_INC.'get_content_file_path.inc.php');
+        $content_file_path = get_content_file_path($contents_meta['content_file']);
+        if ($content_file_path !== false) {
+          if (preg_match("/\.(txt|htm|html)$/i", $content_file_path)) {
+            $contents_meta['content_text'] .= ' '.file_get_contents($content_file_path);
           }
         }
 
