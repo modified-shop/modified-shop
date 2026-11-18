@@ -1168,37 +1168,59 @@ class PayPalPaymentBase extends PayPalCommon {
   function lookup_webhook_id() {
     // a failed lookup waits 15 minutes, otherwise every webhook call would ask PayPal again
     $retry_key = $this->get_webhook_config_key().'_LOOKUP';
-    $last_failure = (int)$this->get_config($retry_key, false);
-    if ($last_failure > (time() - 900) && $last_failure <= time()) {
+    if ($this->webhook_lookup_waits($retry_key)) {
       return '';
     }
 
-    try {
-      $apiContext = $this->apiContext();
-      $WebhookList = \PayPal\Api\Webhook::getAll($apiContext);
-      $webhooks = $WebhookList->getWebhooks();
-
-      if (defined('RUN_MODE_ADMIN')) {
-        $webhook_url = xtc_catalog_href_link('callback/paypal/webhook.php', '', 'SSL', false);
-      } else {
-        $webhook_url = xtc_href_link('callback/paypal/webhook.php', '', 'SSL', false);
-      }
-      for ($w=0, $z=count($webhooks); $w<$z; $w++) {
-        if ($webhooks[$w]->getUrl() == $webhook_url) {
-          $webhook_id = $webhooks[$w]->getId();
-          $this->save_webhook_id($webhook_id);
-          $this->delete_config($retry_key);
-          return $webhook_id;
-        }
-      }
-    } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('exception' => $ex));
+    // one lookup at a time per PayPal configuration, parallel deliveries do not each ask PayPal
+    $lock_name = 'paypal_webhook_'.substr(hash('sha256', $retry_key), 0, 32);
+    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($lock_name)."', 0) AS locked");
+    $lock = xtc_db_fetch_array($lock_query);
+    if (!isset($lock['locked']) || (int)$lock['locked'] !== 1) {
+      return '';
     }
 
-    $this->save_config(array(array('config_key' => $retry_key, 'config_value' => time())));
+    // another delivery may have finished the lookup in the meantime
+    $webhook_id = $this->get_config($this->get_webhook_config_key(), false);
+    if ($webhook_id == '' && !$this->webhook_lookup_waits($retry_key)) {
+      // the attempt counts before PayPal is asked, so a delivery right after the lock waits as well
+      $this->save_config(array(array('config_key' => $retry_key, 'config_value' => time())));
 
-    return '';
+      try {
+        $apiContext = $this->apiContext();
+        $WebhookList = \PayPal\Api\Webhook::getAll($apiContext);
+        $webhooks = $WebhookList->getWebhooks();
+
+        if (defined('RUN_MODE_ADMIN')) {
+          $webhook_url = xtc_catalog_href_link('callback/paypal/webhook.php', '', 'SSL', false);
+        } else {
+          $webhook_url = xtc_href_link('callback/paypal/webhook.php', '', 'SSL', false);
+        }
+        for ($w=0, $z=count($webhooks); $w<$z; $w++) {
+          if ($webhooks[$w]->getUrl() == $webhook_url) {
+            $webhook_id = $webhooks[$w]->getId();
+            $this->save_webhook_id($webhook_id);
+            $this->delete_config($retry_key);
+            break;
+          }
+        }
+      } catch (Exception $ex) {
+        $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('exception' => $ex));
+      }
+    }
+
+    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($lock_name)."')");
+
+    return (string)$webhook_id;
   }
+
+
+  function webhook_lookup_waits($retry_key) {
+    $last_attempt = (int)$this->get_config($retry_key, false);
+
+    return ($last_attempt > (time() - 900) && $last_attempt <= time());
+  }
+
 
 
   function update_order($comment, $orders_status, $orders_id, $notified = 0) {
