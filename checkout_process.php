@@ -539,7 +539,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
               'orders_products_filename' => $attributes_dl_array['products_attributes_filename'],
               'download_maxdays' => $attributes_dl_array['products_attributes_maxdays'],
               'download_count' => $attributes_dl_array['products_attributes_maxcount'],
-              'download_key' => md5($insert_id.$order_products_id.$_SESSION['customer_id'].$order->customer['email_address'].$attributes_dl_array['products_attributes_filename'])
+              'download_key' => bin2hex(random_bytes(16))
             );
             
             foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_download/','php') as $file) require ($file);

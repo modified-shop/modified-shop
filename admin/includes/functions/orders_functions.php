@@ -1055,6 +1055,7 @@
           'orders_products_filename' => $attributes_downloads['products_attributes_filename'],
           'download_maxdays' => $attributes_downloads['products_attributes_maxdays'],
           'download_count' => $attributes_downloads['products_attributes_maxcount'],
+          'download_key' => bin2hex(random_bytes(16)),
         );
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
       }
