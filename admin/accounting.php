@@ -31,35 +31,45 @@
         $fields = xtc_db_query("SHOW COLUMNS FROM `".TABLE_ADMIN_ACCESS."` FROM `".DB_DATABASE."`");
         $columns = xtc_db_num_rows($fields);
 
+        $access_fields = array();
         while ($field = xtc_db_fetch_array($fields)) {
           if ($field['Field'] != 'customers_id') {
+            $access_fields[] = $field['Field'];
             xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS."
-                             SET ".$field['Field']." = '0'
+                             SET `".$field['Field']."` = '0'
                            WHERE customers_id = '".(int)$_GET['cID']."'");
           }
         }
 
-        if (isset($_POST['access'])) foreach($_POST['access'] as $key){
+        if (isset($_POST['access']) && is_array($_POST['access'])) foreach($_POST['access'] as $key){
+          // only existing columns of the table
+          if (!in_array($key, $access_fields, true)) {
+            continue;
+          }
           xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS."
-                           SET ".$key." = '1'
+                           SET `".$key."` = '1'
                          WHERE customers_id = '".(int)$_GET['cID']."'");
         }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID','action')).'cID=' . (int)$_GET['cID'], 'NONSSL'));
         break;
 
       case 'new':
-        $new_field = xtc_db_prepare_input($_POST['admin_access_new']);
+        $new_field = xtc_db_prepare_input(isset($_POST['admin_access_new']) ? $_POST['admin_access_new'] : '');
+        // a column name, not a SQL fragment
+        if (!is_string($new_field) || !preg_match('/^[a-zA-Z0-9_]{1,64}$/', $new_field)) {
+          $new_field = '';
+        }
         $exists = false;
         $fields = xtc_db_query("SHOW COLUMNS FROM `".TABLE_ADMIN_ACCESS."` FROM `".DB_DATABASE."`");
         while ($field = xtc_db_fetch_array($fields)) {
-          if ($field == $new_field) {
+          if (strtolower($field['Field']) == strtolower($new_field)) {
             $exists = true;
           }
         }
         if ($exists === false && $new_field != '') {
-          xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD ".$new_field." INT(1) NOT NULL DEFAULT 0;");
+          xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD `".$new_field."` INT(1) NOT NULL DEFAULT 0;");
           xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS."
-                           SET ".$new_field." = '1'
+                           SET `".$new_field."` = '1'
                          WHERE customers_id = '1'");
         }
         xtc_redirect(xtc_href_link(FILENAME_ACCOUNTING, xtc_get_all_get_params(array('cID','action')).'cID=' . (int)$_GET['cID'], 'NONSSL'));
