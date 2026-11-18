@@ -32,10 +32,11 @@ use PayPal\Auth\OAuthTokenCredential;
 function set_paypal_data() {  
   xtc_db_connect() or die('Unable to connect to database server!');
 
+  require_once (DIR_FS_INC.'check_installed_modules.inc.php');
   $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION . '');
   while ($configuration = xtc_db_fetch_array($configuration_query)) {
     if (!defined($configuration['cfgKey'])) {
-      define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
+      define($configuration['cfgKey'], check_installed_modules($configuration['cfgKey'], stripslashes($configuration['cfgValue'])));
     }
   }
   

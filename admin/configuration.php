@@ -221,6 +221,8 @@
                                                      ORDER BY sort_order, configuration_id");
                   while ($configuration = xtc_db_fetch_array($configuration_query)) {
                     $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
+                    // the lists of installed modules end up in include paths below
+                    $configuration['configuration_value'] = check_installed_modules($configuration['configuration_key'], $configuration['configuration_value']);
                     
                     if ($_GET['gID'] == 6) {
                       switch ($configuration['configuration_key']) {

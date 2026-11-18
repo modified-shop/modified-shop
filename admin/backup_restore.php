@@ -51,11 +51,12 @@
   // the restore shows SQL errors itself, the error mail would query tables that are being restored
   define('EMAIL_SQL_ERRORS', 'false');
   $duplicate_configuration = array();
+  require_once (DIR_FS_INC.'check_installed_modules.inc.php');
   $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION . '');
   while ($configuration = xtc_db_fetch_array($configuration_query)) {
     if ($configuration['cfgKey'] != 'DB_CACHE' && $configuration['cfgKey'] != 'STORE_DB_TRANSACTIONS' && $configuration['cfgKey'] != 'EMAIL_SQL_ERRORS') {
       if (!defined($configuration['cfgKey'])) {
-        define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
+        define($configuration['cfgKey'], check_installed_modules($configuration['cfgKey'], stripslashes($configuration['cfgValue'])));
       } else {
         $duplicate_configuration[] = $configuration['cfgKey'];
       }
