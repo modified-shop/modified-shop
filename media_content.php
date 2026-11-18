@@ -42,23 +42,25 @@ if (isset($_GET['coID']) && (int)$_GET['coID'] > 0) {
     $content_heading = $content_data['content_name'];
     $content_text = $content_data['file_comment'];
 
-    if ($content_data['content_file'] != '' 
-        && (is_file(DIR_FS_CATALOG.'media/content/'.$content_data['content_file'])
-            || is_file(DIR_FS_CATALOG.'media/products/'.$content_data['content_file']))
-        )
-    {
+    require_once (DIR_FS_INC.'get_content_file_path.inc.php');
+    $path = 'products';
+    $content_file_path = get_content_file_path($content_data['content_file'], $path);
+    if ($content_file_path === false) {
       $path = 'content';
-      if (is_file(DIR_FS_CATALOG.'media/products/'.$content_data['content_file'])) {
-        $path = 'products';
-      }
-      $mime_type = mime_content_type(DIR_FS_CATALOG.'media/'.$path.'/'.$content_data['content_file']);
+      $content_file_path = get_content_file_path($content_data['content_file'], $path);
+    }
+    if ($content_file_path !== false) {
+      $mime_type = mime_content_type($content_file_path);
       ob_start();
       if (strpos($content_data['content_file'], '.txt') !== false)
         echo '<pre>';
       if (strpos($mime_type, 'image') !== false) {
         echo xtc_image('media/'.$path.'/'.$content_data['content_file'], $content_data['content_name']);
+      } elseif (strtolower(substr($content_file_path, -4)) == '.php') {
+        // only PHP files placed on the server run as code, uploaded files are output as they are
+        include ($content_file_path);
       } else {
-        include (DIR_FS_CATALOG.'media/'.$path.'/'.$content_data['content_file']);
+        readfile($content_file_path);
       }
       if (strpos($content_data['content_file'], '.txt') !== false)
         echo '</pre>';

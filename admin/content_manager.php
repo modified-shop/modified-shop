@@ -21,6 +21,7 @@
   require_once(DIR_FS_INC . 'xtc_filesize.inc.php');
   require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php');
   require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
+  require_once(DIR_FS_INC . 'get_content_file_path.inc.php');
 
   if(!defined('CONTENT_CHILDS_ACTIV')) {
     define('CONTENT_CHILDS_ACTIV','true');
@@ -166,6 +167,10 @@
           $content_file_name = '';
           if ($select_file[$i][$languages[$l]['id']] != 'default') {
             $content_file_name = $select_file[$i][$languages[$l]['id']];
+            // the shop includes the file, so only a file directly in media/content/ can be selected
+            if (get_content_file_path($content_file_name, 'content') === false) {
+              $content_file_name = '';
+            }
           }
           $accepted_file_upload_files_extensions = array("htm","html","txt");
           $accepted_file_upload_files_mime_types = array("text/html","text/html","text/plain");
@@ -333,6 +338,11 @@
         }
       } else {
         $content_file_name = $select_file;
+      }
+
+      // the shop includes the file, so only a file directly in media/content/ or media/products/ can be stored
+      if (get_content_file_path($content_file_name, $path) === false) {
+        $content_file_name = '';
       }
 
       $sql_data_array = array(

@@ -280,14 +280,18 @@ class main {
         $content_data['content_body'] = '';
         
         // check if content data is a file
-        if ($content_data['content_file'] != '' 
-            && is_file(DIR_FS_CATALOG.'media/content/'.$content_data['content_file'])
-            )
-        {
+        require_once (DIR_FS_INC.'get_content_file_path.inc.php');
+        $content_file_path = get_content_file_path($content_data['content_file']);
+        if ($content_file_path !== false) {
           $content_data['content_body'] = $content_data['content_text'];
           unset($content_data['content_text']);
-          ob_start();      
-          include (DIR_FS_DOCUMENT_ROOT.'media/content/'.$content_data['content_file']);      
+          ob_start();
+          // only PHP files placed on the server run as code, uploaded files are output as they are
+          if (strtolower(substr($content_file_path, -4)) == '.php') {
+            include ($content_file_path);
+          } else {
+            readfile($content_file_path);
+          }
           $content_data['content_text'] = @ob_get_contents();
           ob_end_clean();
           //check for txt file and format output

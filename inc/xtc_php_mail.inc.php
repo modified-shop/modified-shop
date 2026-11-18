@@ -241,8 +241,10 @@ function xtc_php_mail($from_email_address, $from_email_name,
     while ($email = xtc_db_fetch_array($email_query, true)) {
       foreach ($included_files as $files) {
         if (strpos($files, $email['email_id'].'.html') !== false) {
-          if (is_file(DIR_FS_CATALOG.'media/content/'.$email['content_file'])) {
-            $attachments[] = DIR_FS_CATALOG.'media/content/'.$email['content_file'];
+          // a stored path must not attach another file of the server
+          require_once (DIR_FS_INC.'get_content_file_path.inc.php');
+          if (($attachment = get_content_file_path($email['content_file'], 'content')) !== false) {
+            $attachments[] = $attachment;
           }
         }
       }

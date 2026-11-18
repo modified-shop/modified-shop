@@ -14,6 +14,7 @@
    ---------------------------------------------------------------------------------------*/
    
 require('includes/application_top.php');
+require_once (DIR_FS_INC.'get_content_file_path.inc.php');
 
 
 if ($_GET['pID']=='media') {
@@ -53,10 +54,18 @@ if ($_GET['pID']=='media') {
 	if (preg_match('/.gif/i',$content_data['content_file']) or preg_match('/.jpg/i',$content_data['content_file']) or  preg_match('/.png/i',$content_data['content_file']) or  preg_match('/.tif/i',$content_data['content_file']) or  preg_match('/.bmp/i',$content_data['content_file'])) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3	
 	echo xtc_image(DIR_WS_CATALOG.'media/products/'.$content_data['content_file']);
 	} else {
-	include(DIR_FS_CATALOG.'media/products/'.$content_data['content_file']);	
+	$content_file_path = get_content_file_path($content_data['content_file'], 'products');
 	}
 } else {
-include(DIR_FS_CATALOG.'media/content/'.$content_data['content_file']);	
+$content_file_path = get_content_file_path($content_data['content_file'], 'content');
+}
+// only PHP files placed on the server run as code, uploaded files are output as they are
+if (isset($content_file_path) && $content_file_path !== false) {
+  if (strtolower(substr($content_file_path, -4)) == '.php') {
+    include ($content_file_path);
+  } else {
+    readfile($content_file_path);
+  }
 }
 if (strpos($content_data['content_file'],'.txt') !== false) echo '</pre>';
  } else {	      
