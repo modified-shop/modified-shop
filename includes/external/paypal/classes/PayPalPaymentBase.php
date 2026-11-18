@@ -1126,6 +1126,14 @@ class PayPalPaymentBase extends PayPalCommon {
   
   
   function verify_webhook_signature($headers, $body) {
+    // a request without the PayPal headers must not lead to any call to PayPal
+    $required_headers = array('PAYPAL-AUTH-ALGO', 'PAYPAL-CERT-URL', 'PAYPAL-TRANSMISSION-ID', 'PAYPAL-TRANSMISSION-SIG', 'PAYPAL-TRANSMISSION-TIME');
+    foreach ($required_headers as $required_header) {
+      if (!isset($headers[$required_header]) || $headers[$required_header] == '') {
+        return false;
+      }
+    }
+
     $webhook_id = $this->get_config($this->get_webhook_config_key(), false);
     if ($webhook_id == '') {
       $webhook_id = $this->lookup_webhook_id();
@@ -1133,13 +1141,6 @@ class PayPalPaymentBase extends PayPalCommon {
     if ($webhook_id == '') {
       $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('error' => 'no webhook_id configured'));
       return false;
-    }
-
-    $required_headers = array('PAYPAL-AUTH-ALGO', 'PAYPAL-CERT-URL', 'PAYPAL-TRANSMISSION-ID', 'PAYPAL-TRANSMISSION-SIG', 'PAYPAL-TRANSMISSION-TIME');
-    foreach ($required_headers as $required_header) {
-      if (!isset($headers[$required_header]) || $headers[$required_header] == '') {
-        return false;
-      }
     }
 
     try {
@@ -1165,6 +1166,13 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function lookup_webhook_id() {
+    // a failed lookup waits 15 minutes, otherwise every webhook call would ask PayPal again
+    $retry_key = $this->get_webhook_config_key().'_LOOKUP';
+    $last_failure = (int)$this->get_config($retry_key, false);
+    if ($last_failure > (time() - 900) && $last_failure <= time()) {
+      return '';
+    }
+
     try {
       $apiContext = $this->apiContext();
       $WebhookList = \PayPal\Api\Webhook::getAll($apiContext);
@@ -1179,12 +1187,15 @@ class PayPalPaymentBase extends PayPalCommon {
         if ($webhooks[$w]->getUrl() == $webhook_url) {
           $webhook_id = $webhooks[$w]->getId();
           $this->save_webhook_id($webhook_id);
+          $this->delete_config($retry_key);
           return $webhook_id;
         }
       }
     } catch (Exception $ex) {
       $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('exception' => $ex));
     }
+
+    $this->save_config(array(array('config_key' => $retry_key, 'config_value' => time())));
 
     return '';
   }
