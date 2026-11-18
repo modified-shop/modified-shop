@@ -60,6 +60,40 @@
   }
 
   
+  /**
+   * get_update_request()
+   *
+   * @param mixed $response answer of the support endpoint
+   * @return array|false recipient, subject and message of the update request, false if the answer does not fit
+   */
+  function get_update_request($response) {
+    if (!is_array($response)
+        || !isset($response['mail'], $response['stack'])
+        || !is_array($response['mail'])
+        || !is_array($response['stack'])
+        || !isset($response['mail']['address'])
+        || !is_string($response['mail']['address'])
+        || !preg_match('/^[A-Za-z0-9._%+-]+@modified-shop\.org$/D', $response['mail']['address'])
+        )
+    {
+      return false;
+    }
+
+    $request = array('address' => $response['mail']['address']);
+
+    foreach (array('name', 'templatesubject') as $key) {
+      $value = ((isset($response['mail'][$key]) && is_string($response['mail'][$key])) ? $response['mail'][$key] : '');
+      $request[$key] = preg_replace('/[\x00-\x1F\x7F]+/', ' ', strip_tags($value));
+    }
+
+    // the message keeps its entities, anything else is text
+    $success = ((isset($response['stack']['success']) && is_string($response['stack']['success'])) ? $response['stack']['success'] : '');
+    $request['success'] = htmlspecialchars(strip_tags($success), ENT_QUOTES, 'UTF-8', false);
+
+    return $request;
+  }
+
+
   function rrmdir($dir) {
     global $unlinked_files, $error;
     
