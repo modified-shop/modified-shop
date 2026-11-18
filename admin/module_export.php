@@ -110,13 +110,12 @@
           // reach the save loop and the previous value would survive; keys hidden through
           // keys_dispnone are never rendered, so they must keep their stored value
           $module_keys = method_exists($module, 'keys') ? (array)$module->keys() : array();
-
-          // the form only shows the keys of this module, others must not be written through it
-          $configuration = array_intersect_key($configuration, array_flip($module_keys));
-
           if (isset($module->keys_dispnone)) {
             $module_keys = array_diff($module_keys, (array)$module->keys_dispnone);
           }
+
+          // the form only shows these keys of this module, others must not be written through it
+          $configuration = array_intersect_key($configuration, array_flip($module_keys));
           foreach (xtc_cfg_get_multi_checkbox_keys($module_keys) as $checkbox_key) {
             if (!isset($configuration[$checkbox_key])) {
               $configuration[$checkbox_key] = '';
@@ -603,7 +602,7 @@ if (xtc_not_null($action) && !$box) {
                           if ($value['use_function']) {
                             $keys .= xtc_call_use_function($value['use_function'], $value['value']);
                           } else {
-                            $keys .=  encode_htmlspecialchars((strlen($value['value']) > 30) ? substr(strip_tags($value['value']),0,30) . ' ...' : $value['value']);
+                            $keys .=  encode_htmlspecialchars((strlen($value['value']) > 30) ? substr(strip_tags($value['value']),0,30) . ' ...' : $value['value'], ENT_COMPAT | ENT_SUBSTITUTE);
                           }
                           $keys .= '<br /><br />';
                         }

@@ -648,7 +648,7 @@ if (xtc_not_null($action) && !$box) {
                       if ($value['use_function']) {
                         $keys .= xtc_call_use_function($value['use_function'], $value['value']);
                       } else {
-                        $keys .=  encode_htmlspecialchars((strlen($value['value']) > 30) ? substr(strip_tags($value['value']),0,30) . ' ...' : $value['value']);
+                        $keys .=  encode_htmlspecialchars((strlen($value['value']) > 30) ? substr(strip_tags($value['value']),0,30) . ' ...' : $value['value'], ENT_COMPAT | ENT_SUBSTITUTE);
                       }
                       $keys .= '<br /><br />';
                     }
