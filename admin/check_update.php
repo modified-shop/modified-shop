@@ -21,6 +21,7 @@ require ('includes/application_top.php');
 // include needed functions
 require_once(DIR_FS_INC.'check_version_update.inc.php');
 require_once(DIR_FS_INC.'filter_external_html.inc.php');
+require_once(DIR_FS_INC.'admin_action_token.inc.php');
 
 // include needed classes
 require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
@@ -47,10 +48,12 @@ function rrmdir($dir) {
   }
 }
 
-// the update starts from the form of this page only, a posted field makes the token check apply
+// the update starts from the form of this page only, with its own token also when the CSRF check is off
 if (isset($_GET['action'])
     && $_GET['action'] == 'autoupdate'
     && isset($_POST['autoupdate'])
+    && isset($_POST['admin_action_token'])
+    && admin_action_token($_POST['admin_action_token'])
     )
 {
   if (class_exists('ZipArchive')) {
@@ -268,7 +271,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         $contents[] = array('align' => 'center', 'text' => TEXT_INFO_UPDATE_NEEDED);
                         if ($mInfo->link != '') {
                           if ($mInfo->module == 'shop') {
-                            $contents[] = array('align' => 'center', 'text' => xtc_draw_form('autoupdate', basename($PHP_SELF), 'action=autoupdate') . xtc_draw_hidden_field('autoupdate', '1') . '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_AUTOUPDATER . '"/></form>');
+                            $contents[] = array('align' => 'center', 'text' => xtc_draw_form('autoupdate', basename($PHP_SELF), 'action=autoupdate') . xtc_draw_hidden_field('autoupdate', '1') . xtc_draw_hidden_field('admin_action_token', admin_action_token()) . '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_AUTOUPDATER . '"/></form>');
                           } else {
                             $contents[] = array('align' => 'center', 'text' => '<a class="button" target="_blank" onclick="this.blur();" href="' . $mInfo->link . '">' . BUTTON_MODULE_DOWNLOAD . '</a>');
                           }
