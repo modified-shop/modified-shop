@@ -47,8 +47,10 @@ function rrmdir($dir) {
   }
 }
 
+// the update starts from the form of this page only, a posted field makes the token check apply
 if (isset($_GET['action'])
     && $_GET['action'] == 'autoupdate'
+    && isset($_POST['autoupdate'])
     )
 {
   if (class_exists('ZipArchive')) {
@@ -266,7 +268,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         $contents[] = array('align' => 'center', 'text' => TEXT_INFO_UPDATE_NEEDED);
                         if ($mInfo->link != '') {
                           if ($mInfo->module == 'shop') {
-                            $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . $mInfo->link . '">' . BUTTON_AUTOUPDATER . '</a>');
+                            $contents[] = array('align' => 'center', 'text' => xtc_draw_form('autoupdate', basename($PHP_SELF), 'action=autoupdate') . xtc_draw_hidden_field('autoupdate', '1') . '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_AUTOUPDATER . '"/></form>');
                           } else {
                             $contents[] = array('align' => 'center', 'text' => '<a class="button" target="_blank" onclick="this.blur();" href="' . $mInfo->link . '">' . BUTTON_MODULE_DOWNLOAD . '</a>');
                           }
