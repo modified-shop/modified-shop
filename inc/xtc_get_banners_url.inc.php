@@ -41,8 +41,23 @@
   }
 
 
+  // the link in the page: only web, mail and phone addresses, encoded for the href attribute
+  function xtc_get_banners_link($banners_url) {
+    $banners_url = xtc_get_banners_url($banners_url);
+    // the scheme from the start of the address, parse_url() has none for tel:112
+    $scheme = (preg_match('/^([a-z][a-z0-9+.-]*):/i', $banners_url, $match) ? strtolower($match[1]) : '');
+    if (!in_array($scheme, array('http', 'https', 'mailto', 'tel'), true)) {
+      return '';
+    }
+
+    // HTML5 entities like &apos; stay as they are, so the link target does not change
+    return htmlspecialchars($banners_url, ENT_QUOTES | ENT_HTML5, get_default_encoding(''), false);
+  }
+
+
   function check_url_scheme($url) {
-    if ($url != '') {
+    // parse_url() reads short phone numbers like tel:112 as host and port
+    if ($url != '' && !preg_match('/^(tel|mailto):/i', $url)) {
       $parse_url = parse_url($url);
       if (!isset($parse_url['scheme'])) {
         $shop_url = xtc_get_top_level_domain((isset($parse_url['host'])) ? $parse_url['host'] : ((strpos($parse_url['path'], '/') !== false) ? substr($parse_url['path'], 0, strpos($parse_url['path'], '/')) : $parse_url['path']));

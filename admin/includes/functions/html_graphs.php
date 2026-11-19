@@ -374,13 +374,16 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   ////
   // draws a double vertical bar graph for the banner views vs clicks statistics
   function xtc_banner_graph_infoBox($banner_id, $days) {
+    // a banner without views in the period gives an empty graph
+    $names = $values = $dvalues = array();
     $banner_stats_query = xtc_db_query("select dayofmonth(banners_history_date) as name, banners_shown as value, banners_clicked as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and to_days(now()) - to_days(banners_history_date) < " . $days . " order by banners_history_date");
     while ($banner_stats = xtc_db_fetch_array($banner_stats_query)) {
       $names[] = $banner_stats['name'];
       $values[] = $banner_stats['value'];
       $dvalues[] = $banner_stats['dvalue'];
     }
-    $largest = @max($values);
+    // no views in the period: no scale, and max() needs at least one value
+    $largest = ((count($values) > 0) ? max($values) : 0);
 
     $bars = array();
     $dbars = array();
@@ -402,7 +405,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
                         'hbgcolor'=>'#81a2b6',
                         'vfstyle'=>'Verdana, Arial, Helvetica',
                         'hfstyle'=>'Verdana, Arial, Helvetica',
-                        'scale'=>100/$largest,
+                        'scale'=>(($largest > 0) ? 100/$largest : 0),
                         'namebgcolor'=>'#f3f5fe',
                         'valuebgcolor'=>'#f3f5fe',
                         'namefcolor'=>'',
@@ -419,6 +422,8 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   function xtc_banner_graph_yearly($banner_id) {
     global $banner;
 
+    // a banner without history gives an empty graph
+    $names = $values = $dvalues = array();
     $banner_stats_query = xtc_db_query("select year(banners_history_date) as year, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' group by year(banners_history_date)");
     while ($banner_stats = xtc_db_fetch_array($banner_stats_query)) {
       $names[] = $banner_stats['year'];
@@ -426,7 +431,8 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       $dvalues[] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
     }
 
-    $largest = @max($values);
+    // no views in the period: no scale, and max() needs at least one value
+    $largest = ((count($values) > 0) ? max($values) : 0);
 
     $bars = array();
     $dbars = array();
@@ -448,7 +454,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
                         'hbgcolor'=>'#81a2b6',
                         'vfstyle'=>'Verdana, Arial, Helvetica',
                         'hfstyle'=>'Verdana, Arial, Helvetica',
-                        'scale'=>100/$largest,
+                        'scale'=>(($largest > 0) ? 100/$largest : 0),
                         'namebgcolor'=>'#f3f5fe',
                         'valuebgcolor'=>'#f3f5fe',
                         'namefcolor'=>'',
@@ -465,7 +471,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   function xtc_banner_graph_monthly($banner_id) {
     global $banner;
 
-    $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
+    $year = ((!empty($_GET['year'])) ? (int)$_GET['year'] : date('Y'));
 
     for ($i=1; $i<13; $i++) {
       $names[] = formatter_date('MMMM', 'M', mktime(0,0,0,$i));
@@ -480,7 +486,8 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       $dvalues[($banner_stats['banner_month']-1)] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
     }
 
-    $largest = @max($values);
+    // no views in the period: no scale, and max() needs at least one value
+    $largest = ((count($values) > 0) ? max($values) : 0);
 
     $bars = array();
     $dbars = array();
@@ -502,7 +509,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
                         'hbgcolor'=>'#81a2b6',
                         'vfstyle'=>'Verdana, Arial, Helvetica',
                         'hfstyle'=>'Verdana, Arial, Helvetica',
-                        'scale'=>100/$largest,
+                        'scale'=>(($largest > 0) ? 100/$largest : 0),
                         'namebgcolor'=>'#f3f5fe',
                         'valuebgcolor'=>'#f3f5fe',
                         'namefcolor'=>'',
@@ -519,8 +526,8 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   function xtc_banner_graph_daily($banner_id) {
     global $banner;
 
-    $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
-    $month = (($_GET['month']) ? $_GET['month'] : date('n'));
+    $year = ((!empty($_GET['year'])) ? (int)$_GET['year'] : date('Y'));
+    $month = ((!empty($_GET['month'])) ? (int)$_GET['month'] : date('n'));
 
     $days = (date('t', mktime(0,0,0,$month))+1);
     $stats = array();
@@ -537,7 +544,8 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       $dvalues[($banner_stats['banner_day']-1)] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
     }
 
-    $largest = @max($values);
+    // no views in the period: no scale, and max() needs at least one value
+    $largest = ((count($values) > 0) ? max($values) : 0);
 
     $bars = array();
     $dbars = array();
@@ -559,7 +567,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
                         'hbgcolor'=>'#81a2b6',
                         'vfstyle'=>'Verdana, Arial, Helvetica',
                         'hfstyle'=>'Verdana, Arial, Helvetica',
-                        'scale'=>100/$largest,
+                        'scale'=>(($largest > 0) ? 100/$largest : 0),
                         'namebgcolor'=>'#f3f5fe',
                         'valuebgcolor'=>'#f3f5fe',
                         'namefcolor'=>'',
