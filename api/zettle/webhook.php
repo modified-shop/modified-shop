@@ -32,13 +32,14 @@
         die();
       }
 
-      // an incomplete request never reaches the key lookup
+      // an incomplete request never reaches the key lookup, the timestamp has the ISO 8601 form of Zettle
       $signature = (isset($_SERVER['HTTP_X_IZETTLE_SIGNATURE']) ? $_SERVER['HTTP_X_IZETTLE_SIGNATURE'] : '');
       if (!is_string($signature)
-          || !preg_match('/^[0-9a-f]{64}$/', $signature)
+          || !preg_match('/^[0-9a-fA-F]{64}\z/', $signature)
           || !is_string($request['payload'])
           || !isset($request['timestamp'])
           || !is_string($request['timestamp'])
+          || !preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:?\d{2})\z/', $request['timestamp'])
           )
       {
         header('HTTP/1.1 401 Unauthorized');
@@ -66,7 +67,7 @@
 
       // deliveries end after about 73 hours, the booked events are kept for 7 days
       $event_time = strtotime($request['timestamp']);
-      if ($event_time !== false && $event_time < (time() - 4 * 86400)) {
+      if ($event_time === false || $event_time < (time() - 4 * 86400)) {
         die();
       }
 

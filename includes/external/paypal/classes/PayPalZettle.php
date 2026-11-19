@@ -346,7 +346,7 @@
                          SET configuration_value = '".xtc_db_input($signing_key)."'
                        WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
       } else {
-        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '2', NOW())");
+        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '2', NOW())");
       }
 
       return $signing_key;
@@ -360,8 +360,9 @@
                                      FROM ".TABLE_CONFIGURATION."
                                     WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK'");
       if (xtc_db_num_rows($check_query) < 1) {
-        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK', '".$now."', '6', '2', NOW())");
-        return true;
+        // with the unique key of the table a second call at the same time adds nothing
+        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK', '".$now."', '6', '2', NOW())");
+        return (xtc_db_affected_rows() > 0);
       }
 
       $check = xtc_db_fetch_array($check_query);
@@ -389,16 +390,9 @@
       {
         return false;
       }
-      $signed = $request['timestamp'].'.'.$request['payload'];
 
-      // the PHP example of Zettle strips slashes, its other examples do not
-      foreach (array($signed, stripslashes($signed)) as $candidate) {
-        if (hash_equals(hash_hmac('sha256', $candidate, $signing_key), (string)$signature)) {
-          return true;
-        }
-      }
-
-      return false;
+      // the text exactly as it arrived, a changed timestamp or payload must not pass
+      return hash_equals(hash_hmac('sha256', $request['timestamp'].'.'.$request['payload'], $signing_key), strtolower($signature));
     }
 
 
