@@ -17,6 +17,11 @@
    --------------------------------------------------------------*/
   require('includes/application_top.php');
 
+  // an own admin translation may not have the texts yet
+  defined('ERROR_CURRENCY_CODE') or define('ERROR_CURRENCY_CODE', 'Error: The code may only contain letters and be at most %s characters long.');
+  defined('ERROR_CURRENCY_CODE_EXISTS') or define('ERROR_CURRENCY_CODE_EXISTS', 'Error: Another currency already uses this code.');
+  defined('ERROR_CURRENCY_NOT_SAVED') or define('ERROR_CURRENCY_NOT_SAVED', 'Error: The currency was not saved.');
+
   // include needed functions
   require_once(DIR_FS_INC.'quote_currency.inc.php');
 

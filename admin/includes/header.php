@@ -39,7 +39,17 @@
   $languages_array = array();
   if (count($ls_languages) > 1) {
     foreach ($ls_languages as $key => $value) {
+      // only a language with an admin translation can be the language of the admin
+      if (!is_file(DIR_FS_LANGUAGES . $value['directory'] . '/admin/' . $value['directory'] . '.php')
+          || !is_file(DIR_FS_LANGUAGES . $value['directory'] . '/admin/buttons.php')
+          )
+      {
+        continue;
+      }
       $languages_array[] = '<a '.$confirm_change.' href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
+    }
+    if (count($languages_array) < 2) {
+      $languages_array = array();
     }
   }
   $languages_string = implode('&nbsp;', $languages_array);

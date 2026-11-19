@@ -18,6 +18,14 @@
 
   require('includes/application_top.php');
 
+  // an own admin translation may not have the texts yet
+  defined('ERROR_LANGUAGE_CODE') or define('ERROR_LANGUAGE_CODE', 'Error: The code may only contain letters, dash and underscore and be at most %s characters long.');
+  defined('ERROR_LANGUAGE_CODE_EXISTS') or define('ERROR_LANGUAGE_CODE_EXISTS', 'Error: Another language already uses this code.');
+  defined('ERROR_LANGUAGE_DIRECTORY') or define('ERROR_LANGUAGE_DIRECTORY', 'Error: The directory needs a plain name of at most %s characters and must hold the language file of the same name, e.g. lang/english/english.php.');
+  defined('ERROR_LANGUAGE_ADMIN_FILES') or define('ERROR_LANGUAGE_ADMIN_FILES', 'Error: As default language the language directory needs the admin language files, e.g. lang/english/admin/english.php and lang/english/admin/buttons.php.');
+  defined('ERROR_LANGUAGE_IMAGE') or define('ERROR_LANGUAGE_IMAGE', 'Error: The image must not contain quotes, angle brackets, backslashes, #, ? or .. and may be at most %s characters long.');
+  defined('ERROR_LANGUAGE_NOT_SAVED') or define('ERROR_LANGUAGE_NOT_SAVED', 'Error: The language was not saved.');
+
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_LANGUAGES_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
@@ -88,14 +96,14 @@
       }
     }
 
-    // the admin loads its own language file and the buttons on every page; they are needed
-    // where the language becomes the default, or an admin or default language gets another directory
+    // the admin starts in the default language, so it needs the admin language file and the buttons;
+    // the admin status only says that texts of this language are edited in the admin
     $check_admin_files = language_files_exist($check_directory, true);
     if (!$check_admin_files
         && ((isset($_POST['default']) && $_POST['default'] == 'on' && $check_code != DEFAULT_LANGUAGE)
             || (is_array($check_stored)
                 && $check_directory_changed
-                && ($check_stored['status_admin'] == '1' || $check_stored['code'] == DEFAULT_LANGUAGE)
+                && $check_stored['code'] == DEFAULT_LANGUAGE
                 )
             )
         )
@@ -147,19 +155,15 @@
         $lID = (int)$_GET['lID'];
         $status_admin = (int)$_GET['adminflag'];
         if ($status_admin == 1) {
-          // a language without the admin language files would stop every admin page
           $lng_query = xtc_db_query("SELECT directory
                                        FROM " . TABLE_LANGUAGES . "
                                       WHERE languages_id = '" . $lID . "'");
           $lng = xtc_db_fetch_array($lng_query);
-          // an admin can choose every admin language in the shop as well, so the shop needs its file too
+          // an admin can choose every language with this status in the shop, so the shop needs its file;
+          // the admin translation is not needed, the status also opens the texts of the language for editing
           if (!is_array($lng) || !language_files_exist($lng['directory'])) {
             require_once(DIR_FS_INC.'get_column_length.inc.php');
             $messageStack->add_session(sprintf(ERROR_LANGUAGE_DIRECTORY, get_column_length(TABLE_LANGUAGES, 'directory')), 'error');
-            xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
-          }
-          if (!language_files_exist($lng['directory'], true)) {
-            $messageStack->add_session(ERROR_LANGUAGE_ADMIN_FILES, 'error');
             xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
           }
         }
@@ -177,8 +181,6 @@
             'directory' => $check_directory,
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
             'language_charset' => $charset_value,
-            // a shop language without admin translation is not offered in the admin
-            'status_admin' => ($check_admin_files ? 1 : 0),
           );
         if (!xtc_db_perform(TABLE_LANGUAGES, $sql_data_array)) {
           // a failed insert must not change anything else, e.g. the default language
