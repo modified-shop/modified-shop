@@ -76,7 +76,7 @@
               ) 
           {
             $order->info['allow_tax'] = 2; //merchant
-            $this->output[] = array('title' => $key .':',
+            $this->output[] = array('title' => clean_html_output($key) .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
@@ -87,7 +87,7 @@
               ) 
           {
             $order->info['allow_tax'] = 3; //merchant EU, shipping to store country
-            $this->output[] = array('title' => $key .':',
+            $this->output[] = array('title' => clean_html_output($key) .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
