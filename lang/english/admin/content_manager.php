@@ -74,6 +74,8 @@
   define('TEXT_FILE_DESCRIPTION','<b>Info:</b><br />You also have the option to include a <b>.html</b> or <b>.htm</b> file as content.<br />If you select or upload a file, you have the option to create additional text in the text box.<br />This will then appear before the text from the uploaded file.<br />If you do not want additional text, please leave the text field empty.');
   define('ERROR_FILE','Wrong file format (only .html or .htm)');
   define('ERROR_TITLE','Please enter a title');
+  define('ERROR_CONTENT_FILE','Error: The file %s cannot be assigned here. It is not directly in the media folder or its file type is not allowed. The previous assignment stays.');
+  define('WARNING_CONTENT_FILE','Note: The shop does not use the assigned file %s. It is missing or its file type is not allowed. The assignment stays stored.');
   define('ERROR_COMMENT','Please enter a file description!');
   define('TEXT_FILE_FLAG','Box:');
   define('TEXT_PARENT','Main Document:');

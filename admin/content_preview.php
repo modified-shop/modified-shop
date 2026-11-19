@@ -14,9 +14,13 @@
    ---------------------------------------------------------------------------------------*/
    
 require('includes/application_top.php');
+require_once (DIR_FS_INC.'get_content_file_path.inc.php');
+
+// the input filter keeps pID numeric, so the product content comes with set=product
+$preview_media = ((isset($_GET['set']) && $_GET['set'] == 'product') || (isset($_GET['pID']) && $_GET['pID'] == 'media'));
 
 
-if ($_GET['pID']=='media') {
+if ($preview_media) {
 	$content_query=xtc_db_query("SELECT
  					content_file,
  					content_name,
@@ -41,22 +45,40 @@ require (DIR_WS_INCLUDES.'head.php');
 
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
-<div class="pageHeading"><?php echo $content_data['content_heading']; ?></div><br />
+<div class="pageHeading"><?php echo (($preview_media) ? encode_htmlspecialchars($content_data['content_name']) : $content_data['content_heading']); ?></div><br />
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main">
  <?php
  if ($content_data['content_file']!=''){
 if (strpos($content_data['content_file'],'.txt') !== false) echo '<pre>';
-if ($_GET['pID']=='media') {
+if ($preview_media) {
 	// display image
-	if (preg_match('/.gif/i',$content_data['content_file']) or preg_match('/.jpg/i',$content_data['content_file']) or  preg_match('/.png/i',$content_data['content_file']) or  preg_match('/.tif/i',$content_data['content_file']) or  preg_match('/.bmp/i',$content_data['content_file'])) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3	
-	echo xtc_image(DIR_WS_CATALOG.'media/products/'.$content_data['content_file']);
-	} else {
-	include(DIR_FS_CATALOG.'media/products/'.$content_data['content_file']);	
+	// the stored name is checked before any output, the image link takes it encoded;
+	// the checked target decides the type, the image URL also needs an image name;
+	// the same folders as the shop: media/products/ first, then media/content/
+	$content_folder = 'products';
+	$content_file_path = get_content_file_path($content_data['content_file'], $content_folder, 'products');
+	if ($content_file_path === false) {
+	$content_folder = 'content';
+	$content_file_path = get_content_file_path($content_data['content_file'], $content_folder, 'products');
+	}
+	if ($content_file_path !== false && preg_match('/\.(gif|jpe?g|png|tiff?|bmp)$/i', $content_file_path)) {
+	if (preg_match('/\.(gif|jpe?g|png|tiff?|bmp)$/i', $content_data['content_file'])) {
+	echo xtc_image(DIR_WS_CATALOG.'media/'.$content_folder.'/'.rawurlencode($content_data['content_file']));
+	}
+	$content_file_path = false;
 	}
 } else {
-include(DIR_FS_CATALOG.'media/content/'.$content_data['content_file']);	
+$content_file_path = get_content_file_path($content_data['content_file'], 'content');
+}
+// only PHP files placed on the server run as code, uploaded files are output as they are
+if (isset($content_file_path) && $content_file_path !== false) {
+  if (strtolower(substr($content_file_path, -4)) == '.php') {
+    include ($content_file_path);
+  } else {
+    readfile($content_file_path);
+  }
 }
 if (strpos($content_data['content_file'],'.txt') !== false) echo '</pre>';
  } else {	      

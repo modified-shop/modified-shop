@@ -225,7 +225,11 @@ function xtc_php_mail($from_email_address, $from_email_name,
   }
 
   //create attachments array for better handling
-  $attachments = attachments_array($path_to_attachments,$path_to_more_attachments);
+  // one entry per file and name: two links to the same file keep both names
+  $attachments = array();
+  foreach (attachments_array($path_to_attachments,$path_to_more_attachments) as $attachment) {
+    $attachments[$attachment."\0".basename($attachment)] = array($attachment, basename($attachment));
+  }
   
   $included_files = get_included_files();
   if (is_array($included_files)) {
@@ -241,18 +245,19 @@ function xtc_php_mail($from_email_address, $from_email_name,
     while ($email = xtc_db_fetch_array($email_query, true)) {
       foreach ($included_files as $files) {
         if (strpos($files, $email['email_id'].'.html') !== false) {
-          if (is_file(DIR_FS_CATALOG.'media/content/'.$email['content_file'])) {
-            $attachments[] = DIR_FS_CATALOG.'media/content/'.$email['content_file'];
+          // a stored path must not attach another file of the server
+          require_once (DIR_FS_INC.'get_content_file_path.inc.php');
+          if (($attachment = get_content_file_path($email['content_file'], 'content', 'file')) !== false) {
+            // the mail shows the selected name, not the name of a link target
+            $attachments[$attachment."\0".$email['content_file']] = array($attachment, $email['content_file']);
           }
         }
       }
     }
   }
-  $attachments = array_unique($attachments); 
-
   // add attachments
-  for( $i = 0, $n = count($attachments); $i < $n; $i++) {
-    $mail->addAttachment($attachments[$i]);
+  foreach ($attachments as $attachment) {
+    $mail->addAttachment($attachment[0], $attachment[1]);
   }
 
   //Content

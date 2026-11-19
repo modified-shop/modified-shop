@@ -85,14 +85,18 @@ if ($language_not_found === true) {
     }
 
     $content_body = $shop_content_data['content_text'];
-    if ($shop_content_data['content_file'] != '' 
-        && is_file(DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file'])
-        )
-    {
+    require_once (DIR_FS_INC.'get_content_file_path.inc.php');
+    $content_file_path = get_content_file_path($shop_content_data['content_file']);
+    if ($content_file_path !== false) {
       ob_start();
       if (strpos($shop_content_data['content_file'], '.txt') !== false)
         echo '<pre>';
-      include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
+      // only PHP files placed on the server run as code, uploaded files are output as they are
+      if (strtolower(substr($content_file_path, -4)) == '.php') {
+        include ($content_file_path);
+      } else {
+        readfile($content_file_path);
+      }
       if (strpos($shop_content_data['content_file'], '.txt') !== false)
         echo '</pre>';
       $smarty->assign('file', ob_get_contents());
