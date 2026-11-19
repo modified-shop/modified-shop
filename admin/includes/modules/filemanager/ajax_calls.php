@@ -151,11 +151,8 @@ if (isset($_GET['action'])) {
             break;
 
         case 'extract':
-            if (!$config['extract_files']) {
-                response(trans('wrong action').AddErrorLocation())->send();
-            }
             // FTP cannot create a file only when its name is free, so an archive could replace files there
-            if ($ftp) {
+            if (!$config['extract_files'] || $ftp) {
                 response(trans('wrong action').AddErrorLocation())->send();
                 exit;
             }
@@ -201,7 +198,6 @@ if (isset($_GET['action'])) {
                         }
 
                         //make all the folders and unzip into the folders
-                        $target_names = array();
                         for ($i = 0; $i < $zip->numFiles; $i++) {
                             $FullFileName = $zip->statIndex($i);
 
@@ -216,12 +212,9 @@ if (isset($_GET['action'])) {
                                         // inner dots of the file name are replaced like on upload
                                         $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
                                         // an entry must not replace a file that is already there or an earlier entry of the archive
-                                        if (file_exists($base_folder . $target_name) || isset($target_names[$target_name])) {
+                                        if (rfm_copy_new('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name) === false) {
                                             $skipped_files[] = $FullFileName['name'];
-                                            continue;
                                         }
-                                        $target_names[$target_name] = true;
-                                        copy('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name);
                                     }
                                 }
                             }
@@ -247,15 +240,15 @@ if (isset($_GET['action'])) {
                     $phar->decompressFiles();
                     $files = array();
                     check_files_extensions_on_phar($phar, $files, '', $config);
-                    // a file that is already there stays, the entry is reported
-                    foreach ($files as $k => $tar_file) {
-                        if (file_exists($base_folder . $tar_file)) {
-                            $skipped_files[] = $tar_file;
-                            unset($files[$k]);
+                    // a file that is already there stays, the entry is reported;
+                    // extractTo() checks the target and writes it in two steps, so each file is created on its own
+                    foreach ($files as $tar_file) {
+                        if (!is_dir(dirname($base_folder . $tar_file))) {
+                            create_folder(dirname($base_folder . $tar_file));
                         }
-                    }
-                    if (count($files) > 0) {
-                        $phar->extractTo($base_folder, array_values($files), false);
+                        if (rfm_copy_new('phar://' . realpath($path) . '/' . $tar_file, $base_folder . $tar_file) === false) {
+                            $skipped_files[] = $tar_file;
+                        }
                     }
                     break;
 

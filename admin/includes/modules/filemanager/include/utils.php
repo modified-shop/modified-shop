@@ -812,6 +812,34 @@ function rfm_replace_inner_dots($name, $has_extension = true)
 	return (string)$name;
 }
 
+/**
+* Write a new file from a stream, a file that is already there is never replaced
+*
+* The mode x creates the file only when its name is free, in one step, so a file that
+* appears between a check and the write stays as well.
+*
+* @param  string  $source
+* @param  string  $target
+*
+* @return bool|null  true when written, false when the target exists, null when source or target cannot be opened
+*/
+function rfm_copy_new($source, $target)
+{
+	$in = @fopen($source, 'rb');
+	if ($in === false) {
+		return null;
+	}
+	$out = @fopen($target, 'xb');
+	if ($out === false) {
+		fclose($in);
+		return (file_exists($target) ? false : null);
+	}
+	stream_copy_to_stream($in, $out);
+	fclose($in);
+	fclose($out);
+	return true;
+}
+
 function fix_filename($str, $config, $is_folder = false)
 {
 	$str = sanitize($str);
