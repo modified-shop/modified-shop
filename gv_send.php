@@ -39,7 +39,7 @@ if (!isset ($_SESSION['customer_id'])) {
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
-require_once (DIR_FS_INC.'secure_form.inc.php');
+require_once (DIR_FS_INC.'xtc_create_password.inc.php');
 
 // smarty
 $smarty = new Smarty();
@@ -88,14 +88,19 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $process_error = '';
-  if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    // a plain link must not use up the token of other open forms
-    $process_error = ENTRY_TOKEN_ERROR;
-  } elseif (isset($modified_session_handler) && $modified_session_handler->holds_lock() === false) {
+  if (isset($modified_session_handler) && $modified_session_handler->holds_lock() === false) {
     // a session read without its lock may still hold a token that a running transfer used up
     $process_error = (defined('TEXT_GV_SEND_ALREADY_RUNNING') ? TEXT_GV_SEND_ALREADY_RUNNING : ENTRY_TOKEN_ERROR);
-  } elseif (check_secure_form($_POST) === false) {
+  } elseif (!isset($_SESSION['gv_send_token'])
+            || !isset($_POST['gv_send_token'])
+            || !is_string($_POST['gv_send_token'])
+            || !hash_equals($_SESSION['gv_send_token'], $_POST['gv_send_token'])
+            )
+  {
     $process_error = ENTRY_TOKEN_ERROR;
+  } else {
+    // one transfer per token
+    unset($_SESSION['gv_send_token']);
   }
 
   if ($process_error != '') {
@@ -196,10 +201,11 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
   $smarty->assign('action', 'send');
   $send_name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
 
-  // a token of its own, valid at once and as long as the session; a reused one may still wait or be expired
-  unset($_SESSION['SFName']);
-  unset($_SESSION['SFToken']);
-  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post').secure_form('gv_send'));
+  // a token of its own, so the shared form token of other open pages stays valid
+  if (!isset($_SESSION['gv_send_token'])) {
+    $_SESSION['gv_send_token'] = xtc_RandomString(32);
+  }
+  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post').xtc_draw_hidden_field('gv_send_token', $_SESSION['gv_send_token']));
   $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), $to_name, $to_email, $to_name, $xtPrice->xtcFormat((float)$gv_amount, true), $send_name));
   if ($message != '') {
     $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, $send_name));

@@ -33,10 +33,6 @@ function secure_form($case = '') {
       case 'password_double_opt':
         $gap = 2;
         break;
-      // a confirmation of checked input, sent right after it is shown
-      case 'gv_send':
-        $gap = 0;
-        break;
     }
     
     $data = array(
