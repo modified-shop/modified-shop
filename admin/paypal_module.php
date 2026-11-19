@@ -125,13 +125,34 @@ if (isset($_GET['action'])) {
       $allowed_description = array();
       if (isset($_GET['module']) && in_array($_GET['module'], $payment_array)) {
         $code = strtoupper($_GET['module']);
-        foreach (array('USE_ACCOUNT', 'SUCCESS', 'SHOW_PRODUCT', 'SHOW_PRODUCT_BNPL', 'SAVE_PAYMENT', 'SHOW_CHECKOUT_BNPL', 'SHOW_CART', 'SHOW_CART_BNPL', 'SHOW_BOX_CART', 'SHOW_BOX_CART_BNPL', 'EXTEND_CARDS', 'USE_TABS') as $suffix) {
-          $allowed_profile[] = 'MODULE_PAYMENT_'.$code.'_'.$suffix;
+        // the same conditions as the form below
+        $profile_fields = array(
+          'paypallink' => array('USE_ACCOUNT', 'SUCCESS'),
+          'paypalpluslink' => array('USE_ACCOUNT', 'SUCCESS'),
+          'paypalcart' => array('SHOW_PRODUCT'),
+          'paypal' => array('SAVE_PAYMENT', 'SHOW_CHECKOUT_BNPL'),
+          'paypalapplepay' => array('SHOW_CART', 'SHOW_BOX_CART'),
+          'paypalgooglepay' => array('SHOW_CART', 'SHOW_BOX_CART'),
+          'paypalacdc' => array('SAVE_PAYMENT', 'EXTEND_CARDS'),
+          'paypalexpress' => array('SAVE_PAYMENT', 'SHOW_CART_BNPL', 'SHOW_PRODUCT', 'SHOW_PRODUCT_BNPL', 'SHOW_BOX_CART', 'SHOW_BOX_CART_BNPL'),
+          'paypalplus' => array('USE_TABS'),
+        );
+        if (isset($profile_fields[$_GET['module']])) {
+          foreach ($profile_fields[$_GET['module']] as $suffix) {
+            $allowed_profile[] = 'MODULE_PAYMENT_'.$code.'_'.$suffix;
+          }
         }
-        $allowed_profile = array_merge($allowed_profile, array('PAYPAL_BUTTON_HEIGHT', 'PAYPAL_BUTTON_LAYOUT', 'PAYPAL_BUTTON_PRIMARY_COLOR', 'PAYPAL_BUTTON_SECONDARY_COLOR', 'PAYPAL_BUTTON_SHAPE', 'PAYPAL_COMPANY_LABEL'));
+        if ($_GET['module'] == 'paypal') {
+          $allowed_profile = array_merge($allowed_profile, array('PAYPAL_BUTTON_HEIGHT', 'PAYPAL_BUTTON_LAYOUT', 'PAYPAL_BUTTON_PRIMARY_COLOR', 'PAYPAL_BUTTON_SECONDARY_COLOR', 'PAYPAL_BUTTON_SHAPE'));
+        }
+        if ($_GET['module'] == 'paypalapplepay') {
+          $allowed_profile[] = 'PAYPAL_COMPANY_LABEL';
+        }
         $allowed_languages = xtc_get_languages();
-        foreach ($allowed_languages as $allowed_language) {
-          $allowed_profile[] = 'PAYPAL_'.$code.'_'.strtoupper($allowed_language['code']).'_PROFILE';
+        if (in_array($_GET['module'], $orders_v1_array)) {
+          foreach ($allowed_languages as $allowed_language) {
+            $allowed_profile[] = 'PAYPAL_'.$code.'_'.strtoupper($allowed_language['code']).'_PROFILE';
+          }
         }
         if ($_GET['module'] == 'paypalplus') {
           foreach (explode(';', MODULE_PAYMENT_INSTALLED) as $installed_file) {
@@ -152,11 +173,19 @@ if (isset($_GET['action'])) {
       if (isset($_POST['config']) && is_array($_POST['config'])) {
         if (isset($_POST['config']['thirdparty']) && is_array($_POST['config']['thirdparty']) && count($allowed_wall) > 0) {
           $thirdparty = array();
+          $thirdparty_fields = 0;
           foreach ($_POST['config']['thirdparty'] as $key => $value) {
-            if ($value == '1' && in_array($key, $allowed_wall, true)) {
+            if (!in_array($key, $allowed_wall, true)) {
+              continue;
+            }
+            // a valid no counts as well, so all providers can be switched off on purpose
+            $thirdparty_fields ++;
+            if ($value == '1') {
               $thirdparty[] = $key;
             }
           }
+        }
+        if (isset($thirdparty_fields) && $thirdparty_fields > 0) {
           xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT'");
           xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, last_modified) VALUES ('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT', '" . xtc_db_input(implode(';', $thirdparty)) . "', NOW())");
         }
