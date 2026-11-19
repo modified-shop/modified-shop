@@ -173,6 +173,9 @@ class Inputfilter {
                   //0-9a-zA-Z _ -
                   case 'action':
                   case 'last_action':
+                  case 'oldaction':
+                  case 'set':
+                  case 'module':
                       $this->params[$key] = $this->validateSigns($value);
                       break;
                   //cPath

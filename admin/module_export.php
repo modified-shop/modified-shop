@@ -36,11 +36,23 @@
   if (isset($_GET['error'])) {
     $map='error';
     if ($_GET['kind']=='success') $map='success';
-    $messageStack->add($_GET['error'], $map);
+    $messageStack->add(encode_htmlspecialchars($_GET['error']), $map);
   }
 
-  $set = ((isset($_GET['set']) && $_GET['set'] != '') ? strip_tags($_GET['set']) : 'export');
-  $module_class = (isset($_GET['module']) ? strip_tags($_GET['module']) : '');
+  // both end up in links and paths; set keeps the dash like the input filter, own module groups may use it
+  $set = ((isset($_GET['set']) && is_string($_GET['set'])) ? preg_replace('/[^A-Za-z0-9_-]/', '', $_GET['set']) : '');
+  // the same check as the initialisation below, which skips values like NULL
+  if (!xtc_not_null($set)) {
+    $set = 'export';
+  }
+  $module_class = ((isset($_GET['module']) && is_string($_GET['module'])) ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['module']) : '');
+  // included modules read the request themselves, so they get the checked values as well
+  if (isset($_GET['set'])) {
+    $_GET['set'] = $set;
+  }
+  if (isset($_GET['module'])) {
+    $_GET['module'] = $module_class;
+  }
   $box = (isset($_GET['box']) ? true : false);
 
   if (xtc_not_null($set)) {
@@ -75,6 +87,10 @@
     }
   }
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  // these actions load the module without a check, so it has to be part of the group
+  if (in_array($action, array('save', 'edit', 'module_processing_do', 'ready'), true) && !is_file($module_directory . basename($module_class) . $file_extension)) {
+    xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set));
+  }
 
   if (xtc_not_null($action)) {
     //load language file for action

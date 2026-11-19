@@ -24,6 +24,11 @@
 
 require_once ('includes/application_top.php');
 
+// the origin names the page to return to and ends up in links, so only a plain file name
+if (isset($_GET['origin'])) {
+  $_GET['origin'] = preg_replace('/[^A-Za-z0-9_.-]/', '', basename((string)$_GET['origin']));
+}
+
 // include needed function
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
