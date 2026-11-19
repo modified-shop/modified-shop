@@ -12,11 +12,15 @@
   
   require('includes/application_top.php');
   require_once(DIR_FS_CATALOG.'includes/xss_secure.php');
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'deleteconfirm':
+        if (!admin_form_posted()) {
+          xtc_redirect(xtc_href_link(FILENAME_BLACKLIST_LOGS));
+        }
         if (!xss_write_blacklist(array(), array($_GET['ip'] ?? ''))) {
           $messageStack->add_session(ERROR_BLACKLIST_WRITE, 'error');
         }

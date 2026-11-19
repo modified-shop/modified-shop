@@ -11,6 +11,7 @@
    --------------------------------------------------------------*/
   
   require('includes/application_top.php');
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
   
   $exts = array("log","log\.zip","log\.gz", "log\.[0-9]+");
   
@@ -36,7 +37,7 @@
         break;
         
       case 'deleteconfirm':
-        if (strpos($_GET['file'], '..') !== false) {
+        if (!admin_form_posted() || strpos($_GET['file'], '..') !== false) {
           xtc_redirect(xtc_href_link(FILENAME_LOGS));
         }
 
@@ -48,6 +49,9 @@
         break;
         
       case 'dellog':
+        if (!admin_form_posted()) {
+          xtc_redirect(xtc_href_link(FILENAME_LOGS));
+        }
         clear_dir(DIR_FS_CATALOG.'log/', false, array('xss_blacklist.log'));
         $messageStack->add_session(DELETE_LOGS_SUCCESSFUL, 'success');
         xtc_redirect(xtc_href_link(FILENAME_LOGS));

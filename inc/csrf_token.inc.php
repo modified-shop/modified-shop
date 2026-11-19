@@ -95,8 +95,8 @@ if (is_array($_POST) && count($_POST) > 0) {
       $messageStack->add($error, 'warning');
     }
   }
-} elseif ($CSRFKeep === false) {
-  // create CSRF Token
+} elseif ($CSRFKeep === false || !isset($_SESSION['CSRFName']) || !isset($_SESSION['CSRFToken'])) {
+  // create CSRF Token, also on a page that keeps it when the session has none yet
   $_SESSION['CSRFName'] = 'x'.xtc_RandomString(5);
   $_SESSION['CSRFToken'] = xtc_RandomString(32);
 }
