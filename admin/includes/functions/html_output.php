@@ -289,8 +289,9 @@
     $selText = '';
     if (is_array($values)) {
       foreach ($values as $key=>$val) {
-        // ids like banner groups or campaign ids are text from the database
-        $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''), false);
+        // ids like banner groups or campaign ids are text from the database and come back as posted value,
+        // so every character is encoded, also the & of something that looks like an entity
+        $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
         $field .= '<option value="' .$val_id . '"';
         $li .= '<li data-val="' .$val_id . '"';
         if ((strlen($val['id']) > 0 
