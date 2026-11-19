@@ -81,11 +81,12 @@ set_session_cookie(0, $session_cookie_path, $session_cookie_domain, $session_coo
 // an ID from the request never replaces the session cookie of the browser
 $session_id_from_request = false;
 if (SESSION_FORCE_COOKIE_USE != 'True' && !isset($_COOKIE[xtc_session_name()])) {
-  if (isset($_POST[xtc_session_name()]) && is_string($_POST[xtc_session_name()])) {
+  // only a value that can be a session ID, an empty or broken one starts a normal session
+  if (isset($_POST[xtc_session_name()]) && is_string($_POST[xtc_session_name()]) && preg_match('/^[0-9a-zA-Z]+$/', $_POST[xtc_session_name()])) {
     xtc_session_id($_POST[xtc_session_name()]);
     $session_id_from_request = true;
   }
-  elseif ($request_type == 'SSL' && isset($_GET[xtc_session_name()]) && is_string($_GET[xtc_session_name()])) {
+  elseif ($request_type == 'SSL' && isset($_GET[xtc_session_name()]) && is_string($_GET[xtc_session_name()]) && preg_match('/^[0-9a-zA-Z]+$/', $_GET[xtc_session_name()])) {
     xtc_session_id($_GET[xtc_session_name()]);
     $session_id_from_request = true;
   }

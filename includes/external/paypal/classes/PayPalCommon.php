@@ -29,6 +29,7 @@ class PayPalCommon extends PayPalAuth {
   var $free_shipping;
   var $free_shipping_value_over;
   var $LoggingManager;
+  var $session_renewed = false;
 
   function __construct() {
 
@@ -442,7 +443,7 @@ class PayPalCommon extends PayPalAuth {
       $this->create_account($customer);
     } else {
       // the login always goes on under a new session id, without one it does not take place
-      if (xtc_session_renew() !== true) {
+      if ($this->session_renewed !== true && xtc_session_renew() !== true) {
         $messageStack->add_session('info_message_3', xtc_session_renew_error());
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, ''), 'NONSSL');
       }
@@ -506,6 +507,16 @@ class PayPalCommon extends PayPalAuth {
   
   
   function create_account($customer, $force_guest = false) {
+    global $messageStack;
+
+    // the new account is logged in under a new session id, without one it is not created
+    if ($this->session_renewed !== true) {
+      if (xtc_session_renew() !== true) {
+        $messageStack->add_session('info_message_3', xtc_session_renew_error());
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, ''), 'NONSSL');
+      }
+      $this->session_renewed = true;
+    }
         
     // include needed function
     require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
