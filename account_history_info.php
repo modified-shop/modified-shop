@@ -67,11 +67,7 @@ if ($order->delivery != false) {
 
 $order_total = $order->getTotalData($order->info['order_id']);
 
-$order_data = $order->getOrderData($order->info['order_id']);
-foreach ($order_data as $key => $order_values) {
-  $order_data[$key]['PRODUCTS_MODEL'] = encode_model_number($order_values['PRODUCTS_MODEL']);
-}
-$smarty->assign('order_data', $order_data);
+$smarty->assign('order_data', $order->getOrderData($order->info['order_id']));
 $smarty->assign('order_total', $order_total['data']);
 
 // the guarantee notice of this order, wording and graphic from its own archive
@@ -187,7 +183,7 @@ if (defined('MODULE_WITHDRAW_STATUS') && MODULE_WITHDRAW_STATUS == 'true') {
 
     $withdraw_products_array[] = array(
       'PRODUCTS_NAME' => $withdraw_products['products_name'],
-      'PRODUCTS_MODEL' => encode_model_number($withdraw_products['products_model']),
+      'PRODUCTS_MODEL' => encode_model_number($withdraw_products['products_model'], (count($attributes_array) > 0)),
       'PRODUCTS_QUANTITY' => $withdraw_products['products_quantity'],
       'PRODUCTS_ATTRIBUTES' => $attributes_array,
       'DATE_ADDED' => xtc_date_short($withdraw_products['date_added']),

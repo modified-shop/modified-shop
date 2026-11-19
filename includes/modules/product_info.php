@@ -30,6 +30,7 @@ require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 require_once (DIR_FS_INC.'xtc_address_format.inc.php');
 require_once (DIR_FS_INC.'xtc_update_products_viewed_count.inc.php');
+require_once (DIR_FS_INC.'encode_model_number.inc.php');
 
 if (!is_object($product) || $product->isProduct() === false || $language_not_found === true) {
 
@@ -160,6 +161,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
    * assign smarty additional variables or overwrite them
    * START
    */
+  $info_smarty->assign('PRODUCTS_MODEL', encode_model_number($product->data['products_model']));
   $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
    
   // show expiry date of active special products
