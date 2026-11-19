@@ -46,7 +46,15 @@ function payone_get_order_details() {
         }
         echo '  </td>'.PHP_EOL;
         echo '  <td class="dataTableContent" valign="top">';
-        echo ($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : '<br />';
+        // the attribute numbers of the order show whether the number is a joined one
+        require_once(DIR_FS_INC.'encode_model_number.inc.php');
+        $attrib_models = array();
+        if (isset($order->products[$i]['attributes']) && is_array($order->products[$i]['attributes'])) {
+          foreach ($order->products[$i]['attributes'] as $attribute) {
+            $attrib_models[] = $attribute['attributes_model'];
+          }
+        }
+        echo ($order->products[$i]['model'] != '') ? encode_model_number($order->products[$i]['model'], $attrib_models) : '<br />';
         // attribute models
         if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0) {
           for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j ++) {
@@ -54,7 +62,7 @@ function payone_get_order_details() {
             if ($model == '') {
               $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
             }          
-            echo !empty($model) ? $model.'<br />' : '<br />';
+            echo !empty($model) ? encode_model_number($model).'<br />' : '<br />';
           }
         }
         echo '&nbsp;</td>'.PHP_EOL;

@@ -120,7 +120,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
 
       $module_content[$i]['ATTRIBUTES'][$subindex] = array(
         'ID' => $attributes['products_attributes_id'],
-        'MODEL' => $attributes['attributes_model'],
+        'MODEL' => encode_model_number($attributes['attributes_model']),
         'EAN' => $attributes['attributes_ean'],
         'NAME' => $attributes['products_options_name'],
         'VALUE_NAME' => $attributes['products_options_values_name'].$attribute_stock_check

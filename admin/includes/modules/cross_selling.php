@@ -15,6 +15,8 @@
 
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+  require_once(DIR_FS_INC.'encode_model_number.inc.php');
+
   //BOF - web28 -  2012-08-25 - change imagesize by css size  
   if( defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
     $admin_thumbs_size = 'style="'.USE_ADMIN_THUMBS_IN_LIST_STYLE.'"';
@@ -149,7 +151,7 @@
                <?php
               }
               ?>
-              <td class="categories_view_data"><?php echo $cross_data['products_model']; ?></td>
+              <td class="categories_view_data"><?php echo encode_model_number($cross_data['products_model']); ?></td>
               <td class="categories_view_data"><?php echo $cross_data['products_name']; ?></td>
               <td class="categories_view_data"><?php echo buildCAT($categorie_data['categories_id']); ?> </td>
             </tr>
@@ -301,7 +303,7 @@
                  <?php
                 }
                 ?>
-                <td class="categories_view_data"><?php echo $search_data['products_model']; ?></td>
+                <td class="categories_view_data"><?php echo encode_model_number($search_data['products_model']); ?></td>
                 <td class="categories_view_data"><?php echo $search_data['products_name']; ?></td>
                 <td class="categories_view_data"><?php echo buildCAT($categorie_data['categories_id']); ?> </td>
               </tr>
