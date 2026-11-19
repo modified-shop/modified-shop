@@ -23,6 +23,10 @@
   require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
   require_once(DIR_FS_INC . 'get_content_file_path.inc.php');
 
+  // a language pack may not have the texts yet
+  defined('ERROR_CONTENT_FILE') or define('ERROR_CONTENT_FILE', 'Error: The file %s cannot be assigned here. It is not directly in the media folder or its file type is not allowed. The previous assignment stays.');
+  defined('WARNING_CONTENT_FILE') or define('WARNING_CONTENT_FILE', 'Note: The shop does not use the assigned file %s. It is missing or its file type is not allowed. The assignment stays stored.');
+
   if(!defined('CONTENT_CHILDS_ACTIV')) {
     define('CONTENT_CHILDS_ACTIV','true');
   }
