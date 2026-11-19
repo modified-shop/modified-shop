@@ -205,11 +205,11 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
                                                    AND tr.tax_zone_id = ".$geo_zones['geo_zone_id']."
                                        ORDER BY tc.sort_order, tc.tax_class_id");
         while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
-          $tax_class_geo_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_value($tax_class['tax_class_title'], $_SESSION['language_code']));
+          $tax_class_geo_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_html($tax_class['tax_class_title'], $_SESSION['language_code']));
         }
         ?>
         <tr>
-          <td class="main"><?php echo TEXT_PRODUCTS_TAX_CLASS_FOR . parse_multi_language_value($geo_zones['geo_zone_name'], $_SESSION['language_code']); ?>:</td>
+          <td class="main"><?php echo TEXT_PRODUCTS_TAX_CLASS_FOR . parse_multi_language_html($geo_zones['geo_zone_name'], $_SESSION['language_code']); ?>:</td>
           <td class="main" colspan="3"><?php echo xtc_draw_pull_down_menu('products_geo_to_tax['.$geo_zones['geo_zone_id'].']', $tax_class_geo_array, ((isset($products_tax_class_array[$geo_zones['geo_zone_id']])) ? $products_tax_class_array[$geo_zones['geo_zone_id']] : $pInfo->products_tax_class_id), 'style="width: 155px"'); ?></td>
         </tr>
         <?php

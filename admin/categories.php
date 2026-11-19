@@ -31,6 +31,7 @@ require_once (DIR_FS_INC.'xtc_wysiwyg.inc.php');
 require_once (DIR_FS_INC.'xtc_get_order_description.inc.php');
 require_once (DIR_FS_INC.'xtc_parse_category_path.inc.php');
 require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
+require_once (DIR_FS_INC.'parse_multi_language_html.inc.php');
 require_once (DIR_FS_INC.'xtc_get_manufacturers.inc.php');
 
 // include needed classes

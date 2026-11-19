@@ -290,7 +290,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                                       AND customer_id = '" . (int)$cInfo->customer_id . "'");
                   $total = xtc_db_num_rows($count_customers);
 
-                  $heading[] = array('text' => '<b>[' . $cInfo->coupon_id . '] ' . $cInfo->coupon_code . '</b>');
+                  $heading[] = array('text' => '<b>[' . $cInfo->coupon_id . '] ' . encode_htmlspecialchars($cInfo->coupon_code) . '</b>');
                   $contents[] = array('text' => '<b>' . TEXT_REDEMPTIONS . '</b>');
                   $contents[] = array('text' => TEXT_REDEMPTIONS_TOTAL . ' ' . $cc_query_numrows);
                   $contents[] = array('text' => TEXT_REDEMPTIONS_CUSTOMER . ' ' . $total);
@@ -662,7 +662,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td class="dataTableContent">&nbsp;<?php echo $coupon_desc['coupon_name']; ?></td>
                     <td class="dataTableContent" style="padding-left: 5px"><?php echo $coupon_amount;?>&nbsp;</td>
                     <td class="dataTableContent">&nbsp;<?php echo $currencies->format($cc_list['coupon_minimum_order']); ?></td>
-                    <td class="dataTableContent nobr">&nbsp;<?php echo $cc_list['coupon_code']; ?></td>
+                    <td class="dataTableContent nobr">&nbsp;<?php echo encode_htmlspecialchars($cc_list['coupon_code']); ?></td>
                     <td  class="dataTableContent txta-c">
                       <?php
                       if ($cc_list['coupon_active'] == 'Y') {
@@ -689,7 +689,7 @@ require (DIR_WS_INCLUDES.'head.php');
               $contents = array();
               switch ($action) {
                 case 'voucherdelete':
-                  $heading[] = array('text'=>'<b>['.$cInfo->coupon_id.'] '.$cInfo->coupon_code.'</b>');
+                  $heading[] = array('text'=>'<b>['.$cInfo->coupon_id.'] '.encode_htmlspecialchars($cInfo->coupon_code).'</b>');
                   $contents[] = array('text' => TEXT_CONFIRM_DELETE);
                   $contents[] = array('align' => 'center', 'text' => 
                     '<a class="button" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=confirmdelete&cID='.(int)$_GET['cID'],'NONSSL').'">'.BUTTON_CONFIRM.'</a>' .
@@ -699,7 +699,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   
                 default:
                   if (isset($cInfo) && is_object($cInfo)) {
-                    $heading[] = array('text'=>'<b>['.$cInfo->coupon_id.'] '.$cInfo->coupon_code.'</b>');
+                    $heading[] = array('text'=>'<b>['.$cInfo->coupon_id.'] '.encode_htmlspecialchars($cInfo->coupon_code).'</b>');
                     $amount = $cInfo->coupon_amount;
                     if ($cInfo->coupon_type == 'P') {
                       $amount = number_format($amount, 2).'%';

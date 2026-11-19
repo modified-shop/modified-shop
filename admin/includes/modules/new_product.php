@@ -100,7 +100,7 @@
                                              AND tr.tax_zone_id = ".$geo_zones['geo_zone_id']."
                                  ORDER BY tc.sort_order, tc.tax_class_id");
   while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
-    $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_value($tax_class['tax_class_title'], $_SESSION['language_code']));
+    $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_html($tax_class['tax_class_title'], $_SESSION['language_code']));
   }
 
   $shipping_statuses = xtc_get_shipping_status();

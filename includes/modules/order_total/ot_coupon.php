@@ -123,7 +123,8 @@ class ot_coupon {
       $order->info['subtotal'] = $order->info['subtotal'] - $od_amount;
 
       $this->output[] = array(
-        'title' => $this->title.' '.$this->coupon_code.':',
+        // the title is printed as HTML, the code stays text
+        'title' => $this->title.' '.encode_htmlspecialchars($this->coupon_code).':',
         'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount * (-1), true).'</b></span>',
         'value' => $od_amount * (-1)
       );
