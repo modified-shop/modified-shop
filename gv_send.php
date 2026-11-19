@@ -86,14 +86,23 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
   }
 }
 
-if (isset($_GET['action'])
-    && $_GET['action'] == 'process'
-    && check_secure_form($_POST) === false
-    )
-{
-  $error = true;
-  $messageStack->add('gv_send', ENTRY_TOKEN_ERROR);
-  $_GET['action'] = 'send';
+if (isset($_GET['action']) && $_GET['action'] == 'process') {
+  $process_error = '';
+  if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    // a plain link must not use up the token of other open forms
+    $process_error = ENTRY_TOKEN_ERROR;
+  } elseif (isset($modified_session_handler) && $modified_session_handler->holds_lock() === false) {
+    // a session read without its lock may still hold a token that a running transfer used up
+    $process_error = TEXT_GV_SEND_ALREADY_RUNNING;
+  } elseif (check_secure_form($_POST) === false) {
+    $process_error = ENTRY_TOKEN_ERROR;
+  }
+
+  if ($process_error != '') {
+    $error = true;
+    $messageStack->add('gv_send', $process_error);
+    $_GET['action'] = 'send';
+  }
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
@@ -200,7 +209,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
 
 elseif (!isset($_GET['action']) || $_GET['action'] == '' || $error !== false) {
   $smarty->assign('action', '');
-  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_send', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'), 'post'));
+  // created here, the token is past its waiting time when the confirmation is sent
+  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_send', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'), 'post').secure_form('gv_send'));
   $smarty->assign('LINK_SEND', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'));
   $smarty->assign('INPUT_TO_NAME', xtc_draw_input_field('to_name', '', 'autocomplete="name"'));
   $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('to_email', '', 'autocomplete="email"'));
