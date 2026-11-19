@@ -457,7 +457,18 @@
                                 <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
                                   <td class="dataTableContent">&nbsp;</td>
                                   <td class="dataTableContent txta-l">
-                                    <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? encode_model_number($info[$i]['pmodel']).' : ' : '').$info[$i]['pname']; ?></a>
+                                    <?php
+                                    // the attribute numbers of the position show whether its number is a joined one
+                                    $attrib_models = array();
+                                    $attrib_models_query = xtc_db_query("SELECT attributes_model
+                                                                           FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                                                          WHERE orders_products_id = '".(int)$info[$i]['orders_products_id']."'
+                                                                       ORDER BY orders_products_attributes_id");
+                                    while ($attrib_models_array = xtc_db_fetch_array($attrib_models_query)) {
+                                      $attrib_models[] = $attrib_models_array['attributes_model'];
+                                    }
+                                    ?>
+                                    <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? encode_model_number($info[$i]['pmodel'], $attrib_models).' : ' : '').$info[$i]['pname']; ?></a>
                                     <?php
                                     if (is_array($info[$i]['attr'])) {
                                       foreach ($info[$i]['attr'] as $attr) {

@@ -228,20 +228,24 @@
         }
         echo '            </td>'.PHP_EOL;
         echo '            <td class="dataTableContent" valign="top">';
-        // the attribute numbers of the order show whether the number is a joined one
+        // the attribute numbers of the order show whether the number is a joined one;
+        // an order from before the numbers were stored has only those of the catalog
         $attrib_models = array();
+        $attrib_models_catalog = array();
         for ($j = 0; $j < $attr_count; $j ++) {
-          $attrib_models[] = $order->products[$i]['attributes'][$j]['attributes_model'];
+          $model = $order->products[$i]['attributes'][$j]['attributes_model'];
+          $attrib_models[] = $model;
+          if ($model == '') {
+            $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
+          }
+          $attrib_models_catalog[] = $model;
         }
-        echo ($order->products[$i]['model'] != '') ? encode_model_number($order->products[$i]['model'], $attrib_models) : '<br />';
+        echo ($order->products[$i]['model'] != '') ? encode_model_number($order->products[$i]['model'], ((implode('', $attrib_models) != '') ? $attrib_models : $attrib_models_catalog)) : '<br />';
         // attribute models
         $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
         if ($attr_count > 0) {
           for ($j = 0; $j < $attr_count; $j ++) {
-            $model = $order->products[$i]['attributes'][$j]['attributes_model'];
-            if ($model == '') {
-              $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
-            }
+            $model = $attrib_models_catalog[$j];
             echo (($model != '') ? $attr_model_delimiter . encode_model_number($model) : '<br />');
           }
         }

@@ -25,7 +25,8 @@
     if (substr_count($product_sticker, '%s') == 1) {
       $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, encode_model_number($product->data['products_model'])));
     } elseif (substr_count($product_sticker, '%s') == 2) {
-      $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, MODULE_TS_TRUSTEDSHOPS_ID, encode_model_number($product->data['products_model'])));
+      // two placeholders are the script form of the sticker: the number is written for a script string, which is safe in an attribute too
+      $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, MODULE_TS_TRUSTEDSHOPS_ID, strtr((string)$product->data['products_model'], array('\\' => '\\\\', "'" => '\\x27', '"' => '\\x22', '<' => '\\x3C', '>' => '\\x3E', '&' => '\\x26', "\r" => ' ', "\n" => ' '))));
     } else {
       $info_smarty->assign('MODULE_products_reviews', $product_sticker);
     }

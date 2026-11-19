@@ -48,22 +48,23 @@ function payone_get_order_details() {
         echo '  <td class="dataTableContent" valign="top">';
         // the attribute numbers of the order show whether the number is a joined one
         require_once(DIR_FS_INC.'encode_model_number.inc.php');
+        // an order from before the numbers were stored has only those of the catalog
         $attrib_models = array();
+        $attrib_models_catalog = array();
         if (isset($order->products[$i]['attributes']) && is_array($order->products[$i]['attributes'])) {
-          foreach ($order->products[$i]['attributes'] as $attribute) {
-            $attrib_models[] = $attribute['attributes_model'];
-          }
-        }
-        echo ($order->products[$i]['model'] != '') ? encode_model_number($order->products[$i]['model'], $attrib_models) : '<br />';
-        // attribute models
-        if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0) {
           for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j ++) {
             $model = $order->products[$i]['attributes'][$j]['attributes_model'];
+            $attrib_models[] = $model;
             if ($model == '') {
               $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
-            }          
-            echo !empty($model) ? encode_model_number($model).'<br />' : '<br />';
+            }
+            $attrib_models_catalog[] = $model;
           }
+        }
+        echo ($order->products[$i]['model'] != '') ? encode_model_number($order->products[$i]['model'], ((implode('', $attrib_models) != '') ? $attrib_models : $attrib_models_catalog)) : '<br />';
+        // attribute models
+        foreach ($attrib_models_catalog as $model) {
+          echo !empty($model) ? encode_model_number($model).'<br />' : '<br />';
         }
         echo '&nbsp;</td>'.PHP_EOL;
         if ($order->products[$i]['allow_tax'] == '1') {
