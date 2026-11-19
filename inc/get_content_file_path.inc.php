@@ -18,7 +18,7 @@
    *
    * @param string $file stored file name
    * @param string $folder content or products
-   * @param string $types content (pages), products (product content) or file (attachments, deleting)
+   * @param string $types content (pages), products (product content) or file (saving, attachments, deleting)
    * @return string|false absolute path of the file
    */
   function get_content_file_path($file, $folder = 'content', $types = '') {
@@ -59,6 +59,20 @@
     }
 
     $path = DIR_FS_CATALOG.'media/'.$folder.'/'.$file;
+    if (!is_file($path)) {
+      return false;
+    }
 
-    return (is_file($path) ? $path : false);
+    // a symbolic link in the media folder must not lead to a file elsewhere
+    $real_path = realpath($path);
+    $real_folder = realpath(DIR_FS_CATALOG.'media/'.$folder);
+    if ($real_path === false
+        || $real_folder === false
+        || strpos($real_path, $real_folder.DIRECTORY_SEPARATOR) !== 0
+        )
+    {
+      return false;
+    }
+
+    return $path;
   }

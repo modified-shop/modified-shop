@@ -168,7 +168,7 @@
           if ($select_file[$i][$languages[$l]['id']] != 'default') {
             $content_file_name = $select_file[$i][$languages[$l]['id']];
             // the shop includes the file, so only a file directly in media/content/ can be selected
-            if (get_content_file_path($content_file_name, 'content') === false) {
+            if (get_content_file_path($content_file_name, 'content', 'file') === false) {
               $content_file_name = '';
             }
           }
@@ -342,8 +342,8 @@
 
       // the shop includes the file, so only a file directly in the media folder can be stored;
       // a product content may also come from media/content/, as media_content.php looks there too
-      if (get_content_file_path($content_file_name, $path, (($path == 'products') ? 'products' : 'content')) === false
-          && ($path != 'products' || get_content_file_path($content_file_name, 'content', 'products') === false)
+      if (get_content_file_path($content_file_name, $path, 'file') === false
+          && ($path != 'products' || get_content_file_path($content_file_name, 'content', 'file') === false)
           )
       {
         $content_file_name = '';

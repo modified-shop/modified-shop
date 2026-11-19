@@ -51,10 +51,11 @@ require (DIR_WS_INCLUDES.'head.php');
 if (strpos($content_data['content_file'],'.txt') !== false) echo '<pre>';
 if ($_GET['pID']=='media') {
 	// display image
-	if (preg_match('/.gif/i',$content_data['content_file']) or preg_match('/.jpg/i',$content_data['content_file']) or  preg_match('/.png/i',$content_data['content_file']) or  preg_match('/.tif/i',$content_data['content_file']) or  preg_match('/.bmp/i',$content_data['content_file'])) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3	
-	echo xtc_image(DIR_WS_CATALOG.'media/products/'.$content_data['content_file']);
-	} else {
+	// the stored name is checked before any output, the image link takes it encoded
 	$content_file_path = get_content_file_path($content_data['content_file'], 'products', 'products');
+	if ($content_file_path !== false && preg_match('/\.(gif|jpe?g|png|tiff?|bmp)$/i', $content_data['content_file'])) {
+	echo xtc_image(DIR_WS_CATALOG.'media/products/'.rawurlencode($content_data['content_file']));
+	$content_file_path = false;
 	}
 } else {
 $content_file_path = get_content_file_path($content_data['content_file'], 'content');
