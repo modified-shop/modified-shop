@@ -11,6 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   require('includes/application_top.php');
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
 
   $oldaction = isset($_GET['oldaction']) ? '&oldaction='.$_GET['oldaction'] : (isset($_POST['oldaction']) ? '&oldaction='.$_POST['oldaction']: '');
   $oldpage = isset($_GET['page']) ? '&page='.$_GET['page'] : (isset($_POST['page']) ? '&page='.$_POST['page']: '') ;
@@ -176,6 +177,10 @@
       break;
 
     case 'deleteconfirm_values':
+      // deleting needs the form with its token, not a link
+      if (!admin_form_posted()) {
+        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction')) . 'list=detail'));
+      }
       $vID = (int)$_GET['vID'];
       $oID = (int)$_GET['oID'];
 
@@ -235,6 +240,9 @@
       break;
 
     case 'deleteconfirm_options':
+      if (!admin_form_posted()) {
+        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID'))));
+      }
       $oID = (int)$_GET['oID'];
 
       $products_array = xtc_check_attributes_options($oID);

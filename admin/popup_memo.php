@@ -15,6 +15,7 @@
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
   include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/customers.php');
 
   if (isset($_GET['action'])) {
@@ -38,7 +39,8 @@
         break;
 
       case 'edit':
-        if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
+        // deleting needs the form with its token, not a link
+        if (isset($_GET['special']) && $_GET['special'] == 'remove_memo' && admin_form_posted()) {
           xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." where memo_id='".(int)$_GET['mID']."'");
         }
         xtc_redirect(xtc_href_link('popup_memo.php', xtc_get_all_get_params(array('action','special','mID'))));

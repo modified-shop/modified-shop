@@ -22,6 +22,7 @@
    --------------------------------------------------------------*/
 
   require ('includes/application_top.php');
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
   
   require(DIR_WS_INCLUDES . 'get_states.php');
 
@@ -61,8 +62,11 @@
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
   if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
-    $mID = xtc_db_prepare_input($_GET['mID']);
-    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE memo_id = '".(int)$mID."'");
+    // deleting needs the form with its token, not a link
+    if (admin_form_posted()) {
+      $mID = xtc_db_prepare_input($_GET['mID']);
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE memo_id = '".(int)$mID."'");
+    }
     xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action', 'special')).'cID='.$customers_id.'&action=edit'));
   }
 

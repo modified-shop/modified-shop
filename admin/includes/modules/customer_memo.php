@@ -24,6 +24,27 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
                                  WHERE customers_id = '" . (int)$_GET['cID'] . "'
                               ORDER BY memo_date DESC");
     if (xtc_db_num_rows($memo_query) > 0) {
+      ?>
+      <script>
+        // the memo is deleted by a POST of the surrounding form, which carries the form token
+        function remove_memo(message, link) {
+          $.confirm({
+            title: 'Information',
+            content: message,
+            confirmButton: js_button_ok,
+            cancelButton: js_button_cancel,
+            columnClass: 'jalert-width',
+            animation: 'none',
+            confirm: function () {
+              var form = $(link).closest('form');
+              form.attr('action', link.href);
+              form.submit();
+            }
+          });
+          return false;
+        }
+      </script>
+      <?php
       while ($memo_values = xtc_db_fetch_array($memo_query)) {
         $poster_query = xtc_db_query("SELECT customers_firstname, customers_lastname FROM " . TABLE_CUSTOMERS . " WHERE customers_id = '" . $memo_values['poster_id'] . "'");
         $poster_values = xtc_db_fetch_array($poster_query);
@@ -47,7 +68,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
             <td class="main" style="border:none; padding:2px;"><?php echo $memo_values['memo_text']; ?></td>
           </tr>
           <tr>        
-            <td class="txta-r" colspan="2" style="border:none; padding:2px;"><a style="text-decoration:none;" href="<?php echo xtc_href_link(basename($PHP_SELF), 'cID=' . (int)$_GET['cID'] . '&action=edit&special=remove_memo&mID=' . $memo_values['memo_id']); ?>" class="button" onclick="return confirmLink('<?php echo DELETE_ENTRY; ?>', '', this)"><?php echo BUTTON_DELETE; ?></a></td> 
+            <td class="txta-r" colspan="2" style="border:none; padding:2px;"><a style="text-decoration:none;" href="<?php echo xtc_href_link(basename($PHP_SELF), 'cID=' . (int)$_GET['cID'] . '&action=edit&special=remove_memo&mID=' . $memo_values['memo_id']); ?>" class="button" onclick="return remove_memo('<?php echo DELETE_ENTRY; ?>', this)"><?php echo BUTTON_DELETE; ?></a></td>
           </tr>
         </table>
         </div>

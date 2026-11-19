@@ -13,6 +13,7 @@
   define('IMPORT_LIMIT', 5000);
   
   require('includes/application_top.php');
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
 
   $iframe = (isset($_GET['iframe']) ? '&iframe=1' : '');
   $oldaction = isset($_GET['oldaction']) ? '&oldaction='.$_GET['oldaction'] : (isset($_POST['oldaction']) ? '&oldaction='.$_POST['oldaction']: '');
@@ -186,6 +187,10 @@
       break;
 
     case 'deleteconfirm_values':
+      // deleting needs the form with its token, not a link
+      if (!admin_form_posted()) {
+        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage']));
+      }
       $vID = (int)$_GET['vID'];
       $oID = (int)$_GET['oID'];
 
@@ -277,6 +282,9 @@
       break;
 
     case 'deleteconfirm_options':
+      if (!admin_form_posted()) {
+        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page));
+      }
       $oID = (int)$_GET['oID'];
       xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_OPTIONS . " WHERE options_id = '" . $oID . "'");
       xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_VALUES . " WHERE options_id = '" . $oID . "'");
