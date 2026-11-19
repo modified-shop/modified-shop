@@ -87,6 +87,16 @@
         xtc_redirect(xtc_href_link(FILENAME_BACKUP));
         break;
       case 'download':
+        // only a plain name of a file that lies in the backup directory itself
+        if (!isset($_GET['file'])
+            || !is_string($_GET['file'])
+            || basename($_GET['file']) !== $_GET['file']
+            || !is_file(DIR_FS_BACKUP . $_GET['file'])
+            )
+        {
+          $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
+          break;
+        }
         $extension = substr($_GET['file'], -3);
         if ( ($extension == 'zip') || ($extension == '.gz') || ($extension == 'sql') ) {
           if ($fp = fopen(DIR_FS_BACKUP . $_GET['file'], 'rb')) {
