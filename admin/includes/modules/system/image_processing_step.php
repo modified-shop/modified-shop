@@ -115,7 +115,7 @@
     function image_processing_do() {
       
       require_once (DIR_FS_INC.'get_image_manipulator_file.inc.php');
-      include ('includes/classes/'.get_image_manipulator_file());
+      include ('includes/classes/'.get_image_manipulator_file(FILENAME_IMAGEMANIPULATOR));
 
       $offset = (int)$_POST['start'];
       $step = (int)$_POST['max_datasets'];
