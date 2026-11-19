@@ -96,6 +96,18 @@
       }
     }
 
+    // the shop starts in the default language as well; a changed directory is checked above,
+    // an unchanged one could still be without its language file
+    if (!$check_directory_changed
+        && isset($_POST['default'])
+        && $_POST['default'] == 'on'
+        && $check_code != DEFAULT_LANGUAGE
+        && !language_files_exist($check_directory)
+        )
+    {
+      $check_errors[] = sprintf(ERROR_LANGUAGE_DIRECTORY, get_column_length(TABLE_LANGUAGES, 'directory'));
+    }
+
     // the admin starts in the default language, so it needs the admin language file and the buttons;
     // the admin status only says that texts of this language are edited in the admin
     $check_admin_files = language_files_exist($check_directory, true);
