@@ -112,6 +112,36 @@
       return false;
     }  
 
+    // a link that changes data is sent as POST with the form token and nothing else;
+    // with the click event, so that a table row does not navigate away at the same time
+    function postLink(link, e) {
+      if (e && e.stopPropagation) {
+        e.stopPropagation();
+      }
+      var form = $('<form method="post"></form>').attr('action', link.href);
+      <?php if (defined('CSRF_TOKEN_SYSTEM') && CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFName']) && isset($_SESSION['CSRFToken'])) { ?>
+      form.append($('<input type="hidden"/>').attr('name', <?php echo json_encode((string)$_SESSION['CSRFName']); ?>).val(<?php echo json_encode((string)$_SESSION['CSRFToken']); ?>));
+      <?php } ?>
+      form.appendTo('body').submit();
+      return false;
+    }
+
+    function confirmPostLink(message, title, link) {
+      title = title || 'Information';
+      $.confirm({
+        title: title,
+        content: (message ? message : ' '),
+        confirmButton: js_button_ok,
+        cancelButton: js_button_cancel,
+        columnClass: 'jalert-width',
+        animation: 'none',
+        confirm: function () {
+          postLink(link);
+        }
+      });
+      return false;
+    }
+
     function confirmSubmit(message, title, form) { 
       title = title || 'Information'; 
       $.confirm({

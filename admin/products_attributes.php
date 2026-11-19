@@ -11,6 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   require('includes/application_top.php');
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
 
   $oldaction = isset($_GET['oldaction']) ? '&oldaction='.$_GET['oldaction'] : (isset($_POST['oldaction']) ? '&oldaction='.$_POST['oldaction']: '');
   $oldpage = isset($_GET['page']) ? '&page='.$_GET['page'] : (isset($_POST['page']) ? '&page='.$_POST['page']: '') ;
@@ -125,6 +126,21 @@
     return $products_array;
   }
 
+
+  // these actions change data: they need their form with the token, a plain link
+  // or an empty POST is not enough and would also run them with missing fields
+  if (in_array($saction, array('insert_values', 'save_values', 'deleteconfirm_values'), true)
+      && !admin_form_posted()
+      )
+  {
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('saction'))));
+  }
+  if (in_array($action, array('insert_options', 'save_options', 'deleteconfirm_options'), true)
+      && !admin_form_posted()
+      )
+  {
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action'))));
+  }
 
   switch ($saction) {
 

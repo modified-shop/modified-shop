@@ -13,6 +13,7 @@
   define('IMPORT_LIMIT', 5000);
   
   require('includes/application_top.php');
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
 
   $iframe = (isset($_GET['iframe']) ? '&iframe=1' : '');
   $oldaction = isset($_GET['oldaction']) ? '&oldaction='.$_GET['oldaction'] : (isset($_POST['oldaction']) ? '&oldaction='.$_POST['oldaction']: '');
@@ -80,6 +81,21 @@
   $saction = (isset($_GET['saction']) ? $_GET['saction'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   $spage = (isset($_GET['spage']) ? (int)$_GET['spage'] : 1);
+
+  // these actions change data: they need the form or a posted link with the token, a plain link
+  // or an empty POST is not enough and would also run them with missing fields
+  if (in_array($saction, array('setvaluesflag', 'setvaluesfilter', 'insert_values', 'save_values', 'deleteconfirm_values'), true)
+      && !admin_form_posted()
+      )
+  {
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('saction', 'flag'))));
+  }
+  if (in_array($action, array('setoptionsflag', 'setoptionsfilter', 'insert_options', 'save_options', 'deleteconfirm_options'), true)
+      && !admin_form_posted()
+      )
+  {
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('action', 'flag'))));
+  }
   
   switch ($saction) {    
     case 'setvaluesflag':
@@ -499,18 +515,18 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableContent">
                   <?php
                   if ($values['filter'] == 1) {
-                    echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('saction', 'vID')) . 'saction=setvaluesfilter&flag=0&vID='.$values['values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
+                    echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('saction', 'vID')) . 'saction=setvaluesfilter&flag=0&vID='.$values['values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
                   } else {
-                    echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('saction', 'vID')) . 'saction=setvaluesfilter&flag=1&vID='.$values['values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
+                    echo '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('saction', 'vID')) . 'saction=setvaluesfilter&flag=1&vID='.$values['values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
                   }
                   ?>
                 </td>
                 <td class="dataTableContent">
                   <?php
                   if ($values['status'] == 1) {
-                    echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('saction', 'vID')) . 'saction=setvaluesflag&flag=0&vID='.$values['values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
+                    echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('saction', 'vID')) . 'saction=setvaluesflag&flag=0&vID='.$values['values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
                   } else {
-                    echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('saction', 'vID')) . 'saction=setvaluesflag&flag=1&vID='.$values['values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
+                    echo '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('saction', 'vID')) . 'saction=setvaluesflag&flag=1&vID='.$values['values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
                   }
                   ?>
                 </td>
@@ -574,18 +590,18 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableContent">
                     <?php
                     if ($options['filter'] == 1) {
-                      echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('action', 'oID')) . 'action=setoptionsfilter&flag=0&oID='.$options['options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
+                      echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('action', 'oID')) . 'action=setoptionsfilter&flag=0&oID='.$options['options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
                     } else {
-                      echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('action', 'oID')) . 'action=setoptionsfilter&flag=1&oID='.$options['options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
+                      echo '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('action', 'oID')) . 'action=setoptionsfilter&flag=1&oID='.$options['options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
                     }
                     ?>
                   </td>
                   <td class="dataTableContent">
                     <?php
                     if ($options['status'] == 1) {
-                      echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('action', 'oID')) . 'action=setoptionsflag&flag=0&oID='.$options['options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
+                      echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('action', 'oID')) . 'action=setoptionsflag&flag=0&oID='.$options['options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
                     } else {
-                      echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('action', 'oID')) . 'action=setoptionsflag&flag=1&oID='.$options['options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
+                      echo '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('action', 'oID')) . 'action=setoptionsflag&flag=1&oID='.$options['options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
                     }
                     ?>
                   </td>

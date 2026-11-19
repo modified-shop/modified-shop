@@ -15,7 +15,14 @@
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
   include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/customers.php');
+
+  // the central token check refused the form and removed the POST
+  $memo_retry_message = (defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.');
+  if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST)) {
+    $messageStack->add($memo_retry_message, 'warning');
+  }
 
   if (isset($_GET['action'])) {
     switch ($_GET['action']) {
@@ -38,8 +45,13 @@
         break;
 
       case 'edit':
+        // deleting needs the form with its token, not a link
         if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
-          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." where memo_id='".(int)$_GET['mID']."'");
+          if (admin_form_posted()) {
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." where memo_id='".(int)$_GET['mID']."'");
+          } else {
+            $messageStack->add_session($memo_retry_message, 'warning');
+          }
         }
         xtc_redirect(xtc_href_link('popup_memo.php', xtc_get_all_get_params(array('action','special','mID'))));
         break;
@@ -55,6 +67,12 @@
       <div class="pageHeading"><?php echo TITLE_MEMO; ?></div>
       <div class="main pdg2"><?php echo BOX_HEADING_CUSTOMERS; ?></div>
     </div>
+    <?php
+      // the popup has no page header, so a refused action shows its message here
+      if (isset($messageStack) && is_object($messageStack) && $messageStack->size > 0) {
+        echo '<div class="clear"></div>'.$messageStack->output();
+      }
+    ?>
     <?php echo xtc_draw_form('customers_memo', 'popup_memo.php', 'action=save&cID='.(int)$_GET['cID'], 'post'); ?>  
       <table class="tableConfig borderall">
         <tr>
