@@ -24,6 +24,8 @@ if (!isset($module_exclusions) || !is_array($module_exclusions)) {
 
 // keep Token for popups, user_exclusions, module_exclusions
 $CSRFKeep = false;
+// a form without the token is only accepted on pages of external modules and own exclusions
+$CSRFOptional = false;
 if (defined('RUN_MODE_ADMIN')) {
   foreach(auto_include(DIR_FS_ADMIN.'includes/extra/csrf_exclusion/','php') as $file) require_once ($file);
   
@@ -42,15 +44,28 @@ if (defined('RUN_MODE_ADMIN')) {
     'validcategories',
     'validmanufacturers',
   );
+  $optional = array(
+    'bill',
+    'haendlerbund',
+    'magnalister',
+  );
   if (isset($user_exclusions) && is_array($user_exclusions)) {
     $exclusions = array_merge($exclusions, $user_exclusions);
+    $optional = array_merge($optional, $user_exclusions);
   }
   if (isset($module_exclusions) && is_array($module_exclusions)) {
     $exclusions = array_merge($exclusions, $module_exclusions);
+    $optional = array_merge($optional, $module_exclusions);
   }
+  // an empty entry, e.g. from a trailing comma, would match every page
   foreach ($exclusions as $filename) {
-    if (strpos(basename($PHP_SELF), $filename) !== false) {
+    if (is_string($filename) && $filename != '' && strpos(basename($PHP_SELF), $filename) !== false) {
       $CSRFKeep = true;
+    }
+  }
+  foreach ($optional as $filename) {
+    if (is_string($filename) && $filename != '' && strpos(basename($PHP_SELF), $filename) !== false) {
+      $CSRFOptional = true;
     }
   }
 }
@@ -62,7 +77,7 @@ if (is_array($_POST) && count($_POST) > 0) {
     if ($_POST[$_SESSION['CSRFName']] != $_SESSION['CSRFToken']) {
       $error = CSRF_TOKEN_MANIPULATION;
     }
-  } elseif ($CSRFKeep !== true) {
+  } elseif ($CSRFOptional !== true) {
     $error = CSRF_TOKEN_NOT_DEFINED;
   }
   
