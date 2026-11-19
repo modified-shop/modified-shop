@@ -674,17 +674,25 @@ function check_file_extension($extension,$config){
 * @param  array   $files
 * @param  string  $basepath
 * @param  string  $ext
+* @param  array   $omitted   files with an allowed extension that are left out for their name
 */
-function check_files_extensions_on_phar($phar, &$files, $basepath, $config)
+function check_files_extensions_on_phar($phar, &$files, $basepath, $config, &$omitted = null)
 {
 	foreach ($phar as $file)
 	{
 		if ($file->isFile())
 		{
-			// a name with more than one dot is left out, extractTo() cannot rename it
-			if (check_file_extension($file->getExtension(), $config) && substr_count($file->getFileName(), '.') < 2)
+			if (check_file_extension($file->getExtension(), $config))
 			{
-				$files[] = $basepath . $file->getFileName();
+				// a name with more than one dot is left out and listed, an entry of a TAR archive is not renamed
+				if (substr_count($file->getFileName(), '.') < 2)
+				{
+					$files[] = $basepath . $file->getFileName();
+				}
+				elseif (is_array($omitted))
+				{
+					$omitted[] = $basepath . $file->getFileName();
+				}
 			}
 		}
 		else
@@ -693,7 +701,7 @@ function check_files_extensions_on_phar($phar, &$files, $basepath, $config)
 			{
 				// the full path keeps the recursion inside the archive for deeper folders
 				$iterator = new DirectoryIterator($file->getPathname());
-				check_files_extensions_on_phar($iterator, $files, $basepath . $file->getFileName() . '/', $config);
+				check_files_extensions_on_phar($iterator, $files, $basepath . $file->getFileName() . '/', $config, $omitted);
 			}
 		}
 	}

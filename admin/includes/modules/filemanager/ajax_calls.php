@@ -183,6 +183,7 @@ if (isset($_GET['action'])) {
             // entries that could not be written as well
             $skipped_files = array();
             $failed_files = array();
+            $omitted_files = array();
 
             switch ($info['extension']) {
                 case "zip":
@@ -244,7 +245,7 @@ if (isset($_GET['action'])) {
                     $phar = new PharData($path);
                     $phar->decompressFiles();
                     $files = array();
-                    check_files_extensions_on_phar($phar, $files, '', $config);
+                    check_files_extensions_on_phar($phar, $files, '', $config, $omitted_files);
                     // a file that is already there stays, the entry is reported;
                     // extractTo() checks the target and writes it in two steps, so each file is created on its own
                     foreach ($files as $tar_file) {
@@ -273,8 +274,12 @@ if (isset($_GET['action'])) {
                 deleteDir($base_folder);
             }
 
-            if (count($skipped_files) > 0 || count($failed_files) > 0) {
+            if (count($skipped_files) > 0 || count($failed_files) > 0 || count($omitted_files) > 0) {
                 $messages = array();
+                if (count($omitted_files) > 0) {
+                    // TAR entries with inner dots in the name are not extracted
+                    $messages[] = trans('wrong name') . ': ' . rfm_esc(implode(', ', $omitted_files));
+                }
                 if (count($skipped_files) > 0) {
                     $messages[] = trans('Rename_existing_file') . ': ' . rfm_esc(implode(', ', $skipped_files));
                 }
