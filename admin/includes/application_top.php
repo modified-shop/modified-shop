@@ -218,12 +218,7 @@ if (!is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $_SESSION['l
         )
     {
       // only for this page, set_language_sessions.php gives the session its language back
-      $_SESSION['language_shop'] = array(
-        'language' => $_SESSION['language'],
-        'languages_id' => $_SESSION['languages_id'],
-        'language_charset' => $_SESSION['language_charset'],
-        'language_code' => $_SESSION['language_code'],
-      );
+      $_SESSION['language_shop'] = (int)$_SESSION['languages_id'];
       $_SESSION['language'] = $admin_language['directory'];
       $_SESSION['languages_id'] = $admin_language['languages_id'];
       $_SESSION['language_charset'] = $admin_language['language_charset'];
