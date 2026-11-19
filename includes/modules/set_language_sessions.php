@@ -12,6 +12,16 @@
    
 $language_not_found = false;
 
+// the admin used another language for its last page, the session gets the language of the shop back
+if (isset($_SESSION['language_shop']) && is_array($_SESSION['language_shop'])) {
+  foreach (array('language', 'languages_id', 'language_charset', 'language_code') as $language_key) {
+    if (isset($_SESSION['language_shop'][$language_key])) {
+      $_SESSION[$language_key] = $_SESSION['language_shop'][$language_key];
+    }
+  }
+  unset($_SESSION['language_shop']);
+}
+
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_language_sessions/','php') as $file) require_once ($file);
 
 // an open session can still hold a language that has been deleted since

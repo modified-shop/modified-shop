@@ -152,7 +152,13 @@
                                        FROM " . TABLE_LANGUAGES . "
                                       WHERE languages_id = '" . $lID . "'");
           $lng = xtc_db_fetch_array($lng_query);
-          if (!is_array($lng) || !language_files_exist($lng['directory'], true)) {
+          // an admin can choose every admin language in the shop as well, so the shop needs its file too
+          if (!is_array($lng) || !language_files_exist($lng['directory'])) {
+            require_once(DIR_FS_INC.'get_column_length.inc.php');
+            $messageStack->add_session(sprintf(ERROR_LANGUAGE_DIRECTORY, get_column_length(TABLE_LANGUAGES, 'directory')), 'error');
+            xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
+          }
+          if (!language_files_exist($lng['directory'], true)) {
             $messageStack->add_session(ERROR_LANGUAGE_ADMIN_FILES, 'error');
             xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
           }
