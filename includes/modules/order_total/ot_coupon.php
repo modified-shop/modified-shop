@@ -38,6 +38,8 @@
    1.3.2 fix different currencies
    ---------------------------------------------------------------------------------------*/
 
+require_once(DIR_FS_INC.'clean_html_output.inc.php');
+
 class ot_coupon {
 
   var $code;
@@ -123,9 +125,9 @@ class ot_coupon {
       $order->info['subtotal'] = $order->info['subtotal'] - $od_amount;
 
       $this->output[] = array(
-        // the title is printed as HTML and read as text by payment modules, so only the characters
-        // that could open a tag are encoded and an & stays as it is
-        'title' => $this->title.' '.str_replace(array('<', '>'), array('&lt;', '&gt;'), (string)$this->coupon_code).':',
+        // the title is printed as HTML, stored with the order and read as text by payment modules:
+        // a code keeps its characters, only active content is removed
+        'title' => $this->title.' '.clean_html_output((string)$this->coupon_code).':',
         'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount * (-1), true).'</b></span>',
         'value' => $od_amount * (-1)
       );

@@ -221,6 +221,56 @@
   }
 
 
+
+  /**
+   * xtc_remove_active_content_keep()
+   *
+   * like xtc_remove_active_content(), for short texts such as names, labels and codes that are stored in
+   * narrow columns or passed on as plain text: a text that loses nothing keeps its bytes, because the
+   * cleaner writes &amp;, <br /> and tag names its own way and the text would grow
+   *
+   * @param mixed $value text or array of texts
+   * @param boolean $removed set to true when something was removed
+   * @return mixed
+   */
+  function xtc_remove_active_content_keep($value, &$removed = false) {
+    if (is_array($value)) {
+      foreach ($value as $key => $val) {
+        $value[$key] = xtc_remove_active_content_keep($val, $removed);
+      }
+      return $value;
+    }
+
+    if (!is_string($value) || strpos($value, '<') === false || !xtc_remove_active_content_available()) {
+      return $value;
+    }
+
+    $changed = false;
+    $clean = xtc_remove_active_content($value, $changed);
+    if ($changed === true) {
+      $removed = true;
+    }
+
+    // nothing removed and no tag with an attribute, comment or declaration: the text as it is.
+    // With attributes the browser may read a value differently than the cleaner, so those come from the cleaner
+    if ($changed === false && !preg_match('/<[a-z\/][^>]*=|<[!?]/i', $value)) {
+      return $value;
+    }
+
+    // outside of tags an & can only become a character, never markup, so it gets its short form back
+    $parts = preg_split('/(<[^>]*>)/', $clean, -1, PREG_SPLIT_DELIM_CAPTURE);
+    if (is_array($parts)) {
+      foreach ($parts as $i => $part) {
+        if ($i % 2 == 0) {
+          $parts[$i] = str_replace('&amp;', '&', $part);
+        }
+      }
+      $clean = implode('', $parts);
+    }
+
+    return $clean;
+  }
+
   function xtc_remove_active_content_fingerprint($html, $config) {
     $items = array();
     $tokens = HTMLPurifier_Lexer::create($config)->tokenizeHTML($html, $config, new HTMLPurifier_Context());

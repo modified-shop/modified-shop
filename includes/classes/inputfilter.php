@@ -68,12 +68,30 @@ class Inputfilter {
                                   'products_ean',
                                   );
 
+    // short names and labels with narrow columns: a value that loses nothing is stored as typed,
+    // the cleaner would write &amp; for & and the text would no longer fit
+    private $content_keys_keep = array('customers_status_name',
+                                       'coupon_name',
+                                       'banners_title',
+                                       'tax_description',
+                                       'tax_class_title',
+                                       'tax_class_description',
+                                       'geo_zone_name',
+                                       'geo_zone_description',
+                                       'campaigns_name',
+                                       'memo_title',
+                                       'memo_text',
+                                       'symbol_left',
+                                       'symbol_right',
+                                       'products_ean',
+                                       );
+
     public function __construct()
     {
         $this->params = array();
     }
 
-    public function removeActiveContent($value)
+    public function removeActiveContent($value, $keep = false)
     {
         require_once(DIR_FS_CATALOG.'inc/xtc_remove_active_content.inc.php');
 
@@ -84,7 +102,8 @@ class Inputfilter {
         }
 
         $removed = false;
-        $value = xtc_remove_active_content($value, $removed);
+        // $keep: a value that loses nothing stays as typed, see xtc_remove_active_content_keep()
+        $value = (($keep === true) ? xtc_remove_active_content_keep($value, $removed) : xtc_remove_active_content($value, $removed));
         if ($removed === true) {
             $this->active_content_removed = true;
         }
@@ -229,7 +248,7 @@ class Inputfilter {
                           && in_array($key, $this->content_keys)
                           )
                       {
-                        $this->params[$key] = $this->removeActiveContent($value);
+                        $this->params[$key] = $this->removeActiveContent($value, in_array($key, $this->content_keys_keep));
                       }
                     }
                   break;

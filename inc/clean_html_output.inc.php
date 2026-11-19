@@ -30,15 +30,7 @@
     }
 
     $removed = false;
-    $clean = xtc_remove_active_content($value, $removed);
 
-    // a text that loses nothing keeps its bytes: the cleaner writes &amp; and <br /> its own way, and a title
-    // made of this text is stored with the order and read as text by payment modules; tags with attributes
-    // and comments always come from the cleaner
-    if ($removed === false && !preg_match('/<[^>]*[=!]/', $value)) {
-      return $value;
-    }
-
-    return $clean;
+    return xtc_remove_active_content_keep($value, $removed);
   }
 ?>
