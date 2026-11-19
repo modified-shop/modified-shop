@@ -54,60 +54,19 @@
     }
   }
   
-  // resolved path of an entry that lies in the directory itself, false when it leads elsewhere
-  function backup_entry_path($entry, $dir = DIR_FS_BACKUP) {
-    if (!is_string($entry)
-        || $entry === ''
-        || basename($entry) !== $entry
-        || strpos($entry, "\0") !== false
-        )
-    {
-      return false;
-    }
-    $dir = realpath($dir);
-    if ($dir === false) {
-      return false;
-    }
-    $path = realpath($dir . DIRECTORY_SEPARATOR . $entry);
-
-    return (($path !== false && dirname($path) === $dir) ? $path : false);
-  }
-
-  // true when the open file is the regular file behind the path, not the target of a link placed since the check
-  function backup_entry_opened($fp, $path) {
-    clearstatcache();
-    $opened = fstat($fp);
-    $entry = @lstat($path);
-    if (!is_array($opened)
-        || !is_array($entry)
-        || ($entry['mode'] & 0170000) != 0100000
-        )
-    {
-      return false;
-    }
-    // without file numbers the entry is at least no link
-    if ($opened['ino'] == 0 || $entry['ino'] == 0) {
-      return true;
-    }
-
-    return ($opened['dev'] == $entry['dev'] && $opened['ino'] == $entry['ino']);
-  }
-
   function check_schema($entry) {
     $schema = glob(DIR_FS_BACKUP . $entry . "/schema.{sql,sql.gz,gz,zip}", GLOB_BRACE);
     // the schema has to lie in the folder itself
-    if (isset($schema[0]) && backup_entry_path(basename($schema[0]), DIR_FS_BACKUP . $entry) !== false) return basename($schema[0]);
+    if (isset($schema[0]) && backup_entry_path(basename($schema[0]), $entry) !== false) return basename($schema[0]);
   }
   
   function calculate_filesize($entry) {
-    if (is_dir(DIR_FS_BACKUP . $entry)) {
-      $total = 0;      
-      foreach (glob(DIR_FS_BACKUP . $entry . "/*.{sql,gz,zip}", GLOB_BRACE) as $files) {      
-        $total += filesize($files);
-      }
-      return number_format($total);
+    // only regular files of the entry itself count
+    $stat = backup_entry_stat($entry);
+    if ($stat !== false && $stat['is_dir']) {
+      return number_format(backup_folder_size($entry, '*.{sql,gz,zip}'));
     }
-    return number_format(filesize(DIR_FS_BACKUP . $entry));
+    return number_format(($stat !== false && $stat['is_file']) ? $stat['size'] : 0);
   }
   
   function createDBTableList($data) {
@@ -228,19 +187,20 @@
                     $exts = array("sql","sql.zip","sql.gz");
                     while ($file = $dir->read()) {
                       // an entry that leads out of the backup directory is not listed, so nothing of its target is read
-                      if (backup_entry_path($file) === false) {
+                      $entry_stat = backup_entry_stat($file);
+                      if ($entry_stat === false) {
                         continue;
                       }
-                      if (!is_dir(DIR_FS_BACKUP . $file)) {
+                      if ($entry_stat['is_file']) {
                         foreach ($exts as $value) {
                           if (xtc_CheckExt($file, $value)) {
-                            $contents_files_array[(date('Y-m-d', filemtime(rtrim($dir->path, '/').'/'.$file)))][] = $file;
+                            $contents_files_array[(date('Y-m-d', $entry_stat['mtime']))][] = $file;
                           }
                         }
-                      } else {
+                      } elseif ($entry_stat['is_dir']) {
                         $schema = check_schema($file);
                         if ($schema != '') {
-                          $contents_files_array[(date('Y-m-d', filemtime(rtrim($dir->path, '/').'/'.$file)))][] = $file;
+                          $contents_files_array[(date('Y-m-d', $entry_stat['mtime']))][] = $file;
                         }
                       }
                     }
@@ -260,9 +220,10 @@
                         sort($contents);
                         for ($files = 0, $count = sizeof($contents); $files < $count; $files++) {
                           $entry = $contents[$files];
+                          $entry_stat = backup_entry_stat($entry);
                           $check = 0;
                           if ((!isset($_GET['file']) || ($_GET['file'] == $entry)) && !isset($buInfo) && ($action != 'backup') && ($action != 'restorelocal')) {
-                            if (is_dir(DIR_FS_BACKUP.$entry)) {
+                            if ($entry_stat !== false && $entry_stat['is_dir']) {
                               $schema = check_schema($entry);
                               if ($schema != '') {
                                 $file_array = getBackupData($schema, $entry.'/');
@@ -283,7 +244,7 @@
                           }
                           ?>
                             <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo $entry; ?></td>
-                            <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
+                            <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo (($entry_stat !== false) ? date(PHP_DATE_TIME_FORMAT, $entry_stat['mtime']) : ''); ?></td>
                             <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo calculate_filesize($entry); ?> bytes</td>
                             <td class="dataTableContent txta-r" ><?php if ( (isset($buInfo) && is_object($buInfo)) && ($entry == $buInfo->file || $entry == $buInfo->dir) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                           </tr>
