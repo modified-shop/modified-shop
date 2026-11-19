@@ -45,7 +45,7 @@ require (DIR_WS_INCLUDES.'head.php');
 
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
-<div class="pageHeading"><?php echo $content_data['content_heading']; ?></div><br />
+<div class="pageHeading"><?php echo (($preview_media) ? $content_data['content_name'] : $content_data['content_heading']); ?></div><br />
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main">
@@ -55,11 +55,17 @@ if (strpos($content_data['content_file'],'.txt') !== false) echo '<pre>';
 if ($preview_media) {
 	// display image
 	// the stored name is checked before any output, the image link takes it encoded;
-	// the checked target decides the type, the image URL also needs an image name
-	$content_file_path = get_content_file_path($content_data['content_file'], 'products', 'products');
+	// the checked target decides the type, the image URL also needs an image name;
+	// the same folders as the shop: media/products/ first, then media/content/
+	$content_folder = 'products';
+	$content_file_path = get_content_file_path($content_data['content_file'], $content_folder, 'products');
+	if ($content_file_path === false) {
+	$content_folder = 'content';
+	$content_file_path = get_content_file_path($content_data['content_file'], $content_folder, 'products');
+	}
 	if ($content_file_path !== false && preg_match('/\.(gif|jpe?g|png|tiff?|bmp)$/i', $content_file_path)) {
 	if (preg_match('/\.(gif|jpe?g|png|tiff?|bmp)$/i', $content_data['content_file'])) {
-	echo xtc_image(DIR_WS_CATALOG.'media/products/'.rawurlencode($content_data['content_file']));
+	echo xtc_image(DIR_WS_CATALOG.'media/'.$content_folder.'/'.rawurlencode($content_data['content_file']));
 	}
 	$content_file_path = false;
 	}
