@@ -717,6 +717,10 @@
                                                          WHERE banners_group_id = '" . xtc_db_input($bInfo->banners_group_id) . "'
                                                            AND languages_id = '".$languages[$i]['id']."'");
                           $banner = xtc_db_fetch_array($banner_query);
+                          // a language added later has no copy of the banner and so no statistics
+                          if (!is_array($banner)) {
+                            continue;
+                          }
                           // the image and the HTML graph both need the banner and the period
                           $banner_id = $banner['banners_id'];
                           $days = '3';
