@@ -1108,13 +1108,19 @@
 
     if (count($select_array) > 2) {
       $option_array = array();
+      $selected = $key_value;
       for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
+        // the pull down menu encodes the id itself
         $option_array[] = array(
-          'id' => encode_htmlspecialchars($select_array[$i], ENT_QUOTES),
+          'id' => $select_array[$i],
           'text' => xtc_multi_lang_values($select_array[$i]),
         );
+        // a stored call hands over the value encoded
+        if ((string)$key_value == encode_htmlspecialchars($select_array[$i], ENT_QUOTES)) {
+          $selected = $select_array[$i];
+        }
       }
-      $string = xtc_draw_pull_down_menu($name, $option_array, $key_value);
+      $string = xtc_draw_pull_down_menu($name, $option_array, $selected);
     } else {
       if (NEW_SELECT_CHECKBOX == 'true') {
         $string .= '<span class="cfg_select_option">';
