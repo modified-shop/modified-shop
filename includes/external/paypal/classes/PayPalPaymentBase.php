@@ -1166,24 +1166,27 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function lookup_webhook_id() {
-    // a failed lookup waits 15 minutes, otherwise every webhook call would ask PayPal again
+    // a failed lookup waits a minute, otherwise every webhook call would ask PayPal again;
+    // PayPal repeats a delivery later than that, so a repeated delivery always gets a new lookup
     $retry_key = $this->get_webhook_config_key().'_LOOKUP';
     if ($this->webhook_lookup_waits($retry_key)) {
       return '';
     }
 
-    // one lookup at a time per PayPal configuration, parallel deliveries do not each ask PayPal;
+    // one lookup at a time per PayPal configuration, a parallel delivery waits for its result;
     // own connection: before MySQL 5.7.5 a second lock frees the session lock, and the lock ends with the connection
-    if (!is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'paypal_webhook_lock_link', false))) {
-      return '';
-    }
-    // named locks are server wide, the name carries the database
-    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input('MODppw_'.md5(DB_DATABASE.'|'.$retry_key))."', 0) AS locked", 'paypal_webhook_lock_link');
-    $lock = xtc_db_fetch_array($lock_query);
-    if (!is_array($lock) || $lock['locked'] != '1') {
-      xtc_db_close('paypal_webhook_lock_link');
+    $lock_link = is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'paypal_webhook_lock_link', false));
+    if ($lock_link) {
+      // named locks are server wide, the name carries the database
+      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input('MODppw_'.md5(DB_DATABASE.'|'.$retry_key))."', 5) AS locked", 'paypal_webhook_lock_link');
+      $lock = xtc_db_fetch_array($lock_query);
+      if (is_array($lock) && $lock['locked'] === '0') {
+        // the other lookup still runs, its result is used when it is there
+        xtc_db_close('paypal_webhook_lock_link');
 
-      return '';
+        return (string)$this->get_config($this->get_webhook_config_key(), false);
+      }
+      // without named locks on the server the lookup runs without one, like before
     }
 
     // another delivery may have finished the lookup in the meantime
@@ -1215,7 +1218,9 @@ class PayPalPaymentBase extends PayPalCommon {
       }
     }
 
-    xtc_db_close('paypal_webhook_lock_link');
+    if ($lock_link) {
+      xtc_db_close('paypal_webhook_lock_link');
+    }
 
     return (string)$webhook_id;
   }
@@ -1224,7 +1229,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function webhook_lookup_waits($retry_key) {
     $last_attempt = (int)$this->get_config($retry_key, false);
 
-    return ($last_attempt > (time() - 900) && $last_attempt <= time());
+    return ($last_attempt > (time() - 60) && $last_attempt <= time());
   }
 
 
