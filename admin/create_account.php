@@ -114,6 +114,15 @@
       $error = $entry_mail_error = true;
     }
 
+    // an account with admin status is created with the right for the admin rights only
+    if ((string)$customers_status_c == '0') {
+      $admin_access = get_admin_access($_SESSION['customer_id']);
+      if (!isset($admin_access['accounting']) || $admin_access['accounting'] != 1) {
+        $error = true;
+        $messageStack->add((defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.'), 'error');
+      }
+    }
+
     if (strlen($customers_firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
       $error = $entry_firstname_error = true;
     }

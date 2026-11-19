@@ -631,3 +631,4 @@ define('TEXT_IMAGE_NONEXISTENT', 'Bild existiert nicht');
 // withdrawal form
 define('TABLE_HEADING_WITHDRAW', 'Widerruf:');
 define('ERROR_ADMIN_ACTION_TOKEN', 'Das Formular ist abgelaufen. Bitte laden Sie die Seite neu und versuchen Sie es erneut.');
+define('ERROR_CUSTOMERS_ADMIN_ACCOUNT', 'Konten mit Admin-Status k&ouml;nnen nur Administratoren mit dem Recht f&uuml;r die Admin-Rechte anlegen, &auml;ndern oder l&ouml;schen. Das Hauptkonto kann nicht gel&ouml;scht werden und beh&auml;lt seinen Status.');

@@ -387,7 +387,7 @@
                               $contents[] = array ('text' => '<br/>');
                               $contents[] = array ('text' =>  '<table style="font-size:11px; margin-left:20px;"><tr><td>' . xtc_address_format($format_id, $addresses, true, ' ', '<br />') . '</td></tr></table>');
                               $contents[] = array ('text' => '<br/>');
-                              $contents[] = array ('align' => 'left', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'delete')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>&nbsp;<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete')).'cID='.$cInfo->customers_id.'&action=delete_confirm_adressbook&address_book_id='.$addresses['address_book_id']).'">'.BUTTON_DELETE.'</a>');
+                              $contents[] = array ('align' => 'left', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'delete')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>&nbsp;<a class="button" onclick="this.blur(); return postLink(this, event);" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete')).'cID='.$cInfo->customers_id.'&action=delete_confirm_adressbook&address_book_id='.$addresses['address_book_id']).'">'.BUTTON_DELETE.'</a>');
                               $contents[] = array ('text' => '<br/>');
                             } else {
                               $contents[] = array ('text' => '<br/>');
@@ -401,7 +401,7 @@
                         $contents[] = array ('text' => '<br/>');
                         $contents[] = array ('text' =>  '<table style="font-size:11px; margin-left:20px;"><tr><td>' . xtc_address_format($format_id, $addresses, true, ' ', '<br />') . '</td></tr></table>');
                         $contents[] = array ('text' => '<br/>');
-                        $contents[] = array ('align' => 'left', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'edit')).'cID='.$cInfo->customers_id.'&action=edit&saction=edit&edit='.$addresses['address_book_id']).'">'.BUTTON_EDIT.'</a>&nbsp;<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete', 'edit')).'cID='.$cInfo->customers_id.'&action=address_book&delete='.$addresses['address_book_id']).'">'.BUTTON_DELETE.'</a>'. (($cInfo->customers_default_address_id != $addresses['address_book_id'])?'&nbsp;<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete', 'default')).'cID='.$cInfo->customers_id.'&action=update_default_adressbook&default='.$addresses['address_book_id']).'">'.TEXT_SET_DEFAULT.'</a>':'') );
+                        $contents[] = array ('align' => 'left', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'edit')).'cID='.$cInfo->customers_id.'&action=edit&saction=edit&edit='.$addresses['address_book_id']).'">'.BUTTON_EDIT.'</a>&nbsp;<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete', 'edit')).'cID='.$cInfo->customers_id.'&action=address_book&delete='.$addresses['address_book_id']).'">'.BUTTON_DELETE.'</a>'. (($cInfo->customers_default_address_id != $addresses['address_book_id'])?'&nbsp;<a class="button" onclick="this.blur(); return postLink(this, event);" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete', 'default')).'cID='.$cInfo->customers_id.'&action=update_default_adressbook&default='.$addresses['address_book_id']).'">'.TEXT_SET_DEFAULT.'</a>':'') );
                         $contents[] = array ('text' =>  '<hr size="1"/>');
                       }
 
@@ -524,13 +524,15 @@
                       }
 
                       $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
-                      if ($cInfo->customers_id != 1 || ($cInfo->customers_id == 1 && $_SESSION['customer_id'] == 1)) {
+                      // an account with admin status only for admins with the right for the admin rights
+                      $account_locked = customers_account_locked($cInfo->customers_id);
+                      if (($cInfo->customers_id != 1 || ($cInfo->customers_id == 1 && $_SESSION['customer_id'] == 1)) && $account_locked === false) {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=edit').'">'.BUTTON_EDIT.'</a>');
                       }
-                      if ($cInfo->customers_id != 1) {
+                      if ($cInfo->customers_id != 1 && $account_locked === false) {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=confirm').'">'.BUTTON_DELETE.'</a>');
                       }
-                      if ($cInfo->customers_id != 1) {
+                      if ($cInfo->customers_id != 1 && $account_locked === false) {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=editstatus').'">'.BUTTON_STATUS.'</a>');
                       }
                       if (($cInfo->customers_id != 1 || ($cInfo->customers_id == 1 && $_SESSION['customer_id'] == 1)) && $cInfo->customers_status == 0) {
@@ -539,7 +541,7 @@
                       if ($cInfo->customers_status != DEFAULT_CUSTOMERS_STATUS_ID_GUEST && isset($admin_access['api_access']) && $admin_access['api_access'] == 1 && is_file(DIR_FS_ADMIN.'api_access.php')) {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link('api_access.php', xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id).'">'.BUTTON_API_ACCESS.'</a>');
                       }
-                      if (($cInfo->customers_id != 1 || ($cInfo->customers_id == 1 && $_SESSION['customer_id'] == 1))) {
+                      if (($cInfo->customers_id != 1 || ($cInfo->customers_id == 1 && $_SESSION['customer_id'] == 1)) && $account_locked === false) {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=address_book').'">'.TEXT_INFO_HEADING_ADRESS_BOOK.'</a>');
                       }
                       $contents[] = array ('align' => 'center',

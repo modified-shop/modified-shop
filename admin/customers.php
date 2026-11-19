@@ -74,6 +74,59 @@
     xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, ''));
   }
 
+  // these actions change data: they need their form or a posted link with the token
+  if (in_array($action, array('new_order_confirm', 'delete_confirm_adressbook', 'update_default_adressbook', 'statusconfirm', 'deleteconfirm'), true)
+      && !admin_form_posted()
+      )
+  {
+    $messageStack->add_session((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'warning');
+    xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'address_book_id', 'default'))));
+  }
+
+  // accounts with admin status are managed with the right for the admin rights (accounting)
+  function customers_manage_admins() {
+    $admin_access = get_admin_access($_SESSION['customer_id']);
+
+    return (isset($admin_access['accounting']) && $admin_access['accounting'] == 1);
+  }
+
+  // true when this admin must not change the account; with $remove also the main account, it is never deleted and keeps its status
+  function customers_account_locked($customers_id, $remove = false) {
+    $customers_id = (int)$customers_id;
+    if ($remove === true && $customers_id == 1) {
+      return true;
+    }
+    if ($customers_id == (int)$_SESSION['customer_id'] || customers_manage_admins()) {
+      return false;
+    }
+    $check_query = xtc_db_query("SELECT customers_status
+                                   FROM ".TABLE_CUSTOMERS."
+                                  WHERE customers_id = '".$customers_id."'");
+    $check = xtc_db_fetch_array($check_query);
+
+    return (is_array($check) && (int)$check['customers_status'] == 0);
+  }
+
+  // only whole numbers above zero, each one once
+  function customers_id_list($ids) {
+    $list = array();
+    foreach ((array)$ids as $id) {
+      if (is_scalar($id) && ctype_digit((string)$id) && (int)$id > 0) {
+        $list[(int)$id] = (int)$id;
+      }
+    }
+
+    return array_values($list);
+  }
+
+  if (in_array($action, array('edit', 'update', 'delete_confirm_adressbook', 'update_default_adressbook'), true)
+      && customers_account_locked($customers_id)
+      )
+  {
+    $messageStack->add_session((defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.'), 'warning');
+    xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'saction', 'edit', 'address_book_id', 'default'))));
+  }
+
   if ($action) {
     switch ($action) {
       case 'new_order_confirm':
@@ -259,8 +312,24 @@
           $_POST['multi_customers_confirm'] = array($customers_id);
         }
         
-        if (isset($_POST['multi_customers_confirm']) && is_array($_POST['multi_customers_confirm'])) {
-          foreach ($_POST['multi_customers_confirm'] as $customers_id) {
+        // a missing status would read as 0, the admin status
+        if (isset($_POST['multi_customers_confirm'])
+            && is_array($_POST['multi_customers_confirm'])
+            && isset($_POST['customers_status'])
+            && is_scalar($_POST['customers_status'])
+            && ctype_digit((string)$_POST['customers_status'])
+            )
+        {
+          $locked = false;
+          foreach (customers_id_list($_POST['multi_customers_confirm']) as $customers_id) {
+            // also giving an account the admin status needs the right
+            if (customers_account_locked($customers_id, true)
+                || ((int)$_POST['customers_status'] == 0 && !customers_manage_admins())
+                )
+            {
+              $locked = true;
+              continue;
+            }
             $error = false;
             $check_status_query = xtc_db_query("SELECT customers_firstname,
                                                        customers_lastname,
@@ -312,6 +381,9 @@
               }        
             }
           }
+          if ($locked === true) {
+            $messageStack->add_session((defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.'), 'warning');
+          }
         }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action')).'cID='.$customers_id));
         break;
@@ -328,7 +400,7 @@
         if (ACCOUNT_COMPANY == 'true') $entry_company = xtc_db_prepare_input($_POST['entry_company']);
         if (ACCOUNT_STATE == 'true') $entry_state = xtc_db_prepare_input($_POST['entry_state']);
         $customers_default_address_id = xtc_db_prepare_input($_POST['customers_default_address_id']);
-        $address_book_id = xtc_db_prepare_input($_POST['address_book_id']);
+        $address_book_id = (isset($_POST['address_book_id']) ? (int)$_POST['address_book_id'] : 0);
                 
         if (!$saction) {
           $customers_cid = xtc_db_prepare_input($_POST['customers_cid']);
@@ -697,7 +769,12 @@
         }
         
         if (isset($_POST['multi_customers_confirm']) && is_array($_POST['multi_customers_confirm'])) {
-          foreach ($_POST['multi_customers_confirm'] as $customers_id) {
+          $locked = false;
+          foreach (customers_id_list($_POST['multi_customers_confirm']) as $customers_id) {
+            if (customers_account_locked($customers_id, true)) {
+              $locked = true;
+              continue;
+            }
             if (isset($_POST['delete_reviews']) && $_POST['delete_reviews'] == 'on') {
               $reviews_query = xtc_db_query("SELECT reviews_id FROM ".TABLE_REVIEWS." WHERE customers_id = '".$customers_id."'");
               while ($reviews = xtc_db_fetch_array($reviews_query)) {
@@ -719,6 +796,9 @@
             xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
             xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." WHERE customers_id = '".$customers_id."'");
             xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".$customers_id."'");
+          }
+          if ($locked === true) {
+            $messageStack->add_session((defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.'), 'warning');
           }
         }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action'))));

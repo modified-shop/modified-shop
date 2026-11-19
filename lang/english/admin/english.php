@@ -632,3 +632,4 @@ define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
 // withdrawal form
 define('TABLE_HEADING_WITHDRAW', 'Withdrawal:');
 define('ERROR_ADMIN_ACTION_TOKEN', 'The form has expired. Reload the page and try again.');
+define('ERROR_CUSTOMERS_ADMIN_ACCOUNT', 'Accounts with admin status can only be created, changed or deleted by administrators with the right for the admin rights. The main account cannot be deleted and keeps its status.');
