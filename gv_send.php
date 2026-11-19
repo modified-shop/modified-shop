@@ -93,7 +93,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $process_error = ENTRY_TOKEN_ERROR;
   } elseif (isset($modified_session_handler) && $modified_session_handler->holds_lock() === false) {
     // a session read without its lock may still hold a token that a running transfer used up
-    $process_error = TEXT_GV_SEND_ALREADY_RUNNING;
+    $process_error = (defined('TEXT_GV_SEND_ALREADY_RUNNING') ? TEXT_GV_SEND_ALREADY_RUNNING : ENTRY_TOKEN_ERROR);
   } elseif (check_secure_form($_POST) === false) {
     $process_error = ENTRY_TOKEN_ERROR;
   }
@@ -196,6 +196,9 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
   $smarty->assign('action', 'send');
   $send_name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
 
+  // a token of its own, valid at once and as long as the session; a reused one may still wait or be expired
+  unset($_SESSION['SFName']);
+  unset($_SESSION['SFToken']);
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post').secure_form('gv_send'));
   $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), $to_name, $to_email, $to_name, $xtPrice->xtcFormat((float)$gv_amount, true), $send_name));
   if ($message != '') {
@@ -209,8 +212,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
 
 elseif (!isset($_GET['action']) || $_GET['action'] == '' || $error !== false) {
   $smarty->assign('action', '');
-  // created here, the token is past its waiting time when the confirmation is sent
-  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_send', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'), 'post').secure_form('gv_send'));
+  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_send', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'), 'post'));
   $smarty->assign('LINK_SEND', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'));
   $smarty->assign('INPUT_TO_NAME', xtc_draw_input_field('to_name', '', 'autocomplete="name"'));
   $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('to_email', '', 'autocomplete="email"'));
