@@ -33,7 +33,8 @@
       $id = xtc_db_prepare_input((int)$_POST['ID']);
       $customers_status = xtc_get_customers_statuses();
 
-      $title = xtc_db_prepare_input($_POST['title']);
+      // the title is also the mail subject, plain text
+      $title = strip_tags(xtc_db_prepare_input($_POST['title']));
       if ($title == '') $title = 'no title';
       $cc = xtc_db_prepare_input($_POST['cc']);
       $newsletter_body = xtc_db_prepare_input($_POST['newsletter_body']);

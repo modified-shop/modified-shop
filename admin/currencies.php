@@ -44,12 +44,13 @@
 
     case 'insert':
     case 'save':
-      $title = xtc_db_prepare_input($_POST['title']);
-      $code = xtc_db_prepare_input($_POST['code']);
+      // title, code and separators are plain text, the symbols may carry entities
+      $title = strip_tags(xtc_db_prepare_input($_POST['title']));
+      $code = preg_replace('/[^A-Za-z0-9_-]/', '', xtc_db_prepare_input($_POST['code']));
       $symbol_left = xtc_db_prepare_input($_POST['symbol_left']);
       $symbol_right = xtc_db_prepare_input($_POST['symbol_right']);
-      $decimal_point = xtc_db_prepare_input($_POST['decimal_point']);
-      $thousands_point = xtc_db_prepare_input($_POST['thousands_point']);
+      $decimal_point = strip_tags(xtc_db_prepare_input($_POST['decimal_point']));
+      $thousands_point = strip_tags(xtc_db_prepare_input($_POST['thousands_point']));
       $decimal_places = xtc_db_prepare_input($_POST['decimal_places']);
       $value = xtc_db_prepare_input($_POST['value']);
       

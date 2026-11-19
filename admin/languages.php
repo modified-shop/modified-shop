@@ -43,10 +43,11 @@
         // a language may only use ENCODE_LANGUAGE_CHARSETS, never store anything else
         $charset_value = get_language_charset(isset($_POST['language_charset']) ? xtc_db_prepare_input($_POST['language_charset']) : '');
         $sql_data_array = array(
-            'name' => xtc_db_prepare_input($_POST['name']), 
-            'code' => xtc_db_prepare_input($_POST['code']),  
-            'image' => xtc_db_prepare_input($_POST['image']),  
-            'directory' => xtc_db_prepare_input($_POST['directory']),  
+            // the code goes into URLs and attributes, the directory into file paths
+            'name' => str_replace('"', '', strip_tags(xtc_db_prepare_input($_POST['name']))),
+            'code' => preg_replace('/[^A-Za-z0-9_-]/', '', xtc_db_prepare_input($_POST['code'])),
+            'image' => preg_replace('/[^A-Za-z0-9_.\/-]/', '', xtc_db_prepare_input($_POST['image'])),
+            'directory' => preg_replace('/[^A-Za-z0-9_-]/', '', xtc_db_prepare_input($_POST['directory'])),
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
             'language_charset' => $charset_value,
           );
@@ -92,10 +93,11 @@
         }
 
         $sql_data_array = array(
-          'name' => xtc_db_prepare_input($_POST['name']), 
-          'code' => xtc_db_prepare_input($_POST['code']),  
-          'image' => xtc_db_prepare_input($_POST['image']),  
-          'directory' => xtc_db_prepare_input($_POST['directory']),  
+          // the code goes into URLs and attributes, the directory into file paths
+          'name' => str_replace('"', '', strip_tags(xtc_db_prepare_input($_POST['name']))),
+          'code' => preg_replace('/[^A-Za-z0-9_-]/', '', xtc_db_prepare_input($_POST['code'])),
+          'image' => preg_replace('/[^A-Za-z0-9_.\/-]/', '', xtc_db_prepare_input($_POST['image'])),
+          'directory' => preg_replace('/[^A-Za-z0-9_-]/', '', xtc_db_prepare_input($_POST['directory'])),
           //'status' => xtc_db_prepare_input($_POST['status']),  
           'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
           'language_charset' => $charset_value,
