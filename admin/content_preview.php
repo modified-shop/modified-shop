@@ -45,7 +45,7 @@ require (DIR_WS_INCLUDES.'head.php');
 
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
-<div class="pageHeading"><?php echo (($preview_media) ? $content_data['content_name'] : $content_data['content_heading']); ?></div><br />
+<div class="pageHeading"><?php echo (($preview_media) ? encode_htmlspecialchars($content_data['content_name']) : $content_data['content_heading']); ?></div><br />
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main">
