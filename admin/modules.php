@@ -121,6 +121,10 @@
         $check_language_file = false;
         $module_directory_include = '';
         foreach(auto_include(DIR_FS_ADMIN.'includes/extra/submenu/modules/','php') as $file) require ($file);
+        if (empty($module_type)) {
+          // no module group belongs to the set
+          xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . (($set != 'categories') ? 'categories' : 'payment')));
+        }
         if (!defined('HEADING_TITLE')) {
           define('HEADING_TITLE', BOX_MODULE_TYPE);
         }
@@ -140,6 +144,10 @@
     }
   }
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  // these actions load the module without a check, so it has to be part of the group
+  if (in_array($action, array('save', 'edit'), true) && !is_file($module_directory . basename($module_class) . '.php')) {
+    xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set));
+  }
   if (xtc_not_null($action)) {
     //load language file for action
     if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php')) {

@@ -87,6 +87,10 @@
     }
   }
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  // these actions load the module without a check, so it has to be part of the group
+  if (in_array($action, array('save', 'edit', 'module_processing_do', 'ready'), true) && !is_file($module_directory . basename($module_class) . $file_extension)) {
+    xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set));
+  }
 
   if (xtc_not_null($action)) {
     //load language file for action
