@@ -72,8 +72,8 @@
 
   $mTypeArr = array();
 
-  // both end up in links and paths, so only the characters of set and class names
-  $set = ((isset($_GET['set']) && is_string($_GET['set'])) ? preg_replace('/[^A-Za-z0-9_]/', '', $_GET['set']) : '');
+  // both end up in links and paths; set keeps the dash like the input filter, own module groups may use it
+  $set = ((isset($_GET['set']) && is_string($_GET['set'])) ? preg_replace('/[^A-Za-z0-9_-]/', '', $_GET['set']) : '');
   // the same check as the initialisation below, which skips values like NULL
   if (!xtc_not_null($set)) {
     $set = 'categories';
