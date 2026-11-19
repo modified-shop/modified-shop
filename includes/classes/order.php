@@ -339,6 +339,8 @@
         $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
         while ($attributes_data_values = xtc_db_fetch_array($attributes_query)) {
           $attrib_model = $attributes_data_values['attributes_model'];
+          // the numbers of the order, a number added to the catalog later was not part of the stored value
+          $attrib_models[] = $attrib_model;
           if ($attrib_model == '') {
             $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
           }
@@ -352,7 +354,6 @@
           $attributes_data .= '<br />'.$attributes_data_values['products_options'].': '.$attributes_data_values['products_options_values'];
           // the text mail decodes entities without quotes
           $attributes_model .= $attr_model_delimiter.encode_model_number($attrib_model, array(), ENT_NOQUOTES);
-          $attrib_models[] = $attrib_model;
           
           //new module support
           $attributes_array[$subindex] = $orderModules->order_data_attributes($attributes_array[$subindex],$attributes_data_values,$order_data_values,$oID,$order_lang_id);
