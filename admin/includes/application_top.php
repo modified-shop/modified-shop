@@ -198,6 +198,35 @@ require(DIR_WS_FUNCTIONS . 'html_output.php');
 // after the functions above, a failed check redirects with xtc_redirect() and xtc_catalog_href_link()
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 
+// the session language comes from the shop, the browser or the URL and may have no admin translation;
+// the admin then uses a language that has its admin language files, the default language first
+if (!is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $_SESSION['language'] . '.php')
+    || !is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php')
+    )
+{
+  $admin_language_query = xtc_db_query("SELECT languages_id,
+                                               code,
+                                               directory,
+                                               language_charset
+                                          FROM " . TABLE_LANGUAGES . "
+                                      ORDER BY (code = '" . xtc_db_input(DEFAULT_LANGUAGE) . "') DESC,
+                                               status_admin DESC,
+                                               sort_order");
+  while ($admin_language = xtc_db_fetch_array($admin_language_query)) {
+    if (is_file(DIR_FS_LANGUAGES . $admin_language['directory'] . '/admin/' . $admin_language['directory'] . '.php')
+        && is_file(DIR_FS_LANGUAGES . $admin_language['directory'] . '/admin/buttons.php')
+        )
+    {
+      $_SESSION['language'] = $admin_language['directory'];
+      $_SESSION['languages_id'] = $admin_language['languages_id'];
+      $_SESSION['language_charset'] = $admin_language['language_charset'];
+      $_SESSION['language_code'] = $admin_language['code'];
+      set_session_charset();
+      break;
+    }
+  }
+}
+
 // include the language translations
 require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
 require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');

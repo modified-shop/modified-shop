@@ -25,14 +25,19 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
-  // the admin language file and the buttons of a language directory
-  function language_admin_files_exist($directory) {
-    return (is_string($directory)
-            && preg_match('/^[A-Za-z0-9_.-]+$/', $directory)
-            && strpos($directory, '..') === false
-            && is_file(DIR_FS_LANGUAGES . $directory . '/admin/' . $directory . '.php')
-            && is_file(DIR_FS_LANGUAGES . $directory . '/admin/buttons.php')
-            );
+  // the language file the shop loads, or the admin language file with the buttons;
+  // only the files count here, so a stored directory with an unusual name is not refused for its name
+  function language_files_exist($directory, $admin = false) {
+    if (!is_string($directory) || $directory == '') {
+      return false;
+    }
+    if ($admin) {
+      return (is_file(DIR_FS_LANGUAGES . $directory . '/admin/' . $directory . '.php')
+              && is_file(DIR_FS_LANGUAGES . $directory . '/admin/buttons.php')
+              );
+    }
+
+    return is_file(DIR_FS_LANGUAGES . $directory . '/' . $directory . '.php');
   }
 
   // a new or changed value is checked, an unchanged one stays as it is, so an existing language can
@@ -76,7 +81,7 @@
       if (!preg_match('/^[A-Za-z0-9_.-]+$/', $check_directory)
           || strpos($check_directory, '..') !== false
           || ($directory_length > 0 && strlen($check_directory) > $directory_length)
-          || !is_file(DIR_FS_LANGUAGES . $check_directory . '/' . $check_directory . '.php')
+          || !language_files_exist($check_directory)
           )
       {
         $check_errors[] = sprintf(ERROR_LANGUAGE_DIRECTORY, $directory_length);
@@ -84,11 +89,14 @@
     }
 
     // the admin loads its own language file and the buttons on every page; they are needed
-    // where the language becomes the default or an admin language gets another directory
-    $check_admin_files = language_admin_files_exist($check_directory);
+    // where the language becomes the default, or an admin or default language gets another directory
+    $check_admin_files = language_files_exist($check_directory, true);
     if (!$check_admin_files
         && ((isset($_POST['default']) && $_POST['default'] == 'on' && $check_code != DEFAULT_LANGUAGE)
-            || (is_array($check_stored) && $check_stored['status_admin'] == '1' && $check_directory_changed)
+            || (is_array($check_stored)
+                && $check_directory_changed
+                && ($check_stored['status_admin'] == '1' || $check_stored['code'] == DEFAULT_LANGUAGE)
+                )
             )
         )
     {
@@ -120,6 +128,18 @@
       case 'setlflag':
         $lID = (int)$_GET['lID'];
         $status = (int)$_GET['flag'];
+        if ($status == 1) {
+          // the shop loads the language file of an active language with require_once
+          $lng_query = xtc_db_query("SELECT directory
+                                       FROM " . TABLE_LANGUAGES . "
+                                      WHERE languages_id = '" . $lID . "'");
+          $lng = xtc_db_fetch_array($lng_query);
+          if (!is_array($lng) || !language_files_exist($lng['directory'])) {
+            require_once(DIR_FS_INC.'get_column_length.inc.php');
+            $messageStack->add_session(sprintf(ERROR_LANGUAGE_DIRECTORY, get_column_length(TABLE_LANGUAGES, 'directory')), 'error');
+            xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
+          }
+        }
         xtc_db_query("update " . TABLE_LANGUAGES . " set status = '" . xtc_db_input($status) . "' WHERE languages_id = '" . xtc_db_input($lID) . "'");
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
         break;
@@ -132,7 +152,7 @@
                                        FROM " . TABLE_LANGUAGES . "
                                       WHERE languages_id = '" . $lID . "'");
           $lng = xtc_db_fetch_array($lng_query);
-          if (!is_array($lng) || !language_admin_files_exist($lng['directory'])) {
+          if (!is_array($lng) || !language_files_exist($lng['directory'], true)) {
             $messageStack->add_session(ERROR_LANGUAGE_ADMIN_FILES, 'error');
             xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
           }
