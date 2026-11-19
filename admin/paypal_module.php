@@ -119,20 +119,82 @@ if (isset($_GET['action'])) {
       break;
 
     case 'update':
-      if (isset($_POST['config'])) {
-        if (isset($_POST['config']['thirdparty'])) {
+      // the form of a module only shows these fields, nothing else of the PayPal configuration may be written through it
+      $allowed_profile = array();
+      $allowed_wall = array();
+      $allowed_description = array();
+      if (isset($_GET['module']) && in_array($_GET['module'], $payment_array)) {
+        $code = strtoupper($_GET['module']);
+        // the same conditions as the form below
+        $profile_fields = array(
+          'paypallink' => array('USE_ACCOUNT', 'SUCCESS'),
+          'paypalpluslink' => array('USE_ACCOUNT', 'SUCCESS'),
+          'paypalcart' => array('SHOW_PRODUCT'),
+          'paypal' => array('SAVE_PAYMENT', 'SHOW_CHECKOUT_BNPL'),
+          'paypalapplepay' => array('SHOW_CART', 'SHOW_BOX_CART'),
+          'paypalgooglepay' => array('SHOW_CART', 'SHOW_BOX_CART'),
+          'paypalacdc' => array('SAVE_PAYMENT', 'EXTEND_CARDS'),
+          'paypalexpress' => array('SAVE_PAYMENT', 'SHOW_CART_BNPL', 'SHOW_PRODUCT', 'SHOW_PRODUCT_BNPL', 'SHOW_BOX_CART', 'SHOW_BOX_CART_BNPL'),
+          'paypalplus' => array('USE_TABS'),
+        );
+        if (isset($profile_fields[$_GET['module']])) {
+          foreach ($profile_fields[$_GET['module']] as $suffix) {
+            $allowed_profile[] = 'MODULE_PAYMENT_'.$code.'_'.$suffix;
+          }
+        }
+        if ($_GET['module'] == 'paypal') {
+          $allowed_profile = array_merge($allowed_profile, array('PAYPAL_BUTTON_HEIGHT', 'PAYPAL_BUTTON_LAYOUT', 'PAYPAL_BUTTON_PRIMARY_COLOR', 'PAYPAL_BUTTON_SECONDARY_COLOR', 'PAYPAL_BUTTON_SHAPE'));
+        }
+        if ($_GET['module'] == 'paypalapplepay') {
+          $allowed_profile[] = 'PAYPAL_COMPANY_LABEL';
+        }
+        $allowed_languages = xtc_get_languages();
+        if (in_array($_GET['module'], $orders_v1_array)) {
+          foreach ($allowed_languages as $allowed_language) {
+            $allowed_profile[] = 'PAYPAL_'.$code.'_'.strtoupper($allowed_language['code']).'_PROFILE';
+          }
+        }
+        if ($_GET['module'] == 'paypalplus') {
+          foreach (explode(';', MODULE_PAYMENT_INSTALLED) as $installed_file) {
+            $installed_name = substr($installed_file, 0, -4);
+            if ($installed_name != ''
+                && !in_array($installed_name, $payment_array)
+                && !in_array($installed_name, $payment_disallowed_array)
+                )
+            {
+              $allowed_wall[] = $installed_name;
+              foreach ($allowed_languages as $allowed_language) {
+                $allowed_description[] = strtoupper($installed_name.'_'.$allowed_language['code']);
+              }
+            }
+          }
+        }
+      }
+      if (isset($_POST['config']) && is_array($_POST['config'])) {
+        if (isset($_POST['config']['thirdparty']) && is_array($_POST['config']['thirdparty']) && count($allowed_wall) > 0) {
           $thirdparty = array();
+          $thirdparty_fields = 0;
           foreach ($_POST['config']['thirdparty'] as $key => $value) {
+            // only the two values the form sends; a valid no counts as well, so all providers can be switched off on purpose
+            if (!in_array($key, $allowed_wall, true) || !in_array($value, array('0', '1'), true)) {
+              continue;
+            }
+            $thirdparty_fields ++;
             if ($value == '1') {
               $thirdparty[] = $key;
             }
           }
+        }
+        if (isset($thirdparty_fields) && $thirdparty_fields > 0) {
           xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT'");
           xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, last_modified) VALUES ('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT', '" . xtc_db_input(implode(';', $thirdparty)) . "', NOW())");
         }
-        if (isset($_POST['config']['description'])) {
+        if (isset($_POST['config']['description']) && is_array($_POST['config']['description'])) {
           $sql_data_array = array();
           foreach ($_POST['config']['description'] as $key => $value) {
+            if (!in_array($key, $allowed_description, true)) {
+              continue;
+            }
             if ($value != '') {
               $sql_data_array[] = array(
                 'config_key' => $key,
@@ -144,9 +206,12 @@ if (isset($_GET['action'])) {
           }
           $paypal->save_config($sql_data_array);
         }
-        if (isset($_POST['config']['profile'])) {
+        if (isset($_POST['config']['profile']) && is_array($_POST['config']['profile'])) {
           $sql_data_array = array();
           foreach ($_POST['config']['profile'] as $key => $value) {
+            if (!in_array($key, $allowed_profile, true) || !is_scalar($value)) {
+              continue;
+            }
             $sql_data_array[] = array(
               'config_key' => $key,
               'config_value' => ((preg_replace('/[^0-9,.]/', '', $value) == $value) ? str_replace(',', '.', $value) : $value),
@@ -155,9 +220,39 @@ if (isset($_GET['action'])) {
           $paypal->save_config($sql_data_array);
         }
       }
-      if (isset($_POST['configuration']) && count($_POST['configuration']) > 0) {
+      if (isset($_POST['configuration'])
+          && is_array($_POST['configuration'])
+          && count($_POST['configuration']) > 0
+          && isset($_GET['module'])
+          && in_array($_GET['module'], $payment_array)
+          )
+      {
+        require_once(DIR_FS_CATALOG.'includes/modules/payment/'.$_GET['module'].'.php');
+        require_once(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$_GET['module'].'.php');
+        $module = new $_GET['module'];
+
+        // the form only shows the keys of this module, others must not be written through it;
+        // zone keys and the fixed allowed countries are not shown as fields
+        $module_keys = array();
+        foreach ((method_exists($module, 'keys') ? (array)$module->keys() : array()) as $module_key) {
+          if (strpos($module_key, '_ZONE') !== false
+              || (in_array($module->code, $fixed_zones_modules_array)
+                  && isset($module->allowed_zones)
+                  && is_array($module->allowed_zones)
+                  && strpos($module_key, '_ALLOWED') !== false
+                  )
+              )
+          {
+            continue;
+          }
+          $module_keys[] = $module_key;
+        }
         foreach ($_POST['configuration'] as $key => $value) {
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input($value) . "', last_modified = NOW() WHERE configuration_key='" . $key . "'");
+          if (!in_array($key, $module_keys, true)) {
+            continue;
+          }
+          $value = is_array($value) ? implode(',', $value) : $value;
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input($value) . "', last_modified = NOW() WHERE configuration_key='" . xtc_db_input($key) . "'");
         }
       }
       xtc_redirect(xtc_href_link(basename($PHP_SELF)));
