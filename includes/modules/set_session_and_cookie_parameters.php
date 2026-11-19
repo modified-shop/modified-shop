@@ -78,15 +78,21 @@ if (is_array($current_domain_delete)
 set_session_cookie(0, $session_cookie_path, $session_cookie_domain, $session_cookie_secure, $session_cookie_httponly, $session_cookie_samesite);
 
 // set the session ID if it exists
-if (SESSION_FORCE_COOKIE_USE != 'True') {
-  if (isset($_POST[xtc_session_name()])) {
+// an ID from the request never replaces the session cookie of the browser
+$session_id_from_request = false;
+if (SESSION_FORCE_COOKIE_USE != 'True' && !isset($_COOKIE[xtc_session_name()])) {
+  if (isset($_POST[xtc_session_name()]) && is_string($_POST[xtc_session_name()])) {
     xtc_session_id($_POST[xtc_session_name()]);
+    $session_id_from_request = true;
   }
-  elseif ($request_type == 'SSL' && isset($_GET[xtc_session_name()])) {
-    if (!isset($_COOKIE[xtc_session_name()]) || $_GET[xtc_session_name()] != $_COOKIE[xtc_session_name()]) {
-      xtc_session_id($_GET[xtc_session_name()]);
-    }
+  elseif ($request_type == 'SSL' && isset($_GET[xtc_session_name()]) && is_string($_GET[xtc_session_name()])) {
+    xtc_session_id($_GET[xtc_session_name()]);
+    $session_id_from_request = true;
   }
+}
+// and it is not handed back as a cookie, a link must not bind a browser to a session
+if ($session_id_from_request === true) {
+  @ini_set('session.use_cookies', '0');
 }
 
 // start the session

@@ -472,7 +472,7 @@ define('SESSION_CHECK_USER_AGENT_DESC' , '&Uuml;berpr&uuml;fen des Browser-Usera
 define('SESSION_CHECK_IP_ADDRESS_TITLE' , 'Checken der IP-Adresse');
 define('SESSION_CHECK_IP_ADDRESS_DESC' , '&Uuml;berpr&uuml;fen der IP-Adresse des Benutzers bei jedem Seitenaufruf. (Standard &quot;false&quot;)'.SESSION_WARNING);
 define('SESSION_RECREATE_TITLE' , 'Session erneuern');
-define('SESSION_RECREATE_DESC' , 'Erneuern der Session und Zuweisung einer neuen Session-ID sobald sich ein Benutzer einloggt oder registriert (PHP >=4.1 needed). (Standard &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_RECREATE_DESC' , 'Erneuern der Session und Zuweisung einer neuen Session-ID, sobald ein Benutzer seine E-Mail-Adresse oder sein Passwort &auml;ndert. Beim Einloggen und Registrieren wird die Session-ID immer erneuert. (Standard &quot;false&quot;)'.SESSION_WARNING);
 define('SESSION_DELETE_OLD_COOKIES_TITLE' , 'Session Cookie l&ouml;schen');
 define('SESSION_DELETE_OLD_COOKIES_DESC' , 'Sollen alte Session Cookies gel&ouml;scht werden? Nach einem Update von Shopversion <= 2.0.1.0 empfiehlt es sich diese Option zu aktivieren. (Standard &quot;false&quot;)'.SESSION_WARNING);
 

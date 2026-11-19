@@ -441,8 +441,10 @@ class PayPalCommon extends PayPalAuth {
     if (xtc_db_num_rows($check_customer_query) < 1) {
       $this->create_account($customer);
     } else {
-      if (SESSION_RECREATE == 'True') {
-        xtc_session_recreate();
+      // the login always goes on under a new session id, without one it does not take place
+      if (xtc_session_renew() !== true) {
+        $messageStack->add_session('info_message_3', xtc_session_renew_error());
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, ''), 'NONSSL');
       }
       $check_customer = xtc_db_fetch_array($check_customer_query);
  

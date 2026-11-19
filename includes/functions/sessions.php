@@ -302,6 +302,22 @@
     return false;
   }
 
+  // a session that gets a customer goes on under a new id, false when the id could not be changed
+  function xtc_session_renew() {
+    global $http_domain, $https_domain;
+
+    // with different domains for HTTP and HTTPS the id stays as before, the other domain could not follow
+    if ($http_domain != $https_domain) {
+      return true;
+    }
+
+    return (xtc_session_recreate() === true);
+  }
+
+  function xtc_session_renew_error() {
+    return (defined('TEXT_SESSION_RENEW_ERROR') ? TEXT_SESSION_RENEW_ERROR : 'The request could not be completed. Please try again.');
+  }
+
   // the database keeps only this hash, a session id read from it cannot be used
   // 128 bit, as much as the md5 session id itself, and it fits the existing columns
   function xtc_session_hash($session_id) {
