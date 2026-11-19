@@ -19,7 +19,7 @@
    * @param string $file stored file name
    * @param string $folder content or products
    * @param string $types content (pages), products (product content) or file (saving, attachments, deleting)
-   * @return string|false absolute path of the file
+   * @return string|false resolved absolute path of the file
    */
   function get_content_file_path($file, $folder = 'content', $types = '') {
     if (!is_string($file)
@@ -32,7 +32,24 @@
       return false;
     }
 
-    $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $path = DIR_FS_CATALOG.'media/'.$folder.'/'.$file;
+    if (!is_file($path)) {
+      return false;
+    }
+
+    // a symbolic link in the media folder must not lead to a file elsewhere,
+    // and its target decides the type, not the name of the link
+    $real_path = realpath($path);
+    $real_folder = realpath(DIR_FS_CATALOG.'media/'.$folder);
+    if ($real_path === false
+        || $real_folder === false
+        || strpos($real_path, $real_folder.DIRECTORY_SEPARATOR) !== 0
+        )
+    {
+      return false;
+    }
+
+    $extension = strtolower(pathinfo($real_path, PATHINFO_EXTENSION));
     $types = (($types != '') ? $types : $folder);
 
     if ($types == 'file') {
@@ -58,21 +75,6 @@
       }
     }
 
-    $path = DIR_FS_CATALOG.'media/'.$folder.'/'.$file;
-    if (!is_file($path)) {
-      return false;
-    }
-
-    // a symbolic link in the media folder must not lead to a file elsewhere
-    $real_path = realpath($path);
-    $real_folder = realpath(DIR_FS_CATALOG.'media/'.$folder);
-    if ($real_path === false
-        || $real_folder === false
-        || strpos($real_path, $real_folder.DIRECTORY_SEPARATOR) !== 0
-        )
-    {
-      return false;
-    }
-
-    return $path;
+    // the resolved path, so the caller decides on include or output by the real type
+    return $real_path;
   }

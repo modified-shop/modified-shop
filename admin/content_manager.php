@@ -168,7 +168,8 @@
           if ($select_file[$i][$languages[$l]['id']] != 'default') {
             $content_file_name = $select_file[$i][$languages[$l]['id']];
             // the shop includes the file, so only a file directly in media/content/ can be selected
-            if (get_content_file_path($content_file_name, 'content', 'file') === false) {
+            // a page includes PHP files placed on the server, so it is checked like the output
+            if (get_content_file_path($content_file_name, 'content') === false) {
               $content_file_name = '';
             }
           }
