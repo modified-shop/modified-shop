@@ -19,6 +19,9 @@ require_once(DIR_FS_INC.'get_external_content.inc.php');
 require_once(DIR_WS_CLASSES.'order.php');
 require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 
+// tracking events that a callback was taken for
+defined('TABLE_SHIPCLOUD_EVENTS') OR define('TABLE_SHIPCLOUD_EVENTS', 'shipcloud_events');
+
 class shipcloud {
   
   const SC_URL_LABEL = 'https://api.shipcloud.io/v1/shipments/';
@@ -67,6 +70,106 @@ class shipcloud {
   }
   
   
+  // tracking events of a shipment counted by status, as shipcloud reports them:
+  // false when shipcloud has no such shipment, null without a usable answer
+  public function get_tracking_events($sc_id) {
+    $ch = curl_init();
+
+    // set options
+    curl_setopt($ch, CURLOPT_URL, self::SC_URL_LABEL.rawurlencode($sc_id));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Affiliate-ID: plugin.modified.zW7tF8ek'));
+    curl_setopt($ch, CURLOPT_USERPWD, MODULE_SHIPCLOUD_API);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+      $this->LoggingManager->log('INFO', curl_errno($ch), array('exception' => curl_error($ch)));
+      return null;
+    }
+
+    $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($status == 404) {
+      return false;
+    }
+
+    $shipment = json_decode((string)$response, true);
+    if ($status != 200
+        || !is_array($shipment)
+        || !isset($shipment['id'])
+        || !is_string($shipment['id'])
+        || strcasecmp($shipment['id'], $sc_id) != 0
+        )
+    {
+      $this->LoggingManager->log('INFO', 'get_tracking_events', array('exception' => 'status '.$status.' for shipment '.$sc_id));
+      return null;
+    }
+
+    $events = array();
+    if (isset($shipment['packages']) && is_array($shipment['packages'])) {
+      foreach ($shipment['packages'] as $package) {
+        if (!is_array($package) || !isset($package['tracking_events']) || !is_array($package['tracking_events'])) {
+          continue;
+        }
+        foreach ($package['tracking_events'] as $event) {
+          if (is_array($event) && isset($event['status']) && is_string($event['status'])) {
+            $event_status = strtolower($event['status']);
+            $events[$event_status] = (isset($events[$event_status]) ? $events[$event_status] + 1 : 1);
+          }
+        }
+      }
+    }
+
+    return $events;
+  }
+
+
+  // a callback is taken once for each tracking event shipcloud reports for the shipment:
+  // true to take it, false when it is not confirmed or already taken, null when shipcloud gave no answer
+  public function claim_event($tracking_id, $sc_id, $type) {
+    $events = $this->get_tracking_events($sc_id);
+    if ($events === null) {
+      return null;
+    }
+
+    $type = strtoupper($type);
+    $count = 0;
+    if ($type == 'SHIPMENT.STATUS.DELETED') {
+      // shipcloud no longer knows a deleted shipment
+      $count = (($events === false) ? 1 : 0);
+    } elseif (is_array($events) && strpos($type, 'SHIPMENT.TRACKING.') === 0) {
+      $event_status = strtolower(substr($type, 18));
+      $count = (isset($events[$event_status]) ? $events[$event_status] : 0);
+    }
+    if ($count < 1) {
+      $this->LoggingManager->log('INFO', 'callback', array('exception' => 'not confirmed by shipcloud: '.$type.' for shipment '.$sc_id));
+      return false;
+    }
+
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_SHIPCLOUD_EVENTS." (
+                    `tracking_id` int(11) NOT NULL,
+                    `event_type` varchar(64) NOT NULL,
+                    `event_count` int(11) NOT NULL DEFAULT 0,
+                    `date_added` datetime NOT NULL,
+                    PRIMARY KEY (`tracking_id`, `event_type`)
+                  )");
+    xtc_db_query("INSERT IGNORE INTO ".TABLE_SHIPCLOUD_EVENTS." (tracking_id, event_type, date_added) VALUES ('".(int)$tracking_id."', '".xtc_db_input($type)."', NOW())");
+
+    // one statement: of several deliveries at the same time only as many pass as shipcloud has events
+    xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                     SET event_count = event_count + 1
+                   WHERE tracking_id = '".(int)$tracking_id."'
+                     AND event_type = '".xtc_db_input($type)."'
+                     AND event_count < '".(int)$count."'");
+
+    return (xtc_db_affected_rows() > 0);
+  }
+
+
   public function create_label($params) {
     global $messageStack;
     

@@ -77,18 +77,29 @@ if (is_array($request)
     require (DIR_WS_LANGUAGES.$order->info['language'].'/'. $order->info['language'] .'.php');
     require (DIR_WS_LANGUAGES.$order->info['language'].'/modules/system/shipcloud.php');
 
+    // shipcloud sends the event type as a plain string
+    $type = ((isset($request['type']) && is_string($request['type'])) ? strtoupper($request['type']) : '');
+
+    // the callback has no sender check, shipcloud has to confirm the event before the order changes
+    $event = false;
+    if (strpos($type, 'SHIPMENT.') === 0 && defined($type)) {
+      $event = $shipcloud->claim_event($orders['tracking_id'], $orders['sc_id'], $type);
+    }
+    if ($event !== true) {
+      // without an answer shipcloud sends the event again
+      if ($event === null) {
+        header('HTTP/1.1 503 Service Unavailable');
+      }
+      exit();
+    }
+
     // create smarty elements
     $smarty = new Smarty();
 
     // update order
     $oID = $order->info['orders_id'];
     $status = $order->info['orders_status_id'];
-    $comments = '';
-    // shipcloud sends the event type as a plain string
-    $type = ((isset($request['type']) && is_string($request['type'])) ? strtoupper($request['type']) : '');
-    if (strpos($type, 'SHIPMENT.') === 0 && defined($type)) {
-      $comments = decode_htmlentities(constant($type));
-    }
+    $comments = decode_htmlentities(constant($type));
     $order_updated = false;
     $email_preview = false;
     $_POST['notify'] = ((MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'Shop') ? 'on' : 'off');
