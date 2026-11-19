@@ -15,7 +15,7 @@ class Inputfilter {
     private $active_content_removed = false;
     private $active_content_unfiltered = false;
 
-    // admin fields that the storefront prints as HTML
+    // admin fields that the storefront or the admin prints as HTML
     private $content_keys = array('products_name',
                                   'products_heading_title',
                                   'products_description',
@@ -52,6 +52,22 @@ class Inputfilter {
                                   'shipping_status_name',
                                   'orders_status_name',
                                   'cross_sell_group_name',
+                                  'customers_status_name',
+                                  'coupon_name',
+                                  'coupon_code',
+                                  'banners_title',
+                                  'banners_group',
+                                  'new_banners_group',
+                                  'tax_description',
+                                  'tax_class_title',
+                                  'tax_class_description',
+                                  'campaigns_name',
+                                  'campaigns_refID',
+                                  'memo_title',
+                                  'memo_text',
+                                  'symbol_left',
+                                  'symbol_right',
+                                  'products_ean',
                                   );
 
     public function __construct()
