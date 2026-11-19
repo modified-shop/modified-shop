@@ -276,10 +276,10 @@ if (isset($_GET['action'])) {
             if (count($skipped_files) > 0 || count($failed_files) > 0) {
                 $messages = array();
                 if (count($skipped_files) > 0) {
-                    $messages[] = trans('Rename_existing_file') . ': ' . htmlspecialchars(implode(', ', $skipped_files), ENT_QUOTES, 'UTF-8');
+                    $messages[] = trans('Rename_existing_file') . ': ' . rfm_esc(implode(', ', $skipped_files));
                 }
                 if (count($failed_files) > 0) {
-                    $messages[] = trans('File_Save_Error') . ' ' . htmlspecialchars(implode(', ', $failed_files), ENT_QUOTES, 'UTF-8');
+                    $messages[] = trans('File_Save_Error') . ' ' . rfm_esc(implode(', ', $failed_files));
                 }
                 response(implode('<br>', $messages) . AddErrorLocation())->send();
                 exit;
