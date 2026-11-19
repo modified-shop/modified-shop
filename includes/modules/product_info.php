@@ -154,14 +154,14 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   // load all definitions from product class
   $productDataArray = $product->buildDataArray($product->data, 'info', false);
   foreach ($productDataArray as $key => $value) {
-    $info_smarty->assign($key, $value);
+    // the model number is text, also the one a product module has set
+    $info_smarty->assign($key, (($key == 'PRODUCTS_MODEL' && is_string($value)) ? encode_model_number($value) : $value));
   }
   
   /*
    * assign smarty additional variables or overwrite them
    * START
    */
-  $info_smarty->assign('PRODUCTS_MODEL', encode_model_number($product->data['products_model']));
   $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
    
   // show expiry date of active special products

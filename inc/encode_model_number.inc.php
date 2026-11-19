@@ -13,8 +13,10 @@
   // a model number is text; $attribute_models are the attribute numbers stored with an order position
   function encode_model_number($model, $attribute_models = array(), $flags = ENT_QUOTES) {
     $model = (string)$model;
-    $encoding = get_default_encoding('');
-    $flags = $flags | ENT_SUBSTITUTE;
+    // the characters to encode have the same bytes in every charset of the shop, so the bytes of the
+    // value stay as stored, whatever the charset of the page or mail is; entities of HTML5 count as existing
+    $flags = $flags | ENT_HTML5;
+    $charset = 'ISO-8859-1';
 
     $parts = array();
     if (is_array($attribute_models)) {
@@ -43,10 +45,14 @@
       $delimiters = array_unique(array_merge($delimiters, array('<br />', '<br>', '<br/>')));
 
       foreach ($delimiters as $delimiter) {
-        // orders_products.products_model holds 64 characters, a longer joined value was cut there
+        // orders_products.products_model holds 64 characters, a longer joined value was cut there:
+        // at 64 characters of the stored text, or at 64 bytes where the column counts bytes
         $joined = implode($delimiter, $parts);
-        $cut = ((function_exists('mb_substr')) ? mb_substr($joined, 0, 64, $encoding) : substr($joined, 0, 64));
-        if ($model === $joined || $model === $cut) {
+        $cuts = array(substr($joined, 0, 64));
+        if (function_exists('mb_substr') && mb_check_encoding($joined, 'UTF-8')) {
+          $cuts[] = mb_substr($joined, 0, 64, 'UTF-8');
+        }
+        if ($model === $joined || in_array($model, $cuts, true)) {
           $encoded = '';
           $rest = $model;
           foreach ($parts as $key => $part) {
@@ -59,7 +65,7 @@
               }
               $encoded .= $delimiter;
             }
-            $encoded .= htmlspecialchars((string)substr($rest, 0, strlen($part)), $flags, $encoding, false);
+            $encoded .= htmlspecialchars((string)substr($rest, 0, strlen($part)), $flags, $charset, false);
             $rest = (string)substr($rest, strlen($part));
           }
 
@@ -68,5 +74,5 @@
       }
     }
 
-    return htmlspecialchars($model, $flags, $encoding, false);
+    return htmlspecialchars($model, $flags, $charset, false);
   }
