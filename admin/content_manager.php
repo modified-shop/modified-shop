@@ -179,7 +179,12 @@
             }
           }
           $content_file_name = '';
-          if ($select_file[$i][$languages[$l]['id']] != 'default') {
+          $accepted_file_upload_files_extensions = array("htm","html","txt");
+          $accepted_file_upload_files_mime_types = array("text/html","text/html","text/plain");
+          if ($content_file = xtc_try_upload('file_upload_'.$i.'_'.$languages[$l]['id'], DIR_FS_CATALOG.'media/content/', '644', $accepted_file_upload_files_extensions, $accepted_file_upload_files_mime_types)) {
+            // an upload replaces the file, so the selection and its messages do not count
+            $content_file_name = $content_file->filename;
+          } elseif ($select_file[$i][$languages[$l]['id']] != 'default') {
             $content_file_name = $select_file[$i][$languages[$l]['id']];
             // the shop includes the file, so only a file directly in media/content/ can be selected
             // a page includes PHP files placed on the server, so it is checked like the output
@@ -191,11 +196,6 @@
                 $content_file_name = $stored_file_name;
               }
             }
-          }
-          $accepted_file_upload_files_extensions = array("htm","html","txt");
-          $accepted_file_upload_files_mime_types = array("text/html","text/html","text/plain");
-          if ($content_file = xtc_try_upload('file_upload_'.$i.'_'.$languages[$l]['id'], DIR_FS_CATALOG.'media/content/', '644', $accepted_file_upload_files_extensions, $accepted_file_upload_files_mime_types)) {
-            $content_file_name = $content_file->filename;
           }
 
           // set allowed c.groups
@@ -371,13 +371,13 @@
         }
       }
 
-      // the same rule as where the shop uses the file: mails attach it,
-      // media_content.php looks in media/products/ and then in media/content/
+      // the same rule as where the shop uses the file: mails attach it; the shop links other attachments
+      // for download or shows them with media_content.php, which checks the type itself, so the place counts
       if ($type == 'email') {
         $content_file_valid = (get_content_file_path($content_file_name, 'content', 'file') !== false);
       } else {
-        $content_file_valid = (get_content_file_path($content_file_name, 'products', 'products') !== false
-                               || get_content_file_path($content_file_name, 'content', 'products') !== false
+        $content_file_valid = (get_content_file_path($content_file_name, 'products', 'place') !== false
+                               || get_content_file_path($content_file_name, 'content', 'place') !== false
                                );
       }
       if ($content_file_name != '' && $content_file_valid === false) {

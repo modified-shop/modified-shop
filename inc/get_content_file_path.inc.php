@@ -18,7 +18,8 @@
    *
    * @param string $file stored file name
    * @param string $folder content or products
-   * @param string $types content (pages), products (product content) or file (saving, attachments, deleting)
+   * @param string $types content (pages), products (product content), file (mail attachments, deleting)
+   *                      or place (saving an attachment, the place counts and each use checks the type)
    * @return string|false resolved absolute path of the file
    */
   function get_content_file_path($file, $folder = 'content', $types = '') {
@@ -51,6 +52,10 @@
 
     $extension = strtolower(pathinfo($real_path, PATHINFO_EXTENSION));
     $types = (($types != '') ? $types : $folder);
+
+    if ($types == 'place') {
+      return $real_path;
+    }
 
     if ($types == 'file') {
       // a file that is only attached or deleted does not run, but script sources stay on the server
