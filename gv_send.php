@@ -39,6 +39,7 @@ if (!isset ($_SESSION['customer_id'])) {
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+require_once (DIR_FS_INC.'secure_form.inc.php');
 
 // smarty
 $smarty = new Smarty();
@@ -83,6 +84,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
   }
+}
+
+if (isset($_GET['action'])
+    && $_GET['action'] == 'process'
+    && check_secure_form($_POST) === false
+    )
+{
+  $error = true;
+  $messageStack->add('gv_send', ENTRY_TOKEN_ERROR);
+  $_GET['action'] = 'send';
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
@@ -176,7 +187,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
   $smarty->assign('action', 'send');
   $send_name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
 
-  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post'));
+  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post').secure_form('gv_send'));
   $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), $to_name, $to_email, $to_name, $xtPrice->xtcFormat((float)$gv_amount, true), $send_name));
   if ($message != '') {
     $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, $send_name));
