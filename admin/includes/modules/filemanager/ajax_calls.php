@@ -177,6 +177,8 @@ if (isset($_GET['action'])) {
             }
 
             $info = pathinfo($path);
+            // entries that would replace a file or another entry are left out and reported
+            $skipped_files = array();
 
             switch ($info['extension']) {
                 case "zip":
@@ -194,6 +196,7 @@ if (isset($_GET['action'])) {
                         }
 
                         //make all the folders and unzip into the folders
+                        $target_names = array();
                         for ($i = 0; $i < $zip->numFiles; $i++) {
                             $FullFileName = $zip->statIndex($i);
 
@@ -207,10 +210,12 @@ if (isset($_GET['action'])) {
                                     if (in_array(strtolower($fileinfo['extension']), $config['ext'])) {
                                         // inner dots of the file name are replaced like on upload
                                         $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
-                                        // a renamed entry must not replace a file that is already there
-                                        if ($target_name != $FullFileName['name'] && file_exists($base_folder . $target_name)) {
+                                        // an entry must not replace a file that is already there or an earlier entry of the archive
+                                        if (file_exists($base_folder . $target_name) || isset($target_names[strtolower($target_name)])) {
+                                            $skipped_files[] = $FullFileName['name'];
                                             continue;
                                         }
+                                        $target_names[strtolower($target_name)] = true;
                                         copy('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name);
                                     }
                                 }
@@ -237,7 +242,16 @@ if (isset($_GET['action'])) {
                     $phar->decompressFiles();
                     $files = array();
                     check_files_extensions_on_phar($phar, $files, '', $config);
-                    $phar->extractTo($base_folder, $files, true);
+                    // a file that is already there stays, the entry is reported
+                    foreach ($files as $k => $tar_file) {
+                        if (file_exists($base_folder . $tar_file)) {
+                            $skipped_files[] = $tar_file;
+                            unset($files[$k]);
+                        }
+                    }
+                    if (count($files) > 0) {
+                        $phar->extractTo($base_folder, array_values($files), false);
+                    }
                     break;
 
                 default:
@@ -249,6 +263,11 @@ if (isset($_GET['action'])) {
                 unlink($path);
                 $ftp->putAll($base_folder, "/".$config['ftp_base_folder'] . $config['upload_dir'] . fix_dirname($_POST['path']), FTP_BINARY);
                 deleteDir($base_folder);
+            }
+
+            if (count($skipped_files) > 0) {
+                response(trans('Rename_existing_file') . ': ' . htmlspecialchars(implode(', ', $skipped_files), ENT_QUOTES, 'UTF-8') . AddErrorLocation())->send();
+                exit;
             }
 
 

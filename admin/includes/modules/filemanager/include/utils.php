@@ -654,7 +654,7 @@ function check_file_extension($extension,$config){
 			$check = true;
 		}
     } else {
-    	if(!in_array(mb_strtolower($extension), $config['ext_blacklist'])){
+		if(!in_array(mb_strtolower($extension), $config['ext_blacklist'])){
 			$check = true;
 		}
     }
@@ -691,7 +691,8 @@ function check_files_extensions_on_phar($phar, &$files, $basepath, $config)
 		{
 			if ($file->isDir())
 			{
-				$iterator = new DirectoryIterator($file);
+				// the full path keeps the recursion inside the archive for deeper folders
+				$iterator = new DirectoryIterator($file->getPathname());
 				check_files_extensions_on_phar($iterator, $files, $basepath . $file->getFileName() . '/', $config);
 			}
 		}
