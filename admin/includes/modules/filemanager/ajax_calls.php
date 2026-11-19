@@ -211,11 +211,11 @@ if (isset($_GET['action'])) {
                                         // inner dots of the file name are replaced like on upload
                                         $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
                                         // an entry must not replace a file that is already there or an earlier entry of the archive
-                                        if (file_exists($base_folder . $target_name) || isset($target_names[strtolower($target_name)])) {
+                                        if (file_exists($base_folder . $target_name) || isset($target_names[$target_name])) {
                                             $skipped_files[] = $FullFileName['name'];
                                             continue;
                                         }
-                                        $target_names[strtolower($target_name)] = true;
+                                        $target_names[$target_name] = true;
                                         copy('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name);
                                     }
                                 }
@@ -261,7 +261,22 @@ if (isset($_GET['action'])) {
 
             if ($ftp) {
                 unlink($path);
-                $ftp->putAll($base_folder, "/".$config['ftp_base_folder'] . $config['upload_dir'] . fix_dirname($_POST['path']), FTP_BINARY);
+                $ftp_target = "/".$config['ftp_base_folder'] . $config['upload_dir'] . fix_dirname($_POST['path']);
+                // the archive went into a local folder first, a file that is already on the FTP server stays
+                $local_files = array();
+                foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base_folder, FilesystemIterator::SKIP_DOTS)) as $local_file) {
+                    if ($local_file->isFile()) {
+                        $local_files[] = $local_file->getPathname();
+                    }
+                }
+                foreach ($local_files as $local_file) {
+                    $relative_name = ltrim(str_replace('\\', '/', substr($local_file, strlen($base_folder))), '/');
+                    if ($ftp->size($ftp_target . '/' . $relative_name) != -1) {
+                        $skipped_files[] = $relative_name;
+                        unlink($local_file);
+                    }
+                }
+                $ftp->putAll($base_folder, $ftp_target, FTP_BINARY);
                 deleteDir($base_folder);
             }
 
