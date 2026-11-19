@@ -116,7 +116,8 @@
         }
         break;
       case 'deleteconfirm':
-        if (strpos($_GET['file'], '..') !== false) {
+        // only an entry of the backup directory, never the directory itself
+        if (!isset($_GET['file']) || backup_entry_path($_GET['file']) === false) {
           xtc_redirect(xtc_href_link(FILENAME_BACKUP));
         }
 
@@ -321,6 +322,10 @@
                   $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_BACKUP . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP) . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 case 'restore':
+                  // no form without a selected backup
+                  if (!isset($buInfo) || !is_object($buInfo)) {
+                    break;
+                  }
                   $heading[] = array('text' => $info_heading);
                   $contents = array('form' => xtc_draw_form('restore', RS_FILENAME, 'action=restorenow&file=' . (($buInfo->dir != '') ? $buInfo->dir : $buInfo->file)));
                   $contents[] = array('text' => TEXT_INFO_RESTORE);
@@ -362,6 +367,10 @@
                   break;
 
                 case 'delete':
+                  // no form without a selected backup
+                  if (!isset($buInfo) || !is_object($buInfo)) {
+                    break;
+                  }
                   $heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
                   $contents = array('form' => xtc_draw_form('delete', FILENAME_BACKUP, 'file=' . (($buInfo->dir != '') ? $buInfo->dir : $buInfo->file) . '&action=deleteconfirm'));
                   $contents[] = array('text' => TEXT_DELETE_INTRO);

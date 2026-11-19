@@ -899,20 +899,23 @@ function backup_folder_size($folder, $pattern) {
   return $total;
 }
 
-// comment lines at the start of a backup, read from the open stream
+// table and charset lines from the head of a backup, read from the open stream
 function backup_entry_header($fp, $compressed) {
   $lines = array();
   $buffer = '';
   $read = 0;
-  $context = (($compressed) ? inflate_init(ZLIB_ENCODING_GZIP) : false);
-  if ($compressed && $context === false) {
+  $context = false;
+
+  // a plain file with the ending of a compressed one is read as it is, like gzopen() does
+  $data = (string)fread($fp, 2);
+  if ($compressed && $data !== "\x1f\x8b") {
+    $compressed = false;
+  }
+  if ($compressed && ($context = inflate_init(ZLIB_ENCODING_GZIP)) === false) {
     return $lines;
   }
-  while (!feof($fp)) {
-    $data = fread($fp, 8192);
-    if (!is_string($data) || $data === '') {
-      break;
-    }
+
+  while ($data !== '') {
     if ($compressed) {
       // every write of a backup appends a gzip member of its own
       $plain = '';
@@ -936,17 +939,29 @@ function backup_entry_header($fp, $compressed) {
       $data = $plain;
     }
     $buffer .= $data;
-    while (($pos = strpos($buffer, "\n")) !== false) {
-      $line = substr($buffer, 0, $pos + 1);
-      $buffer = (string)substr($buffer, $pos + 1);
-      // backed up tables are in head of file
-      if (substr($line, 0, 2) != "--") {
+    while ($buffer !== '') {
+      // backed up tables are in head of file, so the first two characters of a statement end the reading
+      if (strlen($buffer) > 1 && substr($buffer, 0, 2) != "--") {
         return $lines;
       }
-      $lines[] = $line;
+      // a line has at most 4095 characters, like fgets($fp, 4096) before
+      $pos = strpos($buffer, "\n");
+      if ($pos === false || $pos > 4094) {
+        if (strlen($buffer) < 4095) {
+          break;
+        }
+        $pos = 4094;
+      }
+      $line = substr($buffer, 0, $pos + 1);
+      $buffer = (string)substr($buffer, $pos + 1);
+      if (substr($line, 0, 9) == "-- TABLE|" || substr($line, 0, 10) == "-- Charset") {
+        $lines[] = $line;
+      }
     }
+    // small pieces of a compressed file, a piece may grow a thousandfold
+    $data = ((feof($fp)) ? '' : (string)fread($fp, (($compressed) ? 512 : 8192)));
   }
-  if (substr($buffer, 0, 2) == "--") {
+  if (substr($buffer, 0, 9) == "-- TABLE|" || substr($buffer, 0, 10) == "-- Charset") {
     $lines[] = $buffer;
   }
 
