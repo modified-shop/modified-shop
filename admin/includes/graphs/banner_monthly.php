@@ -20,7 +20,7 @@
   // include needed functions
   require_once(DIR_FS_INC . 'formatter_date.inc.php');
   
-  $year = ((isset($_GET['year'])) ? $_GET['year'] : date('Y'));
+  $year = ((isset($_GET['year'])) ? (int)$_GET['year'] : date('Y'));
 
   $stats = array();
   for ($i=1; $i<13; $i++) {

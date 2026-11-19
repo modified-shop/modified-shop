@@ -21,8 +21,8 @@
   // include needed functions
   require_once(DIR_FS_INC . 'formatter_date.inc.php');
 
-  $year = isset($_GET['year']) ? $_GET['year'] : date('Y');
-  $month = isset($_GET['month']) ? $_GET['month'] : date('n');
+  $year = isset($_GET['year']) ? (int)$_GET['year'] : date('Y');
+  $month = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
 
   $days = (date('t', mktime(0,0,0,$month))+1);
   $stats = array();

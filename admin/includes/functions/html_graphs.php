@@ -465,7 +465,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   function xtc_banner_graph_monthly($banner_id) {
     global $banner;
 
-    $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
+    $year = (($_GET['year']) ? (int)$_GET['year'] : date('Y'));
 
     for ($i=1; $i<13; $i++) {
       $names[] = formatter_date('MMMM', 'M', mktime(0,0,0,$i));
@@ -519,8 +519,8 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   function xtc_banner_graph_daily($banner_id) {
     global $banner;
 
-    $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
-    $month = (($_GET['month']) ? $_GET['month'] : date('n'));
+    $year = (($_GET['year']) ? (int)$_GET['year'] : date('Y'));
+    $month = (($_GET['month']) ? (int)$_GET['month'] : date('n'));
 
     $days = (date('t', mktime(0,0,0,$month))+1);
     $stats = array();

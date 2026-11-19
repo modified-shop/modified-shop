@@ -41,6 +41,18 @@
   }
 
 
+  // the link in the page: only web, mail and phone addresses, encoded for the href attribute
+  function xtc_get_banners_link($banners_url) {
+    $banners_url = xtc_get_banners_url($banners_url);
+    $scheme = strtolower((string)parse_url($banners_url, PHP_URL_SCHEME));
+    if (!in_array($scheme, array('http', 'https', 'mailto', 'tel'), true)) {
+      return '';
+    }
+
+    return htmlspecialchars($banners_url, ENT_QUOTES, get_default_encoding(''), false);
+  }
+
+
   function check_url_scheme($url) {
     if ($url != '') {
       $parse_url = parse_url($url);
