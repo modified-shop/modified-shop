@@ -127,6 +127,21 @@
   }
 
 
+  // these actions change data: they need their form with the token, a plain link
+  // or an empty POST is not enough and would also run them with missing fields
+  if (in_array($saction, array('insert_values', 'save_values', 'deleteconfirm_values'), true)
+      && !admin_form_posted()
+      )
+  {
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('saction'))));
+  }
+  if (in_array($action, array('insert_options', 'save_options', 'deleteconfirm_options'), true)
+      && !admin_form_posted()
+      )
+  {
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action'))));
+  }
+
   switch ($saction) {
 
     case 'insert_values':
@@ -177,10 +192,6 @@
       break;
 
     case 'deleteconfirm_values':
-      // deleting needs the form with its token, not a link
-      if (!admin_form_posted()) {
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction')) . 'list=detail'));
-      }
       $vID = (int)$_GET['vID'];
       $oID = (int)$_GET['oID'];
 
@@ -240,9 +251,6 @@
       break;
 
     case 'deleteconfirm_options':
-      if (!admin_form_posted()) {
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID'))));
-      }
       $oID = (int)$_GET['oID'];
 
       $products_array = xtc_check_attributes_options($oID);

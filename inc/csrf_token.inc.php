@@ -82,7 +82,8 @@ if (is_array($_POST) && count($_POST) > 0) {
   }
   
   if ($error !== false) {
-    trigger_error($error."\n".print_r($_POST, true), E_USER_WARNING);
+    // only the reason and the field names, the values may hold tokens, passwords or API keys
+    trigger_error($error."\n".implode(', ', array_keys($_POST)), E_USER_WARNING);
     unset($_POST);
     unset($_GET['action']);
     unset($_GET['saction']);
