@@ -142,6 +142,12 @@
         return xtc_db_affected_rows();
       }
 
+      // without the lock this request may have read a stale session and cannot save it
+      function holds_lock(): bool
+      {
+        return $this->owns_lock(session_id());
+      }
+
       private function owns_lock(string $session_id): bool
       {
         return $this->lock_acquired && $this->session_id === $session_id;
