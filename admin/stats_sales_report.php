@@ -113,7 +113,7 @@
   $srCgroup = (isset($_GET['cgroup']) && preg_match("/^[0-9]+$/", $_GET['cgroup'])) ? $_GET['cgroup'] : '';
   
   // paymenttype
-  if (isset($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
+  if (isset($_GET['payment']) && is_string($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
     $srPayment = $_GET['payment'];
   } else {
     $srPayment = '0';

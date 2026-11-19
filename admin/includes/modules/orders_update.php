@@ -15,9 +15,9 @@
   if ($order->info['orders_status_id'] != $status || $comments != '' || $email_preview) {
     if (!$email_preview) {  
       xtc_db_query("UPDATE ".TABLE_ORDERS."
-                       SET orders_status = ".$status.",
+                       SET orders_status = ".(int)$status.",
                            last_modified = now()
-                     WHERE orders_id = '".$oID."'");
+                     WHERE orders_id = '".(int)$oID."'");
     }
 
     $customer_notified = 0;

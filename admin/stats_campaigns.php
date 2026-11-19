@@ -114,7 +114,7 @@ $campaign_array = array(
   'endM' => $eMon,
   'endY' => $eYear,
   'status' => ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0),
-  'campaign' => ((isset($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0),
+  'campaign' => ((isset($_GET['campaign']) && is_string($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0),
 );
 $campaign = new campaigns($campaign_array);
 

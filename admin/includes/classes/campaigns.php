@@ -60,7 +60,7 @@ class campaigns {
       $this->endM = $get_array['endM'];
       $this->endY = $get_array['endY'];
       $this->endDate = mktime(0, 0, 0, $this->endM, $this->endD, $this->endY);
-      $this->status = $get_array['status'];
+      $this->status = (isset($get_array['status']) ? (int)$get_array['status'] : 0);
       $this->campaign = $get_array['campaign'];
       $this->campaigns = $this->getCampaigns();
 
@@ -202,7 +202,7 @@ class campaigns {
   function getSelectedCampaign() {
 
     $campaign = array ();
-    $campaign_query = "SELECT * FROM ".TABLE_CAMPAIGNS." WHERE campaigns_refID='".$this->campaign."'";
+    $campaign_query = "SELECT * FROM ".TABLE_CAMPAIGNS." WHERE campaigns_refID='".xtc_db_input($this->campaign)."'";
     $campaign_query = xtc_db_query($campaign_query);
     while ($campaign_data = xtc_db_fetch_array($campaign_query)) {
       $campaign[] = array (
@@ -300,7 +300,7 @@ class campaigns {
                           ON o.orders_id=ot.orders_id 
                              AND ot.class='ot_total'
                     WHERE o.conversion_type='1' 
-                      AND o.campaign='".$this->campaign."'
+                      AND o.campaign='".xtc_db_input($this->campaign)."'
                           ".$selection.$status;
     $sell_query = xtc_db_query($sell_query);
     $sell_data = xtc_db_fetch_array($sell_query);
@@ -312,7 +312,7 @@ class campaigns {
                                ON o.orders_id=ot.orders_id 
                                   AND ot.class='ot_total'
                          WHERE o.conversion_type='2' 
-                           AND o.campaign='".$this->campaign."'
+                           AND o.campaign='".xtc_db_input($this->campaign)."'
                                ".$selection.$status;
     $late_sell_query = xtc_db_query($late_sell_query);
     $late_sell_data = xtc_db_fetch_array($late_sell_query);
@@ -406,7 +406,7 @@ class campaigns {
     // select leads
     $hits_query = "SELECT count(*) as hits 
                      FROM ".TABLE_CAMPAIGNS_IP." 
-                    WHERE campaign='".$this->campaign."'
+                    WHERE campaign='".xtc_db_input($this->campaign)."'
                           ".$selection;
     $hits_query = xtc_db_query($hits_query);
     $hits_data = xtc_db_fetch_array($hits_query);

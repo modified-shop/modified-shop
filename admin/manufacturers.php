@@ -117,8 +117,9 @@
       $manufacturers_name = xtc_db_prepare_input($_POST['manufacturers_name']);
       $manufacturers_status = (int)$_POST['manufacturers_status'];
       $sort_order = xtc_db_prepare_input($_POST['sort_order']);
-      $products_sorting = xtc_db_prepare_input($_POST['products_sorting']);
-      $products_sorting2 = xtc_db_prepare_input($_POST['products_sorting2']);
+      // the shop puts both values into ORDER BY: a column name and a direction, nothing else
+      $products_sorting = ((isset($_POST['products_sorting']) && is_string($_POST['products_sorting']) && preg_match('/^([a-z0-9_]+\.)?[a-z0-9_]+$/i', $_POST['products_sorting'])) ? $_POST['products_sorting'] : '');
+      $products_sorting2 = ((isset($_POST['products_sorting2']) && is_string($_POST['products_sorting2']) && in_array(strtoupper($_POST['products_sorting2']), array('ASC', 'DESC'), true)) ? strtoupper($_POST['products_sorting2']) : '');
       $listing_template = xtc_db_prepare_input($_POST['listing_template']);
       $categories_template = xtc_db_prepare_input($_POST['categories_template']);
 

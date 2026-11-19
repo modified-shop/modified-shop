@@ -54,6 +54,7 @@ class categories {
   // deletes an array of categories, with products
   // makes use of remove_category, remove_product
   function remove_categories($category_id) {
+    $category_id = (int)$category_id;
     $categories = xtc_get_category_tree($category_id, '', '0', '', true);
     $products = array();
     $products_delete = array();
@@ -158,8 +159,9 @@ class categories {
     $sql_data_array = array(
       'sort_order' => xtc_db_prepare_input($categories_data['sort_order']),
       'categories_status' => xtc_db_prepare_input($categories_data['status']),
-      'products_sorting' => xtc_db_prepare_input($categories_data['products_sorting']),
-      'products_sorting2' => xtc_db_prepare_input($categories_data['products_sorting2']),
+      // the shop puts both values into ORDER BY: a column name and a direction, nothing else
+      'products_sorting' => ((isset($categories_data['products_sorting']) && is_string($categories_data['products_sorting']) && preg_match('/^([a-z0-9_]+\.)?[a-z0-9_]+$/i', $categories_data['products_sorting'])) ? $categories_data['products_sorting'] : ''),
+      'products_sorting2' => ((isset($categories_data['products_sorting2']) && is_string($categories_data['products_sorting2']) && in_array(strtoupper($categories_data['products_sorting2']), array('ASC', 'DESC'), true)) ? strtoupper($categories_data['products_sorting2']) : ''),
       'categories_template' => xtc_db_prepare_input($categories_data['categories_template']),
       'listing_template' => xtc_db_prepare_input($categories_data['listing_template'])
     );
@@ -569,6 +571,7 @@ class categories {
 
   // deletes given product from categories, removes it completely if no category is left
   function delete_product($product_id, $product_categories) {
+    $product_id = (int)$product_id;
     for ($i = 0, $n = sizeof($product_categories); $i < $n; $i ++) {
       xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id   = '".(int)$product_id."' AND categories_id = '".xtc_db_input($product_categories[$i])."'");
       if (($product_categories[$i]) == 0) {
@@ -592,7 +595,7 @@ class categories {
   function update_product($products_data) {
     global $messageStack;
     
-    $products_id = xtc_db_prepare_input($products_data['products_id']);
+    $products_id = (int)$products_data['products_id'];
 
     $prod_quantity_query = xtc_db_query("SELECT products_quantity 
                                            FROM ".TABLE_PRODUCTS." 
@@ -1253,7 +1256,7 @@ class categories {
       'products_startpage' => $status,
       'products_last_modified' => 'now()'
     );
-    xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '".$products_id."'");                       
+    xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '".(int)$products_id."'");                       
   }
 
 

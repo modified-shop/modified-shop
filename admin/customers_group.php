@@ -41,20 +41,20 @@ if (isset($_GET['action'])) {
               }
               if ($_POST['permission'] == 'true') {
                 foreach ($_POST['cg'] as $cgID=>$value) {
-                  if (!in_array('c_' . $cgID . '_group', $values)) {
-                    $values[] = 'c_' . $cgID . '_group';
+                  if (!in_array('c_' . (int)$cgID . '_group', $values)) {
+                    $values[] = 'c_' . (int)$cgID . '_group';
                   }
                 }
                 $group_ids = implode(',', $values);
-                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER . ' SET group_ids=\'' . xtc_db_input($group_ids) . '\' WHERE content_id=' . (int)$result['content_id']);
               } else {
                 foreach ($_POST['cg'] as $cgID=>$value) {
-                  if (in_array('c_' . $cgID . '_group', $values)) {
-                    unset($values[array_search('c_' . $cgID . '_group', $values)]);
+                  if (in_array('c_' . (int)$cgID . '_group', $values)) {
+                    unset($values[array_search('c_' . (int)$cgID . '_group', $values)]);
                   }
                 }
                 $group_ids = implode(',', $values);
-                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER . ' SET group_ids=\'' . xtc_db_input($group_ids) . '\' WHERE content_id=' . (int)$result['content_id']);
               }
             }
             $messageStack->add(constant('TEXT_CONTENT_MANAGER_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');
@@ -69,20 +69,20 @@ if (isset($_GET['action'])) {
               }
               if ($_POST['permission'] == 'true') {
                 foreach ($_POST['cg'] as $cgID=>$value) {
-                  if (!in_array('c_' . $cgID . '_group', $values)) {
-                    $values[] = 'c_' . $cgID . '_group';
+                  if (!in_array('c_' . (int)$cgID . '_group', $values)) {
+                    $values[] = 'c_' . (int)$cgID . '_group';
                   }
                 }
                 $group_ids = implode(',', $values);
-                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER_CONTENT . ' SET group_ids=\'' . xtc_db_input($group_ids) . '\' WHERE content_id=' . (int)$result['content_id']);
               } else {
                 foreach ($_POST['cg'] as $cgID=>$value) {
-                  if (in_array('c_' . $cgID . '_group', $values)) {
-                    unset($values[array_search('c_' . $cgID . '_group', $values)]);
+                  if (in_array('c_' . (int)$cgID . '_group', $values)) {
+                    unset($values[array_search('c_' . (int)$cgID . '_group', $values)]);
                   }
                 }
                 $group_ids = implode(',', $values);
-                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER_CONTENT . ' SET group_ids=\'' . xtc_db_input($group_ids) . '\' WHERE content_id=' . (int)$result['content_id']);
               }
             }
             $messageStack->add(constant('TEXT_CONTENT_MANAGER_CONTENT_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');
@@ -97,20 +97,20 @@ if (isset($_GET['action'])) {
               }
               if ($_POST['permission'] == 'true') {
                 foreach ($_POST['cg'] as $cgID=>$value) {
-                  if (!in_array('c_' . $cgID . '_group', $values)) {
-                    $values[] = 'c_' . $cgID . '_group';
+                  if (!in_array('c_' . (int)$cgID . '_group', $values)) {
+                    $values[] = 'c_' . (int)$cgID . '_group';
                   }
                 }
                 $group_ids = implode(',', $values);
-                xtc_db_query('UPDATE ' . TABLE_PRODUCTS_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+                xtc_db_query('UPDATE ' . TABLE_PRODUCTS_CONTENT . ' SET group_ids=\'' . xtc_db_input($group_ids) . '\' WHERE content_id=' . (int)$result['content_id']);
               } else {
                 foreach ($_POST['cg'] as $cgID=>$value) {
-                  if (in_array('c_' . $cgID . '_group', $values)) {
-                    unset($values[array_search('c_' . $cgID . '_group', $values)]);
+                  if (in_array('c_' . (int)$cgID . '_group', $values)) {
+                    unset($values[array_search('c_' . (int)$cgID . '_group', $values)]);
                   }
                 }
                 $group_ids = implode(',', $values);
-                xtc_db_query('UPDATE ' . TABLE_PRODUCTS_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+                xtc_db_query('UPDATE ' . TABLE_PRODUCTS_CONTENT . ' SET group_ids=\'' . xtc_db_input($group_ids) . '\' WHERE content_id=' . (int)$result['content_id']);
               }
             }
             $messageStack->add(constant('TEXT_PRODUCTS_CONTENT_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');
@@ -125,20 +125,20 @@ if (isset($_GET['action'])) {
               }
               if ($_POST['permission'] == 'true') {
                 foreach ($_POST['cg'] as $cgID=>$value) {
-                  if (!in_array('c_' . $cgID . '_group', $values)) {
-                    $values[] = 'c_' . $cgID . '_group';
+                  if (!in_array('c_' . (int)$cgID . '_group', $values)) {
+                    $values[] = 'c_' . (int)$cgID . '_group';
                   }
                 }
                 $group_ids = implode(',', $values);
-                xtc_db_query('UPDATE ' . TABLE_EMAIL_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+                xtc_db_query('UPDATE ' . TABLE_EMAIL_CONTENT . ' SET group_ids=\'' . xtc_db_input($group_ids) . '\' WHERE content_id=' . (int)$result['content_id']);
               } else {
                 foreach ($_POST['cg'] as $cgID=>$value) {
-                  if (in_array('c_' . $cgID . '_group', $values)) {
-                    unset($values[array_search('c_' . $cgID . '_group', $values)]);
+                  if (in_array('c_' . (int)$cgID . '_group', $values)) {
+                    unset($values[array_search('c_' . (int)$cgID . '_group', $values)]);
                   }
                 }
                 $group_ids = implode(',', $values);
-                xtc_db_query('UPDATE ' . TABLE_EMAIL_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+                xtc_db_query('UPDATE ' . TABLE_EMAIL_CONTENT . ' SET group_ids=\'' . xtc_db_input($group_ids) . '\' WHERE content_id=' . (int)$result['content_id']);
               }
             }
             $messageStack->add(constant('TEXT_EMAIL_CONTENT_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');

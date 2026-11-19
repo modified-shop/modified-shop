@@ -42,6 +42,10 @@
     $pInfo = new objectInfo($product);
   } elseif ($_POST) {
     $pInfo = new objectInfo($_POST);
+    // the id of the form goes into several queries of this form and its modules
+    if (isset($pInfo->products_id)) {
+      $pInfo->products_id = (int)$pInfo->products_id;
+    }
     $products_name = $_POST['products_name'];
     $products_description = $_POST['products_description'];
     $products_short_description = $_POST['products_short_description'];
@@ -66,7 +70,7 @@
 
   $prod_quantity_query = xtc_db_query("SELECT products_quantity 
                                          FROM ".TABLE_PRODUCTS." 
-                                        WHERE products_id = '".$pInfo->products_id."'");
+                                        WHERE products_id = '".(isset($pInfo->products_id) ? (int)$pInfo->products_id : 0)."'");
   $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
 
   $manufacturers_array = array(array('id' => '', 'text' => TEXT_NONE));
