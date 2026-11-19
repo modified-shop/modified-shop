@@ -1126,6 +1126,14 @@ class PayPalPaymentBase extends PayPalCommon {
   
   
   function verify_webhook_signature($headers, $body) {
+    // a request without the PayPal headers must not lead to any call to PayPal
+    $required_headers = array('PAYPAL-AUTH-ALGO', 'PAYPAL-CERT-URL', 'PAYPAL-TRANSMISSION-ID', 'PAYPAL-TRANSMISSION-SIG', 'PAYPAL-TRANSMISSION-TIME');
+    foreach ($required_headers as $required_header) {
+      if (!isset($headers[$required_header]) || $headers[$required_header] == '') {
+        return false;
+      }
+    }
+
     $webhook_id = $this->get_config($this->get_webhook_config_key(), false);
     if ($webhook_id == '') {
       $webhook_id = $this->lookup_webhook_id();
@@ -1133,13 +1141,6 @@ class PayPalPaymentBase extends PayPalCommon {
     if ($webhook_id == '') {
       $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('error' => 'no webhook_id configured'));
       return false;
-    }
-
-    $required_headers = array('PAYPAL-AUTH-ALGO', 'PAYPAL-CERT-URL', 'PAYPAL-TRANSMISSION-ID', 'PAYPAL-TRANSMISSION-SIG', 'PAYPAL-TRANSMISSION-TIME');
-    foreach ($required_headers as $required_header) {
-      if (!isset($headers[$required_header]) || $headers[$required_header] == '') {
-        return false;
-      }
     }
 
     try {
@@ -1165,29 +1166,74 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function lookup_webhook_id() {
-    try {
-      $apiContext = $this->apiContext();
-      $WebhookList = \PayPal\Api\Webhook::getAll($apiContext);
-      $webhooks = $WebhookList->getWebhooks();
-
-      if (defined('RUN_MODE_ADMIN')) {
-        $webhook_url = xtc_catalog_href_link('callback/paypal/webhook.php', '', 'SSL', false);
-      } else {
-        $webhook_url = xtc_href_link('callback/paypal/webhook.php', '', 'SSL', false);
-      }
-      for ($w=0, $z=count($webhooks); $w<$z; $w++) {
-        if ($webhooks[$w]->getUrl() == $webhook_url) {
-          $webhook_id = $webhooks[$w]->getId();
-          $this->save_webhook_id($webhook_id);
-          return $webhook_id;
-        }
-      }
-    } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('exception' => $ex));
+    // a failed lookup waits a minute, otherwise every webhook call would ask PayPal again;
+    // PayPal repeats a delivery later than that, so a repeated delivery always gets a new lookup
+    $retry_key = $this->get_webhook_config_key().'_LOOKUP';
+    if ($this->webhook_lookup_waits($retry_key)) {
+      return '';
     }
 
-    return '';
+    // one lookup at a time per PayPal configuration, a parallel delivery waits for its result;
+    // own connection: before MySQL 5.7.5 a second lock frees the session lock, and the lock ends with the connection
+    $lock_link = is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'paypal_webhook_lock_link', false));
+    if ($lock_link) {
+      // named locks are server wide, the name carries the database
+      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input('MODppw_'.md5(DB_DATABASE.'|'.$retry_key))."', 5) AS locked", 'paypal_webhook_lock_link');
+      $lock = xtc_db_fetch_array($lock_query);
+      if (is_array($lock) && $lock['locked'] === '0') {
+        // the other lookup still runs, its result is used when it is there
+        xtc_db_close('paypal_webhook_lock_link');
+
+        return (string)$this->get_config($this->get_webhook_config_key(), false);
+      }
+      // without named locks on the server the lookup runs without one, like before
+    }
+
+    // the lookup this delivery waited for has saved the id or marked its failure
+    $webhook_id = $this->get_config($this->get_webhook_config_key(), false);
+    if ($webhook_id == '' && !$this->webhook_lookup_waits($retry_key)) {
+      try {
+        $apiContext = $this->apiContext();
+        $WebhookList = \PayPal\Api\Webhook::getAll($apiContext);
+        $webhooks = $WebhookList->getWebhooks();
+
+        if (defined('RUN_MODE_ADMIN')) {
+          $webhook_url = xtc_catalog_href_link('callback/paypal/webhook.php', '', 'SSL', false);
+        } else {
+          $webhook_url = xtc_href_link('callback/paypal/webhook.php', '', 'SSL', false);
+        }
+        for ($w=0, $z=count($webhooks); $w<$z; $w++) {
+          if ($webhooks[$w]->getUrl() == $webhook_url) {
+            $webhook_id = $webhooks[$w]->getId();
+            $this->save_webhook_id($webhook_id);
+            $this->delete_config($retry_key);
+            break;
+          }
+        }
+      } catch (Exception $ex) {
+        $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('exception' => $ex));
+      }
+
+      if ($webhook_id == '') {
+        // marked before the lock is given back, so a waiting delivery does not ask PayPal again
+        $this->save_config(array(array('config_key' => $retry_key, 'config_value' => time())));
+      }
+    }
+
+    if ($lock_link) {
+      xtc_db_close('paypal_webhook_lock_link');
+    }
+
+    return (string)$webhook_id;
   }
+
+
+  function webhook_lookup_waits($retry_key) {
+    $last_attempt = (int)$this->get_config($retry_key, false);
+
+    return ($last_attempt > (time() - 60) && $last_attempt <= time());
+  }
+
 
 
   function update_order($comment, $orders_status, $orders_id, $notified = 0) {
