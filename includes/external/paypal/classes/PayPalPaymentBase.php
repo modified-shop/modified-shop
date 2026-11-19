@@ -1172,11 +1172,17 @@ class PayPalPaymentBase extends PayPalCommon {
       return '';
     }
 
-    // one lookup at a time per PayPal configuration, parallel deliveries do not each ask PayPal
-    $lock_name = 'paypal_webhook_'.substr(hash('sha256', $retry_key), 0, 32);
-    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($lock_name)."', 0) AS locked");
+    // one lookup at a time per PayPal configuration, parallel deliveries do not each ask PayPal;
+    // own connection: before MySQL 5.7.5 a second lock frees the session lock, and the lock ends with the connection
+    if (!is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'paypal_webhook_lock_link', false))) {
+      return '';
+    }
+    // named locks are server wide, the name carries the database
+    $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input('MODppw_'.md5(DB_DATABASE.'|'.$retry_key))."', 0) AS locked", 'paypal_webhook_lock_link');
     $lock = xtc_db_fetch_array($lock_query);
-    if (!isset($lock['locked']) || (int)$lock['locked'] !== 1) {
+    if (!is_array($lock) || $lock['locked'] != '1') {
+      xtc_db_close('paypal_webhook_lock_link');
+
       return '';
     }
 
@@ -1209,7 +1215,7 @@ class PayPalPaymentBase extends PayPalCommon {
       }
     }
 
-    xtc_db_query("SELECT RELEASE_LOCK('".xtc_db_input($lock_name)."')");
+    xtc_db_close('paypal_webhook_lock_link');
 
     return (string)$webhook_id;
   }
