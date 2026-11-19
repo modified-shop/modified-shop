@@ -169,12 +169,16 @@ if (defined('MODULE_WITHDRAW_STATUS') && MODULE_WITHDRAW_STATUS == 'true') {
                                 ORDER BY ow.date_added, op.products_name");
   while ($withdraw_products = xtc_db_fetch_array($withdraw_query)) {
     $attributes_array = array();
+    $attrib_models = array();
     $attributes_query = xtc_db_query("SELECT products_options,
-                                             products_options_values
+                                             products_options_values,
+                                             attributes_model
                                         FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
                                        WHERE orders_id = '".(int)$_GET['order_id']."'
-                                         AND orders_products_id = '".(int)$withdraw_products['orders_products_id']."'");
+                                         AND orders_products_id = '".(int)$withdraw_products['orders_products_id']."'
+                                    ORDER BY orders_products_attributes_id");
     while ($attributes = xtc_db_fetch_array($attributes_query)) {
+      $attrib_models[] = $attributes['attributes_model'];
       $attributes_array[] = array(
         'OPTIONS_NAME' => $attributes['products_options'],
         'VALUES_NAME' => $attributes['products_options_values'],
@@ -183,7 +187,7 @@ if (defined('MODULE_WITHDRAW_STATUS') && MODULE_WITHDRAW_STATUS == 'true') {
 
     $withdraw_products_array[] = array(
       'PRODUCTS_NAME' => $withdraw_products['products_name'],
-      'PRODUCTS_MODEL' => encode_model_number($withdraw_products['products_model'], (count($attributes_array) > 0)),
+      'PRODUCTS_MODEL' => encode_model_number($withdraw_products['products_model'], $attrib_models),
       'PRODUCTS_QUANTITY' => $withdraw_products['products_quantity'],
       'PRODUCTS_ATTRIBUTES' => $attributes_array,
       'DATE_ADDED' => xtc_date_short($withdraw_products['date_added']),

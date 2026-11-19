@@ -333,6 +333,7 @@
         $attributes_data = '';
         $attributes_model = '';
         $attributes_array = array();
+        $attrib_models = array();
         $attributes_query = xtc_db_query($attributes_query);
         $subindex = 0;
         $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
@@ -350,7 +351,8 @@
           );
           $attributes_data .= '<br />'.$attributes_data_values['products_options'].': '.$attributes_data_values['products_options_values'];
           // the text mail decodes entities without quotes
-          $attributes_model .= $attr_model_delimiter.encode_model_number($attrib_model, false, ENT_NOQUOTES);
+          $attributes_model .= $attr_model_delimiter.encode_model_number($attrib_model, array(), ENT_NOQUOTES);
+          $attrib_models[] = $attrib_model;
           
           //new module support
           $attributes_array[$subindex] = $orderModules->order_data_attributes($attributes_array[$subindex],$attributes_data_values,$order_data_values,$oID,$order_lang_id);
@@ -373,7 +375,7 @@
         }
 
         // additional data
-        $order_data[$index]['PRODUCTS_MODEL'] = encode_model_number($order_data_values['products_model'], ($subindex > 0), ENT_NOQUOTES);
+        $order_data[$index]['PRODUCTS_MODEL'] = encode_model_number($order_data_values['products_model'], $attrib_models, ENT_NOQUOTES);
         $order_data[$index]['PRODUCTS_IMAGE'] = xtc_get_products_image($order_data_values['products_id']);
         $order_data[$index]['PRODUCTS_ATTRIBUTES'] = $attributes_data;
         $order_data[$index]['PRODUCTS_ATTRIBUTES_ARRAY'] = $attributes_array;
