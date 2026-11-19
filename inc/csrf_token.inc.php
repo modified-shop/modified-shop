@@ -67,18 +67,8 @@ if (is_array($_POST) && count($_POST) > 0) {
   }
   
   if ($error !== false) {
-    // tokens and passwords stay out of the log
-    $logged_post = $_POST;
-    foreach ($logged_post as $logged_key => $logged_value) {
-      if ((isset($_SESSION['CSRFName']) && $logged_key == $_SESSION['CSRFName'])
-          || in_array($logged_key, array('admin_action_token', 'rfm_token'), true)
-          || stripos($logged_key, 'password') !== false
-          )
-      {
-        $logged_post[$logged_key] = '***';
-      }
-    }
-    trigger_error($error."\n".print_r($logged_post, true), E_USER_WARNING);
+    // only the reason and the field names, the values may hold tokens, passwords or API keys
+    trigger_error($error."\n".implode(', ', array_keys($_POST)), E_USER_WARNING);
     unset($_POST);
     unset($_GET['action']);
     unset($_GET['saction']);

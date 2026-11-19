@@ -630,3 +630,4 @@ define('TEXT_IMAGE_NONEXISTENT', 'Bild existiert nicht');
 
 // withdrawal form
 define('TABLE_HEADING_WITHDRAW', 'Widerruf:');
+define('ERROR_ADMIN_ACTION_TOKEN', 'Das Formular ist abgelaufen. Bitte laden Sie die Seite neu und versuchen Sie es erneut.');

@@ -27,7 +27,7 @@
       case 'save':
         // the rights are reset first, so only the form of this page may start it
         if (!isset($_POST['admin_action_token']) || !admin_action_token($_POST['admin_action_token'])) {
-          $messageStack->add_session((isset($_POST['admin_action_token']) ? CSRF_TOKEN_MANIPULATION : CSRF_TOKEN_NOT_DEFINED), 'warning');
+          $messageStack->add_session((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'warning');
           xtc_redirect(xtc_href_link(FILENAME_ACCOUNTING, xtc_get_all_get_params(array('action')), 'NONSSL'));
         }
 

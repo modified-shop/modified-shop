@@ -631,3 +631,4 @@ define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
 
 // withdrawal form
 define('TABLE_HEADING_WITHDRAW', 'Withdrawal:');
+define('ERROR_ADMIN_ACTION_TOKEN', 'The form has expired. Reload the page and try again.');
