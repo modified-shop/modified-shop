@@ -211,7 +211,12 @@ if (isset($_GET['action'])) {
 
             // correct name
             $old_name = $name;
-            $name = rfm_replace_inner_dots(fix_filename($name, $config));
+            $name = fix_filename($name, $config);
+            // inner dots are refused like a wrong name, the upload replaces them for the same reason
+            if ($name != rfm_replace_inner_dots($name)) {
+                response(trans('wrong name') . AddErrorLocation())->send();
+                exit;
+            }
             if (empty($name)) {
                 response(trans('Empty_name') . AddErrorLocation())->send();
                 exit;
@@ -260,6 +265,11 @@ if (isset($_GET['action'])) {
         case 'rename_file':
             if ($config['rename_files']) {
                 $name = fix_filename($name, $config);
+                // the extension is appended later, so any dot would make a second one
+                if ($name != rfm_replace_inner_dots($name, false)) {
+                    response(trans('wrong name') . AddErrorLocation())->send();
+                    exit;
+                }
                 if (!empty($name)) {
                     if (!rename_file($path, $name, $ftp, $config)) {
                         response(trans('Rename_existing_file') . AddErrorLocation())->send();
@@ -292,6 +302,11 @@ if (isset($_GET['action'])) {
         case 'duplicate_file':
             if ($config['duplicate_files']) {
                 $name = fix_filename($name, $config);
+                // the extension is appended later, so any dot would make a second one
+                if ($name != rfm_replace_inner_dots($name, false)) {
+                    response(trans('wrong name') . AddErrorLocation())->send();
+                    exit;
+                }
                 if (!empty($name)) {
                     if (!$ftp && !checkresultingsize(filesize($path))) {
                         response(sprintf(trans('max_size_reached'), $config['MaxSizeTotal']) . AddErrorLocation())->send();

@@ -278,7 +278,6 @@ function deleteDir($dir,$ftp = null, $config = null)
 */
 function duplicate_file( $old_path, $name, $ftp = null, $config = null )
 {
-	$name = rfm_replace_inner_dots($name, false);
 	$info = pathinfo($old_path);
 	$new_path = $info['dirname'] . "/" . $name . "." . $info['extension'];
 	if($ftp){
@@ -317,7 +316,7 @@ function duplicate_file( $old_path, $name, $ftp = null, $config = null )
 */
 function rename_file($old_path, $name, $ftp = null, $config = null)
 {
-	$name = rfm_replace_inner_dots(fix_filename($name, $config), false);
+	$name = fix_filename($name, $config);
 	$info = pathinfo($old_path);
 	$new_path = $info['dirname'] . "/" . $name . "." . $info['extension'];
 	if($ftp){
@@ -651,11 +650,11 @@ function check_files_extensions_on_path($path, $ext)
 function check_file_extension($extension,$config){
 	$check = false;
 	if (!$config['ext_blacklist']) {
-		if(in_array(mb_strtolower($extension), $conf['ext'])){
+		if(in_array(mb_strtolower($extension), $config['ext'])){
 			$check = true;
 		}
     } else {
-    	if(!in_array(mb_strtolower($extension), $conf['ext_blacklist'])){
+    	if(!in_array(mb_strtolower($extension), $config['ext_blacklist'])){
 			$check = true;
 		}
     }
@@ -683,7 +682,7 @@ function check_files_extensions_on_phar($phar, &$files, $basepath, $config)
 		if ($file->isFile())
 		{
 			// a name with more than one dot is left out, extractTo() cannot rename it
-			if (check_file_extension($file->getExtension()) && substr_count($file->getFileName(), '.') < 2)
+			if (check_file_extension($file->getExtension(), $config) && substr_count($file->getFileName(), '.') < 2)
 			{
 				$files[] = $basepath . $file->getFileName();
 			}

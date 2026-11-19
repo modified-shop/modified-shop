@@ -207,6 +207,10 @@ if (isset($_GET['action'])) {
                                     if (in_array(strtolower($fileinfo['extension']), $config['ext'])) {
                                         // inner dots of the file name are replaced like on upload
                                         $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
+                                        // a renamed entry must not replace a file that is already there
+                                        if ($target_name != $FullFileName['name'] && file_exists($base_folder . $target_name)) {
+                                            continue;
+                                        }
                                         copy('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name);
                                     }
                                 }
