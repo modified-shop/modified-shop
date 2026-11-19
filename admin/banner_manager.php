@@ -717,10 +717,11 @@
                                                          WHERE banners_group_id = '" . xtc_db_input($bInfo->banners_group_id) . "'
                                                            AND languages_id = '".$languages[$i]['id']."'");
                           $banner = xtc_db_fetch_array($banner_query);
+                          // the image and the HTML graph both need the banner and the period
+                          $banner_id = $banner['banners_id'];
+                          $days = '3';
 
                           if ( (function_exists('imagecreate')) && ($dir_ok) && ($banner_extension) ) {                          
-                            $banner_id = $banner['banners_id'];
-                            $days = '3';
                             include(DIR_WS_INCLUDES . 'graphs/banner_infobox.php');
                             $contents[] = array('align' => 'center', 'text' => $languages[$i]['name'].'<br /><a href="' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $page . '&bID=' . $banner_id . '&gID=' . $bInfo->banners_group_id) . '">' . xtc_image(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banner_id . '.' . $banner_extension).'</a>');
                           } else {
