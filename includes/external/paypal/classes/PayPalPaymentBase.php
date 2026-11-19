@@ -1189,12 +1189,9 @@ class PayPalPaymentBase extends PayPalCommon {
       // without named locks on the server the lookup runs without one, like before
     }
 
-    // another delivery may have finished the lookup in the meantime
+    // the lookup this delivery waited for has saved the id or marked its failure
     $webhook_id = $this->get_config($this->get_webhook_config_key(), false);
     if ($webhook_id == '' && !$this->webhook_lookup_waits($retry_key)) {
-      // the attempt counts before PayPal is asked, so a delivery right after the lock waits as well
-      $this->save_config(array(array('config_key' => $retry_key, 'config_value' => time())));
-
       try {
         $apiContext = $this->apiContext();
         $WebhookList = \PayPal\Api\Webhook::getAll($apiContext);
@@ -1215,6 +1212,11 @@ class PayPalPaymentBase extends PayPalCommon {
         }
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'WebhookVerification', array('exception' => $ex));
+      }
+
+      if ($webhook_id == '') {
+        // marked before the lock is given back, so a waiting delivery does not ask PayPal again
+        $this->save_config(array(array('config_key' => $retry_key, 'config_value' => time())));
       }
     }
 
