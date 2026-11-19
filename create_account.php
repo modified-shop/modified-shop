@@ -807,7 +807,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
               $smarty->assign('SEND_COUPON', 'true');
               $smarty->assign('COUPON_DESC', $coupon['coupon_description']);
               // the plain text mail decodes the entities again
-              $smarty->assign('COUPON_CODE', encode_htmlspecialchars($coupon['coupon_code']));
+              $smarty->assign('COUPON_CODE', encode_htmlspecialchars($coupon['coupon_code'], ENT_NOQUOTES));
               $send_mail = true;
             }
           }

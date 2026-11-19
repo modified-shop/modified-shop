@@ -242,7 +242,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   for ($n = 0; $n < count($campaign->result); $n ++) {
                   ?>
                     <tr class="dataTableRow"> 
-                      <td class="main" colspan="7" style="border-bottom: 2px solid;"><br /><?php echo $campaign->result[$n]['text'].' '.TEXT_REFERER .' ('.$campaign->result[$n]['id'].')'; ?></td>
+                      <td class="main" colspan="7" style="border-bottom: 2px solid;"><br /><?php echo $campaign->result[$n]['text'].' '.TEXT_REFERER .' ('.encode_htmlspecialchars($campaign->result[$n]['id']).')'; ?></td>
                     </tr>
                     <?php
                     // show values

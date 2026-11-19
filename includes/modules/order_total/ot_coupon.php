@@ -124,7 +124,7 @@ class ot_coupon {
 
       $this->output[] = array(
         // the title is printed as HTML, the code stays text
-        'title' => $this->title.' '.encode_htmlspecialchars($this->coupon_code).':',
+        'title' => $this->title.' '.encode_htmlspecialchars($this->coupon_code, ENT_NOQUOTES).':',
         'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount * (-1), true).'</b></span>',
         'value' => $od_amount * (-1)
       );

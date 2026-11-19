@@ -61,7 +61,7 @@
       $template = 'send_coupon';
       
       // the plain text mail decodes the entities again
-      $smarty->assign('COUPON_ID', encode_htmlspecialchars($data['coupon_code']));
+      $smarty->assign('COUPON_ID', encode_htmlspecialchars($data['coupon_code'], ENT_NOQUOTES));
       $smarty->assign('COUPON_AMOUNT', $data['coupon_amount']);
     } else {
       $template = 'send_gift';

@@ -204,7 +204,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $contents[] = array ('text' => '<br />'.TEXT_DATE_ADDED.' '.xtc_date_short($cInfo->date_added));
                   if (xtc_not_null($cInfo->last_modified))
                     $contents[] = array ('text' => TEXT_LAST_MODIFIED.' '.xtc_date_short($cInfo->last_modified));
-                  $contents[] = array ('text' => TEXT_REFERER.'?refID='.$cInfo->campaigns_refID);
+                  $contents[] = array ('text' => TEXT_REFERER.'?refID='.encode_htmlspecialchars($cInfo->campaigns_refID));
                 }
                 break;
             }

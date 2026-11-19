@@ -63,7 +63,6 @@ class Inputfilter {
                                   'geo_zone_name',
                                   'geo_zone_description',
                                   'campaigns_name',
-                                  'campaigns_refID',
                                   'memo_title',
                                   'memo_text',
                                   'symbol_left',

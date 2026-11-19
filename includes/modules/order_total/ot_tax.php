@@ -15,6 +15,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  require_once(DIR_FS_INC.'clean_html_output.inc.php');
  
   class ot_tax {
 
@@ -64,7 +65,8 @@
 
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
             $order->info['allow_tax'] = 1; //customer
-            $this->output[] = array('title' => $key . ':',
+            // the key is also the lookup for the tax rate, so it is cleaned only for the title
+            $this->output[] = array('title' => clean_html_output($key) . ':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }

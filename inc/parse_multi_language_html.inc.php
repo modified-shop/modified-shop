@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
-  require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
+  require_once(DIR_FS_INC.'clean_html_output.inc.php');
 
   /**
    * parse_multi_language_html()
@@ -25,14 +25,6 @@
    * @return string
    */
   function parse_multi_language_html($text, $lang_code, $admin = false) {
-    $value = parse_multi_language_value($text, $lang_code, $admin);
-    if (strpos($value, '<') === false) {
-      return $value;
-    }
-    if (!xtc_remove_active_content_available()) {
-      return encode_htmlspecialchars($value);
-    }
-
-    return xtc_remove_active_content($value);
+    return clean_html_output(parse_multi_language_value($text, $lang_code, $admin));
   }
 ?>
