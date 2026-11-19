@@ -18,12 +18,12 @@
       <picture>
         <source media="(max-width:600px)" data-srcset="{$CATEGORIES_IMAGE_MOBILE}">
         <source data-srcset="{$CATEGORIES_IMAGE}">
-        <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />
-        <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
+        <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" />
+        <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
       </picture>
     {else}
-      <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />
-      <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
+      <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" />
+      <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
     {/if}
   {/if}
   {if isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != ''}{$CATEGORIES_SHORT_DESCRIPTION}{else if isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}{$CATEGORIES_DESCRIPTION}{/if}

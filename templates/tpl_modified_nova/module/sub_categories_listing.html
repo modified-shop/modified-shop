@@ -8,17 +8,17 @@
     <div class="subcats_row">
       {foreach name=aussen item=categories_data from=$categories_content key=spalten}
         <div class="subcats_item">
-          <a href="{$categories_data.CATEGORIES_LINK}" title="{$categories_data.CATEGORIES_NAME|onlytext}">
+          <a href="{$categories_data.CATEGORIES_LINK}" title="{$categories_data.CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}">
             <span class="subcats_item_inner">
               {if $categories_data.CATEGORIES_IMAGE != '' || (isset($categories_data.CATEGORIES_IMAGE_LIST) && $categories_data.CATEGORIES_IMAGE_LIST != '')}
                 <span class="subcats_image">
                   <span class="subcats_image_inner">
                     {if isset($categories_data.CATEGORIES_IMAGE_LIST) && $categories_data.CATEGORIES_IMAGE_LIST != ''}
-                      <img class="lazyload" data-src="{$categories_data.CATEGORIES_IMAGE_LIST}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" />
+                      <img class="lazyload" data-src="{$categories_data.CATEGORIES_IMAGE_LIST}" alt="{$categories_data.CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" />
                     {else}
-                      <img class="lazyload" data-src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" />
+                      <img class="lazyload" data-src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" />
                     {/if}
-                    <noscript><img src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" /></noscript>
+                    <noscript><img src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
                   </span>
                 </span>
               {/if}

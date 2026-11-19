@@ -35,14 +35,14 @@
           <div class="lb_image">
             <div class="prod_image">
               {if $module_data.PRODUCTS_IMAGE != ''}
-                <a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">
-                  <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+                <a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}">
+                  <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
                 </a>
               {/if}
             </div>
           </div>
 
-          <div class="lb_title"><div class="lb_title_inner"><a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">{$module_data.PRODUCTS_NAME}</a></div></div>
+          <div class="lb_title"><div class="lb_title_inner"><a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}">{$module_data.PRODUCTS_NAME}</a></div></div>
           {if $module_data.GUARANTEE_LABEL}<div class="guarantee-label-row">{$module_data.GUARANTEE_LABEL}</div>{/if}
 
           {if is_array($module_data.ATTRIBUTES) && count($module_data.ATTRIBUTES) > 0}
@@ -56,7 +56,7 @@
           <div class="lb_shipping">
             {if $module_data.PRODUCTS_SHIPPING_NAME}
               <i class="fa-solid fa-truck-fast mr_5"></i>{#text_shippingtime#} 
-              {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lb_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}
+              {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lb_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext|replace:'"':'&quot;'}" /></span>{/if}
               {$module_data.PRODUCTS_SHIPPING_NAME_LINK}
             {else}
               &nbsp;

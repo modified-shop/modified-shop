@@ -4,19 +4,19 @@
   </div>
 {elseif $banner_data.LINK != ''}
   {if isset($banner_data.IMAGE_SRC_MOBILE) && $banner_data.IMAGE_SRC_MOBILE != ''}
-    <a title="{$banner_data.IMAGE_TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+    <a title="{$banner_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
       <picture>
         <source media="(max-width:600px)" data-srcset="{$banner_data.IMAGE_SRC_MOBILE}">
         <source data-srcset="{$banner_data.IMAGE_SRC}">
-        <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
+        <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$banner_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
       </picture>
       {if $banner_data.TITLE != ''}
         <span class="banner_item_content"><span>{$banner_data.TITLE}</span></span>
       {/if}
     </a>
   {else}
-    <a title="{$banner_data.IMAGE_TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
-      <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
+    <a title="{$banner_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+      <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$banner_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
       {if $banner_data.TITLE != ''}
         <span class="banner_item_content"><span>{$banner_data.TITLE}</span></span>
       {/if}
@@ -29,13 +29,13 @@
     <picture>
       <source media="(max-width:600px)" data-srcset="{$banner_data.IMAGE_SRC_MOBILE}">
       <source data-srcset="{$banner_data.IMAGE_SRC}">
-      <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
+      <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$banner_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
     </picture>
     {if $banner_data.TITLE != ''}
       <span class="banner_item_content"><span>{$banner_data.TITLE}</span></span>
     {/if}
   {else}
-    <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
+    <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$banner_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
     {if $banner_data.TITLE != ''}
       <span class="banner_item_content"><span>{$banner_data.TITLE}</span></span>
     {/if}

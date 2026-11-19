@@ -21,11 +21,11 @@
           <div class="prod_image">
             {if $module_data.PRODUCTS_IMAGE != ''}        
               {if $smarty.const.PICTURESET_ACTIVE === true}
-                <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+                <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
               {else}
-                <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+                <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
               {/if}
-              <noscript><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></noscript>
+              <noscript><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
             {/if}  
           </div>
         </div>
@@ -33,7 +33,7 @@
         <div class="of_col_flex">
 
           <div class="of_productname">
-            <a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">{$module_data.PRODUCTS_NAME}</a>
+            <a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}">{$module_data.PRODUCTS_NAME}</a>
           </div>        
 
           {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<div class="of_description">{$module_data.PRODUCTS_SHORT_DESCRIPTION}</div>{/if}

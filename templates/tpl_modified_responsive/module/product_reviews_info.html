@@ -7,9 +7,9 @@
 <div class="pri_imagebox">
   <div class="pri_big_image">
     {if $PRODUCTS_IMAGE != ''}
-      <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}">
-        <img class="lazyload" data-src="{$PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" />
-        <noscript><img src="{$PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></noscript>
+      <a class="cbimages" title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}">
+        <img class="lazyload" data-src="{$PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
+        <noscript><img src="{$PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
       </a>
     {/if}
   </div>

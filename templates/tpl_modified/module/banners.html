@@ -1,9 +1,9 @@
 {if $banner_data.TEXT != ''}
   {$banner_data.TEXT}
 {elseif $banner_data.LINK != ''}
-  <a title="{$banner_data.TITLE}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
-    <img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
+  <a title="{$banner_data.TITLE|replace:'"':'&quot;'}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+    <img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$banner_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
   </a>
 {elseif $banner_data.IMAGE_IMG != ''}
-  <img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
+  <img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$banner_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
 {/if}

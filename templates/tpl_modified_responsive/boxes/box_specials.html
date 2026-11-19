@@ -21,11 +21,11 @@
         <div class="box_image">
           <a href="{$box_content.PRODUCTS_LINK}">
             {if $smarty.const.PICTURESET_ACTIVE === true}
-              <img class="lazyload" data-src="{$box_content.PRODUCTS_IMAGE|replace:"thumbnail_":"midi_"}" alt="{$box_content.PRODUCTS_NAME|onlytext}" title="{$box_content.PRODUCTS_NAME|onlytext}" />
+              <img class="lazyload" data-src="{$box_content.PRODUCTS_IMAGE|replace:"thumbnail_":"midi_"}" alt="{$box_content.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$box_content.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
             {else}
-              <img class="lazyload" data-src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext}" title="{$box_content.PRODUCTS_NAME|onlytext}" />
+              <img class="lazyload" data-src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$box_content.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
             {/if}
-            <noscript><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext}" title="{$box_content.PRODUCTS_NAME|onlytext}" /></noscript>
+            <noscript><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$box_content.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
           </a>
         </div>
       {/if}    
