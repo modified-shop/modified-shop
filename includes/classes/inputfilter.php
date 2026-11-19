@@ -55,8 +55,6 @@ class Inputfilter {
                                   'customers_status_name',
                                   'coupon_name',
                                   'banners_title',
-                                  'banners_group',
-                                  'new_banners_group',
                                   'tax_description',
                                   'tax_class_title',
                                   'tax_class_description',
