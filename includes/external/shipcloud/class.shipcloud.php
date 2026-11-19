@@ -150,23 +150,29 @@ class shipcloud {
       return false;
     }
 
-    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_SHIPCLOUD_EVENTS." (
+    $created = xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_SHIPCLOUD_EVENTS." (
                     `tracking_id` int(11) NOT NULL,
                     `event_type` varchar(64) NOT NULL,
                     `event_count` int(11) NOT NULL DEFAULT 0,
                     `date_added` datetime NOT NULL,
                     PRIMARY KEY (`tracking_id`, `event_type`)
                   )");
-    xtc_db_query("INSERT IGNORE INTO ".TABLE_SHIPCLOUD_EVENTS." (tracking_id, event_type, date_added) VALUES ('".(int)$tracking_id."', '".xtc_db_input($type)."', NOW())");
+    $added = xtc_db_query("INSERT IGNORE INTO ".TABLE_SHIPCLOUD_EVENTS." (tracking_id, event_type, date_added) VALUES ('".(int)$tracking_id."', '".xtc_db_input($type)."', NOW())");
 
     // one statement: of several deliveries at the same time only as many pass as shipcloud has events
-    xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
-                     SET event_count = event_count + 1
-                   WHERE tracking_id = '".(int)$tracking_id."'
-                     AND event_type = '".xtc_db_input($type)."'
-                     AND event_count < '".(int)$count."'");
+    $claimed = xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                               SET event_count = event_count + 1
+                             WHERE tracking_id = '".(int)$tracking_id."'
+                               AND event_type = '".xtc_db_input($type)."'
+                               AND event_count < '".(int)$count."'");
+    $taken = xtc_db_affected_rows();
 
-    return (xtc_db_affected_rows() > 0);
+    // a statement that failed is no answer, shipcloud delivers the event again
+    if ($created === false || $added === false || $claimed === false) {
+      return null;
+    }
+
+    return ($taken > 0);
   }
 
 
