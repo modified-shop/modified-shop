@@ -378,6 +378,7 @@ define('WARNING_NO_FILE_UPLOADED', 'Warnung: Es wurde keine Datei hochgeladen.')
 define('WARNING_ACTIVE_CONTENT_REMOVED', 'Hinweis: Aus den gespeicherten Texten wurden Elemente oder Attribute entfernt, z. B. Scripte, Event-Attribute, Inline-SVG oder unzul&auml;ssiges HTML.');
 define('ERROR_ACTIVE_CONTENT_LIBRARY_MISSING', 'Fehler: Das Verzeichnis includes/external/htmlpurifier/ fehlt. Die Texte wurden ungefiltert gespeichert.');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Fehler: Datei konnte nicht entfernt werden.');
+define('ERROR_DIRECTORY_NOT_REMOVEABLE', 'Fehler: Verzeichnis konnte nicht entfernt werden.');
 
 define('DELETE_ENTRY','Eintrag l&ouml;schen?');
 define('TEXT_PAYMENT_ERROR','<b>WARNUNG:</b> Bitte aktivieren Sie ein <a href="%s">Zahlungsmodul</a>!');

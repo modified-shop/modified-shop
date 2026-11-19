@@ -1383,9 +1383,10 @@
    * @param mixed $source
    * @return
    */
-  function xtc_remove($source) {
+  function xtc_remove($source, $nested = false) {
     global $messageStack, $xtc_remove_error;
-    if (isset ($xtc_remove_error)) {
+    // an error of an entry in a folder has to survive the entries after it
+    if ($nested !== true) {
       $xtc_remove_error = false;
     }
     // a link is removed itself, never the content of its target
@@ -1399,7 +1400,7 @@
       while ($file = $dir->read()) {
         if (($file != '.') && ($file != '..')) {
           if (is_link($source.'/'.$file) || is_writeable($source.'/'.$file)) {
-            xtc_remove($source.'/'.$file);
+            xtc_remove($source.'/'.$file, true);
           } else {
             $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source.'/'.$file), 'error');
             $xtc_remove_error = true;
@@ -1407,16 +1408,13 @@
         }
       }
       $dir->close();
-      if (is_writeable($source)) {
-        rmdir($source);
-      } else {
-        $messageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
+      // a removal that fails is an error too
+      if (!is_writeable($source) || !@rmdir($source)) {
+        $messageStack->add(sprintf((defined('ERROR_DIRECTORY_NOT_REMOVEABLE') ? ERROR_DIRECTORY_NOT_REMOVEABLE : ERROR_FILE_NOT_REMOVEABLE), $source), 'error');
         $xtc_remove_error = true;
       }
     } else {
-      if (is_writeable($source)) {
-        unlink($source);
-      } else {
+      if (!is_writeable($source) || !@unlink($source)) {
         $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
         $xtc_remove_error = true;
       }
