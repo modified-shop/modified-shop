@@ -164,13 +164,28 @@
         }
         */
         if ($error === false) {
+          // the file stored so far stays when the form names the same one again
+          $stored_file_name = '';
+          if ($id == 'update' && (int)$content_id[$i][$languages[$l]['id']] > 0) {
+            $stored_file_query = xtc_db_query("SELECT content_file
+                                                 FROM ".TABLE_CONTENT_MANAGER."
+                                                WHERE content_id = '".(int)$content_id[$i][$languages[$l]['id']]."'");
+            if ($stored_file = xtc_db_fetch_array($stored_file_query)) {
+              $stored_file_name = (string)$stored_file['content_file'];
+            }
+          }
           $content_file_name = '';
           if ($select_file[$i][$languages[$l]['id']] != 'default') {
             $content_file_name = $select_file[$i][$languages[$l]['id']];
             // the shop includes the file, so only a file directly in media/content/ can be selected
             // a page includes PHP files placed on the server, so it is checked like the output
             if (get_content_file_path($content_file_name, 'content') === false) {
-              $content_file_name = '';
+              if ($content_file_name === $stored_file_name) {
+                $messageStack->add_session(sprintf(WARNING_CONTENT_FILE, encode_htmlspecialchars($content_file_name)), 'warning');
+              } else {
+                $messageStack->add_session(sprintf(ERROR_CONTENT_FILE, encode_htmlspecialchars($content_file_name)), 'error');
+                $content_file_name = $stored_file_name;
+              }
             }
           }
           $accepted_file_upload_files_extensions = array("htm","html","txt");
@@ -341,13 +356,33 @@
         $content_file_name = $select_file;
       }
 
-      // the shop includes the file, so only a file directly in the media folder can be stored;
-      // a product content may also come from media/content/, as media_content.php looks there too
-      if (get_content_file_path($content_file_name, $path, 'file') === false
-          && ($path != 'products' || get_content_file_path($content_file_name, 'content', 'file') === false)
-          )
-      {
-        $content_file_name = '';
+      // the file stored so far stays when the form names no other one
+      $stored_file_name = '';
+      if ($subaction == 'update') {
+        $stored_file_query = xtc_db_query("SELECT content_file
+                                             FROM ".$table."
+                                            WHERE content_id = '".(int)$_POST['coID']."'");
+        if ($stored_file = xtc_db_fetch_array($stored_file_query)) {
+          $stored_file_name = (string)$stored_file['content_file'];
+        }
+      }
+
+      // the same rule as where the shop uses the file: mails attach it,
+      // media_content.php looks in media/products/ and then in media/content/
+      if ($type == 'email') {
+        $content_file_valid = (get_content_file_path($content_file_name, 'content', 'file') !== false);
+      } else {
+        $content_file_valid = (get_content_file_path($content_file_name, 'products', 'products') !== false
+                               || get_content_file_path($content_file_name, 'content', 'products') !== false
+                               );
+      }
+      if ($content_file_name != '' && $content_file_valid === false) {
+        if ($content_file_name === $stored_file_name) {
+          $messageStack->add_session(sprintf(WARNING_CONTENT_FILE, encode_htmlspecialchars($content_file_name)), 'warning');
+        } else {
+          $messageStack->add_session(sprintf(ERROR_CONTENT_FILE, encode_htmlspecialchars($content_file_name)), 'error');
+          $content_file_name = $stored_file_name;
+        }
       }
 
       $sql_data_array = array(

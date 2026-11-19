@@ -361,8 +361,10 @@ if (!$action || $action == 'delete') {
   $content_files = array();
   $files = new DirectoryIterator(DIR_FS_CATALOG.'media/content/');
   foreach ($files as $file) {
+    // only files that saving accepts
     if ($file->isDot() === false
         && $file->isDir() === false
+        && get_content_file_path($file->getFilename(), 'content') !== false
         )
     {
       $content_files[] = array(
@@ -600,7 +602,12 @@ if (!$action || $action == 'delete') {
                 <td class="dataTableConfig col-single-right">
                   <?php
                     echo TEXT_CHOOSE_FILE_SERVER.'<br /><br />';
-                    echo xtc_draw_pull_down_menu('select_file['.$i.']['.$languages[$l]['id'].']', array_merge(array(array('id' => 'default','text' => (($content_lang['content_file'] != '') ? TEXT_NO_FILE : TEXT_SELECT))), $content_files), $content_lang['content_file']);
+                    // the stored file stays selectable, otherwise saving another field would remove it
+                    $select_files = $content_files;
+                    if ($content_lang['content_file'] != '' && !in_array($content_lang['content_file'], array_column($content_files, 'id'), true)) {
+                      $select_files[] = array('id' => $content_lang['content_file'], 'text' => $content_lang['content_file']);
+                    }
+                    echo xtc_draw_pull_down_menu('select_file['.$i.']['.$languages[$l]['id'].']', array_merge(array(array('id' => 'default','text' => (($content_lang['content_file'] != '') ? TEXT_NO_FILE : TEXT_SELECT))), $select_files), $content_lang['content_file']);
                     if ($content_lang['content_file'] != '') {
                       echo ' '.TEXT_CURRENT_FILE.' <b>'.$content_lang['content_file'].'</b><br />';
                     }

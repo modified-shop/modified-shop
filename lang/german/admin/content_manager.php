@@ -74,6 +74,8 @@
   define('TEXT_FILE_DESCRIPTION','<b>Info:</b><br />Sie haben ebenfalls die M&ouml;glichkeit eine <b>.html</b> oder <b>.htm</b> Datei als Content einzubinden.<br />Falls Sie eine Datei ausw&auml;hlen oder hochladen, haben Sie die M&ouml;glichkeit zus&auml;tzlichen Text im Textfeld zu erstellen.<br />Dieser erscheint dann vor dem Text aus der hochgeladenen Datei.<br />Sollten Sie keinen zus&auml;tzlichen Text w&uuml;nschen, lassen Sie das Textfeld bitte leer.');
   define('ERROR_FILE','Falsches Dateiformat (nur .html od .htm)');
   define('ERROR_TITLE','Bitte geben Sie einen Titel ein');
+  define('ERROR_CONTENT_FILE','Fehler: Die Datei %s kann hier nicht zugeordnet werden. Sie liegt nicht direkt im Medienordner oder ihr Dateityp ist nicht erlaubt. Die bisherige Zuordnung bleibt bestehen.');
+  define('WARNING_CONTENT_FILE','Hinweis: Die zugeordnete Datei %s verwendet der Shop nicht. Sie fehlt oder ihr Dateityp ist nicht erlaubt. Die Zuordnung bleibt gespeichert.');
   define('ERROR_COMMENT','Bitte geben Sie eine Dateibeschreibung ein!');
   define('TEXT_FILE_FLAG','Box:');
   define('TEXT_PARENT','Hauptdokument:');
