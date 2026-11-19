@@ -41,6 +41,7 @@ if ($customer_id > 0
 {
   // get order data
   require_once (DIR_WS_CLASSES.'order.php');
+  require_once (DIR_FS_INC.'encode_model_number.inc.php');
   $order = new order($oID);
   $smarty->assign('address_label_customer', xtc_address_format($order->customer['format_id'], $order->customer, 1, '', '<br />'));
   $smarty->assign('address_label_shipping', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
@@ -49,7 +50,11 @@ if ($customer_id > 0
   
   // get products data
   $order_total = $order->getTotalData($oID);
-  $smarty->assign('order_data', $order->getOrderData($oID));
+  $order_data = $order->getOrderData($oID);
+  foreach ($order_data as $key => $order_values) {
+    $order_data[$key]['PRODUCTS_MODEL'] = encode_model_number($order_values['PRODUCTS_MODEL']);
+  }
+  $smarty->assign('order_data', $order_data);
   $smarty->assign('order_total', $order_total['data']);
 
   // allow duty-note in print_order
