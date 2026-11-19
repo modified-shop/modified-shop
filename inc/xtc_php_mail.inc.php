@@ -226,6 +226,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
 
   //create attachments array for better handling
   $attachments = attachments_array($path_to_attachments,$path_to_more_attachments);
+  $attachment_names = array();
   
   $included_files = get_included_files();
   if (is_array($included_files)) {
@@ -245,6 +246,10 @@ function xtc_php_mail($from_email_address, $from_email_name,
           require_once (DIR_FS_INC.'get_content_file_path.inc.php');
           if (($attachment = get_content_file_path($email['content_file'], 'content', 'file')) !== false) {
             $attachments[] = $attachment;
+            // the mail shows the selected name, not the name of a link target
+            if (!isset($attachment_names[$attachment])) {
+              $attachment_names[$attachment] = $email['content_file'];
+            }
           }
         }
       }
@@ -252,9 +257,9 @@ function xtc_php_mail($from_email_address, $from_email_name,
   }
   $attachments = array_unique($attachments); 
 
-  // add attachments
-  for( $i = 0, $n = count($attachments); $i < $n; $i++) {
-    $mail->addAttachment($attachments[$i]);
+  // add attachments, array_unique() leaves gaps in the keys
+  foreach ($attachments as $attachment) {
+    $mail->addAttachment($attachment, (isset($attachment_names[$attachment]) ? $attachment_names[$attachment] : ''));
   }
 
   //Content

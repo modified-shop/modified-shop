@@ -1248,8 +1248,9 @@ function xtc_remove_product($product_id)
           if ($duplicate_content['total'] == 0) {
             // a stored path must not delete another file of the server
             require_once (DIR_FS_INC.'get_content_file_path.inc.php');
-            if (($product_content_file = get_content_file_path($product_content['content_file'], 'products', 'file')) !== false) {
-              @ unlink($product_content_file);
+            if (get_content_file_path($product_content['content_file'], 'products', 'file') !== false) {
+              // the stored name: a link goes, the file it points to may belong to another product
+              @ unlink(DIR_FS_CATALOG.'media/products/'.$product_content['content_file']);
             }
           }
         }

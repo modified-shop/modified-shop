@@ -16,8 +16,11 @@
 require('includes/application_top.php');
 require_once (DIR_FS_INC.'get_content_file_path.inc.php');
 
+// the input filter keeps pID numeric, so the product content comes with set=product
+$preview_media = ((isset($_GET['set']) && $_GET['set'] == 'product') || (isset($_GET['pID']) && $_GET['pID'] == 'media'));
 
-if ($_GET['pID']=='media') {
+
+if ($preview_media) {
 	$content_query=xtc_db_query("SELECT
  					content_file,
  					content_name,
@@ -49,12 +52,15 @@ require (DIR_WS_INCLUDES.'head.php');
  <?php
  if ($content_data['content_file']!=''){
 if (strpos($content_data['content_file'],'.txt') !== false) echo '<pre>';
-if ($_GET['pID']=='media') {
+if ($preview_media) {
 	// display image
-	// the stored name is checked before any output, the image link takes it encoded
+	// the stored name is checked before any output, the image link takes it encoded;
+	// the checked target decides the type, the image URL also needs an image name
 	$content_file_path = get_content_file_path($content_data['content_file'], 'products', 'products');
-	if ($content_file_path !== false && preg_match('/\.(gif|jpe?g|png|tiff?|bmp)$/i', $content_data['content_file'])) {
+	if ($content_file_path !== false && preg_match('/\.(gif|jpe?g|png|tiff?|bmp)$/i', $content_file_path)) {
+	if (preg_match('/\.(gif|jpe?g|png|tiff?|bmp)$/i', $content_data['content_file'])) {
 	echo xtc_image(DIR_WS_CATALOG.'media/products/'.rawurlencode($content_data['content_file']));
+	}
 	$content_file_path = false;
 	}
 } else {
