@@ -25,51 +25,88 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
-  // the code is checked like the language switch, the directory has to hold the language files of shop and admin;
-  // nothing is rewritten or cut by the database, a wrong value stops the save with a message
+  // the admin language file and the buttons of a language directory
+  function language_admin_files_exist($directory) {
+    return (is_string($directory)
+            && preg_match('/^[A-Za-z0-9_.-]+$/', $directory)
+            && strpos($directory, '..') === false
+            && is_file(DIR_FS_LANGUAGES . $directory . '/admin/' . $directory . '.php')
+            && is_file(DIR_FS_LANGUAGES . $directory . '/admin/buttons.php')
+            );
+  }
+
+  // a new or changed value is checked, an unchanged one stays as it is, so an existing language can
+  // always be edited; nothing is rewritten or cut by the database, a wrong value stops the save with a message
   if ($action == 'insert' || $action == 'save') {
     require_once(DIR_FS_INC.'xtc_input_validation.inc.php');
     require_once(DIR_FS_INC.'get_column_length.inc.php');
-    $code_length = get_column_length(TABLE_LANGUAGES, 'code');
-    $directory_length = get_column_length(TABLE_LANGUAGES, 'directory');
-    $image_length = get_column_length(TABLE_LANGUAGES, 'image');
     $check_lID = (($action == 'save' && isset($_GET['lID'])) ? (int)$_GET['lID'] : 0);
     $check_code = ((isset($_POST['code']) && is_string($_POST['code'])) ? xtc_db_prepare_input($_POST['code']) : '');
     $check_directory = ((isset($_POST['directory']) && is_string($_POST['directory'])) ? xtc_db_prepare_input($_POST['directory']) : '');
     $check_image = ((isset($_POST['image']) && is_string($_POST['image'])) ? xtc_db_prepare_input($_POST['image']) : '');
-    $check_errors = array();
-    if ($check_code == '' || xtc_input_validation($check_code, 'lang') !== $check_code || ($code_length > 0 && strlen($check_code) > $code_length)) {
-      $check_errors[] = sprintf(ERROR_LANGUAGE_CODE, $code_length);
-    } else {
-      $check_query = xtc_db_query("SELECT languages_id
+    $check_stored = false;
+    if ($action == 'save') {
+      $check_query = xtc_db_query("SELECT code, directory, image, status_admin
                                      FROM " . TABLE_LANGUAGES . "
-                                    WHERE code = '" . xtc_db_input($check_code) . "'
-                                      AND languages_id != '" . $check_lID . "'");
-      if (xtc_db_num_rows($check_query) > 0) {
-        $check_errors[] = ERROR_LANGUAGE_CODE_EXISTS;
+                                    WHERE languages_id = '" . $check_lID . "'");
+      $check_stored = xtc_db_fetch_array($check_query);
+    }
+    $check_errors = array();
+
+    // the code follows the rule of the language switch
+    if (!is_array($check_stored) || $check_code !== $check_stored['code']) {
+      $code_length = get_column_length(TABLE_LANGUAGES, 'code');
+      if ($check_code == '' || xtc_input_validation($check_code, 'lang') !== $check_code || ($code_length > 0 && strlen($check_code) > $code_length)) {
+        $check_errors[] = sprintf(ERROR_LANGUAGE_CODE, $code_length);
+      } else {
+        $check_query = xtc_db_query("SELECT languages_id
+                                       FROM " . TABLE_LANGUAGES . "
+                                      WHERE code = '" . xtc_db_input($check_code) . "'
+                                        AND languages_id != '" . $check_lID . "'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $check_errors[] = ERROR_LANGUAGE_CODE_EXISTS;
+        }
       }
     }
-    // the admin loads its own language file and the buttons as well, a missing one stops every admin page
-    if (!preg_match('/^[A-Za-z0-9_.-]+$/', $check_directory)
-        || strpos($check_directory, '..') !== false
-        || ($directory_length > 0 && strlen($check_directory) > $directory_length)
-        || !is_file(DIR_FS_LANGUAGES . $check_directory . '/' . $check_directory . '.php')
-        || !is_file(DIR_FS_LANGUAGES . $check_directory . '/admin/' . $check_directory . '.php')
-        || !is_file(DIR_FS_LANGUAGES . $check_directory . '/admin/buttons.php')
-        )
-    {
-      $check_errors[] = sprintf(ERROR_LANGUAGE_DIRECTORY, $directory_length);
+
+    // the shop loads the language file of the directory with require_once
+    $check_directory_changed = (!is_array($check_stored) || $check_directory !== $check_stored['directory']);
+    if ($check_directory_changed) {
+      $directory_length = get_column_length(TABLE_LANGUAGES, 'directory');
+      if (!preg_match('/^[A-Za-z0-9_.-]+$/', $check_directory)
+          || strpos($check_directory, '..') !== false
+          || ($directory_length > 0 && strlen($check_directory) > $directory_length)
+          || !is_file(DIR_FS_LANGUAGES . $check_directory . '/' . $check_directory . '.php')
+          )
+      {
+        $check_errors[] = sprintf(ERROR_LANGUAGE_DIRECTORY, $directory_length);
+      }
     }
-    // the image is only a relative src, so names with spaces or umlauts stay; quotes, tags and .. do not
-    if ($check_image != ''
-        && (preg_match('/["<>\\\\\x00-\x1F\x7F]/', $check_image)
-            || preg_match('#(^|/)\.\.(/|$)#', $check_image)
-            || ($image_length > 0 && mb_strlen($check_image, 'UTF-8') > $image_length)
+
+    // the admin loads its own language file and the buttons on every page; they are needed
+    // where the language becomes the default or an admin language gets another directory
+    $check_admin_files = language_admin_files_exist($check_directory);
+    if (!$check_admin_files
+        && ((isset($_POST['default']) && $_POST['default'] == 'on' && $check_code != DEFAULT_LANGUAGE)
+            || (is_array($check_stored) && $check_stored['status_admin'] == '1' && $check_directory_changed)
             )
         )
     {
-      $check_errors[] = sprintf(ERROR_LANGUAGE_IMAGE, $image_length);
+      $check_errors[] = ERROR_LANGUAGE_ADMIN_FILES;
     }
+
+    // the image is printed as typed in every flag, so a new value has to work as a relative path as it is
+    if ($check_image != '' && (!is_array($check_stored) || $check_image !== $check_stored['image'])) {
+      $image_length = get_column_length(TABLE_LANGUAGES, 'image');
+      if (preg_match('/["<>#?\\\\\x00-\x1F\x7F]/', $check_image)
+          || preg_match('#(^|/)\.\.(/|$)#', $check_image)
+          || ($image_length > 0 && mb_strlen($check_image, get_language_charset()) > $image_length)
+          )
+      {
+        $check_errors[] = sprintf(ERROR_LANGUAGE_IMAGE, $image_length);
+      }
+    }
+
     if (count($check_errors) > 0) {
       foreach ($check_errors as $check_error) {
         $messageStack->add_session($check_error, 'error');
@@ -89,6 +126,17 @@
        case 'setladminflag':
         $lID = (int)$_GET['lID'];
         $status_admin = (int)$_GET['adminflag'];
+        if ($status_admin == 1) {
+          // a language without the admin language files would stop every admin page
+          $lng_query = xtc_db_query("SELECT directory
+                                       FROM " . TABLE_LANGUAGES . "
+                                      WHERE languages_id = '" . $lID . "'");
+          $lng = xtc_db_fetch_array($lng_query);
+          if (!is_array($lng) || !language_admin_files_exist($lng['directory'])) {
+            $messageStack->add_session(ERROR_LANGUAGE_ADMIN_FILES, 'error');
+            xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
+          }
+        }
         xtc_db_query("update " . TABLE_LANGUAGES . " set status_admin = '" . xtc_db_input($status_admin) . "' WHERE languages_id = '" . xtc_db_input($lID) . "'");
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
         break;
@@ -103,6 +151,8 @@
             'directory' => $check_directory,
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
             'language_charset' => $charset_value,
+            // a shop language without admin translation is not offered in the admin
+            'status_admin' => ($check_admin_files ? 1 : 0),
           );
         if (!xtc_db_perform(TABLE_LANGUAGES, $sql_data_array)) {
           // a failed insert must not change anything else, e.g. the default language
@@ -711,7 +761,7 @@
                   $contents[] = array('text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code);
                   $contents[] = array('text' => TEXT_INFO_LANGUAGE_CHARSET_INFO . ' ' . $lInfo->language_charset);
                   $contents[] = array('text' => 'Language-ID:' . ' ' . $lInfo->languages_id);
-                  $contents[] = array('text' => '<br />' . xtc_image(DIR_WS_LANGUAGES . $lInfo->directory . '/' . implode('/', array_map('rawurlencode', explode('/', $lInfo->image))), $lInfo->name));
+                  $contents[] = array('text' => '<br />' . xtc_image(DIR_WS_LANGUAGES . $lInfo->directory . '/' . $lInfo->image, $lInfo->name));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . DIR_WS_LANGUAGES . '<b>' . $lInfo->directory . '</b>');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order);
                 }
