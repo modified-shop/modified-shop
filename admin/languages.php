@@ -25,17 +25,21 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
-  // the code is checked like the language switch, the directory has to hold the language file;
-  // nothing is rewritten, a wrong value stops the save with a message
+  // the code is checked like the language switch, the directory has to hold the language files of shop and admin;
+  // nothing is rewritten or cut by the database, a wrong value stops the save with a message
   if ($action == 'insert' || $action == 'save') {
     require_once(DIR_FS_INC.'xtc_input_validation.inc.php');
+    require_once(DIR_FS_INC.'get_column_length.inc.php');
+    $code_length = get_column_length(TABLE_LANGUAGES, 'code');
+    $directory_length = get_column_length(TABLE_LANGUAGES, 'directory');
+    $image_length = get_column_length(TABLE_LANGUAGES, 'image');
     $check_lID = (($action == 'save' && isset($_GET['lID'])) ? (int)$_GET['lID'] : 0);
     $check_code = ((isset($_POST['code']) && is_string($_POST['code'])) ? xtc_db_prepare_input($_POST['code']) : '');
     $check_directory = ((isset($_POST['directory']) && is_string($_POST['directory'])) ? xtc_db_prepare_input($_POST['directory']) : '');
     $check_image = ((isset($_POST['image']) && is_string($_POST['image'])) ? xtc_db_prepare_input($_POST['image']) : '');
     $check_errors = array();
-    if ($check_code == '' || xtc_input_validation($check_code, 'lang') !== $check_code) {
-      $check_errors[] = ERROR_LANGUAGE_CODE;
+    if ($check_code == '' || xtc_input_validation($check_code, 'lang') !== $check_code || ($code_length > 0 && strlen($check_code) > $code_length)) {
+      $check_errors[] = sprintf(ERROR_LANGUAGE_CODE, $code_length);
     } else {
       $check_query = xtc_db_query("SELECT languages_id
                                      FROM " . TABLE_LANGUAGES . "
@@ -45,15 +49,26 @@
         $check_errors[] = ERROR_LANGUAGE_CODE_EXISTS;
       }
     }
+    // the admin loads its own language file and the buttons as well, a missing one stops every admin page
     if (!preg_match('/^[A-Za-z0-9_.-]+$/', $check_directory)
         || strpos($check_directory, '..') !== false
+        || ($directory_length > 0 && strlen($check_directory) > $directory_length)
         || !is_file(DIR_FS_LANGUAGES . $check_directory . '/' . $check_directory . '.php')
+        || !is_file(DIR_FS_LANGUAGES . $check_directory . '/admin/' . $check_directory . '.php')
+        || !is_file(DIR_FS_LANGUAGES . $check_directory . '/admin/buttons.php')
         )
     {
-      $check_errors[] = ERROR_LANGUAGE_DIRECTORY;
+      $check_errors[] = sprintf(ERROR_LANGUAGE_DIRECTORY, $directory_length);
     }
-    if ($check_image != '' && (!preg_match('/^[A-Za-z0-9_.\/-]+$/', $check_image) || strpos($check_image, '..') !== false)) {
-      $check_errors[] = ERROR_LANGUAGE_IMAGE;
+    // the image is only a relative src, so names with spaces or umlauts stay; quotes, tags and .. do not
+    if ($check_image != ''
+        && (preg_match('/["<>\\\\\x00-\x1F\x7F]/', $check_image)
+            || preg_match('#(^|/)\.\.(/|$)#', $check_image)
+            || ($image_length > 0 && mb_strlen($check_image, 'UTF-8') > $image_length)
+            )
+        )
+    {
+      $check_errors[] = sprintf(ERROR_LANGUAGE_IMAGE, $image_length);
     }
     if (count($check_errors) > 0) {
       foreach ($check_errors as $check_error) {
@@ -696,7 +711,7 @@
                   $contents[] = array('text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code);
                   $contents[] = array('text' => TEXT_INFO_LANGUAGE_CHARSET_INFO . ' ' . $lInfo->language_charset);
                   $contents[] = array('text' => 'Language-ID:' . ' ' . $lInfo->languages_id);
-                  $contents[] = array('text' => '<br />' . xtc_image(DIR_WS_LANGUAGES . $lInfo->directory . '/' . $lInfo->image, $lInfo->name));
+                  $contents[] = array('text' => '<br />' . xtc_image(DIR_WS_LANGUAGES . $lInfo->directory . '/' . implode('/', array_map('rawurlencode', explode('/', $lInfo->image))), $lInfo->name));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . DIR_WS_LANGUAGES . '<b>' . $lInfo->directory . '</b>');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order);
                 }

@@ -51,9 +51,12 @@
 
       // the code is checked like the currency switch, which keeps only letters; nothing is rewritten
       require_once(DIR_FS_INC.'xtc_input_validation.inc.php');
+      require_once(DIR_FS_INC.'get_column_length.inc.php');
+      // without strict mode the database cuts a longer code
+      $code_length = get_column_length(TABLE_CURRENCIES, 'code');
       $code_error = '';
-      if (!is_string($code) || $code == '' || xtc_input_validation($code, 'char') !== $code) {
-        $code_error = ERROR_CURRENCY_CODE;
+      if (!is_string($code) || $code == '' || xtc_input_validation($code, 'char') !== $code || ($code_length > 0 && strlen($code) > $code_length)) {
+        $code_error = sprintf(ERROR_CURRENCY_CODE, $code_length);
       } else {
         $check_query = xtc_db_query("SELECT currencies_id
                                        FROM " . TABLE_CURRENCIES . "

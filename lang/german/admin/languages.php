@@ -53,9 +53,9 @@ define('TEXT_LANGUAGE_TRANSFER_ERR', 'Bitte unterschiedliche Sprachen w&auml;hle
 define('TEXT_LANGUAGE_TRANSFER_INFO2', '<strong>ACHTUNG:</strong> Beim Transfer werden die bestehenden Texte &uuml;berschrieben, daher bitte vorher unbedingt die Datenbank sichern!');
 
 // checks on save
-define('ERROR_LANGUAGE_CODE', 'Fehler: Der Code darf nur Buchstaben, Bindestrich und Unterstrich enthalten.');
+define('ERROR_LANGUAGE_CODE', 'Fehler: Der Code darf nur Buchstaben, Bindestrich und Unterstrich enthalten und h&ouml;chstens %s Zeichen lang sein.');
 define('ERROR_LANGUAGE_CODE_EXISTS', 'Fehler: Eine andere Sprache nutzt diesen Code bereits.');
-define('ERROR_LANGUAGE_DIRECTORY', 'Fehler: Das Verzeichnis braucht einen einfachen Namen und muss unter lang/ die Sprachdatei mit demselben Namen enthalten, z. B. lang/german/german.php.');
-define('ERROR_LANGUAGE_IMAGE', 'Fehler: Das Bild darf nur Buchstaben, Ziffern, Punkt, Bindestrich, Unterstrich und / enthalten.');
+define('ERROR_LANGUAGE_DIRECTORY', 'Fehler: Das Verzeichnis braucht einen einfachen Namen mit h&ouml;chstens %s Zeichen und muss die Sprachdateien f&uuml;r Shop und Admin enthalten, z. B. lang/german/german.php, lang/german/admin/german.php und lang/german/admin/buttons.php.');
+define('ERROR_LANGUAGE_IMAGE', 'Fehler: Das Bild darf keine Anf&uuml;hrungszeichen, spitzen Klammern, Backslashes oder .. enthalten und h&ouml;chstens %s Zeichen lang sein.');
 define('ERROR_LANGUAGE_NOT_SAVED', 'Fehler: Die Sprache wurde nicht gespeichert.');
 ?>

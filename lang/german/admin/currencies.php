@@ -47,7 +47,7 @@ define('ERROR_CURRENCY_INVALID', 'Fehler: Der Wechselkurs f&uuml;r %s (%s) wurde
 define('WARNING_PRIMARY_SERVER_FAILED', 'Der prim&auml;re Dienst "%s" konnte den Wechselkurs %s (%s) nicht ermitteln oder ist nicht verf&uuml;gbar. Es wird erneut &uuml;ber den sekund&auml;ren Dienst versucht.');
 
 // checks on save
-define('ERROR_CURRENCY_CODE', 'Fehler: Der Code darf nur Buchstaben enthalten.');
+define('ERROR_CURRENCY_CODE', 'Fehler: Der Code darf nur Buchstaben enthalten und h&ouml;chstens %s Zeichen lang sein.');
 define('ERROR_CURRENCY_CODE_EXISTS', 'Fehler: Eine andere W&auml;hrung nutzt diesen Code bereits.');
 define('ERROR_CURRENCY_NOT_SAVED', 'Fehler: Die W&auml;hrung wurde nicht gespeichert.');
 ?>

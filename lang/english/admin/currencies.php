@@ -47,7 +47,7 @@ define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %s (%s) was not u
 define('WARNING_PRIMARY_SERVER_FAILED', 'The primary service "%s" could not determine the exchange rate %s (%s) or is currently not available. It is retried on the secondary service');
 
 // checks on save
-define('ERROR_CURRENCY_CODE', 'Error: The code may only contain letters.');
+define('ERROR_CURRENCY_CODE', 'Error: The code may only contain letters and be at most %s characters long.');
 define('ERROR_CURRENCY_CODE_EXISTS', 'Error: Another currency already uses this code.');
 define('ERROR_CURRENCY_NOT_SAVED', 'Error: The currency was not saved.');
 ?>
