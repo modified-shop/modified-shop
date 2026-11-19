@@ -25,6 +25,44 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
+  // the code is checked like the language switch, the directory has to hold the language file;
+  // nothing is rewritten, a wrong value stops the save with a message
+  if ($action == 'insert' || $action == 'save') {
+    require_once(DIR_FS_INC.'xtc_input_validation.inc.php');
+    $check_lID = (($action == 'save' && isset($_GET['lID'])) ? (int)$_GET['lID'] : 0);
+    $check_code = ((isset($_POST['code']) && is_string($_POST['code'])) ? xtc_db_prepare_input($_POST['code']) : '');
+    $check_directory = ((isset($_POST['directory']) && is_string($_POST['directory'])) ? xtc_db_prepare_input($_POST['directory']) : '');
+    $check_image = ((isset($_POST['image']) && is_string($_POST['image'])) ? xtc_db_prepare_input($_POST['image']) : '');
+    $check_errors = array();
+    if ($check_code == '' || xtc_input_validation($check_code, 'lang') !== $check_code) {
+      $check_errors[] = ERROR_LANGUAGE_CODE;
+    } else {
+      $check_query = xtc_db_query("SELECT languages_id
+                                     FROM " . TABLE_LANGUAGES . "
+                                    WHERE code = '" . xtc_db_input($check_code) . "'
+                                      AND languages_id != '" . $check_lID . "'");
+      if (xtc_db_num_rows($check_query) > 0) {
+        $check_errors[] = ERROR_LANGUAGE_CODE_EXISTS;
+      }
+    }
+    if (!preg_match('/^[A-Za-z0-9_.-]+$/', $check_directory)
+        || strpos($check_directory, '..') !== false
+        || !is_file(DIR_FS_LANGUAGES . $check_directory . '/' . $check_directory . '.php')
+        )
+    {
+      $check_errors[] = ERROR_LANGUAGE_DIRECTORY;
+    }
+    if ($check_image != '' && (!preg_match('/^[A-Za-z0-9_.\/-]+$/', $check_image) || strpos($check_image, '..') !== false)) {
+      $check_errors[] = ERROR_LANGUAGE_IMAGE;
+    }
+    if (count($check_errors) > 0) {
+      foreach ($check_errors as $check_error) {
+        $messageStack->add_session($check_error, 'error');
+      }
+      xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . (($action == 'save') ? '&lID=' . $check_lID . '&action=edit' : '&action=new')));
+    }
+  }
+
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'setlflag':
@@ -43,15 +81,19 @@
         // a language may only use ENCODE_LANGUAGE_CHARSETS, never store anything else
         $charset_value = get_language_charset(isset($_POST['language_charset']) ? xtc_db_prepare_input($_POST['language_charset']) : '');
         $sql_data_array = array(
-            // the code goes into URLs and attributes, the directory into file paths
+            // the name goes into attributes, code, image and directory are checked above
             'name' => str_replace('"', '', strip_tags(xtc_db_prepare_input($_POST['name']))),
-            'code' => preg_replace('/[^A-Za-z0-9_-]/', '', xtc_db_prepare_input($_POST['code'])),
-            'image' => preg_replace('/[^A-Za-z0-9_.\/-]/', '', xtc_db_prepare_input($_POST['image'])),
-            'directory' => preg_replace('/[^A-Za-z0-9_-]/', '', xtc_db_prepare_input($_POST['directory'])),
+            'code' => $check_code,
+            'image' => $check_image,
+            'directory' => $check_directory,
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
             'language_charset' => $charset_value,
           );
-        xtc_db_perform(TABLE_LANGUAGES, $sql_data_array);      
+        if (!xtc_db_perform(TABLE_LANGUAGES, $sql_data_array)) {
+          // a failed insert must not change anything else, e.g. the default language
+          $messageStack->add_session(ERROR_LANGUAGE_NOT_SAVED, 'error');
+          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&action=new'));
+        }
         $lID = xtc_db_insert_id();
 
         // create additional customers status
@@ -93,17 +135,21 @@
         }
 
         $sql_data_array = array(
-          // the code goes into URLs and attributes, the directory into file paths
+          // the name goes into attributes, code, image and directory are checked above
           'name' => str_replace('"', '', strip_tags(xtc_db_prepare_input($_POST['name']))),
-          'code' => preg_replace('/[^A-Za-z0-9_-]/', '', xtc_db_prepare_input($_POST['code'])),
-          'image' => preg_replace('/[^A-Za-z0-9_.\/-]/', '', xtc_db_prepare_input($_POST['image'])),
-          'directory' => preg_replace('/[^A-Za-z0-9_-]/', '', xtc_db_prepare_input($_POST['directory'])),
+          'code' => $check_code,
+          'image' => $check_image,
+          'directory' => $check_directory,
           //'status' => xtc_db_prepare_input($_POST['status']),  
           'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
           'language_charset' => $charset_value,
           //'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
         ); 
-        xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.$lID.'\'');        
+        if (!xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.$lID.'\'')) {
+          // a failed update must not change anything else, e.g. the default language
+          $messageStack->add_session(ERROR_LANGUAGE_NOT_SAVED, 'error');
+          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID . '&action=edit'));
+        }
         
         if (isset($_POST['default']) && $_POST['default'] == 'on') {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 

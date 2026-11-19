@@ -45,4 +45,9 @@ define('TEXT_INFO_CURRENCY_UPDATED', 'The exchange rate for %s (%s) was updated 
 define('ERROR_REMOVE_DEFAULT_CURRENCY', 'Error: The default currency can not be removed. Please set another currency as default, and try again.');
 define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %s (%s) was not updated. Is it a valid currency code?');
 define('WARNING_PRIMARY_SERVER_FAILED', 'The primary service "%s" could not determine the exchange rate %s (%s) or is currently not available. It is retried on the secondary service');
+
+// checks on save
+define('ERROR_CURRENCY_CODE', 'Error: The code may only contain letters.');
+define('ERROR_CURRENCY_CODE_EXISTS', 'Error: Another currency already uses this code.');
+define('ERROR_CURRENCY_NOT_SAVED', 'Error: The currency was not saved.');
 ?>
