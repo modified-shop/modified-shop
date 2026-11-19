@@ -29,6 +29,9 @@
 
   require('includes/application_top.php');
 
+  // include needed functions
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
+
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_GV_SENT_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
@@ -43,6 +46,11 @@
   
   switch ($action) {
     case 'deleteconfirm':
+      // deleting needs the posted link with the token, a plain link is not enough
+      if (!admin_form_posted()) {
+        $messageStack->add_session((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'warning');
+        xtc_redirect(xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('action', 'gid'))));
+      }
       // delete coupon from DB
       xtc_db_query("DELETE FROM ".TABLE_COUPONS." WHERE coupon_id = '".(int)$_GET['gid']."'");
       xtc_db_query("DELETE FROM ".TABLE_COUPONS_DESCRIPTION." WHERE coupon_id = '".(int)$_GET['gid']."'");
@@ -179,7 +187,7 @@
                 case 'delete':
                   $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . (($gInfo->coupon_type == 'P' || $gInfo->coupon_type == 'T') ? number_format($gInfo->coupon_amount, 2).'%' : $currencies->format($gInfo->coupon_amount)).'</b>');
                   $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button col-red" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=deleteconfirm&gid='.$gInfo->coupon_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button col-red" onclick="this.blur(); return postLink(this, event);" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=deleteconfirm&gid='.$gInfo->coupon_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 
                 default:
