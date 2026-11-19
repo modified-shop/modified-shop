@@ -17,6 +17,7 @@
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
+  require_once(DIR_FS_INC.'admin_action_token.inc.php');
 
   $confirm_save_entry = ' onclick="ButtonClicked(this);"';
   $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
@@ -24,6 +25,11 @@
   if (isset($_GET['action'])) {
     switch ($_GET['action']) {
       case 'save':
+        // the rights are reset first, so only the form of this page may start it
+        if (!isset($_POST['admin_action_token']) || !admin_action_token($_POST['admin_action_token'])) {
+          $messageStack->add_session((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'warning');
+          xtc_redirect(xtc_href_link(FILENAME_ACCOUNTING, xtc_get_all_get_params(array('action')), 'NONSSL'));
+        }
 
         // reset values before writing
         $admin_access = get_admin_access($_GET['cID']);
@@ -213,7 +219,7 @@ require (DIR_WS_INCLUDES.'head.php');
         </form>
         <br/>
 
-        <?php echo xtc_draw_form('accounting', FILENAME_ACCOUNTING, xtc_get_all_get_params(array('action'))  . 'action=save', 'post', 'enctype="multipart/form-data"' . $confirm_submit); ?>
+        <?php echo xtc_draw_form('accounting', FILENAME_ACCOUNTING, xtc_get_all_get_params(array('action'))  . 'action=save', 'post', 'enctype="multipart/form-data"' . $confirm_submit) . xtc_draw_hidden_field('admin_action_token', admin_action_token()); ?>
           <table class="tableBoxCenter collapse">
             <tr>
               <td>
