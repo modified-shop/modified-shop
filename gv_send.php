@@ -84,6 +84,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
   }
+
+  if (isset($modified_session_handler) && $modified_session_handler->holds_lock() === false) {
+    // without the lock the token of the confirmation would not be saved
+    $error = true;
+    $messageStack->add('gv_send', (defined('TEXT_GV_SEND_ALREADY_RUNNING') ? TEXT_GV_SEND_ALREADY_RUNNING : ENTRY_TOKEN_ERROR));
+  }
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {

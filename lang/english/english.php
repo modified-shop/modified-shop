@@ -515,7 +515,7 @@ define('TEXT_COUPON_HELP_PRODUCTS', 'Product Restrictions');
 define('TEXT_COUPON_HELP_MANUFACTURERS', 'Manufacturers Restrictions');
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Invalid amount');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Invalid e-mail address');
-define('TEXT_GV_SEND_ALREADY_RUNNING', 'Your voucher is already being sent. Please wait a moment and check your balance before you try again.');
+define('TEXT_GV_SEND_ALREADY_RUNNING', 'Another request of your session is still running, for example a voucher transfer. Please wait a moment, check your balance and then try again.');
 define('TEXT_COUPON_PRODUCTS_RESTRICT', 'Your voucher/coupon is limited to some products.');
 define('TEXT_COUPON_CATEGORIES_RESTRICT', 'Your voucher/coupon is limited to some categories.');
 define('TEXT_COUPON_MANUFACTURERS_RESTRICT', 'Your voucher/coupon is limited to some manufacturers.');
