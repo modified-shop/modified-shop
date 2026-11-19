@@ -592,7 +592,7 @@ function create_folder($path = null, $path_thumbs = null,$ftp = null,$config = n
 		$ftp->mkdir($path);
 		$ftp->mkdir($path_thumbs);
 	}else{
-		if(file_exists($path) || file_exists($path_thumbs)){
+		if(file_exists($path) || ($path_thumbs && file_exists($path_thumbs))){
 			return false;
 		}
 		$oldumask = umask(0);
@@ -818,12 +818,14 @@ function rfm_replace_inner_dots($name, $has_extension = true)
 * The mode x creates the file only when its name is free, in one step, so a file that
 * appears between a check and the write stays as well.
 *
-* @param  string  $source
-* @param  string  $target
+* @param  string    $source
+* @param  string    $target
+* @param  int|null  $size    expected size of the file, when it is known
 *
-* @return bool|null  true when written, false when the target exists, null when source or target cannot be opened
+* @return bool|null  true when written, false when the target exists,
+*                    null when source or target cannot be opened or the copy is incomplete
 */
-function rfm_copy_new($source, $target)
+function rfm_copy_new($source, $target, $size = null)
 {
 	$in = @fopen($source, 'rb');
 	if ($in === false) {
@@ -834,9 +836,13 @@ function rfm_copy_new($source, $target)
 		fclose($in);
 		return (file_exists($target) ? false : null);
 	}
-	stream_copy_to_stream($in, $out);
+	$copied = stream_copy_to_stream($in, $out);
 	fclose($in);
-	fclose($out);
+	// a part of a file would keep the name taken for the next attempt
+	if (!fclose($out) || $copied === false || ($size !== null && $copied != $size)) {
+		@unlink($target);
+		return null;
+	}
 	return true;
 }
 

@@ -179,8 +179,10 @@ if (isset($_GET['action'])) {
             }
 
             $info = pathinfo($path);
-            // entries that would replace a file or another entry are left out and reported
+            // entries that would replace a file or another entry are left out and reported,
+            // entries that could not be written as well
             $skipped_files = array();
+            $failed_files = array();
 
             switch ($info['extension']) {
                 case "zip":
@@ -212,8 +214,11 @@ if (isset($_GET['action'])) {
                                         // inner dots of the file name are replaced like on upload
                                         $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
                                         // an entry must not replace a file that is already there or an earlier entry of the archive
-                                        if (rfm_copy_new('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name) === false) {
+                                        $written = rfm_copy_new('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name, $FullFileName['size']);
+                                        if ($written === false) {
                                             $skipped_files[] = $FullFileName['name'];
+                                        } elseif ($written === null) {
+                                            $failed_files[] = $FullFileName['name'];
                                         }
                                     }
                                 }
@@ -246,8 +251,13 @@ if (isset($_GET['action'])) {
                         if (!is_dir(dirname($base_folder . $tar_file))) {
                             create_folder(dirname($base_folder . $tar_file));
                         }
-                        if (rfm_copy_new('phar://' . realpath($path) . '/' . $tar_file, $base_folder . $tar_file) === false) {
+                        $tar_source = 'phar://' . realpath($path) . '/' . $tar_file;
+                        $tar_size = @filesize($tar_source);
+                        $written = rfm_copy_new($tar_source, $base_folder . $tar_file, (($tar_size !== false) ? $tar_size : null));
+                        if ($written === false) {
                             $skipped_files[] = $tar_file;
+                        } elseif ($written === null) {
+                            $failed_files[] = $tar_file;
                         }
                     }
                     break;
@@ -263,8 +273,15 @@ if (isset($_GET['action'])) {
                 deleteDir($base_folder);
             }
 
-            if (count($skipped_files) > 0) {
-                response(trans('Rename_existing_file') . ': ' . htmlspecialchars(implode(', ', $skipped_files), ENT_QUOTES, 'UTF-8') . AddErrorLocation())->send();
+            if (count($skipped_files) > 0 || count($failed_files) > 0) {
+                $messages = array();
+                if (count($skipped_files) > 0) {
+                    $messages[] = trans('Rename_existing_file') . ': ' . htmlspecialchars(implode(', ', $skipped_files), ENT_QUOTES, 'UTF-8');
+                }
+                if (count($failed_files) > 0) {
+                    $messages[] = trans('File_Save_Error') . ' ' . htmlspecialchars(implode(', ', $failed_files), ENT_QUOTES, 'UTF-8');
+                }
+                response(implode('<br>', $messages) . AddErrorLocation())->send();
                 exit;
             }
 
