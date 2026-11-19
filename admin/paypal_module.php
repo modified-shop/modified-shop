@@ -175,10 +175,10 @@ if (isset($_GET['action'])) {
           $thirdparty = array();
           $thirdparty_fields = 0;
           foreach ($_POST['config']['thirdparty'] as $key => $value) {
-            if (!in_array($key, $allowed_wall, true)) {
+            // only the two values the form sends; a valid no counts as well, so all providers can be switched off on purpose
+            if (!in_array($key, $allowed_wall, true) || !in_array((string)$value, array('0', '1'), true)) {
               continue;
             }
-            // a valid no counts as well, so all providers can be switched off on purpose
             $thirdparty_fields ++;
             if ($value == '1') {
               $thirdparty[] = $key;
