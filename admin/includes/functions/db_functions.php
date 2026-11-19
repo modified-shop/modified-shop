@@ -915,23 +915,23 @@ function backup_entry_header($fp, $compressed) {
     return $lines;
   }
 
+  $last = false;
   while ($data !== '') {
     if ($compressed) {
       // every write of a backup appends a gzip member of its own
       $plain = '';
       while ($data !== '') {
         $part = @inflate_add($context, $data);
-        if ($part === false) {
-          break 2;
+        $used = (($part !== false) ? inflate_get_read_len($context) - $read : 0);
+        // what follows the last member is no gzip data, like null bytes at the end: the text read so far counts
+        if ($part === false || (inflate_get_status($context) == ZLIB_STREAM_END && $used < 1)) {
+          $last = true;
+          break;
         }
         $plain .= $part;
         if (inflate_get_status($context) != ZLIB_STREAM_END) {
           $read += strlen($data);
           break;
-        }
-        $used = inflate_get_read_len($context) - $read;
-        if ($used < 1) {
-          break 2;
         }
         $data = (string)substr($data, $used);
         $read = 0;
@@ -959,7 +959,7 @@ function backup_entry_header($fp, $compressed) {
       }
     }
     // small pieces of a compressed file, a piece may grow a thousandfold
-    $data = ((feof($fp)) ? '' : (string)fread($fp, (($compressed) ? 512 : 8192)));
+    $data = (($last || feof($fp)) ? '' : (string)fread($fp, (($compressed) ? 512 : 8192)));
   }
   if (substr($buffer, 0, 9) == "-- TABLE|" || substr($buffer, 0, 10) == "-- Charset") {
     $lines[] = $buffer;

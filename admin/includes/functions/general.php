@@ -1388,11 +1388,17 @@
     if (isset ($xtc_remove_error)) {
       $xtc_remove_error = false;
     }
-    if (is_dir($source)) {
+    // a link is removed itself, never the content of its target
+    if (is_link($source)) {
+      if (!@unlink($source) && !@rmdir($source)) {
+        $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
+        $xtc_remove_error = true;
+      }
+    } elseif (is_dir($source)) {
       $dir = dir($source);
       while ($file = $dir->read()) {
         if (($file != '.') && ($file != '..')) {
-          if (is_writeable($source.'/'.$file)) {
+          if (is_link($source.'/'.$file) || is_writeable($source.'/'.$file)) {
             xtc_remove($source.'/'.$file);
           } else {
             $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source.'/'.$file), 'error');
