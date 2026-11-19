@@ -21,7 +21,8 @@
   $admin_thumbs_size = 'style="border:0;max-width:200px;max-height:60px;"';
   
   // include needed classes
-  require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
+  require_once (DIR_FS_INC.'get_image_manipulator_file.inc.php');
+  require_once (DIR_WS_CLASSES.get_image_manipulator_file(FILENAME_IMAGEMANIPULATOR));
 
   $cfg_max_display_results_key = 'MAX_DISPLAY_BANNER_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);

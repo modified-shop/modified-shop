@@ -2429,8 +2429,8 @@
    */
   function xtc_cfg_checkbox_unallowed_module($module_type,$checkbox_name,$data,$name='')
   {
-    // the type is part of an include path
-    if (!is_string($module_type) || !preg_match('/^[a-z_]+$/D', $module_type)) {
+    // type and file names become an include path, only these two lists are checked when the shop loads them
+    if (!in_array($module_type, array('payment', 'shipping'), true)) {
       throw new InvalidArgumentException('Invalid module type');
     }
     $module_unallowed = array();
@@ -2443,6 +2443,9 @@
     if (xtc_not_null($module_const)) {
       $module_array = explode(';', $module_const);
       for ($p=0, $x=sizeof($module_array); $p<$x; $p++) {
+        if (!preg_match('/^[A-Za-z0-9_]+\.php$/D', $module_array[$p])) {
+          continue;
+        }
         if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/'.$module_type.'/' . $module_array[$p])) {
           include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/'.$module_type.'/' . $module_array[$p]);
         }

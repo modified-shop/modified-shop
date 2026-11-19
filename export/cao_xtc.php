@@ -176,7 +176,9 @@ $debug_login = (defined('CAO_DEBUG_LOGIN') && CAO_DEBUG_LOGIN == 'true' ? true :
 define('STANDARD_GROUP',DEFAULT_CUSTOMERS_STATUS_ID);
 
 require_once(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/upload_types.php');
-include(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/classes/'.IMAGE_MANIPULATOR);
+require_once(DIR_FS_INC.'get_image_manipulator_file.inc.php');
+// CAO reads the setting itself, like before the shared check
+include(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/classes/'.get_image_manipulator_file(defined('IMAGE_MANIPULATOR') ? IMAGE_MANIPULATOR : ''));
 
 $user = $password = '';
 if (isset($_POST['user']) && isset($_POST['password'])) {

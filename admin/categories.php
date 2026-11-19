@@ -34,7 +34,8 @@ require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
 require_once (DIR_FS_INC.'xtc_get_manufacturers.inc.php');
 
 // include needed classes
-require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
+require_once (DIR_FS_INC.'get_image_manipulator_file.inc.php');
+require_once (DIR_WS_CLASSES.get_image_manipulator_file(FILENAME_IMAGEMANIPULATOR));
 require_once (DIR_WS_CLASSES.'categories.php');
 require_once (DIR_WS_CLASSES.'currencies.php');
 
