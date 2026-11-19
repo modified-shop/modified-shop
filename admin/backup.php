@@ -87,11 +87,23 @@
         xtc_redirect(xtc_href_link(FILENAME_BACKUP));
         break;
       case 'download':
-        // only a plain name of a file that lies in the backup directory itself
-        if (!isset($_GET['file'])
-            || !is_string($_GET['file'])
-            || basename($_GET['file']) !== $_GET['file']
-            || !is_file(DIR_FS_BACKUP . $_GET['file'])
+        // only a plain name of a file that lies in the backup directory itself, also after resolving links
+        // the cache may still hold the path from before a link was placed
+        clearstatcache(true);
+        $backup_dir = realpath(DIR_FS_BACKUP);
+        $backup_file = false;
+        if (isset($_GET['file'])
+            && is_string($_GET['file'])
+            && basename($_GET['file']) === $_GET['file']
+            && strpos($_GET['file'], "\0") === false
+            )
+        {
+          $backup_file = realpath(DIR_FS_BACKUP . $_GET['file']);
+        }
+        if ($backup_dir === false
+            || $backup_file === false
+            || dirname($backup_file) !== $backup_dir
+            || !is_file($backup_file)
             )
         {
           $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
@@ -99,8 +111,8 @@
         }
         $extension = substr($_GET['file'], -3);
         if ( ($extension == 'zip') || ($extension == '.gz') || ($extension == 'sql') ) {
-          if ($fp = fopen(DIR_FS_BACKUP . $_GET['file'], 'rb')) {
-            $buffer = fread($fp, filesize(DIR_FS_BACKUP . $_GET['file']));
+          if ($fp = fopen($backup_file, 'rb')) {
+            $buffer = fread($fp, filesize($backup_file));
             fclose($fp);
             header('Content-type: application/x-octet-stream');
             header('Content-disposition: attachment; filename=' . $_GET['file']);
