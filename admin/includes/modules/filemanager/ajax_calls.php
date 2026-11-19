@@ -154,6 +154,11 @@ if (isset($_GET['action'])) {
             if (!$config['extract_files']) {
                 response(trans('wrong action').AddErrorLocation())->send();
             }
+            // FTP cannot create a file only when its name is free, so an archive could replace files there
+            if ($ftp) {
+                response(trans('wrong action').AddErrorLocation())->send();
+                exit;
+            }
             if ($ftp) {
                 $path = $config['ftp_base_url'].$config['upload_dir'] . $_POST['path'];
                 $base_folder = $config['ftp_base_url'].$config['upload_dir'] . fix_dirname($_POST['path']) . "/";
@@ -179,7 +184,6 @@ if (isset($_GET['action'])) {
             $info = pathinfo($path);
             // entries that would replace a file or another entry are left out and reported
             $skipped_files = array();
-            $unverified_files = array();
 
             switch ($info['extension']) {
                 case "zip":
@@ -262,45 +266,12 @@ if (isset($_GET['action'])) {
 
             if ($ftp) {
                 unlink($path);
-                $ftp_target = "/".$config['ftp_base_folder'] . $config['upload_dir'] . fix_dirname($_POST['path']);
-                // the archive went into a local folder first; a file is uploaded only when the FTP server
-                // shows that its name is free, also against the other entries without case
-                $local_files = array();
-                foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base_folder, FilesystemIterator::SKIP_DOTS)) as $local_file) {
-                    if ($local_file->isFile()) {
-                        $local_files[] = $local_file->getPathname();
-                    }
-                }
-                $ftp_listings = array();
-                $ftp_planned = array();
-                foreach ($local_files as $local_file) {
-                    $relative_name = ltrim(str_replace('\\', '/', substr($local_file, strlen($base_folder))), '/');
-                    $state = (isset($ftp_planned[mb_strtolower($relative_name)]) ? 'taken' : rfm_ftp_name_state($ftp, $ftp_target, $relative_name, $ftp_listings));
-                    if ($state != 'free') {
-                        if ($state == 'taken') {
-                            $skipped_files[] = $relative_name;
-                        } else {
-                            $unverified_files[] = $relative_name;
-                        }
-                        unlink($local_file);
-                        continue;
-                    }
-                    $ftp_planned[mb_strtolower($relative_name)] = true;
-                }
-                $ftp->putAll($base_folder, $ftp_target, FTP_BINARY);
+                $ftp->putAll($base_folder, "/".$config['ftp_base_folder'] . $config['upload_dir'] . fix_dirname($_POST['path']), FTP_BINARY);
                 deleteDir($base_folder);
             }
 
-            if (count($skipped_files) > 0 || count($unverified_files) > 0) {
-                $messages = array();
-                if (count($skipped_files) > 0) {
-                    $messages[] = trans('Rename_existing_file') . ': ' . htmlspecialchars(implode(', ', $skipped_files), ENT_QUOTES, 'UTF-8');
-                }
-                if (count($unverified_files) > 0) {
-                    // the FTP server could not list the folder, so these entries were not uploaded
-                    $messages[] = trans('File_Save_Error') . ': ' . htmlspecialchars(implode(', ', $unverified_files), ENT_QUOTES, 'UTF-8');
-                }
-                response(implode('<br>', $messages) . AddErrorLocation())->send();
+            if (count($skipped_files) > 0) {
+                response(trans('Rename_existing_file') . ': ' . htmlspecialchars(implode(', ', $skipped_files), ENT_QUOTES, 'UTF-8') . AddErrorLocation())->send();
                 exit;
             }
 

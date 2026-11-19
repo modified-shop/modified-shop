@@ -799,51 +799,6 @@ function sanitize($str)
 *
 * @return string
 */
-/**
- * State of a name below $base on the FTP server: free only when the listing of the
- * nearest existing folder shows that it is missing. Names are compared without case,
- * a server may treat Banner.jpg and banner.jpg as one file. A listing that fails
- * gives unknown, so nothing is uploaded over a file that could not be seen.
- *
- * @param object $ftp
- * @param string $base
- * @param string $relative path below $base with /
- * @param array  $listings cache of folder listings
- *
- * @return string free, taken or unknown
- */
-function rfm_ftp_name_state($ftp, $base, $relative, &$listings)
-{
-    $dir = rtrim($base, '/');
-    $segments = explode('/', $relative);
-    foreach ($segments as $i => $segment) {
-        if (!isset($listings[$dir])) {
-            try {
-                $names = array();
-                foreach ($ftp->nlist($dir) as $entry) {
-                    $names[mb_strtolower(basename($entry))] = true;
-                }
-                $listings[$dir] = $names;
-            } catch (Exception $e) {
-                $listings[$dir] = false;
-            }
-        }
-        if ($listings[$dir] === false) {
-            return 'unknown';
-        }
-        if (!isset($listings[$dir][mb_strtolower($segment)])) {
-            // the folder or file is not there, so nothing below it is either
-            return 'free';
-        }
-        if ($i == count($segments) - 1) {
-            return 'taken';
-        }
-        $dir .= '/' . $segment;
-    }
-
-    return 'unknown';
-}
-
 function rfm_replace_inner_dots($name, $has_extension = true)
 {
 	$parts = explode('.', (string)$name);
