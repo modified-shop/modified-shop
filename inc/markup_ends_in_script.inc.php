@@ -10,8 +10,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // true when a browser reads the text that follows $markup as the content of a script element;
-  // comments, tags with their attributes and elements that hold text are read as the browser reads them
+  // true when a browser reads the text that follows $markup as the content of a script element, false when not;
+  // comments, tags with their attributes and elements that hold text are read as the browser reads them,
+  // null says that this reading cannot tell
   function markup_ends_in_script($markup) {
     $markup = (string)$markup;
     $length = strlen($markup);
@@ -29,14 +30,20 @@
     $html_font = array('color', 'face', 'size');
     $html_content = array('svg' => array('foreignobject', 'desc', 'title'),
                           'math' => array('mi', 'mo', 'mn', 'ms', 'mtext', 'annotation-xml'));
-    // inside a select element browsers differ in what they take as a tag, a template in it keeps it open
+    // inside a select element browsers differ in what they take as a tag, an open template in it keeps it open
     $select_open = false;
-    $select_template = false;
+    $select_templates = 0;
     $select_tags = array('style', 'title', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript', 'plaintext', 'svg', 'math');
-    // where the reading is not sure, every script tag behind $start counts
-    $any_script = function ($start) use ($markup) {
-      return (preg_match('/<script[\t\n\f\r \/>]/i', $markup, $match, PREG_OFFSET_CAPTURE, $start) === 1
-              && strpos($markup, '>', $match[0][1] + 7) !== false);
+    // where the reading is not sure: without a script that is open or a script tag behind $start there is still none
+    $unsure = function ($start, $open = false) use ($markup) {
+      if ($open === true
+          || (preg_match('/<script[\t\n\f\r \/>]/i', $markup, $match, PREG_OFFSET_CAPTURE, $start) === 1
+              && strpos($markup, '>', $match[0][1] + 7) !== false)
+          )
+      {
+        return null;
+      }
+      return false;
     };
 
     // the place behind a tag whose attributes begin at $pos, whether it closes itself and the names of its attributes:
@@ -121,6 +128,10 @@
       $name_start = $pos + ($closing ? 2 : 1);
       if (!preg_match('/\G[a-z][^\t\n\f\r \/>]*/i', $markup, $match, 0, $name_start)) {
         if ($closing === false) {
+          // behind a last "<" in a script of svg or math the text itself decides whether a tag begins
+          if ($pos + 1 >= $length && $foreign_scripts > 0) {
+            return null;
+          }
           $pos++;
         } elseif (substr($markup, $name_start, 1) === '>') {
           $pos = $name_start + 1;
@@ -151,7 +162,7 @@
         if ($leaves === true) {
           // such a tag ends svg and math with all that is open in them, inside content of HTML it changes nothing
           if ($html === true && $closing === false) {
-            return ($foreign_scripts > 0 || $any_script($tag_start));
+            return $unsure($tag_start, $foreign_scripts > 0);
           }
           if ($html === true) {
             continue;
@@ -161,7 +172,7 @@
         } elseif ($closing === false) {
           // mglyph and malignmark stay MathML inside its elements for text
           if ($html === true && ($foreign_root != 'math' || $foreign[$open] == 'annotation-xml' || ($name != 'mglyph' && $name != 'malignmark'))) {
-            return ($foreign_scripts > 0 || $any_script($tag_start));
+            return $unsure($tag_start, $foreign_scripts > 0);
           }
           if ($self_closing === false) {
             $foreign[] = $name;
@@ -174,7 +185,7 @@
           }
           if ($open < 0) {
             // the rules of HTML decide whether this end tag closes something around the svg
-            return ($foreign_scripts > 0 || $any_script($tag_start));
+            return $unsure($tag_start, $foreign_scripts > 0);
           }
           while (count($foreign) > $open) {
             $foreign_scripts -= ((array_pop($foreign) == 'script') ? 1 : 0);
@@ -183,7 +194,9 @@
         }
       }
       if ($closing === true) {
-        if ($name == 'select' && $select_template === false) {
+        if ($name == 'template' && $select_templates > 0) {
+          $select_templates--;
+        } elseif ($name == 'select' && $select_templates == 0) {
           $select_open = false;
         }
         continue;
@@ -192,10 +205,10 @@
         $select_open = true;
       }
       if ($select_open === true && $name == 'template') {
-        $select_template = true;
+        $select_templates++;
       }
       if ($select_open === true && in_array($name, $select_tags)) {
-        return $any_script($tag_start);
+        return $unsure($tag_start);
       }
       if ($name == 'svg' || $name == 'math') {
         if ($self_closing === false) {
